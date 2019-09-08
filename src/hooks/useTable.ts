@@ -50,7 +50,7 @@ const useTable = (intialOverrides: any) => {
     if (tableState.prevPath && tableState.path !== tableState.prevPath) {
       tableState.unsubscribe();
     }
-    //updates prev values
+    //updates previous values
     tableDispatch({
       prevFilters: filters,
       prevLimit: limit,
