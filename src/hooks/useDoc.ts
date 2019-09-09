@@ -1,13 +1,24 @@
 import { db } from "../firebase";
 import { useEffect, useReducer } from "react";
 
+export enum DocActions {
+  update,
+  delete // TODO
+}
 const documentReducer = (prevState: any, newProps: any) => {
-  return { ...prevState, ...newProps };
+  switch (newProps.action) {
+    case DocActions.update:
+      prevState.ref.update({ ...newProps.data });
+      return { ...prevState, doc: { ...prevState.doc, ...newProps.data } };
+    default:
+      return { ...prevState, ...newProps };
+  }
 };
 const documentIntialState = {
   path: null,
   prevPath: null,
   doc: null,
+  ref: null,
   loading: true
 };
 
@@ -21,10 +32,12 @@ const useDoc = (intialOverrides: any) => {
     const unsubscribe = db.doc(documentState.path).onSnapshot(snapshot => {
       if (snapshot.exists) {
         const data = snapshot.data();
+
         const id = snapshot.id;
         const doc = { ...data, id };
         documentDispatch({
           doc,
+          ref: snapshot.ref,
           loading: false
         });
       }
