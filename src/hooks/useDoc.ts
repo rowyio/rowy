@@ -1,0 +1,50 @@
+import { db } from "../firebase";
+import { useEffect, useReducer } from "react";
+
+const documentReducer = (prevState: any, newProps: any) => {
+  return { ...prevState, ...newProps };
+};
+const documentIntialState = {
+  path: null,
+  prevPath: null,
+  doc: null,
+  loading: true
+};
+
+const useDoc = (intialOverrides: any) => {
+  const [documentState, documentDispatch] = useReducer(documentReducer, {
+    ...documentIntialState,
+    ...intialOverrides
+  });
+  const setDocumentListner = () => {
+    documentDispatch({ prevPath: documentState.path });
+    const unsubscribe = db.doc(documentState.path).onSnapshot(snapshot => {
+      if (snapshot.exists) {
+        const data = snapshot.data();
+        const id = snapshot.id;
+        const doc = { ...data, id };
+        documentDispatch({
+          doc,
+          loading: false
+        });
+      }
+    });
+    documentDispatch({ unsubscribe });
+  };
+  useEffect(() => {
+    const { path, prevPath, unsubscribe } = documentState;
+    if (path && path !== prevPath) {
+      if (unsubscribe) unsubscribe();
+      setDocumentListner();
+    }
+  }, [documentState]);
+  useEffect(
+    () => () => {
+      if (documentState.unsubscribe) documentState.unsubscribe();
+    },
+    []
+  );
+  return [documentState, documentDispatch];
+};
+
+export default useDoc;
