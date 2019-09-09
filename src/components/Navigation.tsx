@@ -6,15 +6,13 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import Paper from "@material-ui/core/Paper";
-import Fab from "@material-ui/core/Fab";
 import MenuIcon from "@material-ui/icons/Menu";
-import AddIcon from "@material-ui/icons/Add";
 import Button from "@material-ui/core/Button";
 import Skeleton from "@material-ui/lab/Skeleton";
 import useSettings from "../hooks/useSettings";
 import useTable from "../hooks/useTable";
 import Table from "./Table";
-
+import CreateTableDialog from "./CreateTableDialog";
 import useTableConfig from "../hooks/useTableConfig";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -57,7 +55,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function Navigation() {
   const classes = useStyles();
-  const settings = useSettings();
+  const [settings, createTable] = useSettings();
   const tableConfig = useTableConfig("founders");
   const [table] = useTable({ path: "founders" });
   return (
@@ -88,6 +86,18 @@ export default function Navigation() {
                 height={40}
                 className={classes.skeleton}
               />
+              <Skeleton
+                variant="rect"
+                width={120}
+                height={40}
+                className={classes.skeleton}
+              />
+              <Skeleton
+                variant="rect"
+                width={120}
+                height={40}
+                className={classes.skeleton}
+              />
             </>
           ) : (
             <>
@@ -101,9 +111,7 @@ export default function Navigation() {
             </>
           )}
 
-          <Fab color="secondary" aria-label="add" className={classes.fabButton}>
-            <AddIcon />
-          </Fab>
+          <CreateTableDialog classes={classes} createTable={createTable} />
           <div className={classes.grow} />
         </Toolbar>
       </AppBar>

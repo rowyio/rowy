@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import useDoc from "./useDoc";
+import useDoc, { DocActions } from "./useDoc";
 
 const useSettings = () => {
   const [settingsState, documentDispatch] = useDoc({
@@ -12,7 +12,15 @@ const useSettings = () => {
     }
   }, [settingsState]);
 
-  return settingsState;
+  const createTable = (name: string, collection: string) => {
+    const { tables } = settingsState;
+    console.log(tables);
+    documentDispatch({
+      action: DocActions.update,
+      data: { tables: [...tables, { name, collection }] }
+    });
+  };
+  return [settingsState, createTable];
 };
 
 export default useSettings;
