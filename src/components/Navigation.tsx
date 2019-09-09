@@ -12,6 +12,10 @@ import AddIcon from "@material-ui/icons/Add";
 import Button from "@material-ui/core/Button";
 import Skeleton from "@material-ui/lab/Skeleton";
 import useSettings from "../hooks/useSettings";
+import useTable from "../hooks/useTable";
+import Table from "./Table";
+
+import useTableConfig from "../hooks/useTableConfig";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -53,8 +57,9 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function Navigation() {
   const classes = useStyles();
-  const [settings] = useSettings();
-  console.log(settings);
+  const settings = useSettings();
+  const tableConfig = useTableConfig("founders");
+  const [table] = useTable({ path: "founders" });
   return (
     <React.Fragment>
       <CssBaseline />
@@ -63,12 +68,13 @@ export default function Navigation() {
           Founders
         </Typography>
       </Paper>
+      <Table columns={tableConfig.columns} rows={table.rows} />
       <AppBar position="fixed" color="primary" className={classes.appBar}>
         <Toolbar>
           <IconButton edge="start" color="inherit" aria-label="open drawer">
             <MenuIcon />
           </IconButton>
-          {settings.loading || !settings.doc ? (
+          {!settings.tables ? (
             <>
               <Skeleton
                 variant="rect"
@@ -87,7 +93,9 @@ export default function Navigation() {
             <>
               {settings.tables.map(
                 (table: { name: string; collection: string }) => (
-                  <Button className={classes.button}>{table.name}</Button>
+                  <Button key={table.collection} className={classes.button}>
+                    {table.name}
+                  </Button>
                 )
               )}
             </>

@@ -75,11 +75,13 @@ const useTable = (intialOverrides: any) => {
     }
     const unsubscribe = query.limit(limit).onSnapshot(snapshot => {
       if (snapshot.docs.length > 0) {
-        const rows = snapshot.docs.map(doc => {
-          const data = doc.data();
-          const id = doc.id;
-          return { ...data, id };
-        });
+        const rows = snapshot.docs
+          .map(doc => {
+            const data = doc.data();
+            const id = doc.id;
+            return { ...data, id };
+          })
+          .filter(doc => doc.id !== "_FIRETABLE_");
         tableDispatch({
           rows,
           loading: false
