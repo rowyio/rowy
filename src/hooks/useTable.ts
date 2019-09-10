@@ -81,7 +81,7 @@ const useTable = (intialOverrides: any) => {
             const id = doc.id;
             return { ...data, id };
           })
-          .filter(doc => doc.id !== "_FIRETABLE_");
+          .filter(doc => doc.id !== "_FIRETABLE_"); //removes schema file
         tableDispatch({
           rows,
           loading: false

@@ -1,11 +1,11 @@
 import React from "react";
 
 interface AuthContextInterface {
-  authUser: firebase.User | null | undefined;
+  currentUser: firebase.User | null | undefined;
 }
 
 const AuthContext = React.createContext<AuthContextInterface>({
-  authUser: undefined
+  currentUser: undefined
 });
 
 export default AuthContext;

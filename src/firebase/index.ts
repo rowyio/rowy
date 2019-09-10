@@ -16,3 +16,4 @@ if (process.env.REACT_APP_ENV === "PRODUCTION") {
 export const auth = firebase.auth();
 export const db = firebase.firestore();
 export const functions = firebase.app().functions();
+export const googleProvider = new firebase.auth.GoogleAuthProvider();

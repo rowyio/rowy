@@ -10,11 +10,8 @@ import MenuIcon from "@material-ui/icons/Menu";
 import Button from "@material-ui/core/Button";
 import Skeleton from "@material-ui/lab/Skeleton";
 import useSettings from "../hooks/useSettings";
-import useTable from "../hooks/useTable";
-import Table from "./Table";
-import CreateTableDialog from "./CreateTableDialog";
-import useTableConfig from "../hooks/useTableConfig";
 
+import CreateTableDialog from "./CreateTableDialog";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     text: {
@@ -53,11 +50,10 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function Navigation() {
+export const Navigation = ({ children }: any) => {
   const classes = useStyles();
   const [settings, createTable] = useSettings();
-  const tableConfig = useTableConfig("founders");
-  const [table] = useTable({ path: "founders" });
+
   return (
     <React.Fragment>
       <CssBaseline />
@@ -66,7 +62,7 @@ export default function Navigation() {
           Founders
         </Typography>
       </Paper>
-      <Table columns={tableConfig.columns} rows={table.rows} />
+      {children}
       <AppBar position="fixed" color="primary" className={classes.appBar}>
         <Toolbar>
           <IconButton edge="start" color="inherit" aria-label="open drawer">
@@ -117,4 +113,4 @@ export default function Navigation() {
       </AppBar>
     </React.Fragment>
   );
-}
+};
