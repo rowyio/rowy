@@ -16,9 +16,10 @@ import {
   TableHeaderProps
 } from "react-virtualized";
 import Button from "@material-ui/core/Button";
-import EditIcon from "@material-ui/icons/Edit";
 
-//  import Skeleton from "@material-ui/lab/Skeleton";
+import { TextField } from "@material-ui/core";
+
+import ColumnDrawer from "./ColumnDrawer";
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -95,13 +96,19 @@ class MuiVirtualizedTable extends React.PureComponent<
             : "left"
         }
       >
-        {cellData}
+        <TextField
+          value={cellData}
+          onChange={() => {
+            console.log(columnIndex);
+          }}
+        />
       </TableCell>
     );
   };
 
   headerRenderer = ({
     label,
+    dataKey,
     columnIndex
   }: TableHeaderProps & { columnIndex: number }) => {
     const { headerHeight, columns, classes } = this.props;
@@ -118,9 +125,14 @@ class MuiVirtualizedTable extends React.PureComponent<
         style={{ height: headerHeight }}
         align={columns[columnIndex].numeric || false ? "right" : "left"}
       >
-        <Button size="small">
-          {label} <EditIcon fontSize="small" />
-        </Button>
+        {dataKey === "add" ? (
+          <ColumnDrawer />
+        ) : (
+          <Button size="small">
+            {label}
+            {/* <EditIcon fontSize="small" /> */}
+          </Button>
+        )}
       </TableCell>
     );
   };
@@ -174,20 +186,22 @@ const VirtualizedTable = withStyles(styles)(MuiVirtualizedTable);
 
 export default function fTable(props: any) {
   const { columns, rows } = props;
-  console.log(columns, rows);
   if (columns)
     return (
       <Paper style={{ height: 400, width: "100%" }}>
         <VirtualizedTable
           rowCount={rows.length}
           rowGetter={({ index }) => rows[index]}
-          columns={columns.map(
-            (column: { fieldName: string; name: string; type: string }) => ({
-              width: 200,
-              label: column.name,
-              dataKey: column.fieldName
-            })
-          )}
+          columns={[
+            ...columns.map(
+              (column: { fieldName: string; name: string; type: string }) => ({
+                width: 200,
+                label: column.name,
+                dataKey: column.fieldName
+              })
+            ),
+            { width: 20, label: "add", dataKey: "add" }
+          ]}
         />
       </Paper>
     );
