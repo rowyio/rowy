@@ -7,8 +7,8 @@ const useAuth = () => {
   );
 
   useEffect(() => {
-    auth.onAuthStateChanged(token => {
-      setAuthUser(token);
+    auth.onAuthStateChanged(user => {
+      setAuthUser(user);
     });
   }, []);
 

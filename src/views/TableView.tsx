@@ -13,7 +13,6 @@ export default function AuthView() {
   const tableCollection = router.location.pathname.split("/")[2];
   const [tableConfig, tableActions] = useTableConfig(tableCollection);
   const [table, tableDispatch] = useTable({ path: tableCollection });
-  console.log("tableConfig", tableConfig);
   const classes = useStyles();
   useEffect(() => {
     tableActions.setTable(tableCollection);

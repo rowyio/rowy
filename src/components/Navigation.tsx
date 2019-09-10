@@ -55,7 +55,6 @@ export const Navigation = (props: any) => {
   const router = useRouter();
   const classes = useStyles();
   const [settings, createTable] = useSettings();
-  console.log(props);
   return (
     <React.Fragment>
       <CssBaseline />

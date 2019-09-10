@@ -7,8 +7,9 @@ import TableView from "./views/TableView";
 
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { AuthProvider } from "./AuthProvider";
+import CustomBrowserRouter from "./util/CustomBrowserRouter";
 
-import PrivateRoute from "./components/PrivateRoute";
+import PrivateRoute from "./util/PrivateRoute";
 const theme = createMuiTheme({
   spacing: 4,
   palette: {
@@ -22,12 +23,12 @@ const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <AuthProvider>
-        <Router>
+        <CustomBrowserRouter>
           <div>
             <Route exact path="/auth" component={AuthView} />
             <PrivateRoute path="/table/" component={TableView} />
           </div>
-        </Router>
+        </CustomBrowserRouter>
       </AuthProvider>
     </ThemeProvider>
   );

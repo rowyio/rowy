@@ -14,7 +14,6 @@ const useSettings = () => {
 
   const createTable = (name: string, collection: string) => {
     const { tables } = settingsState;
-    console.log(tables);
     documentDispatch({
       action: DocActions.update,
       data: { tables: [...tables, { name, collection }] }
