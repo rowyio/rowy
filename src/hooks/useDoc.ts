@@ -3,7 +3,7 @@ import { useEffect, useReducer } from "react";
 
 export enum DocActions {
   update,
-  delete // TODO
+  delete // TODO when needed
 }
 const documentReducer = (prevState: any, newProps: any) => {
   switch (newProps.action) {

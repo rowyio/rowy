@@ -1,12 +1,6 @@
 import { useEffect } from "react";
 import useDoc, { DocActions } from "./useDoc";
-export enum FieldType {
-  simpleText = "SIMPLE_TEXT",
-  longText = "LONG_TEXT",
-  email = "EMAIL",
-  PhoneNumber = "PHONE_NUMBER",
-  checkBox = "CHECK_BOX"
-}
+import { FieldType } from "../Fields";
 const useTableConfig = (tablePath: string) => {
   const [tableConfigState, documentDispatch] = useDoc({
     path: `${tablePath}/_FIRETABLE_`

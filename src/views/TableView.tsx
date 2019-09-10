@@ -16,6 +16,7 @@ export default function AuthView() {
   const classes = useStyles();
   useEffect(() => {
     configActions.setTable(tableCollection);
+    tableDispatch({ path: tableCollection });
   }, [tableCollection]);
   const addColumn = configActions.addColumn;
   return (

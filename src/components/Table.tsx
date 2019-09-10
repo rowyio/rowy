@@ -17,8 +17,8 @@ import {
 } from "react-virtualized";
 import Button from "@material-ui/core/Button";
 
-import { TextField } from "@material-ui/core";
-
+//  import { TextField } from "@material-ui/core";
+import { FieldType, getFieldIcon } from "../Fields";
 import ColumnDrawer from "./ColumnDrawer";
 
 const styles = (theme: Theme) =>
@@ -96,12 +96,7 @@ class MuiVirtualizedTable extends React.PureComponent<
             : "left"
         }
       >
-        <TextField
-          value={cellData}
-          onChange={() => {
-            console.log(columnIndex);
-          }}
-        />
+        {cellData}
       </TableCell>
     );
   };
@@ -130,6 +125,7 @@ class MuiVirtualizedTable extends React.PureComponent<
           <ColumnDrawer addColumn={columnData.actions.addColumn} />
         ) : (
           <Button size="small">
+            {getFieldIcon(columnData.fieldType)}
             {label}
             {/* <EditIcon fontSize="small" /> */}
           </Button>
@@ -198,11 +194,14 @@ export default function fTable(props: any) {
               (column: {
                 fieldName: string;
                 columnName: string;
-                type: string;
+                type: FieldType;
               }) => ({
                 width: 200,
                 label: column.columnName,
-                dataKey: column.fieldName
+                dataKey: column.fieldName,
+                columnData: {
+                  fieldType: column.type
+                }
               })
             ),
             {

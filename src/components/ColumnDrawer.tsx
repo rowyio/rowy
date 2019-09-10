@@ -6,24 +6,13 @@ import Divider from "@material-ui/core/Divider";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import MailIcon from "@material-ui/icons/Mail";
-import CheckBoxIcon from "@material-ui/icons/CheckBox";
-import SimpleTextIcon from "@material-ui/icons/TextFields";
-import LongTextIcon from "@material-ui/icons/Notes";
+
 import AddIcon from "@material-ui/icons/Add";
-import PhoneIcon from "@material-ui/icons/Phone";
 
 import IconButton from "@material-ui/core/IconButton";
 import TextField from "@material-ui/core/TextField";
 import _camelCase from "lodash/camelCase";
-
-const FIELDS = [
-  { icon: <SimpleTextIcon />, name: "Simple Text", type: "SIMPLE_TEXT" },
-  { icon: <LongTextIcon />, name: "Long Text", type: "LONG_TEXT" },
-  { icon: <MailIcon />, name: "Email", type: "EMAIL" },
-  { icon: <PhoneIcon />, name: "Phone", type: "PHONE_NUMBER" },
-  { icon: <CheckBoxIcon />, name: "Check Box", type: "CHECK_BOX" }
-];
+import { FIELDS } from "../Fields";
 const useStyles = makeStyles({
   list: {
     width: 250
