@@ -12,6 +12,7 @@ import Skeleton from "@material-ui/lab/Skeleton";
 import useSettings from "../hooks/useSettings";
 
 import CreateTableDialog from "./CreateTableDialog";
+import useRouter from "../hooks/useRouter";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     text: {
@@ -50,19 +51,20 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export const Navigation = ({ children }: any) => {
+export const Navigation = (props: any) => {
+  const router = useRouter();
   const classes = useStyles();
   const [settings, createTable] = useSettings();
-
+  console.log(props);
   return (
     <React.Fragment>
       <CssBaseline />
       <Paper square className={classes.paper}>
         <Typography className={classes.text} variant="h5" gutterBottom>
-          Founders
+          {props.header}
         </Typography>
       </Paper>
-      {children}
+      {props.children}
       <AppBar position="fixed" color="primary" className={classes.appBar}>
         <Toolbar>
           <IconButton edge="start" color="inherit" aria-label="open drawer">
@@ -99,7 +101,13 @@ export const Navigation = ({ children }: any) => {
             <>
               {settings.tables.map(
                 (table: { name: string; collection: string }) => (
-                  <Button key={table.collection} className={classes.button}>
+                  <Button
+                    key={table.collection}
+                    onClick={() => {
+                      router.history.push(table.collection);
+                    }}
+                    className={classes.button}
+                  >
                     {table.name}
                   </Button>
                 )

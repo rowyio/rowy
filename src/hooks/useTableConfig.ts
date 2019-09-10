@@ -10,7 +10,13 @@ const useTableConfig = (tablePath: string) => {
       documentDispatch({ columns: doc.columns });
     }
   }, [tableConfigState]);
-  return tableConfigState;
+  const setTable = (table: string) => {
+    documentDispatch({ path: `${table}/_FIRETABLE_`, columns: [], doc: null });
+  };
+  const actions = {
+    setTable
+  };
+  return [tableConfigState, actions];
 };
 
 export default useTableConfig;

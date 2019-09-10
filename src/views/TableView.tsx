@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 
 import { Navigation } from "../components/Navigation";
@@ -11,12 +11,16 @@ const useStyles = makeStyles({});
 export default function AuthView() {
   const router = useRouter();
   const tableCollection = router.location.pathname.split("/")[2];
-  console.log(tableCollection);
+  const [tableConfig, tableActions] = useTableConfig(tableCollection);
+  const [table, tableDispatch] = useTable({ path: tableCollection });
+  console.log("tableConfig", tableConfig);
   const classes = useStyles();
-  const tableConfig = useTableConfig(tableCollection);
-  const [table] = useTable({ path: tableCollection });
+  useEffect(() => {
+    tableActions.setTable(tableCollection);
+  }, [tableCollection]);
+
   return (
-    <Navigation>
+    <Navigation header={tableCollection}>
       <Table columns={tableConfig.columns} rows={table.rows} />
     </Navigation>
   );
