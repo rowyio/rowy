@@ -29,7 +29,9 @@ const useStyles = makeStyles({
     width: 250
   },
   fields: {
-    padding: 15
+    paddingLeft: 15,
+
+    paddingRight: 15
   },
 
   fullList: {
@@ -37,7 +39,8 @@ const useStyles = makeStyles({
   }
 });
 
-export default function ColumnDrawer() {
+export default function ColumnDrawer(props: any) {
+  const { addColumn } = props;
   const classes = useStyles();
   const [drawerState, toggleDrawer] = useState(false);
   const [columnName, setColumnName] = useState("");
@@ -45,12 +48,12 @@ export default function ColumnDrawer() {
   useEffect(() => {
     setFieldName(_camelCase(columnName));
   }, [columnName]);
-  const sideList = () => (
+  const drawer = () => (
     <div
       className={classes.list}
       role="presentation"
       onClick={() => {
-        toggleDrawer(false);
+        // toggleDrawer(false);
       }}
     >
       <List className={classes.fields}>
@@ -61,7 +64,7 @@ export default function ColumnDrawer() {
           }}
           margin="dense"
           id="name"
-          label="Table Name"
+          label="Column Name"
           type="text"
           fullWidth
         />
@@ -80,7 +83,13 @@ export default function ColumnDrawer() {
       <Divider />
       <List>
         {FIELDS.map((field: any) => (
-          <ListItem button key={field.type}>
+          <ListItem
+            button
+            onClick={() => {
+              addColumn(columnName, fieldName, field.type);
+            }}
+            key={field.type}
+          >
             <ListItemIcon>{field.icon}</ListItemIcon>
             <ListItemText primary={field.name} />
           </ListItem>
@@ -107,7 +116,7 @@ export default function ColumnDrawer() {
           toggleDrawer(false);
         }}
       >
-        {sideList()}
+        {drawer()}
       </Drawer>
     </div>
   );

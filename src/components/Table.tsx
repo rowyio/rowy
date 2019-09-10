@@ -108,6 +108,7 @@ class MuiVirtualizedTable extends React.PureComponent<
 
   headerRenderer = ({
     label,
+    columnData,
     dataKey,
     columnIndex
   }: TableHeaderProps & { columnIndex: number }) => {
@@ -126,7 +127,7 @@ class MuiVirtualizedTable extends React.PureComponent<
         align={columns[columnIndex].numeric || false ? "right" : "left"}
       >
         {dataKey === "add" ? (
-          <ColumnDrawer />
+          <ColumnDrawer addColumn={columnData.actions.addColumn} />
         ) : (
           <Button size="small">
             {label}
@@ -185,7 +186,7 @@ class MuiVirtualizedTable extends React.PureComponent<
 const VirtualizedTable = withStyles(styles)(MuiVirtualizedTable);
 
 export default function fTable(props: any) {
-  const { columns, rows } = props;
+  const { columns, rows, addColumn } = props;
   if (columns)
     return (
       <Paper style={{ height: 400, width: "100%" }}>
@@ -194,13 +195,22 @@ export default function fTable(props: any) {
           rowGetter={({ index }) => rows[index]}
           columns={[
             ...columns.map(
-              (column: { fieldName: string; name: string; type: string }) => ({
+              (column: {
+                fieldName: string;
+                columnName: string;
+                type: string;
+              }) => ({
                 width: 200,
-                label: column.name,
+                label: column.columnName,
                 dataKey: column.fieldName
               })
             ),
-            { width: 20, label: "add", dataKey: "add" }
+            {
+              width: 20,
+              label: "add",
+              dataKey: "add",
+              columnData: { actions: { addColumn } }
+            }
           ]}
         />
       </Paper>

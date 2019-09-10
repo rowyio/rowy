@@ -11,16 +11,20 @@ const useStyles = makeStyles({});
 export default function AuthView() {
   const router = useRouter();
   const tableCollection = router.location.pathname.split("/")[2];
-  const [tableConfig, tableActions] = useTableConfig(tableCollection);
+  const [tableConfig, configActions] = useTableConfig(tableCollection);
   const [table, tableDispatch] = useTable({ path: tableCollection });
   const classes = useStyles();
   useEffect(() => {
-    tableActions.setTable(tableCollection);
+    configActions.setTable(tableCollection);
   }, [tableCollection]);
-
+  const addColumn = configActions.addColumn;
   return (
     <Navigation header={tableCollection}>
-      <Table columns={tableConfig.columns} rows={table.rows} />
+      <Table
+        columns={tableConfig.columns}
+        rows={table.rows}
+        addColumn={addColumn}
+      />
     </Navigation>
   );
 }
