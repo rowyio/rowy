@@ -11,7 +11,7 @@ import Paper from "@material-ui/core/Paper";
 import {
   AutoSizer,
   Column,
-  Table,
+  Table as MuiTable,
   TableCellRenderer,
   TableHeaderProps
 } from "react-virtualized";
@@ -169,7 +169,7 @@ class MuiVirtualizedTable extends React.PureComponent<
     return (
       <AutoSizer>
         {({ height, width }) => (
-          <Table
+          <MuiTable
             height={height}
             width={width}
             rowHeight={rowHeight!}
@@ -196,7 +196,7 @@ class MuiVirtualizedTable extends React.PureComponent<
                 );
               })
             ]}
-          </Table>
+          </MuiTable>
         )}
       </AutoSizer>
     );
@@ -205,9 +205,9 @@ class MuiVirtualizedTable extends React.PureComponent<
 
 const VirtualizedTable = withStyles(styles)(MuiVirtualizedTable);
 
-export default function fTable(props: any) {
+export default function Table(props: any) {
   const { columns, rows, addColumn, deleteRow } = props;
-  //  const [focus, setFocus] = useState(false);
+  const [focus, setFocus] = useState(false);
   if (columns)
     return (
       <Paper style={{ height: 400, width: "100%" }}>
