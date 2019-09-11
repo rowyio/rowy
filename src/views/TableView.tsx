@@ -12,19 +12,22 @@ export default function AuthView() {
   const router = useRouter();
   const tableCollection = router.location.pathname.split("/")[2];
   const [tableConfig, configActions] = useTableConfig(tableCollection);
-  const [table, tableDispatch] = useTable({ path: tableCollection });
+  const [table, tableActions] = useTable({
+    path: tableCollection
+  });
   const classes = useStyles();
+
   useEffect(() => {
     configActions.setTable(tableCollection);
-    tableDispatch({ path: tableCollection });
+    tableActions.setTable(tableCollection);
   }, [tableCollection]);
-  const addColumn = configActions.addColumn;
   return (
     <Navigation header={tableCollection}>
       <Table
         columns={tableConfig.columns}
         rows={table.rows}
-        addColumn={addColumn}
+        addColumn={configActions.addColumn}
+        deleteRow={tableActions.deleteRow}
       />
     </Navigation>
   );

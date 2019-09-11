@@ -119,7 +119,21 @@ const useTable = (intialOverrides: any) => {
       }
     };
   }, [tableState.filters, tableState.limit, tableState.path]);
-  return [tableState, tableDispatch];
+  const deleteRow = (rowIndex: number, documentId: string) => {
+    //remove row locally
+    tableState.rows.splice(rowIndex, 1);
+    tableDispatch({ rows: tableState.rows });
+    // delete document
+    db.collection(tableState.path)
+      .doc(documentId)
+      .delete();
+  };
+  const setTable = (tableCollection: string) => {
+    tableDispatch({ path: tableCollection });
+  };
+
+  const tableActions = { deleteRow, setTable };
+  return [tableState, tableActions];
 };
 
 export default useTable;

@@ -20,7 +20,8 @@ import Button from "@material-ui/core/Button";
 //  import { TextField } from "@material-ui/core";
 import { FieldType, getFieldIcon } from "../Fields";
 import ColumnDrawer from "./ColumnDrawer";
-
+import IconButton from "@material-ui/core/IconButton";
+import DeleteIcon from "@material-ui/icons/Delete";
 const styles = (theme: Theme) =>
   createStyles({
     flexContainer: {
@@ -45,6 +46,7 @@ const styles = (theme: Theme) =>
   });
 
 interface ColumnData {
+  columnData: any;
   dataKey: string;
   label: string;
   numeric?: boolean;
@@ -80,8 +82,29 @@ class MuiVirtualizedTable extends React.PureComponent<
     });
   };
 
-  cellRenderer: TableCellRenderer = ({ cellData, columnIndex }) => {
+  cellRenderer: TableCellRenderer = ({
+    cellData,
+    columnData,
+    columnIndex,
+    dataKey,
+    isScrolling,
+    rowData,
+    rowIndex
+  }) => {
     const { columns, classes, rowHeight, onRowClick } = this.props;
+    const fieldType = columnData.fieldType;
+    if (fieldType === "DELETE")
+      return (
+        <IconButton
+          aria-label="delete"
+          onClick={() => {
+            columnData.actions.deleteRow(rowIndex, rowData.id);
+          }}
+        >
+          <DeleteIcon />
+        </IconButton>
+      );
+
     return (
       <TableCell
         component="div"
@@ -96,7 +119,7 @@ class MuiVirtualizedTable extends React.PureComponent<
             : "left"
         }
       >
-        {cellData}
+        {cellData} {}
       </TableCell>
     );
   };
@@ -125,9 +148,7 @@ class MuiVirtualizedTable extends React.PureComponent<
           <ColumnDrawer addColumn={columnData.actions.addColumn} />
         ) : (
           <Button size="small">
-            {getFieldIcon(columnData.fieldType)}
-            {label}
-            {/* <EditIcon fontSize="small" /> */}
+            {getFieldIcon(columnData.fieldType)} {label}
           </Button>
         )}
       </TableCell>
@@ -182,7 +203,8 @@ class MuiVirtualizedTable extends React.PureComponent<
 const VirtualizedTable = withStyles(styles)(MuiVirtualizedTable);
 
 export default function fTable(props: any) {
-  const { columns, rows, addColumn } = props;
+  const { columns, rows, addColumn, deleteRow } = props;
+
   if (columns)
     return (
       <Paper style={{ height: 400, width: "100%" }}>
@@ -200,15 +222,19 @@ export default function fTable(props: any) {
                 label: column.columnName,
                 dataKey: column.fieldName,
                 columnData: {
-                  fieldType: column.type
+                  fieldType: column.type,
+                  actions: {}
                 }
               })
             ),
             {
-              width: 20,
+              width: 80,
               label: "add",
               dataKey: "add",
-              columnData: { actions: { addColumn } }
+              columnData: {
+                fieldType: "DELETE",
+                actions: { addColumn, deleteRow }
+              }
             }
           ]}
         />
