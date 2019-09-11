@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import clsx from "clsx";
 import {
   createStyles,
@@ -112,6 +112,9 @@ class MuiVirtualizedTable extends React.PureComponent<
           [classes.noClick]: onRowClick == null
         })}
         variant="body"
+        onClick={() => {
+          console.log(rowIndex, rowData.id, columnData.fieldName);
+        }}
         style={{ height: rowHeight }}
         align={
           (columnIndex != null && columns[columnIndex].numeric) || false
@@ -204,7 +207,7 @@ const VirtualizedTable = withStyles(styles)(MuiVirtualizedTable);
 
 export default function fTable(props: any) {
   const { columns, rows, addColumn, deleteRow } = props;
-
+  //  const [focus, setFocus] = useState(false);
   if (columns)
     return (
       <Paper style={{ height: 400, width: "100%" }}>
@@ -223,6 +226,7 @@ export default function fTable(props: any) {
                 dataKey: column.fieldName,
                 columnData: {
                   fieldType: column.type,
+                  fieldName: column.fieldName,
                   actions: {}
                 }
               })
