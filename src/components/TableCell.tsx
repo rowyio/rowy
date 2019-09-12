@@ -8,7 +8,7 @@ import {
   withStyles,
   WithStyles
 } from "@material-ui/core/styles";
-
+import Rating from "@material-ui/lab/Rating";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import AddIcon from "@material-ui/icons/AddCircle";
@@ -17,6 +17,12 @@ import Checkbox, { CheckboxProps } from "@material-ui/core/Checkbox";
 import TextField from "@material-ui/core/TextField";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import CheckBoxOutlineIcon from "@material-ui/icons/CheckBoxOutlineBlank";
+import DateFnsUtils from "@date-io/date-fns";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker,
+  KeyboardDatePicker
+} from "@material-ui/pickers";
 const TableCell = (props: any) => {
   const {
     fieldType,
@@ -45,7 +51,29 @@ const TableCell = (props: any) => {
             }}
           />
         );
+      case FieldType.date:
+        return (
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <KeyboardDatePicker
+              autoFocus
+              margin="normal"
+              id="date-picker-dialog"
+              label="Date picker dialog"
+              format="MM/dd/yyyy"
+              value={new Date("2014-08-18T21:11:54")}
+              onChange={date => {
+                console.log(date);
+                //cellActions.updateValue(e.target.value);
+              }}
+              KeyboardButtonProps={{
+                "aria-label": "change date"
+              }}
+            />
+          </MuiPickersUtilsProvider>
+        );
 
+      case FieldType.rating:
+        return <Rating name="pristine" value={null} />;
       default:
         return (
           <TextField
@@ -61,15 +89,6 @@ const TableCell = (props: any) => {
   const valueRenderer = () => {
     switch (fieldType) {
       case FieldType.checkBox:
-        // return (
-        //   <Checkbox
-        //     checked={state}
-        //     onChange={e => {
-        //       setState(!state);
-        //       cellActions.updateValue(!state, true);
-        //     }}
-        //   />
-        // );
         return cellData === true ? <CheckBoxIcon /> : <CheckBoxOutlineIcon />;
 
       default:

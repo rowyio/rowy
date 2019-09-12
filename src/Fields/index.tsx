@@ -4,6 +4,10 @@ import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import SimpleTextIcon from "@material-ui/icons/TextFormat";
 import LongTextIcon from "@material-ui/icons/Notes";
 import PhoneIcon from "@material-ui/icons/Phone";
+import DateIcon from "@material-ui/icons/CalendarToday";
+import TimeIcon from "@material-ui/icons/AccessTime";
+import RatingIcon from "@material-ui/icons/StarHalf";
+import URLIcon from "@material-ui/icons/Explore";
 import propEq from "ramda/es/propEq";
 import find from "ramda/es/find";
 export enum FieldType {
@@ -11,7 +15,13 @@ export enum FieldType {
   longText = "LONG_TEXT",
   email = "EMAIL",
   PhoneNumber = "PHONE_NUMBER",
-  checkBox = "CHECK_BOX"
+  checkBox = "CHECK_BOX",
+  date = "DATE",
+  time = "TIME",
+  dateTime = "DATE_TIME",
+  number = "NUMBER",
+  url = "URL",
+  rating = "RATING"
 }
 
 export const FIELDS = [
@@ -19,7 +29,11 @@ export const FIELDS = [
   { icon: <LongTextIcon />, name: "Long Text", type: FieldType.longText },
   { icon: <MailIcon />, name: "Email", type: FieldType.email },
   { icon: <PhoneIcon />, name: "Phone", type: FieldType.PhoneNumber },
-  { icon: <CheckBoxIcon />, name: "Check Box", type: FieldType.checkBox }
+  { icon: <CheckBoxIcon />, name: "Check Box", type: FieldType.checkBox },
+  { icon: <DateIcon />, name: "Date", type: FieldType.date },
+  { icon: <TimeIcon />, name: "Time", type: FieldType.time },
+  { icon: <URLIcon />, name: "URL", type: FieldType.url },
+  { icon: <RatingIcon />, name: "Rating", type: FieldType.rating }
 ];
 
 export const getFieldIcon = (type: FieldType) => {
