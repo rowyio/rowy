@@ -7,6 +7,7 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { maxWidth } from "@material-ui/system";
 import { googleProvider, auth } from "../firebase";
+import useRouter from "../hooks/useRouter";
 
 const useStyles = makeStyles({
   card: {
@@ -22,13 +23,15 @@ const useStyles = makeStyles({
   }
 });
 
-googleProvider.addScope("https://www.googleapis.com/auth/contacts.readonly");
-function handleAuth() {
-  auth.signInWithPopup(googleProvider);
-}
+// googleProvider.addScope("https://www.googleapis.com/auth/contacts.readonly");
+
 export default function AuthView() {
   const classes = useStyles();
-
+  const router = useRouter();
+  const handleAuth = async () => {
+    await auth.signInWithPopup(googleProvider);
+    router.history.replace("/");
+  };
   return (
     <Card className={classes.card}>
       <CardContent>

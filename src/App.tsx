@@ -27,7 +27,7 @@ const App: React.FC = () => {
         <CustomBrowserRouter>
           <div>
             <Route exact path="/auth" component={AuthView} />
-            <Route exact path="/" component={TablesView} />
+            <PrivateRoute exact path="/" component={TablesView} />
             <PrivateRoute path="/table/" component={TableView} />
           </div>
         </CustomBrowserRouter>
