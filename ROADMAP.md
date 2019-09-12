@@ -6,9 +6,9 @@
 
 - checkbox(boolean)
 - simple text(string) ✅
-- email(string)
-- phone(string)
-- url(string)
+- email(string) ✅
+- phone(string) ✅
+- url(string) ✅
 - Number(number)
 - long text(string)
 

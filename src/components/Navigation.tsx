@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export const Navigation = (props: any) => {
+const Navigation = (props: any) => {
   const router = useRouter();
   const classes = useStyles();
   const [settings, createTable] = useSettings();
@@ -121,3 +121,4 @@ export const Navigation = (props: any) => {
     </React.Fragment>
   );
 };
+export default Navigation;

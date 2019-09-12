@@ -6,7 +6,7 @@ import {
   withStyles,
   WithStyles
 } from "@material-ui/core/styles";
-import TableCell from "@material-ui/core/TableCell";
+import { TableCell as MuiTableCell } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import {
   AutoSizer,
@@ -17,12 +17,10 @@ import {
 } from "react-virtualized";
 import Button from "@material-ui/core/Button";
 
-import TextField from "@material-ui/core/TextField";
 import { FieldType, getFieldIcon } from "../Fields";
 import ColumnDrawer from "./ColumnDrawer";
-import IconButton from "@material-ui/core/IconButton";
-import DeleteIcon from "@material-ui/icons/Delete";
-import AddIcon from "@material-ui/icons/AddCircle";
+import TableCell from "../components/TableCell";
+
 import useCell, { Cell } from "../hooks/useCell";
 const styles = (theme: Theme) =>
   createStyles({
@@ -104,67 +102,23 @@ class MuiVirtualizedTable extends React.PureComponent<
       focusedCell
     } = this.props;
     const fieldType = columnData.fieldType;
-    if (fieldType === "DELETE" && rowData.id !== "new")
-      return (
-        <IconButton
-          aria-label="delete"
-          onClick={() => {
-            columnData.actions.deleteRow(rowIndex, rowData.id);
-          }}
-        >
-          <DeleteIcon />
-        </IconButton>
-      );
-    else if (fieldType === "DELETE" && rowData.id === "new") {
-      return (
-        <IconButton
-          aria-label="delete"
-          onClick={() => {
-            columnData.actions.deleteRow(rowIndex, rowData.id);
-          }}
-        >
-          <AddIcon />
-        </IconButton>
-      );
-    }
     return (
       <TableCell
-        component="div"
-        className={clsx(classes.tableCell, classes.flexContainer, {
-          [classes.noClick]: onRowClick == null
-        })}
-        variant="body"
-        onClick={() => {
-          cellActions.setCell({
-            rowIndex,
-            docId: rowData.id,
-            fieldName: columnData.fieldName,
-            value: cellData
-          });
-        }}
-        style={{ height: rowHeight }}
-        align={
-          (columnIndex != null && columns[columnIndex].numeric) || false
-            ? "right"
-            : "left"
-        }
-      >
-        {focusedCell &&
-        focusedCell.fieldName === columnData.fieldName &&
-        focusedCell.rowIndex === rowIndex ? (
-          <TextField
-            defaultValue={cellData}
-            onChange={e => {
-              cellActions.updateValue(e.target.value);
-            }}
-          />
-        ) : (
-          cellData
-        )}
-      </TableCell>
+        fieldType={fieldType}
+        rowIndex={rowIndex}
+        rowData={rowData}
+        columnData={columnData}
+        classes={classes}
+        cellActions={cellActions}
+        cellData={cellData}
+        onRowClick={onRowClick}
+        rowHeight={rowHeight}
+        columnIndex={columnIndex}
+        columns={columns}
+        focusedCell={focusedCell}
+      />
     );
   };
-
   headerRenderer = ({
     label,
     columnData,
@@ -174,7 +128,7 @@ class MuiVirtualizedTable extends React.PureComponent<
     const { headerHeight, columns, classes } = this.props;
 
     return (
-      <TableCell
+      <MuiTableCell
         component="div"
         className={clsx(
           classes.tableCell,
@@ -192,7 +146,7 @@ class MuiVirtualizedTable extends React.PureComponent<
             {getFieldIcon(columnData.fieldType)} {label}
           </Button>
         )}
-      </TableCell>
+      </MuiTableCell>
     );
   };
 
@@ -288,7 +242,6 @@ export default function Table(props: any) {
             }
           ]}
         />
-        <Button onClick={tableActions.addRow}>Add Row</Button>
       </Paper>
     );
   else return <>insert loading Skeleton here</>;

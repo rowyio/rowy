@@ -25,7 +25,12 @@ const useCell = (intialOverrides: any) => {
   useEffect(() => {
     const { prevCell, value, updateCell, updatedValue } = cellState;
     // check for change
-    if (updatedValue && prevCell && prevCell.value !== updatedValue) {
+    if (
+      updatedValue !== null &&
+      updatedValue !== undefined &&
+      prevCell &&
+      prevCell.value !== updatedValue
+    ) {
       updateCell({ ...prevCell, value: updatedValue });
       cellDispatch({ updatedValue: null });
     }
