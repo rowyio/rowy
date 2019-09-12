@@ -143,7 +143,9 @@ const useTable = (intialOverrides: any) => {
       .doc(cell.docId)
       .update({ [cell.fieldName]: cell.value });
   };
-  const addRow = (cell: Cell) => {};
+  const addRow = () => {
+    db.collection(tableState.path).add({});
+  };
   const tableActions = { deleteRow, setTable, updateCell, addRow };
   return [tableState, tableActions];
 };

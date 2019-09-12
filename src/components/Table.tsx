@@ -22,6 +22,7 @@ import { FieldType, getFieldIcon } from "../Fields";
 import ColumnDrawer from "./ColumnDrawer";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
+import AddIcon from "@material-ui/icons/AddCircle";
 import useCell, { Cell } from "../hooks/useCell";
 const styles = (theme: Theme) =>
   createStyles({
@@ -103,7 +104,7 @@ class MuiVirtualizedTable extends React.PureComponent<
       focusedCell
     } = this.props;
     const fieldType = columnData.fieldType;
-    if (fieldType === "DELETE")
+    if (fieldType === "DELETE" && rowData.id !== "new")
       return (
         <IconButton
           aria-label="delete"
@@ -114,6 +115,18 @@ class MuiVirtualizedTable extends React.PureComponent<
           <DeleteIcon />
         </IconButton>
       );
+    else if (fieldType === "DELETE" && rowData.id === "new") {
+      return (
+        <IconButton
+          aria-label="delete"
+          onClick={() => {
+            columnData.actions.deleteRow(rowIndex, rowData.id);
+          }}
+        >
+          <AddIcon />
+        </IconButton>
+      );
+    }
     return (
       <TableCell
         component="div"
@@ -194,34 +207,36 @@ class MuiVirtualizedTable extends React.PureComponent<
     return (
       <AutoSizer>
         {({ height, width }) => (
-          <MuiTable
-            height={height}
-            width={width}
-            rowHeight={rowHeight!}
-            headerHeight={headerHeight!}
-            {...tableProps}
-            rowClassName={this.getRowClassName}
-          >
-            {[
-              ...columns.map(({ dataKey, ...other }, index) => {
-                return (
-                  <Column
-                    key={dataKey}
-                    headerRenderer={headerProps =>
-                      this.headerRenderer({
-                        ...headerProps,
-                        columnIndex: index
-                      })
-                    }
-                    className={classes.flexContainer}
-                    cellRenderer={this.cellRenderer}
-                    dataKey={dataKey}
-                    {...other}
-                  />
-                );
-              })
-            ]}
-          </MuiTable>
+          <>
+            <MuiTable
+              height={height}
+              width={width}
+              rowHeight={rowHeight!}
+              headerHeight={headerHeight!}
+              {...tableProps}
+              rowClassName={this.getRowClassName}
+            >
+              {[
+                ...columns.map(({ dataKey, ...other }, index) => {
+                  return (
+                    <Column
+                      key={dataKey}
+                      headerRenderer={headerProps =>
+                        this.headerRenderer({
+                          ...headerProps,
+                          columnIndex: index
+                        })
+                      }
+                      className={classes.flexContainer}
+                      cellRenderer={this.cellRenderer}
+                      dataKey={dataKey}
+                      {...other}
+                    />
+                  );
+                })
+              ]}
+            </MuiTable>
+          </>
         )}
       </AutoSizer>
     );
@@ -231,17 +246,17 @@ class MuiVirtualizedTable extends React.PureComponent<
 const VirtualizedTable = withStyles(styles)(MuiVirtualizedTable);
 
 export default function Table(props: any) {
-  const { columns, rows, addColumn, deleteRow, updateCell } = props;
-  const tableRows = [...rows];
-  const [cell, cellActions] = useCell({ updateCell });
+  const { columns, rows, addColumn, tableActions } = props;
+
+  const [cell, cellActions] = useCell({ updateCell: tableActions.updateCell });
   if (columns)
     return (
       <Paper style={{ height: 400, width: "100%" }}>
         <VirtualizedTable
           focusedCell={cell}
           cellActions={cellActions}
-          rowCount={tableRows.length}
-          rowGetter={({ index }) => tableRows[index]}
+          rowCount={rows.length}
+          rowGetter={({ index }) => rows[index]}
           columns={[
             ...columns.map(
               (column: {
@@ -265,11 +280,15 @@ export default function Table(props: any) {
               dataKey: "add",
               columnData: {
                 fieldType: "DELETE",
-                actions: { addColumn, deleteRow }
+                actions: {
+                  addColumn: addColumn,
+                  deleteRow: tableActions.deleteRow
+                }
               }
             }
           ]}
         />
+        <Button onClick={tableActions.addRow}>Add Row</Button>
       </Paper>
     );
   else return <>insert loading Skeleton here</>;

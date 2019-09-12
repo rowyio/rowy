@@ -27,8 +27,7 @@ export default function AuthView() {
         columns={tableConfig.columns}
         rows={table.rows}
         addColumn={configActions.addColumn}
-        deleteRow={tableActions.deleteRow}
-        updateCell={tableActions.updateCell}
+        tableActions={tableActions}
       />
     </Navigation>
   );
