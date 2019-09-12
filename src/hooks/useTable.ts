@@ -1,6 +1,7 @@
 import { db } from "../firebase";
 import { useEffect, useReducer } from "react";
 import equals from "ramda/es/equals";
+import { Cell } from "./useCell";
 const CAP = 500;
 
 const tableReducer = (prevState: any, newProps: any) => {
@@ -131,8 +132,19 @@ const useTable = (intialOverrides: any) => {
   const setTable = (tableCollection: string) => {
     tableDispatch({ path: tableCollection });
   };
+  const updateCell = (cell: Cell) => {
+    console.log("updateCell:", cell);
+    // TODO: update row locally
+    // tableState.rows[cell.rowIndex][cell.fieldName] = cell.value;
+    // tableDispatch({ rows: tableState.rows });
 
-  const tableActions = { deleteRow, setTable };
+    // update document
+    db.collection(tableState.path)
+      .doc(cell.docId)
+      .update({ [cell.fieldName]: cell.value });
+  };
+  const addRow = (cell: Cell) => {};
+  const tableActions = { deleteRow, setTable, updateCell, addRow };
   return [tableState, tableActions];
 };
 

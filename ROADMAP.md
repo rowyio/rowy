@@ -5,7 +5,7 @@
 ### Initial fields:
 
 - checkbox(boolean)
-- simple text(string)
+- simple text(string) ✅
 - email(string)
 - phone(string)
 - url(string)
@@ -17,7 +17,7 @@
 - Create Tables (Primary collections) ✅
 - Create columns (fields) ✅
 - Create rows(documents)
-- Edit cells
+- Edit cells ✅
 - Authenicate ✅
 - Delete rows ✅
 
@@ -44,6 +44,7 @@
 - Edit tables
 - Hide tables
 - Fixed column
+- keyboard Navigation: ability to use tab and arrow keys to move focus between cells
 
 ## V1
 

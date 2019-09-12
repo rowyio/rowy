@@ -114,7 +114,6 @@ class MuiVirtualizedTable extends React.PureComponent<
           <DeleteIcon />
         </IconButton>
       );
-    console.log(focusedCell);
     return (
       <TableCell
         component="div"
@@ -126,7 +125,8 @@ class MuiVirtualizedTable extends React.PureComponent<
           cellActions.setCell({
             rowIndex,
             docId: rowData.id,
-            fieldName: columnData.fieldName
+            fieldName: columnData.fieldName,
+            value: cellData
           });
         }}
         style={{ height: rowHeight }}
@@ -139,7 +139,12 @@ class MuiVirtualizedTable extends React.PureComponent<
         {focusedCell &&
         focusedCell.fieldName === columnData.fieldName &&
         focusedCell.rowIndex === rowIndex ? (
-          <TextField value={cellData} />
+          <TextField
+            defaultValue={cellData}
+            onChange={e => {
+              cellActions.updateValue(e.target.value);
+            }}
+          />
         ) : (
           cellData
         )}
@@ -226,17 +231,17 @@ class MuiVirtualizedTable extends React.PureComponent<
 const VirtualizedTable = withStyles(styles)(MuiVirtualizedTable);
 
 export default function Table(props: any) {
-  const { columns, rows, addColumn, deleteRow } = props;
-  const [cell, cellActions] = useCell({});
-  console.log("cell", cell);
+  const { columns, rows, addColumn, deleteRow, updateCell } = props;
+  const tableRows = [...rows];
+  const [cell, cellActions] = useCell({ updateCell });
   if (columns)
     return (
       <Paper style={{ height: 400, width: "100%" }}>
         <VirtualizedTable
           focusedCell={cell}
           cellActions={cellActions}
-          rowCount={rows.length}
-          rowGetter={({ index }) => rows[index]}
+          rowCount={tableRows.length}
+          rowGetter={({ index }) => tableRows[index]}
           columns={[
             ...columns.map(
               (column: {

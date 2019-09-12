@@ -6,6 +6,7 @@ export type Cell = {
   fieldName: string;
   rowIndex: number;
   docId: string;
+  value: any;
 };
 
 const cellReducer = (prevState: any, newProps: any) => {
@@ -21,11 +22,23 @@ const useCell = (intialOverrides: any) => {
     ...cellIntialState,
     ...intialOverrides
   });
-
+  useEffect(() => {
+    const { prevCell, value, updateCell, updatedValue } = cellState;
+    // check for change
+    if (updatedValue && prevCell && prevCell.value !== updatedValue) {
+      updateCell({ ...prevCell, value: updatedValue });
+      cellDispatch({ updatedValue: null });
+    }
+  }, [cellState.cell]);
   const setCell = (cell: Cell) => {
     cellDispatch({ prevCell: cellState.cell, cell });
   };
-  const actions = { setCell };
+  const updateValue = (value: any) => {
+    cellDispatch({ updatedValue: value });
+  };
+
+  const actions = { setCell, updateValue };
+
   return [cellState.cell, actions];
 };
 
