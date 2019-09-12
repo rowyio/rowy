@@ -26,14 +26,14 @@
 ### additional fields:
 
 - single select(string)
-- [https://material-ui.com/components/chips/#chip-array]Multiple select(array of strings)
+- [https://material-ui.com/components/chips/#chip-array] Multiple select(array of strings)
 - date(Firebase timestamp)
 - time(Firebase timestamp)
 - file(firebase storage url string)
 - image(firebase storage url string)
 - single select reference(DocRefrence)
 - mulit select reference(DocRefrence)
-- [https://material-ui.com/components/rating/]rating(number)
+- [https://material-ui.com/components/rating/] rating(number)
 
 ### Functionality:
 

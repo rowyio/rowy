@@ -17,11 +17,12 @@ import {
 } from "react-virtualized";
 import Button from "@material-ui/core/Button";
 
-//  import { TextField } from "@material-ui/core";
+import TextField from "@material-ui/core/TextField";
 import { FieldType, getFieldIcon } from "../Fields";
 import ColumnDrawer from "./ColumnDrawer";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
+import useCell, { Cell } from "../hooks/useCell";
 const styles = (theme: Theme) =>
   createStyles({
     flexContainer: {
@@ -59,6 +60,8 @@ interface Row {
 
 interface MuiVirtualizedTableProps extends WithStyles<typeof styles> {
   columns: ColumnData[];
+  focusedCell: Cell | null;
+  cellActions: any;
   headerHeight?: number;
   onRowClick?: () => void;
   rowCount: number;
@@ -91,7 +94,14 @@ class MuiVirtualizedTable extends React.PureComponent<
     rowData,
     rowIndex
   }) => {
-    const { columns, classes, rowHeight, onRowClick } = this.props;
+    const {
+      columns,
+      classes,
+      rowHeight,
+      onRowClick,
+      cellActions,
+      focusedCell
+    } = this.props;
     const fieldType = columnData.fieldType;
     if (fieldType === "DELETE")
       return (
@@ -104,7 +114,7 @@ class MuiVirtualizedTable extends React.PureComponent<
           <DeleteIcon />
         </IconButton>
       );
-
+    console.log(focusedCell);
     return (
       <TableCell
         component="div"
@@ -113,7 +123,11 @@ class MuiVirtualizedTable extends React.PureComponent<
         })}
         variant="body"
         onClick={() => {
-          console.log(rowIndex, rowData.id, columnData.fieldName);
+          cellActions.setCell({
+            rowIndex,
+            docId: rowData.id,
+            fieldName: columnData.fieldName
+          });
         }}
         style={{ height: rowHeight }}
         align={
@@ -122,7 +136,13 @@ class MuiVirtualizedTable extends React.PureComponent<
             : "left"
         }
       >
-        {cellData} {}
+        {focusedCell &&
+        focusedCell.fieldName === columnData.fieldName &&
+        focusedCell.rowIndex === rowIndex ? (
+          <TextField value={cellData} />
+        ) : (
+          cellData
+        )}
       </TableCell>
     );
   };
@@ -207,11 +227,14 @@ const VirtualizedTable = withStyles(styles)(MuiVirtualizedTable);
 
 export default function Table(props: any) {
   const { columns, rows, addColumn, deleteRow } = props;
-  const [focus, setFocus] = useState(false);
+  const [cell, cellActions] = useCell({});
+  console.log("cell", cell);
   if (columns)
     return (
       <Paper style={{ height: 400, width: "100%" }}>
         <VirtualizedTable
+          focusedCell={cell}
+          cellActions={cellActions}
           rowCount={rows.length}
           rowGetter={({ index }) => rows[index]}
           columns={[
