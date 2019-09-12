@@ -16,7 +16,7 @@
 
 - Create Tables (Primary collections) ✅
 - Create columns (fields) ✅
-- Create rows(documents)
+- Create rows(documents) ✅
 - Edit cells ✅
 - Authenicate ✅
 - Delete rows ✅
