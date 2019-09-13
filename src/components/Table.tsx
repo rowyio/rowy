@@ -22,10 +22,8 @@ import ColumnDrawer from "./ColumnDrawer";
 import TableCell from "../components/TableCell";
 
 import useCell, { Cell } from "../hooks/useFiretable/useCell";
-import useFiretable, {
-  FiretableActions,
-  FiretableState
-} from "../hooks/useFiretable";
+import useFiretable from "../hooks/useFiretable";
+
 const styles = (theme: Theme) =>
   createStyles({
     flexContainer: {
@@ -208,7 +206,6 @@ const VirtualizedTable = withStyles(styles)(MuiVirtualizedTable);
 
 export default function Table(props: any) {
   const { collection } = props;
-
   const { tableState, tableActions } = useFiretable(collection);
   useEffect(() => {
     tableActions.table.set(collection);

@@ -3,13 +3,16 @@ import { useEffect, useReducer } from "react";
 
 export enum DocActions {
   update,
-  delete // TODO when needed
+  delete
 }
 const documentReducer = (prevState: any, newProps: any) => {
   switch (newProps.action) {
     case DocActions.update:
       prevState.ref.update({ ...newProps.data });
       return { ...prevState, doc: { ...prevState.doc, ...newProps.data } };
+    case DocActions.delete:
+      prevState.ref.delete();
+      return null;
     default:
       return { ...prevState, ...newProps };
   }

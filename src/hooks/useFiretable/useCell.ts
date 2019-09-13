@@ -23,7 +23,7 @@ const useCell = (intialOverrides: any) => {
     ...intialOverrides
   });
   useEffect(() => {
-    const { prevCell, value, updateCell, updatedValue } = cellState;
+    const { prevCell, updateCell, updatedValue } = cellState;
     // check for change
     if (
       updatedValue !== null &&
