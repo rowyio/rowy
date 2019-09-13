@@ -51,6 +51,22 @@ const TableCell = (props: any) => {
             }}
           />
         );
+      case FieldType.number:
+        return (
+          <TextField
+            id="number"
+            defaultValue={cellData}
+            onChange={e => {
+              cellActions.updateValue(e.target.value);
+            }}
+            type="number"
+            className={classes.textField}
+            InputLabelProps={{
+              shrink: true
+            }}
+            margin="normal"
+          />
+        );
       case FieldType.date:
         return (
           <MuiPickersUtilsProvider utils={DateFnsUtils}>

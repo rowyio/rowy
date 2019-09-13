@@ -8,6 +8,7 @@ import DateIcon from "@material-ui/icons/CalendarToday";
 import TimeIcon from "@material-ui/icons/AccessTime";
 import RatingIcon from "@material-ui/icons/StarHalf";
 import URLIcon from "@material-ui/icons/Explore";
+import NumberIcon from "@material-ui/icons/Looks3";
 import propEq from "ramda/es/propEq";
 import find from "ramda/es/find";
 export enum FieldType {
@@ -30,6 +31,7 @@ export const FIELDS = [
   { icon: <MailIcon />, name: "Email", type: FieldType.email },
   { icon: <PhoneIcon />, name: "Phone", type: FieldType.PhoneNumber },
   { icon: <CheckBoxIcon />, name: "Check Box", type: FieldType.checkBox },
+  { icon: <NumberIcon />, name: "Number", type: FieldType.number },
   { icon: <DateIcon />, name: "Date", type: FieldType.date },
   { icon: <TimeIcon />, name: "Time", type: FieldType.time },
   { icon: <URLIcon />, name: "URL", type: FieldType.url },

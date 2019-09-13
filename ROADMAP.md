@@ -4,12 +4,12 @@
 
 ### Initial fields:
 
-- checkbox(boolean)
+- checkbox(boolean) ✅
 - simple text(string) ✅
 - email(string) ✅
 - phone(string) ✅
 - url(string) ✅
-- Number(number)
+- Number(number) ✅
 - long text(string)
 
 ### Functionality:
