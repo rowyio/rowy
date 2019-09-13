@@ -37,7 +37,7 @@
 
 ### Functionality:
 
-- Hide/show columns
+- Hide/Show columns
 - Delete columns
 - Edit columns
 - Delete tables
@@ -45,14 +45,16 @@
 - Hide tables
 - Fixed column
 - keyboard Navigation: ability to use tab and arrow keys to move focus between cells
+- column / table Create/edit validation
 
 ## V1
 
 ### additional fields:
 
+- Duration
 - Percentage(number)
-- table(Document[])
-- richtext(html string)
+- Table(Document[])
+- Rich Text(html string)
 
 ### Functionality:
 
@@ -72,8 +74,18 @@
 
 ### Additional Fields:
 
+- currency
+- count(docs in collection)
 - index(number)
+- meta fields:
+  - createdAt
+  - createdBy
+  - updatedAt
+  - updatedBy
 
 ### Functionality:
 
 - import csv to table
+- Themes
+- Table templates
+- Dialog View of a row
