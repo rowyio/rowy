@@ -4,6 +4,7 @@ import { createMuiTheme } from "@material-ui/core";
 
 import AuthView from "./views/AuthView";
 import TableView from "./views/TableView";
+import TablesView from "./views/TablesView";
 
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { AuthProvider } from "./AuthProvider";
@@ -26,6 +27,7 @@ const App: React.FC = () => {
         <CustomBrowserRouter>
           <div>
             <Route exact path="/auth" component={AuthView} />
+            <PrivateRoute exact path="/" component={TablesView} />
             <PrivateRoute path="/table/" component={TableView} />
           </div>
         </CustomBrowserRouter>

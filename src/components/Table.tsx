@@ -6,7 +6,7 @@ import {
   withStyles,
   WithStyles
 } from "@material-ui/core/styles";
-import TableCell from "@material-ui/core/TableCell";
+import { TableCell as MuiTableCell } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import {
   AutoSizer,
@@ -17,11 +17,11 @@ import {
 } from "react-virtualized";
 import Button from "@material-ui/core/Button";
 
-//  import { TextField } from "@material-ui/core";
 import { FieldType, getFieldIcon } from "../Fields";
 import ColumnDrawer from "./ColumnDrawer";
-import IconButton from "@material-ui/core/IconButton";
-import DeleteIcon from "@material-ui/icons/Delete";
+import TableCell from "../components/TableCell";
+
+import useCell, { Cell } from "../hooks/useCell";
 const styles = (theme: Theme) =>
   createStyles({
     flexContainer: {
@@ -59,6 +59,8 @@ interface Row {
 
 interface MuiVirtualizedTableProps extends WithStyles<typeof styles> {
   columns: ColumnData[];
+  focusedCell: Cell | null;
+  cellActions: any;
   headerHeight?: number;
   onRowClick?: () => void;
   rowCount: number;
@@ -91,42 +93,32 @@ class MuiVirtualizedTable extends React.PureComponent<
     rowData,
     rowIndex
   }) => {
-    const { columns, classes, rowHeight, onRowClick } = this.props;
+    const {
+      columns,
+      classes,
+      rowHeight,
+      onRowClick,
+      cellActions,
+      focusedCell
+    } = this.props;
     const fieldType = columnData.fieldType;
-    if (fieldType === "DELETE")
-      return (
-        <IconButton
-          aria-label="delete"
-          onClick={() => {
-            columnData.actions.deleteRow(rowIndex, rowData.id);
-          }}
-        >
-          <DeleteIcon />
-        </IconButton>
-      );
-
     return (
       <TableCell
-        component="div"
-        className={clsx(classes.tableCell, classes.flexContainer, {
-          [classes.noClick]: onRowClick == null
-        })}
-        variant="body"
-        onClick={() => {
-          console.log(rowIndex, rowData.id, columnData.fieldName);
-        }}
-        style={{ height: rowHeight }}
-        align={
-          (columnIndex != null && columns[columnIndex].numeric) || false
-            ? "right"
-            : "left"
-        }
-      >
-        {cellData} {}
-      </TableCell>
+        fieldType={fieldType}
+        rowIndex={rowIndex}
+        rowData={rowData}
+        columnData={columnData}
+        classes={classes}
+        cellActions={cellActions}
+        cellData={cellData}
+        onRowClick={onRowClick}
+        rowHeight={rowHeight}
+        columnIndex={columnIndex}
+        columns={columns}
+        focusedCell={focusedCell}
+      />
     );
   };
-
   headerRenderer = ({
     label,
     columnData,
@@ -136,7 +128,7 @@ class MuiVirtualizedTable extends React.PureComponent<
     const { headerHeight, columns, classes } = this.props;
 
     return (
-      <TableCell
+      <MuiTableCell
         component="div"
         className={clsx(
           classes.tableCell,
@@ -154,7 +146,7 @@ class MuiVirtualizedTable extends React.PureComponent<
             {getFieldIcon(columnData.fieldType)} {label}
           </Button>
         )}
-      </TableCell>
+      </MuiTableCell>
     );
   };
 
@@ -169,34 +161,36 @@ class MuiVirtualizedTable extends React.PureComponent<
     return (
       <AutoSizer>
         {({ height, width }) => (
-          <MuiTable
-            height={height}
-            width={width}
-            rowHeight={rowHeight!}
-            headerHeight={headerHeight!}
-            {...tableProps}
-            rowClassName={this.getRowClassName}
-          >
-            {[
-              ...columns.map(({ dataKey, ...other }, index) => {
-                return (
-                  <Column
-                    key={dataKey}
-                    headerRenderer={headerProps =>
-                      this.headerRenderer({
-                        ...headerProps,
-                        columnIndex: index
-                      })
-                    }
-                    className={classes.flexContainer}
-                    cellRenderer={this.cellRenderer}
-                    dataKey={dataKey}
-                    {...other}
-                  />
-                );
-              })
-            ]}
-          </MuiTable>
+          <>
+            <MuiTable
+              height={height}
+              width={width}
+              rowHeight={rowHeight!}
+              headerHeight={headerHeight!}
+              {...tableProps}
+              rowClassName={this.getRowClassName}
+            >
+              {[
+                ...columns.map(({ dataKey, ...other }, index) => {
+                  return (
+                    <Column
+                      key={dataKey}
+                      headerRenderer={headerProps =>
+                        this.headerRenderer({
+                          ...headerProps,
+                          columnIndex: index
+                        })
+                      }
+                      className={classes.flexContainer}
+                      cellRenderer={this.cellRenderer}
+                      dataKey={dataKey}
+                      {...other}
+                    />
+                  );
+                })
+              ]}
+            </MuiTable>
+          </>
         )}
       </AutoSizer>
     );
@@ -206,12 +200,15 @@ class MuiVirtualizedTable extends React.PureComponent<
 const VirtualizedTable = withStyles(styles)(MuiVirtualizedTable);
 
 export default function Table(props: any) {
-  const { columns, rows, addColumn, deleteRow } = props;
-  const [focus, setFocus] = useState(false);
+  const { columns, rows, addColumn, tableActions } = props;
+
+  const [cell, cellActions] = useCell({ updateCell: tableActions.updateCell });
   if (columns)
     return (
       <Paper style={{ height: 400, width: "100%" }}>
         <VirtualizedTable
+          focusedCell={cell}
+          cellActions={cellActions}
           rowCount={rows.length}
           rowGetter={({ index }) => rows[index]}
           columns={[
@@ -237,7 +234,10 @@ export default function Table(props: any) {
               dataKey: "add",
               columnData: {
                 fieldType: "DELETE",
-                actions: { addColumn, deleteRow }
+                actions: {
+                  addColumn: addColumn,
+                  deleteRow: tableActions.deleteRow
+                }
               }
             }
           ]}

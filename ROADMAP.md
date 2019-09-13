@@ -4,45 +4,47 @@
 
 ### Initial fields:
 
-- checkbox(boolean)
-- simple text(string)
-- email(string)
-- phone(string)
-- url(string)
-- Number(number)
+- checkbox(boolean) ✅
+- simple text(string) ✅
+- email(string) ✅
+- phone(string) ✅
+- url(string) ✅
+- Number(number) ✅
 - long text(string)
 
 ### Functionality:
 
-- Create Tables (Primary collections)
-- Create columns (fields)
-- Create rows(documents)
+- Create Tables (Primary collections) ✅
+- Create columns (fields) ✅
+- Create rows(documents) ✅
+- Edit cells ✅
+- Authenicate ✅
+- Delete rows ✅
 
 ## MVP
 
 ### additional fields:
 
-- tags(array of strings)
 - single select(string)
+- [https://material-ui.com/components/chips/#chip-array] Multiple select(array of strings)
 - date(Firebase timestamp)
 - time(Firebase timestamp)
-- index(number)
 - file(firebase storage url string)
-- [https://material-ui.com/components/chips/#chip-array]Multiple select(array of strings)
 - image(firebase storage url string)
-- reference(DocRefrence)
-- [https://material-ui.com/components/rating/]rating(number)
+- single select reference(DocRefrence)
+- mulit select reference(DocRefrence)
+- [https://material-ui.com/components/rating/] rating(number)
 
 ### Functionality:
 
 - Hide/show columns
 - Delete columns
-- Delete rows
+- Edit columns
 - Delete tables
-- Filters:
-  - equals to
-  - Starts with
-  - contains
+- Edit tables
+- Hide tables
+- Fixed column
+- keyboard Navigation: ability to use tab and arrow keys to move focus between cells
 
 ## V1
 
@@ -60,3 +62,18 @@
 - Subcollection tables
 - Permissions
 - Duplicate columns
+- Filters:
+  - equals to
+  - Starts with
+  - contains
+- Export tables to csv
+
+# V+
+
+### Additional Fields:
+
+- index(number)
+
+### Functionality:
+
+- import csv to table
