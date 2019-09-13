@@ -20,6 +20,7 @@
     "array-move": "^2.1.0",
     "date-fns": "^2.0.0-beta.5",
     "firebase": "^6.6.0",
+    "formik": "^1.5.8",
     "lodash": "^4.17.15",
     "ramda": "^0.26.1",
     "react": "^16.9.0",
@@ -27,7 +28,8 @@
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.1.1",
     "react-virtualized": "^9.21.1",
-    "typescript": "3.6.2"
+    "typescript": "3.6.2",
+    "yup": "^0.27.0"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -5,7 +5,7 @@ import useCell, { Cell } from "./useCell";
 export type FiretableActions = {
   cell: { set: Function; update: Function };
   column: { add: Function };
-  row: { add: Function; delete: Function };
+  row: { add: any; delete: Function };
   table: { set: Function };
 };
 

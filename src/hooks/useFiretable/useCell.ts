@@ -1,4 +1,4 @@
-import { db } from "../firebase";
+import { db } from "../../firebase";
 import { useEffect, useReducer } from "react";
 import equals from "ramda/es/equals";
 

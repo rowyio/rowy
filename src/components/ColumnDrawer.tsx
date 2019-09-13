@@ -29,7 +29,7 @@ const useStyles = makeStyles({
 });
 
 export default function ColumnDrawer(props: any) {
-  const { addColumn } = props;
+  const { addColumn, columns } = props;
   const classes = useStyles();
   const [drawerState, toggleDrawer] = useState(false);
   const [columnName, setColumnName] = useState("");

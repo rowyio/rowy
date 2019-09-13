@@ -1,4 +1,4 @@
-import { db } from "../firebase";
+import { db } from "../../firebase";
 
 import { useEffect, useReducer } from "react";
 import equals from "ramda/es/equals";
@@ -144,11 +144,15 @@ const useTable = (intialOverrides: any) => {
     // update document
     db.collection(tableState.path)
       .doc(cell.docId)
-      .update({ [cell.fieldName]: cell.value });
+      .update({
+        [cell.fieldName]: cell.value,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
   };
   const addRow = () => {
     db.collection(tableState.path).add({
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
     });
   };
   const tableActions = { deleteRow, setTable, updateCell, addRow };

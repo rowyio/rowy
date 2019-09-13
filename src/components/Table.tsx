@@ -21,7 +21,7 @@ import { FieldType, getFieldIcon } from "../Fields";
 import ColumnDrawer from "./ColumnDrawer";
 import TableCell from "../components/TableCell";
 
-import useCell, { Cell } from "../hooks/useCell";
+import useCell, { Cell } from "../hooks/useFiretable/useCell";
 import useFiretable, {
   FiretableActions,
   FiretableState
@@ -144,7 +144,10 @@ class MuiVirtualizedTable extends React.PureComponent<
         align={columns[columnIndex].numeric || false ? "right" : "left"}
       >
         {dataKey === "add" ? (
-          <ColumnDrawer addColumn={columnData.actions.addColumn} />
+          <ColumnDrawer
+            columns={columns}
+            addColumn={columnData.actions.addColumn}
+          />
         ) : (
           <Button size="small">
             {getFieldIcon(columnData.fieldType)} {label}
@@ -252,11 +255,7 @@ export default function Table(props: any) {
             ]}
           />
         </Paper>
-        <Button
-        //onClick={tableActions.row.add}
-        >
-          Add Row
-        </Button>
+        <Button onClick={tableActions.row.add}>Add Row</Button>
       </>
     );
   else return <>insert loading Skeleton here</>;
