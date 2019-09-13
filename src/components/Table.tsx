@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import clsx from "clsx";
 import {
   createStyles,
@@ -22,6 +22,10 @@ import ColumnDrawer from "./ColumnDrawer";
 import TableCell from "../components/TableCell";
 
 import useCell, { Cell } from "../hooks/useCell";
+import useFiretable, {
+  FiretableActions,
+  FiretableState
+} from "../hooks/useFiretable";
 const styles = (theme: Theme) =>
   createStyles({
     flexContainer: {
@@ -200,49 +204,60 @@ class MuiVirtualizedTable extends React.PureComponent<
 const VirtualizedTable = withStyles(styles)(MuiVirtualizedTable);
 
 export default function Table(props: any) {
-  const { columns, rows, addColumn, tableActions } = props;
+  const { collection } = props;
 
-  const [cell, cellActions] = useCell({ updateCell: tableActions.updateCell });
-  if (columns)
+  const { tableState, tableActions } = useFiretable(collection);
+  useEffect(() => {
+    tableActions.table.set(collection);
+  }, [collection]);
+
+  if (tableState.columns)
     return (
-      <Paper style={{ height: 400, width: "100%" }}>
-        <VirtualizedTable
-          focusedCell={cell}
-          cellActions={cellActions}
-          rowCount={rows.length}
-          rowGetter={({ index }) => rows[index]}
-          columns={[
-            ...columns.map(
-              (column: {
-                fieldName: string;
-                columnName: string;
-                type: FieldType;
-              }) => ({
-                width: 200,
-                label: column.columnName,
-                dataKey: column.fieldName,
+      <>
+        <Paper style={{ height: 400, width: "100%" }}>
+          <VirtualizedTable
+            focusedCell={tableState.cell}
+            cellActions={tableActions.cell}
+            rowCount={tableState.rows.length}
+            rowGetter={({ index }) => tableState.rows[index]}
+            columns={[
+              ...tableState.columns.map(
+                (column: {
+                  fieldName: string;
+                  columnName: string;
+                  type: FieldType;
+                }) => ({
+                  width: 200,
+                  label: column.columnName,
+                  dataKey: column.fieldName,
+                  columnData: {
+                    fieldType: column.type,
+                    fieldName: column.fieldName,
+                    actions: {}
+                  }
+                })
+              ),
+              {
+                width: 80,
+                label: "add",
+                dataKey: "add",
                 columnData: {
-                  fieldType: column.type,
-                  fieldName: column.fieldName,
-                  actions: {}
-                }
-              })
-            ),
-            {
-              width: 80,
-              label: "add",
-              dataKey: "add",
-              columnData: {
-                fieldType: "DELETE",
-                actions: {
-                  addColumn: addColumn,
-                  deleteRow: tableActions.deleteRow
+                  fieldType: "DELETE",
+                  actions: {
+                    addColumn: tableActions.column.add,
+                    deleteRow: tableActions.row.delete
+                  }
                 }
               }
-            }
-          ]}
-        />
-      </Paper>
+            ]}
+          />
+        </Paper>
+        <Button
+        //onClick={tableActions.row.add}
+        >
+          Add Row
+        </Button>
+      </>
     );
   else return <>insert loading Skeleton here</>;
 }

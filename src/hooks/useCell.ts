@@ -35,16 +35,16 @@ const useCell = (intialOverrides: any) => {
       cellDispatch({ updatedValue: null });
     }
   }, [cellState.cell]);
-  const setCell = (cell: Cell) => {
+  const set = (cell: Cell | null) => {
     cellDispatch({ prevCell: cellState.cell, cell });
   };
-  const updateValue = (value: any) => {
+  const update = (value: any) => {
     cellDispatch({ updatedValue: value });
   };
 
-  const actions = { setCell, updateValue };
+  const actions = { set, update };
 
-  return [cellState.cell, actions];
+  return [cellState, actions];
 };
 
 export default useCell;

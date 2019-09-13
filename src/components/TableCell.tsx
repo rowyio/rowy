@@ -47,7 +47,7 @@ const TableCell = (props: any) => {
             checked={state}
             onChange={e => {
               setState(!state);
-              cellActions.updateValue(!state);
+              cellActions.update(!state);
             }}
           />
         );
@@ -57,7 +57,7 @@ const TableCell = (props: any) => {
             id="number"
             defaultValue={cellData}
             onChange={e => {
-              cellActions.updateValue(e.target.value);
+              cellActions.update(e.target.value);
             }}
             type="number"
             className={classes.textField}
@@ -79,7 +79,7 @@ const TableCell = (props: any) => {
               value={new Date("2014-08-18T21:11:54")}
               onChange={date => {
                 console.log(date);
-                //cellActions.updateValue(e.target.value);
+                //cellActions.update(e.target.value);
               }}
               KeyboardButtonProps={{
                 "aria-label": "change date"
@@ -96,7 +96,7 @@ const TableCell = (props: any) => {
             autoFocus
             defaultValue={cellData}
             onChange={e => {
-              cellActions.updateValue(e.target.value);
+              cellActions.update(e.target.value);
             }}
           />
         );
@@ -132,7 +132,7 @@ const TableCell = (props: any) => {
       })}
       variant="body"
       onClick={() => {
-        cellActions.setCell({
+        cellActions.set({
           rowIndex,
           docId: rowData.id,
           fieldName: columnData.fieldName,
