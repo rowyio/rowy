@@ -89,7 +89,16 @@ const TableCell = (props: any) => {
         );
 
       case FieldType.rating:
-        return <Rating name="pristine" value={null} />;
+        return (
+          <Rating
+            name="pristine"
+            value={cellData}
+            precision={0.5}
+            onChange={(event, newValue) => {
+              cellActions.update(newValue);
+            }}
+          />
+        );
       default:
         return (
           <TextField
