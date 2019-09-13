@@ -17,7 +17,7 @@ import {
 } from "react-virtualized";
 import Button from "@material-ui/core/Button";
 
-import { FieldType, getFieldIcon } from "../Fields";
+import { FieldType, getFieldIcon } from "./Fields";
 import ColumnDrawer from "./ColumnDrawer";
 import TableCell from "../components/TableCell";
 

@@ -12,7 +12,7 @@ import AddIcon from "@material-ui/icons/Add";
 import IconButton from "@material-ui/core/IconButton";
 import TextField from "@material-ui/core/TextField";
 import _camelCase from "lodash/camelCase";
-import { FIELDS } from "../Fields";
+import { FIELDS } from "./Fields";
 const useStyles = makeStyles({
   list: {
     width: 250

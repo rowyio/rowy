@@ -1,28 +1,18 @@
 import React, { useState } from "react";
 import { TableCell as MuiTableCell, Switch } from "@material-ui/core";
 import clsx from "clsx";
-import { FieldType } from "../Fields";
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from "@material-ui/core/styles";
+import { FieldType } from "./Fields";
+
 import Rating from "@material-ui/lab/Rating";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import AddIcon from "@material-ui/icons/AddCircle";
-import Checkbox, { CheckboxProps } from "@material-ui/core/Checkbox";
 
-import TextField from "@material-ui/core/TextField";
-import CheckBoxIcon from "@material-ui/icons/CheckBox";
-import CheckBoxOutlineIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import DateFnsUtils from "@date-io/date-fns";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardTimePicker,
-  KeyboardDatePicker
-} from "@material-ui/pickers";
+import SimpleText from "./Fields/SimpleText";
+import CheckBox from "./Fields/CheckBox";
+import Number from "./Fields/Number";
+
 const TableCell = (props: any) => {
   const {
     fieldType,
@@ -38,35 +28,13 @@ const TableCell = (props: any) => {
     columns,
     focusedCell
   } = props;
-  const [state, setState] = useState(cellData);
+  const isFocusedCell =
+    focusedCell &&
+    focusedCell.fieldName === columnData.fieldName &&
+    focusedCell.rowIndex === rowIndex;
+  /*
   const inputRenderer = () => {
     switch (fieldType) {
-      case FieldType.checkBox:
-        return (
-          <Checkbox
-            checked={state}
-            onChange={e => {
-              setState(!state);
-              cellActions.update(!state);
-            }}
-          />
-        );
-      case FieldType.number:
-        return (
-          <TextField
-            id="number"
-            defaultValue={cellData}
-            onChange={e => {
-              cellActions.update(e.target.value);
-            }}
-            type="number"
-            className={classes.textField}
-            InputLabelProps={{
-              shrink: true
-            }}
-            margin="normal"
-          />
-        );
       case FieldType.date:
         return (
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -99,26 +67,39 @@ const TableCell = (props: any) => {
             }}
           />
         );
-      default:
-        return (
-          <TextField
-            autoFocus
-            defaultValue={cellData}
-            onChange={e => {
-              cellActions.update(e.target.value);
-            }}
-          />
-        );
-    }
-  };
-  const valueRenderer = () => {
+    
+ 
+  */
+
+  const renderCell = () => {
     switch (fieldType) {
       case FieldType.checkBox:
-        return cellData === true ? <CheckBoxIcon /> : <CheckBoxOutlineIcon />;
-
+        return (
+          <CheckBox
+            isFocusedCell={isFocusedCell}
+            cellData={cellData}
+            cellActions={cellActions}
+            columnData={columnData}
+          />
+        );
+      case FieldType.number:
+        return (
+          <Number
+            isFocusedCell={isFocusedCell}
+            cellData={cellData}
+            cellActions={cellActions}
+            columnData={columnData}
+          />
+        );
       default:
-        return cellData;
-        break;
+        return (
+          <SimpleText
+            isFocusedCell={isFocusedCell}
+            cellData={cellData}
+            cellActions={cellActions}
+            columnData={columnData}
+          />
+        );
     }
   };
   if (fieldType === "DELETE")
@@ -155,11 +136,7 @@ const TableCell = (props: any) => {
           : "left"
       }
     >
-      {focusedCell &&
-      focusedCell.fieldName === columnData.fieldName &&
-      focusedCell.rowIndex === rowIndex
-        ? inputRenderer()
-        : valueRenderer()}
+      {renderCell()}
     </MuiTableCell>
   );
 };

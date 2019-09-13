@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import useDoc, { DocActions } from "../useDoc";
-import { FieldType } from "../../Fields";
+import { FieldType } from "../../components/Fields";
 const useTableConfig = (tablePath: string) => {
   const [tableConfigState, documentDispatch] = useDoc({
     path: `${tablePath}/_FIRETABLE_`
