@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 function useKeyCode(keyCode: number) {
-  const [isKeyPressed, setKeyPressed] = useState(false);
+  const [isPressed, setKeyPressed] = useState(false);
   // Only allow fetching each keypress event once to prevent infinite loops
   const clear = () => {
-    if (isKeyPressed) {
+    if (isPressed) {
       setKeyPressed(false);
     }
   };
-  clear();
   useEffect(() => {
     function downHandler(event: any) {
       if (event.keyCode === keyCode) {
@@ -18,6 +17,6 @@ function useKeyCode(keyCode: number) {
     return () => window.removeEventListener("keydown", downHandler);
   }, [keyCode]);
 
-  return isKeyPressed;
+  return { isPressed, clear };
 }
 export default useKeyCode;

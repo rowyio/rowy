@@ -33,10 +33,10 @@ const useFiretable = (collectionName: string) => {
   useEffect(() => {
     if (cellState.cell) {
     }
-  }, [tab]);
+  }, [tab.isPressed]);
   // move focus to cell above on down key
   useEffect(() => {
-    if (cellState.cell) {
+    if (cellState.cell && moveUp.isPressed) {
       if (cellState.cell.rowIndex !== 0) {
         const nextRowIndex = cellState.cell.rowIndex - 1;
         cellActions.set({
@@ -46,11 +46,12 @@ const useFiretable = (collectionName: string) => {
         });
       }
     }
-  }, [moveUp]);
+    moveUp.clear();
+  }, [moveUp.isPressed]);
 
   // move focus to cell bellow on down up
   useEffect(() => {
-    if (cellState.cell) {
+    if (cellState.cell && moveDown.isPressed) {
       if (cellState.cell.rowIndex === tableState.rows.length - 1) {
         // reach last row creating new row
         tableActions.addRow();
@@ -63,7 +64,8 @@ const useFiretable = (collectionName: string) => {
         });
       }
     }
-  }, [moveDown]);
+    moveDown.clear();
+  }, [moveDown.isPressed]);
   const setTable = (collectionName: string) => {
     configActions.setTable(collectionName);
     tableActions.setTable(collectionName);
