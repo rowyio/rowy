@@ -39,11 +39,13 @@ const useFiretable = (collectionName: string) => {
     if (cellState.cell && moveUp.isPressed) {
       if (cellState.cell.rowIndex !== 0) {
         const nextRowIndex = cellState.cell.rowIndex - 1;
-        cellActions.set({
+        const nextCell: Cell = {
+          docId: tableState.rows[nextRowIndex].id,
           fieldName: cellState.cell.fieldName,
           rowIndex: nextRowIndex,
           value: tableState.rows[nextRowIndex].value
-        });
+        };
+        cellActions.set(nextCell);
       }
     }
     moveUp.clear();
@@ -57,11 +59,13 @@ const useFiretable = (collectionName: string) => {
         tableActions.addRow();
       } else {
         const nextRowIndex = cellState.cell.rowIndex + 1;
-        cellActions.set({
+        const nextCell: Cell = {
+          docId: tableState.rows[nextRowIndex].id,
           fieldName: cellState.cell.fieldName,
           rowIndex: nextRowIndex,
           value: tableState.rows[nextRowIndex].value
-        });
+        };
+        cellActions.set(nextCell);
       }
     }
     moveDown.clear();

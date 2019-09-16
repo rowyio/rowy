@@ -44,7 +44,10 @@
 - Edit tables
 - Hide tables
 - Fixed column
-- keyboard Navigation: ability to use tab and arrow keys to move focus between cells
+- keyboard Navigation:
+  - Up key to move to the cell above ✅
+  - Down key to move to the cell bellow if last cell, create a new row ✅
+  - Tab to go to the next cell
 - column / table Create/edit validation
 
 ## V1

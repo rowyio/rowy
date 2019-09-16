@@ -21,7 +21,7 @@ export default function ColumnDialog(props: any) {
   function handleClose() {
     setOpen(false);
   }
-  function handleCreate() {
+  function handleUpdate() {
     // updateColumn(tableName, collectionName);
     handleClose();
   }
@@ -52,18 +52,7 @@ export default function ColumnDialog(props: any) {
             margin="dense"
             id="name"
             label="Table Name"
-            type="email"
-            fullWidth
-          />
-          <TextField
-            // value={collectionName}
-            onChange={e => {
-              // setCollectionName(e.target.value);
-            }}
-            margin="dense"
-            id="collection"
-            label="Collection Name"
-            type="email"
+            type="text"
             fullWidth
           />
         </DialogContent>
@@ -71,7 +60,7 @@ export default function ColumnDialog(props: any) {
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleCreate} color="primary">
+          <Button onClick={handleUpdate} color="primary">
             update
           </Button>
         </DialogActions>
