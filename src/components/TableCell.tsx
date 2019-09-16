@@ -3,7 +3,6 @@ import { TableCell as MuiTableCell, Switch } from "@material-ui/core";
 import clsx from "clsx";
 import { FieldType } from "./Fields";
 
-import Rating from "@material-ui/lab/Rating";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import AddIcon from "@material-ui/icons/AddCircle";
@@ -11,7 +10,9 @@ import AddIcon from "@material-ui/icons/AddCircle";
 import DateFnsUtils from "@date-io/date-fns";
 import SimpleText from "./Fields/SimpleText";
 import CheckBox from "./Fields/CheckBox";
+
 import Number from "./Fields/Number";
+import Rating from "./Fields/Rating";
 
 const TableCell = (props: any) => {
   const {
@@ -76,6 +77,19 @@ const TableCell = (props: any) => {
       case FieldType.checkBox:
         return (
           <CheckBox
+            rowIndex={rowIndex}
+            rowData={rowData}
+            isFocusedCell={isFocusedCell}
+            cellData={cellData}
+            cellActions={cellActions}
+            columnData={columnData}
+          />
+        );
+      case FieldType.rating:
+        return (
+          <Rating
+            rowIndex={rowIndex}
+            rowData={rowData}
             isFocusedCell={isFocusedCell}
             cellData={cellData}
             cellActions={cellActions}

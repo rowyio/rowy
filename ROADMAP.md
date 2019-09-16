@@ -33,7 +33,7 @@
 - image(firebase storage url string)
 - single select reference(DocRefrence)
 - mulit select reference(DocRefrence)
-- [https://material-ui.com/components/rating/] rating(number)
+- rating ✅
 
 ### Functionality:
 
@@ -46,7 +46,7 @@
 - Fixed column
 - keyboard Navigation:
   - Up key to move to the cell above ✅
-  - Down key to move to the cell bellow if last cell, create a new row ✅
+  - Down key to move to the cell bellow, if last cell create a new row ✅
   - Tab to go to the next cell
 - column / table Create/edit validation
 
