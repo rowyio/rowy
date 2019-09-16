@@ -42,7 +42,11 @@ const useCell = (intialOverrides: any) => {
     cellDispatch({ updatedValue: value });
   };
 
-  const actions = { set, update };
+  const updateFirestore = (cell: Cell) => {
+    cellDispatch({ cell: null });
+    cellState.updateCell(cell);
+  };
+  const actions = { set, update, updateFirestore };
 
   return [cellState, actions];
 };

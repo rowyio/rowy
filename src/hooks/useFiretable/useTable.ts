@@ -140,7 +140,6 @@ const useTable = (intialOverrides: any) => {
     // TODO: update row locally
     // tableState.rows[cell.rowIndex][cell.fieldName] = cell.value;
     // tableDispatch({ rows: tableState.rows });
-
     // update document
     db.collection(tableState.path)
       .doc(cell.docId)
