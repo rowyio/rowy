@@ -5,14 +5,14 @@ import { FieldType } from "./Fields";
 
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
-import AddIcon from "@material-ui/icons/AddCircle";
 
-import DateFnsUtils from "@date-io/date-fns";
 import SimpleText from "./Fields/SimpleText";
 import CheckBox from "./Fields/CheckBox";
 
 import Number from "./Fields/Number";
 import Rating from "./Fields/Rating";
+import Date from "./Fields/Date";
+import DateTime from "./Fields/DateTime";
 
 const TableCell = (props: any) => {
   const {
@@ -88,6 +88,28 @@ const TableCell = (props: any) => {
       case FieldType.rating:
         return (
           <Rating
+            rowIndex={rowIndex}
+            rowData={rowData}
+            isFocusedCell={isFocusedCell}
+            cellData={cellData}
+            cellActions={cellActions}
+            columnData={columnData}
+          />
+        );
+      case FieldType.date:
+        return (
+          <Date
+            rowIndex={rowIndex}
+            rowData={rowData}
+            isFocusedCell={isFocusedCell}
+            cellData={cellData}
+            cellActions={cellActions}
+            columnData={columnData}
+          />
+        );
+      case FieldType.dateTime:
+        return (
+          <DateTime
             rowIndex={rowIndex}
             rowData={rowData}
             isFocusedCell={isFocusedCell}

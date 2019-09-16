@@ -18,7 +18,6 @@ export enum FieldType {
   PhoneNumber = "PHONE_NUMBER",
   checkBox = "CHECK_BOX",
   date = "DATE",
-  time = "TIME",
   dateTime = "DATE_TIME",
   number = "NUMBER",
   url = "URL",
@@ -33,7 +32,7 @@ export const FIELDS = [
   { icon: <CheckBoxIcon />, name: "Check Box", type: FieldType.checkBox },
   { icon: <NumberIcon />, name: "Number", type: FieldType.number },
   { icon: <DateIcon />, name: "Date", type: FieldType.date },
-  { icon: <TimeIcon />, name: "Time", type: FieldType.time },
+  { icon: <TimeIcon />, name: "Time", type: FieldType.dateTime },
   { icon: <URLIcon />, name: "URL", type: FieldType.url },
   { icon: <RatingIcon />, name: "Rating", type: FieldType.rating }
 ];
