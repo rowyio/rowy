@@ -6,19 +6,17 @@ const intialState = {};
 const uploadReducer = (prevState: any, newProps: any) => {
   return { ...prevState, ...newProps };
 };
-const useUploader = (collectionPath: string) => {
+const useUploader = () => {
   const [uploaderState, uploaderDispatch] = useReducer(uploadReducer, {
-    ...intialState,
-    collectionPath
+    ...intialState
   });
-  const setCollectionPath = (path: string) => {
-    var collectionPath = bucket.ref(path);
-    uploaderDispatch({ collectionPath });
-  };
-  const upload = (docId: string, fieldName: string, file: File) => {
-    const storageRef = uploaderState.storagePath.child(
-      `${docId}/${fieldName}/${file.name}.${file.type}`
-    );
+
+  const upload = (
+    docRef: firebase.firestore.DocumentReference,
+    fieldName: string,
+    file: File
+  ) => {
+    const storageRef = bucket.ref(`${docRef.path}/${fieldName}/${file.name}`);
     var uploadTask = storageRef.put(file);
     uploadTask.on(
       firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
@@ -35,7 +33,7 @@ const useUploader = (collectionPath: string) => {
             break;
         }
       },
-      function(error: FirebaseError) {
+      function(error: any) {
         // A full list of error codes is available at
         // https://firebase.google.com/docs/storage/web/handle-errors
         switch (error.code) {
@@ -57,12 +55,13 @@ const useUploader = (collectionPath: string) => {
           .getDownloadURL()
           .then(function(downloadURL: string) {
             console.log("File available at", downloadURL);
+            docRef.update({ [fieldName]: downloadURL });
           });
       }
     );
   };
-  const uploadActions = { upload, setCollectionPath };
-  return [uploaderState, uploadActions];
+
+  return [uploaderState, upload];
 };
 
 export default useUploader;

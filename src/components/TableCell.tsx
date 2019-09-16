@@ -13,6 +13,7 @@ import Number from "./Fields/Number";
 import Rating from "./Fields/Rating";
 import Date from "./Fields/Date";
 import DateTime from "./Fields/DateTime";
+import Image from "./Fields/Image";
 
 const TableCell = (props: any) => {
   const {
@@ -88,6 +89,17 @@ const TableCell = (props: any) => {
       case FieldType.rating:
         return (
           <Rating
+            rowIndex={rowIndex}
+            rowData={rowData}
+            isFocusedCell={isFocusedCell}
+            cellData={cellData}
+            cellActions={cellActions}
+            columnData={columnData}
+          />
+        );
+      case FieldType.image:
+        return (
+          <Image
             rowIndex={rowIndex}
             rowData={rowData}
             isFocusedCell={isFocusedCell}

@@ -4,6 +4,8 @@ import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import SimpleTextIcon from "@material-ui/icons/TextFormat";
 import LongTextIcon from "@material-ui/icons/Notes";
 import PhoneIcon from "@material-ui/icons/Phone";
+import ImageIcon from "@material-ui/icons/Photo";
+import FileIcon from "@material-ui/icons/InsertDriveFileOutlined";
 import DateIcon from "@material-ui/icons/CalendarToday";
 import TimeIcon from "@material-ui/icons/AccessTime";
 import RatingIcon from "@material-ui/icons/StarHalf";
@@ -21,7 +23,9 @@ export enum FieldType {
   dateTime = "DATE_TIME",
   number = "NUMBER",
   url = "URL",
-  rating = "RATING"
+  rating = "RATING",
+  image = "IMAGE",
+  file = "FILE"
 }
 
 export const FIELDS = [
@@ -34,7 +38,9 @@ export const FIELDS = [
   { icon: <DateIcon />, name: "Date", type: FieldType.date },
   { icon: <TimeIcon />, name: "Time", type: FieldType.dateTime },
   { icon: <URLIcon />, name: "URL", type: FieldType.url },
-  { icon: <RatingIcon />, name: "Rating", type: FieldType.rating }
+  { icon: <RatingIcon />, name: "Rating", type: FieldType.rating },
+  { icon: <ImageIcon />, name: "Image", type: FieldType.image },
+  { icon: <FileIcon />, name: "File", type: FieldType.file }
 ];
 
 export const getFieldIcon = (type: FieldType) => {
