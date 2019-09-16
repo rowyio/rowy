@@ -5,7 +5,7 @@ import equals from "ramda/es/equals";
 export type Cell = {
   fieldName: string;
   rowIndex: number;
-  docId: string;
+  docRef: firebase.firestore.DocumentReference;
   value: any;
 };
 
@@ -17,13 +17,16 @@ const cellIntialState = {
   cell: null
 };
 
+const updateCell = (cell: Cell) => {
+  cell.docRef.update({ [cell.fieldName]: cell.value });
+};
 const useCell = (intialOverrides: any) => {
   const [cellState, cellDispatch] = useReducer(cellReducer, {
     ...cellIntialState,
     ...intialOverrides
   });
   useEffect(() => {
-    const { prevCell, updateCell, updatedValue } = cellState;
+    const { prevCell, updatedValue } = cellState;
     // check for change
     if (
       updatedValue !== null &&
@@ -44,7 +47,7 @@ const useCell = (intialOverrides: any) => {
 
   const updateFirestore = (cell: Cell) => {
     cellDispatch({ cell: null });
-    cellState.updateCell(cell);
+    updateCell(cell);
   };
   const actions = { set, update, updateFirestore };
 

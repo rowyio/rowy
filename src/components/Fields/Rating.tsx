@@ -11,7 +11,7 @@ const Rating = (props: any) => {
         const cell = {
           rowIndex,
           value: newValue,
-          docId: rowData.id,
+          docRef: rowData.ref,
           fieldName: columnData.fieldName
         };
         cellActions.updateFirestore(cell);

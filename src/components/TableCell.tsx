@@ -34,44 +34,6 @@ const TableCell = (props: any) => {
     focusedCell &&
     focusedCell.fieldName === columnData.fieldName &&
     focusedCell.rowIndex === rowIndex;
-  /*
-  const inputRenderer = () => {
-    switch (fieldType) {
-      case FieldType.date:
-        return (
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <KeyboardDatePicker
-              autoFocus
-              margin="normal"
-              id="date-picker-dialog"
-              label="Date picker dialog"
-              format="MM/dd/yyyy"
-              value={new Date("2014-08-18T21:11:54")}
-              onChange={date => {
-                console.log(date);
-                //cellActions.update(e.target.value);
-              }}
-              KeyboardButtonProps={{
-                "aria-label": "change date"
-              }}
-            />
-          </MuiPickersUtilsProvider>
-        );
-
-      case FieldType.rating:
-        return (
-          <Rating
-            name="pristine"
-            value={cellData}
-            precision={0.5}
-            onChange={(event, newValue) => {
-              cellActions.update(newValue);
-            }}
-          />
-        );
-    
- 
-  */
 
   const renderCell = () => {
     switch (fieldType) {
@@ -170,9 +132,10 @@ const TableCell = (props: any) => {
       })}
       variant="body"
       onClick={() => {
+        // set focusedCell on click
         cellActions.set({
           rowIndex,
-          docId: rowData.id,
+          docRef: rowData.ref,
           fieldName: columnData.fieldName,
           value: cellData
         });

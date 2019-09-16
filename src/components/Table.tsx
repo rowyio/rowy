@@ -75,7 +75,7 @@ class MuiVirtualizedTable extends React.PureComponent<
 > {
   static defaultProps = {
     headerHeight: 48,
-    rowHeight: 200
+    rowHeight: 180
   };
 
   getRowClassName = ({ index }: Row) => {
@@ -207,6 +207,7 @@ const VirtualizedTable = withStyles(styles)(MuiVirtualizedTable);
 export default function Table(props: any) {
   const { collection } = props;
   const { tableState, tableActions } = useFiretable(collection);
+
   useEffect(() => {
     tableActions.table.set(collection);
   }, [collection]);

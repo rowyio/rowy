@@ -23,7 +23,7 @@ const Date = (props: any) => {
       const cell = {
         rowIndex,
         value: date,
-        docId: rowData.id,
+        docRef: rowData.ref,
         fieldName: columnData.fieldName
       };
       cellActions.updateFirestore(cell);

@@ -137,26 +137,14 @@ const useTable = (intialOverrides: any) => {
   const setTable = (tableCollection: string) => {
     tableDispatch({ path: tableCollection });
   };
-  const updateCell = (cell: Cell) => {
-    console.log("updateCell:", cell);
-    // TODO: update row locally
-    // tableState.rows[cell.rowIndex][cell.fieldName] = cell.value;
-    // tableDispatch({ rows: tableState.rows });
-    // update document
-    db.collection(tableState.path)
-      .doc(cell.docId)
-      .update({
-        [cell.fieldName]: cell.value,
-        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-      });
-  };
+
   const addRow = () => {
     db.collection(tableState.path).add({
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       updatedAt: firebase.firestore.FieldValue.serverTimestamp()
     });
   };
-  const tableActions = { deleteRow, setTable, updateCell, addRow };
+  const tableActions = { deleteRow, setTable, addRow };
   return [tableState, tableActions];
 };
 

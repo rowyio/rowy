@@ -1,8 +1,5 @@
-import React, { useState } from "react";
-import Checkbox, { CheckboxProps } from "@material-ui/core/Checkbox";
-
-import CheckBoxIcon from "@material-ui/icons/CheckBox";
-import CheckBoxOutlineIcon from "@material-ui/icons/CheckBoxOutlineBlank";
+import React from "react";
+import Checkbox from "@material-ui/core/Checkbox";
 
 const CheckBox = (props: any) => {
   const { columnData, cellData, cellActions, rowData, rowIndex } = props;
@@ -13,7 +10,7 @@ const CheckBox = (props: any) => {
         cellActions.updateFirestore({
           rowIndex,
           value: !cellData,
-          docId: rowData.id,
+          docRef: rowData.ref,
           fieldName: columnData.fieldName
         });
       }}

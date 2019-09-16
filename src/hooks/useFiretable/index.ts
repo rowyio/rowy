@@ -25,9 +25,7 @@ const useFiretable = (collectionName: string) => {
   const [tableState, tableActions] = useTable({
     path: collectionName
   });
-  const [cellState, cellActions] = useCell({
-    updateCell: tableActions.updateCell
-  });
+  const [cellState, cellActions] = useCell({});
 
   //TODO: move focus to cell above on down key
   useEffect(() => {
@@ -40,7 +38,7 @@ const useFiretable = (collectionName: string) => {
       if (cellState.cell.rowIndex !== 0) {
         const nextRowIndex = cellState.cell.rowIndex - 1;
         const nextCell: Cell = {
-          docId: tableState.rows[nextRowIndex].id,
+          docRef: tableState.rows[nextRowIndex].ref,
           fieldName: cellState.cell.fieldName,
           rowIndex: nextRowIndex,
           value: tableState.rows[nextRowIndex].value
@@ -60,7 +58,7 @@ const useFiretable = (collectionName: string) => {
       } else {
         const nextRowIndex = cellState.cell.rowIndex + 1;
         const nextCell: Cell = {
-          docId: tableState.rows[nextRowIndex].id,
+          docRef: tableState.rows[nextRowIndex].ref,
           fieldName: cellState.cell.fieldName,
           rowIndex: nextRowIndex,
           value: tableState.rows[nextRowIndex].value

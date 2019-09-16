@@ -24,7 +24,6 @@ const useTableConfig = (tablePath: string) => {
       action: DocActions.update,
       data: { columns: [...columns, { columnName, fieldName, type }] }
     });
-    console.log(columnName, fieldName, type);
   };
   const actions = {
     addColumn,
