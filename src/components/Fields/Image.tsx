@@ -11,7 +11,7 @@ const Image = (props: any) => {
     // Do something with the files
     const imageFile = acceptedFiles[0];
     if (imageFile) {
-      upload(rowData.ref, columnData.fieldName, imageFile);
+      upload(rowData.ref, columnData.fieldName, [imageFile]);
       let url = URL.createObjectURL(imageFile);
       setLocalImage(url);
     }
@@ -30,7 +30,7 @@ const Image = (props: any) => {
           <img style={{ height: "150px" }} src={localImage} />
         </div>
       ) : cellData ? (
-        <img style={{ height: "150px" }} src={cellData} />
+        <img style={{ height: "150px" }} src={cellData[0].downloadURL} />
       ) : isDragActive ? (
         <p>Drop the files here ...</p>
       ) : (
