@@ -1,260 +1,96 @@
-import React, { useEffect } from "react";
-import clsx from "clsx";
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from "@material-ui/core/styles";
-import { TableCell as MuiTableCell } from "@material-ui/core";
-import Paper from "@material-ui/core/Paper";
-import {
-  AutoSizer,
-  Column,
-  Table as MuiTable,
-  TableCellRenderer,
-  TableHeaderProps
-} from "react-virtualized";
-import Button from "@material-ui/core/Button";
-
-import { FieldType, getFieldIcon } from "./Fields";
-import ColumnDrawer from "./ColumnDrawer";
-import TableCell from "../components/TableCell";
-
-import useCell, { Cell } from "../hooks/useFiretable/useCell";
+import React from "react";
+import ReactDataGrid from "react-data-grid";
 import useFiretable from "../hooks/useFiretable";
+import Button from "@material-ui/core/Button";
+import Popper, { PopperPlacementType } from "@material-ui/core/Popper";
+import Typography from "@material-ui/core/Typography";
+import Fade from "@material-ui/core/Fade";
+import Paper from "@material-ui/core/Paper";
+import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
 
-const styles = (theme: Theme) =>
+const useStyles = makeStyles(Theme =>
   createStyles({
-    flexContainer: {
-      display: "flex",
-      alignItems: "center",
-      boxSizing: "border-box"
+    typography: {
+      padding: 1
     },
-    tableRow: {
-      cursor: "pointer"
-    },
-    tableRowHover: {
-      "&:hover": {
-        backgroundColor: theme.palette.grey[200]
-      }
-    },
-    tableCell: {
-      flex: 1
-    },
-    noClick: {
-      cursor: "initial"
+    header: {
+      position: "absolute",
+      left: 0,
+      top: 0,
+      zIndex: 1000000
     }
-  });
+  })
+);
 
-interface ColumnData {
-  columnData: any;
-  dataKey: string;
-  label: string;
-  numeric?: boolean;
-  width: number;
-}
-
-interface Row {
-  index: number;
-}
-
-interface MuiVirtualizedTableProps extends WithStyles<typeof styles> {
-  columns: ColumnData[];
-  focusedCell: Cell | null;
-  cellActions: any;
-  headerHeight?: number;
-  onRowClick?: () => void;
-  rowCount: number;
-  rowGetter: (row: Row) => any;
-  rowHeight?: number;
-}
-
-class MuiVirtualizedTable extends React.PureComponent<
-  MuiVirtualizedTableProps
-> {
-  static defaultProps = {
-    headerHeight: 48,
-    rowHeight: 40
-  };
-
-  getRowClassName = ({ index }: Row) => {
-    const { classes, onRowClick } = this.props;
-
-    return clsx(classes.tableRow, classes.flexContainer, {
-      [classes.tableRowHover]: index !== -1 && onRowClick != null
-    });
-  };
-
-  cellRenderer: TableCellRenderer = ({
-    cellData,
-    columnData,
-    columnIndex,
-    dataKey,
-    isScrolling,
-    rowData,
-    rowIndex
-  }) => {
-    const {
-      columns,
-      classes,
-      rowHeight,
-      onRowClick,
-      cellActions,
-      focusedCell
-    } = this.props;
-    const fieldType = columnData.fieldType;
-    return (
-      <TableCell
-        fieldType={fieldType}
-        rowIndex={rowIndex}
-        rowData={rowData}
-        columnData={columnData}
-        classes={classes}
-        cellActions={cellActions}
-        cellData={cellData}
-        onRowClick={onRowClick}
-        rowHeight={rowHeight}
-        columnIndex={columnIndex}
-        columns={columns}
-        focusedCell={focusedCell}
-      />
-    );
-  };
-  headerRenderer = ({
-    label,
-    columnData,
-    dataKey,
-    columnIndex
-  }: TableHeaderProps & { columnIndex: number }) => {
-    const { headerHeight, columns, classes } = this.props;
-
-    return (
-      <MuiTableCell
-        component="div"
-        className={clsx(
-          classes.tableCell,
-          classes.flexContainer,
-          classes.noClick
-        )}
-        variant="head"
-        style={{ height: headerHeight }}
-        align={columns[columnIndex].numeric || false ? "right" : "left"}
-      >
-        {dataKey === "add" ? (
-          <ColumnDrawer
-            columns={columns}
-            addColumn={columnData.actions.addColumn}
-          />
-        ) : (
-          <Button size="small">
-            {getFieldIcon(columnData.fieldType)} {label}
-          </Button>
-        )}
-      </MuiTableCell>
-    );
-  };
-
-  render() {
-    const {
-      classes,
-      columns,
-      rowHeight,
-      headerHeight,
-      ...tableProps
-    } = this.props;
-    return (
-      <AutoSizer>
-        {({ height, width }) => (
-          <>
-            <MuiTable
-              height={height}
-              width={width}
-              rowHeight={rowHeight!}
-              headerHeight={headerHeight!}
-              {...tableProps}
-              rowClassName={this.getRowClassName}
-            >
-              {[
-                ...columns.map(({ dataKey, ...other }, index) => {
-                  return (
-                    <Column
-                      key={dataKey}
-                      headerRenderer={headerProps =>
-                        this.headerRenderer({
-                          ...headerProps,
-                          columnIndex: index
-                        })
-                      }
-                      className={classes.flexContainer}
-                      cellRenderer={this.cellRenderer}
-                      dataKey={dataKey}
-                      {...other}
-                    />
-                  );
-                })
-              ]}
-            </MuiTable>
-          </>
-        )}
-      </AutoSizer>
-    );
-  }
-}
-
-const VirtualizedTable = withStyles(styles)(MuiVirtualizedTable);
-
-export default function Table(props: any) {
+function Table(props: any) {
   const { collection } = props;
   const { tableState, tableActions } = useFiretable(collection);
+  const classes = useStyles();
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
+    null
+  );
+  const [open, setOpen] = React.useState(false);
+  const [placement, setPlacement] = React.useState<PopperPlacementType>();
 
-  useEffect(() => {
-    tableActions.table.set(collection);
-  }, [collection]);
+  const handleClick = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    setAnchorEl(event.currentTarget);
+    setOpen(!open);
+  };
 
-  if (tableState.columns)
+  const onGridRowsUpdated = (props: any) => {
+    const { fromRowData, updated } = props;
+    fromRowData.ref.update(updated);
+  };
+
+  const headerRenderer = (props: any) => {
+    return (
+      <div className={classes.header}>
+        <Button
+          aria-describedby={props.column.key}
+          variant="contained"
+          onClick={handleClick}
+        >
+          {props.column.name}
+        </Button>
+      </div>
+    );
+  };
+  if (tableState.columns) {
+    const columns = tableState.columns.map((column: any) => ({
+      key: column.fieldName,
+      name: column.columnName,
+      editable: true,
+      resizeable: true,
+      frozen: column.fieldName === "cohort",
+      headerRenderer: headerRenderer,
+      width: 200
+    }));
+    const rows = tableState.rows;
     return (
       <>
-        <Paper style={{ height: 400, width: "100%" }}>
-          <VirtualizedTable
-            focusedCell={tableState.cell}
-            cellActions={tableActions.cell}
-            rowCount={tableState.rows.length}
-            rowGetter={({ index }) => tableState.rows[index]}
-            columns={[
-              ...tableState.columns.map(
-                (column: {
-                  fieldName: string;
-                  columnName: string;
-                  type: FieldType;
-                }) => ({
-                  width: 200,
-                  label: column.columnName,
-                  dataKey: column.fieldName,
-                  columnData: {
-                    fieldType: column.type,
-                    fieldName: column.fieldName,
-                    actions: {}
-                  }
-                })
-              ),
-              {
-                width: 80,
-                label: "add",
-                dataKey: "add",
-                columnData: {
-                  fieldType: "DELETE",
-                  actions: {
-                    addColumn: tableActions.column.add,
-                    deleteRow: tableActions.row.delete
-                  }
-                }
-              }
-            ]}
-          />
-        </Paper>
-        <Button onClick={tableActions.row.add}>Add Row</Button>
+        <ReactDataGrid
+          columns={columns}
+          rowGetter={i => rows[i]}
+          rowsCount={rows.length}
+          onGridRowsUpdated={onGridRowsUpdated}
+          enableCellSelect={true}
+        />
+        <Popper id={"id"} open={open} anchorEl={anchorEl} transition>
+          {({ TransitionProps }) => (
+            <Fade {...TransitionProps} timeout={350}>
+              <Paper>
+                <Typography className={classes.typography}>
+                  The content of the Popper.
+                </Typography>
+              </Paper>
+            </Fade>
+          )}
+        </Popper>
       </>
     );
-  else return <>insert loading Skeleton here</>;
+  } else return <p>Loading</p>;
 }
+
+export default Table;
