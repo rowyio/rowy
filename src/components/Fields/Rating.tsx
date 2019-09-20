@@ -2,19 +2,14 @@ import React from "react";
 import MuiRating from "@material-ui/lab/Rating";
 
 const Rating = (props: any) => {
-  const { columnData, cellData, cellActions, rowData, rowIndex } = props;
+  const { value, row, onSubmit } = props;
   return (
     <MuiRating
-      name={`rating-controlled-${columnData.fieldName}-${rowIndex}`}
-      value={cellData}
+      // TODO: make it uniqe for each
+      name={`rating-controlled-${row.id}`}
+      value={value}
       onChange={(event, newValue) => {
-        const cell = {
-          rowIndex,
-          value: newValue,
-          docRef: rowData.ref,
-          fieldName: columnData.fieldName
-        };
-        cellActions.updateFirestore(cell);
+        onSubmit(row.ref, newValue);
       }}
     />
   );

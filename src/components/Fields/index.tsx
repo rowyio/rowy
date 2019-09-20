@@ -13,6 +13,12 @@ import URLIcon from "@material-ui/icons/Explore";
 import NumberIcon from "@material-ui/icons/Looks3";
 import propEq from "ramda/es/propEq";
 import find from "ramda/es/find";
+import SimpleText from "./SimpleText";
+import CheckBox from "./CheckBox";
+import Number from "./Number";
+import Rating from "./Rating";
+import Date from "./Date";
+import Image from "./Image";
 export enum FieldType {
   simpleText = "SIMPLE_TEXT",
   longText = "LONG_TEXT",
@@ -45,4 +51,83 @@ export const FIELDS = [
 
 export const getFieldIcon = (type: FieldType) => {
   return find(propEq("type", type))(FIELDS).icon;
+};
+
+export const CellField = (
+  fieldType: FieldType,
+  rowIndex: number,
+  ref: firebase.firestore.DocumentReference,
+  isFocusedCell: boolean,
+  value: any,
+  cellActions: any,
+  fieldName: string
+) => {
+  const columnData = { fieldName };
+  const rowData = { ref };
+
+  switch (fieldType) {
+    case FieldType.checkBox:
+      return (
+        <CheckBox
+          rowIndex={rowIndex}
+          rowData={rowData}
+          isFocusedCell={isFocusedCell}
+          cellData={value}
+          cellActions={cellActions}
+          columnData={columnData}
+        />
+      );
+    case FieldType.rating:
+      return (
+        <Rating
+          rowIndex={rowIndex}
+          rowData={rowData}
+          cellData={value}
+          cellActions={cellActions}
+          columnData={columnData}
+        />
+      );
+    case FieldType.image:
+      return (
+        <Image
+          rowIndex={rowIndex}
+          rowData={rowData}
+          isFocusedCell={isFocusedCell}
+          cellData={value}
+          cellActions={cellActions}
+          columnData={columnData}
+        />
+      );
+    case FieldType.date:
+      return (
+        <Date
+          rowIndex={rowIndex}
+          rowData={rowData}
+          isFocusedCell={isFocusedCell}
+          cellData={value}
+          cellActions={cellActions}
+          columnData={columnData}
+        />
+      );
+    case FieldType.number:
+      return (
+        <Number
+          isFocusedCell={isFocusedCell}
+          cellData={value}
+          cellActions={cellActions}
+          columnData={columnData}
+        />
+      );
+    default:
+      return (
+        <SimpleText
+          rowIndex={rowIndex}
+          rowData={rowData}
+          isFocusedCell={isFocusedCell}
+          cellData={value}
+          cellActions={cellActions}
+          columnData={columnData}
+        />
+      );
+  }
 };
