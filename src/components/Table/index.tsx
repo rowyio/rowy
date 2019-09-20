@@ -51,7 +51,7 @@ const onSubmit = (fieldName: string) => (
   ref: firebase.firestore.DocumentReference,
   value: any
 ) => {
-  if (!!value) {
+  if (value !== null || value !== undefined) {
     ref.update({ [fieldName]: value });
   }
 };
