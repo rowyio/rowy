@@ -1,18 +1,15 @@
 import React from "react";
 import TextField from "@material-ui/core/TextField";
 const Number = (props: any) => {
-  const { isFocusedCell, cellData, cellActions } = props;
-  if (isFocusedCell)
-    return (
-      <TextField
-        autoFocus
-        type="number"
-        defaultValue={cellData}
-        onChange={e => {
-          cellActions.update(e.target.value);
-        }}
-      />
-    );
-  else return <p>{cellData}</p>;
+  const { value, cellActions } = props;
+  return (
+    <TextField
+      autoFocus
+      type="number"
+      defaultValue={value}
+      onChange={e => {}}
+    />
+  );
+  // else return <p>{cellData}</p>;
 };
 export default Number;
