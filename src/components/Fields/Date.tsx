@@ -32,12 +32,14 @@ const Date = (props: Props) => {
         <DatePicker
           value={value ? value.toDate() : null}
           onChange={handleDateChange}
+          format="dd/MM/yy"
           emptyLabel="select a date"
         />
       ) : (
         <DateTimePicker
           value={value ? value.toDate() : null}
           onChange={handleDateChange}
+          format="dd/MM/yy HH:mm a"
           emptyLabel="select a time"
         />
       )}
