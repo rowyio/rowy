@@ -2,6 +2,7 @@ import React from "react";
 
 import { TextField } from "@material-ui/core";
 
+// TODO: Create an interface for props
 const SimpleText = (props: any) => {
   const { isFocusedCell, cellData, cellActions } = props;
 

@@ -3,6 +3,7 @@ import { useDropzone } from "react-dropzone";
 import useUploader from "../../hooks/useFiretable/useUploader";
 
 // TODO:  indecate state completion / error
+// TODO: Create an interface for props
 const Image = (props: any) => {
   const { columnData, cellData, cellActions, rowData, rowIndex } = props;
   const [uploaderState, upload] = useUploader();

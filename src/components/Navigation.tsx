@@ -57,6 +57,7 @@ const useStyles = makeStyles(theme =>
   })
 );
 
+// TODO: Create an interface for props
 const Navigation = (props: any) => {
   const router = useRouter();
   const classes = useStyles();

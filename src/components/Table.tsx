@@ -205,6 +205,7 @@ class MuiVirtualizedTable extends React.PureComponent<
 
 const VirtualizedTable = withStyles(styles)(MuiVirtualizedTable);
 
+// TODO: Create an interface for props
 export default function Table(props: any) {
   const { collection } = props;
   const { tableState, tableActions } = useFiretable(collection);

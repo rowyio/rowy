@@ -13,6 +13,7 @@ import {
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 
+// TODO: Create an interface for props
 export default function ColumnDialog(props: any) {
   const { classes, columnName, updateColumn } = props;
   const [open, setOpen] = React.useState(false);

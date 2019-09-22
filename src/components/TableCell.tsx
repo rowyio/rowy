@@ -17,6 +17,7 @@ import Date from "./Fields/Date";
 import DateTime from "./Fields/DateTime";
 import Image from "./Fields/Image";
 
+// TODO: Create an interface for props
 const TableCell = (props: any) => {
   const {
     fieldType,

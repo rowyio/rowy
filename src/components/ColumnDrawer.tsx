@@ -34,6 +34,7 @@ const useStyles = makeStyles(() =>
   })
 );
 
+// TODO: Create an interface for props
 export default function ColumnDrawer(props: any) {
   const { addColumn, columns } = props;
   const classes = useStyles();

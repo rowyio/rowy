@@ -13,6 +13,7 @@ import {
   Fab,
 } from "@material-ui/core";
 
+// TODO: Create an interface for props
 export default function CreateTableDialog(props: any) {
   const { classes, createTable } = props;
   const [open, setOpen] = React.useState(false);

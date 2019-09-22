@@ -9,6 +9,7 @@ import {
   DateTimePicker,
 } from "@material-ui/pickers";
 
+// TODO: Create an interface for props
 const DateTime = (props: any) => {
   const {
     isFocusedCell,
