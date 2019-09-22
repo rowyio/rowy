@@ -18,9 +18,9 @@ const App: React.FC = () => {
       <AuthProvider>
         <CustomBrowserRouter>
           <div>
-            <Route exact path="/auth" component={AuthView} />
-            <PrivateRoute exact path="/" component={TablesView} />
-            <PrivateRoute path="/table/" component={TableView} />
+            <Route exact path="/auth" render={() => <AuthView />} />
+            <PrivateRoute exact path="/" render={() => <TablesView />} />
+            <PrivateRoute path="/table/" render={() => <TableView />} />
           </div>
         </CustomBrowserRouter>
       </AuthProvider>
