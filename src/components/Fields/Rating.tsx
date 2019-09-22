@@ -2,7 +2,14 @@ import React from "react";
 import MuiRating from "@material-ui/lab/Rating";
 
 // TODO: Create an interface for props
-const Rating = (props: any) => {
+
+interface Props {
+  value: number | null;
+  row: any;
+  onSubmit: Function;
+  //fieldType: FieldType;
+}
+const Rating = (props: Props) => {
   const { value, row, onSubmit } = props;
   return (
     <MuiRating

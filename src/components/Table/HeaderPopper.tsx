@@ -9,21 +9,22 @@ import Select from "@material-ui/core/Select";
 import Popper from "@material-ui/core/Popper";
 import Fade from "@material-ui/core/Fade";
 import Paper from "@material-ui/core/Paper";
+import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
 import { TextField, Grid } from "@material-ui/core";
 import { FIELDS } from "../Fields";
 const useStyles = makeStyles(Theme =>
   createStyles({
     container: {
-      padding: 10
+      padding: 10,
     },
     typography: {
-      padding: 1
+      padding: 1,
     },
     header: {
       position: "absolute",
       left: 0,
-      top: 0
+      top: 0,
       //zIndex: 100000
     },
     button: {
@@ -31,15 +32,15 @@ const useStyles = makeStyles(Theme =>
     },
     root: {
       display: "flex",
-      flexWrap: "wrap"
+      flexWrap: "wrap",
     },
     formControl: {
       margin: Theme.spacing(1),
-      minWidth: 120
+      minWidth: 120,
     },
     selectEmpty: {
-      marginTop: Theme.spacing(2)
-    }
+      marginTop: Theme.spacing(2),
+    },
   })
 );
 const HeaderPopper = (props: any) => {
@@ -47,7 +48,7 @@ const HeaderPopper = (props: any) => {
   console.log(column);
   const [values, setValues] = React.useState({
     age: "",
-    name: "hai"
+    name: "hai",
   });
   console.log(props);
   const classes = useStyles();
@@ -56,51 +57,53 @@ const HeaderPopper = (props: any) => {
   ) {
     setValues(oldValues => ({
       ...oldValues,
-      [event.target.name as string]: event.target.value
+      [event.target.name as string]: event.target.value,
     }));
   }
-
+  console.log(column);
   if (column) {
     return (
-      <Popper
-        id={`id-${column.name}`}
-        open={!!anchorEl}
-        anchorEl={anchorEl}
-        transition
-      >
-        {({ TransitionProps }) => (
-          <Fade {...TransitionProps} timeout={350}>
-            <Paper className={classes.container}>
-              <Grid container direction="column">
-                <TextField label="Column name" defaultValue={column.name} />
-                <FormControl className={classes.formControl}>
-                  <InputLabel htmlFor="age-simple">Field Type</InputLabel>
-                  <Select
-                    value={FIELDS[0].type}
-                    onChange={handleChange}
-                    inputProps={{
-                      name: "age",
-                      id: "age-simple"
-                    }}
-                  >
-                    {FIELDS.map((field: any) => {
-                      return (
-                        <MenuItem value={field.type}>
-                          {field.icon} {field.name}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                  <Button>Add</Button>
-                  <Button color="secondary" onClick={handleClose}>
-                    cancel
-                  </Button>
-                </FormControl>
-              </Grid>
-            </Paper>
-          </Fade>
-        )}
-      </Popper>
+      <ClickAwayListener onClickAway={handleClose}>
+        <Popper
+          id={`id-${column.name}`}
+          open={!!anchorEl}
+          anchorEl={anchorEl}
+          transition
+        >
+          {({ TransitionProps }) => (
+            <Fade {...TransitionProps} timeout={350}>
+              <Paper className={classes.container}>
+                <Grid container direction="column">
+                  <TextField label="Column name" defaultValue={column.name} />
+                  <FormControl className={classes.formControl}>
+                    <InputLabel htmlFor="age-simple">Field Type</InputLabel>
+                    <Select
+                      value={column.type}
+                      onChange={handleChange}
+                      inputProps={{
+                        name: "age",
+                        id: "age-simple",
+                      }}
+                    >
+                      {FIELDS.map((field: any) => {
+                        return (
+                          <MenuItem value={field.type}>
+                            {field.icon} {field.name}
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                    <Button>Add</Button>
+                    <Button color="secondary" onClick={handleClose}>
+                      cancel
+                    </Button>
+                  </FormControl>
+                </Grid>
+              </Paper>
+            </Fade>
+          )}
+        </Popper>
+      </ClickAwayListener>
     );
   }
   return <div />;

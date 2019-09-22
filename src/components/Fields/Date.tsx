@@ -11,7 +11,14 @@ import {
 } from "@material-ui/pickers";
 
 // TODO: Create an interface for props
-const Date = (props: any) => {
+interface Props {
+  value: firebase.firestore.Timestamp | null;
+  row: any;
+  onSubmit: Function;
+  fieldType: FieldType;
+}
+
+const Date = (props: Props) => {
   const { value, row, onSubmit, fieldType } = props;
   function handleDateChange(date: Date | null) {
     if (date) {
@@ -25,12 +32,14 @@ const Date = (props: any) => {
         <DatePicker
           value={value ? value.toDate() : null}
           onChange={handleDateChange}
+          format="dd/MM/yy"
           emptyLabel="select a date"
         />
       ) : (
         <DateTimePicker
           value={value ? value.toDate() : null}
           onChange={handleDateChange}
+          format="dd/MM/yy HH:mm a"
           emptyLabel="select a time"
         />
       )}

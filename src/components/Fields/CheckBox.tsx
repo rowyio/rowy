@@ -3,12 +3,18 @@ import React from "react";
 import { Checkbox } from "@material-ui/core";
 
 // TODO: Create an interface for props
-const CheckBox = (props: any) => {
+interface Props {
+  value: boolean | null;
+  row: any;
+  onSubmit: Function;
+}
+
+const CheckBox = (props: Props) => {
   const { value, row, onSubmit } = props;
   return (
     <Checkbox
       name={`checkBox-controlled-${row.id}`}
-      checked={value}
+      checked={!!value}
       onChange={e => {
         onSubmit(row.ref, !value);
       }}
