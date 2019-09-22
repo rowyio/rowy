@@ -15,7 +15,6 @@ import Date from "../Fields/Date";
 import Rating from "../Fields/Rating";
 import CheckBox from "../Fields/CheckBox";
 import UrlLink from "../Fields/UrlLink";
-
 const useStyles = makeStyles(Theme =>
   createStyles({
     typography: {
@@ -26,8 +25,8 @@ const useStyles = makeStyles(Theme =>
       left: 0,
       top: 0
     },
-    button: {
-      // margin: theme.spacing(1)
+    headerButton: {
+      width: "100%"
     }
   })
 );
@@ -65,7 +64,6 @@ const DateFormatter = (fieldName: string, fieldType: FieldType) => (
 };
 
 const formatter = (fieldType: FieldType, fieldName: string) => {
-  console.log(fieldType);
   switch (fieldType) {
     case FieldType.date:
     case FieldType.dateTime:
@@ -95,45 +93,67 @@ function Table(props: any) {
 
   const [header, setHeader] = useState<any | null>();
 
-  const handleClick = (
+  const handleCloseHeader = () => {
+    setHeader(null);
+    setAnchorEl(null);
+  };
+  const handleClick = (headerProps: any) => (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
+    handleCloseHeader();
     setAnchorEl(event.currentTarget);
+    setHeader(headerProps);
   };
 
   const onGridRowsUpdated = (props: any) => {
     const { fromRowData, updated } = props;
     fromRowData.ref.update(updated);
   };
-
+  const onCellSelected = (args: any) => {
+    handleCloseHeader();
+    console.log(args);
+  };
   const headerRenderer = (props: any) => {
-    console.log(props);
-    return (
-      <div className={classes.header}>
-        {props.column.name}{" "}
-        <IconButton
-          disableFocusRipple
-          onClick={handleClick}
-          className={classes.button}
-          aria-label="delete"
-        >
-          <EditIcon />
-        </IconButton>
-      </div>
-    );
+    switch (props.column.key) {
+      case "new":
+        return (
+          <Button onClick={handleClick(props)} className={classes.header}>
+            {props.column.name}
+          </Button>
+        );
+      default:
+        return (
+          <div className={classes.header}>
+            <Button
+              className={classes.headerButton}
+              onClick={handleClick(props)}
+              aria-label="edit"
+            >
+              {props.column.name} <EditIcon />
+            </Button>
+          </div>
+        );
+    }
   };
 
   if (tableState.columns) {
-    const columns = tableState.columns.map((column: any) => ({
+    let columns = tableState.columns.map((column: any) => ({
       key: column.fieldName,
       name: column.columnName,
       editable: editable(column.type),
       resizeable: true,
-      frozen: column.fieldName === "cohort",
+      //  frozen: column.fieldName === "cohort",
       headerRenderer: headerRenderer,
       formatter: formatter(column.type, column.fieldName),
-      width: 200
+      width: 200,
+      ...column
     }));
+    columns.push({
+      key: "new",
+      name: "Add column",
+      width: 160,
+      headerRenderer: headerRenderer
+    });
     const rows = tableState.rows;
     return (
       <>
@@ -145,10 +165,14 @@ function Table(props: any) {
           enableCellSelect={true}
           onCellCopyPaste={copyPaste}
           minHeight={500}
-          // getCellActions={getCellActions}
+          onCellSelected={onCellSelected}
         />
         <Button onClick={tableActions.row.add}>Add Row</Button>
-        <HeaderPopper anchorEl={anchorEl} />
+        <HeaderPopper
+          handleClose={handleCloseHeader}
+          anchorEl={anchorEl}
+          column={header && header.column}
+        />
       </>
     );
   } else return <p>Loading</p>;

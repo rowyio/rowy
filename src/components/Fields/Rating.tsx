@@ -5,7 +5,7 @@ const Rating = (props: any) => {
   const { value, row, onSubmit } = props;
   return (
     <MuiRating
-      // TODO: make it uniqe for each
+      // TODO: make it unique for each
       name={`rating-controlled-${row.id}`}
       value={value}
       onChange={(event, newValue) => {
