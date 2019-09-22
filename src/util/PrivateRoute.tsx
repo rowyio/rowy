@@ -1,15 +1,19 @@
 import React, { useContext } from "react";
-import { Route, Redirect } from "react-router-dom";
+import { Route, RouteProps, Redirect } from "react-router-dom";
 import AuthContext from "../contexts/authContext";
 
-const PrivateRoute = ({ component: RouteComponent, ...rest }: any) => {
+interface IPrivateRouteProps extends RouteProps {
+  render: NonNullable<RouteProps["render"]>;
+}
+
+const PrivateRoute: React.FC<IPrivateRouteProps> = ({ render, ...rest }) => {
   const { currentUser } = useContext(AuthContext);
   return (
     <Route
       {...rest}
       render={routeProps =>
         !!currentUser ? (
-          <RouteComponent {...routeProps} />
+          render(routeProps)
         ) : currentUser === null ? (
           <Redirect to={"/auth"} />
         ) : (

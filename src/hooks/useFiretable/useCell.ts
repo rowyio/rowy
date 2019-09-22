@@ -14,7 +14,7 @@ const cellReducer = (prevState: any, newProps: any) => {
 };
 const cellIntialState = {
   prevCell: null,
-  cell: null
+  cell: null,
 };
 
 const updateCell = (cell: Cell) => {
@@ -23,7 +23,7 @@ const updateCell = (cell: Cell) => {
 const useCell = (intialOverrides: any) => {
   const [cellState, cellDispatch] = useReducer(cellReducer, {
     ...cellIntialState,
-    ...intialOverrides
+    ...intialOverrides,
   });
   useEffect(() => {
     const { prevCell, updatedValue } = cellState;

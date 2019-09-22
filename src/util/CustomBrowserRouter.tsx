@@ -3,7 +3,11 @@ import { BrowserRouter, Route } from "react-router-dom";
 
 export const RouterContext = React.createContext({});
 
-const CustomBrowserRouter = ({ children }: any) => (
+interface ICustomBrowserProps {
+  children: React.ReactNode;
+}
+
+const CustomBrowserRouter: React.FC<ICustomBrowserProps> = ({ children }) => (
   <BrowserRouter>
     <Route>
       {routeProps => (

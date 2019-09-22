@@ -1,15 +1,16 @@
 import React from "react";
-import "date-fns";
 import DateFnsUtils from "@date-io/date-fns";
+
+import { FieldType } from ".";
 import {
   MuiPickersUtilsProvider,
   // KeyboardTimePicker,
   // KeyboardDatePicker,
   DatePicker,
-  DateTimePicker
+  DateTimePicker,
 } from "@material-ui/pickers";
-import { FieldType } from ".";
 
+// TODO: Create an interface for props
 const Date = (props: any) => {
   const { value, row, onSubmit, fieldType } = props;
   function handleDateChange(date: Date | null) {

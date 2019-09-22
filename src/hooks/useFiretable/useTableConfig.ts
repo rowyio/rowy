@@ -3,7 +3,7 @@ import useDoc, { DocActions } from "../useDoc";
 import { FieldType } from "../../components/Fields";
 const useTableConfig = (tablePath: string) => {
   const [tableConfigState, documentDispatch] = useDoc({
-    path: `${tablePath}/_FIRETABLE_`
+    path: `${tablePath}/_FIRETABLE_`,
   });
   useEffect(() => {
     const { doc, columns } = tableConfigState;
@@ -22,12 +22,12 @@ const useTableConfig = (tablePath: string) => {
     const { columns } = tableConfigState;
     documentDispatch({
       action: DocActions.update,
-      data: { columns: [...columns, { columnName, fieldName, type }] }
+      data: { columns: [...columns, { columnName, fieldName, type }] },
     });
   };
   const actions = {
     addColumn,
-    setTable
+    setTable,
   };
   return [tableConfigState, actions];
 };

@@ -23,7 +23,7 @@ const useFiretable = (collectionName: string) => {
   const tab = useKeyCode(9);
   const [tableConfig, configActions] = useTableConfig(collectionName);
   const [tableState, tableActions] = useTable({
-    path: collectionName
+    path: collectionName,
   });
   const [cellState, cellActions] = useCell({});
 
@@ -41,7 +41,7 @@ const useFiretable = (collectionName: string) => {
           docRef: tableState.rows[nextRowIndex].ref,
           fieldName: cellState.cell.fieldName,
           rowIndex: nextRowIndex,
-          value: tableState.rows[nextRowIndex].value
+          value: tableState.rows[nextRowIndex].value,
         };
         cellActions.set(nextCell);
       }
@@ -61,7 +61,7 @@ const useFiretable = (collectionName: string) => {
           docRef: tableState.rows[nextRowIndex].ref,
           fieldName: cellState.cell.fieldName,
           rowIndex: nextRowIndex,
-          value: tableState.rows[nextRowIndex].value
+          value: tableState.rows[nextRowIndex].value,
         };
         cellActions.set(nextCell);
       }
@@ -76,13 +76,13 @@ const useFiretable = (collectionName: string) => {
   const state: FiretableState = {
     cell: cellState.cell,
     columns: tableConfig.columns,
-    rows: tableState.rows
+    rows: tableState.rows,
   };
   const actions: FiretableActions = {
     cell: { ...cellActions },
     column: { add: configActions.addColumn },
     row: { add: tableActions.addRow, delete: tableActions.deleteRow },
-    table: { set: setTable }
+    table: { set: setTable },
   };
 
   return { tableState: state, tableActions: actions };

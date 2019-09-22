@@ -10,7 +10,7 @@ export const stagingConfig = {
   databaseURL: `https://${STAGING_PROJECT_NAME}.firebaseio.com`,
   projectId: STAGING_PROJECT_NAME,
   storageBucket: `${STAGING_PROJECT_NAME}.appspot.com`,
-  messagingSenderId: "236015562107"
+  messagingSenderId: "236015562107",
 };
 
 export const productionConfig = stagingConfig;
