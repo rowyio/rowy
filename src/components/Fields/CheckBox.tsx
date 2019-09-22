@@ -4,17 +4,13 @@ import { Checkbox } from "@material-ui/core";
 
 // TODO: Create an interface for props
 const CheckBox = (props: any) => {
-  const { columnData, cellData, cellActions, rowData, rowIndex } = props;
+  const { value, row, onSubmit } = props;
   return (
     <Checkbox
-      checked={cellData}
+      name={`checkBox-controlled-${row.id}`}
+      checked={value}
       onChange={e => {
-        cellActions.updateFirestore({
-          rowIndex,
-          value: !cellData,
-          docRef: rowData.ref,
-          fieldName: columnData.fieldName,
-        });
+        onSubmit(row.ref, !value);
       }}
     />
   );
