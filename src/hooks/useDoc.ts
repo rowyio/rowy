@@ -3,7 +3,7 @@ import { useEffect, useReducer } from "react";
 
 export enum DocActions {
   update,
-  delete
+  delete,
 }
 const documentReducer = (prevState: any, newProps: any) => {
   switch (newProps.action) {
@@ -22,13 +22,13 @@ const documentIntialState = {
   prevPath: null,
   doc: null,
   ref: null,
-  loading: true
+  loading: true,
 };
 
 const useDoc = (intialOverrides: any) => {
   const [documentState, documentDispatch] = useReducer(documentReducer, {
     ...documentIntialState,
-    ...intialOverrides
+    ...intialOverrides,
   });
   const setDocumentListner = () => {
     documentDispatch({ prevPath: documentState.path });
@@ -41,7 +41,7 @@ const useDoc = (intialOverrides: any) => {
         documentDispatch({
           doc,
           ref: snapshot.ref,
-          loading: false
+          loading: false,
         });
       }
     });

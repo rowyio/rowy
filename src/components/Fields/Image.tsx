@@ -20,7 +20,7 @@ const Image = (props: any) => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     multiple: false,
-    accept: ["image/png", "image/jpg", "image/jpeg"]
+    accept: ["image/png", "image/jpg", "image/jpeg"],
   });
   return (
     <div {...getRootProps()}>

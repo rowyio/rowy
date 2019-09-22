@@ -4,7 +4,7 @@ import { db } from "../firebase";
 
 const useSettings = () => {
   const [settingsState, documentDispatch] = useDoc({
-    path: "_FIRETABLE_/settings"
+    path: "_FIRETABLE_/settings",
   });
   useEffect(() => {
     //updates tables data on document change
@@ -19,7 +19,7 @@ const useSettings = () => {
     // updates the setting doc
     documentDispatch({
       action: DocActions.update,
-      data: { tables: [...tables, { name, collection }] }
+      data: { tables: [...tables, { name, collection }] },
     });
     //create the firetable collection doc with empty columns
     db.collection(collection)
