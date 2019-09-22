@@ -3,6 +3,7 @@ import _camelCase from "lodash/camelCase";
 
 import {
   makeStyles,
+  createStyles,
   Drawer,
   List,
   Divider,
@@ -16,20 +17,22 @@ import AddIcon from "@material-ui/icons/Add";
 
 import { FIELDS } from "./Fields";
 
-const useStyles = makeStyles({
-  list: {
-    width: 250,
-  },
-  fields: {
-    paddingLeft: 15,
+const useStyles = makeStyles(() =>
+  createStyles({
+    list: {
+      width: 250,
+    },
+    fields: {
+      paddingLeft: 15,
 
-    paddingRight: 15,
-  },
+      paddingRight: 15,
+    },
 
-  fullList: {
-    width: "auto",
-  },
-});
+    fullList: {
+      width: "auto",
+    },
+  })
+);
 
 export default function ColumnDrawer(props: any) {
   const { addColumn, columns } = props;

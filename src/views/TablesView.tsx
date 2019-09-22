@@ -2,6 +2,7 @@ import React from "react";
 
 import {
   makeStyles,
+  createStyles,
   Card,
   CardActions,
   CardContent,
@@ -13,22 +14,24 @@ import {
 import useSettings from "../hooks/useSettings";
 import useRouter from "../hooks/useRouter";
 
-const useStyles = makeStyles({
-  card: {
-    minWidth: 275,
-  },
-  bullet: {
-    display: "inline-block",
-    margin: "0 2px",
-    transform: "scale(0.8)",
-  },
-  title: {
-    fontSize: 14,
-  },
-  pos: {
-    marginBottom: 12,
-  },
-});
+const useStyles = makeStyles(() =>
+  createStyles({
+    card: {
+      minWidth: 275,
+    },
+    bullet: {
+      display: "inline-block",
+      margin: "0 2px",
+      transform: "scale(0.8)",
+    },
+    title: {
+      fontSize: 14,
+    },
+    pos: {
+      marginBottom: 12,
+    },
+  })
+);
 
 const TablesView = (props: any) => {
   const [settings, createTable] = useSettings();

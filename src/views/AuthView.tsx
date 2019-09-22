@@ -3,6 +3,7 @@ import React from "react";
 import { maxWidth } from "@material-ui/system";
 import {
   makeStyles,
+  createStyles,
   Card,
   CardActions,
   CardContent,
@@ -13,19 +14,21 @@ import {
 import { googleProvider, auth } from "../firebase";
 import useRouter from "../hooks/useRouter";
 
-const useStyles = makeStyles({
-  card: {
-    margin: "auto",
-    minWidth: 275,
-    maxWidth: 300,
-  },
-  button: {
-    width: "100%",
-  },
-  header: {
-    textAlign: "center",
-  },
-});
+const useStyles = makeStyles(() =>
+  createStyles({
+    card: {
+      margin: "auto",
+      minWidth: 275,
+      maxWidth: 300,
+    },
+    button: {
+      width: "100%",
+    },
+    header: {
+      textAlign: "center",
+    },
+  })
+);
 
 // googleProvider.addScope("https://www.googleapis.com/auth/contacts.readonly");
 

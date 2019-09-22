@@ -1,8 +1,8 @@
 import React from "react";
 
 import {
-  createStyles,
   makeStyles,
+  createStyles,
   AppBar,
   CssBaseline,
   Toolbar,
@@ -11,7 +11,6 @@ import {
   Paper,
   Button,
 } from "@material-ui/core";
-import { Theme } from "@material-ui/core/styles";
 import MenuIcon from "@material-ui/icons/Menu";
 import Skeleton from "@material-ui/lab/Skeleton";
 
@@ -20,7 +19,7 @@ import CreateTableDialog from "./CreateTableDialog";
 import useSettings from "../hooks/useSettings";
 import useRouter from "../hooks/useRouter";
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(theme =>
   createStyles({
     text: {
       padding: theme.spacing(2, 2, 0),
