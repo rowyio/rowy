@@ -11,7 +11,14 @@ import {
 } from "@material-ui/pickers";
 
 // TODO: Create an interface for props
-const Date = (props: any) => {
+interface Props {
+  value: firebase.firestore.Timestamp | null;
+  row: any;
+  onSubmit: Function;
+  fieldType: FieldType;
+}
+
+const Date = (props: Props) => {
   const { value, row, onSubmit, fieldType } = props;
   function handleDateChange(date: Date | null) {
     if (date) {
