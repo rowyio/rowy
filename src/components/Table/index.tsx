@@ -18,16 +18,16 @@ import UrlLink from "../Fields/UrlLink";
 const useStyles = makeStyles(Theme =>
   createStyles({
     typography: {
-      padding: 1
+      padding: 1,
     },
     header: {
       position: "absolute",
       left: 0,
-      top: 0
+      top: 0,
     },
     headerButton: {
-      width: "100%"
-    }
+      width: "100%",
+    },
   })
 );
 
@@ -145,14 +145,14 @@ function Table(props: any) {
       //  frozen: column.fieldName === "cohort",
       headerRenderer: headerRenderer,
       formatter: formatter(column.type, column.fieldName),
-      width: 200,
-      ...column
+      width: 220,
+      ...column,
     }));
     columns.push({
       key: "new",
       name: "Add column",
       width: 160,
-      headerRenderer: headerRenderer
+      headerRenderer: headerRenderer,
     });
     const rows = tableState.rows;
     return (
