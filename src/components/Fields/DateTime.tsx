@@ -1,13 +1,13 @@
 import React from "react";
-
 import DateFnsUtils from "@date-io/date-fns";
+
+import { Button } from "@material-ui/core";
 import {
   MuiPickersUtilsProvider,
   // KeyboardTimePicker,
   // KeyboardDatePicker,
-  DateTimePicker
+  DateTimePicker,
 } from "@material-ui/pickers";
-import Button from "@material-ui/core/Button";
 
 const DateTime = (props: any) => {
   const {
@@ -16,7 +16,7 @@ const DateTime = (props: any) => {
     cellData,
     cellActions,
     rowData,
-    rowIndex
+    rowIndex,
   } = props;
   function handleDateChange(date: Date | null) {
     if (date) {
@@ -24,7 +24,7 @@ const DateTime = (props: any) => {
         rowIndex,
         value: date,
         docRef: rowData.ref,
-        fieldName: columnData.fieldName
+        fieldName: columnData.fieldName,
       };
       cellActions.updateFirestore(cell);
     }

@@ -1,5 +1,6 @@
 import React from "react";
-import Checkbox from "@material-ui/core/Checkbox";
+
+import { Checkbox } from "@material-ui/core";
 
 const CheckBox = (props: any) => {
   const { columnData, cellData, cellActions, rowData, rowIndex } = props;
@@ -11,10 +12,11 @@ const CheckBox = (props: any) => {
           rowIndex,
           value: !cellData,
           docRef: rowData.ref,
-          fieldName: columnData.fieldName
+          fieldName: columnData.fieldName,
         });
       }}
     />
   );
 };
+
 export default CheckBox;

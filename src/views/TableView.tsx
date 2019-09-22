@@ -1,9 +1,12 @@
 import React, { useEffect } from "react";
-import { makeStyles } from "@material-ui/core/styles";
+
+import { makeStyles } from "@material-ui/core";
 
 import Navigation from "../components/Navigation";
 import Table from "../components/Table";
+
 import useRouter from "../hooks/useRouter";
+
 const useStyles = makeStyles({});
 
 export default function TableView() {

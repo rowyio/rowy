@@ -1,31 +1,34 @@
 import React, { useState, useEffect } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Drawer from "@material-ui/core/Drawer";
-import List from "@material-ui/core/List";
-import Divider from "@material-ui/core/Divider";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
+import _camelCase from "lodash/camelCase";
 
+import {
+  makeStyles,
+  Drawer,
+  List,
+  Divider,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  IconButton,
+  TextField,
+} from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 
-import IconButton from "@material-ui/core/IconButton";
-import TextField from "@material-ui/core/TextField";
-import _camelCase from "lodash/camelCase";
 import { FIELDS } from "./Fields";
+
 const useStyles = makeStyles({
   list: {
-    width: 250
+    width: 250,
   },
   fields: {
     paddingLeft: 15,
 
-    paddingRight: 15
+    paddingRight: 15,
   },
 
   fullList: {
-    width: "auto"
-  }
+    width: "auto",
+  },
 });
 
 export default function ColumnDrawer(props: any) {
