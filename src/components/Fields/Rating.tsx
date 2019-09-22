@@ -1,6 +1,7 @@
 import React from "react";
 import MuiRating from "@material-ui/lab/Rating";
 
+// TODO: Create an interface for props
 const Rating = (props: any) => {
   const { columnData, cellData, cellActions, rowData, rowIndex } = props;
   return (
@@ -12,7 +13,7 @@ const Rating = (props: any) => {
           rowIndex,
           value: newValue,
           docRef: rowData.ref,
-          fieldName: columnData.fieldName
+          fieldName: columnData.fieldName,
         };
         cellActions.updateFirestore(cell);
       }}

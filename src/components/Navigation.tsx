@@ -1,56 +1,63 @@
 import React from "react";
-import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import IconButton from "@material-ui/core/IconButton";
-import Paper from "@material-ui/core/Paper";
+
+import {
+  makeStyles,
+  createStyles,
+  AppBar,
+  CssBaseline,
+  Toolbar,
+  Typography,
+  IconButton,
+  Paper,
+  Button,
+} from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
-import Button from "@material-ui/core/Button";
 import Skeleton from "@material-ui/lab/Skeleton";
-import useSettings from "../hooks/useSettings";
 
 import CreateTableDialog from "./CreateTableDialog";
+
+import useSettings from "../hooks/useSettings";
 import useRouter from "../hooks/useRouter";
-const useStyles = makeStyles((theme: Theme) =>
+
+const useStyles = makeStyles(theme =>
   createStyles({
     text: {
-      padding: theme.spacing(2, 2, 0)
+      padding: theme.spacing(2, 2, 0),
     },
     paper: {
       paddingBottom: 20,
-      paddingTop: 5
+      paddingTop: 5,
     },
 
     subheader: {
-      backgroundColor: theme.palette.background.paper
+      backgroundColor: theme.palette.background.paper,
     },
     appBar: {
       top: "auto",
-      bottom: 0
+      bottom: 0,
     },
     grow: {
-      flexGrow: 1
+      flexGrow: 1,
     },
     fabButton: {
       position: "absolute",
       zIndex: 1,
       top: -30,
       right: 20,
-      margin: "0 auto"
+      margin: "0 auto",
     },
     button: {
       color: "#fff",
-      marginLeft: 8
+      marginLeft: 8,
     },
     skeleton: {
       marginLeft: 8,
-      borderRadius: 5
-    }
+      borderRadius: 5,
+    },
   })
 );
 
+// TODO: Create an interface for props
 const Navigation = (props: any) => {
   const router = useRouter();
   const classes = useStyles();

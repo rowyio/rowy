@@ -5,7 +5,7 @@ interface AuthContextInterface {
 }
 
 const AuthContext = React.createContext<AuthContextInterface>({
-  currentUser: undefined
+  currentUser: undefined,
 });
 
 export default AuthContext;

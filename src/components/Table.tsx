@@ -1,21 +1,22 @@
 import React, { useEffect } from "react";
 import clsx from "clsx";
+
+import { Theme, WithStyles } from "@material-ui/core/styles";
 import {
+  TableCell as MuiTableCell,
   createStyles,
-  Theme,
   withStyles,
-  WithStyles
-} from "@material-ui/core/styles";
-import { TableCell as MuiTableCell } from "@material-ui/core";
-import Paper from "@material-ui/core/Paper";
+  Paper,
+  Button,
+} from "@material-ui/core";
+
 import {
   AutoSizer,
   Column,
   Table as MuiTable,
   TableCellRenderer,
-  TableHeaderProps
+  TableHeaderProps,
 } from "react-virtualized";
-import Button from "@material-ui/core/Button";
 
 import { FieldType, getFieldIcon } from "./Fields";
 import ColumnDrawer from "./ColumnDrawer";
@@ -29,22 +30,22 @@ const styles = (theme: Theme) =>
     flexContainer: {
       display: "flex",
       alignItems: "center",
-      boxSizing: "border-box"
+      boxSizing: "border-box",
     },
     tableRow: {
-      cursor: "pointer"
+      cursor: "pointer",
     },
     tableRowHover: {
       "&:hover": {
-        backgroundColor: theme.palette.grey[200]
-      }
+        backgroundColor: theme.palette.grey[200],
+      },
     },
     tableCell: {
-      flex: 1
+      flex: 1,
     },
     noClick: {
-      cursor: "initial"
-    }
+      cursor: "initial",
+    },
   });
 
 interface ColumnData {
@@ -75,14 +76,14 @@ class MuiVirtualizedTable extends React.PureComponent<
 > {
   static defaultProps = {
     headerHeight: 48,
-    rowHeight: 40
+    rowHeight: 40,
   };
 
   getRowClassName = ({ index }: Row) => {
     const { classes, onRowClick } = this.props;
 
     return clsx(classes.tableRow, classes.flexContainer, {
-      [classes.tableRowHover]: index !== -1 && onRowClick != null
+      [classes.tableRowHover]: index !== -1 && onRowClick != null,
     });
   };
 
@@ -93,7 +94,7 @@ class MuiVirtualizedTable extends React.PureComponent<
     dataKey,
     isScrolling,
     rowData,
-    rowIndex
+    rowIndex,
   }) => {
     const {
       columns,
@@ -101,7 +102,7 @@ class MuiVirtualizedTable extends React.PureComponent<
       rowHeight,
       onRowClick,
       cellActions,
-      focusedCell
+      focusedCell,
     } = this.props;
     const fieldType = columnData.fieldType;
     return (
@@ -125,7 +126,7 @@ class MuiVirtualizedTable extends React.PureComponent<
     label,
     columnData,
     dataKey,
-    columnIndex
+    columnIndex,
   }: TableHeaderProps & { columnIndex: number }) => {
     const { headerHeight, columns, classes } = this.props;
 
@@ -183,7 +184,7 @@ class MuiVirtualizedTable extends React.PureComponent<
                       headerRenderer={headerProps =>
                         this.headerRenderer({
                           ...headerProps,
-                          columnIndex: index
+                          columnIndex: index,
                         })
                       }
                       className={classes.flexContainer}
@@ -192,7 +193,7 @@ class MuiVirtualizedTable extends React.PureComponent<
                       {...other}
                     />
                   );
-                })
+                }),
               ]}
             </MuiTable>
           </>
@@ -204,6 +205,7 @@ class MuiVirtualizedTable extends React.PureComponent<
 
 const VirtualizedTable = withStyles(styles)(MuiVirtualizedTable);
 
+// TODO: Create an interface for props
 export default function Table(props: any) {
   const { collection } = props;
   const { tableState, tableActions } = useFiretable(collection);
@@ -234,8 +236,8 @@ export default function Table(props: any) {
                   columnData: {
                     fieldType: column.type,
                     fieldName: column.fieldName,
-                    actions: {}
-                  }
+                    actions: {},
+                  },
                 })
               ),
               {
@@ -246,10 +248,10 @@ export default function Table(props: any) {
                   fieldType: "DELETE",
                   actions: {
                     addColumn: tableActions.column.add,
-                    deleteRow: tableActions.row.delete
-                  }
-                }
-              }
+                    deleteRow: tableActions.row.delete,
+                  },
+                },
+              },
             ]}
           />
         </Paper>

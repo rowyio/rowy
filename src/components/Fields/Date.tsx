@@ -1,14 +1,15 @@
 import React from "react";
-import "date-fns";
 import DateFnsUtils from "@date-io/date-fns";
+
+import { Button } from "@material-ui/core";
 import {
   MuiPickersUtilsProvider,
   // KeyboardTimePicker,
   // KeyboardDatePicker,
-  DatePicker
+  DatePicker,
 } from "@material-ui/pickers";
-import Button from "@material-ui/core/Button";
 
+// TODO: Create an interface for props
 const Date = (props: any) => {
   const {
     isFocusedCell,
@@ -16,7 +17,7 @@ const Date = (props: any) => {
     cellData,
     cellActions,
     rowData,
-    rowIndex
+    rowIndex,
   } = props;
   function handleDateChange(date: Date | null) {
     if (date) {
@@ -24,7 +25,7 @@ const Date = (props: any) => {
         rowIndex,
         value: date,
         docRef: rowData.ref,
-        fieldName: columnData.fieldName
+        fieldName: columnData.fieldName,
       };
       cellActions.updateFirestore(cell);
     }

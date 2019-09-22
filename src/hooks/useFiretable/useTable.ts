@@ -31,13 +31,13 @@ const tableIntialState = {
   limit: 20,
   loading: true,
   sort: { field: "createdAt", direction: "asc" },
-  cap: CAP
+  cap: CAP,
 };
 
 const useTable = (intialOverrides: any) => {
   const [tableState, tableDispatch] = useReducer(tableReducer, {
     ...tableIntialState,
-    ...intialOverrides
+    ...intialOverrides,
   });
   const getRows = (
     filters: {
@@ -59,7 +59,7 @@ const useTable = (intialOverrides: any) => {
       prevFilters: filters,
       prevLimit: limit,
       prevPath: tableState.path,
-      loading: true
+      loading: true,
     });
     let query:
       | firebase.firestore.CollectionReference
@@ -90,12 +90,12 @@ const useTable = (intialOverrides: any) => {
           .filter(doc => doc.id !== "_FIRETABLE_"); //removes schema file
         tableDispatch({
           rows,
-          loading: false
+          loading: false,
         });
       } else {
         tableDispatch({
           rows: [],
-          loading: false
+          loading: false,
         });
       }
     });
@@ -110,7 +110,7 @@ const useTable = (intialOverrides: any) => {
       prevPath,
       path,
       sort,
-      unsubscribe
+      unsubscribe,
     } = tableState;
     if (
       !equals(prevFilters, filters) ||
@@ -141,7 +141,7 @@ const useTable = (intialOverrides: any) => {
   const addRow = () => {
     db.collection(tableState.path).add({
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
     });
   };
   const tableActions = { deleteRow, setTable, addRow };

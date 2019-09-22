@@ -1,20 +1,23 @@
 import React, { useState } from "react";
-import { TableCell as MuiTableCell, Switch } from "@material-ui/core";
 import clsx from "clsx";
-import { FieldType } from "./Fields";
 
-import IconButton from "@material-ui/core/IconButton";
+import {
+  TableCell as MuiTableCell,
+  Switch,
+  IconButton,
+} from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 
+import { FieldType } from "./Fields";
 import SimpleText from "./Fields/SimpleText";
 import CheckBox from "./Fields/CheckBox";
-
 import Number from "./Fields/Number";
 import Rating from "./Fields/Rating";
 import Date from "./Fields/Date";
 import DateTime from "./Fields/DateTime";
 import Image from "./Fields/Image";
 
+// TODO: Create an interface for props
 const TableCell = (props: any) => {
   const {
     fieldType,
@@ -28,7 +31,7 @@ const TableCell = (props: any) => {
     rowHeight,
     columnIndex,
     columns,
-    focusedCell
+    focusedCell,
   } = props;
   const isFocusedCell =
     focusedCell &&
@@ -128,7 +131,7 @@ const TableCell = (props: any) => {
     <MuiTableCell
       component="div"
       className={clsx(classes.tableCell, classes.flexContainer, {
-        [classes.noClick]: onRowClick == null
+        [classes.noClick]: onRowClick == null,
       })}
       variant="body"
       onClick={() => {
@@ -137,7 +140,7 @@ const TableCell = (props: any) => {
           rowIndex,
           docRef: rowData.ref,
           fieldName: columnData.fieldName,
-          value: cellData
+          value: cellData,
         });
       }}
       style={{ height: rowHeight }}

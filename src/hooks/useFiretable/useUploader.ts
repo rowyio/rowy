@@ -8,7 +8,7 @@ const uploadReducer = (prevState: any, newProps: any) => {
 };
 const useUploader = () => {
   const [uploaderState, uploaderDispatch] = useReducer(uploadReducer, {
-    ...intialState
+    ...intialState,
   });
 
   const upload = (
@@ -64,9 +64,9 @@ const useUploader = () => {
                     downloadURL,
                     name: file.name,
                     type: file.type,
-                    lastModifiedTS: file.lastModified
-                  }
-                ]
+                    lastModifiedTS: file.lastModified,
+                  },
+                ],
               });
             });
         }

@@ -2,7 +2,11 @@ import React, { useEffect, useState } from "react";
 import { auth } from "./firebase";
 import AuthContext from "./contexts/authContext";
 
-export const AuthProvider = ({ children }: any) => {
+interface IAuthProviderProps {
+  children: React.ReactNode;
+}
+
+export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState();
 
   useEffect(() => {
@@ -14,7 +18,7 @@ export const AuthProvider = ({ children }: any) => {
   return (
     <AuthContext.Provider
       value={{
-        currentUser
+        currentUser,
       }}
     >
       {children}

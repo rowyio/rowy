@@ -25,7 +25,7 @@ export enum FieldType {
   url = "URL",
   rating = "RATING",
   image = "IMAGE",
-  file = "FILE"
+  file = "FILE",
 }
 
 export const FIELDS = [
@@ -40,7 +40,7 @@ export const FIELDS = [
   { icon: <URLIcon />, name: "URL", type: FieldType.url },
   { icon: <RatingIcon />, name: "Rating", type: FieldType.rating },
   { icon: <ImageIcon />, name: "Image", type: FieldType.image },
-  { icon: <FileIcon />, name: "File", type: FieldType.file }
+  { icon: <FileIcon />, name: "File", type: FieldType.file },
 ];
 
 export const getFieldIcon = (type: FieldType) => {
