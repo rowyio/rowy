@@ -1,9 +1,7 @@
-import { useEffect } from "react";
 import useTable from "./useTable";
 import useTableConfig from "./useTableConfig";
 import useCell, { Cell } from "./useCell";
 
-import useKeyCode from "./useKeyCode";
 export type FiretableActions = {
   cell: { set: Function; update: Function };
   column: { add: Function; resize: Function; rename: Function };
@@ -18,56 +16,12 @@ export type FiretableState = {
 };
 
 const useFiretable = (collectionName: string) => {
-  const moveDown = useKeyCode(40);
-  const moveUp = useKeyCode(38);
-  const tab = useKeyCode(9);
   const [tableConfig, configActions] = useTableConfig(collectionName);
   const [tableState, tableActions] = useTable({
     path: collectionName,
   });
   const [cellState, cellActions] = useCell({});
 
-  //TODO: move focus to cell above on down key
-  useEffect(() => {
-    if (cellState.cell) {
-    }
-  }, [tab.isPressed]);
-  // move focus to cell above on down key
-  useEffect(() => {
-    if (cellState.cell && moveUp.isPressed) {
-      if (cellState.cell.rowIndex !== 0) {
-        const nextRowIndex = cellState.cell.rowIndex - 1;
-        const nextCell: Cell = {
-          docRef: tableState.rows[nextRowIndex].ref,
-          fieldName: cellState.cell.fieldName,
-          rowIndex: nextRowIndex,
-          value: tableState.rows[nextRowIndex].value,
-        };
-        cellActions.set(nextCell);
-      }
-    }
-    moveUp.clear();
-  }, [moveUp.isPressed]);
-
-  // move focus to cell bellow on down up
-  useEffect(() => {
-    if (cellState.cell && moveDown.isPressed) {
-      if (cellState.cell.rowIndex === tableState.rows.length - 1) {
-        // reach last row creating new row
-        tableActions.addRow();
-      } else {
-        const nextRowIndex = cellState.cell.rowIndex + 1;
-        const nextCell: Cell = {
-          docRef: tableState.rows[nextRowIndex].ref,
-          fieldName: cellState.cell.fieldName,
-          rowIndex: nextRowIndex,
-          value: tableState.rows[nextRowIndex].value,
-        };
-        cellActions.set(nextCell);
-      }
-    }
-    moveDown.clear();
-  }, [moveDown.isPressed]);
   const setTable = (collectionName: string) => {
     configActions.setTable(collectionName);
     tableActions.setTable(collectionName);
