@@ -14,19 +14,23 @@ const useTableConfig = (tablePath: string) => {
   const setTable = (table: string) => {
     documentDispatch({ path: `${table}/_FIRETABLE_`, columns: [], doc: null });
   };
-  const addColumn = (
-    columnName: string,
-    fieldName: string,
-    type: FieldType
-  ) => {
+  const add = (name: string, key: string, type: FieldType) => {
     const { columns } = tableConfigState;
     documentDispatch({
       action: DocActions.update,
-      data: { columns: [...columns, { columnName, fieldName, type }] },
+      data: { columns: [...columns, { name, key, type }] },
     });
   };
+  const resize = (index: number, width: number) => {
+    const { columns } = tableConfigState;
+    columns[index].width = width;
+    documentDispatch({ action: DocActions.update, data: { columns } });
+  };
+  const rename = () => {};
   const actions = {
-    addColumn,
+    add,
+    resize,
+    rename,
     setTable,
   };
   return [tableConfigState, actions];

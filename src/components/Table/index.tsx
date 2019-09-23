@@ -47,39 +47,35 @@ const editable = (fieldType: FieldType) => {
       return true;
   }
 };
-const onSubmit = (fieldName: string) => (
+const onSubmit = (key: string) => (
   ref: firebase.firestore.DocumentReference,
   value: any
 ) => {
   if (value !== null || value !== undefined) {
-    ref.update({ [fieldName]: value });
+    ref.update({ [key]: value });
   }
 };
 
-const DateFormatter = (fieldName: string, fieldType: FieldType) => (
-  props: any
-) => {
-  return (
-    <Date {...props} onSubmit={onSubmit(fieldName)} fieldType={fieldType} />
-  );
+const DateFormatter = (key: string, fieldType: FieldType) => (props: any) => {
+  return <Date {...props} onSubmit={onSubmit(key)} fieldType={fieldType} />;
 };
 
-const formatter = (fieldType: FieldType, fieldName: string) => {
+const formatter = (fieldType: FieldType, key: string) => {
   switch (fieldType) {
     case FieldType.date:
     case FieldType.dateTime:
-      return DateFormatter(fieldName, fieldType);
+      return DateFormatter(key, fieldType);
     case FieldType.rating:
       return (props: any) => {
-        return <Rating {...props} onSubmit={onSubmit(fieldName)} />;
+        return <Rating {...props} onSubmit={onSubmit(key)} />;
       };
     case FieldType.checkBox:
       return (props: any) => {
-        return <CheckBox {...props} onSubmit={onSubmit(fieldName)} />;
+        return <CheckBox {...props} onSubmit={onSubmit(key)} />;
       };
     case FieldType.url:
       return (props: any) => {
-        return <UrlLink {...props} onSubmit={onSubmit(fieldName)} />;
+        return <UrlLink {...props} onSubmit={onSubmit(key)} />;
       };
     default:
       return false;
@@ -89,6 +85,7 @@ const formatter = (fieldType: FieldType, fieldName: string) => {
 function Table(props: any) {
   const { collection } = props;
   const { tableState, tableActions } = useFiretable(collection);
+
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
@@ -140,14 +137,14 @@ function Table(props: any) {
 
   if (tableState.columns) {
     let columns = tableState.columns.map((column: any) => ({
+      width: 220,
+      resizable: true,
       key: column.fieldName,
       name: column.columnName,
       editable: editable(column.type),
       resizeable: true,
-      //  frozen: column.fieldName === "cohort",
       headerRenderer: headerRenderer,
       formatter: formatter(column.type, column.fieldName),
-      width: 220,
       ...column,
     }));
     columns.push({
@@ -168,6 +165,9 @@ function Table(props: any) {
           onCellCopyPaste={copyPaste}
           minHeight={500}
           onCellSelected={onCellSelected}
+          onColumnResize={(idx, width) =>
+            tableActions.column.resize(idx, width)
+          }
         />
         <Button onClick={tableActions.row.add}>Add Row</Button>
         <HeaderPopper

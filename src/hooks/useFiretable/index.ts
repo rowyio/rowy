@@ -6,7 +6,7 @@ import useCell, { Cell } from "./useCell";
 import useKeyCode from "./useKeyCode";
 export type FiretableActions = {
   cell: { set: Function; update: Function };
-  column: { add: Function };
+  column: { add: Function; resize: Function; rename: Function };
   row: { add: any; delete: Function };
   table: { set: Function };
 };
@@ -80,7 +80,11 @@ const useFiretable = (collectionName: string) => {
   };
   const actions: FiretableActions = {
     cell: { ...cellActions },
-    column: { add: configActions.addColumn },
+    column: {
+      add: configActions.add,
+      resize: configActions.resize,
+      rename: configActions.rename,
+    },
     row: { add: tableActions.addRow, delete: tableActions.deleteRow },
     table: { set: setTable },
   };
