@@ -13,6 +13,8 @@ import URLIcon from "@material-ui/icons/Explore";
 import NumberIcon from "@material-ui/icons/Looks3";
 import propEq from "ramda/es/propEq";
 import find from "ramda/es/find";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
 export enum FieldType {
   simpleText = "SIMPLE_TEXT",
   longText = "LONG_TEXT",
@@ -45,4 +47,32 @@ export const FIELDS = [
 
 export const getFieldIcon = (type: FieldType) => {
   return find(propEq("type", type))(FIELDS).icon;
+};
+
+export const isFieldType = (fieldType: any) => {
+  const fieldTypes = FIELDS.map(field => field.type);
+  return fieldTypes.includes(fieldType);
+};
+
+export const FieldsDropDown = (value: FieldType | null, onChange: any) => {
+  return (
+    <Select
+      value={value}
+      onChange={onChange}
+      inputProps={{
+        name: "type",
+        id: "type",
+      }}
+    >
+      {FIELDS.map(
+        (field: { icon: JSX.Element; name: string; type: FieldType }) => {
+          return (
+            <MenuItem id={`select-field-${field.type}`} value={field.type}>
+              <>{field.name}</>
+            </MenuItem>
+          );
+        }
+      )}
+    </Select>
+  );
 };

@@ -18,7 +18,7 @@
 - Create columns (fields) ✅
 - Create rows(documents) ✅
 - Edit cells ✅
-- Authenicate ✅
+- Authenticate ✅
 - Delete rows ✅
 
 ## MVP
@@ -27,12 +27,12 @@
 
 - single select(string)
 - [https://material-ui.com/components/chips/#chip-array] Multiple select(array of strings)
-- date(Firebase timestamp)
-- time(Firebase timestamp)
+- date(Firebase timestamp)✅
+- time(Firebase timestamp)✅
 - file(firebase storage url string)
 - image(firebase storage url string)
-- single select reference(DocRefrence)
-- mulit select reference(DocRefrence)
+- single select reference(DocReference)
+- multi select reference(DocReference)
 - rating ✅
 
 ### Functionality:
@@ -44,10 +44,11 @@
 - Edit tables
 - Hide tables
 - Fixed column
+- resizable column ✅
 - keyboard Navigation:
   - Up key to move to the cell above ✅
   - Down key to move to the cell bellow, if last cell create a new row ✅
-  - Tab to go to the next cell
+  - Tab to go to the next cell ✅
 - column / table Create/edit validation
 
 ## V1
@@ -64,7 +65,7 @@
 - Sort rows
 - Locked columns
 - Table view only mode
-- Subcollection tables
+- SubCollection tables
 - Permissions
 - Duplicate columns
 - Filters:

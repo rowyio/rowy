@@ -67,7 +67,13 @@ const formatter = (fieldType: FieldType, key: string) => {
       return DateFormatter(key, fieldType);
     case FieldType.rating:
       return (props: any) => {
-        return <Rating {...props} onSubmit={onSubmit(key)} />;
+        return (
+          <Rating
+            {...props}
+            onSubmit={onSubmit(key)}
+            value={typeof props.value === "number" ? props.value : 0}
+          />
+        );
       };
     case FieldType.checkBox:
       return (props: any) => {
@@ -112,23 +118,31 @@ function Table(props: any) {
     console.log(args);
   };
   const headerRenderer = (props: any) => {
-    switch (props.column.key) {
+    const { column } = props;
+    switch (column.key) {
       case "new":
         return (
-          <Button onClick={handleClick(props)} className={classes.header}>
-            {props.column.name}
-          </Button>
+          <div className={classes.header}>
+            <Button
+              onClick={handleClick(props)}
+              style={{ width: column.width }}
+            >
+              {column.name}
+            </Button>
+          </div>
         );
       default:
         return (
           <div className={classes.header}>
             <Button
+              style={{ width: column.width }}
               className={classes.headerButton}
               onClick={handleClick(props)}
               aria-label="edit"
             >
               {getFieldIcon(props.column.type)}
-              {props.column.name} <EditIcon />
+              {props.column.name}
+              {/* <EditIcon /> */}
             </Button>
           </div>
         );
@@ -148,6 +162,7 @@ function Table(props: any) {
       ...column,
     }));
     columns.push({
+      isNew: true,
       key: "new",
       name: "Add column",
       width: 160,
@@ -174,6 +189,7 @@ function Table(props: any) {
           handleClose={handleCloseHeader}
           anchorEl={anchorEl}
           column={header && header.column}
+          actions={tableActions.column}
         />
       </>
     );
