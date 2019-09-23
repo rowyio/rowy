@@ -9,12 +9,13 @@ import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
 import EditIcon from "@material-ui/icons/Edit";
 import HeaderPopper from "./HeaderPopper";
-import { FieldType } from "../Fields";
+import { FieldType, getFieldIcon } from "../Fields";
 
 import Date from "../Fields/Date";
 import Rating from "../Fields/Rating";
 import CheckBox from "../Fields/CheckBox";
 import UrlLink from "../Fields/UrlLink";
+
 const useStyles = makeStyles(Theme =>
   createStyles({
     typography: {
@@ -110,7 +111,7 @@ function Table(props: any) {
     fromRowData.ref.update(updated);
   };
   const onCellSelected = (args: any) => {
-    handleCloseHeader();
+    // handleCloseHeader();
     console.log(args);
   };
   const headerRenderer = (props: any) => {
@@ -129,6 +130,7 @@ function Table(props: any) {
               onClick={handleClick(props)}
               aria-label="edit"
             >
+              {getFieldIcon(props.column.type)}
               {props.column.name} <EditIcon />
             </Button>
           </div>

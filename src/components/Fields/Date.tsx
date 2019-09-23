@@ -13,7 +13,7 @@ import {
 // TODO: Create an interface for props
 interface Props {
   value: firebase.firestore.Timestamp | null;
-  row: any;
+  row: { ref: firebase.firestore.DocumentReference; id: string };
   onSubmit: Function;
   fieldType: FieldType;
 }

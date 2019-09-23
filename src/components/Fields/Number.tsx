@@ -4,7 +4,7 @@ import { TextField } from "@material-ui/core";
 
 // TODO: Create an interface for props
 const Number = (props: any) => {
-  const { value, cellActions } = props;
+  const { value } = props;
   return (
     <TextField
       autoFocus

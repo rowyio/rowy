@@ -5,7 +5,7 @@ import { Checkbox } from "@material-ui/core";
 // TODO: Create an interface for props
 interface Props {
   value: boolean | null;
-  row: any;
+  row: { ref: firebase.firestore.DocumentReference; id: string };
   onSubmit: Function;
 }
 

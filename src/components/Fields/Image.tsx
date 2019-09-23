@@ -2,18 +2,16 @@ import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import useUploader from "../../hooks/useFiretable/useUploader";
 
-import { FieldType } from '.';
+import { FieldType } from ".";
 // TODO:  indicate state completion / error
 // TODO: Create an interface for props
 
-
 interface Props {
   value: any;
-  row: any;
+  row: { ref: firebase.firestore.DocumentReference; id: string };
   onSubmit: Function;
   fieldType: FieldType;
 }
-
 
 const Image = (props: any) => {
   const { columnData, cellData, cellActions, rowData, rowIndex } = props;
