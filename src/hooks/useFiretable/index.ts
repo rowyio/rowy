@@ -4,7 +4,13 @@ import useCell, { Cell } from "./useCell";
 
 export type FiretableActions = {
   cell: { set: Function; update: Function };
-  column: { add: Function; resize: Function; rename: Function };
+  column: {
+    add: Function;
+    resize: Function;
+    rename: Function;
+    remove: Function;
+    update: Function;
+  };
   row: { add: any; delete: Function };
   table: { set: Function };
 };
@@ -38,6 +44,8 @@ const useFiretable = (collectionName: string) => {
       add: configActions.add,
       resize: configActions.resize,
       rename: configActions.rename,
+      update: configActions.update,
+      remove: configActions.remove,
     },
     row: { add: tableActions.addRow, delete: tableActions.deleteRow },
     table: { set: setTable },

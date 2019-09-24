@@ -11,7 +11,7 @@ const UrlLink = (props: Props) => {
   return value ? (
     <>
       <EditIcon />
-      <a href={value} target="_blank">
+      <a href={value} target="_blank" rel="noopener noreferrer">
         {value}
       </a>
     </>

@@ -23,6 +23,7 @@ import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 import FormatItalicIcon from "@material-ui/icons/FormatItalic";
 import FormatUnderlinedIcon from "@material-ui/icons/FormatUnderlined";
 import FormatColorFillIcon from "@material-ui/icons/FormatColorFill";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 const useStyles = makeStyles(Theme =>
   createStyles({
@@ -91,7 +92,7 @@ const HeaderPopper = (props: any) => {
   };
 
   useEffect(() => {
-    if (column && !column.isNew)
+    if (column && !column.isNew) {
       setValues(oldValues => ({
         ...oldValues,
         name: column.name,
@@ -99,6 +100,7 @@ const HeaderPopper = (props: any) => {
         key: column.key,
         isNew: column.isNew,
       }));
+    }
   }, [column]);
   const onClickAway = (event: any) => {
     const dropDownClicked = isFieldType(event.target.dataset.value);
@@ -116,6 +118,20 @@ const HeaderPopper = (props: any) => {
   const createNewColumn = () => {
     const { name, type } = values;
     actions.add(name, type);
+    handleClose();
+  };
+  const deleteColumn = () => {
+    actions.remove(props.column.idx);
+    handleClose();
+  };
+  const updateColumn = () => {
+    console.log(values, props);
+    const updatables = [
+      { field: "name", value: values.name },
+      { field: "type", value: values.type },
+      { field: "resizable", value: flags.includes("resizable") },
+    ];
+    actions.update(props.column.idx, updatables);
     handleClose();
   };
 
@@ -139,24 +155,24 @@ const HeaderPopper = (props: any) => {
                     onChange={handleToggle}
                     arial-label="column settings"
                   >
-                    <ToggleButton value="editable" aria-label="bold">
+                    <ToggleButton value="editable" aria-label="editable">
                       {flags.includes("editable") ? (
                         <LockOpenIcon />
                       ) : (
                         <LockIcon />
                       )}
                     </ToggleButton>
-                    <ToggleButton value="visible" aria-label="italic">
+                    <ToggleButton value="visible" aria-label="visible">
                       {flags.includes("visible") ? (
                         <VisibilityIcon />
                       ) : (
                         <VisibilityOffIcon />
                       )}
                     </ToggleButton>
-                    <ToggleButton value="freeze" aria-label="underlined">
+                    <ToggleButton value="freeze" aria-label="freeze">
                       <FormatUnderlinedIcon />
                     </ToggleButton>
-                    <ToggleButton value="resize" aria-label="color">
+                    <ToggleButton value="resizable" aria-label="resizable">
                       <FormatColorFillIcon />
                     </ToggleButton>
                   </ToggleButtonGroup>
@@ -174,9 +190,18 @@ const HeaderPopper = (props: any) => {
                   <FormControl className={classes.formControl}>
                     <InputLabel htmlFor="Field-select">Field Type</InputLabel>
                     {FieldsDropDown(values.type, handleChange)}
-                    {column.isNew && (
+                    {column.isNew ? (
                       <Button onClick={createNewColumn}>Add</Button>
+                    ) : (
+                      <Button onClick={updateColumn}>update</Button>
                     )}
+                    <Button
+                      variant="outlined"
+                      color="secondary"
+                      onClick={deleteColumn}
+                    >
+                      <DeleteIcon /> Delete
+                    </Button>
                     <Button color="secondary" onClick={handleClose}>
                       cancel
                     </Button>

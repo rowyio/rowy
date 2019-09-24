@@ -37,19 +37,19 @@
 
 ### Functionality:
 
-- Hide/Show columns
-- Delete columns
-- Edit columns
-- Delete tables
-- Edit tables
-- Hide tables
+- Delete columns✅
+- Edit columns✅
 - Fixed column
+- Hide/Show columns
 - resizable column ✅
 - keyboard Navigation:
   - Up key to move to the cell above ✅
   - Down key to move to the cell bellow, if last cell create a new row ✅
   - Tab to go to the next cell ✅
 - column / table Create/edit validation
+- Delete tables
+- Edit tables
+- Hide tables
 
 ## V1
 
