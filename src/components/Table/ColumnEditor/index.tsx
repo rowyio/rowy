@@ -136,7 +136,7 @@ const ColumnEditor = (props: any) => {
     let updatables: { field: string; value: any }[] = [
       { field: "name", value: values.name },
       { field: "type", value: values.type },
-      { field: "resizable", value: flags.includes("resizable") },
+      // { field: "resizable", value: flags.includes("resizable") },
     ];
     if (
       values.type === FieldType.multiSelect ||
@@ -161,6 +161,8 @@ const ColumnEditor = (props: any) => {
             <Fade {...TransitionProps} timeout={350}>
               <Paper className={classes.container}>
                 <Grid container direction="column">
+                  {/* 
+                  // TODO: functional flags 
                   <ToggleButtonGroup
                     size="small"
                     value={flags}
@@ -188,7 +190,7 @@ const ColumnEditor = (props: any) => {
                     <ToggleButton value="resizable" aria-label="resizable">
                       <FormatColorFillIcon />
                     </ToggleButton>
-                  </ToggleButtonGroup>
+                  </ToggleButtonGroup> */}
 
                   <TextField
                     label="Column name"

@@ -1,5 +1,5 @@
 import React from "react";
-import { FieldType, getFieldIcon } from "../Fields";
+import { FieldType } from "../Fields";
 
 import Date from "../Fields/Date";
 import Rating from "../Fields/Rating";
@@ -7,15 +7,17 @@ import CheckBox from "../Fields/CheckBox";
 import UrlLink from "../Fields/UrlLink";
 import firebase from "firebase/app";
 import { Editors } from "react-data-grid-addons";
-export const copyPaste = (props: any) => {
-  console.log(props);
-};
+import MultiSelect from "../Fields/MultiSelect";
+
+const { AutoComplete } = Editors;
+
 export const editable = (fieldType: FieldType) => {
   switch (fieldType) {
     case FieldType.date:
     case FieldType.dateTime:
     case FieldType.rating:
     case FieldType.checkBox:
+    case FieldType.multiSelect:
       return false;
 
     default:
@@ -44,11 +46,12 @@ export const onGridRowsUpdated = (props: any) => {
 export const onCellSelected = (args: any) => {
   console.log(args);
 };
-export const cellFormatter = (fieldType: FieldType, key: string) => {
-  switch (fieldType) {
+export const cellFormatter = (column: any) => {
+  const { type, key, options } = column;
+  switch (type) {
     case FieldType.date:
     case FieldType.dateTime:
-      return DateFormatter(key, fieldType);
+      return DateFormatter(key, type);
     case FieldType.rating:
       return (props: any) => {
         return (
@@ -65,14 +68,18 @@ export const cellFormatter = (fieldType: FieldType, key: string) => {
       };
     case FieldType.url:
       return (props: any) => {
-        return <UrlLink {...props} onSubmit={onSubmit(key)} />;
+        return <UrlLink {...props} />;
+      };
+    case FieldType.multiSelect:
+      return (props: any) => {
+        return (
+          <MultiSelect {...props} onSubmit={onSubmit(key)} options={options} />
+        );
       };
     default:
       return false;
   }
 };
-
-const { DropDownEditor, AutoComplete } = Editors;
 
 export const singleSelectEditor = (options: string[]) => {
   const _options = options.map(option => ({

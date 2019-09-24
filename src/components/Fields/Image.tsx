@@ -14,7 +14,7 @@ interface Props {
 }
 
 const Image = (props: any) => {
-  const { columnData, cellData, cellActions, rowData, rowIndex } = props;
+  const { columnData, cellData, rowData } = props;
   const [uploaderState, upload] = useUploader();
   const [localImage, setLocalImage] = useState<string | null>(null);
   const onDrop = useCallback(acceptedFiles => {

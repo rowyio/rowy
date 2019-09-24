@@ -94,7 +94,7 @@ function Table(props: any) {
       editable: editable(column.type),
       resizable: true,
       headerRenderer: headerRenderer,
-      formatter: cellFormatter(column.type, column.key),
+      formatter: cellFormatter(column),
       editor:
         column.type === FieldType.singleSelect
           ? singleSelectEditor(column.options)
@@ -112,7 +112,7 @@ function Table(props: any) {
     return (
       <>
         <ReactDataGrid
-          rowHeight={60}
+          rowHeight={40}
           columns={columns}
           rowGetter={i => rows[i]}
           rowsCount={rows.length}
