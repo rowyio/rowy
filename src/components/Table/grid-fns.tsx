@@ -72,7 +72,7 @@ export const cellFormatter = (fieldType: FieldType, key: string) => {
   }
 };
 
-const { DropDownEditor } = Editors;
+const { DropDownEditor, AutoComplete } = Editors;
 
 export const singleSelectEditor = (options: string[]) => {
   const _options = options.map(option => ({
@@ -81,5 +81,5 @@ export const singleSelectEditor = (options: string[]) => {
     title: option,
     text: option,
   }));
-  return <DropDownEditor options={_options} />;
+  return <AutoComplete options={_options} />;
 };
