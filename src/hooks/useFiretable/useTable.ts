@@ -2,7 +2,6 @@ import { db } from "../../firebase";
 
 import { useEffect, useReducer } from "react";
 import equals from "ramda/es/equals";
-import { Cell } from "./useCell";
 import firebase from "firebase/app";
 const CAP = 500;
 

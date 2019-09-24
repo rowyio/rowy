@@ -6,18 +6,14 @@ import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import { FieldType, getFieldIcon } from "../Fields";
 
-import Date from "../Fields/Date";
-import Rating from "../Fields/Rating";
-import CheckBox from "../Fields/CheckBox";
-import UrlLink from "../Fields/UrlLink";
 import ColumnEditor from "./ColumnEditor/index";
 
 import {
   cellFormatter,
   onCellSelected,
   onGridRowsUpdated,
-  copyPaste,
   singleSelectEditor,
+  editable,
 } from "./grid-fns";
 const useStyles = makeStyles(Theme =>
   createStyles({
@@ -95,10 +91,10 @@ function Table(props: any) {
       width: 220,
       key: column.fieldName,
       name: column.columnName,
-      editable: true,
+      editable: editable(column.type),
       resizable: true,
       headerRenderer: headerRenderer,
-      formatter: cellFormatter(column.type, column.fieldName),
+      formatter: cellFormatter(column.type, column.key),
       editor:
         column.type === FieldType.singleSelect
           ? singleSelectEditor(column.options)
@@ -112,16 +108,16 @@ function Table(props: any) {
       width: 160,
       headerRenderer: headerRenderer,
     });
-    const rows = tableState.rows;
+    const rows = tableState.rows; //.map((row: any) => ({ height: 100, ...row }));
     return (
       <>
         <ReactDataGrid
+          rowHeight={60}
           columns={columns}
           rowGetter={i => rows[i]}
           rowsCount={rows.length}
           onGridRowsUpdated={onGridRowsUpdated}
           enableCellSelect={true}
-          onCellCopyPaste={copyPaste}
           minHeight={500}
           onCellSelected={onCellSelected}
           onColumnResize={(idx, width) =>

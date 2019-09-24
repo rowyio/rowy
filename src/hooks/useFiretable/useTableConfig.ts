@@ -12,7 +12,8 @@ const useTableConfig = (tablePath: string) => {
     if (doc && columns !== doc.columns) {
       documentDispatch({ columns: doc.columns });
     }
-  }, [tableConfigState]);
+  }, [tableConfigState.doc]);
+
   const setTable = (table: string) => {
     documentDispatch({ path: `${table}/_FIRETABLE_`, columns: [], doc: null });
   };

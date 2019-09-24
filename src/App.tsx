@@ -7,7 +7,7 @@ import AuthView from "./views/AuthView";
 import TableView from "./views/TableView";
 import TablesView from "./views/TablesView";
 
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { Route } from "react-router-dom";
 import { AuthProvider } from "./AuthProvider";
 import CustomBrowserRouter from "./util/CustomBrowserRouter";
 import PrivateRoute from "./util/PrivateRoute";

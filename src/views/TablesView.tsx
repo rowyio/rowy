@@ -35,7 +35,7 @@ const useStyles = makeStyles(() =>
 
 // TODO: Create an interface for props
 const TablesView = (props: any) => {
-  const [settings, createTable] = useSettings();
+  const [settings] = useSettings();
   const tables = settings.tables;
   const classes = useStyles();
   const router = useRouter();
