@@ -8,6 +8,7 @@ import UrlLink from "../Fields/UrlLink";
 import firebase from "firebase/app";
 import { Editors } from "react-data-grid-addons";
 import MultiSelect from "../Fields/MultiSelect";
+import Image from "../Fields/Image";
 
 const { AutoComplete } = Editors;
 
@@ -18,6 +19,7 @@ export const editable = (fieldType: FieldType) => {
     case FieldType.rating:
     case FieldType.checkBox:
     case FieldType.multiSelect:
+    case FieldType.image:
       return false;
 
     default:
@@ -48,6 +50,7 @@ export const onCellSelected = (args: any) => {
 };
 export const cellFormatter = (column: any) => {
   const { type, key, options } = column;
+  console.log(column);
   switch (type) {
     case FieldType.date:
     case FieldType.dateTime:
@@ -75,6 +78,10 @@ export const cellFormatter = (column: any) => {
         return (
           <MultiSelect {...props} onSubmit={onSubmit(key)} options={options} />
         );
+      };
+    case FieldType.image:
+      return (props: any) => {
+        return <Image {...props} onSubmit={onSubmit(key)} fieldName={key} />;
       };
     default:
       return false;

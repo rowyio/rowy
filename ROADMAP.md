@@ -26,11 +26,11 @@
 ### additional fields:
 
 - single select(string)✅
-- Multiple select(array of strings)
+- Multiple select(array of strings)✅
 - date(Firebase timestamp)✅
 - time(Firebase timestamp)✅
 - file(firebase storage url string)
-- image(firebase storage url string)
+- image ✅
 - single select reference(DocReference)
 - multi select reference(DocReference)
 - rating ✅

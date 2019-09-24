@@ -11,17 +11,18 @@ interface Props {
   row: { ref: firebase.firestore.DocumentReference; id: string };
   onSubmit: Function;
   fieldType: FieldType;
+  fieldName: string;
 }
 
-const Image = (props: any) => {
-  const { columnData, cellData, rowData } = props;
+const Image = (props: Props) => {
+  const { fieldName, value, row } = props;
   const [uploaderState, upload] = useUploader();
   const [localImage, setLocalImage] = useState<string | null>(null);
   const onDrop = useCallback(acceptedFiles => {
     // Do something with the files
     const imageFile = acceptedFiles[0];
     if (imageFile) {
-      upload(rowData.ref, columnData.fieldName, [imageFile]);
+      upload(row.ref, fieldName, [imageFile]);
       let url = URL.createObjectURL(imageFile);
       setLocalImage(url);
     }
@@ -37,10 +38,10 @@ const Image = (props: any) => {
       <input {...getInputProps()} />
       {localImage ? (
         <div>
-          <img style={{ height: "150px" }} src={localImage} />
+          <img style={{ height: "80px" }} src={localImage} />
         </div>
-      ) : cellData ? (
-        <img style={{ height: "150px" }} src={cellData[0].downloadURL} />
+      ) : value ? (
+        <img style={{ height: "80px" }} src={value[0].downloadURL} />
       ) : isDragActive ? (
         <p>Drop the files here ...</p>
       ) : (
