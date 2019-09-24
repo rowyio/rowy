@@ -107,6 +107,15 @@ function Table(props: any) {
       name: "Add column",
       width: 160,
       headerRenderer: headerRenderer,
+      formatter: (props: any) => (
+        <Button
+          onClick={() => {
+            props.row.ref.delete();
+          }}
+        >
+          Delete row
+        </Button>
+      ),
     });
     const rows = tableState.rows; //.map((row: any) => ({ height: 100, ...row }));
     return (

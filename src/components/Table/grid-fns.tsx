@@ -51,7 +51,6 @@ export const onCellSelected = (args: any) => {
 };
 export const cellFormatter = (column: any) => {
   const { type, key, options } = column;
-  console.log(column);
   switch (type) {
     case FieldType.date:
     case FieldType.dateTime:
