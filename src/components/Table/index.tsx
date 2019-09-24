@@ -1,21 +1,22 @@
 import React, { useState } from "react";
 import ReactDataGrid from "react-data-grid";
-
 import useFiretable from "../../hooks/useFiretable";
-import Typography from "@material-ui/core/Typography";
-
 import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
-import IconButton from "@material-ui/core/IconButton";
+
 import Button from "@material-ui/core/Button";
-import EditIcon from "@material-ui/icons/Edit";
-import HeaderPopper from "./HeaderPopper";
 import { FieldType, getFieldIcon } from "../Fields";
 
 import Date from "../Fields/Date";
 import Rating from "../Fields/Rating";
 import CheckBox from "../Fields/CheckBox";
 import UrlLink from "../Fields/UrlLink";
-
+import ColumnEditor from "./ColumnEditor/index";
+import {
+  cellFormatter,
+  onCellSelected,
+  onGridRowsUpdated,
+  copyPaste,
+} from "./grid-fns";
 const useStyles = makeStyles(Theme =>
   createStyles({
     typography: {
@@ -31,62 +32,6 @@ const useStyles = makeStyles(Theme =>
     },
   })
 );
-
-const copyPaste = (props: any) => {
-  console.log(props);
-};
-const editable = (fieldType: FieldType) => {
-  switch (fieldType) {
-    case FieldType.date:
-    case FieldType.dateTime:
-    case FieldType.rating:
-    case FieldType.checkBox:
-      return false;
-
-    default:
-      return true;
-  }
-};
-const onSubmit = (key: string) => (
-  ref: firebase.firestore.DocumentReference,
-  value: any
-) => {
-  if (value !== null || value !== undefined) {
-    ref.update({ [key]: value });
-  }
-};
-
-const DateFormatter = (key: string, fieldType: FieldType) => (props: any) => {
-  return <Date {...props} onSubmit={onSubmit(key)} fieldType={fieldType} />;
-};
-
-const formatter = (fieldType: FieldType, key: string) => {
-  switch (fieldType) {
-    case FieldType.date:
-    case FieldType.dateTime:
-      return DateFormatter(key, fieldType);
-    case FieldType.rating:
-      return (props: any) => {
-        return (
-          <Rating
-            {...props}
-            onSubmit={onSubmit(key)}
-            value={typeof props.value === "number" ? props.value : 0}
-          />
-        );
-      };
-    case FieldType.checkBox:
-      return (props: any) => {
-        return <CheckBox {...props} onSubmit={onSubmit(key)} />;
-      };
-    case FieldType.url:
-      return (props: any) => {
-        return <UrlLink {...props} onSubmit={onSubmit(key)} />;
-      };
-    default:
-      return false;
-  }
-};
 
 function Table(props: any) {
   const { collection } = props;
@@ -109,14 +54,6 @@ function Table(props: any) {
     setHeader(headerProps);
   };
 
-  const onGridRowsUpdated = (props: any) => {
-    const { fromRowData, updated } = props;
-    fromRowData.ref.update(updated);
-  };
-  const onCellSelected = (args: any) => {
-    // handleCloseHeader();
-    console.log(args);
-  };
   const headerRenderer = (props: any) => {
     const { column } = props;
     switch (column.key) {
@@ -155,10 +92,10 @@ function Table(props: any) {
 
       key: column.fieldName,
       name: column.columnName,
-      editable: editable(column.type),
+      editable: true,
       resizable: true,
       headerRenderer: headerRenderer,
-      formatter: formatter(column.type, column.fieldName),
+      formatter: cellFormatter(column.type, column.fieldName),
       ...column,
     }));
     columns.push({
@@ -185,7 +122,7 @@ function Table(props: any) {
           }
         />
         <Button onClick={tableActions.row.add}>Add Row</Button>
-        <HeaderPopper
+        <ColumnEditor
           handleClose={handleCloseHeader}
           anchorEl={anchorEl}
           column={header && header.column}

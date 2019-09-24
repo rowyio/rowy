@@ -12,7 +12,7 @@ import Paper from "@material-ui/core/Paper";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import { TextField, Grid } from "@material-ui/core";
-import { FieldsDropDown, isFieldType } from "../Fields";
+import { FieldsDropDown, isFieldType } from "../../Fields";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 
@@ -67,7 +67,7 @@ const useStyles = makeStyles(Theme =>
   })
 );
 
-const HeaderPopper = (props: any) => {
+const ColumnEditor = (props: any) => {
   const { anchorEl, column, handleClose, actions } = props;
   const [values, setValues] = React.useState({
     type: null,
@@ -217,4 +217,4 @@ const HeaderPopper = (props: any) => {
   return <div />;
 };
 
-export default HeaderPopper;
+export default ColumnEditor;
