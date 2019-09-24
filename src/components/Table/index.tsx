@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReactDataGrid from "react-data-grid";
 import useFiretable from "../../hooks/useFiretable";
 import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
@@ -36,7 +36,9 @@ const useStyles = makeStyles(Theme =>
 function Table(props: any) {
   const { collection } = props;
   const { tableState, tableActions } = useFiretable(collection);
-
+  useEffect(() => {
+    tableActions.set(collection);
+  }, [collection]);
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 

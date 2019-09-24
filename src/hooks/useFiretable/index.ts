@@ -12,7 +12,7 @@ export type FiretableActions = {
     update: Function;
   };
   row: { add: any; delete: Function };
-  table: { set: Function };
+  set: Function;
 };
 
 export type FiretableState = {
@@ -48,7 +48,7 @@ const useFiretable = (collectionName: string) => {
       remove: configActions.remove,
     },
     row: { add: tableActions.addRow, delete: tableActions.deleteRow },
-    table: { set: setTable },
+    set: setTable,
   };
 
   return { tableState: state, tableActions: actions };
