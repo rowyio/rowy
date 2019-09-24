@@ -29,8 +29,8 @@
 - Multiple select(array of strings)✅
 - date(Firebase timestamp)✅
 - time(Firebase timestamp)✅
-- file(firebase storage url string)
-- image ✅
+- file (single) 🏗️(missing status indicator)
+- image (single) 🏗️(missing status indicator)
 - single select reference(DocReference)
 - multi select reference(DocReference)
 - rating ✅
@@ -51,13 +51,17 @@
 - Edit tables
 - Hide tables
 - On new table add, refresh view to the table view✅
+- import csv to table
 
 ## V1
 
 ### additional fields:
 
+- file (multi)
+- image (multi)
 - Duration
 - Percentage(number)
+- Slider(number)
 - Table(Document[])
 - Rich Text(html string)
 
@@ -90,7 +94,6 @@
 
 ### Functionality:
 
-- import csv to table
 - Themes
 - Table templates
 - Dialog View of a row

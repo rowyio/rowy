@@ -9,6 +9,7 @@ import firebase from "firebase/app";
 import { Editors } from "react-data-grid-addons";
 import MultiSelect from "../Fields/MultiSelect";
 import Image from "../Fields/Image";
+import File from "../Fields/File";
 
 const { AutoComplete } = Editors;
 
@@ -20,8 +21,8 @@ export const editable = (fieldType: FieldType) => {
     case FieldType.checkBox:
     case FieldType.multiSelect:
     case FieldType.image:
+    case FieldType.file:
       return false;
-
     default:
       return true;
   }
@@ -81,7 +82,11 @@ export const cellFormatter = (column: any) => {
       };
     case FieldType.image:
       return (props: any) => {
-        return <Image {...props} onSubmit={onSubmit(key)} fieldName={key} />;
+        return <Image {...props} fieldName={key} />;
+      };
+    case FieldType.file:
+      return (props: any) => {
+        return <File {...props} fieldName={key} />;
       };
     default:
       return false;
