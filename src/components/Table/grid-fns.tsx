@@ -6,7 +6,7 @@ import Rating from "../Fields/Rating";
 import CheckBox from "../Fields/CheckBox";
 import UrlLink from "../Fields/UrlLink";
 import firebase from "firebase/app";
-
+import { Editors } from "react-data-grid-addons";
 export const copyPaste = (props: any) => {
   console.log(props);
 };
@@ -70,4 +70,16 @@ export const cellFormatter = (fieldType: FieldType, key: string) => {
     default:
       return false;
   }
+};
+
+const { DropDownEditor } = Editors;
+
+export const singleSelectEditor = (options: string[]) => {
+  const _options = options.map(option => ({
+    id: option,
+    value: option,
+    title: option,
+    text: option,
+  }));
+  return <DropDownEditor options={_options} />;
 };

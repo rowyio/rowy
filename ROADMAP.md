@@ -25,8 +25,8 @@
 
 ### additional fields:
 
-- single select(string)
-- [https://material-ui.com/components/chips/#chip-array] Multiple select(array of strings)
+- single select(string)✅
+- Multiple select(array of strings)
 - date(Firebase timestamp)✅
 - time(Firebase timestamp)✅
 - file(firebase storage url string)

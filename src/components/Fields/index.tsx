@@ -28,6 +28,10 @@ export enum FieldType {
   rating = "RATING",
   image = "IMAGE",
   file = "FILE",
+  singleSelect = "SINGLE_SELECT",
+  multiSelect = "MULTI_SELECT",
+  documentSelect = "DOCUMENT_SELECT",
+  documentsSelect = "DOCUMENTS_SELECT",
 }
 
 export const FIELDS = [
@@ -43,6 +47,10 @@ export const FIELDS = [
   { icon: <RatingIcon />, name: "Rating", type: FieldType.rating },
   { icon: <ImageIcon />, name: "Image", type: FieldType.image },
   { icon: <FileIcon />, name: "File", type: FieldType.file },
+  { icon: <FileIcon />, name: "Single Select", type: FieldType.singleSelect },
+  { icon: <FileIcon />, name: "Multi Select", type: FieldType.multiSelect },
+  { icon: <FileIcon />, name: "Doc Select", type: FieldType.documentSelect },
+  { icon: <FileIcon />, name: "Docs Select", type: FieldType.documentsSelect },
 ];
 
 export const getFieldIcon = (type: FieldType) => {

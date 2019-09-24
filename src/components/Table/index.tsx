@@ -11,11 +11,13 @@ import Rating from "../Fields/Rating";
 import CheckBox from "../Fields/CheckBox";
 import UrlLink from "../Fields/UrlLink";
 import ColumnEditor from "./ColumnEditor/index";
+
 import {
   cellFormatter,
   onCellSelected,
   onGridRowsUpdated,
   copyPaste,
+  singleSelectEditor,
 } from "./grid-fns";
 const useStyles = makeStyles(Theme =>
   createStyles({
@@ -91,13 +93,16 @@ function Table(props: any) {
   if (tableState.columns) {
     let columns = tableState.columns.map((column: any) => ({
       width: 220,
-
       key: column.fieldName,
       name: column.columnName,
       editable: true,
       resizable: true,
       headerRenderer: headerRenderer,
       formatter: cellFormatter(column.type, column.fieldName),
+      editor:
+        column.type === FieldType.singleSelect
+          ? singleSelectEditor(column.options)
+          : false,
       ...column,
     }));
     columns.push({

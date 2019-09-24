@@ -12,7 +12,7 @@ import Paper from "@material-ui/core/Paper";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import { TextField, Grid } from "@material-ui/core";
-import { FieldsDropDown, isFieldType } from "../../Fields";
+import { FieldsDropDown, isFieldType, FieldType } from "../../Fields";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 
@@ -20,10 +20,10 @@ import LockIcon from "@material-ui/icons/Lock";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
-import FormatItalicIcon from "@material-ui/icons/FormatItalic";
 import FormatUnderlinedIcon from "@material-ui/icons/FormatUnderlined";
 import FormatColorFillIcon from "@material-ui/icons/FormatColorFill";
 import DeleteIcon from "@material-ui/icons/Delete";
+import SelectOptionsInput from "./SelectOptionsInput";
 
 const useStyles = makeStyles(Theme =>
   createStyles({
@@ -72,6 +72,7 @@ const ColumnEditor = (props: any) => {
   const [values, setValues] = React.useState({
     type: null,
     name: "",
+    options: [],
   });
   const [flags, setFlags] = React.useState(() => [""]);
   const classes = useStyles();
@@ -100,6 +101,11 @@ const ColumnEditor = (props: any) => {
         key: column.key,
         isNew: column.isNew,
       }));
+      if (column.options) {
+        setValue("options", column.options);
+      } else {
+        setValue("options", []);
+      }
     }
   }, [column]);
   const onClickAway = (event: any) => {
@@ -126,11 +132,18 @@ const ColumnEditor = (props: any) => {
   };
   const updateColumn = () => {
     console.log(values, props);
-    const updatables = [
+
+    let updatables: { field: string; value: any }[] = [
       { field: "name", value: values.name },
       { field: "type", value: values.type },
       { field: "resizable", value: flags.includes("resizable") },
     ];
+    if (
+      values.type === FieldType.multiSelect ||
+      values.type === FieldType.singleSelect
+    ) {
+      updatables.push({ field: "options", value: values.options });
+    }
     actions.update(props.column.idx, updatables);
     handleClose();
   };
@@ -190,18 +203,28 @@ const ColumnEditor = (props: any) => {
                   <FormControl className={classes.formControl}>
                     <InputLabel htmlFor="Field-select">Field Type</InputLabel>
                     {FieldsDropDown(values.type, handleChange)}
+
+                    {(values.type === FieldType.singleSelect ||
+                      values.type === FieldType.multiSelect) && (
+                      <SelectOptionsInput
+                        setValue={setValue}
+                        options={values.options}
+                      />
+                    )}
                     {column.isNew ? (
                       <Button onClick={createNewColumn}>Add</Button>
                     ) : (
                       <Button onClick={updateColumn}>update</Button>
                     )}
-                    <Button
-                      variant="outlined"
-                      color="secondary"
-                      onClick={deleteColumn}
-                    >
-                      <DeleteIcon /> Delete
-                    </Button>
+                    {!column.isNew && (
+                      <Button
+                        variant="outlined"
+                        color="secondary"
+                        onClick={deleteColumn}
+                      >
+                        <DeleteIcon /> Delete
+                      </Button>
+                    )}
                     <Button color="secondary" onClick={handleClose}>
                       cancel
                     </Button>
