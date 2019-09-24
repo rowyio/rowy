@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const File = (props: Props) => {
-  const { fieldName, value, row } = props;
+  const { fieldName, value, row, onSubmit } = props;
   const classes = useStyles();
   const [uploaderState, upload] = useUploader();
   const onDrop = useCallback(acceptedFiles => {
@@ -48,10 +48,14 @@ const File = (props: Props) => {
     onDrop,
     multiple: false,
   });
+  const handleDelete = () => {
+    onSubmit(row.ref, []);
+  };
+
   return (
     <div {...getRootProps()}>
       <input {...getInputProps()} />
-      {value ? (
+      {value && value.length !== 0 ? (
         <Chip
           key={value[0].name}
           label={value[0].name}
@@ -59,6 +63,7 @@ const File = (props: Props) => {
           onClick={() => {
             window.open(value[0].downloadURL);
           }}
+          onDelete={handleDelete}
         />
       ) : isDragActive ? (
         <p>Drop the files here ...</p>

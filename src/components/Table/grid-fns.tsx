@@ -81,11 +81,11 @@ export const cellFormatter = (column: any) => {
       };
     case FieldType.image:
       return (props: any) => {
-        return <Image {...props} fieldName={key} />;
+        return <Image {...props} onSubmit={onSubmit(key)} fieldName={key} />;
       };
     case FieldType.file:
       return (props: any) => {
-        return <File {...props} fieldName={key} />;
+        return <File {...props} onSubmit={onSubmit(key)} fieldName={key} />;
       };
     default:
       return false;
