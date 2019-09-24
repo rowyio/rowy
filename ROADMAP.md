@@ -50,7 +50,7 @@
 - Delete tables
 - Edit tables
 - Hide tables
-- On new table add, refresh view to the table view
+- On new table add, refresh view to the table view✅
 
 ## V1
 
