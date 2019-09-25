@@ -17,13 +17,13 @@ const useTableConfig = (tablePath: string) => {
   const setTable = (table: string) => {
     documentDispatch({ path: `${table}/_FIRETABLE_`, columns: [], doc: null });
   };
-  const add = (name: string, type: FieldType) => {
+  const add = (name: string, type: FieldType, data?: any) => {
     //TODO: validation
     const { columns } = tableConfigState;
     const key = _camelCase(name);
     documentDispatch({
       action: DocActions.update,
-      data: { columns: [...columns, { name, key, type }] },
+      data: { columns: [...columns, { name, key, type, ...data }] },
     });
   };
   const resize = (index: number, width: number) => {

@@ -126,8 +126,13 @@ const ColumnEditor = (props: any) => {
   };
 
   const createNewColumn = () => {
-    const { name, type } = values;
-    actions.add(name, type);
+    const { name, type, options } = values;
+    if (type === FieldType.multiSelect || type === FieldType.singleSelect) {
+      actions.add(name, type, { options: values.options });
+    } else {
+      actions.add(name, type);
+    }
+
     handleClose();
     clearValues();
   };
@@ -136,6 +141,7 @@ const ColumnEditor = (props: any) => {
     handleClose();
     clearValues();
   };
+
   const updateColumn = () => {
     let updatables: { field: string; value: any }[] = [
       { field: "name", value: values.name },
@@ -201,7 +207,6 @@ const ColumnEditor = (props: any) => {
                     label="Column name"
                     name="name"
                     defaultValue={values.name}
-                    // onChange={handleChange}
                     onChange={e => {
                       setValue("name", e.target.value);
                     }}
