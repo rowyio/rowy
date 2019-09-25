@@ -10,6 +10,7 @@ import { Editors } from "react-data-grid-addons";
 import MultiSelect from "../Fields/MultiSelect";
 import Image from "../Fields/Image";
 import File from "../Fields/File";
+import LongText from "../Fields/LongText";
 
 const { AutoComplete } = Editors;
 
@@ -22,6 +23,7 @@ export const editable = (fieldType: FieldType) => {
     case FieldType.multiSelect:
     case FieldType.image:
     case FieldType.file:
+    case FieldType.longText:
       return false;
     default:
       return true;
@@ -86,6 +88,10 @@ export const cellFormatter = (column: any) => {
     case FieldType.file:
       return (props: any) => {
         return <File {...props} onSubmit={onSubmit(key)} fieldName={key} />;
+      };
+    case FieldType.longText:
+      return (props: any) => {
+        return <LongText {...props} onSubmit={onSubmit(key)} fieldName={key} />;
       };
     default:
       return false;

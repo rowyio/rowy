@@ -108,10 +108,14 @@ const ColumnEditor = (props: any) => {
       }
     }
   }, [column]);
+  const clearValues = () => {
+    setValues({ type: null, name: "", options: [] });
+  };
   const onClickAway = (event: any) => {
     const dropDownClicked = isFieldType(event.target.dataset.value);
     if (!dropDownClicked) {
       handleClose();
+      clearValues();
     }
   };
   const handleToggle = (
@@ -125,14 +129,14 @@ const ColumnEditor = (props: any) => {
     const { name, type } = values;
     actions.add(name, type);
     handleClose();
+    clearValues();
   };
   const deleteColumn = () => {
     actions.remove(props.column.idx);
     handleClose();
+    clearValues();
   };
   const updateColumn = () => {
-    console.log(values, props);
-
     let updatables: { field: string; value: any }[] = [
       { field: "name", value: values.name },
       { field: "type", value: values.type },
@@ -146,6 +150,7 @@ const ColumnEditor = (props: any) => {
     }
     actions.update(props.column.idx, updatables);
     handleClose();
+    clearValues();
   };
 
   if (column) {
@@ -227,7 +232,13 @@ const ColumnEditor = (props: any) => {
                         <DeleteIcon /> Delete
                       </Button>
                     )}
-                    <Button color="secondary" onClick={handleClose}>
+                    <Button
+                      color="secondary"
+                      onClick={() => {
+                        handleClose();
+                        clearValues();
+                      }}
+                    >
                       cancel
                     </Button>
                   </FormControl>

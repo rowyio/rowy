@@ -61,10 +61,9 @@ const MenuProps = {
 
 const MultiSelect = (props: Props) => {
   const classes = useStyles();
-  console.log(props);
+
   const { value, row, options, onSubmit } = props;
   const handleChange = (e: any, v: any) => {
-    console.log(v.props.value);
     if (!value) {
       // creates new array
       onSubmit(row.ref, [v.props.value]);

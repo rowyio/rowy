@@ -89,8 +89,6 @@ function Table(props: any) {
   if (tableState.columns) {
     let columns = tableState.columns.map((column: any) => ({
       width: 220,
-      key: column.fieldName,
-      name: column.columnName,
       editable: editable(column.type),
       resizable: true,
       headerRenderer: headerRenderer,

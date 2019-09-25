@@ -1,6 +1,6 @@
 # Firetable Roadmap
 
-## POC
+## POC ✅
 
 ### Initial fields:
 
@@ -10,7 +10,7 @@
 - phone(string) ✅
 - url(string) ✅
 - Number(number) ✅
-- long text(string)
+- long text(string) ✅
 
 ### Functionality:
 

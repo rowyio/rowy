@@ -4,12 +4,7 @@ import useUploader from "../../hooks/useFiretable/useUploader";
 
 import { FieldType } from ".";
 import Chip from "@material-ui/core/Chip";
-import {
-  createStyles,
-  makeStyles,
-  useTheme,
-  Theme,
-} from "@material-ui/core/styles";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 
 // TODO:  indicate state completion / error
 // TODO: Create an interface for props
