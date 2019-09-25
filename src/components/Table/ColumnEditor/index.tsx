@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -11,7 +11,7 @@ import Fade from "@material-ui/core/Fade";
 import Paper from "@material-ui/core/Paper";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
-import { TextField, Grid } from "@material-ui/core";
+import { TextField, Grid, Select } from "@material-ui/core";
 import { FieldsDropDown, isFieldType, FieldType } from "../../Fields";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
@@ -24,6 +24,8 @@ import FormatUnderlinedIcon from "@material-ui/icons/FormatUnderlined";
 import FormatColorFillIcon from "@material-ui/icons/FormatColorFill";
 import DeleteIcon from "@material-ui/icons/Delete";
 import SelectOptionsInput from "./SelectOptionsInput";
+
+import DocInput from "./DocInput";
 
 const useStyles = makeStyles(Theme =>
   createStyles({
@@ -69,12 +71,14 @@ const useStyles = makeStyles(Theme =>
 
 const ColumnEditor = (props: any) => {
   const { anchorEl, column, handleClose, actions } = props;
-  const [values, setValues] = React.useState({
+
+  const [values, setValues] = useState({
     type: null,
     name: "",
     options: [],
+    collectionPath: "",
   });
-  const [flags, setFlags] = React.useState(() => [""]);
+  const [flags, setFlags] = useState(() => [""]);
   const classes = useStyles();
 
   function handleChange(
@@ -106,14 +110,18 @@ const ColumnEditor = (props: any) => {
       } else {
         setValue("options", []);
       }
+      if (column.collectionPath) {
+        setValue("collectionPath", column.collectionPath);
+      }
     }
   }, [column]);
   const clearValues = () => {
-    setValues({ type: null, name: "", options: [] });
+    setValues({ type: null, name: "", options: [], collectionPath: "" });
   };
   const onClickAway = (event: any) => {
-    const dropDownClicked = isFieldType(event.target.dataset.value);
-    if (!dropDownClicked) {
+    const elementId = event.target.id;
+    console.log(event, elementId);
+    if (!elementId.includes("select")) {
       handleClose();
       clearValues();
     }
@@ -126,12 +134,9 @@ const ColumnEditor = (props: any) => {
   };
 
   const createNewColumn = () => {
-    const { name, type, options } = values;
-    if (type === FieldType.multiSelect || type === FieldType.singleSelect) {
-      actions.add(name, type, { options: values.options });
-    } else {
-      actions.add(name, type);
-    }
+    const { name, type, options, collectionPath } = values;
+
+    actions.add(name, type, { options, collectionPath });
 
     handleClose();
     clearValues();
@@ -153,6 +158,15 @@ const ColumnEditor = (props: any) => {
       values.type === FieldType.singleSelect
     ) {
       updatables.push({ field: "options", value: values.options });
+    }
+    if (
+      values.type === FieldType.documentSelect ||
+      values.type === FieldType.documentsSelect
+    ) {
+      updatables.push({
+        field: "collectionPath",
+        value: values.collectionPath,
+      });
     }
     actions.update(props.column.idx, updatables);
     handleClose();
@@ -221,6 +235,13 @@ const ColumnEditor = (props: any) => {
                       <SelectOptionsInput
                         setValue={setValue}
                         options={values.options}
+                      />
+                    )}
+                    {(values.type === FieldType.documentSelect ||
+                      values.type === FieldType.documentsSelect) && (
+                      <DocInput
+                        setValue={setValue}
+                        collectionPath={values.collectionPath}
                       />
                     )}
                     {column.isNew ? (

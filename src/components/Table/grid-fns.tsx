@@ -11,6 +11,7 @@ import MultiSelect from "../Fields/MultiSelect";
 import Image from "../Fields/Image";
 import File from "../Fields/File";
 import LongText from "../Fields/LongText";
+import DocSelect from "../Fields/DocSelect";
 
 const { AutoComplete } = Editors;
 
@@ -24,6 +25,7 @@ export const editable = (fieldType: FieldType) => {
     case FieldType.image:
     case FieldType.file:
     case FieldType.longText:
+    case FieldType.documentSelect:
       return false;
     default:
       return true;
@@ -91,7 +93,17 @@ export const cellFormatter = (column: any) => {
       };
     case FieldType.longText:
       return (props: any) => {
-        return <LongText {...props} onSubmit={onSubmit(key)} fieldName={key} />;
+        return <LongText {...props} onSubmit={onSubmit(key)} />;
+      };
+    case FieldType.documentSelect:
+      return (props: any) => {
+        return (
+          <DocSelect
+            {...props}
+            onSubmit={onSubmit(key)}
+            collectionPath={column.collectionPath}
+          />
+        );
       };
     default:
       return false;
@@ -99,11 +111,15 @@ export const cellFormatter = (column: any) => {
 };
 
 export const singleSelectEditor = (options: string[]) => {
-  const _options = options.map(option => ({
-    id: option,
-    value: option,
-    title: option,
-    text: option,
-  }));
-  return <AutoComplete options={_options} />;
+  if (options) {
+    const _options = options.map(option => ({
+      id: option,
+      value: option,
+      title: option,
+      text: option,
+    }));
+    return <AutoComplete options={_options} />;
+  }
+
+  return <AutoComplete options={[]} />;
 };
