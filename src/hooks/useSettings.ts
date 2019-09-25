@@ -17,10 +17,17 @@ const useSettings = () => {
   const createTable = (name: string, collection: string) => {
     const { tables } = settingsState;
     // updates the setting doc
-    documentDispatch({
-      action: DocActions.update,
-      data: { tables: [...tables, { name, collection }] },
-    });
+    if (tables) {
+      documentDispatch({
+        action: DocActions.update,
+        data: { tables: [...tables, { name, collection }] },
+      });
+    } else {
+      db.doc("_FIRETABLE_/settings").set(
+        { tables: [{ name, collection }] },
+        { merge: true }
+      );
+    }
     //create the firetable collection doc with empty columns
     db.collection(collection)
       .doc("_FIRETABLE_")

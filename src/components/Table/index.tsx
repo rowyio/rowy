@@ -132,6 +132,20 @@ function Table(props: any) {
           onColumnResize={(idx, width) =>
             tableActions.column.resize(idx, width)
           }
+          emptyRowsView={() => {
+            return (
+              <div
+                style={{
+                  textAlign: "center",
+                  backgroundColor: "#ddd",
+                  padding: "100px",
+                }}
+              >
+                <h3>no data to show</h3>
+                <Button onClick={tableActions.row.add}>Add Row</Button>
+              </div>
+            );
+          }}
         />
         <Button onClick={tableActions.row.add}>Add Row</Button>
         <ColumnEditor
