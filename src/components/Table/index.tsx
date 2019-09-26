@@ -7,6 +7,7 @@ import Button from "@material-ui/core/Button";
 import { FieldType, getFieldIcon } from "../Fields";
 
 import ColumnEditor from "./ColumnEditor/index";
+import { functions } from "../../firebase";
 
 import {
   cellFormatter,
@@ -15,6 +16,12 @@ import {
   singleSelectEditor,
   editable,
 } from "./grid-fns";
+
+import { CLOUD_FUNCTIONS } from "firebase/callables";
+const deleteAlgoliaRecord = functions.httpsCallable(
+  CLOUD_FUNCTIONS.deleteAlgoliaRecord
+);
+
 const useStyles = makeStyles(Theme =>
   createStyles({
     typography: {
@@ -107,8 +114,12 @@ function Table(props: any) {
       headerRenderer: headerRenderer,
       formatter: (props: any) => (
         <Button
-          onClick={() => {
+          onClick={async () => {
             props.row.ref.delete();
+            await deleteAlgoliaRecord({
+              id: props.row.ref.id,
+              collection: props.row.ref.parent.path,
+            });
           }}
         >
           Delete row

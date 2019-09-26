@@ -5,15 +5,16 @@ import Date from "../Fields/Date";
 import Rating from "../Fields/Rating";
 import CheckBox from "../Fields/CheckBox";
 import UrlLink from "../Fields/UrlLink";
-import firebase from "firebase/app";
+
 import { Editors } from "react-data-grid-addons";
 import MultiSelect from "../Fields/MultiSelect";
 import Image from "../Fields/Image";
 import File from "../Fields/File";
 import LongText from "../Fields/LongText";
 import DocSelect from "../Fields/DocSelect";
-import { cloudFunction, CLOUD_FUNCTIONS } from "firebase/callables";
+import { CLOUD_FUNCTIONS } from "firebase/callables";
 import { functions } from "../../firebase";
+
 const algoliaUpdateDoc = functions.httpsCallable(
   CLOUD_FUNCTIONS.updateAlgoliaRecord
 );
