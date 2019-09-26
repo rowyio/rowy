@@ -64,7 +64,7 @@ export default function DocInput(props: any) {
     tableConfigActions.setTable(collectionPath);
   }, [collectionPath]);
   const [primaryKeys, setPrimaryKeys] = React.useState<string[]>([]);
-  const [secondaryKeys, setSecondary] = React.useState<string[]>([]);
+  const [secondaryKeys, setSecondaryKeys] = React.useState<string[]>([]);
 
   const classes = useStyles();
   const tables = useContext(TablesContext);
@@ -100,7 +100,32 @@ export default function DocInput(props: any) {
             multiple
             value={primaryKeys}
             onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
-              setPersonName(event.target.value as string[]);
+              setPrimaryKeys(event.target.value as string[]);
+            }}
+            input={<Input id="select-multiple-chip" />}
+            renderValue={selected => (
+              <div className={classes.chips}>
+                {(selected as string[]).map(value => (
+                  <Chip key={value} label={value} className={classes.chip} />
+                ))}
+              </div>
+            )}
+            MenuProps={MenuProps}
+          >
+            {names.map(name => (
+              <MenuItem key={name} value={name}>
+                {name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl className={classes.formControl}>
+          <InputLabel htmlFor="select-multiple-chip">Primary Text</InputLabel>
+          <Select
+            multiple
+            value={secondaryKeys}
+            onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
+              setSecondaryKeys(event.target.value as string[]);
             }}
             input={<Input id="select-multiple-chip" />}
             renderValue={selected => (
