@@ -5,7 +5,7 @@ import "firebase/functions";
 import "firebase/storage";
 
 const config = {
-  apiKey: process.env.REACT_APP_FIREBASE_PRPOJECT_KEY,
+  apiKey: process.env.REACT_APP_FIREBASE_PROJECT_KEY,
   authDomain: `${process.env.REACT_APP_FIREBASE_PROJECT_NAME}.firebaseapp.com`,
   databaseURL: `https://${process.env.REACT_APP_FIREBASE_PROJECT_NAME}.firebaseio.com`,
   projectId: process.env.REACT_APP_FIREBASE_PROJECT_NAME,
