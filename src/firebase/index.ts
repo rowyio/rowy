@@ -4,15 +4,15 @@ import "firebase/firestore";
 import "firebase/functions";
 import "firebase/storage";
 
-import { productionConfig, stagingConfig } from "./config";
+const config = {
+  apiKey: process.env.REACT_APP_FIREBASE_PRPOJECT_KEY,
+  authDomain: `${process.env.REACT_APP_FIREBASE_PROJECT_NAME}.firebaseapp.com`,
+  databaseURL: `https://${process.env.REACT_APP_FIREBASE_PROJECT_NAME}.firebaseio.com`,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_NAME,
+  storageBucket: `${process.env.REACT_APP_FIREBASE_PROJECT_NAME}.appspot.com`,
+};
 
-if (process.env.REACT_APP_ENV === "PRODUCTION") {
-  console.log("production");
-  firebase.initializeApp(productionConfig);
-} else {
-  console.log("staging");
-  firebase.initializeApp(stagingConfig);
-}
+firebase.initializeApp(config);
 
 export const auth = firebase.auth();
 export const db = firebase.firestore();

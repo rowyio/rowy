@@ -12,6 +12,7 @@ import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import { onSubmit } from "components/Table/grid-fns";
 import { TextField } from "@material-ui/core";
 import algoliasearch from "algoliasearch/lite";
+
 import {
   InstantSearch,
   Hits,
@@ -23,8 +24,12 @@ import {
   Configure,
 } from "react-instantsearch-dom";
 const searchClient = algoliasearch(
-  "NSSK1FAZOO",
-  "2a6c9c25e4bc9526643331405785baea"
+  process.env.REACT_APP_ALGOLIA_APP_ID
+    ? process.env.REACT_APP_ALGOLIA_APP_ID
+    : "",
+  process.env.REACT_APP_ALGOLIA_SEARCH_KEY
+    ? process.env.REACT_APP_ALGOLIA_SEARCH_KEY
+    : ""
 );
 
 const useStyles = makeStyles((theme: Theme) =>
