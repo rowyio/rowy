@@ -1,28 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SearchIcon from "@material-ui/icons/Search";
 import IconButton from "@material-ui/core/IconButton";
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Popper from "@material-ui/core/Popper";
-import Fade from "@material-ui/core/Fade";
 import Paper from "@material-ui/core/Paper";
-import TextareaAutosize from "@material-ui/core/TextareaAutosize";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
-import { onSubmit } from "components/Table/grid-fns";
-import { TextField } from "@material-ui/core";
 import algoliasearch from "algoliasearch/lite";
+import { TextField } from "@material-ui/core";
 
-import {
-  InstantSearch,
-  Hits,
-  SearchBox,
-  Pagination,
-  Highlight,
-  ClearRefinements,
-  RefinementList,
-  Configure,
-} from "react-instantsearch-dom";
 const searchClient = algoliasearch(
   process.env.REACT_APP_ALGOLIA_APP_ID
     ? process.env.REACT_APP_ALGOLIA_APP_ID
@@ -60,6 +45,15 @@ interface Props {
 const DocSelect = (props: Props) => {
   const { value, row, onSubmit, collectionPath } = props;
   const [query, setQuery] = useState(value ? value : "");
+  const [hits, setHits] = useState<{}>([]);
+  const algoliaIndex = searchClient.initIndex(collectionPath);
+  const search = async (query: string) => {
+    const resp = await algoliaIndex.search({ query });
+    setHits(resp.hits);
+  };
+  useEffect(() => {
+    search(query);
+  }, [query]);
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const classes = useStyles();
@@ -88,16 +82,23 @@ const DocSelect = (props: Props) => {
           {value}
           <Popper id={id} open={open} anchorEl={anchorEl}>
             <Paper>
-              {/* <TextField id={id} placeholder={`searching ${collectionPath}`} /> */}
+              <TextField
+                id={id}
+                placeholder={`searching ${collectionPath}`}
+                onChange={(e: any) => {
+                  setQuery(e.target.value);
+                }}
+              />
 
-              <div className="ais-InstantSearch">
-                <InstantSearch
+              <div>
+                {/* <InstantSearch
                   indexName={collectionPath}
                   searchClient={searchClient}
                 >
-                  <SearchBox />
-                  <Hits hitComponent={Hit} />
-                </InstantSearch>
+                  
+                  <SearchBox /> */}
+
+                {/* </InstantSearch> */}
               </div>
             </Paper>
           </Popper>
@@ -110,8 +111,7 @@ const DocSelect = (props: Props) => {
 const Hit = (props: any) => {
   return (
     <div>
-      <Highlight attribute="firstName" hit={props.hit} />
-
+      <h3>{props.hit.firstName}</h3>
       <p>{props.hit.email}</p>
     </div>
   );
