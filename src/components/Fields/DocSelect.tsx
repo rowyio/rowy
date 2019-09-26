@@ -54,7 +54,7 @@ const DocSelect = (props: Props) => {
   const id = open ? "no-transition-popper" : undefined;
   const onClickAway = (event: any) => {
     if (event.target.id !== id) {
-      //  onSubmit(row.ref, text);
+      //  onSubmit();
       setAnchorEl(null);
     }
   };

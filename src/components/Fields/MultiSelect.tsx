@@ -66,16 +66,16 @@ const MultiSelect = (props: Props) => {
   const handleChange = (e: any, v: any) => {
     if (!value) {
       // creates new array
-      onSubmit(row.ref, [v.props.value]);
+      onSubmit([v.props.value]);
     } else if (!value.includes(v.props.value)) {
       // adds to array
-      onSubmit(row.ref, [...value, v.props.value]);
+      onSubmit([...value, v.props.value]);
     } else {
       // removes from array
       let _updatedValues = [...value];
       const index = _updatedValues.indexOf(v.props.value);
       _updatedValues.splice(index, 1);
-      onSubmit(row.ref, _updatedValues);
+      onSubmit(_updatedValues);
     }
   };
 

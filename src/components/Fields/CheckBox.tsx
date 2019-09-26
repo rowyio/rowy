@@ -16,7 +16,7 @@ const CheckBox = (props: Props) => {
       name={`checkBox-controlled-${row.id}`}
       checked={!!value}
       onChange={e => {
-        onSubmit(row.ref, !value);
+        onSubmit(!value);
       }}
     />
   );

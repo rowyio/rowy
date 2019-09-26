@@ -44,7 +44,7 @@ const File = (props: Props) => {
     multiple: false,
   });
   const handleDelete = () => {
-    onSubmit(row.ref, []);
+    onSubmit([]);
   };
 
   return (

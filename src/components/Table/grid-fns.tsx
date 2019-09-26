@@ -12,7 +12,11 @@ import Image from "../Fields/Image";
 import File from "../Fields/File";
 import LongText from "../Fields/LongText";
 import DocSelect from "../Fields/DocSelect";
-
+import { cloudFunction, CLOUD_FUNCTIONS } from "firebase/callables";
+import { functions } from "../../firebase";
+const algoliaUpdateDoc = functions.httpsCallable(
+  CLOUD_FUNCTIONS.updateAlgoliaRecord
+);
 const { AutoComplete } = Editors;
 
 export const editable = (fieldType: FieldType) => {
@@ -31,24 +35,31 @@ export const editable = (fieldType: FieldType) => {
       return true;
   }
 };
-export const onSubmit = (key: string) => (
-  ref: firebase.firestore.DocumentReference,
-  value: any
-) => {
+export const onSubmit = (key: string, row: any) => async (value: any) => {
+  const collection = row.ref.parent.path;
+  const data = { collection, id: row.ref.id, doc: { [key]: value } };
   if (value !== null || value !== undefined) {
-    ref.update({ [key]: value });
+    row.ref.update({ [key]: value });
+    const callableRes = await algoliaUpdateDoc(data);
+    console.log(callableRes);
   }
 };
 
 export const DateFormatter = (key: string, fieldType: FieldType) => (
   props: any
 ) => {
-  return <Date {...props} onSubmit={onSubmit(key)} fieldType={fieldType} />;
+  return (
+    <Date
+      {...props}
+      onSubmit={onSubmit(key, props.row)}
+      fieldType={fieldType}
+    />
+  );
 };
 
 export const onGridRowsUpdated = (props: any) => {
   const { fromRowData, updated } = props;
-  fromRowData.ref.update(updated);
+  onSubmit(Object.keys(updated)[0], fromRowData)(Object.values(updated)[0]);
 };
 export const onCellSelected = (args: any) => {
   console.log(args);
@@ -64,14 +75,14 @@ export const cellFormatter = (column: any) => {
         return (
           <Rating
             {...props}
-            onSubmit={onSubmit(key)}
+            onSubmit={onSubmit(key, props.row)}
             value={typeof props.value === "number" ? props.value : 0}
           />
         );
       };
     case FieldType.checkBox:
       return (props: any) => {
-        return <CheckBox {...props} onSubmit={onSubmit(key)} />;
+        return <CheckBox {...props} onSubmit={onSubmit(key, props.row)} />;
       };
     case FieldType.url:
       return (props: any) => {
@@ -80,27 +91,43 @@ export const cellFormatter = (column: any) => {
     case FieldType.multiSelect:
       return (props: any) => {
         return (
-          <MultiSelect {...props} onSubmit={onSubmit(key)} options={options} />
+          <MultiSelect
+            {...props}
+            onSubmit={onSubmit(key, props.row)}
+            options={options}
+          />
         );
       };
     case FieldType.image:
       return (props: any) => {
-        return <Image {...props} onSubmit={onSubmit(key)} fieldName={key} />;
+        return (
+          <Image
+            {...props}
+            onSubmit={onSubmit(key, props.row)}
+            fieldName={key}
+          />
+        );
       };
     case FieldType.file:
       return (props: any) => {
-        return <File {...props} onSubmit={onSubmit(key)} fieldName={key} />;
+        return (
+          <File
+            {...props}
+            onSubmit={onSubmit(key, props.row)}
+            fieldName={key}
+          />
+        );
       };
     case FieldType.longText:
       return (props: any) => {
-        return <LongText {...props} onSubmit={onSubmit(key)} />;
+        return <LongText {...props} onSubmit={onSubmit(key, props.row)} />;
       };
     case FieldType.documentSelect:
       return (props: any) => {
         return (
           <DocSelect
             {...props}
-            onSubmit={onSubmit(key)}
+            onSubmit={onSubmit(key, props.row)}
             collectionPath={column.collectionPath}
           />
         );

@@ -1,6 +1,8 @@
 import { functions } from "./index";
 
-export enum CLOUD_FUNCTIONS {}
+export enum CLOUD_FUNCTIONS {
+  updateAlgoliaRecord = "updateAlgoliaRecord",
+}
 
 export const cloudFunction = (
   name: string,

@@ -40,7 +40,10 @@ const useFiretable = (collectionName: string) => {
       update: configActions.update,
       remove: configActions.remove,
     },
-    row: { add: tableActions.addRow, delete: tableActions.deleteRow },
+    row: {
+      add: tableActions.addRow,
+      delete: tableActions.deleteRow,
+    },
     set: setTable,
   };
 
