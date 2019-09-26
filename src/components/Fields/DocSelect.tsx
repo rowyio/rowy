@@ -11,6 +11,21 @@ import TextareaAutosize from "@material-ui/core/TextareaAutosize";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import { onSubmit } from "components/Table/grid-fns";
 import { TextField } from "@material-ui/core";
+import algoliasearch from "algoliasearch/lite";
+import {
+  InstantSearch,
+  Hits,
+  SearchBox,
+  Pagination,
+  Highlight,
+  ClearRefinements,
+  RefinementList,
+  Configure,
+} from "react-instantsearch-dom";
+const searchClient = algoliasearch(
+  "NSSK1FAZOO",
+  "2a6c9c25e4bc9526643331405785baea"
+);
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -55,7 +70,7 @@ const DocSelect = (props: Props) => {
   const onClickAway = (event: any) => {
     if (event.target.id !== id) {
       //  onSubmit();
-      setAnchorEl(null);
+      // setAnchorEl(null);
     }
   };
   return (
@@ -68,7 +83,17 @@ const DocSelect = (props: Props) => {
           {value}
           <Popper id={id} open={open} anchorEl={anchorEl}>
             <Paper>
-              <TextField id={id} placeholder={`searching ${collectionPath}`} />
+              {/* <TextField id={id} placeholder={`searching ${collectionPath}`} /> */}
+
+              <div className="ais-InstantSearch">
+                <InstantSearch
+                  indexName={collectionPath}
+                  searchClient={searchClient}
+                >
+                  <SearchBox />
+                  <Hits hitComponent={Hit} />
+                </InstantSearch>
+              </div>
             </Paper>
           </Popper>
         </div>
@@ -76,4 +101,15 @@ const DocSelect = (props: Props) => {
     </div>
   );
 };
+
+const Hit = (props: any) => {
+  return (
+    <div>
+      <Highlight attribute="firstName" hit={props.hit} />
+
+      <p>{props.hit.email}</p>
+    </div>
+  );
+};
+
 export default DocSelect;
