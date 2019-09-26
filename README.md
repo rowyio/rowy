@@ -13,10 +13,12 @@ clone repo
 
 add .env file to the project directory
 
+```
 REACT_APP_FIREBASE_PROJECT_NAME =
 REACT_APP_FIREBASE_PROJECT_KEY =
 REACT_APP_ALGOLIA_APP_ID =
 REACT_APP_ALGOLIA_SEARCH_KEY =
+```
 
 yarn
 
