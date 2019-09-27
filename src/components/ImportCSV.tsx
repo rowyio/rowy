@@ -13,7 +13,7 @@ import {
 } from "@material-ui/core";
 
 // TODO: Create an interface for props
-export default function ImportExcel(props: any) {
+export default function ImportCSV(props: any) {
   const { classes, columnName, updateColumn } = props;
   const [open, setOpen] = React.useState(false);
   const onDrop = useCallback(async acceptedFiles => {
@@ -63,7 +63,7 @@ export default function ImportExcel(props: any) {
           <div {...getRootProps()}>
             <input {...getInputProps()} />
 
-            <p>Drag 'n' drop .xlsx here, or click to select file</p>
+            <p>Drag 'n' drop .csv here, or click to select file</p>
           </div>
         </DialogContent>
         <DialogActions>

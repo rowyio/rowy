@@ -13,7 +13,6 @@ import {
 
 import useSettings from "../hooks/useSettings";
 import useRouter from "../hooks/useRouter";
-import ImportExcel from "components/ExcelImport";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -70,8 +69,6 @@ const TablesView = (props: any) => {
             </Card>
           ))
         : "TODO: card skeleton"}
-
-      <ImportExcel />
     </Grid>
   );
 };
