@@ -18,7 +18,7 @@ set environment variables
 firebase functions:config:set algolia.app=YOUR_APP_ID algolia.key=ADMIN_API_KEY
 ```
 
-deploy update and delete algolia records
+deploy the following callable cloud functions to update and delete algolia records
 
 ```
 const functions = require("firebase-functions");

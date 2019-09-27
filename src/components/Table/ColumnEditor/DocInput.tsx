@@ -33,19 +33,6 @@ const useStyles = makeStyles(Theme =>
   })
 );
 
-const names = [
-  "Oliver Hansen",
-  "Van Henry",
-  "April Tucker",
-  "Ralph Hubbard",
-  "Omar Alexander",
-  "Carlos Abbott",
-  "Miriam Wagner",
-  "Bradley Wilkerson",
-  "Virginia Andrews",
-  "Kelly Snyder",
-];
-
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -60,24 +47,40 @@ const MenuProps = {
 export default function DocInput(props: any) {
   const { collectionPath, setValue } = props;
   const [tableConfig, tableConfigActions] = useTableConfig(collectionPath);
-  useEffect(() => {
-    tableConfigActions.setTable(collectionPath);
-  }, [collectionPath]);
+
+  const [columns, setColumns] = React.useState<{ key: string; name: string }[]>(
+    []
+  );
   const [primaryKeys, setPrimaryKeys] = React.useState<string[]>([]);
   const [secondaryKeys, setSecondaryKeys] = React.useState<string[]>([]);
+
+  useEffect(() => {
+    console.log(tableConfig);
+    setColumns(tableConfig.columns);
+  }, [tableConfig.columns]);
 
   const classes = useStyles();
   const tables = useContext(TablesContext);
   const onChange = (e: any, v: any) => {
     setValue("collectionPath", v.props.value);
+    setPrimaryKeys([]);
+    setSecondaryKeys([]);
+    setColumns([]);
+    tableConfigActions.setTable(v.props.value);
   };
-
+  useEffect(() => {
+    setValue("resultsConfig", {
+      primaryKeys,
+      secondaryKeys,
+    });
+  }, [primaryKeys, secondaryKeys]);
   if (tables.value)
     return (
       <>
         <Select
           value={collectionPath ? collectionPath : null}
           onChange={onChange}
+          id={`select-key`}
           inputProps={{
             name: "Table",
             id: "table",
@@ -95,14 +98,16 @@ export default function DocInput(props: any) {
           })}
         </Select>
         <FormControl className={classes.formControl}>
-          <InputLabel htmlFor="select-multiple-chip">Primary Text</InputLabel>
+          <InputLabel htmlFor="select-primary-multiple-chip">
+            Primary Text
+          </InputLabel>
           <Select
             multiple
             value={primaryKeys}
             onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
               setPrimaryKeys(event.target.value as string[]);
             }}
-            input={<Input id="select-multiple-chip" />}
+            input={<Input id="select-primary-multiple-chip" />}
             renderValue={selected => (
               <div className={classes.chips}>
                 {(selected as string[]).map(value => (
@@ -112,22 +117,31 @@ export default function DocInput(props: any) {
             )}
             MenuProps={MenuProps}
           >
-            {names.map(name => (
-              <MenuItem key={name} value={name}>
-                {name}
-              </MenuItem>
-            ))}
+            {columns &&
+              columns.length !== 0 &&
+              columns.map(column => (
+                <MenuItem
+                  id={`select-primary-column-${column.key}`}
+                  key={column.key}
+                  value={column.key}
+                >
+                  {column.name}
+                </MenuItem>
+              ))}
           </Select>
         </FormControl>
+
         <FormControl className={classes.formControl}>
-          <InputLabel htmlFor="select-multiple-chip">Primary Text</InputLabel>
+          <InputLabel htmlFor="select-secondary-multiple-chip">
+            Secondary Text
+          </InputLabel>
           <Select
             multiple
             value={secondaryKeys}
             onChange={(event: React.ChangeEvent<{ value: unknown }>) => {
               setSecondaryKeys(event.target.value as string[]);
             }}
-            input={<Input id="select-multiple-chip" />}
+            input={<Input id="select-secondary-multiple-chip" />}
             renderValue={selected => (
               <div className={classes.chips}>
                 {(selected as string[]).map(value => (
@@ -137,11 +151,17 @@ export default function DocInput(props: any) {
             )}
             MenuProps={MenuProps}
           >
-            {names.map(name => (
-              <MenuItem key={name} value={name}>
-                {name}
-              </MenuItem>
-            ))}
+            {columns &&
+              columns.length !== 0 &&
+              columns.map(column => (
+                <MenuItem
+                  id={`select-secondary-column-${column.key}`}
+                  key={column.key}
+                  value={column.key}
+                >
+                  {column.name}
+                </MenuItem>
+              ))}
           </Select>
         </FormControl>
       </>
