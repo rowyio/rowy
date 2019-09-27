@@ -1,11 +1,9 @@
 import React from "react";
 
-import { maxWidth } from "@material-ui/system";
 import {
   makeStyles,
   createStyles,
   Card,
-  CardActions,
   CardContent,
   Button,
   Typography,

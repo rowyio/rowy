@@ -2,7 +2,6 @@ import { db } from "../../firebase";
 
 import { useEffect, useReducer } from "react";
 import equals from "ramda/es/equals";
-import { Cell } from "./useCell";
 import firebase from "firebase/app";
 const CAP = 500;
 
@@ -11,7 +10,7 @@ const tableReducer = (prevState: any, newProps: any) => {
     switch (newProps.type) {
       case "more":
         if (prevState.limit < prevState.cap)
-          // rows count hardcap
+          // rows count hardCap
           return { ...prevState, limit: prevState.limit + 10 };
         else return { ...prevState };
       default:
@@ -21,7 +20,7 @@ const tableReducer = (prevState: any, newProps: any) => {
     return { ...prevState, ...newProps };
   }
 };
-const tableIntialState = {
+const tableInitialState = {
   rows: [],
   prevFilters: null,
   prevPath: null,
@@ -34,10 +33,10 @@ const tableIntialState = {
   cap: CAP,
 };
 
-const useTable = (intialOverrides: any) => {
+const useTable = (initialOverrides: any) => {
   const [tableState, tableDispatch] = useReducer(tableReducer, {
-    ...tableIntialState,
-    ...intialOverrides,
+    ...tableInitialState,
+    ...initialOverrides,
   });
   const getRows = (
     filters: {
@@ -144,6 +143,7 @@ const useTable = (intialOverrides: any) => {
       updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
     });
   };
+
   const tableActions = { deleteRow, setTable, addRow };
   return [tableState, tableActions];
 };

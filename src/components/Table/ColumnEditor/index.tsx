@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -11,8 +11,8 @@ import Fade from "@material-ui/core/Fade";
 import Paper from "@material-ui/core/Paper";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
-import { TextField, Grid } from "@material-ui/core";
-import { FieldsDropDown, isFieldType } from "../Fields";
+import { TextField, Grid, Select } from "@material-ui/core";
+import { FieldsDropDown, isFieldType, FieldType } from "../../Fields";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 
@@ -20,9 +20,12 @@ import LockIcon from "@material-ui/icons/Lock";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
-import FormatItalicIcon from "@material-ui/icons/FormatItalic";
 import FormatUnderlinedIcon from "@material-ui/icons/FormatUnderlined";
 import FormatColorFillIcon from "@material-ui/icons/FormatColorFill";
+import DeleteIcon from "@material-ui/icons/Delete";
+import SelectOptionsInput from "./SelectOptionsInput";
+
+import DocInput from "./DocInput";
 
 const useStyles = makeStyles(Theme =>
   createStyles({
@@ -66,13 +69,16 @@ const useStyles = makeStyles(Theme =>
   })
 );
 
-const HeaderPopper = (props: any) => {
+const ColumnEditor = (props: any) => {
   const { anchorEl, column, handleClose, actions } = props;
-  const [values, setValues] = React.useState({
+
+  const [values, setValues] = useState({
     type: null,
     name: "",
+    options: [],
+    collectionPath: "",
   });
-  const [flags, setFlags] = React.useState(() => [""]);
+  const [flags, setFlags] = useState(() => [""]);
   const classes = useStyles();
 
   function handleChange(
@@ -91,7 +97,7 @@ const HeaderPopper = (props: any) => {
   };
 
   useEffect(() => {
-    if (column && !column.isNew)
+    if (column && !column.isNew) {
       setValues(oldValues => ({
         ...oldValues,
         name: column.name,
@@ -99,11 +105,25 @@ const HeaderPopper = (props: any) => {
         key: column.key,
         isNew: column.isNew,
       }));
+      if (column.options) {
+        setValue("options", column.options);
+      } else {
+        setValue("options", []);
+      }
+      if (column.collectionPath) {
+        setValue("collectionPath", column.collectionPath);
+      }
+    }
   }, [column]);
+  const clearValues = () => {
+    setValues({ type: null, name: "", options: [], collectionPath: "" });
+  };
   const onClickAway = (event: any) => {
-    const dropDownClicked = isFieldType(event.target.dataset.value);
-    if (!dropDownClicked) {
+    const elementId = event.target.id;
+    console.log(event, elementId);
+    if (!elementId.includes("select")) {
       handleClose();
+      clearValues();
     }
   };
   const handleToggle = (
@@ -114,9 +134,43 @@ const HeaderPopper = (props: any) => {
   };
 
   const createNewColumn = () => {
-    const { name, type } = values;
-    actions.add(name, type);
+    const { name, type, options, collectionPath } = values;
+
+    actions.add(name, type, { options, collectionPath });
+
     handleClose();
+    clearValues();
+  };
+  const deleteColumn = () => {
+    actions.remove(props.column.idx);
+    handleClose();
+    clearValues();
+  };
+
+  const updateColumn = () => {
+    let updatables: { field: string; value: any }[] = [
+      { field: "name", value: values.name },
+      { field: "type", value: values.type },
+      // { field: "resizable", value: flags.includes("resizable") },
+    ];
+    if (
+      values.type === FieldType.multiSelect ||
+      values.type === FieldType.singleSelect
+    ) {
+      updatables.push({ field: "options", value: values.options });
+    }
+    if (
+      values.type === FieldType.documentSelect ||
+      values.type === FieldType.documentsSelect
+    ) {
+      updatables.push({
+        field: "collectionPath",
+        value: values.collectionPath,
+      });
+    }
+    actions.update(props.column.idx, updatables);
+    handleClose();
+    clearValues();
   };
 
   if (column) {
@@ -132,6 +186,8 @@ const HeaderPopper = (props: any) => {
             <Fade {...TransitionProps} timeout={350}>
               <Paper className={classes.container}>
                 <Grid container direction="column">
+                  {/* 
+                  // TODO: functional flags 
                   <ToggleButtonGroup
                     size="small"
                     value={flags}
@@ -139,33 +195,32 @@ const HeaderPopper = (props: any) => {
                     onChange={handleToggle}
                     arial-label="column settings"
                   >
-                    <ToggleButton value="editable" aria-label="bold">
+                    <ToggleButton value="editable" aria-label="editable">
                       {flags.includes("editable") ? (
                         <LockOpenIcon />
                       ) : (
                         <LockIcon />
                       )}
                     </ToggleButton>
-                    <ToggleButton value="visible" aria-label="italic">
+                    <ToggleButton value="visible" aria-label="visible">
                       {flags.includes("visible") ? (
                         <VisibilityIcon />
                       ) : (
                         <VisibilityOffIcon />
                       )}
                     </ToggleButton>
-                    <ToggleButton value="freeze" aria-label="underlined">
+                    <ToggleButton value="freeze" aria-label="freeze">
                       <FormatUnderlinedIcon />
                     </ToggleButton>
-                    <ToggleButton value="resize" aria-label="color">
+                    <ToggleButton value="resizable" aria-label="resizable">
                       <FormatColorFillIcon />
                     </ToggleButton>
-                  </ToggleButtonGroup>
+                  </ToggleButtonGroup> */}
 
                   <TextField
                     label="Column name"
                     name="name"
                     defaultValue={values.name}
-                    // onChange={handleChange}
                     onChange={e => {
                       setValue("name", e.target.value);
                     }}
@@ -174,10 +229,42 @@ const HeaderPopper = (props: any) => {
                   <FormControl className={classes.formControl}>
                     <InputLabel htmlFor="Field-select">Field Type</InputLabel>
                     {FieldsDropDown(values.type, handleChange)}
-                    {column.isNew && (
-                      <Button onClick={createNewColumn}>Add</Button>
+
+                    {(values.type === FieldType.singleSelect ||
+                      values.type === FieldType.multiSelect) && (
+                      <SelectOptionsInput
+                        setValue={setValue}
+                        options={values.options}
+                      />
                     )}
-                    <Button color="secondary" onClick={handleClose}>
+                    {(values.type === FieldType.documentSelect ||
+                      values.type === FieldType.documentsSelect) && (
+                      <DocInput
+                        setValue={setValue}
+                        collectionPath={values.collectionPath}
+                      />
+                    )}
+                    {column.isNew ? (
+                      <Button onClick={createNewColumn}>Add</Button>
+                    ) : (
+                      <Button onClick={updateColumn}>update</Button>
+                    )}
+                    {!column.isNew && (
+                      <Button
+                        variant="outlined"
+                        color="secondary"
+                        onClick={deleteColumn}
+                      >
+                        <DeleteIcon /> Delete
+                      </Button>
+                    )}
+                    <Button
+                      color="secondary"
+                      onClick={() => {
+                        handleClose();
+                        clearValues();
+                      }}
+                    >
                       cancel
                     </Button>
                   </FormControl>
@@ -192,4 +279,4 @@ const HeaderPopper = (props: any) => {
   return <div />;
 };
 
-export default HeaderPopper;
+export default ColumnEditor;

@@ -1,8 +1,11 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import useUploader from "../../hooks/useFiretable/useUploader";
 
 import { FieldType } from ".";
+import Chip from "@material-ui/core/Chip";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+
 // TODO:  indicate state completion / error
 // TODO: Create an interface for props
 
@@ -14,40 +17,55 @@ interface Props {
   fieldName: string;
 }
 
-const Image = (props: Props) => {
-  const { fieldName, value, row } = props;
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      display: "flex",
+      flexWrap: "wrap",
+    },
+    chip: {},
+  })
+);
+
+const File = (props: Props) => {
+  const { fieldName, value, row, onSubmit } = props;
+  const classes = useStyles();
   const [uploaderState, upload] = useUploader();
-  const [localImage, setLocalImage] = useState<string | null>(null);
   const onDrop = useCallback(acceptedFiles => {
     // Do something with the files
     const imageFile = acceptedFiles[0];
     if (imageFile) {
       upload(row.ref, fieldName, [imageFile]);
-      let url = URL.createObjectURL(imageFile);
-      setLocalImage(url);
     }
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     multiple: false,
-    accept: ["image/png", "image/jpg", "image/jpeg"],
   });
+  const handleDelete = () => {
+    onSubmit([]);
+  };
+
   return (
     <div {...getRootProps()}>
       <input {...getInputProps()} />
-      {localImage ? (
-        <div>
-          <img style={{ height: "80px" }} src={localImage} />
-        </div>
-      ) : value ? (
-        <img style={{ height: "80px" }} src={value[0].downloadURL} />
+      {value && value.length !== 0 ? (
+        <Chip
+          key={value[0].name}
+          label={value[0].name}
+          className={classes.chip}
+          onClick={() => {
+            window.open(value[0].downloadURL);
+          }}
+          onDelete={handleDelete}
+        />
       ) : isDragActive ? (
         <p>Drop the files here ...</p>
       ) : (
-        <p>Drag 'n' drop some files here, or click to select files</p>
+        <p>click to select files</p>
       )}
     </div>
   );
 };
-export default Image;
+export default File;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import AddIcon from "@material-ui/icons/Add";
 import _camelCase from "lodash/camelCase";
-
+import useRouter from "../hooks/useRouter";
 import {
   Button,
   TextField,
@@ -15,6 +15,7 @@ import {
 
 // TODO: Create an interface for props
 export default function CreateTableDialog(props: any) {
+  const router = useRouter();
   const { classes, createTable } = props;
   const [open, setOpen] = React.useState(false);
   const [tableName, setTableName] = useState("");
@@ -33,6 +34,7 @@ export default function CreateTableDialog(props: any) {
   }
   function handleCreate() {
     createTable(tableName, collectionName);
+    router.history.push(collectionName);
     handleClose();
   }
 

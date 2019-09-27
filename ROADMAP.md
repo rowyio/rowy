@@ -1,6 +1,6 @@
 # Firetable Roadmap
 
-## POC
+## POC ✅
 
 ### Initial fields:
 
@@ -10,7 +10,7 @@
 - phone(string) ✅
 - url(string) ✅
 - Number(number) ✅
-- long text(string)
+- long text(string) ✅
 
 ### Functionality:
 
@@ -25,44 +25,50 @@
 
 ### additional fields:
 
-- single select(string)
-- [https://material-ui.com/components/chips/#chip-array] Multiple select(array of strings)
+- single select(string)✅
+- Multiple select(array of strings)✅
 - date(Firebase timestamp)✅
 - time(Firebase timestamp)✅
-- file(firebase storage url string)
-- image(firebase storage url string)
+- file (single) 🏗️(missing status indicator)
+- image (single) 🏗️(missing status indicator)
 - single select reference(DocReference)
 - multi select reference(DocReference)
 - rating ✅
 
 ### Functionality:
 
-- Hide/Show columns
-- Delete columns
-- Edit columns
-- Delete tables
-- Edit tables
-- Hide tables
+- Delete columns✅
+- Edit columns✅
 - Fixed column
+- Hide/Show columns
 - resizable column ✅
 - keyboard Navigation:
   - Up key to move to the cell above ✅
   - Down key to move to the cell bellow, if last cell create a new row ✅
   - Tab to go to the next cell ✅
 - column / table Create/edit validation
+- Delete tables
+- Edit tables
+- Hide tables
+- On new table add, refresh view to the table view✅
+- import csv to table
 
 ## V1
 
 ### additional fields:
 
+- file (multi)
+- image (multi)
 - Duration
 - Percentage(number)
+- Slider(number)
 - Table(Document[])
 - Rich Text(html string)
 
 ### Functionality:
 
 - Sort rows
+- reorder columns
 - Locked columns
 - Table view only mode
 - SubCollection tables
@@ -89,7 +95,6 @@
 
 ### Functionality:
 
-- import csv to table
 - Themes
 - Table templates
 - Dialog View of a row

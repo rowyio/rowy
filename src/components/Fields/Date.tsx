@@ -22,7 +22,7 @@ const Date = (props: Props) => {
   const { value, row, onSubmit, fieldType } = props;
   function handleDateChange(date: Date | null) {
     if (date) {
-      onSubmit(row.ref, date);
+      onSubmit(date);
     }
   }
 

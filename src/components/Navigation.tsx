@@ -18,6 +18,7 @@ import CreateTableDialog from "./CreateTableDialog";
 
 import useSettings from "../hooks/useSettings";
 import useRouter from "../hooks/useRouter";
+import TablesContext from "../contexts/tablesContext";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -63,69 +64,71 @@ const Navigation = (props: any) => {
   const classes = useStyles();
   const [settings, createTable] = useSettings();
   return (
-    <React.Fragment>
-      <CssBaseline />
-      <Paper square className={classes.paper}>
-        <Typography className={classes.text} variant="h5" gutterBottom>
-          {props.header}
-        </Typography>
-      </Paper>
-      {props.children}
-      <AppBar position="fixed" color="primary" className={classes.appBar}>
-        <Toolbar>
-          <IconButton edge="start" color="inherit" aria-label="open drawer">
-            <MenuIcon />
-          </IconButton>
-          {!settings.tables ? (
-            <>
-              <Skeleton
-                variant="rect"
-                width={120}
-                height={40}
-                className={classes.skeleton}
-              />
-              <Skeleton
-                variant="rect"
-                width={120}
-                height={40}
-                className={classes.skeleton}
-              />
-              <Skeleton
-                variant="rect"
-                width={120}
-                height={40}
-                className={classes.skeleton}
-              />
-              <Skeleton
-                variant="rect"
-                width={120}
-                height={40}
-                className={classes.skeleton}
-              />
-            </>
-          ) : (
-            <>
-              {settings.tables.map(
-                (table: { name: string; collection: string }) => (
-                  <Button
-                    key={table.collection}
-                    onClick={() => {
-                      router.history.push(table.collection);
-                    }}
-                    className={classes.button}
-                  >
-                    {table.name}
-                  </Button>
-                )
-              )}
-            </>
-          )}
+    <TablesContext.Provider value={{ value: settings.tables }}>
+      <React.Fragment>
+        <CssBaseline />
+        <Paper square className={classes.paper}>
+          <Typography className={classes.text} variant="h5" gutterBottom>
+            {props.header}
+          </Typography>
+        </Paper>
+        {props.children}
+        <AppBar position="fixed" color="primary" className={classes.appBar}>
+          <Toolbar>
+            <IconButton edge="start" color="inherit" aria-label="open drawer">
+              <MenuIcon />
+            </IconButton>
+            {!settings.tables ? (
+              <>
+                <Skeleton
+                  variant="rect"
+                  width={120}
+                  height={40}
+                  className={classes.skeleton}
+                />
+                <Skeleton
+                  variant="rect"
+                  width={120}
+                  height={40}
+                  className={classes.skeleton}
+                />
+                <Skeleton
+                  variant="rect"
+                  width={120}
+                  height={40}
+                  className={classes.skeleton}
+                />
+                <Skeleton
+                  variant="rect"
+                  width={120}
+                  height={40}
+                  className={classes.skeleton}
+                />
+              </>
+            ) : (
+              <>
+                {settings.tables.map(
+                  (table: { name: string; collection: string }) => (
+                    <Button
+                      key={table.collection}
+                      onClick={() => {
+                        router.history.push(table.collection);
+                      }}
+                      className={classes.button}
+                    >
+                      {table.name}
+                    </Button>
+                  )
+                )}
+              </>
+            )}
 
-          <CreateTableDialog classes={classes} createTable={createTable} />
-          <div className={classes.grow} />
-        </Toolbar>
-      </AppBar>
-    </React.Fragment>
+            <CreateTableDialog classes={classes} createTable={createTable} />
+            <div className={classes.grow} />
+          </Toolbar>
+        </AppBar>
+      </React.Fragment>
+    </TablesContext.Provider>
   );
 };
 export default Navigation;

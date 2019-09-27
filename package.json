@@ -8,6 +8,7 @@
     "@material-ui/icons": "^4.4.1",
     "@material-ui/lab": "^4.0.0-alpha.26",
     "@material-ui/pickers": "^3.2.5",
+    "@types/algoliasearch": "^3.34.2",
     "@types/jest": "24.0.18",
     "@types/lodash": "^4.14.138",
     "@types/node": "12.7.4",
@@ -15,10 +16,15 @@
     "@types/react": "^16.9.2",
     "@types/react-data-grid": "^4.0.3",
     "@types/react-dom": "16.9.0",
+    "@types/react-instantsearch-dom": "^5.2.6",
     "@types/react-router-dom": "^4.3.5",
     "@types/react-sortable-hoc": "^0.6.5",
     "@types/react-virtualized": "^9.21.4",
+<<<<<<< HEAD
     "@types/xlsx": "^0.0.36",
+=======
+    "algoliasearch": "^3.34.0",
+>>>>>>> 388c726eacf3bd64f948944e2771b63a8afddedc
     "array-move": "^2.1.0",
     "attr-accept": "^1.1.3",
     "convert-csv-to-json": "^0.0.15",

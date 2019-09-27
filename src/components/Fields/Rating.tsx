@@ -17,7 +17,7 @@ const Rating = (props: Props) => {
       name={`rating-controlled-${row.id}`}
       value={value}
       onChange={(event, newValue) => {
-        onSubmit(row.ref, newValue);
+        onSubmit(newValue);
       }}
     />
   );
