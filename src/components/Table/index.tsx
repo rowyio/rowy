@@ -18,6 +18,7 @@ import {
 } from "./grid-fns";
 
 import { CLOUD_FUNCTIONS } from "firebase/callables";
+import ImportCSV from "components/ImportCSV";
 const deleteAlgoliaRecord = functions.httpsCallable(
   CLOUD_FUNCTIONS.deleteAlgoliaRecord
 );
@@ -156,7 +157,14 @@ function Table(props: any) {
             );
           }}
         />
-        <Button onClick={tableActions.row.add}>Add Row</Button>
+        <Button
+          onClick={() => {
+            tableActions.row.add();
+          }}
+        >
+          Add Row
+        </Button>
+        <ImportCSV columns={tableState.columns} addRow={tableActions.row.add} />
         <ColumnEditor
           handleClose={handleCloseHeader}
           anchorEl={anchorEl}
