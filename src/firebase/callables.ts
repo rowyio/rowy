@@ -24,3 +24,13 @@ export const cloudFunction = (
       }
     });
 };
+
+export const algoliaUpdateDoc = (data: {
+  collection: string;
+  id: string;
+  doc: any;
+}) => functions.httpsCallable(CLOUD_FUNCTIONS.updateAlgoliaRecord)(data);
+
+export const algoliaDeleteDoc = functions.httpsCallable(
+  CLOUD_FUNCTIONS.deleteAlgoliaRecord
+);

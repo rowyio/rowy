@@ -7,10 +7,11 @@ interface Props {
   value: number;
   row: any;
   onSubmit: Function;
+  isScrolling: boolean;
 }
 const Rating = (props: Props) => {
-  const { value, row, onSubmit } = props;
-
+  const { value, row, onSubmit, isScrolling } = props;
+  //if (isScrolling) return <div />;
   return (
     <MuiRating
       // TODO: make it unique for each

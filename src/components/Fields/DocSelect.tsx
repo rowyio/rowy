@@ -40,10 +40,11 @@ interface Props {
   row: { ref: firebase.firestore.DocumentReference; id: string };
   onSubmit: Function;
   collectionPath: string;
+  isScrolling: boolean;
 }
 
 const DocSelect = (props: Props) => {
-  const { value, row, onSubmit, collectionPath } = props;
+  const { value, row, onSubmit, collectionPath, isScrolling } = props;
   const [query, setQuery] = useState(value ? value : "");
   const [hits, setHits] = useState<{}>([]);
   const algoliaIndex = searchClient.initIndex(collectionPath);
@@ -52,7 +53,7 @@ const DocSelect = (props: Props) => {
     setHits(resp.hits);
   };
   useEffect(() => {
-    search(query);
+    //search(query);
   }, [query]);
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -63,6 +64,7 @@ const DocSelect = (props: Props) => {
   ) => {
     setAnchorEl(event.currentTarget);
   };
+  // if (isScrolling) return <div />;
 
   const open = Boolean(anchorEl);
   const id = open ? "no-transition-popper" : undefined;

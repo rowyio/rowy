@@ -16,10 +16,12 @@ interface Props {
   row: { ref: firebase.firestore.DocumentReference; id: string };
   onSubmit: Function;
   fieldType: FieldType;
+  isScrolling: boolean;
 }
 
 const Date = (props: Props) => {
-  const { value, row, onSubmit, fieldType } = props;
+  const { value, row, onSubmit, fieldType, isScrolling } = props;
+  //if (isScrolling) return <div />;
   function handleDateChange(date: Date | null) {
     if (date) {
       onSubmit(date);
