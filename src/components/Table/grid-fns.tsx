@@ -12,12 +12,9 @@ import Image from "../Fields/Image";
 import File from "../Fields/File";
 import LongText from "../Fields/LongText";
 import DocSelect from "../Fields/DocSelect";
-import { CLOUD_FUNCTIONS } from "firebase/callables";
-import { functions } from "../../firebase";
 
-const algoliaUpdateDoc = functions.httpsCallable(
-  CLOUD_FUNCTIONS.updateAlgoliaRecord
-);
+import { algoliaUpdateDoc } from "../../firebase/callables";
+
 const { AutoComplete } = Editors;
 
 export const editable = (fieldType: FieldType) => {

@@ -120,6 +120,22 @@ export default function ImportCSV(props: any) {
 
           {csvKeys.length !== 0 && (
             <Grid container direction="column">
+              {keyPairs.map((keyPair: any, index: number) => (
+                <Grid item className={classes.keyPair}>
+                  <Typography>{keyPair.csvKey}</Typography>
+                  <ArrowIcon />
+                  <Typography>{keyPair.columnKey}</Typography>
+                  <IconButton
+                    onClick={() => {
+                      let clonedPairs = [...keyPairs];
+                      clonedPairs.splice(index, 1);
+                      setKeyPairs(clonedPairs);
+                    }}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </Grid>
+              ))}
               <Grid container direction="row" alignContent="center">
                 <FormControl className={classes.formControl}>
                   <InputLabel htmlFor="csv-keys">csv Fields</InputLabel>
@@ -168,22 +184,6 @@ export default function ImportCSV(props: any) {
                   <AddIcon />
                 </IconButton>
               </Grid>
-              {keyPairs.map((keyPair: any, index: number) => (
-                <Grid item className={classes.keyPair}>
-                  <Typography>{keyPair.csvKey}</Typography>
-                  <ArrowIcon />
-                  <Typography>{keyPair.columnKey}</Typography>
-                  <IconButton
-                    onClick={() => {
-                      let clonedPairs = [...keyPairs];
-                      clonedPairs.splice(index, 1);
-                      setKeyPairs(clonedPairs);
-                    }}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </Grid>
-              ))}
             </Grid>
           )}
         </DialogContent>

@@ -3,6 +3,8 @@ import { db } from "../../firebase";
 import { useEffect, useReducer } from "react";
 import equals from "ramda/es/equals";
 import firebase from "firebase/app";
+import { algoliaUpdateDoc } from "../../firebase/callables";
+
 const CAP = 500;
 
 const tableReducer = (prevState: any, newProps: any) => {
@@ -27,7 +29,7 @@ const tableInitialState = {
   path: null,
   filters: [],
   prevLimit: 0,
-  limit: 1000,
+  limit: 100,
   loading: true,
   sort: { field: "createdAt", direction: "asc" },
   cap: CAP,
@@ -137,12 +139,19 @@ const useTable = (initialOverrides: any) => {
     tableDispatch({ path: tableCollection });
   };
 
-  const addRow = (data?: any) => {
-    db.collection(tableState.path).add({
+  const addRow = async (data?: any) => {
+    const ref = await db.collection(tableState.path).add({
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
       ...data,
     });
+    if (data) {
+      algoliaUpdateDoc({
+        collection: ref.parent.path,
+        id: ref.id,
+        doc: { ...data },
+      });
+    }
   };
 
   const tableActions = { deleteRow, setTable, addRow };
