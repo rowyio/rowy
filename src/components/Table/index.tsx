@@ -157,8 +157,14 @@ function Table(props: any) {
             );
           }}
         />
-        <Button onClick={tableActions.row.add}>Add Row</Button>
-        <ImportCSV />
+        <Button
+          onClick={() => {
+            tableActions.row.add();
+          }}
+        >
+          Add Row
+        </Button>
+        <ImportCSV columns={tableState.columns} addRow={tableActions.row.add} />
         <ColumnEditor
           handleClose={handleCloseHeader}
           anchorEl={anchorEl}
