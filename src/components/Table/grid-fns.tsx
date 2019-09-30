@@ -120,16 +120,7 @@ export const cellFormatter = (column: any) => {
       return (props: any) => {
         return <LongText {...props} onSubmit={onSubmit(key, props.row)} />;
       };
-    case FieldType.documentSelect:
-      return (props: any) => {
-        return (
-          <DocSelect
-            {...props}
-            onSubmit={onSubmit(key, props.row)}
-            collectionPath={column.collectionPath}
-          />
-        );
-      };
+
     default:
       return false;
   }

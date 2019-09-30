@@ -15,10 +15,14 @@ import {
   onGridRowsUpdated,
   singleSelectEditor,
   editable,
+  onSubmit,
 } from "./grid-fns";
 
 import { CLOUD_FUNCTIONS } from "firebase/callables";
 import ImportCSV from "components/ImportCSV";
+import SearchBox from "../SearchBox";
+import DocSelect from "../Fields/DocSelect";
+
 const deleteAlgoliaRecord = functions.httpsCallable(
   CLOUD_FUNCTIONS.deleteAlgoliaRecord
 );
@@ -42,6 +46,12 @@ const useStyles = makeStyles(Theme =>
 function Table(props: any) {
   const { collection } = props;
   const { tableState, tableActions } = useFiretable(collection);
+  const [search, setSearch] = useState({
+    query: "",
+    anchorEl: undefined,
+    collection: "",
+    onSubmit: undefined,
+  });
   useEffect(() => {
     tableActions.set(collection);
   }, [collection]);
@@ -54,6 +64,22 @@ function Table(props: any) {
     setHeader(null);
     setAnchorEl(null);
   };
+  const clearSearch = () => {
+    setSearch({
+      query: "",
+      anchorEl: undefined,
+      collection: "",
+      onSubmit: undefined,
+    });
+  };
+  const docSelect = (column: any) => (props: any) => (
+    <DocSelect
+      {...props}
+      onSubmit={onSubmit(column.key, props.row)}
+      collectionPath={column.collectionPath}
+      setSearch={setSearch}
+    />
+  );
   const handleClick = (headerProps: any) => (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
@@ -100,7 +126,10 @@ function Table(props: any) {
       editable: editable(column.type),
       resizable: true,
       headerRenderer: headerRenderer,
-      formatter: cellFormatter(column),
+      formatter:
+        column.type === FieldType.documentSelect
+          ? docSelect(column)
+          : cellFormatter(column),
       editor:
         column.type === FieldType.singleSelect
           ? singleSelectEditor(column.options)
@@ -171,6 +200,7 @@ function Table(props: any) {
           column={header && header.column}
           actions={tableActions.column}
         />
+        <SearchBox searchData={search} clearSearch={clearSearch} />
       </>
     );
   } else return <p>Loading</p>;
