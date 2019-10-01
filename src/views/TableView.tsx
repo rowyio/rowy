@@ -10,7 +10,7 @@ export default function TableView() {
   const tableCollection = router.location.pathname.split("/")[2];
 
   return (
-    <Navigation header={tableCollection}>
+    <Navigation>
       <Table collection={tableCollection} />
     </Navigation>
   );

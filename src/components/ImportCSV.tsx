@@ -17,7 +17,7 @@ import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
-
+import AddCSVIcon from "@material-ui/icons/PlaylistAdd";
 import ArrowIcon from "@material-ui/icons/TrendingFlatOutlined";
 import AddIcon from "@material-ui/icons/Add";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -102,7 +102,9 @@ export default function ImportCSV(props: any) {
 
   return (
     <div>
-      <Button onClick={handleClickOpen}>import csv</Button>
+      <Button onClick={handleClickOpen}>
+        Import CSV <AddCSVIcon />
+      </Button>
       <Dialog
         open={open}
         onClose={handleClose}

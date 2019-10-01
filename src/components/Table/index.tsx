@@ -22,6 +22,9 @@ import { CLOUD_FUNCTIONS } from "firebase/callables";
 import ImportCSV from "components/ImportCSV";
 import SearchBox from "../SearchBox";
 import DocSelect from "../Fields/DocSelect";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+import AddIcon from "@material-ui/icons/Add";
 
 const deleteAlgoliaRecord = functions.httpsCallable(
   CLOUD_FUNCTIONS.deleteAlgoliaRecord
@@ -155,9 +158,25 @@ function Table(props: any) {
         </Button>
       ),
     });
-    const rows = tableState.rows; //.map((row: any) => ({ height: 100, ...row }));
+    const rows = tableState.rows;
+
     return (
       <>
+        <Grid container direction="row" alignContent="center">
+          <Typography variant="h5">{collection}</Typography>
+          <Button
+            onClick={() => {
+              tableActions.row.add();
+            }}
+          >
+            Add Row
+            <AddIcon />
+          </Button>
+          <ImportCSV
+            columns={tableState.columns}
+            addRow={tableActions.row.add}
+          />
+        </Grid>
         <ReactDataGrid
           rowHeight={40}
           columns={columns}
@@ -185,14 +204,7 @@ function Table(props: any) {
             );
           }}
         />
-        <Button
-          onClick={() => {
-            tableActions.row.add();
-          }}
-        >
-          Add Row
-        </Button>
-        <ImportCSV columns={tableState.columns} addRow={tableActions.row.add} />
+
         <ColumnEditor
           handleClose={handleCloseHeader}
           anchorEl={anchorEl}

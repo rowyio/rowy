@@ -19,6 +19,7 @@ import CreateTableDialog from "./CreateTableDialog";
 import useSettings from "../hooks/useSettings";
 import useRouter from "../hooks/useRouter";
 import TablesContext from "../contexts/tablesContext";
+// import { auth } from "../firebase";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -67,11 +68,6 @@ const Navigation = (props: any) => {
     <TablesContext.Provider value={{ value: settings.tables }}>
       <React.Fragment>
         <CssBaseline />
-        <Paper square className={classes.paper}>
-          <Typography className={classes.text} variant="h5" gutterBottom>
-            {props.header}
-          </Typography>
-        </Paper>
         {props.children}
         <AppBar position="fixed" color="primary" className={classes.appBar}>
           <Toolbar>
@@ -122,7 +118,13 @@ const Navigation = (props: any) => {
                 )}
               </>
             )}
-
+            {/* <Button
+              onClick={() => {
+                auth.signOut();
+              }}
+            >
+              Sign out
+            </Button> */}
             <CreateTableDialog classes={classes} createTable={createTable} />
             <div className={classes.grow} />
           </Toolbar>
