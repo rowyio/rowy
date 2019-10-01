@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ReactDataGrid from "react-data-grid";
 import useFiretable from "../../hooks/useFiretable";
-import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
+import { createStyles, makeStyles } from "@material-ui/core/styles";
 
 import Button from "@material-ui/core/Button";
 import { FieldType, getFieldIcon } from "../Fields";
@@ -25,13 +25,14 @@ import DocSelect from "../Fields/DocSelect";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import AddIcon from "@material-ui/icons/Add";
+import useWindowSize from "../../hooks/useWindowSize";
 
 const deleteAlgoliaRecord = functions.httpsCallable(
   CLOUD_FUNCTIONS.deleteAlgoliaRecord
 );
 
-const useStyles = makeStyles(Theme =>
-  createStyles({
+const useStyles = makeStyles(Theme => {
+  return createStyles({
     typography: {
       padding: 1,
     },
@@ -43,8 +44,8 @@ const useStyles = makeStyles(Theme =>
     headerButton: {
       width: "100%",
     },
-  })
-);
+  });
+});
 
 function Table(props: any) {
   const { collection } = props;
@@ -54,6 +55,9 @@ function Table(props: any) {
     collection: "",
     onSubmit: undefined,
   });
+
+  const size = useWindowSize();
+
   useEffect(() => {
     tableActions.set(collection);
   }, [collection]);
@@ -184,7 +188,7 @@ function Table(props: any) {
           rowsCount={rows.length}
           onGridRowsUpdated={onGridRowsUpdated}
           enableCellSelect={true}
-          minHeight={500}
+          minHeight={size.height ? size.height - 102 : 100}
           onCellSelected={onCellSelected}
           onColumnResize={(idx, width) =>
             tableActions.column.resize(idx, width)
