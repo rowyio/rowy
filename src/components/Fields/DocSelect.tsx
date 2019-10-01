@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import SearchIcon from "@material-ui/icons/Search";
 import IconButton from "@material-ui/core/IconButton";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import { TextField } from "@material-ui/core";
-import Typography from "@material-ui/core/Typography";
 import Chip from "@material-ui/core/Chip";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -57,25 +55,33 @@ const DocSelect = (props: Props) => {
       ...oldValues,
       collection: collectionPath,
       config: config,
-      onSubmit: (value: any) => {
-        onSubmit([value]);
+      onSubmit: (newItem: any) => {
+        if (value) onSubmit([...value, newItem]);
+        else onSubmit([newItem]);
       },
     }));
   };
 
+  const handleDelete = (index: number) => {
+    let newValue = [...value];
+    newValue.splice(index, 1);
+    onSubmit(newValue);
+  };
   return (
     <div className={classes.root}>
       <IconButton onClick={handleClick}>
         <SearchIcon />
       </IconButton>
       {value &&
-        value.map((doc: any) => (
+        value.map((doc: any, index: number) => (
           <Chip
             label={config.primaryKeys.map(
               (key: any) => `${doc.snapshot[key]} `
             )}
             //onClick={handleClick}
-            //onDelete={handleDelete}
+            onDelete={() => {
+              handleDelete(index);
+            }}
             className={classes.chip}
           />
         ))}
