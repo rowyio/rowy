@@ -29,12 +29,7 @@ const useStyles = makeStyles(() =>
       alignItems: "center",
       justifyContent: "center",
     },
-    paper: {
-      // backgroundColor: Theme.palette.background.paper,
-      //border: "2px solid #000",
-      // boxShadow: Theme.shadows[5],
-      // padding: Theme.spacing(2, 4, 3),
-    },
+    paper: {},
     root: {
       position: "relative",
       display: "flex",
@@ -45,6 +40,10 @@ const useStyles = makeStyles(() =>
     textArea: {
       fontSize: 14,
       minWidth: 230,
+    },
+    searchField: {
+      width: "100%",
+      padding: 20,
     },
     list: {
       backgroundColor: "#fff",
@@ -78,6 +77,11 @@ const SearchBox = (props: Props) => {
       setAlgoliaIndex(searchClient.initIndex(collection));
     }
   }, [collection]);
+  useEffect(() => {
+    if (algoliaIndex) {
+      search("");
+    }
+  }, [algoliaIndex]);
 
   const search = async (query: string) => {
     if (algoliaIndex) {
@@ -135,8 +139,10 @@ const SearchBox = (props: Props) => {
       }}
     >
       <Fade in={open}>
-        <Paper>
+        <Paper className={classes.paper}>
           <TextField
+            className={classes.searchField}
+            placeholder="type to start searching"
             autoFocus
             value={query}
             onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {

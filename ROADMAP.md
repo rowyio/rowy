@@ -31,8 +31,8 @@
 - time(Firebase timestamp)✅
 - file (single) 🏗️(missing status indicator)
 - image (single) 🏗️(missing status indicator)
-- single select reference(DocReference)
-- multi select reference(DocReference)
+- single select reference(DocReference)🏗️
+- multi select reference(DocReference)✅
 - rating ✅
 
 ### Functionality:
@@ -51,7 +51,7 @@
 - Edit tables
 - Hide tables
 - On new table add, refresh view to the table view✅
-- import csv to table
+- import csv to table✅
 
 ## V1
 
