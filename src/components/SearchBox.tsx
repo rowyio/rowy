@@ -8,6 +8,11 @@ import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import algoliasearch from "algoliasearch/lite";
 import Paper from "@material-ui/core/Paper";
 
+import Modal from "@material-ui/core/Modal";
+import Backdrop from "@material-ui/core/Backdrop";
+import Fade from "@material-ui/core/Fade";
+import { TextField } from "@material-ui/core";
+
 const searchClient = algoliasearch(
   process.env.REACT_APP_ALGOLIA_APP_ID
     ? process.env.REACT_APP_ALGOLIA_APP_ID
@@ -19,6 +24,17 @@ const searchClient = algoliasearch(
 
 const useStyles = makeStyles(() =>
   createStyles({
+    modal: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    paper: {
+      // backgroundColor: Theme.palette.background.paper,
+      //border: "2px solid #000",
+      // boxShadow: Theme.shadows[5],
+      // padding: Theme.spacing(2, 4, 3),
+    },
     root: {
       position: "relative",
       display: "flex",
@@ -30,14 +46,17 @@ const useStyles = makeStyles(() =>
       fontSize: 14,
       minWidth: 230,
     },
-    list: { backgroundColor: "#fff", minWidth: 200 },
+    list: {
+      backgroundColor: "#fff",
+      minWidth: 200,
+      maxHeight: 400,
+      overflowY: "scroll",
+    },
   })
 );
 interface Props {
   searchData: {
-    query: string;
     collection: string;
-    anchorEl: any;
     onSubmit: Function | undefined;
   };
   clearSearch: Function;
@@ -45,7 +64,8 @@ interface Props {
 
 const SearchBox = (props: Props) => {
   const { searchData, clearSearch } = props;
-  const { query, collection, anchorEl, onSubmit } = searchData;
+  const { collection, onSubmit } = searchData;
+  const [query, setQuery] = useState("");
   const classes = useStyles();
 
   const [hits, setHits] = useState<any[]>([]);
@@ -68,7 +88,7 @@ const SearchBox = (props: Props) => {
     search(query);
   }, [query]);
 
-  const open = Boolean(anchorEl);
+  const open = Boolean(collection);
   const id = open ? "no-transition-popper" : undefined;
   const onClickAway = (event: any) => {};
   const Hit = (hit: any) => (
@@ -77,29 +97,48 @@ const SearchBox = (props: Props) => {
       onClick={() => {
         let snapshot = { ...hit };
         delete snapshot._highlightResult;
-        if (onSubmit)
+        if (onSubmit) {
           onSubmit({ snapshot, docPath: `${collection}/${snapshot.objectID}` });
-        clearSearch();
+          clearSearch();
+          setQuery("");
+        }
       }}
     >
       <ListItemText primary={hit.firstName} secondary={hit.lastName} />
     </ListItem>
   );
 
-  if (anchorEl)
-    return (
-      <div className={classes.root}>
-        <ClickAwayListener onClickAway={onClickAway}>
-          <Popper id={id} open={open} anchorEl={anchorEl}>
-            <Paper>
-              results for {query}
-              <List>{hits.map((hit: any) => Hit(hit))}</List>
-            </Paper>
-          </Popper>
-        </ClickAwayListener>
-      </div>
-    );
-  else return <div />;
+  return (
+    <Modal
+      aria-labelledby="transition-modal-title"
+      aria-describedby="transition-modal-description"
+      className={classes.modal}
+      open={open}
+      onClose={(event: any, reason: any) => {
+        clearSearch();
+        setQuery("");
+      }}
+      closeAfterTransition
+      BackdropComponent={Backdrop}
+      BackdropProps={{
+        timeout: 500,
+      }}
+    >
+      <Fade in={open}>
+        <Paper>
+          <TextField
+            value={query}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+              setQuery(e.target.value);
+            }}
+          />
+          {/* results for {query} */}
+          <List className={classes.list}>
+            {hits.map((hit: any) => Hit(hit))}
+          </List>
+        </Paper>
+      </Fade>
+    </Modal>
+  );
 };
-
 export default SearchBox;

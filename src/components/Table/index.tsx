@@ -47,8 +47,7 @@ function Table(props: any) {
   const { collection } = props;
   const { tableState, tableActions } = useFiretable(collection);
   const [search, setSearch] = useState({
-    query: "",
-    anchorEl: undefined,
+    config: undefined,
     collection: "",
     onSubmit: undefined,
   });
@@ -66,8 +65,7 @@ function Table(props: any) {
   };
   const clearSearch = () => {
     setSearch({
-      query: "",
-      anchorEl: undefined,
+      config: undefined,
       collection: "",
       onSubmit: undefined,
     });
@@ -77,6 +75,7 @@ function Table(props: any) {
       {...props}
       onSubmit={onSubmit(column.key, props.row)}
       collectionPath={column.collectionPath}
+      config={column.config}
       setSearch={setSearch}
     />
   );

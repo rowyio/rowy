@@ -77,6 +77,7 @@ const ColumnEditor = (props: any) => {
     name: "",
     options: [],
     collectionPath: "",
+    config: {},
   });
   const [flags, setFlags] = useState(() => [""]);
   const classes = useStyles();
@@ -116,7 +117,13 @@ const ColumnEditor = (props: any) => {
     }
   }, [column]);
   const clearValues = () => {
-    setValues({ type: null, name: "", options: [], collectionPath: "" });
+    setValues({
+      type: null,
+      name: "",
+      options: [],
+      collectionPath: "",
+      config: {},
+    });
   };
   const onClickAway = (event: any) => {
     const elementId = event.target.id;
@@ -126,6 +133,7 @@ const ColumnEditor = (props: any) => {
       clearValues();
     }
   };
+
   const handleToggle = (
     event: React.MouseEvent<HTMLElement>,
     newFlags: string[]
@@ -134,9 +142,9 @@ const ColumnEditor = (props: any) => {
   };
 
   const createNewColumn = () => {
-    const { name, type, options, collectionPath } = values;
+    const { name, type, options, collectionPath, config } = values;
 
-    actions.add(name, type, { options, collectionPath });
+    actions.add(name, type, { options, collectionPath, config });
 
     handleClose();
     clearValues();
@@ -157,7 +165,10 @@ const ColumnEditor = (props: any) => {
       values.type === FieldType.multiSelect ||
       values.type === FieldType.singleSelect
     ) {
-      updatables.push({ field: "options", value: values.options });
+      updatables.push({
+        field: "options",
+        value: values.options,
+      });
     }
     if (
       values.type === FieldType.documentSelect ||
@@ -167,12 +178,22 @@ const ColumnEditor = (props: any) => {
         field: "collectionPath",
         value: values.collectionPath,
       });
+      updatables.push({
+        field: "config",
+        value: values.config,
+      });
     }
     actions.update(props.column.idx, updatables);
     handleClose();
     clearValues();
   };
 
+  const disableAdd = () => {
+    const { type, name, options, collectionPath, config } = values;
+    if (!type || name === "") return true;
+    //TODO: Add more validation
+    return false;
+  };
   if (column) {
     return (
       <ClickAwayListener onClickAway={onClickAway}>
@@ -245,9 +266,13 @@ const ColumnEditor = (props: any) => {
                       />
                     )}
                     {column.isNew ? (
-                      <Button onClick={createNewColumn}>Add</Button>
+                      <Button onClick={createNewColumn} disabled={disableAdd()}>
+                        Add
+                      </Button>
                     ) : (
-                      <Button onClick={updateColumn}>update</Button>
+                      <Button disabled={disableAdd()} onClick={updateColumn}>
+                        update
+                      </Button>
                     )}
                     {!column.isNew && (
                       <Button

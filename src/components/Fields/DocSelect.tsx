@@ -3,12 +3,12 @@ import SearchIcon from "@material-ui/icons/Search";
 import IconButton from "@material-ui/core/IconButton";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { TextField } from "@material-ui/core";
+import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       position: "relative",
-
       display: "flex",
       flexWrap: "wrap",
     },
@@ -29,6 +29,7 @@ interface Props {
   collectionPath: string;
   isScrolling: boolean;
   setSearch: any;
+  config: any;
 }
 
 const DocSelect = (props: Props) => {
@@ -38,20 +39,15 @@ const DocSelect = (props: Props) => {
     onSubmit,
     collectionPath,
     isScrolling,
+    config,
     setSearch,
   } = props;
-  const [query, setQuery] = useState(value ? value : "");
-
-  useEffect(() => {
-    setSearch((oldValues: any) => ({
-      ...oldValues,
-      query,
-    }));
-  }, [query]);
 
   const classes = useStyles();
 
-  const handleClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const handleClick = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     setSearch((oldValues: any) => ({
       ...oldValues,
       collection: collectionPath,
@@ -62,13 +58,11 @@ const DocSelect = (props: Props) => {
   // if (isScrolling) return <div />;
 
   return (
-    <div className={classes.root} onClick={handleClick}>
-      <TextField
-        placeholder={`searching ${collectionPath}`}
-        onChange={(e: any) => {
-          setQuery(e.target.value);
-        }}
-      />
+    <div className={classes.root}>
+      <IconButton onClick={handleClick}>
+        <SearchIcon />
+      </IconButton>
+      <Typography>test</Typography>
     </div>
   );
 };
