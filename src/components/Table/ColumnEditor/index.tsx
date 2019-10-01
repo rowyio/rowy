@@ -170,10 +170,7 @@ const ColumnEditor = (props: any) => {
         value: values.options,
       });
     }
-    if (
-      values.type === FieldType.documentSelect ||
-      values.type === FieldType.documentsSelect
-    ) {
+    if (values.type === FieldType.documentSelect) {
       updatables.push({
         field: "collectionPath",
         value: values.collectionPath,
@@ -258,8 +255,7 @@ const ColumnEditor = (props: any) => {
                         options={values.options}
                       />
                     )}
-                    {(values.type === FieldType.documentSelect ||
-                      values.type === FieldType.documentsSelect) && (
+                    {values.type === FieldType.documentSelect && (
                       <DocInput
                         setValue={setValue}
                         collectionPath={values.collectionPath}
