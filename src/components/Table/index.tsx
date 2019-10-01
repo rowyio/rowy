@@ -44,6 +44,21 @@ const useStyles = makeStyles(Theme => {
     headerButton: {
       width: "100%",
     },
+    tableHeader: {
+      padding: 8,
+      width: "100%",
+      display: "flex",
+      flex: "wrap",
+      alignItems: "center",
+      justifyContent: "space-between",
+      // background: Theme.palette.primary.main,
+    },
+    tableActions: {
+      display: "flex",
+      flex: "wrap",
+      alignContent: "center",
+      // background: Theme.palette.primary.main,
+    },
   });
 });
 
@@ -166,21 +181,24 @@ function Table(props: any) {
 
     return (
       <>
-        <Grid container direction="row" alignContent="center">
-          <Typography variant="h5">{collection}</Typography>
-          <Button
-            onClick={() => {
-              tableActions.row.add();
-            }}
-          >
-            Add Row
-            <AddIcon />
-          </Button>
-          <ImportCSV
-            columns={tableState.columns}
-            addRow={tableActions.row.add}
-          />
-        </Grid>
+        <div className={classes.tableHeader}>
+          <Typography variant="button">{collection}</Typography>
+          <div className={classes.tableActions}>
+            <ImportCSV
+              columns={tableState.columns}
+              addRow={tableActions.row.add}
+            />
+            <Button
+              color="secondary"
+              onClick={() => {
+                tableActions.row.add();
+              }}
+            >
+              Add Row
+              <AddIcon />
+            </Button>
+          </div>
+        </div>
         <ReactDataGrid
           rowHeight={40}
           columns={columns}

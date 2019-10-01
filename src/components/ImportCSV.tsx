@@ -102,7 +102,7 @@ export default function ImportCSV(props: any) {
 
   return (
     <div>
-      <Button onClick={handleClickOpen}>
+      <Button color="secondary" onClick={handleClickOpen}>
         Import CSV <AddCSVIcon />
       </Button>
       <Dialog
