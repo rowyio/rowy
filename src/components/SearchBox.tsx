@@ -58,13 +58,14 @@ interface Props {
   searchData: {
     collection: string;
     onSubmit: Function | undefined;
+    config: any;
   };
   clearSearch: Function;
 }
 
 const SearchBox = (props: Props) => {
   const { searchData, clearSearch } = props;
-  const { collection, onSubmit } = searchData;
+  const { collection, onSubmit, config } = searchData;
   const [query, setQuery] = useState("");
   const classes = useStyles();
 
@@ -99,15 +100,25 @@ const SearchBox = (props: Props) => {
         delete snapshot._highlightResult;
         if (onSubmit) {
           onSubmit({ snapshot, docPath: `${collection}/${snapshot.objectID}` });
-          clearSearch();
-          setQuery("");
+          clear();
         }
       }}
     >
-      <ListItemText primary={hit.firstName} secondary={hit.lastName} />
+      <ListItemText
+        primary={
+          config && config.primaryKeys.map((key: string) => `${hit[key]} `)
+        }
+        secondary={
+          config && config.secondaryKeys.map((key: string) => `${hit[key]} `)
+        }
+      />
     </ListItem>
   );
-
+  const clear = async () => {
+    await setHits([]);
+    await setQuery("");
+    clearSearch();
+  };
   return (
     <Modal
       aria-labelledby="transition-modal-title"
@@ -115,8 +126,7 @@ const SearchBox = (props: Props) => {
       className={classes.modal}
       open={open}
       onClose={(event: any, reason: any) => {
-        clearSearch();
-        setQuery("");
+        clear();
       }}
       closeAfterTransition
       BackdropComponent={Backdrop}
@@ -127,6 +137,7 @@ const SearchBox = (props: Props) => {
       <Fade in={open}>
         <Paper>
           <TextField
+            autoFocus
             value={query}
             onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
               setQuery(e.target.value);

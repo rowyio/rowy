@@ -4,6 +4,7 @@ import IconButton from "@material-ui/core/IconButton";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { TextField } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
+import Chip from "@material-ui/core/Chip";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -11,6 +12,7 @@ const useStyles = makeStyles((theme: Theme) =>
       position: "relative",
       display: "flex",
       flexWrap: "wrap",
+      alignItems: "center",
     },
     typography: {
       padding: theme.spacing(2),
@@ -20,6 +22,9 @@ const useStyles = makeStyles((theme: Theme) =>
       minWidth: 230,
     },
     paper: { minWidth: 200 },
+    chip: {
+      margin: theme.spacing(1),
+    },
   })
 );
 interface Props {
@@ -51,18 +56,34 @@ const DocSelect = (props: Props) => {
     setSearch((oldValues: any) => ({
       ...oldValues,
       collection: collectionPath,
-      anchorEl: event.currentTarget,
-      onSubmit: onSubmit,
+      config: config,
+      onSubmit: (value: any) => {
+        onSubmit([value]);
+      },
     }));
   };
-  // if (isScrolling) return <div />;
 
   return (
     <div className={classes.root}>
       <IconButton onClick={handleClick}>
         <SearchIcon />
       </IconButton>
-      <Typography>test</Typography>
+      {value &&
+        value.map((doc: any) => (
+          <Chip
+            label={config.primaryKeys.map(
+              (key: any) => `${doc.snapshot[key]} `
+            )}
+            //onClick={handleClick}
+            //onDelete={handleDelete}
+            className={classes.chip}
+          />
+        ))}
+      {/* <Typography>
+        {value[0]
+          ? config.primaryKeys.map((key: any) => `${value[0].snapshot[key]} `)
+          : ""}
+      </Typography> */}
     </div>
   );
 };
