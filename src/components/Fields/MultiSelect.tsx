@@ -77,7 +77,6 @@ const MultiSelect = (props: Props) => {
         className={classes.select}
         multiple
         value={value ? value : []}
-        defaultValue={[]}
         onChange={handleChange}
         input={<Input id="select-multiple-chip" />}
         renderValue={selected => (

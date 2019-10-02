@@ -75,6 +75,7 @@ const DocSelect = (props: Props) => {
       {value &&
         value.map((doc: any, index: number) => (
           <Chip
+            key={doc.docPath}
             label={config.primaryKeys.map(
               (key: any) => `${doc.snapshot[key]} `
             )}
