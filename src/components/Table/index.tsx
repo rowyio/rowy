@@ -130,12 +130,10 @@ function Table(props: Props) {
       case "new":
         return (
           <div className={classes.header}>
-            <Button
-              onClick={handleClick(props)}
-              style={{ width: column.width }}
-            >
-              {column.name} <AddIcon />
-            </Button>
+            {column.name}
+            <IconButton size="small" onClick={handleClick(props)}>
+              <AddIcon />
+            </IconButton>
           </div>
         );
       default:
@@ -189,6 +187,7 @@ function Table(props: Props) {
       headerRenderer: headerRenderer,
       formatter: (props: any) => (
         <Button
+          color="primary"
           onClick={async () => {
             props.row.ref.delete();
             await deleteAlgoliaRecord({
