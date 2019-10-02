@@ -11,10 +11,7 @@ export default function TableView() {
 
   return (
     <Navigation>
-      <Table
-        collection={tableCollection}
-        filters={[{ key: "rating", operator: "==", value: 5 }]}
-      />
+      <Table collection={tableCollection} filters={[]} />
     </Navigation>
   );
 }
