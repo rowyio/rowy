@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ReactDataGrid from "react-data-grid";
-import useFiretable from "../../hooks/useFiretable";
+import useFiretable, { FireTableFilter } from "../../hooks/useFiretable";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 
 import Button from "@material-ui/core/Button";
@@ -70,8 +70,14 @@ const useStyles = makeStyles(Theme => {
   });
 });
 
-function Table(props: any) {
-  const { collection } = props;
+interface Props {
+  collection: string;
+  filters: FireTableFilter[];
+}
+
+function Table(props: Props) {
+  const { collection, filters } = props;
+  console.log(filters);
   const { tableState, tableActions } = useFiretable(collection);
   const [search, setSearch] = useState({
     config: undefined,
@@ -82,8 +88,9 @@ function Table(props: any) {
   const size = useWindowSize();
 
   useEffect(() => {
-    tableActions.set(collection);
-  }, [collection]);
+    tableActions.set(collection, filters);
+  }, [collection, filters]);
+
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
@@ -238,7 +245,13 @@ function Table(props: any) {
                 }}
               >
                 <h3>no data to show</h3>
-                <Button onClick={tableActions.row.add}>Add Row</Button>
+                <Button
+                  onClick={() => {
+                    tableActions.row.add();
+                  }}
+                >
+                  Add Row
+                </Button>
               </div>
             );
           }}

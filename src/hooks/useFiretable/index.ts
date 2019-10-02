@@ -11,11 +11,17 @@ export type FiretableActions = {
   };
   row: { add: any; delete: Function };
   set: Function;
+  filter: Function;
 };
 
 export type FiretableState = {
   columns: any;
   rows: any;
+};
+export type FireTableFilter = {
+  key: string;
+  operator: "==" | "<" | ">" | ">=" | "<=" | string;
+  value: any;
 };
 
 const useFiretable = (collectionName: string) => {
@@ -24,10 +30,12 @@ const useFiretable = (collectionName: string) => {
     path: collectionName,
   });
 
-  const setTable = (collectionName: string) => {
+  const setTable = (collectionName: string, filters: FireTableFilter[]) => {
     configActions.setTable(collectionName);
-    tableActions.setTable(collectionName);
+    tableActions.setTable(collectionName, filters);
   };
+  const filterTable = (filters: FireTableFilter[]) => {};
+
   const state: FiretableState = {
     columns: tableConfig.columns,
     rows: tableState.rows,
@@ -45,6 +53,7 @@ const useFiretable = (collectionName: string) => {
       delete: tableActions.deleteRow,
     },
     set: setTable,
+    filter: filterTable,
   };
 
   return { tableState: state, tableActions: actions };
