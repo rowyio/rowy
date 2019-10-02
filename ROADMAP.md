@@ -68,7 +68,7 @@
 ### Functionality:
 
 - Sort rows
-- reorder columns
+- reorder columns✅
 - Locked columns
 - Table view only mode
 - SubCollection tables

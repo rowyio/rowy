@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import useDoc, { DocActions } from "../useDoc";
 import { FieldType } from "../../components/Fields";
 import _camelCase from "lodash/camelCase";
+import _findIndex from "lodash/findIndex";
+import { arrayMover } from "../../util/fns";
 
 const useTableConfig = (tablePath: string) => {
   const [tableConfigState, documentDispatch] = useDoc({
@@ -44,12 +46,24 @@ const useTableConfig = (tablePath: string) => {
     columns.splice(index, 1);
     documentDispatch({ action: DocActions.update, data: { columns } });
   };
+  const reorder = (draggedColumnKey: string, droppedColumnKey: string) => {
+    const { columns } = tableConfigState;
+    const draggedColumnIndex = _findIndex(columns, ["key", draggedColumnKey]);
+    const droppedColumnIndex = _findIndex(columns, ["key", droppedColumnKey]);
+    const reorderedColumns = [...columns];
+    arrayMover(reorderedColumns, draggedColumnIndex, droppedColumnIndex);
+    documentDispatch({
+      action: DocActions.update,
+      data: { columns: reorderedColumns },
+    });
+  };
   const actions = {
     update,
     add,
     resize,
     setTable,
     remove,
+    reorder,
   };
   return [tableConfigState, actions];
 };
