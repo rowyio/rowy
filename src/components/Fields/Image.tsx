@@ -3,6 +3,8 @@ import { useDropzone } from "react-dropzone";
 import useUploader from "../../hooks/useFiretable/useUploader";
 
 import { FieldType } from ".";
+import IconButton from "@material-ui/core/IconButton";
+import AddIcon from "@material-ui/icons/AddAPhoto";
 // TODO:  indicate state completion / error
 // TODO: Create an interface for props
 
@@ -45,7 +47,9 @@ const Image = (props: Props) => {
       ) : isDragActive ? (
         <p>Drop the files here ...</p>
       ) : (
-        <p>Drag 'n' drop some files here, or click to select files</p>
+        <IconButton>
+          <AddIcon />
+        </IconButton>
       )}
     </div>
   );
