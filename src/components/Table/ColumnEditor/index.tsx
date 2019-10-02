@@ -198,11 +198,15 @@ const ColumnEditor = (props: any) => {
           id={`id-${column.name}`}
           open={!!anchorEl}
           anchorEl={anchorEl}
+          placement={"bottom-end"}
           transition
         >
           {({ TransitionProps }) => (
             <Fade {...TransitionProps} timeout={350}>
-              <Paper className={classes.container}>
+              <Paper
+                className={classes.container}
+                style={{ minWidth: column.width ? column.width - 20 : 200 }}
+              >
                 <Grid container direction="column">
                   {/* 
                   // TODO: functional flags 
