@@ -1,24 +1,20 @@
 ## Firetable
 
-Firetable is a simple CMS for Google Firebase.
+Firetable is a simple CMS for Google Cloud Firestore.
 
 ## Setup instructions
 
-create a firebase project
-
-- enable firestore
-- enable google auth
-  create an algolia project
-
-Cloud functions setup
-
-set environment variables
+#### 1) Create a firebase project
+   - enable firestore
+   - enable google auth
+#### 2) Create an algolia project
+#### 3) Setup cloud functions
 
 ```
 firebase functions:config:set algolia.appid=YOUR_APP_ID algolia.apikey=ADMIN_API_KEY
 ```
 
-deploy the following callable cloud functions to update and delete algolia records
+Deploy the following callable cloud functions to update and delete algolia records
 
 ```
 const functions = require("firebase-functions");
@@ -39,9 +35,10 @@ exports.deleteAlgoliaRecord = functions.https.onCall(async (data, context) => {
 });
 ```
 
-Clone repo
+#### 4) Clone repo
+#### 5) Set environment variables
 
-add .env file to the project directory
+Add .env file to the project directory
 
 ```
 REACT_APP_FIREBASE_PROJECT_NAME =
@@ -50,13 +47,13 @@ REACT_APP_ALGOLIA_APP_ID =
 REACT_APP_ALGOLIA_SEARCH_KEY =
 ```
 
-install dependencies
+#### 6) Install dependencies
 
 ```
 yarn
 ```
 
-Run project locally
+#### 7) Run project locally
 
 ```
 yarn start
