@@ -4,6 +4,7 @@ import useFiretable from "../../hooks/useFiretable";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 
 import Button from "@material-ui/core/Button";
+import IconButton from "@material-ui/core/IconButton";
 import { FieldType, getFieldIcon } from "../Fields";
 
 import ColumnEditor from "./ColumnEditor/index";
@@ -22,9 +23,10 @@ import { CLOUD_FUNCTIONS } from "firebase/callables";
 import ImportCSV from "components/ImportCSV";
 import SearchBox from "../SearchBox";
 import DocSelect from "../Fields/DocSelect";
-import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import AddIcon from "@material-ui/icons/Add";
+import AddIcon from "@material-ui/icons/AddCircle";
+import SettingsIcon from "@material-ui/icons/Settings";
+
 import useWindowSize from "../../hooks/useWindowSize";
 
 const deleteAlgoliaRecord = functions.httpsCallable(
@@ -37,9 +39,15 @@ const useStyles = makeStyles(Theme => {
       padding: 1,
     },
     header: {
-      position: "absolute",
-      left: 0,
-      top: 0,
+      display: "flex",
+      flex: "wrap",
+      alignContent: "center",
+      justifyContent: "space-between",
+    },
+    headerLabel: {
+      display: "flex",
+      flex: "wrap",
+      alignContent: "center",
     },
     headerButton: {
       width: "100%",
@@ -119,23 +127,32 @@ function Table(props: any) {
               onClick={handleClick(props)}
               style={{ width: column.width }}
             >
-              {column.name}
+              {column.name} <AddIcon />
             </Button>
           </div>
         );
       default:
         return (
           <div className={classes.header}>
-            <Button
+            {/* <Button
               style={{ width: column.width }}
               className={classes.headerButton}
               onClick={handleClick(props)}
               aria-label="edit"
-            >
+            > */}
+            <div className={classes.headerLabel}>
               {getFieldIcon(props.column.type)}
-              {props.column.name}
-              {/* <EditIcon /> */}
-            </Button>
+              <Typography variant="button">{props.column.name}</Typography>
+            </div>
+            <IconButton
+              disableFocusRipple={true}
+              size="small"
+              onClick={handleClick(props)}
+            >
+              <SettingsIcon />
+            </IconButton>
+            {/* <EditIcon /> */}
+            {/* </Button> */}
           </div>
         );
     }
