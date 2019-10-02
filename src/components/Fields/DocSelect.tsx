@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import SearchIcon from "@material-ui/icons/Search";
+import AddIcon from "@material-ui/icons/AddCircle";
 import IconButton from "@material-ui/core/IconButton";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Chip from "@material-ui/core/Chip";
@@ -70,7 +70,7 @@ const DocSelect = (props: Props) => {
   return (
     <div className={classes.root}>
       <IconButton onClick={handleClick}>
-        <SearchIcon />
+        <AddIcon />
       </IconButton>
       {value &&
         value.map((doc: any, index: number) => (

@@ -1,15 +1,21 @@
 import React from "react";
 import DateFnsUtils from "@date-io/date-fns";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 
 import { FieldType } from ".";
 import {
   MuiPickersUtilsProvider,
-  // KeyboardTimePicker,
-  // KeyboardDatePicker,
   DatePicker,
   DateTimePicker,
 } from "@material-ui/pickers";
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    field: {
+      width: "100%",
+    },
+  })
+);
 // TODO: Create an interface for props
 interface Props {
   value: firebase.firestore.Timestamp | null;
@@ -20,6 +26,8 @@ interface Props {
 }
 
 const Date = (props: Props) => {
+  const classes = useStyles();
+
   const { value, row, onSubmit, fieldType, isScrolling } = props;
   //if (isScrolling) return <div />;
   function handleDateChange(date: Date | null) {
@@ -32,6 +40,7 @@ const Date = (props: Props) => {
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       {fieldType === FieldType.date ? (
         <DatePicker
+          className={classes.field}
           value={value ? value.toDate() : null}
           onChange={handleDateChange}
           format="dd/MM/yy"

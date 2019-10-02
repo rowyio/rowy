@@ -1,13 +1,7 @@
 import React from "react";
-import EditIcon from "@material-ui/icons/Edit";
-import WarningIcon from "@material-ui/icons/Warning";
+
 import { Select } from "@material-ui/core";
-import {
-  createStyles,
-  makeStyles,
-  useTheme,
-  Theme,
-} from "@material-ui/core/styles";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 
 import Input from "@material-ui/core/Input";
 import Grid from "@material-ui/core/Grid";
@@ -21,10 +15,8 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       flexWrap: "wrap",
     },
-    formControl: {
-      margin: theme.spacing(1),
-      minWidth: 120,
-      maxWidth: 300,
+    select: {
+      width: "100%",
     },
     chips: {
       display: "flex",
@@ -82,6 +74,7 @@ const MultiSelect = (props: Props) => {
   if (options && options.length !== 0)
     return (
       <Select
+        className={classes.select}
         multiple
         value={value ? value : []}
         defaultValue={[]}
