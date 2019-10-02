@@ -119,29 +119,29 @@ export default function ImportCSV(props: any) {
       >
         <DialogTitle id="form-dialog-title">Import a CSV file</DialogTitle>
         <DialogContent>
-          <div {...getRootProps()}>
-            <input {...getInputProps()} />
-            <Grid
-              container
-              direction="column"
-              justify="center"
-              alignContent="center"
-              alignItems="center"
-            >
-              <Typography variant="subtitle1">
-                Drag 'n' drop a .csv file here
-              </Typography>
+          {csvKeys.length === 0 ? (
+            <div {...getRootProps()}>
+              <input {...getInputProps()} />
+              <Grid
+                container
+                direction="column"
+                justify="center"
+                alignContent="center"
+                alignItems="center"
+              >
+                <Typography variant="subtitle1">
+                  Drag 'n' drop a .csv file here
+                </Typography>
 
-              <CloudIcon className={classes.cloudIcon} />
-              <Typography variant="subtitle1">or</Typography>
-              <Button color="secondary">click to select a file</Button>
-            </Grid>
-          </div>
-
-          {csvKeys.length !== 0 && (
+                <CloudIcon className={classes.cloudIcon} />
+                <Typography variant="subtitle1">or</Typography>
+                <Button color="secondary">click to select a file</Button>
+              </Grid>
+            </div>
+          ) : (
             <Grid container direction="column">
               {keyPairs.map((keyPair: any, index: number) => (
-                <Grid item className={classes.keyPair}>
+                <Grid item alignItems="center">
                   <Typography>{keyPair.csvKey}</Typography>
                   <ArrowIcon />
                   <Typography>{keyPair.columnKey}</Typography>
@@ -156,7 +156,7 @@ export default function ImportCSV(props: any) {
                   </IconButton>
                 </Grid>
               ))}
-              <Grid container direction="row" alignContent="center">
+              <Grid container direction="row" alignItems="center">
                 <FormControl className={classes.formControl}>
                   <InputLabel htmlFor="csv-keys">csv Fields</InputLabel>
                   <Select
