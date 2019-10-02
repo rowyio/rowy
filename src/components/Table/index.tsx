@@ -77,7 +77,6 @@ interface Props {
 
 function Table(props: Props) {
   const { collection, filters } = props;
-  console.log(filters);
   const { tableState, tableActions } = useFiretable(collection);
   const [search, setSearch] = useState({
     config: undefined,

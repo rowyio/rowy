@@ -104,13 +104,13 @@ const useTable = (initialOverrides: any) => {
         }
       },
       (error: Error) => {
-        console.log(error.message);
-        if (error.message.includes("indexes?create_composite=")) console.log();
-        const url =
-          "https://console.firebase.google.com/project/firetable-antler/database/firestore/" +
-          "indexes?create_composite=" +
-          error.message.split("indexes?create_composite=")[1];
-        console.log(url);
+        if (error.message.includes("indexes?create_composite=")) {
+          const url =
+            "https://console.firebase.google.com/project/firetable-antler/database/firestore/" +
+            "indexes?create_composite=" +
+            error.message.split("indexes?create_composite=")[1];
+          console.log(url);
+        }
       }
     );
     tableDispatch({ unsubscribe });

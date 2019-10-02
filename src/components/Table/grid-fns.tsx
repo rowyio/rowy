@@ -11,7 +11,6 @@ import MultiSelect from "../Fields/MultiSelect";
 import Image from "../Fields/Image";
 import File from "../Fields/File";
 import LongText from "../Fields/LongText";
-import DocSelect from "../Fields/DocSelect";
 
 import { algoliaUpdateDoc } from "../../firebase/callables";
 
@@ -38,8 +37,7 @@ export const onSubmit = (key: string, row: any) => async (value: any) => {
   const data = { collection, id: row.ref.id, doc: { [key]: value } };
   if (value !== null || value !== undefined) {
     row.ref.update({ [key]: value });
-    const callableRes = await algoliaUpdateDoc(data);
-    console.log(callableRes);
+    await algoliaUpdateDoc(data);
   }
 };
 
@@ -59,9 +57,7 @@ export const onGridRowsUpdated = (props: any) => {
   const { fromRowData, updated } = props;
   onSubmit(Object.keys(updated)[0], fromRowData)(Object.values(updated)[0]);
 };
-export const onCellSelected = (args: any) => {
-  console.log(args);
-};
+export const onCellSelected = (args: any) => {};
 export const cellFormatter = (column: any) => {
   const { type, key, options } = column;
   switch (type) {

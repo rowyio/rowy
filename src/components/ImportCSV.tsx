@@ -98,12 +98,9 @@ export default function ImportCSV(props: any) {
       keyPairs.forEach((pair: { columnKey: string; csvKey: string }) => {
         docData[pair.columnKey] = row[csvKeys.indexOf(pair.csvKey)];
       });
-      // console.log(docData);
       addRow(docData);
       return docData;
     });
-    console.log(newDocs);
-
     handleClose();
   }
 

@@ -36,15 +36,7 @@ interface Props {
 }
 
 const DocSelect = (props: Props) => {
-  const {
-    value,
-    row,
-    onSubmit,
-    collectionPath,
-    isScrolling,
-    config,
-    setSearch,
-  } = props;
+  const { value, row, onSubmit, collectionPath, config, setSearch } = props;
 
   const classes = useStyles();
 
