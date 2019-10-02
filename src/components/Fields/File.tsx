@@ -5,7 +5,8 @@ import useUploader from "../../hooks/useFiretable/useUploader";
 import { FieldType } from ".";
 import Chip from "@material-ui/core/Chip";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-
+import IconButton from "@material-ui/core/IconButton";
+import AddIcon from "@material-ui/icons/AddBox";
 // TODO:  indicate state completion / error
 // TODO: Create an interface for props
 
@@ -63,7 +64,9 @@ const File = (props: Props) => {
       ) : isDragActive ? (
         <p>Drop the files here ...</p>
       ) : (
-        <p>click to select files</p>
+        <IconButton>
+          <AddIcon />
+        </IconButton>
       )}
     </div>
   );
