@@ -23,7 +23,8 @@ import AddIcon from "@material-ui/icons/Add";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { makeStyles, createStyles } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
-import { db } from "../firebase";
+
+import CloudIcon from "@material-ui/icons/CloudUpload";
 const useStyles = makeStyles(theme =>
   createStyles({
     root: {
@@ -41,6 +42,12 @@ const useStyles = makeStyles(theme =>
       display: "flex",
       flexWrap: "wrap",
       justifyContent: "space-between",
+    },
+    cloudIcon: {
+      fontSize: 64,
+    },
+    uploadContainer: {
+      margin: "auto",
     },
   })
 );
@@ -110,14 +117,25 @@ export default function ImportCSV(props: any) {
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">Import csv data</DialogTitle>
+        <DialogTitle id="form-dialog-title">Import a CSV file</DialogTitle>
         <DialogContent>
-          <DialogContentText>upload and select</DialogContentText>
-
           <div {...getRootProps()}>
             <input {...getInputProps()} />
+            <Grid
+              container
+              direction="column"
+              justify="center"
+              alignContent="center"
+              alignItems="center"
+            >
+              <Typography variant="subtitle1">
+                Drag 'n' drop a .csv file here
+              </Typography>
 
-            <p>Drag 'n' drop .csv here, or click to select file</p>
+              <CloudIcon className={classes.cloudIcon} />
+              <Typography variant="subtitle1">or</Typography>
+              <Button color="secondary">click to select a file</Button>
+            </Grid>
           </div>
 
           {csvKeys.length !== 0 && (
