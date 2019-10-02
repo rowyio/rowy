@@ -6,6 +6,7 @@ import LongTextIcon from "@material-ui/icons/Notes";
 import PhoneIcon from "@material-ui/icons/Phone";
 import ImageIcon from "@material-ui/icons/Photo";
 import FileIcon from "@material-ui/icons/InsertDriveFileOutlined";
+import AttachmentIcon from "@material-ui/icons/AttachFile";
 import DateIcon from "@material-ui/icons/CalendarToday";
 import TimeIcon from "@material-ui/icons/AccessTime";
 import RatingIcon from "@material-ui/icons/StarHalf";
@@ -45,7 +46,7 @@ export const FIELDS = [
   { icon: <URLIcon />, name: "URL", type: FieldType.url },
   { icon: <RatingIcon />, name: "Rating", type: FieldType.rating },
   { icon: <ImageIcon />, name: "Image", type: FieldType.image },
-  { icon: <FileIcon />, name: "File", type: FieldType.file },
+  { icon: <AttachmentIcon />, name: "File", type: FieldType.file },
   { icon: <FileIcon />, name: "Single Select", type: FieldType.singleSelect },
   { icon: <FileIcon />, name: "Multi Select", type: FieldType.multiSelect },
   { icon: <FileIcon />, name: "Doc Select", type: FieldType.documentSelect },
