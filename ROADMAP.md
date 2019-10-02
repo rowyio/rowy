@@ -42,14 +42,8 @@
 - Fixed column
 - Hide/Show columns
 - resizable column ✅
-- keyboard Navigation:
-  - Up key to move to the cell above ✅
-  - Down key to move to the cell bellow, if last cell create a new row ✅
-  - Tab to go to the next cell ✅
+- keyboard cell navigation ✅
 - column / table Create/edit validation
-- Delete tables
-- Edit tables
-- Hide tables
 - On new table add, refresh view to the table view✅
 - import csv to table✅
 
