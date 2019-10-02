@@ -8,6 +8,7 @@ export type FiretableActions = {
     rename: Function;
     remove: Function;
     update: Function;
+    reorder: Function;
   };
   row: { add: any; delete: Function };
   set: Function;
@@ -47,6 +48,7 @@ const useFiretable = (collectionName: string) => {
       rename: configActions.rename,
       update: configActions.update,
       remove: configActions.remove,
+      reorder: configActions.reorder,
     },
     row: {
       add: tableActions.addRow,

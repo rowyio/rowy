@@ -28,7 +28,8 @@ import AddIcon from "@material-ui/icons/AddCircle";
 import SettingsIcon from "@material-ui/icons/Settings";
 
 import useWindowSize from "../../hooks/useWindowSize";
-
+import { DraggableHeader } from "react-data-grid-addons";
+const { DraggableContainer } = DraggableHeader;
 const deleteAlgoliaRecord = functions.httpsCallable(
   CLOUD_FUNCTIONS.deleteAlgoliaRecord
 );
@@ -161,10 +162,13 @@ function Table(props: Props) {
         );
     }
   };
-
+  const onHeaderDrop = (dragged: any, target: any) => {
+    tableActions.column.reorder(dragged, target);
+  };
   if (tableState.columns) {
     let columns = tableState.columns.map((column: any) => ({
       width: 220,
+      draggable: true,
       editable: editable(column.type),
       resizable: true,
       headerRenderer: headerRenderer,
@@ -200,7 +204,6 @@ function Table(props: Props) {
       ),
     });
     const rows = tableState.rows;
-
     return (
       <>
         <div className={classes.tableHeader}>
@@ -221,39 +224,41 @@ function Table(props: Props) {
             </Button>
           </div>
         </div>
-        <ReactDataGrid
-          rowHeight={40}
-          columns={columns}
-          rowGetter={i => rows[i]}
-          rowsCount={rows.length}
-          onGridRowsUpdated={onGridRowsUpdated}
-          enableCellSelect={true}
-          minHeight={size.height ? size.height - 102 : 100}
-          onCellSelected={onCellSelected}
-          onColumnResize={(idx, width) =>
-            tableActions.column.resize(idx, width)
-          }
-          emptyRowsView={() => {
-            return (
-              <div
-                style={{
-                  textAlign: "center",
-                  backgroundColor: "#ddd",
-                  padding: "100px",
-                }}
-              >
-                <h3>no data to show</h3>
-                <Button
-                  onClick={() => {
-                    tableActions.row.add();
+        <DraggableContainer onHeaderDrop={onHeaderDrop}>
+          <ReactDataGrid
+            rowHeight={40}
+            columns={columns}
+            rowGetter={i => rows[i]}
+            rowsCount={rows.length}
+            onGridRowsUpdated={onGridRowsUpdated}
+            enableCellSelect={true}
+            minHeight={size.height ? size.height - 102 : 100}
+            onCellSelected={onCellSelected}
+            onColumnResize={(idx, width) =>
+              tableActions.column.resize(idx, width)
+            }
+            emptyRowsView={() => {
+              return (
+                <div
+                  style={{
+                    textAlign: "center",
+                    backgroundColor: "#ddd",
+                    padding: "100px",
                   }}
                 >
-                  Add Row
-                </Button>
-              </div>
-            );
-          }}
-        />
+                  <h3>no data to show</h3>
+                  <Button
+                    onClick={() => {
+                      tableActions.row.add();
+                    }}
+                  >
+                    Add Row
+                  </Button>
+                </div>
+              );
+            }}
+          />
+        </DraggableContainer>
 
         <ColumnEditor
           handleClose={handleCloseHeader}
