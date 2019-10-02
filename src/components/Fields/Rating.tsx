@@ -10,7 +10,7 @@ interface Props {
   isScrolling: boolean;
 }
 const Rating = (props: Props) => {
-  const { value, row, onSubmit, isScrolling } = props;
+  const { value, row, onSubmit } = props;
   //if (isScrolling) return <div />;
   return (
     <MuiRating

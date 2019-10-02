@@ -4,6 +4,8 @@ import { useEffect, useReducer } from "react";
 import equals from "ramda/es/equals";
 import firebase from "firebase/app";
 import { algoliaUpdateDoc } from "../../firebase/callables";
+import { FireTableFilter } from ".";
+import filter from "ramda/es/filter";
 
 const CAP = 500;
 
@@ -42,7 +44,7 @@ const useTable = (initialOverrides: any) => {
   });
   const getRows = (
     filters: {
-      field: string;
+      key: string;
       operator: "==" | "<" | ">" | ">=" | "<=";
       value: string;
     }[],
@@ -67,7 +69,7 @@ const useTable = (initialOverrides: any) => {
       | firebase.firestore.Query = db.collection(tableState.path);
 
     filters.forEach(filter => {
-      query = query.where(filter.field, filter.operator, filter.value);
+      query = query.where(filter.key, filter.operator, filter.value);
     });
     if (sort) {
       if (Array.isArray(sort)) {
@@ -78,28 +80,39 @@ const useTable = (initialOverrides: any) => {
         query = query.orderBy(sort.field, sort.direction);
       }
     }
-    const unsubscribe = query.limit(limit).onSnapshot(snapshot => {
-      if (snapshot.docs.length > 0) {
-        const rows = snapshot.docs
-          .map(doc => {
-            const data = doc.data();
-            const id = doc.id;
-            const ref = doc.ref;
+    const unsubscribe = query.limit(limit).onSnapshot(
+      snapshot => {
+        if (snapshot.docs.length > 0) {
+          const rows = snapshot.docs
+            .map(doc => {
+              const data = doc.data();
+              const id = doc.id;
+              const ref = doc.ref;
 
-            return { ...data, id, ref };
-          })
-          .filter(doc => doc.id !== "_FIRETABLE_"); //removes schema file
-        tableDispatch({
-          rows,
-          loading: false,
-        });
-      } else {
-        tableDispatch({
-          rows: [],
-          loading: false,
-        });
+              return { ...data, id, ref };
+            })
+            .filter(doc => doc.id !== "_FIRETABLE_"); //removes schema file
+          tableDispatch({
+            rows,
+            loading: false,
+          });
+        } else {
+          tableDispatch({
+            rows: [],
+            loading: false,
+          });
+        }
+      },
+      (error: Error) => {
+        if (error.message.includes("indexes?create_composite=")) {
+          const url =
+            "https://console.firebase.google.com/project/firetable-antler/database/firestore/" +
+            "indexes?create_composite=" +
+            error.message.split("indexes?create_composite=")[1];
+          console.log(url);
+        }
       }
-    });
+    );
     tableDispatch({ unsubscribe });
   };
   useEffect(() => {
@@ -135,8 +148,9 @@ const useTable = (initialOverrides: any) => {
       .doc(documentId)
       .delete();
   };
-  const setTable = (tableCollection: string) => {
+  const setTable = (tableCollection: string, filters?: FireTableFilter) => {
     tableDispatch({ path: tableCollection });
+    if (filters) tableDispatch({ filters });
   };
 
   const addRow = async (data?: any) => {

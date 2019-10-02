@@ -46,7 +46,6 @@ const MenuProps = {
 
 export default function DocInput(props: any) {
   const { collectionPath, setValue } = props;
-  console.log("collectionPath", collectionPath);
   const [tableConfig, tableConfigActions] = useTableConfig(
     collectionPath ? collectionPath : "initial"
   );
@@ -56,7 +55,6 @@ export default function DocInput(props: any) {
   const [secondaryKeys, setSecondaryKeys] = useState<string[]>([]);
 
   useEffect(() => {
-    console.log(tableConfig);
     setColumns(tableConfig.columns);
   }, [tableConfig.columns]);
 

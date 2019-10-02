@@ -6,9 +6,7 @@ import {
   AppBar,
   CssBaseline,
   Toolbar,
-  Typography,
   IconButton,
-  Paper,
   Button,
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";

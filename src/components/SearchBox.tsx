@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useContext } from "react";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import Popper from "@material-ui/core/Popper";
+import React, { useState, useEffect } from "react";
+import { createStyles, makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";

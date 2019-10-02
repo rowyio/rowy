@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import InputLabel from "@material-ui/core/InputLabel";
@@ -127,7 +127,6 @@ const ColumnEditor = (props: any) => {
   };
   const onClickAway = (event: any) => {
     const elementId = event.target.id;
-    console.log(event, elementId);
     if (!elementId.includes("select")) {
       handleClose();
       clearValues();

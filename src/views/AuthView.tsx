@@ -41,11 +41,7 @@ export default function AuthView() {
     <Card className={classes.card}>
       <CardContent>
         <Typography className={classes.header}>Fire Table</Typography>
-        <Button
-          onClick={handleAuth}
-          color="secondary"
-          className={classes.button}
-        >
+        <Button onClick={handleAuth} color="primary" className={classes.button}>
           Authenticate With Google
         </Button>
       </CardContent>

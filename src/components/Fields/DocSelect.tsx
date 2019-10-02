@@ -36,15 +36,7 @@ interface Props {
 }
 
 const DocSelect = (props: Props) => {
-  const {
-    value,
-    row,
-    onSubmit,
-    collectionPath,
-    isScrolling,
-    config,
-    setSearch,
-  } = props;
+  const { value, row, onSubmit, collectionPath, config, setSearch } = props;
 
   const classes = useStyles();
 
@@ -75,6 +67,7 @@ const DocSelect = (props: Props) => {
       {value &&
         value.map((doc: any, index: number) => (
           <Chip
+            key={doc.docPath}
             label={config.primaryKeys.map(
               (key: any) => `${doc.snapshot[key]} `
             )}

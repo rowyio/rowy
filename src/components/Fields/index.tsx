@@ -63,7 +63,7 @@ export const isFieldType = (fieldType: any) => {
 export const FieldsDropDown = (value: FieldType | null, onChange: any) => {
   return (
     <Select
-      value={value}
+      value={value ? value : ""}
       onChange={onChange}
       inputProps={{
         name: "type",
@@ -73,7 +73,11 @@ export const FieldsDropDown = (value: FieldType | null, onChange: any) => {
       {FIELDS.map(
         (field: { icon: JSX.Element; name: string; type: FieldType }) => {
           return (
-            <MenuItem id={`select-field-${field.type}`} value={field.type}>
+            <MenuItem
+              key={`select-field-${field.name}`}
+              id={`select-field-${field.type}`}
+              value={field.type}
+            >
               <>{field.name}</>
             </MenuItem>
           );

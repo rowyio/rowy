@@ -11,7 +11,7 @@ export default function TableView() {
 
   return (
     <Navigation>
-      <Table collection={tableCollection} />
+      <Table collection={tableCollection} filters={[]} />
     </Navigation>
   );
 }

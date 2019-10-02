@@ -2,20 +2,16 @@ import React, { useState } from "react";
 import ExpandIcon from "@material-ui/icons/AspectRatio";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Popper from "@material-ui/core/Popper";
-import Fade from "@material-ui/core/Fade";
 import Paper from "@material-ui/core/Paper";
 import TextareaAutosize from "@material-ui/core/TextareaAutosize";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
-import { onSubmit } from "components/Table/grid-fns";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       position: "relative",
-
       display: "flex",
       flexWrap: "wrap",
     },
@@ -35,7 +31,7 @@ interface Props {
 }
 
 const LongText = (props: Props) => {
-  const { value, row, onSubmit } = props;
+  const { value, onSubmit } = props;
   const [text, setText] = useState(value ? value : "");
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
