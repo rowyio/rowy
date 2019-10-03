@@ -1,20 +1,18 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { FieldType } from "../Fields";
-
-import Date from "../Fields/Date";
-import Rating from "../Fields/Rating";
-import CheckBox from "../Fields/CheckBox";
-import UrlLink from "../Fields/UrlLink";
-
 import { Editors } from "react-data-grid-addons";
 import MultiSelect from "../Fields/MultiSelect";
-import Image from "../Fields/Image";
-import File from "../Fields/File";
-import LongText from "../Fields/LongText";
 
 import { algoliaUpdateDoc } from "../../firebase/callables";
 
 const { AutoComplete } = Editors;
+const Date = lazy(() => import("../Fields/Date"));
+const Rating = lazy(() => import("../Fields/Rating"));
+const CheckBox = lazy(() => import("../Fields/CheckBox"));
+const UrlLink = lazy(() => import("../Fields/UrlLink"));
+const Image = lazy(() => import("../Fields/Image"));
+const File = lazy(() => import("../Fields/File"));
+const LongText = lazy(() => import("../Fields/LongText"));
 
 export const editable = (fieldType: FieldType) => {
   switch (fieldType) {
@@ -67,54 +65,74 @@ export const cellFormatter = (column: any) => {
     case FieldType.rating:
       return (props: any) => {
         return (
-          <Rating
-            {...props}
-            onSubmit={onSubmit(key, props.row)}
-            value={typeof props.value === "number" ? props.value : 0}
-          />
+          <Suspense fallback={<div />}>
+            <Rating
+              {...props}
+              onSubmit={onSubmit(key, props.row)}
+              value={typeof props.value === "number" ? props.value : 0}
+            />
+          </Suspense>
         );
       };
     case FieldType.checkBox:
       return (props: any) => {
-        return <CheckBox {...props} onSubmit={onSubmit(key, props.row)} />;
+        return (
+          <Suspense fallback={<div />}>
+            <CheckBox {...props} onSubmit={onSubmit(key, props.row)} />
+          </Suspense>
+        );
       };
     case FieldType.url:
       return (props: any) => {
-        return <UrlLink {...props} />;
+        return (
+          <Suspense fallback={<div />}>
+            <UrlLink {...props} />
+          </Suspense>
+        );
       };
     case FieldType.multiSelect:
       return (props: any) => {
         return (
-          <MultiSelect
-            {...props}
-            onSubmit={onSubmit(key, props.row)}
-            options={options}
-          />
+          <Suspense fallback={<div />}>
+            <MultiSelect
+              {...props}
+              onSubmit={onSubmit(key, props.row)}
+              options={options}
+            />
+          </Suspense>
         );
       };
     case FieldType.image:
       return (props: any) => {
         return (
-          <Image
-            {...props}
-            onSubmit={onSubmit(key, props.row)}
-            fieldName={key}
-          />
+          <Suspense fallback={<div />}>
+            <Image
+              {...props}
+              onSubmit={onSubmit(key, props.row)}
+              fieldName={key}
+            />
+          </Suspense>
         );
       };
     case FieldType.file:
       return (props: any) => {
         return (
-          <File
-            {...props}
-            onSubmit={onSubmit(key, props.row)}
-            fieldName={key}
-          />
+          <Suspense fallback={<div />}>
+            <File
+              {...props}
+              onSubmit={onSubmit(key, props.row)}
+              fieldName={key}
+            />
+          </Suspense>
         );
       };
     case FieldType.longText:
       return (props: any) => {
-        return <LongText {...props} onSubmit={onSubmit(key, props.row)} />;
+        return (
+          <Suspense fallback={<div />}>
+            <LongText {...props} onSubmit={onSubmit(key, props.row)} />
+          </Suspense>
+        );
       };
 
     default:

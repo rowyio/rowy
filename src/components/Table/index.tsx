@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import ReactDataGrid from "react-data-grid";
+import React, { useState, useEffect, lazy, Suspense } from "react";
+
 import useFiretable, { FireTableFilter } from "../../hooks/useFiretable";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 
@@ -7,7 +7,6 @@ import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import { FieldType, getFieldIcon } from "../Fields";
 
-import ColumnEditor from "./ColumnEditor/index";
 import { functions } from "../../firebase";
 
 import {
@@ -21,8 +20,6 @@ import {
 
 import { CLOUD_FUNCTIONS } from "firebase/callables";
 
-import SearchBox from "../SearchBox";
-import DocSelect from "../Fields/DocSelect";
 import Typography from "@material-ui/core/Typography";
 import AddIcon from "@material-ui/icons/AddCircle";
 import SettingsIcon from "@material-ui/icons/Settings";
@@ -31,7 +28,11 @@ import useWindowSize from "../../hooks/useWindowSize";
 import { DraggableHeader } from "react-data-grid-addons";
 import Confirmation from "components/Confirmation";
 import DeleteIcon from "@material-ui/icons/Delete";
-import TableHeader from "./TableHeader";
+const ReactDataGrid = lazy(() => import("react-data-grid"));
+const TableHeader = lazy(() => import("./TableHeader"));
+const SearchBox = lazy(() => import("../SearchBox"));
+const DocSelect = lazy(() => import("../Fields/DocSelect"));
+const ColumnEditor = lazy(() => import("./ColumnEditor/index"));
 
 const { DraggableContainer } = DraggableHeader;
 const deleteAlgoliaRecord = functions.httpsCallable(
@@ -116,13 +117,15 @@ function Table(props: Props) {
     });
   };
   const docSelect = (column: any) => (props: any) => (
-    <DocSelect
-      {...props}
-      onSubmit={onSubmit(column.key, props.row)}
-      collectionPath={column.collectionPath}
-      config={column.config}
-      setSearch={setSearch}
-    />
+    <Suspense fallback={<div />}>
+      <DocSelect
+        {...props}
+        onSubmit={onSubmit(column.key, props.row)}
+        collectionPath={column.collectionPath}
+        config={column.config}
+        setSearch={setSearch}
+      />
+    </Suspense>
   );
   const handleClick = (headerProps: any) => (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -226,56 +229,60 @@ function Table(props: Props) {
 
     return (
       <>
-        <TableHeader
-          collection={collection}
-          rowHeight={rowHeight}
-          updateConfig={tableActions.table.updateConfig}
-          columns={columns}
-          addRow={tableActions.row.add}
-        />
-        <DraggableContainer onHeaderDrop={onHeaderDrop}>
-          <ReactDataGrid
+        <Suspense fallback={<div>Loading...</div>}>
+          <TableHeader
+            collection={collection}
             rowHeight={rowHeight}
+            updateConfig={tableActions.table.updateConfig}
             columns={columns}
-            rowGetter={i => rows[i]}
-            rowsCount={rows.length}
-            onGridRowsUpdated={onGridRowsUpdated}
-            enableCellSelect={true}
-            minHeight={size.height ? size.height - 102 : 100}
-            onCellSelected={onCellSelected}
-            onColumnResize={(idx, width) =>
-              tableActions.column.resize(idx, width)
-            }
-            emptyRowsView={() => {
-              return (
-                <div
-                  style={{
-                    textAlign: "center",
-                    backgroundColor: "#ddd",
-                    padding: "100px",
-                  }}
-                >
-                  <h3>no data to show</h3>
-                  <Button
-                    onClick={() => {
-                      tableActions.row.add();
+            addRow={tableActions.row.add}
+          />
+
+          <DraggableContainer onHeaderDrop={onHeaderDrop}>
+            <ReactDataGrid
+              rowHeight={rowHeight}
+              columns={columns}
+              rowGetter={i => rows[i]}
+              rowsCount={rows.length}
+              onGridRowsUpdated={onGridRowsUpdated}
+              enableCellSelect={true}
+              minHeight={size.height ? size.height - 102 : 100}
+              onCellSelected={onCellSelected}
+              onColumnResize={(idx, width) =>
+                tableActions.column.resize(idx, width)
+              }
+              emptyRowsView={() => {
+                return (
+                  <div
+                    style={{
+                      textAlign: "center",
+                      backgroundColor: "#ddd",
+                      padding: "100px",
                     }}
                   >
-                    Add Row
-                  </Button>
-                </div>
-              );
-            }}
-          />
-        </DraggableContainer>
+                    <h3>no data to show</h3>
+                    <Button
+                      onClick={() => {
+                        tableActions.row.add();
+                      }}
+                    >
+                      Add Row
+                    </Button>
+                  </div>
+                );
+              }}
+            />
+          </DraggableContainer>
 
-        <ColumnEditor
-          handleClose={handleCloseHeader}
-          anchorEl={anchorEl}
-          column={header && header.column}
-          actions={tableActions.column}
-        />
-        <SearchBox searchData={search} clearSearch={clearSearch} />
+          <ColumnEditor
+            handleClose={handleCloseHeader}
+            anchorEl={anchorEl}
+            column={header && header.column}
+            actions={tableActions.column}
+          />
+
+          <SearchBox searchData={search} clearSearch={clearSearch} />
+        </Suspense>
       </>
     );
   } else return <p>Loading</p>;
