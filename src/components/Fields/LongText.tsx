@@ -46,7 +46,7 @@ const LongText = (props: Props) => {
   const open = Boolean(anchorEl);
   const id = open ? "no-transition-popper" : undefined;
   const onClickAway = (event: any) => {
-    if (event.target.id !== id) {
+    if (event.target.id !== id && open) {
       onSubmit(text);
       setAnchorEl(null);
     }
@@ -70,7 +70,7 @@ const LongText = (props: Props) => {
                   placeholder="enter text"
                   defaultValue={text}
                   autoFocus
-                  onKeyPress={(e: any) => {
+                  onChange={(e: any) => {
                     setText(e.target.value);
                   }}
                 />
