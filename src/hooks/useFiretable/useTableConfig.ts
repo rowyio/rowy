@@ -12,7 +12,7 @@ const useTableConfig = (tablePath: string) => {
   useEffect(() => {
     const { doc, columns } = tableConfigState;
     if (doc && columns !== doc.columns) {
-      documentDispatch({ columns: doc.columns });
+      documentDispatch({ columns: doc.columns, rowHeight: doc.rowHeight });
     }
   }, [tableConfigState.doc]);
 
@@ -33,7 +33,7 @@ const useTableConfig = (tablePath: string) => {
     columns[index].width = width;
     documentDispatch({ action: DocActions.update, data: { columns } });
   };
-  const update = (index: number, updatables: any) => {
+  const updateColumn = (index: number, updatables: any) => {
     const { columns } = tableConfigState;
     updatables.forEach((updatable: any) => {
       columns[index][updatable.field] = updatable.value;
@@ -57,8 +57,15 @@ const useTableConfig = (tablePath: string) => {
       data: { columns: reorderedColumns },
     });
   };
+  const updateConfig = (key: string, value: any) => {
+    documentDispatch({
+      action: DocActions.update,
+      data: { [key]: value },
+    });
+  };
   const actions = {
-    update,
+    updateColumn,
+    updateConfig,
     add,
     resize,
     setTable,

@@ -31,6 +31,10 @@ import useWindowSize from "../../hooks/useWindowSize";
 import { DraggableHeader } from "react-data-grid-addons";
 import Confirmation from "components/Confirmation";
 import DeleteIcon from "@material-ui/icons/Delete";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
 const { DraggableContainer } = DraggableHeader;
 const deleteAlgoliaRecord = functions.httpsCallable(
   CLOUD_FUNCTIONS.deleteAlgoliaRecord
@@ -70,6 +74,10 @@ const useStyles = makeStyles(Theme => {
       alignContent: "center",
       // background: Theme.palette.primary.main,
     },
+    formControl: {
+      margin: 2,
+      minWidth: 120,
+    },
   });
 });
 
@@ -90,7 +98,7 @@ function Table(props: Props) {
   const size = useWindowSize();
 
   useEffect(() => {
-    tableActions.set(collection, filters);
+    tableActions.table.set(collection, filters);
   }, [collection, filters]);
 
   const classes = useStyles();
@@ -215,13 +223,37 @@ function Table(props: Props) {
         </Confirmation>
       ),
     });
-    const rowHeight = 40;
+    const rowHeight = tableState.config.rowHeight;
     const rows = tableState.rows.map((row: any) => ({ rowHeight, ...row }));
 
     return (
       <>
         <div className={classes.tableHeader}>
-          <Typography variant="button">{collection}</Typography>
+          <div>
+            <Typography variant="button">{collection}</Typography>
+            <FormControl variant="outlined" className={classes.formControl}>
+              <InputLabel htmlFor="outlined-age-simple">Row Height</InputLabel>
+              <Select
+                value={rowHeight}
+                onChange={(event: any, child: any) => {
+                  tableActions.table.updateConfig(
+                    "rowHeight",
+                    event.target.value
+                  );
+                }}
+                labelWidth={90}
+                inputProps={{
+                  name: "rowHeight",
+                  id: "outlined-rowHeight-simple",
+                }}
+              >
+                <MenuItem value={35}>Tall</MenuItem>
+                <MenuItem value={60}>Grande</MenuItem>
+                <MenuItem value={100}>Venti</MenuItem>
+                <MenuItem value={150}>Trenta</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
           <div className={classes.tableActions}>
             <ImportCSV
               columns={tableState.columns}
