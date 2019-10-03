@@ -10,7 +10,7 @@ import Paper from "@material-ui/core/Paper";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
-import { TextField } from "@material-ui/core";
+import TextField from "@material-ui/core/TextField";
 
 const searchClient = algoliasearch(
   process.env.REACT_APP_ALGOLIA_APP_ID

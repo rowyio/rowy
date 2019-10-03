@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Checkbox } from "@material-ui/core";
+import Checkbox from "@material-ui/core/Checkbox";
 
 // TODO: Create an interface for props
 interface Props {
