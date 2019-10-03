@@ -39,9 +39,9 @@ const useStyles = makeStyles(theme =>
       marginTop: theme.spacing(2),
     },
     keyPair: {
+      flexGrow: 2,
       display: "flex",
-      flexWrap: "wrap",
-      justifyContent: "space-between",
+      justifyItems: "space-between",
     },
     cloudIcon: {
       fontSize: 64,
@@ -132,13 +132,22 @@ export default function ImportCSV(props: any) {
 
                 <CloudIcon className={classes.cloudIcon} />
                 <Typography variant="subtitle1">or</Typography>
-                <Button color="secondary">click to select a file</Button>
+                {isDragActive ? (
+                  <p>Drop the file here ...</p>
+                ) : (
+                  <Button color="secondary">click to select a file</Button>
+                )}
               </Grid>
             </div>
           ) : (
             <Grid container direction="column">
               {keyPairs.map((keyPair: any, index: number) => (
-                <Grid item alignItems="center">
+                <Grid
+                  container
+                  direction="row"
+                  alignItems="center"
+                  justify="space-between"
+                >
                   <Typography>{keyPair.csvKey}</Typography>
                   <ArrowIcon />
                   <Typography>{keyPair.columnKey}</Typography>

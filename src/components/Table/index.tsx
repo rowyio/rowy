@@ -192,7 +192,7 @@ function Table(props: Props) {
         <Confirmation
           message={{
             title: "Delete Row",
-            body: "Are you sure you want do delete this row",
+            body: "Are you sure you want to delete this row",
             confirm: (
               <>
                 <DeleteIcon /> Delete
