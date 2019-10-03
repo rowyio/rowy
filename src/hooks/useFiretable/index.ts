@@ -11,11 +11,15 @@ export type FiretableActions = {
     reorder: Function;
   };
   row: { add: any; delete: Function };
-  set: Function;
-  filter: Function;
+  table: {
+    set: Function;
+    filter: Function;
+    updateConfig: Function;
+  };
 };
 
 export type FiretableState = {
+  config: { rowHeight: number };
   columns: any;
   rows: any;
 };
@@ -39,6 +43,7 @@ const useFiretable = (collectionName: string) => {
 
   const state: FiretableState = {
     columns: tableConfig.columns,
+    config: { rowHeight: tableConfig.rowHeight },
     rows: tableState.rows,
   };
   const actions: FiretableActions = {
@@ -46,7 +51,7 @@ const useFiretable = (collectionName: string) => {
       add: configActions.add,
       resize: configActions.resize,
       rename: configActions.rename,
-      update: configActions.update,
+      update: configActions.updateColumn,
       remove: configActions.remove,
       reorder: configActions.reorder,
     },
@@ -54,8 +59,11 @@ const useFiretable = (collectionName: string) => {
       add: tableActions.addRow,
       delete: tableActions.deleteRow,
     },
-    set: setTable,
-    filter: filterTable,
+    table: {
+      updateConfig: configActions.updateConfig,
+      set: setTable,
+      filter: filterTable,
+    },
   };
 
   return { tableState: state, tableActions: actions };
