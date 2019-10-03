@@ -29,6 +29,8 @@ import SettingsIcon from "@material-ui/icons/Settings";
 
 import useWindowSize from "../../hooks/useWindowSize";
 import { DraggableHeader } from "react-data-grid-addons";
+import Confirmation from "components/Confirmation";
+import DeleteIcon from "@material-ui/icons/Delete";
 const { DraggableContainer } = DraggableHeader;
 const deleteAlgoliaRecord = functions.httpsCallable(
   CLOUD_FUNCTIONS.deleteAlgoliaRecord
@@ -156,8 +158,6 @@ function Table(props: Props) {
             >
               <SettingsIcon />
             </IconButton>
-            {/* <EditIcon /> */}
-            {/* </Button> */}
           </div>
         );
     }
@@ -189,18 +189,30 @@ function Table(props: Props) {
       width: 160,
       headerRenderer: headerRenderer,
       formatter: (props: any) => (
-        <Button
-          color="primary"
-          onClick={async () => {
-            props.row.ref.delete();
-            await deleteAlgoliaRecord({
-              id: props.row.ref.id,
-              collection: props.row.ref.parent.path,
-            });
+        <Confirmation
+          message={{
+            title: "Delete Row",
+            body: "Are you sure you want do delete this row",
+            confirm: (
+              <>
+                <DeleteIcon /> Delete
+              </>
+            ),
           }}
         >
-          Delete row
-        </Button>
+          <Button
+            color="primary"
+            onClick={async () => {
+              props.row.ref.delete();
+              await deleteAlgoliaRecord({
+                id: props.row.ref.id,
+                collection: props.row.ref.parent.path,
+              });
+            }}
+          >
+            Delete row
+          </Button>
+        </Confirmation>
       ),
     });
     const rows = tableState.rows;
