@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       position: "relative",
       display: "flex",
-      flexWrap: "wrap",
+      // flexWrap: "wrap",
       alignItems: "center",
     },
     typography: {
