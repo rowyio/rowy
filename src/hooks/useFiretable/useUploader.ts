@@ -2,7 +2,7 @@ import { useReducer } from "react";
 import { bucket } from "../../firebase/index";
 
 import firebase from "firebase/app";
-const intialState = {};
+const intialState = { progress: 0 };
 const uploadReducer = (prevState: any, newProps: any) => {
   return { ...prevState, ...newProps };
 };
@@ -25,6 +25,7 @@ const useUploader = () => {
           // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
           var progress =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          uploaderDispatch({ progress });
           console.log("Upload is " + progress + "% done");
           switch (snapshot.state) {
             case firebase.storage.TaskState.PAUSED: // or 'paused'
