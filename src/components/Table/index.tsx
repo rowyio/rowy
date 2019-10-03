@@ -215,7 +215,9 @@ function Table(props: Props) {
         </Confirmation>
       ),
     });
-    const rows = tableState.rows;
+    const rowHeight = 40;
+    const rows = tableState.rows.map((row: any) => ({ rowHeight, ...row }));
+
     return (
       <>
         <div className={classes.tableHeader}>
@@ -238,7 +240,7 @@ function Table(props: Props) {
         </div>
         <DraggableContainer onHeaderDrop={onHeaderDrop}>
           <ReactDataGrid
-            rowHeight={40}
+            rowHeight={rowHeight}
             columns={columns}
             rowGetter={i => rows[i]}
             rowsCount={rows.length}
