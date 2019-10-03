@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Chip from "@material-ui/core/Chip";
-import { TextField, Grid, Divider } from "@material-ui/core";
+import TextField from "@material-ui/core/TextField";
+import Grid from "@material-ui/core/Grid";
+import Divider from "@material-ui/core/Divider";
 import _includes from "lodash/includes";
 import _camelCase from "lodash/camelCase";
 

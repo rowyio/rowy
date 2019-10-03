@@ -1,7 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Chip from "@material-ui/core/Chip";
-import { TextField, Grid, Divider, Select } from "@material-ui/core";
+import Grid from "@material-ui/core/Grid";
+import TextField from "@material-ui/core/TextField";
+import Divider from "@material-ui/core/Divider";
+import Select from "@material-ui/core/Select";
+
 import TablesContext from "../../../contexts/tablesContext";
 import MenuItem from "@material-ui/core/MenuItem";
 import useTableConfig from "../../../hooks/useFiretable/useTableConfig";

@@ -1,4 +1,4 @@
-import { createMuiTheme } from "@material-ui/core";
+import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 
 const Theme = createMuiTheme({
   spacing: 4,

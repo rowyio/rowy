@@ -20,7 +20,7 @@ import {
 } from "./grid-fns";
 
 import { CLOUD_FUNCTIONS } from "firebase/callables";
-import ImportCSV from "components/ImportCSV";
+
 import SearchBox from "../SearchBox";
 import DocSelect from "../Fields/DocSelect";
 import Typography from "@material-ui/core/Typography";
@@ -31,10 +31,8 @@ import useWindowSize from "../../hooks/useWindowSize";
 import { DraggableHeader } from "react-data-grid-addons";
 import Confirmation from "components/Confirmation";
 import DeleteIcon from "@material-ui/icons/Delete";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
+import TableHeader from "./TableHeader";
+
 const { DraggableContainer } = DraggableHeader;
 const deleteAlgoliaRecord = functions.httpsCallable(
   CLOUD_FUNCTIONS.deleteAlgoliaRecord
@@ -228,48 +226,13 @@ function Table(props: Props) {
 
     return (
       <>
-        <div className={classes.tableHeader}>
-          <div>
-            <Typography variant="button">{collection}</Typography>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel htmlFor="outlined-age-simple">Row Height</InputLabel>
-              <Select
-                value={rowHeight}
-                onChange={(event: any, child: any) => {
-                  tableActions.table.updateConfig(
-                    "rowHeight",
-                    event.target.value
-                  );
-                }}
-                labelWidth={90}
-                inputProps={{
-                  name: "rowHeight",
-                  id: "outlined-rowHeight-simple",
-                }}
-              >
-                <MenuItem value={35}>Tall</MenuItem>
-                <MenuItem value={60}>Grande</MenuItem>
-                <MenuItem value={100}>Venti</MenuItem>
-                <MenuItem value={150}>Trenta</MenuItem>
-              </Select>
-            </FormControl>
-          </div>
-          <div className={classes.tableActions}>
-            <ImportCSV
-              columns={tableState.columns}
-              addRow={tableActions.row.add}
-            />
-            <Button
-              color="secondary"
-              onClick={() => {
-                tableActions.row.add();
-              }}
-            >
-              Add Row
-              <AddIcon />
-            </Button>
-          </div>
-        </div>
+        <TableHeader
+          collection={collection}
+          rowHeight={rowHeight}
+          updateConfig={tableActions.table.updateConfig}
+          columns={columns}
+          addRow={tableActions.row.add}
+        />
         <DraggableContainer onHeaderDrop={onHeaderDrop}>
           <ReactDataGrid
             rowHeight={rowHeight}

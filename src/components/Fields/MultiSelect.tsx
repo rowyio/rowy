@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Select } from "@material-ui/core";
+import Select from "@material-ui/core/Select";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 
 import Input from "@material-ui/core/Input";
