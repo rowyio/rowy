@@ -47,7 +47,7 @@ const TableHeader = (props: any) => {
         <FormControl variant="outlined" className={classes.formControl}>
           <InputLabel htmlFor="outlined-age-simple">Row Height</InputLabel>
           <Select
-            value={rowHeight}
+            value={rowHeight ? rowHeight : 35}
             onChange={(event: any, child: any) => {
               updateConfig("rowHeight", event.target.value);
             }}

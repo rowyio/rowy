@@ -24,7 +24,7 @@ const useTableConfig = (tablePath: string) => {
       loading: true,
     });
   };
-  const add = (name: string, type: FieldType, data?: any) => {
+  const add = (name: string, type: FieldType, data?: unknown) => {
     //TODO: validation
     const { columns } = tableConfigState;
     const key = _camelCase(name);
@@ -38,9 +38,10 @@ const useTableConfig = (tablePath: string) => {
     columns[index].width = width;
     documentDispatch({ action: DocActions.update, data: { columns } });
   };
-  const updateColumn = (index: number, updatables: any) => {
+  type updatable = { field: string; value: unknown };
+  const updateColumn = (index: number, updatables: updatable[]) => {
     const { columns } = tableConfigState;
-    updatables.forEach((updatable: any) => {
+    updatables.forEach((updatable: updatable) => {
       columns[index][updatable.field] = updatable.value;
     });
     documentDispatch({ action: DocActions.update, data: { columns } });
@@ -62,7 +63,7 @@ const useTableConfig = (tablePath: string) => {
       data: { columns: reorderedColumns },
     });
   };
-  const updateConfig = (key: string, value: any) => {
+  const updateConfig = (key: string, value: unknown) => {
     documentDispatch({
       action: DocActions.update,
       data: { [key]: value },

@@ -6,9 +6,7 @@ import { createStyles, makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import { FieldType, getFieldIcon } from "../Fields";
-
 import { functions } from "../../firebase";
-
 import {
   cellFormatter,
   onCellSelected,
@@ -17,17 +15,15 @@ import {
   editable,
   onSubmit,
 } from "./grid-fns";
-
 import { CLOUD_FUNCTIONS } from "firebase/callables";
-
 import Typography from "@material-ui/core/Typography";
 import AddIcon from "@material-ui/icons/AddCircle";
 import SettingsIcon from "@material-ui/icons/Settings";
-import useHotkeys from "../../hooks/useHotkeys";
 import useWindowSize from "../../hooks/useWindowSize";
 import { DraggableHeader } from "react-data-grid-addons";
 import Confirmation from "components/Confirmation";
 import DeleteIcon from "@material-ui/icons/Delete";
+const Hotkeys = lazy(() => import("./HotKeys"));
 const ReactDataGrid = lazy(() => import("react-data-grid"));
 const TableHeader = lazy(() => import("./TableHeader"));
 const SearchBox = lazy(() => import("../SearchBox"));
@@ -100,95 +96,6 @@ function Table(props: Props) {
 
   const size = useWindowSize();
 
-  useHotkeys(
-    "cmd+c",
-    () => {
-      handleCopy();
-    },
-    [selectedCell]
-  );
-  useHotkeys(
-    "ctrl+c",
-    () => {
-      handleCopy();
-    },
-    [selectedCell]
-  );
-  useHotkeys(
-    "cmd+v",
-    () => {
-      handlePaste();
-    },
-    [selectedCell]
-  );
-  useHotkeys(
-    "ctrl+v",
-    () => {
-      handlePaste();
-    },
-    [selectedCell]
-  );
-  useHotkeys(
-    "ctrl+x",
-    () => {
-      handleCut();
-    },
-    [selectedCell]
-  );
-  useHotkeys(
-    "cmd+x",
-    () => {
-      handleCut();
-    },
-    [selectedCell]
-  );
-  const handlePaste = async () => {
-    const { row, column } = selectedCell;
-    switch (column.type) {
-      case FieldType.number:
-      case FieldType.rating:
-      case FieldType.email:
-      case FieldType.simpleText:
-      case FieldType.PhoneNumber:
-        const newValue = await navigator.clipboard.readText();
-        onSubmit(column.key, row)(newValue);
-        break;
-
-      default:
-        break;
-    }
-  };
-  const handleCopy = () => {
-    const { row, column } = selectedCell;
-    switch (column.type) {
-      case FieldType.number:
-      case FieldType.rating:
-      case FieldType.email:
-      case FieldType.simpleText:
-      case FieldType.PhoneNumber:
-        navigator.clipboard.writeText(row[column.key]);
-        break;
-
-      default:
-        break;
-    }
-  };
-  const handleCut = () => {
-    const { row, column } = selectedCell;
-    switch (column.type) {
-      case FieldType.number:
-      case FieldType.rating:
-      case FieldType.email:
-      case FieldType.simpleText:
-      case FieldType.PhoneNumber:
-        navigator.clipboard.writeText(row[column.key]);
-        onSubmit(column.key, row)(null);
-        break;
-
-      default:
-        break;
-    }
-  };
   useEffect(() => {
     tableActions.table.set(collection, filters);
   }, [collection, filters]);
@@ -243,12 +150,6 @@ function Table(props: Props) {
       default:
         return (
           <div className={classes.header}>
-            {/* <Button
-              style={{ width: column.width }}
-              className={classes.headerButton}
-              onClick={handleClick(props)}
-              aria-label="edit"
-            > */}
             <div className={classes.headerLabel}>
               {getFieldIcon(props.column.type)}
               <Typography variant="button">{props.column.name}</Typography>
@@ -320,13 +221,34 @@ function Table(props: Props) {
     });
   }
 
-  const tableHeight = size.height ? size.height - 110 : 500;
+  const tableHeight = size.height ? size.height - 142 : 500;
   const rowHeight = tableState.config.rowHeight;
-  const rows = tableState.rows.map((row: any) => ({ rowHeight, ...row }));
+  const rows = [
+    ...tableState.rows.map((row: any) => ({ rowHeight, ...row })),
+    {},
+  ];
+  const RowRenderer = (props: any) => {
+    const { renderBaseRow, ...rest } = props;
+    console.log(rest);
+    if (rows.length === rest.idx + 1) {
+      return (
+        <Button
+          onClick={() => {
+            tableActions.row.add();
+          }}
+        >
+          Add a new row
+        </Button>
+      );
+    } else {
+      return renderBaseRow(rest);
+    }
+  };
 
   return (
     <>
       <Suspense fallback={<div>Loading header...</div>}>
+        <Hotkeys selectedCell={selectedCell} />
         <TableHeader
           collection={collection}
           rowHeight={rowHeight}
@@ -340,12 +262,13 @@ function Table(props: Props) {
           <DraggableContainer onHeaderDrop={onHeaderDrop}>
             <ReactDataGrid
               headerRowHeight={45}
+              rowRenderer={RowRenderer}
               rowHeight={rowHeight}
               columns={columns}
+              enableCellSelect={true}
               rowGetter={i => rows[i]}
               rowsCount={rows.length}
               onGridRowsUpdated={onGridRowsUpdated}
-              enableCellSelect={true}
               minHeight={tableHeight}
               onCellSelected={(coordinates: {
                 rowIdx: number;

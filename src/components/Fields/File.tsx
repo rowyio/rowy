@@ -12,7 +12,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 // TODO: multi support
 
 interface Props {
-  value: any;
+  value: { name: string; downloadURL: string }[];
   row: { ref: firebase.firestore.DocumentReference; id: string };
   onSubmit: Function;
   fieldType: FieldType;
