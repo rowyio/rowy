@@ -174,8 +174,9 @@ function Table(props: Props) {
   const onHeaderDrop = (dragged: any, target: any) => {
     tableActions.column.reorder(dragged, target);
   };
+  let columns = [];
   if (!tableState.loadingColumns) {
-    let columns = tableState.columns.map((column: any) => ({
+    columns = tableState.columns.map((column: any) => ({
       width: 220,
       draggable: true,
       editable: editable(column.type),
@@ -224,22 +225,25 @@ function Table(props: Props) {
         </Confirmation>
       ),
     });
-    const tableHeight = size.height ? size.height - 110 : 500;
-    const rowHeight = tableState.config.rowHeight;
-    const rows = tableState.rows.map((row: any) => ({ rowHeight, ...row }));
+  }
 
-    return (
-      <>
-        <Suspense fallback={<div>Loading header...</div>}>
-          <TableHeader
-            collection={collection}
-            rowHeight={rowHeight}
-            updateConfig={tableActions.table.updateConfig}
-            columns={columns}
-            addRow={tableActions.row.add}
-          />
-        </Suspense>
-        <Suspense fallback={<div>Loading table...</div>}>
+  const tableHeight = size.height ? size.height - 110 : 500;
+  const rowHeight = tableState.config.rowHeight;
+  const rows = tableState.rows.map((row: any) => ({ rowHeight, ...row }));
+
+  return (
+    <>
+      <Suspense fallback={<div>Loading header...</div>}>
+        <TableHeader
+          collection={collection}
+          rowHeight={rowHeight}
+          updateConfig={tableActions.table.updateConfig}
+          columns={columns}
+          addRow={tableActions.row.add}
+        />
+      </Suspense>
+      <Suspense fallback={<div>Loading table...</div>}>
+        {!tableState.loadingColumns ? (
           <DraggableContainer onHeaderDrop={onHeaderDrop}>
             <ReactDataGrid
               headerRowHeight={45}
@@ -283,19 +287,21 @@ function Table(props: Props) {
               }}
             />
           </DraggableContainer>
+        ) : (
+          <p>fetching columns</p>
+        )}
 
-          <ColumnEditor
-            handleClose={handleCloseHeader}
-            anchorEl={anchorEl}
-            column={header && header.column}
-            actions={tableActions.column}
-          />
+        <ColumnEditor
+          handleClose={handleCloseHeader}
+          anchorEl={anchorEl}
+          column={header && header.column}
+          actions={tableActions.column}
+        />
 
-          <SearchBox searchData={search} clearSearch={clearSearch} />
-        </Suspense>
-      </>
-    );
-  } else return <p>fetching columns</p>;
+        <SearchBox searchData={search} clearSearch={clearSearch} />
+      </Suspense>
+    </>
+  );
 }
 
 export default Table;
