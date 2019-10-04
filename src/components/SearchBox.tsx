@@ -3,7 +3,7 @@ import { createStyles, makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-import ClickAwayListener from "@material-ui/core/ClickAwayListener";
+
 import algoliasearch from "algoliasearch/lite";
 import Paper from "@material-ui/core/Paper";
 
@@ -94,7 +94,6 @@ const SearchBox = (props: Props) => {
 
   const open = Boolean(collection);
   const id = open ? "no-transition-popper" : undefined;
-  const onClickAway = (event: any) => {};
   const Hit = (hit: any) => (
     <ListItem
       button
@@ -128,7 +127,7 @@ const SearchBox = (props: Props) => {
       aria-describedby="transition-modal-description"
       className={classes.modal}
       open={open}
-      onClose={(event: any, reason: any) => {
+      onClose={() => {
         clear();
       }}
       closeAfterTransition

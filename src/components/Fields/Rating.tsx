@@ -5,7 +5,7 @@ import MuiRating from "@material-ui/lab/Rating";
 
 interface Props {
   value: number;
-  row: any;
+  row: { id: string };
   onSubmit: Function;
   isScrolling: boolean;
 }
