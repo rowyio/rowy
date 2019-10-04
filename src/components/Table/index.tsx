@@ -174,8 +174,9 @@ function Table(props: Props) {
   const onHeaderDrop = (dragged: any, target: any) => {
     tableActions.column.reorder(dragged, target);
   };
-  if (tableState.columns) {
-    let columns = tableState.columns.map((column: any) => ({
+  let columns = [];
+  if (!tableState.loadingColumns) {
+    columns = tableState.columns.map((column: any) => ({
       width: 220,
       draggable: true,
       editable: editable(column.type),
@@ -224,68 +225,83 @@ function Table(props: Props) {
         </Confirmation>
       ),
     });
-    const rowHeight = tableState.config.rowHeight;
-    const rows = tableState.rows.map((row: any) => ({ rowHeight, ...row }));
+  }
 
-    return (
-      <>
-        <Suspense fallback={<div>Loading...</div>}>
-          <TableHeader
-            collection={collection}
-            rowHeight={rowHeight}
-            updateConfig={tableActions.table.updateConfig}
-            columns={columns}
-            addRow={tableActions.row.add}
-          />
+  const tableHeight = size.height ? size.height - 110 : 500;
+  const rowHeight = tableState.config.rowHeight;
+  const rows = tableState.rows.map((row: any) => ({ rowHeight, ...row }));
 
+  return (
+    <>
+      <Suspense fallback={<div>Loading header...</div>}>
+        <TableHeader
+          collection={collection}
+          rowHeight={rowHeight}
+          updateConfig={tableActions.table.updateConfig}
+          columns={columns}
+          addRow={tableActions.row.add}
+        />
+      </Suspense>
+      <Suspense fallback={<div>Loading table...</div>}>
+        {!tableState.loadingColumns ? (
           <DraggableContainer onHeaderDrop={onHeaderDrop}>
             <ReactDataGrid
+              headerRowHeight={45}
               rowHeight={rowHeight}
               columns={columns}
               rowGetter={i => rows[i]}
               rowsCount={rows.length}
               onGridRowsUpdated={onGridRowsUpdated}
               enableCellSelect={true}
-              minHeight={size.height ? size.height - 102 : 100}
+              minHeight={tableHeight}
               onCellSelected={onCellSelected}
               onColumnResize={(idx, width) =>
                 tableActions.column.resize(idx, width)
               }
               emptyRowsView={() => {
                 return (
-                  <div
-                    style={{
-                      textAlign: "center",
-                      backgroundColor: "#ddd",
-                      padding: "100px",
-                    }}
-                  >
-                    <h3>no data to show</h3>
-                    <Button
-                      onClick={() => {
-                        tableActions.row.add();
-                      }}
-                    >
-                      Add Row
-                    </Button>
-                  </div>
+                  <>
+                    {tableState.loadingRows ? (
+                      <h3>loading row</h3>
+                    ) : (
+                      <div
+                        style={{
+                          height: tableHeight,
+                          textAlign: "center",
+                          backgroundColor: "#eee",
+                          padding: "100px",
+                        }}
+                      >
+                        <h3>no data to show</h3>
+                        <Button
+                          onClick={() => {
+                            tableActions.row.add();
+                          }}
+                        >
+                          Add Row
+                        </Button>
+                      </div>
+                    )}
+                  </>
                 );
               }}
             />
           </DraggableContainer>
+        ) : (
+          <p>fetching columns</p>
+        )}
 
-          <ColumnEditor
-            handleClose={handleCloseHeader}
-            anchorEl={anchorEl}
-            column={header && header.column}
-            actions={tableActions.column}
-          />
+        <ColumnEditor
+          handleClose={handleCloseHeader}
+          anchorEl={anchorEl}
+          column={header && header.column}
+          actions={tableActions.column}
+        />
 
-          <SearchBox searchData={search} clearSearch={clearSearch} />
-        </Suspense>
-      </>
-    );
-  } else return <p>Loading</p>;
+        <SearchBox searchData={search} clearSearch={clearSearch} />
+      </Suspense>
+    </>
+  );
 }
 
 export default Table;

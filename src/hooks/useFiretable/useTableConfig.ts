@@ -17,7 +17,12 @@ const useTableConfig = (tablePath: string) => {
   }, [tableConfigState.doc]);
 
   const setTable = (table: string) => {
-    documentDispatch({ path: `${table}/_FIRETABLE_`, columns: [], doc: null });
+    documentDispatch({
+      path: `${table}/_FIRETABLE_`,
+      columns: [],
+      doc: null,
+      loading: true,
+    });
   };
   const add = (name: string, type: FieldType, data?: any) => {
     //TODO: validation

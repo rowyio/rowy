@@ -22,6 +22,8 @@ export type FiretableState = {
   config: { rowHeight: number };
   columns: any;
   rows: any;
+  loadingRows: boolean;
+  loadingColumns: boolean;
 };
 export type FireTableFilter = {
   key: string;
@@ -45,6 +47,8 @@ const useFiretable = (collectionName: string) => {
     columns: tableConfig.columns,
     config: { rowHeight: tableConfig.rowHeight },
     rows: tableState.rows,
+    loadingRows: tableState.loading,
+    loadingColumns: tableConfig.loading,
   };
   const actions: FiretableActions = {
     column: {

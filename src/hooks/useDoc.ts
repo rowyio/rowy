@@ -43,6 +43,10 @@ const useDoc = (intialOverrides: any) => {
           ref: snapshot.ref,
           loading: false,
         });
+      } else {
+        documentDispatch({
+          loading: false,
+        });
       }
     });
     documentDispatch({ unsubscribe });
