@@ -6,9 +6,10 @@ import { FieldType } from ".";
 import Chip from "@material-ui/core/Chip";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
-import AddIcon from "@material-ui/icons/AddBox";
-// TODO:  indicate state completion / error
-// TODO: Create an interface for props
+import AddIcon from "@material-ui/icons/NoteAdd";
+import CircularProgress from "@material-ui/core/CircularProgress";
+// TODO:  indicate state error
+// TODO: multi support
 
 interface Props {
   value: any;
@@ -22,9 +23,12 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: "flex",
-      flexWrap: "wrap",
+      // flexDirection: "column",
+      alignContent: "center",
+      width: "100%",
     },
-    chip: {},
+    chip: { margin: theme.spacing(5) },
+    progress: { margin: theme.spacing(5) },
   })
 );
 
@@ -32,6 +36,7 @@ const File = (props: Props) => {
   const { fieldName, value, row, onSubmit } = props;
   const classes = useStyles();
   const [uploaderState, upload] = useUploader();
+  const { progress } = uploaderState;
   const onDrop = useCallback(acceptedFiles => {
     // Do something with the files
     const imageFile = acceptedFiles[0];
@@ -49,7 +54,7 @@ const File = (props: Props) => {
   };
 
   return (
-    <div {...getRootProps()}>
+    <div className={classes.root} {...getRootProps()}>
       <input {...getInputProps()} />
       {value && value.length !== 0 ? (
         <Chip
@@ -67,6 +72,18 @@ const File = (props: Props) => {
         <IconButton>
           <AddIcon />
         </IconButton>
+      )}
+      {progress < 100 ? (
+        <div className={classes.progress}>
+          <CircularProgress
+            size={25}
+            variant="determinate"
+            value={progress}
+            color="secondary"
+          />
+        </div>
+      ) : (
+        <div />
       )}
     </div>
   );

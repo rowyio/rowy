@@ -23,7 +23,7 @@ import { CLOUD_FUNCTIONS } from "firebase/callables";
 import Typography from "@material-ui/core/Typography";
 import AddIcon from "@material-ui/icons/AddCircle";
 import SettingsIcon from "@material-ui/icons/Settings";
-
+import useHotkeys from "../../hooks/useHotkeys";
 import useWindowSize from "../../hooks/useWindowSize";
 import { DraggableHeader } from "react-data-grid-addons";
 import Confirmation from "components/Confirmation";
@@ -88,6 +88,10 @@ interface Props {
 function Table(props: Props) {
   const { collection, filters } = props;
   const { tableState, tableActions } = useFiretable(collection);
+  const [selectedCell, setSelectedCell] = useState<{ row: any; column: any }>({
+    row: {},
+    column: {},
+  });
   const [search, setSearch] = useState({
     config: undefined,
     collection: "",
@@ -96,6 +100,95 @@ function Table(props: Props) {
 
   const size = useWindowSize();
 
+  useHotkeys(
+    "cmd+c",
+    () => {
+      handleCopy();
+    },
+    [selectedCell]
+  );
+  useHotkeys(
+    "ctrl+c",
+    () => {
+      handleCopy();
+    },
+    [selectedCell]
+  );
+  useHotkeys(
+    "cmd+v",
+    () => {
+      handlePaste();
+    },
+    [selectedCell]
+  );
+  useHotkeys(
+    "ctrl+v",
+    () => {
+      handlePaste();
+    },
+    [selectedCell]
+  );
+  useHotkeys(
+    "ctrl+x",
+    () => {
+      handleCut();
+    },
+    [selectedCell]
+  );
+  useHotkeys(
+    "cmd+x",
+    () => {
+      handleCut();
+    },
+    [selectedCell]
+  );
+  const handlePaste = async () => {
+    const { row, column } = selectedCell;
+    switch (column.type) {
+      case FieldType.number:
+      case FieldType.rating:
+      case FieldType.email:
+      case FieldType.simpleText:
+      case FieldType.PhoneNumber:
+        const newValue = await navigator.clipboard.readText();
+        onSubmit(column.key, row)(newValue);
+        break;
+
+      default:
+        break;
+    }
+  };
+  const handleCopy = () => {
+    const { row, column } = selectedCell;
+    switch (column.type) {
+      case FieldType.number:
+      case FieldType.rating:
+      case FieldType.email:
+      case FieldType.simpleText:
+      case FieldType.PhoneNumber:
+        navigator.clipboard.writeText(row[column.key]);
+        break;
+
+      default:
+        break;
+    }
+  };
+  const handleCut = () => {
+    const { row, column } = selectedCell;
+    switch (column.type) {
+      case FieldType.number:
+      case FieldType.rating:
+      case FieldType.email:
+      case FieldType.simpleText:
+      case FieldType.PhoneNumber:
+        navigator.clipboard.writeText(row[column.key]);
+        onSubmit(column.key, row)(null);
+        break;
+
+      default:
+        break;
+    }
+  };
   useEffect(() => {
     tableActions.table.set(collection, filters);
   }, [collection, filters]);
@@ -174,7 +267,7 @@ function Table(props: Props) {
   const onHeaderDrop = (dragged: any, target: any) => {
     tableActions.column.reorder(dragged, target);
   };
-  let columns = [];
+  let columns: any[] = [];
   if (!tableState.loadingColumns) {
     columns = tableState.columns.map((column: any) => ({
       width: 220,
@@ -254,7 +347,14 @@ function Table(props: Props) {
               onGridRowsUpdated={onGridRowsUpdated}
               enableCellSelect={true}
               minHeight={tableHeight}
-              onCellSelected={onCellSelected}
+              onCellSelected={(coordinates: {
+                rowIdx: number;
+                idx: number;
+              }) => {
+                const row = rows[coordinates.rowIdx];
+                const column = columns[coordinates.idx];
+                setSelectedCell({ row, column });
+              }}
               onColumnResize={(idx, width) =>
                 tableActions.column.resize(idx, width)
               }

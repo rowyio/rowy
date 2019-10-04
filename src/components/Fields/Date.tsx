@@ -41,7 +41,7 @@ const Date = (props: Props) => {
       {fieldType === FieldType.date ? (
         <DatePicker
           className={classes.field}
-          value={value ? value.toDate() : null}
+          value={value && value.toDate ? value.toDate() : null}
           onChange={handleDateChange}
           format="dd/MM/yy"
           emptyLabel="select a date"

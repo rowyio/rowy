@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ExpandIcon from "@material-ui/icons/AspectRatio";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
@@ -33,7 +33,9 @@ interface Props {
 const LongText = (props: Props) => {
   const { value, onSubmit } = props;
   const [text, setText] = useState(value ? value : "");
-
+  useEffect(() => {
+    if (text !== value) setText(value);
+  }, [value]);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const classes = useStyles();
 

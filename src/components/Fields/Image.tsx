@@ -7,8 +7,9 @@ import { FieldType } from ".";
 import IconButton from "@material-ui/core/IconButton";
 import AddIcon from "@material-ui/icons/AddAPhoto";
 import CircularProgress from "@material-ui/core/CircularProgress";
-// TODO:  indicate state completion / error
-// TODO: Create an interface for props
+// TODO:  indicate error state
+
+// TODO: multi support
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
