@@ -242,6 +242,7 @@ function Table(props: Props) {
         <Suspense fallback={<div>Loading table...</div>}>
           <DraggableContainer onHeaderDrop={onHeaderDrop}>
             <ReactDataGrid
+              headerRowHeight={45}
               rowHeight={rowHeight}
               columns={columns}
               rowGetter={i => rows[i]}
