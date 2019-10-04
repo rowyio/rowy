@@ -227,6 +227,23 @@ function Table(props: Props) {
     ...tableState.rows.map((row: any) => ({ rowHeight, ...row })),
     {},
   ];
+  const RowRenderer = (props: any) => {
+    const { renderBaseRow, ...rest } = props;
+    console.log(rest);
+    if (rows.length === rest.idx + 1) {
+      return (
+        <Button
+          onClick={() => {
+            tableActions.row.add();
+          }}
+        >
+          Add a new row
+        </Button>
+      );
+    } else {
+      return renderBaseRow(rest);
+    }
+  };
 
   return (
     <>
@@ -245,8 +262,10 @@ function Table(props: Props) {
           <DraggableContainer onHeaderDrop={onHeaderDrop}>
             <ReactDataGrid
               headerRowHeight={45}
+              rowRenderer={RowRenderer}
               rowHeight={rowHeight}
               columns={columns}
+              enableCellSelect={true}
               rowGetter={i => rows[i]}
               rowsCount={rows.length}
               onGridRowsUpdated={onGridRowsUpdated}

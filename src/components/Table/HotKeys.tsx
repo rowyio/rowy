@@ -53,6 +53,7 @@ const Hotkeys = (props: any) => {
     FieldType.simpleText,
     FieldType.PhoneNumber,
     FieldType.singleSelect,
+    FieldType.longText,
     FieldType.url,
   ];
   const numberFields = [FieldType.number, FieldType.rating];
