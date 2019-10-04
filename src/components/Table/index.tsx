@@ -174,7 +174,7 @@ function Table(props: Props) {
   const onHeaderDrop = (dragged: any, target: any) => {
     tableActions.column.reorder(dragged, target);
   };
-  if (tableState.columns) {
+  if (!tableState.loadingColumns) {
     let columns = tableState.columns.map((column: any) => ({
       width: 220,
       draggable: true,
@@ -224,12 +224,13 @@ function Table(props: Props) {
         </Confirmation>
       ),
     });
+    const tableHeight = size.height ? size.height - 110 : 500;
     const rowHeight = tableState.config.rowHeight;
     const rows = tableState.rows.map((row: any) => ({ rowHeight, ...row }));
 
     return (
       <>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div>Loading header...</div>}>
           <TableHeader
             collection={collection}
             rowHeight={rowHeight}
@@ -237,7 +238,8 @@ function Table(props: Props) {
             columns={columns}
             addRow={tableActions.row.add}
           />
-
+        </Suspense>
+        <Suspense fallback={<div>Loading table...</div>}>
           <DraggableContainer onHeaderDrop={onHeaderDrop}>
             <ReactDataGrid
               rowHeight={rowHeight}
@@ -246,29 +248,36 @@ function Table(props: Props) {
               rowsCount={rows.length}
               onGridRowsUpdated={onGridRowsUpdated}
               enableCellSelect={true}
-              minHeight={size.height ? size.height - 102 : 100}
+              minHeight={tableHeight}
               onCellSelected={onCellSelected}
               onColumnResize={(idx, width) =>
                 tableActions.column.resize(idx, width)
               }
               emptyRowsView={() => {
                 return (
-                  <div
-                    style={{
-                      textAlign: "center",
-                      backgroundColor: "#ddd",
-                      padding: "100px",
-                    }}
-                  >
-                    <h3>no data to show</h3>
-                    <Button
-                      onClick={() => {
-                        tableActions.row.add();
-                      }}
-                    >
-                      Add Row
-                    </Button>
-                  </div>
+                  <>
+                    {tableState.loadingRows ? (
+                      <h3>loading row</h3>
+                    ) : (
+                      <div
+                        style={{
+                          height: tableHeight,
+                          textAlign: "center",
+                          backgroundColor: "#eee",
+                          padding: "100px",
+                        }}
+                      >
+                        <h3>no data to show</h3>
+                        <Button
+                          onClick={() => {
+                            tableActions.row.add();
+                          }}
+                        >
+                          Add Row
+                        </Button>
+                      </div>
+                    )}
+                  </>
                 );
               }}
             />
@@ -285,7 +294,7 @@ function Table(props: Props) {
         </Suspense>
       </>
     );
-  } else return <p>Loading</p>;
+  } else return <p>fetching columns</p>;
 }
 
 export default Table;

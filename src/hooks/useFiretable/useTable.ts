@@ -149,7 +149,9 @@ const useTable = (initialOverrides: any) => {
       .delete();
   };
   const setTable = (tableCollection: string, filters?: FireTableFilter) => {
-    tableDispatch({ path: tableCollection });
+    if (tableCollection !== tableState.path) {
+      tableDispatch({ path: tableCollection, rows: [] });
+    }
     if (filters) tableDispatch({ filters });
   };
 
