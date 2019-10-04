@@ -144,8 +144,19 @@ function Table(props: Props) {
   );
   const handlePaste = async () => {
     const { row, column } = selectedCell;
-    const newValue = await navigator.clipboard.readText();
-    onSubmit(column.key, row)(newValue);
+    switch (column.type) {
+      case FieldType.number:
+      case FieldType.rating:
+      case FieldType.email:
+      case FieldType.simpleText:
+      case FieldType.PhoneNumber:
+        const newValue = await navigator.clipboard.readText();
+        onSubmit(column.key, row)(newValue);
+        break;
+
+      default:
+        break;
+    }
   };
   const handleCopy = () => {
     const { row, column } = selectedCell;
@@ -164,8 +175,19 @@ function Table(props: Props) {
   };
   const handleCut = () => {
     const { row, column } = selectedCell;
-    navigator.clipboard.writeText(row[column.key]);
-    onSubmit(column.key, row)(null);
+    switch (column.type) {
+      case FieldType.number:
+      case FieldType.rating:
+      case FieldType.email:
+      case FieldType.simpleText:
+      case FieldType.PhoneNumber:
+        navigator.clipboard.writeText(row[column.key]);
+        onSubmit(column.key, row)(null);
+        break;
+
+      default:
+        break;
+    }
   };
   useEffect(() => {
     tableActions.table.set(collection, filters);
