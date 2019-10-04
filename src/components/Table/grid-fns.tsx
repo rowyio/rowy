@@ -51,8 +51,9 @@ export const DateFormatter = (key: string, fieldType: FieldType) => (
   );
 };
 
-export const onGridRowsUpdated = (props: any) => {
-  const { fromRowData, updated } = props;
+export const onGridRowsUpdated = (event: any) => {
+  const { fromRowData, updated } = event;
+
   onSubmit(Object.keys(updated)[0], fromRowData)(Object.values(updated)[0]);
 };
 export const onCellSelected = (args: any) => {};
