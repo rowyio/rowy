@@ -230,7 +230,6 @@ function Table(props: Props) {
   ];
   const RowRenderer = (props: any) => {
     const { renderBaseRow, ...rest } = props;
-
     if (rows.length === rest.idx + 1) {
       return (
         <Button
