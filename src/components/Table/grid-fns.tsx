@@ -13,7 +13,7 @@ const UrlLink = lazy(() => import("../Fields/UrlLink"));
 const Image = lazy(() => import("../Fields/Image"));
 const File = lazy(() => import("../Fields/File"));
 const LongText = lazy(() => import("../Fields/LongText"));
-const ColorPicker = lazy(() => import("../Fields/ColorPicker"));
+const Color = lazy(() => import("../Fields/Color"));
 
 export const editable = (fieldType: FieldType) => {
   switch (fieldType) {
@@ -81,7 +81,7 @@ export const cellFormatter = (column: any) => {
       return (props: any) => {
         return (
           <Suspense fallback={<div />}>
-            <ColorPicker {...props} onSubmit={onSubmit(key, props.row)} />
+            <Color {...props} onSubmit={onSubmit(key, props.row)} />
           </Suspense>
         );
       };
