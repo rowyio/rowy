@@ -45,9 +45,7 @@ const LongText = (props: Props) => {
     setAnchorEl(event.currentTarget);
   };
   const onClickAway = () => {
-    if (text !== value) {
-      onSubmit(text);
-    }
+    if (text !== value) onSubmit(text);
   };
   const open = anchorEl !== null;
   const id = open ? "no-transition-popper" : undefined;
