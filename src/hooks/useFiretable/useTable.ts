@@ -31,7 +31,7 @@ const tableInitialState = {
   path: null,
   filters: [],
   prevLimit: 0,
-  limit: 100,
+  limit: 20,
   loading: true,
   sort: { field: "createdAt", direction: "asc" },
   cap: CAP,
@@ -169,8 +169,12 @@ const useTable = (initialOverrides: any) => {
       });
     }
   };
-
-  const tableActions = { deleteRow, setTable, addRow };
+  const moreRows = (additionalRows?: number) => {
+    tableDispatch({
+      limit: tableState.limit + (additionalRows ? additionalRows : 20),
+    });
+  };
+  const tableActions = { deleteRow, setTable, addRow, moreRows };
   return [tableState, tableActions];
 };
 

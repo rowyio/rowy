@@ -25,6 +25,7 @@ export const cloudFunction = (
     });
 };
 
+// TODO: data formating dates,
 export const algoliaUpdateDoc = (data: {
   collection: string;
   id: string;
