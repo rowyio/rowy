@@ -38,7 +38,7 @@ const useFiretable = (collectionName: string) => {
   const [tableState, tableActions] = useTable({
     path: collectionName,
   });
-
+  /** set collection path of table */
   const setTable = (collectionName: string, filters: FireTableFilter[]) => {
     configActions.setTable(collectionName);
     tableActions.setTable(collectionName, filters);

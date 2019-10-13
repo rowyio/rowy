@@ -8,6 +8,7 @@ export enum DocActions {
 const documentReducer = (prevState: any, newProps: any) => {
   switch (newProps.action) {
     case DocActions.update:
+      // takes data object form the dispatcher and updates doc
       prevState.ref.update({ ...newProps.data });
       return { ...prevState, doc: { ...prevState.doc, ...newProps.data } };
     case DocActions.delete:

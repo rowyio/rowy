@@ -5,24 +5,11 @@ import equals from "ramda/es/equals";
 import firebase from "firebase/app";
 import { algoliaUpdateDoc } from "../../firebase/callables";
 import { FireTableFilter } from ".";
-import filter from "ramda/es/filter";
 
-const CAP = 500;
+const CAP = 1000; // safety  paramter sets the  upper limit of number of docs fetched by this hook
 
 const tableReducer = (prevState: any, newProps: any) => {
-  if (newProps.type) {
-    switch (newProps.type) {
-      case "more":
-        if (prevState.limit < prevState.cap)
-          // rows count hardCap
-          return { ...prevState, limit: prevState.limit + 10 };
-        else return { ...prevState };
-      default:
-        break;
-    }
-  } else {
-    return { ...prevState, ...newProps };
-  }
+  return { ...prevState, ...newProps };
 };
 const tableInitialState = {
   rows: [],
@@ -42,6 +29,11 @@ const useTable = (initialOverrides: any) => {
     ...tableInitialState,
     ...initialOverrides,
   });
+  /**  set collection listener
+   *  @param filters
+   *  @param limit max number of docs
+   *  @param sort
+   */
   const getRows = (
     filters: {
       key: string;
@@ -104,6 +96,7 @@ const useTable = (initialOverrides: any) => {
         }
       },
       (error: Error) => {
+        //TODO:callable to create new index
         if (error.message.includes("indexes?create_composite=")) {
           const url =
             "https://console.firebase.google.com/project/firetable-antler/database/firestore/" +
@@ -139,6 +132,10 @@ const useTable = (initialOverrides: any) => {
       }
     };
   }, [tableState.filters, tableState.limit, tableState.path]);
+  /**  used deleting row/doc
+   *  @param rowIndex local position
+   *  @param documentId firestore document id
+   */
   const deleteRow = (rowIndex: number, documentId: string) => {
     //remove row locally
     tableState.rows.splice(rowIndex, 1);
@@ -148,6 +145,10 @@ const useTable = (initialOverrides: any) => {
       .doc(documentId)
       .delete();
   };
+  /**  used for setting up the table listener
+   *  @param tableCollection firestore collection path
+   *  @param filters specify filters to be applied to the query
+   */
   const setTable = (tableCollection: string, filters?: FireTableFilter) => {
     if (tableCollection !== tableState.path) {
       tableDispatch({ path: tableCollection, rows: [] });
@@ -155,6 +156,9 @@ const useTable = (initialOverrides: any) => {
     if (filters) tableDispatch({ filters });
   };
 
+  /**  creating new document/row
+   *  @param data(optional: default will create empty row)
+   */
   const addRow = async (data?: any) => {
     const ref = await db.collection(tableState.path).add({
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
@@ -169,6 +173,9 @@ const useTable = (initialOverrides: any) => {
       });
     }
   };
+  /**  used for incrementing the number of rows fetched
+   *  @param additionalRows number additional rows to be fetched (optional: default is 20)
+   */
   const moreRows = (additionalRows?: number) => {
     tableDispatch({
       limit: tableState.limit + (additionalRows ? additionalRows : 20),

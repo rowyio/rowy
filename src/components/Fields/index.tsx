@@ -7,6 +7,7 @@ import PhoneIcon from "@material-ui/icons/Phone";
 import ImageIcon from "@material-ui/icons/Photo";
 import FileIcon from "@material-ui/icons/InsertDriveFileOutlined";
 import AttachmentIcon from "@material-ui/icons/AttachFile";
+import PalleteIcon from "@material-ui/icons/Palette";
 import DateIcon from "@material-ui/icons/CalendarToday";
 import TimeIcon from "@material-ui/icons/AccessTime";
 import RatingIcon from "@material-ui/icons/StarHalf";
@@ -26,6 +27,7 @@ export enum FieldType {
   dateTime = "DATE_TIME",
   number = "NUMBER",
   url = "URL",
+  color = "COLOR",
   rating = "RATING",
   image = "IMAGE",
   file = "FILE",
@@ -50,6 +52,7 @@ export const FIELDS = [
   { icon: <FileIcon />, name: "Single Select", type: FieldType.singleSelect },
   { icon: <FileIcon />, name: "Multi Select", type: FieldType.multiSelect },
   { icon: <FileIcon />, name: "Doc Select", type: FieldType.documentSelect },
+  { icon: <PalleteIcon />, name: "Color", type: FieldType.color },
 ];
 
 export const getFieldIcon = (type: FieldType) => {
