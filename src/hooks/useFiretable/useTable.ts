@@ -5,7 +5,6 @@ import equals from "ramda/es/equals";
 import firebase from "firebase/app";
 import { algoliaUpdateDoc } from "../../firebase/callables";
 import { FireTableFilter } from ".";
-import filter from "ramda/es/filter";
 
 const CAP = 1000; // safety  paramter sets the  upper limit of number of docs fetched by this hook
 
@@ -30,6 +29,11 @@ const useTable = (initialOverrides: any) => {
     ...tableInitialState,
     ...initialOverrides,
   });
+  /**  set collection listener
+   *  @param filters
+   *  @param limit max number of docs
+   *  @param sort
+   */
   const getRows = (
     filters: {
       key: string;

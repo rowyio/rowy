@@ -1,3 +1,9 @@
+/**
+ * reposition an element in an array
+ * @param arr array
+ * @param old_index index of element to be moved
+ * @param new_index new position of the moved element
+ */
 export const arrayMover = (
   arr: any[],
   old_index: number,

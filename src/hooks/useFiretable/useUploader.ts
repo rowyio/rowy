@@ -2,13 +2,13 @@ import { useReducer } from "react";
 import { bucket } from "../../firebase/index";
 
 import firebase from "firebase/app";
-const intialState = { progress: 0 };
+const initialState = { progress: 0 };
 const uploadReducer = (prevState: any, newProps: any) => {
   return { ...prevState, ...newProps };
 };
 const useUploader = () => {
   const [uploaderState, uploaderDispatch] = useReducer(uploadReducer, {
-    ...intialState,
+    ...initialState,
   });
 
   const upload = (
