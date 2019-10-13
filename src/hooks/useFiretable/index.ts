@@ -10,7 +10,7 @@ export type FiretableActions = {
     update: Function;
     reorder: Function;
   };
-  row: { add: any; delete: Function };
+  row: { add: Function; delete: Function; more: Function };
   table: {
     set: Function;
     filter: Function;
@@ -20,15 +20,17 @@ export type FiretableActions = {
 
 export type FiretableState = {
   config: { rowHeight: number };
-  columns: any;
-  rows: any;
+  columns: any[];
+  rows: any[];
+  rowsLimit: number;
+
   loadingRows: boolean;
   loadingColumns: boolean;
 };
 export type FireTableFilter = {
   key: string;
   operator: "==" | "<" | ">" | ">=" | "<=" | string;
-  value: any;
+  value: string | number | boolean;
 };
 
 const useFiretable = (collectionName: string) => {
@@ -47,6 +49,7 @@ const useFiretable = (collectionName: string) => {
     columns: tableConfig.columns,
     config: { rowHeight: tableConfig.rowHeight },
     rows: tableState.rows,
+    rowsLimit: tableState.limit,
     loadingRows: tableState.loading,
     loadingColumns: tableConfig.loading,
   };
@@ -62,6 +65,7 @@ const useFiretable = (collectionName: string) => {
     row: {
       add: tableActions.addRow,
       delete: tableActions.deleteRow,
+      more: tableActions.moreRows,
     },
     table: {
       updateConfig: configActions.updateConfig,

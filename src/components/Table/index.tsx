@@ -23,6 +23,7 @@ import useWindowSize from "../../hooks/useWindowSize";
 import { DraggableHeader } from "react-data-grid-addons";
 import Confirmation from "components/Confirmation";
 import DeleteIcon from "@material-ui/icons/Delete";
+
 const Hotkeys = lazy(() => import("./HotKeys"));
 const ReactDataGrid = lazy(() => import("react-data-grid"));
 const TableHeader = lazy(() => import("./TableHeader"));
@@ -243,7 +244,13 @@ function Table(props: Props) {
       return renderBaseRow(rest);
     }
   };
-
+  const handleRowGetter = (i: number) => {
+    // intercepting row getter to detect when table is reaching the bottom and fetch more rows
+    if (tableState.rowsLimit - i === 1) {
+      tableActions.row.more();
+    }
+    return rows[i];
+  };
   return (
     <>
       <Suspense fallback={<div>Loading header...</div>}>
@@ -265,7 +272,7 @@ function Table(props: Props) {
               rowHeight={rowHeight}
               columns={columns}
               enableCellSelect={true}
-              rowGetter={i => rows[i]}
+              rowGetter={handleRowGetter}
               rowsCount={rows.length}
               onGridRowsUpdated={onGridRowsUpdated}
               minHeight={tableHeight}
