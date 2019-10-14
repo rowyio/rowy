@@ -282,7 +282,10 @@ function Table(props: Props) {
               }) => {
                 const row = rows[coordinates.rowIdx];
                 const column = columns[coordinates.idx];
-                setSelectedCell({ row, column });
+                if (editable(column.type)) {
+                  // only editable fields are stored selectedCell, temporary fix for custom fields
+                  setSelectedCell({ row, column });
+                }
               }}
               onColumnResize={(idx, width) =>
                 tableActions.column.resize(idx, width)
