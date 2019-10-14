@@ -32,7 +32,7 @@ interface Props {
 
 const LongText = (props: Props) => {
   const { value, onSubmit } = props;
-  const [text, setText] = useState(value ? value : "");
+  const [text, setText] = useState(value ? JSON.stringify(value) : "");
   useEffect(() => {
     if (text !== value) setText(value);
   }, [value]);
