@@ -40,7 +40,7 @@ const Confirmation = (props: Props) => {
   const handleClose = () => {
     setShowDialog(false);
   };
-
+  //Gets the function of the wrapped button to use for execution on conformation
   const confirmHandler = children.props.onClick;
   const button = React.cloneElement(children, {
     onClick: () => {

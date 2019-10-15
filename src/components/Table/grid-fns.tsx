@@ -27,6 +27,7 @@ export const editable = (fieldType: FieldType) => {
     case FieldType.longText:
     case FieldType.documentSelect:
     case FieldType.color:
+    case FieldType.last:
       return false;
     default:
       return true;
