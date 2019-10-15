@@ -23,6 +23,7 @@ import useWindowSize from "../../hooks/useWindowSize";
 import { DraggableHeader } from "react-data-grid-addons";
 import Confirmation from "components/Confirmation";
 import DeleteIcon from "@material-ui/icons/Delete";
+import DuplicateIcon from "@material-ui/icons/FileCopy";
 
 const Hotkeys = lazy(() => import("./HotKeys"));
 const ReactDataGrid = lazy(() => import("react-data-grid"));
@@ -191,33 +192,50 @@ function Table(props: Props) {
       isNew: true,
       key: "new",
       name: "Add column",
+      type: FieldType.last,
       width: 160,
       headerRenderer: headerRenderer,
       formatter: (props: any) => (
-        <Confirmation
-          message={{
-            title: "Delete Row",
-            body: "Are you sure you want to delete this row",
-            confirm: (
-              <>
-                <DeleteIcon /> Delete
-              </>
-            ),
-          }}
-        >
-          <Button
-            color="primary"
-            onClick={async () => {
-              props.row.ref.delete();
-              await deleteAlgoliaRecord({
-                id: props.row.ref.id,
-                collection: props.row.ref.parent.path,
-              });
+        <>
+          <Confirmation
+            message={{
+              title: "Delete  ",
+              body: "Are you sure you want to delete this row",
+              confirm: (
+                <>
+                  <DeleteIcon /> Delete
+                </>
+              ),
             }}
           >
-            Delete row
-          </Button>
-        </Confirmation>
+            <IconButton
+              color="primary"
+              onClick={async () => {
+                props.row.ref.delete();
+                await deleteAlgoliaRecord({
+                  id: props.row.ref.id,
+                  collection: props.row.ref.parent.path,
+                });
+              }}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </Confirmation>
+          <IconButton
+            color="secondary"
+            onClick={() => {
+              const clonedRow = { ...props.row };
+              // remove metadata
+              delete clonedRow.ref;
+              delete clonedRow.rowHeight;
+              delete clonedRow.updatedAt;
+              delete clonedRow.createdAt;
+              tableActions.row.add(clonedRow);
+            }}
+          >
+            <DuplicateIcon />
+          </IconButton>
+        </>
       ),
     });
   }

@@ -34,6 +34,7 @@ export enum FieldType {
   singleSelect = "SINGLE_SELECT",
   multiSelect = "MULTI_SELECT",
   documentSelect = "DOCUMENT_SELECT",
+  last = "LAST",
 }
 
 export const FIELDS = [
