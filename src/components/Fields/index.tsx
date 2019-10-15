@@ -56,15 +56,25 @@ export const FIELDS = [
   { icon: <PalleteIcon />, name: "Color", type: FieldType.color },
 ];
 
-export const getFieldIcon = (type: FieldType) => {
-  return find(propEq("type", type))(FIELDS).icon;
+/**
+ * returns icon associated with field type
+ * @param fieldType
+ */
+export const getFieldIcon = (fieldType: FieldType) => {
+  return find(propEq("type", fieldType))(FIELDS).icon;
 };
-
+/**
+ * returns true if it receives an existing fieldType
+ * @param fieldType
+ */
 export const isFieldType = (fieldType: any) => {
   const fieldTypes = FIELDS.map(field => field.type);
   return fieldTypes.includes(fieldType);
 };
 
+/**
+ * Returns dropdown component of all available types
+ */
 export const FieldsDropDown = (value: FieldType | null, onChange: any) => {
   return (
     <Select
