@@ -1,7 +1,6 @@
 import React, { useState, useEffect, lazy, Suspense } from "react";
 
 import useFiretable, { FireTableFilter } from "../../hooks/useFiretable";
-import { createStyles, makeStyles } from "@material-ui/core/styles";
 
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
@@ -24,7 +23,8 @@ import { DraggableHeader } from "react-data-grid-addons";
 import Confirmation from "components/Confirmation";
 import DeleteIcon from "@material-ui/icons/Delete";
 import DuplicateIcon from "@material-ui/icons/FileCopy";
-
+import useStyles from "./useStyle";
+import EmptyTable from "./EmptyTable";
 const Hotkeys = lazy(() => import("./HotKeys"));
 const ReactDataGrid = lazy(() => import("react-data-grid"));
 const TableHeader = lazy(() => import("./TableHeader"));
@@ -36,47 +36,6 @@ const { DraggableContainer } = DraggableHeader;
 const deleteAlgoliaRecord = functions.httpsCallable(
   CLOUD_FUNCTIONS.deleteAlgoliaRecord
 );
-
-const useStyles = makeStyles(Theme => {
-  return createStyles({
-    typography: {
-      padding: 1,
-    },
-    header: {
-      display: "flex",
-      flex: "wrap",
-      alignContent: "center",
-      justifyContent: "space-between",
-    },
-    headerLabel: {
-      display: "flex",
-      flex: "wrap",
-      alignContent: "center",
-    },
-    headerButton: {
-      width: "100%",
-    },
-    tableHeader: {
-      padding: 8,
-      width: "100%",
-      display: "flex",
-      flex: "wrap",
-      alignItems: "center",
-      justifyContent: "space-between",
-      // background: Theme.palette.primary.main,
-    },
-    tableActions: {
-      display: "flex",
-      flex: "wrap",
-      alignContent: "center",
-      // background: Theme.palette.primary.main,
-    },
-    formControl: {
-      margin: 2,
-      minWidth: 120,
-    },
-  });
-});
 
 interface Props {
   collection: string;
@@ -242,10 +201,11 @@ function Table(props: Props) {
 
   const tableHeight = size.height ? size.height - 142 : 500;
   const rowHeight = tableState.config.rowHeight;
-  const rows = [
-    ...tableState.rows.map((row: any) => ({ rowHeight, ...row })),
-    {},
-  ];
+
+  const rows =
+    tableState.rows.length !== 0
+      ? [...tableState.rows.map((row: any) => ({ rowHeight, ...row })), {}]
+      : [];
   const RowRenderer = (props: any) => {
     const { renderBaseRow, ...rest } = props;
     if (rows.length === rest.idx + 1) {
@@ -262,12 +222,15 @@ function Table(props: Props) {
       return renderBaseRow(rest);
     }
   };
-  const handleRowGetter = (i: number) => {
-    // intercepting row getter to detect when table is reaching the bottom and fetch more rows
-    if (tableState.rowsLimit - i === 1) {
+  /**
+   * Intercepting row getter to detect when table is requesting the last local row the bottom and fetch more rows
+   * @param index
+   */
+  const handleRowGetter = (index: number) => {
+    if (tableState.rowsLimit - index === 1) {
       tableActions.row.more();
     }
-    return rows[i];
+    return rows[index];
   };
   return (
     <>
@@ -308,33 +271,13 @@ function Table(props: Props) {
               onColumnResize={(idx, width) =>
                 tableActions.column.resize(idx, width)
               }
-              emptyRowsView={() => {
-                return (
-                  <>
-                    {tableState.loadingRows ? (
-                      <h3>loading row</h3>
-                    ) : (
-                      <div
-                        style={{
-                          height: tableHeight,
-                          textAlign: "center",
-                          backgroundColor: "#eee",
-                          padding: "100px",
-                        }}
-                      >
-                        <h3>no data to show</h3>
-                        <Button
-                          onClick={() => {
-                            tableActions.row.add();
-                          }}
-                        >
-                          Add Row
-                        </Button>
-                      </div>
-                    )}
-                  </>
-                );
-              }}
+              emptyRowsView={() => (
+                <EmptyTable
+                  isLoading={tableState.loadingRows}
+                  tableHeight={tableHeight}
+                  addRow={tableActions.row.add}
+                />
+              )}
             />
           </DraggableContainer>
         ) : (
@@ -353,5 +296,4 @@ function Table(props: Props) {
     </>
   );
 }
-
 export default Table;
