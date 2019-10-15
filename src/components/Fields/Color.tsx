@@ -74,7 +74,6 @@ const Color = (props: Props) => {
             setHex(props.hex);
           }}
           onChangeComplete={props => {
-            console.log(props);
             onSubmit({ hex: props.hex, hsl: props.hsl, rgb: props.rgb });
             setAnchorEl(null);
           }}

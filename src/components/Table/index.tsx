@@ -19,20 +19,16 @@ import Typography from "@material-ui/core/Typography";
 import AddIcon from "@material-ui/icons/AddCircle";
 import SettingsIcon from "@material-ui/icons/Settings";
 import useWindowSize from "../../hooks/useWindowSize";
-import { DraggableHeader } from "react-data-grid-addons";
 import Confirmation from "components/Confirmation";
 import DeleteIcon from "@material-ui/icons/Delete";
 import DuplicateIcon from "@material-ui/icons/FileCopy";
 import useStyles from "./useStyle";
-import EmptyTable from "./EmptyTable";
+import Grid from "./Grid";
 const Hotkeys = lazy(() => import("./HotKeys"));
-const ReactDataGrid = lazy(() => import("react-data-grid"));
 const TableHeader = lazy(() => import("./TableHeader"));
 const SearchBox = lazy(() => import("../SearchBox"));
 const DocSelect = lazy(() => import("../Fields/DocSelect"));
 const ColumnEditor = lazy(() => import("./ColumnEditor/index"));
-
-const { DraggableContainer } = DraggableHeader;
 const deleteAlgoliaRecord = functions.httpsCallable(
   CLOUD_FUNCTIONS.deleteAlgoliaRecord
 );
@@ -243,47 +239,27 @@ function Table(props: Props) {
           columns={columns}
           addRow={tableActions.row.add}
         />
-      </Suspense>
-      <Suspense fallback={<div>Loading table...</div>}>
-        {!tableState.loadingColumns ? (
-          <DraggableContainer onHeaderDrop={onHeaderDrop}>
-            <ReactDataGrid
-              headerRowHeight={45}
-              rowRenderer={RowRenderer}
-              rowHeight={rowHeight}
-              columns={columns}
-              enableCellSelect={true}
-              rowGetter={handleRowGetter}
-              rowsCount={rows.length}
-              onGridRowsUpdated={onGridRowsUpdated}
-              minHeight={tableHeight}
-              onCellSelected={(coordinates: {
-                rowIdx: number;
-                idx: number;
-              }) => {
-                const row = rows[coordinates.rowIdx];
-                const column = columns[coordinates.idx];
-                if (editable(column.type)) {
-                  // only editable fields are stored selectedCell, temporary fix for custom fields
-                  setSelectedCell({ row, column });
-                }
-              }}
-              onColumnResize={(idx, width) =>
-                tableActions.column.resize(idx, width)
-              }
-              emptyRowsView={() => (
-                <EmptyTable
-                  isLoading={tableState.loadingRows}
-                  tableHeight={tableHeight}
-                  addRow={tableActions.row.add}
-                />
-              )}
-            />
-          </DraggableContainer>
-        ) : (
-          <p>fetching columns</p>
-        )}
-
+      </Suspense>{" "}
+      {!tableState.loadingColumns ? (
+        <Grid
+          key={`${collection}-grid`}
+          onHeaderDrop={onHeaderDrop}
+          rowHeight={rowHeight}
+          columns={columns}
+          RowRenderer={RowRenderer}
+          handleRowGetter={handleRowGetter}
+          tableHeight={tableHeight}
+          onGridRowsUpdated={onGridRowsUpdated}
+          rows={rows}
+          resizeColumn={tableActions.column.resize}
+          loadingRows={tableState.loadingRows}
+          addRow={tableActions.row.add}
+          setSelectedCell={setSelectedCell}
+        />
+      ) : (
+        <p>fetching columns</p>
+      )}
+      <Suspense fallback={<div>Loading helpers...</div>}>
         <ColumnEditor
           handleClose={handleCloseHeader}
           anchorEl={anchorEl}

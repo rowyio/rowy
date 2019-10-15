@@ -3,7 +3,7 @@ import Button from "@material-ui/core/Button";
 
 const EmptyTable = (props: any) => {
   const { isLoading, tableHeight, addRow } = props;
-  if (isLoading) return <h3>loading row</h3>;
+  if (isLoading) return <h3>Fetching rows</h3>;
   else
     return (
       <div
