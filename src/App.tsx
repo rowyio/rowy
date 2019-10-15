@@ -6,6 +6,7 @@ import Theme from "./Theme";
 import AuthView from "./views/AuthView";
 import TableView from "./views/TableView";
 import TablesView from "./views/TablesView";
+import EditorView from "./views/EditorView";
 
 import { Route } from "react-router-dom";
 import { AuthProvider } from "./AuthProvider";
@@ -21,6 +22,7 @@ const App: React.FC = () => {
             <Route exact path="/auth" render={() => <AuthView />} />
             <PrivateRoute exact path="/" render={() => <TablesView />} />
             <PrivateRoute path="/table/" render={() => <TableView />} />
+            <PrivateRoute path="/editor" render={() => <EditorView />} />
           </div>
         </CustomBrowserRouter>
       </AuthProvider>
