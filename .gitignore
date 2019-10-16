@@ -20,7 +20,7 @@ cloud_functions/functions/lib
 .env.development.local
 .env.test.local
 .env.production.local
-.env
+www/.env
 .env.production
 
 npm-debug.log*
