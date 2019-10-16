@@ -1,6 +1,6 @@
 ## Firetable
 
-Firetable is a simple CMS for Google Cloud Firestore.
+Firetable an Excel view for Firestore.
 
 ## Setup instructions
 
@@ -12,7 +12,7 @@ Firetable is a simple CMS for Google Cloud Firestore.
 
 #### 2) Create an algolia project
 
-- get the generated appId,api key and search api key
+- get the generated appId,API key and search key
 
 #### 3) Clone repo
 
@@ -48,7 +48,7 @@ REACT_APP_ALGOLIA_SEARCH_KEY =
 #### 6) Install dependencies
 
 ```
-yarn
+cd www;yarn
 ```
 
 #### 7) Run project locally
