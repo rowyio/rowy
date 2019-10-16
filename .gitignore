@@ -2,6 +2,8 @@
 
 # dependencies
 /node_modules
+www/node_modules
+cloud_functions/functions/node_modules
 /.pnp
 .pnp.js
 
@@ -9,7 +11,8 @@
 /coverage
 
 # production
-/build
+www/build
+cloud_functions/functions/lib
 
 # misc
 .DS_Store
@@ -17,7 +20,7 @@
 .env.development.local
 .env.test.local
 .env.production.local
-.env
+www/.env
 .env.production
 
 npm-debug.log*
