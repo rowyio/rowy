@@ -7,9 +7,12 @@ Firetable is a simple CMS for Google Cloud Firestore.
 #### 1) Create a firebase project
 
 - enable firestore
+- enable firebase billing
 - enable google auth
 
 #### 2) Create an algolia project
+
+- get the generated appId,api key and search api key
 
 #### 3) Clone repo
 
