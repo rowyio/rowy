@@ -20,6 +20,7 @@
     "firebase-functions": "^2.3.0"
   },
   "devDependencies": {
+    "husky": "^3.0.9",
     "tslint": "^5.12.0",
     "typescript": "^3.2.2"
   },
