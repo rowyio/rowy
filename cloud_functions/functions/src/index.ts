@@ -1,5 +1,6 @@
 import * as algolia from "algoliasearch";
 import * as functions from "firebase-functions";
+import * as maps from "./maps";
 const env = functions.config();
 export const updateAlgoliaRecord = functions.https.onCall(
   async (data: any, context: any) => {
@@ -21,3 +22,5 @@ export const deleteAlgoliaRecord = functions.https.onCall(
     return true;
   }
 );
+
+export const MAPS = maps;

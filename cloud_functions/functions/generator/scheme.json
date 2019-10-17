@@ -1,0 +1,15 @@
+{
+  "subscription": "users",
+
+  "targets": [
+    {
+      "triggerEvent": ["update", "create"],
+      "collectionPath": "founders",
+      "map": [
+        { "fromField": "firstName", "toField": "firstName" },
+        { "fromField": "lastName", "toField": "lastName" },
+        { "fromField": "preferredName", "toField": "preferredName" }
+      ]
+    }
+  ]
+}
