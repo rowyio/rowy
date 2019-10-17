@@ -1,6 +1,7 @@
 {
   "name": "functions",
   "scripts": {
+    "generator": "cd generator;node index.ts",
     "lint": "tslint --project tsconfig.json",
     "build": "tsc",
     "serve": "npm run build && firebase serve --only functions",
