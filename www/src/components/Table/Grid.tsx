@@ -29,6 +29,7 @@ const Grid = (props: any) => {
           rowRenderer={RowRenderer}
           rowHeight={rowHeight}
           columns={columns}
+          enableCellSelect={true} // makes text based cells editable
           rowGetter={handleRowGetter}
           rowsCount={rows.length}
           onGridRowsUpdated={onGridRowsUpdated}
@@ -60,6 +61,7 @@ const Grid = (props: any) => {
 };
 
 export default React.memo(Grid, (prevProps, nextProps) => {
+  console.log(nextProps, isEqual(prevProps.columns, nextProps.columns));
   return (
     isEqual(prevProps.columns, nextProps.columns) ||
     isEqual(prevProps.rows, nextProps.rows)
@@ -67,3 +69,5 @@ export default React.memo(Grid, (prevProps, nextProps) => {
     // prevProps.tableHeight === nextProps.tableHeight
   );
 });
+
+//export default Grid;
