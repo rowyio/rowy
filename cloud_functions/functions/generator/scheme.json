@@ -1,6 +1,5 @@
 {
   "subscription": "users",
-
   "targets": [
     {
       "triggerEvent": ["update", "create"],
