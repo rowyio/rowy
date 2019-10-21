@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions";
 export const <<COLLECTION_PATH>> = functions.firestore
   .document("<<COLLECTION_PATH>>/{id}")
-  .onUpdate((change, context) => {
+  .<<TRIGGER_EVENT>>((change, context) => {
     const beforeData = change.before.data();
     const afterData = change.after.data();
     let tasks = [];

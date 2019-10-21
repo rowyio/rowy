@@ -2,7 +2,7 @@
   "subscription": "users",
   "targets": [
     {
-      "triggerEvent": ["update", "create"],
+      "triggerEvent": ["onUpdate", "onCreate"],
       "collectionPath": "founders",
       "map": [
         { "fromField": "firstName", "toField": "firstName" },
