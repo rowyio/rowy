@@ -7,6 +7,7 @@ Firetable an Excel view for Firestore.
 #### 1) Create a firebase project
 
 - enable firestore
+- enable firstore rules
 - enable firebase billing
 - enable google auth
 
@@ -36,7 +37,7 @@ Deploy the cloud functions to your firebase project
 
 #### 5) Set environment variables
 
-Add .env file to the wwww directory
+create a .env file in the www directory
 
 ```
 REACT_APP_FIREBASE_PROJECT_NAME =
