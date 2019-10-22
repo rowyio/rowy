@@ -3,6 +3,8 @@ import EmptyTable from "./EmptyTable";
 import { editable } from "./grid-fns";
 import { DraggableHeader } from "react-data-grid-addons";
 import isEqual from "lodash/isEqual";
+import isEmpty from "lodash/isEmpty";
+import xorWith from "lodash/xorWith";
 const ReactDataGrid = lazy(() => import("react-data-grid"));
 const { DraggableContainer } = DraggableHeader;
 const Grid = (props: any) => {
@@ -60,14 +62,14 @@ const Grid = (props: any) => {
   );
 };
 
+export const isArrayEqual = (x: any, y: any) => isEmpty(xorWith(x, y, isEqual));
+
 export default React.memo(Grid, (prevProps, nextProps) => {
-  console.log(nextProps, isEqual(prevProps.columns, nextProps.columns));
+  console.log(nextProps, isArrayEqual(prevProps.columns, nextProps.columns));
   return (
-    isEqual(prevProps.columns, nextProps.columns) ||
-    isEqual(prevProps.rows, nextProps.rows)
+    isArrayEqual(prevProps.columns, nextProps.columns) &&
+    isArrayEqual(prevProps.rows, nextProps.rows)
     // || prevProps.rowHeight === nextProps.rowHeight ||
     // prevProps.tableHeight === nextProps.tableHeight
   );
 });
-
-//export default Grid;

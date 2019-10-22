@@ -10,6 +10,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Fab from "@material-ui/core/Fab";
+import Tooltip from "@material-ui/core/Tooltip";
 
 // TODO: Create an interface for props
 export default function CreateTableDialog(props: any) {
@@ -32,20 +33,28 @@ export default function CreateTableDialog(props: any) {
   }
   function handleCreate() {
     createTable(tableName, collectionName);
-    router.history.push(collectionName);
+    if (router.location.pathname === "/") {
+      router.history.push(`table/${collectionName}`);
+    } else {
+      router.history.push(collectionName);
+    }
+
     handleClose();
   }
 
   return (
     <div>
-      <Fab
-        className={classes.fabButton}
-        color="secondary"
-        aria-label="add"
-        onClick={handleClickOpen}
-      >
-        <AddIcon />
-      </Fab>
+      <Tooltip title="Create a table">
+        <Fab
+          className={classes.fabButton}
+          color="secondary"
+          aria-label="add"
+          onClick={handleClickOpen}
+        >
+          <AddIcon />
+        </Fab>
+      </Tooltip>
+
       <Dialog
         open={open}
         onClose={handleClose}

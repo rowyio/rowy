@@ -11,7 +11,7 @@ import Grid from "@material-ui/core/Grid";
 
 import useSettings from "../hooks/useSettings";
 import useRouter from "../hooks/useRouter";
-
+import CreateTableDialog from "../components/CreateTableDialog";
 const useStyles = makeStyles(() =>
   createStyles({
     card: {
@@ -28,46 +28,55 @@ const useStyles = makeStyles(() =>
     pos: {
       marginBottom: 12,
     },
+    fabButton: {
+      position: "absolute",
+      right: 15,
+      bottom: 15,
+    },
   })
 );
 
 // TODO: Create an interface for props
 const TablesView = (props: any) => {
-  const [settings] = useSettings();
+  const [settings, createTable] = useSettings();
   const tables = settings.tables;
   const classes = useStyles();
   const router = useRouter();
 
   return (
-    <Grid container>
-      {tables
-        ? tables.map((table: any) => (
-            <Card className={classes.card}>
-              <CardContent>
-                <Typography variant="h5" component="h2">
-                  {table.name}
-                </Typography>
-                <Typography className={classes.pos} color="textSecondary">
-                  primary
-                </Typography>
-                <Typography variant="body2" component="p">
-                  Table summery use
-                </Typography>
-              </CardContent>
-              <CardActions>
-                <Button
-                  size="small"
-                  onClick={() => {
-                    router.history.push(`table/${table.collection}`);
-                  }}
-                >
-                  open{" "}
-                </Button>
-              </CardActions>
-            </Card>
-          ))
-        : "TODO: card skeleton"}
-    </Grid>
+    <>
+      <Grid container>
+        {tables
+          ? tables.map((table: any) => (
+              <Card className={classes.card}>
+                <CardContent>
+                  <Typography variant="h5" component="h2">
+                    {table.name}
+                  </Typography>
+                  <Typography className={classes.pos} color="textSecondary">
+                    primary
+                  </Typography>
+                  <Typography variant="body2" component="p">
+                    Table summery use
+                  </Typography>
+                </CardContent>
+                <CardActions>
+                  <Button
+                    size="small"
+                    onClick={() => {
+                      router.history.push(`table/${table.collection}`);
+                    }}
+                  >
+                    open{" "}
+                  </Button>
+                </CardActions>
+              </Card>
+            ))
+          : "TODO: card skeleton"}
+      </Grid>
+
+      <CreateTableDialog classes={classes} createTable={createTable} />
+    </>
   );
 };
 export default TablesView;
