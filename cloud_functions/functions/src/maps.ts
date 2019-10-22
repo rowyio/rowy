@@ -1,11 +1,13 @@
 import * as functions from "firebase-functions";
+const admin = require("firebase-admin");
+admin.initializeApp();
+const db = admin.firestore();
 export const users = functions.firestore
   .document("users/{id}")
-  .<<TRIGGER_EVENT>>((change, context) => {
-    const beforeData = change.before.data();
+  .onUpdate((change, context) => {
     const afterData = change.after.data();
-    let tasks = [];
-    tasks.push({})
-    console.log(tasks);
+
+   if(afterData&&afterData.founderId)db.collection("founders").doc(afterData.founderId).set({firstName:afterData.firstName,lastName:afterData.lastName,preferredName:afterData.preferredName})
+
     return true;
   });

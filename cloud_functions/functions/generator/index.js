@@ -41,9 +41,17 @@ const main = async () => {
     TEMPLATE_KEYS.subscriptionCollectionPath,
     schema.subscription
   );
-  output = templateCode.replace(TEMPLATE_KEYS.triggerEvent, "onUpdate");
-  const tasks = schema.targets.map(target => {});
-  output = output.replace(TEMPLATE_KEYS.body, "tasks.push({})");
+  output = output.replace(TEMPLATE_KEYS.triggerEvent, "onUpdate");
+  const tasks = schema.targets.map(target => {
+    const fields = target.map.map(field => {
+      return `${field.toField}:afterData.${field.fromField}`;
+    });
+    return `if(afterData&&afterData.${target.keyId})db.collection("${
+      target.collectionPath
+    }").doc(afterData.${target.keyId}).set({${fields.join()}})`;
+  });
+
+  output = output.replace(TEMPLATE_KEYS.body, tasks.join());
   writeFile(OutputPath, output);
 };
 main();
