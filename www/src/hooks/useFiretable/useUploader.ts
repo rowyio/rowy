@@ -14,7 +14,8 @@ const useUploader = () => {
   const upload = (
     docRef: firebase.firestore.DocumentReference,
     fieldName: string,
-    files: File[]
+    files: File[],
+    previousValue?: any
   ) => {
     files.forEach(file => {
       const storageRef = bucket.ref(`${docRef.path}/${fieldName}/${file.name}`);
@@ -58,17 +59,30 @@ const useUploader = () => {
             .getDownloadURL()
             .then(function(downloadURL: string) {
               console.log("File available at", downloadURL);
-              // TODO: support mutliple files
-              docRef.update({
-                [fieldName]: [
-                  {
-                    downloadURL,
-                    name: file.name,
-                    type: file.type,
-                    lastModifiedTS: file.lastModified,
-                  },
-                ],
-              });
+              if (previousValue) {
+                docRef.update({
+                  [fieldName]: [
+                    ...previousValue,
+                    {
+                      downloadURL,
+                      name: file.name,
+                      type: file.type,
+                      lastModifiedTS: file.lastModified,
+                    },
+                  ],
+                });
+              } else {
+                docRef.update({
+                  [fieldName]: [
+                    {
+                      downloadURL,
+                      name: file.name,
+                      type: file.type,
+                      lastModifiedTS: file.lastModified,
+                    },
+                  ],
+                });
+              }
             });
         }
       );
