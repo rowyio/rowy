@@ -8,6 +8,8 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
 import AddIcon from "@material-ui/icons/NoteAdd";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import _findIndex from "lodash/findIndex";
+
 // TODO:  indicate state error
 // TODO: multi support
 
@@ -41,7 +43,7 @@ const File = (props: Props) => {
     // Do something with the files
     const imageFile = acceptedFiles[0];
     if (imageFile) {
-      upload(row.ref, fieldName, [imageFile]);
+      upload(row.ref, fieldName, [imageFile], value);
     }
   }, []);
 
@@ -49,42 +51,34 @@ const File = (props: Props) => {
     onDrop,
     multiple: false,
   });
-  const handleDelete = () => {
-    onSubmit([]);
+  const handleDelete = (downloadURL: string) => {
+    const index = _findIndex(value, ["downloadURL", downloadURL]);
+    value.splice(index, 1);
+    onSubmit(value);
   };
-
+  const dropzoneProps = getRootProps();
   return (
-    <div className={classes.root} {...getRootProps()}>
+    <div className={classes.root} {...dropzoneProps} onClick={() => {}}>
       <input {...getInputProps()} />
-      {value && value.length !== 0 ? (
-        <Chip
-          key={value[0].name}
-          label={value[0].name}
-          className={classes.chip}
-          onClick={() => {
-            window.open(value[0].downloadURL);
-          }}
-          onDelete={handleDelete}
-        />
-      ) : isDragActive ? (
-        <p>Drop the files here ...</p>
-      ) : (
-        <IconButton>
-          <AddIcon />
-        </IconButton>
-      )}
-      {progress < 100 ? (
-        <div className={classes.progress}>
-          <CircularProgress
-            size={25}
-            variant="determinate"
-            value={progress}
-            color="secondary"
+      {value.map((file: any) => {
+        return (
+          <Chip
+            key={file.name}
+            label={file.name}
+            className={classes.chip}
+            onClick={() => {
+              window.open(file.downloadURL);
+            }}
+            onDelete={() => {
+              handleDelete(file.downloadURL);
+            }}
           />
-        </div>
-      ) : (
-        <div />
-      )}
+        );
+      })}
+
+      <IconButton onClick={dropzoneProps.onClick}>
+        <AddIcon />
+      </IconButton>
     </div>
   );
 };
