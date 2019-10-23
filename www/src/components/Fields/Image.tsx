@@ -10,6 +10,7 @@ import AddIcon from "@material-ui/icons/AddAPhoto";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 import _findIndex from "lodash/findIndex";
+import { Tooltip } from "@material-ui/core";
 // TODO:  indicate error state
 
 // TODO: multi support
@@ -18,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: "flex",
-      // flexDirection: "column",
+      // flexDirection: "row",
       alignContent: "center",
       width: "100%",
     },
@@ -26,15 +27,15 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       alignContent: "center",
       flexDirection: "row",
-      // justifyItems: "space-between",
       justifyContent: "space-between",
     },
     progress: {
       margin: theme.spacing(3),
     },
-    img: {
+    imgHover: {
       "&:hover": {
-        backgroundColor: "rgb(255, 0, 0, 0.42)",
+        borderStyle: "solid",
+        borderColor: "rgb(255, 0, 0,0.6)",
       },
     },
   })
@@ -95,15 +96,17 @@ const Image = (props: Props) => {
               onSubmit(value);
             }}
           >
-            <img
-              className={classes.img}
-              key={file.name}
-              style={{
-                padding: `${row.rowHeight * 0.03}px`,
-                height: `${row.rowHeight * 0.95}px`,
-              }}
-              src={file.downloadURL}
-            />
+            <Tooltip title="click to delete">
+              <img
+                className={classes.imgHover}
+                key={file.name}
+                style={{
+                  padding: `${row.rowHeight * 0.03}px`,
+                  height: `${row.rowHeight * 0.95}px`,
+                }}
+                src={file.downloadURL}
+              />
+            </Tooltip>
           </div>
         ))}
       {progress === 0 && (
