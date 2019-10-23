@@ -13,8 +13,6 @@ import _findIndex from "lodash/findIndex";
 import { Tooltip } from "@material-ui/core";
 // TODO:  indicate error state
 
-// TODO: multi support
-
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -86,17 +84,17 @@ const Image = (props: Props) => {
       <input {...getInputProps()} />
       {value &&
         value.map((file: { name: string; downloadURL: string }) => (
-          <div
-            onClick={e => {
-              const index = _findIndex(value, [
-                "downloadURL",
-                file.downloadURL,
-              ]);
-              value.splice(index, 1);
-              onSubmit(value);
-            }}
-          >
-            <Tooltip title="click to delete">
+          <Tooltip title="Click to delete">
+            <div
+              onClick={e => {
+                const index = _findIndex(value, [
+                  "downloadURL",
+                  file.downloadURL,
+                ]);
+                value.splice(index, 1);
+                onSubmit(value);
+              }}
+            >
               <img
                 className={classes.imgHover}
                 key={file.name}
@@ -106,15 +104,14 @@ const Image = (props: Props) => {
                 }}
                 src={file.downloadURL}
               />
-            </Tooltip>
-          </div>
+            </div>
+          </Tooltip>
         ))}
-      {progress === 0 && (
+      {progress === 0 ? (
         <IconButton onClick={dropzoneProps.onClick}>
           <AddIcon />
         </IconButton>
-      )}
-      {progress < 100 ? (
+      ) : (
         <div className={classes.progress}>
           <CircularProgress
             size={row.rowHeight * 0.5}
@@ -123,8 +120,6 @@ const Image = (props: Props) => {
             color="secondary"
           />
         </div>
-      ) : (
-        <div />
       )}
     </Grid>
   );

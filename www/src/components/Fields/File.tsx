@@ -11,7 +11,6 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import _findIndex from "lodash/findIndex";
 
 // TODO:  indicate state error
-// TODO: multi support
 
 interface Props {
   value: { name: string; downloadURL: string }[];
