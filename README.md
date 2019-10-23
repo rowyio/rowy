@@ -11,6 +11,7 @@ Firetable an Excel view for Firestore.
 - upgrade project to Blaze plan
 - go to authentication/ sign method enable google auth
 
+
 #### 2) Create an algolia project
 
 - get the generated appId,API key and search key
@@ -45,7 +46,9 @@ yarn deploy
 
 #### 5) Set environment variables
 
-Add .env file to the www directory
+
+create a .env file in the www directory
+
 
 ```
 REACT_APP_FIREBASE_PROJECT_NAME =
