@@ -46,9 +46,9 @@ const main = async () => {
     const fields = target.map.map(field => {
       return `${field.toField}:afterData.${field.fromField}`;
     });
-    return `if(afterData&&afterData.${target.keyId})db.collection("${
-      target.collectionPath
-    }").doc(afterData.${target.keyId}).set({${fields.join()}})`;
+    return `if(afterData&&afterData.${target.docPath})await db.doc(afterData.${
+      target.docPath
+    }).set({${fields.join()}},{merge:true})`;
   });
 
   output = output.replace(TEMPLATE_KEYS.body, tasks.join());

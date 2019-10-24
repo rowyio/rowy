@@ -3,12 +3,12 @@
   "targets": [
     {
       "triggerEvent": ["onUpdate", "onCreate"],
-      "collectionPath": "founders",
-      "keyId": "founderId",
+      "docPath": "founder[0].docPath",
       "map": [
         { "fromField": "firstName", "toField": "firstName" },
         { "fromField": "lastName", "toField": "lastName" },
-        { "fromField": "preferredName", "toField": "preferredName" }
+        { "fromField": "preferredName", "toField": "preferredName" },
+        { "fromField": "personalBio", "toField": "background" }
       ]
     }
   ]

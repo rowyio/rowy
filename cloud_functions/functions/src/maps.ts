@@ -4,10 +4,10 @@ admin.initializeApp();
 const db = admin.firestore();
 export const users = functions.firestore
   .document("users/{id}")
-  .onUpdate((change, context) => {
+  .onUpdate(async(change, context) => {
     const afterData = change.after.data();
 
-   if(afterData&&afterData.founderId)db.collection("founders").doc(afterData.founderId).set({firstName:afterData.firstName,lastName:afterData.lastName,preferredName:afterData.preferredName})
+   if(afterData&&afterData.founder[0].docPath)await db.doc(afterData.founder[0].docPath).set({firstName:afterData.firstName,lastName:afterData.lastName,preferredName:afterData.preferredName,background:afterData.personalBio},{merge:true})
 
     return true;
   });
