@@ -51,8 +51,8 @@
 
 ### additional fields:
 
-- file (multi)
-- image (multi)
+- file (multi) ✅
+- image (multi) ✅
 - Duration
 - Percentage(number)
 - Slider(number)
