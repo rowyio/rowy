@@ -129,9 +129,10 @@ function Table(props: Props) {
   if (!tableState.loadingColumns) {
     columns = tableState.columns.map((column: any) => ({
       width: 220,
-      draggable: true,
-      editable: editable(column.type),
-      resizable: true,
+      draggable: column.draggable,
+      editable: editable(column.type) && column.editable,
+      resizable: column.resizable,
+      frozen: column.fixed,
       headerRenderer: headerRenderer,
       formatter:
         column.type === FieldType.documentSelect
