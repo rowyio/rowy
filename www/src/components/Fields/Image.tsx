@@ -36,6 +36,9 @@ const useStyles = makeStyles((theme: Theme) =>
         borderColor: "rgb(255, 0, 0,0.6)",
       },
     },
+    addIcon: {
+      maxHeight: 48,
+    },
   })
 );
 
@@ -83,7 +86,7 @@ const Image = (props: Props) => {
     <Grid className={classes.root} {...dropzoneProps} onClick={() => {}}>
       <input {...getInputProps()} />
       {value &&
-        value.map((file: { name: string; downloadURL: string }) => (
+        files.map((file: { name: string; downloadURL: string }) => (
           <Tooltip title="Click to delete">
             <div
               onClick={e => {
@@ -108,7 +111,7 @@ const Image = (props: Props) => {
           </Tooltip>
         ))}
       {progress === 0 ? (
-        <IconButton onClick={dropzoneProps.onClick}>
+        <IconButton className={classes.addIcon} onClick={dropzoneProps.onClick}>
           <AddIcon />
         </IconButton>
       ) : (

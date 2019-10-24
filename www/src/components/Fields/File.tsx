@@ -30,6 +30,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     chip: { margin: theme.spacing(5) },
     progress: { margin: theme.spacing(5) },
+    addIcon: {
+      maxHeight: 48,
+    },
   })
 );
 
@@ -59,23 +62,24 @@ const File = (props: Props) => {
   return (
     <div className={classes.root} {...dropzoneProps} onClick={() => {}}>
       <input {...getInputProps()} />
-      {value.map((file: any) => {
-        return (
-          <Chip
-            key={file.name}
-            label={file.name}
-            className={classes.chip}
-            onClick={() => {
-              window.open(file.downloadURL);
-            }}
-            onDelete={() => {
-              handleDelete(file.downloadURL);
-            }}
-          />
-        );
-      })}
+      {value &&
+        value.map((file: any) => {
+          return (
+            <Chip
+              key={file.name}
+              label={file.name}
+              className={classes.chip}
+              onClick={() => {
+                window.open(file.downloadURL);
+              }}
+              onDelete={() => {
+                handleDelete(file.downloadURL);
+              }}
+            />
+          );
+        })}
 
-      <IconButton onClick={dropzoneProps.onClick}>
+      <IconButton className={classes.addIcon} onClick={dropzoneProps.onClick}>
         <AddIcon />
       </IconButton>
     </div>
