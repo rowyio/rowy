@@ -28,6 +28,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import SelectOptionsInput from "./SelectOptionsInput";
 
 import DocInput from "./DocInput";
+import { Tooltip } from "@material-ui/core";
 
 const useStyles = makeStyles(Theme =>
   createStyles({
@@ -41,7 +42,7 @@ const useStyles = makeStyles(Theme =>
       position: "absolute",
       left: 0,
       top: 0,
-      //zIndex: 100000
+      zIndex: 60000,
     },
     button: {
       // margin: theme.spacing(1)
@@ -116,6 +117,11 @@ const ColumnEditor = (props: any) => {
       if (column.collectionPath) {
         setValue("collectionPath", column.collectionPath);
       }
+      ["resizable", "editable", "fixed", "hidden"].map(flag => {
+        if (column[flag]) {
+          setFlags([...flags, flag]);
+        }
+      });
     }
   }, [column]);
   const clearValues = () => {
@@ -160,7 +166,10 @@ const ColumnEditor = (props: any) => {
     let updatables: { field: string; value: any }[] = [
       { field: "name", value: values.name },
       { field: "type", value: values.type },
-      // { field: "resizable", value: flags.includes("resizable") },
+      { field: "resizable", value: flags.includes("resizable") },
+      { field: "editable", value: flags.includes("editable") },
+      { field: "hidden", value: flags.includes("hidden") },
+      { field: "fixed", value: flags.includes("fixed") },
     ];
     if (
       values.type === FieldType.multiSelect ||
@@ -196,6 +205,7 @@ const ColumnEditor = (props: any) => {
     return (
       <ClickAwayListener onClickAway={onClickAway}>
         <Popper
+          className={classes.header}
           id={`id-${column.name}`}
           open={!!anchorEl}
           anchorEl={anchorEl}
@@ -209,8 +219,6 @@ const ColumnEditor = (props: any) => {
                 style={{ minWidth: column.width ? column.width - 20 : 200 }}
               >
                 <Grid container direction="column">
-                  {/* 
-                  // TODO: functional flags 
                   <ToggleButtonGroup
                     size="small"
                     value={flags}
@@ -218,28 +226,35 @@ const ColumnEditor = (props: any) => {
                     onChange={handleToggle}
                     arial-label="column settings"
                   >
-                    <ToggleButton value="editable" aria-label="editable">
-                      {flags.includes("editable") ? (
-                        <LockOpenIcon />
-                      ) : (
-                        <LockIcon />
-                      )}
-                    </ToggleButton>
-                    <ToggleButton value="visible" aria-label="visible">
-                      {flags.includes("visible") ? (
-                        <VisibilityIcon />
-                      ) : (
-                        <VisibilityOffIcon />
-                      )}
-                    </ToggleButton>
-                    <ToggleButton value="freeze" aria-label="freeze">
-                      <FormatUnderlinedIcon />
-                    </ToggleButton>
-                    <ToggleButton value="resizable" aria-label="resizable">
-                      <FormatColorFillIcon />
-                    </ToggleButton>
-                  </ToggleButtonGroup> */}
-
+                    <Tooltip title="Editable Cells">
+                      <ToggleButton value="editable" aria-label="editable">
+                        {flags.includes("editable") ? (
+                          <LockOpenIcon />
+                        ) : (
+                          <LockIcon />
+                        )}
+                      </ToggleButton>
+                    </Tooltip>
+                    <Tooltip title="Hide Column">
+                      <ToggleButton value="visible" aria-label="visible">
+                        {flags.includes("visible") ? (
+                          <VisibilityIcon />
+                        ) : (
+                          <VisibilityOffIcon />
+                        )}
+                      </ToggleButton>
+                    </Tooltip>
+                    <Tooltip title="Fixed Column">
+                      <ToggleButton value="fixed" aria-label="fixed">
+                        <FormatUnderlinedIcon />
+                      </ToggleButton>
+                    </Tooltip>
+                    <Tooltip title="Resizable column">
+                      <ToggleButton value="resizable" aria-label="resizable">
+                        <FormatColorFillIcon />
+                      </ToggleButton>
+                    </Tooltip>
+                  </ToggleButtonGroup>
                   <TextField
                     label="Column name"
                     name="name"
@@ -248,7 +263,6 @@ const ColumnEditor = (props: any) => {
                       setValue("name", e.target.value);
                     }}
                   />
-
                   <FormControl className={classes.formControl}>
                     <InputLabel htmlFor="Field-select">Field Type</InputLabel>
                     {FieldsDropDown(values.type, handleChange)}
