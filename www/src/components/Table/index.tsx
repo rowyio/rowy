@@ -127,23 +127,25 @@ function Table(props: Props) {
   };
   let columns: any[] = [];
   if (!tableState.loadingColumns) {
-    columns = tableState.columns.map((column: any) => ({
-      width: 220,
-      draggable: column.draggable,
-      editable: editable(column.type) && column.editable,
-      resizable: column.resizable,
-      frozen: column.fixed,
-      headerRenderer: headerRenderer,
-      formatter:
-        column.type === FieldType.documentSelect
-          ? docSelect(column)
-          : cellFormatter(column),
-      editor:
-        column.type === FieldType.singleSelect
-          ? singleSelectEditor(column.options)
-          : false,
-      ...column,
-    }));
+    columns = tableState.columns
+      .filter((column: any) => !column.hidden)
+      .map((column: any) => ({
+        width: 220,
+        draggable: column.draggable,
+        editable: editable(column.type) && column.editable,
+        resizable: column.resizable,
+        frozen: column.fixed,
+        headerRenderer: headerRenderer,
+        formatter:
+          column.type === FieldType.documentSelect
+            ? docSelect(column)
+            : cellFormatter(column),
+        editor:
+          column.type === FieldType.singleSelect
+            ? singleSelectEditor(column.options)
+            : false,
+        ...column,
+      }));
     columns.push({
       isNew: true,
       key: "new",
