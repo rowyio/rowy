@@ -8,7 +8,8 @@
         { "fromField": "firstName", "toField": "firstName" },
         { "fromField": "lastName", "toField": "lastName" },
         { "fromField": "preferredName", "toField": "preferredName" },
-        { "fromField": "personalBio", "toField": "background" }
+        { "fromField": "personalBio", "toField": "background" },
+        { "fromField": "role", "toField": "role" }
       ]
     }
   ]
