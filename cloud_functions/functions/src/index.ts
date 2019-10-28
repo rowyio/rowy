@@ -1,9 +1,7 @@
 import * as algolia from "algoliasearch";
 import * as functions from "firebase-functions";
-//import * as maps from "./maps";
-import * as admin from "firebase-admin";
-admin.initializeApp();
-const env = functions.config();
+import * as maps from "./maps";
+import { env, auth } from "./config";
 export const updateAlgoliaRecord = functions.https.onCall(
   async (data: any, context: any) => {
     const client = algolia(env.algolia.appid, env.algolia.apikey);
@@ -35,12 +33,11 @@ exports.setUserAsAdmin = functions.auth.user().onCreate(async user => {
     user.email &&
     user.email.split("@")[1] === "antler.co"
   ) {
-    let additionalClaims = {
+    const additionalClaims = {
       admin: true,
     };
 
-    await admin
-      .auth()
+    await auth
       .createCustomToken(user.uid, additionalClaims)
       .then(function(customToken) {
         // Send token back to client
@@ -54,4 +51,4 @@ exports.setUserAsAdmin = functions.auth.user().onCreate(async user => {
   return true;
 });
 
-//export const MAPS = maps;
+export const MAPS = maps;

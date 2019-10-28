@@ -1,12 +1,18 @@
+/* tslint-disable */
 import * as functions from "firebase-functions";
-const admin = require("firebase-admin");
-const db = admin.firestore();
+import { db} from "./config";
+
 export const users = functions.firestore
   .document("users/{id}")
   .onUpdate(async(change, context) => {
     const afterData = change.after.data();
-
-   if(afterData&&afterData.founder[0].docPath)await db.doc(afterData.founder[0].docPath).set({firstName:afterData.firstName,lastName:afterData.lastName,preferredName:afterData.preferredName,background:afterData.personalBio,role:afterData.role},{merge:true})
-
+    if (afterData) { 
+      if( afterData.founder[0].docPath){
+        const updates = {firstName:afterData.firstName,lastName:afterData.lastName,preferredName:afterData.preferredName,background:afterData.personalBio,role:afterData.role}
+        console.log(`updates FROM users/${context.params.id} TO ${afterData.founder[0].docPath}`, updates)
+   await db.doc(afterData.founder[0].docPath).set(updates, { merge: true }); 
+      }
+   
+  }
     return true;
   });

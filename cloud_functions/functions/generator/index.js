@@ -7,6 +7,7 @@ const TEMPLATE_KEYS = {
   body: "/*<GENERATED_CODE>*/",
   subscriptionCollectionPath: /<<COLLECTION_PATH>>/gi,
   triggerEvent: /<<TRIGGER_EVENT>>/gi,
+  targetDocPath: /<<TARGET_DOC_PATH>>/gi,
 };
 // fs.readFile(OutputPath, "utf-8", (err, data) => {
 // fs.writeFile(OutputPath, data + generatedCode, err => {
@@ -42,13 +43,12 @@ const main = async () => {
     schema.subscription
   );
   output = output.replace(TEMPLATE_KEYS.triggerEvent, "onUpdate");
+  output = output.replace(TEMPLATE_KEYS.targetDocPath, "founder[0].docPath");
   const tasks = schema.targets.map(target => {
     const fields = target.map.map(field => {
       return `${field.toField}:afterData.${field.fromField}`;
     });
-    return `if(afterData&&afterData.${target.docPath})await db.doc(afterData.${
-      target.docPath
-    }).set({${fields.join()}},{merge:true})`;
+    return `const updates = {${fields.join()}}`;
   });
 
   output = output.replace(TEMPLATE_KEYS.body, tasks.join());
