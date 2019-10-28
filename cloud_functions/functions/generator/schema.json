@@ -9,7 +9,8 @@
         { "fromField": "lastName", "toField": "lastName" },
         { "fromField": "preferredName", "toField": "preferredName" },
         { "fromField": "personalBio", "toField": "background" },
-        { "fromField": "role", "toField": "role" }
+        { "fromField": "role", "toField": "role" },
+        { "fromField": "profilePhoto", "toField": "profilePhoto" }
       ]
     }
   ]
