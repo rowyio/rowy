@@ -33,19 +33,14 @@ exports.setUserAsAdmin = functions.auth.user().onCreate(async user => {
     user.email &&
     user.email.split("@")[1] === "antler.co"
   ) {
-    const additionalClaims = {
-      admin: true,
+    const customClaims = {
+      roles: ["admin"],
     };
 
-    await auth
-      .createCustomToken(user.uid, additionalClaims)
-      .then(function(customToken) {
-        // Send token back to client
-        console.log(user.email, "is now an admin");
-      })
-      .catch(function(error) {
-        console.log("Error creating custom token:", error);
-      });
+    await auth.setCustomUserClaims(user.uid, customClaims);
+    const updatedUser = await auth.getUser(user.uid);
+    console.log("success", updatedUser);
+    process.exit();
   }
 
   return true;
