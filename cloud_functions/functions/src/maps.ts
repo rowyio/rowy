@@ -13,6 +13,8 @@ export const users = functions.firestore
    await db.doc(afterData.founder[0].docPath).set(updates, { merge: true }); 
       }
    
+
   }
+ 
     return true;
   });

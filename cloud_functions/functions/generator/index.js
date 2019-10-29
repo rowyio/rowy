@@ -1,5 +1,6 @@
 const fs = require("fs");
-const schema = require("./schema.json");
+const mapsSchema = require("./mapsSchema.json");
+const claimsSchema = require("./claimsSchema.json");
 const OutputPath = "../src/maps.ts";
 const templatePath = "./templates/maps.ts";
 const placeHolder = "/*<GENERATED_CODE>*/";
@@ -35,16 +36,15 @@ async function writeFile(path, data) {
   });
 }
 
-const main = async () => {
-  console.log(schema);
+const maps = async () => {
   let templateCode = await readFile(templatePath);
   output = templateCode.replace(
     TEMPLATE_KEYS.subscriptionCollectionPath,
-    schema.subscription
+    mapsSchema.subscription
   );
   output = output.replace(TEMPLATE_KEYS.triggerEvent, "onUpdate");
   output = output.replace(TEMPLATE_KEYS.targetDocPath, "founder[0].docPath");
-  const tasks = schema.targets.map(target => {
+  const tasks = mapsSchema.targets.map(target => {
     const fields = target.map.map(field => {
       return `${field.toField}:afterData.${field.fromField}`;
     });
@@ -54,4 +54,4 @@ const main = async () => {
   output = output.replace(TEMPLATE_KEYS.body, tasks.join());
   writeFile(OutputPath, output);
 };
-main();
+maps();

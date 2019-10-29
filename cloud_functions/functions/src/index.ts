@@ -1,6 +1,7 @@
 import * as algolia from "algoliasearch";
 import * as functions from "firebase-functions";
 import * as maps from "./maps";
+import * as claims from "./claims";
 import { env, auth } from "./config";
 export const updateAlgoliaRecord = functions.https.onCall(
   async (data: any, context: any) => {
@@ -38,12 +39,10 @@ exports.setUserAsAdmin = functions.auth.user().onCreate(async user => {
     };
 
     await auth.setCustomUserClaims(user.uid, customClaims);
-    const updatedUser = await auth.getUser(user.uid);
-    console.log("success", updatedUser);
-    process.exit();
   }
 
   return true;
 });
 
 export const MAPS = maps;
+export const CLAIMS = claims;

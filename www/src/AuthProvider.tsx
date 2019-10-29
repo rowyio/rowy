@@ -23,8 +23,7 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
   //         !idTokenResult.claims.roles ||
   //         !idTokenResult.claims.roles.includes("admin")
   //       ) {
-  //         auth.signOut();
-  //         console.log("logout");
+  //  firebase.auth().currentUser.getIdTokenResult(true);
   //       }
   //     })
   //     .catch((error: any) => {
