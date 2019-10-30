@@ -9,8 +9,11 @@ export const users = functions.firestore
     if (afterData && beforeData && afterData.startup && afterData.startup[0]) {
       if (afterData.startup !== beforeData.startup) {
         const customClaims = {
-          portfolio: afterData.startup[0].snapshot.objectID,
+          portfolio: afterData.startup.map(
+            (data: any) => data.snapshot.objectID
+          ),
         };
+        console.log(customClaims);
         await auth.setCustomUserClaims(context.params.id, customClaims);
       }
     }
