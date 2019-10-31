@@ -135,7 +135,7 @@ function Table(props: Props) {
     tableActions.column.reorder(dragged, target);
   };
   let columns: any[] = [];
-  if (!tableState.loadingColumns) {
+  if (!tableState.loadingColumns && tableState.columns) {
     columns = tableState.columns
       .filter((column: any) => !column.hidden)
       .map((column: any) => ({
