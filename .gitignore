@@ -22,6 +22,7 @@ cloud_functions/functions/lib
 .env.production.local
 www/.env
 .env.production
+.env.development
 
 npm-debug.log*
 yarn-debug.log*

@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       position: "relative",
       display: "flex",
-      // flexWrap: "wrap",
+      flexWrap: "wrap",
       alignItems: "center",
     },
     typography: {
@@ -69,7 +69,7 @@ const DocSelect = (props: Props) => {
           <Chip
             key={doc.docPath}
             label={config.primaryKeys.map(
-              (key: any) => `${doc.snapshot[key]} `
+              (key: string) => `${doc.snapshot[key]} `
             )}
             //onClick={handleClick}
             onDelete={() => {

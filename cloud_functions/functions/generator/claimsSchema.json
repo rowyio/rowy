@@ -1,0 +1,17 @@
+{
+  "subscription": "users",
+  "targets": [
+    {
+      "triggerEvent": ["onUpdate", "onCreate"],
+      "docPath": "founder[0].docPath",
+      "map": [
+        { "fromField": "firstName", "toField": "firstName" },
+        { "fromField": "lastName", "toField": "lastName" },
+        { "fromField": "preferredName", "toField": "preferredName" },
+        { "fromField": "personalBio", "toField": "background" },
+        { "fromField": "role", "toField": "role" },
+        { "fromField": "profilePhoto", "toField": "profilePhoto" }
+      ]
+    }
+  ]
+}
