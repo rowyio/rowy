@@ -8,11 +8,11 @@ const enum FieldType {
   email = "EMAIL",
   PhoneNumber = "PHONE_NUMBER",
   checkBox = "CHECK_BOX",
-  date = "DATE",
-  dateTime = "DATE_TIME",
+  date = "DATE", //TODO
+  dateTime = "DATE_TIME", //TODO
   number = "NUMBER",
   url = "URL",
-  color = "COLOR",
+  color = "COLOR", //TODO
   rating = "RATING",
   image = "IMAGE",
   file = "FILE",
@@ -21,6 +21,64 @@ const enum FieldType {
   documentSelect = "DOCUMENT_SELECT",
   last = "LAST",
 }
+const selectedColumnsReducer = (doc: any) => (
+  accumulator: any,
+  currentColumn: any
+) => {
+  switch (currentColumn.type) {
+    case FieldType.multiSelect:
+      return {
+        ...accumulator,
+        [currentColumn.key]: doc[currentColumn.key]
+          ? doc[currentColumn.key].join()
+          : "",
+      };
+    case FieldType.file:
+    case FieldType.image:
+      return {
+        ...accumulator,
+        [currentColumn.key]: doc[currentColumn.key]
+          ? doc[currentColumn.key]
+              .map((item: { downloadURL: string }) => item.downloadURL)
+              .join()
+          : "",
+      };
+    case FieldType.documentSelect:
+      return {
+        ...accumulator,
+        [currentColumn.key]: doc[currentColumn.key]
+          ? doc[currentColumn.key]
+              .map((item: any) =>
+                currentColumn.config.primaryKeys.reduce(
+                  (labelAccumulator: string, currentKey: any) =>
+                    `${labelAccumulator} ${item.snapshot[currentKey]}`,
+                  ""
+                )
+              )
+              .join()
+          : "",
+      };
+    case FieldType.checkBox:
+      return {
+        ...accumulator,
+        [currentColumn.key]:
+          typeof doc[currentColumn.key] === "boolean"
+            ? doc[currentColumn.key]
+              ? "YES"
+              : "NO"
+            : "",
+      };
+    case FieldType.last:
+      return accumulator;
+    default:
+      return {
+        ...accumulator,
+        [currentColumn.key]: doc[currentColumn.key]
+          ? doc[currentColumn.key]
+          : "",
+      };
+  }
+};
 export const exportTable = functions.https.onCall(
   async (
     request: {
@@ -39,8 +97,7 @@ export const exportTable = functions.https.onCall(
     response
   ) => {
     const { collectionPath, filters, sort, limit, columns } = request;
-    console.log(request);
-    console.log("columns", columns);
+
     // set query path
     let query:
       | admin.firestore.CollectionReference
@@ -65,50 +122,7 @@ export const exportTable = functions.https.onCall(
     const docs = querySnapshot.docs.map(doc => doc.data());
 
     const data = docs.map((doc: any) => {
-      const selectedColumnsReducer = (accumulator: any, currentColumn: any) => {
-        switch (currentColumn.type) {
-          case FieldType.multiSelect:
-            return {
-              ...accumulator,
-              [currentColumn.key]: doc[currentColumn.key]
-                ? doc[currentColumn.key].join()
-                : "",
-            };
-          case FieldType.file:
-          case FieldType.image:
-            return {
-              ...accumulator,
-              [currentColumn.key]: doc[currentColumn.key]
-                ? doc[currentColumn.key]
-                    .map((item: { downloadURL: string }) => item.downloadURL)
-                    .join()
-                : "",
-            };
-          case FieldType.documentSelect:
-            return {
-              ...accumulator,
-              [currentColumn.key]: doc[currentColumn.key]
-                ? doc[currentColumn.key]
-                    .map((item: any) =>
-                      currentColumn.config.primaryKeys.reduce(
-                        (labelAccumulator: string, currentKey: any) =>
-                          `${labelAccumulator} ${item.snapshot[currentKey]}`,
-                        ""
-                      )
-                    )
-                    .join()
-                : "",
-            };
-          default:
-            return {
-              ...accumulator,
-              [currentColumn.key]: doc[currentColumn.key]
-                ? doc[currentColumn.key]
-                : "",
-            };
-        }
-      };
-      return columns.reduce(selectedColumnsReducer, {});
+      return columns.reduce(selectedColumnsReducer(doc), {});
     });
     const csv = json2csv(data);
     return csv;
