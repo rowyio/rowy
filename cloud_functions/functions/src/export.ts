@@ -70,39 +70,46 @@ export const exportTable = functions.https.onCall(
           case FieldType.multiSelect:
             return {
               ...accumulator,
-              [currentColumn.key]: doc[currentColumn.key].join(),
+              [currentColumn.key]: doc[currentColumn.key]
+                ? doc[currentColumn.key].join()
+                : "",
             };
           case FieldType.file:
           case FieldType.image:
             return {
               ...accumulator,
               [currentColumn.key]: doc[currentColumn.key]
-                .map((item: { downloadURL: string }) => item.downloadURL)
-                .join(),
+                ? doc[currentColumn.key]
+                    .map((item: { downloadURL: string }) => item.downloadURL)
+                    .join()
+                : "",
             };
           case FieldType.documentSelect:
             return {
               ...accumulator,
               [currentColumn.key]: doc[currentColumn.key]
-                .map((item: any) =>
-                  currentColumn.config.primaryKeys.reduce(
-                    (labelAccumulator: string, currentKey: any) =>
-                      `${labelAccumulator} ${item.snapshot[currentKey]}`,
-                    ""
-                  )
-                )
-                .join(),
+                ? doc[currentColumn.key]
+                    .map((item: any) =>
+                      currentColumn.config.primaryKeys.reduce(
+                        (labelAccumulator: string, currentKey: any) =>
+                          `${labelAccumulator} ${item.snapshot[currentKey]}`,
+                        ""
+                      )
+                    )
+                    .join()
+                : "",
             };
           default:
             return {
               ...accumulator,
-              [currentColumn.key]: doc[currentColumn.key],
+              [currentColumn.key]: doc[currentColumn.key]
+                ? doc[currentColumn.key]
+                : "",
             };
         }
       };
       return columns.reduce(selectedColumnsReducer, {});
     });
-    console.log("data", data);
     const csv = json2csv(data);
     return csv;
   }

@@ -80,7 +80,13 @@ const TableHeader = (props: Props) => {
         </FormControl>
       </div>
       <div className={classes.tableActions}>
-        <ExportCSV columns={columns} collection={collection} />
+        <ExportCSV
+          columns={columns.map((column: any) => {
+            const { key, name, config, type } = column;
+            return { key, name, config, type };
+          })}
+          collection={collection}
+        />
 
         <ImportCSV columns={columns} addRow={addRow} />
         <Button
