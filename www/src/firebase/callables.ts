@@ -3,6 +3,7 @@ import { functions } from "./index";
 export enum CLOUD_FUNCTIONS {
   updateAlgoliaRecord = "updateAlgoliaRecord",
   deleteAlgoliaRecord = "deleteAlgoliaRecord",
+  exportTable = "exportTable",
 }
 
 export const cloudFunction = (
@@ -35,3 +36,13 @@ export const algoliaUpdateDoc = (data: {
 export const algoliaDeleteDoc = functions.httpsCallable(
   CLOUD_FUNCTIONS.deleteAlgoliaRecord
 );
+
+export const exportTable = (data: {
+  collectionPath: string;
+  filters: {
+    key: string;
+    operator: "==" | "<" | ">" | ">=" | "<=";
+    value: string;
+  }[];
+  columns: any[];
+}) => functions.httpsCallable(CLOUD_FUNCTIONS.exportTable)(data);

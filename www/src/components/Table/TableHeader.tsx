@@ -5,6 +5,7 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import Typography from "@material-ui/core/Typography";
 import ImportCSV from "components/ImportCSV";
+import ExportCSV from "components/ExportCSV";
 import Button from "@material-ui/core/Button";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/AddCircle";
@@ -36,8 +37,14 @@ const useStyles = makeStyles(Theme => {
   });
 });
 
-interface Props {}
-const TableHeader = (props: any) => {
+interface Props {
+  collection: string;
+  rowHeight: number;
+  updateConfig: Function;
+  addRow: Function;
+  columns: any;
+}
+const TableHeader = (props: Props) => {
   const { collection, rowHeight, updateConfig, columns, addRow } = props;
   const classes = useStyles();
   return (
@@ -73,6 +80,8 @@ const TableHeader = (props: any) => {
         </FormControl>
       </div>
       <div className={classes.tableActions}>
+        <ExportCSV columns={columns} collection={collection} />
+
         <ImportCSV columns={columns} addRow={addRow} />
         <Button
           color="secondary"
