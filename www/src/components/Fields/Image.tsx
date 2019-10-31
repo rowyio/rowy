@@ -87,7 +87,7 @@ const Image = (props: Props) => {
       <input {...getInputProps()} />
       {value &&
         files.map((file: { name: string; downloadURL: string }) => (
-          <Tooltip title="Click to delete">
+          <Tooltip title="Click to delete" key={file.downloadURL}>
             <div
               onClick={e => {
                 const index = _findIndex(value, [

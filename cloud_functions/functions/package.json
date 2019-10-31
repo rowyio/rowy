@@ -16,9 +16,11 @@
   "main": "lib/index.js",
   "dependencies": {
     "@types/algoliasearch": "^3.34.5",
+    "@types/json2csv": "^4.5.0",
     "algoliasearch": "^3.35.1",
     "firebase-admin": "~7.0.0",
-    "firebase-functions": "^2.3.0"
+    "firebase-functions": "^2.3.0",
+    "json2csv": "^4.5.4"
   },
   "devDependencies": {
     "husky": "^3.0.9",
