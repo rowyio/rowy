@@ -24,11 +24,13 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import DuplicateIcon from "@material-ui/icons/FileCopy";
 import useStyles from "./useStyle";
 import Grid from "./Grid";
+import Tooltip from "@material-ui/core/Tooltip";
 const Hotkeys = lazy(() => import("./HotKeys"));
 const TableHeader = lazy(() => import("./TableHeader"));
 const SearchBox = lazy(() => import("../SearchBox"));
 const DocSelect = lazy(() => import("../Fields/DocSelect"));
 const ColumnEditor = lazy(() => import("./ColumnEditor/index"));
+
 const deleteAlgoliaRecord = functions.httpsCallable(
   CLOUD_FUNCTIONS.deleteAlgoliaRecord
 );
@@ -106,19 +108,26 @@ function Table(props: Props) {
         );
       default:
         return (
-          <div className={classes.header}>
-            <div className={classes.headerLabel}>
-              {getFieldIcon(props.column.type)}
-              <Typography variant="button">{props.column.name}</Typography>
+          <Tooltip title={props.column.key}>
+            <div className={classes.header}>
+              <div
+                className={classes.headerLabel}
+                onClick={() => {
+                  navigator.clipboard.writeText(props.column.key);
+                }}
+              >
+                {getFieldIcon(props.column.type)}
+                <Typography variant="button">{props.column.name}</Typography>
+              </div>
+              <IconButton
+                disableFocusRipple={true}
+                size="small"
+                onClick={handleClick(props)}
+              >
+                <SettingsIcon />
+              </IconButton>
             </div>
-            <IconButton
-              disableFocusRipple={true}
-              size="small"
-              onClick={handleClick(props)}
-            >
-              <SettingsIcon />
-            </IconButton>
-          </div>
+          </Tooltip>
         );
     }
   };
@@ -127,22 +136,25 @@ function Table(props: Props) {
   };
   let columns: any[] = [];
   if (!tableState.loadingColumns) {
-    columns = tableState.columns.map((column: any) => ({
-      width: 220,
-      draggable: true,
-      editable: editable(column.type),
-      resizable: true,
-      headerRenderer: headerRenderer,
-      formatter:
-        column.type === FieldType.documentSelect
-          ? docSelect(column)
-          : cellFormatter(column),
-      editor:
-        column.type === FieldType.singleSelect
-          ? singleSelectEditor(column.options)
-          : false,
-      ...column,
-    }));
+    columns = tableState.columns
+      .filter((column: any) => !column.hidden)
+      .map((column: any) => ({
+        width: 220,
+        draggable: true,
+        editable: editable(column.type),
+        resizable: true,
+        //frozen: column.fixed,
+        headerRenderer: headerRenderer,
+        formatter:
+          column.type === FieldType.documentSelect
+            ? docSelect(column)
+            : cellFormatter(column),
+        editor:
+          column.type === FieldType.singleSelect
+            ? singleSelectEditor(column.options)
+            : false,
+        ...column,
+      }));
     columns.push({
       isNew: true,
       key: "new",

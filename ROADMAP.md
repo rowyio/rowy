@@ -63,12 +63,13 @@
 
 - Sort rows
 - reorder columns✅
+- Auto suggest columns based of existing docs
 - Locked columns
 - Table view only mode
 - SubCollection tables
 - Permissions
 - Duplicate columns
-- Filters:
+- Filter columns:
   - equals to
   - Starts with
   - contains
@@ -92,3 +93,4 @@
 - Themes
 - Table templates
 - Dialog View of a row
+- multi auth
