@@ -13,10 +13,6 @@ import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
-import AddCSVIcon from "@material-ui/icons/PlaylistAdd";
-import ArrowIcon from "@material-ui/icons/TrendingFlatOutlined";
-import AddIcon from "@material-ui/icons/Add";
-import DeleteIcon from "@material-ui/icons/Delete";
 import { makeStyles, createStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Input from "@material-ui/core/Input";
@@ -28,6 +24,7 @@ import Chip from "@material-ui/core/Chip";
 import CloudIcon from "@material-ui/icons/CloudDownload";
 import { exportTable } from "../firebase/callables";
 import { saveAs } from "file-saver";
+import useTableConfig from "../hooks/useFiretable/useTableConfig";
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -91,6 +88,7 @@ export default function ExportCSV(props: Props) {
 
   function handleClose() {
     setOpen(false);
+    setCSVColumns([]);
   }
   async function handleExport() {
     const data = await exportTable({
@@ -98,7 +96,7 @@ export default function ExportCSV(props: Props) {
       filters: [],
       columns: csvColumns,
     });
-
+    handleClose();
     var blob = new Blob([data.data], {
       type: "text/csv;charset=utf-8",
     });
@@ -118,11 +116,9 @@ export default function ExportCSV(props: Props) {
         <DialogTitle id="form-dialog-title">Export table into CSV</DialogTitle>
         <DialogContent>
           <FormControl className={classes.formControl}>
-            <InputLabel id="demo-mutiple-chip-label">
-              Exportable columns
-            </InputLabel>
+            <InputLabel id="column-chip-label">Exportable columns</InputLabel>
             <Select
-              id="demo-mutiple-chip"
+              id="column-chip"
               multiple
               value={csvColumns}
               onChange={handleChange}
