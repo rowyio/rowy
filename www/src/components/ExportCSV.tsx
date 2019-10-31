@@ -143,6 +143,13 @@ export default function ExportCSV(props: Props) {
               ))}
             </Select>
           </FormControl>
+          <Button
+            onClick={() => {
+              setCSVColumns(columns);
+            }}
+          >
+            Export All Columns
+          </Button>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">

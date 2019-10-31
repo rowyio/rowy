@@ -13,7 +13,6 @@ export const users = functions.firestore
             (data: any) => data.snapshot.objectID
           ),
         };
-        console.log(customClaims);
         await auth.setCustomUserClaims(context.params.id, customClaims);
       }
     }
