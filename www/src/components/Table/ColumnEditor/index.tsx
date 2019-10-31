@@ -42,7 +42,6 @@ const useStyles = makeStyles(Theme =>
       position: "absolute",
       left: 0,
       top: 0,
-      zIndex: 60000,
     },
     button: {
       // margin: theme.spacing(1)
