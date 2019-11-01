@@ -79,6 +79,8 @@
     - File
     - Reference
     - Select
+ - Mark primary/unique columns
+ - Import CSV by matching with primary unique key column
 
 # V+
 
@@ -101,3 +103,4 @@
 - Table templates
 - Dialog View of a row
 - multi auth
+- Auto detection/suggestions
