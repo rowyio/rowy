@@ -54,6 +54,10 @@ const useStyles = makeStyles(theme =>
       marginLeft: 8,
       borderRadius: 5,
     },
+    routes: {
+      flex: "flex-shrink",
+      overflowX: "scroll",
+    },
   })
 );
 
@@ -100,7 +104,7 @@ const Navigation = (props: any) => {
                 />
               </>
             ) : (
-              <>
+              <div className={classes.routes}>
                 {settings.tables.map(
                   (table: { name: string; collection: string }) => (
                     <Button
@@ -114,7 +118,7 @@ const Navigation = (props: any) => {
                     </Button>
                   )
                 )}
-              </>
+              </div>
             )}
             {/* <Button
               onClick={() => {
