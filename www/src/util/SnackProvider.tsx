@@ -10,6 +10,7 @@ export const SnackProvider: React.FC<ISnackProviderProps> = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [duration, setDuration] = useState(3000);
+  const [action, setAction] = useState(<div />);
   const [position, setPosition] = useState<SnackbarOrigin>({
     vertical: "bottom",
     horizontal: "left",
@@ -19,12 +20,17 @@ export const SnackProvider: React.FC<ISnackProviderProps> = ({ children }) => {
     setMessage("");
     setDuration(0);
   };
-  const open = (
-    message: string,
-    duration?: number,
-    position?: SnackbarOrigin
-  ) => {
+  const open = (props: {
+    message: string;
+    duration?: number;
+    position?: SnackbarOrigin;
+    action?: JSX.Element;
+  }) => {
+    const { message, duration, position, action } = props;
     setMessage(message);
+    if (action) {
+      setAction(action);
+    }
     if (duration) {
       setDuration(duration);
     } else {
@@ -46,6 +52,7 @@ export const SnackProvider: React.FC<ISnackProviderProps> = ({ children }) => {
         position,
         close,
         open,
+        action,
       }}
     >
       {children}

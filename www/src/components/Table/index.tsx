@@ -42,7 +42,7 @@ interface Props {
 
 function Table(props: Props) {
   const { collection, filters } = props;
-  const { tableState, tableActions } = useFiretable(collection);
+  const { tableState, tableActions } = useFiretable(collection, filters);
   const [selectedCell, setSelectedCell] = useState<{ row: any; column: any }>({
     row: {},
     column: {},

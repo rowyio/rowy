@@ -33,14 +33,15 @@ export type FireTableFilter = {
   value: string | number | boolean;
 };
 
-const useFiretable = (collectionName: string) => {
+const useFiretable = (collectionName: string, filters?: FireTableFilter[]) => {
   const [tableConfig, configActions] = useTableConfig(collectionName);
   const [tableState, tableActions] = useTable({
     path: collectionName,
+    filters,
   });
   /** set collection path of table */
   const setTable = (collectionName: string, filters: FireTableFilter[]) => {
-    if (collectionName !== tableState.path) {
+    if (collectionName !== tableState.path && filters !== tableState.filters) {
       configActions.setTable(collectionName);
       tableActions.setTable(collectionName, filters);
     }

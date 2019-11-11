@@ -4,7 +4,7 @@ import { SnackContext } from "../contexts/snackContext";
 export default function Snack() {
   const snackContext = useContext(SnackContext);
 
-  const { position, isOpen, close, message, duration } = snackContext;
+  const { position, isOpen, close, message, duration, action } = snackContext;
   const { vertical, horizontal } = position;
 
   useEffect(() => {
@@ -20,6 +20,7 @@ export default function Snack() {
         "aria-describedby": "message-id",
       }}
       message={<span id="message-id">{message}</span>}
+      action={action}
     />
   );
 }

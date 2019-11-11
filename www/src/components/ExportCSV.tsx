@@ -93,7 +93,10 @@ export default function ExportCSV(props: Props) {
   }
   async function handleExport(columns: any[]) {
     handleClose();
-    snackContext.open("preparing file, download will start shortly", 5000);
+    snackContext.open({
+      message: "preparing file, download will start shortly",
+      duration: 5000,
+    });
     const data = await exportTable({
       collectionPath: collection,
       filters: [],
