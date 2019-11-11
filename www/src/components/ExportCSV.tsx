@@ -26,6 +26,8 @@ import { exportTable } from "../firebase/callables";
 import { saveAs } from "file-saver";
 import useTableConfig from "../hooks/useFiretable/useTableConfig";
 import { SnackContext } from "../contexts/snackContext";
+import { FireTableFilter } from "../hooks/useFiretable";
+
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -72,10 +74,11 @@ const useStyles = makeStyles(theme =>
 interface Props {
   columns: any;
   collection: string;
+  filters: FireTableFilter[];
 }
 
 export default function ExportCSV(props: Props) {
-  const { columns, collection } = props;
+  const { columns, collection, filters } = props;
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [csvColumns, setCSVColumns] = useState<any[]>([]);
@@ -99,7 +102,7 @@ export default function ExportCSV(props: Props) {
     });
     const data = await exportTable({
       collectionPath: collection,
-      filters: [],
+      filters,
       columns,
     });
     var blob = new Blob([data.data], {

@@ -1,4 +1,5 @@
 import { functions } from "./index";
+import { FireTableFilter } from "../hooks/useFiretable";
 
 export enum CLOUD_FUNCTIONS {
   updateAlgoliaRecord = "updateAlgoliaRecord",
@@ -39,10 +40,6 @@ export const algoliaDeleteDoc = functions.httpsCallable(
 
 export const exportTable = (data: {
   collectionPath: string;
-  filters: {
-    key: string;
-    operator: "==" | "<" | ">" | ">=" | "<=";
-    value: string;
-  }[];
+  filters: FireTableFilter[];
   columns: any[];
 }) => functions.httpsCallable(CLOUD_FUNCTIONS.exportTable)(data);

@@ -25,6 +25,7 @@ import DuplicateIcon from "@material-ui/icons/FileCopy";
 import useStyles from "./useStyle";
 import Grid from "./Grid";
 import Tooltip from "@material-ui/core/Tooltip";
+
 const Hotkeys = lazy(() => import("./HotKeys"));
 const TableHeader = lazy(() => import("./TableHeader"));
 const SearchBox = lazy(() => import("../SearchBox"));
@@ -249,6 +250,7 @@ function Table(props: Props) {
           rowHeight={rowHeight}
           updateConfig={tableActions.table.updateConfig}
           columns={columns}
+          filters={filters}
           addRow={tableActions.row.add}
         />
       </Suspense>{" "}
