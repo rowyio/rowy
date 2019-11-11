@@ -59,7 +59,6 @@ const Image = (props: Props) => {
   const { fieldName, value, row, onSubmit } = props;
   const [uploaderState, upload] = useUploader();
   const { progress } = uploaderState;
-  console.log(uploaderState);
   const [localImage, setLocalImage] = useState<string | null>(null);
   const onDrop = useCallback(acceptedFiles => {
     // Do something with the files

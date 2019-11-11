@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useContext } from "react";
 import _camelCase from "lodash/camelCase";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
@@ -25,6 +25,7 @@ import CloudIcon from "@material-ui/icons/CloudDownload";
 import { exportTable } from "../firebase/callables";
 import { saveAs } from "file-saver";
 import useTableConfig from "../hooks/useFiretable/useTableConfig";
+import { SnackContext } from "../contexts/snackContext";
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -78,7 +79,7 @@ export default function ExportCSV(props: Props) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [csvColumns, setCSVColumns] = useState<any[]>([]);
-
+  const snackContext = useContext(SnackContext);
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setCSVColumns(event.target.value as any[]);
   };
@@ -90,13 +91,17 @@ export default function ExportCSV(props: Props) {
     setOpen(false);
     setCSVColumns([]);
   }
-  async function handleExport() {
+  async function handleExport(columns: any[]) {
+    handleClose();
+    snackContext.open({
+      message: "preparing file, download will start shortly",
+      duration: 5000,
+    });
     const data = await exportTable({
       collectionPath: collection,
       filters: [],
-      columns: csvColumns,
+      columns,
     });
-    handleClose();
     var blob = new Blob([data.data], {
       type: "text/csv;charset=utf-8",
     });
@@ -156,7 +161,9 @@ export default function ExportCSV(props: Props) {
             Cancel
           </Button>
           <Button
-            onClick={handleExport}
+            onClick={() => {
+              handleExport(csvColumns);
+            }}
             disabled={csvColumns.length === 0}
             color="primary"
           >

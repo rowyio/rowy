@@ -31,7 +31,7 @@ const useTableConfig = (tablePath: string) => {
    *  @param type of column
    *  @param data additional column properties
    */
-  const add = (name: string, type: FieldType, data?: unknown) => {
+  const add = (name: string, type: FieldType, data?: any) => {
     //TODO: validation
     const { columns } = tableConfigState;
     const key = _camelCase(name);

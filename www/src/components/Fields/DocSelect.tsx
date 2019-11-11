@@ -4,6 +4,8 @@ import IconButton from "@material-ui/core/IconButton";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Chip from "@material-ui/core/Chip";
 
+const snapshotReducer = (accumulator: string, currentValue: any) => {};
+const getPrimaryValue = (config: { primaryKeys: string[] }) => {};
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -39,7 +41,6 @@ const DocSelect = (props: Props) => {
   const { value, row, onSubmit, collectionPath, config, setSearch } = props;
 
   const classes = useStyles();
-
   const handleClick = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
@@ -59,6 +60,7 @@ const DocSelect = (props: Props) => {
     newValue.splice(index, 1);
     onSubmit(newValue);
   };
+
   return (
     <div className={classes.root}>
       <IconButton onClick={handleClick}>

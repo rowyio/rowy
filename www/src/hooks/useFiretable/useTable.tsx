@@ -1,10 +1,12 @@
 import { db } from "../../firebase";
 
-import { useEffect, useReducer } from "react";
+import Button from "@material-ui/core/Button";
+import React, { useEffect, useReducer, useContext } from "react";
 import equals from "ramda/es/equals";
 import firebase from "firebase/app";
 import { algoliaUpdateDoc } from "../../firebase/callables";
 import { FireTableFilter } from ".";
+import { SnackContext } from "../../contexts/snackContext";
 
 const CAP = 1000; // safety  paramter sets the  upper limit of number of docs fetched by this hook
 
@@ -25,6 +27,8 @@ const tableInitialState = {
 };
 
 const useTable = (initialOverrides: any) => {
+  const snackContext = useContext(SnackContext);
+
   const [tableState, tableDispatch] = useReducer(tableReducer, {
     ...tableInitialState,
     ...initialOverrides,
@@ -99,10 +103,24 @@ const useTable = (initialOverrides: any) => {
         //TODO:callable to create new index
         if (error.message.includes("indexes?create_composite=")) {
           const url =
-            "https://console.firebase.google.com/project/firetable-antler/database/firestore/" +
+            `https://console.firebase.google.com/project/${process.env.REACT_APP_FIREBASE_PROJECT_NAME}/database/firestore/` +
             "indexes?create_composite=" +
             error.message.split("indexes?create_composite=")[1];
           console.log(url);
+          snackContext.open({
+            message: "needs a new index",
+            duration: 10000,
+            action: (
+              <Button
+                color="secondary"
+                onClick={() => {
+                  window.open(url, "_blank");
+                }}
+              >
+                create
+              </Button>
+            ),
+          });
         }
       }
     );
