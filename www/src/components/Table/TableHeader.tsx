@@ -9,6 +9,7 @@ import ExportCSV from "components/ExportCSV";
 import Button from "@material-ui/core/Button";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/AddCircle";
+import { FireTableFilter } from "../../hooks/useFiretable";
 
 const useStyles = makeStyles(Theme => {
   return createStyles({
@@ -43,9 +44,17 @@ interface Props {
   updateConfig: Function;
   addRow: Function;
   columns: any;
+  filters: FireTableFilter[];
 }
 const TableHeader = (props: Props) => {
-  const { collection, rowHeight, updateConfig, columns, addRow } = props;
+  const {
+    collection,
+    rowHeight,
+    updateConfig,
+    columns,
+    addRow,
+    filters,
+  } = props;
   const classes = useStyles();
   return (
     <div className={classes.tableHeader}>
@@ -86,6 +95,7 @@ const TableHeader = (props: Props) => {
             return { key, name, config, type };
           })}
           collection={collection}
+          filters={filters}
         />
 
         <ImportCSV columns={columns} addRow={addRow} />
