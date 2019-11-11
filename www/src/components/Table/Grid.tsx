@@ -14,7 +14,6 @@ const Grid = (props: any) => {
     columns,
     RowRenderer,
     handleRowGetter,
-
     tableHeight,
     onGridRowsUpdated,
     rows,

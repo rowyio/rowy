@@ -221,7 +221,7 @@ function Table(props: Props) {
       return (
         <Button
           onClick={() => {
-            tableActions.row.add();
+            addRow();
           }}
         >
           Add a new row
@@ -241,6 +241,19 @@ function Table(props: Props) {
     }
     return rows[index];
   };
+  const addRow = (data?: any) => {
+    if (filters) {
+      // adds filter data into the new row
+      const filtersData = filters.reduce(
+        (accumulator: any, currentValue: FireTableFilter) => ({
+          ...accumulator,
+          [currentValue.key]: currentValue.value,
+        }),
+        {}
+      );
+      tableActions.row.add({ ...filtersData, ...data });
+    } else tableActions.row.add({ ...data });
+  };
   return (
     <>
       <Suspense fallback={<div>Loading header...</div>}>
@@ -251,7 +264,7 @@ function Table(props: Props) {
           updateConfig={tableActions.table.updateConfig}
           columns={columns}
           filters={filters}
-          addRow={tableActions.row.add}
+          addRow={addRow}
         />
       </Suspense>{" "}
       {!tableState.loadingColumns ? (
@@ -267,7 +280,7 @@ function Table(props: Props) {
           rows={rows}
           resizeColumn={tableActions.column.resize}
           loadingRows={tableState.loadingRows}
-          addRow={tableActions.row.add}
+          addRow={addRow}
           setSelectedCell={setSelectedCell}
         />
       ) : (

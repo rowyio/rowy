@@ -16,7 +16,7 @@ export default function TableView() {
     // encoded
     //%5B%7B%20key:%20%22cohort%22,%20operator:%20%22==%22,%20value:%20%22SYD1%22%20%7D%5D
     // decoded
-    //[{ key: "cohort", operator: "==", value: "AMS1" }]
+    //[{key:"cohort",operator:"==",value:"AMS1"}]
     console.log(parsed.filters);
     filters = eval(parsed.filters);
   }
