@@ -2,6 +2,8 @@
 
 Firetable is an Excel/Google Sheets like UI for Firebase/Firestore. No more building admin portal for allowing business users to access data from GCP.
 
+![Firetable](https://i.imgur.com/Isuhy3u.png)
+
 ## Setup instructions
 
 #### 1) Create a firebase project ([instructions](https://console.firebase.google.com/u/0/))
