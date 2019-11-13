@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import useUploader from "../../hooks/useFiretable/useUploader";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
 import { FieldType } from ".";
@@ -11,6 +12,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 
 import _findIndex from "lodash/findIndex";
 import { Tooltip } from "@material-ui/core";
+import Confirmation from "../Confirmation";
 // TODO:  indicate error state
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -87,26 +89,38 @@ const Image = (props: Props) => {
       {value &&
         files.map((file: { name: string; downloadURL: string }) => (
           <Tooltip title="Click to delete" key={file.downloadURL}>
-            <div
-              onClick={e => {
-                const index = _findIndex(value, [
-                  "downloadURL",
-                  file.downloadURL,
-                ]);
-                value.splice(index, 1);
-                onSubmit(value);
+            <Confirmation
+              message={{
+                title: "Delete Image",
+                body: "Are you sure you want to delete this image?",
+                confirm: (
+                  <>
+                    <DeleteIcon /> Delete
+                  </>
+                ),
               }}
             >
-              <img
-                className={classes.imgHover}
-                key={file.name}
-                style={{
-                  padding: `${row.rowHeight * 0.03}px`,
-                  height: `${row.rowHeight * 0.95}px`,
+              <div
+                onClick={e => {
+                  const index = _findIndex(value, [
+                    "downloadURL",
+                    file.downloadURL,
+                  ]);
+                  value.splice(index, 1);
+                  onSubmit(value);
                 }}
-                src={file.downloadURL}
-              />
-            </div>
+              >
+                <img
+                  className={classes.imgHover}
+                  key={file.name}
+                  style={{
+                    padding: `${row.rowHeight * 0.03}px`,
+                    height: `${row.rowHeight * 0.95}px`,
+                  }}
+                  src={file.downloadURL}
+                />
+              </div>
+            </Confirmation>
           </Tooltip>
         ))}
       {progress === 0 ? (
