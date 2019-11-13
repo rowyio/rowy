@@ -1,6 +1,6 @@
 ## Firetable
 
-Firetable an Excel view for Firestore.
+Firetable is an Excel/Google Sheets like UI for Firebase/Firestore. No more building admin portal for allowing business users to access data from GCP.
 
 ## Setup instructions
 
