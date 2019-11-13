@@ -3,10 +3,9 @@
 Firetable is an Excel/Google Sheets like UI for Firebase/Firestore. No more building admin portal for allowing business users to access data from GCP.
 
 #### Firetable UI
-![Firetable](https://i.imgur.com/Isuhy3u.png)
 
 Supports fields such as images, files, single/multi select in addition to standard fields. Functions such a row resizing, data import/export are supported. More coming soon, for comprehensive list of checkout ROADMAP.
-![Firetable Features](https://i.imgur.com/59j5TXG.png)
+![Firetable](https://i.imgur.com/Isuhy3u.png)
 
 ## Setup instructions
 
