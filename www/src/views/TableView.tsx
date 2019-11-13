@@ -16,7 +16,7 @@ export default function TableView() {
     // decoded
     //[{"key":"cohort","operator":"==","value":"AMS1"}]
     filters = JSON.parse(parsed.filters);
-    //TODO:json schema validator
+    //TODO: json schema validator
   }
 
   return (
