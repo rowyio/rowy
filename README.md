@@ -4,7 +4,7 @@ Firetable is an Excel/Google Sheets like UI for Firebase/Firestore. No more buil
 
 ## Setup instructions
 
-#### 1) Create a firebase project [here](https://console.firebase.google.com/u/0/)
+#### 1) Create a firebase project ([instructions](https://console.firebase.google.com/u/0/))
 
 - enable firestore
 - setup security rules: test mode or setup required permission
