@@ -34,6 +34,7 @@ export enum FieldType {
   singleSelect = "SINGLE_SELECT",
   multiSelect = "MULTI_SELECT",
   documentSelect = "DOCUMENT_SELECT",
+  action = "ACTION",
   last = "LAST",
 }
 
@@ -53,6 +54,7 @@ export const FIELDS = [
   { icon: <FileIcon />, name: "Single Select", type: FieldType.singleSelect },
   { icon: <FileIcon />, name: "Multi Select", type: FieldType.multiSelect },
   { icon: <FileIcon />, name: "Doc Select", type: FieldType.documentSelect },
+  { icon: <FileIcon />, name: "Action", type: FieldType.action },
   { icon: <PalleteIcon />, name: "Color", type: FieldType.color },
 ];
 

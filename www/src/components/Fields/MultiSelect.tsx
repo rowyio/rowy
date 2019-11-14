@@ -56,7 +56,7 @@ const MultiSelect = (props: Props) => {
 
   const { value, row, options, onSubmit } = props;
   const handleChange = (e: any, v: any) => {
-    if (!value) {
+    if (!value || !Array.isArray(value)) {
       // creates new array
       onSubmit([v.props.value]);
     } else if (!value.includes(v.props.value)) {
@@ -76,7 +76,7 @@ const MultiSelect = (props: Props) => {
       <Select
         className={classes.select}
         multiple
-        value={value ? value : []}
+        value={value && Array.isArray(value) ? value : []}
         onChange={handleChange}
         input={<Input id="select-multiple-chip" />}
         renderValue={selected => (
