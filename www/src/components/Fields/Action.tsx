@@ -32,7 +32,10 @@ export default function Action(props: Props) {
     onSubmit(true);
     db.collection("founders")
       .doc(id)
-      .set({ ...docData, createdAt: new Date() }, { merge: true });
+      .set(
+        { ...docData, createdAt: new Date(), ordering: "99" },
+        { merge: true }
+      );
   };
   return (
     <Button
