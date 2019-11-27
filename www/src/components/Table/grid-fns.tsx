@@ -108,7 +108,11 @@ export const cellFormatter = (column: any) => {
       return (props: any) => {
         return (
           <Suspense fallback={<div />}>
-            <Action {...props} onSubmit={onSubmit(key, props.row)} />
+            <Action
+              fieldName={key}
+              {...props}
+              onSubmit={onSubmit(key, props.row)}
+            />
           </Suspense>
         );
       };

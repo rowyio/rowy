@@ -2,6 +2,7 @@ import React from "react";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import { db } from "../../firebase";
+import useDoc from "hooks/useDoc";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -15,6 +16,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 interface Props {
   value: boolean | null;
+  fieldName: string;
   row: {
     ref: firebase.firestore.DocumentReference;
     id: string;
@@ -24,18 +26,24 @@ interface Props {
   onSubmit: Function;
 }
 export default function Action(props: Props) {
-  const { row, value, onSubmit } = props;
+  //console.log(props);
+  const { row, value, fieldName, onSubmit } = props;
+  const { createdAt, rowHeight, id, ref, ...docData } = row;
+  const rowDataToSync: any = { ...docData };
+  const [docState, docDispatch] = useDoc({ path: `${fieldName}/${id}` });
+  //console.log("docState", docState);
   const classes = useStyles();
 
   const handleClick = () => {
-    const { createdAt, rowHeight, id, ref, ...docData } = row;
     onSubmit(true);
-    db.collection("founders")
-      .doc(id)
-      .set(
-        { ...docData, createdAt: new Date(), ordering: "99" },
-        { merge: true }
-      );
+    if (value) {
+      db.collection(fieldName)
+        .doc(id)
+        .update({ ...docData });
+    } else
+      db.collection(fieldName)
+        .doc(id)
+        .set({ ...docData, createdAt: new Date() }, { merge: true });
   };
   return (
     <Button
@@ -43,8 +51,16 @@ export default function Action(props: Props) {
       onClick={handleClick}
       color="primary"
       className={classes.button}
+      // disabled={
+      //   !rowDataToSync &&
+      //   Object.keys(rowDataToSync).every(
+      //     (key: string) =>
+      //       rowDataToSync[key] !== null &&
+      //       rowDataToSync[key] === docState.doc[key]
+      //   )
+      // }
     >
-      {value ? "Sync to founders" : "Create Founder"}
+      {Boolean(docState.doc) ? `Sync to ${fieldName}` : `Create ${fieldName}`}
     </Button>
   );
 }
