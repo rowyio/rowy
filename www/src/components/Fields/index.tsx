@@ -20,6 +20,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 export enum FieldType {
   simpleText = "SIMPLE_TEXT",
   longText = "LONG_TEXT",
+  richText = "RICH_TEXT",
   email = "EMAIL",
   PhoneNumber = "PHONE_NUMBER",
   checkBox = "CHECK_BOX",
@@ -55,6 +56,7 @@ export const FIELDS = [
   { icon: <FileIcon />, name: "Multi Select", type: FieldType.multiSelect },
   { icon: <FileIcon />, name: "Doc Select", type: FieldType.documentSelect },
   { icon: <FileIcon />, name: "Action", type: FieldType.action },
+  { icon: <FileIcon />, name: "Rich Text", type: FieldType.richText },
   { icon: <PalleteIcon />, name: "Color", type: FieldType.color },
 ];
 

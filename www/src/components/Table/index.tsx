@@ -27,6 +27,7 @@ import Grid from "./Grid";
 import Tooltip from "@material-ui/core/Tooltip";
 import { EditorProvider } from "../../util/EditorProvider";
 import LongTextEditor from "../LongTextEditor";
+import RichTextEditor from "../RichTextEditor";
 
 const Hotkeys = lazy(() => import("./HotKeys"));
 const TableHeader = lazy(() => import("./TableHeader"));
@@ -297,6 +298,7 @@ function Table(props: Props) {
         />
 
         <SearchBox searchData={search} clearSearch={clearSearch} />
+        <RichTextEditor />
         <LongTextEditor />
       </Suspense>
     </EditorProvider>

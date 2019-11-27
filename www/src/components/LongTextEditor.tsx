@@ -6,6 +6,7 @@ import Fade from "@material-ui/core/Fade";
 import TextareaAutosize from "@material-ui/core/TextareaAutosize";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
+import { FieldType } from "./Fields";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     test: { position: "absolute", top: 10, left: 10 },
@@ -37,6 +38,7 @@ interface Props {}
 const LongTextEditor = (props: Props) => {
   const classes = useStyles();
   const editorContext = useContext(EditorContext);
+  if (editorContext.fieldType !== FieldType.longText) return <></>;
   const isOpen = editorContext.editorValue !== null;
   return (
     <Modal

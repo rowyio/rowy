@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import EditorContext from "../contexts/editorContext";
+import { FieldType } from "../components/Fields";
 
 interface IEditorProviderProps {
   children: React.ReactNode;
@@ -7,6 +8,7 @@ interface IEditorProviderProps {
 export const EditorProvider: React.FC<IEditorProviderProps> = ({
   children,
 }) => {
+  const [fieldType, setFieldType] = useState<FieldType | null>(null);
   const [props, setProps] = useState<any>();
   const [editorValue, setEditorValue] = useState<null | string>(null);
   const close = () => {
@@ -14,14 +16,19 @@ export const EditorProvider: React.FC<IEditorProviderProps> = ({
       props.onSubmit(editorValue);
     }
     setEditorValue(null);
+    setFieldType(null);
   };
-  const open = (props: {
-    row: any;
-    onSubmit: any;
-    fieldName: string;
-    value: string;
-    anchorEl: any;
-  }) => {
+  const open = (
+    props: {
+      row: any;
+      onSubmit: any;
+      fieldName: string;
+      value: string;
+      anchorEl: any;
+    },
+    type: FieldType
+  ) => {
+    setFieldType(type);
     setProps(props);
     setEditorValue(props.value);
   };
@@ -30,6 +37,7 @@ export const EditorProvider: React.FC<IEditorProviderProps> = ({
       value={{
         close,
         open,
+        fieldType,
         editorValue,
         setEditorValue,
       }}

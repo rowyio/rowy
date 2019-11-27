@@ -1,12 +1,8 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useContext } from "react";
 import ExpandIcon from "@material-ui/icons/AspectRatio";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import Popper from "@material-ui/core/Popper";
-import Paper from "@material-ui/core/Paper";
-import TextareaAutosize from "@material-ui/core/TextareaAutosize";
-import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import EditorContext from "contexts/editorContext";
 import { FieldType } from ".";
 
@@ -31,7 +27,7 @@ interface Props {
   onSubmit: Function;
 }
 
-const LongText = (props: Props) => {
+const RichText = (props: Props) => {
   const editorContext = useContext(EditorContext);
   const { value } = props;
   const classes = useStyles();
@@ -39,7 +35,7 @@ const LongText = (props: Props) => {
     <div className={classes.root}>
       <IconButton
         onClick={() => {
-          editorContext.open(props, FieldType.longText);
+          editorContext.open(props, FieldType.richText);
         }}
       >
         <ExpandIcon />
@@ -48,4 +44,4 @@ const LongText = (props: Props) => {
     </div>
   );
 };
-export default LongText;
+export default RichText;

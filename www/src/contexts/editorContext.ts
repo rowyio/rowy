@@ -1,4 +1,5 @@
 import React from "react";
+import { FieldType } from "../components/Fields";
 
 export interface EditorContextInterface {
   // row: any;
@@ -9,6 +10,7 @@ export interface EditorContextInterface {
   open: any;
   close: any;
   setEditorValue: any;
+  fieldType: FieldType | null;
 }
 
 const EditorContext = React.createContext<EditorContextInterface>({
@@ -20,6 +22,7 @@ const EditorContext = React.createContext<EditorContextInterface>({
   close: undefined,
   editorValue: undefined,
   setEditorValue: undefined,
+  fieldType: null,
 });
 
 export default EditorContext;
