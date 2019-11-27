@@ -140,7 +140,6 @@ function Table(props: Props) {
     columns = tableState.columns
       .filter((column: any) => !column.hidden)
       .map((column: any) => ({
-        width: 220,
         draggable: true,
         editable: editable(column.type),
         resizable: true,
@@ -155,6 +154,7 @@ function Table(props: Props) {
             ? singleSelectEditor(column.options)
             : false,
         ...column,
+        width: column.width ? (column.width > 380 ? 380 : column.width) : 150,
       }));
     columns.push({
       isNew: true,
