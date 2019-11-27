@@ -29,8 +29,8 @@ export default function Action(props: Props) {
   //console.log(props);
   const { row, value, fieldName, onSubmit } = props;
   const { createdAt, rowHeight, id, ref, ...docData } = row;
-  const rowDataToSync: any = { ...docData };
-  const [docState, docDispatch] = useDoc({ path: `${fieldName}/${id}` });
+  //const rowDataToSync: any = { ...docData };
+  //const [docState, docDispatch] = useDoc({ path: `${fieldName}/${id}` });
   //console.log("docState", docState);
   const classes = useStyles();
 
@@ -60,7 +60,7 @@ export default function Action(props: Props) {
       //   )
       // }
     >
-      {Boolean(docState.doc) ? `Sync to ${fieldName}` : `Create ${fieldName}`}
+      {value ? `Sync to ${fieldName}` : `Create in ${fieldName}`}
     </Button>
   );
 }
