@@ -25,6 +25,8 @@ import DuplicateIcon from "@material-ui/icons/FileCopy";
 import useStyles from "./useStyle";
 import Grid from "./Grid";
 import Tooltip from "@material-ui/core/Tooltip";
+import { EditorProvider } from "../../util/EditorProvider";
+import LongTextEditor from "../LongTextEditor";
 
 const Hotkeys = lazy(() => import("./HotKeys"));
 const TableHeader = lazy(() => import("./TableHeader"));
@@ -255,7 +257,7 @@ function Table(props: Props) {
     } else tableActions.row.add({ ...data });
   };
   return (
-    <>
+    <EditorProvider>
       <Suspense fallback={<div>Loading header...</div>}>
         <Hotkeys selectedCell={selectedCell} />
         <TableHeader
@@ -295,8 +297,9 @@ function Table(props: Props) {
         />
 
         <SearchBox searchData={search} clearSearch={clearSearch} />
+        <LongTextEditor />
       </Suspense>
-    </>
+    </EditorProvider>
   );
 }
 export default Table;

@@ -5,11 +5,12 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 
 import algoliasearch from "algoliasearch/lite";
-import Paper from "@material-ui/core/Paper";
 
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
+import Paper from "@material-ui/core/Paper";
+
 import TextField from "@material-ui/core/TextField";
 
 const searchClient = algoliasearch(
@@ -36,10 +37,7 @@ const useStyles = makeStyles(() =>
       minWidth: 200,
     },
     typography: {},
-    textArea: {
-      fontSize: 14,
-      minWidth: 230,
-    },
+
     searchField: {
       width: "100%",
       padding: 20,

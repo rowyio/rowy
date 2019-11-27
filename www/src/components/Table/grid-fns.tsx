@@ -156,7 +156,11 @@ export const cellFormatter = (column: any) => {
       return (props: any) => {
         return (
           <Suspense fallback={<div />}>
-            <LongText {...props} onSubmit={onSubmit(key, props.row)} />
+            <LongText
+              {...props}
+              fieldName={key}
+              onSubmit={onSubmit(key, props.row)}
+            />
           </Suspense>
         );
       };
