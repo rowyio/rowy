@@ -39,7 +39,7 @@ export default function Action(props: Props) {
     if (value) {
       db.collection(fieldName)
         .doc(id)
-        .update({ ...docData });
+        .set({ ...docData, createdAt: new Date() }, { merge: true });
     } else
       db.collection(fieldName)
         .doc(id)
