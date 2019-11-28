@@ -10,6 +10,8 @@ import ReactQuill from "react-quill";
 import Delta from "quill-delta";
 import "react-quill/dist/quill.snow.css";
 import { bucket } from "../firebase";
+import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     test: { position: "absolute", top: 10, left: 10 },
@@ -185,8 +187,8 @@ const RichTextEditor = (props: Props) => {
       aria-labelledby="simple-modal-title"
       aria-describedby="simple-modal-description"
       open={isOpen}
-      onClose={() => {
-        editorContext.close();
+      onClose={(event: {}, reason: "backdropClick" | "escapeKeyDown") => {
+        if (reason === "escapeKeyDown") editorContext.cancel();
       }}
     >
       <Fade in={isOpen}>
@@ -224,9 +226,24 @@ const RichTextEditor = (props: Props) => {
               },
             }}
           />
-          <Typography variant="caption">
-            click away or press escape to save
-          </Typography>
+          <Grid container justify="space-between">
+            <Button
+              size="small"
+              variant="outlined"
+              color="primary"
+              onClick={editorContext.close}
+            >
+              Save
+            </Button>
+            <Button
+              size="small"
+              variant="outlined"
+              color="secondary"
+              onClick={editorContext.cancel}
+            >
+              cancel
+            </Button>
+          </Grid>
         </Paper>
       </Fade>
     </Modal>

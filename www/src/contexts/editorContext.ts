@@ -9,6 +9,7 @@ export interface EditorContextInterface {
   editorValue: any;
   open: any;
   close: any;
+  cancel: any;
   setEditorValue: any;
   fieldType: FieldType | null;
 }
@@ -20,6 +21,7 @@ const EditorContext = React.createContext<EditorContextInterface>({
   // anchorEl: undefined,
   open: undefined,
   close: undefined,
+  cancel: undefined,
   editorValue: undefined,
   setEditorValue: undefined,
   fieldType: null,

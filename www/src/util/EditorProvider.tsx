@@ -17,6 +17,12 @@ export const EditorProvider: React.FC<IEditorProviderProps> = ({
     }
     setEditorValue(null);
     setFieldType(null);
+    setProps(null);
+  };
+  const cancel = () => {
+    setEditorValue(null);
+    setFieldType(null);
+    setProps(null);
   };
   const open = (
     props: {
@@ -35,6 +41,7 @@ export const EditorProvider: React.FC<IEditorProviderProps> = ({
   return (
     <EditorContext.Provider
       value={{
+        cancel,
         close,
         open,
         fieldType,
