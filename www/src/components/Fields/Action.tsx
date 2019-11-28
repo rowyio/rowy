@@ -36,14 +36,10 @@ export default function Action(props: Props) {
 
   const handleClick = () => {
     onSubmit(true);
-    if (value) {
-      db.collection(fieldName)
-        .doc(id)
-        .set({ ...docData, createdAt: new Date() }, { merge: true });
-    } else
-      db.collection(fieldName)
-        .doc(id)
-        .set({ ...docData, createdAt: new Date() }, { merge: true });
+
+    db.collection(fieldName)
+      .doc(id)
+      .set({ ...docData, createdAt: new Date() }, { merge: true });
   };
   return (
     <Button
