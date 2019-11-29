@@ -15,31 +15,43 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 interface Props {
-  value: boolean | null;
+  //value: boolean | { seconds: number; nanoseconds: number } | null;
+  value: any;
   fieldName: string;
   row: {
     ref: firebase.firestore.DocumentReference;
     id: string;
     createdAt: any;
     rowHeight: number;
+    updatedAt: any;
   };
   onSubmit: Function;
 }
 export default function Action(props: Props) {
-  //console.log(props);
   const { row, value, fieldName, onSubmit } = props;
-  const { createdAt, rowHeight, id, ref, ...docData } = row;
-  //const rowDataToSync: any = { ...docData };
-  //const [docState, docDispatch] = useDoc({ path: `${fieldName}/${id}` });
-  //console.log("docState", docState);
+  const { createdAt, updatedAt, rowHeight, id, ref, ...docData } = row;
+
+  let needsToSync = true;
+
+  if (
+    value &&
+    updatedAt &&
+    value.seconds &&
+    updatedAt.seconds &&
+    value.seconds + 20 > updatedAt.seconds
+  ) {
+    console.log(value, updatedAt);
+    needsToSync = false;
+  }
   const classes = useStyles();
 
   const handleClick = () => {
-    onSubmit(true);
+    const now = new Date();
+    onSubmit(now);
 
     db.collection(fieldName)
       .doc(id)
-      .set({ ...docData, createdAt: new Date() }, { merge: true });
+      .set({ ...docData, createdAt: now, updatedAt: now }, { merge: true });
   };
   return (
     <Button
@@ -47,14 +59,7 @@ export default function Action(props: Props) {
       onClick={handleClick}
       color="primary"
       className={classes.button}
-      // disabled={
-      //   !rowDataToSync &&
-      //   Object.keys(rowDataToSync).every(
-      //     (key: string) =>
-      //       rowDataToSync[key] !== null &&
-      //       rowDataToSync[key] === docState.doc[key]
-      //   )
-      // }
+      disabled={!needsToSync}
     >
       {value ? `Sync to ${fieldName}` : `Create in ${fieldName}`}
     </Button>

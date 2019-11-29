@@ -1,14 +1,9 @@
 import React, { useContext } from "react";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import EditorContext from "contexts/editorContext";
-import Modal from "@material-ui/core/Modal";
-import Fade from "@material-ui/core/Fade";
 import TextareaAutosize from "@material-ui/core/TextareaAutosize";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
 import { FieldType } from "./Fields";
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
+import EditorModel from "./EditorModal";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -42,53 +37,21 @@ const LongTextEditor = (props: Props) => {
   const classes = useStyles();
   const editorContext = useContext(EditorContext);
   if (editorContext.fieldType !== FieldType.longText) return <></>;
-  const isOpen = editorContext.editorValue !== null;
   return (
-    <Modal
-      className={classes.modal}
-      aria-labelledby="simple-modal-title"
-      aria-describedby="simple-modal-description"
-      open={isOpen}
-      onClose={(event: {}, reason: "backdropClick" | "escapeKeyDown") => {
-        if (reason === "escapeKeyDown") editorContext.cancel();
-      }}
-    >
-      <Fade in={isOpen}>
-        <Paper className={classes.paper}>
-          <TextareaAutosize
-            id={"TextareaAutosize"}
-            className={classes.textArea}
-            rowsMax={25}
-            aria-label="maximum height"
-            placeholder="enter text"
-            defaultValue={editorContext.editorValue}
-            autoFocus
-            onChange={(e: any) => {
-              editorContext.setEditorValue(e.target.value);
-            }}
-          />
-
-          <Grid container justify="space-between">
-            <Button
-              size="small"
-              variant="outlined"
-              color="primary"
-              onClick={editorContext.close}
-            >
-              Save
-            </Button>
-            <Button
-              size="small"
-              variant="outlined"
-              color="secondary"
-              onClick={editorContext.cancel}
-            >
-              cancel
-            </Button>
-          </Grid>
-        </Paper>
-      </Fade>
-    </Modal>
+    <EditorModel>
+      <TextareaAutosize
+        id={"TextareaAutosize"}
+        className={classes.textArea}
+        rowsMax={25}
+        aria-label="maximum height"
+        placeholder="enter text"
+        defaultValue={editorContext.editorValue}
+        autoFocus
+        onChange={(e: any) => {
+          editorContext.setEditorValue(e.target.value);
+        }}
+      />
+    </EditorModel>
   );
 };
 export default LongTextEditor;

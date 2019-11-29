@@ -5,6 +5,7 @@ import Typography from "@material-ui/core/Typography";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import EditorContext from "contexts/editorContext";
 import { FieldType } from ".";
+import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -33,14 +34,14 @@ const RichText = (props: Props) => {
   const classes = useStyles();
   return (
     <div className={classes.root}>
-      <IconButton
+      <Button
         onClick={() => {
           editorContext.open(props, FieldType.richText);
         }}
       >
-        <ExpandIcon />
-      </IconButton>
-      <Typography className={classes.typography}>{value}</Typography>
+        {" "}
+        {Boolean(value) ? "Edit" : "create"}
+      </Button>
     </div>
   );
 };

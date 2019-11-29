@@ -1,13 +1,11 @@
 import React, { useContext, useRef, useEffect } from "react";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import EditorContext from "contexts/editorContext";
-import { FieldType } from "./Fields";
-import ReactQuill from "react-quill";
-import Delta from "quill-delta";
-import "react-quill/dist/quill.snow.css";
-import { bucket } from "../firebase";
-
-import EditorModel from "./EditorModal";
+import Modal from "@material-ui/core/Modal";
+import Fade from "@material-ui/core/Fade";
+import Paper from "@material-ui/core/Paper";
+import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     test: { position: "absolute", top: 10, left: 10 },
@@ -119,100 +117,44 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 interface Props {}
 
-async function asyncUploader(ref: any, file: File) {
-  const documentRef = bucket.ref("test").child(ref);
-  const snapShot = await documentRef.put(file);
-  const downloadUrl = await bucket
-    .ref("test")
-    .child(snapShot.metadata.fullPath)
-    .getDownloadURL();
-  return downloadUrl;
-}
-const imageHandler = (quillRef: any) => () => {
-  const now = new Date();
-
-  const quill = quillRef.current.getEditor();
-  let fileInput: any = document.body.querySelector("input.ql-image[type=file]");
-  if (fileInput == null) {
-    fileInput = document.createElement("input");
-    fileInput.setAttribute("type", "file");
-    fileInput.setAttribute(
-      "accept",
-      "image/png, image/gif, image/jpeg, image/bmp, image/x-icon"
-    );
-    fileInput.classList.add("ql-image");
-    fileInput.addEventListener("change", async () => {
-      if (fileInput.files != null && fileInput.files[0] != null) {
-        const ref = `quill-images/${now.getTime()}/${fileInput.files[0].name}`;
-        const downloadUrl = await asyncUploader(ref, fileInput.files[0]);
-        let range = quill.getSelection(true);
-        quill.updateContents(
-          new Delta()
-            .retain(range.index)
-            .delete(range.length)
-            .insert({ image: downloadUrl }),
-          "user"
-        );
-
-        fileInput.value = "";
-        document.body.removeChild(fileInput);
-      }
-    });
-    document.body.appendChild(fileInput);
-  }
-  fileInput.click();
-};
-
-const RichTextEditor = (props: Props) => {
+const EditorModel = ({ children }: any) => {
   const classes = useStyles();
   const editorContext = useContext(EditorContext);
-  const quillRef = useRef(null);
-  useEffect(() => {
-    if (quillRef !== null && quillRef.current) {
-      // quillRef.current
-      //   .getEditor()
-      //   .getModule("toolbar")
-      //   .addHandler("image", imageHandler(quillRef));
-    }
-  }, [quillRef]);
-  if (editorContext.fieldType !== FieldType.richText) return <></>;
   const isOpen = editorContext.editorValue !== null;
   return (
-    <EditorModel>
-      <ReactQuill
-        //placeholder={placeholder}
-        value={editorContext.editorValue}
-        ref={quillRef}
-        onChange={val => {
-          // const dataURLregEx = /"data:.*?"/;
-          // let matches = val.match(dataURLregEx);
-          // delete matches.index;
-          // delete matches.input;
-          // delete matches.groups;
-          // console.log(matches);
-          editorContext.setEditorValue(val);
-        }}
-        theme="snow"
-        className={classes.quillEditor}
-        //  preserveWhiteSpace
-        modules={{
-          toolbar: {
-            container: [
-              ["bold", "italic", "underline"],
-              [{ header: [1, 2, 3, 4, false] }],
-
-              [{ list: "bullet" }, { list: "ordered" }],
-              [{ indent: "-1" }, { indent: "+1" }],
-              ["blockquote", "code-block", "video"],
-              ["link"],
-            ],
-          },
-          clipboard: {
-            matchVisual: false,
-          },
-        }}
-      />
-    </EditorModel>
+    <Modal
+      className={classes.modal}
+      aria-labelledby="simple-modal-title"
+      aria-describedby="simple-modal-description"
+      open={isOpen}
+      onClose={(event: {}, reason: "backdropClick" | "escapeKeyDown") => {
+        if (reason === "escapeKeyDown") editorContext.cancel();
+      }}
+    >
+      <Fade in={isOpen}>
+        <Paper className={classes.paper}>
+          {children}
+          <Grid container justify="space-between">
+            <Button
+              size="small"
+              variant="outlined"
+              color="primary"
+              onClick={editorContext.close}
+            >
+              Save
+            </Button>
+            <Button
+              size="small"
+              variant="outlined"
+              color="secondary"
+              onClick={editorContext.cancel}
+            >
+              cancel
+            </Button>
+          </Grid>
+        </Paper>
+      </Fade>
+    </Modal>
   );
 };
-export default RichTextEditor;
+export default EditorModel;

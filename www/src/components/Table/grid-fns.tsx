@@ -6,7 +6,7 @@ import MultiSelect from "../Fields/MultiSelect";
 import { algoliaUpdateDoc } from "../../firebase/callables";
 
 const { AutoComplete } = Editors;
-const Date = lazy(() => import("../Fields/Date"));
+const DateField = lazy(() => import("../Fields/Date"));
 const Rating = lazy(() => import("../Fields/Rating"));
 const CheckBox = lazy(() => import("../Fields/CheckBox"));
 const UrlLink = lazy(() => import("../Fields/UrlLink"));
@@ -41,7 +41,8 @@ export const onSubmit = (key: string, row: any) => async (value: any) => {
   const collection = row.ref.parent.path;
   const data = { collection, id: row.ref.id, doc: { [key]: value } };
   if (value !== null || value !== undefined) {
-    row.ref.update({ [key]: value });
+    const updatedAt = new Date();
+    row.ref.update({ [key]: value, updatedAt });
     await algoliaUpdateDoc(data);
   }
 };
@@ -50,7 +51,7 @@ export const DateFormatter = (key: string, fieldType: FieldType) => (
   props: any
 ) => {
   return (
-    <Date
+    <DateField
       {...props}
       onSubmit={onSubmit(key, props.row)}
       fieldType={fieldType}
@@ -59,9 +60,11 @@ export const DateFormatter = (key: string, fieldType: FieldType) => (
 };
 
 export const onGridRowsUpdated = (event: any) => {
-  const { fromRowData, updated } = event;
-
-  onSubmit(Object.keys(updated)[0], fromRowData)(Object.values(updated)[0]);
+  const { fromRowData, updated, action } = event;
+  console.log(event);
+  if (action === "CELL_UPDATE") {
+    onSubmit(Object.keys(updated)[0], fromRowData)(Object.values(updated)[0]);
+  }
 };
 export const onCellSelected = (args: any) => {};
 export const cellFormatter = (column: any) => {
