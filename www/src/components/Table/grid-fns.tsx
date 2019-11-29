@@ -2,7 +2,7 @@ import React, { lazy, Suspense } from "react";
 import { FieldType } from "../Fields";
 import { Editors } from "react-data-grid-addons";
 import MultiSelect from "../Fields/MultiSelect";
-
+import _uniq from "lodash/uniq";
 import { algoliaUpdateDoc } from "../../firebase/callables";
 
 const { AutoComplete } = Editors;
@@ -42,7 +42,11 @@ export const onSubmit = (key: string, row: any) => async (value: any) => {
   const data = { collection, id: row.ref.id, doc: { [key]: value } };
   if (value !== null || value !== undefined) {
     const updatedAt = new Date();
-    row.ref.update({ [key]: value, updatedAt });
+    let updatedFields = [key];
+    if (row.updatedFields) {
+      updatedFields = _uniq([key, ...row.updatedFields]);
+    }
+    row.ref.update({ [key]: value, updatedAt, updatedFields });
     await algoliaUpdateDoc(data);
   }
 };

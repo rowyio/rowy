@@ -47,8 +47,9 @@ export default function Action(props: Props) {
 
   const handleClick = () => {
     const now = new Date();
-    onSubmit(now);
-
+    //onSubmit(now);
+    // sets the new sync time, and clears the
+    row.ref.update({ [fieldName]: now, updatedFields: [] });
     db.collection(fieldName)
       .doc(id)
       .set({ ...docData, createdAt: now, updatedAt: now }, { merge: true });
