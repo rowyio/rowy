@@ -65,7 +65,6 @@ export const DateFormatter = (key: string, fieldType: FieldType) => (
 
 export const onGridRowsUpdated = (event: any) => {
   const { fromRowData, updated, action } = event;
-  console.log(event);
   if (action === "CELL_UPDATE") {
     onSubmit(Object.keys(updated)[0], fromRowData)(Object.values(updated)[0]);
   }

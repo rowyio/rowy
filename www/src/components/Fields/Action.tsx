@@ -15,44 +15,44 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 interface Props {
-  //value: boolean | { seconds: number; nanoseconds: number } | null;
   value: any;
   fieldName: string;
-  row: {
-    ref: firebase.firestore.DocumentReference;
-    id: string;
-    createdAt: any;
-    rowHeight: number;
-    updatedAt: any;
-  };
+  // row: {
+  //   ref: firebase.firestore.DocumentReference;
+  //   id: string;
+  //   createdAt: any;
+  //   rowHeight: number;
+  //   updatedAt: any;
+  // };
+  row: any;
   onSubmit: Function;
 }
 export default function Action(props: Props) {
   const { row, value, fieldName, onSubmit } = props;
   const { createdAt, updatedAt, rowHeight, id, ref, ...docData } = row;
-
-  let needsToSync = true;
-
-  if (
-    value &&
-    updatedAt &&
-    value.seconds &&
-    updatedAt.seconds &&
-    value.seconds + 20 > updatedAt.seconds
-  ) {
-    console.log(value, updatedAt);
-    needsToSync = false;
-  }
   const classes = useStyles();
-
   const handleClick = () => {
-    const now = new Date();
-    //onSubmit(now);
-    // sets the new sync time, and clears the
-    row.ref.update({ [fieldName]: now, updatedFields: [] });
+    const fieldsToSync = [
+      "firstName",
+      "lastName",
+      "preferredName",
+      "personalBio",
+      "founderType",
+      "cohort",
+      "ordering",
+      "email",
+      "profilePhoto",
+    ];
+    const data = fieldsToSync.reduce((acc: any, curr: string) => {
+      if (row[curr]) {
+        acc[curr] = row[curr];
+        return acc;
+      } else return acc;
+    }, {});
     db.collection(fieldName)
       .doc(id)
-      .set({ ...docData, createdAt: now, updatedAt: now }, { merge: true });
+      .set(data, { merge: true });
+    onSubmit(true);
   };
   return (
     <Button
@@ -60,9 +60,9 @@ export default function Action(props: Props) {
       onClick={handleClick}
       color="primary"
       className={classes.button}
-      disabled={!needsToSync}
+      //   disabled={!!value}
     >
-      {value ? `Sync to ${fieldName}` : `Create in ${fieldName}`}
+      {value ? `done` : `Create in ${fieldName}`}
     </Button>
   );
 }
