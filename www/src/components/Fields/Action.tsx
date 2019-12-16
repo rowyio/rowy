@@ -43,6 +43,7 @@ export default function Action(props: Props) {
       "email",
       "profilePhoto",
       "twitter",
+      "employerLogos",
       "linkedin",
       "publicProfile",
       "companies",
