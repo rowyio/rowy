@@ -42,6 +42,10 @@ export default function Action(props: Props) {
       "ordering",
       "email",
       "profilePhoto",
+      "twitter",
+      "linkedin",
+      "publicProfile",
+      "companies",
     ];
     const data = fieldsToSync.reduce((acc: any, curr: string) => {
       if (row[curr]) {
