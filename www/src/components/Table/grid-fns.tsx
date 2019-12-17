@@ -100,7 +100,11 @@ export const cellFormatter = (column: any) => {
       return (props: any) => {
         return (
           <Suspense fallback={<div />}>
-            <CheckBox {...props} onSubmit={onSubmit(key, props.row)} />
+            <CheckBox
+              column={column}
+              {...props}
+              onSubmit={onSubmit(key, props.row)}
+            />
           </Suspense>
         );
       };
