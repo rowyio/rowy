@@ -31,6 +31,8 @@
     "lodash": "^4.17.15",
     "query-string": "^6.8.3",
     "quill-delta": "^4.2.1",
+    "quill-image-drop-module": "^1.0.3",
+    "quill-image-resize-module": "^3.0.0",
     "ramda": "^0.26.1",
     "react": "^16.9.0",
     "react-color": "^2.17.3",
