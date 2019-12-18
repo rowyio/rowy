@@ -22,7 +22,6 @@ const tableInitialState = {
   prevLimit: 0,
   limit: 20,
   loading: true,
-  sort: { field: "createdAt", direction: "asc" },
   cap: CAP,
 };
 
