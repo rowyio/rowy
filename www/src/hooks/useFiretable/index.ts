@@ -15,6 +15,7 @@ export type FiretableActions = {
     set: Function;
     filter: Function;
     updateConfig: Function;
+    orderBy: Function;
   };
 };
 
@@ -32,22 +33,33 @@ export type FireTableFilter = {
   operator: "==" | "<" | ">" | ">=" | "<=" | string;
   value: string | number | boolean;
 };
-
-const useFiretable = (collectionName: string, filters?: FireTableFilter[]) => {
+export type FiretableOrderBy = { key: string; direction: "asc" | "desc" }[];
+const useFiretable = (
+  collectionName: string,
+  filters?: FireTableFilter[],
+  orderBy?: FiretableOrderBy
+) => {
   const [tableConfig, configActions] = useTableConfig(collectionName);
   const [tableState, tableActions] = useTable({
     path: collectionName,
     filters,
+    orderBy,
   });
   /** set collection path of table */
-  const setTable = (collectionName: string, filters: FireTableFilter[]) => {
-    if (collectionName !== tableState.path && filters !== tableState.filters) {
+  const setTable = (
+    collectionName: string,
+    filters: FireTableFilter[],
+    orderBy: FiretableOrderBy
+  ) => {
+    if (collectionName !== tableState.path || filters !== tableState.filters) {
       configActions.setTable(collectionName);
       tableActions.setTable(collectionName, filters);
     }
   };
   const filterTable = (filters: FireTableFilter[]) => {};
-
+  const setOrder = (orderBy: FiretableOrderBy) => {
+    tableActions.dispatch({ orderBy });
+  };
   const state: FiretableState = {
     columns: tableConfig.columns,
     config: { rowHeight: tableConfig.rowHeight },
@@ -73,6 +85,7 @@ const useFiretable = (collectionName: string, filters?: FireTableFilter[]) => {
     table: {
       updateConfig: configActions.updateConfig,
       set: setTable,
+      orderBy: setOrder,
       filter: filterTable,
     },
   };

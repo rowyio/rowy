@@ -1,6 +1,9 @@
 import React, { useState, useEffect, lazy, Suspense } from "react";
 
-import useFiretable, { FireTableFilter } from "../../hooks/useFiretable";
+import useFiretable, {
+  FireTableFilter,
+  FiretableOrderBy,
+} from "../../hooks/useFiretable";
 
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
@@ -17,6 +20,7 @@ import {
 import { CLOUD_FUNCTIONS } from "firebase/callables";
 import Typography from "@material-ui/core/Typography";
 import AddIcon from "@material-ui/icons/AddCircle";
+import SortByAlphaIcon from "@material-ui/icons/SortByAlpha";
 import SettingsIcon from "@material-ui/icons/Settings";
 import useWindowSize from "../../hooks/useWindowSize";
 import Confirmation from "components/Confirmation";
@@ -28,7 +32,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import { EditorProvider } from "../../util/EditorProvider";
 import LongTextEditor from "../LongTextEditor";
 import RichTextEditor from "../RichTextEditor";
-
+import _isEmpty from "lodash/isEmpty";
 const Hotkeys = lazy(() => import("./HotKeys"));
 const TableHeader = lazy(() => import("./TableHeader"));
 const SearchBox = lazy(() => import("../SearchBox"));
@@ -46,11 +50,17 @@ interface Props {
 
 function Table(props: Props) {
   const { collection, filters } = props;
-  const { tableState, tableActions } = useFiretable(collection, filters);
+  const [orderBy, setOrderBy] = useState<FiretableOrderBy>([]);
+  const { tableState, tableActions } = useFiretable(
+    collection,
+    filters,
+    orderBy
+  );
   const [selectedCell, setSelectedCell] = useState<{ row: any; column: any }>({
     row: {},
     column: {},
   });
+
   const [search, setSearch] = useState({
     config: undefined,
     collection: "",
@@ -60,7 +70,7 @@ function Table(props: Props) {
   const size = useWindowSize();
 
   useEffect(() => {
-    tableActions.table.set(collection, filters);
+    tableActions.table.set(collection, filters, orderBy);
   }, [collection, filters]);
 
   const classes = useStyles();
@@ -123,6 +133,43 @@ function Table(props: Props) {
                 {getFieldIcon(props.column.type)}
                 <Typography variant="button">{props.column.name}</Typography>
               </div>
+              <IconButton
+                color={
+                  orderBy[0] && orderBy[0].key === column.key
+                    ? "primary"
+                    : "default"
+                }
+                disableFocusRipple={true}
+                size="small"
+                onClick={() => {
+                  console.log(
+                    orderBy,
+                    orderBy[0] && orderBy[0].key === column.key,
+                    orderBy[0] && orderBy[0].direction === "asc"
+                  );
+                  if (
+                    orderBy[0] &&
+                    orderBy[0].key === column.key &&
+                    orderBy[0].direction === "asc"
+                  ) {
+                    const ordering: FiretableOrderBy = [
+                      { key: column.key, direction: "desc" },
+                    ];
+
+                    tableActions.table.orderBy(ordering);
+                    //setOrderBy(ordering) #BROKENINSIDE
+                  } else {
+                    const ordering: FiretableOrderBy = [
+                      { key: column.key, direction: "asc" },
+                    ];
+                    tableActions.table.orderBy(ordering);
+                    console.log(ordering);
+                    //setOrderBy(ordering) #BROKENINSIDE
+                  }
+                }}
+              >
+                <SortByAlphaIcon />
+              </IconButton>
               <IconButton
                 disableFocusRipple={true}
                 size="small"
