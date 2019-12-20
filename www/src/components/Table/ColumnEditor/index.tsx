@@ -29,6 +29,7 @@ import SelectOptionsInput from "./SelectOptionsInput";
 
 import DocInput from "./DocInput";
 import { Tooltip } from "@material-ui/core";
+import Confirmation from "../../Confirmation";
 
 const useStyles = makeStyles(Theme =>
   createStyles({
@@ -289,13 +290,20 @@ const ColumnEditor = (props: any) => {
                       </Button>
                     )}
                     {!column.isNew && (
-                      <Button
-                        variant="outlined"
-                        color="secondary"
-                        onClick={deleteColumn}
+                      <Confirmation
+                        message={{
+                          customBody:
+                            "Are you sure you want to delete this nice column",
+                        }}
                       >
-                        <DeleteIcon /> Delete
-                      </Button>
+                        <Button
+                          variant="outlined"
+                          color="secondary"
+                          onClick={deleteColumn}
+                        >
+                          <DeleteIcon /> Delete
+                        </Button>
+                      </Confirmation>
                     )}
                     <Button
                       color="secondary"

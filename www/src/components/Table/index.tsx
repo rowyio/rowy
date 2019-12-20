@@ -163,7 +163,6 @@ function Table(props: Props) {
                       { key: column.key, direction: "asc" },
                     ];
                     tableActions.table.orderBy(ordering);
-                    console.log(ordering);
                     //setOrderBy(ordering) #BROKENINSIDE
                   }
                 }}
