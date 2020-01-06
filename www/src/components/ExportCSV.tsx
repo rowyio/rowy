@@ -94,7 +94,7 @@ export default function ExportCSV(props: Props) {
     setOpen(false);
     setCSVColumns([]);
   }
-  async function handleExport(columns: any[]) {
+  async function handleExport(columns?: any[]) {
     handleClose();
     snackContext.open({
       message: "preparing file, download will start shortly",
@@ -102,8 +102,9 @@ export default function ExportCSV(props: Props) {
     });
     const data = await exportTable({
       collectionPath: collection,
+      allFields:!Boolean(columns),
       filters,
-      columns,
+      columns:columns?columns:[],
     });
     var blob = new Blob([data.data], {
       type: "text/csv;charset=utf-8",
@@ -162,6 +163,15 @@ export default function ExportCSV(props: Props) {
         <DialogActions>
           <Button onClick={handleClose} color="primary">
             Cancel
+          </Button>
+          <Button
+            onClick={() => {
+              handleExport();
+            }}
+          
+            color="secondary"
+          >
+            Export All Fields
           </Button>
           <Button
             onClick={() => {
