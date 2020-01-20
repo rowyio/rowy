@@ -1,7 +1,9 @@
 # Firetable
 
-Firetable is a spreadsheet-like UI for Firestore. No more building admin portals
-for allowing business users to access data from Google Cloud.
+Firetable is a spreadsheet-like UI for Firestore.
+
+No more building admin portals to let business users to access data from Google
+Cloud.
 
 ### Firetable UI
 
@@ -29,7 +31,7 @@ supported. More coming soon, for comprehensive list see ROADMAP.md.
   }
   ```
 - Upgrade project to the Blaze Plan
-- Enable the Google sign-in method in **Authentication**
+- Enable the Google sign-in method in **Authentication / Sign-in method**
 
 ### 2. Create an [Algolia](https://algolia.com) project
 
