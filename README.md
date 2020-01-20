@@ -1,73 +1,98 @@
-## Firetable
+# Firetable
 
-Firetable is an Excel/Google Sheets like UI for Firebase/Firestore. No more building admin portal for allowing business users to access data from GCP.
+Firetable is a spreadsheet-like UI for Firestore. No more building admin portals
+for allowing business users to access data from Google Cloud.
 
-#### Firetable UI
+### Firetable UI
 
-Supports fields such as images, files, single/multi select in addition to standard fields. Functions such a row resizing, data import/export are supported. More coming soon, for comprehensive list of checkout ROADMAP.
+Supports fields such as images, files, single/multi select, in addition to
+standard fields. Functions such as row resizing, data import/export are
+supported. More coming soon, for comprehensive list see ROADMAP.md.
+
 ![Firetable](https://i.imgur.com/Isuhy3u.png)
 
 ## Setup instructions
 
-#### 1) Create a firebase project ([instructions](https://console.firebase.google.com/u/0/))
+### 1. Create a Firebase project [(Instructions)](https://console.firebase.google.com/u/0/)
 
-- enable firestore
-- setup security rules: test mode or setup required permission
-- upgrade project to Blaze plan
-- go to authentication/ sign method enable google auth
+- Enable the Firestore database
+- Set up Firestore Security Rules: use Test Mode or set up required permissions.
+  Below are sample rules that allow for unlimited access to the entire database:
+  ```
+  rules_version = '2';
+  service cloud.firestore {
+    match /databases/{database}/documents {
+      match /{document=**} {
+        allow read, write: if true;
+      }
+    }
+  }
+  ```
+- Upgrade project to the Blaze Plan
+- Enable the Google sign-in method in **Authentication**
 
-#### 2) Create an algolia project
+### 2. Create an [Algolia](https://algolia.com) project
 
-- get the generated appId,API key and search key
+- Get the generated **Application ID** and **Search-Only API Key** from the
+  **API Keys** page
 
-#### 3) Clone repo
+### 3. Clone this repo
 
 ```
 git clone https://github.com/AntlerVC/firetable.git
 ```
 
-#### 4) Setup cloud functions
+### 4. Set up Cloud Functions
 
-install dependencies
+- Install dependencies
 
 ```
-cd cloud_functions/functions;yarn
+cd cloud_functions/functions
+yarn
 ```
 
-insure that you have firebase cli installed, [instructions](https://firebase.google.com/docs/cli)
+- Ensure that you have Firebase CLI installed.
+  [(Instructions)](https://firebase.google.com/docs/cli)
 
-then set cloud environment keys using the following commands
+- Set cloud environment keys for Algolia
 
 ```
 firebase functions:config:set algolia.appid=YOUR_APP_ID algolia.apikey=ADMIN_API_KEY
 ```
 
-Deploy the cloud functions to your firebase project
+- Deploy the Cloud Functions to your Firebase project
 
 ```
 yarn deploy
 ```
 
-#### 5) Set environment variables
+### 5. Set React app environment variables
 
-create a .env file in the www directory
+Create a .env file in the `www` directory
 
-```
-REACT_APP_FIREBASE_PROJECT_ID =
-REACT_APP_FIREBASE_PROJECT_WEB_API_KEY =
-REACT_APP_ALGOLIA_APP_ID =
-REACT_APP_ALGOLIA_SEARCH_API_KEY =
-```
+- Get the generated **Application ID** and **Search-Only API Key** from the
+  Algolia **API Keys** page
 
-#### 6) Run frontend
-
-install dependencies
+- Get the Firebase **Project ID** and **Web API Key** from your Firebase
+  Project’s **Settings** page. Click the cog icon on the left sidebar (under the
+  Firebase logo) and click **Project settings**
 
 ```
-cd www;yarn
+REACT_APP_ALGOLIA_APP_ID=
+REACT_APP_ALGOLIA_SEARCH_API_KEY=
+
+REACT_APP_FIREBASE_PROJECT_ID=
+REACT_APP_FIREBASE_PROJECT_WEB_API_KEY=
 ```
 
-#### 7) Run project locally
+### 6. Install front-end dependencies
+
+```
+cd www
+yarn
+```
+
+### 7. Run project locally
 
 ```
 yarn start
