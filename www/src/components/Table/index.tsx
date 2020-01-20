@@ -130,45 +130,45 @@ function Table(props: Props) {
                   navigator.clipboard.writeText(props.column.key);
                 }}
               >
-                {getFieldIcon(props.column.type)}
+                <IconButton
+                  color={
+                    orderBy[0] && orderBy[0].key === column.key
+                      ? "primary"
+                      : "default"
+                  }
+                  disableFocusRipple={true}
+                  size="small"
+                  onClick={() => {
+                    console.log(
+                      orderBy,
+                      orderBy[0] && orderBy[0].key === column.key,
+                      orderBy[0] && orderBy[0].direction === "asc"
+                    );
+                    if (
+                      orderBy[0] &&
+                      orderBy[0].key === column.key &&
+                      orderBy[0].direction === "asc"
+                    ) {
+                      const ordering: FiretableOrderBy = [
+                        { key: column.key, direction: "desc" },
+                      ];
+
+                      tableActions.table.orderBy(ordering);
+                      //setOrderBy(ordering) #BROKENINSIDE
+                    } else {
+                      const ordering: FiretableOrderBy = [
+                        { key: column.key, direction: "asc" },
+                      ];
+                      tableActions.table.orderBy(ordering);
+                      //setOrderBy(ordering) #BROKENINSIDE
+                    }
+                  }}
+                >
+                  <SortByAlphaIcon />
+                </IconButton>
                 <Typography variant="button">{props.column.name}</Typography>
               </div>
-              <IconButton
-                color={
-                  orderBy[0] && orderBy[0].key === column.key
-                    ? "primary"
-                    : "default"
-                }
-                disableFocusRipple={true}
-                size="small"
-                onClick={() => {
-                  console.log(
-                    orderBy,
-                    orderBy[0] && orderBy[0].key === column.key,
-                    orderBy[0] && orderBy[0].direction === "asc"
-                  );
-                  if (
-                    orderBy[0] &&
-                    orderBy[0].key === column.key &&
-                    orderBy[0].direction === "asc"
-                  ) {
-                    const ordering: FiretableOrderBy = [
-                      { key: column.key, direction: "desc" },
-                    ];
 
-                    tableActions.table.orderBy(ordering);
-                    //setOrderBy(ordering) #BROKENINSIDE
-                  } else {
-                    const ordering: FiretableOrderBy = [
-                      { key: column.key, direction: "asc" },
-                    ];
-                    tableActions.table.orderBy(ordering);
-                    //setOrderBy(ordering) #BROKENINSIDE
-                  }
-                }}
-              >
-                <SortByAlphaIcon />
-              </IconButton>
               <IconButton
                 disableFocusRipple={true}
                 size="small"
