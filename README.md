@@ -16,7 +16,6 @@ Supports fields such as images, files, single/multi select in addition to standa
 - upgrade project to Blaze plan
 - go to authentication/ sign method enable google auth
 
-
 #### 2) Create an algolia project
 
 - get the generated appId,API key and search key
@@ -51,15 +50,13 @@ yarn deploy
 
 #### 5) Set environment variables
 
-
 create a .env file in the www directory
 
-
 ```
-REACT_APP_FIREBASE_PROJECT_NAME =
-REACT_APP_FIREBASE_PROJECT_KEY =
+REACT_APP_FIREBASE_PROJECT_ID =
+REACT_APP_FIREBASE_PROJECT_WEB_API_KEY =
 REACT_APP_ALGOLIA_APP_ID =
-REACT_APP_ALGOLIA_SEARCH_KEY =
+REACT_APP_ALGOLIA_SEARCH_API_KEY =
 ```
 
 #### 6) Run frontend
