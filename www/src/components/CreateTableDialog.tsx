@@ -46,7 +46,7 @@ export default function CreateTableDialog(props: any) {
     <div>
       <Tooltip title="Create a table">
         <Fab
-          className={classes.fabButton}
+          //className={classes.fabButton}
           color="secondary"
           aria-label="add"
           onClick={handleClickOpen}

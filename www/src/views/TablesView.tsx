@@ -1,82 +1,44 @@
 import React from "react";
 
-import createStyles from "@material-ui/core/styles/createStyles";
-import makeStyles from "@material-ui/core/styles/makeStyles";
-import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
-import Grid from "@material-ui/core/Grid";
+import { createStyles, makeStyles, Grid } from "@material-ui/core";
 
 import useSettings from "../hooks/useSettings";
-import useRouter from "../hooks/useRouter";
-import CreateTableDialog from "../components/CreateTableDialog";
-const useStyles = makeStyles(() =>
-  createStyles({
-    card: {
-      minWidth: 275,
-    },
-    bullet: {
-      display: "inline-block",
-      margin: "0 2px",
-      transform: "scale(0.8)",
-    },
-    title: {
-      fontSize: 14,
-    },
-    pos: {
-      marginBottom: 12,
-    },
-    fabButton: {
-      position: "absolute",
-      right: 15,
-      bottom: 15,
-    },
-  })
-);
+import routes from "../constants/routes";
 
-// TODO: Create an interface for props
-const TablesView = (props: any) => {
+import CreateTableDialog from "../components/CreateTableDialog";
+import StyledCard from "../components/StyledCard";
+
+const useStyles = makeStyles(() => createStyles({}));
+
+const TablesView = () => {
+  const classes = useStyles();
+
   const [settings, createTable] = useSettings();
   const tables = settings.tables;
-  const classes = useStyles();
-  const router = useRouter();
 
   return (
     <>
-      <Grid container>
-        {tables
+      <Grid container spacing={4}>
+        {Array.isArray(tables)
           ? tables.map((table: any) => (
-              <Card className={classes.card}>
-                <CardContent>
-                  <Typography variant="h5" component="h2">
-                    {table.name}
-                  </Typography>
-                  <Typography className={classes.pos} color="textSecondary">
-                    primary
-                  </Typography>
-                  <Typography variant="body2" component="p">
-                    Table summery use
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <Button
-                    size="small"
-                    onClick={() => {
-                      router.history.push(`table/${table.collection}`);
-                    }}
-                  >
-                    open{" "}
-                  </Button>
-                </CardActions>
-              </Card>
+              <Grid item lg={4}>
+                <StyledCard
+                  overline="Primary"
+                  title={table.name}
+                  bodyContent={table.description}
+                  primaryLink={{
+                    to: `${routes.table}/${table.collection}`,
+                    label: "Open",
+                  }}
+                />
+              </Grid>
             ))
           : "TODO: card skeleton"}
       </Grid>
 
-      <CreateTableDialog classes={classes} createTable={createTable} />
+      <CreateTableDialog createTable={createTable} />
     </>
   );
 };
+
 export default TablesView;
