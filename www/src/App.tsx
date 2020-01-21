@@ -1,9 +1,11 @@
 import React, { lazy, Suspense } from "react";
-
-import { ThemeProvider } from "@material-ui/styles";
-import Theme from "./Theme";
-
 import { Route } from "react-router-dom";
+
+import {
+  MuiThemeProvider as ThemeProvider,
+  CssBaseline,
+} from "@material-ui/core";
+import Theme from "./Theme";
 
 import CustomBrowserRouter from "./util/CustomBrowserRouter";
 import PrivateRoute from "./util/PrivateRoute";
@@ -19,6 +21,7 @@ const EditorView = lazy(() => import("./views/EditorView"));
 const App: React.FC = () => {
   return (
     <ThemeProvider theme={Theme}>
+      <CssBaseline />
       <AuthProvider>
         <SnackProvider>
           <CustomBrowserRouter>
