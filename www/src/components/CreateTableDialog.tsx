@@ -1,21 +1,34 @@
 import React, { useState, useEffect } from "react";
-import AddIcon from "@material-ui/icons/Add";
 import _camelCase from "lodash/camelCase";
-import useRouter from "../hooks/useRouter";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Fab from "@material-ui/core/Fab";
-import Tooltip from "@material-ui/core/Tooltip";
 
-// TODO: Create an interface for props
-export default function CreateTableDialog(props: any) {
+import AddIcon from "@material-ui/icons/Add";
+import useRouter from "../hooks/useRouter";
+
+import {
+  Tooltip,
+  Fab,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TextField,
+  Button,
+} from "@material-ui/core";
+
+export interface ICreateTableDialogProps {
+  /** Optional class overrides */
+  classes?: Partial<Record<"fab", string>>;
+  /** Function to handle table creation */
+  createTable: (tableName: string, collectionName: string) => void;
+}
+
+export default function CreateTableDialog({
+  classes = {},
+  createTable,
+}: ICreateTableDialogProps) {
   const router = useRouter();
-  const { classes, createTable } = props;
+
   const [open, setOpen] = React.useState(false);
   const [tableName, setTableName] = useState("");
   const [collectionName, setCollectionName] = useState("");
@@ -46,9 +59,9 @@ export default function CreateTableDialog(props: any) {
     <div>
       <Tooltip title="Create a table">
         <Fab
-          className={classes.fabButton}
+          className={classes.fab}
           color="secondary"
-          aria-label="add"
+          aria-label="Create table"
           onClick={handleClickOpen}
         >
           <AddIcon />
