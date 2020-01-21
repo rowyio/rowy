@@ -5,15 +5,9 @@ const BODY_TEXT = '"Open Sans", sans-serif';
 
 const Theme = createMuiTheme({
   palette: {
-    primary: {
-      main: "#e22729",
-    },
-    secondary: {
-      main: "#007bff",
-    },
-    text: {
-      secondary: "rgba(0, 0, 0, 0.6)",
-    },
+    primary: { main: "#e22729" },
+    secondary: { main: "#e22729" },
+    text: { secondary: "rgba(0, 0, 0, 0.6)" },
   },
   typography: {
     fontFamily: BODY_TEXT,
@@ -24,6 +18,11 @@ const Theme = createMuiTheme({
       fontStyle: "normal",
       lineHeight: "normal",
       letterSpacing: "normal",
+    },
+    h4: {
+      fontFamily: HEADING_TEXT,
+      fontWeight: "bold",
+      letterSpacing: 0.2,
     },
     h5: {
       fontFamily: HEADING_TEXT,
@@ -70,7 +69,6 @@ const Theme = createMuiTheme({
       fontWeight: "normal",
       lineHeight: 1.45,
       letterSpacing: 0.25,
-      color: "rgba(0, 0, 0, 0.6)",
     },
     button: {
       fontFamily: HEADING_TEXT,
@@ -89,14 +87,10 @@ const Theme = createMuiTheme({
   },
   overrides: {
     MuiChip: {
-      root: {
-        borderRadius: 4,
-      },
+      root: { borderRadius: 4 },
     },
     MuiCard: {
-      root: {
-        borderRadius: 8,
-      },
+      root: { borderRadius: 8 },
     },
     MuiFormLabel: {
       root: {

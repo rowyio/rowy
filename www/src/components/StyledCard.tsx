@@ -20,10 +20,7 @@ import GoIcon from "./GoIcon";
 
 const useStyles = makeStyles(theme =>
   createStyles({
-    root: {
-      maxWidth: 480,
-      width: "100%",
-    },
+    root: { width: "100%" },
     container: { height: "100%" },
     cardContent: { "&:last-child": { paddingBottom: 0 } },
 
@@ -54,6 +51,8 @@ const useStyles = makeStyles(theme =>
 );
 
 interface StyledCardProps {
+  className?: string;
+
   overline?: React.ReactNode;
   title?: string;
   imageSource?: string;
@@ -70,6 +69,7 @@ interface StyledCardProps {
 }
 
 export default function StyledCard({
+  className,
   overline,
   title,
   imageSource,
@@ -81,7 +81,7 @@ export default function StyledCard({
   const classes = useStyles();
 
   return (
-    <Card className={classes.root}>
+    <Card className={clsx(className, classes.root)}>
       <Grid
         container
         direction="column"
