@@ -91,18 +91,18 @@ const TablesView = () => {
               Hi {currentUser!.displayName!.split(" ")[0]}!
             </Typography>
 
-            <Chip
+            {/* <Chip
               label="1 New"
               size="small"
               classes={{ root: classes.newChip, label: classes.newChipLabel }}
-            />
+            /> */}
           </Grid>
 
-          <Grid item>
+          {/* <Grid item>
             <Button color="primary" component={Link} to="" endIcon={<GoIcon />}>
               Manage Team
             </Button>
-          </Grid>
+          </Grid> */}
         </Grid>
 
         <Divider className={classes.divider} />

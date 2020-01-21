@@ -39,7 +39,7 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-const locations = ["SYD2", "SG4", "BAL1"];
+const locations = ["SYD2", "SG4", "LON2", "NYC2", "STO3", "AMS2"];
 
 interface IAppBarProps {
   cohort?: string;
