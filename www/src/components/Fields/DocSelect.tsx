@@ -39,7 +39,7 @@ interface Props {
 
 const DocSelect = (props: Props) => {
   const { value, row, onSubmit, collectionPath, config, setSearch } = props;
-
+  console.log(config);
   const classes = useStyles();
   const handleClick = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -63,9 +63,11 @@ const DocSelect = (props: Props) => {
 
   return (
     <div className={classes.root}>
-      <IconButton onClick={handleClick}>
-        <AddIcon />
-      </IconButton>
+      {!config.isLocked && (
+        <IconButton onClick={handleClick}>
+          <AddIcon />
+        </IconButton>
+      )}
       {value &&
         value.map((doc: any, index: number) => (
           <Chip
@@ -74,9 +76,13 @@ const DocSelect = (props: Props) => {
               (key: string) => `${doc.snapshot[key]} `
             )}
             //onClick={handleClick}
-            onDelete={() => {
-              handleDelete(index);
-            }}
+            onDelete={
+              config.isLocked
+                ? undefined
+                : () => {
+                    handleDelete(index);
+                  }
+            }
             className={classes.chip}
           />
         ))}
