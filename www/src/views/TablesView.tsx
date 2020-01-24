@@ -7,14 +7,12 @@ import {
   Container,
   Grid,
   Typography,
-  Chip,
-  Button,
   Divider,
 } from "@material-ui/core";
 
 import useSettings from "../hooks/useSettings";
 import routes from "../constants/routes";
-import AuthContext from "../contexts/authContext";
+import { AppContext } from "../AppProvider";
 
 import AppBar from "../components/AppBar";
 import GoIcon from "../components/GoIcon";
@@ -66,7 +64,7 @@ const useStyles = makeStyles(theme =>
 
 const TablesView = () => {
   const classes = useStyles();
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser } = useContext(AppContext);
 
   const [settings, createTable] = useSettings();
   const tables = settings.tables;

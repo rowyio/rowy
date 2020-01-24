@@ -1,13 +1,13 @@
 import React, { useContext } from "react";
 import { Route, RouteProps, Redirect } from "react-router-dom";
-import AuthContext from "../contexts/authContext";
+import { AppContext } from "../AppProvider";
 
 interface IPrivateRouteProps extends RouteProps {
   render: NonNullable<RouteProps["render"]>;
 }
 
 const PrivateRoute: React.FC<IPrivateRouteProps> = ({ render, ...rest }) => {
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser } = useContext(AppContext);
   return (
     <Route
       {...rest}
