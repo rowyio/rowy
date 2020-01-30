@@ -1688,6 +1688,13 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-div-100vh@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@types/react-div-100vh/-/react-div-100vh-0.3.0.tgz#3146b567304c6d9587f340fdb4b6e612596f07ad"
+  integrity sha512-ooouxtvbj+mP/OmdAh91+huVECechS2Svb55zTWMaRPXIG4XXL4+TESR7navmm6kvlnZRhDNb7/2qUOTrQm17g==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-dom@16.9.0":
   version "16.9.0"
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-16.9.0.tgz#ba6ddb00bf5de700b0eb91daa452081ffccbfdea"
@@ -10253,6 +10260,11 @@ react-dev-utils@^9.0.4:
     sockjs-client "1.4.0"
     strip-ansi "5.2.0"
     text-table "0.2.0"
+
+react-div-100vh@^0.3.8:
+  version "0.3.8"
+  resolved "https://registry.yarnpkg.com/react-div-100vh/-/react-div-100vh-0.3.8.tgz#54e4c32d0286a65e92367fc0a07cc3f2f00739d8"
+  integrity sha512-1kDFW+HXYpfac1tfJ4BcQmgTSeTtLVs2FO2ZNHcwLIga+oVluexUEISCBJvr9xq98DK8tcygY3259EvIy5O+3g==
 
 react-dnd-html5-backend@^2.6.0:
   version "2.6.0"

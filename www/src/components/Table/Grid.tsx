@@ -5,6 +5,8 @@ import { DraggableHeader } from "react-data-grid-addons";
 import isEqual from "lodash/isEqual";
 import isEmpty from "lodash/isEmpty";
 import xorWith from "lodash/xorWith";
+import Loading from "../Loading";
+
 const ReactDataGrid = lazy(() => import("react-data-grid"));
 const { DraggableContainer } = DraggableHeader;
 const Grid = (props: any) => {
@@ -23,10 +25,10 @@ const Grid = (props: any) => {
     setSelectedCell,
   } = props;
   return (
-    <Suspense fallback={<div>Loading table...</div>}>
+    <Suspense fallback={<Loading message="Loading table" />}>
       <DraggableContainer onHeaderDrop={onHeaderDrop}>
         <ReactDataGrid
-          headerRowHeight={45}
+          headerRowHeight={44}
           rowRenderer={RowRenderer}
           rowHeight={rowHeight}
           columns={columns}

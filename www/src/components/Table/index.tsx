@@ -33,6 +33,7 @@ import { EditorProvider } from "../../util/EditorProvider";
 import LongTextEditor from "../LongTextEditor";
 import RichTextEditor from "../RichTextEditor";
 import _isEmpty from "lodash/isEmpty";
+import Loading from "../../components/Loading";
 const Hotkeys = lazy(() => import("./HotKeys"));
 const TableHeader = lazy(() => import("./TableHeader"));
 const SearchBox = lazy(() => import("../SearchBox"));
@@ -333,9 +334,9 @@ function Table(props: Props) {
           setSelectedCell={setSelectedCell}
         />
       ) : (
-        <p>fetching columns</p>
+        <Loading message="Fetching columns" />
       )}
-      <Suspense fallback={<div>Loading helpers...</div>}>
+      <Suspense fallback={<Loading message="Loading helpers" />}>
         <ColumnEditor
           handleClose={handleCloseHeader}
           anchorEl={anchorEl}
