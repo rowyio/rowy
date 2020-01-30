@@ -13,7 +13,7 @@ const Theme = createMuiTheme({
     fontFamily: BODY_TEXT,
     h3: {
       fontFamily: HEADING_TEXT,
-      fontSize: 36,
+      fontSize: "2.25rem",
       fontWeight: "bold",
       fontStyle: "normal",
       lineHeight: "normal",
@@ -37,11 +37,10 @@ const Theme = createMuiTheme({
       fontSize: "1.125rem",
       fontWeight: "bold",
       letterSpacing: 0.2,
-      textTransform: "uppercase",
     },
     overline: {
       fontFamily: HEADING_TEXT,
-      fontSize: 13.4,
+      fontSize: "0.8125rem",
       fontWeight: "bold",
       fontStyle: "normal",
       lineHeight: 1.2,
@@ -49,9 +48,8 @@ const Theme = createMuiTheme({
       color: "rgba(0, 0, 0, 0.6)",
     },
     subtitle1: {
-      fontSize: 15.9,
-      fontWeight: 300,
-      lineHeight: 1.51,
+      fontSize: "1rem",
+      lineHeight: 1.5,
       letterSpacing: 0.15,
     },
     body1: {
@@ -87,10 +85,29 @@ const Theme = createMuiTheme({
   },
   overrides: {
     MuiChip: {
-      root: { borderRadius: 4 },
+      root: {
+        borderRadius: 4,
+      },
+      label: {
+        // overline style
+        fontFamily: HEADING_TEXT,
+        fontSize: 13.4,
+        fontWeight: "bold",
+        fontStyle: "normal",
+        lineHeight: 1.2,
+        letterSpacing: 2,
+        color: "rgba(0, 0, 0, 0.6)",
+        textTransform: "uppercase",
+      },
+      labelSmall: {
+        paddingLeft: 12,
+        paddingRight: 11,
+      },
     },
-    MuiCard: {
-      root: { borderRadius: 8 },
+    MuiPaper: {
+      rounded: {
+        borderRadius: 8,
+      },
     },
     MuiFormLabel: {
       root: {
@@ -112,11 +129,34 @@ const Theme = createMuiTheme({
     MuiTab: {
       root: { fontSize: "1rem !important" },
     },
+    MuiButton: {
+      contained: {
+        borderRadius: 500,
+        minHeight: 36,
+      },
+      containedSizeLarge: {
+        padding: "8px 32px",
+        minHeight: 48,
+      },
+    },
   },
   props: {
     MuiRadio: { color: "primary" },
     MuiCheckbox: { color: "primary" },
     MuiCircularProgress: { size: 44 },
+    MuiChip: { size: "small" },
+    // Select: show dropdown below text field to follow new Material spec
+    MuiSelect: {
+      MenuProps: {
+        getContentAnchorEl: null,
+        anchorOrigin: { vertical: "bottom", horizontal: "center" },
+        transformOrigin: { vertical: "top", horizontal: "center" },
+      },
+    },
+    MuiTabs: {
+      indicatorColor: "primary",
+      textColor: "primary",
+    },
   },
 });
 

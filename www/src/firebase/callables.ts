@@ -42,5 +42,5 @@ export const exportTable = (data: {
   collectionPath: string;
   filters: FireTableFilter[];
   columns: any[];
-  allFields:Boolean;
+  allFields: Boolean;
 }) => functions.httpsCallable(CLOUD_FUNCTIONS.exportTable)(data);

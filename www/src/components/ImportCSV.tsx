@@ -106,8 +106,12 @@ export default function ImportCSV(props: any) {
 
   return (
     <div>
-      <Button color="secondary" onClick={handleClickOpen}>
-        Import CSV <AddCSVIcon />
+      <Button
+        color="secondary"
+        onClick={handleClickOpen}
+        endIcon={<AddCSVIcon />}
+      >
+        Import CSV
       </Button>
       <Dialog
         open={open}
