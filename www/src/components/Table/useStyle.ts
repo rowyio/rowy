@@ -1,32 +1,28 @@
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles(Theme => {
-  return createStyles({
+const useStyles = makeStyles(theme =>
+  createStyles({
     typography: {
       padding: 1,
     },
-    header: {
-      display: "flex",
-      flex: "wrap",
-      alignContent: "center",
-      justifyContent: "space-between",
+
+    header: {},
+
+    columnIconContainer: {
+      "& > svg": { display: "block" },
     },
-    headerLabel: {
-      display: "flex",
-      flex: "wrap",
-      alignContent: "center",
+    columnNameContainer: {
+      flexShrink: 1,
+      overflow: "hidden",
+      margin: theme.spacing(0, 0.5),
     },
+    columnName: {
+      fontSize: "0.875rem",
+      lineHeight: 1,
+    },
+
     headerButton: {
       width: "100%",
-    },
-    tableHeader: {
-      padding: 8,
-      width: "100%",
-      display: "flex",
-      flex: "wrap",
-      alignItems: "center",
-      justifyContent: "space-between",
-      // background: Theme.palette.primary.main,
     },
     tableActions: {
       display: "flex",
@@ -38,6 +34,6 @@ const useStyles = makeStyles(Theme => {
       margin: 2,
       minWidth: 120,
     },
-  });
-});
+  })
+);
 export default useStyles;

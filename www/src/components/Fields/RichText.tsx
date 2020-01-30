@@ -1,14 +1,11 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useContext } from "react";
 import ExpandIcon from "@material-ui/icons/AspectRatio";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import Popper from "@material-ui/core/Popper";
-import Paper from "@material-ui/core/Paper";
-import TextareaAutosize from "@material-ui/core/TextareaAutosize";
-import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import EditorContext from "contexts/editorContext";
 import { FieldType } from ".";
+import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -31,21 +28,21 @@ interface Props {
   onSubmit: Function;
 }
 
-const LongText = (props: Props) => {
+const RichText = (props: Props) => {
   const editorContext = useContext(EditorContext);
   const { value } = props;
   const classes = useStyles();
   return (
     <div className={classes.root}>
-      <IconButton
+      <Button
         onClick={() => {
-          editorContext.open(props, FieldType.longText);
+          editorContext.open(props, FieldType.richText);
         }}
       >
-        <ExpandIcon />
-      </IconButton>
-      <Typography className={classes.typography}>{value}</Typography>
+        {" "}
+        {Boolean(value) ? "Edit" : "create"}
+      </Button>
     </div>
   );
 };
-export default LongText;
+export default RichText;

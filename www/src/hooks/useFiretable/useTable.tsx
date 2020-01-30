@@ -5,7 +5,7 @@ import React, { useEffect, useReducer, useContext } from "react";
 import equals from "ramda/es/equals";
 import firebase from "firebase/app";
 import { algoliaUpdateDoc } from "../../firebase/callables";
-import { FireTableFilter } from ".";
+import { FireTableFilter, FiretableOrderBy } from ".";
 import { SnackContext } from "../../contexts/snackContext";
 
 const CAP = 1000; // safety  paramter sets the  upper limit of number of docs fetched by this hook
@@ -17,12 +17,12 @@ const tableInitialState = {
   rows: [],
   prevFilters: null,
   prevPath: null,
+  prevOrderBy: null,
   path: null,
   filters: [],
   prevLimit: 0,
   limit: 20,
   loading: true,
-  sort: { field: "createdAt", direction: "asc" },
   cap: CAP,
 };
 
@@ -36,7 +36,7 @@ const useTable = (initialOverrides: any) => {
   /**  set collection listener
    *  @param filters
    *  @param limit max number of docs
-   *  @param sort
+   *  @param orderBy
    */
   const getRows = (
     filters: {
@@ -45,9 +45,7 @@ const useTable = (initialOverrides: any) => {
       value: string;
     }[],
     limit: number,
-    sort:
-      | { field: string; direction: "asc" | "desc" }[]
-      | { field: string; direction: "asc" | "desc" }
+    orderBy: FiretableOrderBy
   ) => {
     //unsubscribe from old path
     if (tableState.prevPath && tableState.path !== tableState.prevPath) {
@@ -58,6 +56,7 @@ const useTable = (initialOverrides: any) => {
       prevFilters: filters,
       prevLimit: limit,
       prevPath: tableState.path,
+      prevOrderBy: tableState.orderBy,
       loading: true,
     });
     let query:
@@ -67,14 +66,10 @@ const useTable = (initialOverrides: any) => {
     filters.forEach(filter => {
       query = query.where(filter.key, filter.operator, filter.value);
     });
-    if (sort) {
-      if (Array.isArray(sort)) {
-        sort.forEach(order => {
-          query = query.orderBy(order.field, order.direction);
-        });
-      } else {
-        query = query.orderBy(sort.field, sort.direction);
-      }
+    if (orderBy) {
+      orderBy.forEach(order => {
+        query = query.orderBy(order.key, order.direction);
+      });
     }
     const unsubscribe = query.limit(limit).onSnapshot(
       snapshot => {
@@ -103,7 +98,7 @@ const useTable = (initialOverrides: any) => {
         //TODO:callable to create new index
         if (error.message.includes("indexes?create_composite=")) {
           const url =
-            `https://console.firebase.google.com/project/${process.env.REACT_APP_FIREBASE_PROJECT_NAME}/database/firestore/` +
+            `https://console.firebase.google.com/project/${process.env.REACT_APP_FIREBASE_PROJECT_ID}/database/firestore/` +
             "indexes?create_composite=" +
             error.message.split("indexes?create_composite=")[1];
           console.log(url);
@@ -131,25 +126,32 @@ const useTable = (initialOverrides: any) => {
       prevFilters,
       filters,
       prevLimit,
+      prevOrderBy,
       limit,
       prevPath,
       path,
-      sort,
+      orderBy,
       unsubscribe,
     } = tableState;
     if (
       !equals(prevFilters, filters) ||
       prevLimit !== limit ||
-      prevPath !== path
+      prevPath !== path ||
+      prevOrderBy !== orderBy
     ) {
-      if (path) getRows(filters, limit, sort);
+      if (path) getRows(filters, limit, orderBy);
     }
     return () => {
       if (unsubscribe) {
         tableState.unsubscribe();
       }
     };
-  }, [tableState.filters, tableState.limit, tableState.path]);
+  }, [
+    tableState.filters,
+    tableState.limit,
+    tableState.path,
+    tableState.orderBy,
+  ]);
   /**  used deleting row/doc
    *  @param rowIndex local position
    *  @param documentId firestore document id
@@ -199,7 +201,14 @@ const useTable = (initialOverrides: any) => {
       limit: tableState.limit + (additionalRows ? additionalRows : 20),
     });
   };
-  const tableActions = { deleteRow, setTable, addRow, moreRows };
+
+  const tableActions = {
+    deleteRow,
+    setTable,
+    addRow,
+    moreRows,
+    dispatch: tableDispatch,
+  };
   return [tableState, tableActions];
 };
 

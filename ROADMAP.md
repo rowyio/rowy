@@ -9,7 +9,7 @@
 - email(string) ✅
 - phone(string) ✅
 - url(string) ✅
-- Number(number) ✅
+- Number(number)
 - long text(string) ✅
 
 ### Functionality:
@@ -31,7 +31,7 @@
 - time(Firebase timestamp)✅
 - file (single) ✅
 - image (single) ✅
-- single select reference(DocReference)🏗️
+- single select reference(DocReference)✅
 - multi select reference(DocReference)✅
 - rating ✅
 
@@ -53,11 +53,11 @@
 
 - file (multi) ✅
 - image (multi) ✅
-- Duration
 - Percentage(number)
 - Slider(number)
 - Table(Document[])
 - Rich Text(html string)
+- Callable buttons
 
 ### Functionality:
 
@@ -73,7 +73,14 @@
   - equals to
   - Starts with
   - contains
-- Export tables to csv
+- Export tables to csv✅
+- Make a toggle switch to allow single/multi
+  - Image
+  - File
+  - Reference
+  - Select
+- Mark primary/unique columns
+- Import CSV by matching with primary unique key column
 
 # V+
 
@@ -82,6 +89,7 @@
 - currency
 - count(docs in collection)
 - index(number)
+- Duration (ss/hh/mm/dd)
 - meta fields:
   - createdAt
   - createdBy
@@ -94,3 +102,4 @@
 - Table templates
 - Dialog View of a row
 - multi auth
+- Auto detection/suggestions

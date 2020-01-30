@@ -1,16 +1,22 @@
 import React, { lazy, Suspense } from "react";
+import { Route, Switch } from "react-router-dom";
 
-import { ThemeProvider } from "@material-ui/styles";
+import {
+  MuiThemeProvider as ThemeProvider,
+  CssBaseline,
+} from "@material-ui/core";
 import Theme from "./Theme";
-
-import { Route } from "react-router-dom";
 
 import CustomBrowserRouter from "./util/CustomBrowserRouter";
 import PrivateRoute from "./util/PrivateRoute";
 import Snack from "./components/Snack";
-import { SnackProvider } from "./util/SnackProvider";
+import ErrorBoundary from "./components/ErrorBoundary";
+import EmptyState from "./components/EmptyState";
+import Loading from "./components/Loading";
 
-import { AuthProvider } from "./AuthProvider";
+import { SnackProvider } from "./util/SnackProvider";
+import { AppProvider } from "./AppProvider";
+
 const AuthView = lazy(() => import("./views/AuthView"));
 const TableView = lazy(() => import("./views/TableView"));
 const TablesView = lazy(() => import("./views/TablesView"));
@@ -19,21 +25,29 @@ const EditorView = lazy(() => import("./views/EditorView"));
 const App: React.FC = () => {
   return (
     <ThemeProvider theme={Theme}>
-      <AuthProvider>
-        <SnackProvider>
-          <CustomBrowserRouter>
-            <div>
-              <Suspense fallback={<div>Loading View</div>}>
-                <Route exact path="/auth" render={() => <AuthView />} />
-                <PrivateRoute exact path="/" render={() => <TablesView />} />
-                <PrivateRoute path="/table/" render={() => <TableView />} />
-                <PrivateRoute path="/editor" render={() => <EditorView />} />
-                <Snack />
+      <CssBaseline />
+      <ErrorBoundary>
+        <AppProvider>
+          <SnackProvider>
+            <CustomBrowserRouter>
+              <Suspense fallback={<Loading fullScreen />}>
+                <Switch>
+                  <Route exact path="/auth" render={() => <AuthView />} />
+                  <PrivateRoute exact path="/" render={() => <TablesView />} />
+                  <PrivateRoute path="/table/" render={() => <TableView />} />
+                  <PrivateRoute path="/editor" render={() => <EditorView />} />
+                  <Route
+                    render={() => (
+                      <EmptyState message="Page Not Found" fullScreen />
+                    )}
+                  />
+                </Switch>
               </Suspense>
-            </div>
-          </CustomBrowserRouter>
-        </SnackProvider>
-      </AuthProvider>
+              <Snack />
+            </CustomBrowserRouter>
+          </SnackProvider>
+        </AppProvider>
+      </ErrorBoundary>
     </ThemeProvider>
   );
 };

@@ -3,6 +3,7 @@
 # dependencies
 /node_modules
 www/node_modules
+Firetable/node_modules
 cloud_functions/functions/node_modules
 /.pnp
 .pnp.js
@@ -21,9 +22,15 @@ cloud_functions/functions/lib
 .env.test.local
 .env.production.local
 www/.env
+Firetable/.env
 .env.production
 .env.development
 
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Accidental package installs to root directory
+yarn.lock
+package.json
+package-lock.json

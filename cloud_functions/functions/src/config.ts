@@ -9,5 +9,4 @@ export const db = admin.firestore();
 export const auth = admin.auth();
 const settings = { timestampsInSnapshots: true };
 db.settings(settings);
-
 export const env = functions.config();

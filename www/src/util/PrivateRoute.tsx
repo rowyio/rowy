@@ -1,25 +1,24 @@
 import React, { useContext } from "react";
 import { Route, RouteProps, Redirect } from "react-router-dom";
-import AuthContext from "../contexts/authContext";
+
+import { AppContext } from "../AppProvider";
+import Loading from "../components/Loading";
 
 interface IPrivateRouteProps extends RouteProps {
   render: NonNullable<RouteProps["render"]>;
 }
 
 const PrivateRoute: React.FC<IPrivateRouteProps> = ({ render, ...rest }) => {
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser } = useContext(AppContext);
+
+  if (!!currentUser) return <Route {...rest} render={render} />;
+
+  if (currentUser === null) return <Redirect to="/auth" />;
+
   return (
     <Route
       {...rest}
-      render={routeProps =>
-        !!currentUser ? (
-          render(routeProps)
-        ) : currentUser === null ? (
-          <Redirect to={"/auth"} />
-        ) : (
-          <p>authenticating</p>
-        )
-      }
+      render={() => <Loading message="Authenticating" fullScreen />}
     />
   );
 };

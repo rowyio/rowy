@@ -2,17 +2,18 @@ import React, { lazy, Suspense } from "react";
 import { FieldType } from "../Fields";
 import { Editors } from "react-data-grid-addons";
 import MultiSelect from "../Fields/MultiSelect";
-
+import _uniq from "lodash/uniq";
 import { algoliaUpdateDoc } from "../../firebase/callables";
 
 const { AutoComplete } = Editors;
-const Date = lazy(() => import("../Fields/Date"));
+const DateField = lazy(() => import("../Fields/Date"));
 const Rating = lazy(() => import("../Fields/Rating"));
 const CheckBox = lazy(() => import("../Fields/CheckBox"));
 const UrlLink = lazy(() => import("../Fields/UrlLink"));
 const Image = lazy(() => import("../Fields/Image"));
 const File = lazy(() => import("../Fields/File"));
 const LongText = lazy(() => import("../Fields/LongText"));
+const RichText = lazy(() => import("../Fields/RichText"));
 const Color = lazy(() => import("../Fields/Color"));
 const Action = lazy(() => import("../Fields/Action"));
 
@@ -26,6 +27,7 @@ export const editable = (fieldType: FieldType) => {
     case FieldType.image:
     case FieldType.file:
     case FieldType.longText:
+    case FieldType.richText:
     case FieldType.documentSelect:
     case FieldType.color:
     case FieldType.action:
@@ -39,7 +41,12 @@ export const onSubmit = (key: string, row: any) => async (value: any) => {
   const collection = row.ref.parent.path;
   const data = { collection, id: row.ref.id, doc: { [key]: value } };
   if (value !== null || value !== undefined) {
-    row.ref.update({ [key]: value });
+    const updatedAt = new Date();
+    let updatedFields = [key];
+    if (row.updatedFields) {
+      updatedFields = _uniq([key, ...row.updatedFields]);
+    }
+    row.ref.update({ [key]: value, updatedAt, updatedFields });
     await algoliaUpdateDoc(data);
   }
 };
@@ -48,7 +55,7 @@ export const DateFormatter = (key: string, fieldType: FieldType) => (
   props: any
 ) => {
   return (
-    <Date
+    <DateField
       {...props}
       onSubmit={onSubmit(key, props.row)}
       fieldType={fieldType}
@@ -57,9 +64,10 @@ export const DateFormatter = (key: string, fieldType: FieldType) => (
 };
 
 export const onGridRowsUpdated = (event: any) => {
-  const { fromRowData, updated } = event;
-
-  onSubmit(Object.keys(updated)[0], fromRowData)(Object.values(updated)[0]);
+  const { fromRowData, updated, action } = event;
+  if (action === "CELL_UPDATE") {
+    onSubmit(Object.keys(updated)[0], fromRowData)(Object.values(updated)[0]);
+  }
 };
 export const onCellSelected = (args: any) => {};
 export const cellFormatter = (column: any) => {
@@ -92,7 +100,11 @@ export const cellFormatter = (column: any) => {
       return (props: any) => {
         return (
           <Suspense fallback={<div />}>
-            <CheckBox {...props} onSubmit={onSubmit(key, props.row)} />
+            <CheckBox
+              column={column}
+              {...props}
+              onSubmit={onSubmit(key, props.row)}
+            />
           </Suspense>
         );
       };
@@ -108,7 +120,11 @@ export const cellFormatter = (column: any) => {
       return (props: any) => {
         return (
           <Suspense fallback={<div />}>
-            <Action {...props} onSubmit={onSubmit(key, props.row)} />
+            <Action
+              fieldName={key}
+              {...props}
+              onSubmit={onSubmit(key, props.row)}
+            />
           </Suspense>
         );
       };
@@ -152,11 +168,26 @@ export const cellFormatter = (column: any) => {
       return (props: any) => {
         return (
           <Suspense fallback={<div />}>
-            <LongText {...props} onSubmit={onSubmit(key, props.row)} />
+            <LongText
+              {...props}
+              fieldName={key}
+              onSubmit={onSubmit(key, props.row)}
+            />
           </Suspense>
         );
       };
-
+    case FieldType.richText:
+      return (props: any) => {
+        return (
+          <Suspense fallback={<div />}>
+            <RichText
+              {...props}
+              fieldName={key}
+              onSubmit={onSubmit(key, props.row)}
+            />
+          </Suspense>
+        );
+      };
     default:
       return false;
   }

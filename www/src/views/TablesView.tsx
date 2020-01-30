@@ -1,82 +1,158 @@
-import React from "react";
+import React, { useContext, useState } from "react";
+import { Link } from "react-router-dom";
 
-import createStyles from "@material-ui/core/styles/createStyles";
-import makeStyles from "@material-ui/core/styles/makeStyles";
-import Card from "@material-ui/core/Card";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
-import Grid from "@material-ui/core/Grid";
+import {
+  createStyles,
+  makeStyles,
+  Container,
+  Grid,
+  Typography,
+  Divider,
+} from "@material-ui/core";
 
 import useSettings from "../hooks/useSettings";
-import useRouter from "../hooks/useRouter";
+import routes from "../constants/routes";
+import { AppContext } from "../AppProvider";
+
+import AppBar from "../components/AppBar";
+import GoIcon from "../components/GoIcon";
+import StyledCard from "../components/StyledCard";
 import CreateTableDialog from "../components/CreateTableDialog";
-const useStyles = makeStyles(() =>
+
+const useStyles = makeStyles(theme =>
   createStyles({
-    card: {
-      minWidth: 275,
-    },
-    bullet: {
+    root: { minHeight: "100vh", paddingBottom: theme.spacing(8) },
+
+    greeting: {
+      textTransform: "uppercase",
+      letterSpacing: 3,
       display: "inline-block",
-      margin: "0 2px",
-      transform: "scale(0.8)",
+      verticalAlign: "middle",
     },
-    title: {
-      fontSize: 14,
+    newChip: {
+      ...theme.typography.overline,
+      backgroundColor: theme.palette.text.secondary,
+      color: theme.palette.getContrastText(theme.palette.text.secondary),
+      marginLeft: theme.spacing(4),
     },
-    pos: {
-      marginBottom: 12,
+    newChipLabel: { padding: theme.spacing(0, 2) },
+    divider: {
+      margin: theme.spacing(2, 0, 4),
     },
-    fabButton: {
-      position: "absolute",
-      right: 15,
-      bottom: 15,
+
+    cardGrid: {
+      [theme.breakpoints.down("xs")]: { maxWidth: 360, margin: "0 auto" },
+    },
+    card: {
+      height: "100%",
+      [theme.breakpoints.up("md")]: { minHeight: 220 },
+      [theme.breakpoints.down("md")]: { minHeight: 180 },
+    },
+
+    createTableContainer: {
+      alignSelf: "flex-end",
+      marginLeft: "auto",
+    },
+    createTableFab: {
+      width: 80,
+      height: 80,
+      borderRadius: theme.shape.borderRadius * 2,
+      "& svg": { width: "2em", height: "2em" },
     },
   })
 );
 
-// TODO: Create an interface for props
-const TablesView = (props: any) => {
+const TablesView = () => {
+  const classes = useStyles();
+  const { currentUser } = useContext(AppContext);
+
   const [settings, createTable] = useSettings();
   const tables = settings.tables;
-  const classes = useStyles();
-  const router = useRouter();
+
+  const [cohort, setCohort] = useState("all");
+  const handleCohortChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setCohort(e.target.value);
 
   return (
-    <>
-      <Grid container>
-        {tables
-          ? tables.map((table: any) => (
-              <Card className={classes.card}>
-                <CardContent>
-                  <Typography variant="h5" component="h2">
-                    {table.name}
-                  </Typography>
-                  <Typography className={classes.pos} color="textSecondary">
-                    primary
-                  </Typography>
-                  <Typography variant="body2" component="p">
-                    Table summery use
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <Button
-                    size="small"
-                    onClick={() => {
-                      router.history.push(`table/${table.collection}`);
-                    }}
-                  >
-                    open{" "}
-                  </Button>
-                </CardActions>
-              </Card>
-            ))
-          : "TODO: card skeleton"}
-      </Grid>
+    <main className={classes.root}>
+      <AppBar cohort={cohort} onChangeCohort={handleCohortChange} />
 
-      <CreateTableDialog classes={classes} createTable={createTable} />
-    </>
+      <Container>
+        <Grid container spacing={2} justify="center">
+          <Grid item xs>
+            <Typography
+              variant="h5"
+              color="textSecondary"
+              component="h2"
+              className={classes.greeting}
+            >
+              Hi {currentUser!.displayName!.split(" ")[0]}!
+            </Typography>
+
+            {/* <Chip
+              label="1 New"
+              size="small"
+              classes={{ root: classes.newChip, label: classes.newChipLabel }}
+            /> */}
+          </Grid>
+
+          {/* <Grid item>
+            <Button color="primary" component={Link} to="" endIcon={<GoIcon />}>
+              Manage Team
+            </Button>
+          </Grid> */}
+        </Grid>
+
+        <Divider className={classes.divider} />
+
+        <Grid
+          container
+          spacing={4}
+          justify="space-between"
+          className={classes.cardGrid}
+        >
+          {Array.isArray(tables)
+            ? tables.map((table: any) => (
+                <Grid key={table.name} item xs={12} sm={6} md={4}>
+                  <StyledCard
+                    className={classes.card}
+                    overline="Primary"
+                    title={table.name}
+                    bodyContent={table.description}
+                    primaryLink={{
+                      to: {
+                        pathname: `${routes.table}/${table.collection}`,
+                        search:
+                          cohort === "all"
+                            ? ""
+                            : encodeURI(
+                                "?filters=" +
+                                  JSON.stringify([
+                                    {
+                                      key: "cohort",
+                                      operator: "==",
+                                      value: cohort,
+                                    },
+                                  ])
+                              ),
+                      },
+                      label: "Open",
+                    }}
+                  />
+                </Grid>
+              ))
+            : "TODO: card skeleton"}
+
+          <Grid item className={classes.createTableContainer}>
+            <CreateTableDialog
+              createTable={createTable}
+              classes={{ fab: classes.createTableFab }}
+            />
+          </Grid>
+        </Grid>
+      </Container>
+    </main>
   );
 };
+
 export default TablesView;

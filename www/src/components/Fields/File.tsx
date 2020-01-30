@@ -18,6 +18,7 @@ interface Props {
   onSubmit: Function;
   fieldType: FieldType;
   fieldName: string;
+  config: any;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -28,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) =>
       alignContent: "center",
       width: "100%",
     },
-    chip: { margin: theme.spacing(5) },
+    chip: { margin: theme.spacing(5), maxWidth: 200 },
     progress: { margin: theme.spacing(5) },
     addIcon: {
       maxHeight: 48,
@@ -37,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const File = (props: Props) => {
-  const { fieldName, value, row, onSubmit } = props;
+  const { fieldName, value, row, onSubmit, config } = props;
   const classes = useStyles();
   const [uploaderState, upload] = useUploader();
   const { progress } = uploaderState;
@@ -72,16 +73,24 @@ const File = (props: Props) => {
               onClick={() => {
                 window.open(file.downloadURL);
               }}
-              onDelete={() => {
-                handleDelete(file.downloadURL);
-              }}
+              onDelete={
+                config && config.isLocked
+                  ? undefined
+                  : () => {
+                      handleDelete(file.downloadURL);
+                    }
+              }
             />
           );
         })}
 
-      <IconButton className={classes.addIcon} onClick={dropzoneProps.onClick}>
-        <AddIcon />
-      </IconButton>
+      {config && config.isLocked ? (
+        <></>
+      ) : (
+        <IconButton className={classes.addIcon} onClick={dropzoneProps.onClick}>
+          <AddIcon />
+        </IconButton>
+      )}
     </div>
   );
 };
