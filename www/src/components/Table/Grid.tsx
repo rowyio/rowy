@@ -28,7 +28,7 @@ const Grid = (props: any) => {
     <Suspense fallback={<Loading message="Loading table" />}>
       <DraggableContainer onHeaderDrop={onHeaderDrop}>
         <ReactDataGrid
-          headerRowHeight={44}
+          headerRowHeight={47}
           rowRenderer={RowRenderer}
           rowHeight={rowHeight}
           columns={columns}

@@ -1,42 +1,35 @@
 import React from "react";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import Typography from "@material-ui/core/Typography";
+
+import {
+  makeStyles,
+  createStyles,
+  Grid,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Typography,
+  Button,
+} from "@material-ui/core";
+import AddIcon from "@material-ui/icons/AddCircle";
+
 import ImportCSV from "components/ImportCSV";
 import ExportCSV from "components/ExportCSV";
-import Button from "@material-ui/core/Button";
-import { createStyles, makeStyles } from "@material-ui/core/styles";
-import AddIcon from "@material-ui/icons/AddCircle";
+
 import { FireTableFilter } from "../../hooks/useFiretable";
 
-const useStyles = makeStyles(Theme => {
-  return createStyles({
-    typography: {
-      padding: 1,
-    },
-    tableHeader: {
-      padding: 8,
+const useStyles = makeStyles(theme =>
+  createStyles({
+    root: {
       width: "100%",
-      display: "flex",
-      flex: "wrap",
-      alignItems: "center",
-      justifyContent: "space-between",
-      // background: Theme.palette.primary.main,
+      margin: 0,
+      padding: theme.spacing(0, 1),
+      minHeight: 56,
     },
-    tableActions: {
-      display: "flex",
-      flex: "wrap",
-      alignContent: "center",
-      // background: Theme.palette.primary.main,
-    },
-    formControl: {
-      margin: 2,
-      minWidth: 120,
-    },
-  });
-});
+    collectionName: { textTransform: "uppercase" },
+    formControl: { minWidth: 120 },
+  })
+);
 
 interface Props {
   collection: string;
@@ -46,20 +39,25 @@ interface Props {
   columns: any;
   filters: FireTableFilter[];
 }
-const TableHeader = (props: Props) => {
-  const {
-    collection,
-    rowHeight,
-    updateConfig,
-    columns,
-    addRow,
-    filters,
-  } = props;
+const TableHeader = ({
+  collection,
+  rowHeight,
+  updateConfig,
+  columns,
+  addRow,
+  filters,
+}: Props) => {
   const classes = useStyles();
+
   return (
-    <div className={classes.tableHeader}>
-      <div>
-        <Typography variant="button">{collection}</Typography>
+    <Grid container alignItems="center" spacing={2} className={classes.root}>
+      <Grid item>
+        <Typography variant="h6" className={classes.collectionName}>
+          {collection}
+        </Typography>
+      </Grid>
+
+      <Grid item xs>
         <FormControl variant="outlined" className={classes.formControl}>
           <InputLabel htmlFor="outlined-age-simple">Row Height</InputLabel>
           <Select
@@ -72,44 +70,45 @@ const TableHeader = (props: Props) => {
               name: "rowHeight",
               id: "outlined-rowHeight-simple",
             }}
+            margin="dense"
           >
-            <MenuItem value={35} key={"rowHeight-35"}>
-              Tall
-            </MenuItem>
-            <MenuItem value={60} key={"rowHeight-60"}>
-              Grande
-            </MenuItem>
-            <MenuItem value={100} key={"rowHeight-100"}>
-              Venti
-            </MenuItem>
-            <MenuItem value={150} key={"rowHeight-150"}>
-              Trenta
-            </MenuItem>
+            <MenuItem value={35}>Tall</MenuItem>
+            <MenuItem value={60}>Grande</MenuItem>
+            <MenuItem value={100}>Venti</MenuItem>
+            <MenuItem value={150}>Trenta</MenuItem>
           </Select>
         </FormControl>
-      </div>
-      <div className={classes.tableActions}>
-        <ExportCSV
-          columns={columns.map((column: any) => {
-            const { key, name, config, type } = column;
-            return { key, name, config, type };
-          })}
-          collection={collection}
-          filters={filters}
-        />
+      </Grid>
 
-        <ImportCSV columns={columns} addRow={addRow} />
-        <Button
-          color="secondary"
-          onClick={() => {
-            addRow();
-          }}
-        >
-          Add Row
-          <AddIcon />
-        </Button>
-      </div>
-    </div>
+      <Grid item>
+        <Grid container spacing={1}>
+          <Grid item>
+            <ExportCSV
+              columns={columns.map((column: any) => {
+                const { key, name, config, type } = column;
+                return { key, name, config, type };
+              })}
+              collection={collection}
+              filters={filters}
+            />
+          </Grid>
+
+          <Grid item>
+            <ImportCSV columns={columns} addRow={addRow} />
+          </Grid>
+
+          <Grid item>
+            <Button
+              color="secondary"
+              onClick={() => addRow()}
+              endIcon={<AddIcon />}
+            >
+              Add Row
+            </Button>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Grid>
   );
 };
 export default TableHeader;

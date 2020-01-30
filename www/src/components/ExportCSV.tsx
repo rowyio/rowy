@@ -102,9 +102,9 @@ export default function ExportCSV(props: Props) {
     });
     const data = await exportTable({
       collectionPath: collection,
-      allFields:!Boolean(columns),
+      allFields: !Boolean(columns),
       filters,
-      columns:columns?columns:[],
+      columns: columns ? columns : [],
     });
     var blob = new Blob([data.data], {
       type: "text/csv;charset=utf-8",
@@ -114,8 +114,12 @@ export default function ExportCSV(props: Props) {
 
   return (
     <div>
-      <Button color="secondary" onClick={handleClickOpen}>
-        Export CSV <CloudIcon />
+      <Button
+        color="secondary"
+        onClick={handleClickOpen}
+        endIcon={<CloudIcon />}
+      >
+        Export CSV
       </Button>
       <Dialog
         open={open}
@@ -168,7 +172,6 @@ export default function ExportCSV(props: Props) {
             onClick={() => {
               handleExport();
             }}
-          
             color="secondary"
           >
             Export All Fields

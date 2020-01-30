@@ -56,7 +56,7 @@ const useStyles = makeStyles(theme =>
     },
     routes: {
       flex: "flex-shrink",
-      overflowX: "scroll",
+      overflowX: "auto",
     },
   })
 );
@@ -68,8 +68,7 @@ const Navigation = (props: any) => {
   const [settings, createTable] = useSettings();
   return (
     <TablesContext.Provider value={{ value: settings.tables }}>
-      <React.Fragment>
-        <CssBaseline />
+      <>
         {props.children}
         <AppBar position="fixed" color="primary" className={classes.appBar}>
           <Toolbar>
@@ -131,7 +130,7 @@ const Navigation = (props: any) => {
             <div className={classes.grow} />
           </Toolbar>
         </AppBar>
-      </React.Fragment>
+      </>
     </TablesContext.Provider>
   );
 };

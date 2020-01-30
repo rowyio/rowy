@@ -1,14 +1,35 @@
 import React, { useState, useEffect, lazy, Suspense } from "react";
+import _isEmpty from "lodash/isEmpty";
+
+import {
+  Button,
+  IconButton,
+  Typography,
+  Grid as MuiGrid,
+  Tooltip,
+} from "@material-ui/core";
+import ImportExportIcon from "@material-ui/icons/ImportExport";
+import SettingsIcon from "@material-ui/icons/Settings";
+import Confirmation from "components/Confirmation";
+import DeleteIcon from "@material-ui/icons/Delete";
+import DuplicateIcon from "@material-ui/icons/FileCopy";
+import AddIcon from "@material-ui/icons/AddCircle";
+
+import useStyles from "./useStyle";
+
+import Loading from "../../components/Loading";
+import Grid from "./Grid";
+import LongTextEditor from "../LongTextEditor";
+import RichTextEditor from "../RichTextEditor";
 
 import useFiretable, {
   FireTableFilter,
   FiretableOrderBy,
 } from "../../hooks/useFiretable";
-
-import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
-import { FieldType, getFieldIcon } from "../Fields";
 import { functions } from "../../firebase";
+import { CLOUD_FUNCTIONS } from "firebase/callables";
+
+import { FieldType, getFieldIcon } from "../Fields";
 import {
   cellFormatter,
   onCellSelected,
@@ -17,23 +38,8 @@ import {
   editable,
   onSubmit,
 } from "./grid-fns";
-import { CLOUD_FUNCTIONS } from "firebase/callables";
-import Typography from "@material-ui/core/Typography";
-import AddIcon from "@material-ui/icons/AddCircle";
-import SortByAlphaIcon from "@material-ui/icons/SortByAlpha";
-import SettingsIcon from "@material-ui/icons/Settings";
-import useWindowSize from "../../hooks/useWindowSize";
-import Confirmation from "components/Confirmation";
-import DeleteIcon from "@material-ui/icons/Delete";
-import DuplicateIcon from "@material-ui/icons/FileCopy";
-import useStyles from "./useStyle";
-import Grid from "./Grid";
-import Tooltip from "@material-ui/core/Tooltip";
 import { EditorProvider } from "../../util/EditorProvider";
-import LongTextEditor from "../LongTextEditor";
-import RichTextEditor from "../RichTextEditor";
-import _isEmpty from "lodash/isEmpty";
-import Loading from "../../components/Loading";
+
 const Hotkeys = lazy(() => import("./HotKeys"));
 const TableHeader = lazy(() => import("./TableHeader"));
 const SearchBox = lazy(() => import("../SearchBox"));
@@ -67,8 +73,6 @@ function Table(props: Props) {
     collection: "",
     onSubmit: undefined,
   });
-
-  const size = useWindowSize();
 
   useEffect(() => {
     tableActions.table.set(collection, filters, orderBy);
@@ -124,64 +128,90 @@ function Table(props: Props) {
       default:
         return (
           <Tooltip title={props.column.key}>
-            <div className={classes.header}>
-              <div
-                className={classes.headerLabel}
+            <MuiGrid
+              container
+              className={classes.header}
+              alignItems="center"
+              wrap="nowrap"
+            >
+              <MuiGrid
+                item
                 onClick={() => {
                   navigator.clipboard.writeText(props.column.key);
                 }}
+                className={classes.columnIconContainer}
               >
                 {getFieldIcon(props.column.type)}
-                <Typography variant="button">{props.column.name}</Typography>
-              </div>
-              <IconButton
-                color={
-                  orderBy[0] && orderBy[0].key === column.key
-                    ? "primary"
-                    : "default"
-                }
-                disableFocusRipple={true}
-                size="small"
+              </MuiGrid>
+              <MuiGrid
+                item
+                xs
                 onClick={() => {
-                  console.log(
-                    orderBy,
-                    orderBy[0] && orderBy[0].key === column.key,
-                    orderBy[0] && orderBy[0].direction === "asc"
-                  );
-                  if (
-                    orderBy[0] &&
-                    orderBy[0].key === column.key &&
-                    orderBy[0].direction === "asc"
-                  ) {
-                    const ordering: FiretableOrderBy = [
-                      { key: column.key, direction: "desc" },
-                    ];
-
-                    tableActions.table.orderBy(ordering);
-                    //setOrderBy(ordering) #BROKENINSIDE
-                  } else {
-                    const ordering: FiretableOrderBy = [
-                      { key: column.key, direction: "asc" },
-                    ];
-                    tableActions.table.orderBy(ordering);
-                    //setOrderBy(ordering) #BROKENINSIDE
-                  }
+                  navigator.clipboard.writeText(props.column.key);
                 }}
+                className={classes.columnNameContainer}
               >
-                <SortByAlphaIcon />
-              </IconButton>
-              <IconButton
-                disableFocusRipple={true}
-                size="small"
-                onClick={handleClick(props)}
-              >
-                <SettingsIcon />
-              </IconButton>
-            </div>
+                <Typography
+                  variant="h6"
+                  noWrap
+                  className={classes.columnName}
+                  component="span"
+                >
+                  {props.column.name}
+                </Typography>
+              </MuiGrid>
+
+              <MuiGrid item>
+                <IconButton
+                  color={
+                    orderBy[0] && orderBy[0].key === column.key
+                      ? "primary"
+                      : "default"
+                  }
+                  disableFocusRipple={true}
+                  size="small"
+                  onClick={() => {
+                    console.log(
+                      orderBy,
+                      orderBy[0] && orderBy[0].key === column.key,
+                      orderBy[0] && orderBy[0].direction === "asc"
+                    );
+                    if (
+                      orderBy[0] &&
+                      orderBy[0].key === column.key &&
+                      orderBy[0].direction === "asc"
+                    ) {
+                      const ordering: FiretableOrderBy = [
+                        { key: column.key, direction: "desc" },
+                      ];
+
+                      tableActions.table.orderBy(ordering);
+                      //setOrderBy(ordering) #BROKENINSIDE
+                    } else {
+                      const ordering: FiretableOrderBy = [
+                        { key: column.key, direction: "asc" },
+                      ];
+                      tableActions.table.orderBy(ordering);
+                      //setOrderBy(ordering) #BROKENINSIDE
+                    }
+                  }}
+                >
+                  <ImportExportIcon />
+                </IconButton>
+                <IconButton
+                  disableFocusRipple={true}
+                  size="small"
+                  onClick={handleClick(props)}
+                >
+                  <SettingsIcon />
+                </IconButton>
+              </MuiGrid>
+            </MuiGrid>
           </Tooltip>
         );
     }
   };
+
   const onHeaderDrop = (dragged: any, target: any) => {
     tableActions.column.reorder(dragged, target);
   };
@@ -217,8 +247,8 @@ function Table(props: Props) {
         <>
           <Confirmation
             message={{
-              title: "Delete  Row",
-              body: "Are you sure you want to delete this row",
+              title: "Delete Row",
+              body: "Are you sure you want to delete this row?",
               confirm: (
                 <>
                   <DeleteIcon /> Delete
@@ -258,7 +288,6 @@ function Table(props: Props) {
     });
   }
 
-  const tableHeight = size.height ? size.height - 142 : 500;
   const rowHeight = tableState.config.rowHeight;
 
   const rows =
@@ -306,7 +335,7 @@ function Table(props: Props) {
   };
   return (
     <EditorProvider>
-      <Suspense fallback={<div>Loading header...</div>}>
+      <Suspense fallback={<Loading message="Loading header" />}>
         <Hotkeys selectedCell={selectedCell} />
         <TableHeader
           collection={collection}
@@ -316,7 +345,7 @@ function Table(props: Props) {
           filters={filters}
           addRow={addRow}
         />
-      </Suspense>{" "}
+      </Suspense>
       {!tableState.loadingColumns ? (
         <Grid
           key={`${collection}-grid`}
@@ -325,7 +354,8 @@ function Table(props: Props) {
           columns={columns}
           RowRenderer={RowRenderer}
           handleRowGetter={handleRowGetter}
-          tableHeight={tableHeight}
+          // TODO: Remove this fixed height using flexbox
+          tableHeight="calc(100vh - 120px)"
           onGridRowsUpdated={onGridRowsUpdated}
           rows={rows}
           resizeColumn={tableActions.column.resize}
