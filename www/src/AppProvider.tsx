@@ -1,12 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { auth } from "./firebase";
-import AuthContext from "./contexts/authContext";
 
-interface IAuthProviderProps {
+interface AppContextInterface {
+  currentUser: firebase.User | null | undefined;
+}
+
+export const AppContext = React.createContext<AppContextInterface>({
+  currentUser: undefined,
+});
+
+interface IAppProviderProps {
   children: React.ReactNode;
 }
 
-export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
+export const AppProvider: React.FC<IAppProviderProps> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState();
 
   useEffect(() => {
@@ -14,6 +21,10 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
       setCurrentUser(auth);
     });
   }, []);
+
+  useEffect(() => {
+    console.log(currentUser);
+  }, [currentUser]);
   // if (currentUser) {
   //   // checks  if current user  has admin role, signout user  to regenerate  token
   //   currentUser
@@ -31,12 +42,12 @@ export const AuthProvider: React.FC<IAuthProviderProps> = ({ children }) => {
   //     });
   // }
   return (
-    <AuthContext.Provider
+    <AppContext.Provider
       value={{
         currentUser,
       }}
     >
       {children}
-    </AuthContext.Provider>
+    </AppContext.Provider>
   );
 };

@@ -93,12 +93,19 @@ export const exportTable = functions.https.onCall(
         | { field: string; direction: "asc" | "desc" }[]
         | { field: string; direction: "asc" | "desc" };
       columns: { key: string; type: FieldType; config: any }[];
-      allFields?:boolean;
+      allFields?: boolean;
     },
-    
+
     response
   ) => {
-    const { collectionPath, filters, sort, limit, columns ,allFields} = request;
+    const {
+      collectionPath,
+      filters,
+      sort,
+      limit,
+      columns,
+      allFields,
+    } = request;
 
     // set query path
     let query:
@@ -123,13 +130,14 @@ export const exportTable = functions.https.onCall(
     const querySnapshot = await query.get();
     const docs = querySnapshot.docs.map(doc => doc.data());
 
-    let data = docs
-    if(!allFields){
+    let data = docs;
+    if (!allFields) {
+      console.log("");
       docs.map((doc: any) => {
         return columns.reduce(selectedColumnsReducer(doc), {});
       });
     }
-   
+
     const csv = json2csv(data);
     return csv;
   }

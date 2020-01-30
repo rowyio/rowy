@@ -15,7 +15,7 @@ import EmptyState from "./components/EmptyState";
 import Loading from "./components/Loading";
 
 import { SnackProvider } from "./util/SnackProvider";
-import { AuthProvider } from "./AuthProvider";
+import { AppProvider } from "./AppProvider";
 
 const AuthView = lazy(() => import("./views/AuthView"));
 const TableView = lazy(() => import("./views/TableView"));
@@ -27,7 +27,7 @@ const App: React.FC = () => {
     <ThemeProvider theme={Theme}>
       <CssBaseline />
       <ErrorBoundary>
-        <AuthProvider>
+        <AppProvider>
           <SnackProvider>
             <CustomBrowserRouter>
               <Suspense fallback={<Loading fullScreen />}>
@@ -46,7 +46,7 @@ const App: React.FC = () => {
               <Snack />
             </CustomBrowserRouter>
           </SnackProvider>
-        </AuthProvider>
+        </AppProvider>
       </ErrorBoundary>
     </ThemeProvider>
   );
