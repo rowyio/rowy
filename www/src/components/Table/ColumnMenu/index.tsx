@@ -9,6 +9,7 @@ import {
   MenuItem,
   ListItemIcon,
   ListSubheader,
+  Divider,
 } from "@material-ui/core";
 import { fade } from "@material-ui/core/styles";
 
@@ -37,10 +38,6 @@ const useStyles = makeStyles(theme =>
       backgroundColor: "#f1f1f3",
     },
 
-    list: {
-      "& > * + *": { borderTop: `1px solid ${theme.palette.divider}` },
-    },
-
     subheader: {
       ...theme.typography.overline,
       color: theme.palette.text.disabled,
@@ -54,12 +51,20 @@ const useStyles = makeStyles(theme =>
     },
 
     menuItem: {
-      minHeight: 44 - 1,
+      minHeight: 42,
       padding: theme.spacing(0.75, 1.25),
 
       ...theme.typography.h6,
       fontSize: "0.875rem",
       color: theme.palette.text.secondary,
+      transition: theme.transitions.create(["background-color", "color"], {
+        duration: theme.transitions.duration.shortest,
+      }),
+
+      "&:hover": {
+        backgroundColor: theme.palette.text.primary,
+        color: "#f1f1f3",
+      },
     },
     menuItemIcon: {
       minWidth: 24,
@@ -83,9 +88,10 @@ const useStyles = makeStyles(theme =>
 export interface IColumnMenuProps {
   anchorEl: MenuProps["anchorEl"];
   handleClose: MenuProps["onClose"];
-  column: Column<any>;
+  column: Column<any> & { [key: string]: any };
 }
 
+// TODO: implement active states and actions
 const ColumnMenu: React.FC<IColumnMenuProps> = ({
   anchorEl,
   handleClose,
@@ -101,7 +107,7 @@ const ColumnMenu: React.FC<IColumnMenuProps> = ({
       icon: <LockOpenIcon />,
       activeIcon: <LockIcon />,
       onClick: () => alert("LOCK"),
-      active: false,
+      active: column.locked,
     },
     {
       label: "Hide",
@@ -124,7 +130,7 @@ const ColumnMenu: React.FC<IColumnMenuProps> = ({
       activeLabel: "Disable resize",
       icon: <CellResizeIcon />,
       onClick: () => alert("RESIZE"),
-      active: false,
+      active: column.resizable,
     },
     {
       label: "Sort: Decreasing",
@@ -147,7 +153,7 @@ const ColumnMenu: React.FC<IColumnMenuProps> = ({
       onClick: () => alert("EDIT"),
     },
     {
-      label: "Edit Type",
+      label: `Edit Type: ${column?.type}`,
       // TODO: This is based off the cell type
       // icon: <VisibilityOffIcon />,
       onClick: () => alert("EDIT TYPE"),
@@ -185,38 +191,46 @@ const ColumnMenu: React.FC<IColumnMenuProps> = ({
       getContentAnchorEl={null}
       anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
       transformOrigin={{ vertical: "top", horizontal: "right" }}
-      classes={{ paper: classes.paper, list: classes.list }}
+      classes={{ paper: classes.paper }}
       MenuListProps={{ disablePadding: true }}
     >
       {menuItems.map((item, index) => {
         if (item.type === "subheader")
           return (
-            <ListSubheader
-              key={index}
-              className={classes.subheader}
-              disableGutters
-              disableSticky
-            >
-              {item.label}
-            </ListSubheader>
+            <>
+              {index !== 0 && <Divider />}
+              <ListSubheader
+                key={index}
+                className={classes.subheader}
+                disableGutters
+                disableSticky
+              >
+                {item.label}
+              </ListSubheader>
+            </>
           );
 
         let icon = item.icon ?? <></>;
         if (item.active && !!item.activeIcon) icon = item.activeIcon;
 
         return (
-          <MenuItem
-            key={index}
-            onClick={item.onClick}
-            className={clsx(
-              classes.menuItem,
-              item.active && classes.menuItemActive,
-              item.color === "error" && classes.menuItemError
-            )}
-          >
-            <ListItemIcon className={classes.menuItemIcon}>{icon}</ListItemIcon>
-            {item.active ? item.activeLabel : item.label}
-          </MenuItem>
+          <>
+            {index !== 0 && <Divider />}
+            <MenuItem
+              key={index}
+              onClick={item.onClick}
+              className={clsx(
+                classes.menuItem,
+                item.active && classes.menuItemActive,
+                item.color === "error" && classes.menuItemError
+              )}
+            >
+              <ListItemIcon className={classes.menuItemIcon}>
+                {icon}
+              </ListItemIcon>
+              {item.active ? item.activeLabel : item.label}
+            </MenuItem>
+          </>
         );
       })}
     </Menu>

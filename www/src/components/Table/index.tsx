@@ -9,7 +9,7 @@ import {
   Tooltip,
 } from "@material-ui/core";
 import ImportExportIcon from "@material-ui/icons/ImportExport";
-import SettingsIcon from "@material-ui/icons/Settings";
+import ArrowDropDownCircleIcon from "@material-ui/icons/ArrowDropDownCircle";
 import Confirmation from "components/Confirmation";
 import DeleteIcon from "@material-ui/icons/Delete";
 import DuplicateIcon from "@material-ui/icons/FileCopy";
@@ -204,7 +204,7 @@ function Table(props: Props) {
                   size="small"
                   onClick={handleClick(props)}
                 >
-                  <SettingsIcon />
+                  <ArrowDropDownCircleIcon />
                 </IconButton>
               </MuiGrid>
             </MuiGrid>
@@ -374,11 +374,13 @@ function Table(props: Props) {
           column={header && header.column}
           actions={tableActions.column}
         /> */}
-        <ColumnMenu
-          handleClose={handleCloseHeader}
-          anchorEl={anchorEl}
-          column={header && header.column}
-        />
+        {header && header.column && (
+          <ColumnMenu
+            handleClose={handleCloseHeader}
+            anchorEl={anchorEl}
+            column={header.column}
+          />
+        )}
 
         <SearchBox searchData={search} clearSearch={clearSearch} />
         <RichTextEditor />
