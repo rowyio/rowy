@@ -16,6 +16,7 @@ import Loading from "./components/Loading";
 
 import { SnackProvider } from "./util/SnackProvider";
 import { AppProvider } from "./AppProvider";
+import GlobalStyles from "./util/GlobalStyles";
 
 const AuthView = lazy(() => import("./views/AuthView"));
 const TableView = lazy(() => import("./views/TableView"));
@@ -26,6 +27,7 @@ const App: React.FC = () => {
   return (
     <ThemeProvider theme={Theme}>
       <CssBaseline />
+      <GlobalStyles />
       <ErrorBoundary>
         <AppProvider>
           <SnackProvider>
