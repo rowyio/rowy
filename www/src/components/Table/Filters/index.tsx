@@ -19,7 +19,7 @@ import CloseIcon from "@material-ui/icons/Close";
 
 import MultiSelect from "../../MultiSelect";
 
-import { FieldType } from "../../Fields";
+import { FieldType } from "constants/fields";
 import { FireTableFilter } from "../../../hooks/useFiretable";
 
 const OPERATORS = [

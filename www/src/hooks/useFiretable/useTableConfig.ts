@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import useDoc, { DocActions } from "../useDoc";
-import { FieldType } from "../../components/Fields";
+import { FieldType } from "constants/fields";
 import _camelCase from "lodash/camelCase";
 import _findIndex from "lodash/findIndex";
 import { arrayMover } from "../../util/fns";

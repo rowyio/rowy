@@ -2,7 +2,7 @@ import React from "react";
 import DateFnsUtils from "@date-io/date-fns";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 
-import { FieldType } from ".";
+import { FieldType } from "constants/fields";
 import {
   MuiPickersUtilsProvider,
   DatePicker,

@@ -4,7 +4,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import EditorContext from "contexts/editorContext";
-import { FieldType } from ".";
+import { FieldType } from "constants/fields";
 import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles((theme: Theme) =>

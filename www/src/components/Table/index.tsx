@@ -29,7 +29,7 @@ import useFiretable, {
 import { functions } from "../../firebase";
 import { CLOUD_FUNCTIONS } from "firebase/callables";
 
-import { FieldType, getFieldIcon } from "../Fields";
+import { FieldType, getFieldIcon } from "constants/fields";
 import {
   cellFormatter,
   onCellSelected,

@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from "react";
-import { FieldType } from "../Fields";
+import { FieldType } from "constants/fields";
 import { Editors } from "react-data-grid-addons";
 import MultiSelect from "../Fields/MultiSelect";
 import _uniq from "lodash/uniq";

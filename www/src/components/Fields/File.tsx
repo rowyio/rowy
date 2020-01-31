@@ -2,7 +2,7 @@ import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import useUploader from "../../hooks/useFiretable/useUploader";
 
-import { FieldType } from ".";
+import { FieldType } from "constants/fields";
 import Chip from "@material-ui/core/Chip";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";

@@ -14,7 +14,8 @@ import Grid from "@material-ui/core/Grid";
 import Popover from "@material-ui/core/Popover";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
-import { FieldsDropDown, isFieldType, FieldType } from "../../Fields";
+import { FieldsDropDown } from "components/Fields";
+import { isFieldType, FieldType } from "constants/fields";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 

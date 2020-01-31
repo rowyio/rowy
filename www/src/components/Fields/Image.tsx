@@ -4,7 +4,7 @@ import useUploader from "../../hooks/useFiretable/useUploader";
 import DeleteIcon from "@material-ui/icons/Delete";
 
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
-import { FieldType } from ".";
+import { FieldType } from "constants/fields";
 import IconButton from "@material-ui/core/IconButton";
 import Grid from "@material-ui/core/Grid";
 import AddIcon from "@material-ui/icons/AddAPhoto";

@@ -8,7 +8,7 @@ import Paper from "@material-ui/core/Paper";
 import TextareaAutosize from "@material-ui/core/TextareaAutosize";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import EditorContext from "contexts/editorContext";
-import { FieldType } from ".";
+import { FieldType } from "constants/fields";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

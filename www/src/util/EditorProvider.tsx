@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import EditorContext from "../contexts/editorContext";
-import { FieldType } from "../components/Fields";
+import { FieldType } from "constants/fields";
 
 interface IEditorProviderProps {
   children: React.ReactNode;
