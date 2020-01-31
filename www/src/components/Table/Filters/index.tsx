@@ -221,7 +221,7 @@ const Filters = ({ columns, tableFilters, setFilters }: any) => {
         </IconButton>
 
         <div className={classes.content}>
-          <Grid
+          {/* <Grid
             container
             alignItems="center"
             spacing={2}
@@ -249,7 +249,7 @@ const Filters = ({ columns, tableFilters, setFilters }: any) => {
             <Grid item>
               <Typography component="span">of the filter criteria.</Typography>
             </Grid>
-          </Grid>
+          </Grid> */}
 
           <Grid container spacing={2}>
             <Grid item xs={4}>
