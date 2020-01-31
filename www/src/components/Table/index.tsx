@@ -45,6 +45,7 @@ const TableHeader = lazy(() => import("./TableHeader"));
 const SearchBox = lazy(() => import("../SearchBox"));
 const DocSelect = lazy(() => import("../Fields/DocSelect"));
 const ColumnEditor = lazy(() => import("./ColumnEditor/index"));
+const ColumnMenu = lazy(() => import("./ColumnMenu/index"));
 
 const deleteAlgoliaRecord = functions.httpsCallable(
   CLOUD_FUNCTIONS.deleteAlgoliaRecord
@@ -367,11 +368,16 @@ function Table(props: Props) {
         <Loading message="Fetching columns" />
       )}
       <Suspense fallback={<Loading message="Loading helpers" />}>
-        <ColumnEditor
+        {/* <ColumnEditor
           handleClose={handleCloseHeader}
           anchorEl={anchorEl}
           column={header && header.column}
           actions={tableActions.column}
+        /> */}
+        <ColumnMenu
+          handleClose={handleCloseHeader}
+          anchorEl={anchorEl}
+          column={header && header.column}
         />
 
         <SearchBox searchData={search} clearSearch={clearSearch} />

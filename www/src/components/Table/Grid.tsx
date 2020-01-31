@@ -8,6 +8,7 @@ import xorWith from "lodash/xorWith";
 import Loading from "../Loading";
 
 const ReactDataGrid = lazy(() => import("react-data-grid"));
+
 const { DraggableContainer } = DraggableHeader;
 const Grid = (props: any) => {
   const {
