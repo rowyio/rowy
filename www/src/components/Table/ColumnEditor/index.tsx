@@ -14,7 +14,7 @@ import Grid from "@material-ui/core/Grid";
 import Popover from "@material-ui/core/Popover";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
-import { FieldsDropDown } from "components/Fields";
+import FieldsDropdown from "components/Fields/FieldsDropdown";
 import { isFieldType, FieldType } from "constants/fields";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
@@ -250,7 +250,7 @@ const ColumnEditor = (props: any) => {
           />
           <FormControl className={classes.formControl}>
             <InputLabel htmlFor="Field-select">Field Type</InputLabel>
-            {FieldsDropDown(values.type, handleChange)}
+            {FieldsDropdown(values.type, handleChange)}
 
             {(values.type === FieldType.singleSelect ||
               values.type === FieldType.multiSelect) && (

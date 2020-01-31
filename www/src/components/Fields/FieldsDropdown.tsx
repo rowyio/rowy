@@ -7,7 +7,7 @@ import { FIELDS, FieldType } from "constants/fields";
 /**
  * Returns dropdown component of all available types
  */
-export const FieldsDropDown = (value: FieldType | null, onChange: any) => {
+const FieldsDropdown = (value: FieldType | null, onChange: any) => {
   return (
     <Select
       value={value ? value : ""}
@@ -33,3 +33,5 @@ export const FieldsDropDown = (value: FieldType | null, onChange: any) => {
     </Select>
   );
 };
+
+export default FieldsDropdown;
