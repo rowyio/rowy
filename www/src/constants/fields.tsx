@@ -2,18 +2,18 @@ import React from "react";
 import propEq from "ramda/es/propEq";
 import find from "ramda/es/find";
 
-import SimpleTextIcon from "@material-ui/icons/ShortText";
+import ShortTextIcon from "@material-ui/icons/ShortText";
 import LongTextIcon from "@material-ui/icons/Notes";
-import MailIcon from "@material-ui/icons/Mail";
+import EmailIcon from "@material-ui/icons/Mail";
 import PhoneIcon from "@material-ui/icons/Phone";
 
-import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import CheckboxIcon from "@material-ui/icons/CheckBox";
 import NumberIcon from "assets/icons/Number";
 
 import DateIcon from "@material-ui/icons/Today";
-import TimeIcon from "@material-ui/icons/AccessTime";
+import DateTimeIcon from "@material-ui/icons/AccessTime";
 
-import URLIcon from "@material-ui/icons/Link";
+import UrlIcon from "@material-ui/icons/Link";
 import RatingIcon from "@material-ui/icons/StarBorder";
 
 import ImageIcon from "@material-ui/icons/PhotoSizeSelectActual";
@@ -31,12 +31,12 @@ import RichTextIcon from "@material-ui/icons/TextFormat";
 import ColorIcon from "@material-ui/icons/Colorize";
 
 export enum FieldType {
-  simpleText = "SIMPLE_TEXT",
+  shortText = "SIMPLE_TEXT",
   longText = "LONG_TEXT",
   email = "EMAIL",
-  PhoneNumber = "PHONE_NUMBER",
+  phone = "PHONE_NUMBER",
 
-  checkBox = "CHECK_BOX",
+  checkbox = "CHECK_BOX",
   number = "NUMBER",
 
   date = "DATE",
@@ -50,7 +50,8 @@ export enum FieldType {
 
   singleSelect = "SINGLE_SELECT",
   multiSelect = "MULTI_SELECT",
-  documentSelect = "DOCUMENT_SELECT",
+
+  connectTable = "DOCUMENT_SELECT",
   subTable = "SUB_TABLE",
 
   action = "ACTION",
@@ -63,18 +64,18 @@ export enum FieldType {
 }
 
 export const FIELDS = [
-  { icon: <SimpleTextIcon />, name: "Short Text", type: FieldType.simpleText },
+  { icon: <ShortTextIcon />, name: "Short Text", type: FieldType.shortText },
   { icon: <LongTextIcon />, name: "Long Text", type: FieldType.longText },
-  { icon: <MailIcon />, name: "Email", type: FieldType.email },
-  { icon: <PhoneIcon />, name: "Phone", type: FieldType.PhoneNumber },
+  { icon: <EmailIcon />, name: "Email", type: FieldType.email },
+  { icon: <PhoneIcon />, name: "Phone", type: FieldType.phone },
 
-  { icon: <CheckBoxIcon />, name: "Checkbox", type: FieldType.checkBox },
+  { icon: <CheckboxIcon />, name: "Checkbox", type: FieldType.checkbox },
   { icon: <NumberIcon />, name: "Number", type: FieldType.number },
 
   { icon: <DateIcon />, name: "Date", type: FieldType.date },
-  { icon: <TimeIcon />, name: "Time & Date", type: FieldType.dateTime },
+  { icon: <DateTimeIcon />, name: "Time & Date", type: FieldType.dateTime },
 
-  { icon: <URLIcon />, name: "URL", type: FieldType.url },
+  { icon: <UrlIcon />, name: "URL", type: FieldType.url },
   { icon: <RatingIcon />, name: "Rating", type: FieldType.rating },
 
   { icon: <ImageIcon />, name: "Image", type: FieldType.image },
@@ -94,7 +95,7 @@ export const FIELDS = [
   {
     icon: <ConnectTableIcon />,
     name: "Connect Table",
-    type: FieldType.documentSelect,
+    type: FieldType.connectTable,
   },
   {
     icon: <SubTableIcon />,

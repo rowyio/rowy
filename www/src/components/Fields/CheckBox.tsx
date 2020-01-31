@@ -28,7 +28,7 @@ const CheckBox = (props: Props) => {
       >
         <Checkbox
           disabled={!column.editable}
-          name={`checkBox-controlled-${row.id}`}
+          name={`checkbox-controlled-${row.id}`}
           checked={!!value}
           onChange={e => {
             onSubmit(!value);
@@ -40,7 +40,7 @@ const CheckBox = (props: Props) => {
     return (
       <Checkbox
         disabled={!column.editable}
-        name={`checkBox-controlled-${row.id}`}
+        name={`checkbox-controlled-${row.id}`}
         checked={!!value}
         onChange={e => {
           onSubmit(!value);

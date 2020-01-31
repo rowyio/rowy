@@ -52,8 +52,8 @@ const Hotkeys = (props: any) => {
   );
   const stringFields = [
     FieldType.email,
-    FieldType.simpleText,
-    FieldType.PhoneNumber,
+    FieldType.shortText,
+    FieldType.phone,
     FieldType.singleSelect,
     FieldType.longText,
     FieldType.url,

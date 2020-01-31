@@ -22,13 +22,13 @@ export const editable = (fieldType: FieldType) => {
     case FieldType.date:
     case FieldType.dateTime:
     case FieldType.rating:
-    case FieldType.checkBox:
+    case FieldType.checkbox:
     case FieldType.multiSelect:
     case FieldType.image:
     case FieldType.file:
     case FieldType.longText:
     case FieldType.richText:
-    case FieldType.documentSelect:
+    case FieldType.connectTable:
     case FieldType.color:
     case FieldType.action:
     case FieldType.last:
@@ -96,7 +96,7 @@ export const cellFormatter = (column: any) => {
           </Suspense>
         );
       };
-    case FieldType.checkBox:
+    case FieldType.checkbox:
       return (props: any) => {
         return (
           <Suspense fallback={<div />}>

@@ -226,7 +226,7 @@ function Table(props: Props) {
         //frozen: column.fixed,
         headerRenderer: headerRenderer,
         formatter:
-          column.type === FieldType.documentSelect
+          column.type === FieldType.connectTable
             ? docSelect(column)
             : cellFormatter(column),
         editor:

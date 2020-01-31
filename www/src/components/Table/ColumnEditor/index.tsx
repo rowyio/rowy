@@ -177,7 +177,7 @@ const ColumnEditor = (props: any) => {
         value: values.options,
       });
     }
-    if (values.type === FieldType.documentSelect) {
+    if (values.type === FieldType.connectTable) {
       updatables.push({
         field: "collectionPath",
         value: values.collectionPath,
@@ -259,7 +259,7 @@ const ColumnEditor = (props: any) => {
                 options={values.options}
               />
             )}
-            {values.type === FieldType.documentSelect && (
+            {values.type === FieldType.connectTable && (
               <DocInput
                 setValue={setValue}
                 collectionPath={values.collectionPath}
