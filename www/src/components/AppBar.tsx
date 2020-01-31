@@ -14,7 +14,7 @@ import {
   MenuItem,
 } from "@material-ui/core";
 
-import AntlerLogo from "../assets/antler.svg";
+import FiretableLogo from "../assets/firetable.svg";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -28,9 +28,14 @@ const useStyles = makeStyles(theme =>
 
     logo: {
       display: "block",
-      marginRight: theme.spacing(2),
+      marginRight: theme.spacing(1),
     },
-    heading: { textTransform: "none" },
+    heading: {
+      textTransform: "none",
+      color: "#ed4746",
+      cursor: "default",
+      userSelect: "none",
+    },
 
     locationDropdown: {
       minWidth: 140,
@@ -66,10 +71,10 @@ const AppBar: React.FunctionComponent<IAppBarProps> = ({
       <Toolbar className={classes.toolbar}>
         <Grid item>
           <img
-            src={AntlerLogo}
+            src={FiretableLogo}
             width="32"
             height="32"
-            alt="Antler"
+            alt="Firetable"
             className={classes.logo}
           />
         </Grid>
@@ -81,7 +86,7 @@ const AppBar: React.FunctionComponent<IAppBarProps> = ({
             component="h1"
             className={classes.heading}
           >
-            Manager
+            firetable
           </Typography>
         </Grid>
 
