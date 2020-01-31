@@ -9,7 +9,7 @@
 - email(string) ✅
 - phone(string) ✅
 - url(string) ✅
-- Number(number) 
+- Number(number)
 - long text(string) ✅
 
 ### Functionality:
@@ -57,7 +57,7 @@
 - Slider(number)
 - Table(Document[])
 - Rich Text(html string)
-- Callable buttons 
+- Callable buttons
 
 ### Functionality:
 
@@ -75,12 +75,12 @@
   - contains
 - Export tables to csv✅
 - Make a toggle switch to allow single/multi
-    - Image
-    - File
-    - Reference
-    - Select
- - Mark primary/unique columns
- - Import CSV by matching with primary unique key column
+  - Image
+  - File
+  - Reference
+  - Select
+- Mark primary/unique columns
+- Import CSV by matching with primary unique key column
 
 # V+
 
@@ -95,7 +95,6 @@
   - createdBy
   - updatedAt
   - updatedBy
-
 
 ### Functionality:
 

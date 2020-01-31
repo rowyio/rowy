@@ -68,6 +68,13 @@ const selectedColumnsReducer = (doc: any) => (
               : "NO"
             : "",
       };
+    case FieldType.dateTime:
+      return {
+        ...accumulator,
+        [currentColumn.key]: doc[currentColumn.key]
+          ? doc[currentColumn.key].toDate()
+          : "",
+      };
     case FieldType.last:
       return accumulator;
     default:
@@ -129,14 +136,18 @@ export const exportTable = functions.https.onCall(
     if (limit) query = query.limit(limit);
     const querySnapshot = await query.get();
     const docs = querySnapshot.docs.map(doc => doc.data());
+    // generate csv Data
+    const data = docs.map((doc: any) => {
+      return columns.reduce(selectedColumnsReducer(doc), {});
+    });
 
-    let data = docs;
-    if (!allFields) {
-      console.log("");
-      docs.map((doc: any) => {
-        return columns.reduce(selectedColumnsReducer(doc), {});
-      });
-    }
+    // let data = docs;
+    // if (!allFields) {
+    //   console.log("");
+    //   docs.map((doc: any) => {
+    //     return columns.reduce(selectedColumnsReducer(doc), {});
+    //   });
+    // }
 
     const csv = json2csv(data);
     return csv;
