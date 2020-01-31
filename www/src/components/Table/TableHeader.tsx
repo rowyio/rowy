@@ -13,11 +13,12 @@ import {
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/AddCircle";
 
-import ImportCSV from "components/ImportCSV";
-import ExportCSV from "components/ExportCSV";
+import ImportCSV from "../ImportCSV";
+import ExportCSV from "../ExportCSV";
 
 import { FireTableFilter } from "../../hooks/useFiretable";
 
+import Filters from "./Filters";
 const useStyles = makeStyles(theme =>
   createStyles({
     root: {
@@ -35,6 +36,7 @@ interface Props {
   collection: string;
   rowHeight: number;
   updateConfig: Function;
+  tableActions: any;
   addRow: Function;
   columns: any;
   filters: FireTableFilter[];
@@ -46,6 +48,7 @@ const TableHeader = ({
   columns,
   addRow,
   filters,
+  tableActions,
 }: Props) => {
   const classes = useStyles();
 
@@ -79,7 +82,11 @@ const TableHeader = ({
           </Select>
         </FormControl>
       </Grid>
-
+      <Filters
+        columns={columns}
+        tableFilters={filters}
+        setFilters={tableActions.table.filter}
+      />
       <Grid item>
         <Grid container spacing={1}>
           <Grid item>

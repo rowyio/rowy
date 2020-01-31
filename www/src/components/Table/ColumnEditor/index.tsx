@@ -11,7 +11,7 @@ import Fade from "@material-ui/core/Fade";
 import Paper from "@material-ui/core/Paper";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
-import Select from "@material-ui/core/Select";
+import Popover from "@material-ui/core/Popover";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import { FieldsDropDown, isFieldType, FieldType } from "../../Fields";
@@ -31,7 +31,7 @@ import DocInput from "./DocInput";
 import { Tooltip } from "@material-ui/core";
 import Confirmation from "../../Confirmation";
 
-const useStyles = makeStyles(Theme =>
+const useStyles = makeStyles(theme =>
   createStyles({
     container: {
       padding: 15,
@@ -39,34 +39,31 @@ const useStyles = makeStyles(Theme =>
     typography: {
       padding: 1,
     },
-    header: {
-      position: "absolute",
-      left: 0,
-      top: 0,
-    },
+
     button: {
       // margin: theme.spacing(1)
     },
     root: {
+      padding: 10,
       display: "flex",
       flexWrap: "wrap",
     },
     formControl: {
-      margin: Theme.spacing(1),
+      margin: theme.spacing(1),
       minWidth: 120,
     },
     selectEmpty: {
-      marginTop: Theme.spacing(2),
+      marginTop: theme.spacing(2),
     },
     toggleGrouped: {
-      margin: Theme.spacing(0.5),
+      margin: theme.spacing(0.5),
       border: "none",
-      padding: Theme.spacing(0, 1),
+      padding: theme.spacing(0, 1),
       "&:not(:first-child)": {
-        borderRadius: Theme.shape.borderRadius,
+        borderRadius: theme.shape.borderRadius,
       },
       "&:first-child": {
-        borderRadius: Theme.shape.borderRadius,
+        borderRadius: theme.shape.borderRadius,
       },
     },
   })
@@ -88,6 +85,8 @@ const ColumnEditor = (props: any) => {
   function handleChange(
     event: React.ChangeEvent<{ name?: string; value: unknown }>
   ) {
+    event.stopPropagation();
+    event.preventDefault();
     setValues(oldValues => ({
       ...oldValues,
       [event.target.name as string]: event.target.value,
@@ -133,12 +132,9 @@ const ColumnEditor = (props: any) => {
       config: {},
     });
   };
-  const onClickAway = (event: any) => {
-    const elementId = event.target.id;
-    if (!elementId.includes("select")) {
-      handleClose();
-      clearValues();
-    }
+  const onClose = (event: any) => {
+    handleClose();
+    clearValues();
   };
 
   const handleToggle = (
@@ -203,124 +199,108 @@ const ColumnEditor = (props: any) => {
   };
   if (column) {
     return (
-      <ClickAwayListener onClickAway={onClickAway}>
-        <Popper
-          className={classes.header}
-          id={`id-${column.name}`}
-          open={!!anchorEl}
-          anchorEl={anchorEl}
-          placement={"bottom-end"}
-          transition
-        >
-          {({ TransitionProps }) => (
-            <Fade {...TransitionProps} timeout={350}>
-              <Paper
-                className={classes.container}
-                style={{ minWidth: column.width ? column.width - 20 : 200 }}
-              >
-                <Grid container direction="column">
-                  <ToggleButtonGroup
-                    size="small"
-                    value={flags}
-                    className={classes.toggleGrouped}
-                    onChange={handleToggle}
-                    arial-label="column settings"
-                  >
-                    <Tooltip title="Editable Cells">
-                      <ToggleButton value="editable" aria-label="editable">
-                        {flags.includes("editable") ? (
-                          <LockOpenIcon />
-                        ) : (
-                          <LockIcon />
-                        )}
-                      </ToggleButton>
-                    </Tooltip>
-                    <Tooltip title="Hide Column">
-                      <ToggleButton value="visible" aria-label="visible">
-                        {flags.includes("visible") ? (
-                          <VisibilityIcon />
-                        ) : (
-                          <VisibilityOffIcon />
-                        )}
-                      </ToggleButton>
-                    </Tooltip>
-                    <Tooltip title="Fixed Column">
-                      <ToggleButton value="fixed" aria-label="fixed">
-                        <FormatUnderlinedIcon />
-                      </ToggleButton>
-                    </Tooltip>
-                    <Tooltip title="Resizable column">
-                      <ToggleButton value="resizable" aria-label="resizable">
-                        <FormatColorFillIcon />
-                      </ToggleButton>
-                    </Tooltip>
-                  </ToggleButtonGroup>
-                  <TextField
-                    label="Column name"
-                    name="name"
-                    defaultValue={values.name}
-                    onChange={e => {
-                      setValue("name", e.target.value);
-                    }}
-                  />
-                  <FormControl className={classes.formControl}>
-                    <InputLabel htmlFor="Field-select">Field Type</InputLabel>
-                    {FieldsDropDown(values.type, handleChange)}
+      <Popover
+        className={classes.root}
+        id={`id-${column.name}`}
+        open={!!anchorEl}
+        anchorEl={anchorEl}
+        onClose={onClose}
+      >
+        <Grid container className={classes.container} direction="column">
+          {/* <ToggleButtonGroup
+            size="small"
+            value={flags}
+            className={classes.toggleGrouped}
+            onChange={handleToggle}
+            arial-label="column settings"
+          >
+            <Tooltip title="Editable Cells">
+              <ToggleButton value="editable" aria-label="editable">
+                {flags.includes("editable") ? <LockOpenIcon /> : <LockIcon />}
+              </ToggleButton>
+            </Tooltip>
+            <Tooltip title="Hide Column">
+              <ToggleButton value="visible" aria-label="visible">
+                {flags.includes("visible") ? (
+                  <VisibilityIcon />
+                ) : (
+                  <VisibilityOffIcon />
+                )}
+              </ToggleButton>
+            </Tooltip>
+            <Tooltip title="Fixed Column">
+              <ToggleButton value="fixed" aria-label="fixed">
+                <FormatUnderlinedIcon />
+              </ToggleButton>
+            </Tooltip>
+            <Tooltip title="Resizable column">
+              <ToggleButton value="resizable" aria-label="resizable">
+                <FormatColorFillIcon />
+              </ToggleButton>
+            </Tooltip>
+          </ToggleButtonGroup> */}
+          <TextField
+            label="Column name"
+            name="name"
+            defaultValue={values.name}
+            onChange={e => {
+              setValue("name", e.target.value);
+            }}
+          />
+          <FormControl className={classes.formControl}>
+            <InputLabel htmlFor="Field-select">Field Type</InputLabel>
+            {FieldsDropDown(values.type, handleChange)}
 
-                    {(values.type === FieldType.singleSelect ||
-                      values.type === FieldType.multiSelect) && (
-                      <SelectOptionsInput
-                        setValue={setValue}
-                        options={values.options}
-                      />
-                    )}
-                    {values.type === FieldType.documentSelect && (
-                      <DocInput
-                        setValue={setValue}
-                        collectionPath={values.collectionPath}
-                      />
-                    )}
-                    {column.isNew ? (
-                      <Button onClick={createNewColumn} disabled={disableAdd()}>
-                        Add
-                      </Button>
-                    ) : (
-                      <Button disabled={disableAdd()} onClick={updateColumn}>
-                        update
-                      </Button>
-                    )}
-                    {!column.isNew && (
-                      <Confirmation
-                        message={{
-                          customBody:
-                            "Are you sure you want to delete this nice column",
-                        }}
-                      >
-                        <Button
-                          variant="outlined"
-                          color="secondary"
-                          onClick={deleteColumn}
-                        >
-                          <DeleteIcon /> Delete
-                        </Button>
-                      </Confirmation>
-                    )}
-                    <Button
-                      color="secondary"
-                      onClick={() => {
-                        handleClose();
-                        clearValues();
-                      }}
-                    >
-                      cancel
-                    </Button>
-                  </FormControl>
-                </Grid>
-              </Paper>
-            </Fade>
-          )}
-        </Popper>
-      </ClickAwayListener>
+            {(values.type === FieldType.singleSelect ||
+              values.type === FieldType.multiSelect) && (
+              <SelectOptionsInput
+                setValue={setValue}
+                options={values.options}
+              />
+            )}
+            {values.type === FieldType.documentSelect && (
+              <DocInput
+                setValue={setValue}
+                collectionPath={values.collectionPath}
+              />
+            )}
+            {column.isNew ? (
+              <Button onClick={createNewColumn} disabled={disableAdd()}>
+                Add
+              </Button>
+            ) : (
+              <Button disabled={disableAdd()} onClick={updateColumn}>
+                update
+              </Button>
+            )}
+            {!column.isNew && (
+              <Confirmation
+                message={{
+                  customBody:
+                    "Are you sure you want to delete this nice column",
+                }}
+              >
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  onClick={deleteColumn}
+                >
+                  <DeleteIcon /> Delete
+                </Button>
+              </Confirmation>
+            )}
+            <Button
+              color="secondary"
+              onClick={() => {
+                handleClose();
+                clearValues();
+              }}
+            >
+              cancel
+            </Button>
+          </FormControl>
+        </Grid>
+      </Popover>
     );
   }
   return <div />;

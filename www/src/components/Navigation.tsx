@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 import CssBaseline from "@material-ui/core/CssBaseline";
 import createStyles from "@material-ui/core/styles/createStyles";
@@ -72,7 +73,13 @@ const Navigation = (props: any) => {
         {props.children}
         <AppBar position="fixed" color="primary" className={classes.appBar}>
           <Toolbar>
-            <IconButton edge="start" color="inherit" aria-label="open drawer">
+            <IconButton
+              edge="start"
+              color="inherit"
+              aria-label="go home"
+              component={Link}
+              to="/"
+            >
               <MenuIcon />
             </IconButton>
             {!settings.tables ? (

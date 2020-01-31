@@ -111,7 +111,7 @@ const Theme = createMuiTheme({
     },
     MuiFormLabel: {
       root: {
-        fontFamily: "Europa",
+        fontFamily: HEADING_TEXT,
         fontSize: "1rem",
         fontWeight: "bold",
         letterSpacing: 0.4,

@@ -31,7 +31,7 @@ export type FiretableState = {
 export type FireTableFilter = {
   key: string;
   operator: "==" | "<" | ">" | ">=" | "<=" | string;
-  value: string | number | boolean;
+  value: string | number | boolean | string[];
 };
 export type FiretableOrderBy = { key: string; direction: "asc" | "desc" }[];
 const useFiretable = (
@@ -56,7 +56,9 @@ const useFiretable = (
       tableActions.setTable(collectionName, filters);
     }
   };
-  const filterTable = (filters: FireTableFilter[]) => {};
+  const filterTable = (filters: FireTableFilter[]) => {
+    tableActions.dispatch({ filters });
+  };
   const setOrder = (orderBy: FiretableOrderBy) => {
     tableActions.dispatch({ orderBy });
   };

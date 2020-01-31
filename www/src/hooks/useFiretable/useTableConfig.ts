@@ -33,6 +33,8 @@ const useTableConfig = (tablePath: string) => {
    */
   const add = (name: string, type: FieldType, data?: any) => {
     //TODO: validation
+
+    //console.log("tableConfigState", tableConfigState);
     const { columns } = tableConfigState;
     const key = _camelCase(name);
     documentDispatch({
