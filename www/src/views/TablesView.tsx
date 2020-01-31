@@ -1,5 +1,4 @@
-import React, { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useContext } from "react";
 
 import {
   createStyles,
@@ -15,6 +14,7 @@ import routes from "../constants/routes";
 import { AppContext } from "../AppProvider";
 
 import AppBar from "../components/AppBar";
+import Loading from "components/Loading";
 import GoIcon from "../components/GoIcon";
 import StyledCard from "../components/StyledCard";
 import CreateTableDialog from "../components/CreateTableDialog";
@@ -69,13 +69,9 @@ const TablesView = () => {
   const [settings, createTable] = useSettings();
   const tables = settings.tables;
 
-  const [cohort, setCohort] = useState("all");
-  const handleCohortChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setCohort(e.target.value);
-
   return (
     <main className={classes.root}>
-      <AppBar cohort={cohort} onChangeCohort={handleCohortChange} />
+      <AppBar />
 
       <Container>
         <Grid container spacing={2} justify="center">
@@ -111,37 +107,24 @@ const TablesView = () => {
           justify="space-between"
           className={classes.cardGrid}
         >
-          {Array.isArray(tables)
-            ? tables.map((table: any) => (
-                <Grid key={table.name} item xs={12} sm={6} md={4}>
-                  <StyledCard
-                    className={classes.card}
-                    overline="Primary"
-                    title={table.name}
-                    bodyContent={table.description}
-                    primaryLink={{
-                      to: {
-                        pathname: `${routes.table}/${table.collection}`,
-                        search:
-                          cohort === "all"
-                            ? ""
-                            : encodeURI(
-                                "?filters=" +
-                                  JSON.stringify([
-                                    {
-                                      key: "cohort",
-                                      operator: "==",
-                                      value: cohort,
-                                    },
-                                  ])
-                              ),
-                      },
-                      label: "Open",
-                    }}
-                  />
-                </Grid>
-              ))
-            : "TODO: card skeleton"}
+          {Array.isArray(tables) ? (
+            tables.map((table: any) => (
+              <Grid key={table.name} item xs={12} sm={6} md={4}>
+                <StyledCard
+                  className={classes.card}
+                  overline="Primary"
+                  title={table.name}
+                  bodyContent={table.description}
+                  primaryLink={{
+                    to: `${routes.table}/${table.collection}`,
+                    label: "Open",
+                  }}
+                />
+              </Grid>
+            ))
+          ) : (
+            <Loading />
+          )}
 
           <Grid item className={classes.createTableContainer}>
             <CreateTableDialog

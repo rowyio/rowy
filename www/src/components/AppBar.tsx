@@ -39,17 +39,9 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-const locations = ["SYD2", "SG4", "LON2", "NYC2", "STO3", "AMS2"];
+interface IAppBarProps {}
 
-interface IAppBarProps {
-  cohort?: string;
-  onChangeCohort?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-}
-
-const AppBar: React.FunctionComponent<IAppBarProps> = ({
-  cohort,
-  onChangeCohort,
-}) => {
+const AppBar: React.FunctionComponent<IAppBarProps> = () => {
   const classes = useStyles();
   const theme = useTheme();
   const trigger = useScrollTrigger({ disableHysteresis: true, threshold: 0 });
@@ -84,27 +76,6 @@ const AppBar: React.FunctionComponent<IAppBarProps> = ({
             Manager
           </Typography>
         </Grid>
-
-        {cohort !== undefined && onChangeCohort && (
-          <Grid item>
-            <TextField
-              select
-              label="Cohort"
-              variant="filled"
-              margin={isMd ? "dense" : "normal"}
-              className={classes.locationDropdown}
-              value={cohort}
-              onChange={onChangeCohort}
-            >
-              <MenuItem value="all">All</MenuItem>
-              {locations.map(option => (
-                <MenuItem key={option} value={option}>
-                  {option}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Grid>
-        )}
       </Toolbar>
     </MuiAppBar>
   );
