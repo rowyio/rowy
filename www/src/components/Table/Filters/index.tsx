@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { FieldType } from "../../Fields";
+import _find from "lodash/find";
+
 import {
+  makeStyles,
+  createStyles,
+  Popover,
   Button,
-  Paper,
   Typography,
   IconButton,
   FormControl,
@@ -11,13 +14,13 @@ import {
   MenuItem,
   TextField,
 } from "@material-ui/core";
-import _find from "lodash/find";
 import FilterIcon from "@material-ui/icons/FilterList";
-import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
-import Popper from "@material-ui/core/Popper";
 import CloseIcon from "@material-ui/icons/Close";
-import { FireTableFilter } from "../../../hooks/useFiretable";
+
 import MultiSelect from "../../MultiSelect";
+
+import { FieldType } from "../../Fields";
+import { FireTableFilter } from "../../../hooks/useFiretable";
 
 const OPERATORS = [
   {
@@ -65,32 +68,20 @@ const OPERATORS = [
   },
 ];
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(theme =>
   createStyles({
-    paper: {
-      padding: theme.spacing(2),
-      width: 640,
-    },
-    close: {
+    paper: { width: 640 },
+
+    closeButton: {
       position: "absolute",
-      right: 0,
+      top: theme.spacing(0.5),
+      right: theme.spacing(0.5),
     },
-    content: {
-      padding: theme.spacing(3),
-    },
-    formControl: {},
-    filterType: {
-      display: "flex",
-      alignContent: "center",
-    },
-    filterTypeSelect: {
-      margin: theme.spacing(0, 1),
-      // height: 50,
-    },
-    footer: {
-      position: "absolute",
-      bottom: 0,
-    },
+
+    content: { padding: theme.spacing(4) },
+
+    topRow: { marginBottom: theme.spacing(3.5) },
+    bottomButtons: { marginTop: theme.spacing(4.5) },
   })
 );
 
@@ -140,7 +131,9 @@ const Filters = ({ columns, tableFilters, setFilters }: any) => {
         operator.compatibleTypes.includes(selectedColumn.type)
       )
     : [];
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const handleClose = () => setAnchorEl(null);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(anchorEl ? null : event.currentTarget);
@@ -167,14 +160,19 @@ const Filters = ({ columns, tableFilters, setFilters }: any) => {
               const value = e.target.value;
               if (value) setQuery(query => ({ ...query, value: value }));
             }}
+            variant="filled"
+            hiddenLabel
+            placeholder="Text value"
           />
         );
+
       case FieldType.singleSelect:
         const val = query?.value
           ? Array.isArray(query.value)
             ? query.value
             : [query.value as string]
           : [];
+
         return (
           <MultiSelect
             onChange={(fieldName, value) => {
@@ -187,128 +185,149 @@ const Filters = ({ columns, tableFilters, setFilters }: any) => {
             field=""
             value={val}
             multiple={operator === "in"}
+            TextFieldProps={{ hiddenLabel: true }}
           />
         );
+
       default:
+        return <>Not available</>;
+        // return <TextField variant="filled" fullWidth disabled />;
         break;
     }
   };
   return (
     <>
-      <Button variant="outlined" color="primary" onClick={handleClick}>
-        <FilterIcon /> {filters.length !== 0 && filters.length}
+      <Button
+        variant="outlined"
+        color="primary"
+        onClick={handleClick}
+        startIcon={<FilterIcon />}
+      >
+        {filters.length !== 0 && filters.length}
         {` Filters`}
       </Button>
-      <Popper id={id} open={open} anchorEl={anchorEl}>
-        <Paper className={classes.paper}>
-          <IconButton
-            className={classes.close}
-            onClick={() => {
-              setAnchorEl(null);
-            }}
+
+      <Popover
+        id={id}
+        open={open}
+        anchorEl={anchorEl}
+        classes={{ paper: classes.paper }}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <IconButton className={classes.closeButton} onClick={handleClose}>
+          <CloseIcon />
+        </IconButton>
+
+        <div className={classes.content}>
+          <Grid
+            container
+            alignItems="center"
+            spacing={2}
+            className={classes.topRow}
           >
-            <CloseIcon />
-          </IconButton>
-          <div className={classes.content}>
-            {/* <div className={classes.filterType}>
-              <Typography>Results match </Typography>
-              <FormControl variant="filled" className={classes.formControl}>
-                <Select
-                  className={classes.filterTypeSelect}
-                  labelId="demo-simple-select-filled-label"
-                  id="demo-simple-select-filled"
-                  value={combineType}
-                  disabled
-                  // onChange={handleChange}
-                >
-                  <MenuItem value={"all"}>all</MenuItem>
-                  <MenuItem value={"any"}>any</MenuItem>
-                </Select>
-              </FormControl>
-              <Typography>of the filter criteria.</Typography>
-            </div> */}
-
-            <Grid container>
-              <Grid item xs={4}>
-                <Typography variant="overline">Column</Typography>
-              </Grid>
-              <Grid item xs={4}>
-                <Typography variant="overline">Condition</Typography>
-              </Grid>
-              <Grid item xs={4}>
-                <Typography variant="overline">Value</Typography>
-              </Grid>
+            <Grid item>
+              <Typography component="span">Results match</Typography>
             </Grid>
 
-            <Grid container>
-              <Grid item xs={4}>
-                <FormControl
-                  variant="filled"
-                  className={classes.formControl}
-                  fullWidth
-                >
-                  <Select
-                    className={classes.filterTypeSelect}
-                    labelId="demo-simple-select-filled-label"
-                    id="demo-simple-select-filled"
-                    value={selectedColumn?.key}
-                    onChange={handleChangeColumn}
-                  >
-                    {filterColumns.map(c => (
-                      <MenuItem value={c.key}>{c.label}</MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={4}>
-                {query.key && (
-                  <FormControl
-                    fullWidth
-                    variant="filled"
-                    className={classes.formControl}
-                  >
-                    <Select
-                      className={classes.filterTypeSelect}
-                      labelId="demo-simple-select-filled-label"
-                      id="demo-simple-select-filled"
-                      value={query.operator}
-                      disabled={operators?.length <= 1}
-                      onChange={e => {
-                        setQuery(query => ({
-                          ...query,
-                          operator: e.target.value as string,
-                        }));
-                      }}
-                    >
-                      {operators.map(operator => (
-                        <MenuItem value={operator.value}>
-                          {operator.label}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                )}
-              </Grid>
-              <Grid item xs={4}>
-                {query.operator &&
-                  renderInputField(selectedColumn, query.operator)}
-              </Grid>
-            </Grid>
-            <Grid container justify="space-between" className={classes.footer}>
-              {/* <Button color="primary">+ ADD FILTER</Button> */}
-              <Button
-                color="primary"
-                onClick={() => {
-                  setFilters([query]);
-                  setAnchorEl(null);
-                }}
+            <Grid item>
+              <TextField
+                select
+                variant="filled"
+                id="demo-simple-select-filled"
+                value={combineType}
+                hiddenLabel
+                // disabled
+                // onChange={handleChange}
               >
-                APPLY
-              </Button>
+                <MenuItem value="all">all</MenuItem>
+                <MenuItem value="any">any</MenuItem>
+              </TextField>
             </Grid>
-          </div>
-        </Paper>
-      </Popper>
+
+            <Grid item>
+              <Typography component="span">of the filter criteria.</Typography>
+            </Grid>
+          </Grid>
+
+          <Grid container spacing={2}>
+            <Grid item xs={4}>
+              <Typography variant="overline">Column</Typography>
+            </Grid>
+            <Grid item xs={4}>
+              <Typography variant="overline">Condition</Typography>
+            </Grid>
+            <Grid item xs={4}>
+              <Typography variant="overline">Value</Typography>
+            </Grid>
+          </Grid>
+
+          <Grid container spacing={2}>
+            <Grid item xs={4}>
+              <TextField
+                select
+                variant="filled"
+                hiddenLabel
+                fullWidth
+                value={selectedColumn?.key ?? ""}
+                onChange={handleChangeColumn}
+                SelectProps={{ displayEmpty: true }}
+              >
+                <MenuItem disabled value="" style={{ display: "none" }}>
+                  Select Column
+                </MenuItem>
+                {filterColumns.map(c => (
+                  <MenuItem value={c.key}>{c.label}</MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+
+            <Grid item xs={4}>
+              <TextField
+                select
+                variant="filled"
+                hiddenLabel
+                fullWidth
+                value={query.operator}
+                disabled={!query.key || operators?.length === 0}
+                onChange={e => {
+                  setQuery(query => ({
+                    ...query,
+                    operator: e.target.value as string,
+                  }));
+                }}
+                SelectProps={{ displayEmpty: true }}
+              >
+                <MenuItem disabled value="" style={{ display: "none" }}>
+                  Select Condition
+                </MenuItem>
+                {operators.map(operator => (
+                  <MenuItem value={operator.value}>{operator.label}</MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+
+            <Grid item xs={4}>
+              {query.operator &&
+                renderInputField(selectedColumn, query.operator)}
+            </Grid>
+          </Grid>
+
+          <Grid container className={classes.bottomButtons}>
+            {/* <Button color="primary">+ ADD FILTER</Button> */}
+            <Button
+              color="primary"
+              onClick={() => {
+                setFilters([query]);
+                handleClose();
+              }}
+            >
+              Apply
+            </Button>
+          </Grid>
+        </div>
+      </Popover>
     </>
   );
 };
