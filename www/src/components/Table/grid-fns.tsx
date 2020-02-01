@@ -8,6 +8,7 @@ import { algoliaUpdateDoc } from "../../firebase/callables";
 const { AutoComplete } = Editors;
 const DateField = lazy(() => import("../Fields/Date"));
 const Rating = lazy(() => import("../Fields/Rating"));
+const Number = lazy(() => import("../Fields/Number"));
 const CheckBox = lazy(() => import("../Fields/CheckBox"));
 const UrlLink = lazy(() => import("../Fields/UrlLink"));
 const Image = lazy(() => import("../Fields/Image"));
@@ -22,6 +23,7 @@ export const editable = (fieldType: FieldType) => {
     case FieldType.date:
     case FieldType.dateTime:
     case FieldType.rating:
+    case FieldType.number:
     case FieldType.checkBox:
     case FieldType.multiSelect:
     case FieldType.image:
@@ -81,6 +83,18 @@ export const cellFormatter = (column: any) => {
         return (
           <Suspense fallback={<div />}>
             <Rating
+              {...props}
+              onSubmit={onSubmit(key, props.row)}
+              value={typeof props.value === "number" ? props.value : undefined}
+            />
+          </Suspense>
+        );
+      };
+    case FieldType.number:
+      return (props: any) => {
+        return (
+          <Suspense fallback={<div />}>
+            <Number
               {...props}
               onSubmit={onSubmit(key, props.row)}
               value={typeof props.value === "number" ? props.value : 0}
