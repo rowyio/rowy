@@ -1,11 +1,12 @@
 import React, { lazy, Suspense } from "react";
 import { FieldType } from "../Fields";
 import { Editors } from "react-data-grid-addons";
-import MultiSelect from "../Fields/MultiSelect";
 import _uniq from "lodash/uniq";
 import { algoliaUpdateDoc } from "../../firebase/callables";
 
 const { AutoComplete } = Editors;
+
+const MultiSelect = lazy(() => import("../Fields/MultiSelect"));
 const DateField = lazy(() => import("../Fields/Date"));
 const Rating = lazy(() => import("../Fields/Rating"));
 const Number = lazy(() => import("../Fields/Number"));
@@ -39,9 +40,11 @@ export const editable = (fieldType: FieldType) => {
       return true;
   }
 };
+
 export const onSubmit = (key: string, row: any) => async (value: any) => {
   const collection = row.ref.parent.path;
   const data = { collection, id: row.ref.id, doc: { [key]: value } };
+
   if (value !== null || value !== undefined) {
     const updatedAt = new Date();
     let updatedFields = [key];
@@ -85,7 +88,7 @@ export const cellFormatter = (column: any) => {
             <Rating
               {...props}
               onSubmit={onSubmit(key, props.row)}
-              value={typeof props.value === "number" ? props.value : undefined}
+              value={typeof props.value === "number" ? props.value : 0}
             />
           </Suspense>
         );
@@ -97,7 +100,7 @@ export const cellFormatter = (column: any) => {
             <Number
               {...props}
               onSubmit={onSubmit(key, props.row)}
-              value={typeof props.value === "number" ? props.value : 0}
+              value={typeof props.value === "number" ? props.value : undefined}
             />
           </Suspense>
         );
