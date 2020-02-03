@@ -49,7 +49,7 @@ const Date = (props: Props) => {
           value={value && value.toDate ? value.toDate() : null}
           onChange={handleDateChange}
           format="dd/MM/yy"
-          emptyLabel="select a date"
+          emptyLabel="Select a date"
           fullWidth
           InputProps={{
             disableUnderline: true,
@@ -66,7 +66,7 @@ const Date = (props: Props) => {
           value={value ? value.toDate() : null}
           onChange={handleDateChange}
           format="dd/MM/yy HH:mm a"
-          emptyLabel="select a time"
+          emptyLabel="Select a time"
           fullWidth
           InputProps={{
             disableUnderline: true,
