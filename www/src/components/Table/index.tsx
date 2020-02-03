@@ -9,7 +9,7 @@ import {
   Tooltip,
 } from "@material-ui/core";
 import ImportExportIcon from "@material-ui/icons/ImportExport";
-import SettingsIcon from "@material-ui/icons/Settings";
+import DropdownIcon from "@material-ui/icons/ArrowDropDownCircle";
 import Confirmation from "components/Confirmation";
 import DeleteIcon from "@material-ui/icons/Delete";
 import DuplicateIcon from "@material-ui/icons/FileCopy";
@@ -202,8 +202,9 @@ function Table(props: Props) {
                   disableFocusRipple={true}
                   size="small"
                   onClick={handleClick(props)}
+                  className={classes.dropdownButton}
                 >
-                  <SettingsIcon />
+                  <DropdownIcon />
                 </IconButton>
               </MuiGrid>
             </MuiGrid>

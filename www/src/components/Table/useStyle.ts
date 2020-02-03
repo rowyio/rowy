@@ -1,4 +1,4 @@
-import { createStyles, makeStyles } from "@material-ui/core/styles";
+import { createStyles, makeStyles, fade } from "@material-ui/core/styles";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -24,6 +24,14 @@ const useStyles = makeStyles(theme =>
         lineHeight: 1.25,
         color: theme.palette.text.secondary,
       },
+    },
+
+    dropdownButton: {
+      color: fade(theme.palette.text.primary, 0.3),
+      transition: theme.transitions.create("color", {
+        duration: theme.transitions.duration.shortest,
+      }),
+      "&:hover": { color: theme.palette.text.secondary },
     },
   })
 );
