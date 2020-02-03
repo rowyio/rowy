@@ -338,7 +338,6 @@ export default function MultipleSelect({
                         label={option.label}
                         variant="outlined"
                         component="li"
-                        size="medium"
                       />
                     );
                 })}

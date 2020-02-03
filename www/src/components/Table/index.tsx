@@ -347,6 +347,7 @@ function Table(props: Props) {
           addRow={addRow}
         />
       </Suspense>
+
       {!tableState.loadingColumns ? (
         <Grid
           key={`${collection}-grid`}
@@ -367,6 +368,7 @@ function Table(props: Props) {
       ) : (
         <Loading message="Fetching columns" />
       )}
+
       <Suspense fallback={<Loading message="Loading helpers" />}>
         <ColumnEditor
           handleClose={handleCloseHeader}

@@ -2,10 +2,6 @@ import { createStyles, makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles(theme =>
   createStyles({
-    typography: {
-      padding: 1,
-    },
-
     header: {},
 
     columnIconContainer: {
@@ -21,18 +17,13 @@ const useStyles = makeStyles(theme =>
       lineHeight: 1,
     },
 
-    headerButton: {
-      width: "100%",
-    },
-    tableActions: {
-      display: "flex",
-      flex: "wrap",
-      alignContent: "center",
-      // background: Theme.palette.primary.main,
-    },
-    formControl: {
-      margin: 2,
-      minWidth: 120,
+    "@global": {
+      ".react-grid-Grid": {
+        ...theme.typography.body2,
+        fontSize: "0.75rem",
+        lineHeight: 1.25,
+        color: theme.palette.text.secondary,
+      },
     },
   })
 );

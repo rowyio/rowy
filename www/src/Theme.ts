@@ -95,9 +95,8 @@ const Theme = createMuiTheme({
         fontWeight: "bold",
         fontStyle: "normal",
         lineHeight: 1.2,
-        letterSpacing: 2,
+        letterSpacing: 1.125,
         color: "rgba(0, 0, 0, 0.6)",
-        textTransform: "uppercase",
       },
       labelSmall: {
         paddingLeft: 12,
@@ -144,7 +143,6 @@ const Theme = createMuiTheme({
     MuiRadio: { color: "primary" },
     MuiCheckbox: { color: "primary" },
     MuiCircularProgress: { size: 44 },
-    MuiChip: { size: "small" },
     // Select: show dropdown below text field to follow new Material spec
     MuiSelect: {
       MenuProps: {
@@ -152,10 +150,6 @@ const Theme = createMuiTheme({
         anchorOrigin: { vertical: "bottom", horizontal: "center" },
         transformOrigin: { vertical: "top", horizontal: "center" },
       },
-    },
-    MuiTabs: {
-      indicatorColor: "primary",
-      textColor: "primary",
     },
   },
 });

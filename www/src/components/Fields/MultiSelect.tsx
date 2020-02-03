@@ -1,39 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 
-import Select from "@material-ui/core/Select";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import {
+  createStyles,
+  makeStyles,
+  Select,
+  Input,
+  MenuItem,
+  Grid,
+  Chip,
+} from "@material-ui/core";
 
-import Input from "@material-ui/core/Input";
-import Grid from "@material-ui/core/Grid";
-import MenuItem from "@material-ui/core/MenuItem";
-import Chip from "@material-ui/core/Chip";
-import Typography from "@material-ui/core/Typography";
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      display: "flex",
-      flexWrap: "wrap",
-    },
-    select: {
-      width: "100%",
-    },
-    chips: {
-      display: "flex",
-      flexWrap: "wrap",
-    },
-    chip: {
-      margin: 2,
-    },
-    noLabel: {
-      marginTop: theme.spacing(3),
-    },
-    noOptions: {
-      position: "absolute",
-      top: -15,
-    },
-  })
-);
+const useStyles = makeStyles(theme => createStyles({}));
 interface Props {
   value: string[] | null;
   row: { ref: firebase.firestore.DocumentReference; id: string };
@@ -71,22 +48,32 @@ const MultiSelect = (props: Props) => {
     }
   };
 
+  const [open, setOpen] = useState(false);
+  const handleClose = () => setOpen(false);
+  const handleOpen = () => setOpen(true);
+
   if (options && options.length !== 0)
     return (
       <Select
-        className={classes.select}
         multiple
         value={value && Array.isArray(value) ? value : []}
         onChange={handleChange}
         input={<Input id="select-multiple-chip" />}
         renderValue={selected => (
-          <div className={classes.chips}>
+          <Grid container spacing={1}>
             {(selected as string[]).map(value => (
-              <Chip key={value} label={value} className={classes.chip} />
+              <Grid item key={value}>
+                <Chip label={value} />
+              </Grid>
             ))}
-          </div>
+          </Grid>
         )}
         MenuProps={MenuProps}
+        disableUnderline
+        open={open}
+        onClose={handleClose}
+        onOpen={handleOpen}
+        fullWidth
       >
         {options.map(option => (
           <MenuItem key={option} value={option}>
@@ -95,16 +82,6 @@ const MultiSelect = (props: Props) => {
         ))}
       </Select>
     );
-  else
-    return (
-      <Grid className={classes.noOptions} direction="row">
-        {/* <Grid item>
-          <WarningIcon />
-        </Grid>{" "} */}
-        <Grid item>
-          <Typography>add options!</Typography>
-        </Grid>
-      </Grid>
-    );
+  else return <>No options set</>;
 };
 export default MultiSelect;
