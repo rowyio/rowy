@@ -30,6 +30,28 @@ import ActionIcon from "assets/icons/Action";
 import RichTextIcon from "@material-ui/icons/TextFormat";
 import ColorIcon from "@material-ui/icons/Colorize";
 
+export {
+  ShortTextIcon,
+  LongTextIcon,
+  EmailIcon,
+  PhoneIcon,
+  CheckboxIcon,
+  NumberIcon,
+  DateIcon,
+  DateTimeIcon,
+  UrlIcon,
+  RatingIcon,
+  ImageIcon,
+  FileIcon,
+  SingleSelectIcon,
+  MultiSelectIcon,
+  ConnectTableIcon,
+  SubTableIcon,
+  ActionIcon,
+  RichTextIcon,
+  ColorIcon,
+};
+
 export enum FieldType {
   shortText = "SIMPLE_TEXT",
   longText = "LONG_TEXT",
