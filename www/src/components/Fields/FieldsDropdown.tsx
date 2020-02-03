@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Select, MenuItem } from "@material-ui/core";
+import { TextField, MenuItem, ListItemIcon } from "@material-ui/core";
 
 import { FIELDS, FieldType } from "constants/fields";
 
@@ -9,13 +9,12 @@ import { FIELDS, FieldType } from "constants/fields";
  */
 const FieldsDropdown = (value: FieldType | null, onChange: any) => {
   return (
-    <Select
+    <TextField
+      select
       value={value ? value : ""}
       onChange={onChange}
-      inputProps={{
-        name: "type",
-        id: "type",
-      }}
+      inputProps={{ name: "type", id: "type" }}
+      label="Field type"
     >
       {FIELDS.map(
         (field: { icon: JSX.Element; name: string; type: FieldType }) => {
@@ -25,12 +24,15 @@ const FieldsDropdown = (value: FieldType | null, onChange: any) => {
               id={`select-field-${field.type}`}
               value={field.type}
             >
-              <>{field.name}</>
+              <ListItemIcon style={{ verticalAlign: "text-bottom" }}>
+                {field.icon}
+              </ListItemIcon>
+              {field.name}
             </MenuItem>
           );
         }
       )}
-    </Select>
+    </TextField>
   );
 };
 

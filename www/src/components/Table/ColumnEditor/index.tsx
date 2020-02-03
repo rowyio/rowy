@@ -208,7 +208,7 @@ const ColumnEditor = (props: any) => {
         onClose={onClose}
       >
         <Grid container className={classes.container} direction="column">
-          {/* <ToggleButtonGroup
+          <ToggleButtonGroup
             size="small"
             value={flags}
             className={classes.toggleGrouped}
@@ -239,7 +239,7 @@ const ColumnEditor = (props: any) => {
                 <FormatColorFillIcon />
               </ToggleButton>
             </Tooltip>
-          </ToggleButtonGroup> */}
+          </ToggleButtonGroup>
           <TextField
             label="Column name"
             name="name"
@@ -249,7 +249,6 @@ const ColumnEditor = (props: any) => {
             }}
           />
           <FormControl className={classes.formControl}>
-            <InputLabel htmlFor="Field-select">Field Type</InputLabel>
             {FieldsDropdown(values.type, handleChange)}
 
             {(values.type === FieldType.singleSelect ||
@@ -265,40 +264,45 @@ const ColumnEditor = (props: any) => {
                 collectionPath={values.collectionPath}
               />
             )}
-            {column.isNew ? (
-              <Button onClick={createNewColumn} disabled={disableAdd()}>
-                Add
-              </Button>
-            ) : (
-              <Button disabled={disableAdd()} onClick={updateColumn}>
-                update
-              </Button>
-            )}
-            {!column.isNew && (
-              <Confirmation
-                message={{
-                  customBody:
-                    "Are you sure you want to delete this nice column",
-                }}
-              >
-                <Button
-                  variant="outlined"
-                  color="secondary"
-                  onClick={deleteColumn}
-                >
-                  <DeleteIcon /> Delete
-                </Button>
-              </Confirmation>
-            )}
-            <Button
-              color="secondary"
-              onClick={() => {
-                handleClose();
-                clearValues();
-              }}
-            >
-              cancel
-            </Button>
+
+            <Grid container>
+              <Grid item xs={6}>
+                {column.isNew ? (
+                  <Button
+                    onClick={createNewColumn}
+                    disabled={disableAdd()}
+                    color="secondary"
+                    fullWidth
+                  >
+                    Add
+                  </Button>
+                ) : (
+                  <Button
+                    disabled={disableAdd()}
+                    onClick={updateColumn}
+                    color="secondary"
+                    fullWidth
+                  >
+                    update
+                  </Button>
+                )}
+              </Grid>
+
+              {!column.isNew && (
+                <Grid item xs={6}>
+                  <Confirmation
+                    message={{
+                      customBody:
+                        "Are you sure you want to delete this nice column?",
+                    }}
+                  >
+                    <Button color="secondary" onClick={deleteColumn} fullWidth>
+                      Delete
+                    </Button>
+                  </Confirmation>
+                </Grid>
+              )}
+            </Grid>
           </FormControl>
         </Grid>
       </Popover>
