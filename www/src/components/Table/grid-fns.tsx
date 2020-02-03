@@ -25,7 +25,7 @@ export const editable = (fieldType: FieldType) => {
     case FieldType.dateTime:
     case FieldType.rating:
     case FieldType.number:
-    case FieldType.checkBox:
+    case FieldType.checkbox:
     case FieldType.multiSelect:
     case FieldType.image:
     case FieldType.file:
