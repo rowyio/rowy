@@ -24,12 +24,12 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "inline-block",
       cursor: "pointer",
 
-      height: 32,
-      width: 42,
-
       backgroundSize: "contain",
       backgroundPosition: "center center",
       backgroundRepeat: "no-repeat",
+
+      boxShadow: `0 0 0 1px ${theme.palette.divider} inset`,
+      borderRadius: theme.shape.borderRadius,
 
       "& + &": { marginLeft: theme.spacing(1) },
     },
@@ -43,6 +43,8 @@ const useStyles = makeStyles((theme: Theme) =>
 
       backgroundColor: "rgba(255,255,255,0.8)",
       color: theme.palette.text.secondary,
+      boxShadow: `0 0 0 1px ${theme.palette.divider} inset`,
+      borderRadius: theme.shape.borderRadius,
 
       opacity: 0,
       transition: theme.transitions.create("opacity", {
@@ -128,7 +130,11 @@ const Image = (props: Props) => {
                     onSubmit(value);
                   }}
                   className={classes.imgContainer}
-                  style={{ backgroundImage: `url(${file.downloadURL})` }}
+                  style={{
+                    backgroundImage: `url(${file.downloadURL})`,
+                    width: row.rowHeight * 0.9,
+                    height: row.rowHeight * 0.9,
+                  }}
                 >
                   <Grid
                     container
