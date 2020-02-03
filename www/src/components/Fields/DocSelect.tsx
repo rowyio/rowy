@@ -16,7 +16,7 @@ const getPrimaryValue = (config: { primaryKeys: string[] }) => {};
 const useStyles = makeStyles(theme =>
   createStyles({
     chipList: {
-      height: "1em",
+      marginTop: -1,
     },
   })
 );
@@ -31,6 +31,7 @@ interface Props {
 }
 
 const DocSelect = (props: Props) => {
+  const classes = useStyles();
   const { value, row, onSubmit, collectionPath, config, setSearch } = props;
   const handleClick = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -53,7 +54,12 @@ const DocSelect = (props: Props) => {
   };
 
   return (
-    <Grid container alignItems="center" spacing={1}>
+    <Grid
+      container
+      alignItems="center"
+      spacing={1}
+      className={classes.chipList}
+    >
       <Grid item xs>
         <Grid container spacing={1}>
           {value &&

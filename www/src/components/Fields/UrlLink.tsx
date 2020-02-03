@@ -11,7 +11,13 @@ interface Props {
 const UrlLink = (props: Props) => {
   const { value } = props;
   return value ? (
-    <Grid container alignItems="center" wrap="nowrap" spacing={1}>
+    <Grid
+      container
+      alignItems="center"
+      wrap="nowrap"
+      spacing={1}
+      style={{ marginTop: 0 }}
+    >
       <Grid item>
         <EditIcon />
       </Grid>

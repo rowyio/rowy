@@ -151,6 +151,7 @@ const Theme = createMuiTheme({
         transformOrigin: { vertical: "top", horizontal: "center" },
       },
     },
+    MuiChip: { size: "small" },
   },
 });
 
