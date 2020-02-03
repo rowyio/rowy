@@ -85,7 +85,7 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-const Filters = ({ columns, tableFilters, setFilters }: any) => {
+const Filters = ({ columns, setFilters }: any) => {
   //const filters = [{}, {}];
 
   const filterColumns = columns
