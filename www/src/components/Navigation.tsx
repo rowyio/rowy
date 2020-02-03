@@ -116,7 +116,13 @@ const Navigation = (props: any) => {
                     <Button
                       key={table.collection}
                       onClick={() => {
-                        router.history.push(table.collection);
+                        if (
+                          table.collection !==
+                          router.location.pathname.replace("/table/", "")
+                        ) {
+                          //prevent redirecting to the same table
+                          router.history.push(table.collection);
+                        }
                       }}
                       className={classes.button}
                     >

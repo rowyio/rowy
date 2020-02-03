@@ -85,7 +85,7 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-const Filters = ({ columns, tableFilters, setFilters }: any) => {
+const Filters = ({ columns, setFilters }: any) => {
   //const filters = [{}, {}];
 
   const filterColumns = columns
@@ -314,9 +314,30 @@ const Filters = ({ columns, tableFilters, setFilters }: any) => {
             </Grid>
           </Grid>
 
-          <Grid container className={classes.bottomButtons}>
+          <Grid
+            container
+            className={classes.bottomButtons}
+            justify="space-between"
+          >
             {/* <Button color="primary">+ ADD FILTER</Button> */}
             <Button
+              disabled={query.key == ""}
+              color="secondary"
+              onClick={() => {
+                setFilters([]);
+                setQuery({
+                  key: "",
+                  operator: "",
+                  value: "",
+                });
+                setSelectedColumn(null);
+                //handleClose();
+              }}
+            >
+              Clear
+            </Button>
+            <Button
+              disabled={query.value == ""}
               color="primary"
               onClick={() => {
                 setFilters([query]);

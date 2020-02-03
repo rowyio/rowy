@@ -32,7 +32,6 @@ interface Props {
 
 const DocSelect = (props: Props) => {
   const { value, row, onSubmit, collectionPath, config, setSearch } = props;
-
   const handleClick = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {

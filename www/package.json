@@ -48,6 +48,7 @@
     "react-scripts": "^3.3.0",
     "start": "^5.1.0",
     "typescript": "^3.7.2",
+    "use-debounce": "^3.3.0",
     "yarn": "^1.19.0",
     "yup": "^0.27.0"
   },

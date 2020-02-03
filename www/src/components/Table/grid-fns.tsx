@@ -1,13 +1,15 @@
 import React, { lazy, Suspense } from "react";
 import { FieldType } from "constants/fields";
 import { Editors } from "react-data-grid-addons";
-import MultiSelect from "../Fields/MultiSelect";
 import _uniq from "lodash/uniq";
 import { algoliaUpdateDoc } from "../../firebase/callables";
 
 const { AutoComplete } = Editors;
+
+const MultiSelect = lazy(() => import("../Fields/MultiSelect"));
 const DateField = lazy(() => import("../Fields/Date"));
 const Rating = lazy(() => import("../Fields/Rating"));
+const Number = lazy(() => import("../Fields/Number"));
 const CheckBox = lazy(() => import("../Fields/CheckBox"));
 const UrlLink = lazy(() => import("../Fields/UrlLink"));
 const Image = lazy(() => import("../Fields/Image"));
@@ -22,7 +24,8 @@ export const editable = (fieldType: FieldType) => {
     case FieldType.date:
     case FieldType.dateTime:
     case FieldType.rating:
-    case FieldType.checkbox:
+    case FieldType.number:
+    case FieldType.checkBox:
     case FieldType.multiSelect:
     case FieldType.image:
     case FieldType.file:
@@ -37,9 +40,11 @@ export const editable = (fieldType: FieldType) => {
       return true;
   }
 };
+
 export const onSubmit = (key: string, row: any) => async (value: any) => {
   const collection = row.ref.parent.path;
   const data = { collection, id: row.ref.id, doc: { [key]: value } };
+
   if (value !== null || value !== undefined) {
     const updatedAt = new Date();
     let updatedFields = [key];
@@ -84,6 +89,18 @@ export const cellFormatter = (column: any) => {
               {...props}
               onSubmit={onSubmit(key, props.row)}
               value={typeof props.value === "number" ? props.value : 0}
+            />
+          </Suspense>
+        );
+      };
+    case FieldType.number:
+      return (props: any) => {
+        return (
+          <Suspense fallback={<div />}>
+            <Number
+              {...props}
+              onSubmit={onSubmit(key, props.row)}
+              value={typeof props.value === "number" ? props.value : undefined}
             />
           </Suspense>
         );
