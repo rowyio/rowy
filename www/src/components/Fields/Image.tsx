@@ -4,7 +4,7 @@ import useUploader from "../../hooks/useFiretable/useUploader";
 import DeleteIcon from "@material-ui/icons/Delete";
 
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
-import { FieldType } from ".";
+import { FieldType } from "constants/fields";
 import IconButton from "@material-ui/core/IconButton";
 import Grid from "@material-ui/core/Grid";
 import AddIcon from "@material-ui/icons/AddAPhoto";
@@ -17,29 +17,40 @@ import Confirmation from "../Confirmation";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-      display: "flex",
-      // flexDirection: "row",
-      alignContent: "center",
-      width: "100%",
+    root: {},
+
+    imgContainer: {
+      position: "relative",
+      display: "inline-block",
+      cursor: "pointer",
+
+      backgroundSize: "contain",
+      backgroundPosition: "center center",
+      backgroundRepeat: "no-repeat",
+
+      boxShadow: `0 0 0 1px ${theme.palette.divider} inset`,
+      borderRadius: theme.shape.borderRadius,
+
+      "& + &": { marginLeft: theme.spacing(1) },
     },
-    uploadingContainer: {
-      display: "flex",
-      alignContent: "center",
-      flexDirection: "row",
-      justifyContent: "space-between",
-    },
-    progress: {
-      margin: theme.spacing(3),
-    },
-    imgHover: {
-      "&:hover": {
-        borderStyle: "solid",
-        borderColor: "rgb(255, 0, 0,0.6)",
-      },
-    },
-    addIcon: {
-      maxHeight: 48,
+
+    deleteImgHover: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      bottom: 0,
+      right: 0,
+
+      backgroundColor: "rgba(255,255,255,0.8)",
+      color: theme.palette.text.secondary,
+      boxShadow: `0 0 0 1px ${theme.palette.divider} inset`,
+      borderRadius: theme.shape.borderRadius,
+
+      opacity: 0,
+      transition: theme.transitions.create("opacity", {
+        duration: theme.transitions.duration.shortest,
+      }),
+      "$imgContainer:hover &": { opacity: 1 },
     },
   })
 );
@@ -84,59 +95,75 @@ const Image = (props: Props) => {
     files.push({ downloadURL: localImage, name: "localImage" });
   }
   return (
-    <Grid className={classes.root} {...dropzoneProps} onClick={() => {}}>
+    <Grid
+      container
+      className={classes.root}
+      wrap="nowrap"
+      alignItems="center"
+      {...dropzoneProps}
+      onClick={() => {}}
+    >
       <input {...getInputProps()} />
-      {value &&
-        files.map((file: { name: string; downloadURL: string }) => (
-          <Tooltip title="Click to delete" key={file.downloadURL}>
-            <Confirmation
-              message={{
-                title: "Delete Image",
-                body: "Are you sure you want to delete this image?",
-                confirm: (
-                  <>
-                    <DeleteIcon /> Delete
-                  </>
-                ),
-              }}
-            >
-              <div
-                onClick={e => {
-                  const index = _findIndex(value, [
-                    "downloadURL",
-                    file.downloadURL,
-                  ]);
-                  value.splice(index, 1);
-                  onSubmit(value);
+
+      <Grid item xs>
+        {value &&
+          files.map((file: { name: string; downloadURL: string }) => (
+            <Tooltip key={file.downloadURL} title="Click to delete">
+              <Confirmation
+                message={{
+                  title: "Delete Image",
+                  body: "Are you sure you want to delete this image?",
+                  confirm: (
+                    <>
+                      <DeleteIcon /> Delete
+                    </>
+                  ),
                 }}
               >
-                <img
-                  className={classes.imgHover}
-                  key={file.name}
-                  style={{
-                    padding: `${row.rowHeight * 0.03}px`,
-                    height: `${row.rowHeight * 0.95}px`,
+                <div
+                  onClick={e => {
+                    const index = _findIndex(value, [
+                      "downloadURL",
+                      file.downloadURL,
+                    ]);
+                    value.splice(index, 1);
+                    onSubmit(value);
                   }}
-                  src={file.downloadURL}
-                />
-              </div>
-            </Confirmation>
-          </Tooltip>
-        ))}
-      {progress === 0 ? (
-        <IconButton className={classes.addIcon} onClick={dropzoneProps.onClick}>
-          <AddIcon />
-        </IconButton>
-      ) : (
-        <div className={classes.progress}>
+                  className={classes.imgContainer}
+                  style={{
+                    backgroundImage: `url(${file.downloadURL})`,
+                    width: row.rowHeight * 0.9,
+                    height: row.rowHeight * 0.9,
+                  }}
+                >
+                  <Grid
+                    container
+                    justify="center"
+                    alignItems="center"
+                    className={classes.deleteImgHover}
+                  >
+                    <DeleteIcon color="inherit" />
+                  </Grid>
+                </div>
+              </Confirmation>
+            </Tooltip>
+          ))}
+      </Grid>
+
+      <Grid item>
+        {progress === 0 ? (
+          <IconButton onClick={dropzoneProps.onClick} size="small">
+            <AddIcon />
+          </IconButton>
+        ) : (
           <CircularProgress
-            size={row.rowHeight * 0.5}
-            variant="determinate"
+            size={30}
+            variant="static"
             value={progress}
             color="secondary"
           />
-        </div>
-      )}
+        )}
+      </Grid>
     </Grid>
   );
 };

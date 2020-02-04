@@ -19,7 +19,7 @@ import CloseIcon from "@material-ui/icons/Close";
 
 import MultiSelect from "../../MultiSelect";
 
-import { FieldType } from "../../Fields";
+import { FieldType } from "constants/fields";
 import { FireTableFilter } from "../../../hooks/useFiretable";
 
 const OPERATORS = [
@@ -27,11 +27,11 @@ const OPERATORS = [
     value: "==",
     label: "Equals",
     compatibleTypes: [
-      FieldType.PhoneNumber,
+      FieldType.phone,
       FieldType.color,
       FieldType.date,
       FieldType.dateTime,
-      FieldType.simpleText,
+      FieldType.shortText,
       FieldType.singleSelect,
       FieldType.url,
       FieldType.email,
@@ -114,8 +114,8 @@ const Filters = ({ columns, setFilters }: any) => {
       let updatedQuery = { key: selectedColumn.key, operator: "", value: "" };
       if (
         [
-          FieldType.PhoneNumber,
-          FieldType.simpleText,
+          FieldType.phone,
+          FieldType.shortText,
           FieldType.url,
           FieldType.email,
         ].includes(selectedColumn.type)
@@ -151,8 +151,8 @@ const Filters = ({ columns, setFilters }: any) => {
     console.log("selectedColumn.fieldType", selectedColumn.type);
     switch (selectedColumn.type) {
       case FieldType.email:
-      case FieldType.PhoneNumber:
-      case FieldType.simpleText:
+      case FieldType.phone:
+      case FieldType.shortText:
       case FieldType.longText:
         return (
           <TextField

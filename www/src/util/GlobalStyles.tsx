@@ -6,9 +6,6 @@ export const useGlobalStyles = makeStyles(theme =>
   createStyles({
     "@global": {
       // Overrides <CSSBaseline />
-      "*": {
-        fontFeatureSettings: '"liga"',
-      },
 
       // Fix width to width of card columns
       ".rendered-html": {

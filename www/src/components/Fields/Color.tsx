@@ -64,9 +64,10 @@ const Color = (props: Props) => {
           onClick={handleClick}
           className={classes.colorIndicator}
           style={{ backgroundColor: hex }}
-        />{" "}
+        />
         {hex}
       </div>
+
       <Popper id={id} open={open} anchorEl={anchorEl}>
         <CompactPicker
           color={value.rgb}

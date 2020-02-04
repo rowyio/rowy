@@ -1,29 +1,22 @@
-import React, { useState, useEffect } from "react";
-import AddIcon from "@material-ui/icons/AddCircle";
-import IconButton from "@material-ui/core/IconButton";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import Chip from "@material-ui/core/Chip";
+import React from "react";
+
+import {
+  createStyles,
+  makeStyles,
+  Grid,
+  Chip,
+  IconButton,
+} from "@material-ui/core";
+
+import AddIcon from "@material-ui/icons/AddCircleOutline";
 
 const snapshotReducer = (accumulator: string, currentValue: any) => {};
 const getPrimaryValue = (config: { primaryKeys: string[] }) => {};
-const useStyles = makeStyles((theme: Theme) =>
+
+const useStyles = makeStyles(theme =>
   createStyles({
-    root: {
-      position: "relative",
-      display: "flex",
-      flexWrap: "wrap",
-      alignItems: "center",
-    },
-    typography: {
-      padding: theme.spacing(2),
-    },
-    textArea: {
-      fontSize: 14,
-      minWidth: 230,
-    },
-    paper: { minWidth: 200 },
-    chip: {
-      margin: theme.spacing(1),
+    chipList: {
+      marginTop: -1,
     },
   })
 );
@@ -38,8 +31,8 @@ interface Props {
 }
 
 const DocSelect = (props: Props) => {
-  const { value, row, onSubmit, collectionPath, config, setSearch } = props;
   const classes = useStyles();
+  const { value, row, onSubmit, collectionPath, config, setSearch } = props;
   const handleClick = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
@@ -61,36 +54,43 @@ const DocSelect = (props: Props) => {
   };
 
   return (
-    <div className={classes.root}>
-      {!config.isLocked && (
-        <IconButton onClick={handleClick}>
-          <AddIcon />
-        </IconButton>
-      )}
-      {value &&
-        value.map((doc: any, index: number) => (
-          <Chip
-            key={doc.docPath}
-            label={config.primaryKeys.map(
-              (key: string) => `${doc.snapshot[key]} `
-            )}
-            //onClick={handleClick}
-            onDelete={
-              config.isLocked
-                ? undefined
-                : () => {
-                    handleDelete(index);
+    <Grid
+      container
+      alignItems="center"
+      spacing={1}
+      className={classes.chipList}
+    >
+      <Grid item xs>
+        <Grid container spacing={1}>
+          {value &&
+            value.map((doc: any, index: number) => (
+              <Grid item key={doc.docPath}>
+                <Chip
+                  label={config.primaryKeys.map(
+                    (key: string) => `${doc.snapshot[key]} `
+                  )}
+                  onDelete={
+                    config.isLocked ? () => {} : () => handleDelete(index)
                   }
-            }
-            className={classes.chip}
-          />
-        ))}
+                />
+              </Grid>
+            ))}
+        </Grid>
+      </Grid>
+
+      {!config.isLocked && (
+        <Grid item>
+          <IconButton onClick={handleClick} size="small">
+            <AddIcon />
+          </IconButton>
+        </Grid>
+      )}
       {/* <Typography>
         {value[0]
           ? config.primaryKeys.map((key: any) => `${value[0].snapshot[key]} `)
           : ""}
       </Typography> */}
-    </div>
+    </Grid>
   );
 };
 
