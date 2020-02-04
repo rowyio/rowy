@@ -9,7 +9,7 @@ import {
   Tooltip,
 } from "@material-ui/core";
 import ImportExportIcon from "@material-ui/icons/ImportExport";
-import SettingsIcon from "@material-ui/icons/Settings";
+import DropdownIcon from "@material-ui/icons/ArrowDropDownCircle";
 import Confirmation from "components/Confirmation";
 import DeleteIcon from "@material-ui/icons/Delete";
 import DuplicateIcon from "@material-ui/icons/FileCopy";
@@ -29,7 +29,7 @@ import useFiretable, {
 import { functions } from "../../firebase";
 import { CLOUD_FUNCTIONS } from "firebase/callables";
 
-import { FieldType, getFieldIcon } from "../Fields";
+import { FieldType, getFieldIcon } from "constants/fields";
 import {
   cellFormatter,
   onCellSelected,
@@ -202,8 +202,9 @@ function Table(props: Props) {
                   disableFocusRipple={true}
                   size="small"
                   onClick={handleClick(props)}
+                  className={classes.dropdownButton}
                 >
-                  <SettingsIcon />
+                  <DropdownIcon />
                 </IconButton>
               </MuiGrid>
             </MuiGrid>
@@ -226,7 +227,7 @@ function Table(props: Props) {
         //frozen: column.fixed,
         headerRenderer: headerRenderer,
         formatter:
-          column.type === FieldType.documentSelect
+          column.type === FieldType.connectTable
             ? docSelect(column)
             : cellFormatter(column),
         editor:
@@ -347,6 +348,7 @@ function Table(props: Props) {
           addRow={addRow}
         />
       </Suspense>
+
       {!tableState.loadingColumns ? (
         <Grid
           key={`${collection}-grid`}
@@ -367,6 +369,7 @@ function Table(props: Props) {
       ) : (
         <Loading message="Fetching columns" />
       )}
+
       <Suspense fallback={<Loading message="Loading helpers" />}>
         <ColumnEditor
           handleClose={handleCloseHeader}

@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import EditorContext from "contexts/editorContext";
 import TextareaAutosize from "@material-ui/core/TextareaAutosize";
-import { FieldType } from "./Fields";
+import { FieldType } from "constants/fields";
 import EditorModel from "./EditorModal";
 
 const useStyles = makeStyles((theme: Theme) =>

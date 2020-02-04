@@ -1,7 +1,8 @@
 import React from "react";
 
-import Checkbox from "@material-ui/core/Checkbox";
+import { Grid, Switch } from "@material-ui/core";
 import Confirmation from "../Confirmation";
+
 // TODO: Create an interface for props
 interface Props {
   value: boolean | null;
@@ -26,26 +27,24 @@ const CheckBox = (props: Props) => {
           ),
         }}
       >
-        <Checkbox
-          disabled={!column.editable}
-          name={`checkBox-controlled-${row.id}`}
-          checked={!!value}
-          onChange={e => {
-            onSubmit(!value);
-          }}
-        />
+        <Grid container justify="center">
+          <Switch
+            checked={!!value}
+            onChange={() => onSubmit(!value)}
+            disabled={!column.editable}
+          />
+        </Grid>
       </Confirmation>
     );
   } else {
     return (
-      <Checkbox
-        disabled={!column.editable}
-        name={`checkBox-controlled-${row.id}`}
-        checked={!!value}
-        onChange={e => {
-          onSubmit(!value);
-        }}
-      />
+      <Grid container justify="center">
+        <Switch
+          checked={!!value}
+          onChange={() => onSubmit(!value)}
+          disabled={!column.editable}
+        />
+      </Grid>
     );
   }
 };

@@ -1,4 +1,4 @@
-# Firetable
+# [![Firetable](./www/src/assets/firetable-with-wordmark.svg)](https://firetable.io/)
 
 Firetable is a spreadsheet-like UI for Firestore.
 
@@ -11,7 +11,7 @@ Supports fields such as images, files, single/multi select, in addition to
 standard fields. Functions such as row resizing, data import/export are
 supported. More coming soon, for comprehensive list see ROADMAP.md.
 
-![Firetable](https://i.imgur.com/Isuhy3u.png)
+![Firetable screenshot](https://firetable.io/static/demo-screenshot-0732a04a6a01316f4c423b2055198dec.png)
 
 ## Setup instructions
 

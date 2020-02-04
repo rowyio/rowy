@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from "react";
-import { FieldType } from "../Fields";
+import { FieldType } from "constants/fields";
 import { Editors } from "react-data-grid-addons";
 import _uniq from "lodash/uniq";
 import { algoliaUpdateDoc } from "../../firebase/callables";
@@ -25,13 +25,13 @@ export const editable = (fieldType: FieldType) => {
     case FieldType.dateTime:
     case FieldType.rating:
     case FieldType.number:
-    case FieldType.checkBox:
+    case FieldType.checkbox:
     case FieldType.multiSelect:
     case FieldType.image:
     case FieldType.file:
     case FieldType.longText:
     case FieldType.richText:
-    case FieldType.documentSelect:
+    case FieldType.connectTable:
     case FieldType.color:
     case FieldType.action:
     case FieldType.last:
@@ -113,7 +113,7 @@ export const cellFormatter = (column: any) => {
           </Suspense>
         );
       };
-    case FieldType.checkBox:
+    case FieldType.checkbox:
       return (props: any) => {
         return (
           <Suspense fallback={<div />}>

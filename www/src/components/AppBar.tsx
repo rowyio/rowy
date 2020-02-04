@@ -35,6 +35,7 @@ const useStyles = makeStyles(theme =>
       color: "#ed4746",
       cursor: "default",
       userSelect: "none",
+      fontFeatureSettings: '"liga"',
     },
 
     locationDropdown: {

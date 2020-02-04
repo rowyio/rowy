@@ -14,7 +14,8 @@ import Grid from "@material-ui/core/Grid";
 import Popover from "@material-ui/core/Popover";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
-import { FieldsDropDown, isFieldType, FieldType } from "../../Fields";
+import FieldsDropdown from "components/Fields/FieldsDropdown";
+import { isFieldType, FieldType } from "constants/fields";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 
@@ -176,7 +177,7 @@ const ColumnEditor = (props: any) => {
         value: values.options,
       });
     }
-    if (values.type === FieldType.documentSelect) {
+    if (values.type === FieldType.connectTable) {
       updatables.push({
         field: "collectionPath",
         value: values.collectionPath,
@@ -207,7 +208,7 @@ const ColumnEditor = (props: any) => {
         onClose={onClose}
       >
         <Grid container className={classes.container} direction="column">
-          {/* <ToggleButtonGroup
+          <ToggleButtonGroup
             size="small"
             value={flags}
             className={classes.toggleGrouped}
@@ -238,7 +239,7 @@ const ColumnEditor = (props: any) => {
                 <FormatColorFillIcon />
               </ToggleButton>
             </Tooltip>
-          </ToggleButtonGroup> */}
+          </ToggleButtonGroup>
           <TextField
             label="Column name"
             name="name"
@@ -248,8 +249,7 @@ const ColumnEditor = (props: any) => {
             }}
           />
           <FormControl className={classes.formControl}>
-            <InputLabel htmlFor="Field-select">Field Type</InputLabel>
-            {FieldsDropDown(values.type, handleChange)}
+            {FieldsDropdown(values.type, handleChange)}
 
             {(values.type === FieldType.singleSelect ||
               values.type === FieldType.multiSelect) && (
@@ -258,46 +258,51 @@ const ColumnEditor = (props: any) => {
                 options={values.options}
               />
             )}
-            {values.type === FieldType.documentSelect && (
+            {values.type === FieldType.connectTable && (
               <DocInput
                 setValue={setValue}
                 collectionPath={values.collectionPath}
               />
             )}
-            {column.isNew ? (
-              <Button onClick={createNewColumn} disabled={disableAdd()}>
-                Add
-              </Button>
-            ) : (
-              <Button disabled={disableAdd()} onClick={updateColumn}>
-                update
-              </Button>
-            )}
-            {!column.isNew && (
-              <Confirmation
-                message={{
-                  customBody:
-                    "Are you sure you want to delete this nice column",
-                }}
-              >
-                <Button
-                  variant="outlined"
-                  color="secondary"
-                  onClick={deleteColumn}
-                >
-                  <DeleteIcon /> Delete
-                </Button>
-              </Confirmation>
-            )}
-            <Button
-              color="secondary"
-              onClick={() => {
-                handleClose();
-                clearValues();
-              }}
-            >
-              cancel
-            </Button>
+
+            <Grid container>
+              <Grid item xs={6}>
+                {column.isNew ? (
+                  <Button
+                    onClick={createNewColumn}
+                    disabled={disableAdd()}
+                    color="secondary"
+                    fullWidth
+                  >
+                    Add
+                  </Button>
+                ) : (
+                  <Button
+                    disabled={disableAdd()}
+                    onClick={updateColumn}
+                    color="secondary"
+                    fullWidth
+                  >
+                    update
+                  </Button>
+                )}
+              </Grid>
+
+              {!column.isNew && (
+                <Grid item xs={6}>
+                  <Confirmation
+                    message={{
+                      customBody:
+                        "Are you sure you want to delete this nice column?",
+                    }}
+                  >
+                    <Button color="secondary" onClick={deleteColumn} fullWidth>
+                      Delete
+                    </Button>
+                  </Confirmation>
+                </Grid>
+              )}
+            </Grid>
           </FormControl>
         </Grid>
       </Popover>

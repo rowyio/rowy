@@ -14,7 +14,7 @@ import TextField from "@material-ui/core/TextField";
 
 import AddIcon from "@material-ui/icons/Add";
 
-import { FIELDS } from "./Fields";
+import { FIELDS } from "constants/fields";
 
 const useStyles = makeStyles(() =>
   createStyles({

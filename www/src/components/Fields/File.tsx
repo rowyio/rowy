@@ -1,13 +1,19 @@
 import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
+
+import {
+  createStyles,
+  makeStyles,
+  Grid,
+  Chip,
+  IconButton,
+  CircularProgress,
+} from "@material-ui/core";
+import UploadIcon from "@material-ui/icons/Publish";
+
 import useUploader from "../../hooks/useFiretable/useUploader";
 
-import { FieldType } from ".";
-import Chip from "@material-ui/core/Chip";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import IconButton from "@material-ui/core/IconButton";
-import AddIcon from "@material-ui/icons/NoteAdd";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import { FieldType, FileIcon } from "constants/fields";
 import _findIndex from "lodash/findIndex";
 
 // TODO:  indicate state error
@@ -21,19 +27,14 @@ interface Props {
   config: any;
 }
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(theme =>
   createStyles({
-    root: {
-      display: "flex",
-      // flexDirection: "column",
-      alignContent: "center",
-      width: "100%",
-    },
-    chip: { margin: theme.spacing(5), maxWidth: 200 },
+    root: {},
     progress: { margin: theme.spacing(5) },
-    addIcon: {
-      maxHeight: 48,
-    },
+
+    chipList: { overflow: "hidden" },
+    chip: { cursor: "pointer" },
+    uploadButton: { marginLeft: "auto" },
   })
 );
 
@@ -60,38 +61,56 @@ const File = (props: Props) => {
     onSubmit(value);
   };
   const dropzoneProps = getRootProps();
+
   return (
-    <div className={classes.root} {...dropzoneProps} onClick={() => {}}>
+    <Grid
+      container
+      className={classes.root}
+      wrap="nowrap"
+      alignItems="center"
+      spacing={1}
+      {...dropzoneProps}
+    >
       <input {...getInputProps()} />
-      {value &&
-        value.map((file: any) => {
-          return (
+
+      <Grid item xs className={classes.chipList}>
+        {value &&
+          value.map((file: any) => (
             <Chip
               key={file.name}
+              icon={<FileIcon />}
               label={file.name}
-              className={classes.chip}
-              onClick={() => {
-                window.open(file.downloadURL);
-              }}
+              component="a"
+              target="_blank"
+              rel="noopener noreferrer"
+              href={file.downloadURL}
               onDelete={
                 config && config.isLocked
                   ? undefined
-                  : () => {
-                      handleDelete(file.downloadURL);
-                    }
+                  : () => handleDelete(file.downloadURL)
               }
+              className={classes.chip}
+              onClick={e => e.stopPropagation()}
             />
-          );
-        })}
+          ))}
 
-      {config && config.isLocked ? (
-        <></>
-      ) : (
-        <IconButton className={classes.addIcon} onClick={dropzoneProps.onClick}>
-          <AddIcon />
-        </IconButton>
-      )}
-    </div>
+        {!value || (value.length === 0 && "Upload a file…")}
+      </Grid>
+
+      <Grid item>
+        {config && !config.isLocked ? (
+          <></>
+        ) : (
+          <IconButton
+            className={classes.uploadButton}
+            onClick={dropzoneProps.onClick}
+            size="small"
+          >
+            <UploadIcon />
+          </IconButton>
+        )}
+      </Grid>
+    </Grid>
   );
 };
 export default File;

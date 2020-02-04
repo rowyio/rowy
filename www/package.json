@@ -8,6 +8,7 @@
     "@material-ui/icons": "^4.5.1",
     "@material-ui/lab": "^4.0.0-alpha.39",
     "@material-ui/pickers": "^3.2.9",
+    "@mdi/js": "^4.8.95",
     "@types/algoliasearch": "^3.34.2",
     "@types/backbone": "^1.4.1",
     "@types/cash": "^0.0.3",
