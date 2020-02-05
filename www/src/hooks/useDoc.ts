@@ -4,12 +4,22 @@ import { useEffect, useReducer } from "react";
 export enum DocActions {
   update,
   delete,
+  clear,
 }
+const documentIntialState = {
+  path: null,
+  prevPath: null,
+  doc: null,
+  ref: null,
+  loading: true,
+};
 const documentReducer = (prevState: any, newProps: any) => {
   switch (newProps.action) {
+    case DocActions.clear:
+      return documentIntialState;
     case DocActions.update:
       // takes data object form the dispatcher and updates doc
-      prevState.ref.update({ ...newProps.data });
+      prevState.ref.set({ ...newProps.data }, { merge: true });
       return { ...prevState, doc: { ...prevState.doc, ...newProps.data } };
     case DocActions.delete:
       prevState.ref.delete();
@@ -17,13 +27,6 @@ const documentReducer = (prevState: any, newProps: any) => {
     default:
       return { ...prevState, ...newProps };
   }
-};
-const documentIntialState = {
-  path: null,
-  prevPath: null,
-  doc: null,
-  ref: null,
-  loading: true,
 };
 
 const useDoc = (intialOverrides: any) => {

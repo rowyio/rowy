@@ -18,6 +18,7 @@ const LongText = lazy(() => import("../Fields/LongText"));
 const RichText = lazy(() => import("../Fields/RichText"));
 const Color = lazy(() => import("../Fields/Color"));
 const Action = lazy(() => import("../Fields/Action"));
+const SubTable = lazy(() => import("../Fields/SubTable"));
 
 export const editable = (fieldType: FieldType) => {
   switch (fieldType) {
@@ -32,6 +33,7 @@ export const editable = (fieldType: FieldType) => {
     case FieldType.longText:
     case FieldType.richText:
     case FieldType.connectTable:
+    case FieldType.subTable:
     case FieldType.color:
     case FieldType.action:
     case FieldType.last:
@@ -52,7 +54,7 @@ export const onSubmit = (key: string, row: any) => async (value: any) => {
       updatedFields = _uniq([key, ...row.updatedFields]);
     }
     row.ref.update({ [key]: value, updatedAt, updatedFields });
-    await algoliaUpdateDoc(data);
+    // await algoliaUpdateDoc(data);
   }
 };
 
@@ -200,6 +202,19 @@ export const cellFormatter = (column: any) => {
             <RichText
               {...props}
               fieldName={key}
+              onSubmit={onSubmit(key, props.row)}
+            />
+          </Suspense>
+        );
+      };
+    case FieldType.subTable:
+      return (props: any) => {
+        return (
+          <Suspense fallback={<div />}>
+            <SubTable
+              fieldName={key}
+              {...props}
+              parentLabel={column.parentLabel}
               onSubmit={onSubmit(key, props.row)}
             />
           </Suspense>

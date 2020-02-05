@@ -1,4 +1,6 @@
 import React from "react";
+import useRouter from "../../hooks/useRouter";
+import queryString from "query-string";
 
 import {
   makeStyles,
@@ -9,6 +11,8 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Link,
+  Breadcrumbs,
   Typography,
   Button,
 } from "@material-ui/core";
@@ -62,13 +66,40 @@ const TableHeader = ({
   tableActions,
 }: Props) => {
   const classes = useStyles();
+  const router = useRouter();
+  const parentLabel = queryString.parse(router.location.search).parentLabel;
+  console.log(parentLabel);
+  let breadcrumbs = collection.split("/");
 
   return (
     <Grid container alignItems="center" spacing={2} className={classes.root}>
       <Grid item xs>
-        <Typography variant="h6" className={classes.collectionName}>
-          {collection.replace(/([A-Z])/g, " $1")}
-        </Typography>
+        {breadcrumbs.length === 1 ? (
+          <Typography variant="h6" className={classes.collectionName}>
+            {" "}
+            {collection.replace(/([A-Z])/g, " $1")}
+          </Typography>
+        ) : (
+          <Breadcrumbs aria-label="breadcrumb">
+            {breadcrumbs.map((crumb: string, index) => {
+              if (index === 0)
+                return (
+                  <Link color="inherit" href={`/table/${crumb}`}>
+                    {crumb}
+                  </Link>
+                );
+              else if (index === 1 && parentLabel)
+                return <Typography variant="h6">{parentLabel}</Typography>;
+              else
+                return (
+                  <Typography variant="h6">
+                    {" "}
+                    {crumb.replace(/([A-Z])/g, " $1")}
+                  </Typography>
+                );
+            })}
+          </Breadcrumbs>
+        )}
       </Grid>
 
       <Grid item>
