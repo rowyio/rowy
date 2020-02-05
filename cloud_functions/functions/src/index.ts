@@ -5,8 +5,6 @@ import { auth } from "./config";
 
 exports.setUserAsAdmin = functions.auth.user().onCreate(async user => {
   // check if email is from antler domain and is verified then add an admin custom token
-  console.log("user.emailVerified ", user.emailVerified);
-  console.log("user.email ", user.email);
 
   if (
     user.emailVerified &&

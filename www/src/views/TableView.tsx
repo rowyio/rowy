@@ -12,7 +12,7 @@ export default function TableView() {
   const tableCollection = decodeURIComponent(
     router.location.pathname.split("/")[2]
   );
-  console.log(tableCollection);
+
   let filters: FireTableFilter[] = [];
   const parsed = queryString.parse(router.location.search);
   if (typeof parsed.filters === "string") {
