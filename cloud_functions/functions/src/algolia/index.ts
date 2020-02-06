@@ -13,7 +13,7 @@ const algoliaReducer = (docData: FirebaseFirestore.DocumentData) => (
   acc: any,
   curr: string
 ) => {
-  if (docData?.[curr]) return { ...acc, [curr]: docData[curr] };
+  if (docData[curr]) return { ...acc, [curr]: docData[curr] };
   else return acc;
 };
 
