@@ -79,6 +79,7 @@ const ColumnEditor = (props: any) => {
     options: [],
     collectionPath: "",
     config: {},
+    parentLabel: "",
   });
   const [flags, setFlags] = useState(() => [""]);
   const classes = useStyles();
@@ -131,6 +132,7 @@ const ColumnEditor = (props: any) => {
       options: [],
       collectionPath: "",
       config: {},
+      parentLabel: "",
     });
   };
   const onClose = (event: any) => {
@@ -146,9 +148,9 @@ const ColumnEditor = (props: any) => {
   };
 
   const createNewColumn = () => {
-    const { name, type, options, collectionPath, config } = values;
+    const { name, type, options, collectionPath, config, parentLabel } = values;
 
-    actions.add(name, type, { options, collectionPath, config });
+    actions.add(name, type, { options, collectionPath, config, parentLabel });
 
     handleClose();
     clearValues();
@@ -186,6 +188,9 @@ const ColumnEditor = (props: any) => {
         field: "config",
         value: values.config,
       });
+    }
+    if (values.type === FieldType.subTable) {
+      updatables.push({ field: "parentLabel", value: values.parentLabel });
     }
     actions.update(props.column.idx, updatables);
     handleClose();
@@ -264,7 +269,14 @@ const ColumnEditor = (props: any) => {
                 collectionPath={values.collectionPath}
               />
             )}
-
+            {values.type === FieldType.subTable && (
+              <TextField
+                label={"Parent Label"}
+                onChange={e => {
+                  setValue("parentLabel", e.target.value);
+                }}
+              />
+            )}
             <Grid container>
               <Grid item xs={6}>
                 {column.isNew ? (
