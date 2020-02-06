@@ -2,6 +2,8 @@ import { functions } from "./index";
 import { FireTableFilter } from "../hooks/useFiretable";
 
 export enum CLOUD_FUNCTIONS {
+  updateAlgoliaRecord = "updateAlgoliaRecord",
+  deleteAlgoliaRecord = "deleteAlgoliaRecord",
   exportTable = "exportTable",
 }
 
@@ -24,6 +26,17 @@ export const cloudFunction = (
       }
     });
 };
+
+// TODO: data formating dates,
+export const algoliaUpdateDoc = (data: {
+  collection: string;
+  id: string;
+  doc: any;
+}) => functions.httpsCallable(CLOUD_FUNCTIONS.updateAlgoliaRecord)(data);
+
+export const algoliaDeleteDoc = functions.httpsCallable(
+  CLOUD_FUNCTIONS.deleteAlgoliaRecord
+);
 
 export const exportTable = (data: {
   collectionPath: string;

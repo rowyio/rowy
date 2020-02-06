@@ -111,7 +111,7 @@ export const exportTable = functions.https.onCall(
       sort,
       limit,
       columns,
-      //allFields,
+      allFields,
     } = request;
 
     // set query path

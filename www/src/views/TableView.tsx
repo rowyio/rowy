@@ -9,10 +9,7 @@ import useRouter from "../hooks/useRouter";
 
 export default function TableView() {
   const router = useRouter();
-  const tableCollection = decodeURIComponent(
-    router.location.pathname.split("/")[2]
-  );
-
+  const tableCollection = router.location.pathname.split("/")[2];
   let filters: FireTableFilter[] = [];
   const parsed = queryString.parse(router.location.search);
   if (typeof parsed.filters === "string") {

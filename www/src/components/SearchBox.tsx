@@ -14,8 +14,12 @@ import Paper from "@material-ui/core/Paper";
 import TextField from "@material-ui/core/TextField";
 
 const searchClient = algoliasearch(
-  `${process.env.REACT_APP_ALGOLIA_APP_ID}`,
-  `${process.env.REACT_APP_ALGOLIA_SEARCH_KEY}`
+  process.env.REACT_APP_ALGOLIA_APP_ID
+    ? process.env.REACT_APP_ALGOLIA_APP_ID
+    : "",
+  process.env.REACT_APP_ALGOLIA_SEARCH_API_KEY
+    ? process.env.REACT_APP_ALGOLIA_SEARCH_API_KEY
+    : ""
 );
 
 const useStyles = makeStyles(() =>

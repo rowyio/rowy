@@ -4,6 +4,7 @@ import Button from "@material-ui/core/Button";
 import React, { useEffect, useReducer, useContext } from "react";
 import equals from "ramda/es/equals";
 import firebase from "firebase/app";
+import { algoliaUpdateDoc } from "../../firebase/callables";
 import { FireTableFilter, FiretableOrderBy } from ".";
 import { SnackContext } from "../../contexts/snackContext";
 
@@ -184,6 +185,13 @@ const useTable = (initialOverrides: any) => {
       updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
       ...data,
     });
+    if (data) {
+      algoliaUpdateDoc({
+        collection: ref.parent.path,
+        id: ref.id,
+        doc: { ...data },
+      });
+    }
   };
   /**  used for incrementing the number of rows fetched
    *  @param additionalRows number additional rows to be fetched (optional: default is 20)

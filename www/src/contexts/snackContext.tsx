@@ -14,7 +14,9 @@ const DEFAULT_STATE = {
     duration?: number;
     position?: SnackbarOrigin;
     action?: JSX.Element;
-  }) => {},
+  }) => {
+    console.log(props.message, props.duration);
+  },
   action: <div />,
 };
 // Create our Context

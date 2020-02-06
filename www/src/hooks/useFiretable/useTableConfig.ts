@@ -4,15 +4,11 @@ import { FieldType } from "constants/fields";
 import _camelCase from "lodash/camelCase";
 import _findIndex from "lodash/findIndex";
 import { arrayMover } from "../../util/fns";
-import { db } from "../../firebase";
 
-const formatPath = (tablePath: string) =>
-  `${tablePath.replace(new RegExp("/.*/"), "/_FIRETABLE_/")}/_FIRETABLE_`;
 const useTableConfig = (tablePath: string) => {
   const [tableConfigState, documentDispatch] = useDoc({
-    path: formatPath(tablePath),
+    path: `${tablePath}/_FIRETABLE_`,
   });
-
   useEffect(() => {
     const { doc, columns } = tableConfigState;
     if (doc && columns !== doc.columns) {
@@ -24,10 +20,9 @@ const useTableConfig = (tablePath: string) => {
    */
   const setTable = (table: string) => {
     documentDispatch({
-      path: formatPath(table),
+      path: `${table}/_FIRETABLE_`,
       columns: [],
       doc: null,
-      ref: db.doc(formatPath(table)),
       loading: true,
     });
   };

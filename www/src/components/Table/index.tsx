@@ -26,6 +26,8 @@ import useFiretable, {
   FireTableFilter,
   FiretableOrderBy,
 } from "../../hooks/useFiretable";
+import { functions } from "../../firebase";
+import { CLOUD_FUNCTIONS } from "firebase/callables";
 
 import { FieldType, getFieldIcon } from "constants/fields";
 import {
@@ -43,6 +45,10 @@ const TableHeader = lazy(() => import("./TableHeader"));
 const SearchBox = lazy(() => import("../SearchBox"));
 const DocSelect = lazy(() => import("../Fields/DocSelect"));
 const ColumnEditor = lazy(() => import("./ColumnEditor/index"));
+
+const deleteAlgoliaRecord = functions.httpsCallable(
+  CLOUD_FUNCTIONS.deleteAlgoliaRecord
+);
 
 interface Props {
   collection: string;
@@ -255,6 +261,10 @@ function Table(props: Props) {
               color="primary"
               onClick={async () => {
                 props.row.ref.delete();
+                await deleteAlgoliaRecord({
+                  id: props.row.ref.id,
+                  collection: props.row.ref.parent.path,
+                });
               }}
             >
               <DeleteIcon />
