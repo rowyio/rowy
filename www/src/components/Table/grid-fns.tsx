@@ -2,7 +2,6 @@ import React, { lazy, Suspense } from "react";
 import { FieldType } from "constants/fields";
 import { Editors } from "react-data-grid-addons";
 import _uniq from "lodash/uniq";
-import { algoliaUpdateDoc } from "../../firebase/callables";
 
 const { AutoComplete } = Editors;
 
@@ -54,7 +53,6 @@ export const onSubmit = (key: string, row: any) => async (value: any) => {
       updatedFields = _uniq([key, ...row.updatedFields]);
     }
     row.ref.update({ [key]: value, updatedAt, updatedFields });
-    // await algoliaUpdateDoc(data);
   }
 };
 
