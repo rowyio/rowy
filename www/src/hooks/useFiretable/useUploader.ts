@@ -58,7 +58,6 @@ const useUploader = () => {
           uploadTask.snapshot.ref
             .getDownloadURL()
             .then(function(downloadURL: string) {
-              console.log("File available at", downloadURL);
               if (previousValue) {
                 docRef.update({
                   [fieldName]: [
