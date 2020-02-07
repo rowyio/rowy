@@ -1,18 +1,24 @@
 import React from "react";
 import DateFnsUtils from "@date-io/date-fns";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 
-import { FieldType } from ".";
+import { createStyles, makeStyles, InputAdornment } from "@material-ui/core";
 import {
   MuiPickersUtilsProvider,
   DatePicker,
   DateTimePicker,
 } from "@material-ui/pickers";
 
-const useStyles = makeStyles((theme: Theme) =>
+import { FieldType, DateIcon, DateTimeIcon } from "constants/fields";
+
+const useStyles = makeStyles(theme =>
   createStyles({
-    field: {
-      width: "100%",
+    input: {
+      ...theme.typography.body2,
+      fontSize: "0.75rem",
+      color: theme.palette.text.secondary,
+    },
+    icon: {
+      color: theme.palette.text.secondary,
     },
   })
 );
@@ -40,18 +46,37 @@ const Date = (props: Props) => {
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       {fieldType === FieldType.date ? (
         <DatePicker
-          className={classes.field}
           value={value && value.toDate ? value.toDate() : null}
           onChange={handleDateChange}
           format="dd/MM/yy"
-          emptyLabel="select a date"
+          emptyLabel="Select a date"
+          fullWidth
+          InputProps={{
+            disableUnderline: true,
+            classes: { input: classes.input },
+            startAdornment: (
+              <InputAdornment position="start">
+                <DateIcon className={classes.icon} />
+              </InputAdornment>
+            ),
+          }}
         />
       ) : (
         <DateTimePicker
           value={value ? value.toDate() : null}
           onChange={handleDateChange}
           format="dd/MM/yy HH:mm a"
-          emptyLabel="select a time"
+          emptyLabel="Select a time"
+          fullWidth
+          InputProps={{
+            disableUnderline: true,
+            classes: { input: classes.input },
+            startAdornment: (
+              <InputAdornment position="start">
+                <DateTimeIcon className={classes.icon} />
+              </InputAdornment>
+            ),
+          }}
         />
       )}
     </MuiPickersUtilsProvider>

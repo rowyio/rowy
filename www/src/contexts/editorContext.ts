@@ -1,5 +1,5 @@
 import React from "react";
-import { FieldType } from "../components/Fields";
+import { FieldType } from "constants/fields";
 
 export interface EditorContextInterface {
   // row: any;

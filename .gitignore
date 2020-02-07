@@ -22,6 +22,7 @@ cloud_functions/functions/lib
 .env.test.local
 .env.production.local
 www/.env
+www/.env.development
 Firetable/.env
 .env.production
 .env.development

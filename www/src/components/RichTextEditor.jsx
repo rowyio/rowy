@@ -1,7 +1,7 @@
 import React, { useContext, useRef, useEffect } from "react";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import EditorContext from "contexts/editorContext";
-import { FieldType } from "./Fields";
+import { FieldType } from "constants/fields";
 import ReactQuill, { Quill } from "react-quill";
 import { ImageDrop } from "quill-image-drop-module";
 import Delta from "quill-delta";
@@ -148,7 +148,7 @@ const imageHandler = quillRef => () => {
       if (fileInput.files != null && fileInput.files[0] != null) {
         const ref = `quill-images/${now.getTime()}/${fileInput.files[0].name}`;
         const downloadUrl = await asyncUploader(ref, fileInput.files[0]);
-        console.log(downloadUrl);
+
         let range = quill.getSelection(true);
         quill.updateContents(
           new Delta()
@@ -192,7 +192,7 @@ const RichTextEditor = props => {
           // delete matches.index;
           // delete matches.input;
           // delete matches.groups;
-          // console.log(matches);
+
           editorContext.setEditorValue(val);
         }}
         theme="snow"

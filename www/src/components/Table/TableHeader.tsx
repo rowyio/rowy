@@ -1,13 +1,18 @@
 import React from "react";
+import useRouter from "../../hooks/useRouter";
+import queryString from "query-string";
 
 import {
   makeStyles,
   createStyles,
   Grid,
   FormControl,
+  TextField,
   InputLabel,
   Select,
   MenuItem,
+  Link,
+  Breadcrumbs,
   Typography,
   Button,
 } from "@material-ui/core";
@@ -28,7 +33,17 @@ const useStyles = makeStyles(theme =>
       minHeight: 56,
     },
     collectionName: { textTransform: "uppercase" },
-    formControl: { minWidth: 120 },
+
+    formControl: {
+      minWidth: 120,
+      margin: 0,
+      marginRight: theme.spacing(1),
+
+      "& > div": {
+        height: 32,
+        borderRadius: theme.shape.borderRadius,
+      },
+    },
   })
 );
 
@@ -51,44 +66,86 @@ const TableHeader = ({
   tableActions,
 }: Props) => {
   const classes = useStyles();
+  const router = useRouter();
+  const parentLabel = queryString.parse(router.location.search).parentLabel;
+  console.log(parentLabel);
+  let breadcrumbs = collection.split("/");
 
   return (
     <Grid container alignItems="center" spacing={2} className={classes.root}>
-      <Grid item>
-        <Typography variant="h6" className={classes.collectionName}>
-          {collection}
-        </Typography>
+      <Grid item xs>
+        {breadcrumbs.length === 1 ? (
+          <Typography variant="h6" className={classes.collectionName}>
+            {" "}
+            {collection.replace(/([A-Z])/g, " $1")}
+          </Typography>
+        ) : (
+          <Breadcrumbs aria-label="breadcrumb">
+            {breadcrumbs.map((crumb: string, index) => {
+              if (index === 0)
+                return (
+                  <Link color="inherit" href={`/table/${crumb}`}>
+                    {crumb}
+                  </Link>
+                );
+              else if (index === 1 && parentLabel)
+                return <Typography variant="h6">{parentLabel}</Typography>;
+              else
+                return (
+                  <Typography variant="h6">
+                    {" "}
+                    {crumb.replace(/([A-Z])/g, " $1")}
+                  </Typography>
+                );
+            })}
+          </Breadcrumbs>
+        )}
       </Grid>
 
-      <Grid item xs>
-        <FormControl variant="outlined" className={classes.formControl}>
-          <InputLabel htmlFor="outlined-age-simple">Row Height</InputLabel>
-          <Select
-            value={rowHeight ? rowHeight : 35}
-            onChange={(event: any, child: any) => {
-              updateConfig("rowHeight", event.target.value);
-            }}
-            labelWidth={90}
-            inputProps={{
-              name: "rowHeight",
-              id: "outlined-rowHeight-simple",
-            }}
-            margin="dense"
-          >
-            <MenuItem value={35}>Tall</MenuItem>
-            <MenuItem value={60}>Grande</MenuItem>
-            <MenuItem value={100}>Venti</MenuItem>
-            <MenuItem value={150}>Trenta</MenuItem>
-          </Select>
-        </FormControl>
-      </Grid>
-      <Filters
-        columns={columns}
-        tableFilters={filters}
-        setFilters={tableActions.table.filter}
-      />
       <Grid item>
-        <Grid container spacing={1}>
+        <Grid container spacing={1} alignItems="center">
+          <Grid item>
+            <Typography
+              variant="overline"
+              component="label"
+              htmlFor="outlined-rowHeight-simple"
+            >
+              Height
+            </Typography>
+          </Grid>
+
+          <Grid item>
+            <TextField
+              select
+              variant="filled"
+              className={classes.formControl}
+              value={rowHeight ? rowHeight : 35}
+              onChange={event => {
+                updateConfig("rowHeight", event.target.value);
+              }}
+              inputProps={{
+                name: "rowHeight",
+                id: "outlined-rowHeight-simple",
+              }}
+              margin="dense"
+              InputProps={{ disableUnderline: true }}
+              hiddenLabel
+            >
+              <MenuItem value={35}>Tall</MenuItem>
+              <MenuItem value={60}>Grande</MenuItem>
+              <MenuItem value={100}>Venti</MenuItem>
+              <MenuItem value={150}>Trenta</MenuItem>
+            </TextField>
+          </Grid>
+
+          <Grid item>
+            <Filters
+              columns={columns}
+              tableFilters={filters}
+              setFilters={tableActions.table.filter}
+            />
+          </Grid>
+
           <Grid item>
             <ExportCSV
               columns={columns.map((column: any) => {

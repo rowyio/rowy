@@ -1,7 +1,7 @@
 import React from "react";
 import useHotkeys from "../../hooks/useHotkeys";
 import { onSubmit } from "./grid-fns";
-import { FieldType } from "../Fields";
+import { FieldType } from "constants/fields";
 /**
  * Listens Hot Keys combination keys to trigger keyboard shortcuts
  */
@@ -52,8 +52,8 @@ const Hotkeys = (props: any) => {
   );
   const stringFields = [
     FieldType.email,
-    FieldType.simpleText,
-    FieldType.PhoneNumber,
+    FieldType.shortText,
+    FieldType.phone,
     FieldType.singleSelect,
     FieldType.longText,
     FieldType.url,

@@ -9,7 +9,7 @@ import {
   Tooltip,
 } from "@material-ui/core";
 import ImportExportIcon from "@material-ui/icons/ImportExport";
-import SettingsIcon from "@material-ui/icons/Settings";
+import DropdownIcon from "@material-ui/icons/ArrowDropDownCircle";
 import Confirmation from "components/Confirmation";
 import DeleteIcon from "@material-ui/icons/Delete";
 import DuplicateIcon from "@material-ui/icons/FileCopy";
@@ -26,10 +26,8 @@ import useFiretable, {
   FireTableFilter,
   FiretableOrderBy,
 } from "../../hooks/useFiretable";
-import { functions } from "../../firebase";
-import { CLOUD_FUNCTIONS } from "firebase/callables";
 
-import { FieldType, getFieldIcon } from "../Fields";
+import { FieldType, getFieldIcon } from "constants/fields";
 import {
   cellFormatter,
   onCellSelected,
@@ -45,10 +43,6 @@ const TableHeader = lazy(() => import("./TableHeader"));
 const SearchBox = lazy(() => import("../SearchBox"));
 const DocSelect = lazy(() => import("../Fields/DocSelect"));
 const ColumnEditor = lazy(() => import("./ColumnEditor/index"));
-
-const deleteAlgoliaRecord = functions.httpsCallable(
-  CLOUD_FUNCTIONS.deleteAlgoliaRecord
-);
 
 interface Props {
   collection: string;
@@ -202,8 +196,9 @@ function Table(props: Props) {
                   disableFocusRipple={true}
                   size="small"
                   onClick={handleClick(props)}
+                  className={classes.dropdownButton}
                 >
-                  <SettingsIcon />
+                  <DropdownIcon />
                 </IconButton>
               </MuiGrid>
             </MuiGrid>
@@ -226,7 +221,7 @@ function Table(props: Props) {
         //frozen: column.fixed,
         headerRenderer: headerRenderer,
         formatter:
-          column.type === FieldType.documentSelect
+          column.type === FieldType.connectTable
             ? docSelect(column)
             : cellFormatter(column),
         editor:
@@ -260,10 +255,6 @@ function Table(props: Props) {
               color="primary"
               onClick={async () => {
                 props.row.ref.delete();
-                await deleteAlgoliaRecord({
-                  id: props.row.ref.id,
-                  collection: props.row.ref.parent.path,
-                });
               }}
             >
               <DeleteIcon />
@@ -347,6 +338,7 @@ function Table(props: Props) {
           addRow={addRow}
         />
       </Suspense>
+
       {!tableState.loadingColumns ? (
         <Grid
           key={`${collection}-grid`}
@@ -367,6 +359,7 @@ function Table(props: Props) {
       ) : (
         <Loading message="Fetching columns" />
       )}
+
       <Suspense fallback={<Loading message="Loading helpers" />}>
         <ColumnEditor
           handleClose={handleCloseHeader}

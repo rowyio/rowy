@@ -1,27 +1,20 @@
 import React, { useContext } from "react";
-import ExpandIcon from "@material-ui/icons/AspectRatio";
-import IconButton from "@material-ui/core/IconButton";
-import Typography from "@material-ui/core/Typography";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import EditorContext from "contexts/editorContext";
-import { FieldType } from ".";
-import Button from "@material-ui/core/Button";
+import clsx from "clsx";
 
-const useStyles = makeStyles((theme: Theme) =>
+import { makeStyles, createStyles } from "@material-ui/core/styles";
+
+import EditorContext from "contexts/editorContext";
+import { FieldType } from "constants/fields";
+
+const useStyles = makeStyles(theme =>
   createStyles({
     root: {
-      position: "relative",
-      display: "flex",
-      flexWrap: "wrap",
-    },
-    typography: {
-      position: "relative",
-      marginTop: 15,
-      maxWidth: "calc(100% - 80px)",
-      wordWrap: "break-word",
+      height: "1.25em",
+      "& > *:first-child": { marginTop: 0 },
     },
   })
 );
+
 interface Props {
   value: any;
   row: { ref: firebase.firestore.DocumentReference; id: string };
@@ -33,16 +26,13 @@ const RichText = (props: Props) => {
   const { value } = props;
   const classes = useStyles();
   return (
-    <div className={classes.root}>
-      <Button
-        onClick={() => {
-          editorContext.open(props, FieldType.richText);
-        }}
-      >
-        {" "}
-        {Boolean(value) ? "Edit" : "create"}
-      </Button>
-    </div>
+    <div
+      onDoubleClick={() => {
+        editorContext.open(props, FieldType.richText);
+      }}
+      dangerouslySetInnerHTML={{ __html: value }}
+      className={clsx("rendered-html", classes.root)}
+    />
   );
 };
 export default RichText;
