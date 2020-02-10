@@ -21,6 +21,7 @@ import Loading from "../../components/Loading";
 import Grid from "./Grid";
 import LongTextEditor from "../LongTextEditor";
 import RichTextEditor from "../RichTextEditor";
+import JsonEditor from "../JsonEditor";
 
 import useFiretable, {
   FireTableFilter,
@@ -371,6 +372,7 @@ function Table(props: Props) {
         <SearchBox searchData={search} clearSearch={clearSearch} />
         <RichTextEditor />
         <LongTextEditor />
+        <JsonEditor />
       </Suspense>
     </EditorProvider>
   );
