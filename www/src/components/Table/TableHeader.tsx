@@ -68,7 +68,6 @@ const TableHeader = ({
   const classes = useStyles();
   const router = useRouter();
   const parentLabel = queryString.parse(router.location.search).parentLabel;
-  console.log(parentLabel);
   let breadcrumbs = collection.split("/");
 
   return (

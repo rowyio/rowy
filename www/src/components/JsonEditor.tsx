@@ -7,7 +7,7 @@ import EditorModel from "./EditorModal";
 import ReactJson from "react-json-view";
 const useStyles = makeStyles(theme =>
   createStyles({
-    root: { minWidth: 400 },
+    root: { minWidth: 400, maxHeight: 500, overflowY: "scroll" },
   })
 );
 
@@ -23,6 +23,7 @@ const JsonEditor = props => {
     <EditorModel>
       <div className={classes.root}>
         <ReactJson
+          theme="bright:inverted"
           src={editorContext.editorValue ? editorContext.editorValue : {}}
           onEdit={handleEdit}
           onAdd={handleEdit}
