@@ -148,7 +148,6 @@ const Filters = ({ columns, setFilters }: any) => {
   const id = open ? "simple-popper" : undefined;
 
   const renderInputField = (selectedColumn, operator) => {
-    console.log("selectedColumn.fieldType", selectedColumn.type);
     switch (selectedColumn.type) {
       case FieldType.email:
       case FieldType.phone:

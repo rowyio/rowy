@@ -100,7 +100,7 @@ const useTable = (initialOverrides: any) => {
             `https://console.firebase.google.com/project/${process.env.REACT_APP_FIREBASE_PROJECT_ID}/database/firestore/` +
             "indexes?create_composite=" +
             error.message.split("indexes?create_composite=")[1];
-          console.log(url);
+
           snackContext.open({
             message: "needs a new index",
             duration: 10000,
