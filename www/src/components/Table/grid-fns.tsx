@@ -14,6 +14,7 @@ const UrlLink = lazy(() => import("../Fields/UrlLink"));
 const Image = lazy(() => import("../Fields/Image"));
 const File = lazy(() => import("../Fields/File"));
 const LongText = lazy(() => import("../Fields/LongText"));
+const Json = lazy(() => import("../Fields/Json"));
 const RichText = lazy(() => import("../Fields/RichText"));
 const Color = lazy(() => import("../Fields/Color"));
 const Action = lazy(() => import("../Fields/Action"));
@@ -36,6 +37,7 @@ export const editable = (fieldType: FieldType) => {
     case FieldType.color:
     case FieldType.action:
     case FieldType.last:
+    case FieldType.json:
       return false;
     default:
       return true;
@@ -186,6 +188,18 @@ export const cellFormatter = (column: any) => {
         return (
           <Suspense fallback={<div />}>
             <LongText
+              {...props}
+              fieldName={key}
+              onSubmit={onSubmit(key, props.row)}
+            />
+          </Suspense>
+        );
+      };
+    case FieldType.json:
+      return (props: any) => {
+        return (
+          <Suspense fallback={<div />}>
+            <Json
               {...props}
               fieldName={key}
               onSubmit={onSubmit(key, props.row)}

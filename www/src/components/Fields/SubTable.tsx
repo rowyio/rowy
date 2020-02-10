@@ -29,7 +29,7 @@ interface Props {
 }
 export default function SubTable(props: Props) {
   const { row, value, fieldName, onSubmit, parentLabel } = props;
-  console.log(props);
+
   const { createdAt, updatedAt, rowHeight, id, ref, ...docData } = row;
   const router = useRouter();
   const classes = useStyles();
@@ -38,7 +38,6 @@ export default function SubTable(props: Props) {
     const subTablePath =
       encodeURIComponent(`${row.ref.path}/${fieldName}`) +
       `?parentLabel=${row[parentLabel]}`;
-    console.log(row, subTablePath);
     router.history.push(subTablePath);
   };
 
