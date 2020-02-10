@@ -144,7 +144,6 @@ const imageHandler = quillRef => () => {
     );
     fileInput.classList.add("ql-image");
     fileInput.addEventListener("change", async () => {
-      console.log("detected file");
       if (fileInput.files != null && fileInput.files[0] != null) {
         const ref = `quill-images/${now.getTime()}/${fileInput.files[0].name}`;
         const downloadUrl = await asyncUploader(ref, fileInput.files[0]);
