@@ -59,7 +59,7 @@ yarn
 - Set cloud environment keys for Algolia
 
 ```
-firebase functions:config:set algolia.appid=YOUR_APP_ID algolia.apikey=ADMIN_API_KEY
+firebase functions:config:set algolia.app=YOUR_APP_ID algolia.key=ADMIN_API_KEY
 ```
 
 - Deploy the Cloud Functions to your Firebase project
