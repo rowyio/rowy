@@ -31,7 +31,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Accidental package installs to root directory
+# Accidental package installs to root directories
 yarn.lock
 package.json
 package-lock.json
+node_modules/
