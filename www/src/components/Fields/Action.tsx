@@ -4,7 +4,7 @@ import { SnackContext } from "../../contexts/snackContext";
 import IconButton from "@material-ui/core/IconButton";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import PlayIcon from "@material-ui/icons/PlayCircleFilled";
+import PlayIcon from "@material-ui/icons/PlayCircleOutline";
 import ReplayIcon from "@material-ui/icons/Replay";
 import { cloudFunction } from "../../firebase/callables";
 
@@ -83,7 +83,16 @@ export default function Action(props: Props) {
     );
   else
     return (
-      <Grid container direction="row" justify="flex-end" alignContent="center">
+      <Grid
+        container
+        direction="row"
+        justify="space-between"
+        alignContent="center"
+      >
+        <Typography variant="body1">
+          {" "}
+          {callableName.replace("callable-", "")}
+        </Typography>
         <IconButton onClick={handleRun}>
           <PlayIcon />
         </IconButton>
