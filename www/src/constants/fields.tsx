@@ -26,6 +26,7 @@ import ConnectTableIcon from "assets/icons/ConnectTable";
 import SubTableIcon from "assets/icons/SubTable";
 
 import ActionIcon from "assets/icons/Action";
+import JsonIcon from "assets/icons/Json";
 
 import RichTextIcon from "@material-ui/icons/TextFormat";
 import ColorIcon from "@material-ui/icons/Colorize";
@@ -82,6 +83,8 @@ export enum FieldType {
   color = "COLOR",
   slider = "SLIDER",
 
+  json = "JSON",
+
   last = "LAST",
 }
 
@@ -130,6 +133,7 @@ export const FIELDS = [
   { icon: <RichTextIcon />, name: "Rich Text", type: FieldType.richText },
   { icon: <ColorIcon />, name: "Color", type: FieldType.color },
   { icon: <ActionIcon />, name: "Slider", type: FieldType.slider },
+  { icon: <JsonIcon />, name: "JSON", type: FieldType.json },
 ];
 
 /**

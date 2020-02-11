@@ -51,28 +51,29 @@
 
 ### additional fields:
 
+- json ✅
 - file (multi) ✅
 - image (multi) ✅
 - Percentage(number)
 - Slider(number)
-- Table(Document[])
-- Rich Text(html string)
+- Table(Document[])✅
+- Rich Text(html string))✅
 - Callable buttons
 
 ### Functionality:
 
-- Sort rows
+- Sort rows ✅
 - reorder columns✅
 - Auto suggest columns based of existing docs
 - Locked columns
 - Table view only mode
-- SubCollection tables
+- SubCollection tables ✅
 - Permissions
 - Duplicate columns
-- Filter columns:
-  - equals to
+- Filter columns:✅
+  - equals to✅
   - Starts with
-  - contains
+  - contains✅
 - Export tables to csv✅
 - Make a toggle switch to allow single/multi
   - Image
