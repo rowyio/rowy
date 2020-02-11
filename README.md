@@ -17,7 +17,7 @@ supported. More coming soon, for comprehensive list see ROADMAP.md.
 
 ### 1. Create a Firebase project [(Instructions)](https://console.firebase.google.com/u/0/)
 
-- Enable the Firestore database
+- Create a Firestore database
 - Set up Firestore Security Rules: use Test Mode or set up required permissions.
   Below are sample rules that allow for unlimited access to the entire database:
   ```
@@ -33,10 +33,26 @@ supported. More coming soon, for comprehensive list see ROADMAP.md.
 - Upgrade project to the Blaze Plan
 - Enable the Google sign-in method in **Authentication / Sign-in method**
 
-### 2. Create an [Algolia](https://algolia.com) project
+### 2. (Optional) Create an [Algolia](https://algolia.com) project
 
-- Get the generated **Application ID** and **Search-Only API Key** from the
-  **API Keys** page
+- Algolia’s free **Community** plan is sufficient
+
+#### Why Algolia?
+
+Algolia is currently used for the **Connect Table** cell type to link a cell to
+another row in another table. It may also be used in the future for further
+plain text search and filtering capabilities.
+
+You can **opt out** of Algolia by commenting out the following lines in
+`cloud_functions/functions/src/index.ts`:
+
+```ts
+import algoliaFnsGenerator from "./algolia";
+import algoliaConfig from "./algolia/algoliaConfig";
+export const algolia = algoliaConfig.reduce((acc: any, collection) => {
+  return { ...acc, [collection.name]: algoliaFnsGenerator(collection) };
+}, {});
+```
 
 ### 3. Clone this repo
 
@@ -56,7 +72,8 @@ yarn
 - Ensure that you have Firebase CLI installed.
   [(Instructions)](https://firebase.google.com/docs/cli)
 
-- Set cloud environment keys for Algolia
+- Set cloud environment keys for Algolia: get the generated **Application ID**
+  and **Admin API Key** from the Algolia **API Keys** page
 
 ```
 firebase functions:config:set algolia.app=YOUR_APP_ID algolia.key=ADMIN_API_KEY
@@ -99,3 +116,28 @@ yarn
 ```
 yarn start
 ```
+
+## Issues
+
+[Please create issues here.](https://github.com/antlervc/firetable/issues)  
+Make sure to provide console log outputs and screenshots!
+
+## Roadmap and feature requests
+
+- [View our roadmap here](ROADMAP.md)
+- [View our ideas and feature requests here](https://github.com/AntlerVC/firetable/projects/1)
+
+---
+
+## About Antler Engineering
+
+Firetable is created and being actively developed by
+[Antler Engineering](https://twitter.com/AntlerEng).
+
+At [Antler](https://antler.co), we identify and invest in exceptional people.
+
+We’re a global startup generator and early-stage VC firm that builds
+groundbreaking technology companies.
+
+[Apply now](https://antler.co/apply) to be part of a global cohort of tech
+founders.
