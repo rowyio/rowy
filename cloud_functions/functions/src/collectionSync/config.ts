@@ -1,14 +1,17 @@
-const algoliaConfig = [
+const config = [
   {
     target: "teams",
     source: "myTeam",
-    name: "founders",
     fieldsToSync: [
-      "firstName",
-      "lastName",
-      "founderType",
       "cohort",
-      "employerLogos",
+      "teamName",
+      "trackOutDate",
+      "teamMembers",
+      "focusArea",
+      "isDisolved",
+      "oneLineDescription",
     ],
   },
 ];
+
+export default config;

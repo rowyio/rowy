@@ -11,6 +11,11 @@ const docReducer = (docData: FirebaseFirestore.DocumentData) => (
   else return acc;
 };
 
+/**
+ *
+ * @param targetCollection
+ * @param fieldsToSync
+ */
 const syncDoc = (targetCollection: string, fieldsToSync: string[]) => (
   snapshot: FirebaseFirestore.DocumentSnapshot
 ) => {
@@ -24,6 +29,11 @@ const syncDoc = (targetCollection: string, fieldsToSync: string[]) => (
     .set(syncData, { merge: true });
 };
 
+/**
+ * onUpdate change to snapshot adapter
+ * @param targetCollection
+ * @param fieldsToSync
+ */
 const syncDocOnUpdate = (targetCollection: string, fieldsToSync: string[]) => (
   snapshot: functions.Change<FirebaseFirestore.DocumentSnapshot>
 ) => syncDoc(targetCollection, fieldsToSync)(snapshot.after);
@@ -32,13 +42,13 @@ const syncDocOnUpdate = (targetCollection: string, fieldsToSync: string[]) => (
  * returns 3 different trigger functions (onCreate,onUpdate,onDelete) in an object
  * @param collection configuration object
  */
-const collectionsSyncFnsGenerator = collection => ({
+const collectionSyncFnsGenerator = collection => ({
   onCreate: functions.firestore
     .document(`${collection.source}/{docId}`)
     .onCreate(syncDoc(collection.target, collection.fieldsToSync)),
   onUpdate: functions.firestore
-    .document(`${collection.name}/{docId}`)
+    .document(`${collection.source}/{docId}`)
     .onUpdate(syncDocOnUpdate(collection.target, collection.fieldsToSync)),
 });
 
-export default collectionsSyncFnsGenerator;
+export default collectionSyncFnsGenerator;
