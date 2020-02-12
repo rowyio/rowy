@@ -8,7 +8,7 @@ const config = [
       "trackOutDate",
       "teamMembers",
       "focusArea",
-      "isDisolved",
+      "isDissolved",
       "oneLineDescription",
     ],
   },
