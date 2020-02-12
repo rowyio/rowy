@@ -13,8 +13,16 @@ const algoliaReducer = (docData: FirebaseFirestore.DocumentData) => (
   acc: any,
   curr: string
 ) => {
-  if (docData[curr]) return { ...acc, [curr]: docData[curr] };
-  else return acc;
+  if ("_seconds" in docData[curr]) {
+    return {
+      ...acc,
+      [curr]: docData[curr]._seconds,
+    };
+  } else if (docData[curr]) {
+    return { ...acc, [curr]: docData[curr] };
+  } else {
+    return acc;
+  }
 };
 
 const addToAlgolia = (fieldsToSync: string[]) => (
