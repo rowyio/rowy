@@ -13,10 +13,10 @@ const algoliaReducer = (docData: FirebaseFirestore.DocumentData) => (
   acc: any,
   curr: string
 ) => {
-  if ("_seconds" in docData[curr]) {
+  if (docData[curr] && typeof docData[curr].toDate === "function") {
     return {
       ...acc,
-      [curr]: docData[curr]._seconds,
+      [curr]: docData[curr].toDate().getTime() / 1000,
     };
   } else if (docData[curr]) {
     return { ...acc, [curr]: docData[curr] };

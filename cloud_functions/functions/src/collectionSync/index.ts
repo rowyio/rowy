@@ -26,7 +26,9 @@ const syncDoc = (targetCollection: string, fieldsToSync: string[]) => (
   if (Object.keys(syncData).length === 0) return false; // returns if theres nothing to sync
   db.collection(targetCollection)
     .doc(docId)
-    .set(syncData, { merge: true });
+    .set(syncData, { merge: true })
+    .catch(error => console.error(error));
+  return true;
 };
 
 /**
