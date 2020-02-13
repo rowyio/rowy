@@ -8,8 +8,8 @@ export enum CLOUD_FUNCTIONS {
 export const cloudFunction = (
   name: string,
   input: any,
-  success: Function,
-  fail: Function
+  success?: Function,
+  fail?: Function
 ) => {
   const callable = functions.httpsCallable(name);
   callable(input)

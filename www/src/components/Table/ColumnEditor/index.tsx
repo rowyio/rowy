@@ -80,6 +80,7 @@ const ColumnEditor = (props: any) => {
     collectionPath: "",
     config: {},
     parentLabel: "",
+    callableName: "",
   });
   const [flags, setFlags] = useState(() => [""]);
   const classes = useStyles();
@@ -133,6 +134,7 @@ const ColumnEditor = (props: any) => {
       collectionPath: "",
       config: {},
       parentLabel: "",
+      callableName: "",
     });
   };
   const onClose = (event: any) => {
@@ -191,6 +193,9 @@ const ColumnEditor = (props: any) => {
     }
     if (values.type === FieldType.subTable) {
       updatables.push({ field: "parentLabel", value: values.parentLabel });
+    }
+    if (values.type === FieldType.action) {
+      updatables.push({ field: "callableName", value: values.callableName });
     }
     actions.update(props.column.idx, updatables);
     handleClose();
@@ -274,6 +279,14 @@ const ColumnEditor = (props: any) => {
                 label={"Parent Label"}
                 onChange={e => {
                   setValue("parentLabel", e.target.value);
+                }}
+              />
+            )}
+            {values.type === FieldType.action && (
+              <TextField
+                label={"Callable Name"}
+                onChange={e => {
+                  setValue("callableName", e.target.value);
                 }}
               />
             )}
