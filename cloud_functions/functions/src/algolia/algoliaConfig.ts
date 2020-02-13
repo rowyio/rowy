@@ -1,3 +1,18 @@
+import * as _ from "lodash";
+const flattenSnapshot = (
+  field: { docPath: string; snapshot: any },
+  preservedKeys: string[]
+) => {
+  return {
+    docPath: field.docPath,
+    ...preservedKeys.reduce((acc: any, currentKey: string) => {
+      const value = _.get(field.snapshot, currentKey);
+      if (value) {
+        return { ...acc, [currentKey]: value };
+      } else return acc;
+    }, {}),
+  };
+};
 const algoliaConfig = [
   {
     name: "founders",
@@ -27,18 +42,28 @@ const algoliaConfig = [
     ],
   },
   {
-    name: "portfolio",
+    name: "teams",
     fieldsToSync: [
       "cohort",
-      "location",
-      "companyName",
-      "oneLine",
-      "logo",
-      "website",
-      "year",
-      "crunchbase",
-      "angelList",
-      "sector",
+      "teamName",
+      "trackOutDate",
+      {
+        fieldName: "teamMembers",
+        transformer: (teamMembers: any[]) => {
+          return teamMembers.map(member =>
+            flattenSnapshot(member, [
+              "cohort",
+              "firstName",
+              "lastName",
+              "preferredName",
+              "profilePhoto",
+            ])
+          );
+        },
+      },
+      "focusArea",
+      "isDissolved",
+      "oneLineDescription",
     ],
   },
   {

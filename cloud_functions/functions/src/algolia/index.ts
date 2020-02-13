@@ -11,17 +11,28 @@ const client = algoliasearch(APP_ID, ADMIN_KEY);
 // returns object of fieldsToSync
 const algoliaReducer = (docData: FirebaseFirestore.DocumentData) => (
   acc: any,
-  curr: string
+  curr: string | { fieldName: string; transformer: Function }
 ) => {
-  if (docData[curr] && typeof docData[curr].toDate === "function") {
-    return {
-      ...acc,
-      [curr]: docData[curr].toDate().getTime() / 1000,
-    };
-  } else if (docData[curr]) {
-    return { ...acc, [curr]: docData[curr] };
+  if (typeof curr === "string") {
+    if (docData[curr] && typeof docData[curr].toDate === "function") {
+      return {
+        ...acc,
+        [curr]: docData[curr].toDate().getTime() / 1000,
+      };
+    } else if (docData[curr]) {
+      return { ...acc, [curr]: docData[curr] };
+    } else {
+      return acc;
+    }
   } else {
-    return acc;
+    if (docData[curr.fieldName]) {
+      return {
+        ...acc,
+        [curr.fieldName]: curr.transformer(docData[curr.fieldName]),
+      };
+    } else {
+      return acc;
+    }
   }
 };
 
