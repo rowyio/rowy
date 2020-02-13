@@ -44,13 +44,13 @@ export const createInFounders = functions.https.onCall(
         .set(syncData, { merge: true });
       return {
         message: "Founder created!",
-        cellValue: { redo: false, status: "complete" },
+        cellValue: { redo: false, status: "live", undo: true },
         success: true,
       };
     } else {
       return {
         message: "unauthorized function",
-        cellValue: { redo: false, status: "complete" },
+        // cellValue: { redo: false, status: "complete" },
         success: false,
       };
     }
