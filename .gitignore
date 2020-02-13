@@ -15,6 +15,11 @@ cloud_functions/functions/node_modules
 www/build
 cloud_functions/functions/lib
 
+# cloud function config
+
+cloud_functions/functions/collectionSync/config.json
+cloud_functions/functions/history/config.json
+
 # misc
 .DS_Store
 .env.local
