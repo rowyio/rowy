@@ -1,6 +1,6 @@
 import * as algoliasearch from "algoliasearch";
 import * as functions from "firebase-functions";
-
+import * as _ from "lodash";
 import { env } from "../config";
 
 const APP_ID = env.algolia.app;
@@ -8,10 +8,25 @@ const ADMIN_KEY = env.algolia.key;
 
 const client = algoliasearch(APP_ID, ADMIN_KEY);
 
+const filterSnapshot = (
+  field: { docPath: string; snapshot: any },
+  preservedKeys: string[]
+) => {
+  return {
+    docPath: field.docPath,
+    ...preservedKeys.reduce((acc: any, currentKey: string) => {
+      const value = _.get(field.snapshot, currentKey);
+      if (value) {
+        return { ...acc, snapshot: { [currentKey]: value, ...acc.snapshot } };
+      } else return acc;
+    }, {}),
+  };
+};
+
 // returns object of fieldsToSync
 const algoliaReducer = (docData: FirebaseFirestore.DocumentData) => (
   acc: any,
-  curr: string | { fieldName: string; transformer: Function }
+  curr: string | { fieldName: string; snapshotFields: string[] }
 ) => {
   if (typeof curr === "string") {
     if (docData[curr] && typeof docData[curr].toDate === "function") {
@@ -25,10 +40,12 @@ const algoliaReducer = (docData: FirebaseFirestore.DocumentData) => (
       return acc;
     }
   } else {
-    if (docData[curr.fieldName]) {
+    if (docData[curr.fieldName] && curr.snapshotFields) {
       return {
         ...acc,
-        [curr.fieldName]: curr.transformer(docData[curr.fieldName]),
+        [curr.fieldName]: docData[curr.fieldName].map(snapshot =>
+          filterSnapshot(snapshot, curr.snapshotFields)
+        ),
       };
     } else {
       return acc;

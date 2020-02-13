@@ -1,5 +1,5 @@
 import algoliaFnsGenerator from "./algolia";
-import algoliaConfig from "./algolia/algoliaConfig";
+import * as algoliaConfig from "./algolia/config.json";
 import collectionSyncFnsGenerator from "./collectionSync";
 import * as collectionSyncConfig from "./collectionSync/config.json";
 
@@ -8,12 +8,12 @@ import * as collectionHistoryConfig from "./history/config.json";
 
 export { exportTable } from "./export";
 import * as callableFns from "./callable";
-export const callable = callableFns;
-export const algolia = algoliaConfig.reduce((acc: any, collection) => {
+const callable = callableFns;
+const algolia = algoliaConfig.reduce((acc: any, collection) => {
   return { ...acc, [collection.name]: algoliaFnsGenerator(collection) };
 }, {});
 
-export const sync = collectionSyncConfig.reduce((acc: any, collection) => {
+const sync = collectionSyncConfig.reduce((acc: any, collection) => {
   return {
     ...acc,
     [`${collection.source}2${collection.target}`]: collectionSyncFnsGenerator(
@@ -22,12 +22,11 @@ export const sync = collectionSyncConfig.reduce((acc: any, collection) => {
   };
 }, {});
 
-export const history = collectionHistoryConfig.reduce(
-  (acc: any, collection) => {
-    return {
-      ...acc,
-      [collection.name]: collectionSnapshotFnsGenerator(collection),
-    };
-  },
-  {}
-);
+const history = collectionHistoryConfig.reduce((acc: any, collection) => {
+  return {
+    ...acc,
+    [collection.name]: collectionSnapshotFnsGenerator(collection),
+  };
+}, {});
+
+export const FIRETABLE = { callable, algolia, sync, history };

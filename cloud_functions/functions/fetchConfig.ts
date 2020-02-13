@@ -26,10 +26,13 @@ const main = async () => {
     "./src/history/config.json"
   );
   await docConfig2json(
+    "_FIRETABLE_/_SETTINGS_/_CONFIG_/_ALGOLIA_",
+    "./src/algolia/config.json"
+  );
+  await docConfig2json(
     "_FIRETABLE_/_SETTINGS_/_CONFIG_/_COLLECTION_SYNC_",
     "./src/collectionSync/config.json"
   );
-
   return true;
 };
 
