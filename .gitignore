@@ -17,8 +17,9 @@ cloud_functions/functions/lib
 
 # cloud function config
 
-cloud_functions/functions/collectionSync/config.json
-cloud_functions/functions/history/config.json
+cloud_functions/functions/src/collectionSync/config.json
+cloud_functions/functions/src/history/config.json
+cloud_functions/functions/firebase-credentials.json
 
 # misc
 .DS_Store

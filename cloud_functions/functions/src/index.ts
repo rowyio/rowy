@@ -1,10 +1,10 @@
 import algoliaFnsGenerator from "./algolia";
 import algoliaConfig from "./algolia/algoliaConfig";
 import collectionSyncFnsGenerator from "./collectionSync";
-import collectionSyncConfig from "./collectionSync/config";
+import * as collectionSyncConfig from "./collectionSync/config.json";
 
 import collectionSnapshotFnsGenerator from "./history";
-import collectionHistoryConfig from "./history/config";
+import * as collectionHistoryConfig from "./history/config.json";
 
 export { exportTable } from "./export";
 import * as callableFns from "./callable";

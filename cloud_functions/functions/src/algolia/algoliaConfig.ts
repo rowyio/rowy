@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-const flattenSnapshot = (
+const filterSnapshot = (
   field: { docPath: string; snapshot: any },
   preservedKeys: string[]
 ) => {
@@ -8,7 +8,7 @@ const flattenSnapshot = (
     ...preservedKeys.reduce((acc: any, currentKey: string) => {
       const value = _.get(field.snapshot, currentKey);
       if (value) {
-        return { ...acc, [currentKey]: value };
+        return { ...acc, snapshot: { [currentKey]: value, ...acc.snapshot } };
       } else return acc;
     }, {}),
   };
@@ -44,6 +44,10 @@ const algoliaConfig = [
   {
     name: "teams",
     fieldsToSync: [
+      "createdAt",
+      "createdBy",
+      "updatedAt",
+      "updatedBy",
       "cohort",
       "teamName",
       "trackOutDate",
@@ -51,7 +55,7 @@ const algoliaConfig = [
         fieldName: "teamMembers",
         transformer: (teamMembers: any[]) => {
           return teamMembers.map(member =>
-            flattenSnapshot(member, [
+            filterSnapshot(member, [
               "cohort",
               "firstName",
               "lastName",

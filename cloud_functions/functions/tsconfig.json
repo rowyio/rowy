@@ -7,8 +7,9 @@
     "sourceMap": true,
     "strict": true,
     "noImplicitAny": false,
+    "resolveJsonModule": true,
     "target": "es2017"
   },
   "compileOnSave": true,
-  "include": ["src"]
+  "include": ["src", "fetchConfig.ts"]
 }
