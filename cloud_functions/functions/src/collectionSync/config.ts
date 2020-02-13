@@ -10,6 +10,12 @@ const config = [
       "focusArea",
       "isDissolved",
       "oneLineDescription",
+      "documents",
+      "longDescription",
+      "longPitchDeck",
+      "shortPitchDeck",
+      "updatedAt",
+      "updatedBy",
     ],
   },
 ];
