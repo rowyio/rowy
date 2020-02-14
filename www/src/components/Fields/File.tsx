@@ -74,27 +74,29 @@ const File = (props: Props) => {
       <input {...getInputProps()} />
 
       <Grid item xs className={classes.chipList}>
-        {value &&
-          value.map((file: any) => (
-            <Chip
-              key={file.name}
-              icon={<FileIcon />}
-              label={file.name}
-              component="a"
-              target="_blank"
-              rel="noopener noreferrer"
-              href={file.downloadURL}
-              onDelete={
-                config && config.isLocked
-                  ? undefined
-                  : () => handleDelete(file.downloadURL)
-              }
-              className={classes.chip}
-              onClick={e => e.stopPropagation()}
-            />
-          ))}
+        <>
+          {value &&
+            value.map((file: any) => (
+              <Chip
+                key={file.name}
+                icon={<FileIcon />}
+                label={file.name}
+                component="a"
+                target="_blank"
+                rel="noopener noreferrer"
+                href={file.downloadURL}
+                onDelete={
+                  config && config.isLocked
+                    ? undefined
+                    : () => handleDelete(file.downloadURL)
+                }
+                className={classes.chip}
+                onClick={e => e.stopPropagation()}
+              />
+            ))}
 
-        {!value || (value.length === 0 && "Upload a file…")}
+          {!value || (value.length === 0 && "Upload a file…")}
+        </>
       </Grid>
 
       <Grid item>
