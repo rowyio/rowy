@@ -277,7 +277,9 @@ const Filters = ({ columns, setFilters }: any) => {
                   Select Column
                 </MenuItem>
                 {filterColumns.map(c => (
-                  <MenuItem value={c.key}>{c.label}</MenuItem>
+                  <MenuItem key={c.key} value={c.key}>
+                    {c.label}
+                  </MenuItem>
                 ))}
               </TextField>
             </Grid>

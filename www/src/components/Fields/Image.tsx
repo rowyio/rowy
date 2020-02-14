@@ -109,43 +109,45 @@ const Image = (props: Props) => {
         {value &&
           files.map((file: { name: string; downloadURL: string }) => (
             <Tooltip key={file.downloadURL} title="Click to delete">
-              <Confirmation
-                message={{
-                  title: "Delete Image",
-                  body: "Are you sure you want to delete this image?",
-                  confirm: (
-                    <>
-                      <DeleteIcon /> Delete
-                    </>
-                  ),
-                }}
-              >
-                <div
-                  onClick={e => {
-                    const index = _findIndex(value, [
-                      "downloadURL",
-                      file.downloadURL,
-                    ]);
-                    value.splice(index, 1);
-                    onSubmit(value);
-                  }}
-                  className={classes.imgContainer}
-                  style={{
-                    backgroundImage: `url(${file.downloadURL})`,
-                    width: row.rowHeight * 0.9,
-                    height: row.rowHeight * 0.9,
+              <span>
+                <Confirmation
+                  message={{
+                    title: "Delete Image",
+                    body: "Are you sure you want to delete this image?",
+                    confirm: (
+                      <>
+                        <DeleteIcon /> Delete
+                      </>
+                    ),
                   }}
                 >
-                  <Grid
-                    container
-                    justify="center"
-                    alignItems="center"
-                    className={classes.deleteImgHover}
+                  <div
+                    onClick={e => {
+                      const index = _findIndex(value, [
+                        "downloadURL",
+                        file.downloadURL,
+                      ]);
+                      value.splice(index, 1);
+                      onSubmit(value);
+                    }}
+                    className={classes.imgContainer}
+                    style={{
+                      backgroundImage: `url(${file.downloadURL})`,
+                      width: row.rowHeight * 0.9,
+                      height: row.rowHeight * 0.9,
+                    }}
                   >
-                    <DeleteIcon color="inherit" />
-                  </Grid>
-                </div>
-              </Confirmation>
+                    <Grid
+                      container
+                      justify="center"
+                      alignItems="center"
+                      className={classes.deleteImgHover}
+                    >
+                      <DeleteIcon color="inherit" />
+                    </Grid>
+                  </div>
+                </Confirmation>
+              </span>
             </Tooltip>
           ))}
       </Grid>
