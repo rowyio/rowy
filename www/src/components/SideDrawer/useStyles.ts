@@ -9,29 +9,29 @@ export const useStyles = makeStyles(theme =>
       whiteSpace: "nowrap",
     },
 
-    drawerOpen: {
-      width: DRAWER_WIDTH,
-      transition: theme.transitions.create("width", {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-    },
-    drawerClose: {
-      transition: theme.transitions.create("width", {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-      }),
-
-      overflowX: "hidden" as "hidden",
-      width: DRAWER_COLLAPSED_WIDTH,
-    },
-
     paper: {
       border: "none",
       boxShadow:
         "0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 8px 10px 1px rgba(0, 0, 0, 0.14)",
       borderRadius: `${theme.shape.borderRadius * 2}px 0 0 ${theme.shape
         .borderRadius * 2}px`,
+
+      width: DRAWER_WIDTH,
+    },
+    paperOpen: {
+      transition: theme.transitions.create("transform", {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+    },
+    paperClose: {
+      transition: theme.transitions.create("transform", {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+      }),
+
+      overflowX: "hidden" as "hidden",
+      transform: `translateX(${DRAWER_WIDTH - DRAWER_COLLAPSED_WIDTH}px)`,
     },
 
     drawerFabContainer: {

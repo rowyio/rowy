@@ -153,7 +153,6 @@ const Theme = createMuiTheme({
     },
     MuiChip: { size: "small" },
     MuiButton: { color: "primary" },
-    MuiIconButton: { color: "primary" },
   },
 });
 
