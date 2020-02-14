@@ -7,61 +7,69 @@ import isEmpty from "lodash/isEmpty";
 import xorWith from "lodash/xorWith";
 import Loading from "../Loading";
 
+import { FieldType } from "constants/fields";
+
 const ReactDataGrid = lazy(() => import("react-data-grid"));
 const { DraggableContainer } = DraggableHeader;
-const Grid = (props: any) => {
-  const {
-    onHeaderDrop,
-    rowHeight,
-    columns,
-    RowRenderer,
-    handleRowGetter,
-    tableHeight,
-    onGridRowsUpdated,
-    rows,
-    resizeColumn,
-    loadingRows,
-    addRow,
-    setSelectedCell,
-  } = props;
-  return (
-    <Suspense fallback={<Loading message="Loading table" />}>
-      <DraggableContainer onHeaderDrop={onHeaderDrop}>
-        <ReactDataGrid
-          headerRowHeight={47}
-          rowRenderer={RowRenderer}
-          rowHeight={rowHeight}
-          columns={columns}
-          enableCellSelect={true} // makes text based cells editable
-          rowGetter={handleRowGetter}
-          rowsCount={rows.length}
-          onGridRowsUpdated={onGridRowsUpdated}
-          minHeight={tableHeight}
-          onCellSelected={(coordinates: { rowIdx: number; idx: number }) => {
-            const row = rows[coordinates.rowIdx];
-            const column = columns[coordinates.idx];
-            if (editable(column.type)) {
-              //only editable fields are stored selectedCell, temporary fix for custom fields
-              setSelectedCell({ row, column });
-            }
-          }}
-          onColumnResize={(idx: number, width: number) =>
-            //tableActions.column.resize(idx, width)
-            resizeColumn(idx, width)
+
+export interface IGridProps {
+  columns: (AdazzleReactDataGrid.Column<any> & {
+    isNew?: boolean;
+    type: FieldType;
+  })[];
+  [key: string]: any;
+}
+
+const Grid = ({
+  onHeaderDrop,
+  rowHeight,
+  columns,
+  RowRenderer,
+  handleRowGetter,
+  tableHeight,
+  onGridRowsUpdated,
+  rows,
+  resizeColumn,
+  loadingRows,
+  addRow,
+  setSelectedCell,
+}: IGridProps) => (
+  <Suspense fallback={<Loading message="Loading table" />}>
+    <DraggableContainer onHeaderDrop={onHeaderDrop}>
+      <ReactDataGrid
+        headerRowHeight={47}
+        rowRenderer={RowRenderer}
+        rowHeight={rowHeight}
+        columns={columns}
+        enableCellSelect={true} // makes text based cells editable
+        rowGetter={handleRowGetter}
+        rowsCount={rows.length}
+        onGridRowsUpdated={onGridRowsUpdated}
+        minHeight={tableHeight}
+        onCellSelected={(coordinates: { rowIdx: number; idx: number }) => {
+          const row = rows[coordinates.rowIdx];
+          const column = columns[coordinates.idx];
+          if (editable(column.type)) {
+            //only editable fields are stored selectedCell, temporary fix for custom fields
+            setSelectedCell({ row, column });
           }
-          emptyRowsView={() => (
-            <EmptyTable
-              //isLoading={tableState.loadingRows}
-              isLoading={loadingRows}
-              tableHeight={tableHeight}
-              addRow={addRow}
-            />
-          )}
-        />
-      </DraggableContainer>
-    </Suspense>
-  );
-};
+        }}
+        onColumnResize={(idx: number, width: number) =>
+          //tableActions.column.resize(idx, width)
+          resizeColumn(idx, width)
+        }
+        emptyRowsView={() => (
+          <EmptyTable
+            //isLoading={tableState.loadingRows}
+            isLoading={loadingRows}
+            tableHeight={tableHeight}
+            addRow={addRow}
+          />
+        )}
+      />
+    </DraggableContainer>
+  </Suspense>
+);
 
 export const isArrayEqual = (x: any, y: any) => isEmpty(xorWith(x, y, isEqual));
 

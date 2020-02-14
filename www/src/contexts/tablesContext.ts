@@ -1,7 +1,7 @@
 import React from "react";
 
 interface TablesContextInterface {
-  value: any[] | undefined;
+  value: { collection: string; name: string }[] | undefined;
 }
 
 const TablesContext = React.createContext<TablesContextInterface>({

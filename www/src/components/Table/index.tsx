@@ -18,7 +18,7 @@ import AddIcon from "@material-ui/icons/AddCircle";
 import useStyles from "./useStyle";
 
 import Loading from "../../components/Loading";
-import Grid from "./Grid";
+import Grid, { IGridProps } from "./Grid";
 import LongTextEditor from "../LongTextEditor";
 import RichTextEditor from "../RichTextEditor";
 import JsonEditor from "../JsonEditor";
@@ -211,7 +211,8 @@ function Table(props: Props) {
   const onHeaderDrop = (dragged: any, target: any) => {
     tableActions.column.reorder(dragged, target);
   };
-  let columns: any[] = [];
+
+  let columns: IGridProps["columns"] = [];
   if (!tableState.loadingColumns && tableState.columns) {
     columns = tableState.columns
       .filter((column: any) => !column.hidden)
@@ -284,6 +285,7 @@ function Table(props: Props) {
     tableState.rows.length !== 0
       ? [...tableState.rows.map((row: any) => ({ rowHeight, ...row })), {}]
       : [];
+
   const RowRenderer = (props: any) => {
     const { renderBaseRow, ...rest } = props;
     if (rows.length === rest.idx + 1) {

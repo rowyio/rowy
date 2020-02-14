@@ -93,18 +93,16 @@ export default function DocInput(props: any) {
               id: "table",
             }}
           >
-            {tables.value.map(
-              (table: { collection: string; table: string }) => {
-                return (
-                  <MenuItem
-                    id={`select-collection-${table.collection}`}
-                    value={table.collection}
-                  >
-                    <>{table.collection}</>
-                  </MenuItem>
-                );
-              }
-            )}
+            {tables.value.map(table => {
+              return (
+                <MenuItem
+                  id={`select-collection-${table.collection}`}
+                  value={table.collection}
+                >
+                  <>{table.collection}</>
+                </MenuItem>
+              );
+            })}
           </Select>
         </FormControl>
         {collectionPath ? (
