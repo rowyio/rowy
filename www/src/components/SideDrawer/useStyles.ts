@@ -34,24 +34,26 @@ export const useStyles = makeStyles(theme =>
         .borderRadius * 2}px`,
     },
 
-    drawerFab: {
+    drawerFabContainer: {
       position: "absolute",
       top: "50%",
-      transform: "translateY(-50%)",
+      transform: "translateY(-50%) rotate(90deg)",
       right: theme.spacing(1),
-
       zIndex: theme.zIndex.drawer + 1,
 
-      boxShadow:
-        "-2px 0 4px -1px rgba(0, 0, 0, 0.2), -1px 0 10px 0 rgba(0, 0, 0, 0.12), -4px 0 5px 0 rgba(0, 0, 0, 0.14)",
+      width: theme.spacing(7),
+      height: theme.spacing(7),
+      borderRadius: "50%",
+      backgroundColor: theme.palette.background.paper,
 
-      transition: theme.transitions.create(["transform", "box-shadow"], {
+      transition: theme.transitions.create("transform", {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.enteringScreen,
       }),
     },
     drawerFabOpen: {
-      transform: `translate(-${DRAWER_WIDTH - DRAWER_COLLAPSED_WIDTH}px, -50%)`,
+      transform: `translate(-${DRAWER_WIDTH -
+        DRAWER_COLLAPSED_WIDTH}px, -50%) rotate(90deg)`,
 
       transitionDuration: `${theme.transitions.duration.leavingScreen}ms`,
 
@@ -59,6 +61,10 @@ export const useStyles = makeStyles(theme =>
         transform: "rotate(180deg)",
         transitionDuration: `${theme.transitions.duration.leavingScreen}ms`,
       },
+    },
+    drawerFab: {
+      overflow: "hidden",
+      "&$drawerFabDisabled": { boxShadow: theme.shadows[6] },
     },
     drawerFabIcon: {
       width: "2em",
@@ -69,6 +75,7 @@ export const useStyles = makeStyles(theme =>
         duration: theme.transitions.duration.enteringScreen,
       }),
     },
+    drawerFabDisabled: {},
 
     drawerContents: {
       padding: theme.spacing(8),

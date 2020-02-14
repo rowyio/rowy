@@ -1,18 +1,26 @@
 import React, { useState } from "react";
 import clsx from "clsx";
+import _isEmpty from "lodash/isEmpty";
 
 import { Drawer, Fab } from "@material-ui/core";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import ChevronIcon from "@material-ui/icons/KeyboardArrowDown";
 
 import { useStyles } from "./useStyles";
+import { useSideDrawerContext } from "contexts/sideDrawerContext";
 
 export const DRAWER_WIDTH = 600;
 export const DRAWER_COLLAPSED_WIDTH = 36;
 
 export default function SideDrawer() {
   const classes = useStyles();
+  const { columns, selectedCell } = useSideDrawerContext();
+  console.log(columns, selectedCell);
 
   const [open, setOpen] = useState(false);
+  const disabled =
+    !selectedCell ||
+    _isEmpty(selectedCell.row) ||
+    _isEmpty(selectedCell.column);
 
   return (
     <>
@@ -34,14 +42,22 @@ export default function SideDrawer() {
         <div className={classes.drawerContents}>bla</div>
       </Drawer>
 
-      <Fab
-        className={clsx(classes.drawerFab, open && classes.drawerFabOpen)}
-        color="secondary"
-        onClick={() => setOpen(o => !o)}
-        disabled
+      <div
+        className={clsx(
+          classes.drawerFabContainer,
+          open && classes.drawerFabOpen
+        )}
       >
-        <ChevronLeftIcon className={classes.drawerFabIcon} />
-      </Fab>
+        <Fab
+          className={classes.drawerFab}
+          classes={{ disabled: classes.drawerFabDisabled }}
+          color="secondary"
+          disabled={disabled}
+          onClick={() => setOpen(o => !o)}
+        >
+          <ChevronIcon className={classes.drawerFabIcon} />
+        </Fab>
+      </div>
     </>
   );
 }

@@ -38,6 +38,7 @@ import {
   onSubmit,
 } from "./grid-fns";
 import { EditorProvider } from "../../util/EditorProvider";
+import { useSideDrawerContext } from "contexts/sideDrawerContext";
 
 const Hotkeys = lazy(() => import("./HotKeys"));
 const TableHeader = lazy(() => import("./TableHeader"));
@@ -62,6 +63,18 @@ function Table(props: Props) {
     row: {},
     column: {},
   });
+  // Sync selectedCell, columns values to context to show side drawer
+  // TODO: remove this sync here if useFiretable becomes a context
+  const {
+    setColumns,
+    setSelectedCell: contextSetSelectedCell,
+  } = useSideDrawerContext();
+  useEffect(() => {
+    if (setColumns) setColumns(tableState.columns);
+  }, [tableState.columns]);
+  useEffect(() => {
+    if (contextSetSelectedCell) contextSetSelectedCell(selectedCell);
+  }, [selectedCell]);
 
   const [search, setSearch] = useState({
     config: undefined,
