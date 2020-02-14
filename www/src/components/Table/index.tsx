@@ -253,7 +253,6 @@ function Table(props: Props) {
             }}
           >
             <IconButton
-              color="primary"
               onClick={async () => {
                 props.row.ref.delete();
               }}
@@ -262,7 +261,6 @@ function Table(props: Props) {
             </IconButton>
           </Confirmation>
           <IconButton
-            color="secondary"
             onClick={() => {
               const clonedRow = { ...props.row };
               // remove metadata

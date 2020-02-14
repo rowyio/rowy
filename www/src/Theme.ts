@@ -6,7 +6,7 @@ const BODY_TEXT = '"Open Sans", sans-serif';
 const Theme = createMuiTheme({
   palette: {
     primary: { main: "#e22729" },
-    secondary: { main: "#e22729" },
+    secondary: { main: "#000" },
     text: { secondary: "rgba(0, 0, 0, 0.6)" },
   },
   typography: {
@@ -152,6 +152,8 @@ const Theme = createMuiTheme({
       },
     },
     MuiChip: { size: "small" },
+    MuiButton: { color: "primary" },
+    MuiIconButton: { color: "primary" },
   },
 });
 

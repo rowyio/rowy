@@ -156,12 +156,7 @@ const Image = (props: Props) => {
             <AddIcon />
           </IconButton>
         ) : (
-          <CircularProgress
-            size={30}
-            variant="static"
-            value={progress}
-            color="secondary"
-          />
+          <CircularProgress size={30} variant="static" value={progress} />
         )}
       </Grid>
     </Grid>

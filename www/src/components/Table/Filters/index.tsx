@@ -321,7 +321,6 @@ const Filters = ({ columns, setFilters }: any) => {
             {/* <Button color="primary">+ ADD FILTER</Button> */}
             <Button
               disabled={query.key == ""}
-              color="secondary"
               onClick={() => {
                 setFilters([]);
                 setQuery({

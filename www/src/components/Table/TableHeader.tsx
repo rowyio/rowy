@@ -161,11 +161,7 @@ const TableHeader = ({
           </Grid>
 
           <Grid item>
-            <Button
-              color="secondary"
-              onClick={() => addRow()}
-              endIcon={<AddIcon />}
-            >
+            <Button onClick={() => addRow()} endIcon={<AddIcon />}>
               Add Row
             </Button>
           </Grid>

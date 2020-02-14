@@ -146,7 +146,6 @@ const EditorModel = ({ children }: any) => {
             <Button
               size="small"
               variant="outlined"
-              color="secondary"
               onClick={editorContext.cancel}
             >
               cancel
