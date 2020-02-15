@@ -34,7 +34,9 @@ const permissions = (customClaimsFields: string[]) => async change => {
       .setCustomUserClaims(uid, customClaimsTokens)
       .catch(err => console.log(err))
       .then(() => {
-        console.info(`${email} has new claims ${customClaimsTokens}`);
+        console.info(
+          `${email} has new claims ${JSON.stringify(customClaimsTokens)}`
+        );
       })
       .catch(() => "obligatory catch");
     return true;
@@ -47,6 +49,6 @@ const permissions = (customClaimsFields: string[]) => async change => {
 const permissionsFnsGenerator = collection =>
   firestore
     .document(`${collection.name}/{docId}`)
-    .onUpdate(permissions(collection.customClaimsFields));
+    .onUpdate(permissions(collection.customTokenFields));
 
 export default permissionsFnsGenerator;
