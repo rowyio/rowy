@@ -1,13 +1,38 @@
-import React, { lazy, Suspense } from "react";
 import EmptyTable from "./EmptyTable";
 import { editable } from "./grid-fns";
 import { DraggableHeader } from "react-data-grid-addons";
-import isEqual from "lodash/isEqual";
-import isEmpty from "lodash/isEmpty";
-import xorWith from "lodash/xorWith";
 import Loading from "../Loading";
 
-const ReactDataGrid = lazy(() => import("react-data-grid"));
+import "react-data-grid/dist/react-data-grid.css";
+
+import React, { useState, useCallback, useRef } from "react";
+
+import DataGrid, {
+  Column,
+  SelectColumn,
+  UpdateActions,
+  DataGridHandle,
+  RowsUpdateEvent,
+  CalculatedColumn,
+  CellNavigationMode,
+} from "react-data-grid";
+
+function ImageFormatter({
+  value,
+}: {
+  /** image url, used as background-image */
+  value: string;
+}) {
+  return (
+    <div className="rdg-image-cell-wrapper">
+      <div
+        className="rdg-image-cell"
+        style={{ backgroundImage: `url(${value})` }}
+      />
+    </div>
+  );
+}
+
 const { DraggableContainer } = DraggableHeader;
 const Grid = (props: any) => {
   const {
@@ -17,6 +42,7 @@ const Grid = (props: any) => {
     RowRenderer,
     handleRowGetter,
     tableHeight,
+    tableWidth,
     onGridRowsUpdated,
     rows,
     resizeColumn,
@@ -24,52 +50,65 @@ const Grid = (props: any) => {
     addRow,
     setSelectedCell,
   } = props;
+
+  //const [rows, setRows] = useState(() => createRows(2000));
+  const [selectedRows, setSelectedRows] = useState(() => new Set<string>());
+  const gridRef = useRef<DataGridHandle>(null);
+
+  const handleRowUpdate = useCallback(
+    ({
+      fromRow,
+      toRow,
+      updated,
+      action,
+    }: RowsUpdateEvent<Partial<any>>): void => {
+      const newRows = [...rows];
+      let start;
+      let end;
+
+      if (action === UpdateActions.COPY_PASTE) {
+        start = toRow;
+        end = toRow;
+      } else {
+        start = Math.min(fromRow, toRow);
+        end = Math.max(fromRow, toRow);
+      }
+
+      for (let i = start; i <= end; i++) {
+        newRows[i] = { ...newRows[i], ...updated };
+      }
+    },
+    [rows]
+  );
+
+  const handleRowClick = useCallback(
+    (rowIdx: number, row: any, column: CalculatedColumn<any>) => {
+      if (column.key === "title") {
+        gridRef.current?.openCellEditor(rowIdx, column.idx);
+      }
+    },
+    []
+  );
+
   return (
-    <Suspense fallback={<Loading message="Loading table" />}>
-      <DraggableContainer onHeaderDrop={onHeaderDrop}>
-        <ReactDataGrid
-          headerRowHeight={47}
-          rowRenderer={RowRenderer}
-          rowHeight={rowHeight}
-          columns={columns}
-          enableCellSelect={true} // makes text based cells editable
-          rowGetter={handleRowGetter}
-          rowsCount={rows.length}
-          onGridRowsUpdated={onGridRowsUpdated}
-          minHeight={tableHeight}
-          onCellSelected={(coordinates: { rowIdx: number; idx: number }) => {
-            const row = rows[coordinates.rowIdx];
-            const column = columns[coordinates.idx];
-            if (editable(column.type)) {
-              //only editable fields are stored selectedCell, temporary fix for custom fields
-              setSelectedCell({ row, column });
-            }
-          }}
-          onColumnResize={(idx: number, width: number) =>
-            //tableActions.column.resize(idx, width)
-            resizeColumn(idx, width)
-          }
-          emptyRowsView={() => (
-            <EmptyTable
-              //isLoading={tableState.loadingRows}
-              isLoading={loadingRows}
-              tableHeight={tableHeight}
-              addRow={addRow}
-            />
-          )}
-        />
-      </DraggableContainer>
-    </Suspense>
+    <DataGrid
+      ref={gridRef}
+      columns={columns}
+      rows={rows}
+      rowKey="id"
+      onRowsUpdate={handleRowUpdate}
+      onRowClick={handleRowClick}
+      rowHeight={rowHeight}
+      width={tableWidth}
+      height={tableHeight}
+      selectedRows={selectedRows}
+      onSelectedRowsChange={setSelectedRows}
+      enableCellCopyPaste
+      enableCellDragAndDrop
+      onColumnResize={resizeColumn} //TODO: maybe use debounce for performance
+      cellNavigationMode={CellNavigationMode.CHANGE_ROW}
+    />
   );
 };
 
-export const isArrayEqual = (x: any, y: any) => isEmpty(xorWith(x, y, isEqual));
-
-export default React.memo(Grid, (prevProps, nextProps) => {
-  return (
-    isArrayEqual(prevProps.columns, nextProps.columns) &&
-    isArrayEqual(prevProps.rows, nextProps.rows)
-    // || prevProps.rowHeight === nextProps.rowHeight ||
-    // prevProps.tableHeight === nextProps.tableHeight
-  );
-});
+export default Grid;

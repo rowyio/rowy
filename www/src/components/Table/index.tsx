@@ -14,7 +14,7 @@ import Confirmation from "components/Confirmation";
 import DeleteIcon from "@material-ui/icons/Delete";
 import DuplicateIcon from "@material-ui/icons/FileCopy";
 import AddIcon from "@material-ui/icons/AddCircle";
-
+import useWindowSize from "../../hooks/useWindowSize";
 import useStyles from "./useStyle";
 
 import Loading from "../../components/Loading";
@@ -52,6 +52,7 @@ interface Props {
 
 function Table(props: Props) {
   const { collection, filters } = props;
+
   const [orderBy, setOrderBy] = useState<FiretableOrderBy>([]);
   const { tableState, tableActions } = useFiretable(
     collection,
@@ -218,6 +219,7 @@ function Table(props: Props) {
       .map((column: any) => ({
         draggable: true,
         editable: editable(column.type),
+        frozen: column.fixed,
         resizable: true,
         //frozen: column.fixed,
         headerRenderer: headerRenderer,
@@ -325,10 +327,12 @@ function Table(props: Props) {
       tableActions.row.add({ ...filtersData, ...data });
     } else tableActions.row.add({ ...data });
   };
+  const windowSize = useWindowSize();
+  if (!windowSize || !windowSize.height) return <></>;
   return (
     <EditorProvider>
       <Suspense fallback={<Loading message="Loading header" />}>
-        <Hotkeys selectedCell={selectedCell} />
+        {/* <Hotkeys selectedCell={selectedCell} /> */}
         <TableHeader
           tableActions={tableActions}
           collection={collection}
@@ -349,7 +353,8 @@ function Table(props: Props) {
           RowRenderer={RowRenderer}
           handleRowGetter={handleRowGetter}
           // TODO: Remove this fixed height using flexbox
-          tableHeight="calc(100vh - 120px)"
+          tableHeight={windowSize.height - 120}
+          tableWidth={"100%"}
           onGridRowsUpdated={onGridRowsUpdated}
           rows={rows}
           resizeColumn={tableActions.column.resize}
