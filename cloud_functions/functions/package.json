@@ -13,7 +13,7 @@
   "engines": {
     "node": "8"
   },
-  "main": "lib/index.js",
+  "main": "lib/src/index.js",
   "dependencies": {
     "@types/algoliasearch": "^3.34.5",
     "@types/json2csv": "^4.5.0",
