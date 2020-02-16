@@ -1,8 +1,11 @@
 import React from "react";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
-import useRouter from "../../hooks/useRouter";
+
 import OpenIcon from "@material-ui/icons/OpenInNew";
+import useRouter from "../../hooks/useRouter";
+import queryString from "query-string";
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     button: {
@@ -34,11 +37,19 @@ export default function SubTable(props: Props) {
   const router = useRouter();
   const classes = useStyles();
 
+  const parentLabels = queryString.parse(router.location.search).parentLabel;
   const handleClick = () => {
-    const subTablePath =
-      encodeURIComponent(`${row.ref.path}/${fieldName}`) +
-      `?parentLabel=${row[parentLabel]}`;
-    router.history.push(subTablePath);
+    if (parentLabels) {
+      const subTablePath =
+        encodeURIComponent(`${row.ref.path}/${fieldName}`) +
+        `?parentLabel=${parentLabels},${row[parentLabel]}`;
+      router.history.push(subTablePath);
+    } else {
+      const subTablePath =
+        encodeURIComponent(`${row.ref.path}/${fieldName}`) +
+        `?parentLabel=${row[parentLabel]}`;
+      router.history.push(subTablePath);
+    }
   };
 
   return (

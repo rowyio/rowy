@@ -140,6 +140,8 @@ export const cellFormatter = (column: any) => {
         return (
           <Suspense fallback={<div />}>
             <Action
+              scripts={column.scripts}
+              callableName={column.callableName}
               fieldName={key}
               {...props}
               onSubmit={onSubmit(key, props.row)}

@@ -67,7 +67,8 @@ const TableHeader = ({
 }: Props) => {
   const classes = useStyles();
   const router = useRouter();
-  const parentLabel = queryString.parse(router.location.search).parentLabel;
+  const parentLabel = queryString.parse(router.location.search)
+    .parentLabel as string;
   let breadcrumbs = collection.split("/");
 
   return (
@@ -81,14 +82,32 @@ const TableHeader = ({
         ) : (
           <Breadcrumbs aria-label="breadcrumb">
             {breadcrumbs.map((crumb: string, index) => {
-              if (index === 0)
+              if (index % 2 === 0)
                 return (
-                  <Link color="inherit" href={`/table/${crumb}`}>
-                    {crumb}
+                  <Link
+                    color="inherit"
+                    href={`/table/${breadcrumbs
+                      .reduce((acc: string, curr: string, currIndex) => {
+                        if (currIndex < index + 1) return acc + "/" + curr;
+                        else return acc;
+                      }, " ")
+                      .replace(" /", "")}?parentLabel=${parentLabel
+                      .split(",")
+                      .reduce((acc: string, curr, currIndex) => {
+                        if (currIndex > index - 1) return acc + "," + curr;
+                        else return acc;
+                      }, " ")
+                      .replace(" ,", "")}`}
+                  >
+                    {crumb.replace(/([A-Z])/g, " $1")}
                   </Link>
                 );
-              else if (index === 1 && parentLabel)
-                return <Typography variant="h6">{parentLabel}</Typography>;
+              else if (index % 2 === 1)
+                return (
+                  <Typography variant="h6">
+                    {parentLabel.split(",")[Math.ceil(index / 2) - 1]}
+                  </Typography>
+                );
               else
                 return (
                   <Typography variant="h6">
