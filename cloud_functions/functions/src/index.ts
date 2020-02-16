@@ -9,6 +9,9 @@ import * as collectionHistoryConfig from "./history/config.json";
 import permissionControlFnsGenerator from "./permissions";
 import * as permissionsConfig from "./permissions/config.json";
 
+import synonymsFnsGenerator from "./synonyms";
+import synonymsConfig from "./synonyms/config";
+
 export { exportTable } from "./export";
 import * as callableFns from "./callable";
 
@@ -45,3 +48,10 @@ export const FT_permissions = permissionsConfig.reduce(
   },
   {}
 );
+
+export const FT_synonyms = synonymsConfig.reduce((acc: any, collection) => {
+  return {
+    ...acc,
+    [collection.name]: synonymsFnsGenerator(collection),
+  };
+}, {});
