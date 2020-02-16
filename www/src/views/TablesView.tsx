@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import {
   createStyles,
@@ -64,11 +64,24 @@ const useStyles = makeStyles(theme =>
 
 const TablesView = () => {
   const classes = useStyles();
+  const [userRoles, setUserRoles] = useState<null | string[]>();
   const { currentUser } = useContext(AppContext);
+  console.log(currentUser);
 
+  useEffect(() => {
+    if (currentUser) {
+      currentUser.getIdTokenResult(true).then(results => {
+        if (results.claims.roles) {
+          console.log(results.claims.roles);
+          setUserRoles(results.claims.roles);
+        }
+      });
+    }
+  }, [currentUser]);
   const [settings, createTable] = useSettings();
   const tables = settings.tables;
 
+  if (!userRoles) return <Loading />;
   return (
     <main className={classes.root}>
       <AppBar />
@@ -108,20 +121,25 @@ const TablesView = () => {
           className={classes.cardGrid}
         >
           {Array.isArray(tables) ? (
-            tables.map((table: any) => (
-              <Grid key={table.name} item xs={12} sm={6} md={4}>
-                <StyledCard
-                  className={classes.card}
-                  overline="Primary"
-                  title={table.name}
-                  bodyContent={table.description}
-                  primaryLink={{
-                    to: `${routes.table}/${table.collection}`,
-                    label: "Open",
-                  }}
-                />
-              </Grid>
-            ))
+            tables.map((table: any) => {
+              if (table.roles.includes(userRoles[0])) {
+                //console.log(table.roles, userRoles[0]);
+                return (
+                  <Grid key={table.name} item xs={12} sm={6} md={4}>
+                    <StyledCard
+                      className={classes.card}
+                      overline="Primary"
+                      title={table.name}
+                      bodyContent={table.description}
+                      primaryLink={{
+                        to: `${routes.table}/${table.collection}`,
+                        label: "Open",
+                      }}
+                    />
+                  </Grid>
+                );
+              }
+            })
           ) : (
             <Loading />
           )}
