@@ -41,7 +41,7 @@ const useStyles = makeStyles(theme =>
     },
     newChipLabel: { padding: theme.spacing(0, 2) },
     divider: {
-      margin: theme.spacing(2, 0, 4),
+      margin: theme.spacing(2, 0, 2),
     },
 
     cardGrid: {
@@ -71,8 +71,6 @@ const TablesView = () => {
   const [userRoles, setUserRoles] = useState<null | string[]>();
   const [userRegions, setUserRegions] = useState<null | string[]>();
   const { currentUser } = useContext(AppContext);
-  console.log(userRegions);
-
   useEffect(() => {
     if (currentUser) {
       currentUser.getIdTokenResult(true).then(results => {
@@ -91,39 +89,12 @@ const TablesView = () => {
     ),
     "section"
   );
-  console.log(sections);
 
   return (
     <main className={classes.root}>
       <AppBar />
 
       <Container>
-        <Grid container spacing={2} justify="center">
-          <Grid item xs>
-            <Typography
-              variant="h5"
-              color="textSecondary"
-              component="h2"
-              className={classes.greeting}
-            >
-              Hi {currentUser!.displayName!.split(" ")[0]}!
-            </Typography>
-
-            {/* <Chip
-              label="1 New"
-              size="small"
-              classes={{ root: classes.newChip, label: classes.newChipLabel }}
-            /> */}
-          </Grid>
-
-          {/* <Grid item>
-            <Button color="primary" component={Link} to="" endIcon={<GoIcon />}>
-              Manage Team
-            </Button>
-          </Grid> */}
-        </Grid>
-
-        <Divider className={classes.divider} />
         {userRoles.length === 0 && (
           <EmptyState
             Icon={SecurityIcon}
@@ -140,19 +111,21 @@ const TablesView = () => {
         {tables ? (
           Object.keys(sections).map(sectionName => (
             <div className={classes.section}>
-              <Typography variant="overline">{sectionName}</Typography>
+              <Typography variant="overline">
+                {sectionName == "undefined" ? "Other" : sectionName}
+              </Typography>
               <Divider className={classes.divider} />
               <Grid
                 container
                 spacing={4}
-                justify="space-between"
+                justify="flex-start"
                 className={classes.cardGrid}
               >
                 {sections[sectionName].map(table => (
                   <Grid key={table.name} item xs={12} sm={6} md={4}>
                     <StyledCard
                       className={classes.card}
-                      overline="Primary"
+                      overline={sectionName}
                       title={table.name}
                       bodyContent={table.description}
                       primaryLink={{
