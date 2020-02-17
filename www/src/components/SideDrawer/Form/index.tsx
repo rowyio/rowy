@@ -7,6 +7,7 @@ import _isEmpty from "lodash/isEmpty";
 
 import { Grid } from "@material-ui/core";
 
+import Autosave from "./Autosave";
 import FieldWrapper from "./FieldWrapper";
 import Text from "./Fields/Text";
 import SingleSelect from "./Fields/SingleSelect";
@@ -78,10 +79,9 @@ const getInitialValues = (fields: Fields): Values =>
 export interface IFormProps {
   fields: Fields;
   values: Values;
-  onSubmit: (values: Values) => void;
 }
 
-export default function Form({ fields, values, onSubmit }: IFormProps) {
+export default function Form({ fields, values }: IFormProps) {
   const initialValues = getInitialValues(fields);
 
   return (
@@ -96,6 +96,8 @@ export default function Form({ fields, values, onSubmit }: IFormProps) {
       >
         {({ values, errors }) => (
           <FormikForm>
+            <Autosave values={values} errors={errors} />
+
             <Grid container spacing={4} direction="column" wrap="nowrap">
               {fields.map((_field, i) => {
                 // Call the field function with values if necessary

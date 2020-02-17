@@ -86,11 +86,7 @@ export default function SideDrawer() {
       >
         <div className={classes.drawerContents}>
           {fields && selectedCell && selectedCell.row && (
-            <Form
-              fields={fields}
-              values={selectedCell.row}
-              onSubmit={() => alert("SUBMITTED")}
-            />
+            <Form fields={fields} values={selectedCell.row} />
           )}
         </div>
       </Drawer>
