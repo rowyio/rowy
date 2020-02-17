@@ -17,6 +17,7 @@ import DateTimePicker from "./Fields/DateTimePicker";
 import Checkbox from "./Fields/Checkbox";
 import Rating from "./Fields/Rating";
 import Color from "./Fields/Color";
+import RichText from "./Fields/RichText";
 // import Radio from "./Fields/Radio";
 import Slider from "./Fields/Slider";
 // import TextMulti from "./Fields/TextMulti";
@@ -180,8 +181,11 @@ export default function Form({ fields, values }: IFormProps) {
                     );
                     break;
 
-                  // case FieldType.richText:
-                  //   break;
+                  case FieldType.richText:
+                    renderedField = (
+                      <Field {...fieldProps} component={RichText} />
+                    );
+                    break;
 
                   // case FieldType.image:
                   //   renderedField = (

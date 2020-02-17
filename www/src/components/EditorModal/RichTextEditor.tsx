@@ -6,7 +6,7 @@ import { FieldType } from "constants/fields";
 
 import EditorModal from ".";
 
-const RichTextEditor = props => {
+export default function RichTextEditor() {
   const editorContext = useContext(EditorContext);
 
   if (editorContext.fieldType !== FieldType.richText) return <></>;
@@ -18,5 +18,4 @@ const RichTextEditor = props => {
       />
     </EditorModal>
   );
-};
-export default RichTextEditor;
+}
