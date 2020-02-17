@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import createStyles from "@material-ui/core/styles/createStyles";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-
+import Typography from "@material-ui/core/Typography";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
@@ -118,7 +118,10 @@ const Navigation = (props: any) => {
                 alignItems="center"
                 spacing={2}
               >
-                {settings.tables.map(
+                <Typography>
+                  brb; use the home button to navigate to another table, sorry
+                </Typography>
+                {/* {settings.tables.map(
                   (table: { name: string; collection: string }) => (
                     <Grid item key={table.collection}>
                       <Button
@@ -140,7 +143,7 @@ const Navigation = (props: any) => {
                       </Button>
                     </Grid>
                   )
-                )}
+                )} */}
                 <Grid item>
                   <div className={classes.routeSpacer} />
                 </Grid>
@@ -153,7 +156,7 @@ const Navigation = (props: any) => {
             >
               Sign out
             </Button> */}
-            <CreateTableDialog classes={classes} createTable={createTable} />
+            {/* <CreateTableDialog classes={classes} createTable={createTable} /> */}
           </Toolbar>
         </AppBar>
       </>
