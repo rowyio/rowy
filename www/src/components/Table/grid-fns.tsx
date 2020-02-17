@@ -85,48 +85,59 @@ export const onGridRowsUpdated = (event: any) => {
 export const onCellSelected = (args: any) => {};
 export const cellFormatter = (column: any) => {
   const { type, key, options } = column;
+
   switch (type) {
     case FieldType.date:
     case FieldType.dateTime:
       return DateFormatter(key, type);
     case FieldType.rating:
       return (props: any) => {
+        const value = props.row[key];
         return (
           <Suspense fallback={<div />}>
             <Rating
               {...props}
               column={column}
               onSubmit={onSubmit(key, props.row)}
-              value={typeof props.value === "number" ? props.value : 0}
+              value={typeof value === "number" ? value : 0}
             />
           </Suspense>
         );
       };
     case FieldType.number:
       return (props: any) => {
+        const value = props.row[key];
+
         return (
           <Suspense fallback={<div />}>
             <Number
               {...props}
               onSubmit={onSubmit(key, props.row)}
-              value={typeof props.value === "number" ? props.value : undefined}
+              value={typeof value === "number" ? value : undefined}
             />
           </Suspense>
         );
       };
     case FieldType.color:
       return (props: any) => {
+        const value = props.row[key];
         return (
           <Suspense fallback={<div />}>
-            <Color {...props} onSubmit={onSubmit(key, props.row)} />
+            <Color
+              {...props}
+              value={value}
+              onSubmit={onSubmit(key, props.row)}
+            />
           </Suspense>
         );
       };
     case FieldType.checkbox:
       return (props: any) => {
+        const value = props.row[key];
         return (
           <Suspense fallback={<div />}>
             <CheckBox
+              value={value}
               column={column}
               {...props}
               onSubmit={onSubmit(key, props.row)}
@@ -136,17 +147,21 @@ export const cellFormatter = (column: any) => {
       };
     case FieldType.url:
       return (props: any) => {
+        const value = props.row[key];
         return (
           <Suspense fallback={<div />}>
-            <UrlLink {...props} />
+            <UrlLink {...props} value={value} />
           </Suspense>
         );
       };
     case FieldType.action:
       return (props: any) => {
+        const value = props.row[key];
+
         return (
           <Suspense fallback={<div />}>
             <Action
+              value={value}
               scripts={column.scripts}
               callableName={column.callableName}
               fieldName={key}
@@ -158,9 +173,11 @@ export const cellFormatter = (column: any) => {
       };
     case FieldType.multiSelect:
       return (props: any) => {
+        const value = props.row[key];
         return (
           <Suspense fallback={<div />}>
             <MultiSelect
+              value={value}
               {...props}
               onSubmit={onSubmit(key, props.row)}
               options={options}
@@ -170,9 +187,11 @@ export const cellFormatter = (column: any) => {
       };
     case FieldType.image:
       return (props: any) => {
+        const value = props.row[key];
         return (
           <Suspense fallback={<div />}>
             <Image
+              value={value}
               {...props}
               onSubmit={onSubmit(key, props.row)}
               fieldName={key}
@@ -182,9 +201,12 @@ export const cellFormatter = (column: any) => {
       };
     case FieldType.file:
       return (props: any) => {
+        const value = props.row[key];
+
         return (
           <Suspense fallback={<div />}>
             <File
+              value={value}
               {...props}
               onSubmit={onSubmit(key, props.row)}
               fieldName={key}
@@ -194,9 +216,11 @@ export const cellFormatter = (column: any) => {
       };
     case FieldType.longText:
       return (props: any) => {
+        const value = props.row[key];
         return (
           <Suspense fallback={<div />}>
             <LongText
+              value={value}
               {...props}
               fieldName={key}
               onSubmit={onSubmit(key, props.row)}
@@ -206,9 +230,11 @@ export const cellFormatter = (column: any) => {
       };
     case FieldType.json:
       return (props: any) => {
+        const value = props.row[key];
         return (
           <Suspense fallback={<div />}>
             <Json
+              value={value}
               {...props}
               fieldName={key}
               onSubmit={onSubmit(key, props.row)}
@@ -218,9 +244,12 @@ export const cellFormatter = (column: any) => {
       };
     case FieldType.richText:
       return (props: any) => {
+        const value = props.row[key];
+
         return (
           <Suspense fallback={<div />}>
             <RichText
+              value={value}
               {...props}
               fieldName={key}
               onSubmit={onSubmit(key, props.row)}
