@@ -20,11 +20,13 @@ import EmptyState from "components/EmptyState";
 import GoIcon from "../components/GoIcon";
 import StyledCard from "../components/StyledCard";
 import CreateTableDialog from "../components/CreateTableDialog";
-
+import _groupBy from "lodash/groupBy";
 const useStyles = makeStyles(theme =>
   createStyles({
     root: { minHeight: "100vh", paddingBottom: theme.spacing(8) },
-
+    section: {
+      padding: theme.spacing(2),
+    },
     greeting: {
       textTransform: "uppercase",
       letterSpacing: 3,
@@ -81,8 +83,16 @@ const TablesView = () => {
   }, [currentUser]);
   const [settings, createTable] = useSettings();
   const tables = settings.tables;
+  if (!userRoles || !tables) return <Loading />;
+  const sections = _groupBy(
+    tables.filter(
+      table =>
+        !table.roles || table.roles.some(role => userRoles.includes(role))
+    ),
+    "section"
+  );
+  console.log(sections);
 
-  if (!userRoles) return <Loading />;
   return (
     <main className={classes.root}>
       <AppBar />
@@ -126,19 +136,19 @@ const TablesView = () => {
             }
           />
         )}
-        <Grid
-          container
-          spacing={4}
-          justify="space-between"
-          className={classes.cardGrid}
-        >
-          {Array.isArray(tables) ? (
-            tables.map((table: any) => {
-              if (
-                !table.roles ||
-                table.roles.some(role => userRoles.includes(role))
-              ) {
-                return (
+
+        {tables ? (
+          Object.keys(sections).map(sectionName => (
+            <div className={classes.section}>
+              <Typography variant="overline">{sectionName}</Typography>
+              <Divider className={classes.divider} />
+              <Grid
+                container
+                spacing={4}
+                justify="space-between"
+                className={classes.cardGrid}
+              >
+                {sections[sectionName].map(table => (
                   <Grid key={table.name} item xs={12} sm={6} md={4}>
                     <StyledCard
                       className={classes.card}
@@ -157,19 +167,19 @@ const TablesView = () => {
                       }}
                     />
                   </Grid>
-                );
-              }
-            })
-          ) : (
-            <Loading />
-          )}
+                ))}
+              </Grid>
+            </div>
+          ))
+        ) : (
+          <Loading />
+        )}
 
-          <Grid item className={classes.createTableContainer}>
-            <CreateTableDialog
-              createTable={createTable}
-              classes={{ fab: classes.createTableFab }}
-            />
-          </Grid>
+        <Grid item className={classes.createTableContainer}>
+          <CreateTableDialog
+            createTable={createTable}
+            classes={{ fab: classes.createTableFab }}
+          />
         </Grid>
       </Container>
     </main>
