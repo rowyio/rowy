@@ -19,9 +19,9 @@ import useStyles from "./useStyle";
 
 import Loading from "../../components/Loading";
 import Grid, { IGridProps } from "./Grid";
-import LongTextEditor from "../LongTextEditor";
-import RichTextEditor from "../RichTextEditor";
-import JsonEditor from "../JsonEditor";
+import LongTextEditor from "../EditorModal/LongTextEditor";
+import RichTextEditor from "../EditorModal/RichTextEditor";
+import JsonEditor from "../EditorModal/JsonEditor";
 
 import useFiretable, {
   FireTableFilter,

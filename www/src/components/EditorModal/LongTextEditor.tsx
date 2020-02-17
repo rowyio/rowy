@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 
 import { makeStyles, createStyles, TextField } from "@material-ui/core";
 
-import EditorModal from "./EditorModal";
+import EditorModal from ".";
 import EditorContext from "contexts/editorContext";
 import { FieldType } from "constants/fields";
 

@@ -6,9 +6,9 @@ import ReactQuill, { Quill } from "react-quill";
 import { ImageDrop } from "quill-image-drop-module";
 import Delta from "quill-delta";
 import "react-quill/dist/quill.snow.css";
-import { bucket } from "../firebase";
+import { bucket } from "../../firebase";
 
-import EditorModal from "./EditorModal";
+import EditorModal from ".";
 
 Quill.register("modules/imageDrop", ImageDrop);
 

@@ -3,7 +3,7 @@ import { createStyles, makeStyles } from "@material-ui/core/styles";
 import EditorContext from "contexts/editorContext";
 import { FieldType } from "constants/fields";
 
-import EditorModel from "./EditorModal";
+import EditorModal from ".";
 import ReactJson from "react-json-view";
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -20,7 +20,7 @@ const JsonEditor = props => {
   };
   if (editorContext.fieldType !== FieldType.json) return <></>;
   return (
-    <EditorModel>
+    <EditorModal>
       <div className={classes.root}>
         <ReactJson
           theme="bright:inverted"
@@ -30,7 +30,7 @@ const JsonEditor = props => {
           onDelete={handleEdit}
         />
       </div>
-    </EditorModel>
+    </EditorModal>
   );
 };
 export default JsonEditor;
