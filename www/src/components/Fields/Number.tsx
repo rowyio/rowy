@@ -30,7 +30,7 @@ const Number = (props: any) => {
   // Debounce callback
   const [debouncedCallback] = useDebouncedCallback(
     value => {
-      if (value.includes(".")) {
+      if (value?.includes(".")) {
         onSubmit(parseFloat(value));
       } else onSubmit(parseInt(value));
     },

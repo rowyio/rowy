@@ -27,6 +27,7 @@ import useFiretable, {
   FireTableFilter,
   FiretableOrderBy,
 } from "../../hooks/useFiretable";
+import { useAppContext } from "AppProvider";
 
 import { FieldType, getFieldIcon } from "constants/fields";
 import {
@@ -53,6 +54,8 @@ interface Props {
 
 function Table(props: Props) {
   const { collection, filters } = props;
+  const { currentUser } = useAppContext();
+
   const [orderBy, setOrderBy] = useState<FiretableOrderBy>([]);
   const { tableState, tableActions } = useFiretable(
     collection,
@@ -105,7 +108,7 @@ function Table(props: Props) {
     <Suspense fallback={<div />}>
       <DocSelect
         {...props}
-        onSubmit={onSubmit(column.key, props.row)}
+        onSubmit={onSubmit(column.key, props.row, currentUser?.uid)}
         collectionPath={column.collectionPath}
         config={column.config}
         setSearch={setSearch}
