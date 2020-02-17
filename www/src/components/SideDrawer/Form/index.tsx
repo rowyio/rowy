@@ -15,6 +15,7 @@ import DatePicker from "./Fields/DatePicker";
 import DateTimePicker from "./Fields/DateTimePicker";
 import Checkbox from "./Fields/Checkbox";
 import Rating from "./Fields/Rating";
+import Color from "./Fields/Color";
 // import Radio from "./Fields/Radio";
 import Slider from "./Fields/Slider";
 // import TextMulti from "./Fields/TextMulti";
@@ -167,6 +168,10 @@ export default function Form({ fields, values, onSubmit }: IFormProps) {
                     );
                     break;
 
+                  case FieldType.color:
+                    renderedField = <Field {...fieldProps} component={Color} />;
+                    break;
+
                   case FieldType.slider:
                     renderedField = (
                       <Field {...fieldProps} component={Slider} />
@@ -196,7 +201,6 @@ export default function Form({ fields, values, onSubmit }: IFormProps) {
                   // case FieldType.connectTable:
                   // case FieldType.subTable:
                   // case FieldType.action:
-                  // case FieldType.color:
                   // case FieldType.json:
 
                   case undefined:

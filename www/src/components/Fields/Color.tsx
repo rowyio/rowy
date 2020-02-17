@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from "react";
-import {
-  SketchPicker,
-  BlockPicker,
-  CompactPicker,
-  TwitterPicker,
-} from "react-color";
-import Popper from "@material-ui/core/Popper";
-import ClickAwayListener from "@material-ui/core/ClickAwayListener";
-import ExpandIcon from "@material-ui/icons/AspectRatio";
-import IconButton from "@material-ui/core/IconButton";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import { CompactPicker } from "react-color";
 
-const useStyles = makeStyles((theme: Theme) =>
+import {
+  makeStyles,
+  createStyles,
+  Popper,
+  Grow,
+  ClickAwayListener,
+} from "@material-ui/core";
+
+const useStyles = makeStyles(theme =>
   createStyles({
     root: {
       position: "relative",
@@ -22,10 +20,10 @@ const useStyles = makeStyles((theme: Theme) =>
     colorIndicator: {
       width: 20,
       height: 20,
-      margin: 10,
-      backgroundColor: "#fff",
-      borderStyle: "solid",
-      borderWidth: 0.5,
+      marginLeft: 2,
+      marginRight: theme.spacing(1),
+
+      border: `1px solid ${theme.palette.text.disabled}`,
     },
   })
 );
@@ -59,26 +57,37 @@ const Color = (props: Props) => {
   };
   return (
     <>
-      <div className={classes.root}>
+      <div className={classes.root} onDoubleClick={handleClick}>
         <div
-          onClick={handleClick}
           className={classes.colorIndicator}
           style={{ backgroundColor: hex }}
         />
         {hex}
       </div>
 
-      <Popper id={id} open={open} anchorEl={anchorEl}>
-        <CompactPicker
-          color={value.rgb}
-          onChange={props => {
-            setHex(props.hex);
-          }}
-          onChangeComplete={props => {
-            onSubmit({ hex: props.hex, hsl: props.hsl, rgb: props.rgb });
-            setAnchorEl(null);
-          }}
-        />
+      <Popper id={id} open={open} anchorEl={anchorEl} transition>
+        {({ TransitionProps }) => (
+          <Grow {...TransitionProps} style={{ transformOrigin: "top left" }}>
+            <div>
+              <ClickAwayListener onClickAway={onClickAway}>
+                <CompactPicker
+                  color={value.rgb}
+                  onChange={props => {
+                    setHex(props.hex);
+                  }}
+                  onChangeComplete={props => {
+                    onSubmit({
+                      hex: props.hex,
+                      hsl: props.hsl,
+                      rgb: props.rgb,
+                    });
+                    setAnchorEl(null);
+                  }}
+                />
+              </ClickAwayListener>
+            </div>
+          </Grow>
+        )}
       </Popper>
     </>
   );
