@@ -89,6 +89,7 @@ export const cellFormatter = (column: any) => {
           <Suspense fallback={<div />}>
             <Rating
               {...props}
+              column={column}
               onSubmit={onSubmit(key, props.row)}
               value={typeof props.value === "number" ? props.value : 0}
             />

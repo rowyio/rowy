@@ -1,57 +1,41 @@
 import React, { useContext } from "react";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import EditorContext from "contexts/editorContext";
-import TextareaAutosize from "@material-ui/core/TextareaAutosize";
-import { FieldType } from "constants/fields";
-import EditorModel from "./EditorModal";
 
-const useStyles = makeStyles((theme: Theme) =>
+import { makeStyles, createStyles, TextField } from "@material-ui/core";
+
+import EditorModal from "./EditorModal";
+import EditorContext from "contexts/editorContext";
+import { FieldType } from "constants/fields";
+
+const useStyles = makeStyles(theme =>
   createStyles({
-    test: { position: "absolute", top: 10, left: 10 },
-    modal: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      maxWidth: 600,
-      width: "100%",
-    },
-    paper: { padding: theme.spacing(2) },
     root: {
-      position: "relative",
-      display: "flex",
-      flexWrap: "wrap",
+      minWidth: 300,
     },
-    typography: {
-      padding: theme.spacing(2),
-    },
-    textArea: {
-      fontSize: 16,
-      minWidth: 230,
-      width: "100%",
-    },
+    multiline: { padding: theme.spacing(2.25, 1.5) },
   })
 );
-interface Props {}
 
-const LongTextEditor = (props: Props) => {
+const LongTextEditor = () => {
   const classes = useStyles();
+
   const editorContext = useContext(EditorContext);
   if (editorContext.fieldType !== FieldType.longText) return <></>;
+
   return (
-    <EditorModel>
-      <TextareaAutosize
-        id={"TextareaAutosize"}
-        className={classes.textArea}
-        rowsMax={25}
-        aria-label="maximum height"
-        placeholder="enter text"
+    <EditorModal>
+      <TextField
+        multiline
+        variant="filled"
+        rows={3}
+        placeholder="Enter text here…"
         defaultValue={editorContext.editorValue}
         autoFocus
         onChange={(e: any) => {
           editorContext.setEditorValue(e.target.value);
         }}
+        InputProps={{ classes }}
       />
-    </EditorModel>
+    </EditorModal>
   );
 };
 export default LongTextEditor;

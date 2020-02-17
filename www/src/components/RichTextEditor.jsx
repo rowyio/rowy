@@ -8,7 +8,7 @@ import Delta from "quill-delta";
 import "react-quill/dist/quill.snow.css";
 import { bucket } from "../firebase";
 
-import EditorModel from "./EditorModal";
+import EditorModal from "./EditorModal";
 
 Quill.register("modules/imageDrop", ImageDrop);
 
@@ -180,7 +180,7 @@ const RichTextEditor = props => {
   }, [quillRef]);
   if (editorContext.fieldType !== FieldType.richText) return <></>;
   return (
-    <EditorModel>
+    <EditorModal>
       <ReactQuill
         //placeholder={placeholder}
         value={editorContext.editorValue}
@@ -217,7 +217,7 @@ const RichTextEditor = props => {
           },
         }}
       />
-    </EditorModel>
+    </EditorModal>
   );
 };
 export default RichTextEditor;
