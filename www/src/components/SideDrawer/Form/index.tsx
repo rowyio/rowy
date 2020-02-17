@@ -7,12 +7,14 @@ import _isEmpty from "lodash/isEmpty";
 
 import { Grid } from "@material-ui/core";
 
+import FieldWrapper from "./FieldWrapper";
 import Text from "./Fields/Text";
 import SingleSelect from "./Fields/SingleSelect";
 import MultiSelect from "./Fields/MultiSelect";
 import DatePicker from "./Fields/DatePicker";
 import DateTimePicker from "./Fields/DateTimePicker";
 import Checkbox from "./Fields/Checkbox";
+import Rating from "./Fields/Rating";
 // import Radio from "./Fields/Radio";
 import Slider from "./Fields/Slider";
 // import TextMulti from "./Fields/TextMulti";
@@ -110,36 +112,58 @@ export default function Form({ fields, values, onSubmit }: IFormProps) {
                 switch (type) {
                   case FieldType.shortText:
                   case FieldType.longText:
-                    renderedField = <Field {...fieldProps} component={Text} />;
+                  case FieldType.email:
+                  case FieldType.phone:
+                  case FieldType.url:
+                  case FieldType.number:
+                    renderedField = (
+                      <Field {...fieldProps} component={Text} hiddenLabel />
+                    );
                     break;
 
                   case FieldType.singleSelect:
                     renderedField = (
-                      <Field {...fieldProps} component={SingleSelect} />
+                      <Field
+                        {...fieldProps}
+                        component={SingleSelect}
+                        hiddenLabel
+                      />
                     );
                     break;
 
                   case FieldType.multiSelect:
                     renderedField = (
-                      <Field {...fieldProps} component={MultiSelect} />
+                      <Field
+                        {...fieldProps}
+                        component={MultiSelect}
+                        hiddenLabel
+                      />
                     );
                     break;
 
                   case FieldType.date:
                     renderedField = (
-                      <Field {...fieldProps} component={DatePicker} />
+                      <Field
+                        {...fieldProps}
+                        component={DatePicker}
+                        hiddenLabel
+                      />
                     );
                     break;
 
                   case FieldType.dateTime:
                     renderedField = (
-                      <Field {...fieldProps} component={DateTimePicker} />
+                      <Field
+                        {...fieldProps}
+                        component={DateTimePicker}
+                        hiddenLabel
+                      />
                     );
                     break;
 
                   case FieldType.checkbox:
                     renderedField = (
-                      <Field {...fieldProps} component={Checkbox} />
+                      <Checkbox {...fieldProps} name={fieldProps.name!} />
                     );
                     break;
 
@@ -148,6 +172,9 @@ export default function Form({ fields, values, onSubmit }: IFormProps) {
                       <Field {...fieldProps} component={Slider} />
                     );
                     break;
+
+                  // case FieldType.richText:
+                  //   break;
 
                   // case FieldType.image:
                   //   renderedField = (
@@ -159,15 +186,35 @@ export default function Form({ fields, values, onSubmit }: IFormProps) {
                   //   );
                   //   break;
 
+                  case FieldType.rating:
+                    renderedField = (
+                      <Field {...fieldProps} component={Rating} />
+                    );
+                    break;
+
+                  // case FieldType.file:
+                  // case FieldType.connectTable:
+                  // case FieldType.subTable:
+                  // case FieldType.action:
+                  // case FieldType.color:
+                  // case FieldType.json:
+
                   case undefined:
-                  default:
                     return null;
+
+                  default:
+                    break;
                 }
 
                 return (
-                  <Grid item key={fieldProps.name ?? i} xs={12}>
+                  <FieldWrapper
+                    key={fieldProps.name ?? i}
+                    type={type}
+                    name={field.name}
+                    label={field.label}
+                  >
                     {renderedField}
-                  </Grid>
+                  </FieldWrapper>
                 );
               })}
             </Grid>

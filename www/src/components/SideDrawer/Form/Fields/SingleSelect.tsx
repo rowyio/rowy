@@ -34,6 +34,9 @@ export default function SingleSelect({
         const { value } = event.target;
         props.form.setFieldValue(props.field.name, value ? [value] : []);
       }}
+      label=""
+      hiddenLabel
+      SelectProps={{ labelId: `sidemodal-label-${props.field.name}` }}
     >
       {options.map(option => {
         if (typeof option === "object")

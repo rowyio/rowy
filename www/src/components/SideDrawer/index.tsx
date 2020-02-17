@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import clsx from "clsx";
 import _isEmpty from "lodash/isEmpty";
 
@@ -20,7 +20,11 @@ export default function SideDrawer() {
 
   const [open, setOpen] = useState(false);
   const disabled = !selectedCell || _isEmpty(selectedCell.row);
+  useEffect(() => {
+    if (disabled) setOpen(false);
+  }, [disabled]);
 
+  // Map columns to form fields
   const fields = columns?.map(column => {
     const field: Field = {
       type: column.type,
@@ -29,6 +33,26 @@ export default function SideDrawer() {
     };
 
     switch (column.type) {
+      case FieldType.longText:
+        field.fieldVariant = "long";
+        break;
+
+      case FieldType.email:
+        field.fieldVariant = "email";
+        break;
+
+      case FieldType.phone:
+        field.fieldVariant = "phone";
+        break;
+
+      case FieldType.number:
+        field.fieldVariant = "number";
+        break;
+
+      case FieldType.url:
+        field.fieldVariant = "url";
+        break;
+
       case FieldType.singleSelect:
       case FieldType.multiSelect:
         field.options = column.options;

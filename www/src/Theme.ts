@@ -77,9 +77,9 @@ const Theme = createMuiTheme({
     },
     caption: {
       fontFamily: HEADING_TEXT,
-      fontSize: "0.8125rem",
+      fontSize: "0.875rem",
       fontWeight: "bold",
-      letterSpacing: 0.4,
+      letterSpacing: 0.25,
       lineHeight: 1.2,
     },
   },

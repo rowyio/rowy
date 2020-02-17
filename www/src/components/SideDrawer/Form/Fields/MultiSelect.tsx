@@ -227,7 +227,9 @@ export default function MultiSelect({
       <TextField
         name={field.name}
         value={field.value ?? []}
-        label={label}
+        label=""
+        hiddenLabel
+        id={`sidemodal-field-${field.name}`}
         variant="filled"
         fullWidth
         select

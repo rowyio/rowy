@@ -1,21 +1,28 @@
 import React from "react";
 
+import { makeStyles, createStyles } from "@material-ui/core";
 import { TextField, TextFieldProps } from "formik-material-ui";
+
+const useStyles = makeStyles(theme =>
+  createStyles({
+    multiline: { padding: theme.spacing(2.25, 1.5) },
+  })
+);
 
 export interface ITextProps extends TextFieldProps {
   fieldVariant?: "short" | "long" | "email" | "phone" | "number" | "url";
 }
 
-export default function Text({
-  fieldVariant = "short",
-  hiddenLabel = false,
-  ...props
-}: ITextProps) {
+export default function Text({ fieldVariant = "short", ...props }: ITextProps) {
+  const classes = useStyles();
   let variantProps = {};
 
   switch (fieldVariant) {
     case "long":
-      variantProps = { multiline: true };
+      variantProps = {
+        multiline: true,
+        InputProps: { classes: { multiline: classes.multiline } },
+      };
       break;
 
     case "email":
@@ -40,18 +47,18 @@ export default function Text({
       break;
   }
 
-  const overrideProps = hiddenLabel
-    ? { label: "", "aria-label": props.label as string, hiddenLabel: true }
-    : {};
-
   return (
     <TextField
       variant="filled"
       fullWidth
       margin="none"
+      placeholder={props.label as string}
       {...variantProps}
       {...props}
-      {...overrideProps}
+      id={`sidemodal-field-${props.field.name}`}
+      label=""
+      hiddenLabel
+      //InputProps={{ disableUnderline: true }}
     />
   );
 }
