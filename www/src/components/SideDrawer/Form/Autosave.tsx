@@ -27,7 +27,9 @@ export default function Autosave({ values, errors }: IAutosaveProps) {
   });
 
   useEffect(() => {
+    if (!selectedCell?.row) return;
     if (_isEqual(getEditables(selectedCell?.row), debouncedValue)) return;
+    if (selectedCell?.row.ref.id !== values.ref.id) return;
     console.log("DEBOUNCED", debouncedValue);
 
     // Remove undefined value to prevent Firestore crash
