@@ -2,11 +2,13 @@ import React from "react";
 import useHotkeys from "../../hooks/useHotkeys";
 import { onSubmit } from "./grid-fns";
 import { FieldType } from "constants/fields";
+import { useAppContext } from "AppProvider";
 /**
  * Listens Hot Keys combination keys to trigger keyboard shortcuts
  */
 const Hotkeys = (props: any) => {
   const { selectedCell } = props;
+  const { currentUser } = useAppContext();
 
   useHotkeys(
     "cmd+c",
@@ -65,11 +67,12 @@ const Hotkeys = (props: any) => {
   const handlePaste = async () => {
     const { row, column } = selectedCell;
     const newValue = await navigator.clipboard.readText();
-    if (stringFields.includes(column.type)) onSubmit(column.key, row)(newValue);
+    if (stringFields.includes(column.type))
+      onSubmit(column.key, row, currentUser?.uid)(newValue);
     else if (numberFields.includes(column.type)) {
       const numberValue = parseInt(newValue);
       if (`${numberValue}` !== "NaN") {
-        onSubmit(column.key, row)(numberValue);
+        onSubmit(column.key, row, currentUser?.uid)(numberValue);
       }
     }
   };
