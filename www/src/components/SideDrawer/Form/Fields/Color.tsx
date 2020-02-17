@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { FieldProps } from "formik";
-import { CompactPicker } from "react-color";
+import { ChromePicker } from "react-color";
 
 import {
   makeStyles,
   createStyles,
+  ButtonBase,
   Grid,
   Typography,
   Collapse,
@@ -15,6 +16,8 @@ const useStyles = makeStyles(theme =>
     root: {
       height: 56,
       cursor: "pointer",
+      textAlign: "left",
+      borderRadius: theme.shape.borderRadius,
     },
     colorIndicator: {
       width: 20,
@@ -46,6 +49,7 @@ export default function Color({ field, form }: IColorProps) {
         spacing={1}
         className={classes.root}
         onClick={toggleOpen}
+        component={ButtonBase}
       >
         <Grid item>
           <div
@@ -65,7 +69,7 @@ export default function Color({ field, form }: IColorProps) {
       </Grid>
 
       <Collapse in={showPicker}>
-        <CompactPicker
+        <ChromePicker
           color={field.value.rgb}
           onChangeComplete={handleChangeComplete}
         />

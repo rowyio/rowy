@@ -27,6 +27,9 @@ export default function DatePicker(props: KeyboardDatePickerProps) {
       InputAdornmentProps={{ style: { marginRight: theme.spacing(-1) } }}
       {...fieldToKeyboardDatePicker(props)}
       value={transformedValue}
+      label=""
+      hiddenLabel
+      id={`sidemodal-field-${props.field.name}`}
     />
   );
 }

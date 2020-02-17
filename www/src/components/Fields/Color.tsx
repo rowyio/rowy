@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { CompactPicker } from "react-color";
+import { ChromePicker } from "react-color";
 
 import {
   makeStyles,
@@ -70,7 +70,7 @@ const Color = (props: Props) => {
           <Grow {...TransitionProps} style={{ transformOrigin: "top left" }}>
             <div>
               <ClickAwayListener onClickAway={onClickAway}>
-                <CompactPicker
+                <ChromePicker
                   color={value.rgb}
                   onChange={props => {
                     setHex(props.hex);

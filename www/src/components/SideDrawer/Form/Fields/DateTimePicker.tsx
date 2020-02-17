@@ -30,6 +30,9 @@ export default function DateTimePicker(props: KeyboardDateTimePickerProps) {
       keyboardIcon={<AccessTimeIcon />}
       {...fieldToKeyboardDateTimePicker(props)}
       value={transformedValue}
+      label=""
+      hiddenLabel
+      id={`sidemodal-field-${props.field.name}`}
     />
   );
 }
