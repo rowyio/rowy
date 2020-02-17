@@ -22,12 +22,13 @@ import ImportCSV from "../ImportCSV";
 import ExportCSV from "../ExportCSV";
 
 import { FireTableFilter } from "../../hooks/useFiretable";
+import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
 
 import Filters from "./Filters";
 const useStyles = makeStyles(theme =>
   createStyles({
     root: {
-      width: "100%",
+      width: `calc(100% - ${DRAWER_COLLAPSED_WIDTH}px)`,
       margin: 0,
       padding: theme.spacing(0, 1),
       minHeight: 56,
@@ -180,11 +181,7 @@ const TableHeader = ({
           </Grid>
 
           <Grid item>
-            <Button
-              color="secondary"
-              onClick={() => addRow()}
-              endIcon={<AddIcon />}
-            >
+            <Button onClick={() => addRow()} endIcon={<AddIcon />}>
               Add Row
             </Button>
           </Grid>

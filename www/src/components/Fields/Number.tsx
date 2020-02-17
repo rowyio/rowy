@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
-import { createStyles, makeStyles, TextField } from "@material-ui/core";
+import { createStyles, makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles(theme =>
   createStyles({
-    input: {
-      ...theme.typography.body2,
-      fontSize: "0.75rem",
-      color: theme.palette.text.secondary,
+    root: {
+      border: "none",
+      outline: "none",
+      backgroundColor: "transparent",
+
+      font: "inherit",
+      color: "inherit",
     },
   })
 );
 
 // TODO: Create an interface for props
-// NOTE: THIS IS NOT USED
 const Number = (props: any) => {
   const classes = useStyles();
   const { value, onSubmit } = props;
@@ -35,19 +37,16 @@ const Number = (props: any) => {
     // delay in ms
     1100
   );
+
   return (
-    <TextField
+    <input
       type="number"
       value={localValue}
       onChange={e => {
         setLocalValue(e.target.value);
       }}
-      InputProps={{
-        disableUnderline: true,
-        classes: { input: classes.input },
-      }}
+      className={classes.root}
     />
   );
-  // else return <p>{cellData}</p>;
 };
 export default Number;

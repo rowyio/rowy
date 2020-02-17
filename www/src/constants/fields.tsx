@@ -30,6 +30,7 @@ import JsonIcon from "assets/icons/Json";
 
 import RichTextIcon from "@material-ui/icons/TextFormat";
 import ColorIcon from "@material-ui/icons/Colorize";
+import SliderIcon from "assets/icons/Slider";
 
 export {
   ShortTextIcon,
@@ -132,7 +133,7 @@ export const FIELDS = [
 
   { icon: <RichTextIcon />, name: "Rich Text", type: FieldType.richText },
   { icon: <ColorIcon />, name: "Color", type: FieldType.color },
-  { icon: <ActionIcon />, name: "Slider", type: FieldType.slider },
+  { icon: <SliderIcon />, name: "Slider", type: FieldType.slider },
   { icon: <JsonIcon />, name: "JSON", type: FieldType.json },
 ];
 

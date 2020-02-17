@@ -106,7 +106,6 @@ const useTable = (initialOverrides: any) => {
             duration: 10000,
             action: (
               <Button
-                color="secondary"
                 onClick={() => {
                   window.open(url, "_blank");
                 }}

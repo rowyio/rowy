@@ -18,10 +18,10 @@ import AddIcon from "@material-ui/icons/AddCircle";
 import useStyles from "./useStyle";
 
 import Loading from "../../components/Loading";
-import Grid from "./Grid";
-import LongTextEditor from "../LongTextEditor";
-import RichTextEditor from "../RichTextEditor";
-import JsonEditor from "../JsonEditor";
+import Grid, { IGridProps } from "./Grid";
+import LongTextEditor from "../EditorModal/LongTextEditor";
+import RichTextEditor from "../EditorModal/RichTextEditor";
+import JsonEditor from "../EditorModal/JsonEditor";
 
 import useFiretable, {
   FireTableFilter,
@@ -38,6 +38,7 @@ import {
   onSubmit,
 } from "./grid-fns";
 import { EditorProvider } from "../../util/EditorProvider";
+import { useSideDrawerContext } from "contexts/sideDrawerContext";
 
 const Hotkeys = lazy(() => import("./HotKeys"));
 const TableHeader = lazy(() => import("./TableHeader"));
@@ -62,6 +63,17 @@ function Table(props: Props) {
     row: {},
     column: {},
   });
+  // Sync columns values to context to show side drawer
+  // TODO: remove this sync here if useFiretable becomes a context
+  const {
+    setColumns,
+    setSelectedCell: contextSetSelectedCell,
+  } = useSideDrawerContext();
+  useEffect(() => {
+    if (setColumns) setColumns(tableState.columns);
+    // Reset selected cell so we don’t show empty form that does nothing
+    if (contextSetSelectedCell) contextSetSelectedCell({});
+  }, [tableState.columns]);
 
   const [search, setSearch] = useState({
     config: undefined,
@@ -211,7 +223,8 @@ function Table(props: Props) {
   const onHeaderDrop = (dragged: any, target: any) => {
     tableActions.column.reorder(dragged, target);
   };
-  let columns: any[] = [];
+
+  let columns: IGridProps["columns"] = [];
   if (!tableState.loadingColumns && tableState.columns) {
     columns = tableState.columns
       .filter((column: any) => !column.hidden)
@@ -253,7 +266,6 @@ function Table(props: Props) {
             }}
           >
             <IconButton
-              color="primary"
               onClick={async () => {
                 props.row.ref.delete();
               }}
@@ -262,7 +274,6 @@ function Table(props: Props) {
             </IconButton>
           </Confirmation>
           <IconButton
-            color="secondary"
             onClick={() => {
               const clonedRow = { ...props.row };
               // remove metadata
@@ -286,6 +297,7 @@ function Table(props: Props) {
     tableState.rows.length !== 0
       ? [...tableState.rows.map((row: any) => ({ rowHeight, ...row })), {}]
       : [];
+
   const RowRenderer = (props: any) => {
     const { renderBaseRow, ...rest } = props;
     if (rows.length === rest.idx + 1) {
