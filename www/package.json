@@ -48,7 +48,6 @@
     "react-dom": "^16.9.0",
     "react-dropzone": "^10.1.8",
     "react-json-view": "^1.19.1",
-    "react-quill": "^1.3.3",
     "react-router-dom": "^5.0.1",
     "react-scripts": "^3.3.0",
     "start": "^5.1.0",
