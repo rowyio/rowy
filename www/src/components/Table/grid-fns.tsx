@@ -3,6 +3,8 @@ import { FieldType } from "constants/fields";
 import { Editors } from "react-data-grid-addons";
 import _uniq from "lodash/uniq";
 
+import { useAppContext } from "AppProvider";
+
 const { AutoComplete } = Editors;
 
 const MultiSelect = lazy(() => import("../Fields/MultiSelect"));
@@ -47,14 +49,18 @@ export const editable = (fieldType: FieldType) => {
 export const onSubmit = (key: string, row: any) => async (value: any) => {
   const collection = row.ref.parent.path;
   const data = { collection, id: row.ref.id, doc: { [key]: value } };
+  const { currentUser } = useAppContext();
 
   if (value !== null || value !== undefined) {
-    const updatedAt = new Date();
-    let updatedFields = [key];
-    if (row.updatedFields) {
-      updatedFields = _uniq([key, ...row.updatedFields]);
-    }
-    row.ref.update({ [key]: value, updatedAt, updatedFields });
+    const _ft_updatedAt = new Date();
+    const _ft_updatedBy = currentUser?.uid;
+    row.ref.update({
+      [key]: value,
+      _ft_updatedAt,
+      updatedAt: _ft_updatedAt,
+      _ft_updatedBy,
+      updatedBy: _ft_updatedBy,
+    });
   }
 };
 
@@ -91,6 +97,7 @@ export const cellFormatter = (column: any) => {
           <Suspense fallback={<div />}>
             <Rating
               {...props}
+              column={column}
               onSubmit={onSubmit(key, props.row)}
               value={typeof value === "number" ? value : 0}
             />

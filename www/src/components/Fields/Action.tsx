@@ -90,8 +90,7 @@ export default function Action(props: Props) {
         alignContent="center"
       >
         <Typography variant="body1">
-          {" "}
-          {callableName.replace("callable-", "")}
+          {callableName?.replace("callable-", "")}
         </Typography>
         <IconButton onClick={handleRun}>
           <PlayIcon />

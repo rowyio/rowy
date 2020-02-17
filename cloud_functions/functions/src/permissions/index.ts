@@ -1,4 +1,4 @@
-import { firestore } from "firebase-functions";
+import { firestore, Change } from "firebase-functions";
 import { auth } from "../config";
 const email2uid = async (email: string) => {
   const user = await auth.getUserByEmail(email);
@@ -8,7 +8,9 @@ const email2uid = async (email: string) => {
   return user ? user.uid : undefined;
 };
 
-const permissions = (customClaimsFields: string[]) => async change => {
+const permissions = (customClaimsFields: string[]) => async (
+  change: Change<FirebaseFirestore.DocumentSnapshot>
+) => {
   const after = change.after;
   const afterData = after.data();
   if (!afterData) {

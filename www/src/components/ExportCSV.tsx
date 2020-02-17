@@ -114,11 +114,7 @@ export default function ExportCSV(props: Props) {
 
   return (
     <div>
-      <Button
-        color="secondary"
-        onClick={handleClickOpen}
-        endIcon={<CloudIcon />}
-      >
+      <Button onClick={handleClickOpen} endIcon={<CloudIcon />}>
         Export CSV
       </Button>
       <Dialog
