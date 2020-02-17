@@ -13,8 +13,10 @@ import useSettings from "../hooks/useSettings";
 import routes from "../constants/routes";
 import { AppContext } from "../AppProvider";
 
+import SecurityIcon from "@material-ui/icons/Security";
 import AppBar from "../components/AppBar";
 import Loading from "components/Loading";
+import EmptyState from "components/EmptyState";
 import GoIcon from "../components/GoIcon";
 import StyledCard from "../components/StyledCard";
 import CreateTableDialog from "../components/CreateTableDialog";
@@ -65,16 +67,15 @@ const useStyles = makeStyles(theme =>
 const TablesView = () => {
   const classes = useStyles();
   const [userRoles, setUserRoles] = useState<null | string[]>();
+  const [userRegions, setUserRegions] = useState<null | string[]>();
   const { currentUser } = useContext(AppContext);
-  console.log(currentUser);
+  console.log(userRegions);
 
   useEffect(() => {
     if (currentUser) {
       currentUser.getIdTokenResult(true).then(results => {
-        if (results.claims.roles) {
-          console.log(results.claims.roles);
-          setUserRoles(results.claims.roles);
-        }
+        setUserRoles(results.claims.roles || []);
+        setUserRegions(results.claims.regions || []);
       });
     }
   }, [currentUser]);
@@ -113,7 +114,18 @@ const TablesView = () => {
         </Grid>
 
         <Divider className={classes.divider} />
-
+        {userRoles.length === 0 && (
+          <EmptyState
+            Icon={SecurityIcon}
+            message={"You don't have any permissions specified"}
+            description={
+              <>
+                Please contact the Assistant <em>to</em> the Regional Manager of
+                your branch
+              </>
+            }
+          />
+        )}
         <Grid
           container
           spacing={4}
@@ -122,8 +134,10 @@ const TablesView = () => {
         >
           {Array.isArray(tables) ? (
             tables.map((table: any) => {
-              if (table.roles.includes(userRoles[0])) {
-                //console.log(table.roles, userRoles[0]);
+              if (
+                !table.roles ||
+                table.roles.some(role => userRoles.includes(role))
+              ) {
                 return (
                   <Grid key={table.name} item xs={12} sm={6} md={4}>
                     <StyledCard
@@ -132,7 +146,13 @@ const TablesView = () => {
                       title={table.name}
                       bodyContent={table.description}
                       primaryLink={{
-                        to: `${routes.table}/${table.collection}`,
+                        to: `${routes.table}/${table.collection}${
+                          table.regional &&
+                          userRegions &&
+                          !userRegions.includes("GLOBAL")
+                            ? `?filters=%5B%7B%22key%22%3A%22region%22%2C%22operator%22%3A%22%3D%3D%22%2C%22value%22%3A%22${userRegions[0]}%22%7D%5D`
+                            : ""
+                        }`,
                         label: "Open",
                       }}
                     />

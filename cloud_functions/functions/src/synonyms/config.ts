@@ -1,6 +1,7 @@
 import * as algoliasearch from "algoliasearch";
 
 import { env } from "../config";
+
 const client = algoliasearch(env.algolia.app, env.algolia.key);
 
 const generateAlgoliaKey = (fieldName: string, value: string) =>
@@ -21,8 +22,7 @@ const cohort2region = (cohort: string) =>
 //   const _location = location.toUpperCase();
 //   switch (_location) {
 //     case "GLOBAL":
-//       return _location;
-
+//       return "GLOBAL";
 //     case "SYDNEY":
 //       return "SYD";
 //     case "LONDON":
@@ -37,6 +37,29 @@ const cohort2region = (cohort: string) =>
 //       break;
 //   }
 // };
+const cohort2location = (cohort: string) => {
+  const _region = cohort2region(cohort);
+  switch (_region) {
+    case "SYD":
+      return "Sydney";
+    case "SG":
+      return "Singapore";
+    case "AMS":
+      return "Amsterdam";
+    case "OSL":
+      return "Oslo";
+    case "LON":
+      return "London";
+    case "STO":
+      return "Stockholm";
+    case "NYC":
+      return "New York";
+    case "NAI":
+      return "Nairobi";
+    default:
+      return "";
+  }
+};
 
 const cohort2regionCollections = (collections: string[]) =>
   collections.map(collection => ({
@@ -66,12 +89,26 @@ const config = [
       },
     ],
   },
+  {
+    name: "portfolio",
+    groups: [
+      {
+        listenerField: "cohort",
+        synonymField: "region",
+        transformer: cohort2region,
+      },
+      {
+        listenerField: "cohort",
+        synonymField: "location",
+        transformer: cohort2location,
+      },
+    ],
+  },
   ...cohort2regionCollections([
     "hubResources",
     "profiles",
     "teams",
     "sprintSubmissions",
-    "portfolio",
     "trackoutApplications",
     "portfolioEnquiries",
   ]),
