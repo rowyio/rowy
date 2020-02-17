@@ -70,7 +70,6 @@ interface Props {
 const Image = (props: Props) => {
   const classes = useStyles();
   const { fieldName, value, row, onSubmit } = props;
-
   const [uploaderState, upload] = useUploader();
   const { progress } = uploaderState;
   const [localImage, setLocalImage] = useState<string | null>(null);
@@ -91,7 +90,7 @@ const Image = (props: Props) => {
   });
   const dropzoneProps = getRootProps();
 
-  const files = value ? [...value] : [];
+  const files = [...value];
   if (localImage) {
     files.push({ downloadURL: localImage, name: "localImage" });
   }
