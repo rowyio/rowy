@@ -58,8 +58,6 @@ const Grid = ({
               //only editable fields are stored selectedCell, temporary fix for custom fields
               setSelectedCell({ row, column });
             }
-          }}
-          onRowClick={(index, row) => {
             if (contextSetSelectedCell) contextSetSelectedCell({ row });
           }}
           onColumnResize={(idx: number, width: number) =>

@@ -65,9 +65,14 @@ function Table(props: Props) {
   });
   // Sync columns values to context to show side drawer
   // TODO: remove this sync here if useFiretable becomes a context
-  const { setColumns } = useSideDrawerContext();
+  const {
+    setColumns,
+    setSelectedCell: contextSetSelectedCell,
+  } = useSideDrawerContext();
   useEffect(() => {
     if (setColumns) setColumns(tableState.columns);
+    // Reset selected cell so we don’t show empty form that does nothing
+    if (contextSetSelectedCell) contextSetSelectedCell({});
   }, [tableState.columns]);
 
   const [search, setSearch] = useState({
