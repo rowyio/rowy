@@ -24,19 +24,19 @@ const Number = (props: any) => {
   const [localValue, setLocalValue] = useState(value);
 
   useEffect(() => {
-    if (value !== localValue) debouncedCallback(localValue);
+    //  if (value !== localValue) debouncedCallback(localValue);
   }, [localValue]);
 
   // Debounce callback
-  const [debouncedCallback] = useDebouncedCallback(
-    value => {
-      if (value.includes(".")) {
-        onSubmit(parseFloat(value));
-      } else onSubmit(parseInt(value));
-    },
-    // delay in ms
-    1100
-  );
+  // const [debouncedCallback] = useDebouncedCallback(
+  //   // value => {
+  //   //   if (value.includes(".")) {
+  //   //     onSubmit(parseFloat(value));
+  //   //   } else onSubmit(parseInt(value));
+  //   // },
+  //   // delay in ms
+  //   1100
+  // );
 
   return (
     <input

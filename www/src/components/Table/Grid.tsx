@@ -99,7 +99,7 @@ const Grid = (props: any) => {
     addRow,
     setSelectedCell,
   } = props;
-
+  const { setSelectedCell: contextSetSelectedCell } = useSideDrawerContext();
   //const [rows, setRows] = useState(() => createRows(2000));
   const [selectedRows, setSelectedRows] = useState(() => new Set<string>());
   const gridRef = useRef<DataGridHandle>(null);
@@ -134,6 +134,8 @@ const Grid = (props: any) => {
   const handleRowClick = useCallback(
     (rowIdx: number, row: any, column: CalculatedColumn<any>) => {
       // TODO:
+      setSelectedCell({ row, column });
+      console.log(rowIdx, row, column);
     },
     []
   );
