@@ -111,30 +111,29 @@ const Grid = (props: any) => {
       updated,
       action,
     }: RowsUpdateEvent<Partial<any>>): void => {
-      const newRows = [...rows];
-      let start;
-      let end;
+      console.log(fromRow, toRow, action, updated);
+      // const newRows = [...rows];
+      // let start;
+      // let end;
 
-      if (action === UpdateActions.COPY_PASTE) {
-        start = toRow;
-        end = toRow;
-      } else {
-        start = Math.min(fromRow, toRow);
-        end = Math.max(fromRow, toRow);
-      }
+      // if (action === UpdateActions.COPY_PASTE) {
+      //   start = toRow;
+      //   end = toRow;
+      // } else {
+      //   start = Math.min(fromRow, toRow);
+      //   end = Math.max(fromRow, toRow);
+      // }
 
-      for (let i = start; i <= end; i++) {
-        newRows[i] = { ...newRows[i], ...updated };
-      }
+      // for (let i = start; i <= end; i++) {
+      //   newRows[i] = { ...newRows[i], ...updated };
+      // }
     },
     [rows]
   );
 
   const handleRowClick = useCallback(
     (rowIdx: number, row: any, column: CalculatedColumn<any>) => {
-      if (column.key === "title") {
-        gridRef.current?.openCellEditor(rowIdx, column.idx);
-      }
+      // TODO:
     },
     []
   );
@@ -145,7 +144,9 @@ const Grid = (props: any) => {
       columns={columns}
       rows={rows}
       rowKey="id"
-      onRowsUpdate={handleRowUpdate}
+      onRowsUpdate={props => {
+        onGridRowsUpdated({ ...props, row: rows[props.toRow] });
+      }}
       onRowClick={handleRowClick}
       rowHeight={rowHeight}
       width={tableWidth}

@@ -49,17 +49,17 @@ export const editable = (fieldType: FieldType) => {
 export const onSubmit = (key: string, row: any) => async (value: any) => {
   const collection = row.ref.parent.path;
   const data = { collection, id: row.ref.id, doc: { [key]: value } };
-  const { currentUser } = useAppContext();
+  // const { currentUser } = useAppContext();
 
   if (value !== null || value !== undefined) {
     const _ft_updatedAt = new Date();
-    const _ft_updatedBy = currentUser?.uid;
+    //  const _ft_updatedBy = currentUser?.uid;
     row.ref.update({
       [key]: value,
       _ft_updatedAt,
       updatedAt: _ft_updatedAt,
-      _ft_updatedBy,
-      updatedBy: _ft_updatedBy,
+      // _ft_updatedBy,
+      // updatedBy: _ft_updatedBy,
     });
   }
 };
@@ -77,9 +77,10 @@ export const DateFormatter = (key: string, fieldType: FieldType) => (
 };
 
 export const onGridRowsUpdated = (event: any) => {
-  const { fromRowData, updated, action } = event;
+  console.log(event);
+  const { fromRowData, updated, action, row } = event;
   if (action === "CELL_UPDATE") {
-    onSubmit(Object.keys(updated)[0], fromRowData)(Object.values(updated)[0]);
+    onSubmit(Object.keys(updated)[0], row)(Object.values(updated)[0]);
   }
 };
 export const onCellSelected = (args: any) => {};
