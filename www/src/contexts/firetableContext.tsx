@@ -1,11 +1,13 @@
 import React, { useState, useContext, useEffect } from "react";
+import _groupBy from "lodash/groupBy";
+
 import useFiretable, {
   FiretableActions,
   FiretableState,
-} from "../hooks/useFiretable";
+} from "hooks/useFiretable";
+import useSettings from "hooks/useSettings";
+
 import { useAppContext } from "./appContext";
-import useSettings from "../hooks/useSettings";
-import _groupBy from "lodash/groupBy";
 interface FiretableContextProps {
   sections: {
     [sectionName: string]: {
@@ -29,6 +31,7 @@ const firetableContext = React.createContext<Partial<FiretableContextProps>>(
   {}
 );
 export default firetableContext;
+
 export const useFiretableContext = () => useContext(firetableContext);
 
 export const FiretableContextProvider: React.FC = ({ children }) => {
@@ -86,5 +89,3 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
     </firetableContext.Provider>
   );
 };
-
-//

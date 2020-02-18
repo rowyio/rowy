@@ -19,7 +19,6 @@ import SideDrawer, { DRAWER_COLLAPSED_WIDTH } from "./SideDrawer";
 import useSettings from "../hooks/useSettings";
 import useRouter from "../hooks/useRouter";
 import TablesContext from "../contexts/tablesContext";
-import { SideDrawerProvider } from "contexts/sideDrawerContext";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -67,100 +66,98 @@ const Navigation = (props: any) => {
 
   return (
     <TablesContext.Provider value={{ value: settings.tables }}>
-      <SideDrawerProvider>
-        <>
-          {props.children}
+      <>
+        {props.children}
 
-          <AppBar position="fixed" color="primary" className={classes.appBar}>
-            <Toolbar className={classes.toolbar}>
-              <IconButton
-                edge="start"
-                color="inherit"
-                aria-label="go home"
-                component={Link}
-                to="/"
-                className={classes.homeButton}
+        <AppBar position="fixed" color="primary" className={classes.appBar}>
+          <Toolbar className={classes.toolbar}>
+            <IconButton
+              edge="start"
+              color="inherit"
+              aria-label="go home"
+              component={Link}
+              to="/"
+              className={classes.homeButton}
+            >
+              <HomeIcon />
+            </IconButton>
+
+            {!settings.tables ? (
+              <>
+                <Skeleton
+                  variant="rect"
+                  width={120}
+                  height={40}
+                  className={classes.skeleton}
+                />
+                <Skeleton
+                  variant="rect"
+                  width={120}
+                  height={40}
+                  className={classes.skeleton}
+                />
+                <Skeleton
+                  variant="rect"
+                  width={120}
+                  height={40}
+                  className={classes.skeleton}
+                />
+                <Skeleton
+                  variant="rect"
+                  width={120}
+                  height={40}
+                  className={classes.skeleton}
+                />
+              </>
+            ) : (
+              <Grid
+                container
+                className={classes.routes}
+                wrap="nowrap"
+                alignItems="center"
+                spacing={2}
               >
-                <HomeIcon />
-              </IconButton>
-
-              {!settings.tables ? (
-                <>
-                  <Skeleton
-                    variant="rect"
-                    width={120}
-                    height={40}
-                    className={classes.skeleton}
-                  />
-                  <Skeleton
-                    variant="rect"
-                    width={120}
-                    height={40}
-                    className={classes.skeleton}
-                  />
-                  <Skeleton
-                    variant="rect"
-                    width={120}
-                    height={40}
-                    className={classes.skeleton}
-                  />
-                  <Skeleton
-                    variant="rect"
-                    width={120}
-                    height={40}
-                    className={classes.skeleton}
-                  />
-                </>
-              ) : (
-                <Grid
-                  container
-                  className={classes.routes}
-                  wrap="nowrap"
-                  alignItems="center"
-                  spacing={2}
-                >
-                  {settings.tables.map(
-                    (table: { name: string; collection: string }) => (
-                      <Grid item key={table.collection}>
-                        <Button
-                          key={table.collection}
-                          component={Link}
-                          to={table.collection}
-                          disabled={
-                            table.collection ===
-                            router.location.pathname.replace("/table/", "")
-                          }
-                          color="inherit"
-                          className={classes.routeButton}
-                          classes={{
-                            root: classes.routeButton,
-                            disabled: classes.currentRouteButton,
-                          }}
-                        >
-                          {table.name}
-                        </Button>
-                      </Grid>
-                    )
-                  )}
-                  <Grid item>
-                    <div className={classes.routeSpacer} />
-                  </Grid>
+                {settings.tables.map(
+                  (table: { name: string; collection: string }) => (
+                    <Grid item key={table.collection}>
+                      <Button
+                        key={table.collection}
+                        component={Link}
+                        to={table.collection}
+                        disabled={
+                          table.collection ===
+                          router.location.pathname.replace("/table/", "")
+                        }
+                        color="inherit"
+                        className={classes.routeButton}
+                        classes={{
+                          root: classes.routeButton,
+                          disabled: classes.currentRouteButton,
+                        }}
+                      >
+                        {table.name}
+                      </Button>
+                    </Grid>
+                  )
+                )}
+                <Grid item>
+                  <div className={classes.routeSpacer} />
                 </Grid>
-              )}
-              {/* <Button
+              </Grid>
+            )}
+            {/* <Button
               onClick={() => {
                 auth.signOut();
               }}
             >
               Sign out
             </Button> */}
-              <CreateTableDialog classes={classes} createTable={createTable} />
-            </Toolbar>
-          </AppBar>
+            <CreateTableDialog classes={classes} createTable={createTable} />
+          </Toolbar>
+        </AppBar>
 
-          <SideDrawer />
-        </>
-      </SideDrawerProvider>
+        <SideDrawer />
+      </>
     </TablesContext.Provider>
   );
 };

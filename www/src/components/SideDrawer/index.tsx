@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import clsx from "clsx";
-import _isEmpty from "lodash/isEmpty";
+import _isNil from "lodash/isNil";
 
 import { Drawer, Fab } from "@material-ui/core";
 import ChevronIcon from "@material-ui/icons/KeyboardArrowDown";
@@ -8,7 +8,7 @@ import ChevronIcon from "@material-ui/icons/KeyboardArrowDown";
 import Form, { Field } from "./Form";
 
 import { useStyles } from "./useStyles";
-import { useSideDrawerContext } from "contexts/sideDrawerContext";
+import { useFiretableContext } from "contexts/firetableContext";
 import { FieldType } from "constants/fields";
 
 export const DRAWER_WIDTH = 600;
@@ -16,16 +16,16 @@ export const DRAWER_COLLAPSED_WIDTH = 36;
 
 export default function SideDrawer() {
   const classes = useStyles();
-  const { columns, selectedCell } = useSideDrawerContext();
+  const { tableState, selectedCell } = useFiretableContext();
 
   const [open, setOpen] = useState(false);
-  const disabled = !selectedCell || _isEmpty(selectedCell.row);
+  const disabled = !selectedCell || _isNil(selectedCell.row);
   useEffect(() => {
     if (disabled) setOpen(false);
   }, [disabled]);
 
   // Map columns to form fields
-  const fields = columns?.map(column => {
+  const fields = tableState?.columns?.map(column => {
     const field: Field = {
       type: column.type,
       name: column.key,
@@ -85,8 +85,11 @@ export default function SideDrawer() {
         }}
       >
         <div className={classes.drawerContents}>
-          {fields && selectedCell && selectedCell.row && (
-            <Form fields={fields} values={selectedCell.row} />
+          {fields && selectedCell && (
+            <Form
+              fields={fields}
+              values={tableState?.rows[selectedCell.row] ?? {}}
+            />
           )}
         </div>
       </Drawer>
