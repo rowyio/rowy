@@ -21,6 +21,7 @@ import Color from "./Fields/Color";
 import Slider from "./Fields/Slider";
 // import TextMulti from "./Fields/TextMulti";
 import ImageUploader from "./Fields/ImageUploader";
+import FileUploader from "./Fields/FileUploader";
 
 import { FieldType } from "constants/fields";
 // import Heading from "./Heading";
@@ -200,13 +201,22 @@ export default function Form({ fields, values }: IFormProps) {
                     );
                     break;
 
+                  case FieldType.file:
+                    renderedField = (
+                      <Field
+                        {...fieldProps}
+                        component={FileUploader}
+                        docRef={values.ref}
+                      />
+                    );
+                    break;
+
                   case FieldType.rating:
                     renderedField = (
                       <Field {...fieldProps} component={Rating} />
                     );
                     break;
 
-                  // case FieldType.file:
                   // case FieldType.connectTable:
                   // case FieldType.subTable:
                   // case FieldType.action:

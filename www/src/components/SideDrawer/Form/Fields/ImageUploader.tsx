@@ -82,7 +82,6 @@ const useStyles = makeStyles(theme =>
 );
 
 export interface IImageUploaderProps extends FieldProps {
-  label: React.ReactNode;
   docRef?: firebase.firestore.DocumentReference;
 }
 

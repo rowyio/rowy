@@ -9,7 +9,7 @@ import {
   IconButton,
   CircularProgress,
 } from "@material-ui/core";
-import UploadIcon from "@material-ui/icons/Publish";
+import UploadIcon from "assets/icons/Upload";
 
 import useUploader, { FileValue } from "hooks/useFiretable/useUploader";
 
@@ -34,7 +34,7 @@ const useStyles = makeStyles(theme =>
 
     chipList: { overflow: "hidden" },
     chipGridItem: { maxWidth: "100%" },
-    chip: { cursor: "pointer", width: "100%" },
+    chip: { width: "100%" },
     uploadButton: { marginLeft: "auto" },
   })
 );
@@ -87,17 +87,16 @@ const File = (props: Props) => {
                 <Chip
                   icon={<FileIcon />}
                   label={file.name}
-                  component="a"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href={file.downloadURL}
+                  onClick={e => {
+                    window.open(file.downloadURL);
+                    e.stopPropagation();
+                  }}
                   onDelete={
                     config && config.isLocked
                       ? undefined
                       : () => handleDelete(file.downloadURL)
                   }
                   className={classes.chip}
-                  onClick={e => e.stopPropagation()}
                 />
               </Grid>
             ))
