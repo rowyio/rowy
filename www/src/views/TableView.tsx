@@ -24,7 +24,11 @@ export default function TableView() {
 
   return (
     <Navigation>
-      <Table collection={tableCollection} filters={filters} />
+      <Table
+        key={tableCollection}
+        collection={tableCollection}
+        filters={filters}
+      />
     </Navigation>
   );
 }

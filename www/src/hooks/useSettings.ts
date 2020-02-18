@@ -1,8 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useContext, useState } from "react";
 import useDoc, { DocActions } from "./useDoc";
 import { db } from "../firebase";
+import _groupBy from "lodash/groupBy";
+import { AppContext } from "../AppProvider";
 
 const useSettings = () => {
+  const { currentUser } = useContext(AppContext);
   const [settingsState, documentDispatch] = useDoc({
     path: "_FIRETABLE_/settings",
   });
@@ -10,6 +13,14 @@ const useSettings = () => {
     //updates tables data on document change
     const { doc, tables } = settingsState;
     if (doc && tables !== doc.tables) {
+      // const sections = _groupBy(
+      //   tables.filter(
+      //     table =>
+      //       !table.roles || table.roles.some(role => userRoles.includes(role))
+      //   ),
+      //   "section"
+      // );
+
       documentDispatch({ tables: doc.tables });
     }
   }, [settingsState]);
