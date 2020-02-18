@@ -37,9 +37,6 @@ const addSynonymOnUpdate = (groups: synonymGroup[]) => (
     return false;
   }
   const updates = synonyms(afterData, groups);
-  console.log(
-    `updates:${JSON.stringify(updates)}, count:${Object.values(updates).length}`
-  );
   if (Object.values(updates).length === 0) {
     return false;
   } else {
@@ -56,7 +53,7 @@ const addSynonymOnCreate = (groups: synonymGroup[]) => (
     return false;
   }
   const updates = synonyms(docData, groups);
-  if (Object.keys(updates).length !== 0) {
+  if (Object.keys(updates).length === 0) {
     return false;
   } else {
     const docPath = snapshot.ref.path;
