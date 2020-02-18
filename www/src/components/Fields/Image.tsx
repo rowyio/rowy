@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) =>
       bottom: 0,
       right: 0,
 
-      backgroundColor: "rgba(255,255,255,0.8)",
+      backgroundColor: "rgba(255, 255, 255, 0.8)",
       color: theme.palette.text.secondary,
       boxShadow: `0 0 0 1px ${theme.palette.divider} inset`,
       borderRadius: theme.shape.borderRadius,
@@ -91,7 +91,13 @@ const Image = (props: Props) => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     multiple: false,
-    accept: ["image/png", "image/jpg", "image/jpeg"],
+    accept: [
+      "image/jpeg",
+      "image/png",
+      "image/svg+xml",
+      "image/gif",
+      "image/webp",
+    ],
   });
   const dropzoneProps = getRootProps();
 
@@ -106,6 +112,7 @@ const Image = (props: Props) => {
       wrap="nowrap"
       alignItems="center"
       {...dropzoneProps}
+      onClick={() => {}}
     >
       <input {...getInputProps()} />
 
@@ -120,11 +127,7 @@ const Image = (props: Props) => {
                       message={{
                         title: "Delete Image",
                         body: "Are you sure you want to delete this image?",
-                        confirm: (
-                          <>
-                            <DeleteIcon /> Delete
-                          </>
-                        ),
+                        confirm: "Delete",
                       }}
                     >
                       <div

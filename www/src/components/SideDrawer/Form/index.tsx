@@ -20,7 +20,7 @@ import Color from "./Fields/Color";
 // import Radio from "./Fields/Radio";
 import Slider from "./Fields/Slider";
 // import TextMulti from "./Fields/TextMulti";
-// import ImageUploader from "./Fields/ImageUploader";
+import ImageUploader from "./Fields/ImageUploader";
 
 import { FieldType } from "constants/fields";
 // import Heading from "./Heading";
@@ -183,15 +183,15 @@ export default function Form({ fields, values }: IFormProps) {
                   // case FieldType.richText:
                   //   break;
 
-                  // case FieldType.image:
-                  //   renderedField = (
-                  //     <Field
-                  //       {...fieldProps}
-                  //       component={ImageUploader}
-                  //       docRef={docState.ref}
-                  //     />
-                  //   );
-                  //   break;
+                  case FieldType.image:
+                    renderedField = (
+                      <Field
+                        {...fieldProps}
+                        component={ImageUploader}
+                        docRef={values.ref}
+                      />
+                    );
+                    break;
 
                   case FieldType.rating:
                     renderedField = (
