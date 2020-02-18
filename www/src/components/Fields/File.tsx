@@ -33,7 +33,8 @@ const useStyles = makeStyles(theme =>
     progress: { margin: theme.spacing(5) },
 
     chipList: { overflow: "hidden" },
-    chip: { cursor: "pointer" },
+    chipGridItem: { maxWidth: "100%" },
+    chip: { cursor: "pointer", width: "100%" },
     uploadButton: { marginLeft: "auto" },
   })
 );
@@ -74,40 +75,37 @@ const File = (props: Props) => {
       <input {...getInputProps()} />
 
       <Grid item xs className={classes.chipList}>
-        <>
+        <Grid container spacing={1}>
           {value &&
             value.map((file: any) => (
-              <Chip
-                key={file.name}
-                icon={<FileIcon />}
-                label={file.name}
-                component="a"
-                target="_blank"
-                rel="noopener noreferrer"
-                href={file.downloadURL}
-                onDelete={
-                  config && config.isLocked
-                    ? undefined
-                    : () => handleDelete(file.downloadURL)
-                }
-                className={classes.chip}
-                onClick={e => e.stopPropagation()}
-              />
+              <Grid key={file.name} item className={classes.chipGridItem}>
+                <Chip
+                  icon={<FileIcon />}
+                  label={file.name}
+                  component="a"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href={file.downloadURL}
+                  onDelete={
+                    config && config.isLocked
+                      ? undefined
+                      : () => handleDelete(file.downloadURL)
+                  }
+                  className={classes.chip}
+                  onClick={e => e.stopPropagation()}
+                />
+              </Grid>
             ))}
 
           {!value || (value.length === 0 && "Upload a file…")}
-        </>
+        </Grid>
       </Grid>
 
       <Grid item>
         {config && !config.isLocked ? (
           <></>
         ) : (
-          <IconButton
-            className={classes.uploadButton}
-            onClick={dropzoneProps.onClick}
-            size="small"
-          >
+          <IconButton className={classes.uploadButton} size="small">
             <UploadIcon />
           </IconButton>
         )}
