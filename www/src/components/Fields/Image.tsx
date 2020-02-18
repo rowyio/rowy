@@ -30,8 +30,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
       boxShadow: `0 0 0 1px ${theme.palette.divider} inset`,
       borderRadius: theme.shape.borderRadius,
-
-      "& + &": { marginLeft: theme.spacing(1) },
     },
 
     deleteImgHover: {
@@ -106,51 +104,55 @@ const Image = (props: Props) => {
       <input {...getInputProps()} />
 
       <Grid item xs>
-        {value &&
-          files.map((file: { name: string; downloadURL: string }) => (
-            <Tooltip key={file.downloadURL} title="Click to delete">
-              <span>
-                <Confirmation
-                  message={{
-                    title: "Delete Image",
-                    body: "Are you sure you want to delete this image?",
-                    confirm: (
-                      <>
-                        <DeleteIcon /> Delete
-                      </>
-                    ),
-                  }}
-                >
-                  <div
-                    key={file.downloadURL}
-                    onClick={e => {
-                      const index = _findIndex(value, [
-                        "downloadURL",
-                        file.downloadURL,
-                      ]);
-                      value.splice(index, 1);
-                      onSubmit(value);
-                    }}
-                    className={classes.imgContainer}
-                    style={{
-                      backgroundImage: `url(${file.downloadURL})`,
-                      width: row.rowHeight * 0.9,
-                      height: row.rowHeight * 0.9,
-                    }}
-                  >
-                    <Grid
-                      container
-                      justify="center"
-                      alignItems="center"
-                      className={classes.deleteImgHover}
+        <Grid container spacing={1}>
+          {value &&
+            files.map((file: { name: string; downloadURL: string }) => (
+              <Grid item key={file.downloadURL}>
+                <Tooltip title="Click to delete">
+                  <span>
+                    <Confirmation
+                      message={{
+                        title: "Delete Image",
+                        body: "Are you sure you want to delete this image?",
+                        confirm: (
+                          <>
+                            <DeleteIcon /> Delete
+                          </>
+                        ),
+                      }}
                     >
-                      <DeleteIcon color="inherit" />
-                    </Grid>
-                  </div>
-                </Confirmation>
-              </span>
-            </Tooltip>
-          ))}
+                      <div
+                        key={file.downloadURL}
+                        onClick={e => {
+                          const index = _findIndex(value, [
+                            "downloadURL",
+                            file.downloadURL,
+                          ]);
+                          value.splice(index, 1);
+                          onSubmit(value);
+                        }}
+                        className={classes.imgContainer}
+                        style={{
+                          backgroundImage: `url(${file.downloadURL})`,
+                          width: row.rowHeight * 0.9,
+                          height: row.rowHeight * 0.9,
+                        }}
+                      >
+                        <Grid
+                          container
+                          justify="center"
+                          alignItems="center"
+                          className={classes.deleteImgHover}
+                        >
+                          <DeleteIcon color="inherit" />
+                        </Grid>
+                      </div>
+                    </Confirmation>
+                  </span>
+                </Tooltip>
+              </Grid>
+            ))}
+        </Grid>
       </Grid>
 
       <Grid item>
