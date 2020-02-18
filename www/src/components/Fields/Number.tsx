@@ -21,20 +21,21 @@ export default function _Number(props: any) {
   const classes = useStyles();
   const { value, onSubmit } = props;
 
-  const [localValue, setLocalValue] = useState<number>(value);
-  const [debouncedValue] = useDebounce<number>(localValue, 1000);
+  const [localValue, setLocalValue] = useState<number | undefined>(
+    value === NaN ? undefined : value
+  );
+  const [debouncedValue] = useDebounce<number | undefined>(localValue, 1000);
 
   useEffect(() => {
+    if (debouncedValue === undefined || debouncedValue === NaN) return;
     if (value !== debouncedValue) onSubmit(debouncedValue);
   }, [debouncedValue]);
 
   return (
     <input
       type="number"
-      value={localValue}
-      onChange={e => {
-        setLocalValue(Number(e.target.value));
-      }}
+      value={localValue === NaN ? undefined : localValue}
+      onChange={e => setLocalValue(Number(e.target.value))}
       className={classes.root}
     />
   );
