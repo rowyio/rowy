@@ -4,6 +4,7 @@ import { Field } from "formik";
 import {
   makeStyles,
   createStyles,
+  ButtonBase,
   FormControlLabel,
   SwitchProps as MuiSwitchProps,
 } from "@material-ui/core";
@@ -12,16 +13,23 @@ import ErrorMessage from "../ErrorMessage";
 
 const useStyles = makeStyles(theme =>
   createStyles({
-    root: {
+    buttonBase: {
+      borderRadius: theme.shape.borderRadius,
       backgroundColor:
         theme.palette.type === "light"
           ? "rgba(0, 0, 0, 0.09)"
           : "rgba(255, 255, 255, 0.09)",
-      borderRadius: theme.shape.borderRadius,
       padding: theme.spacing(9 / 8, 1, 9 / 8, 1.5),
 
+      width: "100%",
+      display: "flex",
+      textAlign: "left",
+    },
+
+    formControlLabel: {
       margin: 0,
       width: "100%",
+      display: "flex",
     },
 
     label: {
@@ -41,19 +49,21 @@ export default function Checkbox({ label, ...props }: ICheckboxProps) {
 
   return (
     <>
-      <FormControlLabel
-        control={
-          <Field
-            component={Switch}
-            color="primary"
-            {...props}
-            type="checkbox"
-          />
-        }
-        label={label}
-        labelPlacement="start"
-        classes={classes}
-      />
+      <ButtonBase className={classes.buttonBase}>
+        <FormControlLabel
+          control={
+            <Field
+              component={Switch}
+              color="primary"
+              {...props}
+              type="checkbox"
+            />
+          }
+          label={label}
+          labelPlacement="start"
+          classes={{ root: classes.formControlLabel, label: classes.label }}
+        />
+      </ButtonBase>
 
       <ErrorMessage name={props.name} />
     </>
