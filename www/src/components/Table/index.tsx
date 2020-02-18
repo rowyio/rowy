@@ -314,7 +314,7 @@ function Table(props: Props) {
    * @param index
    */
   const handleRowGetter = (index: number) => {
-    if (tableState.rowsLimit - index === 10) {
+    if (tableState.rowsLimit - index === 20) {
       tableActions.row.more();
     }
     return rows[index];
