@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import useUploader from "../../hooks/useFiretable/useUploader";
+import useUploader from "hooks/useFiretable/useUploader";
 import DeleteIcon from "@material-ui/icons/Delete";
 
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
@@ -30,8 +30,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
       boxShadow: `0 0 0 1px ${theme.palette.divider} inset`,
       borderRadius: theme.shape.borderRadius,
-
-      "& + &": { marginLeft: theme.spacing(1) },
     },
 
     deleteImgHover: {
@@ -41,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) =>
       bottom: 0,
       right: 0,
 
-      backgroundColor: "rgba(255,255,255,0.8)",
+      backgroundColor: "rgba(255, 255, 255, 0.8)",
       color: theme.palette.text.secondary,
       boxShadow: `0 0 0 1px ${theme.palette.divider} inset`,
       borderRadius: theme.shape.borderRadius,
@@ -70,14 +68,21 @@ interface Props {
 const Image = (props: Props) => {
   const classes = useStyles();
   const { fieldName, value, row, onSubmit } = props;
+
   const [uploaderState, upload] = useUploader();
-  const { progress } = uploaderState;
+  const { progress, isLoading } = uploaderState;
+
   const [localImage, setLocalImage] = useState<string | null>(null);
   const onDrop = useCallback(acceptedFiles => {
     // Do something with the files
     const imageFile = acceptedFiles[0];
     if (imageFile) {
-      upload(row.ref, fieldName, [imageFile], value);
+      upload({
+        docRef: row.ref,
+        fieldName,
+        files: [imageFile],
+        previousValue: value,
+      });
       let url = URL.createObjectURL(imageFile);
       setLocalImage(url);
     }
@@ -86,7 +91,13 @@ const Image = (props: Props) => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     multiple: false,
-    accept: ["image/png", "image/jpg", "image/jpeg"],
+    accept: [
+      "image/jpeg",
+      "image/png",
+      "image/svg+xml",
+      "image/gif",
+      "image/webp",
+    ],
   });
   const dropzoneProps = getRootProps();
 
@@ -106,60 +117,64 @@ const Image = (props: Props) => {
       <input {...getInputProps()} />
 
       <Grid item xs>
-        {value &&
-          files.map((file: { name: string; downloadURL: string }) => (
-            <Tooltip key={file.downloadURL} title="Click to delete">
-              <span>
-                <Confirmation
-                  message={{
-                    title: "Delete Image",
-                    body: "Are you sure you want to delete this image?",
-                    confirm: (
-                      <>
-                        <DeleteIcon /> Delete
-                      </>
-                    ),
-                  }}
-                >
-                  <div
-                    key={file.downloadURL}
-                    onClick={e => {
-                      const index = _findIndex(value, [
-                        "downloadURL",
-                        file.downloadURL,
-                      ]);
-                      value.splice(index, 1);
-                      onSubmit(value);
-                    }}
-                    className={classes.imgContainer}
-                    style={{
-                      backgroundImage: `url(${file.downloadURL})`,
-                      width: row.rowHeight * 0.9,
-                      height: row.rowHeight * 0.9,
-                    }}
-                  >
-                    <Grid
-                      container
-                      justify="center"
-                      alignItems="center"
-                      className={classes.deleteImgHover}
+        <Grid container spacing={1}>
+          {value &&
+            files.map((file: { name: string; downloadURL: string }) => (
+              <Grid item key={file.downloadURL}>
+                <Tooltip title="Click to delete">
+                  <span>
+                    <Confirmation
+                      message={{
+                        title: "Delete Image",
+                        body: "Are you sure you want to delete this image?",
+                        confirm: "Delete",
+                      }}
                     >
-                      <DeleteIcon color="inherit" />
-                    </Grid>
-                  </div>
-                </Confirmation>
-              </span>
-            </Tooltip>
-          ))}
+                      <div
+                        key={file.downloadURL}
+                        onClick={e => {
+                          const index = _findIndex(value, [
+                            "downloadURL",
+                            file.downloadURL,
+                          ]);
+                          value.splice(index, 1);
+                          onSubmit(value);
+                        }}
+                        className={classes.imgContainer}
+                        style={{
+                          backgroundImage: `url(${file.downloadURL})`,
+                          width: row.rowHeight * 0.9,
+                          height: row.rowHeight * 0.9,
+                        }}
+                      >
+                        <Grid
+                          container
+                          justify="center"
+                          alignItems="center"
+                          className={classes.deleteImgHover}
+                        >
+                          <DeleteIcon color="inherit" />
+                        </Grid>
+                      </div>
+                    </Confirmation>
+                  </span>
+                </Tooltip>
+              </Grid>
+            ))}
+        </Grid>
       </Grid>
 
       <Grid item>
-        {progress === 0 ? (
+        {!isLoading && progress === 0 ? (
           <IconButton onClick={dropzoneProps.onClick} size="small">
             <AddIcon />
           </IconButton>
         ) : (
-          <CircularProgress size={30} variant="static" value={progress} />
+          <CircularProgress
+            size={30}
+            variant={progress === 0 ? "indeterminate" : "static"}
+            value={progress}
+          />
         )}
       </Grid>
     </Grid>
