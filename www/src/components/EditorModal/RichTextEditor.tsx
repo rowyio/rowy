@@ -1,10 +1,11 @@
-import React, { useContext } from "react";
+import React, { useContext, lazy, Suspense } from "react";
 
 import EditorContext from "contexts/editorContext";
-import RichText from "components/RichText";
 import { FieldType } from "constants/fields";
 
 import EditorModal from ".";
+import { CircularProgress } from "@material-ui/core";
+const RichText = lazy(() => import("components/RichText"));
 
 export default function RichTextEditor() {
   const editorContext = useContext(EditorContext);
@@ -12,10 +13,12 @@ export default function RichTextEditor() {
   if (editorContext.fieldType !== FieldType.richText) return <></>;
   return (
     <EditorModal>
-      <RichText
-        value={editorContext.editorValue}
-        onChange={val => editorContext.setEditorValue(val)}
-      />
+      <Suspense fallback={<CircularProgress />}>
+        <RichText
+          value={editorContext.editorValue}
+          onChange={val => editorContext.setEditorValue(val)}
+        />
+      </Suspense>
     </EditorModal>
   );
 }
