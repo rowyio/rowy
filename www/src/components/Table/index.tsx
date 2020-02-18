@@ -54,11 +54,16 @@ function Table(props: Props) {
   const { currentUser } = useAppContext();
 
   const [orderBy, setOrderBy] = useState<FiretableOrderBy>([]);
-  const { tableState, tableActions } = useFiretableContext();
+  const {
+    tableState,
+    tableActions,
+    setSelectedCell: contextSetSelectedCell,
+  } = useFiretableContext();
 
   useEffect(() => {
     if (tableActions && tableState && tableState?.tablePath !== collection) {
       tableActions.table.set(collection, filters);
+      if (contextSetSelectedCell) contextSetSelectedCell({});
     }
   }, [collection]);
   // TODO: move this to firetableContext

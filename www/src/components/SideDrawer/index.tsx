@@ -3,7 +3,9 @@ import clsx from "clsx";
 import _isNil from "lodash/isNil";
 
 import { Drawer, Fab } from "@material-ui/core";
-import ChevronIcon from "@material-ui/icons/KeyboardArrowDown";
+import ChevronIcon from "@material-ui/icons/KeyboardArrowLeft";
+import ChevronUpIcon from "@material-ui/icons/KeyboardArrowUp";
+import ChevronDownIcon from "@material-ui/icons/KeyboardArrowDown";
 
 import Form, { Field } from "./Form";
 import ErrorBoundary from "components/ErrorBoundary";
@@ -17,13 +19,28 @@ export const DRAWER_COLLAPSED_WIDTH = 36;
 
 export default function SideDrawer() {
   const classes = useStyles();
-  const { tableState, selectedCell } = useFiretableContext();
+  const { tableState, selectedCell, setSelectedCell } = useFiretableContext();
 
   const [open, setOpen] = useState(false);
   const disabled = !selectedCell || _isNil(selectedCell.row);
   useEffect(() => {
     if (disabled) setOpen(false);
   }, [disabled]);
+
+  const handleNavigateUp = () => {
+    if (setSelectedCell)
+      setSelectedCell(cell => ({
+        ...cell,
+        row: cell.row > 0 ? cell.row - 1 : cell.row,
+      }));
+  };
+  const handleNavigateDown = () => {
+    if (setSelectedCell)
+      setSelectedCell(cell => ({
+        ...cell,
+        row: cell.row < tableState!.rows.length - 1 ? cell.row + 1 : cell.row,
+      }));
+  };
 
   // Map columns to form fields
   const fields = tableState?.columns?.map(column => {
@@ -72,7 +89,7 @@ export default function SideDrawer() {
   });
 
   return (
-    <>
+    <div className={clsx(open && classes.open, disabled && classes.disabled)}>
       <Drawer
         variant="permanent"
         anchor="right"
@@ -97,15 +114,36 @@ export default function SideDrawer() {
         </ErrorBoundary>
       </Drawer>
 
-      <div
-        className={clsx(
-          classes.drawerFabContainer,
-          open && classes.drawerFabOpen
-        )}
-      >
+      <div className={classes.navFabContainer}>
         <Fab
-          className={classes.drawerFab}
-          classes={{ disabled: classes.drawerFabDisabled }}
+          classes={{ root: classes.fab, disabled: classes.disabled }}
+          color="secondary"
+          size="small"
+          disabled={disabled || !selectedCell || selectedCell.row <= 0}
+          onClick={handleNavigateUp}
+        >
+          <ChevronUpIcon />
+        </Fab>
+
+        <Fab
+          classes={{ root: classes.fab, disabled: classes.disabled }}
+          color="secondary"
+          size="small"
+          disabled={
+            disabled ||
+            !tableState ||
+            !selectedCell ||
+            selectedCell.row >= tableState.rows.length - 1
+          }
+          onClick={handleNavigateDown}
+        >
+          <ChevronDownIcon />
+        </Fab>
+      </div>
+
+      <div className={classes.drawerFabContainer}>
+        <Fab
+          classes={{ root: classes.fab, disabled: classes.disabled }}
           color="secondary"
           disabled={disabled}
           onClick={() => setOpen(o => !o)}
@@ -113,6 +151,6 @@ export default function SideDrawer() {
           <ChevronIcon className={classes.drawerFabIcon} />
         </Fab>
       </div>
-    </>
+    </div>
   );
 }
