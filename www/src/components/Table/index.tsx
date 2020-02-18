@@ -61,7 +61,8 @@ function Table(props: Props) {
   } = useFiretableContext();
 
   useEffect(() => {
-    if (tableActions && tableState && tableState?.tablePath !== collection) {
+    if (tableActions && tableState && tableState.tablePath !== collection) {
+      console.log("setting table");
       tableActions.table.set(collection, filters);
       if (contextSetSelectedCell) contextSetSelectedCell({});
     }
@@ -314,7 +315,7 @@ function Table(props: Props) {
    */
   const handleRowGetter = (index: number) => {
     if (tableState.rowsLimit - index === 1) {
-      tableActions.row.more();
+      //tableActions.row.more();
     }
     return rows[index];
   };

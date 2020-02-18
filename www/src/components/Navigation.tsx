@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import {
@@ -9,17 +9,18 @@ import {
   IconButton,
   Grid,
   Button,
+  Tabs,
+  Tab,
 } from "@material-ui/core";
 import HomeIcon from "@material-ui/icons/Home";
 import Skeleton from "@material-ui/lab/Skeleton";
 
-import CreateTableDialog from "./CreateTableDialog";
 import SideDrawer, { DRAWER_COLLAPSED_WIDTH } from "./SideDrawer";
 
-import useSettings from "../hooks/useSettings";
 import useRouter from "../hooks/useRouter";
-import TablesContext from "../contexts/tablesContext";
 
+import { SideDrawerProvider } from "contexts/sideDrawerContext";
+import { useFiretableContext } from "../contexts/firetableContext";
 const useStyles = makeStyles(theme =>
   createStyles({
     appBar: {
@@ -62,13 +63,44 @@ const useStyles = makeStyles(theme =>
 const Navigation = (props: any) => {
   const router = useRouter();
   const classes = useStyles();
-  const [settings, createTable] = useSettings();
-
+  const [section, setSection] = useState<any>();
+  const [table, setTable] = useState();
+  const { sections, createTable, userClaims } = useFiretableContext();
+  useEffect(() => {
+    if (section) {
+      setTable(sections![section][0]);
+    }
+  }, [section]);
+  useEffect(() => {
+    if (table) {
+      const newPath = `${table.collection}${
+        table.regional &&
+        userClaims.regions &&
+        !userClaims.regions.includes("GLOBAL")
+          ? `?filters=%5B%7B%22key%22%3A%22region%22%2C%22operator%22%3A%22%3D%3D%22%2C%22value%22%3A%22${userClaims.regions[0]}%22%7D%5D`
+          : ""
+      }`;
+      router.history.push(newPath);
+    }
+  }, [table]);
   return (
-    <TablesContext.Provider value={{ value: settings.tables }}>
-      <>
+    <SideDrawerProvider>
+        {section && sections && (
+          <Tabs
+            value={table}
+            indicatorColor="primary"
+            textColor="primary"
+            onChange={(e, v) => {
+              setTable(v);
+            }}
+            aria-label="disabled tabs example"
+          >
+            {sections[section].map(table => (
+              <Tab key={table.name} label={table.name} value={table} />
+            ))}
+          </Tabs>
+        )}
         {props.children}
-
         <AppBar position="fixed" color="primary" className={classes.appBar}>
           <Toolbar className={classes.toolbar}>
             <IconButton
@@ -82,7 +114,7 @@ const Navigation = (props: any) => {
               <HomeIcon />
             </IconButton>
 
-            {!settings.tables ? (
+            {!sections ? (
               <>
                 <Skeleton
                   variant="rect"
@@ -117,6 +149,7 @@ const Navigation = (props: any) => {
                 alignItems="center"
                 spacing={2}
               >
+
                 {settings.tables.map(
                   (table: { name: string; collection: string }) => (
                     <Grid item key={table.collection}>
@@ -140,6 +173,27 @@ const Navigation = (props: any) => {
                     </Grid>
                   )
                 )}
+                {Object.keys(sections).map((sectionName: string) => (
+                  <Grid item key={sectionName}>
+                    <Button
+                      key={sectionName}
+                      // component={Link}
+                      // to={table.collection}
+                      disabled={sectionName === section}
+                      onClick={() => {
+                        setSection(sectionName);
+                      }}
+                      color="inherit"
+                      className={classes.routeButton}
+                      classes={{
+                        root: classes.routeButton,
+                        disabled: classes.currentRouteButton,
+                      }}
+                    >
+                      {sectionName}
+                    </Button>
+                  </Grid>
+                ))}
                 <Grid item>
                   <div className={classes.routeSpacer} />
                 </Grid>
@@ -152,13 +206,14 @@ const Navigation = (props: any) => {
             >
               Sign out
             </Button> */}
-            <CreateTableDialog classes={classes} createTable={createTable} />
+
           </Toolbar>
         </AppBar>
 
         <SideDrawer />
       </>
-    </TablesContext.Provider>
+
+    </SideDrawerProvider>
   );
 };
 export default Navigation;
