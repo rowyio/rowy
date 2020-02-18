@@ -33,7 +33,7 @@ export const useFiretableContext = () => useContext(firetableContext);
 
 export const FiretableContextProvider: React.FC = ({ children }) => {
   const { tableState, tableActions } = useFiretable();
-
+  console.log(tableState);
   const [selectedCell, setSelectedCell] = useState<{
     row: number;
     column: string;
@@ -59,7 +59,7 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
   }, [settings, tables, userRoles]);
 
   useEffect(() => {
-    if (currentUser) {
+    if (currentUser && !userClaims) {
       currentUser.getIdTokenResult(true).then(results => {
         setUserRoles(results.claims.roles || []);
         setUserClaims(results.claims);

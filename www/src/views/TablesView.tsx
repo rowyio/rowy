@@ -80,7 +80,6 @@ const TablesView = () => {
     tableActions,
   } = useFiretableContext();
 
-  console.log(sections);
   if (!userClaims?.roles || !sections) return <Loading />;
   const { roles, regions } = userClaims;
   return (
