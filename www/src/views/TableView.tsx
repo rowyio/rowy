@@ -21,7 +21,6 @@ export default function TableView() {
     filters = JSON.parse(parsed.filters);
     //TODO: json schema validator
   }
-
   return (
     <Navigation>
       <Table

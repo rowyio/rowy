@@ -17,6 +17,7 @@ import Loading from "./components/Loading";
 import { SnackProvider } from "./util/SnackProvider";
 import { AppProvider } from "./contexts/appContext";
 import GlobalStyles from "./util/GlobalStyles";
+import { FiretableContextProvider } from "./contexts/firetableContext";
 
 const AuthView = lazy(() => import("./views/AuthView"));
 const TableView = lazy(() => import("./views/TableView"));
@@ -35,8 +36,14 @@ const App: React.FC = () => {
               <Suspense fallback={<Loading fullScreen />}>
                 <Switch>
                   <Route exact path="/auth" render={() => <AuthView />} />
-                  <PrivateRoute exact path="/" render={() => <TablesView />} />
-                  <PrivateRoute path="/table/" render={() => <TableView />} />
+                  <FiretableContextProvider>
+                    <PrivateRoute
+                      exact
+                      path="/"
+                      render={() => <TablesView />}
+                    />
+                    <PrivateRoute path="/table/" render={() => <TableView />} />
+                  </FiretableContextProvider>
                   <PrivateRoute path="/editor" render={() => <EditorView />} />
                   <Route
                     render={() => (

@@ -7,24 +7,22 @@ import { useAppContext } from "./appContext";
 import useSettings from "../hooks/useSettings";
 import _groupBy from "lodash/groupBy";
 interface FiretableContextProps {
-  section: any;
-  // sections: {
-  //   sectionName: string;
-  //   tables:
-  //     | {
-  //         collection: string;
-  //         name: string;
-  //         roles: string[];
-  //         description: string;
-  //       }[]
-  //     | undefined;
-  // };
+  sections: {
+    [sectionName: string]: {
+      collection: string;
+      name: string;
+      roles: string[];
+      description: string;
+      regional: Boolean;
+    }[];
+  };
   tableState: FiretableState;
   tableActions: FiretableActions;
   updateCell: Function;
-  currentRow: number;
-  currentColumn: { key: string; name: string; config: any };
-  setRow: Function;
+  createTable: Function;
+  selectedCell: { row: number; column: string };
+  setSelectedCell: Function;
+  userClaims: any;
 }
 
 const firetableContext = React.createContext<Partial<FiretableContextProps>>(
@@ -35,12 +33,16 @@ export const useFiretableContext = () => useContext(firetableContext);
 
 export const FiretableContextProvider: React.FC = ({ children }) => {
   const { tableState, tableActions } = useFiretable();
-  const [currentRow, setCurrentRow] = useState();
+
+  const [selectedCell, setSelectedCell] = useState<{
+    row: number;
+    column: string;
+  }>();
   const [sections, setSections] = useState<any>();
   const [settings, createTable] = useSettings();
   const { tables } = settings;
   const [userRoles, setUserRoles] = useState<null | string[]>();
-  //const [userRegions, setUserRegions] = useState<null | string[]>();
+  const [userClaims, setUserClaims] = useState<any>();
 
   const { currentUser } = useAppContext();
   useEffect(() => {
@@ -54,12 +56,13 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
       );
       setSections(sections);
     }
-  }, [settings, userRoles]);
+  }, [settings, tables, userRoles]);
 
   useEffect(() => {
     if (currentUser) {
       currentUser.getIdTokenResult(true).then(results => {
         setUserRoles(results.claims.roles || []);
+        setUserClaims(results.claims);
         // setUserRegions(results.claims.regions || []);
       });
     }
@@ -71,9 +74,12 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
       value={{
         tableState,
         tableActions,
-        currentRow,
-        setRow: setCurrentRow,
+        selectedCell,
+        setSelectedCell,
         updateCell,
+        createTable,
+        sections,
+        userClaims,
       }}
     >
       {children}

@@ -8,6 +8,7 @@ import {
   Grid as MuiGrid,
   Tooltip,
 } from "@material-ui/core";
+import { useFiretableContext } from "../../contexts/firetableContext";
 import ImportExportIcon from "@material-ui/icons/ImportExport";
 import DropdownIcon from "@material-ui/icons/ArrowDropDownCircle";
 import Confirmation from "components/Confirmation";
@@ -23,10 +24,7 @@ import LongTextEditor from "../EditorModal/LongTextEditor";
 import RichTextEditor from "../EditorModal/RichTextEditor";
 import JsonEditor from "../EditorModal/JsonEditor";
 
-import useFiretable, {
-  FireTableFilter,
-  FiretableOrderBy,
-} from "../../hooks/useFiretable";
+import { FireTableFilter, FiretableOrderBy } from "../../hooks/useFiretable";
 import { useAppContext } from "contexts/appContext";
 
 import { FieldType, getFieldIcon } from "constants/fields";
@@ -57,11 +55,18 @@ function Table(props: Props) {
   const { currentUser } = useAppContext();
 
   const [orderBy, setOrderBy] = useState<FiretableOrderBy>([]);
-  const { tableState, tableActions } = useFiretable(
-    collection,
-    filters,
-    orderBy
-  );
+  const { tableState, tableActions } = useFiretableContext();
+
+  // collection,
+  // filters,
+  // orderBy
+  //tableActions.setTable();
+
+  useEffect(() => {
+    if (tableActions && tableState && tableState?.tablePath !== collection) {
+      tableActions.table.set(collection, filters);
+    }
+  }, [collection]);
   const [selectedCell, setSelectedCell] = useState<{ row: any; column: any }>({
     row: {},
     column: {},
@@ -73,10 +78,10 @@ function Table(props: Props) {
     setSelectedCell: contextSetSelectedCell,
   } = useSideDrawerContext();
   useEffect(() => {
-    if (setColumns) setColumns(tableState.columns);
+    if (setColumns) setColumns(tableState!.columns);
     // Reset selected cell so we don’t show empty form that does nothing
     if (contextSetSelectedCell) contextSetSelectedCell({});
-  }, [tableState.columns]);
+  }, [tableState?.columns]);
 
   const [search, setSearch] = useState({
     config: undefined,
@@ -84,15 +89,12 @@ function Table(props: Props) {
     onSubmit: undefined,
   });
 
-  useEffect(() => {
-    tableActions.table.set(collection, filters, orderBy);
-  }, [collection, filters]);
-
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   const [header, setHeader] = useState<any | null>();
 
+  if (!tableActions || !tableState) return <></>;
   const handleCloseHeader = () => {
     setHeader(null);
     setAnchorEl(null);
@@ -195,13 +197,13 @@ function Table(props: Props) {
                         { key: column.key, direction: "desc" },
                       ];
 
-                      tableActions.table.orderBy(ordering);
+                      // tableActions.table.orderBy(ordering);
                       //setOrderBy(ordering) #BROKENINSIDE
                     } else {
                       const ordering: FiretableOrderBy = [
                         { key: column.key, direction: "asc" },
                       ];
-                      tableActions.table.orderBy(ordering);
+                      // tableActions.table.orderBy(ordering);
                       //setOrderBy(ordering) #BROKENINSIDE
                     }
                   }}
