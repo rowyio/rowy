@@ -107,27 +107,28 @@ export default function FileUploader({
       </ButtonBase>
 
       <Grid container spacing={1} className={classes.chipList}>
-        {field.value.map((file: FileValue, i) => (
-          <Grid item key={file.name} className={classes.chipGridItem}>
-            <Confirmation
-              message={{
-                title: "Delete File",
-                body: "Are you sure you want to delete this file?",
-                confirm: "Delete",
-              }}
-              functionName="onDelete"
-            >
-              <Chip
-                size="medium"
-                icon={<FileIcon />}
-                label={file.name}
-                onClick={() => window.open(file.downloadURL)}
-                onDelete={() => handleDelete(i)}
-                className={classes.chip}
-              />
-            </Confirmation>
-          </Grid>
-        ))}
+        {Array.isArray(field.value) &&
+          field.value.map((file: FileValue, i) => (
+            <Grid item key={file.name} className={classes.chipGridItem}>
+              <Confirmation
+                message={{
+                  title: "Delete File",
+                  body: "Are you sure you want to delete this file?",
+                  confirm: "Delete",
+                }}
+                functionName="onDelete"
+              >
+                <Chip
+                  size="medium"
+                  icon={<FileIcon />}
+                  label={file.name}
+                  onClick={() => window.open(file.downloadURL)}
+                  onDelete={() => handleDelete(i)}
+                  className={classes.chip}
+                />
+              </Confirmation>
+            </Grid>
+          ))}
 
         {localFile && (
           <Grid item className={classes.chipGridItem}>

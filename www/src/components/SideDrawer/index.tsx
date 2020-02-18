@@ -6,6 +6,7 @@ import { Drawer, Fab } from "@material-ui/core";
 import ChevronIcon from "@material-ui/icons/KeyboardArrowDown";
 
 import Form, { Field } from "./Form";
+import ErrorBoundary from "components/ErrorBoundary";
 
 import { useStyles } from "./useStyles";
 import { useFiretableContext } from "contexts/firetableContext";
@@ -84,14 +85,16 @@ export default function SideDrawer() {
           }),
         }}
       >
-        <div className={classes.drawerContents}>
-          {fields && selectedCell && (
-            <Form
-              fields={fields}
-              values={tableState?.rows[selectedCell.row] ?? {}}
-            />
-          )}
-        </div>
+        <ErrorBoundary>
+          <div className={classes.drawerContents}>
+            {fields && selectedCell && (
+              <Form
+                fields={fields}
+                values={tableState?.rows[selectedCell.row] ?? {}}
+              />
+            )}
+          </div>
+        </ErrorBoundary>
       </Drawer>
 
       <div
