@@ -2,7 +2,7 @@ import React from "react";
 import useHotkeys from "../../hooks/useHotkeys";
 import { onSubmit } from "./grid-fns";
 import { FieldType } from "constants/fields";
-import { useAppContext } from "AppProvider";
+import { useAppContext } from "contexts/appContext";
 /**
  * Listens Hot Keys combination keys to trigger keyboard shortcuts
  */

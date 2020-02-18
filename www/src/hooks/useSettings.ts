@@ -1,11 +1,9 @@
-import { useEffect, useContext, useState } from "react";
+import { useEffect } from "react";
 import useDoc, { DocActions } from "./useDoc";
 import { db } from "../firebase";
 import _groupBy from "lodash/groupBy";
-import { AppContext } from "../AppProvider";
 
 const useSettings = () => {
-  const { currentUser } = useContext(AppContext);
   const [settingsState, documentDispatch] = useDoc({
     path: "_FIRETABLE_/settings",
   });
@@ -20,7 +18,6 @@ const useSettings = () => {
       //   ),
       //   "section"
       // );
-
       documentDispatch({ tables: doc.tables });
     }
   }, [settingsState]);

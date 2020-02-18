@@ -15,7 +15,7 @@ import EmptyState from "./components/EmptyState";
 import Loading from "./components/Loading";
 
 import { SnackProvider } from "./util/SnackProvider";
-import { AppProvider } from "./AppProvider";
+import { AppProvider } from "./contexts/appContext";
 import GlobalStyles from "./util/GlobalStyles";
 
 const AuthView = lazy(() => import("./views/AuthView"));

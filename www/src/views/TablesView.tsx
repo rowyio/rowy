@@ -11,7 +11,7 @@ import {
 
 import useSettings from "../hooks/useSettings";
 import routes from "../constants/routes";
-import { AppContext } from "../AppProvider";
+import { AppContext } from "../contexts/appContext";
 
 import SecurityIcon from "@material-ui/icons/Security";
 import AppBar from "../components/AppBar";

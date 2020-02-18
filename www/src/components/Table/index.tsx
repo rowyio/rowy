@@ -27,7 +27,7 @@ import useFiretable, {
   FireTableFilter,
   FiretableOrderBy,
 } from "../../hooks/useFiretable";
-import { useAppContext } from "AppProvider";
+import { useAppContext } from "contexts/appContext";
 
 import { FieldType, getFieldIcon } from "constants/fields";
 import {
