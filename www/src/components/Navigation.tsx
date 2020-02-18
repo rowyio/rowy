@@ -18,6 +18,7 @@ import Skeleton from "@material-ui/lab/Skeleton";
 import SideDrawer, { DRAWER_COLLAPSED_WIDTH } from "./SideDrawer";
 
 import useRouter from "../hooks/useRouter";
+
 import { SideDrawerProvider } from "contexts/sideDrawerContext";
 import { useFiretableContext } from "../contexts/firetableContext";
 const useStyles = makeStyles(theme =>
@@ -84,7 +85,6 @@ const Navigation = (props: any) => {
   }, [table]);
   return (
     <SideDrawerProvider>
-      <>
         {section && sections && (
           <Tabs
             value={table}
@@ -101,7 +101,6 @@ const Navigation = (props: any) => {
           </Tabs>
         )}
         {props.children}
-
         <AppBar position="fixed" color="primary" className={classes.appBar}>
           <Toolbar className={classes.toolbar}>
             <IconButton
@@ -150,6 +149,30 @@ const Navigation = (props: any) => {
                 alignItems="center"
                 spacing={2}
               >
+
+                {settings.tables.map(
+                  (table: { name: string; collection: string }) => (
+                    <Grid item key={table.collection}>
+                      <Button
+                        key={table.collection}
+                        component={Link}
+                        to={table.collection}
+                        disabled={
+                          table.collection ===
+                          router.location.pathname.replace("/table/", "")
+                        }
+                        color="inherit"
+                        className={classes.routeButton}
+                        classes={{
+                          root: classes.routeButton,
+                          disabled: classes.currentRouteButton,
+                        }}
+                      >
+                        {table.name}
+                      </Button>
+                    </Grid>
+                  )
+                )}
                 {Object.keys(sections).map((sectionName: string) => (
                   <Grid item key={sectionName}>
                     <Button
@@ -183,11 +206,13 @@ const Navigation = (props: any) => {
             >
               Sign out
             </Button> */}
+
           </Toolbar>
         </AppBar>
 
         <SideDrawer />
       </>
+
     </SideDrawerProvider>
   );
 };

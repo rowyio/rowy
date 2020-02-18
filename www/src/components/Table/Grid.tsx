@@ -8,7 +8,7 @@ import xorWith from "lodash/xorWith";
 import Loading from "../Loading";
 
 import { FieldType } from "constants/fields";
-import { useSideDrawerContext } from "contexts/sideDrawerContext";
+import { useFiretableContext } from "contexts/firetableContext";
 
 const ReactDataGrid = lazy(() => import("react-data-grid"));
 const { DraggableContainer } = DraggableHeader;
@@ -36,7 +36,7 @@ const Grid = ({
   addRow,
   setSelectedCell,
 }: IGridProps) => {
-  const { setSelectedCell: contextSetSelectedCell } = useSideDrawerContext();
+  const { setSelectedCell: contextSetSelectedCell } = useFiretableContext();
 
   return (
     <Suspense fallback={<Loading message="Loading table" />}>
@@ -58,7 +58,11 @@ const Grid = ({
               //only editable fields are stored selectedCell, temporary fix for custom fields
               setSelectedCell({ row, column });
             }
-            if (contextSetSelectedCell) contextSetSelectedCell({ row });
+            if (contextSetSelectedCell)
+              contextSetSelectedCell({
+                row: coordinates.rowIdx,
+                column: columns[coordinates.idx].key,
+              });
           }}
           onColumnResize={(idx: number, width: number) =>
             //tableActions.column.resize(idx, width)

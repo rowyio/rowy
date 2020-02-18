@@ -3,6 +3,9 @@ import { DRAWER_WIDTH, DRAWER_COLLAPSED_WIDTH } from "./index";
 
 export const useStyles = makeStyles(theme =>
   createStyles({
+    open: {},
+    disabled: {},
+
     drawer: {
       width: DRAWER_WIDTH,
       flexShrink: 0,
@@ -34,37 +37,52 @@ export const useStyles = makeStyles(theme =>
       transform: `translateX(${DRAWER_WIDTH - DRAWER_COLLAPSED_WIDTH}px)`,
     },
 
-    drawerFabContainer: {
-      position: "absolute",
-      top: "50%",
-      transform: "translateY(-50%) rotate(90deg)",
-      right: theme.spacing(1),
-      zIndex: theme.zIndex.drawer + 1,
+    fab: {
+      display: "flex",
 
-      width: theme.spacing(7),
-      height: theme.spacing(7),
-      borderRadius: "50%",
-      backgroundColor: theme.palette.background.paper,
+      "&$disabled": {
+        boxShadow: theme.shadows[6],
+        backgroundColor: theme.palette.grey[300],
+      },
+
+      "& + &": { marginTop: theme.spacing(4) },
+    },
+
+    navFabContainer: {
+      position: "absolute",
+      top: theme.spacing(8),
+      right: theme.spacing(2),
+      zIndex: theme.zIndex.drawer + 1,
 
       transition: theme.transitions.create("transform", {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.enteringScreen,
       }),
-    },
-    drawerFabOpen: {
-      transform: `translate(-${DRAWER_WIDTH -
-        DRAWER_COLLAPSED_WIDTH}px, -50%) rotate(90deg)`,
 
-      transitionDuration: `${theme.transitions.duration.leavingScreen}ms`,
-
-      "& $drawerFabIcon": {
-        transform: "rotate(180deg)",
+      "$open &": {
+        transform: `translate(-${DRAWER_WIDTH - DRAWER_COLLAPSED_WIDTH}px)`,
         transitionDuration: `${theme.transitions.duration.leavingScreen}ms`,
       },
     },
-    drawerFab: {
-      overflow: "hidden",
-      "&$drawerFabDisabled": { boxShadow: theme.shadows[6] },
+
+    drawerFabContainer: {
+      position: "absolute",
+      top: "50%",
+      transform: "translateY(-50%)",
+      right: theme.spacing(1),
+      zIndex: theme.zIndex.drawer + 1,
+
+      transition: theme.transitions.create("transform", {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+
+      "$open &": {
+        transform: `translate(-${DRAWER_WIDTH -
+          DRAWER_COLLAPSED_WIDTH}px, -50%)`,
+
+        transitionDuration: `${theme.transitions.duration.leavingScreen}ms`,
+      },
     },
     drawerFabIcon: {
       width: "2em",
@@ -74,8 +92,12 @@ export const useStyles = makeStyles(theme =>
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.enteringScreen,
       }),
+
+      "$open &": {
+        transform: "rotate(180deg)",
+        transitionDuration: `${theme.transitions.duration.leavingScreen}ms`,
+      },
     },
-    drawerFabDisabled: {},
 
     drawerContents: {
       padding: theme.spacing(8),

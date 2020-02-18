@@ -8,7 +8,6 @@ import {
   Grid as MuiGrid,
   Tooltip,
 } from "@material-ui/core";
-import { useFiretableContext } from "../../contexts/firetableContext";
 import ImportExportIcon from "@material-ui/icons/ImportExport";
 import DropdownIcon from "@material-ui/icons/ArrowDropDownCircle";
 import Confirmation from "components/Confirmation";
@@ -26,6 +25,7 @@ import JsonEditor from "../EditorModal/JsonEditor";
 
 import { FireTableFilter, FiretableOrderBy } from "../../hooks/useFiretable";
 import { useAppContext } from "contexts/appContext";
+import { useFiretableContext } from "contexts/firetableContext";
 
 import { FieldType, getFieldIcon } from "constants/fields";
 import {
@@ -37,7 +37,6 @@ import {
   onSubmit,
 } from "./grid-fns";
 import { EditorProvider } from "../../util/EditorProvider";
-import { useSideDrawerContext } from "contexts/sideDrawerContext";
 
 const Hotkeys = lazy(() => import("./HotKeys"));
 const TableHeader = lazy(() => import("./TableHeader"));
@@ -55,34 +54,24 @@ function Table(props: Props) {
   const { currentUser } = useAppContext();
 
   const [orderBy, setOrderBy] = useState<FiretableOrderBy>([]);
-  const { tableState, tableActions } = useFiretableContext();
-
-  // collection,
-  // filters,
-  // orderBy
-  //tableActions.setTable();
+  const {
+    tableState,
+    tableActions,
+    setSelectedCell: contextSetSelectedCell,
+  } = useFiretableContext();
 
   useEffect(() => {
     if (tableActions && tableState && tableState.tablePath !== collection) {
       console.log("setting table");
       tableActions.table.set(collection, filters);
+      if (contextSetSelectedCell) contextSetSelectedCell({});
     }
   }, [collection]);
+  // TODO: move this to firetableContext
   const [selectedCell, setSelectedCell] = useState<{ row: any; column: any }>({
     row: {},
     column: {},
   });
-  // Sync columns values to context to show side drawer
-  // TODO: remove this sync here if useFiretable becomes a context
-  const {
-    setColumns,
-    setSelectedCell: contextSetSelectedCell,
-  } = useSideDrawerContext();
-  useEffect(() => {
-    if (setColumns) setColumns(tableState!.columns);
-    // Reset selected cell so we don’t show empty form that does nothing
-    if (contextSetSelectedCell) contextSetSelectedCell({});
-  }, [tableState?.columns]);
 
   const [search, setSearch] = useState({
     config: undefined,

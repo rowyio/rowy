@@ -1,11 +1,11 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { Formik, Form as FormikForm, Field } from "formik";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import _isFunction from "lodash/isFunction";
 import _isEmpty from "lodash/isEmpty";
 
-import { Grid } from "@material-ui/core";
+import { Grid, LinearProgress } from "@material-ui/core";
 
 import Autosave from "./Autosave";
 import FieldWrapper from "./FieldWrapper";
@@ -20,11 +20,14 @@ import Color from "./Fields/Color";
 // import Radio from "./Fields/Radio";
 import Slider from "./Fields/Slider";
 // import TextMulti from "./Fields/TextMulti";
-// import ImageUploader from "./Fields/ImageUploader";
+import ImageUploader from "./Fields/ImageUploader";
+import FileUploader from "./Fields/FileUploader";
 
 import { FieldType } from "constants/fields";
 // import Heading from "./Heading";
 // import Description from "./Description";
+
+const RichText = lazy(() => import("./Fields/RichText"));
 
 export type Values = { [key: string]: any };
 export type Field = {
@@ -180,18 +183,33 @@ export default function Form({ fields, values }: IFormProps) {
                     );
                     break;
 
-                  // case FieldType.richText:
-                  //   break;
+                  case FieldType.richText:
+                    renderedField = (
+                      <Suspense fallback={<LinearProgress />}>
+                        <Field {...fieldProps} component={RichText} />
+                      </Suspense>
+                    );
+                    break;
 
-                  // case FieldType.image:
-                  //   renderedField = (
-                  //     <Field
-                  //       {...fieldProps}
-                  //       component={ImageUploader}
-                  //       docRef={docState.ref}
-                  //     />
-                  //   );
-                  //   break;
+                  case FieldType.image:
+                    renderedField = (
+                      <Field
+                        {...fieldProps}
+                        component={ImageUploader}
+                        docRef={values.ref}
+                      />
+                    );
+                    break;
+
+                  case FieldType.file:
+                    renderedField = (
+                      <Field
+                        {...fieldProps}
+                        component={FileUploader}
+                        docRef={values.ref}
+                      />
+                    );
+                    break;
 
                   case FieldType.rating:
                     renderedField = (
@@ -199,7 +217,6 @@ export default function Form({ fields, values }: IFormProps) {
                     );
                     break;
 
-                  // case FieldType.file:
                   // case FieldType.connectTable:
                   // case FieldType.subTable:
                   // case FieldType.action:

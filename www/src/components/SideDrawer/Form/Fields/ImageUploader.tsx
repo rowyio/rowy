@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useState } from "react";
 import clsx from "clsx";
 import { FieldProps } from "formik";
 
@@ -8,111 +8,95 @@ import useUploader from "hooks/useFiretable/useUploader";
 import {
   makeStyles,
   createStyles,
-  FormControl,
-  Grid,
   ButtonBase,
-  CardMedia,
+  Typography,
+  Grid,
   CircularProgress,
   Tooltip,
-  FormHelperText,
 } from "@material-ui/core";
 
 import AddIcon from "@material-ui/icons/AddAPhoto";
 import DeleteIcon from "@material-ui/icons/Delete";
 
-import Label from "../Label";
 import ErrorMessage from "../ErrorMessage";
+import Confirmation from "components/Confirmation";
 
 const useStyles = makeStyles(theme =>
   createStyles({
-    button: {
+    dropzoneButton: {
+      backgroundColor:
+        theme.palette.type === "light"
+          ? "rgba(0, 0, 0, 0.09)"
+          : "rgba(255, 255, 255, 0.09)",
+      borderRadius: theme.shape.borderRadius,
+      padding: theme.spacing(0, 2),
+      justifyContent: "flex-start",
+
+      margin: 0,
+      width: "100%",
+      height: 56,
+
+      color: theme.palette.text.secondary,
+
+      "& svg": { marginRight: theme.spacing(2) },
+    },
+
+    imagesContainer: {
+      marginTop: theme.spacing(1),
+    },
+
+    img: {
       position: "relative",
 
-      width: 120,
-      height: 120,
+      width: 80,
+      height: 80,
       borderRadius: theme.shape.borderRadius,
+      boxShadow: `0 0 0 1px ${theme.palette.divider} inset`,
 
-      marginTop: theme.spacing(0.5),
-
-      // From https://github.com/mui-org/material-ui/blob/master/packages/material-ui/src/FilledInput/FilledInput.js
-      transition: theme.transitions.create("background-color", {
-        duration: theme.transitions.duration.shorter,
-        easing: theme.transitions.easing.easeOut,
-      }),
-      backgroundColor: "rgba(0, 0, 0, 0.09)",
-      "&:hover": {
-        backgroundColor: "rgba(0, 0, 0, 0.13)",
-        "& $icon": { color: theme.palette.text.secondary },
-      },
-    },
-
-    icon: {
-      color: theme.palette.text.disabled,
-      fontSize: 48,
-      transition: theme.transitions.create("color", {
-        duration: theme.transitions.duration.shorter,
-        easing: theme.transitions.easing.easeOut,
-      }),
-    },
-
-    fullSize: {
-      position: "absolute",
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      borderRadius: theme.shape.borderRadius,
+      backgroundSize: "contain",
+      backgroundPosition: "center center",
+      backgroundRepeat: "no-repeat",
     },
 
     overlay: {
-      background: "rgba(0, 0, 0, 0.4)",
-      color: theme.palette.common.white,
+      position: "absolute",
+      top: 0,
+      left: 0,
+      bottom: 0,
+      right: 0,
 
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
+      backgroundColor: "rgba(255, 255, 255, 0.8)",
+      color: theme.palette.text.secondary,
+      boxShadow: `0 0 0 1px ${theme.palette.divider} inset`,
+      borderRadius: theme.shape.borderRadius,
     },
 
-    iconOverlay: {
+    deleteImgHover: {
       opacity: 0,
       transition: theme.transitions.create("opacity", {
-        duration: theme.transitions.duration.shorter,
-        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.shortest,
       }),
-      "&:hover": { opacity: 1 },
-
-      "& $icon": { color: theme.palette.common.white },
-      "&:hover $icon": { color: theme.palette.common.white },
+      "$img:hover &": { opacity: 1 },
     },
   })
 );
 
 export interface IImageUploaderProps extends FieldProps {
-  label: React.ReactNode;
   docRef?: firebase.firestore.DocumentReference;
 }
 
 export default function ImageUploader({
   form,
   field,
-  label,
   docRef,
 }: IImageUploaderProps) {
   const classes = useStyles();
 
-  const [uploaderState, upload, uploaderDispatch] = useUploader();
-  const { progress, isLoading } = uploaderState;
+  const [uploaderState, upload] = useUploader();
+  const { progress } = uploaderState;
 
-  // TODO: SHOW ERROR MESSAGES FROM USEUPLOADER
-
-  // Store a preview image locally
-  const initialImage = field.value?.[0]?.downloadURL || "";
-  const [localImage, setLocalImage] = useState<string>(initialImage);
-
-  useEffect(() => {
-    if (!docRef && !isLoading) uploaderDispatch({ isLoading: true });
-    if (docRef && isLoading) uploaderDispatch({ isLoading: false });
-  }, [docRef]);
+  // Store a preview image locally while uploading
+  const [localImage, setLocalImage] = useState<string>("");
 
   const onDrop = useCallback(
     acceptedFiles => {
@@ -123,13 +107,23 @@ export default function ImageUploader({
           docRef,
           fieldName: field.name,
           files: [imageFile],
-          onComplete: newValue => form.setFieldValue(field.name, newValue),
+          previousValue: field.value ?? [],
+          onComplete: newValue => {
+            form.setFieldValue(field.name, newValue);
+            setLocalImage("");
+          },
         });
         setLocalImage(URL.createObjectURL(imageFile));
       }
     },
     [docRef]
   );
+
+  const handleDelete = (index: number) => {
+    const newValue = [...field.value];
+    newValue.splice(index, 1);
+    form.setFieldValue(field.name, newValue);
+  };
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
@@ -144,32 +138,63 @@ export default function ImageUploader({
   });
 
   return (
-    <FormControl onClick={() => form.setFieldTouched(field.name)}>
-      <Label error={!!(form.errors[field.name] && form.touched[field.name])}>
-        {label}
-      </Label>
+    <>
+      <ButtonBase className={classes.dropzoneButton} {...getRootProps()}>
+        <input id={`sidemodal-field-${field.name}`} {...getInputProps()} />
+        <AddIcon />
+        <Typography variant="body1" color="textSecondary">
+          Upload image
+        </Typography>
+      </ButtonBase>
 
-      <div {...getRootProps()}>
-        <input {...getInputProps()} />
-        <ButtonBase className={classes.button}>
-          {!localImage && <AddIcon className={classes.icon} />}
+      <Grid container spacing={1} className={classes.imagesContainer}>
+        {Array.isArray(field.value) &&
+          field.value.map((image, i) => (
+            <Grid item key={image.downloadURL}>
+              <Tooltip title="Click to delete">
+                <span>
+                  <Confirmation
+                    message={{
+                      title: "Delete Image",
+                      body: "Are you sure you want to delete this image?",
+                      confirm: "Delete",
+                    }}
+                  >
+                    <ButtonBase
+                      className={classes.img}
+                      style={{ backgroundImage: `url(${image.downloadURL})` }}
+                      onClick={() => handleDelete(i)}
+                    >
+                      <Grid
+                        container
+                        justify="center"
+                        alignItems="center"
+                        className={clsx(
+                          classes.overlay,
+                          classes.deleteImgHover
+                        )}
+                      >
+                        <DeleteIcon color="inherit" />
+                      </Grid>
+                    </ButtonBase>
+                  </Confirmation>
+                </span>
+              </Tooltip>
+            </Grid>
+          ))}
 
-          {localImage && (
-            <CardMedia
-              image={localImage}
-              title={`Your uploaded ${label}`}
-              className={classes.fullSize}
-            />
-          )}
-
-          {isLoading && (
-            <Grid
-              container
-              justify="center"
-              alignItems="center"
-              className={clsx(classes.fullSize, classes.overlay)}
+        {localImage && (
+          <Grid item>
+            <ButtonBase
+              className={classes.img}
+              style={{ backgroundImage: `url(${localImage})` }}
             >
-              <Grid item>
+              <Grid
+                container
+                justify="center"
+                alignItems="center"
+                className={classes.overlay}
+              >
                 <CircularProgress
                   color="inherit"
                   size={48}
@@ -177,29 +202,12 @@ export default function ImageUploader({
                   value={progress}
                 />
               </Grid>
-            </Grid>
-          )}
-
-          {localImage && !isLoading && (
-            <Tooltip title="Click to upload a new image">
-              <Grid
-                container
-                justify="center"
-                alignItems="center"
-                className={clsx(
-                  classes.fullSize,
-                  classes.overlay,
-                  classes.iconOverlay
-                )}
-              >
-                <AddIcon className={classes.icon} />
-              </Grid>
-            </Tooltip>
-          )}
-        </ButtonBase>
-      </div>
+            </ButtonBase>
+          </Grid>
+        )}
+      </Grid>
 
       <ErrorMessage name={field.name} />
-    </FormControl>
+    </>
   );
 }
