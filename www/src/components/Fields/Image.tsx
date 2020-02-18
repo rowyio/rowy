@@ -122,6 +122,7 @@ const Image = (props: Props) => {
                   }}
                 >
                   <div
+                    key={file.downloadURL}
                     onClick={e => {
                       const index = _findIndex(value, [
                         "downloadURL",

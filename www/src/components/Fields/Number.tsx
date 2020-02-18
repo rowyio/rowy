@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useDebouncedCallback } from "use-debounce";
+import { useDebounce } from "use-debounce";
 
 import { createStyles, makeStyles } from "@material-ui/core";
 
@@ -17,36 +17,26 @@ const useStyles = makeStyles(theme =>
 );
 
 // TODO: Create an interface for props
-const Number = (props: any) => {
+export default function _Number(props: any) {
   const classes = useStyles();
   const { value, onSubmit } = props;
 
-  const [localValue, setLocalValue] = useState(value);
+  const [localValue, setLocalValue] = useState<number | undefined>(
+    value === NaN ? undefined : value
+  );
+  const [debouncedValue] = useDebounce<number | undefined>(localValue, 1000);
 
   useEffect(() => {
-    if (value !== localValue) debouncedCallback(localValue);
-  }, [localValue]);
-
-  // Debounce callback
-  const [debouncedCallback] = useDebouncedCallback(
-    value => {
-      if (value?.includes(".")) {
-        onSubmit(parseFloat(value));
-      } else onSubmit(parseInt(value));
-    },
-    // delay in ms
-    1100
-  );
+    if (debouncedValue === undefined || debouncedValue === NaN) return;
+    if (value !== debouncedValue) onSubmit(debouncedValue);
+  }, [debouncedValue]);
 
   return (
     <input
       type="number"
-      value={localValue}
-      onChange={e => {
-        setLocalValue(e.target.value);
-      }}
+      value={localValue === NaN ? undefined : localValue}
+      onChange={e => setLocalValue(Number(e.target.value))}
       className={classes.root}
     />
   );
-};
-export default Number;
+}
