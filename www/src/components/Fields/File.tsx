@@ -11,7 +11,7 @@ import {
 } from "@material-ui/core";
 import UploadIcon from "@material-ui/icons/Publish";
 
-import useUploader from "../../hooks/useFiretable/useUploader";
+import useUploader, { FileValue } from "hooks/useFiretable/useUploader";
 
 import { FieldType, FileIcon } from "constants/fields";
 import _findIndex from "lodash/findIndex";
@@ -19,7 +19,7 @@ import _findIndex from "lodash/findIndex";
 // TODO:  indicate state error
 
 interface Props {
-  value: { name: string; downloadURL: string }[];
+  value: FileValue[];
   row: { ref: firebase.firestore.DocumentReference; id: string };
   onSubmit: Function;
   fieldType: FieldType;
@@ -29,7 +29,7 @@ interface Props {
 
 const useStyles = makeStyles(theme =>
   createStyles({
-    root: {},
+    root: { marginTop: 0 },
     progress: { margin: theme.spacing(5) },
 
     chipList: { overflow: "hidden" },
@@ -43,12 +43,17 @@ const File = (props: Props) => {
   const { fieldName, value, row, onSubmit, config } = props;
   const classes = useStyles();
   const [uploaderState, upload] = useUploader();
-  const { progress } = uploaderState;
+  const { progress, isLoading } = uploaderState;
   const onDrop = useCallback(acceptedFiles => {
     // Do something with the files
     const imageFile = acceptedFiles[0];
     if (imageFile) {
-      upload(row.ref, fieldName, [imageFile], value);
+      upload({
+        docRef: row.ref,
+        fieldName,
+        files: [imageFile],
+        previousValue: value,
+      });
     }
   }, []);
 
@@ -76,7 +81,7 @@ const File = (props: Props) => {
 
       <Grid item xs className={classes.chipList}>
         <Grid container spacing={1}>
-          {value &&
+          {value && value.length > 0 ? (
             value.map((file: any) => (
               <Grid key={file.name} item className={classes.chipGridItem}>
                 <Chip
@@ -95,19 +100,24 @@ const File = (props: Props) => {
                   onClick={e => e.stopPropagation()}
                 />
               </Grid>
-            ))}
-
-          {!value || (value.length === 0 && "Upload a file…")}
+            ))
+          ) : (
+            <Grid item>Upload a file…</Grid>
+          )}
         </Grid>
       </Grid>
 
       <Grid item>
-        {config && !config.isLocked ? (
-          <></>
-        ) : (
-          <IconButton className={classes.uploadButton} size="small">
+        {!isLoading && progress === 0 ? (
+          <IconButton size="small">
             <UploadIcon />
           </IconButton>
+        ) : (
+          <CircularProgress
+            size={30}
+            variant={progress === 0 ? "indeterminate" : "static"}
+            value={progress}
+          />
         )}
       </Grid>
     </Grid>

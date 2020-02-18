@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import useUploader from "../../hooks/useFiretable/useUploader";
+import useUploader from "hooks/useFiretable/useUploader";
 import DeleteIcon from "@material-ui/icons/Delete";
 
 import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
@@ -68,14 +68,21 @@ interface Props {
 const Image = (props: Props) => {
   const classes = useStyles();
   const { fieldName, value, row, onSubmit } = props;
+
   const [uploaderState, upload] = useUploader();
-  const { progress } = uploaderState;
+  const { progress, isLoading } = uploaderState;
+
   const [localImage, setLocalImage] = useState<string | null>(null);
   const onDrop = useCallback(acceptedFiles => {
     // Do something with the files
     const imageFile = acceptedFiles[0];
     if (imageFile) {
-      upload(row.ref, fieldName, [imageFile], value);
+      upload({
+        docRef: row.ref,
+        fieldName,
+        files: [imageFile],
+        previousValue: value,
+      });
       let url = URL.createObjectURL(imageFile);
       setLocalImage(url);
     }
@@ -99,7 +106,6 @@ const Image = (props: Props) => {
       wrap="nowrap"
       alignItems="center"
       {...dropzoneProps}
-      onClick={() => {}}
     >
       <input {...getInputProps()} />
 
@@ -156,12 +162,16 @@ const Image = (props: Props) => {
       </Grid>
 
       <Grid item>
-        {progress === 0 ? (
+        {!isLoading && progress === 0 ? (
           <IconButton onClick={dropzoneProps.onClick} size="small">
             <AddIcon />
           </IconButton>
         ) : (
-          <CircularProgress size={30} variant="static" value={progress} />
+          <CircularProgress
+            size={30}
+            variant={progress === 0 ? "indeterminate" : "static"}
+            value={progress}
+          />
         )}
       </Grid>
     </Grid>
