@@ -32,7 +32,7 @@ export default function DateTimePicker(props: KeyboardDateTimePickerProps) {
       value={transformedValue}
       label=""
       hiddenLabel
-      id={`sidemodal-field-${props.field.name}`}
+      id={`sidedrawer-field-${props.field.name}`}
     />
   );
 }

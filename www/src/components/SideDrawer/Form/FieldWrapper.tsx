@@ -50,8 +50,8 @@ export default function FieldWrapper({
         alignItems="center"
         className={classes.header}
         component="label"
-        id={`sidemodal-label-${name}`}
-        htmlFor={`sidemodal-field-${name}`}
+        id={`sidedrawer-label-${name}`}
+        htmlFor={`sidedrawer-field-${name}`}
       >
         <Grid item className={classes.iconContainer}>
           {getFieldIcon(type)}

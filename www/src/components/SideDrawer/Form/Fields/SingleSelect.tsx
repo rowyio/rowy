@@ -36,7 +36,7 @@ export default function SingleSelect({
       }}
       label=""
       hiddenLabel
-      SelectProps={{ labelId: `sidemodal-label-${props.field.name}` }}
+      SelectProps={{ labelId: `sidedrawer-label-${props.field.name}` }}
     >
       {options.map(option => {
         if (typeof option === "object")

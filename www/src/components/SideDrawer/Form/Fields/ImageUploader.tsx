@@ -140,7 +140,7 @@ export default function ImageUploader({
   return (
     <>
       <ButtonBase className={classes.dropzoneButton} {...getRootProps()}>
-        <input id={`sidemodal-field-${field.name}`} {...getInputProps()} />
+        <input id={`sidedrawer-field-${field.name}`} {...getInputProps()} />
         <AddIcon />
         <Typography variant="body1" color="textSecondary">
           Upload image

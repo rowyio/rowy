@@ -1,9 +1,11 @@
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useEffect } from "react";
 import { Formik, Form as FormikForm, Field } from "formik";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import _isFunction from "lodash/isFunction";
 import _isEmpty from "lodash/isEmpty";
+
+import { useFiretableContext } from "contexts/firetableContext";
 
 import { Grid, LinearProgress } from "@material-ui/core";
 
@@ -87,6 +89,15 @@ export interface IFormProps {
 
 export default function Form({ fields, values }: IFormProps) {
   const initialValues = getInitialValues(fields);
+
+  const { selectedCell } = useFiretableContext();
+  useEffect(() => {
+    if (!selectedCell?.column) return;
+    const elem = document.getElementById(
+      `sidedrawer-label-${selectedCell!.column}`
+    )?.parentNode as HTMLElement;
+    elem?.scrollIntoView({ behavior: "smooth" });
+  }, [selectedCell?.column]);
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
