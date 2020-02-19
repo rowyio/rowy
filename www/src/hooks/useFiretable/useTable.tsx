@@ -16,6 +16,7 @@ const tableInitialState = {
   rows: [],
   prevFilters: null,
   prevPath: null,
+  orderBy: null,
   prevOrderBy: null,
   path: null,
   filters: [],

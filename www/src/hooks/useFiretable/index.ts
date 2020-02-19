@@ -20,6 +20,7 @@ export type FiretableActions = {
 };
 
 export type FiretableState = {
+  orderBy: FiretableOrderBy;
   tablePath: string;
   config: { rowHeight: number };
   columns: any[];
@@ -60,6 +61,7 @@ const useFiretable = (
     tableActions.dispatch({ orderBy });
   };
   const state: FiretableState = {
+    orderBy: tableState.orderBy,
     tablePath: tableState.path,
     filters: tableState.filters,
     columns: tableConfig.columns,
