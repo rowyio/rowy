@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import useDoc, { DocActions } from "./useDoc";
 import { db } from "../firebase";
+import _groupBy from "lodash/groupBy";
 
 const useSettings = () => {
   const [settingsState, documentDispatch] = useDoc({
@@ -10,6 +11,13 @@ const useSettings = () => {
     //updates tables data on document change
     const { doc, tables } = settingsState;
     if (doc && tables !== doc.tables) {
+      // const sections = _groupBy(
+      //   tables.filter(
+      //     table =>
+      //       !table.roles || table.roles.some(role => userRoles.includes(role))
+      //   ),
+      //   "section"
+      // );
       documentDispatch({ tables: doc.tables });
     }
   }, [settingsState]);

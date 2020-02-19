@@ -26,6 +26,7 @@ const CheckBox = (props: Props) => {
             row.firstName
           ),
         }}
+        functionName="onChange"
       >
         <Grid container justify="center">
           <Switch

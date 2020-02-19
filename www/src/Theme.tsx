@@ -1,4 +1,7 @@
+import React from "react";
+
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
+import ClearIcon from "@material-ui/icons/Clear";
 
 const HEADING_TEXT = "Europa, sans-serif";
 const BODY_TEXT = '"Open Sans", sans-serif';
@@ -88,6 +91,11 @@ const Theme = createMuiTheme({
       root: {
         borderRadius: 4,
       },
+      outlined: {
+        backgroundColor: "rgba(0, 0, 0, 0.08)",
+        borderColor: "rgba(0, 0, 0, 0.08)",
+        color: "rgba(0, 0, 0, 0.6)",
+      },
       label: {
         // overline style
         fontFamily: HEADING_TEXT,
@@ -96,11 +104,13 @@ const Theme = createMuiTheme({
         fontStyle: "normal",
         lineHeight: 1.2,
         letterSpacing: 1.125,
-        color: "rgba(0, 0, 0, 0.6)",
       },
       labelSmall: {
         paddingLeft: 12,
         paddingRight: 11,
+      },
+      deleteIcon: {
+        color: "inherit",
       },
     },
     MuiPaper: {
@@ -151,7 +161,11 @@ const Theme = createMuiTheme({
         transformOrigin: { vertical: "top", horizontal: "center" },
       },
     },
-    MuiChip: { size: "small" },
+    MuiChip: {
+      size: "small",
+      variant: "outlined",
+      deleteIcon: <ClearIcon />,
+    },
     MuiButton: { color: "primary" },
   },
 });

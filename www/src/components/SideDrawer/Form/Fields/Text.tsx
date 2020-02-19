@@ -55,7 +55,7 @@ export default function Text({ fieldVariant = "short", ...props }: ITextProps) {
       placeholder={props.label as string}
       {...variantProps}
       {...props}
-      id={`sidemodal-field-${props.field.name}`}
+      id={`sidedrawer-field-${props.field.name}`}
       label=""
       hiddenLabel
       //InputProps={{ disableUnderline: true }}

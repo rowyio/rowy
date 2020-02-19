@@ -1,14 +1,14 @@
+import React, { useState, useCallback, useRef } from "react";
+
 import EmptyTable from "./EmptyTable";
 import { editable } from "./grid-fns";
 
 import Loading from "../Loading";
 
 import { FieldType } from "constants/fields";
-import { useSideDrawerContext } from "contexts/sideDrawerContext";
+import { useFiretableContext } from "contexts/firetableContext";
 
 import "react-data-grid/dist/react-data-grid.css";
-
-import React, { useState, useCallback, useRef } from "react";
 
 import DataGrid, {
   Column,
@@ -29,61 +29,7 @@ export interface IGridProps {
   [key: string]: any;
 }
 
-// const Grid = ({
-//   onHeaderDrop,
-//   rowHeight,
-//   columns,
-//   RowRenderer,
-//   handleRowGetter,
-//   tableHeight,
-//   onGridRowsUpdated,
-//   rows,
-//   resizeColumn,
-//   loadingRows,
-//   addRow,
-//   setSelectedCell,
-// }: IGridProps) => {
-//   const { setSelectedCell: contextSetSelectedCell } = useSideDrawerContext();
-
-//   return (
-//     <Suspense fallback={<Loading message="Loading table" />}>
-//       <DraggableContainer onHeaderDrop={onHeaderDrop}>
-//         <ReactDataGrid
-//           headerRowHeight={47}
-//           rowRenderer={RowRenderer}
-//           rowHeight={rowHeight}
-//           columns={columns}
-//           enableCellSelect={true} // makes text based cells editable
-//           rowGetter={handleRowGetter}
-//           rowsCount={rows.length}
-//           onGridRowsUpdated={onGridRowsUpdated}
-//           minHeight={tableHeight}
-//           onCellSelected={(coordinates: { rowIdx: number; idx: number }) => {
-//             const row = rows[coordinates.rowIdx];
-//             const column = columns[coordinates.idx];
-//             if (editable(column.type)) {
-//               //only editable fields are stored selectedCell, temporary fix for custom fields
-//               setSelectedCell({ row, column });
-//             }
-//             if (contextSetSelectedCell) contextSetSelectedCell({ row });
-//           }}
-//           onColumnResize={(idx: number, width: number) =>
-//             //tableActions.column.resize(idx, width)
-//             resizeColumn(idx, width)
-//           }
-//           emptyRowsView={() => (
-//             <EmptyTable
-//               //isLoading={tableState.loadingRows}
-//               isLoading={loadingRows}
-//               tableHeight={tableHeight}
-//               addRow={addRow}
-//             />
-//           )}
-//         />
-//       </DraggableContainer>
-//     </Suspense>
-
-const Grid = (props: any) => {
+export default function Grid(props: any) {
   const {
     onHeaderDrop,
     rowHeight,
@@ -97,9 +43,8 @@ const Grid = (props: any) => {
     resizeColumn,
     loadingRows,
     addRow,
-    setSelectedCell,
   } = props;
-  const { setSelectedCell: contextSetSelectedCell } = useSideDrawerContext();
+  const { setSelectedCell } = useFiretableContext();
   //const [rows, setRows] = useState(() => createRows(2000));
   const [selectedRows, setSelectedRows] = useState(() => new Set<string>());
   const gridRef = useRef<DataGridHandle>(null);
@@ -134,7 +79,7 @@ const Grid = (props: any) => {
   const handleRowClick = useCallback(
     (rowIdx: number, row: any, column: CalculatedColumn<any>) => {
       // TODO:
-      setSelectedCell({ row, column });
+      if (setSelectedCell) setSelectedCell({ row: rowIdx, column: column.idx });
       console.log(rowIdx, row, column);
     },
     []
@@ -161,6 +106,4 @@ const Grid = (props: any) => {
       cellNavigationMode={CellNavigationMode.CHANGE_ROW}
     />
   );
-};
-
-export default Grid;
+}

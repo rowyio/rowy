@@ -11,13 +11,15 @@ import {
 
 import useSettings from "../hooks/useSettings";
 import routes from "../constants/routes";
-import { AppContext } from "../AppProvider";
-
+import { AppContext } from "../contexts/appContext";
+import useRouter from "../hooks/useRouter";
 import SecurityIcon from "@material-ui/icons/Security";
 import AppBar from "../components/AppBar";
 import Loading from "components/Loading";
 import EmptyState from "components/EmptyState";
 import GoIcon from "../components/GoIcon";
+
+import { useFiretableContext } from "../contexts/firetableContext";
 import StyledCard from "../components/StyledCard";
 import CreateTableDialog from "../components/CreateTableDialog";
 import _groupBy from "lodash/groupBy";
@@ -68,34 +70,24 @@ const useStyles = makeStyles(theme =>
 
 const TablesView = () => {
   const classes = useStyles();
+  const router = useRouter();
   const [userRoles, setUserRoles] = useState<null | string[]>();
   const [userRegions, setUserRegions] = useState<null | string[]>();
-  const { currentUser } = useContext(AppContext);
-  useEffect(() => {
-    if (currentUser) {
-      currentUser.getIdTokenResult(true).then(results => {
-        setUserRoles(results.claims.roles || []);
-        setUserRegions(results.claims.regions || []);
-      });
-    }
-  }, [currentUser]);
-  const [settings, createTable] = useSettings();
-  const tables = settings.tables;
-  if (!userRoles || !tables) return <Loading />;
-  const sections = _groupBy(
-    tables.filter(
-      table =>
-        !table.roles || table.roles.some(role => userRoles.includes(role))
-    ),
-    "section"
-  );
+  const {
+    sections,
+    createTable,
+    userClaims,
+    tableActions,
+  } = useFiretableContext();
 
+  if (!userClaims?.roles || !sections) return <Loading />;
+  const { roles, regions } = userClaims;
   return (
     <main className={classes.root}>
       <AppBar />
 
       <Container>
-        {userRoles.length === 0 && (
+        {roles.length === 0 && (
           <EmptyState
             Icon={SecurityIcon}
             message={"You don't have any permissions specified"}
@@ -108,9 +100,9 @@ const TablesView = () => {
           />
         )}
 
-        {tables ? (
+        {sections ? (
           Object.keys(sections).map(sectionName => (
-            <div className={classes.section}>
+            <div key={sectionName} className={classes.section}>
               <Typography variant="overline">
                 {sectionName == "undefined" ? "Other" : sectionName}
               </Typography>
@@ -131,13 +123,34 @@ const TablesView = () => {
                       primaryLink={{
                         to: `${routes.table}/${table.collection}${
                           table.regional &&
-                          userRegions &&
-                          !userRegions.includes("GLOBAL")
-                            ? `?filters=%5B%7B%22key%22%3A%22region%22%2C%22operator%22%3A%22%3D%3D%22%2C%22value%22%3A%22${userRegions[0]}%22%7D%5D`
+                          regions &&
+                          !regions.includes("GLOBAL")
+                            ? `?filters=%5B%7B%22key%22%3A%22region%22%2C%22operator%22%3A%22%3D%3D%22%2C%22value%22%3A%22${regions[0]}%22%7D%5D`
                             : ""
                         }`,
                         label: "Open",
                       }}
+                      // primaryButton={{
+                      //   children: "Open",
+                      //   onClick: () => {
+                      //     //set
+                      //     if (table.regional && !regions.includes("GLOBAL")) {
+                      //       tableActions?.table.set(table.collection, [
+                      //         {
+                      //           key: "region",
+                      //           operator: "==",
+                      //           value: regions[0],
+                      //         },
+                      //       ]);
+                      //     } else {
+                      //       tableActions?.table.set(table.collection, []);
+                      //     }
+
+                      //     router.history.push(
+                      //       `${routes.table}/${table.collection}`
+                      //     );
+                      //   },
+                      // }}
                     />
                   </Grid>
                 ))}
@@ -150,7 +163,11 @@ const TablesView = () => {
 
         <Grid item className={classes.createTableContainer}>
           <CreateTableDialog
-            createTable={createTable}
+            createTable={(tableName: string, collectionName: string) => {
+              if (createTable) {
+                createTable(tableName, collectionName);
+              }
+            }}
             classes={{ fab: classes.createTableFab }}
           />
         </Grid>

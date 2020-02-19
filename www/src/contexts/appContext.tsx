@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { auth } from "./firebase";
+import { auth } from "../firebase";
 
 interface AppContextInterface {
   currentUser: firebase.User | null | undefined;

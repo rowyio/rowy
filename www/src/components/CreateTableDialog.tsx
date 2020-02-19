@@ -3,7 +3,7 @@ import _camelCase from "lodash/camelCase";
 
 import AddIcon from "@material-ui/icons/Add";
 import useRouter from "../hooks/useRouter";
-
+import MultiSelect from "../components/MultiSelect";
 import {
   Tooltip,
   Fab,
@@ -14,6 +14,7 @@ import {
   DialogTitle,
   TextField,
   Button,
+  Select,
 } from "@material-ui/core";
 
 export interface ICreateTableDialogProps {
@@ -76,6 +77,7 @@ export default function CreateTableDialog({
         <DialogTitle id="form-dialog-title">New table</DialogTitle>
         <DialogContent>
           <DialogContentText>Create a new Table</DialogContentText>
+          <Select label="Section" />
           <TextField
             autoFocus
             onChange={e => {
@@ -84,19 +86,39 @@ export default function CreateTableDialog({
             margin="dense"
             id="name"
             label="Table Name"
-            type="email"
+            type="text"
             fullWidth
+            variant="filled"
           />
           <TextField
             value={collectionName}
             onChange={e => {
               setCollectionName(e.target.value);
             }}
+            variant="filled"
             margin="dense"
             id="collection"
             label="Collection Name"
-            type="email"
+            type="text"
             fullWidth
+          />
+
+          <TextField
+            label="Description"
+            id="description"
+            variant="filled"
+            fullWidth
+            multiline={true}
+          />
+          <MultiSelect
+            field="roles"
+            freeText={true}
+            options={["PROGRAM", "RECRUITING", "COACHING", "ADMIN"]}
+            multiple
+            value={[]}
+            selectAll
+            label="Roles"
+            onChange={() => {}}
           />
         </DialogContent>
         <DialogActions>

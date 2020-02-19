@@ -21,10 +21,13 @@ export default function TableView() {
     filters = JSON.parse(parsed.filters);
     //TODO: json schema validator
   }
-
   return (
     <Navigation>
-      <Table collection={tableCollection} filters={filters} />
+      <Table
+        key={tableCollection}
+        collection={tableCollection}
+        filters={filters}
+      />
     </Navigation>
   );
 }

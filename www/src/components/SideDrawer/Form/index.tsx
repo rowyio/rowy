@@ -1,11 +1,13 @@
-import React from "react";
+import React, { lazy, Suspense, useEffect } from "react";
 import { Formik, Form as FormikForm, Field } from "formik";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import _isFunction from "lodash/isFunction";
 import _isEmpty from "lodash/isEmpty";
 
-import { Grid } from "@material-ui/core";
+import { useFiretableContext } from "contexts/firetableContext";
+
+import { Grid, LinearProgress } from "@material-ui/core";
 
 import Autosave from "./Autosave";
 import FieldWrapper from "./FieldWrapper";
@@ -20,11 +22,15 @@ import Color from "./Fields/Color";
 // import Radio from "./Fields/Radio";
 import Slider from "./Fields/Slider";
 // import TextMulti from "./Fields/TextMulti";
-// import ImageUploader from "./Fields/ImageUploader";
+import ImageUploader from "./Fields/ImageUploader";
+import FileUploader from "./Fields/FileUploader";
 
 import { FieldType } from "constants/fields";
 // import Heading from "./Heading";
 // import Description from "./Description";
+
+const RichText = lazy(() => import("./Fields/RichText"));
+const JsonEditor = lazy(() => import("./Fields/JsonEditor"));
 
 export type Values = { [key: string]: any };
 export type Field = {
@@ -83,6 +89,15 @@ export interface IFormProps {
 
 export default function Form({ fields, values }: IFormProps) {
   const initialValues = getInitialValues(fields);
+
+  const { selectedCell } = useFiretableContext();
+  useEffect(() => {
+    if (!selectedCell?.column) return;
+    const elem = document.getElementById(
+      `sidedrawer-label-${selectedCell!.column}`
+    )?.parentNode as HTMLElement;
+    elem?.scrollIntoView({ behavior: "smooth" });
+  }, [selectedCell?.column]);
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -180,18 +195,33 @@ export default function Form({ fields, values }: IFormProps) {
                     );
                     break;
 
-                  // case FieldType.richText:
-                  //   break;
+                  case FieldType.richText:
+                    renderedField = (
+                      <Suspense fallback={<LinearProgress />}>
+                        <Field {...fieldProps} component={RichText} />
+                      </Suspense>
+                    );
+                    break;
 
-                  // case FieldType.image:
-                  //   renderedField = (
-                  //     <Field
-                  //       {...fieldProps}
-                  //       component={ImageUploader}
-                  //       docRef={docState.ref}
-                  //     />
-                  //   );
-                  //   break;
+                  case FieldType.image:
+                    renderedField = (
+                      <Field
+                        {...fieldProps}
+                        component={ImageUploader}
+                        docRef={values.ref}
+                      />
+                    );
+                    break;
+
+                  case FieldType.file:
+                    renderedField = (
+                      <Field
+                        {...fieldProps}
+                        component={FileUploader}
+                        docRef={values.ref}
+                      />
+                    );
+                    break;
 
                   case FieldType.rating:
                     renderedField = (
@@ -199,11 +229,16 @@ export default function Form({ fields, values }: IFormProps) {
                     );
                     break;
 
-                  // case FieldType.file:
                   // case FieldType.connectTable:
                   // case FieldType.subTable:
                   // case FieldType.action:
-                  // case FieldType.json:
+                  case FieldType.json:
+                    renderedField = (
+                      <Suspense fallback={<LinearProgress />}>
+                        <Field {...fieldProps} component={JsonEditor} />
+                      </Suspense>
+                    );
+                    break;
 
                   case undefined:
                     return null;
@@ -223,6 +258,13 @@ export default function Form({ fields, values }: IFormProps) {
                   </FieldWrapper>
                 );
               })}
+
+              <FieldWrapper
+                type={FieldType.debug}
+                name="_ft_debug_path"
+                label="Document Path"
+                debugText={values.ref.path}
+              />
             </Grid>
           </FormikForm>
         )}

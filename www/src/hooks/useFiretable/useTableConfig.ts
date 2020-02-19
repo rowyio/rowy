@@ -8,9 +8,9 @@ import { db } from "../../firebase";
 
 const formatPath = (tablePath: string) =>
   `${tablePath.replace(new RegExp("/.*/"), "/_FIRETABLE_/")}/_FIRETABLE_`;
-const useTableConfig = (tablePath: string) => {
+const useTableConfig = (tablePath?: string) => {
   const [tableConfigState, documentDispatch] = useDoc({
-    path: formatPath(tablePath),
+    path: tablePath ? formatPath(tablePath) : "",
   });
 
   useEffect(() => {

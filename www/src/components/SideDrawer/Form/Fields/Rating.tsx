@@ -15,7 +15,7 @@ const useStyles = makeStyles(theme =>
           ? "rgba(0, 0, 0, 0.09)"
           : "rgba(255, 255, 255, 0.09)",
       borderRadius: theme.shape.borderRadius,
-      padding: theme.spacing(0, 1),
+      padding: theme.spacing(0, 2),
 
       margin: 0,
       width: "100%",
@@ -37,7 +37,7 @@ export default function Rating(props: IRatingProps) {
       <Grid container alignItems="center" className={classes.root}>
         <MuiRating
           name={props.field.name}
-          id={`sidemodal-field-${props.field.name}`}
+          id={`sidedrawer-field-${props.field.name}`}
           value={typeof props.field.value === "number" ? props.field.value : 0}
           onChange={(event, newValue) => {
             props.form.setFieldValue(props.field.name, newValue);

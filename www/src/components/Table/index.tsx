@@ -14,19 +14,16 @@ import Confirmation from "components/Confirmation";
 import DeleteIcon from "@material-ui/icons/Delete";
 import DuplicateIcon from "@material-ui/icons/FileCopy";
 import AddIcon from "@material-ui/icons/AddCircle";
-import useWindowSize from "../../hooks/useWindowSize";
+
 import useStyles from "./useStyle";
+import useWindowSize from "hooks/useWindowSize";
 
 import Loading from "../../components/Loading";
 import Grid, { IGridProps } from "./Grid";
-import LongTextEditor from "../EditorModal/LongTextEditor";
-import RichTextEditor from "../EditorModal/RichTextEditor";
-import JsonEditor from "../EditorModal/JsonEditor";
 
-import useFiretable, {
-  FireTableFilter,
-  FiretableOrderBy,
-} from "../../hooks/useFiretable";
+import { FireTableFilter, FiretableOrderBy } from "../../hooks/useFiretable";
+import { useAppContext } from "contexts/appContext";
+import { useFiretableContext } from "contexts/firetableContext";
 
 import { FieldType, getFieldIcon } from "constants/fields";
 import {
@@ -38,7 +35,6 @@ import {
   onSubmit,
 } from "./grid-fns";
 import { EditorProvider } from "../../util/EditorProvider";
-import { useSideDrawerContext } from "contexts/sideDrawerContext";
 
 const Hotkeys = lazy(() => import("./HotKeys"));
 const TableHeader = lazy(() => import("./TableHeader"));
@@ -53,28 +49,26 @@ interface Props {
 
 function Table(props: Props) {
   const { collection, filters } = props;
-
+  const { currentUser } = useAppContext();
+  const {
+    tableState,
+    tableActions,
+    setSelectedCell: contextSetSelectedCell,
+  } = useFiretableContext();
   const [orderBy, setOrderBy] = useState<FiretableOrderBy>([]);
-  const { tableState, tableActions } = useFiretable(
-    collection,
-    filters,
-    orderBy
-  );
+
+  useEffect(() => {
+    if (tableActions && tableState && tableState.tablePath !== collection) {
+      console.log("setting table");
+      tableActions.table.set(collection, filters);
+      if (contextSetSelectedCell) contextSetSelectedCell({});
+    }
+  }, [collection]);
+  // TODO: move this to firetableContext
   const [selectedCell, setSelectedCell] = useState<{ row: any; column: any }>({
     row: {},
     column: {},
   });
-  // Sync columns values to context to show side drawer
-  // TODO: remove this sync here if useFiretable becomes a context
-  const {
-    setColumns,
-    setSelectedCell: contextSetSelectedCell,
-  } = useSideDrawerContext();
-  useEffect(() => {
-    if (setColumns) setColumns(tableState.columns);
-    // Reset selected cell so we don’t show empty form that does nothing
-    if (contextSetSelectedCell) contextSetSelectedCell({});
-  }, [tableState.columns]);
 
   const [search, setSearch] = useState({
     config: undefined,
@@ -82,15 +76,15 @@ function Table(props: Props) {
     onSubmit: undefined,
   });
 
-  useEffect(() => {
-    tableActions.table.set(collection, filters, orderBy);
-  }, [collection, filters]);
-
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   const [header, setHeader] = useState<any | null>();
 
+  const windowSize = useWindowSize();
+  if (!windowSize || !windowSize.height) return <></>;
+
+  if (!tableActions || !tableState) return <></>;
   const handleCloseHeader = () => {
     setHeader(null);
     setAnchorEl(null);
@@ -106,7 +100,7 @@ function Table(props: Props) {
     <Suspense fallback={<div />}>
       <DocSelect
         {...props}
-        onSubmit={onSubmit(column.key, props.row)}
+        onSubmit={onSubmit(column.key, props.row, currentUser?.uid)}
         collectionPath={column.collectionPath}
         config={column.config}
         setSearch={setSearch}
@@ -232,7 +226,6 @@ function Table(props: Props) {
       .map((column: any) => ({
         draggable: true,
         editable: editable(column.type),
-        frozen: column.fixed,
         resizable: true,
         //frozen: column.fixed,
         headerRenderer: headerRenderer,
@@ -321,8 +314,8 @@ function Table(props: Props) {
    * @param index
    */
   const handleRowGetter = (index: number) => {
-    if (tableState.rowsLimit - index === 1) {
-      tableActions.row.more();
+    if (tableState.rowsLimit - index < 30) {
+      tableActions.row.more(30);
     }
     return rows[index];
   };
@@ -339,20 +332,16 @@ function Table(props: Props) {
       tableActions.row.add({ ...filtersData, ...data });
     } else tableActions.row.add({ ...data });
   };
-  const windowSize = useWindowSize();
-  if (!windowSize || !windowSize.height) return <></>;
   return (
     <EditorProvider>
       <Suspense fallback={<Loading message="Loading header" />}>
-        {/* <Hotkeys selectedCell={selectedCell} /> */}
+        <Hotkeys selectedCell={selectedCell} />
         <TableHeader
-          tableActions={tableActions}
           collection={collection}
           rowHeight={rowHeight}
           updateConfig={tableActions.table.updateConfig}
           columns={columns}
           filters={filters}
-          addRow={addRow}
         />
       </Suspense>
 
@@ -387,9 +376,6 @@ function Table(props: Props) {
         />
 
         <SearchBox searchData={search} clearSearch={clearSearch} />
-        <RichTextEditor />
-        <LongTextEditor />
-        <JsonEditor />
       </Suspense>
     </EditorProvider>
   );
