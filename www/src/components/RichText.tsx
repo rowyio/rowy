@@ -30,7 +30,6 @@ export default function RichText({ value, onChange }: IRichTextProps) {
   return (
     <div className={classes.root}>
       <Editor
-        initialValue={value}
         init={{
           height: 300,
           menubar: false,
@@ -39,6 +38,7 @@ export default function RichText({ value, onChange }: IRichTextProps) {
           toolbar:
             "formatselect | bold italic forecolor | link | bullist numlist outdent indent | removeformat | help",
         }}
+        value={value}
         onEditorChange={onChange}
       />
     </div>
