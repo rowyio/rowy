@@ -12,6 +12,7 @@ import {
   Tabs,
   Tab,
 } from "@material-ui/core";
+
 import HomeIcon from "@material-ui/icons/Home";
 import Skeleton from "@material-ui/lab/Skeleton";
 
@@ -157,6 +158,7 @@ const Navigation = (props: any) => {
               alignItems="center"
               spacing={2}
             >
+
               {Object.keys(sections).map((sectionName: string) => (
                 <Grid item key={sectionName}>
                   <Button
@@ -176,6 +178,7 @@ const Navigation = (props: any) => {
                   >
                     {sectionName}
                   </Button>
+
                 </Grid>
               ))}
               <Grid item>
@@ -190,11 +193,13 @@ const Navigation = (props: any) => {
             >
               Sign out
             </Button> */}
+
         </Toolbar>
       </AppBar>
 
       <SideDrawer />
     </>
+
   );
 };
 export default Navigation;
