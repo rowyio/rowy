@@ -333,13 +333,11 @@ function Table(props: Props) {
       <Suspense fallback={<Loading message="Loading header" />}>
         <Hotkeys selectedCell={selectedCell} />
         <TableHeader
-          tableActions={tableActions}
           collection={collection}
           rowHeight={rowHeight}
           updateConfig={tableActions.table.updateConfig}
           columns={columns}
           filters={filters}
-          addRow={addRow}
         />
       </Suspense>
 

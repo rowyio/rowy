@@ -23,6 +23,7 @@ import ExportCSV from "../ExportCSV";
 
 import { FireTableFilter } from "../../hooks/useFiretable";
 import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
+import { useFiretableContext } from "../../contexts/firetableContext";
 
 import Filters from "./Filters";
 const useStyles = makeStyles(theme =>
@@ -52,8 +53,7 @@ interface Props {
   collection: string;
   rowHeight: number;
   updateConfig: Function;
-  tableActions: any;
-  addRow: Function;
+
   columns: any;
   filters: FireTableFilter[];
 }
@@ -62,16 +62,15 @@ const TableHeader = ({
   rowHeight,
   updateConfig,
   columns,
-  addRow,
+
   filters,
-  tableActions,
 }: Props) => {
   const classes = useStyles();
   const router = useRouter();
   const parentLabel = queryString.parse(router.location.search)
     .parentLabel as string;
   let breadcrumbs = collection.split("/");
-
+  const { tableActions } = useFiretableContext();
   return (
     <Grid container alignItems="center" spacing={2} className={classes.root}>
       <Grid item xs>
@@ -162,7 +161,7 @@ const TableHeader = ({
             <Filters
               columns={columns}
               tableFilters={filters}
-              setFilters={tableActions.table.filter}
+              setFilters={tableActions?.table.filter}
             />
           </Grid>
 
@@ -178,11 +177,14 @@ const TableHeader = ({
           </Grid>
 
           <Grid item>
-            <ImportCSV columns={columns} addRow={addRow} />
+            <ImportCSV columns={columns} addRow={tableActions?.row.add} />
           </Grid>
 
           <Grid item>
-            <Button onClick={() => addRow()} endIcon={<AddIcon />}>
+            <Button
+              onClick={() => tableActions?.row.add()}
+              endIcon={<AddIcon />}
+            >
               Add Row
             </Button>
           </Grid>
