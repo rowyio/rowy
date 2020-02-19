@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-interface Props {
+export interface IConfirmationProps {
   children: JSX.Element;
   message?: {
     title?: string;
@@ -30,9 +30,15 @@ interface Props {
     confirm?: string | JSX.Element;
   };
   confirmationCommand?: string;
+  functionName?: string;
 }
-const Confirmation = (props: Props) => {
-  const { children, message, confirmationCommand } = props;
+
+export default function Confirmation({
+  children,
+  message,
+  confirmationCommand,
+  functionName = "onClick",
+}: IConfirmationProps) {
   const classes = useStyles();
   const [showDialog, setShowDialog] = useState(false);
   const [dryText, setDryText] = useState("");
@@ -40,20 +46,16 @@ const Confirmation = (props: Props) => {
   const handleClose = () => {
     setShowDialog(false);
   };
-  //Gets the function of the wrapped button to use for execution on conformation
-  const confirmHandler = children.props.onChange || children.props.onClick;
+
+  const confirmHandler = children.props[functionName];
   const button = React.cloneElement(children, {
-    onClick: () => {
-      setShowDialog(true);
-    },
-    onChange: () => {
-      setShowDialog(true);
-    },
+    [functionName]: () => setShowDialog(true),
   });
 
   return (
     <>
       {button}
+
       <Dialog open={showDialog} onClose={handleClose}>
         <DialogTitle>
           {(message && message.title) || "Are you sure?"}
@@ -108,6 +110,4 @@ const Confirmation = (props: Props) => {
       </Dialog>
     </>
   );
-};
-
-export default Confirmation;
+}

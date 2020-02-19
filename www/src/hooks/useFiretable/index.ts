@@ -20,11 +20,13 @@ export type FiretableActions = {
 };
 
 export type FiretableState = {
+  orderBy: FiretableOrderBy;
+  tablePath: string;
   config: { rowHeight: number };
   columns: any[];
   rows: any[];
   rowsLimit: number;
-
+  filters: FireTableFilter[];
   loadingRows: boolean;
   loadingColumns: boolean;
 };
@@ -35,7 +37,7 @@ export type FireTableFilter = {
 };
 export type FiretableOrderBy = { key: string; direction: "asc" | "desc" }[];
 const useFiretable = (
-  collectionName: string,
+  collectionName?: string,
   filters?: FireTableFilter[],
   orderBy?: FiretableOrderBy
 ) => {
@@ -46,11 +48,7 @@ const useFiretable = (
     orderBy,
   });
   /** set collection path of table */
-  const setTable = (
-    collectionName: string,
-    filters: FireTableFilter[],
-    orderBy: FiretableOrderBy
-  ) => {
+  const setTable = (collectionName: string, filters: FireTableFilter[]) => {
     if (collectionName !== tableState.path || filters !== tableState.filters) {
       configActions.setTable(collectionName);
       tableActions.setTable(collectionName, filters);
@@ -63,6 +61,9 @@ const useFiretable = (
     tableActions.dispatch({ orderBy });
   };
   const state: FiretableState = {
+    orderBy: tableState.orderBy,
+    tablePath: tableState.path,
+    filters: tableState.filters,
     columns: tableConfig.columns,
     config: { rowHeight: tableConfig.rowHeight },
     rows: tableState.rows,

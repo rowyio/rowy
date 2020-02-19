@@ -296,7 +296,6 @@ const ColumnEditor = (props: any) => {
                   <Button
                     onClick={createNewColumn}
                     disabled={disableAdd()}
-                    color="secondary"
                     fullWidth
                   >
                     Add
@@ -305,7 +304,6 @@ const ColumnEditor = (props: any) => {
                   <Button
                     disabled={disableAdd()}
                     onClick={updateColumn}
-                    color="secondary"
                     fullWidth
                   >
                     update
@@ -321,7 +319,7 @@ const ColumnEditor = (props: any) => {
                         "Are you sure you want to delete this nice column?",
                     }}
                   >
-                    <Button color="secondary" onClick={deleteColumn} fullWidth>
+                    <Button onClick={deleteColumn} fullWidth>
                       Delete
                     </Button>
                   </Confirmation>

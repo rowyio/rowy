@@ -18,15 +18,14 @@ import AddIcon from "@material-ui/icons/AddCircle";
 import useStyles from "./useStyle";
 
 import Loading from "../../components/Loading";
-import Grid from "./Grid";
-import LongTextEditor from "../LongTextEditor";
-import RichTextEditor from "../RichTextEditor";
-import JsonEditor from "../JsonEditor";
+import Grid, { IGridProps } from "./Grid";
+import LongTextEditor from "../EditorModal/LongTextEditor";
+import RichTextEditor from "../EditorModal/RichTextEditor";
+import JsonEditor from "../EditorModal/JsonEditor";
 
-import useFiretable, {
-  FireTableFilter,
-  FiretableOrderBy,
-} from "../../hooks/useFiretable";
+import { FireTableFilter, FiretableOrderBy } from "../../hooks/useFiretable";
+import { useAppContext } from "contexts/appContext";
+import { useFiretableContext } from "contexts/firetableContext";
 
 import { FieldType, getFieldIcon } from "constants/fields";
 import {
@@ -52,12 +51,21 @@ interface Props {
 
 function Table(props: Props) {
   const { collection, filters } = props;
-  const [orderBy, setOrderBy] = useState<FiretableOrderBy>([]);
-  const { tableState, tableActions } = useFiretable(
-    collection,
-    filters,
-    orderBy
-  );
+  const { currentUser } = useAppContext();
+  const {
+    tableState,
+    tableActions,
+    setSelectedCell: contextSetSelectedCell,
+  } = useFiretableContext();
+
+  useEffect(() => {
+    if (tableActions && tableState && tableState.tablePath !== collection) {
+      console.log("setting table");
+      tableActions.table.set(collection, filters);
+      if (contextSetSelectedCell) contextSetSelectedCell({});
+    }
+  }, [collection]);
+  // TODO: move this to firetableContext
   const [selectedCell, setSelectedCell] = useState<{ row: any; column: any }>({
     row: {},
     column: {},
@@ -69,15 +77,12 @@ function Table(props: Props) {
     onSubmit: undefined,
   });
 
-  useEffect(() => {
-    tableActions.table.set(collection, filters, orderBy);
-  }, [collection, filters]);
-
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   const [header, setHeader] = useState<any | null>();
 
+  if (!tableActions || !tableState) return <></>;
   const handleCloseHeader = () => {
     setHeader(null);
     setAnchorEl(null);
@@ -93,7 +98,7 @@ function Table(props: Props) {
     <Suspense fallback={<div />}>
       <DocSelect
         {...props}
-        onSubmit={onSubmit(column.key, props.row)}
+        onSubmit={onSubmit(column.key, props.row, currentUser?.uid)}
         collectionPath={column.collectionPath}
         config={column.config}
         setSearch={setSearch}
@@ -159,36 +164,34 @@ function Table(props: Props) {
               <MuiGrid item>
                 <IconButton
                   color={
-                    orderBy[0] && orderBy[0].key === column.key
-                      ? "primary"
-                      : "default"
+                    // tableState &&
+                    // tableState.orderBy[0] &&
+                    // tableState.orderBy[0].key === column.key
+                    //   ? "primary"
+                    //   :
+                    "default"
                   }
                   disableFocusRipple={true}
                   size="small"
                   onClick={() => {
-                    console.log(
-                      orderBy,
-                      orderBy[0] && orderBy[0].key === column.key,
-                      orderBy[0] && orderBy[0].direction === "asc"
-                    );
-                    if (
-                      orderBy[0] &&
-                      orderBy[0].key === column.key &&
-                      orderBy[0].direction === "asc"
-                    ) {
-                      const ordering: FiretableOrderBy = [
-                        { key: column.key, direction: "desc" },
-                      ];
+                    // console.log(orderBy);
+                    // if (
+                    //   orderBy &&
+                    //   orderBy[0] &&
+                    //   orderBy[0].direction === "asc"
+                    // ) {
+                    //   const ordering: FiretableOrderBy = [
+                    //     { key: column.key, direction: "desc" },
+                    //   ];
+                    //   tableActions.table.orderBy(ordering);
+                    // } else {
+                    const ordering: FiretableOrderBy = [
+                      { key: column.key, direction: "asc" },
+                    ];
+                    tableActions.table.orderBy(ordering);
+                    // }
 
-                      tableActions.table.orderBy(ordering);
-                      //setOrderBy(ordering) #BROKENINSIDE
-                    } else {
-                      const ordering: FiretableOrderBy = [
-                        { key: column.key, direction: "asc" },
-                      ];
-                      tableActions.table.orderBy(ordering);
-                      //setOrderBy(ordering) #BROKENINSIDE
-                    }
+                    // setOrderBy(ordering) #BROKENINSIDE
                   }}
                 >
                   <ImportExportIcon />
@@ -211,7 +214,8 @@ function Table(props: Props) {
   const onHeaderDrop = (dragged: any, target: any) => {
     tableActions.column.reorder(dragged, target);
   };
-  let columns: any[] = [];
+
+  let columns: IGridProps["columns"] = [];
   if (!tableState.loadingColumns && tableState.columns) {
     columns = tableState.columns
       .filter((column: any) => !column.hidden)
@@ -253,7 +257,6 @@ function Table(props: Props) {
             }}
           >
             <IconButton
-              color="primary"
               onClick={async () => {
                 props.row.ref.delete();
               }}
@@ -262,7 +265,6 @@ function Table(props: Props) {
             </IconButton>
           </Confirmation>
           <IconButton
-            color="secondary"
             onClick={() => {
               const clonedRow = { ...props.row };
               // remove metadata
@@ -286,6 +288,7 @@ function Table(props: Props) {
     tableState.rows.length !== 0
       ? [...tableState.rows.map((row: any) => ({ rowHeight, ...row })), {}]
       : [];
+
   const RowRenderer = (props: any) => {
     const { renderBaseRow, ...rest } = props;
     if (rows.length === rest.idx + 1) {
@@ -307,8 +310,8 @@ function Table(props: Props) {
    * @param index
    */
   const handleRowGetter = (index: number) => {
-    if (tableState.rowsLimit - index === 1) {
-      tableActions.row.more();
+    if (tableState.rowsLimit - index < 30) {
+      tableActions.row.more(30);
     }
     return rows[index];
   };

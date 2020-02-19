@@ -1,33 +1,62 @@
 import { useReducer } from "react";
+import firebase from "firebase/app";
 import { bucket } from "../../firebase/index";
 
-import firebase from "firebase/app";
-const initialState = { progress: 0 };
-const uploadReducer = (prevState: any, newProps: any) => {
-  return { ...prevState, ...newProps };
+export type UploaderState = {
+  progress: number;
+  isLoading: boolean;
+  error?: string;
 };
+export type FileValue = {
+  downloadURL: string;
+  name: string;
+  type: string;
+  lastModifiedTS: number;
+};
+
+const initialState: UploaderState = { progress: 0, isLoading: false };
+const uploadReducer = (
+  prevState: UploaderState,
+  newProps: Partial<UploaderState>
+) => ({ ...prevState, ...newProps });
+
+export type UploadProps = {
+  docRef: firebase.firestore.DocumentReference;
+  fieldName: string;
+  files: File[];
+  previousValue?: FileValue[];
+  onComplete?: (values: FileValue[]) => void;
+};
+
 const useUploader = () => {
   const [uploaderState, uploaderDispatch] = useReducer(uploadReducer, {
     ...initialState,
   });
 
-  const upload = (
-    docRef: firebase.firestore.DocumentReference,
-    fieldName: string,
-    files: File[],
-    previousValue?: any
-  ) => {
+  const upload = ({
+    docRef,
+    fieldName,
+    files,
+    previousValue,
+    onComplete,
+  }: UploadProps) => {
+    uploaderDispatch({ isLoading: true });
+
     files.forEach(file => {
       const storageRef = bucket.ref(`${docRef.path}/${fieldName}/${file.name}`);
-      var uploadTask = storageRef.put(file);
+      const uploadTask = storageRef.put(file);
+
       uploadTask.on(
+        // event
         firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
-        function(snapshot: any) {
+        // observer
+        snapshot => {
           // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-          var progress =
+          const progress =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
           uploaderDispatch({ progress });
           console.log("Upload is " + progress + "% done");
+
           switch (snapshot.state) {
             case firebase.storage.TaskState.PAUSED: // or 'paused'
               console.log("Upload is paused");
@@ -37,58 +66,64 @@ const useUploader = () => {
               break;
           }
         },
-        function(error: any) {
+
+        // error – must be any to access error.code
+        (error: any) => {
           // A full list of error codes is available at
           // https://firebase.google.com/docs/storage/web/handle-errors
           switch (error.code) {
-            case "storage/unauthorized":
-              // User doesn't have permission to access the object
+            case "storage/unknown":
+              // Unknown error occurred, inspect error.serverResponse
+              uploaderDispatch({ error: error.serverResponse });
               break;
 
+            case "storage/unauthorized":
+            // User doesn't have permission to access the object
             case "storage/canceled":
-              // User canceled the upload
-              break;
-            case "storage/unknown":
+            // User canceled the upload
+            default:
+              uploaderDispatch({ error: error.code });
               // Unknown error occurred, inspect error.serverResponse
               break;
           }
         },
-        function() {
+
+        // complete
+        () => {
+          uploaderDispatch({ isLoading: false });
+
           // Upload completed successfully, now we can get the download URL
           uploadTask.snapshot.ref
             .getDownloadURL()
-            .then(function(downloadURL: string) {
-              if (previousValue) {
-                docRef.update({
-                  [fieldName]: [
-                    ...previousValue,
-                    {
-                      downloadURL,
-                      name: file.name,
-                      type: file.type,
-                      lastModifiedTS: file.lastModified,
-                    },
-                  ],
-                });
-              } else {
-                docRef.update({
-                  [fieldName]: [
-                    {
-                      downloadURL,
-                      name: file.name,
-                      type: file.type,
-                      lastModifiedTS: file.lastModified,
-                    },
-                  ],
-                });
-              }
+            .then((downloadURL: string) => {
+              const newValue: FileValue[] = previousValue ?? [];
+
+              newValue.push({
+                downloadURL,
+                name: file.name,
+                type: file.type,
+                lastModifiedTS: file.lastModified,
+              });
+
+              // STore in the document if docRef provided
+              if (docRef && docRef.update)
+                docRef.update({ [fieldName]: newValue });
+              // Also call callback if it exists
+              // IMPORTANT: Formik may not update its local values after this
+              // function updates the doc, so you MUST update it manually
+              // using this callback
+              if (onComplete) onComplete(newValue);
             });
         }
       );
     });
   };
 
-  return [uploaderState, upload];
+  return [uploaderState, upload, uploaderDispatch] as [
+    typeof uploaderState,
+    typeof upload,
+    typeof uploaderDispatch
+  ];
 };
 
 export default useUploader;

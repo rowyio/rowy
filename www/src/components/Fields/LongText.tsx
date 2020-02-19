@@ -1,5 +1,8 @@
 import React, { useContext } from "react";
 
+import { Grid } from "@material-ui/core";
+import EditIcon from "@material-ui/icons/Edit";
+
 import EditorContext from "contexts/editorContext";
 import { FieldType } from "constants/fields";
 
@@ -14,13 +17,22 @@ const LongText = (props: Props) => {
   const { value } = props;
 
   return (
-    <div
+    <Grid
+      container
       onDoubleClick={() => {
         editorContext.open(props, FieldType.longText);
       }}
+      spacing={1}
+      alignItems="center"
+      style={{ marginTop: 0 }}
     >
-      {value}
-    </div>
+      <Grid item>
+        <EditIcon />
+      </Grid>
+      <Grid item xs style={{ width: "calc(100% - 24px - 8px)" }}>
+        {value}
+      </Grid>
+    </Grid>
   );
 };
 export default LongText;

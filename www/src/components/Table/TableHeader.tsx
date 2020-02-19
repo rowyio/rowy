@@ -22,12 +22,13 @@ import ImportCSV from "../ImportCSV";
 import ExportCSV from "../ExportCSV";
 
 import { FireTableFilter } from "../../hooks/useFiretable";
+import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
 
 import Filters from "./Filters";
 const useStyles = makeStyles(theme =>
   createStyles({
     root: {
-      width: "100%",
+      width: `calc(100% - ${DRAWER_COLLAPSED_WIDTH}px)`,
       margin: 0,
       padding: theme.spacing(0, 1),
       minHeight: 56,
@@ -84,23 +85,24 @@ const TableHeader = ({
             {breadcrumbs.map((crumb: string, index) => {
               if (index % 2 === 0)
                 return (
-                  <Link
+                  <Typography
+                    variant="h6"
                     color="inherit"
-                    href={`/table/${breadcrumbs
-                      .reduce((acc: string, curr: string, currIndex) => {
-                        if (currIndex < index + 1) return acc + "/" + curr;
-                        else return acc;
-                      }, " ")
-                      .replace(" /", "")}?parentLabel=${parentLabel
-                      .split(",")
-                      .reduce((acc: string, curr, currIndex) => {
-                        if (currIndex > index - 1) return acc + "," + curr;
-                        else return acc;
-                      }, " ")
-                      .replace(" ,", "")}`}
+                    // href={`/table/${breadcrumbs
+                    //   .reduce((acc: string, curr: string, currIndex) => {
+                    //     if (currIndex < index + 1) return acc + "/" + curr;
+                    //     else return acc;
+                    //   }, " ")
+                    //   .replace(" /", "")}?parentLabel=${parentLabel
+                    //   .split(",")
+                    //   .reduce((acc: string, curr, currIndex) => {
+                    //     if (currIndex > index - 1) return acc + "," + curr;
+                    //     else return acc;
+                    //   }, " ")
+                    //   .replace(" ,", "")}`}
                   >
                     {crumb.replace(/([A-Z])/g, " $1")}
-                  </Link>
+                  </Typography>
                 );
               else if (index % 2 === 1)
                 return (
@@ -180,11 +182,7 @@ const TableHeader = ({
           </Grid>
 
           <Grid item>
-            <Button
-              color="secondary"
-              onClick={() => addRow()}
-              endIcon={<AddIcon />}
-            >
+            <Button onClick={() => addRow()} endIcon={<AddIcon />}>
               Add Row
             </Button>
           </Grid>

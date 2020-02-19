@@ -16,7 +16,7 @@ const cohort2algoliaKey = (cohort: string) =>
   generateAlgoliaKey("cohort", cohort);
 
 const cohort2region = (cohort: string) =>
-  cohort.toUpperCase().replace(/\d+$/, "");
+  cohort.toUpperCase().replace(/\d+.*$/, "");
 
 // const location2region = (location: string) => {
 //   const _location = location.toUpperCase();

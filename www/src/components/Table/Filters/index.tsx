@@ -277,7 +277,9 @@ const Filters = ({ columns, setFilters }: any) => {
                   Select Column
                 </MenuItem>
                 {filterColumns.map(c => (
-                  <MenuItem value={c.key}>{c.label}</MenuItem>
+                  <MenuItem key={c.key} value={c.key}>
+                    {c.label}
+                  </MenuItem>
                 ))}
               </TextField>
             </Grid>
@@ -321,7 +323,6 @@ const Filters = ({ columns, setFilters }: any) => {
             {/* <Button color="primary">+ ADD FILTER</Button> */}
             <Button
               disabled={query.key == ""}
-              color="secondary"
               onClick={() => {
                 setFilters([]);
                 setQuery({

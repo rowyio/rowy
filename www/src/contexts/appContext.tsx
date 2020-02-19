@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { auth } from "./firebase";
+import React, { useEffect, useState, useContext } from "react";
+import { auth } from "../firebase";
 
 interface AppContextInterface {
   currentUser: firebase.User | null | undefined;
@@ -8,6 +8,8 @@ interface AppContextInterface {
 export const AppContext = React.createContext<AppContextInterface>({
   currentUser: undefined,
 });
+
+export const useAppContext = () => useContext(AppContext);
 
 interface IAppProviderProps {
   children: React.ReactNode;

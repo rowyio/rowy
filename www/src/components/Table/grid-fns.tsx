@@ -44,17 +44,22 @@ export const editable = (fieldType: FieldType) => {
   }
 };
 
-export const onSubmit = (key: string, row: any) => async (value: any) => {
+export const onSubmit = (key: string, row: any, uid?: string) => async (
+  value: any
+) => {
   const collection = row.ref.parent.path;
   const data = { collection, id: row.ref.id, doc: { [key]: value } };
 
   if (value !== null || value !== undefined) {
-    const updatedAt = new Date();
-    let updatedFields = [key];
-    if (row.updatedFields) {
-      updatedFields = _uniq([key, ...row.updatedFields]);
-    }
-    row.ref.update({ [key]: value, updatedAt, updatedFields });
+    const _ft_updatedAt = new Date();
+    const _ft_updatedBy = uid ?? "";
+    row.ref.update({
+      [key]: value,
+      _ft_updatedAt,
+      updatedAt: _ft_updatedAt,
+      _ft_updatedBy,
+      updatedBy: _ft_updatedBy,
+    });
   }
 };
 
@@ -89,6 +94,7 @@ export const cellFormatter = (column: any) => {
           <Suspense fallback={<div />}>
             <Rating
               {...props}
+              column={column}
               onSubmit={onSubmit(key, props.row)}
               value={typeof props.value === "number" ? props.value : 0}
             />

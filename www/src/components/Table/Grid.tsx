@@ -7,23 +7,37 @@ import isEmpty from "lodash/isEmpty";
 import xorWith from "lodash/xorWith";
 import Loading from "../Loading";
 
+import { FieldType } from "constants/fields";
+import { useFiretableContext } from "contexts/firetableContext";
+
 const ReactDataGrid = lazy(() => import("react-data-grid"));
 const { DraggableContainer } = DraggableHeader;
-const Grid = (props: any) => {
-  const {
-    onHeaderDrop,
-    rowHeight,
-    columns,
-    RowRenderer,
-    handleRowGetter,
-    tableHeight,
-    onGridRowsUpdated,
-    rows,
-    resizeColumn,
-    loadingRows,
-    addRow,
-    setSelectedCell,
-  } = props;
+
+export interface IGridProps {
+  columns: (AdazzleReactDataGrid.Column<any> & {
+    isNew?: boolean;
+    type: FieldType;
+    [key: string]: any;
+  })[];
+  [key: string]: any;
+}
+
+const Grid = ({
+  onHeaderDrop,
+  rowHeight,
+  columns,
+  RowRenderer,
+  handleRowGetter,
+  tableHeight,
+  onGridRowsUpdated,
+  rows,
+  resizeColumn,
+  loadingRows,
+  addRow,
+  setSelectedCell,
+}: IGridProps) => {
+  const { setSelectedCell: contextSetSelectedCell } = useFiretableContext();
+
   return (
     <Suspense fallback={<Loading message="Loading table" />}>
       <DraggableContainer onHeaderDrop={onHeaderDrop}>
@@ -44,6 +58,11 @@ const Grid = (props: any) => {
               //only editable fields are stored selectedCell, temporary fix for custom fields
               setSelectedCell({ row, column });
             }
+            if (contextSetSelectedCell)
+              contextSetSelectedCell({
+                row: coordinates.rowIdx,
+                column: columns[coordinates.idx].key,
+              });
           }}
           onColumnResize={(idx: number, width: number) =>
             //tableActions.column.resize(idx, width)
