@@ -85,23 +85,24 @@ const TableHeader = ({
             {breadcrumbs.map((crumb: string, index) => {
               if (index % 2 === 0)
                 return (
-                  <Link
+                  <Typography
+                    variant="h6"
                     color="inherit"
-                    href={`/table/${breadcrumbs
-                      .reduce((acc: string, curr: string, currIndex) => {
-                        if (currIndex < index + 1) return acc + "/" + curr;
-                        else return acc;
-                      }, " ")
-                      .replace(" /", "")}?parentLabel=${parentLabel
-                      .split(",")
-                      .reduce((acc: string, curr, currIndex) => {
-                        if (currIndex > index - 1) return acc + "," + curr;
-                        else return acc;
-                      }, " ")
-                      .replace(" ,", "")}`}
+                    // href={`/table/${breadcrumbs
+                    //   .reduce((acc: string, curr: string, currIndex) => {
+                    //     if (currIndex < index + 1) return acc + "/" + curr;
+                    //     else return acc;
+                    //   }, " ")
+                    //   .replace(" /", "")}?parentLabel=${parentLabel
+                    //   .split(",")
+                    //   .reduce((acc: string, curr, currIndex) => {
+                    //     if (currIndex > index - 1) return acc + "," + curr;
+                    //     else return acc;
+                    //   }, " ")
+                    //   .replace(" ,", "")}`}
                   >
                     {crumb.replace(/([A-Z])/g, " $1")}
-                  </Link>
+                  </Typography>
                 );
               else if (index % 2 === 1)
                 return (
