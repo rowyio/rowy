@@ -36,7 +36,6 @@ export const useFiretableContext = () => useContext(firetableContext);
 
 export const FiretableContextProvider: React.FC = ({ children }) => {
   const { tableState, tableActions } = useFiretable();
-  console.log(tableState);
   const [selectedCell, setSelectedCell] = useState<{
     row: number;
     column: string;

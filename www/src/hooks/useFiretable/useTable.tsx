@@ -102,6 +102,7 @@ const useTable = (initialOverrides: any) => {
             error.message.split("indexes?create_composite=")[1];
 
           snackContext.open({
+            severity: "error",
             message: "needs a new index",
             duration: 10000,
             action: (

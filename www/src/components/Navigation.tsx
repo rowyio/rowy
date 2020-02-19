@@ -65,6 +65,13 @@ const Navigation = (props: any) => {
   const [section, setSection] = useState<any>();
   const [table, setTable] = useState();
   const { sections, createTable, userClaims } = useFiretableContext();
+
+  useEffect(() => {
+    if (!table) {
+      console.log(router.location);
+      //TODO: set navigation state from url
+    }
+  }, [router.location.pathname]);
   useEffect(() => {
     if (section) {
       setTable(sections![section][0]);
@@ -79,7 +86,9 @@ const Navigation = (props: any) => {
           ? `?filters=%5B%7B%22key%22%3A%22region%22%2C%22operator%22%3A%22%3D%3D%22%2C%22value%22%3A%22${userClaims.regions[0]}%22%7D%5D`
           : ""
       }`;
-      router.history.push(newPath);
+      if (router.location.pathname !== newPath) {
+        router.history.push(newPath);
+      }
     }
   }, [table]);
   return (

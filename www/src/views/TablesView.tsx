@@ -102,7 +102,7 @@ const TablesView = () => {
 
         {sections ? (
           Object.keys(sections).map(sectionName => (
-            <div className={classes.section}>
+            <div key={sectionName} className={classes.section}>
               <Typography variant="overline">
                 {sectionName == "undefined" ? "Other" : sectionName}
               </Typography>

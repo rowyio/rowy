@@ -97,6 +97,7 @@ export default function ExportCSV(props: Props) {
   async function handleExport(columns?: any[]) {
     handleClose();
     snackContext.open({
+      severity: "info",
       message: "preparing file, download will start shortly",
       duration: 5000,
     });
