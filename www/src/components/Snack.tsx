@@ -24,8 +24,6 @@ export default function Snack() {
   useEffect(() => {
     if (isOpen) setTimeout(close, 10000);
   }, [isOpen]);
-
-  console.log("severity", severity);
   return (
     <Snackbar
       anchorOrigin={{ vertical, horizontal }}

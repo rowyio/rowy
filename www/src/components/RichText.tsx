@@ -24,7 +24,6 @@ export interface IRichTextProps {
   onChange: (value: string) => void;
 }
 
-console.log("LOADED RICH TEXT");
 export default function RichText({ value, onChange }: IRichTextProps) {
   const classes = useStyles();
 

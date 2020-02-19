@@ -52,8 +52,6 @@ interface Props {
 function Table(props: Props) {
   const { collection, filters } = props;
   const { currentUser } = useAppContext();
-
-  const [orderBy, setOrderBy] = useState<FiretableOrderBy>([]);
   const {
     tableState,
     tableActions,
@@ -166,36 +164,34 @@ function Table(props: Props) {
               <MuiGrid item>
                 <IconButton
                   color={
-                    orderBy[0] && orderBy[0].key === column.key
-                      ? "primary"
-                      : "default"
+                    // tableState &&
+                    // tableState.orderBy[0] &&
+                    // tableState.orderBy[0].key === column.key
+                    //   ? "primary"
+                    //   :
+                    "default"
                   }
                   disableFocusRipple={true}
                   size="small"
                   onClick={() => {
-                    console.log(
-                      orderBy,
-                      orderBy[0] && orderBy[0].key === column.key,
-                      orderBy[0] && orderBy[0].direction === "asc"
-                    );
-                    if (
-                      orderBy[0] &&
-                      orderBy[0].key === column.key &&
-                      orderBy[0].direction === "asc"
-                    ) {
-                      const ordering: FiretableOrderBy = [
-                        { key: column.key, direction: "desc" },
-                      ];
+                    // console.log(orderBy);
+                    // if (
+                    //   orderBy &&
+                    //   orderBy[0] &&
+                    //   orderBy[0].direction === "asc"
+                    // ) {
+                    //   const ordering: FiretableOrderBy = [
+                    //     { key: column.key, direction: "desc" },
+                    //   ];
+                    //   tableActions.table.orderBy(ordering);
+                    // } else {
+                    const ordering: FiretableOrderBy = [
+                      { key: column.key, direction: "asc" },
+                    ];
+                    tableActions.table.orderBy(ordering);
+                    // }
 
-                      // tableActions.table.orderBy(ordering);
-                      //setOrderBy(ordering) #BROKENINSIDE
-                    } else {
-                      const ordering: FiretableOrderBy = [
-                        { key: column.key, direction: "asc" },
-                      ];
-                      // tableActions.table.orderBy(ordering);
-                      //setOrderBy(ordering) #BROKENINSIDE
-                    }
+                    // setOrderBy(ordering) #BROKENINSIDE
                   }}
                 >
                   <ImportExportIcon />
@@ -337,13 +333,11 @@ function Table(props: Props) {
       <Suspense fallback={<Loading message="Loading header" />}>
         <Hotkeys selectedCell={selectedCell} />
         <TableHeader
-          tableActions={tableActions}
           collection={collection}
           rowHeight={rowHeight}
           updateConfig={tableActions.table.updateConfig}
           columns={columns}
           filters={filters}
-          addRow={addRow}
         />
       </Suspense>
 
