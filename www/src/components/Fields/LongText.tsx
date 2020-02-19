@@ -8,13 +8,17 @@ import { FieldType } from "constants/fields";
 
 interface Props {
   value: any;
-  row: { ref: firebase.firestore.DocumentReference; id: string };
+  row: {
+    ref: firebase.firestore.DocumentReference;
+    id: string;
+    rowHeight: number;
+  };
   onSubmit: Function;
 }
 
 const LongText = (props: Props) => {
   const editorContext = useContext(EditorContext);
-  const { value } = props;
+  const { value, row } = props;
 
   return (
     <Grid
@@ -29,7 +33,15 @@ const LongText = (props: Props) => {
       <Grid item>
         <EditIcon />
       </Grid>
-      <Grid item xs style={{ width: "calc(100% - 24px - 8px)" }}>
+      <Grid
+        item
+        xs
+        style={{
+          width: "calc(100% - 24px - 8px)",
+          maxHeight: row.rowHeight,
+          whiteSpace: "pre-line",
+        }}
+      >
         {value}
       </Grid>
     </Grid>
