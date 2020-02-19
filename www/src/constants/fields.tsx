@@ -32,6 +32,8 @@ import RichTextIcon from "@material-ui/icons/TextFormat";
 import ColorIcon from "@material-ui/icons/Colorize";
 import SliderIcon from "assets/icons/Slider";
 
+import DebugIcon from "@material-ui/icons/BugReportOutlined";
+
 export {
   ShortTextIcon,
   LongTextIcon,
@@ -87,6 +89,7 @@ export enum FieldType {
   json = "JSON",
 
   last = "LAST",
+  debug = "DEBUG",
 }
 
 export const FIELDS = [
@@ -135,6 +138,8 @@ export const FIELDS = [
   { icon: <ColorIcon />, name: "Color", type: FieldType.color },
   { icon: <SliderIcon />, name: "Slider", type: FieldType.slider },
   { icon: <JsonIcon />, name: "JSON", type: FieldType.json },
+
+  { icon: <DebugIcon />, name: "Debug", type: FieldType.debug },
 ];
 
 /**

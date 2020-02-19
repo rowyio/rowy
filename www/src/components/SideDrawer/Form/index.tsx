@@ -258,6 +258,13 @@ export default function Form({ fields, values }: IFormProps) {
                   </FieldWrapper>
                 );
               })}
+
+              <FieldWrapper
+                type={FieldType.debug}
+                name="_ft_debug_path"
+                label="Document Path"
+                debugText={values.ref.path}
+              />
             </Grid>
           </FormikForm>
         )}

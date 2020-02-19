@@ -33,6 +33,7 @@ export interface IFieldWrapperProps {
   type: FieldType;
   name?: string;
   label?: React.ReactNode;
+  debugText?: React.ReactNode;
 }
 
 export default function FieldWrapper({
@@ -40,6 +41,7 @@ export default function FieldWrapper({
   type,
   name,
   label,
+  debugText,
 }: IFieldWrapperProps) {
   const classes = useStyles();
 
@@ -61,9 +63,16 @@ export default function FieldWrapper({
         </Grid>
       </Grid>
 
-      {children ?? (
+      {children ??
+        (!debugText && (
+          <Typography variant="body2" className={classes.disabledText}>
+            This field can’t be edited here.
+          </Typography>
+        ))}
+
+      {debugText && (
         <Typography variant="body2" className={classes.disabledText}>
-          This field can’t be edited here.
+          {debugText}
         </Typography>
       )}
     </Grid>
