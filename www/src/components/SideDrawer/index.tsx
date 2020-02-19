@@ -19,12 +19,17 @@ export const DRAWER_COLLAPSED_WIDTH = 36;
 
 export default function SideDrawer() {
   const classes = useStyles();
-  const { tableState, selectedCell, setSelectedCell } = useFiretableContext();
+  const {
+    tableState,
+    selectedCell,
+    setSelectedCell,
+    sideDrawerOpen: open,
+    setSideDrawerOpen: setOpen,
+  } = useFiretableContext();
 
-  const [open, setOpen] = useState(false);
   const disabled = !selectedCell || _isNil(selectedCell.row);
   useEffect(() => {
-    if (disabled) setOpen(false);
+    if (disabled && setOpen) setOpen(false);
   }, [disabled]);
 
   const handleNavigateUp = () => {
@@ -146,7 +151,9 @@ export default function SideDrawer() {
           classes={{ root: classes.fab, disabled: classes.disabled }}
           color="secondary"
           disabled={disabled}
-          onClick={() => setOpen(o => !o)}
+          onClick={() => {
+            if (setOpen) setOpen(o => !o);
+          }}
         >
           <ChevronIcon className={classes.drawerFabIcon} />
         </Fab>

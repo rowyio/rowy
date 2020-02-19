@@ -1,10 +1,9 @@
-import React, { useContext } from "react";
+import React from "react";
 
 import { Grid } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 
-import EditorContext from "contexts/editorContext";
-import { FieldType } from "constants/fields";
+import { useFiretableContext } from "contexts/firetableContext";
 
 interface Props {
   value: any;
@@ -17,14 +16,14 @@ interface Props {
 }
 
 const LongText = (props: Props) => {
-  const editorContext = useContext(EditorContext);
+  const { setSideDrawerOpen } = useFiretableContext();
   const { value, row } = props;
 
   return (
     <Grid
       container
       onDoubleClick={() => {
-        editorContext.open(props, FieldType.longText);
+        if (setSideDrawerOpen) setSideDrawerOpen(true);
       }}
       spacing={1}
       alignItems="center"

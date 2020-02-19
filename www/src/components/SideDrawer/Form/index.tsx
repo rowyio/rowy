@@ -28,6 +28,7 @@ import { FieldType } from "constants/fields";
 // import Description from "./Description";
 
 const RichText = lazy(() => import("./Fields/RichText"));
+const JsonEditor = lazy(() => import("./Fields/JsonEditor"));
 
 export type Values = { [key: string]: any };
 export type Field = {
@@ -220,7 +221,13 @@ export default function Form({ fields, values }: IFormProps) {
                   // case FieldType.connectTable:
                   // case FieldType.subTable:
                   // case FieldType.action:
-                  // case FieldType.json:
+                  case FieldType.json:
+                    renderedField = (
+                      <Suspense fallback={<LinearProgress />}>
+                        <Field {...fieldProps} component={JsonEditor} />
+                      </Suspense>
+                    );
+                    break;
 
                   case undefined:
                     return null;

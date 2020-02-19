@@ -1,11 +1,10 @@
-import React, { useContext } from "react";
+import React from "react";
 import clsx from "clsx";
 
 import { makeStyles, createStyles, Grid } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 
-import EditorContext from "contexts/editorContext";
-import { FieldType } from "constants/fields";
+import { useFiretableContext } from "contexts/firetableContext";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -31,14 +30,14 @@ interface Props {
 }
 
 const RichText = (props: Props) => {
-  const editorContext = useContext(EditorContext);
+  const { setSideDrawerOpen } = useFiretableContext();
   const { value, row } = props;
   const classes = useStyles();
   return (
     <Grid
       container
       onDoubleClick={() => {
-        editorContext.open(props, FieldType.richText);
+        if (setSideDrawerOpen) setSideDrawerOpen(true);
       }}
       spacing={1}
       alignItems="center"
