@@ -79,7 +79,7 @@ export default function Grid(props: any) {
   const handleRowClick = useCallback(
     (rowIdx: number, row: any, column: CalculatedColumn<any>) => {
       // TODO:
-      if (setSelectedCell) setSelectedCell({ row: rowIdx, column: column.idx });
+      if (setSelectedCell) setSelectedCell({ row: rowIdx, column: column.key });
       console.log(rowIdx, row, column);
     },
     []
