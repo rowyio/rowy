@@ -11,9 +11,10 @@ const useStyles = makeStyles(theme =>
   createStyles({
     renderedHtmlContainer: {
       maxWidth: "calc(100% - 24px - 8px)",
+      marginTop: theme.spacing(2),
     },
     renderedHtml: {
-      height: "1.25em",
+      minHeight: "1.25em",
       "& > *:first-child": { marginTop: 0 },
     },
   })
@@ -21,13 +22,17 @@ const useStyles = makeStyles(theme =>
 
 interface Props {
   value: any;
-  row: { ref: firebase.firestore.DocumentReference; id: string };
+  row: {
+    ref: firebase.firestore.DocumentReference;
+    id: string;
+    rowHeight: number;
+  };
   onSubmit: Function;
 }
 
 const RichText = (props: Props) => {
   const editorContext = useContext(EditorContext);
-  const { value } = props;
+  const { value, row } = props;
   const classes = useStyles();
   return (
     <Grid
@@ -36,6 +41,7 @@ const RichText = (props: Props) => {
         editorContext.open(props, FieldType.richText);
       }}
       spacing={1}
+      alignItems="center"
     >
       <Grid item>
         <EditIcon />
@@ -44,6 +50,7 @@ const RichText = (props: Props) => {
         <div
           dangerouslySetInnerHTML={{ __html: value }}
           className={clsx("rendered-html", classes.renderedHtml)}
+          style={{ maxHeight: row.rowHeight }}
         />
       </Grid>
     </Grid>
