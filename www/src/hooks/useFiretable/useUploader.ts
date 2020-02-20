@@ -96,7 +96,9 @@ const useUploader = () => {
           uploadTask.snapshot.ref
             .getDownloadURL()
             .then((downloadURL: string) => {
-              const newValue: FileValue[] = previousValue ?? [];
+              const newValue: FileValue[] = Array.isArray(previousValue)
+                ? previousValue
+                : [];
 
               newValue.push({
                 downloadURL,
