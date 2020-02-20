@@ -1,7 +1,6 @@
-import React, { useContext } from "react";
+import React from "react";
 
-import EditorContext from "contexts/editorContext";
-import { FieldType } from "constants/fields";
+import { useFiretableContext } from "contexts/firetableContext";
 
 interface Props {
   value: any;
@@ -10,13 +9,13 @@ interface Props {
 }
 
 const LongText = (props: Props) => {
-  const editorContext = useContext(EditorContext);
+  const { setSideDrawerOpen } = useFiretableContext();
   const { value } = props;
 
   return (
     <div
       onDoubleClick={() => {
-        editorContext.open(props, FieldType.json);
+        if (setSideDrawerOpen) setSideDrawerOpen(true);
       }}
     >
       {JSON.stringify(value)}

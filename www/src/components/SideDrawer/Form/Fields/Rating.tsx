@@ -37,7 +37,7 @@ export default function Rating(props: IRatingProps) {
       <Grid container alignItems="center" className={classes.root}>
         <MuiRating
           name={props.field.name}
-          id={`sidemodal-field-${props.field.name}`}
+          id={`sidedrawer-field-${props.field.name}`}
           value={typeof props.field.value === "number" ? props.field.value : 0}
           onChange={(event, newValue) => {
             props.form.setFieldValue(props.field.name, newValue);

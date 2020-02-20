@@ -70,7 +70,7 @@ const DocSelect = (props: Props) => {
                     (key: string) => `${doc.snapshot[key]} `
                   )}
                   onDelete={
-                    config.isLocked ? () => {} : () => handleDelete(index)
+                    config.isLocked ? undefined : () => handleDelete(index)
                   }
                 />
               </Grid>

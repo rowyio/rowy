@@ -148,10 +148,9 @@ export default function MultiSelect({
   field,
   form,
   options: optionsProp,
-  label,
   searchable = false,
   itemRenderer,
-  freeText = false,
+  freeText = true,
   multiple = true,
   selectAll = true,
   className,
@@ -229,7 +228,7 @@ export default function MultiSelect({
         value={field.value ?? []}
         label=""
         hiddenLabel
-        id={`sidemodal-field-${field.name}`}
+        id={`sidedrawer-field-${field.name}`}
         variant="filled"
         fullWidth
         select

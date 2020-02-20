@@ -29,7 +29,7 @@ export default function DatePicker(props: KeyboardDatePickerProps) {
       value={transformedValue}
       label=""
       hiddenLabel
-      id={`sidemodal-field-${props.field.name}`}
+      id={`sidedrawer-field-${props.field.name}`}
     />
   );
 }

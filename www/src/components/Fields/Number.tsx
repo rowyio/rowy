@@ -34,7 +34,11 @@ export default function _Number(props: any) {
   return (
     <input
       type="number"
-      value={localValue === NaN ? undefined : localValue}
+      value={
+        localValue === NaN || (localValue as any) === "NaN"
+          ? undefined
+          : localValue
+      }
       onChange={e => setLocalValue(Number(e.target.value))}
       className={classes.root}
     />

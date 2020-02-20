@@ -25,6 +25,9 @@ interface FiretableContextProps {
   selectedCell: { row: number; column: string };
   setSelectedCell: Function;
   userClaims: any;
+
+  sideDrawerOpen: boolean;
+  setSideDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const firetableContext = React.createContext<Partial<FiretableContextProps>>(
@@ -45,6 +48,7 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
   const { tables } = settings;
   const [userRoles, setUserRoles] = useState<null | string[]>();
   const [userClaims, setUserClaims] = useState<any>();
+  const [sideDrawerOpen, setSideDrawerOpen] = useState<boolean>(false);
 
   const { currentUser } = useAppContext();
   useEffect(() => {
@@ -82,6 +86,8 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
         createTable,
         sections,
         userClaims,
+        sideDrawerOpen,
+        setSideDrawerOpen,
       }}
     >
       {children}
