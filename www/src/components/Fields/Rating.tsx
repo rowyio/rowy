@@ -36,6 +36,7 @@ const Rating = (props: Props) => {
         onSubmit(newValue);
       }}
       emptyIcon={<StarBorderIcon fontSize="inherit" />}
+      max={4}
       classes={{ root: classes.rating, iconEmpty: classes.iconEmpty }}
     />
   );
