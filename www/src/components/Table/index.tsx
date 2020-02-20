@@ -50,6 +50,7 @@ const useStyles = makeStyles(theme =>
     "@global": {
       ".rdg-root": {
         "&.rdg-root": { borderColor: "#e0e0e0" },
+        "& .rdg-header": { backgroundColor: theme.palette.background.default },
         "& .rdg-cell": { borderColor: "#e0e0e0" },
       },
 
