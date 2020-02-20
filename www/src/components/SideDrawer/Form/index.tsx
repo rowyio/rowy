@@ -260,7 +260,7 @@ export default function Form({ fields, values }: IFormProps) {
               })}
 
               <FieldWrapper
-                type={FieldType.debug}
+                type="debug"
                 name="_ft_debug_path"
                 label="Document Path"
                 debugText={values.ref.path}

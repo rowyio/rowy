@@ -7,6 +7,7 @@ import {
   Typography,
   TextField,
 } from "@material-ui/core";
+import DebugIcon from "@material-ui/icons/BugReportOutlined";
 
 import { FieldType, getFieldIcon } from "constants/fields";
 
@@ -33,7 +34,7 @@ const useStyles = makeStyles(theme =>
 
 export interface IFieldWrapperProps {
   children?: React.ReactNode;
-  type: FieldType;
+  type: FieldType | "debug";
   name?: string;
   label?: React.ReactNode;
   debugText?: React.ReactNode;
@@ -59,7 +60,7 @@ export default function FieldWrapper({
         htmlFor={`sidedrawer-field-${name}`}
       >
         <Grid item className={classes.iconContainer}>
-          {getFieldIcon(type)}
+          {type === "debug" ? <DebugIcon /> : getFieldIcon(type)}
         </Grid>
         <Grid item xs>
           <Typography variant="caption">{label}</Typography>
