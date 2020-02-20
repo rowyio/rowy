@@ -59,8 +59,10 @@ const useStyles = makeStyles(theme =>
         lineHeight: "inherit",
         color: theme.palette.text.secondary,
       },
+    },
 
-      ".rdg-header-row > .rdg-cell:last-of-type": {
+    finalHeaderCell: {
+      ".rdg-root &": {
         width: "40px !important",
         overflow: "visible",
 
@@ -69,8 +71,10 @@ const useStyles = makeStyles(theme =>
           right: "-50%",
         },
       },
+    },
 
-      ".rdg-row > .rdg-cell:last-of-type": {
+    finalCell: {
+      ".rdg-root &": {
         background: theme.palette.background.default,
         borderColor: "transparent",
       },
@@ -79,7 +83,7 @@ const useStyles = makeStyles(theme =>
 );
 
 function Table(props: Props) {
-  useStyles();
+  const classes = useStyles();
 
   const { collection, filters } = props;
   const { currentUser } = useAppContext();
@@ -172,6 +176,8 @@ function Table(props: Props) {
       type: FieldType.last,
       width: 160,
       headerRenderer: ColumnHeader,
+      headerCellClass: classes.finalHeaderCell,
+      cellClass: classes.finalCell,
       formatter: (props: any) => (
         <MuiGrid container spacing={1}>
           <MuiGrid item>
@@ -304,13 +310,7 @@ function Table(props: Props) {
       )}
 
       <Suspense fallback={<Loading message="Loading helpers" />}>
-        <ColumnEditor
-          handleClose={handleCloseHeader}
-          anchorEl={anchorEl}
-          column={header && header.column}
-          actions={tableActions.column}
-        />
-
+        <ColumnEditor />
         <SearchBox searchData={search} clearSearch={clearSearch} />
       </Suspense>
     </EditorProvider>

@@ -4,7 +4,6 @@ import { Column } from "react-data-grid";
 import {
   makeStyles,
   createStyles,
-  fade,
   Tooltip,
   Grid,
   IconButton,
@@ -15,6 +14,7 @@ import ImportExportIcon from "@material-ui/icons/ImportExport";
 import DropdownIcon from "@material-ui/icons/ArrowDropDownCircle";
 
 import { getFieldIcon } from "constants/fields";
+import { useFiretableContext } from "contexts/firetableContext";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -73,13 +73,13 @@ const useStyles = makeStyles(theme =>
 const ColumnHeader: Column<any>["headerRenderer"] = ({ column }) => {
   const classes = useStyles();
 
-  // const handleClick = (headerProps: any) => (
-  //   event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  // ) => {
-  //   handleCloseHeader();
-  //   setAnchorEl(event.currentTarget);
-  //   setHeader(headerProps);
-  // };
+  const { setSelectedColumnHeader } = useFiretableContext();
+
+  if (!setSelectedColumnHeader) return null;
+
+  const handleClick = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => setSelectedColumnHeader({ column, anchorEl: event.currentTarget });
 
   if (column.key === "new")
     return (
@@ -96,6 +96,7 @@ const ColumnHeader: Column<any>["headerRenderer"] = ({ column }) => {
             className={classes.addColumnButton}
             color="primary"
             aria-label="Add column"
+            onClick={handleClick}
           >
             <AddColumnIcon />
           </IconButton>
@@ -174,10 +175,10 @@ const ColumnHeader: Column<any>["headerRenderer"] = ({ column }) => {
           </IconButton> */}
         <IconButton
           size="small"
-          // onClick={handleClick(props)}
           className={classes.dropdownButton}
           aria-label={`Show ${column.name} column dropdown`}
           color="inherit"
+          onClick={handleClick}
         >
           <DropdownIcon />
         </IconButton>

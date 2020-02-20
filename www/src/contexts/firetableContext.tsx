@@ -1,13 +1,21 @@
 import React, { useState, useContext, useEffect } from "react";
 import _groupBy from "lodash/groupBy";
 
+import { Column } from "react-data-grid";
+import { PopoverProps } from "@material-ui/core";
+
 import useFiretable, {
   FiretableActions,
   FiretableState,
 } from "hooks/useFiretable";
 import useSettings from "hooks/useSettings";
-
 import { useAppContext } from "./appContext";
+
+type SelectedColumnHeader = {
+  column: Column<any> & { [key: string]: any };
+  anchorEl: PopoverProps["anchorEl"];
+};
+
 interface FiretableContextProps {
   sections: {
     [sectionName: string]: {
@@ -28,6 +36,11 @@ interface FiretableContextProps {
 
   sideDrawerOpen: boolean;
   setSideDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
+
+  selectedColumnHeader: SelectedColumnHeader | null;
+  setSelectedColumnHeader: React.Dispatch<
+    React.SetStateAction<SelectedColumnHeader | null>
+  >;
 }
 
 const firetableContext = React.createContext<Partial<FiretableContextProps>>(
@@ -49,6 +62,10 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
   const [userRoles, setUserRoles] = useState<null | string[]>();
   const [userClaims, setUserClaims] = useState<any>();
   const [sideDrawerOpen, setSideDrawerOpen] = useState<boolean>(false);
+  const [
+    selectedColumnHeader,
+    setSelectedColumnHeader,
+  ] = useState<SelectedColumnHeader | null>(null);
 
   const { currentUser } = useAppContext();
   useEffect(() => {
@@ -88,6 +105,8 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
         userClaims,
         sideDrawerOpen,
         setSideDrawerOpen,
+        selectedColumnHeader,
+        setSelectedColumnHeader,
       }}
     >
       {children}
