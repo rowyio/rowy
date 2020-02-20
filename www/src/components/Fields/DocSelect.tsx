@@ -28,11 +28,20 @@ interface Props {
   isScrolling: boolean;
   setSearch: any;
   config: any;
+  column: any;
 }
 
 const DocSelect = (props: Props) => {
   const classes = useStyles();
-  const { value, row, onSubmit, collectionPath, config, setSearch } = props;
+  const {
+    value,
+    row,
+    onSubmit,
+    collectionPath,
+    config,
+    setSearch,
+    column,
+  } = props;
   const handleClick = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
@@ -70,7 +79,7 @@ const DocSelect = (props: Props) => {
                     (key: string) => `${doc.snapshot[key]} `
                   )}
                   onDelete={
-                    config.isLocked ? () => {} : () => handleDelete(index)
+                    config.editable ? () => handleDelete(index) : undefined
                   }
                 />
               </Grid>
@@ -78,7 +87,7 @@ const DocSelect = (props: Props) => {
         </Grid>
       </Grid>
 
-      {!config.isLocked && (
+      {config.editable && (
         <Grid item>
           <IconButton onClick={handleClick} size="small">
             <AddIcon />
