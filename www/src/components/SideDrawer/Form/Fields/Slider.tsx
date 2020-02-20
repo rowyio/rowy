@@ -11,11 +11,11 @@ import {
   Typography,
 } from "@material-ui/core";
 
-import Label from "../Label";
 import ErrorMessage from "../ErrorMessage";
 
 const useStyles = makeStyles(theme =>
   createStyles({
+    root: { display: "flex" },
     slider: { display: "block" },
 
     thumb: {
@@ -78,11 +78,7 @@ export default function Slider({
     `${value}${units ? " " + units : ""}`;
 
   return (
-    <FormControl>
-      <Label error={!!(form.errors[field.name] && form.touched[field.name])}>
-        {label}
-      </Label>
-
+    <FormControl className={classes.root}>
       <Grid container spacing={2} alignItems="center">
         <Grid item>
           <Typography variant="overline" component="span" color="textSecondary">

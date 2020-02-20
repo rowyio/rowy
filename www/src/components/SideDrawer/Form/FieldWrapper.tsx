@@ -24,6 +24,9 @@ const useStyles = makeStyles(theme =>
     disabledText: {
       paddingLeft: theme.spacing(3 + 0.5),
       color: theme.palette.text.disabled,
+
+      whiteSpace: "normal",
+      wordBreak: "break-all",
     },
   })
 );

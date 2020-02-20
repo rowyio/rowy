@@ -3,6 +3,8 @@ import { FieldType } from "constants/fields";
 import { Editors } from "react-data-grid-addons";
 import _uniq from "lodash/uniq";
 
+import ErrorBoundary from "components/ErrorBoundary";
+
 const { AutoComplete } = Editors;
 
 const MultiSelect = lazy(() => import("../Fields/MultiSelect"));
@@ -63,18 +65,6 @@ export const onSubmit = (key: string, row: any, uid?: string) => async (
   }
 };
 
-export const DateFormatter = (key: string, fieldType: FieldType) => (
-  props: any
-) => {
-  return (
-    <DateField
-      {...props}
-      onSubmit={onSubmit(key, props.row)}
-      fieldType={fieldType}
-    />
-  );
-};
-
 export const onGridRowsUpdated = (event: any) => {
   const { fromRowData, updated, action } = event;
   if (action === "CELL_UPDATE") {
@@ -82,164 +72,156 @@ export const onGridRowsUpdated = (event: any) => {
   }
 };
 export const onCellSelected = (args: any) => {};
+
+const CellWrapper: React.FC = ({ children }) => (
+  <ErrorBoundary>
+    <Suspense fallback={<div />}>{children}</Suspense>
+  </ErrorBoundary>
+);
+
 export const cellFormatter = (column: any) => {
   const { type, key, options } = column;
+
   switch (type) {
     case FieldType.date:
     case FieldType.dateTime:
-      return DateFormatter(key, type);
+      return (props: any) => (
+        <CellWrapper>
+          <DateField
+            {...props}
+            onSubmit={onSubmit(key, props.row)}
+            fieldType={type}
+          />
+        </CellWrapper>
+      );
+
     case FieldType.rating:
-      return (props: any) => {
-        return (
-          <Suspense fallback={<div />}>
-            <Rating
-              {...props}
-              column={column}
-              onSubmit={onSubmit(key, props.row)}
-              value={typeof props.value === "number" ? props.value : 0}
-            />
-          </Suspense>
-        );
-      };
+      return (props: any) => (
+        <CellWrapper>
+          <Rating
+            {...props}
+            column={column}
+            onSubmit={onSubmit(key, props.row)}
+            value={typeof props.value === "number" ? props.value : 0}
+          />
+        </CellWrapper>
+      );
     case FieldType.number:
-      return (props: any) => {
-        return (
-          <Suspense fallback={<div />}>
-            <Number
-              {...props}
-              onSubmit={onSubmit(key, props.row)}
-              value={typeof props.value === "number" ? props.value : undefined}
-            />
-          </Suspense>
-        );
-      };
+      return (props: any) => (
+        <CellWrapper>
+          <Number
+            {...props}
+            onSubmit={onSubmit(key, props.row)}
+            value={typeof props.value === "number" ? props.value : undefined}
+          />
+        </CellWrapper>
+      );
     case FieldType.color:
-      return (props: any) => {
-        return (
-          <Suspense fallback={<div />}>
-            <Color {...props} onSubmit={onSubmit(key, props.row)} />
-          </Suspense>
-        );
-      };
+      return (props: any) => (
+        <CellWrapper>
+          <Color {...props} onSubmit={onSubmit(key, props.row)} />
+        </CellWrapper>
+      );
     case FieldType.checkbox:
-      return (props: any) => {
-        return (
-          <Suspense fallback={<div />}>
-            <CheckBox
-              column={column}
-              {...props}
-              onSubmit={onSubmit(key, props.row)}
-            />
-          </Suspense>
-        );
-      };
+      return (props: any) => (
+        <CellWrapper>
+          <CheckBox
+            column={column}
+            {...props}
+            onSubmit={onSubmit(key, props.row)}
+          />
+        </CellWrapper>
+      );
     case FieldType.url:
-      return (props: any) => {
-        return (
-          <Suspense fallback={<div />}>
-            <UrlLink {...props} />
-          </Suspense>
-        );
-      };
+      return (props: any) => (
+        <CellWrapper>
+          <UrlLink {...props} />
+        </CellWrapper>
+      );
     case FieldType.action:
-      return (props: any) => {
-        return (
-          <Suspense fallback={<div />}>
-            <Action
-              scripts={column.scripts}
-              callableName={column.callableName}
-              fieldName={key}
-              {...props}
-              onSubmit={onSubmit(key, props.row)}
-            />
-          </Suspense>
-        );
-      };
+      return (props: any) => (
+        <CellWrapper>
+          <Action
+            scripts={column.scripts}
+            callableName={column.callableName}
+            fieldName={key}
+            {...props}
+            onSubmit={onSubmit(key, props.row)}
+          />
+        </CellWrapper>
+      );
     case FieldType.multiSelect:
-      return (props: any) => {
-        return (
-          <Suspense fallback={<div />}>
-            <MultiSelect
-              {...props}
-              onSubmit={onSubmit(key, props.row)}
-              options={options}
-            />
-          </Suspense>
-        );
-      };
+      return (props: any) => (
+        <CellWrapper>
+          <MultiSelect
+            {...props}
+            onSubmit={onSubmit(key, props.row)}
+            options={options}
+          />
+        </CellWrapper>
+      );
     case FieldType.image:
-      return (props: any) => {
-        return (
-          <Suspense fallback={<div />}>
-            <Image
-              {...props}
-              onSubmit={onSubmit(key, props.row)}
-              fieldName={key}
-            />
-          </Suspense>
-        );
-      };
+      return (props: any) => (
+        <CellWrapper>
+          <Image
+            {...props}
+            onSubmit={onSubmit(key, props.row)}
+            fieldName={key}
+          />
+        </CellWrapper>
+      );
     case FieldType.file:
-      return (props: any) => {
-        return (
-          <Suspense fallback={<div />}>
-            <File
-              {...props}
-              onSubmit={onSubmit(key, props.row)}
-              fieldName={key}
-            />
-          </Suspense>
-        );
-      };
+      return (props: any) => (
+        <CellWrapper>
+          <File
+            {...props}
+            onSubmit={onSubmit(key, props.row)}
+            fieldName={key}
+          />
+        </CellWrapper>
+      );
     case FieldType.longText:
-      return (props: any) => {
-        return (
-          <Suspense fallback={<div />}>
-            <LongText
-              {...props}
-              fieldName={key}
-              onSubmit={onSubmit(key, props.row)}
-            />
-          </Suspense>
-        );
-      };
+      return (props: any) => (
+        <CellWrapper>
+          <LongText
+            {...props}
+            fieldName={key}
+            onSubmit={onSubmit(key, props.row)}
+          />
+        </CellWrapper>
+      );
     case FieldType.json:
-      return (props: any) => {
-        return (
-          <Suspense fallback={<div />}>
-            <Json
-              {...props}
-              fieldName={key}
-              onSubmit={onSubmit(key, props.row)}
-            />
-          </Suspense>
-        );
-      };
+      return (props: any) => (
+        <CellWrapper>
+          <Json
+            {...props}
+            fieldName={key}
+            onSubmit={onSubmit(key, props.row)}
+          />
+        </CellWrapper>
+      );
     case FieldType.richText:
-      return (props: any) => {
-        return (
-          <Suspense fallback={<div />}>
-            <RichText
-              {...props}
-              fieldName={key}
-              onSubmit={onSubmit(key, props.row)}
-            />
-          </Suspense>
-        );
-      };
+      return (props: any) => (
+        <CellWrapper>
+          <RichText
+            {...props}
+            fieldName={key}
+            onSubmit={onSubmit(key, props.row)}
+          />
+        </CellWrapper>
+      );
     case FieldType.subTable:
-      return (props: any) => {
-        return (
-          <Suspense fallback={<div />}>
-            <SubTable
-              fieldName={key}
-              {...props}
-              parentLabel={column.parentLabel}
-              onSubmit={onSubmit(key, props.row)}
-            />
-          </Suspense>
-        );
-      };
+      return (props: any) => (
+        <CellWrapper>
+          <SubTable
+            fieldName={key}
+            {...props}
+            parentLabel={column.parentLabel}
+            onSubmit={onSubmit(key, props.row)}
+          />
+        </CellWrapper>
+      );
+
     default:
       return false;
   }
