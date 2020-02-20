@@ -229,7 +229,7 @@ export default function MultiSelect({
         value={field.value ?? []}
         label=""
         hiddenLabel
-        id={`sidemodal-field-${field.name}`}
+        id={`sidedrawer-field-${field.name}`}
         variant="filled"
         fullWidth
         select

@@ -19,9 +19,6 @@ import useStyles from "./useStyle";
 
 import Loading from "../../components/Loading";
 import Grid, { IGridProps } from "./Grid";
-import LongTextEditor from "../EditorModal/LongTextEditor";
-import RichTextEditor from "../EditorModal/RichTextEditor";
-import JsonEditor from "../EditorModal/JsonEditor";
 
 import { FireTableFilter, FiretableOrderBy } from "../../hooks/useFiretable";
 import { useAppContext } from "contexts/appContext";
@@ -371,9 +368,6 @@ function Table(props: Props) {
         />
 
         <SearchBox searchData={search} clearSearch={clearSearch} />
-        <RichTextEditor />
-        <LongTextEditor />
-        <JsonEditor />
       </Suspense>
     </EditorProvider>
   );
