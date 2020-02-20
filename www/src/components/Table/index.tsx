@@ -2,26 +2,24 @@ import React, { useState, useEffect, lazy, Suspense } from "react";
 import _isEmpty from "lodash/isEmpty";
 
 import {
+  makeStyles,
+  createStyles,
   Button,
-  IconButton,
-  Typography,
   Grid as MuiGrid,
   Tooltip,
+  IconButton,
 } from "@material-ui/core";
-import ImportExportIcon from "@material-ui/icons/ImportExport";
-import DropdownIcon from "@material-ui/icons/ArrowDropDownCircle";
 import Confirmation from "components/Confirmation";
-import DeleteIcon from "@material-ui/icons/Delete";
-import DuplicateIcon from "@material-ui/icons/FileCopy";
-import AddIcon from "@material-ui/icons/AddCircle";
+import CopyCellsIcon from "assets/icons/CopyCells";
+import DeleteIcon from "@material-ui/icons/Cancel";
 
-import useStyles from "./useStyle";
 import useWindowSize from "hooks/useWindowSize";
 
-import Loading from "../../components/Loading";
+import Loading from "components/Loading";
 import Grid, { IGridProps } from "./Grid";
+import ColumnHeader from "./ColumnHeader";
 
-import { FireTableFilter, FiretableOrderBy } from "../../hooks/useFiretable";
+import { FireTableFilter, FiretableOrderBy } from "hooks/useFiretable";
 import { useAppContext } from "contexts/appContext";
 import { useFiretableContext } from "contexts/firetableContext";
 
@@ -47,7 +45,42 @@ interface Props {
   filters: FireTableFilter[];
 }
 
+const useStyles = makeStyles(theme =>
+  createStyles({
+    "@global": {
+      ".rdg-root": {
+        "&.rdg-root": { borderColor: "#e0e0e0" },
+        "& .rdg-cell": { borderColor: "#e0e0e0" },
+      },
+
+      ".rdg-viewport": {
+        ...theme.typography.body2,
+        fontSize: "0.75rem",
+        lineHeight: "inherit",
+        color: theme.palette.text.secondary,
+      },
+
+      ".rdg-header-row > .rdg-cell:last-of-type": {
+        width: "40px !important",
+        overflow: "visible",
+
+        "& > div": {
+          position: "absolute",
+          right: "-50%",
+        },
+      },
+
+      ".rdg-row > .rdg-cell:last-of-type": {
+        background: theme.palette.background.default,
+        borderColor: "transparent",
+      },
+    },
+  })
+);
+
 function Table(props: Props) {
+  useStyles();
+
   const { collection, filters } = props;
   const { currentUser } = useAppContext();
   const {
@@ -76,7 +109,6 @@ function Table(props: Props) {
     onSubmit: undefined,
   });
 
-  const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   const [header, setHeader] = useState<any | null>();
@@ -107,113 +139,6 @@ function Table(props: Props) {
       />
     </Suspense>
   );
-  const handleClick = (headerProps: any) => (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    handleCloseHeader();
-    setAnchorEl(event.currentTarget);
-    setHeader(headerProps);
-  };
-
-  const headerRenderer = (props: any) => {
-    const { column } = props;
-    switch (column.key) {
-      case "new":
-        return (
-          <div className={classes.header}>
-            {column.name}
-            <IconButton size="small" onClick={handleClick(props)}>
-              <AddIcon />
-            </IconButton>
-          </div>
-        );
-      default:
-        return (
-          <Tooltip title={props.column.key}>
-            <MuiGrid
-              container
-              className={classes.header}
-              alignItems="center"
-              wrap="nowrap"
-            >
-              <MuiGrid
-                item
-                onClick={() => {
-                  navigator.clipboard.writeText(props.column.key);
-                }}
-                className={classes.columnIconContainer}
-              >
-                {getFieldIcon(props.column.type)}
-              </MuiGrid>
-              <MuiGrid
-                item
-                xs
-                onClick={() => {
-                  navigator.clipboard.writeText(props.column.key);
-                }}
-                className={classes.columnNameContainer}
-              >
-                <Typography
-                  variant="h6"
-                  noWrap
-                  className={classes.columnName}
-                  component="span"
-                >
-                  {props.column.name}
-                </Typography>
-              </MuiGrid>
-
-              <MuiGrid item>
-                <IconButton
-                  color={
-                    orderBy[0] && orderBy[0].key === column.key
-                      ? "primary"
-                      : "default"
-                  }
-                  disableFocusRipple={true}
-                  size="small"
-                  onClick={() => {
-                    console.log(
-                      orderBy,
-                      orderBy[0] && orderBy[0].key === column.key,
-                      orderBy[0] && orderBy[0].direction === "asc"
-                    );
-                    if (
-                      orderBy[0] &&
-                      orderBy[0].key === column.key &&
-                      orderBy[0].direction === "asc"
-                    ) {
-                      const ordering: FiretableOrderBy = [
-                        { key: column.key, direction: "desc" },
-                      ];
-
-                      tableActions.table.orderBy(ordering);
-                      //setOrderBy(ordering) #BROKENINSIDE
-                    } else {
-                      const ordering: FiretableOrderBy = [
-                        { key: column.key, direction: "asc" },
-                      ];
-                      tableActions.table.orderBy(ordering);
-                      //setOrderBy(ordering) #BROKENINSIDE
-                    }
-                  }}
-                >
-                  <ImportExportIcon />
-                </IconButton>
-                <IconButton
-                  disableFocusRipple={true}
-                  size="small"
-                  onClick={handleClick(props)}
-                  className={classes.dropdownButton}
-                >
-                  <DropdownIcon />
-                </IconButton>
-              </MuiGrid>
-            </MuiGrid>
-          </Tooltip>
-        );
-    }
-  };
 
   const onHeaderDrop = (dragged: any, target: any) => {
     tableActions.column.reorder(dragged, target);
@@ -225,10 +150,10 @@ function Table(props: Props) {
       .filter((column: any) => !column.hidden)
       .map((column: any) => ({
         draggable: true,
-        editable: editable(column.type),
+        editable: true,
         resizable: true,
         //frozen: column.fixed,
-        headerRenderer: headerRenderer,
+        headerRenderer: ColumnHeader,
         formatter:
           column.type === FieldType.connectTable
             ? docSelect(column)
@@ -246,42 +171,53 @@ function Table(props: Props) {
       name: "Add column",
       type: FieldType.last,
       width: 160,
-      headerRenderer: headerRenderer,
+      headerRenderer: ColumnHeader,
       formatter: (props: any) => (
-        <>
-          <Confirmation
-            message={{
-              title: "Delete Row",
-              body: "Are you sure you want to delete this row?",
-              confirm: (
-                <>
-                  <DeleteIcon /> Delete
-                </>
-              ),
-            }}
-          >
-            <IconButton
-              onClick={async () => {
-                props.row.ref.delete();
-              }}
-            >
-              <DeleteIcon />
-            </IconButton>
-          </Confirmation>
-          <IconButton
-            onClick={() => {
-              const clonedRow = { ...props.row };
-              // remove metadata
-              delete clonedRow.ref;
-              delete clonedRow.rowHeight;
-              delete clonedRow.updatedAt;
-              delete clonedRow.createdAt;
-              tableActions.row.add(clonedRow);
-            }}
-          >
-            <DuplicateIcon />
-          </IconButton>
-        </>
+        <MuiGrid container spacing={1}>
+          <MuiGrid item>
+            <Tooltip title="Duplicate row">
+              <IconButton
+                size="small"
+                onClick={() => {
+                  const clonedRow = { ...props.row };
+                  // remove metadata
+                  delete clonedRow.ref;
+                  delete clonedRow.rowHeight;
+                  delete clonedRow.updatedAt;
+                  delete clonedRow.createdAt;
+                  tableActions.row.add(clonedRow);
+                }}
+                aria-label="Duplicate row"
+              >
+                <CopyCellsIcon />
+              </IconButton>
+            </Tooltip>
+          </MuiGrid>
+
+          <MuiGrid item>
+            <Tooltip title="Delete row">
+              <span>
+                <Confirmation
+                  message={{
+                    title: "Delete Row",
+                    body: "Are you sure you want to delete this row?",
+                    confirm: "Delete",
+                  }}
+                >
+                  <IconButton
+                    size="small"
+                    onClick={async () => {
+                      props.row.ref.delete();
+                    }}
+                    aria-label="Delete row"
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </Confirmation>
+              </span>
+            </Tooltip>
+          </MuiGrid>
+        </MuiGrid>
       ),
     });
   }

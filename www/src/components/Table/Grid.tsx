@@ -96,6 +96,7 @@ export default function Grid(props: any) {
       }}
       onRowClick={handleRowClick}
       rowHeight={rowHeight}
+      headerRowHeight={43}
       width={tableWidth}
       height={tableHeight}
       selectedRows={selectedRows}
