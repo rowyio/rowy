@@ -101,7 +101,7 @@ const Image = (props: Props) => {
   });
   const dropzoneProps = getRootProps();
 
-  const files = [...value];
+  const files = [...(value ?? [])];
   if (localImage) {
     files.push({ downloadURL: localImage, name: "localImage" });
   }

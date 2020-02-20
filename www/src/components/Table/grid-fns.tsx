@@ -90,6 +90,7 @@ export const cellFormatter = (column: any) => {
         <CellWrapper>
           <DateField
             {...props}
+            value={props.row[key]}
             onSubmit={onSubmit(key, props.row)}
             fieldType={type}
           />
@@ -103,7 +104,7 @@ export const cellFormatter = (column: any) => {
             {...props}
             column={column}
             onSubmit={onSubmit(key, props.row)}
-            value={typeof props.value === "number" ? props.value : 0}
+            value={typeof props.row[key] === "number" ? props.row[key] : 0}
           />
         </CellWrapper>
       );
@@ -113,14 +114,20 @@ export const cellFormatter = (column: any) => {
           <Number
             {...props}
             onSubmit={onSubmit(key, props.row)}
-            value={typeof props.value === "number" ? props.value : undefined}
+            value={
+              typeof props.row[key] === "number" ? props.row[key] : undefined
+            }
           />
         </CellWrapper>
       );
     case FieldType.color:
       return (props: any) => (
         <CellWrapper>
-          <Color {...props} onSubmit={onSubmit(key, props.row)} />
+          <Color
+            {...props}
+            value={props.row[key]}
+            onSubmit={onSubmit(key, props.row)}
+          />
         </CellWrapper>
       );
     case FieldType.checkbox:
@@ -129,6 +136,7 @@ export const cellFormatter = (column: any) => {
           <CheckBox
             column={column}
             {...props}
+            value={props.row[key]}
             onSubmit={onSubmit(key, props.row)}
           />
         </CellWrapper>
@@ -136,7 +144,7 @@ export const cellFormatter = (column: any) => {
     case FieldType.url:
       return (props: any) => (
         <CellWrapper>
-          <UrlLink {...props} />
+          <UrlLink {...props} value={props.row[key]} />
         </CellWrapper>
       );
     case FieldType.action:
@@ -147,6 +155,7 @@ export const cellFormatter = (column: any) => {
             callableName={column.callableName}
             fieldName={key}
             {...props}
+            value={props.row[key]}
             onSubmit={onSubmit(key, props.row)}
           />
         </CellWrapper>
@@ -156,6 +165,7 @@ export const cellFormatter = (column: any) => {
         <CellWrapper>
           <MultiSelect
             {...props}
+            value={props.row[key]}
             onSubmit={onSubmit(key, props.row)}
             options={options}
           />
@@ -166,6 +176,7 @@ export const cellFormatter = (column: any) => {
         <CellWrapper>
           <Image
             {...props}
+            value={props.row[key]}
             onSubmit={onSubmit(key, props.row)}
             fieldName={key}
           />
@@ -176,6 +187,7 @@ export const cellFormatter = (column: any) => {
         <CellWrapper>
           <File
             {...props}
+            value={props.row[key]}
             onSubmit={onSubmit(key, props.row)}
             fieldName={key}
           />
@@ -186,6 +198,7 @@ export const cellFormatter = (column: any) => {
         <CellWrapper>
           <LongText
             {...props}
+            value={props.row[key]}
             fieldName={key}
             onSubmit={onSubmit(key, props.row)}
           />
@@ -196,6 +209,7 @@ export const cellFormatter = (column: any) => {
         <CellWrapper>
           <Json
             {...props}
+            value={props.row[key]}
             fieldName={key}
             onSubmit={onSubmit(key, props.row)}
           />
@@ -206,6 +220,7 @@ export const cellFormatter = (column: any) => {
         <CellWrapper>
           <RichText
             {...props}
+            value={props.row[key]}
             fieldName={key}
             onSubmit={onSubmit(key, props.row)}
           />
@@ -217,6 +232,7 @@ export const cellFormatter = (column: any) => {
           <SubTable
             fieldName={key}
             {...props}
+            value={props.row[key]}
             parentLabel={column.parentLabel}
             onSubmit={onSubmit(key, props.row)}
           />
