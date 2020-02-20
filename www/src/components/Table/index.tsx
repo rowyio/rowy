@@ -95,7 +95,6 @@ function Table(props: Props) {
     <Suspense fallback={<div />}>
       <DocSelect
         {...props}
-        column={column}
         onSubmit={onSubmit(column.key, props.row, currentUser?.uid)}
         collectionPath={column.collectionPath}
         config={column.config}
