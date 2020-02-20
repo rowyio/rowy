@@ -79,7 +79,7 @@ const DocSelect = (props: Props) => {
                     (key: string) => `${doc.snapshot[key]} `
                   )}
                   onDelete={
-                    column.editable ? () => handleDelete(index) : undefined
+                    config.editable ? () => handleDelete(index) : undefined
                   }
                 />
               </Grid>
@@ -87,7 +87,7 @@ const DocSelect = (props: Props) => {
         </Grid>
       </Grid>
 
-      {column.editable && (
+      {config.editable && (
         <Grid item>
           <IconButton onClick={handleClick} size="small">
             <AddIcon />
