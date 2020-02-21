@@ -11,11 +11,11 @@ import SideDrawerEditor from "./editors/SideDrawerEditor";
 const { AutoComplete } = Editors;
 
 const MultiSelect = lazy(() => import("../Fields/MultiSelect"));
-const DateField = lazy(() => import("../Fields/Date"));
+const Date = lazy(() => import("./formatters/Date"));
 const Rating = lazy(() => import("../Fields/Rating"));
 const Number = lazy(() => import("../Fields/Number"));
 const CheckBox = lazy(() => import("../Fields/CheckBox"));
-const UrlLink = lazy(() => import("../Fields/UrlLink"));
+const Url = lazy(() => import("./formatters/Url"));
 const Image = lazy(() => import("../Fields/Image"));
 const File = lazy(() => import("../Fields/File"));
 const LongText = lazy(() => import("./formatters/LongText"));
@@ -52,20 +52,19 @@ export const editable = (fieldType: FieldType) => {
 export const onSubmit = (key: string, row: any, uid?: string) => async (
   value: any
 ) => {
-  const collection = row.ref.parent.path;
-  const data = { collection, id: row.ref.id, doc: { [key]: value } };
-
-  if (value !== null || value !== undefined) {
-    const _ft_updatedAt = new Date();
-    const _ft_updatedBy = uid ?? "";
-    row.ref.update({
-      [key]: value,
-      _ft_updatedAt,
-      updatedAt: _ft_updatedAt,
-      // _ft_updatedBy,
-      // updatedBy: _ft_updatedBy,
-    });
-  }
+  // const collection = row.ref.parent.path;
+  // const data = { collection, id: row.ref.id, doc: { [key]: value } };
+  // if (value !== null || value !== undefined) {
+  //   const _ft_updatedAt = new Date();
+  //   const _ft_updatedBy = uid ?? "";
+  //   row.ref.update({
+  //     [key]: value,
+  //     _ft_updatedAt,
+  //     updatedAt: _ft_updatedAt,
+  //     // _ft_updatedBy,
+  //     // updatedBy: _ft_updatedBy,
+  //   });
+  // }
 };
 
 export const onGridRowsUpdated = (event: any) => {
@@ -89,16 +88,7 @@ export const cellFormatter = (column: any) => {
   switch (type) {
     case FieldType.date:
     case FieldType.dateTime:
-      return (props: any) => (
-        <CellWrapper>
-          <DateField
-            {...props}
-            value={props.row[key]}
-            onSubmit={onSubmit(key, props.row)}
-            fieldType={type}
-          />
-        </CellWrapper>
-      );
+      return Date;
 
     case FieldType.rating:
       return (props: any) => (
@@ -140,11 +130,8 @@ export const cellFormatter = (column: any) => {
         </CellWrapper>
       );
     case FieldType.url:
-      return (props: any) => (
-        <CellWrapper>
-          <UrlLink {...props} value={props.row[key]} />
-        </CellWrapper>
-      );
+      return Url;
+
     case FieldType.action:
       return (props: any) => (
         <CellWrapper>
@@ -252,6 +239,8 @@ export const getEditor = (column: any) => {
 
   switch (type) {
     // Can be edited without double-clicking
+    case FieldType.date:
+    case FieldType.dateTime:
     case FieldType.checkbox:
     case FieldType.rating:
     case FieldType.image:
@@ -268,8 +257,6 @@ export const getEditor = (column: any) => {
 
     // Supports double-click editor, but not implemented yet
     case FieldType.number:
-    case FieldType.date:
-    case FieldType.dateTime:
     case FieldType.color:
       return NullEditor;
 

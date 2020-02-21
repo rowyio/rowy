@@ -3,7 +3,7 @@ import _groupBy from "lodash/groupBy";
 
 import { Column } from "react-data-grid";
 import { PopoverProps } from "@material-ui/core";
-
+import firebase from "firebase/app";
 import useFiretable, {
   FiretableActions,
   FiretableState,
@@ -91,7 +91,24 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
     }
   }, [currentUser]);
 
-  const updateCell = (fieldName: string, row: any) => {};
+  const updateCell = (
+    ref: firebase.firestore.DocumentReference,
+    fieldName: string,
+    value: any
+  ) => {
+    if (value === null || value === undefined) return;
+    const _ft_updatedAt = new Date();
+    const _ft_updatedBy = currentUser?.uid ?? "";
+
+    ref.update({
+      [fieldName]: value,
+      _ft_updatedAt,
+      updatedAt: _ft_updatedAt,
+      _ft_updatedBy,
+      updatedBy: _ft_updatedBy,
+    });
+  };
+
   return (
     <firetableContext.Provider
       value={{
