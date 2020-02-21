@@ -22,7 +22,6 @@ import { FiretableOrderBy } from "hooks/useFiretable";
 const useStyles = makeStyles(theme =>
   createStyles({
     root: {
-      marginTop: -1,
       height: "100%",
       "& svg, & button": { display: "block" },
 
@@ -56,15 +55,11 @@ const useStyles = makeStyles(theme =>
     },
     columnName: {
       fontSize: "0.875rem",
-      lineHeight: 1,
+      lineHeight: "44px",
     },
 
     sortIconContainer: {
-      // backgroundColor: theme.palette.background.default,
-      backgroundImage: `linear-gradient(to right, ${fade(
-        theme.palette.background.default,
-        0
-      )} 0, ${theme.palette.background.default} 6px)`,
+      backgroundColor: theme.palette.background.default,
       width: 30,
       height: 30,
 
@@ -169,24 +164,26 @@ const ColumnHeader: Column<any>["headerRenderer"] = ({ column }) => {
         </Grid>
       </Tooltip>
 
-      <Grid
-        item
-        xs
-        onClick={() => {
-          navigator.clipboard.writeText(column.key);
-        }}
-        className={classes.columnNameContainer}
-      >
-        <Typography
-          variant="h6"
-          noWrap
-          className={classes.columnName}
-          component="span"
-          color="inherit"
+      <Tooltip title={column.name}>
+        <Grid
+          item
+          xs
+          onClick={() => {
+            navigator.clipboard.writeText(column.key);
+          }}
+          className={classes.columnNameContainer}
         >
-          {column.name}
-        </Typography>
-      </Grid>
+          <Typography
+            variant="h6"
+            noWrap
+            className={classes.columnName}
+            component="span"
+            color="inherit"
+          >
+            {column.name}
+          </Typography>
+        </Grid>
+      </Tooltip>
 
       <Grid
         item

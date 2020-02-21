@@ -49,9 +49,19 @@ const useStyles = makeStyles(theme =>
   createStyles({
     "@global": {
       ".rdg-root": {
-        "&.rdg-root": { borderColor: "#e0e0e0" },
+        "&.rdg-root": {
+          borderColor: "#e0e0e0",
+          lineHeight: "inherit !important",
+        },
+
         "& .rdg-header": { backgroundColor: theme.palette.background.default },
-        "& .rdg-cell": { borderColor: "#e0e0e0" },
+
+        "& .rdg-cell": {
+          borderColor: "#e0e0e0",
+          display: "flex",
+          alignItems: "center",
+          padding: theme.spacing(0, 1.5),
+        },
       },
 
       ".rdg-viewport": {
