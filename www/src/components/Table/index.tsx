@@ -26,11 +26,9 @@ import { useFiretableContext } from "contexts/firetableContext";
 import { FieldType, getFieldIcon } from "constants/fields";
 import {
   cellFormatter,
-  onCellSelected,
   onGridRowsUpdated,
-  singleSelectEditor,
-  editable,
   onSubmit,
+  getEditor,
 } from "./grid-fns";
 import { EditorProvider } from "../../util/EditorProvider";
 
@@ -170,7 +168,7 @@ function Table(props: Props) {
         // frozen: column.fixed,
         headerRenderer: ColumnHeader,
         formatter: cellFormatter(column),
-        editor: false,
+        editor: getEditor(column),
         ...column,
         width: column.width ? (column.width > 380 ? 380 : column.width) : 150,
       }));
@@ -180,6 +178,7 @@ function Table(props: Props) {
       name: "Add column",
       type: FieldType.last,
       width: 160,
+      editable: false,
       headerRenderer: ColumnHeader,
       headerCellClass: classes.finalHeaderCell,
       cellClass: classes.finalCell,
