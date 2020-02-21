@@ -37,6 +37,7 @@ export default function RichText({ value, onChange }: IRichTextProps) {
           statusbar: false,
           toolbar:
             "formatselect | bold italic forecolor | link | bullist numlist outdent indent | removeformat | help",
+          skin_url: "/static/js/skins/ui/oxide",
         }}
         value={value}
         onEditorChange={onChange}
