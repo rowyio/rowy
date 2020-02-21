@@ -103,7 +103,7 @@ export default function Grid(props: any) {
       onSelectedRowsChange={setSelectedRows}
       enableCellCopyPaste
       enableCellDragAndDrop
-      onColumnResize={resizeColumn} //TODO: maybe use debounce for performance
+      onColumnResize={resizeColumn}
       cellNavigationMode={CellNavigationMode.CHANGE_ROW}
     />
   );
