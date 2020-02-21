@@ -94,9 +94,11 @@ export default function Form({ fields, values }: IFormProps) {
   useEffect(() => {
     if (!selectedCell?.column) return;
     const elem = document.getElementById(
-      `sidedrawer-label-${selectedCell!.column}`
+      `sidedrawer-label-${selectedCell.column}`
     )?.parentNode as HTMLElement;
-    elem?.scrollIntoView({ behavior: "smooth" });
+
+    // Time out for double-clicking on cells, which can open the null editor
+    setTimeout(() => elem?.scrollIntoView({ behavior: "smooth" }), 50);
   }, [selectedCell?.column]);
 
   return (
