@@ -5,13 +5,11 @@ import { Column } from "react-data-grid";
 import {
   makeStyles,
   createStyles,
-  fade,
   Tooltip,
   Grid,
   IconButton,
   Typography,
 } from "@material-ui/core";
-import AddColumnIcon from "assets/icons/AddColumn";
 import SortDescIcon from "@material-ui/icons/ArrowDownward";
 import DropdownIcon from "@material-ui/icons/ArrowDropDownCircle";
 
@@ -30,21 +28,6 @@ const useStyles = makeStyles(theme =>
         duration: theme.transitions.duration.short,
       }),
       "&:hover": { color: theme.palette.text.primary },
-    },
-
-    addColumnButton: {
-      backgroundColor: theme.palette.primary.contrastText,
-      padding: 0,
-      "& svg": { width: 32, height: 32 },
-
-      opacity: 0.5,
-      transition: theme.transitions.create("opacity", {
-        duration: theme.transitions.duration.short,
-      }),
-      "&:hover": {
-        backgroundColor: theme.palette.primary.contrastText,
-        opacity: 1,
-      },
     },
 
     columnNameContainer: {
@@ -127,29 +110,6 @@ const ColumnHeader: Column<any>["headerRenderer"] = ({ column }) => {
       tableActions.table.orderBy(ordering);
     }
   };
-
-  if (column.key === "new")
-    return (
-      <Grid
-        container
-        alignItems="center"
-        justify="center"
-        className={classes.root}
-      >
-        <Tooltip title="Add column">
-          <IconButton
-            size="small"
-            // onClick={handleClick(props)}
-            className={classes.addColumnButton}
-            color="primary"
-            aria-label="Add column"
-            onClick={handleClick}
-          >
-            <AddColumnIcon />
-          </IconButton>
-        </Tooltip>
-      </Grid>
-    );
 
   return (
     <Grid container className={classes.root} alignItems="center" wrap="nowrap">

@@ -1,23 +1,14 @@
 import React, { useState, useEffect, lazy, Suspense } from "react";
 import _isEmpty from "lodash/isEmpty";
 
-import {
-  makeStyles,
-  createStyles,
-  Button,
-  Grid as MuiGrid,
-  Tooltip,
-  IconButton,
-} from "@material-ui/core";
-import Confirmation from "components/Confirmation";
-import CopyCellsIcon from "assets/icons/CopyCells";
-import DeleteIcon from "@material-ui/icons/Cancel";
+import { makeStyles, createStyles, Button } from "@material-ui/core";
 
 import useWindowSize from "hooks/useWindowSize";
 
 import Loading from "components/Loading";
 import Grid, { IGridProps } from "./Grid";
 import ColumnHeader from "./ColumnHeader";
+import FinalColumnHeader from "./FinalColumnHeader";
 
 import { FireTableFilter, FiretableOrderBy } from "hooks/useFiretable";
 import { useAppContext } from "contexts/appContext";
@@ -31,6 +22,8 @@ import {
   getEditor,
 } from "./grid-fns";
 import { EditorProvider } from "../../util/EditorProvider";
+
+import FinalColumn, { useFinalColumnStyles } from "./formatters/FinalColumn";
 
 const Hotkeys = lazy(() => import("./HotKeys"));
 const TableHeader = lazy(() => import("./TableHeader"));
@@ -69,30 +62,12 @@ const useStyles = makeStyles(theme =>
         color: theme.palette.text.secondary,
       },
     },
-
-    finalHeaderCell: {
-      ".rdg-root &": {
-        width: "40px !important",
-        overflow: "visible",
-
-        "& > div": {
-          position: "absolute",
-          right: "-50%",
-        },
-      },
-    },
-
-    finalCell: {
-      ".rdg-root &": {
-        background: theme.palette.background.default,
-        borderColor: "transparent",
-      },
-    },
   })
 );
 
 function Table(props: Props) {
-  const classes = useStyles();
+  useStyles();
+  const finalColumnClasses = useFinalColumnStyles();
 
   const { collection, filters } = props;
   const { currentUser } = useAppContext();
@@ -179,56 +154,10 @@ function Table(props: Props) {
       type: FieldType.last,
       width: 160,
       editable: false,
-      headerRenderer: ColumnHeader,
-      headerCellClass: classes.finalHeaderCell,
-      cellClass: classes.finalCell,
-      formatter: (props: any) => (
-        <MuiGrid container spacing={1}>
-          <MuiGrid item>
-            <Tooltip title="Duplicate row">
-              <IconButton
-                size="small"
-                onClick={() => {
-                  const clonedRow = { ...props.row };
-                  // remove metadata
-                  delete clonedRow.ref;
-                  delete clonedRow.rowHeight;
-                  delete clonedRow.updatedAt;
-                  delete clonedRow.createdAt;
-                  tableActions.row.add(clonedRow);
-                }}
-                aria-label="Duplicate row"
-              >
-                <CopyCellsIcon />
-              </IconButton>
-            </Tooltip>
-          </MuiGrid>
-
-          <MuiGrid item>
-            <Tooltip title="Delete row">
-              <span>
-                <Confirmation
-                  message={{
-                    title: "Delete Row",
-                    body: "Are you sure you want to delete this row?",
-                    confirm: "Delete",
-                  }}
-                >
-                  <IconButton
-                    size="small"
-                    onClick={async () => {
-                      props.row.ref.delete();
-                    }}
-                    aria-label="Delete row"
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </Confirmation>
-              </span>
-            </Tooltip>
-          </MuiGrid>
-        </MuiGrid>
-      ),
+      headerRenderer: FinalColumnHeader,
+      headerCellClass: finalColumnClasses.headerCell,
+      cellClass: finalColumnClasses.cell,
+      formatter: FinalColumn,
     });
   }
 
