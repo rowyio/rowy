@@ -163,20 +163,14 @@ function Table(props: Props) {
   if (!tableState.loadingColumns && tableState.columns) {
     columns = tableState.columns
       .filter((column: any) => !column.hidden)
-      .map((column: any) => ({
+      .map((column: any, index) => ({
         draggable: true,
         editable: true,
         resizable: true,
-        //frozen: column.fixed,
+        // frozen: column.fixed,
         headerRenderer: ColumnHeader,
-        formatter:
-          column.type === FieldType.connectTable
-            ? docSelect(column)
-            : cellFormatter(column),
-        editor:
-          column.type === FieldType.singleSelect
-            ? singleSelectEditor(column.options)
-            : false,
+        formatter: cellFormatter(column),
+        editor: false,
         ...column,
         width: column.width ? (column.width > 380 ? 380 : column.width) : 150,
       }));

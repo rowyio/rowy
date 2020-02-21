@@ -15,10 +15,10 @@ const CheckBox = lazy(() => import("../Fields/CheckBox"));
 const UrlLink = lazy(() => import("../Fields/UrlLink"));
 const Image = lazy(() => import("../Fields/Image"));
 const File = lazy(() => import("../Fields/File"));
-const LongText = lazy(() => import("../Fields/LongText"));
-const Json = lazy(() => import("../Fields/Json"));
-const RichText = lazy(() => import("../Fields/RichText"));
-const Color = lazy(() => import("../Fields/Color"));
+const LongText = lazy(() => import("./formatters/LongText"));
+const Json = lazy(() => import("./formatters/Json"));
+const RichText = lazy(() => import("./formatters/RichText"));
+const Color = lazy(() => import("./formatters/Color"));
 const Action = lazy(() => import("../Fields/Action"));
 const SubTable = lazy(() => import("../Fields/SubTable"));
 
@@ -108,28 +108,23 @@ export const cellFormatter = (column: any) => {
           />
         </CellWrapper>
       );
-    case FieldType.number:
-      return (props: any) => (
-        <CellWrapper>
-          <Number
-            {...props}
-            onSubmit={onSubmit(key, props.row)}
-            value={
-              typeof props.row[key] === "number" ? props.row[key] : undefined
-            }
-          />
-        </CellWrapper>
-      );
+
+    // case FieldType.number:
+    //   return (props: any) => (
+    //     <CellWrapper>
+    //       <Number
+    //         {...props}
+    //         onSubmit={onSubmit(key, props.row)}
+    //         value={
+    //           typeof props.row[key] === "number" ? props.row[key] : undefined
+    //         }
+    //       />
+    //     </CellWrapper>
+    //   );
+
     case FieldType.color:
-      return (props: any) => (
-        <CellWrapper>
-          <Color
-            {...props}
-            value={props.row[key]}
-            onSubmit={onSubmit(key, props.row)}
-          />
-        </CellWrapper>
-      );
+      return Color;
+
     case FieldType.checkbox:
       return (props: any) => (
         <CellWrapper>
@@ -194,27 +189,11 @@ export const cellFormatter = (column: any) => {
         </CellWrapper>
       );
     case FieldType.longText:
-      return (props: any) => (
-        <CellWrapper>
-          <LongText
-            {...props}
-            value={props.row[key]}
-            fieldName={key}
-            onSubmit={onSubmit(key, props.row)}
-          />
-        </CellWrapper>
-      );
+      return LongText;
+
     case FieldType.json:
-      return (props: any) => (
-        <CellWrapper>
-          <Json
-            {...props}
-            value={props.row[key]}
-            fieldName={key}
-            onSubmit={onSubmit(key, props.row)}
-          />
-        </CellWrapper>
-      );
+      return Json;
+
     case FieldType.richText:
       return (props: any) => (
         <CellWrapper>
@@ -240,7 +219,7 @@ export const cellFormatter = (column: any) => {
       );
 
     default:
-      return false;
+      return () => <div>CELL</div>;
   }
 };
 
@@ -252,7 +231,7 @@ export const singleSelectEditor = (options: string[]) => {
       title: option,
       text: option,
     }));
-    return <AutoComplete options={_options} />;
+    // return <AutoComplete options={_options} />;
   }
 
   return <AutoComplete options={[]} />;
