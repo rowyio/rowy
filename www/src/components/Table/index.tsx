@@ -30,6 +30,7 @@ import {
   onCellSelected,
   onGridRowsUpdated,
   singleSelectEditor,
+  NumberEditor,
   editable,
   onSubmit,
 } from "./grid-fns";
@@ -229,6 +230,8 @@ function Table(props: Props) {
         editor:
           column.type === FieldType.singleSelect
             ? singleSelectEditor(column.options)
+            : column.type === FieldType.number
+            ? NumberEditor
             : false,
         ...column,
         width: column.width ? (column.width > 380 ? 380 : column.width) : 150,
