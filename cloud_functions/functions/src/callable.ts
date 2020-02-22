@@ -1,6 +1,48 @@
 import * as functions from "firebase-functions";
+import * as _ from "lodash";
 import { db } from "./config";
+import * as admin from "firebase-admin";
 // example callable function
+
+const serverTimestamp = admin.firestore.FieldValue.serverTimestamp();
+const emailGenerator = (
+  emailTemplate: { subject: string; body: string },
+  data: any
+) => {
+  const subject = emailTemplate.subject.replace(/\{\{(.*?)\}\}/g, function(
+    m,
+    key
+  ) {
+    return _.get(data, key, "");
+  });
+
+  const html = emailTemplate.body.replace(/\{\{(.*?)\}\}/g, function(m, key) {
+    return _.get(data, key, "");
+  });
+
+  return { subject, html };
+};
+
+const sendVerifiedEmail = async (row: any) => {
+  const emailTemplate = await db
+    .doc("emailTemplates/p8K9z0CBhGlb3Vgzl02o")
+    .get();
+  const templateData = emailTemplate.data();
+  if (!templateData || !templateData.subject || !templateData.body)
+    return false;
+
+  const message = emailGenerator(
+    templateData as { subject: string; body: string },
+    row
+  );
+
+  return db.collection("firemail").add({
+    to: row.email,
+    message,
+    createdAt: serverTimestamp,
+  });
+};
+
 export const verifyFounder = functions.https.onCall(
   async (
     data: {
@@ -47,9 +89,11 @@ export const verifyFounder = functions.https.onCall(
             .collection("founders")
             .doc(ref.id)
             .set(syncData, { merge: true });
+          await sendVerifiedEmail(row);
           return {
             message: "Founder created!",
             cellValue: { redo: false, status: "Verified", undo: true },
+            completedAt: serverTimestamp,
             success: true,
           };
       }
@@ -62,3 +106,34 @@ export const verifyFounder = functions.https.onCall(
     }
   }
 );
+
+const dissolveTeam = async (
+  data: {
+    ref: {
+      id: string;
+      path: string;
+      parentId: string;
+    };
+    row: any;
+    action: "run" | "redo" | "undo";
+  },
+  context: functions.https.CallableContext
+) => {
+  console.log(context.auth?.token);
+  await db
+    .collection("myTeam")
+    .doc(data.ref.id)
+    .update({ isDissolved: true });
+  return {
+    message: "Team dissemble",
+    cellValue: {
+      redo: false,
+      status: `dissolved by ${context.auth?.token.givenName}`,
+      completedAt: serverTimestamp,
+      undo: true,
+    },
+    success: true,
+  };
+};
+
+export const FH_dissolveTeam = functions.https.onCall(dissolveTeam);
