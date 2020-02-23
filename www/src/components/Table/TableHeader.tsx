@@ -177,7 +177,7 @@ const TableHeader = ({
           </Grid>
 
           <Grid item>
-            <ImportCSV columns={columns} addRow={tableActions?.row.add} />
+            <ImportCSV />
           </Grid>
 
           <Grid item>
