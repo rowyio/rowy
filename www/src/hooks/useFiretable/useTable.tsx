@@ -206,7 +206,7 @@ const useTable = (initialOverrides: any) => {
    */
   const addRow = async (data?: any) => {
     const { rows, orderBy, path } = tableState;
-    if (rows.length === 0 || orderBy !== null) {
+    if (rows.length === 0) {
       await db.collection(path).add({
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
@@ -215,6 +215,7 @@ const useTable = (initialOverrides: any) => {
     } else {
       const firstId = rows[0].id;
       const newId = generateSmallerId(firstId);
+      console.log(newId);
       await db
         .collection(path)
         .doc(newId)

@@ -158,7 +158,7 @@ export default function ExportCSV(props: Props) {
               setCSVColumns(columns);
             }}
           >
-            Export All Columns
+            Select All
           </Button>
         </DialogContent>
         <DialogActions>

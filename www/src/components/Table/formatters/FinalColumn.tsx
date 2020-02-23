@@ -13,7 +13,7 @@ import DeleteIcon from "@material-ui/icons/Cancel";
 
 import Confirmation from "components/Confirmation";
 import { useFiretableContext } from "contexts/firetableContext";
-
+import useKeyPress from "../../../hooks/useKeyPress";
 export const useFinalColumnStyles = makeStyles(theme =>
   createStyles({
     headerCell: {
@@ -46,7 +46,8 @@ export const useFinalColumnStyles = makeStyles(theme =>
 
 export default function FinalColumn({ row }: FormatterProps) {
   const { tableActions } = useFiretableContext();
-
+  const shiftPress = useKeyPress("Shift");
+  console.log(shiftPress);
   return (
     <Grid container spacing={1}>
       <Grid item>
@@ -74,13 +75,7 @@ export default function FinalColumn({ row }: FormatterProps) {
       <Grid item>
         <Tooltip title="Delete row">
           <span>
-            <Confirmation
-              message={{
-                title: "Delete Row",
-                body: "Are you sure you want to delete this row?",
-                confirm: "Delete",
-              }}
-            >
+            {shiftPress ? (
               <IconButton
                 size="small"
                 color="inherit"
@@ -91,7 +86,26 @@ export default function FinalColumn({ row }: FormatterProps) {
               >
                 <DeleteIcon />
               </IconButton>
-            </Confirmation>
+            ) : (
+              <Confirmation
+                message={{
+                  title: "Delete Row",
+                  body: "Are you sure you want to delete this row?",
+                  confirm: "Delete",
+                }}
+              >
+                <IconButton
+                  size="small"
+                  color="inherit"
+                  onClick={async () => {
+                    row.ref.delete();
+                  }}
+                  aria-label="Delete row"
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </Confirmation>
+            )}
           </span>
         </Tooltip>
       </Grid>
