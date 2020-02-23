@@ -8,6 +8,31 @@ import { FireTableFilter, FiretableOrderBy } from ".";
 import { SnackContext } from "../../contexts/snackContext";
 
 const CAP = 1000; // safety  paramter sets the  upper limit of number of docs fetched by this hook
+const serverTimestamp = firebase.firestore.FieldValue.serverTimestamp;
+var characters =
+  "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+function makeId(length) {
+  var result = "";
+  var charactersLength = characters.length;
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
+
+const generateSmallerId = (id: string) => {
+  const indexOfFirstChar = characters.indexOf(id[0]);
+  if (indexOfFirstChar !== 0)
+    return characters[indexOfFirstChar - 1] + makeId(id.length - 1);
+  else return id[0] + generateSmallerId(id.substr(1, id.length - 1));
+};
+
+const generateBiggerId = (id: string) => {
+  const indexOfFirstChar = characters.indexOf(id[0]);
+  if (indexOfFirstChar !== 61)
+    return characters[indexOfFirstChar + 1] + makeId(id.length - 1);
+  else return id[0] + generateBiggerId(id.substr(1, id.length - 1));
+};
 
 const tableReducer = (prevState: any, newProps: any) => {
   return { ...prevState, ...newProps };
@@ -180,11 +205,28 @@ const useTable = (initialOverrides: any) => {
    *  @param data(optional: default will create empty row)
    */
   const addRow = async (data?: any) => {
-    const ref = await db.collection(tableState.path).add({
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-      ...data,
-    });
+    const { rows, orderBy, path } = tableState;
+    if (rows.length === 0 || orderBy !== null) {
+      await db.collection(path).add({
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+        ...data,
+      });
+    } else {
+      const firstId = rows[0].id;
+      const newId = generateSmallerId(firstId);
+      await db
+        .collection(path)
+        .doc(newId)
+        .set(
+          {
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp(),
+            ...data,
+          },
+          { merge: true }
+        );
+    }
   };
   /**  used for incrementing the number of rows fetched
    *  @param additionalRows number additional rows to be fetched (optional: default is 20)
