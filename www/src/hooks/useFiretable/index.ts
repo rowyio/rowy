@@ -25,7 +25,7 @@ export type FiretableState = {
   config: { rowHeight: number };
   columns: any[];
   rows: any[];
-  rowsLimit: number;
+  queryLimit: number;
   filters: FireTableFilter[];
   loadingRows: boolean;
   loadingColumns: boolean;
@@ -67,7 +67,7 @@ const useFiretable = (
     columns: tableConfig.columns,
     config: { rowHeight: tableConfig.rowHeight },
     rows: tableState.rows,
-    rowsLimit: tableState.limit,
+    queryLimit: tableState.limit,
     loadingRows: tableState.loading,
     loadingColumns: tableConfig.loading,
   };

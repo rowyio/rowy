@@ -189,7 +189,7 @@ function Table(props: Props) {
    * @param index
    */
   const handleRowGetter = (index: number) => {
-    if (tableState.rowsLimit - index < 30) {
+    if (tableState.queryLimit - index < 30) {
       tableActions.row.more(30);
     }
     return rows[index];

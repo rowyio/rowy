@@ -62,7 +62,6 @@ const TableHeader = ({
   rowHeight,
   updateConfig,
   columns,
-
   filters,
 }: Props) => {
   const classes = useStyles();
