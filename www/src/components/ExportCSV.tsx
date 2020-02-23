@@ -167,14 +167,6 @@ export default function ExportCSV(props: Props) {
           </Button>
           <Button
             onClick={() => {
-              handleExport();
-            }}
-            color="secondary"
-          >
-            Export All Fields
-          </Button>
-          <Button
-            onClick={() => {
               handleExport(csvColumns);
             }}
             disabled={csvColumns.length === 0}
