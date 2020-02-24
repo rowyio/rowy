@@ -12,9 +12,8 @@ const { AutoComplete } = Editors;
 
 const MultiSelect = lazy(() => import("../Fields/MultiSelect"));
 const Date = lazy(() => import("./formatters/Date"));
-const Rating = lazy(() => import("../Fields/Rating"));
-const Number = lazy(() => import("../Fields/Number"));
-const CheckBox = lazy(() => import("../Fields/CheckBox"));
+const Rating = lazy(() => import("./formatters/Rating"));
+const Checkbox = lazy(() => import("./formatters/Checkbox"));
 const Url = lazy(() => import("./formatters/Url"));
 const Image = lazy(() => import("../Fields/Image"));
 const File = lazy(() => import("../Fields/File"));
@@ -91,16 +90,7 @@ export const cellFormatter = (column: any) => {
       return Date;
 
     case FieldType.rating:
-      return (props: any) => (
-        <CellWrapper>
-          <Rating
-            {...props}
-            column={column}
-            onSubmit={onSubmit(key, props.row)}
-            value={typeof props.row[key] === "number" ? props.row[key] : 0}
-          />
-        </CellWrapper>
-      );
+      return Rating;
 
     // case FieldType.number:
     //   return (props: any) => (
@@ -119,16 +109,8 @@ export const cellFormatter = (column: any) => {
       return Color;
 
     case FieldType.checkbox:
-      return (props: any) => (
-        <CellWrapper>
-          <CheckBox
-            column={column}
-            {...props}
-            value={props.row[key]}
-            onSubmit={onSubmit(key, props.row)}
-          />
-        </CellWrapper>
-      );
+      return Checkbox;
+
     case FieldType.url:
       return Url;
 
