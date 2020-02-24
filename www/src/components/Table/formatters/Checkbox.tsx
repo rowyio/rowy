@@ -1,11 +1,32 @@
 import React from "react";
 import withCustomCell, { CustomCellProps } from "./withCustomCell";
 
-import { Grid, Switch } from "@material-ui/core";
+import {
+  makeStyles,
+  createStyles,
+  FormControlLabel,
+  Switch,
+} from "@material-ui/core";
 import Confirmation from "components/Confirmation";
 
+const useStyles = makeStyles(theme =>
+  createStyles({
+    root: { paddingLeft: theme.spacing(1.5) },
+
+    label: {
+      font: "inherit",
+
+      flexGrow: 1,
+      width: "calc(100% - 58px)",
+      overflowX: "hidden",
+    },
+  })
+);
+
 function Checkbox({ row, column, value, onSubmit }: CustomCellProps) {
-  const checkbox = (
+  const classes = useStyles();
+
+  let component = (
     <Switch
       checked={!!value}
       onChange={() => onSubmit(!value)}
@@ -15,27 +36,29 @@ function Checkbox({ row, column, value, onSubmit }: CustomCellProps) {
   );
 
   if ((column as any)?.config?.confirmation)
-    return (
-      <Grid container justify="center">
-        <Confirmation
-          message={{
-            title: (column as any).config.confirmation.title,
-            body: (column as any).config.confirmation.body.replace(
-              "{{firstName}}",
-              row.firstName
-            ),
-          }}
-          functionName="onChange"
-        >
-          {checkbox}
-        </Confirmation>
-      </Grid>
+    component = (
+      <Confirmation
+        message={{
+          title: (column as any).config.confirmation.title,
+          body: (column as any).config.confirmation.body.replace(
+            "{{firstName}}",
+            row.firstName
+          ),
+        }}
+        functionName="onChange"
+      >
+        {component}
+      </Confirmation>
     );
 
   return (
-    <Grid container justify="center">
-      {checkbox}
-    </Grid>
+    <FormControlLabel
+      control={component}
+      label={column.name}
+      labelPlacement="start"
+      className="cell-collapse-padding"
+      classes={classes}
+    />
   );
 }
 

@@ -66,8 +66,6 @@ function Action({ column, row, value, onSubmit }: CustomCellProps) {
         {hasRan
           ? value.status
           : callableName?.replace("callable-", "").replace(/([A-Z])/g, " $1")}
-        complete complete complete complete complete complete complete complete
-        complete complete complete complete
       </Grid>
 
       <Grid item>
