@@ -247,7 +247,7 @@ export const getEditor = (column: any) => {
     case FieldType.file:
     case FieldType.singleSelect:
     case FieldType.multiSelect:
-      return NullEditor;
+      return SideDrawerEditor;
 
     // Can be edited without double-clicking; side drawer editor not implemented
     case FieldType.connectTable:

@@ -1,7 +1,7 @@
 import React from "react";
 import withCustomCell, { CustomCellProps } from "./withCustomCell";
 
-import { makeStyles, createStyles, InputAdornment } from "@material-ui/core";
+import { makeStyles, createStyles, fade } from "@material-ui/core";
 import { FieldType, DateIcon, DateTimeIcon } from "constants/fields";
 import { DATE_FORMAT, DATE_TIME_FORMAT } from "constants/dates";
 
@@ -12,25 +12,45 @@ import {
   KeyboardDateTimePicker,
 } from "@material-ui/pickers";
 
+import { useFiretableContext } from "contexts/firetableContext";
+
 const useStyles = makeStyles(theme =>
   createStyles({
+    root: {
+      height: "100%",
+      margin: theme.spacing(0, -1.5),
+      width: `calc(100% + ${theme.spacing(3)}px)`,
+    },
+    inputBase: { height: "100%" },
+
+    inputAdornment: {
+      height: "100%",
+      marginLeft: theme.spacing(1) + 1,
+      marginRight: theme.spacing(0.25),
+    },
+    iconButton: {
+      color: theme.palette.text.disabled,
+      ".rdg-row:hover &": {
+        color: theme.palette.text.primary,
+        backgroundColor: fade(
+          theme.palette.text.primary,
+          theme.palette.action.hoverOpacity * 2
+        ),
+      },
+    },
+
     input: {
       ...theme.typography.body2,
       fontSize: "0.75rem",
       color: theme.palette.text.secondary,
-    },
-    icon: {
-      color: theme.palette.text.secondary,
-    },
-
-    "@global": {
-      ".rdg-editor-container": { display: "none" },
+      height: "100%",
     },
   })
 );
 
-function Date({ column, value, onSubmit }: CustomCellProps) {
+function Date({ rowIdx, column, value, onSubmit }: CustomCellProps) {
   const classes = useStyles();
+  const { setSelectedCell } = useFiretableContext();
 
   const transformedValue = value && "toDate" in value ? value.toDate() : null;
 
@@ -46,17 +66,26 @@ function Date({ column, value, onSubmit }: CustomCellProps) {
       <Picker
         value={transformedValue}
         onChange={handleDateChange}
+        onClick={e => {
+          e.stopPropagation();
+          setSelectedCell!({ row: rowIdx, column: column.key });
+        }}
         format={fieldType === FieldType.date ? DATE_FORMAT : DATE_TIME_FORMAT}
         // emptyLabel="Select a date"
         fullWidth
+        keyboardIcon={<Icon />}
+        className={classes.root}
         InputProps={{
           disableUnderline: true,
-          classes: { input: classes.input },
-          startAdornment: (
-            <InputAdornment position="start">
-              <Icon className={classes.icon} />
-            </InputAdornment>
-          ),
+          classes: { root: classes.inputBase, input: classes.input },
+        }}
+        InputAdornmentProps={{
+          position: "start",
+          classes: { root: classes.inputAdornment },
+        }}
+        KeyboardButtonProps={{
+          size: "small",
+          classes: { root: classes.iconButton },
         }}
       />
     </MuiPickersUtilsProvider>
