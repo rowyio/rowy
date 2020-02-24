@@ -53,10 +53,6 @@ function Date({ rowIdx, column, value, onSubmit }: CustomCellProps) {
   const classes = useStyles();
   const { setSelectedCell } = useFiretableContext();
 
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
   const transformedValue = value && "toDate" in value ? value.toDate() : null;
 
   const fieldType = (column as any).type;
@@ -71,14 +67,10 @@ function Date({ rowIdx, column, value, onSubmit }: CustomCellProps) {
       <Picker
         value={transformedValue}
         onChange={handleDateChange}
-        open={open}
         onClick={e => {
           e.stopPropagation();
           setSelectedCell!({ row: rowIdx, column: column.key });
         }}
-        onDoubleClick={handleOpen}
-        onOpen={handleOpen}
-        onClose={handleClose}
         format={fieldType === FieldType.date ? DATE_FORMAT : DATE_TIME_FORMAT}
         fullWidth
         keyboardIcon={<Icon />}
