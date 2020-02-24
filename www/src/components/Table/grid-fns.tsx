@@ -22,7 +22,7 @@ const LongText = lazy(() => import("./formatters/LongText"));
 const Json = lazy(() => import("./formatters/Json"));
 const RichText = lazy(() => import("./formatters/RichText"));
 const Color = lazy(() => import("./formatters/Color"));
-const Action = lazy(() => import("../Fields/Action"));
+const Action = lazy(() => import("./formatters/Action"));
 const SubTable = lazy(() => import("../Fields/SubTable"));
 
 export const editable = (fieldType: FieldType) => {
@@ -109,18 +109,8 @@ export const cellFormatter = (column: any) => {
       return Url;
 
     case FieldType.action:
-      return (props: any) => (
-        <CellWrapper>
-          <Action
-            scripts={column.scripts}
-            callableName={column.callableName}
-            fieldName={key}
-            {...props}
-            value={props.row[key]}
-            onSubmit={onSubmit(key, props.row)}
-          />
-        </CellWrapper>
-      );
+      return Action;
+
     case FieldType.multiSelect:
       return (props: any) => (
         <CellWrapper>
