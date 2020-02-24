@@ -2,16 +2,18 @@ import React, { useContext } from "react";
 import withCustomCell, { CustomCellProps } from "./withCustomCell";
 import clsx from "clsx";
 
-import { createStyles, makeStyles, Grid, IconButton } from "@material-ui/core";
-import PlayIcon from "@material-ui/icons/PlayCircleOutline";
-import ReplayIcon from "@material-ui/icons/Replay";
+import { createStyles, makeStyles, Grid, Fab } from "@material-ui/core";
+import PlayIcon from "@material-ui/icons/PlayArrow";
+import RefreshIcon from "@material-ui/icons/Refresh";
 
 import { SnackContext } from "contexts/snackContext";
 import { cloudFunction } from "firebase/callables";
 
 const useStyles = makeStyles(theme =>
   createStyles({
-    root: { padding: theme.spacing(0, 0.625, 0, 1) },
+    root: { padding: theme.spacing(0, 0.375, 0, 1.5) },
+    labelContainer: { overflowX: "hidden" },
+    fab: { width: 36, height: 36 },
   })
 );
 
@@ -58,24 +60,26 @@ function Action({ column, row, value, onSubmit }: CustomCellProps) {
       container
       alignItems="center"
       wrap="nowrap"
-      spacing={1}
       className={clsx("cell-collapse-padding", classes.root)}
     >
-      <Grid item xs>
+      <Grid item xs className={classes.labelContainer}>
         {hasRan
           ? value.status
           : callableName?.replace("callable-", "").replace(/([A-Z])/g, " $1")}
+        complete complete complete complete complete complete complete complete
+        complete complete complete complete
       </Grid>
 
       <Grid item>
-        <IconButton
+        <Fab
           size="small"
+          color="secondary"
+          className={classes.fab}
           onClick={handleRun}
           disabled={hasRan && !value.redo}
-          className={hasRan && !value.redo ? "" : "row-hover-iconButton"}
         >
-          {hasRan ? <ReplayIcon /> : <PlayIcon />}
-        </IconButton>
+          {hasRan ? <RefreshIcon /> : <PlayIcon />}
+        </Fab>
       </Grid>
     </Grid>
   );

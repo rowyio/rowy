@@ -137,7 +137,7 @@ const TableHeader = ({
               select
               variant="filled"
               className={classes.formControl}
-              value={rowHeight ? rowHeight : 35}
+              value={rowHeight ? rowHeight : 43}
               onChange={event => {
                 updateConfig("rowHeight", event.target.value);
               }}
@@ -149,7 +149,7 @@ const TableHeader = ({
               InputProps={{ disableUnderline: true }}
               hiddenLabel
             >
-              <MenuItem value={35}>Tall</MenuItem>
+              <MenuItem value={43}>Tall</MenuItem>
               <MenuItem value={60}>Grande</MenuItem>
               <MenuItem value={100}>Venti</MenuItem>
               <MenuItem value={150}>Trenta</MenuItem>

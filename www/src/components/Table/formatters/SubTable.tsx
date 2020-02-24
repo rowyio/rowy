@@ -13,7 +13,6 @@ const useStyles = makeStyles(theme =>
   createStyles({
     root: { padding: theme.spacing(0, 0.625, 0, 1) },
     labelContainer: { overflowX: "hidden" },
-    button: { color: theme.palette.text.primary },
   })
 );
 
@@ -45,14 +44,14 @@ function SubTable({ column, row }: CustomCellProps) {
       className={clsx("cell-collapse-padding", classes.root)}
     >
       <Grid item xs className={classes.labelContainer}>
-        {row[parentLabel]} {column.name}
+        {column.name}: {row[parentLabel]}
       </Grid>
 
       <Grid item>
         <IconButton
           component={Link}
           to={subTablePath}
-          className={clsx("row-hover-iconButton", classes.button)}
+          className="row-hover-iconButton"
           size="small"
         >
           <OpenIcon />
