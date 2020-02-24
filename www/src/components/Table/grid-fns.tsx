@@ -16,8 +16,8 @@ const Date = lazy(() => import("./formatters/Date"));
 const Rating = lazy(() => import("./formatters/Rating"));
 const Checkbox = lazy(() => import("./formatters/Checkbox"));
 const Url = lazy(() => import("./formatters/Url"));
-const Image = lazy(() => import("../Fields/Image"));
-const File = lazy(() => import("../Fields/File"));
+const Image = lazy(() => import("./formatters/Image"));
+const File = lazy(() => import("./formatters/File"));
 const LongText = lazy(() => import("./formatters/LongText"));
 const Json = lazy(() => import("./formatters/Json"));
 const RichText = lazy(() => import("./formatters/RichText"));
@@ -133,27 +133,11 @@ export const cellFormatter = (column: any) => {
         </CellWrapper>
       );
     case FieldType.image:
-      return (props: any) => (
-        <CellWrapper>
-          <Image
-            {...props}
-            value={props.row[key]}
-            onSubmit={onSubmit(key, props.row)}
-            fieldName={key}
-          />
-        </CellWrapper>
-      );
+      return Image;
+
     case FieldType.file:
-      return (props: any) => (
-        <CellWrapper>
-          <File
-            {...props}
-            value={props.row[key]}
-            onSubmit={onSubmit(key, props.row)}
-            fieldName={key}
-          />
-        </CellWrapper>
-      );
+      return File;
+
     case FieldType.longText:
       return LongText;
 

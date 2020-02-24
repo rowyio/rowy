@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
+import clsx from "clsx";
 import withCustomCell, { CustomCellProps } from "./withCustomCell";
 
-import { makeStyles, createStyles, fade } from "@material-ui/core";
+import { makeStyles, createStyles } from "@material-ui/core";
 import { FieldType, DateIcon, DateTimeIcon } from "constants/fields";
 import { DATE_FORMAT, DATE_TIME_FORMAT } from "constants/dates";
 
@@ -18,8 +19,6 @@ const useStyles = makeStyles(theme =>
   createStyles({
     root: {
       height: "100%",
-      margin: theme.spacing(0, -1.5),
-      width: `calc(100% + ${theme.spacing(3)}px)`,
     },
     inputBase: { height: "100%" },
 
@@ -27,16 +26,6 @@ const useStyles = makeStyles(theme =>
       height: "100%",
       marginLeft: theme.spacing(1) + 1,
       marginRight: theme.spacing(0.25),
-    },
-    iconButton: {
-      color: theme.palette.text.disabled,
-      ".rdg-row:hover &": {
-        color: theme.palette.text.primary,
-        backgroundColor: fade(
-          theme.palette.text.primary,
-          theme.palette.action.hoverOpacity * 2
-        ),
-      },
     },
 
     input: {
@@ -74,7 +63,7 @@ function Date({ rowIdx, column, value, onSubmit }: CustomCellProps) {
         format={fieldType === FieldType.date ? DATE_FORMAT : DATE_TIME_FORMAT}
         fullWidth
         keyboardIcon={<Icon />}
-        className={classes.root}
+        className={clsx("cell-collapse-padding", classes.root)}
         InputProps={{
           disableUnderline: true,
           classes: { root: classes.inputBase, input: classes.input },
@@ -85,7 +74,7 @@ function Date({ rowIdx, column, value, onSubmit }: CustomCellProps) {
         }}
         KeyboardButtonProps={{
           size: "small",
-          classes: { root: classes.iconButton },
+          classes: { root: "row-hover-iconButton" },
         }}
       />
     </MuiPickersUtilsProvider>

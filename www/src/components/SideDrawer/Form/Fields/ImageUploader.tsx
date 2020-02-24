@@ -20,6 +20,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 
 import ErrorMessage from "../ErrorMessage";
 import Confirmation from "components/Confirmation";
+import { IMAGE_MIME_TYPES } from "constants/fields";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -116,7 +117,7 @@ export default function ImageUploader({
         setLocalImage(URL.createObjectURL(imageFile));
       }
     },
-    [docRef]
+    [docRef, field.value]
   );
 
   const handleDelete = (index: number) => {
@@ -128,13 +129,7 @@ export default function ImageUploader({
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     multiple: false,
-    accept: [
-      "image/jpeg",
-      "image/png",
-      "image/svg+xml",
-      "image/gif",
-      "image/webp",
-    ],
+    accept: IMAGE_MIME_TYPES,
   });
 
   return (

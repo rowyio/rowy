@@ -153,3 +153,11 @@ export const isFieldType = (fieldType: any) => {
   const fieldTypes = FIELDS.map(field => field.type);
   return fieldTypes.includes(fieldType);
 };
+
+export const IMAGE_MIME_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/svg+xml",
+  "image/gif",
+  "image/webp",
+];

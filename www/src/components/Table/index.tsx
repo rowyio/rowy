@@ -1,7 +1,7 @@
 import React, { useState, useEffect, lazy, Suspense } from "react";
 import _isEmpty from "lodash/isEmpty";
 
-import { makeStyles, createStyles, Button } from "@material-ui/core";
+import { makeStyles, createStyles, fade, Button } from "@material-ui/core";
 
 import useWindowSize from "hooks/useWindowSize";
 
@@ -55,6 +55,23 @@ const useStyles = makeStyles(theme =>
         fontSize: "0.75rem",
         lineHeight: "inherit",
         color: theme.palette.text.secondary,
+      },
+
+      ".row-hover-iconButton": {
+        color: theme.palette.text.disabled,
+
+        ".rdg-row:hover &": {
+          color: theme.palette.text.primary,
+          backgroundColor: fade(
+            theme.palette.text.primary,
+            theme.palette.action.hoverOpacity * 2
+          ),
+        },
+      },
+
+      ".cell-collapse-padding": {
+        margin: theme.spacing(0, -1.5),
+        width: `calc(100% + ${theme.spacing(3)}px)`,
       },
     },
   })

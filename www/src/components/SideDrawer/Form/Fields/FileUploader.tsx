@@ -82,7 +82,7 @@ export default function FileUploader({
         setLocalFile(file.name);
       }
     },
-    [docRef]
+    [docRef, field.value]
   );
 
   const handleDelete = (index: number) => {
