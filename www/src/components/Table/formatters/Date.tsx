@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import withCustomCell, { CustomCellProps } from "./withCustomCell";
 
 import { makeStyles, createStyles, fade } from "@material-ui/core";
@@ -44,6 +44,7 @@ const useStyles = makeStyles(theme =>
       fontSize: "0.75rem",
       color: theme.palette.text.secondary,
       height: "100%",
+      padding: theme.spacing(1.5, 0),
     },
   })
 );
@@ -51,6 +52,10 @@ const useStyles = makeStyles(theme =>
 function Date({ rowIdx, column, value, onSubmit }: CustomCellProps) {
   const classes = useStyles();
   const { setSelectedCell } = useFiretableContext();
+
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const transformedValue = value && "toDate" in value ? value.toDate() : null;
 
@@ -66,12 +71,15 @@ function Date({ rowIdx, column, value, onSubmit }: CustomCellProps) {
       <Picker
         value={transformedValue}
         onChange={handleDateChange}
+        open={open}
         onClick={e => {
           e.stopPropagation();
           setSelectedCell!({ row: rowIdx, column: column.key });
         }}
+        onDoubleClick={handleOpen}
+        onOpen={handleOpen}
+        onClose={handleClose}
         format={fieldType === FieldType.date ? DATE_FORMAT : DATE_TIME_FORMAT}
-        // emptyLabel="Select a date"
         fullWidth
         keyboardIcon={<Icon />}
         className={classes.root}
