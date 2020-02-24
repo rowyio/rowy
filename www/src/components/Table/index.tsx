@@ -14,8 +14,8 @@ import { FireTableFilter, FiretableOrderBy } from "hooks/useFiretable";
 import { useAppContext } from "contexts/appContext";
 import { useFiretableContext } from "contexts/firetableContext";
 
-import { FieldType, getFieldIcon } from "constants/fields";
-import { cellFormatter, onSubmit, getEditor } from "./grid-fns";
+import { FieldType } from "constants/fields";
+import { getFormatter, getEditor } from "./grid-fns";
 import { EditorProvider } from "../../util/EditorProvider";
 
 import FinalColumn, { useFinalColumnStyles } from "./formatters/FinalColumn";
@@ -128,17 +128,6 @@ function Table(props: Props) {
       onSubmit: undefined,
     });
   };
-  const docSelect = (column: any) => (props: any) => (
-    <Suspense fallback={<div />}>
-      <DocSelect
-        {...props}
-        onSubmit={onSubmit(column.key, props.row, currentUser?.uid)}
-        collectionPath={column.collectionPath}
-        config={column.config}
-        setSearch={setSearch}
-      />
-    </Suspense>
-  );
 
   const onHeaderDrop = (dragged: any, target: any) => {
     tableActions.column.reorder(dragged, target);
@@ -154,7 +143,7 @@ function Table(props: Props) {
         resizable: true,
         // frozen: column.fixed,
         headerRenderer: ColumnHeader,
-        formatter: cellFormatter(column),
+        formatter: getFormatter(column),
         editor: getEditor(column),
         ...column,
         width: column.width ? (column.width > 380 ? 380 : column.width) : 150,

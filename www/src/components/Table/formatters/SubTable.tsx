@@ -25,6 +25,8 @@ function SubTable({ column, row }: CustomCellProps) {
   const router = useRouter();
   const parentLabels = queryString.parse(router.location.search).parentLabel;
 
+  if (!row.ref) return null;
+
   let subTablePath = "";
   if (parentLabels)
     subTablePath =

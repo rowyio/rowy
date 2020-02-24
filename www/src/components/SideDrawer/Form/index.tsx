@@ -265,7 +265,7 @@ export default function Form({ fields, values }: IFormProps) {
                 type="debug"
                 name="_ft_debug_path"
                 label="Document Path"
-                debugText={values.ref.path}
+                debugText={values.ref?.path ?? values.id ?? "No ref"}
               />
             </Grid>
           </FormikForm>

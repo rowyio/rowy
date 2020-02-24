@@ -1,6 +1,5 @@
 import React, { lazy, Suspense } from "react";
 import { FieldType } from "constants/fields";
-import { Editors } from "react-data-grid-addons";
 import _uniq from "lodash/uniq";
 
 import ErrorBoundary from "components/ErrorBoundary";
@@ -8,8 +7,6 @@ import ErrorBoundary from "components/ErrorBoundary";
 import NullEditor from "./editors/NullEditor";
 import SideDrawerEditor from "./editors/SideDrawerEditor";
 import TextEditor from "./editors/TextEditor";
-
-const { AutoComplete } = Editors;
 
 const MultiSelect = lazy(() => import("./formatters/MultiSelect"));
 const DatePicker = lazy(() => import("./formatters/Date"));
@@ -23,62 +20,24 @@ const Json = lazy(() => import("./formatters/Json"));
 const RichText = lazy(() => import("./formatters/RichText"));
 const Color = lazy(() => import("./formatters/Color"));
 const Action = lazy(() => import("./formatters/Action"));
+const ConnectTable = lazy(() => import("./formatters/ConnectTable"));
 const SubTable = lazy(() => import("./formatters/SubTable"));
-
-export const editable = (fieldType: FieldType) => {
-  switch (fieldType) {
-    case FieldType.date:
-    case FieldType.dateTime:
-    case FieldType.rating:
-    case FieldType.number:
-    case FieldType.checkbox:
-    case FieldType.multiSelect:
-    case FieldType.image:
-    case FieldType.file:
-    case FieldType.longText:
-    case FieldType.richText:
-    case FieldType.connectTable:
-    case FieldType.subTable:
-    case FieldType.color:
-    case FieldType.action:
-    case FieldType.last:
-    case FieldType.json:
-      return false;
-    default:
-      return true;
-  }
-};
-
-export const onSubmit = (key: string, row: any, uid?: string) => async (
-  value: any
-) => {
-  // const collection = row.ref.parent.path;
-  // const data = { collection, id: row.ref.id, doc: { [key]: value } };
-  // if (value !== null || value !== undefined) {
-  //   const _ft_updatedAt = new Date();
-  //   const _ft_updatedBy = uid ?? "";
-  //   row.ref.update({
-  //     [key]: value,
-  //     _ft_updatedAt,
-  //     updatedAt: _ft_updatedAt,
-  //     // _ft_updatedBy,
-  //     // updatedBy: _ft_updatedBy,
-  //   });
-  // }
-};
 
 export const onCellSelected = (args: any) => {};
 
-const CellWrapper: React.FC = ({ children }) => (
-  <ErrorBoundary>
-    <Suspense fallback={<div />}>{children}</Suspense>
-  </ErrorBoundary>
-);
-
-export const cellFormatter = (column: any) => {
-  const { type, key, options } = column;
-
-  switch (type) {
+/**
+ * Gets the corresponding formatter for each cell.
+ * Cells can be edited:
+ * - by displaying the default react-data-grid text editor,
+ * - without double-clicking, or
+ * - must be edited in the side drawer.
+ *
+ * This is implemented alongside the correct editor — see below.
+ *
+ * @param column Must have column `type`
+ */
+export const getFormatter = (column: any) => {
+  switch (column.type) {
     case FieldType.date:
     case FieldType.dateTime:
       return DatePicker;
@@ -117,6 +76,9 @@ export const cellFormatter = (column: any) => {
     case FieldType.richText:
       return RichText;
 
+    case FieldType.connectTable:
+      return ConnectTable;
+
     case FieldType.subTable:
       return SubTable;
 
@@ -128,7 +90,7 @@ export const cellFormatter = (column: any) => {
       return null;
 
     default:
-      return () => <div>CELL</div>;
+      return () => <div />;
   }
 };
 
