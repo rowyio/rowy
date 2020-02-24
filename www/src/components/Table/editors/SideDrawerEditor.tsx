@@ -12,12 +12,12 @@ import { useFiretableContext } from "contexts/firetableContext";
  * Use for cells that do not support any type of in-cell editing.
  */
 const SideDrawerEditor = React.forwardRef(
-  (props: EditorProps<any, any>, ref) => {
+  ({ column, row }: EditorProps<any, any>, ref) => {
     const { sideDrawerOpen, setSideDrawerOpen } = useFiretableContext();
 
     useEffect(() => {
       if (!sideDrawerOpen && setSideDrawerOpen) setSideDrawerOpen(true);
-    }, []);
+    }, [column?.key, row?.id]);
 
     return (
       <div

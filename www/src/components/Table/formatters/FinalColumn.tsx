@@ -47,7 +47,7 @@ export const useFinalColumnStyles = makeStyles(theme =>
 export default function FinalColumn({ row }: FormatterProps) {
   const { tableActions } = useFiretableContext();
   const shiftPress = useKeyPress("Shift");
-  console.log(shiftPress);
+
   return (
     <Grid container spacing={1}>
       <Grid item>
