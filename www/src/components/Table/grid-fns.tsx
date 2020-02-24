@@ -106,16 +106,6 @@ export const cellFormatter = (column: any) => {
           />
         </CellWrapper>
       );
-    case FieldType.number:
-      return (props: any) => (
-        <CellWrapper>
-          <Number
-            {...props}
-            onSubmit={onSubmit(key, props.row)}
-            value={typeof props.value === "number" ? props.value : undefined}
-          />
-        </CellWrapper>
-      );
     case FieldType.color:
       return (props: any) => (
         <CellWrapper>
@@ -240,3 +230,34 @@ export const singleSelectEditor = (options: string[]) => {
 
   return <AutoComplete options={[]} />;
 };
+
+export class NumberEditor extends React.Component<any> {
+  constructor(props) {
+    super(props);
+  }
+  state = { value: this.props.value };
+  inputRef = React.createRef<HTMLInputElement>();
+
+  getInputNode() {
+    return this.inputRef?.current;
+  }
+
+  getValue() {
+    return { [this.props.column.key]: this.state.value };
+  }
+
+  handleChangeComplete = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ value: event.target.value });
+  };
+
+  render() {
+    return (
+      <input
+        type="number"
+        value={this.state.value}
+        onChange={this.handleChangeComplete}
+        ref={this.inputRef}
+      />
+    );
+  }
+}
