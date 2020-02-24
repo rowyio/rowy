@@ -74,7 +74,7 @@ function Action({ column, row, value, onSubmit }: CustomCellProps) {
           color="secondary"
           className={classes.fab}
           onClick={handleRun}
-          disabled={hasRan && !value.redo}
+          disabled={!!(hasRan && !value.redo)}
         >
           {hasRan ? <RefreshIcon /> : <PlayIcon />}
         </Fab>

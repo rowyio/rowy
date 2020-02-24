@@ -6,6 +6,7 @@ import {
   createStyles,
   makeStyles,
   TextField,
+  TextFieldProps,
   Chip,
   Grid,
   Button,
@@ -14,7 +15,6 @@ import {
   InputAdornment,
   Portal,
 } from "@material-ui/core";
-import { FilledTextFieldProps } from "@material-ui/core/TextField";
 
 import SearchIcon from "@material-ui/icons/Search";
 import SelectedIcon from "@material-ui/icons/Check";
@@ -39,6 +39,7 @@ const useStyles = makeStyles(theme =>
       padding: `0 ${theme.spacing(2)}px`,
       width: ({ width }: StylesProps) => width || 480,
       maxWidth: `calc(100vw - ${theme.spacing(4)}px)`,
+      minWidth: 240,
     },
     grid: { outline: 0 },
 
@@ -93,15 +94,8 @@ const useStyles = makeStyles(theme =>
       margin: theme.spacing(0.5),
       // Allow multi-line chip
       maxWidth: `calc(100% - ${theme.spacing(1)}px)`,
-      minHeight: 32,
-      height: "auto",
     },
     selectedChip: { backgroundColor: theme.palette.divider },
-    chipLabel: {
-      maxWidth: "100%",
-      padding: theme.spacing(0.75, 1.5),
-      whiteSpace: "normal",
-    },
 
     footerRow: { marginBottom: theme.spacing(2) },
     addCustomButton: { marginLeft: -theme.spacing(1) },
@@ -124,17 +118,9 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-const MenuProps = {
-  PaperProps: {
-    style: {
-      display: "flex",
-    },
-  },
-};
-
 type OptionType = { label: string; value: string; data?: any };
 
-export interface IMultipleSelectProps {
+export interface IMultiSelectProps {
   /** The field name. TODO: Change prop name to `name` for consistency with Formik */
   field: string;
   label: string;
@@ -159,15 +145,15 @@ export interface IMultipleSelectProps {
   /** Optional style overrides for root MUI `TextField` component */
   className?: string;
   /** Override any props of the root MUI `TextField` component */
-  TextFieldProps?: Partial<FilledTextFieldProps>;
+  TextFieldProps?: Partial<TextFieldProps>;
 }
 
-export default function MultipleSelect({
+export default function MultiSelect({
   options: optionsProp,
   label,
   field,
   onChange,
-  value,
+  value = [],
   searchable = false,
   itemRenderer,
   freeText = false,
@@ -175,7 +161,7 @@ export default function MultipleSelect({
   selectAll = true,
   className,
   TextFieldProps = {},
-}: IMultipleSelectProps) {
+}: IMultiSelectProps) {
   const [dropdownWidth, setDropdownWidth] = useState(200);
   const classes = useStyles({
     searchable,
@@ -193,7 +179,7 @@ export default function MultipleSelect({
     if (multiple)
       onChange(
         field,
-        value.filter(v => v !== option.value)
+        value?.filter(v => v !== option.value)
       );
     else onChange(field, []);
   };
@@ -208,7 +194,7 @@ export default function MultipleSelect({
   // If `freeText` enabled, show the user’s custom fields
   if (freeText) {
     // `value` prop is an array of all values. It removes labels
-    const formattedValues = value.map(x => ({ label: x, value: x }));
+    const formattedValues = value?.map(x => ({ label: x, value: x }));
     options = _unionWith(
       options,
       formattedValues,
@@ -232,7 +218,7 @@ export default function MultipleSelect({
 
   // Get longest item label
   const longestLabel = options.reduce(
-    (acc, curr) => (curr.label.length > acc.length ? curr.label : acc),
+    (acc, curr) => (curr.label?.length > acc.length ? curr.label : acc),
     ""
   );
 
@@ -240,7 +226,7 @@ export default function MultipleSelect({
     <>
       <TextField
         label={label}
-        variant="filled"
+        variant={"filled" as any}
         select
         value={value}
         className={clsx(classes.root, className)}
@@ -263,6 +249,7 @@ export default function MultipleSelect({
             getContentAnchorEl: null,
             anchorOrigin: { vertical: "bottom", horizontal: "center" },
             transformOrigin: { vertical: "top", horizontal: "center" },
+            ...TextFieldProps.SelectProps?.MenuProps,
           },
         }}
         ref={el => {
@@ -308,7 +295,7 @@ export default function MultipleSelect({
                   );
                 })
                 .map(option => {
-                  const isSelected = value.includes(option.value);
+                  const isSelected = value?.includes(option.value);
 
                   let icon = <></>;
                   if (multiple) {
@@ -328,7 +315,6 @@ export default function MultipleSelect({
                           classes.chip,
                           isSelected && classes.selectedChip
                         )}
-                        classes={{ label: classes.chipLabel }}
                         onClick={e => {
                           e.stopPropagation();
                           if (isSelected) deselect(option);
@@ -338,6 +324,7 @@ export default function MultipleSelect({
                         label={option.label}
                         variant="outlined"
                         component="li"
+                        size="medium"
                       />
                     );
                 })}
@@ -387,19 +374,19 @@ export default function MultipleSelect({
                   color="textSecondary"
                   className={classes.selectedNum}
                 >
-                  {value.length} of {options.length}
+                  {value?.length} of {options.length}
                 </Typography>
                 <Button
-                  disabled={selectAll === false && value.length === 0}
+                  disabled={selectAll === false && value?.length === 0}
                   onClick={
-                    value.length === options.length || !selectAll
+                    value?.length === options.length || !selectAll
                       ? clearSelection
                       : handleSelectAll
                   }
                   color="primary"
                   className={classes.selectAllButton}
                 >
-                  {value.length === options.length || !selectAll
+                  {value?.length === options.length || !selectAll
                     ? "Clear Selection"
                     : "Select All"}
                 </Button>
@@ -412,7 +399,6 @@ export default function MultipleSelect({
       <Portal>
         <Chip
           className={clsx(classes.chip, classes.measureChip)}
-          classes={{ label: classes.chipLabel }}
           icon={<SelectedIcon />}
           label={longestLabel}
           variant="outlined"

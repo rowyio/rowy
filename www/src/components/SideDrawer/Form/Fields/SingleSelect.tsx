@@ -1,6 +1,7 @@
 import React from "react";
+import { FieldProps } from "formik";
 
-import MultiSelect, { IMultiSelectProps } from "./MultiSelect";
+import MultiSelect, { IMultiSelectProps } from "components/MultiSelect";
 
 /**
  * Uses the MultiSelect UI, but writes values as a string,
@@ -10,16 +11,26 @@ export default function SingleSelect({
   field,
   form,
   ...props
-}: IMultiSelectProps) {
+}: FieldProps<string[]> & IMultiSelectProps) {
   const value = ([field.value] as unknown) as string[];
-  const setFieldValue = (name, value) =>
+  const handleChange = (name, value) =>
     form.setFieldValue(name, value.join(", "));
 
   return (
     <MultiSelect
       {...props}
-      field={{ ...field, value }}
-      form={{ ...form, setFieldValue }}
+      field={field.name}
+      value={value}
+      onChange={handleChange}
+      TextFieldProps={{
+        fullWidth: true,
+        label: "",
+        hiddenLabel: true,
+        error: !!(form.touched[field.name] && form.errors[field.name]),
+        helperText: (form.touched[field.name] && form.errors[field.name]) || "",
+        onBlur: () => form.setFieldTouched(field.name),
+      }}
+      freeText
       multiple={false}
     />
   );

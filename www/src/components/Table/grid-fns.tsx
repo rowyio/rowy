@@ -11,7 +11,7 @@ import TextEditor from "./editors/TextEditor";
 
 const { AutoComplete } = Editors;
 
-const MultiSelect = lazy(() => import("../Fields/MultiSelect"));
+const MultiSelect = lazy(() => import("./formatters/MultiSelect"));
 const DatePicker = lazy(() => import("./formatters/Date"));
 const Rating = lazy(() => import("./formatters/Rating"));
 const Checkbox = lazy(() => import("./formatters/Checkbox"));
@@ -98,17 +98,9 @@ export const cellFormatter = (column: any) => {
     case FieldType.action:
       return Action;
 
+    case FieldType.singleSelect:
     case FieldType.multiSelect:
-      return (props: any) => (
-        <CellWrapper>
-          <MultiSelect
-            {...props}
-            value={props.row[key]}
-            onSubmit={onSubmit(key, props.row)}
-            options={options}
-          />
-        </CellWrapper>
-      );
+      return MultiSelect;
 
     case FieldType.image:
       return Image;
@@ -138,20 +130,6 @@ export const cellFormatter = (column: any) => {
     default:
       return () => <div>CELL</div>;
   }
-};
-
-export const singleSelectEditor = (options: string[]) => {
-  if (options) {
-    const _options = options.map(option => ({
-      id: option,
-      value: option,
-      title: option,
-      text: option,
-    }));
-    // return <AutoComplete options={_options} />;
-  }
-
-  return <AutoComplete options={[]} />;
 };
 
 /**
