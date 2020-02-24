@@ -7,6 +7,7 @@ import ErrorBoundary from "components/ErrorBoundary";
 
 import NullEditor from "./editors/NullEditor";
 import SideDrawerEditor from "./editors/SideDrawerEditor";
+import TextEditor from "./editors/TextEditor";
 
 const { AutoComplete } = Editors;
 
@@ -66,13 +67,6 @@ export const onSubmit = (key: string, row: any, uid?: string) => async (
   // }
 };
 
-export const onGridRowsUpdated = (event: any) => {
-  console.log(event);
-  const { fromRowData, updated, action, row } = event;
-  if (action === "CELL_UPDATE") {
-    onSubmit(Object.keys(updated)[0], row)(Object.values(updated)[0]);
-  }
-};
 export const onCellSelected = (args: any) => {};
 
 const CellWrapper: React.FC = ({ children }) => (
@@ -190,6 +184,13 @@ export const cellFormatter = (column: any) => {
         </CellWrapper>
       );
 
+    case FieldType.shortText:
+    case FieldType.email:
+    case FieldType.phone:
+    case FieldType.url:
+    case FieldType.number:
+      return null;
+
     default:
       return () => <div>CELL</div>;
   }
@@ -238,23 +239,20 @@ export const getEditor = (column: any) => {
     case FieldType.action:
       return NullEditor;
 
-    // Supports double-click editor, but not implemented yet
+    // Supports react-data-grid’s in-cell editing
+    case FieldType.shortText:
+    case FieldType.email:
+    case FieldType.phone:
+    case FieldType.url:
     case FieldType.number:
-      return NullEditor;
+      return TextEditor;
 
     // No in-cell editing; must open side drawer
     case FieldType.longText:
     case FieldType.richText:
     case FieldType.slider:
     case FieldType.json:
-      return SideDrawerEditor;
-
-    // Supports react-data-grid’s in-cell editing
-    case FieldType.shortText:
-    case FieldType.email:
-    case FieldType.phone:
-    case FieldType.url:
     default:
-      return null;
+      return SideDrawerEditor;
   }
 };

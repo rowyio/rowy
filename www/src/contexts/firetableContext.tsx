@@ -28,7 +28,11 @@ interface FiretableContextProps {
   };
   tableState: FiretableState;
   tableActions: FiretableActions;
-  updateCell: Function;
+  updateCell: (
+    ref: firebase.firestore.DocumentReference,
+    fieldName: string,
+    value: any
+  ) => void;
   createTable: Function;
   selectedCell: { row: number; column: string };
   setSelectedCell: Function;

@@ -15,12 +15,7 @@ import { useAppContext } from "contexts/appContext";
 import { useFiretableContext } from "contexts/firetableContext";
 
 import { FieldType, getFieldIcon } from "constants/fields";
-import {
-  cellFormatter,
-  onGridRowsUpdated,
-  onSubmit,
-  getEditor,
-} from "./grid-fns";
+import { cellFormatter, onSubmit, getEditor } from "./grid-fns";
 import { EditorProvider } from "../../util/EditorProvider";
 
 import FinalColumn, { useFinalColumnStyles } from "./formatters/FinalColumn";
@@ -55,7 +50,7 @@ const useStyles = makeStyles(theme =>
         },
       },
 
-      ".rdg-viewport": {
+      ".rdg-viewport, .rdg-editor-container": {
         ...theme.typography.body2,
         fontSize: "0.75rem",
         lineHeight: "inherit",
@@ -231,7 +226,6 @@ function Table(props: Props) {
           // TODO: Remove this fixed height using flexbox
           tableHeight={windowSize.height - 120}
           tableWidth={"100%"}
-          onGridRowsUpdated={onGridRowsUpdated}
           rows={rows}
           resizeColumn={tableActions.column.resize}
           loadingRows={tableState.loadingRows}

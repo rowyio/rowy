@@ -1,10 +1,5 @@
 import React, { useState, useCallback, useRef } from "react";
 
-import EmptyTable from "./EmptyTable";
-import { editable } from "./grid-fns";
-
-import Loading from "../Loading";
-
 import { FieldType } from "constants/fields";
 import { useFiretableContext } from "contexts/firetableContext";
 
@@ -38,14 +33,13 @@ export default function Grid(props: any) {
     handleRowGetter,
     tableHeight,
     tableWidth,
-    onGridRowsUpdated,
     rows,
     resizeColumn,
     loadingRows,
     addRow,
   } = props;
-  const { setSelectedCell } = useFiretableContext();
-  //const [rows, setRows] = useState(() => createRows(2000));
+  const { setSelectedCell, updateCell } = useFiretableContext();
+
   const [selectedRows, setSelectedRows] = useState(() => new Set<string>());
   const gridRef = useRef<DataGridHandle>(null);
 
@@ -91,8 +85,11 @@ export default function Grid(props: any) {
       columns={columns}
       rows={rows}
       rowKey="id"
-      onRowsUpdate={props => {
-        onGridRowsUpdated({ ...props, row: rows[props.toRow] });
+      onRowsUpdate={event => {
+        console.log(event);
+        const { action, cellKey, updated } = event;
+        if (action === "CELL_UPDATE")
+          updateCell!(rows[event.toRow].ref, cellKey, updated);
       }}
       onRowClick={handleRowClick}
       rowHeight={rowHeight}
