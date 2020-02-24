@@ -12,7 +12,7 @@ import TextEditor from "./editors/TextEditor";
 const { AutoComplete } = Editors;
 
 const MultiSelect = lazy(() => import("../Fields/MultiSelect"));
-const Date = lazy(() => import("./formatters/Date"));
+const DatePicker = lazy(() => import("./formatters/Date"));
 const Rating = lazy(() => import("./formatters/Rating"));
 const Checkbox = lazy(() => import("./formatters/Checkbox"));
 const Url = lazy(() => import("./formatters/Url"));
@@ -23,7 +23,7 @@ const Json = lazy(() => import("./formatters/Json"));
 const RichText = lazy(() => import("./formatters/RichText"));
 const Color = lazy(() => import("./formatters/Color"));
 const Action = lazy(() => import("./formatters/Action"));
-const SubTable = lazy(() => import("../Fields/SubTable"));
+const SubTable = lazy(() => import("./formatters/SubTable"));
 
 export const editable = (fieldType: FieldType) => {
   switch (fieldType) {
@@ -81,23 +81,10 @@ export const cellFormatter = (column: any) => {
   switch (type) {
     case FieldType.date:
     case FieldType.dateTime:
-      return Date;
+      return DatePicker;
 
     case FieldType.rating:
       return Rating;
-
-    // case FieldType.number:
-    //   return (props: any) => (
-    //     <CellWrapper>
-    //       <Number
-    //         {...props}
-    //         onSubmit={onSubmit(key, props.row)}
-    //         value={
-    //           typeof props.row[key] === "number" ? props.row[key] : undefined
-    //         }
-    //       />
-    //     </CellWrapper>
-    //   );
 
     case FieldType.color:
       return Color;
@@ -122,6 +109,7 @@ export const cellFormatter = (column: any) => {
           />
         </CellWrapper>
       );
+
     case FieldType.image:
       return Image;
 
@@ -135,28 +123,10 @@ export const cellFormatter = (column: any) => {
       return Json;
 
     case FieldType.richText:
-      return (props: any) => (
-        <CellWrapper>
-          <RichText
-            {...props}
-            value={props.row[key]}
-            fieldName={key}
-            onSubmit={onSubmit(key, props.row)}
-          />
-        </CellWrapper>
-      );
+      return RichText;
+
     case FieldType.subTable:
-      return (props: any) => (
-        <CellWrapper>
-          <SubTable
-            fieldName={key}
-            {...props}
-            value={props.row[key]}
-            parentLabel={column.parentLabel}
-            onSubmit={onSubmit(key, props.row)}
-          />
-        </CellWrapper>
-      );
+      return SubTable;
 
     case FieldType.shortText:
     case FieldType.email:
