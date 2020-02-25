@@ -58,6 +58,8 @@ const useStyles = makeStyles(theme =>
         color: theme.palette.text.secondary,
       },
 
+      ".rdg-row:hover": { color: theme.palette.text.primary },
+
       ".row-hover-iconButton": {
         color: theme.palette.text.disabled,
 
@@ -144,7 +146,21 @@ function Table(props: Props) {
         resizable: true,
         // frozen: column.fixed,
         headerRenderer: ColumnHeader,
-        formatter: getFormatter(column),
+        formatter:
+          column.type === FieldType.connectTable
+            ? (props: any) => (
+                <Suspense fallback={<div />}>
+                  <DocSelect
+                    {...props}
+                    //onSubmit={onSubmit(column.key, props.row, currentUser?.uid)}
+                    onSubmit={a => console.log(a)}
+                    collectionPath={column.collectionPath}
+                    config={column.config}
+                    setSearch={setSearch}
+                  />
+                </Suspense>
+              )
+            : getFormatter(column),
         editor: getEditor(column),
         ...column,
         width: column.width ? (column.width > 380 ? 380 : column.width) : 150,
@@ -155,7 +171,6 @@ function Table(props: Props) {
       name: "Add column",
       type: FieldType.last,
       width: 160,
-      editable: false,
       headerRenderer: FinalColumnHeader,
       headerCellClass: finalColumnClasses.headerCell,
       cellClass: finalColumnClasses.cell,
