@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect } from "react";
+import React, { lazy, useEffect } from "react";
 import { Formik, Form as FormikForm, Field } from "formik";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
@@ -11,7 +11,6 @@ import { Grid } from "@material-ui/core";
 
 import Autosave from "./Autosave";
 import FieldWrapper from "./FieldWrapper";
-import FieldSkeleton from "./FieldSkeleton";
 import Text from "./Fields/Text";
 
 import { FieldType } from "constants/fields";
@@ -256,12 +255,7 @@ export default function Form({ fields, values }: IFormProps) {
                     name={field.name}
                     label={field.label}
                   >
-                    <Suspense
-                      key={fieldProps.name ?? i}
-                      fallback={<FieldSkeleton />}
-                    >
-                      {renderedField}
-                    </Suspense>
+                    {renderedField}
                   </FieldWrapper>
                 );
               })}

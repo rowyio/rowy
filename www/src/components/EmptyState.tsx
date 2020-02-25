@@ -32,7 +32,7 @@ const useStyles = makeStyles(theme =>
     },
   })
 );
-interface IEmptyStateProps {
+export interface IEmptyStateProps {
   message?: React.ReactNode;
   description?: React.ReactNode;
   Icon?: typeof ErrorIcon;

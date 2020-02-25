@@ -53,7 +53,7 @@ const withCustomCell = (Component: React.ComponentType<CustomCellProps>) => (
     selectedCell?.column === props.column.key;
 
   return (
-    <ErrorBoundary>
+    <ErrorBoundary fullScreen={false}>
       <Suspense fallback={<div />}>
         {isSelected && (
           <div
