@@ -10,8 +10,7 @@ import Grid, { IGridProps } from "./Grid";
 import ColumnHeader from "./ColumnHeader";
 import FinalColumnHeader from "./FinalColumnHeader";
 
-import { FireTableFilter, FiretableOrderBy } from "hooks/useFiretable";
-import { useAppContext } from "contexts/appContext";
+import { FireTableFilter } from "hooks/useFiretable";
 import { useFiretableContext } from "contexts/firetableContext";
 
 import { FieldType } from "constants/fields";
@@ -23,8 +22,6 @@ import FinalColumn, { useFinalColumnStyles } from "./formatters/FinalColumn";
 
 const Hotkeys = lazy(() => import("./HotKeys"));
 const TableHeader = lazy(() => import("./TableHeader"));
-const SearchBox = lazy(() => import("../SearchBox"));
-const DocSelect = lazy(() => import("../Fields/DocSelect"));
 const ColumnEditor = lazy(() => import("./ColumnEditor/index"));
 
 interface Props {
@@ -85,13 +82,11 @@ function Table(props: Props) {
   const finalColumnClasses = useFinalColumnStyles();
 
   const { collection, filters } = props;
-  const { currentUser } = useAppContext();
   const {
     tableState,
     tableActions,
     setSelectedCell: contextSetSelectedCell,
   } = useFiretableContext();
-  const [orderBy, setOrderBy] = useState<FiretableOrderBy>([]);
 
   useEffect(() => {
     if (tableActions && tableState && tableState.tablePath !== collection) {
@@ -106,31 +101,10 @@ function Table(props: Props) {
     column: {},
   });
 
-  const [search, setSearch] = useState({
-    config: undefined,
-    collection: "",
-    onSubmit: undefined,
-  });
-
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-
-  const [header, setHeader] = useState<any | null>();
-
   const windowSize = useWindowSize();
   if (!windowSize || !windowSize.height) return <></>;
 
   if (!tableActions || !tableState) return <></>;
-  const handleCloseHeader = () => {
-    setHeader(null);
-    setAnchorEl(null);
-  };
-  const clearSearch = () => {
-    setSearch({
-      config: undefined,
-      collection: "",
-      onSubmit: undefined,
-    });
-  };
 
   const onHeaderDrop = (dragged: any, target: any) => {
     tableActions.column.reorder(dragged, target);
@@ -146,21 +120,7 @@ function Table(props: Props) {
         resizable: true,
         // frozen: column.fixed,
         headerRenderer: ColumnHeader,
-        formatter:
-          column.type === FieldType.connectTable
-            ? (props: any) => (
-                <Suspense fallback={<div />}>
-                  <DocSelect
-                    {...props}
-                    //onSubmit={onSubmit(column.key, props.row, currentUser?.uid)}
-                    onSubmit={a => console.log(a)}
-                    collectionPath={column.collectionPath}
-                    config={column.config}
-                    setSearch={setSearch}
-                  />
-                </Suspense>
-              )
-            : getFormatter(column),
+        formatter: getFormatter(column),
         editor: getEditor(column),
         ...column,
         width: column.width ? (column.width > 380 ? 380 : column.width) : 150,
@@ -260,7 +220,6 @@ function Table(props: Props) {
 
       <Suspense fallback={<Loading message="Loading helpers" />}>
         <ColumnEditor />
-        <SearchBox searchData={search} clearSearch={clearSearch} />
       </Suspense>
     </EditorProvider>
   );

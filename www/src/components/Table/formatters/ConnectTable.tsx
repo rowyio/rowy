@@ -2,83 +2,108 @@ import React from "react";
 import clsx from "clsx";
 import withCustomCell, { CustomCellProps } from "./withCustomCell";
 
-import {
-  createStyles,
-  makeStyles,
-  Grid,
-  Chip,
-  IconButton,
-} from "@material-ui/core";
+import { createStyles, makeStyles, Grid, Chip } from "@material-ui/core";
 
-import AddIcon from "@material-ui/icons/AddCircleOutline";
+import ConnectTableSelect from "components/ConnectTableSelect";
+import { useFiretableContext } from "contexts/firetableContext";
 
 const useStyles = makeStyles(theme =>
   createStyles({
-    root: { padding: theme.spacing(0, 0.625, 0, 1) },
-    chipList: { overflowX: "hidden" },
+    root: { minWidth: 0 },
+    disabled: {},
+
+    fullHeight: {
+      height: "100%",
+      font: "inherit",
+      color: "inherit",
+      letterSpacing: "inherit",
+    },
+
+    select: {
+      padding: theme.spacing(0, 3, 0, 1.5),
+      display: "flex",
+      alignItems: "center",
+
+      "&&": { paddingRight: theme.spacing(4) },
+
+      "$disabled &": { paddingRight: theme.spacing(0) },
+    },
+    icon: {
+      marginRight: theme.spacing(1),
+      "$disabled &": { display: "none" },
+    },
+
+    chipList: {
+      overflowX: "hidden",
+      width: "100%",
+    },
+    chip: { cursor: "inherit" },
   })
 );
 
-const ConnectTable = ({ column, value, onSubmit }: CustomCellProps) => {
+const ConnectTable = ({ rowIdx, column, value, onSubmit }: CustomCellProps) => {
   const classes = useStyles();
 
   const { collectionPath, config } = column as any;
+  const { setSelectedCell } = useFiretableContext();
 
-  const handleClick = () => {
-    // setSearch((oldValues: any) => ({
-    //   ...oldValues,
-    //   collection: collectionPath,
-    //   config: config,
-    //   onSubmit: (newItem: any) => {
-    //     if (value) onSubmit([...value, newItem]);
-    //     else onSubmit([newItem]);
-    //   },
-    // }));
-  };
+  const disabled = !column.editable || config.isLocked;
 
-  const handleDelete = (index: number) => {
-    let newValue = [...value];
-    newValue.splice(index, 1);
-    onSubmit(newValue);
-  };
+  // Render chips
+  const renderValue = value => (
+    <Grid container spacing={1} wrap="nowrap" className={classes.chipList}>
+      {value?.map((doc: any, index) => (
+        <Grid item key={doc.docPath}>
+          <Chip
+            label={config.primaryKeys
+              .map((key: string) => doc.snapshot[key])
+              .join(" ")}
+            className={classes.chip}
+          />
+        </Grid>
+      ))}
+    </Grid>
+  );
 
   return (
-    <Grid
-      container
-      alignItems="center"
-      spacing={1}
-      className={clsx("cell-collapse-padding", classes.root)}
-    >
-      <Grid item xs className={classes.chipList}>
-        <Grid container spacing={1} wrap="nowrap">
-          {value &&
-            value.map((doc: any, index: number) => (
-              <Grid item key={doc.docPath}>
-                <Chip
-                  label={config.primaryKeys.map(
-                    (key: string) => `${doc.snapshot[key]} `
-                  )}
-                  onDelete={
-                    config.isLocked ? undefined : () => handleDelete(index)
-                  }
-                />
-              </Grid>
-            ))}
-        </Grid>
-      </Grid>
-
-      {!config.isLocked && (
-        <Grid item>
-          <IconButton
-            onClick={handleClick}
-            size="small"
-            className="row-hover-iconButton"
-          >
-            <AddIcon />
-          </IconButton>
-        </Grid>
+    <ConnectTableSelect
+      value={value}
+      onChange={onSubmit}
+      collection={collectionPath}
+      config={config}
+      TextFieldProps={{
+        fullWidth: true,
+        label: "",
+        hiddenLabel: true,
+        variant: "standard" as "filled",
+        InputProps: {
+          disableUnderline: true,
+          classes: { root: classes.fullHeight },
+        },
+        SelectProps: {
+          classes: {
+            root: clsx(classes.fullHeight, classes.select),
+            icon: clsx(classes.icon),
+          },
+          renderValue,
+          MenuProps: {
+            anchorOrigin: { vertical: "bottom", horizontal: "left" },
+            transformOrigin: { vertical: "top", horizontal: "left" },
+          },
+        },
+        onClick: e => {
+          setSelectedCell!({ row: rowIdx, column: column.key });
+          e.stopPropagation();
+        },
+        disabled,
+      }}
+      className={clsx(
+        "cell-collapse-padding",
+        classes.fullHeight,
+        classes.root,
+        disabled && classes.disabled
       )}
-    </Grid>
+    />
   );
 };
 

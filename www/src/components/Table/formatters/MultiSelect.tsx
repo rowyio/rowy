@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme =>
       overflowX: "hidden",
       width: "100%",
     },
-    chip: { cursor: "pointer" },
+    chip: { cursor: "inherit" },
   })
 );
 
