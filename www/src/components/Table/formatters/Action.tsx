@@ -54,7 +54,10 @@ function Action({ column, row, value, onSubmit }: CustomCellProps) {
         snack.open({ message, severity: "success" });
         if (cellValue) onSubmit(cellValue);
       },
-      o => snack.open({ message: JSON.stringify(o), severity: "error" })
+      error => {
+        setIsRunning(false);
+        snack.open({ message: JSON.stringify(error), severity: "error" });
+      }
     );
   };
 
