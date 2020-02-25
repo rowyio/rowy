@@ -15,7 +15,8 @@ import { useAppContext } from "contexts/appContext";
 import { useFiretableContext } from "contexts/firetableContext";
 
 import { FieldType } from "constants/fields";
-import { getFormatter, getEditor } from "./grid-fns";
+import { getFormatter } from "./formatters";
+import { getEditor } from "./editors";
 import { EditorProvider } from "../../util/EditorProvider";
 
 import FinalColumn, { useFinalColumnStyles } from "./formatters/FinalColumn";

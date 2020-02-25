@@ -7,10 +7,7 @@ import "react-data-grid/dist/react-data-grid.css";
 
 import DataGrid, {
   Column,
-  SelectColumn,
-  UpdateActions,
   DataGridHandle,
-  RowsUpdateEvent,
   CalculatedColumn,
   CellNavigationMode,
 } from "react-data-grid";
@@ -43,32 +40,32 @@ export default function Grid(props: any) {
   const [selectedRows, setSelectedRows] = useState(() => new Set<string>());
   const gridRef = useRef<DataGridHandle>(null);
 
-  const handleRowUpdate = useCallback(
-    ({
-      fromRow,
-      toRow,
-      updated,
-      action,
-    }: RowsUpdateEvent<Partial<any>>): void => {
-      console.log(fromRow, toRow, action, updated);
-      // const newRows = [...rows];
-      // let start;
-      // let end;
+  // const handleRowUpdate = useCallback(
+  //   ({
+  //     fromRow,
+  //     toRow,
+  //     updated,
+  //     action,
+  //   }: RowsUpdateEvent<Partial<any>>): void => {
+  //     console.log(fromRow, toRow, action, updated);
+  //     // const newRows = [...rows];
+  //     // let start;
+  //     // let end;
 
-      // if (action === UpdateActions.COPY_PASTE) {
-      //   start = toRow;
-      //   end = toRow;
-      // } else {
-      //   start = Math.min(fromRow, toRow);
-      //   end = Math.max(fromRow, toRow);
-      // }
+  //     // if (action === UpdateActions.COPY_PASTE) {
+  //     //   start = toRow;
+  //     //   end = toRow;
+  //     // } else {
+  //     //   start = Math.min(fromRow, toRow);
+  //     //   end = Math.max(fromRow, toRow);
+  //     // }
 
-      // for (let i = start; i <= end; i++) {
-      //   newRows[i] = { ...newRows[i], ...updated };
-      // }
-    },
-    [rows]
-  );
+  //     // for (let i = start; i <= end; i++) {
+  //     //   newRows[i] = { ...newRows[i], ...updated };
+  //     // }
+  //   },
+  //   [rows]
+  // );
 
   const handleRowClick = useCallback(
     (rowIdx: number, row: any, column: CalculatedColumn<any>) => {
