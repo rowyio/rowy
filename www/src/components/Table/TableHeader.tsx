@@ -150,9 +150,15 @@ const TableHeader = ({
               hiddenLabel
             >
               <MenuItem value={43}>Tall</MenuItem>
-              <MenuItem value={60}>Grande</MenuItem>
+              <MenuItem value={65}>Grande</MenuItem>
               <MenuItem value={100}>Venti</MenuItem>
               <MenuItem value={150}>Trenta</MenuItem>
+              {rowHeight !== 43 &&
+                rowHeight !== 65 &&
+                rowHeight !== 100 &&
+                rowHeight !== 150 && (
+                  <MenuItem value={rowHeight}>Custom</MenuItem>
+                )}
             </TextField>
           </Grid>
 
