@@ -55,8 +55,7 @@ function MultiSelect({
     ? (([value] as unknown) as string[])
     : value;
   // And support transforming array of strings back to string
-  const handleChange = (name, value) =>
-    onSubmit(isSingle ? value.join(", ") : value);
+  const handleChange = value => onSubmit(isSingle ? value.join(", ") : value);
 
   // Render chips
   const renderValue = value => (
@@ -79,7 +78,6 @@ function MultiSelect({
 
   return (
     <_MultiSelect
-      field={`${row.id}-${column.key}`}
       value={transformedValue}
       onChange={handleChange}
       label={column.name}

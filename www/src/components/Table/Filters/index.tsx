@@ -174,14 +174,13 @@ const Filters = ({ columns, setFilters }: any) => {
 
         return (
           <MultiSelect
-            onChange={(fieldName, value) => {
+            onChange={value => {
               if (operator === "==")
                 setQuery(query => ({ ...query, value: value[0] }));
               else setQuery(query => ({ ...query, value }));
             }}
             options={selectedColumn.options}
             label=""
-            field=""
             value={val}
             multiple={operator === "in"}
             TextFieldProps={{ hiddenLabel: true }}

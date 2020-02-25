@@ -13,13 +13,12 @@ export default function SingleSelect({
   ...props
 }: FieldProps<string[]> & IMultiSelectProps) {
   const value = ([field.value] as unknown) as string[];
-  const handleChange = (name, value) =>
-    form.setFieldValue(name, value.join(", "));
+  const handleChange = value =>
+    form.setFieldValue(field.name, value.join(", "));
 
   return (
     <MultiSelect
       {...props}
-      field={field.name}
       value={value}
       onChange={handleChange}
       TextFieldProps={{
