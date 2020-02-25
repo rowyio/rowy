@@ -22,6 +22,7 @@ export default function Text({ fieldVariant = "short", ...props }: ITextProps) {
       variantProps = {
         multiline: true,
         InputProps: { classes: { multiline: classes.multiline } },
+        inputProps: { rowsMin: 5 },
       };
       break;
 

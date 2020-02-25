@@ -29,6 +29,8 @@ const useStyles = makeStyles(theme =>
         theme.palette.primary.main,
         theme.palette.action.hoverOpacity * 2
       ),
+
+      "& .row-hover-iconButton": { color: theme.palette.primary.main },
     },
 
     imglistContainer: {
@@ -191,6 +193,7 @@ const Image = ({ column, row, value, onSubmit }: CustomCellProps) => {
             size="small"
             className="row-hover-iconButton"
             onClick={e => dropzoneProps.onClick!(e)}
+            color="inherit"
           >
             <AddIcon />
           </IconButton>

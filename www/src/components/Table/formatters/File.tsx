@@ -27,6 +27,8 @@ const useStyles = makeStyles(theme =>
         theme.palette.primary.main,
         theme.palette.action.hoverOpacity * 2
       ),
+
+      "& .row-hover-iconButton": { color: theme.palette.primary.main },
     },
 
     chipList: { overflow: "hidden" },

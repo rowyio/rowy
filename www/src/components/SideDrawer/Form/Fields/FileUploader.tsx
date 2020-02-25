@@ -8,6 +8,7 @@ import useUploader, { FileValue } from "hooks/useFiretable/useUploader";
 import {
   makeStyles,
   createStyles,
+  fade,
   ButtonBase,
   Typography,
   Grid,
@@ -39,6 +40,13 @@ const useStyles = makeStyles(theme =>
       color: theme.palette.text.secondary,
 
       "& svg": { marginRight: theme.spacing(2) },
+    },
+    dropzoneDragActive: {
+      backgroundColor: fade(
+        theme.palette.primary.light,
+        theme.palette.action.hoverOpacity * 2
+      ),
+      color: theme.palette.primary.main,
     },
 
     chipList: { marginTop: theme.spacing(1) },
@@ -91,14 +99,20 @@ export default function FileUploader({
     form.setFieldValue(field.name, newValue);
   };
 
-  const { getRootProps, getInputProps } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     multiple: false,
   });
 
   return (
     <>
-      <ButtonBase className={classes.dropzoneButton} {...getRootProps()}>
+      <ButtonBase
+        className={clsx(
+          classes.dropzoneButton,
+          isDragActive && classes.dropzoneDragActive
+        )}
+        {...getRootProps()}
+      >
         <input id={`sidedrawer-field-${field.name}`} {...getInputProps()} />
         <UploadIcon />
         <Typography variant="body1" color="textSecondary">
