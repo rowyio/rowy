@@ -1,14 +1,16 @@
 import React, { useState, useEffect, lazy, Suspense } from "react";
 import _isEmpty from "lodash/isEmpty";
 
+import "react-data-grid/dist/react-data-grid.css";
+import DataGrid, { Column, CellNavigationMode } from "react-data-grid";
+
 import { makeStyles, createStyles, fade, Button } from "@material-ui/core";
 
-import useWindowSize from "hooks/useWindowSize";
-
 import Loading from "components/Loading";
-import Grid, { IGridProps } from "./Grid";
+import TableHeader from "./TableHeader";
 import ColumnHeader from "./ColumnHeader";
 import FinalColumnHeader from "./FinalColumnHeader";
+import FinalColumn, { useFinalColumnStyles } from "./formatters/FinalColumn";
 
 import { FireTableFilter } from "hooks/useFiretable";
 import { useFiretableContext } from "contexts/firetableContext";
@@ -18,11 +20,17 @@ import { getFormatter } from "./formatters";
 import { getEditor } from "./editors";
 import { EditorProvider } from "../../util/EditorProvider";
 
-import FinalColumn, { useFinalColumnStyles } from "./formatters/FinalColumn";
+import useWindowSize from "hooks/useWindowSize";
+import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
 
 const Hotkeys = lazy(() => import("./HotKeys"));
-const TableHeader = lazy(() => import("./TableHeader"));
 const ColumnEditor = lazy(() => import("./ColumnEditor/index"));
+
+export type FiretableColumn = Column<any> & {
+  isNew?: boolean;
+  type: FieldType;
+  [key: string]: any;
+};
 
 interface Props {
   collection: string;
@@ -86,6 +94,7 @@ function Table(props: Props) {
     tableState,
     tableActions,
     setSelectedCell: contextSetSelectedCell,
+    updateCell,
   } = useFiretableContext();
 
   useEffect(() => {
@@ -110,7 +119,7 @@ function Table(props: Props) {
     tableActions.column.reorder(dragged, target);
   };
 
-  let columns: IGridProps["columns"] = [];
+  let columns: FiretableColumn[] = [];
   if (!tableState.loadingColumns && tableState.columns) {
     columns = tableState.columns
       .filter((column: any) => !column.hidden)
@@ -188,31 +197,38 @@ function Table(props: Props) {
     <EditorProvider>
       <Suspense fallback={<Loading message="Loading header" />}>
         <Hotkeys selectedCell={selectedCell} />
-        <TableHeader
-          collection={collection}
-          rowHeight={rowHeight}
-          updateConfig={tableActions.table.updateConfig}
-          columns={columns}
-          filters={filters}
-        />
       </Suspense>
 
+      <TableHeader
+        collection={collection}
+        rowHeight={rowHeight}
+        updateConfig={tableActions.table.updateConfig}
+        columns={columns}
+        filters={filters}
+      />
+
       {!tableState.loadingColumns ? (
-        <Grid
-          key={`${collection}-grid`}
-          onHeaderDrop={onHeaderDrop}
-          rowHeight={rowHeight}
+        <DataGrid
           columns={columns}
-          RowRenderer={RowRenderer}
-          handleRowGetter={handleRowGetter}
-          // TODO: Remove this fixed height using flexbox
-          tableHeight={windowSize.height - 120}
-          tableWidth={"100%"}
           rows={rows}
-          resizeColumn={tableActions.column.resize}
-          loadingRows={tableState.loadingRows}
-          addRow={addRow}
-          setSelectedCell={setSelectedCell}
+          rowKey={"id" as "id"}
+          onRowsUpdate={event => {
+            console.log(event);
+            const { action, cellKey, updated } = event;
+            if (action === "CELL_UPDATE")
+              updateCell!(rows[event.toRow].ref, cellKey, updated);
+          }}
+          rowHeight={rowHeight}
+          headerRowHeight={43}
+          // TODO: Investigate why setting a numeric value causes
+          // LOADING to pop up on screen when scrolling horizontally
+          // width={windowSize.width - DRAWER_COLLAPSED_WIDTH}
+          width={`calc(100% - ${DRAWER_COLLAPSED_WIDTH}px)` as any}
+          height={windowSize.height - 120}
+          enableCellCopyPaste
+          enableCellDragAndDrop
+          onColumnResize={tableActions.column.resize}
+          cellNavigationMode={CellNavigationMode.CHANGE_ROW}
         />
       ) : (
         <Loading message="Fetching columns" />

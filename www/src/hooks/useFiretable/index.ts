@@ -2,9 +2,10 @@ import useTable from "./useTable";
 import useTableConfig from "./useTableConfig";
 
 export type FiretableActions = {
+  // TODO: Stricter types here
   column: {
     add: Function;
-    resize: Function;
+    resize: (index: number, width: number) => void;
     rename: Function;
     remove: Function;
     update: Function;
