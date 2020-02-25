@@ -50,12 +50,8 @@ export default function ConnectTableSelect({
       className={clsx(classes.root, className)}
       {...TextFieldProps}
       SelectProps={{
-        renderValue: value => {
-          const selected = value as string[];
-          if (selected.length === 1 && typeof selected[0] === "string")
-            return selected;
-          return `${selected.length} selected`;
-        },
+        renderValue: value => `${(value as any[]).length} selected`,
+        displayEmpty: true,
         classes: { root: classes.selectRoot },
         ...TextFieldProps.SelectProps,
         // Must have this set to prevent MUI transforming `value`
