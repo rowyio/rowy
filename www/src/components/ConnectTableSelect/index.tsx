@@ -5,6 +5,7 @@ import { TextField, TextFieldProps } from "@material-ui/core";
 
 import useStyles from "./styles";
 import Loading from "components/Loading";
+import ErrorBoundary from "components/ErrorBoundary";
 
 const PopupContents = lazy(() => import("./PopupContents"));
 
@@ -14,7 +15,7 @@ export interface IConnectTableSelectProps {
   value: ConnectTableValue[];
   onChange: (value: ConnectTableValue[]) => void;
 
-  collection: string;
+  collectionPath: string;
   config: {
     primaryKeys: string[];
     secondaryKeys: string[];
@@ -70,9 +71,11 @@ export default function ConnectTableSelect({
         },
       }}
     >
-      <Suspense fallback={<Loading />}>
-        <PopupContents value={sanitisedValue} {...props} />
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense fallback={<Loading />}>
+          <PopupContents value={sanitisedValue} {...props} />
+        </Suspense>
+      </ErrorBoundary>
     </TextField>
   );
 }

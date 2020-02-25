@@ -37,7 +37,7 @@ export interface IPopupContentsProps
 export default function PopupContents({
   value = [],
   onChange,
-  collection,
+  collectionPath,
   config,
   multiple = true,
 }: IPopupContentsProps) {
@@ -48,9 +48,9 @@ export default function PopupContents({
   }, []);
 
   const algoliaIndex = useMemo(() => {
-    console.log("INIT INDEX");
-    return searchClient.initIndex(collection);
-  }, [collection]);
+    console.log("INIT INDEX", collectionPath);
+    return searchClient.initIndex(collectionPath);
+  }, [collectionPath]);
 
   // Algolia search query
   const [query, setQuery] = useState("");
@@ -61,7 +61,7 @@ export default function PopupContents({
   const [search] = useDebouncedCallback(
     async (query: string) => {
       if (!algoliaIndex) return;
-      console.log("SEARCH", query);
+      console.log("SEARCH", query, algoliaIndex);
       const resp = await algoliaIndex.search({ query });
       setResponse(resp);
     },
@@ -77,7 +77,10 @@ export default function PopupContents({
 
   const select = (hit: any) => () => {
     const { _highlightResult, ...snapshot } = hit;
-    const output = { snapshot, docPath: `${collection}/${snapshot.objectID}` };
+    const output = {
+      snapshot,
+      docPath: `${collectionPath}/${snapshot.objectID}`,
+    };
 
     if (multiple) onChange([...value, output]);
     else onChange([output]);

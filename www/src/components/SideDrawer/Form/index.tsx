@@ -31,6 +31,7 @@ import { FieldType } from "constants/fields";
 
 const RichText = lazy(() => import("./Fields/RichText"));
 const JsonEditor = lazy(() => import("./Fields/JsonEditor"));
+const ConnectTable = lazy(() => import("./Fields/ConnectTable"));
 
 export type Values = { [key: string]: any };
 export type Field = {
@@ -231,7 +232,12 @@ export default function Form({ fields, values }: IFormProps) {
                     );
                     break;
 
-                  // case FieldType.connectTable:
+                  case FieldType.connectTable:
+                    renderedField = (
+                      <Field {...fieldProps} component={ConnectTable} />
+                    );
+                    break;
+
                   // case FieldType.subTable:
                   // case FieldType.action:
                   case FieldType.json:

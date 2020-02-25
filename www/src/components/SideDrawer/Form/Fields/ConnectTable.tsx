@@ -1,30 +1,27 @@
 import React from "react";
 import { FieldProps } from "formik";
 
-import _MultiSelect, {
-  IMultiSelectProps as _IMultiSelectProps,
-} from "components/MultiSelect";
+import ConnectTableSelect, {
+  ConnectTableValue,
+  IConnectTableSelectProps,
+} from "components/ConnectTableSelect";
 
-export default function MultiSelect({
+export default function ConnectTable({
   field,
   form,
   ...props
-}: FieldProps<string[]> & _IMultiSelectProps) {
+}: FieldProps<ConnectTableValue[]> & IConnectTableSelectProps) {
   return (
-    <_MultiSelect
+    <ConnectTableSelect
       {...props}
-      field={field.name}
       value={field.value}
-      onChange={(fieldName, value) => form.setFieldValue(fieldName, value)}
+      onChange={value => form.setFieldValue(field.name, value)}
       TextFieldProps={{
         fullWidth: true,
-        label: "",
-        hiddenLabel: true,
         error: !!(form.touched[field.name] && form.errors[field.name]),
         helperText: (form.touched[field.name] && form.errors[field.name]) || "",
         onBlur: () => form.setFieldTouched(field.name),
       }}
-      freeText
     />
   );
 }

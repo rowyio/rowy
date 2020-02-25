@@ -69,7 +69,7 @@ const ConnectTable = ({ rowIdx, column, value, onSubmit }: CustomCellProps) => {
     <ConnectTableSelect
       value={value}
       onChange={onSubmit}
-      collection={collectionPath}
+      collectionPath={collectionPath}
       config={config}
       TextFieldProps={{
         fullWidth: true,
