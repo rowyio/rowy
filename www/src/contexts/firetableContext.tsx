@@ -1,7 +1,7 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import _groupBy from "lodash/groupBy";
 
-import { Column } from "react-data-grid";
+import { Column, DataGridHandle } from "react-data-grid";
 import { PopoverProps } from "@material-ui/core";
 import firebase from "firebase/app";
 import useFiretable, {
@@ -45,6 +45,9 @@ interface FiretableContextProps {
   setSelectedColumnHeader: React.Dispatch<
     React.SetStateAction<SelectedColumnHeader | null>
   >;
+
+  // A ref to the data grid. Contains data grid functions
+  dataGridRef: React.RefObject<DataGridHandle>;
 }
 
 const firetableContext = React.createContext<Partial<FiretableContextProps>>(
@@ -113,6 +116,9 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
     });
   };
 
+  // A ref to the data grid. Contains data grid functions
+  const dataGridRef = useRef<DataGridHandle>(null);
+
   return (
     <firetableContext.Provider
       value={{
@@ -128,6 +134,7 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
         setSideDrawerOpen,
         selectedColumnHeader,
         setSelectedColumnHeader,
+        dataGridRef,
       }}
     >
       {children}

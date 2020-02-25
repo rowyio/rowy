@@ -1,8 +1,13 @@
 import React, { useState, useEffect, lazy, Suspense } from "react";
+import { useDebouncedCallback } from "use-debounce";
 import _isEmpty from "lodash/isEmpty";
 
 import "react-data-grid/dist/react-data-grid.css";
-import DataGrid, { Column, CellNavigationMode } from "react-data-grid";
+import DataGrid, {
+  Column,
+  CellNavigationMode,
+  ScrollPosition,
+} from "react-data-grid";
 
 import { makeStyles, createStyles, fade, Button } from "@material-ui/core";
 
@@ -21,7 +26,7 @@ import { getEditor } from "./editors";
 import { EditorProvider } from "../../util/EditorProvider";
 
 import useWindowSize from "hooks/useWindowSize";
-import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
+import { DRAWER_WIDTH, DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
 
 const Hotkeys = lazy(() => import("./HotKeys"));
 const ColumnEditor = lazy(() => import("./ColumnEditor/index"));
@@ -93,22 +98,25 @@ function Table(props: Props) {
   const {
     tableState,
     tableActions,
-    setSelectedCell: contextSetSelectedCell,
+    selectedCell,
+    setSelectedCell,
     updateCell,
+    sideDrawerOpen,
+    dataGridRef,
   } = useFiretableContext();
 
   useEffect(() => {
     if (tableActions && tableState && tableState.tablePath !== collection) {
       console.log("setting table");
       tableActions.table.set(collection, filters);
-      if (contextSetSelectedCell) contextSetSelectedCell({});
+      setSelectedCell!({});
     }
   }, [collection]);
-  // TODO: move this to firetableContext
-  const [selectedCell, setSelectedCell] = useState<{ row: any; column: any }>({
-    row: {},
-    column: {},
-  });
+
+  const [handleScroll] = useDebouncedCallback(
+    (position: ScrollPosition) => console.log(position),
+    100
+  );
 
   const windowSize = useWindowSize();
   if (!windowSize || !windowSize.height) return <></>;
@@ -170,16 +178,7 @@ function Table(props: Props) {
       return renderBaseRow(rest);
     }
   };
-  /**
-   * Intercepting row getter to detect when table is requesting the last local row the bottom and fetch more rows
-   * @param index
-   */
-  const handleRowGetter = (index: number) => {
-    if (tableState.queryLimit - index < 30) {
-      tableActions.row.more(30);
-    }
-    return rows[index];
-  };
+
   const addRow = (data?: any) => {
     if (filters) {
       // adds filter data into the new row
@@ -193,6 +192,7 @@ function Table(props: Props) {
       tableActions.row.add({ ...filtersData, ...data });
     } else tableActions.row.add({ ...data });
   };
+
   return (
     <EditorProvider>
       <Suspense fallback={<Loading message="Loading header" />}>
@@ -223,12 +223,21 @@ function Table(props: Props) {
           // TODO: Investigate why setting a numeric value causes
           // LOADING to pop up on screen when scrolling horizontally
           // width={windowSize.width - DRAWER_COLLAPSED_WIDTH}
-          width={`calc(100% - ${DRAWER_COLLAPSED_WIDTH}px)` as any}
+          width={
+            `calc(100% - ${
+              sideDrawerOpen ? DRAWER_WIDTH : DRAWER_COLLAPSED_WIDTH
+            }px)` as any
+          }
           height={windowSize.height - 120}
           enableCellCopyPaste
           enableCellDragAndDrop
           onColumnResize={tableActions.column.resize}
           cellNavigationMode={CellNavigationMode.CHANGE_ROW}
+          onSelectedCellChange={({ rowIdx, idx: colIdx }) =>
+            setSelectedCell!({ row: rowIdx, column: columns[colIdx].key })
+          }
+          onScroll={handleScroll}
+          ref={dataGridRef}
         />
       ) : (
         <Loading message="Fetching columns" />
