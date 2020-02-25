@@ -86,6 +86,10 @@ export default function SideDrawer() {
         field.config = column.config;
         break;
 
+      case FieldType.action:
+        field.callableName = column.callableName;
+        break;
+
       default:
         break;
     }

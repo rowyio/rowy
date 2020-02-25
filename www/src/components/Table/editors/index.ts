@@ -29,7 +29,6 @@ export const getEditor = (column: any) => {
 
     // Can be edited without double-clicking; side drawer editor not implemented
     case FieldType.subTable:
-    case FieldType.action:
       return NullEditor;
 
     // Supports react-data-grid’s in-cell editing
@@ -46,6 +45,7 @@ export const getEditor = (column: any) => {
     case FieldType.slider:
     case FieldType.json:
     case FieldType.connectTable:
+    case FieldType.action:
     default:
       return SideDrawerEditor;
   }

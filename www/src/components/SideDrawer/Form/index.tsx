@@ -28,6 +28,7 @@ const FileUploader = lazy(() => import("./Fields/FileUploader"));
 const RichText = lazy(() => import("./Fields/RichText"));
 const JsonEditor = lazy(() => import("./Fields/JsonEditor"));
 const ConnectTable = lazy(() => import("./Fields/ConnectTable"));
+const Action = lazy(() => import("./Fields/Action"));
 
 export type Values = { [key: string]: any };
 export type Field = {
@@ -233,7 +234,12 @@ export default function Form({ fields, values }: IFormProps) {
                     break;
 
                   // case FieldType.subTable:
-                  // case FieldType.action:
+
+                  case FieldType.action:
+                    renderedField = (
+                      <Field {...fieldProps} component={Action} />
+                    );
+                    break;
 
                   case FieldType.json:
                     renderedField = (

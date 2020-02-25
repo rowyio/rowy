@@ -1,11 +1,11 @@
 import React, { useContext, useState } from "react";
-import withCustomCell, { CustomCellProps } from "./withCustomCell";
-import clsx from "clsx";
+import { FieldProps } from "formik";
 
 import {
   createStyles,
   makeStyles,
   Grid,
+  Typography,
   Fab,
   CircularProgress,
 } from "@material-ui/core";
@@ -17,33 +17,39 @@ import { cloudFunction } from "firebase/callables";
 
 const useStyles = makeStyles(theme =>
   createStyles({
-    root: { padding: theme.spacing(0, 0.375, 0, 1.5) },
-    labelContainer: { overflowX: "hidden" },
-    fab: { width: 36, height: 36 },
+    root: {},
+
+    labelContainer: {
+      borderRadius: theme.shape.borderRadius,
+      backgroundColor:
+        theme.palette.type === "light"
+          ? "rgba(0, 0, 0, 0.09)"
+          : "rgba(255, 255, 255, 0.09)",
+      padding: theme.spacing(9 / 8, 1, 9 / 8, 1.5),
+
+      width: "100%",
+      display: "flex",
+      textAlign: "left",
+      minHeight: 56,
+    },
+    label: { whiteSpace: "normal" },
   })
 );
 
-function Action({ column, row, value, onSubmit }: CustomCellProps) {
+function Action({
+  field,
+  form,
+  callableName,
+}: FieldProps<any> & { callableName: string }) {
   const classes = useStyles();
-
-  const { createdAt, updatedAt, rowHeight, id, ref, ...docData } = row;
-  const { callableName } = column as any;
+  const { ref, ...docData } = form.values;
 
   const [isRunning, setIsRunning] = useState(false);
 
   const snack = useContext(SnackContext);
   const handleRun = () => {
-    // TODO: Verify that this code can be removed
-    // eval(scripts.onClick)(row);
-    // const cleanRow = Object.keys(row).reduce((acc: any, key: string) => {
-    //   if (row[key]) return { ...acc, [key]: row[key] };
-    //   else return acc;
-    // }, {});
-    // cleanRow.ref = "cleanRow.ref";
-    // delete cleanRow.rowHeight;
-    // delete cleanRow.updatedFields;
-
     setIsRunning(true);
+    console.log("RUN");
 
     cloudFunction(
       callableName,
@@ -52,40 +58,45 @@ function Action({ column, row, value, onSubmit }: CustomCellProps) {
         const { message, cellValue } = response.data;
         setIsRunning(false);
         snack.open({ message, severity: "success" });
-        if (cellValue) onSubmit(cellValue);
+        if (cellValue) form.setFieldValue(field.name, cellValue);
       },
       error => {
         setIsRunning(false);
+        console.log(error);
         snack.open({ message: JSON.stringify(error), severity: "error" });
       }
     );
   };
 
-  const hasRan = value && value.status;
+  const hasRan = field.value && field.value.status;
 
   return (
     <Grid
       container
       alignItems="center"
       wrap="nowrap"
-      className={clsx("cell-collapse-padding", classes.root)}
+      className={classes.root}
+      spacing={2}
     >
-      <Grid item xs className={classes.labelContainer}>
-        {hasRan
-          ? value.status
-          : callableName?.replace("callable-", "").replace(/([A-Z])/g, " $1")}
+      <Grid item xs>
+        <Grid container alignItems="center" className={classes.labelContainer}>
+          <Typography variant="body1" className={classes.label}>
+            {hasRan
+              ? field.value.status
+              : callableName
+                  ?.replace("callable-", "")
+                  .replace(/([A-Z])/g, " $1")}
+          </Typography>
+        </Grid>
       </Grid>
 
       <Grid item>
         <Fab
-          size="small"
-          color="secondary"
-          className={classes.fab}
           onClick={handleRun}
-          disabled={isRunning || !!(hasRan && !value.redo)}
+          disabled={isRunning || !!(hasRan && !field.value.redo)}
         >
           {isRunning ? (
-            <CircularProgress color="secondary" size={16} thickness={5.6} />
+            <CircularProgress color="secondary" size={24} thickness={4.6} />
           ) : hasRan ? (
             <RefreshIcon />
           ) : (
@@ -97,4 +108,4 @@ function Action({ column, row, value, onSubmit }: CustomCellProps) {
   );
 }
 
-export default withCustomCell(Action);
+export default Action;
