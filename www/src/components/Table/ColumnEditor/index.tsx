@@ -6,7 +6,7 @@ import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 import Popover from "@material-ui/core/Popover";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
-import FieldsDropdown from "components/Fields/FieldsDropdown";
+import FieldsDropdown from "./FieldsDropdown";
 import { FieldType } from "constants/fields";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
