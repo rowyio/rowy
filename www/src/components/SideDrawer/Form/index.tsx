@@ -7,28 +7,25 @@ import _isEmpty from "lodash/isEmpty";
 
 import { useFiretableContext } from "contexts/firetableContext";
 
-import { Grid, LinearProgress } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 
 import Autosave from "./Autosave";
 import FieldWrapper from "./FieldWrapper";
+import FieldSkeleton from "./FieldSkeleton";
 import Text from "./Fields/Text";
-import SingleSelect from "./Fields/SingleSelect";
-import MultiSelect from "./Fields/MultiSelect";
-import DatePicker from "./Fields/DatePicker";
-import DateTimePicker from "./Fields/DateTimePicker";
-import Checkbox from "./Fields/Checkbox";
-import Rating from "./Fields/Rating";
-import Color from "./Fields/Color";
-// import Radio from "./Fields/Radio";
-import Slider from "./Fields/Slider";
-// import TextMulti from "./Fields/TextMulti";
-import ImageUploader from "./Fields/ImageUploader";
-import FileUploader from "./Fields/FileUploader";
 
 import { FieldType } from "constants/fields";
-// import Heading from "./Heading";
-// import Description from "./Description";
 
+const SingleSelect = lazy(() => import("./Fields/SingleSelect"));
+const MultiSelect = lazy(() => import("./Fields/MultiSelect"));
+const DatePicker = lazy(() => import("./Fields/DatePicker"));
+const DateTimePicker = lazy(() => import("./Fields/DateTimePicker"));
+const Checkbox = lazy(() => import("./Fields/Checkbox"));
+const Rating = lazy(() => import("./Fields/Rating"));
+const Color = lazy(() => import("./Fields/Color"));
+const Slider = lazy(() => import("./Fields/Slider"));
+const ImageUploader = lazy(() => import("./Fields/ImageUploader"));
+const FileUploader = lazy(() => import("./Fields/FileUploader"));
 const RichText = lazy(() => import("./Fields/RichText"));
 const JsonEditor = lazy(() => import("./Fields/JsonEditor"));
 const ConnectTable = lazy(() => import("./Fields/ConnectTable"));
@@ -200,9 +197,7 @@ export default function Form({ fields, values }: IFormProps) {
 
                   case FieldType.richText:
                     renderedField = (
-                      <Suspense fallback={<LinearProgress />}>
-                        <Field {...fieldProps} component={RichText} />
-                      </Suspense>
+                      <Field {...fieldProps} component={RichText} />
                     );
                     break;
 
@@ -240,11 +235,10 @@ export default function Form({ fields, values }: IFormProps) {
 
                   // case FieldType.subTable:
                   // case FieldType.action:
+
                   case FieldType.json:
                     renderedField = (
-                      <Suspense fallback={<LinearProgress />}>
-                        <Field {...fieldProps} component={JsonEditor} />
-                      </Suspense>
+                      <Field {...fieldProps} component={JsonEditor} />
                     );
                     break;
 
@@ -262,7 +256,12 @@ export default function Form({ fields, values }: IFormProps) {
                     name={field.name}
                     label={field.label}
                   >
-                    {renderedField}
+                    <Suspense
+                      key={fieldProps.name ?? i}
+                      fallback={<FieldSkeleton />}
+                    >
+                      {renderedField}
+                    </Suspense>
                   </FieldWrapper>
                 );
               })}
