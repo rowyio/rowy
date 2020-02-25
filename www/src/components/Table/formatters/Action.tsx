@@ -1,8 +1,14 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import withCustomCell, { CustomCellProps } from "./withCustomCell";
 import clsx from "clsx";
 
-import { createStyles, makeStyles, Grid, Fab } from "@material-ui/core";
+import {
+  createStyles,
+  makeStyles,
+  Grid,
+  Fab,
+  CircularProgress,
+} from "@material-ui/core";
 import PlayIcon from "@material-ui/icons/PlayArrow";
 import RefreshIcon from "@material-ui/icons/Refresh";
 
@@ -23,31 +29,30 @@ function Action({ column, row, value, onSubmit }: CustomCellProps) {
   const { createdAt, updatedAt, rowHeight, id, ref, ...docData } = row;
   const { callableName } = column as any;
 
+  const [isRunning, setIsRunning] = useState(false);
+
   const snack = useContext(SnackContext);
   const handleRun = () => {
+    // TODO: Verify that this code can be removed
     // eval(scripts.onClick)(row);
-    const cleanRow = Object.keys(row).reduce((acc: any, key: string) => {
-      if (row[key]) return { ...acc, [key]: row[key] };
-      else return acc;
-    }, {});
-    cleanRow.ref = "cleanRow.ref";
-    delete cleanRow.rowHeight;
-    delete cleanRow.updatedFields;
+    // const cleanRow = Object.keys(row).reduce((acc: any, key: string) => {
+    //   if (row[key]) return { ...acc, [key]: row[key] };
+    //   else return acc;
+    // }, {});
+    // cleanRow.ref = "cleanRow.ref";
+    // delete cleanRow.rowHeight;
+    // delete cleanRow.updatedFields;
+
+    setIsRunning(true);
+
     cloudFunction(
       callableName,
-      {
-        ref: {
-          path: ref.path,
-          id: ref.id,
-        },
-        row: docData,
-      },
+      { ref: { path: ref.path, id: ref.id }, row: docData },
       response => {
         const { message, cellValue } = response.data;
+        setIsRunning(false);
         snack.open({ message, severity: "success" });
-        if (cellValue) {
-          onSubmit(cellValue);
-        }
+        if (cellValue) onSubmit(cellValue);
       },
       o => snack.open({ message: JSON.stringify(o), severity: "error" })
     );
@@ -74,9 +79,15 @@ function Action({ column, row, value, onSubmit }: CustomCellProps) {
           color="secondary"
           className={classes.fab}
           onClick={handleRun}
-          disabled={!!(hasRan && !value.redo)}
+          disabled={isRunning || !!(hasRan && !value.redo)}
         >
-          {hasRan ? <RefreshIcon /> : <PlayIcon />}
+          {isRunning ? (
+            <CircularProgress size={16} thickness={5.6} />
+          ) : hasRan ? (
+            <RefreshIcon />
+          ) : (
+            <PlayIcon />
+          )}
         </Fab>
       </Grid>
     </Grid>
