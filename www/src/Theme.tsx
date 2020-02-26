@@ -106,8 +106,8 @@ const Theme = createMuiTheme({
         letterSpacing: 1.125,
       },
       labelSmall: {
-        paddingLeft: 12,
-        paddingRight: 11,
+        paddingLeft: 10,
+        paddingRight: 9,
       },
       deleteIcon: {
         color: "inherit",
@@ -162,7 +162,7 @@ const Theme = createMuiTheme({
       },
     },
     MuiChip: {
-      size: "small",
+      size: "medium",
       variant: "outlined",
       deleteIcon: <ClearIcon />,
     },
