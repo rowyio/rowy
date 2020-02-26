@@ -13,10 +13,14 @@ const useStyles = makeStyles(theme =>
       whiteSpace: "pre-line",
       padding: theme.spacing(0.5, 0),
 
-      width: "100%",
-      height: "100%",
       display: "flex",
       alignItems: "center",
+
+      position: "absolute",
+      top: 0,
+      bottom: 0,
+      right: theme.spacing(1.5),
+      left: theme.spacing(1.5),
     },
     text: { maxHeight: "100%" },
 
