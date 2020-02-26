@@ -43,8 +43,8 @@ const useStyles = makeStyles(theme =>
       position: "relative",
       display: "flex",
 
-      width: rowHeight - theme.spacing(1),
-      height: rowHeight - theme.spacing(1),
+      width: rowHeight - theme.spacing(1) - 1,
+      height: rowHeight - theme.spacing(1) - 1,
 
       backgroundSize: "contain",
       backgroundPosition: "center center",
@@ -148,7 +148,7 @@ const Image = ({ column, row, value, onSubmit }: CustomCellProps) => {
             value.map((file: { name: string; downloadURL: string }) => (
               <Grid item key={file.downloadURL}>
                 <Tooltip title="Click to delete">
-                  <span>
+                  <div>
                     <Confirmation
                       message={{
                         title: "Delete Image",
@@ -173,7 +173,7 @@ const Image = ({ column, row, value, onSubmit }: CustomCellProps) => {
                         </Grid>
                       </ButtonBase>
                     </Confirmation>
-                  </span>
+                  </div>
                 </Tooltip>
               </Grid>
             ))}
