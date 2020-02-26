@@ -157,10 +157,7 @@ function Table(props: Props) {
 
   const rowHeight = tableState.config.rowHeight;
 
-  const rows =
-    tableState.rows.length !== 0
-      ? [...tableState.rows.map((row: any) => ({ rowHeight, ...row })), {}]
-      : [];
+  const rows = [...tableState.rows, {}];
 
   return (
     <EditorProvider>
@@ -207,6 +204,7 @@ function Table(props: Props) {
           }
           onScroll={handleScroll}
           ref={dataGridRef}
+          // emptyRowsView={() => null}
         />
       ) : (
         <Loading message="Fetching columns" />
