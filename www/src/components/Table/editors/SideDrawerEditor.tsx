@@ -3,14 +3,10 @@ import { EditorProps } from "react-data-grid";
 import _findIndex from "lodash/findIndex";
 import { useFiretableContext } from "contexts/firetableContext";
 
-import { makeStyles, createStyles } from "@material-ui/core";
-const useStyles = makeStyles(
-  createStyles({
-    "@global": {
-      ".rdg-editor-container": { display: "none" },
-    },
-  })
-);
+import { makeStyles } from "@material-ui/core";
+import styles from "./styles";
+
+const useStyles = makeStyles(styles);
 
 /**
  * Allow the cell to be editable, but disable react-data-grid’s default
@@ -20,17 +16,27 @@ const useStyles = makeStyles(
  *
  * Use for cells that do not support any type of in-cell editing.
  */
-const SideDrawerEditor = React.forwardRef(
-  ({ column, rowData }: EditorProps<any, any>, ref) => {
-    useStyles();
-    const { sideDrawerOpen, setSideDrawerOpen } = useFiretableContext();
+function SideDrawerEditor_(props: EditorProps<any, any>) {
+  useStyles();
 
-    useEffect(() => {
-      if (!sideDrawerOpen && setSideDrawerOpen) setSideDrawerOpen(true);
-    }, [column?.key, rowData?.id]);
+  const { column, rowData } = props;
+  const { sideDrawerOpen, setSideDrawerOpen } = useFiretableContext();
 
-    return null;
-  }
-);
+  useEffect(() => {
+    if (!sideDrawerOpen) setSideDrawerOpen!(true);
+  }, [column?.key, rowData?.id]);
+
+  return null;
+}
+
+/**
+ * react-data-grid requires the Editor component to be a class component
+ * with getInputNode and getValue methods.
+ */
+class SideDrawerEditor extends React.Component<EditorProps<any, any>> {
+  getInputNode = () => null;
+  getValue = () => null;
+  render = () => <SideDrawerEditor_ {...this.props} />;
+}
 
 export default SideDrawerEditor;

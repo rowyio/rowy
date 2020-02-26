@@ -154,6 +154,7 @@ function Table(props: Props) {
           onCellSelected={({ rowIdx, idx: colIdx }) =>
             setSelectedCell!({ row: rowIdx, column: columns[colIdx].key })
           }
+          enableCellSelect
           onScroll={handleScroll}
           ref={dataGridRef}
         />

@@ -49,10 +49,6 @@ class TextEditor extends React.Component<
     return this.inputRef?.current?.value;
   }
 
-  componentWillUnmount() {
-    this.props.onCommit();
-  }
-
   render() {
     const { classes, column, value } = this.props;
 

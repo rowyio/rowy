@@ -78,7 +78,7 @@ export const getFormatter = (column: any) => {
     case FieldType.phone:
     case FieldType.url:
     case FieldType.number:
-      return null;
+      return undefined;
 
     default:
       return () => <div />;
