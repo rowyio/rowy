@@ -2,9 +2,10 @@ import React from "react";
 import clsx from "clsx";
 import withCustomCell, { CustomCellProps } from "./withCustomCell";
 
-import { makeStyles, createStyles, Grid, Chip } from "@material-ui/core";
+import { makeStyles, createStyles, Grid } from "@material-ui/core";
 
-import _MultiSelect from "components/MultiSelect";
+import MultiSelect_ from "components/MultiSelect";
+import FormattedChip from "components/FormattedChip";
 import { FieldType } from "constants/fields";
 import { useFiretableContext } from "contexts/firetableContext";
 
@@ -66,7 +67,7 @@ function MultiSelect({ rowIdx, column, value, onSubmit }: CustomCellProps) {
         item =>
           typeof item === "string" && (
             <Grid item key={item}>
-              <Chip label={item} className={classes.chip} />
+              <FormattedChip label={item} className={classes.chip} />
             </Grid>
           )
       )}
@@ -80,7 +81,7 @@ function MultiSelect({ rowIdx, column, value, onSubmit }: CustomCellProps) {
   };
 
   return (
-    <_MultiSelect
+    <MultiSelect_
       value={transformedValue}
       onChange={handleChange}
       label={column.name}

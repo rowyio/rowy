@@ -1,17 +1,18 @@
 import React from "react";
 import { FieldProps } from "formik";
 
-import { useTheme, Grid, Chip } from "@material-ui/core";
+import { useTheme, Grid } from "@material-ui/core";
 
-import _MultiSelect, {
-  IMultiSelectProps as _IMultiSelectProps,
+import MultiSelect_, {
+  IMultiSelectProps as IMultiSelectProps_,
 } from "components/MultiSelect";
+import FormattedChip from "components/FormattedChip";
 
 export default function MultiSelect({
   field,
   form,
   ...props
-}: FieldProps<string[]> & _IMultiSelectProps) {
+}: FieldProps<string[]> & IMultiSelectProps_) {
   const theme = useTheme();
 
   const handleDelete = (index: number) => () => {
@@ -22,7 +23,7 @@ export default function MultiSelect({
 
   return (
     <>
-      <_MultiSelect
+      <MultiSelect_
         {...props}
         value={field.value}
         onChange={value => form.setFieldValue(field.name, value)}
@@ -42,8 +43,7 @@ export default function MultiSelect({
         <Grid container spacing={1} style={{ marginTop: theme.spacing(1) }}>
           {field.value.map((item, i) => (
             <Grid item key={item}>
-              <Chip
-                component="li"
+              <FormattedChip
                 size="medium"
                 label={item}
                 onDelete={handleDelete(i)}
