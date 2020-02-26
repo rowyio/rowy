@@ -30,6 +30,8 @@ const useStyles = makeStyles(theme =>
       marginTop: theme.spacing(1),
       letterSpacing: 1,
     },
+
+    basicIcon: { display: "block" },
   })
 );
 export interface IEmptyStateProps {
@@ -37,6 +39,7 @@ export interface IEmptyStateProps {
   description?: React.ReactNode;
   Icon?: typeof ErrorIcon;
   fullScreen?: boolean;
+  basic?: boolean;
 }
 
 export default function EmptyState({
@@ -44,8 +47,24 @@ export default function EmptyState({
   description,
   Icon = ErrorIcon,
   fullScreen = false,
+  basic = false,
 }: IEmptyStateProps) {
   const classes = useStyles({});
+
+  if (basic)
+    return (
+      <Grid container alignItems="center" spacing={1}>
+        <Grid item>
+          <Icon className={classes.basicIcon} />
+        </Grid>
+
+        <Grid item>
+          {message}
+          {description && ": "}
+          {description}
+        </Grid>
+      </Grid>
+    );
 
   return (
     <Grid
