@@ -40,7 +40,7 @@ const useStyles = makeStyles(theme =>
 
 function Date({ rowIdx, column, value, onSubmit }: CustomCellProps) {
   const classes = useStyles();
-  const { setSelectedCell } = useFiretableContext();
+  const { dataGridRef } = useFiretableContext();
 
   const transformedValue = value && "toDate" in value ? value.toDate() : null;
 
@@ -58,7 +58,8 @@ function Date({ rowIdx, column, value, onSubmit }: CustomCellProps) {
         onChange={handleDateChange}
         onClick={e => {
           e.stopPropagation();
-          setSelectedCell!({ row: rowIdx, column: column.key });
+          if (dataGridRef?.current?.selectCell)
+            dataGridRef.current.selectCell({ rowIdx, idx: column.idx });
         }}
         format={fieldType === FieldType.date ? DATE_FORMAT : DATE_TIME_FORMAT}
         fullWidth

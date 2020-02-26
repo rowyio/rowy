@@ -43,17 +43,11 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-function MultiSelect({
-  row,
-  rowIdx,
-  column,
-  value,
-  onSubmit,
-}: CustomCellProps) {
+function MultiSelect({ rowIdx, column, value, onSubmit }: CustomCellProps) {
   const classes = useStyles();
 
   const { options } = column as any;
-  const { setSelectedCell } = useFiretableContext();
+  const { dataGridRef } = useFiretableContext();
 
   // Support SingleSelect field
   const isSingle = (column as any).type === FieldType.singleSelect;
@@ -79,9 +73,10 @@ function MultiSelect({
     </Grid>
   );
 
-  const onClick = e => {
-    setSelectedCell!({ row: rowIdx, column: column.key });
-    e.stopPropagation();
+  const onClick = e => e.stopPropagation();
+  const onClose = () => {
+    if (dataGridRef?.current?.selectCell)
+      dataGridRef.current.selectCell({ rowIdx, idx: column.idx });
   };
 
   return (
@@ -100,6 +95,7 @@ function MultiSelect({
           classes: { root: classes.fullHeight },
         },
         SelectProps: {
+          onClose,
           classes: {
             root: clsx(classes.fullHeight, classes.select),
             icon: classes.icon,

@@ -53,7 +53,7 @@ const ConnectTable = ({ rowIdx, column, value, onSubmit }: CustomCellProps) => {
   const classes = useStyles();
 
   const { collectionPath, config } = column as any;
-  const { setSelectedCell } = useFiretableContext();
+  const { dataGridRef } = useFiretableContext();
 
   const disabled = !column.editable || config.isLocked;
 
@@ -73,6 +73,12 @@ const ConnectTable = ({ rowIdx, column, value, onSubmit }: CustomCellProps) => {
     </Grid>
   );
 
+  const onClick = e => e.stopPropagation();
+  const onClose = () => {
+    if (dataGridRef?.current?.selectCell)
+      dataGridRef.current.selectCell({ rowIdx, idx: column.idx });
+  };
+
   return (
     <ConnectTableSelect
       value={value}
@@ -89,6 +95,7 @@ const ConnectTable = ({ rowIdx, column, value, onSubmit }: CustomCellProps) => {
           classes: { root: classes.fullHeight },
         },
         SelectProps: {
+          onClose,
           classes: {
             root: clsx(classes.fullHeight, classes.select),
             icon: clsx(classes.icon),
@@ -99,10 +106,7 @@ const ConnectTable = ({ rowIdx, column, value, onSubmit }: CustomCellProps) => {
             transformOrigin: { vertical: "top", horizontal: "left" },
           },
         },
-        onClick: e => {
-          setSelectedCell!({ row: rowIdx, column: column.key });
-          e.stopPropagation();
-        },
+        onClick,
         disabled,
       }}
       className={clsx(
