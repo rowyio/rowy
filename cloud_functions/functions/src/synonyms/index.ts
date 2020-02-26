@@ -12,7 +12,7 @@ const synonyms = (docData, groups: synonymGroup[]) =>
   groups.reduce((update: any, currGroup) => {
     if (
       docData[currGroup.listenerField] &&
-      docData[currGroup.synonymField] !=
+      docData[currGroup.synonymField] !==
         currGroup.transformer(docData[currGroup.listenerField])
     ) {
       return {

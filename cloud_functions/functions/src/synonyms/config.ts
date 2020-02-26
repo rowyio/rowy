@@ -37,6 +37,7 @@ const cohort2region = (cohort: string) =>
 //       break;
 //   }
 // };
+
 const cohort2location = (cohort: string) => {
   const _region = cohort2region(cohort);
   switch (_region) {

@@ -16,7 +16,7 @@ const docReducer = (docData: FirebaseFirestore.DocumentData) => (
  * @param targetCollection
  * @param fieldsToSync
  */
-const syncDoc = (targetCollection: string, fieldsToSync: string[]) => (
+const cloneDoc = (targetCollection: string, fieldsToSync: string[]) => (
   snapshot: FirebaseFirestore.DocumentSnapshot
 ) => {
   const docId = snapshot.id;
@@ -32,25 +32,53 @@ const syncDoc = (targetCollection: string, fieldsToSync: string[]) => (
 };
 
 /**
+ *
+ * @param targetCollection
+ * @param fieldsToSync
+ */
+const syncDoc = (targetCollection: string, fieldsToSync: string[]) => (
+  snapshot: FirebaseFirestore.DocumentSnapshot
+) => {
+  const docId = snapshot.id;
+  const docData = snapshot.data();
+  if (!docData) return false; // returns if theres no data in the doc
+  const syncData = fieldsToSync.reduce(docReducer(docData), {});
+  if (Object.keys(syncData).length === 0) return false; // returns if theres nothing to sync
+  db.collection(targetCollection)
+    .doc(docId)
+    .update(syncData)
+    .catch(error => console.error(error));
+  return true;
+};
+
+/**
  * onUpdate change to snapshot adapter
  * @param targetCollection
  * @param fieldsToSync
  */
 const syncDocOnUpdate = (targetCollection: string, fieldsToSync: string[]) => (
   snapshot: functions.Change<FirebaseFirestore.DocumentSnapshot>
-) => syncDoc(targetCollection, fieldsToSync)(snapshot.after);
+) => {
+  // TODO: compare before and after for fields to sync
+  return syncDoc(targetCollection, fieldsToSync)(snapshot.after);
+};
 
 /**
- * returns 3 different trigger functions (onCreate,onUpdate,onDelete) in an object
+ * returns 2 different trigger functions (onCreate,onUpdate) in an object
  * @param collection configuration object
  */
-const collectionSyncFnsGenerator = collection => ({
-  onCreate: functions.firestore
-    .document(`${collection.source}/{docId}`)
-    .onCreate(syncDoc(collection.target, collection.fieldsToSync)),
-  onUpdate: functions.firestore
-    .document(`${collection.source}/{docId}`)
-    .onUpdate(syncDocOnUpdate(collection.target, collection.fieldsToSync)),
-});
+const collectionSyncFnsGenerator = collection =>
+  Object.entries({
+    onCreate: collection.onCreate
+      ? functions.firestore
+          .document(`${collection.source}/{docId}`)
+          .onCreate(cloneDoc(collection.target, collection.fieldsToSync))
+      : null,
+    onUpdate: collection.onUpdate
+      ? functions.firestore
+          .document(`${collection.source}/{docId}`)
+          .onUpdate(syncDocOnUpdate(collection.target, collection.fieldsToSync))
+      : null,
+  }).reduce((a, [k, v]) => (v === null ? a : { ...a, [k]: v }), {});
 
 export default collectionSyncFnsGenerator;
