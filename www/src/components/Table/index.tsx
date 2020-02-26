@@ -72,7 +72,7 @@ function Table(props: Props) {
     if (!elem || !parent) return;
 
     const lowestScrollTopPosition = elem.scrollHeight - parent.clientHeight;
-    const offset = 100;
+    const offset = 200;
 
     if (position.scrollTop < lowestScrollTopPosition - offset) return;
 
