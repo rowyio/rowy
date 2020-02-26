@@ -25,7 +25,7 @@ export type FiretableState = {
   tablePath: string;
   config: { rowHeight: number };
   columns: any[];
-  rows: any[];
+  rows: { [key: string]: any }[];
   queryLimit: number;
   filters: FireTableFilter[];
   loadingRows: boolean;

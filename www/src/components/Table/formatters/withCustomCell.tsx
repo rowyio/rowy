@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-export type CustomCellProps = FormatterProps & {
+export type CustomCellProps = FormatterProps<any> & {
   value: any;
   onSubmit: (value: any) => void;
 };
@@ -39,18 +39,19 @@ export type CustomCellProps = FormatterProps & {
  * @param Component The formatter component to display
  */
 const withCustomCell = (Component: React.ComponentType<CustomCellProps>) => (
-  props: FormatterProps
+  props: FormatterProps<any>
 ) => {
   const classes = useStyles();
   const { updateCell, selectedCell } = useFiretableContext();
 
   const handleSubmit = (value: any) => {
-    if (updateCell) updateCell(props.row.ref, props.column.key, value);
+    if (updateCell)
+      updateCell(props.row.ref, props.column.key as string, value);
   };
 
   const isSelected =
     selectedCell?.row === props.rowIdx &&
-    selectedCell?.column === props.column.key;
+    selectedCell?.column === (props.column.key as string);
 
   return (
     <ErrorBoundary fullScreen={false}>
@@ -62,7 +63,7 @@ const withCustomCell = (Component: React.ComponentType<CustomCellProps>) => (
         )}
         <Component
           {...props}
-          value={props.row[props.column.key]}
+          value={props.row[props.column.key as string]}
           onSubmit={handleSubmit}
         />
       </Suspense>

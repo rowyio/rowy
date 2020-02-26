@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React from "react";
 import { FormatterProps } from "react-data-grid";
 
 import {
@@ -44,7 +44,7 @@ export const useFinalColumnStyles = makeStyles(theme =>
   })
 );
 
-export default function FinalColumn({ row }: FormatterProps) {
+export default function FinalColumn({ row }: FormatterProps<any, any, any>) {
   const { tableActions } = useFiretableContext();
   const shiftPress = useKeyPress("Shift");
 

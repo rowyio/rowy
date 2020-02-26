@@ -93,19 +93,19 @@ const ColumnHeader: Column<any>["headerRenderer"] = ({ column }) => {
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => setSelectedColumnHeader({ column, anchorEl: event.currentTarget });
 
-  const isSorted = orderBy?.[0]?.key === column.key;
+  const isSorted = orderBy?.[0]?.key === (column.key as string);
   const isAsc = isSorted && orderBy?.[0]?.direction === "asc";
 
   const handleSortClick = () => {
     if (isAsc) {
       const ordering: FiretableOrderBy = [
-        { key: column.key, direction: "desc" },
+        { key: column.key as string, direction: "desc" },
       ];
 
       tableActions.table.orderBy(ordering);
     } else {
       const ordering: FiretableOrderBy = [
-        { key: column.key, direction: "asc" },
+        { key: column.key as string, direction: "asc" },
       ];
       tableActions.table.orderBy(ordering);
     }
@@ -113,11 +113,11 @@ const ColumnHeader: Column<any>["headerRenderer"] = ({ column }) => {
 
   return (
     <Grid container className={classes.root} alignItems="center" wrap="nowrap">
-      <Tooltip title={column.key}>
+      <Tooltip title={column.key as string}>
         <Grid
           item
           onClick={() => {
-            navigator.clipboard.writeText(column.key);
+            navigator.clipboard.writeText(column.key as string);
           }}
         >
           {getFieldIcon((column as any).type)}
@@ -129,7 +129,7 @@ const ColumnHeader: Column<any>["headerRenderer"] = ({ column }) => {
           item
           xs
           onClick={() => {
-            navigator.clipboard.writeText(column.key);
+            navigator.clipboard.writeText(column.key as string);
           }}
           className={classes.columnNameContainer}
         >

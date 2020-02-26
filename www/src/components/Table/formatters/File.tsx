@@ -61,7 +61,7 @@ const File = ({ column, row, value, onSubmit }: CustomCellProps) => {
       if (file) {
         upload({
           docRef: row.ref,
-          fieldName: column.key,
+          fieldName: column.key as string,
           files: [file],
           previousValue: value,
         });

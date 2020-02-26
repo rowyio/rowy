@@ -59,6 +59,11 @@ const useStyles = makeStyles(theme =>
           alignItems: "center",
           padding: theme.spacing(0, 1.5),
         },
+
+        "& .rdg-cell-value": {
+          width: "100%",
+          maxHeight: "100%",
+        },
       },
 
       ".rdg-viewport, .rdg-editor-container": {
@@ -176,32 +181,33 @@ function Table(props: Props) {
       {!tableState.loadingColumns ? (
         <DataGrid
           columns={columns}
-          rows={rows}
+          rowGetter={rowIdx => rows[rowIdx]}
+          rowsCount={rows.length}
           rowKey={"id" as "id"}
-          onRowsUpdate={event => {
-            console.log(event);
-            const { action, cellKey, updated } = event;
-            if (action === "CELL_UPDATE")
-              updateCell!(rows[event.toRow].ref, cellKey, updated);
-          }}
+          // onRowsUpdate={event => {
+          //   console.log(event);
+          //   const { action, cellKey, updated } = event;
+          //   if (action === "CELL_UPDATE")
+          //     updateCell!(rows[event.toRow].ref, cellKey, updated);
+          // }}
           rowHeight={rowHeight}
           headerRowHeight={43}
           // TODO: Investigate why setting a numeric value causes
           // LOADING to pop up on screen when scrolling horizontally
           // width={windowSize.width - DRAWER_COLLAPSED_WIDTH}
-          width={
+          minWidth={
             `calc(100% - ${
               sideDrawerOpen ? DRAWER_WIDTH : DRAWER_COLLAPSED_WIDTH
             }px)` as any
           }
-          height={windowSize.height - 120}
-          enableCellCopyPaste
-          enableCellDragAndDrop
+          minHeight={windowSize.height - 120}
+          // enableCellCopyPaste
+          // enableCellDragAndDrop
           onColumnResize={tableActions.column.resize}
           cellNavigationMode={CellNavigationMode.CHANGE_ROW}
-          onSelectedCellChange={({ rowIdx, idx: colIdx }) =>
-            setSelectedCell!({ row: rowIdx, column: columns[colIdx].key })
-          }
+          // onSelectedCellChange={({ rowIdx, idx: colIdx }) =>
+          //   setSelectedCell!({ row: rowIdx, column: columns[colIdx].key })
+          // }
           onScroll={handleScroll}
           ref={dataGridRef}
           // emptyRowsView={() => null}

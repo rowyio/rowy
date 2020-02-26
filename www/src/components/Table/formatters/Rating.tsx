@@ -17,7 +17,7 @@ function Rating({ row, column, value, onSubmit }: CustomCellProps) {
 
   return (
     <MuiRating
-      name={`${row.id}-${column.key}`}
+      name={`${row.id}-${column.key as string}`}
       value={typeof value === "number" ? value : 0}
       onChange={(event, newValue) => onSubmit(newValue)}
       emptyIcon={<StarBorderIcon />}

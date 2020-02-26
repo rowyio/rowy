@@ -21,13 +21,13 @@ const useStyles = makeStyles(
  * Use for cells that do not support any type of in-cell editing.
  */
 const SideDrawerEditor = React.forwardRef(
-  ({ column, row }: EditorProps<any, any>, ref) => {
+  ({ column, rowData }: EditorProps<any, any>, ref) => {
     useStyles();
     const { sideDrawerOpen, setSideDrawerOpen } = useFiretableContext();
 
     useEffect(() => {
       if (!sideDrawerOpen && setSideDrawerOpen) setSideDrawerOpen(true);
-    }, [column?.key, row?.id]);
+    }, [column?.key, rowData?.id]);
 
     return null;
   }

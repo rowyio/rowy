@@ -100,7 +100,7 @@ const Image = ({ column, row, value, onSubmit }: CustomCellProps) => {
       if (imageFile) {
         upload({
           docRef: row.ref,
-          fieldName: column.key,
+          fieldName: column.key as string,
           files: [imageFile],
           previousValue: value,
           onComplete: () => setLocalImage(""),

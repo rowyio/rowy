@@ -20,7 +20,7 @@ function SubTable({ column, row }: CustomCellProps) {
   const classes = useStyles();
 
   const { parentLabel } = column as any;
-  const fieldName = column.key;
+  const fieldName = column.key as string;
 
   const router = useRouter();
   const parentLabels = queryString.parse(router.location.search).parentLabel;

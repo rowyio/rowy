@@ -1307,7 +1307,7 @@
     "@babel/traverse" "^7.6.2"
     jscodeshift-add-imports "^1.0.1"
 
-"@material-ui/core@^4.9.1", "@material-ui/core@^4.9.4":
+"@material-ui/core@^4.7.1", "@material-ui/core@^4.9.4":
   version "4.9.4"
   resolved "https://registry.yarnpkg.com/@material-ui/core/-/core-4.9.4.tgz#796515b12845dc6ea7e21872888cfc4c0c1c1efe"
   integrity sha512-1wqm3jBC8mGpVHu0wVOYBX7LUzkPsWxkkTtKSn0Hz66T6TDJkke72mkSIL7akNdjnxy+bRc2Vi6NiJ4YutkDcw==
@@ -1325,7 +1325,7 @@
     react-is "^16.8.0"
     react-transition-group "^4.3.0"
 
-"@material-ui/icons@^4.9.1":
+"@material-ui/icons@^4.5.1", "@material-ui/icons@^4.9.1":
   version "4.9.1"
   resolved "https://registry.yarnpkg.com/@material-ui/icons/-/icons-4.9.1.tgz#fdeadf8cb3d89208945b33dbc50c7c616d0bd665"
   integrity sha512-GBitL3oBWO0hzBhvA9KxqcowRUsA0qzwKkURyC8nppnC3fw54KPKZ+d4V1Eeg/UnDRSzDaI9nGCdel/eh9AQMg==
@@ -9955,14 +9955,16 @@ react-color@^2.17.3:
     reactcss "^1.2.0"
     tinycolor2 "^1.4.1"
 
-react-data-grid@7.0.0-canary.13:
-  version "7.0.0-canary.13"
-  resolved "https://registry.yarnpkg.com/react-data-grid/-/react-data-grid-7.0.0-canary.13.tgz#99537d1f1d35d7ab15d5bae5d2d50adad9a3d73d"
-  integrity sha512-GeWN//GhcBaiaMYHaVVLxO4t9Tfxy9XoCzhHvrIC/xstKpGuDCDZdssEspoRCZEjUOGbhkxweRw3TkI6ksMtyA==
+react-data-grid@^7.0.0-alpha.29:
+  version "7.0.0-alpha.29"
+  resolved "https://registry.yarnpkg.com/react-data-grid/-/react-data-grid-7.0.0-alpha.29.tgz#9e52f4d61dc7818f6cd4ef83d8bb296743b4e903"
+  integrity sha512-9uCABMvIkkjATxtLSkQazLKs0xrnRnuM3VyfC76+xZz3RnKBieDnxF1wmZ1aaSXcqsknH4YUz7+fUG/klnW6cA==
   dependencies:
-    "@material-ui/core" "^4.9.1"
-    "@material-ui/icons" "^4.9.1"
+    "@material-ui/core" "^4.7.1"
+    "@material-ui/icons" "^4.5.1"
     classnames "^2.2.6"
+    react-is "^16.12.0"
+    tslib "^1.10.0"
 
 react-dev-utils@^10.2.0:
   version "10.2.0"
@@ -10028,7 +10030,7 @@ react-fast-compare@^2.0.1:
   resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-2.0.4.tgz#e84b4d455b0fec113e0402c329352715196f81f9"
   integrity sha512-suNP+J1VU1MWFKcyt7RtjiSWUjvidmQSlqu+eHslq+342xCbGTYmC0mEhPCOHxlW0CywylOC1u2DFAT+bv4dBw==
 
-react-is@^16.6.0, react-is@^16.7.0, react-is@^16.8.0, react-is@^16.8.1, react-is@^16.8.4:
+react-is@^16.12.0, react-is@^16.6.0, react-is@^16.7.0, react-is@^16.8.0, react-is@^16.8.1, react-is@^16.8.4:
   version "16.12.0"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.12.0.tgz#2cc0fe0fba742d97fd527c42a13bec4eeb06241c"
   integrity sha512-rPCkf/mWBtKc97aLL9/txD8DZdemK0vkA3JMLShjlJB3Pj3s+lpf1KaBzMfQrAmhMQB0n1cU/SUGgKKBCe837Q==
