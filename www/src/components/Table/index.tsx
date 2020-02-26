@@ -1,4 +1,4 @@
-import React, { useEffect, lazy, Suspense } from "react";
+import React, { lazy, Suspense, useEffect, useRef } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import _isEmpty from "lodash/isEmpty";
 
@@ -64,10 +64,25 @@ function Table(props: Props) {
     }
   }, [collection]);
 
-  const [handleScroll] = useDebouncedCallback(
-    (position: ScrollPosition) => console.log(position),
-    100
-  );
+  const rowsContainerRef = useRef<HTMLDivElement>(null);
+  // Gets more rows when scrolled down.
+  const [handleScroll] = useDebouncedCallback((position: ScrollPosition) => {
+    const elem = rowsContainerRef?.current;
+    const parent = elem?.parentNode as HTMLDivElement;
+    if (!elem || !parent) return;
+
+    const lowestScrollTopPosition = elem.scrollHeight - parent.clientHeight;
+    const offset = 100;
+
+    if (position.scrollTop < lowestScrollTopPosition - offset) return;
+
+    // Prevent calling more rows when they’ve already been called
+    if (tableState!.loadingRows) return;
+
+    // Call for 30 more rows. Note we don’t know here if there are no more
+    // rows left in the database. This is done in the useTable hook.
+    tableActions?.row.more(30);
+  }, 100);
 
   const windowSize = useWindowSize();
   if (!windowSize || !windowSize.height) return <></>;
@@ -108,7 +123,8 @@ function Table(props: Props) {
 
   const rowHeight = tableState.config.rowHeight;
 
-  const rows = [...tableState.rows, {}];
+  const rows = tableState.rows;
+  const rowGetter = (rowIdx: number) => rows[rowIdx];
 
   return (
     <EditorProvider>
@@ -127,7 +143,7 @@ function Table(props: Props) {
       {!tableState.loadingColumns ? (
         <DataGrid
           columns={columns}
-          rowGetter={rowIdx => rows[rowIdx]}
+          rowGetter={rowGetter}
           rowsCount={rows.length}
           rowKey={"id" as "id"}
           onGridRowsUpdated={event => {
@@ -157,6 +173,7 @@ function Table(props: Props) {
           enableCellSelect
           onScroll={handleScroll}
           ref={dataGridRef}
+          RowsContainer={props => <div {...props} ref={rowsContainerRef} />}
         />
       ) : (
         <Loading message="Fetching columns" />

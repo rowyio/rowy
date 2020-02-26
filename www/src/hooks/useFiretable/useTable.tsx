@@ -107,6 +107,9 @@ const useTable = (initialOverrides: any) => {
 
               return { ...data, id, ref };
             })
+            // IMPORTANT: If this is removed in the future, you MUST remove the
+            // offset in moreRows that accounts for this document being removed.
+            // See the comment inside moreRows.
             .filter(doc => doc.id !== "_FIRETABLE_"); //removes schema file
           tableDispatch({
             rows,
@@ -233,6 +236,13 @@ const useTable = (initialOverrides: any) => {
    *  @param additionalRows number additional rows to be fetched (optional: default is 20)
    */
   const moreRows = (additionalRows?: number) => {
+    // Don’t request more when already loading
+    if (tableState.loading) return;
+
+    // Don’t request more if none remaining. Must offset by 1 since
+    // this hook removes any documents with ID prefixed with _FIRETABLE_
+    if (tableState.rows.length < tableState.limit - 1) return;
+
     tableDispatch({
       limit: tableState.limit + (additionalRows ? additionalRows : 20),
     });
