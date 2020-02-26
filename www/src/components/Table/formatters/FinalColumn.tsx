@@ -16,22 +16,10 @@ import { useFiretableContext } from "contexts/firetableContext";
 import useKeyPress from "../../../hooks/useKeyPress";
 export const useFinalColumnStyles = makeStyles(theme =>
   createStyles({
-    headerCell: {
-      ".rdg-root &": {
-        width: "46px !important",
-        overflow: "visible",
-
-        "& > div": {
-          position: "absolute",
-          right: "-50%",
-        },
-      },
-    },
-
     cell: {
       ".rdg-root .rdg-cell&": {
         background: theme.palette.background.default,
-        borderColor: "transparent",
+        borderWidth: 0,
 
         color: theme.palette.text.disabled,
         transition: theme.transitions.create("color", {
@@ -40,6 +28,17 @@ export const useFinalColumnStyles = makeStyles(theme =>
       },
 
       ".rdg-row:hover &": { color: theme.palette.text.primary },
+
+      ".rdg-header-row &": {
+        width: "46px !important",
+        overflow: "visible",
+        borderWidth: "1px !important",
+
+        "& > div": {
+          position: "absolute",
+          right: "-50%",
+        },
+      },
     },
   })
 );
@@ -74,7 +73,7 @@ export default function FinalColumn({ row }: FormatterProps<any, any, any>) {
 
       <Grid item>
         <Tooltip title="Delete row">
-          <span>
+          <div>
             {shiftPress ? (
               <IconButton
                 size="small"
@@ -106,7 +105,7 @@ export default function FinalColumn({ row }: FormatterProps<any, any, any>) {
                 </IconButton>
               </Confirmation>
             )}
-          </span>
+          </div>
         </Tooltip>
       </Grid>
     </Grid>

@@ -78,6 +78,7 @@ export const getFormatter = (column: any) => {
     case FieldType.phone:
     case FieldType.url:
     case FieldType.number:
+    case FieldType.slider:
       return undefined;
 
     default:

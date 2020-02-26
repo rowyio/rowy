@@ -115,7 +115,6 @@ function Table(props: Props) {
       type: FieldType.last,
       width: 160,
       headerRenderer: FinalColumnHeader,
-      headerCellClass: finalColumnClasses.headerCell,
       cellClass: finalColumnClasses.cell,
       formatter: FinalColumn,
     });
