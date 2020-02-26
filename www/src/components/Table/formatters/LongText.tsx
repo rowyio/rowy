@@ -1,21 +1,74 @@
 import React from "react";
 import withCustomCell, { CustomCellProps } from "./withCustomCell";
 
-import { makeStyles, createStyles } from "@material-ui/core";
+import { makeStyles, createStyles, Tooltip, Fade } from "@material-ui/core";
+
+type StylesProps = { width: number; rowHeight: number };
 
 const useStyles = makeStyles(theme =>
   createStyles({
     root: {
       whiteSpace: "pre-line",
-      maxHeight: "100%",
       padding: theme.spacing(0.5, 0),
+
+      width: "100%",
+      height: "100%",
+      display: "flex",
+      alignItems: "center",
     },
+    text: { maxHeight: "100%" },
+
+    tooltip: ({ width, rowHeight }: StylesProps) => ({
+      margin: `-${rowHeight - 1}px 0 0 -${theme.spacing(1.5)}px`,
+      padding: theme.spacing(0.5, 1.5),
+
+      width: width - 1,
+      maxWidth: "none",
+      minHeight: rowHeight - 1,
+
+      background: theme.palette.background.paper,
+      borderRadius: 0,
+      boxShadow: theme.shadows[4],
+
+      ...theme.typography.body2,
+      fontSize: "0.75rem",
+      color: theme.palette.text.primary,
+      whiteSpace: "pre-line",
+
+      display: "flex",
+      alignItems: "center",
+    }),
   })
 );
 
-function LongText({ value }: CustomCellProps) {
-  const classes = useStyles();
-  return <div className={classes.root}>{value}</div>;
+function LongText({ row, column, value }: CustomCellProps) {
+  const classes = useStyles({ width: column.width, rowHeight: row.rowHeight });
+
+  if (!value || value === "") return <div />;
+
+  return (
+    <Tooltip
+      title={value}
+      enterDelay={1000}
+      placement="bottom-start"
+      PopperProps={{
+        modifiers: {
+          flip: { enabled: false },
+          preventOverflow: {
+            enabled: false,
+            boundariesElement: "scrollParent",
+          },
+          hide: { enabled: false },
+        },
+      }}
+      TransitionComponent={Fade}
+      classes={{ tooltip: classes.tooltip }}
+    >
+      <div className={classes.root}>
+        <span className={classes.text}>{value}</span>
+      </div>
+    </Tooltip>
+  );
 }
 
 export default withCustomCell(LongText);
