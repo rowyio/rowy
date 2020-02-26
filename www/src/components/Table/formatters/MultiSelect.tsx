@@ -10,7 +10,15 @@ import { useFiretableContext } from "contexts/firetableContext";
 
 const useStyles = makeStyles(theme =>
   createStyles({
-    root: { minWidth: 0 },
+    root: {
+      minWidth: 0,
+
+      position: "absolute",
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0,
+    },
     fullHeight: {
       height: "100%",
       font: "inherit",
@@ -105,11 +113,7 @@ function MultiSelect({
         onClick,
       }}
       freeText
-      className={clsx(
-        "cell-collapse-padding",
-        classes.fullHeight,
-        classes.root
-      )}
+      className={clsx(classes.fullHeight, classes.root)}
       multiple={!isSingle}
     />
   );

@@ -9,7 +9,15 @@ import { useFiretableContext } from "contexts/firetableContext";
 
 const useStyles = makeStyles(theme =>
   createStyles({
-    root: { minWidth: 0 },
+    root: {
+      minWidth: 0,
+
+      position: "absolute",
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0,
+    },
     disabled: {},
 
     fullHeight: {
@@ -52,7 +60,7 @@ const ConnectTable = ({ rowIdx, column, value, onSubmit }: CustomCellProps) => {
   // Render chips
   const renderValue = value => (
     <Grid container spacing={1} wrap="nowrap" className={classes.chipList}>
-      {value?.map((doc: any, index) => (
+      {value?.map((doc: any) => (
         <Grid item key={doc.docPath}>
           <Chip
             label={config.primaryKeys
@@ -98,7 +106,6 @@ const ConnectTable = ({ rowIdx, column, value, onSubmit }: CustomCellProps) => {
         disabled,
       }}
       className={clsx(
-        "cell-collapse-padding",
         classes.fullHeight,
         classes.root,
         disabled && classes.disabled

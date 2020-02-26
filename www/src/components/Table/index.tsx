@@ -1,4 +1,4 @@
-import React, { useState, useEffect, lazy, Suspense } from "react";
+import React, { useEffect, lazy, Suspense } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import _isEmpty from "lodash/isEmpty";
 
@@ -8,8 +8,6 @@ import DataGrid, {
   CellNavigationMode,
   ScrollPosition,
 } from "react-data-grid";
-
-import { makeStyles, createStyles, fade, Button } from "@material-ui/core";
 
 import Loading from "components/Loading";
 import TableHeader from "./TableHeader";
@@ -27,6 +25,7 @@ import { EditorProvider } from "../../util/EditorProvider";
 
 import useWindowSize from "hooks/useWindowSize";
 import { DRAWER_WIDTH, DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
+import useStyles from "./styles";
 
 const Hotkeys = lazy(() => import("./HotKeys"));
 const ColumnEditor = lazy(() => import("./ColumnEditor/index"));
@@ -41,59 +40,6 @@ interface Props {
   collection: string;
   filters: FireTableFilter[];
 }
-
-const useStyles = makeStyles(theme =>
-  createStyles({
-    "@global": {
-      ".rdg-root": {
-        "&.rdg-root": {
-          borderColor: "#e0e0e0",
-          lineHeight: "inherit !important",
-        },
-
-        "& .rdg-header": { backgroundColor: theme.palette.background.default },
-
-        "& .rdg-cell": {
-          borderColor: "#e0e0e0",
-          display: "flex",
-          alignItems: "center",
-          padding: theme.spacing(0, 1.5),
-        },
-
-        "& .rdg-cell-value": {
-          width: "100%",
-          maxHeight: "100%",
-        },
-      },
-
-      ".rdg-viewport, .rdg-editor-container": {
-        ...theme.typography.body2,
-        fontSize: "0.75rem",
-        lineHeight: "inherit",
-        color: theme.palette.text.secondary,
-      },
-
-      ".rdg-row:hover": { color: theme.palette.text.primary },
-
-      ".row-hover-iconButton": {
-        color: theme.palette.text.disabled,
-
-        ".rdg-row:hover &": {
-          color: theme.palette.text.primary,
-          backgroundColor: fade(
-            theme.palette.text.primary,
-            theme.palette.action.hoverOpacity * 2
-          ),
-        },
-      },
-
-      ".cell-collapse-padding": {
-        margin: theme.spacing(0, -1.5),
-        width: `calc(100% + ${theme.spacing(3)}px)`,
-      },
-    },
-  })
-);
 
 function Table(props: Props) {
   useStyles();
@@ -184,12 +130,12 @@ function Table(props: Props) {
           rowGetter={rowIdx => rows[rowIdx]}
           rowsCount={rows.length}
           rowKey={"id" as "id"}
-          // onRowsUpdate={event => {
-          //   console.log(event);
-          //   const { action, cellKey, updated } = event;
-          //   if (action === "CELL_UPDATE")
-          //     updateCell!(rows[event.toRow].ref, cellKey, updated);
-          // }}
+          onGridRowsUpdated={event => {
+            console.log(event);
+            const { action, cellKey, updated } = event;
+            if (action === "CELL_UPDATE")
+              updateCell!(rows[event.toRow].ref, cellKey as string, updated);
+          }}
           rowHeight={rowHeight}
           headerRowHeight={43}
           // TODO: Investigate why setting a numeric value causes
@@ -205,12 +151,11 @@ function Table(props: Props) {
           // enableCellDragAndDrop
           onColumnResize={tableActions.column.resize}
           cellNavigationMode={CellNavigationMode.CHANGE_ROW}
-          // onSelectedCellChange={({ rowIdx, idx: colIdx }) =>
-          //   setSelectedCell!({ row: rowIdx, column: columns[colIdx].key })
-          // }
+          onCellSelected={({ rowIdx, idx: colIdx }) =>
+            setSelectedCell!({ row: rowIdx, column: columns[colIdx].key })
+          }
           onScroll={handleScroll}
           ref={dataGridRef}
-          // emptyRowsView={() => null}
         />
       ) : (
         <Loading message="Fetching columns" />
