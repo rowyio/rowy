@@ -20,6 +20,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import Confirmation from "components/Confirmation";
 import useUploader from "hooks/useFiretable/useUploader";
 import { IMAGE_MIME_TYPES } from "constants/fields";
+import { useFiretableContext } from "contexts/firetableContext";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -83,7 +84,8 @@ const useStyles = makeStyles(theme =>
 );
 
 const Image = ({ column, row, value, onSubmit }: CustomCellProps) => {
-  const classes = useStyles({ rowHeight: row.rowHeight });
+  const { tableState } = useFiretableContext();
+  const classes = useStyles({ rowHeight: tableState?.config?.rowHeight ?? 44 });
 
   const [uploaderState, upload] = useUploader();
   const { progress, isLoading } = uploaderState;

@@ -3,6 +3,8 @@ import withCustomCell, { CustomCellProps } from "./withCustomCell";
 
 import { makeStyles, createStyles, Tooltip, Fade } from "@material-ui/core";
 
+import { useFiretableContext } from "contexts/firetableContext";
+
 type StylesProps = { width: number; rowHeight: number };
 
 const useStyles = makeStyles(theme =>
@@ -41,8 +43,12 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-function LongText({ row, column, value }: CustomCellProps) {
-  const classes = useStyles({ width: column.width, rowHeight: row.rowHeight });
+function LongText({ column, value }: CustomCellProps) {
+  const { tableState } = useFiretableContext();
+  const classes = useStyles({
+    width: column.width,
+    rowHeight: tableState?.config?.rowHeight ?? 44,
+  });
 
   if (!value || value === "") return <div />;
 

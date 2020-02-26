@@ -162,37 +162,6 @@ function Table(props: Props) {
       ? [...tableState.rows.map((row: any) => ({ rowHeight, ...row })), {}]
       : [];
 
-  const RowRenderer = (props: any) => {
-    const { renderBaseRow, ...rest } = props;
-    if (rows.length === rest.idx + 1) {
-      return (
-        <Button
-          onClick={() => {
-            addRow();
-          }}
-        >
-          Add a new row
-        </Button>
-      );
-    } else {
-      return renderBaseRow(rest);
-    }
-  };
-
-  const addRow = (data?: any) => {
-    if (filters) {
-      // adds filter data into the new row
-      const filtersData = filters.reduce(
-        (accumulator: any, currentValue: FireTableFilter) => ({
-          ...accumulator,
-          [currentValue.key]: currentValue.value,
-        }),
-        {}
-      );
-      tableActions.row.add({ ...filtersData, ...data });
-    } else tableActions.row.add({ ...data });
-  };
-
   return (
     <EditorProvider>
       <Suspense fallback={<Loading message="Loading header" />}>

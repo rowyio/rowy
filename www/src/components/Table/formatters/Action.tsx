@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme =>
 function Action({ column, row, value, onSubmit }: CustomCellProps) {
   const classes = useStyles();
 
-  const { createdAt, updatedAt, rowHeight, id, ref, ...docData } = row;
+  const { createdAt, updatedAt, id, ref, ...docData } = row;
   const { callableName } = column as any;
 
   const [isRunning, setIsRunning] = useState(false);
