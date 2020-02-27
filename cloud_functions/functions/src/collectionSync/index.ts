@@ -7,7 +7,7 @@ const docReducer = (docData: FirebaseFirestore.DocumentData) => (
   acc: any,
   curr: string
 ) => {
-  if (docData[curr] !== undefined || docData[curr] !== null)
+  if (docData[curr] !== undefined && docData[curr] !== null)
     return { ...acc, [curr]: docData[curr] };
   else return acc;
 };
@@ -22,6 +22,7 @@ const cloneDoc = (targetCollection: string, fieldsToSync: string[]) => (
 ) => {
   const docId = snapshot.id;
   const docData = snapshot.data();
+  console.log(docData);
   if (!docData) return false; // returns if theres no data in the doc
   const syncData = fieldsToSync.reduce(docReducer(docData), {});
   if (Object.keys(syncData).length === 0) return false; // returns if theres nothing to sync
