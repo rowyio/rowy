@@ -7,7 +7,8 @@ const docReducer = (docData: FirebaseFirestore.DocumentData) => (
   acc: any,
   curr: string
 ) => {
-  if (docData[curr]) return { ...acc, [curr]: docData[curr] };
+  if (docData[curr] !== undefined || docData[curr] !== null)
+    return { ...acc, [curr]: docData[curr] };
   else return acc;
 };
 
@@ -24,6 +25,7 @@ const cloneDoc = (targetCollection: string, fieldsToSync: string[]) => (
   if (!docData) return false; // returns if theres no data in the doc
   const syncData = fieldsToSync.reduce(docReducer(docData), {});
   if (Object.keys(syncData).length === 0) return false; // returns if theres nothing to sync
+  console.log(`creating new doc ${docId}`);
   db.collection(targetCollection)
     .doc(docId)
     .set(syncData, { merge: true })
@@ -36,14 +38,26 @@ const cloneDoc = (targetCollection: string, fieldsToSync: string[]) => (
  * @param targetCollection
  * @param fieldsToSync
  */
-const syncDoc = (targetCollection: string, fieldsToSync: string[]) => (
+const syncDoc = (targetCollection: string, fieldsToSync: string[]) => async (
   snapshot: FirebaseFirestore.DocumentSnapshot
 ) => {
   const docId = snapshot.id;
   const docData = snapshot.data();
   if (!docData) return false; // returns if theres no data in the doc
   const syncData = fieldsToSync.reduce(docReducer(docData), {});
+
   if (Object.keys(syncData).length === 0) return false; // returns if theres nothing to sync
+  const targetDoc = await db
+    .collection(targetCollection)
+    .doc(docId)
+    .get();
+  if (!targetDoc.exists) return false;
+  const targetDocData = targetDoc.data();
+  console.log(`syncing ${docId}`, targetDoc.exists, {
+    targetDocData,
+    docData,
+    syncData,
+  });
   db.collection(targetCollection)
     .doc(docId)
     .update(syncData)
