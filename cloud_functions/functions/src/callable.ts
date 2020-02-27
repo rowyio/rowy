@@ -4,7 +4,7 @@ import { db } from "./config";
 import * as admin from "firebase-admin";
 // example callable function
 
-const serverTimestamp = admin.firestore.FieldValue.serverTimestamp();
+const serverTimestamp = admin.firestore.FieldValue.serverTimestamp;
 const emailGenerator = (
   emailTemplate: { subject: string; body: string },
   data: any
@@ -39,7 +39,7 @@ const sendVerifiedEmail = async (row: any) => {
   return db.collection("firemail").add({
     to: row.email,
     message,
-    createdAt: serverTimestamp,
+    createdAt: serverTimestamp(),
   });
 };
 
@@ -92,8 +92,13 @@ export const verifyFounder = functions.https.onCall(
           await sendVerifiedEmail(row);
           return {
             message: "Founder created!",
-            cellValue: { redo: false, status: "Verified", undo: true },
-            completedAt: serverTimestamp,
+            cellValue: {
+              redo: false,
+              status: "Verified",
+              undo: true,
+              meta: { ranBy: context.auth.token.email },
+            },
+            completedAt: serverTimestamp(),
             success: true,
           };
       }
@@ -119,21 +124,29 @@ const dissolveTeam = async (
   },
   context: functions.https.CallableContext
 ) => {
-  console.log(context.auth?.token);
-  await db
-    .collection("myTeam")
-    .doc(data.ref.id)
-    .update({ isDissolved: true });
-  return {
-    message: "Team dissemble",
-    cellValue: {
-      redo: false,
-      status: `dissolved by ${context.auth?.token.givenName}`,
-      completedAt: serverTimestamp,
-      undo: true,
-    },
-    success: true,
-  };
+  if (context.auth && context.auth.token.email.includes("@antler.co")) {
+    await db
+      .collection("myTeam")
+      .doc(data.ref.id)
+      .update({ isDissolved: true });
+    return {
+      message: "Team dissemble",
+      cellValue: {
+        redo: false,
+        status: `dissolved`,
+        completedAt: serverTimestamp(),
+        meta: { ranBy: context.auth.token.email },
+        undo: true,
+      },
+      success: true,
+    };
+  } else {
+    return {
+      message: "unauthorized user",
+      // cellValue: { redo: false, status: "complete" },
+      success: false,
+    };
+  }
 };
 
 export const FH_dissolveTeam = functions.https.onCall(dissolveTeam);

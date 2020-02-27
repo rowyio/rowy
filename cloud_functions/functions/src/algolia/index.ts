@@ -34,7 +34,7 @@ const algoliaReducer = (docData: FirebaseFirestore.DocumentData) => (
         ...acc,
         [curr]: docData[curr].toDate().getTime() / 1000,
       };
-    } else if (docData[curr]) {
+    } else if (docData[curr] !== undefined || docData[curr] !== null) {
       return { ...acc, [curr]: docData[curr] };
     } else {
       return acc;
