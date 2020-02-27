@@ -2,9 +2,10 @@ import useTable from "./useTable";
 import useTableConfig from "./useTableConfig";
 
 export type FiretableActions = {
+  // TODO: Stricter types here
   column: {
     add: Function;
-    resize: Function;
+    resize: (index: number, width: number) => void;
     rename: Function;
     remove: Function;
     update: Function;
@@ -24,8 +25,8 @@ export type FiretableState = {
   tablePath: string;
   config: { rowHeight: number };
   columns: any[];
-  rows: any[];
-  rowsLimit: number;
+  rows: { [key: string]: any }[];
+  queryLimit: number;
   filters: FireTableFilter[];
   loadingRows: boolean;
   loadingColumns: boolean;
@@ -67,7 +68,7 @@ const useFiretable = (
     columns: tableConfig.columns,
     config: { rowHeight: tableConfig.rowHeight },
     rows: tableState.rows,
-    rowsLimit: tableState.limit,
+    queryLimit: tableState.limit,
     loadingRows: tableState.loading,
     loadingColumns: tableConfig.loading,
   };

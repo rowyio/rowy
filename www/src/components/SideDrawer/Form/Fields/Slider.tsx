@@ -94,7 +94,7 @@ export default function Slider({
             getAriaValueText={getAriaValueText}
             valueLabelFormat={getValueLabelFormat}
             {...props}
-            value={field.value ?? min}
+            value={typeof field.value === "number" ? field.value : min}
             onClick={handleClick}
             onChange={handleChange}
             classes={{

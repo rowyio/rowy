@@ -158,20 +158,12 @@ export default function ExportCSV(props: Props) {
               setCSVColumns(columns);
             }}
           >
-            Export All Columns
+            Select All
           </Button>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
             Cancel
-          </Button>
-          <Button
-            onClick={() => {
-              handleExport();
-            }}
-            color="secondary"
-          >
-            Export All Fields
           </Button>
           <Button
             onClick={() => {

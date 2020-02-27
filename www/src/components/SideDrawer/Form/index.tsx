@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect } from "react";
+import React, { lazy, useEffect } from "react";
 import { Formik, Form as FormikForm, Field } from "formik";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
@@ -7,30 +7,28 @@ import _isEmpty from "lodash/isEmpty";
 
 import { useFiretableContext } from "contexts/firetableContext";
 
-import { Grid, LinearProgress } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 
 import Autosave from "./Autosave";
 import FieldWrapper from "./FieldWrapper";
 import Text from "./Fields/Text";
-import SingleSelect from "./Fields/SingleSelect";
-import MultiSelect from "./Fields/MultiSelect";
-import DatePicker from "./Fields/DatePicker";
-import DateTimePicker from "./Fields/DateTimePicker";
-import Checkbox from "./Fields/Checkbox";
-import Rating from "./Fields/Rating";
-import Color from "./Fields/Color";
-// import Radio from "./Fields/Radio";
-import Slider from "./Fields/Slider";
-// import TextMulti from "./Fields/TextMulti";
-import ImageUploader from "./Fields/ImageUploader";
-import FileUploader from "./Fields/FileUploader";
 
 import { FieldType } from "constants/fields";
-// import Heading from "./Heading";
-// import Description from "./Description";
 
+const SingleSelect = lazy(() => import("./Fields/SingleSelect"));
+const MultiSelect = lazy(() => import("./Fields/MultiSelect"));
+const DatePicker = lazy(() => import("./Fields/DatePicker"));
+const DateTimePicker = lazy(() => import("./Fields/DateTimePicker"));
+const Checkbox = lazy(() => import("./Fields/Checkbox"));
+const Rating = lazy(() => import("./Fields/Rating"));
+const Color = lazy(() => import("./Fields/Color"));
+const Slider = lazy(() => import("./Fields/Slider"));
+const ImageUploader = lazy(() => import("./Fields/ImageUploader"));
+const FileUploader = lazy(() => import("./Fields/FileUploader"));
 const RichText = lazy(() => import("./Fields/RichText"));
 const JsonEditor = lazy(() => import("./Fields/JsonEditor"));
+const ConnectTable = lazy(() => import("./Fields/ConnectTable"));
+const Action = lazy(() => import("./Fields/Action"));
 
 export type Values = { [key: string]: any };
 export type Field = {
@@ -94,9 +92,11 @@ export default function Form({ fields, values }: IFormProps) {
   useEffect(() => {
     if (!selectedCell?.column) return;
     const elem = document.getElementById(
-      `sidedrawer-label-${selectedCell!.column}`
+      `sidedrawer-label-${selectedCell.column}`
     )?.parentNode as HTMLElement;
-    elem?.scrollIntoView({ behavior: "smooth" });
+
+    // Time out for double-clicking on cells, which can open the null editor
+    setTimeout(() => elem?.scrollIntoView({ behavior: "smooth" }), 50);
   }, [selectedCell?.column]);
 
   return (
@@ -197,9 +197,7 @@ export default function Form({ fields, values }: IFormProps) {
 
                   case FieldType.richText:
                     renderedField = (
-                      <Suspense fallback={<LinearProgress />}>
-                        <Field {...fieldProps} component={RichText} />
-                      </Suspense>
+                      <Field {...fieldProps} component={RichText} />
                     );
                     break;
 
@@ -229,14 +227,23 @@ export default function Form({ fields, values }: IFormProps) {
                     );
                     break;
 
-                  // case FieldType.connectTable:
+                  case FieldType.connectTable:
+                    renderedField = (
+                      <Field {...fieldProps} component={ConnectTable} />
+                    );
+                    break;
+
                   // case FieldType.subTable:
-                  // case FieldType.action:
+
+                  case FieldType.action:
+                    renderedField = (
+                      <Field {...fieldProps} component={Action} />
+                    );
+                    break;
+
                   case FieldType.json:
                     renderedField = (
-                      <Suspense fallback={<LinearProgress />}>
-                        <Field {...fieldProps} component={JsonEditor} />
-                      </Suspense>
+                      <Field {...fieldProps} component={JsonEditor} />
                     );
                     break;
 
@@ -260,10 +267,10 @@ export default function Form({ fields, values }: IFormProps) {
               })}
 
               <FieldWrapper
-                type={FieldType.debug}
+                type="debug"
                 name="_ft_debug_path"
                 label="Document Path"
-                debugText={values.ref.path}
+                debugText={values.ref?.path ?? values.id ?? "No ref"}
               />
             </Grid>
           </FormikForm>

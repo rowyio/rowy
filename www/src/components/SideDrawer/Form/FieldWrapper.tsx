@@ -1,12 +1,10 @@
-import React from "react";
+import React, { Suspense } from "react";
 
-import {
-  makeStyles,
-  createStyles,
-  Grid,
-  Typography,
-  TextField,
-} from "@material-ui/core";
+import { makeStyles, createStyles, Grid, Typography } from "@material-ui/core";
+import DebugIcon from "@material-ui/icons/BugReportOutlined";
+
+import ErrorBoundary from "components/ErrorBoundary";
+import FieldSkeleton from "./FieldSkeleton";
 
 import { FieldType, getFieldIcon } from "constants/fields";
 
@@ -33,7 +31,7 @@ const useStyles = makeStyles(theme =>
 
 export interface IFieldWrapperProps {
   children?: React.ReactNode;
-  type: FieldType;
+  type: FieldType | "debug";
   name?: string;
   label?: React.ReactNode;
   debugText?: React.ReactNode;
@@ -49,35 +47,39 @@ export default function FieldWrapper({
   const classes = useStyles();
 
   return (
-    <Grid item xs={12}>
-      <Grid
-        container
-        alignItems="center"
-        className={classes.header}
-        component="label"
-        id={`sidedrawer-label-${name}`}
-        htmlFor={`sidedrawer-field-${name}`}
-      >
-        <Grid item className={classes.iconContainer}>
-          {getFieldIcon(type)}
+    <ErrorBoundary fullScreen={false}>
+      <Grid item xs={12}>
+        <Grid
+          container
+          alignItems="center"
+          className={classes.header}
+          component="label"
+          id={`sidedrawer-label-${name}`}
+          htmlFor={`sidedrawer-field-${name}`}
+        >
+          <Grid item className={classes.iconContainer}>
+            {type === "debug" ? <DebugIcon /> : getFieldIcon(type)}
+          </Grid>
+          <Grid item xs>
+            <Typography variant="caption">{label}</Typography>
+          </Grid>
         </Grid>
-        <Grid item xs>
-          <Typography variant="caption">{label}</Typography>
-        </Grid>
-      </Grid>
 
-      {children ??
-        (!debugText && (
+        <Suspense fallback={<FieldSkeleton />}>
+          {children ??
+            (!debugText && (
+              <Typography variant="body2" className={classes.disabledText}>
+                This field can’t be edited here.
+              </Typography>
+            ))}
+        </Suspense>
+
+        {debugText && (
           <Typography variant="body2" className={classes.disabledText}>
-            This field can’t be edited here.
+            {debugText}
           </Typography>
-        ))}
-
-      {debugText && (
-        <Typography variant="body2" className={classes.disabledText}>
-          {debugText}
-        </Typography>
-      )}
-    </Grid>
+        )}
+      </Grid>
+    </ErrorBoundary>
   );
 }

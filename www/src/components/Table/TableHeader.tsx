@@ -62,7 +62,6 @@ const TableHeader = ({
   rowHeight,
   updateConfig,
   columns,
-
   filters,
 }: Props) => {
   const classes = useStyles();
@@ -138,7 +137,7 @@ const TableHeader = ({
               select
               variant="filled"
               className={classes.formControl}
-              value={rowHeight ? rowHeight : 35}
+              value={rowHeight ? rowHeight : 43}
               onChange={event => {
                 updateConfig("rowHeight", event.target.value);
               }}
@@ -150,10 +149,16 @@ const TableHeader = ({
               InputProps={{ disableUnderline: true }}
               hiddenLabel
             >
-              <MenuItem value={35}>Tall</MenuItem>
-              <MenuItem value={60}>Grande</MenuItem>
+              <MenuItem value={43}>Tall</MenuItem>
+              <MenuItem value={65}>Grande</MenuItem>
               <MenuItem value={100}>Venti</MenuItem>
               <MenuItem value={150}>Trenta</MenuItem>
+              {rowHeight !== 43 &&
+                rowHeight !== 65 &&
+                rowHeight !== 100 &&
+                rowHeight !== 150 && (
+                  <MenuItem value={rowHeight}>Custom</MenuItem>
+                )}
             </TextField>
           </Grid>
 
@@ -177,7 +182,7 @@ const TableHeader = ({
           </Grid>
 
           <Grid item>
-            <ImportCSV columns={columns} addRow={tableActions?.row.add} />
+            <ImportCSV />
           </Grid>
 
           <Grid item>

@@ -1,7 +1,7 @@
 import React from "react";
-import EmptyState from "./EmptyState";
+import EmptyState, { IEmptyStateProps } from "./EmptyState";
 
-class ErrorBoundary extends React.Component {
+class ErrorBoundary extends React.Component<IEmptyStateProps> {
   state = { hasError: false, errorMessage: "" };
 
   static getDerivedStateFromError(error: Error) {
@@ -23,6 +23,7 @@ class ErrorBoundary extends React.Component {
           message="Something Went Wrong"
           description={this.state.errorMessage}
           fullScreen
+          {...this.props}
         />
       );
     }

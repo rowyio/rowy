@@ -8,6 +8,7 @@ import useUploader from "hooks/useFiretable/useUploader";
 import {
   makeStyles,
   createStyles,
+  fade,
   ButtonBase,
   Typography,
   Grid,
@@ -20,6 +21,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 
 import ErrorMessage from "../ErrorMessage";
 import Confirmation from "components/Confirmation";
+import { IMAGE_MIME_TYPES } from "constants/fields";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -39,6 +41,13 @@ const useStyles = makeStyles(theme =>
       color: theme.palette.text.secondary,
 
       "& svg": { marginRight: theme.spacing(2) },
+    },
+    dropzoneDragActive: {
+      backgroundColor: fade(
+        theme.palette.primary.light,
+        theme.palette.action.hoverOpacity * 2
+      ),
+      color: theme.palette.primary.main,
     },
 
     imagesContainer: {
@@ -116,7 +125,7 @@ export default function ImageUploader({
         setLocalImage(URL.createObjectURL(imageFile));
       }
     },
-    [docRef]
+    [docRef, field.value]
   );
 
   const handleDelete = (index: number) => {
@@ -125,25 +134,25 @@ export default function ImageUploader({
     form.setFieldValue(field.name, newValue);
   };
 
-  const { getRootProps, getInputProps } = useDropzone({
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     multiple: false,
-    accept: [
-      "image/jpeg",
-      "image/png",
-      "image/svg+xml",
-      "image/gif",
-      "image/webp",
-    ],
+    accept: IMAGE_MIME_TYPES,
   });
 
   return (
     <>
-      <ButtonBase className={classes.dropzoneButton} {...getRootProps()}>
+      <ButtonBase
+        className={clsx(
+          classes.dropzoneButton,
+          isDragActive && classes.dropzoneDragActive
+        )}
+        {...getRootProps()}
+      >
         <input id={`sidedrawer-field-${field.name}`} {...getInputProps()} />
         <AddIcon />
-        <Typography variant="body1" color="textSecondary">
-          Upload image
+        <Typography variant="body1" color="inherit">
+          {isDragActive ? "Drop your image here" : "Upload image"}
         </Typography>
       </ButtonBase>
 
