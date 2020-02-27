@@ -10,6 +10,7 @@ import DataGrid, {
   CellNavigationMode,
   ScrollPosition,
 } from "react-data-grid";
+import { DraggableHeader } from "react-data-grid-addons";
 
 import Loading from "components/Loading";
 import SubTableBreadcrumbs, { BREADCRUMBS_HEIGHT } from "./SubTableBreadcrumbs";
@@ -32,6 +33,7 @@ import useStyles from "./styles";
 
 const Hotkeys = lazy(() => import("./HotKeys"));
 const ColumnEditor = lazy(() => import("./ColumnEditor/index"));
+const { DraggableContainer } = DraggableHeader;
 
 export type FiretableColumn = Column<any> & {
   isNew?: boolean;
@@ -92,9 +94,9 @@ export default function Table({ collection, filters }: ITableProps) {
 
   if (!tableActions || !tableState) return <></>;
 
-  // const onHeaderDrop = (dragged: any, target: any) => {
-  //   tableActions.column.reorder(dragged, target);
-  // };
+  const onHeaderDrop = (dragged: any, target: any) => {
+    tableActions.column.reorder(dragged, target);
+  };
 
   let columns: FiretableColumn[] = [];
   if (!tableState.loadingColumns && tableState.columns) {
@@ -152,41 +154,43 @@ export default function Table({ collection, filters }: ITableProps) {
       />
 
       {!tableState.loadingColumns ? (
-        <DataGrid
-          columns={columns}
-          rowGetter={rowGetter}
-          rowsCount={rows.length}
-          rowKey={"id" as "id"}
-          onGridRowsUpdated={event => {
-            console.log(event);
-            const { action, cellKey, updated } = event;
-            if (action === "CELL_UPDATE")
-              updateCell!(rows[event.toRow].ref, cellKey as string, updated);
-          }}
-          rowHeight={rowHeight}
-          headerRowHeight={43}
-          // TODO: Investigate why setting a numeric value causes
-          // LOADING to pop up on screen when scrolling horizontally
-          // width={windowSize.width - DRAWER_COLLAPSED_WIDTH}
-          minWidth={tableWidth}
-          minHeight={
-            windowSize.height -
-            APP_BAR_HEIGHT * 2 -
-            TABLE_HEADER_HEIGHT -
-            (inSubTable ? BREADCRUMBS_HEIGHT : 0)
-          }
-          // enableCellCopyPaste
-          // enableCellDragAndDrop
-          onColumnResize={tableActions.column.resize}
-          cellNavigationMode={CellNavigationMode.CHANGE_ROW}
-          onCellSelected={({ rowIdx, idx: colIdx }) =>
-            setSelectedCell!({ row: rowIdx, column: columns[colIdx].key })
-          }
-          enableCellSelect
-          onScroll={handleScroll}
-          ref={dataGridRef}
-          RowsContainer={props => <div {...props} ref={rowsContainerRef} />}
-        />
+        <DraggableContainer onHeaderDrop={onHeaderDrop}>
+          <DataGrid
+            columns={columns}
+            rowGetter={rowGetter}
+            rowsCount={rows.length}
+            rowKey={"id" as "id"}
+            onGridRowsUpdated={event => {
+              console.log(event);
+              const { action, cellKey, updated } = event;
+              if (action === "CELL_UPDATE")
+                updateCell!(rows[event.toRow].ref, cellKey as string, updated);
+            }}
+            rowHeight={rowHeight}
+            headerRowHeight={44}
+            // TODO: Investigate why setting a numeric value causes
+            // LOADING to pop up on screen when scrolling horizontally
+            // width={windowSize.width - DRAWER_COLLAPSED_WIDTH}
+            minWidth={tableWidth}
+            minHeight={
+              windowSize.height -
+              APP_BAR_HEIGHT * 2 -
+              TABLE_HEADER_HEIGHT -
+              (inSubTable ? BREADCRUMBS_HEIGHT : 0)
+            }
+            // enableCellCopyPaste
+            // enableCellDragAndDrop
+            onColumnResize={tableActions.column.resize}
+            cellNavigationMode={CellNavigationMode.CHANGE_ROW}
+            onCellSelected={({ rowIdx, idx: colIdx }) =>
+              setSelectedCell!({ row: rowIdx, column: columns[colIdx].key })
+            }
+            enableCellSelect
+            onScroll={handleScroll}
+            ref={dataGridRef}
+            RowsContainer={props => <div {...props} ref={rowsContainerRef} />}
+          />
+        </DraggableContainer>
       ) : (
         <Loading message="Fetching columns" />
       )}
