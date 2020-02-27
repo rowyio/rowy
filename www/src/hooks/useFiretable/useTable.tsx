@@ -8,6 +8,31 @@ import { FireTableFilter, FiretableOrderBy } from ".";
 import { SnackContext } from "../../contexts/snackContext";
 
 const CAP = 1000; // safety  paramter sets the  upper limit of number of docs fetched by this hook
+const serverTimestamp = firebase.firestore.FieldValue.serverTimestamp;
+var characters =
+  "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+function makeId(length) {
+  var result = "";
+  var charactersLength = characters.length;
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
+
+const generateSmallerId = (id: string) => {
+  const indexOfFirstChar = characters.indexOf(id[0]);
+  if (indexOfFirstChar !== 0)
+    return characters[indexOfFirstChar - 1] + makeId(id.length - 1);
+  else return id[0] + generateSmallerId(id.substr(1, id.length - 1));
+};
+
+const generateBiggerId = (id: string) => {
+  const indexOfFirstChar = characters.indexOf(id[0]);
+  if (indexOfFirstChar !== 61)
+    return characters[indexOfFirstChar + 1] + makeId(id.length - 1);
+  else return id[0] + generateBiggerId(id.substr(1, id.length - 1));
+};
 
 const tableReducer = (prevState: any, newProps: any) => {
   return { ...prevState, ...newProps };
@@ -82,6 +107,9 @@ const useTable = (initialOverrides: any) => {
 
               return { ...data, id, ref };
             })
+            // IMPORTANT: If this is removed in the future, you MUST remove the
+            // offset in moreRows that accounts for this document being removed.
+            // See the comment inside moreRows.
             .filter(doc => doc.id !== "_FIRETABLE_"); //removes schema file
           tableDispatch({
             rows,
@@ -180,16 +208,41 @@ const useTable = (initialOverrides: any) => {
    *  @param data(optional: default will create empty row)
    */
   const addRow = async (data?: any) => {
-    const ref = await db.collection(tableState.path).add({
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-      ...data,
-    });
+    const { rows, orderBy, path } = tableState;
+    if (rows.length === 0) {
+      await db.collection(path).add({
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+        ...data,
+      });
+    } else {
+      const firstId = rows[0].id;
+      const newId = generateSmallerId(firstId);
+      console.log(newId);
+      await db
+        .collection(path)
+        .doc(newId)
+        .set(
+          {
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp(),
+            ...data,
+          },
+          { merge: true }
+        );
+    }
   };
   /**  used for incrementing the number of rows fetched
    *  @param additionalRows number additional rows to be fetched (optional: default is 20)
    */
   const moreRows = (additionalRows?: number) => {
+    // Don’t request more when already loading
+    if (tableState.loading) return;
+
+    // Don’t request more if none remaining. Must offset by 1 since
+    // this hook removes any documents with ID prefixed with _FIRETABLE_
+    if (tableState.rows.length < tableState.limit - 1) return;
+
     tableDispatch({
       limit: tableState.limit + (additionalRows ? additionalRows : 20),
     });

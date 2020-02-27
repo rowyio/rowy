@@ -1,117 +1,136 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React from "react";
+import clsx from "clsx";
+import _find from "lodash/find";
+import { Link, LinkProps } from "react-router-dom";
 
 import {
   createStyles,
   makeStyles,
   AppBar,
   Toolbar,
+  Tabs,
+  Tab,
+  Divider,
   IconButton,
   Grid,
   Button,
-  Tabs,
-  Tab,
 } from "@material-ui/core";
-
 import HomeIcon from "@material-ui/icons/Home";
-import Skeleton from "@material-ui/lab/Skeleton";
 
-import SideDrawer, { DRAWER_COLLAPSED_WIDTH } from "./SideDrawer";
+import SideDrawer, {
+  DRAWER_COLLAPSED_WIDTH,
+  DRAWER_WIDTH,
+} from "components/SideDrawer";
 
-import useRouter from "../hooks/useRouter";
+import { useFiretableContext, Table } from "contexts/firetableContext";
 
-import { useFiretableContext } from "../contexts/firetableContext";
 const useStyles = makeStyles(theme =>
   createStyles({
     appBar: {
+      paddingRight: ({ sideDrawerOpen }: { sideDrawerOpen?: boolean }) =>
+        sideDrawerOpen ? DRAWER_WIDTH : DRAWER_COLLAPSED_WIDTH,
+      minHeight: 56,
+    },
+
+    tab: { minHeight: 56 },
+
+    bottomAppBar: {
       top: "auto",
       bottom: 0,
-      paddingRight: DRAWER_COLLAPSED_WIDTH,
     },
-    toolbar: { paddingRight: 0 },
-    homeButton: { marginRight: theme.spacing(2) },
+    homeButton: { marginRight: theme.spacing(1.5) },
 
-    fab: {
-      position: "absolute",
-      zIndex: 1,
-      top: -28,
-      right: 16,
-      margin: "0 auto",
+    scrollableSections: {
+      overflowY: "auto",
+      minHeight: 56,
+      width: `calc(100% + ${theme.spacing(3)}px)`,
+      marginRight: theme.spacing(-2),
     },
 
-    skeleton: {
-      marginLeft: 8,
-      borderRadius: 5,
-    },
-
-    routes: {
-      overflowX: "auto",
-      height: 64,
-    },
-    routeButton: { whiteSpace: "nowrap" },
-
-    currentRouteButton: {
+    sectionButton: { whiteSpace: "nowrap" },
+    sectionButtonCurrent: {
       backgroundColor: "#fff",
-      "$routeButton&": { color: theme.palette.primary.main },
+      "$sectionButton&": { color: theme.palette.primary.main },
     },
-
-    routeSpacer: { width: theme.spacing(10) },
   })
 );
 
-// TODO: Create an interface for props
-const Navigation = (props: any) => {
-  const router = useRouter();
-  const classes = useStyles();
-  const [section, setSection] = useState<any>();
-  const [table, setTable] = useState();
-  const { sections, createTable, userClaims } = useFiretableContext();
+export default function Navigation({
+  children,
+  tableCollection,
+}: React.PropsWithChildren<{ tableCollection: string }>) {
+  const {
+    tables,
+    sections,
+    userClaims,
+    sideDrawerOpen,
+  } = useFiretableContext();
+  const classes = useStyles({ sideDrawerOpen });
 
-  useEffect(() => {
-    if (!table) {
-      console.log(router.location);
-      //TODO: set navigation state from url
-    }
-  }, [router.location.pathname]);
-  useEffect(() => {
-    if (section) {
-      setTable(sections![section][0]);
-    }
-  }, [section]);
-  useEffect(() => {
-    if (table) {
-      const newPath = `${table.collection}${
-        table.regional &&
-        userClaims.regions &&
-        !userClaims.regions.includes("GLOBAL")
-          ? `?filters=%5B%7B%22key%22%3A%22region%22%2C%22operator%22%3A%22%3D%3D%22%2C%22value%22%3A%22${userClaims.regions[0]}%22%7D%5D`
-          : ""
-      }`;
-      if (router.location.pathname !== newPath) {
-        router.history.push(newPath);
-      }
-    }
-  }, [table]);
+  // Find the matching section for the current route
+  const section = _find(tables, ["collection", tableCollection?.split("/")[0]])
+    ?.section;
+
+  // Get the table path, including filtering for regions & user permissions
+  const getTablePath = (table: Table): LinkProps["to"] => {
+    if (!table || !userClaims) return "";
+
+    if (table.regional && !userClaims.regions?.includes("GLOBAL"))
+      return {
+        pathname: table.collection,
+        search: `?filters=${encodeURIComponent(
+          JSON.stringify([
+            { key: "region", operator: "==", value: userClaims.regions[0] },
+          ])
+        )}`,
+      };
+
+    return table.collection;
+  };
+
   return (
     <>
-      {section && sections && (
-        <Tabs
-          value={table}
-          indicatorColor="primary"
-          textColor="primary"
-          onChange={(e, v) => {
-            setTable(v);
-          }}
-          aria-label="disabled tabs example"
-        >
-          {sections[section].map(table => (
-            <Tab key={table.name} label={table.name} value={table} />
-          ))}
-        </Tabs>
-      )}
-      {props.children}
-      <AppBar position="fixed" color="primary" className={classes.appBar}>
-        <Toolbar className={classes.toolbar}>
+      <AppBar
+        position="static"
+        color="inherit"
+        elevation={0}
+        className={classes.appBar}
+      >
+        {section && sections && (
+          <Tabs
+            value={tableCollection.split("/")[0]}
+            indicatorColor="primary"
+            textColor="primary"
+            action={actions =>
+              setTimeout(() => actions?.updateIndicator(), 200)
+            }
+            component="nav"
+            variant="scrollable"
+          >
+            {sections[section].map(table => (
+              <Tab
+                key={table.collection}
+                label={table.name}
+                value={table.collection}
+                component={Link}
+                to={getTablePath(table)}
+                className={classes.tab}
+              />
+            ))}
+          </Tabs>
+        )}
+        <Divider />
+      </AppBar>
+
+      {children}
+
+      <AppBar
+        component="footer"
+        position="fixed"
+        color="primary"
+        className={clsx(classes.appBar, classes.bottomAppBar)}
+      >
+        <Toolbar component="nav">
           <IconButton
             edge="start"
             color="inherit"
@@ -123,69 +142,35 @@ const Navigation = (props: any) => {
             <HomeIcon />
           </IconButton>
 
-          {!sections ? (
-            <>
-              <Skeleton
-                variant="rect"
-                width={120}
-                height={40}
-                className={classes.skeleton}
-              />
-              <Skeleton
-                variant="rect"
-                width={120}
-                height={40}
-                className={classes.skeleton}
-              />
-              <Skeleton
-                variant="rect"
-                width={120}
-                height={40}
-                className={classes.skeleton}
-              />
-              <Skeleton
-                variant="rect"
-                width={120}
-                height={40}
-                className={classes.skeleton}
-              />
-            </>
-          ) : (
-            <Grid
-              container
-              className={classes.routes}
-              wrap="nowrap"
-              alignItems="center"
-              spacing={2}
-            >
-
-              {Object.keys(sections).map((sectionName: string) => (
+          <Grid
+            container
+            wrap="nowrap"
+            alignItems="center"
+            spacing={2}
+            className={classes.scrollableSections}
+          >
+            {sections &&
+              Object.entries(sections).map(([sectionName, tables]) => (
                 <Grid item key={sectionName}>
                   <Button
                     key={sectionName}
-                    // component={Link}
-                    // to={table.collection}
                     disabled={sectionName === section}
-                    onClick={() => {
-                      setSection(sectionName);
-                    }}
+                    // onClick={handleSectionClick(sectionName)}
+                    component={Link}
+                    to={getTablePath(tables[0])}
                     color="inherit"
-                    className={classes.routeButton}
+                    className={classes.sectionButton}
                     classes={{
-                      root: classes.routeButton,
-                      disabled: classes.currentRouteButton,
+                      root: classes.sectionButton,
+                      disabled: classes.sectionButtonCurrent,
                     }}
                   >
                     {sectionName}
                   </Button>
-
                 </Grid>
               ))}
-              <Grid item>
-                <div className={classes.routeSpacer} />
-              </Grid>
-            </Grid>
-          )}
+          </Grid>
+
           {/* <Button
               onClick={() => {
                 auth.signOut();
@@ -193,13 +178,10 @@ const Navigation = (props: any) => {
             >
               Sign out
             </Button> */}
-
         </Toolbar>
       </AppBar>
 
       <SideDrawer />
     </>
-
   );
-};
-export default Navigation;
+}

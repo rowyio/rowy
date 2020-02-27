@@ -1,21 +1,13 @@
 import React, { useEffect, useState } from "react";
 import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 
-import Popper from "@material-ui/core/Popper";
-import Fade from "@material-ui/core/Fade";
-import Paper from "@material-ui/core/Paper";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 import Popover from "@material-ui/core/Popover";
-import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
-import FieldsDropdown from "components/Fields/FieldsDropdown";
-import { isFieldType, FieldType } from "constants/fields";
+import FieldsDropdown from "./FieldsDropdown";
+import { FieldType } from "constants/fields";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 
@@ -31,6 +23,8 @@ import SelectOptionsInput from "./SelectOptionsInput";
 import DocInput from "./DocInput";
 import { Tooltip } from "@material-ui/core";
 import Confirmation from "../../Confirmation";
+
+import { useFiretableContext } from "contexts/firetableContext";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -70,8 +64,18 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-const ColumnEditor = (props: any) => {
-  const { anchorEl, column, handleClose, actions } = props;
+export default function ColumnEditor() {
+  const {
+    tableActions,
+    selectedColumnHeader,
+    setSelectedColumnHeader,
+  } = useFiretableContext();
+  const actions = tableActions!.column;
+  const { column, anchorEl } = selectedColumnHeader ?? {};
+
+  const handleClose = () => {
+    if (setSelectedColumnHeader) setSelectedColumnHeader(null);
+  };
 
   const [values, setValues] = useState({
     type: null,
@@ -158,7 +162,7 @@ const ColumnEditor = (props: any) => {
     clearValues();
   };
   const deleteColumn = () => {
-    actions.remove(props.column.idx);
+    actions.remove(column?.idx);
     handleClose();
     clearValues();
   };
@@ -197,7 +201,7 @@ const ColumnEditor = (props: any) => {
     if (values.type === FieldType.action) {
       updatables.push({ field: "callableName", value: values.callableName });
     }
-    actions.update(props.column.idx, updatables);
+    actions.update(column?.idx, updatables);
     handleClose();
     clearValues();
   };
@@ -208,7 +212,8 @@ const ColumnEditor = (props: any) => {
     //TODO: Add more validation
     return false;
   };
-  if (column) {
+
+  if (column)
     return (
       <Popover
         className={classes.root}
@@ -330,8 +335,6 @@ const ColumnEditor = (props: any) => {
         </Grid>
       </Popover>
     );
-  }
-  return <div />;
-};
 
-export default ColumnEditor;
+  return null;
+}

@@ -22,6 +22,16 @@ const useStyles = makeStyles(theme =>
   })
 );
 
+const isValidJson = (val: any) => {
+  try {
+    if (typeof val === "string") JSON.parse(val);
+    else JSON.stringify(val);
+  } catch (error) {
+    return false;
+  }
+  return true;
+};
+
 export default function JsonEditor({ form, field }: FieldProps) {
   const classes = useStyles();
 
@@ -32,7 +42,7 @@ export default function JsonEditor({ form, field }: FieldProps) {
   return (
     <div className={classes.root}>
       <ReactJson
-        src={field.value ? field.value : {}}
+        src={isValidJson(field.value) ? field.value : {}}
         onEdit={handleEdit}
         onAdd={handleEdit}
         onDelete={handleEdit}

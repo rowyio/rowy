@@ -111,7 +111,6 @@ export default function CreateTableDialog({
             multiline={true}
           />
           <MultiSelect
-            field="roles"
             freeText={true}
             options={["PROGRAM", "RECRUITING", "COACHING", "ADMIN"]}
             multiple

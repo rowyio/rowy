@@ -4,10 +4,9 @@ import { useDropzone } from "react-dropzone";
 import parse from "csv-parse";
 
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
+
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
@@ -25,6 +24,7 @@ import { makeStyles, createStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 
 import CloudIcon from "@material-ui/icons/CloudUpload";
+import { useFiretableContext } from "../contexts/firetableContext";
 const useStyles = makeStyles(theme =>
   createStyles({
     root: {
@@ -54,7 +54,7 @@ const useStyles = makeStyles(theme =>
 
 // TODO: Create an interface for props
 export default function ImportCSV(props: any) {
-  const { columns, addRow } = props;
+  const { tableState, tableActions } = useFiretableContext();
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [csvKeys, setCsvKeys] = useState<string[]>([]);
@@ -93,17 +93,15 @@ export default function ImportCSV(props: any) {
     setColumnKey(null);
   }
   function handleImport() {
-    const newDocs = csvData.map((row: any[]) => {
+    csvData.forEach((row: any[]) => {
       let docData: any = {};
       keyPairs.forEach((pair: { columnKey: string; csvKey: string }) => {
         docData[pair.columnKey] = row[csvKeys.indexOf(pair.csvKey)];
       });
-      addRow(docData);
-      return docData;
+      tableActions?.row.add(docData);
     });
     handleClose();
   }
-
   return (
     <div>
       <Button onClick={handleClickOpen} endIcon={<AddCSVIcon />}>
@@ -193,7 +191,7 @@ export default function ImportCSV(props: any) {
                       id: "column-keys",
                     }}
                   >
-                    {columns.map((column: any) => (
+                    {tableState?.columns.map((column: any) => (
                       <MenuItem value={column.key}>{column.name}</MenuItem>
                     ))}
                   </Select>

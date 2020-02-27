@@ -22,7 +22,7 @@ export default function TableView() {
     //TODO: json schema validator
   }
   return (
-    <Navigation>
+    <Navigation tableCollection={tableCollection}>
       <Table
         key={tableCollection}
         collection={tableCollection}
