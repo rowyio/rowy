@@ -16,16 +16,18 @@ type SelectedColumnHeader = {
   anchorEl: PopoverProps["anchorEl"];
 };
 
+export type Table = {
+  collection: string;
+  name: string;
+  roles: string[];
+  description: string;
+  regional: boolean;
+  section: string;
+};
+
 interface FiretableContextProps {
-  sections: {
-    [sectionName: string]: {
-      collection: string;
-      name: string;
-      roles: string[];
-      description: string;
-      regional: Boolean;
-    }[];
-  };
+  tables: Table[];
+  sections: { [sectionName: string]: Table[] };
   tableState: FiretableState;
   tableActions: FiretableActions;
   updateCell: (
@@ -63,9 +65,9 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
     row: number;
     column: string;
   }>();
-  const [sections, setSections] = useState<any>();
+  const [tables, setTables] = useState<FiretableContextProps["tables"]>();
+  const [sections, setSections] = useState<FiretableContextProps["sections"]>();
   const [settings, createTable] = useSettings();
-  const { tables } = settings;
   const [userRoles, setUserRoles] = useState<null | string[]>();
   const [userClaims, setUserClaims] = useState<any>();
   const [sideDrawerOpen, setSideDrawerOpen] = useState<boolean>(false);
@@ -76,17 +78,19 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
 
   const { currentUser } = useAppContext();
   useEffect(() => {
+    const { tables } = settings;
     if (tables && userRoles && !sections) {
-      const sections = _groupBy(
-        tables.filter(
-          table =>
-            !table.roles || table.roles.some(role => userRoles.includes(role))
-        ),
-        "section"
+      const filteredTables = tables.filter(
+        table =>
+          !table.roles || table.roles.some(role => userRoles.includes(role))
       );
+
+      const sections = _groupBy(filteredTables, "section");
+
       setSections(sections);
+      setTables(filteredTables);
     }
-  }, [settings, tables, userRoles]);
+  }, [settings, userRoles]);
 
   useEffect(() => {
     if (currentUser && !userClaims) {
@@ -128,6 +132,7 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
         setSelectedCell,
         updateCell,
         createTable,
+        tables,
         sections,
         userClaims,
         sideDrawerOpen,
