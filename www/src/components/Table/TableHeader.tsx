@@ -29,12 +29,17 @@ const useStyles = makeStyles(theme =>
       padding: theme.spacing(0, 3.5, 0, 1),
       minHeight: TABLE_HEADER_HEIGHT,
 
+      overflowX: "auto",
+      whiteSpace: "nowrap",
+
       [theme.breakpoints.down("sm")]: {
         width: "100%",
         paddingRight: theme.spacing(1),
       },
     },
     collectionName: { textTransform: "uppercase" },
+
+    spacer: { minWidth: theme.spacing(8) },
 
     formControl: {
       minWidth: 120,
@@ -49,7 +54,7 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-interface Props {
+interface ITableHeaderProps {
   collection: string;
   rowHeight: number;
   updateConfig: Function;
@@ -57,18 +62,28 @@ interface Props {
   columns: any;
   filters: FireTableFilter[];
 }
-const TableHeader = ({
+
+/**
+ * TODO: Make this properly mobile responsive, not just horizontally scrolling
+ */
+export default function TableHeader({
   collection,
   rowHeight,
   updateConfig,
   columns,
   filters,
-}: Props) => {
+}: ITableHeaderProps) {
   const classes = useStyles();
   const { tableActions } = useFiretableContext();
 
   return (
-    <Grid container alignItems="center" spacing={2} className={classes.root}>
+    <Grid
+      container
+      alignItems="center"
+      spacing={2}
+      wrap="nowrap"
+      className={classes.root}
+    >
       <Grid item>
         <Button
           onClick={() => tableActions?.row.add()}
@@ -90,7 +105,7 @@ const TableHeader = ({
         />
       </Grid>
 
-      <Grid item xs></Grid>
+      <Grid item xs className={classes.spacer} />
 
       <Grid item>
         <Typography variant="overline" component="label" htmlFor="rowHeight">
@@ -148,5 +163,4 @@ const TableHeader = ({
       </Grid>
     </Grid>
   );
-};
-export default TableHeader;
+}
