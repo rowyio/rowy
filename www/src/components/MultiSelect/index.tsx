@@ -57,6 +57,8 @@ export default function MultiSelect({
     width: dropdownWidth,
   });
 
+  const sanitisedValue = value.filter(v => v?.length > 0);
+
   // Transform `option` prop if it’s just strings
   let options =
     typeof optionsProp[0] === "string"
@@ -67,7 +69,7 @@ export default function MultiSelect({
   // If `freeText` enabled, show the user’s custom fields
   if (freeText) {
     // `value` prop is an array of all values. It removes labels
-    const formattedValues = value?.map(x => ({ label: x, value: x }));
+    const formattedValues = sanitisedValue?.map(x => ({ label: x, value: x }));
     options = _unionWith(
       options,
       formattedValues,
@@ -80,7 +82,7 @@ export default function MultiSelect({
       label={label}
       variant={"filled" as any}
       select
-      value={value}
+      value={sanitisedValue}
       className={clsx(classes.root, className)}
       {...TextFieldProps}
       SelectProps={{
