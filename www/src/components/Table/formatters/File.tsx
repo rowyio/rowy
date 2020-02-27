@@ -108,7 +108,7 @@ export default function File({
       <Grid item xs className={classes.chipList}>
         <Grid container spacing={1} wrap="nowrap">
           {Array.isArray(value) &&
-            value.map((file: any) => (
+            value.reverse().map((file: any) => (
               <Grid item key={file.name} className={classes.chipGridItem}>
                 <Confirmation
                   message={{
