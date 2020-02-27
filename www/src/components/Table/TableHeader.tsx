@@ -117,7 +117,7 @@ export default function TableHeader({
           select
           variant="filled"
           className={classes.formControl}
-          value={rowHeight}
+          value={rowHeight ?? 43}
           onChange={event => {
             updateConfig("rowHeight", event.target.value);
           }}
