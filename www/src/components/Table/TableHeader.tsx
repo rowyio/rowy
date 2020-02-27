@@ -43,13 +43,12 @@ const useStyles = makeStyles(theme =>
 
     formControl: {
       minWidth: 120,
-      margin: 0,
-      marginRight: theme.spacing(1),
-
-      "& > div": {
-        height: 32,
-        borderRadius: theme.shape.borderRadius,
-      },
+      margin: theme.spacing(0, 0, 0, -1),
+    },
+    inputBaseRoot: { borderRadius: theme.shape.borderRadius },
+    select: {
+      paddingTop: "6px !important",
+      paddingBottom: "7px !important",
     },
   })
 );
@@ -118,7 +117,7 @@ export default function TableHeader({
           select
           variant="filled"
           className={classes.formControl}
-          value={rowHeight ? rowHeight : 43}
+          value={rowHeight}
           onChange={event => {
             updateConfig("rowHeight", event.target.value);
           }}
@@ -127,7 +126,14 @@ export default function TableHeader({
             id: "rowHeight",
           }}
           margin="dense"
-          InputProps={{ disableUnderline: true }}
+          InputProps={{
+            disableUnderline: true,
+            classes: { root: classes.inputBaseRoot },
+          }}
+          SelectProps={{
+            classes: { root: classes.select },
+            displayEmpty: true,
+          }}
           hiddenLabel
         >
           <MenuItem value={43}>Tall</MenuItem>
@@ -137,11 +143,7 @@ export default function TableHeader({
           {rowHeight !== 43 &&
             rowHeight !== 65 &&
             rowHeight !== 100 &&
-            rowHeight !== 150 && (
-              <MenuItem value={rowHeight} disabled>
-                Custom
-              </MenuItem>
-            )}
+            rowHeight !== 150 && <MenuItem value={rowHeight}>Custom</MenuItem>}
         </TextField>
       </Grid>
 
