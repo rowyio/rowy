@@ -1,15 +1,19 @@
 import { makeStyles, createStyles, fade } from "@material-ui/core";
+import { APP_BAR_HEIGHT } from "components/Navigation";
 
 export const useStyles = makeStyles(theme =>
   createStyles({
     "@global": {
       ".rdg-root": {
         "&.rdg-root": {
-          borderColor: "#e0e0e0",
+          border: "none",
           lineHeight: "inherit !important",
         },
 
         "& .rdg-header": { backgroundColor: theme.palette.background.default },
+        "& .rdg-header .rdg-cell": { borderTop: "1px solid #e0e0e0" },
+
+        "& .rdg-viewport": { backgroundColor: "transparent" },
 
         "& .rdg-cell": {
           borderColor: "#e0e0e0",
@@ -49,6 +53,14 @@ export const useStyles = makeStyles(theme =>
         margin: theme.spacing(0, -1.5),
         width: `calc(100% + ${theme.spacing(3)}px)`,
       },
+    },
+
+    loadingBar: {
+      position: "fixed",
+      left: 0,
+      right: 0,
+      bottom: APP_BAR_HEIGHT,
+      height: theme.spacing(1),
     },
   })
 );

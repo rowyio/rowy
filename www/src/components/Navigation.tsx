@@ -17,22 +17,28 @@ import {
 } from "@material-ui/core";
 import HomeIcon from "@material-ui/icons/Home";
 
-import SideDrawer, {
-  DRAWER_COLLAPSED_WIDTH,
-  DRAWER_WIDTH,
-} from "components/SideDrawer";
+import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
 
 import { useFiretableContext, Table } from "contexts/firetableContext";
+
+export const APP_BAR_HEIGHT = 56;
 
 const useStyles = makeStyles(theme =>
   createStyles({
     appBar: {
-      paddingRight: ({ sideDrawerOpen }: { sideDrawerOpen?: boolean }) =>
-        sideDrawerOpen ? DRAWER_WIDTH : DRAWER_COLLAPSED_WIDTH,
-      minHeight: 56,
+      paddingRight: DRAWER_COLLAPSED_WIDTH,
+      height: APP_BAR_HEIGHT,
+
+      [theme.breakpoints.down("sm")]: { paddingRight: 0 },
     },
 
-    tab: { minHeight: 56 },
+    maxHeight: {
+      height: APP_BAR_HEIGHT,
+      minHeight: "auto",
+    },
+
+    topToolbar: { padding: theme.spacing(0, 2) },
+    topDivider: { marginTop: -1 },
 
     bottomAppBar: {
       top: "auto",
@@ -42,7 +48,7 @@ const useStyles = makeStyles(theme =>
 
     scrollableSections: {
       overflowY: "auto",
-      minHeight: 56,
+      height: APP_BAR_HEIGHT,
       width: `calc(100% + ${theme.spacing(3)}px)`,
       marginRight: theme.spacing(-2),
     },
@@ -59,13 +65,8 @@ export default function Navigation({
   children,
   tableCollection,
 }: React.PropsWithChildren<{ tableCollection: string }>) {
-  const {
-    tables,
-    sections,
-    userClaims,
-    sideDrawerOpen,
-  } = useFiretableContext();
-  const classes = useStyles({ sideDrawerOpen });
+  const { tables, sections, userClaims } = useFiretableContext();
+  const classes = useStyles();
 
   // Find the matching section for the current route
   const section = _find(tables, ["collection", tableCollection?.split("/")[0]])
@@ -88,6 +89,8 @@ export default function Navigation({
     return table.collection;
   };
 
+  const currentCollection = tableCollection.split("/")[0];
+
   return (
     <>
       <AppBar
@@ -96,30 +99,40 @@ export default function Navigation({
         elevation={0}
         className={classes.appBar}
       >
-        {section && sections && (
-          <Tabs
-            value={tableCollection.split("/")[0]}
-            indicatorColor="primary"
-            textColor="primary"
-            action={actions =>
-              setTimeout(() => actions?.updateIndicator(), 200)
-            }
-            component="nav"
-            variant="scrollable"
-          >
-            {sections[section].map(table => (
-              <Tab
-                key={table.collection}
-                label={table.name}
-                value={table.collection}
-                component={Link}
-                to={getTablePath(table)}
-                className={classes.tab}
-              />
-            ))}
-          </Tabs>
-        )}
-        <Divider />
+        <Toolbar className={clsx(classes.maxHeight, classes.topToolbar)}>
+          {sections && (
+            <Tabs
+              value={currentCollection}
+              indicatorColor="primary"
+              textColor="primary"
+              action={actions =>
+                setTimeout(() => actions?.updateIndicator(), 200)
+              }
+              component="nav"
+              variant="scrollable"
+            >
+              {section ? (
+                sections[section].map(table => (
+                  <Tab
+                    key={table.collection}
+                    label={table.name}
+                    value={table.collection}
+                    component={Link}
+                    to={getTablePath(table)}
+                    className={classes.maxHeight}
+                  />
+                ))
+              ) : (
+                <Tab
+                  label={currentCollection}
+                  value={currentCollection}
+                  className={classes.maxHeight}
+                />
+              )}
+            </Tabs>
+          )}
+        </Toolbar>
+        <Divider className={classes.topDivider} />
       </AppBar>
 
       {children}
@@ -130,7 +143,7 @@ export default function Navigation({
         color="primary"
         className={clsx(classes.appBar, classes.bottomAppBar)}
       >
-        <Toolbar component="nav">
+        <Toolbar component="nav" className={classes.maxHeight}>
           <IconButton
             edge="start"
             color="inherit"
@@ -180,8 +193,6 @@ export default function Navigation({
             </Button> */}
         </Toolbar>
       </AppBar>
-
-      <SideDrawer />
     </>
   );
 }

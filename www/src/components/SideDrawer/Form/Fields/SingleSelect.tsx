@@ -40,9 +40,11 @@ export default function SingleSelect({
         multiple={false}
       />
 
-      <div style={{ marginTop: theme.spacing(1) }}>
-        <FormattedChip size="medium" label={field.value} />
-      </div>
+      {field.value?.length > 0 && (
+        <div style={{ marginTop: theme.spacing(1) }}>
+          <FormattedChip size="medium" label={field.value} />
+        </div>
+      )}
     </>
   );
 }

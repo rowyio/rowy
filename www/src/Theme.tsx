@@ -141,11 +141,15 @@ const Theme = createMuiTheme({
     MuiButton: {
       contained: {
         borderRadius: 500,
-        minHeight: 36,
+        minHeight: 32,
+        boxShadow: "none",
       },
       containedSizeLarge: {
         padding: "8px 32px",
         minHeight: 48,
+      },
+      outlinedPrimary: {
+        borderColor: "rgba(0, 0, 0, 0.23)",
       },
     },
   },

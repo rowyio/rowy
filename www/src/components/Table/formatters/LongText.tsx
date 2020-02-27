@@ -31,6 +31,7 @@ const useStyles = makeStyles(theme =>
       width: width - 1,
       maxWidth: "none",
       minHeight: rowHeight - 1,
+      overflowX: "hidden",
 
       background: theme.palette.background.paper,
       borderRadius: 0,

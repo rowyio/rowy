@@ -41,15 +41,18 @@ export default function MultiSelect({
 
       {Array.isArray(field.value) && (
         <Grid container spacing={1} style={{ marginTop: theme.spacing(1) }}>
-          {field.value.map((item, i) => (
-            <Grid item key={item}>
-              <FormattedChip
-                size="medium"
-                label={item}
-                onDelete={handleDelete(i)}
-              />
-            </Grid>
-          ))}
+          {field.value.map(
+            (item, i) =>
+              item?.length > 0 && (
+                <Grid item key={item}>
+                  <FormattedChip
+                    size="medium"
+                    label={item}
+                    onDelete={handleDelete(i)}
+                  />
+                </Grid>
+              )
+          )}
         </Grid>
       )}
     </>
