@@ -102,7 +102,7 @@ const TableHeader = ({
           select
           variant="filled"
           className={classes.formControl}
-          value={rowHeight ? rowHeight : 43}
+          value={rowHeight ? (rowHeight < 43 ? 43 : rowHeight) : 43}
           onChange={event => {
             updateConfig("rowHeight", event.target.value);
           }}
