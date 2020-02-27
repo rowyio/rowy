@@ -2,6 +2,8 @@ import React, { lazy, Suspense, useEffect, useRef } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import _isEmpty from "lodash/isEmpty";
 
+import { useTheme } from "@material-ui/core";
+
 import "react-data-grid/dist/react-data-grid.css";
 import DataGrid, {
   Column,
@@ -45,6 +47,7 @@ interface Props {
 
 function Table(props: Props) {
   useStyles();
+  const theme = useTheme();
   const finalColumnClasses = useFinalColumnStyles();
 
   const { collection, filters } = props;
@@ -129,6 +132,11 @@ function Table(props: Props) {
 
   const inSubTable = collection.split("/").length > 1;
 
+  let tableWidth: any = `calc(100% - ${
+    sideDrawerOpen ? DRAWER_WIDTH : DRAWER_COLLAPSED_WIDTH
+  }px)`;
+  if (windowSize.width < theme.breakpoints.values.md) tableWidth = "100%";
+
   return (
     <EditorProvider>
       <Suspense fallback={<Loading message="Loading header" />}>
@@ -162,11 +170,7 @@ function Table(props: Props) {
           // TODO: Investigate why setting a numeric value causes
           // LOADING to pop up on screen when scrolling horizontally
           // width={windowSize.width - DRAWER_COLLAPSED_WIDTH}
-          minWidth={
-            `calc(100% - ${
-              sideDrawerOpen ? DRAWER_WIDTH : DRAWER_COLLAPSED_WIDTH
-            }px)` as any
-          }
+          minWidth={tableWidth}
           minHeight={
             windowSize.height -
             APP_BAR_HEIGHT * 2 -

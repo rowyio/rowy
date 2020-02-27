@@ -28,6 +28,11 @@ const useStyles = makeStyles(theme =>
       margin: 0,
       padding: theme.spacing(0, 3.5, 0, 1),
       minHeight: TABLE_HEADER_HEIGHT,
+
+      [theme.breakpoints.down("sm")]: {
+        width: "100%",
+        paddingRight: theme.spacing(1),
+      },
     },
     collectionName: { textTransform: "uppercase" },
 

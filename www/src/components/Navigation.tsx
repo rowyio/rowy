@@ -17,10 +17,7 @@ import {
 } from "@material-ui/core";
 import HomeIcon from "@material-ui/icons/Home";
 
-import SideDrawer, {
-  DRAWER_COLLAPSED_WIDTH,
-  DRAWER_WIDTH,
-} from "components/SideDrawer";
+import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
 
 import { useFiretableContext, Table } from "contexts/firetableContext";
 
@@ -29,9 +26,10 @@ export const APP_BAR_HEIGHT = 56;
 const useStyles = makeStyles(theme =>
   createStyles({
     appBar: {
-      paddingRight: ({ sideDrawerOpen }: { sideDrawerOpen?: boolean }) =>
-        sideDrawerOpen ? DRAWER_WIDTH : DRAWER_COLLAPSED_WIDTH,
+      paddingRight: DRAWER_COLLAPSED_WIDTH,
       height: APP_BAR_HEIGHT,
+
+      [theme.breakpoints.down("sm")]: { paddingRight: 0 },
     },
 
     maxHeight: {
@@ -67,13 +65,8 @@ export default function Navigation({
   children,
   tableCollection,
 }: React.PropsWithChildren<{ tableCollection: string }>) {
-  const {
-    tables,
-    sections,
-    userClaims,
-    sideDrawerOpen,
-  } = useFiretableContext();
-  const classes = useStyles({ sideDrawerOpen });
+  const { tables, sections, userClaims } = useFiretableContext();
+  const classes = useStyles();
 
   // Find the matching section for the current route
   const section = _find(tables, ["collection", tableCollection?.split("/")[0]])
@@ -200,8 +193,6 @@ export default function Navigation({
             </Button> */}
         </Toolbar>
       </AppBar>
-
-      <SideDrawer />
     </>
   );
 }
