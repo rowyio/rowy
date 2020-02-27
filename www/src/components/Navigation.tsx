@@ -38,6 +38,8 @@ const useStyles = makeStyles(theme =>
       height: APP_BAR_HEIGHT,
       minHeight: "auto",
     },
+
+    topToolbar: { padding: theme.spacing(0, 2) },
     topDivider: { marginTop: -1 },
 
     bottomAppBar: {
@@ -94,6 +96,8 @@ export default function Navigation({
     return table.collection;
   };
 
+  const currentCollection = tableCollection.split("/")[0];
+
   return (
     <>
       <AppBar
@@ -102,29 +106,39 @@ export default function Navigation({
         elevation={0}
         className={classes.appBar}
       >
-        {section && sections && (
-          <Tabs
-            value={tableCollection.split("/")[0]}
-            indicatorColor="primary"
-            textColor="primary"
-            action={actions =>
-              setTimeout(() => actions?.updateIndicator(), 200)
-            }
-            component="nav"
-            variant="scrollable"
-          >
-            {sections[section].map(table => (
-              <Tab
-                key={table.collection}
-                label={table.name}
-                value={table.collection}
-                component={Link}
-                to={getTablePath(table)}
-                className={classes.maxHeight}
-              />
-            ))}
-          </Tabs>
-        )}
+        <Toolbar className={clsx(classes.maxHeight, classes.topToolbar)}>
+          {sections && (
+            <Tabs
+              value={currentCollection}
+              indicatorColor="primary"
+              textColor="primary"
+              action={actions =>
+                setTimeout(() => actions?.updateIndicator(), 200)
+              }
+              component="nav"
+              variant="scrollable"
+            >
+              {section ? (
+                sections[section].map(table => (
+                  <Tab
+                    key={table.collection}
+                    label={table.name}
+                    value={table.collection}
+                    component={Link}
+                    to={getTablePath(table)}
+                    className={classes.maxHeight}
+                  />
+                ))
+              ) : (
+                <Tab
+                  label={currentCollection}
+                  value={currentCollection}
+                  className={classes.maxHeight}
+                />
+              )}
+            </Tabs>
+          )}
+        </Toolbar>
         <Divider className={classes.topDivider} />
       </AppBar>
 

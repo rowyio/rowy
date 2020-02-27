@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme =>
     root: {
       width: `calc(100% - ${DRAWER_COLLAPSED_WIDTH}px)`,
       margin: 0,
-      padding: theme.spacing(0, 3, 0, 1),
+      padding: theme.spacing(0, 3.5, 0, 1),
       minHeight: TABLE_HEADER_HEIGHT,
     },
     collectionName: { textTransform: "uppercase" },
@@ -88,11 +88,7 @@ const TableHeader = ({
       <Grid item xs></Grid>
 
       <Grid item>
-        <Typography
-          variant="overline"
-          component="label"
-          htmlFor="outlined-rowHeight-simple"
-        >
+        <Typography variant="overline" component="label" htmlFor="rowHeight">
           Height
         </Typography>
       </Grid>
@@ -102,13 +98,13 @@ const TableHeader = ({
           select
           variant="filled"
           className={classes.formControl}
-          value={rowHeight ? (rowHeight < 43 ? 43 : rowHeight) : 43}
+          value={rowHeight ? rowHeight : 43}
           onChange={event => {
             updateConfig("rowHeight", event.target.value);
           }}
           inputProps={{
             name: "rowHeight",
-            id: "outlined-rowHeight-simple",
+            id: "rowHeight",
           }}
           margin="dense"
           InputProps={{ disableUnderline: true }}
@@ -121,7 +117,11 @@ const TableHeader = ({
           {rowHeight !== 43 &&
             rowHeight !== 65 &&
             rowHeight !== 100 &&
-            rowHeight !== 150 && <MenuItem value={rowHeight}>Custom</MenuItem>}
+            rowHeight !== 150 && (
+              <MenuItem value={rowHeight} disabled>
+                Custom
+              </MenuItem>
+            )}
         </TextField>
       </Grid>
 
