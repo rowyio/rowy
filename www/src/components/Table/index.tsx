@@ -2,7 +2,7 @@ import React, { lazy, Suspense, useEffect, useRef } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import _isEmpty from "lodash/isEmpty";
 
-import { useTheme } from "@material-ui/core";
+import { useTheme, LinearProgress } from "@material-ui/core";
 
 import "react-data-grid/dist/react-data-grid.css";
 import DataGrid, {
@@ -46,7 +46,7 @@ interface Props {
 }
 
 function Table(props: Props) {
-  useStyles();
+  const classes = useStyles();
   const theme = useTheme();
   const finalColumnClasses = useFinalColumnStyles();
 
@@ -191,6 +191,10 @@ function Table(props: Props) {
         />
       ) : (
         <Loading message="Fetching columns" />
+      )}
+
+      {tableState.rows.length > 0 && tableState.loadingRows && (
+        <LinearProgress className={classes.loadingBar} />
       )}
 
       <Suspense fallback={<Loading message="Loading helpers" />}>
