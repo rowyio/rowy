@@ -1,5 +1,5 @@
 import React from "react";
-import withCustomCell, { CustomCellProps } from "./withCustomCell";
+import { CustomCellProps } from "./withCustomCell";
 import clsx from "clsx";
 
 import { Link } from "react-router-dom";
@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-function SubTable({ column, row }: CustomCellProps) {
+export default function SubTable({ column, row }: CustomCellProps) {
   const classes = useStyles();
 
   const { parentLabel } = column as any;
@@ -62,5 +62,3 @@ function SubTable({ column, row }: CustomCellProps) {
     </Grid>
   );
 }
-
-export default withCustomCell(SubTable);

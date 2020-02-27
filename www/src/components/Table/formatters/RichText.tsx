@@ -1,6 +1,6 @@
 import React from "react";
 import clsx from "clsx";
-import withCustomCell, { CustomCellProps } from "./withCustomCell";
+import { CustomCellProps } from "./withCustomCell";
 
 import { makeStyles, createStyles } from "@material-ui/core";
 
@@ -13,7 +13,7 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-function RichText({ value }: CustomCellProps) {
+export default function RichText({ value }: CustomCellProps) {
   const classes = useStyles();
   return (
     <div
@@ -22,5 +22,3 @@ function RichText({ value }: CustomCellProps) {
     />
   );
 }
-
-export default withCustomCell(RichText);

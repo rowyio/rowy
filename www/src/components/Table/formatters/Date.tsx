@@ -1,6 +1,6 @@
 import React from "react";
 import clsx from "clsx";
-import withCustomCell, { CustomCellProps } from "./withCustomCell";
+import { CustomCellProps } from "./withCustomCell";
 
 import { makeStyles, createStyles } from "@material-ui/core";
 import { FieldType, DateIcon, DateTimeIcon } from "constants/fields";
@@ -38,7 +38,12 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-function Date({ rowIdx, column, value, onSubmit }: CustomCellProps) {
+export default function Date({
+  rowIdx,
+  column,
+  value,
+  onSubmit,
+}: CustomCellProps) {
   const classes = useStyles();
   const { dataGridRef } = useFiretableContext();
 
@@ -81,5 +86,3 @@ function Date({ rowIdx, column, value, onSubmit }: CustomCellProps) {
     </MuiPickersUtilsProvider>
   );
 }
-
-export default withCustomCell(Date);

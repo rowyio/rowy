@@ -1,6 +1,6 @@
 import React from "react";
 import clsx from "clsx";
-import withCustomCell, { CustomCellProps } from "./withCustomCell";
+import { CustomCellProps } from "./withCustomCell";
 
 import { makeStyles, createStyles, Grid } from "@material-ui/core";
 
@@ -44,7 +44,12 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-function MultiSelect({ rowIdx, column, value, onSubmit }: CustomCellProps) {
+export default function MultiSelect({
+  rowIdx,
+  column,
+  value,
+  onSubmit,
+}: CustomCellProps) {
   const classes = useStyles();
 
   const { options } = column as any;
@@ -115,5 +120,3 @@ function MultiSelect({ rowIdx, column, value, onSubmit }: CustomCellProps) {
     />
   );
 }
-
-export default withCustomCell(MultiSelect);

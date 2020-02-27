@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import withCustomCell, { CustomCellProps } from "./withCustomCell";
+import { CustomCellProps } from "./withCustomCell";
 import { ChromePicker } from "react-color";
 
 import {
@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-function Color({ value, onSubmit }: CustomCellProps) {
+export default function Color({ value, onSubmit }: CustomCellProps) {
   const classes = useStyles();
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -72,5 +72,3 @@ function Color({ value, onSubmit }: CustomCellProps) {
     </>
   );
 }
-
-export default withCustomCell(Color);

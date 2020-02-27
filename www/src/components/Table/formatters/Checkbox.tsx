@@ -1,5 +1,5 @@
 import React from "react";
-import withCustomCell, { CustomCellProps } from "./withCustomCell";
+import { CustomCellProps } from "./withCustomCell";
 
 import {
   makeStyles,
@@ -23,7 +23,12 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-function Checkbox({ row, column, value, onSubmit }: CustomCellProps) {
+export default function Checkbox({
+  row,
+  column,
+  value,
+  onSubmit,
+}: CustomCellProps) {
   const classes = useStyles();
 
   let component = (
@@ -61,5 +66,3 @@ function Checkbox({ row, column, value, onSubmit }: CustomCellProps) {
     />
   );
 }
-
-export default withCustomCell(Checkbox);

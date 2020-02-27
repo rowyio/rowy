@@ -1,5 +1,5 @@
 import React from "react";
-import withCustomCell, { CustomCellProps } from "./withCustomCell";
+import { CustomCellProps } from "./withCustomCell";
 
 import { makeStyles, createStyles, Tooltip, Fade } from "@material-ui/core";
 
@@ -47,7 +47,7 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-function LongText({ column, value }: CustomCellProps) {
+export default function LongText({ column, value }: CustomCellProps) {
   const { tableState } = useFiretableContext();
   const classes = useStyles({
     width: column.width,
@@ -80,5 +80,3 @@ function LongText({ column, value }: CustomCellProps) {
     </Tooltip>
   );
 }
-
-export default withCustomCell(LongText);

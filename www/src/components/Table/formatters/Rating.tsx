@@ -1,5 +1,5 @@
 import React from "react";
-import withCustomCell, { CustomCellProps } from "./withCustomCell";
+import { CustomCellProps } from "./withCustomCell";
 
 import { makeStyles, createStyles } from "@material-ui/core";
 import MuiRating from "@material-ui/lab/Rating";
@@ -12,7 +12,12 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-function Rating({ row, column, value, onSubmit }: CustomCellProps) {
+export default function Rating({
+  row,
+  column,
+  value,
+  onSubmit,
+}: CustomCellProps) {
   const classes = useStyles();
 
   return (
@@ -27,5 +32,3 @@ function Rating({ row, column, value, onSubmit }: CustomCellProps) {
     />
   );
 }
-
-export default withCustomCell(Rating);

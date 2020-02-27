@@ -1,6 +1,6 @@
 import React from "react";
 import clsx from "clsx";
-import withCustomCell, { CustomCellProps } from "./withCustomCell";
+import { CustomCellProps } from "./withCustomCell";
 
 import { createStyles, makeStyles, Grid, Chip } from "@material-ui/core";
 
@@ -49,7 +49,12 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-const ConnectTable = ({ rowIdx, column, value, onSubmit }: CustomCellProps) => {
+export default function ConnectTable({
+  rowIdx,
+  column,
+  value,
+  onSubmit,
+}: CustomCellProps) {
   const classes = useStyles();
 
   const { collectionPath, config } = column as any;
@@ -116,6 +121,4 @@ const ConnectTable = ({ rowIdx, column, value, onSubmit }: CustomCellProps) => {
       )}
     />
   );
-};
-
-export default withCustomCell(ConnectTable);
+}

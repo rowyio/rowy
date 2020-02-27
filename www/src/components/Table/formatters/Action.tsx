@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import withCustomCell, { CustomCellProps } from "./withCustomCell";
+import { CustomCellProps } from "./withCustomCell";
 import clsx from "clsx";
 
 import {
@@ -23,7 +23,12 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-function Action({ column, row, value, onSubmit }: CustomCellProps) {
+export default function Action({
+  column,
+  row,
+  value,
+  onSubmit,
+}: CustomCellProps) {
   const classes = useStyles();
 
   const { createdAt, updatedAt, id, ref, ...docData } = row;
@@ -96,5 +101,3 @@ function Action({ column, row, value, onSubmit }: CustomCellProps) {
     </Grid>
   );
 }
-
-export default withCustomCell(Action);

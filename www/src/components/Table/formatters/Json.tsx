@@ -1,9 +1,7 @@
 import React from "react";
-import withCustomCell, { CustomCellProps } from "./withCustomCell";
+import { CustomCellProps } from "./withCustomCell";
 
-function Json({ value }: CustomCellProps) {
+export default function Json({ value }: CustomCellProps) {
   if (!value) return null;
   return <span>{JSON.stringify(value)}</span>;
 }
-
-export default withCustomCell(Json);

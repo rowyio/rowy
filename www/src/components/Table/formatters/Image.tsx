@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import withCustomCell, { CustomCellProps } from "./withCustomCell";
+import { CustomCellProps } from "./withCustomCell";
 import { useDropzone } from "react-dropzone";
 import _findIndex from "lodash/findIndex";
 import clsx from "clsx";
@@ -83,7 +83,12 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-const Image = ({ column, row, value, onSubmit }: CustomCellProps) => {
+export default function Image({
+  column,
+  row,
+  value,
+  onSubmit,
+}: CustomCellProps) {
   const { tableState } = useFiretableContext();
   const classes = useStyles({ rowHeight: tableState?.config?.rowHeight ?? 44 });
 
@@ -211,6 +216,4 @@ const Image = ({ column, row, value, onSubmit }: CustomCellProps) => {
       </Grid>
     </Grid>
   );
-};
-
-export default withCustomCell(Image);
+}

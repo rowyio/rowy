@@ -1,6 +1,8 @@
 import React, { lazy } from "react";
 import { FieldType } from "constants/fields";
 
+import withCustomCell from "./withCustomCell";
+
 const MultiSelect = lazy(() => import("./MultiSelect"));
 const DatePicker = lazy(() => import("./Date"));
 const Rating = lazy(() => import("./Rating"));
@@ -31,47 +33,47 @@ export const getFormatter = (column: any) => {
   switch (column.type) {
     case FieldType.date:
     case FieldType.dateTime:
-      return DatePicker;
+      return withCustomCell(DatePicker);
 
     case FieldType.rating:
-      return Rating;
+      return withCustomCell(Rating);
 
     case FieldType.color:
-      return Color;
+      return withCustomCell(Color);
 
     case FieldType.checkbox:
-      return Checkbox;
+      return withCustomCell(Checkbox);
 
     case FieldType.url:
-      return Url;
+      return withCustomCell(Url);
 
     case FieldType.action:
-      return Action;
+      return withCustomCell(Action);
 
     case FieldType.singleSelect:
     case FieldType.multiSelect:
-      return MultiSelect;
+      return withCustomCell(MultiSelect);
 
     case FieldType.image:
-      return Image;
+      return withCustomCell(Image);
 
     case FieldType.file:
-      return File;
+      return withCustomCell(File);
 
     case FieldType.longText:
-      return LongText;
+      return withCustomCell(LongText);
 
     case FieldType.json:
-      return Json;
+      return withCustomCell(Json);
 
     case FieldType.richText:
-      return RichText;
+      return withCustomCell(RichText);
 
     case FieldType.connectTable:
-      return ConnectTable;
+      return withCustomCell(ConnectTable);
 
     case FieldType.subTable:
-      return SubTable;
+      return withCustomCell(SubTable);
 
     case FieldType.shortText:
     case FieldType.email:
