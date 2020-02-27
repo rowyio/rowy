@@ -24,7 +24,7 @@ import { makeStyles, createStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 
 import CloudIcon from "@material-ui/icons/CloudUpload";
-import { useFiretableContext } from "../contexts/firetableContext";
+import { useFiretableContext } from "contexts/firetableContext";
 const useStyles = makeStyles(theme =>
   createStyles({
     root: {
@@ -104,8 +104,8 @@ export default function ImportCSV(props: any) {
   }
   return (
     <div>
-      <Button onClick={handleClickOpen} endIcon={<AddCSVIcon />}>
-        Import CSV
+      <Button onClick={handleClickOpen} variant="contained" color="secondary">
+        Import
       </Button>
       <Dialog
         open={open}

@@ -10,7 +10,8 @@ import DataGrid, {
 } from "react-data-grid";
 
 import Loading from "components/Loading";
-import TableHeader from "./TableHeader";
+import SubTableBreadcrumbs, { BREADCRUMBS_HEIGHT } from "./SubTableBreadcrumbs";
+import TableHeader, { TABLE_HEADER_HEIGHT } from "./TableHeader";
 import ColumnHeader from "./ColumnHeader";
 import FinalColumnHeader from "./FinalColumnHeader";
 import FinalColumn, { useFinalColumnStyles } from "./formatters/FinalColumn";
@@ -21,10 +22,11 @@ import { useFiretableContext } from "contexts/firetableContext";
 import { FieldType } from "constants/fields";
 import { getFormatter } from "./formatters";
 import { getEditor } from "./editors";
-import { EditorProvider } from "../../util/EditorProvider";
+import { EditorProvider } from "util/EditorProvider";
 
 import useWindowSize from "hooks/useWindowSize";
 import { DRAWER_WIDTH, DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
+import { APP_BAR_HEIGHT } from "components/Navigation";
 import useStyles from "./styles";
 
 const Hotkeys = lazy(() => import("./HotKeys"));
@@ -125,11 +127,15 @@ function Table(props: Props) {
   const rows = tableState.rows;
   const rowGetter = (rowIdx: number) => rows[rowIdx];
 
+  const inSubTable = collection.split("/").length > 1;
+
   return (
     <EditorProvider>
       <Suspense fallback={<Loading message="Loading header" />}>
         <Hotkeys selectedCell={selectedCell} />
       </Suspense>
+
+      {inSubTable && <SubTableBreadcrumbs collection={collection} />}
 
       <TableHeader
         collection={collection}
@@ -161,7 +167,12 @@ function Table(props: Props) {
               sideDrawerOpen ? DRAWER_WIDTH : DRAWER_COLLAPSED_WIDTH
             }px)` as any
           }
-          minHeight={windowSize.height - 120}
+          minHeight={
+            windowSize.height -
+            APP_BAR_HEIGHT * 2 -
+            TABLE_HEADER_HEIGHT -
+            (inSubTable ? BREADCRUMBS_HEIGHT : 0)
+          }
           // enableCellCopyPaste
           // enableCellDragAndDrop
           onColumnResize={tableActions.column.resize}

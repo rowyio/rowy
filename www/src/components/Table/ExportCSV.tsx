@@ -22,11 +22,11 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Checkbox from "@material-ui/core/Checkbox";
 import Chip from "@material-ui/core/Chip";
 import CloudIcon from "@material-ui/icons/CloudDownload";
-import { exportTable } from "../firebase/callables";
+import { exportTable } from "firebase/callables";
 import { saveAs } from "file-saver";
-import useTableConfig from "../hooks/useFiretable/useTableConfig";
-import { SnackContext } from "../contexts/snackContext";
-import { FireTableFilter } from "../hooks/useFiretable";
+import useTableConfig from "hooks/useFiretable/useTableConfig";
+import { SnackContext } from "contexts/snackContext";
+import { FireTableFilter } from "hooks/useFiretable";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -115,9 +115,10 @@ export default function ExportCSV(props: Props) {
 
   return (
     <div>
-      <Button onClick={handleClickOpen} endIcon={<CloudIcon />}>
-        Export CSV
+      <Button onClick={handleClickOpen} variant="contained" color="secondary">
+        Export
       </Button>
+
       <Dialog
         open={open}
         onClose={handleClose}

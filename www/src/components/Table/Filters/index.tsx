@@ -202,7 +202,8 @@ const Filters = ({ columns, setFilters }: any) => {
         startIcon={<FilterIcon />}
       >
         {filters.length !== 0 && filters.length}
-        {` Filters`}
+        {" Filter"}
+        {filters.length > 1 && "s"}
       </Button>
 
       <Popover

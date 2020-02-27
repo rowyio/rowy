@@ -24,15 +24,21 @@ import SideDrawer, {
 
 import { useFiretableContext, Table } from "contexts/firetableContext";
 
+export const APP_BAR_HEIGHT = 56;
+
 const useStyles = makeStyles(theme =>
   createStyles({
     appBar: {
       paddingRight: ({ sideDrawerOpen }: { sideDrawerOpen?: boolean }) =>
         sideDrawerOpen ? DRAWER_WIDTH : DRAWER_COLLAPSED_WIDTH,
-      minHeight: 56,
+      height: APP_BAR_HEIGHT,
     },
 
-    tab: { minHeight: 56 },
+    maxHeight: {
+      height: APP_BAR_HEIGHT,
+      minHeight: "auto",
+    },
+    topDivider: { marginTop: -1 },
 
     bottomAppBar: {
       top: "auto",
@@ -42,7 +48,7 @@ const useStyles = makeStyles(theme =>
 
     scrollableSections: {
       overflowY: "auto",
-      minHeight: 56,
+      height: APP_BAR_HEIGHT,
       width: `calc(100% + ${theme.spacing(3)}px)`,
       marginRight: theme.spacing(-2),
     },
@@ -114,12 +120,12 @@ export default function Navigation({
                 value={table.collection}
                 component={Link}
                 to={getTablePath(table)}
-                className={classes.tab}
+                className={classes.maxHeight}
               />
             ))}
           </Tabs>
         )}
-        <Divider />
+        <Divider className={classes.topDivider} />
       </AppBar>
 
       {children}
@@ -130,7 +136,7 @@ export default function Navigation({
         color="primary"
         className={clsx(classes.appBar, classes.bottomAppBar)}
       >
-        <Toolbar component="nav">
+        <Toolbar component="nav" className={classes.maxHeight}>
           <IconButton
             edge="start"
             color="inherit"
