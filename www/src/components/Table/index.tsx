@@ -24,7 +24,6 @@ import { useFiretableContext } from "contexts/firetableContext";
 import { FieldType } from "constants/fields";
 import { getFormatter } from "./formatters";
 import { getEditor } from "./editors";
-import { EditorProvider } from "util/EditorProvider";
 
 import useWindowSize from "hooks/useWindowSize";
 import { DRAWER_WIDTH, DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
@@ -40,17 +39,16 @@ export type FiretableColumn = Column<any> & {
   [key: string]: any;
 };
 
-interface Props {
+interface ITableProps {
   collection: string;
   filters: FireTableFilter[];
 }
 
-function Table(props: Props) {
+export default function Table({ collection, filters }: ITableProps) {
   const classes = useStyles();
   const theme = useTheme();
   const finalColumnClasses = useFinalColumnStyles();
 
-  const { collection, filters } = props;
   const {
     tableState,
     tableActions,
@@ -94,9 +92,9 @@ function Table(props: Props) {
 
   if (!tableActions || !tableState) return <></>;
 
-  const onHeaderDrop = (dragged: any, target: any) => {
-    tableActions.column.reorder(dragged, target);
-  };
+  // const onHeaderDrop = (dragged: any, target: any) => {
+  //   tableActions.column.reorder(dragged, target);
+  // };
 
   let columns: FiretableColumn[] = [];
   if (!tableState.loadingColumns && tableState.columns) {
@@ -138,7 +136,7 @@ function Table(props: Props) {
   if (windowSize.width < theme.breakpoints.values.md) tableWidth = "100%";
 
   return (
-    <EditorProvider>
+    <>
       <Suspense fallback={<Loading message="Loading header" />}>
         <Hotkeys selectedCell={selectedCell} />
       </Suspense>
@@ -200,7 +198,6 @@ function Table(props: Props) {
       <Suspense fallback={<Loading message="Loading helpers" />}>
         <ColumnEditor />
       </Suspense>
-    </EditorProvider>
+    </>
   );
 }
-export default Table;
