@@ -204,8 +204,8 @@ export default function Image({
             size="small"
             className="row-hover-iconButton"
             onClick={e => {
-              e.stopPropagation();
               dropzoneProps.onClick!(e);
+              e.stopPropagation();
             }}
             color="inherit"
           >

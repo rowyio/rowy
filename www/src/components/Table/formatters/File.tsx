@@ -148,8 +148,8 @@ export default function File({
             size="small"
             className="row-hover-iconButton"
             onClick={e => {
-              e.stopPropagation();
               dropzoneProps.onClick!(e);
+              e.stopPropagation();
             }}
           >
             <UploadIcon />
