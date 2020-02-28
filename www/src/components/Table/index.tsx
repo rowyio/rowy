@@ -2,7 +2,7 @@ import React, { lazy, Suspense, useEffect, useRef } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import _isEmpty from "lodash/isEmpty";
 
-import { useTheme, LinearProgress } from "@material-ui/core";
+import { useTheme, Grid, CircularProgress } from "@material-ui/core";
 
 import "react-data-grid/dist/react-data-grid.css";
 import DataGrid, {
@@ -77,7 +77,7 @@ export default function Table({ collection, filters }: ITableProps) {
     if (!elem || !parent) return;
 
     const lowestScrollTopPosition = elem.scrollHeight - parent.clientHeight;
-    const offset = 200;
+    const offset = 400;
 
     if (position.scrollTop < lowestScrollTopPosition - offset) return;
 
@@ -191,15 +191,25 @@ export default function Table({ collection, filters }: ITableProps) {
             enableCellSelect
             onScroll={handleScroll}
             ref={dataGridRef}
-            RowsContainer={props => <div {...props} ref={rowsContainerRef} />}
+            RowsContainer={props => (
+              <>
+                <div {...props} ref={rowsContainerRef} />
+                <Grid
+                  container
+                  className={classes.loadingContainer}
+                  alignItems="center"
+                  justify="center"
+                >
+                  {tableState.rows.length > 0 && tableState.loadingRows && (
+                    <CircularProgress disableShrink />
+                  )}
+                </Grid>
+              </>
+            )}
           />
         </DraggableContainer>
       ) : (
         <Loading message="Fetching columns" />
-      )}
-
-      {tableState.rows.length > 0 && tableState.loadingRows && (
-        <LinearProgress className={classes.loadingBar} />
       )}
 
       <Suspense fallback={<Loading message="Loading helpers" />}>
