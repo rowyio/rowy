@@ -1,238 +1,115 @@
-import React, { useState, useEffect, lazy, Suspense } from "react";
+import React, { lazy, Suspense, useEffect, useRef } from "react";
+import { useDebouncedCallback } from "use-debounce";
 import _isEmpty from "lodash/isEmpty";
 
-import {
-  Button,
-  IconButton,
-  Typography,
-  Grid as MuiGrid,
-  Tooltip,
-} from "@material-ui/core";
-import ImportExportIcon from "@material-ui/icons/ImportExport";
-import DropdownIcon from "@material-ui/icons/ArrowDropDownCircle";
-import Confirmation from "components/Confirmation";
-import DeleteIcon from "@material-ui/icons/Delete";
-import DuplicateIcon from "@material-ui/icons/FileCopy";
-import AddIcon from "@material-ui/icons/AddCircle";
+import { useTheme, LinearProgress } from "@material-ui/core";
 
-import useStyles from "./useStyle";
+import "react-data-grid/dist/react-data-grid.css";
+import DataGrid, {
+  Column,
+  CellNavigationMode,
+  ScrollPosition,
+} from "react-data-grid";
+import { DraggableHeader } from "react-data-grid-addons";
 
-import Loading from "../../components/Loading";
-import Grid, { IGridProps } from "./Grid";
+import Loading from "components/Loading";
+import SubTableBreadcrumbs, { BREADCRUMBS_HEIGHT } from "./SubTableBreadcrumbs";
+import TableHeader, { TABLE_HEADER_HEIGHT } from "./TableHeader";
+import ColumnHeader from "./ColumnHeader";
+import FinalColumnHeader from "./FinalColumnHeader";
+import FinalColumn, { useFinalColumnStyles } from "./formatters/FinalColumn";
 
-import { FireTableFilter, FiretableOrderBy } from "../../hooks/useFiretable";
-import { useAppContext } from "contexts/appContext";
+import { FireTableFilter } from "hooks/useFiretable";
 import { useFiretableContext } from "contexts/firetableContext";
 
-import { FieldType, getFieldIcon } from "constants/fields";
-import {
-  cellFormatter,
-  onCellSelected,
-  onGridRowsUpdated,
-  singleSelectEditor,
-  NumberEditor,
-  editable,
-  onSubmit,
-} from "./grid-fns";
-import { EditorProvider } from "../../util/EditorProvider";
+import { FieldType } from "constants/fields";
+import { getFormatter } from "./formatters";
+import { getEditor } from "./editors";
+
+import useWindowSize from "hooks/useWindowSize";
+import { DRAWER_WIDTH, DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
+import { APP_BAR_HEIGHT } from "components/Navigation";
+import useStyles from "./styles";
 
 const Hotkeys = lazy(() => import("./HotKeys"));
-const TableHeader = lazy(() => import("./TableHeader"));
-const SearchBox = lazy(() => import("../SearchBox"));
-const DocSelect = lazy(() => import("../Fields/DocSelect"));
 const ColumnEditor = lazy(() => import("./ColumnEditor/index"));
+const { DraggableContainer } = DraggableHeader;
 
-interface Props {
+export type FiretableColumn = Column<any> & {
+  isNew?: boolean;
+  type: FieldType;
+  [key: string]: any;
+};
+
+interface ITableProps {
   collection: string;
   filters: FireTableFilter[];
 }
 
-function Table(props: Props) {
-  const { collection, filters } = props;
-  const { currentUser } = useAppContext();
+export default function Table({ collection, filters }: ITableProps) {
+  const classes = useStyles();
+  const theme = useTheme();
+  const finalColumnClasses = useFinalColumnStyles();
+
   const {
     tableState,
     tableActions,
-    setSelectedCell: contextSetSelectedCell,
+    selectedCell,
+    setSelectedCell,
+    updateCell,
+    sideDrawerOpen,
+    dataGridRef,
   } = useFiretableContext();
 
   useEffect(() => {
     if (tableActions && tableState && tableState.tablePath !== collection) {
       console.log("setting table");
       tableActions.table.set(collection, filters);
-      if (contextSetSelectedCell) contextSetSelectedCell({});
+      setSelectedCell!({});
     }
   }, [collection]);
-  // TODO: move this to firetableContext
-  const [selectedCell, setSelectedCell] = useState<{ row: any; column: any }>({
-    row: {},
-    column: {},
-  });
 
-  const [search, setSearch] = useState({
-    config: undefined,
-    collection: "",
-    onSubmit: undefined,
-  });
+  const rowsContainerRef = useRef<HTMLDivElement>(null);
+  // Gets more rows when scrolled down.
+  const [handleScroll] = useDebouncedCallback((position: ScrollPosition) => {
+    const elem = rowsContainerRef?.current;
+    const parent = elem?.parentNode as HTMLDivElement;
+    if (!elem || !parent) return;
 
-  const classes = useStyles();
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+    const lowestScrollTopPosition = elem.scrollHeight - parent.clientHeight;
+    const offset = 200;
 
-  const [header, setHeader] = useState<any | null>();
+    if (position.scrollTop < lowestScrollTopPosition - offset) return;
+
+    // Prevent calling more rows when they’ve already been called
+    if (tableState!.loadingRows) return;
+
+    // Call for 30 more rows. Note we don’t know here if there are no more
+    // rows left in the database. This is done in the useTable hook.
+    tableActions?.row.more(30);
+  }, 100);
+
+  const windowSize = useWindowSize();
+  if (!windowSize || !windowSize.height) return <></>;
 
   if (!tableActions || !tableState) return <></>;
-  const handleCloseHeader = () => {
-    setHeader(null);
-    setAnchorEl(null);
-  };
-  const clearSearch = () => {
-    setSearch({
-      config: undefined,
-      collection: "",
-      onSubmit: undefined,
-    });
-  };
-  const docSelect = (column: any) => (props: any) => (
-    <Suspense fallback={<div />}>
-      <DocSelect
-        {...props}
-        onSubmit={onSubmit(column.key, props.row, currentUser?.uid)}
-        collectionPath={column.collectionPath}
-        config={column.config}
-        setSearch={setSearch}
-      />
-    </Suspense>
-  );
-  const handleClick = (headerProps: any) => (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    handleCloseHeader();
-    setAnchorEl(event.currentTarget);
-    setHeader(headerProps);
-  };
-
-  const headerRenderer = (props: any) => {
-    const { column } = props;
-    switch (column.key) {
-      case "new":
-        return (
-          <div className={classes.header}>
-            {column.name}
-            <IconButton size="small" onClick={handleClick(props)}>
-              <AddIcon />
-            </IconButton>
-          </div>
-        );
-      default:
-        return (
-          <Tooltip title={props.column.key}>
-            <MuiGrid
-              container
-              className={classes.header}
-              alignItems="center"
-              wrap="nowrap"
-            >
-              <MuiGrid
-                item
-                onClick={() => {
-                  navigator.clipboard.writeText(props.column.key);
-                }}
-                className={classes.columnIconContainer}
-              >
-                {getFieldIcon(props.column.type)}
-              </MuiGrid>
-              <MuiGrid
-                item
-                xs
-                onClick={() => {
-                  navigator.clipboard.writeText(props.column.key);
-                }}
-                className={classes.columnNameContainer}
-              >
-                <Typography
-                  variant="h6"
-                  noWrap
-                  className={classes.columnName}
-                  component="span"
-                >
-                  {props.column.name}
-                </Typography>
-              </MuiGrid>
-
-              <MuiGrid item>
-                <IconButton
-                  color={
-                    // tableState &&
-                    // tableState.orderBy[0] &&
-                    // tableState.orderBy[0].key === column.key
-                    //   ? "primary"
-                    //   :
-                    "default"
-                  }
-                  disableFocusRipple={true}
-                  size="small"
-                  onClick={() => {
-                    // console.log(orderBy);
-                    // if (
-                    //   orderBy &&
-                    //   orderBy[0] &&
-                    //   orderBy[0].direction === "asc"
-                    // ) {
-                    //   const ordering: FiretableOrderBy = [
-                    //     { key: column.key, direction: "desc" },
-                    //   ];
-                    //   tableActions.table.orderBy(ordering);
-                    // } else {
-                    const ordering: FiretableOrderBy = [
-                      { key: column.key, direction: "asc" },
-                    ];
-                    tableActions.table.orderBy(ordering);
-                    // }
-
-                    // setOrderBy(ordering) #BROKENINSIDE
-                  }}
-                >
-                  <ImportExportIcon />
-                </IconButton>
-                <IconButton
-                  disableFocusRipple={true}
-                  size="small"
-                  onClick={handleClick(props)}
-                  className={classes.dropdownButton}
-                >
-                  <DropdownIcon />
-                </IconButton>
-              </MuiGrid>
-            </MuiGrid>
-          </Tooltip>
-        );
-    }
-  };
 
   const onHeaderDrop = (dragged: any, target: any) => {
     tableActions.column.reorder(dragged, target);
   };
 
-  let columns: IGridProps["columns"] = [];
+  let columns: FiretableColumn[] = [];
   if (!tableState.loadingColumns && tableState.columns) {
     columns = tableState.columns
       .filter((column: any) => !column.hidden)
-      .map((column: any) => ({
+      .map((column: any, index) => ({
         draggable: true,
-        editable: editable(column.type),
+        editable: true,
         resizable: true,
-        //frozen: column.fixed,
-        headerRenderer: headerRenderer,
-        formatter:
-          column.type === FieldType.connectTable
-            ? docSelect(column)
-            : cellFormatter(column),
-        editor:
-          column.type === FieldType.singleSelect
-            ? singleSelectEditor(column.options)
-            : column.type === FieldType.number
-            ? NumberEditor
-            : false,
+        frozen: column.fixed,
+        headerRenderer: ColumnHeader,
+        formatter: getFormatter(column),
+        editor: getEditor(column),
         ...column,
         width: column.width ? (column.width > 380 ? 380 : column.width) : 150,
       }));
@@ -242,137 +119,92 @@ function Table(props: Props) {
       name: "Add column",
       type: FieldType.last,
       width: 160,
-      headerRenderer: headerRenderer,
-      formatter: (props: any) => (
-        <>
-          <Confirmation
-            message={{
-              title: "Delete Row",
-              body: "Are you sure you want to delete this row?",
-              confirm: (
-                <>
-                  <DeleteIcon /> Delete
-                </>
-              ),
-            }}
-          >
-            <IconButton
-              onClick={async () => {
-                props.row.ref.delete();
-              }}
-            >
-              <DeleteIcon />
-            </IconButton>
-          </Confirmation>
-          <IconButton
-            onClick={() => {
-              const clonedRow = { ...props.row };
-              // remove metadata
-              delete clonedRow.ref;
-              delete clonedRow.rowHeight;
-              delete clonedRow.updatedAt;
-              delete clonedRow.createdAt;
-              tableActions.row.add(clonedRow);
-            }}
-          >
-            <DuplicateIcon />
-          </IconButton>
-        </>
-      ),
+      headerRenderer: FinalColumnHeader,
+      cellClass: finalColumnClasses.cell,
+      formatter: FinalColumn,
+      editable: false,
     });
   }
 
   const rowHeight = tableState.config.rowHeight;
 
-  const rows =
-    tableState.rows.length !== 0
-      ? [...tableState.rows.map((row: any) => ({ rowHeight, ...row })), {}]
-      : [];
+  const rows = tableState.rows;
+  const rowGetter = (rowIdx: number) => rows[rowIdx];
 
-  const RowRenderer = (props: any) => {
-    const { renderBaseRow, ...rest } = props;
-    if (rows.length === rest.idx + 1) {
-      return (
-        <Button
-          onClick={() => {
-            addRow();
-          }}
-        >
-          Add a new row
-        </Button>
-      );
-    } else {
-      return renderBaseRow(rest);
-    }
-  };
-  /**
-   * Intercepting row getter to detect when table is requesting the last local row the bottom and fetch more rows
-   * @param index
-   */
-  const handleRowGetter = (index: number) => {
-    if (tableState.rowsLimit - index < 30) {
-      tableActions.row.more(30);
-    }
-    return rows[index];
-  };
-  const addRow = (data?: any) => {
-    if (filters) {
-      // adds filter data into the new row
-      const filtersData = filters.reduce(
-        (accumulator: any, currentValue: FireTableFilter) => ({
-          ...accumulator,
-          [currentValue.key]: currentValue.value,
-        }),
-        {}
-      );
-      tableActions.row.add({ ...filtersData, ...data });
-    } else tableActions.row.add({ ...data });
-  };
+  const inSubTable = collection.split("/").length > 1;
+
+  let tableWidth: any = `calc(100% - ${
+    sideDrawerOpen ? DRAWER_WIDTH : DRAWER_COLLAPSED_WIDTH
+  }px)`;
+  if (windowSize.width < theme.breakpoints.values.md) tableWidth = "100%";
+
   return (
-    <EditorProvider>
+    <>
       <Suspense fallback={<Loading message="Loading header" />}>
         <Hotkeys selectedCell={selectedCell} />
-        <TableHeader
-          collection={collection}
-          rowHeight={rowHeight}
-          updateConfig={tableActions.table.updateConfig}
-          columns={columns}
-          filters={filters}
-        />
       </Suspense>
 
+      {inSubTable && <SubTableBreadcrumbs collection={collection} />}
+
+      <TableHeader
+        collection={collection}
+        rowHeight={rowHeight}
+        updateConfig={tableActions.table.updateConfig}
+        columns={columns}
+        filters={filters}
+      />
+
       {!tableState.loadingColumns ? (
-        <Grid
-          key={`${collection}-grid`}
-          onHeaderDrop={onHeaderDrop}
-          rowHeight={rowHeight}
-          columns={columns}
-          RowRenderer={RowRenderer}
-          handleRowGetter={handleRowGetter}
-          // TODO: Remove this fixed height using flexbox
-          tableHeight="calc(100vh - 120px)"
-          onGridRowsUpdated={onGridRowsUpdated}
-          rows={rows}
-          resizeColumn={tableActions.column.resize}
-          loadingRows={tableState.loadingRows}
-          addRow={addRow}
-          setSelectedCell={setSelectedCell}
-        />
+        <DraggableContainer onHeaderDrop={onHeaderDrop}>
+          <DataGrid
+            columns={columns}
+            rowGetter={rowGetter}
+            rowsCount={rows.length}
+            rowKey={"id" as "id"}
+            onGridRowsUpdated={event => {
+              console.log(event);
+              const { action, cellKey, updated } = event;
+              if (action === "CELL_UPDATE")
+                updateCell!(rows[event.toRow].ref, cellKey as string, updated);
+            }}
+            rowHeight={rowHeight}
+            headerRowHeight={44}
+            // TODO: Investigate why setting a numeric value causes
+            // LOADING to pop up on screen when scrolling horizontally
+            // width={windowSize.width - DRAWER_COLLAPSED_WIDTH}
+            minWidth={tableWidth}
+            minHeight={
+              windowSize.height -
+              APP_BAR_HEIGHT * 2 -
+              TABLE_HEADER_HEIGHT -
+              (inSubTable ? BREADCRUMBS_HEIGHT : 0)
+            }
+            // enableCellCopyPaste
+            // enableCellDragAndDrop
+            onColumnResize={tableActions.column.resize}
+            cellNavigationMode={CellNavigationMode.CHANGE_ROW}
+            onCellSelected={({ rowIdx, idx: colIdx }) => {
+              // Prevent selecting final row
+              if (colIdx < columns.length - 1)
+                setSelectedCell!({ row: rowIdx, column: columns[colIdx].key });
+            }}
+            enableCellSelect
+            onScroll={handleScroll}
+            ref={dataGridRef}
+            RowsContainer={props => <div {...props} ref={rowsContainerRef} />}
+          />
+        </DraggableContainer>
       ) : (
         <Loading message="Fetching columns" />
       )}
 
-      <Suspense fallback={<Loading message="Loading helpers" />}>
-        <ColumnEditor
-          handleClose={handleCloseHeader}
-          anchorEl={anchorEl}
-          column={header && header.column}
-          actions={tableActions.column}
-        />
+      {tableState.rows.length > 0 && tableState.loadingRows && (
+        <LinearProgress className={classes.loadingBar} />
+      )}
 
-        <SearchBox searchData={search} clearSearch={clearSearch} />
+      <Suspense fallback={<Loading message="Loading helpers" />}>
+        <ColumnEditor />
       </Suspense>
-    </EditorProvider>
+    </>
   );
 }
-export default Table;

@@ -1,11 +1,14 @@
 import React from "react";
 import queryString from "query-string";
-import Navigation from "../components/Navigation";
-import Table from "../components/Table";
 
-import { FireTableFilter } from "../hooks/useFiretable";
+import { Hidden } from "@material-ui/core";
 
-import useRouter from "../hooks/useRouter";
+import Navigation from "components/Navigation";
+import Table from "components/Table";
+import SideDrawer from "components/SideDrawer";
+
+import { FireTableFilter } from "hooks/useFiretable";
+import useRouter from "hooks/useRouter";
 
 export default function TableView() {
   const router = useRouter();
@@ -21,13 +24,18 @@ export default function TableView() {
     filters = JSON.parse(parsed.filters);
     //TODO: json schema validator
   }
+
   return (
-    <Navigation>
+    <Navigation tableCollection={tableCollection}>
       <Table
         key={tableCollection}
         collection={tableCollection}
         filters={filters}
       />
+
+      <Hidden smDown>
+        <SideDrawer />
+      </Hidden>
     </Navigation>
   );
 }

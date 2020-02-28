@@ -24,7 +24,8 @@ const useStyles = makeStyles(theme =>
       height: 20,
       marginLeft: 2,
 
-      border: `1px solid ${theme.palette.text.disabled}`,
+      boxShadow: `0 0 0 1px ${theme.palette.text.disabled} inset`,
+      borderRadius: theme.shape.borderRadius,
     },
   })
 );
@@ -60,7 +61,7 @@ export default function Color({ field, form }: IColorProps) {
 
         <Grid item xs>
           <Typography
-            variant="body2"
+            variant="body1"
             color={field.value.hex ? "textPrimary" : "textSecondary"}
           >
             {field.value.hex ?? "Choose a color…"}

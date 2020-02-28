@@ -3,10 +3,8 @@ function useWindowSize() {
   const isClient = typeof window === "object";
 
   function getSize() {
-    return {
-      width: isClient ? window.innerWidth : undefined,
-      height: isClient ? window.innerHeight : undefined,
-    };
+    if (!isClient) return undefined;
+    return { width: window.innerWidth, height: window.innerHeight };
   }
 
   const [windowSize, setWindowSize] = useState(getSize);

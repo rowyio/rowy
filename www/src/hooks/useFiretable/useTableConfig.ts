@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useDebouncedCallback } from "use-debounce";
 import useDoc, { DocActions } from "../useDoc";
 import { FieldType } from "constants/fields";
 import _camelCase from "lodash/camelCase";
@@ -52,11 +53,11 @@ const useTableConfig = (tablePath?: string) => {
    *  @param index of column.
    *  @param width number of pixels, eg: 120
    */
-  const resize = (index: number, width: number) => {
+  const [resize] = useDebouncedCallback((index: number, width: number) => {
     const { columns } = tableConfigState;
     columns[index].width = width;
     documentDispatch({ action: DocActions.update, data: { columns } });
-  };
+  }, 1000);
   type updatable = { field: string; value: unknown };
 
   /**  used for updating column properties such as type,name etc.

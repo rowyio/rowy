@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import clsx from "clsx";
 import _isNil from "lodash/isNil";
+import _findIndex from "lodash/findIndex";
 
 import { Drawer, Fab } from "@material-ui/core";
 import ChevronIcon from "@material-ui/icons/KeyboardArrowLeft";
@@ -25,6 +26,7 @@ export default function SideDrawer() {
     setSelectedCell,
     sideDrawerOpen: open,
     setSideDrawerOpen: setOpen,
+    dataGridRef,
   } = useFiretableContext();
 
   const disabled = !selectedCell || _isNil(selectedCell.row);
@@ -32,19 +34,17 @@ export default function SideDrawer() {
     if (disabled && setOpen) setOpen(false);
   }, [disabled]);
 
-  const handleNavigateUp = () => {
-    if (setSelectedCell)
-      setSelectedCell(cell => ({
-        ...cell,
-        row: cell.row > 0 ? cell.row - 1 : cell.row,
-      }));
-  };
-  const handleNavigateDown = () => {
-    if (setSelectedCell)
-      setSelectedCell(cell => ({
-        ...cell,
-        row: cell.row < tableState!.rows.length - 1 ? cell.row + 1 : cell.row,
-      }));
+  const handleNavigate = (direction: "up" | "down") => () => {
+    if (!tableState?.rows) return;
+
+    let row = selectedCell!.row;
+    if (direction === "up" && row > 0) row -= 1;
+    if (direction === "down" && row < tableState.rows.length - 1) row += 1;
+
+    setSelectedCell!(cell => ({ ...cell, row }));
+
+    const idx = _findIndex(tableState?.columns, ["key", selectedCell!.column]);
+    dataGridRef?.current?.selectCell({ rowIdx: row, idx });
   };
 
   // Map columns to form fields
@@ -86,6 +86,10 @@ export default function SideDrawer() {
         field.config = column.config;
         break;
 
+      case FieldType.action:
+        field.callableName = column.callableName;
+        break;
+
       default:
         break;
     }
@@ -125,7 +129,7 @@ export default function SideDrawer() {
           color="secondary"
           size="small"
           disabled={disabled || !selectedCell || selectedCell.row <= 0}
-          onClick={handleNavigateUp}
+          onClick={handleNavigate("up")}
         >
           <ChevronUpIcon />
         </Fab>
@@ -140,7 +144,7 @@ export default function SideDrawer() {
             !selectedCell ||
             selectedCell.row >= tableState.rows.length - 1
           }
-          onClick={handleNavigateDown}
+          onClick={handleNavigate("down")}
         >
           <ChevronDownIcon />
         </Fab>
