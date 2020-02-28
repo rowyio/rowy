@@ -52,7 +52,7 @@ const tableInitialState = {
 };
 
 const useTable = (initialOverrides: any) => {
-  const snackContext = useContext(SnackContext);
+  const snack = useContext(SnackContext);
 
   const [tableState, tableDispatch] = useReducer(tableReducer, {
     ...tableInitialState,
@@ -130,7 +130,7 @@ const useTable = (initialOverrides: any) => {
             "indexes?create_composite=" +
             error.message.split("indexes?create_composite=")[1];
 
-          snackContext.open({
+          snack.open({
             severity: "error",
             message: "needs a new index",
             duration: 10000,
@@ -224,16 +224,27 @@ const useTable = (initialOverrides: any) => {
       ...data,
     };
     console.log(docData);
-    if (rows.length === 0) {
-      await db.collection(path).add(docData);
-    } else {
-      const firstId = rows[0].id;
-      const newId = generateSmallerId(firstId);
-      console.log(newId);
-      await db
-        .collection(path)
-        .doc(newId)
-        .set(docData, { merge: true });
+    try {
+      if (rows.length === 0) {
+        await db.collection(path).add(docData);
+      } else {
+        const firstId = rows[0].id;
+        const newId = generateSmallerId(firstId);
+        console.log(newId);
+        await db
+          .collection(path)
+          .doc(newId)
+          .set(docData, { merge: true });
+      }
+    } catch (error) {
+      if (error.code === "permission-denied") {
+        snack.open({
+          severity: "error",
+          message: "You don't have sufficient permissions",
+          duration: 3000,
+          position: { vertical: "top", horizontal: "center" },
+        });
+      }
     }
   };
   /**  used for incrementing the number of rows fetched

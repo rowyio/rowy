@@ -21,7 +21,10 @@ import { FileIcon } from "constants/fields";
 
 const useStyles = makeStyles(theme =>
   createStyles({
-    root: { padding: theme.spacing(0, 0.75, 0, 1) },
+    root: {
+      padding: theme.spacing(0, 0.75, 0, 1),
+      outline: "none",
+    },
     dragActive: {
       backgroundColor: fade(
         theme.palette.primary.main,
@@ -117,6 +120,7 @@ export default function File({
                     confirm: "Delete",
                   }}
                   functionName="onDelete"
+                  stopPropagation
                 >
                   <Chip
                     icon={<FileIcon />}
@@ -143,7 +147,10 @@ export default function File({
           <IconButton
             size="small"
             className="row-hover-iconButton"
-            onClick={e => dropzoneProps.onClick!(e)}
+            onClick={e => {
+              dropzoneProps.onClick!(e);
+              e.stopPropagation();
+            }}
           >
             <UploadIcon />
           </IconButton>

@@ -6,6 +6,7 @@ import {
   fieldToKeyboardDateTimePicker,
   KeyboardDateTimePickerProps,
 } from "formik-material-ui-pickers";
+import { DATE_TIME_FORMAT } from "constants/dates";
 
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
 
@@ -18,18 +19,24 @@ export default function DateTimePicker(props: KeyboardDateTimePickerProps) {
   else if (props.field.value !== undefined)
     transformedValue = props.field.value;
 
+  const handleChange = (date: Date | null) => {
+    if (!date || isNaN(date.valueOf())) return;
+    props.form.setFieldValue(props.field.name, date);
+  };
+
   return (
     <KeyboardDateTimePicker
       variant="inline"
       inputVariant="filled"
       fullWidth
       margin="none"
-      format="yyyy/MM/dd h:mm aaaa"
-      placeholder="yyyy/MM/dd h:mm aaaa"
+      format={DATE_TIME_FORMAT}
+      placeholder={DATE_TIME_FORMAT}
       InputAdornmentProps={{ style: { marginRight: theme.spacing(-1) } }}
       keyboardIcon={<AccessTimeIcon />}
       {...fieldToKeyboardDateTimePicker(props)}
       value={transformedValue}
+      onChange={handleChange}
       label=""
       hiddenLabel
       id={`sidedrawer-field-${props.field.name}`}
