@@ -204,17 +204,28 @@ const useTable = (initialOverrides: any) => {
     if (filters) tableDispatch({ filters });
   };
 
+  const filterReducer = (acc, curr) => {
+    if (curr.operator === "==") {
+      return { ...acc, [curr.key]: curr.value };
+    } else return acc;
+  };
   /**  creating new document/row
    *  @param data(optional: default will create empty row)
    */
   const addRow = async (data?: any) => {
+    const valuesFromFilter = tableState.filters.reduce(filterReducer, {});
+    console.log(valuesFromFilter);
     const { rows, orderBy, path } = tableState;
+
+    const docData = {
+      ...valuesFromFilter,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+      ...data,
+    };
+    console.log(docData);
     if (rows.length === 0) {
-      await db.collection(path).add({
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-        ...data,
-      });
+      await db.collection(path).add(docData);
     } else {
       const firstId = rows[0].id;
       const newId = generateSmallerId(firstId);
@@ -222,14 +233,7 @@ const useTable = (initialOverrides: any) => {
       await db
         .collection(path)
         .doc(newId)
-        .set(
-          {
-            createdAt: serverTimestamp(),
-            updatedAt: serverTimestamp(),
-            ...data,
-          },
-          { merge: true }
-        );
+        .set(docData, { merge: true });
     }
   };
   /**  used for incrementing the number of rows fetched
