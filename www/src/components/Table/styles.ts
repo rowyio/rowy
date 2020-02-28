@@ -10,7 +10,9 @@ export const useStyles = makeStyles(theme =>
           lineHeight: "inherit !important",
         },
 
-        "& .rdg-header": { backgroundColor: theme.palette.background.default },
+        "& .rdg-header, & .rdg-header .rdg-cell": {
+          backgroundColor: theme.palette.background.default,
+        },
         "& .rdg-header .rdg-cell": {
           borderTop: "1px solid #e0e0e0",
           height: "100%",
@@ -20,7 +22,7 @@ export const useStyles = makeStyles(theme =>
 
         "& .rdg-cell": {
           borderColor: "#e0e0e0",
-          display: "flex",
+          display: "inline-flex",
           alignItems: "center",
           padding: theme.spacing(0, 1.5),
         },
@@ -40,6 +42,7 @@ export const useStyles = makeStyles(theme =>
 
       ".rdg-draggable-header-cell": {
         cursor: "move",
+        display: "inline",
 
         "&.rdg-can-drop .rdg-cell": { backgroundColor: theme.palette.divider },
       },

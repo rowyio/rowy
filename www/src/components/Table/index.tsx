@@ -106,7 +106,7 @@ export default function Table({ collection, filters }: ITableProps) {
         draggable: true,
         editable: true,
         resizable: true,
-        // frozen: column.fixed,
+        frozen: column.fixed,
         headerRenderer: ColumnHeader,
         formatter: getFormatter(column),
         editor: getEditor(column),

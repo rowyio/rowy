@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import _findIndex from "lodash/findIndex";
 import Button from "@material-ui/core/Button";
 import FormControl from "@material-ui/core/FormControl";
 
@@ -15,8 +16,8 @@ import LockIcon from "@material-ui/icons/Lock";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
-import FormatUnderlinedIcon from "@material-ui/icons/FormatUnderlined";
-import FormatColorFillIcon from "@material-ui/icons/FormatColorFill";
+import FrozenIcon from "@material-ui/icons/AcUnit";
+import ResizeIcon from "@material-ui/icons/PhotoSizeSelectSmall";
 import DeleteIcon from "@material-ui/icons/Delete";
 import SelectOptionsInput from "./SelectOptionsInput";
 
@@ -66,6 +67,7 @@ const useStyles = makeStyles(theme =>
 
 export default function ColumnEditor() {
   const {
+    tableState,
     tableActions,
     selectedColumnHeader,
     setSelectedColumnHeader,
@@ -123,13 +125,15 @@ export default function ColumnEditor() {
       if (column.collectionPath) {
         setValue("collectionPath", column.collectionPath);
       }
-      ["resizable", "editable", "fixed", "hidden"].map(flag => {
-        if (column[flag]) {
-          setFlags([...flags, flag]);
-        }
-      });
+      const flags = ["resizable", "editable", "fixed", "hidden"].filter(
+        flag =>
+          column[flag] === true ||
+          (flag === "resizable" && column[flag] !== false)
+      );
+      setFlags(flags);
     }
   }, [column]);
+
   const clearValues = () => {
     setValues({
       type: null,
@@ -161,8 +165,18 @@ export default function ColumnEditor() {
     handleClose();
     clearValues();
   };
+
+  // WARNING: column.idx does NOT map to how we store column config in Firestore
+  // when a column is fixed AND it is not the first column. We should NOT be
+  // using indexes to manipulate column config anyway!
+
+  const configColumnIndex = _findIndex(tableState?.columns, [
+    "key",
+    column?.key,
+  ]);
+
   const deleteColumn = () => {
-    actions.remove(column?.idx);
+    actions.remove(configColumnIndex);
     handleClose();
     clearValues();
   };
@@ -171,7 +185,12 @@ export default function ColumnEditor() {
     let updatables: { field: string; value: any }[] = [
       { field: "name", value: values.name },
       { field: "type", value: values.type },
-      { field: "resizable", value: flags.includes("resizable") },
+      // TEMP: disable resizing fixed columns due to the problem described
+      // on line 169
+      {
+        field: "resizable",
+        value: !flags.includes("fixed") && flags.includes("resizable"),
+      },
       { field: "editable", value: flags.includes("editable") },
       { field: "hidden", value: flags.includes("hidden") },
       { field: "fixed", value: flags.includes("fixed") },
@@ -201,7 +220,7 @@ export default function ColumnEditor() {
     if (values.type === FieldType.action) {
       updatables.push({ field: "callableName", value: values.callableName });
     }
-    actions.update(column?.idx, updatables);
+    actions.update(configColumnIndex, updatables);
     handleClose();
     clearValues();
   };
@@ -220,6 +239,8 @@ export default function ColumnEditor() {
         id={`id-${column.name}`}
         open={!!anchorEl}
         anchorEl={anchorEl}
+        anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
+        transformOrigin={{ horizontal: "center", vertical: "top" }}
         onClose={onClose}
       >
         <Grid container className={classes.container} direction="column">
@@ -230,12 +251,12 @@ export default function ColumnEditor() {
             onChange={handleToggle}
             arial-label="column settings"
           >
-            <Tooltip title="Editable Cells">
-              <ToggleButton value="editable" aria-label="editable">
+            <ToggleButton value="editable" aria-label="editable">
+              <Tooltip title={flags.includes("editable") ? "Lock" : "Unlock"}>
                 {flags.includes("editable") ? <LockOpenIcon /> : <LockIcon />}
-              </ToggleButton>
-            </Tooltip>
-            <Tooltip title="Hide Column">
+              </Tooltip>
+            </ToggleButton>
+            {/* <Tooltip title="Hide Column">
               <ToggleButton value="visible" aria-label="visible">
                 {flags.includes("visible") ? (
                   <VisibilityIcon />
@@ -243,18 +264,34 @@ export default function ColumnEditor() {
                   <VisibilityOffIcon />
                 )}
               </ToggleButton>
-            </Tooltip>
-            <Tooltip title="Fixed Column">
-              <ToggleButton value="fixed" aria-label="fixed">
-                <FormatUnderlinedIcon />
-              </ToggleButton>
-            </Tooltip>
-            <Tooltip title="Resizable column">
-              <ToggleButton value="resizable" aria-label="resizable">
-                <FormatColorFillIcon />
-              </ToggleButton>
-            </Tooltip>
+            </Tooltip> */}
+            <ToggleButton value="fixed" aria-label="fixed">
+              <Tooltip
+                title={
+                  flags.includes("fixed") ? "Unfreeze Column" : "Freeze Column"
+                }
+              >
+                <FrozenIcon />
+              </Tooltip>
+            </ToggleButton>
+
+            <ToggleButton
+              value="resizable"
+              aria-label="resizable"
+              disabled={flags.includes("fixed")}
+            >
+              <Tooltip
+                title={
+                  flags.includes("resizable")
+                    ? "Disable column resize"
+                    : "Enable column resize"
+                }
+              >
+                <ResizeIcon />
+              </Tooltip>
+            </ToggleButton>
           </ToggleButtonGroup>
+
           <TextField
             label="Column name"
             name="name"
