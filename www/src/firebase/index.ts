@@ -15,7 +15,11 @@ const config = {
 firebase.initializeApp(config);
 
 export const auth = firebase.auth();
+
 export const db = firebase.firestore();
+db.settings({ cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED });
+db.enablePersistence();
+
 export const bucket = firebase.storage();
 export const functions = firebase.functions();
 export const googleProvider = new firebase.auth.GoogleAuthProvider();
