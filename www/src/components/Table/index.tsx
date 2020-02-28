@@ -122,6 +122,7 @@ export default function Table({ collection, filters }: ITableProps) {
       headerRenderer: FinalColumnHeader,
       cellClass: finalColumnClasses.cell,
       formatter: FinalColumn,
+      editable: false,
     });
   }
 
@@ -182,9 +183,11 @@ export default function Table({ collection, filters }: ITableProps) {
             // enableCellDragAndDrop
             onColumnResize={tableActions.column.resize}
             cellNavigationMode={CellNavigationMode.CHANGE_ROW}
-            onCellSelected={({ rowIdx, idx: colIdx }) =>
-              setSelectedCell!({ row: rowIdx, column: columns[colIdx].key })
-            }
+            onCellSelected={({ rowIdx, idx: colIdx }) => {
+              // Prevent selecting final row
+              if (colIdx < columns.length - 1)
+                setSelectedCell!({ row: rowIdx, column: columns[colIdx].key });
+            }}
             enableCellSelect
             onScroll={handleScroll}
             ref={dataGridRef}
