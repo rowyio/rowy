@@ -1,6 +1,7 @@
 import React from "react";
 import clsx from "clsx";
 import { CustomCellProps } from "./withCustomCell";
+import { useDebouncedCallback } from "use-debounce";
 
 import { makeStyles, createStyles } from "@material-ui/core";
 import { FieldType, DateIcon, DateTimeIcon } from "constants/fields";
@@ -11,6 +12,7 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
   KeyboardDateTimePicker,
+  DatePickerProps,
 } from "@material-ui/pickers";
 
 import { useFiretableContext } from "contexts/firetableContext";
@@ -54,18 +56,23 @@ export default function Date({
     fieldType === FieldType.date ? KeyboardDatePicker : KeyboardDateTimePicker;
   const Icon = fieldType === FieldType.date ? DateIcon : DateTimeIcon;
 
-  const handleDateChange = (date: Date | null) => onSubmit(date);
+  const [handleDateChange] = useDebouncedCallback<DatePickerProps["onChange"]>(
+    date => {
+      if (!date || isNaN(date.valueOf())) return;
+
+      onSubmit(date);
+      if (dataGridRef?.current?.selectCell)
+        dataGridRef.current.selectCell({ rowIdx, idx: column.idx });
+    },
+    500
+  );
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <Picker
         value={transformedValue}
         onChange={handleDateChange}
-        onClick={e => {
-          e.stopPropagation();
-          if (dataGridRef?.current?.selectCell)
-            dataGridRef.current.selectCell({ rowIdx, idx: column.idx });
-        }}
+        onClick={e => e.stopPropagation()}
         format={fieldType === FieldType.date ? DATE_FORMAT : DATE_TIME_FORMAT}
         fullWidth
         keyboardIcon={<Icon />}
@@ -82,6 +89,7 @@ export default function Date({
           size: "small",
           classes: { root: "row-hover-iconButton" },
         }}
+        DialogProps={{ onClick: e => e.stopPropagation() }}
       />
     </MuiPickersUtilsProvider>
   );
