@@ -1,6 +1,6 @@
 import React from "react";
 import { CustomCellProps } from "./withCustomCell";
-
+import _get from "lodash/get";
 import {
   makeStyles,
   createStyles,
@@ -23,6 +23,12 @@ const useStyles = makeStyles(theme =>
   })
 );
 
+const replacer = (data: any) => (m: string, key: string) => {
+  const objKey = key.split(":")[0];
+  const defaultValue = key.split(":")[1] || "";
+  return _get(data, objKey, defaultValue);
+};
+
 export default function Checkbox({
   row,
   column,
@@ -30,7 +36,6 @@ export default function Checkbox({
   onSubmit,
 }: CustomCellProps) {
   const classes = useStyles();
-
   let component = (
     <Switch
       checked={!!value}
@@ -46,8 +51,8 @@ export default function Checkbox({
         message={{
           title: (column as any).config.confirmation.title,
           body: (column as any).config.confirmation.body.replace(
-            "{{firstName}}",
-            row.firstName
+            /\{\{(.*?)\}\}/g,
+            replacer(row)
           ),
         }}
         functionName="onChange"
