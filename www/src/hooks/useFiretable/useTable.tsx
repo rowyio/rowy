@@ -187,11 +187,24 @@ const useTable = (initialOverrides: any) => {
   const deleteRow = (rowIndex: number, documentId: string) => {
     //remove row locally
     tableState.rows.splice(rowIndex, 1);
+    console.log("deleting");
     tableDispatch({ rows: tableState.rows });
     // delete document
-    db.collection(tableState.path)
-      .doc(documentId)
-      .delete();
+    try {
+      db.collection(tableState.path)
+        .doc(documentId)
+        .delete();
+    } catch (error) {
+      console.log(error);
+      if (error.code === "permission-denied") {
+        snack.open({
+          severity: "error",
+          message: "You don't have permissions to delete row",
+          duration: 3000,
+          position: { vertical: "top", horizontal: "center" },
+        });
+      }
+    }
   };
   /**  used for setting up the table listener
    *  @param tableCollection firestore collection path
@@ -240,7 +253,7 @@ const useTable = (initialOverrides: any) => {
       if (error.code === "permission-denied") {
         snack.open({
           severity: "error",
-          message: "You don't have sufficient permissions",
+          message: "You don't have permissions to add a new row",
           duration: 3000,
           position: { vertical: "top", horizontal: "center" },
         });
