@@ -6,6 +6,7 @@ import {
   fieldToKeyboardDatePicker,
   KeyboardDatePickerProps,
 } from "formik-material-ui-pickers";
+import { DATE_FORMAT } from "constants/dates";
 
 export default function DatePicker(props: KeyboardDatePickerProps) {
   const theme = useTheme();
@@ -16,17 +17,23 @@ export default function DatePicker(props: KeyboardDatePickerProps) {
   else if (props.field.value !== undefined)
     transformedValue = props.field.value;
 
+  const handleChange = (date: Date | null) => {
+    if (!date || isNaN(date.valueOf())) return;
+    props.form.setFieldValue(props.field.name, date);
+  };
+
   return (
     <KeyboardDatePicker
       variant="inline"
       inputVariant="filled"
       fullWidth
       margin="none"
-      format="yyyy/MM/dd"
-      placeholder="yyyy/MM/dd"
+      format={DATE_FORMAT}
+      placeholder={DATE_FORMAT}
       InputAdornmentProps={{ style: { marginRight: theme.spacing(-1) } }}
       {...fieldToKeyboardDatePicker(props)}
       value={transformedValue}
+      onChange={handleChange}
       label=""
       hiddenLabel
       id={`sidedrawer-field-${props.field.name}`}
