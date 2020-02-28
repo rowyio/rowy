@@ -24,7 +24,10 @@ import { useFiretableContext } from "contexts/firetableContext";
 
 const useStyles = makeStyles(theme =>
   createStyles({
-    root: { padding: theme.spacing(0, 0.875, 0, 1.125) },
+    root: {
+      padding: theme.spacing(0, 0.875, 0, 1.125),
+      outline: "none",
+    },
     dragActive: {
       backgroundColor: fade(
         theme.palette.primary.main,
@@ -160,6 +163,7 @@ export default function Image({
                         body: "Are you sure you want to delete this image?",
                         confirm: "Delete",
                       }}
+                      stopPropagation
                     >
                       <ButtonBase
                         className={classes.img}
@@ -199,7 +203,10 @@ export default function Image({
           <IconButton
             size="small"
             className="row-hover-iconButton"
-            onClick={e => dropzoneProps.onClick!(e)}
+            onClick={e => {
+              e.stopPropagation();
+              dropzoneProps.onClick!(e);
+            }}
             color="inherit"
           >
             <AddIcon />

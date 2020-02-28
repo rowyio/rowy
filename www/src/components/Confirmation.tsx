@@ -31,6 +31,7 @@ export interface IConfirmationProps {
   };
   confirmationCommand?: string;
   functionName?: string;
+  stopPropagation?: boolean;
 }
 
 export default function Confirmation({
@@ -38,6 +39,7 @@ export default function Confirmation({
   message,
   confirmationCommand,
   functionName = "onClick",
+  stopPropagation = false,
 }: IConfirmationProps) {
   const classes = useStyles();
   const [showDialog, setShowDialog] = useState(false);
@@ -49,7 +51,10 @@ export default function Confirmation({
 
   const confirmHandler = children.props[functionName];
   const button = React.cloneElement(children, {
-    [functionName]: () => setShowDialog(true),
+    [functionName]: e => {
+      if (stopPropagation && e && e.stopPropagation) e.stopPropagation();
+      setShowDialog(true);
+    },
   });
 
   return (

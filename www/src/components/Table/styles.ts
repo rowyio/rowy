@@ -67,12 +67,10 @@ export const useStyles = makeStyles(theme =>
       },
     },
 
-    loadingBar: {
-      position: "fixed",
+    loadingContainer: {
+      position: "sticky",
       left: 0,
-      right: 0,
-      bottom: APP_BAR_HEIGHT,
-      height: theme.spacing(1),
+      height: 100,
     },
   })
 );
