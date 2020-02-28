@@ -5,6 +5,7 @@ import {
   makeStyles,
   Container,
   Grid,
+  Button,
   Typography,
   Divider,
 } from "@material-ui/core";
@@ -94,7 +95,15 @@ const TablesView = () => {
             description={
               <>
                 Please contact the Assistant <em>to</em> the Regional Manager of
-                your branch
+                your branch then
+                <br />
+                <Button
+                  onClick={() => {
+                    window.location.reload();
+                  }}
+                >
+                  Refresh this page
+                </Button>
               </>
             }
           />
