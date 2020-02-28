@@ -47,7 +47,10 @@ export default function Color({ value, onSubmit }: CustomCellProps) {
           <ButtonBase
             className={classes.colorIndicator}
             style={{ backgroundColor: value?.hex }}
-            onClick={toggleOpen}
+            onClick={e => {
+              e.stopPropagation();
+              toggleOpen(e);
+            }}
           />
         </Grid>
 

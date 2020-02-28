@@ -24,7 +24,8 @@ export default function Rating({
     <MuiRating
       name={`${row.id}-${column.key as string}`}
       value={typeof value === "number" ? value : 0}
-      onChange={(event, newValue) => onSubmit(newValue)}
+      onClick={e => e.stopPropagation()}
+      onChange={(e, newValue) => onSubmit(newValue)}
       emptyIcon={<StarBorderIcon />}
       // TODO: Make this customisable in config
       max={4}
