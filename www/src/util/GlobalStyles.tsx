@@ -16,7 +16,7 @@ export const useGlobalStyles = makeStyles(theme =>
           margin: 0,
           paddingLeft: "1.5em",
         },
-        "& * + ul": { marginTop: "1em" },
+        "& * + ul, .rdg-cell-value & * + ul": { marginTop: "1em" },
         "& li + li": {
           marginTop: "0.5em",
         },
