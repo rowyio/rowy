@@ -40,7 +40,7 @@ export interface IPopupContentsProps
 export default function PopupContents({
   onChange,
   value = [],
-  searchable = false,
+  searchable = true,
   itemRenderer,
   freeText = false,
   multiple = true,

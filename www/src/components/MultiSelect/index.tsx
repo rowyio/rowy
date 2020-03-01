@@ -44,7 +44,7 @@ export default function MultiSelect({
 }: IMultiSelectProps) {
   const {
     value = [],
-    searchable = false,
+    searchable = true,
     freeText = false,
     multiple = true,
   } = props;
