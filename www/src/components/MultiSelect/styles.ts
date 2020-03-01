@@ -18,7 +18,7 @@ export const useStyles = makeStyles(theme =>
       padding: `0 ${theme.spacing(2)}px`,
       width: ({ width }: StylesProps) => width || 480,
       maxWidth: `calc(100vw - ${theme.spacing(4)}px)`,
-      minWidth: 240,
+      minWidth: 300,
     },
 
     noMargins: { margin: 0 },
