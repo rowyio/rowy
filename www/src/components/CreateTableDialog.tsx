@@ -56,7 +56,7 @@ export default function CreateTableDialog({
 
     handleClose();
   }
-  if (userClaims && userClaims.roles.includes("ADMIN"))
+  if (userClaims && userClaims.roles?.includes("ADMIN"))
     return (
       <div>
         <Tooltip title="Create a table">
