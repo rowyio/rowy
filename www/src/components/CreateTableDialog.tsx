@@ -16,6 +16,7 @@ import {
   Button,
   Select,
 } from "@material-ui/core";
+import { useFiretableContext } from "../contexts/firetableContext";
 
 export interface ICreateTableDialogProps {
   /** Optional class overrides */
@@ -29,7 +30,7 @@ export default function CreateTableDialog({
   createTable,
 }: ICreateTableDialogProps) {
   const router = useRouter();
-
+  const { userClaims } = useFiretableContext();
   const [open, setOpen] = React.useState(false);
   const [tableName, setTableName] = useState("");
   const [collectionName, setCollectionName] = useState("");
@@ -55,80 +56,81 @@ export default function CreateTableDialog({
 
     handleClose();
   }
+  if (userClaims && userClaims.roles?.includes("ADMIN"))
+    return (
+      <div>
+        <Tooltip title="Create a table">
+          <Fab
+            className={classes.fab}
+            color="secondary"
+            aria-label="Create table"
+            onClick={handleClickOpen}
+          >
+            <AddIcon />
+          </Fab>
+        </Tooltip>
 
-  return (
-    <div>
-      <Tooltip title="Create a table">
-        <Fab
-          className={classes.fab}
-          color="secondary"
-          aria-label="Create table"
-          onClick={handleClickOpen}
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="form-dialog-title"
         >
-          <AddIcon />
-        </Fab>
-      </Tooltip>
+          <DialogTitle id="form-dialog-title">New table</DialogTitle>
+          <DialogContent>
+            <DialogContentText>Create a new Table</DialogContentText>
+            <Select label="Section" />
+            <TextField
+              autoFocus
+              onChange={e => {
+                setTableName(e.target.value);
+              }}
+              margin="dense"
+              id="name"
+              label="Table Name"
+              type="text"
+              fullWidth
+              variant="filled"
+            />
+            <TextField
+              value={collectionName}
+              onChange={e => {
+                setCollectionName(e.target.value);
+              }}
+              variant="filled"
+              margin="dense"
+              id="collection"
+              label="Collection Name"
+              type="text"
+              fullWidth
+            />
 
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="form-dialog-title"
-      >
-        <DialogTitle id="form-dialog-title">New table</DialogTitle>
-        <DialogContent>
-          <DialogContentText>Create a new Table</DialogContentText>
-          <Select label="Section" />
-          <TextField
-            autoFocus
-            onChange={e => {
-              setTableName(e.target.value);
-            }}
-            margin="dense"
-            id="name"
-            label="Table Name"
-            type="text"
-            fullWidth
-            variant="filled"
-          />
-          <TextField
-            value={collectionName}
-            onChange={e => {
-              setCollectionName(e.target.value);
-            }}
-            variant="filled"
-            margin="dense"
-            id="collection"
-            label="Collection Name"
-            type="text"
-            fullWidth
-          />
-
-          <TextField
-            label="Description"
-            id="description"
-            variant="filled"
-            fullWidth
-            multiline={true}
-          />
-          <MultiSelect
-            freeText={true}
-            options={["PROGRAM", "RECRUITING", "COACHING", "ADMIN"]}
-            multiple
-            value={[]}
-            selectAll
-            label="Roles"
-            onChange={() => {}}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleCreate} color="primary">
-            Create
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
-  );
+            <TextField
+              label="Description"
+              id="description"
+              variant="filled"
+              fullWidth
+              multiline={true}
+            />
+            <MultiSelect
+              freeText={true}
+              options={["PROGRAM", "RECRUITING", "COACHING", "ADMIN"]}
+              multiple
+              value={[]}
+              selectAll
+              label="Roles"
+              onChange={() => {}}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleCreate} color="primary">
+              Create
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+    );
+  else return <></>;
 }

@@ -1,28 +1,27 @@
-import React, { useContext, useEffect, useState } from "react";
+import React from "react";
+import _groupBy from "lodash/groupBy";
 
 import {
   createStyles,
   makeStyles,
   Container,
   Grid,
+  Link,
+  Button,
   Typography,
   Divider,
 } from "@material-ui/core";
-
-import useSettings from "../hooks/useSettings";
-import routes from "../constants/routes";
-import { AppContext } from "../contexts/appContext";
-import useRouter from "../hooks/useRouter";
 import SecurityIcon from "@material-ui/icons/Security";
-import AppBar from "../components/AppBar";
+
+import AppBar from "components/AppBar";
 import Loading from "components/Loading";
 import EmptyState from "components/EmptyState";
-import GoIcon from "../components/GoIcon";
+import StyledCard from "components/StyledCard";
+import CreateTableDialog from "components/CreateTableDialog";
 
-import { useFiretableContext } from "../contexts/firetableContext";
-import StyledCard from "../components/StyledCard";
-import CreateTableDialog from "../components/CreateTableDialog";
-import _groupBy from "lodash/groupBy";
+import routes from "constants/routes";
+import { useFiretableContext } from "contexts/firetableContext";
+
 const useStyles = makeStyles(theme =>
   createStyles({
     root: { minHeight: "100vh", paddingBottom: theme.spacing(8) },
@@ -70,31 +69,32 @@ const useStyles = makeStyles(theme =>
 
 const TablesView = () => {
   const classes = useStyles();
-  const router = useRouter();
-  const [userRoles, setUserRoles] = useState<null | string[]>();
-  const [userRegions, setUserRegions] = useState<null | string[]>();
-  const {
-    sections,
-    createTable,
-    userClaims,
-    tableActions,
-  } = useFiretableContext();
+  const { sections, createTable, userClaims } = useFiretableContext();
 
-  if (!userClaims?.roles || !sections) return <Loading />;
-  const { roles, regions } = userClaims;
   return (
     <main className={classes.root}>
       <AppBar />
 
       <Container>
-        {roles.length === 0 && (
+        {(!userClaims?.roles || userClaims.roles.length === 0) && (
           <EmptyState
             Icon={SecurityIcon}
             message={"You don't have any permissions specified"}
             description={
               <>
                 Please contact the Assistant <em>to</em> the Regional Manager of
-                your branch
+                your branch then{" "}
+                <Link
+                  component="button"
+                  onClick={() => {
+                    window.location.reload();
+                  }}
+                  variant="body2"
+                  style={{ verticalAlign: "baseline" }}
+                >
+                  refresh this page
+                </Link>
+                .
               </>
             }
           />
@@ -123,9 +123,9 @@ const TablesView = () => {
                       primaryLink={{
                         to: `${routes.table}/${table.collection}${
                           table.regional &&
-                          regions &&
-                          !regions.includes("GLOBAL")
-                            ? `?filters=%5B%7B%22key%22%3A%22region%22%2C%22operator%22%3A%22%3D%3D%22%2C%22value%22%3A%22${regions[0]}%22%7D%5D`
+                          userClaims?.regions &&
+                          !userClaims?.regions.includes("GLOBAL")
+                            ? `?filters=%5B%7B%22key%22%3A%22region%22%2C%22operator%22%3A%22%3D%3D%22%2C%22value%22%3A%22${userClaims?.regions[0]}%22%7D%5D`
                             : ""
                         }`,
                         label: "Open",

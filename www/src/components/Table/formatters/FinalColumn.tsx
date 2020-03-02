@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { FormatterProps } from "react-data-grid";
 
 import {
@@ -10,7 +10,7 @@ import {
 } from "@material-ui/core";
 import CopyCellsIcon from "assets/icons/CopyCells";
 import DeleteIcon from "@material-ui/icons/Cancel";
-
+import { SnackContext } from "../../../contexts/snackContext";
 import Confirmation from "components/Confirmation";
 import { useFiretableContext } from "contexts/firetableContext";
 import useKeyPress from "../../../hooks/useKeyPress";
@@ -46,7 +46,27 @@ export const useFinalColumnStyles = makeStyles(theme =>
 export default function FinalColumn({ row }: FormatterProps<any, any, any>) {
   const { tableActions } = useFiretableContext();
   const shiftPress = useKeyPress("Shift");
+  const snack = useContext(SnackContext);
 
+  const handleDelete = async () => {
+    console.log("Deleting");
+
+    row.ref.delete().then(
+      r => {
+        console.log("r", r);
+      },
+      error => {
+        if (error.code === "permission-denied") {
+          snack.open({
+            severity: "error",
+            message: "You don't have permissions to delete this row",
+            duration: 3000,
+            position: { vertical: "top", horizontal: "center" },
+          });
+        }
+      }
+    );
+  };
   return (
     <Grid container spacing={1}>
       <Grid item>
@@ -78,9 +98,7 @@ export default function FinalColumn({ row }: FormatterProps<any, any, any>) {
               <IconButton
                 size="small"
                 color="inherit"
-                onClick={async () => {
-                  row.ref.delete();
-                }}
+                onClick={handleDelete}
                 aria-label="Delete row"
               >
                 <DeleteIcon />
@@ -96,9 +114,7 @@ export default function FinalColumn({ row }: FormatterProps<any, any, any>) {
                 <IconButton
                   size="small"
                   color="inherit"
-                  onClick={async () => {
-                    row.ref.delete();
-                  }}
+                  onClick={handleDelete}
                   aria-label="Delete row"
                 >
                   <DeleteIcon />

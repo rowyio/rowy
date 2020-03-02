@@ -6,6 +6,7 @@ import {
   makeStyles,
   createStyles,
   Tooltip,
+  Fade,
   Grid,
   IconButton,
   Typography,
@@ -36,9 +37,16 @@ const useStyles = makeStyles(theme =>
       margin: theme.spacing(0, 0.5),
       marginRight: -26,
     },
-    columnName: {
-      fontSize: "0.875rem",
-      lineHeight: "44px",
+    columnName: { lineHeight: "44px" },
+
+    columnNameTooltip: {
+      background: theme.palette.background.default,
+      color: theme.palette.text.primary,
+
+      margin: "-43px 0 0",
+      padding: theme.spacing(0, 1.5, 0, 0),
+
+      "& *": { lineHeight: "42px" },
     },
 
     sortIconContainer: {
@@ -85,6 +93,7 @@ const ColumnHeader: Column<any>["headerRenderer"] = ({ column }) => {
     setSelectedColumnHeader,
     tableState,
     tableActions,
+    userClaims,
   } = useFiretableContext();
   if (!setSelectedColumnHeader || !tableState || !tableActions) return null;
   const { orderBy } = tableState;
@@ -113,7 +122,20 @@ const ColumnHeader: Column<any>["headerRenderer"] = ({ column }) => {
 
   return (
     <Grid container className={classes.root} alignItems="center" wrap="nowrap">
-      <Tooltip title={column.key as string}>
+      <Tooltip
+        title={
+          <>
+            <Typography variant="caption" component="p">
+              {column.key as string}
+            </Typography>
+            <Typography variant="body2" component="p">
+              <small>(Click to copy)</small>
+            </Typography>
+          </>
+        }
+        enterDelay={1000}
+        placement="bottom-start"
+      >
         <Grid
           item
           onClick={() => {
@@ -124,26 +146,35 @@ const ColumnHeader: Column<any>["headerRenderer"] = ({ column }) => {
         </Grid>
       </Tooltip>
 
-      <Tooltip title={column.name}>
-        <Grid
-          item
-          xs
-          onClick={() => {
-            navigator.clipboard.writeText(column.key as string);
+      <Grid item xs className={classes.columnNameContainer}>
+        <Tooltip
+          title={<Typography variant="caption">{column.name}</Typography>}
+          enterDelay={1000}
+          placement="bottom-start"
+          PopperProps={{
+            modifiers: {
+              flip: { enabled: false },
+              preventOverflow: {
+                enabled: false,
+                boundariesElement: "scrollParent",
+              },
+              hide: { enabled: false },
+            },
           }}
-          className={classes.columnNameContainer}
+          TransitionComponent={Fade}
+          classes={{ tooltip: classes.columnNameTooltip }}
         >
           <Typography
-            variant="h6"
+            variant="caption"
             noWrap
             className={classes.columnName}
-            component="span"
+            component="div"
             color="inherit"
           >
             {column.name}
           </Typography>
-        </Grid>
-      </Tooltip>
+        </Tooltip>
+      </Grid>
 
       <Grid
         item
@@ -163,17 +194,20 @@ const ColumnHeader: Column<any>["headerRenderer"] = ({ column }) => {
           <SortDescIcon />
         </IconButton>
       </Grid>
-      <Grid item>
-        <IconButton
-          size="small"
-          className={classes.dropdownButton}
-          aria-label={`Show ${column.name} column dropdown`}
-          color="inherit"
-          onClick={handleClick}
-        >
-          <DropdownIcon />
-        </IconButton>
-      </Grid>
+
+      {userClaims?.roles?.includes("ADMIN") && (
+        <Grid item>
+          <IconButton
+            size="small"
+            className={classes.dropdownButton}
+            aria-label={`Show ${column.name} column dropdown`}
+            color="inherit"
+            onClick={handleClick}
+          >
+            <DropdownIcon />
+          </IconButton>
+        </Grid>
+      )}
     </Grid>
   );
 };

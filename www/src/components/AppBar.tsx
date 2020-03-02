@@ -10,11 +10,12 @@ import {
   Toolbar,
   Typography,
   Grid,
-  TextField,
-  MenuItem,
+  Button,
 } from "@material-ui/core";
 
 import FiretableLogo from "../assets/firetable.svg";
+
+import { auth } from "../firebase";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -81,6 +82,12 @@ const AppBar: React.FunctionComponent<IAppBarProps> = () => {
           >
             firetable
           </Typography>
+        </Grid>
+
+        <Grid item>
+          <Button onClick={() => auth.signOut()} size="large" color="primary">
+            Sign Out
+          </Button>
         </Grid>
       </Toolbar>
     </MuiAppBar>

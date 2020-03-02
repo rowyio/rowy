@@ -36,6 +36,7 @@ export default function SingleSelect({
             (form.touched[field.name] && form.errors[field.name]) || "",
           onBlur: () => form.setFieldTouched(field.name),
         }}
+        searchable
         freeText
         multiple={false}
       />
