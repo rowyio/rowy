@@ -183,14 +183,6 @@ export default function Navigation({
                 </Grid>
               ))}
           </Grid>
-
-          {/* <Button
-              onClick={() => {
-                auth.signOut();
-              }}
-            >
-              Sign out
-            </Button> */}
         </Toolbar>
       </AppBar>
     </>
