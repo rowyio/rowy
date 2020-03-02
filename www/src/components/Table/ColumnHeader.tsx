@@ -93,6 +93,7 @@ const ColumnHeader: Column<any>["headerRenderer"] = ({ column }) => {
     setSelectedColumnHeader,
     tableState,
     tableActions,
+    userClaims,
   } = useFiretableContext();
   if (!setSelectedColumnHeader || !tableState || !tableActions) return null;
   const { orderBy } = tableState;
@@ -193,17 +194,20 @@ const ColumnHeader: Column<any>["headerRenderer"] = ({ column }) => {
           <SortDescIcon />
         </IconButton>
       </Grid>
-      <Grid item>
-        <IconButton
-          size="small"
-          className={classes.dropdownButton}
-          aria-label={`Show ${column.name} column dropdown`}
-          color="inherit"
-          onClick={handleClick}
-        >
-          <DropdownIcon />
-        </IconButton>
-      </Grid>
+
+      {userClaims?.roles?.includes("ADMIN") && (
+        <Grid item>
+          <IconButton
+            size="small"
+            className={classes.dropdownButton}
+            aria-label={`Show ${column.name} column dropdown`}
+            color="inherit"
+            onClick={handleClick}
+          >
+            <DropdownIcon />
+          </IconButton>
+        </Grid>
+      )}
     </Grid>
   );
 };
