@@ -13,6 +13,7 @@ import {
   Select,
   MenuItem,
   TextField,
+  Switch,
 } from "@material-ui/core";
 import FilterIcon from "@material-ui/icons/FilterList";
 import CloseIcon from "@material-ui/icons/Close";
@@ -35,6 +36,7 @@ const OPERATORS = [
       FieldType.singleSelect,
       FieldType.url,
       FieldType.email,
+      FieldType.checkbox,
     ],
   },
   {
@@ -111,16 +113,24 @@ const Filters = ({ columns, setFilters }: any) => {
 
   useEffect(() => {
     if (selectedColumn) {
-      let updatedQuery = { key: selectedColumn.key, operator: "", value: "" };
+      let updatedQuery: FireTableFilter = {
+        key: selectedColumn.key,
+        operator: "",
+        value: "",
+      };
       if (
         [
           FieldType.phone,
           FieldType.shortText,
           FieldType.url,
           FieldType.email,
+          FieldType.checkbox,
         ].includes(selectedColumn.type)
       ) {
         updatedQuery = { ...updatedQuery, operator: "==" };
+      }
+      if (selectedColumn.type === FieldType.checkbox) {
+        updatedQuery = { ...updatedQuery, value: false };
       }
       setQuery(updatedQuery);
     }
@@ -149,6 +159,16 @@ const Filters = ({ columns, setFilters }: any) => {
 
   const renderInputField = (selectedColumn, operator) => {
     switch (selectedColumn.type) {
+      case FieldType.checkbox:
+        return (
+          <Switch
+            value={query.value}
+            onChange={(e, checked) => {
+              console.log(checked);
+              setQuery(query => ({ ...query, value: checked }));
+            }}
+          />
+        );
       case FieldType.email:
       case FieldType.phone:
       case FieldType.shortText:
@@ -337,7 +357,7 @@ const Filters = ({ columns, setFilters }: any) => {
               Clear
             </Button>
             <Button
-              disabled={query.value == ""}
+              disabled={query.value === null || query.value === undefined}
               color="primary"
               onClick={() => {
                 setFilters([query]);
