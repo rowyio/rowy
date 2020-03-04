@@ -14,6 +14,8 @@ import DateIcon from "@material-ui/icons/Today";
 import DateTimeIcon from "@material-ui/icons/AccessTime";
 
 import UrlIcon from "@material-ui/icons/Link";
+import PercentageIcon from "assets/icons/Percentage";
+
 import RatingIcon from "@material-ui/icons/StarBorder";
 
 import ImageIcon from "@material-ui/icons/PhotoSizeSelectActual";
@@ -55,6 +57,7 @@ export {
 };
 
 export enum FieldType {
+  percentage = "PERCENTAGE",
   shortText = "SIMPLE_TEXT",
   longText = "LONG_TEXT",
   email = "EMAIL",
@@ -91,6 +94,7 @@ export enum FieldType {
 
 export const FIELDS = [
   { icon: <ShortTextIcon />, name: "Short Text", type: FieldType.shortText },
+  { icon: <PercentageIcon />, name: "Percentage", type: FieldType.percentage },
   { icon: <LongTextIcon />, name: "Long Text", type: FieldType.longText },
   { icon: <EmailIcon />, name: "Email", type: FieldType.email },
   { icon: <PhoneIcon />, name: "Phone", type: FieldType.phone },

@@ -17,6 +17,7 @@ const Color = lazy(() => import("./Color"));
 const Action = lazy(() => import("./Action"));
 const ConnectTable = lazy(() => import("./ConnectTable"));
 const SubTable = lazy(() => import("./SubTable"));
+const Percentage = lazy(() => import("./Percentage"));
 
 /**
  * Gets the corresponding formatter for each cell.
@@ -37,6 +38,8 @@ export const getFormatter = (column: any) => {
 
     case FieldType.rating:
       return withCustomCell(Rating);
+    case FieldType.percentage:
+      return withCustomCell(Percentage);
 
     case FieldType.color:
       return withCustomCell(Color);

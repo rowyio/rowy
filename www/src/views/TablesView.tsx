@@ -130,27 +130,6 @@ const TablesView = () => {
                         }`,
                         label: "Open",
                       }}
-                      // primaryButton={{
-                      //   children: "Open",
-                      //   onClick: () => {
-                      //     //set
-                      //     if (table.regional && !regions.includes("GLOBAL")) {
-                      //       tableActions?.table.set(table.collection, [
-                      //         {
-                      //           key: "region",
-                      //           operator: "==",
-                      //           value: regions[0],
-                      //         },
-                      //       ]);
-                      //     } else {
-                      //       tableActions?.table.set(table.collection, []);
-                      //     }
-
-                      //     router.history.push(
-                      //       `${routes.table}/${table.collection}`
-                      //     );
-                      //   },
-                      // }}
                     />
                   </Grid>
                 ))}
