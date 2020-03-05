@@ -1,11 +1,11 @@
 import React from "react";
 import queryString from "query-string";
 
-import { Hidden } from "@material-ui/core";
+// import { Hidden } from "@material-ui/core";
 
 import Navigation from "components/Navigation";
 import Table from "components/Table";
-import SideDrawer from "components/SideDrawer";
+// import SideDrawer from "components/SideDrawer";
 
 import { FireTableFilter } from "hooks/useFiretable";
 import useRouter from "hooks/useRouter";
@@ -33,9 +33,10 @@ export default function TableView() {
         filters={filters}
       />
 
-      <Hidden smDown>
+      {/* TODO: RE-ENABLE */}
+      {/* <Hidden smDown>
         <SideDrawer />
-      </Hidden>
+      </Hidden> */}
     </Navigation>
   );
 }
