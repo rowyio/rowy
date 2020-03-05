@@ -212,7 +212,12 @@ const useTable = (initialOverrides: any) => {
    */
   const setTable = (tableCollection: string, filters?: FireTableFilter) => {
     if (tableCollection !== tableState.path) {
-      tableDispatch({ path: tableCollection, rows: [] });
+      tableDispatch({
+        path: tableCollection,
+        orderBy: null,
+        filters: null,
+        rows: [],
+      });
     }
     if (filters) tableDispatch({ filters });
   };
