@@ -15,8 +15,9 @@ import { useStyles } from "./useStyles";
 import { useFiretableContext } from "contexts/firetableContext";
 import { FieldType } from "constants/fields";
 
-export const DRAWER_WIDTH = 600;
-export const DRAWER_COLLAPSED_WIDTH = 36;
+// TODO: RE-ENABLE THIS
+export const DRAWER_WIDTH = 0; // 600
+export const DRAWER_COLLAPSED_WIDTH = 0; // 36
 
 export default function SideDrawer() {
   const classes = useStyles();
