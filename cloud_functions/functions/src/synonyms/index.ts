@@ -36,7 +36,7 @@ const addSynonymOnUpdate = (groups: synonymGroup[]) => (
   if (!beforeData || !afterData) {
     return false;
   }
-  const updates = synonyms(afterData, groups);
+  const updates = synonyms({ ...afterData, id: change.after.id }, groups);
   if (Object.values(updates).length === 0) {
     return false;
   } else {
@@ -52,7 +52,7 @@ const addSynonymOnCreate = (groups: synonymGroup[]) => (
   if (!docData) {
     return false;
   }
-  const updates = synonyms(docData, groups);
+  const updates = synonyms({ ...docData, id: snapshot.id }, groups);
   if (Object.keys(updates).length === 0) {
     return false;
   } else {
