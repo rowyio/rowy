@@ -14,7 +14,7 @@ export type ConnectTableValue = { snapshot: any; docPath: string };
 export interface IConnectTableSelectProps {
   value: ConnectTableValue[];
   onChange: (value: ConnectTableValue[]) => void;
-
+  row: any;
   collectionPath: string;
   config: {
     filters: string;
@@ -34,6 +34,7 @@ export interface IConnectTableSelectProps {
 export default function ConnectTableSelect({
   value = [],
   className,
+
   TextFieldProps = {},
   ...props
 }: IConnectTableSelectProps) {

@@ -40,17 +40,13 @@ export default function PopupContents({
   collectionPath,
   config,
   multiple = true,
+  row,
 }: IPopupContentsProps) {
   const classes = useStyles();
 
   const { userClaims } = useFiretableContext();
-  console.log({ userClaims });
-  useEffect(() => {
-    console.log("MOUNT POPUP");
-  }, []);
 
   const algoliaIndex = useMemo(() => {
-    console.log("INIT INDEX", collectionPath);
     return searchClient.initIndex(collectionPath);
   }, [collectionPath]);
 
@@ -63,10 +59,12 @@ export default function PopupContents({
   const [search] = useDebouncedCallback(
     async (query: string) => {
       if (!algoliaIndex) return;
-      console.log("SEARCH", query, algoliaIndex);
+      console.log("SEARCH", query, algoliaIndex, row);
+
+      const data = { ...userClaims, ...row };
       const filters = config.filters.replace(
         /\{\{(.*?)\}\}/g,
-        (m, k) => userClaims[k]
+        (m, k) => data[k]
       );
       console.log(filters);
       const resp = await algoliaIndex.search({
