@@ -85,7 +85,7 @@ const sendEmailTemplateCallable = async (
       parentId: string;
     };
     row: any;
-    columnName: string;
+    column: any;
     action: "run" | "redo" | "undo";
   },
   context: functions.https.CallableContext
@@ -99,9 +99,9 @@ const sendEmailTemplateCallable = async (
       message: "you dont have permissions to send this email",
     };
   }
+  console.log({ column: data.column });
+  await sendEmail(data.column.config.templateId, data.row);
 
-  await sendEmail("opWkmwG6IDOQQxRJZnZn", data.row);
-  console.log({ columnName: data.columnName });
   return {
     message: "Email Sent",
     cellValue: {
