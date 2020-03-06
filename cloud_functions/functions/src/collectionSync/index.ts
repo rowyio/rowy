@@ -77,9 +77,8 @@ const syncDocOnUpdate = (
   fieldsToSync: string[],
   forcedUpdate: boolean
 ) => (snapshot: functions.Change<FirebaseFirestore.DocumentSnapshot>) => {
-  // TODO: compare before and after for fields to sync
   const afterData = snapshot.after.data();
-  const beforeData = snapshot.after.data();
+  const beforeData = snapshot.before.data();
   const hasChanged = !_.isEqual(afterData, beforeData);
   if (hasChanged) {
     if (forcedUpdate === true) {
