@@ -2,13 +2,12 @@ import * as functions from "firebase-functions";
 import * as _ from "lodash";
 import { db } from "../config";
 
-const historySnapshot = (collection: string, trackedFields) => async (
-  change: functions.Change<FirebaseFirestore.DocumentSnapshot>,
-  context: functions.EventContext
+const historySnapshot = (trackedFields: string[]) => async (
+  change: functions.Change<FirebaseFirestore.DocumentSnapshot>
 ) => {
-  const docId = context.params.docId;
   const before = change.before.data();
   const after = change.after.data();
+  const docPath = change.after.ref.path;
   if (!before || !after) return false;
   const trackedChanges: any = {};
   trackedFields.forEach(field => {
@@ -17,8 +16,7 @@ const historySnapshot = (collection: string, trackedFields) => async (
   });
   if (!_.isEmpty(trackedChanges)) {
     await db
-      .collection(collection)
-      .doc(docId)
+      .doc(docPath)
       .collection("historySnapshots")
       .add({ ...before, archivedAt: new Date() });
     return true;
@@ -28,6 +26,6 @@ const historySnapshot = (collection: string, trackedFields) => async (
 const historySnapshotFnsGenerator = collection =>
   functions.firestore
     .document(`${collection.name}/{docId}`)
-    .onUpdate(historySnapshot(collection.name, collection.trackedFields));
+    .onUpdate(historySnapshot(collection.trackedFields));
 
 export default historySnapshotFnsGenerator;
