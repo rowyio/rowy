@@ -23,7 +23,7 @@ import Loading from "components/Loading";
 
 import algoliasearch from "algoliasearch/lite";
 import { Response } from "algoliasearch";
-
+import { useFiretableContext } from "../../contexts/firetableContext";
 const searchClient = algoliasearch(
   process.env.REACT_APP_ALGOLIA_APP_ID ?? "",
   process.env.REACT_APP_ALGOLIA_SEARCH_API_KEY ?? ""
@@ -40,15 +40,13 @@ export default function PopupContents({
   collectionPath,
   config,
   multiple = true,
+  row,
 }: IPopupContentsProps) {
   const classes = useStyles();
 
-  useEffect(() => {
-    console.log("MOUNT POPUP");
-  }, []);
+  const { userClaims } = useFiretableContext();
 
   const algoliaIndex = useMemo(() => {
-    console.log("INIT INDEX", collectionPath);
     return searchClient.initIndex(collectionPath);
   }, [collectionPath]);
 
@@ -61,8 +59,18 @@ export default function PopupContents({
   const [search] = useDebouncedCallback(
     async (query: string) => {
       if (!algoliaIndex) return;
-      console.log("SEARCH", query, algoliaIndex);
-      const resp = await algoliaIndex.search({ query });
+      console.log("SEARCH", query, algoliaIndex, row);
+
+      const data = { ...userClaims, ...row };
+      const filters = config.filters.replace(
+        /\{\{(.*?)\}\}/g,
+        (m, k) => data[k]
+      );
+      console.log(filters);
+      const resp = await algoliaIndex.search({
+        query,
+        filters,
+      });
       setResponse(resp);
     },
     1000,

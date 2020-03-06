@@ -23,9 +23,11 @@ export const FT_algolia = algoliaConfig.reduce((acc: any, collection) => {
 export const FT_sync = collectionSyncConfig.reduce((acc: any, collection) => {
   return {
     ...acc,
-    [`${collection.source}2${collection.target}`]: collectionSyncFnsGenerator(
-      collection
-    ),
+    [`${`${`${collection.source}`
+      .replace(/\//g, "_")
+      .replace(/_{.*?}_/g, "_")}`}2${`${`${collection.target}`
+      .replace(/\//g, "_")
+      .replace(/_{.*?}_/g, "_")}`}`]: collectionSyncFnsGenerator(collection),
   };
 }, {});
 
@@ -33,7 +35,9 @@ export const FT_history = collectionHistoryConfig.reduce(
   (acc: any, collection) => {
     return {
       ...acc,
-      [collection.name]: collectionSnapshotFnsGenerator(collection),
+      [collection.name
+        .replace(/\//g, "_")
+        .replace(/_{.*?}_/g, "_")]: collectionSnapshotFnsGenerator(collection),
     };
   },
   {}

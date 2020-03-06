@@ -3,7 +3,7 @@ import * as _ from "lodash";
 import { db } from "../config";
 const serverTimestamp = admin.firestore.FieldValue.serverTimestamp;
 /** fills template with doc values or default value if key doesn't exist */
-const replacer = (data: any) => (m: string, key: string) => {
+export const replacer = (data: any) => (m: string, key: string) => {
   const objKey = key.split(":")[0];
   const defaultValue = key.split(":")[1] || "";
   return _.get(data, objKey, defaultValue);

@@ -2,6 +2,8 @@ import * as functions from "firebase-functions";
 
 import { db } from "../config";
 
+import * as _ from "lodash";
+import { replacer } from "../utils/email";
 // returns object of fieldsToSync
 const docReducer = (docData: FirebaseFirestore.DocumentData) => (
   acc: any,
@@ -26,8 +28,12 @@ const cloneDoc = (targetCollection: string, fieldsToSync: string[]) => (
   if (!docData) return false; // returns if theres no data in the doc
   const syncData = fieldsToSync.reduce(docReducer(docData), {});
   if (Object.keys(syncData).length === 0) return false; // returns if theres nothing to sync
-  console.log(`creating new doc ${docId}`);
-  db.collection(targetCollection)
+  console.log(`creating new doc or forcing update ${docId}`);
+  const collectionPath = targetCollection.replace(
+    /\{\{(.*?)\}\}/g,
+    replacer(docData)
+  );
+  db.collection(collectionPath)
     .doc(docId)
     .set(syncData, { merge: true })
     .catch(error => console.error(error));
@@ -47,9 +53,13 @@ const syncDoc = (targetCollection: string, fieldsToSync: string[]) => async (
   if (!docData) return false; // returns if theres no data in the doc
   const syncData = fieldsToSync.reduce(docReducer(docData), {});
 
+  const collectionPath = targetCollection.replace(
+    /\{\{(.*?)\}\}/g,
+    replacer(docData)
+  );
   if (Object.keys(syncData).length === 0) return false; // returns if theres nothing to sync
   const targetDoc = await db
-    .collection(targetCollection)
+    .collection(collectionPath)
     .doc(docId)
     .get();
   if (!targetDoc.exists) return false;
@@ -59,7 +69,7 @@ const syncDoc = (targetCollection: string, fieldsToSync: string[]) => async (
     docData,
     syncData,
   });
-  db.collection(targetCollection)
+  db.collection(collectionPath)
     .doc(docId)
     .update(syncData)
     .catch(error => console.error(error));
@@ -71,11 +81,24 @@ const syncDoc = (targetCollection: string, fieldsToSync: string[]) => async (
  * @param targetCollection
  * @param fieldsToSync
  */
-const syncDocOnUpdate = (targetCollection: string, fieldsToSync: string[]) => (
-  snapshot: functions.Change<FirebaseFirestore.DocumentSnapshot>
-) => {
-  // TODO: compare before and after for fields to sync
-  return syncDoc(targetCollection, fieldsToSync)(snapshot.after);
+const syncDocOnUpdate = (
+  targetCollection: string,
+  fieldsToSync: string[],
+  forcedUpdate: boolean
+) => (snapshot: functions.Change<FirebaseFirestore.DocumentSnapshot>) => {
+  const afterData = snapshot.after.data();
+  const beforeData = snapshot.before.data();
+  const hasChanged = !_.isEqual(afterData, beforeData);
+  if (hasChanged) {
+    if (forcedUpdate === true) {
+      return cloneDoc(targetCollection, fieldsToSync)(snapshot.after);
+    } else {
+      return syncDoc(targetCollection, fieldsToSync)(snapshot.after);
+    }
+  } else {
+    console.warn("no change detected");
+    return false;
+  }
 };
 
 /**
@@ -92,7 +115,13 @@ const collectionSyncFnsGenerator = collection =>
     onUpdate: collection.onUpdate
       ? functions.firestore
           .document(`${collection.source}/{docId}`)
-          .onUpdate(syncDocOnUpdate(collection.target, collection.fieldsToSync))
+          .onUpdate(
+            syncDocOnUpdate(
+              collection.target,
+              collection.fieldsToSync,
+              collection.forcedUpdate
+            )
+          )
       : null,
   }).reduce((a, [k, v]) => (v === null ? a : { ...a, [k]: v }), {});
 

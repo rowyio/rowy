@@ -54,6 +54,7 @@ export default function ConnectTable({
   column,
   value,
   onSubmit,
+  row,
 }: CustomCellProps) {
   const classes = useStyles();
 
@@ -86,6 +87,7 @@ export default function ConnectTable({
 
   return (
     <ConnectTableSelect
+      row={row}
       value={value}
       onChange={onSubmit}
       collectionPath={collectionPath}
