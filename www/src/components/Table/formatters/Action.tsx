@@ -38,21 +38,10 @@ export default function Action({
 
   const snack = useContext(SnackContext);
   const handleRun = () => {
-    // TODO: Verify that this code can be removed
-    // eval(scripts.onClick)(row);
-    // const cleanRow = Object.keys(row).reduce((acc: any, key: string) => {
-    //   if (row[key]) return { ...acc, [key]: row[key] };
-    //   else return acc;
-    // }, {});
-    // cleanRow.ref = "cleanRow.ref";
-    // delete cleanRow.rowHeight;
-    // delete cleanRow.updatedFields;
-
     setIsRunning(true);
-
     cloudFunction(
       callableName,
-      { ref: { path: ref.path, id: ref.id }, row: docData },
+      { ref: { path: ref.path, id: ref.id }, row: docData, column },
       response => {
         const { message, cellValue } = response.data;
         setIsRunning(false);

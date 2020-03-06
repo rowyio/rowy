@@ -1,13 +1,7 @@
 import React from "react";
 import Div100vh from "react-div-100vh";
 
-import {
-  makeStyles,
-  createStyles,
-  Grid,
-  CircularProgress,
-  Typography,
-} from "@material-ui/core";
+import { makeStyles, createStyles, Grid, Typography } from "@material-ui/core";
 import ErrorIcon from "@material-ui/icons/Error";
 
 const useStyles = makeStyles(theme =>

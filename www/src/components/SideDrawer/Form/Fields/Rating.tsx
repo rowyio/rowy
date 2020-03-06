@@ -44,6 +44,8 @@ export default function Rating(props: IRatingProps) {
           }}
           emptyIcon={<StarBorderIcon fontSize="inherit" />}
           classes={{ root: classes.rating, iconEmpty: classes.iconEmpty }}
+          // TODO: Make this customisable in column settings
+          max={4}
         />
       </Grid>
 

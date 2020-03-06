@@ -2,46 +2,10 @@ import * as functions from "firebase-functions";
 import * as _ from "lodash";
 import { db } from "./config";
 import * as admin from "firebase-admin";
-// example callable function
+import { sendEmail } from "./utils/email";
+import { hasAnyRole } from "./utils/auth";
 
 const serverTimestamp = admin.firestore.FieldValue.serverTimestamp;
-const emailGenerator = (
-  emailTemplate: { subject: string; body: string },
-  data: any
-) => {
-  const subject = emailTemplate.subject.replace(/\{\{(.*?)\}\}/g, function(
-    m,
-    key
-  ) {
-    return _.get(data, key, "");
-  });
-
-  const html = emailTemplate.body.replace(/\{\{(.*?)\}\}/g, function(m, key) {
-    return _.get(data, key, "");
-  });
-
-  return { subject, html };
-};
-
-const sendVerifiedEmail = async (row: any) => {
-  const emailTemplate = await db
-    .doc("emailTemplates/p8K9z0CBhGlb3Vgzl02o")
-    .get();
-  const templateData = emailTemplate.data();
-  if (!templateData || !templateData.subject || !templateData.body)
-    return false;
-
-  const message = emailGenerator(
-    templateData as { subject: string; body: string },
-    row
-  );
-
-  return db.collection("firemail").add({
-    to: row.email,
-    message,
-    createdAt: serverTimestamp(),
-  });
-};
 
 export const verifyFounder = functions.https.onCall(
   async (
@@ -73,46 +37,47 @@ export const verifyFounder = functions.https.onCall(
       "companies",
     ];
 
-    if (context.auth && context.auth.token.email.includes("@antler.co")) {
-      switch (action) {
-        case "undo":
-        case "redo":
-        case "run":
-        default:
-          const syncData = fieldsToSync.reduce((acc: any, curr: string) => {
-            if (row[curr]) {
-              acc[curr] = row[curr];
-              return acc;
-            } else return acc;
-          }, {});
-          await db
-            .collection("founders")
-            .doc(ref.id)
-            .set(syncData, { merge: true });
-          await sendVerifiedEmail(row);
-          return {
-            message: "Founder created!",
-            cellValue: {
-              redo: false,
-              status: "Verified",
-              undo: true,
-              meta: { ranBy: context.auth.token.email },
-            },
-            completedAt: serverTimestamp(),
-            success: true,
-          };
-      }
-    } else {
+    const authorized = hasAnyRole(["ADMIN", "PROGRAM"], context);
+
+    if (!context.auth || !authorized) {
+      console.warn(`unautherized user${context}`);
       return {
-        message: "unauthorized function",
-        // cellValue: { redo: false, status: "complete" },
         success: false,
+        message: "you dont have permissions to send this email",
       };
+    }
+    switch (action) {
+      case "undo":
+      case "redo":
+      case "run":
+      default:
+        const syncData = fieldsToSync.reduce((acc: any, curr: string) => {
+          if (row[curr]) {
+            acc[curr] = row[curr];
+            return acc;
+          } else return acc;
+        }, {});
+        await db
+          .collection("founders")
+          .doc(ref.id)
+          .set(syncData, { merge: true });
+        await sendEmail("p8K9z0CBhGlb3Vgzl02o", row);
+        return {
+          message: "Founder created!",
+          cellValue: {
+            redo: false,
+            status: "Verified",
+            undo: true,
+            meta: { ranBy: context.auth.token.email },
+          },
+          completedAt: serverTimestamp(),
+          success: true,
+        };
     }
   }
 );
 
-const dissolveTeam = async (
+const sendEmailTemplateCallable = async (
   data: {
     ref: {
       id: string;
@@ -120,33 +85,34 @@ const dissolveTeam = async (
       parentId: string;
     };
     row: any;
+    column: any;
     action: "run" | "redo" | "undo";
   },
   context: functions.https.CallableContext
 ) => {
-  if (context.auth && context.auth.token.email.includes("@antler.co")) {
-    await db
-      .collection("myTeam")
-      .doc(data.ref.id)
-      .update({ isDissolved: true });
+  const authorized = hasAnyRole(["ADMIN", "PROGRAM"], context);
+
+  if (!context.auth || !authorized) {
+    console.warn(`unautherized user${context}`);
     return {
-      message: "Team dissemble",
-      cellValue: {
-        redo: false,
-        status: `dissolved`,
-        completedAt: serverTimestamp(),
-        meta: { ranBy: context.auth.token.email },
-        undo: true,
-      },
-      success: true,
-    };
-  } else {
-    return {
-      message: "unauthorized user",
-      // cellValue: { redo: false, status: "complete" },
       success: false,
+      message: "you dont have permissions to send this email",
     };
   }
+  console.log({ column: data.column });
+  await sendEmail(data.column.config.templateId, data.row);
+
+  return {
+    message: "Email Sent",
+    cellValue: {
+      redo: true,
+      status: `sent`,
+      completedAt: serverTimestamp(),
+      meta: { ranBy: context.auth.token.email },
+      undo: false,
+    },
+    success: true,
+  };
 };
 
-export const FH_dissolveTeam = functions.https.onCall(dissolveTeam);
+export const SendEmail = functions.https.onCall(sendEmailTemplateCallable);

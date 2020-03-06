@@ -18,26 +18,6 @@ const cohort2algoliaKey = (cohort: string) =>
 const cohort2region = (cohort: string) =>
   cohort.toUpperCase().replace(/\d+.*$/, "");
 
-// const location2region = (location: string) => {
-//   const _location = location.toUpperCase();
-//   switch (_location) {
-//     case "GLOBAL":
-//       return "GLOBAL";
-//     case "SYDNEY":
-//       return "SYD";
-//     case "LONDON":
-//       return "LON";
-//     case "SINGAPORE":
-//       return "SG";
-//     case "AMSTERDAM":
-//       return "AMS";
-//        case 'OSLO': return 'OSL'
-
-//     default:
-//       break;
-//   }
-// };
-
 const cohort2location = (cohort: string) => {
   const _region = cohort2region(cohort);
   switch (_region) {
@@ -91,6 +71,21 @@ const config = [
     ],
   },
   {
+    name: "icManagement",
+    groups: [
+      {
+        listenerField: "cohort",
+        synonymField: "region",
+        transformer: cohort2region,
+      },
+      {
+        listenerField: "cohort",
+        synonymField: "algoliaKey",
+        transformer: cohort2algoliaKey,
+      },
+    ],
+  },
+  {
     name: "portfolio",
     groups: [
       {
@@ -105,10 +100,24 @@ const config = [
       },
     ],
   },
+  {
+    name: "teams",
+    groups: [
+      {
+        listenerField: "cohort",
+        synonymField: "region",
+        transformer: cohort2region,
+      },
+      {
+        listenerField: "id",
+        synonymField: "ddPage",
+        transformer: id => `https://firepage.antler.co/DD?id=${id}`,
+      },
+    ],
+  },
   ...cohort2regionCollections([
     "hubResources",
     "profiles",
-    "teams",
     "sprintSubmissions",
     "trackoutApplications",
     "portfolioEnquiries",

@@ -73,7 +73,7 @@ export default function TableHeader({
   filters,
 }: ITableHeaderProps) {
   const classes = useStyles();
-  const { tableActions } = useFiretableContext();
+  const { tableActions, userClaims } = useFiretableContext();
 
   return (
     <Grid
@@ -145,9 +145,11 @@ export default function TableHeader({
 
       <Grid item />
 
-      <Grid item>
-        <ImportCSV />
-      </Grid>
+      {userClaims && userClaims.roles?.includes("ADMIN") && (
+        <Grid item>
+          <ImportCSV />
+        </Grid>
+      )}
 
       <Grid item>
         <ExportCSV
