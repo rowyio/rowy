@@ -17,6 +17,7 @@ export interface IConnectTableSelectProps {
 
   collectionPath: string;
   config: {
+    filters: string;
     primaryKeys: string[];
     secondaryKeys: string[];
     [key: string]: any;
