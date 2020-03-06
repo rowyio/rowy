@@ -183,12 +183,11 @@ export default function Table({ collection, filters }: ITableProps) {
             // enableCellDragAndDrop
             onColumnResize={tableActions.column.resize}
             cellNavigationMode={CellNavigationMode.CHANGE_ROW}
-            // TODO: RE-ENABLE ONCE PERFORMANCE ISSUES SOLVED
-            // onCellSelected={({ rowIdx, idx: colIdx }) => {
-            //   // Prevent selecting final row
-            //   if (colIdx < columns.length - 1)
-            //     setSelectedCell!({ row: rowIdx, column: columns[colIdx].key });
-            // }}
+            onCellSelected={({ rowIdx, idx: colIdx }) => {
+              // Prevent selecting final row
+              if (colIdx < columns.length - 1)
+                setSelectedCell!({ row: rowIdx, column: columns[colIdx].key });
+            }}
             enableCellSelect
             onScroll={handleScroll}
             ref={dataGridRef}
