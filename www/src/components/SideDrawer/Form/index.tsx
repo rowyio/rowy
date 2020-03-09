@@ -98,7 +98,7 @@ export default function Form({ fields, values }: IFormProps) {
 
     // Time out for double-clicking on cells, which can open the null editor
     setTimeout(() => elem?.scrollIntoView({ behavior: "smooth" }), 50);
-  }, [sideDrawerRef]);
+  }, [sideDrawerRef?.current]);
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
