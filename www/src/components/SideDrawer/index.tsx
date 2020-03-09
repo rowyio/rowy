@@ -52,8 +52,6 @@ export default function SideDrawer() {
     dataGridRef?.current?.selectCell({ rowIdx: row, idx });
   };
 
-  const showBumpAnim = !open && cell?.column && cell?.row;
-
   // Map columns to form fields
   const fields = tableState?.columns?.map(column => {
     const field: Field = {
@@ -113,7 +111,7 @@ export default function SideDrawer() {
         classes={{
           paperAnchorDockedRight: clsx(
             classes.paper,
-            showBumpAnim && classes.bumpPaper
+            !disabled && classes.bumpPaper
           ),
           paper: clsx({
             [classes.paperOpen]: open,
@@ -170,7 +168,7 @@ export default function SideDrawer() {
       <div
         className={clsx(
           classes.drawerFabContainer,
-          showBumpAnim && classes.bumpDrawerFab
+          !disabled && classes.bumpDrawerFab
         )}
       >
         <Fab

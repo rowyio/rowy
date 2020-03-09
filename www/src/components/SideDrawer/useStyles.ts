@@ -51,7 +51,7 @@ export const useStyles = makeStyles(theme =>
       },
     },
     bumpPaper: {
-      animation: `${theme.transitions.duration.standard}ms ${theme.transitions.easing.custom} both $bumpPaper`,
+      animation: `${theme.transitions.duration.standard}ms ${theme.transitions.easing.custom} $bumpPaper`,
     },
 
     fab: {
@@ -111,7 +111,7 @@ export const useStyles = makeStyles(theme =>
       "100%": { transform: `translate(0px, -50%)` },
     },
     bumpDrawerFab: {
-      animation: `${theme.transitions.duration.standard}ms ${theme.transitions.easing.custom} both $bumpDrawerFab`,
+      animation: `${theme.transitions.duration.standard}ms ${theme.transitions.easing.custom} $bumpDrawerFab`,
     },
 
     drawerContents: { padding: theme.spacing(8) },
