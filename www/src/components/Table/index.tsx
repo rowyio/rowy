@@ -184,8 +184,8 @@ export default function Table({ collection, filters }: ITableProps) {
             cellNavigationMode={CellNavigationMode.CHANGE_ROW}
             onCellSelected={({ rowIdx, idx: colIdx }) => {
               // Prevent selecting final row
-              if (colIdx < columns.length - 1)
-                sideDrawerRef?.current?.setCell!({
+              if (colIdx < columns.length - 1 && sideDrawerRef?.current)
+                sideDrawerRef.current.setCell({
                   row: rowIdx,
                   column: columns[colIdx].key as string,
                 });
