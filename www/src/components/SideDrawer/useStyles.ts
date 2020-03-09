@@ -23,13 +23,13 @@ export const useStyles = makeStyles(theme =>
     },
     paperOpen: {
       transition: theme.transitions.create("transform", {
-        easing: theme.transitions.easing.sharp,
+        easing: theme.transitions.easing.custom,
         duration: theme.transitions.duration.enteringScreen,
       }),
     },
     paperClose: {
       transition: theme.transitions.create("transform", {
-        easing: theme.transitions.easing.sharp,
+        easing: theme.transitions.easing.custom,
         duration: theme.transitions.duration.leavingScreen,
       }),
 
@@ -51,18 +51,15 @@ export const useStyles = makeStyles(theme =>
     navFabContainer: {
       position: "absolute",
       top: theme.spacing(8),
-      right: theme.spacing(2),
+      right: DRAWER_WIDTH - 20,
       zIndex: theme.zIndex.drawer + 1,
-
-      transition: theme.transitions.create("transform", {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-
-      "$open &": {
-        transform: `translate(-${DRAWER_WIDTH - DRAWER_COLLAPSED_WIDTH}px)`,
-        transitionDuration: `${theme.transitions.duration.leavingScreen}ms`,
-      },
+    },
+    "@keyframes navFab": {
+      from: { transform: "translateY(-50vh)" },
+      to: { transform: "translateY(0)" },
+    },
+    navFab: {
+      animation: `${theme.transitions.duration.standard}ms $navFab both`,
     },
 
     drawerFabContainer: {
@@ -73,7 +70,7 @@ export const useStyles = makeStyles(theme =>
       zIndex: theme.zIndex.drawer + 1,
 
       transition: theme.transitions.create("transform", {
-        easing: theme.transitions.easing.sharp,
+        easing: theme.transitions.easing.custom,
         duration: theme.transitions.duration.enteringScreen,
       }),
 
@@ -88,19 +85,9 @@ export const useStyles = makeStyles(theme =>
       width: "2em",
       height: "2em",
 
-      // transition: theme.transitions.create("transform", {
-      //   easing: theme.transitions.easing.sharp,
-      //   duration: theme.transitions.duration.enteringScreen,
-      // }),
-
-      "$open &": {
-        transform: "rotate(180deg)",
-        //   transitionDuration: `${theme.transitions.duration.leavingScreen}ms`,
-      },
+      "$open &": { transform: "rotate(180deg)" },
     },
 
-    drawerContents: {
-      padding: theme.spacing(8),
-    },
+    drawerContents: { padding: theme.spacing(8) },
   })
 );

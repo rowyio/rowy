@@ -126,32 +126,42 @@ export default function SideDrawer() {
         </ErrorBoundary>
       </Drawer>
 
-      <div className={classes.navFabContainer}>
-        <Fab
-          classes={{ root: classes.fab, disabled: classes.disabled }}
-          color="secondary"
-          size="small"
-          disabled={disabled || !cell || cell.row <= 0}
-          onClick={handleNavigate("up")}
-        >
-          <ChevronUpIcon />
-        </Fab>
+      {open && (
+        <div className={classes.navFabContainer}>
+          <Fab
+            classes={{
+              root: clsx(classes.fab, classes.navFab),
+              disabled: classes.disabled,
+            }}
+            style={{ animationDelay: "0.2s" }}
+            color="secondary"
+            size="small"
+            disabled={disabled || !cell || cell.row <= 0}
+            onClick={handleNavigate("up")}
+          >
+            <ChevronUpIcon />
+          </Fab>
 
-        <Fab
-          classes={{ root: classes.fab, disabled: classes.disabled }}
-          color="secondary"
-          size="small"
-          disabled={
-            disabled ||
-            !tableState ||
-            !cell ||
-            cell.row >= tableState.rows.length - 1
-          }
-          onClick={handleNavigate("down")}
-        >
-          <ChevronDownIcon />
-        </Fab>
-      </div>
+          <Fab
+            classes={{
+              root: clsx(classes.fab, classes.navFab),
+              disabled: classes.disabled,
+            }}
+            style={{ animationDelay: "0.1s" }}
+            color="secondary"
+            size="small"
+            disabled={
+              disabled ||
+              !tableState ||
+              !cell ||
+              cell.row >= tableState.rows.length - 1
+            }
+            onClick={handleNavigate("down")}
+          >
+            <ChevronDownIcon />
+          </Fab>
+        </div>
+      )}
 
       <div className={classes.drawerFabContainer}>
         <Fab
