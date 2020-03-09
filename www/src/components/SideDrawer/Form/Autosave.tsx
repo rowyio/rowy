@@ -18,7 +18,7 @@ export interface IAutosaveProps {
 
 export default function Autosave({ values, errors }: IAutosaveProps) {
   const { currentUser } = useAppContext();
-  const { tableState, selectedCell } = useFiretableContext();
+  const { tableState, sideDrawerRef } = useFiretableContext();
 
   const getEditables = value =>
     _pick(value, tableState?.columns?.map(c => c.key) ?? []);
@@ -27,7 +27,9 @@ export default function Autosave({ values, errors }: IAutosaveProps) {
     equalityFn: _isEqual,
   });
 
-  const row = selectedCell ? tableState?.rows[selectedCell.row] : {};
+  const row = sideDrawerRef?.current?.cell
+    ? tableState?.rows[sideDrawerRef?.current?.cell.row]
+    : {};
 
   useEffect(() => {
     if (!row || !row.ref) return;

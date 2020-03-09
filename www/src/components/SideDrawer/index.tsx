@@ -18,18 +18,23 @@ import { FieldType } from "constants/fields";
 export const DRAWER_WIDTH = 600;
 export const DRAWER_COLLAPSED_WIDTH = 36;
 
+type SelectedCell = { row: number; column: string } | null;
+export type SideDrawerRef = {
+  cell: SelectedCell;
+  setCell: React.Dispatch<React.SetStateAction<SelectedCell>>;
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
 export default function SideDrawer() {
   const classes = useStyles();
-  const {
-    tableState,
-    selectedCell,
-    setSelectedCell,
-    sideDrawerOpen: open,
-    setSideDrawerOpen: setOpen,
-    dataGridRef,
-  } = useFiretableContext();
+  const { tableState, dataGridRef, sideDrawerRef } = useFiretableContext();
 
-  const disabled = !selectedCell || _isNil(selectedCell.row);
+  const [cell, setCell] = useState<SelectedCell>(null);
+  const [open, setOpen] = useState(false);
+  if (sideDrawerRef) sideDrawerRef.current = { cell, setCell, open, setOpen };
+
+  const disabled = !cell || _isNil(cell.row);
   useEffect(() => {
     if (disabled && setOpen) setOpen(false);
   }, [disabled]);
@@ -37,13 +42,13 @@ export default function SideDrawer() {
   const handleNavigate = (direction: "up" | "down") => () => {
     if (!tableState?.rows) return;
 
-    let row = selectedCell!.row;
+    let row = cell!.row;
     if (direction === "up" && row > 0) row -= 1;
     if (direction === "down" && row < tableState.rows.length - 1) row += 1;
 
-    setSelectedCell!(cell => ({ ...cell, row }));
+    setCell!(cell => ({ column: cell!.column, row }));
 
-    const idx = _findIndex(tableState?.columns, ["key", selectedCell!.column]);
+    const idx = _findIndex(tableState?.columns, ["key", cell!.column]);
     dataGridRef?.current?.selectCell({ rowIdx: row, idx });
   };
 
@@ -104,7 +109,10 @@ export default function SideDrawer() {
         anchor="right"
         className={classes.drawer}
         classes={{
-          paperAnchorDockedRight: classes.paper,
+          paperAnchorDockedRight: clsx(
+            classes.paper,
+            !disabled && classes.bumpPaper
+          ),
           paper: clsx({
             [classes.paperOpen]: open,
             [classes.paperClose]: !open,
@@ -113,44 +121,56 @@ export default function SideDrawer() {
       >
         <ErrorBoundary>
           <div className={classes.drawerContents}>
-            {open && fields && selectedCell && (
-              <Form
-                fields={fields}
-                values={tableState?.rows[selectedCell.row] ?? {}}
-              />
+            {open && fields && cell && (
+              <Form fields={fields} values={tableState?.rows[cell.row] ?? {}} />
             )}
           </div>
         </ErrorBoundary>
       </Drawer>
 
-      <div className={classes.navFabContainer}>
-        <Fab
-          classes={{ root: classes.fab, disabled: classes.disabled }}
-          color="secondary"
-          size="small"
-          disabled={disabled || !selectedCell || selectedCell.row <= 0}
-          onClick={handleNavigate("up")}
-        >
-          <ChevronUpIcon />
-        </Fab>
+      {open && (
+        <div className={classes.navFabContainer}>
+          <Fab
+            classes={{
+              root: clsx(classes.fab, classes.navFab),
+              disabled: classes.disabled,
+            }}
+            style={{ animationDelay: "0.2s" }}
+            color="secondary"
+            size="small"
+            disabled={disabled || !cell || cell.row <= 0}
+            onClick={handleNavigate("up")}
+          >
+            <ChevronUpIcon />
+          </Fab>
 
-        <Fab
-          classes={{ root: classes.fab, disabled: classes.disabled }}
-          color="secondary"
-          size="small"
-          disabled={
-            disabled ||
-            !tableState ||
-            !selectedCell ||
-            selectedCell.row >= tableState.rows.length - 1
-          }
-          onClick={handleNavigate("down")}
-        >
-          <ChevronDownIcon />
-        </Fab>
-      </div>
+          <Fab
+            classes={{
+              root: clsx(classes.fab, classes.navFab),
+              disabled: classes.disabled,
+            }}
+            style={{ animationDelay: "0.1s" }}
+            color="secondary"
+            size="small"
+            disabled={
+              disabled ||
+              !tableState ||
+              !cell ||
+              cell.row >= tableState.rows.length - 1
+            }
+            onClick={handleNavigate("down")}
+          >
+            <ChevronDownIcon />
+          </Fab>
+        </div>
+      )}
 
-      <div className={classes.drawerFabContainer}>
+      <div
+        className={clsx(
+          classes.drawerFabContainer,
+          !disabled && classes.bumpDrawerFab
+        )}
+      >
         <Fab
           classes={{ root: classes.fab, disabled: classes.disabled }}
           color="secondary"
