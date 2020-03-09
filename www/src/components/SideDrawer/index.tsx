@@ -32,7 +32,6 @@ export default function SideDrawer() {
 
   const [cell, setCell] = useState<SelectedCell>(null);
   const [open, setOpen] = useState(false);
-
   if (sideDrawerRef) sideDrawerRef.current = { cell, setCell, open, setOpen };
 
   const disabled = !cell || _isNil(cell.row);
@@ -52,6 +51,8 @@ export default function SideDrawer() {
     const idx = _findIndex(tableState?.columns, ["key", cell!.column]);
     dataGridRef?.current?.selectCell({ rowIdx: row, idx });
   };
+
+  const showBumpAnim = !open && cell?.column && cell?.row;
 
   // Map columns to form fields
   const fields = tableState?.columns?.map(column => {
@@ -110,7 +111,10 @@ export default function SideDrawer() {
         anchor="right"
         className={classes.drawer}
         classes={{
-          paperAnchorDockedRight: classes.paper,
+          paperAnchorDockedRight: clsx(
+            classes.paper,
+            showBumpAnim && classes.bumpPaper
+          ),
           paper: clsx({
             [classes.paperOpen]: open,
             [classes.paperClose]: !open,
@@ -163,7 +167,12 @@ export default function SideDrawer() {
         </div>
       )}
 
-      <div className={classes.drawerFabContainer}>
+      <div
+        className={clsx(
+          classes.drawerFabContainer,
+          showBumpAnim && classes.bumpDrawerFab
+        )}
+      >
         <Fab
           classes={{ root: classes.fab, disabled: classes.disabled }}
           color="secondary"

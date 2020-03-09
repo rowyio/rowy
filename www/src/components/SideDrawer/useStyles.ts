@@ -37,6 +37,23 @@ export const useStyles = makeStyles(theme =>
       transform: `translateX(${DRAWER_WIDTH - DRAWER_COLLAPSED_WIDTH}px)`,
     },
 
+    "@keyframes bumpPaper": {
+      "0%": {
+        transform: `translateX(${DRAWER_WIDTH - DRAWER_COLLAPSED_WIDTH}px)`,
+      },
+      "50%": {
+        transform: `translateX(${DRAWER_WIDTH -
+          DRAWER_COLLAPSED_WIDTH -
+          theme.spacing(4)}px)`,
+      },
+      "100%": {
+        transform: `translateX(${DRAWER_WIDTH - DRAWER_COLLAPSED_WIDTH}px)`,
+      },
+    },
+    bumpPaper: {
+      animation: `${theme.transitions.duration.standard}ms ${theme.transitions.easing.custom} both $bumpPaper`,
+    },
+
     fab: {
       display: "flex",
 
@@ -59,7 +76,7 @@ export const useStyles = makeStyles(theme =>
       to: { transform: "translateY(0)" },
     },
     navFab: {
-      animation: `${theme.transitions.duration.standard}ms $navFab both`,
+      animation: `${theme.transitions.duration.standard}ms ${theme.transitions.easing.custom} both $navFab`,
     },
 
     drawerFabContainer: {
@@ -86,6 +103,15 @@ export const useStyles = makeStyles(theme =>
       height: "2em",
 
       "$open &": { transform: "rotate(180deg)" },
+    },
+
+    "@keyframes bumpDrawerFab": {
+      "0%": { transform: `translate(0px, -50%)` },
+      "50%": { transform: `translate(${-theme.spacing(4)}px, -50%)` },
+      "100%": { transform: `translate(0px, -50%)` },
+    },
+    bumpDrawerFab: {
+      animation: `${theme.transitions.duration.standard}ms ${theme.transitions.easing.custom} both $bumpDrawerFab`,
     },
 
     drawerContents: { padding: theme.spacing(8) },
