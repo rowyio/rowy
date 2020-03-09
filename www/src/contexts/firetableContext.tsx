@@ -10,6 +10,7 @@ import useFiretable, {
 } from "hooks/useFiretable";
 import useSettings from "hooks/useSettings";
 import { useAppContext } from "./appContext";
+import { SideDrawerRef } from "components/SideDrawer";
 
 type SelectedColumnHeader = {
   column: Column<any> & { [key: string]: any };
@@ -36,13 +37,9 @@ interface FiretableContextProps {
     value: any
   ) => void;
   createTable: Function;
-  selectedCell: { row: number; column: string };
-  setSelectedCell: Function;
   userClaims: any;
 
-  sideDrawerOpen: boolean;
-  setSideDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
-
+  // TODO: Investigate if this can be moved out of this context
   selectedColumnHeader: SelectedColumnHeader | null;
   setSelectedColumnHeader: React.Dispatch<
     React.SetStateAction<SelectedColumnHeader | null>
@@ -50,6 +47,8 @@ interface FiretableContextProps {
 
   // A ref to the data grid. Contains data grid functions
   dataGridRef: React.RefObject<DataGridHandle>;
+  // A ref to the side drawer state. Prevents unnecessary re-renders
+  sideDrawerRef: React.MutableRefObject<SideDrawerRef | undefined>;
 }
 
 const firetableContext = React.createContext<Partial<FiretableContextProps>>(
@@ -61,16 +60,11 @@ export const useFiretableContext = () => useContext(firetableContext);
 
 export const FiretableContextProvider: React.FC = ({ children }) => {
   const { tableState, tableActions } = useFiretable();
-  const [selectedCell, setSelectedCell] = useState<{
-    row: number;
-    column: string;
-  }>();
   const [tables, setTables] = useState<FiretableContextProps["tables"]>();
   const [sections, setSections] = useState<FiretableContextProps["sections"]>();
   const [settings, createTable] = useSettings();
   const [userRoles, setUserRoles] = useState<null | string[]>();
   const [userClaims, setUserClaims] = useState<any>();
-  const [sideDrawerOpen, setSideDrawerOpen] = useState<boolean>(false);
   const [
     selectedColumnHeader,
     setSelectedColumnHeader,
@@ -122,24 +116,22 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
 
   // A ref to the data grid. Contains data grid functions
   const dataGridRef = useRef<DataGridHandle>(null);
+  const sideDrawerRef = useRef<SideDrawerRef>();
 
   return (
     <firetableContext.Provider
       value={{
         tableState,
         tableActions,
-        selectedCell,
-        setSelectedCell,
         updateCell,
         createTable,
         tables,
         sections,
         userClaims,
-        sideDrawerOpen,
-        setSideDrawerOpen,
         selectedColumnHeader,
         setSelectedColumnHeader,
         dataGridRef,
+        sideDrawerRef,
       }}
     >
       {children}

@@ -88,14 +88,14 @@ export const useStyles = makeStyles(theme =>
       width: "2em",
       height: "2em",
 
-      transition: theme.transitions.create("transform", {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
+      // transition: theme.transitions.create("transform", {
+      //   easing: theme.transitions.easing.sharp,
+      //   duration: theme.transitions.duration.enteringScreen,
+      // }),
 
       "$open &": {
         transform: "rotate(180deg)",
-        transitionDuration: `${theme.transitions.duration.leavingScreen}ms`,
+        //   transitionDuration: `${theme.transitions.duration.leavingScreen}ms`,
       },
     },
 

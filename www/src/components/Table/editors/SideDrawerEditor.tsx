@@ -20,11 +20,12 @@ function SideDrawerEditor_(props: EditorProps<any, any>) {
   useStyles();
 
   const { column, rowData } = props;
-  const { sideDrawerOpen, setSideDrawerOpen } = useFiretableContext();
+  const { sideDrawerRef } = useFiretableContext();
 
   useEffect(() => {
-    if (!sideDrawerOpen) setSideDrawerOpen!(true);
-  }, [column?.key, rowData?.id]);
+    if (!sideDrawerRef?.current?.open && sideDrawerRef?.current?.setOpen)
+      sideDrawerRef?.current?.setOpen(true);
+  }, [column, rowData]);
 
   return null;
 }

@@ -88,16 +88,17 @@ export interface IFormProps {
 export default function Form({ fields, values }: IFormProps) {
   const initialValues = getInitialValues(fields);
 
-  const { selectedCell } = useFiretableContext();
+  const { sideDrawerRef } = useFiretableContext();
   useEffect(() => {
-    if (!selectedCell?.column) return;
-    const elem = document.getElementById(
-      `sidedrawer-label-${selectedCell.column}`
-    )?.parentNode as HTMLElement;
+    const column = sideDrawerRef?.current?.cell?.column;
+    if (!column) return;
+
+    const elem = document.getElementById(`sidedrawer-label-${column}`)
+      ?.parentNode as HTMLElement;
 
     // Time out for double-clicking on cells, which can open the null editor
     setTimeout(() => elem?.scrollIntoView({ behavior: "smooth" }), 50);
-  }, [selectedCell?.column]);
+  }, [sideDrawerRef]);
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
