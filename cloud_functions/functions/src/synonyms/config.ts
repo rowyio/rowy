@@ -56,6 +56,16 @@ const cohort2regionCollections = (collections: string[]) =>
 
 const config = [
   {
+    name: "icManagement/{icId}/icMembers/{memberId}/votes",
+    groups: [
+      {
+        listenerField: "team",
+        synonymField: "teamName",
+        transformer: team => (team[0] ? team[0].teamName : ""),
+      },
+    ],
+  },
+  {
     name: "cohorts",
     groups: [
       {
