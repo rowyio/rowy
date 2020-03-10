@@ -1,7 +1,8 @@
 import React, { useContext, useState } from "react";
 import { CustomCellProps } from "./withCustomCell";
 import clsx from "clsx";
-
+import Confirmation from "components/Confirmation";
+import _get from "lodash/get";
 import {
   createStyles,
   makeStyles,
@@ -22,6 +23,12 @@ const useStyles = makeStyles(theme =>
     fab: { width: 36, height: 36 },
   })
 );
+
+const replacer = (data: any) => (m: string, key: string) => {
+  const objKey = key.split(":")[0];
+  const defaultValue = key.split(":")[1] || "";
+  return _get(data, objKey, defaultValue);
+};
 
 export default function Action({
   column,
@@ -54,8 +61,40 @@ export default function Action({
       }
     );
   };
-
   const hasRan = value && value.status;
+  let component = (
+    <Fab
+      size="small"
+      color="secondary"
+      className={classes.fab}
+      onClick={handleRun}
+      disabled={isRunning || !!(hasRan && !value.redo)}
+    >
+      {isRunning ? (
+        <CircularProgress color="secondary" size={16} thickness={5.6} />
+      ) : hasRan ? (
+        <RefreshIcon />
+      ) : (
+        <PlayIcon />
+      )}
+    </Fab>
+  );
+
+  if ((column as any)?.config?.confirmation)
+    component = (
+      <Confirmation
+        message={{
+          title: (column as any).config.confirmation.title,
+          body: (column as any).config.confirmation.body.replace(
+            /\{\{(.*?)\}\}/g,
+            replacer(row)
+          ),
+        }}
+        functionName="onClick"
+      >
+        {component}
+      </Confirmation>
+    );
 
   return (
     <Grid
@@ -70,23 +109,7 @@ export default function Action({
           : callableName?.replace("callable-", "").replace(/([A-Z])/g, " $1")}
       </Grid>
 
-      <Grid item>
-        <Fab
-          size="small"
-          color="secondary"
-          className={classes.fab}
-          onClick={handleRun}
-          disabled={isRunning || !!(hasRan && !value.redo)}
-        >
-          {isRunning ? (
-            <CircularProgress color="secondary" size={16} thickness={5.6} />
-          ) : hasRan ? (
-            <RefreshIcon />
-          ) : (
-            <PlayIcon />
-          )}
-        </Fab>
-      </Grid>
+      <Grid item>{component}</Grid>
     </Grid>
   );
 }

@@ -40,10 +40,10 @@ export const verifyFounder = functions.https.onCall(
     const authorized = hasAnyRole(["ADMIN", "PROGRAM"], context);
 
     if (!context.auth || !authorized) {
-      console.warn(`unautherized user${context}`);
+      console.warn(`unauthorized user${context}`);
       return {
         success: false,
-        message: "you dont have permissions to send this email",
+        message: "you don't have permissions to send this email",
       };
     }
     switch (action) {
@@ -93,10 +93,10 @@ const sendEmailTemplateCallable = async (
   const authorized = hasAnyRole(["ADMIN", "PROGRAM"], context);
 
   if (!context.auth || !authorized) {
-    console.warn(`unautherized user${context}`);
+    console.warn(`unauthorized user${context}`);
     return {
       success: false,
-      message: "you dont have permissions to send this email",
+      message: "you don't have permissions to send this email",
     };
   }
   console.log({ column: data.column });
@@ -116,3 +116,46 @@ const sendEmailTemplateCallable = async (
 };
 
 export const SendEmail = functions.https.onCall(sendEmailTemplateCallable);
+
+const dissolveTeam = async (
+  data: {
+    ref: {
+      id: string;
+      path: string;
+      parentId: string;
+    };
+    row: any;
+    column: any;
+    action: "run" | "redo" | "undo";
+  },
+  context: functions.https.CallableContext
+) => {
+  const authorized = hasAnyRole(["ADMIN", "PROGRAM"], context);
+
+  if (!context.auth || !authorized) {
+    console.warn(`unauthorized user${{ context }}`);
+    return {
+      success: false,
+      message: "you don't have permissions to dissolve this team",
+    };
+  }
+
+  await db
+    .collection("myTeam")
+    .doc(data.ref.id)
+    .update({ isDissolved: true });
+
+  return {
+    message: "team dissolved",
+    cellValue: {
+      redo: false,
+      status: `Dissolved`,
+      completedAt: serverTimestamp(),
+      meta: { ranBy: context.auth.token.email },
+      undo: false,
+    },
+    success: true,
+  };
+};
+
+export const DissolveTeam = functions.https.onCall(dissolveTeam);
