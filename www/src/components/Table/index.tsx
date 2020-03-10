@@ -31,7 +31,7 @@ import { DRAWER_WIDTH, DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
 import { APP_BAR_HEIGHT } from "components/Navigation";
 import useStyles from "./styles";
 
-const Hotkeys = lazy(() => import("./HotKeys"));
+// const Hotkeys = lazy(() => import("./HotKeys"));
 const ColumnEditor = lazy(() => import("./ColumnEditor/index"));
 const { DraggableContainer } = DraggableHeader;
 
@@ -54,18 +54,16 @@ export default function Table({ collection, filters }: ITableProps) {
   const {
     tableState,
     tableActions,
-    selectedCell,
-    setSelectedCell,
     updateCell,
-    sideDrawerOpen,
     dataGridRef,
+    sideDrawerRef,
   } = useFiretableContext();
 
   useEffect(() => {
     if (tableActions && tableState && tableState.tablePath !== collection) {
       console.log("setting table");
       tableActions.table.set(collection, filters);
-      setSelectedCell!({});
+      if (sideDrawerRef?.current) sideDrawerRef.current.setCell!(null);
     }
   }, [collection]);
 
@@ -134,15 +132,16 @@ export default function Table({ collection, filters }: ITableProps) {
   const inSubTable = collection.split("/").length > 1;
 
   let tableWidth: any = `calc(100% - ${
-    sideDrawerOpen ? DRAWER_WIDTH : DRAWER_COLLAPSED_WIDTH
+    DRAWER_COLLAPSED_WIDTH
+    // sideDrawerOpen ? DRAWER_WIDTH : DRAWER_COLLAPSED_WIDTH
   }px)`;
   if (windowSize.width < theme.breakpoints.values.md) tableWidth = "100%";
 
   return (
     <>
-      <Suspense fallback={<Loading message="Loading header" />}>
+      {/* <Suspense fallback={<Loading message="Loading header" />}>
         <Hotkeys selectedCell={selectedCell} />
-      </Suspense>
+      </Suspense> */}
 
       {inSubTable && <SubTableBreadcrumbs collection={collection} />}
 
@@ -185,8 +184,11 @@ export default function Table({ collection, filters }: ITableProps) {
             cellNavigationMode={CellNavigationMode.CHANGE_ROW}
             onCellSelected={({ rowIdx, idx: colIdx }) => {
               // Prevent selecting final row
-              if (colIdx < columns.length - 1)
-                setSelectedCell!({ row: rowIdx, column: columns[colIdx].key });
+              if (colIdx < columns.length - 1 && sideDrawerRef?.current)
+                sideDrawerRef.current.setCell({
+                  row: rowIdx,
+                  column: columns[colIdx].key as string,
+                });
             }}
             enableCellSelect
             onScroll={handleScroll}

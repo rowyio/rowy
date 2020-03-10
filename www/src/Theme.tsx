@@ -6,6 +6,12 @@ import ClearIcon from "@material-ui/icons/Clear";
 const HEADING_TEXT = "Europa, sans-serif";
 const BODY_TEXT = '"Open Sans", sans-serif';
 
+declare module "@material-ui/core/styles/transitions" {
+  interface Easing {
+    custom: string;
+  }
+}
+
 const Theme = createMuiTheme({
   palette: {
     primary: { main: "#e22729" },
@@ -84,6 +90,11 @@ const Theme = createMuiTheme({
       fontWeight: "bold",
       letterSpacing: 0.25,
       lineHeight: 1.2,
+    },
+  },
+  transitions: {
+    easing: {
+      custom: "cubic-bezier(0.25, 0.1, 0.25, 1)",
     },
   },
   overrides: {

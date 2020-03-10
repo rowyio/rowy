@@ -42,7 +42,7 @@ const withCustomCell = (Component: React.ComponentType<CustomCellProps>) => (
   props: FormatterProps<any>
 ) => {
   const classes = useStyles();
-  const { updateCell, selectedCell } = useFiretableContext();
+  const { updateCell, sideDrawerRef } = useFiretableContext();
 
   const handleSubmit = (value: any) => {
     if (updateCell)
@@ -50,8 +50,8 @@ const withCustomCell = (Component: React.ComponentType<CustomCellProps>) => (
   };
 
   const isSelected =
-    selectedCell?.row === props.rowIdx &&
-    selectedCell?.column === (props.column.key as string);
+    sideDrawerRef?.current?.cell?.row === props.rowIdx &&
+    sideDrawerRef?.current?.cell?.column === (props.column.key as string);
 
   return (
     <ErrorBoundary fullScreen={false} basic>
