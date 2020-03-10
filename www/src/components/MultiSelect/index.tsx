@@ -76,7 +76,6 @@ export default function MultiSelect({
       (a, b) => a.value === b.value
     );
   }
-
   return (
     <TextField
       label={label}
