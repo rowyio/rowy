@@ -15,6 +15,7 @@ import RefreshIcon from "@material-ui/icons/Refresh";
 
 import { SnackContext } from "contexts/snackContext";
 import { cloudFunction } from "firebase/callables";
+import { sanitiseCallableName, isUrl } from "util/fns";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -104,9 +105,15 @@ export default function Action({
       className={clsx("cell-collapse-padding", classes.root)}
     >
       <Grid item xs className={classes.labelContainer}>
-        {hasRan
-          ? value.status
-          : callableName?.replace("callable-", "").replace(/([A-Z])/g, " $1")}
+        {hasRan && isUrl(value.status) ? (
+          <a href={value.status} target="_blank" rel="noopener noreferer">
+            {value.status}
+          </a>
+        ) : hasRan ? (
+          value.status
+        ) : (
+          sanitiseCallableName(callableName)
+        )}
       </Grid>
 
       <Grid item>{component}</Grid>
