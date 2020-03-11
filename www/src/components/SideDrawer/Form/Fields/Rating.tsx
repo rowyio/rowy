@@ -27,7 +27,9 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-export interface IRatingProps extends FieldProps {}
+export interface IRatingProps extends FieldProps {
+  editable?: boolean;
+}
 
 export default function Rating(props: IRatingProps) {
   const classes = useStyles();
@@ -36,6 +38,7 @@ export default function Rating(props: IRatingProps) {
     <>
       <Grid container alignItems="center" className={classes.root}>
         <MuiRating
+          disabled={props.editable === false}
           name={props.field.name}
           id={`sidedrawer-field-${props.field.name}`}
           value={typeof props.field.value === "number" ? props.field.value : 0}
