@@ -119,7 +119,7 @@ export default function File({
                     body: "Are you sure you want to delete this file?",
                     confirm: "Delete",
                   }}
-                  functionName="onDelete"
+                  functionName={column.editable !== false ? "onDelete" : ""}
                   stopPropagation
                 >
                   <Chip
@@ -130,7 +130,7 @@ export default function File({
                       e.stopPropagation();
                     }}
                     onDelete={
-                      column.editable
+                      column.editable !== false
                         ? () => handleDelete(file.downloadURL)
                         : undefined
                     }
@@ -144,16 +144,18 @@ export default function File({
 
       <Grid item className={classes.endButtonContainer}>
         {!isLoading ? (
-          <IconButton
-            size="small"
-            className="row-hover-iconButton"
-            onClick={e => {
-              dropzoneProps.onClick!(e);
-              e.stopPropagation();
-            }}
-          >
-            <UploadIcon />
-          </IconButton>
+          column.editable !== false && (
+            <IconButton
+              size="small"
+              className="row-hover-iconButton"
+              onClick={e => {
+                dropzoneProps.onClick!(e);
+                e.stopPropagation();
+              }}
+            >
+              <UploadIcon />
+            </IconButton>
+          )
         ) : (
           <CircularProgress
             size={24}
