@@ -11,6 +11,7 @@ import ConnectTableSelect, {
 export default function ConnectTable({
   field,
   form,
+  editable,
   ...props
 }: FieldProps<ConnectTableValue[]> & IConnectTableSelectProps) {
   const theme = useTheme();
@@ -23,21 +24,23 @@ export default function ConnectTable({
     );
     // else form.setFieldValue(field.name, []);
   };
-
+  const disabled = editable === false;
   return (
     <>
-      <ConnectTableSelect
-        {...props}
-        value={field.value}
-        onChange={value => form.setFieldValue(field.name, value)}
-        TextFieldProps={{
-          fullWidth: true,
-          error: !!(form.touched[field.name] && form.errors[field.name]),
-          helperText:
-            (form.touched[field.name] && form.errors[field.name]) || "",
-          onBlur: () => form.setFieldTouched(field.name),
-        }}
-      />
+      {!disabled && (
+        <ConnectTableSelect
+          {...props}
+          value={field.value}
+          onChange={value => form.setFieldValue(field.name, value)}
+          TextFieldProps={{
+            fullWidth: true,
+            error: !!(form.touched[field.name] && form.errors[field.name]),
+            helperText:
+              (form.touched[field.name] && form.errors[field.name]) || "",
+            onBlur: () => form.setFieldTouched(field.name),
+          }}
+        />
+      )}
 
       {Array.isArray(field.value) && (
         <Grid container spacing={1} style={{ marginTop: theme.spacing(1) }}>
@@ -49,7 +52,7 @@ export default function ConnectTable({
                 label={props.config?.primaryKeys
                   ?.map((key: string) => snapshot[key])
                   .join(" ")}
-                onDelete={handleDelete(snapshot)}
+                onDelete={disabled ? undefined : handleDelete(snapshot)}
               />
             </Grid>
           ))}
