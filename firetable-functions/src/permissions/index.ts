@@ -1,6 +1,11 @@
 import { firestore, Change, auth as FCAuth } from "firebase-functions";
 import { auth, db } from "../config";
 
+export interface PermissionsConfig {
+  name: string;
+  customTokenFields: string[];
+}
+
 const email2uid = async (email: string) => {
   const user = await auth.getUserByEmail(email);
   console.log(
@@ -79,7 +84,7 @@ const permissions = (customClaimsFields: string[]) => async (
   return true;
 };
 
-const permissionsFnsGenerator = collection => ({
+const permissionsFnsGenerator = (collection: PermissionsConfig) => ({
   onCreate: firestore
     .document(`${collection.name}/{docId}`)
     .onCreate(permissions(collection.customTokenFields)),

@@ -2,6 +2,11 @@ import * as functions from "firebase-functions";
 import * as _ from "lodash";
 import { db } from "../config";
 
+export interface CollectionHistoryConfig {
+  name: string;
+  trackedFields: string[];
+}
+
 const historySnapshot = (trackedFields: string[]) => async (
   change: functions.Change<FirebaseFirestore.DocumentSnapshot>
 ) => {
@@ -23,7 +28,7 @@ const historySnapshot = (trackedFields: string[]) => async (
   } else return false;
 };
 
-const historySnapshotFnsGenerator = collection =>
+const historySnapshotFnsGenerator = (collection: CollectionHistoryConfig) =>
   functions.firestore
     .document(`${collection.name}/{docId}`)
     .onUpdate(historySnapshot(collection.trackedFields));

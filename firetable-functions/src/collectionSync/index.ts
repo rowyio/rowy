@@ -4,6 +4,17 @@ import { db } from "../config";
 
 import * as _ from "lodash";
 import { replacer } from "../utils/email";
+
+export interface CollectionSyncConfig {
+  name: string;
+  source: string;
+  target: string;
+  fieldsToSync: string[];
+  forcedUpdate: boolean;
+  onCreate?: boolean;
+  onUpdate?: boolean;
+}
+
 // returns object of fieldsToSync
 const docReducer = (docData: FirebaseFirestore.DocumentData) => (
   acc: any,
@@ -105,7 +116,7 @@ const syncDocOnUpdate = (
  * returns 2 different trigger functions (onCreate,onUpdate) in an object
  * @param collection configuration object
  */
-const collectionSyncFnsGenerator = collection =>
+const collectionSyncFnsGenerator = (collection: CollectionSyncConfig) =>
   Object.entries({
     onCreate: collection.onCreate
       ? functions.firestore

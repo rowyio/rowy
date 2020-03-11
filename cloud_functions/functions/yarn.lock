@@ -84,9 +84,9 @@
     teeny-request "^6.0.0"
 
 "@google-cloud/firestore@^3.0.0":
-  version "3.5.1"
-  resolved "https://registry.yarnpkg.com/@google-cloud/firestore/-/firestore-3.5.1.tgz#3084f57c56970e4fd928f821c9071124c0cf21cf"
-  integrity sha512-cTPKg0Yh2cSwde5tlGLHccCrhSpSMSBB0SwWm1bQwTyp4I7T8USp/mEyppd6zP2u8oQaHSPcP+lHdg/aHmL4tA==
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/@google-cloud/firestore/-/firestore-3.6.0.tgz#a550ffd2445183a2dfc87a0abcd810b1c27bbb88"
+  integrity sha512-mAT3aEkKNsSGLApZZIUw3XMW5RUf+Y1MsoD7T5M72fDlGnAvIUHXA93wGVHpI+UPxu3XTntJ0BDSJwjlOaWM3w==
   dependencies:
     deep-equal "^2.0.0"
     functional-red-black-tree "^1.0.1"
@@ -139,6 +139,16 @@
     stream-events "^1.0.1"
     through2 "^3.0.0"
     xdg-basedir "^4.0.0"
+
+"@gourmetpro/firetable-functions@0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@gourmetpro/firetable-functions/-/firetable-functions-0.1.0.tgz#af4e772c05654757e53ab79f44fcf94b0c72afea"
+  integrity sha512-L+pp9O7uQLslpv1oqvVa6ZDUAZUsv8TalJGZle6JcCvbVhFGuSgODUGG4q8gaP7gm6F4EbfN6ESykYa3O3NfZA==
+  dependencies:
+    algoliasearch "^3.35.1"
+    commander "^4.1.1"
+    json2csv "^4.5.4"
+    lodash "^4.17.15"
 
 "@grpc/grpc-js@^0.6.18":
   version "0.6.18"
@@ -256,18 +266,6 @@
   integrity sha512-UoOfVEzAUpeSPmjm7h1uk5MH6KZma2z2O7a75onTGjnNvAvMVrPzPL/vBbT65iIGHWj6rokwfmYcmxmlSf2uwg==
   dependencies:
     "@types/node" "*"
-
-"@types/json2csv@^4.5.0":
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/@types/json2csv/-/json2csv-4.5.0.tgz#f846edb5239969942a1aa6fbc470e13e69ae971d"
-  integrity sha512-7T/1w/8QZaEWqAX4LzuP3L9R2D8VuXoJPTrtQ1UG1dbkq90j+t1a7dPrx5JrdhV0tQ8zK7NUApNyK+cAMgOLew==
-  dependencies:
-    "@types/node" "*"
-
-"@types/lodash@^4.14.149":
-  version "4.14.149"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.149.tgz#1342d63d948c6062838fbf961012f74d4e638440"
-  integrity sha512-ijGqzZt/b7BfzcK9vTrS6MFljQRPn5BFWOx8oE0GYxribu6uV+aA9zZuXI1zc/etK9E8nrgdoF2+LgUw7+9tJQ==
 
 "@types/long@^4.0.0":
   version "4.0.0"
@@ -497,6 +495,11 @@ commander@^2.12.1, commander@^2.15.1:
   version "2.20.3"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.20.3.tgz#fd485e84c03eb4881c20722ba48035e8531aeb33"
   integrity sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==
+
+commander@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-4.1.1.tgz#9fd602bd936294e9e9ef46a3f4d6964044b18068"
+  integrity sha512-NOKm8xhkzAjzFx8B2v5OAHT+u5pRQc2UCa2Vq9jYL/31o2wi9mxBA7LIFs3sV5VSC49z6pEhfbMULvShKj26WA==
 
 compressible@^2.0.12:
   version "2.0.17"
@@ -2186,15 +2189,15 @@ supports-color@^5.3.0:
     has-flag "^3.0.0"
 
 teeny-request@^6.0.0:
-  version "6.0.2"
-  resolved "https://registry.yarnpkg.com/teeny-request/-/teeny-request-6.0.2.tgz#da0a6ba6fce4a9dab772ef84b04e417157c56fe7"
-  integrity sha512-B6fxA0fSnY/bul06NggdN1nywtr5U5Uvt96pHfTi8pi4MNe6++VUWcAAFBrcMeha94s+gULwA5WvagoSZ+AcYg==
+  version "6.0.3"
+  resolved "https://registry.yarnpkg.com/teeny-request/-/teeny-request-6.0.3.tgz#b617f9d5b7ba95c76a3f257f6ba2342b70228b1f"
+  integrity sha512-TZG/dfd2r6yeji19es1cUIwAlVD8y+/svB1kAC2Y0bjEyysrfbO8EZvJBRwIE6WkwmUoB7uvWLwTIhJbMXZ1Dw==
   dependencies:
     http-proxy-agent "^4.0.0"
     https-proxy-agent "^5.0.0"
     node-fetch "^2.2.0"
     stream-events "^1.0.5"
-    uuid "^3.3.2"
+    uuid "^7.0.0"
 
 through2@^2.0.0:
   version "2.0.5"
@@ -2322,10 +2325,10 @@ utils-merge@1.0.1:
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
   integrity sha1-n5VxD1CiZ5R7LMwSR0HBAoQn5xM=
 
-uuid@^3.3.2:
-  version "3.3.3"
-  resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.3.tgz#4568f0216e78760ee1dbf3a4d2cf53e224112866"
-  integrity sha512-pW0No1RGHgzlpHJO1nsVrHKpOEIxkGg1xB+v0ZmdNH5OAeAwzAVrCnI2/6Mtx+Uys6iaylxa+D3g4j63IKKjSQ==
+uuid@^7.0.0:
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-7.0.2.tgz#7ff5c203467e91f5e0d85cfcbaaf7d2ebbca9be6"
+  integrity sha512-vy9V/+pKG+5ZTYKf+VcphF5Oc6EFiu3W8Nv3P3zIh0EqVI80ZxOzuPfe9EHjkFNvf8+xuTHVeei4Drydlx4zjw==
 
 validate-npm-package-license@^3.0.1:
   version "3.0.4"

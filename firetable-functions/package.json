@@ -1,0 +1,52 @@
+{
+  "name": "@gourmetpro/firetable-functions",
+  "version": "0.1.0",
+  "description": "Provides firetable cloud functions as a package",
+  "main": "lib/index.js",
+  "files": [
+    "lib/"
+  ],
+  "directories": {
+    "lib": "lib"
+  },
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "lint": "tslint --project tsconfig.json",
+    "build": "tsc"
+  },
+  "engines": {
+    "node": "8"
+  },
+  "keywords": [],
+  "license": "ISC",
+  "bin": {
+    "firetable": "lib/cli/index.js"
+  },
+  "dependencies": {
+    "commander": "^4.1.1",
+    "json2csv": "^4.5.4",
+    "lodash": "^4.17.15",
+    "algoliasearch": "^3.35.1"
+  },
+  "devDependencies": {
+    "@types/algoliasearch": "^3.34.5",
+    "@types/json2csv": "^4.5.0",
+    "@types/lodash": "^4.14.149",
+    "firebase-admin": "^8.9.2",
+    "firebase-functions": "^3.3.0",
+    "tslint": "^6.0.0",
+    "typescript": "^3.8.3"
+  },
+  "peerDependencies": {
+    "firebase-admin": "^8.8.0",
+    "firebase-functions": "^3.3.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AntlerVC/firetable.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AntlerVC/firetable/issues"
+  },
+  "homepage": "https://github.com/AntlerVC/firetable#readme"
+}

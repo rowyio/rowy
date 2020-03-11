@@ -8,6 +8,11 @@ type synonymGroup = {
   transformer: Function;
 };
 
+export interface SynonymConfig {
+  name: string;
+  groups: synonymGroup[];
+}
+
 const synonyms = (docData, groups: synonymGroup[]) =>
   groups.reduce((update: any, currGroup) => {
     if (
@@ -65,7 +70,7 @@ const addSynonymOnCreate = (groups: synonymGroup[]) => (
  *
  * @param collection configuration object
  */
-const synonymsFnsGenerator = collection => ({
+const synonymsFnsGenerator = (collection: SynonymConfig) => ({
   onCreate: functions.firestore
     .document(`${collection.name}/{docId}`)
     .onCreate(addSynonymOnCreate(collection.groups)),

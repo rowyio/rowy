@@ -1,4 +1,4 @@
-import * as algoliasearch from "algoliasearch";
+import algoliasearch from "algoliasearch";
 import * as functions from "firebase-functions";
 import * as _ from "lodash";
 import { env } from "../config";
@@ -7,6 +7,10 @@ const APP_ID = env.algolia.app;
 const ADMIN_KEY = env.algolia.key;
 
 const client = algoliasearch(APP_ID, ADMIN_KEY);
+export interface AlgoliaConfig {
+  name: string;
+  fieldsToSync: string[];
+}
 
 const filterSnapshot = (
   field: { docPath: string; snapshot: any },
@@ -63,7 +67,7 @@ const addToAlgolia = (fieldsToSync: string[]) => (
   const algoliaData = fieldsToSync.reduce(algoliaReducer(docData), {});
   if (Object.keys(algoliaData).length === 0) return false; // returns if theres nothing to sync
   const index = client.initIndex(collectionName); // initialize algolia index
-  return index.addObject({ ...algoliaData, objectID }); // add new algolia entry
+  return index.saveObject({ ...algoliaData, objectID }); // add new algolia entry
 };
 
 const updateAlgolia = (fieldsToSync: string[]) => (
@@ -90,7 +94,7 @@ const deleteFromAlgolia = (snapshot: FirebaseFirestore.DocumentSnapshot) => {
  * returns 3 different trigger functions (onCreate,onUpdate,onDelete) in an object
  * @param collection configuration object
  */
-const algoliaFnsGenerator = collection => ({
+const algoliaFnsGenerator = (collection: AlgoliaConfig) => ({
   onCreate: functions.firestore
     .document(`${collection.name}/{docId}`)
     .onCreate(addToAlgolia(collection.fieldsToSync)),
