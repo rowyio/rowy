@@ -15,6 +15,7 @@ const generateAlgoliaKey = (fieldName: string, value: string) =>
 const cohort2algoliaKey = (cohort: string) =>
   generateAlgoliaKey("cohort", cohort);
 
+const tableConnect2ids = records => records.map(r => r.snapshot.objectID);
 const cohort2region = (cohort: string) =>
   cohort.toUpperCase().replace(/\d+.*$/, "");
 
@@ -113,6 +114,11 @@ const config = [
   {
     name: "teams",
     groups: [
+      {
+        listenerField: "coach",
+        synonymField: "coachID",
+        transformer: tableConnect2ids,
+      },
       {
         listenerField: "cohort",
         synonymField: "region",
