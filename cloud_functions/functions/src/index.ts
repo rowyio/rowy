@@ -56,6 +56,8 @@ export const FT_permissions = permissionsConfig.reduce(
 export const FT_synonyms = synonymsConfig.reduce((acc: any, collection) => {
   return {
     ...acc,
-    [collection.name]: synonymsFnsGenerator(collection),
+    [collection.name
+      .replace(/\//g, "_")
+      .replace(/_{.*?}_/g, "_")]: synonymsFnsGenerator(collection),
   };
 }, {});

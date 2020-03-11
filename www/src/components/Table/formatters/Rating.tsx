@@ -25,6 +25,7 @@ export default function Rating({
       name={`${row.id}-${column.key as string}`}
       value={typeof value === "number" ? value : 0}
       onClick={e => e.stopPropagation()}
+      disabled={column.editable === false}
       onChange={(e, newValue) => onSubmit(newValue)}
       emptyIcon={<StarBorderIcon />}
       // TODO: Make this customisable in config

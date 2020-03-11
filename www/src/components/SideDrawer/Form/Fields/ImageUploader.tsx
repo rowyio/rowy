@@ -18,6 +18,7 @@ import {
 
 import AddIcon from "@material-ui/icons/AddAPhoto";
 import DeleteIcon from "@material-ui/icons/Delete";
+import OpenIcon from "@material-ui/icons/OpenInNewOutlined";
 
 import ErrorMessage from "../ErrorMessage";
 import Confirmation from "components/Confirmation";
@@ -92,13 +93,16 @@ const useStyles = makeStyles(theme =>
 
 export interface IImageUploaderProps extends FieldProps {
   docRef?: firebase.firestore.DocumentReference;
+  editable?: boolean;
 }
 
 export default function ImageUploader({
   form,
   field,
+  editable,
   docRef,
 }: IImageUploaderProps) {
+  const disabled = editable === false;
   const classes = useStyles();
 
   const [uploaderState, upload] = useUploader();
@@ -142,53 +146,79 @@ export default function ImageUploader({
 
   return (
     <>
-      <ButtonBase
-        className={clsx(
-          classes.dropzoneButton,
-          isDragActive && classes.dropzoneDragActive
-        )}
-        {...getRootProps()}
-      >
-        <input id={`sidedrawer-field-${field.name}`} {...getInputProps()} />
-        <AddIcon />
-        <Typography variant="body1" color="inherit">
-          {isDragActive ? "Drop your image here" : "Upload image"}
-        </Typography>
-      </ButtonBase>
+      {!disabled && (
+        <ButtonBase
+          className={clsx(
+            classes.dropzoneButton,
+            isDragActive && classes.dropzoneDragActive
+          )}
+          {...getRootProps()}
+        >
+          <input id={`sidedrawer-field-${field.name}`} {...getInputProps()} />
+          <AddIcon />
+          <Typography variant="body1" color="inherit">
+            {isDragActive ? "Drop your image here" : "Upload image"}
+          </Typography>
+        </ButtonBase>
+      )}
 
       <Grid container spacing={1} className={classes.imagesContainer}>
         {Array.isArray(field.value) &&
           field.value.map((image, i) => (
             <Grid item key={image.downloadURL}>
-              <Tooltip title="Click to delete">
-                <span>
-                  <Confirmation
-                    message={{
-                      title: "Delete Image",
-                      body: "Are you sure you want to delete this image?",
-                      confirm: "Delete",
+              {disabled ? (
+                <Tooltip title="Click to open">
+                  <ButtonBase
+                    className={classes.img}
+                    onClick={() => window.open(image.downloadURL, "_blank")}
+                    style={{
+                      backgroundImage: `url(${image.downloadURL})`,
                     }}
                   >
-                    <ButtonBase
-                      className={classes.img}
-                      style={{ backgroundImage: `url(${image.downloadURL})` }}
-                      onClick={() => handleDelete(i)}
+                    <Grid
+                      container
+                      justify="center"
+                      alignItems="center"
+                      className={clsx(classes.overlay, classes.deleteImgHover)}
                     >
-                      <Grid
-                        container
-                        justify="center"
-                        alignItems="center"
-                        className={clsx(
-                          classes.overlay,
-                          classes.deleteImgHover
-                        )}
+                      {disabled ? <OpenIcon /> : <DeleteIcon color="inherit" />}
+                    </Grid>
+                  </ButtonBase>
+                </Tooltip>
+              ) : (
+                <Tooltip title="Click to delete">
+                  <div>
+                    <Confirmation
+                      message={{
+                        title: "Delete Image",
+                        body: "Are you sure you want to delete this image?",
+                        confirm: "Delete",
+                      }}
+                      stopPropagation
+                    >
+                      <ButtonBase
+                        className={classes.img}
+                        onClick={() => handleDelete(i)}
+                        style={{
+                          backgroundImage: `url(${image.downloadURL})`,
+                        }}
                       >
-                        <DeleteIcon color="inherit" />
-                      </Grid>
-                    </ButtonBase>
-                  </Confirmation>
-                </span>
-              </Tooltip>
+                        <Grid
+                          container
+                          justify="center"
+                          alignItems="center"
+                          className={clsx(
+                            classes.overlay,
+                            classes.deleteImgHover
+                          )}
+                        >
+                          <DeleteIcon color="inherit" />
+                        </Grid>
+                      </ButtonBase>
+                    </Confirmation>
+                  </div>
+                </Tooltip>
+              )}
             </Grid>
           ))}
 

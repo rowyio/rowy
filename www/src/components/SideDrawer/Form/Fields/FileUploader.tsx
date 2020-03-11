@@ -56,6 +56,7 @@ const useStyles = makeStyles(theme =>
 );
 
 export interface IFileUploaderProps extends FieldProps {
+  editable?: boolean;
   docRef?: firebase.firestore.DocumentReference;
 }
 
@@ -63,9 +64,11 @@ export default function FileUploader({
   form,
   field,
   docRef,
+  editable,
 }: IFileUploaderProps) {
   const classes = useStyles();
 
+  console.log({ field, editable });
   const [uploaderState, upload] = useUploader();
   const { progress } = uploaderState;
 
@@ -106,19 +109,21 @@ export default function FileUploader({
 
   return (
     <>
-      <ButtonBase
-        className={clsx(
-          classes.dropzoneButton,
-          isDragActive && classes.dropzoneDragActive
-        )}
-        {...getRootProps()}
-      >
-        <input id={`sidedrawer-field-${field.name}`} {...getInputProps()} />
-        <UploadIcon />
-        <Typography variant="body1" color="textSecondary">
-          Upload file
-        </Typography>
-      </ButtonBase>
+      {editable !== false && (
+        <ButtonBase
+          className={clsx(
+            classes.dropzoneButton,
+            isDragActive && classes.dropzoneDragActive
+          )}
+          {...getRootProps()}
+        >
+          <input id={`sidedrawer-field-${field.name}`} {...getInputProps()} />
+          <UploadIcon />
+          <Typography variant="body1" color="textSecondary">
+            Upload file
+          </Typography>
+        </ButtonBase>
+      )}
 
       <Grid container spacing={1} className={classes.chipList}>
         {Array.isArray(field.value) &&
@@ -130,14 +135,16 @@ export default function FileUploader({
                   body: "Are you sure you want to delete this file?",
                   confirm: "Delete",
                 }}
-                functionName="onDelete"
+                functionName={editable !== false ? "onDelete" : ""}
               >
                 <Chip
                   size="medium"
                   icon={<FileIcon />}
                   label={file.name}
                   onClick={() => window.open(file.downloadURL)}
-                  onDelete={() => handleDelete(i)}
+                  onDelete={
+                    editable !== false ? () => handleDelete(i) : undefined
+                  }
                   className={classes.chip}
                 />
               </Confirmation>
@@ -151,7 +158,7 @@ export default function FileUploader({
               icon={<FileIcon />}
               label={localFile}
               className={classes.chip}
-              onDelete={() => {}}
+              //onDelete={() => {}}
               deleteIcon={
                 <CircularProgress size={20} thickness={4.5} color="inherit" />
               }

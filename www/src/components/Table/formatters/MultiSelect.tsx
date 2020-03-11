@@ -92,6 +92,7 @@ export default function MultiSelect({
       label={column.name}
       options={options}
       TextFieldProps={{
+        disabled: column.editable === false,
         fullWidth: true,
         label: "",
         hiddenLabel: true,

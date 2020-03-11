@@ -16,6 +16,7 @@ import {
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/AddAPhoto";
 import DeleteIcon from "@material-ui/icons/Delete";
+import OpenIcon from "@material-ui/icons/OpenInBrowser";
 
 import Confirmation from "components/Confirmation";
 import useUploader from "hooks/useFiretable/useUploader";
@@ -133,7 +134,7 @@ export default function Image({
   });
 
   const dropzoneProps = getRootProps();
-
+  const disabled = column.editable === false;
   return (
     <Grid
       container
@@ -155,35 +156,60 @@ export default function Image({
           {Array.isArray(value) &&
             value.map((file: { name: string; downloadURL: string }) => (
               <Grid item key={file.downloadURL}>
-                <Tooltip title="Click to delete">
-                  <div>
-                    <Confirmation
-                      message={{
-                        title: "Delete Image",
-                        body: "Are you sure you want to delete this image?",
-                        confirm: "Delete",
+                {disabled ? (
+                  <Tooltip title="Click to open">
+                    <ButtonBase
+                      className={classes.img}
+                      onClick={() => window.open(file.downloadURL, "_blank")}
+                      style={{
+                        backgroundImage: `url(${file.downloadURL})`,
                       }}
-                      stopPropagation
                     >
-                      <ButtonBase
-                        className={classes.img}
-                        onClick={handleDelete(file.downloadURL)}
-                        style={{
-                          backgroundImage: `url(${file.downloadURL})`,
-                        }}
+                      <Grid
+                        container
+                        justify="center"
+                        alignItems="center"
+                        className={classes.deleteImgHover}
                       >
-                        <Grid
-                          container
-                          justify="center"
-                          alignItems="center"
-                          className={classes.deleteImgHover}
-                        >
+                        {disabled ? (
+                          <OpenIcon />
+                        ) : (
                           <DeleteIcon color="inherit" />
-                        </Grid>
-                      </ButtonBase>
-                    </Confirmation>
-                  </div>
-                </Tooltip>
+                        )}
+                      </Grid>
+                    </ButtonBase>
+                  </Tooltip>
+                ) : (
+                  <Tooltip title="Click to delete">
+                    <div>
+                      <Confirmation
+                        message={{
+                          title: "Delete Image",
+                          body: "Are you sure you want to delete this image?",
+                          confirm: "Delete",
+                        }}
+                        stopPropagation
+                      >
+                        <ButtonBase
+                          className={classes.img}
+                          onClick={handleDelete(file.downloadURL)}
+                          style={{
+                            backgroundImage: `url(${file.downloadURL})`,
+                          }}
+                        >
+                          <Grid
+                            container
+                            justify="center"
+                            alignItems="center"
+                            className={classes.deleteImgHover}
+                          >
+                            <DeleteIcon color="inherit" />
+                          </Grid>
+                        </ButtonBase>
+                      </Confirmation>
+                    </div>
+                  </Tooltip>
+                )}
               </Grid>
             ))}
 
@@ -200,17 +226,19 @@ export default function Image({
 
       <Grid item className={classes.endButtonContainer}>
         {!isLoading ? (
-          <IconButton
-            size="small"
-            className="row-hover-iconButton"
-            onClick={e => {
-              dropzoneProps.onClick!(e);
-              e.stopPropagation();
-            }}
-            color="inherit"
-          >
-            <AddIcon />
-          </IconButton>
+          !disabled && (
+            <IconButton
+              size="small"
+              className="row-hover-iconButton"
+              onClick={e => {
+                dropzoneProps.onClick!(e);
+                e.stopPropagation();
+              }}
+              color="inherit"
+            >
+              <AddIcon />
+            </IconButton>
+          )
         ) : (
           <CircularProgress
             size={24}

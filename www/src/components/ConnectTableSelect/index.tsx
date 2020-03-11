@@ -22,7 +22,7 @@ export interface IConnectTableSelectProps {
     secondaryKeys: string[];
     [key: string]: any;
   };
-
+  editable?: boolean;
   /** Optionally set this prop to `false` to only allow one option */
   multiple?: boolean;
   /** Optional style overrides for root MUI `TextField` component */

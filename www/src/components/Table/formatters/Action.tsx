@@ -1,7 +1,8 @@
 import React, { useContext, useState } from "react";
 import { CustomCellProps } from "./withCustomCell";
 import clsx from "clsx";
-
+import Confirmation from "components/Confirmation";
+import _get from "lodash/get";
 import {
   createStyles,
   makeStyles,
@@ -14,6 +15,7 @@ import RefreshIcon from "@material-ui/icons/Refresh";
 
 import { SnackContext } from "contexts/snackContext";
 import { cloudFunction } from "firebase/callables";
+import { sanitiseCallableName, isUrl } from "util/fns";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -22,6 +24,12 @@ const useStyles = makeStyles(theme =>
     fab: { width: 36, height: 36 },
   })
 );
+
+const replacer = (data: any) => (m: string, key: string) => {
+  const objKey = key.split(":")[0];
+  const defaultValue = key.split(":")[1] || "";
+  return _get(data, objKey, defaultValue);
+};
 
 export default function Action({
   column,
@@ -35,7 +43,7 @@ export default function Action({
   const { callableName } = column as any;
 
   const [isRunning, setIsRunning] = useState(false);
-
+  const disabled = column.editable === false;
   const snack = useContext(SnackContext);
   const handleRun = () => {
     setIsRunning(true);
@@ -54,8 +62,40 @@ export default function Action({
       }
     );
   };
-
   const hasRan = value && value.status;
+  let component = (
+    <Fab
+      size="small"
+      color="secondary"
+      className={classes.fab}
+      onClick={handleRun}
+      disabled={isRunning || !!(hasRan && !value.redo) || disabled}
+    >
+      {isRunning ? (
+        <CircularProgress color="secondary" size={16} thickness={5.6} />
+      ) : hasRan ? (
+        <RefreshIcon />
+      ) : (
+        <PlayIcon />
+      )}
+    </Fab>
+  );
+
+  if ((column as any)?.config?.confirmation)
+    component = (
+      <Confirmation
+        message={{
+          title: (column as any).config.confirmation.title,
+          body: (column as any).config.confirmation.body.replace(
+            /\{\{(.*?)\}\}/g,
+            replacer(row)
+          ),
+        }}
+        functionName="onClick"
+      >
+        {component}
+      </Confirmation>
+    );
 
   return (
     <Grid
@@ -65,28 +105,18 @@ export default function Action({
       className={clsx("cell-collapse-padding", classes.root)}
     >
       <Grid item xs className={classes.labelContainer}>
-        {hasRan
-          ? value.status
-          : callableName?.replace("callable-", "").replace(/([A-Z])/g, " $1")}
+        {hasRan && isUrl(value.status) ? (
+          <a href={value.status} target="_blank" rel="noopener noreferer">
+            {value.status}
+          </a>
+        ) : hasRan ? (
+          value.status
+        ) : (
+          sanitiseCallableName(callableName)
+        )}
       </Grid>
 
-      <Grid item>
-        <Fab
-          size="small"
-          color="secondary"
-          className={classes.fab}
-          onClick={handleRun}
-          disabled={isRunning || !!(hasRan && !value.redo)}
-        >
-          {isRunning ? (
-            <CircularProgress color="secondary" size={16} thickness={5.6} />
-          ) : hasRan ? (
-            <RefreshIcon />
-          ) : (
-            <PlayIcon />
-          )}
-        </Fab>
-      </Grid>
+      <Grid item>{component}</Grid>
     </Grid>
   );
 }

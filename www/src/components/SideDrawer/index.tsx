@@ -98,7 +98,7 @@ export default function SideDrawer() {
       default:
         break;
     }
-
+    field.editable = column.editable;
     return field;
   });
 
