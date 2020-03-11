@@ -14,11 +14,13 @@ import RefreshIcon from "@material-ui/icons/Refresh";
 
 import { SnackContext } from "contexts/snackContext";
 import { cloudFunction } from "firebase/callables";
+import { sanitiseCallableName, isUrl } from "util/fns";
 
 const useStyles = makeStyles(theme =>
   createStyles({
     root: {},
 
+    labelGridItem: { width: `calc(100% - 56px - ${theme.spacing(2)}px)` },
     labelContainer: {
       borderRadius: theme.shape.borderRadius,
       backgroundColor:
@@ -27,12 +29,14 @@ const useStyles = makeStyles(theme =>
           : "rgba(255, 255, 255, 0.09)",
       padding: theme.spacing(9 / 8, 1, 9 / 8, 1.5),
 
-      width: "100%",
-      display: "flex",
       textAlign: "left",
       minHeight: 56,
     },
-    label: { whiteSpace: "normal" },
+    label: {
+      whiteSpace: "normal",
+      width: "100%",
+      overflow: "hidden",
+    },
   })
 );
 
@@ -79,14 +83,22 @@ function Action({
       className={classes.root}
       spacing={2}
     >
-      <Grid item xs>
+      <Grid item xs className={classes.labelGridItem}>
         <Grid container alignItems="center" className={classes.labelContainer}>
           <Typography variant="body1" className={classes.label}>
-            {hasRan
-              ? field.value.status
-              : callableName
-                  ?.replace("callable-", "")
-                  .replace(/([A-Z])/g, " $1")}
+            {hasRan && isUrl(field.value.status) ? (
+              <a
+                href={field.value.status}
+                target="_blank"
+                rel="noopener noreferer"
+              >
+                {field.value.status}
+              </a>
+            ) : hasRan ? (
+              field.value.status
+            ) : (
+              sanitiseCallableName(callableName)
+            )}
           </Typography>
         </Grid>
       </Grid>

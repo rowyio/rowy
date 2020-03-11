@@ -97,7 +97,7 @@ export default function Form({ fields, values }: IFormProps) {
       ?.parentNode as HTMLElement;
 
     // Time out for double-clicking on cells, which can open the null editor
-    setTimeout(() => elem?.scrollIntoView({ behavior: "smooth" }), 50);
+    setTimeout(() => elem?.scrollIntoView({ behavior: "smooth" }), 100);
   }, [sideDrawerRef?.current]);
 
   return (
