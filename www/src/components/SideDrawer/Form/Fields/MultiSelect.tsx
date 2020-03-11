@@ -11,16 +11,15 @@ import FormattedChip from "components/FormattedChip";
 export default function MultiSelect({
   field,
   form,
+  editable,
   ...props
 }: FieldProps<string[]> & IMultiSelectProps_) {
   const theme = useTheme();
-
   const handleDelete = (index: number) => () => {
     const newValues = [...field.value];
     newValues.splice(index, 1);
     form.setFieldValue(field.name, newValues);
   };
-
   return (
     <>
       <MultiSelect_
@@ -28,6 +27,7 @@ export default function MultiSelect({
         value={field.value}
         onChange={value => form.setFieldValue(field.name, value)}
         TextFieldProps={{
+          disabled: editable === false,
           fullWidth: true,
           label: "",
           hiddenLabel: true,
@@ -49,7 +49,7 @@ export default function MultiSelect({
                   <FormattedChip
                     size="medium"
                     label={item}
-                    onDelete={handleDelete(i)}
+                    onDelete={editable !== false ? handleDelete(i) : undefined}
                   />
                 </Grid>
               )

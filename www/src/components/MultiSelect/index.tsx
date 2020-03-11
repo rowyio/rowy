@@ -12,6 +12,7 @@ export type OptionType = { label: string; value: string; data?: any };
 export interface IMultiSelectProps {
   label: string;
   value: string[];
+  editable?: boolean;
   /** The list of options to display. Passing `string[]` will auto-transform */
   options: OptionType[] | string[];
   itemRenderer?: (
