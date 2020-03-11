@@ -131,7 +131,6 @@ const config = [
     "sprintSubmissions",
     "trackoutApplications",
     "portfolioEnquiries",
-    "icManagement",
   ]),
 ];
 export default config;

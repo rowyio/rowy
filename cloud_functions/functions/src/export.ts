@@ -20,6 +20,8 @@ const enum FieldType {
   multiSelect = "MULTI_SELECT",
   documentSelect = "DOCUMENT_SELECT",
   last = "LAST",
+  action = "ACTION",
+  connectTable = "DOCUMENT_SELECT",
 }
 const selectedColumnsReducer = (doc: any) => (
   accumulator: any,
@@ -69,6 +71,7 @@ const selectedColumnsReducer = (doc: any) => (
             : "",
       };
     case FieldType.dateTime:
+    case FieldType.date:
       return {
         ...accumulator,
         [currentColumn.key]: doc[currentColumn.key]
@@ -76,6 +79,8 @@ const selectedColumnsReducer = (doc: any) => (
           : "",
       };
     case FieldType.last:
+    case FieldType.action:
+    case FieldType.connectTable:
       return accumulator;
     default:
       return {
