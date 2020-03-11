@@ -42,7 +42,7 @@ export default function Action({
   const { callableName } = column as any;
 
   const [isRunning, setIsRunning] = useState(false);
-
+  const disabled = column.editable === false;
   const snack = useContext(SnackContext);
   const handleRun = () => {
     setIsRunning(true);
@@ -68,7 +68,7 @@ export default function Action({
       color="secondary"
       className={classes.fab}
       onClick={handleRun}
-      disabled={isRunning || !!(hasRan && !value.redo)}
+      disabled={isRunning || !!(hasRan && !value.redo) || disabled}
     >
       {isRunning ? (
         <CircularProgress color="secondary" size={16} thickness={5.6} />

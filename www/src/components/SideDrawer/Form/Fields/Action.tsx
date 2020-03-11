@@ -39,8 +39,9 @@ const useStyles = makeStyles(theme =>
 function Action({
   field,
   form,
+  editable,
   callableName,
-}: FieldProps<any> & { callableName: string }) {
+}: FieldProps<any> & { callableName: string; editable?: boolean }) {
   const classes = useStyles();
   const { ref, ...docData } = form.values;
 
@@ -69,7 +70,7 @@ function Action({
   };
 
   const hasRan = field.value && field.value.status;
-
+  const disabled = editable === false;
   return (
     <Grid
       container
@@ -93,7 +94,7 @@ function Action({
       <Grid item>
         <Fab
           onClick={handleRun}
-          disabled={isRunning || !!(hasRan && !field.value.redo)}
+          disabled={isRunning || !!(hasRan && !field.value.redo) || disabled}
         >
           {isRunning ? (
             <CircularProgress color="secondary" size={24} thickness={4.6} />
