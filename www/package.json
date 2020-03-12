@@ -22,7 +22,7 @@
     "@types/react-div-100vh": "^0.3.0",
     "@types/react-dom": "16.9.0",
     "@types/react-router-dom": "^4.3.5",
-    "algoliasearch": "^3.34.0",
+    "algoliasearch": "^4.1.0",
     "csv-parse": "^4.4.6",
     "date-fns": "^2.9.0",
     "file-saver": "^2.0.2",

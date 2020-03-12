@@ -21,8 +21,10 @@ import CloseIcon from "@material-ui/icons/Close";
 import MultiSelect from "../../MultiSelect";
 
 import { FieldType } from "constants/fields";
-import { FireTableFilter } from "../../../hooks/useFiretable";
+import { FireTableFilter } from "hooks/useFiretable";
+import { useFiretableContext } from "contexts/firetableContext";
 
+import DocSelector from "./DocSelector";
 const OPERATORS = [
   {
     value: "==",
@@ -44,6 +46,11 @@ const OPERATORS = [
     label: "matches any of",
     compatibleTypes: [FieldType.singleSelect],
   },
+  // {
+  //   value: "array-contains",
+  //   label: "includes",
+  //   compatibleTypes: [FieldType.connectTable],
+  // },
   {
     value: "array-contains",
     label: "Has",
@@ -52,7 +59,7 @@ const OPERATORS = [
   {
     value: "array-contains-any",
     label: "Has any",
-    compatibleTypes: [FieldType.multiSelect],
+    compatibleTypes: [FieldType.multiSelect, FieldType.connectTable],
   },
   { value: "<", label: "<", compatibleTypes: [FieldType.number] },
   { value: "<=", label: "<=", compatibleTypes: [FieldType.number] },
@@ -88,8 +95,7 @@ const useStyles = makeStyles(theme =>
 );
 
 const Filters = ({ columns, setFilters }: any) => {
-  //const filters = [{}, {}];
-
+  const { userClaims } = useFiretableContext();
   const filterColumns = columns
     .filter(c => c.type !== FieldType.file && c.type !== FieldType.image)
     .map(c => ({
@@ -97,6 +103,7 @@ const Filters = ({ columns, setFilters }: any) => {
       label: c.name,
       type: c.type,
       options: c.options,
+      ...c,
     }));
   filterColumns.pop(); // remove the new column
 
@@ -110,7 +117,7 @@ const Filters = ({ columns, setFilters }: any) => {
     operator: "",
     value: "",
   });
-
+  console.log(query);
   useEffect(() => {
     if (selectedColumn) {
       let updatedQuery: FireTableFilter = {
@@ -131,6 +138,13 @@ const Filters = ({ columns, setFilters }: any) => {
       }
       if (selectedColumn.type === FieldType.checkbox) {
         updatedQuery = { ...updatedQuery, value: false };
+      }
+      if (selectedColumn.type === FieldType.connectTable) {
+        updatedQuery = {
+          key: `${selectedColumn.key}ID`,
+          operator: "array-contains-any",
+          value: [],
+        };
       }
       setQuery(updatedQuery);
     }
@@ -206,7 +220,28 @@ const Filters = ({ columns, setFilters }: any) => {
             TextFieldProps={{ hiddenLabel: true }}
           />
         );
-
+      case FieldType.connectTable:
+        if (selectedColumn.key === "coach")
+          return (
+            <>
+              <DocSelector
+                algoliaIndex={selectedColumn.collectionPath}
+                algoliaKey={`${process.env.REACT_APP_ALGOLIA_SEARCH_API_KEY}`}
+                valueReducer={(r: any) => r.objectID}
+                labelReducer={(r: any) => `${r.firstName} ${r.lastName}`}
+                value={query.value}
+                filters={selectedColumn.config.filters.replace(
+                  /\{\{(.*?)\}\}/g,
+                  (m, k) => userClaims[k]
+                )}
+                //  filters={'regions:SYD AND roles:COACHING"}
+                onChange={value => {
+                  setQuery(query => ({ ...query, value }));
+                }}
+              />
+            </>
+          );
+        return <>needs configuration</>;
       default:
         return <>Not available</>;
         // return <TextField variant="filled" fullWidth disabled />;
