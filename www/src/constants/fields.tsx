@@ -9,12 +9,12 @@ import PhoneIcon from "@material-ui/icons/Phone";
 
 import CheckboxIcon from "@material-ui/icons/CheckBox";
 import NumberIcon from "assets/icons/Number";
+import PercentageIcon from "assets/icons/Percentage";
 
 import DateIcon from "@material-ui/icons/Today";
 import DateTimeIcon from "@material-ui/icons/AccessTime";
 
 import UrlIcon from "@material-ui/icons/Link";
-import PercentageIcon from "assets/icons/Percentage";
 
 import RatingIcon from "@material-ui/icons/StarBorder";
 
@@ -41,6 +41,7 @@ export {
   PhoneIcon,
   CheckboxIcon,
   NumberIcon,
+  PercentageIcon,
   DateIcon,
   DateTimeIcon,
   UrlIcon,
@@ -57,7 +58,6 @@ export {
 };
 
 export enum FieldType {
-  percentage = "PERCENTAGE",
   shortText = "SIMPLE_TEXT",
   longText = "LONG_TEXT",
   email = "EMAIL",
@@ -65,6 +65,7 @@ export enum FieldType {
 
   checkbox = "CHECK_BOX",
   number = "NUMBER",
+  percentage = "PERCENTAGE",
 
   date = "DATE",
   dateTime = "DATE_TIME",
@@ -94,13 +95,13 @@ export enum FieldType {
 
 export const FIELDS = [
   { icon: <ShortTextIcon />, name: "Short Text", type: FieldType.shortText },
-  { icon: <PercentageIcon />, name: "Percentage", type: FieldType.percentage },
   { icon: <LongTextIcon />, name: "Long Text", type: FieldType.longText },
   { icon: <EmailIcon />, name: "Email", type: FieldType.email },
   { icon: <PhoneIcon />, name: "Phone", type: FieldType.phone },
 
   { icon: <CheckboxIcon />, name: "Checkbox", type: FieldType.checkbox },
   { icon: <NumberIcon />, name: "Number", type: FieldType.number },
+  { icon: <PercentageIcon />, name: "Percentage", type: FieldType.percentage },
 
   { icon: <DateIcon />, name: "Date", type: FieldType.date },
   { icon: <DateTimeIcon />, name: "Time & Date", type: FieldType.dateTime },
