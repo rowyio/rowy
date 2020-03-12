@@ -4,7 +4,7 @@ import { mdiPercent } from "@mdi/js";
 
 export default function Action(props: SvgIconProps) {
   return (
-    <SvgIcon viewBox="0 2 24 24" {...props}>
+    <SvgIcon viewBox="-2 -2 28 28" {...props}>
       <path d={mdiPercent} />
     </SvgIcon>
   );
