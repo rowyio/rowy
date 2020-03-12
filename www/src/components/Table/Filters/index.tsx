@@ -18,7 +18,7 @@ import {
 import FilterIcon from "@material-ui/icons/FilterList";
 import CloseIcon from "@material-ui/icons/Close";
 
-import MultiSelect from "../../MultiSelect";
+import MultiSelect from "components/MultiSelect";
 
 import { FieldType } from "constants/fields";
 import { FireTableFilter } from "hooks/useFiretable";
@@ -51,11 +51,11 @@ const OPERATORS = [
   //   label: "includes",
   //   compatibleTypes: [FieldType.connectTable],
   // },
-  {
-    value: "array-contains",
-    label: "Has",
-    compatibleTypes: [FieldType.multiSelect],
-  },
+  // {
+  //   value: "array-contains",
+  //   label: "Has",
+  //   compatibleTypes: [FieldType.multiSelect],
+  // },
   {
     value: "array-contains-any",
     label: "Has any",
@@ -146,6 +146,13 @@ const Filters = ({ columns, setFilters }: any) => {
           value: [],
         };
       }
+      if (selectedColumn.type === FieldType.multiSelect) {
+        updatedQuery = {
+          ...updatedQuery,
+          operator: "array-contains-any",
+          value: [],
+        };
+      }
       setQuery(updatedQuery);
     }
   }, [selectedColumn]);
@@ -220,6 +227,20 @@ const Filters = ({ columns, setFilters }: any) => {
             TextFieldProps={{ hiddenLabel: true }}
           />
         );
+      case FieldType.multiSelect:
+        return (
+          <MultiSelect
+            onChange={value => {
+              setQuery(query => ({ ...query, value }));
+            }}
+            value={query.value as string[]}
+            options={selectedColumn.options}
+            label={""}
+            searchable={false}
+            freeText={true}
+          />
+        );
+
       case FieldType.connectTable:
         if (selectedColumn.key === "coach")
           return (
