@@ -3,6 +3,9 @@ import * as algoliaConfig from "./algolia/config.json";
 import collectionSyncFnsGenerator from "./collectionSync";
 import * as collectionSyncConfig from "./collectionSync/config.json";
 
+import snapshotSyncFnsGenerator from "./snapshotSync";
+import * as snapshotSyncConfig from "./snapshotSync/config.json";
+
 import collectionSnapshotFnsGenerator from "./history";
 
 import * as collectionHistoryConfig from "./history/config.json";
@@ -30,6 +33,19 @@ export const FT_sync = collectionSyncConfig.reduce((acc: any, collection) => {
       .replace(/_{.*?}_/g, "_")}`}`]: collectionSyncFnsGenerator(collection),
   };
 }, {});
+export const FT_snapshotSync = snapshotSyncConfig.reduce(
+  (acc: any, collection) => {
+    return {
+      ...acc,
+      [`${`${`${collection.source}`
+        .replace(/\//g, "_")
+        .replace(/_{.*?}_/g, "_")}`}2${`${`${collection.target}`
+        .replace(/\//g, "_")
+        .replace(/_{.*?}_/g, "_")}`}`]: snapshotSyncFnsGenerator(collection),
+    };
+  },
+  {}
+);
 
 export const FT_history = collectionHistoryConfig.reduce(
   (acc: any, collection) => {
