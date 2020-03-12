@@ -2,28 +2,44 @@ import React from "react";
 import { CustomCellProps } from "./withCustomCell";
 
 import { makeStyles, createStyles } from "@material-ui/core";
-
-function percentageToHsl(percentage: number, hue0: number, hue1: number) {
-  var hue = percentage * (hue1 - hue0) + hue0;
-  return "hsl(" + hue + ", 100%, 50%)";
-}
+import { resultColorsScale } from "util/color";
 
 const useStyles = makeStyles(theme =>
   createStyles({
-    rating: { color: theme.palette.text.secondary },
-    iconEmpty: { color: theme.palette.text.secondary },
+    resultColor: {
+      position: "absolute",
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0,
+      opacity: 0.5,
+
+      zIndex: 0,
+    },
+
+    text: {
+      textAlign: "right",
+      color: theme.palette.text.primary,
+
+      position: "relative",
+      zIndex: 1,
+    },
   })
 );
 
-export default function Percentage({
-  row,
-  column,
-  value,
-  onSubmit,
-}: CustomCellProps) {
+export default function Percentage({ value }: CustomCellProps) {
   const classes = useStyles();
-  if (typeof value === "number") {
-    const backgroundColor = percentageToHsl(100 - value, 120, 0);
-    return <div style={{ backgroundColor }}>{Math.round(value * 100)} %</div>;
-  } else return <div>%</div>;
+
+  if (typeof value === "number")
+    return (
+      <>
+        <div
+          className={classes.resultColor}
+          style={{ backgroundColor: resultColorsScale(value).hex() }}
+        />
+        <div className={classes.text}>{Math.round(value * 100)}%</div>
+      </>
+    );
+
+  return null;
 }
