@@ -117,6 +117,16 @@ const config = [
       },
       {
         listenerField: "cohort",
+        synonymField: "icPage",
+        transformer: (cohort, doc) => {
+          if (doc.icType === "IC") {
+            return `https://firepage.antler.co/IC/${cohort}`;
+          } else return "";
+        },
+      },
+
+      {
+        listenerField: "cohort",
         synonymField: "algoliaKey",
         transformer: cohort2algoliaKey,
       },
@@ -153,7 +163,7 @@ const config = [
       {
         listenerField: "id",
         synonymField: "ddPage",
-        transformer: id => `https://firepage.antler.co/DD?id=${id}`,
+        transformer: id => `https://firepage.antler.co/DD/${id}`,
       },
     ],
   },
