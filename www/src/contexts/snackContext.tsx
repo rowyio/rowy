@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { SnackbarOrigin } from "@material-ui/core/Snackbar";
 
 // Default State of our SnackBar
@@ -23,3 +23,5 @@ const DEFAULT_STATE = {
 };
 // Create our Context
 export const SnackContext = React.createContext(DEFAULT_STATE);
+
+export const useSnackContext = () => useContext(SnackContext);
