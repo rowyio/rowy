@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 import {
   createStyles,
@@ -13,9 +14,9 @@ import {
   Button,
 } from "@material-ui/core";
 
-import FiretableLogo from "../assets/firetable.svg";
+import FiretableLogo from "assets/firetable-with-wordmark.svg";
 
-import { auth } from "../firebase";
+import routes from "constants/routes";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -63,29 +64,23 @@ const AppBar: React.FunctionComponent<IAppBarProps> = () => {
       elevation={trigger ? 4 : 0}
     >
       <Toolbar className={classes.toolbar}>
-        <Grid item>
+        <Grid item xs>
           <img
             src={FiretableLogo}
-            width="32"
+            width="140"
             height="32"
             alt="Firetable"
             className={classes.logo}
           />
         </Grid>
 
-        <Grid item xs>
-          <Typography
-            variant={isMd ? "h6" : "h4"}
-            color="primary"
-            component="h1"
-            className={classes.heading}
-          >
-            firetable
-          </Typography>
-        </Grid>
-
         <Grid item>
-          <Button onClick={() => auth.signOut()} size="large" color="primary">
+          <Button
+            component={Link}
+            to={routes.signOut}
+            color="primary"
+            variant="outlined"
+          >
             Sign Out
           </Button>
         </Grid>

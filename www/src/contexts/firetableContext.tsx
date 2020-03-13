@@ -70,6 +70,10 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
     setSelectedColumnHeader,
   ] = useState<SelectedColumnHeader | null>(null);
 
+  useEffect(() => {
+    console.log("MOUNT CONTEXT");
+  }, []);
+
   const { currentUser } = useAppContext();
   useEffect(() => {
     const { tables } = settings;

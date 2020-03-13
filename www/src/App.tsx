@@ -1,9 +1,10 @@
 import React, { lazy, Suspense } from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, Link } from "react-router-dom";
 
 import {
   MuiThemeProvider as ThemeProvider,
   CssBaseline,
+  Button,
 } from "@material-ui/core";
 import Theme from "./Theme";
 
@@ -18,8 +19,11 @@ import { SnackProvider } from "./util/SnackProvider";
 import { AppProvider } from "./contexts/appContext";
 import GlobalStyles from "./util/GlobalStyles";
 import { FiretableContextProvider } from "./contexts/firetableContext";
+import routes from "constants/routes";
 
-const AuthView = lazy(() => import("./views/AuthView"));
+import AuthView from "views/AuthView";
+import SignOutView from "views/SignOutView";
+
 const TableView = lazy(() => import("./views/TableView"));
 const TablesView = lazy(() => import("./views/TablesView"));
 const EditorView = lazy(() => import("./views/EditorView"));
@@ -35,19 +39,54 @@ const App: React.FC = () => {
             <CustomBrowserRouter>
               <Suspense fallback={<Loading fullScreen />}>
                 <Switch>
-                  <Route exact path="/auth" render={() => <AuthView />} />
-                  <FiretableContextProvider>
-                    <PrivateRoute
-                      exact
-                      path="/"
-                      render={() => <TablesView />}
-                    />
-                    <PrivateRoute path="/table/" render={() => <TableView />} />
-                  </FiretableContextProvider>
-                  <PrivateRoute path="/editor" render={() => <EditorView />} />
+                  <Route exact path={routes.auth} render={() => <AuthView />} />
                   <Route
+                    exact
+                    path={routes.signOut}
+                    render={() => <SignOutView />}
+                  />
+
+                  <PrivateRoute
+                    exact
+                    path={[routes.home, routes.tableWithId]}
                     render={() => (
-                      <EmptyState message="Page Not Found" fullScreen />
+                      <FiretableContextProvider>
+                        <Switch>
+                          <PrivateRoute
+                            exact
+                            path={routes.home}
+                            render={() => <TablesView />}
+                          />
+                          <PrivateRoute
+                            path={routes.tableWithId}
+                            render={() => <TableView />}
+                          />
+                        </Switch>
+                      </FiretableContextProvider>
+                    )}
+                  />
+
+                  <PrivateRoute
+                    path={routes.editor}
+                    render={() => <EditorView />}
+                  />
+
+                  <PrivateRoute
+                    render={() => (
+                      <EmptyState
+                        message="Page Not Found"
+                        description={
+                          <Button
+                            component={Link}
+                            to={routes.home}
+                            variant="outlined"
+                            style={{ marginTop: 8 }}
+                          >
+                            Go Home
+                          </Button>
+                        }
+                        fullScreen
+                      />
                     )}
                   />
                 </Switch>
