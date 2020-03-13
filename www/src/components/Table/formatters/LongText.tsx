@@ -62,7 +62,6 @@ export default function LongText({ column, value }: CustomCellProps) {
       title={value}
       enterDelay={1000}
       interactive
-      onClick={e => e.stopPropagation()}
       placement="bottom-start"
       PopperProps={{
         modifiers: {

@@ -66,7 +66,6 @@ export default function RichText({ column, value }: CustomCellProps) {
       }
       enterDelay={1000}
       interactive
-      onClick={e => e.stopPropagation()}
       placement="bottom-start"
       PopperProps={{
         modifiers: {
