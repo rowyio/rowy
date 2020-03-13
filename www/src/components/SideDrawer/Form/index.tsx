@@ -15,6 +15,8 @@ import Text from "./Fields/Text";
 
 import { FieldType } from "constants/fields";
 
+const Url = lazy(() => import("./Fields/Url"));
+const Percentage = lazy(() => import("./Fields/Percentage"));
 const SingleSelect = lazy(() => import("./Fields/SingleSelect"));
 const MultiSelect = lazy(() => import("./Fields/MultiSelect"));
 const DatePicker = lazy(() => import("./Fields/DatePicker"));
@@ -133,10 +135,25 @@ export default function Form({ fields, values }: IFormProps) {
                   case FieldType.longText:
                   case FieldType.email:
                   case FieldType.phone:
-                  case FieldType.url:
                   case FieldType.number:
                     renderedField = (
                       <Field {...fieldProps} component={Text} hiddenLabel />
+                    );
+                    break;
+
+                  case FieldType.url:
+                    renderedField = (
+                      <Field {...fieldProps} component={Url} hiddenLabel />
+                    );
+                    break;
+
+                  case FieldType.percentage:
+                    renderedField = (
+                      <Field
+                        {...fieldProps}
+                        component={Percentage}
+                        hiddenLabel
+                      />
                     );
                     break;
 
