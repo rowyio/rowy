@@ -122,7 +122,7 @@ const useTable = (initialOverrides: any) => {
           });
         }
       },
-      (error: Error) => {
+      (error: any) => {
         //TODO:callable to create new index
         if (error.message.includes("indexes?create_composite=")) {
           const url =
@@ -143,6 +143,13 @@ const useTable = (initialOverrides: any) => {
                 create
               </Button>
             ),
+          });
+        } else if (error.code === "permission-denied") {
+          snack.open({
+            position: { horizontal: "center", vertical: "top" },
+            severity: "error",
+            message: "You don't have permissions to see the results.",
+            duration: 10000,
           });
         }
       }
