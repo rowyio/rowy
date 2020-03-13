@@ -28,7 +28,7 @@ export const arrayMover = (
 export const sanitiseCallableName = (name: string) =>
   name
     .replace("callable-", "")
-    .replace(/(?<![A-Z])([A-Z])/g, " $1")
+    .replace(/([^A-Z])([A-Z])/g, "$1 $2")
     .replace(/([A-Z])(?=[a-z])/g, " $1");
 
 export const isUrl = (str: string) => {
