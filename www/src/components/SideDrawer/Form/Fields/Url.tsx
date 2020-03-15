@@ -25,6 +25,7 @@ export default function Url(props: TextFieldProps) {
         target="_blank"
         rel="noopener noreferer"
         style={{ width: 56 }}
+        disabled={!props.field.value}
       >
         <LaunchIcon />
       </IconButton>
