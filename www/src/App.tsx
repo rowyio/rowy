@@ -24,9 +24,15 @@ import routes from "constants/routes";
 import AuthView from "views/AuthView";
 import SignOutView from "views/SignOutView";
 
-const TableView = lazy(() => import("./views/TableView"));
-const TablesView = lazy(() => import("./views/TablesView"));
-const EditorView = lazy(() => import("./views/EditorView"));
+const TableView = lazy(() =>
+  import("./views/TableView" /* webpackChunkName: "TableView" */)
+);
+const TablesView = lazy(() =>
+  import("./views/TablesView" /* webpackChunkName: "TablesView" */)
+);
+const EditorView = lazy(() =>
+  import("./views/EditorView" /* webpackChunkName: "EditorView" */)
+);
 
 const App: React.FC = () => {
   return (

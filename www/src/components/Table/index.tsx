@@ -31,8 +31,10 @@ import { DRAWER_WIDTH, DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
 import { APP_BAR_HEIGHT } from "components/Navigation";
 import useStyles from "./styles";
 
-// const Hotkeys = lazy(() => import("./HotKeys"));
-const ColumnEditor = lazy(() => import("./ColumnEditor/index"));
+// const Hotkeys = lazy(() => import("./HotKeys" /* webpackChunkName: "HotKeys" */));
+const ColumnEditor = lazy(() =>
+  import("./ColumnEditor" /* webpackChunkName: "ColumnEditor" */)
+);
 const { DraggableContainer } = DraggableHeader;
 
 export type FiretableColumn = Column<any> & {
