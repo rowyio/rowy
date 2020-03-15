@@ -77,10 +77,6 @@ export default function SideDrawer() {
         field.fieldVariant = "number";
         break;
 
-      case FieldType.url:
-        field.fieldVariant = "url";
-        break;
-
       case FieldType.singleSelect:
       case FieldType.multiSelect:
         field.options = column.options;

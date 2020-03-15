@@ -68,7 +68,6 @@ export default function FileUploader({
 }: IFileUploaderProps) {
   const classes = useStyles();
 
-  console.log({ field, editable });
   const [uploaderState, upload] = useUploader();
   const { progress } = uploaderState;
 
