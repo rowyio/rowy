@@ -99,18 +99,13 @@ const useTable = (initialOverrides: any) => {
     const unsubscribe = query.limit(limit).onSnapshot(
       snapshot => {
         if (snapshot.docs.length > 0) {
-          const rows = snapshot.docs
-            .map(doc => {
-              const data = doc.data();
-              const id = doc.id;
-              const ref = doc.ref;
+          const rows = snapshot.docs.map(doc => {
+            const data = doc.data();
+            const id = doc.id;
+            const ref = doc.ref;
 
-              return { ...data, id, ref };
-            })
-            // IMPORTANT: If this is removed in the future, you MUST remove the
-            // offset in moreRows that accounts for this document being removed.
-            // See the comment inside moreRows.
-            .filter(doc => doc.id !== "_FIRETABLE_"); //removes schema file
+            return { ...data, id, ref };
+          });
           tableDispatch({
             rows,
             loading: false,
@@ -272,9 +267,8 @@ const useTable = (initialOverrides: any) => {
     // Don’t request more when already loading
     if (tableState.loading) return;
 
-    // Don’t request more if none remaining. Must offset by 1 since
-    // this hook removes any documents with ID prefixed with _FIRETABLE_
-    if (tableState.rows.length < tableState.limit - 1) return;
+    // Don’t request more if none remaining.
+    if (tableState.rows.length < tableState.limit) return;
 
     tableDispatch({
       limit: tableState.limit + (additionalRows ? additionalRows : 20),

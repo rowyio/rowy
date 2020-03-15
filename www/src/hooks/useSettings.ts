@@ -37,9 +37,9 @@ const useSettings = () => {
       );
     }
     //create the firetable collection doc with empty columns
-    db.collection(collection)
-      .doc("_FIRETABLE_")
-      .set({ columns: [] });
+    db.collection("_FIRETABLE_/settings/schema")
+      .doc(collection)
+      .set({ name, columns: [] });
   };
   return [settingsState, createTable];
 };
