@@ -1,0 +1,100 @@
+:root {
+  font-size: 16px;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  box-sizing: border-box;
+
+  padding: 1rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0 auto;
+  max-width: 60ch;
+
+  font-size: 13.8px;
+  font-family: "Open Sans", sans-serif;
+  line-height: 1.45;
+  letter-spacing: 0.25px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Europa", "Open Sans", sans-serif;
+  margin: 0;
+}
+p {
+  margin: 0;
+}
+
+a {
+  font-weight: bold;
+  color: #e22729;
+}
+
+ul {
+  margin: 0;
+  padding-left: 1.5em;
+}
+li + li {
+  margin-top: 0.5em;
+}
+
+body * + * {
+  margin-top: 1em;
+}
+
+table {
+  border-collapse: collapse;
+}
+table th,
+table td {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  padding: 0.4rem;
+}
+figure {
+  display: table;
+  margin: 1rem auto;
+}
+figure figcaption {
+  color: #999;
+  display: block;
+  margin-top: 0.25rem;
+  text-align: center;
+}
+hr {
+  border-color: rgba(0, 0, 0, 0.12);
+  border-style: solid;
+  border-width: 1px 0 0 0;
+}
+code {
+  background-color: #e8e8e8;
+  border-radius: 4px;
+  padding: 0.1rem 0.2rem;
+  font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+}
+pre {
+  font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+}
+.mce-content-body:not([dir="rtl"]) blockquote {
+  border-left: 2px solid rgba(0, 0, 0, 0.12);
+  margin-left: 1.5rem;
+  padding-left: 1rem;
+}
+.mce-content-body[dir="rtl"] blockquote {
+  border-right: 2px solid rgba(0, 0, 0, 0.12);
+  margin-right: 1.5rem;
+  padding-right: 1rem;
+}

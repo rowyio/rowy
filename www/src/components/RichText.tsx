@@ -3,6 +3,9 @@ import clsx from "clsx";
 
 import "tinymce/tinymce.min.js";
 import "tinymce/themes/silver";
+import "tinymce/skins/ui/oxide/skin.min.css";
+import "tinymce/skins/ui/oxide/content.min.css";
+import "tinymce/plugins/autoresize";
 import "tinymce/plugins/lists";
 import "tinymce/plugins/link";
 import "tinymce/plugins/image";
@@ -96,13 +99,18 @@ export default function RichText({ value, onChange }: IRichTextProps) {
     <div className={clsx(classes.root, focus && classes.focus)}>
       <Editor
         init={{
-          height: 300,
+          minHeight: 300,
           menubar: false,
-          plugins: ["lists link image", "paste help"],
+          plugins: ["autoresize", "lists link image", "paste help"],
           statusbar: false,
           toolbar:
             "formatselect | bold italic forecolor | link | bullist numlist outdent indent | removeformat | help",
-          skin_url: "/static/js/skins/ui/oxide",
+          skin: false,
+          content_css: [
+            "https://use.typekit.net/ngg8buf.css",
+            "https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i&display=swap",
+            "/static/tinymce_content.css",
+          ],
         }}
         value={value}
         onEditorChange={onChange}
