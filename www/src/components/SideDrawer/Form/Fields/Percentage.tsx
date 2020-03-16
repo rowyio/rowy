@@ -60,7 +60,7 @@ export default function Percentage({ field }: FieldProps) {
         }}
       />
       <Typography variant="body1" className={classes.value}>
-        {field.value}%
+        {Math.round(field.value * 100)}%
       </Typography>
     </div>
   );
