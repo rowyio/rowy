@@ -57,6 +57,7 @@ export default function Action({
         if (cellValue) onSubmit(cellValue);
       },
       error => {
+        console.error("ERROR", callableName, error);
         setIsRunning(false);
         snack.open({ message: JSON.stringify(error), severity: "error" });
       }
