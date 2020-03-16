@@ -46,7 +46,7 @@ const tableInitialState = {
   path: null,
   filters: [],
   prevLimit: 0,
-  limit: 20,
+  limit: 150,
   loading: true,
   cap: CAP,
 };
@@ -273,7 +273,7 @@ const useTable = (initialOverrides: any) => {
     }
   };
   /**  used for incrementing the number of rows fetched
-   *  @param additionalRows number additional rows to be fetched (optional: default is 20)
+   *  @param additionalRows number additional rows to be fetched (optional: default is 150)
    */
   const moreRows = (additionalRows?: number) => {
     // Don’t request more when already loading
@@ -284,7 +284,7 @@ const useTable = (initialOverrides: any) => {
     if (tableState.rows.length < tableState.limit - 1) return;
 
     tableDispatch({
-      limit: tableState.limit + (additionalRows ? additionalRows : 20),
+      limit: tableState.limit + (additionalRows ? additionalRows : 150),
     });
   };
 
