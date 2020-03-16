@@ -1,5 +1,6 @@
 import React from "react";
 import { CustomCellProps } from "./withCustomCell";
+import jsonFormat from "json-format";
 
 import { makeStyles, createStyles, Tooltip, Fade } from "@material-ui/core";
 
@@ -22,7 +23,12 @@ const useStyles = makeStyles(theme =>
       right: theme.spacing(1.5),
       left: theme.spacing(1.5),
     },
-    text: { maxHeight: "100%" },
+    text: {
+      maxHeight: "100%",
+      fontFamily: "SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace",
+      wordBreak: "break-word",
+      whiteSpace: "pre-wrap",
+    },
 
     tooltip: ({ width, rowHeight }: StylesProps) => ({
       margin: `-${rowHeight - 1}px 0 0 -${theme.spacing(1.5)}px`,
@@ -40,7 +46,9 @@ const useStyles = makeStyles(theme =>
       ...theme.typography.body2,
       fontSize: "0.75rem",
       color: theme.palette.text.primary,
-      whiteSpace: "pre-line",
+      fontFamily: "SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace",
+      wordBreak: "break-word",
+      whiteSpace: "pre-wrap",
 
       display: "flex",
       alignItems: "center",
@@ -57,11 +65,15 @@ export default function LongText({ column, value }: CustomCellProps) {
 
   if (!value) return <div />;
 
+  const formattedJson = jsonFormat(value, {
+    type: "space",
+    char: " ",
+    size: 2,
+  });
+
   return (
     <Tooltip
-      title={JSON.stringify(value).replace(/\n( *)/g, function(match, p1) {
-        return "<br>" + "&nbsp;".repeat(p1.length);
-      })}
+      title={formattedJson}
       enterDelay={1000}
       interactive
       onClick={e => e.stopPropagation()}
@@ -80,7 +92,7 @@ export default function LongText({ column, value }: CustomCellProps) {
       classes={{ tooltip: classes.tooltip }}
     >
       <div className={classes.root}>
-        <pre className={classes.text}>{JSON.stringify(value)}</pre>
+        <pre className={classes.text}>{formattedJson}</pre>
       </div>
     </Tooltip>
   );

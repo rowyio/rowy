@@ -33,6 +33,7 @@
     "formik-material-ui-pickers": "^0.0.8",
     "grapesjs-react": "^2.0.2",
     "hotkeys-js": "^3.7.2",
+    "json-format": "^1.0.1",
     "lodash": "^4.17.15",
     "query-string": "^6.8.3",
     "ramda": "^0.26.1",
