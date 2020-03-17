@@ -39,3 +39,17 @@ export const isUrl = (str: string) => {
   );
   return regex.test(str);
 };
+
+/**
+ * Removes NaN from object so it can be serialised as Cloud Function input
+ * @param rowData
+ */
+export const sanitiseRowData = (rowData: any) => {
+  Object.keys(rowData).forEach(key => {
+    if (rowData[key] && typeof rowData[key] === "object")
+      sanitiseRowData(rowData[key]);
+    else if (typeof rowData[key] === "number" && isNaN(rowData[key]))
+      delete rowData[key];
+  });
+  return rowData;
+};

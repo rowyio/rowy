@@ -16,15 +16,6 @@ const useStyles = makeStyles(theme =>
         boxShadow: `0 0 0 1px ${theme.palette.background.paper} inset`,
       },
     },
-
-    cellMask: {
-      position: "absolute",
-      top: 0,
-      right: 0,
-      bottom: 0,
-      left: 0,
-      ".rdg-cell-mask.rdg-selected&": { boxShadow: "none" },
-    },
   })
 );
 
@@ -41,26 +32,17 @@ export type CustomCellProps = FormatterProps<any> & {
 const withCustomCell = (Component: React.ComponentType<CustomCellProps>) => (
   props: FormatterProps<any>
 ) => {
-  const classes = useStyles();
-  const { updateCell, sideDrawerRef } = useFiretableContext();
+  useStyles();
+  const { updateCell } = useFiretableContext();
 
   const handleSubmit = (value: any) => {
     if (updateCell)
       updateCell(props.row.ref, props.column.key as string, value);
   };
 
-  const isSelected =
-    sideDrawerRef?.current?.cell?.row === props.rowIdx &&
-    sideDrawerRef?.current?.cell?.column === (props.column.key as string);
-
   return (
     <ErrorBoundary fullScreen={false} basic>
       <Suspense fallback={<div />}>
-        {isSelected && (
-          <div
-            className={clsx("rdg-cell-mask rdg-selected", classes.cellMask)}
-          />
-        )}
         <Component
           {...props}
           value={props.row[props.column.key as string]}
