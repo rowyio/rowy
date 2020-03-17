@@ -15,7 +15,7 @@ import RefreshIcon from "@material-ui/icons/Refresh";
 
 import { SnackContext } from "contexts/snackContext";
 import { cloudFunction } from "firebase/callables";
-import { sanitiseCallableName, isUrl } from "util/fns";
+import { sanitiseCallableName, isUrl, sanitiseRowData } from "util/fns";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -49,7 +49,11 @@ export default function Action({
     setIsRunning(true);
     cloudFunction(
       callableName,
-      { ref: { path: ref.path, id: ref.id }, row: docData, column },
+      {
+        ref: { path: ref.path, id: ref.id },
+        row: sanitiseRowData(Object.assign({}, docData)),
+        column,
+      },
       response => {
         const { message, cellValue } = response.data;
         setIsRunning(false);
