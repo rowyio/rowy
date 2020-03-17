@@ -1,0 +1,30 @@
+[
+  {
+    "source": "teams",
+    "onUpdate": true,
+    "target": "teams/{{id}}/dueDiligence",
+    "snapshotField": "team",
+    "fieldsToSync": [
+      "cohort",
+      "teamName",
+      "trackOutDate",
+      "teamMembers",
+      "focusArea",
+      "isDissolved",
+      "oneLineDescription",
+      "documents",
+      "longDescription",
+      "shortPitchDeck",
+      "logo",
+      "problem",
+      "model",
+      "geography",
+      "targetCustomer",
+      "marketSize",
+      "competitors",
+      "innovation",
+      "gtm",
+      "defensibility"
+    ]
+  }
+]

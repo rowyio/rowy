@@ -20,20 +20,15 @@ export const useStyles = makeStyles(theme =>
         .borderRadius * 2}px`,
 
       width: DRAWER_WIDTH,
-    },
-    paperOpen: {
+      overflowX: "visible",
+      overflowY: "visible",
+
       transition: theme.transitions.create("transform", {
         easing: theme.transitions.easing.custom,
-        duration: theme.transitions.duration.enteringScreen,
+        duration: theme.transitions.duration.standard,
       }),
     },
     paperClose: {
-      transition: theme.transitions.create("transform", {
-        easing: theme.transitions.easing.custom,
-        duration: theme.transitions.duration.leavingScreen,
-      }),
-
-      overflowX: "hidden" as "hidden",
       transform: `translateX(${DRAWER_WIDTH - DRAWER_COLLAPSED_WIDTH}px)`,
     },
 
@@ -68,7 +63,7 @@ export const useStyles = makeStyles(theme =>
     navFabContainer: {
       position: "absolute",
       top: theme.spacing(8),
-      right: DRAWER_WIDTH - 20,
+      left: -theme.spacing(2.5),
       zIndex: theme.zIndex.drawer + 1,
     },
     "@keyframes navFab": {
@@ -83,37 +78,18 @@ export const useStyles = makeStyles(theme =>
       position: "absolute",
       top: "50%",
       transform: "translateY(-50%)",
-      right: theme.spacing(1),
+      left: -theme.spacing(3.5),
       zIndex: theme.zIndex.drawer + 1,
-
-      transition: theme.transitions.create("transform", {
-        easing: theme.transitions.easing.custom,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-
-      "$open &": {
-        transform: `translate(-${DRAWER_WIDTH -
-          DRAWER_COLLAPSED_WIDTH}px, -50%)`,
-
-        transitionDuration: `${theme.transitions.duration.leavingScreen}ms`,
-      },
     },
     drawerFabIcon: {
       width: "2em",
       height: "2em",
-
       "$open &": { transform: "rotate(180deg)" },
     },
 
-    "@keyframes bumpDrawerFab": {
-      "0%": { transform: `translate(0px, -50%)` },
-      "50%": { transform: `translate(${-theme.spacing(4)}px, -50%)` },
-      "100%": { transform: `translate(0px, -50%)` },
+    drawerContents: {
+      padding: theme.spacing(8),
+      overflowY: "auto",
     },
-    bumpDrawerFab: {
-      animation: `${theme.transitions.duration.standard}ms ${theme.transitions.easing.custom} $bumpDrawerFab`,
-    },
-
-    drawerContents: { padding: theme.spacing(8) },
   })
 );

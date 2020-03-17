@@ -3,21 +3,35 @@ import { FieldType } from "constants/fields";
 
 import withCustomCell from "./withCustomCell";
 
-const MultiSelect = lazy(() => import("./MultiSelect"));
-const DatePicker = lazy(() => import("./Date"));
-const Rating = lazy(() => import("./Rating"));
-const Checkbox = lazy(() => import("./Checkbox"));
-const Url = lazy(() => import("./Url"));
-const Image = lazy(() => import("./Image"));
-const File = lazy(() => import("./File"));
-const LongText = lazy(() => import("./LongText"));
-const Json = lazy(() => import("./Json"));
-const RichText = lazy(() => import("./RichText"));
-const Color = lazy(() => import("./Color"));
-const Action = lazy(() => import("./Action"));
-const ConnectTable = lazy(() => import("./ConnectTable"));
-const SubTable = lazy(() => import("./SubTable"));
-const Percentage = lazy(() => import("./Percentage"));
+const MultiSelect = lazy(() =>
+  import("./MultiSelect" /* webpackChunkName: "MultiSelect" */)
+);
+const DatePicker = lazy(() => import("./Date" /* webpackChunkName: "Date" */));
+const Rating = lazy(() => import("./Rating" /* webpackChunkName: "Rating" */));
+const Checkbox = lazy(() =>
+  import("./Checkbox" /* webpackChunkName: "Checkbox" */)
+);
+const Url = lazy(() => import("./Url" /* webpackChunkName: "Url" */));
+const Image = lazy(() => import("./Image" /* webpackChunkName: "Image" */));
+const File = lazy(() => import("./File" /* webpackChunkName: "File" */));
+const LongText = lazy(() =>
+  import("./LongText" /* webpackChunkName: "LongText" */)
+);
+const Json = lazy(() => import("./Json" /* webpackChunkName: "Json" */));
+const RichText = lazy(() =>
+  import("./RichText" /* webpackChunkName: "RichText" */)
+);
+const Color = lazy(() => import("./Color" /* webpackChunkName: "Color" */));
+const Action = lazy(() => import("./Action" /* webpackChunkName: "Action" */));
+const ConnectTable = lazy(() =>
+  import("./ConnectTable" /* webpackChunkName: "ConnectTable" */)
+);
+const SubTable = lazy(() =>
+  import("./SubTable" /* webpackChunkName: "SubTable" */)
+);
+const Percentage = lazy(() =>
+  import("./Percentage" /* webpackChunkName: "Percentage" */)
+);
 
 /**
  * Gets the corresponding formatter for each cell.

@@ -22,7 +22,7 @@ import useStyles from "./styles";
 import Loading from "components/Loading";
 
 import algoliasearch from "algoliasearch/lite";
-import { Response } from "algoliasearch";
+
 import { useFiretableContext } from "../../contexts/firetableContext";
 const searchClient = algoliasearch(
   process.env.REACT_APP_ALGOLIA_APP_ID ?? "",
@@ -53,8 +53,8 @@ export default function PopupContents({
   // Algolia search query
   const [query, setQuery] = useState("");
   // Algolia query response
-  const [response, setResponse] = useState<Response<any> | null>(null);
-  const hits: Response<any>["hits"] = response?.hits ?? [];
+  const [response, setResponse] = useState<any | null>(null);
+  const hits: any["hits"] = response?.hits ?? [];
 
   const [search] = useDebouncedCallback(
     async (query: string) => {
@@ -67,8 +67,7 @@ export default function PopupContents({
         (m, k) => data[k]
       );
       console.log(filters);
-      const resp = await algoliaIndex.search({
-        query,
+      const resp = await algoliaIndex.search(query, {
         filters,
       });
       setResponse(resp);

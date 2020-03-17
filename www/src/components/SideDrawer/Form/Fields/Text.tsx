@@ -39,10 +39,6 @@ export default function Text({ fieldVariant = "short", ...props }: ITextProps) {
       variantProps = { type: "number" };
       break;
 
-    case "url":
-      variantProps = { type: "url" };
-      break;
-
     case "short":
     default:
       break;

@@ -1,7 +1,7 @@
 import * as algoliasearch from "algoliasearch";
 
 import { env } from "../config";
-
+import * as _ from "lodash";
 const client = algoliasearch(env.algolia.app, env.algolia.key);
 
 const generateAlgoliaKey = (fieldName: string, value: string) =>
@@ -19,6 +19,22 @@ const tableConnect2ids = records => records.map(r => r.snapshot.objectID);
 const cohort2region = (cohort: string) =>
   cohort.toUpperCase().replace(/\d+.*$/, "");
 
+const locations = [
+  { location: "Sydney", region: "SYD" },
+  { location: "Singapore", region: "SG" },
+  { location: "Amsterdam", region: "AMS" },
+  { location: "Oslo", region: "OSL" },
+  { location: "New York", region: "NYC" },
+  { location: "London", region: "LON" },
+  { location: "Nairobi", region: "NAI" },
+  { location: "Stockholm", region: "STO" },
+];
+
+const location2region = (location: string) => {
+  const _location = _.find(locations, { location });
+
+  return _location ? _location.region : "GLOBAL";
+};
 const cohort2location = (cohort: string) => {
   const _region = cohort2region(cohort);
   switch (_region) {
@@ -57,6 +73,16 @@ const cohort2regionCollections = (collections: string[]) =>
 
 const config = [
   {
+    name: "advisors",
+    groups: [
+      {
+        listenerField: "location",
+        synonymField: "region",
+        transformer: location2region,
+      },
+    ],
+  },
+  {
     name: "icManagement/{icId}/icMembers/{memberId}/votes",
     groups: [
       {
@@ -89,6 +115,16 @@ const config = [
         synonymField: "region",
         transformer: cohort2region,
       },
+      {
+        listenerField: "cohort",
+        synonymField: "icPage",
+        transformer: (cohort, doc) => {
+          if (doc.icType === "IC") {
+            return `https://firepage.antler.co/IC/${cohort}`;
+          } else return "";
+        },
+      },
+
       {
         listenerField: "cohort",
         synonymField: "algoliaKey",
@@ -127,7 +163,7 @@ const config = [
       {
         listenerField: "id",
         synonymField: "ddPage",
-        transformer: id => `https://firepage.antler.co/DD?id=${id}`,
+        transformer: id => `https://firepage.antler.co/DD/${id}`,
       },
     ],
   },

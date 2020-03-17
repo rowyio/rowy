@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import clsx from "clsx";
 import _unionWith from "lodash/unionWith";
-
+import _find from "lodash/find";
 import { TextField, TextFieldProps } from "@material-ui/core";
 
 import useStyles from "./styles";
@@ -88,8 +88,10 @@ export default function MultiSelect({
       SelectProps={{
         renderValue: value => {
           const selected = value as string[];
-          if (selected.length === 1 && typeof selected[0] === "string")
-            return selected;
+          if (selected.length === 1 && typeof selected[0] === "string") {
+            const selectedOption = _find(options, { value: selected[0] });
+            return selectedOption?.label;
+          }
           return `${selected.length} of ${options.length} selected`;
         },
         displayEmpty: true,

@@ -7,7 +7,9 @@ import useStyles from "./styles";
 import Loading from "components/Loading";
 import ErrorBoundary from "components/ErrorBoundary";
 
-const PopupContents = lazy(() => import("./PopupContents"));
+const PopupContents = lazy(() =>
+  import("./PopupContents" /* webpackChunkName: "PopupContents" */)
+);
 
 export type ConnectTableValue = { snapshot: any; docPath: string };
 

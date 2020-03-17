@@ -66,8 +66,8 @@ function Action({
         if (cellValue) form.setFieldValue(field.name, cellValue);
       },
       error => {
+        console.error("ERROR", callableName, error);
         setIsRunning(false);
-        console.log(error);
         snack.open({ message: JSON.stringify(error), severity: "error" });
       }
     );

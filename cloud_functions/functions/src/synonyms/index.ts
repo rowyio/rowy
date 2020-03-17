@@ -13,12 +13,13 @@ const synonyms = (docData, groups: synonymGroup[]) =>
     if (
       docData[currGroup.listenerField] &&
       docData[currGroup.synonymField] !==
-        currGroup.transformer(docData[currGroup.listenerField])
+        currGroup.transformer(docData[currGroup.listenerField], docData)
     ) {
       return {
         ...update,
         [currGroup.synonymField]: currGroup.transformer(
-          docData[currGroup.listenerField]
+          docData[currGroup.listenerField],
+          docData
         ),
       };
     } else return update;

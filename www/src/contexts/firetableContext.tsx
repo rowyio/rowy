@@ -10,6 +10,7 @@ import useFiretable, {
 } from "hooks/useFiretable";
 import useSettings from "hooks/useSettings";
 import { useAppContext } from "./appContext";
+import { useSnackContext } from "./snackContext";
 import { SideDrawerRef } from "components/SideDrawer";
 
 type SelectedColumnHeader = {
@@ -59,6 +60,7 @@ export default firetableContext;
 export const useFiretableContext = () => useContext(firetableContext);
 
 export const FiretableContextProvider: React.FC = ({ children }) => {
+  const { open } = useSnackContext();
   const { tableState, tableActions } = useFiretable();
   const [tables, setTables] = useState<FiretableContextProps["tables"]>();
   const [sections, setSections] = useState<FiretableContextProps["sections"]>();
@@ -105,13 +107,29 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
     const _ft_updatedAt = new Date();
     const _ft_updatedBy = currentUser?.uid ?? "";
 
-    ref.update({
-      [fieldName]: value,
-      _ft_updatedAt,
-      updatedAt: _ft_updatedAt,
-      _ft_updatedBy,
-      updatedBy: _ft_updatedBy,
-    });
+    ref
+      .update({
+        [fieldName]: value,
+        _ft_updatedAt,
+        updatedAt: _ft_updatedAt,
+        _ft_updatedBy,
+        updatedBy: _ft_updatedBy,
+      })
+      .then(
+        success => {
+          console.log("successful update");
+        },
+        error => {
+          if (error.code === "permission-denied") {
+            open({
+              message: `You don't have permissions to make this change`,
+              severity: "error",
+              duration: 3000,
+              position: { horizontal: "center", vertical: "top" },
+            });
+          }
+        }
+      );
   };
 
   // A ref to the data grid. Contains data grid functions
