@@ -7,8 +7,14 @@ import _findIndex from "lodash/findIndex";
 import { arrayMover } from "../../util/fns";
 import { db } from "../../firebase";
 
-const formatPath = (tablePath: string) =>
-  `${tablePath.replace(new RegExp("/.*/"), "/_FIRETABLE_/")}/_FIRETABLE_`;
+const formatPathRegex = /\/[^\/]+\/([^\/]+)/g;
+
+const formatPath = (tablePath: string) => {
+  return `_FIRETABLE_/settings/schema/${tablePath.replace(
+    formatPathRegex,
+    "/subTables/$1"
+  )}`;
+};
 const useTableConfig = (tablePath?: string) => {
   const [tableConfigState, documentDispatch] = useDoc({
     path: tablePath ? formatPath(tablePath) : "",
