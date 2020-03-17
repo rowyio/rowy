@@ -69,7 +69,7 @@ export default function SubTableBreadcrumbs({
         if (index % 2 === 1)
           return (
             <Typography variant="caption" color="textSecondary">
-              {parentLabel.split(",")[Math.ceil(index / 2) - 1]}
+              {parentLabel.split(",")[Math.ceil(index / 2) - 1] || crumb}
             </Typography>
           );
 
@@ -77,7 +77,9 @@ export default function SubTableBreadcrumbs({
         return (
           <Link
             component={RouterLink}
-            to={`${routes.table}/${crumb}`}
+            to={`${routes.table}/${encodeURIComponent(
+              breadcrumbs.slice(0, index + 1).join("/")
+            )}`}
             variant="caption"
             color="textSecondary"
           >
