@@ -100,7 +100,7 @@ export default function Table({ collection, filters }: ITableProps) {
 
   let columns: FiretableColumn[] = [];
   if (!tableState.loadingColumns && tableState.columns) {
-    columns = tableState.columns
+    columns = Object.values(tableState.columns)
       .filter((column: any) => !column.hidden)
       .map((column: any, index) => ({
         draggable: true,

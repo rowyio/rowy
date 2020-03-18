@@ -70,12 +70,21 @@ const useTableConfig = (tablePath?: string) => {
    *  @param index of column.
    *  @param {updatable[]} updatables properties to be updated
    */
-  const updateColumn = (index: number, updatables: updatable[]) => {
+  const updateColumn = (key: string, updatables: updatable[]) => {
     const { columns } = tableConfigState;
-    updatables.forEach((updatable: updatable) => {
-      columns[index][updatable.field] = updatable.value;
+    const columnUpdates = updatables.reduce((acc, curr) => {
+      return { ...acc, [curr.field]: curr.value };
+    }, {});
+
+    const updatedColumns = {
+      ...columns,
+      [key]: { ...columns[key], ...columnUpdates },
+    };
+    console.log({ key, updatedColumns, columnUpdates });
+    documentDispatch({
+      action: DocActions.update,
+      data: { columns: updatedColumns },
     });
-    documentDispatch({ action: DocActions.update, data: { columns } });
   };
   /** remove column by index
    *  @param index of column.
