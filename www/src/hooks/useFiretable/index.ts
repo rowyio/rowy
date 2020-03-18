@@ -48,6 +48,12 @@ const useFiretable = (
     filters,
     orderBy,
   });
+
+  /**Subscribes to _FIRETABLE_/settings/schema  to have table configuration pre-cached */
+  const [settingsState, setttingsDispatch] = useTable({
+    path: "_FIRETABLE_/settings/schema",
+  });
+
   /** set collection path of table */
   const setTable = (collectionName: string, filters: FireTableFilter[]) => {
     if (collectionName !== tableState.path || filters !== tableState.filters) {
