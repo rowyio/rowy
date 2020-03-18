@@ -18,7 +18,7 @@ export const auth = firebase.auth();
 
 export const db = firebase.firestore();
 db.settings({ cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED });
-db.enablePersistence();
+db.enablePersistence({ synchronizeTabs: true });
 
 export const bucket = firebase.storage();
 export const functions = firebase.functions();
