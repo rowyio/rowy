@@ -35,7 +35,7 @@ const cloneDoc = (targetCollection: string, fieldsToSync: string[]) => (
   );
   db.collection(collectionPath)
     .doc(docId)
-    .set(syncData, { merge: true })
+    .set({ ...syncData, syncedAt: new Date() }, { merge: true })
     .catch(error => console.error(error));
   return true;
 };
@@ -71,7 +71,7 @@ const syncDoc = (targetCollection: string, fieldsToSync: string[]) => async (
   });
   db.collection(collectionPath)
     .doc(docId)
-    .update(syncData)
+    .update({ ...syncData, syncedAt: new Date() })
     .catch(error => console.error(error));
   return true;
 };
