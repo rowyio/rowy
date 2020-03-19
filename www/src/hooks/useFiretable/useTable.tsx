@@ -1,7 +1,7 @@
 import { db } from "../../firebase";
-
+import { usePersistState } from "use-persist";
 import Button from "@material-ui/core/Button";
-import React, { useEffect, useReducer, useContext } from "react";
+import React, { useEffect, useReducer, useState, useContext } from "react";
 import equals from "ramda/es/equals";
 import firebase from "firebase/app";
 import { FireTableFilter, FiretableOrderBy } from ".";
@@ -53,7 +53,11 @@ const tableInitialState = {
 
 const useTable = (initialOverrides: any) => {
   const snack = useContext(SnackContext);
-
+  const [perviousConfigs, setPerviousConfigs] = usePersistState(
+    { key: "tableConfigs" },
+    {}
+  );
+  console.log({ perviousConfigs });
   const [tableState, tableDispatch] = useReducer(tableReducer, {
     ...tableInitialState,
     ...initialOverrides,
@@ -163,13 +167,37 @@ const useTable = (initialOverrides: any) => {
       orderBy,
       unsubscribe,
     } = tableState;
+
+    if (
+      prevPath !== path &&
+      filters &&
+      Boolean(perviousConfigs[encodeURIComponent(path)])
+    ) {
+      const filters = perviousConfigs[encodeURIComponent(path)].filters;
+      const orderBy = perviousConfigs[encodeURIComponent(path)].orderBy;
+
+      getRows(filters, limit, orderBy);
+      console.log({ filters, orderBy });
+      if (filters) {
+        tableDispatch({ filters });
+      }
+      if (orderBy) {
+        tableDispatch({ orderBy });
+      }
+    }
+
     if (
       !equals(prevFilters, filters) ||
       prevLimit !== limit ||
-      prevPath !== path ||
       prevOrderBy !== orderBy
     ) {
-      if (path) getRows(filters, limit, orderBy);
+      if (path) {
+        getRows(filters, limit, orderBy);
+        setPerviousConfigs(prevConfigs => ({
+          ...prevConfigs,
+          [encodeURIComponent(path)]: { filters, limit, orderBy },
+        }));
+      }
     }
     return () => {
       if (unsubscribe) {
@@ -189,7 +217,6 @@ const useTable = (initialOverrides: any) => {
   const deleteRow = (rowIndex: number, documentId: string) => {
     //remove row locally
     tableState.rows.splice(rowIndex, 1);
-    console.log("deleting");
     tableDispatch({ rows: tableState.rows });
     // delete document
     try {

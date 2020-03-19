@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { auth } from "../firebase";
+import firebase from "firebase/app";
 
 interface AppContextInterface {
   currentUser: firebase.User | null | undefined;
@@ -16,7 +17,9 @@ interface IAppProviderProps {
 }
 
 export const AppProvider: React.FC<IAppProviderProps> = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState();
+  const [currentUser, setCurrentUser] = useState<
+    firebase.User | null | undefined
+  >();
 
   useEffect(() => {
     auth.onAuthStateChanged(auth => {
