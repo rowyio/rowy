@@ -1,17 +1,8 @@
 import React from "react";
-import clsx from "clsx";
 
-import {
-  createStyles,
-  makeStyles,
-  Menu,
-  MenuProps,
-  MenuItem,
-  ListItemIcon,
-  ListSubheader,
-  Divider,
-} from "@material-ui/core";
-import { fade } from "@material-ui/core/styles";
+import { createStyles, makeStyles, Menu } from "@material-ui/core";
+
+import MenuContents from "./MenuContents";
 
 import LockOpenIcon from "@material-ui/icons/LockOpen";
 import LockIcon from "@material-ui/icons/Lock";
@@ -28,8 +19,7 @@ import ColumnPlusBeforeIcon from "assets/icons/ColumnPlusBefore";
 import ColumnPlusAfterIcon from "assets/icons/ColumnPlusAfter";
 import ColumnRemoveIcon from "assets/icons/ColumnRemove";
 
-// Note: this only imports the type
-import { Column } from "react-data-grid";
+import { useFiretableContext } from "contexts/firetableContext";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -37,67 +27,28 @@ const useStyles = makeStyles(theme =>
       // TODO: change this if we need to support a dark mode
       backgroundColor: "#f1f1f3",
     },
-
-    subheader: {
-      ...theme.typography.overline,
-      color: theme.palette.text.disabled,
-      padding: theme.spacing(1, 1.25),
-      paddingTop: theme.spacing(2) + 1,
-
-      cursor: "default",
-      userSelect: "none",
-
-      "&:focus": { outline: 0 },
-    },
-
-    menuItem: {
-      minHeight: 42,
-      padding: theme.spacing(0.75, 1.25),
-
-      ...theme.typography.h6,
-      fontSize: "0.875rem",
-      color: theme.palette.text.secondary,
-      transition: theme.transitions.create(["background-color", "color"], {
-        duration: theme.transitions.duration.shortest,
-      }),
-
-      "&:hover": {
-        backgroundColor: theme.palette.text.primary,
-        color: "#f1f1f3",
-      },
-    },
-    menuItemIcon: {
-      minWidth: 24,
-      marginRight: theme.spacing(1.25),
-      color: "inherit",
-    },
-
-    menuItemActive: { color: theme.palette.text.primary },
-    menuItemError: {
-      color: theme.palette.error.main,
-      "&:hover": {
-        backgroundColor: fade(
-          theme.palette.error.main,
-          theme.palette.action.hoverOpacity
-        ),
-      },
-    },
   })
 );
 
-export interface IColumnMenuProps {
-  anchorEl: MenuProps["anchorEl"];
-  handleClose: MenuProps["onClose"];
-  column: Column<any> & { [key: string]: any };
-}
-
-// TODO: implement active states and actions
-const ColumnMenu: React.FC<IColumnMenuProps> = ({
-  anchorEl,
-  handleClose,
-  column,
-}) => {
+export default function ColumnMenu() {
   const classes = useStyles();
+
+  const {
+    tableState,
+    tableActions,
+    selectedColumnHeader,
+    setSelectedColumnHeader,
+  } = useFiretableContext();
+  const actions = tableActions!.column;
+  const { column, anchorEl } = selectedColumnHeader ?? {};
+
+  const handleClose = () => {
+    if (!setSelectedColumnHeader) return;
+    setSelectedColumnHeader({ column: column!, anchorEl: null });
+    setTimeout(() => setSelectedColumnHeader(null), 300);
+  };
+
+  if (!column) return null;
 
   const menuItems = [
     { type: "subheader", label: "View" },
@@ -177,7 +128,7 @@ const ColumnMenu: React.FC<IColumnMenuProps> = ({
       label: "Delete Column",
       icon: <ColumnRemoveIcon />,
       onClick: () => alert("DELETE COLUMN"),
-      color: "error",
+      color: "error" as "error",
     },
   ];
 
@@ -194,47 +145,7 @@ const ColumnMenu: React.FC<IColumnMenuProps> = ({
       classes={{ paper: classes.paper }}
       MenuListProps={{ disablePadding: true }}
     >
-      {menuItems.map((item, index) => {
-        if (item.type === "subheader")
-          return (
-            <>
-              {index !== 0 && <Divider />}
-              <ListSubheader
-                key={index}
-                className={classes.subheader}
-                disableGutters
-                disableSticky
-              >
-                {item.label}
-              </ListSubheader>
-            </>
-          );
-
-        let icon = item.icon ?? <></>;
-        if (item.active && !!item.activeIcon) icon = item.activeIcon;
-
-        return (
-          <>
-            {index !== 0 && <Divider />}
-            <MenuItem
-              key={index}
-              onClick={item.onClick}
-              className={clsx(
-                classes.menuItem,
-                item.active && classes.menuItemActive,
-                item.color === "error" && classes.menuItemError
-              )}
-            >
-              <ListItemIcon className={classes.menuItemIcon}>
-                {icon}
-              </ListItemIcon>
-              {item.active ? item.activeLabel : item.label}
-            </MenuItem>
-          </>
-        );
-      })}
+      <MenuContents menuItems={menuItems} />
     </Menu>
   );
-};
-
-export default ColumnMenu;
+}

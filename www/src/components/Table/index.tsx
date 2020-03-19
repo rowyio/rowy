@@ -18,6 +18,7 @@ import Loading from "components/Loading";
 import SubTableBreadcrumbs, { BREADCRUMBS_HEIGHT } from "./SubTableBreadcrumbs";
 import TableHeader, { TABLE_HEADER_HEIGHT } from "./TableHeader";
 import ColumnHeader from "./ColumnHeader";
+import ColumnMenu from "./ColumnMenu";
 import FinalColumnHeader from "./FinalColumnHeader";
 import FinalColumn, { useFinalColumnStyles } from "./formatters/FinalColumn";
 
@@ -29,14 +30,11 @@ import { getFormatter } from "./formatters";
 import { getEditor } from "./editors";
 
 import useWindowSize from "hooks/useWindowSize";
-import { DRAWER_WIDTH, DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
+import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
 import { APP_BAR_HEIGHT } from "components/Navigation";
 import useStyles from "./styles";
 
 // const Hotkeys = lazy(() => import("./HotKeys" /* webpackChunkName: "HotKeys" */));
-const ColumnMenu = lazy(() =>
-  import("./ColumnMenu" /* webpackChunkName: "ColumnMenu" */)
-);
 const { DraggableContainer } = DraggableHeader;
 
 export type FiretableColumn = Column<any> & {
@@ -222,15 +220,7 @@ export default function Table({ collection, filters }: ITableProps) {
         <Loading message="Fetching columns" />
       )}
 
-      <Suspense fallback={<Loading message="Loading helpers" />}>
-        {header && header.column && (
-          <ColumnMenu
-            handleClose={handleCloseHeader}
-            anchorEl={anchorEl}
-            column={header.column}
-          />
-        )}
-      </Suspense>
+      <ColumnMenu />
     </>
   );
 }
