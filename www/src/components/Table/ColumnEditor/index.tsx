@@ -176,7 +176,7 @@ export default function ColumnEditor() {
   ]);
 
   const deleteColumn = () => {
-    actions.remove(configColumnIndex);
+    actions.remove(column?.key);
     handleClose();
     clearValues();
   };

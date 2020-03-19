@@ -1,4 +1,6 @@
 import React, { lazy, Suspense, useEffect, useRef } from "react";
+
+import _orderBy from "lodash/orderBy";
 import { useDebouncedCallback } from "use-debounce";
 import _isEmpty from "lodash/isEmpty";
 
@@ -100,19 +102,22 @@ export default function Table({ collection, filters }: ITableProps) {
 
   let columns: FiretableColumn[] = [];
   if (!tableState.loadingColumns && tableState.columns) {
-    columns = Object.values(tableState.columns)
-      .filter((column: any) => !column.hidden)
-      .map((column: any, index) => ({
-        draggable: true,
-        editable: true,
-        resizable: true,
-        frozen: column.fixed,
-        headerRenderer: ColumnHeader,
-        formatter: getFormatter(column),
-        editor: getEditor(column),
-        ...column,
-        width: column.width ? (column.width > 380 ? 380 : column.width) : 150,
-      }));
+    columns = _orderBy(
+      Object.values(tableState.columns).filter(
+        (column: any) => !column.hidden && column.key
+      ),
+      "index"
+    ).map((column: any, index) => ({
+      draggable: true,
+      editable: true,
+      resizable: true,
+      frozen: column.fixed,
+      headerRenderer: ColumnHeader,
+      formatter: getFormatter(column),
+      editor: getEditor(column),
+      ...column,
+      width: column.width ? (column.width > 380 ? 380 : column.width) : 150,
+    }));
     columns.push({
       isNew: true,
       key: "new",
@@ -125,6 +130,7 @@ export default function Table({ collection, filters }: ITableProps) {
       editable: false,
     });
   }
+  console.log(columns);
 
   const rowHeight = tableState.config.rowHeight;
 

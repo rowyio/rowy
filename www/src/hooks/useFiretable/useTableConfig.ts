@@ -5,7 +5,9 @@ import { FieldType } from "constants/fields";
 import _camelCase from "lodash/camelCase";
 import _findIndex from "lodash/findIndex";
 import { arrayMover } from "../../util/fns";
-import { db } from "../../firebase";
+import { db, deleteField } from "../../firebase";
+
+//import
 
 const formatPathRegex = /\/[^\/]+\/([^\/]+)/g;
 
@@ -45,13 +47,14 @@ const useTableConfig = (tablePath?: string) => {
    */
   const add = (name: string, type: FieldType, data?: any) => {
     //TODO: validation
-
-    //console.log("tableConfigState", tableConfigState);
     const { columns } = tableConfigState;
+    const newIndex = Object.keys(columns).length;
+    let updatedColumns = columns;
     const key = _camelCase(name);
+    updatedColumns[key] = { name, key, type, ...data, index: newIndex };
     documentDispatch({
       action: DocActions.update,
-      data: { columns: [...columns, { name, key, type, ...data }] },
+      data: { columns: updatedColumns },
     });
   };
 
@@ -89,10 +92,15 @@ const useTableConfig = (tablePath?: string) => {
   /** remove column by index
    *  @param index of column.
    */
-  const remove = (index: number) => {
+  const remove = (key: string) => {
     const { columns } = tableConfigState;
-    columns.splice(index, 1);
-    documentDispatch({ action: DocActions.update, data: { columns } });
+    let updatedColumns = columns;
+    updatedColumns[key] = deleteField();
+    console.log({ updatedColumns });
+    documentDispatch({
+      action: DocActions.update,
+      data: { columns: updatedColumns },
+    });
   };
   /** reorder columns by key
    * @param draggedColumnKey column being repositioned.
