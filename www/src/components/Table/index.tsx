@@ -34,8 +34,8 @@ import { APP_BAR_HEIGHT } from "components/Navigation";
 import useStyles from "./styles";
 
 // const Hotkeys = lazy(() => import("./HotKeys" /* webpackChunkName: "HotKeys" */));
-const ColumnEditor = lazy(() =>
-  import("./ColumnEditor" /* webpackChunkName: "ColumnEditor" */)
+const ColumnMenu = lazy(() =>
+  import("./ColumnMenu" /* webpackChunkName: "ColumnMenu" */)
 );
 const { DraggableContainer } = DraggableHeader;
 
@@ -223,7 +223,13 @@ export default function Table({ collection, filters }: ITableProps) {
       )}
 
       <Suspense fallback={<Loading message="Loading helpers" />}>
-        <ColumnEditor />
+        {header && header.column && (
+          <ColumnMenu
+            handleClose={handleCloseHeader}
+            anchorEl={anchorEl}
+            column={header.column}
+          />
+        )}
       </Suspense>
     </>
   );
