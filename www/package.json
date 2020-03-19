@@ -50,6 +50,7 @@
     "tinymce": "^5.2.0",
     "typescript": "^3.7.2",
     "use-debounce": "^3.3.0",
+    "use-persist": "^1.0.2",
     "yarn": "^1.19.0",
     "yup": "^0.27.0"
   },

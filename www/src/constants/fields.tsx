@@ -147,7 +147,8 @@ export const FIELDS = [
  * @param fieldType
  */
 export const getFieldIcon = (fieldType: FieldType) => {
-  return find(propEq("type", fieldType))(FIELDS)?.icon;
+  const field: any = find(propEq("type", fieldType))(FIELDS);
+  return field.icon;
 };
 
 /**
