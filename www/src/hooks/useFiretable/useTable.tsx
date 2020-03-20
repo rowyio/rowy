@@ -1,5 +1,5 @@
 import { db } from "../../firebase";
-import { usePersistState } from "use-persist";
+
 import Button from "@material-ui/core/Button";
 import React, { useEffect, useReducer, useState, useContext } from "react";
 import equals from "ramda/es/equals";
@@ -7,6 +7,8 @@ import firebase from "firebase/app";
 import { FireTableFilter, FiretableOrderBy } from ".";
 import { SnackContext } from "../../contexts/snackContext";
 
+import createPersistedState from "use-persisted-state";
+const useTableFilterHistory = createPersistedState("tableFilters");
 const CAP = 1000; // safety  paramter sets the  upper limit of number of docs fetched by this hook
 const serverTimestamp = firebase.firestore.FieldValue.serverTimestamp;
 var characters =
@@ -46,17 +48,14 @@ const tableInitialState = {
   path: null,
   filters: [],
   prevLimit: 0,
-  limit: 150,
+  limit: 50,
   loading: true,
   cap: CAP,
 };
 
 const useTable = (initialOverrides: any) => {
   const snack = useContext(SnackContext);
-  const [perviousConfigs, setPerviousConfigs] = usePersistState(
-    { key: "tableConfigs" },
-    {}
-  );
+  const [perviousConfigs, setPerviousConfigs] = useTableFilterHistory();
   console.log({ perviousConfigs });
   const [tableState, tableDispatch] = useReducer(tableReducer, {
     ...tableInitialState,
@@ -76,6 +75,7 @@ const useTable = (initialOverrides: any) => {
     limit: number,
     orderBy: FiretableOrderBy
   ) => {
+    console.log(`getting Rows ${tableState.path}`);
     //unsubscribe from old path
     if (tableState.prevPath && tableState.path !== tableState.prevPath) {
       tableState.unsubscribe();
@@ -170,20 +170,16 @@ const useTable = (initialOverrides: any) => {
 
     if (
       prevPath !== path &&
-      filters &&
+      perviousConfigs &&
       Boolean(perviousConfigs[encodeURIComponent(path)])
     ) {
-      const filters = perviousConfigs[encodeURIComponent(path)].filters;
-      const orderBy = perviousConfigs[encodeURIComponent(path)].orderBy;
-
-      getRows(filters, limit, orderBy);
-      console.log({ filters, orderBy });
-      if (filters) {
-        tableDispatch({ filters });
-      }
-      if (orderBy) {
-        tableDispatch({ orderBy });
-      }
+      const filters = perviousConfigs[encodeURIComponent(path)].filters
+        ? perviousConfigs[encodeURIComponent(path)].filters
+        : [];
+      const orderBy = perviousConfigs[encodeURIComponent(path)].orderBy
+        ? perviousConfigs[encodeURIComponent(path)].orderBy
+        : null;
+      tableDispatch({ filters, orderBy });
     }
 
     if (
