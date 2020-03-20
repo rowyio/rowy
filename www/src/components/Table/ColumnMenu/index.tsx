@@ -39,6 +39,9 @@ export default function ColumnMenu() {
     selectedColumnHeader,
     setSelectedColumnHeader,
   } = useFiretableContext();
+  if (!tableState || !tableActions) return null;
+  const { orderBy } = tableState;
+
   const actions = tableActions!.column;
   const { column, anchorEl } = selectedColumnHeader ?? {};
 
@@ -49,53 +52,66 @@ export default function ColumnMenu() {
   };
 
   if (!column) return null;
-
+  const isSorted = orderBy?.[0]?.key === (column.key as string);
+  const isAsc = isSorted && orderBy?.[0]?.direction === "asc";
   const menuItems = [
-    { type: "subheader", label: "View" },
+    { type: "subheader", label: column.key as string },
     {
       label: "Lock",
-      activeLabel: "Locked",
+      activeLabel: "Locked (unlock)",
       icon: <LockOpenIcon />,
       activeIcon: <LockIcon />,
-      onClick: () => alert("LOCK"),
-      active: column.locked,
+      onClick: () => {
+        actions.update(column.key, { editable: !column.editable });
+      },
+      active: column.editable,
     },
     {
       label: "Hide",
       activeLabel: "Show",
       icon: <VisibilityOffIcon />,
       activeIcon: <VisibilityIcon />,
-      onClick: () => alert("HIDE/SHOW"),
-      active: false,
+      onClick: () => {
+        actions.update(column.key, { hidden: !column.hidden });
+      },
+      active: column.hidden,
     },
     {
       label: "Freeze",
       activeLabel: "Unfreeze",
       icon: <FreezeIcon />,
       activeIcon: <UnfreezeIcon />,
-      onClick: () => alert("FREEZE"),
-      active: false,
+      onClick: () => {
+        actions.update(column.key, { fixed: !column.fixed });
+      },
+      active: column.fixed,
     },
     {
       label: "Enable resize",
       activeLabel: "Disable resize",
       icon: <CellResizeIcon />,
-      onClick: () => alert("RESIZE"),
+      onClick: () => {
+        actions.update(column.key, { resizable: !column.resizable });
+      },
       active: column.resizable,
     },
     {
       label: "Sort: Decreasing",
       activeLabel: "Sorted: Decreasing",
       icon: <ArrowDownwardIcon />,
-      onClick: () => alert("SORT DECREASING"),
-      active: false,
+      onClick: () => {
+        tableActions.table.orderBy([{ key: column.key, direction: "desc" }]);
+      },
+      active: isSorted && !isAsc,
     },
     {
       label: "Sort: Increasing",
       activeLabel: "Sorted: Increasing",
       icon: <ArrowUpwardIcon />,
-      onClick: () => alert("SORT INCREASING"),
-      active: false,
+      onClick: () => {
+        tableActions.table.orderBy([{ key: column.key, direction: "asc" }]);
+      },
+      active: isSorted && isAsc,
     },
     { type: "subheader", label: "Edit" },
     {
