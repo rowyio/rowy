@@ -63,6 +63,7 @@ export default function ColumnMenu() {
       activeIcon: <LockIcon />,
       onClick: () => {
         actions.update(column.key, { editable: !column.editable });
+        handleClose();
       },
       active: column.editable,
     },
@@ -73,6 +74,7 @@ export default function ColumnMenu() {
       activeIcon: <VisibilityIcon />,
       onClick: () => {
         actions.update(column.key, { hidden: !column.hidden });
+        handleClose();
       },
       active: column.hidden,
     },
@@ -83,6 +85,7 @@ export default function ColumnMenu() {
       activeIcon: <UnfreezeIcon />,
       onClick: () => {
         actions.update(column.key, { fixed: !column.fixed });
+        handleClose();
       },
       active: column.fixed,
     },
@@ -92,6 +95,7 @@ export default function ColumnMenu() {
       icon: <CellResizeIcon />,
       onClick: () => {
         actions.update(column.key, { resizable: !column.resizable });
+        handleClose();
       },
       active: column.resizable,
     },
@@ -101,6 +105,7 @@ export default function ColumnMenu() {
       icon: <ArrowDownwardIcon />,
       onClick: () => {
         tableActions.table.orderBy([{ key: column.key, direction: "desc" }]);
+        handleClose();
       },
       active: isSorted && !isAsc,
     },
@@ -110,6 +115,7 @@ export default function ColumnMenu() {
       icon: <ArrowUpwardIcon />,
       onClick: () => {
         tableActions.table.orderBy([{ key: column.key, direction: "asc" }]);
+        handleClose();
       },
       active: isSorted && isAsc,
     },
@@ -143,7 +149,10 @@ export default function ColumnMenu() {
     {
       label: "Delete Column",
       icon: <ColumnRemoveIcon />,
-      onClick: () => alert("DELETE COLUMN"),
+      onClick: () => {
+        actions.remove(column.key);
+        handleClose();
+      },
       color: "error" as "error",
     },
   ];
