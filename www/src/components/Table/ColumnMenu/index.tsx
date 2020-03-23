@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { createStyles, makeStyles, Menu } from "@material-ui/core";
 
@@ -18,9 +18,12 @@ import ReorderIcon from "@material-ui/icons/Reorder";
 import ColumnPlusBeforeIcon from "assets/icons/ColumnPlusBefore";
 import ColumnPlusAfterIcon from "assets/icons/ColumnPlusAfter";
 import ColumnRemoveIcon from "assets/icons/ColumnRemove";
+import NameChange from "./NameChange";
 
 import { useFiretableContext } from "contexts/firetableContext";
-
+enum ModalStates {
+  nameChange = "NAME_CHANGE",
+}
 const useStyles = makeStyles(theme =>
   createStyles({
     paper: {
@@ -32,7 +35,7 @@ const useStyles = makeStyles(theme =>
 
 export default function ColumnMenu() {
   const classes = useStyles();
-
+  const [modal, setModal] = useState("");
   const {
     tableState,
     tableActions,
@@ -123,7 +126,9 @@ export default function ColumnMenu() {
     {
       label: "Rename",
       icon: <EditIcon />,
-      onClick: () => alert("EDIT"),
+      onClick: () => {
+        setModal(ModalStates.nameChange);
+      },
     },
     {
       label: `Edit Type: ${column?.type}`,
@@ -158,19 +163,36 @@ export default function ColumnMenu() {
   ];
 
   return (
-    <Menu
-      id="simple-menu"
-      anchorEl={anchorEl}
-      keepMounted
-      open={Boolean(anchorEl)}
-      onClose={handleClose}
-      getContentAnchorEl={null}
-      anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-      transformOrigin={{ vertical: "top", horizontal: "right" }}
-      classes={{ paper: classes.paper }}
-      MenuListProps={{ disablePadding: true }}
-    >
-      <MenuContents menuItems={menuItems} />
-    </Menu>
+    <>
+      <Menu
+        id="simple-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+        getContentAnchorEl={null}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        transformOrigin={{ vertical: "top", horizontal: "right" }}
+        classes={{ paper: classes.paper }}
+        MenuListProps={{ disablePadding: true }}
+      >
+        <MenuContents menuItems={menuItems} />
+      </Menu>
+      {column && (
+        <NameChange
+          name={column.name}
+          fieldName={column.key as string}
+          open={modal === ModalStates.nameChange}
+          handleClose={() => {
+            setModal("");
+          }}
+          handleSave={(key, update) => {
+            actions.update(key, update);
+            setModal("");
+            handleClose();
+          }}
+        />
+      )}
+    </>
   );
 }
