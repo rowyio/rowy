@@ -9,23 +9,21 @@ import { Typography, IconButton } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import { FieldType } from "constants/fields";
 import FieldsDropdown from "./FieldsDropdown";
+import _camel from "lodash/camelCase";
 
 export default function FormDialog({
-  name,
-  fieldName,
-  type,
   open,
+  data,
   handleClose,
   handleSave,
 }: {
-  name: string;
-  fieldName: string;
-  type: FieldType;
   open: boolean;
+  data: any;
   handleClose: Function;
   handleSave: Function;
 }) {
-  const [newType, setType] = useState(type);
+  const [type, setType] = useState(FieldType.shortText);
+  const [name, setName] = useState("");
   return (
     <div>
       <Dialog
@@ -33,7 +31,7 @@ export default function FormDialog({
         onClose={(e, r) => {
           handleClose();
         }}
-        aria-labelledby="form-dialog-title"
+        aria-labelledby="new-column"
       >
         <DialogContent>
           <Grid
@@ -42,7 +40,7 @@ export default function FormDialog({
             alignContent="flex-start"
             direction="row"
           >
-            <Typography variant="h6">Change Column Type</Typography>
+            <Typography variant="h6">Add new column</Typography>
             <IconButton
               onClick={() => {
                 handleClose();
@@ -51,10 +49,23 @@ export default function FormDialog({
               <CloseIcon />
             </IconButton>
           </Grid>
-          <Typography variant="overline">Current Column: {name}</Typography>
+          <Typography variant="overline">Column Name</Typography>
+          <TextField
+            value={name}
+            autoFocus
+            variant="filled"
+            id="name"
+            label="Column Header"
+            type="text"
+            fullWidth
+            onChange={e => {
+              setName(e.target.value);
+            }}
+          />
+          <Typography variant="overline">Column Type</Typography>
 
           <FieldsDropdown
-            value={newType}
+            value={type}
             onChange={(newType: any) => {
               setType(newType.target.value);
             }}
@@ -71,11 +82,18 @@ export default function FormDialog({
           </Button>
           <Button
             onClick={() => {
-              handleSave(fieldName, { type: newType });
+              const fieldName = _camel(name);
+              handleSave(fieldName, {
+                type,
+                name,
+                fieldName,
+                key: fieldName,
+                ...data.initializeColumn,
+              });
             }}
             color="primary"
           >
-            Update
+            Add
           </Button>
         </DialogActions>
       </Dialog>

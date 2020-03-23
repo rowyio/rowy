@@ -19,12 +19,18 @@ import ColumnPlusBeforeIcon from "assets/icons/ColumnPlusBefore";
 import ColumnPlusAfterIcon from "assets/icons/ColumnPlusAfter";
 import ColumnRemoveIcon from "assets/icons/ColumnRemove";
 import NameChange from "./NameChange";
+import NewColumn from "./NewColumn";
 import TypeChange from "./TypeChange";
-
 import { useFiretableContext } from "contexts/firetableContext";
+import { FIELDS } from "constants/fields";
+import _find from "lodash/find";
+
+const INITIAL_MODAL = { type: "", data: {} };
+
 enum ModalStates {
   nameChange = "NAME_CHANGE",
   typeChange = "TYPE_CHANGE",
+  new = "NEW_COLUMN",
 }
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -37,7 +43,7 @@ const useStyles = makeStyles(theme =>
 
 export default function ColumnMenu() {
   const classes = useStyles();
-  const [modal, setModal] = useState("");
+  const [modal, setModal] = useState(INITIAL_MODAL);
   const {
     tableState,
     tableActions,
@@ -129,15 +135,15 @@ export default function ColumnMenu() {
       label: "Rename",
       icon: <EditIcon />,
       onClick: () => {
-        setModal(ModalStates.nameChange);
+        setModal({ type: ModalStates.nameChange, data: {} });
       },
     },
     {
       label: `Edit Type: ${column?.type}`,
       // TODO: This is based off the cell type
-      // icon: <VisibilityOffIcon />,
+      icon: _find(FIELDS, { type: column.type })?.icon,
       onClick: () => {
-        setModal(ModalStates.typeChange);
+        setModal({ type: ModalStates.typeChange, data: {} });
       },
     },
     {
@@ -148,12 +154,20 @@ export default function ColumnMenu() {
     {
       label: "Add New to Left",
       icon: <ColumnPlusBeforeIcon />,
-      onClick: () => alert("ADD NEW LEFT"),
+      onClick: () =>
+        setModal({
+          type: ModalStates.new,
+          data: { initializeColumn: { index: column.index - 1 } },
+        }),
     },
     {
       label: "Add New to Right",
       icon: <ColumnPlusAfterIcon />,
-      onClick: () => alert("ADD NEW RIGHT"),
+      onClick: () =>
+        setModal({
+          type: ModalStates.new,
+          data: { initializeColumn: { index: column.index + 1 } },
+        }),
     },
     {
       label: "Delete Column",
@@ -187,13 +201,13 @@ export default function ColumnMenu() {
           <NameChange
             name={column.name}
             fieldName={column.key as string}
-            open={modal === ModalStates.nameChange}
+            open={modal.type === ModalStates.nameChange}
             handleClose={() => {
-              setModal("");
+              setModal(INITIAL_MODAL);
             }}
             handleSave={(key, update) => {
               actions.update(key, update);
-              setModal("");
+              setModal(INITIAL_MODAL);
               handleClose();
             }}
           />
@@ -201,14 +215,26 @@ export default function ColumnMenu() {
           <TypeChange
             name={column.name}
             fieldName={column.key as string}
-            open={modal === ModalStates.typeChange}
+            open={modal.type === ModalStates.typeChange}
             type={column.type}
             handleClose={() => {
-              setModal("");
+              setModal(INITIAL_MODAL);
             }}
             handleSave={(key, update) => {
               actions.update(key, update);
-              setModal("");
+              setModal(INITIAL_MODAL);
+              handleClose();
+            }}
+          />
+          <NewColumn
+            open={modal.type === ModalStates.new}
+            data={modal.data}
+            handleClose={() => {
+              setModal(INITIAL_MODAL);
+            }}
+            handleSave={(key, update) => {
+              actions.update(key, update);
+              setModal(INITIAL_MODAL);
               handleClose();
             }}
           />
