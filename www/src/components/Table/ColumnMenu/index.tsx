@@ -66,7 +66,13 @@ export default function ColumnMenu() {
   const isSorted = orderBy?.[0]?.key === (column.key as string);
   const isAsc = isSorted && orderBy?.[0]?.direction === "asc";
   const menuItems = [
-    { type: "subheader", label: column.key as string },
+    {
+      type: "subheader",
+      label:
+        column.name === column?.key
+          ? column.name
+          : (`${column.name}(${column?.key as string})` as string),
+    },
     {
       label: "Lock",
       activeLabel: "Locked (unlock)",
@@ -76,7 +82,7 @@ export default function ColumnMenu() {
         actions.update(column.key, { editable: !column.editable });
         handleClose();
       },
-      active: column.editable,
+      active: !column.editable,
     },
     {
       label: "Hide",
@@ -146,11 +152,11 @@ export default function ColumnMenu() {
         setModal({ type: ModalStates.typeChange, data: {} });
       },
     },
-    {
-      label: "Re-order",
-      icon: <ReorderIcon />,
-      onClick: () => alert("REORDER"),
-    },
+    // {
+    //   label: "Re-order",
+    //   icon: <ReorderIcon />,
+    //   onClick: () => alert("REORDER"),
+    // },
     {
       label: "Add New to Left",
       icon: <ColumnPlusBeforeIcon />,
@@ -180,6 +186,9 @@ export default function ColumnMenu() {
     },
   ];
 
+  const clearModal = () => {
+    setModal(INITIAL_MODAL);
+  };
   return (
     <>
       <Menu
@@ -202,12 +211,10 @@ export default function ColumnMenu() {
             name={column.name}
             fieldName={column.key as string}
             open={modal.type === ModalStates.nameChange}
-            handleClose={() => {
-              setModal(INITIAL_MODAL);
-            }}
+            handleClose={clearModal}
             handleSave={(key, update) => {
               actions.update(key, update);
-              setModal(INITIAL_MODAL);
+              clearModal();
               handleClose();
             }}
           />
@@ -217,24 +224,20 @@ export default function ColumnMenu() {
             fieldName={column.key as string}
             open={modal.type === ModalStates.typeChange}
             type={column.type}
-            handleClose={() => {
-              setModal(INITIAL_MODAL);
-            }}
+            handleClose={clearModal}
             handleSave={(key, update) => {
               actions.update(key, update);
-              setModal(INITIAL_MODAL);
+              clearModal();
               handleClose();
             }}
           />
           <NewColumn
             open={modal.type === ModalStates.new}
             data={modal.data}
-            handleClose={() => {
-              setModal(INITIAL_MODAL);
-            }}
+            handleClose={clearModal}
             handleSave={(key, update) => {
               actions.update(key, update);
-              setModal(INITIAL_MODAL);
+              clearModal();
               handleClose();
             }}
           />
