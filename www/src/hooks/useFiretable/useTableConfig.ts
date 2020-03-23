@@ -4,6 +4,8 @@ import useDoc, { DocActions } from "../useDoc";
 import { FieldType } from "constants/fields";
 import _camelCase from "lodash/camelCase";
 import _findIndex from "lodash/findIndex";
+import _find from "lodash/find";
+import _sortBy from "lodash/sortBy";
 import { arrayMover } from "../../util/fns";
 import { db, deleteField } from "../../firebase";
 
@@ -64,8 +66,23 @@ const useTableConfig = (tablePath?: string) => {
    */
   const [resize] = useDebouncedCallback((index: number, width: number) => {
     const { columns } = tableConfigState;
-    columns[index].width = width;
-    documentDispatch({ action: DocActions.update, data: { columns } });
+    const numberOfFixedColumns = Object.values(columns).filter(
+      (col: any) => col.fixed && !col.hidden
+    ).length;
+    const columnsArray = _sortBy(
+      Object.values(columns).filter((col: any) => !col.hidden && !col.fixed),
+      "index"
+    );
+    let column: any = columnsArray[index - numberOfFixedColumns];
+    column.width = width;
+    let updatedColumns = columns;
+    updatedColumns[column.key] = column;
+
+    console.log({ index, column, updatedColumns });
+    documentDispatch({
+      action: DocActions.update,
+      data: { columns: updatedColumns },
+    });
   }, 1000);
   type updatable = { field: string; value: unknown };
 
@@ -104,15 +121,18 @@ const useTableConfig = (tablePath?: string) => {
    * @param droppedColumnKey column being .
    */
   const reorder = (draggedColumnKey: string, droppedColumnKey: string) => {
+    console.log(draggedColumnKey, droppedColumnKey);
+
     const { columns } = tableConfigState;
-    const draggedColumnIndex = _findIndex(columns, ["key", draggedColumnKey]);
-    const droppedColumnIndex = _findIndex(columns, ["key", droppedColumnKey]);
-    const reorderedColumns = [...columns];
-    arrayMover(reorderedColumns, draggedColumnIndex, droppedColumnIndex);
-    documentDispatch({
-      action: DocActions.update,
-      data: { columns: reorderedColumns },
-    });
+    console.log(columns[draggedColumnKey], columns[droppedColumnKey]);
+    // const draggedColumnIndex = _findIndex(columns, ["key", draggedColumnKey]);
+    // const droppedColumnIndex = _findIndex(columns, ["key", droppedColumnKey]);
+    // const reorderedColumns = [...columns];
+    // arrayMover(reorderedColumns, draggedColumnIndex, droppedColumnIndex);
+    // documentDispatch({
+    //   action: DocActions.update,
+    //   data: { columns: reorderedColumns },
+    // });
   };
   /** changing table configuration used for things such as row height
    * @param key name of parameter eg. rowHeight
