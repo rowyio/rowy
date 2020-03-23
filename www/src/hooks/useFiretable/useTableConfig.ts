@@ -77,8 +77,6 @@ const useTableConfig = (tablePath?: string) => {
     column.width = width;
     let updatedColumns = columns;
     updatedColumns[column.key] = column;
-
-    console.log({ index, column, updatedColumns });
     documentDispatch({
       action: DocActions.update,
       data: { columns: updatedColumns },
@@ -110,7 +108,6 @@ const useTableConfig = (tablePath?: string) => {
     const { columns } = tableConfigState;
     let updatedColumns = columns;
     updatedColumns[key] = deleteField();
-    console.log({ updatedColumns });
     documentDispatch({
       action: DocActions.update,
       data: { columns: updatedColumns },
@@ -121,18 +118,20 @@ const useTableConfig = (tablePath?: string) => {
    * @param droppedColumnKey column being .
    */
   const reorder = (draggedColumnKey: string, droppedColumnKey: string) => {
-    console.log(draggedColumnKey, droppedColumnKey);
-
     const { columns } = tableConfigState;
     console.log(columns[draggedColumnKey], columns[droppedColumnKey]);
-    // const draggedColumnIndex = _findIndex(columns, ["key", draggedColumnKey]);
-    // const droppedColumnIndex = _findIndex(columns, ["key", droppedColumnKey]);
-    // const reorderedColumns = [...columns];
-    // arrayMover(reorderedColumns, draggedColumnIndex, droppedColumnIndex);
-    // documentDispatch({
-    //   action: DocActions.update,
-    //   data: { columns: reorderedColumns },
-    // });
+    const oldIndex = columns[draggedColumnKey].index;
+    const newIndex = columns[droppedColumnKey].index;
+    const columnsArray = _sortBy(Object.values(columns), "index");
+    arrayMover(columnsArray, oldIndex, newIndex);
+    let updatedColumns = columns;
+    columnsArray.forEach((column: any, index) => {
+      updatedColumns[column.key] = { ...column, index };
+    });
+    documentDispatch({
+      action: DocActions.update,
+      data: { columns: updatedColumns },
+    });
   };
   /** changing table configuration used for things such as row height
    * @param key name of parameter eg. rowHeight
