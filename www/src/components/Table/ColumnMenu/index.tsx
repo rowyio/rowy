@@ -19,10 +19,12 @@ import ColumnPlusBeforeIcon from "assets/icons/ColumnPlusBefore";
 import ColumnPlusAfterIcon from "assets/icons/ColumnPlusAfter";
 import ColumnRemoveIcon from "assets/icons/ColumnRemove";
 import NameChange from "./NameChange";
+import TypeChange from "./TypeChange";
 
 import { useFiretableContext } from "contexts/firetableContext";
 enum ModalStates {
   nameChange = "NAME_CHANGE",
+  typeChange = "TYPE_CHANGE",
 }
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -134,7 +136,9 @@ export default function ColumnMenu() {
       label: `Edit Type: ${column?.type}`,
       // TODO: This is based off the cell type
       // icon: <VisibilityOffIcon />,
-      onClick: () => alert("EDIT TYPE"),
+      onClick: () => {
+        setModal(ModalStates.typeChange);
+      },
     },
     {
       label: "Re-order",
@@ -179,19 +183,36 @@ export default function ColumnMenu() {
         <MenuContents menuItems={menuItems} />
       </Menu>
       {column && (
-        <NameChange
-          name={column.name}
-          fieldName={column.key as string}
-          open={modal === ModalStates.nameChange}
-          handleClose={() => {
-            setModal("");
-          }}
-          handleSave={(key, update) => {
-            actions.update(key, update);
-            setModal("");
-            handleClose();
-          }}
-        />
+        <>
+          <NameChange
+            name={column.name}
+            fieldName={column.key as string}
+            open={modal === ModalStates.nameChange}
+            handleClose={() => {
+              setModal("");
+            }}
+            handleSave={(key, update) => {
+              actions.update(key, update);
+              setModal("");
+              handleClose();
+            }}
+          />
+
+          <TypeChange
+            name={column.name}
+            fieldName={column.key as string}
+            open={modal === ModalStates.typeChange}
+            type={column.type}
+            handleClose={() => {
+              setModal("");
+            }}
+            handleSave={(key, update) => {
+              actions.update(key, update);
+              setModal("");
+              handleClose();
+            }}
+          />
+        </>
       )}
     </>
   );
