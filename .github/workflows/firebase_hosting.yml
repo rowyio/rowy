@@ -23,11 +23,11 @@ jobs:
       - uses: borales/actions-yarn@v2.0.0
         with:
           cmd: install # will run `yarn install` command
-        working-directory: ${{env.working-directory}}
+          working-directory: ${{env.working-directory}}
       - uses: borales/actions-yarn@v2.0.0
         with:
           cmd: build # will run `yarn install` command
-        working-directory: ${{env.working-directory}}
+          working-directory: ${{env.working-directory}}
       - uses: w9jds/firebase-action@master
         with:
           args: deploy --only hosting
