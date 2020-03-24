@@ -24,7 +24,7 @@ jobs:
           cmd: install # will run `yarn install` command
       - uses: borales/actions-yarn@v2.0.0
         with:
-          cmd: build # will run `yarn install` command
+          cmd: cd www; build # will run `yarn install` command
       - uses: w9jds/firebase-action@master
         with:
           args: deploy --only hosting
