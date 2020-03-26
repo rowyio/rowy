@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "antler-vc"
+  },
+  "targets": {
+    "antler-vc": {
+      "hosting": {
+        "firetable": [
+          "antler-admin"
+        ]
+      }
+    }
   }
 }

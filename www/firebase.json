@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "target": "firetable",
     "public": "build",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [

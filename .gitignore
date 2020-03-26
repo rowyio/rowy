@@ -26,6 +26,7 @@ cloud_functions/functions/firebase-credentials.json
 .DS_Store
 .env*
 !.env.example
+!.env.enc
 
 npm-debug.log*
 yarn-debug.log*

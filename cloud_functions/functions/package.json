@@ -7,11 +7,11 @@
     "serve": "npm run build && firebase serve --only functions",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
-    "deploy": "firebase deploy --only functions",
+    "deploy": "echo 'n\n' | firebase deploy --token \"$FIREBASE_TOKEN\" --project \"$PROJECT_ID\" --only functions --interactive",
     "logs": "firebase functions:log"
   },
   "engines": {
-    "node": "8"
+    "node": "10"
   },
   "main": "lib/src/index.js",
   "dependencies": {

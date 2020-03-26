@@ -1,0 +1,49 @@
+steps:
+  - name: gcr.io/cloud-builders/gcloud
+    args:
+      - kms
+      - decrypt
+      - --ciphertext-file=www/.env.enc
+      - --plaintext-file=www/.env
+      - --location=global
+      - --keyring=antler-vc
+      - --key=cloudbuild-env
+  - name: node:10.15.1
+    entrypoint: yarn
+    args: ["install"]
+    dir: "www"
+  - name: node:10.15.1
+    entrypoint: yarn
+    args: ["build"]
+    dir: "www"
+  - name: node:10.15.1
+    entrypoint: yarn
+    args: ["deploy"]
+    dir: "www"
+
+  - name: gcr.io/cloud-builders/gcloud
+    args:
+      - kms
+      - decrypt
+      - --ciphertext-file=cloud_functions/functions/.env.enc
+      - --plaintext-file=cloud_functions/functions/.env
+      - --location=global
+      - --keyring=antler-vc
+      - --key=cloudbuild-env
+  - name: gcr.io/cloud-builders/gcloud
+    args:
+      - kms
+      - decrypt
+      - --ciphertext-file=cloud_functions/functions/firebase-credentials.json.enc
+      - --plaintext-file=cloud_functions/functions/firebase-credentials.json
+      - --location=global
+      - --keyring=antler-vc
+      - --key=cloudbuild-env
+  - name: node:10.15.1
+    entrypoint: yarn
+    args: ["install"]
+    dir: "cloud_functions/functions"
+  - name: node:10.15.1
+    entrypoint: yarn
+    args: ["deploy"]
+    dir: "cloud_functions/functions"
