@@ -1,0 +1,91 @@
+[debug] [2020-03-26T07:20:33.296Z] ----------------------------------------------------------------------
+[debug] [2020-03-26T07:20:33.297Z] Command:       /usr/local/bin/firebase /Users/shams/.cache/firebase/tools/lib/node_modules/firebase-tools/lib/bin/firebase deploy --token  --only functions --interactive
+[debug] [2020-03-26T07:20:33.297Z] CLI Version:   7.10.0
+[debug] [2020-03-26T07:20:33.298Z] Platform:      darwin
+[debug] [2020-03-26T07:20:33.298Z] Node Version:  v10.17.0
+[debug] [2020-03-26T07:20:33.303Z] Time:          Thu Mar 26 2020 15:20:33 GMT+0800 (Singapore Standard Time)
+[debug] [2020-03-26T07:20:33.303Z] ----------------------------------------------------------------------
+[debug] [2020-03-26T07:20:33.303Z] 
+[debug] [2020-03-26T07:20:33.310Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2020-03-26T07:20:33.311Z] > authorizing via signed-in user
+[debug] [2020-03-26T07:20:33.311Z] [iam] checking project antler-vc for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2020-03-26T07:20:33.312Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/antler-vc:testIamPermissions  
+
+[debug] [2020-03-26T07:20:34.561Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Deploying to 'antler-vc'...
+[info] 
+[info] i  deploying functions
+[info] Running command: npm --prefix "$RESOURCE_DIR" run fetchConfig
+[info] Running command: npm --prefix "$RESOURCE_DIR" run lint
+[info] Running command: npm --prefix "$RESOURCE_DIR" run build
+[info] ✔  functions: Finished running predeploy script.
+[debug] [2020-03-26T07:20:44.310Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "fetchConfig": "ts-node fetchConfig.ts",
+    "lint": "tslint --project tsconfig.json",
+    "build": "tsc",
+    "serve": "npm run build && firebase serve --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "echo 'n\n' | firebase deploy --token \"$FIREBASE_TOKEN\" --only functions --interactive",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "10"
+  },
+  "main": "lib/src/index.js",
+  "dependencies": {
+    "@types/algoliasearch": "^3.34.5",
+    "@types/json2csv": "^4.5.0",
+    "@types/lodash": "^4.14.149",
+    "algoliasearch": "^3.35.1",
+    "firebase-admin": "^8.9.2",
+    "firebase-functions": "^3.3.0",
+    "json2csv": "^4.5.4",
+    "lodash": "^4.17.15"
+  },
+  "devDependencies": {
+    "husky": "^3.0.9",
+    "ts-node": "^8.6.2",
+    "tslint": "^6.1.0",
+    "typescript": "^3.2.2"
+  },
+  "private": true
+}
+[info] i  functions: ensuring necessary APIs are enabled...
+[debug] [2020-03-26T07:20:44.311Z] >>> HTTP REQUEST GET https://serviceusage.googleapis.com/v1/projects/antler-vc/services/cloudfunctions.googleapis.com  
+ 
+[debug] [2020-03-26T07:20:44.312Z] >>> HTTP REQUEST GET https://serviceusage.googleapis.com/v1/projects/antler-vc/services/runtimeconfig.googleapis.com  
+ 
+[debug] [2020-03-26T07:20:45.783Z] <<< HTTP RESPONSE 200
+[debug] [2020-03-26T07:20:45.841Z] <<< HTTP RESPONSE 200
+[info] ✔  functions: all necessary APIs are enabled
+[debug] [2020-03-26T07:20:45.842Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/antler-vc/adminSdkConfig  
+ 
+[debug] [2020-03-26T07:20:46.783Z] <<< HTTP RESPONSE 200
+[info] i  functions: preparing functions directory for uploading...
+[debug] [2020-03-26T07:20:46.785Z] >>> HTTP REQUEST GET https://runtimeconfig.googleapis.com/v1beta1/projects/antler-vc/configs  
+ 
+[debug] [2020-03-26T07:22:38.064Z] ----------------------------------------------------------------------
+[debug] [2020-03-26T07:22:38.065Z] Command:       /usr/local/bin/firebase /Users/shams/.cache/firebase/tools/lib/node_modules/firebase-tools/lib/bin/firebase deploy --token  --project  --only functions --interactive
+[debug] [2020-03-26T07:22:38.065Z] CLI Version:   7.10.0
+[debug] [2020-03-26T07:22:38.065Z] Platform:      darwin
+[debug] [2020-03-26T07:22:38.065Z] Node Version:  v10.17.0
+[debug] [2020-03-26T07:22:38.066Z] Time:          Thu Mar 26 2020 15:22:38 GMT+0800 (Singapore Standard Time)
+[debug] [2020-03-26T07:22:38.066Z] ----------------------------------------------------------------------
+[debug] [2020-03-26T07:22:38.066Z] 
+[debug] [2020-03-26T07:22:38.074Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2020-03-26T07:22:38.075Z] > authorizing via signed-in user
+[debug] [2020-03-26T07:22:38.075Z] [iam] checking project antler-vc for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2020-03-26T07:22:38.076Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/antler-vc:testIamPermissions  
+
+[debug] [2020-03-26T07:22:39.204Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Deploying to 'antler-vc'...
+[info] 
+[info] i  deploying functions
+[info] Running command: npm --prefix "$RESOURCE_DIR" run fetchConfig
+[info] Running command: npm --prefix "$RESOURCE_DIR" run lint
+[info] Running command: npm --prefix "$RESOURCE_DIR" run build

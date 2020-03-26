@@ -59,7 +59,8 @@ export default function ImportCSV(props: any) {
   const [open, setOpen] = useState(false);
   const [csvKeys, setCsvKeys] = useState<string[]>([]);
   const [keyPairs, setKeyPairs] = useState<
-    { csvKey: string; columnKey: string }[]
+    any
+    //   { csvKey: string; columnKey: string }[]
   >([]);
   const [csvKey, setCsvKey] = useState();
   const [columnKey, setColumnKey] = useState();
@@ -89,8 +90,8 @@ export default function ImportCSV(props: any) {
     setOpen(false);
     setKeyPairs([]);
     setCsvKeys([]);
-    setCsvKey(null);
-    setColumnKey(null);
+    setCsvKey(undefined);
+    setColumnKey(undefined);
   }
   function handleImport() {
     csvData.forEach((row: any[]) => {
@@ -200,8 +201,8 @@ export default function ImportCSV(props: any) {
                   onClick={() => {
                     if (csvKey && columnKey) {
                       setKeyPairs([...keyPairs, { csvKey, columnKey }]);
-                      setColumnKey(null);
-                      setCsvKey(null);
+                      setColumnKey(undefined);
+                      setCsvKey(undefined);
                     }
                   }}
                 >
