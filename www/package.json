@@ -61,6 +61,9 @@
     "eject": "react-scripts eject",
     "deploy": "firebase deploy --project \"$PROJECT_ID\" --debug --token \"$FIREBASE_TOKEN\" --only hosting"
   },
+  "engines": {
+    "node": "10"
+  },
   "eslintConfig": {
     "extends": "react-app"
   },
