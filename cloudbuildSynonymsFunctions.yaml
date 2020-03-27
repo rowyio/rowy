@@ -25,5 +25,5 @@ steps:
     entrypoint: yarn
     args:
       - "deploy"
-      - "functions:exportTable"
+      - "functions:FT_synonyms"
     dir: "cloud_functions/functions"

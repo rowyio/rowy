@@ -7,7 +7,7 @@
     "serve": "npm run build && firebase serve --only functions",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
-    "deploy": "echo 'n\n' | firebase deploy --token \"$FIREBASE_TOKEN\" --project antler-vc --only functions --interactive",
+    "deploy": "firebase deploy --token \"$FIREBASE_TOKEN\" --project antler-vc --only",
     "logs": "firebase functions:log"
   },
   "engines": {
