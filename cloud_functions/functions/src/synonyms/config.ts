@@ -112,6 +112,18 @@ const config = [
             }
           ),
       },
+      {
+        listenerField: "cohort",
+        synonymField: "portfolioAlgoliaKey",
+        transformer: (cohort: string) =>
+          client.generateSecuredApiKey(
+            env.algolia.search, // Make sure to use a search key
+            {
+              filters: `cohort:${cohort} OR cohort:Global`,
+              restrictIndices: ["portfolio"],
+            }
+          ),
+      },
     ],
   },
   {
