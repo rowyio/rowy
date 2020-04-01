@@ -37,7 +37,7 @@ export default function MultiSelect({
           onBlur: () => form.setFieldTouched(field.name),
         }}
         searchable
-        freeText
+        freeText={false}
       />
 
       {Array.isArray(field.value) && (

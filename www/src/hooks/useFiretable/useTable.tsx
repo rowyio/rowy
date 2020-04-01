@@ -179,7 +179,7 @@ const useTable = (initialOverrides: any) => {
       const orderBy = perviousConfigs[encodeURIComponent(path)].orderBy
         ? perviousConfigs[encodeURIComponent(path)].orderBy
         : null;
-      tableDispatch({ filters, orderBy });
+      // tableDispatch({ filters, orderBy });
     }
 
     if (
