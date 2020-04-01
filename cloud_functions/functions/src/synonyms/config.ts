@@ -103,7 +103,32 @@ const config = [
       {
         listenerField: "cohort",
         synonymField: "algoliaKey",
-        transformer: cohort2algoliaKey,
+        transformer: (cohort: string) =>
+          client.generateSecuredApiKey(
+            env.algolia.search, // Make sure to use a search key
+            {
+              filters: `cohort:${cohort} OR cohort:Global`,
+              restrictIndices: [
+                "teams",
+                "founders",
+                "hubResources",
+                "advisors",
+                "partnerships",
+              ],
+            }
+          ),
+      },
+      {
+        listenerField: "cohort",
+        synonymField: "demoDayAlgoliaKey",
+        transformer: (cohort: string) =>
+          client.generateSecuredApiKey(
+            env.algolia.search, // Make sure to use a search key
+            {
+              filters: `cohort:${cohort} AND showOnDemoDayWebsite:true`,
+              restrictIndices: ["portfolio"],
+            }
+          ),
       },
     ],
   },

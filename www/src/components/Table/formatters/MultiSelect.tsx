@@ -116,7 +116,7 @@ export default function MultiSelect({
         onClick,
       }}
       searchable
-      freeText
+      freeText={false}
       className={clsx(classes.fullHeight, classes.root)}
       multiple={!isSingle}
     />
