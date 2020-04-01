@@ -108,7 +108,13 @@ const config = [
             env.algolia.search, // Make sure to use a search key
             {
               filters: `cohort:${cohort} OR cohort:Global`,
-              restrictIndices: ["teams", "founders", "hubResources"],
+              restrictIndices: [
+                "teams",
+                "founders",
+                "hubResources",
+                "advisors",
+                "partnerships",
+              ],
             }
           ),
       },
