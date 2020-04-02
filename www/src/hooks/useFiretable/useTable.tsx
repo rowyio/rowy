@@ -183,6 +183,7 @@ const useTable = (initialOverrides: any) => {
     }
 
     if (
+      prevPath !== path ||
       !equals(prevFilters, filters) ||
       prevLimit !== limit ||
       prevOrderBy !== orderBy
