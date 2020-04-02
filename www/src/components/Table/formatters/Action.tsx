@@ -65,9 +65,9 @@ export default function Action({
       callableName,
       data,
       response => {
-        const { message, cellValue } = response.data;
+        const { message, cellValue, success } = response.data;
         setIsRunning(false);
-        snack.open({ message, severity: "success" });
+        snack.open({ message, severity: success ? "success" : "error" });
         if (cellValue) onSubmit(cellValue);
       },
       error => {
