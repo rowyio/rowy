@@ -12,6 +12,7 @@ import {
 } from "@material-ui/core";
 import PlayIcon from "@material-ui/icons/PlayArrow";
 import RefreshIcon from "@material-ui/icons/Refresh";
+import UndoIcon from "@material-ui/icons/Undo";
 
 import { SnackContext } from "contexts/snackContext";
 import { cloudFunction } from "firebase/callables";
@@ -41,23 +42,32 @@ export default function Action({
 
   const { createdAt, updatedAt, id, ref, ...docData } = row;
   const { callableName } = column as any;
-
+  const action = !value
+    ? "run"
+    : value.undo
+    ? "undo"
+    : value.redo
+    ? "redo"
+    : "";
   const [isRunning, setIsRunning] = useState(false);
   const disabled = column.editable === false;
   const snack = useContext(SnackContext);
   const handleRun = () => {
     setIsRunning(true);
+    const data = {
+      ref: { path: ref.path, id: ref.id },
+      row: sanitiseRowData(Object.assign({}, docData)),
+      column,
+      action,
+    };
+    console.log(data);
     cloudFunction(
       callableName,
-      {
-        ref: { path: ref.path, id: ref.id },
-        row: sanitiseRowData(Object.assign({}, docData)),
-        column,
-      },
+      data,
       response => {
-        const { message, cellValue } = response.data;
+        const { message, cellValue, success } = response.data;
         setIsRunning(false);
-        snack.open({ message, severity: "success" });
+        snack.open({ message, severity: success ? "success" : "error" });
         if (cellValue) onSubmit(cellValue);
       },
       error => {
@@ -74,12 +84,18 @@ export default function Action({
       color="secondary"
       className={classes.fab}
       onClick={handleRun}
-      disabled={isRunning || !!(hasRan && !value.redo) || disabled}
+      disabled={
+        isRunning || !!(hasRan && !value.redo && !value.undo) || disabled
+      }
     >
       {isRunning ? (
         <CircularProgress color="secondary" size={16} thickness={5.6} />
       ) : hasRan ? (
-        <RefreshIcon />
+        value.undo ? (
+          <UndoIcon />
+        ) : (
+          <RefreshIcon />
+        )
       ) : (
         <PlayIcon />
       )}
