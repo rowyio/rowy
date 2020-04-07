@@ -130,6 +130,18 @@ const config = [
             }
           ),
       },
+      {
+        listenerField: "location",
+        synonymField: "demoDayAntlerBiosAlgoliaKey",
+        transformer: (location: string) =>
+          client.generateSecuredApiKey(
+            env.algolia.search, // Make sure to use a search key
+            {
+              filters: `location:${location}`,
+              restrictIndices: ["antlerBios"],
+            }
+          ),
+      },
     ],
   },
   {
