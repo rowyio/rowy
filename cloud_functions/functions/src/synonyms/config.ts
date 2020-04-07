@@ -137,7 +137,7 @@ const config = [
           client.generateSecuredApiKey(
             env.algolia.search, // Make sure to use a search key
             {
-              filters: `location:${location}`,
+              filters: `location:"${location}"`,
               restrictIndices: ["antlerBios"],
             }
           ),
