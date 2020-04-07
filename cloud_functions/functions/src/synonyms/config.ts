@@ -192,9 +192,23 @@ const config = [
       },
     ],
   },
+  {
+    name: "profiles",
+    groups: [
+      {
+        listenerField: "email",
+        synonymField: "isInternal",
+        transformer: email => email.includes("@antler.co"),
+      },
+      {
+        listenerField: "cohort",
+        synonymField: "region",
+        transformer: cohort2region,
+      },
+    ],
+  },
   ...cohort2regionCollections([
     "hubResources",
-    "profiles",
     "sprintSubmissions",
     "trackoutApplications",
     "portfolioEnquiries",
