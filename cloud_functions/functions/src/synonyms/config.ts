@@ -182,6 +182,11 @@ const config = [
         synonymField: "location",
         transformer: cohort2location,
       },
+      {
+        listenerField: "id",
+        synonymField: "onePager",
+        transformer: id => `https://firepage.antler.co/portfolio/${id}`,
+      },
     ],
   },
   {
