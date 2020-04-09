@@ -150,17 +150,18 @@ export default function TableHeader({
           <ImportCSV />
         </Grid>
       )}
-
-      <Grid item>
-        <ExportCSV
-          columns={columns.map((column: any) => {
-            const { key, name, config, type } = column;
-            return { key, name, config, type };
-          })}
-          collection={collection}
-          filters={filters}
-        />
-      </Grid>
+      {userClaims && !userClaims.roles?.includes("READONLY") && (
+        <Grid item>
+          <ExportCSV
+            columns={columns.map((column: any) => {
+              const { key, name, config, type } = column;
+              return { key, name, config, type };
+            })}
+            collection={collection}
+            filters={filters}
+          />
+        </Grid>
+      )}
     </Grid>
   );
 }
