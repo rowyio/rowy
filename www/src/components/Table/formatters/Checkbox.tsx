@@ -7,6 +7,7 @@ import {
   FormControlLabel,
   Switch,
 } from "@material-ui/core";
+import { green } from "@material-ui/core/colors";
 import Confirmation from "components/Confirmation";
 
 const useStyles = makeStyles(theme =>
@@ -20,6 +21,13 @@ const useStyles = makeStyles(theme =>
       width: "calc(100% - 58px)",
       overflowX: "hidden",
     },
+
+    switchBase: {
+      "&$switchChecked": { color: green["A700"] },
+      "&$switchChecked + $switchTrack": { backgroundColor: green["A700"] },
+    },
+    switchChecked: {},
+    switchTrack: {},
   })
 );
 
@@ -41,7 +49,11 @@ export default function Checkbox({
       checked={!!value}
       onChange={() => onSubmit(!value)}
       disabled={!column.editable}
-      color="primary"
+      classes={{
+        switchBase: classes.switchBase,
+        checked: classes.switchChecked,
+        track: classes.switchTrack,
+      }}
     />
   );
 
