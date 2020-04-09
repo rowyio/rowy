@@ -18,6 +18,9 @@ const useStyles = makeStyles(theme =>
       right: theme.spacing(1.5),
       left: theme.spacing(1.5),
 
+      display: "flex",
+      alignItems: "center",
+
       "& .rendered-html": {
         maxHeight: "100%",
         whiteSpace: "normal",
