@@ -15,7 +15,7 @@ declare module "@material-ui/core/styles/transitions" {
 const Theme = createMuiTheme({
   palette: {
     primary: { main: "#e22729" },
-    secondary: { main: "#000" },
+    secondary: { main: "#282829" },
     text: { secondary: "rgba(0, 0, 0, 0.6)" },
   },
   typography: {
