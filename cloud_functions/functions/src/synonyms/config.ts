@@ -130,6 +130,18 @@ const config = [
             }
           ),
       },
+      {
+        listenerField: "location",
+        synonymField: "demoDayAntlerBiosAlgoliaKey",
+        transformer: (location: string) =>
+          client.generateSecuredApiKey(
+            env.algolia.search, // Make sure to use a search key
+            {
+              filters: `location:"${location}"`,
+              restrictIndices: ["antlerBios"],
+            }
+          ),
+      },
     ],
   },
   {
@@ -170,6 +182,11 @@ const config = [
         synonymField: "location",
         transformer: cohort2location,
       },
+      {
+        listenerField: "id",
+        synonymField: "onePager",
+        transformer: id => `https://firepage.antler.co/portfolio/${id}`,
+      },
     ],
   },
   {
@@ -192,9 +209,23 @@ const config = [
       },
     ],
   },
+  {
+    name: "profiles",
+    groups: [
+      {
+        listenerField: "email",
+        synonymField: "isInternal",
+        transformer: email => email.includes("@antler.co"),
+      },
+      {
+        listenerField: "cohort",
+        synonymField: "region",
+        transformer: cohort2region,
+      },
+    ],
+  },
   ...cohort2regionCollections([
     "hubResources",
-    "profiles",
     "sprintSubmissions",
     "trackoutApplications",
     "portfolioEnquiries",

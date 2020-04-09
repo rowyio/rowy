@@ -113,6 +113,10 @@ const getInitialValues = (fields: Fields): Values =>
         value = 0;
         break;
 
+      case FieldType.json:
+        value = {};
+        break;
+
       case FieldType.shortText:
       case FieldType.longText:
       case FieldType.email:
