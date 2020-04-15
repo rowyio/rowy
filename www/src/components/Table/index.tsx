@@ -63,7 +63,6 @@ export default function Table({ collection, filters }: ITableProps) {
 
   useEffect(() => {
     if (tableActions && tableState && tableState.tablePath !== collection) {
-      console.log("setting table");
       tableActions.table.set(collection, filters);
       if (sideDrawerRef?.current) sideDrawerRef.current.setCell!(null);
     }

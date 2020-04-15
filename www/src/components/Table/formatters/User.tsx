@@ -15,7 +15,6 @@ export default function FiretableUser({ column, value }: CustomCellProps) {
   if (!value || !value.displayName || !value.timestamp) return <div />;
 
   const updatedAt = dateFns.format(value.timestamp.toDate(), "hh:mma ddMMM");
-  console.log(updatedAt, value.timestamp);
   return (
     <Tooltip title={updatedAt}>
       <Chip

@@ -56,7 +56,6 @@ const tableInitialState = {
 const useTable = (initialOverrides: any) => {
   const snack = useContext(SnackContext);
   const [perviousConfigs, setPerviousConfigs] = useTableFilterHistory();
-  console.log({ perviousConfigs });
   const [tableState, tableDispatch] = useReducer(tableReducer, {
     ...tableInitialState,
     ...initialOverrides,
@@ -258,7 +257,6 @@ const useTable = (initialOverrides: any) => {
    */
   const addRow = async (data?: any) => {
     const valuesFromFilter = tableState.filters.reduce(filterReducer, {});
-    console.log(valuesFromFilter);
     const { rows, orderBy, path } = tableState;
 
     const docData = {
@@ -267,14 +265,12 @@ const useTable = (initialOverrides: any) => {
       updatedAt: serverTimestamp(),
       ...data,
     };
-    console.log(docData);
     try {
       if (rows.length === 0) {
         await db.collection(path).add(docData);
       } else {
         const firstId = rows[0].id;
         const newId = generateSmallerId(firstId);
-        console.log(newId);
         await db
           .collection(path)
           .doc(newId)
