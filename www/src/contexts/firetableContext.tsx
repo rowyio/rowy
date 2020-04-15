@@ -57,6 +57,24 @@ const firetableContext = React.createContext<Partial<FiretableContextProps>>(
 );
 export default firetableContext;
 
+export const firetableUser = currentUser => {
+  const {
+    displayName,
+    email,
+    uid,
+    emailVerified,
+    isAnonymous,
+    photoURL,
+  } = currentUser;
+  return {
+    displayName,
+    email,
+    uid,
+    emailVerified,
+    isAnonymous,
+    photoURL,
+  };
+};
 export const useFiretableContext = () => useContext(firetableContext);
 
 export const FiretableContextProvider: React.FC = ({ children }) => {
@@ -104,8 +122,10 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
     value: any
   ) => {
     if (value === null || value === undefined) return;
+
+    const ftUser = firetableUser(currentUser);
     const _ft_updatedAt = new Date();
-    const _ft_updatedBy = currentUser?.uid ?? "";
+    const _ft_updatedBy = ftUser;
 
     ref
       .update({
