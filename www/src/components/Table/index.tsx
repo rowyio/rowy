@@ -168,7 +168,7 @@ export default function Table({ collection, filters }: ITableProps) {
               if (action === "CELL_UPDATE")
                 updateCell!(rows[event.toRow].ref, cellKey as string, updated);
             }}
-            rowHeight={rowHeight}
+            rowHeight={rowHeight ?? 43}
             headerRowHeight={44}
             // TODO: Investigate why setting a numeric value causes
             // LOADING to pop up on screen when scrolling horizontally
