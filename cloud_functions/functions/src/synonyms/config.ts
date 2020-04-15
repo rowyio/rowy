@@ -187,6 +187,11 @@ const config = [
         synonymField: "onePager",
         transformer: id => `https://firepage.antler.co/portfolio/${id}`,
       },
+      {
+        listenerField: "coach",
+        synonymField: "coachID",
+        transformer: tableConnect2ids,
+      },
     ],
   },
   {
