@@ -67,6 +67,7 @@ export const firetableUser = currentUser => {
     photoURL,
   } = currentUser;
   return {
+    timestamp: new Date(),
     displayName,
     email,
     uid,
