@@ -12,11 +12,7 @@ import useSettings from "hooks/useSettings";
 import { useAppContext } from "./appContext";
 import { useSnackContext } from "./snackContext";
 import { SideDrawerRef } from "components/SideDrawer";
-
-type SelectedColumnHeader = {
-  column: Column<any> & { [key: string]: any };
-  anchorEl: PopoverProps["anchorEl"];
-};
+import { ColumnMenuRef } from "components/Table/ColumnMenu";
 
 export type Table = {
   collection: string;
@@ -40,16 +36,12 @@ interface FiretableContextProps {
   createTable: Function;
   userClaims: any;
 
-  // TODO: Investigate if this can be moved out of this context
-  selectedColumnHeader: SelectedColumnHeader | null;
-  setSelectedColumnHeader: React.Dispatch<
-    React.SetStateAction<SelectedColumnHeader | null>
-  >;
-
   // A ref to the data grid. Contains data grid functions
   dataGridRef: React.RefObject<DataGridHandle>;
   // A ref to the side drawer state. Prevents unnecessary re-renders
   sideDrawerRef: React.MutableRefObject<SideDrawerRef | undefined>;
+  // A ref to the column menu. Prevents unnecessary re-renders
+  columnMenuRef: React.MutableRefObject<ColumnMenuRef | undefined>;
 }
 
 const firetableContext = React.createContext<Partial<FiretableContextProps>>(
@@ -67,10 +59,6 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
   const [settings, createTable] = useSettings();
   const [userRoles, setUserRoles] = useState<null | string[]>();
   const [userClaims, setUserClaims] = useState<any>();
-  const [
-    selectedColumnHeader,
-    setSelectedColumnHeader,
-  ] = useState<SelectedColumnHeader | null>(null);
 
   const { currentUser } = useAppContext();
   useEffect(() => {
@@ -135,6 +123,7 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
   // A ref to the data grid. Contains data grid functions
   const dataGridRef = useRef<DataGridHandle>(null);
   const sideDrawerRef = useRef<SideDrawerRef>();
+  const columnMenuRef = useRef<ColumnMenuRef>();
 
   return (
     <firetableContext.Provider
@@ -146,10 +135,9 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
         tables,
         sections,
         userClaims,
-        selectedColumnHeader,
-        setSelectedColumnHeader,
         dataGridRef,
         sideDrawerRef,
+        columnMenuRef,
       }}
     >
       {children}

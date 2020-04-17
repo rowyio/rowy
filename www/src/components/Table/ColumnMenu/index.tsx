@@ -1,9 +1,6 @@
 import React, { useState } from "react";
 
 import { createStyles, makeStyles, Menu } from "@material-ui/core";
-
-import MenuContents from "./MenuContents";
-
 import LockOpenIcon from "@material-ui/icons/LockOpen";
 import LockIcon from "@material-ui/icons/Lock";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
@@ -18,12 +15,17 @@ import ReorderIcon from "@material-ui/icons/Reorder";
 import ColumnPlusBeforeIcon from "assets/icons/ColumnPlusBefore";
 import ColumnPlusAfterIcon from "assets/icons/ColumnPlusAfter";
 import ColumnRemoveIcon from "assets/icons/ColumnRemove";
+
+import MenuContents from "./MenuContents";
 import NameChange from "./NameChange";
 import NewColumn from "./NewColumn";
 import TypeChange from "./TypeChange";
+
 import { useFiretableContext } from "contexts/firetableContext";
 import { FIELDS } from "constants/fields";
 import _find from "lodash/find";
+import { Column } from "react-data-grid";
+import { PopoverProps } from "@material-ui/core";
 
 const INITIAL_MODAL = { type: "", data: {} };
 
@@ -32,6 +34,18 @@ enum ModalStates {
   typeChange = "TYPE_CHANGE",
   new = "NEW_COLUMN",
 }
+
+type SelectedColumnHeader = {
+  column: Column<any> & { [key: string]: any };
+  anchorEl: PopoverProps["anchorEl"];
+};
+export type ColumnMenuRef = {
+  selectedColumnHeader: SelectedColumnHeader | null;
+  setSelectedColumnHeader: React.Dispatch<
+    React.SetStateAction<SelectedColumnHeader | null>
+  >;
+};
+
 const useStyles = makeStyles(theme =>
   createStyles({
     paper: {
@@ -44,12 +58,12 @@ const useStyles = makeStyles(theme =>
 export default function ColumnMenu() {
   const classes = useStyles();
   const [modal, setModal] = useState(INITIAL_MODAL);
-  const {
-    tableState,
-    tableActions,
-    selectedColumnHeader,
-    setSelectedColumnHeader,
-  } = useFiretableContext();
+  const { tableState, tableActions, columnMenuRef } = useFiretableContext();
+
+  const [selectedColumnHeader, setSelectedColumnHeader] = useState();
+  if (columnMenuRef)
+    columnMenuRef.current = { selectedColumnHeader, setSelectedColumnHeader };
+
   if (!tableState || !tableActions) return null;
   const { orderBy } = tableState;
 

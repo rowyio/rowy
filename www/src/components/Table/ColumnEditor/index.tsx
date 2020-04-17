@@ -65,13 +65,14 @@ const useStyles = makeStyles(theme =>
   })
 );
 
+// TODO: REMOVE THIS OLD COMPONENT
 export default function ColumnEditor() {
   const {
     tableState,
     tableActions,
     selectedColumnHeader,
     setSelectedColumnHeader,
-  } = useFiretableContext();
+  } = useFiretableContext() as any;
   const actions = tableActions!.column;
   const { column, anchorEl } = selectedColumnHeader ?? {};
 
