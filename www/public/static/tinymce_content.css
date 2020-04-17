@@ -18,6 +18,7 @@ html {
 
 body {
   margin: 0 auto;
+  max-width: 33em;
   max-width: 60ch;
 
   font-size: 13.8px;
@@ -34,6 +35,8 @@ h5,
 h6 {
   font-family: "Europa", "Open Sans", sans-serif;
   margin: 0;
+  line-height: 1.2;
+  font-weight: bold;
 }
 p {
   margin: 0;
