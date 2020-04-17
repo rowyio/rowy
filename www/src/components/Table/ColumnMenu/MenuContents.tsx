@@ -51,10 +51,8 @@ const useStyles = makeStyles(theme =>
     menuItemError: {
       color: theme.palette.error.main,
       "&:hover": {
-        backgroundColor: fade(
-          theme.palette.error.main,
-          theme.palette.action.hoverOpacity
-        ),
+        backgroundColor: theme.palette.error.main,
+        color: theme.palette.error.contrastText,
       },
     },
   })
@@ -73,7 +71,6 @@ export interface IMenuContentsProps {
   }[];
 }
 
-// TODO: implement active states and actions
 export default function MenuContents({ menuItems }: IMenuContentsProps) {
   const classes = useStyles();
 

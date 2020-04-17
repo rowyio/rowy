@@ -82,10 +82,7 @@ export default function ColumnMenu() {
   const menuItems = [
     {
       type: "subheader",
-      label:
-        column.name === column?.key
-          ? column.name
-          : (`${column.name}(${column?.key as string})` as string),
+      label: column.name,
     },
     {
       label: "Lock",
