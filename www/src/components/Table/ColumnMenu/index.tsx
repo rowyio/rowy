@@ -132,7 +132,9 @@ export default function ColumnMenu() {
       activeLabel: "Sorted: Decreasing",
       icon: <ArrowDownwardIcon />,
       onClick: () => {
-        tableActions.table.orderBy([{ key: column.key, direction: "desc" }]);
+        tableActions.table.orderBy(
+          isSorted && !isAsc ? [] : [{ key: column.key, direction: "desc" }]
+        );
         handleClose();
       },
       active: isSorted && !isAsc,
@@ -142,7 +144,9 @@ export default function ColumnMenu() {
       activeLabel: "Sorted: Increasing",
       icon: <ArrowUpwardIcon />,
       onClick: () => {
-        tableActions.table.orderBy([{ key: column.key, direction: "asc" }]);
+        tableActions.table.orderBy(
+          isSorted && isAsc ? [] : [{ key: column.key, direction: "asc" }]
+        );
         handleClose();
       },
       active: isSorted && isAsc,
