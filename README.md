@@ -5,13 +5,15 @@ Firetable is a spreadsheet-like UI for Firestore.
 No more building admin portals to let business users to access data from Google
 Cloud.
 
+![Commit](https://img.shields.io/github/last-commit/AntlerVC/firetable?color=%23ed4747)
+
 ### Firetable UI
 
 Supports fields such as images, files, single/multi select, in addition to
 standard fields. Functions such as row resizing, data import/export are
 supported. More coming soon, for comprehensive list see ROADMAP.md.
 
-![Firetable screenshot](https://firetable.io/static/demo-screenshot-0732a04a6a01316f4c423b2055198dec.png)
+![Firetable screenshot](https://firetable.io/demo-screenshot.png)
 
 ## Setup instructions
 
