@@ -17,7 +17,6 @@ import Loading from "./components/Loading";
 
 import { SnackProvider } from "./util/SnackProvider";
 import { AppProvider } from "./contexts/appContext";
-import GlobalStyles from "./util/GlobalStyles";
 import { FiretableContextProvider } from "./contexts/firetableContext";
 import routes from "constants/routes";
 
@@ -38,7 +37,6 @@ const App: React.FC = () => {
   return (
     <ThemeProvider theme={Theme}>
       <CssBaseline />
-      <GlobalStyles />
       <ErrorBoundary>
         <AppProvider>
           <SnackProvider>

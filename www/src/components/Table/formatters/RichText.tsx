@@ -5,6 +5,7 @@ import { CustomCellProps } from "./withCustomCell";
 import { makeStyles, createStyles, Tooltip, Fade } from "@material-ui/core";
 
 import { useFiretableContext } from "contexts/firetableContext";
+import RenderedHtml from "components/RenderedHtml";
 
 type StylesProps = { width: number; rowHeight: number };
 
@@ -20,11 +21,14 @@ const useStyles = makeStyles(theme =>
 
       display: "flex",
       alignItems: "center",
+    },
 
-      "& .rendered-html": {
-        maxHeight: "100%",
-        whiteSpace: "normal",
-      },
+    renderedHtml: {
+      maxHeight: "100%",
+      whiteSpace: "normal",
+
+      ...theme.typography.body2,
+      fontSize: "0.75rem",
     },
 
     tooltip: ({ width, rowHeight }: StylesProps) => ({
@@ -39,16 +43,11 @@ const useStyles = makeStyles(theme =>
       background: theme.palette.background.paper,
       borderRadius: 0,
       boxShadow: theme.shadows[4],
-
-      ...theme.typography.body2,
-      fontSize: "0.75rem",
       color: theme.palette.text.primary,
-      whiteSpace: "normal",
 
       display: "flex",
       alignItems: "center",
     }),
-    tooltipHtml: { margin: 0 },
   })
 );
 
@@ -61,12 +60,7 @@ export default function RichText({ column, value }: CustomCellProps) {
 
   return (
     <Tooltip
-      title={
-        <div
-          dangerouslySetInnerHTML={{ __html: value }}
-          className={clsx("rendered-html", classes.tooltipHtml)}
-        />
-      }
+      title={<RenderedHtml html={value} className={classes.renderedHtml} />}
       enterDelay={1000}
       interactive
       placement="bottom-start"
@@ -84,10 +78,7 @@ export default function RichText({ column, value }: CustomCellProps) {
       classes={{ tooltip: classes.tooltip }}
     >
       <div className={classes.root}>
-        <div
-          dangerouslySetInnerHTML={{ __html: value }}
-          className={"rendered-html"}
-        />
+        <RenderedHtml html={value} className={classes.renderedHtml} />
       </div>
     </Tooltip>
   );
