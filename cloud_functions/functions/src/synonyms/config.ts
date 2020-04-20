@@ -212,6 +212,15 @@ const config = [
         synonymField: "ddPage",
         transformer: id => `https://firepage.antler.co/DD/${id}`,
       },
+      {
+        listenerField: "icResult",
+        synonymField: "isDecided",
+        transformer: icResult => {
+          if (["Yes", "No"].includes(icResult)) {
+            return true;
+          } else return false;
+        },
+      },
     ],
   },
   {
