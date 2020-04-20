@@ -3,6 +3,7 @@ import * as functions from "firebase-functions";
 import { db } from "../config";
 
 type synonymGroup = {
+  isForced: boolean | undefined;
   listenerField: string;
   synonymField: string;
   transformer: Function;
@@ -11,9 +12,10 @@ type synonymGroup = {
 const synonyms = (docData, groups: synonymGroup[]) =>
   groups.reduce((update: any, currGroup) => {
     if (
-      docData[currGroup.listenerField] &&
-      docData[currGroup.synonymField] !==
-        currGroup.transformer(docData[currGroup.listenerField], docData)
+      currGroup.isForced ||
+      (docData[currGroup.listenerField] &&
+        docData[currGroup.synonymField] !==
+          currGroup.transformer(docData[currGroup.listenerField], docData))
     ) {
       return {
         ...update,
