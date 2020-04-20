@@ -37,7 +37,22 @@ const addSynonymOnUpdate = (groups: synonymGroup[]) => (
   if (!beforeData || !afterData) {
     return false;
   }
-  const updates = synonyms({ ...afterData, id: change.after.id }, groups);
+  const changedGroups = groups.reduce((acc: synonymGroup[], currGroup) => {
+    if (
+      beforeData[currGroup.listenerField] !== afterData[currGroup.listenerField]
+    ) {
+      return [...acc, currGroup];
+    } else {
+      return acc;
+    }
+  }, []);
+  if (changedGroups.length === 0) {
+    return false; // no changes detected
+  }
+  const updates = synonyms(
+    { ...afterData, id: change.after.id },
+    changedGroups
+  );
   if (Object.values(updates).length === 0) {
     return false;
   } else {

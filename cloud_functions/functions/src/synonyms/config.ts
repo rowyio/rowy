@@ -187,6 +187,11 @@ const config = [
         synonymField: "onePager",
         transformer: id => `https://firepage.antler.co/portfolio/${id}`,
       },
+      {
+        listenerField: "coach",
+        synonymField: "coachID",
+        transformer: tableConnect2ids,
+      },
     ],
   },
   {
@@ -206,6 +211,15 @@ const config = [
         listenerField: "id",
         synonymField: "ddPage",
         transformer: id => `https://firepage.antler.co/DD/${id}`,
+      },
+      {
+        listenerField: "icResult",
+        synonymField: "isDecided",
+        transformer: icResult => {
+          if (["Yes", "No"].includes(icResult)) {
+            return true;
+          } else return false;
+        },
       },
     ],
   },
