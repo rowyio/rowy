@@ -213,6 +213,7 @@ const config = [
         transformer: id => `https://firepage.antler.co/DD/${id}`,
       },
       {
+        isForced: true,
         listenerField: "icResult",
         synonymField: "isDecided",
         transformer: icResult => {
