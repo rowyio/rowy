@@ -12,10 +12,9 @@ type synonymGroup = {
 const synonyms = (docData, groups: synonymGroup[]) =>
   groups.reduce((update: any, currGroup) => {
     if (
-      currGroup.isForced ||
-      (docData[currGroup.listenerField] &&
-        docData[currGroup.synonymField] !==
-          currGroup.transformer(docData[currGroup.listenerField], docData))
+      docData[currGroup.listenerField] &&
+      docData[currGroup.synonymField] !==
+        currGroup.transformer(docData[currGroup.listenerField], docData)
     ) {
       return {
         ...update,
@@ -41,6 +40,7 @@ const addSynonymOnUpdate = (groups: synonymGroup[]) => (
   }
   const changedGroups = groups.reduce((acc: synonymGroup[], currGroup) => {
     if (
+      currGroup.isForced ||
       beforeData[currGroup.listenerField] !== afterData[currGroup.listenerField]
     ) {
       return [...acc, currGroup];

@@ -3,7 +3,9 @@
     "source": "teams",
     "onUpdate": true,
     "target": "teams/{{id}}/dueDiligence",
+    "targetType": "subCollection",
     "snapshotField": "team",
+    "isArray": false,
     "fieldsToSync": [
       "cohort",
       "teamName",
@@ -25,6 +27,33 @@
       "innovation",
       "gtm",
       "defensibility"
+    ]
+  },
+  {
+    "source": "founders",
+    "target": "{{team.docPath}}",
+    "targetType": "document",
+    "snapshotField": "teamMembers",
+    "isArray": true,
+
+    "fieldsToSync": [
+      [
+        "firstName",
+        "lastName",
+        "title",
+        "preferredName",
+        "personalBio",
+        "founderType",
+        "founderBio",
+        "cohort",
+        "email",
+        "profilePhoto",
+        "twitter",
+        "employerLogos",
+        "linkedin",
+        "publicProfile",
+        "companies"
+      ]
     ]
   }
 ]

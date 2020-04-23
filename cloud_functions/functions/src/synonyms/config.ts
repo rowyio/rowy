@@ -217,9 +217,8 @@ const config = [
         listenerField: "icResult",
         synonymField: "isDecided",
         transformer: icResult => {
-          if (["Yes", "No"].includes(icResult)) {
-            return true;
-          } else return false;
+          if (icResult && ["Yes", "No"].includes(icResult)) return true;
+          else return false;
         },
       },
     ],
