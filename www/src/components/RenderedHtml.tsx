@@ -32,7 +32,7 @@ const useStyles = makeStyles(theme =>
         "&:hover": { color: theme.palette.primary.dark },
       },
 
-      "& ul": {
+      "& ul, & ol": {
         margin: 0,
         paddingLeft: "1.5em",
       },

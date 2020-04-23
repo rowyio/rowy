@@ -72,6 +72,9 @@ const ConnectTable = lazy(() =>
     "./Fields/ConnectTable" /* webpackChunkName: "SideDrawer-ConnectTable" */
   )
 );
+const SubTable = lazy(() =>
+  import("./Fields/SubTable" /* webpackChunkName: "SideDrawer-SubTable" */)
+);
 const Action = lazy(() =>
   import("./Fields/Action" /* webpackChunkName: "SideDrawer-Action" */)
 );
@@ -299,7 +302,11 @@ export default function Form({ fields, values }: IFormProps) {
                     );
                     break;
 
-                  // case FieldType.subTable:
+                  case FieldType.subTable:
+                    renderedField = (
+                      <Field {...fieldProps} component={SubTable} />
+                    );
+                    break;
 
                   case FieldType.action:
                     renderedField = (

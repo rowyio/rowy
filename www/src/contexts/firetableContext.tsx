@@ -122,7 +122,7 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
     fieldName: string,
     value: any
   ) => {
-    if (value === null || value === undefined) return;
+    if (value === undefined) return;
 
     const ftUser = firetableUser(currentUser);
     const _ft_updatedAt = new Date();
