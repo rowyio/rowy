@@ -29,5 +29,6 @@ steps:
       - "--only"
       - "functions:FT_permissions"
     dir: "cloud_functions/functions"
+
 substitutions:
   _PROJECT_ID: "project-id" # default value
