@@ -25,5 +25,12 @@ steps:
     entrypoint: yarn
     args:
       - "deploy"
-      - "functions:exportTable"
+      - "--project"
+      - "${_PROJECT_ID}"
+      - "--only"
+      - "functions:${_FUNCTIONS_GROUP}"
     dir: "cloud_functions/functions"
+
+substitutions:
+  _PROJECT_ID: "project-id" # default value
+  _FUNCTIONS_GROUP: "exportTable" # default value
