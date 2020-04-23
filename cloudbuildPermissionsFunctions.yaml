@@ -25,7 +25,8 @@ steps:
     entrypoint: yarn
     args:
       - "deploy"
-      - "--project ${_PROJECT_ID}"
+      - "--project"
+      - "${_PROJECT_ID}"
       - "--only"
       - "functions:FT_permissions"
     dir: "cloud_functions/functions"
