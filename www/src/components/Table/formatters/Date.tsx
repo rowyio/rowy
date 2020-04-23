@@ -58,7 +58,7 @@ export default function Date({
 
   const [handleDateChange] = useDebouncedCallback<DatePickerProps["onChange"]>(
     date => {
-      if (!date || isNaN(date.valueOf())) return;
+      if (isNaN(date?.valueOf() ?? 0)) return;
 
       onSubmit(date);
       if (dataGridRef?.current?.selectCell)
@@ -75,6 +75,7 @@ export default function Date({
         onClick={e => e.stopPropagation()}
         format={fieldType === FieldType.date ? DATE_FORMAT : DATE_TIME_FORMAT}
         fullWidth
+        clearable
         keyboardIcon={<Icon />}
         className={clsx("cell-collapse-padding", classes.root)}
         InputProps={{

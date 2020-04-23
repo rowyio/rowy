@@ -4,6 +4,8 @@ import { CustomCellProps } from "./withCustomCell";
 import { Link } from "@material-ui/core";
 
 export default function Url({ value }: CustomCellProps) {
+  if (!value) return null;
+
   return (
     <Link
       href={value}
