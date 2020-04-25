@@ -5,10 +5,10 @@ import { Link } from "@material-ui/core";
 
 export default function Url({ value }: CustomCellProps) {
   if (!value) return null;
-
+  const href = value.includes("http") ? value : `https://${value}`;
   return (
     <Link
-      href={value}
+      href={href}
       target="_blank"
       rel="noopener noreferrer"
       underline="always"
