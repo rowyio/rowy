@@ -16,6 +16,7 @@ import synonymsFnsGenerator from "./synonyms";
 import synonymsConfig from "./synonyms/config";
 
 export { exportTable } from "./export";
+export { triggerCloudBuild } from "./buildTriggers";
 import * as callableFns from "./callable";
 
 export const callable = callableFns;
