@@ -17,6 +17,7 @@ import synonymsConfig from "./synonyms/config";
 
 export { exportTable } from "./export";
 export { triggerCloudBuild } from "./buildTriggers";
+export { scheduledFirestoreBackup, callableFirestoreBackup } from "./backup";
 import * as callableFns from "./callable";
 
 export const callable = callableFns;
