@@ -1,9 +1,9 @@
 {
   "projects": {
-    "default": "antler-vc"
+    "default": "antler-develop"
   },
   "targets": {
-    "antler-vc": {
+    "antler-develop": {
       "hosting": {
         "firetable": [
           "antler-admin"

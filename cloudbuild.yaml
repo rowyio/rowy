@@ -5,10 +5,6 @@ steps:
     dir: "www"
   - name: node:10.15.1
     entrypoint: yarn
-    args: ["build"]
-    dir: "www"
-  - name: node:10.15.1
-    entrypoint: yarn
     args:
       - env
       - "${_PROJECT_ID}"
@@ -16,6 +12,11 @@ steps:
       - "${_ALGOLIA_APP_ID}"
       - "${_ALGOLIA_APP_KEY}"
     dir: "www"
+  - name: node:10.15.1
+    entrypoint: yarn
+    args: ["build"]
+    dir: "www"
+
   - name: node:10.15.1
     entrypoint: yarn
     args:
