@@ -61,7 +61,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "firebase deploy --project \"$PROJECT_ID\" --debug --token \"$FIREBASE_TOKEN\" --only hosting"
+    "env": "node createDotEnv",
+    "deploy": "firebase deploy"
   },
   "engines": {
     "node": "10"

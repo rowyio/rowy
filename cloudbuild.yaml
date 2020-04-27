@@ -28,3 +28,5 @@ steps:
       - --only
       - hosting
     dir: "www"
+substitutions:
+  _PROJECT_ID: "project-id" # default value
