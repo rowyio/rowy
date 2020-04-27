@@ -1,13 +1,4 @@
 steps:
-  - name: gcr.io/cloud-builders/gcloud
-    args:
-      - kms
-      - decrypt
-      - --ciphertext-file=www/.env.enc
-      - --plaintext-file=www/.env
-      - --location=global
-      - --keyring=antler-vc
-      - --key=cloudbuild-env
   - name: node:10.15.1
     entrypoint: yarn
     args: ["install"]
@@ -18,5 +9,22 @@ steps:
     dir: "www"
   - name: node:10.15.1
     entrypoint: yarn
-    args: ["deploy"]
+    args:
+      - env
+      - "${_PROJECT_ID}"
+      - "${_FIREBASE_WEB_API_KEY}"
+      - "${_ALGOLIA_APP_ID}"
+      - "${_ALGOLIA_APP_KEY}"
+    dir: "www"
+  - name: node:10.15.1
+    entrypoint: yarn
+    args:
+      - deploy
+      - --project
+      - "${_PROJECT_ID}"
+      - --debug
+      - --token
+      - "${_FIREBASE_TOKEN}"
+      - --only
+      - hosting
     dir: "www"

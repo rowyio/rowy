@@ -5,7 +5,7 @@ import { hasAnyRole } from "./utils/auth";
 const client = new firestore.v1.FirestoreAdminClient();
 
 // Replace BUCKET_NAME
-const bucket = "gs://antler-backups";
+const bucket = "gs://BUCKET_NAME";
 
 // const restoreFirestoreBackup = (collectionIds: string[] = []) => {
 //   const projectId = process.env.GCP_PROJECT || process.env.GCLOUD_PROJECT;
