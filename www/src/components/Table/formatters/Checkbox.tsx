@@ -10,7 +10,7 @@ import {
 import { green } from "@material-ui/core/colors";
 import Confirmation from "components/Confirmation";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: { paddingLeft: theme.spacing(1.5) },
 
@@ -22,12 +22,12 @@ const useStyles = makeStyles(theme =>
       overflowX: "hidden",
     },
 
-    switchBase: {
-      "&$switchChecked": { color: green["A700"] },
-      "&$switchChecked + $switchTrack": { backgroundColor: green["A700"] },
-    },
-    switchChecked: {},
-    switchTrack: {},
+    // switchBase: {
+    //   "&$switchChecked": { color: green["A700"] },
+    //   "&$switchChecked + $switchTrack": { backgroundColor: green["A700"] },
+    // },
+    // switchChecked: {},
+    // switchTrack: {},
   })
 );
 
@@ -49,11 +49,12 @@ export default function Checkbox({
       checked={!!value}
       onChange={() => onSubmit(!value)}
       disabled={!column.editable}
-      classes={{
-        switchBase: classes.switchBase,
-        checked: classes.switchChecked,
-        track: classes.switchTrack,
-      }}
+      classes={
+        {
+          // checked: classes.switchChecked,
+          // track: classes.switchTrack,
+        }
+      }
     />
   );
 
