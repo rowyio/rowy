@@ -9,7 +9,7 @@ import FormattedChip from "components/FormattedChip";
 import { FieldType } from "constants/fields";
 import { useFiretableContext } from "contexts/firetableContext";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       minWidth: 0,
@@ -63,23 +63,27 @@ export default function MultiSelect({
     ? (([value] as unknown) as string[])
     : value;
   // And support transforming array of strings back to string
-  const handleChange = value => onSubmit(isSingle ? value.join(", ") : value);
+  const handleChange = (value) => onSubmit(isSingle ? value.join(", ") : value);
 
   // Render chips
-  const renderValue = value => (
-    <Grid container spacing={1} wrap="nowrap" className={classes.chipList}>
-      {value?.map(
-        item =>
-          typeof item === "string" && (
-            <Grid item key={item}>
-              <FormattedChip label={item} className={classes.chip} />
-            </Grid>
-          )
-      )}
-    </Grid>
-  );
+  const renderValue = (value) => {
+    //if (Array.isArray(value))
+    return (
+      <Grid container spacing={1} wrap="nowrap" className={classes.chipList}>
+        {value?.map(
+          (item) =>
+            typeof item === "string" && (
+              <Grid item key={item}>
+                <FormattedChip label={item} className={classes.chip} />
+              </Grid>
+            )
+        )}
+      </Grid>
+    );
+    //  else
+  };
 
-  const onClick = e => e.stopPropagation();
+  const onClick = (e) => e.stopPropagation();
   const onClose = () => {
     if (dataGridRef?.current?.selectCell)
       dataGridRef.current.selectCell({ rowIdx, idx: column.idx });

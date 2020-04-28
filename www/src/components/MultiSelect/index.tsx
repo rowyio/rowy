@@ -58,19 +58,24 @@ export default function MultiSelect({
     width: dropdownWidth,
   });
 
-  const sanitisedValue = value.filter(v => v?.length > 0);
+  const sanitisedValue = Array.isArray(value)
+    ? value.filter((v) => v?.length > 0)
+    : [value];
 
   // Transform `option` prop if it’s just strings
   let options =
     typeof optionsProp[0] === "string"
       ? (optionsProp as string[]).map(
-          item => ({ label: item, value: item } as OptionType)
+          (item) => ({ label: item, value: item } as OptionType)
         )
       : (optionsProp as OptionType[]);
   // If `freeText` enabled, show the user’s custom fields
   if (freeText) {
     // `value` prop is an array of all values. It removes labels
-    const formattedValues = sanitisedValue?.map(x => ({ label: x, value: x }));
+    const formattedValues = sanitisedValue?.map((x) => ({
+      label: x,
+      value: x,
+    }));
     options = _unionWith(
       options,
       formattedValues,
@@ -86,7 +91,7 @@ export default function MultiSelect({
       className={clsx(classes.root, className)}
       {...TextFieldProps}
       SelectProps={{
-        renderValue: value => {
+        renderValue: (value) => {
           const selected = value as string[];
           if (selected.length === 1 && typeof selected[0] === "string") {
             const selectedOption = _find(options, { value: selected[0] });
@@ -109,7 +114,7 @@ export default function MultiSelect({
           ...TextFieldProps.SelectProps?.MenuProps,
         },
       }}
-      ref={el => {
+      ref={(el) => {
         if (!el) return;
         const width = el.getBoundingClientRect().width;
         if (dropdownWidth < width) setDropdownWidth(width);
