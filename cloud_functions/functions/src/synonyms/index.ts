@@ -9,27 +9,31 @@ type synonymGroup = {
   transformer: Function;
 };
 
-const synonyms = (docData, groups: synonymGroup[]) =>
-  groups.reduce((update: any, currGroup) => {
+const synonyms = async (docData, groups: synonymGroup[]) => {
+  const updates = await groups.reduce(async (update: any, currGroup) => {
+    const newValue = await currGroup.transformer(
+      docData[currGroup.listenerField],
+      docData
+    );
     if (
       docData[currGroup.listenerField] &&
-      docData[currGroup.synonymField] !==
-        currGroup.transformer(docData[currGroup.listenerField], docData)
+      docData[currGroup.synonymField] !== newValue
     ) {
       return {
         ...update,
-        [currGroup.synonymField]: currGroup.transformer(
-          docData[currGroup.listenerField],
-          docData
-        ),
+        [currGroup.synonymField]: newValue,
       };
     } else return update;
   }, {});
 
+  console.log({ updates });
+  return updates;
+};
+
 /**
  *
  */
-const addSynonymOnUpdate = (groups: synonymGroup[]) => (
+const addSynonymOnUpdate = (groups: synonymGroup[]) => async (
   change: functions.Change<FirebaseFirestore.DocumentSnapshot>
 ) => {
   const beforeData = change.before.data();
@@ -51,7 +55,7 @@ const addSynonymOnUpdate = (groups: synonymGroup[]) => (
   if (changedGroups.length === 0) {
     return false; // no changes detected
   }
-  const updates = synonyms(
+  const updates = await synonyms(
     { ...afterData, id: change.after.id },
     changedGroups
   );
@@ -63,14 +67,14 @@ const addSynonymOnUpdate = (groups: synonymGroup[]) => (
   }
 };
 
-const addSynonymOnCreate = (groups: synonymGroup[]) => (
+const addSynonymOnCreate = (groups: synonymGroup[]) => async (
   snapshot: FirebaseFirestore.DocumentSnapshot
 ) => {
   const docData = snapshot.data();
   if (!docData) {
     return false;
   }
-  const updates = synonyms({ ...docData, id: snapshot.id }, groups);
+  const updates = await synonyms({ ...docData, id: snapshot.id }, groups);
   if (Object.keys(updates).length === 0) {
     return false;
   } else {
@@ -83,7 +87,7 @@ const addSynonymOnCreate = (groups: synonymGroup[]) => (
  *
  * @param collection configuration object
  */
-const synonymsFnsGenerator = collection => ({
+const synonymsFnsGenerator = (collection) => ({
   onCreate: functions.firestore
     .document(`${collection.name}/{docId}`)
     .onCreate(addSynonymOnCreate(collection.groups)),
