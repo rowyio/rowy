@@ -21,6 +21,8 @@ steps:
     args:
       - "target"
       - "${_HOSTING_TARGET}"
+      - --project
+      - "${_PROJECT_ID}"
     dir: "www"
   - name: node:10.15.1
     entrypoint: yarn
