@@ -16,7 +16,12 @@ steps:
     entrypoint: yarn
     args: ["build"]
     dir: "www"
-
+  - name: node:10.15.1
+    entrypoint: yarn
+    args:
+      - "target"
+      - "${_HOSTING_TARGET}"
+    dir: "www"
   - name: node:10.15.1
     entrypoint: yarn
     args:
