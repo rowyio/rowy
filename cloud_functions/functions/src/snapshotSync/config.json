@@ -30,30 +30,29 @@
     ]
   },
   {
+    "fnName": "foundersDoc2myTeam",
     "source": "founders",
     "target": "{{team.docPath}}",
     "targetType": "document",
     "snapshotField": "teamMembers",
     "isArray": true,
-
+    "onUpdate": true,
     "fieldsToSync": [
-      [
-        "firstName",
-        "lastName",
-        "title",
-        "preferredName",
-        "personalBio",
-        "founderType",
-        "founderBio",
-        "cohort",
-        "email",
-        "profilePhoto",
-        "twitter",
-        "employerLogos",
-        "linkedin",
-        "publicProfile",
-        "companies"
-      ]
+      "firstName",
+      "lastName",
+      "title",
+      "preferredName",
+      "personalBio",
+      "founderType",
+      "founderBio",
+      "cohort",
+      "email",
+      "profilePhoto",
+      "twitter",
+      "employerLogos",
+      "linkedin",
+      "publicProfile",
+      "companies"
     ]
   }
 ]

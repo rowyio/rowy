@@ -17,9 +17,9 @@ const docReducer = (docData: FirebaseFirestore.DocumentData) => (
   acc: any,
   curr: string
 ) => {
-  if (docData[curr] !== undefined && docData[curr] !== null)
+  if (docData[curr] !== undefined && docData[curr] !== null) {
     return { ...acc, [curr]: docData[curr] };
-  else return acc;
+  } else return acc;
 };
 
 /**
@@ -54,6 +54,11 @@ const syncDocSnapshot = async (
   newSnapshotData,
   snapshot
 ) => {
+  console.log({
+    targetPath,
+    isArray,
+    snapshotField,
+  });
   const targetRef = db.doc(targetPath);
   const targetSnapshot = await targetRef.get();
   const targetData = targetSnapshot.data();
@@ -66,7 +71,9 @@ const syncDocSnapshot = async (
     const oldSnapshotsArray = targetData[snapshotField];
     const snapshotDocPath = snapshot.ref.path;
     const oldSnapshot = _.find(oldSnapshotsArray, { docPath: snapshotDocPath });
-    const updatedSnapshotsArray = _.filter(oldSnapshotsArray, item => {
+
+    const updatedSnapshotsArray = oldSnapshotsArray.filter(item => {
+      console.log({ snapshotDocPath, item });
       return item.docPath !== snapshotDocPath;
     });
     updatedSnapshotsArray.push({ ...oldSnapshot, snapshot: newSnapshotData });
@@ -95,21 +102,22 @@ const syncDocOnUpdate = (config: {
   isArray: boolean;
 }) => (snapshot: functions.Change<FirebaseFirestore.DocumentSnapshot>) => {
   const { fieldsToSync, target, snapshotField, targetType, isArray } = config;
-  const afterData = fieldsToSync.reduce(
-    docReducer(snapshot.after.data() || {}),
-    {}
-  );
-  const beforeData = fieldsToSync.reduce(
-    docReducer(snapshot.before.data() || {}),
-    {}
-  );
+
+  const afterDocData = snapshot.after.data();
+  const beforeDocData = snapshot.before.data();
+  if (!afterDocData || !beforeDocData) return false;
+  const afterData = fieldsToSync.reduce(docReducer(afterDocData), {});
+  const beforeData = fieldsToSync.reduce(docReducer(beforeDocData), {});
   const hasChanged = !_.isEqual(afterData, beforeData);
+  console.log("nothing important changed");
   if (Object.keys(afterData).length === 0) return false; // returns if theres nothing to sync
 
   const targetPath = target.replace(
     /\{\{(.*?)\}\}/g,
     replacer({ ...snapshot.after.data(), id: snapshot.after.id })
   );
+
+  console.log({ hasChanged, targetType });
   if (hasChanged) {
     switch (targetType) {
       case TargetTypes.subCollection:
