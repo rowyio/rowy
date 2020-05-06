@@ -78,6 +78,7 @@ export default function Date({
         clearable
         keyboardIcon={<Icon />}
         className={clsx("cell-collapse-padding", classes.root)}
+        inputVariant="standard"
         InputProps={{
           disableUnderline: true,
           classes: { root: classes.inputBase, input: classes.input },
