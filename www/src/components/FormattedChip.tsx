@@ -2,6 +2,8 @@ import React from "react";
 import clsx from "clsx";
 import { makeStyles, createStyles, Chip, ChipProps } from "@material-ui/core";
 
+export const VARIANTS = ["yes", "no", "maybe"];
+
 const useStyles = makeStyles(
   createStyles({
     yes: {
@@ -23,11 +25,10 @@ const useStyles = makeStyles(
 export default function FormattedChip(props: ChipProps) {
   const classes = useStyles();
 
-  const variants = ["yes", "no", "maybe"];
   const label =
     typeof props.label === "string" ? props.label.toLowerCase() : "";
 
-  if (variants.includes(label)) {
+  if (VARIANTS.includes(label)) {
     return (
       <Chip {...props} className={clsx(props.className, classes[label])} />
     );

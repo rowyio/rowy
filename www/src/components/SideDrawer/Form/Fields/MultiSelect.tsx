@@ -3,9 +3,7 @@ import { FieldProps } from "formik";
 
 import { useTheme, Grid } from "@material-ui/core";
 
-import MultiSelect_, {
-  IMultiSelectProps as IMultiSelectProps_,
-} from "components/MultiSelect";
+import MultiSelect_, { MultiSelectProps } from "@antlerengineering/multiselect";
 import FormattedChip from "components/FormattedChip";
 
 export default function MultiSelect({
@@ -13,22 +11,24 @@ export default function MultiSelect({
   form,
   editable,
   ...props
-}: FieldProps<string[]> & IMultiSelectProps_) {
+}: FieldProps<string[]> & MultiSelectProps<string> & { editable?: boolean }) {
   const theme = useTheme();
+
   const handleDelete = (index: number) => () => {
     const newValues = [...field.value];
     newValues.splice(index, 1);
     form.setFieldValue(field.name, newValues);
   };
+
   return (
     <>
       <MultiSelect_
         {...props}
+        multiple
         value={field.value}
         onChange={value => form.setFieldValue(field.name, value)}
+        disabled={editable === false}
         TextFieldProps={{
-          disabled: editable === false,
-          fullWidth: true,
           label: "",
           hiddenLabel: true,
           error: !!(form.touched[field.name] && form.errors[field.name]),
