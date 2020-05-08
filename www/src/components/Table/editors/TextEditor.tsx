@@ -79,6 +79,7 @@ class TextEditor extends React.Component<
         defaultValue={value}
         type={inputType}
         fullWidth
+        variant="standard"
         inputProps={{ ref: this.inputRef }}
         className={classes.root}
         InputProps={{

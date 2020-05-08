@@ -4,43 +4,48 @@ import { CustomCellProps } from "./withCustomCell";
 
 import { makeStyles, createStyles, Grid } from "@material-ui/core";
 
-import MultiSelect_ from "components/MultiSelect";
-import FormattedChip from "components/FormattedChip";
+import MultiSelect_ from "@antlerengineering/multiselect";
+import FormattedChip, { VARIANTS } from "components/FormattedChip";
 import { FieldType } from "constants/fields";
 import { useFiretableContext } from "contexts/firetableContext";
 
-const useStyles = makeStyles((theme) =>
+const useStyles = makeStyles(theme =>
   createStyles({
     root: {
-      minWidth: 0,
-
       position: "absolute",
       top: 0,
       right: 0,
       bottom: 0,
       left: 0,
     },
-    fullHeight: {
+
+    inputBase: {
       height: "100%",
       font: "inherit",
-      color: "inherit",
+      color: "inherit !important",
       letterSpacing: "inherit",
     },
 
     select: {
-      padding: theme.spacing(0, 3, 0, 1.5),
+      height: "100%",
       display: "flex",
       alignItems: "center",
-
+      whiteSpace: "pre-line",
+      padding: theme.spacing(0, 4, 0, 1.5),
       "&&": { paddingRight: theme.spacing(4) },
     },
-    icon: { marginRight: theme.spacing(1) },
+    selectSingleLabel: {
+      maxHeight: "100%",
+      overflow: "hidden",
+    },
+    icon: { right: theme.spacing(1) },
 
     chipList: {
       overflowX: "hidden",
       width: "100%",
     },
     chip: { cursor: "inherit" },
+    chipLabel: { whiteSpace: "nowrap" },
   })
 );
 
@@ -58,71 +63,70 @@ export default function MultiSelect({
   // Support SingleSelect field
   const isSingle = (column as any).type === FieldType.singleSelect;
 
-  // If SingleSelect, transform string to array of strings
-  const transformedValue = isSingle
-    ? (([value] as unknown) as string[])
-    : value;
-  // And support transforming array of strings back to string
-  const handleChange = (value) => onSubmit(isSingle ? value.join(", ") : value);
+  // Render chips or basic string
+  const renderValue = isSingle
+    ? () =>
+        typeof value === "string" && VARIANTS.includes(value.toLowerCase()) ? (
+          <FormattedChip label={value} className={classes.chip} />
+        ) : (
+          <span className={classes.selectSingleLabel}>{value}</span>
+        )
+    : () => (
+        <Grid container spacing={1} wrap="nowrap" className={classes.chipList}>
+          {value?.map(
+            item =>
+              typeof item === "string" && (
+                <Grid item key={item}>
+                  <FormattedChip
+                    label={item}
+                    className={classes.chip}
+                    classes={{ label: classes.chipLabel }}
+                  />
+                </Grid>
+              )
+          )}
+        </Grid>
+      );
 
-  // Render chips
-  const renderValue = (value) => {
-    //if (Array.isArray(value))
-    return (
-      <Grid container spacing={1} wrap="nowrap" className={classes.chipList}>
-        {value?.map(
-          (item) =>
-            typeof item === "string" && (
-              <Grid item key={item}>
-                <FormattedChip label={item} className={classes.chip} />
-              </Grid>
-            )
-        )}
-      </Grid>
-    );
-    //  else
-  };
-
-  const onClick = (e) => e.stopPropagation();
-  const onClose = () => {
+  const handleOpen = () => {
     if (dataGridRef?.current?.selectCell)
       dataGridRef.current.selectCell({ rowIdx, idx: column.idx });
   };
 
   return (
     <MultiSelect_
-      value={transformedValue}
-      onChange={handleChange}
-      label={column.name}
-      options={options}
-      TextFieldProps={{
-        disabled: column.editable === false,
-        fullWidth: true,
-        label: "",
-        hiddenLabel: true,
-        variant: "standard" as "filled",
-        InputProps: {
-          disableUnderline: true,
-          classes: { root: classes.fullHeight },
-        },
-        SelectProps: {
-          onClose,
-          classes: {
-            root: clsx(classes.fullHeight, classes.select),
-            icon: classes.icon,
-          },
-          renderValue,
-          MenuProps: {
-            anchorOrigin: { vertical: "bottom", horizontal: "left" },
-            transformOrigin: { vertical: "top", horizontal: "left" },
-          },
-        },
-        onClick,
-      }}
-      searchable
+      value={value === undefined ? (isSingle ? null : []) : value}
+      onChange={onSubmit}
       freeText={false}
-      className={clsx(classes.fullHeight, classes.root)}
-      multiple={!isSingle}
+      multiple={!isSingle as any}
+      label={column.name}
+      labelPlural={column.name}
+      options={options}
+      disabled={column.editable === false}
+      onOpen={handleOpen}
+      TextFieldProps={
+        {
+          label: "",
+          hiddenLabel: true,
+          variant: "standard",
+          className: classes.root,
+          InputProps: {
+            disableUnderline: true,
+            classes: { root: classes.inputBase },
+          },
+          SelectProps: {
+            classes: {
+              root: clsx(classes.root, classes.select),
+              icon: classes.icon,
+            },
+            renderValue,
+            MenuProps: {
+              anchorOrigin: { vertical: "bottom", horizontal: "left" },
+              transformOrigin: { vertical: "top", horizontal: "left" },
+            },
+          },
+        } as const
+      }
     />
   );
 }

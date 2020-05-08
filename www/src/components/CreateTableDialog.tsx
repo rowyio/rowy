@@ -3,7 +3,7 @@ import _camelCase from "lodash/camelCase";
 
 import AddIcon from "@material-ui/icons/Add";
 import useRouter from "../hooks/useRouter";
-import MultiSelect from "../components/MultiSelect";
+import MultiSelect from "@antlerengineering/multiselect";
 import {
   Tooltip,
   Fab,

@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@antlerengineering/multiselect": "^0.3.9",
     "@date-io/date-fns": "1.x",
-    "@material-ui/core": "^4.9.4",
+    "@material-ui/core": "^4.9.13",
     "@material-ui/icons": "^4.9.1",
-    "@material-ui/lab": "^4.0.0-alpha.44",
+    "@material-ui/lab": "^4.0.0-alpha.52",
     "@material-ui/pickers": "^3.2.10",
     "@mdi/js": "^4.9.95",
     "@tinymce/tinymce-react": "^3.4.0",
