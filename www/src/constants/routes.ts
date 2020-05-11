@@ -5,6 +5,8 @@ export enum routes {
 
   table = "/table",
   tableWithId = "/table/:id",
+  grid = "/grid",
+  gridWithId = "/grid/:id",
   editor = "/editor",
 }
 

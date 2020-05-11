@@ -156,7 +156,7 @@ const config = [
         listenerField: "cohort",
         synonymField: "icPage",
         transformer: (cohort, doc) => {
-          if (doc.icType === "IC") {
+          if (doc.icType === "IC" || doc.icType === "Delayed IC") {
             return `https://firepage.antler.co/IC/${cohort}`;
           } else return "";
         },
@@ -217,9 +217,8 @@ const config = [
         listenerField: "icResult",
         synonymField: "isDecided",
         transformer: icResult => {
-          if (["Yes", "No"].includes(icResult)) {
-            return true;
-          } else return false;
+          if (icResult && ["Yes", "No"].includes(icResult)) return true;
+          else return false;
         },
       },
     ],

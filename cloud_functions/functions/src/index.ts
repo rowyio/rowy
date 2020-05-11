@@ -16,6 +16,8 @@ import synonymsFnsGenerator from "./synonyms";
 import synonymsConfig from "./synonyms/config";
 
 export { exportTable } from "./export";
+export { triggerCloudBuild } from "./buildTriggers";
+export { scheduledFirestoreBackup, callableFirestoreBackup } from "./backup";
 import * as callableFns from "./callable";
 
 export const callable = callableFns;
@@ -35,14 +37,20 @@ export const FT_sync = collectionSyncConfig.reduce((acc: any, collection) => {
 }, {});
 export const FT_snapshotSync = snapshotSyncConfig.reduce(
   (acc: any, collection) => {
-    return {
-      ...acc,
-      [`${`${`${collection.source}`
-        .replace(/\//g, "_")
-        .replace(/_{.*?}_/g, "_")}`}2${`${`${collection.target}`
-        .replace(/\//g, "_")
-        .replace(/_{.*?}_/g, "_")}`}`]: snapshotSyncFnsGenerator(collection),
-    };
+    if (collection.fnName) {
+      return {
+        ...acc,
+        [collection.fnName]: snapshotSyncFnsGenerator(collection),
+      };
+    } else
+      return {
+        ...acc,
+        [`${`${`${collection.source}`
+          .replace(/\//g, "_")
+          .replace(/_{.*?}_/g, "_")}`}2${`${`${collection.target}`
+          .replace(/\//g, "_")
+          .replace(/_{.*?}_/g, "_")}`}`]: snapshotSyncFnsGenerator(collection),
+      };
   },
   {}
 );

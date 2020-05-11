@@ -33,6 +33,10 @@ const main = async () => {
     "_FIRETABLE_/_SETTINGS_/_CONFIG_/_COLLECTION_SYNC_",
     "./src/collectionSync/config.json"
   );
+  await docConfig2json(
+    "_FIRETABLE_/_SETTINGS_/_CONFIG_/_SNAPSHOT_SYNC_",
+    "./src/snapshotSync/config.json"
+  );
   return true;
 };
 

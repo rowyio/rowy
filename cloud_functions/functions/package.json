@@ -7,7 +7,7 @@
     "serve": "npm run build && firebase serve --only functions",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
-    "deploy": "firebase deploy --token \"$FIREBASE_TOKEN\" --project antler-vc --only",
+    "deploy": "firebase deploy",
     "logs": "firebase functions:log"
   },
   "engines": {
@@ -15,6 +15,8 @@
   },
   "main": "lib/src/index.js",
   "dependencies": {
+    "@google-cloud/cloudbuild": "^1.5.0",
+    "@google-cloud/firestore": "^3.7.5",
     "@types/algoliasearch": "^3.34.5",
     "@types/json2csv": "^4.5.0",
     "@types/lodash": "^4.14.149",
@@ -27,6 +29,8 @@
   "devDependencies": {
     "firebase-tools": "^7.16.1",
     "husky": "^3.0.9",
+    "prettier": "^2.0.5",
+    "pretty-quick": "^2.0.1",
     "ts-node": "^8.6.2",
     "tslint": "^6.1.0",
     "typescript": "^3.2.2"

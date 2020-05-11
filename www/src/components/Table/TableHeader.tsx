@@ -18,10 +18,11 @@ import ExportCSV from "./ExportCSV";
 import { FireTableFilter } from "hooks/useFiretable";
 import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
 import { useFiretableContext } from "contexts/firetableContext";
+import { FieldType } from "constants/fields";
 
 export const TABLE_HEADER_HEIGHT = 56;
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       width: `calc(100% - ${DRAWER_COLLAPSED_WIDTH}px)`,
@@ -85,7 +86,16 @@ export default function TableHeader({
     >
       <Grid item>
         <Button
-          onClick={() => tableActions?.row.add()}
+          onClick={() => {
+            const initialVal = columns.reduce((acc, currCol) => {
+              if (currCol.type === FieldType.checkbox) {
+                return { ...acc, [currCol.key]: false };
+              } else {
+                return acc;
+              }
+            }, {});
+            tableActions?.row.add(initialVal);
+          }}
           variant="contained"
           color="primary"
           startIcon={<AddIcon />}
@@ -118,7 +128,7 @@ export default function TableHeader({
           variant="filled"
           className={classes.formControl}
           value={rowHeight ?? 43}
-          onChange={event => {
+          onChange={(event) => {
             updateConfig("rowHeight", event.target.value);
           }}
           inputProps={{

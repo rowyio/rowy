@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from "react";
 import useAlgolia from "hooks/useAlgolia";
-import { createStyles, makeStyles } from "@material-ui/core";
 
-import MultiSelect from "components/MultiSelect";
-const useStyles = makeStyles(theme =>
-  createStyles({
-    root: { minWidth: 200 },
-  })
-);
+import MultiSelect from "@antlerengineering/multiselect";
 
 const AlgoliaSelect = (props: any) => {
   const {
@@ -17,11 +11,7 @@ const AlgoliaSelect = (props: any) => {
     labelReducer,
     filters,
   } = props;
-  const [searchState, searchDispatch] = useAlgolia(
-    algoliaIndex,
-    algoliaKey,
-    filters
-  );
+  const [searchState] = useAlgolia(algoliaIndex, algoliaKey, filters);
 
   console.log(filters);
   const [options, setOptions] = useState<any[]>([]);
@@ -40,6 +30,7 @@ const AlgoliaSelect = (props: any) => {
 
   return (
     <MultiSelect
+      multiple
       options={options}
       {...props}
       searchable={options.length > 10} //shows type to filter after 10 options

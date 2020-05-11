@@ -18,7 +18,7 @@ import {
 import FilterIcon from "@material-ui/icons/FilterList";
 import CloseIcon from "@material-ui/icons/Close";
 
-import MultiSelect from "components/MultiSelect";
+import MultiSelect from "@antlerengineering/multiselect";
 
 import { FieldType } from "constants/fields";
 import { FireTableFilter } from "hooks/useFiretable";
@@ -207,32 +207,36 @@ const Filters = ({ columns, setFilters }: any) => {
         );
 
       case FieldType.singleSelect:
-        const val = query?.value
-          ? Array.isArray(query.value)
-            ? query.value
-            : [query.value as string]
-          : [];
+        if (operator === "in")
+          return (
+            <MultiSelect
+              multiple
+              onChange={value => setQuery(query => ({ ...query, value }))}
+              options={selectedColumn.options}
+              label=""
+              value={Array.isArray(query?.value) ? query.value : []}
+              TextFieldProps={{ hiddenLabel: true }}
+            />
+          );
 
         return (
           <MultiSelect
+            multiple={false}
             onChange={value => {
-              if (operator === "==")
-                setQuery(query => ({ ...query, value: value[0] }));
-              else setQuery(query => ({ ...query, value }));
+              if (value !== null) setQuery(query => ({ ...query, value }));
             }}
             options={selectedColumn.options}
             label=""
-            value={val}
-            multiple={operator === "in"}
+            value={typeof query?.value === "string" ? query.value : null}
             TextFieldProps={{ hiddenLabel: true }}
           />
         );
+
       case FieldType.multiSelect:
         return (
           <MultiSelect
-            onChange={value => {
-              setQuery(query => ({ ...query, value }));
-            }}
+            multiple
+            onChange={value => setQuery(query => ({ ...query, value }))}
             value={query.value as string[]}
             options={selectedColumn.options}
             label={""}
