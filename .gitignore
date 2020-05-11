@@ -22,6 +22,8 @@ cloud_functions/functions/lib
 cloud_functions/functions/src/collectionSync/config.json
 cloud_functions/functions/src/history/config.json
 cloud_functions/functions/src/algolia/config.json
+cloud_functions/functions/src/snapshotSync/config.json
+
 cloud_functions/functions/firebase-credentials.json
 cloud_functions/.firebaserc
 
