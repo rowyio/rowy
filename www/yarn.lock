@@ -106,6 +106,15 @@
     "@algolia/logger-common" "4.1.0"
     "@algolia/requester-common" "4.1.0"
 
+"@antlerengineering/components@^0.2.7":
+  version "0.2.7"
+  resolved "https://registry.yarnpkg.com/@antlerengineering/components/-/components-0.2.7.tgz#9d05d5ad841f85ab75d0c5b3bd8e37f1aa58a679"
+  integrity sha512-3lK/3VO+hEdNkOsPComvGVxr/30rTre0W5H4kWQcmdUi7nkB65WMRjnUcu1/IGBctTGlZiygv38W9DterND/7A==
+  dependencies:
+    dompurify "^2.0.10"
+    lodash "^4.17.15"
+    lodash-es "^4.17.15"
+
 "@antlerengineering/multiselect@^0.3.9":
   version "0.3.9"
   resolved "https://registry.yarnpkg.com/@antlerengineering/multiselect/-/multiselect-0.3.9.tgz#a368c8b26227c37c80ac225d0007a999b0242997"
@@ -5076,6 +5085,11 @@ domhandler@^3.0.0:
   dependencies:
     domelementtype "^2.0.1"
 
+dompurify@^2.0.10:
+  version "2.0.11"
+  resolved "https://registry.yarnpkg.com/dompurify/-/dompurify-2.0.11.tgz#cd47935774230c5e478b183a572e726300b3891d"
+  integrity sha512-qVoGPjIW9IqxRij7klDQQ2j6nSe4UNWANBhZNLnsS7ScTtLb+3YdxkRY8brNTpkUiTtcXsCJO+jS0UCDfenLuA==
+
 dompurify@^2.0.8:
   version "2.0.8"
   resolved "https://registry.yarnpkg.com/dompurify/-/dompurify-2.0.8.tgz#6ef89d2d227d041af139c7b01d9f67ed59c2eb3c"
@@ -8978,7 +8992,7 @@ locate-path@^5.0.0:
   dependencies:
     p-locate "^4.1.0"
 
-lodash-es@^4.17.14, lodash-es@^4.2.1:
+lodash-es@^4.17.14, lodash-es@^4.17.15, lodash-es@^4.2.1:
   version "4.17.15"
   resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.15.tgz#21bd96839354412f23d7a10340e5eac6ee455d78"
   integrity sha512-rlrc3yU3+JNOpZ9zj5pQtxnx2THmvRykwL4Xlxoa8I9lHBlVbbyPhgyPMioxVZ4NqyxaVVtaJnzsyOidQIhyyQ==
@@ -14085,6 +14099,11 @@ url@^0.11.0:
   dependencies:
     punycode "1.3.2"
     querystring "0.2.0"
+
+use-algolia@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/use-algolia/-/use-algolia-1.3.0.tgz#a53623b9c248bad14ca1cba551658c625613cb72"
+  integrity sha512-t6rY8apz0CmeNUbVchsi0+7UIeutJ8FPNfGTbx/f2vCw1LFYAo9ZUrG81vIsKMAhSLP2FKEXeztDWYr976MEpw==
 
 use-debounce@^3.3.0:
   version "3.4.0"

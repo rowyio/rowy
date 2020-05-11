@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@antlerengineering/components": "^0.2.7",
     "@antlerengineering/multiselect": "^0.3.9",
     "@date-io/date-fns": "1.x",
     "@material-ui/core": "^4.9.13",
@@ -52,6 +53,7 @@
     "react-scripts": "^3.3.0",
     "tinymce": "^5.2.0",
     "typescript": "^3.7.2",
+    "use-algolia": "^1.3.0",
     "use-debounce": "^3.3.0",
     "use-persisted-state": "^0.3.0",
     "yarn": "^1.19.0",

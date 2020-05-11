@@ -26,6 +26,9 @@ import SignOutView from "views/SignOutView";
 const TableView = lazy(() =>
   import("./views/TableView" /* webpackChunkName: "TableView" */)
 );
+const GridView = lazy(() =>
+  import("./views/GridView" /* webpackChunkName: "GridView" */)
+);
 const TablesView = lazy(() =>
   import("./views/TablesView" /* webpackChunkName: "TablesView" */)
 );
@@ -52,7 +55,7 @@ const App: React.FC = () => {
 
                   <PrivateRoute
                     exact
-                    path={[routes.home, routes.tableWithId]}
+                    path={[routes.home, routes.tableWithId, routes.gridWithId]}
                     render={() => (
                       <FiretableContextProvider>
                         <Switch>
@@ -64,6 +67,10 @@ const App: React.FC = () => {
                           <PrivateRoute
                             path={routes.tableWithId}
                             render={() => <TableView />}
+                          />
+                          <PrivateRoute
+                            path={routes.gridWithId}
+                            render={() => <GridView />}
                           />
                         </Switch>
                       </FiretableContextProvider>
