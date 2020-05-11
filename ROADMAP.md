@@ -9,7 +9,7 @@
 - email(string) ✅
 - phone(string) ✅
 - url(string) ✅
-- Number(number)
+- Number(number) ✅
 - long text(string) ✅
 
 ### Functionality:
@@ -39,7 +39,7 @@
 
 - Delete columns✅
 - Edit columns✅
-- Fixed column
+- Fixed column ✅
 - Hide/Show columns
 - resizable column ✅
 - keyboard cell navigation ✅
@@ -58,14 +58,14 @@
 - Slider(number)
 - Table(Document[])✅
 - Rich Text(html string))✅
-- Callable buttons
+- Callable buttons ✅
 
 ### Functionality:
 
 - Sort rows ✅
 - reorder columns✅
 - Auto suggest columns based of existing docs
-- Locked columns
+- Locked columns ✅
 - Table view only mode
 - SubCollection tables ✅
 - Permissions
