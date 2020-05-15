@@ -238,6 +238,16 @@ const config = [
       },
     ],
   },
+  {
+    name: "demodays",
+    groups: [
+      {
+        listenerField: "cohortDoc",
+        synonymField: "cohort",
+        transformer: cohortDoc => cohortDoc?.[0]?.snapshot?.cohort,
+      },
+    ],
+  },
   ...cohort2regionCollections([
     "hubResources",
     "sprintSubmissions",
