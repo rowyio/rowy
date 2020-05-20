@@ -11,6 +11,7 @@ import "tinymce/plugins/link";
 import "tinymce/plugins/image";
 import "tinymce/plugins/paste";
 import "tinymce/plugins/help";
+import "tinymce/plugins/code";
 import { Editor } from "@tinymce/tinymce-react";
 
 import { makeStyles, createStyles } from "@material-ui/core";
@@ -101,10 +102,10 @@ export default function RichText({ value, onChange }: IRichTextProps) {
         init={{
           minHeight: 300,
           menubar: false,
-          plugins: ["autoresize", "lists link image", "paste help"],
+          plugins: ["autoresize", "lists link image", "paste help", "code"],
           statusbar: false,
           toolbar:
-            "formatselect | bold italic forecolor | link | bullist numlist outdent indent | removeformat | help",
+            "formatselect | bold italic forecolor | link | bullist numlist outdent indent | removeformat code | help",
           skin: false,
           content_css: [
             "https://use.typekit.net/ngg8buf.css",
