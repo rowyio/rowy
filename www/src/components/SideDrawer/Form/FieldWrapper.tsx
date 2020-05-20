@@ -47,24 +47,24 @@ export default function FieldWrapper({
   const classes = useStyles();
 
   return (
-    <ErrorBoundary fullScreen={false}>
-      <Grid item xs={12}>
-        <Grid
-          container
-          alignItems="center"
-          className={classes.header}
-          component="label"
-          id={`sidedrawer-label-${name}`}
-          htmlFor={`sidedrawer-field-${name}`}
-        >
-          <Grid item className={classes.iconContainer}>
-            {type === "debug" ? <DebugIcon /> : getFieldIcon(type)}
-          </Grid>
-          <Grid item xs>
-            <Typography variant="caption">{label}</Typography>
-          </Grid>
+    <Grid item xs={12}>
+      <Grid
+        container
+        alignItems="center"
+        className={classes.header}
+        component="label"
+        id={`sidedrawer-label-${name}`}
+        htmlFor={`sidedrawer-field-${name}`}
+      >
+        <Grid item className={classes.iconContainer}>
+          {type === "debug" ? <DebugIcon /> : getFieldIcon(type)}
         </Grid>
+        <Grid item xs>
+          <Typography variant="caption">{label}</Typography>
+        </Grid>
+      </Grid>
 
+      <ErrorBoundary fullScreen={false} basic>
         <Suspense fallback={<FieldSkeleton />}>
           {children ??
             (!debugText && (
@@ -73,13 +73,13 @@ export default function FieldWrapper({
               </Typography>
             ))}
         </Suspense>
+      </ErrorBoundary>
 
-        {debugText && (
-          <Typography variant="body2" className={classes.disabledText}>
-            {debugText}
-          </Typography>
-        )}
-      </Grid>
-    </ErrorBoundary>
+      {debugText && (
+        <Typography variant="body2" className={classes.disabledText}>
+          {debugText}
+        </Typography>
+      )}
+    </Grid>
   );
 }
