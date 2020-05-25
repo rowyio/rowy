@@ -1,7 +1,14 @@
 import React, { Suspense } from "react";
 
-import { makeStyles, createStyles, Grid, Typography } from "@material-ui/core";
+import {
+  makeStyles,
+  createStyles,
+  Grid,
+  Typography,
+  IconButton,
+} from "@material-ui/core";
 import DebugIcon from "@material-ui/icons/BugReportOutlined";
+import LaunchIcon from "@material-ui/icons/Launch";
 
 import ErrorBoundary from "components/ErrorBoundary";
 import FieldSkeleton from "./FieldSkeleton";
@@ -26,6 +33,7 @@ const useStyles = makeStyles(theme =>
       whiteSpace: "normal",
       wordBreak: "break-all",
     },
+    launchButton: { margin: theme.spacing(-4, 0.5, 0, 0) },
   })
 );
 
@@ -76,9 +84,31 @@ export default function FieldWrapper({
       </ErrorBoundary>
 
       {debugText && (
-        <Typography variant="body2" className={classes.disabledText}>
-          {debugText}
-        </Typography>
+        <Grid container spacing={1} wrap="nowrap" alignItems="center">
+          <Grid item xs>
+            <Typography variant="body2" className={classes.disabledText}>
+              {debugText}
+            </Typography>
+          </Grid>
+
+          <Grid item>
+            <IconButton
+              component="a"
+              href={`https://console.firebase.google.com/project/${
+                process.env.REACT_APP_FIREBASE_PROJECT_ID
+              }/database/firestore/data~2F${(debugText as string).replace(
+                /\//g,
+                "~2F"
+              )}`}
+              target="_blank"
+              rel="noopener"
+              aria-label="Open in Firebase Console"
+              className={classes.launchButton}
+            >
+              <LaunchIcon />
+            </IconButton>
+          </Grid>
+        </Grid>
       )}
     </Grid>
   );
