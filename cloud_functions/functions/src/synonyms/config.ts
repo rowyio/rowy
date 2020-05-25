@@ -117,6 +117,7 @@ const config = [
               restrictIndices: [
                 "teams",
                 "founders",
+                "students",
                 "hubResources",
                 "advisors",
                 "partnerships",
