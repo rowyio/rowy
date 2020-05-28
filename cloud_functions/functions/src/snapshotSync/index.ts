@@ -116,7 +116,11 @@ const syncDocOnUpdate = (config: {
     /\{\{(.*?)\}\}/g,
     replacer({ ...snapshot.after.data(), id: snapshot.after.id })
   );
-
+  console.log({ targetPath });
+  if (targetPath === "") {
+    console.log("unspecified target");
+    return false;
+  }
   console.log({ hasChanged, targetType });
   if (hasChanged) {
     switch (targetType) {

@@ -95,7 +95,9 @@ export default function MultiSelect({
 
   return (
     <MultiSelect_
-      value={value === undefined ? (isSingle ? null : []) : value}
+      value={
+        value === undefined || value === null ? (isSingle ? null : []) : value
+      }
       onChange={onSubmit}
       freeText={false}
       multiple={!isSingle as any}

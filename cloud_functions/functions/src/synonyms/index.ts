@@ -9,8 +9,8 @@ type synonymGroup = {
   transformer: Function;
 };
 
-const synonyms = async (docData, groups: synonymGroup[]) => {
-  const updates = await groups.reduce(async (update: any, currGroup) => {
+const synonyms = (docData, groups: synonymGroup[]) =>
+  groups.reduce(async (acc: any, currGroup) => {
     const newValue = await currGroup.transformer(
       docData[currGroup.listenerField],
       docData
@@ -20,15 +20,11 @@ const synonyms = async (docData, groups: synonymGroup[]) => {
       docData[currGroup.synonymField] !== newValue
     ) {
       return {
-        ...update,
+        ...(await acc),
         [currGroup.synonymField]: newValue,
       };
-    } else return update;
+    } else return await acc;
   }, {});
-
-  console.log({ updates });
-  return updates;
-};
 
 /**
  *
@@ -87,7 +83,7 @@ const addSynonymOnCreate = (groups: synonymGroup[]) => async (
  *
  * @param collection configuration object
  */
-const synonymsFnsGenerator = (collection) => ({
+const synonymsFnsGenerator = collection => ({
   onCreate: functions.firestore
     .document(`${collection.name}/{docId}`)
     .onCreate(addSynonymOnCreate(collection.groups)),

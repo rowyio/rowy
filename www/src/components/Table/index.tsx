@@ -162,9 +162,8 @@ export default function Table({ collection, filters }: ITableProps) {
             rowsCount={rows.length}
             rowKey={"id" as "id"}
             onGridRowsUpdated={event => {
-              console.log(event);
               const { action, cellKey, updated } = event;
-              if (action === "CELL_UPDATE")
+              if (action === "CELL_UPDATE" && updated !== null)
                 updateCell!(rows[event.toRow].ref, cellKey as string, updated);
             }}
             rowHeight={rowHeight ?? 43}

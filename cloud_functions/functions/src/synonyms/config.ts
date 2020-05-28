@@ -15,7 +15,13 @@ const generateAlgoliaKey = (fieldName: string, value: string) =>
 const cohort2algoliaKey = (cohort: string) =>
   generateAlgoliaKey("cohort", cohort);
 
-const tableConnect2ids = records => records.map(r => r.snapshot.objectID);
+const tableConnect2ids = records => {
+  if (records) {
+    return records.map(r => r.snapshot.objectID);
+  } else {
+    return [];
+  }
+};
 const cohort2region = (cohort: string) =>
   cohort.toUpperCase().replace(/\d+.*$/, "");
 
@@ -111,6 +117,7 @@ const config = [
               restrictIndices: [
                 "teams",
                 "founders",
+                "students",
                 "hubResources",
                 "advisors",
                 "partnerships",

@@ -43,9 +43,9 @@ export default function Text({ fieldVariant = "short", ...props }: ITextProps) {
     default:
       break;
   }
-
   return (
     <TextField
+      key={`${props.form.initialValues.id}-${props.field.name}`}
       variant="filled"
       fullWidth
       margin="none"
