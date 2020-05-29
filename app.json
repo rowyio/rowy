@@ -1,0 +1,38 @@
+{
+  "name": "foo-app",
+  "env": {
+    "BACKGROUND_COLOR": {
+      "description": "specify a css color",
+      "value": "#fefefe",
+      "required": false
+    },
+    "TITLE": {
+      "description": "title for your site"
+    },
+    "APP_SECRET": {
+      "generator": "secret"
+    }
+  },
+  "options": {
+    "allow-unauthenticated": false,
+    "memory": "512Mi",
+    "cpu": "1"
+  },
+  "build": {
+    "skip": false
+  },
+  "hooks": {
+    "prebuild": {
+      "commands": ["./my-custom-prebuild"]
+    },
+    "postbuild": {
+      "commands": ["./my-custom-postbuild"]
+    },
+    "precreate": {
+      "commands": ["echo 'test'"]
+    },
+    "postcreate": {
+      "commands": ["./setup.sh"]
+    }
+  }
+}
