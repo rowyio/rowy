@@ -12,9 +12,6 @@ import * as collectionHistoryConfig from "./history/config.json";
 import permissionControlFnsGenerator from "./permissions";
 import * as permissionsConfig from "./permissions/config.json";
 
-import synonymsFnsGenerator from "./synonyms";
-import synonymsConfig from "./synonyms/config";
-
 export { exportTable } from "./export";
 export { triggerCloudBuild } from "./buildTriggers";
 export { scheduledFirestoreBackup, callableFirestoreBackup } from "./backup";
@@ -76,12 +73,3 @@ export const FT_permissions = permissionsConfig.reduce(
   },
   {}
 );
-
-export const FT_synonyms = synonymsConfig.reduce((acc: any, collection) => {
-  return {
-    ...acc,
-    [collection.name
-      .replace(/\//g, "_")
-      .replace(/_{.*?}_/g, "_")]: synonymsFnsGenerator(collection),
-  };
-}, {});
