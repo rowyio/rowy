@@ -22,7 +22,7 @@ import { FieldType } from "constants/fields";
 
 export const TABLE_HEADER_HEIGHT = 56;
 
-const useStyles = makeStyles((theme) =>
+const useStyles = makeStyles(theme =>
   createStyles({
     root: {
       width: `calc(100% - ${DRAWER_COLLAPSED_WIDTH}px)`,
@@ -128,7 +128,7 @@ export default function TableHeader({
           variant="filled"
           className={classes.formControl}
           value={rowHeight ?? 43}
-          onChange={(event) => {
+          onChange={event => {
             updateConfig("rowHeight", event.target.value);
           }}
           inputProps={{
@@ -162,14 +162,7 @@ export default function TableHeader({
       )}
       {userClaims && !userClaims.roles?.includes("READONLY") && (
         <Grid item>
-          <ExportCSV
-            columns={columns.map((column: any) => {
-              const { key, name, config, type } = column;
-              return { key, name, config, type };
-            })}
-            collection={collection}
-            filters={filters}
-          />
+          <ExportCSV />
         </Grid>
       )}
     </Grid>
