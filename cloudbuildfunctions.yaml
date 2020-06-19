@@ -14,8 +14,12 @@ steps:
     dir: "cloud_functions/functions"
   - name: node:10.15.1
     entrypoint: yarn
+    args: ["fetchConfig"]
+    dir: "cloud_functions/functions"
+  - name: node:10.15.1
+    entrypoint: yarn
     args:
-      - "deploy"
+      - "deployFT"
       - "--project"
       - "${_PROJECT_ID}"
       - "--token"
