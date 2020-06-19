@@ -3,7 +3,7 @@ import { FieldProps } from "formik";
 
 import { useTheme, Grid } from "@material-ui/core";
 
-import MultiSelect_, { MultiSelectProps } from "@antlerengineering/multiselect";
+import MultiSelectA, { MultiSelectProps } from "@antlerengineering/multiselect";
 import FormattedChip from "components/FormattedChip";
 
 export default function MultiSelect({
@@ -22,7 +22,7 @@ export default function MultiSelect({
 
   return (
     <>
-      <MultiSelect_
+      <MultiSelectA
         {...props}
         multiple
         value={field.value}
