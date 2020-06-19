@@ -5,8 +5,6 @@ import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import Grid from "@material-ui/core/Grid";
-import IconButton from "@material-ui/core/IconButton";
 import Dialog from "@material-ui/core/Dialog";
 
 import Select from "@material-ui/core/Select";
@@ -14,19 +12,15 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import { makeStyles, createStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
 import Input from "@material-ui/core/Input";
 
-import ListItemText from "@material-ui/core/ListItemText";
-
-import Checkbox from "@material-ui/core/Checkbox";
 import Chip from "@material-ui/core/Chip";
-import CloudIcon from "@material-ui/icons/CloudDownload";
+
 import { exportTable } from "firebase/callables";
 import { saveAs } from "file-saver";
-import useTableConfig from "hooks/useFiretable/useTableConfig";
 import { SnackContext } from "contexts/snackContext";
 import { FireTableFilter } from "hooks/useFiretable";
+import { useFiretableContext } from "contexts/firetableContext";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -71,14 +65,9 @@ const useStyles = makeStyles(theme =>
     chip: {},
   })
 );
-interface Props {
-  columns: any;
-  collection: string;
-  filters: FireTableFilter[];
-}
 
-export default function ExportCSV(props: Props) {
-  const { columns, collection, filters } = props;
+export default function ExportCSV() {
+  const { tableState } = useFiretableContext();
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [csvColumns, setCSVColumns] = useState<any[]>([]);
@@ -102,15 +91,15 @@ export default function ExportCSV(props: Props) {
       duration: 5000,
     });
     const data = await exportTable({
-      collectionPath: collection,
+      collectionPath: tableState?.tablePath!,
       allFields: !Boolean(columns),
-      filters,
+      filters: tableState?.filters ? tableState.filters : [],
       columns: columns ? columns : [],
     });
     var blob = new Blob([data.data], {
       type: "text/csv;charset=utf-8",
     });
-    saveAs(blob, `${collection}.csv`);
+    saveAs(blob, `${tableState?.tablePath!}.csv`);
   }
 
   return (
@@ -147,7 +136,7 @@ export default function ExportCSV(props: Props) {
               )}
               MenuProps={MenuProps}
             >
-              {columns.map((column: any) => (
+              {tableState?.columns.map((column: any) => (
                 <MenuItem key={column.key} value={column}>
                   {column.name}
                 </MenuItem>
@@ -156,7 +145,7 @@ export default function ExportCSV(props: Props) {
           </FormControl>
           <Button
             onClick={() => {
-              setCSVColumns(columns);
+              setCSVColumns(tableState?.columns!);
             }}
           >
             Select All
