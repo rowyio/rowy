@@ -143,5 +143,3 @@ groundbreaking technology companies.
 
 [Apply now](https://antler.co/apply) to be part of a global cohort of tech
 founders.
-
-[![Run on Google Cloud](https://deploy.cloud.run/button.svg)](https://deploy.cloud.run)
