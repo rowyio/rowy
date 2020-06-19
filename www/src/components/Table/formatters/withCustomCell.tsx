@@ -1,5 +1,4 @@
 import React, { Suspense } from "react";
-import clsx from "clsx";
 import { FormatterProps } from "react-data-grid";
 
 import { makeStyles, createStyles } from "@material-ui/core";

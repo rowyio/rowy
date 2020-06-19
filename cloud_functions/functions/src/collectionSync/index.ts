@@ -24,7 +24,6 @@ const cloneDoc = (targetCollection: string, fieldsToSync: string[]) => (
 ) => {
   const docId = snapshot.id;
   const docData = snapshot.data();
-  console.log(docData);
   if (!docData) return false; // returns if theres no data in the doc
   const syncData = fieldsToSync.reduce(docReducer(docData), {});
   if (Object.keys(syncData).length === 0) return false; // returns if theres nothing to sync
@@ -33,6 +32,10 @@ const cloneDoc = (targetCollection: string, fieldsToSync: string[]) => (
     /\{\{(.*?)\}\}/g,
     replacer(docData)
   );
+  if (collectionPath.includes("//")) {
+    console.log(`${collectionPath} is an invalid collection path`);
+    return false;
+  }
   db.collection(collectionPath)
     .doc(docId)
     .set({ ...syncData, syncedAt: new Date() }, { merge: true })
@@ -57,18 +60,17 @@ const syncDoc = (targetCollection: string, fieldsToSync: string[]) => async (
     /\{\{(.*?)\}\}/g,
     replacer(docData)
   );
+
+  if (collectionPath.includes("//")) {
+    console.log(`${collectionPath} is an invalid collection path`);
+    return false;
+  }
   if (Object.keys(syncData).length === 0) return false; // returns if theres nothing to sync
   const targetDoc = await db
     .collection(collectionPath)
     .doc(docId)
     .get();
   if (!targetDoc.exists) return false;
-  const targetDocData = targetDoc.data();
-  console.log(`syncing ${docId}`, targetDoc.exists, {
-    targetDocData,
-    docData,
-    syncData,
-  });
   db.collection(collectionPath)
     .doc(docId)
     .update({ ...syncData, syncedAt: new Date() })
