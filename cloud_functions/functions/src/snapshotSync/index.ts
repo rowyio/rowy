@@ -128,7 +128,7 @@ const syncDocOnUpdate = (config: {
         return syncSubCollection(
           targetPath,
           snapshotField,
-          afterData,
+          { ...afterData, objectID: snapshot.after.ref.id },
           snapshot.after
         );
 
@@ -137,7 +137,7 @@ const syncDocOnUpdate = (config: {
           targetPath,
           isArray,
           snapshotField,
-          afterData,
+          { ...afterData, objectID: snapshot.after.ref.id },
           snapshot.after
         );
       default:
