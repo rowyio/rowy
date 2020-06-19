@@ -8,6 +8,7 @@ export type UploaderState = {
   error?: string;
 };
 export type FileValue = {
+  ref: string;
   downloadURL: string;
   name: string;
   type: string;
@@ -101,6 +102,7 @@ const useUploader = () => {
                 : [];
 
               newValue.push({
+                ref: uploadTask.snapshot.ref.fullPath,
                 downloadURL,
                 name: file.name,
                 type: file.type,
@@ -121,11 +123,11 @@ const useUploader = () => {
     });
   };
 
-  return [uploaderState, upload, uploaderDispatch] as [
-    typeof uploaderState,
-    typeof upload,
-    typeof uploaderDispatch
-  ];
+  const deleteUpload = (fileValue: FileValue) => {
+    return bucket.ref(fileValue.ref).delete();
+  };
+
+  return { uploaderState, upload, uploaderDispatch, deleteUpload };
 };
 
 export default useUploader;
