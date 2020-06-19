@@ -1,3 +1,5 @@
+export { exportTable } from "./export";
+
 import algoliaFnsGenerator from "./algolia";
 import * as algoliaConfig from "./algolia/config.json";
 import collectionSyncFnsGenerator from "./collectionSync";
@@ -12,28 +14,30 @@ import * as collectionHistoryConfig from "./history/config.json";
 import permissionControlFnsGenerator from "./permissions";
 import * as permissionsConfig from "./permissions/config.json";
 
-export { exportTable } from "./export";
 export { triggerCloudBuild } from "./buildTriggers";
 export { scheduledFirestoreBackup, callableFirestoreBackup } from "./backup";
 import * as callableFns from "./callable";
 
 export const callable = callableFns;
-export const FT_algolia = algoliaConfig.reduce((acc: any, collection) => {
+export const FT_algolia = algoliaConfig.reduce((acc: any, collection: any) => {
   return { ...acc, [collection.name]: algoliaFnsGenerator(collection) };
 }, {});
 
-export const FT_sync = collectionSyncConfig.reduce((acc: any, collection) => {
-  return {
-    ...acc,
-    [`${`${`${collection.source}`
-      .replace(/\//g, "_")
-      .replace(/_{.*?}_/g, "_")}`}2${`${`${collection.target}`
-      .replace(/\//g, "_")
-      .replace(/_{.*?}_/g, "_")}`}`]: collectionSyncFnsGenerator(collection),
-  };
-}, {});
+export const FT_sync = collectionSyncConfig.reduce(
+  (acc: any, collection: any) => {
+    return {
+      ...acc,
+      [`${`${`${collection.source}`
+        .replace(/\//g, "_")
+        .replace(/_{.*?}_/g, "_")}`}2${`${`${collection.target}`
+        .replace(/\//g, "_")
+        .replace(/_{.*?}_/g, "_")}`}`]: collectionSyncFnsGenerator(collection),
+    };
+  },
+  {}
+);
 export const FT_snapshotSync = snapshotSyncConfig.reduce(
-  (acc: any, collection) => {
+  (acc: any, collection: any) => {
     if (collection.fnName) {
       return {
         ...acc,
@@ -53,7 +57,7 @@ export const FT_snapshotSync = snapshotSyncConfig.reduce(
 );
 
 export const FT_history = collectionHistoryConfig.reduce(
-  (acc: any, collection) => {
+  (acc: any, collection: any) => {
     return {
       ...acc,
       [collection.name
@@ -65,7 +69,7 @@ export const FT_history = collectionHistoryConfig.reduce(
 );
 
 export const FT_permissions = permissionsConfig.reduce(
-  (acc: any, collection) => {
+  (acc: any, collection: any) => {
     return {
       ...acc,
       [collection.name]: permissionControlFnsGenerator(collection),
