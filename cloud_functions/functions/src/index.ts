@@ -1,18 +1,27 @@
+const algoliaConfig = requireConfig("./algolia/config.json");
+const collectionHistoryConfig = requireConfig("./history/config.json");
+const snapshotSyncConfig = requireConfig("./snapshotSync/config.json");
+const collectionSyncConfig = requireConfig("./collectionSync/config.json");
+const permissionsConfig = requireConfig("./permissions/config.json");
+function requireConfig(module) {
+  //trys to import config json
+  try {
+    return require(module);
+  } catch (error) {
+    // if there's no config it'll return an empty array
+    return [];
+  }
+}
 export { exportTable } from "./export";
 
 import algoliaFnsGenerator from "./algolia";
-import * as algoliaConfig from "./algolia/config.json";
 import collectionSyncFnsGenerator from "./collectionSync";
-import * as collectionSyncConfig from "./collectionSync/config.json";
 
 import snapshotSyncFnsGenerator from "./snapshotSync";
-import * as snapshotSyncConfig from "./snapshotSync/config.json";
 
 import collectionSnapshotFnsGenerator from "./history";
 
-import * as collectionHistoryConfig from "./history/config.json";
 import permissionControlFnsGenerator from "./permissions";
-import * as permissionsConfig from "./permissions/config.json";
 
 export { triggerCloudBuild } from "./buildTriggers";
 export { scheduledFirestoreBackup, callableFirestoreBackup } from "./backup";
