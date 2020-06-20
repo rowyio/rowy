@@ -9,11 +9,9 @@ function requireIfExists(module) {
   try {
     return require(module);
   } catch (error) {
-    // pass and try next file
     console.log("serviceAccount json not found");
     return false;
   }
-  // throw('None of the provided modules exist.')
 }
 if (serviceAccount) {
   console.log(`Running on ${serviceAccount.project_id}`);
