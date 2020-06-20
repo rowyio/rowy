@@ -1,7 +1,7 @@
+import { parse as json2csv } from "json2csv";
 import React, { useState, useCallback, useContext } from "react";
 import _camelCase from "lodash/camelCase";
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -16,11 +16,12 @@ import Input from "@material-ui/core/Input";
 
 import Chip from "@material-ui/core/Chip";
 
-import { exportTable } from "firebase/callables";
 import { saveAs } from "file-saver";
 import { SnackContext } from "contexts/snackContext";
 import { FireTableFilter } from "hooks/useFiretable";
 import { useFiretableContext } from "contexts/firetableContext";
+import { db } from "../../firebase";
+import { FieldType } from "constants/fields";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -65,7 +66,74 @@ const useStyles = makeStyles(theme =>
     chip: {},
   })
 );
-
+const selectedColumnsReducer = (doc: any) => (
+  accumulator: any,
+  currentColumn: any
+) => {
+  switch (currentColumn.type) {
+    case FieldType.multiSelect:
+      return {
+        ...accumulator,
+        [currentColumn.key]: doc[currentColumn.key]
+          ? doc[currentColumn.key].join()
+          : "",
+      };
+    case FieldType.file:
+    case FieldType.image:
+      return {
+        ...accumulator,
+        [currentColumn.key]: doc[currentColumn.key]
+          ? doc[currentColumn.key]
+              .map((item: { downloadURL: string }) => item.downloadURL)
+              .join()
+          : "",
+      };
+    case FieldType.connectTable:
+      return {
+        ...accumulator,
+        [currentColumn.key]: doc[currentColumn.key]
+          ? doc[currentColumn.key]
+              .map((item: any) =>
+                currentColumn.config.primaryKeys.reduce(
+                  (labelAccumulator: string, currentKey: any) =>
+                    `${labelAccumulator} ${item.snapshot[currentKey]}`,
+                  ""
+                )
+              )
+              .join()
+          : "",
+      };
+    case FieldType.checkbox:
+      return {
+        ...accumulator,
+        [currentColumn.key]:
+          typeof doc[currentColumn.key] === "boolean"
+            ? doc[currentColumn.key]
+              ? "YES"
+              : "NO"
+            : "",
+      };
+    case FieldType.dateTime:
+    case FieldType.date:
+      return {
+        ...accumulator,
+        [currentColumn.key]: doc[currentColumn.key]
+          ? doc[currentColumn.key].toDate()
+          : "",
+      };
+    case FieldType.last:
+    case FieldType.action:
+    case FieldType.connectTable:
+      return accumulator;
+    default:
+      return {
+        ...accumulator,
+        [currentColumn.key]: doc[currentColumn.key]
+          ? doc[currentColumn.key]
+          : "",
+      };
+  }
+};
 export default function ExportCSV() {
   const { tableState } = useFiretableContext();
   const classes = useStyles();
@@ -90,13 +158,30 @@ export default function ExportCSV() {
       message: "preparing file, download will start shortly",
       duration: 5000,
     });
-    const data = await exportTable({
-      collectionPath: tableState?.tablePath!,
-      allFields: !Boolean(columns),
-      filters: tableState?.filters ? tableState.filters : [],
-      columns: columns ? columns : [],
+
+    let query: any = db.collection(tableState?.tablePath!);
+    // add filters
+    tableState?.filters.forEach(filter => {
+      query = query.where(filter.key, filter.operator, filter.value);
     });
-    var blob = new Blob([data.data], {
+    // optional order results
+    console.log(tableState?.orderBy);
+    if (tableState?.orderBy !== undefined) {
+      tableState?.orderBy.forEach(orderBy => {
+        query = query.orderBy(orderBy.key, orderBy.direction);
+      });
+    }
+    //optional set query limit
+    //if (limit) query = query.limit(limit);
+    const querySnapshot = await query.get();
+    const docs = querySnapshot.docs.map(doc => doc.data());
+    // generate csv Data
+    const data = docs.map((doc: any) => {
+      return csvColumns.reduce(selectedColumnsReducer(doc), {});
+    });
+
+    const csv = json2csv(data);
+    var blob = new Blob([csv], {
       type: "text/csv;charset=utf-8",
     });
     saveAs(blob, `${tableState?.tablePath!}.csv`);

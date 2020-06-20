@@ -1,24 +1,28 @@
-const algoliaConfig = requireConfig("./algolia/config.json");
-const collectionHistoryConfig = requireConfig("./history/config.json");
-const snapshotSyncConfig = requireConfig("./snapshotSync/config.json");
-const collectionSyncConfig = requireConfig("./collectionSync/config.json");
-const permissionsConfig = requireConfig("./permissions/config.json");
+const fs = require("fs");
 function requireConfig(module) {
   //trys to import config json
   try {
-    return require(module);
+    const data = JSON.parse(fs.readFileSync(module, "utf-8"));
+    console.log(data);
+    return data;
   } catch (error) {
     // if there's no config it'll return an empty array
     return [];
   }
 }
-export { exportTable } from "./export";
+
+const algoliaConfig = requireConfig("./algolia/config.json");
+const collectionHistoryConfig = requireConfig("./history/config.json");
+
+const snapshotSyncConfig = requireConfig("./snapshotSync/config.json");
+const collectionSyncConfig = requireConfig("./collectionSync/config.json");
+const permissionsConfig = requireConfig("./permissions/config.json");
 
 import algoliaFnsGenerator from "./algolia";
 import collectionSyncFnsGenerator from "./collectionSync";
 
 import snapshotSyncFnsGenerator from "./snapshotSync";
-
+//import * as collectionHistoryConfig from "./history/config.json";
 import collectionSnapshotFnsGenerator from "./history";
 
 import permissionControlFnsGenerator from "./permissions";
