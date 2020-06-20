@@ -16,7 +16,7 @@ import {
 import UploadIcon from "assets/icons/Upload";
 
 import Confirmation from "components/Confirmation";
-import useUploader from "hooks/useFiretable/useUploader";
+import useUploader, { FileValue } from "hooks/useFiretable/useUploader";
 import { FileIcon } from "constants/fields";
 
 const useStyles = makeStyles(theme =>
@@ -59,7 +59,7 @@ export default function File({
 }: CustomCellProps) {
   const classes = useStyles();
 
-  const [uploaderState, upload] = useUploader();
+  const { uploaderState, upload, deleteUpload } = useUploader();
   const { progress, isLoading } = uploaderState;
 
   const onDrop = useCallback(
@@ -78,10 +78,11 @@ export default function File({
     [value]
   );
 
-  const handleDelete = (downloadURL: string) => {
+  const handleDelete = (ref: string) => {
     const newValue = [...value];
-    const index = _findIndex(newValue, ["downloadURL", downloadURL]);
-    newValue.splice(index, 1);
+    const index = _findIndex(newValue, ["ref", ref]);
+    const toBeDeleted = newValue.splice(index, 1);
+    toBeDeleted.length && deleteUpload(toBeDeleted[0]);
     onSubmit(newValue);
   };
 
@@ -111,7 +112,7 @@ export default function File({
       <Grid item xs className={classes.chipList}>
         <Grid container spacing={1} wrap="nowrap">
           {Array.isArray(value) &&
-            value.reverse().map((file: any) => (
+            value.reverse().map((file: FileValue) => (
               <Grid item key={file.name} className={classes.chipGridItem}>
                 <Confirmation
                   message={{
@@ -131,7 +132,7 @@ export default function File({
                     }}
                     onDelete={
                       column.editable !== false
-                        ? () => handleDelete(file.downloadURL)
+                        ? () => handleDelete(file.ref)
                         : undefined
                     }
                     className={classes.chip}

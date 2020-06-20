@@ -68,7 +68,7 @@ export default function FileUploader({
 }: IFileUploaderProps) {
   const classes = useStyles();
 
-  const [uploaderState, upload] = useUploader();
+  const { uploaderState, upload, deleteUpload } = useUploader();
   const { progress } = uploaderState;
 
   // Store a preview image locally while uploading
@@ -97,7 +97,8 @@ export default function FileUploader({
 
   const handleDelete = (index: number) => {
     const newValue = [...field.value];
-    newValue.splice(index, 1);
+    const toBeDeleted = newValue.splice(index, 1);
+    toBeDeleted.length && deleteUpload(toBeDeleted[0]);
     form.setFieldValue(field.name, newValue);
   };
 

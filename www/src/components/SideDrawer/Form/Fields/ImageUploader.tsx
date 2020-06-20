@@ -105,7 +105,7 @@ export default function ImageUploader({
   const disabled = editable === false;
   const classes = useStyles();
 
-  const [uploaderState, upload] = useUploader();
+  const { uploaderState, upload, deleteUpload } = useUploader();
   const { progress } = uploaderState;
 
   // Store a preview image locally while uploading
@@ -134,7 +134,8 @@ export default function ImageUploader({
 
   const handleDelete = (index: number) => {
     const newValue = [...field.value];
-    newValue.splice(index, 1);
+    const toBeDeleted = newValue.splice(index, 1);
+    toBeDeleted.length && deleteUpload(toBeDeleted[0]);
     form.setFieldValue(field.name, newValue);
   };
 
