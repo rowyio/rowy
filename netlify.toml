@@ -1,12 +1,10 @@
 [build]
-  command = "npm run build"
-  publish = "dist"
-
-[context.deploy-preview]
-  command = "npm run build-preview"
+  base = "www/"
+  command = "yarn build"
+  publish = "www/build/"
 
 [template.environment]
-  STATUSKIT_PAGE_TITLE = "title for the page"
-  STATUSKIT_COMPANY_LOGO = "url to your company's logo"
-  STATUSKIT_SUPPORT_CONTACT_LINK = "url to your support page"
-  STATUSKIT_RESOURCES_LINK = "url to your knowledge base page"
+  REACT_APP_FIREBASE_PROJECT_ID = "you firebase project Id"
+  REACT_APP_FIREBASE_PROJECT_WEB_API_KEY = "your firebase web api key"
+  REACT_APP_ALGOLIA_APP_ID = "optional algolia app id"
+  REACT_APP_ALGOLIA_SEARCH_API_KEY = "optional algolia search api key"
