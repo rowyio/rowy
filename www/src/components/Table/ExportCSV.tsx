@@ -18,7 +18,6 @@ import Chip from "@material-ui/core/Chip";
 
 import { saveAs } from "file-saver";
 import { SnackContext } from "contexts/snackContext";
-import { FireTableFilter } from "hooks/useFiretable";
 import { useFiretableContext } from "contexts/firetableContext";
 import { db } from "../../firebase";
 import { FieldType } from "constants/fields";
