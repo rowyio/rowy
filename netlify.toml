@@ -1,7 +1,7 @@
 [build]
   base = "www/"
   command = "yarn build"
-  publish = "www/build/"
+  publish = "build/"
 
 [template.environment]
   REACT_APP_FIREBASE_PROJECT_ID = "you firebase project Id"
