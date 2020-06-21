@@ -15,7 +15,10 @@ supported. More coming soon, for comprehensive list see ROADMAP.md.
 
 ![Firetable screenshot](https://firetable.io/demo-screenshot.png)
 
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/AntlerVC/firetable)
+## Quick deploy
+
+- [fork Firetable](https://github.com/AntlerVC/firetable/fork) then
+  [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/AntlerVC/firetable)
 
 ## Setup instructions
 
