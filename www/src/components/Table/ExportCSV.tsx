@@ -176,24 +176,27 @@ export default function ExportCSV() {
     }
     //optional set query limit
     //if (limit)
-    // query = query.limit(1000);
-    const querySnapshot = await query.get();
-    const docs = querySnapshot.docs.map(doc => doc.data());
-    const docChunks = docs.reduce((all, one, i) => {
-      const ch = Math.floor(i / 1000);
-      all[ch] = [].concat(all[ch] || [], one);
-      return all;
-    }, []);
-    console.log(docChunks.length);
-    await asyncForEach(docChunks, async (element, index) => {
-      await setTimeout(() => {
-        console.log(`saving part${index + 1}`);
-      }, 3000);
-      saveDocs2CSV(element, index, docChunks.length);
-    });
-
+    query = query.limit(100);
+    await recursiveSave(query, 0);
     // generate csv Data
   }
+  const recursiveSave = async (query: any, index: number, lastDoc?: any) => {
+    let _query = query;
+    if (lastDoc) {
+      _query = _query.startAt(lastDoc);
+    }
+    let querySnapshot = await _query.get();
+    let docs = querySnapshot.docs.map(doc => doc.data());
+    saveDocs2CSV(docs, index, 3);
+    if (docs.length === 100) {
+      docs = null;
+
+      await setTimeout(() => {
+        console.log(`saving part${index + 1}`);
+      }, 1000);
+      await recursiveSave(query, index + 1, querySnapshot.docs[99]);
+    }
+  };
   const saveDocs2CSV = (docs, index, chunksLength) => {
     const data = docs.map((doc: any) => {
       return csvColumns.reduce(selectedColumnsReducer(doc), {});
@@ -206,7 +209,7 @@ export default function ExportCSV() {
     saveAs(
       blob,
       `${tableState?.tablePath!}${
-        chunksLength > 1 ? `-${index + 1}of${chunksLength}` : ""
+        chunksLength > 1 ? `-part${index + 1}` : ""
       }.csv`
     );
   };
