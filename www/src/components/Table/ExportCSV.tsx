@@ -133,6 +133,7 @@ const selectedColumnsReducer = (doc: any) => (
       };
   }
 };
+
 export default function ExportCSV() {
   const { tableState } = useFiretableContext();
   const classes = useStyles();
@@ -164,17 +165,29 @@ export default function ExportCSV() {
       query = query.where(filter.key, filter.operator, filter.value);
     });
     // optional order results
-    console.log(tableState?.orderBy);
-    if (tableState?.orderBy !== undefined) {
-      tableState?.orderBy.forEach(orderBy => {
+    if (tableState?.orderBy) {
+      tableState?.orderBy?.forEach(orderBy => {
         query = query.orderBy(orderBy.key, orderBy.direction);
       });
     }
     //optional set query limit
-    //if (limit) query = query.limit(limit);
+    //if (limit)
+    // query = query.limit(1000);
     const querySnapshot = await query.get();
     const docs = querySnapshot.docs.map(doc => doc.data());
+    const docChunks = docs.reduce((all, one, i) => {
+      const ch = Math.floor(i / 1000);
+      all[ch] = [].concat(all[ch] || [], one);
+      return all;
+    }, []);
+    console.log(docChunks.length);
+
+    docChunks.forEach((element, index) => {
+      saveDocs2CSV(element, index, docChunks.length);
+    });
     // generate csv Data
+  }
+  const saveDocs2CSV = (docs, index, chunksLength) => {
     const data = docs.map((doc: any) => {
       return csvColumns.reduce(selectedColumnsReducer(doc), {});
     });
@@ -183,8 +196,13 @@ export default function ExportCSV() {
     var blob = new Blob([csv], {
       type: "text/csv;charset=utf-8",
     });
-    saveAs(blob, `${tableState?.tablePath!}.csv`);
-  }
+    saveAs(
+      blob,
+      `${tableState?.tablePath!}${
+        chunksLength > 1 ? `-${index + 1}of${chunksLength}` : ""
+      }.csv`
+    );
+  };
 
   return (
     <div>
@@ -220,11 +238,12 @@ export default function ExportCSV() {
               )}
               MenuProps={MenuProps}
             >
-              {tableState?.columns.map((column: any) => (
-                <MenuItem key={column.key} value={column}>
-                  {column.name}
-                </MenuItem>
-              ))}
+              {tableState?.columns &&
+                tableState?.columns.map((column: any) => (
+                  <MenuItem key={column.key} value={column}>
+                    {column.name}
+                  </MenuItem>
+                ))}
             </Select>
           </FormControl>
           <Button
