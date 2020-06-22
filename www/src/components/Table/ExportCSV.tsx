@@ -21,7 +21,11 @@ import { SnackContext } from "contexts/snackContext";
 import { useFiretableContext } from "contexts/firetableContext";
 import { db } from "../../firebase";
 import { FieldType } from "constants/fields";
-
+async function asyncForEach(array, callback) {
+  for (let index = 0; index < array.length; index++) {
+    await callback(array[index], index, array);
+  }
+}
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -181,10 +185,13 @@ export default function ExportCSV() {
       return all;
     }, []);
     console.log(docChunks.length);
-
-    docChunks.forEach((element, index) => {
+    await asyncForEach(docChunks, async (element, index) => {
+      await setTimeout(() => {
+        console.log(`saving part${index + 1}`);
+      }, 3000);
       saveDocs2CSV(element, index, docChunks.length);
     });
+
     // generate csv Data
   }
   const saveDocs2CSV = (docs, index, chunksLength) => {
