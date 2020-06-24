@@ -1,4 +1,5 @@
 import { parse as json2csv } from "json2csv";
+import { saveAs } from "file-saver";
 import React, { useState, useCallback, useContext } from "react";
 import _camelCase from "lodash/camelCase";
 import Button from "@material-ui/core/Button";
@@ -16,7 +17,6 @@ import Input from "@material-ui/core/Input";
 
 import Chip from "@material-ui/core/Chip";
 
-import { saveAs } from "file-saver";
 import { SnackContext } from "contexts/snackContext";
 import { useFiretableContext } from "contexts/firetableContext";
 import { db } from "../../firebase";
@@ -169,50 +169,24 @@ export default function ExportCSV() {
       query = query.where(filter.key, filter.operator, filter.value);
     });
     // optional order results
+
     if (tableState?.orderBy) {
       tableState?.orderBy?.forEach(orderBy => {
         query = query.orderBy(orderBy.key, orderBy.direction);
       });
     }
-    //optional set query limit
-    //if (limit)
-    query = query.limit(100);
-    await recursiveSave(query, 0);
-    // generate csv Data
-  }
-  const recursiveSave = async (query: any, index: number, lastDoc?: any) => {
-    let _query = query;
-    if (lastDoc) {
-      _query = _query.startAt(lastDoc);
-    }
-    let querySnapshot = await _query.get();
+    query.limit(500);
+    let querySnapshot = await query.get();
     let docs = querySnapshot.docs.map(doc => doc.data());
-    saveDocs2CSV(docs, index, 3);
-    if (docs.length === 100) {
-      docs = null;
-
-      await setTimeout(() => {
-        console.log(`saving part${index + 1}`);
-      }, 1000);
-      await recursiveSave(query, index + 1, querySnapshot.docs[99]);
-    }
-  };
-  const saveDocs2CSV = (docs, index, chunksLength) => {
     const data = docs.map((doc: any) => {
       return csvColumns.reduce(selectedColumnsReducer(doc), {});
     });
-
     const csv = json2csv(data);
     var blob = new Blob([csv], {
       type: "text/csv;charset=utf-8",
     });
-    saveAs(
-      blob,
-      `${tableState?.tablePath!}${
-        chunksLength > 1 ? `-part${index + 1}` : ""
-      }.csv`
-    );
-  };
+    saveAs(blob, `${tableState?.tablePath!}.csv`);
+  }
 
   return (
     <div>
