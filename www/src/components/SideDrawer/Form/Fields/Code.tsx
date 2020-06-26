@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { FieldProps } from "formik";
 
 import AceEditor from "react-ace";
@@ -6,9 +6,17 @@ import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/theme-monokai";
 import ErrorMessage from "../ErrorMessage";
+import { Button } from "@material-ui/core";
 
 export default function Code({ form, field }: FieldProps) {
-  const handleChange = value => form.setFieldValue(field.name, value);
+  const [localValue, setLocalValue] = useState(field.value);
+  useEffect(() => {
+    if (field.value !== localValue) setLocalValue(field.value);
+  }, [field.value]);
+  const autoSave = false;
+  const handleChange = autoSave
+    ? value => form.setFieldValue(field.name, value)
+    : value => setLocalValue(value);
 
   return (
     <>
@@ -17,7 +25,7 @@ export default function Code({ form, field }: FieldProps) {
         placeholder="insert code"
         mode="javascript"
         theme="monokai"
-        //name="blah2"
+        name={field.name}
         //onLoad={this.onLoad}
         onChange={handleChange}
         fontSize={14}
@@ -25,7 +33,7 @@ export default function Code({ form, field }: FieldProps) {
         height={"150px"}
         //showGutter={true}
         highlightActiveLine={true}
-        value={field.value}
+        value={autoSave ? field.value : localValue}
         setOptions={{
           enableBasicAutocompletion: false,
           enableLiveAutocompletion: false,
@@ -34,6 +42,15 @@ export default function Code({ form, field }: FieldProps) {
           tabSize: 2,
         }}
       />
+      {!autoSave && field.value !== localValue && (
+        <Button
+          onClick={() => {
+            form.setFieldValue(field.name, localValue);
+          }}
+        >
+          Save Changes
+        </Button>
+      )}
       <ErrorMessage name={field.name} />
     </>
   );
