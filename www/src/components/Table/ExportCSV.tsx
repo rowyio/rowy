@@ -175,7 +175,7 @@ export default function ExportCSV() {
         query = query.orderBy(orderBy.key, orderBy.direction);
       });
     }
-    query.limit(500);
+    query.limit(10000);
     let querySnapshot = await query.get();
     let docs = querySnapshot.docs.map(doc => doc.data());
     const data = docs.map((doc: any) => {
