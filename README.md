@@ -15,10 +15,6 @@ supported. More coming soon, for comprehensive list see ROADMAP.md.
 
 ![Firetable screenshot](https://firetable.io/demo-screenshot.png)
 
-## Quick deploy
-
-- [fork Firetable](https://github.com/AntlerVC/firetable/fork) then
-  [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/AntlerVC/firetable)
 
 ## Setup instructions
 
@@ -40,7 +36,7 @@ supported. More coming soon, for comprehensive list see ROADMAP.md.
 - Upgrade project to the Blaze Plan
 - Enable the Google sign-in method in **Authentication / Sign-in method**
 
-### 3. Clone this repo
+### 2. Clone this repo
 
 ```
 git clone https://github.com/AntlerVC/firetable.git
