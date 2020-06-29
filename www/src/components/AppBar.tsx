@@ -9,12 +9,11 @@ import {
   useScrollTrigger,
   AppBar as MuiAppBar,
   Toolbar,
-  Typography,
   Grid,
   Button,
 } from "@material-ui/core";
 
-import FiretableLogo from "assets/firetable-with-wordmark.svg";
+import FiretableLogo from "assets/Firetable";
 
 import routes from "constants/routes";
 
@@ -34,7 +33,7 @@ const useStyles = makeStyles(theme =>
     },
     heading: {
       textTransform: "none",
-      color: "#ed4746",
+      color: theme.palette.primary.main,
       cursor: "default",
       userSelect: "none",
       fontFeatureSettings: '"liga"',
@@ -65,13 +64,7 @@ const AppBar: React.FunctionComponent<IAppBarProps> = () => {
     >
       <Toolbar className={classes.toolbar}>
         <Grid item xs>
-          <img
-            src={FiretableLogo}
-            width="140"
-            height="32"
-            alt="Firetable"
-            className={classes.logo}
-          />
+          <FiretableLogo />
         </Grid>
 
         <Grid item>

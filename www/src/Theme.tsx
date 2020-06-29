@@ -309,5 +309,6 @@ export const defaultOverrides: ThemeOptions = {
   },
 };
 
-export const Theme = createMuiTheme(_merge(themeBase, defaultOverrides));
+export const Theme = (customization: ThemeOptions) =>
+  createMuiTheme(_merge(_merge(themeBase, defaultOverrides), customization));
 export default Theme;

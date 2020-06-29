@@ -22,6 +22,7 @@ if (serviceAccount) {
 
   const main = async deployRequestPath => {
     await db.doc(deployRequestPath).update({ deployedAt: serverTimestamp() });
+    return true;
   };
 
   main(process.argv[2])
