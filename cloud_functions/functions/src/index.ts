@@ -1,3 +1,5 @@
+import { config } from "./functionConfig";
+import algoliaFnsGenerator from "./algolia";
 //const fs = require("fs");
 // function requireConfig(module) {
 //   //trys to import config json
@@ -11,7 +13,6 @@
 //   }
 // }
 
-import { config } from "./functionConfig";
 //const algoliaConfig = require("./algolia/config.json");
 
 // const collectionHistoryConfig = requireConfig("./history/config.json");
@@ -20,7 +21,6 @@ import { config } from "./functionConfig";
 // const collectionSyncConfig = requireConfig("./collectionSync/config.json");
 // const permissionsConfig = requireConfig("./permissions/config.json");
 
-import algoliaFnsGenerator from "./algolia";
 // import collectionSyncFnsGenerator from "./collectionSync";
 
 // import snapshotSyncFnsGenerator from "./snapshotSync";
@@ -35,7 +35,7 @@ import * as callableFns from "./callable";
 
 export const callable = callableFns;
 export const FT_algolia = {
-  [config.name]: algoliaFnsGenerator(config),
+  [(config as any).name]: algoliaFnsGenerator(config),
 };
 
 // export const FT_sync = collectionSyncConfig.reduce(
