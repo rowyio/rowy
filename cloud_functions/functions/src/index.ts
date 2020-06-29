@@ -1,4 +1,4 @@
-import { config } from "./functionConfig";
+import * as config from "./functionConfig.json";
 import algoliaFnsGenerator from "./algolia";
 //const fs = require("fs");
 // function requireConfig(module) {
