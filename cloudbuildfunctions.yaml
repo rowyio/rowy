@@ -16,13 +16,7 @@ steps:
     entrypoint: yarn
     args:
       - "generateConfig"
-      - "'${_FUNCTION_CONFIG}'"
-    dir: "cloud_functions/functions"
-  - name: node:10.15.1
-    entrypoint: yarn
-    args:
-      - "generateConfig"
-      - "'${_FUNCTION_CONFIG}'"
+      - "${_FUNCTION_CONFIG}"
     dir: "cloud_functions/functions"
   - name: node:10.15.1
     entrypoint: yarn
