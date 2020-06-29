@@ -1,7 +1,7 @@
 {
   "name": "functions",
   "scripts": {
-    "fetchConfig": "ts-node fetchConfig.ts",
+    "updateStatus": "ts-node updateDeployStatus.ts",
     "generateConfig": "ts-node src/generateConfig.ts",
     "lint": "tslint --project tsconfig.json",
     "build": "tsc",
@@ -14,7 +14,7 @@
   "engines": {
     "node": "10"
   },
-  "main": "lib/src/index.js",
+  "main": "lib/index.js",
   "dependencies": {
     "@google-cloud/cloudbuild": "^1.5.0",
     "@google-cloud/firestore": "^3.7.5",

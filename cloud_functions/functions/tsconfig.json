@@ -11,5 +11,5 @@
     "target": "es2017"
   },
   "compileOnSave": true,
-  "include": ["src", "fetchConfig.ts", "generateConfig.ts"]
+  "include": ["src", "generateConfig.ts"]
 }

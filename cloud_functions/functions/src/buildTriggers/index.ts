@@ -16,7 +16,8 @@ export const triggerCloudBuild = functions.https.onCall(
     context: functions.https.CallableContext
   ) => {
     const {
-      row, //ref, action
+      row,
+      ref, // action
     } = data;
 
     if (!context.auth) {
@@ -34,6 +35,7 @@ export const triggerCloudBuild = functions.https.onCall(
           _PROJECT_ID: projectId,
           _FUNCTIONS_GROUP: groupName,
           _FUNCTION_CONFIG: functionConfig,
+          _REQUEST_DOC_PATH: ref.path,
         },
       },
     });

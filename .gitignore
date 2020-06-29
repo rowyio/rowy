@@ -45,3 +45,5 @@ yarn.lock
 package.json
 package-lock.json
 node_modules/
+
+cloud_functions/functions/src/functionConfig.json

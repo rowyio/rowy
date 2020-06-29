@@ -29,6 +29,12 @@ steps:
       - "--only"
       - "functions:${_FUNCTIONS_GROUP}"
     dir: "cloud_functions/functions"
+  - name: node:10.15.1
+    entrypoint: yarn
+    args:
+      - "updateStatus"
+      - "${_REQUEST_DOC_PATH}"
+    dir: "cloud_functions/functions"
 
 substitutions:
   _PROJECT_ID: "project-id" # default value
