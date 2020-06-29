@@ -97,27 +97,46 @@ const algoliaFnsGenerator = collection => ({
     .document(`${collection.name}/{docId}`)
     .onCreate(
       collection.indices
-        ? collection.indices.map(index =>
-            addToAlgolia(index.fieldsToSync, index.name)
-          )
+        ? (snapshot: FirebaseFirestore.DocumentSnapshot) =>
+            Promise.all(
+              collection.indices.map(index =>
+                addToAlgolia(index.fieldsToSync, index.name)(snapshot)
+              )
+            )
         : addToAlgolia(collection.fieldsToSync)
     ),
   onUpdate: functions.firestore
     .document(`${collection.name}/{docId}`)
     .onUpdate(
       collection.indices
-        ? collection.indices.map(index =>
-            updateAlgolia(index.fieldsToSync, index.name)
-          )
+        ? snapshot =>
+            Promise.all(
+              collection.indices.map(index =>
+                updateAlgolia(index.fieldsToSync, index.name)(snapshot)
+              )
+            )
         : updateAlgolia(collection.fieldsToSync)
     ),
   onDelete: functions.firestore
     .document(`${collection.name}/{docId}`)
     .onDelete(
       collection.indices
-        ? collection.indices.map(index => deleteFromAlgolia(index.name))
+        ? (snapshot: FirebaseFirestore.DocumentSnapshot) =>
+            Promise.all(
+              collection.indices.map(index =>
+                deleteFromAlgolia(index.name)(snapshot)
+              )
+            )
         : deleteFromAlgolia()
     ),
 });
 
+// const algoliaFnsGenerator = (collection) => ({
+//   onUpdate: functions.firestore
+//     .document(`${collection.name}/{docId}`)
+//     .onUpdate((change, context) => {
+//       const afterData = change.after.data();
+//       console.log(JSON.stringify(afterData));
+//     }),
+// });
 export default algoliaFnsGenerator;
