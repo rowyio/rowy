@@ -22,7 +22,7 @@ export const triggerCloudBuild = functions.https.onCall(
     if (!context.auth) {
       return false;
     }
-    const { triggerId, branch, projectId, groupName } = row;
+    const { triggerId, branch, projectId, groupName, functionConfig } = row;
 
     // Starts a build against the branch provided.
     const [resp] = await cb.runBuildTrigger({
@@ -33,6 +33,7 @@ export const triggerCloudBuild = functions.https.onCall(
         substitutions: {
           _PROJECT_ID: projectId,
           _FUNCTIONS_GROUP: groupName,
+          _FUNCTION_CONFIG: functionConfig,
         },
       },
     });

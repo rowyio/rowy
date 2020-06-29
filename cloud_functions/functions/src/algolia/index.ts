@@ -53,7 +53,7 @@ const algoliaReducer = (docData: FirebaseFirestore.DocumentData) => (
   }
 };
 
-const addToAlgolia = (fieldsToSync: string[]) => (
+const addToAlgolia = (fieldsToSync: string[], indexName?: string) => (
   snapshot: FirebaseFirestore.DocumentSnapshot
 ) => {
   const collectionName = snapshot.ref.parent.id;
@@ -62,11 +62,11 @@ const addToAlgolia = (fieldsToSync: string[]) => (
   if (!docData) return false; // returns if theres no data in the doc
   const algoliaData = fieldsToSync.reduce(algoliaReducer(docData), {});
   if (Object.keys(algoliaData).length === 0) return false; // returns if theres nothing to sync
-  const index = client.initIndex(collectionName); // initialize algolia index
+  const index = client.initIndex(indexName ? indexName : collectionName); // initialize algolia index
   return index.addObject({ ...algoliaData, objectID }); // add new algolia entry
 };
 
-const updateAlgolia = (fieldsToSync: string[]) => (
+const updateAlgolia = (fieldsToSync: string[], indexName?: string) => (
   snapshot: functions.Change<FirebaseFirestore.DocumentSnapshot>
 ) => {
   const collectionName = snapshot.after.ref.parent.id;
@@ -75,14 +75,16 @@ const updateAlgolia = (fieldsToSync: string[]) => (
   if (!docData) return false; // returns if theres no data in the doc
   const algoliaData = fieldsToSync.reduce(algoliaReducer(docData), {});
   if (Object.keys(algoliaData).length === 0) return false; // returns if theres nothing to sync
-  const index = client.initIndex(collectionName); // initialize algolia index
+  const index = client.initIndex(indexName ? indexName : collectionName); // initialize algolia index
   return index.saveObject({ ...algoliaData, objectID }); // add update algolia entry
 };
 
-const deleteFromAlgolia = (snapshot: FirebaseFirestore.DocumentSnapshot) => {
+const deleteFromAlgolia = (indexName?: string) => (
+  snapshot: FirebaseFirestore.DocumentSnapshot
+) => {
   const collectionName = snapshot.ref.parent.id;
   const objectID = snapshot.id;
-  const index = client.initIndex(collectionName); // initialize algolia index
+  const index = client.initIndex(indexName ? indexName : collectionName); // initialize algolia index
   return index.deleteObject(objectID); // delete algolia entry
 };
 
@@ -93,13 +95,29 @@ const deleteFromAlgolia = (snapshot: FirebaseFirestore.DocumentSnapshot) => {
 const algoliaFnsGenerator = collection => ({
   onCreate: functions.firestore
     .document(`${collection.name}/{docId}`)
-    .onCreate(addToAlgolia(collection.fieldsToSync)),
+    .onCreate(
+      collection.indices
+        ? collection.indices.map(index =>
+            addToAlgolia(index.fieldsToSync, index.name)
+          )
+        : addToAlgolia(collection.fieldsToSync)
+    ),
   onUpdate: functions.firestore
     .document(`${collection.name}/{docId}`)
-    .onUpdate(updateAlgolia(collection.fieldsToSync)),
+    .onUpdate(
+      collection.indices
+        ? collection.indices.map(index =>
+            updateAlgolia(index.fieldsToSync, index.name)
+          )
+        : updateAlgolia(collection.fieldsToSync)
+    ),
   onDelete: functions.firestore
     .document(`${collection.name}/{docId}`)
-    .onDelete(deleteFromAlgolia),
+    .onDelete(
+      collection.indices
+        ? collection.indices.map(index => deleteFromAlgolia(index.name))
+        : deleteFromAlgolia()
+    ),
 });
 
 export default algoliaFnsGenerator;

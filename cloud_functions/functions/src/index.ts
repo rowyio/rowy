@@ -11,7 +11,9 @@ function requireConfig(module) {
   }
 }
 
-const algoliaConfig = requireConfig("./algolia/config.json");
+import functionConfig from "./functionConfig";
+//const algoliaConfig = require("./algolia/config.json");
+
 const collectionHistoryConfig = requireConfig("./history/config.json");
 
 const snapshotSyncConfig = requireConfig("./snapshotSync/config.json");
@@ -32,9 +34,9 @@ export { scheduledFirestoreBackup, callableFirestoreBackup } from "./backup";
 import * as callableFns from "./callable";
 
 export const callable = callableFns;
-export const FT_algolia = algoliaConfig.reduce((acc: any, collection: any) => {
-  return { ...acc, [collection.name]: algoliaFnsGenerator(collection) };
-}, {});
+export const FT_algolia = {
+  [functionConfig.name]: algoliaFnsGenerator(functionConfig),
+};
 
 export const FT_sync = collectionSyncConfig.reduce(
   (acc: any, collection: any) => {
