@@ -1,13 +1,16 @@
 import React, { useEffect, useState, useContext } from "react";
 import { auth, db } from "../firebase";
 import firebase from "firebase/app";
+import useDoc from "hooks/useDoc";
 
 interface AppContextInterface {
   currentUser: firebase.User | null | undefined;
+  userDoc: any;
 }
 
 export const AppContext = React.createContext<AppContextInterface>({
   currentUser: undefined,
+  userDoc: undefined,
 });
 
 export const useAppContext = () => useContext(AppContext);
@@ -25,23 +28,21 @@ export const AppProvider: React.FC<IAppProviderProps> = ({
     firebase.User | null | undefined
   >();
 
+  const [userDoc, dispatchUserDoc] = useDoc({});
   useEffect(() => {
     auth.onAuthStateChanged(auth => {
       setCurrentUser(auth);
     });
   }, []);
-
-  const getUserTheme = async (currentUser: firebase.User) => {
-    const userDoc = await db
-      .collection("_FT_USERS")
-      .doc(currentUser.uid)
-      .get();
-    if (userDoc.exists) {
-      const userDocData = userDoc.data();
-      if (userDocData && userDocData.theme) {
-        setTheme(userDocData.theme);
-      }
-    } else {
+  useEffect(() => {
+    if (userDoc.doc) {
+      setTheme(userDoc.doc.theme);
+    } else if (
+      !userDoc.doc &&
+      !userDoc.loading &&
+      userDoc.path &&
+      currentUser
+    ) {
       const userFields = ["email", "displayName", "photoURL", "phoneNumber"];
       const userData = userFields.reduce((acc, curr) => {
         if (currentUser[curr]) {
@@ -49,30 +50,30 @@ export const AppProvider: React.FC<IAppProviderProps> = ({
         }
         return acc;
       }, {});
-      db.collection("_FT_USERS")
-        .doc(currentUser.uid)
-        .set(
-          {
-            user: userData,
-            theme: {
-              palette: {
-                primary: { main: "#ef4747" },
-              },
+      db.doc(userDoc.path).set(
+        {
+          user: userData,
+          theme: {
+            palette: {
+              primary: { main: "#ef4747" },
             },
           },
-          { merge: true }
-        );
+        },
+        { merge: true }
+      );
     }
-  };
+  }, [userDoc]);
+
   useEffect(() => {
     if (currentUser) {
-      getUserTheme(currentUser);
+      dispatchUserDoc({ path: `_FT_USERS/${currentUser.uid}` });
     }
   }, [currentUser]);
 
   return (
     <AppContext.Provider
       value={{
+        userDoc: { state: userDoc, dispatch: dispatchUserDoc },
         currentUser,
       }}
     >
