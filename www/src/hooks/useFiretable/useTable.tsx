@@ -1,14 +1,12 @@
 import { db } from "../../firebase";
 
 import Button from "@material-ui/core/Button";
-import React, { useEffect, useReducer, useState, useContext } from "react";
+import React, { useEffect, useReducer, useContext } from "react";
 import equals from "ramda/es/equals";
 import firebase from "firebase/app";
 import { FireTableFilter, FiretableOrderBy } from ".";
 import { SnackContext } from "../../contexts/snackContext";
 
-import createPersistedState from "use-persisted-state";
-const useTableFilterHistory = createPersistedState("tableFilters");
 const CAP = 1000; // safety  paramter sets the  upper limit of number of docs fetched by this hook
 const serverTimestamp = firebase.firestore.FieldValue.serverTimestamp;
 var characters =
@@ -43,7 +41,7 @@ const tableInitialState = {
   rows: [],
   prevFilters: null,
   prevPath: null,
-  orderBy: null,
+  orderBy: [],
   prevOrderBy: null,
   path: null,
   filters: [],
@@ -55,11 +53,12 @@ const tableInitialState = {
 
 const useTable = (initialOverrides: any) => {
   const snack = useContext(SnackContext);
-  const [perviousConfigs, setPerviousConfigs] = useTableFilterHistory();
+
   const [tableState, tableDispatch] = useReducer(tableReducer, {
     ...tableInitialState,
     ...initialOverrides,
   });
+
   /**  set collection listener
    *  @param filters
    *  @param limit max number of docs
@@ -74,7 +73,6 @@ const useTable = (initialOverrides: any) => {
     limit: number,
     orderBy: FiretableOrderBy
   ) => {
-    console.log(`getting Rows ${tableState.path}`);
     //unsubscribe from old path
     if (tableState.prevPath && tableState.path !== tableState.prevPath) {
       tableState.unsubscribe();
@@ -94,11 +92,11 @@ const useTable = (initialOverrides: any) => {
     filters.forEach(filter => {
       query = query.where(filter.key, filter.operator, filter.value);
     });
-    if (orderBy) {
-      orderBy.forEach(order => {
-        query = query.orderBy(order.key, order.direction);
-      });
-    }
+
+    orderBy?.forEach(order => {
+      query = query.orderBy(order.key, order.direction);
+    });
+
     const unsubscribe = query.limit(limit).onSnapshot(
       snapshot => {
         if (snapshot.docs.length > 0) {
@@ -106,9 +104,9 @@ const useTable = (initialOverrides: any) => {
             const data = doc.data();
             const id = doc.id;
             const ref = doc.ref;
-
             return { ...data, id, ref };
           });
+          console.log(tableState.path, { orderBy, rows });
           tableDispatch({
             rows,
             loading: false,
@@ -168,32 +166,16 @@ const useTable = (initialOverrides: any) => {
     } = tableState;
 
     if (
-      prevPath !== path &&
-      perviousConfigs &&
-      Boolean(perviousConfigs[encodeURIComponent(path)])
+      (prevPath !== path ||
+        !equals(prevFilters, filters) ||
+        prevLimit !== limit ||
+        prevOrderBy !== orderBy) &&
+      path
     ) {
-      const filters = perviousConfigs[encodeURIComponent(path)].filters
-        ? perviousConfigs[encodeURIComponent(path)].filters
-        : [];
-      const orderBy = perviousConfigs[encodeURIComponent(path)].orderBy
-        ? perviousConfigs[encodeURIComponent(path)].orderBy
-        : null;
-      // tableDispatch({ filters, orderBy });
-    }
-
-    if (
-      prevPath !== path ||
-      !equals(prevFilters, filters) ||
-      prevLimit !== limit ||
-      prevOrderBy !== orderBy
-    ) {
-      if (path) {
-        getRows(filters, limit, orderBy);
-        setPerviousConfigs(prevConfigs => ({
-          ...prevConfigs,
-          [encodeURIComponent(path)]: { filters, limit, orderBy },
-        }));
+      if (unsubscribe) {
+        tableState.unsubscribe();
       }
+      getRows(filters, limit, orderBy);
     }
     return () => {
       if (unsubscribe) {
@@ -239,9 +221,7 @@ const useTable = (initialOverrides: any) => {
     if (tableCollection !== tableState.path) {
       tableDispatch({
         path: tableCollection,
-        orderBy: null,
-        filters: null,
-        rows: [],
+        orderBy: [],
       });
     }
     if (filters) tableDispatch({ filters });
@@ -257,7 +237,7 @@ const useTable = (initialOverrides: any) => {
    */
   const addRow = async (data?: any) => {
     const valuesFromFilter = tableState.filters.reduce(filterReducer, {});
-    const { rows, orderBy, path } = tableState;
+    const { rows, path } = tableState;
 
     const docData = {
       ...valuesFromFilter,
@@ -298,7 +278,7 @@ const useTable = (initialOverrides: any) => {
     if (tableState.rows.length < tableState.limit) return;
 
     tableDispatch({
-      limit: tableState.limit + (additionalRows ? additionalRows : 150),
+      limit: tableState.limit + (additionalRows ? additionalRows : 100),
     });
   };
 

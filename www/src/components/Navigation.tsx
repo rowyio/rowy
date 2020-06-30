@@ -76,12 +76,20 @@ export default function Navigation({
   const getTablePath = (table: Table): LinkProps["to"] => {
     if (!table || !userClaims) return "";
 
-    if (table.regional && !userClaims.regions?.includes("GLOBAL"))
+    if (
+      userClaims.regions &&
+      table.regional &&
+      !userClaims.regions?.includes("GLOBAL")
+    )
       return {
         pathname: table.collection,
         search: `?filters=${encodeURIComponent(
           JSON.stringify([
-            { key: "region", operator: "==", value: userClaims.regions[0] },
+            {
+              key: "region",
+              operator: "==",
+              value: userClaims.regions[0],
+            },
           ])
         )}`,
       };
