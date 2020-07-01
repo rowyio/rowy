@@ -127,10 +127,8 @@ export default function Table({ collection, filters }: ITableProps) {
       editable: false,
     });
   }
-  console.log(columns);
 
   const rowHeight = tableState.config.rowHeight;
-
   const rows = tableState.rows;
   const rowGetter = (rowIdx: number) => rows[rowIdx];
 

@@ -60,19 +60,25 @@ export default function ColumnMenu() {
   const [modal, setModal] = useState(INITIAL_MODAL);
   const { tableState, tableActions, columnMenuRef } = useFiretableContext();
 
-  const [selectedColumnHeader, setSelectedColumnHeader] = useState();
+  const [selectedColumnHeader, setSelectedColumnHeader] = useState<any>(null);
   if (columnMenuRef)
-    columnMenuRef.current = { selectedColumnHeader, setSelectedColumnHeader };
+    columnMenuRef.current = {
+      selectedColumnHeader,
+      setSelectedColumnHeader,
+    } as any;
 
   if (!tableState || !tableActions) return null;
   const { orderBy } = tableState;
 
   const actions = tableActions!.column;
-  const { column, anchorEl } = selectedColumnHeader ?? {};
+  const { column, anchorEl } = (selectedColumnHeader ?? {}) as any;
 
   const handleClose = () => {
     if (!setSelectedColumnHeader) return;
-    setSelectedColumnHeader({ column: column!, anchorEl: null });
+    setSelectedColumnHeader({
+      column: column!,
+      anchorEl: null,
+    });
     setTimeout(() => setSelectedColumnHeader(null), 300);
   };
 
@@ -178,7 +184,9 @@ export default function ColumnMenu() {
       onClick: () =>
         setModal({
           type: ModalStates.new,
-          data: { initializeColumn: { index: column.index - 1 } },
+          data: {
+            initializeColumn: { index: column.index ? column.index - 1 : 0 },
+          },
         }),
     },
     {
@@ -187,7 +195,9 @@ export default function ColumnMenu() {
       onClick: () =>
         setModal({
           type: ModalStates.new,
-          data: { initializeColumn: { index: column.index + 1 } },
+          data: {
+            initializeColumn: { index: column.index ? column.index + 1 : 0 },
+          },
         }),
     },
     {
