@@ -103,7 +103,7 @@ export default function MultiSelect({
       multiple={!isSingle as any}
       label={column.name}
       labelPlural={column.name}
-      options={options}
+      options={options ?? []}
       disabled={column.editable === false}
       onOpen={handleOpen}
       TextFieldProps={

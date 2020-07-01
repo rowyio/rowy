@@ -24,6 +24,7 @@ export default function MultiSelect({
     <>
       <MultiSelectA
         {...props}
+        options={props.options ?? []}
         multiple
         value={field.value ? field.value : []}
         onChange={value => form.setFieldValue(field.name, value)}
