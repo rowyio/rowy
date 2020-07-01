@@ -53,53 +53,56 @@ export default function SideDrawer() {
   };
 
   // Map columns to form fields
-  let fields: any[] = [];
-  if (tableState && tableState.columns) {
-    fields = Object.values(tableState.columns).map(column => {
-      const field: Field = {
-        type: column.type,
-        name: column.key,
-        label: column.name,
-      };
 
-      switch (column.type) {
-        case FieldType.longText:
-          field.fieldVariant = "long";
-          break;
+  const fields = tableState?.columns?.map(column => {
+    const field: Field = {
+      type: column.type,
+      name: column.key,
+      label: column.name,
+    };
 
-        case FieldType.email:
-          field.fieldVariant = "email";
-          break;
+    switch (column.type) {
+      case FieldType.longText:
+        field.fieldVariant = "long";
+        break;
 
-        case FieldType.phone:
-          field.fieldVariant = "phone";
-          break;
+      case FieldType.email:
+        field.fieldVariant = "email";
+        break;
 
-        case FieldType.number:
-          field.fieldVariant = "number";
-          break;
+      case FieldType.phone:
+        field.fieldVariant = "phone";
+        break;
 
-        case FieldType.singleSelect:
-        case FieldType.multiSelect:
-          field.options = column.options;
-          break;
+      case FieldType.number:
+        field.fieldVariant = "number";
+        break;
 
-        case FieldType.connectTable:
-          field.collectionPath = column.collectionPath;
-          field.config = column.config;
-          break;
+      case FieldType.singleSelect:
+      case FieldType.multiSelect:
+        field.options = column.options;
+        break;
 
-        case FieldType.action:
-          field.callableName = column.callableName;
-          break;
+      case FieldType.connectTable:
+        field.collectionPath = column.collectionPath;
+        field.config = column.config;
+        break;
 
-        default:
-          break;
-      }
-      field.editable = column.editable;
-      return field;
-    });
-  }
+      case FieldType.subTable:
+        field.parentLabel = column.parentLabel;
+        break;
+
+      case FieldType.action:
+        field.callableName = column.callableName;
+        break;
+
+      default:
+        break;
+    }
+    field.editable = column.editable;
+    return field;
+  });
+
 
   return (
     <div className={clsx(open && classes.open, disabled && classes.disabled)}>

@@ -3,7 +3,7 @@ import { FieldProps } from "formik";
 
 import { useTheme } from "@material-ui/core";
 
-import MultiSelect, { IMultiSelectProps } from "components/MultiSelect";
+import MultiSelect, { MultiSelectProps } from "@antlerengineering/multiselect";
 import FormattedChip from "components/FormattedChip";
 
 /**
@@ -13,22 +13,22 @@ import FormattedChip from "components/FormattedChip";
 export default function SingleSelect({
   field,
   form,
+  editable,
   ...props
-}: FieldProps<string[]> & IMultiSelectProps) {
+}: FieldProps<string> & MultiSelectProps<string> & { editable: boolean }) {
   const theme = useTheme();
 
-  const value = ([field.value] as unknown) as string[];
-  const handleChange = value =>
-    form.setFieldValue(field.name, value.join(", "));
+  const handleChange = value => form.setFieldValue(field.name, value);
 
   return (
     <>
       <MultiSelect
         {...props}
-        value={value}
+        multiple={false}
+        value={field.value}
         onChange={handleChange}
+        disabled={editable === false}
         TextFieldProps={{
-          fullWidth: true,
           label: "",
           hiddenLabel: true,
           error: !!(form.touched[field.name] && form.errors[field.name]),
@@ -37,8 +37,7 @@ export default function SingleSelect({
           onBlur: () => form.setFieldTouched(field.name),
         }}
         searchable
-        freeText
-        multiple={false}
+        freeText={false}
       />
 
       {field.value?.length > 0 && (

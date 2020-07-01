@@ -1,12 +1,11 @@
+import { parse as json2csv } from "json2csv";
+import { saveAs } from "file-saver";
 import React, { useState, useCallback, useContext } from "react";
 import _camelCase from "lodash/camelCase";
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import Grid from "@material-ui/core/Grid";
-import IconButton from "@material-ui/core/IconButton";
 import Dialog from "@material-ui/core/Dialog";
 
 import Select from "@material-ui/core/Select";
@@ -14,20 +13,19 @@ import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import { makeStyles, createStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
 import Input from "@material-ui/core/Input";
 
-import ListItemText from "@material-ui/core/ListItemText";
-
-import Checkbox from "@material-ui/core/Checkbox";
 import Chip from "@material-ui/core/Chip";
-import CloudIcon from "@material-ui/icons/CloudDownload";
-import { exportTable } from "firebase/callables";
-import { saveAs } from "file-saver";
-import useTableConfig from "hooks/useFiretable/useTableConfig";
-import { SnackContext } from "contexts/snackContext";
-import { FireTableFilter } from "hooks/useFiretable";
 
+import { SnackContext } from "contexts/snackContext";
+import { useFiretableContext } from "contexts/firetableContext";
+import { db } from "../../firebase";
+import { FieldType } from "constants/fields";
+async function asyncForEach(array, callback) {
+  for (let index = 0; index < array.length; index++) {
+    await callback(array[index], index, array);
+  }
+}
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -71,14 +69,77 @@ const useStyles = makeStyles(theme =>
     chip: {},
   })
 );
-interface Props {
-  columns: any;
-  collection: string;
-  filters: FireTableFilter[];
-}
+const selectedColumnsReducer = (doc: any) => (
+  accumulator: any,
+  currentColumn: any
+) => {
+  switch (currentColumn.type) {
+    case FieldType.multiSelect:
+      return {
+        ...accumulator,
+        [currentColumn.key]: doc[currentColumn.key]
+          ? doc[currentColumn.key].join()
+          : "",
+      };
+    case FieldType.file:
+    case FieldType.image:
+      return {
+        ...accumulator,
+        [currentColumn.key]: doc[currentColumn.key]
+          ? doc[currentColumn.key]
+              .map((item: { downloadURL: string }) => item.downloadURL)
+              .join()
+          : "",
+      };
+    case FieldType.connectTable:
+      return {
+        ...accumulator,
+        [currentColumn.key]: doc[currentColumn.key]
+          ? doc[currentColumn.key]
+              .map((item: any) =>
+                currentColumn.config.primaryKeys.reduce(
+                  (labelAccumulator: string, currentKey: any) =>
+                    `${labelAccumulator} ${item.snapshot[currentKey]}`,
+                  ""
+                )
+              )
+              .join()
+          : "",
+      };
+    case FieldType.checkbox:
+      return {
+        ...accumulator,
+        [currentColumn.key]:
+          typeof doc[currentColumn.key] === "boolean"
+            ? doc[currentColumn.key]
+              ? "YES"
+              : "NO"
+            : "",
+      };
+    case FieldType.dateTime:
+    case FieldType.date:
+      return {
+        ...accumulator,
+        [currentColumn.key]: doc[currentColumn.key]
+          ? doc[currentColumn.key].toDate()
+          : "",
+      };
+    case FieldType.last:
+    case FieldType.action:
+    case FieldType.connectTable:
+      return accumulator;
+    default:
+      return {
+        ...accumulator,
+        [currentColumn.key]: doc[currentColumn.key]
+          ? doc[currentColumn.key]
+          : "",
+      };
+  }
+};
 
-export default function ExportCSV(props: Props) {
-  const { columns, collection, filters } = props;
+export default function ExportCSV() {
+  const { tableState } = useFiretableContext();
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [csvColumns, setCSVColumns] = useState<any[]>([]);
@@ -101,16 +162,30 @@ export default function ExportCSV(props: Props) {
       message: "preparing file, download will start shortly",
       duration: 5000,
     });
-    const data = await exportTable({
-      collectionPath: collection,
-      allFields: !Boolean(columns),
-      filters,
-      columns: columns ? columns : [],
+
+    let query: any = db.collection(tableState?.tablePath!);
+    // add filters
+    tableState?.filters.forEach(filter => {
+      query = query.where(filter.key, filter.operator, filter.value);
     });
-    var blob = new Blob([data.data], {
+    // optional order results
+
+    if (tableState?.orderBy) {
+      tableState?.orderBy?.forEach(orderBy => {
+        query = query.orderBy(orderBy.key, orderBy.direction);
+      });
+    }
+    query.limit(10000);
+    let querySnapshot = await query.get();
+    let docs = querySnapshot.docs.map(doc => doc.data());
+    const data = docs.map((doc: any) => {
+      return csvColumns.reduce(selectedColumnsReducer(doc), {});
+    });
+    const csv = json2csv(data);
+    var blob = new Blob([csv], {
       type: "text/csv;charset=utf-8",
     });
-    saveAs(blob, `${collection}.csv`);
+    saveAs(blob, `${tableState?.tablePath!}.csv`);
   }
 
   return (
@@ -147,16 +222,17 @@ export default function ExportCSV(props: Props) {
               )}
               MenuProps={MenuProps}
             >
-              {columns.map((column: any) => (
-                <MenuItem key={column.key} value={column}>
-                  {column.name}
-                </MenuItem>
-              ))}
+              {tableState?.columns &&
+                tableState?.columns.map((column: any) => (
+                  <MenuItem key={column.key} value={column}>
+                    {column.name}
+                  </MenuItem>
+                ))}
             </Select>
           </FormControl>
           <Button
             onClick={() => {
-              setCSVColumns(columns);
+              setCSVColumns(tableState?.columns!);
             }}
           >
             Select All

@@ -9,7 +9,7 @@ import { FormikErrors } from "formik";
 import { Values } from ".";
 
 import { useAppContext } from "contexts/appContext";
-import { useFiretableContext } from "contexts/firetableContext";
+import { useFiretableContext, firetableUser } from "contexts/firetableContext";
 
 export interface IAutosaveProps {
   values: Values;
@@ -40,7 +40,7 @@ export default function Autosave({ values, errors }: IAutosaveProps) {
     const updatedValues = _omitBy(debouncedValue, _isUndefined);
 
     const _ft_updatedAt = new Date();
-    const _ft_updatedBy = currentUser?.uid;
+    const _ft_updatedBy = firetableUser(currentUser);
     row.ref.update({
       ...updatedValues,
       _ft_updatedAt,

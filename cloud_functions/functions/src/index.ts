@@ -1,79 +1,49 @@
-import algoliaFnsGenerator from "./algolia";
-import * as algoliaConfig from "./algolia/config.json";
-import collectionSyncFnsGenerator from "./collectionSync";
-import * as collectionSyncConfig from "./collectionSync/config.json";
-
-import snapshotSyncFnsGenerator from "./snapshotSync";
-import * as snapshotSyncConfig from "./snapshotSync/config.json";
-
-import collectionSnapshotFnsGenerator from "./history";
-
-import * as collectionHistoryConfig from "./history/config.json";
-import permissionControlFnsGenerator from "./permissions";
-import * as permissionsConfig from "./permissions/config.json";
-
-import synonymsFnsGenerator from "./synonyms";
-import synonymsConfig from "./synonyms/config";
-
-export { exportTable } from "./export";
+export { triggerCloudBuild } from "./buildTriggers"; // a callable used for triggering cloudbuild to build and deploy configurable cloud functions
+export { scheduledFirestoreBackup, callableFirestoreBackup } from "./backup";
 import * as callableFns from "./callable";
-
 export const callable = callableFns;
-export const FT_algolia = algoliaConfig.reduce((acc: any, collection) => {
-  return { ...acc, [collection.name]: algoliaFnsGenerator(collection) };
-}, {});
 
-export const FT_sync = collectionSyncConfig.reduce((acc: any, collection) => {
-  return {
-    ...acc,
-    [`${`${`${collection.source}`
-      .replace(/\//g, "_")
-      .replace(/_{.*?}_/g, "_")}`}2${`${`${collection.target}`
-      .replace(/\//g, "_")
-      .replace(/_{.*?}_/g, "_")}`}`]: collectionSyncFnsGenerator(collection),
-  };
-}, {});
-export const FT_snapshotSync = snapshotSyncConfig.reduce(
-  (acc: any, collection) => {
-    return {
-      ...acc,
-      [`${`${`${collection.source}`
+// all the cloud functions bellow are deployed using the triggerCloudBuild callable  function
+// these functions are designed to be built and deployed based on the configuration passed through the callable
+import * as config from "./functionConfig.json"; // generated using generateConfig.ts
+import algoliaFnsGenerator from "./algolia"; // algolia sync functions template
+import collectionSyncFnsGenerator from "./collectionSync";
+import snapshotSyncFnsGenerator from "./snapshotSync";
+import collectionSnapshotFnsGenerator from "./history";
+import permissionControlFnsGenerator from "./permissions";
+
+const functionConfig: any = config;
+
+export const FT_algolia = {
+  [functionConfig.name]: { ...algoliaFnsGenerator(functionConfig) },
+};
+
+export const FT_sync = {
+  [`${`${`${functionConfig.source}`
+    .replace(/\//g, "_")
+    .replace(/_{.*?}_/g, "_")}`}2${`${`${functionConfig.target}`
+    .replace(/\//g, "_")
+    .replace(/_{.*?}_/g, "_")}`}`]: collectionSyncFnsGenerator(functionConfig),
+};
+
+export const FT_history = {
+  [functionConfig.name
+    .replace(/\//g, "_")
+    .replace(/_{.*?}_/g, "_")]: collectionSnapshotFnsGenerator(functionConfig),
+};
+
+export const FT_permissions = {
+  [functionConfig.name]: permissionControlFnsGenerator(functionConfig),
+};
+
+export const FT_snapshotSync = functionConfig.fnName
+  ? { [functionConfig.fnName]: snapshotSyncFnsGenerator(functionConfig) }
+  : {
+      [`${`${`${functionConfig.source}`
         .replace(/\//g, "_")
-        .replace(/_{.*?}_/g, "_")}`}2${`${`${collection.target}`
+        .replace(/_{.*?}_/g, "_")}`}2${`${`${functionConfig.target}`
         .replace(/\//g, "_")
-        .replace(/_{.*?}_/g, "_")}`}`]: snapshotSyncFnsGenerator(collection),
+        .replace(/_{.*?}_/g, "_")}`}`]: snapshotSyncFnsGenerator(
+        functionConfig
+      ),
     };
-  },
-  {}
-);
-
-export const FT_history = collectionHistoryConfig.reduce(
-  (acc: any, collection) => {
-    return {
-      ...acc,
-      [collection.name
-        .replace(/\//g, "_")
-        .replace(/_{.*?}_/g, "_")]: collectionSnapshotFnsGenerator(collection),
-    };
-  },
-  {}
-);
-
-export const FT_permissions = permissionsConfig.reduce(
-  (acc: any, collection) => {
-    return {
-      ...acc,
-      [collection.name]: permissionControlFnsGenerator(collection),
-    };
-  },
-  {}
-);
-
-export const FT_synonyms = synonymsConfig.reduce((acc: any, collection) => {
-  return {
-    ...acc,
-    [collection.name
-      .replace(/\//g, "_")
-      .replace(/_{.*?}_/g, "_")]: synonymsFnsGenerator(collection),
-  };
-}, {});

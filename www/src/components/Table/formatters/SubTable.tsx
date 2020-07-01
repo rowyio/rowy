@@ -35,7 +35,7 @@ export default function SubTable({ column, row }: CustomCellProps) {
   else
     subTablePath =
       encodeURIComponent(`${row.ref.path}/${fieldName}`) +
-      `?parentLabel=${row[parentLabel]}`;
+      `?parentLabel=${encodeURIComponent(row[parentLabel])}`;
 
   return (
     <Grid

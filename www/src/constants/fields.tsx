@@ -33,6 +33,8 @@ import JsonIcon from "assets/icons/Json";
 import RichTextIcon from "@material-ui/icons/TextFormat";
 import ColorIcon from "@material-ui/icons/Colorize";
 import SliderIcon from "assets/icons/Slider";
+import CodeIcon from "@material-ui/icons/Code";
+import UserIcon from "@material-ui/icons/Person";
 
 export {
   ShortTextIcon,
@@ -58,6 +60,7 @@ export {
 };
 
 export enum FieldType {
+  code = "CODE",
   shortText = "SIMPLE_TEXT",
   longText = "LONG_TEXT",
   email = "EMAIL",
@@ -89,6 +92,8 @@ export enum FieldType {
   slider = "SLIDER",
 
   json = "JSON",
+
+  user = "USER",
 
   last = "LAST",
 }
@@ -140,6 +145,8 @@ export const FIELDS = [
   { icon: <ColorIcon />, name: "Color", type: FieldType.color },
   { icon: <SliderIcon />, name: "Slider", type: FieldType.slider },
   { icon: <JsonIcon />, name: "JSON", type: FieldType.json },
+  { icon: <UserIcon />, name: "User", type: FieldType.user },
+  { icon: <CodeIcon />, name: "Code", type: FieldType.code },
 ];
 
 /**
@@ -147,7 +154,8 @@ export const FIELDS = [
  * @param fieldType
  */
 export const getFieldIcon = (fieldType: FieldType) => {
-  return find(propEq("type", fieldType))(FIELDS)?.icon;
+  const field: any = find(propEq("type", fieldType))(FIELDS);
+  return field.icon;
 };
 
 /**

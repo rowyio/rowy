@@ -41,12 +41,12 @@ const tableInitialState = {
   rows: [],
   prevFilters: null,
   prevPath: null,
-  orderBy: null,
+  orderBy: [],
   prevOrderBy: null,
   path: null,
   filters: [],
   prevLimit: 0,
-  limit: 150,
+  limit: 50,
   loading: true,
   cap: CAP,
 };
@@ -58,6 +58,7 @@ const useTable = (initialOverrides: any) => {
     ...tableInitialState,
     ...initialOverrides,
   });
+
   /**  set collection listener
    *  @param filters
    *  @param limit max number of docs
@@ -91,11 +92,11 @@ const useTable = (initialOverrides: any) => {
     filters.forEach(filter => {
       query = query.where(filter.key, filter.operator, filter.value);
     });
-    if (orderBy) {
-      orderBy.forEach(order => {
-        query = query.orderBy(order.key, order.direction);
-      });
-    }
+
+    orderBy?.forEach(order => {
+      query = query.orderBy(order.key, order.direction);
+    });
+
     const unsubscribe = query.limit(limit).onSnapshot(
       snapshot => {
         if (snapshot.docs.length > 0) {
@@ -103,9 +104,9 @@ const useTable = (initialOverrides: any) => {
             const data = doc.data();
             const id = doc.id;
             const ref = doc.ref;
-
             return { ...data, id, ref };
           });
+          console.log(tableState.path, { orderBy, rows });
           tableDispatch({
             rows,
             loading: false,
@@ -163,13 +164,18 @@ const useTable = (initialOverrides: any) => {
       orderBy,
       unsubscribe,
     } = tableState;
+
     if (
-      !equals(prevFilters, filters) ||
-      prevLimit !== limit ||
-      prevPath !== path ||
-      prevOrderBy !== orderBy
+      (prevPath !== path ||
+        !equals(prevFilters, filters) ||
+        prevLimit !== limit ||
+        prevOrderBy !== orderBy) &&
+      path
     ) {
-      if (path) getRows(filters, limit, orderBy);
+      if (unsubscribe) {
+        tableState.unsubscribe();
+      }
+      getRows(filters, limit, orderBy);
     }
     return () => {
       if (unsubscribe) {
@@ -189,7 +195,6 @@ const useTable = (initialOverrides: any) => {
   const deleteRow = (rowIndex: number, documentId: string) => {
     //remove row locally
     tableState.rows.splice(rowIndex, 1);
-    console.log("deleting");
     tableDispatch({ rows: tableState.rows });
     // delete document
     try {
@@ -216,9 +221,7 @@ const useTable = (initialOverrides: any) => {
     if (tableCollection !== tableState.path) {
       tableDispatch({
         path: tableCollection,
-        orderBy: null,
-        filters: null,
-        rows: [],
+        orderBy: [],
       });
     }
     if (filters) tableDispatch({ filters });
@@ -234,8 +237,7 @@ const useTable = (initialOverrides: any) => {
    */
   const addRow = async (data?: any) => {
     const valuesFromFilter = tableState.filters.reduce(filterReducer, {});
-    console.log(valuesFromFilter);
-    const { rows, orderBy, path } = tableState;
+    const { rows, path } = tableState;
 
     const docData = {
       ...valuesFromFilter,
@@ -243,14 +245,12 @@ const useTable = (initialOverrides: any) => {
       updatedAt: serverTimestamp(),
       ...data,
     };
-    console.log(docData);
     try {
       if (rows.length === 0) {
         await db.collection(path).add(docData);
       } else {
         const firstId = rows[0].id;
         const newId = generateSmallerId(firstId);
-        console.log(newId);
         await db
           .collection(path)
           .doc(newId)
@@ -278,7 +278,7 @@ const useTable = (initialOverrides: any) => {
     if (tableState.rows.length < tableState.limit) return;
 
     tableDispatch({
-      limit: tableState.limit + (additionalRows ? additionalRows : 150),
+      limit: tableState.limit + (additionalRows ? additionalRows : 100),
     });
   };
 

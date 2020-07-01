@@ -18,6 +18,8 @@ const LongText = lazy(() =>
   import("./LongText" /* webpackChunkName: "LongText" */)
 );
 const Json = lazy(() => import("./Json" /* webpackChunkName: "Json" */));
+const User = lazy(() => import("./User" /* webpackChunkName: "User" */));
+const Code = lazy(() => import("./Code" /* webpackChunkName: "Code" */));
 const RichText = lazy(() =>
   import("./RichText" /* webpackChunkName: "RichText" */)
 );
@@ -83,6 +85,10 @@ export const getFormatter = (column: any) => {
     case FieldType.json:
       return withCustomCell(Json);
 
+    case FieldType.user:
+      return withCustomCell(User);
+    case FieldType.code:
+      return withCustomCell(Code);
     case FieldType.richText:
       return withCustomCell(RichText);
 

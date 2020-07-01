@@ -1,20 +1,23 @@
 {
   "name": "functions",
   "scripts": {
-    "fetchConfig": "ts-node fetchConfig.ts",
+    "updateStatus": "ts-node updateDeployStatus.ts",
+    "generateConfig": "ts-node src/generateConfig.ts",
     "lint": "tslint --project tsconfig.json",
     "build": "tsc",
     "serve": "npm run build && firebase serve --only functions",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
-    "deploy": "firebase deploy --only functions",
+    "deployFT": "echo 'n\n' | firebase deploy --interactive",
     "logs": "firebase functions:log"
   },
   "engines": {
-    "node": "8"
+    "node": "10"
   },
-  "main": "lib/src/index.js",
+  "main": "lib/index.js",
   "dependencies": {
+    "@google-cloud/cloudbuild": "^1.5.0",
+    "@google-cloud/firestore": "^3.7.5",
     "@types/algoliasearch": "^3.34.5",
     "@types/json2csv": "^4.5.0",
     "@types/lodash": "^4.14.149",
@@ -25,7 +28,10 @@
     "lodash": "^4.17.15"
   },
   "devDependencies": {
+    "firebase-tools": "^7.16.1",
     "husky": "^3.0.9",
+    "prettier": "^2.0.5",
+    "pretty-quick": "^2.0.1",
     "ts-node": "^8.6.2",
     "tslint": "^6.1.0",
     "typescript": "^3.2.2"

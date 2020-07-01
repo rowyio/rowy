@@ -44,8 +44,9 @@ export default function SubTableBreadcrumbs({
   const classes = useStyles();
 
   const router = useRouter();
-  const parentLabel = queryString.parse(router.location.search)
-    .parentLabel as string;
+  const parentLabel = decodeURIComponent(
+    queryString.parse(router.location.search).parentLabel as string
+  );
 
   const breadcrumbs = collection.split("/");
 

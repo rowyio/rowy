@@ -33,6 +33,10 @@ export interface IConnectTableSelectProps {
   TextFieldProps?: Partial<TextFieldProps>;
 }
 
+/**
+ * TODO: Update this to use @antlerengineering/multiselect
+ * This is a copy-paste of the old MultiSelect
+ */
 export default function ConnectTableSelect({
   value = [],
   className,

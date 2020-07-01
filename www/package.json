@@ -3,16 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@antlerengineering/components": "^0.2.7",
+    "@antlerengineering/multiselect": "^0.3.9",
     "@date-io/date-fns": "1.x",
-    "@material-ui/core": "^4.9.4",
+    "@material-ui/core": "^4.9.13",
     "@material-ui/icons": "^4.9.1",
-    "@material-ui/lab": "^4.0.0-alpha.44",
+    "@material-ui/lab": "^4.0.0-alpha.52",
     "@material-ui/pickers": "^3.2.10",
     "@mdi/js": "^4.9.95",
     "@tinymce/tinymce-react": "^3.4.0",
     "@types/backbone": "^1.4.1",
     "@types/cash": "^0.0.3",
     "@types/chroma-js": "^2.0.0",
+    "@types/dompurify": "^2.0.1",
     "@types/file-saver": "^2.0.1",
     "@types/lodash": "^4.14.138",
     "@types/node": "12.7.4",
@@ -22,10 +25,12 @@
     "@types/react-div-100vh": "^0.3.0",
     "@types/react-dom": "16.9.0",
     "@types/react-router-dom": "^4.3.5",
+    "ace-builds": "^1.4.11",
     "algoliasearch": "^4.1.0",
     "chroma-js": "^2.1.0",
     "csv-parse": "^4.4.6",
     "date-fns": "^2.9.0",
+    "dompurify": "^2.0.8",
     "file-saver": "^2.0.2",
     "firebase": "^6.6.0",
     "formik": "^2.1.4",
@@ -34,10 +39,12 @@
     "grapesjs-react": "^2.0.2",
     "hotkeys-js": "^3.7.2",
     "json-format": "^1.0.1",
+    "json2csv": "^5.0.1",
     "lodash": "^4.17.15",
     "query-string": "^6.8.3",
     "ramda": "^0.26.1",
     "react": "^16.9.0",
+    "react-ace": "^9.1.1",
     "react-color": "^2.17.3",
     "react-data-grid": "^7.0.0-alpha.29",
     "react-data-grid-addons": "^7.0.0-alpha.24",
@@ -49,7 +56,9 @@
     "react-scripts": "^3.3.0",
     "tinymce": "^5.2.0",
     "typescript": "^3.7.2",
+    "use-algolia": "^1.3.0",
     "use-debounce": "^3.3.0",
+    "use-persisted-state": "^0.3.0",
     "yarn": "^1.19.0",
     "yup": "^0.27.0"
   },
@@ -57,7 +66,13 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "env": "node createDotEnv",
+    "target": "firebase target:apply hosting firetable",
+    "deploy": "firebase deploy"
+  },
+  "engines": {
+    "node": "10"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -76,6 +91,7 @@
   },
   "devDependencies": {
     "@material-ui/codemod": "^4.3.0",
+    "firebase-tools": "^7.16.1",
     "husky": "^3.0.5",
     "prettier": "^1.18.2",
     "pretty-quick": "^2.0.1"

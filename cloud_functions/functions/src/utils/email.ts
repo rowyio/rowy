@@ -32,7 +32,7 @@ export const sendEmail = async (templateId, row: any) => {
     row
   );
 
-  return db.collection("firemail").add({
+  return db.collection(Collections.fireMail).add({
     to: row.email,
     message,
     createdAt: serverTimestamp(),

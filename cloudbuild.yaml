@@ -1,0 +1,40 @@
+steps:
+  - name: node:10.15.1
+    entrypoint: yarn
+    args: ["install"]
+    dir: "www"
+  - name: node:10.15.1
+    entrypoint: yarn
+    args:
+      - env
+      - "${_PROJECT_ID}"
+      - "${_FIREBASE_WEB_API_KEY}"
+      - "${_ALGOLIA_APP_ID}"
+      - "${_ALGOLIA_APP_KEY}"
+    dir: "www"
+  - name: node:10.15.1
+    entrypoint: yarn
+    args: ["build"]
+    dir: "www"
+  - name: node:10.15.1
+    entrypoint: yarn
+    args:
+      - "target"
+      - "${_HOSTING_TARGET}"
+      - --project
+      - "${_PROJECT_ID}"
+    dir: "www"
+  - name: node:10.15.1
+    entrypoint: yarn
+    args:
+      - deploy
+      - --project
+      - "${_PROJECT_ID}"
+      - --debug
+      - --token
+      - "${_FIREBASE_TOKEN}"
+      - --only
+      - hosting
+    dir: "www"
+substitutions:
+  _PROJECT_ID: "project-id" # default value

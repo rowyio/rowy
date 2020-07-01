@@ -1,5 +1,6 @@
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useState } from "react";
 import { Route, Switch, Link } from "react-router-dom";
+import _merge from "lodash/merge";
 
 import {
   MuiThemeProvider as ThemeProvider,
@@ -17,7 +18,6 @@ import Loading from "./components/Loading";
 
 import { SnackProvider } from "./util/SnackProvider";
 import { AppProvider } from "./contexts/appContext";
-import GlobalStyles from "./util/GlobalStyles";
 import { FiretableContextProvider } from "./contexts/firetableContext";
 import routes from "constants/routes";
 
@@ -27,6 +27,9 @@ import SignOutView from "views/SignOutView";
 const TableView = lazy(() =>
   import("./views/TableView" /* webpackChunkName: "TableView" */)
 );
+const GridView = lazy(() =>
+  import("./views/GridView" /* webpackChunkName: "GridView" */)
+);
 const TablesView = lazy(() =>
   import("./views/TablesView" /* webpackChunkName: "TablesView" */)
 );
@@ -35,12 +38,16 @@ const EditorView = lazy(() =>
 );
 
 const App: React.FC = () => {
+  const [themeCustomization, setTheme] = useState({
+    palette: {
+      primary: { main: "#ef4747" },
+    },
+  });
   return (
-    <ThemeProvider theme={Theme}>
+    <ThemeProvider theme={Theme(themeCustomization)}>
       <CssBaseline />
-      <GlobalStyles />
       <ErrorBoundary>
-        <AppProvider>
+        <AppProvider setTheme={setTheme}>
           <SnackProvider>
             <CustomBrowserRouter>
               <Suspense fallback={<Loading fullScreen />}>
@@ -54,7 +61,7 @@ const App: React.FC = () => {
 
                   <PrivateRoute
                     exact
-                    path={[routes.home, routes.tableWithId]}
+                    path={[routes.home, routes.tableWithId, routes.gridWithId]}
                     render={() => (
                       <FiretableContextProvider>
                         <Switch>
@@ -66,6 +73,10 @@ const App: React.FC = () => {
                           <PrivateRoute
                             path={routes.tableWithId}
                             render={() => <TableView />}
+                          />
+                          <PrivateRoute
+                            path={routes.gridWithId}
+                            render={() => <GridView />}
                           />
                         </Switch>
                       </FiretableContextProvider>

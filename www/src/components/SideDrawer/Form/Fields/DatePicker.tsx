@@ -18,7 +18,7 @@ export default function DatePicker(props: KeyboardDatePickerProps) {
     transformedValue = props.field.value;
 
   const handleChange = (date: Date | null) => {
-    if (!date || isNaN(date.valueOf())) return;
+    if (isNaN(date?.valueOf() ?? 0)) return;
     props.form.setFieldValue(props.field.name, date);
   };
 

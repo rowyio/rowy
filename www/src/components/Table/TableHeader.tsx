@@ -18,6 +18,7 @@ import ExportCSV from "./ExportCSV";
 import { FireTableFilter } from "hooks/useFiretable";
 import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
 import { useFiretableContext } from "contexts/firetableContext";
+import { FieldType } from "constants/fields";
 
 export const TABLE_HEADER_HEIGHT = 56;
 
@@ -85,7 +86,16 @@ export default function TableHeader({
     >
       <Grid item>
         <Button
-          onClick={() => tableActions?.row.add()}
+          onClick={() => {
+            const initialVal = columns.reduce((acc, currCol) => {
+              if (currCol.type === FieldType.checkbox) {
+                return { ...acc, [currCol.key]: false };
+              } else {
+                return acc;
+              }
+            }, {});
+            tableActions?.row.add(initialVal);
+          }}
           variant="contained"
           color="primary"
           startIcon={<AddIcon />}
@@ -145,22 +155,16 @@ export default function TableHeader({
 
       <Grid item />
 
-      {userClaims && userClaims.roles?.includes("ADMIN") && (
+      {/* {userClaims && userClaims.roles?.includes("ADMIN") && ( */}
+      <Grid item>
+        <ImportCSV />
+      </Grid>
+      {/* )} */}
+      {userClaims && !userClaims.roles?.includes("READONLY") && (
         <Grid item>
-          <ImportCSV />
+          <ExportCSV />
         </Grid>
       )}
-
-      <Grid item>
-        <ExportCSV
-          columns={columns.map((column: any) => {
-            const { key, name, config, type } = column;
-            return { key, name, config, type };
-          })}
-          collection={collection}
-          filters={filters}
-        />
-      </Grid>
     </Grid>
   );
 }

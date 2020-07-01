@@ -1,10 +1,20 @@
 import React from "react";
 import { CustomCellProps } from "./withCustomCell";
 
+import { Link } from "@material-ui/core";
+
 export default function Url({ value }: CustomCellProps) {
+  if (!value) return null;
+  const href = value.includes("http") ? value : `https://${value}`;
   return (
-    <a href={value} target="_blank" rel="noopener noreferrer">
+    <Link
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      underline="always"
+      style={{ fontWeight: "bold" }}
+    >
       {value}
-    </a>
+    </Link>
   );
 }

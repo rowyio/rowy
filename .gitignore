@@ -3,6 +3,8 @@
 # dependencies
 /node_modules
 www/node_modules
+www/.firebaserc
+
 Firetable/node_modules
 cloud_functions/functions/node_modules
 /.pnp
@@ -20,19 +22,28 @@ cloud_functions/functions/lib
 cloud_functions/functions/src/collectionSync/config.json
 cloud_functions/functions/src/history/config.json
 cloud_functions/functions/src/algolia/config.json
+cloud_functions/functions/src/snapshotSync/config.json
+
 cloud_functions/functions/firebase-credentials.json
+cloud_functions/.firebaserc
 
 # misc
 .DS_Store
 .env*
 !.env.example
+!*.enc
 
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+firebase-debug.log*
+
+
 
 # Accidental package installs to root directories
 yarn.lock
 package.json
 package-lock.json
 node_modules/
+
+cloud_functions/functions/src/functionConfig.json
