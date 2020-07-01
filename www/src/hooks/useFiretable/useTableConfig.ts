@@ -4,8 +4,12 @@ import useDoc, { DocActions } from "../useDoc";
 import { FieldType } from "constants/fields";
 import _camelCase from "lodash/camelCase";
 import _findIndex from "lodash/findIndex";
+import _find from "lodash/find";
+import _sortBy from "lodash/sortBy";
 import { arrayMover } from "../../util/fns";
-import { db } from "../../firebase";
+import { db, deleteField } from "../../firebase";
+
+//import
 
 const formatPathRegex = /\/[^\/]+\/([^\/]+)/g;
 
@@ -45,13 +49,14 @@ const useTableConfig = (tablePath?: string) => {
    */
   const add = (name: string, type: FieldType, data?: any) => {
     //TODO: validation
-
-    //console.log("tableConfigState", tableConfigState);
     const { columns } = tableConfigState;
+    const newIndex = Object.keys(columns).length;
+    let updatedColumns = columns;
     const key = _camelCase(name);
+    updatedColumns[key] = { name, key, type, ...data, index: newIndex };
     documentDispatch({
       action: DocActions.update,
-      data: { columns: [...columns, { name, key, type, ...data }] },
+      data: { columns: updatedColumns },
     });
   };
 
@@ -61,8 +66,21 @@ const useTableConfig = (tablePath?: string) => {
    */
   const [resize] = useDebouncedCallback((index: number, width: number) => {
     const { columns } = tableConfigState;
-    columns[index].width = width;
-    documentDispatch({ action: DocActions.update, data: { columns } });
+    const numberOfFixedColumns = Object.values(columns).filter(
+      (col: any) => col.fixed && !col.hidden
+    ).length;
+    const columnsArray = _sortBy(
+      Object.values(columns).filter((col: any) => !col.hidden && !col.fixed),
+      "index"
+    );
+    let column: any = columnsArray[index - numberOfFixedColumns];
+    column.width = width;
+    let updatedColumns = columns;
+    updatedColumns[column.key] = column;
+    documentDispatch({
+      action: DocActions.update,
+      data: { columns: updatedColumns },
+    });
   }, 1000);
   type updatable = { field: string; value: unknown };
 
@@ -70,20 +88,30 @@ const useTableConfig = (tablePath?: string) => {
    *  @param index of column.
    *  @param {updatable[]} updatables properties to be updated
    */
-  const updateColumn = (index: number, updatables: updatable[]) => {
+  const updateColumn = (key: string, updates: any) => {
     const { columns } = tableConfigState;
-    updatables.forEach((updatable: updatable) => {
-      columns[index][updatable.field] = updatable.value;
+
+    const updatedColumns = {
+      ...columns,
+      [key]: { ...columns[key], ...updates },
+    };
+
+    documentDispatch({
+      action: DocActions.update,
+      data: { columns: updatedColumns },
     });
-    documentDispatch({ action: DocActions.update, data: { columns } });
   };
   /** remove column by index
    *  @param index of column.
    */
-  const remove = (index: number) => {
+  const remove = (key: string) => {
     const { columns } = tableConfigState;
-    columns.splice(index, 1);
-    documentDispatch({ action: DocActions.update, data: { columns } });
+    let updatedColumns = columns;
+    updatedColumns[key] = deleteField();
+    documentDispatch({
+      action: DocActions.update,
+      data: { columns: updatedColumns },
+    });
   };
   /** reorder columns by key
    * @param draggedColumnKey column being repositioned.
@@ -91,13 +119,18 @@ const useTableConfig = (tablePath?: string) => {
    */
   const reorder = (draggedColumnKey: string, droppedColumnKey: string) => {
     const { columns } = tableConfigState;
-    const draggedColumnIndex = _findIndex(columns, ["key", draggedColumnKey]);
-    const droppedColumnIndex = _findIndex(columns, ["key", droppedColumnKey]);
-    const reorderedColumns = [...columns];
-    arrayMover(reorderedColumns, draggedColumnIndex, droppedColumnIndex);
+    console.log(columns[draggedColumnKey], columns[droppedColumnKey]);
+    const oldIndex = columns[draggedColumnKey].index;
+    const newIndex = columns[droppedColumnKey].index;
+    const columnsArray = _sortBy(Object.values(columns), "index");
+    arrayMover(columnsArray, oldIndex, newIndex);
+    let updatedColumns = columns;
+    columnsArray.forEach((column: any, index) => {
+      updatedColumns[column.key] = { ...column, index };
+    });
     documentDispatch({
       action: DocActions.update,
-      data: { columns: reorderedColumns },
+      data: { columns: updatedColumns },
     });
   };
   /** changing table configuration used for things such as row height

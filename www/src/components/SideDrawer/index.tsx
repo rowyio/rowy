@@ -53,6 +53,7 @@ export default function SideDrawer() {
   };
 
   // Map columns to form fields
+
   const fields = tableState?.columns?.map(column => {
     const field: Field = {
       type: column.type,
@@ -101,6 +102,7 @@ export default function SideDrawer() {
     field.editable = column.editable;
     return field;
   });
+
 
   return (
     <div className={clsx(open && classes.open, disabled && classes.disabled)}>

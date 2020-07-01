@@ -13,13 +13,16 @@ const documentIntialState = {
   ref: null,
   loading: true,
 };
+
 const documentReducer = (prevState: any, newProps: any) => {
   switch (newProps.action) {
     case DocActions.clear:
       return documentIntialState;
     case DocActions.update:
       // takes data object form the dispatcher and updates doc
+
       prevState.ref.set({ ...newProps.data }, { merge: true });
+
       return { ...prevState, doc: { ...prevState.doc, ...newProps.data } };
     case DocActions.delete:
       prevState.ref.delete();
