@@ -25,7 +25,7 @@ export default function MultiSelect({
       <MultiSelectA
         {...props}
         multiple
-        value={field.value}
+        value={field.value ? field.value : []}
         onChange={value => form.setFieldValue(field.name, value)}
         disabled={editable === false}
         TextFieldProps={{
@@ -40,7 +40,7 @@ export default function MultiSelect({
         freeText={false}
       />
 
-      {Array.isArray(field.value) && (
+      {field.value && Array.isArray(field.value) && (
         <Grid container spacing={1} style={{ marginTop: theme.spacing(1) }}>
           {field.value.map(
             (item, i) =>

@@ -14,7 +14,9 @@ steps:
     dir: "cloud_functions/functions"
   - name: node:10.15.1
     entrypoint: yarn
-    args: ["fetchConfig"]
+    args:
+      - "generateConfig"
+      - "${_FUNCTION_CONFIG}"
     dir: "cloud_functions/functions"
   - name: node:10.15.1
     entrypoint: yarn
@@ -26,6 +28,12 @@ steps:
       - "${_FIREBASE_TOKEN}"
       - "--only"
       - "functions:${_FUNCTIONS_GROUP}"
+    dir: "cloud_functions/functions"
+  - name: node:10.15.1
+    entrypoint: yarn
+    args:
+      - "updateStatus"
+      - "${_REQUEST_DOC_PATH}"
     dir: "cloud_functions/functions"
 
 substitutions:

@@ -1,4 +1,5 @@
 import { parse as json2csv } from "json2csv";
+import { saveAs } from "file-saver";
 import React, { useState, useCallback, useContext } from "react";
 import _camelCase from "lodash/camelCase";
 import Button from "@material-ui/core/Button";
@@ -16,12 +17,15 @@ import Input from "@material-ui/core/Input";
 
 import Chip from "@material-ui/core/Chip";
 
-import { saveAs } from "file-saver";
 import { SnackContext } from "contexts/snackContext";
 import { useFiretableContext } from "contexts/firetableContext";
 import { db } from "../../firebase";
 import { FieldType } from "constants/fields";
-
+async function asyncForEach(array, callback) {
+  for (let index = 0; index < array.length; index++) {
+    await callback(array[index], index, array);
+  }
+}
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -133,6 +137,7 @@ const selectedColumnsReducer = (doc: any) => (
       };
   }
 };
+
 export default function ExportCSV() {
   const { tableState } = useFiretableContext();
   const classes = useStyles();
@@ -164,21 +169,18 @@ export default function ExportCSV() {
       query = query.where(filter.key, filter.operator, filter.value);
     });
     // optional order results
-    console.log(tableState?.orderBy);
-    if (tableState?.orderBy !== undefined) {
-      tableState?.orderBy.forEach(orderBy => {
+
+    if (tableState?.orderBy) {
+      tableState?.orderBy?.forEach(orderBy => {
         query = query.orderBy(orderBy.key, orderBy.direction);
       });
     }
-    //optional set query limit
-    //if (limit) query = query.limit(limit);
-    const querySnapshot = await query.get();
-    const docs = querySnapshot.docs.map(doc => doc.data());
-    // generate csv Data
+    query.limit(10000);
+    let querySnapshot = await query.get();
+    let docs = querySnapshot.docs.map(doc => doc.data());
     const data = docs.map((doc: any) => {
       return csvColumns.reduce(selectedColumnsReducer(doc), {});
     });
-
     const csv = json2csv(data);
     var blob = new Blob([csv], {
       type: "text/csv;charset=utf-8",
@@ -220,11 +222,12 @@ export default function ExportCSV() {
               )}
               MenuProps={MenuProps}
             >
-              {tableState?.columns.map((column: any) => (
-                <MenuItem key={column.key} value={column}>
-                  {column.name}
-                </MenuItem>
-              ))}
+              {tableState?.columns &&
+                tableState?.columns.map((column: any) => (
+                  <MenuItem key={column.key} value={column}>
+                    {column.name}
+                  </MenuItem>
+                ))}
             </Select>
           </FormControl>
           <Button

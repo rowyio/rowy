@@ -155,11 +155,11 @@ export default function TableHeader({
 
       <Grid item />
 
-      {userClaims && userClaims.roles?.includes("ADMIN") && (
-        <Grid item>
-          <ImportCSV />
-        </Grid>
-      )}
+      {/* {userClaims && userClaims.roles?.includes("ADMIN") && ( */}
+      <Grid item>
+        <ImportCSV />
+      </Grid>
+      {/* )} */}
       {userClaims && !userClaims.roles?.includes("READONLY") && (
         <Grid item>
           <ExportCSV />

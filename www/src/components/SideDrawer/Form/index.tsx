@@ -72,6 +72,9 @@ const ConnectTable = lazy(() =>
     "./Fields/ConnectTable" /* webpackChunkName: "SideDrawer-ConnectTable" */
   )
 );
+const Code = lazy(() =>
+  import("./Fields/Code" /* webpackChunkName: "SideDrawer-Code" */)
+);
 const SubTable = lazy(() =>
   import("./Fields/SubTable" /* webpackChunkName: "SideDrawer-SubTable" */)
 );
@@ -125,6 +128,7 @@ const getInitialValues = (fields: Fields): Values =>
       case FieldType.email:
       case FieldType.phone:
       case FieldType.url:
+      case FieldType.code:
       case FieldType.richText:
       default:
         break;
@@ -319,7 +323,9 @@ export default function Form({ fields, values }: IFormProps) {
                       <Field {...fieldProps} component={JsonEditor} />
                     );
                     break;
-
+                  case FieldType.code:
+                    renderedField = <Field {...fieldProps} component={Code} />;
+                    break;
                   case undefined:
                     return null;
 

@@ -1,92 +1,49 @@
-const fs = require("fs");
-function requireConfig(module) {
-  //trys to import config json
-  try {
-    const data = JSON.parse(fs.readFileSync(module, "utf-8"));
-    console.log(data);
-    return data;
-  } catch (error) {
-    // if there's no config it'll return an empty array
-    return [];
-  }
-}
-
-const algoliaConfig = requireConfig("./algolia/config.json");
-const collectionHistoryConfig = requireConfig("./history/config.json");
-
-const snapshotSyncConfig = requireConfig("./snapshotSync/config.json");
-const collectionSyncConfig = requireConfig("./collectionSync/config.json");
-const permissionsConfig = requireConfig("./permissions/config.json");
-
-import algoliaFnsGenerator from "./algolia";
-import collectionSyncFnsGenerator from "./collectionSync";
-
-import snapshotSyncFnsGenerator from "./snapshotSync";
-//import * as collectionHistoryConfig from "./history/config.json";
-import collectionSnapshotFnsGenerator from "./history";
-
-import permissionControlFnsGenerator from "./permissions";
-
-export { triggerCloudBuild } from "./buildTriggers";
+export { triggerCloudBuild } from "./buildTriggers"; // a callable used for triggering cloudbuild to build and deploy configurable cloud functions
 export { scheduledFirestoreBackup, callableFirestoreBackup } from "./backup";
 import * as callableFns from "./callable";
-
 export const callable = callableFns;
-export const FT_algolia = algoliaConfig.reduce((acc: any, collection: any) => {
-  return { ...acc, [collection.name]: algoliaFnsGenerator(collection) };
-}, {});
 
-export const FT_sync = collectionSyncConfig.reduce(
-  (acc: any, collection: any) => {
-    return {
-      ...acc,
-      [`${`${`${collection.source}`
-        .replace(/\//g, "_")
-        .replace(/_{.*?}_/g, "_")}`}2${`${`${collection.target}`
-        .replace(/\//g, "_")
-        .replace(/_{.*?}_/g, "_")}`}`]: collectionSyncFnsGenerator(collection),
-    };
-  },
-  {}
-);
-export const FT_snapshotSync = snapshotSyncConfig.reduce(
-  (acc: any, collection: any) => {
-    if (collection.fnName) {
-      return {
-        ...acc,
-        [collection.fnName]: snapshotSyncFnsGenerator(collection),
-      };
-    } else
-      return {
-        ...acc,
-        [`${`${`${collection.source}`
-          .replace(/\//g, "_")
-          .replace(/_{.*?}_/g, "_")}`}2${`${`${collection.target}`
-          .replace(/\//g, "_")
-          .replace(/_{.*?}_/g, "_")}`}`]: snapshotSyncFnsGenerator(collection),
-      };
-  },
-  {}
-);
+// all the cloud functions bellow are deployed using the triggerCloudBuild callable  function
+// these functions are designed to be built and deployed based on the configuration passed through the callable
+import * as config from "./functionConfig.json"; // generated using generateConfig.ts
+import algoliaFnsGenerator from "./algolia"; // algolia sync functions template
+import collectionSyncFnsGenerator from "./collectionSync";
+import snapshotSyncFnsGenerator from "./snapshotSync";
+import collectionSnapshotFnsGenerator from "./history";
+import permissionControlFnsGenerator from "./permissions";
 
-export const FT_history = collectionHistoryConfig.reduce(
-  (acc: any, collection: any) => {
-    return {
-      ...acc,
-      [collection.name
-        .replace(/\//g, "_")
-        .replace(/_{.*?}_/g, "_")]: collectionSnapshotFnsGenerator(collection),
-    };
-  },
-  {}
-);
+const functionConfig: any = config;
 
-export const FT_permissions = permissionsConfig.reduce(
-  (acc: any, collection: any) => {
-    return {
-      ...acc,
-      [collection.name]: permissionControlFnsGenerator(collection),
+export const FT_algolia = {
+  [functionConfig.name]: { ...algoliaFnsGenerator(functionConfig) },
+};
+
+export const FT_sync = {
+  [`${`${`${functionConfig.source}`
+    .replace(/\//g, "_")
+    .replace(/_{.*?}_/g, "_")}`}2${`${`${functionConfig.target}`
+    .replace(/\//g, "_")
+    .replace(/_{.*?}_/g, "_")}`}`]: collectionSyncFnsGenerator(functionConfig),
+};
+
+export const FT_history = {
+  [functionConfig.name
+    .replace(/\//g, "_")
+    .replace(/_{.*?}_/g, "_")]: collectionSnapshotFnsGenerator(functionConfig),
+};
+
+export const FT_permissions = {
+  [functionConfig.name]: permissionControlFnsGenerator(functionConfig),
+};
+
+export const FT_snapshotSync = functionConfig.fnName
+  ? { [functionConfig.fnName]: snapshotSyncFnsGenerator(functionConfig) }
+  : {
+      [`${`${`${functionConfig.source}`
+        .replace(/\//g, "_")
+        .replace(/_{.*?}_/g, "_")}`}2${`${`${functionConfig.target}`
+        .replace(/\//g, "_")
+        .replace(/_{.*?}_/g, "_")}`}`]: snapshotSyncFnsGenerator(
+        functionConfig
+      ),
     };
-  },
-  {}
-);

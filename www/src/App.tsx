@@ -1,5 +1,6 @@
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useState } from "react";
 import { Route, Switch, Link } from "react-router-dom";
+import _merge from "lodash/merge";
 
 import {
   MuiThemeProvider as ThemeProvider,
@@ -37,11 +38,16 @@ const EditorView = lazy(() =>
 );
 
 const App: React.FC = () => {
+  const [themeCustomization, setTheme] = useState({
+    palette: {
+      primary: { main: "#ef4747" },
+    },
+  });
   return (
-    <ThemeProvider theme={Theme}>
+    <ThemeProvider theme={Theme(themeCustomization)}>
       <CssBaseline />
       <ErrorBoundary>
-        <AppProvider>
+        <AppProvider setTheme={setTheme}>
           <SnackProvider>
             <CustomBrowserRouter>
               <Suspense fallback={<Loading fullScreen />}>

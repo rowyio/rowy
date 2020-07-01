@@ -1,19 +1,20 @@
 {
   "name": "functions",
   "scripts": {
-    "fetchConfig": "ts-node fetchConfig.ts",
+    "updateStatus": "ts-node updateDeployStatus.ts",
+    "generateConfig": "ts-node src/generateConfig.ts",
     "lint": "tslint --project tsconfig.json",
     "build": "tsc",
     "serve": "npm run build && firebase serve --only functions",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
-    "deployFT": "firebase deploy",
+    "deployFT": "echo 'n\n' | firebase deploy --interactive",
     "logs": "firebase functions:log"
   },
   "engines": {
     "node": "10"
   },
-  "main": "lib/src/index.js",
+  "main": "lib/index.js",
   "dependencies": {
     "@google-cloud/cloudbuild": "^1.5.0",
     "@google-cloud/firestore": "^3.7.5",

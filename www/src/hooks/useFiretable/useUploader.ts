@@ -108,7 +108,6 @@ const useUploader = () => {
                 type: file.type,
                 lastModifiedTS: file.lastModified,
               });
-
               // STore in the document if docRef provided
               if (docRef && docRef.update)
                 docRef.update({ [fieldName]: newValue });
@@ -124,7 +123,10 @@ const useUploader = () => {
   };
 
   const deleteUpload = (fileValue: FileValue) => {
-    return bucket.ref(fileValue.ref).delete();
+    if (fileValue.ref) return bucket.ref(fileValue.ref).delete();
+    else {
+      return true;
+    }
   };
 
   return { uploaderState, upload, uploaderDispatch, deleteUpload };

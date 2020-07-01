@@ -117,7 +117,7 @@ const Filters = ({ columns, setFilters }: any) => {
     operator: "",
     value: "",
   });
-  console.log(query);
+
   useEffect(() => {
     if (selectedColumn) {
       let updatedQuery: FireTableFilter = {
@@ -185,7 +185,6 @@ const Filters = ({ columns, setFilters }: any) => {
           <Switch
             value={query.value}
             onChange={(e, checked) => {
-              console.log(checked);
               setQuery(query => ({ ...query, value: checked }));
             }}
           />
