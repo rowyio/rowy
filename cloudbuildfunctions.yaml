@@ -1,9 +1,9 @@
 steps:
-  # - name: "gcr.io/kaniko-project/executor:latest"
-  #   args:
-  #     - --destination=gcr.io/$PROJECT_ID/image
-  #     - --cache=true
-  #     - --cache-ttl=24h
+  - name: "gcr.io/kaniko-project/executor:latest"
+    args:
+      - --destination=gcr.io/$PROJECT_ID/image
+      - --cache=true
+      - --cache-ttl=24h
   - name: gcr.io/cloud-builders/gcloud
     args:
       - kms
@@ -13,10 +13,10 @@ steps:
       - --location=global
       - --keyring=antler-vc
       - --key=cloudbuild-env
-  - name: node:10.15.1
-    entrypoint: yarn
-    args: ["install"]
-    dir: "cloud_functions/functions"
+  # - name: node:10.15.1
+  #   entrypoint: yarn
+  #   args: ["install"]
+  #   dir: "cloud_functions/functions"
   - name: node:10.15.1
     entrypoint: yarn
     args:
