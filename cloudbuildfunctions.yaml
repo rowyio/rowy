@@ -1,9 +1,13 @@
 steps:
-  - name: "gcr.io/kaniko-project/executor:latest"
-    args:
-      - --destination=gcr.io/$PROJECT_ID/image
-      - --cache=true
-      - --cache-ttl=24h
+  # - name: "gcr.io/kaniko-project/executor:latest"
+  #   args:
+  #     - --destination=gcr.io/$PROJECT_ID/image
+  #     - --cache=true
+  #     - --cache-ttl=24h
+  - name: gcr.io/cloud-builders/docker
+    args: ["build", "-t", "gcr.io/$PROJECT_ID/image", "."]
+    images:
+      - "gcr.io/$PROJECT_ID/image"
   - name: gcr.io/cloud-builders/gcloud
     args:
       - kms
