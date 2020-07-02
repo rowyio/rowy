@@ -90,17 +90,21 @@ const ColumnHeader: Column<any>["headerRenderer"] = ({ column }) => {
   const classes = useStyles();
 
   const {
-    setSelectedColumnHeader,
     tableState,
     tableActions,
     userClaims,
+    columnMenuRef,
   } = useFiretableContext();
-  if (!setSelectedColumnHeader || !tableState || !tableActions) return null;
+  if (!columnMenuRef || !tableState || !tableActions) return null;
   const { orderBy } = tableState;
 
   const handleClick = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => setSelectedColumnHeader({ column, anchorEl: event.currentTarget });
+  ) =>
+    columnMenuRef?.current?.setSelectedColumnHeader({
+      column,
+      anchorEl: event.currentTarget,
+    });
 
   const isSorted = orderBy?.[0]?.key === (column.key as string);
   const isAsc = isSorted && orderBy?.[0]?.direction === "asc";

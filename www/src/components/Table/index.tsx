@@ -1,4 +1,6 @@
 import React, { lazy, Suspense, useEffect, useRef } from "react";
+
+import _orderBy from "lodash/orderBy";
 import { useDebouncedCallback } from "use-debounce";
 import _isEmpty from "lodash/isEmpty";
 
@@ -16,6 +18,7 @@ import Loading from "components/Loading";
 import SubTableBreadcrumbs, { BREADCRUMBS_HEIGHT } from "./SubTableBreadcrumbs";
 import TableHeader, { TABLE_HEADER_HEIGHT } from "./TableHeader";
 import ColumnHeader from "./ColumnHeader";
+import ColumnMenu from "./ColumnMenu";
 import FinalColumnHeader from "./FinalColumnHeader";
 import FinalColumn, { useFinalColumnStyles } from "./formatters/FinalColumn";
 
@@ -27,14 +30,11 @@ import { getFormatter } from "./formatters";
 import { getEditor } from "./editors";
 
 import useWindowSize from "hooks/useWindowSize";
-import { DRAWER_WIDTH, DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
+import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
 import { APP_BAR_HEIGHT } from "components/Navigation";
 import useStyles from "./styles";
 
 // const Hotkeys = lazy(() => import("./HotKeys" /* webpackChunkName: "HotKeys" */));
-const ColumnEditor = lazy(() =>
-  import("./ColumnEditor" /* webpackChunkName: "ColumnEditor" */)
-);
 const { DraggableContainer } = DraggableHeader;
 
 export type FiretableColumn = Column<any> & {
@@ -99,19 +99,22 @@ export default function Table({ collection, filters }: ITableProps) {
 
   let columns: FiretableColumn[] = [];
   if (!tableState.loadingColumns && tableState.columns) {
-    columns = tableState.columns
-      .filter((column: any) => !column.hidden)
-      .map((column: any, index) => ({
-        draggable: true,
-        editable: true,
-        resizable: true,
-        frozen: column.fixed,
-        headerRenderer: ColumnHeader,
-        formatter: getFormatter(column),
-        editor: getEditor(column),
-        ...column,
-        width: column.width ? (column.width > 380 ? 380 : column.width) : 150,
-      }));
+    columns = _orderBy(
+      Object.values(tableState.columns).filter(
+        (column: any) => !column.hidden && column.key
+      ),
+      "index"
+    ).map((column: any, index) => ({
+      draggable: true,
+      editable: true,
+      resizable: true,
+      frozen: column.fixed,
+      headerRenderer: ColumnHeader,
+      formatter: getFormatter(column),
+      editor: getEditor(column),
+      ...column,
+      width: column.width ? (column.width > 380 ? 380 : column.width) : 150,
+    }));
     columns.push({
       isNew: true,
       key: "new",
@@ -124,6 +127,7 @@ export default function Table({ collection, filters }: ITableProps) {
       editable: false,
     });
   }
+  console.log(columns);
 
   const rowHeight = tableState.config.rowHeight;
 
@@ -214,9 +218,7 @@ export default function Table({ collection, filters }: ITableProps) {
         <Loading message="Fetching columns" />
       )}
 
-      <Suspense fallback={<Loading message="Loading helpers" />}>
-        <ColumnEditor />
-      </Suspense>
+      <ColumnMenu />
     </>
   );
 }
