@@ -88,6 +88,7 @@ export default function FormDialog({
                 name,
                 fieldName,
                 key: fieldName,
+                config: {},
                 ...data.initializeColumn,
               });
             }}

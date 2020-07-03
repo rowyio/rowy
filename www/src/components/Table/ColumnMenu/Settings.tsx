@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
-
 import Dialog from "@material-ui/core/Dialog";
 import Grid from "@material-ui/core/Grid";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -8,27 +7,62 @@ import DialogContent from "@material-ui/core/DialogContent";
 import { Typography, IconButton, TextField, Switch } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import { FieldType } from "constants/fields";
-import FieldsDropdown from "./FieldsDropdown";
 import OptionsInput from "./ConfigFields/OptionsInput";
 import { useFiretableContext } from "contexts/firetableContext";
 import MultiSelect from "@antlerengineering/multiselect";
+import { db } from "../../../firebase";
+import _sortBy from "lodash/sortBy";
+const ColumnSelector = ({
+  tableColumns,
+  handleChange,
+  validTypes,
+  table,
+  value,
+}: {
+  tableColumns?: any[];
+  handleChange: any;
+  validTypes: FieldType[];
+  table?: string;
+  value: any;
+}) => {
+  const [columns, setColumns] = useState(tableColumns ?? []);
+  const getColumns = async table => {
+    const tableConfigDoc = await db
+      .doc(`_FIRETABLE_/settings/schema/${table}`)
+      .get();
+    const tableConfig = tableConfigDoc.data();
 
-const ColumnSelector = ({ columns, handleChange, validTypes }) => {
+    if (tableConfig) setColumns(tableConfig.columns ?? []);
+  };
+  useEffect(() => {
+    if (table) {
+      console.log({ table });
+      getColumns(table);
+    }
+  }, [table]);
+  console.log({ columns });
   const options = columns
-    .filter(col => validTypes.includes(col.type))
-    .map(col => ({ value: col.key, label: col.name }));
-  return <MultiSelect onChange={handleChange} value={[]} options={options} />;
+    ? columns
+        .filter(col => validTypes.includes(col.type))
+        .map(col => ({ value: col.key, label: col.name }))
+    : [];
+  return (
+    <MultiSelect
+      onChange={handleChange}
+      value={value ?? []}
+      options={options}
+    />
+  );
 };
 
 const ConfigForm = ({ type, config, handleChange }) => {
   const { tableState, tables } = useFiretableContext();
-  console.log(tables);
-  if (!tableState) return <></>;
 
+  if (!tableState) return <></>;
+  const { columns } = tableState;
   switch (type) {
     case FieldType.singleSelect:
     case FieldType.multiSelect:
-      const { columns } = tableState;
       return (
         <>
           <OptionsInput
@@ -49,10 +83,51 @@ const ConfigForm = ({ type, config, handleChange }) => {
           </Grid>
         </>
       );
+    case FieldType.connectTable:
+      const tableOptions = _sortBy(
+        tables?.map(t => ({
+          label: `${t.section} - ${t.name}`,
+          value: t.collection,
+        })) ?? [],
+        "label"
+      );
+
+      return (
+        <>
+          <MultiSelect
+            options={tableOptions}
+            freeText={false}
+            value={config.index}
+            onChange={handleChange("index")}
+            multiple={false}
+          />
+          <ColumnSelector
+            value={config.primaryKeys}
+            table={config.index}
+            handleChange={handleChange("primaryKeys")}
+            validTypes={[FieldType.shortText, FieldType.singleSelect]}
+          />
+          <TextField
+            label="filter template"
+            name="filters"
+            fullWidth
+            onChange={e => {
+              handleChange("filters")(e.target.value);
+            }}
+          />
+        </>
+      );
     case FieldType.subTable:
       return (
         <ColumnSelector
-          columns={columns ?? []}
+          value={config.parentLabel}
+          tableColumns={
+            columns
+              ? Array.isArray(columns)
+                ? columns
+                : Object.values(columns)
+              : []
+          }
           handleChange={handleChange("parentLabel")}
           validTypes={[FieldType.shortText, FieldType.singleSelect]}
         />

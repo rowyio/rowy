@@ -9,7 +9,6 @@ import {
   ListSubheader,
   Divider,
 } from "@material-ui/core";
-import { fade } from "@material-ui/core/styles";
 
 const useStyles = makeStyles(theme =>
   createStyles({

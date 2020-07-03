@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { createStyles, makeStyles, Menu } from "@material-ui/core";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
@@ -24,7 +24,7 @@ import TypeChange from "./TypeChange";
 import Settings from "./Settings";
 
 import { useFiretableContext } from "contexts/firetableContext";
-import { FIELDS } from "constants/fields";
+import { FIELDS, FieldType } from "constants/fields";
 import _find from "lodash/find";
 import { Column } from "react-data-grid";
 import { PopoverProps } from "@material-ui/core";
@@ -70,11 +70,22 @@ export default function ColumnMenu() {
       setSelectedColumnHeader,
     } as any;
 
+  const { column, anchorEl } = (selectedColumnHeader ?? {}) as any;
+
+  useEffect(() => {
+    if (column && column.type === FieldType.last) {
+      setModal({
+        type: ModalStates.new,
+        data: {
+          initializeColumn: { index: column.index ? column.index + 1 : 0 },
+        },
+      });
+    }
+  }, [column]);
   if (!tableState || !tableActions) return null;
   const { orderBy } = tableState;
 
   const actions = tableActions!.column;
-  const { column, anchorEl } = (selectedColumnHeader ?? {}) as any;
 
   const handleClose = () => {
     if (!setSelectedColumnHeader) return;
@@ -225,23 +236,25 @@ export default function ColumnMenu() {
   const clearModal = () => {
     setModal(INITIAL_MODAL);
   };
-  console.log({ column });
+
   return (
     <>
-      <Menu
-        id="simple-menu"
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-        getContentAnchorEl={null}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        transformOrigin={{ vertical: "top", horizontal: "right" }}
-        classes={{ paper: classes.paper }}
-        MenuListProps={{ disablePadding: true }}
-      >
-        <MenuContents menuItems={menuItems} />
-      </Menu>
+      {column.type !== FieldType.last && (
+        <Menu
+          id="simple-menu"
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+          getContentAnchorEl={null}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          transformOrigin={{ vertical: "top", horizontal: "right" }}
+          classes={{ paper: classes.paper }}
+          MenuListProps={{ disablePadding: true }}
+        >
+          <MenuContents menuItems={menuItems} />
+        </Menu>
+      )}
       {column && (
         <>
           <NameChange
