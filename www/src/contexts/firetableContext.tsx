@@ -100,7 +100,6 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
       currentUser.getIdTokenResult(true).then(results => {
         setUserRoles(results.claims.roles || []);
         setUserClaims(results.claims);
-        // setUserRegions(results.claims.regions || []);
       });
     }
   }, [currentUser]);

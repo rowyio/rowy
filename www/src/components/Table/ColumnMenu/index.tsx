@@ -12,6 +12,7 @@ import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import EditIcon from "@material-ui/icons/Edit";
 import ReorderIcon from "@material-ui/icons/Reorder";
+import SettingsIcon from "@material-ui/icons/Settings";
 import ColumnPlusBeforeIcon from "assets/icons/ColumnPlusBefore";
 import ColumnPlusAfterIcon from "assets/icons/ColumnPlusAfter";
 import ColumnRemoveIcon from "assets/icons/ColumnRemove";
@@ -20,6 +21,7 @@ import MenuContents from "./MenuContents";
 import NameChange from "./NameChange";
 import NewColumn from "./NewColumn";
 import TypeChange from "./TypeChange";
+import Settings from "./Settings";
 
 import { useFiretableContext } from "contexts/firetableContext";
 import { FIELDS } from "constants/fields";
@@ -33,6 +35,7 @@ enum ModalStates {
   nameChange = "NAME_CHANGE",
   typeChange = "TYPE_CHANGE",
   new = "NEW_COLUMN",
+  settings = "COLUMN_SETTINGS",
 }
 
 type SelectedColumnHeader = {
@@ -170,7 +173,15 @@ export default function ColumnMenu() {
       // TODO: This is based off the cell type
       icon: _find(FIELDS, { type: column.type })?.icon,
       onClick: () => {
-        setModal({ type: ModalStates.typeChange, data: {} });
+        setModal({ type: ModalStates.typeChange, data: { column } });
+      },
+    },
+    {
+      label: `Column Settings`,
+      // TODO: This is based off the cell type
+      icon: <SettingsIcon />,
+      onClick: () => {
+        setModal({ type: ModalStates.settings, data: { column } });
       },
     },
     // {
@@ -214,6 +225,7 @@ export default function ColumnMenu() {
   const clearModal = () => {
     setModal(INITIAL_MODAL);
   };
+  console.log({ column });
   return (
     <>
       <Menu
@@ -248,6 +260,19 @@ export default function ColumnMenu() {
             name={column.name}
             fieldName={column.key as string}
             open={modal.type === ModalStates.typeChange}
+            type={column.type}
+            handleClose={clearModal}
+            handleSave={(key, update) => {
+              actions.update(key, update);
+              clearModal();
+              handleClose();
+            }}
+          />
+          <Settings
+            config={column.config}
+            name={column.name}
+            fieldName={column.key as string}
+            open={modal.type === ModalStates.settings}
             type={column.type}
             handleClose={clearModal}
             handleSave={(key, update) => {
