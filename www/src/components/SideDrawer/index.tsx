@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import clsx from "clsx";
 import _isNil from "lodash/isNil";
+import _sortBy from "lodash/sortBy";
 import _findIndex from "lodash/findIndex";
 
 import { Drawer, Fab } from "@material-ui/core";
@@ -58,7 +59,7 @@ export default function SideDrawer() {
     tableState?.columns &&
     (Array.isArray(tableState?.columns)
       ? tableState?.columns
-      : Object.values(tableState?.columns)
+      : _sortBy(Object.values(tableState?.columns), "index")
     ).map(column => {
       const field: Field = {
         type: column.type,
@@ -85,20 +86,10 @@ export default function SideDrawer() {
 
         case FieldType.singleSelect:
         case FieldType.multiSelect:
-          field.options = column.options;
-          break;
-
         case FieldType.connectTable:
-          field.collectionPath = column.collectionPath;
-          field.config = column.config;
-          break;
-
         case FieldType.subTable:
-          field.parentLabel = column.parentLabel;
-          break;
-
         case FieldType.action:
-          field.callableName = column.callableName;
+          field.config = column.config;
           break;
 
         default:

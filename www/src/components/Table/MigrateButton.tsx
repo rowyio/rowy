@@ -12,24 +12,21 @@ const MigrateButton = ({ columns, needsMigration }) => {
     console.log({ columns });
 
     const newColumns = columns.reduce((acc, currCol, currIndex) => {
-      const index = currCol.collectionPath;
-      const options = currCol.options;
-      delete currCol.options;
-      const parentLabel = [currCol.parentLabel];
-      delete currCol.collectionPath;
-      delete currCol.parentLabel;
       const baseCol = {
         ...currCol,
         fieldName: currCol.key,
         index: currIndex,
       };
       if (currCol.type === FieldType.connectTable) {
+        const index = currCol.collectionPath;
+        delete baseCol.collectionPath;
         return {
           ...acc,
-
           [currCol.key]: { ...baseCol, config: { ...currCol.config, index } },
         };
       } else if (currCol.type === FieldType.subTable) {
+        const parentLabel = [currCol.parentLabel];
+        delete baseCol.parentLabel;
         return {
           ...acc,
           [currCol.key]: {
@@ -37,9 +34,21 @@ const MigrateButton = ({ columns, needsMigration }) => {
             config: { ...currCol.config, parentLabel },
           },
         };
+      } else if (currCol.type === FieldType.action) {
+        const callableName = currCol.callableName;
+        delete baseCol.callableName;
+        return {
+          ...acc,
+          [currCol.key]: {
+            ...baseCol,
+            config: { ...currCol.config, callableName },
+          },
+        };
       } else if (
         [FieldType.multiSelect, FieldType.singleSelect].includes(currCol.type)
       ) {
+        const options = currCol.options;
+        delete baseCol.options;
         return {
           ...acc,
           [currCol.key]: {
@@ -49,7 +58,6 @@ const MigrateButton = ({ columns, needsMigration }) => {
         };
       } else return { ...acc, [currCol.key]: baseCol };
     }, {});
-    console.log({ newColumns });
     await db
       .doc(configDocPath)
       .update({ columns: newColumns, oldColumns: columns });

@@ -35,33 +35,34 @@ export default function SubTable({
   form,
   field,
   label,
-  parentLabel,
-}: FieldProps<any> & { parentLabel?: string; label: string }) {
+  config,
+}: FieldProps<any> & { config: { parentLabel?: string[] }; label: string }) {
   const classes = useStyles();
 
   const router = useRouter();
   const parentLabels = queryString.parse(router.location.search).parentLabel;
-
+  const _label = config?.parentLabel
+    ? config.parentLabel.reduce((acc, curr) => {
+        if (acc !== "") return `${acc} - ${form.values[curr]}`;
+        else return form.values[curr];
+      }, "")
+    : "";
   let subTablePath = "";
   if (parentLabels)
     subTablePath =
       encodeURIComponent(`${form.values.ref.path}/${field.name}`) +
-      `?parentLabel=${parentLabels},${
-        parentLabel ? form.values[parentLabel] : ""
-      }`;
+      `?parentLabel=${parentLabels},${label}`;
   else
     subTablePath =
       encodeURIComponent(`${form.values.ref.path}/${field.name}`) +
-      `?parentLabel=${
-        parentLabel ? encodeURIComponent(form.values[parentLabel]) : ""
-      }`;
+      `?parentLabel=${encodeURIComponent(_label)}`;
 
   return (
     <Grid container wrap="nowrap">
       <Grid container alignItems="center" className={classes.labelContainer}>
         <Typography variant="body1">
           {label}
-          {parentLabel && `: ${form.values[parentLabel]}`}
+          {`: ${_label}`}
         </Typography>
       </Grid>
 
