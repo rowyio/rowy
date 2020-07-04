@@ -61,7 +61,7 @@ export default function ConnectTable({
   const { collectionPath, config } = column as any;
   const { dataGridRef } = useFiretableContext();
 
-  const disabled = !column.editable || config.isLocked;
+  const disabled = !column.editable || config?.isLocked;
 
   // Render chips
   const renderValue = value => (

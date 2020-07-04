@@ -42,13 +42,14 @@ export default function PopupContents({
   multiple = true,
   row,
 }: IPopupContentsProps) {
+  const index = collectionPath ?? config.index; //temporary for pre column restructure migration
   const classes = useStyles();
 
   const { userClaims } = useFiretableContext();
 
   const algoliaIndex = useMemo(() => {
-    return searchClient.initIndex(collectionPath);
-  }, [collectionPath]);
+    return searchClient.initIndex(index);
+  }, [index]);
 
   // Algolia search query
   const [query, setQuery] = useState("");
@@ -62,11 +63,10 @@ export default function PopupContents({
       console.log("SEARCH", query, algoliaIndex, row);
 
       const data = { ...userClaims, ...row };
-      const filters = config.filters.replace(
-        /\{\{(.*?)\}\}/g,
-        (m, k) => data[k]
-      );
-      console.log(filters);
+      const filters = config?.filters
+        ? config?.filters.replace(/\{\{(.*?)\}\}/g, (m, k) => data[k])
+        : "";
+
       const resp = await algoliaIndex.search(query, {
         filters,
       });
@@ -86,7 +86,7 @@ export default function PopupContents({
     const { _highlightResult, ...snapshot } = hit;
     const output = {
       snapshot,
-      docPath: `${collectionPath}/${snapshot.objectID}`,
+      docPath: `${index}/${snapshot.objectID}`,
     };
 
     if (multiple) onChange([...value, output]);

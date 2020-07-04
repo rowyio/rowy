@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { createStyles, makeStyles, Menu } from "@material-ui/core";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
@@ -12,6 +12,7 @@ import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import EditIcon from "@material-ui/icons/Edit";
 import ReorderIcon from "@material-ui/icons/Reorder";
+import SettingsIcon from "@material-ui/icons/Settings";
 import ColumnPlusBeforeIcon from "assets/icons/ColumnPlusBefore";
 import ColumnPlusAfterIcon from "assets/icons/ColumnPlusAfter";
 import ColumnRemoveIcon from "assets/icons/ColumnRemove";
@@ -20,9 +21,10 @@ import MenuContents from "./MenuContents";
 import NameChange from "./NameChange";
 import NewColumn from "./NewColumn";
 import TypeChange from "./TypeChange";
+import Settings from "./Settings";
 
 import { useFiretableContext } from "contexts/firetableContext";
-import { FIELDS } from "constants/fields";
+import { FIELDS, FieldType } from "constants/fields";
 import _find from "lodash/find";
 import { Column } from "react-data-grid";
 import { PopoverProps } from "@material-ui/core";
@@ -33,6 +35,7 @@ enum ModalStates {
   nameChange = "NAME_CHANGE",
   typeChange = "TYPE_CHANGE",
   new = "NEW_COLUMN",
+  settings = "COLUMN_SETTINGS",
 }
 
 type SelectedColumnHeader = {
@@ -60,19 +63,36 @@ export default function ColumnMenu() {
   const [modal, setModal] = useState(INITIAL_MODAL);
   const { tableState, tableActions, columnMenuRef } = useFiretableContext();
 
-  const [selectedColumnHeader, setSelectedColumnHeader] = useState();
+  const [selectedColumnHeader, setSelectedColumnHeader] = useState<any>(null);
   if (columnMenuRef)
-    columnMenuRef.current = { selectedColumnHeader, setSelectedColumnHeader };
+    columnMenuRef.current = {
+      selectedColumnHeader,
+      setSelectedColumnHeader,
+    } as any;
 
+  const { column, anchorEl } = (selectedColumnHeader ?? {}) as any;
+
+  useEffect(() => {
+    if (column && column.type === FieldType.last) {
+      setModal({
+        type: ModalStates.new,
+        data: {
+          initializeColumn: { index: column.index ? column.index + 1 : 0 },
+        },
+      });
+    }
+  }, [column]);
   if (!tableState || !tableActions) return null;
   const { orderBy } = tableState;
 
   const actions = tableActions!.column;
-  const { column, anchorEl } = selectedColumnHeader ?? {};
 
   const handleClose = () => {
     if (!setSelectedColumnHeader) return;
-    setSelectedColumnHeader({ column: column!, anchorEl: null });
+    setSelectedColumnHeader({
+      column: column!,
+      anchorEl: null,
+    });
     setTimeout(() => setSelectedColumnHeader(null), 300);
   };
 
@@ -164,7 +184,15 @@ export default function ColumnMenu() {
       // TODO: This is based off the cell type
       icon: _find(FIELDS, { type: column.type })?.icon,
       onClick: () => {
-        setModal({ type: ModalStates.typeChange, data: {} });
+        setModal({ type: ModalStates.typeChange, data: { column } });
+      },
+    },
+    {
+      label: `Column Settings`,
+      // TODO: This is based off the cell type
+      icon: <SettingsIcon />,
+      onClick: () => {
+        setModal({ type: ModalStates.settings, data: { column } });
       },
     },
     // {
@@ -178,7 +206,9 @@ export default function ColumnMenu() {
       onClick: () =>
         setModal({
           type: ModalStates.new,
-          data: { initializeColumn: { index: column.index - 1 } },
+          data: {
+            initializeColumn: { index: column.index ? column.index - 1 : 0 },
+          },
         }),
     },
     {
@@ -187,7 +217,9 @@ export default function ColumnMenu() {
       onClick: () =>
         setModal({
           type: ModalStates.new,
-          data: { initializeColumn: { index: column.index + 1 } },
+          data: {
+            initializeColumn: { index: column.index ? column.index + 1 : 0 },
+          },
         }),
     },
     {
@@ -204,22 +236,25 @@ export default function ColumnMenu() {
   const clearModal = () => {
     setModal(INITIAL_MODAL);
   };
+
   return (
     <>
-      <Menu
-        id="simple-menu"
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-        getContentAnchorEl={null}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        transformOrigin={{ vertical: "top", horizontal: "right" }}
-        classes={{ paper: classes.paper }}
-        MenuListProps={{ disablePadding: true }}
-      >
-        <MenuContents menuItems={menuItems} />
-      </Menu>
+      {column.type !== FieldType.last && (
+        <Menu
+          id="simple-menu"
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+          getContentAnchorEl={null}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          transformOrigin={{ vertical: "top", horizontal: "right" }}
+          classes={{ paper: classes.paper }}
+          MenuListProps={{ disablePadding: true }}
+        >
+          <MenuContents menuItems={menuItems} />
+        </Menu>
+      )}
       {column && (
         <>
           <NameChange
@@ -238,6 +273,19 @@ export default function ColumnMenu() {
             name={column.name}
             fieldName={column.key as string}
             open={modal.type === ModalStates.typeChange}
+            type={column.type}
+            handleClose={clearModal}
+            handleSave={(key, update) => {
+              actions.update(key, update);
+              clearModal();
+              handleClose();
+            }}
+          />
+          <Settings
+            config={column.config}
+            name={column.name}
+            fieldName={column.key as string}
+            open={modal.type === ModalStates.settings}
             type={column.type}
             handleClose={clearModal}
             handleSave={(key, update) => {

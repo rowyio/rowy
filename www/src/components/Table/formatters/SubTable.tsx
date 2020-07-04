@@ -19,7 +19,15 @@ const useStyles = makeStyles(theme =>
 export default function SubTable({ column, row }: CustomCellProps) {
   const classes = useStyles();
 
-  const { parentLabel } = column as any;
+  const { parentLabel, config } = column as any;
+  const label = parentLabel
+    ? row[parentLabel]
+    : config.parentLabel
+    ? config.parentLabel.reduce((acc, curr) => {
+        if (acc !== "") return `${acc} - ${row[curr]}`;
+        else return row[curr];
+      }, "")
+    : "";
   const fieldName = column.key as string;
 
   const router = useRouter();
@@ -31,11 +39,11 @@ export default function SubTable({ column, row }: CustomCellProps) {
   if (parentLabels)
     subTablePath =
       encodeURIComponent(`${row.ref.path}/${fieldName}`) +
-      `?parentLabel=${parentLabels},${row[parentLabel]}`;
+      `?parentLabel=${parentLabels},${label}`;
   else
     subTablePath =
       encodeURIComponent(`${row.ref.path}/${fieldName}`) +
-      `?parentLabel=${encodeURIComponent(row[parentLabel])}`;
+      `?parentLabel=${encodeURIComponent(label)}`;
 
   return (
     <Grid
@@ -46,7 +54,7 @@ export default function SubTable({ column, row }: CustomCellProps) {
       className={clsx("cell-collapse-padding", classes.root)}
     >
       <Grid item xs className={classes.labelContainer}>
-        {column.name}: {row[parentLabel]}
+        {column.name}: {label}
       </Grid>
 
       <Grid item>

@@ -57,7 +57,7 @@ export default function MultiSelect({
 }: CustomCellProps) {
   const classes = useStyles();
 
-  const { options } = column as any;
+  const { config } = column as any;
   const { dataGridRef } = useFiretableContext();
 
   // Support SingleSelect field
@@ -99,11 +99,11 @@ export default function MultiSelect({
         value === undefined || value === null ? (isSingle ? null : []) : value
       }
       onChange={onSubmit}
-      freeText={false}
+      freeText={!isSingle && config.freeText}
       multiple={!isSingle as any}
       label={column.name}
       labelPlural={column.name}
-      options={options}
+      options={config.options ?? []}
       disabled={column.editable === false}
       onOpen={handleOpen}
       TextFieldProps={

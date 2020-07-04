@@ -127,10 +127,8 @@ export default function Table({ collection, filters }: ITableProps) {
       editable: false,
     });
   }
-  console.log(columns);
 
   const rowHeight = tableState.config.rowHeight;
-
   const rows = tableState.rows;
   const rowGetter = (rowIdx: number) => rows[rowIdx];
 
@@ -151,10 +149,8 @@ export default function Table({ collection, filters }: ITableProps) {
       {inSubTable && <SubTableBreadcrumbs collection={collection} />}
 
       <TableHeader
-        collection={collection}
         rowHeight={rowHeight}
         updateConfig={tableActions.table.updateConfig}
-        columns={columns}
         filters={filters}
       />
 
