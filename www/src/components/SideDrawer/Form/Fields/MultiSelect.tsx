@@ -19,12 +19,12 @@ export default function MultiSelect({
     newValues.splice(index, 1);
     form.setFieldValue(field.name, newValues);
   };
-
+  const { config } = props as any;
   return (
     <>
       <MultiSelectA
         {...props}
-        options={props.options ?? []}
+        options={config.options ?? []}
         multiple
         value={field.value ? field.value : []}
         onChange={value => form.setFieldValue(field.name, value)}

@@ -7,10 +7,10 @@ import {
   FormControlLabel,
   Switch,
 } from "@material-ui/core";
-import { green } from "@material-ui/core/colors";
+
 import Confirmation from "components/Confirmation";
 
-const useStyles = makeStyles((theme) =>
+const useStyles = makeStyles(theme =>
   createStyles({
     root: { paddingLeft: theme.spacing(1.5) },
 
