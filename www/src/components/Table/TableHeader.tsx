@@ -8,6 +8,7 @@ import {
   MenuItem,
   Typography,
   Button,
+  Tooltip,
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 
@@ -19,6 +20,7 @@ import { FireTableFilter } from "hooks/useFiretable";
 import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
 import { useFiretableContext } from "contexts/firetableContext";
 import { FieldType } from "constants/fields";
+import MigrateButton from "./MigrateButton";
 
 export const TABLE_HEADER_HEIGHT = 56;
 
@@ -55,11 +57,8 @@ const useStyles = makeStyles(theme =>
 );
 
 interface ITableHeaderProps {
-  collection: string;
   rowHeight: number;
   updateConfig: Function;
-
-  columns: any;
   filters: FireTableFilter[];
 }
 
@@ -67,14 +66,18 @@ interface ITableHeaderProps {
  * TODO: Make this properly mobile responsive, not just horizontally scrolling
  */
 export default function TableHeader({
-  collection,
   rowHeight,
   updateConfig,
-  columns,
+
   filters,
 }: ITableHeaderProps) {
   const classes = useStyles();
-  const { tableActions, userClaims } = useFiretableContext();
+  const { tableActions, tableState } = useFiretableContext();
+  if (!tableState || !tableState.columns) return <></>;
+  const { columns } = tableState;
+
+  const needsMigration = Array.isArray(columns) && columns.length !== 0;
+  const tempColumns = needsMigration ? columns : Object.values(columns);
 
   return (
     <Grid
@@ -84,10 +87,11 @@ export default function TableHeader({
       wrap="nowrap"
       className={classes.root}
     >
+      <MigrateButton needsMigration={needsMigration} columns={tempColumns} />
       <Grid item>
         <Button
           onClick={() => {
-            const initialVal = columns.reduce((acc, currCol) => {
+            const initialVal = tempColumns.reduce((acc, currCol) => {
               if (currCol.type === FieldType.checkbox) {
                 return { ...acc, [currCol.key]: false };
               } else {
@@ -108,7 +112,7 @@ export default function TableHeader({
 
       <Grid item>
         <Filters
-          columns={columns}
+          columns={tempColumns}
           tableFilters={filters}
           setFilters={tableActions?.table.filter}
         />
@@ -160,11 +164,10 @@ export default function TableHeader({
         <ImportCSV />
       </Grid>
       {/* )} */}
-      {userClaims && !userClaims.roles?.includes("READONLY") && (
-        <Grid item>
-          <ExportCSV />
-        </Grid>
-      )}
+
+      <Grid item>
+        <ExportCSV />
+      </Grid>
     </Grid>
   );
 }

@@ -149,10 +149,8 @@ export default function Table({ collection, filters }: ITableProps) {
       {inSubTable && <SubTableBreadcrumbs collection={collection} />}
 
       <TableHeader
-        collection={collection}
         rowHeight={rowHeight}
         updateConfig={tableActions.table.updateConfig}
-        columns={columns}
         filters={filters}
       />
 

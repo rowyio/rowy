@@ -20,13 +20,14 @@ export default function SubTable({ column, row }: CustomCellProps) {
   const classes = useStyles();
 
   const { parentLabel, config } = column as any;
-
   const label = parentLabel
     ? row[parentLabel]
-    : config.parentLabel.reduce((acc, curr) => {
+    : config.parentLabel
+    ? config.parentLabel.reduce((acc, curr) => {
         if (acc !== "") return `${acc} - ${row[curr]}`;
         else return row[curr];
-      }, "");
+      }, "")
+    : "";
   const fieldName = column.key as string;
 
   const router = useRouter();
