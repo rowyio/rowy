@@ -10,8 +10,13 @@ export default function MultiSelect({
   field,
   form,
   editable,
+  config,
   ...props
-}: FieldProps<string[]> & MultiSelectProps<string> & { editable?: boolean }) {
+}: FieldProps<string[]> &
+  MultiSelectProps<string> & {
+    config: { options: string[] };
+    editable?: boolean;
+  }) {
   const theme = useTheme();
 
   const handleDelete = (index: number) => () => {
@@ -19,7 +24,7 @@ export default function MultiSelect({
     newValues.splice(index, 1);
     form.setFieldValue(field.name, newValues);
   };
-  const { config } = props as any;
+
   return (
     <>
       <MultiSelectA
