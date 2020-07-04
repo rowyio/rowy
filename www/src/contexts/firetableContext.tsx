@@ -1,8 +1,8 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
 import _groupBy from "lodash/groupBy";
+import _sortBy from "lodash/sortBy";
+import { DataGridHandle } from "react-data-grid";
 
-import { Column, DataGridHandle } from "react-data-grid";
-import { PopoverProps } from "@material-ui/core";
 import firebase from "firebase/app";
 import useFiretable, {
   FiretableActions,
@@ -33,7 +33,24 @@ interface FiretableContextProps {
     fieldName: string,
     value: any
   ) => void;
-  createTable: Function;
+  settingsActions: {
+    createTable: (data: {
+      collection: string;
+      name: string;
+      description: string;
+      roles: string[];
+      section: string;
+    }) => void;
+    updateTable: (data: {
+      collection: string;
+      name: string;
+      description: string;
+      roles: string[];
+      section: string;
+    }) => Promise<any>;
+    deleteTable: (collection: string) => void;
+  };
+
   userClaims: any;
 
   // A ref to the data grid. Contains data grid functions
@@ -75,7 +92,7 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
   const { tableState, tableActions } = useFiretable();
   const [tables, setTables] = useState<FiretableContextProps["tables"]>();
   const [sections, setSections] = useState<FiretableContextProps["sections"]>();
-  const [settings, createTable] = useSettings();
+  const [settings, settingsActions] = useSettings();
   const [userRoles, setUserRoles] = useState<null | string[]>();
   const [userClaims, setUserClaims] = useState<any>();
 
@@ -83,13 +100,18 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
   useEffect(() => {
     const { tables } = settings;
     if (tables && userRoles && !sections) {
-      const filteredTables = tables.filter(
-        table =>
-          !table.roles || table.roles.some(role => userRoles.includes(role))
-      );
+      const filteredTables = _sortBy(tables, "name")
+        .filter(
+          table =>
+            !table.roles || table.roles.some(role => userRoles.includes(role))
+        )
+        .map(table => ({
+          ...table,
+          section: table.section ? table.section.toUpperCase().trim() : "OTHER",
+        }));
 
       const sections = _groupBy(filteredTables, "section");
-
+      console.log({ sections });
       setSections(sections);
       setTables(filteredTables);
     }
@@ -132,7 +154,7 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
             open({
               message: `You don't have permissions to make this change`,
               severity: "error",
-              duration: 3000,
+              duration: 2000,
               position: { horizontal: "center", vertical: "top" },
             });
           }
@@ -151,7 +173,7 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
         tableState,
         tableActions,
         updateCell,
-        createTable,
+        settingsActions,
         tables,
         sections,
         userClaims,

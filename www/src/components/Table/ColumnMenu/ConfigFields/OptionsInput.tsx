@@ -47,7 +47,7 @@ export default function OptionsInput(props: any) {
         <TextField
           value={newOption}
           className={classes.field}
-          label="New Option"
+          label={props.placeholder ?? "New Option"}
           onChange={e => {
             setNewOption(e.target.value);
           }}
@@ -61,7 +61,7 @@ export default function OptionsInput(props: any) {
               <InputAdornment position="end">
                 <IconButton
                   edge="end"
-                  aria-label="toggle password visibility"
+                  aria-label="add new"
                   onClick={(e: any) => {
                     handleAdd();
                   }}

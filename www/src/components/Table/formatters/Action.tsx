@@ -60,7 +60,6 @@ export default function Action({
       column,
       action,
     };
-    console.log(data);
     cloudFunction(
       callableName ?? config.callableName,
       data,

@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import useDoc, { DocActions } from "./useDoc";
 import { db } from "../firebase";
 import _groupBy from "lodash/groupBy";
+import _find from "lodash/find";
 
 const useSettings = () => {
   const [settingsState, documentDispatch] = useDoc({
@@ -22,26 +23,65 @@ const useSettings = () => {
     }
   }, [settingsState]);
 
-  const createTable = (name: string, collection: string) => {
+  const createTable = (data: {
+    name: string;
+    collection: string;
+    description: string;
+    roles: string[];
+  }) => {
     const { tables } = settingsState;
     // updates the setting doc
-    if (tables) {
-      documentDispatch({
-        action: DocActions.update,
-        data: { tables: [...tables, { name, collection }] },
-      });
-    } else {
-      db.doc("_FIRETABLE_/settings").set(
-        { tables: [{ name, collection }] },
-        { merge: true }
-      );
-    }
+
+    db.doc("_FIRETABLE_/settings").set(
+      { tables: tables ? [...tables, data] : [data] },
+      { merge: true }
+    );
+
     //create the firetable collection doc with empty columns
     db.collection("_FIRETABLE_/settings/schema")
-      .doc(collection)
-      .set({ name, columns: [] });
+      .doc(data.collection)
+      .set({ ...data, columns: [] }, { merge: true });
   };
-  return [settingsState, createTable];
+
+  const updateTable = (data: {
+    name: string;
+    collection: string;
+    description: string;
+    roles: string[];
+  }) => {
+    const { tables } = settingsState;
+    const table = tables.filter(t => t.collection === data.collection)[0];
+    return Promise.all([
+      db.doc("_FIRETABLE_/settings").set(
+        {
+          tables: tables
+            ? [
+                ...tables.filter(table => table.collection !== data.collection),
+                { table, ...data },
+              ]
+            : [data],
+        },
+        { merge: true }
+      ),
+      //update the firetable collection doc with empty columns
+      db
+        .collection("_FIRETABLE_/settings/schema")
+        .doc(data.collection)
+        .set({ ...data }, { merge: true }),
+    ]);
+  };
+  const deleteTable = (collection: string) => {
+    const { tables } = settingsState;
+
+    db.doc("_FIRETABLE_/settings").update({
+      tables: tables.filter(table => table.collection !== collection),
+    });
+    db.collection("_FIRETABLE_/settings/schema")
+      .doc(collection)
+      .delete();
+  };
+  const settingsActions = { createTable, updateTable, deleteTable };
+  return [settingsState, settingsActions];
 };
 
 export default useSettings;
