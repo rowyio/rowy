@@ -40,9 +40,8 @@ const ColumnSelector = ({
       getColumns(table);
     }
   }, [table]);
-  console.log({ columns });
   const options = columns
-    ? columns
+    ? Object.values(columns)
         .filter(col => validTypes.includes(col.type))
         .map(col => ({ value: col.key, label: col.name }))
     : [];
