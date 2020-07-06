@@ -145,7 +145,7 @@ export default function TableSettingsDialog({
           />
           <OptionsInput
             placeholder={"Add Role"}
-            options={formState.roles}
+            options={formState.roles ?? []}
             handleChange={update => handleChange("roles", update)}
           />
         </DialogContent>
