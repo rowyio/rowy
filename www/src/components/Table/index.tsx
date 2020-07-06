@@ -120,6 +120,7 @@ export default function Table({ collection, filters }: ITableProps) {
       key: "new",
       name: "Add column",
       type: FieldType.last,
+      index: columns.length,
       width: 160,
       headerRenderer: FinalColumnHeader,
       cellClass: finalColumnClasses.cell,
