@@ -93,7 +93,7 @@ function Action({
               <a
                 href={field.value.status}
                 target="_blank"
-                rel="noopener noreferer"
+                rel="noopener noreferrer"
               >
                 {field.value.status}
               </a>

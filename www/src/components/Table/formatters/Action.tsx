@@ -126,7 +126,7 @@ export default function Action({
     >
       <Grid item xs className={classes.labelContainer}>
         {hasRan && isUrl(value.status) ? (
-          <a href={value.status} target="_blank" rel="noopener noreferer">
+          <a href={value.status} target="_blank" rel="noopener noreferrer">
             {value.status}
           </a>
         ) : hasRan ? (
