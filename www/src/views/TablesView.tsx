@@ -114,6 +114,24 @@ const TablesView = () => {
           className={classes.card}
           overline={table.section}
           title={table.name}
+          headerAction={
+            <Checkbox
+              onClick={e => {
+                userDoc.dispatch({
+                  action: DocActions.update,
+                  data: {
+                    favoriteTables: checked
+                      ? favs.filter(t => t.collection !== table.collection)
+                      : [...favs, table],
+                  },
+                });
+              }}
+              checked={checked}
+              icon={<FavoriteBorder />}
+              checkedIcon={<Favorite />}
+              name="checkedH"
+            />
+          }
           bodyContent={table.description}
           primaryLink={{
             to: `${routes.table}/${table.collection}${regionalFilter(
@@ -123,35 +141,16 @@ const TablesView = () => {
             label: "Open",
           }}
           secondaryAction={
-            <>
-              {" "}
-              <Checkbox
-                onClick={e => {
-                  userDoc.dispatch({
-                    action: DocActions.update,
-                    data: {
-                      favoriteTables: checked
-                        ? favs.filter(t => t.collection !== table.collection)
-                        : [...favs, table],
-                    },
-                  });
-                }}
-                checked={checked}
-                icon={<FavoriteBorder />}
-                checkedIcon={<Favorite />}
-                name="checkedH"
-              />{" "}
-              <IconButton
-                onClick={() =>
-                  setSettingsDialogState({
-                    mode: TableSettingsDialogModes.update,
-                    data: table,
-                  })
-                }
-              >
-                <EditIcon />
-              </IconButton>
-            </>
+            <IconButton
+              onClick={() =>
+                setSettingsDialogState({
+                  mode: TableSettingsDialogModes.update,
+                  data: table,
+                })
+              }
+            >
+              <EditIcon />
+            </IconButton>
           }
         />
       </Grid>
@@ -205,7 +204,7 @@ const TablesView = () => {
             Object.keys(sections).map(sectionName => (
               <div key={sectionName} className={classes.section}>
                 <Typography variant="overline">
-                  {sectionName == "undefined" ? "Other" : sectionName}
+                  {sectionName === "undefined" ? "Other" : sectionName}
                 </Typography>
                 <Divider className={classes.divider} />
                 <Grid
