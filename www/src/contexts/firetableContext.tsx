@@ -2,7 +2,6 @@ import React, { useState, useContext, useEffect, useRef } from "react";
 import _groupBy from "lodash/groupBy";
 import _sortBy from "lodash/sortBy";
 import { DataGridHandle } from "react-data-grid";
-
 import firebase from "firebase/app";
 import useFiretable, {
   FiretableActions,
@@ -110,12 +109,11 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
           section: table.section ? table.section.toUpperCase().trim() : "OTHER",
         }));
 
-      const sections = _groupBy(filteredTables, "section");
-      console.log({ sections });
-      setSections(sections);
+      const _sections = _groupBy(filteredTables, "section");
+      setSections(_sections);
       setTables(filteredTables);
     }
-  }, [settings, userRoles]);
+  }, [settings, userRoles, sections]);
 
   useEffect(() => {
     if (currentUser && !userClaims) {

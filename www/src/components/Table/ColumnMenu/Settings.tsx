@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import Grid from "@material-ui/core/Grid";
@@ -10,49 +10,11 @@ import { FieldType } from "constants/fields";
 import OptionsInput from "./ConfigFields/OptionsInput";
 import { useFiretableContext } from "contexts/firetableContext";
 import MultiSelect from "@antlerengineering/multiselect";
-import { db } from "../../../firebase";
-import _sortBy from "lodash/sortBy";
-const ColumnSelector = ({
-  tableColumns,
-  handleChange,
-  validTypes,
-  table,
-  value,
-}: {
-  tableColumns?: any[];
-  handleChange: any;
-  validTypes: FieldType[];
-  table?: string;
-  value: any;
-}) => {
-  const [columns, setColumns] = useState(tableColumns ?? []);
-  const getColumns = async table => {
-    const tableConfigDoc = await db
-      .doc(`_FIRETABLE_/settings/schema/${table}`)
-      .get();
-    const tableConfig = tableConfigDoc.data();
 
-    if (tableConfig) setColumns(tableConfig.columns ?? []);
-  };
-  useEffect(() => {
-    if (table) {
-      console.log({ table });
-      getColumns(table);
-    }
-  }, [table]);
-  const options = columns
-    ? Object.values(columns)
-        .filter(col => validTypes.includes(col.type))
-        .map(col => ({ value: col.key, label: col.name }))
-    : [];
-  return (
-    <MultiSelect
-      onChange={handleChange}
-      value={value ?? []}
-      options={options}
-    />
-  );
-};
+import _sortBy from "lodash/sortBy";
+import CodeEditor from "./ConfigFields/CodeEditor";
+import FieldsDropdown from "./FieldsDropdown";
+import ColumnSelector from "./ConfigFields/ColumnSelector";
 
 const ConfigForm = ({ type, config, handleChange }) => {
   const { tableState, tables } = useFiretableContext();
@@ -101,6 +63,7 @@ const ConfigForm = ({ type, config, handleChange }) => {
             multiple={false}
           />
           <ColumnSelector
+            label={"Primary Keys"}
             value={config.primaryKeys}
             table={config.index}
             handleChange={handleChange("primaryKeys")}
@@ -119,6 +82,7 @@ const ConfigForm = ({ type, config, handleChange }) => {
     case FieldType.subTable:
       return (
         <ColumnSelector
+          label={"Parent Label"}
           value={config.parentLabel}
           tableColumns={
             columns
@@ -131,7 +95,33 @@ const ConfigForm = ({ type, config, handleChange }) => {
           validTypes={[FieldType.shortText, FieldType.singleSelect]}
         />
       );
-
+    case FieldType.derivative:
+      return (
+        <>
+          <ColumnSelector
+            label={"Listener fields"}
+            value={config.listenerFields}
+            tableColumns={
+              columns
+                ? Array.isArray(columns)
+                  ? columns
+                  : Object.values(columns)
+                : []
+            }
+            handleChange={handleChange("listenerFields")}
+          />
+          <CodeEditor
+            script={config.script}
+            handleChange={handleChange("script")}
+          />
+          <FieldsDropdown
+            value={config.renderFieldType}
+            onChange={(newType: any) => {
+              handleChange("renderFieldType")(newType.target.value);
+            }}
+          />
+        </>
+      );
     default:
       return <></>;
   }

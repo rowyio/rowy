@@ -403,7 +403,7 @@ const Filters = ({ columns, setFilters }: any) => {
           >
             {/* <Button color="primary">+ ADD FILTER</Button> */}
             <Button
-              disabled={query.key == ""}
+              disabled={query.key === ""}
               onClick={() => {
                 setFilters([]);
                 setQuery({

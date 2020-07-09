@@ -34,6 +34,7 @@ import RichTextIcon from "@material-ui/icons/TextFormat";
 import ColorIcon from "@material-ui/icons/Colorize";
 import SliderIcon from "assets/icons/Slider";
 import CodeIcon from "@material-ui/icons/Code";
+import DerivativeIcon from "@material-ui/icons/Functions";
 import UserIcon from "@material-ui/icons/Person";
 
 export {
@@ -94,6 +95,7 @@ export enum FieldType {
   json = "JSON",
 
   user = "USER",
+  derivative = "DERIVATIVE",
 
   last = "LAST",
 }
@@ -147,6 +149,7 @@ export const FIELDS = [
   { icon: <JsonIcon />, name: "JSON", type: FieldType.json },
   { icon: <UserIcon />, name: "User", type: FieldType.user },
   { icon: <CodeIcon />, name: "Code", type: FieldType.code },
+  { icon: <DerivativeIcon />, name: "Derivative", type: FieldType.derivative },
 ];
 
 /**

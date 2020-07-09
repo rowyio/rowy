@@ -23,7 +23,7 @@ export default function Url(props: TextFieldProps) {
         component="a"
         href={props.field.value}
         target="_blank"
-        rel="noopener noreferer"
+        rel="noopener noreferrer"
         style={{ width: 56 }}
         disabled={!props.field.value}
       >
