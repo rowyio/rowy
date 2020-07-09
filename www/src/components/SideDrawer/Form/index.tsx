@@ -91,48 +91,48 @@ export type Field = {
 };
 export type Fields = (Field | ((values: Values) => Field))[];
 
+const initializeValue = type => {
+  switch (type) {
+    case FieldType.singleSelect:
+    case FieldType.multiSelect:
+    case FieldType.image:
+    case FieldType.file:
+      return [];
+    case FieldType.date:
+    case FieldType.dateTime:
+      return null;
+
+    case FieldType.checkbox:
+      return false;
+
+    case FieldType.number:
+      return 0;
+
+    case FieldType.json:
+      return {};
+      break;
+
+    case FieldType.shortText:
+    case FieldType.longText:
+    case FieldType.email:
+    case FieldType.phone:
+    case FieldType.url:
+    case FieldType.code:
+    case FieldType.richText:
+    default:
+      break;
+  }
+};
+
 const getInitialValues = (fields: Fields): Values =>
   fields.reduce((acc, _field) => {
     const field = _isFunction(_field) ? _field({}) : _field;
     if (!field.name) return acc;
-
-    let value: any = "";
-
-    switch (field.type) {
-      case FieldType.singleSelect:
-      case FieldType.multiSelect:
-      case FieldType.image:
-      case FieldType.file:
-        value = [];
-        break;
-
-      case FieldType.date:
-      case FieldType.dateTime:
-        value = null;
-        break;
-
-      case FieldType.checkbox:
-        value = false;
-        break;
-
-      case FieldType.number:
-        value = 0;
-        break;
-
-      case FieldType.json:
-        value = {};
-        break;
-
-      case FieldType.shortText:
-      case FieldType.longText:
-      case FieldType.email:
-      case FieldType.phone:
-      case FieldType.url:
-      case FieldType.code:
-      case FieldType.richText:
-      default:
-        break;
+    let _type = field.type;
+    if (field.config && field.config.renderFieldType) {
+      _type = field.config.renderFieldType;
     }
+    const value = initializeValue(_type);
 
     return { ...acc, [field.name]: value };
   }, {});
@@ -179,13 +179,16 @@ export default function Form({ fields, values }: IFormProps) {
                   ? _field(values)
                   : _field;
                 const { type, ...fieldProps } = field;
-
+                let _type = type;
+                if (field.config && field.config.renderFieldType) {
+                  _type = field.config.renderFieldType;
+                }
                 // TODO: handle get initial field value for when a field is later
                 // shown to prevent uncontrolled components becoming controlled
 
                 let renderedField: React.ReactNode = null;
 
-                switch (type) {
+                switch (_type) {
                   case FieldType.shortText:
                   case FieldType.longText:
                   case FieldType.email:
@@ -336,7 +339,7 @@ export default function Form({ fields, values }: IFormProps) {
                 return (
                   <FieldWrapper
                     key={fieldProps.name ?? i}
-                    type={type}
+                    type={_type}
                     name={field.name}
                     label={field.label}
                   >
