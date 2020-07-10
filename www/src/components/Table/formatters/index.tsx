@@ -47,7 +47,11 @@ const Percentage = lazy(() =>
  * @param column Must have column `type`
  */
 export const getFormatter = (column: any) => {
-  switch (column.type) {
+  let _type = column.type;
+  if (column.config.renderFieldType) {
+    _type = column.config.renderFieldType;
+  }
+  switch (_type) {
     case FieldType.date:
     case FieldType.dateTime:
       return withCustomCell(DatePicker);

@@ -23,7 +23,7 @@ export type FiretableActions = {
 export type FiretableState = {
   orderBy: FiretableOrderBy;
   tablePath: string;
-  config: { rowHeight: number };
+  config: { rowHeight: number; tableConfig: any };
   columns: any[];
   rows: { [key: string]: any }[];
   queryLimit: number;
@@ -72,7 +72,7 @@ const useFiretable = (
     tablePath: tableState.path,
     filters: tableState.filters,
     columns: tableConfig.columns,
-    config: { rowHeight: tableConfig.rowHeight },
+    config: { rowHeight: tableConfig.rowHeight, tableConfig },
     rows: tableState.rows,
     queryLimit: tableState.limit,
     loadingRows: tableState.loading,

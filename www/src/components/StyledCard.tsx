@@ -66,6 +66,7 @@ interface StyledCardProps {
     label?: string;
   };
   secondaryAction?: React.ReactNode;
+  headerAction?: React.ReactNode;
 }
 
 export default function StyledCard({
@@ -77,6 +78,7 @@ export default function StyledCard({
   primaryButton,
   primaryLink,
   secondaryAction,
+  headerAction,
 }: StyledCardProps) {
   const classes = useStyles();
 
@@ -107,11 +109,14 @@ export default function StyledCard({
                         {overline}
                       </Typography>
                     )}
-                    {title && (
-                      <Typography variant="h5" className={classes.title}>
-                        {title}
-                      </Typography>
-                    )}
+                    <Grid container direction="row" justify="space-between">
+                      {title && (
+                        <Typography variant="h5" className={classes.title}>
+                          {title}
+                        </Typography>
+                      )}
+                      {headerAction && headerAction}
+                    </Grid>
                   </Grid>
 
                   {imageSource && (

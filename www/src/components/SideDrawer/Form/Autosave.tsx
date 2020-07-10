@@ -21,7 +21,15 @@ export default function Autosave({ values, errors }: IAutosaveProps) {
   const { tableState, sideDrawerRef } = useFiretableContext();
 
   const getEditables = value =>
-    _pick(value, tableState?.columns?.map(c => c.key) ?? []);
+    _pick(
+      value,
+      (tableState &&
+        (Array.isArray(tableState?.columns)
+          ? tableState?.columns
+          : Object.values(tableState?.columns)
+        ).map(c => c.key)) ??
+        []
+    );
 
   const [debouncedValue] = useDebounce(getEditables(values), 1000, {
     equalityFn: _isEqual,

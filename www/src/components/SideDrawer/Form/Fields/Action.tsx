@@ -44,8 +44,8 @@ function Action({
   field,
   form,
   editable,
-  callableName,
-}: FieldProps<any> & { callableName: string; editable?: boolean }) {
+  config,
+}: FieldProps<any> & { config: { callableName: string }; editable?: boolean }) {
   const classes = useStyles();
   const { ref, ...docData } = form.values;
 
@@ -57,7 +57,7 @@ function Action({
     console.log("RUN");
 
     cloudFunction(
-      callableName,
+      config.callableName,
       {
         ref: { path: ref.path, id: ref.id },
         row: sanitiseRowData(Object.assign({}, docData)),
@@ -69,7 +69,7 @@ function Action({
         if (cellValue) form.setFieldValue(field.name, cellValue);
       },
       error => {
-        console.error("ERROR", callableName, error);
+        console.error("ERROR", config.callableName, error);
         setIsRunning(false);
         snack.open({ message: JSON.stringify(error), severity: "error" });
       }
@@ -93,14 +93,14 @@ function Action({
               <a
                 href={field.value.status}
                 target="_blank"
-                rel="noopener noreferer"
+                rel="noopener noreferrer"
               >
                 {field.value.status}
               </a>
             ) : hasRan ? (
               field.value.status
             ) : (
-              sanitiseCallableName(callableName)
+              sanitiseCallableName(config.callableName)
             )}
           </Typography>
         </Grid>

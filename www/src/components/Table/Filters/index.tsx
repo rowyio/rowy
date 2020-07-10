@@ -210,8 +210,9 @@ const Filters = ({ columns, setFilters }: any) => {
           return (
             <MultiSelect
               multiple
+              freeText={false}
               onChange={value => setQuery(query => ({ ...query, value }))}
-              options={selectedColumn.options}
+              options={selectedColumn.config.options ?? []}
               label=""
               value={Array.isArray(query?.value) ? query.value : []}
               TextFieldProps={{ hiddenLabel: true }}
@@ -221,10 +222,11 @@ const Filters = ({ columns, setFilters }: any) => {
         return (
           <MultiSelect
             multiple={false}
+            freeText={false}
             onChange={value => {
               if (value !== null) setQuery(query => ({ ...query, value }));
             }}
-            options={selectedColumn.options}
+            options={selectedColumn.config.options ?? []}
             label=""
             value={typeof query?.value === "string" ? query.value : null}
             TextFieldProps={{ hiddenLabel: true }}
@@ -237,7 +239,7 @@ const Filters = ({ columns, setFilters }: any) => {
             multiple
             onChange={value => setQuery(query => ({ ...query, value }))}
             value={query.value as string[]}
-            options={selectedColumn.options}
+            options={selectedColumn.config.options}
             label={""}
             searchable={false}
             freeText={true}
@@ -401,7 +403,7 @@ const Filters = ({ columns, setFilters }: any) => {
           >
             {/* <Button color="primary">+ ADD FILTER</Button> */}
             <Button
-              disabled={query.key == ""}
+              disabled={query.key === ""}
               onClick={() => {
                 setFilters([]);
                 setQuery({

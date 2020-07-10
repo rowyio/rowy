@@ -106,7 +106,6 @@ const useTable = (initialOverrides: any) => {
             const ref = doc.ref;
             return { ...data, id, ref };
           });
-          console.log(tableState.path, { orderBy, rows });
           tableDispatch({
             rows,
             loading: false,
@@ -221,6 +220,7 @@ const useTable = (initialOverrides: any) => {
     if (tableCollection !== tableState.path) {
       tableDispatch({
         path: tableCollection,
+        rows: [],
         orderBy: [],
       });
     }

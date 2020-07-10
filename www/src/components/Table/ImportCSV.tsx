@@ -192,9 +192,11 @@ export default function ImportCSV(props: any) {
                       id: "column-keys",
                     }}
                   >
-                    {tableState?.columns.map((column: any) => (
-                      <MenuItem value={column.key}>{column.name}</MenuItem>
-                    ))}
+                    {Object.values(tableState?.columns as any).map(
+                      (column: any) => (
+                        <MenuItem value={column.key}>{column.name}</MenuItem>
+                      )
+                    )}
                   </Select>
                 </FormControl>
                 <IconButton

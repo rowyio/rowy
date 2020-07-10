@@ -1,8 +1,7 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
 import _groupBy from "lodash/groupBy";
-
-import { Column, DataGridHandle } from "react-data-grid";
-import { PopoverProps } from "@material-ui/core";
+import _sortBy from "lodash/sortBy";
+import { DataGridHandle } from "react-data-grid";
 import firebase from "firebase/app";
 import useFiretable, {
   FiretableActions,
@@ -12,11 +11,7 @@ import useSettings from "hooks/useSettings";
 import { useAppContext } from "./appContext";
 import { useSnackContext } from "./snackContext";
 import { SideDrawerRef } from "components/SideDrawer";
-
-type SelectedColumnHeader = {
-  column: Column<any> & { [key: string]: any };
-  anchorEl: PopoverProps["anchorEl"];
-};
+import { ColumnMenuRef } from "components/Table/ColumnMenu";
 
 export type Table = {
   collection: string;
@@ -37,19 +32,32 @@ interface FiretableContextProps {
     fieldName: string,
     value: any
   ) => void;
-  createTable: Function;
-  userClaims: any;
+  settingsActions: {
+    createTable: (data: {
+      collection: string;
+      name: string;
+      description: string;
+      roles: string[];
+      section: string;
+    }) => void;
+    updateTable: (data: {
+      collection: string;
+      name: string;
+      description: string;
+      roles: string[];
+      section: string;
+    }) => Promise<any>;
+    deleteTable: (collection: string) => void;
+  };
 
-  // TODO: Investigate if this can be moved out of this context
-  selectedColumnHeader: SelectedColumnHeader | null;
-  setSelectedColumnHeader: React.Dispatch<
-    React.SetStateAction<SelectedColumnHeader | null>
-  >;
+  userClaims: any;
 
   // A ref to the data grid. Contains data grid functions
   dataGridRef: React.RefObject<DataGridHandle>;
   // A ref to the side drawer state. Prevents unnecessary re-renders
   sideDrawerRef: React.MutableRefObject<SideDrawerRef | undefined>;
+  // A ref to the column menu. Prevents unnecessary re-renders
+  columnMenuRef: React.MutableRefObject<ColumnMenuRef | undefined>;
 }
 
 const firetableContext = React.createContext<Partial<FiretableContextProps>>(
@@ -83,36 +91,35 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
   const { tableState, tableActions } = useFiretable();
   const [tables, setTables] = useState<FiretableContextProps["tables"]>();
   const [sections, setSections] = useState<FiretableContextProps["sections"]>();
-  const [settings, createTable] = useSettings();
+  const [settings, settingsActions] = useSettings();
   const [userRoles, setUserRoles] = useState<null | string[]>();
   const [userClaims, setUserClaims] = useState<any>();
-  const [
-    selectedColumnHeader,
-    setSelectedColumnHeader,
-  ] = useState<SelectedColumnHeader | null>(null);
 
   const { currentUser } = useAppContext();
   useEffect(() => {
     const { tables } = settings;
     if (tables && userRoles && !sections) {
-      const filteredTables = tables.filter(
-        table =>
-          !table.roles || table.roles.some(role => userRoles.includes(role))
-      );
+      const filteredTables = _sortBy(tables, "name")
+        .filter(
+          table =>
+            !table.roles || table.roles.some(role => userRoles.includes(role))
+        )
+        .map(table => ({
+          ...table,
+          section: table.section ? table.section.toUpperCase().trim() : "OTHER",
+        }));
 
-      const sections = _groupBy(filteredTables, "section");
-
-      setSections(sections);
+      const _sections = _groupBy(filteredTables, "section");
+      setSections(_sections);
       setTables(filteredTables);
     }
-  }, [settings, userRoles]);
+  }, [settings, userRoles, sections]);
 
   useEffect(() => {
     if (currentUser && !userClaims) {
       currentUser.getIdTokenResult(true).then(results => {
         setUserRoles(results.claims.roles || []);
         setUserClaims(results.claims);
-        // setUserRegions(results.claims.regions || []);
       });
     }
   }, [currentUser]);
@@ -145,7 +152,7 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
             open({
               message: `You don't have permissions to make this change`,
               severity: "error",
-              duration: 3000,
+              duration: 2000,
               position: { horizontal: "center", vertical: "top" },
             });
           }
@@ -156,6 +163,7 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
   // A ref to the data grid. Contains data grid functions
   const dataGridRef = useRef<DataGridHandle>(null);
   const sideDrawerRef = useRef<SideDrawerRef>();
+  const columnMenuRef = useRef<ColumnMenuRef>();
 
   return (
     <firetableContext.Provider
@@ -163,14 +171,13 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
         tableState,
         tableActions,
         updateCell,
-        createTable,
+        settingsActions,
         tables,
         sections,
         userClaims,
-        selectedColumnHeader,
-        setSelectedColumnHeader,
         dataGridRef,
         sideDrawerRef,
+        columnMenuRef,
       }}
     >
       {children}

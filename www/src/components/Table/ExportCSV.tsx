@@ -21,11 +21,7 @@ import { SnackContext } from "contexts/snackContext";
 import { useFiretableContext } from "contexts/firetableContext";
 import { db } from "../../firebase";
 import { FieldType } from "constants/fields";
-async function asyncForEach(array, callback) {
-  for (let index = 0; index < array.length; index++) {
-    await callback(array[index], index, array);
-  }
-}
+
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -223,7 +219,10 @@ export default function ExportCSV() {
               MenuProps={MenuProps}
             >
               {tableState?.columns &&
-                tableState?.columns.map((column: any) => (
+                (Array.isArray(tableState?.columns)
+                  ? tableState?.columns
+                  : Object.values(tableState?.columns)
+                ).map((column: any) => (
                   <MenuItem key={column.key} value={column}>
                     {column.name}
                   </MenuItem>

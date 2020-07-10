@@ -41,7 +41,7 @@ export default function Action({
   const classes = useStyles();
 
   const { createdAt, updatedAt, id, ref, ...docData } = row;
-  const { callableName } = column as any;
+  const { callableName, config } = column as any;
   const action = !value
     ? "run"
     : value.undo
@@ -60,9 +60,8 @@ export default function Action({
       column,
       action,
     };
-    console.log(data);
     cloudFunction(
-      callableName,
+      callableName ?? config.callableName,
       data,
       response => {
         const { message, cellValue, success } = response.data;
@@ -71,7 +70,7 @@ export default function Action({
         if (cellValue) onSubmit(cellValue);
       },
       error => {
-        console.error("ERROR", callableName, error);
+        console.error("ERROR", callableName ?? config.callableName, error);
         setIsRunning(false);
         snack.open({ message: JSON.stringify(error), severity: "error" });
       }
@@ -127,13 +126,13 @@ export default function Action({
     >
       <Grid item xs className={classes.labelContainer}>
         {hasRan && isUrl(value.status) ? (
-          <a href={value.status} target="_blank" rel="noopener noreferer">
+          <a href={value.status} target="_blank" rel="noopener noreferrer">
             {value.status}
           </a>
         ) : hasRan ? (
           value.status
         ) : (
-          sanitiseCallableName(callableName)
+          sanitiseCallableName(callableName ?? config.callableName)
         )}
       </Grid>
 

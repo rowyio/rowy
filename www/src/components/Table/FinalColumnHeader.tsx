@@ -39,12 +39,16 @@ const useStyles = makeStyles(theme =>
 const FinalColumnHeader: Column<any>["headerRenderer"] = ({ column }) => {
   const classes = useStyles();
 
-  const { setSelectedColumnHeader } = useFiretableContext();
-  if (!setSelectedColumnHeader) return null;
+  const { columnMenuRef } = useFiretableContext();
+  if (!columnMenuRef) return null;
 
   const handleClick = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => setSelectedColumnHeader({ column, anchorEl: event.currentTarget });
+  ) =>
+    columnMenuRef?.current?.setSelectedColumnHeader({
+      column,
+      anchorEl: event.currentTarget,
+    });
 
   return (
     <Grid

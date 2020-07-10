@@ -12,9 +12,12 @@ import TextEditor from "./TextEditor";
  * @param column Must have column `type`
  */
 export const getEditor = (column: any) => {
-  const { type } = column;
-
-  switch (type) {
+  const { type, config } = column;
+  let _type = type;
+  if (config && config.renderFieldType) {
+    _type = config.renderFieldType;
+  }
+  switch (_type) {
     // Can be edited without double-clicking
     case FieldType.date:
     case FieldType.dateTime:

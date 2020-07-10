@@ -14,8 +14,13 @@ export default function SingleSelect({
   field,
   form,
   editable,
+  config,
   ...props
-}: FieldProps<string> & MultiSelectProps<string> & { editable: boolean }) {
+}: FieldProps<string> &
+  MultiSelectProps<string> & {
+    config: { options: string[] };
+    editable: boolean;
+  }) {
   const theme = useTheme();
 
   const handleChange = value => form.setFieldValue(field.name, value);
@@ -24,6 +29,7 @@ export default function SingleSelect({
     <>
       <MultiSelect
         {...props}
+        options={config.options}
         multiple={false}
         value={field.value}
         onChange={handleChange}
