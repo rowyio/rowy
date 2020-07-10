@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@antlerengineering/components": "^0.2.7",
+    "@antlerengineering/components": "^0.3.10",
     "@antlerengineering/multiselect": "^0.3.14",
     "@date-io/date-fns": "1.x",
     "@material-ui/core": "^4.9.13",
