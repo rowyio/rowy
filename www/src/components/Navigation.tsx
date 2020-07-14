@@ -79,7 +79,7 @@ export default function Navigation({
     if (
       userClaims.regions &&
       table.regional &&
-      !userClaims.regions?.includes("GLOBAL")
+      !userClaims.regions?.includes("GL")
     )
       return {
         pathname: table.collection,
