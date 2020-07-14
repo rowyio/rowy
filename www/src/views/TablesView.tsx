@@ -79,7 +79,7 @@ const useStyles = makeStyles(theme =>
 );
 
 const regionalFilter = (regional, userClaims) =>
-  regional && userClaims?.regions && !userClaims?.regions?.includes("GLOBAL")
+  regional && userClaims?.regions && !userClaims?.regions?.includes("GL")
     ? `?filters=%5B%7B%22key%22%3A%22region%22%2C%22operator%22%3A%22%3D%3D%22%2C%22value%22%3A%22${userClaims?.regions[0]}%22%7D%5D`
     : "";
 
