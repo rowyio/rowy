@@ -8,6 +8,12 @@ const ADMIN_KEY = env.algolia.key;
 
 const client = algoliasearch(APP_ID, ADMIN_KEY);
 
+const missingFieldsReducer = (data: any) => (acc: string[], curr: string) => {
+  if (data[curr] === undefined) {
+    return [...acc, curr];
+  } else return acc;
+};
+
 const filterSnapshot = (
   field: { docPath: string; snapshot: any },
   preservedKeys: string[]
@@ -53,30 +59,55 @@ const algoliaReducer = (docData: FirebaseFirestore.DocumentData) => (
   }
 };
 
-const addToAlgolia = (fieldsToSync: string[], indexName?: string) => (
-  snapshot: FirebaseFirestore.DocumentSnapshot
-) => {
+const addToAlgolia = (
+  fieldsToSync: string[],
+  requiredFields: string[],
+  indexName?: string
+) => (snapshot: FirebaseFirestore.DocumentSnapshot) => {
   const collectionName = snapshot.ref.parent.id;
   const objectID = snapshot.id;
   const docData = snapshot.data();
   if (!docData) return false; // returns if theres no data in the doc
+  const missingRequiredFields = requiredFields.reduce(
+    missingFieldsReducer(docData),
+    []
+  );
+  if (missingRequiredFields.length > 0) {
+    throw new Error(
+      `Missing required fields:${missingRequiredFields.join(", ")}`
+    );
+  }
   const algoliaData = fieldsToSync.reduce(algoliaReducer(docData), {});
   if (Object.keys(algoliaData).length === 0) return false; // returns if theres nothing to sync
   const index = client.initIndex(indexName ? indexName : collectionName); // initialize algolia index
   return index.addObject({ ...algoliaData, objectID }); // add new algolia entry
 };
 
-const updateAlgolia = (fieldsToSync: string[], indexName?: string) => (
-  snapshot: functions.Change<FirebaseFirestore.DocumentSnapshot>
-) => {
+const updateAlgolia = (
+  fieldsToSync: string[],
+  requiredFields: string[],
+  indexName?: string
+) => async (snapshot: functions.Change<FirebaseFirestore.DocumentSnapshot>) => {
   const collectionName = snapshot.after.ref.parent.id;
   const objectID = snapshot.after.id;
   const docData = snapshot.after.data();
   if (!docData) return false; // returns if theres no data in the doc
+
+  const missingRequiredFields = requiredFields.reduce(
+    missingFieldsReducer(docData),
+    []
+  );
+  if (missingRequiredFields.length > 0) {
+    throw new Error(
+      `Missing required fields:${missingRequiredFields.join(", ")}`
+    );
+  }
   const algoliaData = fieldsToSync.reduce(algoliaReducer(docData), {});
   if (Object.keys(algoliaData).length === 0) return false; // returns if theres nothing to sync
   const index = client.initIndex(indexName ? indexName : collectionName); // initialize algolia index
-  return index.saveObject({ ...algoliaData, objectID }); // add update algolia entry
+  const algoliaTask = await index.saveObject({ ...algoliaData, objectID }); // add update algolia entry
+
+  return algoliaTask;
 };
 
 const deleteFromAlgolia = (indexName?: string) => (
@@ -100,10 +131,14 @@ const algoliaFnsGenerator = collection => ({
         ? (snapshot: FirebaseFirestore.DocumentSnapshot) =>
             Promise.all(
               collection.indices.map(index =>
-                addToAlgolia(index.fieldsToSync, index.name)(snapshot)
+                addToAlgolia(
+                  index.fieldsToSync,
+                  collection.requiredFields ?? [],
+                  index.name
+                )(snapshot)
               )
             )
-        : addToAlgolia(collection.fieldsToSync)
+        : addToAlgolia(collection.fieldsToSync, collection.requiredFields ?? [])
     ),
   onUpdate: functions.firestore
     .document(`${collection.name}/{docId}`)
@@ -112,10 +147,17 @@ const algoliaFnsGenerator = collection => ({
         ? snapshot =>
             Promise.all(
               collection.indices.map(index =>
-                updateAlgolia(index.fieldsToSync, index.name)(snapshot)
+                updateAlgolia(
+                  index.fieldsToSync,
+                  collection.requiredFields ?? [],
+                  index.name
+                )(snapshot)
               )
             )
-        : updateAlgolia(collection.fieldsToSync)
+        : updateAlgolia(
+            collection.fieldsToSync,
+            collection.requiredFields ?? []
+          )
     ),
   onDelete: functions.firestore
     .document(`${collection.name}/{docId}`)
