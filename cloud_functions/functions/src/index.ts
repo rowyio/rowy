@@ -5,7 +5,7 @@ export const callable = callableFns;
 
 // all the cloud functions bellow are deployed using the triggerCloudBuild callable  function
 // these functions are designed to be built and deployed based on the configuration passed through the callable
-import * as config from "./functionConfig.json"; // generated using generateConfig.ts
+import config from "./functionConfig"; // generated using generateConfig.ts
 import algoliaFnsGenerator from "./algolia"; // algolia sync functions template
 import collectionSyncFnsGenerator from "./collectionSync";
 import snapshotSyncFnsGenerator from "./snapshotSync";
@@ -17,6 +17,10 @@ const functionConfig: any = config;
 export const FT_algolia = {
   [functionConfig.name]: { ...algoliaFnsGenerator(functionConfig) },
 };
+
+// {
+//   [functionConfig.name]: { ...algoliaFnsGenerator(functionConfig) },
+// };
 
 export const FT_sync = {
   [`${`${`${functionConfig.source}`

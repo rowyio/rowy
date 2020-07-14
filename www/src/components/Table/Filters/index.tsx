@@ -260,7 +260,6 @@ const Filters = ({ columns, setFilters }: any) => {
                   /\{\{(.*?)\}\}/g,
                   (m, k) => userClaims[k]
                 )}
-                //  filters={'regions:SYD AND roles:COACHING"}
                 onChange={value => {
                   setQuery(query => ({ ...query, value }));
                 }}
