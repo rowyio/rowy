@@ -111,11 +111,7 @@ export default function TableHeader({
       <Grid item />
 
       <Grid item>
-        <Filters
-          columns={tempColumns}
-          tableFilters={filters}
-          setFilters={tableActions?.table.filter}
-        />
+        <Filters />
       </Grid>
 
       <Grid item xs className={classes.spacer} />

@@ -8,12 +8,11 @@ import {
   Button,
   Typography,
   IconButton,
-  FormControl,
   Grid,
-  Select,
   MenuItem,
   TextField,
   Switch,
+  Chip,
 } from "@material-ui/core";
 import FilterIcon from "@material-ui/icons/FilterList";
 import CloseIcon from "@material-ui/icons/Close";
@@ -25,6 +24,8 @@ import { FireTableFilter } from "hooks/useFiretable";
 import { useFiretableContext } from "contexts/firetableContext";
 
 import DocSelector from "./DocSelector";
+import { useAppContext } from "contexts/appContext";
+import { DocActions } from "hooks/useDoc";
 const OPERATORS = [
   {
     value: "==",
@@ -94,10 +95,29 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-const Filters = ({ columns, setFilters }: any) => {
-  const { userClaims } = useFiretableContext();
-  const filterColumns = columns
-    .filter(c => c.type !== FieldType.file && c.type !== FieldType.image)
+const UNFILTERABLES = [
+  FieldType.image,
+  FieldType.file,
+  FieldType.action,
+  FieldType.subTable,
+  FieldType.last,
+];
+const Filters = () => {
+  const { userClaims, tableState, tableActions } = useFiretableContext();
+  const { userDoc } = useAppContext();
+
+  useEffect(() => {
+    if (userDoc.state.doc && tableState?.tablePath) {
+      if (userDoc.state.doc.tables?.[tableState?.tablePath]?.filters) {
+        console.log(userDoc.state.doc.tables[tableState?.tablePath].filters);
+        tableActions?.table.filter(
+          userDoc.state.doc.tables[tableState?.tablePath].filters
+        );
+      }
+    }
+  }, [userDoc.state, tableState?.tablePath]);
+  const filterColumns = Object.values(tableState!.columns)
+    .filter(c => !UNFILTERABLES.includes(c.type))
     .map(c => ({
       key: c.key,
       label: c.name,
@@ -273,19 +293,38 @@ const Filters = ({ columns, setFilters }: any) => {
         break;
     }
   };
+
+  const handleUpdateFilters = (filters: FireTableFilter[]) => {
+    userDoc.dispatch({
+      action: DocActions.update,
+      data: {
+        tables: { [`${tableState?.tablePath}`]: { filters } },
+      },
+    });
+  };
   return (
     <>
-      <Button
-        variant="outlined"
-        color="primary"
-        onClick={handleClick}
-        startIcon={<FilterIcon />}
-      >
-        {filters.length !== 0 && filters.length}
-        {" Filter"}
-        {filters.length > 1 && "s"}
-      </Button>
-
+      <Grid container direction="row">
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={handleClick}
+          startIcon={<FilterIcon />}
+        >
+          {filters.length !== 0 && filters.length}
+          {" Filter"}
+          {filters.length > 1 && "s"}
+        </Button>
+        {(tableState?.filters ?? []).map(filter => (
+          <Chip
+            key={filter.key}
+            label={`${filter.key} ${filter.operator} ${filter.value}`}
+            onDelete={() => {
+              handleUpdateFilters([]);
+            }}
+          />
+        ))}
+      </Grid>
       <Popover
         id={id}
         open={open}
@@ -404,7 +443,7 @@ const Filters = ({ columns, setFilters }: any) => {
             <Button
               disabled={query.key === ""}
               onClick={() => {
-                setFilters([]);
+                handleUpdateFilters([]);
                 setQuery({
                   key: "",
                   operator: "",
@@ -420,7 +459,7 @@ const Filters = ({ columns, setFilters }: any) => {
               disabled={query.value === null || query.value === undefined}
               color="primary"
               onClick={() => {
-                setFilters([query]);
+                handleUpdateFilters([query]);
                 handleClose();
               }}
             >
