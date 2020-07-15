@@ -2,6 +2,9 @@ import * as functions from "firebase-functions";
 import * as _ from "lodash";
 import { db } from "../config";
 
+import config from "../functionConfig"; // generated using generateConfig.ts
+const functionConfig: any = config;
+
 const historySnapshot = (trackedFields: string[]) => async (
   change: functions.Change<FirebaseFirestore.DocumentSnapshot>
 ) => {
@@ -28,4 +31,10 @@ const historySnapshotFnsGenerator = collection =>
     .document(`${collection.name}/{docId}`)
     .onUpdate(historySnapshot(collection.trackedFields));
 
-export default historySnapshotFnsGenerator;
+//export default historySnapshotFnsGenerator;
+
+export const FT_history = {
+  [functionConfig.name
+    .replace(/\//g, "_")
+    .replace(/_{.*?}_/g, "_")]: historySnapshotFnsGenerator(functionConfig),
+};
