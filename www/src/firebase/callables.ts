@@ -2,7 +2,7 @@ import { functions } from "./index";
 import { FireTableFilter } from "../hooks/useFiretable";
 
 export enum CLOUD_FUNCTIONS {
-  exportTable = "exportTable",
+  ImpersonatorAuth = "callable-ImpersonatorAuth",
 }
 
 export const cloudFunction = (
@@ -25,9 +25,5 @@ export const cloudFunction = (
     });
 };
 
-export const exportTable = (data: {
-  collectionPath: string;
-  filters: FireTableFilter[];
-  columns: any[];
-  allFields: Boolean;
-}) => functions.httpsCallable(CLOUD_FUNCTIONS.exportTable)(data);
+export const ImpersonatorAuth = (email: string) =>
+  functions.httpsCallable(CLOUD_FUNCTIONS.ImpersonatorAuth)({ email });

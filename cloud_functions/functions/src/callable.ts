@@ -63,7 +63,7 @@ export const ImpersonatorAuth = functions.https.onCall(
       } else {
         return {
           success: false,
-          message: "needs admin role",
+          message: "admin role is required",
         };
       }
     } catch (error) {
