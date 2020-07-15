@@ -59,7 +59,6 @@ const useStyles = makeStyles(theme =>
 interface ITableHeaderProps {
   rowHeight: number;
   updateConfig: Function;
-  filters: FireTableFilter[];
 }
 
 /**
@@ -68,8 +67,6 @@ interface ITableHeaderProps {
 export default function TableHeader({
   rowHeight,
   updateConfig,
-
-  filters,
 }: ITableHeaderProps) {
   const classes = useStyles();
   const { tableActions, tableState } = useFiretableContext();

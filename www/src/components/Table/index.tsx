@@ -120,7 +120,7 @@ export default function Table({ collection, filters }: ITableProps) {
       key: "new",
       name: "Add column",
       type: FieldType.last,
-      index: columns.length,
+      index: columns.length ?? 0,
       width: 160,
       headerRenderer: FinalColumnHeader,
       cellClass: finalColumnClasses.cell,
@@ -152,7 +152,6 @@ export default function Table({ collection, filters }: ITableProps) {
       <TableHeader
         rowHeight={rowHeight}
         updateConfig={tableActions.table.updateConfig}
-        filters={filters}
       />
 
       {!tableState.loadingColumns ? (
