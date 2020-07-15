@@ -50,10 +50,11 @@ const useTableConfig = (tablePath?: string) => {
   const add = (name: string, type: FieldType, data?: any) => {
     //TODO: validation
     const { columns } = tableConfigState;
+    console.log({ columns });
     const newIndex = Object.keys(columns).length;
     let updatedColumns = columns;
     const key = _camelCase(name);
-    updatedColumns[key] = { name, key, type, ...data, index: newIndex };
+    updatedColumns[key] = { name, key, type, ...data, index: newIndex ?? 0 };
     documentDispatch({
       action: DocActions.update,
       data: { columns: updatedColumns },

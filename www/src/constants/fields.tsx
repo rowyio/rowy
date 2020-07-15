@@ -29,12 +29,12 @@ import SubTableIcon from "assets/icons/SubTable";
 
 import ActionIcon from "assets/icons/Action";
 import JsonIcon from "assets/icons/Json";
+import CodeIcon from "@material-ui/icons/Code";
+import DerivativeIcon from "assets/icons/Derivative";
 
 import RichTextIcon from "@material-ui/icons/TextFormat";
 import ColorIcon from "@material-ui/icons/Colorize";
 import SliderIcon from "assets/icons/Slider";
-import CodeIcon from "@material-ui/icons/Code";
-import DerivativeIcon from "@material-ui/icons/Functions";
 import UserIcon from "@material-ui/icons/Person";
 
 export {
@@ -56,12 +56,16 @@ export {
   ConnectTableIcon,
   SubTableIcon,
   ActionIcon,
+  JsonIcon,
+  CodeIcon,
+  DerivativeIcon,
   RichTextIcon,
   ColorIcon,
+  SliderIcon,
+  UserIcon,
 };
 
 export enum FieldType {
-  code = "CODE",
   shortText = "SIMPLE_TEXT",
   longText = "LONG_TEXT",
   email = "EMAIL",
@@ -87,15 +91,14 @@ export enum FieldType {
   subTable = "SUB_TABLE",
 
   action = "ACTION",
+  json = "JSON",
+  code = "CODE",
+  derivative = "DERIVATIVE",
 
   richText = "RICH_TEXT",
   color = "COLOR",
   slider = "SLIDER",
-
-  json = "JSON",
-
   user = "USER",
-  derivative = "DERIVATIVE",
 
   last = "LAST",
 }
@@ -142,14 +145,14 @@ export const FIELDS = [
   },
 
   { icon: <ActionIcon />, name: "Action", type: FieldType.action },
+  { icon: <JsonIcon />, name: "JSON", type: FieldType.json },
+  { icon: <CodeIcon />, name: "Code", type: FieldType.code },
+  { icon: <DerivativeIcon />, name: "Derivative", type: FieldType.derivative },
 
   { icon: <RichTextIcon />, name: "Rich Text", type: FieldType.richText },
   { icon: <ColorIcon />, name: "Color", type: FieldType.color },
   { icon: <SliderIcon />, name: "Slider", type: FieldType.slider },
-  { icon: <JsonIcon />, name: "JSON", type: FieldType.json },
   { icon: <UserIcon />, name: "User", type: FieldType.user },
-  { icon: <CodeIcon />, name: "Code", type: FieldType.code },
-  { icon: <DerivativeIcon />, name: "Derivative", type: FieldType.derivative },
 ];
 
 /**

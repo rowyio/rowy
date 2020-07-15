@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import _groupBy from "lodash/groupBy";
 import _find from "lodash/find";
+
 import {
   createStyles,
   makeStyles,
   Container,
   Grid,
-  Link,
   Typography,
   Divider,
   Fab,
@@ -14,14 +14,13 @@ import {
   Tooltip,
   IconButton,
 } from "@material-ui/core";
+
 import AddIcon from "@material-ui/icons/Add";
 import EditIcon from "@material-ui/icons/Edit";
 import Favorite from "@material-ui/icons/Favorite";
 import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
-import SecurityIcon from "@material-ui/icons/Security";
+
 import AppBar from "components/AppBar";
-import Loading from "components/Loading";
-import EmptyState from "components/EmptyState";
 import StyledCard from "components/StyledCard";
 
 import routes from "constants/routes";
@@ -31,28 +30,23 @@ import { DocActions } from "hooks/useDoc";
 import TableSettingsDialog, {
   TableSettingsDialogModes,
 } from "components/TableSettingsDialog";
+
 const useStyles = makeStyles(theme =>
   createStyles({
-    root: { minHeight: "100vh", paddingBottom: theme.spacing(8) },
+    root: {
+      minHeight: "100vh",
+      paddingBottom: theme.spacing(8),
+    },
+
     section: {
-      padding: theme.spacing(2),
+      "& + &": { marginTop: theme.spacing(8) },
     },
-    greeting: {
+    sectionHeader: {
+      color: theme.palette.text.secondary,
       textTransform: "uppercase",
-      letterSpacing: 3,
-      display: "inline-block",
-      verticalAlign: "middle",
+      letterSpacing: `${2 / 13}em`,
     },
-    newChip: {
-      ...theme.typography.overline,
-      backgroundColor: theme.palette.text.secondary,
-      color: theme.palette.getContrastText(theme.palette.text.secondary),
-      marginLeft: theme.spacing(4),
-    },
-    newChipLabel: { padding: theme.spacing(0, 2) },
-    divider: {
-      margin: theme.spacing(2, 0, 2),
-    },
+    divider: { margin: theme.spacing(1, 0, 3) },
 
     cardGrid: {
       [theme.breakpoints.down("xs")]: { maxWidth: 360, margin: "0 auto" },
@@ -62,11 +56,19 @@ const useStyles = makeStyles(theme =>
       [theme.breakpoints.up("md")]: { minHeight: 220 },
       [theme.breakpoints.down("md")]: { minHeight: 180 },
     },
-
-    createTable: {
-      padding: theme.spacing(2),
+    favButton: {
+      margin: theme.spacing(-0.5, -1, 0, 0),
     },
+    editButton: {
+      margin: theme.spacing(-1),
+      marginRight: theme.spacing(-0.5),
+    },
+
     fab: {
+      position: "fixed",
+      bottom: theme.spacing(3),
+      right: theme.spacing(3),
+
       width: 80,
       height: 80,
 
@@ -80,7 +82,10 @@ const regionalFilter = (regional, userClaims) =>
   regional && userClaims?.regions && !userClaims?.regions?.includes("GL")
     ? `?filters=%5B%7B%22key%22%3A%22region%22%2C%22operator%22%3A%22%3D%3D%22%2C%22value%22%3A%22${userClaims?.regions[0]}%22%7D%5D`
     : "";
+
 const TablesView = () => {
+  const classes = useStyles();
+
   const [settingsDialogState, setSettingsDialogState] = useState<{
     mode: null | TableSettingsDialogModes;
     data: null | {
@@ -94,18 +99,20 @@ const TablesView = () => {
     mode: null,
     data: null,
   });
+
   const clearDialog = () =>
     setSettingsDialogState({
       mode: null,
       data: null,
     });
-  const classes = useStyles();
+
   const { sections, userClaims } = useFiretableContext();
   const { userDoc } = useAppContext();
 
   const favs = userDoc.state.doc?.favoriteTables
     ? userDoc.state.doc.favoriteTables
     : [];
+
   const TableCard = ({ table }) => {
     const checked = Boolean(_find(favs, table));
     return (
@@ -116,7 +123,7 @@ const TablesView = () => {
           title={table.name}
           headerAction={
             <Checkbox
-              onClick={e => {
+              onClick={() => {
                 userDoc.dispatch({
                   action: DocActions.update,
                   data: {
@@ -130,6 +137,7 @@ const TablesView = () => {
               icon={<FavoriteBorder />}
               checkedIcon={<Favorite />}
               name="checkedH"
+              className={classes.favButton}
             />
           }
           bodyContent={table.description}
@@ -148,6 +156,8 @@ const TablesView = () => {
                   data: table,
                 })
               }
+              aria-label="Edit table"
+              className={classes.editButton}
             >
               <EditIcon />
             </IconButton>
@@ -156,37 +166,22 @@ const TablesView = () => {
       </Grid>
     );
   };
+
   return (
     <>
       <main className={classes.root}>
         <AppBar />
+
         <Container>
-          {(!userClaims?.roles || userClaims.roles.length === 0) && (
-            <EmptyState
-              Icon={SecurityIcon}
-              message={"You don't have any permissions specified"}
-              description={
-                <>
-                  Please contact the Assistant <em>to</em> the Regional Manager
-                  of your branch then{" "}
-                  <Link
-                    component="button"
-                    onClick={() => {
-                      window.location.reload();
-                    }}
-                    variant="body2"
-                    style={{ verticalAlign: "baseline" }}
-                  >
-                    refresh this page
-                  </Link>
-                  .
-                </>
-              }
-            />
-          )}
           {favs.length !== 0 && (
-            <div key={"favorites"} className={classes.section}>
-              <Typography variant="overline">favorites</Typography>
+            <section key={"favorites"} className={classes.section}>
+              <Typography
+                variant="subtitle2"
+                component="h1"
+                className={classes.sectionHeader}
+              >
+                favorites
+              </Typography>
               <Divider className={classes.divider} />
               <Grid
                 container
@@ -198,15 +193,22 @@ const TablesView = () => {
                   <TableCard key={table.collection} table={table} />
                 ))}
               </Grid>
-            </div>
+            </section>
           )}
-          {sections ? (
+
+          {sections &&
             Object.keys(sections).map(sectionName => (
-              <div key={sectionName} className={classes.section}>
-                <Typography variant="overline">
+              <section key={sectionName} className={classes.section}>
+                <Typography
+                  variant="subtitle2"
+                  component="h1"
+                  className={classes.sectionHeader}
+                >
                   {sectionName === "undefined" ? "Other" : sectionName}
                 </Typography>
+
                 <Divider className={classes.divider} />
+
                 <Grid
                   container
                   spacing={4}
@@ -217,12 +219,10 @@ const TablesView = () => {
                     <TableCard key={table.collection} table={table} />
                   ))}
                 </Grid>
-              </div>
-            ))
-          ) : (
-            <Loading />
-          )}
-          <div className={classes.createTable}>
+              </section>
+            ))}
+
+          <section className={classes.section}>
             <Tooltip title="Create a table">
               <Fab
                 className={classes.fab}
@@ -238,7 +238,7 @@ const TablesView = () => {
                 <AddIcon />
               </Fab>
             </Tooltip>
-          </div>
+          </section>
         </Container>
       </main>
 
