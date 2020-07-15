@@ -8,7 +8,6 @@ import {
   MenuItem,
   Typography,
   Button,
-  Tooltip,
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 
@@ -16,7 +15,6 @@ import Filters from "./Filters";
 import ImportCSV from "./ImportCSV";
 import ExportCSV from "./ExportCSV";
 
-import { FireTableFilter } from "hooks/useFiretable";
 import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
 import { useFiretableContext } from "contexts/firetableContext";
 import { FieldType } from "constants/fields";
@@ -152,11 +150,9 @@ export default function TableHeader({
 
       <Grid item />
 
-      {/* {userClaims && userClaims.roles?.includes("ADMIN") && ( */}
       <Grid item>
         <ImportCSV />
       </Grid>
-      {/* )} */}
 
       <Grid item>
         <ExportCSV />
