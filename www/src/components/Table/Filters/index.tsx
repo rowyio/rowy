@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import _find from "lodash/find";
+import _sortBy from "lodash/sortBy";
 
 import {
   makeStyles,
@@ -101,6 +102,7 @@ const UNFILTERABLES = [
   FieldType.action,
   FieldType.subTable,
   FieldType.last,
+  FieldType.longText,
 ];
 const Filters = () => {
   const { userClaims, tableState, tableActions } = useFiretableContext();
@@ -116,7 +118,7 @@ const Filters = () => {
       }
     }
   }, [userDoc.state, tableState?.tablePath]);
-  const filterColumns = Object.values(tableState!.columns)
+  const filterColumns = _sortBy(Object.values(tableState!.columns), "index")
     .filter(c => !UNFILTERABLES.includes(c.type))
     .map(c => ({
       key: c.key,
@@ -232,7 +234,11 @@ const Filters = () => {
               multiple
               freeText={false}
               onChange={value => setQuery(query => ({ ...query, value }))}
-              options={selectedColumn.config.options ?? []}
+              options={
+                selectedColumn.config.options
+                  ? selectedColumn.config.options.sort()
+                  : []
+              }
               label=""
               value={Array.isArray(query?.value) ? query.value : []}
               TextFieldProps={{ hiddenLabel: true }}
@@ -246,7 +252,11 @@ const Filters = () => {
             onChange={value => {
               if (value !== null) setQuery(query => ({ ...query, value }));
             }}
-            options={selectedColumn.config.options ?? []}
+            options={
+              selectedColumn.config.options
+                ? selectedColumn.config.options.sort()
+                : []
+            }
             label=""
             value={typeof query?.value === "string" ? query.value : null}
             TextFieldProps={{ hiddenLabel: true }}
@@ -259,7 +269,11 @@ const Filters = () => {
             multiple
             onChange={value => setQuery(query => ({ ...query, value }))}
             value={query.value as string[]}
-            options={selectedColumn.config.options}
+            options={
+              selectedColumn.config.options
+                ? selectedColumn.config.options.sort()
+                : []
+            }
             label={""}
             searchable={false}
             freeText={true}
