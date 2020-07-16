@@ -1,7 +1,9 @@
 import * as functions from "firebase-functions";
 
 import { db } from "../config";
-import derivativeConfigs, { collectionPath } from "../functionConfig";
+import config, { collectionPath } from "../functionConfig";
+// generated using generateConfig.ts
+const functionConfig: any = config;
 
 const shouldEvaluateReducer = (listeners, before, after) =>
   listeners.reduce((acc: Boolean, currField: string) => {
@@ -14,7 +16,7 @@ export const derivativeOnChange = async (
   const beforeData = Change.before.data();
   const afterData = Change.after.data();
   if (!beforeData || !afterData) return false;
-  const update = await derivativeConfigs.reduce(
+  const update = await functionConfig.reduce(
     async (accUpdates: any, currDerivative) => {
       const shouldEval = shouldEvaluateReducer(
         currDerivative.listenerFields,

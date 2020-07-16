@@ -5,8 +5,8 @@ import { db } from "../config";
 import * as _ from "lodash";
 import { replacer } from "../utils/email";
 
-import config from "../functionConfig"; // generated using generateConfig.ts
-const functionConfig: any = config;
+import Config from "../functionConfig"; // generated using generateConfig.ts
+const functionConfig: any = Config;
 
 enum TargetTypes {
   subCollection = "subCollection",

@@ -9,4 +9,5 @@ export { FT_derivatives } from "./derivatives";
 export { FT_algolia } from "./algolia";
 export { FT_sync } from "./collectionSync";
 export { FT_snapshotSync } from "./snapshotSync";
-export { FT_history } from "./history";
+//export { FT_history } from "./history";
+export { FT_subTableStats } from "./subTableStats";

@@ -47,6 +47,10 @@ if (serviceAccount) {
 
         configData = `export default [${config}]\nexport const collectionPath ="${configString}"`;
         break;
+
+      case "FT_subTableStats":
+        configData = `export const collectionPath ="${configString}"\nexport default []`;
+        break;
       default:
         configData = `export default ${configString}`;
         break;
