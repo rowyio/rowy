@@ -4,6 +4,8 @@ import { db } from "../config";
 
 import * as _ from "lodash";
 import { replacer } from "../utils/email";
+import config from "../functionConfig"; // generated using generateConfig.ts
+const functionConfig: any = config;
 // returns object of fieldsToSync
 const docReducer = (docData: FirebaseFirestore.DocumentData) => (
   acc: any,
@@ -127,4 +129,11 @@ const collectionSyncFnsGenerator = collection =>
       : null,
   }).reduce((a, [k, v]) => (v === null ? a : { ...a, [k]: v }), {});
 
-export default collectionSyncFnsGenerator;
+//export default collectionSyncFnsGenerator;
+export const FT_sync = {
+  [`${`${`${functionConfig.source}`
+    .replace(/\//g, "_")
+    .replace(/_{.*?}_/g, "_")}`}2${`${`${functionConfig.target}`
+    .replace(/\//g, "_")
+    .replace(/_{.*?}_/g, "_")}`}`]: collectionSyncFnsGenerator(functionConfig),
+};

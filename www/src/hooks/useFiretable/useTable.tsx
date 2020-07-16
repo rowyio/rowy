@@ -6,7 +6,7 @@ import equals from "ramda/es/equals";
 import firebase from "firebase/app";
 import { FireTableFilter, FiretableOrderBy } from ".";
 import { SnackContext } from "../../contexts/snackContext";
-
+import { cloudFunction } from "../../firebase/callables";
 const CAP = 1000; // safety  paramter sets the  upper limit of number of docs fetched by this hook
 const serverTimestamp = firebase.firestore.FieldValue.serverTimestamp;
 var characters =
@@ -140,12 +140,24 @@ const useTable = (initialOverrides: any) => {
             ),
           });
         } else if (error.code === "permission-denied") {
-          snack.open({
-            position: { horizontal: "center", vertical: "top" },
-            severity: "error",
-            message: "You don't have permissions to see the results.",
-            duration: 10000,
-          });
+          if (filters.length === 0) {
+            cloudFunction(
+              "callable-setFiretablePersonalizedFilter",
+              {
+                table: tableState.path,
+              },
+              resp => {
+                console.log(resp);
+              },
+              () => {}
+            );
+          } else
+            snack.open({
+              position: { horizontal: "center", vertical: "top" },
+              severity: "error",
+              message: "You don't have permissions to see the results.",
+              duration: 10000,
+            });
         }
       }
     );

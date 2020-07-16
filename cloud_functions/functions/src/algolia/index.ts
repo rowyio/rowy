@@ -2,6 +2,8 @@ import * as algoliasearch from "algoliasearch";
 import * as functions from "firebase-functions";
 import * as _ from "lodash";
 import { env } from "../config";
+import config from "../functionConfig"; // generated using generateConfig.ts
+const functionConfig: any = config;
 
 const APP_ID = env.algolia.app;
 const ADMIN_KEY = env.algolia.key;
@@ -181,4 +183,7 @@ const algoliaFnsGenerator = collection => ({
 //       console.log(JSON.stringify(afterData));
 //     }),
 // });
-export default algoliaFnsGenerator;
+//export default algoliaFnsGenerator;
+export const FT_algolia = {
+  [functionConfig.name]: { ...algoliaFnsGenerator(functionConfig) },
+};

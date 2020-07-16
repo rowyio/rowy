@@ -72,27 +72,9 @@ export default function Navigation({
   const section = _find(tables, ["collection", tableCollection?.split("/")[0]])
     ?.section;
 
-  // Get the table path, including filtering for regions & user permissions
+  // Get the table path, including filtering for user permissions
   const getTablePath = (table: Table): LinkProps["to"] => {
     if (!table || !userClaims) return "";
-
-    if (
-      userClaims.regions &&
-      table.regional &&
-      !userClaims.regions?.includes("GL")
-    )
-      return {
-        pathname: table.collection,
-        search: `?filters=${encodeURIComponent(
-          JSON.stringify([
-            {
-              key: "region",
-              operator: "==",
-              value: userClaims.regions[0],
-            },
-          ])
-        )}`,
-      };
 
     return table.collection;
   };
