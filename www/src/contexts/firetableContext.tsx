@@ -18,7 +18,6 @@ export type Table = {
   name: string;
   roles: string[];
   description: string;
-  regional: boolean;
   section: string;
 };
 
