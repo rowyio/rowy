@@ -149,7 +149,14 @@ const useTable = (initialOverrides: any) => {
               resp => {
                 console.log(resp);
               },
-              () => {}
+              () => {
+                snack.open({
+                  position: { horizontal: "center", vertical: "top" },
+                  severity: "error",
+                  message: "You don't have permissions to see the results.",
+                  duration: 10000,
+                });
+              }
             );
           } else
             snack.open({
