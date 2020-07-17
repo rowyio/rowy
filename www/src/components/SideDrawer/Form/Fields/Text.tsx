@@ -1,7 +1,11 @@
 import React from "react";
 
-import { makeStyles, createStyles } from "@material-ui/core";
-import { TextField, TextFieldProps } from "formik-material-ui";
+import {
+  makeStyles,
+  createStyles,
+  TextField,
+  FilledTextFieldProps,
+} from "@material-ui/core";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -9,7 +13,7 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-export interface ITextProps extends TextFieldProps {
+export interface ITextProps extends Omit<FilledTextFieldProps, "variant"> {
   fieldVariant?: "short" | "long" | "email" | "phone" | "number" | "url";
 }
 
@@ -27,7 +31,10 @@ export default function Text({ fieldVariant = "short", ...props }: ITextProps) {
       break;
 
     case "email":
-      variantProps = { type: "email", inputProps: { autoComplete: "email" } };
+      variantProps = {
+        // type: "email",
+        inputProps: { autoComplete: "email" },
+      };
       break;
 
     case "phone":
@@ -45,14 +52,14 @@ export default function Text({ fieldVariant = "short", ...props }: ITextProps) {
   }
   return (
     <TextField
-      key={`${props.form.initialValues.id}-${props.field.name}`}
-      variant="filled"
+      //key={`${props.form.initialValues.id}-${props.field.name}`}
+      // variant="filled"
       fullWidth
       margin="none"
       placeholder={props.label as string}
       {...variantProps}
       {...props}
-      id={`sidedrawer-field-${props.field.name}`}
+      id={`sidedrawer-field-${props.name}`}
       label=""
       hiddenLabel
       //InputProps={{ disableUnderline: true }}

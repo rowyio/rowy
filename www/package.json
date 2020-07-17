@@ -51,6 +51,7 @@
     "react-div-100vh": "^0.3.8",
     "react-dom": "^16.9.0",
     "react-dropzone": "^10.1.8",
+    "react-hook-form": "^6.0.6",
     "react-json-view": "^1.19.1",
     "react-router-dom": "^5.0.1",
     "react-scripts": "^3.3.0",
