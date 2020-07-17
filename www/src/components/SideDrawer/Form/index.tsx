@@ -146,16 +146,16 @@ export default function Form({ fields, values }: IFormProps) {
   const initialValues = getInitialValues(fields);
 
   const { sideDrawerRef } = useFiretableContext();
-  useEffect(() => {
-    const column = sideDrawerRef?.current?.cell?.column;
-    if (!column) return;
+  // useEffect(() => {
+  //   const column = sideDrawerRef?.current?.cell?.column;
+  //   if (!column) return;
 
-    const elem = document.getElementById(`sidedrawer-label-${column}`)
-      ?.parentNode as HTMLElement;
+  //   const elem = document.getElementById(`sidedrawer-label-${column}`)
+  //     ?.parentNode as HTMLElement;
 
-    // Time out for double-clicking on cells, which can open the null editor
-    setTimeout(() => elem?.scrollIntoView({ behavior: "smooth" }), 100);
-  }, [sideDrawerRef?.current]);
+  //   // Time out for double-clicking on cells, which can open the null editor
+  //   setTimeout(() => elem?.scrollIntoView({ behavior: "smooth" }), 200);
+  // }, [sideDrawerRef?.current]);
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
