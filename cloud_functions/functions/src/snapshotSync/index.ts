@@ -5,6 +5,9 @@ import { db } from "../config";
 import * as _ from "lodash";
 import { replacer } from "../utils/email";
 
+import Config from "../functionConfig"; // generated using generateConfig.ts
+const functionConfig: any = Config;
+
 enum TargetTypes {
   subCollection = "subCollection",
   document = "document",
@@ -162,4 +165,16 @@ const snapshotSyncFnsGenerator = config =>
       : null,
   }).reduce((a, [k, v]) => (v === null ? a : { ...a, [k]: v }), {});
 
-export default snapshotSyncFnsGenerator;
+//export default snapshotSyncFnsGenerator;
+
+export const FT_snapshotSync = functionConfig.fnName
+  ? { [functionConfig.fnName]: snapshotSyncFnsGenerator(functionConfig) }
+  : {
+      [`${`${`${functionConfig.source}`
+        .replace(/\//g, "_")
+        .replace(/_{.*?}_/g, "_")}`}2${`${`${functionConfig.target}`
+        .replace(/\//g, "_")
+        .replace(/_{.*?}_/g, "_")}`}`]: snapshotSyncFnsGenerator(
+        functionConfig
+      ),
+    };

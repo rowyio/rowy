@@ -29,6 +29,7 @@ export default function SubTable({ column, row }: CustomCellProps) {
       }, "")
     : "";
   const fieldName = column.key as string;
+  const documentCount = row[fieldName]?.count ?? "";
 
   const router = useRouter();
   const parentLabels = queryString.parse(router.location.search).parentLabel;
@@ -54,7 +55,7 @@ export default function SubTable({ column, row }: CustomCellProps) {
       className={clsx("cell-collapse-padding", classes.root)}
     >
       <Grid item xs className={classes.labelContainer}>
-        {column.name}: {label}
+        {documentCount} {column.name}: {label}
       </Grid>
 
       <Grid item>

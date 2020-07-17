@@ -2,7 +2,7 @@ import React from "react";
 import clsx from "clsx";
 import { CustomCellProps } from "./withCustomCell";
 
-import { makeStyles, createStyles, Grid } from "@material-ui/core";
+import { makeStyles, createStyles, Grid, Tooltip } from "@material-ui/core";
 
 import MultiSelect_ from "@antlerengineering/multiselect";
 import FormattedChip, { VARIANTS } from "components/FormattedChip";
@@ -94,41 +94,62 @@ export default function MultiSelect({
   };
 
   return (
-    <MultiSelect_
-      value={
-        value === undefined || value === null ? (isSingle ? null : []) : value
+    <Tooltip
+      title={
+        value
+          ? Array.isArray(value)
+            ? value.length > 1
+              ? value.join(", ")
+              : ``
+            : value
+          : ``
       }
-      onChange={onSubmit}
-      freeText={!isSingle && config.freeText}
-      multiple={!isSingle as any}
-      label={column.name}
-      labelPlural={column.name}
-      options={config.options ?? []}
-      disabled={column.editable === false}
-      onOpen={handleOpen}
-      TextFieldProps={
-        {
-          label: "",
-          hiddenLabel: true,
-          variant: "standard",
-          className: classes.root,
-          InputProps: {
-            disableUnderline: true,
-            classes: { root: classes.inputBase },
-          },
-          SelectProps: {
-            classes: {
-              root: clsx(classes.root, classes.select),
-              icon: classes.icon,
-            },
-            renderValue,
-            MenuProps: {
-              anchorOrigin: { vertical: "bottom", horizontal: "left" },
-              transformOrigin: { vertical: "top", horizontal: "left" },
-            },
-          },
-        } as const
-      }
-    />
+      enterDelay={100}
+      interactive
+      placement="bottom-start"
+    >
+      <div>
+        <MultiSelect_
+          value={
+            value === undefined || value === null
+              ? isSingle
+                ? null
+                : []
+              : value
+          }
+          onChange={onSubmit}
+          freeText={!isSingle && config.freeText}
+          multiple={!isSingle as any}
+          label={column.name}
+          labelPlural={column.name}
+          options={config.options ?? []}
+          disabled={column.editable === false}
+          onOpen={handleOpen}
+          TextFieldProps={
+            {
+              label: "",
+              hiddenLabel: true,
+              variant: "standard",
+              className: classes.root,
+              InputProps: {
+                disableUnderline: true,
+                classes: { root: classes.inputBase },
+              },
+              SelectProps: {
+                classes: {
+                  root: clsx(classes.root, classes.select),
+                  icon: classes.icon,
+                },
+                renderValue,
+                MenuProps: {
+                  anchorOrigin: { vertical: "bottom", horizontal: "left" },
+                  transformOrigin: { vertical: "top", horizontal: "left" },
+                },
+              },
+            } as const
+          }
+        />
+      </div>
+    </Tooltip>
   );
 }

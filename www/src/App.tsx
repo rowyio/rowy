@@ -21,8 +21,14 @@ import { AppProvider } from "./contexts/appContext";
 import { FiretableContextProvider } from "./contexts/firetableContext";
 import routes from "constants/routes";
 
-import AuthView from "views/AuthView";
+import AuthView from "views/AuthViews/GoogleAuthView";
 import SignOutView from "views/SignOutView";
+
+const ImpersonatorAuthView = lazy(() =>
+  import(
+    "./views/AuthViews/ImpersonatorAuthView" /* webpackChunkName: "ImpersonatorAuthView" */
+  )
+);
 
 const TableView = lazy(() =>
   import("./views/TableView" /* webpackChunkName: "TableView" */)
@@ -53,6 +59,11 @@ const App: React.FC = () => {
               <Suspense fallback={<Loading fullScreen />}>
                 <Switch>
                   <Route exact path={routes.auth} render={() => <AuthView />} />
+                  <Route
+                    exact
+                    path={routes.impersonatorAuth}
+                    render={() => <ImpersonatorAuthView />}
+                  />
                   <Route
                     exact
                     path={routes.signOut}
