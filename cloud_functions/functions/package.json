@@ -25,7 +25,7 @@
     "firebase-admin": "^8.9.2",
     "firebase-functions": "^3.3.0",
     "json2csv": "^4.5.4",
-    "lodash": "^4.17.15"
+    "lodash": "^4.17.19"
   },
   "devDependencies": {
     "firebase-tools": "^7.16.1",
