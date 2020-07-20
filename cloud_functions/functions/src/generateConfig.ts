@@ -52,7 +52,7 @@ if (serviceAccount) {
         configData = `export const collectionPath ="${configString}"\nexport default []`;
         break;
       default:
-        configData = `export default ${configString}`;
+        configData = `export default ${configString}\n export const collectionPath=''`;
         break;
     }
     fs.writeFileSync("./src/functionConfig.ts", configData);
