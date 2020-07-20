@@ -95,6 +95,18 @@ const ConfigForm = ({ type, config, handleChange }) => {
           validTypes={[FieldType.shortText, FieldType.singleSelect]}
         />
       );
+
+    case FieldType.action:
+      return (
+        <TextField
+          label="callable name"
+          name="callableName"
+          fullWidth
+          onChange={e => {
+            handleChange("callableName")(e.target.value);
+          }}
+        />
+      );
     case FieldType.derivative:
       return (
         <>
