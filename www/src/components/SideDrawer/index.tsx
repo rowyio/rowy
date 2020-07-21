@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import clsx from "clsx";
 import _isNil from "lodash/isNil";
 import _sortBy from "lodash/sortBy";
-import _findIndex from "lodash/findIndex";
 
 import { Drawer, Fab } from "@material-ui/core";
 import ChevronIcon from "@material-ui/icons/KeyboardArrowLeft";
@@ -49,7 +48,7 @@ export default function SideDrawer() {
 
     setCell!(cell => ({ column: cell!.column, row }));
 
-    const idx = _findIndex(tableState?.columns, ["key", cell!.column]);
+    const idx = tableState?.columns[cell!.column]?.index;
     dataGridRef?.current?.selectCell({ rowIdx: row, idx });
   };
 
