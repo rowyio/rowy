@@ -15,9 +15,14 @@ const useStyles = makeStyles(theme =>
 
 export interface ITextProps extends Omit<FilledTextFieldProps, "variant"> {
   fieldVariant?: "short" | "long" | "email" | "phone" | "number" | "url";
+  editable?: boolean;
 }
 
-export default function Text({ fieldVariant = "short", ...props }: ITextProps) {
+export default function Text({
+  fieldVariant = "short",
+  editable,
+  ...props
+}: ITextProps) {
   const classes = useStyles();
   let variantProps = {};
 
@@ -50,10 +55,11 @@ export default function Text({ fieldVariant = "short", ...props }: ITextProps) {
     default:
       break;
   }
+
   return (
     <TextField
       //key={`${props.form.initialValues.id}-${props.field.name}`}
-      // variant="filled"
+      variant="filled"
       fullWidth
       margin="none"
       placeholder={props.label as string}
@@ -62,6 +68,7 @@ export default function Text({ fieldVariant = "short", ...props }: ITextProps) {
       id={`sidedrawer-field-${props.name}`}
       label=""
       hiddenLabel
+      disabled={editable === false}
       //InputProps={{ disableUnderline: true }}
     />
   );

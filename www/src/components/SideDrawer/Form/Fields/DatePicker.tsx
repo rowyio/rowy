@@ -1,42 +1,59 @@
 import React from "react";
+import { Controller, Control } from "react-hook-form";
 
 import { useTheme } from "@material-ui/core";
-import { KeyboardDatePicker } from "@material-ui/pickers";
 import {
-  fieldToKeyboardDatePicker,
+  KeyboardDatePicker,
   KeyboardDatePickerProps,
-} from "formik-material-ui-pickers";
+} from "@material-ui/pickers";
 import { DATE_FORMAT } from "constants/dates";
 
-export default function DatePicker(props: KeyboardDatePickerProps) {
+export interface IDatePickerProps
+  extends Omit<KeyboardDatePickerProps, "onChange" | "value"> {
+  control: Control;
+  name: string;
+}
+
+export default function DatePicker({
+  control,
+  name,
+  ...props
+}: IDatePickerProps) {
   const theme = useTheme();
 
-  let transformedValue = null;
-  if (props.field.value && "toDate" in props.field.value)
-    transformedValue = props.field.value.toDate();
-  else if (props.field.value !== undefined)
-    transformedValue = props.field.value;
-
-  const handleChange = (date: Date | null) => {
-    if (isNaN(date?.valueOf() ?? 0)) return;
-    props.form.setFieldValue(props.field.name, date);
-  };
-
   return (
-    <KeyboardDatePicker
-      variant="inline"
-      inputVariant="filled"
-      fullWidth
-      margin="none"
-      format={DATE_FORMAT}
-      placeholder={DATE_FORMAT}
-      InputAdornmentProps={{ style: { marginRight: theme.spacing(-1) } }}
-      {...fieldToKeyboardDatePicker(props)}
-      value={transformedValue}
-      onChange={handleChange}
-      label=""
-      hiddenLabel
-      id={`sidedrawer-field-${props.field.name}`}
+    <Controller
+      control={control}
+      name={name}
+      render={({ onChange, onBlur, value }) => {
+        let transformedValue = null;
+        if (value && "toDate" in value) transformedValue = value.toDate();
+        else if (value !== undefined) transformedValue = value;
+
+        const handleChange = (date: Date | null) => {
+          if (isNaN(date?.valueOf() ?? 0)) return;
+          onChange(date);
+        };
+
+        return (
+          <KeyboardDatePicker
+            variant="inline"
+            inputVariant="filled"
+            fullWidth
+            margin="none"
+            format={DATE_FORMAT}
+            placeholder={DATE_FORMAT}
+            InputAdornmentProps={{ style: { marginRight: theme.spacing(-1) } }}
+            {...props}
+            value={transformedValue}
+            onChange={handleChange}
+            onBlur={onBlur}
+            label=""
+            hiddenLabel
+            id={`sidedrawer-field-${name}`}
+          />
+        );
+      }}
     />
   );
 }

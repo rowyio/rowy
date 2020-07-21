@@ -1,6 +1,5 @@
 import React, { lazy, useEffect } from "react";
-import { Formik, Form as FormikForm, Field } from "formik";
-import { useForm, useWatch } from "react-hook-form";
+import { useForm, useWatch, Control } from "react-hook-form";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import _isFunction from "lodash/isFunction";
@@ -18,9 +17,6 @@ import { FieldType } from "constants/fields";
 
 const Url = lazy(() =>
   import("./Fields/Url" /* webpackChunkName: "SideDrawer-Url" */)
-);
-const Percentage = lazy(() =>
-  import("./Fields/Percentage" /* webpackChunkName: "SideDrawer-Percentage" */)
 );
 const SingleSelect = lazy(() =>
   import(
@@ -45,6 +41,9 @@ const Checkbox = lazy(() =>
 );
 const Rating = lazy(() =>
   import("./Fields/Rating" /* webpackChunkName: "SideDrawer-Rating" */)
+);
+const Percentage = lazy(() =>
+  import("./Fields/Percentage" /* webpackChunkName: "SideDrawer-Percentage" */)
 );
 const Color = lazy(() =>
   import("./Fields/Color" /* webpackChunkName: "SideDrawer-Color" */)
@@ -86,8 +85,8 @@ const Action = lazy(() =>
 export type Values = { [key: string]: any };
 export type Field = {
   type?: FieldType;
-  name?: string;
-  label?: React.ReactNode;
+  name: string;
+  label?: string;
   [key: string]: any;
 };
 export type Fields = (Field | ((values: Values) => Field))[];
@@ -111,7 +110,6 @@ const initializeValue = type => {
 
     case FieldType.json:
       return {};
-      break;
 
     case FieldType.shortText:
     case FieldType.longText:
@@ -145,9 +143,10 @@ export interface IFormProps {
 
 export default function Form({ fields, values }: IFormProps) {
   const initialValues = getInitialValues(fields);
-  const defaultValues = { ...initialValues, ...values };
+  const { ref: firestoreRef, ...rowValues } = values;
+  const defaultValues = { ...initialValues, ...rowValues };
 
-  const { register, handleSubmit, watch, errors, control } = useForm({
+  const { register, handleSubmit, control, reset } = useForm({
     mode: "onBlur",
     defaultValues,
   });
@@ -155,9 +154,11 @@ export default function Form({ fields, values }: IFormProps) {
     console.log("SUBMIT", data);
   };
 
-  // const watchAllFields = watch();
-
-  // useEffect(() => {console.log(watchAllFields)}, [watchAllFields]);
+  // Update field values when Firestore document updates
+  // useEffect(() => {
+  //   console.log("RESET", defaultValues);
+  //   reset(defaultValues);
+  // }, [reset, JSON.stringify(rowValues)]);
 
   // const { sideDrawerRef } = useFiretableContext();
   // useEffect(() => {
@@ -173,19 +174,10 @@ export default function Form({ fields, values }: IFormProps) {
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
-      <form
-        // enableReinitialize
-        onSubmit={handleSubmit(onSubmit)}
-        // onSubmit={(values, actions) => {
-        //   // Mark as submitted. We use Autosave instead.
-        //   actions.setSubmitting(false);
-        // }}
-      >
+      <form onSubmit={handleSubmit(onSubmit)} key={values.id}>
         <AutosaveTwo control={control} defaultValues={defaultValues} />
 
         <Grid container spacing={4} direction="column" wrap="nowrap">
-          <button type="submit">Submit</button>
-
           {fields.map((_field, i) => {
             // Call the field function with values if necessary
             // Otherwise, just use the field object
@@ -195,8 +187,6 @@ export default function Form({ fields, values }: IFormProps) {
             if (field.config && field.config.renderFieldType) {
               _type = field.config.renderFieldType;
             }
-            // TODO: handle get initial field value for when a field is later
-            // shown to prevent uncontrolled components becoming controlled
 
             let renderedField: React.ReactNode = null;
 
@@ -211,67 +201,37 @@ export default function Form({ fields, values }: IFormProps) {
                 );
                 break;
 
-              // case FieldType.url:
-              //   renderedField = (
-              //     <Field {...fieldProps} component={Url} hiddenLabel />
-              //   );
-              //   break;
+              case FieldType.url:
+                renderedField = <Url {...fieldProps} control={control} />;
+                break;
 
-              // case FieldType.percentage:
-              //   renderedField = (
-              //     <Field
-              //       {...fieldProps}
-              //       component={Percentage}
-              //       hiddenLabel
-              //     />
-              //   );
-              //   break;
+              case FieldType.singleSelect:
+                renderedField = (
+                  <SingleSelect {...fieldProps} control={control} />
+                );
+                break;
 
-              // case FieldType.singleSelect:
-              //   renderedField = (
-              //     <Field
-              //       {...fieldProps}
-              //       component={SingleSelect}
-              //       hiddenLabel
-              //     />
-              //   );
-              //   break;
+              case FieldType.multiSelect:
+                renderedField = (
+                  <MultiSelect {...fieldProps} control={control} />
+                );
+                break;
 
-              // case FieldType.multiSelect:
-              //   renderedField = (
-              //     <Field
-              //       {...fieldProps}
-              //       component={MultiSelect}
-              //       hiddenLabel
-              //     />
-              //   );
-              //   break;
+              case FieldType.date:
+                renderedField = (
+                  <DatePicker {...fieldProps} control={control} />
+                );
+                break;
 
-              // case FieldType.date:
-              //   renderedField = (
-              //     <Field
-              //       {...fieldProps}
-              //       component={DatePicker}
-              //       hiddenLabel
-              //     />
-              //   );
-              //   break;
+              case FieldType.dateTime:
+                renderedField = (
+                  <DateTimePicker {...fieldProps} control={control} />
+                );
+                break;
 
-              // case FieldType.dateTime:
-              //   renderedField = (
-              //     <Field
-              //       {...fieldProps}
-              //       component={DateTimePicker}
-              //       hiddenLabel
-              //     />
-              //   );
-              //   break;
-
-              // case FieldType.checkbox:
-              //   renderedField = (
-              //     <Checkbox {...fieldProps} name={fieldProps.name!} />
-              //   );
-              //   break;
+              case FieldType.checkbox:
+                renderedField = <Checkbox {...fieldProps} control={control} />;
+                break;
 
               // case FieldType.color:
               //   renderedField = <Field {...fieldProps} component={Color} />;
@@ -315,6 +275,12 @@ export default function Form({ fields, values }: IFormProps) {
               //   );
               //   break;
 
+              case FieldType.percentage:
+                renderedField = (
+                  <Percentage {...fieldProps} control={control} />
+                );
+                break;
+
               // case FieldType.connectTable:
               //   renderedField = (
               //     <Field {...fieldProps} component={ConnectTable} />
@@ -342,11 +308,11 @@ export default function Form({ fields, values }: IFormProps) {
               //   renderedField = <Field {...fieldProps} component={Code} />;
               //   break;
               case undefined:
-              default:
+                // default:
                 return null;
 
-              // default:
-              // break;
+              default:
+                break;
             }
 
             return (
@@ -369,203 +335,17 @@ export default function Form({ fields, values }: IFormProps) {
           />
         </Grid>
       </form>
-      {/* {({ values, errors }) => (
-          <FormikForm>
-            <Autosave values={values} errors={errors} />
-
-            <Grid container spacing={4} direction="column" wrap="nowrap">
-              {fields.map((_field, i) => {
-                // Call the field function with values if necessary
-                // Otherwise, just use the field object
-                const field: Field = _isFunction(_field)
-                  ? _field(values)
-                  : _field;
-                const { type, ...fieldProps } = field;
-                let _type = type;
-                if (field.config && field.config.renderFieldType) {
-                  _type = field.config.renderFieldType;
-                }
-                // TODO: handle get initial field value for when a field is later
-                // shown to prevent uncontrolled components becoming controlled
-
-                let renderedField: React.ReactNode = null;
-
-                switch (_type) {
-                  case FieldType.shortText:
-                  case FieldType.longText:
-                  case FieldType.email:
-                  case FieldType.phone:
-                  case FieldType.number:
-                    renderedField = (
-                      <Field {...fieldProps} component={Text} hiddenLabel />
-                    );
-                    break;
-
-                  case FieldType.url:
-                    renderedField = (
-                      <Field {...fieldProps} component={Url} hiddenLabel />
-                    );
-                    break;
-
-                  case FieldType.percentage:
-                    renderedField = (
-                      <Field
-                        {...fieldProps}
-                        component={Percentage}
-                        hiddenLabel
-                      />
-                    );
-                    break;
-
-                  case FieldType.singleSelect:
-                    renderedField = (
-                      <Field
-                        {...fieldProps}
-                        component={SingleSelect}
-                        hiddenLabel
-                      />
-                    );
-                    break;
-
-                  case FieldType.multiSelect:
-                    renderedField = (
-                      <Field
-                        {...fieldProps}
-                        component={MultiSelect}
-                        hiddenLabel
-                      />
-                    );
-                    break;
-
-                  case FieldType.date:
-                    renderedField = (
-                      <Field
-                        {...fieldProps}
-                        component={DatePicker}
-                        hiddenLabel
-                      />
-                    );
-                    break;
-
-                  case FieldType.dateTime:
-                    renderedField = (
-                      <Field
-                        {...fieldProps}
-                        component={DateTimePicker}
-                        hiddenLabel
-                      />
-                    );
-                    break;
-
-                  case FieldType.checkbox:
-                    renderedField = (
-                      <Checkbox {...fieldProps} name={fieldProps.name!} />
-                    );
-                    break;
-
-                  case FieldType.color:
-                    renderedField = <Field {...fieldProps} component={Color} />;
-                    break;
-
-                  case FieldType.slider:
-                    renderedField = (
-                      <Field {...fieldProps} component={Slider} />
-                    );
-                    break;
-
-                  case FieldType.richText:
-                    renderedField = (
-                      <Field {...fieldProps} component={RichText} />
-                    );
-                    break;
-
-                  case FieldType.image:
-                    renderedField = (
-                      <Field
-                        {...fieldProps}
-                        component={ImageUploader}
-                        docRef={values.ref}
-                      />
-                    );
-                    break;
-
-                  case FieldType.file:
-                    renderedField = (
-                      <Field
-                        {...fieldProps}
-                        component={FileUploader}
-                        docRef={values.ref}
-                      />
-                    );
-                    break;
-
-                  case FieldType.rating:
-                    renderedField = (
-                      <Field {...fieldProps} component={Rating} />
-                    );
-                    break;
-
-                  case FieldType.connectTable:
-                    renderedField = (
-                      <Field {...fieldProps} component={ConnectTable} />
-                    );
-                    break;
-
-                  case FieldType.subTable:
-                    renderedField = (
-                      <Field {...fieldProps} component={SubTable} />
-                    );
-                    break;
-
-                  case FieldType.action:
-                    renderedField = (
-                      <Field {...fieldProps} component={Action} />
-                    );
-                    break;
-
-                  case FieldType.json:
-                    renderedField = (
-                      <Field {...fieldProps} component={JsonEditor} />
-                    );
-                    break;
-                  case FieldType.code:
-                    renderedField = <Field {...fieldProps} component={Code} />;
-                    break;
-                  case undefined:
-                    return null;
-
-                  default:
-                    break;
-                }
-
-                return (
-                  <FieldWrapper
-                    key={fieldProps.name ?? i}
-                    type={_type}
-                    name={field.name}
-                    label={field.label}
-                  >
-                    {renderedField}
-                  </FieldWrapper>
-                );
-              })}
-
-              <FieldWrapper
-                type="debug"
-                name="_ft_debug_path"
-                label="Document Path"
-                debugText={values.ref?.path ?? values.id ?? "No ref"}
-              />
-            </Grid>
-          </FormikForm>
-        )}
-      </Formik> */}
     </MuiPickersUtilsProvider>
   );
 }
 
-function AutosaveTwo({ control }: any) {
+function AutosaveTwo({
+  control,
+}: {
+  control: Control;
+  defaultValues: { [key: string]: any };
+}) {
   const watchAll = useWatch({ control });
-  console.log(watchAll);
-  return <>autosave2</>;
+  console.log("FORM VALUES", watchAll);
+  return null;
 }
