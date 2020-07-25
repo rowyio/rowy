@@ -19,6 +19,7 @@ import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
 import { useFiretableContext } from "contexts/firetableContext";
 import { FieldType } from "constants/fields";
 import MigrateButton from "./MigrateButton";
+import HiddenFields from "./HidenFields";
 
 export const TABLE_HEADER_HEIGHT = 56;
 
@@ -103,8 +104,7 @@ export default function TableHeader({
         </Button>
       </Grid>
 
-      <Grid item />
-
+      <Grid item>{/* <HiddenFields /> */}</Grid>
       <Grid item>
         <Filters />
       </Grid>

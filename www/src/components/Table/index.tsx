@@ -33,6 +33,7 @@ import useWindowSize from "hooks/useWindowSize";
 import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
 import { APP_BAR_HEIGHT } from "components/Navigation";
 import useStyles from "./styles";
+import { useAppContext } from "contexts/appContext";
 
 // const Hotkeys = lazy(() => import("./HotKeys" /* webpackChunkName: "HotKeys" */));
 const { DraggableContainer } = DraggableHeader;
@@ -60,7 +61,9 @@ export default function Table({ collection, filters }: ITableProps) {
     dataGridRef,
     sideDrawerRef,
   } = useFiretableContext();
-
+  const { userDoc } = useAppContext();
+  const userDocHiddenFields =
+    userDoc.state.doc?.tables[`${tableState?.tablePath}`]?.hiddenFields ?? [];
   useEffect(() => {
     if (tableActions && tableState && tableState.tablePath !== collection) {
       tableActions.table.set(collection, filters);
@@ -104,17 +107,19 @@ export default function Table({ collection, filters }: ITableProps) {
         (column: any) => !column.hidden && column.key
       ),
       "index"
-    ).map((column: any, index) => ({
-      draggable: true,
-      editable: true,
-      resizable: true,
-      frozen: column.fixed,
-      headerRenderer: ColumnHeader,
-      formatter: getFormatter(column),
-      editor: getEditor(column),
-      ...column,
-      width: column.width ? (column.width > 380 ? 380 : column.width) : 150,
-    }));
+    )
+      .map((column: any, index) => ({
+        draggable: true,
+        editable: true,
+        resizable: true,
+        frozen: column.fixed,
+        headerRenderer: ColumnHeader,
+        formatter: getFormatter(column),
+        editor: getEditor(column),
+        ...column,
+        width: column.width ? (column.width > 380 ? 380 : column.width) : 150,
+      }))
+      .filter(column => !userDocHiddenFields.includes(column.key));
     columns.push({
       isNew: true,
       key: "new",
