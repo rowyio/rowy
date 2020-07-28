@@ -52,6 +52,7 @@ export const AppProvider: React.FC<IAppProviderProps> = ({
       }, {});
       db.doc(userDoc.path).set(
         {
+          tables: {},
           user: userData,
           theme: {
             palette: {
