@@ -120,15 +120,18 @@ const useTableConfig = (tablePath?: string) => {
    */
   const reorder = (draggedColumnKey: string, droppedColumnKey: string) => {
     const { columns } = tableConfigState;
-    console.log(columns[draggedColumnKey], columns[droppedColumnKey]);
     const oldIndex = columns[draggedColumnKey].index;
     const newIndex = columns[droppedColumnKey].index;
     const columnsArray = _sortBy(Object.values(columns), "index");
     arrayMover(columnsArray, oldIndex, newIndex);
     let updatedColumns = columns;
-    columnsArray.forEach((column: any, index) => {
-      updatedColumns[column.key] = { ...column, index };
-    });
+
+    columnsArray
+      .filter(c => c) // arrayMover has a bug creating undefined items
+      .forEach((column: any, index) => {
+        console.log({ column });
+        updatedColumns[column.key] = { ...column, index };
+      });
     documentDispatch({
       action: DocActions.update,
       data: { columns: updatedColumns },
