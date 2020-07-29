@@ -90,26 +90,32 @@ const updateAlgolia = (
   requiredFields: string[],
   indexName?: string
 ) => async (snapshot: functions.Change<FirebaseFirestore.DocumentSnapshot>) => {
-  const collectionName = snapshot.after.ref.parent.id;
   const objectID = snapshot.after.id;
-  const docData = snapshot.after.data();
-  if (!docData) return false; // returns if theres no data in the doc
+  try {
+    const collectionName = snapshot.after.ref.parent.id;
 
-  const missingRequiredFields = requiredFields.reduce(
-    missingFieldsReducer(docData),
-    []
-  );
-  if (missingRequiredFields.length > 0) {
-    throw new Error(
-      `Missing required fields:${missingRequiredFields.join(", ")}`
+    const docData = snapshot.after.data();
+    if (!docData) return false; // returns if theres no data in the doc
+
+    const missingRequiredFields = requiredFields.reduce(
+      missingFieldsReducer(docData),
+      []
     );
-  }
-  const algoliaData = fieldsToSync.reduce(algoliaReducer(docData), {});
-  if (Object.keys(algoliaData).length === 0) return false; // returns if theres nothing to sync
-  const index = client.initIndex(indexName ? indexName : collectionName); // initialize algolia index
-  const algoliaTask = await index.saveObject({ ...algoliaData, objectID }); // add update algolia entry
+    if (missingRequiredFields.length > 0) {
+      throw new Error(
+        `Missing required fields:${missingRequiredFields.join(", ")}`
+      );
+    }
+    const algoliaData = fieldsToSync.reduce(algoliaReducer(docData), {});
+    if (Object.keys(algoliaData).length === 0) return false; // returns if theres nothing to sync
+    const index = client.initIndex(indexName ? indexName : collectionName); // initialize algolia index
+    const algoliaTask = await index.saveObject({ ...algoliaData, objectID }); // add update algolia entry
 
-  return algoliaTask;
+    return algoliaTask;
+  } catch (error) {
+    console.error(JSON.stringify({ error, objectID }));
+    return false;
+  }
 };
 
 const deleteFromAlgolia = (indexName?: string) => (

@@ -16,12 +16,8 @@ import CodeEditor from "./ConfigFields/CodeEditor";
 import FieldsDropdown from "./FieldsDropdown";
 import ColumnSelector from "./ConfigFields/ColumnSelector";
 
-const ConfigForm = ({ type, config, handleChange }) => {
-  const { tableState, tables } = useFiretableContext();
-
-  if (!tableState) return <></>;
-  const { columns } = tableState;
-  switch (type) {
+const ConfigFields = ({ fieldType, config, handleChange, tables, columns }) => {
+  switch (fieldType) {
     case FieldType.singleSelect:
     case FieldType.multiSelect:
       return (
@@ -95,6 +91,18 @@ const ConfigForm = ({ type, config, handleChange }) => {
           validTypes={[FieldType.shortText, FieldType.singleSelect]}
         />
       );
+
+    case FieldType.action:
+      return (
+        <TextField
+          label="callable name"
+          name="callableName"
+          fullWidth
+          onChange={e => {
+            handleChange("callableName")(e.target.value);
+          }}
+        />
+      );
     case FieldType.derivative:
       return (
         <>
@@ -114,17 +122,46 @@ const ConfigForm = ({ type, config, handleChange }) => {
             script={config.script}
             handleChange={handleChange("script")}
           />
+          <Typography variant="overline">Field type of the output</Typography>
           <FieldsDropdown
             value={config.renderFieldType}
             onChange={(newType: any) => {
               handleChange("renderFieldType")(newType.target.value);
             }}
           />
+          {config.renderFieldType && (
+            <>
+              <Typography variant="overline"> Rendered field config</Typography>
+              <ConfigFields
+                fieldType={config.renderFieldType}
+                config={config}
+                handleChange={handleChange}
+                tables={tables}
+                columns={columns}
+              />
+            </>
+          )}
         </>
       );
     default:
       return <></>;
   }
+};
+const ConfigForm = ({ type, config, handleChange }) => {
+  const { tableState, tables } = useFiretableContext();
+
+  if (!tableState) return <></>;
+  const { columns } = tableState;
+
+  return (
+    <ConfigFields
+      fieldType={type}
+      columns={columns}
+      config={config}
+      handleChange={handleChange}
+      tables={tables}
+    />
+  );
 };
 
 export default function FormDialog({

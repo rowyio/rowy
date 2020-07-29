@@ -1,6 +1,7 @@
 import * as admin from "firebase-admin";
 import * as _ from "lodash";
 import { db } from "../config";
+
 const serverTimestamp = admin.firestore.FieldValue.serverTimestamp;
 /** fills template with doc values or default value if key doesn't exist */
 export const replacer = (data: any) => (m: string, key: string) => {
@@ -32,7 +33,7 @@ export const sendEmail = async (templateId, row: any) => {
     row
   );
 
-  return db.collection(Collections.fireMail).add({
+  return db.collection("firemail").add({
     to: row.email,
     message,
     createdAt: serverTimestamp(),
