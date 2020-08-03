@@ -184,6 +184,8 @@ export default function Form({ fields, values }: IFormProps) {
             const field: Field = _isFunction(_field) ? _field(values) : _field;
             const { type, ...fieldProps } = field;
             let _type = type;
+
+            // Derivative field support
             if (field.config && field.config.renderFieldType) {
               _type = field.config.renderFieldType;
             }
