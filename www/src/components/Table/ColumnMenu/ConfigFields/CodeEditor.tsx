@@ -1,52 +1,93 @@
-import React from "react";
+import React, { useRef } from "react";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import AceEditor from "react-ace";
-
-import "ace-builds/src-noconflict/mode-javascript";
+import "ace-builds/src-noconflict/mode-typescript";
 import "ace-builds/src-noconflict/theme-monokai";
-const useStyles = makeStyles(Theme =>
+import "ace-builds/src-noconflict/snippets/typescript";
+import "ace-builds/src-noconflict/snippets/javascript";
+import "ace-builds/src-noconflict/ext-beautify";
+import "ace-builds/src-noconflict/ext-options";
+import "ace-builds/src-noconflict/ext-settings_menu";
+import "ace-builds/src-noconflict/ext-language_tools";
+import "ace-builds/src-noconflict/ext-spellcheck";
+import "ace-builds/src-noconflict/ext-searchbox";
+const useStyles = makeStyles(theme =>
   createStyles({
-    root: {},
+    editorWrapper: { position: "relative" },
+
+    editor: {
+      border: `1px solid ${theme.palette.divider}`,
+      borderRadius: theme.shape.borderRadius,
+      resize: "both",
+
+      fontFamily: "SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace",
+    },
+
+    resizeIcon: {
+      position: "absolute",
+      bottom: 0,
+      right: 0,
+
+      color: theme.palette.text.disabled,
+    },
+
+    saveButton: {
+      marginTop: theme.spacing(1),
+    },
   })
 );
-
-const heightCalc = (code: string, minHeight: number, maxHeight: number) => {
-  const codeHeight = code.split("\n").length * 20;
-  console.log({ codeHeight });
-  if (codeHeight <= maxHeight && codeHeight >= minHeight) return codeHeight;
-  else if (codeHeight > maxHeight) return maxHeight;
-  else if (codeHeight < minHeight) return minHeight;
-};
 export default function CodeEditor(props: any) {
   const { handleChange, script } = props;
   console.log({ script });
   const classes = useStyles();
+  const editor = useRef<AceEditor>(null);
+  const handleResize = () => {
+    if (!editor.current) return;
+    editor.current.editor.resize();
+  };
 
+  const annotations = [
+    {
+      row: 3, // must be 0 based
+      column: 4, // must be 0 based
+      text: "error.message", // text to show in tooltip
+      type: "error",
+    },
+  ];
   return (
-    <Grid container direction="column" className={classes.root}>
+    <div className={classes.editorWrapper} onMouseUp={handleResize}>
       <AceEditor
         key={`column-code-editor`}
-        placeholder="insert code"
+        placeholder="Type code here…"
         mode="javascript"
-        theme="monokai"
+        theme="github"
         name={"code-editor"}
-        //onLoad={this.onLoad}
         onChange={handleChange}
-        fontSize={14}
-        showPrintMargin={true}
-        height={`${heightCalc(script ?? "", 100, 600)}px`}
-        //showGutter={true}
-        highlightActiveLine={true}
+        fontSize={13}
+        width="100%"
+        height="300px"
+        showGutter
+        highlightActiveLine
+        showPrintMargin
+        //annotations={annotations}
         value={script}
+        enableBasicAutocompletion={true}
+        enableSnippets={true}
+        enableLiveAutocompletion={true}
         setOptions={{
-          enableBasicAutocompletion: false,
-          enableLiveAutocompletion: false,
-          enableSnippets: false,
+          enableBasicAutocompletion: true,
+          enableLiveAutocompletion: true,
+          enableSnippets: true,
           showLineNumbers: true,
           tabSize: 2,
+          enableMultiselect: true,
+          enableEmmet: true,
+          cursorStyle: "wide",
         }}
+        className={classes.editor}
+        ref={editor}
       />
-    </Grid>
+    </div>
   );
 }
