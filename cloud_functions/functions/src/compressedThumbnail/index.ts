@@ -40,7 +40,7 @@ export const FT_compressedThumbnail = functions.storage
     }
 
     // Exit if this is already a compressed thumbnail.
-    if (object.metadata?.isCompressedThumbnail) {
+    if (object.metadata?.resizedImage) {
       console.log("This is already a compressed thumbnail", object.name);
       return null;
     }
@@ -108,7 +108,7 @@ export const FT_compressedThumbnail = functions.storage
           metadata: {
             metadata: {
               firebaseStorageDownloadTokens: token,
-              isCompressedThumbnail: true,
+              resizedImage: true,
             },
           },
         });
