@@ -11,3 +11,4 @@ export { FT_sync } from "./collectionSync";
 export { FT_snapshotSync } from "./snapshotSync";
 //export { FT_history } from "./history";
 export { FT_subTableStats } from "./subTableStats";
+export { FT_compressedThumbnail } from "./compressedThumbnail";
