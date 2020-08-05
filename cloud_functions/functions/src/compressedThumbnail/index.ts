@@ -17,9 +17,15 @@ import config from "../functionConfig";
 const SUPPORTED_TYPES = ["image/jpeg", "image/png"];
 const DEFAULT_SIZES = ["400x400", "200x200", "100x100"];
 const sizes =
-  Array.isArray(config) && typeof config[0] === "string"
-    ? config
+  config && Array.isArray(config.sizes) && typeof config.sizes[0] === "string"
+    ? config.sizes
     : DEFAULT_SIZES;
+const excludePaths =
+  config &&
+  Array.isArray(config.excludes) &&
+  typeof config.excludes[0] === "string"
+    ? config.excludes
+    : [];
 
 export const FT_compressedThumbnail = functions.storage
   .object()
@@ -43,6 +49,14 @@ export const FT_compressedThumbnail = functions.storage
     const token = object.metadata?.firebaseStorageDownloadTokens;
 
     const filePath = object.name!;
+
+    // Check if file should be excluded based off path
+    for (const excludePath of excludePaths)
+      if (filePath.startsWith(excludePath)) {
+        console.log("File excluded from path", excludePath);
+        return null;
+      }
+
     const baseFileName = path.basename(filePath, path.extname(filePath));
     const tempLocalFile = path.join(
       os.tmpdir(),
