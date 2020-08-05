@@ -105,6 +105,7 @@ export const FT_compressedThumbnail = functions.storage
         // Upload the image
         await bucket.upload(tempLocalThumbFile, {
           destination: thumbFilePath,
+          contentType: object.contentType,
           metadata: {
             metadata: {
               firebaseStorageDownloadTokens: token,
