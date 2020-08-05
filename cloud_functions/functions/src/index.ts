@@ -3,6 +3,8 @@ export { scheduledFirestoreBackup, callableFirestoreBackup } from "./backup";
 import * as callableFns from "./callable";
 export const callable = callableFns;
 
+export { compressedThumbnail } from "./imageCompression";
+
 // all the cloud functions bellow are deployed using the triggerCloudBuild callable  function
 // these functions are designed to be built and deployed based on the configuration passed through the callable
 export { FT_derivatives } from "./derivatives";
