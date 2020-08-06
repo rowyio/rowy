@@ -180,7 +180,6 @@ export default function ExportCSV() {
     const data = docs.map((doc: any) => {
       return csvColumns.reduce(selectedColumnsReducer(doc), {});
     });
-    console.log(data);
     const csv = json2csv(data);
     var blob = new Blob([csv], {
       type: "text/csv;charset=utf-8",

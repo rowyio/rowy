@@ -13,14 +13,12 @@ const useStyles = makeStyles(Theme =>
 
 const heightCalc = (code: string, minHeight: number, maxHeight: number) => {
   const codeHeight = code.split("\n").length * 20;
-  console.log({ codeHeight });
   if (codeHeight <= maxHeight && codeHeight >= minHeight) return codeHeight;
   else if (codeHeight > maxHeight) return maxHeight;
   else if (codeHeight < minHeight) return minHeight;
 };
 export default function CodeEditor(props: any) {
   const { handleChange, script } = props;
-  console.log({ script });
   const classes = useStyles();
 
   return (

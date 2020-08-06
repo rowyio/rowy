@@ -49,7 +49,6 @@ const useTableConfig = (tablePath?: string) => {
   const add = (name: string, type: FieldType, data?: any) => {
     //TODO: validation
     const { columns } = tableConfigState;
-    console.log({ columns });
     const newIndex = Object.keys(columns).length;
     let updatedColumns = columns;
     const key = _camelCase(name);
