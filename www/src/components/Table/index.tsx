@@ -44,12 +44,7 @@ export type FiretableColumn = Column<any> & {
   [key: string]: any;
 };
 
-interface ITableProps {
-  collection: string;
-  filters: FireTableFilter[];
-}
-
-export default function Table({ collection, filters }: ITableProps) {
+export default function Table() {
   const classes = useStyles();
   const theme = useTheme();
   const finalColumnClasses = useFinalColumnStyles();
@@ -64,12 +59,6 @@ export default function Table({ collection, filters }: ITableProps) {
   const { userDoc } = useAppContext();
   const userDocHiddenFields =
     userDoc.state.doc?.tables[`${tableState?.tablePath}`]?.hiddenFields ?? [];
-  useEffect(() => {
-    if (tableActions && tableState && tableState.tablePath !== collection) {
-      tableActions.table.set(collection, filters);
-      if (sideDrawerRef?.current) sideDrawerRef.current.setCell!(null);
-    }
-  }, [collection]);
 
   const rowsContainerRef = useRef<HTMLDivElement>(null);
   // Gets more rows when scrolled down.
@@ -138,7 +127,7 @@ export default function Table({ collection, filters }: ITableProps) {
   const rows = tableState.rows;
   const rowGetter = (rowIdx: number) => rows[rowIdx];
 
-  const inSubTable = collection.split("/").length > 1;
+  const inSubTable = tableState.tablePath.split("/").length > 1;
 
   let tableWidth: any = `calc(100% - ${
     DRAWER_COLLAPSED_WIDTH
@@ -152,7 +141,7 @@ export default function Table({ collection, filters }: ITableProps) {
         <Hotkeys selectedCell={selectedCell} />
       </Suspense> */}
 
-      {inSubTable && <SubTableBreadcrumbs collection={collection} />}
+      {inSubTable && <SubTableBreadcrumbs collection={tableState.tablePath} />}
 
       <TableHeader
         rowHeight={rowHeight}

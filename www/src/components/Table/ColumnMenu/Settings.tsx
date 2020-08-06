@@ -219,7 +219,6 @@ export default function FormDialog({
             <ConfigForm
               type={type}
               handleChange={key => update => {
-                console.log(key, update);
                 setNewConfig({ ...newConfig, [key]: update });
               }}
               config={newConfig}

@@ -37,9 +37,9 @@ const useStyles = makeStyles(theme =>
     },
   })
 );
+
 export default function CodeEditor(props: any) {
   const { handleChange, script } = props;
-  console.log({ script });
   const classes = useStyles();
   const editor = useRef<AceEditor>(null);
   const handleResize = () => {

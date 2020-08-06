@@ -28,7 +28,6 @@ const ColumnSelector = ({
   };
   useEffect(() => {
     if (table) {
-      console.log({ table });
       getColumns(table);
     }
   }, [table]);

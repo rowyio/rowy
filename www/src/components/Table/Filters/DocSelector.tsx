@@ -13,7 +13,6 @@ const AlgoliaSelect = (props: any) => {
   } = props;
   const [searchState] = useAlgolia(algoliaIndex, algoliaKey, filters);
 
-  console.log(filters);
   const [options, setOptions] = useState<any[]>([]);
   useEffect(() => {
     if (Array.isArray(searchState.results?.hits)) {
