@@ -9,6 +9,8 @@ import {
   Typography,
   Button,
 } from "@material-ui/core";
+
+import { isCollectionGroup } from "../../util/fns";
 import AddIcon from "@material-ui/icons/Add";
 
 import Filters from "./Filters";
@@ -84,25 +86,27 @@ export default function TableHeader({
       className={classes.root}
     >
       <MigrateButton needsMigration={needsMigration} columns={tempColumns} />
-      <Grid item>
-        <Button
-          onClick={() => {
-            const initialVal = tempColumns.reduce((acc, currCol) => {
-              if (currCol.type === FieldType.checkbox) {
-                return { ...acc, [currCol.key]: false };
-              } else {
-                return acc;
-              }
-            }, {});
-            tableActions?.row.add(initialVal);
-          }}
-          variant="contained"
-          color="primary"
-          startIcon={<AddIcon />}
-        >
-          Add Row
-        </Button>
-      </Grid>
+      {!isCollectionGroup() && (
+        <Grid item>
+          <Button
+            onClick={() => {
+              const initialVal = tempColumns.reduce((acc, currCol) => {
+                if (currCol.type === FieldType.checkbox) {
+                  return { ...acc, [currCol.key]: false };
+                } else {
+                  return acc;
+                }
+              }, {});
+              tableActions?.row.add(initialVal);
+            }}
+            variant="contained"
+            color="primary"
+            startIcon={<AddIcon />}
+          >
+            Add Row
+          </Button>
+        </Grid>
+      )}
 
       <Grid item>{/* <HiddenFields /> */}</Grid>
       <Grid item>
