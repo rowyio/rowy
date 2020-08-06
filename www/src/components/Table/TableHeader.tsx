@@ -154,9 +154,11 @@ export default function TableHeader({
 
       <Grid item />
 
-      <Grid item>
-        <ImportCSV />
-      </Grid>
+      {!isCollectionGroup() && (
+        <Grid item>
+          <ImportCSV />
+        </Grid>
+      )}
 
       <Grid item>
         <ExportCSV />
