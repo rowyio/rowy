@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import queryString from "query-string";
+import { useFiretableContext } from "contexts/firetableContext";
 
 import { Hidden } from "@material-ui/core";
 
@@ -13,7 +14,7 @@ import useRouter from "hooks/useRouter";
 export default function TableView() {
   const router = useRouter();
   const tableCollection = decodeURIComponent(router.match.params.id);
-
+  const { tableState, tableActions, sideDrawerRef } = useFiretableContext();
   let filters: FireTableFilter[] = [];
   const parsed = queryString.parse(router.location.search);
   if (typeof parsed.filters === "string") {
@@ -23,14 +24,20 @@ export default function TableView() {
     //TODO: json schema validator
   }
 
+  useEffect(() => {
+    if (
+      tableActions &&
+      tableState &&
+      tableState.tablePath !== tableCollection
+    ) {
+      tableActions.table.set(tableCollection, filters);
+      if (sideDrawerRef?.current) sideDrawerRef.current.setCell!(null);
+    }
+  }, [tableCollection]);
+  if (!tableState?.tablePath) return <></>;
   return (
     <Navigation tableCollection={tableCollection}>
-      <Table
-        key={tableCollection}
-        collection={tableCollection}
-        filters={filters}
-      />
-
+      <Table key={tableCollection} />
       <Hidden smDown>
         <SideDrawer />
       </Hidden>

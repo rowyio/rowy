@@ -75,8 +75,9 @@ export default function Navigation({
   // Get the table path, including filtering for user permissions
   const getTablePath = (table: Table): LinkProps["to"] => {
     if (!table || !userClaims) return "";
-
-    return table.collection;
+    return table.isCollectionGroup
+      ? `/tableGroup/${table.collection}`
+      : `/table/${table.collection}`;
   };
 
   const currentCollection = tableCollection.split("/")[0];
@@ -160,6 +161,7 @@ export default function Navigation({
                     disabled={sectionName === section}
                     // onClick={handleSectionClick(sectionName)}
                     component={Link}
+                    replace={true}
                     to={getTablePath(tables[0])}
                     color="inherit"
                     className={classes.sectionButton}

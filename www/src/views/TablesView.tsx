@@ -89,6 +89,7 @@ const TablesView = () => {
       roles: string[];
       name: string;
       section: string;
+      isCollectionGroup: boolean;
     };
   }>({
     mode: null,
@@ -137,7 +138,9 @@ const TablesView = () => {
           }
           bodyContent={table.description}
           primaryLink={{
-            to: `${routes.table}/${table.collection}`,
+            to: `${
+              table.isCollectionGroup ? routes.tableGroup : routes.table
+            }/${table.collection}`,
             label: "Open",
           }}
           secondaryAction={

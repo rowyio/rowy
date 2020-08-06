@@ -72,7 +72,12 @@ const App: React.FC = () => {
 
                   <PrivateRoute
                     exact
-                    path={[routes.home, routes.tableWithId, routes.gridWithId]}
+                    path={[
+                      routes.home,
+                      routes.tableWithId,
+                      routes.tableGroupWithId,
+                      routes.gridWithId,
+                    ]}
                     render={() => (
                       <FiretableContextProvider>
                         <Switch>
@@ -86,8 +91,8 @@ const App: React.FC = () => {
                             render={() => <TableView />}
                           />
                           <PrivateRoute
-                            path={routes.gridWithId}
-                            render={() => <GridView />}
+                            path={routes.tableGroupWithId}
+                            render={() => <TableView />}
                           />
                         </Switch>
                       </FiretableContextProvider>
