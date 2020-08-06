@@ -21,6 +21,7 @@ import { SnackContext } from "contexts/snackContext";
 import { useFiretableContext } from "contexts/firetableContext";
 import { db } from "../../firebase";
 import { FieldType } from "constants/fields";
+import { isCollectionGroup } from "util/fns";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -159,7 +160,9 @@ export default function ExportCSV() {
       duration: 5000,
     });
 
-    let query: any = db.collection(tableState?.tablePath!);
+    let query: any = isCollectionGroup()
+      ? db.collectionGroup(tableState?.tablePath!)
+      : db.collection(tableState?.tablePath!);
     // add filters
     tableState?.filters.forEach(filter => {
       query = query.where(filter.key, filter.operator, filter.value);
@@ -177,6 +180,7 @@ export default function ExportCSV() {
     const data = docs.map((doc: any) => {
       return csvColumns.reduce(selectedColumnsReducer(doc), {});
     });
+    console.log(data);
     const csv = json2csv(data);
     var blob = new Blob([csv], {
       type: "text/csv;charset=utf-8",
