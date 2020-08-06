@@ -173,7 +173,7 @@ export default function ImageUploader({
                     className={classes.img}
                     onClick={() => window.open(image.downloadURL, "_blank")}
                     style={{
-                      backgroundImage: `url(${image.downloadURL})`,
+                      backgroundImage: `url("${image.downloadURL}")`,
                     }}
                   >
                     <Grid
@@ -201,7 +201,7 @@ export default function ImageUploader({
                         className={classes.img}
                         onClick={() => handleDelete(i)}
                         style={{
-                          backgroundImage: `url(${image.downloadURL})`,
+                          backgroundImage: `url("${image.downloadURL}")`,
                         }}
                       >
                         <Grid
@@ -227,7 +227,7 @@ export default function ImageUploader({
           <Grid item>
             <ButtonBase
               className={classes.img}
-              style={{ backgroundImage: `url(${localImage})` }}
+              style={{ backgroundImage: `url("${localImage}")` }}
             >
               <Grid
                 container

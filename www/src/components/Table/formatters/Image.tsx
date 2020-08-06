@@ -163,7 +163,7 @@ export default function Image({
                       className={classes.img}
                       onClick={() => window.open(file.downloadURL, "_blank")}
                       style={{
-                        backgroundImage: `url(${file.downloadURL})`,
+                        backgroundImage: `url("${file.downloadURL}")`,
                       }}
                     >
                       <Grid
@@ -195,7 +195,7 @@ export default function Image({
                           className={classes.img}
                           onClick={handleDelete(file.ref)}
                           style={{
-                            backgroundImage: `url(${file.downloadURL})`,
+                            backgroundImage: `url("${file.downloadURL}")`,
                           }}
                         >
                           <Grid
@@ -218,7 +218,7 @@ export default function Image({
             <Grid item>
               <div
                 className={classes.img}
-                style={{ backgroundImage: `url(${localImage})` }}
+                style={{ backgroundImage: `url("${localImage}")` }}
               />
             </Grid>
           )}
