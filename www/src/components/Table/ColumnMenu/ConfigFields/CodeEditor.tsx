@@ -48,7 +48,10 @@ export default function CodeEditor(props: any) {
     });
   }
 
-  useMemo(() => {
+  useMemo(async () => {
+    const res = await fetch(`${process.env.PUBLIC_URL}/firestore.d.ts`);
+    const data = await res.text();
+    console.log({ data });
     console.log(tableState?.columns);
     monaco
       .init()
@@ -70,9 +73,12 @@ export default function CodeEditor(props: any) {
             allowNonTsExtensions: true,
           }
         );
-        monacoInstance.languages.typescript.javascriptDefaults.addExtraLib();
+        monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
+          data
+        );
         monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
           [
+            "  const db:FirebaseFirestore.Firestore;",
             "declare class row {",
             "    /**",
             "     * Returns the row fields",
@@ -124,9 +130,6 @@ export default function CodeEditor(props: any) {
 
   return (
     <>
-      <button onClick={listenEditorChanges} disabled={!!editorRef.current}>
-        Press to listen editor changes (see console)
-      </button>
       <div className={classes.editorWrapper}>
         <div id="editor" className={classes.editor} />
       </div>
