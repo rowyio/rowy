@@ -19,6 +19,7 @@ export type Table = {
   roles: string[];
   description: string;
   section: string;
+  isCollectionGroup: boolean;
 };
 
 interface FiretableContextProps {

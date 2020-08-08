@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, lazy, Suspense } from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import Grid from "@material-ui/core/Grid";
@@ -10,12 +10,13 @@ import { FieldType } from "constants/fields";
 import OptionsInput from "./ConfigFields/OptionsInput";
 import { useFiretableContext } from "contexts/firetableContext";
 import MultiSelect from "@antlerengineering/multiselect";
-
 import _sortBy from "lodash/sortBy";
-import CodeEditor from "./ConfigFields/CodeEditor";
 import FieldsDropdown from "./FieldsDropdown";
 import ColumnSelector from "./ConfigFields/ColumnSelector";
-
+import FieldSkeleton from "components/SideDrawer/Form/FieldSkeleton";
+const CodeEditor = lazy(() =>
+  import("./ConfigFields/CodeEditor" /* webpackChunkName: "CodeEditor" */)
+);
 const ConfigFields = ({ fieldType, config, handleChange, tables, columns }) => {
   switch (fieldType) {
     case FieldType.singleSelect:
@@ -118,10 +119,13 @@ const ConfigFields = ({ fieldType, config, handleChange, tables, columns }) => {
             }
             handleChange={handleChange("listenerFields")}
           />
-          <CodeEditor
-            script={config.script}
-            handleChange={handleChange("script")}
-          />
+          <Typography variant="overline">derivative script</Typography>
+          <Suspense fallback={<FieldSkeleton height={200} />}>
+            <CodeEditor
+              script={config.script}
+              handleChange={handleChange("script")}
+            />
+          </Suspense>
           <Typography variant="overline">Field type of the output</Typography>
           <FieldsDropdown
             value={config.renderFieldType}
@@ -186,6 +190,7 @@ export default function FormDialog({
   return (
     <div>
       <Dialog
+        maxWidth="xl"
         open={open}
         onClose={(e, r) => {
           handleClose();
@@ -214,7 +219,6 @@ export default function FormDialog({
             <ConfigForm
               type={type}
               handleChange={key => update => {
-                console.log(key, update);
                 setNewConfig({ ...newConfig, [key]: update });
               }}
               config={newConfig}

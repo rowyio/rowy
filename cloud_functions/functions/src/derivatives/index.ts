@@ -8,7 +8,10 @@ const functionConfig: any = config;
 const shouldEvaluateReducer = (listeners, before, after) =>
   listeners.reduce((acc: Boolean, currField: string) => {
     if (acc) return true;
-    else return before[currField] !== after[currField];
+    else
+      return (
+        JSON.stringify(before[currField]) !== JSON.stringify(after[currField])
+      );
   }, false);
 export const derivativeOnChange = async (
   Change: functions.Change<FirebaseFirestore.DocumentSnapshot>
@@ -42,15 +45,8 @@ export const derivativeOnChange = async (
   return false;
 };
 
-/**
- *
- * @param collection configuration object
- */
 export const FT_derivatives = {
   [collectionPath]: {
-    // onCreate: functions.firestore
-    //   .document(`employees/{docId}`)
-    //   .onCreate(addSynonymOnCreate(collection.groups)),
     onUpdate: functions.firestore
       .document(`${collectionPath}/{docId}`)
       .onUpdate(derivativeOnChange),

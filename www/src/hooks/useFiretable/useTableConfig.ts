@@ -6,7 +6,7 @@ import _camelCase from "lodash/camelCase";
 import _findIndex from "lodash/findIndex";
 import _find from "lodash/find";
 import _sortBy from "lodash/sortBy";
-import { arrayMover } from "../../util/fns";
+import { arrayMover, isCollectionGroup } from "../../util/fns";
 import { db, deleteField } from "../../firebase";
 
 //import
@@ -14,10 +14,9 @@ import { db, deleteField } from "../../firebase";
 const formatPathRegex = /\/[^\/]+\/([^\/]+)/g;
 
 const formatPath = (tablePath: string) => {
-  return `_FIRETABLE_/settings/schema/${tablePath.replace(
-    formatPathRegex,
-    "/subTables/$1"
-  )}`;
+  return `_FIRETABLE_/settings/${
+    isCollectionGroup() ? "groupSchema" : "schema"
+  }/${tablePath.replace(formatPathRegex, "/subTables/$1")}`;
 };
 const useTableConfig = (tablePath?: string) => {
   const [tableConfigState, documentDispatch] = useDoc({
@@ -50,7 +49,6 @@ const useTableConfig = (tablePath?: string) => {
   const add = (name: string, type: FieldType, data?: any) => {
     //TODO: validation
     const { columns } = tableConfigState;
-    console.log({ columns });
     const newIndex = Object.keys(columns).length;
     let updatedColumns = columns;
     const key = _camelCase(name);
