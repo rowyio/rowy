@@ -1,5 +1,4 @@
 const inquirer = require("inquirer");
-const files = require("./files");
 
 module.exports = {
   selectFirebaseProject: projects =>
@@ -21,7 +20,8 @@ module.exports = {
       {
         type: "confirm",
         name: "installAlgolia",
-        message: "do you want integrate firetable with algolia?",
+        message:
+          "do you want integrate firetable with algolia? \n You can add it later on, if you don't have it setup yet",
       },
     ];
     return inquirer.prompt(questions);
@@ -61,6 +61,13 @@ module.exports = {
       type: "confirm",
       name: "deployToFirebase",
       message: "Do you want deploy firetable on firebase hosting?",
+    }),
+  askChangeFirebaseHostTarget: hostTarget =>
+    inquirer.prompt({
+      type: "confirm",
+      name: "changeTarget",
+      default: false,
+      message: `do you want to change your current host target (${hostTarget}) ?`,
     }),
   askFirebaseHostTarget: projectId =>
     inquirer.prompt({

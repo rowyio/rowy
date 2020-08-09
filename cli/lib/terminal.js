@@ -1,7 +1,9 @@
 var exec = require("child_process").exec;
 const CLI = require("clui");
 const Spinner = CLI.Spinner;
+// appId regex \d:[0-9]*:web:[0-z]*
 
+// firetable app Regex │ firetable-app.*
 function execute(command, callback) {
   exec(command, function(error, stdout, stderr) {
     //console.log({ error, stdout, stderr });
@@ -71,45 +73,63 @@ module.exports.setFiretableENV = envVariables =>
     });
   });
 
-module.exports.setFirebaseHostingTarget = (projectId, hostingTarget) =>
+module.exports.setFirebaseHostingTarget = (
+  projectId,
+  hostingTarget,
+  directory = "firetable/www"
+) =>
   new Promise((resolve, reject) => {
     const status = new Spinner("setting environment variables, please wait...");
     status.start();
-    const command = `cd firetable/www;yarn target ${hostingTarget} --project ${projectId}`;
+    const command = `cd ${directory};echo '{}' > .firebaserc;yarn target ${hostingTarget} --project ${projectId}`;
     execute(command, function() {
       status.stop();
       resolve(true);
     });
   });
 
-module.exports.deployToFirebaseHosting = projectId =>
+module.exports.deployToFirebaseHosting = (
+  projectId,
+  directory = "firetable/www"
+) =>
   new Promise((resolve, reject) => {
     const status = new Spinner("deploying to firebase hosting, please wait...");
     status.start();
-    const command = `cd firetable/www;firebase deploy --project ${projectId} --only hosting`;
-    execute(command, function(result) {
+    const command = `cd ${directory};firebase deploy --project ${projectId} --only hosting`;
+    execute(command, function(results) {
+      if (results.includes("Error:")) {
+        throw new Error(results);
+      }
       status.stop();
       resolve(true);
     });
   });
 
-module.exports.startFiretableLocally = () =>
+module.exports.startFiretableLocally = directory =>
   new Promise((resolve, reject) => {
     const status = new Spinner("Starting firetable locally, please wait...");
     status.start();
-    execute(`cd firetable/www;yarn start`, function() {
+    execute(`cd ${directory};yarn local`, function() {
       status.stop();
       resolve(true);
     });
   });
-
-module.exports.buildFiretable = () =>
+module.exports.installFiretableAppPackages = directory =>
+  new Promise((resolve, reject) => {
+    const status = new Spinner("Installing firetable app packages...");
+    status.start();
+    execute(`cd ${directory};yarn`, function() {
+      status.stop();
+      resolve(true);
+    });
+  });
+module.exports.buildFiretable = (directory = "firetable/www") =>
   new Promise((resolve, reject) => {
     const status = new Spinner(
       "Building firetable, this one might take a while \u{1F602}..."
     );
     status.start();
-    execute(`cd firetable/www;yarn build`, function() {
+    execute(`cd ${directory};yarn build`, function() {
       status.stop();
       resolve(true);
     });
@@ -121,13 +141,27 @@ module.exports.getFirebaseProjects = () =>
     status.start();
     execute(`firebase projects:list`, function(results) {
       status.stop();
-      const projects = results
-        .split(
-          `├──────────────────────┼────────────────────────┼────────────────┼──────────────────────┤`
-        )
-        .map(line => line.split(" │ ")[1].trim());
-      projects.shift();
+      //console.log(results);
+      if (results.includes("Failed to authenticate")) {
+        throw new Error(results);
+      }
+      const projects = results.match(/(?<=│.*│ )[0-z,-]*(?= *│ \d)/g);
       resolve(projects);
+    });
+  });
+
+module.exports.getExistingFiretableApp = projectId =>
+  new Promise((resolve, reject) => {
+    const status = new Spinner("Checking for existing firetable web app...");
+    status.start();
+    execute(`firebase apps:list WEB --project ${projectId}`, function(results) {
+      status.stop();
+      const firetableApp = results.match(/│ firetable-app.*/);
+      if (firetableApp) {
+        resolve(firetableApp[0].match(/\d:[0-9]*:web:[0-z]*/)[0]);
+      } else {
+        resolve(false);
+      }
     });
   });
 
