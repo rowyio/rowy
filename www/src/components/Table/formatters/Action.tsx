@@ -41,7 +41,7 @@ export default function Action({
   const classes = useStyles();
 
   const { createdAt, updatedAt, id, ref, ...docData } = row;
-  const { callableName, config } = column as any;
+  const { config } = column as any;
   const action = !value
     ? "run"
     : value.undo
@@ -52,16 +52,19 @@ export default function Action({
   const [isRunning, setIsRunning] = useState(false);
   const disabled = column.editable === false;
   const snack = useContext(SnackContext);
+
+  const callableName =
+    (column as any).callableName ?? config.callableName ?? "actionScript";
   const handleRun = () => {
     setIsRunning(true);
     const data = {
-      ref: { path: ref.path, id: ref.id },
+      ref: { path: ref.path, id: ref.id, tablePath: window.location.pathname },
       row: sanitiseRowData(Object.assign({}, docData)),
       column,
       action,
     };
     cloudFunction(
-      callableName ?? config.callableName,
+      callableName,
       data,
       response => {
         const { message, cellValue, success } = response.data;
@@ -70,7 +73,7 @@ export default function Action({
         if (cellValue) onSubmit(cellValue);
       },
       error => {
-        console.error("ERROR", callableName ?? config.callableName, error);
+        console.error("ERROR", callableName, error);
         setIsRunning(false);
         snack.open({ message: JSON.stringify(error), severity: "error" });
       }

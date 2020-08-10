@@ -1,8 +1,9 @@
-import React, { useRef, useMemo } from "react";
+import React, { useRef, useMemo, useState } from "react";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
-import { monaco } from "@monaco-editor/react";
+import Editor, { monaco } from "@monaco-editor/react";
 import { useFiretableContext } from "contexts/firetableContext";
 import { FieldType } from "constants/fields";
+import { setTimeout } from "timers";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -30,7 +31,7 @@ const useStyles = makeStyles(theme =>
 );
 export default function CodeEditor(props: any) {
   const { handleChange, script } = props;
-
+  const [initialEditorValue] = useState(script ?? "");
   const { tableState } = useFiretableContext();
   const classes = useStyles();
 
@@ -41,9 +42,11 @@ export default function CodeEditor(props: any) {
   }
 
   function listenEditorChanges() {
-    editorRef.current?.onDidChangeModelContent(ev => {
-      console.log(editorRef.current.getValue());
-    });
+    setTimeout(() => {
+      editorRef.current?.onDidChangeModelContent(ev => {
+        handleChange(editorRef.current.getValue());
+      });
+    }, 2000);
   }
 
   useMemo(async () => {
@@ -80,11 +83,19 @@ export default function CodeEditor(props: any) {
         monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
           [
             "    /**",
-            "     * Sends out an email throw sendGrid",
+            "     * utility functions",
             "     */",
-            `function sendEmail({from: string,
+            "declare namespace utilFns {",
+            // "function setLogFunction(logger: ((msg: string) => void) | null): void;",
+            "    /**",
+            "     * Sends out an email through sendGrid",
+            "     */",
+            `function sendEmail(msg:{from: string,
               templateId:string,
-              personalizations:{to:string,dynamic_template_data:any}})`,
+              personalizations:{to:string,dynamic_template_data:any}[]}):void {
+
+              }`,
+            "}",
           ].join("\n")
         );
 
@@ -130,7 +141,7 @@ export default function CodeEditor(props: any) {
           //language: "typescript",
         };
 
-        monacoInstance.editor.create(wrapper, properties);
+        //  monacoInstance.editor.create(wrapper, properties);
       })
       .catch(error =>
         console.error(
@@ -138,12 +149,19 @@ export default function CodeEditor(props: any) {
           error
         )
       );
+    listenEditorChanges();
   }, [tableState?.columns]);
 
   return (
     <>
       <div className={classes.editorWrapper}>
-        <div id="editor" className={classes.editor} />
+        {/* <div id="editor" className={classes.editor} /> */}
+        <Editor
+          height="90vh"
+          editorDidMount={handleEditorDidMount}
+          language="javascript"
+          value={initialEditorValue}
+        />
       </div>
     </>
   );
