@@ -6,21 +6,20 @@ import { FieldType } from "constants/fields";
 
 const useStyles = makeStyles(theme =>
   createStyles({
-    editorWrapper: { position: "relative" },
+    editorWrapper: { position: "relative", minWidth: 800 },
 
     editor: {
       border: `1px solid ${theme.palette.divider}`,
       borderRadius: theme.shape.borderRadius,
       resize: "both",
       fontFamily: "SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace",
-      height: "400px",
+      height: "350px",
     },
 
     resizeIcon: {
       position: "absolute",
       bottom: 0,
       right: 0,
-
       color: theme.palette.text.disabled,
     },
 
@@ -33,7 +32,6 @@ export default function CodeEditor(props: any) {
   const { handleChange, script } = props;
 
   const { tableState } = useFiretableContext();
-  console.log({ script });
   const classes = useStyles();
 
   const editorRef = useRef<any>();
@@ -49,16 +47,21 @@ export default function CodeEditor(props: any) {
   }
 
   useMemo(async () => {
-    const res = await fetch(`${process.env.PUBLIC_URL}/firestore.d.ts`);
-    const data = await res.text();
-    console.log({ data });
-    console.log(tableState?.columns);
+    const firestoreDefs = await fetch(
+      `${process.env.PUBLIC_URL}/firestore.d.ts`
+    );
+    // const res = await fetch(
+    //   `https://www.gstatic.com/firebasejs/7.17.2/firebase-firestore.js`,
+    //   { mode: "no-cors" }
+    // );
+    const firestoreDefsFile = await firestoreDefs.text();
+
     monaco
       .init()
       .then(monacoInstance => {
-        /* here is the instance of monaco, so you can use the `monaco.languages` or whatever you want */
-        /* example below */
-
+        monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
+          firestoreDefsFile
+        );
         monacoInstance.languages.typescript.javascriptDefaults.setDiagnosticsOptions(
           {
             noSemanticValidation: true,
@@ -73,9 +76,18 @@ export default function CodeEditor(props: any) {
             allowNonTsExtensions: true,
           }
         );
+
         monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
-          data
+          [
+            "    /**",
+            "     * Sends out an email throw sendGrid",
+            "     */",
+            `function sendEmail({from: string,
+              templateId:string,
+              personalizations:{to:string,dynamic_template_data:any}})`,
+          ].join("\n")
         );
+
         monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
           [
             "  const db:FirebaseFirestore.Firestore;",
@@ -97,7 +109,6 @@ export default function CodeEditor(props: any) {
                     ...column.config.options.map(opt => `"${opt}"`),
                     //     "string",
                   ].join(" | ");
-                  console.log(typeString);
                   return `static ${columnKey}:${typeString}`;
                 case FieldType.multiSelect:
                   return `static ${columnKey}:string[]`;
@@ -118,6 +129,7 @@ export default function CodeEditor(props: any) {
           language: "javascript",
           //language: "typescript",
         };
+
         monacoInstance.editor.create(wrapper, properties);
       })
       .catch(error =>

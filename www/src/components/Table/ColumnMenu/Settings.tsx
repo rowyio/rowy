@@ -95,20 +95,31 @@ const ConfigFields = ({ fieldType, config, handleChange, tables, columns }) => {
 
     case FieldType.action:
       return (
-        <TextField
-          label="callable name"
-          name="callableName"
-          fullWidth
-          onChange={e => {
-            handleChange("callableName")(e.target.value);
-          }}
-        />
+        // <TextField
+        //   label="callable name"
+        //   name="callableName"
+        //   fullWidth
+        //   onChange={e => {
+        //     handleChange("callableName")(e.target.value);
+        //   }}
+        // />
+        <>
+          <Typography variant="overline">action script</Typography>
+          <Suspense fallback={<FieldSkeleton height={200} />}>
+            <CodeEditor
+              script={config.script}
+              handleChange={handleChange("script")}
+            />
+          </Suspense>
+        </>
       );
     case FieldType.derivative:
       return (
         <>
           <ColumnSelector
-            label={"Listener fields"}
+            label={
+              "Listener fields (this script runs when these fields change)"
+            }
             value={config.listenerFields}
             tableColumns={
               columns
@@ -126,6 +137,7 @@ const ConfigFields = ({ fieldType, config, handleChange, tables, columns }) => {
               handleChange={handleChange("script")}
             />
           </Suspense>
+
           <Typography variant="overline">Field type of the output</Typography>
           <FieldsDropdown
             value={config.renderFieldType}
