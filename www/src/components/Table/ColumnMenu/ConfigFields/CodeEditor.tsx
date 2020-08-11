@@ -1,17 +1,9 @@
-import React, { useRef } from "react";
+import React, { useRef, useMemo } from "react";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid";
-import AceEditor from "react-ace";
-import "ace-builds/src-noconflict/mode-typescript";
-import "ace-builds/src-noconflict/theme-monokai";
-import "ace-builds/src-noconflict/snippets/typescript";
-import "ace-builds/src-noconflict/snippets/javascript";
-import "ace-builds/src-noconflict/ext-beautify";
-import "ace-builds/src-noconflict/ext-options";
-import "ace-builds/src-noconflict/ext-settings_menu";
-import "ace-builds/src-noconflict/ext-language_tools";
-import "ace-builds/src-noconflict/ext-spellcheck";
-import "ace-builds/src-noconflict/ext-searchbox";
+import { monaco } from "@monaco-editor/react";
+import { useFiretableContext } from "contexts/firetableContext";
+import { FieldType } from "constants/fields";
+
 const useStyles = makeStyles(theme =>
   createStyles({
     editorWrapper: { position: "relative" },
@@ -20,8 +12,8 @@ const useStyles = makeStyles(theme =>
       border: `1px solid ${theme.palette.divider}`,
       borderRadius: theme.shape.borderRadius,
       resize: "both",
-
       fontFamily: "SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace",
+      height: "400px",
     },
 
     resizeIcon: {
@@ -40,54 +32,107 @@ const useStyles = makeStyles(theme =>
 
 export default function CodeEditor(props: any) {
   const { handleChange, script } = props;
-  const classes = useStyles();
-  const editor = useRef<AceEditor>(null);
-  const handleResize = () => {
-    if (!editor.current) return;
-    editor.current.editor.resize();
-  };
+  const { tableState } = useFiretableContext();
 
-  const annotations = [
-    {
-      row: 3, // must be 0 based
-      column: 4, // must be 0 based
-      text: "error.message", // text to show in tooltip
-      type: "error",
-    },
-  ];
+  const classes = useStyles();
+
+  const editorRef = useRef<any>();
+
+  function handleEditorDidMount(_, editor) {
+    editorRef.current = editor;
+  }
+
+  function listenEditorChanges() {
+    editorRef.current?.onDidChangeModelContent(ev => {
+      console.log(editorRef.current.getValue());
+    });
+  }
+
+  useMemo(async () => {
+    const res = await fetch(`${process.env.PUBLIC_URL}/firestore.d.ts`);
+    const data = await res.text();
+    console.log({ data });
+    console.log(tableState?.columns);
+    monaco
+      .init()
+      .then(monacoInstance => {
+        /* here is the instance of monaco, so you can use the `monaco.languages` or whatever you want */
+        /* example below */
+
+        monacoInstance.languages.typescript.javascriptDefaults.setDiagnosticsOptions(
+          {
+            noSemanticValidation: true,
+            noSyntaxValidation: false,
+          }
+        );
+
+        // compiler options
+        monacoInstance.languages.typescript.javascriptDefaults.setCompilerOptions(
+          {
+            target: monacoInstance.languages.typescript.ScriptTarget.ES5,
+            allowNonTsExtensions: true,
+          }
+        );
+        monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
+          data
+        );
+        monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
+          [
+            "  const db:FirebaseFirestore.Firestore;",
+            "declare class row {",
+            "    /**",
+            "     * Returns the row fields",
+            "     */",
+            ...Object.keys(tableState?.columns!).map((columnKey: string) => {
+              const column = tableState?.columns[columnKey];
+              switch (column.type) {
+                case FieldType.shortText:
+                case FieldType.longText:
+                case FieldType.email:
+                case FieldType.phone:
+                case FieldType.code:
+                  return `static ${columnKey}:string`;
+                case FieldType.singleSelect:
+                  const typeString = [
+                    ...column.config.options.map(opt => `"${opt}"`),
+                    //     "string",
+                  ].join(" | ");
+                  console.log(typeString);
+                  return `static ${columnKey}:${typeString}`;
+                case FieldType.multiSelect:
+                  return `static ${columnKey}:string[]`;
+                case FieldType.checkbox:
+                  return `static ${columnKey}:boolean`;
+                default:
+                  return `static ${columnKey}:any`;
+              }
+            }),
+            "}",
+          ].join("\n"),
+          "ts:filename/rowFields.d.ts"
+        );
+
+        let wrapper = document.getElementById("editor");
+        let properties = {
+          value: script,
+          language: "javascript",
+          //language: "typescript",
+        };
+        monacoInstance.editor.create(wrapper, properties);
+      })
+      .catch(error =>
+        console.error(
+          "An error occurred during initialization of Monaco: ",
+          error
+        )
+      );
+  }, [tableState?.columns]);
+
   return (
-    <div className={classes.editorWrapper} onMouseUp={handleResize}>
-      <AceEditor
-        key={`column-code-editor`}
-        placeholder="Type code here…"
-        mode="javascript"
-        theme="github"
-        name={"code-editor"}
-        onChange={handleChange}
-        fontSize={13}
-        width="100%"
-        height="300px"
-        showGutter
-        highlightActiveLine
-        showPrintMargin
-        //annotations={annotations}
-        value={script}
-        enableBasicAutocompletion={true}
-        enableSnippets={true}
-        enableLiveAutocompletion={true}
-        setOptions={{
-          enableBasicAutocompletion: true,
-          enableLiveAutocompletion: true,
-          enableSnippets: true,
-          showLineNumbers: true,
-          tabSize: 2,
-          enableMultiselect: true,
-          enableEmmet: true,
-          cursorStyle: "wide",
-        }}
-        className={classes.editor}
-        ref={editor}
-      />
-    </div>
+    <>
+      <div className={classes.editorWrapper}>
+        <div id="editor" className={classes.editor} />
+      </div>
+    </>
   );
 }
