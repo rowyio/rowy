@@ -53,3 +53,8 @@ export const sanitiseRowData = (rowData: any) => {
   });
   return rowData;
 };
+
+export const isCollectionGroup = () => {
+  const pathName = window.location.pathname.split("/")[1];
+  return pathName === "tableGroup";
+};

@@ -4,15 +4,9 @@ import "firebase/firestore";
 import "firebase/functions";
 import "firebase/storage";
 
-const config = {
-  apiKey: process.env.REACT_APP_FIREBASE_PROJECT_WEB_API_KEY,
-  authDomain: `${process.env.REACT_APP_FIREBASE_PROJECT_ID}.firebaseapp.com`,
-  databaseURL: `https://${process.env.REACT_APP_FIREBASE_PROJECT_ID}.firebaseio.com`,
-  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
-  storageBucket: `${process.env.REACT_APP_FIREBASE_PROJECT_ID}.appspot.com`,
-};
+import appConfig from "./config";
 
-firebase.initializeApp(config);
+firebase.initializeApp(appConfig);
 
 export const auth = firebase.auth();
 
@@ -28,6 +22,5 @@ export const googleProvider = new firebase.auth.GoogleAuthProvider().setCustomPa
     prompt: "select_account",
   }
 );
-
 
 export const deleteField = firebase.firestore.FieldValue.delete;

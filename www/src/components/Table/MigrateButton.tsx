@@ -9,8 +9,6 @@ const MigrateButton = ({ columns, needsMigration }) => {
 
   const configDocPath = tableState?.config.tableConfig.path;
   const handleColumnMigration = async () => {
-    console.log({ columns });
-
     const newColumns = columns.reduce((acc, currCol, currIndex) => {
       const baseCol = {
         ...currCol,

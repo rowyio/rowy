@@ -7,6 +7,7 @@ import firebase from "firebase/app";
 import { FireTableFilter, FiretableOrderBy } from ".";
 import { SnackContext } from "../../contexts/snackContext";
 import { cloudFunction } from "../../firebase/callables";
+import { isCollectionGroup } from "util/fns";
 const CAP = 1000; // safety  paramter sets the  upper limit of number of docs fetched by this hook
 const serverTimestamp = firebase.firestore.FieldValue.serverTimestamp;
 var characters =
@@ -87,7 +88,9 @@ const useTable = (initialOverrides: any) => {
     });
     let query:
       | firebase.firestore.CollectionReference
-      | firebase.firestore.Query = db.collection(tableState.path);
+      | firebase.firestore.Query = isCollectionGroup()
+      ? db.collectionGroup(tableState.path)
+      : db.collection(tableState.path);
 
     filters.forEach(filter => {
       query = query.where(filter.key, filter.operator, filter.value);
