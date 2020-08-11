@@ -86,7 +86,6 @@ export default function CodeEditor(props: any) {
             "     * utility functions",
             "     */",
             "declare namespace utilFns {",
-            // "function setLogFunction(logger: ((msg: string) => void) | null): void;",
             "    /**",
             "     * Sends out an email through sendGrid",
             "     */",

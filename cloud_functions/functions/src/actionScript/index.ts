@@ -15,13 +15,18 @@ type ActionData = {
   action: "run" | "redo" | "undo";
 };
 // import {
-//   serverTimestamp,
 //   makeId,
 //   hasGoogleMailServer,
 //   hasMissingFields,
 // } from "../utils";
 
 import { hasAnyRole } from "../utils/auth";
+
+const missingFieldsReducer = (data: any) => (acc: string[], curr: string) => {
+  if (data[curr] === undefined) {
+    return [...acc, curr];
+  } else return acc;
+};
 
 const generateSchemaDocPath = tablePath => {
   const pathComponents = tablePath.split("/");
@@ -34,8 +39,9 @@ const serverTimestamp = admin.firestore.FieldValue.serverTimestamp;
 export const actionScript = functions.https.onCall(
   async (data: ActionData, context: functions.https.CallableContext) => {
     try {
-      if (!context || !hasAnyRole(["ADMIN", "OPS", "PROGRAM"], context))
-        throw Error(`You don't have permissions to drop out founders`);
+      if (!context) {
+        throw Error(`You are unauthenticated`);
+      }
 
       const { ref, row, column } = data;
 
@@ -50,10 +56,35 @@ export const actionScript = functions.https.onCall(
           message: "no schema found",
         };
       }
-      const script = schemaDocData.columns[column.key].config.script;
+      const { script, requiredRoles, requiredFields } = schemaDocData.columns[
+        column.key
+      ].config;
+      if (!hasAnyRole(requiredRoles, context)) {
+        throw Error(`You don't have the required roles permissions`);
+      }
 
+      const missingRequiredFields = requiredFields.reduce(
+        missingFieldsReducer(row),
+        []
+      );
+      if (missingRequiredFields.length > 0) {
+        throw new Error(
+          `Missing required fields:${missingRequiredFields.join(", ")}`
+        );
+      }
+      //
       // get auth
-      console.log(JSON.stringify({ row, ref, column, schemaDocData, script }));
+      console.log(
+        JSON.stringify({
+          row,
+          ref,
+          column,
+          schemaDocData,
+          script,
+          requiredRoles,
+          requiredFields,
+        })
+      );
 
       const result: {
         message: string;

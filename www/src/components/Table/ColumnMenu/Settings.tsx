@@ -4,7 +4,13 @@ import Dialog from "@material-ui/core/Dialog";
 import Grid from "@material-ui/core/Grid";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import { Typography, IconButton, TextField, Switch } from "@material-ui/core";
+import {
+  Typography,
+  IconButton,
+  TextField,
+  Switch,
+  FormControlLabel,
+} from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import { FieldType } from "constants/fields";
 import OptionsInput from "./ConfigFields/OptionsInput";
@@ -14,6 +20,7 @@ import _sortBy from "lodash/sortBy";
 import FieldsDropdown from "./FieldsDropdown";
 import ColumnSelector from "./ConfigFields/ColumnSelector";
 import FieldSkeleton from "components/SideDrawer/Form/FieldSkeleton";
+import RoleSelector from "components/RolesSelector";
 const CodeEditor = lazy(() =>
   import("./ConfigFields/CodeEditor" /* webpackChunkName: "CodeEditor" */)
 );
@@ -95,22 +102,58 @@ const ConfigFields = ({ fieldType, config, handleChange, tables, columns }) => {
 
     case FieldType.action:
       return (
-        // <TextField
-        //   label="callable name"
-        //   name="callableName"
-        //   fullWidth
-        //   onChange={e => {
-        //     handleChange("callableName")(e.target.value);
-        //   }}
-        // />
         <>
-          <Typography variant="overline">action script</Typography>
-          <Suspense fallback={<FieldSkeleton height={200} />}>
-            <CodeEditor
-              script={config.script}
-              handleChange={handleChange("script")}
+          <FormControlLabel
+            control={
+              <Switch
+                checked={config.isActionScript}
+                onChange={() =>
+                  handleChange("isActionScript")(
+                    !Boolean(config.isActionScript)
+                  )
+                }
+                name="actionScript"
+              />
+            }
+            label="Set as an action script"
+          />
+          <RoleSelector
+            value={config.requiredRoles}
+            handleChange={handleChange("requiredRoles")}
+          />
+          <ColumnSelector
+            label={"Required fields (this script will)"}
+            value={config.requiredFields}
+            tableColumns={
+              columns
+                ? Array.isArray(columns)
+                  ? columns
+                  : Object.values(columns)
+                : []
+            }
+            handleChange={handleChange("requiredFields")}
+          />
+
+          {!Boolean(config.isActionScript) ? (
+            <TextField
+              label="callable name"
+              name="callableName"
+              fullWidth
+              onChange={e => {
+                handleChange("callableName")(e.target.value);
+              }}
             />
-          </Suspense>
+          ) : (
+            <>
+              <Typography variant="overline">action script</Typography>
+              <Suspense fallback={<FieldSkeleton height={200} />}>
+                <CodeEditor
+                  script={config.script}
+                  handleChange={handleChange("script")}
+                />
+              </Suspense>
+            </>
+          )}
         </>
       );
     case FieldType.derivative:
