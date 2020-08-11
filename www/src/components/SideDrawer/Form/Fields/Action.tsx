@@ -54,8 +54,6 @@ function Action({
   const snack = useContext(SnackContext);
   const handleRun = () => {
     setIsRunning(true);
-    console.log("RUN");
-
     cloudFunction(
       config.callableName,
       {

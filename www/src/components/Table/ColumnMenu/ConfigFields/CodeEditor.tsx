@@ -29,11 +29,11 @@ const useStyles = makeStyles(theme =>
     },
   })
 );
+
 export default function CodeEditor(props: any) {
   const { handleChange, script } = props;
-
   const { tableState } = useFiretableContext();
-  console.log({ script });
+
   const classes = useStyles();
 
   const editorRef = useRef<any>();

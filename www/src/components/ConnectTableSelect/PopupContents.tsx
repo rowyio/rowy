@@ -28,7 +28,6 @@ const searchClient = algoliasearch(
   process.env.REACT_APP_ALGOLIA_APP_ID ?? "",
   process.env.REACT_APP_ALGOLIA_SEARCH_API_KEY ?? ""
 );
-console.log("SEARCH CLIENT", searchClient);
 
 export interface IPopupContentsProps
   extends Omit<IConnectTableSelectProps, "className" | "TextFieldProps"> {}
@@ -60,8 +59,6 @@ export default function PopupContents({
   const [search] = useDebouncedCallback(
     async (query: string) => {
       if (!algoliaIndex) return;
-      console.log("SEARCH", query, algoliaIndex, row);
-
       const data = { ...userClaims, ...row };
       const filters = config?.filters
         ? config?.filters.replace(/\{\{(.*?)\}\}/g, (m, k) => data[k])
