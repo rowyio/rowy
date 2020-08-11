@@ -19,7 +19,7 @@ const useSettings = () => {
       //   ),
       //   "section"
       // );
-      documentDispatch({ tables: doc.tables });
+      documentDispatch({ tables: doc.tables, roles: doc.roles });
     }
   }, [settingsState]);
 

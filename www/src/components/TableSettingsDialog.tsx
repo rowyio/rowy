@@ -15,7 +15,8 @@ import {
   FormControlLabel,
 } from "@material-ui/core";
 import { useFiretableContext } from "../contexts/firetableContext";
-import OptionsInput from "./Table/ColumnMenu/ConfigFields/OptionsInput";
+
+import RolesSelector from "./RolesSelector";
 
 export enum TableSettingsDialogModes {
   create,
@@ -160,9 +161,10 @@ export default function TableSettingsDialog({
             value={formState.description}
             onChange={e => handleChange("description", e.target.value)}
           />
-          <OptionsInput
-            placeholder={"Add Role"}
-            options={formState.roles ?? []}
+
+          <RolesSelector
+            label="Roles"
+            value={formState.roles ?? []}
             handleChange={update => handleChange("roles", update)}
           />
         </DialogContent>

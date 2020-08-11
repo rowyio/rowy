@@ -1,6 +1,7 @@
 export { triggerCloudBuild } from "./buildTriggers"; // a callable used for triggering cloudbuild to build and deploy configurable cloud functions
 export { scheduledFirestoreBackup, callableFirestoreBackup } from "./backup";
 import * as callableFns from "./callable";
+
 export const callable = callableFns;
 
 // all the cloud functions bellow are deployed using the triggerCloudBuild callable  function
@@ -12,3 +13,4 @@ export { FT_snapshotSync } from "./snapshotSync";
 //export { FT_history } from "./history";
 export { FT_subTableStats } from "./subTableStats";
 export { FT_compressedThumbnail } from "./compressedThumbnail";
+export { actionScript } from "./actionScript";

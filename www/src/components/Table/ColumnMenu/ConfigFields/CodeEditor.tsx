@@ -1,26 +1,26 @@
-import React, { useRef, useMemo } from "react";
+import React, { useRef, useMemo, useState } from "react";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
-import { monaco } from "@monaco-editor/react";
+import Editor, { monaco } from "@monaco-editor/react";
 import { useFiretableContext } from "contexts/firetableContext";
 import { FieldType } from "constants/fields";
+import { setTimeout } from "timers";
 
 const useStyles = makeStyles(theme =>
   createStyles({
-    editorWrapper: { position: "relative" },
+    editorWrapper: { position: "relative", minWidth: 800 },
 
     editor: {
       border: `1px solid ${theme.palette.divider}`,
       borderRadius: theme.shape.borderRadius,
       resize: "both",
       fontFamily: "SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace",
-      height: "400px",
+      height: "350px",
     },
 
     resizeIcon: {
       position: "absolute",
       bottom: 0,
       right: 0,
-
       color: theme.palette.text.disabled,
     },
 
@@ -32,8 +32,9 @@ const useStyles = makeStyles(theme =>
 
 export default function CodeEditor(props: any) {
   const { handleChange, script } = props;
-  const { tableState } = useFiretableContext();
 
+  const [initialEditorValue] = useState(script ?? "");
+  const { tableState } = useFiretableContext();
   const classes = useStyles();
 
   const editorRef = useRef<any>();
@@ -43,22 +44,29 @@ export default function CodeEditor(props: any) {
   }
 
   function listenEditorChanges() {
-    editorRef.current?.onDidChangeModelContent(ev => {
-      console.log(editorRef.current.getValue());
-    });
+    setTimeout(() => {
+      editorRef.current?.onDidChangeModelContent(ev => {
+        handleChange(editorRef.current.getValue());
+      });
+    }, 2000);
   }
 
   useMemo(async () => {
-    const res = await fetch(`${process.env.PUBLIC_URL}/firestore.d.ts`);
-    const data = await res.text();
-    console.log({ data });
-    console.log(tableState?.columns);
+    const firestoreDefs = await fetch(
+      `${process.env.PUBLIC_URL}/firestore.d.ts`
+    );
+    // const res = await fetch(
+    //   `https://www.gstatic.com/firebasejs/7.17.2/firebase-firestore.js`,
+    //   { mode: "no-cors" }
+    // );
+    const firestoreDefsFile = await firestoreDefs.text();
+
     monaco
       .init()
       .then(monacoInstance => {
-        /* here is the instance of monaco, so you can use the `monaco.languages` or whatever you want */
-        /* example below */
-
+        monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
+          firestoreDefsFile
+        );
         monacoInstance.languages.typescript.javascriptDefaults.setDiagnosticsOptions(
           {
             noSemanticValidation: true,
@@ -73,9 +81,25 @@ export default function CodeEditor(props: any) {
             allowNonTsExtensions: true,
           }
         );
+
         monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
-          data
+          [
+            "    /**",
+            "     * utility functions",
+            "     */",
+            "declare namespace utilFns {",
+            "    /**",
+            "     * Sends out an email through sendGrid",
+            "     */",
+            `function sendEmail(msg:{from: string,
+              templateId:string,
+              personalizations:{to:string,dynamic_template_data:any}[]}):void {
+
+              }`,
+            "}",
+          ].join("\n")
         );
+
         monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
           [
             "  const db:FirebaseFirestore.Firestore;",
@@ -97,7 +121,6 @@ export default function CodeEditor(props: any) {
                     ...column.config.options.map(opt => `"${opt}"`),
                     //     "string",
                   ].join(" | ");
-                  console.log(typeString);
                   return `static ${columnKey}:${typeString}`;
                 case FieldType.multiSelect:
                   return `static ${columnKey}:string[]`;
@@ -118,7 +141,8 @@ export default function CodeEditor(props: any) {
           language: "javascript",
           //language: "typescript",
         };
-        monacoInstance.editor.create(wrapper, properties);
+
+        //  monacoInstance.editor.create(wrapper, properties);
       })
       .catch(error =>
         console.error(
@@ -126,12 +150,19 @@ export default function CodeEditor(props: any) {
           error
         )
       );
+    listenEditorChanges();
   }, [tableState?.columns]);
 
   return (
     <>
       <div className={classes.editorWrapper}>
-        <div id="editor" className={classes.editor} />
+        {/* <div id="editor" className={classes.editor} /> */}
+        <Editor
+          height="90vh"
+          editorDidMount={handleEditorDidMount}
+          language="javascript"
+          value={initialEditorValue}
+        />
       </div>
     </>
   );
