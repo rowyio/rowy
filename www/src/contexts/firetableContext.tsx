@@ -23,6 +23,7 @@ export type Table = {
 
 interface FiretableContextProps {
   tables: Table[];
+  roles: string[];
   sections: { [sectionName: string]: Table[] };
   tableState: FiretableState;
   tableActions: FiretableActions;
@@ -171,6 +172,7 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
         tableActions,
         updateCell,
         settingsActions,
+        roles: settings.roles,
         tables,
         sections,
         userClaims,
