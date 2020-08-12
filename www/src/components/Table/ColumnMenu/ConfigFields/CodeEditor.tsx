@@ -52,20 +52,27 @@ export default function CodeEditor(props: any) {
   }
 
   useMemo(async () => {
-    const firestoreDefs = await fetch(
+    const firestoreDefsFile = await fetch(
       `${process.env.PUBLIC_URL}/firestore.d.ts`
+    );
+    const firebaseAuthDefsFile = await fetch(
+      `${process.env.PUBLIC_URL}/auth.d.ts`
     );
     // const res = await fetch(
     //   `https://www.gstatic.com/firebasejs/7.17.2/firebase-firestore.js`,
     //   { mode: "no-cors" }
     // );
-    const firestoreDefsFile = await firestoreDefs.text();
+    const firestoreDefs = await firestoreDefsFile.text();
+    const firebaseAuthDefs = await firebaseAuthDefsFile.text();
 
     monaco
       .init()
       .then(monacoInstance => {
         monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
-          firestoreDefsFile
+          firestoreDefs
+        );
+        monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
+          firebaseAuthDefs
         );
         monacoInstance.languages.typescript.javascriptDefaults.setDiagnosticsOptions(
           {
