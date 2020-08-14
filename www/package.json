@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@antlerengineering/components": "^0.3.10",
     "@antlerengineering/multiselect": "^0.3.14",
     "@date-io/date-fns": "1.x",
     "@material-ui/core": "^4.9.13",
@@ -52,6 +51,7 @@
     "react-div-100vh": "^0.3.8",
     "react-dom": "^16.9.0",
     "react-dropzone": "^10.1.8",
+    "react-image": "^4.0.3",
     "react-json-view": "^1.19.1",
     "react-router-dom": "^5.0.1",
     "react-scripts": "^3.3.0",
