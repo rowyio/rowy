@@ -2,8 +2,8 @@ import * as algoliasearch from "algoliasearch";
 import * as functions from "firebase-functions";
 import * as _ from "lodash";
 import { env } from "../config";
-import config from "../functionConfig"; // generated using generateConfig.ts
-const functionConfig: any = config;
+import fnConfig from "../functionConfig"; // generated using generateConfig.ts
+const functionConfig: any = fnConfig;
 
 const APP_ID = env.algolia.app;
 const ADMIN_KEY = env.algolia.key;
@@ -62,11 +62,19 @@ const algoliaReducer = (docData: FirebaseFirestore.DocumentData) => (
 };
 
 const addToAlgolia = (
+  config: any,
   fieldsToSync: string[],
   requiredFields: string[],
   indexName?: string
-) => (snapshot: FirebaseFirestore.DocumentSnapshot) => {
-  const collectionName = snapshot.ref.parent.id;
+) => (
+  snapshot: FirebaseFirestore.DocumentSnapshot,
+  context: functions.EventContext
+) => {
+  if (config.subTable && config.subTable !== context.params.subCollectionId)
+    return false;
+  const _index = indexName
+    ? indexName
+    : `${config.name}${config.subTable ? `_${config.subTable}` : ""}`;
   const objectID = snapshot.id;
   const docData = snapshot.data();
   if (!docData) return false; // returns if theres no data in the doc
@@ -81,18 +89,26 @@ const addToAlgolia = (
   }
   const algoliaData = fieldsToSync.reduce(algoliaReducer(docData), {});
   if (Object.keys(algoliaData).length === 0) return false; // returns if theres nothing to sync
-  const index = client.initIndex(indexName ? indexName : collectionName); // initialize algolia index
+  const index = client.initIndex(_index); // initialize algolia index
   return index.addObject({ ...algoliaData, objectID }); // add new algolia entry
 };
 
 const updateAlgolia = (
+  config: any,
   fieldsToSync: string[],
   requiredFields: string[],
   indexName?: string
-) => async (snapshot: functions.Change<FirebaseFirestore.DocumentSnapshot>) => {
+) => async (
+  snapshot: functions.Change<FirebaseFirestore.DocumentSnapshot>,
+  context: functions.EventContext
+) => {
   const objectID = snapshot.after.id;
   try {
-    const collectionName = snapshot.after.ref.parent.id;
+    if (config.subTable && config.subTable !== context.params.subCollectionId)
+      return false;
+    const _index = indexName
+      ? indexName
+      : `${config.name}${config.subTable ? `_${config.subTable}` : ""}`;
 
     const docData = snapshot.after.data();
     if (!docData) return false; // returns if theres no data in the doc
@@ -108,7 +124,7 @@ const updateAlgolia = (
     }
     const algoliaData = fieldsToSync.reduce(algoliaReducer(docData), {});
     if (Object.keys(algoliaData).length === 0) return false; // returns if theres nothing to sync
-    const index = client.initIndex(indexName ? indexName : collectionName); // initialize algolia index
+    const index = client.initIndex(_index); // initialize algolia index
     const algoliaTask = await index.saveObject({ ...algoliaData, objectID }); // add update algolia entry
 
     return algoliaTask;
@@ -118,78 +134,85 @@ const updateAlgolia = (
   }
 };
 
-const deleteFromAlgolia = (indexName?: string) => (
-  snapshot: FirebaseFirestore.DocumentSnapshot
+const deleteFromAlgolia = (config: any, indexName?: string) => (
+  snapshot: FirebaseFirestore.DocumentSnapshot,
+  context: functions.EventContext
 ) => {
-  const collectionName = snapshot.ref.parent.id;
+  if (config.subTable && config.subTable !== context.params.subCollectionId)
+    return false;
+  const _index = indexName
+    ? indexName
+    : `${config.name}${config.subTable ? `_${config.subTable}` : ""}`;
   const objectID = snapshot.id;
-  const index = client.initIndex(indexName ? indexName : collectionName); // initialize algolia index
+  const index = client.initIndex(_index); // initialize algolia index
   return index.deleteObject(objectID); // delete algolia entry
 };
 
+const documentPathGenerator = config =>
+  `${
+    config.subTable
+      ? `${config.name}/{parentId}/{subCollectionId}/{docId}`
+      : `${config.name}/{docId}`
+  }`;
 /**
  * returns 3 different trigger functions (onCreate,onUpdate,onDelete) in an object
- * @param collection configuration object
+ * @param config configuration object
  */
-const algoliaFnsGenerator = collection => ({
+const algoliaFnsGenerator = config => ({
   onCreate: functions.firestore
-    .document(`${collection.name}/{docId}`)
+    .document(documentPathGenerator(config))
     .onCreate(
-      collection.indices
-        ? (snapshot: FirebaseFirestore.DocumentSnapshot) =>
+      config.indices
+        ? (snapshot, context) =>
             Promise.all(
-              collection.indices.map(index =>
+              config.indices.map(index =>
                 addToAlgolia(
+                  config,
                   index.fieldsToSync,
-                  collection.requiredFields ?? [],
+                  config.requiredFields ?? [],
                   index.name
-                )(snapshot)
+                )(snapshot, context)
               )
             )
-        : addToAlgolia(collection.fieldsToSync, collection.requiredFields ?? [])
+        : addToAlgolia(config, config.fieldsToSync, config.requiredFields ?? [])
     ),
   onUpdate: functions.firestore
-    .document(`${collection.name}/{docId}`)
+    .document(documentPathGenerator(config))
     .onUpdate(
-      collection.indices
-        ? snapshot =>
+      config.indices
+        ? (snapshot, context) =>
             Promise.all(
-              collection.indices.map(index =>
+              config.indices.map(index =>
                 updateAlgolia(
+                  config,
                   index.fieldsToSync,
-                  collection.requiredFields ?? [],
+                  config.requiredFields ?? [],
                   index.name
-                )(snapshot)
+                )(snapshot, context)
               )
             )
         : updateAlgolia(
-            collection.fieldsToSync,
-            collection.requiredFields ?? []
+            config,
+            config.fieldsToSync,
+            config.requiredFields ?? []
           )
     ),
   onDelete: functions.firestore
-    .document(`${collection.name}/{docId}`)
+    .document(documentPathGenerator(config))
     .onDelete(
-      collection.indices
-        ? (snapshot: FirebaseFirestore.DocumentSnapshot) =>
+      config.indices
+        ? (snapshot, context) =>
             Promise.all(
-              collection.indices.map(index =>
-                deleteFromAlgolia(index.name)(snapshot)
+              config.indices.map(index =>
+                deleteFromAlgolia(config, index.name)(snapshot, context)
               )
             )
-        : deleteFromAlgolia()
+        : deleteFromAlgolia(config)
     ),
 });
 
-// const algoliaFnsGenerator = (collection) => ({
-//   onUpdate: functions.firestore
-//     .document(`${collection.name}/{docId}`)
-//     .onUpdate((change, context) => {
-//       const afterData = change.after.data();
-//       console.log(JSON.stringify(afterData));
-//     }),
-// });
-//export default algoliaFnsGenerator;
 export const FT_algolia = {
-  [functionConfig.name]: { ...algoliaFnsGenerator(functionConfig) },
+  [`${functionConfig.name}${
+    functionConfig.subTable ? `${functionConfig.subTable}` : ""
+  }`]: { ...algoliaFnsGenerator(functionConfig) },
 };
