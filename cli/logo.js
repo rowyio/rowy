@@ -1,4 +1,7 @@
-module.exports.logo = `tttttttttttttttttttttttttttttttttttttttt
+const chalk = require("chalk");
+const figlet = require("figlet");
+
+const logo = `tttttttttttttttttttttttttttttttttttttttt
 tttttttttttttttttttttttttttttttttttttttt
 tttttttttttttttttttttttt            tttt
 tttttttttttttttttttttttt     A      tttt
@@ -17,7 +20,7 @@ tttt                                tttt
 tttttttttttttttttttttttttttttttttttttttt
 tttttttttttttttttttttttttttttttttttttttt`;
 
-module.exports.logoO = `++++++++++++++++++++++++++++++++++++++++
+const logo1 = `++++++++++++++++++++++++++++++++++++++++
 ++++++++++++++++++++++++++++++++++++++++
 ++++++++++++++++++++++++            ++++
 ++++++++++++++++++++++++     A      ++++
@@ -35,3 +38,15 @@ module.exports.logoO = `++++++++++++++++++++++++++++++++++++++++
 ++++                                ++++
 ++++++++++++++++++++++++++++++++++++++++
 ++++++++++++++++++++++++++++++++++++++++`;
+
+module.exports.printLogo = () => {
+  console.log(chalk.red(logo1));
+  console.log(
+    chalk.white(
+      figlet.textSync("FIRETABLE", {
+        font: "rounded",
+        horizontalLayout: "full",
+      })
+    )
+  );
+};

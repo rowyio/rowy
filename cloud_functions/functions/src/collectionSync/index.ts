@@ -3,7 +3,7 @@ import * as functions from "firebase-functions";
 import { db } from "../config";
 
 import * as _ from "lodash";
-import { replacer } from "../utils/email";
+import { replacer } from "../utils";
 import config from "../functionConfig"; // generated using generateConfig.ts
 const functionConfig: any = config;
 // returns object of fieldsToSync

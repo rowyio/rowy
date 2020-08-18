@@ -16,12 +16,13 @@ import {
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/AddAPhoto";
 import DeleteIcon from "@material-ui/icons/Delete";
-import OpenIcon from "@material-ui/icons/OpenInBrowser";
+import OpenIcon from "@material-ui/icons/OpenInNewOutlined";
 
 import Confirmation from "components/Confirmation";
 import useUploader, { FileValue } from "hooks/useFiretable/useUploader";
 import { IMAGE_MIME_TYPES } from "constants/fields";
 import { useFiretableContext } from "contexts/firetableContext";
+import Thumbnail from "components/Thumbnail";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -54,9 +55,15 @@ const useStyles = makeStyles(theme =>
       backgroundPosition: "center center",
       backgroundRepeat: "no-repeat",
 
-      boxShadow: `0 0 0 1px ${theme.palette.divider} inset`,
-      borderRadius: theme.shape.borderRadius / 2,
+      borderRadius: theme.shape.borderRadius,
     }),
+    thumbnail: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+    },
 
     deleteImgHover: {
       position: "absolute",
@@ -65,16 +72,29 @@ const useStyles = makeStyles(theme =>
       bottom: 0,
       right: 0,
 
-      backgroundColor: "rgba(255, 255, 255, 0.8)",
       color: theme.palette.text.secondary,
       boxShadow: `0 0 0 1px ${theme.palette.divider} inset`,
-      borderRadius: theme.shape.borderRadius / 2,
+      borderRadius: theme.shape.borderRadius,
 
-      opacity: 0,
-      transition: theme.transitions.create("opacity", {
+      transition: theme.transitions.create("background-color", {
         duration: theme.transitions.duration.shortest,
       }),
-      "$img:hover &": { opacity: 1 },
+
+      "& *": {
+        opacity: 0,
+        transition: theme.transitions.create("opacity", {
+          duration: theme.transitions.duration.shortest,
+        }),
+      },
+
+      "$img:hover &": {
+        backgroundColor: "rgba(255, 255, 255, 0.8)",
+        "& *": { opacity: 1 },
+      },
+    },
+
+    localImgPreview: {
+      boxShadow: `0 0 0 1px ${theme.palette.divider} inset`,
     },
 
     endButtonContainer: {
@@ -136,6 +156,13 @@ export default function Image({
 
   const dropzoneProps = getRootProps();
   const disabled = column.editable === false;
+
+  let thumbnailSize = "100x100";
+  if (tableState?.config?.rowHeight) {
+    if (tableState!.config!.rowHeight! > 50) thumbnailSize = "200x200";
+    if (tableState!.config!.rowHeight! > 100) thumbnailSize = "400x400";
+  }
+
   return (
     <Grid
       container
@@ -162,10 +189,13 @@ export default function Image({
                     <ButtonBase
                       className={classes.img}
                       onClick={() => window.open(file.downloadURL, "_blank")}
-                      style={{
-                        backgroundImage: `url("${file.downloadURL}")`,
-                      }}
                     >
+                      <Thumbnail
+                        imageUrl={file.downloadURL}
+                        size={thumbnailSize}
+                        objectFit="contain"
+                        className={classes.thumbnail}
+                      />
                       <Grid
                         container
                         justify="center"
@@ -194,10 +224,13 @@ export default function Image({
                         <ButtonBase
                           className={classes.img}
                           onClick={handleDelete(file.ref)}
-                          style={{
-                            backgroundImage: `url("${file.downloadURL}")`,
-                          }}
                         >
+                          <Thumbnail
+                            imageUrl={file.downloadURL}
+                            size={thumbnailSize}
+                            objectFit="contain"
+                            className={classes.thumbnail}
+                          />
                           <Grid
                             container
                             justify="center"
@@ -217,7 +250,7 @@ export default function Image({
           {localImage && (
             <Grid item>
               <div
-                className={classes.img}
+                className={clsx(classes.img, classes.localImgPreview)}
                 style={{ backgroundImage: `url("${localImage}")` }}
               />
             </Grid>
