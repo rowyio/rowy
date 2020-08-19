@@ -69,7 +69,7 @@ const useFiretable = (
     columns: tableConfig.columns,
     config: {
       rowHeight: tableConfig.rowHeight,
-      webhooks: tableConfig.webhooks,
+      webhooks: tableConfig.doc?.webhooks,
       tableConfig,
     },
     rows: tableState.rows,

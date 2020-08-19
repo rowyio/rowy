@@ -64,20 +64,30 @@ export default function WebhooksDialog({ open, handleClose }) {
   const handleChange = (key: string) => (value: any) => {
     setState(s => ({ ...s, [key]: value }));
   };
+  const initializeWebhooksConfig = () => {
+    const secret = makeId(32);
+    handleChange("secret")(secret);
+    setState({ ...EmptyState, secret });
+    tableActions?.table.updateConfig("webhooks", {
+      enabled: false,
+      type: WebhookTypes.custom,
+      secret,
+      customParser: "", // TODO: add a boilerplate/example
+    });
+  };
   useEffect(() => {
-    if (tableState?.config && !tableState?.config.webhooks) {
-      const secret = makeId(32);
-      handleChange("secret")(secret);
-      tableActions?.table.updateConfig("webhooks", {
-        enabled: false,
-        type: WebhookTypes.custom,
-        secret,
-        customParser: "", // TODO: add a boilerplate/example
-      });
-    } else {
+    console.log({ tableState, secret: state.secret });
+    if (
+      tableState &&
+      !tableState.config.tableConfig.loading &&
+      !tableState?.config.webhooks &&
+      !state.secret
+    ) {
+      initializeWebhooksConfig();
+    } else if (tableState?.config.webhooks) {
       setState({ ...tableState?.config.webhooks });
     }
-  }, []);
+  }, [tableState]);
 
   const handleWebhookTypeChange = (
     event: React.ChangeEvent<{ value: unknown }>
