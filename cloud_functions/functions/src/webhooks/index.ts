@@ -29,6 +29,9 @@ export const webhook = functions.https.onRequest(async (req, res) => {
   if (!schemaDocData) {
     res.sendStatus(404);
   }
+  if (!schemaDocData?.webhooks.enabled) {
+    res.sendStatus(401);
+  }
 
   if (query.type === "CUSTOM") {
     console.log({ schemaDocData });
