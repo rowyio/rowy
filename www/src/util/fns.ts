@@ -58,3 +58,27 @@ export const isCollectionGroup = () => {
   const pathName = window.location.pathname.split("/")[1];
   return pathName === "tableGroup";
 };
+var characters =
+  "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+export function makeId(length) {
+  var result = "";
+  var charactersLength = characters.length;
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
+
+export const generateSmallerId = (id: string) => {
+  const indexOfFirstChar = characters.indexOf(id[0]);
+  if (indexOfFirstChar !== 0)
+    return characters[indexOfFirstChar - 1] + makeId(id.length - 1);
+  else return id[0] + generateSmallerId(id.substr(1, id.length - 1));
+};
+
+export const generateBiggerId = (id: string) => {
+  const indexOfFirstChar = characters.indexOf(id[0]);
+  if (indexOfFirstChar !== 61)
+    return characters[indexOfFirstChar + 1] + makeId(id.length - 1);
+  else return id[0] + generateBiggerId(id.substr(1, id.length - 1));
+};

@@ -55,25 +55,21 @@ export default function CodeEditor(props: any) {
     const firestoreDefsFile = await fetch(
       `${process.env.PUBLIC_URL}/firestore.d.ts`
     );
-    const firebaseAuthDefsFile = await fetch(
-      `${process.env.PUBLIC_URL}/auth.d.ts`
-    );
-    // const res = await fetch(
-    //   `https://www.gstatic.com/firebasejs/7.17.2/firebase-firestore.js`,
-    //   { mode: "no-cors" }
+    // const firebaseAuthDefsFile = await fetch(
+    //   `${process.env.PUBLIC_URL}/auth.d.ts`
     // );
     const firestoreDefs = await firestoreDefsFile.text();
-    const firebaseAuthDefs = await firebaseAuthDefsFile.text();
-
+    // const firebaseAuthDefs = await firebaseAuthDefsFile.text();
+    // console.timeLog(firebaseAuthDefs);
     monaco
       .init()
       .then(monacoInstance => {
         monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
           firestoreDefs
         );
-        monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
-          firebaseAuthDefs
-        );
+        // monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
+        //   firebaseAuthDefs
+        // );
         monacoInstance.languages.typescript.javascriptDefaults.setDiagnosticsOptions(
           {
             noSemanticValidation: true,
@@ -110,6 +106,7 @@ export default function CodeEditor(props: any) {
         monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
           [
             "  const db:FirebaseFirestore.Firestore;",
+            //     "  const auth:admin.auth;",
             "declare class row {",
             "    /**",
             "     * Returns the row fields",
@@ -141,14 +138,6 @@ export default function CodeEditor(props: any) {
           ].join("\n"),
           "ts:filename/rowFields.d.ts"
         );
-
-        let wrapper = document.getElementById("editor");
-        let properties = {
-          value: script,
-          language: "javascript",
-          //language: "typescript",
-        };
-
         //  monacoInstance.editor.create(wrapper, properties);
       })
       .catch(error =>

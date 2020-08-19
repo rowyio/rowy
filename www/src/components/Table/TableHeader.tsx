@@ -22,7 +22,7 @@ import { useFiretableContext } from "contexts/firetableContext";
 import { FieldType } from "constants/fields";
 import MigrateButton from "./MigrateButton";
 import HiddenFields from "./HidenFields";
-
+import Settings from "./Settings";
 export const TABLE_HEADER_HEIGHT = 56;
 
 const useStyles = makeStyles(theme =>
@@ -163,6 +163,7 @@ export default function TableHeader({
       <Grid item>
         <ExportCSV />
       </Grid>
+      <Settings />
     </Grid>
   );
 }
