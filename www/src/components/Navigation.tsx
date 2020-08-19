@@ -35,6 +35,9 @@ const useStyles = makeStyles(theme =>
     maxHeight: {
       height: APP_BAR_HEIGHT,
       minHeight: "auto",
+      minWidth: 0,
+      maxWidth: "none",
+      padding: theme.spacing(0.75, 2),
     },
 
     topToolbar: { padding: theme.spacing(0, 2) },
