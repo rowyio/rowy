@@ -68,7 +68,7 @@
 - Locked columns ✅
 - Table view only mode
 - SubCollection tables ✅
-- Permissions
+- Permissions✅
 - Duplicate columns
 - Filter columns:✅
   - equals to✅
