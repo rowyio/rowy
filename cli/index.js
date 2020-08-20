@@ -10,14 +10,23 @@ const Configstore = require("configstore");
 const config = new Configstore("firetable");
 const { directoryExists } = require("./lib/files");
 const program = new Command();
-program.version("0.3.0");
+program.version("0.4.0");
 
 //TODO: validate if all the required packages exist
 const systemHealthCheck = async () => {
   const versions = await terminal.getRequiredVersions();
-
+  const requiredApps = ["node", "git", "yarn", "firebase"];
+  requiredApps.forEach((app) => {
+    if (versions[app] === "") {
+      throw new Error(
+        chalk.red(
+          `your system is missing ${app}\n please install ${app}, then rerun firetable init`
+        )
+      );
+    }
+  });
   console.log(versions);
-  //throw new Error(chalk.red("missing something"));
+  //
 };
 // checks the current directory of the cli app
 const directoryCheck = async () => {
