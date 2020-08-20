@@ -12,10 +12,11 @@ import * as imagemin from "imagemin";
 import * as imageminMozjpeg from "imagemin-mozjpeg";
 import imageminPngquant from "imagemin-pngquant";
 
-import config from "../functionConfig";
+import config_ from "../functionConfig";
 
 const SUPPORTED_TYPES = ["image/jpeg", "image/png"];
 const DEFAULT_SIZES = ["400x400", "200x200", "100x100"];
+const config: any = config_;
 const sizes =
   config && Array.isArray(config.sizes) && typeof config.sizes[0] === "string"
     ? config.sizes

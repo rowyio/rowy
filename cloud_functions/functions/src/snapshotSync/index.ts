@@ -38,8 +38,7 @@ const syncSubCollection = async (
 ) => {
   const targetDocs = await db.collection(targetPath).get();
   if (targetDocs.empty) return false;
-  for (let i = 0; i < targetDocs.docs.length; i++) {
-    const doc = targetDocs.docs[i];
+  for (const doc of targetDocs.docs) {
     await doc.ref.update({
       [snapshotField]: {
         docPath: snapshot.ref.path,
@@ -75,7 +74,7 @@ const syncDocSnapshot = async (
     const snapshotDocPath = snapshot.ref.path;
     const oldSnapshot = _.find(oldSnapshotsArray, { docPath: snapshotDocPath });
 
-    const updatedSnapshotsArray = oldSnapshotsArray.filter(item => {
+    const updatedSnapshotsArray = oldSnapshotsArray.filter((item) => {
       console.log({ snapshotDocPath, item });
       return item.docPath !== snapshotDocPath;
     });
@@ -156,7 +155,7 @@ const syncDocOnUpdate = (config: {
  * returns 2 different trigger functions (onCreate,onUpdate) in an object
  * @param config configuration object
  */
-const snapshotSyncFnsGenerator = config =>
+const snapshotSyncFnsGenerator = (config) =>
   Object.entries({
     onUpdate: config.onUpdate
       ? functions.firestore
