@@ -22,7 +22,7 @@ import ColumnSelector from "./ConfigFields/ColumnSelector";
 import FieldSkeleton from "components/SideDrawer/Form/FieldSkeleton";
 import RoleSelector from "components/RolesSelector";
 const CodeEditor = lazy(() =>
-  import("./ConfigFields/CodeEditor" /* webpackChunkName: "CodeEditor" */)
+  import("../editors/CodeEditor" /* webpackChunkName: "CodeEditor" */)
 );
 const ConfigFields = ({ fieldType, config, handleChange, tables, columns }) => {
   switch (fieldType) {
@@ -118,11 +118,16 @@ const ConfigFields = ({ fieldType, config, handleChange, tables, columns }) => {
             label="Set as an action script"
           />
           <RoleSelector
+            label={
+              "Allowed Roles(Authenticated user must have at least one of these to run the script)"
+            }
             value={config.requiredRoles}
             handleChange={handleChange("requiredRoles")}
           />
           <ColumnSelector
-            label={"Required fields (this script will)"}
+            label={
+              "Required fields(All of the selected fields must have a value for the script to run)"
+            }
             value={config.requiredFields}
             tableColumns={
               columns

@@ -7,33 +7,9 @@ import firebase from "firebase/app";
 import { FireTableFilter, FiretableOrderBy } from ".";
 import { SnackContext } from "../../contexts/snackContext";
 import { cloudFunction } from "../../firebase/callables";
-import { isCollectionGroup } from "util/fns";
+import { isCollectionGroup, generateSmallerId } from "util/fns";
 const CAP = 1000; // safety  paramter sets the  upper limit of number of docs fetched by this hook
 const serverTimestamp = firebase.firestore.FieldValue.serverTimestamp;
-var characters =
-  "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-function makeId(length) {
-  var result = "";
-  var charactersLength = characters.length;
-  for (var i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-}
-
-const generateSmallerId = (id: string) => {
-  const indexOfFirstChar = characters.indexOf(id[0]);
-  if (indexOfFirstChar !== 0)
-    return characters[indexOfFirstChar - 1] + makeId(id.length - 1);
-  else return id[0] + generateSmallerId(id.substr(1, id.length - 1));
-};
-
-const generateBiggerId = (id: string) => {
-  const indexOfFirstChar = characters.indexOf(id[0]);
-  if (indexOfFirstChar !== 61)
-    return characters[indexOfFirstChar + 1] + makeId(id.length - 1);
-  else return id[0] + generateBiggerId(id.substr(1, id.length - 1));
-};
 
 const tableReducer = (prevState: any, newProps: any) => {
   return { ...prevState, ...newProps };

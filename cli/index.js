@@ -10,11 +10,12 @@ const Configstore = require("configstore");
 const config = new Configstore("firetable");
 const { directoryExists } = require("./lib/files");
 const program = new Command();
-program.version("0.2.0");
+program.version("0.3.0");
 
 //TODO: validate if all the required packages exist
 const systemHealthCheck = async () => {
   const versions = await terminal.getRequiredVersions();
+
   console.log(versions);
   //throw new Error(chalk.red("missing something"));
 };
@@ -106,6 +107,9 @@ program
       const existingFiretableAppId = await terminal.getExistingFiretableApp(
         projectId
       );
+
+      // TODO: SET FIREBASE PROJECT
+
       if (existingFiretableAppId) {
         firetableAppId = existingFiretableAppId;
       } else {

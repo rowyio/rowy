@@ -23,10 +23,12 @@ module.exports.getRequiredVersions = () =>
           execute("firebase --version", function(firebase) {
             checkingVersionsStatus.stop();
             resolve({
-              node: node.replace("\n", ""),
-              git: git.replace("\n", ""),
-              yarn: yarn.replace("\n", ""),
-              firebase: firebase.replace("\n", ""),
+              node: node ? node.match(/[0-9]*\.[0-9]*\.[0-9]/)[0] : "",
+              git: git ? git.match(/[0-9]*\.[0-9]*\.[0-9]/)[0] : "",
+              yarn: yarn ? yarn.match(/[0-9]*\.[0-9]*\.[0-9]/)[0] : "",
+              firebase: firebase
+                ? firebase.match(/[0-9]*\.[0-9]*\.[0-9]/)[0]
+                : "",
             });
           });
         });

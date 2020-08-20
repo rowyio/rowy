@@ -46,7 +46,6 @@ export const actionScript = functions.https.onCall(
       const { ref, row, column } = data;
 
       const schemaDocPath = generateSchemaDocPath(ref.tablePath);
-
       const schemaDoc = await db.doc(schemaDocPath).get();
       const schemaDocData = schemaDoc.data();
       if (!schemaDocData) {

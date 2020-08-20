@@ -46,7 +46,7 @@ const useTableConfig = (tablePath?: string) => {
    *  @param type of column
    *  @param data additional column properties
    */
-  const add = (name: string, type: FieldType, data?: any) => {
+  const addColumn = (name: string, type: FieldType, data?: any) => {
     //TODO: validation
     const { columns } = tableConfigState;
     const newIndex = Object.keys(columns).length;
@@ -148,7 +148,7 @@ const useTableConfig = (tablePath?: string) => {
   const actions = {
     updateColumn,
     updateConfig,
-    add,
+    addColumn,
     resize,
     setTable,
     remove,

@@ -14,3 +14,4 @@ export { FT_snapshotSync } from "./snapshotSync";
 export { FT_subTableStats } from "./subTableStats";
 export { FT_compressedThumbnail } from "./compressedThumbnail";
 export { actionScript } from "./actionScript";
+export { webhook } from "./webhooks";
