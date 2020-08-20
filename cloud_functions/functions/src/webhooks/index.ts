@@ -1,5 +1,6 @@
 import { db } from "../config";
 import * as functions from "firebase-functions";
+// const fetch = require("node-fetch");
 
 //import * as crypto from "crypto";
 
@@ -13,10 +14,36 @@ import * as functions from "firebase-functions";
 //   return receivedSignature === `sha256=${hash}`;
 // };
 
-const typeformParser = body =>
-  body.form_response.answers.reduce((accRow, currAnswer) => {
-    return { ...accRow, [currAnswer.field.ref]: currAnswer[currAnswer.type] };
-  }, {});
+//const file = bucket.file('path/to/image.jpg');
+
+const typeformParser = body => ({
+  ...body.form_response.hidden,
+  ...body.form_response.answers.reduce((accRow, currAnswer) => {
+    switch (currAnswer.type) {
+      case "date":
+        return {
+          ...accRow,
+          [currAnswer.field.ref]: new Date(currAnswer[currAnswer.type]),
+        };
+      case "choice":
+        return {
+          ...accRow,
+          [currAnswer.field.ref]: currAnswer[currAnswer.type].label,
+        };
+      case "choices":
+        return {
+          ...accRow,
+          [currAnswer.field.ref]: currAnswer[currAnswer.type].labels,
+        };
+      case "file_url":
+      default:
+        return {
+          ...accRow,
+          [currAnswer.field.ref]: currAnswer[currAnswer.type],
+        };
+    }
+  }, {}),
+});
 
 export const webhook = functions.https.onRequest(async (req, res) => {
   const { body, url, query } = req;
