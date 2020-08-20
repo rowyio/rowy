@@ -15,14 +15,16 @@ supported. More coming soon, for comprehensive list see ROADMAP.md.
 
 ![Firetable screenshot](https://firetable.io/demo-screenshot.png)
 
-
 ## Setup instructions
 
 ### 1. Create a Firebase project [(Instructions)](https://console.firebase.google.com/u/0/)
 
 - Create a Firestore database
 - Set up Firestore Security Rules: use Test Mode or set up required permissions.
-  Below are sample rules that allow for unlimited access to the entire database:
+
+  Below are sample rules that allow for unlimited access to the entire database
+  just for quick testing purpose:
+
   ```
   rules_version = '2';
   service cloud.firestore {
@@ -33,6 +35,9 @@ supported. More coming soon, for comprehensive list see ROADMAP.md.
     }
   }
   ```
+
+  [Or follow this guide for setting up you rules](RULES.md)
+
 - Upgrade project to the Blaze Plan
 - Enable the Google sign-in method in **Authentication / Sign-in method**
 
