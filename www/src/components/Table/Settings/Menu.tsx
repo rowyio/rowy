@@ -50,6 +50,7 @@ export default function SettingsMenu({ modal, setModal }) {
             value={option}
             selected={option === modal}
             onClick={handleClose(option)}
+            disabled={["Rules", "Algolia", "CollectionSync"].includes(option)}
           >
             {option}
           </MenuItem>
