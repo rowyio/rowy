@@ -105,7 +105,6 @@ export default function WebhooksDialog({ open, handleClose }) {
     handleClose();
     setState({ ...tableState?.config.webhooks });
   };
-
   return (
     <React.Fragment>
       <Dialog
@@ -122,7 +121,7 @@ export default function WebhooksDialog({ open, handleClose }) {
               control={<Switch />}
               label={"Enable webhooks for this table"}
               labelPlacement="end"
-              value={state.enabled}
+              checked={state.enabled}
               onChange={
                 e => {
                   handleChange("enabled")(!state.enabled);
