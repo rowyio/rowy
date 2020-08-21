@@ -34,7 +34,7 @@ const functionConfig: {
     undo: ActionScript;
     redo: ActionScript;
   };
-} = config;
+} = config as any;
 
 const { AllowedRoles, functionName, actionScripts } = functionConfig;
 const serverTimestamp = admin.firestore.FieldValue.serverTimestamp;
