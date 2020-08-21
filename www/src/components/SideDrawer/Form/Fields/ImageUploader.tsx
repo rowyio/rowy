@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 import clsx from "clsx";
-import { FieldProps } from "formik";
+import { Controller, Control } from "react-hook-form";
 
 import { useDropzone } from "react-dropzone";
 import useUploader from "hooks/useFiretable/useUploader";
@@ -91,17 +91,21 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-export interface IImageUploaderProps extends FieldProps {
-  docRef?: firebase.firestore.DocumentReference;
-  editable?: boolean;
+export interface IControlledImageUploaderProps
+  extends Pick<IImageUploaderProps, "docRef" | "editable" | "name"> {
+  onChange: (...event: any[]) => void;
+  onBlur: () => void;
+  value: any;
 }
 
-export default function ImageUploader({
-  form,
-  field,
+export function ControlledImageUploader({
+  onChange,
+  onBlur,
+  value,
+  name,
   editable,
   docRef,
-}: IImageUploaderProps) {
+}: IControlledImageUploaderProps) {
   const disabled = editable === false;
   const classes = useStyles();
 
@@ -118,25 +122,25 @@ export default function ImageUploader({
       if (docRef && imageFile) {
         upload({
           docRef,
-          fieldName: field.name,
+          fieldName: name,
           files: [imageFile],
-          previousValue: field.value ?? [],
+          previousValue: value ?? [],
           onComplete: newValue => {
-            form.setFieldValue(field.name, newValue);
+            onChange(newValue);
             setLocalImage("");
           },
         });
         setLocalImage(URL.createObjectURL(imageFile));
       }
     },
-    [docRef, field.value]
+    [docRef, value]
   );
 
   const handleDelete = (index: number) => {
-    const newValue = [...field.value];
+    const newValue = [...value];
     const toBeDeleted = newValue.splice(index, 1);
     toBeDeleted.length && deleteUpload(toBeDeleted[0]);
-    form.setFieldValue(field.name, newValue);
+    onChange(newValue);
   };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -155,7 +159,7 @@ export default function ImageUploader({
           )}
           {...getRootProps()}
         >
-          <input id={`sidedrawer-field-${field.name}`} {...getInputProps()} />
+          <input id={`sidedrawer-field-${name}`} {...getInputProps()} />
           <AddIcon />
           <Typography variant="body1" color="inherit">
             {isDragActive ? "Drop your image here" : "Upload image"}
@@ -164,8 +168,8 @@ export default function ImageUploader({
       )}
 
       <Grid container spacing={1} className={classes.imagesContainer}>
-        {Array.isArray(field.value) &&
-          field.value.map((image, i) => (
+        {Array.isArray(value) &&
+          value.map((image, i) => (
             <Grid item key={image.downloadURL}>
               {disabled ? (
                 <Tooltip title="Click to open">
@@ -246,8 +250,29 @@ export default function ImageUploader({
           </Grid>
         )}
       </Grid>
-
-      <ErrorMessage name={field.name} />
     </>
+  );
+}
+export interface IImageUploaderProps {
+  control: Control;
+  name: string;
+
+  docRef?: firebase.firestore.DocumentReference;
+  editable?: boolean;
+}
+
+export default function ImageUploader({
+  control,
+  name,
+  ...props
+}: IImageUploaderProps) {
+  return (
+    <Controller
+      control={control}
+      name={name}
+      render={renderProps => (
+        <ControlledImageUploader {...props} name={name} {...renderProps} />
+      )}
+    />
   );
 }

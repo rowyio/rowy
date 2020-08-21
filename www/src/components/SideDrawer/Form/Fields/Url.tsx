@@ -31,7 +31,7 @@ export default function Url({ control, name, ...props }: IUrlProps) {
               {...props}
               onChange={onChange}
               onBlur={onBlur}
-              value={value}
+              value={value || ""}
               id={`sidedrawer-field-${name}`}
               label=""
               hiddenLabel

@@ -1,5 +1,5 @@
 import React from "react";
-import { FieldProps } from "formik";
+import { Controller, Control } from "react-hook-form";
 
 import {
   makeStyles,
@@ -10,8 +10,6 @@ import {
   Grid,
   Typography,
 } from "@material-ui/core";
-
-import ErrorMessage from "../ErrorMessage";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -45,17 +43,17 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-export interface ISliderProps extends FieldProps, SliderProps {
-  label: React.ReactNode;
+export interface ISliderProps extends SliderProps {
+  control: Control;
+  name: string;
   units?: string;
   minLabel?: React.ReactNode;
   maxLabel?: React.ReactNode;
 }
 
 export default function Slider({
-  field,
-  form,
-  label,
+  control,
+  name,
   units,
   minLabel,
   maxLabel,
@@ -65,54 +63,67 @@ export default function Slider({
 }: ISliderProps) {
   const classes = useStyles();
 
-  const handleClick = () => form.setFieldTouched(field.name);
-  const handleChange = (event: any, value: number | number[]) => {
-    form.setFieldValue(field.name, value);
-    form.setFieldTouched(field.name);
-  };
-
-  const getAriaValueText = (value: number) =>
-    `${value}${units ? " " + units : ""}`;
-
-  const getValueLabelFormat = (value: number) =>
-    `${value}${units ? " " + units : ""}`;
-
   return (
-    <FormControl className={classes.root}>
-      <Grid container spacing={2} alignItems="center">
-        <Grid item>
-          <Typography variant="overline" component="span" color="textSecondary">
-            {minLabel ?? `${min}${units ? " " + units : ""}`}
-          </Typography>
-        </Grid>
+    <Controller
+      control={control}
+      name={name}
+      render={({ onChange, onBlur, value }) => {
+        const handleChange = (_: any, value: number | number[]) => {
+          onChange(value);
+          onBlur();
+        };
 
-        <Grid item xs>
-          <MuiSlider
-            valueLabelDisplay="auto"
-            min={min}
-            max={max}
-            getAriaValueText={getAriaValueText}
-            valueLabelFormat={getValueLabelFormat}
-            {...props}
-            value={typeof field.value === "number" ? field.value : min}
-            onClick={handleClick}
-            onChange={handleChange}
-            classes={{
-              root: classes.slider,
-              thumb: classes.thumb,
-              valueLabel: classes.valueLabel,
-            }}
-          />
-        </Grid>
+        const getAriaValueText = (value: number) =>
+          `${value}${units ? " " + units : ""}`;
 
-        <Grid item>
-          <Typography variant="overline" component="span" color="textSecondary">
-            {maxLabel ?? `${max}${units ? " " + units : ""}`}
-          </Typography>
-        </Grid>
-      </Grid>
+        const getValueLabelFormat = (value: number) =>
+          `${value}${units ? " " + units : ""}`;
 
-      <ErrorMessage name={field.name} />
-    </FormControl>
+        return (
+          <FormControl className={classes.root}>
+            <Grid container spacing={2} alignItems="center">
+              <Grid item>
+                <Typography
+                  variant="overline"
+                  component="span"
+                  color="textSecondary"
+                >
+                  {minLabel ?? `${min}${units ? " " + units : ""}`}
+                </Typography>
+              </Grid>
+
+              <Grid item xs>
+                <MuiSlider
+                  valueLabelDisplay="auto"
+                  min={min}
+                  max={max}
+                  getAriaValueText={getAriaValueText}
+                  valueLabelFormat={getValueLabelFormat}
+                  {...props}
+                  value={value ?? min}
+                  onClick={onBlur}
+                  onChange={handleChange}
+                  classes={{
+                    root: classes.slider,
+                    thumb: classes.thumb,
+                    valueLabel: classes.valueLabel,
+                  }}
+                />
+              </Grid>
+
+              <Grid item>
+                <Typography
+                  variant="overline"
+                  component="span"
+                  color="textSecondary"
+                >
+                  {maxLabel ?? `${max}${units ? " " + units : ""}`}
+                </Typography>
+              </Grid>
+            </Grid>
+          </FormControl>
+        );
+      }}
+    />
   );
 }

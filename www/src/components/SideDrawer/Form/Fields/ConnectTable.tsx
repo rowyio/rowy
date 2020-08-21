@@ -1,63 +1,75 @@
 import React from "react";
-import { FieldProps } from "formik";
+import { Control, Controller } from "react-hook-form";
 
 import { useTheme, Grid, Chip } from "@material-ui/core";
 
 import ConnectTableSelect, {
-  ConnectTableValue,
   IConnectTableSelectProps,
 } from "components/ConnectTableSelect";
 
+export interface IConnectTableProps extends Partial<IConnectTableSelectProps> {
+  control: Control;
+  name: string;
+}
+
 export default function ConnectTable({
-  field,
-  form,
+  control,
+  name,
   editable,
   ...props
-}: FieldProps<ConnectTableValue[]> & IConnectTableSelectProps) {
+}: IConnectTableProps) {
   const theme = useTheme();
 
-  const handleDelete = (hit: any) => () => {
-    // if (multiple)
-    form.setFieldValue(
-      field.name,
-      field.value.filter(v => v.snapshot.objectID !== hit.objectID)
-    );
-    // else form.setFieldValue(field.name, []);
-  };
   const disabled = editable === false;
-  return (
-    <>
-      {!disabled && (
-        <ConnectTableSelect
-          {...props}
-          value={field.value}
-          onChange={value => form.setFieldValue(field.name, value)}
-          TextFieldProps={{
-            fullWidth: true,
-            error: !!(form.touched[field.name] && form.errors[field.name]),
-            helperText:
-              (form.touched[field.name] && form.errors[field.name]) || "",
-            onBlur: () => form.setFieldTouched(field.name),
-          }}
-        />
-      )}
 
-      {Array.isArray(field.value) && (
-        <Grid container spacing={1} style={{ marginTop: theme.spacing(1) }}>
-          {field.value.map(({ snapshot }) => (
-            <Grid item key={snapshot.objectID}>
-              <Chip
-                component="li"
-                size="medium"
-                label={props.config?.primaryKeys
-                  ?.map((key: string) => snapshot[key])
-                  .join(" ")}
-                onDelete={disabled ? undefined : handleDelete(snapshot)}
+  return (
+    <Controller
+      control={control}
+      name={name}
+      render={({ onChange, onBlur, value }) => {
+        const handleDelete = (hit: any) => () => {
+          // if (multiple)
+          onChange(value.filter(v => v.snapshot.objectID !== hit.objectID));
+          // else form.setFieldValue(field.name, []);
+        };
+
+        return (
+          <>
+            {!disabled && (
+              <ConnectTableSelect
+                {...(props as any)}
+                value={value}
+                onChange={onChange}
+                TextFieldProps={{
+                  fullWidth: true,
+                  onBlur,
+                }}
               />
-            </Grid>
-          ))}
-        </Grid>
-      )}
-    </>
+            )}
+
+            {Array.isArray(value) && (
+              <Grid
+                container
+                spacing={1}
+                style={{ marginTop: theme.spacing(1) }}
+              >
+                {value.map(({ snapshot }) => (
+                  <Grid item key={snapshot.objectID}>
+                    <Chip
+                      component="li"
+                      size="medium"
+                      label={props.config?.primaryKeys
+                        ?.map((key: string) => snapshot[key])
+                        .join(" ")}
+                      onDelete={disabled ? undefined : handleDelete(snapshot)}
+                    />
+                  </Grid>
+                ))}
+              </Grid>
+            )}
+          </>
+        );
+      }}
+    />
   );
 }

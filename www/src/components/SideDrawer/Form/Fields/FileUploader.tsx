@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 import clsx from "clsx";
-import { FieldProps } from "formik";
+import { Controller, Control } from "react-hook-form";
 
 import { useDropzone } from "react-dropzone";
 import useUploader, { FileValue } from "hooks/useFiretable/useUploader";
@@ -19,7 +19,6 @@ import {
 import UploadIcon from "assets/icons/Upload";
 import { FileIcon } from "constants/fields";
 
-import ErrorMessage from "../ErrorMessage";
 import Confirmation from "components/Confirmation";
 
 const useStyles = makeStyles(theme =>
@@ -55,17 +54,21 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-export interface IFileUploaderProps extends FieldProps {
-  editable?: boolean;
-  docRef?: firebase.firestore.DocumentReference;
+export interface IControlledFileUploaderProps
+  extends Pick<IFileUploaderProps, "editable" | "docRef" | "name"> {
+  onChange: (...event: any[]) => void;
+  onBlur: () => void;
+  value: any;
 }
 
-export default function FileUploader({
-  form,
-  field,
+export function ControlledFileUploader({
+  onChange,
+  onBlur,
+  value,
+  name,
   docRef,
   editable,
-}: IFileUploaderProps) {
+}: IControlledFileUploaderProps) {
   const classes = useStyles();
 
   const { uploaderState, upload, deleteUpload } = useUploader();
@@ -81,25 +84,25 @@ export default function FileUploader({
       if (docRef && file) {
         upload({
           docRef,
-          fieldName: field.name,
+          fieldName: name,
           files: [file],
-          previousValue: field.value ?? [],
+          previousValue: value ?? [],
           onComplete: newValue => {
-            form.setFieldValue(field.name, newValue);
+            onChange(newValue);
             setLocalFile("");
           },
         });
         setLocalFile(file.name);
       }
     },
-    [docRef, field.value]
+    [docRef, value]
   );
 
   const handleDelete = (index: number) => {
-    const newValue = [...field.value];
+    const newValue = [...value];
     const toBeDeleted = newValue.splice(index, 1);
     toBeDeleted.length && deleteUpload(toBeDeleted[0]);
-    form.setFieldValue(field.name, newValue);
+    onChange(newValue);
   };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -117,7 +120,7 @@ export default function FileUploader({
           )}
           {...getRootProps()}
         >
-          <input id={`sidedrawer-field-${field.name}`} {...getInputProps()} />
+          <input id={`sidedrawer-field-${name}`} {...getInputProps()} />
           <UploadIcon />
           <Typography variant="body1" color="textSecondary">
             Upload file
@@ -126,8 +129,8 @@ export default function FileUploader({
       )}
 
       <Grid container spacing={1} className={classes.chipList}>
-        {Array.isArray(field.value) &&
-          field.value.map((file: FileValue, i) => (
+        {Array.isArray(value) &&
+          value.map((file: FileValue, i) => (
             <Grid item key={file.name} className={classes.chipGridItem}>
               <Confirmation
                 message={{
@@ -166,8 +169,30 @@ export default function FileUploader({
           </Grid>
         )}
       </Grid>
-
-      <ErrorMessage name={field.name} />
     </>
+  );
+}
+
+export interface IFileUploaderProps {
+  control: Control;
+  name: string;
+
+  editable?: boolean;
+  docRef?: firebase.firestore.DocumentReference;
+}
+
+export default function FileUploader({
+  control,
+  name,
+  ...props
+}: IFileUploaderProps) {
+  return (
+    <Controller
+      control={control}
+      name={name}
+      render={renderProps => (
+        <ControlledFileUploader {...props} name={name} {...renderProps} />
+      )}
+    />
   );
 }

@@ -1,16 +1,21 @@
 import React from "react";
-import { FieldProps } from "formik";
+import { Control, Controller } from "react-hook-form";
 
 import _RichText from "components/RichText";
-import ErrorMessage from "../ErrorMessage";
 
-export default function RichText({ form, field }: FieldProps) {
-  const handleChange = value => form.setFieldValue(field.name, value);
+export interface IRichTextProps {
+  control: Control;
+  name: string;
+}
 
+export default function RichText({ control, name }: IRichTextProps) {
   return (
-    <>
-      <_RichText value={field.value} onChange={handleChange} />
-      <ErrorMessage name={field.name} />
-    </>
+    <Controller
+      control={control}
+      name={name}
+      render={({ onChange, onBlur, value }) => (
+        <_RichText value={value} onChange={onChange} />
+      )}
+    />
   );
 }

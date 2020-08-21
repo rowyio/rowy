@@ -55,38 +55,36 @@ export default function Checkbox({
   const classes = useStyles();
 
   return (
-    <>
-      <ButtonBase className={classes.buttonBase}>
-        <FormControlLabel
-          control={
-            <Controller
-              control={control}
-              name={name}
-              render={({ onChange, onBlur, value }) => {
-                const handleChange = (
-                  event: React.ChangeEvent<HTMLInputElement>
-                ) => {
-                  onChange(event.target.checked);
-                };
+    <Controller
+      control={control}
+      name={name}
+      render={({ onChange, onBlur, value }) => {
+        const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+          onChange(event.target.checked);
+        };
 
-                return (
-                  <Switch
-                    color="secondary"
-                    {...props}
-                    checked={value}
-                    onChange={handleChange}
-                    onBlur={onBlur}
-                    disabled={editable === false}
-                  />
-                );
-              }}
+        const handleClick = () => onChange(!value);
+
+        return (
+          <ButtonBase className={classes.buttonBase} onClick={handleClick}>
+            <FormControlLabel
+              control={
+                <Switch
+                  color="secondary"
+                  {...props}
+                  checked={value}
+                  onChange={handleChange}
+                  onBlur={onBlur}
+                  disabled={editable === false}
+                />
+              }
+              label={label}
+              labelPlacement="start"
+              classes={{ root: classes.formControlLabel, label: classes.label }}
             />
-          }
-          label={label}
-          labelPlacement="start"
-          classes={{ root: classes.formControlLabel, label: classes.label }}
-        />
-      </ButtonBase>
-    </>
+          </ButtonBase>
+        );
+      }}
+    />
   );
 }

@@ -1,11 +1,9 @@
-import React, { lazy, useEffect } from "react";
-import { useForm, useWatch, Control } from "react-hook-form";
-import { MuiPickersUtilsProvider } from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
+import React, { lazy } from "react";
+import { useForm } from "react-hook-form";
 import _isFunction from "lodash/isFunction";
 import _isEmpty from "lodash/isEmpty";
 
-import { useFiretableContext } from "contexts/firetableContext";
+// import { useFiretableContext } from "contexts/firetableContext";
 
 import { Grid } from "@material-ui/core";
 
@@ -143,16 +141,13 @@ export interface IFormProps {
 
 export default function Form({ fields, values }: IFormProps) {
   const initialValues = getInitialValues(fields);
-  const { ref: firestoreRef, ...rowValues } = values;
+  const { ref: docRef, ...rowValues } = values;
   const defaultValues = { ...initialValues, ...rowValues };
 
-  const { register, handleSubmit, control, reset } = useForm({
+  const { register, control } = useForm({
     mode: "onBlur",
     defaultValues,
   });
-  const onSubmit = data => {
-    console.log("SUBMIT", data);
-  };
 
   // Update field values when Firestore document updates
   // useEffect(() => {
@@ -173,181 +168,168 @@ export default function Form({ fields, values }: IFormProps) {
   // }, [sideDrawerRef?.current]);
 
   return (
-    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-      <form onSubmit={handleSubmit(onSubmit)} key={values.id}>
-        <AutosaveTwo control={control} defaultValues={defaultValues} />
+    <form>
+      <Autosave
+        control={control}
+        defaultValues={defaultValues}
+        docRef={docRef}
+      />
 
-        <Grid container spacing={4} direction="column" wrap="nowrap">
-          {fields.map((_field, i) => {
-            // Call the field function with values if necessary
-            // Otherwise, just use the field object
-            const field: Field = _isFunction(_field) ? _field(values) : _field;
-            const { type, ...fieldProps } = field;
-            let _type = type;
+      <Grid container spacing={4} direction="column" wrap="nowrap">
+        {fields.map((_field, i) => {
+          // Call the field function with values if necessary
+          // Otherwise, just use the field object
+          const field: Field = _isFunction(_field) ? _field(values) : _field;
+          const { type, ...fieldProps } = field;
+          let _type = type;
 
-            // Derivative field support
-            if (field.config && field.config.renderFieldType) {
-              _type = field.config.renderFieldType;
-            }
+          // Derivative field support
+          if (field.config && field.config.renderFieldType) {
+            _type = field.config.renderFieldType;
+          }
 
-            let renderedField: React.ReactNode = null;
+          let renderedField: React.ReactNode = null;
 
-            switch (_type) {
-              case FieldType.shortText:
-              case FieldType.longText:
-              case FieldType.email:
-              case FieldType.phone:
-              case FieldType.number:
-                renderedField = (
-                  <Text {...fieldProps} hiddenLabel inputRef={register} />
-                );
-                break;
+          switch (_type) {
+            case FieldType.shortText:
+            case FieldType.longText:
+            case FieldType.email:
+            case FieldType.phone:
+            case FieldType.number:
+              renderedField = (
+                <Text {...fieldProps} control={control} docRef={docRef} />
+              );
+              break;
 
-              case FieldType.url:
-                renderedField = <Url {...fieldProps} control={control} />;
-                break;
+            case FieldType.url:
+              renderedField = <Url {...fieldProps} control={control} />;
+              break;
 
-              case FieldType.singleSelect:
-                renderedField = (
-                  <SingleSelect {...fieldProps} control={control} />
-                );
-                break;
+            case FieldType.singleSelect:
+              renderedField = (
+                <SingleSelect {...fieldProps} control={control} />
+              );
+              break;
 
-              case FieldType.multiSelect:
-                renderedField = (
-                  <MultiSelect {...fieldProps} control={control} />
-                );
-                break;
+            case FieldType.multiSelect:
+              renderedField = <MultiSelect {...fieldProps} control={control} />;
+              break;
 
-              case FieldType.date:
-                renderedField = (
-                  <DatePicker {...fieldProps} control={control} />
-                );
-                break;
+            case FieldType.date:
+              renderedField = <DatePicker {...fieldProps} control={control} />;
+              break;
 
-              case FieldType.dateTime:
-                renderedField = (
-                  <DateTimePicker {...fieldProps} control={control} />
-                );
-                break;
+            case FieldType.dateTime:
+              renderedField = (
+                <DateTimePicker {...fieldProps} control={control} />
+              );
+              break;
 
-              case FieldType.checkbox:
-                renderedField = <Checkbox {...fieldProps} control={control} />;
-                break;
+            case FieldType.checkbox:
+              renderedField = <Checkbox {...fieldProps} control={control} />;
+              break;
 
-              // case FieldType.color:
-              //   renderedField = <Field {...fieldProps} component={Color} />;
-              //   break;
+            case FieldType.color:
+              renderedField = <Color {...fieldProps} control={control} />;
+              break;
 
-              // case FieldType.slider:
-              //   renderedField = (
-              //     <Field {...fieldProps} component={Slider} />
-              //   );
-              //   break;
+            case FieldType.slider:
+              renderedField = <Slider {...fieldProps} control={control} />;
+              break;
 
-              // case FieldType.richText:
-              //   renderedField = (
-              //     <Field {...fieldProps} component={RichText} />
-              //   );
-              //   break;
+            case FieldType.richText:
+              renderedField = <RichText {...fieldProps} control={control} />;
+              break;
 
-              // case FieldType.image:
-              //   renderedField = (
-              //     <Field
-              //       {...fieldProps}
-              //       component={ImageUploader}
-              //       docRef={values.ref}
-              //     />
-              //   );
-              //   break;
+            case FieldType.image:
+              renderedField = (
+                <ImageUploader
+                  {...fieldProps}
+                  control={control}
+                  docRef={values.ref}
+                />
+              );
+              break;
 
-              // case FieldType.file:
-              //   renderedField = (
-              //     <Field
-              //       {...fieldProps}
-              //       component={FileUploader}
-              //       docRef={values.ref}
-              //     />
-              //   );
-              //   break;
+            case FieldType.file:
+              renderedField = (
+                <FileUploader
+                  {...fieldProps}
+                  control={control}
+                  docRef={values.ref}
+                />
+              );
+              break;
 
-              // case FieldType.rating:
-              //   renderedField = (
-              //     <Field {...fieldProps} component={Rating} />
-              //   );
-              //   break;
+            case FieldType.rating:
+              renderedField = <Rating {...fieldProps} control={control} />;
+              break;
 
-              case FieldType.percentage:
-                renderedField = (
-                  <Percentage {...fieldProps} control={control} />
-                );
-                break;
+            case FieldType.percentage:
+              renderedField = <Percentage {...fieldProps} control={control} />;
+              break;
 
-              // case FieldType.connectTable:
-              //   renderedField = (
-              //     <Field {...fieldProps} component={ConnectTable} />
-              //   );
-              //   break;
+            case FieldType.connectTable:
+              renderedField = (
+                <ConnectTable {...fieldProps} control={control} />
+              );
+              break;
 
-              // case FieldType.subTable:
-              //   renderedField = (
-              //     <Field {...fieldProps} component={SubTable} />
-              //   );
-              //   break;
+            case FieldType.subTable:
+              renderedField = (
+                <SubTable
+                  {...(fieldProps as any)}
+                  control={control}
+                  docRef={docRef}
+                />
+              );
+              break;
 
-              // case FieldType.action:
-              //   renderedField = (
-              //     <Field {...fieldProps} component={Action} />
-              //   );
-              //   break;
+            case FieldType.action:
+              renderedField = (
+                <Action
+                  {...(fieldProps as any)}
+                  control={control}
+                  docRef={docRef}
+                />
+              );
+              break;
 
-              // case FieldType.json:
-              //   renderedField = (
-              //     <Field {...fieldProps} component={JsonEditor} />
-              //   );
-              //   break;
-              // case FieldType.code:
-              //   renderedField = <Field {...fieldProps} component={Code} />;
-              //   break;
-              case undefined:
-                // default:
-                return null;
+            case FieldType.json:
+              renderedField = <JsonEditor {...fieldProps} control={control} />;
+              break;
 
-              default:
-                break;
-            }
+            case FieldType.code:
+              renderedField = <Code {...fieldProps} control={control} />;
+              break;
 
-            return (
-              <FieldWrapper
-                key={fieldProps.name ?? i}
-                type={_type}
-                name={field.name}
-                label={field.label}
-              >
-                {renderedField}
-              </FieldWrapper>
-            );
-          })}
+            case undefined:
+              // default:
+              return null;
 
-          <FieldWrapper
-            type="debug"
-            name="_ft_debug_path"
-            label="Document Path"
-            debugText={values.ref?.path ?? values.id ?? "No ref"}
-          />
-        </Grid>
-      </form>
-    </MuiPickersUtilsProvider>
+            default:
+              break;
+          }
+
+          return (
+            <FieldWrapper
+              key={fieldProps.name ?? i}
+              type={_type}
+              name={field.name}
+              label={field.label}
+            >
+              {renderedField}
+            </FieldWrapper>
+          );
+        })}
+
+        <FieldWrapper
+          type="debug"
+          name="_ft_debug_path"
+          label="Document Path"
+          debugText={values.ref?.path ?? values.id ?? "No ref"}
+        />
+      </Grid>
+    </form>
   );
-}
-
-function AutosaveTwo({
-  control,
-}: {
-  control: Control;
-  defaultValues: { [key: string]: any };
-}) {
-  const watchAll = useWatch({ control });
-  console.log("FORM VALUES", watchAll);
-  return null;
 }

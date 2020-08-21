@@ -1,4 +1,5 @@
 import React from "react";
+import { Controller, Control } from "react-hook-form";
 
 import {
   makeStyles,
@@ -13,12 +14,23 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-export interface ITextProps extends Omit<FilledTextFieldProps, "variant"> {
-  fieldVariant?: "short" | "long" | "email" | "phone" | "number" | "url";
+export interface IFieldProps {
+  control: Control;
+  name: string;
+  docRef: firebase.firestore.DocumentReference;
   editable?: boolean;
 }
 
+export interface ITextProps
+  extends IFieldProps,
+    Omit<FilledTextFieldProps, "variant" | "name"> {
+  fieldVariant?: "short" | "long" | "email" | "phone" | "number" | "url";
+}
+
 export default function Text({
+  control,
+  name,
+  docRef,
   fieldVariant = "short",
   editable,
   ...props
@@ -48,7 +60,7 @@ export default function Text({
       break;
 
     case "number":
-      variantProps = { type: "number" };
+      variantProps = { inputmode: "numeric", pattern: "[0-9]*" };
       break;
 
     case "short":
@@ -57,19 +69,33 @@ export default function Text({
   }
 
   return (
-    <TextField
-      //key={`${props.form.initialValues.id}-${props.field.name}`}
-      variant="filled"
-      fullWidth
-      margin="none"
-      placeholder={props.label as string}
-      {...variantProps}
-      {...props}
-      id={`sidedrawer-field-${props.name}`}
-      label=""
-      hiddenLabel
-      disabled={editable === false}
-      //InputProps={{ disableUnderline: true }}
+    <Controller
+      control={control}
+      name={name}
+      render={({ onChange, onBlur, value }) => {
+        const handleChange = e => {
+          if (fieldVariant === "number") onChange(parseInt(e.target.value, 10));
+          else onChange(e.target.value);
+        };
+
+        return (
+          <TextField
+            variant="filled"
+            fullWidth
+            margin="none"
+            placeholder={props.label as string}
+            {...variantProps}
+            {...props}
+            onChange={handleChange}
+            onBlur={onBlur}
+            value={value}
+            id={`sidedrawer-field-${name}`}
+            label=""
+            hiddenLabel
+            disabled={editable === false}
+          />
+        );
+      }}
     />
   );
 }

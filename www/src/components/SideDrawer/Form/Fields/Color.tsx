@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FieldProps } from "formik";
+import { Controller, Control } from "react-hook-form";
 import { ChromePicker } from "react-color";
 
 import {
@@ -18,7 +18,16 @@ const useStyles = makeStyles(theme =>
       cursor: "pointer",
       textAlign: "left",
       borderRadius: theme.shape.borderRadius,
+
+      backgroundColor:
+        theme.palette.type === "light"
+          ? "rgba(0, 0, 0, 0.09)"
+          : "rgba(255, 255, 255, 0.09)",
+      margin: 0,
+      width: "100%",
+      padding: theme.spacing(0, 0.75),
     },
+
     colorIndicator: {
       width: 20,
       height: 20,
@@ -30,51 +39,57 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-export interface IColorProps extends FieldProps {}
+export interface IColorProps {
+  control: Control;
+  name: string;
+}
 
-export default function Color({ field, form }: IColorProps) {
+export default function Color({ control, name }: IColorProps) {
   const classes = useStyles();
 
   const [showPicker, setShowPicker] = useState(false);
   const toggleOpen = () => setShowPicker(s => !s);
 
-  const handleChangeComplete = color => {
-    form.setFieldValue(field.name, color);
-  };
-
   return (
-    <>
-      <Grid
-        container
-        alignItems="center"
-        spacing={1}
-        className={classes.root}
-        onClick={toggleOpen}
-        component={ButtonBase}
-      >
-        <Grid item>
-          <div
-            className={classes.colorIndicator}
-            style={{ backgroundColor: field.value.hex }}
-          />
-        </Grid>
-
-        <Grid item xs>
-          <Typography
-            variant="body1"
-            color={field.value.hex ? "textPrimary" : "textSecondary"}
+    <Controller
+      control={control}
+      name={name}
+      render={({ onChange, onBlur, value }) => (
+        <>
+          <Grid
+            container
+            alignItems="center"
+            spacing={1}
+            className={classes.root}
+            onClick={() => {
+              toggleOpen();
+              onBlur();
+            }}
+            component={ButtonBase}
+            focusRipple
           >
-            {field.value.hex ?? "Choose a color…"}
-          </Typography>
-        </Grid>
-      </Grid>
+            <Grid item>
+              <div
+                className={classes.colorIndicator}
+                style={{ backgroundColor: value?.hex }}
+              />
+            </Grid>
 
-      <Collapse in={showPicker}>
-        <ChromePicker
-          color={field.value.rgb}
-          onChangeComplete={handleChangeComplete}
-        />
-      </Collapse>
-    </>
+            <Grid item xs>
+              <Typography
+                variant="body1"
+                color={value?.hex ? "textPrimary" : "textSecondary"}
+              >
+                {value?.hex ?? "Choose a color…"}
+              </Typography>
+            </Grid>
+          </Grid>
+
+          <Collapse in={showPicker}>
+            <ChromePicker color={value?.rgb} onChangeComplete={onChange} />
+          </Collapse>
+        </>
+      )}
+    />
   );
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { FieldProps } from "formik";
+import { Control, useWatch } from "react-hook-form";
 
 import { Link } from "react-router-dom";
 import queryString from "query-string";
@@ -31,30 +31,41 @@ const useStyles = makeStyles(theme =>
   })
 );
 
+export interface ISubTableProps {
+  control: Control;
+  name: string;
+  docRef: firebase.firestore.DocumentReference;
+  config: { parentLabel?: string[] };
+  label: string;
+}
+
 export default function SubTable({
-  form,
-  field,
+  control,
+  name,
+  docRef,
   label,
   config,
-}: FieldProps<any> & { config: { parentLabel?: string[] }; label: string }) {
+}: ISubTableProps) {
   const classes = useStyles();
+
+  const values = useWatch({ control });
 
   const router = useRouter();
   const parentLabels = queryString.parse(router.location.search).parentLabel;
   const _label = config?.parentLabel
     ? config.parentLabel.reduce((acc, curr) => {
-        if (acc !== "") return `${acc} - ${form.values[curr]}`;
-        else return form.values[curr];
+        if (acc !== "") return `${acc} - ${values[curr]}`;
+        else return values[curr];
       }, "")
     : "";
   let subTablePath = "";
   if (parentLabels)
     subTablePath =
-      encodeURIComponent(`${form.values.ref.path}/${field.name}`) +
+      encodeURIComponent(`${docRef.path}/${name}`) +
       `?parentLabel=${parentLabels},${label}`;
   else
     subTablePath =
-      encodeURIComponent(`${form.values.ref.path}/${field.name}`) +
+      encodeURIComponent(`${docRef.path}/${name}`) +
       `?parentLabel=${encodeURIComponent(_label)}`;
 
   return (
