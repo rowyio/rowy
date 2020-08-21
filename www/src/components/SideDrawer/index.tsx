@@ -115,7 +115,11 @@ export default function SideDrawer() {
         <ErrorBoundary>
           <div className={classes.drawerContents}>
             {open && fields && cell && (
-              <Form fields={fields} values={tableState?.rows[cell.row] ?? {}} />
+              <Form
+                key={cell.row}
+                fields={fields}
+                values={tableState?.rows[cell.row] ?? {}}
+              />
             )}
           </div>
         </ErrorBoundary>
