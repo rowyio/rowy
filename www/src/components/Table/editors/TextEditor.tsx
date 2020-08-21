@@ -10,7 +10,7 @@ import {
 
 import { FieldType } from "constants/fields";
 
-const styles = theme =>
+const styles = (theme) =>
   createStyles({
     root: {
       width: "calc(100% - 1px)",
@@ -54,7 +54,6 @@ class TextEditor extends React.Component<
 
   render() {
     const { classes, column, value } = this.props;
-
     let inputType = "text";
     switch ((column as any).type) {
       case FieldType.email:

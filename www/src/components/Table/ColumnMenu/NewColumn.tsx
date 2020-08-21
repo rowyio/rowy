@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
@@ -23,7 +23,12 @@ export default function FormDialog({
   handleSave: Function;
 }) {
   const [type, setType] = useState(FieldType.shortText);
-  const [name, setName] = useState("");
+  const [columnLabel, setColumnLabel] = useState("");
+  const [fieldKey, setFieldKey] = useState("");
+  useEffect(() => {
+    setFieldKey(_camel(columnLabel));
+  }, [columnLabel]);
+
   return (
     <div>
       <Dialog
@@ -51,15 +56,27 @@ export default function FormDialog({
           </Grid>
           <Typography variant="overline">Column Name</Typography>
           <TextField
-            value={name}
+            value={columnLabel}
             autoFocus
             variant="filled"
-            id="name"
+            id="columnName"
             label="Column Header"
             type="text"
             fullWidth
-            onChange={e => {
-              setName(e.target.value);
+            onChange={(e) => {
+              setColumnLabel(e.target.value);
+            }}
+          />
+          <Typography variant="overline">Field Key</Typography>
+          <TextField
+            value={fieldKey}
+            variant="filled"
+            id="fieldKey"
+            label="Field Key"
+            type="text"
+            fullWidth
+            onChange={(e) => {
+              setFieldKey(e.target.value);
             }}
           />
           <Typography variant="overline">Column Type</Typography>
@@ -82,12 +99,12 @@ export default function FormDialog({
           </Button>
           <Button
             onClick={() => {
-              const fieldName = _camel(name);
-              handleSave(fieldName, {
+              //const fieldName = _camel(name);
+              handleSave(fieldKey, {
                 type,
-                name,
-                fieldName,
-                key: fieldName,
+                name: columnLabel,
+                fieldName: fieldKey,
+                key: fieldKey,
                 config: {},
                 ...data.initializeColumn,
               });

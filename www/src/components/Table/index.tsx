@@ -34,7 +34,7 @@ import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
 import { APP_BAR_HEIGHT } from "components/Navigation";
 import useStyles from "./styles";
 import { useAppContext } from "contexts/appContext";
-
+import _get from "lodash/get";
 // const Hotkeys = lazy(() => import("./HotKeys" /* webpackChunkName: "HotKeys" */));
 const { DraggableContainer } = DraggableHeader;
 
@@ -108,7 +108,7 @@ export default function Table() {
         ...column,
         width: column.width ? (column.width > 380 ? 380 : column.width) : 150,
       }))
-      .filter(column => !userDocHiddenFields.includes(column.key));
+      .filter((column) => !userDocHiddenFields.includes(column.key));
     columns.push({
       isNew: true,
       key: "new",
@@ -125,7 +125,17 @@ export default function Table() {
 
   const rowHeight = tableState.config.rowHeight;
   const rows = tableState.rows;
-  const rowGetter = (rowIdx: number) => rows[rowIdx];
+  //const rowGetter = (rowIdx: number) => rows[rowIdx];
+  const rowGetter = (rowIdx: number) =>
+    columns.reduce(
+      (acc, currColumn) => ({
+        ...acc,
+        [currColumn.key]: _get(rows[rowIdx], currColumn.key),
+      }),
+      {}
+    );
+
+  // rows[rowIdx]
 
   const inSubTable = tableState.tablePath.split("/").length > 1;
 
@@ -155,7 +165,7 @@ export default function Table() {
             rowGetter={rowGetter}
             rowsCount={rows.length}
             rowKey={"id" as "id"}
-            onGridRowsUpdated={event => {
+            onGridRowsUpdated={(event) => {
               const { action, cellKey, updated } = event;
               if (action === "CELL_UPDATE" && updated !== null)
                 updateCell!(rows[event.toRow].ref, cellKey as string, updated);
@@ -187,7 +197,7 @@ export default function Table() {
             enableCellSelect
             onScroll={handleScroll}
             ref={dataGridRef}
-            RowsContainer={props => (
+            RowsContainer={(props) => (
               <>
                 <div {...props} ref={rowsContainerRef} />
                 <Grid

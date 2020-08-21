@@ -66,7 +66,7 @@ const firetableContext = React.createContext<Partial<FiretableContextProps>>(
 );
 export default firetableContext;
 
-export const firetableUser = currentUser => {
+export const firetableUser = (currentUser) => {
   const {
     displayName,
     email,
@@ -102,10 +102,10 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
     if (tables && userRoles && !sections) {
       const filteredTables = _sortBy(tables, "name")
         .filter(
-          table =>
-            !table.roles || table.roles.some(role => userRoles.includes(role))
+          (table) =>
+            !table.roles || table.roles.some((role) => userRoles.includes(role))
         )
-        .map(table => ({
+        .map((table) => ({
           ...table,
           section: table.section ? table.section.toUpperCase().trim() : "OTHER",
         }));
@@ -118,7 +118,7 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
 
   useEffect(() => {
     if (currentUser && !userClaims) {
-      currentUser.getIdTokenResult(true).then(results => {
+      currentUser.getIdTokenResult(true).then((results) => {
         setUserRoles(results.claims.roles || []);
         setUserClaims(results.claims);
       });
@@ -135,20 +135,20 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
     const ftUser = firetableUser(currentUser);
     const _ft_updatedAt = new Date();
     const _ft_updatedBy = ftUser;
-
+    let update = { [fieldName]: value };
     ref
       .update({
-        [fieldName]: value,
+        ...update,
         _ft_updatedAt,
         updatedAt: _ft_updatedAt,
         _ft_updatedBy,
         updatedBy: _ft_updatedBy,
       })
       .then(
-        success => {
+        (success) => {
           console.log("successful update");
         },
-        error => {
+        (error) => {
           if (error.code === "permission-denied") {
             open({
               message: `You don't have permissions to make this change`,
