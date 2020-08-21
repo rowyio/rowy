@@ -62,7 +62,7 @@ export default function WebhooksDialog({ open, handleClose }) {
   const fullWidth = true;
   const maxWidth: DialogProps["maxWidth"] = "xl";
   const handleChange = (key: string) => (value: any) => {
-    setState(s => ({ ...s, [key]: value }));
+    setState((s) => ({ ...s, [key]: value }));
   };
   const initializeWebhooksConfig = () => {
     const secret = makeId(32);
@@ -76,7 +76,6 @@ export default function WebhooksDialog({ open, handleClose }) {
     });
   };
   useEffect(() => {
-    console.log({ tableState, secret: state.secret });
     if (
       tableState &&
       !tableState.config.tableConfig.loading &&
@@ -87,7 +86,7 @@ export default function WebhooksDialog({ open, handleClose }) {
     } else if (tableState?.config.webhooks) {
       setState({ ...tableState?.config.webhooks });
     }
-  }, [tableState]);
+  }, [tableState?.config]);
 
   const handleWebhookTypeChange = (
     event: React.ChangeEvent<{ value: unknown }>
@@ -123,7 +122,7 @@ export default function WebhooksDialog({ open, handleClose }) {
               labelPlacement="end"
               checked={state.enabled}
               onChange={
-                e => {
+                (e) => {
                   handleChange("enabled")(!state.enabled);
                 }
                 //  handleChange("isCollectionGroup", !formState.isCollectionGroup)
@@ -162,7 +161,7 @@ export default function WebhooksDialog({ open, handleClose }) {
               <Typography variant="body1">
                 please set the question reference in typeform to the following
                 field keys :{" "}
-                {tableFields.map(key => (
+                {tableFields.map((key) => (
                   <>
                     {" "}
                     <b key={key}>{key}</b>,
