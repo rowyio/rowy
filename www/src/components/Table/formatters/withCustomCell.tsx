@@ -24,7 +24,8 @@ export type CustomCellProps = FormatterProps<any> & {
 };
 
 const getCellValue = (row, key) => {
-  return _get(row, key);
+  if (key.includes(".")) return _get(row, key);
+  return row[key];
 };
 /**
  * HOC to wrap around custom cell formatters.
@@ -41,7 +42,6 @@ const withCustomCell = (Component: React.ComponentType<CustomCellProps>) => (
     if (updateCell)
       updateCell(props.row.ref, props.column.key as string, value);
   };
-
   return (
     <ErrorBoundary fullScreen={false} basic>
       <Suspense fallback={<div />}>

@@ -126,14 +126,16 @@ export default function Table() {
   const rowHeight = tableState.config.rowHeight;
   const rows = tableState.rows;
   //const rowGetter = (rowIdx: number) => rows[rowIdx];
-  const rowGetter = (rowIdx: number) =>
-    columns.reduce(
+  const rowGetter = (rowIdx: number) => ({
+    ...rows[rowIdx],
+    ...columns.reduce(
       (acc, currColumn) => ({
         ...acc,
         [currColumn.key]: _get(rows[rowIdx], currColumn.key),
       }),
       {}
-    );
+    ),
+  });
 
   // rows[rowIdx]
 
