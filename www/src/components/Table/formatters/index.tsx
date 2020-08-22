@@ -48,9 +48,8 @@ const Percentage = lazy(() =>
  */
 export const getFormatter = (column: any) => {
   let _type = column.type;
-  if (column.config.renderFieldType) {
-    _type = column.config.renderFieldType;
-  }
+  if (column.config?.renderFieldType) _type = column.config.renderFieldType;
+
   switch (_type) {
     case FieldType.date:
     case FieldType.dateTime:

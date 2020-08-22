@@ -108,7 +108,7 @@ export default function Table() {
         ...column,
         width: column.width ? (column.width > 380 ? 380 : column.width) : 150,
       }))
-      .filter((column) => !userDocHiddenFields.includes(column.key));
+      .filter(column => !userDocHiddenFields.includes(column.key));
     columns.push({
       isNew: true,
       key: "new",
@@ -167,7 +167,7 @@ export default function Table() {
             rowGetter={rowGetter}
             rowsCount={rows.length}
             rowKey={"id" as "id"}
-            onGridRowsUpdated={(event) => {
+            onGridRowsUpdated={event => {
               const { action, cellKey, updated } = event;
               if (action === "CELL_UPDATE" && updated !== null)
                 updateCell!(rows[event.toRow].ref, cellKey as string, updated);
@@ -199,7 +199,7 @@ export default function Table() {
             enableCellSelect
             onScroll={handleScroll}
             ref={dataGridRef}
-            RowsContainer={(props) => (
+            RowsContainer={props => (
               <>
                 <div {...props} ref={rowsContainerRef} />
                 <Grid

@@ -1,15 +1,15 @@
 import React from "react";
-import { Field } from "formik";
+import { Controller } from "react-hook-form";
+import { IFieldProps } from "../utils";
 
 import {
   makeStyles,
   createStyles,
   ButtonBase,
   FormControlLabel,
+  Switch,
   SwitchProps as MuiSwitchProps,
 } from "@material-ui/core";
-import { Switch } from "formik-material-ui";
-import ErrorMessage from "../ErrorMessage";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -39,33 +39,54 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-export interface ICheckboxProps extends MuiSwitchProps {
-  name: string;
+export interface ICheckboxProps
+  extends IFieldProps,
+    Omit<MuiSwitchProps, "name"> {
   label?: React.ReactNode;
+  editable?: boolean;
 }
 
-export default function Checkbox({ label, ...props }: ICheckboxProps) {
+export default function Checkbox({
+  control,
+  docRef,
+  label,
+  name,
+  editable,
+  ...props
+}: ICheckboxProps) {
   const classes = useStyles();
 
   return (
-    <>
-      <ButtonBase className={classes.buttonBase}>
-        <FormControlLabel
-          control={
-            <Field
-              component={Switch}
-              color="primary"
-              {...props}
-              type="checkbox"
-            />
-          }
-          label={label}
-          labelPlacement="start"
-          classes={{ root: classes.formControlLabel, label: classes.label }}
-        />
-      </ButtonBase>
+    <Controller
+      control={control}
+      name={name}
+      render={({ onChange, onBlur, value }) => {
+        const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+          onChange(event.target.checked);
+        };
 
-      <ErrorMessage name={props.name} />
-    </>
+        const handleClick = () => onChange(!value);
+
+        return (
+          <ButtonBase className={classes.buttonBase} onClick={handleClick}>
+            <FormControlLabel
+              control={
+                <Switch
+                  color="secondary"
+                  {...props}
+                  checked={value}
+                  onChange={handleChange}
+                  onBlur={onBlur}
+                  disabled={editable === false}
+                />
+              }
+              label={label}
+              labelPlacement="start"
+              classes={{ root: classes.formControlLabel, label: classes.label }}
+            />
+          </ButtonBase>
+        );
+      }}
+    />
   );
 }

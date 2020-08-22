@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import { FieldProps } from "formik";
+import { Controller } from "react-hook-form";
+import { IFieldProps } from "../utils";
 
 import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-javascript";
-import "ace-builds/src-noconflict/theme-monokai";
+import "ace-builds/src-noconflict/theme-github";
 
 import { makeStyles, createStyles, Button } from "@material-ui/core";
-import ErrorMessage from "../ErrorMessage";
 import CornerResizeIcon from "assets/icons/CornerResize";
 
 const useStyles = makeStyles(theme =>
@@ -35,17 +35,23 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-export default function Code({ form, field }: FieldProps) {
+export interface IControlledCodeProps {
+  onChange: (...event: any[]) => void;
+  onBlur: () => void;
+  value: any;
+}
+
+function ControlledCode({ onChange, onBlur, value }: IControlledCodeProps) {
   const classes = useStyles();
 
-  const [localValue, setLocalValue] = useState(field.value);
+  const [localValue, setLocalValue] = useState(value);
   useEffect(() => {
-    if (field.value !== localValue) setLocalValue(field.value);
-  }, [field.value]);
+    if (value !== localValue) setLocalValue(value);
+  }, [value]);
 
   const autoSave = false;
   const handleChange = autoSave
-    ? value => form.setFieldValue(field.name, value)
+    ? value => onChange(value)
     : value => setLocalValue(value);
 
   const editor = useRef<AceEditor>(null);
@@ -58,11 +64,9 @@ export default function Code({ form, field }: FieldProps) {
     <>
       <div className={classes.editorWrapper} onMouseUp={handleResize}>
         <AceEditor
-          key={`${form.initialValues.id}-${field.name}`}
           placeholder="Type code here…"
           mode="javascript"
           theme="github"
-          name={field.name}
           //onLoad={this.onLoad}
           onChange={handleChange}
           fontSize={13}
@@ -71,7 +75,7 @@ export default function Code({ form, field }: FieldProps) {
           showGutter
           highlightActiveLine
           showPrintMargin
-          value={autoSave ? field.value : localValue}
+          value={autoSave ? value : localValue}
           setOptions={{
             enableBasicAutocompletion: false,
             enableLiveAutocompletion: false,
@@ -85,19 +89,25 @@ export default function Code({ form, field }: FieldProps) {
         <CornerResizeIcon className={classes.resizeIcon} />
       </div>
 
-      {!autoSave && field.value !== localValue && (
+      {!autoSave && value !== localValue && (
         <Button
-          onClick={() => {
-            form.setFieldValue(field.name, localValue);
-          }}
+          onClick={() => onChange(localValue)}
           className={classes.saveButton}
           variant="contained"
         >
           Save Changes
         </Button>
       )}
-
-      <ErrorMessage name={field.name} />
     </>
+  );
+}
+
+export default function Code({ control, docRef, name, ...props }: IFieldProps) {
+  return (
+    <Controller
+      control={control}
+      name={name}
+      render={renderProps => <ControlledCode {...props} {...renderProps} />}
+    />
   );
 }

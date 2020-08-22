@@ -2,14 +2,14 @@ import React, { useState, useEffect } from "react";
 import clsx from "clsx";
 import _isNil from "lodash/isNil";
 import _sortBy from "lodash/sortBy";
-import _findIndex from "lodash/findIndex";
 
 import { Drawer, Fab } from "@material-ui/core";
 import ChevronIcon from "@material-ui/icons/KeyboardArrowLeft";
 import ChevronUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import ChevronDownIcon from "@material-ui/icons/KeyboardArrowDown";
 
-import Form, { Field } from "./Form";
+import Form from "./Form";
+import { Field } from "./Form/utils";
 import ErrorBoundary from "components/ErrorBoundary";
 
 import { useStyles } from "./useStyles";
@@ -49,7 +49,7 @@ export default function SideDrawer() {
 
     setCell!(cell => ({ column: cell!.column, row }));
 
-    const idx = _findIndex(tableState?.columns, ["key", cell!.column]);
+    const idx = tableState?.columns[cell!.column]?.index;
     dataGridRef?.current?.selectCell({ rowIdx: row, idx });
   };
 
@@ -116,7 +116,11 @@ export default function SideDrawer() {
         <ErrorBoundary>
           <div className={classes.drawerContents}>
             {open && fields && cell && (
-              <Form fields={fields} values={tableState?.rows[cell.row] ?? {}} />
+              <Form
+                key={cell.row}
+                fields={fields}
+                values={tableState?.rows[cell.row] ?? {}}
+              />
             )}
           </div>
         </ErrorBoundary>

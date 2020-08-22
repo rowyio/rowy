@@ -1,67 +1,84 @@
 import React from "react";
-import { FieldProps } from "formik";
+import { Controller } from "react-hook-form";
+import { IFieldProps } from "../utils";
 
 import { useTheme, Grid } from "@material-ui/core";
 
-import MultiSelectA, { MultiSelectProps } from "@antlerengineering/multiselect";
+import MultiSelect_, { MultiSelectProps } from "@antlerengineering/multiselect";
 import FormattedChip from "components/FormattedChip";
 
+export type IMultiSelectProps = IFieldProps &
+  Omit<
+    MultiSelectProps<string>,
+    "name" | "multiple" | "value" | "onChange" | "options"
+  > & {
+    config?: { options: string[] };
+  };
+
 export default function MultiSelect({
-  field,
-  form,
+  control,
+  name,
+  docRef,
   editable,
   config,
   ...props
-}: FieldProps<string[]> &
-  MultiSelectProps<string> & {
-    config: { options: string[] };
-    editable?: boolean;
-  }) {
+}: IMultiSelectProps) {
   const theme = useTheme();
 
-  const handleDelete = (index: number) => () => {
-    const newValues = [...field.value];
-    newValues.splice(index, 1);
-    form.setFieldValue(field.name, newValues);
-  };
-
   return (
-    <>
-      <MultiSelectA
-        {...props}
-        options={config.options ?? []}
-        multiple
-        value={field.value ? field.value : []}
-        onChange={value => form.setFieldValue(field.name, value)}
-        disabled={editable === false}
-        TextFieldProps={{
-          label: "",
-          hiddenLabel: true,
-          error: !!(form.touched[field.name] && form.errors[field.name]),
-          helperText:
-            (form.touched[field.name] && form.errors[field.name]) || "",
-          onBlur: () => form.setFieldTouched(field.name),
-        }}
-        searchable
-        freeText={false}
-      />
+    <Controller
+      control={control}
+      name={name}
+      render={({ onChange, onBlur, value }) => {
+        const handleDelete = (index: number) => () => {
+          const newValues = [...value];
+          newValues.splice(index, 1);
+          onChange(newValues);
+        };
 
-      {field.value && Array.isArray(field.value) && (
-        <Grid container spacing={1} style={{ marginTop: theme.spacing(1) }}>
-          {field.value.map(
-            (item, i) =>
-              item?.length > 0 && (
-                <Grid item key={item}>
-                  <FormattedChip
-                    size="medium"
-                    label={item}
-                    onDelete={editable !== false ? handleDelete(i) : undefined}
-                  />
-                </Grid>
-              )
-          )}
-        </Grid>
-      )}
-    </>
+        return (
+          <>
+            <MultiSelect_
+              {...props}
+              options={config?.options ?? []}
+              multiple
+              value={value ? value : []}
+              onChange={onChange}
+              disabled={editable === false}
+              TextFieldProps={{
+                label: "",
+                hiddenLabel: true,
+                onBlur,
+              }}
+              searchable
+              freeText={false}
+            />
+
+            {value && Array.isArray(value) && (
+              <Grid
+                container
+                spacing={1}
+                style={{ marginTop: theme.spacing(1) }}
+              >
+                {value.map(
+                  (item, i) =>
+                    item?.length > 0 && (
+                      <Grid item key={item}>
+                        <FormattedChip
+                          size="medium"
+                          label={item}
+                          onDelete={
+                            editable !== false ? handleDelete(i) : undefined
+                          }
+                        />
+                      </Grid>
+                    )
+                )}
+              </Grid>
+            )}
+          </>
+        );
+      }}
+    />
   );
 }
