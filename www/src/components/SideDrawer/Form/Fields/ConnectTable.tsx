@@ -1,5 +1,6 @@
 import React from "react";
-import { Control, Controller } from "react-hook-form";
+import { Controller } from "react-hook-form";
+import { IFieldProps } from "../utils";
 
 import { useTheme, Grid, Chip } from "@material-ui/core";
 
@@ -7,13 +8,13 @@ import ConnectTableSelect, {
   IConnectTableSelectProps,
 } from "components/ConnectTableSelect";
 
-export interface IConnectTableProps extends Partial<IConnectTableSelectProps> {
-  control: Control;
-  name: string;
-}
+export interface IConnectTableProps
+  extends IFieldProps,
+    Partial<IConnectTableSelectProps> {}
 
 export default function ConnectTable({
   control,
+  docRef,
   name,
   editable,
   ...props

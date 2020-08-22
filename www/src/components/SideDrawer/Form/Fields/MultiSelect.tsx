@@ -1,25 +1,24 @@
 import React from "react";
-import { Controller, Control } from "react-hook-form";
+import { Controller } from "react-hook-form";
+import { IFieldProps } from "../utils";
 
 import { useTheme, Grid } from "@material-ui/core";
 
 import MultiSelect_, { MultiSelectProps } from "@antlerengineering/multiselect";
 import FormattedChip from "components/FormattedChip";
 
-export type IMultiSelectProps = Omit<
-  MultiSelectProps<string>,
-  "multiple" | "value" | "onChange" | "options"
-> & {
-  control: Control;
-  name: string;
-
-  config?: { options: string[] };
-  editable?: boolean;
-};
+export type IMultiSelectProps = IFieldProps &
+  Omit<
+    MultiSelectProps<string>,
+    "name" | "multiple" | "value" | "onChange" | "options"
+  > & {
+    config?: { options: string[] };
+  };
 
 export default function MultiSelect({
   control,
   name,
+  docRef,
   editable,
   config,
   ...props

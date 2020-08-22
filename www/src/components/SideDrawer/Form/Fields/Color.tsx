@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Controller, Control } from "react-hook-form";
+import { Controller } from "react-hook-form";
+import { IFieldProps } from "../utils";
 import { ChromePicker } from "react-color";
 
 import {
@@ -39,12 +40,7 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-export interface IColorProps {
-  control: Control;
-  name: string;
-}
-
-export default function Color({ control, name }: IColorProps) {
+export default function Color({ control, name }: IFieldProps) {
   const classes = useStyles();
 
   const [showPicker, setShowPicker] = useState(false);

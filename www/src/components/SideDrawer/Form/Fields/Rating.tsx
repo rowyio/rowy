@@ -1,5 +1,6 @@
 import React from "react";
-import { Controller, Control } from "react-hook-form";
+import { Controller } from "react-hook-form";
+import { IFieldProps } from "../utils";
 
 import { makeStyles, createStyles, Grid } from "@material-ui/core";
 import { Rating as MuiRating } from "@material-ui/lab";
@@ -25,13 +26,7 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-export interface IRatingProps {
-  control: Control;
-  name: string;
-  editable?: boolean;
-}
-
-export default function Rating({ control, name, editable }: IRatingProps) {
+export default function Rating({ control, name, editable }: IFieldProps) {
   const classes = useStyles();
 
   return (

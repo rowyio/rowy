@@ -2,17 +2,14 @@ import React, { lazy } from "react";
 import { useForm } from "react-hook-form";
 import _isFunction from "lodash/isFunction";
 import _isEmpty from "lodash/isEmpty";
-
-// import { useFiretableContext } from "contexts/firetableContext";
-
 import { Grid } from "@material-ui/core";
 
+import { Fields, Values, getInitialValues, Field } from "./utils";
+import { FieldType } from "constants/fields";
 import Autosave from "./Autosave";
 import FieldWrapper from "./FieldWrapper";
+
 import Text from "./Fields/Text";
-
-import { FieldType } from "constants/fields";
-
 const Url = lazy(() =>
   import("./Fields/Url" /* webpackChunkName: "SideDrawer-Url" */)
 );
@@ -80,60 +77,6 @@ const Action = lazy(() =>
   import("./Fields/Action" /* webpackChunkName: "SideDrawer-Action" */)
 );
 
-export type Values = { [key: string]: any };
-export type Field = {
-  type?: FieldType;
-  name: string;
-  label?: string;
-  [key: string]: any;
-};
-export type Fields = (Field | ((values: Values) => Field))[];
-
-const initializeValue = type => {
-  switch (type) {
-    case FieldType.singleSelect:
-    case FieldType.multiSelect:
-    case FieldType.image:
-    case FieldType.file:
-      return [];
-    case FieldType.date:
-    case FieldType.dateTime:
-      return null;
-
-    case FieldType.checkbox:
-      return false;
-
-    case FieldType.number:
-      return 0;
-
-    case FieldType.json:
-      return {};
-
-    case FieldType.shortText:
-    case FieldType.longText:
-    case FieldType.email:
-    case FieldType.phone:
-    case FieldType.url:
-    case FieldType.code:
-    case FieldType.richText:
-    default:
-      break;
-  }
-};
-
-const getInitialValues = (fields: Fields): Values =>
-  fields.reduce((acc, _field) => {
-    const field = _isFunction(_field) ? _field({}) : _field;
-    if (!field.name) return acc;
-    let _type = field.type;
-    if (field.config && field.config.renderFieldType) {
-      _type = field.config.renderFieldType;
-    }
-    const value = initializeValue(_type);
-
-    return { ...acc, [field.name]: value };
-  }, {});
-
 export interface IFormProps {
   fields: Fields;
   values: Values;
@@ -188,7 +131,7 @@ export default function Form({ fields, values }: IFormProps) {
             _type = field.config.renderFieldType;
           }
 
-          let renderedField: React.ReactNode = null;
+          let fieldComponent: React.ComponentType<any> | null = null;
 
           switch (_type) {
             case FieldType.shortText:
@@ -196,111 +139,79 @@ export default function Form({ fields, values }: IFormProps) {
             case FieldType.email:
             case FieldType.phone:
             case FieldType.number:
-              renderedField = (
-                <Text {...fieldProps} control={control} docRef={docRef} />
-              );
+              fieldComponent = Text;
               break;
 
             case FieldType.url:
-              renderedField = <Url {...fieldProps} control={control} />;
+              fieldComponent = Url;
               break;
 
             case FieldType.singleSelect:
-              renderedField = (
-                <SingleSelect {...fieldProps} control={control} />
-              );
+              fieldComponent = SingleSelect;
               break;
 
             case FieldType.multiSelect:
-              renderedField = <MultiSelect {...fieldProps} control={control} />;
+              fieldComponent = MultiSelect;
               break;
 
             case FieldType.date:
-              renderedField = <DatePicker {...fieldProps} control={control} />;
+              fieldComponent = DatePicker;
               break;
 
             case FieldType.dateTime:
-              renderedField = (
-                <DateTimePicker {...fieldProps} control={control} />
-              );
+              fieldComponent = DateTimePicker;
               break;
 
             case FieldType.checkbox:
-              renderedField = <Checkbox {...fieldProps} control={control} />;
+              fieldComponent = Checkbox;
               break;
 
             case FieldType.color:
-              renderedField = <Color {...fieldProps} control={control} />;
+              fieldComponent = Color;
               break;
 
             case FieldType.slider:
-              renderedField = <Slider {...fieldProps} control={control} />;
+              fieldComponent = Slider;
               break;
 
             case FieldType.richText:
-              renderedField = <RichText {...fieldProps} control={control} />;
+              fieldComponent = RichText;
               break;
 
             case FieldType.image:
-              renderedField = (
-                <ImageUploader
-                  {...fieldProps}
-                  control={control}
-                  docRef={values.ref}
-                />
-              );
+              fieldComponent = ImageUploader;
               break;
 
             case FieldType.file:
-              renderedField = (
-                <FileUploader
-                  {...fieldProps}
-                  control={control}
-                  docRef={values.ref}
-                />
-              );
+              fieldComponent = FileUploader;
               break;
 
             case FieldType.rating:
-              renderedField = <Rating {...fieldProps} control={control} />;
+              fieldComponent = Rating;
               break;
 
             case FieldType.percentage:
-              renderedField = <Percentage {...fieldProps} control={control} />;
+              fieldComponent = Percentage;
               break;
 
             case FieldType.connectTable:
-              renderedField = (
-                <ConnectTable {...fieldProps} control={control} />
-              );
+              fieldComponent = ConnectTable;
               break;
 
             case FieldType.subTable:
-              renderedField = (
-                <SubTable
-                  {...(fieldProps as any)}
-                  control={control}
-                  docRef={docRef}
-                />
-              );
+              fieldComponent = SubTable;
               break;
 
             case FieldType.action:
-              renderedField = (
-                <Action
-                  {...(fieldProps as any)}
-                  control={control}
-                  docRef={docRef}
-                />
-              );
+              fieldComponent = Action;
               break;
 
             case FieldType.json:
-              renderedField = <JsonEditor {...fieldProps} control={control} />;
+              fieldComponent = JsonEditor;
               break;
 
             case FieldType.code:
-              renderedField = <Code {...fieldProps} control={control} />;
+              fieldComponent = Code;
               break;
 
             case undefined:
@@ -311,6 +222,12 @@ export default function Form({ fields, values }: IFormProps) {
               break;
           }
 
+          // Should not reach this state
+          if (fieldComponent === null) {
+            console.error("`fieldComponent` is null");
+            return null;
+          }
+
           return (
             <FieldWrapper
               key={fieldProps.name ?? i}
@@ -318,7 +235,11 @@ export default function Form({ fields, values }: IFormProps) {
               name={field.name}
               label={field.label}
             >
-              {renderedField}
+              {React.createElement(fieldComponent, {
+                ...fieldProps,
+                control,
+                docRef,
+              })}
             </FieldWrapper>
           );
         })}

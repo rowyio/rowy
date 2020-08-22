@@ -1,5 +1,6 @@
 import React from "react";
-import { Controller, Control } from "react-hook-form";
+import { Controller } from "react-hook-form";
+import { IFieldProps } from "../utils";
 
 import {
   makeStyles,
@@ -43,9 +44,7 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-export interface ISliderProps extends SliderProps {
-  control: Control;
-  name: string;
+export interface ISliderProps extends IFieldProps, Omit<SliderProps, "name"> {
   units?: string;
   minLabel?: React.ReactNode;
   maxLabel?: React.ReactNode;
@@ -53,6 +52,7 @@ export interface ISliderProps extends SliderProps {
 
 export default function Slider({
   control,
+  docRef,
   name,
   units,
   minLabel,

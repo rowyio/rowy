@@ -1,5 +1,6 @@
 import React from "react";
-import { Control, useWatch } from "react-hook-form";
+import { Controller, useWatch } from "react-hook-form";
+import { IFieldProps } from "../utils";
 
 import { Link } from "react-router-dom";
 import queryString from "query-string";
@@ -31,10 +32,7 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-export interface ISubTableProps {
-  control: Control;
-  name: string;
-  docRef: firebase.firestore.DocumentReference;
+export interface ISubTableProps extends IFieldProps {
   config: { parentLabel?: string[] };
   label: string;
 }

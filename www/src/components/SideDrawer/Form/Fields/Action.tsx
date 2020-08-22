@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
-import { Control, Controller, useWatch } from "react-hook-form";
+import { Controller, useWatch } from "react-hook-form";
+import { IFieldProps } from "../utils";
 
 import {
   createStyles,
@@ -40,12 +41,8 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-export interface IActionProps {
-  control: Control;
-  name: string;
-  docRef: firebase.firestore.DocumentReference;
+export interface IActionProps extends IFieldProps {
   config: { callableName: string };
-  editable?: boolean;
 }
 
 function Action({ control, name, docRef, editable, config }: IActionProps) {

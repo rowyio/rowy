@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Controller, Control } from "react-hook-form";
+import { Controller } from "react-hook-form";
+import { IFieldProps } from "../utils";
 
 import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-javascript";
@@ -101,12 +102,7 @@ function ControlledCode({ onChange, onBlur, value }: IControlledCodeProps) {
   );
 }
 
-export interface ICodeProps {
-  control: Control;
-  name: string;
-}
-
-export default function Code({ control, name, ...props }: ICodeProps) {
+export default function Code({ control, docRef, name, ...props }: IFieldProps) {
   return (
     <Controller
       control={control}

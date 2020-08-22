@@ -1,5 +1,6 @@
 import React from "react";
-import { Controller, Control } from "react-hook-form";
+import { Controller } from "react-hook-form";
+import { IFieldProps } from "../utils";
 
 import {
   Grid,
@@ -9,12 +10,11 @@ import {
 } from "@material-ui/core";
 import LaunchIcon from "@material-ui/icons/Launch";
 
-export interface IUrlProps extends Omit<FilledTextFieldProps, "variant"> {
-  control: Control;
-  name: string;
-}
+export interface IUrlProps
+  extends IFieldProps,
+    Omit<FilledTextFieldProps, "name" | "variant"> {}
 
-export default function Url({ control, name, ...props }: IUrlProps) {
+export default function Url({ control, name, docRef, ...props }: IUrlProps) {
   return (
     <Grid container wrap="nowrap">
       <Controller

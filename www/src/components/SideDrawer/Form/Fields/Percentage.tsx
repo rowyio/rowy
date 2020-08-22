@@ -1,5 +1,6 @@
 import React from "react";
-import { Controller, Control } from "react-hook-form";
+import { Controller } from "react-hook-form";
+import { IFieldProps } from "../utils";
 
 import { makeStyles, createStyles, Typography } from "@material-ui/core";
 import { resultColorsScale } from "util/color";
@@ -41,15 +42,7 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-export interface IPercentageProps {
-  control: Control;
-  name: string;
-}
-
-/**
- * TODO: Fix cell not updating properly when switching between rows
- */
-export default function Percentage({ control, name }: IPercentageProps) {
+export default function Percentage({ control, name }: IFieldProps) {
   const classes = useStyles();
 
   return (

@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from "react";
 import clsx from "clsx";
-import { Controller, Control } from "react-hook-form";
+import { Controller } from "react-hook-form";
+import { IFieldProps } from "../utils";
 
 import { useDropzone } from "react-dropzone";
 import useUploader, { FileValue } from "hooks/useFiretable/useUploader";
@@ -55,7 +56,7 @@ const useStyles = makeStyles(theme =>
 );
 
 export interface IControlledFileUploaderProps
-  extends Pick<IFileUploaderProps, "editable" | "docRef" | "name"> {
+  extends Pick<IFieldProps, "editable" | "docRef" | "name"> {
   onChange: (...event: any[]) => void;
   onBlur: () => void;
   value: any;
@@ -173,19 +174,7 @@ export function ControlledFileUploader({
   );
 }
 
-export interface IFileUploaderProps {
-  control: Control;
-  name: string;
-
-  editable?: boolean;
-  docRef?: firebase.firestore.DocumentReference;
-}
-
-export default function FileUploader({
-  control,
-  name,
-  ...props
-}: IFileUploaderProps) {
+export default function FileUploader({ control, name, ...props }: IFieldProps) {
   return (
     <Controller
       control={control}

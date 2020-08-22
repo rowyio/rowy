@@ -8,7 +8,8 @@ import ChevronIcon from "@material-ui/icons/KeyboardArrowLeft";
 import ChevronUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import ChevronDownIcon from "@material-ui/icons/KeyboardArrowDown";
 
-import Form, { Field } from "./Form";
+import Form from "./Form";
+import { Field } from "./Form/utils";
 import ErrorBoundary from "components/ErrorBoundary";
 
 import { useStyles } from "./useStyles";

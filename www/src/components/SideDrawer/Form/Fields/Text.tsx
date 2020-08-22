@@ -1,5 +1,6 @@
 import React from "react";
-import { Controller, Control } from "react-hook-form";
+import { Controller } from "react-hook-form";
+import { IFieldProps } from "../utils";
 
 import {
   makeStyles,
@@ -13,13 +14,6 @@ const useStyles = makeStyles(theme =>
     multiline: { padding: theme.spacing(2.25, 1.5) },
   })
 );
-
-export interface IFieldProps {
-  control: Control;
-  name: string;
-  docRef: firebase.firestore.DocumentReference;
-  editable?: boolean;
-}
 
 export interface ITextProps
   extends IFieldProps,
@@ -60,7 +54,7 @@ export default function Text({
       break;
 
     case "number":
-      variantProps = { inputmode: "numeric", pattern: "[0-9]*" };
+      variantProps = { inputMode: "numeric", pattern: "[0-9]*" };
       break;
 
     case "short":

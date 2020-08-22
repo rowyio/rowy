@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from "react";
 import clsx from "clsx";
-import { Controller, Control } from "react-hook-form";
+import { Controller } from "react-hook-form";
+import { IFieldProps } from "../utils";
 
 import { useDropzone } from "react-dropzone";
 import useUploader from "hooks/useFiretable/useUploader";
@@ -20,7 +21,6 @@ import AddIcon from "@material-ui/icons/AddAPhoto";
 import DeleteIcon from "@material-ui/icons/Delete";
 import OpenIcon from "@material-ui/icons/OpenInNewOutlined";
 
-import ErrorMessage from "../ErrorMessage";
 import Confirmation from "components/Confirmation";
 import { IMAGE_MIME_TYPES } from "constants/fields";
 
@@ -92,7 +92,7 @@ const useStyles = makeStyles(theme =>
 );
 
 export interface IControlledImageUploaderProps
-  extends Pick<IImageUploaderProps, "docRef" | "editable" | "name"> {
+  extends Pick<IFieldProps, "docRef" | "editable" | "name"> {
   onChange: (...event: any[]) => void;
   onBlur: () => void;
   value: any;
@@ -253,19 +253,11 @@ export function ControlledImageUploader({
     </>
   );
 }
-export interface IImageUploaderProps {
-  control: Control;
-  name: string;
-
-  docRef?: firebase.firestore.DocumentReference;
-  editable?: boolean;
-}
-
 export default function ImageUploader({
   control,
   name,
   ...props
-}: IImageUploaderProps) {
+}: IFieldProps) {
   return (
     <Controller
       control={control}

@@ -1,5 +1,6 @@
 import React from "react";
-import { Controller, Control } from "react-hook-form";
+import { Controller } from "react-hook-form";
+import { IFieldProps } from "../utils";
 
 import {
   makeStyles,
@@ -38,15 +39,16 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-export interface ICheckboxProps extends MuiSwitchProps {
-  control: Control;
-  name: string;
+export interface ICheckboxProps
+  extends IFieldProps,
+    Omit<MuiSwitchProps, "name"> {
   label?: React.ReactNode;
   editable?: boolean;
 }
 
 export default function Checkbox({
   control,
+  docRef,
   label,
   name,
   editable,

@@ -7,7 +7,7 @@ import _isUndefined from "lodash/isUndefined";
 import _reduce from "lodash/reduce";
 
 import { Control, useWatch } from "react-hook-form";
-import { Values } from ".";
+import { Values } from "./utils";
 
 import { useAppContext } from "contexts/appContext";
 import { useFiretableContext, firetableUser } from "contexts/firetableContext";

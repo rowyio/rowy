@@ -1,21 +1,19 @@
 import React from "react";
-import { Controller, Control } from "react-hook-form";
+import { Controller } from "react-hook-form";
+import { IFieldProps } from "../utils";
 
 import { useTheme } from "@material-ui/core";
 
 import MultiSelect, { MultiSelectProps } from "@antlerengineering/multiselect";
 import FormattedChip from "components/FormattedChip";
 
-export type ISingleSelectProps = Omit<
-  MultiSelectProps<string>,
-  "multiple" | "value" | "onChange" | "options"
-> & {
-  control: Control;
-  name: string;
-
-  config?: { options: string[] };
-  editable?: boolean;
-};
+export type ISingleSelectProps = IFieldProps &
+  Omit<
+    MultiSelectProps<string>,
+    "name" | "multiple" | "value" | "onChange" | "options"
+  > & {
+    config?: { options: string[] };
+  };
 
 /**
  * Uses the MultiSelect UI, but writes values as a string,
@@ -23,6 +21,7 @@ export type ISingleSelectProps = Omit<
  */
 export default function SingleSelect({
   control,
+  docRef,
   name,
   editable,
   config,

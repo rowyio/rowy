@@ -1,5 +1,6 @@
 import React from "react";
-import { Controller, Control } from "react-hook-form";
+import { Controller } from "react-hook-form";
+import { IFieldProps } from "../utils";
 
 import { useTheme } from "@material-ui/core";
 import {
@@ -14,13 +15,12 @@ import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 
 export interface IDateTimePickerProps
-  extends Omit<KeyboardDateTimePickerProps, "onChange" | "value"> {
-  control: Control;
-  name: string;
-}
+  extends IFieldProps,
+    Omit<KeyboardDateTimePickerProps, "name" | "onChange" | "value"> {}
 
 export default function DateTimePicker({
   control,
+  docRef,
   name,
   ...props
 }: IDateTimePickerProps) {

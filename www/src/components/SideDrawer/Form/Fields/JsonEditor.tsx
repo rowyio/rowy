@@ -1,5 +1,6 @@
 import React from "react";
-import { Control, Controller } from "react-hook-form";
+import { Controller } from "react-hook-form";
+import { IFieldProps } from "../utils";
 import ReactJson from "react-json-view";
 
 import { makeStyles, createStyles, useTheme } from "@material-ui/core";
@@ -32,12 +33,7 @@ const isValidJson = (val: any) => {
   return true;
 };
 
-export interface IJsonEditorProps {
-  control: Control;
-  name: string;
-}
-
-export default function JsonEditor({ control, name }: IJsonEditorProps) {
+export default function JsonEditor({ control, name }: IFieldProps) {
   const classes = useStyles();
   const theme = useTheme();
 

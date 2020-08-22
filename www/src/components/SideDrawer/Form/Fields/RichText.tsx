@@ -1,14 +1,10 @@
 import React from "react";
-import { Control, Controller } from "react-hook-form";
+import { Controller } from "react-hook-form";
+import { IFieldProps } from "../utils";
 
 import _RichText from "components/RichText";
 
-export interface IRichTextProps {
-  control: Control;
-  name: string;
-}
-
-export default function RichText({ control, name }: IRichTextProps) {
+export default function RichText({ control, name }: IFieldProps) {
   return (
     <Controller
       control={control}
