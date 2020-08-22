@@ -8,14 +8,17 @@ const functionConfig: any = config;
 const shouldEvaluateReducer = (listeners, before, after) =>
   listeners.reduce((acc: Boolean, currField: string) => {
     if (acc) return true;
-    else return before[currField] !== after[currField];
+    else
+      return (
+        JSON.stringify(before[currField]) !== JSON.stringify(after[currField])
+      );
   }, false);
+
 export const derivativeOnChange = async (
-  Change: functions.Change<FirebaseFirestore.DocumentSnapshot>
+  ref,
+  beforeData: FirebaseFirestore.DocumentData,
+  afterData: FirebaseFirestore.DocumentData
 ) => {
-  const beforeData = Change.before.data();
-  const afterData = Change.after.data();
-  if (!beforeData || !afterData) return false;
   const update = await functionConfig.reduce(
     async (accUpdates: any, currDerivative) => {
       const shouldEval = shouldEvaluateReducer(
@@ -37,22 +40,36 @@ export const derivativeOnChange = async (
     {}
   );
   if (Object.keys(update).length !== 0) {
-    return Change.after.ref.update(update);
+    return ref.update(update);
   }
   return false;
 };
 
-/**
- *
- * @param collection configuration object
- */
+export const derivativeOnCreate = async (
+  snapshot: functions.firestore.DocumentSnapshot
+) => {
+  const docData = snapshot.data();
+
+  if (!docData) return false;
+  return derivativeOnChange(snapshot.ref, {}, docData);
+};
+
+export const derivativeOnUpdate = async (
+  Change: functions.Change<FirebaseFirestore.DocumentSnapshot>
+) => {
+  const beforeData = Change.before.data();
+  const afterData = Change.after.data();
+  if (!beforeData || !afterData) return false;
+  return derivativeOnChange(Change.after.ref, beforeData, afterData);
+};
+
 export const FT_derivatives = {
   [collectionPath]: {
-    // onCreate: functions.firestore
-    //   .document(`employees/{docId}`)
-    //   .onCreate(addSynonymOnCreate(collection.groups)),
     onUpdate: functions.firestore
       .document(`${collectionPath}/{docId}`)
-      .onUpdate(derivativeOnChange),
+      .onUpdate(derivativeOnUpdate),
+    onCreate: functions.firestore
+      .document(`${collectionPath}/{docId}`)
+      .onCreate(derivativeOnCreate),
   },
 };

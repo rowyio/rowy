@@ -23,7 +23,7 @@ export type FiretableActions = {
 export type FiretableState = {
   orderBy: FiretableOrderBy;
   tablePath: string;
-  config: { rowHeight: number; tableConfig: any };
+  config: { rowHeight: number; tableConfig: any; webhooks: any };
   columns: any[];
   rows: { [key: string]: any }[];
   queryLimit: number;
@@ -49,11 +49,6 @@ const useFiretable = (
     orderBy,
   });
 
-  /**Subscribes to _FIRETABLE_/settings/schema  to have table configuration pre-cached */
-  const [settingsState, setttingsDispatch] = useTable({
-    path: "_FIRETABLE_/settings/schema",
-  });
-
   /** set collection path of table */
   const setTable = (collectionName: string, filters: FireTableFilter[]) => {
     if (collectionName !== tableState.path || filters !== tableState.filters) {
@@ -72,7 +67,11 @@ const useFiretable = (
     tablePath: tableState.path,
     filters: tableState.filters,
     columns: tableConfig.columns,
-    config: { rowHeight: tableConfig.rowHeight, tableConfig },
+    config: {
+      rowHeight: tableConfig.rowHeight,
+      webhooks: tableConfig.doc?.webhooks,
+      tableConfig,
+    },
     rows: tableState.rows,
     queryLimit: tableState.limit,
     loadingRows: tableState.loading,
@@ -80,7 +79,7 @@ const useFiretable = (
   };
   const actions: FiretableActions = {
     column: {
-      add: configActions.add,
+      add: configActions.addColumn,
       resize: configActions.resize,
       rename: configActions.rename,
       update: configActions.updateColumn,

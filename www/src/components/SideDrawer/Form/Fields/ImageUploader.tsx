@@ -23,6 +23,7 @@ import OpenIcon from "@material-ui/icons/OpenInNewOutlined";
 
 import Confirmation from "components/Confirmation";
 import { IMAGE_MIME_TYPES } from "constants/fields";
+import Thumbnail from "components/Thumbnail";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -57,15 +58,21 @@ const useStyles = makeStyles(theme =>
 
     img: {
       position: "relative",
-
       width: 80,
       height: 80,
       borderRadius: theme.shape.borderRadius,
-      boxShadow: `0 0 0 1px ${theme.palette.divider} inset`,
+      // boxShadow: `0 0 0 1px ${theme.palette.divider} inset`,
 
       backgroundSize: "contain",
       backgroundPosition: "center center",
       backgroundRepeat: "no-repeat",
+    },
+    thumbnail: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
     },
 
     overlay: {
@@ -82,11 +89,23 @@ const useStyles = makeStyles(theme =>
     },
 
     deleteImgHover: {
-      opacity: 0,
-      transition: theme.transitions.create("opacity", {
+      transition: theme.transitions.create("background-color", {
         duration: theme.transitions.duration.shortest,
       }),
-      "$img:hover &": { opacity: 1 },
+
+      backgroundColor: "transparent",
+
+      "$img:hover &": {
+        backgroundColor: "rgba(255, 255, 255, 0.8)",
+        "& *": { opacity: 1 },
+      },
+
+      "& *": {
+        opacity: 0,
+        transition: theme.transitions.create("opacity", {
+          duration: theme.transitions.duration.shortest,
+        }),
+      },
     },
   })
 );
@@ -176,10 +195,13 @@ export function ControlledImageUploader({
                   <ButtonBase
                     className={classes.img}
                     onClick={() => window.open(image.downloadURL, "_blank")}
-                    style={{
-                      backgroundImage: `url(${image.downloadURL})`,
-                    }}
                   >
+                    <Thumbnail
+                      imageUrl={image.downloadURL}
+                      size="200x200"
+                      objectFit="contain"
+                      className={classes.thumbnail}
+                    />
                     <Grid
                       container
                       justify="center"
@@ -204,10 +226,13 @@ export function ControlledImageUploader({
                       <ButtonBase
                         className={classes.img}
                         onClick={() => handleDelete(i)}
-                        style={{
-                          backgroundImage: `url(${image.downloadURL})`,
-                        }}
                       >
+                        <Thumbnail
+                          imageUrl={image.downloadURL}
+                          size="200x200"
+                          objectFit="contain"
+                          className={classes.thumbnail}
+                        />
                         <Grid
                           container
                           justify="center"
@@ -231,7 +256,7 @@ export function ControlledImageUploader({
           <Grid item>
             <ButtonBase
               className={classes.img}
-              style={{ backgroundImage: `url(${localImage})` }}
+              style={{ backgroundImage: `url("${localImage}")` }}
             >
               <Grid
                 container

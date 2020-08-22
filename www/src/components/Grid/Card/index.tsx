@@ -14,7 +14,7 @@ import {
   Tab,
 } from "@material-ui/core";
 import { ButtonProps } from "@material-ui/core/Button";
-import { GoIcon } from "@antlerengineering/components";
+import GoIcon from "assets/icons/Go";
 
 import useStyles from "./styles";
 export interface ICardProps {

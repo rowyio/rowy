@@ -19,10 +19,12 @@ export type Table = {
   roles: string[];
   description: string;
   section: string;
+  isCollectionGroup: boolean;
 };
 
 interface FiretableContextProps {
   tables: Table[];
+  roles: string[];
   sections: { [sectionName: string]: Table[] };
   tableState: FiretableState;
   tableActions: FiretableActions;
@@ -133,10 +135,10 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
     const ftUser = firetableUser(currentUser);
     const _ft_updatedAt = new Date();
     const _ft_updatedBy = ftUser;
-
+    let update = { [fieldName]: value };
     ref
       .update({
-        [fieldName]: value,
+        ...update,
         _ft_updatedAt,
         updatedAt: _ft_updatedAt,
         _ft_updatedBy,
@@ -171,6 +173,7 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
         tableActions,
         updateCell,
         settingsActions,
+        roles: settings.roles,
         tables,
         sections,
         userClaims,

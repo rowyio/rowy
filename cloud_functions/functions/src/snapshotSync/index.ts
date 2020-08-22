@@ -3,7 +3,7 @@ import * as functions from "firebase-functions";
 import { db } from "../config";
 
 import * as _ from "lodash";
-import { replacer } from "../utils/email";
+import { replacer } from "../utils";
 
 import Config from "../functionConfig"; // generated using generateConfig.ts
 const functionConfig: any = Config;
@@ -38,8 +38,7 @@ const syncSubCollection = async (
 ) => {
   const targetDocs = await db.collection(targetPath).get();
   if (targetDocs.empty) return false;
-  for (let i = 0; i < targetDocs.docs.length; i++) {
-    const doc = targetDocs.docs[i];
+  for (const doc of targetDocs.docs) {
     await doc.ref.update({
       [snapshotField]: {
         docPath: snapshot.ref.path,

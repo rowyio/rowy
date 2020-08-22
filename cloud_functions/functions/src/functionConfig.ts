@@ -1,2 +1,2 @@
-export const collectionPath = "teams";
-export default [];
+export default {} as any;
+export const collectionPath = "";

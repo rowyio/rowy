@@ -52,7 +52,6 @@ function Action({ control, name, docRef, editable, config }: IActionProps) {
   const [isRunning, setIsRunning] = useState(false);
 
   const snack = useContext(SnackContext);
-
   const disabled = editable === false;
 
   return (

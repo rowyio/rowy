@@ -11,11 +11,13 @@ import {
   DialogTitle,
   TextField,
   Button,
-  Select,
-  Typography,
+  Switch,
+  FormControlLabel,
 } from "@material-ui/core";
 import { useFiretableContext } from "../contexts/firetableContext";
-import OptionsInput from "./Table/ColumnMenu/ConfigFields/OptionsInput";
+
+import RolesSelector from "./RolesSelector";
+
 export enum TableSettingsDialogModes {
   create,
   update,
@@ -31,6 +33,7 @@ export interface ICreateTableDialogProps {
     section: string;
     description: string;
     name: string;
+    isCollectionGroup: boolean;
   } | null;
 }
 
@@ -40,6 +43,7 @@ const FORM_EMPTY_STATE = {
   collection: "",
   description: "",
   roles: ["ADMIN"],
+  isCollectionGroup: false,
 };
 export default function TableSettingsDialog({
   mode,
@@ -66,7 +70,11 @@ export default function TableSettingsDialog({
     settingsActions?.createTable(formState);
 
     if (router.location.pathname === "/") {
-      router.history.push(`table/${formState.collection}`);
+      router.history.push(
+        `${formState.isCollectionGroup ? "tableGroup" : "table"}/${
+          formState.collection
+        }`
+      );
     } else {
       router.history.push(formState.collection);
     }
@@ -123,6 +131,16 @@ export default function TableSettingsDialog({
             />
           )}
 
+          <FormControlLabel
+            control={<Switch />}
+            label={"isCollectionGroup"}
+            labelPlacement="start"
+            value={formState.isCollectionGroup}
+            onChange={e =>
+              handleChange("isCollectionGroup", !formState.isCollectionGroup)
+            }
+            // classes={{ root: classes.formControlLabel, label: classes.label }}
+          />
           <TextField
             value={formState.section}
             onChange={e => handleChange("section", e.target.value)}
@@ -143,9 +161,10 @@ export default function TableSettingsDialog({
             value={formState.description}
             onChange={e => handleChange("description", e.target.value)}
           />
-          <OptionsInput
-            placeholder={"Add Role"}
-            options={formState.roles ?? []}
+
+          <RolesSelector
+            label="Roles"
+            value={formState.roles ?? []}
             handleChange={update => handleChange("roles", update)}
           />
         </DialogContent>

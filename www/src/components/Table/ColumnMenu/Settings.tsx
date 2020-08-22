@@ -1,27 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, lazy, Suspense } from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import Grid from "@material-ui/core/Grid";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import { Typography, IconButton, TextField, Switch } from "@material-ui/core";
+import {
+  Typography,
+  IconButton,
+  TextField,
+  Switch,
+  FormControlLabel,
+} from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import { FieldType } from "constants/fields";
 import OptionsInput from "./ConfigFields/OptionsInput";
 import { useFiretableContext } from "contexts/firetableContext";
 import MultiSelect from "@antlerengineering/multiselect";
-
 import _sortBy from "lodash/sortBy";
-import CodeEditor from "./ConfigFields/CodeEditor";
 import FieldsDropdown from "./FieldsDropdown";
 import ColumnSelector from "./ConfigFields/ColumnSelector";
-
-const ConfigForm = ({ type, config, handleChange }) => {
-  const { tableState, tables } = useFiretableContext();
-
-  if (!tableState) return <></>;
-  const { columns } = tableState;
-  switch (type) {
+import FieldSkeleton from "components/SideDrawer/Form/FieldSkeleton";
+import RoleSelector from "components/RolesSelector";
+const CodeEditor = lazy(() =>
+  import("../editors/CodeEditor" /* webpackChunkName: "CodeEditor" */)
+);
+const ConfigFields = ({ fieldType, config, handleChange, tables, columns }) => {
+  switch (fieldType) {
     case FieldType.singleSelect:
     case FieldType.multiSelect:
       return (
@@ -95,11 +99,75 @@ const ConfigForm = ({ type, config, handleChange }) => {
           validTypes={[FieldType.shortText, FieldType.singleSelect]}
         />
       );
+
+    case FieldType.action:
+      return (
+        <>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={config.isActionScript}
+                onChange={() =>
+                  handleChange("isActionScript")(
+                    !Boolean(config.isActionScript)
+                  )
+                }
+                name="actionScript"
+              />
+            }
+            label="Set as an action script"
+          />
+          <RoleSelector
+            label={
+              "Allowed Roles(Authenticated user must have at least one of these to run the script)"
+            }
+            value={config.requiredRoles}
+            handleChange={handleChange("requiredRoles")}
+          />
+          <ColumnSelector
+            label={
+              "Required fields(All of the selected fields must have a value for the script to run)"
+            }
+            value={config.requiredFields}
+            tableColumns={
+              columns
+                ? Array.isArray(columns)
+                  ? columns
+                  : Object.values(columns)
+                : []
+            }
+            handleChange={handleChange("requiredFields")}
+          />
+
+          {!Boolean(config.isActionScript) ? (
+            <TextField
+              label="callable name"
+              name="callableName"
+              fullWidth
+              onChange={e => {
+                handleChange("callableName")(e.target.value);
+              }}
+            />
+          ) : (
+            <>
+              <Typography variant="overline">action script</Typography>
+              <Suspense fallback={<FieldSkeleton height={200} />}>
+                <CodeEditor
+                  script={config.script}
+                  handleChange={handleChange("script")}
+                />
+              </Suspense>
+            </>
+          )}
+        </>
+      );
     case FieldType.derivative:
       return (
         <>
           <ColumnSelector
-            label={"Listener fields"}
+            label={
+              "Listener fields (this script runs when these fields change)"
+            }
             value={config.listenerFields}
             tableColumns={
               columns
@@ -110,21 +178,54 @@ const ConfigForm = ({ type, config, handleChange }) => {
             }
             handleChange={handleChange("listenerFields")}
           />
-          <CodeEditor
-            script={config.script}
-            handleChange={handleChange("script")}
-          />
+          <Typography variant="overline">derivative script</Typography>
+          <Suspense fallback={<FieldSkeleton height={200} />}>
+            <CodeEditor
+              script={config.script}
+              handleChange={handleChange("script")}
+            />
+          </Suspense>
+
+          <Typography variant="overline">Field type of the output</Typography>
           <FieldsDropdown
             value={config.renderFieldType}
             onChange={(newType: any) => {
               handleChange("renderFieldType")(newType.target.value);
             }}
           />
+          {config.renderFieldType && (
+            <>
+              <Typography variant="overline"> Rendered field config</Typography>
+              <ConfigFields
+                fieldType={config.renderFieldType}
+                config={config}
+                handleChange={handleChange}
+                tables={tables}
+                columns={columns}
+              />
+            </>
+          )}
         </>
       );
     default:
       return <></>;
   }
+};
+const ConfigForm = ({ type, config, handleChange }) => {
+  const { tableState, tables } = useFiretableContext();
+
+  if (!tableState) return <></>;
+  const { columns } = tableState;
+
+  return (
+    <ConfigFields
+      fieldType={type}
+      columns={columns}
+      config={config}
+      handleChange={handleChange}
+      tables={tables}
+    />
+  );
 };
 
 export default function FormDialog({
@@ -149,6 +250,7 @@ export default function FormDialog({
   return (
     <div>
       <Dialog
+        maxWidth="xl"
         open={open}
         onClose={(e, r) => {
           handleClose();
@@ -177,7 +279,6 @@ export default function FormDialog({
             <ConfigForm
               type={type}
               handleChange={key => update => {
-                console.log(key, update);
                 setNewConfig({ ...newConfig, [key]: update });
               }}
               config={newConfig}

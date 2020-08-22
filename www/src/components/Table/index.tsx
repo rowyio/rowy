@@ -33,7 +33,8 @@ import useWindowSize from "hooks/useWindowSize";
 import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
 import { APP_BAR_HEIGHT } from "components/Navigation";
 import useStyles from "./styles";
-
+import { useAppContext } from "contexts/appContext";
+import _get from "lodash/get";
 // const Hotkeys = lazy(() => import("./HotKeys" /* webpackChunkName: "HotKeys" */));
 const { DraggableContainer } = DraggableHeader;
 
@@ -43,12 +44,7 @@ export type FiretableColumn = Column<any> & {
   [key: string]: any;
 };
 
-interface ITableProps {
-  collection: string;
-  filters: FireTableFilter[];
-}
-
-export default function Table({ collection, filters }: ITableProps) {
+export default function Table() {
   const classes = useStyles();
   const theme = useTheme();
   const finalColumnClasses = useFinalColumnStyles();
@@ -60,13 +56,9 @@ export default function Table({ collection, filters }: ITableProps) {
     dataGridRef,
     sideDrawerRef,
   } = useFiretableContext();
-
-  useEffect(() => {
-    if (tableActions && tableState && tableState.tablePath !== collection) {
-      tableActions.table.set(collection, filters);
-      if (sideDrawerRef?.current) sideDrawerRef.current.setCell!(null);
-    }
-  }, [collection]);
+  const { userDoc } = useAppContext();
+  const userDocHiddenFields =
+    userDoc.state.doc?.tables[`${tableState?.tablePath}`]?.hiddenFields ?? [];
 
   const rowsContainerRef = useRef<HTMLDivElement>(null);
   // Gets more rows when scrolled down.
@@ -104,17 +96,19 @@ export default function Table({ collection, filters }: ITableProps) {
         (column: any) => !column.hidden && column.key
       ),
       "index"
-    ).map((column: any, index) => ({
-      draggable: true,
-      editable: true,
-      resizable: true,
-      frozen: column.fixed,
-      headerRenderer: ColumnHeader,
-      formatter: getFormatter(column),
-      editor: getEditor(column),
-      ...column,
-      width: column.width ? (column.width > 380 ? 380 : column.width) : 150,
-    }));
+    )
+      .map((column: any, index) => ({
+        draggable: true,
+        editable: true,
+        resizable: true,
+        frozen: column.fixed,
+        headerRenderer: ColumnHeader,
+        formatter: getFormatter(column),
+        editor: getEditor(column),
+        ...column,
+        width: column.width ? (column.width > 380 ? 380 : column.width) : 150,
+      }))
+      .filter(column => !userDocHiddenFields.includes(column.key));
     columns.push({
       isNew: true,
       key: "new",
@@ -131,9 +125,21 @@ export default function Table({ collection, filters }: ITableProps) {
 
   const rowHeight = tableState.config.rowHeight;
   const rows = tableState.rows;
-  const rowGetter = (rowIdx: number) => rows[rowIdx];
+  //const rowGetter = (rowIdx: number) => rows[rowIdx];
+  const rowGetter = (rowIdx: number) => ({
+    ...rows[rowIdx],
+    ...columns.reduce(
+      (acc, currColumn) => ({
+        ...acc,
+        [currColumn.key]: _get(rows[rowIdx], currColumn.key),
+      }),
+      {}
+    ),
+  });
 
-  const inSubTable = collection.split("/").length > 1;
+  // rows[rowIdx]
+
+  const inSubTable = tableState.tablePath.split("/").length > 1;
 
   let tableWidth: any = `calc(100% - ${
     DRAWER_COLLAPSED_WIDTH
@@ -147,7 +153,7 @@ export default function Table({ collection, filters }: ITableProps) {
         <Hotkeys selectedCell={selectedCell} />
       </Suspense> */}
 
-      {inSubTable && <SubTableBreadcrumbs collection={collection} />}
+      {inSubTable && <SubTableBreadcrumbs collection={tableState.tablePath} />}
 
       <TableHeader
         rowHeight={rowHeight}

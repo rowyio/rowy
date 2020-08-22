@@ -6,7 +6,7 @@ import _camelCase from "lodash/camelCase";
 import _findIndex from "lodash/findIndex";
 import _find from "lodash/find";
 import _sortBy from "lodash/sortBy";
-import { arrayMover } from "../../util/fns";
+import { arrayMover, isCollectionGroup } from "../../util/fns";
 import { db, deleteField } from "../../firebase";
 
 //import
@@ -14,10 +14,9 @@ import { db, deleteField } from "../../firebase";
 const formatPathRegex = /\/[^\/]+\/([^\/]+)/g;
 
 const formatPath = (tablePath: string) => {
-  return `_FIRETABLE_/settings/schema/${tablePath.replace(
-    formatPathRegex,
-    "/subTables/$1"
-  )}`;
+  return `_FIRETABLE_/settings/${
+    isCollectionGroup() ? "groupSchema" : "schema"
+  }/${tablePath.replace(formatPathRegex, "/subTables/$1")}`;
 };
 const useTableConfig = (tablePath?: string) => {
   const [tableConfigState, documentDispatch] = useDoc({
@@ -47,10 +46,9 @@ const useTableConfig = (tablePath?: string) => {
    *  @param type of column
    *  @param data additional column properties
    */
-  const add = (name: string, type: FieldType, data?: any) => {
+  const addColumn = (name: string, type: FieldType, data?: any) => {
     //TODO: validation
     const { columns } = tableConfigState;
-    console.log({ columns });
     const newIndex = Object.keys(columns).length;
     let updatedColumns = columns;
     const key = _camelCase(name);
@@ -120,15 +118,18 @@ const useTableConfig = (tablePath?: string) => {
    */
   const reorder = (draggedColumnKey: string, droppedColumnKey: string) => {
     const { columns } = tableConfigState;
-    console.log(columns[draggedColumnKey], columns[droppedColumnKey]);
     const oldIndex = columns[draggedColumnKey].index;
     const newIndex = columns[droppedColumnKey].index;
     const columnsArray = _sortBy(Object.values(columns), "index");
     arrayMover(columnsArray, oldIndex, newIndex);
     let updatedColumns = columns;
-    columnsArray.forEach((column: any, index) => {
-      updatedColumns[column.key] = { ...column, index };
-    });
+
+    columnsArray
+      .filter(c => c) // arrayMover has a bug creating undefined items
+      .forEach((column: any, index) => {
+        console.log({ column });
+        updatedColumns[column.key] = { ...column, index };
+      });
     documentDispatch({
       action: DocActions.update,
       data: { columns: updatedColumns },
@@ -147,7 +148,7 @@ const useTableConfig = (tablePath?: string) => {
   const actions = {
     updateColumn,
     updateConfig,
-    add,
+    addColumn,
     resize,
     setTable,
     remove,

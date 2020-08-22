@@ -54,7 +54,6 @@ class TextEditor extends React.Component<
 
   render() {
     const { classes, column, value } = this.props;
-
     let inputType = "text";
     switch ((column as any).type) {
       case FieldType.email:

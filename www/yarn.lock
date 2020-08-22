@@ -1078,6 +1078,13 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
+"@babel/runtime@^7.11.0":
+  version "7.11.2"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.11.2.tgz#f549c13c754cc40b87644b9fa9f09a6a95fe0736"
+  integrity sha512-TeWkU52so0mPtDcaCTxNBI/IHiz0pZgr8VEFqXFtZWpYD08ZB6FaSwVAS8MKRQAP3bYKiVjwysOJgMFY28o6Tw==
+  dependencies:
+    regenerator-runtime "^0.13.4"
+
 "@babel/runtime@^7.3.1", "@babel/runtime@^7.4.4", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.0", "@babel/runtime@^7.8.3":
   version "7.10.5"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.10.5.tgz#303d8bd440ecd5a491eae6117fd3367698674c5c"
@@ -1728,6 +1735,13 @@
   version "4.9.95"
   resolved "https://registry.yarnpkg.com/@mdi/js/-/js-4.9.95.tgz#8984c2ac04c89913a3ff2bbe4d91f4ab51d8ef4f"
   integrity sha512-6zKTCqZUCuDWJThdRcjdFTqp2BXfYwXI1UlYa68A1/kmCcy1ijpbpRbrJcUdZ+9WojencCh1DOGFqhj/x8I/eQ==
+
+"@monaco-editor/react@^3.5.5":
+  version "3.5.5"
+  resolved "https://registry.yarnpkg.com/@monaco-editor/react/-/react-3.5.5.tgz#7ebef1903bf7e7925084f16efb6550a83a7efed6"
+  integrity sha512-2/j9KFMu0Lr1DKX6ZqPwiCbhfv47yD8849Cyi8BTlGGRIzCcrF2pIQPbsZrsO+A+uG/352BfOsSF3zKQT84NQQ==
+  dependencies:
+    "@babel/runtime" "^7.11.0"
 
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
@@ -5097,9 +5111,9 @@ domhandler@^3.0.0:
     domelementtype "^2.0.1"
 
 dompurify@^2.0.10:
-  version "2.0.11"
-  resolved "https://registry.yarnpkg.com/dompurify/-/dompurify-2.0.11.tgz#cd47935774230c5e478b183a572e726300b3891d"
-  integrity sha512-qVoGPjIW9IqxRij7klDQQ2j6nSe4UNWANBhZNLnsS7ScTtLb+3YdxkRY8brNTpkUiTtcXsCJO+jS0UCDfenLuA==
+  version "2.0.12"
+  resolved "https://registry.yarnpkg.com/dompurify/-/dompurify-2.0.12.tgz#284a2b041e1c60b8e72d7b4d2fadad36141254ae"
+  integrity sha512-Fl8KseK1imyhErHypFPA8qpq9gPzlsJ/EukA6yk9o0gX23p1TzC+rh9LqNg1qvErRTc0UNMYlKxEGSfSh43NDg==
 
 dompurify@^2.0.8:
   version "2.0.8"
@@ -11952,6 +11966,11 @@ react-hook-form@^6.0.6:
   version "6.0.6"
   resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-6.0.6.tgz#72ac1668aeaddfd642bcfb324cebe1ba237fb13e"
   integrity sha512-qxWhV++1V7SKKlr2hHFsessGwATCdexgVsByxOHltDyO9F0VWB1WN4ZvxnKuHTVGwjj6CLZo0mL+Hgy0QH1sAw==
+
+react-image@^4.0.3:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/react-image/-/react-image-4.0.3.tgz#6fa722877660b67295298a914bff1ed87ad2cf83"
+  integrity sha512-19MUK9u1qaw9xys8XEsVkSpVhHctEBUeYFvrLTe1PN+4w5Co13AN2WA7xtBshPM6SthsOj77SlDrEAeOaJpf7g==
 
 react-input-autosize@^2.1.2:
   version "2.2.2"
