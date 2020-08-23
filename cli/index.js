@@ -16,7 +16,7 @@ program.version("0.4.0");
 const systemHealthCheck = async () => {
   const versions = await terminal.getRequiredVersions();
   const requiredApps = ["node", "git", "yarn", "firebase"];
-  requiredApps.forEach(app => {
+  requiredApps.forEach((app) => {
     if (versions[app] === "") {
       throw new Error(
         chalk.red(
@@ -137,9 +137,10 @@ program
       );
       console.log(
         `you can run:${chalk.bold(
-          "firetable local"
+          "firetable start"
         )} command to run your firetable instance locally`
       );
+
       console.log(
         `you can run:${chalk.bold(
           "firetable deploy"
@@ -152,13 +153,14 @@ program
   });
 
 program
-  .command("local")
+  .command("start")
   .description("run your firetable instance locally")
   .action(async () => {
     try {
       // check directory for firetable
       let directory = await directoryCheck();
       if (!directory) return;
+      await terminal.buildFiretable(directory);
       terminal.startFiretableLocally(directory);
     } catch (error) {
       console.log(chalk.red("FAILED:"));
