@@ -41,12 +41,16 @@ const logo1 = `++++++++++++++++++++++++++++++++++++++++
 
 module.exports.printLogo = () => {
   console.log(chalk.red(logo1));
-  console.log(
-    chalk.white(
-      figlet.textSync("FIRETABLE", {
-        font: "rounded",
-        horizontalLayout: "full",
-      })
-    )
-  );
+  try {
+    console.log(
+      chalk.white(
+        figlet.textSync("FIRETABLE", {
+          font: "rounded",
+          horizontalLayout: "full",
+        })
+      )
+    );
+  } catch (err) {
+    console.log("FIRETABLE");
+  }
 };
