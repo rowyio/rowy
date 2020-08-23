@@ -1,5 +1,6 @@
 import React from "react";
-import { FieldProps } from "formik";
+import { Controller } from "react-hook-form";
+import { IFieldProps } from "../utils";
 
 import { makeStyles, createStyles, Typography } from "@material-ui/core";
 import { resultColorsScale } from "util/color";
@@ -41,27 +42,35 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-export default function Percentage({ field }: FieldProps) {
+export default function Percentage({ control, name }: IFieldProps) {
   const classes = useStyles();
 
-  if (!field.value)
-    return (
-      <div className={classes.root}>
-        <div className={classes.resultColor} style={{ opacity: 1 }} />
-      </div>
-    );
-
   return (
-    <div className={classes.root}>
-      <div
-        className={classes.resultColor}
-        style={{
-          backgroundColor: resultColorsScale(field.value as number).hex(),
-        }}
-      />
-      <Typography variant="body1" className={classes.value}>
-        {Math.round(field.value * 100)}%
-      </Typography>
-    </div>
+    <Controller
+      control={control}
+      name={name}
+      render={({ value }) => {
+        if (!value)
+          return (
+            <div className={classes.root}>
+              <div className={classes.resultColor} style={{ opacity: 1 }} />
+            </div>
+          );
+
+        return (
+          <div className={classes.root}>
+            <div
+              className={classes.resultColor}
+              style={{
+                backgroundColor: resultColorsScale(value as number).hex(),
+              }}
+            />
+            <Typography variant="body1" className={classes.value}>
+              {Math.round(value * 100)}%
+            </Typography>
+          </div>
+        );
+      }}
+    />
   );
 }

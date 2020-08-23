@@ -63,7 +63,7 @@ export default function FormDialog({
             label="Column Header"
             type="text"
             fullWidth
-            onChange={(e) => {
+            onChange={e => {
               setColumnLabel(e.target.value);
             }}
           />
@@ -75,7 +75,7 @@ export default function FormDialog({
             label="Field Key"
             type="text"
             fullWidth
-            onChange={(e) => {
+            onChange={e => {
               setFieldKey(e.target.value);
             }}
           />

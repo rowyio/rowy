@@ -4,21 +4,29 @@ import _isEqual from "lodash/isEqual";
 import _pick from "lodash/pick";
 import _omitBy from "lodash/omitBy";
 import _isUndefined from "lodash/isUndefined";
+import _reduce from "lodash/reduce";
 
-import { FormikErrors } from "formik";
-import { Values } from ".";
+import { Control, useWatch } from "react-hook-form";
+import { Values } from "./utils";
 
 import { useAppContext } from "contexts/appContext";
 import { useFiretableContext, firetableUser } from "contexts/firetableContext";
 
 export interface IAutosaveProps {
-  values: Values;
-  errors: FormikErrors<Values>;
+  control: Control;
+  defaultValues: Values;
+  docRef: firebase.firestore.DocumentReference;
 }
 
-export default function Autosave({ values, errors }: IAutosaveProps) {
+export default function Autosave({
+  control,
+  defaultValues,
+  docRef,
+}: IAutosaveProps) {
   const { currentUser } = useAppContext();
   const { tableState, sideDrawerRef } = useFiretableContext();
+
+  const values = useWatch({ control });
 
   const getEditables = value =>
     _pick(
@@ -41,21 +49,29 @@ export default function Autosave({ values, errors }: IAutosaveProps) {
 
   useEffect(() => {
     if (!row || !row.ref) return;
-    if (_isEqual(getEditables(row), debouncedValue)) return;
-    if (row.ref.id !== values.ref.id) return;
+    if (row.ref.id !== docRef.id) return;
 
+    // Get only fields that have changed and
     // Remove undefined value to prevent Firestore crash
-    const updatedValues = _omitBy(debouncedValue, _isUndefined);
+    const updatedValues = _omitBy(
+      _omitBy(debouncedValue, _isUndefined),
+      (value, key) => _isEqual(value, row[key])
+    );
+    console.log(updatedValues);
+
+    if (Object.keys(updatedValues).length === 0) return;
 
     const _ft_updatedAt = new Date();
     const _ft_updatedBy = firetableUser(currentUser);
-    row.ref.update({
-      ...updatedValues,
-      _ft_updatedAt,
-      updatedAt: _ft_updatedAt,
-      _ft_updatedBy,
-      updatedBy: _ft_updatedBy,
-    });
+    row.ref
+      .update({
+        ...updatedValues,
+        _ft_updatedAt,
+        updatedAt: _ft_updatedAt,
+        _ft_updatedBy,
+        updatedBy: _ft_updatedBy,
+      })
+      .then(() => console.log("Updated row", row.ref.id, updatedValues));
   }, [debouncedValue]);
 
   return null;
