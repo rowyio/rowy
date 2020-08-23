@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
-import { FieldProps } from "formik";
+import { Controller, useWatch } from "react-hook-form";
+import { IFieldProps } from "../utils";
 
 import {
   createStyles,
@@ -40,85 +41,104 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-function Action({
-  field,
-  form,
-  editable,
-  config,
-}: FieldProps<any> & { config: { callableName: string }; editable?: boolean }) {
+export interface IActionProps extends IFieldProps {
+  config: { callableName: string };
+}
+
+function Action({ control, name, docRef, editable, config }: IActionProps) {
   const classes = useStyles();
-  const { ref, ...docData } = form.values;
+  const docData = useWatch({ control });
 
   const [isRunning, setIsRunning] = useState(false);
 
   const snack = useContext(SnackContext);
-  const handleRun = () => {
-    setIsRunning(true);
-    cloudFunction(
-      config.callableName,
-      {
-        ref: { path: ref.path, id: ref.id },
-        row: sanitiseRowData(Object.assign({}, docData)),
-      },
-      response => {
-        const { message, cellValue } = response.data;
-        setIsRunning(false);
-        snack.open({ message, severity: "success" });
-        if (cellValue) form.setFieldValue(field.name, cellValue);
-      },
-      error => {
-        console.error("ERROR", config.callableName, error);
-        setIsRunning(false);
-        snack.open({ message: JSON.stringify(error), severity: "error" });
-      }
-    );
-  };
-
-  const hasRan = field.value && field.value.status;
   const disabled = editable === false;
-  return (
-    <Grid
-      container
-      alignItems="center"
-      wrap="nowrap"
-      className={classes.root}
-      spacing={2}
-    >
-      <Grid item xs className={classes.labelGridItem}>
-        <Grid container alignItems="center" className={classes.labelContainer}>
-          <Typography variant="body1" className={classes.label}>
-            {hasRan && isUrl(field.value.status) ? (
-              <a
-                href={field.value.status}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {field.value.status}
-              </a>
-            ) : hasRan ? (
-              field.value.status
-            ) : (
-              sanitiseCallableName(config.callableName)
-            )}
-          </Typography>
-        </Grid>
-      </Grid>
 
-      <Grid item>
-        <Fab
-          onClick={handleRun}
-          disabled={isRunning || !!(hasRan && !field.value.redo) || disabled}
-        >
-          {isRunning ? (
-            <CircularProgress color="secondary" size={24} thickness={4.6} />
-          ) : hasRan ? (
-            <RefreshIcon />
-          ) : (
-            <PlayIcon />
-          )}
-        </Fab>
-      </Grid>
-    </Grid>
+  return (
+    <Controller
+      control={control}
+      name={name}
+      render={({ onChange, onBlur, value }) => {
+        const handleRun = () => {
+          setIsRunning(true);
+          console.log("RUN");
+
+          cloudFunction(
+            config.callableName,
+            {
+              ref: { path: docRef.path, id: docRef.id },
+              row: sanitiseRowData(Object.assign({}, docData)),
+            },
+            response => {
+              const { message, cellValue } = response.data;
+              setIsRunning(false);
+              snack.open({ message, severity: "success" });
+              if (cellValue) onChange(cellValue);
+            },
+            error => {
+              console.error("ERROR", config.callableName, error);
+              setIsRunning(false);
+              snack.open({ message: JSON.stringify(error), severity: "error" });
+            }
+          );
+        };
+
+        const hasRan = value && value.status;
+
+        return (
+          <Grid
+            container
+            alignItems="center"
+            wrap="nowrap"
+            className={classes.root}
+            spacing={2}
+          >
+            <Grid item xs className={classes.labelGridItem}>
+              <Grid
+                container
+                alignItems="center"
+                className={classes.labelContainer}
+              >
+                <Typography variant="body1" className={classes.label}>
+                  {hasRan && isUrl(value.status) ? (
+                    <a
+                      href={value.status}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {value.status}
+                    </a>
+                  ) : hasRan ? (
+                    value.status
+                  ) : (
+                    sanitiseCallableName(config.callableName)
+                  )}
+                </Typography>
+              </Grid>
+            </Grid>
+
+            <Grid item>
+              <Fab
+                onClick={handleRun}
+                disabled={isRunning || !!(hasRan && !value.redo) || disabled}
+              >
+                {isRunning ? (
+                  <CircularProgress
+                    color="secondary"
+                    size={24}
+                    thickness={4.6}
+                  />
+                ) : hasRan ? (
+                  <RefreshIcon />
+                ) : (
+                  <PlayIcon />
+                )}
+              </Fab>
+            </Grid>
+          </Grid>
+        );
+      }}
+    />
   );
 }
 

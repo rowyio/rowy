@@ -1,11 +1,10 @@
 import React from "react";
-import { FieldProps } from "formik";
+import { Controller } from "react-hook-form";
+import { IFieldProps } from "../utils";
 
 import { makeStyles, createStyles, Grid } from "@material-ui/core";
 import { Rating as MuiRating } from "@material-ui/lab";
 import StarBorderIcon from "@material-ui/icons/StarBorder";
-
-import ErrorMessage from "../ErrorMessage";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -27,32 +26,30 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-export interface IRatingProps extends FieldProps {
-  editable?: boolean;
-}
-
-export default function Rating(props: IRatingProps) {
+export default function Rating({ control, name, editable }: IFieldProps) {
   const classes = useStyles();
 
   return (
-    <>
-      <Grid container alignItems="center" className={classes.root}>
-        <MuiRating
-          disabled={props.editable === false}
-          name={props.field.name}
-          id={`sidedrawer-field-${props.field.name}`}
-          value={typeof props.field.value === "number" ? props.field.value : 0}
-          onChange={(event, newValue) => {
-            props.form.setFieldValue(props.field.name, newValue);
-          }}
-          emptyIcon={<StarBorderIcon fontSize="inherit" />}
-          classes={{ root: classes.rating, iconEmpty: classes.iconEmpty }}
-          // TODO: Make this customisable in column settings
-          max={4}
-        />
-      </Grid>
-
-      <ErrorMessage name={props.field.name} />
-    </>
+    <Controller
+      control={control}
+      name={name}
+      render={({ onChange, onBlur, value }) => (
+        <Grid container alignItems="center" className={classes.root}>
+          <MuiRating
+            disabled={editable === false}
+            name={name}
+            id={`sidedrawer-field-${name}`}
+            value={typeof value === "number" ? value : 0}
+            onChange={(event, newValue) => {
+              onChange(newValue);
+            }}
+            emptyIcon={<StarBorderIcon fontSize="inherit" />}
+            classes={{ root: classes.rating, iconEmpty: classes.iconEmpty }}
+            // TODO: Make this customisable in column settings
+            max={4}
+          />
+        </Grid>
+      )}
+    />
   );
 }

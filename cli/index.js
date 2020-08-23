@@ -16,7 +16,7 @@ program.version("0.4.0");
 const systemHealthCheck = async () => {
   const versions = await terminal.getRequiredVersions();
   const requiredApps = ["node", "git", "yarn", "firebase"];
-  requiredApps.forEach((app) => {
+  requiredApps.forEach(app => {
     if (versions[app] === "") {
       throw new Error(
         chalk.red(

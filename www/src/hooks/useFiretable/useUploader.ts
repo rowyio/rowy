@@ -112,7 +112,7 @@ const useUploader = () => {
               if (docRef && docRef.update)
                 docRef.update({ [fieldName]: newValue });
               // Also call callback if it exists
-              // IMPORTANT: Formik may not update its local values after this
+              // IMPORTANT: SideDrawer form may not update its local values after this
               // function updates the doc, so you MUST update it manually
               // using this callback
               if (onComplete) onComplete(newValue);

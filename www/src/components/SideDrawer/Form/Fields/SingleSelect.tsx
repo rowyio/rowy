@@ -1,56 +1,63 @@
 import React from "react";
-import { FieldProps } from "formik";
+import { Controller } from "react-hook-form";
+import { IFieldProps } from "../utils";
 
 import { useTheme } from "@material-ui/core";
 
 import MultiSelect, { MultiSelectProps } from "@antlerengineering/multiselect";
 import FormattedChip from "components/FormattedChip";
 
+export type ISingleSelectProps = IFieldProps &
+  Omit<
+    MultiSelectProps<string>,
+    "name" | "multiple" | "value" | "onChange" | "options"
+  > & {
+    config?: { options: string[] };
+  };
+
 /**
  * Uses the MultiSelect UI, but writes values as a string,
  * not an array of strings
  */
 export default function SingleSelect({
-  field,
-  form,
+  control,
+  docRef,
+  name,
   editable,
   config,
   ...props
-}: FieldProps<string> &
-  MultiSelectProps<string> & {
-    config: { options: string[] };
-    editable: boolean;
-  }) {
+}: ISingleSelectProps) {
   const theme = useTheme();
 
-  const handleChange = value => form.setFieldValue(field.name, value);
-
   return (
-    <>
-      <MultiSelect
-        {...props}
-        options={config.options}
-        multiple={false}
-        value={field.value}
-        onChange={handleChange}
-        disabled={editable === false}
-        TextFieldProps={{
-          label: "",
-          hiddenLabel: true,
-          error: !!(form.touched[field.name] && form.errors[field.name]),
-          helperText:
-            (form.touched[field.name] && form.errors[field.name]) || "",
-          onBlur: () => form.setFieldTouched(field.name),
-        }}
-        searchable
-        freeText={false}
-      />
+    <Controller
+      control={control}
+      name={name}
+      render={({ onChange, onBlur, value }) => (
+        <>
+          <MultiSelect
+            {...props}
+            options={config?.options ?? []}
+            multiple={false}
+            value={value}
+            onChange={onChange}
+            disabled={editable === false}
+            TextFieldProps={{
+              label: "",
+              hiddenLabel: true,
+              onBlur,
+            }}
+            searchable
+            freeText={false}
+          />
 
-      {field.value?.length > 0 && (
-        <div style={{ marginTop: theme.spacing(1) }}>
-          <FormattedChip size="medium" label={field.value} />
-        </div>
+          {value?.length > 0 && (
+            <div style={{ marginTop: theme.spacing(1) }}>
+              <FormattedChip size="medium" label={value} />
+            </div>
+          )}
+        </>
       )}
-    </>
+    />
   );
 }

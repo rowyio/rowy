@@ -30,7 +30,7 @@ const excludePaths =
 
 export const FT_compressedThumbnail = functions.storage
   .object()
-  .onFinalize(async (object) => {
+  .onFinalize(async object => {
     // Log file name, size, and content type for monitoring
     console.log(object.name, object.size, object.contentType);
 

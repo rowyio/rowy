@@ -1,7 +1,13 @@
 import React from "react";
+import { Controller } from "react-hook-form";
+import { IFieldProps } from "../utils";
 
-import { makeStyles, createStyles } from "@material-ui/core";
-import { TextField, TextFieldProps } from "formik-material-ui";
+import {
+  makeStyles,
+  createStyles,
+  TextField,
+  FilledTextFieldProps,
+} from "@material-ui/core";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -9,11 +15,20 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-export interface ITextProps extends TextFieldProps {
+export interface ITextProps
+  extends IFieldProps,
+    Omit<FilledTextFieldProps, "variant" | "name"> {
   fieldVariant?: "short" | "long" | "email" | "phone" | "number" | "url";
 }
 
-export default function Text({ fieldVariant = "short", ...props }: ITextProps) {
+export default function Text({
+  control,
+  name,
+  docRef,
+  fieldVariant = "short",
+  editable,
+  ...props
+}: ITextProps) {
   const classes = useStyles();
   let variantProps = {};
 
@@ -27,7 +42,10 @@ export default function Text({ fieldVariant = "short", ...props }: ITextProps) {
       break;
 
     case "email":
-      variantProps = { type: "email", inputProps: { autoComplete: "email" } };
+      variantProps = {
+        // type: "email",
+        inputProps: { autoComplete: "email" },
+      };
       break;
 
     case "phone":
@@ -36,26 +54,42 @@ export default function Text({ fieldVariant = "short", ...props }: ITextProps) {
       break;
 
     case "number":
-      variantProps = { type: "number" };
+      variantProps = { inputMode: "numeric", pattern: "[0-9]*" };
       break;
 
     case "short":
     default:
       break;
   }
+
   return (
-    <TextField
-      key={`${props.form.initialValues.id}-${props.field.name}`}
-      variant="filled"
-      fullWidth
-      margin="none"
-      placeholder={props.label as string}
-      {...variantProps}
-      {...props}
-      id={`sidedrawer-field-${props.field.name}`}
-      label=""
-      hiddenLabel
-      //InputProps={{ disableUnderline: true }}
+    <Controller
+      control={control}
+      name={name}
+      render={({ onChange, onBlur, value }) => {
+        const handleChange = e => {
+          if (fieldVariant === "number") onChange(parseInt(e.target.value, 10));
+          else onChange(e.target.value);
+        };
+
+        return (
+          <TextField
+            variant="filled"
+            fullWidth
+            margin="none"
+            placeholder={props.label as string}
+            {...variantProps}
+            {...props}
+            onChange={handleChange}
+            onBlur={onBlur}
+            value={value}
+            id={`sidedrawer-field-${name}`}
+            label=""
+            hiddenLabel
+            disabled={editable === false}
+          />
+        );
+      }}
     />
   );
 }

@@ -96,7 +96,7 @@ export default function FieldWrapper({
               component="a"
               href={`https://console.firebase.google.com/project/${
                 process.env.REACT_APP_FIREBASE_PROJECT_ID
-              }/database/firestore/data~2F${(debugText as string).replace(
+              }/firestore/data~2F${(debugText as string).replace(
                 /\//g,
                 "~2F"
               )}`}

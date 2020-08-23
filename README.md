@@ -7,6 +7,8 @@ Cloud.
 
 ![Commit](https://img.shields.io/github/last-commit/AntlerVC/firetable?color=%23ed4747)
 
+[![Discord Shield](https://discordapp.com/api/guilds/746329234720686132/widget.png?style=shield)](https://discord.gg/Vdshr9E)
+
 ### Firetable UI
 
 Supports fields such as images, files, single/multi select, in addition to

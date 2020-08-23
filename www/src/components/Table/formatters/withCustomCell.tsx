@@ -6,7 +6,7 @@ import { makeStyles, createStyles } from "@material-ui/core";
 import ErrorBoundary from "components/ErrorBoundary";
 import { useFiretableContext } from "../../../contexts/firetableContext";
 import _get from "lodash/get";
-const useStyles = makeStyles((theme) =>
+const useStyles = makeStyles(theme =>
   createStyles({
     "@global": {
       ".rdg-cell-mask.rdg-selected": {
