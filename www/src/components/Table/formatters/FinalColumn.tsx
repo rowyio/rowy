@@ -14,7 +14,7 @@ import { SnackContext } from "../../../contexts/snackContext";
 import Confirmation from "components/Confirmation";
 import { useFiretableContext } from "contexts/firetableContext";
 import useKeyPress from "../../../hooks/useKeyPress";
-export const useFinalColumnStyles = makeStyles(theme =>
+export const useFinalColumnStyles = makeStyles((theme) =>
   createStyles({
     cell: {
       ".rdg-root .rdg-cell&": {
@@ -52,10 +52,10 @@ export default function FinalColumn({ row }: FormatterProps<any, any, any>) {
     console.log("Deleting");
 
     row.ref.delete().then(
-      r => {
+      (r) => {
         console.log("r", r);
       },
-      error => {
+      (error) => {
         if (error.code === "permission-denied") {
           snack.open({
             severity: "error",
@@ -82,6 +82,11 @@ export default function FinalColumn({ row }: FormatterProps<any, any, any>) {
               delete clonedRow._ft_updatedAt;
               delete clonedRow._ft_updatedBy;
               delete clonedRow._ft_createdAt;
+              Object.keys(clonedRow).forEach((key) => {
+                if (clonedRow[key] === undefined) {
+                  delete clonedRow[key];
+                }
+              });
               if (tableActions) tableActions?.row.add(clonedRow);
             }}
             aria-label="Duplicate row"
