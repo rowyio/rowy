@@ -44,6 +44,10 @@ supported. More coming soon, for comprehensive list see ROADMAP.md.
 
 - Upgrade project to the Blaze Plan
 - Enable the Google sign-in method in **Authentication / Sign-in method**
+  - **⚠️ IMPORTANT:** If you try to sign in and see “This account does not
+    exist”, run
+    [the following script](https://github.com/AntlerVC/firetable/blob/develop/RULES.md#custom-claims)
+    on your Firebase Authentication user.
 
 ### 2. Run the Firetable CLI
 
@@ -121,6 +125,12 @@ yarn start
 
 [Please create issues here.](https://github.com/antlervc/firetable/issues)  
 Make sure to provide console log outputs and screenshots!
+
+### Known Issue: “This account does not exist”
+
+If you try to sign in and see “This account does not exist”, run
+[the following script](https://github.com/AntlerVC/firetable/blob/develop/RULES.md#custom-claims)
+on your Firebase Authentication user.
 
 ## Roadmap and feature requests
 
