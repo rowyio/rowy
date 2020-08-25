@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-
 const chalk = require("chalk");
 const clear = require("clear");
 const { printLogo } = require("./logo");
@@ -10,24 +9,29 @@ const Configstore = require("configstore");
 const config = new Configstore("firetable");
 const { directoryExists } = require("./lib/files");
 const program = new Command();
+
 program.version("0.4.0");
 
 //TODO: validate if all the required packages exist
 const systemHealthCheck = async () => {
   const versions = await terminal.getRequiredVersions();
   const requiredApps = ["node", "git", "yarn", "firebase"];
-  requiredApps.forEach((app) => {
+
+  requiredApps.forEach(app => {
     if (versions[app] === "") {
       throw new Error(
         chalk.red(
-          `your system is missing ${app}\n please install ${app}, then rerun firetable init`
+          `Your system is missing ${app}\nPlease install ${app}, then re-run ${chalk.bold(
+            chalk.yellow("firetable init")
+          )}`
         )
       );
     }
   });
+
   console.log(versions);
-  //
 };
+
 // checks the current directory of the cli app
 const directoryCheck = async () => {
   let directory = "firetable/www";
@@ -37,11 +41,11 @@ const directoryCheck = async () => {
     directory = "www";
   }
   if (!isInsideFiretableFolder && !firetableAppExists) {
-    console.log(chalk.red("Firetable app not detected."));
+    console.log(chalk.red("firetable app not detected"));
     console.log(
-      `please ensure you are in the correct directory or run:${chalk.bold(
+      `Make sure you’re in the correct directory or run:${chalk.bold(
         chalk.yellow("firetable init")
-      )} to get  started`
+      )} to get started`
     );
     return;
   }
@@ -73,7 +77,9 @@ const deploy2firebase = async (directory = "firetable/www") => {
   config.set("firebaseHostTarget", hostTarget);
   console.log(
     chalk.green(
-      `\u{1F973}\u{1F973}\u{1F973} \n Firetable has been successfully deployed to 'https://${hostTarget}.web.app' \n \u{1F973}\u{1F973}\u{1F973}`
+      `\u{1F973}\nfiretable has been successfully deployed to ${chalk.underline(
+        `https://${hostTarget}.web.app`
+      )}`
     )
   );
 };
@@ -81,7 +87,7 @@ const deploy2firebase = async (directory = "firetable/www") => {
 program
   .command("init")
   .description(
-    "clones firetable repo, installs the npm packages and set the environment variables"
+    "Clones firetable repo, installs npm packages, and sets required environment variables"
   )
   .action(async () => {
     try {
@@ -131,20 +137,23 @@ program
 
       await terminal.createFirebaseAppConfigFile(webAppConfig);
 
-      console.log(chalk.green("environment variables were set successfully"));
+      console.log(chalk.green("Environment variables set successfully"));
       console.log(
-        chalk.green("Success: Firetable has been successfully set up!")
+        chalk.green(chalk.bold("\nfiretable has been successfully set up!"))
       );
+
+      console.log("\nYou can now run the following commands:");
+
       console.log(
-        `you can run:${chalk.bold(
-          "firetable start"
-        )} command to run your firetable instance locally`
+        `${chalk.bold(
+          chalk.yellow("firetable start")
+        )}    Run your firetable instance locally`
       );
 
       console.log(
-        `you can run:${chalk.bold(
-          "firetable deploy"
-        )} to deploy you your firetable app to firebase hosting`
+        `${chalk.bold(
+          chalk.yellow("firetable deploy")
+        )}   Deploy you your firetable app to Firebase Hosting`
       );
     } catch (error) {
       console.log(chalk.red("FAILED:"));
@@ -154,7 +163,7 @@ program
 
 program
   .command("start")
-  .description("run your firetable instance locally")
+  .description("Runs your firetable instance locally")
   .action(async () => {
     try {
       // check directory for firetable
@@ -170,7 +179,7 @@ program
 
 program
   .command("deploy")
-  .description("deploys firetable to a firebase hosting site")
+  .description("Deploys firetable to a Firebase Hosting site")
   .action(async () => {
     try {
       // check directory for firetable
@@ -182,4 +191,5 @@ program
       console.log(error);
     }
   });
+
 program.parse(process.argv);
