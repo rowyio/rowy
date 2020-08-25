@@ -2,13 +2,13 @@ const inquirer = require("inquirer");
 const chalk = require("chalk");
 
 module.exports = {
-  selectFirebaseProject: projects =>
+  selectFirebaseProject: (projects) =>
     inquirer.prompt({
       name: "projectId",
       type: "list",
       message: "Select the Firebase project you want deploy to:",
       choices: projects,
-      validate: function(value) {
+      validate: function (value) {
         if (value.length) {
           return true;
         } else {
@@ -37,7 +37,7 @@ module.exports = {
         name: "algoliaAppId",
         type: "input",
         message: "Enter your Algolia App ID:",
-        validate: function(value) {
+        validate: function (value) {
           if (value.length) {
             return true;
           } else {
@@ -51,7 +51,7 @@ module.exports = {
         name: "algoliaSearchKey",
         type: "input",
         message: "Enter your Algolia Search API Key (not the admin key):",
-        validate: function(value) {
+        validate: function (value) {
           if (value.length > 5) {
             return true;
           } else {
@@ -70,7 +70,7 @@ module.exports = {
       message: "Do you want deploy firetable on Firebase Hosting?",
     }),
 
-  askChangeFirebaseHostTarget: hostTarget =>
+  askChangeFirebaseHostTarget: (hostTarget) =>
     inquirer.prompt({
       type: "confirm",
       name: "changeTarget",
@@ -80,7 +80,7 @@ module.exports = {
       )})?`,
     }),
 
-  askFirebaseHostTarget: projectId =>
+  askFirebaseHostTarget: (projectId) =>
     inquirer.prompt({
       type: "input",
       name: "hostTarget",

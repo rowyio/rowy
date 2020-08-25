@@ -6,7 +6,7 @@ module.exports = {
     return path.basename(process.cwd());
   },
 
-  directoryExists: filePath => {
+  directoryExists: (filePath) => {
     return fs.existsSync(filePath);
   },
 };

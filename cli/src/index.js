@@ -9,7 +9,7 @@ const config = new Configstore("firetable");
 const { directoryExists } = require("./lib/files");
 const process = require("process");
 const { Command } = require("commander");
-const { version } = require("./package.json");
+const { version } = require("../package.json");
 
 const program = new Command();
 program.version(version);
@@ -19,7 +19,7 @@ const systemHealthCheck = async () => {
   const versions = await terminal.getRequiredVersions();
   const requiredApps = ["node", "git", "yarn", "firebase"];
 
-  requiredApps.forEach(app => {
+  requiredApps.forEach((app) => {
     if (versions[app] === "") {
       throw new Error(
         chalk.red(
