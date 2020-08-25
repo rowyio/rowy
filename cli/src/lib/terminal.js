@@ -24,13 +24,13 @@ module.exports.getRequiredVersions = () =>
 
     execute("git --version", function (git) {
       execute("node --version", function (node) {
-        execute("yarn --version", function (yarn) {
+        execute("npm --version", function (npm) {
           execute("firebase --version", function (firebase) {
             checkingVersionsStatus.stop();
             resolve({
               node: node ? node.match(/[0-9]*\.[0-9]*\.[0-9]/)[0] : "",
               git: git ? git.match(/[0-9]*\.[0-9]*\.[0-9]/)[0] : "",
-              yarn: yarn ? yarn.match(/[0-9]*\.[0-9]*\.[0-9]/)[0] : "",
+              npm: npm ? npm.match(/[0-9]*\.[0-9]*\.[0-9]/)[0] : "",
               firebase: firebase
                 ? firebase.match(/[0-9]*\.[0-9]*\.[0-9]/)[0]
                 : "",
@@ -62,7 +62,7 @@ module.exports.cloneFiretable = (dir = "firetable") =>
         cloningStatus.stop();
         const installingPackagesStatus = new Spinner("Installing packages");
         installingPackagesStatus.start();
-        execute(`cd ${dir}/www; yarn;`, function (results) {
+        execute(`cd ${dir}/www; npm install;`, function (results) {
           installingPackagesStatus.stop();
           resolve(results);
         });
@@ -90,7 +90,7 @@ module.exports.setFirebaseHostingTarget = (
     const status = new Spinner("Setting Firebase Hosting target");
     status.start();
 
-    const command = `cd ${dir};echo '{}' > .firebaserc; yarn target ${hostingTarget} --project ${projectId}`;
+    const command = `cd ${dir};echo '{}' > .firebaserc; npm run target ${hostingTarget} --project ${projectId}`;
     execute(command, function () {
       execute(`firebase use ${projectId}`, function () {
         status.stop();
@@ -139,7 +139,7 @@ module.exports.installFiretableAppPackages = (dir = "firetable/www") =>
   new Promise((resolve) => {
     const status = new Spinner("Installing firetable app npm packages");
     status.start();
-    execute(`cd ${dir}; yarn`, function () {
+    execute(`cd ${dir}; npm install`, function () {
       status.stop();
       resolve(true);
     });
@@ -151,7 +151,7 @@ module.exports.buildFiretable = (dir = "firetable/www") =>
       "Building firetable. This will take a few minutes"
     );
     status.start();
-    execute(`cd ${dir}; yarn build`, function (stdout) {
+    execute(`cd ${dir}; npm run build`, function (stdout) {
       status.stop();
       resolve(true);
     });

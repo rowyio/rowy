@@ -14,26 +14,31 @@ const { version } = require("../package.json");
 const program = new Command();
 program.version(version);
 
-//TODO: validate if all the required packages exist
 const systemHealthCheck = async () => {
   const versions = await terminal.getRequiredVersions();
-  const requiredApps = ["node", "git", "yarn", "firebase"];
+  let isMissingApps = false;
 
-  requiredApps.forEach((app) => {
-    if (versions[app] === "") {
-      throw new Error(
-        chalk.red(
-          `Your system is missing ${app}\nPlease install ${app}, then re-run ${chalk.bold(
-            chalk.yellow("firetable init")
-          )}`
-        )
-      );
-    }
+  Object.entries(versions).forEach(([app, version]) => {
+    console.log(
+      `${app.padEnd(8)} ${
+        version ? chalk.green(version) : chalk.red("MISSING")
+      }`
+    );
+
+    if (!version) isMissingApps = true;
   });
 
-  Object.entries(versions).forEach(([app, version]) =>
-    console.log(`${app.padEnd(8)} ${chalk.green(version)}`)
-  );
+  if (isMissingApps)
+    throw new Error(
+      chalk.red(
+        `${chalk.bold(
+          "Your system is missing some required packages."
+        )}\nPlease install the missing packages listed above, then re-run ${chalk.bold(
+          chalk.yellow("firetable init")
+        )}`
+      )
+    );
+
   console.log();
 };
 
