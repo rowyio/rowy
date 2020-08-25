@@ -3,7 +3,7 @@
   "alias": "firetable-cli",
   "version": "0.5.6",
   "description": "CLI tool to simplify firetable deployment processes",
-  "main": "index.ts",
+  "main": "index.js",
   "repository": "https://github.com/AntlerVC/firetable",
   "author": "Shams Mosowi",
   "license": "MIT",
