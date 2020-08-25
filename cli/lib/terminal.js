@@ -113,15 +113,26 @@ module.exports.deployToFirebaseHosting = (projectId, dir = "firetable/www") =>
     });
   });
 
-module.exports.startFiretableLocally = directory =>
+module.exports.startFiretableLocally = (dir = "firetable/www") =>
   new Promise(resolve => {
-    const status = new Spinner("Starting firetable locally");
-    status.start();
-    execute(`cd ${directory}; yarn start`, function(results) {
-      status.stop();
-      console.log(results);
-      resolve(true);
+    const child = spawn("npm", ["run", "start"], { cwd: dir });
+    child.stdout.on("data", data => {
+      const msg = data.toString();
+      const portRegex = /^INFO: Accepting connections at (http:\/\/[\w\.]+:\d+)/;
+
+      if (portRegex.test(msg))
+        console.log(
+          chalk.green(
+            chalk.bold(
+              "\u2705 Serving firetable at " +
+                chalk.underline(msg.replace(portRegex, "$1"))
+            )
+          )
+        );
+      else console.log(msg);
     });
+
+    child.on("close", code => resolve(code));
   });
 
 module.exports.installFiretableAppPackages = (dir = "firetable/www") =>
