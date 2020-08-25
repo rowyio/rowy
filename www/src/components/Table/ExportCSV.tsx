@@ -22,6 +22,7 @@ import { useFiretableContext } from "contexts/firetableContext";
 import { db } from "../../firebase";
 import { FieldType } from "constants/fields";
 import { isCollectionGroup } from "util/fns";
+import _get from "lodash/get";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -34,7 +35,7 @@ const MenuProps = {
   },
 };
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       display: "flex",
@@ -70,20 +71,20 @@ const selectedColumnsReducer = (doc: any) => (
   accumulator: any,
   currentColumn: any
 ) => {
+  const value = _get(doc, currentColumn.key);
+  console.log({ currentColumn });
   switch (currentColumn.type) {
     case FieldType.multiSelect:
       return {
         ...accumulator,
-        [currentColumn.key]: doc[currentColumn.key]
-          ? doc[currentColumn.key].join()
-          : "",
+        [currentColumn.name]: value ? value.join() : "",
       };
     case FieldType.file:
     case FieldType.image:
       return {
         ...accumulator,
-        [currentColumn.key]: doc[currentColumn.key]
-          ? doc[currentColumn.key]
+        [currentColumn.name]: value
+          ? value
               .map((item: { downloadURL: string }) => item.downloadURL)
               .join()
           : "",
@@ -91,8 +92,8 @@ const selectedColumnsReducer = (doc: any) => (
     case FieldType.connectTable:
       return {
         ...accumulator,
-        [currentColumn.key]: doc[currentColumn.key]
-          ? doc[currentColumn.key]
+        [currentColumn.name]: value
+          ? value
               .map((item: any) =>
                 currentColumn.config.primaryKeys.reduce(
                   (labelAccumulator: string, currentKey: any) =>
@@ -106,20 +107,14 @@ const selectedColumnsReducer = (doc: any) => (
     case FieldType.checkbox:
       return {
         ...accumulator,
-        [currentColumn.key]:
-          typeof doc[currentColumn.key] === "boolean"
-            ? doc[currentColumn.key]
-              ? "YES"
-              : "NO"
-            : "",
+        [currentColumn.name]:
+          typeof value === "boolean" ? (value ? "YES" : "NO") : "",
       };
     case FieldType.dateTime:
     case FieldType.date:
       return {
         ...accumulator,
-        [currentColumn.key]: doc[currentColumn.key]
-          ? doc[currentColumn.key].toDate()
-          : "",
+        [currentColumn.name]: value ? value.toDate() : "",
       };
     case FieldType.last:
     case FieldType.action:
@@ -128,9 +123,7 @@ const selectedColumnsReducer = (doc: any) => (
     default:
       return {
         ...accumulator,
-        [currentColumn.key]: doc[currentColumn.key]
-          ? doc[currentColumn.key]
-          : "",
+        [currentColumn.name]: value ? value : "",
       };
   }
 };
@@ -164,19 +157,19 @@ export default function ExportCSV() {
       ? db.collectionGroup(tableState?.tablePath!)
       : db.collection(tableState?.tablePath!);
     // add filters
-    tableState?.filters.forEach(filter => {
+    tableState?.filters.forEach((filter) => {
       query = query.where(filter.key, filter.operator, filter.value);
     });
     // optional order results
 
     if (tableState?.orderBy) {
-      tableState?.orderBy?.forEach(orderBy => {
+      tableState?.orderBy?.forEach((orderBy) => {
         query = query.orderBy(orderBy.key, orderBy.direction);
       });
     }
     query.limit(10000);
     let querySnapshot = await query.get();
-    let docs = querySnapshot.docs.map(doc => doc.data());
+    let docs = querySnapshot.docs.map((doc) => doc.data());
     const data = docs.map((doc: any) => {
       return csvColumns.reduce(selectedColumnsReducer(doc), {});
     });
@@ -208,9 +201,9 @@ export default function ExportCSV() {
               value={csvColumns}
               onChange={handleChange}
               input={<Input id="select-multiple-chip" />}
-              renderValue={selected => (
+              renderValue={(selected) => (
                 <div className={classes.chips}>
-                  {(selected as any[]).map(value => (
+                  {(selected as any[]).map((value) => (
                     <Chip
                       key={value.key}
                       label={value.name}
