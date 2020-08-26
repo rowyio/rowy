@@ -68,18 +68,19 @@ const useTable = (initialOverrides: any) => {
       ? db.collectionGroup(tableState.path)
       : db.collection(tableState.path);
 
-    filters.forEach(filter => {
-      query = query.where(filter.key, filter.operator, filter.value);
+    filters.forEach((filter) => {
+      if (filter.key && filter.operator && filter.value)
+        query = query.where(filter.key, filter.operator, filter.value);
     });
 
-    orderBy?.forEach(order => {
+    orderBy?.forEach((order) => {
       query = query.orderBy(order.key, order.direction);
     });
 
     const unsubscribe = query.limit(limit).onSnapshot(
-      snapshot => {
+      (snapshot) => {
         if (snapshot.docs.length > 0) {
-          const rows = snapshot.docs.map(doc => {
+          const rows = snapshot.docs.map((doc) => {
             const data = doc.data();
             const id = doc.id;
             const ref = doc.ref;
@@ -125,7 +126,7 @@ const useTable = (initialOverrides: any) => {
               {
                 table: tableState.path,
               },
-              resp => {
+              (resp) => {
                 console.log(resp);
               },
               () => {
@@ -195,9 +196,7 @@ const useTable = (initialOverrides: any) => {
     tableDispatch({ rows: tableState.rows });
     // delete document
     try {
-      db.collection(tableState.path)
-        .doc(documentId)
-        .delete();
+      db.collection(tableState.path).doc(documentId).delete();
     } catch (error) {
       console.log(error);
       if (error.code === "permission-denied") {
@@ -249,10 +248,7 @@ const useTable = (initialOverrides: any) => {
       } else {
         const firstId = rows[0].id;
         const newId = generateSmallerId(firstId);
-        await db
-          .collection(path)
-          .doc(newId)
-          .set(docData, { merge: true });
+        await db.collection(path).doc(newId).set(docData, { merge: true });
       }
     } catch (error) {
       if (error.code === "permission-denied") {
