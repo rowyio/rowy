@@ -2,34 +2,44 @@
 const chalk = require("chalk");
 const clear = require("clear");
 const { printLogo } = require("./logo");
-const { Command } = require("commander");
 const terminal = require("./lib/terminal");
 const inquirer = require("./lib/inquirer");
 const Configstore = require("configstore");
 const config = new Configstore("firetable");
 const { directoryExists } = require("./lib/files");
+const process = require("process");
+const { Command } = require("commander");
+const { version } = require("../package.json");
+
 const program = new Command();
+program.version(version);
 
-program.version("0.4.0");
-
-//TODO: validate if all the required packages exist
 const systemHealthCheck = async () => {
   const versions = await terminal.getRequiredVersions();
-  const requiredApps = ["node", "git", "yarn", "firebase"];
+  let isMissingApps = false;
 
-  requiredApps.forEach(app => {
-    if (versions[app] === "") {
-      throw new Error(
-        chalk.red(
-          `Your system is missing ${app}\nPlease install ${app}, then re-run ${chalk.bold(
-            chalk.yellow("firetable init")
-          )}`
-        )
-      );
-    }
+  Object.entries(versions).forEach(([app, version]) => {
+    console.log(
+      `${app.padEnd(8)} ${
+        version ? chalk.green(version) : chalk.red("MISSING")
+      }`
+    );
+
+    if (!version) isMissingApps = true;
   });
 
-  console.log(versions);
+  if (isMissingApps)
+    throw new Error(
+      chalk.red(
+        `${chalk.bold(
+          "Your system is missing some required packages."
+        )}\nPlease install the missing packages listed above, then re-run ${chalk.bold(
+          chalk.yellow("firetable init")
+        )}`
+      )
+    );
+
+  console.log();
 };
 
 // checks the current directory of the cli app
@@ -37,18 +47,19 @@ const directoryCheck = async () => {
   let directory = "firetable/www";
   const isInsideFiretableFolder = directoryExists("www");
   const firetableAppExists = directoryExists("firetable/www");
+
   if (isInsideFiretableFolder) {
     directory = "www";
-  }
-  if (!isInsideFiretableFolder && !firetableAppExists) {
+  } else if (!firetableAppExists) {
     console.log(chalk.red("firetable app not detected"));
     console.log(
-      `Make sure you’re in the correct directory or run:${chalk.bold(
+      `Make sure you’re in the correct directory or run ${chalk.bold(
         chalk.yellow("firetable init")
       )} to get started`
     );
     return;
   }
+
   const nodeModulesAvailable = directoryExists(`${directory}/node_modules`);
   if (!nodeModulesAvailable) {
     await terminal.installFiretableAppPackages(directory);
@@ -75,21 +86,21 @@ const deploy2firebase = async (directory = "firetable/www") => {
   await terminal.setFirebaseHostingTarget(projectId, hostTarget, directory);
   await terminal.deployToFirebaseHosting(projectId, directory);
   config.set("firebaseHostTarget", hostTarget);
+
   console.log(
     chalk.green(
-      `\u{1F973}\nfiretable has been successfully deployed to ${chalk.underline(
-        `https://${hostTarget}.web.app`
-      )}`
+      `\u{1F973} ${chalk.bold("firetable has been successfully deployed to")}`
     )
   );
+  console.log(`   ${chalk.underline(`https://${hostTarget}.web.app`)}`);
 };
 
 program
-  .command("init")
+  .command("init [dir]")
   .description(
     "Clones firetable repo, installs npm packages, and sets required environment variables"
   )
-  .action(async () => {
+  .action(async (dir = "firetable") => {
     try {
       clear();
       printLogo();
@@ -113,10 +124,12 @@ program
         envVariables = { ...envVariables, ...algoliaKey };
       }
       // clone firetable repo and install app dependencies
-      await terminal.cloneFiretable();
+      await terminal.cloneFiretable(dir);
+
+      const appDir = dir + "/www";
 
       // set environment variables
-      await terminal.setFiretableENV(envVariables);
+      await terminal.setFiretableENV(envVariables, appDir);
       let firetableAppId;
 
       const existingFiretableAppId = await terminal.getExistingFiretableApp(
@@ -135,28 +148,35 @@ program
         firetableAppId
       );
 
-      await terminal.createFirebaseAppConfigFile(webAppConfig);
-
-      console.log(chalk.green("Environment variables set successfully"));
-      console.log(
-        chalk.green(chalk.bold("\nfiretable has been successfully set up!"))
-      );
-
-      console.log("\nYou can now run the following commands:");
+      await terminal.createFirebaseAppConfigFile(webAppConfig, appDir);
+      // console.log(chalk.green("Environment variables set successfully"));
 
       console.log(
-        `${chalk.bold(
-          chalk.yellow("firetable start")
-        )}    Run your firetable instance locally`
+        chalk.green(
+          chalk.bold("\n\u2705 firetable has been successfully set up at")
+        )
       );
+      console.log(`   ${process.cwd()}/${dir}`);
 
       console.log(
-        `${chalk.bold(
-          chalk.yellow("firetable deploy")
-        )}   Deploy you your firetable app to Firebase Hosting`
+        "\n   Inside the firetable directory, you can now run the following commands:"
       );
+      console.log(
+        `   ${chalk.yellow("firetable start ")}${chalk.dim(
+          "  Run your firetable instance locally"
+        )}`
+      );
+      console.log(
+        `   ${chalk.yellow("firetable deploy")}${chalk.dim(
+          "  Deploy you your firetable app to Firebase Hosting"
+        )}`
+      );
+
+      console.log("\n\u{1F449} You can begin by running the commands:");
+      console.log(chalk.bold(chalk.yellow(`   cd ${dir}`)));
+      console.log(chalk.bold(chalk.yellow(`   firetable start`)));
     } catch (error) {
-      console.log(chalk.red("FAILED:"));
+      console.log("\u{1F6D1}" + chalk.bold(chalk.red(" FAILED")));
       console.log(error);
     }
   });
@@ -169,10 +189,10 @@ program
       // check directory for firetable
       let directory = await directoryCheck();
       if (!directory) return;
-      await terminal.buildFiretable(directory);
+      // await terminal.buildFiretable(directory);
       terminal.startFiretableLocally(directory);
     } catch (error) {
-      console.log(chalk.red("FAILED:"));
+      console.log("\u{1F6D1}" + chalk.bold(chalk.red(" FAILED")));
       console.log(error);
     }
   });
@@ -187,7 +207,7 @@ program
       if (!directory) return;
       await deploy2firebase(directory);
     } catch (error) {
-      console.log(chalk.red("FAILED:"));
+      console.log("\u{1F6D1}" + chalk.bold(chalk.red(" FAILED")));
       console.log(error);
     }
   });

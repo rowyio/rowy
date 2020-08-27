@@ -1,42 +1,48 @@
 # Firetable CLI
 
-## Prerequisites
+## Installation requirements
 
-please insure you have the following installed;
-[Git](https://git-scm.com/downloads), [Node](https://nodejs.org/en/download/),
-[Yarn](https://classic.yarnpkg.com/en/docs/install/)
+Make sure you have the following installed:
 
-### Firebase
+- [Git](https://git-scm.com/downloads)
+- [Node](https://nodejs.org/en/download/)
+- [Firebase CLI](https://firebase.google.com/docs/cli)
 
-insure that you have [firebase-tools](https://firebase.google.com/docs/cli) and
-logged in to your firebase account.
+Also make sure you are logged in to your Firebase account in the Firebase CLI.
 
 ## Installation
 
 ```
-npm install -g firetable@latest
+npm install -g firetable
 ```
 
-## Setup
-
-set directory you want to setup firetable in then run
+or
 
 ```
-firetable init
+yarn global add firetable
 ```
 
-### run Locally
+## Commands
+
+### Create a new project
+
+```
+firetable init [directory]
+```
+
+### Run firetable locally
+
+Before you run locally, make sure you have a Firebase project set up.
+[Instructions](https://github.com/AntlerVC/firetable#setup-instructions)
 
 ```
 firetable start
 ```
 
-### deploying to firebase hosting
+### Deploy to Firebase Hosting
 
-insure that you have created a site on your projects
-[firebase hosting](https://console.firebase.google.com/u/0/project/_/hosting)
-
-then run
+First, make sure that you have created a site in your Firebase project.
+[Open Firebase console](https://console.firebase.google.com/)
 
 ```
 firetable deploy
