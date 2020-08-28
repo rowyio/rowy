@@ -17,7 +17,7 @@ type SlackOnTriggerConfig = {
           after: firestore.DocumentSnapshot;
         }
     // db: FirebaseFirestore.Firestore
-  ) => Boolean;
+  ) => Boolean | any;
 };
 const slackOnCreate = (config: SlackOnTriggerConfig) =>
   firestore
@@ -65,7 +65,10 @@ const slackOnUpdate = (config: SlackOnTriggerConfig) =>
         );
         if (hasAllRequiredFields) {
           const messageDoc = await config.messageDocGenerator(change);
+          console.log({ messageDoc });
           if (messageDoc && typeof messageDoc === "object") {
+            console.log("creating slack message doc");
+
             await db
               .collection("slackBotMessages")
               .add({ createdAt: serverTimestamp(), ...messageDoc });
