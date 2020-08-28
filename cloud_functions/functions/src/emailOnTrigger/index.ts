@@ -1,6 +1,7 @@
 import { firestore } from "firebase-functions";
 
 import { sendEmail } from "../utils/email";
+import { hasRequiredFields } from "../utils";
 import _config from "../functionConfig"; // generated using generateConfig.ts
 const functionConfig: any = _config;
 type EmailOnTriggerConfig = {
@@ -21,16 +22,6 @@ type EmailOnTriggerConfig = {
   ) => Boolean;
   onUpdate: Boolean;
 };
-
-const hasRequiredField = (requiredFields: string[], snapshotData: any) =>
-  requiredFields.reduce((acc: boolean, currField: string) => {
-    if (
-      snapshotData[currField] === undefined ||
-      snapshotData[currField] === null
-    )
-      return false;
-    else return acc;
-  }, true);
 const emailOnCreate = (config: EmailOnTriggerConfig) =>
   firestore
     .document(`${config.collectionPath}/{docId}`)
@@ -40,7 +31,7 @@ const emailOnCreate = (config: EmailOnTriggerConfig) =>
         if (!snapshotData) throw Error("no snapshot data");
 
         const shouldSend = config.shouldSend(snapshot);
-        const hasAllRequiredFields = hasRequiredField(
+        const hasAllRequiredFields = hasRequiredFields(
           config.requiredFields,
           snapshotData
         );
@@ -83,7 +74,7 @@ const emailOnUpdate = (config: EmailOnTriggerConfig) =>
         const afterData = change.after.data();
         if (!beforeData || !afterData) throw Error("no data found in snapshot");
         const shouldSend = config.shouldSend(change);
-        const hasAllRequiredFields = hasRequiredField(
+        const hasAllRequiredFields = hasRequiredFields(
           config.requiredFields,
           afterData
         );
@@ -128,7 +119,7 @@ const emailOnTriggerFns = (config: EmailOnTriggerConfig) =>
   }).reduce((a, [k, v]) => (v === null ? a : { ...a, [k]: v }), {});
 
 export const FT_email = {
-  [functionConfig.collectionPath
+  [`${functionConfig.collectionPath
     .replace(/\//g, "_")
-    .replace(/_{.*?}_/g, "_")]: emailOnTriggerFns(functionConfig),
+    .replace(/_{.*?}_/g, "_")}`]: emailOnTriggerFns(functionConfig),
 };

@@ -87,7 +87,7 @@ export const cloudBuildUpdates = functions.pubsub
 
     if (query.docs.length !== 0) {
       const update = { status };
-      if (status === "SUCCESS") {
+      if (status === "SUCCESS" || status === "FAILURE") {
         update["buildDuration.end"] = serverTimestamp();
       }
       await query.docs[0].ref.update(update);
