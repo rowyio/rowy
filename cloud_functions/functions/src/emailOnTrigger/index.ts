@@ -119,7 +119,7 @@ const emailOnTriggerFns = (config: EmailOnTriggerConfig) =>
   }).reduce((a, [k, v]) => (v === null ? a : { ...a, [k]: v }), {});
 
 export const FT_email = {
-  [`${functionConfig.collectionPath
+  [`${`${functionConfig.collectionPath}`
     .replace(/\//g, "_")
     .replace(/_{.*?}_/g, "_")}`]: emailOnTriggerFns(functionConfig),
 };
