@@ -9,3 +9,9 @@ export const replacer = (data: any) => (m: string, key: string) => {
   const defaultValue = key.split(":")[1] || "";
   return _.get(data, objKey, defaultValue);
 };
+
+export const hasRequiredFields = (requiredFields: string[], data: any) =>
+  requiredFields.reduce((acc: boolean, currField: string) => {
+    if (data[currField] === undefined || data[currField] === null) return false;
+    else return acc;
+  }, true);
