@@ -1,6 +1,6 @@
 import * as admin from "firebase-admin";
 import * as _ from "lodash";
-const serverTimestamp = admin.firestore.FieldValue.serverTimestamp;
+export const serverTimestamp = admin.firestore.FieldValue.serverTimestamp;
 import { sendEmail } from "./email";
 import { hasAnyRole } from "./auth";
 export default { sendEmail, serverTimestamp, hasAnyRole };

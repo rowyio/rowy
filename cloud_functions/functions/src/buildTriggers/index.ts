@@ -1,4 +1,7 @@
 import * as functions from "firebase-functions";
+import { hasAnyRole } from "../utils/auth";
+import { serverTimestamp } from "../utils";
+import { db } from "../config";
 const { CloudBuildClient } = require("@google-cloud/cloudbuild");
 const cb = new CloudBuildClient();
 
@@ -20,8 +23,13 @@ export const triggerCloudBuild = functions.https.onCall(
       ref, // action
     } = data;
 
-    if (!context.auth) {
-      return false;
+    const authorized = hasAnyRole(["ADMIN"], context);
+    if (!context.auth || !authorized) {
+      console.warn(`unauthorized user${context}`);
+      return {
+        success: false,
+        message: "you don't have permission to trigger a build",
+      };
     }
     const { triggerId, branch, projectId, groupName, functionConfig } = row;
 
@@ -39,33 +47,19 @@ export const triggerCloudBuild = functions.https.onCall(
         },
       },
     });
-    console.info(`triggered build for ${triggerId}`);
-    const [build] = await resp.promise();
-
-    const STATUS_LOOKUP = [
-      "UNKNOWN",
-      "Queued",
-      "Working",
-      "Success",
-      "Failure",
-      "Error",
-      "Timeout",
-      "Cancelled",
-    ];
-    for (const step of build.steps) {
-      console.info(
-        `step:\n\tname: ${step.name}\n\tstatus: ${STATUS_LOOKUP[build.status]}`
-      );
-    }
-
-    console.log(context.auth.token);
-    if (triggerId) {
+    const buildId = resp.metadata.build.id;
+    const logUrl = resp.metadata.build.logUrl;
+    console.log({ buildId, logUrl });
+    await db
+      .doc(ref.path)
+      .update({ buildId, logUrl, buildDuration: { start: serverTimestamp() } });
+    if (buildId && logUrl) {
       return {
         message: "cloud functions are snow flakes",
         cellValue: {
           redo: true,
           status: `Triggered`,
-          // completedAt: serverTimestamp(),
+          completedAt: serverTimestamp(),
           meta: { ranBy: context.auth.token.email },
           undo: false,
         },
@@ -75,3 +69,28 @@ export const triggerCloudBuild = functions.https.onCall(
     return false;
   }
 );
+
+export const cloudBuildUpdates = functions.pubsub
+  .topic("cloud-builds")
+  .onPublish(async (message, context) => {
+    console.log(JSON.stringify(message));
+    const { buildId, status } = message.attributes;
+    console.log(JSON.stringify({ buildId, status }));
+    //message
+    //status: "SUCCESS"
+    //buildId: "1a6d7819-aa35-486c-a29c-fb67eb39430f"
+
+    const query = await db
+      .collection("cloudFunctions")
+      .where("buildId", "==", buildId)
+      .get();
+
+    if (query.docs.length !== 0) {
+      const update = { status };
+      if (status === "SUCCESS") {
+        update["buildDuration.end"] = serverTimestamp();
+      }
+      await query.docs[0].ref.update(update);
+    }
+    return true;
+  });

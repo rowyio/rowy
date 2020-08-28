@@ -50,8 +50,9 @@ const firestoreBackup = (collectionIds: string[] = []) => {
   const databaseName = client.databasePath(projectId, "(default)");
   const date = new Date();
 
-  const backupFolder = `${date.getFullYear()}-${date.getMonth() +
-    1}-${date.getDate()}`;
+  const backupFolder = `${date.getUTCFullYear()}-${
+    date.getUTCMonth() + 1
+  }-${date.getUTCDate()}-${date.getUTCHours()}`;
 
   return client
     .exportDocuments({
@@ -62,19 +63,19 @@ const firestoreBackup = (collectionIds: string[] = []) => {
       // collectionIds: ['users', 'posts']
       collectionIds,
     })
-    .then(responses => {
+    .then((responses) => {
       const response = responses[0];
       console.log(`Operation Name: ${response["name"]}`);
       return response;
     })
-    .catch(err => {
+    .catch((err) => {
       console.error(err);
       throw new Error("Export operation failed");
     });
 };
 export const scheduledFirestoreBackup = functions.pubsub
-  .schedule("every 24 hours")
-  .onRun(context => {
+  .schedule("every 12 hours")
+  .onRun((context) => {
     console.log(context);
     return firestoreBackup();
   });
