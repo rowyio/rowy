@@ -36,7 +36,7 @@ import RichTextIcon from "@material-ui/icons/TextFormat";
 import ColorIcon from "@material-ui/icons/Colorize";
 import SliderIcon from "assets/icons/Slider";
 import UserIcon from "@material-ui/icons/Person";
-
+import DurationIcon from "@material-ui/icons/Timer";
 export {
   ShortTextIcon,
   LongTextIcon,
@@ -63,6 +63,7 @@ export {
   ColorIcon,
   SliderIcon,
   UserIcon,
+  DurationIcon,
 };
 
 export enum FieldType {
@@ -99,6 +100,7 @@ export enum FieldType {
   color = "COLOR",
   slider = "SLIDER",
   user = "USER",
+  duration = "DURATION",
 
   last = "LAST",
 }
@@ -153,6 +155,7 @@ export const FIELDS = [
   { icon: <ColorIcon />, name: "Color", type: FieldType.color },
   { icon: <SliderIcon />, name: "Slider", type: FieldType.slider },
   { icon: <UserIcon />, name: "User", type: FieldType.user },
+  { icon: <DurationIcon />, name: "Duration", type: FieldType.duration },
 ];
 
 /**
@@ -169,7 +172,7 @@ export const getFieldIcon = (fieldType: FieldType) => {
  * @param fieldType
  */
 export const isFieldType = (fieldType: any) => {
-  const fieldTypes = FIELDS.map(field => field.type);
+  const fieldTypes = FIELDS.map((field) => field.type);
   return fieldTypes.includes(fieldType);
 };
 
