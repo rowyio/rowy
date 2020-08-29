@@ -7,6 +7,9 @@ const MultiSelect = lazy(() =>
   import("./MultiSelect" /* webpackChunkName: "MultiSelect" */)
 );
 const DatePicker = lazy(() => import("./Date" /* webpackChunkName: "Date" */));
+const Duration = lazy(() =>
+  import("./Duration" /* webpackChunkName: "Duration" */)
+);
 const Rating = lazy(() => import("./Rating" /* webpackChunkName: "Rating" */));
 const Checkbox = lazy(() =>
   import("./Checkbox" /* webpackChunkName: "Checkbox" */)
@@ -90,6 +93,8 @@ export const getFormatter = (column: any) => {
 
     case FieldType.user:
       return withCustomCell(User);
+    case FieldType.duration:
+      return withCustomCell(Duration);
     case FieldType.code:
       return withCustomCell(Code);
     case FieldType.richText:

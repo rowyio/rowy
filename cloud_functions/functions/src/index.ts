@@ -18,3 +18,4 @@ export { FT_compressedThumbnail } from "./compressedThumbnail";
 export { actionScript } from "./actionScript";
 export { webhook } from "./webhooks";
 export { FT_email } from "./emailOnTrigger";
+export { FT_slack } from "./slackOnTrigger";
