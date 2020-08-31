@@ -18,12 +18,11 @@ import { getFieldIcon } from "constants/fields";
 import { useFiretableContext } from "contexts/firetableContext";
 import { FiretableOrderBy } from "hooks/useFiretable";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       height: "100%",
       "& svg, & button": { display: "block" },
-
       color: theme.palette.text.secondary,
       transition: theme.transitions.create("color", {
         duration: theme.transitions.duration.short,
