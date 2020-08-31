@@ -6,6 +6,7 @@ import { Typography } from "@material-ui/core";
 import WizardDialog from "../WizardDialog";
 import Step1Columns from "./Step1Columns";
 import Step2Rename from "./Step2Rename";
+import Step3Types from "./Step3Types";
 
 import { ColumnConfig } from "hooks/useFiretable/useTableConfig";
 import { useFiretableContext } from "contexts/firetableContext";
@@ -86,7 +87,7 @@ export default function ImportWizard() {
     },
   });
   const updateConfig: IStepProps["updateConfig"] = (value) => {
-    setConfig((prev) => _merge(prev, value));
+    setConfig((prev) => ({ ..._merge(prev, value) }));
   };
 
   const { tableState } = useFiretableContext();
@@ -125,6 +126,18 @@ export default function ImportWizard() {
             "Rename your Firetable columns with user-friendly names. These changes will not update the field names in your database.",
           content: (
             <Step2Rename
+              config={config}
+              setConfig={setConfig}
+              updateConfig={updateConfig}
+            />
+          ),
+        },
+        {
+          title: "set column types",
+          description:
+            "Set the type of each column to display your data correctly. Some column types have been suggested based off your data.",
+          content: (
+            <Step3Types
               config={config}
               setConfig={setConfig}
               updateConfig={updateConfig}

@@ -45,6 +45,10 @@ const useStyles = makeStyles((theme) =>
       "&:hover": { color: theme.palette.primary.dark },
     },
 
+    columnNameContainer: {
+      flexShrink: 1,
+      overflow: "hidden",
+    },
     columnName: {
       lineHeight: "44px",
       display: "block",
@@ -52,7 +56,6 @@ const useStyles = makeStyles((theme) =>
       userSelect: "none",
 
       marginLeft: theme.spacing(0.5),
-      marginTop: -1,
     },
   })
 );
@@ -79,12 +82,13 @@ export default function Column({
     <Grid
       container
       alignItems="center"
+      wrap="nowrap"
       className={clsx(classes.root, active && classes.active)}
       {...props}
     >
       {type && <Grid item>{getFieldIcon(type)}</Grid>}
 
-      <Grid item xs>
+      <Grid item xs className={classes.columnNameContainer}>
         <Typography
           component={Grid}
           item

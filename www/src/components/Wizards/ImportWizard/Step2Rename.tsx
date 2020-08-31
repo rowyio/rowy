@@ -20,6 +20,8 @@ import Column from "./Column";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
+    divider: { marginBottom: theme.spacing(0.5) },
+
     buttonBase: {
       width: "100%",
       textAlign: "left",
@@ -70,7 +72,7 @@ export default function Step2Rename({ config, updateConfig }: IStepProps) {
         </Grid>
       </Grid>
 
-      <Divider />
+      <Divider className={classes.divider} />
 
       <FadeList>
         {Object.entries(config).map(([field, { name }]) => (
