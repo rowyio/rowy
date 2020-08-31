@@ -1,14 +1,26 @@
 import React from "react";
 
-import { TextField, MenuItem, ListItemIcon } from "@material-ui/core";
+import {
+  TextField,
+  MenuItem,
+  ListItemIcon,
+  TextFieldProps,
+} from "@material-ui/core";
 
 import { FIELDS, FieldType } from "constants/fields";
+
+export interface IFieldsDropdownProps {
+  value: FieldType;
+  onChange: TextFieldProps["onChange"];
+}
 
 /**
  * Returns dropdown component of all available types
  */
-const FieldsDropdown = (props: { value: FieldType | null; onChange: any }) => {
-  const { value, onChange } = props;
+export default function FieldsDropdown({
+  value,
+  onChange,
+}: IFieldsDropdownProps) {
   return (
     <TextField
       fullWidth
@@ -36,6 +48,4 @@ const FieldsDropdown = (props: { value: FieldType | null; onChange: any }) => {
       )}
     </TextField>
   );
-};
-
-export default FieldsDropdown;
+}
