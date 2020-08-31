@@ -53,6 +53,7 @@ export const themeBase = createMuiTheme({
       fontFamily: HEADING_FONT,
       fontSize: toRem(18),
       fontWeight: "bold",
+      lineHeight: "normal",
     },
     subtitle1: {
       lineHeight: 1.5,
