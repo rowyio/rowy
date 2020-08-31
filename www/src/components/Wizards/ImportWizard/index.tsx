@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import _merge from "lodash/merge";
 
 import { Typography } from "@material-ui/core";
 
 import WizardDialog from "../WizardDialog";
 import Step1Columns from "./Step1Columns";
+import Step2Rename from "./Step2Rename";
 
 import { ColumnConfig } from "hooks/useFiretable/useTableConfig";
 import { useFiretableContext } from "contexts/firetableContext";
@@ -14,6 +16,7 @@ export type TableColumnsConfig = { [key: string]: ColumnConfig };
 export interface IStepProps {
   config: TableColumnsConfig;
   setConfig: React.Dispatch<React.SetStateAction<TableColumnsConfig>>;
+  updateConfig: (value: Partial<ColumnConfig>) => void;
 }
 
 export default function ImportWizard() {
@@ -82,6 +85,9 @@ export default function ImportWizard() {
       index: 8,
     },
   });
+  const updateConfig: IStepProps["updateConfig"] = (value) => {
+    setConfig((prev) => _merge(prev, value));
+  };
 
   const { tableState } = useFiretableContext();
   if (tableState?.rows.length === 0) return null;
@@ -104,14 +110,26 @@ export default function ImportWizard() {
               </Typography>
             </>
           ),
-          content: <Step1Columns config={config} setConfig={setConfig} />,
+          content: (
+            <Step1Columns
+              config={config}
+              setConfig={setConfig}
+              updateConfig={updateConfig}
+            />
+          ),
           disableNext: Object.keys(config).length === 0,
         },
         {
           title: "rename columns",
           description:
             "Rename your Firetable columns with user-friendly names. These changes will not update the field names in your database.",
-          content: <Step1Columns config={config} setConfig={setConfig} />,
+          content: (
+            <Step2Rename
+              config={config}
+              setConfig={setConfig}
+              updateConfig={updateConfig}
+            />
+          ),
         },
       ]}
       onFinish={() => alert("FINISHED")}

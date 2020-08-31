@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) =>
       border: `1px solid ${theme.palette.divider}`,
       backgroundColor: theme.palette.background.default,
 
-      padding: theme.spacing(0, 1.5),
+      padding: theme.spacing(0, 1, 0, 1.5),
 
       color: theme.palette.text.secondary,
       transition: theme.transitions.create("color", {

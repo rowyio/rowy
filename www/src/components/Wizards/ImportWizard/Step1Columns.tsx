@@ -6,6 +6,7 @@ import {
   Draggable,
 } from "react-beautiful-dnd";
 import _sortBy from "lodash/sortBy";
+import _startCase from "lodash/startCase";
 
 import {
   makeStyles,
@@ -78,7 +79,7 @@ export default function Step1Columns({ config, setConfig }: IStepProps) {
           [c]: {
             fieldName: c,
             key: c,
-            name: c,
+            name: _startCase(c),
             type: FieldType.shortText,
             index: i,
           },
