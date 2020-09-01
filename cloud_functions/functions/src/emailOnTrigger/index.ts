@@ -2,6 +2,7 @@ import { firestore } from "firebase-functions";
 
 import { sendEmail } from "../utils/email";
 import { hasRequiredFields } from "../utils";
+import { db } from "../config";
 import _config from "../functionConfig"; // generated using generateConfig.ts
 const functionConfig: any = _config;
 type EmailOnTriggerConfig = {
@@ -85,8 +86,8 @@ const emailOnUpdate = (config: EmailOnTriggerConfig) =>
           {}
         );
         if (shouldSend && hasAllRequiredFields) {
-          const from = await config.from(afterData);
-          const to = await config.to(afterData);
+          const from = await config.from(afterData, db);
+          const to = await config.to(afterData, db);
           const msg = {
             from,
             personalizations: [
