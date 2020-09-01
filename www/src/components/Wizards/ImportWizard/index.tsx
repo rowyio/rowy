@@ -7,6 +7,7 @@ import WizardDialog from "../WizardDialog";
 import Step1Columns from "./Step1Columns";
 import Step2Rename from "./Step2Rename";
 import Step3Types from "./Step3Types";
+import Step4Preview from "./Step4Preview";
 
 import { ColumnConfig } from "hooks/useFiretable/useTableConfig";
 import { useFiretableContext } from "contexts/firetableContext";
@@ -25,63 +26,63 @@ export default function ImportWizard() {
     attachments: {
       fieldName: "attachments",
       key: "attachments",
-      name: "attachments",
+      name: "",
       type: FieldType.shortText,
       index: 0,
     },
     calendarEventDescription: {
       fieldName: "calendarEventDescription",
       key: "calendarEventDescription",
-      name: "calendarEventDescription",
+      name: "",
       type: FieldType.shortText,
       index: 1,
     },
     email: {
       fieldName: "email",
       key: "email",
-      name: "email",
+      name: "",
       type: FieldType.shortText,
       index: 2,
     },
     isInvestor: {
       fieldName: "isInvestor",
       key: "isInvestor",
-      name: "isInvestor",
+      name: "",
       type: FieldType.shortText,
       index: 3,
     },
     introVideo: {
       fieldName: "introVideo",
       key: "introVideo",
-      name: "introVideo",
+      name: "",
       type: FieldType.shortText,
       index: 4,
     },
     introDemoDay: {
       fieldName: "introDemoDay",
       key: "introDemoDay",
-      name: "introDemoDay",
+      name: "",
       type: FieldType.shortText,
       index: 5,
     },
     sectors: {
       fieldName: "sectors",
       key: "sectors",
-      name: "sectors",
+      name: "",
       type: FieldType.shortText,
       index: 6,
     },
     resend: {
       fieldName: "resend",
       key: "resend",
-      name: "resend",
+      name: "",
       type: FieldType.shortText,
       index: 7,
     },
     showOnDemoDayWebsite: {
       fieldName: "showOnDemoDayWebsite",
       key: "showOnDemoDayWebsite",
-      name: "showOnDemoDayWebsite",
+      name: "",
       type: FieldType.shortText,
       index: 8,
     },
@@ -107,7 +108,8 @@ export default function ImportWizard() {
                 import and view the data by setting up columns for this table.
               </Typography>
               <Typography gutterBottom>
-                Start by choosing which columns you want to display.
+                Start by choosing which columns you want to display, then sort
+                your columns.
               </Typography>
             </>
           ),
@@ -138,6 +140,18 @@ export default function ImportWizard() {
             "Set the type of each column to display your data correctly. Some column types have been suggested based off your data.",
           content: (
             <Step3Types
+              config={config}
+              setConfig={setConfig}
+              updateConfig={updateConfig}
+            />
+          ),
+        },
+        {
+          title: "preview",
+          description:
+            "Preview your data with your configured columns. You can change column types by clicking “Edit Type” from the column menu at any time.",
+          content: (
+            <Step4Preview
               config={config}
               setConfig={setConfig}
               updateConfig={updateConfig}

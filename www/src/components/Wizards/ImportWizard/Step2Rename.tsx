@@ -20,7 +20,7 @@ import Column from "./Column";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
-    divider: { marginBottom: theme.spacing(0.5) },
+    spacer: { width: theme.spacing(3) },
 
     buttonBase: {
       width: "100%",
@@ -59,7 +59,7 @@ export default function Step2Rename({ config, updateConfig }: IStepProps) {
 
   return (
     <>
-      <Grid container spacing={2}>
+      <Grid container spacing={3}>
         <Grid item xs={12} sm={6}>
           <Typography variant="overline" gutterBottom component="h2">
             Field Names
@@ -72,15 +72,16 @@ export default function Step2Rename({ config, updateConfig }: IStepProps) {
         </Grid>
       </Grid>
 
-      <Divider className={classes.divider} />
+      <Divider />
 
       <FadeList>
         {Object.entries(config).map(([field, { name }]) => (
-          <Grid container key={field} spacing={2}>
-            <Grid item xs={6}>
+          <Grid container key={field} component="li" wrap="nowrap">
+            <Grid item xs>
               <Column label={field} />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item className={classes.spacer} />
+            <Grid item xs>
               {fieldToRename === field ? (
                 <TextField
                   value={renameTextField}

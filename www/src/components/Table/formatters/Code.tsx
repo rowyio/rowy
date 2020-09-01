@@ -7,7 +7,7 @@ import { useFiretableContext } from "contexts/firetableContext";
 
 type StylesProps = { width: number; rowHeight: number };
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       whiteSpace: "pre-line",
@@ -21,6 +21,8 @@ const useStyles = makeStyles(theme =>
       bottom: 0,
       right: theme.spacing(1.5),
       left: theme.spacing(1.5),
+
+      fontFamily: "SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace",
     },
     text: { maxHeight: "100%" },
 
@@ -38,6 +40,7 @@ const useStyles = makeStyles(theme =>
       boxShadow: theme.shadows[4],
 
       ...theme.typography.body2,
+      fontFamily: "SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace",
       fontSize: "0.75rem",
       color: theme.palette.text.primary,
       whiteSpace: "pre-line",

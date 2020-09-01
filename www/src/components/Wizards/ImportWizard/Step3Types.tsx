@@ -7,23 +7,60 @@ import {
   Typography,
   Divider,
   ButtonBase,
-  IconButton,
-  TextField,
-  InputAdornment,
 } from "@material-ui/core";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 
 import { IStepProps } from ".";
 import FadeList from "./FadeList";
 import Column from "./Column";
+import Cell from "./Cell";
 import FieldsDropdown from "components/Table/ColumnMenu/FieldsDropdown";
+
+import { useFiretableContext } from "contexts/firetableContext";
+import { FieldType } from "constants/fields";
+
+const SELECTABLE_TYPES = [
+  FieldType.shortText,
+  FieldType.longText,
+  FieldType.email,
+  FieldType.phone,
+
+  FieldType.checkbox,
+  FieldType.number,
+  FieldType.percentage,
+
+  FieldType.date,
+  FieldType.dateTime,
+
+  FieldType.url,
+  FieldType.rating,
+
+  FieldType.singleSelect,
+  FieldType.multiSelect,
+
+  FieldType.json,
+  FieldType.code,
+
+  FieldType.richText,
+  FieldType.color,
+  FieldType.slider,
+];
 
 const useStyles = makeStyles((theme) =>
   createStyles({
+    typeSelectRow: { marginBottom: theme.spacing(3) },
+
     buttonBase: {
       width: "100%",
       textAlign: "left",
     },
+
+    typeHeading: { margin: theme.spacing(5, 0, 1) },
+
+    previewDivider: { marginBottom: theme.spacing(2) },
+    previewList: { paddingTop: 0 },
+    previewSpacer: { width: theme.spacing(3) },
+    cellContainer: { overflow: "hidden" },
   })
 );
 
@@ -35,9 +72,11 @@ export default function Step3Types({ config, updateConfig }: IStepProps) {
   const handleChange = (e) =>
     updateConfig({ [fieldToEdit]: { type: e.target.value } });
 
+  const { tableState } = useFiretableContext();
+
   return (
     <>
-      <Grid container spacing={2}>
+      <Grid container spacing={2} className={classes.typeSelectRow}>
         <Grid item xs={12} sm={6}>
           <Typography variant="overline" gutterBottom component="h2">
             Firetable Columns
@@ -67,35 +106,77 @@ export default function Step3Types({ config, updateConfig }: IStepProps) {
           </FadeList>
         </Grid>
         <Grid item xs={12} sm={6}>
-          <Typography variant="overline" gutterBottom component="h2">
+          <Typography
+            variant="overline"
+            noWrap
+            component="h2"
+            className={classes.typeHeading}
+          >
             Column Type: {config[fieldToEdit].name}
           </Typography>
 
           <FieldsDropdown
             value={config[fieldToEdit].type}
             onChange={handleChange}
+            hideLabel
+            options={SELECTABLE_TYPES}
           />
         </Grid>
       </Grid>
 
-      {/* <Grid container spacing={2}>
+      <Grid container spacing={3}>
         <Grid item xs={12} sm={6}>
           <Typography variant="overline" gutterBottom component="h2">
-            Field Names
+            Raw Data
           </Typography>
         </Grid>
         <Grid item xs={12} sm={6}>
           <Typography variant="overline" gutterBottom component="h2">
-            Set Column Names
+            Column Preview
           </Typography>
         </Grid>
       </Grid>
 
-      <Divider />
+      <Divider className={classes.previewDivider} />
 
-      <FadeList>
-        
-      </FadeList> */}
+      <Grid container spacing={3}>
+        <Grid item xs={12} sm={6}>
+          <Column label={fieldToEdit} />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <Column
+            label={config[fieldToEdit].name}
+            type={config[fieldToEdit].type}
+          />
+        </Grid>
+      </Grid>
+
+      <FadeList classes={{ list: classes.previewList }}>
+        {tableState!.rows!.slice(0, 20).map((row) => (
+          <Grid container key={row.id} wrap="nowrap">
+            <Grid item xs className={classes.cellContainer}>
+              <Cell
+                field={fieldToEdit}
+                value={(JSON.stringify(row[fieldToEdit]) || "")
+                  .replace(/^"/, "")
+                  .replace(/"$/, "")}
+                type={FieldType.shortText}
+              />
+            </Grid>
+
+            <Grid item className={classes.previewSpacer} />
+
+            <Grid item xs className={classes.cellContainer}>
+              <Cell
+                field={fieldToEdit}
+                value={row[fieldToEdit]}
+                type={config[fieldToEdit].type}
+                name={config[fieldToEdit].name}
+              />
+            </Grid>
+          </Grid>
+        ))}
+      </FadeList>
     </>
   );
 }

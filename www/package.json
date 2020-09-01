@@ -42,6 +42,7 @@
     "react-json-view": "^1.19.1",
     "react-router-dom": "^5.0.1",
     "react-scripts": "^3.3.0",
+    "react-scroll-sync": "^0.8.0",
     "serve": "^11.3.2",
     "tinymce": "^5.2.0",
     "typescript": "^3.7.2",

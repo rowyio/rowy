@@ -1,4 +1,5 @@
 import React from "react";
+import clsx from "clsx";
 
 import { makeStyles, createStyles } from "@material-ui/core";
 
@@ -24,7 +25,7 @@ const useStyles = makeStyles((theme) =>
     list: {
       listStyleType: "none",
       margin: 0,
-      padding: theme.spacing(1.5, 0, 2.5),
+      padding: theme.spacing(1.5, 0, 3),
 
       height: 200,
       overflowY: "auto",
@@ -36,15 +37,19 @@ const useStyles = makeStyles((theme) =>
 
 export interface IFadeListProps {
   children?: React.ReactNode | React.ElementType[];
+  classes?: Partial<ReturnType<typeof useStyles>>;
 }
 
 export const FadeList = React.forwardRef<HTMLDivElement, IFadeListProps>(
-  function FadeList_({ children }, ref) {
+  function FadeList_({ children, classes: classesProp }, ref) {
     const classes = useStyles();
 
     return (
-      <div className={classes.listWrapper} ref={ref}>
-        <ul className={classes.list}>{children}</ul>
+      <div
+        className={clsx(classes.listWrapper, classesProp?.listWrapper)}
+        ref={ref}
+      >
+        <ul className={clsx(classes.list, classesProp?.list)}>{children}</ul>
       </div>
     );
   }

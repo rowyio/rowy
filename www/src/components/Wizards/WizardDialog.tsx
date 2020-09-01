@@ -225,7 +225,7 @@ export default function WizardDialog({
             onClick={handleNext}
             disabled={currentStep.disableNext}
           >
-            Continue
+            {step === steps.length - 1 ? "Finish" : "Continue"}
           </Button>
         </Grid>
       </Grid>

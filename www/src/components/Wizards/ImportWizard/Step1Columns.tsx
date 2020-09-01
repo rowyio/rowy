@@ -79,8 +79,8 @@ export default function Step1Columns({ config, setConfig }: IStepProps) {
           [c]: {
             fieldName: c,
             key: c,
-            name: _startCase(c),
-            type: FieldType.shortText,
+            name: config[c]?.name || _startCase(c),
+            type: config[c]?.type || FieldType.shortText,
             index: i,
           },
         }),
@@ -90,7 +90,7 @@ export default function Step1Columns({ config, setConfig }: IStepProps) {
   }, [selectedFields]);
 
   return (
-    <Grid container spacing={2}>
+    <Grid container spacing={3}>
       <Grid item xs={12} sm={6}>
         <Typography variant="overline" gutterBottom component="h2">
           Select Columns ({selectedFields.length} of {allFields.length})
