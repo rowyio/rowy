@@ -88,6 +88,7 @@ const emailOnUpdate = (config: EmailOnTriggerConfig) =>
         if (shouldSend && hasAllRequiredFields) {
           const from = await config.from(afterData, db);
           const to = await config.to(afterData, db);
+          console.log(JSON.stringify({ to }));
           const msg = {
             from,
             personalizations: [
