@@ -36,8 +36,9 @@ const emailOnCreate = (config: EmailOnTriggerConfig) =>
           config.requiredFields,
           snapshotData
         );
-        const to = await config.to(snapshotData);
-        const from = await config.from(snapshotData);
+        const to = await config.to(snapshotData, db);
+        const from = await config.from(snapshotData, db);
+        console.log(JSON.stringify({ to, from }));
         if (shouldSend && hasAllRequiredFields) {
           const msg = {
             from,
