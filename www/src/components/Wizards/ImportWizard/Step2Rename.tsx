@@ -46,7 +46,11 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-export default function Step2Rename({ config, updateConfig }: IStepProps) {
+export default function Step2Rename({
+  config,
+  updateConfig,
+  isXs,
+}: IStepProps) {
   const classes = useStyles();
 
   const [fieldToRename, setFieldToRename] = useState("");
@@ -60,11 +64,13 @@ export default function Step2Rename({ config, updateConfig }: IStepProps) {
   return (
     <>
       <Grid container spacing={3}>
-        <Grid item xs={12} sm={6}>
-          <Typography variant="overline" gutterBottom component="h2">
-            Field Names
-          </Typography>
-        </Grid>
+        {!isXs && (
+          <Grid item xs={12} sm={6}>
+            <Typography variant="overline" gutterBottom component="h2">
+              Field Names
+            </Typography>
+          </Grid>
+        )}
         <Grid item xs={12} sm={6}>
           <Typography variant="overline" gutterBottom component="h2">
             Set Column Names
@@ -77,10 +83,12 @@ export default function Step2Rename({ config, updateConfig }: IStepProps) {
       <FadeList>
         {Object.entries(config).map(([field, { name }]) => (
           <Grid container key={field} component="li" wrap="nowrap">
-            <Grid item xs>
-              <Column label={field} />
-            </Grid>
-            <Grid item className={classes.spacer} />
+            {!isXs && (
+              <Grid item xs>
+                <Column label={field} />
+              </Grid>
+            )}
+            {!isXs && <Grid item className={classes.spacer} />}
             <Grid item xs>
               {fieldToRename === field ? (
                 <TextField

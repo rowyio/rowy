@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-export default function Step3Types({ config, updateConfig }: IStepProps) {
+export default function Step3Types({ config, updateConfig, isXs }: IStepProps) {
   const classes = useStyles();
 
   const [fieldToEdit, setFieldToEdit] = useState(Object.keys(config)[0]);
@@ -99,11 +99,13 @@ export default function Step3Types({ config, updateConfig }: IStepProps) {
       </Grid>
 
       <Grid container spacing={3}>
-        <Grid item xs={12} sm={6}>
-          <Typography variant="overline" gutterBottom component="h2">
-            Raw Data
-          </Typography>
-        </Grid>
+        {!isXs && (
+          <Grid item xs={12} sm={6}>
+            <Typography variant="overline" gutterBottom component="h2">
+              Raw Data
+            </Typography>
+          </Grid>
+        )}
         <Grid item xs={12} sm={6}>
           <Typography variant="overline" gutterBottom component="h2">
             Column Preview
@@ -114,9 +116,11 @@ export default function Step3Types({ config, updateConfig }: IStepProps) {
       <Divider className={classes.previewDivider} />
 
       <Grid container spacing={3}>
-        <Grid item xs={12} sm={6}>
-          <Column label={fieldToEdit} />
-        </Grid>
+        {!isXs && (
+          <Grid item xs={12} sm={6}>
+            <Column label={fieldToEdit} />
+          </Grid>
+        )}
         <Grid item xs={12} sm={6}>
           <Column
             label={config[fieldToEdit].name}
@@ -128,17 +132,19 @@ export default function Step3Types({ config, updateConfig }: IStepProps) {
       <FadeList classes={{ list: classes.previewList }}>
         {tableState!.rows!.slice(0, 20).map((row) => (
           <Grid container key={row.id} wrap="nowrap">
-            <Grid item xs className={classes.cellContainer}>
-              <Cell
-                field={fieldToEdit}
-                value={(JSON.stringify(row[fieldToEdit]) || "")
-                  .replace(/^"/, "")
-                  .replace(/"$/, "")}
-                type={FieldType.shortText}
-              />
-            </Grid>
+            {!isXs && (
+              <Grid item xs className={classes.cellContainer}>
+                <Cell
+                  field={fieldToEdit}
+                  value={(JSON.stringify(row[fieldToEdit]) || "")
+                    .replace(/^"/, "")
+                    .replace(/"$/, "")}
+                  type={FieldType.shortText}
+                />
+              </Grid>
+            )}
 
-            <Grid item className={classes.previewSpacer} />
+            {!isXs && <Grid item className={classes.previewSpacer} />}
 
             <Grid item xs className={classes.cellContainer}>
               <Cell

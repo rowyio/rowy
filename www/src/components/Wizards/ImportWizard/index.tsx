@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import _merge from "lodash/merge";
 
-import { Typography } from "@material-ui/core";
+import { useTheme, useMediaQuery, Typography } from "@material-ui/core";
 
 import WizardDialog from "../WizardDialog";
 import Step1Columns from "./Step1Columns";
@@ -18,9 +18,13 @@ export interface IStepProps {
   config: TableColumnsConfig;
   setConfig: React.Dispatch<React.SetStateAction<TableColumnsConfig>>;
   updateConfig: (value: Partial<ColumnConfig>) => void;
+  isXs: boolean;
 }
 
 export default function ImportWizard() {
+  const theme = useTheme();
+  const isXs = useMediaQuery(theme.breakpoints.down("xs"));
+
   const [config, setConfig] = useState<TableColumnsConfig>({});
   const updateConfig: IStepProps["updateConfig"] = (value) => {
     setConfig((prev) => ({ ..._merge(prev, value) }));
@@ -53,6 +57,7 @@ export default function ImportWizard() {
               config={config}
               setConfig={setConfig}
               updateConfig={updateConfig}
+              isXs={isXs}
             />
           ),
           disableNext: Object.keys(config).length === 0,
@@ -66,6 +71,7 @@ export default function ImportWizard() {
               config={config}
               setConfig={setConfig}
               updateConfig={updateConfig}
+              isXs={isXs}
             />
           ),
         },
@@ -78,6 +84,7 @@ export default function ImportWizard() {
               config={config}
               setConfig={setConfig}
               updateConfig={updateConfig}
+              isXs={isXs}
             />
           ),
         },
@@ -90,6 +97,7 @@ export default function ImportWizard() {
               config={config}
               setConfig={setConfig}
               updateConfig={updateConfig}
+              isXs={isXs}
             />
           ),
         },
