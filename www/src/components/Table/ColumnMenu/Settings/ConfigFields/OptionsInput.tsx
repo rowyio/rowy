@@ -9,7 +9,7 @@ import _camelCase from "lodash/camelCase";
 import AddIcon from "@material-ui/icons/AddCircle";
 import IconButton from "@material-ui/core/IconButton";
 import InputAdornment from "@material-ui/core/InputAdornment";
-const useStyles = makeStyles(Theme =>
+const useStyles = makeStyles((Theme) =>
   createStyles({
     root: {},
     field: {
@@ -48,7 +48,7 @@ export default function OptionsInput(props: any) {
           value={newOption}
           className={classes.field}
           label={props.placeholder ?? "New Option"}
-          onChange={e => {
+          onChange={(e) => {
             setNewOption(e.target.value);
           }}
           onKeyPress={(e: any) => {

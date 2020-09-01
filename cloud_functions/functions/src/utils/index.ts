@@ -15,3 +15,8 @@ export const hasRequiredFields = (requiredFields: string[], data: any) =>
     if (data[currField] === undefined || data[currField] === null) return false;
     else return acc;
   }, true);
+export async function asyncForEach(array: any[], callback: Function) {
+  for (let index = 0; index < array.length; index++) {
+    await callback(array[index], index, array);
+  }
+}

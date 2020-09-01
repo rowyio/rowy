@@ -18,7 +18,7 @@ import { SnackContext } from "contexts/snackContext";
 import { cloudFunction } from "firebase/callables";
 import { sanitiseCallableName, isUrl, sanitiseRowData } from "util/fns";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: { padding: theme.spacing(0, 0.375, 0, 1.5) },
     labelContainer: { overflowX: "hidden" },
@@ -32,6 +32,16 @@ const replacer = (data: any) => (m: string, key: string) => {
   return _get(data, objKey, defaultValue);
 };
 
+const getStateIcon = (actionState) => {
+  switch (actionState) {
+    case "undo":
+      return <UndoIcon />;
+    case "redo":
+      return <RefreshIcon />;
+    default:
+      return <PlayIcon />;
+  }
+};
 export default function Action({
   column,
   row,
@@ -66,13 +76,13 @@ export default function Action({
     cloudFunction(
       callableName,
       data,
-      response => {
+      (response) => {
         const { message, cellValue, success } = response.data;
         setIsRunning(false);
         snack.open({ message, severity: success ? "success" : "error" });
         if (cellValue) onSubmit(cellValue);
       },
-      error => {
+      (error) => {
         console.error("ERROR", callableName, error);
         setIsRunning(false);
         snack.open({ message: JSON.stringify(error), severity: "error" });
@@ -80,6 +90,12 @@ export default function Action({
     );
   };
   const hasRan = value && value.status;
+
+  const actionState: "run" | "undo" | "redo" = hasRan
+    ? value.undo
+      ? "undo"
+      : "redo"
+    : "run";
   let component = (
     <Fab
       size="small"
@@ -92,34 +108,28 @@ export default function Action({
     >
       {isRunning ? (
         <CircularProgress color="secondary" size={16} thickness={5.6} />
-      ) : hasRan ? (
-        value.undo ? (
-          <UndoIcon />
-        ) : (
-          <RefreshIcon />
-        )
       ) : (
-        <PlayIcon />
+        getStateIcon(actionState)
       )}
     </Fab>
   );
 
-  if ((column as any)?.config?.confirmation)
+  if (typeof config.confirmation === "string") {
     component = (
       <Confirmation
         message={{
-          title: (column as any).config.confirmation.title,
-          body: (column as any).config.confirmation.body.replace(
-            /\{\{(.*?)\}\}/g,
-            replacer(row)
-          ),
+          title: `${column.name} Confirmation`,
+          body: (actionState === "undo" && config.undoConfirmation
+            ? config.undoConfirmation
+            : config.confirmation
+          ).replace(/\{\{(.*?)\}\}/g, replacer(row)),
         }}
         functionName="onClick"
       >
         {component}
       </Confirmation>
     );
-
+  }
   return (
     <Grid
       container
