@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import _merge from "lodash/merge";
 
 import { useTheme, useMediaQuery, Typography } from "@material-ui/core";
@@ -25,17 +25,33 @@ export default function ImportWizard() {
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.down("xs"));
 
+  const [open, setOpen] = useState(false);
+
   const [config, setConfig] = useState<TableColumnsConfig>({});
   const updateConfig: IStepProps["updateConfig"] = (value) => {
     setConfig((prev) => ({ ..._merge(prev, value) }));
   };
 
-  const { tableState } = useFiretableContext();
+  const { tableState, tableActions } = useFiretableContext();
+  useEffect(() => {
+    if (
+      (!tableState?.columns || Object.keys(tableState?.columns).length === 0) &&
+      !open
+    )
+      setOpen(true);
+  }, [tableState?.columns]);
+
   if (tableState?.rows.length === 0) return null;
+
+  const handleFinish = () => {
+    tableActions?.table.updateConfig("columns", config);
+    setOpen(false);
+  };
 
   return (
     <WizardDialog
-      open
+      open={open}
+      onClose={() => setOpen(false)}
       title="Import"
       steps={[
         {
@@ -102,7 +118,7 @@ export default function ImportWizard() {
           ),
         },
       ]}
-      onFinish={() => alert("FINISHED")}
+      onFinish={handleFinish}
     />
   );
 }

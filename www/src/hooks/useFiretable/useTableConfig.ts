@@ -26,6 +26,7 @@ export type ColumnConfig = {
   index: number;
   width?: number;
   editable?: boolean;
+  config: { [key: string]: any };
   [key: string]: any;
 };
 

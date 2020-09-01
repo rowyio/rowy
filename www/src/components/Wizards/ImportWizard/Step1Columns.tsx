@@ -94,6 +94,7 @@ export default function Step1Columns({ config, setConfig }: IStepProps) {
               suggestType(tableState!.rows, c) ||
               FieldType.shortText,
             index: i,
+            config: {},
           },
         }),
         {}
