@@ -47,6 +47,7 @@ const useStyles = makeStyles((theme) =>
     spacer: {
       width: theme.spacing(3),
       height: theme.spacing(3),
+      flexShrink: 0,
     },
 
     header: { overflowX: "scroll" },

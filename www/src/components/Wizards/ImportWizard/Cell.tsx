@@ -15,6 +15,8 @@ const useStyles = makeStyles((theme) =>
       overflow: "hidden",
       whiteSpace: "nowrap",
 
+      pointerEvents: "none",
+
       border: `1px solid #e0e0e0`,
       borderTopWidth: 0,
       backgroundColor: theme.palette.background.paper,
@@ -84,10 +86,11 @@ export default function Cell({
           })
         ) : typeof value === "string" ||
           typeof value === "number" ||
-          typeof value === "boolean" ||
           value === undefined ||
           value === null ? (
           value
+        ) : typeof value === "boolean" ? (
+          value.toString()
         ) : (
           <EmptyState basic wrap="nowrap" message="Invalid column type" />
         )}

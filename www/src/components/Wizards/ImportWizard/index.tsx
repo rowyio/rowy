@@ -11,7 +11,6 @@ import Step4Preview from "./Step4Preview";
 
 import { ColumnConfig } from "hooks/useFiretable/useTableConfig";
 import { useFiretableContext } from "contexts/firetableContext";
-import { FieldType } from "constants/fields";
 
 export type TableColumnsConfig = { [key: string]: ColumnConfig };
 
@@ -22,71 +21,7 @@ export interface IStepProps {
 }
 
 export default function ImportWizard() {
-  const [config, setConfig] = useState<TableColumnsConfig>({
-    attachments: {
-      fieldName: "attachments",
-      key: "attachments",
-      name: "",
-      type: FieldType.shortText,
-      index: 0,
-    },
-    calendarEventDescription: {
-      fieldName: "calendarEventDescription",
-      key: "calendarEventDescription",
-      name: "",
-      type: FieldType.shortText,
-      index: 1,
-    },
-    email: {
-      fieldName: "email",
-      key: "email",
-      name: "",
-      type: FieldType.shortText,
-      index: 2,
-    },
-    isInvestor: {
-      fieldName: "isInvestor",
-      key: "isInvestor",
-      name: "",
-      type: FieldType.shortText,
-      index: 3,
-    },
-    introVideo: {
-      fieldName: "introVideo",
-      key: "introVideo",
-      name: "",
-      type: FieldType.shortText,
-      index: 4,
-    },
-    introDemoDay: {
-      fieldName: "introDemoDay",
-      key: "introDemoDay",
-      name: "",
-      type: FieldType.shortText,
-      index: 5,
-    },
-    sectors: {
-      fieldName: "sectors",
-      key: "sectors",
-      name: "",
-      type: FieldType.shortText,
-      index: 6,
-    },
-    resend: {
-      fieldName: "resend",
-      key: "resend",
-      name: "",
-      type: FieldType.shortText,
-      index: 7,
-    },
-    showOnDemoDayWebsite: {
-      fieldName: "showOnDemoDayWebsite",
-      key: "showOnDemoDayWebsite",
-      name: "",
-      type: FieldType.shortText,
-      index: 8,
-    },
-  });
+  const [config, setConfig] = useState<TableColumnsConfig>({});
   const updateConfig: IStepProps["updateConfig"] = (value) => {
     setConfig((prev) => ({ ..._merge(prev, value) }));
   };

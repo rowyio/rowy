@@ -18,33 +18,7 @@ import FieldsDropdown from "components/Table/ColumnMenu/FieldsDropdown";
 
 import { useFiretableContext } from "contexts/firetableContext";
 import { FieldType } from "constants/fields";
-
-const SELECTABLE_TYPES = [
-  FieldType.shortText,
-  FieldType.longText,
-  FieldType.email,
-  FieldType.phone,
-
-  FieldType.checkbox,
-  FieldType.number,
-  FieldType.percentage,
-
-  FieldType.date,
-  FieldType.dateTime,
-
-  FieldType.url,
-  FieldType.rating,
-
-  FieldType.singleSelect,
-  FieldType.multiSelect,
-
-  FieldType.json,
-  FieldType.code,
-
-  FieldType.richText,
-  FieldType.color,
-  FieldType.slider,
-];
+import { SELECTABLE_TYPES } from "./utils";
 
 const useStyles = makeStyles((theme) =>
   createStyles({

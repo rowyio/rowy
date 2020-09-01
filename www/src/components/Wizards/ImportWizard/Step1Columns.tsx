@@ -13,6 +13,7 @@ import {
   createStyles,
   Grid,
   Typography,
+  Button,
   Divider,
   FormControlLabel,
   Checkbox,
@@ -27,9 +28,11 @@ import AddColumnIcon from "assets/icons/ColumnPlusAfter";
 
 import { useFiretableContext } from "contexts/firetableContext";
 import { FieldType } from "constants/fields";
+import { suggestType } from "./utils";
 
-const useStyles = makeStyles(() =>
+const useStyles = makeStyles((theme) =>
   createStyles({
+    spacer: { height: theme.spacing(1) },
     formControlLabel: { marginRight: 0 },
     columnLabel: { flex: 1 },
   })
@@ -64,6 +67,12 @@ export default function Step1Columns({ config, setConfig }: IStepProps) {
     }
   };
 
+  const handleSelectAll = () => {
+    if (selectedFields.length !== allFields.length)
+      setSelectedFields(allFields);
+    else setSelectedFields([]);
+  };
+
   const handleDragEnd = (result: DropResult) => {
     const newOrder = [...selectedFields];
     const [removed] = newOrder.splice(result.source.index, 1);
@@ -80,7 +89,10 @@ export default function Step1Columns({ config, setConfig }: IStepProps) {
             fieldName: c,
             key: c,
             name: config[c]?.name || _startCase(c),
-            type: config[c]?.type || FieldType.shortText,
+            type:
+              config[c]?.type ||
+              suggestType(tableState!.rows, c) ||
+              FieldType.shortText,
             index: i,
           },
         }),
@@ -98,6 +110,32 @@ export default function Step1Columns({ config, setConfig }: IStepProps) {
         <Divider />
 
         <FadeList>
+          <li>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={selectedFields.length === allFields.length}
+                  indeterminate={
+                    selectedFields.length !== 0 &&
+                    selectedFields.length !== allFields.length
+                  }
+                  onChange={handleSelectAll}
+                  color="default"
+                />
+              }
+              label={
+                <Typography variant="caption" color="textSecondary">
+                  Select all
+                </Typography>
+              }
+              classes={{
+                root: classes.formControlLabel,
+                label: classes.columnLabel,
+              }}
+            />
+          </li>
+          <li className={classes.spacer} />
+
           {allFields.map((field) => (
             <li key={field}>
               <FormControlLabel
