@@ -5,7 +5,7 @@ import { useFiretableContext } from "contexts/firetableContext";
 import { FieldType } from "constants/fields";
 import { setTimeout } from "timers";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     editorWrapper: { position: "relative", minWidth: 800 },
 
@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme =>
 );
 
 export default function CodeEditor(props: any) {
-  const { handleChange, script } = props;
+  const { handleChange, script, height = "90hv" } = props;
 
   const [initialEditorValue] = useState(script ?? "");
   const { tableState } = useFiretableContext();
@@ -45,7 +45,7 @@ export default function CodeEditor(props: any) {
 
   function listenEditorChanges() {
     setTimeout(() => {
-      editorRef.current?.onDidChangeModelContent(ev => {
+      editorRef.current?.onDidChangeModelContent((ev) => {
         handleChange(editorRef.current.getValue());
       });
     }, 2000);
@@ -63,7 +63,7 @@ export default function CodeEditor(props: any) {
     // console.timeLog(firebaseAuthDefs);
     monaco
       .init()
-      .then(monacoInstance => {
+      .then((monacoInstance) => {
         monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
           firestoreDefs
         );
@@ -122,7 +122,7 @@ export default function CodeEditor(props: any) {
                   return `static ${columnKey}:string`;
                 case FieldType.singleSelect:
                   const typeString = [
-                    ...column.config.options.map(opt => `"${opt}"`),
+                    ...column.config.options.map((opt) => `"${opt}"`),
                     //     "string",
                   ].join(" | ");
                   return `static ${columnKey}:${typeString}`;
@@ -140,7 +140,7 @@ export default function CodeEditor(props: any) {
         );
         //  monacoInstance.editor.create(wrapper, properties);
       })
-      .catch(error =>
+      .catch((error) =>
         console.error(
           "An error occurred during initialization of Monaco: ",
           error
@@ -154,7 +154,7 @@ export default function CodeEditor(props: any) {
       <div className={classes.editorWrapper}>
         {/* <div id="editor" className={classes.editor} /> */}
         <Editor
-          height="90vh"
+          height={height}
           editorDidMount={handleEditorDidMount}
           language="javascript"
           value={initialEditorValue}

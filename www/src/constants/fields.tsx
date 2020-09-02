@@ -13,6 +13,7 @@ import PercentageIcon from "assets/icons/Percentage";
 
 import DateIcon from "@material-ui/icons/Today";
 import DateTimeIcon from "@material-ui/icons/AccessTime";
+import DurationIcon from "@material-ui/icons/Timer";
 
 import UrlIcon from "@material-ui/icons/Link";
 
@@ -47,6 +48,7 @@ export {
   PercentageIcon,
   DateIcon,
   DateTimeIcon,
+  DurationIcon,
   UrlIcon,
   RatingIcon,
   ImageIcon,
@@ -77,6 +79,7 @@ export enum FieldType {
 
   date = "DATE",
   dateTime = "DATE_TIME",
+  duration = "DURATION",
 
   url = "URL",
   rating = "RATING",
@@ -115,6 +118,7 @@ export const FIELDS = [
 
   { icon: <DateIcon />, name: "Date", type: FieldType.date },
   { icon: <DateTimeIcon />, name: "Time & Date", type: FieldType.dateTime },
+  { icon: <DurationIcon />, name: "Duration", type: FieldType.duration },
 
   { icon: <UrlIcon />, name: "URL", type: FieldType.url },
   { icon: <RatingIcon />, name: "Rating", type: FieldType.rating },
@@ -171,6 +175,7 @@ export const FIELD_TYPE_DESCRIPTIONS = {
     "Date displayed and input as YYYY/MM/DD or input using a picker module.",
   [FieldType.dateTime]:
     "Time and Date can be written as YYYY/MM/DD hh:mm (am/pm) or input using a picker module.",
+  [FieldType.duration]: "Duration calculated from two timestamps.",
 
   [FieldType.url]: "Web address. Firetable does not validate URLs.",
   [FieldType.rating]: "Rating displayed as stars from 0 to 4.",

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FieldType } from "constants/fields";
 import MultiSelect from "@antlerengineering/multiselect";
-import { db } from "../../../../firebase";
+import { db } from "../../../../../firebase";
 const ColumnSelector = ({
   tableColumns,
   handleChange,
@@ -18,7 +18,7 @@ const ColumnSelector = ({
   label?: string;
 }) => {
   const [columns, setColumns] = useState(tableColumns ?? []);
-  const getColumns = async table => {
+  const getColumns = async (table) => {
     const tableConfigDoc = await db
       .doc(`_FIRETABLE_/settings/schema/${table}`)
       .get();
@@ -33,8 +33,8 @@ const ColumnSelector = ({
   }, [table]);
   const options = columns
     ? Object.values(columns)
-        .filter(col => (validTypes ? validTypes.includes(col.type) : true))
-        .map(col => ({ value: col.key, label: col.name }))
+        .filter((col) => (validTypes ? validTypes.includes(col.type) : true))
+        .map((col) => ({ value: col.key, label: col.name }))
     : [];
   return (
     <MultiSelect

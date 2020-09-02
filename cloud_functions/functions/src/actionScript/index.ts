@@ -28,7 +28,7 @@ const missingFieldsReducer = (data: any) => (acc: string[], curr: string) => {
   } else return acc;
 };
 
-const generateSchemaDocPath = tablePath => {
+const generateSchemaDocPath = (tablePath) => {
   const pathComponents = tablePath.split("/");
   return `_FIRETABLE_/settings/${
     pathComponents[1] === "table" ? "schema" : "groupSchema"
@@ -43,7 +43,7 @@ export const actionScript = functions.https.onCall(
         throw Error(`You are unauthenticated`);
       }
 
-      const { ref, row, column } = data;
+      const { ref, row, column, action } = data;
 
       const schemaDocPath = generateSchemaDocPath(ref.tablePath);
       const schemaDoc = await db.doc(schemaDocPath).get();
@@ -51,13 +51,16 @@ export const actionScript = functions.https.onCall(
       if (!schemaDocData) {
         return {
           success: false,
-
           message: "no schema found",
         };
       }
-      const { script, requiredRoles, requiredFields } = schemaDocData.columns[
-        column.key
-      ].config;
+      const {
+        script,
+        requiredRoles,
+        requiredFields,
+        undo,
+        redo,
+      } = schemaDocData.columns[column.key].config;
       if (!hasAnyRole(requiredRoles, context)) {
         throw Error(`You don't have the required roles permissions`);
       }
@@ -89,24 +92,34 @@ export const actionScript = functions.https.onCall(
         message: string;
         status: string;
         success: boolean;
-      } = await eval(`async({db, auth, utilFns})=>{${script}}`)({
+      } = await eval(
+        `async({db, auth, utilFns})=>{${
+          action === "undo" ? undo.script : script
+        }}`
+      )({
         db,
         auth,
         utilFns,
       });
-      return {
-        success: result.success,
-        message: result.message,
-        cellValue: {
-          redo: true,
-          status: result.status,
-          completedAt: serverTimestamp(),
-          meta: { ranBy: context.auth!.token.email },
-          undo: false,
-        },
-        undo: false,
-        redo: false,
-      };
+      if (result.success)
+        return {
+          success: result.success,
+          message: result.message,
+          cellValue: {
+            redo: redo.enabled,
+            status: result.status,
+            completedAt: serverTimestamp(),
+            meta: { ranBy: context.auth!.token.email },
+            undo: undo.enabled,
+          },
+          undo: undo.enabled,
+          redo: redo.enabled,
+        };
+      else
+        return {
+          success: false,
+          message: result.message,
+        };
     } catch (error) {
       return {
         success: false,
