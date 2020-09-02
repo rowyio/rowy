@@ -1,5 +1,5 @@
 import { firestore } from "firebase-functions";
-import { hasRequiredFields, serverTimestamp } from "../utils";
+import { hasRequiredFields, serverTimestamp, asyncForEach } from "../utils";
 import _config from "../functionConfig"; // generated using generateConfig.ts
 import { db } from "../config";
 const functionConfig: any = _config;
@@ -66,12 +66,23 @@ const slackOnUpdate = (config: SlackOnTriggerConfig) =>
         if (hasAllRequiredFields) {
           const messageDoc = await config.messageDocGenerator(change);
           console.log({ messageDoc });
-          if (messageDoc && typeof messageDoc === "object") {
+          if (
+            (messageDoc && typeof messageDoc === "object") ||
+            Array.isArray(messageDoc)
+          ) {
             console.log("creating slack message doc");
+            if (Array.isArray(messageDoc)) {
+              asyncForEach(messageDoc, async (message) => {
+                await db
+                  .collection("slackBotMessages")
+                  .add({ createdAt: serverTimestamp(), ...message });
+              });
+            } else {
+              await db
+                .collection("slackBotMessages")
+                .add({ createdAt: serverTimestamp(), ...messageDoc });
+            }
 
-            await db
-              .collection("slackBotMessages")
-              .add({ createdAt: serverTimestamp(), ...messageDoc });
             return true;
           } else {
             console.log("message is not sent");
