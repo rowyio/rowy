@@ -72,7 +72,7 @@ const slackOnUpdate = (config: SlackOnTriggerConfig) =>
           ) {
             console.log("creating slack message doc");
             if (Array.isArray(messageDoc)) {
-              asyncForEach(messageDoc, async (message) => {
+              await asyncForEach(messageDoc, async (message) => {
                 await db
                   .collection("slackBotMessages")
                   .add({ createdAt: serverTimestamp(), ...message });
