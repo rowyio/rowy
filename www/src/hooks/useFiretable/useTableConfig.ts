@@ -1,15 +1,14 @@
 import { useEffect } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import useDoc, { DocActions } from "../useDoc";
-import { FieldType } from "constants/fields";
 import _camelCase from "lodash/camelCase";
 import _findIndex from "lodash/findIndex";
 import _find from "lodash/find";
 import _sortBy from "lodash/sortBy";
+
+import useDoc, { DocActions } from "../useDoc";
+import { FieldType } from "constants/fields";
 import { arrayMover, isCollectionGroup } from "../../util/fns";
 import { db, deleteField } from "../../firebase";
-
-//import
 
 const formatPathRegex = /\/[^\/]+\/([^\/]+)/g;
 
@@ -18,6 +17,19 @@ const formatPath = (tablePath: string) => {
     isCollectionGroup() ? "groupSchema" : "schema"
   }/${tablePath.replace(formatPathRegex, "/subTables/$1")}`;
 };
+
+export type ColumnConfig = {
+  fieldName: string;
+  key: string;
+  name: string;
+  type: FieldType;
+  index: number;
+  width?: number;
+  editable?: boolean;
+  config: { [key: string]: any };
+  [key: string]: any;
+};
+
 const useTableConfig = (tablePath?: string) => {
   const [tableConfigState, documentDispatch] = useDoc({
     path: tablePath ? formatPath(tablePath) : "",
@@ -125,7 +137,7 @@ const useTableConfig = (tablePath?: string) => {
     let updatedColumns = columns;
 
     columnsArray
-      .filter(c => c) // arrayMover has a bug creating undefined items
+      .filter((c) => c) // arrayMover has a bug creating undefined items
       .forEach((column: any, index) => {
         console.log({ column });
         updatedColumns[column.key] = { ...column, index };

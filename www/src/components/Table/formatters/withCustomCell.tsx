@@ -6,7 +6,7 @@ import { makeStyles, createStyles } from "@material-ui/core";
 import ErrorBoundary from "components/ErrorBoundary";
 import { useFiretableContext } from "../../../contexts/firetableContext";
 import _get from "lodash/get";
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     "@global": {
       ".rdg-cell-mask.rdg-selected": {
@@ -31,19 +31,21 @@ const getCellValue = (row, key) => {
  * HOC to wrap around custom cell formatters.
  * Displays react-data-grid’s blue selection border when the cell is selected.
  * @param Component The formatter component to display
+ * @param readOnly Prevent the formatter from updating the cell value
  */
-const withCustomCell = (Component: React.ComponentType<CustomCellProps>) => (
-  props: FormatterProps<any>
-) => {
+const withCustomCell = (
+  Component: React.ComponentType<CustomCellProps>,
+  readOnly: boolean = false
+) => (props: FormatterProps<any>) => {
   useStyles();
   const { updateCell } = useFiretableContext();
 
   const handleSubmit = (value: any) => {
-    if (updateCell)
+    if (updateCell && !readOnly)
       updateCell(props.row.ref, props.column.key as string, value);
   };
   return (
-    <ErrorBoundary fullScreen={false} basic>
+    <ErrorBoundary fullScreen={false} basic wrap="nowrap">
       <Suspense fallback={<div />}>
         <Component
           {...props}

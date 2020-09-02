@@ -13,6 +13,7 @@ import PercentageIcon from "assets/icons/Percentage";
 
 import DateIcon from "@material-ui/icons/Today";
 import DateTimeIcon from "@material-ui/icons/AccessTime";
+import DurationIcon from "@material-ui/icons/Timer";
 
 import UrlIcon from "@material-ui/icons/Link";
 
@@ -36,7 +37,7 @@ import RichTextIcon from "@material-ui/icons/TextFormat";
 import ColorIcon from "@material-ui/icons/Colorize";
 import SliderIcon from "assets/icons/Slider";
 import UserIcon from "@material-ui/icons/Person";
-import DurationIcon from "@material-ui/icons/Timer";
+
 export {
   ShortTextIcon,
   LongTextIcon,
@@ -47,6 +48,7 @@ export {
   PercentageIcon,
   DateIcon,
   DateTimeIcon,
+  DurationIcon,
   UrlIcon,
   RatingIcon,
   ImageIcon,
@@ -63,7 +65,6 @@ export {
   ColorIcon,
   SliderIcon,
   UserIcon,
-  DurationIcon,
 };
 
 export enum FieldType {
@@ -78,6 +79,7 @@ export enum FieldType {
 
   date = "DATE",
   dateTime = "DATE_TIME",
+  duration = "DURATION",
 
   url = "URL",
   rating = "RATING",
@@ -100,7 +102,6 @@ export enum FieldType {
   color = "COLOR",
   slider = "SLIDER",
   user = "USER",
-  duration = "DURATION",
 
   last = "LAST",
 }
@@ -117,6 +118,7 @@ export const FIELDS = [
 
   { icon: <DateIcon />, name: "Date", type: FieldType.date },
   { icon: <DateTimeIcon />, name: "Time & Date", type: FieldType.dateTime },
+  { icon: <DurationIcon />, name: "Duration", type: FieldType.duration },
 
   { icon: <UrlIcon />, name: "URL", type: FieldType.url },
   { icon: <RatingIcon />, name: "Rating", type: FieldType.rating },
@@ -155,8 +157,58 @@ export const FIELDS = [
   { icon: <ColorIcon />, name: "Color", type: FieldType.color },
   { icon: <SliderIcon />, name: "Slider", type: FieldType.slider },
   { icon: <UserIcon />, name: "User", type: FieldType.user },
-  { icon: <DurationIcon />, name: "Duration", type: FieldType.duration },
 ];
+
+export const FIELD_TYPE_DESCRIPTIONS = {
+  [FieldType.shortText]: "Small amount of text, such as names and taglines.",
+  [FieldType.longText]:
+    "Large amount of text, such as sentences and paragraphs.",
+  [FieldType.email]: "Email address. Firetable does not validate emails.",
+  [FieldType.phone]:
+    "Phone numbers stored as text. Firetable does not validate phone numbers.",
+
+  [FieldType.checkbox]: "Either checked or unchecked. Unchecked by default.",
+  [FieldType.number]: "Numeric data.",
+  [FieldType.percentage]: "Percentage stored as a number between 0 and 1.",
+
+  [FieldType.date]:
+    "Date displayed and input as YYYY/MM/DD or input using a picker module.",
+  [FieldType.dateTime]:
+    "Time and Date can be written as YYYY/MM/DD hh:mm (am/pm) or input using a picker module.",
+  [FieldType.duration]: "Duration calculated from two timestamps.",
+
+  [FieldType.url]: "Web address. Firetable does not validate URLs.",
+  [FieldType.rating]: "Rating displayed as stars from 0 to 4.",
+
+  [FieldType.image]:
+    "Image file uploaded to Firebase Storage. Supports JPEG, PNG, SVG, GIF, WebP.",
+  [FieldType.file]:
+    "File uploaded to Firebase Storage. Supports any file type.",
+
+  [FieldType.singleSelect]:
+    "Dropdown selector with searchable options and radio button behaviour. Optionally allows users to input custom values. Max selection: 1 option.",
+  [FieldType.multiSelect]:
+    "Dropdown selector with searchable options and check box behaviour. Optionally allows users to input custom values. Max selection: all options.",
+
+  [FieldType.connectTable]:
+    "Connects to an existing table to fetch a snapshot of values from a row. Requires Algolia integration.",
+  [FieldType.subTable]:
+    "Creates a sub-table. Also displays number of rows inside the sub-table. Max sub-table levels: 100.",
+
+  [FieldType.action]:
+    "A button with a pre-defined action. Triggers a Cloud Function. 3 different states: Disabled, Enabled, Active (Clicked). Supports Undo and Redo.",
+  [FieldType.json]: "JSON object editable with a visual JSON editor.",
+  [FieldType.code]: "Raw code editable with Monaco Editor.",
+  [FieldType.derivative]:
+    "Value derived from the rest of the row’s values. Displayed using any other field type. Requires Cloud Function setup.",
+
+  [FieldType.richText]: "Rich text editor with predefined HTML text styles.",
+  [FieldType.color]: "Visual color picker. Supports Hex, RGBA, HSLA.",
+  [FieldType.slider]: "Slider with adjustable range. Returns a numeric value. ",
+  [FieldType.user]: "Used to display _ft_updatedBy field for editing history",
+
+  [FieldType.last]: "Internally used to display last column with row actions.",
+};
 
 /**
  * Returns icon associated with field type

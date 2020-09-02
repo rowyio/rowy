@@ -22,8 +22,8 @@ import FieldsDropdown from "../FieldsDropdown";
 import ColumnSelector from "./ConfigFields/ColumnSelector";
 import FieldSkeleton from "components/SideDrawer/Form/FieldSkeleton";
 import RoleSelector from "components/RolesSelector";
-const CodeEditor = lazy(() =>
-  import("../../editors/CodeEditor" /* webpackChunkName: "CodeEditor" */)
+const CodeEditor = lazy(
+  () => import("../../editors/CodeEditor" /* webpackChunkName: "CodeEditor" */)
 );
 const ConfigFields = ({ fieldType, config, handleChange, tables, columns }) => {
   switch (fieldType) {
