@@ -11,6 +11,8 @@ import SideDrawer from "components/SideDrawer";
 import { FireTableFilter } from "hooks/useFiretable";
 import useRouter from "hooks/useRouter";
 
+import ImportWizard from "components/Wizards/ImportWizard";
+
 export default function TableView() {
   const router = useRouter();
   const tableCollection = decodeURIComponent(router.match.params.id);
@@ -38,6 +40,9 @@ export default function TableView() {
   return (
     <Navigation tableCollection={tableCollection}>
       <Table key={tableCollection} />
+
+      <ImportWizard />
+
       <Hidden smDown>
         <SideDrawer />
       </Hidden>

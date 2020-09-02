@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from "react";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import Dialog from "@material-ui/core/Dialog";
-import Grid from "@material-ui/core/Grid";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import { Typography, IconButton } from "@material-ui/core";
+import _camel from "lodash/camelCase";
+
+import {
+  Button,
+  TextField,
+  Dialog,
+  Grid,
+  DialogActions,
+  DialogContent,
+  Typography,
+  IconButton,
+} from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
+
 import { FieldType } from "constants/fields";
 import FieldsDropdown from "./FieldsDropdown";
-import _camel from "lodash/camelCase";
 
 export default function FormDialog({
   open,
@@ -63,7 +68,7 @@ export default function FormDialog({
             label="Column Header"
             type="text"
             fullWidth
-            onChange={e => {
+            onChange={(e) => {
               setColumnLabel(e.target.value);
             }}
           />
@@ -75,7 +80,7 @@ export default function FormDialog({
             label="Field Key"
             type="text"
             fullWidth
-            onChange={e => {
+            onChange={(e) => {
               setFieldKey(e.target.value);
             }}
           />
@@ -83,8 +88,8 @@ export default function FormDialog({
 
           <FieldsDropdown
             value={type}
-            onChange={(newType: any) => {
-              setType(newType.target.value);
+            onChange={(newType) => {
+              setType(newType.target.value as FieldType);
             }}
           />
         </DialogContent>
