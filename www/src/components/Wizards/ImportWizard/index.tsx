@@ -35,11 +35,11 @@ export default function ImportWizard() {
   const { tableState, tableActions } = useFiretableContext();
   useEffect(() => {
     if (
-      (!tableState?.columns || Object.keys(tableState?.columns).length === 0) &&
-      !open
+      tableState?.config.tableConfig.doc &&
+      !tableState?.config.tableConfig.doc?.columns
     )
       setOpen(true);
-  }, [tableState?.columns]);
+  }, [tableState]);
 
   if (tableState?.rows.length === 0) return null;
 
