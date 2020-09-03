@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@material-ui/core";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       height: "100%",

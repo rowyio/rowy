@@ -47,7 +47,7 @@ export default function SideDrawer() {
     if (direction === "up" && row > 0) row -= 1;
     if (direction === "down" && row < tableState.rows.length - 1) row += 1;
 
-    setCell!(cell => ({ column: cell!.column, row }));
+    setCell!((cell) => ({ column: cell!.column, row }));
 
     const idx = tableState?.columns[cell!.column]?.index;
     dataGridRef?.current?.selectCell({ rowIdx: row, idx });
@@ -60,7 +60,7 @@ export default function SideDrawer() {
     (Array.isArray(tableState?.columns)
       ? tableState?.columns
       : _sortBy(Object.values(tableState?.columns), "index")
-    ).map(column => {
+    ).map((column) => {
       const field: Field = {
         type: column.type,
         name: column.key,
@@ -168,7 +168,7 @@ export default function SideDrawer() {
             color="secondary"
             disabled={disabled}
             onClick={() => {
-              if (setOpen) setOpen(o => !o);
+              if (setOpen) setOpen((o) => !o);
             }}
           >
             <ChevronIcon className={classes.drawerFabIcon} />

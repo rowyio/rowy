@@ -5,7 +5,7 @@ import Avatar from "@material-ui/core/Avatar";
 import Chip from "@material-ui/core/Chip";
 import { makeStyles, createStyles, Tooltip, Fade } from "@material-ui/core";
 const dateFns = new DateFnsAdapter();
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: {},
   })

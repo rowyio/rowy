@@ -11,7 +11,7 @@ import {
   SwitchProps as MuiSwitchProps,
 } from "@material-ui/core";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     buttonBase: {
       borderRadius: theme.shape.borderRadius,

@@ -6,7 +6,7 @@ import { makeStyles, createStyles, Grid } from "@material-ui/core";
 import { Rating as MuiRating } from "@material-ui/lab";
 import StarBorderIcon from "@material-ui/icons/StarBorder";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       backgroundColor:

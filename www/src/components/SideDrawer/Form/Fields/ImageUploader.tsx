@@ -25,7 +25,7 @@ import Confirmation from "components/Confirmation";
 import { IMAGE_MIME_TYPES } from "constants/fields";
 import Thumbnail from "components/Thumbnail";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     dropzoneButton: {
       backgroundColor:
@@ -135,7 +135,7 @@ export function ControlledImageUploader({
   const [localImage, setLocalImage] = useState<string>("");
 
   const onDrop = useCallback(
-    acceptedFiles => {
+    (acceptedFiles) => {
       const imageFile = acceptedFiles[0];
 
       if (docRef && imageFile) {
@@ -144,7 +144,7 @@ export function ControlledImageUploader({
           fieldName: name,
           files: [imageFile],
           previousValue: value ?? [],
-          onComplete: newValue => {
+          onComplete: (newValue) => {
             onChange(newValue);
             setLocalImage("");
           },
@@ -287,7 +287,7 @@ export default function ImageUploader({
     <Controller
       control={control}
       name={name}
-      render={renderProps => (
+      render={(renderProps) => (
         <ControlledImageUploader {...props} name={name} {...renderProps} />
       )}
     />

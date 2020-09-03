@@ -51,7 +51,7 @@ const algoliaReducer = (docData: FirebaseFirestore.DocumentData) => (
     if (docData[curr.fieldName] && curr.snapshotFields) {
       return {
         ...acc,
-        [curr.fieldName]: docData[curr.fieldName].map(snapshot =>
+        [curr.fieldName]: docData[curr.fieldName].map((snapshot) =>
           filterSnapshot(snapshot, curr.snapshotFields)
         ),
       };
@@ -148,7 +148,7 @@ const deleteFromAlgolia = (config: any, indexName?: string) => (
   return index.deleteObject(objectID); // delete algolia entry
 };
 
-const documentPathGenerator = config =>
+const documentPathGenerator = (config) =>
   `${
     config.subTable
       ? `${config.name}/{parentId}/{subCollectionId}/{docId}`
@@ -158,14 +158,14 @@ const documentPathGenerator = config =>
  * returns 3 different trigger functions (onCreate,onUpdate,onDelete) in an object
  * @param config configuration object
  */
-const algoliaFnsGenerator = config => ({
+const algoliaFnsGenerator = (config) => ({
   onCreate: functions.firestore
     .document(documentPathGenerator(config))
     .onCreate(
       config.indices
         ? (snapshot, context) =>
             Promise.all(
-              config.indices.map(index =>
+              config.indices.map((index) =>
                 addToAlgolia(
                   config,
                   index.fieldsToSync,
@@ -182,7 +182,7 @@ const algoliaFnsGenerator = config => ({
       config.indices
         ? (snapshot, context) =>
             Promise.all(
-              config.indices.map(index =>
+              config.indices.map((index) =>
                 updateAlgolia(
                   config,
                   index.fieldsToSync,
@@ -203,7 +203,7 @@ const algoliaFnsGenerator = config => ({
       config.indices
         ? (snapshot, context) =>
             Promise.all(
-              config.indices.map(index =>
+              config.indices.map((index) =>
                 deleteFromAlgolia(config, index.name)(snapshot, context)
               )
             )

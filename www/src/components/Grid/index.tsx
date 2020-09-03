@@ -56,7 +56,7 @@ export default function Grid({ collection, filters }: IGridProps) {
       )}
       <MuiGrid container spacing={4}>
         {" "}
-        {algoliaState.hits.map(hit => {
+        {algoliaState.hits.map((hit) => {
           return (
             <MuiGrid key={hit.objectID} item lg={4} md={6} xs={12}>
               {" "}

@@ -15,7 +15,7 @@ import {
 import FiretableLogo from "assets/Firetable";
 import routes from "constants/routes";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     appBar: {
       backgroundColor: theme.palette.background.paper,

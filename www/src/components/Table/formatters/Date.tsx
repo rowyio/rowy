@@ -17,7 +17,7 @@ import {
 
 import { useFiretableContext } from "contexts/firetableContext";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       height: "100%",
@@ -57,7 +57,7 @@ export default function Date({
   const Icon = fieldType === FieldType.date ? DateIcon : DateTimeIcon;
 
   const [handleDateChange] = useDebouncedCallback<DatePickerProps["onChange"]>(
-    date => {
+    (date) => {
       if (isNaN(date?.valueOf() ?? 0)) return;
 
       onSubmit(date);
@@ -72,7 +72,7 @@ export default function Date({
       <Picker
         value={transformedValue}
         onChange={handleDateChange}
-        onClick={e => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
         format={fieldType === FieldType.date ? DATE_FORMAT : DATE_TIME_FORMAT}
         fullWidth
         clearable
@@ -91,7 +91,7 @@ export default function Date({
           size: "small",
           classes: { root: "row-hover-iconButton" },
         }}
-        DialogProps={{ onClick: e => e.stopPropagation() }}
+        DialogProps={{ onClick: (e) => e.stopPropagation() }}
       />
     </MuiPickersUtilsProvider>
   );

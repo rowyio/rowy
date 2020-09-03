@@ -18,7 +18,7 @@ import SearchIcon from "@material-ui/icons/Search";
 
 import MultiSelect from "@antlerengineering/multiselect";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     resetFilters: { marginRight: -theme.spacing(1) },
 
@@ -54,7 +54,7 @@ const generateFiltersString = (
     .map(
       ([facet, values]) =>
         `(${values
-          .map(value => `${facet}:"${value.replace(/"/g, '\\"')}"`)
+          .map((value) => `${facet}:"${value.replace(/"/g, '\\"')}"`)
           .join(" OR ")})`
     )
     .join(" AND ");
@@ -112,7 +112,7 @@ export default function AlgoliaFilters({
   useEffect(() => {
     if (!index) return;
 
-    filters.forEach(filter => {
+    filters.forEach((filter) => {
       const params = { ...request, maxFacetHits: 100 };
       // Ignore current user-selected value for these filters so all options
       // continue to show up
@@ -125,7 +125,7 @@ export default function AlgoliaFilters({
       index
         .searchForFacetValues(filter.facet, "", params)
         .then(({ facetHits }) =>
-          setFacetValues(other => ({ ...other, [filter.facet]: facetHits }))
+          setFacetValues((other) => ({ ...other, [filter.facet]: facetHits }))
         );
     });
   }, [filters, index, filterValues, requiredFilters]);
@@ -175,7 +175,7 @@ export default function AlgoliaFilters({
           <Grid item xs={12} md={4} lg={3}>
             <TextField
               value={query}
-              onChange={e => {
+              onChange={(e) => {
                 setQuery(e.target.value);
                 handleQueryChange(e.target.value);
               }}
@@ -196,16 +196,19 @@ export default function AlgoliaFilters({
           </Grid>
         )}
 
-        {filters.map(filter => (
+        {filters.map((filter) => (
           <Grid item key={filter.facet} xs={12} sm={6} md={4} lg={3}>
             <MultiSelect
               label={filter.label}
               value={filterValues[filter.facet] ?? []}
-              onChange={value =>
-                setFilterValues(other => ({ ...other, [filter.facet]: value }))
+              onChange={(value) =>
+                setFilterValues((other) => ({
+                  ...other,
+                  [filter.facet]: value,
+                }))
               }
               options={
-                facetValues[filter.facet]?.map(item => ({
+                facetValues[filter.facet]?.map((item) => ({
                   value: item.value,
                   label: filter.labelTransformer
                     ? filter.labelTransformer(item.value)
@@ -213,7 +216,7 @@ export default function AlgoliaFilters({
                   count: item.count,
                 })) ?? []
               }
-              itemRenderer={option => (
+              itemRenderer={(option) => (
                 <React.Fragment key={option.value}>
                   {option.label}
                   <ListItemSecondaryAction className={classes.count}>

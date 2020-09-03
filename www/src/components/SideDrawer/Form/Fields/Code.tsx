@@ -9,7 +9,7 @@ import "ace-builds/src-noconflict/theme-github";
 import { makeStyles, createStyles, Button } from "@material-ui/core";
 import CornerResizeIcon from "assets/icons/CornerResize";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     editorWrapper: { position: "relative" },
 
@@ -51,8 +51,8 @@ function ControlledCode({ onChange, onBlur, value }: IControlledCodeProps) {
 
   const autoSave = false;
   const handleChange = autoSave
-    ? value => onChange(value)
-    : value => setLocalValue(value);
+    ? (value) => onChange(value)
+    : (value) => setLocalValue(value);
 
   const editor = useRef<AceEditor>(null);
   const handleResize = () => {
@@ -107,7 +107,7 @@ export default function Code({ control, docRef, name, ...props }: IFieldProps) {
     <Controller
       control={control}
       name={name}
-      render={renderProps => <ControlledCode {...props} {...renderProps} />}
+      render={(renderProps) => <ControlledCode {...props} {...renderProps} />}
     />
   );
 }

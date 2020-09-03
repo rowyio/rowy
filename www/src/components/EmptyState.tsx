@@ -11,7 +11,7 @@ import {
 } from "@material-ui/core";
 import ErrorIcon from "@material-ui/icons/Error";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       height: "100%",

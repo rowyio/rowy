@@ -13,7 +13,7 @@ import { googleProvider, auth } from "../firebase";
 import useRouter from "hooks/useRouter";
 import FiretableLogo from "assets/firetable-with-wordmark.svg";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       height: "100%",

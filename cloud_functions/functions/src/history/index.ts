@@ -13,7 +13,7 @@ const historySnapshot = (trackedFields: string[]) => async (
   const docPath = change.after.ref.path;
   if (!before || !after) return false;
   const trackedChanges: any = {};
-  trackedFields.forEach(field => {
+  trackedFields.forEach((field) => {
     if (!_.isEqual(before[field], after[field]))
       trackedChanges[field] = after[field];
   });
@@ -26,7 +26,7 @@ const historySnapshot = (trackedFields: string[]) => async (
   } else return false;
 };
 
-const historySnapshotFnsGenerator = collection =>
+const historySnapshotFnsGenerator = (collection) =>
   functions.firestore
     .document(`${collection.name}/{docId}`)
     .onUpdate(historySnapshot(collection.trackedFields));

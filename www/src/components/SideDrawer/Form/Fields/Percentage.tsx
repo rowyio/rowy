@@ -5,7 +5,7 @@ import { IFieldProps } from "../utils";
 import { makeStyles, createStyles, Typography } from "@material-ui/core";
 import { resultColorsScale } from "util/color";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       padding: theme.spacing(9 / 8, 1, 9 / 8, 1.5),

@@ -5,7 +5,7 @@ import ReactJson from "react-json-view";
 
 import { makeStyles, createStyles, useTheme } from "@material-ui/core";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       backgroundColor:
@@ -42,7 +42,7 @@ export default function JsonEditor({ control, name }: IFieldProps) {
       control={control}
       name={name}
       render={({ onChange, onBlur, value }) => {
-        const handleEdit = edit => {
+        const handleEdit = (edit) => {
           onChange(edit.updated_src);
         };
 

@@ -19,7 +19,7 @@ export type Field = {
 };
 export type Fields = (Field | ((values: Values) => Field))[];
 
-export const initializeValue = type => {
+export const initializeValue = (type) => {
   switch (type) {
     case FieldType.singleSelect:
     case FieldType.multiSelect:

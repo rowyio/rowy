@@ -9,7 +9,7 @@ import RenderedHtml from "components/RenderedHtml";
 
 type StylesProps = { width: number; rowHeight: number };
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       padding: theme.spacing(0.5, 0),

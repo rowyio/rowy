@@ -25,7 +25,7 @@ import HiddenFields from "./HidenFields";
 import Settings from "./Settings";
 export const TABLE_HEADER_HEIGHT = 56;
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       width: `calc(100% - ${DRAWER_COLLAPSED_WIDTH}px)`,
@@ -127,7 +127,7 @@ export default function TableHeader({
           variant="filled"
           className={classes.formControl}
           value={rowHeight ?? 43}
-          onChange={event => {
+          onChange={(event) => {
             updateConfig("rowHeight", event.target.value);
           }}
           inputProps={{

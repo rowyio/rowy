@@ -3,7 +3,7 @@ import DOMPurify from "dompurify";
 import clsx from "clsx";
 import { makeStyles, createStyles } from "@material-ui/core";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       maxWidth: "33em",

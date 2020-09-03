@@ -9,7 +9,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles, createStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       display: "flex",
@@ -51,7 +51,7 @@ export default function Confirmation({
 
   const confirmHandler = children.props[functionName];
   const button = React.cloneElement(children, {
-    [functionName]: e => {
+    [functionName]: (e) => {
       if (stopPropagation && e && e.stopPropagation) e.stopPropagation();
       setShowDialog(true);
     },
@@ -79,7 +79,7 @@ export default function Confirmation({
                 <TextField
                   value={dryText}
                   variant="filled"
-                  onChange={e => {
+                  onChange={(e) => {
                     setDryText(e.target.value);
                   }}
                   className={classes.dryField}

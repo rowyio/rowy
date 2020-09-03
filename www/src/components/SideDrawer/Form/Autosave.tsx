@@ -28,14 +28,14 @@ export default function Autosave({
 
   const values = useWatch({ control });
 
-  const getEditables = value =>
+  const getEditables = (value) =>
     _pick(
       value,
       (tableState &&
         (Array.isArray(tableState?.columns)
           ? tableState?.columns
           : Object.values(tableState?.columns)
-        ).map(c => c.key)) ??
+        ).map((c) => c.key)) ??
         []
     );
 

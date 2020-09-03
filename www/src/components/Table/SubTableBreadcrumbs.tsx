@@ -17,7 +17,7 @@ import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
 
 export const BREADCRUMBS_HEIGHT = 36;
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     ol: {
       height: BREADCRUMBS_HEIGHT,

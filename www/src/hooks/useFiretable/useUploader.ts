@@ -43,7 +43,7 @@ const useUploader = () => {
   }: UploadProps) => {
     uploaderDispatch({ isLoading: true });
 
-    files.forEach(file => {
+    files.forEach((file) => {
       const storageRef = bucket.ref(`${docRef.path}/${fieldName}/${file.name}`);
       const uploadTask = storageRef.put(file);
 
@@ -51,7 +51,7 @@ const useUploader = () => {
         // event
         firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
         // observer
-        snapshot => {
+        (snapshot) => {
           // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
           const progress =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;

@@ -15,7 +15,7 @@ import FieldSkeleton from "./FieldSkeleton";
 
 import { FieldType, getFieldIcon } from "constants/fields";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     header: {
       marginBottom: theme.spacing(1),

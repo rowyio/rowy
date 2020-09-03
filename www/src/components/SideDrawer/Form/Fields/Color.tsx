@@ -12,7 +12,7 @@ import {
   Collapse,
 } from "@material-ui/core";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       height: 56,
@@ -44,7 +44,7 @@ export default function Color({ control, name }: IFieldProps) {
   const classes = useStyles();
 
   const [showPicker, setShowPicker] = useState(false);
-  const toggleOpen = () => setShowPicker(s => !s);
+  const toggleOpen = () => setShowPicker((s) => !s);
 
   return (
     <Controller

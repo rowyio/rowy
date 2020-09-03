@@ -10,71 +10,89 @@ import Autosave from "./Autosave";
 import FieldWrapper from "./FieldWrapper";
 
 import Text from "./Fields/Text";
-const Url = lazy(() =>
-  import("./Fields/Url" /* webpackChunkName: "SideDrawer-Url" */)
+const Url = lazy(
+  () => import("./Fields/Url" /* webpackChunkName: "SideDrawer-Url" */)
 );
-const SingleSelect = lazy(() =>
-  import(
-    "./Fields/SingleSelect" /* webpackChunkName: "SideDrawer-SingleSelect" */
-  )
+const SingleSelect = lazy(
+  () =>
+    import(
+      "./Fields/SingleSelect" /* webpackChunkName: "SideDrawer-SingleSelect" */
+    )
 );
-const MultiSelect = lazy(() =>
-  import(
-    "./Fields/MultiSelect" /* webpackChunkName: "SideDrawer-MultiSelect" */
-  )
+const MultiSelect = lazy(
+  () =>
+    import(
+      "./Fields/MultiSelect" /* webpackChunkName: "SideDrawer-MultiSelect" */
+    )
 );
-const DatePicker = lazy(() =>
-  import("./Fields/DatePicker" /* webpackChunkName: "SideDrawer-DatePicker" */)
+const DatePicker = lazy(
+  () =>
+    import(
+      "./Fields/DatePicker" /* webpackChunkName: "SideDrawer-DatePicker" */
+    )
 );
-const DateTimePicker = lazy(() =>
-  import(
-    "./Fields/DateTimePicker" /* webpackChunkName: "SideDrawer-DateTimePicker" */
-  )
+const DateTimePicker = lazy(
+  () =>
+    import(
+      "./Fields/DateTimePicker" /* webpackChunkName: "SideDrawer-DateTimePicker" */
+    )
 );
-const Checkbox = lazy(() =>
-  import("./Fields/Checkbox" /* webpackChunkName: "SideDrawer-Checkbox" */)
+const Checkbox = lazy(
+  () =>
+    import("./Fields/Checkbox" /* webpackChunkName: "SideDrawer-Checkbox" */)
 );
-const Rating = lazy(() =>
-  import("./Fields/Rating" /* webpackChunkName: "SideDrawer-Rating" */)
+const Rating = lazy(
+  () => import("./Fields/Rating" /* webpackChunkName: "SideDrawer-Rating" */)
 );
-const Percentage = lazy(() =>
-  import("./Fields/Percentage" /* webpackChunkName: "SideDrawer-Percentage" */)
+const Percentage = lazy(
+  () =>
+    import(
+      "./Fields/Percentage" /* webpackChunkName: "SideDrawer-Percentage" */
+    )
 );
-const Color = lazy(() =>
-  import("./Fields/Color" /* webpackChunkName: "SideDrawer-Color" */)
+const Color = lazy(
+  () => import("./Fields/Color" /* webpackChunkName: "SideDrawer-Color" */)
 );
-const Slider = lazy(() =>
-  import("./Fields/Slider" /* webpackChunkName: "SideDrawer-Slider" */)
+const Slider = lazy(
+  () => import("./Fields/Slider" /* webpackChunkName: "SideDrawer-Slider" */)
 );
-const ImageUploader = lazy(() =>
-  import(
-    "./Fields/ImageUploader" /* webpackChunkName: "SideDrawer-ImageUploader" */
-  )
+const ImageUploader = lazy(
+  () =>
+    import(
+      "./Fields/ImageUploader" /* webpackChunkName: "SideDrawer-ImageUploader" */
+    )
 );
-const FileUploader = lazy(() =>
-  import(
-    "./Fields/FileUploader" /* webpackChunkName: "SideDrawer-FileUploader" */
-  )
+const FileUploader = lazy(
+  () =>
+    import(
+      "./Fields/FileUploader" /* webpackChunkName: "SideDrawer-FileUploader" */
+    )
 );
-const RichText = lazy(() =>
-  import("./Fields/RichText" /* webpackChunkName: "SideDrawer-RichText" */)
+const RichText = lazy(
+  () =>
+    import("./Fields/RichText" /* webpackChunkName: "SideDrawer-RichText" */)
 );
-const JsonEditor = lazy(() =>
-  import("./Fields/JsonEditor" /* webpackChunkName: "SideDrawer-JsonEditor" */)
+const JsonEditor = lazy(
+  () =>
+    import(
+      "./Fields/JsonEditor" /* webpackChunkName: "SideDrawer-JsonEditor" */
+    )
 );
-const ConnectTable = lazy(() =>
-  import(
-    "./Fields/ConnectTable" /* webpackChunkName: "SideDrawer-ConnectTable" */
-  )
+const ConnectTable = lazy(
+  () =>
+    import(
+      "./Fields/ConnectTable" /* webpackChunkName: "SideDrawer-ConnectTable" */
+    )
 );
-const Code = lazy(() =>
-  import("./Fields/Code" /* webpackChunkName: "SideDrawer-Code" */)
+const Code = lazy(
+  () => import("./Fields/Code" /* webpackChunkName: "SideDrawer-Code" */)
 );
-const SubTable = lazy(() =>
-  import("./Fields/SubTable" /* webpackChunkName: "SideDrawer-SubTable" */)
+const SubTable = lazy(
+  () =>
+    import("./Fields/SubTable" /* webpackChunkName: "SideDrawer-SubTable" */)
 );
-const Action = lazy(() =>
-  import("./Fields/Action" /* webpackChunkName: "SideDrawer-Action" */)
+const Action = lazy(
+  () => import("./Fields/Action" /* webpackChunkName: "SideDrawer-Action" */)
 );
 
 export interface IFormProps {
