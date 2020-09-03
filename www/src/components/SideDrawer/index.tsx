@@ -76,7 +76,10 @@ export default function SideDrawer() {
         )}`
       );
       console.log(tableState?.tablePath, tableState?.rows[cell.row].id);
-      dispatchUrlDoc({ path: "", doc: null });
+      if (urlDocState.doc) {
+        urlDocState.unsubscribe();
+        dispatchUrlDoc({ path: "", doc: null });
+      }
     }
   }, [cell]);
 
