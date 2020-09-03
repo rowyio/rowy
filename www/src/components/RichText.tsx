@@ -16,7 +16,7 @@ import { Editor } from "@tinymce/tinymce-react";
 
 import { makeStyles, createStyles } from "@material-ui/core";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       "& .tox": {

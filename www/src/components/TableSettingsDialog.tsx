@@ -109,7 +109,7 @@ export default function TableSettingsDialog({
 
           <TextField
             autoFocus
-            onChange={e => handleChange("name", e.target.value)}
+            onChange={(e) => handleChange("name", e.target.value)}
             value={formState.name}
             margin="dense"
             id="name"
@@ -121,7 +121,7 @@ export default function TableSettingsDialog({
           {mode === TableSettingsDialogModes.create && (
             <TextField
               value={formState.collection}
-              onChange={e => handleChange("collection", e.target.value)}
+              onChange={(e) => handleChange("collection", e.target.value)}
               variant="filled"
               margin="dense"
               id="collection"
@@ -136,14 +136,14 @@ export default function TableSettingsDialog({
             label={"isCollectionGroup"}
             labelPlacement="start"
             value={formState.isCollectionGroup}
-            onChange={e =>
+            onChange={(e) =>
               handleChange("isCollectionGroup", !formState.isCollectionGroup)
             }
             // classes={{ root: classes.formControlLabel, label: classes.label }}
           />
           <TextField
             value={formState.section}
-            onChange={e => handleChange("section", e.target.value)}
+            onChange={(e) => handleChange("section", e.target.value)}
             variant="filled"
             margin="dense"
             id="section"
@@ -159,13 +159,13 @@ export default function TableSettingsDialog({
             fullWidth
             multiline={true}
             value={formState.description}
-            onChange={e => handleChange("description", e.target.value)}
+            onChange={(e) => handleChange("description", e.target.value)}
           />
 
           <RolesSelector
             label="Roles"
             value={formState.roles ?? []}
-            handleChange={update => handleChange("roles", update)}
+            handleChange={(update) => handleChange("roles", update)}
           />
         </DialogContent>
         <DialogActions>

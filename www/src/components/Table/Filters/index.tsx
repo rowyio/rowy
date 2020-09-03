@@ -79,7 +79,7 @@ const OPERATORS = [
   },
 ];
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     paper: { width: 640 },
 
@@ -119,8 +119,8 @@ const Filters = () => {
     }
   }, [userDoc.state, tableState?.tablePath]);
   const filterColumns = _sortBy(Object.values(tableState!.columns), "index")
-    .filter(c => !UNFILTERABLES.includes(c.type))
-    .map(c => ({
+    .filter((c) => !UNFILTERABLES.includes(c.type))
+    .map((c) => ({
       key: c.key,
       label: c.name,
       type: c.type,
@@ -180,7 +180,7 @@ const Filters = () => {
   }, [selectedColumn]);
 
   const operators = selectedColumn
-    ? OPERATORS.filter(operator =>
+    ? OPERATORS.filter((operator) =>
         operator.compatibleTypes.includes(selectedColumn.type)
       )
     : [];
@@ -192,8 +192,8 @@ const Filters = () => {
     setAnchorEl(anchorEl ? null : event.currentTarget);
   };
 
-  const handleChangeColumn = e => {
-    const column = _find(filterColumns, c => c.key === e.target.value);
+  const handleChangeColumn = (e) => {
+    const column = _find(filterColumns, (c) => c.key === e.target.value);
     setSelectedColumn(column);
   };
   const open = Boolean(anchorEl);
@@ -207,7 +207,7 @@ const Filters = () => {
           <Switch
             value={query.value}
             onChange={(e, checked) => {
-              setQuery(query => ({ ...query, value: checked }));
+              setQuery((query) => ({ ...query, value: checked }));
             }}
           />
         );
@@ -217,9 +217,9 @@ const Filters = () => {
       case FieldType.longText:
         return (
           <TextField
-            onChange={e => {
+            onChange={(e) => {
               const value = e.target.value;
-              if (value) setQuery(query => ({ ...query, value: value }));
+              if (value) setQuery((query) => ({ ...query, value: value }));
             }}
             variant="filled"
             hiddenLabel
@@ -233,7 +233,7 @@ const Filters = () => {
             <MultiSelect
               multiple
               freeText={false}
-              onChange={value => setQuery(query => ({ ...query, value }))}
+              onChange={(value) => setQuery((query) => ({ ...query, value }))}
               options={
                 selectedColumn.config.options
                   ? selectedColumn.config.options.sort()
@@ -249,8 +249,8 @@ const Filters = () => {
           <MultiSelect
             multiple={false}
             freeText={false}
-            onChange={value => {
-              if (value !== null) setQuery(query => ({ ...query, value }));
+            onChange={(value) => {
+              if (value !== null) setQuery((query) => ({ ...query, value }));
             }}
             options={
               selectedColumn.config.options
@@ -267,7 +267,7 @@ const Filters = () => {
         return (
           <MultiSelect
             multiple
-            onChange={value => setQuery(query => ({ ...query, value }))}
+            onChange={(value) => setQuery((query) => ({ ...query, value }))}
             value={query.value as string[]}
             options={
               selectedColumn.config.options
@@ -294,8 +294,8 @@ const Filters = () => {
                   /\{\{(.*?)\}\}/g,
                   (m, k) => userClaims[k]
                 )}
-                onChange={value => {
-                  setQuery(query => ({ ...query, value }));
+                onChange={(value) => {
+                  setQuery((query) => ({ ...query, value }));
                 }}
               />
             </>
@@ -329,7 +329,7 @@ const Filters = () => {
           {" Filter"}
           {filters.length > 1 && "s"}
         </Button>
-        {(tableState?.filters ?? []).map(filter => (
+        {(tableState?.filters ?? []).map((filter) => (
           <Chip
             key={filter.key}
             label={`${filter.key} ${filter.operator} ${filter.value}`}
@@ -409,7 +409,7 @@ const Filters = () => {
                 <MenuItem disabled value="" style={{ display: "none" }}>
                   Select Column
                 </MenuItem>
-                {filterColumns.map(c => (
+                {filterColumns.map((c) => (
                   <MenuItem key={c.key} value={c.key}>
                     {c.label}
                   </MenuItem>
@@ -425,8 +425,8 @@ const Filters = () => {
                 fullWidth
                 value={query.operator}
                 disabled={!query.key || operators?.length === 0}
-                onChange={e => {
-                  setQuery(query => ({
+                onChange={(e) => {
+                  setQuery((query) => ({
                     ...query,
                     operator: e.target.value as string,
                   }));
@@ -436,7 +436,7 @@ const Filters = () => {
                 <MenuItem disabled value="" style={{ display: "none" }}>
                   Select Condition
                 </MenuItem>
-                {operators.map(operator => (
+                {operators.map((operator) => (
                   <MenuItem value={operator.value}>{operator.label}</MenuItem>
                 ))}
               </TextField>

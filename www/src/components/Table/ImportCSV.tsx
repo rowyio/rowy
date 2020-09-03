@@ -25,7 +25,7 @@ import Typography from "@material-ui/core/Typography";
 
 import CloudIcon from "@material-ui/icons/CloudUpload";
 import { useFiretableContext } from "contexts/firetableContext";
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       display: "flex",
@@ -65,12 +65,12 @@ export default function ImportCSV(props: any) {
   const [csvKey, setCsvKey] = useState();
   const [columnKey, setColumnKey] = useState();
   const [csvData, setCsvData] = useState<any[]>([]);
-  const onDrop = useCallback(async acceptedFiles => {
+  const onDrop = useCallback(async (acceptedFiles) => {
     const file = acceptedFiles[0];
     var reader = new FileReader();
-    reader.onload = function(event: any) {
+    reader.onload = function (event: any) {
       const csvString = event.target.result;
-      parse(csvString, {}, function(err, output) {
+      parse(csvString, {}, function (err, output) {
         const keys = output.shift();
         setCsvData(output);
         setCsvKeys(keys);

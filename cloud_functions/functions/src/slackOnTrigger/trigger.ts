@@ -9,28 +9,33 @@ const web = new WebClient(env.slackbot.token);
 const messageByChannel = async ({
   text,
   channel,
+  blocks,
 }: {
   channel: string;
   text: string;
+  blocks: any[];
 }) =>
   await web.chat.postMessage({
     text,
     channel,
+    blocks,
   });
 const messageByEmail = async ({
   email,
   text,
+  blocks,
 }: {
   email: string;
   text: string;
+  blocks: any[];
 }) => {
   try {
     const user = await web.users.lookupByEmail({ email });
     if (user.ok) {
       const channel = (user as any).user.id as string;
-      console.log({ channel });
       return await messageByChannel({
         text,
+        blocks,
         channel,
       });
     } else {
@@ -60,6 +65,7 @@ export const slackBotMessageOnCreate = firestore
         await asyncForEach(channels, async (channel: string) => {
           await messageByChannel({
             text: docData.text,
+            blocks: docData.blocks,
             channel,
           });
         });
@@ -67,6 +73,7 @@ export const slackBotMessageOnCreate = firestore
         await asyncForEach(emails, async (email: string) => {
           await messageByEmail({
             text: docData.text,
+            blocks: docData.blocks ?? [],
             email,
           });
         });

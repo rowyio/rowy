@@ -10,7 +10,7 @@ import {
   Divider,
 } from "@material-ui/core";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     subheader: {
       ...theme.typography.overline,

@@ -10,7 +10,7 @@ import {
 
 import { FieldType } from "constants/fields";
 
-const styles = theme =>
+const styles = (theme) =>
   createStyles({
     root: {
       width: "calc(100% - 1px)",

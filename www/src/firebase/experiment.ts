@@ -15,11 +15,11 @@ export let googleProvider: any = false;
 
 console.log(`fetching config for ${window.location.hostname.split(".")[0]}`);
 fetch(
-  `https://us-central1-firetable-magic.cloudfunctions.net/getWebAppConfig?projectId=${window.location.hostname.split(
-    "."
-  )[0] ?? "antler-vc"}`
+  `https://us-central1-firetable-magic.cloudfunctions.net/getWebAppConfig?projectId=${
+    window.location.hostname.split(".")[0] ?? "antler-vc"
+  }`
 )
-  .then(async response => {
+  .then(async (response) => {
     const config = await response.json();
     console.log({ config });
     firebase.initializeApp(config);
@@ -38,6 +38,6 @@ fetch(
       }
     );
   })
-  .catch(err => console.log(err));
+  .catch((err) => console.log(err));
 
 export const deleteField = firebase.firestore.FieldValue.delete;

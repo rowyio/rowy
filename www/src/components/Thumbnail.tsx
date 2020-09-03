@@ -7,7 +7,7 @@ import Skeleton from "@material-ui/lab/Skeleton";
 
 import ErrorBoundary from "./ErrorBoundary";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: ({
       objectFit,

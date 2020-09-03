@@ -44,7 +44,7 @@ export default function SettingsMenu({ modal, setModal }) {
           },
         }}
       >
-        {options.map(option => (
+        {options.map((option) => (
           <MenuItem
             key={option}
             value={option}

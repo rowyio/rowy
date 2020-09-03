@@ -45,7 +45,7 @@ export const isUrl = (str: string) => {
  * @param rowData
  */
 export const sanitiseRowData = (rowData: any) => {
-  Object.keys(rowData).forEach(key => {
+  Object.keys(rowData).forEach((key) => {
     if (rowData[key] && typeof rowData[key] === "object")
       sanitiseRowData(rowData[key]);
     else if (typeof rowData[key] === "number" && isNaN(rowData[key]))

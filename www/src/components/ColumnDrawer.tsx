@@ -54,7 +54,7 @@ export default function ColumnDrawer(props: any) {
       <List className={classes.fields}>
         <TextField
           autoFocus
-          onChange={e => {
+          onChange={(e) => {
             setColumnName(e.target.value);
           }}
           margin="dense"
@@ -65,7 +65,7 @@ export default function ColumnDrawer(props: any) {
         />
         <TextField
           value={fieldName}
-          onChange={e => {
+          onChange={(e) => {
             setFieldName(e.target.value);
           }}
           margin="dense"

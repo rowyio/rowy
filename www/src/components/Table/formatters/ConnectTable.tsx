@@ -7,7 +7,7 @@ import { createStyles, makeStyles, Grid, Chip } from "@material-ui/core";
 import ConnectTableSelect from "components/ConnectTableSelect";
 import { useFiretableContext } from "contexts/firetableContext";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       minWidth: 0,
@@ -64,7 +64,7 @@ export default function ConnectTable({
   const disabled = !column.editable || config?.isLocked;
 
   // Render chips
-  const renderValue = value => (
+  const renderValue = (value) => (
     <Grid container spacing={1} wrap="nowrap" className={classes.chipList}>
       {value?.map((doc: any) => (
         <Grid item key={doc.docPath}>
@@ -79,7 +79,7 @@ export default function ConnectTable({
     </Grid>
   );
 
-  const onClick = e => e.stopPropagation();
+  const onClick = (e) => e.stopPropagation();
   const onClose = () => {
     if (dataGridRef?.current?.selectCell)
       dataGridRef.current.selectCell({ rowIdx, idx: column.idx });

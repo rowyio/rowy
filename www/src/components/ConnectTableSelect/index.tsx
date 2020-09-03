@@ -7,8 +7,8 @@ import useStyles from "./styles";
 import Loading from "components/Loading";
 import ErrorBoundary from "components/ErrorBoundary";
 
-const PopupContents = lazy(() =>
-  import("./PopupContents" /* webpackChunkName: "PopupContents" */)
+const PopupContents = lazy(
+  () => import("./PopupContents" /* webpackChunkName: "PopupContents" */)
 );
 
 export type ConnectTableValue = { snapshot: any; docPath: string };
@@ -58,7 +58,7 @@ export default function ConnectTableSelect({
       className={clsx(classes.root, className)}
       {...TextFieldProps}
       SelectProps={{
-        renderValue: value => `${(value as any[]).length} selected`,
+        renderValue: (value) => `${(value as any[]).length} selected`,
         displayEmpty: true,
         classes: { root: classes.selectRoot },
         ...TextFieldProps.SelectProps,

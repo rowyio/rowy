@@ -32,12 +32,12 @@ const HiddenFields = () => {
     }
   }, [userDocHiddenFields]);
   if (!tableState || !userDoc) return <></>;
-  const tableColumns = Object.keys(tableState.columns).map(key => ({
+  const tableColumns = Object.keys(tableState.columns).map((key) => ({
     value: key,
     label: tableState.columns[key].name,
   }));
 
-  const handleChange = value => {
+  const handleChange = (value) => {
     setHiddenFields(value);
   };
 

@@ -10,7 +10,7 @@ import {
   Popover,
 } from "@material-ui/core";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: {},
 
@@ -29,10 +29,10 @@ export default function Color({ value, onSubmit }: CustomCellProps) {
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const toggleOpen = (e: React.MouseEvent<HTMLElement>) =>
-    setAnchorEl(s => (s ? null : e.currentTarget));
+    setAnchorEl((s) => (s ? null : e.currentTarget));
   const handleClose = () => setAnchorEl(null);
 
-  const handleChangeComplete = color => onSubmit(color);
+  const handleChangeComplete = (color) => onSubmit(color);
 
   return (
     <>
@@ -47,7 +47,7 @@ export default function Color({ value, onSubmit }: CustomCellProps) {
           <ButtonBase
             className={classes.colorIndicator}
             style={{ backgroundColor: value?.hex }}
-            onClick={e => {
+            onClick={(e) => {
               e.stopPropagation();
               toggleOpen(e);
             }}

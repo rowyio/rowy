@@ -12,7 +12,7 @@ import {
   Typography,
 } from "@material-ui/core";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: { display: "flex" },
     slider: { display: "block" },

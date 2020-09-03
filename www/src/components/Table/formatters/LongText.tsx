@@ -7,7 +7,7 @@ import { useFiretableContext } from "contexts/firetableContext";
 
 type StylesProps = { width: number; rowHeight: number };
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       whiteSpace: "pre-line",

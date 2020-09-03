@@ -9,7 +9,7 @@ import FormattedChip, { VARIANTS } from "components/FormattedChip";
 import { FieldType } from "constants/fields";
 import { useFiretableContext } from "contexts/firetableContext";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       position: "absolute",
@@ -74,7 +74,7 @@ export default function MultiSelect({
     : () => (
         <Grid container spacing={1} wrap="nowrap" className={classes.chipList}>
           {value?.map(
-            item =>
+            (item) =>
               typeof item === "string" && (
                 <Grid item key={item}>
                   <FormattedChip

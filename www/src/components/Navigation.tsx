@@ -23,7 +23,7 @@ import { useFiretableContext, Table } from "contexts/firetableContext";
 
 export const APP_BAR_HEIGHT = 56;
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     appBar: {
       paddingRight: DRAWER_COLLAPSED_WIDTH,
@@ -99,14 +99,14 @@ export default function Navigation({
               value={currentCollection}
               indicatorColor="primary"
               textColor="primary"
-              action={actions =>
+              action={(actions) =>
                 setTimeout(() => actions?.updateIndicator(), 200)
               }
               component="nav"
               variant="scrollable"
             >
               {section ? (
-                sections[section].map(table => (
+                sections[section].map((table) => (
                   <Tab
                     key={table.collection}
                     label={table.name}

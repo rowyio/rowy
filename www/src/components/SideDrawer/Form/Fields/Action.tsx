@@ -17,7 +17,7 @@ import { SnackContext } from "contexts/snackContext";
 import { cloudFunction } from "firebase/callables";
 import { sanitiseCallableName, isUrl, sanitiseRowData } from "util/fns";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: {},
 
@@ -69,13 +69,13 @@ function Action({ control, name, docRef, editable, config }: IActionProps) {
               ref: { path: docRef.path, id: docRef.id },
               row: sanitiseRowData(Object.assign({}, docData)),
             },
-            response => {
+            (response) => {
               const { message, cellValue } = response.data;
               setIsRunning(false);
               snack.open({ message, severity: "success" });
               if (cellValue) onChange(cellValue);
             },
-            error => {
+            (error) => {
               console.error("ERROR", config.callableName, error);
               setIsRunning(false);
               snack.open({ message: JSON.stringify(error), severity: "error" });

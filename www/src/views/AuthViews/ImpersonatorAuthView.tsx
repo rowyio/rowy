@@ -71,7 +71,7 @@ export default function ImpersonatorAuthView() {
         </>
       ) : (
         <>
-          <TextField name="email" onChange={e => setEmail(e.target.value)} />
+          <TextField name="email" onChange={(e) => setEmail(e.target.value)} />
           <Button disabled={email === ""} onClick={() => handleAuth(email)}>
             Sign in
           </Button>

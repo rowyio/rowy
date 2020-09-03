@@ -16,7 +16,7 @@ import {
 
 import LaunchIcon from "@material-ui/icons/Launch";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     labelContainer: {
       borderRadius: theme.shape.borderRadius,

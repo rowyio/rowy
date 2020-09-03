@@ -1,6 +1,6 @@
 import { makeStyles, createStyles } from "@material-ui/core";
 
-export const useStyles = makeStyles(theme =>
+export const useStyles = makeStyles((theme) =>
   createStyles({
     root: { minWidth: 200 },
     selectRoot: { paddingRight: theme.spacing(4) },

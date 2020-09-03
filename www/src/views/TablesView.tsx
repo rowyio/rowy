@@ -31,7 +31,7 @@ import TableSettingsDialog, {
   TableSettingsDialogModes,
 } from "components/TableSettingsDialog";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       minHeight: "100vh",
@@ -124,7 +124,7 @@ const TablesView = () => {
                   action: DocActions.update,
                   data: {
                     favoriteTables: checked
-                      ? favs.filter(t => t.collection !== table.collection)
+                      ? favs.filter((t) => t.collection !== table.collection)
                       : [...favs, table],
                   },
                 });
@@ -184,7 +184,7 @@ const TablesView = () => {
                 justify="flex-start"
                 className={classes.cardGrid}
               >
-                {favs.map(table => (
+                {favs.map((table) => (
                   <TableCard key={table.collection} table={table} />
                 ))}
               </Grid>
@@ -192,7 +192,7 @@ const TablesView = () => {
           )}
 
           {sections &&
-            Object.keys(sections).map(sectionName => (
+            Object.keys(sections).map((sectionName) => (
               <section key={sectionName} className={classes.section}>
                 <Typography
                   variant="subtitle2"
@@ -210,7 +210,7 @@ const TablesView = () => {
                   justify="flex-start"
                   className={classes.cardGrid}
                 >
-                  {sections[sectionName].map(table => (
+                  {sections[sectionName].map((table) => (
                     <TableCard key={table.collection} table={table} />
                   ))}
                 </Grid>

@@ -39,7 +39,7 @@ const useDoc = (intialOverrides: any) => {
   });
   const setDocumentListner = () => {
     documentDispatch({ prevPath: documentState.path });
-    const unsubscribe = db.doc(documentState.path).onSnapshot(snapshot => {
+    const unsubscribe = db.doc(documentState.path).onSnapshot((snapshot) => {
       if (snapshot.exists) {
         const data = snapshot.data();
 

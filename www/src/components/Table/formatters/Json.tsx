@@ -8,7 +8,7 @@ import { useFiretableContext } from "contexts/firetableContext";
 
 type StylesProps = { width: number; rowHeight: number };
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       whiteSpace: "pre-line",
@@ -76,7 +76,7 @@ export default function LongText({ column, value }: CustomCellProps) {
       title={formattedJson}
       enterDelay={1000}
       interactive
-      onClick={e => e.stopPropagation()}
+      onClick={(e) => e.stopPropagation()}
       placement="bottom-start"
       PopperProps={{
         modifiers: {

@@ -1,7 +1,7 @@
 import { makeStyles, createStyles, fade } from "@material-ui/core";
 import { APP_BAR_HEIGHT } from "components/Navigation";
 
-export const useStyles = makeStyles(theme =>
+export const useStyles = makeStyles((theme) =>
   createStyles({
     "@global": {
       ".rdg-root": {

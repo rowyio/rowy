@@ -9,7 +9,7 @@ import useRouter from "hooks/useRouter";
 import { createStyles, makeStyles, Grid, IconButton } from "@material-ui/core";
 import OpenIcon from "@material-ui/icons/OpenInNew";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: { padding: theme.spacing(0, 0.625, 0, 1) },
     labelContainer: { overflowX: "hidden" },

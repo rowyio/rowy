@@ -24,23 +24,24 @@ import routes from "constants/routes";
 import AuthView from "views/AuthViews/GoogleAuthView";
 import SignOutView from "views/SignOutView";
 
-const ImpersonatorAuthView = lazy(() =>
-  import(
-    "./views/AuthViews/ImpersonatorAuthView" /* webpackChunkName: "ImpersonatorAuthView" */
-  )
+const ImpersonatorAuthView = lazy(
+  () =>
+    import(
+      "./views/AuthViews/ImpersonatorAuthView" /* webpackChunkName: "ImpersonatorAuthView" */
+    )
 );
 
-const TableView = lazy(() =>
-  import("./views/TableView" /* webpackChunkName: "TableView" */)
+const TableView = lazy(
+  () => import("./views/TableView" /* webpackChunkName: "TableView" */)
 );
-const GridView = lazy(() =>
-  import("./views/GridView" /* webpackChunkName: "GridView" */)
+const GridView = lazy(
+  () => import("./views/GridView" /* webpackChunkName: "GridView" */)
 );
-const TablesView = lazy(() =>
-  import("./views/TablesView" /* webpackChunkName: "TablesView" */)
+const TablesView = lazy(
+  () => import("./views/TablesView" /* webpackChunkName: "TablesView" */)
 );
-const EditorView = lazy(() =>
-  import("./views/EditorView" /* webpackChunkName: "EditorView" */)
+const EditorView = lazy(
+  () => import("./views/EditorView" /* webpackChunkName: "EditorView" */)
 );
 
 const App: React.FC = () => {

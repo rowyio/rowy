@@ -50,13 +50,15 @@ const useSettings = () => {
     roles: string[];
   }) => {
     const { tables } = settingsState;
-    const table = tables.filter(t => t.collection === data.collection)[0];
+    const table = tables.filter((t) => t.collection === data.collection)[0];
     return Promise.all([
       db.doc("_FIRETABLE_/settings").set(
         {
           tables: tables
             ? [
-                ...tables.filter(table => table.collection !== data.collection),
+                ...tables.filter(
+                  (table) => table.collection !== data.collection
+                ),
                 { table, ...data },
               ]
             : [data],
@@ -74,11 +76,9 @@ const useSettings = () => {
     const { tables } = settingsState;
 
     db.doc("_FIRETABLE_/settings").update({
-      tables: tables.filter(table => table.collection !== collection),
+      tables: tables.filter((table) => table.collection !== collection),
     });
-    db.collection("_FIRETABLE_/settings/schema")
-      .doc(collection)
-      .delete();
+    db.collection("_FIRETABLE_/settings/schema").doc(collection).delete();
   };
   const settingsActions = { createTable, updateTable, deleteTable };
   return [settingsState, settingsActions];
