@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import clsx from "clsx";
 import _isNil from "lodash/isNil";
 import _sortBy from "lodash/sortBy";
-
+import queryString from "query-string";
 import { Drawer, Fab } from "@material-ui/core";
 import ChevronIcon from "@material-ui/icons/KeyboardArrowLeft";
 import ChevronUpIcon from "@material-ui/icons/KeyboardArrowUp";
@@ -15,7 +15,7 @@ import ErrorBoundary from "components/ErrorBoundary";
 import { useStyles } from "./useStyles";
 import { useFiretableContext } from "contexts/firetableContext";
 import { FieldType } from "constants/fields";
-
+import useDoc from "hooks/useDoc";
 export const DRAWER_WIDTH = 600;
 export const DRAWER_COLLAPSED_WIDTH = 36;
 
@@ -52,6 +52,33 @@ export default function SideDrawer() {
     const idx = tableState?.columns[cell!.column]?.index;
     dataGridRef?.current?.selectCell({ rowIdx: row, idx });
   };
+
+  const [urlDocState, dispatchUrlDoc] = useDoc({});
+  useEffect(() => {
+    if (urlDocState.doc) {
+      setOpen(true);
+    }
+  }, [urlDocState]);
+  useEffect(() => {
+    const rowRef = queryString.parse(window.location.search).rowRef as string;
+    if (rowRef) {
+      console.log(rowRef);
+      dispatchUrlDoc({ path: decodeURIComponent(rowRef) });
+    }
+  }, []);
+  useEffect(() => {
+    if (cell) {
+      window.history.pushState(
+        "",
+        `${tableState?.tablePath}`,
+        `${window.location.pathname}?rowRef=${encodeURIComponent(
+          tableState?.rows[cell.row].ref.path
+        )}`
+      );
+      console.log(tableState?.tablePath, tableState?.rows[cell.row].id);
+      dispatchUrlDoc({ path: "", doc: null });
+    }
+  }, [cell]);
 
   // Map columns to form fields
 
@@ -115,12 +142,22 @@ export default function SideDrawer() {
       >
         <ErrorBoundary>
           <div className={classes.drawerContents}>
-            {open && fields && cell && (
+            {open && fields && urlDocState.doc ? (
               <Form
-                key={cell.row}
+                key={urlDocState.path}
                 fields={fields}
-                values={tableState?.rows[cell.row] ?? {}}
+                values={urlDocState.doc ?? {}}
               />
+            ) : (
+              open &&
+              fields &&
+              cell && (
+                <Form
+                  key={cell.row}
+                  fields={fields}
+                  values={tableState?.rows[cell.row] ?? {}}
+                />
+              )
             )}
           </div>
         </ErrorBoundary>

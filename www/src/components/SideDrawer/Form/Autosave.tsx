@@ -16,12 +16,14 @@ export interface IAutosaveProps {
   control: Control;
   defaultValues: Values;
   docRef: firebase.firestore.DocumentReference;
+  row: any;
 }
 
 export default function Autosave({
   control,
   defaultValues,
   docRef,
+  row,
 }: IAutosaveProps) {
   const { currentUser } = useAppContext();
   const { tableState, sideDrawerRef } = useFiretableContext();
@@ -43,10 +45,6 @@ export default function Autosave({
     equalityFn: _isEqual,
   });
 
-  const row = sideDrawerRef?.current?.cell
-    ? tableState?.rows[sideDrawerRef?.current?.cell.row]
-    : {};
-
   useEffect(() => {
     if (!row || !row.ref) return;
     if (row.ref.id !== docRef.id) return;
@@ -57,7 +55,6 @@ export default function Autosave({
       _omitBy(debouncedValue, _isUndefined),
       (value, key) => _isEqual(value, row[key])
     );
-    console.log(updatedValues);
 
     if (Object.keys(updatedValues).length === 0) return;
 
