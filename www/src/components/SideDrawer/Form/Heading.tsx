@@ -6,7 +6,7 @@ import {
   Divider,
 } from "@material-ui/core";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       marginTop: theme.spacing(2),

@@ -16,7 +16,7 @@ import * as functions from "firebase-functions";
 
 //const file = bucket.file('path/to/image.jpg');
 
-const typeformParser = body => ({
+const typeformParser = (body) => ({
   ...body.form_response.hidden,
   ...body.form_response.answers.reduce((accRow, currAnswer) => {
     switch (currAnswer.type) {

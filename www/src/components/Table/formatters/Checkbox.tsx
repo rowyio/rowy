@@ -10,7 +10,7 @@ import {
 
 import Confirmation from "components/Confirmation";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: { paddingLeft: theme.spacing(1.5) },
 

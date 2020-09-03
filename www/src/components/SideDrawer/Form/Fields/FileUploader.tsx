@@ -22,7 +22,7 @@ import { FileIcon } from "constants/fields";
 
 import Confirmation from "components/Confirmation";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     dropzoneButton: {
       backgroundColor:
@@ -88,7 +88,7 @@ export function ControlledFileUploader({
           fieldName: name,
           files: [file],
           previousValue: value ?? [],
-          onComplete: newValue => {
+          onComplete: (newValue) => {
             onChange(newValue);
             setLocalFile("");
           },
@@ -179,7 +179,7 @@ export default function FileUploader({ control, name, ...props }: IFieldProps) {
     <Controller
       control={control}
       name={name}
-      render={renderProps => (
+      render={(renderProps) => (
         <ControlledFileUploader {...props} name={name} {...renderProps} />
       )}
     />

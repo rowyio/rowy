@@ -12,7 +12,7 @@ import {
 
 import logo from "assets/firetable-with-wordmark.svg";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     card: {
       maxWidth: 419,

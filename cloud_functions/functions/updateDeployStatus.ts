@@ -29,7 +29,7 @@ if (serviceAccount) {
   };
 
   main(process.argv[2], process.argv[3])
-    .catch(err => console.log(err))
+    .catch((err) => console.log(err))
     .then(() => console.log("this will succeed"))
     .catch(() => "obligatory catch");
 }

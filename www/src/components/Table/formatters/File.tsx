@@ -19,7 +19,7 @@ import Confirmation from "components/Confirmation";
 import useUploader, { FileValue } from "hooks/useFiretable/useUploader";
 import { FileIcon } from "constants/fields";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       padding: theme.spacing(0, 0.75, 0, 1),
@@ -63,7 +63,7 @@ export default function File({
   const { progress, isLoading } = uploaderState;
 
   const onDrop = useCallback(
-    acceptedFiles => {
+    (acceptedFiles) => {
       const file = acceptedFiles[0];
 
       if (file) {
@@ -126,7 +126,7 @@ export default function File({
                   <Chip
                     icon={<FileIcon />}
                     label={file.name}
-                    onClick={e => {
+                    onClick={(e) => {
                       window.open(file.downloadURL);
                       e.stopPropagation();
                     }}
@@ -149,7 +149,7 @@ export default function File({
             <IconButton
               size="small"
               className="row-hover-iconButton"
-              onClick={e => {
+              onClick={(e) => {
                 dropzoneProps.onClick!(e);
                 e.stopPropagation();
               }}

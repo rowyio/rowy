@@ -5,7 +5,7 @@ import { makeStyles, createStyles } from "@material-ui/core";
 import MuiRating from "@material-ui/lab/Rating";
 import StarBorderIcon from "@material-ui/icons/StarBorder";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     rating: { color: theme.palette.text.secondary },
     iconEmpty: { color: theme.palette.text.secondary },
@@ -24,7 +24,7 @@ export default function Rating({
     <MuiRating
       name={`${row.id}-${column.key as string}`}
       value={typeof value === "number" ? value : 0}
-      onClick={e => e.stopPropagation()}
+      onClick={(e) => e.stopPropagation()}
       disabled={column.editable === false}
       onChange={(e, newValue) => onSubmit(newValue)}
       emptyIcon={<StarBorderIcon />}

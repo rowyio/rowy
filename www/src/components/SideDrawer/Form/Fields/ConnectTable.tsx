@@ -30,7 +30,7 @@ export default function ConnectTable({
       render={({ onChange, onBlur, value }) => {
         const handleDelete = (hit: any) => () => {
           // if (multiple)
-          onChange(value.filter(v => v.snapshot.objectID !== hit.objectID));
+          onChange(value.filter((v) => v.snapshot.objectID !== hit.objectID));
           // else form.setFieldValue(field.name, []);
         };
 

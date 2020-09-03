@@ -39,12 +39,17 @@
     "@types/lodash": "^4.14.158",
     "@types/sharp": "^0.25.1",
     "firebase-tools": "^8.7.0",
-    "husky": "^3.0.9",
-    "prettier": "^2.0.5",
-    "pretty-quick": "^2.0.1",
+    "husky": "^4.2.5",
+    "prettier": "^2.1.1",
+    "pretty-quick": "^3.0.0",
     "ts-node": "^8.6.2",
     "tslint": "^6.1.0",
     "typescript": "^3.2.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
   },
   "private": true
 }

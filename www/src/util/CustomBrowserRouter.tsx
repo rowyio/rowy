@@ -10,7 +10,7 @@ interface ICustomBrowserProps {
 const CustomBrowserRouter: React.FC<ICustomBrowserProps> = ({ children }) => (
   <BrowserRouter>
     <Route>
-      {routeProps => (
+      {(routeProps) => (
         <RouterContext.Provider value={routeProps}>
           {children}
         </RouterContext.Provider>

@@ -18,7 +18,7 @@ import { ButtonProps } from "@material-ui/core/Button";
 
 import GoIcon from "./GoIcon";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: { width: "100%" },
     container: { height: "100%" },
@@ -139,7 +139,7 @@ export default function StyledCard({
                     wrap="nowrap"
                     justify="space-between"
                   >
-                    {bodyContent.map(element => (
+                    {bodyContent.map((element) => (
                       <Grid item>{element}</Grid>
                     ))}
                   </Grid>

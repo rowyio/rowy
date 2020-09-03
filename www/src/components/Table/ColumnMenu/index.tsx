@@ -49,7 +49,7 @@ export type ColumnMenuRef = {
   >;
 };
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     paper: {
       // TODO: change this if we need to support a dark mode

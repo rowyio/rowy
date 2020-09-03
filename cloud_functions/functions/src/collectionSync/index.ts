@@ -41,7 +41,7 @@ const cloneDoc = (targetCollection: string, fieldsToSync: string[]) => (
   db.collection(collectionPath)
     .doc(docId)
     .set({ ...syncData, syncedAt: new Date() }, { merge: true })
-    .catch(error => console.error(error));
+    .catch((error) => console.error(error));
   return true;
 };
 
@@ -68,15 +68,12 @@ const syncDoc = (targetCollection: string, fieldsToSync: string[]) => async (
     return false;
   }
   if (Object.keys(syncData).length === 0) return false; // returns if theres nothing to sync
-  const targetDoc = await db
-    .collection(collectionPath)
-    .doc(docId)
-    .get();
+  const targetDoc = await db.collection(collectionPath).doc(docId).get();
   if (!targetDoc.exists) return false;
   db.collection(collectionPath)
     .doc(docId)
     .update({ ...syncData, syncedAt: new Date() })
-    .catch(error => console.error(error));
+    .catch((error) => console.error(error));
   return true;
 };
 
@@ -109,7 +106,7 @@ const syncDocOnUpdate = (
  * returns 2 different trigger functions (onCreate,onUpdate) in an object
  * @param collection configuration object
  */
-const collectionSyncFnsGenerator = collection =>
+const collectionSyncFnsGenerator = (collection) =>
   Object.entries({
     onCreate: collection.onCreate
       ? functions.firestore

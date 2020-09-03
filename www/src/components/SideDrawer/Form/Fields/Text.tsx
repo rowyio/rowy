@@ -9,7 +9,7 @@ import {
   FilledTextFieldProps,
 } from "@material-ui/core";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     multiline: { padding: theme.spacing(2.25, 1.5) },
   })
@@ -67,7 +67,7 @@ export default function Text({
       control={control}
       name={name}
       render={({ onChange, onBlur, value }) => {
-        const handleChange = e => {
+        const handleChange = (e) => {
           if (fieldVariant === "number") onChange(parseInt(e.target.value, 10));
           else onChange(e.target.value);
         };

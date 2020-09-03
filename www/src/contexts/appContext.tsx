@@ -30,7 +30,7 @@ export const AppProvider: React.FC<IAppProviderProps> = ({
 
   const [userDoc, dispatchUserDoc] = useDoc({});
   useEffect(() => {
-    auth.onAuthStateChanged(auth => {
+    auth.onAuthStateChanged((auth) => {
       setCurrentUser(auth);
     });
   }, []);

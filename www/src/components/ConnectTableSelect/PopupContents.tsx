@@ -91,11 +91,11 @@ export default function PopupContents({
   };
   const deselect = (hit: any) => () => {
     if (multiple)
-      onChange(value.filter(v => v.snapshot.objectID !== hit.objectID));
+      onChange(value.filter((v) => v.snapshot.objectID !== hit.objectID));
     else onChange([]);
   };
 
-  const selectedValues = value?.map(item => item.snapshot.objectID);
+  const selectedValues = value?.map((item) => item.snapshot.objectID);
 
   const clearSelection = () => onChange([]);
 
@@ -104,7 +104,7 @@ export default function PopupContents({
       <Grid item className={classes.searchRow}>
         <TextField
           value={query}
-          onChange={e => setQuery(e.target.value)}
+          onChange={(e) => setQuery(e.target.value)}
           fullWidth
           variant="filled"
           margin="dense"
@@ -117,14 +117,14 @@ export default function PopupContents({
               </InputAdornment>
             ),
           }}
-          onClick={e => e.stopPropagation()}
-          onKeyDown={e => e.stopPropagation()}
+          onClick={(e) => e.stopPropagation()}
+          onKeyDown={(e) => e.stopPropagation()}
         />
       </Grid>
 
       <Grid item xs className={classes.listRow}>
         <List className={classes.list}>
-          {hits.map(hit => {
+          {hits.map((hit) => {
             const isSelected = selectedValues.indexOf(hit.objectID) !== -1;
 
             return (

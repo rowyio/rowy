@@ -13,12 +13,12 @@ export const cloudFunction = (
 ) => {
   const callable = functions.httpsCallable(name);
   callable(input)
-    .then(result => {
+    .then((result) => {
       if (success) {
         success(result);
       }
     })
-    .catch(error => {
+    .catch((error) => {
       if (fail) {
         fail(error);
       }

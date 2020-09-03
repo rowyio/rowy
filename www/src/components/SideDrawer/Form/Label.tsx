@@ -10,7 +10,7 @@ import {
 } from "@material-ui/core";
 import HelpIcon from "@material-ui/icons/HelpOutline";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       display: "block",

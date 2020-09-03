@@ -1,7 +1,7 @@
 import { makeStyles, createStyles } from "@material-ui/core";
 import { DRAWER_WIDTH, DRAWER_COLLAPSED_WIDTH } from "./index";
 
-export const useStyles = makeStyles(theme =>
+export const useStyles = makeStyles((theme) =>
   createStyles({
     open: {},
     disabled: {},
@@ -16,8 +16,9 @@ export const useStyles = makeStyles(theme =>
       border: "none",
       boxShadow:
         "0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 8px 10px 1px rgba(0, 0, 0, 0.14)",
-      borderRadius: `${theme.shape.borderRadius * 2}px 0 0 ${theme.shape
-        .borderRadius * 2}px`,
+      borderRadius: `${theme.shape.borderRadius * 2}px 0 0 ${
+        theme.shape.borderRadius * 2
+      }px`,
 
       width: DRAWER_WIDTH,
       overflowX: "visible",
@@ -37,9 +38,9 @@ export const useStyles = makeStyles(theme =>
         transform: `translateX(${DRAWER_WIDTH - DRAWER_COLLAPSED_WIDTH}px)`,
       },
       "50%": {
-        transform: `translateX(${DRAWER_WIDTH -
-          DRAWER_COLLAPSED_WIDTH -
-          theme.spacing(4)}px)`,
+        transform: `translateX(${
+          DRAWER_WIDTH - DRAWER_COLLAPSED_WIDTH - theme.spacing(4)
+        }px)`,
       },
       "100%": {
         transform: `translateX(${DRAWER_WIDTH - DRAWER_COLLAPSED_WIDTH}px)`,

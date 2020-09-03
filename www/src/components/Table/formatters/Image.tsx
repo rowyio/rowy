@@ -24,7 +24,7 @@ import { IMAGE_MIME_TYPES } from "constants/fields";
 import { useFiretableContext } from "contexts/firetableContext";
 import Thumbnail from "components/Thumbnail";
 
-const useStyles = makeStyles(theme =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       padding: theme.spacing(0, 0.875, 0, 1.125),
@@ -123,7 +123,7 @@ export default function Image({
   const [localImage, setLocalImage] = useState<string>("");
 
   const onDrop = useCallback(
-    acceptedFiles => {
+    (acceptedFiles) => {
       const imageFile = acceptedFiles[0];
 
       if (imageFile) {
@@ -264,7 +264,7 @@ export default function Image({
             <IconButton
               size="small"
               className="row-hover-iconButton"
-              onClick={e => {
+              onClick={(e) => {
                 dropzoneProps.onClick!(e);
                 e.stopPropagation();
               }}

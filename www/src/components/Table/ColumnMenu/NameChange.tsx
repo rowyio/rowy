@@ -55,7 +55,7 @@ export default function FormDialog({
             label="Column Header"
             type="text"
             fullWidth
-            onChange={e => {
+            onChange={(e) => {
               setName(e.target.value);
             }}
           />

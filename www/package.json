@@ -92,10 +92,10 @@
     "@types/react-div-100vh": "^0.3.0",
     "@types/react-dom": "16.9.0",
     "@types/react-router-dom": "^4.3.5",
-    "firebase-tools": "^7.16.1",
-    "husky": "^3.0.5",
-    "prettier": "^1.18.2",
-    "pretty-quick": "^2.0.1"
+    "firebase-tools": "^8.9.2",
+    "husky": "^4.2.5",
+    "prettier": "^2.1.1",
+    "pretty-quick": "^3.0.0"
   },
   "husky": {
     "hooks": {
