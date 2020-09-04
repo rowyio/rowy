@@ -1,4 +1,5 @@
 import React from "react";
+import _find from "lodash/find";
 import queryString from "query-string";
 import { Link as RouterLink } from "react-router-dom";
 
@@ -46,7 +47,7 @@ const useStyles = makeStyles((theme) =>
 export default function Breadcrumbs(props: BreadcrumbsProps) {
   const classes = useStyles();
 
-  const { tableState } = useFiretableContext();
+  const { tables, tableState } = useFiretableContext();
   const collection = tableState?.tablePath || "";
 
   const router = useRouter();
@@ -55,6 +56,9 @@ export default function Breadcrumbs(props: BreadcrumbsProps) {
   );
 
   const breadcrumbs = collection.split("/");
+
+  const getLabel = (collection: string) =>
+    _find(tables, ["collection", collection])?.name || collection;
 
   return (
     <MuiBreadcrumbs
@@ -77,7 +81,7 @@ export default function Breadcrumbs(props: BreadcrumbsProps) {
         if (index === breadcrumbs.length - 1)
           return (
             <Typography {...crumbProps}>
-              {crumb.replace(/([A-Z])/g, " $1")}
+              {getLabel(crumb.replace(/([A-Z])/g, " $1"))}
             </Typography>
           );
 
@@ -86,7 +90,9 @@ export default function Breadcrumbs(props: BreadcrumbsProps) {
         if (index % 2 === 1)
           return (
             <Typography {...crumbProps}>
-              {parentLabel.split(",")[Math.ceil(index / 2) - 1] || crumb}
+              {getLabel(
+                parentLabel.split(",")[Math.ceil(index / 2) - 1] || crumb
+              )}
             </Typography>
           );
 
@@ -101,7 +107,7 @@ export default function Breadcrumbs(props: BreadcrumbsProps) {
             variant={crumbProps.variant}
             color={crumbProps.color}
           >
-            {crumb.replace(/([A-Z])/g, " $1")}
+            {getLabel(crumb.replace(/([A-Z])/g, " $1"))}
           </Link>
         );
       })}
