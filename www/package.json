@@ -63,7 +63,7 @@
     "deploy": "firebase deploy"
   },
   "engines": {
-    "node": "10"
+    "node": ">=10"
   },
   "eslintConfig": {
     "extends": "react-app"

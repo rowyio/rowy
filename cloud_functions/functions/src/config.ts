@@ -8,7 +8,6 @@ export const db = admin.firestore();
 // Initialize Auth
 export const auth = admin.auth();
 
-//export const bucket = admin.storage().bucket("antler-vc");
 const settings = { timestampsInSnapshots: true };
 db.settings(settings);
 export const env = functions.config();

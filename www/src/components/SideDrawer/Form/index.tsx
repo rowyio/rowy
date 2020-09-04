@@ -134,6 +134,7 @@ export default function Form({ fields, values }: IFormProps) {
         control={control}
         defaultValues={defaultValues}
         docRef={docRef}
+        row={values}
       />
 
       <Grid container spacing={4} direction="column" wrap="nowrap">
