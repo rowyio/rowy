@@ -14,7 +14,7 @@ export const handleGoogleAuth = async (
     if (result.claims.roles && result.claims.roles.length !== 0) {
       success(authUser, result.claims.roles);
     } else {
-      throw Error("This account does not exist");
+      throw Error("This account does not have any roles");
     }
   } catch (error) {
     if (auth.currentUser) {
