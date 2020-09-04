@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) =>
     root: {
       width: `calc(100% - ${DRAWER_COLLAPSED_WIDTH}px)`,
       margin: 0,
-      padding: theme.spacing(0, 3.5, 0, 1),
+      padding: theme.spacing(0, 3, 0, 1),
       minHeight: TABLE_HEADER_HEIGHT,
 
       overflowX: "auto",
