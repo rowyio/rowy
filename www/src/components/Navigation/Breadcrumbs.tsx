@@ -16,21 +16,28 @@ import useRouter from "hooks/useRouter";
 import routes from "constants/routes";
 import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
 
-export const BREADCRUMBS_HEIGHT = 36;
-
 const useStyles = makeStyles((theme) =>
   createStyles({
     ol: {
-      height: BREADCRUMBS_HEIGHT,
-      alignItems: "flex-end",
+      alignItems: "baseline",
 
       paddingLeft: theme.spacing(2),
       paddingRight: DRAWER_COLLAPSED_WIDTH,
+
+      userSelect: "none",
     },
 
     li: {
+      display: "flex",
+      alignItems: "center",
+
       textTransform: "capitalize",
       "&:first-of-type": { textTransform: "uppercase" },
+    },
+
+    separator: {
+      alignSelf: "flex-end",
+      marginBottom: -2,
     },
   })
 );
@@ -53,12 +60,21 @@ export default function Breadcrumbs() {
       separator={<ArrowRightIcon />}
       aria-label="sub-table breadcrumbs"
       classes={classes}
+      component="div"
     >
       {breadcrumbs.map((crumb: string, index) => {
+        // If it’s the first breadcrumb, show with specific style
+        const crumbProps = {
+          key: index,
+          variant: index === 0 ? "h6" : "caption",
+          component: index === 0 ? "h1" : "div",
+          color: index === 0 ? "textPrimary" : "textSecondary",
+        } as const;
+
         // If it’s the last crumb, just show the label without linking
         if (index === breadcrumbs.length - 1)
           return (
-            <Typography variant="caption" color="textSecondary">
+            <Typography {...crumbProps}>
               {crumb.replace(/([A-Z])/g, " $1")}
             </Typography>
           );
@@ -67,7 +83,7 @@ export default function Breadcrumbs() {
         // TODO: show a picker here to switch between sub tables
         if (index % 2 === 1)
           return (
-            <Typography variant="caption" color="textSecondary">
+            <Typography {...crumbProps}>
               {parentLabel.split(",")[Math.ceil(index / 2) - 1] || crumb}
             </Typography>
           );
@@ -75,12 +91,13 @@ export default function Breadcrumbs() {
         // Otherwise, even: breadcrumb points to a Firestore collection
         return (
           <Link
+            key={crumbProps.key}
             component={RouterLink}
             to={`${routes.table}/${encodeURIComponent(
               breadcrumbs.slice(0, index + 1).join("/")
             )}`}
-            variant="caption"
-            color="textSecondary"
+            variant={crumbProps.variant}
+            color={crumbProps.color}
           >
             {crumb.replace(/([A-Z])/g, " $1")}
           </Link>

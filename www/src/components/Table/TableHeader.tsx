@@ -36,6 +36,8 @@ const useStyles = makeStyles((theme) =>
       overflowX: "auto",
       whiteSpace: "nowrap",
 
+      userSelect: "none",
+
       [theme.breakpoints.down("sm")]: {
         width: "100%",
         paddingRight: theme.spacing(1),

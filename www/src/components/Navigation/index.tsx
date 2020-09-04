@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import clsx from "clsx";
 import _find from "lodash/find";
 
@@ -50,6 +50,9 @@ export default function Navigation({
   const classes = useStyles();
 
   const [open, setOpen] = useState(false);
+  useEffect(() => {
+    setOpen(false);
+  }, [tableCollection]);
 
   // Find the matching section for the current route
   const currentSection = _find(tables, [
@@ -67,7 +70,7 @@ export default function Navigation({
       >
         <Toolbar className={clsx(classes.maxHeight, classes.toolbar)}>
           <IconButton
-            aria-labe="Open navigation drawer"
+            aria-label="Open navigation drawer"
             onClick={() => setOpen(true)}
           >
             <MenuIcon />
