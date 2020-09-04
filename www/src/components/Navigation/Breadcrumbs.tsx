@@ -6,6 +6,7 @@ import {
   makeStyles,
   createStyles,
   Breadcrumbs as MuiBreadcrumbs,
+  BreadcrumbsProps,
   Link,
   Typography,
 } from "@material-ui/core";
@@ -42,7 +43,7 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-export default function Breadcrumbs() {
+export default function Breadcrumbs(props: BreadcrumbsProps) {
   const classes = useStyles();
 
   const { tableState } = useFiretableContext();
@@ -61,6 +62,7 @@ export default function Breadcrumbs() {
       aria-label="sub-table breadcrumbs"
       classes={classes}
       component="div"
+      {...(props as any)}
     >
       {breadcrumbs.map((crumb: string, index) => {
         // If it’s the first breadcrumb, show with specific style

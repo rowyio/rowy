@@ -16,6 +16,7 @@ import NavDrawer from "./NavDrawer";
 
 import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
 import { useFiretableContext } from "contexts/firetableContext";
+import UserMenu from "./UserMenu";
 
 export const APP_BAR_HEIGHT = 56;
 
@@ -38,6 +39,10 @@ const useStyles = makeStyles((theme) =>
 
     toolbar: {
       padding: theme.spacing(0, 1.5),
+    },
+
+    breadcrumbs: {
+      flex: 1,
     },
   })
 );
@@ -76,7 +81,9 @@ export default function Navigation({
             <MenuIcon />
           </IconButton>
 
-          <Breadcrumbs />
+          <Breadcrumbs className={classes.breadcrumbs} />
+
+          <UserMenu />
         </Toolbar>
       </AppBar>
 

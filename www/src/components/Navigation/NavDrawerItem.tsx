@@ -38,7 +38,6 @@ const useStyles = makeStyles((theme) =>
       display: "block",
       color: "inherit",
     },
-    listItemOpen: { color: theme.palette.text.primary },
 
     dropdownIcon: { transition: theme.transitions.create("transform") },
     dropdownIconOpen: { transform: "rotate(180deg)" },
@@ -80,7 +79,6 @@ export default function NavDrawerItem({
         classes={{
           root: clsx(
             classes.listItem,
-            open && classes.listItemOpen,
             !open && currentSection === section && classes.listItemSelected
           ),
         }}
