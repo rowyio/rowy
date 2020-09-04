@@ -57,7 +57,7 @@ export default function HiddenFields() {
 
   // Initialise hiddenFields from user doc
   const userDocHiddenFields =
-    userDoc.state.doc.tables?.[tableState?.tablePath!]?.hiddenFields;
+    userDoc.state.doc?.tables?.[tableState?.tablePath!]?.hiddenFields;
   useEffect(() => {
     if (userDocHiddenFields) setHiddenFields(userDocHiddenFields);
   }, [userDocHiddenFields]);
