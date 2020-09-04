@@ -42,12 +42,12 @@ const useDoc = (intialOverrides: any) => {
     const unsubscribe = db.doc(documentState.path).onSnapshot((snapshot) => {
       if (snapshot.exists) {
         const data = snapshot.data();
-
         const id = snapshot.id;
-        const doc = { ...data, id };
+        const ref = snapshot.ref;
+        const doc = { ...data, id, ref };
         documentDispatch({
           doc,
-          ref: snapshot.ref,
+          ref,
           loading: false,
         });
       } else {
