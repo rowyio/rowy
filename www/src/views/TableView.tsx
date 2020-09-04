@@ -34,8 +34,8 @@ export default function TableView() {
       tableState &&
       tableState.tablePath !== tableCollection
     ) {
+      tableActions.table.set(tableCollection, filters);
       if (filters && filters.length !== 0) {
-        tableActions.table.set(tableCollection, filters);
         userDoc.dispatch({
           action: DocActions.update,
           data: {
