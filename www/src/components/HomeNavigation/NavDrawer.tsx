@@ -15,7 +15,7 @@ import {
   ListItemText,
 } from "@material-ui/core";
 import { fade } from "@material-ui/core/styles";
-import CloseIcon from "@material-ui/icons/Close";
+import CloseIcon from "assets/icons/Backburger";
 import AddIcon from "@material-ui/icons/Add";
 
 import { APP_BAR_HEIGHT } from ".";

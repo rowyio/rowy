@@ -15,7 +15,7 @@ import {
   Divider,
 } from "@material-ui/core";
 import HomeIcon from "@material-ui/icons/Home";
-import CloseIcon from "@material-ui/icons/Close";
+import CloseIcon from "assets/icons/Backburger";
 
 import { APP_BAR_HEIGHT } from ".";
 import FiretableLogo from "assets/Firetable";
