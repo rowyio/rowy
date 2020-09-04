@@ -5,12 +5,13 @@ import { Link as RouterLink } from "react-router-dom";
 import {
   makeStyles,
   createStyles,
-  Breadcrumbs,
+  Breadcrumbs as MuiBreadcrumbs,
   Link,
   Typography,
 } from "@material-ui/core";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 
+import { useFiretableContext } from "contexts/firetableContext";
 import useRouter from "hooks/useRouter";
 import routes from "constants/routes";
 import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
@@ -34,14 +35,11 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-export interface ISubTableBreadcrumbsProps {
-  collection: string;
-}
-
-export default function SubTableBreadcrumbs({
-  collection,
-}: ISubTableBreadcrumbsProps) {
+export default function Breadcrumbs() {
   const classes = useStyles();
+
+  const { tableState } = useFiretableContext();
+  const collection = tableState?.tablePath || "";
 
   const router = useRouter();
   const parentLabel = decodeURIComponent(
@@ -51,7 +49,7 @@ export default function SubTableBreadcrumbs({
   const breadcrumbs = collection.split("/");
 
   return (
-    <Breadcrumbs
+    <MuiBreadcrumbs
       separator={<ArrowRightIcon />}
       aria-label="sub-table breadcrumbs"
       classes={classes}
@@ -88,6 +86,6 @@ export default function SubTableBreadcrumbs({
           </Link>
         );
       })}
-    </Breadcrumbs>
+    </MuiBreadcrumbs>
   );
 }

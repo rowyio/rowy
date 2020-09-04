@@ -15,7 +15,8 @@ export default function Firetable(props: SvgIconProps) {
   //const strokeColor = getColorByBgColor(primaryColor);
   const strokeColor = "#fff";
   return (
-    <svg width="140" height="32" viewBox="0 0 140 32">
+    <svg width="140" height="32" viewBox="0 0 140 32" role="img">
+      <title>Firetable</title>
       <g fill="none" fillRule="evenodd">
         <rect width="32" height="32" fill={primaryColor} rx="2.667" />
         <g fill={strokeColor}>

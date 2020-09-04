@@ -107,7 +107,10 @@ const useStyles = makeStyles((theme) =>
       marginLeft: -1,
       borderColor: theme.palette.action.disabled,
     },
-    filterChipDelete: { color: theme.palette.primary.main },
+    filterChipDelete: {
+      color: theme.palette.primary.main,
+      "&:hover": { color: theme.palette.primary.dark },
+    },
   })
 );
 
