@@ -57,6 +57,7 @@ export default function Breadcrumbs(props: BreadcrumbsProps) {
 
   const breadcrumbs = collection.split("/");
 
+  const section = _find(tables, ["collection", breadcrumbs[0]])?.section || "";
   const getLabel = (collection: string) =>
     _find(tables, ["collection", collection])?.name || collection;
 
@@ -68,12 +69,24 @@ export default function Breadcrumbs(props: BreadcrumbsProps) {
       component="div"
       {...(props as any)}
     >
+      {/* Section name */}
+      {section && (
+        <Link
+          component={RouterLink}
+          to={`${routes.home}#${section}`}
+          variant="h6"
+          color="textPrimary"
+        >
+          {section}
+        </Link>
+      )}
+
       {breadcrumbs.map((crumb: string, index) => {
         // If it’s the first breadcrumb, show with specific style
         const crumbProps = {
           key: index,
           variant: index === 0 ? "h6" : "caption",
-          component: index === 0 ? "h1" : "div",
+          component: index === 0 ? "h2" : "div",
           color: index === 0 ? "textPrimary" : "textSecondary",
         } as const;
 
@@ -81,7 +94,7 @@ export default function Breadcrumbs(props: BreadcrumbsProps) {
         if (index === breadcrumbs.length - 1)
           return (
             <Typography {...crumbProps}>
-              {getLabel(crumb.replace(/([A-Z])/g, " $1"))}
+              {getLabel(crumb) || crumb.replace(/([A-Z])/g, " $1")}
             </Typography>
           );
 
@@ -107,7 +120,7 @@ export default function Breadcrumbs(props: BreadcrumbsProps) {
             variant={crumbProps.variant}
             color={crumbProps.color}
           >
-            {getLabel(crumb.replace(/([A-Z])/g, " $1"))}
+            {getLabel(crumb) || crumb.replace(/([A-Z])/g, " $1")}
           </Link>
         );
       })}

@@ -16,6 +16,7 @@
     "commander": "^6.0.0",
     "configstore": "^5.0.1",
     "figlet": "^1.5.0",
+    "firebase-admin": "^9.1.1",
     "inquirer": "^7.3.3",
     "lodash": "^4.17.19",
     "open": "^7.1.0"

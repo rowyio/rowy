@@ -16,7 +16,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 
 import FiretableLogo from "assets/Firetable";
 import NavDrawer, { NAV_DRAWER_WIDTH } from "./NavDrawer";
-import UserMenu from "./UserMenu";
+import UserMenu from "components/Navigation/UserMenu";
 
 export const APP_BAR_HEIGHT = 56;
 
@@ -76,7 +76,7 @@ const useStyles = makeStyles((theme) =>
     },
     logo: {
       flex: 1,
-      marginLeft: theme.spacing(1),
+      textAlign: "center",
 
       opacity: 1,
       transition: theme.transitions.create("opacity"),

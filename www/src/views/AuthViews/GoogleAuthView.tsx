@@ -8,6 +8,8 @@ import AuthCard from "./AuthCard";
 import { handleGoogleAuth } from "./utils";
 import GoogleLogo from "assets/google-icon.svg";
 import { useSnackContext } from "contexts/snackContext";
+import { Link } from "react-router-dom";
+import { auth } from "../../firebase";
 export default function GoogleAuthView() {
   const [loading, setLoading] = useState(false);
   const snack = useSnackContext();
@@ -27,7 +29,45 @@ export default function GoogleAuthView() {
             },
             (error: Error) => {
               setLoading(false);
-              snack.open({ message: error.message });
+              console.log(error);
+              if (
+                error.message ===
+                "The identity provider configuration is disabled."
+              ) {
+                snack.open({
+                  severity: "warning",
+                  message:
+                    "You need to enable Google authentication in your firebase project",
+                  action: (
+                    <Button
+                      component="a"
+                      href={`https://console.firebase.google.com/u/0/project/${auth.app.options["projectId"]}/authentication/providers`}
+                      target="_blank"
+                    >
+                      Go to settings
+                    </Button>
+                  ),
+                });
+              } else if (
+                error.message === "This account does not have any roles"
+              ) {
+                snack.open({
+                  severity: "warning",
+                  message:
+                    "You need to enable Google authentication in your firebase project",
+                  action: (
+                    <Button
+                      component="a"
+                      href={`https://github.com/AntlerVC/firetable/blob/master/RULES.md`}
+                      target="_blank"
+                    >
+                      Instructions
+                    </Button>
+                  ),
+                });
+              } else {
+                snack.open({ message: error.message });
+              }
             },
             parsedQuery.email as string
           );
