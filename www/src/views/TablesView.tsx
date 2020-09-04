@@ -107,17 +107,25 @@ const TablesView = () => {
       data: null,
     });
 
-  const { sections, userClaims } = useFiretableContext();
+  const { sections } = useFiretableContext();
   const { userDoc } = useAppContext();
 
   const favs = userDoc.state.doc?.favoriteTables
     ? userDoc.state.doc.favoriteTables
     : [];
 
+  const handleCreateTable = () =>
+    setSettingsDialogState({
+      mode: TableSettingsDialogModes.create,
+      data: null,
+    });
+
+  const [open, setOpen] = useState(false);
+
   const TableCard = ({ table }) => {
     const checked = Boolean(_find(favs, table));
     return (
-      <Grid key={table.name} item xs={12} sm={6} md={4}>
+      <Grid key={table.name} item xs={12} sm={6} md={open ? 6 : 4}>
         <StyledCard
           className={classes.card}
           overline={table.section}
@@ -168,7 +176,11 @@ const TablesView = () => {
   };
 
   return (
-    <HomeNavigation>
+    <HomeNavigation
+      open={open}
+      setOpen={setOpen}
+      handleCreateTable={handleCreateTable}
+    >
       <main className={classes.root}>
         <Container>
           {favs.length !== 0 && (
@@ -230,12 +242,7 @@ const TablesView = () => {
                 className={classes.fab}
                 color="secondary"
                 aria-label="Create table"
-                onClick={() => {
-                  setSettingsDialogState({
-                    mode: TableSettingsDialogModes.create,
-                    data: null,
-                  });
-                }}
+                onClick={handleCreateTable}
               >
                 <AddIcon />
               </Fab>

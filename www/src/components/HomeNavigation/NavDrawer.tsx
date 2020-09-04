@@ -3,6 +3,8 @@ import React from "react";
 import {
   makeStyles,
   createStyles,
+  useTheme,
+  useMediaQuery,
   Drawer,
   DrawerProps,
   Grid,
@@ -11,10 +13,10 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  Divider,
 } from "@material-ui/core";
 import { fade } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
+import AddIcon from "@material-ui/icons/Add";
 
 import { APP_BAR_HEIGHT } from ".";
 import FiretableLogo from "assets/Firetable";
@@ -34,6 +36,15 @@ const useStyles = makeStyles((theme) =>
       marginBottom: theme.spacing(1),
 
       padding: theme.spacing(0, 0.5, 0, 2),
+    },
+
+    nav: { height: "100%" },
+    list: {
+      display: "flex",
+      flexDirection: "column",
+      flexWrap: "nowrap",
+
+      height: "100%",
     },
 
     listItem: {
@@ -57,13 +68,22 @@ const useStyles = makeStyles((theme) =>
       display: "block",
       color: "inherit",
     },
+
+    createTable: { marginTop: "auto" },
   })
 );
 
-export interface INavDrawerProps extends DrawerProps {}
+export interface INavDrawerProps extends DrawerProps {
+  handleCreateTable: () => void;
+}
 
-export default function NavDrawer(props: INavDrawerProps) {
+export default function NavDrawer({
+  handleCreateTable,
+  ...props
+}: INavDrawerProps) {
   const classes = useStyles();
+  const theme = useTheme();
+  const isSm = useMediaQuery(theme.breakpoints.down("sm"));
 
   const { sections } = useFiretableContext();
   const { location } = useRouter();
@@ -72,7 +92,7 @@ export default function NavDrawer(props: INavDrawerProps) {
   return (
     <Drawer
       open
-      variant="persistent"
+      variant={isSm ? "temporary" : "persistent"}
       {...props}
       classes={{ paper: classes.paper }}
     >
@@ -98,8 +118,8 @@ export default function NavDrawer(props: INavDrawerProps) {
         </Grid>
       </Grid>
 
-      <nav>
-        <List>
+      <nav className={classes.nav}>
+        <List className={classes.list}>
           {sections &&
             Object.keys(sections).map((section) => (
               <li key={section}>
@@ -114,6 +134,7 @@ export default function NavDrawer(props: INavDrawerProps) {
                     root: classes.listItem,
                     selected: classes.listItemSelected,
                   }}
+                  onClick={isSm ? (props.onClose as any) : undefined}
                 >
                   <ListItemText
                     primary={section}
@@ -122,6 +143,22 @@ export default function NavDrawer(props: INavDrawerProps) {
                 </ListItem>
               </li>
             ))}
+
+          <li className={classes.createTable}>
+            <ListItem
+              button
+              onClick={handleCreateTable}
+              classes={{ root: classes.listItem }}
+            >
+              <ListItemIcon>
+                <AddIcon />
+              </ListItemIcon>
+              <ListItemText
+                primary="Create Table"
+                classes={{ primary: classes.listItemText }}
+              />
+            </ListItem>
+          </li>
         </List>
       </nav>
     </Drawer>

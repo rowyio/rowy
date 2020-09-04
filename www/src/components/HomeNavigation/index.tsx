@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import clsx from "clsx";
 import _find from "lodash/find";
 
@@ -25,18 +25,20 @@ const useStyles = makeStyles((theme) =>
     open: {},
 
     navDrawerContainer: {
-      width: 0,
-      transition: theme.transitions.create("width", {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-      }),
-
-      "$open &": {
-        width: NAV_DRAWER_WIDTH,
+      [theme.breakpoints.up("md")]: {
+        width: 0,
         transition: theme.transitions.create("width", {
-          easing: theme.transitions.easing.easeOut,
-          duration: theme.transitions.duration.enteringScreen,
+          easing: theme.transitions.easing.sharp,
+          duration: theme.transitions.duration.leavingScreen,
         }),
+
+        "$open &": {
+          width: NAV_DRAWER_WIDTH,
+          transition: theme.transitions.create("width", {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen,
+          }),
+        },
       },
     },
 
@@ -44,16 +46,18 @@ const useStyles = makeStyles((theme) =>
       height: APP_BAR_HEIGHT,
       [theme.breakpoints.down("sm")]: { paddingRight: 0 },
 
-      transition: theme.transitions.create("width", {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-      }),
-      "$open &": {
-        width: `calc(100% - ${NAV_DRAWER_WIDTH}px)`,
+      [theme.breakpoints.up("md")]: {
         transition: theme.transitions.create("width", {
-          easing: theme.transitions.easing.easeOut,
-          duration: theme.transitions.duration.enteringScreen,
+          easing: theme.transitions.easing.sharp,
+          duration: theme.transitions.duration.leavingScreen,
         }),
+        "$open &": {
+          width: `calc(100% - ${NAV_DRAWER_WIDTH}px)`,
+          transition: theme.transitions.create("width", {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen,
+          }),
+        },
       },
     },
     maxHeight: {
@@ -81,13 +85,23 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
+export interface IHomeNavigationProps {
+  children: React.ReactNode;
+
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+
+  handleCreateTable: () => void;
+}
+
 export default function HomeNavigation({
   children,
-}: React.PropsWithChildren<{}>) {
+  open,
+  setOpen,
+  handleCreateTable,
+}: IHomeNavigationProps) {
   const classes = useStyles();
   const trigger = useScrollTrigger({ disableHysteresis: true, threshold: 0 });
-
-  const [open, setOpen] = useState(false);
 
   return (
     <Grid
@@ -97,7 +111,11 @@ export default function HomeNavigation({
       className={clsx(open && classes.open)}
     >
       <Grid item className={classes.navDrawerContainer}>
-        <NavDrawer open={open} onClose={() => setOpen(false)} />
+        <NavDrawer
+          open={open}
+          onClose={() => setOpen(false)}
+          handleCreateTable={handleCreateTable}
+        />
       </Grid>
 
       <Grid item xs>
