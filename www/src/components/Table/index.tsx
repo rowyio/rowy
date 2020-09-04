@@ -15,7 +15,6 @@ import DataGrid, {
 import { DraggableHeader } from "react-data-grid-addons";
 
 import Loading from "components/Loading";
-import SubTableBreadcrumbs, { BREADCRUMBS_HEIGHT } from "./SubTableBreadcrumbs";
 import TableHeader, { TABLE_HEADER_HEIGHT } from "./TableHeader";
 import ColumnHeader from "./ColumnHeader";
 import ColumnMenu from "./ColumnMenu";
@@ -136,10 +135,6 @@ export default function Table() {
     ),
   });
 
-  // rows[rowIdx]
-
-  const inSubTable = tableState.tablePath.split("/").length > 1;
-
   let tableWidth: any = `calc(100% - ${
     DRAWER_COLLAPSED_WIDTH
     // sideDrawerOpen ? DRAWER_WIDTH : DRAWER_COLLAPSED_WIDTH
@@ -151,8 +146,6 @@ export default function Table() {
       {/* <Suspense fallback={<Loading message="Loading header" />}>
         <Hotkeys selectedCell={selectedCell} />
       </Suspense> */}
-
-      {inSubTable && <SubTableBreadcrumbs collection={tableState.tablePath} />}
 
       <TableHeader
         rowHeight={rowHeight}
@@ -177,12 +170,7 @@ export default function Table() {
             // LOADING to pop up on screen when scrolling horizontally
             // width={windowSize.width - DRAWER_COLLAPSED_WIDTH}
             minWidth={tableWidth}
-            minHeight={
-              windowSize.height -
-              APP_BAR_HEIGHT * 2 -
-              TABLE_HEADER_HEIGHT -
-              (inSubTable ? BREADCRUMBS_HEIGHT : 0)
-            }
+            minHeight={windowSize.height - APP_BAR_HEIGHT - TABLE_HEADER_HEIGHT}
             // enableCellCopyPaste
             // enableCellDragAndDrop
             onColumnResize={tableActions.column.resize}

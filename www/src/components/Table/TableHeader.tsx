@@ -22,7 +22,7 @@ import { useFiretableContext } from "contexts/firetableContext";
 import { FieldType } from "constants/fields";
 import MigrateButton from "./MigrateButton";
 import HiddenFields from "./HidenFields";
-import Settings from "./Settings";
+//import Settings from "./Settings";
 export const TABLE_HEADER_HEIGHT = 56;
 
 const useStyles = makeStyles((theme) =>
@@ -30,11 +30,13 @@ const useStyles = makeStyles((theme) =>
     root: {
       width: `calc(100% - ${DRAWER_COLLAPSED_WIDTH}px)`,
       margin: 0,
-      padding: theme.spacing(0, 3.5, 0, 1),
+      padding: theme.spacing(0, 3, 0, 1),
       minHeight: TABLE_HEADER_HEIGHT,
 
       overflowX: "auto",
       whiteSpace: "nowrap",
+
+      userSelect: "none",
 
       [theme.breakpoints.down("sm")]: {
         width: "100%",
@@ -108,7 +110,12 @@ export default function TableHeader({
         </Grid>
       )}
 
-      <Grid item>{/* <HiddenFields /> */}</Grid>
+      {/* Spacer */}
+      <Grid item />
+
+      <Grid item>
+        <HiddenFields />
+      </Grid>
       <Grid item>
         <Filters />
       </Grid>
@@ -163,7 +170,7 @@ export default function TableHeader({
       <Grid item>
         <ExportCSV />
       </Grid>
-      <Settings />
+      {/* <Settings /> */}
     </Grid>
   );
 }

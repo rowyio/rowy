@@ -20,7 +20,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import Favorite from "@material-ui/icons/Favorite";
 import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
 
-import AppBar from "components/AppBar";
+import HomeNavigation from "components/HomeNavigation";
 import StyledCard from "components/StyledCard";
 
 import routes from "constants/routes";
@@ -33,13 +33,18 @@ import TableSettingsDialog, {
 
 const useStyles = makeStyles((theme) =>
   createStyles({
+    "@global": {
+      html: { scrollBehavior: "smooth" },
+    },
+
     root: {
       minHeight: "100vh",
       paddingBottom: theme.spacing(8),
     },
 
     section: {
-      "& + &": { marginTop: theme.spacing(8) },
+      paddingTop: theme.spacing(10),
+      "&:first-of-type": { marginTop: theme.spacing(2) },
     },
     sectionHeader: {
       color: theme.palette.text.secondary,
@@ -102,17 +107,25 @@ const TablesView = () => {
       data: null,
     });
 
-  const { sections, userClaims } = useFiretableContext();
+  const { sections } = useFiretableContext();
   const { userDoc } = useAppContext();
 
   const favs = userDoc.state.doc?.favoriteTables
     ? userDoc.state.doc.favoriteTables
     : [];
 
+  const handleCreateTable = () =>
+    setSettingsDialogState({
+      mode: TableSettingsDialogModes.create,
+      data: null,
+    });
+
+  const [open, setOpen] = useState(false);
+
   const TableCard = ({ table }) => {
     const checked = Boolean(_find(favs, table));
     return (
-      <Grid key={table.name} item xs={12} sm={6} md={4}>
+      <Grid key={table.name} item xs={12} sm={6} md={open ? 6 : 4}>
         <StyledCard
           className={classes.card}
           overline={table.section}
@@ -163,19 +176,21 @@ const TablesView = () => {
   };
 
   return (
-    <>
+    <HomeNavigation
+      open={open}
+      setOpen={setOpen}
+      handleCreateTable={handleCreateTable}
+    >
       <main className={classes.root}>
-        <AppBar />
-
         <Container>
           {favs.length !== 0 && (
-            <section key={"favorites"} className={classes.section}>
+            <section id="favorites" className={classes.section}>
               <Typography
                 variant="subtitle2"
                 component="h1"
                 className={classes.sectionHeader}
               >
-                favorites
+                Favorites
               </Typography>
               <Divider className={classes.divider} />
               <Grid
@@ -193,7 +208,11 @@ const TablesView = () => {
 
           {sections &&
             Object.keys(sections).map((sectionName) => (
-              <section key={sectionName} className={classes.section}>
+              <section
+                key={sectionName}
+                id={sectionName}
+                className={classes.section}
+              >
                 <Typography
                   variant="subtitle2"
                   component="h1"
@@ -223,12 +242,7 @@ const TablesView = () => {
                 className={classes.fab}
                 color="secondary"
                 aria-label="Create table"
-                onClick={() => {
-                  setSettingsDialogState({
-                    mode: TableSettingsDialogModes.create,
-                    data: null,
-                  });
-                }}
+                onClick={handleCreateTable}
               >
                 <AddIcon />
               </Fab>
@@ -242,7 +256,7 @@ const TablesView = () => {
         mode={settingsDialogState.mode}
         data={settingsDialogState.data}
       />
-    </>
+    </HomeNavigation>
   );
 };
 

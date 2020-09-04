@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@antlerengineering/components": "^0.4.1",
-    "@antlerengineering/multiselect": "^0.3.14",
+    "@antlerengineering/multiselect": "^0.4.0",
     "@date-io/date-fns": "1.x",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",

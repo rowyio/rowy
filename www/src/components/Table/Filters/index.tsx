@@ -19,6 +19,7 @@ import FilterIcon from "@material-ui/icons/FilterList";
 import CloseIcon from "@material-ui/icons/Close";
 
 import MultiSelect from "@antlerengineering/multiselect";
+import ButtonWithStatus from "components/ButtonWithStatus";
 
 import { FieldType } from "constants/fields";
 import { FireTableFilter } from "hooks/useFiretable";
@@ -93,6 +94,23 @@ const useStyles = makeStyles((theme) =>
 
     topRow: { marginBottom: theme.spacing(3.5) },
     bottomButtons: { marginTop: theme.spacing(4.5) },
+
+    activeButton: {
+      borderTopRightRadius: 0,
+      borderBottomRightRadius: 0,
+    },
+
+    filterChip: {
+      borderTopLeftRadius: 0,
+      borderBottomLeftRadius: 0,
+      backgroundColor: theme.palette.background.paper,
+      marginLeft: -1,
+      borderColor: theme.palette.action.disabled,
+    },
+    filterChipDelete: {
+      color: theme.palette.primary.main,
+      "&:hover": { color: theme.palette.primary.dark },
+    },
   })
 );
 
@@ -319,22 +337,31 @@ const Filters = () => {
   return (
     <>
       <Grid container direction="row">
-        <Button
+        <ButtonWithStatus
           variant="outlined"
           color="primary"
           onClick={handleClick}
           startIcon={<FilterIcon />}
+          active={tableState?.filters && tableState?.filters.length > 0}
+          className={
+            tableState?.filters && tableState?.filters.length > 0
+              ? classes.activeButton
+              : ""
+          }
         >
-          {filters.length !== 0 && filters.length}
-          {" Filter"}
-          {filters.length > 1 && "s"}
-        </Button>
+          {tableState?.filters && tableState?.filters.length > 0
+            ? "Filtered"
+            : "Filter"}
+        </ButtonWithStatus>
+
         {(tableState?.filters ?? []).map((filter) => (
           <Chip
             key={filter.key}
             label={`${filter.key} ${filter.operator} ${filter.value}`}
-            onDelete={() => {
-              handleUpdateFilters([]);
+            onDelete={() => handleUpdateFilters([])}
+            classes={{
+              root: classes.filterChip,
+              deleteIcon: classes.filterChipDelete,
             }}
           />
         ))}

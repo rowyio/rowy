@@ -115,10 +115,10 @@
     lodash "^4.17.15"
     lodash-es "^4.17.15"
 
-"@antlerengineering/multiselect@^0.3.14":
-  version "0.3.14"
-  resolved "https://registry.yarnpkg.com/@antlerengineering/multiselect/-/multiselect-0.3.14.tgz#d24c983913ba1a2272bfe4dd5afbb081aedc95dc"
-  integrity sha512-1AsBicZlna3hEG+J1tOgQEhgx/WNbuc7z9khDtkISjWs7hZxevMoLlTPuNZFafHikuGhk/Lr56KihBvz51+mxA==
+"@antlerengineering/multiselect@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@antlerengineering/multiselect/-/multiselect-0.4.0.tgz#39e04883671b0a05d5dda4294ef3cac3ba3715dd"
+  integrity sha512-CBCdGc4zIl0Of2jhtssXUuYP5KxzgsHCTYezbWTqFZGdGr+BIjLHfEOjY5RSx/9dQzamlNL1Z8XrRpamEGymYg==
 
 "@babel/code-frame@7.8.3", "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.8.3":
   version "7.8.3"
