@@ -336,7 +336,7 @@ const Filters = () => {
   };
   return (
     <>
-      <Grid container direction="row">
+      <Grid container direction="row" wrap="nowrap">
         <ButtonWithStatus
           variant="outlined"
           color="primary"
