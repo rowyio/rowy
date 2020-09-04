@@ -66,6 +66,16 @@ export default function Navigation({
   ])?.section;
   const currentTable = tableCollection?.split("/")[0];
 
+  useEffect(() => {
+    const name =
+      _find(tables, ["collection", currentTable])?.name || currentTable;
+    document.title = `${name} | Firetable`;
+
+    return () => {
+      document.title = "Firetable";
+    };
+  }, [currentTable]);
+
   return (
     <>
       <AppBar
