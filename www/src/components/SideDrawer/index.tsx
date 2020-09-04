@@ -35,7 +35,7 @@ export default function SideDrawer() {
   const [open, setOpen] = useState(false);
   if (sideDrawerRef) sideDrawerRef.current = { cell, setCell, open, setOpen };
 
-  const disabled = !cell || _isNil(cell.row);
+  const disabled = !open && (!cell || _isNil(cell.row));
   useEffect(() => {
     if (disabled && setOpen) setOpen(false);
   }, [disabled]);
@@ -55,10 +55,9 @@ export default function SideDrawer() {
 
   const [urlDocState, dispatchUrlDoc] = useDoc({});
   useEffect(() => {
-    if (urlDocState.doc) {
-      setOpen(true);
-    }
+    if (urlDocState.doc) setOpen(true);
   }, [urlDocState]);
+
   useEffect(() => {
     const rowRef = queryString.parse(window.location.search).rowRef as string;
     if (rowRef) {
@@ -66,6 +65,7 @@ export default function SideDrawer() {
       dispatchUrlDoc({ path: decodeURIComponent(rowRef) });
     }
   }, []);
+
   useEffect(() => {
     if (cell) {
       window.history.pushState(
