@@ -20,7 +20,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import Favorite from "@material-ui/icons/Favorite";
 import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
 
-import AppBar from "components/AppBar";
+import HomeNavigation from "components/HomeNavigation";
 import StyledCard from "components/StyledCard";
 
 import routes from "constants/routes";
@@ -33,13 +33,18 @@ import TableSettingsDialog, {
 
 const useStyles = makeStyles((theme) =>
   createStyles({
+    "@global": {
+      html: { scrollBehavior: "smooth" },
+    },
+
     root: {
       minHeight: "100vh",
       paddingBottom: theme.spacing(8),
     },
 
     section: {
-      "& + &": { marginTop: theme.spacing(8) },
+      paddingTop: theme.spacing(10),
+      "&:first-of-type": { marginTop: theme.spacing(2) },
     },
     sectionHeader: {
       color: theme.palette.text.secondary,
@@ -163,19 +168,17 @@ const TablesView = () => {
   };
 
   return (
-    <>
+    <HomeNavigation>
       <main className={classes.root}>
-        <AppBar />
-
         <Container>
           {favs.length !== 0 && (
-            <section key={"favorites"} className={classes.section}>
+            <section id="favorites" className={classes.section}>
               <Typography
                 variant="subtitle2"
                 component="h1"
                 className={classes.sectionHeader}
               >
-                favorites
+                Favorites
               </Typography>
               <Divider className={classes.divider} />
               <Grid
@@ -193,7 +196,11 @@ const TablesView = () => {
 
           {sections &&
             Object.keys(sections).map((sectionName) => (
-              <section key={sectionName} className={classes.section}>
+              <section
+                key={sectionName}
+                id={sectionName}
+                className={classes.section}
+              >
                 <Typography
                   variant="subtitle2"
                   component="h1"
@@ -242,7 +249,7 @@ const TablesView = () => {
         mode={settingsDialogState.mode}
         data={settingsDialogState.data}
       />
-    </>
+    </HomeNavigation>
   );
 };
 
