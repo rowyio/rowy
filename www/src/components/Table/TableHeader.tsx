@@ -108,7 +108,12 @@ export default function TableHeader({
         </Grid>
       )}
 
-      <Grid item>{/* <HiddenFields /> */}</Grid>
+      {/* Spacer */}
+      <Grid item />
+
+      <Grid item>
+        <HiddenFields />
+      </Grid>
       <Grid item>
         <Filters />
       </Grid>

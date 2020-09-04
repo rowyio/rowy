@@ -57,6 +57,8 @@ const useStyles = makeStyles((theme) =>
 
       marginLeft: theme.spacing(0.5),
     },
+
+    secondaryItem: { marginLeft: theme.spacing(1) },
   })
 );
 
@@ -83,8 +85,8 @@ export default function Column({
       container
       alignItems="center"
       wrap="nowrap"
-      className={clsx(classes.root, active && classes.active)}
       {...props}
+      className={clsx(classes.root, active && classes.active, props.className)}
     >
       {type && <Grid item>{getFieldIcon(type)}</Grid>}
 
@@ -100,7 +102,11 @@ export default function Column({
         </Typography>
       </Grid>
 
-      {secondaryItem && <Grid item>{secondaryItem}</Grid>}
+      {secondaryItem && (
+        <Grid item className={classes.secondaryItem}>
+          {secondaryItem}
+        </Grid>
+      )}
     </Grid>
   );
 }
