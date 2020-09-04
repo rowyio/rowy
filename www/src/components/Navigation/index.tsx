@@ -64,6 +64,7 @@ export default function Navigation({
     "collection",
     tableCollection?.split("/")[0],
   ])?.section;
+  const currentTable = tableCollection?.split("/")[0];
 
   return (
     <>
@@ -89,7 +90,7 @@ export default function Navigation({
 
       <NavDrawer
         currentSection={currentSection}
-        currentTable={tableCollection}
+        currentTable={currentTable}
         open={open}
         onClose={() => setOpen(false)}
       />
