@@ -39,7 +39,9 @@ export default function UserMenu(props: IconButtonProps) {
   const anchorEl = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
 
-  const { userDoc } = useAppContext();
+  const { currentUser, userDoc } = useAppContext();
+  if (!currentUser || !userDoc || !userDoc?.state?.doc) return null;
+
   const displayName = userDoc?.state?.doc?.user?.displayName;
   const avatarUrl = userDoc?.state?.doc?.user?.photoURL;
 

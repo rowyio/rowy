@@ -57,8 +57,7 @@ export default function Breadcrumbs(props: BreadcrumbsProps) {
 
   const breadcrumbs = collection.split("/");
 
-  const getSection = (collection: string) =>
-    _find(tables, ["collection", collection])?.section || collection;
+  const section = _find(tables, ["collection", breadcrumbs[0]])?.section || "";
   const getLabel = (collection: string) =>
     _find(tables, ["collection", collection])?.name || collection;
 
@@ -71,9 +70,16 @@ export default function Breadcrumbs(props: BreadcrumbsProps) {
       {...(props as any)}
     >
       {/* Section name */}
-      <Typography variant="h6" component="h1" color="textPrimary">
-        {getSection(breadcrumbs[0])}
-      </Typography>
+      {section && (
+        <Link
+          component={RouterLink}
+          to={`${routes.home}#${section}`}
+          variant="h6"
+          color="textPrimary"
+        >
+          {section}
+        </Link>
+      )}
 
       {breadcrumbs.map((crumb: string, index) => {
         // If it’s the first breadcrumb, show with specific style
