@@ -9,11 +9,10 @@ Cloud.
 
 <!-- [![Discord Shield](https://discordapp.com/api/guilds/746329234720686132/widget.png?style=shield)](https://discord.gg/Vdshr9E) -->
 
-### Firetable UI [(Demo)](https://try.firetable.io)
+### Firetable UI [(Live Demo)](https://try.firetable.io)
 
 Supports fields such as images, files, single/multi select, in addition to
-standard fields. Functions such as row resizing, data import/export are
-supported.
+standard fields. Functions such as row resizing, csv data import/export and much more!
 
 ![Firetable screenshot](https://firetable.io/demo.gif)
 
@@ -80,7 +79,7 @@ cd [directory]
 firetable start
 ```
 
-### 3. Manually set up Firetable app
+### Manually set up Firetable app
 
 If you don’t want to run the Firetable CLI, follow these steps:
 
