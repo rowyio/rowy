@@ -21,18 +21,18 @@
 - Authenticate ✅
 - Delete rows ✅
 
-## MVP
+## MVP ✅
 
 ### additional fields:
 
-- single select(string)✅
-- Multiple select(array of strings)✅
-- date(Firebase timestamp)✅
-- time(Firebase timestamp)✅
+- single select(string) ✅
+- Multiple select(array of strings) ✅
+- date(Firebase timestamp) ✅
+- time(Firebase timestamp) ✅
 - file (single) ✅
 - image (single) ✅
-- single select reference(DocReference)✅
-- multi select reference(DocReference)✅
+- single select reference(DocReference) ✅
+- multi select reference(DocReference) ✅
 - rating ✅
 
 ### Functionality:
@@ -44,8 +44,7 @@
 - resizable column ✅
 - keyboard cell navigation ✅
 - column / table Create/edit  ✅
-- On new table add, refresh view to the table view✅
-- import csv to table✅
+- import csv to table ✅
 
 ## V1
 
@@ -56,8 +55,8 @@
 - image (multi) ✅
 - Percentage(number)
 - Slider(number) ✅
-- Table(Document[])✅
-- Rich Text(html string))✅
+- Table(Document[]) ✅
+- Rich Text(html string)) ✅
 - Callable buttons ✅
 - meta fields:✅
   - createdAt
@@ -68,18 +67,17 @@
 ### Functionality:
 
 - Sort rows ✅
-- reorder columns✅
+- reorder columns ✅
 - Auto suggest columns based of existing docs ✅
 - Locked columns ✅
-- Table view only mode
 - SubCollection tables ✅
 - Permissions✅
 - Duplicate columns
 - Filter columns:✅
   - equals to✅
   - Starts with
-  - contains✅
-- Export tables to csv✅
+  - contains ✅
+- Export tables to csv ✅
 - Dialog View of a row(SideDrawer) ✅
 - Import CSV by matching with primary unique key column
 
@@ -88,6 +86,7 @@
 ### Additional Fields:
 
 - currency
+- Derivative
 - count(docs in collection)
 - index(number)
 - Duration (ss/hh/mm/dd) 
@@ -98,9 +97,12 @@
 - Themes
 - Table templates
 - multi auth
+- Table view only mode
 - Make a toggle switch to allow single/multi
   - Image
   - File
   - Reference
   - Select
 - Mark primary/unique columns
+- Webhooks
+- Firestore Rules automation
