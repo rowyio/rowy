@@ -15,7 +15,7 @@ Supports fields such as images, files, single/multi select, in addition to
 standard fields. Functions such as row resizing, data import/export are
 supported. More coming soon, for comprehensive list see ROADMAP.md.
 
-![Firetable screenshot](https://firetable.io/demo-screenshot.png)
+![Firetable screenshot](https://firetable.io/demo.gif)
 
 ## Setup instructions
 
