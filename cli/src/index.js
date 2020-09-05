@@ -6,11 +6,11 @@ const terminal = require("./lib/terminal");
 const inquirer = require("./lib/inquirer");
 const Configstore = require("configstore");
 const config = new Configstore("firetable");
-const { directoryExists } = require("./lib/files");
+const { directoryExists, findFile } = require("./lib/files");
 const process = require("process");
 const { Command } = require("commander");
 const { version } = require("../package.json");
-
+const { setUserRoles } = require("./lib/firebaseAdmin");
 const program = new Command();
 program.version(version);
 
@@ -34,7 +34,6 @@ const systemHealthCheck = async () => {
   Object.entries(versions).forEach(([app, version]) =>
     console.log(`${app.padEnd(8)} ${chalk.green(version)}`)
   );
-  console.log();
 };
 
 // checks the current directory of the cli app
@@ -201,6 +200,43 @@ program
       let directory = await directoryCheck();
       if (!directory) return;
       await deploy2firebase(directory);
+    } catch (error) {
+      console.log("\u{1F6D1}" + chalk.bold(chalk.red(" FAILED")));
+      console.log(error);
+    }
+  });
+
+program
+  .command("auth:setRoles <email> <roles>")
+  .description(
+    "Adds roles to the custom claims of a specified firebase account."
+  )
+  .action(async (email, roles) => {
+    try {
+      // check directory for admin sdk json
+      const adminSDKFilePath = await findFile(/.*-firebase-adminsdk.*json/);
+
+      // let directory = await directoryCheck();
+      // if (!directory) return;
+      // await deploy2firebase(directory);
+      const result = await setUserRoles(adminSDKFilePath)(
+        email,
+        roles.split(",")
+      );
+      if (result.success) {
+        console.log(result.message);
+        return;
+      } else if (result.code === "auth/user-not-found") {
+        console.log(
+          chalk.bold(chalk.red("FAILED: ")),
+          `could not find an account corresponding with`,
+          chalk.bold(email)
+        );
+        return;
+      } else {
+        console.log(chalk.bold(chalk.red(result.message)));
+        return;
+      }
     } catch (error) {
       console.log("\u{1F6D1}" + chalk.bold(chalk.red(" FAILED")));
       console.log(error);

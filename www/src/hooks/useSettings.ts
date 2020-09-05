@@ -40,7 +40,7 @@ const useSettings = () => {
     //create the firetable collection doc with empty columns
     db.collection("_FIRETABLE_/settings/schema")
       .doc(data.collection)
-      .set({ ...data, columns: [] }, { merge: true });
+      .set({ ...data }, { merge: true });
   };
 
   const updateTable = (data: {

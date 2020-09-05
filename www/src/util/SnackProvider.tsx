@@ -24,6 +24,7 @@ export const SnackProvider: React.FC<ISnackProviderProps> = ({ children }) => {
     setMessage("");
     setDuration(0);
     setSeverity(undefined);
+    setAction(<div />);
   };
   const open = (props: {
     message: string;

@@ -51,8 +51,11 @@ The firetable roles are stored in the users firebase auth token custom claims
 
 ### setting roles
 
-this a basic script for setting your user roles. you can run this locally using
-the adm sdk or implement it in your cloud functions
+You can use the CLI tool to set your roles
+[here](https://github.com/AntlerVC/firetable/blob/master/cli/README.md#Setting-user-Roles)
+
+It relays on this basic script. you can run this locally using the adm sdk or
+implement it in your cloud functions
 
 ```js
 import * as admin from "firebase-admin";

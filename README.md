@@ -44,8 +44,8 @@ supported. More coming soon, for comprehensive list see ROADMAP.md.
 
 - Upgrade project to the Blaze Plan
 - Enable the Google sign-in method in **Authentication / Sign-in method**
-  - **⚠️ IMPORTANT:** If you try to sign in and see “This account does not
-    exist”, run
+  - **⚠️ IMPORTANT:** If you try to sign in and see “This account does not have
+    any roles”, run
     [the following script](https://github.com/AntlerVC/firetable/blob/develop/RULES.md#custom-claims)
     on your Firebase Authentication user.
 
@@ -126,9 +126,9 @@ yarn start
 [Please create issues here.](https://github.com/antlervc/firetable/issues)  
 Make sure to provide console log outputs and screenshots!
 
-### Known Issue: “This account does not exist”
+### Known Issue: “This account does not have any roles”
 
-If you try to sign in and see “This account does not exist”, run
+If you try to sign in and see “This account does not have any roles”, run
 [the following script](https://github.com/AntlerVC/firetable/blob/develop/RULES.md#custom-claims)
 on your Firebase Authentication user.
 

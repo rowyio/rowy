@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import queryString from "query-string";
 import { useFiretableContext } from "contexts/firetableContext";
+import { useAppContext } from "contexts/appContext";
 
 import { Hidden } from "@material-ui/core";
 
@@ -12,11 +13,12 @@ import { FireTableFilter } from "hooks/useFiretable";
 import useRouter from "hooks/useRouter";
 
 import ImportWizard from "components/Wizards/ImportWizard";
-
+import { DocActions } from "hooks/useDoc";
 export default function TableView() {
   const router = useRouter();
   const tableCollection = decodeURIComponent(router.match.params.id);
   const { tableState, tableActions, sideDrawerRef } = useFiretableContext();
+  const { userDoc } = useAppContext();
   let filters: FireTableFilter[] = [];
   const parsed = queryString.parse(router.location.search);
   if (typeof parsed.filters === "string") {
@@ -32,7 +34,15 @@ export default function TableView() {
       tableState &&
       tableState.tablePath !== tableCollection
     ) {
-      tableActions.table.set(tableCollection, filters);
+      if (filters && filters.length !== 0) {
+        tableActions.table.set(tableCollection, filters);
+        userDoc.dispatch({
+          action: DocActions.update,
+          data: {
+            tables: { [`${tableState?.tablePath}`]: { filters } },
+          },
+        });
+      }
       if (sideDrawerRef?.current) sideDrawerRef.current.setCell!(null);
     }
   }, [tableCollection]);
