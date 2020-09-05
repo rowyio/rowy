@@ -7,7 +7,7 @@ import ClearIcon from "@material-ui/icons/Clear";
 export const HEADING_FONT = "Europa, sans-serif";
 export const BODY_FONT = '"Open Sans", sans-serif';
 
-export const ANTLER_RED = "#ef4747";
+export const ANTLER_RED = "#ed4747";
 export const ANTLER_RED_ACCESSIBLE = "#e22729";
 export const SECONDARY_GREY = "#282829";
 export const SECONDARY_TEXT = "rgba(0, 0, 0, 0.6)";
