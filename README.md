@@ -117,7 +117,7 @@ yarn
 #### 4. Run project locally
 
 ```
-yarn local
+yarn start
 ```
 
 ## Issues
