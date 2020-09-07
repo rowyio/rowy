@@ -70,27 +70,23 @@ module.exports.cloneFiretable = (dir = "firetable") =>
     );
   });
 
-module.exports.setFiretableENV = (envVariables, dir = "firetable/www") =>
+module.exports.setFiretableENV = (envVariables, dir) =>
   new Promise((resolve) => {
     const status = new Spinner("Setting environment variables");
     status.start();
-    const command = `cd ${dir}; node createDotEnv ${envVariables.projectId} ${envVariables.firebaseWebApiKey} ${envVariables.algoliaAppId} ${envVariables.algoliaSearchKey}`;
+    const command = `cd ${dir}/www; node createDotEnv ${envVariables.projectId} ${envVariables.firebaseWebApiKey} ${envVariables.algoliaAppId} ${envVariables.algoliaSearchKey}`;
     execute(command, function () {
       status.stop();
       resolve(true);
     });
   });
 
-module.exports.setFirebaseHostingTarget = (
-  projectId,
-  hostingTarget,
-  dir = "firetable/www"
-) =>
+module.exports.setFirebaseHostingTarget = (projectId, hostingTarget) =>
   new Promise((resolve) => {
     const status = new Spinner("Setting Firebase Hosting target");
     status.start();
 
-    const command = `cd ${dir};echo '{}' > .firebaserc; yarn target ${hostingTarget} --project ${projectId}`;
+    const command = `cd www;echo '{}' > .firebaserc; yarn target ${hostingTarget} --project ${projectId}`;
     execute(command, function () {
       execute(`firebase use ${projectId}`, function () {
         status.stop();
@@ -99,11 +95,11 @@ module.exports.setFirebaseHostingTarget = (
     });
   });
 
-module.exports.deployToFirebaseHosting = (projectId, dir = "firetable/www") =>
+module.exports.deployToFirebaseHosting = (projectId) =>
   new Promise((resolve) => {
     const status = new Spinner("Deploying to Firebase Hosting");
     status.start();
-    const command = `cd ${dir}; firebase deploy --project ${projectId} --only hosting`;
+    const command = `cd www; firebase deploy --project ${projectId} --only hosting`;
     execute(command, function (results) {
       if (results.includes("Error:")) {
         throw new Error(results);
@@ -145,13 +141,13 @@ module.exports.installFiretableAppPackages = (dir = "firetable/www") =>
     });
   });
 
-module.exports.buildFiretable = (dir = "firetable/www") =>
+module.exports.buildFiretable = (dir) =>
   new Promise((resolve) => {
     const status = new Spinner(
       "Building firetable. This will take a few minutes"
     );
     status.start();
-    execute(`cd ${dir}; yarn build`, function (stdout) {
+    execute(`cd ${dir}/www; yarn build`, function (stdout) {
       status.stop();
       resolve(true);
     });
@@ -213,16 +209,17 @@ module.exports.getFiretableWebAppConfig = (webAppId) =>
     });
   });
 
-module.exports.createFirebaseAppConfigFile = (config, dir = "firetable/www") =>
+module.exports.createFirebaseAppConfigFile = (config, dir) =>
   new Promise((resolve) => {
     const status = new Spinner(`Creating firebase config file`);
     status.start();
     execute(
-      `cd ${dir}/src/firebase; echo 'export default ${config.replace(
+      `cd ${dir}/www/src/firebase; ls;echo 'export default ${config.replace(
         /\n/g,
         ""
       )}' > config.ts`,
       function (results) {
+        console.log(results);
         status.stop();
         resolve(results);
       }

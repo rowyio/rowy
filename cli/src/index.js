@@ -76,9 +76,9 @@ const deploy2firebase = async (directory = "firetable/www") => {
     const response = await inquirer.askFirebaseHostTarget(projectId);
     hostTarget = response.hostTarget;
   }
-  await terminal.buildFiretable(directory);
-  await terminal.setFirebaseHostingTarget(projectId, hostTarget, directory);
-  await terminal.deployToFirebaseHosting(projectId, directory);
+  //await terminal.buildFiretable(directory);
+  await terminal.setFirebaseHostingTarget(projectId, hostTarget);
+  await terminal.deployToFirebaseHosting(projectId);
   config.set("firebaseHostTarget", hostTarget);
 
   console.log(
@@ -120,17 +120,13 @@ program
       // clone firetable repo and install app dependencies
       await terminal.cloneFiretable(dir);
 
-      const appDir = dir + "/www";
-
       // set environment variables
-      await terminal.setFiretableENV(envVariables, appDir);
+      await terminal.setFiretableENV(envVariables, dir);
       let firetableAppId;
 
       const existingFiretableAppId = await terminal.getExistingFiretableApp(
         projectId
       );
-
-      // TODO: SET FIREBASE PROJECT
 
       if (existingFiretableAppId) {
         firetableAppId = existingFiretableAppId;
@@ -142,9 +138,9 @@ program
         firetableAppId
       );
 
-      await terminal.createFirebaseAppConfigFile(webAppConfig, appDir);
-      // console.log(chalk.green("Environment variables set successfully"));
-
+      await terminal.createFirebaseAppConfigFile(webAppConfig, dir);
+      console.log(chalk.green("Environment variables set successfully"));
+      await terminal.buildFiretable(dir);
       console.log(
         chalk.green(
           chalk.bold("\n\u2705 firetable has been successfully set up at")
