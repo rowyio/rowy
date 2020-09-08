@@ -14,12 +14,6 @@ Also make sure you are logged in to your Firebase account in the Firebase CLI.
 ## Installation
 
 ```
-npm install -g firetable
-```
-
-or
-
-```
 yarn global add firetable
 ```
 

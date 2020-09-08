@@ -58,12 +58,6 @@ Before using it, make sure you have the Firebase CLI installed.
 [Instructions](https://firebase.google.com/docs/cli)
 
 ```
-npm install -g firetable
-```
-
-or
-
-```
 yarn global add firetable
 ```
 
