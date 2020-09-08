@@ -5,7 +5,7 @@
 Make sure you have the following installed:
 
 - [Git](https://git-scm.com/downloads)
-- [Node](https://nodejs.org/en/download/)
+- [Node](https://nodejs.org/en/download/) 10, 11, or 12
 - [Yarn](https://classic.yarnpkg.com/en/docs/install/)
 - [Firebase CLI](https://firebase.google.com/docs/cli)
 
