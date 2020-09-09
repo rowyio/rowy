@@ -106,19 +106,10 @@
     "@algolia/logger-common" "4.1.0"
     "@algolia/requester-common" "4.1.0"
 
-"@antlerengineering/components@^0.4.1":
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/@antlerengineering/components/-/components-0.4.1.tgz#68955a5eebac4f3022442f6c148ed5aa0d7b6e48"
-  integrity sha512-7MMP75dMrfx/OrQk3lL4/3wWhYCvTeyGuhqTbohpWG7FSS513YBoh7Q7wly0XASB0Shz5gzuFrDZ5s4WfpSf9Q==
-  dependencies:
-    dompurify "^2.0.10"
-    lodash "^4.17.15"
-    lodash-es "^4.17.15"
-
-"@antlerengineering/multiselect@^0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@antlerengineering/multiselect/-/multiselect-0.4.0.tgz#39e04883671b0a05d5dda4294ef3cac3ba3715dd"
-  integrity sha512-CBCdGc4zIl0Of2jhtssXUuYP5KxzgsHCTYezbWTqFZGdGr+BIjLHfEOjY5RSx/9dQzamlNL1Z8XrRpamEGymYg==
+"@antlerengineering/multiselect@^0.5.0":
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/@antlerengineering/multiselect/-/multiselect-0.5.0.tgz#26e9790a9050f45986d4530df01cbedf54d310e9"
+  integrity sha512-rPLgC6Qy/WF2DDlhIjgEaDEmULRRnxC3DKjt11oT3iQiDkRJj7Mx8cCL4bViRLEkg9W4/AW5EngneHpa8aZybA==
 
 "@babel/code-frame@7.8.3", "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.8.3":
   version "7.8.3"
@@ -5168,11 +5159,6 @@ domhandler@^3.0.0:
   dependencies:
     domelementtype "^2.0.1"
 
-dompurify@^2.0.10:
-  version "2.0.12"
-  resolved "https://registry.yarnpkg.com/dompurify/-/dompurify-2.0.12.tgz#284a2b041e1c60b8e72d7b4d2fadad36141254ae"
-  integrity sha512-Fl8KseK1imyhErHypFPA8qpq9gPzlsJ/EukA6yk9o0gX23p1TzC+rh9LqNg1qvErRTc0UNMYlKxEGSfSh43NDg==
-
 dompurify@^2.0.8:
   version "2.0.8"
   resolved "https://registry.yarnpkg.com/dompurify/-/dompurify-2.0.8.tgz#6ef89d2d227d041af139c7b01d9f67ed59c2eb3c"
@@ -9058,7 +9044,7 @@ locate-path@^5.0.0:
   dependencies:
     p-locate "^4.1.0"
 
-lodash-es@^4.17.15, lodash-es@^4.2.1:
+lodash-es@^4.2.1:
   version "4.17.15"
   resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.15.tgz#21bd96839354412f23d7a10340e5eac6ee455d78"
   integrity sha512-rlrc3yU3+JNOpZ9zj5pQtxnx2THmvRykwL4Xlxoa8I9lHBlVbbyPhgyPMioxVZ4NqyxaVVtaJnzsyOidQIhyyQ==
