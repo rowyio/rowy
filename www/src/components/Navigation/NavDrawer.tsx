@@ -28,7 +28,10 @@ export const NAV_DRAWER_WIDTH = 300;
 
 const useStyles = makeStyles((theme) =>
   createStyles({
-    paper: { width: NAV_DRAWER_WIDTH },
+    paper: {
+      width: NAV_DRAWER_WIDTH,
+      overflowX: "hidden",
+    },
 
     logoRow: {
       height: APP_BAR_HEIGHT,
