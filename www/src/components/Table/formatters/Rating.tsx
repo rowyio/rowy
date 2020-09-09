@@ -19,17 +19,17 @@ export default function Rating({
   onSubmit,
 }: CustomCellProps) {
   const classes = useStyles();
-
+  const { max } = (column as any).config as { max: number };
   return (
     <MuiRating
       name={`${row.id}-${column.key as string}`}
       value={typeof value === "number" ? value : 0}
       onClick={(e) => e.stopPropagation()}
       disabled={column.editable === false}
-      onChange={(e, newValue) => onSubmit(newValue)}
+      onChange={(_, newValue) => onSubmit(newValue)}
       emptyIcon={<StarBorderIcon />}
       // TODO: Make this customisable in config
-      max={4}
+      max={max ?? 5}
       classes={{ root: classes.rating, iconEmpty: classes.iconEmpty }}
     />
   );
