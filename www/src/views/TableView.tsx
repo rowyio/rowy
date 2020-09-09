@@ -34,8 +34,8 @@ export default function TableView() {
       tableState &&
       tableState.tablePath !== tableCollection
     ) {
+      tableActions.table.set(tableCollection, filters);
       if (filters && filters.length !== 0) {
-        tableActions.table.set(tableCollection, filters);
         userDoc.dispatch({
           action: DocActions.update,
           data: {
@@ -47,10 +47,10 @@ export default function TableView() {
     }
   }, [tableCollection]);
 
-  if (!tableState?.tablePath) {
-    console.error(tableState);
-    throw new Error("tableState.tablePath is blank");
-  }
+  // if (!tableState?.tablePath) {
+  //   console.error(tableState);
+  //   throw new Error("tableState.tablePath is blank");
+  // }
 
   return (
     <Navigation tableCollection={tableCollection}>
