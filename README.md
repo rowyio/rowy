@@ -18,6 +18,14 @@ standard fields. Functions such as row resizing, csv data import/export and much
 
 ## Setup instructions
 
+### Installation requirements
+
+Make sure you have the following installed:
+
+- [Git](https://git-scm.com/downloads)
+- [Node](https://nodejs.org/en/download/) 10, 11, or 12
+- [Yarn](https://classic.yarnpkg.com/en/docs/install/)
+
 ### 1. Create and set up a Firebase project
 
 - Create a new project using the
@@ -55,12 +63,6 @@ locally.
 
 Before using it, make sure you have the Firebase CLI installed.
 [Instructions](https://firebase.google.com/docs/cli)
-
-```
-npm install -g firetable
-```
-
-or
 
 ```
 yarn global add firetable

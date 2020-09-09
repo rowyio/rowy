@@ -46,7 +46,12 @@ export default function TableView() {
       if (sideDrawerRef?.current) sideDrawerRef.current.setCell!(null);
     }
   }, [tableCollection]);
-  if (!tableState?.tablePath) return <></>;
+
+  // if (!tableState?.tablePath) {
+  //   console.error(tableState);
+  //   throw new Error("tableState.tablePath is blank");
+  // }
+
   return (
     <Navigation tableCollection={tableCollection}>
       <Table key={tableCollection} />

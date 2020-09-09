@@ -86,7 +86,7 @@ export default function HiddenFields() {
     setOpen(false);
   };
 
-  const itemRenderer = (option, selected) => (
+  const renderOption = (option, { selected }) => (
     <Column
       label={option.label}
       type={tableState.columns[option.value].type}
@@ -110,14 +110,16 @@ export default function HiddenFields() {
           className: classes.textField,
           SelectProps: { open, MenuProps: { anchorEl: buttonRef.current } },
         }}
-        AutocompleteProps={{ classes: { option: classes.option } }}
+        AutocompleteProps={{
+          classes: { option: classes.option },
+          renderOption,
+        }}
         label="Hidden fields"
         labelPlural="Fields"
         options={tableColumns}
         value={hiddenFields}
         onChange={setHiddenFields}
         onClose={handleSave}
-        itemRenderer={itemRenderer}
       />
     </>
   );

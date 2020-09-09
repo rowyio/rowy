@@ -37,13 +37,9 @@ const useStyles = makeStyles((theme) =>
       padding: theme.spacing(0.75, 2),
     },
 
-    toolbar: {
-      padding: theme.spacing(0, 1.5),
-    },
+    toolbar: { padding: theme.spacing(0, 3) },
 
-    breadcrumbs: {
-      flex: 1,
-    },
+    breadcrumbs: { flex: 1 },
   })
 );
 
@@ -88,6 +84,7 @@ export default function Navigation({
           <IconButton
             aria-label="Open navigation drawer"
             onClick={() => setOpen(true)}
+            edge="start"
           >
             <MenuIcon />
           </IconButton>
