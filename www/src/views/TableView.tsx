@@ -47,10 +47,10 @@ export default function TableView() {
     }
   }, [tableCollection]);
 
-  if (!tableState?.tablePath) {
-    console.error(tableState);
-    throw new Error("tableState.tablePath is blank");
-  }
+  // if (!tableState?.tablePath) {
+  //   console.error(tableState);
+  //   throw new Error("tableState.tablePath is blank");
+  // }
 
   return (
     <Navigation tableCollection={tableCollection}>
