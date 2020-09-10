@@ -55,15 +55,17 @@ const emailOnCreate = (config: EmailOnTriggerConfig) =>
             categories: config.categories,
             attachments: snapshotData.attachments,
           };
+          console.log(JSON.stringify(msg));
+
           const resp = await sendEmail(msg);
           console.log(JSON.stringify(resp));
-          return true;
+          return resp;
         } else {
           console.log("requirements were not met");
           return false;
         }
       } catch (error) {
-        console.warn(JSON.stringify(error));
+        console.warn("Failed", JSON.stringify(error));
         return false;
       }
     });
