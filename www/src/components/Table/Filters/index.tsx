@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import _find from "lodash/find";
 import _sortBy from "lodash/sortBy";
+import _isEmpty from "lodash/isEmpty";
 
 import {
   makeStyles,
@@ -129,7 +130,6 @@ const Filters = () => {
   useEffect(() => {
     if (userDoc.state.doc && tableState?.tablePath) {
       if (userDoc.state.doc.tables?.[tableState?.tablePath]?.filters) {
-        console.log(userDoc.state.doc.tables[tableState?.tablePath].filters);
         tableActions?.table.filter(
           userDoc.state.doc.tables[tableState?.tablePath].filters
         );
@@ -497,7 +497,7 @@ const Filters = () => {
               Clear
             </Button>
             <Button
-              disabled={query.value === null || query.value === undefined}
+              disabled={_isEmpty(query.value)}
               color="primary"
               onClick={() => {
                 handleUpdateFilters([query]);
