@@ -36,8 +36,9 @@ const emailOnCreate = (config: EmailOnTriggerConfig) =>
           config.requiredFields,
           snapshotData
         );
-        const to = await config.to(snapshotData, db);
         const from = await config.from(snapshotData, db);
+        const to = await config.to(snapshotData, db);
+
         console.log(JSON.stringify({ to, from }));
         if (shouldSend && hasAllRequiredFields) {
           const msg = {
@@ -62,7 +63,7 @@ const emailOnCreate = (config: EmailOnTriggerConfig) =>
           return false;
         }
       } catch (error) {
-        console.warn(JSON.stringify(error.response.body));
+        console.warn(JSON.stringify(error));
         return false;
       }
     });
