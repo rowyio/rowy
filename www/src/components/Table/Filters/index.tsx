@@ -145,8 +145,6 @@ const Filters = () => {
       options: c.options,
       ...c,
     }));
-  filterColumns.pop(); // remove the new column
-
   const classes = useStyles();
   const filters = [];
   const combineType = "all";
