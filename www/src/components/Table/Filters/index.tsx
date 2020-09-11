@@ -231,6 +231,7 @@ const Filters = () => {
       case FieldType.phone:
       case FieldType.shortText:
       case FieldType.longText:
+      case FieldType.url:
         return (
           <TextField
             onChange={(e) => {
@@ -295,28 +296,6 @@ const Filters = () => {
             freeText={true}
           />
         );
-
-      case FieldType.connectTable:
-        if (selectedColumn.key === "coach")
-          return (
-            <>
-              <DocSelector
-                algoliaIndex={selectedColumn.collectionPath}
-                algoliaKey={`${process.env.REACT_APP_ALGOLIA_SEARCH_API_KEY}`}
-                valueReducer={(r: any) => r.objectID}
-                labelReducer={(r: any) => `${r.firstName} ${r.lastName}`}
-                value={query.value}
-                filters={selectedColumn.config.filters.replace(
-                  /\{\{(.*?)\}\}/g,
-                  (m, k) => userClaims[k]
-                )}
-                onChange={(value) => {
-                  setQuery((query) => ({ ...query, value }));
-                }}
-              />
-            </>
-          );
-        return <>needs configuration</>;
       default:
         return <>Not available</>;
         // return <TextField variant="filled" fullWidth disabled />;
@@ -495,7 +474,11 @@ const Filters = () => {
               Clear
             </Button>
             <Button
-              disabled={_isEmpty(query.value)}
+              disabled={
+                query.value !== true &&
+                query.value !== false &&
+                _isEmpty(query.value)
+              }
               color="primary"
               onClick={() => {
                 handleUpdateFilters([query]);
