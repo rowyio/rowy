@@ -72,7 +72,6 @@ const selectedColumnsReducer = (doc: any) => (
   currentColumn: any
 ) => {
   const value = _get(doc, currentColumn.key);
-  console.log({ currentColumn });
   switch (currentColumn.type) {
     case FieldType.multiSelect:
       return {
@@ -92,17 +91,18 @@ const selectedColumnsReducer = (doc: any) => (
     case FieldType.connectTable:
       return {
         ...accumulator,
-        [currentColumn.name]: value
-          ? value
-              .map((item: any) =>
-                currentColumn.config.primaryKeys.reduce(
-                  (labelAccumulator: string, currentKey: any) =>
-                    `${labelAccumulator} ${item.snapshot[currentKey]}`,
-                  ""
+        [currentColumn.name]:
+          value && Array.isArray(value)
+            ? value
+                .map((item: any) =>
+                  currentColumn.config.primaryKeys.reduce(
+                    (labelAccumulator: string, currentKey: any) =>
+                      `${labelAccumulator} ${item.snapshot[currentKey]}`,
+                    ""
+                  )
                 )
-              )
-              .join()
-          : "",
+                .join()
+            : "",
       };
     case FieldType.checkbox:
       return {
@@ -116,10 +116,11 @@ const selectedColumnsReducer = (doc: any) => (
         ...accumulator,
         [currentColumn.name]: value ? value.toDate() : "",
       };
-    case FieldType.last:
     case FieldType.action:
-    case FieldType.connectTable:
-      return accumulator;
+      return {
+        ...accumulator,
+        [currentColumn.name]: value && value.status ? value.status : "",
+      };
     default:
       return {
         ...accumulator,
@@ -227,7 +228,7 @@ export default function ExportCSV() {
           </FormControl>
           <Button
             onClick={() => {
-              setCSVColumns(tableState?.columns!);
+              setCSVColumns(Object.values(tableState?.columns!));
             }}
           >
             Select All
