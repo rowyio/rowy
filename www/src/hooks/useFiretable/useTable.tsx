@@ -69,7 +69,7 @@ const useTable = (initialOverrides: any) => {
       : db.collection(tableState.path);
 
     filters.forEach((filter) => {
-      if (filter.key && filter.operator && filter.value)
+      if (filter.key && filter.operator && filter.value !== undefined)
         query = query.where(filter.key, filter.operator, filter.value);
     });
 
