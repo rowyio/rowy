@@ -4,6 +4,7 @@ import Dialog from "@material-ui/core/Dialog";
 import Grid from "@material-ui/core/Grid";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
+import Slider from "@material-ui/core/Slider";
 import {
   Typography,
   IconButton,
@@ -100,7 +101,26 @@ const ConfigFields = ({ fieldType, config, handleChange, tables, columns }) => {
           validTypes={[FieldType.shortText, FieldType.singleSelect]}
         />
       );
-
+    case FieldType.rating:
+      return (
+        <>
+          <Typography variant="overline">Maximum number of stars</Typography>
+          <Slider
+            defaultValue={5}
+            value={config.max}
+            getAriaValueText={(v) => `${v} max stars`}
+            aria-labelledby="discrete-slider"
+            valueLabelDisplay="auto"
+            onChange={(_, v) => {
+              handleChange("max")(v);
+            }}
+            step={1}
+            marks
+            min={1}
+            max={15}
+          />
+        </>
+      );
     case FieldType.action:
       return (
         <>
