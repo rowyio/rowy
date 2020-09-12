@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import _camelCase from "lodash/camelCase";
 
 import useRouter from "../hooks/useRouter";
-
+import { db } from "../firebase";
+import DeleteIcon from "@material-ui/icons/DeleteForever";
+import LinearProgress from "@material-ui/core/LinearProgress";
 import {
   Dialog,
   DialogActions,
@@ -17,6 +19,7 @@ import {
 import { useFiretableContext } from "../contexts/firetableContext";
 
 import RolesSelector from "./RolesSelector";
+import Confirmation from "components/Confirmation";
 
 export enum TableSettingsDialogModes {
   create,
@@ -87,7 +90,7 @@ export default function TableSettingsDialog({
   useEffect(() => {
     if (data) setForm(data);
   }, [data]);
-
+  const [loading, setLoading] = useState(false);
   return (
     <div>
       <Dialog
@@ -95,6 +98,7 @@ export default function TableSettingsDialog({
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
       >
+        {loading && <LinearProgress />}
         <DialogTitle id="form-dialog-title">
           {mode === TableSettingsDialogModes.create
             ? "New table"
@@ -135,7 +139,7 @@ export default function TableSettingsDialog({
             control={<Switch />}
             label={"isCollectionGroup"}
             labelPlacement="start"
-            value={formState.isCollectionGroup}
+            checked={formState.isCollectionGroup}
             onChange={(e) =>
               handleChange("isCollectionGroup", !formState.isCollectionGroup)
             }
@@ -168,6 +172,46 @@ export default function TableSettingsDialog({
             handleChange={(update) => handleChange("roles", update)}
           />
         </DialogContent>
+
+        {mode === TableSettingsDialogModes.update && (
+          <Confirmation
+            message={{
+              title: `Are you sure you want to delete ${formState.name}'s table`,
+              body: `This will only delete the firetable configuration data and not the data stored in in the firestore collection ${formState.collection}`,
+              confirm: "delete",
+            }}
+            functionName="onClick"
+          >
+            <Button
+              onClick={async () => {
+                setLoading(true);
+
+                const tablesDocRef = db.doc(`_FIRETABLE_/settings`);
+                const tablesDoc = await tablesDocRef.get();
+                const tableData = tablesDoc.data();
+                const updatedTables = tableData?.tables.filter(
+                  (table) =>
+                    table.collection !== data?.collection ||
+                    table.isCollectionGroup !== data?.isCollectionGroup
+                );
+                await tablesDocRef.update({ tables: updatedTables });
+                await tablesDocRef
+                  .collection(
+                    Boolean(data?.isCollectionGroup) ? "schema" : "groupSchema"
+                  )
+                  .doc(data?.collection)
+                  .delete();
+                window.location.reload();
+                handleClose();
+                setLoading(false);
+              }}
+            >
+              <DeleteIcon />
+              Delete Table
+            </Button>
+          </Confirmation>
+        )}
+
         <DialogActions>
           <Button onClick={handleClose} color="primary">
             Cancel
