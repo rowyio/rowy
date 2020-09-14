@@ -56,7 +56,7 @@ const emailOnCreate = (config: EmailOnTriggerConfig) =>
             ],
             template_id: config.templateId,
             categories: config.categories,
-            attachments: snapshotData.attachments,
+            //   attachments: snapshotData.attachments,
           };
           console.log(JSON.stringify(msg));
 
