@@ -38,11 +38,7 @@ const emailOnCreate = (config: EmailOnTriggerConfig) =>
         );
         const from = await config.from(snapshotData, db);
         const to = await config.to(snapshotData, db);
-
-        console.log(
-          JSON.stringify({ to, from, hasAllRequiredFields, shouldSend })
-        );
-
+        console.log({ attachments: snapshotData.attachments });
         if (shouldSend && hasAllRequiredFields) {
           const msg = {
             from,
@@ -56,12 +52,11 @@ const emailOnCreate = (config: EmailOnTriggerConfig) =>
             ],
             template_id: config.templateId,
             categories: config.categories,
-            //   attachments: snapshotData.attachments,
+            attachments: snapshotData.attachments,
           };
-          console.log(JSON.stringify(msg));
 
           const resp = await sendEmail(msg);
-          console.log(JSON.stringify(resp));
+
           return resp;
         } else {
           console.log("requirements were not met");
@@ -95,7 +90,6 @@ const emailOnUpdate = (config: EmailOnTriggerConfig) =>
         if (shouldSend && hasAllRequiredFields) {
           const from = await config.from(afterData, db);
           const to = await config.to(afterData, db);
-          console.log(JSON.stringify({ to }));
           const msg = {
             from,
             personalizations: [
@@ -107,8 +101,7 @@ const emailOnUpdate = (config: EmailOnTriggerConfig) =>
             template_id: config.templateId,
             categories: config.categories,
           };
-          const resp = await sendEmail(msg);
-          console.log(JSON.stringify(resp));
+          await sendEmail(msg);
 
           return true;
         } else {
