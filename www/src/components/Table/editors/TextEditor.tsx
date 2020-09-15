@@ -72,14 +72,14 @@ class TextEditor extends React.Component<
       default:
         break;
     }
-
+    const { maxLength } = (column as any).config;
     return (
       <TextField
         defaultValue={value}
         type={inputType}
         fullWidth
         variant="standard"
-        inputProps={{ ref: this.inputRef }}
+        inputProps={{ ref: this.inputRef, maxLength: maxLength }}
         className={classes.root}
         InputProps={{
           classes: { root: classes.inputBase, input: classes.input },
