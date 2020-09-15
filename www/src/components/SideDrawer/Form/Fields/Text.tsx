@@ -19,6 +19,7 @@ export interface ITextProps
   extends IFieldProps,
     Omit<FilledTextFieldProps, "variant" | "name"> {
   fieldVariant?: "short" | "long" | "email" | "phone" | "number" | "url";
+  config: { maxLength: string };
 }
 
 export default function Text({
@@ -27,30 +28,34 @@ export default function Text({
   docRef,
   fieldVariant = "short",
   editable,
+  config,
   ...props
 }: ITextProps) {
   const classes = useStyles();
   let variantProps = {};
-
+  const { maxLength } = config;
   switch (fieldVariant) {
     case "long":
       variantProps = {
         multiline: true,
         InputProps: { classes: { multiline: classes.multiline } },
-        inputProps: { rowsMin: 5 },
+        inputProps: { rowsMin: 5, maxLength },
       };
       break;
 
     case "email":
       variantProps = {
         // type: "email",
-        inputProps: { autoComplete: "email" },
+        inputProps: { autoComplete: "email", maxLength },
       };
       break;
 
     case "phone":
       // TODO: add mask, validation
-      variantProps = { type: "tel", inputProps: { autoComplete: "tel" } };
+      variantProps = {
+        type: "tel",
+        inputProps: { autoComplete: "tel", maxLength },
+      };
       break;
 
     case "number":
@@ -59,6 +64,7 @@ export default function Text({
 
     case "short":
     default:
+      variantProps = { inputProps: { maxLength } };
       break;
   }
 

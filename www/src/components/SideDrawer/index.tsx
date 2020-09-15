@@ -114,18 +114,18 @@ export default function SideDrawer() {
           field.fieldVariant = "number";
           break;
 
-        case FieldType.singleSelect:
-        case FieldType.multiSelect:
-        case FieldType.connectTable:
-        case FieldType.subTable:
-        case FieldType.action:
-          field.config = column.config;
-          break;
+        // case FieldType.singleSelect:
+        // case FieldType.multiSelect:
+        // case FieldType.connectTable:
+        // case FieldType.subTable:
+        // case FieldType.action:
+        //   break;
 
         default:
           break;
       }
       field.editable = column.editable;
+      field.config = column.config;
       return field;
     });
 
