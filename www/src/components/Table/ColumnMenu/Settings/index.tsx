@@ -66,6 +66,58 @@ const ConfigFields = ({ fieldType, config, handleChange, tables, columns }) => {
           </Grid>
         </>
       );
+    case FieldType.connectService:
+      return (
+        <>
+          <TextField
+            label="Webservice Url"
+            name="url"
+            value={config.url}
+            fullWidth
+            onChange={(e) => {
+              handleChange("url")(e.target.value);
+            }}
+          />
+          <TextField
+            label="Results key Path"
+            name="resultsKey"
+            helperText="Can be specified as a key path"
+            placeholder="data.results"
+            value={config.resultsKey}
+            fullWidth
+            onChange={(e) => {
+              handleChange("resultsKey")(e.target.value);
+            }}
+          />
+          <TextField
+            label="Primary Key"
+            name="primaryKey"
+            value={config.primaryKey}
+            fullWidth
+            onChange={(e) => {
+              handleChange("primaryKey")(e.target.value);
+            }}
+          />
+          <TextField
+            label="Title Key (optional)"
+            name="titleKey"
+            value={config.titleKey}
+            fullWidth
+            onChange={(e) => {
+              handleChange("titleKey")(e.target.value);
+            }}
+          />
+          <TextField
+            label="SubTitle Key (optional)"
+            name="subtitleKey"
+            value={config.subtitleKey}
+            fullWidth
+            onChange={(e) => {
+              handleChange("subtitleKey")(e.target.value);
+            }}
+          />
+        </>
+      );
     case FieldType.connectTable:
       const tableOptions = _sortBy(
         tables?.map((t) => ({

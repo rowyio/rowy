@@ -90,6 +90,7 @@ export enum FieldType {
   singleSelect = "SINGLE_SELECT",
   multiSelect = "MULTI_SELECT",
 
+  connectService = "SERVICE_SELECT",
   connectTable = "DOCUMENT_SELECT",
   subTable = "SUB_TABLE",
 
@@ -125,7 +126,11 @@ export const FIELDS = [
 
   { icon: <ImageIcon />, name: "Image", type: FieldType.image },
   { icon: <FileIcon />, name: "File", type: FieldType.file },
-
+  {
+    icon: <SingleSelectIcon />,
+    name: "Select from Webservice",
+    type: FieldType.connectService,
+  },
   {
     icon: <SingleSelectIcon />,
     name: "Single Select",
@@ -192,6 +197,7 @@ export const FIELD_TYPE_DESCRIPTIONS = {
 
   [FieldType.connectTable]:
     "Connects to an existing table to fetch a snapshot of values from a row. Requires Algolia integration.",
+  [FieldType.connectService]: "Select a value from a list of websevice results",
   [FieldType.subTable]:
     "Creates a sub-table. Also displays number of rows inside the sub-table. Max sub-table levels: 100.",
 

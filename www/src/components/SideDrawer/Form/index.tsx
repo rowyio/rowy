@@ -84,6 +84,13 @@ const ConnectTable = lazy(
       "./Fields/ConnectTable" /* webpackChunkName: "SideDrawer-ConnectTable" */
     )
 );
+
+const ConnectService = lazy(
+  () =>
+    import(
+      "./Fields/ConnectService" /* webpackChunkName: "SideDrawer-ConnectTable" */
+    )
+);
 const Code = lazy(
   () => import("./Fields/Code" /* webpackChunkName: "SideDrawer-Code" */)
 );
@@ -215,6 +222,10 @@ export default function Form({ fields, values }: IFormProps) {
 
             case FieldType.connectTable:
               fieldComponent = ConnectTable;
+              break;
+
+            case FieldType.connectService:
+              fieldComponent = ConnectService;
               break;
 
             case FieldType.subTable:
