@@ -79,7 +79,10 @@ export default function Action({
       (response) => {
         const { message, cellValue, success } = response.data;
         setIsRunning(false);
-        snack.open({ message, severity: success ? "success" : "error" });
+        snack.open({
+          message: JSON.stringify(message),
+          severity: success ? "success" : "error",
+        });
         if (cellValue) onSubmit(cellValue);
       },
       (error) => {
