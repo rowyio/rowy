@@ -9,6 +9,7 @@ export const callable = callableFns;
 // all the cloud functions bellow are deployed using the triggerCloudBuild callable  function
 // these functions are designed to be built and deployed based on the configuration passed through the callable
 export { FT_derivatives } from "./derivatives";
+export { FT_aggregates } from "./aggregates";
 export { FT_algolia } from "./algolia";
 export { FT_sync } from "./collectionSync";
 export { FT_snapshotSync } from "./snapshotSync";
