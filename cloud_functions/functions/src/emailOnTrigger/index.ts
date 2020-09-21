@@ -12,6 +12,7 @@ type EmailOnTriggerConfig = {
   onCreate: Boolean;
   from: Function;
   to: Function;
+  attachments?: Function;
   requiredFields: string[];
   shouldSend: (
     snapshot:
@@ -38,6 +39,9 @@ const emailOnCreate = (config: EmailOnTriggerConfig) =>
         );
         const from = await config.from(snapshotData, db);
         const to = await config.to(snapshotData, db);
+        const attachments = config.attachments
+          ? await config.attachments(snapshotData, db)
+          : null;
         console.log({ attachments: snapshotData.attachments });
         if (shouldSend && hasAllRequiredFields) {
           const msg = {
@@ -52,7 +56,7 @@ const emailOnCreate = (config: EmailOnTriggerConfig) =>
             ],
             template_id: config.templateId,
             categories: config.categories,
-            attachments: snapshotData.attachments,
+            attachments,
           };
 
           const resp = await sendEmail(msg);
