@@ -7,10 +7,11 @@ import { setTimeout } from "timers";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
-    editorWrapper: { position: "relative", minWidth: 800 },
+    editorWrapper: { position: "relative", minWidth: 800, minHeight: 300 },
 
     editor: {
       border: `1px solid ${theme.palette.divider}`,
+      minHeight: 300,
       borderRadius: theme.shape.borderRadius,
       resize: "both",
       fontFamily: "SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace",
@@ -31,7 +32,7 @@ const useStyles = makeStyles((theme) =>
 );
 
 export default function CodeEditor(props: any) {
-  const { handleChange, script, height = "90hv" } = props;
+  const { handleChange, extraLibs, script, height = 400 } = props;
 
   const [initialEditorValue] = useState(script ?? "");
   const { tableState } = useFiretableContext();
@@ -84,7 +85,11 @@ export default function CodeEditor(props: any) {
             allowNonTsExtensions: true,
           }
         );
-
+        if (extraLibs) {
+          monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
+            extraLibs.join("\n")
+          );
+        }
         monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
           [
             "    /**",
@@ -148,7 +153,6 @@ export default function CodeEditor(props: any) {
       );
     listenEditorChanges();
   }, [tableState?.columns]);
-
   return (
     <>
       <div className={classes.editorWrapper}>

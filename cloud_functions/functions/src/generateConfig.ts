@@ -34,8 +34,6 @@ if (serviceAccount) {
         const derivativeColumns = Object.values(schemaData.columns).filter(
           (col: any) => col.type === "DERIVATIVE"
         );
-        console.log(derivativeColumns);
-
         const config = derivativeColumns.reduce((acc, currColumn: any) => {
           return `${acc}{
             fieldName:'${currColumn.key}',eval:(db)=> async (row) =>{${
@@ -48,6 +46,28 @@ if (serviceAccount) {
         configData = `export default [${config}]\nexport const collectionPath ="${configString}"`;
         break;
 
+      case "FT_aggregates":
+        const _schemaDoc = await db
+          .doc(`_FIRETABLE_/settings/schema/${configString}`)
+          .get();
+        const _schemaData = _schemaDoc.data();
+        if (!_schemaData) return;
+        const aggregateColumns = Object.values(_schemaData.columns).filter(
+          (col: any) => col.type === "AGGREGATE"
+        );
+        const _config = aggregateColumns.reduce((acc, currColumn: any) => {
+          return `${acc}{
+            fieldName:'${
+              currColumn.key
+            }',eval:(db)=> async ({aggregateState,incrementor,triggerType,change,afterData,beforeData}) =>{${
+            currColumn.config.script
+          }},subtables:[${currColumn.config.subtables
+            .map((t) => `"${t}"`)
+            .join(",")}]},`;
+        }, ``);
+
+        configData = `export default [${_config}]\nexport const collectionPath ="${configString}"`;
+        break;
       case "FT_subTableStats":
         configData = `export const collectionPath ="${configString}"\nexport default []`;
         break;
