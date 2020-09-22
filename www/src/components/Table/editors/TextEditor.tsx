@@ -48,7 +48,6 @@ class TextEditor extends React.Component<
   getValue() {
     if ((this.props.column as any).type === FieldType.number)
       return Number(this.inputRef?.current?.value);
-
     return this.inputRef?.current?.value;
   }
 

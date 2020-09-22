@@ -152,7 +152,7 @@ export default function Form({ fields, values }: IFormProps) {
           const { type, ...fieldProps } = field;
           let _type = type;
 
-          // Derivative field support
+          // Derivative/aggregate field support
           if (field.config && field.config.renderFieldType) {
             _type = field.config.renderFieldType;
           }

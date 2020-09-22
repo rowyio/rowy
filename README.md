@@ -150,5 +150,5 @@ At [Antler](https://antler.co), we identify and invest in exceptional people.
 We’re a global startup generator and early-stage VC firm that builds
 groundbreaking technology companies.
 
-[Apply now](https://antler.co/apply) to be part of a global cohort of tech
+[Apply now](https://www.antler.co/apply?utm_source=Firetable&utm_medium=website&utm_campaign=Thu%20Apr%2016%202020%2018:00:00%20GMT%2B0200%20(CEST)&utm_content=TechTracking) to be part of a global cohort of tech
 founders.

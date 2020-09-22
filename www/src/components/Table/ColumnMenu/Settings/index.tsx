@@ -147,6 +147,7 @@ const ConfigFields = ({ fieldType, config, handleChange, tables, columns }) => {
             label="filter template"
             name="filters"
             fullWidth
+            value={config.filters}
             onChange={(e) => {
               handleChange("filters")(e.target.value);
             }}
@@ -319,6 +320,73 @@ const ConfigFields = ({ fieldType, config, handleChange, tables, columns }) => {
                   </Suspense>
                 </>
               )}
+            </>
+          )}
+        </>
+      );
+    case FieldType.aggregate:
+      return (
+        <>
+          <ColumnSelector
+            label={"Sub Tables"}
+            validTypes={[FieldType.subTable]}
+            value={config.subtables}
+            tableColumns={
+              columns
+                ? Array.isArray(columns)
+                  ? columns
+                  : Object.values(columns)
+                : []
+            }
+            handleChange={handleChange("subtables")}
+          />
+
+          <Typography variant="overline">Aggergate script</Typography>
+          <Suspense fallback={<FieldSkeleton height={200} />}>
+            <CodeEditor
+              script={
+                config.script ??
+                `//triggerType:  create | update | delete\n//aggregateState: the subtable accumenlator stored in the cell of this column\n//snapshot: the triggered document snapshot of the the subcollection\n//incrementor: short for firebase.firestore.FieldValue.increment(n);\n//This script needs to return the new aggregateState cell value.
+switch (triggerType){
+  case "create":return {
+      count:incrementor(1)
+  }
+  case "update":return {}
+  case "delete":
+  return {
+      count:incrementor(-1)
+  }
+}`
+              }
+              extraLibs={[
+                `  /**
+    * increaments firestore field value
+    */",
+    function incrementor(value:number):number {
+
+    }`,
+              ]}
+              handleChange={handleChange("script")}
+            />
+          </Suspense>
+
+          <Typography variant="overline">Field type of the output</Typography>
+          <FieldsDropdown
+            value={config.renderFieldType}
+            onChange={(newType: any) => {
+              handleChange("renderFieldType")(newType.target.value);
+            }}
+          />
+          {config.renderFieldType && (
+            <>
+              <Typography variant="overline">Rendered field config</Typography>
+              <ConfigFields
+                fieldType={config.renderFieldType}
+                config={config}
+                handleChange={handleChange}
+                tables={tables}
+                columns={columns}
+              />
             </>
           )}
         </>

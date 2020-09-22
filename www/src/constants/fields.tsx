@@ -32,6 +32,7 @@ import ActionIcon from "assets/icons/Action";
 import JsonIcon from "assets/icons/Json";
 import CodeIcon from "@material-ui/icons/Code";
 import DerivativeIcon from "assets/icons/Derivative";
+import AggregateIcon from "@material-ui/icons/Layers";
 
 import RichTextIcon from "@material-ui/icons/TextFormat";
 import ColorIcon from "@material-ui/icons/Colorize";
@@ -61,6 +62,7 @@ export {
   JsonIcon,
   CodeIcon,
   DerivativeIcon,
+  AggregateIcon,
   RichTextIcon,
   ColorIcon,
   SliderIcon,
@@ -98,6 +100,7 @@ export enum FieldType {
   json = "JSON",
   code = "CODE",
   derivative = "DERIVATIVE",
+  aggregate = "AGGREGATE",
 
   richText = "RICH_TEXT",
   color = "COLOR",
@@ -153,10 +156,12 @@ export const FIELDS = [
     type: FieldType.subTable,
   },
 
-  { icon: <ActionIcon />, name: "Action", type: FieldType.action },
   { icon: <JsonIcon />, name: "JSON", type: FieldType.json },
   { icon: <CodeIcon />, name: "Code", type: FieldType.code },
+
+  { icon: <ActionIcon />, name: "Action", type: FieldType.action },
   { icon: <DerivativeIcon />, name: "Derivative", type: FieldType.derivative },
+  { icon: <AggregateIcon />, name: "Aggregate", type: FieldType.aggregate },
 
   { icon: <RichTextIcon />, name: "Rich Text", type: FieldType.richText },
   { icon: <ColorIcon />, name: "Color", type: FieldType.color },
@@ -183,7 +188,8 @@ export const FIELD_TYPE_DESCRIPTIONS = {
   [FieldType.duration]: "Duration calculated from two timestamps.",
 
   [FieldType.url]: "Web address. Firetable does not validate URLs.",
-  [FieldType.rating]: "Rating displayed as stars from 0 to 4.",
+  [FieldType.rating]:
+    "Rating displayed as stars from 0 to configurable number of stars(5 by default).",
 
   [FieldType.image]:
     "Image file uploaded to Firebase Storage. Supports JPEG, PNG, SVG, GIF, WebP.",
@@ -207,6 +213,8 @@ export const FIELD_TYPE_DESCRIPTIONS = {
   [FieldType.code]: "Raw code editable with Monaco Editor.",
   [FieldType.derivative]:
     "Value derived from the rest of the row’s values. Displayed using any other field type. Requires Cloud Function setup.",
+  [FieldType.aggregate]:
+    "Value aggregated from a specified subcollection of the row. Displayed using any other field type. Requires Cloud Function setup.",
 
   [FieldType.richText]: "Rich text editor with predefined HTML text styles.",
   [FieldType.color]: "Visual color picker. Supports Hex, RGBA, HSLA.",
