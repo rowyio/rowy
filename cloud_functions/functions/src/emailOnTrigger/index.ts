@@ -53,7 +53,7 @@ const emailOnCreate = (config: EmailOnTriggerConfig) =>
           },
           {}
         );
-
+        console.log(JSON.stringify({ optionalFields }));
         if (shouldSend && hasAllRequiredFields) {
           const msg = {
             from,
