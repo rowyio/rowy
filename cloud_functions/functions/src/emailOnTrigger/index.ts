@@ -13,6 +13,8 @@ type EmailOnTriggerConfig = {
   from: Function;
   to: Function;
   attachments?: Function;
+  bcc?: Function;
+  cc?: Function;
   requiredFields: string[];
   shouldSend: (
     snapshot:
@@ -39,15 +41,27 @@ const emailOnCreate = (config: EmailOnTriggerConfig) =>
         );
         const from = await config.from(snapshotData, db);
         const to = await config.to(snapshotData, db);
-        const attachments = config.attachments
-          ? await config.attachments(snapshotData, db)
-          : undefined;
+
+        const optionalFields = await ["attachments", "cc", "bcc"].reduce(
+          async (accOptions, currOption) => {
+            if (config[currOption]) {
+              return {
+                ...(await accOptions),
+                [currOption]: await config[currOption](snapshotData, db),
+              };
+            } else return await accOptions;
+          },
+          {}
+        );
+
         if (shouldSend && hasAllRequiredFields) {
           const msg = {
             from,
             personalizations: [
               {
                 to,
+                cc: optionalFields["cc"],
+                bcc: optionalFields["bcc"],
                 dynamic_template_data: {
                   ...snapshotData,
                 },
@@ -55,7 +69,7 @@ const emailOnCreate = (config: EmailOnTriggerConfig) =>
             ],
             template_id: config.templateId,
             categories: config.categories,
-            attachments,
+            attachments: optionalFields["attachments"],
           };
           console.log({ msg });
           const resp = await sendEmail(msg);
