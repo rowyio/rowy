@@ -73,7 +73,7 @@ const Hotkeys = (props: any) => {
     if (stringFields.includes(column.type))
       onSubmit(column.key, row, currentUser?.uid)(newValue);
     else if (numberFields.includes(column.type)) {
-      const numberValue = parseInt(newValue);
+      const numberValue = parseInt(newValue, 10);
       if (`${numberValue}` !== "NaN") {
         onSubmit(column.key, row, currentUser?.uid)(numberValue);
       }

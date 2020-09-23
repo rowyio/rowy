@@ -5,8 +5,8 @@ import { env } from "../config";
 import fnConfig from "../functionConfig"; // generated using generateConfig.ts
 const functionConfig: any = fnConfig;
 
-const APP_ID = env.algolia.app;
-const ADMIN_KEY = env.algolia.key;
+const APP_ID = env.algolia ? env.algolia.app : "NEEDS_CONFIG";
+const ADMIN_KEY = env.algolia ? env.algolia.key : "NEEDS_CONFIG";
 
 const client = algoliasearch(APP_ID, ADMIN_KEY);
 
