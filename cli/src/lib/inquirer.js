@@ -88,4 +88,33 @@ module.exports = {
         `https://console.firebase.google.com/u/0/project/${projectId}/hosting`
       )}\n  Enter your site name:`,
     }),
+
+  firetableFunctions: () => {
+    const questions = [
+      {
+        name: "functionToDeploy",
+        type: "list",
+        message: "Select the Firetable function you want to deploy",
+        choices: [
+          "FT_derivatives",
+          "FT_aggregates",
+          "FT_sparks",
+          "actionScript",
+          "webhooks",
+        ],
+      },
+    ];
+    return inquirer.prompt(questions);
+  },
+  selectTableCollection: (collections) => {
+    const questions = [
+      {
+        name: "targetCollection",
+        type: "list",
+        message: "Select the Firetable collection",
+        choices: collections,
+      },
+    ];
+    return inquirer.prompt(questions);
+  },
 };

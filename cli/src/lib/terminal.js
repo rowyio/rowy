@@ -163,7 +163,6 @@ module.exports.getFirebaseProjects = () =>
     status.start();
     execute(`firebase projects:list`, function (results) {
       status.stop();
-      //console.log(results);
       if (results.includes("Failed to authenticate")) {
         throw new Error(results);
       }
@@ -228,4 +227,34 @@ module.exports.createFirebaseAppConfigFile = (config, dir) =>
         resolve(results);
       }
     );
+  });
+
+module.exports.createCloudFunctionConfig = (functionName, collectionName) =>
+  new Promise((resolve) => {
+    const status = new Spinner(
+      `Configuring ${functionName} for ${collectionName}`
+    );
+    status.start();
+    const command = `cd cloud_functions/functions;yarn;yarn generateConfig ${functionName} ${collectionName}`;
+    execute(command, function (results) {
+      console.log(results);
+      if (results.includes("Error:")) {
+        throw new Error(results);
+      }
+      status.stop();
+      resolve(true);
+    });
+  });
+module.exports.deployCloudFunction = (projectId, functionName) =>
+  new Promise((resolve) => {
+    const status = new Spinner(`Deploying ${functionName}`);
+    status.start();
+    const command = `cd cloud_functions/functions;yarn; firebase deploy --project ${projectId} --only functions:${functionName}`;
+    execute(command, function (results) {
+      if (results.includes("Error:")) {
+        throw new Error(results);
+      }
+      status.stop();
+      resolve(true);
+    });
   });
