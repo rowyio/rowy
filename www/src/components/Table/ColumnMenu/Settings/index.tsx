@@ -126,7 +126,7 @@ const ConfigFields = ({ fieldType, config, handleChange, tables, columns }) => {
             defaultValue={5}
             value={config.max}
             getAriaValueText={(v) => `${v} max stars`}
-            aria-labelledby="discrete-slider"
+            aria-labelledby="max-slider"
             valueLabelDisplay="auto"
             onChange={(_, v) => {
               handleChange("max")(v);
@@ -135,6 +135,21 @@ const ConfigFields = ({ fieldType, config, handleChange, tables, columns }) => {
             marks
             min={1}
             max={15}
+          />
+          <Typography variant="overline">Slider precision stars</Typography>
+          <Slider
+            defaultValue={0.5}
+            value={config.precision}
+            getAriaValueText={(v) => `${v} rating step size`}
+            aria-labelledby="precision-slider"
+            valueLabelDisplay="auto"
+            onChange={(_, v) => {
+              handleChange("precision")(v);
+            }}
+            step={0.25}
+            marks
+            min={0.25}
+            max={1}
           />
         </>
       );
