@@ -12,7 +12,7 @@ export type IMultiSelectProps = IFieldProps &
     MultiSelectProps<string>,
     "name" | "multiple" | "value" | "onChange" | "options"
   > & {
-    config?: { options: string[] };
+    config?: { options: string[]; freeText: boolean };
   };
 
 export default function MultiSelect({
@@ -51,7 +51,7 @@ export default function MultiSelect({
                 onBlur,
               }}
               searchable
-              freeText={false}
+              freeText={config?.freeText}
             />
 
             {value && Array.isArray(value) && (
