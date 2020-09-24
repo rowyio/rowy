@@ -3,7 +3,19 @@ import * as _ from "lodash";
 export const serverTimestamp = admin.firestore.FieldValue.serverTimestamp;
 import { sendEmail } from "./email";
 import { hasAnyRole } from "./auth";
-export default { sendEmail, serverTimestamp, hasAnyRole };
+
+var characters =
+  "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+export function generateId(length) {
+  var result = "";
+  var charactersLength = characters.length;
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
+
+export default { generateId, sendEmail, serverTimestamp, hasAnyRole };
 export const replacer = (data: any) => (m: string, key: string) => {
   const objKey = key.split(":")[0];
   const defaultValue = key.split(":")[1] || "";
