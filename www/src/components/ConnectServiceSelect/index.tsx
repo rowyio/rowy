@@ -22,8 +22,6 @@ export interface IConnectServiceSelectProps {
     [key: string]: any;
   };
   editable?: boolean;
-  /** Optionally set this prop to `false` to only allow one option */
-  multiple?: boolean;
   /** Optional style overrides for root MUI `TextField` component */
   className?: string;
   /** Override any props of the root MUI `TextField` component */
@@ -57,7 +55,6 @@ export default function ConnectServiceSelect({
         ...TextFieldProps.SelectProps,
         // Must have this set to prevent MUI transforming `value`
         // prop for this component to a comma-separated string
-        multiple: false,
         MenuProps: {
           classes: { paper: classes.paper, list: classes.menuChild },
           MenuListProps: { disablePadding: true },

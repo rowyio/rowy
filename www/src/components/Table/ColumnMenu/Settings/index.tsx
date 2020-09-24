@@ -116,6 +116,18 @@ const ConfigFields = ({ fieldType, config, handleChange, tables, columns }) => {
               handleChange("subtitleKey")(e.target.value);
             }}
           />
+          <FormControlLabel
+            control={
+              <Switch
+                checked={config.multiple}
+                onChange={() =>
+                  handleChange("multiple")(!Boolean(config.multiple))
+                }
+                name="select-multiple"
+              />
+            }
+            label="Enable multiple item selection"
+          />
         </>
       );
     case FieldType.connectTable:
