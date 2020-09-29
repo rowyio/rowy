@@ -71,6 +71,8 @@ if (serviceAccount) {
       case "FT_subTableStats":
         configData = `export const collectionPath ="${configString}"\nexport default []`;
         break;
+      case "FT_spark":
+        configData = configString;
       default:
         configData = `export default ${configString}\n export const collectionPath=''`;
         break;

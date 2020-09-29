@@ -10,14 +10,20 @@ export const callable = callableFns;
 // these functions are designed to be built and deployed based on the configuration passed through the callable
 export { FT_derivatives } from "./derivatives";
 export { FT_aggregates } from "./aggregates";
-export { FT_algolia } from "./algolia";
+export { FT_subTableStats } from "./subTableStats";
+
+export { actionScript } from "./actionScript";
+export { FT_spark } from "./sparks";
+export { webhook } from "./webhooks";
+
 export { FT_sync } from "./collectionSync";
 export { FT_snapshotSync } from "./snapshotSync";
 //export { FT_history } from "./history";
-export { FT_subTableStats } from "./subTableStats";
 export { FT_compressedThumbnail } from "./compressedThumbnail";
-export { actionScript } from "./actionScript";
-export { webhook } from "./webhooks";
+
+export { slackBotMessageOnCreate } from "./slackOnTrigger/trigger";
+
+// depercated will be using sparks integrations instead.
+export { FT_algolia } from "./algolia";
 export { FT_email } from "./emailOnTrigger";
 export { FT_slack } from "./slackOnTrigger";
-export { slackBotMessageOnCreate } from "./slackOnTrigger/trigger";

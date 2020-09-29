@@ -1,36 +1,78 @@
-const sampleConfig = [
-  {
-    type: "slack",
-    triggers: ["create"],
-    shouldSend: (row, db) => true,
-    requiredFields: [],
-    target: (row, db) => ({ emails: ["shams@antler.co"], channels: [] }),
-    message: (row, db) => ({
-      text: "I am a test ${user.firstName} message",
-      attachments: [
-        {
-          text: "And here’s an attachment!",
-        },
-      ],
-    }),
-  },
-  {
-    type: "sendGrid",
-    triggers: ["create"],
-    requiredFields: [],
-    shouldSend: (row, db) => true,
-    to: (row, db) => "",
-    cc: (row, db) => undefined,
-    bcc: (row, db) => undefined,
-    attachments: (row, db) => undefined,
-    templateId: "d-",
-    personalizations: ["firstName", { email: "user.email" }],
-  },
-  {
-    type: "algolia",
-    triggers: ["create", "update", "delete"],
-    index: "users",
-    requiredFields: ["email"],
-    fieldsToSync: ["firstName", "lastName", "email", { email: "user.email" }],
-  },
-];
+import * as functions from "firebase-functions";
+import { hasRequiredFields } from "../utils";
+const { PubSub } = require("@google-cloud/pubsub");
+const pubSubClient = new PubSub();
+
+import { db } from "../config";
+
+import config, { collectionPath } from "../functionConfig";
+// generated using generateConfig.ts
+const functionConfig: any = config;
+
+const sparkTrigger = async (
+  change: functions.Change<functions.firestore.DocumentSnapshot>,
+  context: functions.EventContext
+) => {
+  const beforeData = change.before?.data();
+  const afterData = change.after?.data();
+  const ref = change.after ? change.after.ref : change.before.ref;
+  const triggerType =
+    Boolean(beforeData) && Boolean(afterData)
+      ? "update"
+      : Boolean(afterData)
+      ? "create"
+      : "delete";
+
+  try {
+    const sparkPromises = functionConfig.map(async (sparkConfig) => {
+      const {
+        topic,
+        triggers,
+        shouldRun,
+        requiredFields,
+        sparkBody,
+      } = sparkConfig;
+      const sparkContext = {
+        row: afterData,
+        ref,
+        db,
+        change,
+        triggerType,
+        sparkConfig,
+      };
+      if (!triggers.includes(triggerType)) return false; //check if trigger type is included in the spark
+      if (
+        triggerType !== "delete" &&
+        requiredFields &&
+        requiredFields.length !== 0 &&
+        !hasRequiredFields(requiredFields, afterData)
+      )
+        return false; // check if it hase required fields for the spark to run
+      const dontRun = shouldRun ? !(await shouldRun(sparkContext)) : false; //
+      if (dontRun) return false;
+      const sparkData = await Object.keys(sparkBody).reduce(
+        async (acc, key) => ({
+          [key]: await sparkBody[key](sparkContext),
+          ...(await acc),
+        }),
+        {}
+      );
+      console.log(JSON.stringify(sparkData));
+      const messageBuffer = Buffer.from(JSON.stringify(sparkData), "utf8");
+      const messageId = await pubSubClient.topic(topic).publish(messageBuffer);
+      console.log(`Message ${messageId} published.`);
+      return true;
+    });
+    await Promise.all(sparkPromises);
+    return true;
+  } catch (err) {
+    console.error(err);
+    return Promise.reject(err);
+  }
+};
+
+export const FT_spark = {
+  [collectionPath.replace(/-/g, "_")]: functions.firestore
+    .document(`${collectionPath}/{docId}`)
+    .onWrite(sparkTrigger),
+};
