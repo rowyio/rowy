@@ -72,7 +72,15 @@ if (serviceAccount) {
         configData = `export const collectionPath ="${configString}"\nexport default []`;
         break;
       case "FT_spark":
-        configData = configString;
+        const sparkSchemaDoc = await db
+          .doc(`_FIRETABLE_/settings/schema/${configString}`)
+          .get();
+        const sparkSchemaData = sparkSchemaDoc.data();
+
+        configData = `export default [${sparkSchemaData?.sparks.join(
+          ",\n"
+        )}]\n export const collectionPath='${configString}';`;
+        break;
       default:
         configData = `export default ${configString}\n export const collectionPath=''`;
         break;
