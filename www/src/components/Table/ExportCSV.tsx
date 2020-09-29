@@ -23,6 +23,7 @@ import { db } from "../../firebase";
 import { FieldType } from "constants/fields";
 import { isCollectionGroup } from "util/fns";
 import _get from "lodash/get";
+import { tablePath } from "../../hooks/useFiretable";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -156,7 +157,7 @@ export default function ExportCSV() {
 
     let query: any = isCollectionGroup()
       ? db.collectionGroup(tableState?.tablePath!)
-      : db.collection(tableState?.tablePath!);
+      : db.collection(tablePath(tableState?.tablePath!));
     // add filters
     tableState?.filters.forEach((filter) => {
       query = query.where(filter.key, filter.operator, filter.value);

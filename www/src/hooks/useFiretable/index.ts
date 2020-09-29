@@ -1,5 +1,6 @@
 import useTable from "./useTable";
 import useTableConfig from "./useTableConfig";
+import { useEffect } from "react";
 
 export type FiretableActions = {
   // TODO: Stricter types here
@@ -101,5 +102,13 @@ const useFiretable = (
 
   return { tableState: state, tableActions: actions };
 };
+
+export function tablePath(path: string) {
+  const prefix = process.env.REACT_APP_DATA_PATH_PREFIX;
+  if (prefix) {
+    return `${prefix}/${path}`;
+  }
+  return path;
+}
 
 export default useFiretable;

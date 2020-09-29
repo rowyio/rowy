@@ -1,8 +1,6 @@
 import { useEffect } from "react";
-import useDoc, { DocActions } from "./useDoc";
+import useDoc from "./useDoc";
 import { db } from "../firebase";
-import _groupBy from "lodash/groupBy";
-import _find from "lodash/find";
 
 const useSettings = () => {
   const [settingsState, documentDispatch] = useDoc({
