@@ -26,6 +26,7 @@ const useSettings = () => {
     collection: string;
     description: string;
     roles: string[];
+    copySchema: string;
   }) => {
     const { tables } = settingsState;
     // updates the setting doc
@@ -35,10 +36,27 @@ const useSettings = () => {
       { merge: true }
     );
 
-    //create the firetable collection doc with empty columns
-    db.collection("_FIRETABLE_/settings/schema")
-      .doc(data.collection)
-      .set({ ...data, columns: {} }, { merge: true });
+    const schemaToCopy = data.copySchema;
+    delete data["copySchema"];
+
+    if (schemaToCopy) {
+      db.collection("_FIRETABLE_/settings/schema")
+        .doc(schemaToCopy)
+        .get()
+        .then((snapshot) => {
+          let schemaData = snapshot.data();
+          schemaData = Object.assign(schemaData, data);
+
+          db.collection("_FIRETABLE_/settings/schema")
+            .doc(data.collection)
+            .set(schemaData, { merge: true });
+        });
+    } else {
+      //create the firetable collection doc with empty columns
+      db.collection("_FIRETABLE_/settings/schema")
+        .doc(data.collection)
+        .set({ ...data, columns: {} }, { merge: true });
+    }
   };
 
   const updateTable = (data: {

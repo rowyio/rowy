@@ -20,6 +20,7 @@ import { useFiretableContext } from "../contexts/firetableContext";
 
 import RolesSelector from "./RolesSelector";
 import Confirmation from "components/Confirmation";
+import TableSelector from "./TableSelector";
 
 export enum TableSettingsDialogModes {
   create,
@@ -37,6 +38,7 @@ export interface ICreateTableDialogProps {
     description: string;
     name: string;
     isCollectionGroup: boolean;
+    copySchema: string;
   } | null;
 }
 
@@ -47,6 +49,7 @@ const FORM_EMPTY_STATE = {
   description: "",
   roles: ["ADMIN"],
   isCollectionGroup: false,
+  copySchema: "",
 };
 export default function TableSettingsDialog({
   mode,
@@ -171,6 +174,15 @@ export default function TableSettingsDialog({
             value={formState.roles ?? []}
             handleChange={(update) => handleChange("roles", update)}
           />
+          {mode === TableSettingsDialogModes.create && (
+            <TableSelector
+              handleChange={(table) => {
+                handleChange("copySchema", table.collection);
+              }}
+              value={formState.copySchema}
+              label="Copy Schema"
+            />
+          )}
         </DialogContent>
 
         {mode === TableSettingsDialogModes.update && (

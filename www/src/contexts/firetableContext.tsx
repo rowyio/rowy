@@ -40,6 +40,7 @@ interface FiretableContextProps {
       description: string;
       roles: string[];
       section: string;
+      copySchema: string;
     }) => void;
     updateTable: (data: {
       collection: string;

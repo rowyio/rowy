@@ -95,6 +95,7 @@ const TablesView = () => {
       name: string;
       section: string;
       isCollectionGroup: boolean;
+      copySchema: string;
     };
   }>({
     mode: null,
