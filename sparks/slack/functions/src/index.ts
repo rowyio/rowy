@@ -10,7 +10,7 @@ async function asyncForEach(array: any[], callback: Function) {
   }
 }
 
-const web = new WebClient(env.slackbot ? env.slackbot.token : "NEEDS_CONFIG");
+const web = new WebClient(env.slackbot.token);
 
 const messageByChannel = async ({
   text,

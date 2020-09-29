@@ -2,8 +2,8 @@ import algoliasearch from "algoliasearch";
 import { pubsub, config } from "firebase-functions";
 export const env = config();
 
-const APP_ID = env.algolia ? env.algolia.app : "NEEDS_CONFIG";
-const ADMIN_KEY = env.algolia ? env.algolia.key : "NEEDS_CONFIG";
+const APP_ID = env.algolia.app;
+const ADMIN_KEY = env.algolia.key;
 
 const client = algoliasearch(APP_ID, ADMIN_KEY);
 
