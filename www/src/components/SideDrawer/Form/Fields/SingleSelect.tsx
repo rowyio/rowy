@@ -42,7 +42,7 @@ export default function SingleSelect({
             {...props}
             options={config?.options ?? []}
             multiple={false}
-            value={value}
+            value={Array.isArray(value) ? value[0] : value}
             onChange={onChange}
             disabled={editable === false}
             TextFieldProps={{

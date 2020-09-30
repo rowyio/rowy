@@ -66,16 +66,17 @@ export default function ConnectTable({
   // Render chips
   const renderValue = () => (
     <Grid container spacing={1} wrap="nowrap" className={classes.chipList}>
-      {value?.map((doc: any) => (
-        <Grid item key={doc.docPath}>
-          <Chip
-            label={config.primaryKeys
-              .map((key: string) => doc.snapshot[key])
-              .join(" ")}
-            className={classes.chip}
-          />
-        </Grid>
-      ))}
+      {Array.isArray(value) &&
+        value.map((doc: any) => (
+          <Grid item key={doc.docPath}>
+            <Chip
+              label={config.primaryKeys
+                .map((key: string) => doc.snapshot[key])
+                .join(" ")}
+              className={classes.chip}
+            />
+          </Grid>
+        ))}
     </Grid>
   );
 
