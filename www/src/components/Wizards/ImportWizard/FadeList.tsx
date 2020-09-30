@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) =>
       padding: theme.spacing(1.5, 0, 3),
 
       height: 400,
-      overflowY: "auto",
+      overflowY: "overlay" as any,
 
       "& li": { margin: theme.spacing(0.5, 0) },
     },
