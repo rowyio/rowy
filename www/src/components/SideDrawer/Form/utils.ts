@@ -21,11 +21,12 @@ export type Fields = (Field | ((values: Values) => Field))[];
 
 export const initializeValue = (type) => {
   switch (type) {
-    case FieldType.singleSelect:
     case FieldType.multiSelect:
     case FieldType.image:
     case FieldType.file:
       return [];
+
+    case FieldType.singleSelect:
     case FieldType.date:
     case FieldType.dateTime:
       return null;

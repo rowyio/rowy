@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme) =>
 export type CustomCellProps = FormatterProps<any> & {
   value: any;
   onSubmit: (value: any) => void;
+  docRef: firebase.firestore.DocumentReference;
 };
 
 const getCellValue = (row, key) => {
@@ -49,6 +50,7 @@ const withCustomCell = (
       <Suspense fallback={<div />}>
         <Component
           {...props}
+          docRef={props.row.ref}
           value={getCellValue(props.row, props.column.key as string)}
           onSubmit={handleSubmit}
         />

@@ -19,7 +19,7 @@ export default function Rating({
   onSubmit,
 }: CustomCellProps) {
   const classes = useStyles();
-  const { max, precision } = (column as any).config as {
+  const { max, precision } = ((column as any).config ?? {}) as {
     max: number;
     precision: number;
   };

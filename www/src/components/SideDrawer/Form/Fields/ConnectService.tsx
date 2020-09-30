@@ -1,28 +1,32 @@
 import React from "react";
-import { Controller } from "react-hook-form";
+import { Controller, useWatch } from "react-hook-form";
 import { IFieldProps } from "../utils";
 
-import { useTheme, Grid, Chip } from "@material-ui/core";
+import { Chip, Grid, useTheme } from "@material-ui/core";
+import { get } from "lodash";
+import ConnectServiceSelect, {
+  IConnectServiceSelectProps,
+} from "../../../ConnectServiceSelect";
 
-import ConnectTableSelect, {
-  IConnectTableSelectProps,
-} from "components/ConnectTableSelect";
-
-export interface IConnectTableProps
+export interface IConnectServiceProps
   extends IFieldProps,
-    Partial<IConnectTableSelectProps> {}
+    Partial<Omit<IConnectServiceSelectProps, "docRef">> {}
 
-export default function ConnectTable({
+export default function ConnectService({
   control,
-  docRef,
   name,
   editable,
   ...props
-}: IConnectTableProps) {
+}: IConnectServiceProps) {
   const theme = useTheme();
 
   const disabled = editable === false;
+  const { config, docRef } = props;
+  if (!config) {
+    return <></>;
+  }
 
+  const displayKey = config.titleKey ?? config.primaryKey;
   return (
     <Controller
       control={control}
@@ -30,23 +34,26 @@ export default function ConnectTable({
       render={({ onChange, onBlur, value }) => {
         const handleDelete = (hit: any) => () => {
           // if (multiple)
-          onChange(value.filter((v) => v.snapshot.objectID !== hit.objectID));
+          onChange(
+            value.filter(
+              (v) => get(v, config.primaryKey) !== get(hit, config.primaryKey)
+            )
+          );
           // else form.setFieldValue(field.name, []);
         };
 
         return (
           <>
             {!disabled && (
-              <ConnectTableSelect
+              <ConnectServiceSelect
                 {...(props as any)}
                 value={value}
+                multiple={false}
                 onChange={onChange}
+                docRef={docRef}
                 TextFieldProps={{
                   fullWidth: true,
                   onBlur,
-                  SelectProps: {
-                    renderValue: () => `${value?.length ?? 0} selected`,
-                  },
                 }}
               />
             )}
@@ -57,14 +64,12 @@ export default function ConnectTable({
                 spacing={1}
                 style={{ marginTop: theme.spacing(1) }}
               >
-                {value.map(({ snapshot }) => (
-                  <Grid item key={snapshot.objectID}>
+                {value.map((snapshot) => (
+                  <Grid item key={get(snapshot, config.primaryKey)}>
                     <Chip
                       component="li"
                       size="medium"
-                      label={props.config?.primaryKeys
-                        ?.map((key: string) => snapshot[key])
-                        .join(" ")}
+                      label={get(snapshot, displayKey)}
                       onDelete={disabled ? undefined : handleDelete(snapshot)}
                     />
                   </Grid>

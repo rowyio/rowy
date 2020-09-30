@@ -63,6 +63,16 @@ export default function MultiSelect({
   // Support SingleSelect field
   const isSingle = (column as any).type === FieldType.singleSelect;
 
+  let sanitisedValue: any;
+  if (isSingle) {
+    if (value === undefined || value === null) sanitisedValue = null;
+    else if (Array.isArray(value)) sanitisedValue = value[0];
+    else sanitisedValue = value;
+  } else {
+    if (value === undefined || value === null) sanitisedValue = [];
+    else sanitisedValue = value;
+  }
+
   // Render chips or basic string
   const renderValue = isSingle
     ? () =>
@@ -110,15 +120,9 @@ export default function MultiSelect({
     >
       <div>
         <MultiSelect_
-          value={
-            value === undefined || value === null
-              ? isSingle
-                ? null
-                : []
-              : value
-          }
+          value={sanitisedValue}
           onChange={onSubmit}
-          freeText={!isSingle && config.freeText}
+          freeText={config.freeText}
           multiple={!isSingle as any}
           label={column.name}
           labelPlural={column.name}

@@ -44,3 +44,5 @@ package-lock.json
 node_modules/
 
 cloud_functions/functions/src/functionConfig.json
+*.iml
+.idea

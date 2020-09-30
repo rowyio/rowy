@@ -12,7 +12,10 @@ export type ISingleSelectProps = IFieldProps &
     MultiSelectProps<string>,
     "name" | "multiple" | "value" | "onChange" | "options"
   > & {
-    config?: { options: string[] };
+    config?: {
+      options: string[];
+      freeText?: boolean;
+    };
   };
 
 /**
@@ -39,7 +42,7 @@ export default function SingleSelect({
             {...props}
             options={config?.options ?? []}
             multiple={false}
-            value={value}
+            value={Array.isArray(value) ? value[0] : value}
             onChange={onChange}
             disabled={editable === false}
             TextFieldProps={{
@@ -48,7 +51,7 @@ export default function SingleSelect({
               onBlur,
             }}
             searchable
-            freeText={false}
+            freeText={config?.freeText}
           />
 
           {value?.length > 0 && (

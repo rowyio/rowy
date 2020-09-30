@@ -1,73 +1,79 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import { useDebouncedCallback } from "use-debounce";
+import _get from "lodash/get";
 
 import {
-  Grid,
-  TextField,
-  List,
-  MenuItem,
-  ListItemIcon,
-  Checkbox,
-  ListItemText,
-  Divider,
   Button,
-  Typography,
+  Checkbox,
+  Divider,
+  Grid,
   InputAdornment,
+  List,
+  ListItemIcon,
+  ListItemText,
+  MenuItem,
+  TextField,
+  Typography,
+  Radio,
 } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 
-import { IConnectTableSelectProps } from ".";
+import { IConnectServiceSelectProps } from ".";
 import useStyles from "./styles";
 import Loading from "components/Loading";
 
-import algoliasearch from "algoliasearch/lite";
-
 import { useFiretableContext } from "../../contexts/firetableContext";
-const searchClient = algoliasearch(
-  process.env.REACT_APP_ALGOLIA_APP_ID ?? "",
-  process.env.REACT_APP_ALGOLIA_SEARCH_API_KEY ?? ""
-);
 
 export interface IPopupContentsProps
-  extends Omit<IConnectTableSelectProps, "className" | "TextFieldProps"> {}
+  extends Omit<IConnectServiceSelectProps, "className" | "TextFieldProps"> {}
 
 // TODO: Implement infinite scroll here
 export default function PopupContents({
   value = [],
   onChange,
-  collectionPath,
   config,
-  multiple = true,
   row,
+  docRef,
 }: IPopupContentsProps) {
-  const index = collectionPath ?? config.index; //temporary for pre column restructure migration
+  const url = config.url;
+  const titleKey = config.titleKey ?? config.primaryKey;
+  const subtitleKey = config.subtitleKey;
+  const resultsKey = config.resultsKey;
+  const primaryKey = config.primaryKey;
+  const multiple = Boolean(config.multiple);
+
   const classes = useStyles();
 
-  const { userClaims } = useFiretableContext();
-
-  const algoliaIndex = useMemo(() => {
-    return searchClient.initIndex(index);
-  }, [index]);
-
-  // Algolia search query
+  // Webservice search query
   const [query, setQuery] = useState("");
-  // Algolia query response
+  // Webservice response
   const [response, setResponse] = useState<any | null>(null);
-  const hits: any["hits"] = response?.hits ?? [];
 
+  const [docData, setDocData] = useState<any | null>(null);
+  useEffect(() => {
+    docRef.get().then((d) => setDocData(d.data()));
+  }, []);
+
+  const hits: any["hits"] = _get(response, resultsKey) ?? [];
   const [search] = useDebouncedCallback(
     async (query: string) => {
-      if (!algoliaIndex) return;
-      const data = { ...userClaims, ...row };
-      const filters = config?.filters
-        ? config?.filters.replace(/\{\{(.*?)\}\}/g, (m, k) => data[k])
-        : "";
+      if (!docData) return;
+      if (!url) return;
+      const uri = new URL(url),
+        params = { q: query };
+      Object.keys(params).forEach((key) =>
+        uri.searchParams.append(key, params[key])
+      );
 
-      const resp = await algoliaIndex.search(query, {
-        filters,
+      const resp = await fetch(uri.toString(), {
+        method: "POST",
+        body: JSON.stringify(docData),
+        headers: { "content-type": "application/json" },
       });
-      setResponse(resp);
+
+      const jsonBody = await resp.json();
+      setResponse(jsonBody);
     },
     1000,
     { leading: true }
@@ -75,27 +81,21 @@ export default function PopupContents({
 
   useEffect(() => {
     search(query);
-  }, [query]);
+  }, [query, docData]);
 
   if (!response) return <Loading />;
 
   const select = (hit: any) => () => {
-    const { _highlightResult, ...snapshot } = hit;
-    const output = {
-      snapshot,
-      docPath: `${index}/${snapshot.objectID}`,
-    };
-
-    if (multiple) onChange([...value, output]);
-    else onChange([output]);
+    if (multiple) onChange([...value, hit]);
+    else onChange([hit]);
   };
   const deselect = (hit: any) => () => {
     if (multiple)
-      onChange(value.filter((v) => v.snapshot.objectID !== hit.objectID));
+      onChange(value.filter((v) => v[primaryKey] !== hit[primaryKey]));
     else onChange([]);
   };
 
-  const selectedValues = value?.map((item) => item.snapshot.objectID);
+  const selectedValues = value?.map((item) => _get(item, primaryKey));
 
   const clearSelection = () => onChange([]);
 
@@ -125,35 +125,46 @@ export default function PopupContents({
       <Grid item xs className={classes.listRow}>
         <List className={classes.list}>
           {hits.map((hit) => {
-            const isSelected = selectedValues.indexOf(hit.objectID) !== -1;
-
+            const isSelected =
+              selectedValues.indexOf(_get(hit, primaryKey)) !== -1;
+            console.log(`Selected Values: ${selectedValues}`);
             return (
-              <React.Fragment key={hit.objectID}>
+              <React.Fragment key={_get(hit, primaryKey)}>
                 <MenuItem
                   dense
                   onClick={isSelected ? deselect(hit) : select(hit)}
                 >
                   <ListItemIcon className={classes.checkboxContainer}>
-                    <Checkbox
-                      edge="start"
-                      checked={isSelected}
-                      tabIndex={-1}
-                      color="secondary"
-                      className={classes.checkbox}
-                      disableRipple
-                      inputProps={{
-                        "aria-labelledby": `label-${hit.objectID}`,
-                      }}
-                    />
+                    {multiple ? (
+                      <Checkbox
+                        edge="start"
+                        checked={isSelected}
+                        tabIndex={-1}
+                        color="secondary"
+                        className={classes.checkbox}
+                        disableRipple
+                        inputProps={{
+                          "aria-labelledby": `label-${_get(hit, primaryKey)}`,
+                        }}
+                      />
+                    ) : (
+                      <Radio
+                        edge="start"
+                        checked={isSelected}
+                        tabIndex={-1}
+                        color="secondary"
+                        className={classes.checkbox}
+                        disableRipple
+                        inputProps={{
+                          "aria-labelledby": `label-${_get(hit, primaryKey)}`,
+                        }}
+                      />
+                    )}
                   </ListItemIcon>
                   <ListItemText
-                    id={`label-${hit.objectID}`}
-                    primary={config?.primaryKeys
-                      ?.map((key: string) => hit[key])
-                      .join(" ")}
-                    secondary={config?.secondaryKeys
-                      ?.map((key: string) => hit[key])
-                      .join(" ")}
+                    id={`label-${_get(hit, primaryKey)}`}
+                    primary={_get(hit, titleKey)}
+                    secondary={!subtitleKey ? "" : _get(hit, subtitleKey)}
                   />
                 </MenuItem>
                 <Divider className={classes.divider} />
@@ -176,7 +187,7 @@ export default function PopupContents({
               color="textSecondary"
               className={classes.selectedNum}
             >
-              {value?.length} of {response?.nbHits}
+              {value?.length} of {hits?.length}
             </Typography>
 
             <Button

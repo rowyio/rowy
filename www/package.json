@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@antlerengineering/multiselect": "^0.5.0",
+    "@antlerengineering/multiselect": "^0.6.0",
     "@date-io/date-fns": "1.x",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
@@ -45,7 +45,7 @@
     "serve": "^11.3.2",
     "tinymce": "^5.2.0",
     "typescript": "^3.7.2",
-    "use-algolia": "^1.3.0",
+    "use-algolia": "^1.4.1",
     "use-debounce": "^3.3.0",
     "use-persisted-state": "^0.3.0",
     "yarn": "^1.19.0",

@@ -23,6 +23,8 @@ import ImageIcon from "@material-ui/icons/PhotoSizeSelectActual";
 import FileIcon from "@material-ui/icons/AttachFile";
 
 import SingleSelectIcon from "@material-ui/icons/FormatListBulleted";
+import WebServiceIcon from "@material-ui/icons/Http";
+
 import MultiSelectIcon from "assets/icons/MultiSelect";
 
 import ConnectTableIcon from "assets/icons/ConnectTable";
@@ -67,6 +69,7 @@ export {
   ColorIcon,
   SliderIcon,
   UserIcon,
+  WebServiceIcon,
 };
 
 export enum FieldType {
@@ -92,6 +95,7 @@ export enum FieldType {
   singleSelect = "SINGLE_SELECT",
   multiSelect = "MULTI_SELECT",
 
+  connectService = "SERVICE_SELECT",
   connectTable = "DOCUMENT_SELECT",
   subTable = "SUB_TABLE",
 
@@ -128,7 +132,6 @@ export const FIELDS = [
 
   { icon: <ImageIcon />, name: "Image", type: FieldType.image },
   { icon: <FileIcon />, name: "File", type: FieldType.file },
-
   {
     icon: <SingleSelectIcon />,
     name: "Single Select",
@@ -139,16 +142,20 @@ export const FIELDS = [
     name: "Multi Select",
     type: FieldType.multiSelect,
   },
-
+  {
+    icon: <SubTableIcon />,
+    name: "Sub-table",
+    type: FieldType.subTable,
+  },
   {
     icon: <ConnectTableIcon />,
     name: "Connect Table",
     type: FieldType.connectTable,
   },
   {
-    icon: <SubTableIcon />,
-    name: "Sub-table",
-    type: FieldType.subTable,
+    icon: <WebServiceIcon />,
+    name: "Webservice Select",
+    type: FieldType.connectService,
   },
 
   { icon: <JsonIcon />, name: "JSON", type: FieldType.json },
@@ -198,6 +205,7 @@ export const FIELD_TYPE_DESCRIPTIONS = {
 
   [FieldType.connectTable]:
     "Connects to an existing table to fetch a snapshot of values from a row. Requires Algolia integration.",
+  [FieldType.connectService]: "Select a value from a list of websevice results",
   [FieldType.subTable]:
     "Creates a sub-table. Also displays number of rows inside the sub-table. Max sub-table levels: 100.",
 

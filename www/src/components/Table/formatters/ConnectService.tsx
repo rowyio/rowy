@@ -1,10 +1,10 @@
 import React from "react";
 import clsx from "clsx";
 import { CustomCellProps } from "./withCustomCell";
-
+import _get from "lodash/get";
 import { createStyles, makeStyles, Grid, Chip } from "@material-ui/core";
 
-import ConnectTableSelect from "components/ConnectTableSelect";
+import ConnectServiceSelect from "components/ConnectServiceSelect";
 import { useFiretableContext } from "contexts/firetableContext";
 
 const useStyles = makeStyles((theme) =>
@@ -49,34 +49,28 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-export default function ConnectTable({
+export default function ConnectService({
   rowIdx,
   column,
   value,
   onSubmit,
   row,
+  docRef,
 }: CustomCellProps) {
   const classes = useStyles();
-
-  const { collectionPath, config } = column as any;
+  const { config } = column as any;
   const { dataGridRef } = useFiretableContext();
-  if (!config || !config.primaryKeys) return <></>;
-  const disabled = column.editable === false || config?.isLocked;
-
+  if (!config) return <></>;
+  const disabled = !column.editable || config?.isLocked;
+  const titleKey = config.titleKey ?? config.primaryKey;
   // Render chips
-  const renderValue = () => (
+  const renderValue = (value) => (
     <Grid container spacing={1} wrap="nowrap" className={classes.chipList}>
-      {Array.isArray(value) &&
-        value.map((doc: any) => (
-          <Grid item key={doc.docPath}>
-            <Chip
-              label={config.primaryKeys
-                .map((key: string) => doc.snapshot[key])
-                .join(" ")}
-              className={classes.chip}
-            />
-          </Grid>
-        ))}
+      {value?.map((doc: any) => (
+        <Grid item key={_get(doc, config.primaryKey)}>
+          <Chip label={_get(doc, titleKey)} className={classes.chip} />
+        </Grid>
+      ))}
     </Grid>
   );
 
@@ -87,14 +81,12 @@ export default function ConnectTable({
   };
 
   return (
-    <ConnectTableSelect
+    <ConnectServiceSelect
       row={row}
-      column={column}
       value={value}
       onChange={onSubmit}
-      collectionPath={collectionPath}
       config={config}
-      editable={column.editable as boolean}
+      docRef={docRef}
       TextFieldProps={{
         fullWidth: true,
         label: "",
@@ -117,6 +109,7 @@ export default function ConnectTable({
           },
         },
         onClick,
+        disabled,
       }}
       className={clsx(
         classes.fullHeight,

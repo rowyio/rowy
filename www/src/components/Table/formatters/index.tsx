@@ -31,6 +31,7 @@ const Action = lazy(() => import("./Action" /* webpackChunkName: "Action" */));
 const ConnectTable = lazy(
   () => import("./ConnectTable" /* webpackChunkName: "ConnectTable" */)
 );
+const ConnectService = lazy(() => import("./ConnectService"));
 const SubTable = lazy(
   () => import("./SubTable" /* webpackChunkName: "SubTable" */)
 );
@@ -105,6 +106,9 @@ export const getFormatter = (column: any, readOnly: boolean = false) => {
 
     case FieldType.connectTable:
       return withCustomCell(ConnectTable, readOnly);
+
+    case FieldType.connectService:
+      return withCustomCell(ConnectService, readOnly);
 
     case FieldType.subTable:
       return withCustomCell(SubTable, readOnly);
