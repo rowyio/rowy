@@ -106,7 +106,13 @@ export default function Action({
       className={classes.fab}
       onClick={handleRun}
       disabled={
-        isRunning || !!(hasRan && !value.redo && !value.undo) || disabled
+        isRunning ||
+        !!(
+          hasRan &&
+          (config["redo.enabled"] ? false : !value.redo) &&
+          (config["undo.enabled"] ? false : !value.undo)
+        ) ||
+        disabled
       }
     >
       {isRunning ? (
