@@ -31,13 +31,13 @@ const useSettings = () => {
     const { tables } = settingsState;
     // updates the setting doc
 
+    const schemaToCopy = data.copySchema;
+    delete data["copySchema"];
+
     db.doc("_FIRETABLE_/settings").set(
       { tables: tables ? [...tables, data] : [data] },
       { merge: true }
     );
-
-    const schemaToCopy = data.copySchema;
-    delete data["copySchema"];
 
     if (schemaToCopy) {
       db.collection("_FIRETABLE_/settings/schema")
@@ -46,7 +46,7 @@ const useSettings = () => {
         .then((snapshot) => {
           let schemaData = snapshot.data();
           schemaData = Object.assign(schemaData, data);
-
+          schemaData.collection = data.collection;
           db.collection("_FIRETABLE_/settings/schema")
             .doc(data.collection)
             .set(schemaData, { merge: true });
