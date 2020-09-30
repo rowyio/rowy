@@ -118,7 +118,7 @@ export default function MultiSelect({
               : value
           }
           onChange={onSubmit}
-          freeText={!isSingle && config.freeText}
+          freeText={config.freeText}
           multiple={!isSingle as any}
           label={column.name}
           labelPlural={column.name}
