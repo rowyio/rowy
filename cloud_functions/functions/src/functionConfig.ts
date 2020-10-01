@@ -1,45 +1,52 @@
 export default [
   {
-    fieldName: "reviewsSummary",
-    eval: (db) => async ({
-      aggregateState,
-      incrementor,
-      triggerType,
-      change,
-      afterData,
-      beforeData,
-    }) => {
-      //triggerType:  create | update | delete
-      //aggregateState: the subtable accumenlator stored in the cell of this column
-      //change: the triggered document change snapshot of the the subcollection
-      //afterData
-      //beforeData
-      //incrementor: short for firebase.firestore.FieldValue.increment(n);
-      //This script needs to return the new aggregateState cell value.
-      switch (triggerType) {
-        case "create":
-          const rating = afterData?.rating ?? 0;
+    type: "slack",
+    topic: "spark_slack",
+    triggers: ["create"],
+    requiredFields: [],
+    shouldRun: ({}) => true,
+    sparkBody: {
+      emails: ({}) => [],
+      channels: async ({}) => ["C01B88WBYNQ"],
+      blocks: ({ row }) => [
+        {
+          type: "section",
+          text: {
+            type: "mrkdwn",
+            text: `👋🏻Hi Team,\n A new portfolio company has been created on Fusion\nTeam ${row.teamName} from ${row.cohort} \n\n *Meet the founders:*`,
+          },
+        },
+        { type: "divider" },
+        ...row.teamMembers.map((teamMember) => {
+          const {
+            firstName,
+            lastName,
+            email,
+            profilePhoto,
+          } = teamMember.snapshot;
           return {
-            numberOfReviews: incrementor(1),
-            accumulatedStars: incrementor(rating),
+            type: "section",
+            text: {
+              type: "mrkdwn",
+              text: `*${firstName} ${lastName}*\n email: ${email}`,
+            },
+            accessory: {
+              type: "image",
+              image_url: profilePhoto[0].downloadURL,
+              alt_text: `${firstName}'s profile photo`,
+            },
           };
-        case "update":
-          const prevRating = beforeData?.rating ?? 0;
-          const newRating = afterData?.rating ?? 0;
-          return {
-            accumulatedStars: incrementor(newRating - prevRating),
-          };
-        case "delete":
-          const removeStars = -(beforeData?.rating ?? 0);
-          return {
-            numberOfReviews: incrementor(-1),
-            accumulatedStars: incrementor(removeStars),
-          };
-        default:
-          return {};
-      }
+        }),
+        { type: "divider" },
+        {
+          type: "section",
+          text: {
+            type: "mrkdwn",
+            text: `Please add and welcome them to ALumni Slack`,
+          },
+        },
+      ],
     },
-    subtables: ["reviews"],
   },
 ];
-export const collectionPath = "mvpResources";
+export const collectionPath = "portfolio";

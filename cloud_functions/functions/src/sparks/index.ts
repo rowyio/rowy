@@ -71,8 +71,18 @@ const sparkTrigger = async (
   }
 };
 
+const subCollectionTriggerPath = (schemaPath) => {
+  const subtables = schemaPath.match(/\/subTables\//g);
+  if (subtables === null) return schemaPath;
+  const collection = schemaPath.split("/").pop();
+  return `${subtables
+    .map((_, i) => `{col${i}}/{doc${i}}/`)
+    .join("")}${collection}`;
+};
 export const FT_spark = {
-  [collectionPath.replace(/-/g, "_")]: functions.firestore
-    .document(`${collectionPath}/{docId}`)
+  [collectionPath
+    .replace(/\/subTables\//g, "_sub_")
+    .replace(/-/g, "_")]: functions.firestore
+    .document(`${subCollectionTriggerPath(collectionPath)}/{docId}`)
     .onWrite(sparkTrigger),
 };
