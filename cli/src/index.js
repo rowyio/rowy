@@ -216,7 +216,7 @@ program
 
       const adminSDKFilePath = await findFile(
         /.*-firebase-adminsdk.*json/,
-        `Can not find the firebase service account key json file, download the admin key for your project then add it to this directory without renaming it.\nYou can find your service account here: https://console.firebase.google.com/u/0/project/${projectId}/settings/serviceaccounts/adminsdk`
+        `Can not find the firebase service account key json file, download the service account key for your project then add it to this directory without renaming it.\nYou can find your service account here: https://console.firebase.google.com/u/0/project/${projectId}/settings/serviceaccounts/adminsdk`
       );
       // let directory = await directoryCheck();
       // if (!directory) return;
@@ -257,7 +257,7 @@ program
       // check directory for admin sdk json
       const adminSDKFilePath = await findFile(
         /.*-firebase-adminsdk.*json/,
-        `Can not find the firebase service account key json file, download the admin key for your project then add it to this directory without renaming it.\nYou can find your service account here: https://console.firebase.google.com/u/0/project/${projectId}/settings/serviceaccounts/adminsdk`
+        `Can not find the firebase service account key json file, download the service account key for your project then add it to this directory without renaming it.\nYou can find your service account here: https://console.firebase.google.com/u/0/project/${projectId}/settings/serviceaccounts/adminsdk`
       );
 
       var serviceAccount = fs.readFileSync(adminSDKFilePath, {

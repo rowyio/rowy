@@ -50,8 +50,8 @@ Read more about firebase rules for firetable
 
 ### Setting user Roles
 
-Download the admin key for your project then add it to the directory without
-renaming it. You can find your service account here:
+Download the service account key for your project then add it to the directory
+without renaming it. You can find your service account here:
 https://console.firebase.google.com/u/0/project/_/settings/serviceaccounts/adminsdk
 
 ```
