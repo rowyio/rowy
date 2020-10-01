@@ -41,14 +41,15 @@ export default function ImportWizard() {
       !tableState.config.tableConfig.doc?.columns
     ) {
       setOpen(true);
+
+      if (Array.isArray(tableState.filters) && tableState.filters?.length > 0)
+        tableActions!.table.filter([]);
+
+      if (Array.isArray(tableState.orderBy) && tableState.orderBy?.length > 0)
+        tableActions!.table.orderBy([]);
+
       return;
     }
-
-    if (Array.isArray(tableState.filters) && tableState.filters?.length > 0)
-      tableActions!.table.filter([]);
-
-    if (Array.isArray(tableState.orderBy) && tableState.orderBy?.length > 0)
-      tableActions!.table.orderBy([]);
   }, [tableState]);
 
   if (tableState?.rows.length === 0) return null;
