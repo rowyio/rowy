@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) =>
       flexShrink: 0,
     },
 
-    header: { overflowX: "scroll" },
+    header: { overflowX: "hidden" },
     data: {
       overflow: "scroll",
       height: 300,

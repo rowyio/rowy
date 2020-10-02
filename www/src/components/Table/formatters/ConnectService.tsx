@@ -1,7 +1,7 @@
 import React from "react";
 import clsx from "clsx";
 import { CustomCellProps } from "./withCustomCell";
-import { get } from "lodash";
+import _get from "lodash/get";
 import { createStyles, makeStyles, Grid, Chip } from "@material-ui/core";
 
 import ConnectServiceSelect from "components/ConnectServiceSelect";
@@ -67,8 +67,8 @@ export default function ConnectService({
   const renderValue = (value) => (
     <Grid container spacing={1} wrap="nowrap" className={classes.chipList}>
       {value?.map((doc: any) => (
-        <Grid item key={get(doc, config.primaryKey)}>
-          <Chip label={get(doc, titleKey)} className={classes.chip} />
+        <Grid item key={_get(doc, config.primaryKey)}>
+          <Chip label={_get(doc, titleKey)} className={classes.chip} />
         </Grid>
       ))}
     </Grid>
@@ -87,7 +87,6 @@ export default function ConnectService({
       onChange={onSubmit}
       config={config}
       docRef={docRef}
-      multiple={false}
       TextFieldProps={{
         fullWidth: true,
         label: "",

@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 const chalk = require("chalk");
+const fs = require("fs");
 const clear = require("clear");
 const { printLogo } = require("./logo");
 const terminal = require("./lib/terminal");
@@ -10,7 +11,7 @@ const { directoryExists, findFile } = require("./lib/files");
 const process = require("process");
 const { Command } = require("commander");
 const { version } = require("../package.json");
-const { setUserRoles } = require("./lib/firebaseAdmin");
+const { setUserRoles, getProjectTables } = require("./lib/firebaseAdmin");
 const program = new Command();
 program.version(version);
 
@@ -101,7 +102,6 @@ program
       // check if all the required packages are available on the machine
       await systemHealthCheck();
       const firebaseProjects = await terminal.getFirebaseProjects();
-
       const { projectId } = await inquirer.selectFirebaseProject(
         firebaseProjects
       );
@@ -210,8 +210,14 @@ program
   .action(async (email, roles) => {
     try {
       // check directory for admin sdk json
-      const adminSDKFilePath = await findFile(/.*-firebase-adminsdk.*json/);
+      const projectId = config.get("firebaseProjectId")
+        ? config.get("firebaseProjectId")
+        : "_";
 
+      const adminSDKFilePath = await findFile(
+        /.*-firebase-adminsdk.*json/,
+        `Can not find the firebase service account key json file, download the service account key for your project then add it to this directory without renaming it.\nYou can find your service account here: https://console.firebase.google.com/u/0/project/${projectId}/settings/serviceaccounts/adminsdk`
+      );
       // let directory = await directoryCheck();
       // if (!directory) return;
       // await deploy2firebase(directory);
@@ -233,6 +239,55 @@ program
         console.log(chalk.bold(chalk.red(result.message)));
         return;
       }
+    } catch (error) {
+      console.log("\u{1F6D1}" + chalk.bold(chalk.red(" FAILED")));
+      console.log(error);
+    }
+  });
+
+program
+  .command("functions:deploy")
+  .description("deploys a specified firetable cloud function")
+  .action(async () => {
+    try {
+      const projectId = config.get("firebaseProjectId")
+        ? config.get("firebaseProjectId")
+        : "_";
+      console.log({ projectId });
+      // check directory for admin sdk json
+      const adminSDKFilePath = await findFile(
+        /.*-firebase-adminsdk.*json/,
+        `Can not find the firebase service account key json file, download the service account key for your project then add it to this directory without renaming it.\nYou can find your service account here: https://console.firebase.google.com/u/0/project/${projectId}/settings/serviceaccounts/adminsdk`
+      );
+
+      var serviceAccount = fs.readFileSync(adminSDKFilePath, {
+        encoding: "utf8",
+      });
+      fs.writeFileSync(
+        `./cloud_functions/functions/firebase-credentials.json`,
+        serviceAccount
+      );
+
+      const { functionToDeploy } = await inquirer.firetableFunctions();
+      if (["actionScript", "webhooks"].includes(functionToDeploy)) {
+        // used for non-collection specific functions
+        await terminal.deployCloudFunction(projectId, functionToDeploy);
+      } else {
+        const collections = (await getProjectTables(adminSDKFilePath)()).map(
+          (f) => f.collection
+        );
+        const { targetCollection } = await inquirer.selectTableCollection(
+          collections
+        );
+        await terminal.createCloudFunctionConfig(
+          functionToDeploy,
+          targetCollection
+        );
+        await terminal.deployCloudFunction(projectId, functionToDeploy);
+      }
+      console.log(
+        "Success!\nYou can now check the firebase cloud functions dashboard to confirm that your function has been deployed successfully!"
+      );
     } catch (error) {
       console.log("\u{1F6D1}" + chalk.bold(chalk.red(" FAILED")));
       console.log(error);

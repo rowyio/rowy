@@ -61,21 +61,22 @@ export default function ConnectTable({
   const { collectionPath, config } = column as any;
   const { dataGridRef } = useFiretableContext();
   if (!config || !config.primaryKeys) return <></>;
-  const disabled = !column.editable || config?.isLocked;
+  const disabled = column.editable === false || config?.isLocked;
 
   // Render chips
-  const renderValue = (value) => (
+  const renderValue = () => (
     <Grid container spacing={1} wrap="nowrap" className={classes.chipList}>
-      {value?.map((doc: any) => (
-        <Grid item key={doc.docPath}>
-          <Chip
-            label={config.primaryKeys
-              .map((key: string) => doc.snapshot[key])
-              .join(" ")}
-            className={classes.chip}
-          />
-        </Grid>
-      ))}
+      {Array.isArray(value) &&
+        value.map((doc: any) => (
+          <Grid item key={doc.docPath}>
+            <Chip
+              label={config.primaryKeys
+                .map((key: string) => doc.snapshot[key])
+                .join(" ")}
+              className={classes.chip}
+            />
+          </Grid>
+        ))}
     </Grid>
   );
 
@@ -88,10 +89,12 @@ export default function ConnectTable({
   return (
     <ConnectTableSelect
       row={row}
+      column={column}
       value={value}
       onChange={onSubmit}
       collectionPath={collectionPath}
       config={config}
+      editable={column.editable as boolean}
       TextFieldProps={{
         fullWidth: true,
         label: "",
@@ -114,7 +117,6 @@ export default function ConnectTable({
           },
         },
         onClick,
-        disabled,
       }}
       className={clsx(
         classes.fullHeight,

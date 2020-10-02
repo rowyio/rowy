@@ -342,29 +342,29 @@
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha1-p3c2C1s5oaLlEG+OhY8v0tBgxXA=
 
-"@sendgrid/client@^7.2.5":
-  version "7.2.5"
-  resolved "https://registry.yarnpkg.com/@sendgrid/client/-/client-7.2.5.tgz#912575a5ecfe91c250eb6b267711dff2dea4e0f1"
-  integrity sha512-UZxk0liUeOMwbBkvlFJUezzP+w+gV6n13IAbG49KEiqwOns02HeSinFwF/CK0vQfjr3wkXRGKS34gvic53rlOg==
+"@sendgrid/client@^7.2.6":
+  version "7.2.6"
+  resolved "https://registry.yarnpkg.com/@sendgrid/client/-/client-7.2.6.tgz#28374927b5d9b3b351b9426f4a218d23d590c958"
+  integrity sha512-AOB3IVlB76SMYdaLEtWGm6/GwrOv0xlAOkyCqk5+XifJRqL2pl8a9lfxFZ9BEnWrdqPJPJ1/omopj0P7d5ZPmw==
   dependencies:
-    "@sendgrid/helpers" "^7.2.4"
+    "@sendgrid/helpers" "^7.2.6"
     axios "^0.19.2"
 
-"@sendgrid/helpers@^7.2.4":
-  version "7.2.4"
-  resolved "https://registry.yarnpkg.com/@sendgrid/helpers/-/helpers-7.2.4.tgz#82544a4b7d9a905ce5e0b4f96fcd9b2a73129337"
-  integrity sha512-h8bBRXpjQLM0Zl08EGJPxVOPWBaXjEZZCM3IurxWn8RaVFYDGPVZ4pv4ZW9AAmsujntZXuIxSsmB4aQczg/ivw==
+"@sendgrid/helpers@^7.2.6":
+  version "7.2.6"
+  resolved "https://registry.yarnpkg.com/@sendgrid/helpers/-/helpers-7.2.6.tgz#5d15b8914940147c0635c9a3d2a93fed8c73dc71"
+  integrity sha512-J2xniPBOVo4ASzx+xc735OovHGj/v9oNrDo1Bb5fwTg/kmUxWxeoKZRkB+KLdciwmTtVrZjYLdQB3pMFIe9lAw==
   dependencies:
     chalk "^2.0.1"
     deepmerge "^4.2.2"
 
-"@sendgrid/mail@^7.2.3":
-  version "7.2.5"
-  resolved "https://registry.yarnpkg.com/@sendgrid/mail/-/mail-7.2.5.tgz#cc101c13e613e9f1466308f96dfb6c9e6dc60a1f"
-  integrity sha512-kbv5Mzzx6xei26fD84S4yn/JJ3v2Pz/tRwl4WULhJlxqvfs2sTAdVZc1kjQ09ffg32iVE62eO74WhhLm+vcuJw==
+"@sendgrid/mail@^7.2.6":
+  version "7.2.6"
+  resolved "https://registry.yarnpkg.com/@sendgrid/mail/-/mail-7.2.6.tgz#8f6a398ad75fb1ed7a35a9bb18cbdac111637ef6"
+  integrity sha512-eP9MuqEZIgt4bHaoufWqKGUY4Bo7FUgST3WGNYIDXIe1rP2dV6/JR7Ac2Dl9iW22gy15nc58fLGIGa41XbwtuA==
   dependencies:
-    "@sendgrid/client" "^7.2.5"
-    "@sendgrid/helpers" "^7.2.4"
+    "@sendgrid/client" "^7.2.6"
+    "@sendgrid/helpers" "^7.2.6"
 
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"
@@ -2594,7 +2594,7 @@ firebase-admin@^8.9.2:
     "@types/node" "^8.10.59"
     dicer "^0.3.0"
     jsonwebtoken "^8.5.1"
-    node-forge "^0.7.6"
+    node-forge "^0.10.0"
   optionalDependencies:
     "@google-cloud/firestore" "^3.0.0"
     "@google-cloud/storage" "^4.1.2"
@@ -3076,7 +3076,7 @@ google-p12-pem@^2.0.0:
   resolved "https://registry.yarnpkg.com/google-p12-pem/-/google-p12-pem-2.0.4.tgz#036462394e266472632a78b685f0cc3df4ef337b"
   integrity sha512-S4blHBQWZRnEW44OcR7TL9WR+QCqByRvhNDZ/uuQfpxywfupikf/miba8js1jZi6ZOGv5slgSuoshCWh6EMDzg==
   dependencies:
-    node-forge "^0.9.0"
+    node-forge "^0.10.0"
 
 google-p12-pem@^3.0.0:
   version "3.0.3"
@@ -4638,7 +4638,6 @@ node-forge@^0.10.0:
   version "0.10.0"
   resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-0.10.0.tgz#32dea2afb3e9926f02ee5ce8794902691a676bf3"
   integrity sha512-PPmu8eEeG9saEUvI97fm4OYxXVB6bFvyNTyiUOBichBpFG8A1Ljw3bY62+5oOjDEMHRnd0Y7HQ+x7uzxOzC6JA==
-
 
 noop-logger@^0.1.1:
   version "0.1.1"

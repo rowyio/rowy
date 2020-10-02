@@ -2,21 +2,10 @@ import React, { useContext, useState } from "react";
 import { Controller, useWatch } from "react-hook-form";
 import { IFieldProps } from "../utils";
 
-import {
-  createStyles,
-  makeStyles,
-  Grid,
-  Typography,
-  Fab,
-  CircularProgress,
-} from "@material-ui/core";
-import PlayIcon from "@material-ui/icons/PlayArrow";
-import RefreshIcon from "@material-ui/icons/Refresh";
+import { createStyles, makeStyles, Grid, Typography } from "@material-ui/core";
+import { sanitiseCallableName, isUrl } from "util/fns";
 
-import { SnackContext } from "contexts/snackContext";
-import { cloudFunction } from "firebase/callables";
-import { sanitiseCallableName, isUrl, sanitiseRowData } from "util/fns";
-
+import { ActionFab } from "../../../Table/formatters/Action";
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {},
@@ -49,40 +38,11 @@ function Action({ control, name, docRef, editable, config }: IActionProps) {
   const classes = useStyles();
   const docData = useWatch({ control });
 
-  const [isRunning, setIsRunning] = useState(false);
-
-  const snack = useContext(SnackContext);
-  const disabled = editable === false;
-
   return (
     <Controller
       control={control}
       name={name}
       render={({ onChange, onBlur, value }) => {
-        const handleRun = () => {
-          setIsRunning(true);
-          console.log("RUN");
-
-          cloudFunction(
-            config.callableName,
-            {
-              ref: { path: docRef.path, id: docRef.id },
-              row: sanitiseRowData(Object.assign({}, docData)),
-            },
-            (response) => {
-              const { message, cellValue } = response.data;
-              setIsRunning(false);
-              snack.open({ message, severity: "success" });
-              if (cellValue) onChange(cellValue);
-            },
-            (error) => {
-              console.error("ERROR", config.callableName, error);
-              setIsRunning(false);
-              snack.open({ message: JSON.stringify(error), severity: "error" });
-            }
-          );
-        };
-
         const hasRan = value && value.status;
 
         return (
@@ -111,29 +71,19 @@ function Action({ control, name, docRef, editable, config }: IActionProps) {
                   ) : hasRan ? (
                     value.status
                   ) : (
-                    sanitiseCallableName(config.callableName)
+                    sanitiseCallableName(name)
                   )}
                 </Typography>
               </Grid>
             </Grid>
 
             <Grid item>
-              <Fab
-                onClick={handleRun}
-                disabled={isRunning || !!(hasRan && !value.redo) || disabled}
-              >
-                {isRunning ? (
-                  <CircularProgress
-                    color="secondary"
-                    size={24}
-                    thickness={4.6}
-                  />
-                ) : hasRan ? (
-                  <RefreshIcon />
-                ) : (
-                  <PlayIcon />
-                )}
-              </Fab>
+              <ActionFab
+                row={{ ...docData, ref: docRef }}
+                column={{ config, key: name }}
+                onSubmit={onChange}
+                value={value}
+              />
             </Grid>
           </Grid>
         );

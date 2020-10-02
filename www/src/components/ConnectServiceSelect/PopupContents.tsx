@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import { useDebouncedCallback } from "use-debounce";
-import { get } from "lodash";
+import _get from "lodash/get";
 
 import {
   Button,
@@ -15,6 +15,7 @@ import {
   MenuItem,
   TextField,
   Typography,
+  Radio,
 } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 
@@ -32,7 +33,6 @@ export default function PopupContents({
   value = [],
   onChange,
   config,
-  multiple = false,
   row,
   docRef,
 }: IPopupContentsProps) {
@@ -41,6 +41,7 @@ export default function PopupContents({
   const subtitleKey = config.subtitleKey;
   const resultsKey = config.resultsKey;
   const primaryKey = config.primaryKey;
+  const multiple = Boolean(config.multiple);
 
   const classes = useStyles();
 
@@ -54,7 +55,7 @@ export default function PopupContents({
     docRef.get().then((d) => setDocData(d.data()));
   }, []);
 
-  const hits: any["hits"] = get(response, resultsKey) ?? [];
+  const hits: any["hits"] = _get(response, resultsKey) ?? [];
   const [search] = useDebouncedCallback(
     async (query: string) => {
       if (!docData) return;
@@ -85,16 +86,16 @@ export default function PopupContents({
   if (!response) return <Loading />;
 
   const select = (hit: any) => () => {
-    if (multiple) onChange([...hit]);
+    if (multiple) onChange([...value, hit]);
     else onChange([hit]);
   };
   const deselect = (hit: any) => () => {
     if (multiple)
-      onChange(value.filter((v) => get(v, primaryKey) !== get(v, primaryKey)));
+      onChange(value.filter((v) => v[primaryKey] !== hit[primaryKey]));
     else onChange([]);
   };
 
-  const selectedValues = value?.map((item) => get(item, primaryKey));
+  const selectedValues = value?.map((item) => _get(item, primaryKey));
 
   const clearSelection = () => onChange([]);
 
@@ -125,31 +126,45 @@ export default function PopupContents({
         <List className={classes.list}>
           {hits.map((hit) => {
             const isSelected =
-              selectedValues.indexOf(get(hit, primaryKey)) !== -1;
+              selectedValues.indexOf(_get(hit, primaryKey)) !== -1;
             console.log(`Selected Values: ${selectedValues}`);
             return (
-              <React.Fragment key={get(hit, primaryKey)}>
+              <React.Fragment key={_get(hit, primaryKey)}>
                 <MenuItem
                   dense
                   onClick={isSelected ? deselect(hit) : select(hit)}
                 >
                   <ListItemIcon className={classes.checkboxContainer}>
-                    <Checkbox
-                      edge="start"
-                      checked={isSelected}
-                      tabIndex={-1}
-                      color="secondary"
-                      className={classes.checkbox}
-                      disableRipple
-                      inputProps={{
-                        "aria-labelledby": `label-${get(hit, primaryKey)}`,
-                      }}
-                    />
+                    {multiple ? (
+                      <Checkbox
+                        edge="start"
+                        checked={isSelected}
+                        tabIndex={-1}
+                        color="secondary"
+                        className={classes.checkbox}
+                        disableRipple
+                        inputProps={{
+                          "aria-labelledby": `label-${_get(hit, primaryKey)}`,
+                        }}
+                      />
+                    ) : (
+                      <Radio
+                        edge="start"
+                        checked={isSelected}
+                        tabIndex={-1}
+                        color="secondary"
+                        className={classes.checkbox}
+                        disableRipple
+                        inputProps={{
+                          "aria-labelledby": `label-${_get(hit, primaryKey)}`,
+                        }}
+                      />
+                    )}
                   </ListItemIcon>
                   <ListItemText
-                    id={`label-${get(hit, primaryKey)}`}
-                    primary={get(hit, titleKey)}
-                    secondary={!subtitleKey ? "" : get(hit, subtitleKey)}
+                    id={`label-${_get(hit, primaryKey)}`}
+                    primary={_get(hit, titleKey)}
+                    secondary={!subtitleKey ? "" : _get(hit, subtitleKey)}
                   />
                 </MenuItem>
                 <Divider className={classes.divider} />
@@ -172,7 +187,7 @@ export default function PopupContents({
               color="textSecondary"
               className={classes.selectedNum}
             >
-              {value?.length} of {response?.total}
+              {value?.length} of {hits?.length}
             </Typography>
 
             <Button

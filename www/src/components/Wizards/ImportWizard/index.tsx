@@ -34,11 +34,22 @@ export default function ImportWizard() {
 
   const { tableState, tableActions } = useFiretableContext();
   useEffect(() => {
+    if (!tableState) return;
+
     if (
-      tableState?.config.tableConfig.doc &&
-      !tableState?.config.tableConfig.doc?.columns
-    )
+      tableState.config.tableConfig.doc &&
+      !tableState.config.tableConfig.doc?.columns
+    ) {
       setOpen(true);
+
+      if (Array.isArray(tableState.filters) && tableState.filters?.length > 0)
+        tableActions!.table.filter([]);
+
+      if (Array.isArray(tableState.orderBy) && tableState.orderBy?.length > 0)
+        tableActions!.table.orderBy([]);
+
+      return;
+    }
   }, [tableState]);
 
   if (tableState?.rows.length === 0) return null;

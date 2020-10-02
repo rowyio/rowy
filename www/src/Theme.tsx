@@ -1,14 +1,18 @@
 import React from "react";
 import _merge from "lodash/merge";
 
-import { createMuiTheme, ThemeOptions, fade } from "@material-ui/core/styles";
+import {
+  createMuiTheme,
+  Theme as ThemeType,
+  ThemeOptions,
+  fade,
+} from "@material-ui/core/styles";
 import ClearIcon from "@material-ui/icons/Clear";
 
 export const HEADING_FONT = "Europa, sans-serif";
 export const BODY_FONT = '"Open Sans", sans-serif';
 
 export const ANTLER_RED = "#ed4747";
-export const ANTLER_RED_ACCESSIBLE = "#e22729";
 export const SECONDARY_GREY = "#282829";
 export const SECONDARY_TEXT = "rgba(0, 0, 0, 0.6)";
 export const ERROR = "#b00020";
@@ -98,7 +102,7 @@ export const themeBase = createMuiTheme({
   },
 });
 
-export const defaultOverrides: ThemeOptions = {
+export const defaultOverrides = (theme: ThemeType): ThemeOptions => ({
   transitions: {
     easing: { custom: "cubic-bezier(0.25, 0.1, 0.25, 1)" },
   },
@@ -106,18 +110,16 @@ export const defaultOverrides: ThemeOptions = {
     MuiContainer: {
       root: {
         "@supports (padding: max(0px))": {
-          paddingLeft: `max(${themeBase.spacing(
-            2
-          )}px, env(safe-area-inset-left))`,
-          paddingRight: `max(${themeBase.spacing(
+          paddingLeft: `max(${theme.spacing(2)}px, env(safe-area-inset-left))`,
+          paddingRight: `max(${theme.spacing(
             2
           )}px, env(safe-area-inset-right))`,
 
           "@media (min-width: 640px)": {
-            paddingLeft: `max(${themeBase.spacing(
+            paddingLeft: `max(${theme.spacing(
               3
             )}px, env(safe-area-inset-left))`,
-            paddingRight: `max(${themeBase.spacing(
+            paddingRight: `max(${theme.spacing(
               3
             )}px, env(safe-area-inset-right))`,
           },
@@ -125,7 +127,7 @@ export const defaultOverrides: ThemeOptions = {
       },
     },
     MuiTooltip: {
-      tooltip: themeBase.typography.caption,
+      tooltip: theme.typography.caption,
     },
     MuiButton: {
       root: { minHeight: 36 },
@@ -137,7 +139,7 @@ export const defaultOverrides: ThemeOptions = {
         boxShadow: "none",
       },
       containedSizeLarge: {
-        padding: themeBase.spacing(1, 4),
+        padding: theme.spacing(1, 4),
       },
 
       outlinedPrimary: {
@@ -145,10 +147,10 @@ export const defaultOverrides: ThemeOptions = {
         borderColor: "rgba(0, 0, 0, 0.23)",
       },
       outlinedSizeLarge: {
-        padding: themeBase.spacing(1, 4),
+        padding: theme.spacing(1, 4),
         borderRadius: 500,
 
-        "&$outlinedPrimary": { borderColor: ANTLER_RED },
+        "&$outlinedPrimary": { borderColor: theme.palette.primary.main },
       },
     },
     MuiSvgIcon: {
@@ -157,14 +159,14 @@ export const defaultOverrides: ThemeOptions = {
     // Override text field label
     MuiFormLabel: {
       root: {
-        ...themeBase.typography.subtitle2,
+        ...theme.typography.subtitle2,
         lineHeight: 1,
       },
     },
     // Override radio & checkbox labels
     MuiFormControlLabel: {
       root: { display: "flex" },
-      label: themeBase.typography.body1,
+      label: theme.typography.body1,
     },
     MuiChip: {
       root: {
@@ -174,32 +176,32 @@ export const defaultOverrides: ThemeOptions = {
         height: "auto",
         minHeight: 32,
 
-        color: themeBase.palette.text.secondary,
+        color: theme.palette.text.secondary,
       },
       label: {
-        ...themeBase.typography.caption,
+        ...theme.typography.caption,
         color: "inherit",
-        padding: themeBase.spacing(1, 1.5),
+        padding: theme.spacing(1, 1.5),
         // whiteSpace: "normal",
 
         "$outlined &": {
-          paddingTop: themeBase.spacing(0.875),
-          paddingBottom: themeBase.spacing(0.875),
+          paddingTop: theme.spacing(0.875),
+          paddingBottom: theme.spacing(0.875),
         },
       },
       sizeSmall: { minHeight: 24 },
       labelSmall: {
-        padding: themeBase.spacing(0.5, 1.5),
+        padding: theme.spacing(0.5, 1.5),
       },
 
       outlined: {
-        backgroundColor: themeBase.palette.action.selected,
-        borderColor: themeBase.palette.action.selected,
+        backgroundColor: theme.palette.action.selected,
+        borderColor: theme.palette.action.selected,
       },
       outlinedPrimary: {
         backgroundColor: fade(
-          ANTLER_RED,
-          themeBase.palette.action.selectedOpacity
+          theme.palette.primary.main,
+          theme.palette.action.selectedOpacity
         ),
       },
 
@@ -207,7 +209,7 @@ export const defaultOverrides: ThemeOptions = {
     },
     MuiBadge: {
       badge: {
-        ...themeBase.typography.caption,
+        ...theme.typography.caption,
         fontFeatureSettings: '"tnum"',
       },
     },
@@ -252,8 +254,8 @@ export const defaultOverrides: ThemeOptions = {
 
       valueLabel: {
         top: -22,
-        ...themeBase.typography.caption,
-        color: themeBase.palette.primary.main,
+        ...theme.typography.caption,
+        color: theme.palette.primary.main,
 
         "& > *": {
           width: "auto",
@@ -263,12 +265,12 @@ export const defaultOverrides: ThemeOptions = {
           whiteSpace: "nowrap",
           borderRadius: 500,
 
-          padding: themeBase.spacing(0, 1),
-          paddingRight: themeBase.spacing(0.875),
+          padding: theme.spacing(0, 1),
+          paddingRight: theme.spacing(0.875),
         },
         "& *": { transform: "none" },
       },
-      markLabel: themeBase.typography.caption,
+      markLabel: theme.typography.caption,
     },
     MuiLinearProgress: {
       colorPrimary: { backgroundColor: "#e7e7e7" },
@@ -308,8 +310,12 @@ export const defaultOverrides: ThemeOptions = {
     },
     MuiTextField: { variant: "filled" },
   },
-};
+});
 
 export const Theme = (customization: ThemeOptions) =>
-  createMuiTheme(_merge(_merge(themeBase, defaultOverrides), customization));
+  createMuiTheme(
+    _merge(themeBase, defaultOverrides(_merge(themeBase, customization))),
+    customization
+  );
+
 export default Theme;

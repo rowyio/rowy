@@ -19,7 +19,7 @@
     "@google-cloud/cloudbuild": "^1.5.0",
     "@google-cloud/firestore": "^3.7.5",
     "@google-cloud/storage": "^5.1.2",
-    "@sendgrid/mail": "^7.2.3",
+    "@sendgrid/mail": "^7.2.6",
     "@slack/web-api": "^5.11.0",
     "algoliasearch": "^3.35.1",
     "firebase-admin": "^8.9.2",

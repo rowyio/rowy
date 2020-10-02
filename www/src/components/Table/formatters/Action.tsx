@@ -42,16 +42,13 @@ const getStateIcon = (actionState) => {
       return <PlayIcon />;
   }
 };
-export default function Action({
-  column,
-  row,
-  value,
-  onSubmit,
-}: CustomCellProps) {
+
+export const ActionFab = ({ row, column, onSubmit, value }) => {
   const classes = useStyles();
 
   const { createdAt, updatedAt, id, ref, ...docData } = row;
   const { config } = column as any;
+
   const action = !value
     ? "run"
     : value.undo
@@ -79,7 +76,10 @@ export default function Action({
       (response) => {
         const { message, cellValue, success } = response.data;
         setIsRunning(false);
-        snack.open({ message, severity: success ? "success" : "error" });
+        snack.open({
+          message: JSON.stringify(message),
+          severity: success ? "success" : "error",
+        });
         if (cellValue) onSubmit(cellValue);
       },
       (error) => {
@@ -96,14 +96,20 @@ export default function Action({
       ? "undo"
       : "redo"
     : "run";
-  let component = (
+  let fabButton = (
     <Fab
       size="small"
       color="secondary"
       className={classes.fab}
       onClick={handleRun}
       disabled={
-        isRunning || !!(hasRan && !value.redo && !value.undo) || disabled
+        isRunning ||
+        !!(
+          hasRan &&
+          (config["redo.enabled"] ? false : !value.redo) &&
+          (config["undo.enabled"] ? false : !value.undo)
+        ) ||
+        disabled
       }
     >
       {isRunning ? (
@@ -114,8 +120,8 @@ export default function Action({
     </Fab>
   );
 
-  if (typeof config.confirmation === "string") {
-    component = (
+  if (typeof config.confirmation === "string")
+    return (
       <Confirmation
         message={{
           title: `${column.name} Confirmation`,
@@ -126,10 +132,24 @@ export default function Action({
         }}
         functionName="onClick"
       >
-        {component}
+        {fabButton}
       </Confirmation>
     );
-  }
+
+  return fabButton;
+};
+
+export default function Action({
+  column,
+  row,
+  value,
+  onSubmit,
+}: CustomCellProps) {
+  const classes = useStyles();
+
+  const { createdAt, updatedAt, id, ref, ...docData } = row;
+  const { name } = column as any;
+  const hasRan = value && value.status;
   return (
     <Grid
       container
@@ -145,11 +165,18 @@ export default function Action({
         ) : hasRan ? (
           value.status
         ) : (
-          sanitiseCallableName(callableName ?? config.callableName)
+          sanitiseCallableName(name)
         )}
       </Grid>
 
-      <Grid item>{component}</Grid>
+      <Grid item>
+        <ActionFab
+          row={row}
+          column={column}
+          onSubmit={onSubmit}
+          value={value}
+        />
+      </Grid>
     </Grid>
   );
 }

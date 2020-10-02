@@ -106,10 +106,10 @@
     "@algolia/logger-common" "4.1.0"
     "@algolia/requester-common" "4.1.0"
 
-"@antlerengineering/multiselect@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@antlerengineering/multiselect/-/multiselect-0.5.0.tgz#26e9790a9050f45986d4530df01cbedf54d310e9"
-  integrity sha512-rPLgC6Qy/WF2DDlhIjgEaDEmULRRnxC3DKjt11oT3iQiDkRJj7Mx8cCL4bViRLEkg9W4/AW5EngneHpa8aZybA==
+"@antlerengineering/multiselect@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@antlerengineering/multiselect/-/multiselect-0.6.0.tgz#aed7aef5f2c4a9316d00328d85eb41d149694b47"
+  integrity sha512-fvW26wQsaghW9KjDnUWP3WLaktx/DgzT1M2quPIMrQ5e+gPT5psNEmWGEqG4jN0hYfsnl+5m5cHMwCD/wR/Mmg==
 
 "@babel/code-frame@7.8.3", "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.8.3":
   version "7.8.3"
@@ -9964,11 +9964,15 @@ node-fetch@^2.3.0, node-fetch@^2.6.0:
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.0.tgz#e633456386d4aa55863f676a7ab0daa8fdecb0fd"
   integrity sha512-8dG4H5ujfvFiqDmVu9fQ5bOHUC15JMjMY/Zumv26oOvvVJjM67KF8koCWIabKQ1GJIa9r2mMZscBq/TbdOcmNA==
 
+node-forge@0.9.0:
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-0.9.0.tgz#d624050edbb44874adca12bb9a52ec63cb782579"
+  integrity sha512-7ASaDa3pD+lJ3WvXFsxekJQelBKRpne+GOVbLbtHYdd7pFspyeuJHnWfLplGf3SwKGbfs/aYl5V/JCIaHVUKKQ==
 
-node-forge@^0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-0.1.0.tgz#775368e6846558ab6676858a4d8c6e8d16c677b5"
-  integrity sha512-G6RlQt5Sb4GMBzXvhfkeFmbqR6MzhtnT7VTHuLadjkii3rdYHNdw0m8zA4BTxVIh68FicCQ2NSUANpsqkr9jvQ==
+node-forge@^0.9.0:
+  version "0.9.2"
+  resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-0.9.2.tgz#b35a44c28889b2ea55cabf8c79e3563f9676190a"
+  integrity sha512-naKSScof4Wn+aoHU6HBsifh92Zeicm1GDQKd1vp3Y/kOi8ub0DozCa9KpvYNCXslFHYRmLNiqRopGdTGwNLpNw==
 
 node-int64@^0.4.0:
   version "0.4.0"
@@ -14370,10 +14374,10 @@ url@^0.11.0:
     punycode "1.3.2"
     querystring "0.2.0"
 
-use-algolia@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/use-algolia/-/use-algolia-1.3.0.tgz#a53623b9c248bad14ca1cba551658c625613cb72"
-  integrity sha512-t6rY8apz0CmeNUbVchsi0+7UIeutJ8FPNfGTbx/f2vCw1LFYAo9ZUrG81vIsKMAhSLP2FKEXeztDWYr976MEpw==
+use-algolia@^1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/use-algolia/-/use-algolia-1.4.1.tgz#a39747a3c39c69a99b19815ffebf2426526e8287"
+  integrity sha512-V1XlPYDQK45Tws2Zk//SKFjHiBmlwiGFESygFWWtNrVwlZRJrbF/pPLMquv1Hkq9jW2npX8y7GA/pdWBAfAeuQ==
 
 use-debounce@^3.3.0:
   version "3.4.0"

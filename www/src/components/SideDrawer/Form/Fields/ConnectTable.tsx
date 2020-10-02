@@ -44,6 +44,9 @@ export default function ConnectTable({
                 TextFieldProps={{
                   fullWidth: true,
                   onBlur,
+                  SelectProps: {
+                    renderValue: () => `${value?.length ?? 0} selected`,
+                  },
                 }}
               />
             )}

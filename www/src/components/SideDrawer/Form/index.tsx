@@ -8,7 +8,8 @@ import { Fields, Values, getInitialValues, Field } from "./utils";
 import { FieldType } from "constants/fields";
 import Autosave from "./Autosave";
 import FieldWrapper from "./FieldWrapper";
-
+import { useAppContext } from "contexts/appContext";
+import { useFiretableContext } from "contexts/firetableContext";
 import Text from "./Fields/Text";
 const Url = lazy(
   () => import("./Fields/Url" /* webpackChunkName: "SideDrawer-Url" */)
@@ -112,6 +113,11 @@ export default function Form({ fields, values }: IFormProps) {
   const { ref: docRef, ...rowValues } = values;
   const defaultValues = { ...initialValues, ...rowValues };
 
+  const { tableState } = useFiretableContext();
+  const { userDoc } = useAppContext();
+  const userDocHiddenFields =
+    userDoc.state.doc?.tables?.[`${tableState?.tablePath}`]?.hiddenFields ?? [];
+
   const { register, control } = useForm({
     mode: "onBlur",
     defaultValues,
@@ -145,134 +151,136 @@ export default function Form({ fields, values }: IFormProps) {
       />
 
       <Grid container spacing={4} direction="column" wrap="nowrap">
-        {fields.map((_field, i) => {
-          // Call the field function with values if necessary
-          // Otherwise, just use the field object
-          const field: Field = _isFunction(_field) ? _field(values) : _field;
-          const { type, ...fieldProps } = field;
-          let _type = type;
+        {fields
+          .filter((f) => !userDocHiddenFields.includes(f.name))
+          .map((_field, i) => {
+            // Call the field function with values if necessary
+            // Otherwise, just use the field object
+            const field: Field = _isFunction(_field) ? _field(values) : _field;
+            const { type, ...fieldProps } = field;
+            let _type = type;
 
-          // Derivative/aggregate field support
-          if (field.config && field.config.renderFieldType) {
-            _type = field.config.renderFieldType;
-          }
+            // Derivative/aggregate field support
+            if (field.config && field.config.renderFieldType) {
+              _type = field.config.renderFieldType;
+            }
 
-          let fieldComponent: React.ComponentType<any> | null = null;
+            let fieldComponent: React.ComponentType<any> | null = null;
 
-          switch (_type) {
-            case FieldType.shortText:
-            case FieldType.longText:
-            case FieldType.email:
-            case FieldType.phone:
-            case FieldType.number:
-              fieldComponent = Text;
-              break;
+            switch (_type) {
+              case FieldType.shortText:
+              case FieldType.longText:
+              case FieldType.email:
+              case FieldType.phone:
+              case FieldType.number:
+                fieldComponent = Text;
+                break;
 
-            case FieldType.url:
-              fieldComponent = Url;
-              break;
+              case FieldType.url:
+                fieldComponent = Url;
+                break;
 
-            case FieldType.singleSelect:
-              fieldComponent = SingleSelect;
-              break;
+              case FieldType.singleSelect:
+                fieldComponent = SingleSelect;
+                break;
 
-            case FieldType.multiSelect:
-              fieldComponent = MultiSelect;
-              break;
+              case FieldType.multiSelect:
+                fieldComponent = MultiSelect;
+                break;
 
-            case FieldType.date:
-              fieldComponent = DatePicker;
-              break;
+              case FieldType.date:
+                fieldComponent = DatePicker;
+                break;
 
-            case FieldType.dateTime:
-              fieldComponent = DateTimePicker;
-              break;
+              case FieldType.dateTime:
+                fieldComponent = DateTimePicker;
+                break;
 
-            case FieldType.checkbox:
-              fieldComponent = Checkbox;
-              break;
+              case FieldType.checkbox:
+                fieldComponent = Checkbox;
+                break;
 
-            case FieldType.color:
-              fieldComponent = Color;
-              break;
+              case FieldType.color:
+                fieldComponent = Color;
+                break;
 
-            case FieldType.slider:
-              fieldComponent = Slider;
-              break;
+              case FieldType.slider:
+                fieldComponent = Slider;
+                break;
 
-            case FieldType.richText:
-              fieldComponent = RichText;
-              break;
+              case FieldType.richText:
+                fieldComponent = RichText;
+                break;
 
-            case FieldType.image:
-              fieldComponent = ImageUploader;
-              break;
+              case FieldType.image:
+                fieldComponent = ImageUploader;
+                break;
 
-            case FieldType.file:
-              fieldComponent = FileUploader;
-              break;
+              case FieldType.file:
+                fieldComponent = FileUploader;
+                break;
 
-            case FieldType.rating:
-              fieldComponent = Rating;
-              break;
+              case FieldType.rating:
+                fieldComponent = Rating;
+                break;
 
-            case FieldType.percentage:
-              fieldComponent = Percentage;
-              break;
+              case FieldType.percentage:
+                fieldComponent = Percentage;
+                break;
 
-            case FieldType.connectTable:
-              fieldComponent = ConnectTable;
-              break;
+              case FieldType.connectTable:
+                fieldComponent = ConnectTable;
+                break;
 
-            case FieldType.connectService:
-              fieldComponent = ConnectService;
-              break;
+              case FieldType.connectService:
+                fieldComponent = ConnectService;
+                break;
 
-            case FieldType.subTable:
-              fieldComponent = SubTable;
-              break;
+              case FieldType.subTable:
+                fieldComponent = SubTable;
+                break;
 
-            case FieldType.action:
-              fieldComponent = Action;
-              break;
+              case FieldType.action:
+                fieldComponent = Action;
+                break;
 
-            case FieldType.json:
-              fieldComponent = JsonEditor;
-              break;
+              case FieldType.json:
+                fieldComponent = JsonEditor;
+                break;
 
-            case FieldType.code:
-              fieldComponent = Code;
-              break;
+              case FieldType.code:
+                fieldComponent = Code;
+                break;
 
-            case undefined:
-              // default:
+              case undefined:
+                // default:
+                return null;
+
+              default:
+                break;
+            }
+
+            // Should not reach this state
+            if (fieldComponent === null) {
+              console.error("`fieldComponent` is null");
               return null;
+            }
 
-            default:
-              break;
-          }
-
-          // Should not reach this state
-          if (fieldComponent === null) {
-            console.error("`fieldComponent` is null");
-            return null;
-          }
-
-          return (
-            <FieldWrapper
-              key={fieldProps.name ?? i}
-              type={_type}
-              name={field.name}
-              label={field.label}
-            >
-              {React.createElement(fieldComponent, {
-                ...fieldProps,
-                control,
-                docRef,
-              })}
-            </FieldWrapper>
-          );
-        })}
+            return (
+              <FieldWrapper
+                key={fieldProps.name ?? i}
+                type={_type}
+                name={field.name}
+                label={field.label}
+              >
+                {React.createElement(fieldComponent, {
+                  ...fieldProps,
+                  control,
+                  docRef,
+                })}
+              </FieldWrapper>
+            );
+          })}
 
         <FieldWrapper
           type="debug"

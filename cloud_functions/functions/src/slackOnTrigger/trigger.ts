@@ -4,7 +4,7 @@ import { env } from "../config";
 import { WebClient } from "@slack/web-api";
 import { asyncForEach, serverTimestamp } from "../utils";
 // Initialize
-const web = new WebClient(env.slackbot.token);
+const web = new WebClient(env.slackbot ? env.slackbot.token : "NEEDS_CONFIG");
 
 const messageByChannel = async ({
   text,
