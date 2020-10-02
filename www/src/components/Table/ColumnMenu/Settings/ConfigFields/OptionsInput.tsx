@@ -33,8 +33,8 @@ export default function OptionsInput(props: any) {
   const [newOption, setNewOption] = useState("");
   const handleAdd = () => {
     // setOptions([...options, newOption]);
-    if (newOption !== "") {
-      handleChange([...options, newOption]);
+    if (newOption.trim() !== "") {
+      handleChange([...options, newOption.trim()]);
       setNewOption("");
     }
   };
