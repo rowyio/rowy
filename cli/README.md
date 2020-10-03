@@ -18,7 +18,7 @@ other operations on your computer.
 
 </td></tr></tbody></table>
 
-# Installation requirements
+## Installation requirements
 
 Make sure you have the following installed:
 
@@ -33,7 +33,7 @@ Also, make sure you are logged in to your Firebase account in the Firebase CLI:
 firebase login
 ```
 
-# Install the Firetable CLI
+## Install the Firetable CLI
 
 Install the Firetable CLI globally.
 
@@ -41,15 +41,15 @@ Install the Firetable CLI globally.
 yarn global add firetable
 ```
 
-# Commands
+## Commands
 
-## Create a new project
+### Create a new project
 
 ```
 firetable init [directory]
 ```
 
-## Run Firetable locally
+### Run Firetable locally
 
 Before you run locally, make sure you have a Firebase project set up.
 [Instructions →](https://github.com/AntlerVC/firetable/wiki/Getting-Started)
@@ -58,7 +58,7 @@ Before you run locally, make sure you have a Firebase project set up.
 firetable start
 ```
 
-## Deploy to Firebase Hosting
+### Deploy to Firebase Hosting
 
 First, make sure that you have created a site in your Firebase project.
 [Open Firebase console ↗️](https://console.firebase.google.com/project/_/hosting/main)
@@ -67,7 +67,7 @@ First, make sure that you have created a site in your Firebase project.
 firetable deploy
 ```
 
-## Set user roles for Firestore Security Rules
+### Set user roles for Firestore Security Rules
 
 Firetable has role-based access controls using Firestore Security Rules and
 custom claims in Firebase Authentication.
@@ -96,7 +96,7 @@ You can use the Firetable CLI the roles of Firebase Authentication users.
 
    [Example user roles →](https://github.com/AntlerVC/firetable/wiki/Firetable-Role-Based-Security-Rules#example-roles)
 
-## Deploy Firetable Cloud Functions
+### Deploy Firetable Cloud Functions
 
 Easily deploy Cloud Functions used to extend Firetable. You can choose which
 functions you want to deploy.
