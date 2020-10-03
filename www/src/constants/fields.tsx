@@ -23,11 +23,10 @@ import ImageIcon from "@material-ui/icons/PhotoSizeSelectActual";
 import FileIcon from "@material-ui/icons/AttachFile";
 
 import SingleSelectIcon from "@material-ui/icons/FormatListBulleted";
-import WebServiceIcon from "@material-ui/icons/Http";
-
 import MultiSelectIcon from "assets/icons/MultiSelect";
 
 import ConnectTableIcon from "assets/icons/ConnectTable";
+import ConnectServiceIcon from "@material-ui/icons/Http";
 import SubTableIcon from "assets/icons/SubTable";
 
 import ActionIcon from "assets/icons/Action";
@@ -69,7 +68,7 @@ export {
   ColorIcon,
   SliderIcon,
   UserIcon,
-  WebServiceIcon,
+  ConnectServiceIcon,
 };
 
 export enum FieldType {
@@ -95,8 +94,8 @@ export enum FieldType {
   singleSelect = "SINGLE_SELECT",
   multiSelect = "MULTI_SELECT",
 
-  connectService = "SERVICE_SELECT",
   connectTable = "DOCUMENT_SELECT",
+  connectService = "SERVICE_SELECT",
   subTable = "SUB_TABLE",
 
   action = "ACTION",
@@ -153,8 +152,8 @@ export const FIELDS = [
     type: FieldType.connectTable,
   },
   {
-    icon: <WebServiceIcon />,
-    name: "Webservice Select",
+    icon: <ConnectServiceIcon />,
+    name: "Connect Service",
     type: FieldType.connectService,
   },
 
@@ -205,7 +204,8 @@ export const FIELD_TYPE_DESCRIPTIONS = {
 
   [FieldType.connectTable]:
     "Connects to an existing table to fetch a snapshot of values from a row. Requires Algolia integration.",
-  [FieldType.connectService]: "Select a value from a list of websevice results",
+  [FieldType.connectService]:
+    "Select a value from a list of external web service results.",
   [FieldType.subTable]:
     "Creates a sub-table. Also displays number of rows inside the sub-table. Max sub-table levels: 100.",
 
