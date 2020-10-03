@@ -57,7 +57,7 @@ export default function GoogleAuthView() {
                   action: (
                     <Button
                       component="a"
-                      href="https://github.com/AntlerVC/firetable/wiki/Firetable-Role-Based-Security-Rules#set-user-roles-with-the-firetable-cli"
+                      href="https://github.com/AntlerVC/firetable/wiki/Role-Based-Security-Rules#set-user-roles-with-the-firetable-cli"
                       target="_blank"
                     >
                       Instructions

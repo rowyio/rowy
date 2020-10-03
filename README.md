@@ -19,7 +19,7 @@ To set up Firetable, you must be comfortable with working with the command line.
 You must have at least a basic understanding of how to use npm and install npm
 packages globally.
 
-<big>[**Read the getting started guide →**](https://github.com/AntlerVC/firetable/wiki/Getting-Started)</big>
+### [**Read the getting started guide →**](https://github.com/AntlerVC/firetable/wiki/Getting-Started)
 
 # Issues
 

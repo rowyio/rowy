@@ -61,7 +61,7 @@ firetable start
 ### Deploy to Firebase Hosting
 
 First, make sure that you have created a site in your Firebase project.
-[Open Firebase console ↗️](https://console.firebase.google.com/project/_/hosting/main)
+[Open Firebase console](https://console.firebase.google.com/project/_/hosting/main)
 
 ```
 firetable deploy
@@ -71,7 +71,7 @@ firetable deploy
 
 Firetable has role-based access controls using Firestore Security Rules and
 custom claims in Firebase Authentication.
-[Read more →](https://github.com/AntlerVC/firetable/wiki/Firetable-Role-Based-Security-Rules)
+[Read more →](https://github.com/AntlerVC/firetable/wiki/Role-Based-Security-Rules)
 
 You can use the Firetable CLI the roles of Firebase Authentication users.
 
@@ -94,7 +94,7 @@ You can use the Firetable CLI the roles of Firebase Authentication users.
    firetable auth:setRoles <email> <roles>
    ```
 
-   [Example user roles →](https://github.com/AntlerVC/firetable/wiki/Firetable-Role-Based-Security-Rules#example-roles)
+   [Example user roles →](https://github.com/AntlerVC/firetable/wiki/Role-Based-Security-Rules#example-roles)
 
 ### Deploy Firetable Cloud Functions
 
