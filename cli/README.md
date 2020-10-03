@@ -1,3 +1,5 @@
+# Firetable CLI
+
 The Firetable CLI automates the steps required to set up the Firetable app and
 other operations on your computer.
 
