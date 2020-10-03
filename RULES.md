@@ -1,6 +1,7 @@
 # Firetable Rules
 
-Firetable uses a Role based access control on top of firestore rules you
+Firetable uses a Role based access control on top of
+[firestore rules](https://firebase.google.com/docs/firestore/security/get-started).
 
 ## Firestore Rules Base
 
@@ -63,7 +64,7 @@ import * as admin from "firebase-admin";
 const projectId = "YOUR FIREBASE PROJECT ID HERE";
 console.log(`Running on ${projectId}`);
 // you can get the admin sdk service account key from the url bellow, remember to add your project Id
-//https://console.firebase.google.com/u/0/project/{{PORJECT_ID}}/settings/serviceaccounts/adminsdk
+//https://console.firebase.google.com/u/0/project/_/settings/serviceaccounts/adminsdk
 var serviceAccount = require(`./firebase-service-account.json`);
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
