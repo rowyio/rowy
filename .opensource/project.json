@@ -1,0 +1,5 @@
+{
+  "name": "Firetable",
+  "platforms": ["Web", "Admin"],
+  "content": "README.md"
+}
