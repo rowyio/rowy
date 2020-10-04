@@ -57,7 +57,7 @@ module.exports.cloneFiretable = (dir = "firetable") =>
     const cloningStatus = new Spinner("Cloning the Firetable repository");
     cloningStatus.start();
     execute(
-      `git clone https://github.com/AntlerVC/firetable.git ${dir}`,
+      `git clone --depth 1 https://github.com/AntlerVC/firetable.git ${dir}`,
       function () {
         cloningStatus.stop();
         const installingPackagesStatus = new Spinner("Installing packages");
