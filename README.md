@@ -47,12 +47,34 @@
 - Integrations with external services.
   - Connect Table uses Algolia to get a snapshot of another table’s row values
   - Connect Service uses any HTTP endpoint to get a cell value
+  
+## Firetable makes it easy to use key Firebase products
+
+<p align="center">
+  <a href="https://firebase.google.com/products/firestore">
+    <img src="https://github.com/AntlerVC/firetable/wiki/images/firebase/firestore.png" alt="Cloud Firestore" width="33%" />
+  </a>
+  <a href="https://firebase.google.com/products/auth">
+    <img src="https://github.com/AntlerVC/firetable/wiki/images/firebase/authentication.png" alt="Firebase Authentication" width="33%" />
+  </a>
+  <a href="https://firebase.google.com/products/functions">
+    <img src="https://github.com/AntlerVC/firetable/wiki/images/firebase/functions.png" alt="Firebase Functions" width="33%" />
+  </a>
+  <a href="https://firebase.google.com/products/hosting">
+    <img src="https://github.com/AntlerVC/firetable/wiki/images/firebase/hosting.png" alt="Firebase Hosting" width="33%" />
+  </a>
+  <a href="https://firebase.google.com/products/storage">
+    <img src="https://github.com/AntlerVC/firetable/wiki/images/firebase/storage.png" alt="Firebase Storage" width="33%" />
+  </a>
+</p>
 
 ## [Live demo →](https://try.firetable.io)
 
 <a href="https://try.firetable.io">
   <img align="center" alt="Firetable demo GIF" src="https://firetable.io/demo.gif">
 </a>
+
+<br />
 
 # Getting started
 
@@ -66,6 +88,8 @@ Firetable.
 
 ### [**Read the getting started guide →**](https://github.com/AntlerVC/firetable/wiki/Getting-Started)
 
+<br />
+
 # Documentation
 
 We’re still working on improving our documentation and writing more
@@ -73,9 +97,11 @@ beginner-friendly guides.
 
 [**Documentation on GitHub Wiki →**](https://github.com/AntlerVC/firetable/wiki)
 
+<br />
+
 # Issues
 
-![Open issues](https://badgen.net/github/open-issues/AntlerVC/firetable)
+[![Open issues](https://badgen.net/github/open-issues/AntlerVC/firetable)](https://github.com/antlervc/firetable/issues)  
 
 [Create issues and bug reports here.](https://github.com/antlervc/firetable/issues)  
 Make sure to provide console log outputs and screenshots!
