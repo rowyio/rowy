@@ -178,6 +178,12 @@ program
       // check directory for firetable
       let directory = await directoryCheck();
       if (!directory) return;
+
+      // Make sure there is a build
+      if (!directoryExists(directory + "/build/index.html")) {
+        await terminal.buildFiretable(directory === "www" ? "." : "firetable");
+      }
+
       // await terminal.buildFiretable(directory);
       terminal.startFiretableLocally(directory);
     } catch (error) {
