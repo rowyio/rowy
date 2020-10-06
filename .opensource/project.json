@@ -1,0 +1,7 @@
+{
+  "name": "firetable",
+  "platforms": ["Node", "Web"],
+  "content": "README.md",
+  "related": ["firebase/firebase-js-sdk"],
+  "tabs": []
+}
