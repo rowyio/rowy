@@ -3,9 +3,11 @@ const fs = require("fs");
 
 const CLI = require("clui");
 const Spinner = CLI.Spinner;
+const chalk = require("chalk");
 
 const initializeApp = (serviceAccountFile) => {
-  console.log(serviceAccountFile);
+  console.log(chalk.grey(serviceAccountFile));
+
   var serviceAccount = fs.readFileSync(`./${serviceAccountFile}`, {
     encoding: "utf8",
   });
@@ -18,6 +20,7 @@ const initializeApp = (serviceAccountFile) => {
   const db = admin.firestore();
   return { auth, db };
 };
+
 module.exports.setUserRoles = (serviceAccountFile) => async (email, roles) => {
   try {
     const { auth } = initializeApp(serviceAccountFile);
@@ -27,9 +30,9 @@ module.exports.setUserRoles = (serviceAccountFile) => async (email, roles) => {
     await auth.setCustomUserClaims(user.uid, { ...user.customClaims, roles });
     return {
       success: true,
-      message: `✅ ${email} now has the following roles ✨${roles.join(
-        " & "
-      )}✨`,
+      message: `\n✅ ${chalk.bold(email)} has the roles: ${chalk.bold(
+        roles.join(", ")
+      )}`,
     };
   } catch (error) {
     return {
@@ -42,7 +45,7 @@ module.exports.setUserRoles = (serviceAccountFile) => async (email, roles) => {
 
 module.exports.getProjectTables = (serviceAccountFile) => async () => {
   try {
-    const status = new Spinner("Fetching firetable collections");
+    const status = new Spinner("Fetching Firetable collections");
     status.start();
     // Initialize DB
     const { db } = initializeApp(serviceAccountFile);

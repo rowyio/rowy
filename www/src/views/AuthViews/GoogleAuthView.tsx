@@ -37,7 +37,7 @@ export default function GoogleAuthView() {
                 snack.open({
                   severity: "warning",
                   message:
-                    "You need to enable Google authentication in your firebase project",
+                    "You must enable Google sign-in for your Firebase project",
                   action: (
                     <Button
                       component="a"
@@ -53,12 +53,11 @@ export default function GoogleAuthView() {
               ) {
                 snack.open({
                   severity: "warning",
-                  message:
-                    "You need to enable Google authentication in your firebase project",
+                  message: "You must set roles for this user",
                   action: (
                     <Button
                       component="a"
-                      href={`https://github.com/AntlerVC/firetable/blob/master/RULES.md`}
+                      href="https://github.com/AntlerVC/firetable/wiki/Role-Based-Security-Rules#set-user-roles-with-the-firetable-cli"
                       target="_blank"
                     >
                       Instructions
