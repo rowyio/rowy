@@ -38,7 +38,9 @@ import AggregateIcon from "@material-ui/icons/Layers";
 
 import ColorIcon from "@material-ui/icons/Colorize";
 import SliderIcon from "assets/icons/Slider";
+
 import UserIcon from "@material-ui/icons/Person";
+import IdIcon from "assets/icons/Id";
 
 export {
   ShortTextIcon,
@@ -69,6 +71,7 @@ export {
   ColorIcon,
   SliderIcon,
   UserIcon,
+  IdIcon,
 };
 
 export enum FieldType {
@@ -108,8 +111,9 @@ export enum FieldType {
 
   color = "COLOR",
   slider = "SLIDER",
-  user = "USER",
 
+  user = "USER",
+  id = "ID",
   last = "LAST",
 }
 
@@ -170,7 +174,9 @@ export const FIELDS = [
 
   { icon: <ColorIcon />, name: "Color", type: FieldType.color },
   { icon: <SliderIcon />, name: "Slider", type: FieldType.slider },
+
   { icon: <UserIcon />, name: "User", type: FieldType.user },
+  { icon: <IdIcon />, name: "ID", type: FieldType.id },
 ];
 
 export const FIELD_TYPE_DESCRIPTIONS = {
@@ -225,8 +231,9 @@ export const FIELD_TYPE_DESCRIPTIONS = {
 
   [FieldType.color]: "Visual color picker. Supports Hex, RGBA, HSLA.",
   [FieldType.slider]: "Slider with adjustable range. Returns a numeric value.",
-  [FieldType.user]: "Used to display _ft_updatedBy field for editing history",
 
+  [FieldType.user]: "Used to display _ft_updatedBy field for editing history",
+  [FieldType.user]: "Display’s the row’s document ID",
   [FieldType.last]: "Internally used to display last column with row actions.",
 };
 

@@ -49,6 +49,7 @@ export const getEditor = (column: any) => {
     case FieldType.json:
     case FieldType.connectTable:
     case FieldType.action:
+    case FieldType.id:
     default:
       return SideDrawerEditor;
   }
