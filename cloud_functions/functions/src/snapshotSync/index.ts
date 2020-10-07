@@ -71,16 +71,25 @@ const syncDocSnapshot = async (
 
   if (isArray) {
     const oldSnapshotsArray = targetData[snapshotField];
-    const snapshotDocPath = snapshot.ref.path;
-    const oldSnapshot = _.find(oldSnapshotsArray, { docPath: snapshotDocPath });
+    if (!oldSnapshotsArray) {
+      return targetRef.update({
+        [snapshotField]: [
+          { docPath: snapshot.ref.path, snapshot: newSnapshotData },
+        ],
+      });
+    } else {
+      const snapshotDocPath = snapshot.ref.path;
+      const oldSnapshot = _.find(oldSnapshotsArray, {
+        docPath: snapshotDocPath,
+      });
 
-    const updatedSnapshotsArray = oldSnapshotsArray.filter((item) => {
-      console.log({ snapshotDocPath, item });
-      return item.docPath !== snapshotDocPath;
-    });
-    updatedSnapshotsArray.push({ ...oldSnapshot, snapshot: newSnapshotData });
+      const updatedSnapshotsArray = oldSnapshotsArray.filter((item) => {
+        return item.docPath !== snapshotDocPath;
+      });
+      updatedSnapshotsArray.push({ ...oldSnapshot, snapshot: newSnapshotData });
 
-    return targetRef.update({ [snapshotField]: updatedSnapshotsArray });
+      return targetRef.update({ [snapshotField]: updatedSnapshotsArray });
+    }
   } else {
     return targetRef.update({
       [snapshotField]: {
