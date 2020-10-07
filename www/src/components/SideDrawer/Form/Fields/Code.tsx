@@ -9,6 +9,8 @@ import "ace-builds/src-noconflict/theme-github";
 import { makeStyles, createStyles, Button } from "@material-ui/core";
 import CornerResizeIcon from "assets/icons/CornerResize";
 
+import { MONO_FONT } from "Theme";
+
 const useStyles = makeStyles((theme) =>
   createStyles({
     editorWrapper: { position: "relative" },
@@ -18,7 +20,7 @@ const useStyles = makeStyles((theme) =>
       borderRadius: theme.shape.borderRadius,
       resize: "vertical",
 
-      fontFamily: "SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace",
+      fontFamily: MONO_FONT,
     },
 
     resizeIcon: {

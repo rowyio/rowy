@@ -47,7 +47,9 @@ export default function Step1Columns({ config, setConfig }: IStepProps) {
     const sample = tableState!.rows.slice(0, 50);
     const fields_ = new Set<string>();
     sample.forEach((doc) =>
-      Object.keys(doc).forEach((key) => fields_.add(key))
+      Object.keys(doc).forEach((key) => {
+        if (key !== "ref") fields_.add(key);
+      })
     );
     return Array.from(fields_).sort();
   }, [tableState?.rows]);
