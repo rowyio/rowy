@@ -86,7 +86,11 @@ const syncDocSnapshot = async (
       const updatedSnapshotsArray = oldSnapshotsArray.filter((item) => {
         return item.docPath !== snapshotDocPath;
       });
-      updatedSnapshotsArray.push({ ...oldSnapshot, snapshot: newSnapshotData });
+      updatedSnapshotsArray.push({
+        ...oldSnapshot,
+        docPath: snapshot.ref.path,
+        snapshot: newSnapshotData,
+      });
 
       return targetRef.update({ [snapshotField]: updatedSnapshotsArray });
     }
