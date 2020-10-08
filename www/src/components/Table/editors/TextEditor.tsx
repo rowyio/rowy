@@ -46,11 +46,12 @@ class TextEditor extends React.Component<
   }
 
   getValue() {
-    if (
-      (this.props.column as any).type === FieldType.number ||
-      (this.props.column as any).type === FieldType.percentage
-    )
+    if ((this.props.column as any).type === FieldType.number)
       return Number(this.inputRef?.current?.value);
+
+    if ((this.props.column as any).type === FieldType.percentage)
+      return Number(this.inputRef?.current?.value) / 100;
+
     return this.inputRef?.current?.value;
   }
 
@@ -78,14 +79,18 @@ class TextEditor extends React.Component<
     const { maxLength } = (column as any).config;
     return (
       <TextField
-        defaultValue={value}
+        defaultValue={
+          (column as any).type === FieldType.percentage &&
+          typeof value === "number"
+            ? value * 100
+            : value
+        }
         type={inputType}
         fullWidth
         variant="standard"
         inputProps={{
           ref: this.inputRef,
           maxLength: maxLength,
-          step: (column as any).type === FieldType.percentage ? 0.1 : undefined,
         }}
         className={classes.root}
         InputProps={{
@@ -93,6 +98,8 @@ class TextEditor extends React.Component<
             root: classes.inputBase,
             input: classes.input,
           },
+          endAdornment:
+            (column as any).type === FieldType.percentage ? "%" : undefined,
         }}
       />
     );

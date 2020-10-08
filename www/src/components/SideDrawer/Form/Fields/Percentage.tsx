@@ -13,13 +13,22 @@ import { resultColorsScale } from "util/color";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
-    pct: ({ value }: { value: number | undefined }) => ({
-      borderRadius: theme.shape.borderRadius / 2,
-      padding: theme.spacing(0.5, 1),
-
-      backgroundColor: resultColorsScale(value as number).hex(),
-      color: emphasize(resultColorsScale(value as number).hex(), 1),
+    resultColor: ({ value }: { value: number | undefined }) => ({
+      backgroundColor:
+        typeof value === "number"
+          ? resultColorsScale(value).hex() + " !important"
+          : undefined,
+      color:
+        typeof value === "number"
+          ? emphasize(resultColorsScale(value).hex(), 1)
+          : undefined,
     }),
+
+    underline: {
+      "&::after": {
+        borderColor: theme.palette.text.primary,
+      },
+    },
   })
 );
 
@@ -42,7 +51,7 @@ export default function Percentage({
       name={name}
       render={({ onChange, onBlur, value }) => {
         const handleChange = (e) => {
-          onChange(Number(e.target.value));
+          onChange(Number(e.target.value) / 100);
         };
 
         return (
@@ -53,19 +62,18 @@ export default function Percentage({
             {...props}
             onChange={handleChange}
             onBlur={onBlur}
-            value={value}
+            value={typeof value === "number" ? value * 100 : value}
             id={`sidedrawer-field-${name}`}
             type="number"
-            inputProps={{ step: 0.1 }}
             label=""
             hiddenLabel
             disabled={editable === false}
             InputProps={{
-              endAdornment: (
-                <div className={classes.pct}>
-                  {typeof value === "number" ? value * 100 : "–"}%
-                </div>
-              ),
+              endAdornment: "%",
+              classes: {
+                root: classes.resultColor,
+                underline: classes.underline,
+              },
             }}
           />
         );
