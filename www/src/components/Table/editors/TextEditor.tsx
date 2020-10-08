@@ -46,7 +46,10 @@ class TextEditor extends React.Component<
   }
 
   getValue() {
-    if ((this.props.column as any).type === FieldType.number)
+    if (
+      (this.props.column as any).type === FieldType.number ||
+      (this.props.column as any).type === FieldType.percentage
+    )
       return Number(this.inputRef?.current?.value);
     return this.inputRef?.current?.value;
   }
@@ -65,6 +68,7 @@ class TextEditor extends React.Component<
         inputType = "url";
         break;
       case FieldType.number:
+      case FieldType.percentage:
         inputType = "number";
         break;
 
@@ -78,10 +82,17 @@ class TextEditor extends React.Component<
         type={inputType}
         fullWidth
         variant="standard"
-        inputProps={{ ref: this.inputRef, maxLength: maxLength }}
+        inputProps={{
+          ref: this.inputRef,
+          maxLength: maxLength,
+          step: (column as any).type === FieldType.percentage ? 0.1 : undefined,
+        }}
         className={classes.root}
         InputProps={{
-          classes: { root: classes.inputBase, input: classes.input },
+          classes: {
+            root: classes.inputBase,
+            input: classes.input,
+          },
         }}
       />
     );
