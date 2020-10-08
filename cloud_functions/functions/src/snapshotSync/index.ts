@@ -3,7 +3,7 @@ import * as functions from "firebase-functions";
 import { db } from "../config";
 
 import * as _ from "lodash";
-import { replacer } from "../utils";
+import { replacer, identifyTriggerType } from "../utils";
 
 import Config from "../functionConfig"; // generated using generateConfig.ts
 const functionConfig: any = Config;
@@ -105,7 +105,7 @@ const syncDocSnapshot = async (
  * @param targetCollection
  * @param fieldsToSync
  */
-const syncDocOnUpdate = (config: {
+const syncDocOnWrite = (config: {
   target: string;
   snapshotField: string;
   targetType: TargetTypes;
@@ -116,9 +116,11 @@ const syncDocOnUpdate = (config: {
 
   const afterDocData = snapshot.after.data();
   const beforeDocData = snapshot.before.data();
-  if (!afterDocData || !beforeDocData) return false;
-  const afterData = fieldsToSync.reduce(docReducer(afterDocData), {});
-  const beforeData = fieldsToSync.reduce(docReducer(beforeDocData), {});
+
+  const triggerType = identifyTriggerType(beforeDocData, afterDocData);
+
+  const afterData = fieldsToSync.reduce(docReducer(afterDocData ?? {}), {});
+  const beforeData = fieldsToSync.reduce(docReducer(beforeDocData ?? {}), {});
   const hasChanged = !_.isEqual(afterData, beforeData);
   console.log("nothing important changed");
   if (Object.keys(afterData).length === 0) return false; // returns if theres nothing to sync
@@ -136,21 +138,25 @@ const syncDocOnUpdate = (config: {
   if (hasChanged) {
     switch (targetType) {
       case TargetTypes.subCollection:
-        return syncSubCollection(
-          targetPath,
-          snapshotField,
-          { ...afterData, objectID: snapshot.after.ref.id },
-          snapshot.after
-        );
+        return triggerType === "update"
+          ? syncSubCollection(
+              targetPath,
+              snapshotField,
+              { ...afterData, objectID: snapshot.after.ref.id },
+              snapshot.after
+            )
+          : false;
 
       case TargetTypes.document:
-        return syncDocSnapshot(
-          targetPath,
-          isArray,
-          snapshotField,
-          { ...afterData, objectID: snapshot.after.ref.id },
-          snapshot.after
-        );
+        return triggerType !== "delete"
+          ? syncDocSnapshot(
+              targetPath,
+              isArray,
+              snapshotField,
+              { ...afterData, objectID: snapshot.after.ref.id },
+              snapshot.after
+            )
+          : false;
       default:
         return false;
     }
@@ -165,13 +171,9 @@ const syncDocOnUpdate = (config: {
  * @param config configuration object
  */
 const snapshotSyncFnsGenerator = (config) =>
-  Object.entries({
-    onUpdate: config.onUpdate
-      ? functions.firestore
-          .document(`${config.source}/{docId}`)
-          .onUpdate(syncDocOnUpdate(config))
-      : null,
-  }).reduce((a, [k, v]) => (v === null ? a : { ...a, [k]: v }), {});
+  functions.firestore
+    .document(`${config.source}/{docId}`)
+    .onWrite(syncDocOnWrite(config));
 
 //export default snapshotSyncFnsGenerator;
 
