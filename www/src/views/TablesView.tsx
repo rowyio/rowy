@@ -230,8 +230,8 @@ const TablesView = () => {
                   justify="flex-start"
                   className={classes.cardGrid}
                 >
-                  {sections[sectionName].map((table) => (
-                    <TableCard key={table.collection} table={table} />
+                  {sections[sectionName].map((table, i) => (
+                    <TableCard key={`${i}-${table.collection}`} table={table} />
                   ))}
                 </Grid>
               </section>

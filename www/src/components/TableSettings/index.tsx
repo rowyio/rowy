@@ -18,70 +18,91 @@ export enum TableSettingsDialogModes {
   update,
 }
 export interface ICreateTableDialogProps {
-  /** dialog Modes create or udpate table */
-
   mode: TableSettingsDialogModes | null;
   clearDialog: () => void;
   data: {
+    name: string;
     collection: string;
-    roles: string[];
+    tableType: string;
     section: string;
     description: string;
-    name: string;
-    tableType: string;
     isCollectionGroup: boolean;
+    roles: string[];
   } | null;
 }
 
 const FORM_EMPTY_STATE = {
   name: "",
-  section: "",
   collection: "",
+  section: "",
   description: "",
-  roles: ["ADMIN"],
   isCollectionGroup: false,
+  roles: ["ADMIN"],
 };
+
 export default function TableSettingsDialog({
   mode,
   clearDialog,
   data,
 }: ICreateTableDialogProps) {
-  const { settingsActions, tables } = useFiretableContext();
-  const sections = tables?.reduce((accSections: string[], currTable: any) => {
-    if (currTable.section && !accSections.includes(currTable.section)) {
-      return [...accSections, currTable.section];
-    } else return accSections;
-  }, []);
-  const roles = tables?.reduce((accRoles: string[], currTable: any) => {
-    const newRoles = currTable.roles
-      .map((role) => {
-        if (!accRoles.includes(role)) return role;
-      })
-      .filter((role) => role);
-    return [...accRoles, ...newRoles];
-  }, []);
-  //const
+  const { settingsActions, sections, roles } = useFiretableContext();
+
+  const sectionNames = sections ? Object.keys(sections) : [];
+
   const router = useRouter();
   const open = mode !== null;
 
   const [formState, setForm] = useState(FORM_EMPTY_STATE);
+
   const handleChange = (key: string, value: any) =>
     setForm({ ...formState, [key]: value });
+
   useEffect(() => {
     if (mode === TableSettingsDialogModes.create)
       handleChange("collection", _camelCase(formState.name));
   }, [formState.name]);
 
-  function handleClose() {
+  const handleClose = () => {
     setForm(FORM_EMPTY_STATE);
     clearDialog();
-  }
+  };
 
   useEffect(() => {
     if (data) setForm(data);
   }, [data]);
+
   const [loading, setLoading] = useState(true);
-  if (!open) return <></>;
+
+  if (!open) return null;
+
+  const handleSubmit = async (values) => {
+    const data: any = {
+      ...values,
+      isCollectionGroup: values.tableType === "collectionGroup",
+    };
+
+    setLoading(true);
+
+    if (mode === TableSettingsDialogModes.update) {
+      await Promise.all([settingsActions?.updateTable(data), handleClose()]);
+      window.location.reload();
+    } else {
+      settingsActions?.createTable(data);
+
+      if (router.location.pathname === "/") {
+        router.history.push(
+          `${values.tableType === "collectionGroup" ? "tableGroup" : "table"}/${
+            values.collection
+          }`
+        );
+      } else {
+        router.history.push(values.collection);
+      }
+    }
+
+    handleClose();
+  };
+
   return (
     <FormDialog
       onClose={handleClose}
@@ -91,45 +112,16 @@ export default function TableSettingsDialog({
           ? "Create Table"
           : "Update Table"
       }
-      fields={tableSettings(mode, roles, sections)}
+      fields={tableSettings(mode, roles, sectionNames)}
       values={{
         tableType: data?.isCollectionGroup
           ? "collectionGroup"
           : "primaryCollection",
         ...data,
       }}
-      onSubmit={async (values) => {
-        const data: any = {
-          ...values,
-          isCollectionGroup: values.tableType === "collectionGroup",
-        };
-        setLoading(true);
-        if (mode === TableSettingsDialogModes.update) {
-          await Promise.all([
-            settingsActions?.updateTable(data),
-            handleClose(),
-          ]);
-          window.location.reload();
-        } else {
-          settingsActions?.createTable(data);
-
-          if (router.location.pathname === "/") {
-            router.history.push(
-              `${
-                values.tableType === "collectionGroup" ? "tableGroup" : "table"
-              }/${values.collection}`
-            );
-          } else {
-            router.history.push(values.collection);
-          }
-        }
-
-        handleClose();
-      }}
-      customComponents={{}}
+      onSubmit={handleSubmit}
       formFooter={
         <>
-          {" "}
           {mode === TableSettingsDialogModes.update && (
             <Confirmation
               message={{
