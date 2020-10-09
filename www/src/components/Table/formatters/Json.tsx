@@ -6,6 +6,8 @@ import { makeStyles, createStyles, Tooltip, Fade } from "@material-ui/core";
 
 import { useFiretableContext } from "contexts/firetableContext";
 
+import { MONO_FONT } from "Theme";
+
 type StylesProps = { width: number; rowHeight: number };
 
 const useStyles = makeStyles((theme) =>
@@ -25,7 +27,7 @@ const useStyles = makeStyles((theme) =>
     },
     text: {
       maxHeight: "100%",
-      fontFamily: "SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace",
+      fontFamily: MONO_FONT,
       wordBreak: "break-word",
       whiteSpace: "pre-wrap",
     },
@@ -46,7 +48,7 @@ const useStyles = makeStyles((theme) =>
       ...theme.typography.body2,
       fontSize: "0.75rem",
       color: theme.palette.text.primary,
-      fontFamily: "SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace",
+      fontFamily: MONO_FONT,
       wordBreak: "break-word",
       whiteSpace: "pre-wrap",
 

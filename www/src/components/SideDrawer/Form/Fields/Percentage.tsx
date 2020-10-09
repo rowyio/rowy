@@ -1,74 +1,81 @@
 import React from "react";
-import { Controller } from "react-hook-form";
+import { Controller, useWatch } from "react-hook-form";
 import { IFieldProps } from "../utils";
 
-import { makeStyles, createStyles, Typography } from "@material-ui/core";
+import {
+  makeStyles,
+  createStyles,
+  TextField,
+  FilledTextFieldProps,
+} from "@material-ui/core";
+import { emphasize } from "@material-ui/core/styles";
 import { resultColorsScale } from "util/color";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
-    root: {
-      padding: theme.spacing(9 / 8, 1, 9 / 8, 1.5),
-      height: 56,
-
-      width: "100%",
-      display: "flex",
-      textAlign: "left",
-      alignItems: "center",
-
-      position: "relative",
-    },
-
-    resultColor: {
-      borderRadius: theme.shape.borderRadius,
+    resultColor: ({ value }: { value: number | undefined }) => ({
       backgroundColor:
-        theme.palette.type === "light"
-          ? "rgba(0, 0, 0, 0.09)"
-          : "rgba(255, 255, 255, 0.09)",
+        typeof value === "number"
+          ? resultColorsScale(value).hex() + " !important"
+          : undefined,
+      color:
+        typeof value === "number"
+          ? emphasize(resultColorsScale(value).hex(), 1)
+          : undefined,
+    }),
 
-      position: "absolute",
-      top: 0,
-      right: 0,
-      bottom: 0,
-      left: 0,
-      opacity: 0.5,
-
-      zIndex: 0,
-    },
-
-    value: {
-      position: "relative",
+    underline: {
+      "&::after": {
+        borderColor: theme.palette.text.primary,
+      },
     },
   })
 );
 
-export default function Percentage({ control, name }: IFieldProps) {
-  const classes = useStyles();
+export interface ITextProps
+  extends IFieldProps,
+    Omit<FilledTextFieldProps, "variant" | "name"> {}
+
+export default function Percentage({
+  control,
+  name,
+  editable,
+  ...props
+}: IFieldProps) {
+  const value: number | undefined = useWatch({ control, name });
+  const classes = useStyles({ value });
 
   return (
     <Controller
       control={control}
       name={name}
-      render={({ value }) => {
-        if (!value)
-          return (
-            <div className={classes.root}>
-              <div className={classes.resultColor} style={{ opacity: 1 }} />
-            </div>
-          );
+      render={({ onChange, onBlur, value }) => {
+        const handleChange = (e) => {
+          onChange(Number(e.target.value) / 100);
+        };
 
         return (
-          <div className={classes.root}>
-            <div
-              className={classes.resultColor}
-              style={{
-                backgroundColor: resultColorsScale(value as number).hex(),
-              }}
-            />
-            <Typography variant="body1" className={classes.value}>
-              {Math.round(value * 100)}%
-            </Typography>
-          </div>
+          <TextField
+            variant="filled"
+            fullWidth
+            margin="none"
+            {...props}
+            onChange={handleChange}
+            onBlur={onBlur}
+            value={typeof value === "number" ? value * 100 : value}
+            id={`sidedrawer-field-${name}`}
+            type="number"
+            label=""
+            hiddenLabel
+            disabled={editable === false}
+            InputProps={{
+              endAdornment: "%",
+              classes: {
+                root: classes.resultColor,
+                underline: classes.underline,
+              },
+            }}
+          />
         );
       }}
     />

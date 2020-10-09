@@ -4,6 +4,7 @@ import { CustomCellProps } from "./withCustomCell";
 import { makeStyles, createStyles, Tooltip, Fade } from "@material-ui/core";
 
 import { useFiretableContext } from "contexts/firetableContext";
+import { MONO_FONT } from "Theme";
 
 type StylesProps = { width: number; rowHeight: number };
 
@@ -22,7 +23,7 @@ const useStyles = makeStyles((theme) =>
       right: theme.spacing(1.5),
       left: theme.spacing(1.5),
 
-      fontFamily: "SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace",
+      fontFamily: MONO_FONT,
     },
     text: { maxHeight: "100%" },
 
@@ -40,7 +41,7 @@ const useStyles = makeStyles((theme) =>
       boxShadow: theme.shadows[4],
 
       ...theme.typography.body2,
-      fontFamily: "SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace",
+      fontFamily: MONO_FONT,
       fontSize: "0.75rem",
       color: theme.palette.text.primary,
       whiteSpace: "pre-line",

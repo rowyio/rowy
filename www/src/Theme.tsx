@@ -11,6 +11,8 @@ import ClearIcon from "@material-ui/icons/Clear";
 
 export const HEADING_FONT = "Europa, sans-serif";
 export const BODY_FONT = '"Open Sans", sans-serif';
+export const MONO_FONT =
+  "SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace";
 
 export const ANTLER_RED = "#ed4747";
 export const SECONDARY_GREY = "#282829";
