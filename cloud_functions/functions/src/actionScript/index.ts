@@ -10,6 +10,7 @@ type ActionData = {
     parentId: string;
     tablePath: string;
   };
+  schemaDocPath?: string;
   row: any;
   column: any;
   action: "run" | "redo" | "undo";
@@ -43,10 +44,11 @@ export const actionScript = functions.https.onCall(
         throw Error(`You are unauthenticated`);
       }
 
-      const { ref, row, column, action } = data;
+      const { ref, row, column, action, schemaDocPath } = data;
 
-      const schemaDocPath = generateSchemaDocPath(ref.tablePath);
-      const schemaDoc = await db.doc(schemaDocPath).get();
+      const _schemaDocPath =
+        schemaDocPath ?? generateSchemaDocPath(ref.tablePath);
+      const schemaDoc = await db.doc(_schemaDocPath).get();
       const schemaDocData = schemaDoc.data();
       if (!schemaDocData) {
         return {

@@ -82,3 +82,11 @@ export const generateBiggerId = (id: string) => {
     return characters[indexOfFirstChar + 1] + makeId(id.length - 1);
   else return id[0] + generateBiggerId(id.substr(1, id.length - 1));
 };
+
+const formatPathRegex = /\/[^\/]+\/([^\/]+)/g;
+
+export const formatPath = (tablePath: string) => {
+  return `_FIRETABLE_/settings/${
+    isCollectionGroup() ? "groupSchema" : "schema"
+  }/${tablePath.replace(formatPathRegex, "/subTables/$1")}`;
+};

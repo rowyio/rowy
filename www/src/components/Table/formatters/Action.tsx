@@ -13,11 +13,11 @@ import {
 import PlayIcon from "@material-ui/icons/PlayArrow";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import UndoIcon from "@material-ui/icons/Undo";
-
+import { useFiretableContext } from "contexts/firetableContext";
 import { SnackContext } from "contexts/snackContext";
 import { cloudFunction } from "firebase/callables";
 import { sanitiseCallableName, isUrl, sanitiseRowData } from "util/fns";
-
+import { formatPath } from "../../../util/fns";
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: { padding: theme.spacing(0, 0.375, 0, 1.5) },
@@ -46,6 +46,7 @@ const getStateIcon = (actionState) => {
 export const ActionFab = ({ row, column, onSubmit, value }) => {
   const classes = useStyles();
 
+  const { tableState } = useFiretableContext();
   const { createdAt, updatedAt, id, ref, ...docData } = row;
   const { config } = column as any;
 
@@ -69,6 +70,7 @@ export const ActionFab = ({ row, column, onSubmit, value }) => {
       row: sanitiseRowData(Object.assign({}, docData)),
       column,
       action,
+      schemaDocPath: formatPath(tableState?.tablePath ?? ""),
     };
     cloudFunction(
       callableName,
