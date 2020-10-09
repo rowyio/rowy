@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@antlerengineering/form-builder": "^0.5.1",
     "@antlerengineering/multiselect": "^0.6.0",
     "@date-io/date-fns": "1.x",
     "@material-ui/core": "^4.11.0",

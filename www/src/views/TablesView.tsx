@@ -29,7 +29,7 @@ import { useAppContext } from "contexts/appContext";
 import { DocActions } from "hooks/useDoc";
 import TableSettingsDialog, {
   TableSettingsDialogModes,
-} from "components/TableSettingsDialog";
+} from "components/TableSettings";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -95,6 +95,7 @@ const TablesView = () => {
       name: string;
       section: string;
       isCollectionGroup: boolean;
+      tableType: string;
     };
   }>({
     mode: null,

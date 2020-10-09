@@ -2,7 +2,9 @@ import _isDate from "lodash/isDate";
 import _sortBy from "lodash/sortBy";
 
 import { FieldType } from "constants/fields";
-
+function arrayIsUnique(myArray) {
+  return myArray.length === new Set(myArray).size;
+}
 export const SELECTABLE_TYPES = [
   FieldType.shortText,
   FieldType.longText,
@@ -83,7 +85,8 @@ export const suggestType = (data: { [key: string]: any }[], field: string) => {
   if (bestMatch === FieldType.shortText) {
     const values = new Set();
     data.forEach((row) => values.add(row[field]));
-    if (values.size <= 10) return FieldType.singleSelect;
+    if (values.size <= 20 && !arrayIsUnique(values))
+      return FieldType.singleSelect;
   }
 
   return bestMatch;
