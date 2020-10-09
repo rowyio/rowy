@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import _merge from "lodash/merge";
+import _isEmpty from "lodash/isEmpty";
 
 import { useTheme, useMediaQuery, Typography } from "@material-ui/core";
 
@@ -38,7 +39,7 @@ export default function ImportWizard() {
 
     if (
       tableState.config.tableConfig.doc &&
-      !tableState.config.tableConfig.doc?.columns
+      _isEmpty(tableState.config.tableConfig.doc?.columns)
     ) {
       setOpen(true);
 
