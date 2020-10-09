@@ -82,7 +82,7 @@ export const ActionFab = ({ row, column, onSubmit, value }) => {
           message: JSON.stringify(message),
           severity: success ? "success" : "error",
         });
-        if (cellValue) onSubmit(cellValue);
+        if (cellValue.status) onSubmit(cellValue);
       },
       (error) => {
         console.error("ERROR", callableName, error);
@@ -148,8 +148,6 @@ export default function Action({
   onSubmit,
 }: CustomCellProps) {
   const classes = useStyles();
-
-  const { createdAt, updatedAt, id, ref, ...docData } = row;
   const { name } = column as any;
   const hasRan = value && value.status;
   return (
