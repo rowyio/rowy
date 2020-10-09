@@ -5,7 +5,7 @@ import useRouter from "../../hooks/useRouter";
 import { db } from "../../firebase";
 import DeleteIcon from "@material-ui/icons/DeleteForever";
 
-import { Button } from "@material-ui/core";
+import { makeStyles, createStyles, Grid, Button } from "@material-ui/core";
 import { useFiretableContext } from "../../contexts/firetableContext";
 
 import Confirmation from "components/Confirmation";
@@ -40,11 +40,26 @@ const FORM_EMPTY_STATE = {
   roles: ["ADMIN"],
 };
 
+const useStyles = makeStyles((theme) =>
+  createStyles({
+    buttonGrid: { padding: theme.spacing(3, 0) },
+    button: { width: 160 },
+
+    deleteButton: {
+      display: "flex",
+      margin: "0 auto",
+      marginTop: theme.spacing(4),
+    },
+  })
+);
+
 export default function TableSettingsDialog({
   mode,
   clearDialog,
   data,
 }: ICreateTableDialogProps) {
+  const classes = useStyles();
+
   const { settingsActions, sections, roles } = useFiretableContext();
 
   const sectionNames = sections ? Object.keys(sections) : [];
@@ -103,6 +118,26 @@ export default function TableSettingsDialog({
     handleClose();
   };
 
+  const handleDelete = async () => {
+    setLoading(true);
+    const tablesDocRef = db.doc(`_FIRETABLE_/settings`);
+    const tablesDoc = await tablesDocRef.get();
+    const tableData = tablesDoc.data();
+    const updatedTables = tableData?.tables.filter(
+      (table) =>
+        table.collection !== data?.collection ||
+        table.isCollectionGroup !== data?.isCollectionGroup
+    );
+    await tablesDocRef.update({ tables: updatedTables });
+    await tablesDocRef
+      .collection(Boolean(data?.isCollectionGroup) ? "schema" : "groupSchema")
+      .doc(data?.collection)
+      .delete();
+    window.location.reload();
+    handleClose();
+    setLoading(false);
+  };
+
   return (
     <FormDialog
       onClose={handleClose}
@@ -120,49 +155,57 @@ export default function TableSettingsDialog({
         ...data,
       }}
       onSubmit={handleSubmit}
-      formFooter={
-        <>
-          {mode === TableSettingsDialogModes.update && (
-            <Confirmation
-              message={{
-                title: `Are you sure you want to delete ${formState.name}'s table`,
-                body: `This will only delete the firetable configuration data and not the data stored in in the firestore collection ${formState.collection}`,
-                confirm: "delete",
-              }}
-              functionName="onClick"
+      customActions={
+        <Grid
+          container
+          spacing={2}
+          justify="center"
+          className={classes.buttonGrid}
+        >
+          <Grid item>
+            <Button
+              size="large"
+              variant="outlined"
+              onClick={handleClose}
+              className={classes.button}
             >
-              <Button
-                fullWidth
-                onClick={async () => {
-                  setLoading(true);
-                  const tablesDocRef = db.doc(`_FIRETABLE_/settings`);
-                  const tablesDoc = await tablesDocRef.get();
-                  const tableData = tablesDoc.data();
-                  const updatedTables = tableData?.tables.filter(
-                    (table) =>
-                      table.collection !== data?.collection ||
-                      table.isCollectionGroup !== data?.isCollectionGroup
-                  );
-                  await tablesDocRef.update({ tables: updatedTables });
-                  await tablesDocRef
-                    .collection(
-                      Boolean(data?.isCollectionGroup)
-                        ? "schema"
-                        : "groupSchema"
-                    )
-                    .doc(data?.collection)
-                    .delete();
-                  window.location.reload();
-                  handleClose();
-                  setLoading(false);
-                }}
-              >
-                <DeleteIcon />
-                Delete Table
-              </Button>
-            </Confirmation>
-          )}
-        </>
+              Cancel
+            </Button>
+          </Grid>
+          <Grid item>
+            <Button
+              size="large"
+              variant="contained"
+              type="submit"
+              className={classes.button}
+            >
+              {mode === TableSettingsDialogModes.create ? "Create" : "Update"}
+            </Button>
+          </Grid>
+        </Grid>
+      }
+      formFooter={
+        mode === TableSettingsDialogModes.update ? (
+          <Confirmation
+            message={{
+              title: `Are you sure you want to delete ${formState.name}'s table`,
+              body: `This will only delete the firetable configuration data and not the data stored in in the firestore collection ${formState.collection}`,
+              confirm: "DELETE",
+            }}
+            functionName="onClick"
+          >
+            <Button
+              size="large"
+              variant="outlined"
+              color="secondary"
+              onClick={handleDelete}
+              startIcon={<DeleteIcon />}
+              className={classes.deleteButton}
+            >
+              Delete Table
+            </Button>
+          </Confirmation>
+        ) : null
       }
     />
   );
