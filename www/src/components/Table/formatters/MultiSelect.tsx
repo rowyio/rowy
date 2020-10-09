@@ -123,7 +123,7 @@ export default function MultiSelect({
     if (dataGridRef?.current?.selectCell)
       dataGridRef.current.selectCell({ rowIdx, idx: column.idx });
   };
-  if (typeof value === "string" && value !== "")
+  if (typeof value === "string" && value !== "" && !isSingle)
     return <ConvertStringToArray value={value} onSubmit={onSubmit} />;
 
   return (
