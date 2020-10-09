@@ -2,7 +2,13 @@ import React from "react";
 import clsx from "clsx";
 import { CustomCellProps } from "./withCustomCell";
 
-import { makeStyles, createStyles, Grid, Tooltip } from "@material-ui/core";
+import {
+  makeStyles,
+  createStyles,
+  Grid,
+  Tooltip,
+  Button,
+} from "@material-ui/core";
 
 import MultiSelect_ from "@antlerengineering/multiselect";
 import FormattedChip, { VARIANTS } from "components/FormattedChip";
@@ -47,6 +53,21 @@ const useStyles = makeStyles((theme) =>
     chip: { cursor: "inherit" },
     chipLabel: { whiteSpace: "nowrap" },
   })
+);
+
+export const ConvertStringToArray = ({ value, onSubmit }) => (
+  <>
+    {value}
+    <Tooltip title="It looks like this is a string, click to convert it to an array">
+      <Button
+        onClick={() => {
+          onSubmit([value]);
+        }}
+      >
+        fix
+      </Button>
+    </Tooltip>
+  </>
 );
 
 export default function MultiSelect({
@@ -102,6 +123,8 @@ export default function MultiSelect({
     if (dataGridRef?.current?.selectCell)
       dataGridRef.current.selectCell({ rowIdx, idx: column.idx });
   };
+  if (typeof value === "string" && value !== "")
+    return <ConvertStringToArray value={value} onSubmit={onSubmit} />;
 
   return (
     <Tooltip

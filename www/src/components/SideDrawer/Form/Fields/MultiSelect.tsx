@@ -6,7 +6,7 @@ import { useTheme, Grid } from "@material-ui/core";
 
 import MultiSelect_, { MultiSelectProps } from "@antlerengineering/multiselect";
 import FormattedChip from "components/FormattedChip";
-
+import { ConvertStringToArray } from "components/Table/formatters/MultiSelect";
 export type IMultiSelectProps = IFieldProps &
   Omit<
     MultiSelectProps<string>,
@@ -35,6 +35,8 @@ export default function MultiSelect({
           newValues.splice(index, 1);
           onChange(newValues);
         };
+        if (typeof value === "string" && value !== "")
+          return <ConvertStringToArray value={value} onSubmit={onChange} />;
 
         return (
           <>
