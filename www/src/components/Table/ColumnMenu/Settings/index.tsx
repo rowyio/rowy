@@ -22,11 +22,18 @@ import _sortBy from "lodash/sortBy";
 import FieldsDropdown from "../FieldsDropdown";
 import ColumnSelector from "./ConfigFields/ColumnSelector";
 import FieldSkeleton from "components/SideDrawer/Form/FieldSkeleton";
-import RoleSelector from "components/RolesSelector";
+
 const CodeEditor = lazy(
   () => import("../../editors/CodeEditor" /* webpackChunkName: "CodeEditor" */)
 );
-const ConfigFields = ({ fieldType, config, handleChange, tables, columns }) => {
+const ConfigFields = ({
+  fieldType,
+  config,
+  handleChange,
+  tables,
+  columns,
+  roles,
+}) => {
   switch (fieldType) {
     case FieldType.longText:
     case FieldType.shortText:
@@ -224,10 +231,11 @@ const ConfigFields = ({ fieldType, config, handleChange, tables, columns }) => {
           <Typography variant="body2">
             Authenticated user must have at least one of these to run the script
           </Typography>
-          <RoleSelector
+          <MultiSelect
             label={"Allowed Roles"}
+            options={roles}
             value={config.requiredRoles}
-            handleChange={handleChange("requiredRoles")}
+            onChange={handleChange("requiredRoles")}
           />
 
           <Typography variant="overline">Required fields</Typography>
@@ -413,6 +421,7 @@ switch (triggerType){
                 handleChange={handleChange}
                 tables={tables}
                 columns={columns}
+                roles={roles}
               />
             </>
           )}
@@ -460,6 +469,7 @@ switch (triggerType){
                 handleChange={handleChange}
                 tables={tables}
                 columns={columns}
+                roles={roles}
               />
             </>
           )}
@@ -470,7 +480,7 @@ switch (triggerType){
   }
 };
 const ConfigForm = ({ type, config, handleChange }) => {
-  const { tableState, tables } = useFiretableContext();
+  const { tableState, tables, roles } = useFiretableContext();
 
   if (!tableState) return <></>;
   const { columns } = tableState;
@@ -482,6 +492,7 @@ const ConfigForm = ({ type, config, handleChange }) => {
       config={config}
       handleChange={handleChange}
       tables={tables}
+      roles={roles}
     />
   );
 };
