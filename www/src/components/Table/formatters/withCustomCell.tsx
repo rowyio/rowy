@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense } from "react";
 import { FormatterProps } from "react-data-grid";
 
 import { makeStyles, createStyles } from "@material-ui/core";
@@ -40,6 +40,32 @@ const withCustomCell = (
 ) => (props: FormatterProps<any>) => {
   useStyles();
   const { updateCell } = useFiretableContext();
+
+  const handleSubmit = (value: any) => {
+    if (updateCell && !readOnly)
+      updateCell(props.row.ref, props.column.key as string, value);
+  };
+  return (
+    <ErrorBoundary fullScreen={false} basic wrap="nowrap">
+      <Suspense fallback={<></>}>
+        <Component
+          {...props}
+          docRef={props.row.ref}
+          value={getCellValue(props.row, props.column.key as string)}
+          onSubmit={handleSubmit}
+        />
+      </Suspense>
+    </ErrorBoundary>
+  );
+};
+
+/*
+const withCustomCell = (
+  Component: React.ComponentType<CustomCellProps>,
+  readOnly: boolean = false
+) => (props: FormatterProps<any>) => {
+  useStyles();
+  const { updateCell } = useFiretableContext();
   const [component, setComponent] = useState(<></>);
 
   useEffect(() => {
@@ -64,5 +90,5 @@ const withCustomCell = (
   };
   return component;
 };
-
+*/
 export default withCustomCell;
