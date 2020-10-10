@@ -40,9 +40,6 @@ const GridView = lazy(
 const TablesView = lazy(
   () => import("./views/TablesView" /* webpackChunkName: "TablesView" */)
 );
-const EditorView = lazy(
-  () => import("./views/EditorView" /* webpackChunkName: "EditorView" */)
-);
 
 const App: React.FC = () => {
   const [themeCustomization, setTheme] = useState({
@@ -98,11 +95,6 @@ const App: React.FC = () => {
                         </Switch>
                       </FiretableContextProvider>
                     )}
-                  />
-
-                  <PrivateRoute
-                    path={routes.editor}
-                    render={() => <EditorView />}
                   />
 
                   <PrivateRoute
