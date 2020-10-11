@@ -66,35 +66,5 @@ export default function Cell({
 
   const formatter = type ? getFormatter({ type: type }, true) : null;
 
-  return (
-    <div className={classes.root} {...props}>
-      <div className={classes.value}>
-        {formatter ? (
-          React.createElement(formatter, {
-            value,
-            rowIdx: 0,
-            column: {
-              type,
-              key: field,
-              name,
-              config: { options: [] },
-            } as any,
-            row: { [field]: value },
-            isRowSelected: false,
-            onRowSelectionChange: () => {},
-            isSummaryRow: false,
-          })
-        ) : typeof value === "string" ||
-          typeof value === "number" ||
-          value === undefined ||
-          value === null ? (
-          value
-        ) : typeof value === "boolean" ? (
-          value.toString()
-        ) : (
-          <EmptyState basic wrap="nowrap" message="Invalid column type" />
-        )}
-      </div>
-    </div>
-  );
+  return <div className={classes.root} {...props}></div>;
 }

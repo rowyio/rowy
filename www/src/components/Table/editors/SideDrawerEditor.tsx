@@ -19,13 +19,13 @@ const useStyles = makeStyles(styles);
 function SideDrawerEditor_(props: EditorProps<any, any>) {
   useStyles();
 
-  const { column, rowData } = props;
+  const { column } = props;
   const { sideDrawerRef } = useFiretableContext();
 
   useEffect(() => {
     if (!sideDrawerRef?.current?.open && sideDrawerRef?.current?.setOpen)
       sideDrawerRef?.current?.setOpen(true);
-  }, [column, rowData]);
+  }, [column]);
 
   return null;
 }
