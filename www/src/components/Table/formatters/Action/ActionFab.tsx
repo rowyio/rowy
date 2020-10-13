@@ -1,12 +1,9 @@
 import React, { useContext, useState } from "react";
-import { CustomCellProps } from "./withCustomCell";
-import clsx from "clsx";
-import Confirmation from "components/Confirmation";
+//import Confirmation from "components/Confirmation";
 import _get from "lodash/get";
 import {
   createStyles,
   makeStyles,
-  Grid,
   Fab,
   CircularProgress,
 } from "@material-ui/core";
@@ -16,12 +13,12 @@ import UndoIcon from "@material-ui/icons/Undo";
 import { useFiretableContext } from "contexts/firetableContext";
 import { SnackContext } from "contexts/snackContext";
 import { cloudFunction } from "firebase/callables";
-import { sanitiseCallableName, isUrl, sanitiseRowData } from "util/fns";
-import { formatPath } from "../../../util/fns";
+import { sanitiseRowData } from "util/fns";
+import { formatPath } from "../../../../util/fns";
+import { useConfirmation } from "components/ConfirmationDialog";
+//import ParamsDialog from './ParamsDialog'
 const useStyles = makeStyles((theme) =>
   createStyles({
-    root: { padding: theme.spacing(0, 0.375, 0, 1.5) },
-    labelContainer: { overflowX: "hidden" },
     fab: { width: 36, height: 36 },
   })
 );
@@ -43,9 +40,9 @@ const getStateIcon = (actionState) => {
   }
 };
 
-export const ActionFab = ({ row, column, onSubmit, value }) => {
+export default ({ row, column, onSubmit, value }) => {
   const classes = useStyles();
-
+  const { requestConfirmation } = useConfirmation();
   const { tableState } = useFiretableContext();
   const { createdAt, updatedAt, id, ref, ...docData } = row;
   const { config } = column as any;
@@ -63,7 +60,7 @@ export const ActionFab = ({ row, column, onSubmit, value }) => {
 
   const callableName =
     (column as any).callableName ?? config.callableName ?? "actionScript";
-  const handleRun = () => {
+  const handleRun = (actionParams = {}) => {
     setIsRunning(true);
     const data = {
       ref: { path: ref.path, id: ref.id, tablePath: window.location.pathname },
@@ -71,6 +68,7 @@ export const ActionFab = ({ row, column, onSubmit, value }) => {
       column,
       action,
       schemaDocPath: formatPath(tableState?.tablePath ?? ""),
+      actionParams,
     };
     cloudFunction(
       callableName,
@@ -98,12 +96,39 @@ export const ActionFab = ({ row, column, onSubmit, value }) => {
       ? "undo"
       : "redo"
     : "run";
-  let fabButton = (
+  // if(Array.isArray(config.params)){
+  // if(false){
+
+  //     return(<ParamsDialog
+  //     column={column}
+  //     row={row}
+  //   >
+  //     {fabButton}
+  //   </ParamsDialog>
+  // );
+
+  // }
+  const needsConfirmation =
+    typeof config.confirmation === "string" && config.confirmation !== "";
+  return (
     <Fab
       size="small"
       color="secondary"
       className={classes.fab}
-      onClick={handleRun}
+      onClick={
+        needsConfirmation
+          ? () =>
+              requestConfirmation({
+                title: `${column.name} Confirmation`,
+                body: (actionState === "undo" && config.undoConfirmation
+                  ? config.undoConfirmation
+                  : config.confirmation
+                ).replace(/\{\{(.*?)\}\}/g, replacer(row)),
+                confirm: "Run",
+                handleConfirm: handleRun,
+              })
+          : handleRun
+      }
       disabled={
         isRunning ||
         !!(
@@ -121,62 +146,4 @@ export const ActionFab = ({ row, column, onSubmit, value }) => {
       )}
     </Fab>
   );
-
-  if (typeof config.confirmation === "string")
-    return (
-      <Confirmation
-        message={{
-          title: `${column.name} Confirmation`,
-          body: (actionState === "undo" && config.undoConfirmation
-            ? config.undoConfirmation
-            : config.confirmation
-          ).replace(/\{\{(.*?)\}\}/g, replacer(row)),
-        }}
-        functionName="onClick"
-      >
-        {fabButton}
-      </Confirmation>
-    );
-
-  return fabButton;
 };
-
-export default function Action({
-  column,
-  row,
-  value,
-  onSubmit,
-}: CustomCellProps) {
-  const classes = useStyles();
-  const { name } = column as any;
-  const hasRan = value && value.status;
-  return (
-    <Grid
-      container
-      alignItems="center"
-      wrap="nowrap"
-      className={clsx("cell-collapse-padding", classes.root)}
-    >
-      <Grid item xs className={classes.labelContainer}>
-        {hasRan && isUrl(value.status) ? (
-          <a href={value.status} target="_blank" rel="noopener noreferrer">
-            {value.status}
-          </a>
-        ) : hasRan ? (
-          value.status
-        ) : (
-          sanitiseCallableName(name)
-        )}
-      </Grid>
-
-      <Grid item>
-        <ActionFab
-          row={row}
-          column={column}
-          onSubmit={onSubmit}
-          value={value}
-        />
-      </Grid>
-    </Grid>
-  );
-}

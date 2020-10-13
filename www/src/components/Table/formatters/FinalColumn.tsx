@@ -11,7 +11,7 @@ import {
 import CopyCellsIcon from "assets/icons/CopyCells";
 import DeleteIcon from "@material-ui/icons/Cancel";
 import { SnackContext } from "../../../contexts/snackContext";
-import Confirmation from "components/Confirmation";
+import { useConfirmation } from "components/ConfirmationDialog/Context";
 import { useFiretableContext } from "contexts/firetableContext";
 import useKeyPress from "../../../hooks/useKeyPress";
 export const useFinalColumnStyles = makeStyles((theme) =>
@@ -44,13 +44,12 @@ export const useFinalColumnStyles = makeStyles((theme) =>
 );
 
 export default function FinalColumn({ row }: FormatterProps<any, any, any>) {
+  const { requestConfirmation } = useConfirmation();
   const { tableActions } = useFiretableContext();
   const shiftPress = useKeyPress("Shift");
   const snack = useContext(SnackContext);
 
   const handleDelete = async () => {
-    console.log("Deleting");
-
     row.ref.delete().then(
       (r) => {
         console.log("r", r);
@@ -98,7 +97,7 @@ export default function FinalColumn({ row }: FormatterProps<any, any, any>) {
 
       <Grid item>
         <Tooltip title="Delete row">
-          <div>
+          <>
             {shiftPress ? (
               <IconButton
                 size="small"
@@ -109,24 +108,31 @@ export default function FinalColumn({ row }: FormatterProps<any, any, any>) {
                 <DeleteIcon />
               </IconButton>
             ) : (
-              <Confirmation
-                message={{
-                  title: "Delete Row",
-                  body: "Are you sure you want to delete this row?",
-                  confirm: "Delete",
+              // <Confirmation
+              //   message={{
+              //     title: "Delete Row",
+              //     body: "Are you sure you want to delete this row?",
+              //     confirm: "Delete",
+              //   }}
+              // >
+              <IconButton
+                size="small"
+                color="inherit"
+                onClick={() => {
+                  requestConfirmation({
+                    title: "Delete Row",
+                    body: "Are you sure you want to delete this row?",
+                    confirm: "Delete",
+                    handleConfirm: handleDelete,
+                  });
                 }}
+                aria-label="Delete row"
               >
-                <IconButton
-                  size="small"
-                  color="inherit"
-                  onClick={handleDelete}
-                  aria-label="Delete row"
-                >
-                  <DeleteIcon />
-                </IconButton>
-              </Confirmation>
+                <DeleteIcon />
+              </IconButton>
+              // </Confirmation>
             )}
-          </div>
+          </>
         </Tooltip>
       </Grid>
     </Grid>
