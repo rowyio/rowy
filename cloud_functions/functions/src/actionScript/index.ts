@@ -14,6 +14,7 @@ type ActionData = {
   row: any;
   column: any;
   action: "run" | "redo" | "undo";
+  actionParams: any;
 };
 // import {
 //   makeId,
@@ -44,7 +45,7 @@ export const actionScript = functions.https.onCall(
         throw Error(`You are unauthenticated`);
       }
 
-      const { ref, row, column, action, schemaDocPath } = data;
+      const { ref, actionParams, row, column, action, schemaDocPath } = data;
 
       const _schemaDocPath =
         schemaDocPath ?? generateSchemaDocPath(ref.tablePath);
@@ -78,6 +79,7 @@ export const actionScript = functions.https.onCall(
           redo,
           row,
           ref,
+          actionParams,
           column,
           schemaDocData,
           script,
@@ -91,10 +93,10 @@ export const actionScript = functions.https.onCall(
         status: string;
         success: boolean;
       } = await eval(
-        `async({row,db, ref,auth, utilFns})=>{${
+        `async({row,db, ref,auth,utilFns,actionParams})=>{${
           action === "undo" ? config["undo.script"] : script
         }}`
-      )({ row, db, auth, utilFns, ref });
+      )({ row, db, auth, utilFns, ref, actionParams });
       if (result.success)
         return {
           success: result.success,

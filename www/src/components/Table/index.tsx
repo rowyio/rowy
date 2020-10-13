@@ -123,8 +123,7 @@ export default function Table() {
 
   const rowHeight = tableState.config.rowHeight;
   const rows = tableState.rows.map((row) =>
-    columns.reduce(
-      (acc, currColumn) => ({
+    columns.reduce((acc, currColumn) => ({
         ...acc,
         [currColumn.key]: _get(row, currColumn.key),
       }),
