@@ -47,7 +47,7 @@ const withCustomCell = (
   };
   return (
     <ErrorBoundary fullScreen={false} basic wrap="nowrap">
-      <Suspense fallback={<div />}>
+      <Suspense fallback={<></>}>
         <Component
           {...props}
           docRef={props.row.ref}
@@ -59,4 +59,36 @@ const withCustomCell = (
   );
 };
 
+/*
+const withCustomCell = (
+  Component: React.ComponentType<CustomCellProps>,
+  readOnly: boolean = false
+) => (props: FormatterProps<any>) => {
+  useStyles();
+  const { updateCell } = useFiretableContext();
+  const [component, setComponent] = useState(<></>);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setComponent(
+        <ErrorBoundary fullScreen={false} basic wrap="nowrap">
+          <Suspense fallback={<></>}>
+            <Component
+              {...props}
+              docRef={props.row.ref}
+              value={getCellValue(props.row, props.column.key as string)}
+              onSubmit={handleSubmit}
+            />
+          </Suspense>
+        </ErrorBoundary>
+      );
+    });
+  }, []);
+  const handleSubmit = (value: any) => {
+    if (updateCell && !readOnly)
+      updateCell(props.row.ref, props.column.key as string, value);
+  };
+  return component;
+};
+*/
 export default withCustomCell;

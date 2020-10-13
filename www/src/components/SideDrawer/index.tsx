@@ -59,6 +59,11 @@ export default function SideDrawer() {
   }, [urlDocState]);
 
   useEffect(() => {
+    setOpen(false);
+    dispatchUrlDoc({ path: "", doc: null });
+  }, [window.location.pathname]);
+
+  useEffect(() => {
     const rowRef = queryString.parse(window.location.search).rowRef as string;
     if (rowRef) {
       console.log(rowRef);

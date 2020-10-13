@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@antlerengineering/form-builder": "^0.6.0",
     "@antlerengineering/multiselect": "^0.6.0",
     "@date-io/date-fns": "1.x",
     "@material-ui/core": "^4.11.0",
@@ -20,7 +21,6 @@
     "dompurify": "^2.0.8",
     "file-saver": "^2.0.2",
     "firebase": "^6.6.0",
-    "grapesjs-react": "^2.0.2",
     "hotkeys-js": "^3.7.2",
     "json-format": "^1.0.1",
     "json2csv": "^5.0.1",
@@ -47,7 +47,6 @@
     "typescript": "^3.7.2",
     "use-algolia": "^1.4.1",
     "use-debounce": "^3.3.0",
-    "use-persisted-state": "^0.3.0",
     "yarn": "^1.19.0",
     "yup": "^0.27.0"
   },

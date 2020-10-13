@@ -17,6 +17,7 @@ import EmptyState from "./components/EmptyState";
 import Loading from "./components/Loading";
 
 import { SnackProvider } from "./util/SnackProvider";
+import ConfirmationProvider from "components/ConfirmationDialog/Provider";
 import { AppProvider } from "./contexts/appContext";
 import { FiretableContextProvider } from "./contexts/firetableContext";
 import routes from "constants/routes";
@@ -40,9 +41,6 @@ const GridView = lazy(
 const TablesView = lazy(
   () => import("./views/TablesView" /* webpackChunkName: "TablesView" */)
 );
-const EditorView = lazy(
-  () => import("./views/EditorView" /* webpackChunkName: "EditorView" */)
-);
 
 const App: React.FC = () => {
   const [themeCustomization, setTheme] = useState({
@@ -55,79 +53,80 @@ const App: React.FC = () => {
       <CssBaseline />
       <ErrorBoundary>
         <AppProvider setTheme={setTheme}>
-          <SnackProvider>
-            <CustomBrowserRouter>
-              <Suspense fallback={<Loading fullScreen />}>
-                <Switch>
-                  <Route exact path={routes.auth} render={() => <AuthView />} />
-                  <Route
-                    exact
-                    path={routes.impersonatorAuth}
-                    render={() => <ImpersonatorAuthView />}
-                  />
-                  <Route
-                    exact
-                    path={routes.signOut}
-                    render={() => <SignOutView />}
-                  />
+          <ConfirmationProvider>
+            <SnackProvider>
+              <CustomBrowserRouter>
+                <Suspense fallback={<Loading fullScreen />}>
+                  <Switch>
+                    <Route
+                      exact
+                      path={routes.auth}
+                      render={() => <AuthView />}
+                    />
+                    <Route
+                      exact
+                      path={routes.impersonatorAuth}
+                      render={() => <ImpersonatorAuthView />}
+                    />
+                    <Route
+                      exact
+                      path={routes.signOut}
+                      render={() => <SignOutView />}
+                    />
 
-                  <PrivateRoute
-                    exact
-                    path={[
-                      routes.home,
-                      routes.tableWithId,
-                      routes.tableGroupWithId,
-                      routes.gridWithId,
-                    ]}
-                    render={() => (
-                      <FiretableContextProvider>
-                        <Switch>
-                          <PrivateRoute
-                            exact
-                            path={routes.home}
-                            render={() => <TablesView />}
-                          />
-                          <PrivateRoute
-                            path={routes.tableWithId}
-                            render={() => <TableView />}
-                          />
-                          <PrivateRoute
-                            path={routes.tableGroupWithId}
-                            render={() => <TableView />}
-                          />
-                        </Switch>
-                      </FiretableContextProvider>
-                    )}
-                  />
+                    <PrivateRoute
+                      exact
+                      path={[
+                        routes.home,
+                        routes.tableWithId,
+                        routes.tableGroupWithId,
+                        routes.gridWithId,
+                      ]}
+                      render={() => (
+                        <FiretableContextProvider>
+                          <Switch>
+                            <PrivateRoute
+                              exact
+                              path={routes.home}
+                              render={() => <TablesView />}
+                            />
+                            <PrivateRoute
+                              path={routes.tableWithId}
+                              render={() => <TableView />}
+                            />
+                            <PrivateRoute
+                              path={routes.tableGroupWithId}
+                              render={() => <TableView />}
+                            />
+                          </Switch>
+                        </FiretableContextProvider>
+                      )}
+                    />
 
-                  <PrivateRoute
-                    path={routes.editor}
-                    render={() => <EditorView />}
-                  />
-
-                  <PrivateRoute
-                    render={() => (
-                      <EmptyState
-                        message="Page Not Found"
-                        description={
-                          <Button
-                            component={Link}
-                            to={routes.home}
-                            variant="outlined"
-                            style={{ marginTop: 8 }}
-                          >
-                            Go Home
-                          </Button>
-                        }
-                        fullScreen
-                      />
-                    )}
-                  />
-                </Switch>
-              </Suspense>
-              <Snack />
-            </CustomBrowserRouter>
-          </SnackProvider>
+                    <PrivateRoute
+                      render={() => (
+                        <EmptyState
+                          message="Page Not Found"
+                          description={
+                            <Button
+                              component={Link}
+                              to={routes.home}
+                              variant="outlined"
+                              style={{ marginTop: 8 }}
+                            >
+                              Go Home
+                            </Button>
+                          }
+                          fullScreen
+                        />
+                      )}
+                    />
+                  </Switch>
+                </Suspense>
+                <Snack />
+              </CustomBrowserRouter>
+            </SnackProvider>
+          </ConfirmationProvider>
         </AppProvider>
       </ErrorBoundary>
     </ThemeProvider>
