@@ -66,6 +66,15 @@ export const useStyles = makeStyles((theme) =>
         width: `calc(100% + ${theme.spacing(3)}px)`,
       },
     },
+    wrapper: {
+      display: "flex",
+      flexDirection: "column",
+      height: "700px!important",
+      rdg: {
+        flex: 1,
+        height: "700px!important",
+      },
+    },
 
     loadingContainer: {
       position: "sticky",

@@ -43,7 +43,8 @@ export const useFinalColumnStyles = makeStyles((theme) =>
   })
 );
 
-export default function FinalColumn({ row }: FormatterProps<any, any, any>) {
+
+export default function FinalColumn({ row }: FormatterProps<any, any>) {
   const { requestConfirmation } = useConfirmation();
   const { tableActions } = useFiretableContext();
   const shiftPress = useKeyPress("Shift");
