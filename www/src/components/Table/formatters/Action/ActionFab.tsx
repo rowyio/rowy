@@ -16,6 +16,7 @@ import { cloudFunction } from "firebase/callables";
 import { sanitiseRowData } from "util/fns";
 import { formatPath } from "../../../../util/fns";
 import { useConfirmation } from "components/ConfirmationDialog";
+import { useActionParams } from "./FormDialog/Context";
 //import ParamsDialog from './ParamsDialog'
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -43,6 +44,7 @@ const getStateIcon = (actionState) => {
 export default ({ row, column, onSubmit, value }) => {
   const classes = useStyles();
   const { requestConfirmation } = useConfirmation();
+  const { requestParams } = useActionParams();
   const { tableState } = useFiretableContext();
   const { createdAt, updatedAt, id, ref, ...docData } = row;
   const { config } = column as any;
@@ -60,8 +62,9 @@ export default ({ row, column, onSubmit, value }) => {
 
   const callableName =
     (column as any).callableName ?? config.callableName ?? "actionScript";
-  const handleRun = (actionParams = {}) => {
+  const handleRun = (actionParams = null) => {
     setIsRunning(true);
+
     const data = {
       ref: { path: ref.path, id: ref.id, tablePath: window.location.pathname },
       row: sanitiseRowData(Object.assign({}, docData)),
@@ -70,6 +73,7 @@ export default ({ row, column, onSubmit, value }) => {
       schemaDocPath: formatPath(tableState?.tablePath ?? ""),
       actionParams,
     };
+    console.log({ data });
     cloudFunction(
       callableName,
       data,
@@ -80,7 +84,7 @@ export default ({ row, column, onSubmit, value }) => {
           message: JSON.stringify(message),
           severity: success ? "success" : "error",
         });
-        if (cellValue.status) onSubmit(cellValue);
+        if (cellValue && cellValue.status) onSubmit(cellValue);
       },
       (error) => {
         console.error("ERROR", callableName, error);
@@ -96,18 +100,8 @@ export default ({ row, column, onSubmit, value }) => {
       ? "undo"
       : "redo"
     : "run";
-  // if(Array.isArray(config.params)){
-  // if(false){
 
-  //     return(<ParamsDialog
-  //     column={column}
-  //     row={row}
-  //   >
-  //     {fabButton}
-  //   </ParamsDialog>
-  // );
-
-  // }
+  const needsParams = Array.isArray(config.params) && config.params.length > 0;
   const needsConfirmation =
     typeof config.confirmation === "string" && config.confirmation !== "";
   return (
@@ -116,7 +110,14 @@ export default ({ row, column, onSubmit, value }) => {
       color="secondary"
       className={classes.fab}
       onClick={
-        needsConfirmation
+        needsParams
+          ? () =>
+              requestParams({
+                column,
+                row,
+                handleRun,
+              })
+          : needsConfirmation
           ? () =>
               requestConfirmation({
                 title: `${column.name} Confirmation`,
@@ -125,9 +126,9 @@ export default ({ row, column, onSubmit, value }) => {
                   : config.confirmation
                 ).replace(/\{\{(.*?)\}\}/g, replacer(row)),
                 confirm: "Run",
-                handleConfirm: handleRun,
+                handleConfirm: () => handleRun(),
               })
-          : handleRun
+          : () => handleRun()
       }
       disabled={
         isRunning ||

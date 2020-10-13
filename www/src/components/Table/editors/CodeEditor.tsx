@@ -89,7 +89,8 @@ export default function CodeEditor(props: any) {
         );
         if (extraLibs) {
           monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
-            extraLibs.join("\n")
+            extraLibs.join("\n"),
+            "ts:filename/extraLibs.d.ts"
           );
         }
         monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
@@ -107,7 +108,8 @@ export default function CodeEditor(props: any) {
 
               }`,
             "}",
-          ].join("\n")
+          ].join("\n"),
+          "ts:filename/utils.d.ts"
         );
 
         monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(

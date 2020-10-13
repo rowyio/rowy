@@ -234,7 +234,7 @@ const ConfigFields = ({
           <MultiSelect
             label={"Allowed Roles"}
             options={roles}
-            value={config.requiredRoles}
+            value={config.requiredRoles ?? []}
             onChange={handleChange("requiredRoles")}
           />
 
@@ -300,6 +300,34 @@ const ConfigFields = ({
                 <CodeEditor
                   height={180}
                   script={config.script}
+                  extraLibs={[
+                    [
+                      "declare class ref {",
+                      "    /**",
+                      "     * Reference object of the row running the action script",
+                      "     */",
+                      "static id:string",
+                      "static path:string",
+                      "static parentId:string",
+                      "static tablePath:string",
+                      "}",
+                    ].join("\n"),
+                    [
+                      "declare class actionParams {",
+                      "    /**",
+                      "     * actionParams are provided by dialog popup form",
+                      "     */",
+                      (config.params ?? []).map((param) => {
+                        const validationKeys = Object.keys(param.validation);
+                        if (validationKeys.includes("string")) {
+                          return `static ${param.name}:string`;
+                        } else if (validationKeys.includes("array")) {
+                          return `static ${param.name}:any[]`;
+                        } else return `static ${param.name}:any`;
+                      }),
+                      "}",
+                    ],
+                  ]}
                   handleChange={handleChange("script")}
                 />
               </Suspense>
