@@ -126,11 +126,15 @@ export default function Table() {
 
   const rowGetter = (rowIdx: number) =>
     columns.reduce(
-      (acc, currColumn) => ({
-        ...acc,
-        [currColumn.key]: _get(rows[rowIdx], currColumn.key),
-      }),
-      {}
+      (acc, currColumn) => {
+        if ((currColumn.key as string).includes(".")) {
+          return {
+            ...acc,
+            [currColumn.key]: _get(rows[rowIdx], currColumn.key),
+          };
+        } else return acc;
+      },
+      { ...rows[rowIdx] }
     );
 
   let tableWidth: any = `calc(100% - ${
