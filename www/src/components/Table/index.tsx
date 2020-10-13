@@ -9,9 +9,10 @@ import { useTheme, Grid, CircularProgress } from "@material-ui/core";
 import "react-data-grid/dist/react-data-grid.css";
 import DataGrid, {
   Column,
-  DataGridHandle,
   CellNavigationMode,
+  ScrollPosition,
 } from "react-data-grid";
+import { DraggableHeader } from "react-data-grid-addons";
 
 import Loading from "components/Loading";
 import TableHeader, { TABLE_HEADER_HEIGHT } from "./TableHeader";
@@ -33,6 +34,7 @@ import useStyles from "./styles";
 import { useAppContext } from "contexts/appContext";
 import _get from "lodash/get";
 // const Hotkeys = lazy(() => import("./HotKeys" /* webpackChunkName: "HotKeys" */));
+const { DraggableContainer } = DraggableHeader;
 
 export type FiretableColumn = Column<any> & {
   isNew?: boolean;
@@ -44,6 +46,7 @@ export default function Table() {
   const classes = useStyles();
   const theme = useTheme();
   const finalColumnClasses = useFinalColumnStyles();
+
   const {
     tableState,
     tableActions,
@@ -57,14 +60,12 @@ export default function Table() {
 
   const rowsContainerRef = useRef<HTMLDivElement>(null);
   // Gets more rows when scrolled down.
-  const [handleScroll] = useDebouncedCallback((position: any) => {
+  const [handleScroll] = useDebouncedCallback((position: ScrollPosition) => {
     const elem = rowsContainerRef?.current;
     const parent = elem?.parentNode as HTMLDivElement;
-    console.log({ position, elem, parent, scrollTop: position.scrollTop });
     if (!elem || !parent) return;
 
     const lowestScrollTopPosition = elem.scrollHeight - parent.clientHeight;
-    console.log({ lowestScrollTopPosition, scrollTop: position.scrollTop });
     const offset = 400;
 
     if (position.scrollTop < lowestScrollTopPosition - offset) return;
@@ -74,8 +75,7 @@ export default function Table() {
 
     // Call for 30 more rows. Note we don’t know here if there are no more
     // rows left in the database. This is done in the useTable hook.
-    console.log("requesting more");
-    //tableActions?.row.more(30);
+    tableActions?.row.more(30);
   }, 100);
 
   const windowSize = useWindowSize();
@@ -122,86 +122,93 @@ export default function Table() {
   }
 
   const rowHeight = tableState.config.rowHeight;
-  const rows = tableState.rows.map((row) =>
-    columns.reduce((acc, currColumn) => ({
-        ...acc,
-        [currColumn.key]: _get(row, currColumn.key),
-      }),
-      { ref: row.ref, id: row.id }
-    )
-  );
+  const rows = tableState.rows;
+
+  const rowGetter = (rowIdx: number) =>
+    columns.reduce(
+      (acc, currColumn) => {
+        if ((currColumn.key as string).includes(".")) {
+          return {
+            ...acc,
+            [currColumn.key]: _get(rows[rowIdx], currColumn.key),
+          };
+        } else return acc;
+      },
+      { ...rows[rowIdx] }
+    );
+
+  let tableWidth: any = `calc(100% - ${
+    DRAWER_COLLAPSED_WIDTH
+    // sideDrawerOpen ? DRAWER_WIDTH : DRAWER_COLLAPSED_WIDTH
+  }px)`;
+  if (windowSize.width < theme.breakpoints.values.md) tableWidth = "100%";
 
   return (
     <>
       {/* <Suspense fallback={<Loading message="Loading header" />}>
         <Hotkeys selectedCell={selectedCell} />
       </Suspense> */}
-      <div className={classes.wrapper} ref={rowsContainerRef}>
-        <TableHeader
-          rowHeight={rowHeight}
-          updateConfig={tableActions.table.updateConfig}
-        />
 
-        {!tableState.loadingColumns ? (
+      <TableHeader
+        rowHeight={rowHeight}
+        updateConfig={tableActions.table.updateConfig}
+      />
+
+      {!tableState.loadingColumns ? (
+        <DraggableContainer onHeaderDrop={onHeaderDrop}>
           <DataGrid
-            onColumnResize={tableActions.column.resize}
-            onScroll={handleScroll}
-            ref={dataGridRef}
-            rows={rows}
-            rowKey="id"
-            columns={columns as any}
+            columns={columns}
+            rowGetter={rowGetter}
+            rowsCount={rows.length}
+            rowKey={"id" as "id"}
+            onGridRowsUpdated={(event) => {
+              const { action, cellKey, updated } = event;
+              if (action === "CELL_UPDATE" && updated !== null)
+                updateCell!(rows[event.toRow].ref, cellKey as string, updated);
+            }}
             rowHeight={rowHeight ?? 43}
             headerRowHeight={44}
-            enableCellCopyPaste
-            enableCellDragAndDrop
-            cellNavigationMode={"LOOP_OVER_ROW"}
-            // rowGetter={rowGetter}
-            //rowsCount={rows.length}
-            // onGridRowsUpdated={(event) => {
-            //   const { action, cellKey, updated } = event;
-            //   if (action === "CELL_UPDATE" && updated !== null)
-            //     updateCell!(rows[event.toRow].ref, cellKey as string, updated);
-            // }}
-
             // TODO: Investigate why setting a numeric value causes
             // LOADING to pop up on screen when scrolling horizontally
             // width={windowSize.width - DRAWER_COLLAPSED_WIDTH}
-            // minWidth={tableWidth}
-            // minHeight={windowSize.height - APP_BAR_HEIGHT - TABLE_HEADER_HEIGHT}
+            minWidth={tableWidth}
+            minHeight={windowSize.height - APP_BAR_HEIGHT - TABLE_HEADER_HEIGHT}
             // enableCellCopyPaste
             // enableCellDragAndDrop
-
-            //cellNavigationMode={CellNavigationMode.CHANGE_ROW}
-            // onCellSelected={({ rowIdx, idx: colIdx }) => {
-            //   // Prevent selecting final row
-            //   if (colIdx < columns.length - 1 && sideDrawerRef?.current)
-            //     sideDrawerRef.current.setCell({
-            //       row: rowIdx,
-            //       column: columns[colIdx].key as string,
-            //     });
-            // }}
-            //  enableCellSelect
-
-            // RowsContainer={(props) => (
-            //   <>
-            //     <div {...props} ref={rowsContainerRef} />
-            //     <Grid
-            //       container
-            //       className={classes.loadingContainer}
-            //       alignItems="center"
-            //       justify="center"
-            //     >
-            //       {tableState.rows.length > 0 && tableState.loadingRows && (
-            //         <CircularProgress disableShrink />
-            //       )}
-            //     </Grid>
-            //   </>
-            // )}
+            onColumnResize={tableActions.column.resize}
+            cellNavigationMode={CellNavigationMode.CHANGE_ROW}
+            onCellSelected={({ rowIdx, idx: colIdx }) => {
+              // Prevent selecting final row
+              if (colIdx < columns.length - 1 && sideDrawerRef?.current)
+                sideDrawerRef.current.setCell({
+                  row: rowIdx,
+                  column: columns[colIdx].key as string,
+                });
+            }}
+            enableCellSelect
+            onScroll={handleScroll}
+            ref={dataGridRef}
+            RowsContainer={(props) => (
+              <>
+                <div {...props} ref={rowsContainerRef} />
+                <Grid
+                  container
+                  className={classes.loadingContainer}
+                  alignItems="center"
+                  justify="center"
+                >
+                  {tableState.rows.length > 0 && tableState.loadingRows && (
+                    <CircularProgress disableShrink />
+                  )}
+                </Grid>
+              </>
+            )}
           />
-        ) : (
-          <Loading message="Fetching columns" />
-        )}
-      </div>
+        </DraggableContainer>
+      ) : (
+        <Loading message="Fetching columns" />
+      )}
+
       <ColumnMenu />
     </>
   );

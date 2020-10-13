@@ -1,8 +1,8 @@
-import React, { Suspense, useState, useEffect } from "react";
+import React, { Suspense } from "react";
 import { FormatterProps } from "react-data-grid";
 
 import { makeStyles, createStyles } from "@material-ui/core";
-import { FieldType } from "constants/fields";
+
 import ErrorBoundary from "components/ErrorBoundary";
 import { useFiretableContext } from "../../../contexts/firetableContext";
 import _get from "lodash/get";
@@ -34,62 +34,49 @@ const getCellValue = (row, key) => {
  * @param Component The formatter component to display
  * @param readOnly Prevent the formatter from updating the cell value
  */
-// const withCustomCell = (
-//   Component: React.ComponentType<CustomCellProps>,
-//   readOnly: boolean = false
-// ) => (props: FormatterProps<any>) => {
-//   useStyles();
-//   const { updateCell } = useFiretableContext();
-
-//   const handleSubmit = (value: any) => {
-//     if (updateCell && !readOnly)
-//       updateCell(props.row.ref, props.column.key as string, value);
-//   };
-//   return (
-//     <ErrorBoundary fullScreen={false} basic wrap="nowrap">
-//       <Suspense fallback={<></>}>
-//         <Component
-//           {...props}
-//           docRef={props.row.ref}
-//           value={getCellValue(props.row, props.column.key as string)}
-//           onSubmit={handleSubmit}
-//         />
-//       </Suspense>
-//     </ErrorBoundary>
-//   );
-// };
-
-const BasicCell = ({ value, type, name }) => {
-  if (typeof value === "string") return <>{value}</>;
-  if ([FieldType.checkbox, FieldType.action, FieldType.subTable].includes(type))
-    return <>{name}</>;
-  return <></>;
-};
 const withCustomCell = (
   Component: React.ComponentType<CustomCellProps>,
   readOnly: boolean = false
 ) => (props: FormatterProps<any>) => {
   useStyles();
   const { updateCell } = useFiretableContext();
-  const value = getCellValue(props.row, props.column.key as string);
-  const basicCell = (
-    <BasicCell
-      value={value}
-      type={(props.column as any).type}
-      name={(props.column as any).name}
-    />
+
+  const handleSubmit = (value: any) => {
+    if (updateCell && !readOnly)
+      updateCell(props.row.ref, props.column.key as string, value);
+  };
+  return (
+    <ErrorBoundary fullScreen={false} basic wrap="nowrap">
+      <Suspense fallback={<></>}>
+        <Component
+          {...props}
+          docRef={props.row.ref}
+          value={getCellValue(props.row, props.column.key as string)}
+          onSubmit={handleSubmit}
+        />
+      </Suspense>
+    </ErrorBoundary>
   );
-  const [component, setComponent] = useState(basicCell);
+};
+
+/*
+const withCustomCell = (
+  Component: React.ComponentType<CustomCellProps>,
+  readOnly: boolean = false
+) => (props: FormatterProps<any>) => {
+  useStyles();
+  const { updateCell } = useFiretableContext();
+  const [component, setComponent] = useState(<></>);
 
   useEffect(() => {
     setTimeout(() => {
       setComponent(
         <ErrorBoundary fullScreen={false} basic wrap="nowrap">
-          <Suspense fallback={basicCell}>
+          <Suspense fallback={<></>}>
             <Component
               {...props}
               docRef={props.row.ref}
-              value={value}
+              value={getCellValue(props.row, props.column.key as string)}
               onSubmit={handleSubmit}
             />
           </Suspense>
@@ -103,5 +90,5 @@ const withCustomCell = (
   };
   return component;
 };
-
+*/
 export default withCustomCell;
