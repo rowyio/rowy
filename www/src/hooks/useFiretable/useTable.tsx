@@ -99,7 +99,7 @@ const useTable = (initialOverrides: any) => {
       },
       (error: any) => {
         //TODO:callable to create new index
-        if (error.message.includes("indexes?create_composite=")) {
+        if (error?.message.includes("indexes?create_composite=")) {
           const url =
             `https://console.firebase.google.com/project/${process.env.REACT_APP_FIREBASE_PROJECT_ID}/database/firestore/` +
             "indexes?create_composite=" +

@@ -26,7 +26,7 @@ export default function Autosave({
   row,
 }: IAutosaveProps) {
   const { currentUser } = useAppContext();
-  const { tableState, sideDrawerRef } = useFiretableContext();
+  const { tableState } = useFiretableContext();
 
   const values = useWatch({ control });
 

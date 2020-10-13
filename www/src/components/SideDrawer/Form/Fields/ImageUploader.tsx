@@ -21,10 +21,9 @@ import AddIcon from "@material-ui/icons/AddAPhoto";
 import DeleteIcon from "@material-ui/icons/Delete";
 import OpenIcon from "@material-ui/icons/OpenInNewOutlined";
 
-import Confirmation from "components/Confirmation";
 import { IMAGE_MIME_TYPES } from "constants/fields";
 import Thumbnail from "components/Thumbnail";
-
+import { useConfirmation } from "components/ConfirmationDialog";
 const useStyles = makeStyles((theme) =>
   createStyles({
     dropzoneButton: {
@@ -127,7 +126,7 @@ export function ControlledImageUploader({
 }: IControlledImageUploaderProps) {
   const disabled = editable === false;
   const classes = useStyles();
-
+  const { requestConfirmation } = useConfirmation();
   const { uploaderState, upload, deleteUpload } = useUploader();
   const { progress } = uploaderState;
 
@@ -215,37 +214,35 @@ export function ControlledImageUploader({
               ) : (
                 <Tooltip title="Click to delete">
                   <div>
-                    <Confirmation
-                      message={{
-                        title: "Delete Image",
-                        body: "Are you sure you want to delete this image?",
-                        confirm: "Delete",
-                      }}
-                      stopPropagation
+                    <ButtonBase
+                      className={classes.img}
+                      onClick={() =>
+                        requestConfirmation({
+                          title: "Delete Image",
+                          body: "Are you sure you want to delete this image?",
+                          confirm: "Delete",
+                          handleConfirm: () => handleDelete(i),
+                        })
+                      }
                     >
-                      <ButtonBase
-                        className={classes.img}
-                        onClick={() => handleDelete(i)}
+                      <Thumbnail
+                        imageUrl={image.downloadURL}
+                        size="200x200"
+                        objectFit="contain"
+                        className={classes.thumbnail}
+                      />
+                      <Grid
+                        container
+                        justify="center"
+                        alignItems="center"
+                        className={clsx(
+                          classes.overlay,
+                          classes.deleteImgHover
+                        )}
                       >
-                        <Thumbnail
-                          imageUrl={image.downloadURL}
-                          size="200x200"
-                          objectFit="contain"
-                          className={classes.thumbnail}
-                        />
-                        <Grid
-                          container
-                          justify="center"
-                          alignItems="center"
-                          className={clsx(
-                            classes.overlay,
-                            classes.deleteImgHover
-                          )}
-                        >
-                          <DeleteIcon color="inherit" />
-                        </Grid>
-                      </ButtonBase>
-                    </Confirmation>
+                        <DeleteIcon color="inherit" />
+                      </Grid>
+                    </ButtonBase>
                   </div>
                 </Tooltip>
               )}
@@ -288,7 +285,7 @@ export default function ImageUploader({
       control={control}
       name={name}
       render={(renderProps) => (
-        <ControlledImageUploader {...props} name={name} {...renderProps} />
+        <ControlledImageUploader {...props} {...renderProps} />
       )}
     />
   );
