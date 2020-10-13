@@ -38,3 +38,5 @@ steps:
     dir: "www"
 substitutions:
   _PROJECT_ID: "project-id" # default value
+options:
+  machineType: "N1_HIGHCPU_8"
