@@ -32,3 +32,10 @@ export async function asyncForEach(array: any[], callback: Function) {
     await callback(array[index], index, array);
   }
 }
+
+export const identifyTriggerType = (beforeData, afterData) =>
+  Boolean(beforeData) && Boolean(afterData)
+    ? "update"
+    : Boolean(afterData)
+    ? "create"
+    : "delete";

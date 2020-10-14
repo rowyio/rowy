@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useRef } from "react";
+import React, { useState, useContext, useEffect, useRef, useMemo } from "react";
 import _groupBy from "lodash/groupBy";
 import _sortBy from "lodash/sortBy";
 import { DataGridHandle } from "react-data-grid";
@@ -117,6 +117,16 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
     }
   }, [settings, userRoles, sections]);
 
+  const roles = useMemo(
+    () =>
+      Array.isArray(tables)
+        ? Array.from(
+            new Set(tables.reduce((a, c) => [...a, ...c.roles], [] as string[]))
+          )
+        : [],
+    [tables]
+  );
+
   useEffect(() => {
     if (currentUser && !userClaims) {
       currentUser.getIdTokenResult(true).then((results) => {
@@ -174,7 +184,7 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
         tableActions,
         updateCell,
         settingsActions,
-        roles: settings.roles,
+        roles,
         tables,
         sections,
         userClaims,

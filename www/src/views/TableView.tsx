@@ -14,6 +14,7 @@ import useRouter from "hooks/useRouter";
 
 import ImportWizard from "components/Wizards/ImportWizard";
 import { DocActions } from "hooks/useDoc";
+import ActionParamsProvider from "components/Table/formatters/Action/FormDialog/Provider";
 export default function TableView() {
   const router = useRouter();
   const tableCollection = decodeURIComponent(router.match.params.id);
@@ -54,13 +55,15 @@ export default function TableView() {
 
   return (
     <Navigation tableCollection={tableCollection}>
-      <Table key={tableCollection} />
+      <ActionParamsProvider>
+        <Table key={tableCollection} />
 
-      <ImportWizard />
+        <ImportWizard />
 
-      <Hidden smDown>
-        <SideDrawer />
-      </Hidden>
+        <Hidden smDown>
+          <SideDrawer />
+        </Hidden>
+      </ActionParamsProvider>
     </Navigation>
   );
 }

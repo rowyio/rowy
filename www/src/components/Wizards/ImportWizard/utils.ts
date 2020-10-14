@@ -81,9 +81,11 @@ export const suggestType = (data: { [key: string]: any }[], field: string) => {
   const bestMatch = sortedResults[0][0];
 
   if (bestMatch === FieldType.shortText) {
-    const values = new Set();
-    data.forEach((row) => values.add(row[field]));
-    if (values.size <= 10) return FieldType.singleSelect;
+    const values = data.map((row) => row[field]);
+    const uniqueValues = new Set(values);
+    const hasDuplicates = values.length !== uniqueValues.size;
+
+    if (hasDuplicates && uniqueValues.size < 30) return FieldType.singleSelect;
   }
 
   return bestMatch;

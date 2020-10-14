@@ -102,6 +102,9 @@ const SubTable = lazy(
 const Action = lazy(
   () => import("./Fields/Action" /* webpackChunkName: "SideDrawer-Action" */)
 );
+const Id = lazy(
+  () => import("./Fields/Id" /* webpackChunkName: "SideDrawer-Id" */)
+);
 
 export interface IFormProps {
   fields: Fields;
@@ -252,6 +255,10 @@ export default function Form({ fields, values }: IFormProps) {
                 fieldComponent = Code;
                 break;
 
+              case FieldType.id:
+                fieldComponent = Id;
+                break;
+
               case undefined:
                 // default:
                 return null;
@@ -262,7 +269,7 @@ export default function Form({ fields, values }: IFormProps) {
 
             // Should not reach this state
             if (fieldComponent === null) {
-              console.error("`fieldComponent` is null");
+              console.error("`fieldComponent` is null", field);
               return null;
             }
 

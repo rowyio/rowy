@@ -30,7 +30,7 @@ const tableInitialState = {
 
 const useTable = (initialOverrides: any) => {
   const snack = useContext(SnackContext);
-  
+
   const [tableState, tableDispatch] = useReducer(tableReducer, {
     ...tableInitialState,
     ...initialOverrides,
@@ -99,7 +99,7 @@ const useTable = (initialOverrides: any) => {
       },
       (error: any) => {
         //TODO:callable to create new index
-        if (error.message.includes("indexes?create_composite=")) {
+        if (error?.message.includes("indexes?create_composite=")) {
           const url =
             `https://console.firebase.google.com/project/${process.env.REACT_APP_FIREBASE_PROJECT_ID}/database/firestore/` +
             "indexes?create_composite=" +
@@ -196,9 +196,7 @@ const useTable = (initialOverrides: any) => {
     tableDispatch({ rows: tableState.rows });
     // delete document
     try {
-      db.collection(tablePath(tableState.path))
-        .doc(documentId)
-        .delete();
+      db.collection(tablePath(tableState.path)).doc(documentId).delete();
     } catch (error) {
       console.log(error);
       if (error.code === "permission-denied") {
@@ -226,7 +224,6 @@ const useTable = (initialOverrides: any) => {
     if (filters) tableDispatch({ filters });
   };
 
-
   const filterReducer = (acc, curr) => {
     if (curr.operator === "==") {
       return { ...acc, [curr.key]: curr.value };
@@ -246,9 +243,7 @@ const useTable = (initialOverrides: any) => {
     };
     try {
       if (rows.length === 0) {
-        await db
-          .collection(tablePath(path))
-          .add(docData);
+        await db.collection(tablePath(path)).add(docData);
       } else {
         const firstId = rows[0].id;
         const newId = generateSmallerId(firstId);

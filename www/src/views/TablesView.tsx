@@ -29,7 +29,7 @@ import { useAppContext } from "contexts/appContext";
 import { DocActions } from "hooks/useDoc";
 import TableSettingsDialog, {
   TableSettingsDialogModes,
-} from "components/TableSettingsDialog";
+} from "components/TableSettings";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -96,6 +96,7 @@ const TablesView = () => {
       section: string;
       isCollectionGroup: boolean;
       copySchema: string;
+      tableType: string;
     };
   }>({
     mode: null,
@@ -230,8 +231,8 @@ const TablesView = () => {
                   justify="flex-start"
                   className={classes.cardGrid}
                 >
-                  {sections[sectionName].map((table) => (
-                    <TableCard key={table.collection} table={table} />
+                  {sections[sectionName].map((table, i) => (
+                    <TableCard key={`${i}-${table.collection}`} table={table} />
                   ))}
                 </Grid>
               </section>

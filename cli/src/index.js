@@ -15,7 +15,6 @@ const { setUserRoles, getProjectTables } = require("./lib/firebaseAdmin");
 const program = new Command();
 program.version(version);
 
-//TODO: validate if all the required packages exist
 const systemHealthCheck = async () => {
   const versions = await terminal.getRequiredVersions();
   const requiredApps = ["node", "git", "yarn", "firebase"];
@@ -46,7 +45,7 @@ const directoryCheck = async () => {
   if (isInsideFiretableFolder) {
     directory = "www";
   } else if (!firetableAppExists) {
-    console.log(chalk.red("firetable app not detected"));
+    console.log(chalk.red("Firetable app not detected"));
     console.log(
       `Make sure you’re in the correct directory or run ${chalk.bold(
         chalk.yellow("firetable init")
@@ -84,7 +83,7 @@ const deploy2firebase = async (directory = "firetable/www") => {
 
   console.log(
     chalk.green(
-      `\u{1F973} ${chalk.bold("firetable has been successfully deployed to")}`
+      `\u{1F973} ${chalk.bold("Firetable has been successfully deployed to")}`
     )
   );
   console.log(`   ${chalk.underline(`https://${hostTarget}.web.app`)}`);
@@ -93,7 +92,7 @@ const deploy2firebase = async (directory = "firetable/www") => {
 program
   .command("init [dir]")
   .description(
-    "Clones firetable repo, installs npm packages, and sets required environment variables"
+    "Clones Firetable repo, installs npm packages, and sets required environment variables"
   )
   .action(async (dir = "firetable") => {
     try {
@@ -143,22 +142,22 @@ program
       await terminal.buildFiretable(dir);
       console.log(
         chalk.green(
-          chalk.bold("\n\u2705 firetable has been successfully set up at")
+          chalk.bold("\n\u2705 Firetable has been successfully set up at")
         )
       );
       console.log(`   ${process.cwd()}/${dir}`);
 
       console.log(
-        "\n   Inside the firetable directory, you can now run the following commands:"
+        "\n   Inside the Firetable directory, you can now run the following commands:"
       );
       console.log(
         `   ${chalk.yellow("firetable start ")}${chalk.dim(
-          "  Run your firetable instance locally"
+          "  Run your Firetable instance locally"
         )}`
       );
       console.log(
         `   ${chalk.yellow("firetable deploy")}${chalk.dim(
-          "  Deploy you your firetable app to Firebase Hosting"
+          "  Deploy you your Firetable app to Firebase Hosting"
         )}`
       );
 
@@ -173,12 +172,18 @@ program
 
 program
   .command("start")
-  .description("Runs your firetable instance locally")
+  .description("Runs your Firetable app locally")
   .action(async () => {
     try {
       // check directory for firetable
       let directory = await directoryCheck();
       if (!directory) return;
+
+      // Make sure there is a build
+      if (!directoryExists(directory + "/build/index.html")) {
+        await terminal.buildFiretable(directory === "www" ? "." : "firetable");
+      }
+
       // await terminal.buildFiretable(directory);
       terminal.startFiretableLocally(directory);
     } catch (error) {
@@ -189,7 +194,7 @@ program
 
 program
   .command("deploy")
-  .description("Deploys firetable to a Firebase Hosting site")
+  .description("Deploys Firetable to a Firebase Hosting site")
   .action(async () => {
     try {
       // check directory for firetable
@@ -204,9 +209,7 @@ program
 
 program
   .command("auth:setRoles <email> <roles>")
-  .description(
-    "Adds roles to the custom claims of a specified firebase account."
-  )
+  .description("Adds roles to a Firebase Authentication user")
   .action(async (email, roles) => {
     try {
       // check directory for admin sdk json
@@ -216,7 +219,13 @@ program
 
       const adminSDKFilePath = await findFile(
         /.*-firebase-adminsdk.*json/,
-        `Can not find the firebase service account key json file, download the service account key for your project then add it to this directory without renaming it.\nYou can find your service account here: https://console.firebase.google.com/u/0/project/${projectId}/settings/serviceaccounts/adminsdk`
+        `${chalk.bold(
+          "Cannot find the Firebase service account private key file"
+        )}\n\nDownload and add it to this directory without renaming it.\n\nYou can find your service account here:\n${chalk.underline(
+          `https://console.firebase.google.com/u/0/project/${projectId}/settings/serviceaccounts/adminsdk`
+        )}\n\nInstructions: ${chalk.underline(
+          "https://github.com/AntlerVC/firetable/wiki/Role-Based-Security-Rules#set-user-roles-with-the-firetable-cli"
+        )}`
       );
       // let directory = await directoryCheck();
       // if (!directory) return;
@@ -227,27 +236,25 @@ program
       );
       if (result.success) {
         console.log(result.message);
-        return;
       } else if (result.code === "auth/user-not-found") {
         console.log(
           chalk.bold(chalk.red("FAILED: ")),
-          `could not find an account corresponding with`,
+          `Could not find account with email`,
           chalk.bold(email)
         );
-        return;
       } else {
         console.log(chalk.bold(chalk.red(result.message)));
-        return;
       }
     } catch (error) {
       console.log("\u{1F6D1}" + chalk.bold(chalk.red(" FAILED")));
       console.log(error);
     }
+    process.exit(1);
   });
 
 program
   .command("functions:deploy")
-  .description("deploys a specified firetable cloud function")
+  .description("Deploys a specified Firetable Cloud Function")
   .action(async () => {
     try {
       const projectId = config.get("firebaseProjectId")
@@ -257,7 +264,13 @@ program
       // check directory for admin sdk json
       const adminSDKFilePath = await findFile(
         /.*-firebase-adminsdk.*json/,
-        `Can not find the firebase service account key json file, download the service account key for your project then add it to this directory without renaming it.\nYou can find your service account here: https://console.firebase.google.com/u/0/project/${projectId}/settings/serviceaccounts/adminsdk`
+        `${chalk.bold(
+          "Cannot find the Firebase service account private key file"
+        )}\n\nDownload and add it to this directory without renaming it.\n\nYou can find your service account here:\n${chalk.underline(
+          `https://console.firebase.google.com/u/0/project/${projectId}/settings/serviceaccounts/adminsdk`
+        )}\n\nInstructions: ${chalk.underline(
+          "https://github.com/AntlerVC/firetable/wiki/Role-Based-Security-Rules#set-user-roles-with-the-firetable-cli"
+        )}`
       );
 
       var serviceAccount = fs.readFileSync(adminSDKFilePath, {
@@ -286,7 +299,7 @@ program
         await terminal.deployCloudFunction(projectId, functionToDeploy);
       }
       console.log(
-        "Success!\nYou can now check the firebase cloud functions dashboard to confirm that your function has been deployed successfully!"
+        "\n\u2705 Success!\nYou can now check the Firebase Cloud Functions dashboard to confirm that your function has been deployed successfully."
       );
     } catch (error) {
       console.log("\u{1F6D1}" + chalk.bold(chalk.red(" FAILED")));

@@ -25,7 +25,7 @@ module.exports = {
         type: "confirm",
         name: "installAlgolia",
         message:
-          "Do you want integrate firetable with Algolia?\n  (You can add Algolia later if you don’t have it set up yet):",
+          "Do you want integrate Firetable with Algolia?\n  (You can add Algolia later if you don’t have it set up yet):",
       },
     ];
     return inquirer.prompt(questions);
@@ -67,7 +67,7 @@ module.exports = {
     inquirer.prompt({
       type: "confirm",
       name: "deployToFirebase",
-      message: "Do you want deploy firetable on Firebase Hosting?",
+      message: "Do you want deploy Firetable on Firebase Hosting?",
     }),
 
   askChangeFirebaseHostTarget: (hostTarget) =>

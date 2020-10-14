@@ -1,5 +1,23 @@
 # Firetable CLI
 
+The Firetable CLI automates the steps required to set up the Firetable app and
+other operations on your computer.
+
+<table><tbody><tr><td>
+
+### Contents
+
+- [Installation requirements](#installation-requirements)
+- [Install the Firetable CLI](#install-the-firetable-cli)
+- [Commands](#commands)
+  - [Create a new project](#create-a-new-project)
+  - [Run Firetable locally](#run-firetable-locally)
+  - [Deploy to Firebase Hosting](#deploy-to-firebase-hosting)
+  - [Set user roles for Firestore Security Rules](#set-user-roles-for-firestore-security-rules)
+  - [Deploy Firetable Cloud Functions](#deploy-firetable-cloud-functions)
+
+</td></tr></tbody></table>
+
 ## Installation requirements
 
 Make sure you have the following installed:
@@ -9,9 +27,15 @@ Make sure you have the following installed:
 - [Yarn](https://classic.yarnpkg.com/en/docs/install/)
 - [Firebase CLI](https://firebase.google.com/docs/cli)
 
-Also make sure you are logged in to your Firebase account in the Firebase CLI.
+Also, make sure you are logged in to your Firebase account in the Firebase CLI:
 
-## Installation
+```
+firebase login
+```
+
+## Install the Firetable CLI
+
+Install the Firetable CLI globally.
 
 ```
 yarn global add firetable
@@ -25,10 +49,10 @@ yarn global add firetable
 firetable init [directory]
 ```
 
-### Run firetable locally
+### Run Firetable locally
 
 Before you run locally, make sure you have a Firebase project set up.
-[Instructions](https://github.com/AntlerVC/firetable#setup-instructions)
+[Instructions →](https://github.com/AntlerVC/firetable/wiki/Getting-Started)
 
 ```
 firetable start
@@ -37,30 +61,46 @@ firetable start
 ### Deploy to Firebase Hosting
 
 First, make sure that you have created a site in your Firebase project.
-[Open Firebase console](https://console.firebase.google.com/)
+[Open Firebase console](https://console.firebase.google.com/project/_/hosting/main)
 
 ```
 firetable deploy
 ```
 
-## Firebase Rules & Firetable roles
+### Set user roles for Firestore Security Rules
 
-Read more about firebase rules for firetable
-[HERE](https://github.com/AntlerVC/firetable/blob/master/RULES.md)
+Firetable has role-based access controls using Firestore Security Rules and
+custom claims in Firebase Authentication.
+[Read more →](https://github.com/AntlerVC/firetable/wiki/Role-Based-Security-Rules)
 
-### Setting user Roles
+You can use the Firetable CLI the roles of Firebase Authentication users.
 
-Download the service account key for your project then add it to the directory
-without renaming it. You can find your service account here:
-https://console.firebase.google.com/u/0/project/_/settings/serviceaccounts/adminsdk
+1. Download your project’s service account private key file from the Firebase
+   Console in
+   [Project Settings > Service Accounts.](https://console.firebase.google.com/u/0/project/_/settings/serviceaccounts/adminsdk)
+   This is used to run Firebase Admin SDK commands on your computer.
+
+2. Save the JSON file, without renaming it, in your current working directory.  
+   The file name should look like
+   `PROJECT-ID-firebase-adminsdk-ALPHANUMERIC-CHARACTERS.json`
+
+3. Run the following command to set the roles of the Firebase Authentication
+   user.  
+   You can view all users in Firebase Authentication and find their emails in
+   the
+   [Firebase Console.](https://console.firebase.google.com/project/_/authentication/users)
+
+   ```
+   firetable auth:setRoles <email> <roles>
+   ```
+
+   [Example user roles →](https://github.com/AntlerVC/firetable/wiki/Role-Based-Security-Rules#example-roles)
+
+### Deploy Firetable Cloud Functions
+
+Easily deploy Cloud Functions used to extend Firetable. You can choose which
+functions you want to deploy.
 
 ```
-firetable auth:setRoles <email> <roles>
-```
-
-email: needs to be associated with an existing firebase account on the example
-roles: can be one role `ADMIN` or a comma separated array `ADMIN,OPS,DEV`
-
-```
-firetable auth:setRoles shams@antler.co OPS,INTERNAL
+firetable functions:deploy
 ```

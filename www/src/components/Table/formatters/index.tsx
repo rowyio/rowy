@@ -38,6 +38,7 @@ const SubTable = lazy(
 const Percentage = lazy(
   () => import("./Percentage" /* webpackChunkName: "Percentage" */)
 );
+const Id = lazy(() => import("./Id" /* webpackChunkName: "Id" */));
 
 /**
  * Gets the corresponding formatter for each cell.
@@ -112,6 +113,9 @@ export const getFormatter = (column: any, readOnly: boolean = false) => {
 
     case FieldType.subTable:
       return withCustomCell(SubTable, readOnly);
+
+    case FieldType.id:
+      return withCustomCell(Id, readOnly);
 
     case FieldType.shortText:
     case FieldType.email:

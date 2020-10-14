@@ -1,7 +1,9 @@
 import React from "react";
 import DOMPurify from "dompurify";
 import clsx from "clsx";
+
 import { makeStyles, createStyles } from "@material-ui/core";
+import { MONO_FONT } from "Theme";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -66,12 +68,10 @@ const useStyles = makeStyles((theme) =>
         backgroundColor: "#e8e8e8",
         borderRadius: theme.shape.borderRadius,
         padding: "0.1rem 0.2rem",
-        fontFamily:
-          "SFMonoRegular, Consolas, Liberation Mono, Menlo, monospace",
+        fontFamily: MONO_FONT,
       },
       "& pre": {
-        fontFamily:
-          "SFMonoRegular, Consolas, Liberation Mono, Menlo, monospace",
+        fontFamily: MONO_FONT,
       },
       '& .mceContent-body:not([dir="rtl"]) blockquote': {
         borderLeft: `2px solid ${theme.palette.divider}`,

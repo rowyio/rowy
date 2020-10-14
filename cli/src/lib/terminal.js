@@ -54,10 +54,10 @@ module.exports.getGitUser = function (callback) {
 
 module.exports.cloneFiretable = (dir = "firetable") =>
   new Promise((resolve) => {
-    const cloningStatus = new Spinner("Cloning the firetable repository");
+    const cloningStatus = new Spinner("Cloning the Firetable repository");
     cloningStatus.start();
     execute(
-      `git clone https://github.com/AntlerVC/firetable.git ${dir}`,
+      `git clone --depth 1 https://github.com/AntlerVC/firetable.git ${dir}`,
       function () {
         cloningStatus.stop();
         const installingPackagesStatus = new Spinner("Installing packages");
@@ -111,11 +111,7 @@ module.exports.deployToFirebaseHosting = (projectId) =>
 
 module.exports.startFiretableLocally = (dir = "firetable/www") =>
   new Promise((resolve) => {
-    const child = spawn(
-      /^win/.test(process.platform) ? "npm.cmd" : "npm",
-      ["run", "serve"],
-      { cwd: dir }
-    );
+    const child = spawn("yarn", ["serve"], { cwd: dir });
     child.stdout.on("data", (data) => {
       const msg = data.toString();
       const portRegex = /^INFO: Accepting connections at (http:\/\/[\w\.]+:\d+)/;
@@ -124,7 +120,7 @@ module.exports.startFiretableLocally = (dir = "firetable/www") =>
         console.log(
           chalk.green(
             chalk.bold(
-              "\u2705 Serving firetable at " +
+              "\u2705 Serving Firetable at " +
                 chalk.underline(msg.replace(portRegex, "$1"))
             )
           )
@@ -137,7 +133,7 @@ module.exports.startFiretableLocally = (dir = "firetable/www") =>
 
 module.exports.installFiretableAppPackages = (dir = "firetable/www") =>
   new Promise((resolve) => {
-    const status = new Spinner("Installing firetable app npm packages");
+    const status = new Spinner("Installing Firetable app npm packages");
     status.start();
     execute(`cd ${dir}; yarn`, function () {
       status.stop();
@@ -148,7 +144,7 @@ module.exports.installFiretableAppPackages = (dir = "firetable/www") =>
 module.exports.buildFiretable = (dir) =>
   new Promise((resolve) => {
     const status = new Spinner(
-      "Building firetable. This will take a few minutes"
+      "Building Firetable. This will take a few minutes"
     );
     status.start();
     execute(`cd ${dir}/www; yarn build`, function (stdout) {
@@ -173,7 +169,7 @@ module.exports.getFirebaseProjects = () =>
 
 module.exports.getExistingFiretableApp = (projectId) =>
   new Promise((resolve) => {
-    const status = new Spinner("Checking for existing firetable web app");
+    const status = new Spinner("Checking for existing Firetable web app");
     status.start();
     execute(`firebase apps:list WEB --project ${projectId}`, function (
       results
@@ -190,7 +186,7 @@ module.exports.getExistingFiretableApp = (projectId) =>
 
 module.exports.createFiretableWebApp = (projectId) =>
   new Promise((resolve) => {
-    const status = new Spinner(`Creating a firetable web app in ${projectId}`);
+    const status = new Spinner(`Creating a Firetable web app in ${projectId}`);
     status.start();
     execute(
       `firebase apps:create --project ${projectId} web firetable-app`,
@@ -245,6 +241,7 @@ module.exports.createCloudFunctionConfig = (functionName, collectionName) =>
       resolve(true);
     });
   });
+
 module.exports.deployCloudFunction = (projectId, functionName) =>
   new Promise((resolve) => {
     const status = new Spinner(`Deploying ${functionName}`);

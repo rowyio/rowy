@@ -38,7 +38,7 @@ if (serviceAccount) {
           return `${acc}{
             fieldName:'${currColumn.key}',eval:(db)=> async (row) =>{${
             currColumn.config.script
-          }},listenerFields:[${currColumn.config.listenerFields
+          }},listenerFields:[${(currColumn.config.listenerFields ?? [])
             .map((f) => `"${f}"`)
             .join(",")}]},`;
         }, ``);
