@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect, useRef } from "react";
+import React, { useMemo, useRef } from "react";
 
 import _orderBy from "lodash/orderBy";
 import { useDebouncedCallback } from "use-debounce";
@@ -57,6 +57,24 @@ export default function Table() {
   const { userDoc } = useAppContext();
   const userDocHiddenFields =
     userDoc.state.doc?.tables?.[`${tableState?.tablePath}`]?.hiddenFields ?? [];
+  let columns: FiretableColumn[] = [];
+  const rows = useMemo(
+    () =>
+      tableState?.rows.map((row) =>
+        columns.reduce(
+          (acc, currColumn) => {
+            if ((currColumn.key as string).includes(".")) {
+              return {
+                ...acc,
+                [currColumn.key]: _get(row, currColumn.key),
+              };
+            } else return acc;
+          },
+          { ...row }
+        )
+      ),
+    [columns, tableState?.rows]
+  );
 
   const rowsContainerRef = useRef<HTMLDivElement>(null);
   // Gets more rows when scrolled down.
@@ -87,7 +105,6 @@ export default function Table() {
     tableActions.column.reorder(dragged, target);
   };
 
-  let columns: FiretableColumn[] = [];
   if (!tableState.loadingColumns && tableState.columns) {
     columns = _orderBy(
       Object.values(tableState.columns).filter(
@@ -122,20 +139,8 @@ export default function Table() {
   }
 
   const rowHeight = tableState.config.rowHeight;
-  const rows = tableState.rows;
 
-  const rowGetter = (rowIdx: number) =>
-    columns.reduce(
-      (acc, currColumn) => {
-        if ((currColumn.key as string).includes(".")) {
-          return {
-            ...acc,
-            [currColumn.key]: _get(rows[rowIdx], currColumn.key),
-          };
-        } else return acc;
-      },
-      { ...rows[rowIdx] }
-    );
+  const rowGetter = (rowIdx: number) => (rows ? rows[rowIdx] : {});
 
   let tableWidth: any = `calc(100% - ${
     DRAWER_COLLAPSED_WIDTH
@@ -159,12 +164,16 @@ export default function Table() {
           <DataGrid
             columns={columns}
             rowGetter={rowGetter}
-            rowsCount={rows.length}
+            rowsCount={rows?.length ?? 0}
             rowKey={"id" as "id"}
             onGridRowsUpdated={(event) => {
               const { action, cellKey, updated } = event;
               if (action === "CELL_UPDATE" && updated !== null)
-                updateCell!(rows[event.toRow].ref, cellKey as string, updated);
+                updateCell!(
+                  rows?.[event.toRow]?.ref,
+                  cellKey as string,
+                  updated
+                );
             }}
             rowHeight={rowHeight ?? 43}
             headerRowHeight={44}

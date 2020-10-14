@@ -46,3 +46,5 @@ steps:
 substitutions:
   _PROJECT_ID: "project-id" # default value
   _FUNCTIONS_GROUP: "exportTable" # default value
+options:
+  machineType: "N1_HIGHCPU_8"
