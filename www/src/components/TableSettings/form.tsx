@@ -97,7 +97,11 @@ export const tableSettings = (
     options: sections,
     validation: yup.string().required("Required"),
   },
-
+  {
+    type: FIELDS.text,
+    name: "copySchema",
+    label: "Copy Schema",
+  },
   {
     type: FIELDS.text,
     name: "description",
