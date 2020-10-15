@@ -93,10 +93,10 @@ export const actionScript = functions.https.onCall(
         status: string;
         success: boolean;
       } = await eval(
-        `async({row,db, ref,auth,utilFns,actionParams})=>{${
+        `async({row,db, ref,auth,utilFns,actionParams,context})=>{${
           action === "undo" ? config["undo.script"] : script
         }}`
-      )({ row, db, auth, utilFns, ref, actionParams });
+      )({ row, db, auth, utilFns, ref, actionParams, context });
       if (result.success)
         return {
           success: result.success,
