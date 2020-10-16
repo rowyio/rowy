@@ -249,7 +249,7 @@ const Filters = () => {
           return (
             <MultiSelect
               multiple
-              freeText={false}
+              freeText={true}
               onChange={(value) => setQuery((query) => ({ ...query, value }))}
               options={
                 selectedColumn.config.options
@@ -264,8 +264,8 @@ const Filters = () => {
 
         return (
           <MultiSelect
+            freeText={true}
             multiple={false}
-            freeText={false}
             onChange={(value) => {
               if (value !== null) setQuery((query) => ({ ...query, value }));
             }}
