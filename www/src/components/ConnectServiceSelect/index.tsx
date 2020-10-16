@@ -1,24 +1,30 @@
-import React, { lazy, Suspense } from "react";
-import clsx from "clsx";
+import React, { useEffect, useState } from "react";
 
-import { TextField, TextFieldProps } from "@material-ui/core";
+import { TextFieldProps } from "@material-ui/core";
 
-import useStyles from "./styles";
 import Loading from "components/Loading";
-import ErrorBoundary from "components/ErrorBoundary";
+import MultiSelect from "@antlerengineering/multiselect";
+import useConnectService from "../../hooks/useConnectService";
+import _get from "lodash/get";
+import { useDebounce } from "use-debounce";
 
-const PopupContents = lazy(
-  () => import("./PopupContents" /* webpackChunkName: "PopupContents" */)
-);
-
-export type ServiceValue = { value: string; [prop: string]: any };
+export type ServiceValue = {
+  primaryKey: string;
+  title: string;
+  subtitle: string;
+  [prop: string]: any;
+};
 
 export interface IConnectServiceSelectProps {
-  value: ServiceValue[];
-  onChange: (value: ServiceValue[]) => void;
+  value: ServiceValue | null;
+  onChange: (value: ServiceValue | null) => void;
+  column: any;
   row: any;
   config: {
-    displayKey: string;
+    primaryKey: string;
+    titleKey: string;
+    subtitleKey: string;
+    resultsKey: string;
     [key: string]: any;
   };
   editable?: boolean;
@@ -26,50 +32,84 @@ export interface IConnectServiceSelectProps {
   className?: string;
   /** Override any props of the root MUI `TextField` component */
   TextFieldProps?: Partial<TextFieldProps>;
-  docRef: firebase.firestore.DocumentReference;
 }
 
 export default function ConnectServiceSelect({
-  value = [],
+  value = null,
   className,
   TextFieldProps = {},
+  column,
+  config,
+  onChange,
+  editable,
   ...props
 }: IConnectServiceSelectProps) {
-  const classes = useStyles();
+  const url = config.url;
+  const titleKey = config.titleKey ?? config.primaryKey;
+  const resultsKey = config.resultsKey;
+  const primaryKey = config.primaryKey;
 
-  const sanitisedValue = Array.isArray(value) ? value : [];
+  const row = Object.assign({}, props.row, { ref: undefined });
+  const [searchState, searchDispatch] = useConnectService(url, row, resultsKey);
+
+  const options = searchState.results.map((hit) => ({
+    label: _get(hit, titleKey) ?? _get(hit, primaryKey),
+    value: _get(hit, primaryKey),
+  }));
+
+  const sanitizedValue = value ? _get(value, primaryKey) : null;
+
+  const handleChange = (_newValue) => {
+    // Ensure we return an array
+    let newValue: any;
+
+    if (Array.isArray(_newValue)) {
+      if (_newValue.length > 0) {
+        newValue = _newValue[0];
+      } else {
+        newValue = null;
+      }
+    } else {
+      newValue = _newValue;
+    }
+
+    let newLocalValue: ServiceValue | null = null;
+    if (newValue) {
+      const results = searchState.results as any[];
+      newLocalValue = results.find((r) => _get(r, primaryKey) == newValue);
+    }
+    onChange(newLocalValue);
+  };
+
+  const [search, setSearch] = useState("");
+  const [debouncedSearch] = useDebounce(search, 1000);
+  useEffect(() => {
+    searchDispatch({ search: debouncedSearch });
+  }, [debouncedSearch]);
 
   return (
-    <TextField
-      label=""
-      hiddenLabel
-      variant={"filled" as any}
-      select
-      value={sanitisedValue}
-      className={clsx(classes.root, className)}
-      {...TextFieldProps}
-      SelectProps={{
-        renderValue: (value) => `${(value as any[]).length} selected`,
-        displayEmpty: true,
-        classes: { root: classes.selectRoot },
-        ...TextFieldProps.SelectProps,
-        // Must have this set to prevent MUI transforming `value`
-        // prop for this component to a comma-separated string
-        MenuProps: {
-          classes: { paper: classes.paper, list: classes.menuChild },
-          MenuListProps: { disablePadding: true },
-          getContentAnchorEl: null,
-          anchorOrigin: { vertical: "bottom", horizontal: "center" },
-          transformOrigin: { vertical: "top", horizontal: "center" },
-          ...TextFieldProps.SelectProps?.MenuProps,
-        },
+    <MultiSelect
+      value={sanitizedValue}
+      onChange={handleChange}
+      onOpen={() => searchDispatch({ search: "", force: true })}
+      options={options}
+      TextFieldProps={{
+        className,
+        hiddenLabel: true,
+        ...TextFieldProps,
       }}
-    >
-      <ErrorBoundary>
-        <Suspense fallback={<Loading />}>
-          <PopupContents value={sanitisedValue} {...props} />
-        </Suspense>
-      </ErrorBoundary>
-    </TextField>
+      label={column?.name}
+      multiple={false}
+      AutocompleteProps={{
+        loading: searchState.loading,
+        loadingText: <Loading />,
+        inputValue: search,
+        onInputChange: (_, value, reason) => {
+          if (reason === "input") setSearch(value);
+        },
+        filterOptions: () => options,
+      }}
+      disabled={editable === false}
+    />
   );
 }

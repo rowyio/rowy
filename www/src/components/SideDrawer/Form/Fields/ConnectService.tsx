@@ -1,7 +1,7 @@
 import React from "react";
 import { Controller, useWatch } from "react-hook-form";
 import { IFieldProps } from "../utils";
-
+import { inspect } from "util";
 import { Chip, Grid, useTheme } from "@material-ui/core";
 import { get } from "lodash";
 import ConnectServiceSelect, {
@@ -27,19 +27,14 @@ export default function ConnectService({
   }
 
   const displayKey = config.titleKey ?? config.primaryKey;
+
   return (
     <Controller
       control={control}
       name={name}
       render={({ onChange, onBlur, value }) => {
         const handleDelete = (hit: any) => () => {
-          // if (multiple)
-          onChange(
-            value.filter(
-              (v) => get(v, config.primaryKey) !== get(hit, config.primaryKey)
-            )
-          );
-          // else form.setFieldValue(field.name, []);
+          onChange(null);
         };
 
         return (
@@ -48,6 +43,7 @@ export default function ConnectService({
               <ConnectServiceSelect
                 {...(props as any)}
                 value={value}
+                row={control.defaultValuesRef.current}
                 multiple={false}
                 onChange={onChange}
                 docRef={docRef}
@@ -57,23 +53,20 @@ export default function ConnectService({
                 }}
               />
             )}
-
-            {Array.isArray(value) && (
+            {value && (
               <Grid
                 container
                 spacing={1}
                 style={{ marginTop: theme.spacing(1) }}
               >
-                {value.map((snapshot) => (
-                  <Grid item key={get(snapshot, config.primaryKey)}>
-                    <Chip
-                      component="li"
-                      size="medium"
-                      label={get(snapshot, displayKey)}
-                      onDelete={disabled ? undefined : handleDelete(snapshot)}
-                    />
-                  </Grid>
-                ))}
+                <Grid item key={get(value, config.primaryKey)}>
+                  <Chip
+                    component="li"
+                    size="medium"
+                    label={get(value, displayKey)}
+                    onDelete={disabled ? undefined : handleDelete(value)}
+                  />
+                </Grid>
               </Grid>
             )}
           </>

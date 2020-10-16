@@ -4,8 +4,8 @@ import { CustomCellProps } from "./withCustomCell";
 import _get from "lodash/get";
 import { createStyles, makeStyles, Grid, Chip } from "@material-ui/core";
 
-import ConnectServiceSelect from "components/ConnectServiceSelect";
 import { useFiretableContext } from "contexts/firetableContext";
+import ConnectServiceSelect from "components/ConnectServiceSelect";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -55,24 +55,26 @@ export default function ConnectService({
   value,
   onSubmit,
   row,
-  docRef,
 }: CustomCellProps) {
   const classes = useStyles();
+
   const { config } = column as any;
   const { dataGridRef } = useFiretableContext();
-  if (!config) return <></>;
-  const disabled = !column.editable || config?.isLocked;
+  if (!config || !config.primaryKey) return <></>;
+  const disabled = column.editable === false || config?.isLocked;
+
   const titleKey = config.titleKey ?? config.primaryKey;
   // Render chips
-  const renderValue = (value) => (
-    <Grid container spacing={1} wrap="nowrap" className={classes.chipList}>
-      {value?.map((doc: any) => (
-        <Grid item key={_get(doc, config.primaryKey)}>
-          <Chip label={_get(doc, titleKey)} className={classes.chip} />
+  const renderValue = () =>
+    value ? (
+      <Grid container spacing={1} wrap="nowrap" className={classes.chipList}>
+        <Grid item key={_get(value, config.primaryKey)}>
+          <Chip label={_get(value, titleKey)} className={classes.chip} />
         </Grid>
-      ))}
-    </Grid>
-  );
+      </Grid>
+    ) : (
+      <></>
+    );
 
   const onClick = (e) => e.stopPropagation();
   const onClose = () => {
@@ -83,10 +85,11 @@ export default function ConnectService({
   return (
     <ConnectServiceSelect
       row={row}
+      column={column}
       value={value}
       onChange={onSubmit}
       config={config}
-      docRef={docRef}
+      editable={column.editable as boolean}
       TextFieldProps={{
         fullWidth: true,
         label: "",
@@ -109,7 +112,6 @@ export default function ConnectService({
           },
         },
         onClick,
-        disabled,
       }}
       className={clsx(
         classes.fullHeight,
