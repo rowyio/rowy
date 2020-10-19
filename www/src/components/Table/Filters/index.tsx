@@ -133,6 +133,7 @@ const Filters = () => {
         tableActions?.table.filter(
           userDoc.state.doc.tables[tableState?.tablePath].filters
         );
+        tableActions?.table.orderBy();
       }
     }
   }, [userDoc.state, tableState?.tablePath]);
