@@ -28,7 +28,6 @@ const useStyles = makeStyles((theme) =>
 export interface IFieldsDropdownProps {
   value: FieldType;
   onChange: TextFieldProps["onChange"];
-
   className?: string;
   hideLabel?: boolean;
   options?: FieldType[];
@@ -40,7 +39,6 @@ export interface IFieldsDropdownProps {
 export default function FieldsDropdown({
   value,
   onChange,
-
   className,
   hideLabel = false,
   options: optionsProp,
