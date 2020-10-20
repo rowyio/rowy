@@ -33,6 +33,7 @@ import { APP_BAR_HEIGHT } from "components/Navigation";
 import useStyles from "./styles";
 import { useAppContext } from "contexts/appContext";
 import _get from "lodash/get";
+import { formatSubTableName } from "../../util/fns";
 // const Hotkeys = lazy(() => import("./HotKeys" /* webpackChunkName: "HotKeys" */));
 const { DraggableContainer } = DraggableHeader;
 
@@ -56,7 +57,8 @@ export default function Table() {
   } = useFiretableContext();
   const { userDoc } = useAppContext();
   const userDocHiddenFields =
-    userDoc.state.doc?.tables?.[`${tableState?.tablePath}`]?.hiddenFields ?? [];
+    userDoc.state.doc?.tables?.[formatSubTableName(tableState?.tablePath)]
+      ?.hiddenFields ?? [];
   let columns: FiretableColumn[] = [];
   const rows = useMemo(
     () =>
