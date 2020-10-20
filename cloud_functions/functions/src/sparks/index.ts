@@ -33,7 +33,7 @@ const sparkTrigger = async (
         sparkBody,
       } = sparkConfig;
       const sparkContext = {
-        row: afterData,
+        row: triggerType === "delete" ? beforeData:afterData,
         ref,
         db,
         change,
