@@ -30,8 +30,8 @@ export default function Duration({
   onSubmit,
 }: CustomCellProps) {
   const classes = useStyles();
-  const startDate = value.start?.toDate();
-  const endDate = value.end?.toDate();
+  const startDate = value?.start?.toDate();
+  const endDate = value?.end?.toDate();
   if (!startDate && !endDate) {
     return <></>;
   }
