@@ -10,8 +10,8 @@ import {
   Button,
 } from "@material-ui/core";
 
-import { isCollectionGroup } from "../../util/fns";
-import AddIcon from "@material-ui/icons/Add";
+import { isCollectionGroup } from "util/fns";
+import AddRowIcon from "assets/icons/AddRow";
 
 import Filters from "./Filters";
 import ImportCSV from "./ImportCSV";
@@ -21,8 +21,8 @@ import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
 import { useFiretableContext } from "contexts/firetableContext";
 import { FieldType } from "constants/fields";
 import MigrateButton from "./MigrateButton";
-import HiddenFields from "./HidenFields";
-//import Settings from "./Settings";
+import HiddenFields from "./HiddenFields";
+
 export const TABLE_HEADER_HEIGHT = 56;
 
 const useStyles = makeStyles((theme) =>
@@ -43,7 +43,8 @@ const useStyles = makeStyles((theme) =>
         paddingRight: theme.spacing(1),
       },
     },
-    collectionName: { textTransform: "uppercase" },
+
+    addRowIcon: { fontSize: "26px !important" },
 
     spacer: { minWidth: theme.spacing(8) },
 
@@ -103,7 +104,7 @@ export default function TableHeader({
             }}
             variant="contained"
             color="primary"
-            startIcon={<AddIcon />}
+            startIcon={<AddRowIcon className={classes.addRowIcon} />}
           >
             Add Row
           </Button>

@@ -10,10 +10,12 @@ import {
 } from "@material-ui/core";
 import CopyCellsIcon from "assets/icons/CopyCells";
 import DeleteIcon from "@material-ui/icons/Cancel";
+
 import { SnackContext } from "../../../contexts/snackContext";
 import { useConfirmation } from "components/ConfirmationDialog/Context";
 import { useFiretableContext } from "contexts/firetableContext";
 import useKeyPress from "../../../hooks/useKeyPress";
+
 export const useFinalColumnStyles = makeStyles((theme) =>
   createStyles({
     cell: {
@@ -33,11 +35,6 @@ export const useFinalColumnStyles = makeStyles((theme) =>
         width: "46px !important",
         overflow: "visible",
         borderWidth: "1px !important",
-
-        "& > div": {
-          position: "absolute",
-          right: "-50%",
-        },
       },
     },
   })
