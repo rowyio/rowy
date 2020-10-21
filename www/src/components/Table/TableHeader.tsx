@@ -21,8 +21,8 @@ import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
 import { useFiretableContext } from "contexts/firetableContext";
 import { FieldType } from "constants/fields";
 import MigrateButton from "./MigrateButton";
-import HiddenFields from "./HidenFields";
-//import Settings from "./Settings";
+import HiddenFields from "./HiddenFields";
+
 export const TABLE_HEADER_HEIGHT = 56;
 
 const useStyles = makeStyles((theme) =>
