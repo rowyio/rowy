@@ -74,7 +74,8 @@ export default function TableHeader({
 }: ITableHeaderProps) {
   const classes = useStyles();
   const { tableActions, tableState } = useFiretableContext();
-  if (!tableState || !tableState.columns) return <></>;
+
+  if (!tableState || !tableState.columns) return null;
   const { columns } = tableState;
 
   const needsMigration = Array.isArray(columns) && columns.length !== 0;
@@ -171,7 +172,6 @@ export default function TableHeader({
       <Grid item>
         <ExportCSV />
       </Grid>
-      {/* <Settings /> */}
     </Grid>
   );
 }

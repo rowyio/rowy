@@ -29,6 +29,7 @@ const useTableConfig = (tablePath?: string) => {
 
   useEffect(() => {
     const { doc, columns } = tableConfigState;
+    // Copy columns, rowHeight to tableConfigState
     if (doc && columns !== doc.columns) {
       documentDispatch({ columns: doc.columns, rowHeight: doc.rowHeight });
     }

@@ -14,7 +14,6 @@ import DataGrid, {
 } from "react-data-grid";
 import { DraggableHeader } from "react-data-grid-addons";
 
-import Loading from "components/Loading";
 import TableHeader, { TABLE_HEADER_HEIGHT } from "./TableHeader";
 import ColumnHeader from "./ColumnHeader";
 import ColumnMenu from "./ColumnMenu";
@@ -155,13 +154,11 @@ export default function Table() {
       {/* <Suspense fallback={<Loading message="Loading header" />}>
         <Hotkeys selectedCell={selectedCell} />
       </Suspense> */}
-
       <TableHeader
         rowHeight={rowHeight}
         updateConfig={tableActions.table.updateConfig}
       />
-
-      {!tableState.loadingColumns ? (
+      {!tableState.loadingColumns && columns.length > 0 && (
         <DraggableContainer onHeaderDrop={onHeaderDrop}>
           <DataGrid
             columns={columns}
@@ -216,8 +213,6 @@ export default function Table() {
             )}
           />
         </DraggableContainer>
-      ) : (
-        <Loading message="Fetching columns" />
       )}
 
       <ColumnMenu />
