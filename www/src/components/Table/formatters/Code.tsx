@@ -65,7 +65,6 @@ export default function LongText({ column, value }: CustomCellProps) {
     <Tooltip
       title={value}
       enterDelay={1000}
-      interactive
       placement="bottom-start"
       PopperProps={{
         modifiers: {

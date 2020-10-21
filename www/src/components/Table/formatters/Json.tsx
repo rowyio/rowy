@@ -77,7 +77,6 @@ export default function LongText({ column, value }: CustomCellProps) {
     <Tooltip
       title={formattedJson}
       enterDelay={1000}
-      interactive
       onClick={(e) => e.stopPropagation()}
       placement="bottom-start"
       PopperProps={{

@@ -62,7 +62,6 @@ export default function RichText({ column, value }: CustomCellProps) {
     <Tooltip
       title={<RenderedHtml html={value} className={classes.renderedHtml} />}
       enterDelay={1000}
-      interactive
       placement="bottom-start"
       PopperProps={{
         modifiers: {
