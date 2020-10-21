@@ -10,6 +10,7 @@ import {
 import ImportIcon from "assets/icons/Import";
 
 import { APP_BAR_HEIGHT } from "components/Navigation";
+import { MONO_FONT } from "Theme";
 import { useFiretableContext } from "contexts/firetableContext";
 
 const useStyles = makeStyles(() =>
@@ -20,6 +21,11 @@ const useStyles = makeStyles(() =>
       margin: "0 auto",
       textAlign: "center",
       userSelect: "none",
+    },
+
+    tablePath: {
+      fontFamily: MONO_FONT,
+      textTransform: "none",
     },
   })
 );
@@ -40,8 +46,15 @@ export default function EmptyTableConfig() {
     >
       <Grid item>
         <Typography variant="overline">
-          You have existing data in your Firestore collection “
-          {tableState?.tablePath}”
+          You have existing data in your Firestore collection
+          <br />
+          <Typography
+            variant="body2"
+            component="span"
+            className={classes.tablePath}
+          >
+            “{tableState?.tablePath}”
+          </Typography>
         </Typography>
       </Grid>
 

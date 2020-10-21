@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) =>
     root: {
       width: `calc(100% - ${DRAWER_COLLAPSED_WIDTH}px)`,
       margin: 0,
-      padding: theme.spacing(0, 3, 0, 1),
+      padding: theme.spacing(0, 1.5),
       minHeight: TABLE_HEADER_HEIGHT,
 
       overflowX: "auto",
@@ -93,6 +93,9 @@ export default function TableHeaderSkeleton() {
 
       <Grid item />
 
+      <Grid item>
+        <Skeleton variant="circle" className={classes.circleButton} />
+      </Grid>
       <Grid item>
         <Skeleton variant="circle" className={classes.circleButton} />
       </Grid>

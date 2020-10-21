@@ -23,7 +23,7 @@ import ExportIcon from "assets/icons/Export";
 
 import { SnackContext } from "contexts/snackContext";
 import { useFiretableContext } from "contexts/firetableContext";
-import { db } from "../../firebase";
+import { db } from "../../../firebase";
 import { FieldType } from "constants/fields";
 import { isCollectionGroup } from "util/fns";
 import _get from "lodash/get";
