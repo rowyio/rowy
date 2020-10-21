@@ -132,7 +132,7 @@ export default function Table() {
       name: "Add column",
       type: FieldType.last,
       index: columns.length ?? 0,
-      width: 160,
+      width: 201,
       headerRenderer: FinalColumnHeader,
       cellClass: finalColumnClasses.cell,
       formatter: FinalColumn,
