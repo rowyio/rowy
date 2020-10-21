@@ -143,10 +143,9 @@ export const defaultOverrides = (theme: ThemeType): ThemeOptions => ({
         borderRadius: 500,
         boxShadow: "none",
       },
-      containedSizeLarge: {
-        padding: theme.spacing(1, 4),
-      },
+      containedSizeLarge: { padding: theme.spacing(1, 4) },
 
+      outlined: { padding: theme.spacing(3 / 8, 15 / 8) },
       outlinedPrimary: {
         // Same as outlined text field
         borderColor: "rgba(0, 0, 0, 0.23)",
@@ -156,6 +155,10 @@ export const defaultOverrides = (theme: ThemeType): ThemeOptions => ({
         borderRadius: 500,
 
         "&$outlinedPrimary": { borderColor: theme.palette.primary.main },
+      },
+
+      iconSizeMedium: {
+        "& > *:first-child": { fontSize: 24 },
       },
     },
     MuiSvgIcon: {

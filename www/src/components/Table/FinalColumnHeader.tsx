@@ -20,7 +20,6 @@ const useStyles = makeStyles((theme) =>
     },
 
     button: { zIndex: 1 },
-    addColumnIcon: { fontSize: "24px !important" },
   })
 );
 
@@ -50,7 +49,7 @@ const FinalColumnHeader: Column<any>["headerRenderer"] = ({ column }) => {
         variant="contained"
         color="primary"
         className={classes.button}
-        startIcon={<AddColumnIcon className={classes.addColumnIcon} />}
+        startIcon={<AddColumnIcon />}
       >
         Add Column
       </Button>
