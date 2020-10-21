@@ -3,8 +3,8 @@ import SvgIcon, { SvgIconProps } from "@material-ui/core/SvgIcon";
 
 export default function AddColumn(props: SvgIconProps) {
   return (
-    <SvgIcon viewBox="0 0 32 32" {...props}>
-      <path d="M16 0c8.837 0 16 7.163 16 16s-7.163 16-16 16S0 24.837 0 16 7.163 0 16 0zm1 8H7v17h10V8zm-2 12v3H9v-3h6zm9-8h-2v3h-3v2h3v3h2v-3h3v-2h-3v-3zm-9 3v3H9v-3h6zm0-5v3H9v-3h6z" />
+    <SvgIcon viewBox="0 0 24 24" {...props}>
+      <path d="M13,4 L3,4 L3,21 L13,21 L13,4 Z M11,16 L11,19 L5,19 L5,16 L11,16 Z M20,8 L18,8 L18,11 L15,11 L15,13 L18,13 L18,16 L20,16 L20,13 L23,13 L23,11 L20,11 L20,8 Z M11,11 L11,14 L5,14 L5,11 L11,11 Z M11,6 L11,9 L5,9 L5,6 L11,6 Z" />
     </SvgIcon>
   );
 }
