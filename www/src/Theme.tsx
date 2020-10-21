@@ -132,7 +132,10 @@ export const defaultOverrides = (theme: ThemeType): ThemeOptions => ({
       tooltip: theme.typography.caption,
     },
     MuiButton: {
-      root: { minHeight: 36 },
+      root: {
+        minHeight: 32,
+        padding: theme.spacing(0.25, 2),
+      },
       sizeSmall: { minHeight: 30 },
       sizeLarge: { minHeight: 48 },
 

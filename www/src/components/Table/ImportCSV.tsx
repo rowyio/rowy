@@ -3,34 +3,43 @@ import _camelCase from "lodash/camelCase";
 import { useDropzone } from "react-dropzone";
 import parse from "csv-parse";
 
-import Button from "@material-ui/core/Button";
-
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Grid from "@material-ui/core/Grid";
-import IconButton from "@material-ui/core/IconButton";
-import Dialog from "@material-ui/core/Dialog";
-
-import Select from "@material-ui/core/Select";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import AddCSVIcon from "@material-ui/icons/PlaylistAdd";
+import {
+  makeStyles,
+  createStyles,
+  Tooltip,
+  Typography,
+  Button,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  IconButton,
+  Dialog,
+  Select,
+  FormControl,
+  InputLabel,
+  MenuItem,
+} from "@material-ui/core";
+import ImportIcon from "assets/icons/Import";
 import ArrowIcon from "@material-ui/icons/TrendingFlatOutlined";
 import AddIcon from "@material-ui/icons/Add";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { makeStyles, createStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-
 import CloudIcon from "@material-ui/icons/CloudUpload";
+
 import { useFiretableContext } from "contexts/firetableContext";
+
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       display: "flex",
       flexWrap: "wrap",
     },
+
+    button: {
+      padding: 0,
+      minWidth: 32,
+    },
+
     formControl: {
       margin: theme.spacing(1),
       minWidth: 120,
@@ -105,9 +114,18 @@ export default function ImportCSV(props: any) {
   }
   return (
     <div>
-      <Button onClick={handleClickOpen} variant="contained" color="secondary">
-        Import
-      </Button>
+      <Tooltip title="Import">
+        <Button
+          onClick={handleClickOpen}
+          variant="contained"
+          color="secondary"
+          aria-label="Import"
+          className={classes.button}
+        >
+          <ImportIcon />
+        </Button>
+      </Tooltip>
+
       <Dialog
         open={open}
         onClose={handleClose}

@@ -1,21 +1,25 @@
+import React, { useState, useContext } from "react";
 import { parse as json2csv } from "json2csv";
 import { saveAs } from "file-saver";
-import React, { useState, useCallback, useContext } from "react";
 import _camelCase from "lodash/camelCase";
-import Button from "@material-ui/core/Button";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Dialog from "@material-ui/core/Dialog";
 
-import Select from "@material-ui/core/Select";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import { makeStyles, createStyles } from "@material-ui/core/styles";
-import Input from "@material-ui/core/Input";
-
-import Chip from "@material-ui/core/Chip";
+import {
+  makeStyles,
+  createStyles,
+  Tooltip,
+  Button,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Dialog,
+  Select,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Input,
+  Chip,
+} from "@material-ui/core";
+import ExportIcon from "assets/icons/Export";
 
 import { SnackContext } from "contexts/snackContext";
 import { useFiretableContext } from "contexts/firetableContext";
@@ -41,6 +45,12 @@ const useStyles = makeStyles((theme) =>
       display: "flex",
       flexWrap: "wrap",
     },
+
+    button: {
+      padding: 0,
+      minWidth: 32,
+    },
+
     formControl: {
       margin: theme.spacing(1),
       width: 400,
@@ -183,9 +193,17 @@ export default function ExportCSV() {
 
   return (
     <div>
-      <Button onClick={handleClickOpen} variant="contained" color="secondary">
-        Export
-      </Button>
+      <Tooltip title="Export">
+        <Button
+          onClick={handleClickOpen}
+          variant="contained"
+          color="secondary"
+          aria-label="Export"
+          className={classes.button}
+        >
+          <ExportIcon />
+        </Button>
+      </Tooltip>
 
       <Dialog
         open={open}
