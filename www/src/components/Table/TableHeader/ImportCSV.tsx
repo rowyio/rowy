@@ -114,17 +114,21 @@ export default function ImportCSV(props: any) {
   }
   return (
     <div>
-      <Tooltip title="Import">
-        <Button
-          onClick={handleClickOpen}
-          variant="contained"
-          color="secondary"
-          aria-label="Import"
-          className={classes.button}
-        >
-          <ImportIcon />
-        </Button>
-      </Tooltip>
+      {props.render ? (
+        props.render(handleClickOpen)
+      ) : (
+        <Tooltip title="Import">
+          <Button
+            onClick={handleClickOpen}
+            variant="contained"
+            color="secondary"
+            aria-label="Import"
+            className={classes.button}
+          >
+            <ImportIcon />
+          </Button>
+        </Tooltip>
+      )}
 
       <Dialog
         open={open}

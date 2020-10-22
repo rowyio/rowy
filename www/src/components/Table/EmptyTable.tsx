@@ -14,6 +14,8 @@ import { APP_BAR_HEIGHT } from "components/Navigation";
 
 import { useFiretableContext } from "contexts/firetableContext";
 import ColumnMenu from "./ColumnMenu";
+import ImportWizard from "components/Wizards/ImportWizard";
+import ImportCSV from "./TableHeader/ImportCSV";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -76,6 +78,8 @@ export default function EmptyTable() {
           >
             Import
           </Button>
+
+          <ImportWizard />
         </Grid>
       </Grid>
     );
@@ -103,14 +107,18 @@ export default function EmptyTable() {
       </Grid>
 
       <Grid item>
-        <Button
-          variant="contained"
-          color="secondary"
-          startIcon={<ImportIcon />}
-          onClick={() => importWizardRef?.current?.setOpen(true)}
-        >
-          Import
-        </Button>
+        <ImportCSV
+          render={(onClick) => (
+            <Button
+              variant="contained"
+              color="secondary"
+              startIcon={<ImportIcon />}
+              onClick={onClick}
+            >
+              Import CSV
+            </Button>
+          )}
+        />
       </Grid>
 
       <Grid item />
