@@ -23,6 +23,11 @@ export const ROOT_FONT_SIZE = 16;
 export const toRem = (px: number) => `${px / ROOT_FONT_SIZE}rem`;
 export const toEm = (px: number, root: number) => `${px / root}em`;
 
+declare module "@material-ui/core/styles/createTypography" {
+  interface FontStyle {
+    fontFamilyMono: string;
+  }
+}
 declare module "@material-ui/core/styles/transitions" {
   interface Easing {
     custom: string;
@@ -38,6 +43,7 @@ export const themeBase = createMuiTheme({
   },
   typography: {
     fontFamily: BODY_FONT,
+    fontFamilyMono: MONO_FONT,
     h1: { fontFamily: HEADING_FONT },
     h2: { fontFamily: HEADING_FONT },
     h3: {

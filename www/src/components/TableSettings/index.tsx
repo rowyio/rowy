@@ -18,7 +18,6 @@ import { tableSettings } from "./form";
 import { useFiretableContext } from "../../contexts/firetableContext";
 import useRouter from "../../hooks/useRouter";
 import { db } from "../../firebase";
-import { MONO_FONT } from "Theme";
 
 export enum TableSettingsDialogModes {
   create,
@@ -60,7 +59,7 @@ const useStyles = makeStyles((theme) =>
         display: "flex",
       },
     },
-    collectionName: { fontFamily: MONO_FONT },
+    collectionName: { fontFamily: theme.typography.fontFamilyMono },
   })
 );
 

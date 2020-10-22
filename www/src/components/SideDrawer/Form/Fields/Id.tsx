@@ -2,7 +2,6 @@ import React from "react";
 import { IFieldProps } from "../utils";
 
 import { createStyles, makeStyles, Typography } from "@material-ui/core";
-import { MONO_FONT } from "Theme";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -24,7 +23,7 @@ const useStyles = makeStyles((theme) =>
       whiteSpace: "normal",
       width: "100%",
       overflow: "hidden",
-      fontFamily: MONO_FONT,
+      fontFamily: theme.typography.fontFamilyMono,
       userSelect: "all",
     },
   })

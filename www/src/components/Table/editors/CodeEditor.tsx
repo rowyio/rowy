@@ -5,8 +5,6 @@ import { useFiretableContext } from "contexts/firetableContext";
 import { FieldType } from "constants/fields";
 import { setTimeout } from "timers";
 
-import { MONO_FONT } from "Theme";
-
 const useStyles = makeStyles((theme) =>
   createStyles({
     editorWrapper: { position: "relative", minWidth: 800, minHeight: 300 },
@@ -16,7 +14,7 @@ const useStyles = makeStyles((theme) =>
       minHeight: 300,
       borderRadius: theme.shape.borderRadius,
       resize: "both",
-      fontFamily: MONO_FONT,
+      fontFamily: theme.typography.fontFamilyMono,
       height: "350px",
     },
 

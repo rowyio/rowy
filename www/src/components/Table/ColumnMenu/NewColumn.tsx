@@ -17,7 +17,6 @@ import CloseIcon from "@material-ui/icons/Close";
 
 import { FieldType } from "constants/fields";
 import FieldsDropdown from "./FieldsDropdown";
-import { MONO_FONT } from "Theme";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -36,7 +35,7 @@ const useStyles = makeStyles((theme) =>
       marginTop: theme.spacing(1),
     },
 
-    fieldKey: { fontFamily: MONO_FONT },
+    fieldKey: { fontFamily: theme.typography.fontFamilyMono },
   })
 );
 

@@ -11,11 +11,11 @@ import ImportIcon from "assets/icons/Import";
 import AddColumnIcon from "assets/icons/AddColumn";
 
 import { APP_BAR_HEIGHT } from "components/Navigation";
-import { MONO_FONT } from "Theme";
+
 import { useFiretableContext } from "contexts/firetableContext";
 import ColumnMenu from "./ColumnMenu";
 
-const useStyles = makeStyles(() =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       height: `calc(100vh - ${APP_BAR_HEIGHT}px)`,
@@ -26,7 +26,7 @@ const useStyles = makeStyles(() =>
     },
 
     tablePath: {
-      fontFamily: MONO_FONT,
+      fontFamily: theme.typography.fontFamilyMono,
       textTransform: "none",
     },
   })

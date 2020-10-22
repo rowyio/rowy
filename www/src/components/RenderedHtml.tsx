@@ -3,7 +3,6 @@ import DOMPurify from "dompurify";
 import clsx from "clsx";
 
 import { makeStyles, createStyles } from "@material-ui/core";
-import { MONO_FONT } from "Theme";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -68,10 +67,10 @@ const useStyles = makeStyles((theme) =>
         backgroundColor: "#e8e8e8",
         borderRadius: theme.shape.borderRadius,
         padding: "0.1rem 0.2rem",
-        fontFamily: MONO_FONT,
+        fontFamily: theme.typography.fontFamilyMono,
       },
       "& pre": {
-        fontFamily: MONO_FONT,
+        fontFamily: theme.typography.fontFamilyMono,
       },
       '& .mceContent-body:not([dir="rtl"]) blockquote': {
         borderLeft: `2px solid ${theme.palette.divider}`,

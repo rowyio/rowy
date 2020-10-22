@@ -5,8 +5,6 @@ import ReactJson from "react-json-view";
 
 import { makeStyles, createStyles, useTheme } from "@material-ui/core";
 
-import { MONO_FONT } from "Theme";
-
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
@@ -75,7 +73,7 @@ export default function JsonEditor({ control, name }: IFieldProps) {
               }}
               iconStyle="triangle"
               style={{
-                fontFamily: MONO_FONT,
+                fontFamily: theme.typography.fontFamilyMono,
                 backgroundColor: "transparent",
               }}
             />
