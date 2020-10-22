@@ -350,8 +350,8 @@ const Filters = () => {
         anchorEl={anchorEl}
         classes={{ paper: classes.paper }}
         onClose={handleClose}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        transformOrigin={{ vertical: "top", horizontal: "right" }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        transformOrigin={{ vertical: "top", horizontal: "left" }}
       >
         <IconButton className={classes.closeButton} onClick={handleClose}>
           <CloseIcon />
