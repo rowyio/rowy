@@ -63,7 +63,10 @@ export default function FormDialog({
   }, [columnLabel]);
 
   useEffect(() => {
-    if (type === FieldType.id) setFieldKey("id");
+    if (type === FieldType.id) {
+      setColumnLabel("ID");
+      setFieldKey("id");
+    }
   }, [type]);
 
   return (
