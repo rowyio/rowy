@@ -2,6 +2,9 @@ import React, { useState, useContext } from "react";
 import { parse as json2csv } from "json2csv";
 import { saveAs } from "file-saver";
 import _camelCase from "lodash/camelCase";
+import _get from "lodash/get";
+import _find from "lodash/find";
+import MultiSelect from "@antlerengineering/multiselect";
 
 import {
   makeStyles,
@@ -11,13 +14,8 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  DialogContentText,
   Dialog,
-  Select,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Input,
-  Chip,
 } from "@material-ui/core";
 import ExportIcon from "assets/icons/Export";
 
@@ -26,57 +24,16 @@ import { useFiretableContext } from "contexts/firetableContext";
 import { db } from "../../../firebase";
 import { FieldType } from "constants/fields";
 import { isCollectionGroup } from "util/fns";
-import _get from "lodash/get";
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
-
-const useStyles = makeStyles((theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
-    root: {
-      display: "flex",
-      flexWrap: "wrap",
-    },
-
     button: {
       padding: 0,
       minWidth: 32,
     },
-
-    formControl: {
-      margin: theme.spacing(1),
-      width: 400,
-    },
-    selectEmpty: {
-      marginTop: theme.spacing(2),
-    },
-    keyPair: {
-      flexGrow: 2,
-      display: "flex",
-      justifyItems: "space-between",
-    },
-    cloudIcon: {
-      fontSize: 64,
-    },
-    uploadContainer: {
-      margin: "auto",
-    },
-    chips: {
-      display: "flex",
-      flexWrap: "wrap",
-      width: 400,
-    },
-    chip: {},
   })
 );
+
 const selectedColumnsReducer = (doc: any) => (
   accumulator: any,
   currentColumn: any
@@ -140,27 +97,31 @@ const selectedColumnsReducer = (doc: any) => (
 };
 
 export default function ExportCSV() {
-  const { tableState } = useFiretableContext();
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-  const [csvColumns, setCSVColumns] = useState<any[]>([]);
-  const snackContext = useContext(SnackContext);
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setCSVColumns(event.target.value as any[]);
-  };
-  function handleClickOpen() {
-    setOpen(true);
-  }
 
-  function handleClose() {
+  const { tableState } = useFiretableContext();
+  const snackContext = useContext(SnackContext);
+
+  const [csvColumns, setCsvColumns] = useState<any[]>([]);
+
+  const handleClose = () => {
     setOpen(false);
-    setCSVColumns([]);
-  }
-  async function handleExport(columns?: any[]) {
+    setCsvColumns([]);
+  };
+
+  const handleChange = (keys: string[]) =>
+    setCsvColumns(
+      keys
+        .map((key) => _find(tableState!.columns, ["key", key]))
+        .filter((x) => !!x)
+    );
+
+  const handleExport = async () => {
     handleClose();
     snackContext.open({
       severity: "info",
-      message: "preparing file, download will start shortly",
+      message: "Preparing file. Download will start shortly",
       duration: 5000,
     });
 
@@ -172,7 +133,6 @@ export default function ExportCSV() {
       query = query.where(filter.key, filter.operator, filter.value);
     });
     // optional order results
-
     if (tableState?.orderBy) {
       tableState?.orderBy?.forEach((orderBy) => {
         query = query.orderBy(orderBy.key, orderBy.direction);
@@ -181,21 +141,20 @@ export default function ExportCSV() {
     query.limit(10000);
     let querySnapshot = await query.get();
     let docs = querySnapshot.docs.map((doc) => doc.data());
-    const data = docs.map((doc: any) => {
-      return csvColumns.reduce(selectedColumnsReducer(doc), {});
-    });
+
+    const data = docs.map((doc: any) =>
+      csvColumns.reduce(selectedColumnsReducer(doc), {})
+    );
     const csv = json2csv(data);
-    var blob = new Blob([csv], {
-      type: "text/csv;charset=utf-8",
-    });
-    saveAs(blob, `${tableState?.tablePath!}.csv`);
-  }
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    saveAs(blob, `${tableState?.tablePath!}-${new Date().toISOString()}.csv`);
+  };
 
   return (
-    <div>
+    <>
       <Tooltip title="Export">
         <Button
-          onClick={handleClickOpen}
+          onClick={() => setOpen(true)}
           variant="contained"
           color="secondary"
           aria-label="Export"
@@ -206,67 +165,55 @@ export default function ExportCSV() {
       </Tooltip>
 
       <Dialog
-        open={open}
+        open={open && !!tableState}
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
+        aria-aria-describedby="form-dialog-description"
+        maxWidth="xs"
+        fullWidth
       >
-        <DialogTitle id="form-dialog-title">Export table into CSV</DialogTitle>
+        <DialogTitle id="form-dialog-title">Export Table to CSV</DialogTitle>
+
         <DialogContent>
-          <FormControl className={classes.formControl}>
-            <InputLabel id="column-chip-label">Exportable columns</InputLabel>
-            <Select
-              id="column-chip"
-              multiple
-              value={csvColumns}
-              onChange={handleChange}
-              input={<Input id="select-multiple-chip" />}
-              renderValue={(selected) => (
-                <div className={classes.chips}>
-                  {(selected as any[]).map((value) => (
-                    <Chip
-                      key={value.key}
-                      label={value.name}
-                      className={classes.chip}
-                    />
-                  ))}
-                </div>
-              )}
-              MenuProps={MenuProps}
-            >
-              {tableState?.columns &&
-                (Array.isArray(tableState?.columns)
-                  ? tableState?.columns
-                  : Object.values(tableState?.columns)
-                ).map((column: any) => (
-                  <MenuItem key={column.key} value={column}>
-                    {column.name}
-                  </MenuItem>
-                ))}
-            </Select>
-          </FormControl>
-          <Button
-            onClick={() => {
-              setCSVColumns(Object.values(tableState?.columns!));
-            }}
-          >
-            Select All
-          </Button>
+          <DialogContentText id="form-dialog-description">
+            Export the current table view, including filters and sorting order,
+            to a CSV file.
+          </DialogContentText>
+          <DialogContentText>
+            Choose which columns to export to get started.
+          </DialogContentText>
+
+          <MultiSelect
+            value={csvColumns.map((x) => x.key)}
+            onChange={handleChange}
+            options={(typeof tableState!.columns === "object" &&
+            !Array.isArray(tableState!.columns)
+              ? Object.values(tableState!.columns)
+              : []
+            ).map((column: any) => ({ label: column.name, value: column.key }))}
+            label="Columns to Export"
+            labelPlural="columns"
+            TextFieldProps={{ autoFocus: true }}
+            multiple
+            selectAll
+          />
         </DialogContent>
+
         <DialogActions>
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
+
           <Button
-            onClick={() => {
-              handleExport(csvColumns);
-            }}
+            onClick={handleExport}
             disabled={csvColumns.length === 0}
             color="primary"
+            variant="contained"
           >
             Export
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </>
   );
 }
