@@ -284,6 +284,12 @@ export const defaultOverrides = (theme: ThemeType): ThemeOptions => ({
       colorPrimary: { backgroundColor: "#e7e7e7" },
       colorSecondary: { backgroundColor: "#e7e7e7" },
     },
+    MuiFormHelperText: {
+      contained: {
+        marginLeft: theme.spacing(1.5),
+        marginRight: theme.spacing(1.5),
+      },
+    },
   },
   props: {
     MuiTypography: {
