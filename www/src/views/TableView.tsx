@@ -9,7 +9,7 @@ import Table from "components/Table";
 import SideDrawer from "components/SideDrawer";
 import TableHeaderSkeleton from "components/Table/Skeleton/TableHeaderSkeleton";
 import HeaderRowSkeleton from "components/Table/Skeleton/HeaderRowSkeleton";
-import EmptyTableConfig from "components/Table/EmptyTableConfig";
+import EmptyTable from "components/Table/EmptyTable";
 import ImportWizard from "components/Wizards/ImportWizard";
 
 import { useFiretableContext } from "contexts/firetableContext";
@@ -69,7 +69,7 @@ export default function TableView() {
         )}
 
         {!tableState.loadingColumns && _isEmpty(tableState.columns) && (
-          <EmptyTableConfig />
+          <EmptyTable />
         )}
         <ImportWizard />
 
