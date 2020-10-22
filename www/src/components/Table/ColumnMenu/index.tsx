@@ -235,6 +235,7 @@ export default function ColumnMenu() {
 
   const clearModal = () => {
     setModal(INITIAL_MODAL);
+    setSelectedColumnHeader(null);
   };
 
   return (
