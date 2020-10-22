@@ -1,13 +1,7 @@
 import React from "react";
 import { Column } from "react-data-grid";
 
-import {
-  makeStyles,
-  createStyles,
-  Tooltip,
-  Grid,
-  Button,
-} from "@material-ui/core";
+import { makeStyles, createStyles, Grid, Button } from "@material-ui/core";
 import AddColumnIcon from "assets/icons/AddColumn";
 
 import { useFiretableContext } from "contexts/firetableContext";
