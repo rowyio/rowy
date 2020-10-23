@@ -152,7 +152,7 @@ export default function ExportCSV() {
 
   return (
     <>
-      <Tooltip title="Export">
+      <Tooltip title="Export CSV">
         <Button
           onClick={() => setOpen(true)}
           variant="contained"
