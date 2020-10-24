@@ -1,3 +1,7 @@
+import * as path from "path";
+import * as os from "os";
+import * as fs from "fs";
+import * as request from "request";
 import * as functions from "firebase-functions";
 import { db, auth } from "./config";
 import * as admin from "firebase-admin";
@@ -9,7 +13,7 @@ type ActionData = {
     parentId: string;
     tablePath: string;
   };
-  schemaDocPath?: string;
+  schemaDocPath: string;
   row: any;
   column: any;
   action: "run" | "redo" | "undo";
@@ -29,13 +33,32 @@ const missingFieldsReducer = (data: any) => (acc: string[], curr: string) => {
   } else return acc;
 };
 
-const generateSchemaDocPath = (tablePath:string) => {
-  const pathComponents = tablePath.split("/");
-  return `_FIRETABLE_/settings/${
-    pathComponents[1] === "table" ? "schema" : "groupSchema"
-  }/${pathComponents[2]}`;
-};
+// const generateSchemaDocPath = (tablePath:string) => {
+//   const pathComponents = tablePath.split("/");
+//   return `_FIRETABLE_/settings/${
+//     pathComponents[1] === "table" ? "schema" : "groupSchema"
+//   }/${pathComponents[2]}`;
+// };
+
 const serverTimestamp = admin.firestore.FieldValue.serverTimestamp;
+
+const scriptLoader = (uri: string, file: fs.WriteStream) =>
+  new Promise((resolve, reject) => {
+    request({
+      /* Here you should specify the exact link to the file you are trying to download */
+      uri,
+    })
+      .pipe(file)
+      .on("finish", () => {
+        console.log(`The file is finished downloading.`);
+        resolve();
+      })
+      .on("error", (error: any) => {
+        reject(error);
+      });
+  }).catch((error) => {
+    console.log(`Something happened: ${error}`);
+  });
 
 export const actionScript = functions.https.onCall(
   async (data: ActionData, context: functions.https.CallableContext) => {
@@ -46,9 +69,7 @@ export const actionScript = functions.https.onCall(
 
       const { ref, actionParams, row, column, action, schemaDocPath } = data;
 
-      const _schemaDocPath =
-        schemaDocPath ?? generateSchemaDocPath(ref.tablePath);
-      const schemaDoc = await db.doc(_schemaDocPath).get();
+      const schemaDoc = await db.doc(schemaDocPath).get();
       const schemaDocData = schemaDoc.data();
       if (!schemaDocData) {
         return {
@@ -57,7 +78,7 @@ export const actionScript = functions.https.onCall(
         };
       }
       const config = schemaDocData.columns[column.key].config;
-      const { script, requiredRoles, requiredFields, undo, redo } = config;
+      const { requiredRoles, requiredFields } = config;
       if (!hasAnyRole(requiredRoles, context)) {
         throw Error(`You don't have the required roles permissions`);
       }
@@ -72,30 +93,36 @@ export const actionScript = functions.https.onCall(
       }
       //
       // get auth
-      console.log(
-        JSON.stringify({
-          undo,
-          redo,
-          row,
-          ref,
-          actionParams,
-          column,
-          schemaDocData,
-          script,
-          requiredRoles,
-          requiredFields,
-        })
+
+      const scriptSource: string =
+        "https://gist.githubusercontent.com/shamsmosowi/3a0a93aec9faa0edba55fa228a9f9495/raw/3ffb8ed3a118caf0dd8140254794f523fa370cdd/sript.js";
+      const filePath = "script.js";
+      const baseFileName = path.basename(filePath, path.extname(filePath));
+      const scriptLocation = path.join(
+        os.tmpdir(),
+        baseFileName + path.extname(filePath)
       );
+      const file = fs.createWriteStream(scriptLocation);
+      await scriptLoader(scriptSource, file);
+      const loadedScript: any = await import(scriptLocation);
+      const {
+        cloudActionScript,
+      }: { cloudActionScript: Function } = loadedScript;
 
       const result: {
         message: string;
         status: string;
         success: boolean;
-      } = await eval(
-        `async({row,db, ref,auth,utilFns,actionParams,context})=>{${
-          action === "undo" ? config["undo.script"] : script
-        }}`
-      )({ row, db, auth, utilFns, ref, actionParams, context });
+      } = await cloudActionScript({
+        row,
+        db,
+        ref,
+        auth,
+        utilFns,
+        actionParams,
+        context,
+      });
+
       if (result.success)
         return {
           success: result.success,
