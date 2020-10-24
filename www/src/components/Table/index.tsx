@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from "react";
+import React, { useMemo, useRef, useState, useEffect } from "react";
 
 import _orderBy from "lodash/orderBy";
 import { useDebouncedCallback } from "use-debounce";
@@ -55,10 +55,48 @@ export default function Table() {
     sideDrawerRef,
   } = useFiretableContext();
   const { userDoc } = useAppContext();
-  const userDocHiddenFields =
-    userDoc.state.doc?.tables?.[formatSubTableName(tableState?.tablePath)]
+
+  const userDocHiddenFields = userDoc.state.doc?.tables?.[formatSubTableName(tableState?.tablePath)]
       ?.hiddenFields ?? [];
-  let columns: FiretableColumn[] = [];
+  const [columns, setColumns] = useState<FiretableColumn[]>([]);
+  useEffect(() => {
+    if (!tableState?.loadingColumns && tableState?.columns) {
+      const _columns = _orderBy(
+        Object.values(tableState?.columns).filter(
+          (column: any) => !column.hidden && column.key
+        ),
+        "index"
+      )
+        .map((column: any, index) => ({
+          draggable: true,
+          editable: true,
+          resizable: true,
+          frozen: column.fixed,
+          headerRenderer: ColumnHeader,
+          formatter: getFormatter(column),
+          editor: getEditor(column),
+          ...column,
+          width: column.width ? (column.width > 380 ? 380 : column.width) : 150,
+        }))
+        .filter((column) => !userDocHiddenFields.includes(column.key));
+      _columns.push({
+        isNew: true,
+        key: "new",
+        name: "Add column",
+        type: FieldType.last,
+        index: columns.length ?? 0,
+        width: 160,
+        headerRenderer: FinalColumnHeader,
+        cellClass: finalColumnClasses.cell,
+        formatter: FinalColumn,
+        editable: false,
+      });
+
+      setColumns(_columns);
+    }
+  }, [tableState?.loadingColumns, tableState?.columns]);
+
+
   const rows = useMemo(
     () =>
       tableState?.rows.map((row) =>
@@ -76,7 +114,7 @@ export default function Table() {
       ),
     [columns, tableState?.rows]
   );
-
+  // console.log(rows)
   const rowsContainerRef = useRef<HTMLDivElement>(null);
   // Gets more rows when scrolled down.
   const [handleScroll] = useDebouncedCallback((position: ScrollPosition) => {
@@ -105,40 +143,7 @@ export default function Table() {
   const onHeaderDrop = (dragged: any, target: any) => {
     tableActions.column.reorder(dragged, target);
   };
-
-  if (!tableState.loadingColumns && tableState.columns) {
-    columns = _orderBy(
-      Object.values(tableState.columns).filter(
-        (column: any) => !column.hidden && column.key
-      ),
-      "index"
-    )
-      .map((column: any, index) => ({
-        draggable: true,
-        editable: true,
-        resizable: true,
-        frozen: column.fixed,
-        headerRenderer: ColumnHeader,
-        formatter: getFormatter(column),
-        editor: getEditor(column),
-        ...column,
-        width: column.width ? (column.width > 380 ? 380 : column.width) : 150,
-      }))
-      .filter((column) => !userDocHiddenFields.includes(column.key));
-    columns.push({
-      isNew: true,
-      key: "new",
-      name: "Add column",
-      type: FieldType.last,
-      index: columns.length ?? 0,
-      width: 201,
-      headerRenderer: FinalColumnHeader,
-      cellClass: finalColumnClasses.cell,
-      formatter: FinalColumn,
-      editable: false,
-    });
-  }
-
+    
   const rowHeight = tableState.config.rowHeight;
 
   const rowGetter = (rowIdx: number) => (rows ? rows[rowIdx] : {});
