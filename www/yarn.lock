@@ -106,12 +106,12 @@
     "@algolia/logger-common" "4.1.0"
     "@algolia/requester-common" "4.1.0"
 
-"@antlerengineering/form-builder@^0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@antlerengineering/form-builder/-/form-builder-0.6.0.tgz#1dda8f50f4acd6ebb9b3311f085d1856e0afd740"
-  integrity sha512-47I1n5GCBOkQopSMOtg0TNnslKI89AjSNdBkJMQuuSN2lx5AxMKsP9cKDR1DWpUrpVamZ5INCLXkjNIdxeRUkg==
+"@antlerengineering/form-builder@^0.6.1":
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/@antlerengineering/form-builder/-/form-builder-0.6.1.tgz#ff6c7fd5e020dbd67b26375829dd9bd951be759c"
+  integrity sha512-YQ7ZdMVjnCIziWS3KGIWqcM+Td33Q1wqbiK4bn5dEpGccjGkhhNgNsa2BlQ0VMuW17H+abmugrKwr3q4Tw2+HQ==
   dependencies:
-    "@antlerengineering/multiselect" "^0.3.14"
+    "@antlerengineering/multiselect" "^0.7.1"
     "@date-io/date-fns" "1.x"
     "@hookform/resolvers" "^0.1.0"
     "@material-ui/pickers" "^3.2.10"
@@ -125,15 +125,10 @@
     use-debounce "^3.4.3"
     yup "^0.29.2"
 
-"@antlerengineering/multiselect@^0.3.14":
-  version "0.3.15"
-  resolved "https://registry.yarnpkg.com/@antlerengineering/multiselect/-/multiselect-0.3.15.tgz#e0c7a2fb627752a0a527ff1c1e4771aa3b7c3f7a"
-  integrity sha512-AMHKjoW682CB3d//h/IqrIBjjz/6/IcUTDqOUgKEymoII44WLsGyHUcXO67vxLd+tgz1YUcDvYoYjDE8fTSiNQ==
-
-"@antlerengineering/multiselect@^0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@antlerengineering/multiselect/-/multiselect-0.6.0.tgz#aed7aef5f2c4a9316d00328d85eb41d149694b47"
-  integrity sha512-fvW26wQsaghW9KjDnUWP3WLaktx/DgzT1M2quPIMrQ5e+gPT5psNEmWGEqG4jN0hYfsnl+5m5cHMwCD/wR/Mmg==
+"@antlerengineering/multiselect@^0.7.1":
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/@antlerengineering/multiselect/-/multiselect-0.7.1.tgz#1f58baa47d2d8a60b62057c0bce221e74e00b71b"
+  integrity sha512-WDYMY5tKaEzrHFQhGwTLsGwrPF5F4YdJGV7aGVRQf/6UFUWBW3C0oiJvQPVSAB4Y6JD4y1GY+pjHGMueMzQfuw==
 
 "@apidevtools/json-schema-ref-parser@^9.0.3":
   version "9.0.6"

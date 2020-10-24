@@ -25,7 +25,7 @@ Make sure you have the following installed:
 - [Git](https://git-scm.com/downloads)
 - [Node](https://nodejs.org/en/download/) 10, 11, or 12
 - [Yarn](https://classic.yarnpkg.com/en/docs/install/)
-- [Firebase CLI](https://firebase.google.com/docs/cli)
+- [Firebase CLI](https://firebase.google.com/docs/cli) 8
 
 Also, make sure you are logged in to your Firebase account in the Firebase CLI:
 

@@ -162,7 +162,9 @@ module.exports.getFirebaseProjects = () =>
       if (results.includes("Failed to authenticate")) {
         throw new Error(results);
       }
-      const projects = results.match(/(?<=│.*│ )[0-z,-]*(?= *│ \d)/g);
+      const projects = results.match(
+        /(?<=│.*│ )[0-z,-]*(?=( \(current\))? *│ \d)/g
+      );
       resolve(projects);
     });
   });

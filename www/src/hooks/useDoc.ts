@@ -6,7 +6,7 @@ export enum DocActions {
   delete,
   clear,
 }
-const documentIntialState = {
+const documentInitialState = {
   path: null,
   prevPath: null,
   doc: null,
@@ -17,7 +17,7 @@ const documentIntialState = {
 const documentReducer = (prevState: any, newProps: any) => {
   switch (newProps.action) {
     case DocActions.clear:
-      return documentIntialState;
+      return documentInitialState;
     case DocActions.update:
       // takes data object form the dispatcher and updates doc
 
@@ -32,10 +32,10 @@ const documentReducer = (prevState: any, newProps: any) => {
   }
 };
 
-const useDoc = (intialOverrides: any) => {
+const useDoc = (initialOverrides: any) => {
   const [documentState, documentDispatch] = useReducer(documentReducer, {
-    ...documentIntialState,
-    ...intialOverrides,
+    ...documentInitialState,
+    ...initialOverrides,
   });
   const setDocumentListner = () => {
     documentDispatch({ prevPath: documentState.path });

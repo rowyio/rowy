@@ -12,7 +12,7 @@ import Column from "components/Wizards/ImportWizard/Column";
 import { useFiretableContext } from "contexts/firetableContext";
 import { useAppContext } from "contexts/appContext";
 import { DocActions } from "hooks/useDoc";
-
+import { formatSubTableName } from "../../util/fns";
 const useStyles = makeStyles((theme) =>
   createStyles({
     textField: { display: "none" },
@@ -57,9 +57,11 @@ export default function HiddenFields() {
 
   // Initialise hiddenFields from user doc
   const userDocHiddenFields =
-    userDoc.state.doc?.tables?.[tableState?.tablePath!]?.hiddenFields;
+    userDoc.state.doc?.tables?.[formatSubTableName(tableState?.tablePath!)]
+      ?.hiddenFields;
   useEffect(() => {
     if (userDocHiddenFields) setHiddenFields(userDocHiddenFields);
+    else setHiddenFields([]);
   }, [userDocHiddenFields]);
 
   if (!tableState || !userDoc) return null;
@@ -79,13 +81,14 @@ export default function HiddenFields() {
       userDoc.dispatch({
         action: DocActions.update,
         data: {
-          tables: { [tableState?.tablePath]: { hiddenFields } },
+          tables: {
+            [formatSubTableName(tableState?.tablePath)]: { hiddenFields },
+          },
         },
       });
 
     setOpen(false);
   };
-
   const renderOption = (option, { selected }) => (
     <Column
       label={option.label}
@@ -94,7 +97,6 @@ export default function HiddenFields() {
       active={selected}
     />
   );
-
   return (
     <>
       <ButtonWithStatus
@@ -117,7 +119,7 @@ export default function HiddenFields() {
         label="Hidden fields"
         labelPlural="Fields"
         options={tableColumns}
-        value={hiddenFields}
+        value={hiddenFields ?? []}
         onChange={setHiddenFields}
         onClose={handleSave}
       />

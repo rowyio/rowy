@@ -14,7 +14,6 @@ import DataGrid, {
 } from "react-data-grid";
 import { DraggableHeader } from "react-data-grid-addons";
 
-import Loading from "components/Loading";
 import TableHeader, { TABLE_HEADER_HEIGHT } from "./TableHeader";
 import ColumnHeader from "./ColumnHeader";
 import ColumnMenu from "./ColumnMenu";
@@ -33,6 +32,7 @@ import { APP_BAR_HEIGHT } from "components/Navigation";
 import useStyles from "./styles";
 import { useAppContext } from "contexts/appContext";
 import _get from "lodash/get";
+import { formatSubTableName } from "../../util/fns";
 // const Hotkeys = lazy(() => import("./HotKeys" /* webpackChunkName: "HotKeys" */));
 const { DraggableContainer } = DraggableHeader;
 
@@ -56,8 +56,8 @@ export default function Table() {
   } = useFiretableContext();
   const { userDoc } = useAppContext();
 
-  const userDocHiddenFields =
-    userDoc.state.doc?.tables?.[`${tableState?.tablePath}`]?.hiddenFields ?? [];
+  const userDocHiddenFields = userDoc.state.doc?.tables?.[formatSubTableName(tableState?.tablePath)]
+      ?.hiddenFields ?? [];
   const [columns, setColumns] = useState<FiretableColumn[]>([]);
   useEffect(() => {
     if (!tableState?.loadingColumns && tableState?.columns) {
@@ -95,6 +95,8 @@ export default function Table() {
       setColumns(_columns);
     }
   }, [tableState?.loadingColumns, tableState?.columns]);
+
+
   const rows = useMemo(
     () =>
       tableState?.rows.map((row) =>
@@ -141,6 +143,7 @@ export default function Table() {
   const onHeaderDrop = (dragged: any, target: any) => {
     tableActions.column.reorder(dragged, target);
   };
+    
   const rowHeight = tableState.config.rowHeight;
 
   const rowGetter = (rowIdx: number) => (rows ? rows[rowIdx] : {});
@@ -156,13 +159,11 @@ export default function Table() {
       {/* <Suspense fallback={<Loading message="Loading header" />}>
         <Hotkeys selectedCell={selectedCell} />
       </Suspense> */}
-
       <TableHeader
         rowHeight={rowHeight}
         updateConfig={tableActions.table.updateConfig}
       />
-
-      {!tableState.loadingColumns ? (
+      {!tableState.loadingColumns && columns.length > 0 && (
         <DraggableContainer onHeaderDrop={onHeaderDrop}>
           <DataGrid
             columns={columns}
@@ -217,8 +218,6 @@ export default function Table() {
             )}
           />
         </DraggableContainer>
-      ) : (
-        <Loading message="Fetching columns" />
       )}
 
       <ColumnMenu />

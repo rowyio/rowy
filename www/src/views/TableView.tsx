@@ -1,32 +1,35 @@
 import React, { useEffect } from "react";
 import queryString from "query-string";
-import { useFiretableContext } from "contexts/firetableContext";
-import { useAppContext } from "contexts/appContext";
+import _isEmpty from "lodash/isEmpty";
 
 import { Hidden } from "@material-ui/core";
 
 import Navigation from "components/Navigation";
 import Table from "components/Table";
 import SideDrawer from "components/SideDrawer";
+import TableHeaderSkeleton from "components/Table/Skeleton/TableHeaderSkeleton";
+import HeaderRowSkeleton from "components/Table/Skeleton/HeaderRowSkeleton";
+import EmptyTable from "components/Table/EmptyTable";
 
+import { useFiretableContext } from "contexts/firetableContext";
+import { useAppContext } from "contexts/appContext";
 import { FireTableFilter } from "hooks/useFiretable";
 import useRouter from "hooks/useRouter";
-
-import ImportWizard from "components/Wizards/ImportWizard";
 import { DocActions } from "hooks/useDoc";
 import ActionParamsProvider from "components/Table/formatters/Action/FormDialog/Provider";
+
 export default function TableView() {
   const router = useRouter();
   const tableCollection = decodeURIComponent(router.match.params.id);
+
   const { tableState, tableActions, sideDrawerRef } = useFiretableContext();
   const { userDoc } = useAppContext();
+
   let filters: FireTableFilter[] = [];
   const parsed = queryString.parse(router.location.search);
   if (typeof parsed.filters === "string") {
-    // decoded
-    //[{"key":"cohort","operator":"==","value":"AMS1"}]
     filters = JSON.parse(parsed.filters);
-    //TODO: json schema validator
+    // TODO: json schema validator
   }
 
   useEffect(() => {
@@ -40,7 +43,7 @@ export default function TableView() {
         userDoc.dispatch({
           action: DocActions.update,
           data: {
-            tables: { [`${tableState?.tablePath}`]: { filters } },
+            tables: { [`${tableState.tablePath}`]: { filters } },
           },
         });
       }
@@ -48,17 +51,25 @@ export default function TableView() {
     }
   }, [tableCollection]);
 
-  // if (!tableState?.tablePath) {
-  //   console.error(tableState);
-  //   throw new Error("tableState.tablePath is blank");
-  // }
+  if (!tableState) return null;
 
   return (
     <Navigation tableCollection={tableCollection}>
       <ActionParamsProvider>
-        <Table key={tableCollection} />
+        {tableState.loadingColumns && (
+          <>
+            <TableHeaderSkeleton />
+            <HeaderRowSkeleton />
+          </>
+        )}
 
-        <ImportWizard />
+        {!tableState.loadingColumns && !_isEmpty(tableState.columns) && (
+          <Table key={tableCollection} />
+        )}
+
+        {!tableState.loadingColumns && _isEmpty(tableState.columns) && (
+          <EmptyTable />
+        )}
 
         <Hidden smDown>
           <SideDrawer />

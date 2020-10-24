@@ -10,6 +10,7 @@ export const useStyles = makeStyles((theme) =>
           lineHeight: "inherit !important",
         },
 
+        "& .rdg-header": { overflowY: "visible" },
         "& .rdg-header, & .rdg-header .rdg-cell": {
           backgroundColor: theme.palette.background.default,
         },

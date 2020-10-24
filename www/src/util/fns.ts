@@ -90,3 +90,8 @@ export const formatPath = (tablePath: string) => {
     isCollectionGroup() ? "groupSchema" : "schema"
   }/${tablePath.replace(formatPathRegex, "/subTables/$1")}`;
 };
+
+export const formatSubTableName = (tablePath) =>
+  tablePath
+    ? tablePath.replace(formatPathRegex, "/subTables/$1").replace(/\//g, "_")
+    : null;
