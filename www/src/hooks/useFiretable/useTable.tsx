@@ -66,7 +66,7 @@ const useTable = (initialOverrides: any) => {
       | firebase.firestore.CollectionReference
       | firebase.firestore.Query = isCollectionGroup()
       ? db.collectionGroup(tableState.path)
-      : db.collection(tableState.path);
+      : db.collection(tableState.path.replace(/~2F/g, "/"));
 
     filters.forEach((filter) => {
       if (filter.key && filter.operator && filter.value !== undefined)
