@@ -69,10 +69,10 @@ export const useStyles = makeStyles((theme) =>
     wrapper: {
       display: "flex",
       flexDirection: "column",
-      height: "700px!important",
-      rdg: {
+      height: `calc(100vh - 56px)`,
+
+      "& > .rdg": {
         flex: 1,
-        height: "700px!important",
       },
     },
 
