@@ -96,7 +96,7 @@ const selectedColumnsReducer = (doc: any) => (
   }
 };
 
-export default function ExportCSV() {
+export default function ExportCsv() {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
 

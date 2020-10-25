@@ -24,8 +24,12 @@ import TabPanel from "@material-ui/lab/TabPanel";
 
 import ImportIcon from "assets/icons/Import";
 import FileUploadIcon from "assets/icons/FileUpload";
-import AttachmentIcon from "@material-ui/icons/AttachFile";
+import CheckIcon from "@material-ui/icons/CheckCircle";
 import GoIcon from "assets/icons/Go";
+
+import ImportCsvWizard, {
+  IImportCsvWizardProps,
+} from "components/Wizards/ImportCsvWizard";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -76,22 +80,23 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-export interface IImportCSVProps {
+export interface IImportCsvProps {
   render?: (
     onClick: (event: React.MouseEvent<HTMLButtonElement>) => void
   ) => React.ReactNode;
 }
 
-export default function ImportCSV({ render }: IImportCSVProps) {
+export default function ImportCsv({ render }: IImportCsvProps) {
   const classes = useStyles();
 
   const [open, setOpen] = useState<HTMLButtonElement | null>(null);
   const [tab, setTab] = useState("upload");
-  const [csvData, setCsvData] = useState<{
-    columns: string[];
-    rows: string[][];
-  } | null>(null);
+  const [csvData, setCsvData] = useState<IImportCsvWizardProps["csvData"]>(
+    null
+  );
   const [error, setError] = useState("");
+  const validCsv =
+    csvData !== null && csvData?.columns.length > 0 && csvData?.rows.length > 0;
 
   const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) =>
     setOpen(event.currentTarget);
@@ -151,6 +156,8 @@ export default function ImportCSV({ render }: IImportCSVProps) {
         setLoading(false);
       });
   }, 1000);
+
+  const [openWizard, setOpenWizard] = useState(false);
 
   return (
     <>
@@ -218,11 +225,17 @@ export default function ImportCSV({ render }: IImportCSVProps) {
               ) : (
                 <>
                   <Grid item>
-                    <FileUploadIcon color="inherit" />
+                    {validCsv ? (
+                      <CheckIcon color="inherit" />
+                    ) : (
+                      <FileUploadIcon color="inherit" />
+                    )}
                   </Grid>
                   <Grid item>
                     <Typography variant="overline" color="inherit">
-                      Click to upload or drop CSV file here
+                      {validCsv
+                        ? "Valid CSV"
+                        : "Click to upload or drop CSV file here"}
                     </Typography>
                   </Grid>
                 </>
@@ -277,16 +290,49 @@ export default function ImportCSV({ render }: IImportCSVProps) {
 
         <Button
           endIcon={<GoIcon />}
-          disabled={
-            csvData === null ||
-            csvData?.columns.length === 0 ||
-            csvData?.rows.length === 0
-          }
+          disabled={!validCsv}
           className={classes.continueButton}
+          onClick={() => setOpenWizard(true)}
         >
           Continue
         </Button>
       </Popover>
+
+      <ImportCsvWizard
+        // open={openWizard}
+        setOpen={setOpenWizard}
+        // csvData={csvData}
+        open
+        csvData={{
+          columns: [
+            "Title",
+            "Show On Fusion",
+            "Datastudio Link",
+            "Fusion Section",
+          ],
+          rows: [
+            ["Events Data", "NO", "", "/events/global"],
+            [
+              "Antler Global Key Statistics",
+              "NO",
+              "https://datastudio.google.com/embed/reporting/14x4t3K_8pwhsdPN27gQlgykMBOJtsm16/page/sq7VB",
+              "/employees",
+            ],
+            [
+              "Program Resource Usage Stats",
+              "YES",
+              "https://datastudio.google.com/embed/reporting/709aea8c-db5a-451f-88c5-51485b8ece63/page/p6veB",
+              "/resources/program",
+            ],
+            [
+              "Founder Stats",
+              "YES",
+              "https://datastudio.google.com/embed/reporting/1Ka1xm1OhrZU6BtfMQB0hGtLdgfZeH-nQ/page/oXEBB",
+              "/cohort/founders",
+            ],
+          ],
+        }}
+      />
     </>
   );
 }

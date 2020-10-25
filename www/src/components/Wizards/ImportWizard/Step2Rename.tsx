@@ -15,8 +15,8 @@ import EditIcon from "@material-ui/icons/Edit";
 import DoneIcon from "@material-ui/icons/Done";
 
 import { IStepProps } from ".";
-import FadeList from "./FadeList";
-import Column from "./Column";
+import FadeList from "../FadeList";
+import Column from "../Column";
 
 const useStyles = makeStyles((theme) =>
   createStyles({

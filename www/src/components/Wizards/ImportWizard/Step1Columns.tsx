@@ -21,8 +21,8 @@ import {
 import DragHandleIcon from "@material-ui/icons/DragHandle";
 
 import { IStepProps } from ".";
-import FadeList from "./FadeList";
-import Column from "./Column";
+import FadeList from "../FadeList";
+import Column from "../Column";
 import EmptyState from "components/EmptyState";
 import AddColumnIcon from "assets/icons/AddColumn";
 

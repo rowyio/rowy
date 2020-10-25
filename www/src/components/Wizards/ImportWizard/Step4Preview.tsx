@@ -4,8 +4,8 @@ import { ScrollSync, ScrollSyncPane } from "react-scroll-sync";
 import { makeStyles, createStyles, Grid } from "@material-ui/core";
 
 import { IStepProps } from ".";
-import Column from "./Column";
-import Cell from "./Cell";
+import Column from "../Column";
+import Cell from "../Cell";
 
 import { useFiretableContext } from "contexts/firetableContext";
 
