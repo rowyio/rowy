@@ -56,27 +56,24 @@ export default function Table() {
     userDoc.state.doc?.tables?.[`${tableState?.tablePath}`]?.hiddenFields ?? [];
 
   const rowsContainerRef = useRef<HTMLDivElement>(null);
+
   // Gets more rows when scrolled down.
-  const [handleScroll] = useDebouncedCallback((position: any) => {
-    const elem = rowsContainerRef?.current;
-    const parent = elem?.parentNode as HTMLDivElement;
-    console.log({ position, elem, parent, scrollTop: position.scrollTop });
-    if (!elem || !parent) return;
+  // https://github.com/adazzle/react-data-grid/blob/ead05032da79d7e2b86e37cdb9af27f2a4d80b90/stories/demos/AllFeatures.tsx#L60
+  const handleScroll = (event: React.UIEvent<HTMLDivElement>) => {
+    const target = event.target as HTMLDivElement;
+    const offset = 800;
+    const isAtBottom =
+      target.clientHeight + target.scrollTop >= target.scrollHeight - offset;
 
-    const lowestScrollTopPosition = elem.scrollHeight - parent.clientHeight;
-    console.log({ lowestScrollTopPosition, scrollTop: position.scrollTop });
-    const offset = 400;
-
-    if (position.scrollTop < lowestScrollTopPosition - offset) return;
+    if (!isAtBottom) return;
 
     // Prevent calling more rows when they’ve already been called
     if (tableState!.loadingRows) return;
 
     // Call for 30 more rows. Note we don’t know here if there are no more
     // rows left in the database. This is done in the useTable hook.
-    console.log("requesting more");
-    //tableActions?.row.more(30);
-  }, 100);
+    tableActions?.row.more(30);
+  };
 
   const windowSize = useWindowSize();
   if (!windowSize || !windowSize.height) return <></>;
@@ -123,7 +120,8 @@ export default function Table() {
 
   const rowHeight = tableState.config.rowHeight;
   const rows = tableState.rows.map((row) =>
-    columns.reduce((acc, currColumn) => ({
+    columns.reduce(
+      (acc, currColumn) => ({
         ...acc,
         [currColumn.key]: _get(row, currColumn.key),
       }),
