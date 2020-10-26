@@ -113,7 +113,10 @@ export default function NavDrawerItem({
                 to={
                   table.isCollectionGroup
                     ? `${routes.tableGroup}/${table.collection}`
-                    : `${routes.table}/${table.collection}`
+                    : `${routes.table}/${table.collection.replace(
+                        /\//g,
+                        "~2F"
+                      )}`
                 }
               >
                 <ListItemText

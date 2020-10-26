@@ -4,7 +4,6 @@ import { CustomCellProps } from "./withCustomCell";
 import { makeStyles, createStyles, Tooltip, Fade } from "@material-ui/core";
 
 import { useFiretableContext } from "contexts/firetableContext";
-import { MONO_FONT } from "Theme";
 
 type StylesProps = { width: number; rowHeight: number };
 
@@ -23,7 +22,7 @@ const useStyles = makeStyles((theme) =>
       right: theme.spacing(1.5),
       left: theme.spacing(1.5),
 
-      fontFamily: MONO_FONT,
+      fontFamily: theme.typography.fontFamilyMono,
     },
     text: { maxHeight: "100%" },
 
@@ -41,7 +40,7 @@ const useStyles = makeStyles((theme) =>
       boxShadow: theme.shadows[4],
 
       ...theme.typography.body2,
-      fontFamily: MONO_FONT,
+      fontFamily: theme.typography.fontFamilyMono,
       fontSize: "0.75rem",
       color: theme.palette.text.primary,
       whiteSpace: "pre-line",
@@ -65,7 +64,6 @@ export default function LongText({ column, value }: CustomCellProps) {
     <Tooltip
       title={value}
       enterDelay={1000}
-      interactive
       placement="bottom-start"
       PopperProps={{
         modifiers: {

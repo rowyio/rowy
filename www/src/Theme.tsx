@@ -23,6 +23,11 @@ export const ROOT_FONT_SIZE = 16;
 export const toRem = (px: number) => `${px / ROOT_FONT_SIZE}rem`;
 export const toEm = (px: number, root: number) => `${px / root}em`;
 
+declare module "@material-ui/core/styles/createTypography" {
+  interface FontStyle {
+    fontFamilyMono: string;
+  }
+}
 declare module "@material-ui/core/styles/transitions" {
   interface Easing {
     custom: string;
@@ -38,6 +43,7 @@ export const themeBase = createMuiTheme({
   },
   typography: {
     fontFamily: BODY_FONT,
+    fontFamilyMono: MONO_FONT,
     h1: { fontFamily: HEADING_FONT },
     h2: { fontFamily: HEADING_FONT },
     h3: {
@@ -132,7 +138,10 @@ export const defaultOverrides = (theme: ThemeType): ThemeOptions => ({
       tooltip: theme.typography.caption,
     },
     MuiButton: {
-      root: { minHeight: 36 },
+      root: {
+        minHeight: 32,
+        padding: theme.spacing(0.25, 2),
+      },
       sizeSmall: { minHeight: 30 },
       sizeLarge: { minHeight: 48 },
 
@@ -140,10 +149,9 @@ export const defaultOverrides = (theme: ThemeType): ThemeOptions => ({
         borderRadius: 500,
         boxShadow: "none",
       },
-      containedSizeLarge: {
-        padding: theme.spacing(1, 4),
-      },
+      containedSizeLarge: { padding: theme.spacing(1, 4) },
 
+      outlined: { padding: theme.spacing(3 / 8, 15 / 8) },
       outlinedPrimary: {
         // Same as outlined text field
         borderColor: "rgba(0, 0, 0, 0.23)",
@@ -153,6 +161,10 @@ export const defaultOverrides = (theme: ThemeType): ThemeOptions => ({
         borderRadius: 500,
 
         "&$outlinedPrimary": { borderColor: theme.palette.primary.main },
+      },
+
+      iconSizeMedium: {
+        "& > *:first-child": { fontSize: 24 },
       },
     },
     MuiSvgIcon: {
@@ -277,6 +289,12 @@ export const defaultOverrides = (theme: ThemeType): ThemeOptions => ({
     MuiLinearProgress: {
       colorPrimary: { backgroundColor: "#e7e7e7" },
       colorSecondary: { backgroundColor: "#e7e7e7" },
+    },
+    MuiFormHelperText: {
+      contained: {
+        marginLeft: theme.spacing(1.5),
+        marginRight: theme.spacing(1.5),
+      },
     },
   },
   props: {

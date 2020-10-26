@@ -1,4 +1,11 @@
-import React, { lazy, Suspense, useEffect, useRef } from "react";
+import React, {
+  lazy,
+  Suspense,
+  useEffect,
+  useRef,
+  useMemo,
+  useState,
+} from "react";
 
 import _orderBy from "lodash/orderBy";
 import { useDebouncedCallback } from "use-debounce";
@@ -9,10 +16,12 @@ import { useTheme, Grid, CircularProgress } from "@material-ui/core";
 import "react-data-grid/dist/react-data-grid.css";
 import DataGrid, {
   Column,
+  SelectCellFormatter,
+  SelectColumn,
   DataGridHandle,
   CellNavigationMode,
 } from "react-data-grid";
-
+import { formatSubTableName } from "../../util/fns";
 import Loading from "components/Loading";
 import TableHeader, { TABLE_HEADER_HEIGHT } from "./TableHeader";
 import ColumnHeader from "./ColumnHeader";
@@ -52,9 +61,68 @@ export default function Table() {
     sideDrawerRef,
   } = useFiretableContext();
   const { userDoc } = useAppContext();
-  const userDocHiddenFields =
-    userDoc.state.doc?.tables?.[`${tableState?.tablePath}`]?.hiddenFields ?? [];
 
+  const [selectedRows, setSelectedRows] = useState<ReadonlySet<string>>();
+  const userDocHiddenFields =
+    userDoc.state.doc?.tables?.[formatSubTableName(tableState?.tablePath)]
+      ?.hiddenFields ?? [];
+
+  const [columns, setColumns] = useState<FiretableColumn[]>([]);
+  const lastColumn = {
+    isNew: true,
+    key: "new",
+    name: "Add column",
+    type: FieldType.last,
+    index: columns.length ?? 0,
+    width: 160,
+    headerRenderer: FinalColumnHeader,
+    cellClass: finalColumnClasses.cell,
+    formatter: FinalColumn,
+    editable: false,
+  };
+  useEffect(() => {
+    if (!tableState?.loadingColumns && tableState?.columns) {
+      const _columns = _orderBy(
+        Object.values(tableState?.columns).filter(
+          (column: any) => !column.hidden && column.key
+        ),
+        "index"
+      )
+        .map((column: any, index) => ({
+          draggable: true,
+          editable: true,
+          resizable: true,
+          frozen: column.fixed,
+          headerRenderer: ColumnHeader,
+          formatter: getFormatter(column),
+          editor: getEditor(column),
+          ...column,
+          width: column.width ? (column.width > 380 ? 380 : column.width) : 150,
+        }))
+        .filter((column) => !userDocHiddenFields.includes(column.key));
+
+      setColumns([SelectColumn, ..._columns, lastColumn]);
+    }
+  }, [tableState?.loadingColumns, tableState?.columns]);
+
+  const rows =
+    useMemo(
+      () =>
+        tableState?.rows.map((row) =>
+          columns.reduce(
+            (acc, currColumn) => {
+              if ((currColumn.key as string).includes(".")) {
+                return {
+                  ...acc,
+                  [currColumn.key]: _get(row, currColumn.key),
+                };
+              } else return acc;
+            },
+            { ...row, id: row.id as string }
+          )
+        ),
+      [columns, tableState?.rows]
+    ) ?? [];
   const rowsContainerRef = useRef<HTMLDivElement>(null);
 
   // Gets more rows when scrolled down.
@@ -84,50 +152,7 @@ export default function Table() {
     tableActions.column.reorder(dragged, target);
   };
 
-  let columns: FiretableColumn[] = [];
-  if (!tableState.loadingColumns && tableState.columns) {
-    columns = _orderBy(
-      Object.values(tableState.columns).filter(
-        (column: any) => !column.hidden && column.key
-      ),
-      "index"
-    )
-      .map((column: any, index) => ({
-        draggable: true,
-        editable: true,
-        resizable: true,
-        frozen: column.fixed,
-        headerRenderer: ColumnHeader,
-        formatter: getFormatter(column),
-        editor: getEditor(column),
-        ...column,
-        width: column.width ? (column.width > 380 ? 380 : column.width) : 150,
-      }))
-      .filter((column) => !userDocHiddenFields.includes(column.key));
-    columns.push({
-      isNew: true,
-      key: "new",
-      name: "Add column",
-      type: FieldType.last,
-      index: columns.length ?? 0,
-      width: 160,
-      headerRenderer: FinalColumnHeader,
-      cellClass: finalColumnClasses.cell,
-      formatter: FinalColumn,
-      editable: false,
-    });
-  }
-
   const rowHeight = tableState.config.rowHeight;
-  const rows = tableState.rows.map((row) =>
-    columns.reduce(
-      (acc, currColumn) => ({
-        ...acc,
-        [currColumn.key]: _get(row, currColumn.key),
-      }),
-      { ref: row.ref, id: row.id }
-    )
-  );
 
   return (
     <>
@@ -153,6 +178,8 @@ export default function Table() {
             enableCellCopyPaste
             enableCellDragAndDrop
             cellNavigationMode={"LOOP_OVER_ROW"}
+            selectedRows={selectedRows}
+            onSelectedRowsChange={setSelectedRows}
             // rowGetter={rowGetter}
             //rowsCount={rows.length}
             // onGridRowsUpdated={(event) => {
@@ -200,6 +227,7 @@ export default function Table() {
           <Loading message="Fetching columns" />
         )}
       </div>
+
       <ColumnMenu />
     </>
   );

@@ -14,7 +14,7 @@ import {
 import SortDescIcon from "@material-ui/icons/ArrowDownward";
 import DropdownIcon from "@material-ui/icons/ArrowDropDownCircle";
 
-import { getFieldIcon } from "constants/fields";
+import { getFieldIcon, FieldType } from "constants/fields";
 import { useFiretableContext } from "contexts/firetableContext";
 import { FiretableOrderBy } from "hooks/useFiretable";
 
@@ -179,24 +179,26 @@ const ColumnHeader: Column<any>["headerRenderer"] = ({ column }) => {
         </Tooltip>
       </Grid>
 
-      <Grid
-        item
-        className={clsx(
-          classes.sortIconContainer,
-          isSorted && classes.sortIconContainerSorted
-        )}
-      >
-        <IconButton
-          disableFocusRipple={true}
-          size="small"
-          onClick={handleSortClick}
-          color="inherit"
-          aria-label={`Sort by ${isAsc ? "descending" : "ascending"}`}
-          className={clsx(classes.sortIcon, isAsc && classes.sortIconAsc)}
+      {(column as any).type !== FieldType.id && (
+        <Grid
+          item
+          className={clsx(
+            classes.sortIconContainer,
+            isSorted && classes.sortIconContainerSorted
+          )}
         >
-          <SortDescIcon />
-        </IconButton>
-      </Grid>
+          <IconButton
+            disableFocusRipple={true}
+            size="small"
+            onClick={handleSortClick}
+            color="inherit"
+            aria-label={`Sort by ${isAsc ? "descending" : "ascending"}`}
+            className={clsx(classes.sortIcon, isAsc && classes.sortIconAsc)}
+          >
+            <SortDescIcon />
+          </IconButton>
+        </Grid>
+      )}
 
       {userClaims?.roles?.includes("ADMIN") && (
         <Grid item>

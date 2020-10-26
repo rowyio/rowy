@@ -154,7 +154,7 @@ const TablesView = () => {
           primaryLink={{
             to: `${
               table.isCollectionGroup ? routes.tableGroup : routes.table
-            }/${table.collection}`,
+            }/${table.collection.replace(/\//g, "~2F")}`,
             label: "Open",
           }}
           secondaryAction={

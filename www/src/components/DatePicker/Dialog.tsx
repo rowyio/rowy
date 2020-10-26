@@ -1,6 +1,6 @@
 import React from "react";
 import clsx from "clsx";
-import { CustomCellProps } from "./withCustomCell";
+
 import { useDebouncedCallback } from "use-debounce";
 
 import { makeStyles, createStyles } from "@material-ui/core";
@@ -47,22 +47,14 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-export default function _Date({
-  rowIdx,
-  column,
-  value,
-  onSubmit,
-}: CustomCellProps) {
+export default function Date({ rowIdx, column, value, onSubmit }: any) {
   const classes = useStyles();
   const { dataGridRef } = useFiretableContext();
 
-  const transformedValue = !value
-    ? null
-    : typeof value === "number"
-    ? new Date(value)
-    : "toDate" in value
-    ? value.toDate()
-    : null;
+  const transformedValue =
+    value && typeof value !== "number" && "toDate" in value
+      ? value.toDate()
+      : null;
 
   const fieldType = (column as any).type;
   const Picker =

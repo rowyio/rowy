@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme) =>
       width: "100%",
       textAlign: "center",
     },
+    progress: { color: theme.palette.text.secondary },
     content: { maxWidth: "25em" },
     message: {
       textTransform: "uppercase",
@@ -46,7 +47,7 @@ export default function Loading({
       style={{ height: fullScreen ? "100rvh" : "100%" }}
     >
       <Grid item className={classes.content}>
-        <CircularProgress />
+        <CircularProgress className={classes.progress} />
         <Typography
           variant="h6"
           className={classes.message}

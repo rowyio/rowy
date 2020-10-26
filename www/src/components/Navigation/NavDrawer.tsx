@@ -38,8 +38,9 @@ const useStyles = makeStyles((theme) =>
       marginTop: 0,
       marginBottom: theme.spacing(1),
 
-      padding: theme.spacing(0, 0.5, 0, 2),
+      padding: theme.spacing(0, 2, 0, 0.5),
     },
+    logo: { marginLeft: theme.spacing(1.5) },
 
     listItem: {
       color: theme.palette.text.secondary,
@@ -81,14 +82,9 @@ export default function NavDrawer({
         container
         spacing={1}
         wrap="nowrap"
-        justify="space-between"
         alignItems="center"
         className={classes.logoRow}
       >
-        <Grid item>
-          <FiretableLogo />
-        </Grid>
-
         <Grid item>
           <IconButton
             aria-label="Close navigation drawer"
@@ -96,6 +92,10 @@ export default function NavDrawer({
           >
             <CloseIcon />
           </IconButton>
+        </Grid>
+
+        <Grid item className={classes.logo}>
+          <FiretableLogo />
         </Grid>
       </Grid>
 

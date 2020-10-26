@@ -436,6 +436,15 @@ switch (triggerType){
           <Typography variant="overline">Field type of the output</Typography>
           <FieldsDropdown
             value={config.renderFieldType}
+            options={Object.values(FieldType).filter(
+              (f) =>
+                ![
+                  FieldType.derivative,
+                  FieldType.aggregate,
+                  FieldType.subTable,
+                  FieldType.action,
+                ].includes(f)
+            )}
             onChange={(newType: any) => {
               handleChange("renderFieldType")(newType.target.value);
             }}
@@ -484,6 +493,15 @@ switch (triggerType){
           <Typography variant="overline">Field type of the output</Typography>
           <FieldsDropdown
             value={config.renderFieldType}
+            options={Object.values(FieldType).filter(
+              (f) =>
+                ![
+                  FieldType.derivative,
+                  FieldType.aggregate,
+                  FieldType.subTable,
+                  FieldType.action,
+                ].includes(f)
+            )}
             onChange={(newType: any) => {
               handleChange("renderFieldType")(newType.target.value);
             }}

@@ -10,19 +10,20 @@ import {
   Button,
 } from "@material-ui/core";
 
-import { isCollectionGroup } from "../../util/fns";
-import AddIcon from "@material-ui/icons/Add";
+import { isCollectionGroup } from "util/fns";
+import AddRowIcon from "assets/icons/AddRow";
 
-import Filters from "./Filters";
+import Filters from "../Filters";
 import ImportCSV from "./ImportCSV";
 import ExportCSV from "./ExportCSV";
+import TableSettings from "./TableSettings";
 
 import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
 import { useFiretableContext } from "contexts/firetableContext";
 import { FieldType } from "constants/fields";
-import MigrateButton from "./MigrateButton";
-import HiddenFields from "./HidenFields";
-//import Settings from "./Settings";
+import MigrateButton from "../MigrateButton";
+import HiddenFields from "../HiddenFields";
+
 export const TABLE_HEADER_HEIGHT = 56;
 
 const useStyles = makeStyles((theme) =>
@@ -30,7 +31,7 @@ const useStyles = makeStyles((theme) =>
     root: {
       width: `calc(100% - ${DRAWER_COLLAPSED_WIDTH}px)`,
       margin: 0,
-      padding: theme.spacing(0, 3, 0, 1),
+      padding: theme.spacing(0, 1.5),
       minHeight: TABLE_HEADER_HEIGHT,
 
       overflowX: "auto",
@@ -43,7 +44,8 @@ const useStyles = makeStyles((theme) =>
         paddingRight: theme.spacing(1),
       },
     },
-    collectionName: { textTransform: "uppercase" },
+
+    addRowIcon: { fontSize: "26px !important" },
 
     spacer: { minWidth: theme.spacing(8) },
 
@@ -73,7 +75,8 @@ export default function TableHeader({
 }: ITableHeaderProps) {
   const classes = useStyles();
   const { tableActions, tableState } = useFiretableContext();
-  if (!tableState || !tableState.columns) return <></>;
+
+  if (!tableState || !tableState.columns) return null;
   const { columns } = tableState;
 
   const needsMigration = Array.isArray(columns) && columns.length !== 0;
@@ -103,7 +106,7 @@ export default function TableHeader({
             }}
             variant="contained"
             color="primary"
-            startIcon={<AddIcon />}
+            startIcon={<AddRowIcon className={classes.addRowIcon} />}
           >
             Add Row
           </Button>
@@ -170,7 +173,10 @@ export default function TableHeader({
       <Grid item>
         <ExportCSV />
       </Grid>
-      {/* <Settings /> */}
+
+      <Grid item>
+        <TableSettings />
+      </Grid>
     </Grid>
   );
 }

@@ -18,7 +18,7 @@ import AddIcon from "@material-ui/icons/AddAPhoto";
 import DeleteIcon from "@material-ui/icons/Delete";
 import OpenIcon from "@material-ui/icons/OpenInNewOutlined";
 
-import Confirmation from "components/Confirmation";
+import { useConfirmation } from "components/ConfirmationDialog";
 import useUploader, { FileValue } from "hooks/useFiretable/useUploader";
 import { IMAGE_MIME_TYPES } from "constants/fields";
 import { useFiretableContext } from "contexts/firetableContext";
@@ -114,6 +114,7 @@ export default function Image({
   onSubmit,
 }: CustomCellProps) {
   const { tableState } = useFiretableContext();
+  const { requestConfirmation } = useConfirmation();
   const classes = useStyles({ rowHeight: tableState?.config?.rowHeight ?? 44 });
 
   const { uploaderState, upload, deleteUpload } = useUploader();
@@ -213,34 +214,32 @@ export default function Image({
                 ) : (
                   <Tooltip title="Click to delete">
                     <div>
-                      <Confirmation
-                        message={{
-                          title: "Delete Image",
-                          body: "Are you sure you want to delete this image?",
-                          confirm: "Delete",
+                      <ButtonBase
+                        className={classes.img}
+                        onClick={() => {
+                          requestConfirmation({
+                            title: "Delete Image",
+                            body: "Are you sure you want to delete this image?",
+                            confirm: "Delete",
+                            handleConfirm: handleDelete(file.ref),
+                          });
                         }}
-                        stopPropagation
                       >
-                        <ButtonBase
-                          className={classes.img}
-                          onClick={handleDelete(file.ref)}
+                        <Thumbnail
+                          imageUrl={file.downloadURL}
+                          size={thumbnailSize}
+                          objectFit="contain"
+                          className={classes.thumbnail}
+                        />
+                        <Grid
+                          container
+                          justify="center"
+                          alignItems="center"
+                          className={classes.deleteImgHover}
                         >
-                          <Thumbnail
-                            imageUrl={file.downloadURL}
-                            size={thumbnailSize}
-                            objectFit="contain"
-                            className={classes.thumbnail}
-                          />
-                          <Grid
-                            container
-                            justify="center"
-                            alignItems="center"
-                            className={classes.deleteImgHover}
-                          >
-                            <DeleteIcon color="inherit" />
-                          </Grid>
-                        </ButtonBase>
-                      </Confirmation>
+                          <DeleteIcon color="inherit" />
+                        </Grid>
+                      </ButtonBase>
                     </div>
                   </Tooltip>
                 )}

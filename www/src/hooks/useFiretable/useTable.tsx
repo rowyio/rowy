@@ -66,7 +66,7 @@ const useTable = (initialOverrides: any) => {
       | firebase.firestore.CollectionReference
       | firebase.firestore.Query = isCollectionGroup()
       ? db.collectionGroup(tableState.path)
-      : db.collection(tableState.path);
+      : db.collection(tableState.path.replace(/~2F/g, "/"));
 
     filters.forEach((filter) => {
       if (filter.key && filter.operator && filter.value !== undefined)
@@ -99,7 +99,7 @@ const useTable = (initialOverrides: any) => {
       },
       (error: any) => {
         //TODO:callable to create new index
-        if (error.message.includes("indexes?create_composite=")) {
+        if (error?.message.includes("indexes?create_composite=")) {
           const url =
             `https://console.firebase.google.com/project/${process.env.REACT_APP_FIREBASE_PROJECT_ID}/database/firestore/` +
             "indexes?create_composite=" +

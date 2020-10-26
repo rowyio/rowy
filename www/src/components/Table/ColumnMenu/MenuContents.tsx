@@ -67,6 +67,7 @@ export interface IMenuContentsProps {
     onClick?: () => void;
     active?: boolean;
     color?: "error";
+    disabled?: boolean;
   }[];
 }
 
@@ -105,6 +106,7 @@ export default function MenuContents({ menuItems }: IMenuContentsProps) {
                 item.active && classes.menuItemActive,
                 item.color === "error" && classes.menuItemError
               )}
+              disabled={item.disabled}
             >
               <ListItemIcon className={classes.menuItemIcon}>
                 {icon}

@@ -25,7 +25,7 @@ export interface IConfirmationProps {
   message?: {
     title?: string;
     customBody?: string;
-    body?: string;
+    body?: string | React.ReactNode;
     cancel?: string;
     confirm?: string | JSX.Element;
   };
@@ -68,9 +68,12 @@ export default function Confirmation({
         {message && (
           <DialogContent>
             {message.customBody}
-            {message.body && (
-              <DialogContentText>{message.body}</DialogContentText>
-            )}
+            {message.body &&
+              (typeof message.body === "string" ? (
+                <DialogContentText>{message.body}</DialogContentText>
+              ) : (
+                message.body
+              ))}
             {confirmationCommand && (
               <div className={classes.dryWrapper}>
                 <DialogContentText>
