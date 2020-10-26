@@ -12,7 +12,7 @@ import { useDebouncedCallback } from "use-debounce";
 import _isEmpty from "lodash/isEmpty";
 
 import { useTheme, Grid, CircularProgress } from "@material-ui/core";
-
+import BulkActions from "./BulkActions";
 import "react-data-grid/dist/react-data-grid.css";
 import DataGrid, {
   Column,
@@ -229,6 +229,11 @@ export default function Table() {
       </div>
 
       <ColumnMenu />
+      <BulkActions
+        selectedRowsIds={selectedRows ? [...selectedRows] : []}
+        rows={rows}
+        clearSelection={() => setSelectedRows(undefined)}
+      />
     </>
   );
 }
