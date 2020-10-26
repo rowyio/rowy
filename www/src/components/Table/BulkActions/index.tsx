@@ -5,6 +5,7 @@ import Typography from "@material-ui/core/Typography";
 import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 import CopyCellsIcon from "assets/icons/CopyCells";
+import ClearSelectionIcon from "@material-ui/icons/IndeterminateCheckBox";
 import DeleteIcon from "@material-ui/icons/DeleteForever";
 import { useConfirmation } from "components/ConfirmationDialog/Context";
 import { useFiretableContext } from "contexts/firetableContext";
@@ -56,13 +57,21 @@ export default function BulkActions({ selectedRowsIds, rows, clearSelection }) {
     <div className={classes.root}>
       <Paper elevation={5} className={classes.paper}>
         <>
+          <IconButton
+            size="medium"
+            color="inherit"
+            onClick={clearSelection}
+            aria-label="Duplicate selected rows"
+          >
+            <ClearSelectionIcon />
+          </IconButton>
           <Typography variant="overline">
             {" "}
             {numberOfSelectedRows} rows selected{" "}
           </Typography>
 
           <IconButton
-            size="small"
+            size="medium"
             color="inherit"
             onClick={() => {
               requestConfirmation({
@@ -78,7 +87,7 @@ export default function BulkActions({ selectedRowsIds, rows, clearSelection }) {
           </IconButton>
 
           <IconButton
-            size="small"
+            size="medium"
             color="inherit"
             onClick={() => {
               requestConfirmation({
