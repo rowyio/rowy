@@ -17,7 +17,8 @@ const useStyles = makeStyles((theme: Theme) =>
       right: 50,
     },
     paper: {
-      margin: theme.spacing(3),
+      padding: theme.spacing(3),
+      cornerRadius: 32,
     },
   })
 );
@@ -53,9 +54,9 @@ export default function BulkActions({ selectedRowsIds, rows, clearSelection }) {
   if (numberOfSelectedRows === 0) return null;
   return (
     <div className={classes.root}>
-      <Paper elevation={3}>
+      <Paper elevation={5} className={classes.paper}>
         <>
-          <Typography variant="overline" className={classes.paper}>
+          <Typography variant="overline">
             {" "}
             {numberOfSelectedRows} rows selected{" "}
           </Typography>
