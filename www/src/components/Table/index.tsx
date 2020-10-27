@@ -10,6 +10,8 @@ import React, {
 import _orderBy from "lodash/orderBy";
 import { useDebouncedCallback } from "use-debounce";
 import _isEmpty from "lodash/isEmpty";
+import _find from "lodash/find";
+import _difference from "lodash/difference";
 
 import { useTheme, Grid, CircularProgress } from "@material-ui/core";
 import BulkActions from "./BulkActions";
@@ -62,7 +64,6 @@ export default function Table() {
   } = useFiretableContext();
   const { userDoc } = useAppContext();
 
-  const [selectedRows, setSelectedRows] = useState<ReadonlySet<string>>();
   const userDocHiddenFields =
     userDoc.state.doc?.tables?.[formatSubTableName(tableState?.tablePath)]
       ?.hiddenFields ?? [];
@@ -125,6 +126,8 @@ export default function Table() {
     ) ?? [];
   const rowsContainerRef = useRef<HTMLDivElement>(null);
 
+  const [selectedRowsSet, setSelectedRowsSet] = useState<ReadonlySet<string>>();
+  const [selectedRows, setSelectedRows] = useState<any[]>([]);
   // Gets more rows when scrolled down.
   // https://github.com/adazzle/react-data-grid/blob/ead05032da79d7e2b86e37cdb9af27f2a4d80b90/stories/demos/AllFeatures.tsx#L60
   const handleScroll = (event: React.UIEvent<HTMLDivElement>) => {
@@ -178,8 +181,31 @@ export default function Table() {
             enableCellCopyPaste
             enableCellDragAndDrop
             cellNavigationMode={"LOOP_OVER_ROW"}
-            selectedRows={selectedRows}
-            onSelectedRowsChange={setSelectedRows}
+            selectedRows={selectedRowsSet}
+            onSelectedRowsChange={(newSelectedSet) => {
+              const newSelectedArray = newSelectedSet
+                ? [...newSelectedSet]
+                : [];
+              const prevSelectedRowsArray = selectedRowsSet
+                ? [...selectedRowsSet]
+                : [];
+              const addedSelections = _difference(
+                newSelectedArray,
+                prevSelectedRowsArray
+              );
+              const removedSelections = _difference(
+                prevSelectedRowsArray,
+                newSelectedArray
+              );
+              addedSelections.forEach((id) => {
+                const newRow = _find(rows, { id });
+                setSelectedRows([...selectedRows, newRow]);
+              });
+              removedSelections.forEach((rowId) => {
+                setSelectedRows(selectedRows.filter((row) => row.id !== rowId));
+              });
+              setSelectedRowsSet(newSelectedSet);
+            }}
             // rowGetter={rowGetter}
             //rowsCount={rows.length}
             // onGridRowsUpdated={(event) => {
@@ -230,9 +256,11 @@ export default function Table() {
 
       <ColumnMenu />
       <BulkActions
-        selectedRowsIds={selectedRows ? [...selectedRows] : []}
-        rows={rows}
-        clearSelection={() => setSelectedRows(undefined)}
+        selectedRows={selectedRows}
+        clearSelection={() => {
+          setSelectedRowsSet(new Set());
+          setSelectedRows([]);
+        }}
       />
     </>
   );

@@ -18,17 +18,17 @@ const useStyles = makeStyles((theme: Theme) =>
       right: 50,
     },
     paper: {
-      padding: theme.spacing(3),
+      padding: theme.spacing(2),
       cornerRadius: 32,
     },
   })
 );
 
-export default function BulkActions({ selectedRowsIds, rows, clearSelection }) {
+export default function BulkActions({ selectedRows, clearSelection }) {
   const { requestConfirmation } = useConfirmation();
   const { tableActions } = useFiretableContext();
   const classes = useStyles();
-  const selectedRows = selectedRowsIds.map((id) => _find(rows, { id }));
+
   const handleDuplicate = () => {
     selectedRows.forEach((row) => {
       const clonedRow = { ...row };
