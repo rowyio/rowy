@@ -257,6 +257,7 @@ export default function Table() {
       <ColumnMenu />
       <BulkActions
         selectedRows={selectedRows}
+        columns={columns}
         clearSelection={() => {
           setSelectedRowsSet(new Set());
           setSelectedRows([]);
