@@ -31,7 +31,9 @@ const ImpersonatorAuthView = lazy(
       "./views/AuthViews/ImpersonatorAuthView" /* webpackChunkName: "ImpersonatorAuthView" */
     )
 );
-
+const JWTAuthView = lazy(
+  () => import("./views/AuthViews/JWTAuth" /* webpackChunkName: "JWTAuth" */)
+);
 const TableView = lazy(
   () => import("./views/TableView" /* webpackChunkName: "TableView" */)
 );
@@ -67,6 +69,11 @@ const App: React.FC = () => {
                       exact
                       path={routes.impersonatorAuth}
                       render={() => <ImpersonatorAuthView />}
+                    />
+                    <Route
+                      exact
+                      path={routes.jwtAuth}
+                      render={() => <JWTAuthView />}
                     />
                     <Route
                       exact

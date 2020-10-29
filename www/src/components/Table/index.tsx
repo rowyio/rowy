@@ -119,7 +119,7 @@ export default function Table() {
                 };
               } else return acc;
             },
-            { ...row, id: row.id as string }
+            { ...row, id: row.id as string, ref: row.ref }
           )
         ),
       [columns, tableState?.rows]
