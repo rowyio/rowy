@@ -206,8 +206,27 @@ export default function Table() {
               });
               setSelectedRowsSet(newSelectedSet);
             }}
-            // rowGetter={rowGetter}
-            //rowsCount={rows.length}
+            onRowsUpdate={(e) => {
+              const { action, fromRow, toRow, updated, cellKey } = e;
+              switch (action) {
+                case "CELL_UPDATE":
+                  rows[fromRow].ref.update({ [cellKey]: updated });
+                  break;
+                case "CELL_DRAG":
+                  if (toRow > fromRow)
+                    [...rows]
+                      .splice(fromRow, toRow - fromRow + 1)
+                      .forEach((row) => row.ref.update(updated));
+                  if (toRow < fromRow)
+                    [...rows]
+                      .splice(toRow, fromRow - toRow + 1)
+                      .forEach((row) => row.ref.update(updated));
+                  break;
+                default:
+                  break;
+              }
+            }}
+
             // onGridRowsUpdated={(event) => {
             //   const { action, cellKey, updated } = event;
             //   if (action === "CELL_UPDATE" && updated !== null)
