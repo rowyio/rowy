@@ -12296,10 +12296,10 @@ react-color@^2.18.1:
     reactcss "^1.2.0"
     tinycolor2 "^1.4.1"
 
-react-data-grid@^7.0.0-canary.26:
-  version "7.0.0-canary.26"
-  resolved "https://registry.yarnpkg.com/react-data-grid/-/react-data-grid-7.0.0-canary.26.tgz#98286d2e03aa9ef039ee4284d6d7606502b0ba58"
-  integrity sha512-AVObk1vL8lck7VljL+ye6xUa+2C4CHTnPj4tF+fr5RikHAY/4EPSfDJeBZGg78APeH4Pr4uZLtVHkL0mScHA/Q==
+react-data-grid@^7.0.0-canary.27:
+  version "7.0.0-canary.27"
+  resolved "https://registry.yarnpkg.com/react-data-grid/-/react-data-grid-7.0.0-canary.27.tgz#764ca52b7935eb9024339a58ed34af6e1e22f05a"
+  integrity sha512-PQLHeA85j3rvXH4/5eytxT31Xutx5+UPTZpMra85tx/wE++ErWTEjpdL6D+ReV+AcOs+GUzAPh8f1kuehNdawg==
   dependencies:
     clsx "^1.1.1"
 

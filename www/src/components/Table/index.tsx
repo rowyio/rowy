@@ -1,28 +1,14 @@
-import React, {
-  lazy,
-  Suspense,
-  useEffect,
-  useRef,
-  useMemo,
-  useState,
-} from "react";
+import React, { useEffect, useRef, useMemo, useState } from "react";
 
 import _orderBy from "lodash/orderBy";
-import { useDebouncedCallback } from "use-debounce";
 import _isEmpty from "lodash/isEmpty";
 import _find from "lodash/find";
 import _difference from "lodash/difference";
 
-import { useTheme, Grid, CircularProgress } from "@material-ui/core";
+import { useTheme } from "@material-ui/core";
 import BulkActions from "./BulkActions";
 import "react-data-grid/dist/react-data-grid.css";
-import DataGrid, {
-  Column,
-  SelectCellFormatter,
-  SelectColumn,
-  DataGridHandle,
-  CellNavigationMode,
-} from "react-data-grid";
+import DataGrid, { Column, SelectColumn } from "react-data-grid";
 import { formatSubTableName } from "../../util/fns";
 import Loading from "components/Loading";
 import TableHeader, { TABLE_HEADER_HEIGHT } from "./TableHeader";
@@ -39,7 +25,6 @@ import { getEditor } from "./editors";
 
 import useWindowSize from "hooks/useWindowSize";
 import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
-import { APP_BAR_HEIGHT } from "components/Navigation";
 import useStyles from "./styles";
 import { useAppContext } from "contexts/appContext";
 import _get from "lodash/get";
@@ -50,7 +35,9 @@ export type FiretableColumn = Column<any> & {
   type: FieldType;
   [key: string]: any;
 };
-
+function rowKeyGetter(row: any) {
+  return row.id;
+}
 export default function Table() {
   const classes = useStyles();
   const theme = useTheme();
@@ -126,7 +113,7 @@ export default function Table() {
     ) ?? [];
   const rowsContainerRef = useRef<HTMLDivElement>(null);
 
-  const [selectedRowsSet, setSelectedRowsSet] = useState<ReadonlySet<string>>();
+  const [selectedRowsSet, setSelectedRowsSet] = useState<Set<React.Key>>();
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   // Gets more rows when scrolled down.
   // https://github.com/adazzle/react-data-grid/blob/ead05032da79d7e2b86e37cdb9af27f2a4d80b90/stories/demos/AllFeatures.tsx#L60
@@ -174,13 +161,13 @@ export default function Table() {
             onScroll={handleScroll}
             ref={dataGridRef}
             rows={rows}
-            rowKey="id"
             columns={columns as any}
             rowHeight={rowHeight ?? 43}
             headerRowHeight={44}
             enableCellCopyPaste
             enableCellDragAndDrop
             cellNavigationMode={"LOOP_OVER_ROW"}
+            rowKeyGetter={rowKeyGetter}
             selectedRows={selectedRowsSet}
             onSelectedRowsChange={(newSelectedSet) => {
               const newSelectedArray = newSelectedSet
@@ -242,13 +229,13 @@ export default function Table() {
 
             //cellNavigationMode={CellNavigationMode.CHANGE_ROW}
 
-            onCheckCellIsEditable={({ column }) =>
-              Boolean(
-                column.editable &&
-                  column.editor?.displayName &&
-                  column.editor?.displayName === "WithStyles(TextEditor)"
-              )
-            }
+            // onCheckCellIsEditable={({ column }) =>
+            //   Boolean(
+            //     column.editable &&
+            //       column.editor?.displayName &&
+            //       column.editor?.displayName === "WithStyles(TextEditor)"
+            //   )
+            // }
             //  enableCellSelect
 
             // RowsContainer={(props) => (

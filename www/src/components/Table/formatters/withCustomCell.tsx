@@ -5,8 +5,9 @@ import { makeStyles, createStyles } from "@material-ui/core";
 
 import ErrorBoundary from "components/ErrorBoundary";
 import { useFiretableContext } from "../../../contexts/firetableContext";
-import _get from "lodash/get";
+
 import { FieldType } from "constants/fields";
+import { getCellValue } from "../utils";
 const useStyles = makeStyles((theme) =>
   createStyles({
     "@global": {
@@ -23,11 +24,6 @@ export type CustomCellProps = FormatterProps<any> & {
   value: any;
   onSubmit: (value: any) => void;
   docRef: firebase.firestore.DocumentReference;
-};
-
-const getCellValue = (row, key) => {
-  if (key.includes(".")) return _get(row, key);
-  return row[key];
 };
 
 const BasicCell = ({ value, type, name }) => {

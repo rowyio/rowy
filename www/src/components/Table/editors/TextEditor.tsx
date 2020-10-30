@@ -9,7 +9,7 @@ import {
 } from "@material-ui/core";
 
 import { FieldType } from "constants/fields";
-
+import { getCellValue } from "../utils";
 const styles = (theme) =>
   createStyles({
     root: {
@@ -56,7 +56,12 @@ class TextEditor extends React.Component<
   }
 
   render() {
-    const { classes, column, value } = this.props;
+    const {
+      classes,
+      row,
+      column, //value
+    } = this.props;
+    const value = getCellValue(row, column.key as string);
     let inputType = "text";
     switch ((column as any).type) {
       case FieldType.email:

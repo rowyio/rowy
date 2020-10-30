@@ -31,7 +31,7 @@
     "react-ace": "^9.1.1",
     "react-beautiful-dnd": "^13.0.0",
     "react-color": "^2.17.3",
-    "react-data-grid": "^7.0.0-canary.26",
+    "react-data-grid": "^7.0.0-canary.27",
     "react-div-100vh": "^0.3.8",
     "react-dom": "^16.9.0",
     "react-dropzone": "^10.1.8",
