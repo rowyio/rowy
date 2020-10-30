@@ -127,56 +127,56 @@ export default function MultiSelect({
     return <ConvertStringToArray value={value} onSubmit={onSubmit} />;
 
   return (
-    <Tooltip
-      title={
-        value
-          ? Array.isArray(value)
-            ? value.length > 1
-              ? value.join(", ")
-              : ``
-            : value
-          : ``
-      }
-      enterDelay={100}
-      interactive
-      placement="bottom-start"
-    >
-      <div>
-        <MultiSelect_
-          value={sanitisedValue}
-          onChange={onSubmit}
-          freeText={config.freeText}
-          multiple={!isSingle as any}
-          label={column.name}
-          labelPlural={column.name}
-          options={config.options ?? []}
-          disabled={column.editable === false}
-          onOpen={handleOpen}
-          TextFieldProps={
-            {
-              label: "",
-              hiddenLabel: true,
-              variant: "standard",
-              className: classes.root,
-              InputProps: {
-                disableUnderline: true,
-                classes: { root: classes.inputBase },
+    // <Tooltip
+    //   title={
+    //     value
+    //       ? Array.isArray(value)
+    //         ? value.length > 1
+    //           ? value.join(", ")
+    //           : ``
+    //         : value
+    //       : ``
+    //   }
+    //   enterDelay={100}
+    //   interactive
+    //   placement="bottom-start"
+    // >
+    <div>
+      <MultiSelect_
+        value={sanitisedValue}
+        onChange={onSubmit}
+        freeText={config.freeText}
+        multiple={!isSingle as any}
+        label={column.name}
+        labelPlural={column.name}
+        options={config.options ?? []}
+        disabled={column.editable === false}
+        onOpen={handleOpen}
+        TextFieldProps={
+          {
+            label: "",
+            hiddenLabel: true,
+            variant: "standard",
+            className: classes.root,
+            InputProps: {
+              disableUnderline: true,
+              classes: { root: classes.inputBase },
+            },
+            SelectProps: {
+              classes: {
+                root: clsx(classes.root, classes.select),
+                icon: classes.icon,
               },
-              SelectProps: {
-                classes: {
-                  root: clsx(classes.root, classes.select),
-                  icon: classes.icon,
-                },
-                renderValue,
-                MenuProps: {
-                  anchorOrigin: { vertical: "bottom", horizontal: "left" },
-                  transformOrigin: { vertical: "top", horizontal: "left" },
-                },
+              renderValue,
+              MenuProps: {
+                anchorOrigin: { vertical: "bottom", horizontal: "left" },
+                transformOrigin: { vertical: "top", horizontal: "left" },
               },
-            } as const
-          }
-        />
-      </div>
-    </Tooltip>
+            },
+          } as const
+        }
+      />
+    </div>
+    //  </Tooltip>
   );
 }
