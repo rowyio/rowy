@@ -92,6 +92,9 @@ class TextEditor extends React.Component<
         }
         type={inputType}
         fullWidth
+        onBlur={(e) => {
+          row.ref.update({ [column.key]: e.target.value });
+        }}
         variant="standard"
         inputProps={{
           ref: this.inputRef,
