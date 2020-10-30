@@ -56,16 +56,20 @@ const withCustomCell = (
 ) => (props: FormatterProps<any>) => {
   useStyles();
   const { updateCell } = useFiretableContext();
-
   const value = getCellValue(props.row, props.column.key as string);
+  const [localValue, setLocalValue] = useState(value);
   const lazyCell = (
     <BasicCell
-      value={value}
+      value={localValue}
       name={(props.column as any).name}
       type={(props.column as any).type as FieldType}
     />
   );
   const [component, setComponent] = useState(lazyCell);
+  useEffect(() => {
+    setLocalValue(value);
+  }, [value]);
+
   useEffect(() => {
     setTimeout(() => {
       setComponent(
@@ -74,17 +78,20 @@ const withCustomCell = (
             <Component
               {...props}
               docRef={props.row.ref}
-              value={value}
+              value={localValue}
               onSubmit={handleSubmit}
             />
           </Suspense>
         </ErrorBoundary>
       );
     });
-  }, [value]);
+  }, [localValue]);
+
   const handleSubmit = (value: any) => {
-    if (updateCell && !readOnly)
+    if (updateCell && !readOnly) {
       updateCell(props.row.ref, props.column.key as string, value);
+      setLocalValue(value);
+    }
   };
   return component;
 };
