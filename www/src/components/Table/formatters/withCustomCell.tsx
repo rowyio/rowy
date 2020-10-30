@@ -35,6 +35,23 @@ const BasicCell = ({ value, type, name }) => {
     case FieldType.singleSelect:
     case FieldType.longText:
       return <>{value}</>;
+    case FieldType.url:
+      return (
+        <a
+          href={value}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ fontWeight: "bold" }}
+        >
+          {value}
+        </a>
+      );
+    case FieldType.subTable:
+      return (
+        <>
+          {value && value.count} {name}:
+        </>
+      );
     case FieldType.checkbox:
       return <>{name}</>;
     case FieldType.action:

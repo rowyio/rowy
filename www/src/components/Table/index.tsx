@@ -226,7 +226,6 @@ export default function Table() {
                   break;
               }
             }}
-
             // onGridRowsUpdated={(event) => {
             //   const { action, cellKey, updated } = event;
             //   if (action === "CELL_UPDATE" && updated !== null)
@@ -242,14 +241,14 @@ export default function Table() {
             // enableCellDragAndDrop
 
             //cellNavigationMode={CellNavigationMode.CHANGE_ROW}
-            // onCellSelected={({ rowIdx, idx: colIdx }) => {
-            //   // Prevent selecting final row
-            //   if (colIdx < columns.length - 1 && sideDrawerRef?.current)
-            //     sideDrawerRef.current.setCell({
-            //       row: rowIdx,
-            //       column: columns[colIdx].key as string,
-            //     });
-            // }}
+
+            onCheckCellIsEditable={({ column }) =>
+              Boolean(
+                column.editable &&
+                  column.editor?.displayName &&
+                  column.editor?.displayName === "WithStyles(TextEditor)"
+              )
+            }
             //  enableCellSelect
 
             // RowsContainer={(props) => (

@@ -21,7 +21,6 @@ import TableSettings from "./TableSettings";
 import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
 import { useFiretableContext } from "contexts/firetableContext";
 import { FieldType } from "constants/fields";
-import MigrateButton from "../MigrateButton";
 import HiddenFields from "../HiddenFields";
 
 export const TABLE_HEADER_HEIGHT = 56;
@@ -90,7 +89,6 @@ export default function TableHeader({
       wrap="nowrap"
       className={classes.root}
     >
-      <MigrateButton needsMigration={needsMigration} columns={tempColumns} />
       {!isCollectionGroup() && (
         <Grid item>
           <Button
