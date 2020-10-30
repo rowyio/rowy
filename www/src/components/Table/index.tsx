@@ -45,7 +45,6 @@ export default function Table() {
   const {
     tableState,
     tableActions,
-    updateCell,
     dataGridRef,
     sideDrawerRef,
   } = useFiretableContext();
@@ -197,7 +196,6 @@ export default function Table() {
               const { action, fromRow, toRow, updated, cellKey } = e;
               switch (action) {
                 case "CELL_UPDATE":
-                  rows[fromRow].ref.update({ [cellKey]: updated });
                   break;
                 case "CELL_DRAG":
                   if (toRow > fromRow)
@@ -213,6 +211,15 @@ export default function Table() {
                   break;
               }
             }}
+            onRowClick={(rowIdx, row, column) => {
+              if (sideDrawerRef?.current) {
+                sideDrawerRef.current.setCell({
+                  row: rowIdx,
+                  column: column.key as string,
+                });
+              }
+            }}
+
             // onGridRowsUpdated={(event) => {
             //   const { action, cellKey, updated } = event;
             //   if (action === "CELL_UPDATE" && updated !== null)
