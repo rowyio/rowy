@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React, { Suspense, useState, useEffect } from "react";
 import { FormatterProps } from "react-data-grid";
 
 import { makeStyles, createStyles } from "@material-ui/core";
@@ -6,6 +6,7 @@ import { makeStyles, createStyles } from "@material-ui/core";
 import ErrorBoundary from "components/ErrorBoundary";
 import { useFiretableContext } from "../../../contexts/firetableContext";
 import _get from "lodash/get";
+import { FieldType } from "constants/fields";
 const useStyles = makeStyles((theme) =>
   createStyles({
     "@global": {
@@ -28,6 +29,21 @@ const getCellValue = (row, key) => {
   if (key.includes(".")) return _get(row, key);
   return row[key];
 };
+
+const BasicCell = ({ value, type, name }) => {
+  switch (type) {
+    case FieldType.singleSelect:
+    case FieldType.longText:
+      return <>{value}</>;
+    case FieldType.checkbox:
+      return <>{name}</>;
+    case FieldType.action:
+      return <>{value ? value.status : name}</>;
+    default:
+      return <></>;
+  }
+};
+
 /**
  * HOC to wrap around custom cell formatters.
  * Displays react-data-grid’s blue selection border when the cell is selected.
@@ -41,54 +57,36 @@ const withCustomCell = (
   useStyles();
   const { updateCell } = useFiretableContext();
 
-  const handleSubmit = (value: any) => {
-    if (updateCell && !readOnly)
-      updateCell(props.row.ref, props.column.key as string, value);
-  };
-  return (
-    <ErrorBoundary fullScreen={false} basic wrap="nowrap">
-      <Suspense fallback={<></>}>
-        <Component
-          {...props}
-          docRef={props.row.ref}
-          value={getCellValue(props.row, props.column.key as string)}
-          onSubmit={handleSubmit}
-        />
-      </Suspense>
-    </ErrorBoundary>
+  const value = getCellValue(props.row, props.column.key as string);
+  const lazyCell = (
+    <BasicCell
+      value={value}
+      name={(props.column as any).name}
+      type={(props.column as any).type as FieldType}
+    />
   );
-};
-
-/*
-const withCustomCell = (
-  Component: React.ComponentType<CustomCellProps>,
-  readOnly: boolean = false
-) => (props: FormatterProps<any>) => {
-  useStyles();
-  const { updateCell } = useFiretableContext();
-  const [component, setComponent] = useState(<></>);
-
+  const [component, setComponent] = useState(lazyCell);
   useEffect(() => {
     setTimeout(() => {
       setComponent(
         <ErrorBoundary fullScreen={false} basic wrap="nowrap">
-          <Suspense fallback={<></>}>
+          <Suspense fallback={lazyCell}>
             <Component
               {...props}
               docRef={props.row.ref}
-              value={getCellValue(props.row, props.column.key as string)}
+              value={value}
               onSubmit={handleSubmit}
             />
           </Suspense>
         </ErrorBoundary>
       );
     });
-  }, []);
+  }, [value]);
   const handleSubmit = (value: any) => {
     if (updateCell && !readOnly)
       updateCell(props.row.ref, props.column.key as string, value);
   };
   return component;
 };
-*/
+
 export default withCustomCell;
