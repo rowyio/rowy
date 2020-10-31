@@ -3,7 +3,14 @@ import _mergeWith from "lodash/mergeWith";
 import _find from "lodash/find";
 import { parseJSON } from "date-fns";
 
-import { useTheme, useMediaQuery } from "@material-ui/core";
+import {
+  useTheme,
+  useMediaQuery,
+  Grid,
+  Typography,
+  Link,
+} from "@material-ui/core";
+import WarningIcon from "@material-ui/icons/Warning";
 
 import WizardDialog from "../WizardDialog";
 import Step1Columns from "./Step1Columns";
@@ -110,8 +117,35 @@ export default function ImportCsvWizard({
         [
           {
             title: "choose columns",
-            description:
-              "Select or add the columns to be imported to your table.",
+            description: (
+              <>
+                <Typography paragraph>
+                  Select or add the columns to be imported to your table.
+                </Typography>
+                <Grid container spacing={1} wrap="nowrap">
+                  <Grid item>
+                    <WarningIcon />
+                  </Grid>
+                  <Grid item xs>
+                    <Typography variant="subtitle2" gutterBottom>
+                      Importing dates?
+                    </Typography>
+                    <Typography variant="body2">
+                      Make sure your dates are in UTC time and{" "}
+                      <Link
+                        href="https://date-fns.org/v2.16.1/docs/parseJSON"
+                        rel="noopener"
+                        target="_blank"
+                      >
+                        a supported format
+                      </Link>
+                      . If they’re not, you will need to re-import your CSV
+                      data.
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </>
+            ),
             content: (
               <Step1Columns
                 csvData={csvData}
