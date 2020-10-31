@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@antlerengineering/form-builder": "^0.6.1",
-    "@antlerengineering/multiselect": "^0.7.1",
+    "@antlerengineering/multiselect": "^0.7.4",
     "@date-io/date-fns": "1.x",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",

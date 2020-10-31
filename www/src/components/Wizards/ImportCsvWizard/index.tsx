@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import _merge from "lodash/merge";
+import _mergeWith from "lodash/mergeWith";
 
 import { useTheme, useMediaQuery, Typography } from "@material-ui/core";
 
@@ -11,7 +11,7 @@ import { useFiretableContext } from "contexts/firetableContext";
 
 export type CsvConfig = {
   pairs: { csvKey: string; columnKey: string }[];
-  newColumns: string[];
+  newColumns: ColumnConfig[];
 };
 
 export interface IStepProps {
@@ -45,8 +45,13 @@ export default function ImportCsvWizard({
     pairs: [],
     newColumns: [],
   });
+  console.log(config);
   const updateConfig: IStepProps["updateConfig"] = (value) => {
-    setConfig((prev) => ({ ..._merge(prev, value) }));
+    setConfig((prev) => ({
+      ..._mergeWith(prev, value, (objValue, srcValue) =>
+        Array.isArray(objValue) ? objValue.concat(srcValue) : undefined
+      ),
+    }));
   };
 
   useEffect(() => {
@@ -73,40 +78,37 @@ export default function ImportCsvWizard({
       open={open}
       onClose={() => setOpen(false)}
       title="Import CSV"
-      steps={[
-        {
-          title: "choose columns",
-          description: "Select which columns to import to your table.",
-          content: (
-            <Step1Columns
-              csvData={csvData}
-              config={config}
-              setConfig={setConfig}
-              updateConfig={updateConfig}
-              isXs={isXs}
-            />
-          ),
-          disableNext: Object.keys(config).length === 0,
-        },
-        {
-          title: "rename columns",
-          description:
-            "Rename your Firetable columns with user-friendly names. These changes will not update the field names in your database.",
-          content: <div>Step2Rename</div>,
-        },
-        {
-          title: "set column types",
-          description:
-            "Set the type of each column to display your data correctly. Some column types have been suggested based off your data.",
-          content: <div>Step3Types</div>,
-        },
-        {
-          title: "preview",
-          description:
-            "Preview your data with your configured columns. You can change column types by clicking “Edit Type” from the column menu at any time.",
-          content: <div>Step4Preview</div>,
-        },
-      ]}
+      steps={
+        [
+          {
+            title: "choose columns",
+            description:
+              "Select or add the columns to be imported to your table.",
+            content: (
+              <Step1Columns
+                csvData={csvData}
+                config={config}
+                setConfig={setConfig}
+                updateConfig={updateConfig}
+                isXs={isXs}
+              />
+            ),
+            disableNext: config.pairs.length === 0,
+          },
+          config.newColumns.length > 0 && {
+            title: "set column types",
+            description:
+              "Set the type of each column to display your data correctly. Some column types have been suggested based off your data.",
+            content: <div>Step2Types</div>,
+          },
+          {
+            title: "preview",
+            description:
+              "Preview your data with your configured columns. You can change column types by clicking “Edit Type” from the column menu at any time.",
+            content: <div>Step4Preview</div>,
+          },
+        ].filter((x) => x) as any
+      }
       onFinish={handleFinish}
     />
   );

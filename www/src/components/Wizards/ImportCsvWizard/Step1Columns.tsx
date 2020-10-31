@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import MultiSelect from "@antlerengineering/multiselect";
 import _find from "lodash/find";
+import _findIndex from "lodash/findIndex";
+import _camel from "lodash/camelCase";
+import clsx from "clsx";
 
 import {
   makeStyles,
@@ -10,14 +13,13 @@ import {
   Divider,
   FormControlLabel,
   Checkbox,
+  Chip,
 } from "@material-ui/core";
 import ArrowIcon from "@material-ui/icons/ArrowForward";
 
 import { IStepProps } from ".";
 import FadeList from "../FadeList";
 import Column from "../Column";
-import EmptyState from "components/EmptyState";
-import AddColumnIcon from "assets/icons/AddColumn";
 
 import { useFiretableContext } from "contexts/firetableContext";
 
@@ -38,6 +40,40 @@ const useStyles = makeStyles((theme) =>
       alignItems: "center",
       justifyContent: "center",
     },
+    activeArrow: { color: theme.palette.secondary.main },
+
+    multiSelectInput: {
+      backgroundColor: theme.palette.background.default,
+      border: `1px solid ${theme.palette.divider}`,
+      borderRadius: 0,
+
+      ...theme.typography.caption,
+      color: theme.palette.text.secondary,
+      transition: theme.transitions.create("color", {
+        duration: theme.transitions.duration.short,
+      }),
+      "&:hover": {
+        backgroundColor: theme.palette.background.default,
+        color: theme.palette.text.primary,
+      },
+
+      "&::before": { content: "none" },
+      "&::after": { pointerEvents: "none" },
+    },
+    noneSelected: { color: theme.palette.text.disabled },
+    multiSelectInputLabel: {
+      padding: theme.spacing(0, 2),
+      height: 44 - 2,
+
+      display: "flex",
+      alignItems: "center",
+    },
+    newColumnChip: {
+      marginLeft: theme.spacing(1),
+      backgroundColor: theme.palette.action.focus,
+      ...theme.typography.overline,
+      pointerEvents: "none",
+    },
   })
 );
 
@@ -45,6 +81,7 @@ export default function Step1Columns({
   csvData,
   config,
   updateConfig,
+  setConfig,
   isXs,
 }: IStepProps) {
   const classes = useStyles();
@@ -65,11 +102,40 @@ export default function Step1Columns({
       const newValue = [...selectedFields];
       newValue.splice(newValue.indexOf(field), 1);
       setSelectedFields(newValue);
+
+      // Delete from main config if it was pushed already
+      const configIndex = _findIndex(config.pairs, { csvKey: field });
+      if (configIndex > -1) {
+        const newConfig = [...config.pairs];
+        newConfig.splice(configIndex, 1);
+        setConfig((config) => ({ ...config, pairs: newConfig }));
+      }
+
+      //
     }
   };
 
-  const handleChange = (csvKey: string) => (columnKey: string) =>
-    updateConfig({ pairs: [{ csvKey, columnKey }] });
+  const handleChange = (csvKey: string) => (value: string) => {
+    const columnKey = !!tableState?.columns[value] ? value : _camel(value);
+
+    updateConfig({
+      pairs: [{ csvKey, columnKey }],
+    });
+
+    if (!tableState?.columns[value])
+      updateConfig({
+        newColumns: [
+          {
+            name: value,
+            fieldName: columnKey,
+            key: columnKey,
+            type: "" as any,
+            index: -1,
+            config: {},
+          },
+        ],
+      });
+  };
 
   return (
     <>
@@ -96,7 +162,9 @@ export default function Step1Columns({
           const ftColumnKey =
             _find(config.pairs, { csvKey: field })?.columnKey ?? null;
           const matchingColumn = ftColumnKey
-            ? tableState?.columns[ftColumnKey]
+            ? tableState?.columns[ftColumnKey] ??
+              _find(config.newColumns, { key: ftColumnKey }) ??
+              null
             : null;
 
           return (
@@ -109,7 +177,7 @@ export default function Step1Columns({
                       checked={selected}
                       aria-label={`Select column ${field}`}
                       onChange={handleSelect(field)}
-                      color="default"
+                      color="secondary"
                     />
                   }
                   label={<Column label={field} className={classes.csvColumn} />}
@@ -121,7 +189,10 @@ export default function Step1Columns({
               </Grid>
 
               <Grid item className={classes.arrowGridItem}>
-                <ArrowIcon color={selected ? "action" : "disabled"} />
+                <ArrowIcon
+                  color="disabled"
+                  className={selected ? classes.activeArrow : ""}
+                />
               </Grid>
 
               <Grid item xs>
@@ -136,12 +207,41 @@ export default function Step1Columns({
                       SelectProps: {
                         renderValue: (_) => {
                           if (!ftColumnKey) return "Select or add column";
-                          else return matchingColumn.name;
+                          else
+                            return (
+                              <>
+                                {matchingColumn?.name}
+                                {matchingColumn?.type === "" && (
+                                  <Chip
+                                    label="New"
+                                    size="small"
+                                    variant="default"
+                                    className={classes.newColumnChip}
+                                  />
+                                )}
+                              </>
+                            );
+                        },
+                      },
+                      InputProps: {
+                        classes: {
+                          root: clsx(
+                            classes.multiSelectInput,
+                            !ftColumnKey && classes.noneSelected
+                          ),
+                          inputHiddenLabel: classes.multiSelectInputLabel,
                         },
                       },
                     }}
                     clearable={false}
                     displayEmpty
+                    labelPlural="columns"
+                    freeText
+                    AddButtonProps={{ children: "Add New Column" }}
+                    AddDialogProps={{
+                      title: "Add New Column",
+                      textFieldLabel: "Column Name",
+                    }}
                   />
                 )}
               </Grid>
