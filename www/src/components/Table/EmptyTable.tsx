@@ -15,7 +15,7 @@ import { APP_BAR_HEIGHT } from "components/Navigation";
 import { useFiretableContext } from "contexts/firetableContext";
 import ColumnMenu from "./ColumnMenu";
 import ImportWizard from "components/Wizards/ImportWizard";
-import ImportCSV from "./TableHeader/ImportCSV";
+import ImportCSV from "./TableHeader/ImportCsv";
 
 const useStyles = makeStyles((theme) =>
   createStyles({

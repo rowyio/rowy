@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import _find from "lodash/find";
 
 import {
   makeStyles,
@@ -16,9 +17,8 @@ import Column from "../Column";
 import Cell from "../Cell";
 import FieldsDropdown from "components/Table/ColumnMenu/FieldsDropdown";
 
-import { useFiretableContext } from "contexts/firetableContext";
 import { FieldType } from "constants/fields";
-import { SELECTABLE_TYPES } from "./utils";
+import { SELECTABLE_TYPES } from "../ImportWizard/utils";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -38,41 +38,51 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-export default function Step3Types({ config, updateConfig, isXs }: IStepProps) {
+export default function Step2NewColumns({
+  csvData,
+  config,
+  setConfig,
+  isXs,
+}: IStepProps) {
   const classes = useStyles();
 
-  const [fieldToEdit, setFieldToEdit] = useState(Object.keys(config)[0]);
+  const [fieldToEdit, setFieldToEdit] = useState(0);
 
-  const handleChange = (e) =>
-    updateConfig({ [fieldToEdit]: { type: e.target.value } });
+  const handleChange = (e) => {
+    const newColumns = [...config.newColumns];
+    newColumns[fieldToEdit].type = e.target.value;
 
-  const { tableState } = useFiretableContext();
+    setConfig((config) => ({ ...config, newColumns }));
+  };
+
+  const currentPair = _find(config.pairs, {
+    columnKey: config.newColumns[fieldToEdit]?.key,
+  });
+  const rowData = csvData.rows.map((row) => row[currentPair?.csvKey ?? ""]);
 
   return (
     <>
       <Grid container spacing={2} className={classes.typeSelectRow}>
         <Grid item xs={12} sm={6}>
           <Typography variant="overline" gutterBottom component="h2">
-            Firetable Columns
+            New Firetable Columns
           </Typography>
           <Divider />
 
           <FadeList>
-            {Object.entries(config).map(([field, { name, type }]) => (
-              <li key={field}>
+            {config.newColumns.map(({ key, name, type }, i) => (
+              <li key={key}>
                 <ButtonBase
                   className={classes.buttonBase}
-                  onClick={() => setFieldToEdit(field)}
-                  aria-label={`Edit column ${field}`}
+                  onClick={() => setFieldToEdit(i)}
+                  aria-label={`Edit column ${key}`}
                   focusRipple
                 >
                   <Column
                     label={name}
                     type={type}
-                    active={field === fieldToEdit}
-                    secondaryItem={
-                      field === fieldToEdit && <ChevronRightIcon />
-                    }
+                    active={i === fieldToEdit}
+                    secondaryItem={i === fieldToEdit && <ChevronRightIcon />}
                   />
                 </ButtonBase>
               </li>
@@ -86,11 +96,11 @@ export default function Step3Types({ config, updateConfig, isXs }: IStepProps) {
             component="h2"
             className={classes.typeHeading}
           >
-            Column Type: {config[fieldToEdit].name}
+            Column Type: {config.newColumns[fieldToEdit].name}
           </Typography>
 
           <FieldsDropdown
-            value={config[fieldToEdit].type}
+            value={config.newColumns[fieldToEdit].type}
             onChange={handleChange}
             hideLabel
             options={SELECTABLE_TYPES}
@@ -118,25 +128,25 @@ export default function Step3Types({ config, updateConfig, isXs }: IStepProps) {
       <Grid container spacing={3}>
         {!isXs && (
           <Grid item xs={12} sm={6}>
-            <Column label={fieldToEdit} />
+            <Column label={config.newColumns[fieldToEdit].key} />
           </Grid>
         )}
         <Grid item xs={12} sm={6}>
           <Column
-            label={config[fieldToEdit].name}
-            type={config[fieldToEdit].type}
+            label={config.newColumns[fieldToEdit].name}
+            type={config.newColumns[fieldToEdit].type}
           />
         </Grid>
       </Grid>
 
       <FadeList classes={{ list: classes.previewList }}>
-        {tableState!.rows!.slice(0, 20).map((row) => (
-          <Grid container key={row.id} wrap="nowrap">
+        {rowData.slice(0, 20).map((cell, i) => (
+          <Grid container key={i} wrap="nowrap">
             {!isXs && (
               <Grid item xs className={classes.cellContainer}>
                 <Cell
-                  field={fieldToEdit}
-                  value={(JSON.stringify(row[fieldToEdit]) || "")
+                  field={config.newColumns[fieldToEdit].key}
+                  value={(JSON.stringify(cell) || "")
                     .replace(/^"/, "")
                     .replace(/"$/, "")}
                   type={FieldType.shortText}
@@ -148,10 +158,10 @@ export default function Step3Types({ config, updateConfig, isXs }: IStepProps) {
 
             <Grid item xs className={classes.cellContainer}>
               <Cell
-                field={fieldToEdit}
-                value={row[fieldToEdit]}
-                type={config[fieldToEdit].type}
-                name={config[fieldToEdit].name}
+                field={config.newColumns[fieldToEdit].key}
+                value={cell}
+                type={config.newColumns[fieldToEdit].type}
+                name={config.newColumns[fieldToEdit].name}
               />
             </Grid>
           </Grid>
