@@ -111,7 +111,11 @@ module.exports.deployToFirebaseHosting = (projectId) =>
 
 module.exports.startFiretableLocally = (dir = "firetable/www") =>
   new Promise((resolve) => {
-    const child = spawn("yarn", ["serve"], { cwd: dir });
+    const child = spawn(
+      /^win/.test(process.platform) ? "yarn.cmd" : "yarn",
+      ["serve"],
+      { cwd: dir }
+    );
     child.stdout.on("data", (data) => {
       const msg = data.toString();
       const portRegex = /^INFO: Accepting connections at (http:\/\/[\w\.]+:\d+)/;
