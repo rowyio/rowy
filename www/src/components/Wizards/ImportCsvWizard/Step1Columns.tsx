@@ -3,6 +3,7 @@ import MultiSelect from "@antlerengineering/multiselect";
 import _find from "lodash/find";
 import _findIndex from "lodash/findIndex";
 import _camel from "lodash/camelCase";
+import _sortBy from "lodash/sortBy";
 import clsx from "clsx";
 
 import {
@@ -89,9 +90,9 @@ export default function Step1Columns({
   const classes = useStyles();
 
   const { tableState } = useFiretableContext();
-  const tableColumns = Object.values(
-    tableState?.columns ?? {}
-  ).map((column) => ({ label: column.name, value: column.key }));
+  const tableColumns = _sortBy(Object.values(tableState?.columns ?? {}), [
+    "index",
+  ]).map((column) => ({ label: column.name, value: column.key }));
 
   const [selectedFields, setSelectedFields] = useState(
     config.pairs.map((pair) => pair.csvKey)
