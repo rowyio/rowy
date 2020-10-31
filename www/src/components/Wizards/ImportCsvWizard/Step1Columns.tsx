@@ -22,6 +22,8 @@ import FadeList from "../FadeList";
 import Column from "../Column";
 
 import { useFiretableContext } from "contexts/firetableContext";
+import { FieldType } from "constants/fields";
+import { suggestType } from "../ImportWizard/utils";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -103,15 +105,28 @@ export default function Step1Columns({
       newValue.splice(newValue.indexOf(field), 1);
       setSelectedFields(newValue);
 
-      // Delete from main config if it was pushed already
+      // Check if this pair was already pushed to main config
+      const configPair = _find(config.pairs, { csvKey: field });
       const configIndex = _findIndex(config.pairs, { csvKey: field });
+
+      // Delete matching newColumn if it was created
+      if (configPair) {
+        const newColumnIndex = _findIndex(config.newColumns, {
+          key: configPair.columnKey,
+        });
+        if (newColumnIndex > -1) {
+          const newColumns = [...config.newColumns];
+          newColumns.splice(newColumnIndex, 1);
+          setConfig((config) => ({ ...config, newColumns }));
+        }
+      }
+
+      // Delete pair from main config
       if (configIndex > -1) {
         const newConfig = [...config.pairs];
         newConfig.splice(configIndex, 1);
         setConfig((config) => ({ ...config, pairs: newConfig }));
       }
-
-      //
     }
   };
 
@@ -122,19 +137,23 @@ export default function Step1Columns({
       pairs: [{ csvKey, columnKey }],
     });
 
-    if (!tableState?.columns[value])
+    if (!tableState?.columns[value]) {
+      const columnIndex = csvData.columns.indexOf(csvKey);
+      const rows = csvData.rows.map((row) => ({ [csvKey]: row[columnIndex] }));
+
       updateConfig({
         newColumns: [
           {
             name: value,
             fieldName: columnKey,
             key: columnKey,
-            type: "" as any,
+            type: suggestType(rows, csvKey) || FieldType.shortText,
             index: -1,
             config: {},
           },
         ],
       });
+    }
   };
 
   return (
@@ -166,6 +185,7 @@ export default function Step1Columns({
               _find(config.newColumns, { key: ftColumnKey }) ??
               null
             : null;
+          const isNewColumn = !!_find(config.newColumns, { key: ftColumnKey });
 
           return (
             <Grid container key={field} component="li" wrap="nowrap">
@@ -211,7 +231,7 @@ export default function Step1Columns({
                             return (
                               <>
                                 {matchingColumn?.name}
-                                {matchingColumn?.type === "" && (
+                                {isNewColumn && (
                                   <Chip
                                     label="New"
                                     size="small"

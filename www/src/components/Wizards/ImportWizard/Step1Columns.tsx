@@ -13,7 +13,6 @@ import {
   createStyles,
   Grid,
   Typography,
-  Button,
   Divider,
   FormControlLabel,
   Checkbox,

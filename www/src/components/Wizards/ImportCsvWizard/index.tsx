@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import _mergeWith from "lodash/mergeWith";
 
-import { useTheme, useMediaQuery, Typography } from "@material-ui/core";
+import { useTheme, useMediaQuery } from "@material-ui/core";
 
 import WizardDialog from "../WizardDialog";
 import Step1Columns from "./Step1Columns";
+import Step2NewColumns from "./Step2NewColumns";
 
 import { ColumnConfig } from "hooks/useFiretable/useTableConfig";
 import { useFiretableContext } from "contexts/firetableContext";
@@ -42,8 +43,19 @@ export default function ImportCsvWizard({
   const { tableState, tableActions } = useFiretableContext();
 
   const [config, setConfig] = useState<CsvConfig>({
-    pairs: [],
-    newColumns: [],
+    pairs: [
+      { csvKey: "Show On Fusion", columnKey: "fusionSection" },
+      { csvKey: "Datastudio Link", columnKey: "twentyTwenty" },
+    ],
+    newColumns: [
+      {
+        name: "twenty twenty",
+        fieldName: "twentyTwenty",
+        key: "twentyTwenty",
+        type: "",
+        index: -1,
+      } as any,
+    ],
   });
   console.log(config);
   const updateConfig: IStepProps["updateConfig"] = (value) => {
@@ -99,7 +111,19 @@ export default function ImportCsvWizard({
             title: "set column types",
             description:
               "Set the type of each column to display your data correctly. Some column types have been suggested based off your data.",
-            content: <div>Step2Types</div>,
+            content: (
+              <Step2NewColumns
+                csvData={csvData}
+                config={config}
+                setConfig={setConfig}
+                updateConfig={updateConfig}
+                isXs={isXs}
+              />
+            ),
+            disableNext: config.newColumns.reduce(
+              (a, c) => a || (c.type as any) === "",
+              false
+            ),
           },
           {
             title: "preview",
