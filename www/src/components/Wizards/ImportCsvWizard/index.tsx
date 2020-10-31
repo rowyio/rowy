@@ -25,8 +25,7 @@ export interface IStepProps {
 }
 
 export interface IImportCsvWizardProps {
-  open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  handleClose: () => void;
   csvData: {
     columns: string[];
     rows: Record<string, any>[];
@@ -34,12 +33,13 @@ export interface IImportCsvWizardProps {
 }
 
 export default function ImportCsvWizard({
-  open,
-  setOpen,
+  handleClose,
   csvData,
 }: IImportCsvWizardProps) {
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.down("xs"));
+
+  const [open, setOpen] = useState(true);
 
   const { tableState, tableActions } = useFiretableContext();
 
@@ -83,7 +83,7 @@ export default function ImportCsvWizard({
     });
     // Close wizard
     setOpen(false);
-    setConfig({ pairs: [], newColumns: [] });
+    setTimeout(handleClose, 300);
   };
 
   if (!csvData) return null;
@@ -91,7 +91,10 @@ export default function ImportCsvWizard({
   return (
     <WizardDialog
       open={open}
-      onClose={() => setOpen(false)}
+      onClose={() => {
+        setOpen(false);
+        setTimeout(handleClose, 300);
+      }}
       title="Import CSV"
       steps={
         [

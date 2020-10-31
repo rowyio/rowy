@@ -301,11 +301,12 @@ export default function ImportCsv({ render }: IImportCsvProps) {
         </Button>
       </Popover>
 
-      <ImportCsvWizard
-        open={openWizard}
-        setOpen={setOpenWizard}
-        csvData={csvData}
-      />
+      {openWizard && csvData && (
+        <ImportCsvWizard
+          handleClose={() => setOpenWizard(false)}
+          csvData={csvData}
+        />
+      )}
     </>
   );
 }
