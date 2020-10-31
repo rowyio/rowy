@@ -133,21 +133,26 @@ export default function Step1Columns({
   const handleChange = (csvKey: string) => (value: string) => {
     const columnKey = !!tableState?.columns[value] ? value : _camel(value);
 
-    updateConfig({
-      pairs: [{ csvKey, columnKey }],
-    });
+    // Check if this pair already exists in config
+    const configIndex = _findIndex(config.pairs, { csvKey });
+    if (configIndex > -1) {
+      const pairs = [...config.pairs];
+      pairs[configIndex].columnKey = columnKey;
+      setConfig((config) => ({ ...config, pairs }));
+    } else {
+      updateConfig({
+        pairs: [{ csvKey, columnKey }],
+      });
+    }
 
     if (!tableState?.columns[value]) {
-      const columnIndex = csvData.columns.indexOf(csvKey);
-      const rows = csvData.rows.map((row) => ({ [csvKey]: row[columnIndex] }));
-
       updateConfig({
         newColumns: [
           {
             name: value,
             fieldName: columnKey,
             key: columnKey,
-            type: suggestType(rows, csvKey) || FieldType.shortText,
+            type: suggestType(csvData.rows, csvKey) || FieldType.shortText,
             index: -1,
             config: {},
           },

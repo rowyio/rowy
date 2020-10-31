@@ -59,8 +59,7 @@ export default function Step2NewColumns({
   const currentPair = _find(config.pairs, {
     columnKey: config.newColumns[fieldToEdit]?.key,
   });
-  const columnIndex = csvData.columns.indexOf(currentPair?.csvKey ?? "");
-  const rowData = csvData.rows.map((row) => row[columnIndex]);
+  const rowData = csvData.rows.map((row) => row[currentPair?.csvKey ?? ""]);
 
   return (
     <>

@@ -118,7 +118,10 @@ export default function ImportCsv({ render }: IImportCsvProps) {
         if (columns.length === 0) {
           setError("No columns detected");
         } else {
-          setCsvData({ columns, rows });
+          const mappedRows = rows.map((row) =>
+            row.reduce((a, c, i) => ({ ...a, [columns[i]]: c }), {})
+          );
+          setCsvData({ columns, rows: mappedRows });
           setError("");
         }
       }
@@ -299,39 +302,9 @@ export default function ImportCsv({ render }: IImportCsvProps) {
       </Popover>
 
       <ImportCsvWizard
-        // open={openWizard}
+        open={openWizard}
         setOpen={setOpenWizard}
-        // csvData={csvData}
-        open
-        csvData={{
-          columns: [
-            "Title",
-            "Show On Fusion",
-            "Datastudio Link",
-            "Fusion Section",
-          ],
-          rows: [
-            ["Events Data", "NO", "", "/events/global"],
-            [
-              "Antler Global Key Statistics",
-              "NO",
-              "https://datastudio.google.com/embed/reporting/14x4t3K_8pwhsdPN27gQlgykMBOJtsm16/page/sq7VB",
-              "/employees",
-            ],
-            [
-              "Program Resource Usage Stats",
-              "YES",
-              "https://datastudio.google.com/embed/reporting/709aea8c-db5a-451f-88c5-51485b8ece63/page/p6veB",
-              "/resources/program",
-            ],
-            [
-              "Founder Stats",
-              "YES",
-              "https://datastudio.google.com/embed/reporting/1Ka1xm1OhrZU6BtfMQB0hGtLdgfZeH-nQ/page/oXEBB",
-              "/cohort/founders",
-            ],
-          ],
-        }}
+        csvData={csvData}
       />
     </>
   );

@@ -6,6 +6,7 @@ import { useTheme, useMediaQuery } from "@material-ui/core";
 import WizardDialog from "../WizardDialog";
 import Step1Columns from "./Step1Columns";
 import Step2NewColumns from "./Step2NewColumns";
+import Step3Preview from "./Step3Preview";
 
 import { ColumnConfig } from "hooks/useFiretable/useTableConfig";
 import { useFiretableContext } from "contexts/firetableContext";
@@ -28,7 +29,7 @@ export interface IImportCsvWizardProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   csvData: {
     columns: string[];
-    rows: string[][];
+    rows: Record<string, any>[];
   } | null;
 }
 
@@ -43,21 +44,9 @@ export default function ImportCsvWizard({
   const { tableState, tableActions } = useFiretableContext();
 
   const [config, setConfig] = useState<CsvConfig>({
-    pairs: [
-      { csvKey: "Show On Fusion", columnKey: "fusionSection" },
-      { csvKey: "Datastudio Link", columnKey: "twentyTwenty" },
-    ],
-    newColumns: [
-      {
-        name: "twenty twenty",
-        fieldName: "twentyTwenty",
-        key: "twentyTwenty",
-        type: "",
-        index: -1,
-      } as any,
-    ],
+    pairs: [],
+    newColumns: [],
   });
-  console.log(config);
   const updateConfig: IStepProps["updateConfig"] = (value) => {
     setConfig((prev) => ({
       ..._mergeWith(prev, value, (objValue, srcValue) =>
@@ -79,8 +68,22 @@ export default function ImportCsvWizard({
   if (tableState?.rows.length === 0) return null;
 
   const handleFinish = () => {
-    tableActions?.table.updateConfig("columns", config);
+    if (!tableActions || !csvData) return;
+    // Add any new columns to the end
+    config.newColumns.forEach((col) =>
+      tableActions.column.add(col.name, col.type, col)
+    );
+    // Add all new rows
+    csvData.rows.forEach((row) => {
+      const newRow = config.pairs.reduce(
+        (a, c) => ({ ...a, [c.columnKey]: row[c.csvKey] }),
+        {}
+      );
+      tableActions.row.add(newRow);
+    });
+    // Close wizard
     setOpen(false);
+    setConfig({ pairs: [], newColumns: [] });
   };
 
   if (!csvData) return null;
@@ -129,7 +132,15 @@ export default function ImportCsvWizard({
             title: "preview",
             description:
               "Preview your data with your configured columns. You can change column types by clicking “Edit Type” from the column menu at any time.",
-            content: <div>Step4Preview</div>,
+            content: (
+              <Step3Preview
+                csvData={csvData}
+                config={config}
+                setConfig={setConfig}
+                updateConfig={updateConfig}
+                isXs={isXs}
+              />
+            ),
           },
         ].filter((x) => x) as any
       }
