@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import _mergeWith from "lodash/mergeWith";
+import _find from "lodash/find";
+import { parseJSON } from "date-fns";
 
 import { useTheme, useMediaQuery } from "@material-ui/core";
 
@@ -10,6 +12,7 @@ import Step3Preview from "./Step3Preview";
 
 import { ColumnConfig } from "hooks/useFiretable/useTableConfig";
 import { useFiretableContext } from "contexts/firetableContext";
+import { FieldType } from "constants/fields";
 
 export type CsvConfig = {
   pairs: { csvKey: string; columnKey: string }[];
@@ -68,17 +71,24 @@ export default function ImportCsvWizard({
   if (tableState?.rows.length === 0) return null;
 
   const handleFinish = () => {
-    if (!tableActions || !csvData) return;
+    if (!tableState || !tableActions || !csvData) return;
     // Add any new columns to the end
     config.newColumns.forEach((col) =>
       tableActions.column.add(col.name, col.type, col)
     );
     // Add all new rows
     csvData.rows.forEach((row) => {
-      const newRow = config.pairs.reduce(
-        (a, c) => ({ ...a, [c.columnKey]: row[c.csvKey] }),
-        {}
-      );
+      const newRow = config.pairs.reduce((a, pair) => {
+        const matchingColumn =
+          tableState.columns[pair.columnKey] ??
+          _find(config.newColumns, { key: pair.columnKey });
+        const value =
+          matchingColumn.type === FieldType.date ||
+          matchingColumn.type === FieldType.dateTime
+            ? parseJSON(row[pair.csvKey])
+            : row[pair.csvKey];
+        return { ...a, [pair.columnKey]: value };
+      }, {});
       tableActions.row.add(newRow);
     });
     // Close wizard

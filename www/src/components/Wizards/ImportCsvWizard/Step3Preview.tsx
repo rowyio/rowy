@@ -1,6 +1,7 @@
 import React from "react";
 import { ScrollSync, ScrollSyncPane } from "react-scroll-sync";
 import _find from "lodash/find";
+import { parseJSON } from "date-fns";
 
 import { makeStyles, createStyles, Grid } from "@material-ui/core";
 
@@ -9,6 +10,7 @@ import Column from "../Column";
 import Cell from "../Cell";
 
 import { useFiretableContext } from "contexts/firetableContext";
+import { FieldType } from "constants/fields";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -103,7 +105,11 @@ export default function Step4Preview({ csvData, config }: IStepProps) {
                     <Cell
                       key={csvKey + i}
                       field={csvKey}
-                      value={row[csvKey]}
+                      value={
+                        type === FieldType.date || type === FieldType.dateTime
+                          ? parseJSON(row[csvKey]).getTime()
+                          : row[csvKey]
+                      }
                       type={type}
                       name={name}
                     />
