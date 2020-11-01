@@ -13,8 +13,8 @@ import UndoIcon from "@material-ui/icons/Undo";
 import { useFiretableContext } from "contexts/firetableContext";
 import { SnackContext } from "contexts/snackContext";
 import { cloudFunction } from "firebase/callables";
-import { sanitiseRowData } from "util/fns";
-import { formatPath } from "../../../../util/fns";
+import { sanitiseRowData } from "utils/fns";
+import { formatPath } from "../../../../utils/fns";
 import { useConfirmation } from "components/ConfirmationDialog";
 import { useActionParams } from "./FormDialog/Context";
 //import ParamsDialog from './ParamsDialog'

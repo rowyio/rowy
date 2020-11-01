@@ -10,7 +10,7 @@ import {
   Button,
 } from "@material-ui/core";
 
-import { isCollectionGroup } from "util/fns";
+import { isCollectionGroup } from "utils/fns";
 import AddRowIcon from "assets/icons/AddRow";
 
 import Filters from "../Filters";

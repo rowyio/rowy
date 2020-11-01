@@ -9,14 +9,14 @@ import {
 } from "@material-ui/core";
 import Theme from "./Theme";
 
-import CustomBrowserRouter from "./util/CustomBrowserRouter";
-import PrivateRoute from "./util/PrivateRoute";
+import CustomBrowserRouter from "./utils/CustomBrowserRouter";
+import PrivateRoute from "./utils/PrivateRoute";
 import Snack from "./components/Snack";
 import ErrorBoundary from "./components/ErrorBoundary";
 import EmptyState from "./components/EmptyState";
 import Loading from "./components/Loading";
 
-import { SnackProvider } from "./util/SnackProvider";
+import { SnackProvider } from "./utils/SnackProvider";
 import ConfirmationProvider from "components/ConfirmationDialog/Provider";
 import { AppProvider } from "./contexts/appContext";
 import { FiretableContextProvider } from "./contexts/firetableContext";

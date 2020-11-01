@@ -19,8 +19,8 @@ import DropdownIcon from "@material-ui/icons/ArrowDropDown";
 import { useConfirmation } from "components/ConfirmationDialog/Context";
 import { useFiretableContext } from "contexts/firetableContext";
 import { useSnackContext } from "contexts/snackContext";
-import { sanitiseRowData } from "util/fns";
-import { formatPath, asyncForEach } from "../../../util/fns";
+import { sanitiseRowData } from "utils/fns";
+import { formatPath, asyncForEach } from "../../../utils/fns";
 import { cloudFunction } from "firebase/callables";
 import _find from "lodash/find";
 const useStyles = makeStyles((theme: Theme) =>
