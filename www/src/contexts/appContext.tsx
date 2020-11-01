@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { auth, db } from "../firebase";
 import firebase from "firebase/app";
 import useDoc from "hooks/useDoc";
+import createPersistedState from "use-persisted-state";
 
 import {
   useMediaQuery,
@@ -10,6 +11,8 @@ import {
   CssBaseline,
 } from "@material-ui/core";
 import Themes from "Themes";
+
+const useThemeState = createPersistedState("_FT_THEME");
 
 interface AppContextInterface {
   currentUser: firebase.User | null | undefined;
@@ -50,7 +53,7 @@ export const AppProvider: React.FC = ({ children }) => {
   // Infer theme based on system settings
   const prefersDarkTheme = useMediaQuery("(prefers-color-scheme: dark)");
   // Store theme
-  const [theme, setTheme] = useState<keyof typeof Themes>(
+  const [theme, setTheme] = useThemeState<keyof typeof Themes>(
     prefersDarkTheme ? "dark" : "light"
   );
   // Update theme when system settings change

@@ -9,6 +9,7 @@ import {
   Typography,
   Button,
 } from "@material-ui/core";
+import { fade } from "@material-ui/core/styles";
 
 import { isCollectionGroup } from "utils/fns";
 import AddRowIcon from "assets/icons/AddRow";
@@ -51,7 +52,13 @@ const useStyles = makeStyles((theme) =>
       minWidth: 120,
       margin: theme.spacing(0, 0, 0, -1),
     },
-    inputBaseRoot: { borderRadius: theme.shape.borderRadius },
+    inputBaseRoot: {
+      borderRadius: theme.shape.borderRadius,
+      backgroundColor:
+        theme.palette.type === "dark"
+          ? fade(theme.palette.text.primary, 0.06)
+          : undefined,
+    },
     select: {
       paddingTop: "6px !important",
       paddingBottom: "7px !important",

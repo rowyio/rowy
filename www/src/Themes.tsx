@@ -24,6 +24,11 @@ export const ROOT_FONT_SIZE = 16;
 export const toRem = (px: number) => `${px / ROOT_FONT_SIZE}rem`;
 export const toEm = (px: number, root: number) => `${px / root}em`;
 
+declare module "@material-ui/core/styles/createPalette" {
+  interface TypeBackground {
+    elevation?: Record<0 | 1 | 2 | 3 | 4 | 6 | 8 | 12 | 16 | 24, string>;
+  }
+}
 declare module "@material-ui/core/styles/createTypography" {
   interface FontStyle {
     fontFamilyMono: string;
@@ -112,12 +117,35 @@ export const themeBase = {
 };
 
 export const darkThemeBase = {
+  // https://material.io/design/color/dark-theme.html#ui-application
   palette: {
     type: "dark",
-    primary: { main: ANTLER_RED, light: ANTLER_RED },
-    secondary: { main: SECONDARY_GREY },
-    text: { secondary: SECONDARY_TEXT },
-    error: { main: ERROR },
+    background: {
+      default: "#121212",
+      paper: "#1E1E1E",
+      elevation: {
+        0: "#121212",
+        1: "#1E1E1E",
+        2: "#222222",
+        3: "#252525",
+        4: "#272727",
+        6: "#2C2C2C",
+        8: "#2E2E2E",
+        12: "#333333",
+        16: "#363636",
+        24: "#383838",
+      },
+    },
+    secondary: { main: "#E4E4E5" },
+    text: {
+      // primary: "rgba(255, 255, 255, 0.87)",
+      secondary: "rgba(255, 255, 255, 0.7)",
+      // disabled: "rgba(255, 255, 255, 0.38)",
+    },
+    error: { main: "#CF6679" },
+  },
+  typography: {
+    overline: { color: "rgba(255, 255, 255, 0.6)" },
   },
 };
 
@@ -165,7 +193,7 @@ export const defaultOverrides = (theme: Theme): ThemeOptions => ({
       outlined: { padding: theme.spacing(3 / 8, 15 / 8) },
       outlinedPrimary: {
         // Same as outlined text field
-        borderColor: "rgba(0, 0, 0, 0.23)",
+        borderColor: fade(theme.palette.divider, 0.23),
       },
       outlinedSizeLarge: {
         padding: theme.spacing(1, 4),
@@ -240,6 +268,28 @@ export const defaultOverrides = (theme: Theme): ThemeOptions => ({
     },
     MuiPaper: {
       rounded: { borderRadius: 8 },
+      // Dark theme paper elevation backgrounds
+      ...(() => {
+        const classes: Record<string, any> = {};
+        for (let i = 0; i <= 24; i++) {
+          if (theme.palette.background.elevation === undefined) continue;
+
+          let closestElevation = i;
+          for (let j = i; j > 0; j--) {
+            if (theme.palette.background.elevation[j] !== undefined) {
+              closestElevation = j;
+              break;
+            }
+          }
+
+          classes["elevation" + i] = {
+            backgroundColor:
+              theme.palette.background.elevation[closestElevation],
+          };
+        }
+        console.log(classes);
+        return classes;
+      })(),
     },
     MuiSlider: {
       disabled: {},

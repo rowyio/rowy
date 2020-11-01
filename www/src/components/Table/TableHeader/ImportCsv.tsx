@@ -49,8 +49,8 @@ const useStyles = makeStyles((theme) =>
     dropzone: {
       height: 137,
       borderRadius: theme.shape.borderRadius,
-      border: "dashed 3px rgba(0, 0, 0, 0.42)",
-      backgroundColor: "rgba(0, 0, 0, 0.09)",
+      border: `dashed 3px ${fade(theme.palette.text.primary, 0.42)}`,
+      backgroundColor: fade(theme.palette.text.primary, 0.09),
       color: theme.palette.text.secondary,
       cursor: "pointer",
 

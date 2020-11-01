@@ -22,18 +22,25 @@ export const useStyles = makeStyles((theme) =>
     "@global": {
       ".rdg.rdg": {
         "--color": theme.palette.text.secondary,
-        "--border-color": "#e0e0e0",
+        "--border-color": theme.palette.divider,
         // "--summary-border-color": "#aaa",
         "--background-color": theme.palette.background.paper,
         "--header-background-color": theme.palette.background.default,
-        "--row-hover-background-color": "#f5f5f5",
-        "--row-selected-background-color": "#dbecfa",
-        "--row-selected-hover-background-color": "#c9e3f8",
-        "--checkbox-color": "#005295",
-        "--checkbox-focus-color": "#62b8ff",
+        "--row-hover-background-color":
+          theme.palette.type === "light" ? "#f5f5f5" : "#303030",
+        "--row-selected-background-color": fade(
+          theme.palette.primary.main,
+          theme.palette.action.hoverOpacity
+        ),
+        "--row-selected-hover-background-color": fade(
+          theme.palette.primary.main,
+          theme.palette.action.selectedOpacity
+        ),
+        "--checkbox-color": theme.palette.primary.main,
+        "--checkbox-focus-color": theme.palette.primary.main,
         "--checkbox-disabled-border-color": "#ccc",
         "--checkbox-disabled-background-color": "#ddd",
-        "--selection-color": "#66afe9",
+        "--selection-color": theme.palette.primary.main,
         "--font-size": "0.75rem",
 
         border: "none",
@@ -48,13 +55,20 @@ export const useStyles = makeStyles((theme) =>
           alignItems: "center",
           padding: theme.spacing(0, 1.5),
         },
+
+        "& .rdg-cell-frozen-last": {
+          boxShadow:
+            theme.palette.type === "light"
+              ? "2px 0 4px 0px rgba(0, 0, 0, .08)"
+              : "2px 0 4px 0px rgba(0, 0, 0, .67)",
+        },
       },
 
       ".rdg-header-row .rdg-cell": {
         borderTop: "1px solid var(--border-color)",
       },
 
-      // TODO:
+      // TODO: restyle if needed
       ".rdg-draggable-header-cell": {
         cursor: "move",
         display: "inline",

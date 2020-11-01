@@ -8,13 +8,12 @@ import {
   IconButtonProps,
   Avatar,
   Menu,
-  Typography,
+  Link as MuiLink,
   MenuItem,
   ListItemSecondaryAction,
-  Divider,
+  // Divider,
 } from "@material-ui/core";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import LaunchIcon from "@material-ui/icons/Launch";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 
@@ -36,7 +35,7 @@ const useStyles = makeStyles((theme) =>
       color: theme.palette.text.disabled,
     },
 
-    divider: { margin: theme.spacing(1, 2) },
+    // divider: { margin: theme.spacing(1, 2) },
 
     secondaryIcon: {
       display: "block",
@@ -94,27 +93,17 @@ export default function UserMenu(props: IconButtonProps) {
         classes={{ paper: classes.paper }}
       >
         {displayName && (
-          <Typography
+          <MuiLink
             variant="overline"
             className={classes.displayName}
-            role="presentation"
+            component="a"
+            href={`https://console.firebase.google.com/project/${process.env.REACT_APP_FIREBASE_PROJECT_ID}/firestore/data~2F_FT_USERS~2F${currentUser.uid}`}
+            target="_blank"
+            rel="noopener"
           >
             {displayName}
-          </Typography>
+          </MuiLink>
         )}
-        <MenuItem
-          component="a"
-          href={`https://console.firebase.google.com/project/${process.env.REACT_APP_FIREBASE_PROJECT_ID}/firestore/data~2F_FT_USERS~2F${currentUser.uid}`}
-          target="_blank"
-          rel="noopener"
-        >
-          User Config
-          <ListItemSecondaryAction>
-            <LaunchIcon className={classes.secondaryIcon} />
-          </ListItemSecondaryAction>
-        </MenuItem>
-
-        <Divider className={classes.divider} />
 
         <MenuItem onClick={handleToggleTheme}>
           Dark Theme
