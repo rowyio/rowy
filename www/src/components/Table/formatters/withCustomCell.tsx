@@ -31,10 +31,16 @@ export type CustomCellProps = FormatterProps<any> & {
 const BasicCell = ({ value, type, name }) => {
   switch (type) {
     case FieldType.singleSelect:
+    case FieldType.shortText:
     case FieldType.longText:
-      return <>{value}</>;
+    case FieldType.shortText:
+    case FieldType.email:
+    case FieldType.phone:
+    case FieldType.number:
+    case FieldType.slider:
+      return typeof value === "string" ? <>{value}</> : <></>;
     case FieldType.url:
-      return (
+      return typeof value === "string" ? (
         <Link
           href={value}
           target="_blank"
@@ -44,6 +50,8 @@ const BasicCell = ({ value, type, name }) => {
         >
           {value}
         </Link>
+      ) : (
+        <></>
       );
     case FieldType.subTable:
       return (

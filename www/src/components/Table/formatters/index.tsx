@@ -2,6 +2,7 @@ import React, { lazy } from "react";
 import { FieldType } from "constants/fields";
 
 import withCustomCell from "./withCustomCell";
+import Text from "./Text";
 
 const MultiSelect = lazy(
   () => import("./MultiSelect" /* webpackChunkName: "MultiSelect" */)
@@ -122,7 +123,7 @@ export const getFormatter = (column: any, readOnly: boolean = false) => {
     case FieldType.phone:
     case FieldType.number:
     case FieldType.slider:
-      return undefined;
+      return withCustomCell(Text, readOnly);
 
     default:
       return () => <div />;

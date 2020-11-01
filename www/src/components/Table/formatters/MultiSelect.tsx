@@ -86,18 +86,21 @@ export default function MultiSelect({
 
   let sanitisedValue: any;
   if (isSingle) {
-    if (value === undefined || value === null || value === "") sanitisedValue = null;
+    if (value === undefined || value === null || value === "")
+      sanitisedValue = null;
     else if (Array.isArray(value)) sanitisedValue = value[0];
     else sanitisedValue = value;
   } else {
-    if (value === undefined || value === null || value === "") sanitisedValue = [];
+    if (value === undefined || value === null || value === "")
+      sanitisedValue = [];
     else sanitisedValue = value;
   }
-  
+
   // Render chips or basic string
   const renderValue = isSingle
     ? () =>
-        typeof sanitisedValue === "string" && VARIANTS.includes(sanitisedValue.toLowerCase()) ? (
+        typeof sanitisedValue === "string" &&
+        VARIANTS.includes(sanitisedValue.toLowerCase()) ? (
           <FormattedChip label={sanitisedValue} className={classes.chip} />
         ) : (
           <span className={classes.selectSingleLabel}>{sanitisedValue}</span>
@@ -125,7 +128,6 @@ export default function MultiSelect({
   };
   if (typeof value === "string" && value !== "" && !isSingle)
     return <ConvertStringToArray value={value} onSubmit={onSubmit} />;
-  console.log({sanitisedValue})
   return (
     // <Tooltip
     //   title={
