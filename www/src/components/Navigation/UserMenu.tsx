@@ -10,8 +10,13 @@ import {
   Menu,
   Typography,
   MenuItem,
+  ListItemSecondaryAction,
+  Divider,
 } from "@material-ui/core";
-import AccountCircle from "@material-ui/icons/AccountCircle";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import LaunchIcon from "@material-ui/icons/Launch";
+import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
+import CheckBoxIcon from "@material-ui/icons/CheckBox";
 
 import { useAppContext } from "contexts/appContext";
 import routes from "constants/routes";
@@ -30,6 +35,15 @@ const useStyles = makeStyles((theme) =>
       userSelect: "none",
       color: theme.palette.text.disabled,
     },
+
+    divider: { margin: theme.spacing(1, 2) },
+
+    secondaryIcon: {
+      display: "block",
+      pointerEvents: "none",
+
+      color: theme.palette.action.active,
+    },
   })
 );
 
@@ -39,11 +53,16 @@ export default function UserMenu(props: IconButtonProps) {
   const anchorEl = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
 
-  const { currentUser, userDoc } = useAppContext();
+  const { currentUser, userDoc, theme, setTheme } = useAppContext();
   if (!currentUser || !userDoc || !userDoc?.state?.doc) return null;
 
   const displayName = userDoc?.state?.doc?.user?.displayName;
   const avatarUrl = userDoc?.state?.doc?.user?.photoURL;
+
+  const handleToggleTheme = () => {
+    if (theme === "light") setTheme(() => "dark");
+    if (theme === "dark") setTheme(() => "light");
+  };
 
   return (
     <>
@@ -59,7 +78,7 @@ export default function UserMenu(props: IconButtonProps) {
         {avatarUrl ? (
           <Avatar src={avatarUrl} className={classes.avatar} />
         ) : (
-          <AccountCircle />
+          <AccountCircleIcon />
         )}
       </IconButton>
 
@@ -83,6 +102,31 @@ export default function UserMenu(props: IconButtonProps) {
             {displayName}
           </Typography>
         )}
+        <MenuItem
+          component="a"
+          href={`https://console.firebase.google.com/project/${process.env.REACT_APP_FIREBASE_PROJECT_ID}/firestore/data~2F_FT_USERS~2F${currentUser.uid}`}
+          target="_blank"
+          rel="noopener"
+        >
+          User Config
+          <ListItemSecondaryAction>
+            <LaunchIcon className={classes.secondaryIcon} />
+          </ListItemSecondaryAction>
+        </MenuItem>
+
+        <Divider className={classes.divider} />
+
+        <MenuItem onClick={handleToggleTheme}>
+          Dark Theme
+          <ListItemSecondaryAction>
+            {theme === "light" ? (
+              <CheckBoxOutlineBlankIcon className={classes.secondaryIcon} />
+            ) : (
+              <CheckBoxIcon className={classes.secondaryIcon} />
+            )}
+          </ListItemSecondaryAction>
+        </MenuItem>
+
         <MenuItem component={Link} to={routes.signOut}>
           Sign Out
         </MenuItem>

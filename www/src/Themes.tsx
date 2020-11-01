@@ -1,4 +1,5 @@
 import React from "react";
+import _clone from "lodash/clone";
 import _merge from "lodash/merge";
 
 import {
@@ -306,6 +307,9 @@ export const defaultOverrides = (theme: Theme): ThemeOptions => ({
         marginRight: theme.spacing(1.5),
       },
     },
+    MuiListItemIcon: {
+      root: { minWidth: theme.spacing(40 / 8) },
+    },
   },
   props: {
     MuiTypography: {
@@ -344,22 +348,28 @@ export const defaultOverrides = (theme: Theme): ThemeOptions => ({
 
 export const customizableLightTheme = (customization: ThemeOptions) => {
   const customizedLightThemeBase = createMuiTheme(
-    _merge(themeBase, customization)
+    _merge({}, themeBase, customization)
   );
 
   return createMuiTheme(
     customizedLightThemeBase,
-    _merge(defaultOverrides(customizedLightThemeBase), customization)
+    _merge({}, defaultOverrides(customizedLightThemeBase), customization)
   );
 };
 
 export const customizableDarkTheme = (customization: ThemeOptions) => {
   const customizedDarkThemeBase = createMuiTheme(
-    _merge(themeBase, darkThemeBase, customization)
+    _merge({}, themeBase, darkThemeBase, customization)
   );
 
   return createMuiTheme(
     customizedDarkThemeBase,
-    _merge(defaultOverrides(customizedDarkThemeBase), customization)
+    _merge({}, defaultOverrides(customizedDarkThemeBase), customization)
   );
 };
+
+const Themes = {
+  light: customizableLightTheme,
+  dark: customizableDarkTheme,
+};
+export default Themes;

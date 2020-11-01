@@ -4,24 +4,24 @@ import firebase from "firebase/app";
 import useDoc from "hooks/useDoc";
 
 import {
+  useMediaQuery,
   MuiThemeProvider,
   ThemeOptions,
-  Theme,
   CssBaseline,
 } from "@material-ui/core";
-import { customizableLightTheme } from "Themes";
+import Themes from "Themes";
 
 interface AppContextInterface {
   currentUser: firebase.User | null | undefined;
   userDoc: any;
-  setTheme: React.Dispatch<
-    React.SetStateAction<(customization: ThemeOptions) => Theme>
-  >;
+  theme: keyof typeof Themes;
+  setTheme: React.Dispatch<React.SetStateAction<keyof typeof Themes>>;
 }
 
 export const AppContext = React.createContext<AppContextInterface>({
   currentUser: undefined,
   userDoc: undefined,
+  theme: "light",
   setTheme: () => {},
 });
 
@@ -47,12 +47,23 @@ export const AppProvider: React.FC = ({ children }) => {
     }
   }, [currentUser]);
 
+  // Infer theme based on system settings
+  const prefersDarkTheme = useMediaQuery("(prefers-color-scheme: dark)");
   // Store theme
-  const [theme, setTheme] = useState(() => customizableLightTheme);
+  const [theme, setTheme] = useState<keyof typeof Themes>(
+    prefersDarkTheme ? "dark" : "light"
+  );
+  // Update theme when system settings change
+  useEffect(() => {
+    if (prefersDarkTheme && theme !== "dark") setTheme("dark");
+    if (!prefersDarkTheme && theme !== "light") setTheme("light");
+  }, [prefersDarkTheme]);
+
   // Store themeCustomization from userDoc
   const [themeCustomization, setThemeCustomization] = useState<ThemeOptions>(
     {}
   );
+  const generatedTheme = Themes[theme](themeCustomization);
 
   useEffect(() => {
     if (userDoc.doc) {
@@ -92,10 +103,11 @@ export const AppProvider: React.FC = ({ children }) => {
       value={{
         userDoc: { state: userDoc, dispatch: dispatchUserDoc },
         currentUser,
+        theme,
         setTheme,
       }}
     >
-      <MuiThemeProvider theme={theme(themeCustomization)}>
+      <MuiThemeProvider theme={generatedTheme}>
         <CssBaseline />
         {children}
       </MuiThemeProvider>
