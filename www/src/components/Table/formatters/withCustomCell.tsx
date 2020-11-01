@@ -7,7 +7,8 @@ import ErrorBoundary from "components/ErrorBoundary";
 import { useFiretableContext } from "../../../contexts/firetableContext";
 
 import { FieldType } from "constants/fields";
-import { getCellValue } from "../utils";
+import { getCellValue } from "utils/fns";
+
 const useStyles = makeStyles((theme) =>
   createStyles({
     "@global": {

@@ -9,7 +9,8 @@ import {
 } from "@material-ui/core";
 
 import { FieldType } from "constants/fields";
-import { getCellValue } from "../utils";
+import { getCellValue } from "utils/fns";
+
 const styles = (theme) =>
   createStyles({
     root: {

@@ -1,3 +1,5 @@
+import _get from "lodash/get";
+
 /**
  * reposition an element in an array
  * @param arr array
@@ -101,3 +103,8 @@ export async function asyncForEach(array: any[], callback: Function) {
     await callback(array[index], index, array);
   }
 }
+
+export const getCellValue = (row: Record<string, any>, key: string) => {
+  if (key.includes(".")) return _get(row, key);
+  return row[key];
+};
