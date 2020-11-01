@@ -89,7 +89,7 @@ export default function Table() {
 
       setColumns([SelectColumn, ..._columns, lastColumn]);
     }
-  }, [tableState?.loadingColumns, tableState?.columns, userDocHiddenFields]);
+  }, [tableState?.loadingColumns, tableState?.columns]);
 
   const rows =
     useMemo(
