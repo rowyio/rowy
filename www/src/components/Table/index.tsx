@@ -5,10 +5,12 @@ import _isEmpty from "lodash/isEmpty";
 import _find from "lodash/find";
 import _difference from "lodash/difference";
 
-import { useTheme } from "@material-ui/core";
 import BulkActions from "./BulkActions";
 import "react-data-grid/dist/react-data-grid.css";
-import DataGrid, { Column, SelectColumn } from "react-data-grid";
+import DataGrid, {
+  Column,
+  SelectColumn as _SelectColumn,
+} from "react-data-grid";
 import { formatSubTableName } from "../../utils/fns";
 import Loading from "components/Loading";
 import TableHeader from "./TableHeader";
@@ -34,9 +36,10 @@ export type FiretableColumn = Column<any> & {
   type: FieldType;
   [key: string]: any;
 };
-function rowKeyGetter(row: any) {
-  return row.id;
-}
+
+const rowKeyGetter = (row: any) => row.id;
+const SelectColumn = { ..._SelectColumn, width: 44, maxWidth: 44 };
+
 export default function Table() {
   const classes = useStyles();
 
