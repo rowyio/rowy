@@ -2,6 +2,7 @@ import React, { Suspense, useState, useEffect } from "react";
 import { FormatterProps } from "react-data-grid";
 
 // import { makeStyles, createStyles } from "@material-ui/core";
+import { Link } from "@material-ui/core";
 
 import ErrorBoundary from "components/ErrorBoundary";
 import { useFiretableContext } from "../../../contexts/firetableContext";
@@ -34,14 +35,15 @@ const BasicCell = ({ value, type, name }) => {
       return <>{value}</>;
     case FieldType.url:
       return (
-        <a
+        <Link
           href={value}
           target="_blank"
           rel="noopener noreferrer"
+          underline="always"
           style={{ fontWeight: "bold" }}
         >
           {value}
-        </a>
+        </Link>
       );
     case FieldType.subTable:
       return (
