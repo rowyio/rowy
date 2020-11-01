@@ -4,6 +4,7 @@ import { saveAs } from "file-saver";
 import _camelCase from "lodash/camelCase";
 import _get from "lodash/get";
 import _find from "lodash/find";
+import _sortBy from "lodash/sortBy";
 import MultiSelect from "@antlerengineering/multiselect";
 
 import {
@@ -96,7 +97,7 @@ const selectedColumnsReducer = (doc: any) => (
   }
 };
 
-export default function ExportCSV() {
+export default function ExportCsv() {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
 
@@ -152,7 +153,7 @@ export default function ExportCSV() {
 
   return (
     <>
-      <Tooltip title="Export">
+      <Tooltip title="Export CSV">
         <Button
           onClick={() => setOpen(true)}
           variant="contained"
@@ -168,7 +169,7 @@ export default function ExportCSV() {
         open={open && !!tableState}
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
-        aria-aria-describedby="form-dialog-description"
+        aria-describedby="form-dialog-description"
         maxWidth="xs"
         fullWidth
       >
@@ -188,7 +189,7 @@ export default function ExportCSV() {
             onChange={handleChange}
             options={(typeof tableState!.columns === "object" &&
             !Array.isArray(tableState!.columns)
-              ? Object.values(tableState!.columns)
+              ? _sortBy(Object.values(tableState!.columns), ["index"])
               : []
             ).map((column: any) => ({ label: column.name, value: column.key }))}
             label="Columns to Export"

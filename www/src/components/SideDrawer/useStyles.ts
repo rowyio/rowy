@@ -28,6 +28,8 @@ export const useStyles = makeStyles((theme) =>
         easing: theme.transitions.easing.custom,
         duration: theme.transitions.duration.standard,
       }),
+
+      zIndex: theme.zIndex.drawer + 50,
     },
     paperClose: {
       transform: `translateX(${DRAWER_WIDTH - DRAWER_COLLAPSED_WIDTH}px)`,

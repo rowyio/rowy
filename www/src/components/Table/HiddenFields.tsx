@@ -7,7 +7,7 @@ import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 
 import MultiSelect from "@antlerengineering/multiselect";
 import ButtonWithStatus from "components/ButtonWithStatus";
-import Column from "components/Wizards/ImportWizard/Column";
+import Column from "components/Wizards/Column";
 
 import { useFiretableContext } from "contexts/firetableContext";
 import { useAppContext } from "contexts/appContext";

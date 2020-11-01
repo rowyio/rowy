@@ -4,12 +4,12 @@ export const serverTimestamp = admin.firestore.FieldValue.serverTimestamp;
 import { sendEmail } from "./email";
 import { hasAnyRole } from "./auth";
 
-var characters =
+const characters =
   "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 export function generateId(length) {
-  var result = "";
-  var charactersLength = characters.length;
-  for (var i = 0; i < length; i++) {
+  let result = "";
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
   return result;

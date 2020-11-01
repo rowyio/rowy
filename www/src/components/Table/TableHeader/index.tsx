@@ -14,8 +14,8 @@ import { isCollectionGroup } from "util/fns";
 import AddRowIcon from "assets/icons/AddRow";
 
 import Filters from "../Filters";
-import ImportCSV from "./ImportCSV";
-import ExportCSV from "./ExportCSV";
+import ImportCSV from "./ImportCsv";
+import ExportCSV from "./ExportCsv";
 import TableSettings from "./TableSettings";
 
 import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";

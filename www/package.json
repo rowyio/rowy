@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@antlerengineering/form-builder": "^0.6.1",
-    "@antlerengineering/multiselect": "^0.7.1",
+    "@antlerengineering/multiselect": "^0.7.4",
     "@date-io/date-fns": "1.x",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
@@ -17,7 +17,7 @@
     "algoliasearch": "^4.1.0",
     "chroma-js": "^2.1.0",
     "csv-parse": "^4.4.6",
-    "date-fns": "^2.9.0",
+    "date-fns": "^2.16.1",
     "dompurify": "^2.0.8",
     "file-saver": "^2.0.2",
     "firebase": "^7.23.0",

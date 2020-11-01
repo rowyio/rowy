@@ -1,5 +1,7 @@
 import React from "react";
 import { ScrollSync, ScrollSyncPane } from "react-scroll-sync";
+import _find from "lodash/find";
+import { parseJSON } from "date-fns";
 
 import { makeStyles, createStyles, Grid } from "@material-ui/core";
 
@@ -8,6 +10,7 @@ import Column from "../Column";
 import Cell from "../Cell";
 
 import { useFiretableContext } from "contexts/firetableContext";
+import { FieldType } from "constants/fields";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -66,9 +69,18 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-export default function Step4Preview({ config }: IStepProps) {
+export default function Step4Preview({ csvData, config }: IStepProps) {
   const classes = useStyles();
   const { tableState } = useFiretableContext();
+
+  if (!tableState) return null;
+
+  const columns = config.pairs.map(({ csvKey, columnKey }) => ({
+    csvKey,
+    ...(tableState!.columns[columnKey] ??
+      _find(config.newColumns, { key: columnKey }) ??
+      {}),
+  }));
 
   return (
     <div className={classes.root}>
@@ -76,8 +88,8 @@ export default function Step4Preview({ config }: IStepProps) {
         <div>
           <ScrollSyncPane>
             <Grid container wrap="nowrap" className={classes.header}>
-              {Object.entries(config).map(([field, { name, type }]) => (
-                <Grid item key={field} className={classes.column}>
+              {columns.map(({ key, name, type }) => (
+                <Grid item key={key} className={classes.column}>
                   <Column label={name} type={type} />
                 </Grid>
               ))}
@@ -87,13 +99,17 @@ export default function Step4Preview({ config }: IStepProps) {
 
           <ScrollSyncPane>
             <Grid container wrap="nowrap" className={classes.data}>
-              {Object.entries(config).map(([field, { name, type }]) => (
-                <Grid item key={field} className={classes.column}>
-                  {tableState!.rows!.slice(0, 20).map((row) => (
+              {columns.map(({ csvKey, name, type }) => (
+                <Grid item key={csvKey} className={classes.column}>
+                  {csvData.rows.slice(0, 20).map((row, i) => (
                     <Cell
-                      key={field + row.id}
-                      field={field}
-                      value={row[field]}
+                      key={csvKey + i}
+                      field={csvKey}
+                      value={
+                        type === FieldType.date || type === FieldType.dateTime
+                          ? parseJSON(row[csvKey]).getTime()
+                          : row[csvKey]
+                      }
                       type={type}
                       name={name}
                     />
