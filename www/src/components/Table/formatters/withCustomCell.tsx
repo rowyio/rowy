@@ -1,7 +1,7 @@
 import React, { Suspense, useState, useEffect } from "react";
 import { FormatterProps } from "react-data-grid";
 
-import { makeStyles, createStyles } from "@material-ui/core";
+// import { makeStyles, createStyles } from "@material-ui/core";
 
 import ErrorBoundary from "components/ErrorBoundary";
 import { useFiretableContext } from "../../../contexts/firetableContext";
@@ -9,17 +9,17 @@ import { useFiretableContext } from "../../../contexts/firetableContext";
 import { FieldType } from "constants/fields";
 import { getCellValue } from "utils/fns";
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    "@global": {
-      ".rdg-cell-mask.rdg-selected": {
-        // Prevent 3px-wide cell selection border when both react-data-grid
-        // cell selection mask and our custom one are active
-        boxShadow: `0 0 0 1px ${theme.palette.background.paper} inset`,
-      },
-    },
-  })
-);
+// const useStyles = makeStyles((theme) =>
+//   createStyles({
+//     "@global": {
+//       ".rdg-cell-mask.rdg-selected": {
+//         // Prevent 3px-wide cell selection border when both react-data-grid
+//         // cell selection mask and our custom one are active
+//         boxShadow: `0 0 0 1px ${theme.palette.background.paper} inset`,
+//       },
+//     },
+//   })
+// );
 
 export type CustomCellProps = FormatterProps<any> & {
   value: any;
@@ -68,27 +68,32 @@ const withCustomCell = (
   Component: React.ComponentType<CustomCellProps>,
   readOnly: boolean = false
 ) => (props: FormatterProps<any>) => {
-  useStyles();
+  // useStyles();
   const { updateCell } = useFiretableContext();
+
   const value = getCellValue(props.row, props.column.key as string);
   const [localValue, setLocalValue] = useState(value);
-  const lazyCell = (
+  useEffect(() => {
+    setLocalValue(value);
+  }, [value]);
+
+  // Initially display basicCell to improve scroll performance
+  const basicCell = (
     <BasicCell
       value={localValue}
       name={(props.column as any).name}
       type={(props.column as any).type as FieldType}
     />
   );
-  const [component, setComponent] = useState(lazyCell);
-  useEffect(() => {
-    setLocalValue(value);
-  }, [value]);
 
+  const [component, setComponent] = useState(basicCell);
+
+  // Switch to heavy cell component on mount
   useEffect(() => {
     setTimeout(() => {
       setComponent(
         <ErrorBoundary fullScreen={false} basic wrap="nowrap">
-          <Suspense fallback={lazyCell}>
+          <Suspense fallback={basicCell}>
             <Component
               {...props}
               docRef={props.row.ref}
@@ -107,6 +112,7 @@ const withCustomCell = (
       setLocalValue(value);
     }
   };
+
   return component;
 };
 

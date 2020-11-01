@@ -11,11 +11,11 @@ import "react-data-grid/dist/react-data-grid.css";
 import DataGrid, { Column, SelectColumn } from "react-data-grid";
 import { formatSubTableName } from "../../utils/fns";
 import Loading from "components/Loading";
-import TableHeader, { TABLE_HEADER_HEIGHT } from "./TableHeader";
+import TableHeader from "./TableHeader";
 import ColumnHeader from "./ColumnHeader";
 import ColumnMenu from "./ColumnMenu";
 import FinalColumnHeader from "./FinalColumnHeader";
-import FinalColumn, { useFinalColumnStyles } from "./formatters/FinalColumn";
+import FinalColumn from "./formatters/FinalColumn";
 
 import { useFiretableContext } from "contexts/firetableContext";
 
@@ -24,7 +24,6 @@ import { getFormatter } from "./formatters";
 import { getEditor } from "./editors";
 
 import useWindowSize from "hooks/useWindowSize";
-import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
 import useStyles from "./styles";
 import { useAppContext } from "contexts/appContext";
 import _get from "lodash/get";
@@ -40,8 +39,7 @@ function rowKeyGetter(row: any) {
 }
 export default function Table() {
   const classes = useStyles();
-  const theme = useTheme();
-  const finalColumnClasses = useFinalColumnStyles();
+
   const {
     tableState,
     tableActions,
@@ -61,9 +59,10 @@ export default function Table() {
     name: "Add column",
     type: FieldType.last,
     index: columns.length ?? 0,
-    width: 160,
+    width: 190,
     headerRenderer: FinalColumnHeader,
-    cellClass: finalColumnClasses.cell,
+    headerCellClass: "final-column-header",
+    cellClass: "final-column-cell",
     formatter: FinalColumn,
     editable: false,
   };
@@ -148,7 +147,7 @@ export default function Table() {
       {/* <Suspense fallback={<Loading message="Loading header" />}>
         <Hotkeys selectedCell={selectedCell} />
       </Suspense> */}
-      <div className={classes.wrapper} ref={rowsContainerRef}>
+      <div className={classes.tableWrapper} ref={rowsContainerRef}>
         <TableHeader
           rowHeight={rowHeight}
           updateConfig={tableActions.table.updateConfig}
@@ -163,9 +162,10 @@ export default function Table() {
             columns={columns as any}
             rowHeight={rowHeight ?? 43}
             headerRowHeight={44}
+            className="rdg-light" // Handle dark mode in MUI theme
             enableCellCopyPaste
             enableCellDragAndDrop
-            cellNavigationMode={"LOOP_OVER_ROW"}
+            cellNavigationMode="LOOP_OVER_ROW"
             rowKeyGetter={rowKeyGetter}
             selectedRows={selectedRowsSet}
             onSelectedRowsChange={(newSelectedSet) => {

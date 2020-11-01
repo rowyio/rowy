@@ -6,8 +6,28 @@ import AddColumnIcon from "assets/icons/AddColumn";
 
 import { useFiretableContext } from "contexts/firetableContext";
 
-const useStyles = makeStyles((theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
+    "@global": {
+      ".rdg-header-row .rdg-cell.final-column-header": {
+        border: "none",
+
+        "&::before": {
+          content: "''",
+          display: "block",
+          width: 46,
+          height: "100%",
+
+          position: "absolute",
+          top: 0,
+          left: 0,
+
+          border: "1px solid var(--border-color)",
+          borderLeftWidth: 0,
+        },
+      },
+    },
+
     root: {
       height: "100%",
       width: "auto",

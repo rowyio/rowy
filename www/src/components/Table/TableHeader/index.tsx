@@ -18,7 +18,6 @@ import ImportCSV from "./ImportCsv";
 import ExportCSV from "./ExportCsv";
 import TableSettings from "./TableSettings";
 
-import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
 import { useFiretableContext } from "contexts/firetableContext";
 import { FieldType } from "constants/fields";
 import HiddenFields from "../HiddenFields";
@@ -28,7 +27,7 @@ export const TABLE_HEADER_HEIGHT = 56;
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
-      width: `calc(100% - ${DRAWER_COLLAPSED_WIDTH}px)`,
+      width: "100%",
       margin: 0,
       padding: theme.spacing(0, 1.5),
       minHeight: TABLE_HEADER_HEIGHT,

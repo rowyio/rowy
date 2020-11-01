@@ -1,46 +1,59 @@
 import { makeStyles, createStyles, fade } from "@material-ui/core";
 import { APP_BAR_HEIGHT } from "components/Navigation";
+import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
 
 export const useStyles = makeStyles((theme) =>
   createStyles({
+    tableWrapper: {
+      display: "flex",
+      flexDirection: "column",
+      width: `calc(100% - ${DRAWER_COLLAPSED_WIDTH}px)`,
+      height: `calc(100vh - ${APP_BAR_HEIGHT}px)`,
+
+      "& > .rdg": { flex: 1 },
+    },
+
+    loadingContainer: {
+      position: "sticky",
+      left: 0,
+      height: 100,
+    },
+
     "@global": {
-      ".rdg-root": {
-        "&.rdg-root": {
-          border: "none",
-          lineHeight: "inherit !important",
-        },
+      ".rdg.rdg": {
+        "--color": theme.palette.text.secondary,
+        "--border-color": "#e0e0e0",
+        // "--summary-border-color": "#aaa",
+        "--background-color": theme.palette.background.paper,
+        "--header-background-color": theme.palette.background.default,
+        "--row-hover-background-color": "#f5f5f5",
+        "--row-selected-background-color": "#dbecfa",
+        "--row-selected-hover-background-color": "#c9e3f8",
+        "--checkbox-color": "#005295",
+        "--checkbox-focus-color": "#62b8ff",
+        "--checkbox-disabled-border-color": "#ccc",
+        "--checkbox-disabled-background-color": "#ddd",
+        "--selection-color": "#66afe9",
+        "--font-size": "0.75rem",
 
-        "& .rdg-header": { overflowY: "visible" },
-        "& .rdg-header, & .rdg-header .rdg-cell": {
-          backgroundColor: theme.palette.background.default,
-        },
-        "& .rdg-header .rdg-cell": {
-          borderTop: "1px solid #e0e0e0",
-          height: "100%",
-        },
+        border: "none",
+        lineHeight: "inherit !important",
 
-        "& .rdg-viewport": { backgroundColor: "transparent" },
+        ...theme.typography.body2,
+        fontSize: "0.75rem",
 
         "& .rdg-cell": {
-          borderColor: "#e0e0e0",
-          display: "inline-flex",
+          display: "flex",
           alignItems: "center",
           padding: theme.spacing(0, 1.5),
         },
-
-        "& .rdg-cell-value": {
-          width: "100%",
-          maxHeight: "100%",
-        },
       },
 
-      ".rdg-viewport, .rdg-editor-container": {
-        ...theme.typography.body2,
-        fontSize: "0.75rem",
-        lineHeight: "inherit",
-        color: theme.palette.text.secondary,
+      ".rdg-header-row .rdg-cell": {
+        borderTop: "1px solid var(--border-color)",
       },
 
+      // TODO:
       ".rdg-draggable-header-cell": {
         cursor: "move",
         display: "inline",
@@ -52,6 +65,7 @@ export const useStyles = makeStyles((theme) =>
 
       ".row-hover-iconButton": {
         color: theme.palette.text.disabled,
+        transitionDuration: "0s",
 
         ".rdg-row:hover &": {
           color: theme.palette.text.primary,
@@ -66,21 +80,6 @@ export const useStyles = makeStyles((theme) =>
         margin: theme.spacing(0, -1.5),
         width: `calc(100% + ${theme.spacing(3)}px)`,
       },
-    },
-    wrapper: {
-      display: "flex",
-      flexDirection: "column",
-      height: `calc(100vh - 56px)`,
-
-      "& > .rdg": {
-        flex: 1,
-      },
-    },
-
-    loadingContainer: {
-      position: "sticky",
-      left: 0,
-      height: 100,
     },
   })
 );
