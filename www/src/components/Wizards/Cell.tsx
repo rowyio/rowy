@@ -70,23 +70,21 @@ export default function Cell({
     <div className={classes.root} {...props}>
       <div className={classes.value}>
         {formatter ? (
-          <></>
-        ) : // TODO:
-        // React.createElement(formatter, {
-        //   value,
-        //   rowIdx: 0,
-        //   column: {
-        //     type,
-        //     key: field,
-        //     name,
-        //     config: { options: [] },
-        //   } as any,
-        //   row: { [field]: value },
-        //   isRowSelected: false,
-        //   onRowSelectionChange: () => {},
-        //   isSummaryRow: false,
-        // })
-        typeof value === "string" ||
+          React.createElement(formatter, {
+            value,
+            rowIdx: 0,
+            column: {
+              type,
+              key: field,
+              name,
+              config: { options: [] },
+            } as any,
+            row: { [field]: value },
+            isRowSelected: false,
+            onRowSelectionChange: () => {},
+            isSummaryRow: false,
+          } as any)
+        ) : typeof value === "string" ||
           typeof value === "number" ||
           value === undefined ||
           value === null ? (
