@@ -37,10 +37,11 @@ export const useStyles = makeStyles((theme) =>
         "--font-size": "0.75rem",
 
         border: "none",
-        lineHeight: "inherit !important",
+        backgroundColor: "transparent",
 
         ...theme.typography.body2,
         fontSize: "0.75rem",
+        lineHeight: "inherit !important",
 
         "& .rdg-cell": {
           display: "flex",
