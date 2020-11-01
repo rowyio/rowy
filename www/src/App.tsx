@@ -1,13 +1,8 @@
-import React, { lazy, Suspense, useState } from "react";
+import React, { lazy, Suspense } from "react";
 import { Route, Switch, Link } from "react-router-dom";
 import _merge from "lodash/merge";
 
-import {
-  MuiThemeProvider as ThemeProvider,
-  CssBaseline,
-  Button,
-} from "@material-ui/core";
-import Theme from "./Theme";
+import { CssBaseline, Button } from "@material-ui/core";
 
 import CustomBrowserRouter from "./utils/CustomBrowserRouter";
 import PrivateRoute from "./utils/PrivateRoute";
@@ -37,24 +32,19 @@ const JWTAuthView = lazy(
 const TableView = lazy(
   () => import("./views/TableView" /* webpackChunkName: "TableView" */)
 );
-const GridView = lazy(
-  () => import("./views/GridView" /* webpackChunkName: "GridView" */)
-);
+// const GridView = lazy(
+//   () => import("./views/GridView" /* webpackChunkName: "GridView" */)
+// );
 const TablesView = lazy(
   () => import("./views/TablesView" /* webpackChunkName: "TablesView" */)
 );
 
-const App: React.FC = () => {
-  const [themeCustomization, setTheme] = useState({
-    palette: {
-      primary: { main: "#ef4747" },
-    },
-  });
+export default function App() {
   return (
-    <ThemeProvider theme={Theme(themeCustomization)}>
+    <>
       <CssBaseline />
       <ErrorBoundary>
-        <AppProvider setTheme={setTheme}>
+        <AppProvider>
           <ConfirmationProvider>
             <SnackProvider>
               <CustomBrowserRouter>
@@ -136,8 +126,6 @@ const App: React.FC = () => {
           </ConfirmationProvider>
         </AppProvider>
       </ErrorBoundary>
-    </ThemeProvider>
+    </>
   );
-};
-
-export default App;
+}

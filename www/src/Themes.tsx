@@ -3,7 +3,7 @@ import _merge from "lodash/merge";
 
 import {
   createMuiTheme,
-  Theme as ThemeType,
+  Theme,
   ThemeOptions,
   fade,
 } from "@material-ui/core/styles";
@@ -34,7 +34,7 @@ declare module "@material-ui/core/styles/transitions" {
   }
 }
 
-export const themeBase = createMuiTheme({
+export const themeBase = {
   palette: {
     primary: { main: ANTLER_RED, light: ANTLER_RED },
     secondary: { main: SECONDARY_GREY },
@@ -108,9 +108,19 @@ export const themeBase = createMuiTheme({
       color: SECONDARY_TEXT,
     },
   },
-});
+};
 
-export const defaultOverrides = (theme: ThemeType): ThemeOptions => ({
+export const darkThemeBase = {
+  palette: {
+    type: "dark",
+    primary: { main: ANTLER_RED, light: ANTLER_RED },
+    secondary: { main: SECONDARY_GREY },
+    text: { secondary: SECONDARY_TEXT },
+    error: { main: ERROR },
+  },
+};
+
+export const defaultOverrides = (theme: Theme): ThemeOptions => ({
   transitions: {
     easing: { custom: "cubic-bezier(0.25, 0.1, 0.25, 1)" },
   },
@@ -332,10 +342,24 @@ export const defaultOverrides = (theme: ThemeType): ThemeOptions => ({
   },
 });
 
-export const Theme = (customization: ThemeOptions) =>
-  createMuiTheme(
-    _merge(themeBase, defaultOverrides(_merge(themeBase, customization))),
-    customization
+export const customizableLightTheme = (customization: ThemeOptions) => {
+  const customizedLightThemeBase = createMuiTheme(
+    _merge(themeBase, customization)
   );
 
-export default Theme;
+  return createMuiTheme(
+    customizedLightThemeBase,
+    _merge(defaultOverrides(customizedLightThemeBase), customization)
+  );
+};
+
+export const customizableDarkTheme = (customization: ThemeOptions) => {
+  const customizedDarkThemeBase = createMuiTheme(
+    _merge(themeBase, darkThemeBase, customization)
+  );
+
+  return createMuiTheme(
+    customizedDarkThemeBase,
+    _merge(defaultOverrides(customizedDarkThemeBase), customization)
+  );
+};
