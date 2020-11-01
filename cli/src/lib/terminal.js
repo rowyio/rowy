@@ -17,7 +17,7 @@ function execute(command, callback) {
 module.exports.getRequiredVersions = () =>
   new Promise((resolve) => {
     const checkingVersionsStatus = new Spinner(
-      "Checking the versions of required system packages"
+      "Checking versions of required system packages"
     );
 
     checkingVersionsStatus.start();
@@ -62,7 +62,7 @@ module.exports.cloneFiretable = (dir = "firetable") =>
         cloningStatus.stop();
         const installingPackagesStatus = new Spinner("Installing packages");
         installingPackagesStatus.start();
-        execute(`cd ${dir}/www; yarn;`, function (results) {
+        execute(`cd ${dir}/www && yarn;`, function (results) {
           installingPackagesStatus.stop();
           resolve(results);
         });
@@ -74,7 +74,7 @@ module.exports.setFiretableENV = (envVariables, dir) =>
   new Promise((resolve) => {
     const status = new Spinner("Setting environment variables");
     status.start();
-    const command = `cd ${dir}/www; node createDotEnv ${envVariables.projectId} ${envVariables.firebaseWebApiKey} ${envVariables.algoliaAppId} ${envVariables.algoliaSearchKey}`;
+    const command = `cd ${dir}/www && node createDotEnv ${envVariables.projectId} ${envVariables.firebaseWebApiKey} ${envVariables.algoliaAppId} ${envVariables.algoliaSearchKey}`;
     execute(command, function () {
       status.stop();
       resolve(true);
@@ -86,7 +86,7 @@ module.exports.setFirebaseHostingTarget = (projectId, hostingTarget) =>
     const status = new Spinner("Setting Firebase Hosting target");
     status.start();
 
-    const command = `cd www;echo '{}' > .firebaserc; yarn target ${hostingTarget} --project ${projectId}`;
+    const command = `cd www && echo '{}' > .firebaserc && yarn target ${hostingTarget} --project ${projectId}`;
     execute(command, function () {
       execute(`firebase use ${projectId}`, function () {
         status.stop();
@@ -99,7 +99,7 @@ module.exports.deployToFirebaseHosting = (projectId) =>
   new Promise((resolve) => {
     const status = new Spinner("Deploying to Firebase Hosting");
     status.start();
-    const command = `cd www; firebase deploy --project ${projectId} --only hosting`;
+    const command = `cd www && firebase deploy --project ${projectId} --only hosting`;
     execute(command, function (results) {
       if (results.includes("Error:")) {
         throw new Error(results);
@@ -139,7 +139,7 @@ module.exports.installFiretableAppPackages = (dir = "firetable/www") =>
   new Promise((resolve) => {
     const status = new Spinner("Installing Firetable app npm packages");
     status.start();
-    execute(`cd ${dir}; yarn`, function () {
+    execute(`cd ${dir} && yarn`, function () {
       status.stop();
       resolve(true);
     });
@@ -151,7 +151,7 @@ module.exports.buildFiretable = (dir) =>
       "Building Firetable. This will take a few minutes"
     );
     status.start();
-    execute(`cd ${dir}/www; yarn build`, function (stdout) {
+    execute(`cd ${dir}/www && yarn build`, function (stdout) {
       status.stop();
       resolve(true);
     });
@@ -205,7 +205,7 @@ module.exports.createFiretableWebApp = (projectId) =>
 
 module.exports.getFiretableWebAppConfig = (webAppId) =>
   new Promise((resolve) => {
-    const status = new Spinner(`Getting your firetable web app config`);
+    const status = new Spinner(`Getting your Firetable web app config`);
     status.start();
     execute(`firebase apps:sdkconfig WEB ${webAppId}`, function (results) {
       status.stop();
@@ -219,7 +219,7 @@ module.exports.createFirebaseAppConfigFile = (config, dir) =>
     const status = new Spinner(`Creating firebase config file`);
     status.start();
     execute(
-      `cd ${dir}/www/src/firebase; ls;echo 'export default ${config.replace(
+      `cd ${dir}/www/src/firebase && ls && echo 'export default ${config.replace(
         /\n/g,
         ""
       )}' > config.ts`,
@@ -237,7 +237,7 @@ module.exports.createCloudFunctionConfig = (functionName, collectionName) =>
       `Configuring ${functionName} for ${collectionName}`
     );
     status.start();
-    const command = `cd cloud_functions/functions;yarn;yarn generateConfig ${functionName} ${collectionName}`;
+    const command = `cd cloud_functions/functions && yarn && yarn generateConfig ${functionName} ${collectionName}`;
     execute(command, function (results) {
       console.log(results);
       if (results.includes("Error:")) {
@@ -252,7 +252,7 @@ module.exports.deployCloudFunction = (projectId, functionName) =>
   new Promise((resolve) => {
     const status = new Spinner(`Deploying ${functionName}`);
     status.start();
-    const command = `cd cloud_functions/functions;yarn; firebase deploy --project ${projectId} --only functions:${functionName}`;
+    const command = `cd cloud_functions/functions && yarn && firebase deploy --project ${projectId} --only functions:${functionName}`;
     execute(command, function (results) {
       if (results.includes("Error:")) {
         throw new Error(results);
