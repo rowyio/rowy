@@ -65,23 +65,13 @@ export default function ImportCsvWizard({
     }));
   };
 
-  useEffect(() => {
-    if (!tableState || !open) return;
-
-    if (Array.isArray(tableState.filters) && tableState.filters?.length > 0)
-      tableActions!.table.filter([]);
-
-    if (Array.isArray(tableState.orderBy) && tableState.orderBy?.length > 0)
-      tableActions!.table.orderBy([]);
-  }, [open, tableState]);
-
-  if (tableState?.rows.length === 0) return null;
-
   const handleFinish = () => {
     if (!tableState || !tableActions || !csvData) return;
     // Add any new columns to the end
     config.newColumns.forEach((col) =>
-      tableActions.column.add(col.name, col.type, col)
+      setTimeout(() => {
+        tableActions.column.add(col.name, col.type, col);
+      })
     );
     // Add all new rows
     csvData.rows.forEach((row) => {

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import _find from "lodash/find";
+import { parseJSON } from "date-fns";
 
 import {
   makeStyles,
@@ -159,7 +160,12 @@ export default function Step2NewColumns({
             <Grid item xs className={classes.cellContainer}>
               <Cell
                 field={config.newColumns[fieldToEdit].key}
-                value={cell}
+                value={
+                  config.newColumns[fieldToEdit].type === FieldType.date ||
+                  config.newColumns[fieldToEdit].type === FieldType.dateTime
+                    ? parseJSON(cell).getTime()
+                    : cell
+                }
                 type={config.newColumns[fieldToEdit].type}
                 name={config.newColumns[fieldToEdit].name}
               />
