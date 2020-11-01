@@ -10,6 +10,7 @@ import {
   Tooltip,
   Button,
   Popover,
+  PopoverProps as MuiPopoverProps,
   Grid,
   Typography,
   TextField,
@@ -84,9 +85,10 @@ export interface IImportCsvProps {
   render?: (
     onClick: (event: React.MouseEvent<HTMLButtonElement>) => void
   ) => React.ReactNode;
+  PopoverProps?: Partial<MuiPopoverProps>;
 }
 
-export default function ImportCsv({ render }: IImportCsvProps) {
+export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
   const classes = useStyles();
 
   const [open, setOpen] = useState<HTMLButtonElement | null>(null);
@@ -194,6 +196,7 @@ export default function ImportCsv({ render }: IImportCsvProps) {
           vertical: "top",
           horizontal: "right",
         }}
+        {...PopoverProps}
       >
         <TabContext value={tab}>
           <TabList
