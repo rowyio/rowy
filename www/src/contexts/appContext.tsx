@@ -13,12 +13,14 @@ import {
 import Themes from "Themes";
 
 const useThemeState = createPersistedState("_FT_THEME");
+const useThemeOverriddenState = createPersistedState("_FT_THEME_OVERRIDDEN");
 
 interface AppContextInterface {
   currentUser: firebase.User | null | undefined;
   userDoc: any;
   theme: keyof typeof Themes;
   setTheme: React.Dispatch<React.SetStateAction<keyof typeof Themes>>;
+  setThemeOverridden: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const AppContext = React.createContext<AppContextInterface>({
@@ -26,6 +28,7 @@ export const AppContext = React.createContext<AppContextInterface>({
   userDoc: undefined,
   theme: "light",
   setTheme: () => {},
+  setThemeOverridden: () => {},
 });
 
 export const useAppContext = () => useContext(AppContext);
@@ -56,11 +59,14 @@ export const AppProvider: React.FC = ({ children }) => {
   const [theme, setTheme] = useThemeState<keyof typeof Themes>(
     prefersDarkTheme ? "dark" : "light"
   );
+  // Store if theme was overridden
+  const [themeOverridden, setThemeOverridden] = useThemeOverriddenState(false);
   // Update theme when system settings change
   useEffect(() => {
+    if (themeOverridden) return;
     if (prefersDarkTheme && theme !== "dark") setTheme("dark");
     if (!prefersDarkTheme && theme !== "light") setTheme("light");
-  }, [prefersDarkTheme]);
+  }, [prefersDarkTheme, themeOverridden]);
 
   // Store themeCustomization from userDoc
   const [themeCustomization, setThemeCustomization] = useState<ThemeOptions>(
@@ -108,6 +114,7 @@ export const AppProvider: React.FC = ({ children }) => {
         currentUser,
         theme,
         setTheme,
+        setThemeOverridden,
       }}
     >
       <MuiThemeProvider theme={generatedTheme}>

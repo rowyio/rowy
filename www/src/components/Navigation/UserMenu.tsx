@@ -52,7 +52,13 @@ export default function UserMenu(props: IconButtonProps) {
   const anchorEl = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
 
-  const { currentUser, userDoc, theme, setTheme } = useAppContext();
+  const {
+    currentUser,
+    userDoc,
+    theme,
+    setTheme,
+    setThemeOverridden,
+  } = useAppContext();
   if (!currentUser || !userDoc || !userDoc?.state?.doc) return null;
 
   const displayName = userDoc?.state?.doc?.user?.displayName;
@@ -61,6 +67,7 @@ export default function UserMenu(props: IconButtonProps) {
   const handleToggleTheme = () => {
     if (theme === "light") setTheme(() => "dark");
     if (theme === "dark") setTheme(() => "light");
+    setThemeOverridden(true);
   };
 
   return (
