@@ -147,6 +147,11 @@ export const darkThemeBase = {
   typography: {
     overline: { color: "rgba(255, 255, 255, 0.6)" },
   },
+  overrides: {
+    MuiBackdrop: {
+      root: { backgroundColor: "rgba(0, 0, 0, 0.67)" },
+    },
+  },
 };
 
 export const defaultOverrides = (theme: Theme): ThemeOptions => ({
