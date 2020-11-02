@@ -37,10 +37,9 @@ const useStyles = makeStyles((theme) =>
 
     // divider: { margin: theme.spacing(1, 2) },
 
+    secondaryAction: { pointerEvents: "none" },
     secondaryIcon: {
       display: "block",
-      pointerEvents: "none",
-
       color: theme.palette.action.active,
     },
   })
@@ -114,7 +113,7 @@ export default function UserMenu(props: IconButtonProps) {
 
         <MenuItem onClick={handleToggleTheme}>
           Dark Theme
-          <ListItemSecondaryAction>
+          <ListItemSecondaryAction className={classes.secondaryAction}>
             {theme === "light" ? (
               <CheckBoxOutlineBlankIcon className={classes.secondaryIcon} />
             ) : (

@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) =>
 
     spacer: { minWidth: theme.spacing(8) },
 
-    formControl: {
+    dropdown: {
       minWidth: 120,
       margin: theme.spacing(0, 0, 0, -1),
     },
@@ -139,7 +139,7 @@ export default function TableHeader({
         <TextField
           select
           variant="filled"
-          className={classes.formControl}
+          className={classes.dropdown}
           value={rowHeight ?? 43}
           onChange={(event) => {
             updateConfig("rowHeight", event.target.value);
