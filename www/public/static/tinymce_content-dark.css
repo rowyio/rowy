@@ -1,9 +1,9 @@
 :root {
   font-size: 16px;
 
-  --tinymce-text-color: rgba(0, 0, 0, 0.87);
+  --tinymce-text-color: rgba(255, 255, 255, 1);
   --tinymce-primary-color: #ed4747;
-  --tinymce-divider-color: rgba(0, 0, 0, 0.12);
+  --tinymce-divider-color: rgba(255, 255, 255, 0.12);
 }
 
 html {

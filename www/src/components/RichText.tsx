@@ -14,7 +14,7 @@ import "tinymce/plugins/help";
 import "tinymce/plugins/code";
 import { Editor } from "@tinymce/tinymce-react";
 
-import { makeStyles, createStyles } from "@material-ui/core";
+import { makeStyles, createStyles, useTheme } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -94,6 +94,7 @@ export interface IRichTextProps {
 
 export default function RichText({ value, onChange }: IRichTextProps) {
   const classes = useStyles();
+  const theme = useTheme();
   const [focus, setFocus] = useState(false);
 
   return (
@@ -110,7 +111,9 @@ export default function RichText({ value, onChange }: IRichTextProps) {
           content_css: [
             "https://use.typekit.net/ngg8buf.css",
             "https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i&display=swap",
-            "/static/tinymce_content.css",
+            theme.palette.type === "light"
+              ? "/static/tinymce_content.css"
+              : "/static/tinymce_content-dark.css",
           ],
         }}
         value={value}
