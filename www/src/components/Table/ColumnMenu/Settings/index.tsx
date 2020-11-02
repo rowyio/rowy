@@ -288,6 +288,7 @@ const ConfigFields = ({
             <TextField
               label="callable name"
               name="callableName"
+              value={config.callableName}
               fullWidth
               onChange={(e) => {
                 handleChange("callableName")(e.target.value);

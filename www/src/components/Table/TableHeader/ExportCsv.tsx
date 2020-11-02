@@ -24,7 +24,7 @@ import { SnackContext } from "contexts/snackContext";
 import { useFiretableContext } from "contexts/firetableContext";
 import { db } from "../../../firebase";
 import { FieldType } from "constants/fields";
-import { isCollectionGroup } from "util/fns";
+import { isCollectionGroup } from "utils/fns";
 
 const useStyles = makeStyles(() =>
   createStyles({

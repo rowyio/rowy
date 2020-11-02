@@ -9,8 +9,9 @@ import {
   Typography,
   Button,
 } from "@material-ui/core";
+import { fade } from "@material-ui/core/styles";
 
-import { isCollectionGroup } from "util/fns";
+import { isCollectionGroup } from "utils/fns";
 import AddRowIcon from "assets/icons/AddRow";
 
 import Filters from "../Filters";
@@ -18,10 +19,8 @@ import ImportCSV from "./ImportCsv";
 import ExportCSV from "./ExportCsv";
 import TableSettings from "./TableSettings";
 
-import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
 import { useFiretableContext } from "contexts/firetableContext";
 import { FieldType } from "constants/fields";
-import MigrateButton from "../MigrateButton";
 import HiddenFields from "../HiddenFields";
 
 export const TABLE_HEADER_HEIGHT = 56;
@@ -29,7 +28,7 @@ export const TABLE_HEADER_HEIGHT = 56;
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
-      width: `calc(100% - ${DRAWER_COLLAPSED_WIDTH}px)`,
+      width: "100%",
       margin: 0,
       padding: theme.spacing(0, 1.5),
       minHeight: TABLE_HEADER_HEIGHT,
@@ -49,11 +48,17 @@ const useStyles = makeStyles((theme) =>
 
     spacer: { minWidth: theme.spacing(8) },
 
-    formControl: {
+    dropdown: {
       minWidth: 120,
       margin: theme.spacing(0, 0, 0, -1),
     },
-    inputBaseRoot: { borderRadius: theme.shape.borderRadius },
+    inputBaseRoot: {
+      borderRadius: theme.shape.borderRadius,
+      backgroundColor:
+        theme.palette.type === "dark"
+          ? fade(theme.palette.text.primary, 0.06)
+          : undefined,
+    },
     select: {
       paddingTop: "6px !important",
       paddingBottom: "7px !important",
@@ -90,7 +95,6 @@ export default function TableHeader({
       wrap="nowrap"
       className={classes.root}
     >
-      <MigrateButton needsMigration={needsMigration} columns={tempColumns} />
       {!isCollectionGroup() && (
         <Grid item>
           <Button
@@ -135,7 +139,7 @@ export default function TableHeader({
         <TextField
           select
           variant="filled"
-          className={classes.formControl}
+          className={classes.dropdown}
           value={rowHeight ?? 43}
           onChange={(event) => {
             updateConfig("rowHeight", event.target.value);

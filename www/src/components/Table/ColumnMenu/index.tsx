@@ -52,8 +52,11 @@ export type ColumnMenuRef = {
 const useStyles = makeStyles((theme) =>
   createStyles({
     paper: {
-      // TODO: change this if we need to support a dark mode
-      backgroundColor: "#f1f1f3",
+      backgroundColor:
+        theme.palette.type === "light"
+          ? "#f1f1f3"
+          : theme.palette.background.elevation?.[8] ??
+            theme.palette.background.paper,
     },
   })
 );

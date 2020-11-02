@@ -28,7 +28,10 @@ const useStyles = makeStyles((theme) =>
         right: 0,
 
         height: theme.spacing(3),
-        backgroundImage: `linear-gradient(to top, ${theme.palette.background.paper}, transparent)`,
+        backgroundImage: `linear-gradient(to top, ${
+          theme.palette.background.elevation?.[24] ??
+          theme.palette.background.paper
+        }, transparent)`,
       },
 
       "&::before": {
@@ -43,7 +46,10 @@ const useStyles = makeStyles((theme) =>
         right: 0,
 
         width: theme.spacing(3),
-        backgroundImage: `linear-gradient(to left, ${theme.palette.background.paper}, transparent)`,
+        backgroundImage: `linear-gradient(to left, ${
+          theme.palette.background.elevation?.[24] ??
+          theme.palette.background.paper
+        }, transparent)`,
       },
     },
 
@@ -101,7 +107,7 @@ export default function Step4Preview({ csvData, config }: IStepProps) {
             <Grid container wrap="nowrap" className={classes.data}>
               {columns.map(({ csvKey, name, type }) => (
                 <Grid item key={csvKey} className={classes.column}>
-                  {csvData.rows.slice(0, 20).map((row, i) => (
+                  {csvData.rows.map((row, i) => (
                     <Cell
                       key={csvKey + i}
                       field={csvKey}

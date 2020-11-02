@@ -12,7 +12,7 @@ import Column from "components/Wizards/Column";
 import { useFiretableContext } from "contexts/firetableContext";
 import { useAppContext } from "contexts/appContext";
 import { DocActions } from "hooks/useDoc";
-import { formatSubTableName } from "../../util/fns";
+import { formatSubTableName } from "../../utils/fns";
 const useStyles = makeStyles((theme) =>
   createStyles({
     textField: { display: "none" },

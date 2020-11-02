@@ -9,7 +9,7 @@ import {
   FilledTextFieldProps,
 } from "@material-ui/core";
 import { emphasize } from "@material-ui/core/styles";
-import { resultColorsScale } from "util/color";
+import { resultColorsScale } from "utils/color";
 
 const useStyles = makeStyles((theme) =>
   createStyles({

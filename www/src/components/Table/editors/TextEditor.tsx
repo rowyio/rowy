@@ -9,6 +9,7 @@ import {
 } from "@material-ui/core";
 
 import { FieldType } from "constants/fields";
+import { getCellValue } from "utils/fns";
 
 const styles = (theme) =>
   createStyles({
@@ -56,7 +57,12 @@ class TextEditor extends React.Component<
   }
 
   render() {
-    const { classes, column, value } = this.props;
+    const {
+      classes,
+      row,
+      column, //value
+    } = this.props;
+    const value = getCellValue(row, column.key as string);
     let inputType = "text";
     switch ((column as any).type) {
       case FieldType.email:
@@ -87,6 +93,9 @@ class TextEditor extends React.Component<
         }
         type={inputType}
         fullWidth
+        onBlur={(e) => {
+          row.ref.update({ [column.key]: e.target.value });
+        }}
         variant="standard"
         inputProps={{
           ref: this.inputRef,

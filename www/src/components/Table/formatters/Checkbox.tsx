@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme) =>
 
     label: {
       font: "inherit",
+      letterSpacing: "inherit",
 
       flexGrow: 1,
       width: "calc(100% - 58px)",

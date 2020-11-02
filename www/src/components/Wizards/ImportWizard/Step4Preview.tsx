@@ -25,7 +25,10 @@ const useStyles = makeStyles((theme) =>
         right: 0,
 
         height: theme.spacing(3),
-        backgroundImage: `linear-gradient(to top, ${theme.palette.background.paper}, transparent)`,
+        backgroundImage: `linear-gradient(to top, ${
+          theme.palette.background.elevation?.[24] ??
+          theme.palette.background.paper
+        }, transparent)`,
       },
 
       "&::before": {
@@ -40,7 +43,10 @@ const useStyles = makeStyles((theme) =>
         right: 0,
 
         width: theme.spacing(3),
-        backgroundImage: `linear-gradient(to left, ${theme.palette.background.paper}, transparent)`,
+        backgroundImage: `linear-gradient(to left, ${
+          theme.palette.background.elevation?.[24] ??
+          theme.palette.background.paper
+        }, transparent)`,
       },
     },
 
