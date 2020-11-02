@@ -106,12 +106,12 @@
     "@algolia/logger-common" "4.1.0"
     "@algolia/requester-common" "4.1.0"
 
-"@antlerengineering/form-builder@^0.6.1":
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/@antlerengineering/form-builder/-/form-builder-0.6.1.tgz#ff6c7fd5e020dbd67b26375829dd9bd951be759c"
-  integrity sha512-YQ7ZdMVjnCIziWS3KGIWqcM+Td33Q1wqbiK4bn5dEpGccjGkhhNgNsa2BlQ0VMuW17H+abmugrKwr3q4Tw2+HQ==
+"@antlerengineering/form-builder@^0.6.2":
+  version "0.6.2"
+  resolved "https://registry.yarnpkg.com/@antlerengineering/form-builder/-/form-builder-0.6.2.tgz#313b1fe463ff6e56e1df82ea6d5a21f1c33f928a"
+  integrity sha512-0efnTthYPCHLq9mNcmpxq3R/FwZ8hexDAJju5rvvhCn39trcPc226t+FK6hW14WQrA+aNae2tb/4BwivkW1ksg==
   dependencies:
-    "@antlerengineering/multiselect" "^0.7.1"
+    "@antlerengineering/multiselect" "0.7.8"
     "@date-io/date-fns" "1.x"
     "@hookform/resolvers" "^0.1.0"
     "@material-ui/pickers" "^3.2.10"
@@ -125,15 +125,10 @@
     use-debounce "^3.4.3"
     yup "^0.29.2"
 
-"@antlerengineering/multiselect@^0.7.1":
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/@antlerengineering/multiselect/-/multiselect-0.7.1.tgz#1f58baa47d2d8a60b62057c0bce221e74e00b71b"
-  integrity sha512-WDYMY5tKaEzrHFQhGwTLsGwrPF5F4YdJGV7aGVRQf/6UFUWBW3C0oiJvQPVSAB4Y6JD4y1GY+pjHGMueMzQfuw==
-
-"@antlerengineering/multiselect@^0.7.4":
-  version "0.7.4"
-  resolved "https://registry.yarnpkg.com/@antlerengineering/multiselect/-/multiselect-0.7.4.tgz#dcee19e1d86ad376a88b3ebd10a5511dfe2292fc"
-  integrity sha512-Y5mbXRwGxuMS3uzirPK8afc3H9+A3nrI3tUWtr/69O8lxkoGUCWljPjkUoyAAQJqG4RsK2uhNRakq1X0JLSfdg==
+"@antlerengineering/multiselect@0.7.8", "@antlerengineering/multiselect@^0.7.8":
+  version "0.7.8"
+  resolved "https://registry.yarnpkg.com/@antlerengineering/multiselect/-/multiselect-0.7.8.tgz#6925dddb94f9b01175dd8e3d3179e44cce7f295a"
+  integrity sha512-ACGE0e46J0QGhylx+jIRLxtV7pAO9ODLbAQ2oVnPwiZ6k2/eySBJI3VMj/x0tmunCQfUIwCieMKPhaOWCfa9Fg==
 
 "@apidevtools/json-schema-ref-parser@^9.0.3":
   version "9.0.6"
