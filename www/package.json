@@ -33,6 +33,8 @@
     "react-color": "^2.17.3",
     "react-data-grid": "^7.0.0-canary.27",
     "react-div-100vh": "^0.3.8",
+    "react-dnd": "^11.1.3",
+    "react-dnd-html5-backend": "^11.1.3",
     "react-dom": "^16.9.0",
     "react-dropzone": "^10.1.8",
     "react-hook-form": "^6.5.0",

@@ -4,7 +4,8 @@ import _orderBy from "lodash/orderBy";
 import _isEmpty from "lodash/isEmpty";
 import _find from "lodash/find";
 import _difference from "lodash/difference";
-
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import BulkActions from "./BulkActions";
 import "react-data-grid/dist/react-data-grid.css";
 import DataGrid, {
@@ -29,7 +30,6 @@ import useWindowSize from "hooks/useWindowSize";
 import useStyles from "./styles";
 import { useAppContext } from "contexts/appContext";
 import _get from "lodash/get";
-// const Hotkeys = lazy(() => import("./HotKeys" /* webpackChunkName: "HotKeys" */));
 
 export type FiretableColumn = Column<any> & {
   isNew?: boolean;
@@ -116,8 +116,8 @@ export default function Table() {
         ),
       [columns, tableState?.rows]
     ) ?? [];
-  const rowsContainerRef = useRef<HTMLDivElement>(null);
 
+  const rowsContainerRef = useRef<HTMLDivElement>(null);
   const [selectedRowsSet, setSelectedRowsSet] = useState<Set<React.Key>>();
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   // Gets more rows when scrolled down.
@@ -161,113 +161,96 @@ export default function Table() {
         />
 
         {!tableState.loadingColumns ? (
-          <DataGrid
-            onColumnResize={tableActions.column.resize}
-            onScroll={handleScroll}
-            ref={dataGridRef}
-            rows={rows}
-            columns={columns as any}
-            rowHeight={rowHeight ?? 43}
-            headerRowHeight={44}
-            className="rdg-light" // Handle dark mode in MUI theme
-            enableCellCopyPaste
-            enableCellDragAndDrop
-            cellNavigationMode="LOOP_OVER_ROW"
-            rowKeyGetter={rowKeyGetter}
-            selectedRows={selectedRowsSet}
-            onSelectedRowsChange={(newSelectedSet) => {
-              const newSelectedArray = newSelectedSet
-                ? [...newSelectedSet]
-                : [];
-              const prevSelectedRowsArray = selectedRowsSet
-                ? [...selectedRowsSet]
-                : [];
-              const addedSelections = _difference(
-                newSelectedArray,
-                prevSelectedRowsArray
-              );
-              const removedSelections = _difference(
-                prevSelectedRowsArray,
-                newSelectedArray
-              );
-              addedSelections.forEach((id) => {
-                const newRow = _find(rows, { id });
-                setSelectedRows([...selectedRows, newRow]);
-              });
-              removedSelections.forEach((rowId) => {
-                setSelectedRows(selectedRows.filter((row) => row.id !== rowId));
-              });
-              setSelectedRowsSet(newSelectedSet);
-            }}
-            onRowsUpdate={(e) => {
-              const { action, fromRow, toRow, updated, cellKey } = e;
-              switch (action) {
-                case "CELL_UPDATE":
-                  break;
-                case "CELL_DRAG":
-                  if (toRow > fromRow)
-                    [...rows]
-                      .splice(fromRow, toRow - fromRow + 1)
-                      .forEach((row) => row.ref.update(updated));
-                  if (toRow < fromRow)
-                    [...rows]
-                      .splice(toRow, fromRow - toRow + 1)
-                      .forEach((row) => row.ref.update(updated));
-                  break;
-                default:
-                  break;
-              }
-            }}
-            onRowClick={(rowIdx, row, column) => {
-              if (sideDrawerRef?.current) {
-                sideDrawerRef.current.setCell({
-                  row: rowIdx,
-                  column: column.key as string,
+          <DndProvider backend={HTML5Backend}>
+            <DataGrid
+              onColumnResize={tableActions.column.resize}
+              onScroll={handleScroll}
+              ref={dataGridRef}
+              rows={rows}
+              columns={columns}
+              rowHeight={rowHeight ?? 43}
+              headerRowHeight={44}
+              className="rdg-light" // Handle dark mode in MUI theme
+              enableCellCopyPaste
+              enableCellDragAndDrop
+              cellNavigationMode="LOOP_OVER_ROW"
+              rowKeyGetter={rowKeyGetter}
+              selectedRows={selectedRowsSet}
+              onSelectedRowsChange={(newSelectedSet) => {
+                const newSelectedArray = newSelectedSet
+                  ? [...newSelectedSet]
+                  : [];
+                const prevSelectedRowsArray = selectedRowsSet
+                  ? [...selectedRowsSet]
+                  : [];
+                const addedSelections = _difference(
+                  newSelectedArray,
+                  prevSelectedRowsArray
+                );
+                const removedSelections = _difference(
+                  prevSelectedRowsArray,
+                  newSelectedArray
+                );
+                addedSelections.forEach((id) => {
+                  const newRow = _find(rows, { id });
+                  setSelectedRows([...selectedRows, newRow]);
                 });
-              }
-            }}
-
-            // onGridRowsUpdated={(event) => {
-            //   const { action, cellKey, updated } = event;
-            //   if (action === "CELL_UPDATE" && updated !== null)
-            //     updateCell!(rows[event.toRow].ref, cellKey as string, updated);
-            // }}
-
-            // TODO: Investigate why setting a numeric value causes
-            // LOADING to pop up on screen when scrolling horizontally
-            // width={windowSize.width - DRAWER_COLLAPSED_WIDTH}
-            // minWidth={tableWidth}
-            // minHeight={windowSize.height - APP_BAR_HEIGHT - TABLE_HEADER_HEIGHT}
-            // enableCellCopyPaste
-            // enableCellDragAndDrop
-
-            //cellNavigationMode={CellNavigationMode.CHANGE_ROW}
-
-            // onCheckCellIsEditable={({ column }) =>
-            //   Boolean(
-            //     column.editable &&
-            //       column.editor?.displayName &&
-            //       column.editor?.displayName === "WithStyles(TextEditor)"
-            //   )
-            // }
-            //  enableCellSelect
-
-            // RowsContainer={(props) => (
-            //   <>
-            //     <div {...props} ref={rowsContainerRef} />
-            //     <Grid
-            //       container
-            //       className={classes.loadingContainer}
-            //       alignItems="center"
-            //       justify="center"
-            //     >
-            //       {tableState.rows.length > 0 && tableState.loadingRows && (
-            //         <CircularProgress disableShrink />
-            //       )}
-            //     </Grid>
-            //   </>
-            // )}
-          />
+                removedSelections.forEach((rowId) => {
+                  setSelectedRows(
+                    selectedRows.filter((row) => row.id !== rowId)
+                  );
+                });
+                setSelectedRowsSet(newSelectedSet);
+              }}
+              onRowsUpdate={(e) => {
+                const { action, fromRow, toRow, updated, cellKey } = e;
+                switch (action) {
+                  case "CELL_UPDATE":
+                    break;
+                  case "CELL_DRAG":
+                    if (toRow > fromRow)
+                      [...rows]
+                        .splice(fromRow, toRow - fromRow + 1)
+                        .forEach((row) => row.ref.update(updated));
+                    if (toRow < fromRow)
+                      [...rows]
+                        .splice(toRow, fromRow - toRow + 1)
+                        .forEach((row) => row.ref.update(updated));
+                    break;
+                  default:
+                    break;
+                }
+              }}
+              onRowClick={(rowIdx, row, column) => {
+                if (sideDrawerRef?.current) {
+                  sideDrawerRef.current.setCell({
+                    row: rowIdx,
+                    column: column.key as string,
+                  });
+                }
+              }}
+              // TODO: Investigate why setting a numeric value causes
+              // LOADING to pop up on screen when scrolling horizontally
+              // width={windowSize.width - DRAWER_COLLAPSED_WIDTH}
+              // minWidth={tableWidth}
+              // minHeight={windowSize.height - APP_BAR_HEIGHT - TABLE_HEADER_HEIGHT}
+              // RowsContainer={(props) => (
+              //   <>
+              //     <div {...props} ref={rowsContainerRef} />
+              //     <Grid
+              //       container
+              //       className={classes.loadingContainer}
+              //       alignItems="center"
+              //       justify="center"
+              //     >
+              //       {tableState.rows.length > 0 && tableState.loadingRows && (
+              //         <CircularProgress disableShrink />
+              //       )}
+              //     </Grid>
+              //   </>
+              // )}
+            />
+          </DndProvider>
         ) : (
           <Loading message="Fetching columns" />
         )}
