@@ -11,6 +11,8 @@ export const useStyles = makeStyles((theme) =>
       height: `calc(100vh - ${APP_BAR_HEIGHT}px)`,
 
       "& > .rdg": { flex: 1 },
+
+      [theme.breakpoints.down("sm")]: { width: "100%" },
     },
 
     loadingContainer: {

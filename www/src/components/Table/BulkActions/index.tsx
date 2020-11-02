@@ -46,7 +46,12 @@ const useStyles = makeStyles((theme) =>
       backgroundColor:
         theme.palette.type === "light"
           ? theme.palette.background.default
-          : undefined,
+          : theme.palette.background.elevation?.[12] ??
+            theme.palette.background.default,
+
+      width: 470,
+      maxWidth: "100vw",
+      overflowX: "auto",
     },
 
     grid: {
@@ -56,6 +61,10 @@ const useStyles = makeStyles((theme) =>
     },
     spacer: { width: theme.spacing(2) },
 
+    selectedContainer: {
+      flexBasis: 206,
+      flexShrink: 0,
+    },
     selected: {
       color: theme.palette.text.disabled,
       fontFeatureSettings: '"tnum"',
@@ -102,39 +111,6 @@ export default function BulkActions({ selectedRows, columns, clearSelection }) {
 
   const { requestConfirmation } = useConfirmation();
   const snack = useSnackContext();
-
-  const [open, setOpen] = React.useState(false);
-  const anchorRef = React.useRef<HTMLButtonElement>(null);
-
-  const handleToggle = () => setOpen((prevOpen) => !prevOpen);
-
-  const handleClose = (event: React.MouseEvent<EventTarget>) => {
-    if (
-      anchorRef.current &&
-      anchorRef.current.contains(event.target as HTMLElement)
-    ) {
-      return;
-    }
-
-    setOpen(false);
-  };
-
-  function handleListKeyDown(event: React.KeyboardEvent) {
-    if (event.key === "Tab") {
-      event.preventDefault();
-      setOpen(false);
-    }
-  }
-
-  // return focus to the button when we transitioned from !open -> open
-  const prevOpen = React.useRef(open);
-  React.useEffect(() => {
-    if (prevOpen.current === true && open === false) {
-      anchorRef.current!.focus();
-    }
-
-    prevOpen.current = open;
-  }, [open]);
 
   const actionColumns: { name: string; key: string; config: any }[] = columns
     .filter((column) => column.type === "ACTION")
@@ -216,8 +192,13 @@ export default function BulkActions({ selectedRows, columns, clearSelection }) {
     <div className={classes.root}>
       <Grow in={numSelected > 0}>
         <Paper elevation={8} className={classes.paper}>
-          <Grid container alignItems="center" className={classes.grid}>
-            <Grid item>
+          <Grid
+            container
+            alignItems="center"
+            wrap="nowrap"
+            className={classes.grid}
+          >
+            <Grid item className={classes.selectedContainer}>
               <Tooltip title="Clear selection">
                 <IconButton
                   color="secondary"
