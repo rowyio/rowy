@@ -1,54 +1,112 @@
 import React from "react";
-import { Theme, createStyles, makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
-import Tooltip from "@material-ui/core/Tooltip";
+import _find from "lodash/find";
 
-import ClickAwayListener from "@material-ui/core/ClickAwayListener";
-import Grow from "@material-ui/core/Grow";
-import Grid from "@material-ui/core/Grid";
-import Popper from "@material-ui/core/Popper";
-import MenuItem from "@material-ui/core/MenuItem";
-import MenuList from "@material-ui/core/MenuList";
-import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
+import {
+  createStyles,
+  makeStyles,
+  fade,
+  Grow,
+  Paper,
+  Grid,
+  Tooltip,
+  IconButton,
+  Typography,
+  TextField,
+  MenuItem,
+} from "@material-ui/core";
+
 import CopyCellsIcon from "assets/icons/CopyCells";
 import ClearSelectionIcon from "@material-ui/icons/IndeterminateCheckBox";
 import DeleteIcon from "@material-ui/icons/DeleteForever";
-import DropdownIcon from "@material-ui/icons/ArrowDropDown";
+import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp";
+
 import { useConfirmation } from "components/ConfirmationDialog/Context";
 import { useFiretableContext } from "contexts/firetableContext";
 import { useSnackContext } from "contexts/snackContext";
-import { sanitiseRowData } from "utils/fns";
-import { formatPath, asyncForEach } from "../../../utils/fns";
+import { sanitiseRowData, formatPath, asyncForEach } from "utils/fns";
 import { cloudFunction } from "firebase/callables";
-import _find from "lodash/find";
-const useStyles = makeStyles((theme: Theme) =>
+
+const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
-      position: "absolute",
-      bottom: 10,
-      right: 30,
+      position: "fixed",
+      bottom: theme.spacing(2),
+      left: "50%",
+      transform: "translateX(-50%)",
     },
-    paper: {
-      padding: theme.spacing(2),
 
-      cornerRadius: 32,
+    paper: {
+      height: 64,
+      borderRadius: 32,
+      padding: theme.spacing(0, 1),
+      [theme.breakpoints.up("lg")]: { paddingRight: theme.spacing(2) },
+
+      zIndex: theme.zIndex.modal,
+
+      backgroundColor:
+        theme.palette.type === "light"
+          ? theme.palette.background.default
+          : undefined,
     },
+
+    grid: {
+      height: "100%",
+      marginTop: 0,
+      marginBottom: 0,
+    },
+    spacer: { width: theme.spacing(2) },
+
+    selected: {
+      color: theme.palette.text.disabled,
+      fontFeatureSettings: '"tnum"',
+      userSelect: "none",
+
+      display: "inline-block",
+      marginRight: theme.spacing(1),
+      minWidth: 150,
+    },
+
+    dropdown: {
+      minWidth: 120,
+      margin: 0,
+    },
+    inputBaseRoot: {
+      borderRadius: theme.shape.borderRadius,
+      backgroundColor:
+        theme.palette.type === "dark"
+          ? fade(theme.palette.text.primary, 0.06)
+          : undefined,
+    },
+    dropdownLabel: {
+      left: theme.spacing(1.5),
+      top: "50%",
+      transform: "translateY(-50%) !important",
+
+      ...theme.typography.body1,
+    },
+    dropdownLabelFocused: {
+      "$dropdownLabel&": { color: theme.palette.text.primary },
+    },
+    select: {
+      paddingTop: "6px !important",
+      paddingBottom: "7px !important",
+    },
+    dropdownMenu: { marginTop: theme.spacing(-3) },
   })
 );
 
 export default function BulkActions({ selectedRows, columns, clearSelection }) {
-  const { requestConfirmation } = useConfirmation();
-  const { tableActions, tableState } = useFiretableContext();
-  const snack = useSnackContext();
   const classes = useStyles();
+
+  const { tableActions, tableState } = useFiretableContext();
+
+  const { requestConfirmation } = useConfirmation();
+  const snack = useSnackContext();
+
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef<HTMLButtonElement>(null);
 
-  const handleToggle = () => {
-    setOpen((prevOpen) => !prevOpen);
-  };
+  const handleToggle = () => setOpen((prevOpen) => !prevOpen);
 
   const handleClose = (event: React.MouseEvent<EventTarget>) => {
     if (
@@ -78,7 +136,7 @@ export default function BulkActions({ selectedRows, columns, clearSelection }) {
     prevOpen.current = open;
   }, [open]);
 
-  const actionColumns = columns
+  const actionColumns: { name: string; key: string; config: any }[] = columns
     .filter((column) => column.type === "ACTION")
     .map((column) => ({
       name: column.name,
@@ -109,7 +167,10 @@ export default function BulkActions({ selectedRows, columns, clearSelection }) {
     clearSelection();
   };
 
-  const executeAction = async (actionColumn, actionType) => {
+  const executeAction = async (key: string, actionType: string) => {
+    const actionColumn = _find(actionColumns, { key });
+    if (!actionColumn) return;
+
     console.log({ actionColumn, selectedRows, actionType });
     const callableName = actionColumn.config.callableName ?? "actionScript";
 
@@ -148,109 +209,116 @@ export default function BulkActions({ selectedRows, columns, clearSelection }) {
       );
     });
   };
-  const numberOfSelectedRows = selectedRows.length;
-  if (numberOfSelectedRows === 0) return null;
+
+  const numSelected = selectedRows.length;
+
   return (
     <div className={classes.root}>
-      <Paper elevation={5} className={classes.paper}>
-        <Grid direction="row" container alignItems="center">
-          <IconButton
-            size="medium"
-            color="inherit"
-            onClick={clearSelection}
-            aria-label="Duplicate selected rows"
-          >
-            <ClearSelectionIcon />
-          </IconButton>
-          <Typography variant="overline">
-            {numberOfSelectedRows} rows selected
-          </Typography>
+      <Grow in={numSelected > 0}>
+        <Paper elevation={8} className={classes.paper}>
+          <Grid container alignItems="center" className={classes.grid}>
+            <Grid item>
+              <Tooltip title="Clear selection">
+                <IconButton
+                  color="secondary"
+                  onClick={clearSelection}
+                  aria-label="Clear selection"
+                >
+                  <ClearSelectionIcon />
+                </IconButton>
+              </Tooltip>
 
-          <Grid item>
-            <div>
-              <Button
-                color="inherit"
-                ref={anchorRef}
-                aria-controls={open ? "menu-list-grow" : undefined}
-                aria-haspopup="true"
-                onClick={handleToggle}
+              <Typography variant="overline" className={classes.selected}>
+                {numSelected} row{numSelected !== 1 && "s"} selected
+              </Typography>
+            </Grid>
+
+            <Grid item className={classes.spacer} />
+
+            <Grid item>
+              <TextField
+                select
+                variant="filled"
+                className={classes.dropdown}
+                onChange={(event) => executeAction(event.target.value, "run")}
+                margin="dense"
+                InputProps={{
+                  disableUnderline: true,
+                  classes: { root: classes.inputBaseRoot },
+                }}
+                InputLabelProps={{
+                  classes: {
+                    root: classes.dropdownLabel,
+                    focused: classes.dropdownLabelFocused,
+                  },
+                }}
+                SelectProps={{
+                  classes: { root: classes.select },
+                  displayEmpty: true,
+                  MenuProps: {
+                    getContentAnchorEl: null,
+                    anchorOrigin: { vertical: "top", horizontal: "left" },
+                    transformOrigin: { vertical: "bottom", horizontal: "left" },
+                    classes: { paper: classes.dropdownMenu },
+                  },
+                  IconComponent: ArrowDropUpIcon,
+                }}
+                label={`${actionColumns.length} action${
+                  actionColumns.length !== 1 ? "s" : ""
+                }`}
               >
-                {actionColumns.length} actions <DropdownIcon />
-              </Button>
-              <Popper
-                open={open}
-                anchorEl={anchorRef.current}
-                role={undefined}
-                transition
-                disablePortal
-              >
-                {({ TransitionProps, placement }) => (
-                  <Grow
-                    {...TransitionProps}
-                    style={{
-                      transformOrigin:
-                        placement === "bottom" ? "center top" : "center bottom",
-                    }}
-                  >
-                    <Paper>
-                      <ClickAwayListener onClickAway={handleClose}>
-                        <MenuList
-                          autoFocusItem={open}
-                          id="menu-list-grow"
-                          onKeyDown={handleListKeyDown}
-                        >
-                          {actionColumns.map((action) => (
-                            <MenuItem
-                              onClick={(e) => {
-                                executeAction(action, "run");
-                                handleClose(e);
-                              }}
-                            >
-                              {action.name}
-                            </MenuItem>
-                          ))}
-                        </MenuList>
-                      </ClickAwayListener>
-                    </Paper>
-                  </Grow>
-                )}
-              </Popper>
-            </div>
+                {actionColumns.map((action) => (
+                  <MenuItem value={action.key}>{action.name}</MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+
+            <Grid item className={classes.spacer} />
+
+            <Grid item>
+              <Tooltip title="Duplicate rows">
+                <IconButton
+                  color="secondary"
+                  onClick={() => {
+                    requestConfirmation({
+                      title: "Duplicate Rows?",
+                      body: `Are you sure you want to duplicate the ${numSelected} selected row${
+                        numSelected !== 1 ? "s" : ""
+                      }?`,
+                      confirm: "Duplicate Rows",
+                      handleConfirm: handleDuplicate,
+                    });
+                  }}
+                  aria-label="Duplicate selected rows"
+                >
+                  <CopyCellsIcon />
+                </IconButton>
+              </Tooltip>
+            </Grid>
+
+            <Grid item>
+              <Tooltip title="Delete rows">
+                <IconButton
+                  color="secondary"
+                  onClick={() => {
+                    requestConfirmation({
+                      title: "Delete Rows?",
+                      body: `Are you sure you want to delete the ${numSelected} select row${
+                        numSelected !== 1 ? "s" : ""
+                      }?`,
+                      confirm: "Delete Rows",
+                      handleConfirm: handleDelete,
+                    });
+                  }}
+                  aria-label="Delete selected rows"
+                >
+                  <DeleteIcon />
+                </IconButton>
+              </Tooltip>
+            </Grid>
           </Grid>
-
-          <IconButton
-            size="medium"
-            color="inherit"
-            onClick={() => {
-              requestConfirmation({
-                title: "Duplicate Rows",
-                body: `Are you sure you want to create duplicate of the ${numberOfSelectedRows} select rows?`,
-                confirm: "Duplicate",
-                handleConfirm: handleDuplicate,
-              });
-            }}
-            aria-label="Duplicate selected rows"
-          >
-            <CopyCellsIcon />
-          </IconButton>
-
-          <IconButton
-            size="medium"
-            color="inherit"
-            onClick={() => {
-              requestConfirmation({
-                title: "Delete Rows",
-                body: `Are you sure you want to delete the ${numberOfSelectedRows} select rows?`,
-                confirm: "Delete",
-                handleConfirm: handleDelete,
-              });
-            }}
-            aria-label="Delete selected rows"
-          >
-            <DeleteIcon />
-          </IconButton>
-        </Grid>
-      </Paper>
+        </Paper>
+      </Grow>
     </div>
   );
 }
