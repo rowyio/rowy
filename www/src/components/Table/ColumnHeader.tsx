@@ -1,11 +1,13 @@
 import React from "react";
 import clsx from "clsx";
-import { Column, HeaderRendererProps } from "react-data-grid";
+import { HeaderRendererProps } from "react-data-grid";
 import { useDrag, useDrop, DragObjectWithType } from "react-dnd";
 import { useCombinedRefs } from "react-data-grid/lib/hooks";
+
 import {
   makeStyles,
   createStyles,
+  fade,
   Tooltip,
   Fade,
   Grid,
@@ -24,11 +26,26 @@ const useStyles = makeStyles((theme) =>
     root: {
       height: "100%",
       "& svg, & button": { display: "block" },
+
       color: theme.palette.text.secondary,
       transition: theme.transitions.create("color", {
         duration: theme.transitions.duration.short,
       }),
       "&:hover": { color: theme.palette.text.primary },
+
+      cursor: "move",
+
+      margin: theme.spacing(0, -1.5),
+      padding: theme.spacing(0, 1.5),
+      width: `calc(100% + ${theme.spacing(1.5) * 2}px)`,
+    },
+    isDragging: { opacity: 0.5 },
+    isOver: {
+      backgroundColor: fade(
+        theme.palette.primary.main,
+        theme.palette.action.focusOpacity
+      ),
+      color: theme.palette.primary.main,
     },
 
     columnNameContainer: {
@@ -158,12 +175,11 @@ export default function DraggableHeaderRenderer<R>({
     <Grid
       ref={headerRef}
       container
-      className={classes.root}
-      style={{
-        opacity: isDragging ? 0.5 : 1,
-        backgroundColor: isOver ? "#ececec" : "inherit",
-        cursor: "move",
-      }}
+      className={clsx(
+        classes.root,
+        isDragging && classes.isDragging,
+        isOver && !isDragging && classes.isOver
+      )}
       alignItems="center"
       wrap="nowrap"
     >
