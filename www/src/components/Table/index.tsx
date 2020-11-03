@@ -204,6 +204,7 @@ export default function Table() {
               }}
               onRowsUpdate={(e) => {
                 const { action, fromRow, toRow, updated, cellKey } = e;
+                console.log(e);
                 switch (action) {
                   case "CELL_UPDATE":
                     break;
