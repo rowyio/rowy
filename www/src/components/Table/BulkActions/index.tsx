@@ -221,6 +221,7 @@ export default function BulkActions({ selectedRows, columns, clearSelection }) {
                 select
                 variant="filled"
                 className={classes.dropdown}
+                value=""
                 onChange={(event) => executeAction(event.target.value, "run")}
                 margin="dense"
                 InputProps={{
@@ -249,7 +250,9 @@ export default function BulkActions({ selectedRows, columns, clearSelection }) {
                 }`}
               >
                 {actionColumns.map((action) => (
-                  <MenuItem value={action.key}>{action.name}</MenuItem>
+                  <MenuItem value={action.key} key={action.key}>
+                    {action.name}
+                  </MenuItem>
                 ))}
               </TextField>
             </Grid>

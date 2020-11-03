@@ -147,10 +147,6 @@ export default function Table() {
 
   if (!tableActions || !tableState) return <></>;
 
-  const onHeaderDrop = (dragged: any, target: any) => {
-    tableActions.column.reorder(dragged, target);
-  };
-
   const rowHeight = tableState.config.rowHeight;
 
   return (

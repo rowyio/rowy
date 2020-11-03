@@ -292,7 +292,6 @@ export const defaultOverrides = (theme: Theme): ThemeOptions => ({
               theme.palette.background.elevation[closestElevation],
           };
         }
-        console.log(classes);
         return classes;
       })(),
     },
