@@ -9,7 +9,7 @@ import {
   CircularProgress,
 } from "@material-ui/core";
 
-import { googleProvider, auth } from "../firebase";
+import { googleProvider, auth } from "../../firebase";
 import useRouter from "hooks/useRouter";
 import FiretableLogo from "assets/firetable-with-wordmark.svg";
 
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-export default function AuthView() {
+export default function AuthPage() {
   const classes = useStyles();
   const router = useRouter();
   const [loading, setLoading] = useState(false);

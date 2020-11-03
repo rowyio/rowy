@@ -3,8 +3,9 @@ import React, { useState } from "react";
 import { TextField, Typography, Button } from "@material-ui/core";
 
 import { auth } from "../../firebase";
-import AuthCard from "./AuthCard";
-export default function ImpersonatorAuthView() {
+import AuthCard from "components/Auth/AuthCard";
+
+export default function JwtAuthPage() {
   const [jwt, setJWT] = useState("");
   const [loading, setLoading] = useState(false);
 

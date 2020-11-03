@@ -17,27 +17,27 @@ import { AppProvider } from "./contexts/appContext";
 import { FiretableContextProvider } from "./contexts/firetableContext";
 import routes from "constants/routes";
 
-import AuthView from "views/AuthViews/GoogleAuthView";
-import SignOutView from "views/SignOutView";
+import AuthView from "pages/Auth/GoogleAuth";
+import SignOutView from "pages/Auth/SignOut";
 
-const ImpersonatorAuthView = lazy(
+const HomePage = lazy(
+  () => import("./pages/Home" /* webpackChunkName: "HomePage" */)
+);
+const TablePage = lazy(
+  () => import("./pages/Table" /* webpackChunkName: "TablePage" */)
+);
+const ImpersonatorAuthPage = lazy(
   () =>
     import(
-      "./views/AuthViews/ImpersonatorAuthView" /* webpackChunkName: "ImpersonatorAuthView" */
+      "./pages/Auth/ImpersonatorAuth" /* webpackChunkName: "ImpersonatorAuthPage" */
     )
 );
-const JWTAuthView = lazy(
-  () => import("./views/AuthViews/JWTAuth" /* webpackChunkName: "JWTAuth" */)
-);
-const TableView = lazy(
-  () => import("./views/TableView" /* webpackChunkName: "TableView" */)
+const JwtAuthPage = lazy(
+  () => import("./pages/Auth/JwtAuth" /* webpackChunkName: "JwtAuthPage" */)
 );
 // const GridView = lazy(
 //   () => import("./views/GridView" /* webpackChunkName: "GridView" */)
 // );
-const TablesView = lazy(
-  () => import("./views/TablesView" /* webpackChunkName: "TablesView" */)
-);
 
 export default function App() {
   return (
@@ -58,12 +58,12 @@ export default function App() {
                     <Route
                       exact
                       path={routes.impersonatorAuth}
-                      render={() => <ImpersonatorAuthView />}
+                      render={() => <ImpersonatorAuthPage />}
                     />
                     <Route
                       exact
                       path={routes.jwtAuth}
-                      render={() => <JWTAuthView />}
+                      render={() => <JwtAuthPage />}
                     />
                     <Route
                       exact
@@ -85,15 +85,15 @@ export default function App() {
                             <PrivateRoute
                               exact
                               path={routes.home}
-                              render={() => <TablesView />}
+                              render={() => <HomePage />}
                             />
                             <PrivateRoute
                               path={routes.tableWithId}
-                              render={() => <TableView />}
+                              render={() => <TablePage />}
                             />
                             <PrivateRoute
                               path={routes.tableGroupWithId}
-                              render={() => <TableView />}
+                              render={() => <TablePage />}
                             />
                           </Switch>
                         </FiretableContextProvider>

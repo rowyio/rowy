@@ -1,4 +1,4 @@
-import { auth, googleProvider } from "../../firebase";
+import { auth, googleProvider } from "../firebase";
 
 export const handleGoogleAuth = async (
   success: Function,
