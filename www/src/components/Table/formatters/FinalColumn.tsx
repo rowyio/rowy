@@ -9,7 +9,7 @@ import {
   IconButton,
 } from "@material-ui/core";
 import CopyCellsIcon from "assets/icons/CopyCells";
-import DeleteIcon from "@material-ui/icons/Cancel";
+import DeleteIcon from "@material-ui/icons/DeleteForever";
 
 import { SnackContext } from "contexts/snackContext";
 import { useConfirmation } from "components/ConfirmationDialog/Context";
