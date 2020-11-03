@@ -297,9 +297,9 @@ const ConfigFields = ({
           ) : (
             <>
               <Typography variant="overline">action script</Typography>
-              <Suspense fallback={<FieldSkeleton height={180} />}>
+              <Suspense fallback={<FieldSkeleton height={300} />}>
                 <CodeEditor
-                  height={180}
+                  height={300}
                   script={config.script}
                   extraLibs={[
                     [
@@ -375,9 +375,9 @@ const ConfigFields = ({
                     fullWidth
                   />
                   <Typography variant="overline">Undo Action script</Typography>
-                  <Suspense fallback={<FieldSkeleton height={180} />}>
+                  <Suspense fallback={<FieldSkeleton height={300} />}>
                     <CodeEditor
-                      height={180}
+                      height={300}
                       script={config["undo.script"]}
                       handleChange={handleChange("undo.script")}
                     />

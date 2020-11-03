@@ -1,5 +1,5 @@
 import React, { useRef, useMemo, useState } from "react";
-import { createStyles, makeStyles } from "@material-ui/core/styles";
+import { useTheme, createStyles, makeStyles } from "@material-ui/core/styles";
 import Editor, { monaco } from "@monaco-editor/react";
 import { useFiretableContext } from "contexts/firetableContext";
 import { FieldType } from "constants/fields";
@@ -7,17 +7,7 @@ import { setTimeout } from "timers";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
-    editorWrapper: { position: "relative", minWidth: 800, minHeight: 300 },
-
-    editor: {
-      border: `1px solid ${theme.palette.divider}`,
-      minHeight: 300,
-      borderRadius: theme.shape.borderRadius,
-      resize: "both",
-      fontFamily: theme.typography.fontFamilyMono,
-      height: "350px",
-    },
-
+    editorWrapper: { position: "relative", minWidth: 800 },
     resizeIcon: {
       position: "absolute",
       bottom: 0,
@@ -33,6 +23,7 @@ const useStyles = makeStyles((theme) =>
 
 export default function CodeEditor(props: any) {
   const { handleChange, extraLibs, script, height = 400 } = props;
+  const theme = useTheme();
 
   const [initialEditorValue] = useState(script ?? "");
   const { tableState } = useFiretableContext();
@@ -77,7 +68,6 @@ export default function CodeEditor(props: any) {
             noSyntaxValidation: false,
           }
         );
-
         // compiler options
         monacoInstance.languages.typescript.javascriptDefaults.setCompilerOptions(
           {
@@ -158,8 +148,8 @@ export default function CodeEditor(props: any) {
   return (
     <>
       <div className={classes.editorWrapper}>
-        {/* <div id="editor" className={classes.editor} /> */}
         <Editor
+          theme={theme.palette.type}
           height={height}
           editorDidMount={handleEditorDidMount}
           language="javascript"
