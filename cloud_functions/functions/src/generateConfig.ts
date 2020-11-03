@@ -36,7 +36,7 @@ if (serviceAccount) {
         );
         const config = derivativeColumns.reduce((acc, currColumn: any) => {
           return `${acc}{
-            fieldName:'${currColumn.key}',eval:(db)=> async (row) =>{${
+            fieldName:'${currColumn.key}',eval:(db)=> async ({row,ref}) =>{${
             currColumn.config.script
           }},listenerFields:[${(currColumn.config.listenerFields ?? [])
             .map((f) => `"${f}"`)
