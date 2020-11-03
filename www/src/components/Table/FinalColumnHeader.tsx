@@ -1,38 +1,39 @@
 import React from "react";
 import { Column } from "react-data-grid";
 
-import {
-  makeStyles,
-  createStyles,
-  Tooltip,
-  Grid,
-  IconButton,
-} from "@material-ui/core";
+import { makeStyles, createStyles, Grid, Button } from "@material-ui/core";
 import AddColumnIcon from "assets/icons/AddColumn";
 
 import { useFiretableContext } from "contexts/firetableContext";
 
-const useStyles = makeStyles((theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
-    root: {
-      height: "100%",
-      "& svg, & button": { display: "block" },
-    },
+    "@global": {
+      ".rdg-header-row .rdg-cell.final-column-header": {
+        border: "none",
 
-    addColumnButton: {
-      backgroundColor: theme.palette.primary.contrastText,
-      padding: 0,
-      "& svg": { width: 32, height: 32 },
+        "&::before": {
+          content: "''",
+          display: "block",
+          width: 46,
+          height: "100%",
 
-      opacity: 0.5,
-      transition: theme.transitions.create("opacity", {
-        duration: theme.transitions.duration.short,
-      }),
-      "&:hover": {
-        backgroundColor: theme.palette.primary.contrastText,
-        opacity: 1,
+          position: "absolute",
+          top: 0,
+          left: 0,
+
+          border: "1px solid var(--border-color)",
+          borderLeftWidth: 0,
+        },
       },
     },
+
+    root: {
+      height: "100%",
+      width: "auto",
+    },
+
+    button: { zIndex: 1 },
   })
 );
 
@@ -57,17 +58,15 @@ const FinalColumnHeader: Column<any>["headerRenderer"] = ({ column }) => {
       justify="center"
       className={classes.root}
     >
-      <Tooltip title="Add column">
-        <IconButton
-          size="small"
-          className={classes.addColumnButton}
-          color="primary"
-          aria-label="Add column"
-          onClick={handleClick}
-        >
-          <AddColumnIcon />
-        </IconButton>
-      </Tooltip>
+      <Button
+        onClick={handleClick}
+        variant="contained"
+        color="primary"
+        className={classes.button}
+        startIcon={<AddColumnIcon />}
+      >
+        Add Column
+      </Button>
     </Grid>
   );
 };

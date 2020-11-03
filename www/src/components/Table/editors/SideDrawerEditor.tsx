@@ -19,7 +19,10 @@ const useStyles = makeStyles(styles);
 function SideDrawerEditor_(props: EditorProps<any, any>) {
   useStyles();
 
-  const { column, rowData } = props;
+  const {
+    column, // rowData
+  } = props;
+  const rowData = {};
   const { sideDrawerRef } = useFiretableContext();
 
   useEffect(() => {

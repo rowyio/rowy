@@ -13,7 +13,6 @@ import {
   createStyles,
   Grid,
   Typography,
-  Button,
   Divider,
   FormControlLabel,
   Checkbox,
@@ -21,10 +20,10 @@ import {
 import DragHandleIcon from "@material-ui/icons/DragHandle";
 
 import { IStepProps } from ".";
-import FadeList from "./FadeList";
-import Column from "./Column";
+import FadeList from "../FadeList";
+import Column from "../Column";
 import EmptyState from "components/EmptyState";
-import AddColumnIcon from "assets/icons/ColumnPlusAfter";
+import AddColumnIcon from "assets/icons/AddColumn";
 
 import { useFiretableContext } from "contexts/firetableContext";
 import { FieldType } from "constants/fields";

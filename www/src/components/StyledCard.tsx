@@ -16,7 +16,7 @@ import {
 } from "@material-ui/core";
 import { ButtonProps } from "@material-ui/core/Button";
 
-import GoIcon from "./GoIcon";
+import GoIcon from "assets/icons/Go";
 
 const useStyles = makeStyles((theme) =>
   createStyles({

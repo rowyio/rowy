@@ -7,7 +7,7 @@ import _sortBy from "lodash/sortBy";
 
 import useDoc, { DocActions } from "../useDoc";
 import { FieldType } from "constants/fields";
-import { arrayMover, formatPath } from "../../util/fns";
+import { arrayMover, formatPath } from "../../utils/fns";
 import { db, deleteField } from "../../firebase";
 
 export type ColumnConfig = {
@@ -29,6 +29,7 @@ const useTableConfig = (tablePath?: string) => {
 
   useEffect(() => {
     const { doc, columns } = tableConfigState;
+    // Copy columns, rowHeight to tableConfigState
     if (doc && columns !== doc.columns) {
       documentDispatch({ columns: doc.columns, rowHeight: doc.rowHeight });
     }

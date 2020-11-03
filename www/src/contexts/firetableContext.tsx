@@ -12,6 +12,7 @@ import { useAppContext } from "./appContext";
 import { useSnackContext } from "./snackContext";
 import { SideDrawerRef } from "components/SideDrawer";
 import { ColumnMenuRef } from "components/Table/ColumnMenu";
+import { ImportWizardRef } from "components/Wizards/ImportWizard";
 
 export type Table = {
   collection: string;
@@ -60,6 +61,8 @@ interface FiretableContextProps {
   sideDrawerRef: React.MutableRefObject<SideDrawerRef | undefined>;
   // A ref to the column menu. Prevents unnecessary re-renders
   columnMenuRef: React.MutableRefObject<ColumnMenuRef | undefined>;
+  // A ref ot the import wizard. Prevents unnecessary re-renders
+  importWizardRef: React.MutableRefObject<ImportWizardRef | undefined>;
 }
 
 const firetableContext = React.createContext<Partial<FiretableContextProps>>(
@@ -176,6 +179,7 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
   const dataGridRef = useRef<DataGridHandle>(null);
   const sideDrawerRef = useRef<SideDrawerRef>();
   const columnMenuRef = useRef<ColumnMenuRef>();
+  const importWizardRef = useRef<ImportWizardRef>();
 
   return (
     <firetableContext.Provider
@@ -191,6 +195,7 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
         dataGridRef,
         sideDrawerRef,
         columnMenuRef,
+        importWizardRef,
       }}
     >
       {children}

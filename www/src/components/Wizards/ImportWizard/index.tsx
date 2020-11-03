@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import _merge from "lodash/merge";
-import _isEmpty from "lodash/isEmpty";
 
 import { useTheme, useMediaQuery, Typography } from "@material-ui/core";
 
@@ -15,6 +14,11 @@ import { useFiretableContext } from "contexts/firetableContext";
 
 export type TableColumnsConfig = { [key: string]: ColumnConfig };
 
+export type ImportWizardRef = {
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
 export interface IStepProps {
   config: TableColumnsConfig;
   setConfig: React.Dispatch<React.SetStateAction<TableColumnsConfig>>;
@@ -26,32 +30,25 @@ export default function ImportWizard() {
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.down("xs"));
 
+  const { tableState, tableActions, importWizardRef } = useFiretableContext();
+
   const [open, setOpen] = useState(false);
+  if (importWizardRef) importWizardRef.current = { open, setOpen };
 
   const [config, setConfig] = useState<TableColumnsConfig>({});
   const updateConfig: IStepProps["updateConfig"] = (value) => {
     setConfig((prev) => ({ ..._merge(prev, value) }));
   };
 
-  const { tableState, tableActions } = useFiretableContext();
   useEffect(() => {
-    if (!tableState) return;
+    if (!tableState || !open) return;
 
-    if (
-      tableState.config.tableConfig.doc &&
-      _isEmpty(tableState.config.tableConfig.doc?.columns)
-    ) {
-      setOpen(true);
+    if (Array.isArray(tableState.filters) && tableState.filters?.length > 0)
+      tableActions!.table.filter([]);
 
-      if (Array.isArray(tableState.filters) && tableState.filters?.length > 0)
-        tableActions!.table.filter([]);
-
-      if (Array.isArray(tableState.orderBy) && tableState.orderBy?.length > 0)
-        tableActions!.table.orderBy([]);
-
-      return;
-    }
-  }, [tableState]);
+    if (Array.isArray(tableState.orderBy) && tableState.orderBy?.length > 0)
+      tableActions!.table.orderBy([]);
+  }, [open, tableState]);
 
   if (tableState?.rows.length === 0) return null;
 

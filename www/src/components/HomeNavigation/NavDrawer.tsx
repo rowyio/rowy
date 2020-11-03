@@ -31,6 +31,9 @@ const useStyles = makeStyles((theme) =>
     paper: {
       width: NAV_DRAWER_WIDTH,
       overflowX: "hidden",
+      backgroundColor:
+        theme.palette.background.elevation?.[1] ??
+        theme.palette.background.paper,
     },
 
     logoRow: {
@@ -38,8 +41,9 @@ const useStyles = makeStyles((theme) =>
       marginTop: 0,
       marginBottom: theme.spacing(1),
 
-      padding: theme.spacing(0, 0.5, 0, 2),
+      padding: theme.spacing(0, 2, 0, 0.5),
     },
+    logo: { marginLeft: theme.spacing(1.5) },
 
     nav: { height: "100%" },
     list: {
@@ -103,14 +107,9 @@ export default function NavDrawer({
         container
         spacing={1}
         wrap="nowrap"
-        justify="space-between"
         alignItems="center"
         className={classes.logoRow}
       >
-        <Grid item>
-          <FiretableLogo />
-        </Grid>
-
         <Grid item>
           <IconButton
             aria-label="Close navigation drawer"
@@ -118,6 +117,10 @@ export default function NavDrawer({
           >
             <CloseIcon />
           </IconButton>
+        </Grid>
+
+        <Grid item className={classes.logo}>
+          <FiretableLogo />
         </Grid>
       </Grid>
 

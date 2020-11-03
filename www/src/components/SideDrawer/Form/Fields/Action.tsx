@@ -3,7 +3,7 @@ import { Controller, useWatch } from "react-hook-form";
 import { IFieldProps } from "../utils";
 
 import { createStyles, makeStyles, Grid, Typography } from "@material-ui/core";
-import { sanitiseCallableName, isUrl } from "util/fns";
+import { sanitiseCallableName, isUrl } from "utils/fns";
 
 import ActionFab from "../../../Table/formatters/Action/ActionFab";
 const useStyles = makeStyles((theme) =>

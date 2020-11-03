@@ -1,9 +1,9 @@
 steps:
-  - name: node:10.15.1
+  - name: node:10.17.0
     entrypoint: yarn
     args: ["install"]
     dir: "www"
-  - name: node:10.15.1
+  - name: node:10.17.0
     entrypoint: yarn
     args:
       - env
@@ -12,11 +12,11 @@ steps:
       - "${_ALGOLIA_APP_ID}"
       - "${_ALGOLIA_APP_KEY}"
     dir: "www"
-  - name: node:10.15.1
+  - name: node:10.17.0
     entrypoint: yarn
     args: ["build"]
     dir: "www"
-  - name: node:10.15.1
+  - name: node:10.17.0
     entrypoint: yarn
     args:
       - "target"
@@ -24,7 +24,7 @@ steps:
       - --project
       - "${_PROJECT_ID}"
     dir: "www"
-  - name: node:10.15.1
+  - name: node:10.17.0
     entrypoint: yarn
     args:
       - deploy

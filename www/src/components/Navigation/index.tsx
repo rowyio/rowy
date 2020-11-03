@@ -25,8 +25,9 @@ const useStyles = makeStyles((theme) =>
     appBar: {
       paddingRight: DRAWER_COLLAPSED_WIDTH,
       height: APP_BAR_HEIGHT,
-
       [theme.breakpoints.down("sm")]: { paddingRight: 0 },
+
+      backgroundColor: theme.palette.background.paper,
     },
 
     maxHeight: {

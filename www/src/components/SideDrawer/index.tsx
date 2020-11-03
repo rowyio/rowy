@@ -16,6 +16,7 @@ import { useStyles } from "./useStyles";
 import { useFiretableContext } from "contexts/firetableContext";
 import { FieldType } from "constants/fields";
 import useDoc from "hooks/useDoc";
+
 export const DRAWER_WIDTH = 600;
 export const DRAWER_COLLAPSED_WIDTH = 36;
 
@@ -80,7 +81,7 @@ export default function SideDrawer() {
           tableState?.rows[cell.row].ref.path
         )}`
       );
-      console.log(tableState?.tablePath, tableState?.rows[cell.row].id);
+      // console.log(tableState?.tablePath, tableState?.rows[cell.row].id);
       if (urlDocState.doc) {
         urlDocState.unsubscribe();
         dispatchUrlDoc({ path: "", doc: null });

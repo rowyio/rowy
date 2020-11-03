@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-export default function Date({
+export default function _Date({
   rowIdx,
   column,
   value,
@@ -56,7 +56,13 @@ export default function Date({
   const classes = useStyles();
   const { dataGridRef } = useFiretableContext();
 
-  const transformedValue = value && "toDate" in value ? value.toDate() : null;
+  const transformedValue = !value
+    ? null
+    : typeof value === "number"
+    ? new Date(value)
+    : "toDate" in value
+    ? value.toDate()
+    : null;
 
   const fieldType = (column as any).type;
   const Picker =

@@ -1,5 +1,9 @@
 :root {
   font-size: 16px;
+
+  --tinymce-text-color: rgba(0, 0, 0, 0.87);
+  --tinymce-primary-color: #ed4747;
+  --tinymce-divider-color: rgba(0, 0, 0, 0.12);
 }
 
 html {
@@ -25,6 +29,8 @@ body {
   font-family: "Open Sans", sans-serif;
   line-height: 1.45;
   letter-spacing: 0.25px;
+
+  color: var(--tinymce-text-color);
 }
 
 h1,
@@ -44,7 +50,7 @@ p {
 
 a {
   font-weight: bold;
-  color: #e22729;
+  color: var(--tinymce-primary-color);
 }
 
 ul,
@@ -65,7 +71,7 @@ table {
 }
 table th,
 table td {
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  border: 1px solid var(--tinymce-divider-color);
   padding: 0.4rem;
 }
 figure {
@@ -79,12 +85,12 @@ figure figcaption {
   text-align: center;
 }
 hr {
-  border-color: rgba(0, 0, 0, 0.12);
+  border-color: var(--tinymce-divider-color);
   border-style: solid;
   border-width: 1px 0 0 0;
 }
 code {
-  background-color: #e8e8e8;
+  background-color: var(--tinymce-divider-color);
   border-radius: 4px;
   padding: 0.1rem 0.2rem;
   font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
@@ -93,12 +99,12 @@ pre {
   font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
 }
 .mce-content-body:not([dir="rtl"]) blockquote {
-  border-left: 2px solid rgba(0, 0, 0, 0.12);
+  border-left: 2px solid var(--tinymce-divider-color);
   margin-left: 1.5rem;
   padding-left: 1rem;
 }
 .mce-content-body[dir="rtl"] blockquote {
-  border-right: 2px solid rgba(0, 0, 0, 0.12);
+  border-right: 2px solid var(--tinymce-divider-color);
   margin-right: 1.5rem;
   padding-right: 1rem;
 }

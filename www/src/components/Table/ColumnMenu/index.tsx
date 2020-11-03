@@ -11,7 +11,7 @@ import CellResizeIcon from "assets/icons/CellResize";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import EditIcon from "@material-ui/icons/Edit";
-import ReorderIcon from "@material-ui/icons/Reorder";
+// import ReorderIcon from "@material-ui/icons/Reorder";
 import SettingsIcon from "@material-ui/icons/Settings";
 import ColumnPlusBeforeIcon from "assets/icons/ColumnPlusBefore";
 import ColumnPlusAfterIcon from "assets/icons/ColumnPlusAfter";
@@ -52,8 +52,11 @@ export type ColumnMenuRef = {
 const useStyles = makeStyles((theme) =>
   createStyles({
     paper: {
-      // TODO: change this if we need to support a dark mode
-      backgroundColor: "#f1f1f3",
+      backgroundColor:
+        theme.palette.type === "light"
+          ? "#f1f1f3"
+          : theme.palette.background.elevation?.[8] ??
+            theme.palette.background.paper,
     },
   })
 );
@@ -158,6 +161,7 @@ export default function ColumnMenu() {
         handleClose();
       },
       active: isSorted && !isAsc,
+      disabled: column.type === FieldType.id,
     },
     {
       label: "Sort: Increasing",
@@ -170,6 +174,7 @@ export default function ColumnMenu() {
         handleClose();
       },
       active: isSorted && isAsc,
+      disabled: column.type === FieldType.id,
     },
     { type: "subheader", label: "Edit" },
     {
@@ -181,7 +186,7 @@ export default function ColumnMenu() {
     },
     {
       label: `Edit Type: ${column?.type}`,
-      // TODO: This is based off the cell type
+      // This is based off the cell type
       icon: _find(FIELDS, { type: column.type })?.icon,
       onClick: () => {
         setModal({ type: ModalStates.typeChange, data: { column } });
@@ -189,7 +194,7 @@ export default function ColumnMenu() {
     },
     {
       label: `Column Settings`,
-      // TODO: This is based off the cell type
+      // This is based off the cell type
       icon: <SettingsIcon />,
       onClick: () => {
         setModal({ type: ModalStates.settings, data: { column } });
@@ -235,6 +240,7 @@ export default function ColumnMenu() {
 
   const clearModal = () => {
     setModal(INITIAL_MODAL);
+    setSelectedColumnHeader(null);
   };
 
   return (

@@ -7,7 +7,7 @@ import { TableSettingsDialogModes } from "./index";
 import HelperText from "./HelperText";
 import { Link } from "@material-ui/core";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
-import { MONO_FONT } from "Theme";
+import { MONO_FONT } from "Themes";
 
 export const tableSettings = (
   mode: TableSettingsDialogModes | null,

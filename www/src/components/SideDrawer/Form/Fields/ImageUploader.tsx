@@ -81,7 +81,7 @@ const useStyles = makeStyles((theme) =>
       bottom: 0,
       right: 0,
 
-      backgroundColor: "rgba(255, 255, 255, 0.8)",
+      backgroundColor: fade(theme.palette.background.paper, 0.8),
       color: theme.palette.text.secondary,
       boxShadow: `0 0 0 1px ${theme.palette.divider} inset`,
       borderRadius: theme.shape.borderRadius,
@@ -95,7 +95,7 @@ const useStyles = makeStyles((theme) =>
       backgroundColor: "transparent",
 
       "$img:hover &": {
-        backgroundColor: "rgba(255, 255, 255, 0.8)",
+        backgroundColor: fade(theme.palette.background.paper, 0.8),
         "& *": { opacity: 1 },
       },
 

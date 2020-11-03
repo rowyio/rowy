@@ -5,7 +5,7 @@ import clsx from "clsx";
 import _get from "lodash/get";
 import { createStyles, makeStyles, Grid } from "@material-ui/core";
 
-import { sanitiseCallableName, isUrl } from "util/fns";
+import { sanitiseCallableName, isUrl } from "utils/fns";
 import ActionFab from "./ActionFab";
 
 const useStyles = makeStyles((theme) =>

@@ -2,6 +2,7 @@ export enum routes {
   home = "/",
   auth = "/auth",
   impersonatorAuth = "/impersonatorAuth",
+  jwtAuth = "/jwtAuth",
   signOut = "/signOut",
 
   table = "/table",

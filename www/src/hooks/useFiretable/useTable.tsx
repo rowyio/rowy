@@ -7,7 +7,7 @@ import firebase from "firebase/app";
 import { FireTableFilter, FiretableOrderBy, tablePath } from ".";
 import { SnackContext } from "../../contexts/snackContext";
 import { cloudFunction } from "../../firebase/callables";
-import { isCollectionGroup, generateSmallerId } from "util/fns";
+import { isCollectionGroup, generateSmallerId } from "utils/fns";
 const CAP = 1000; // safety  paramter sets the  upper limit of number of docs fetched by this hook
 const serverTimestamp = firebase.firestore.FieldValue.serverTimestamp;
 

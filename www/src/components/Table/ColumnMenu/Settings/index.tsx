@@ -288,6 +288,7 @@ const ConfigFields = ({
             <TextField
               label="callable name"
               name="callableName"
+              value={config.callableName}
               fullWidth
               onChange={(e) => {
                 handleChange("callableName")(e.target.value);
@@ -296,9 +297,9 @@ const ConfigFields = ({
           ) : (
             <>
               <Typography variant="overline">action script</Typography>
-              <Suspense fallback={<FieldSkeleton height={180} />}>
+              <Suspense fallback={<FieldSkeleton height={300} />}>
                 <CodeEditor
-                  height={180}
+                  height={300}
                   script={config.script}
                   extraLibs={[
                     [
@@ -374,9 +375,9 @@ const ConfigFields = ({
                     fullWidth
                   />
                   <Typography variant="overline">Undo Action script</Typography>
-                  <Suspense fallback={<FieldSkeleton height={180} />}>
+                  <Suspense fallback={<FieldSkeleton height={300} />}>
                     <CodeEditor
-                      height={180}
+                      height={300}
                       script={config["undo.script"]}
                       handleChange={handleChange("undo.script")}
                     />
@@ -436,6 +437,15 @@ switch (triggerType){
           <Typography variant="overline">Field type of the output</Typography>
           <FieldsDropdown
             value={config.renderFieldType}
+            options={Object.values(FieldType).filter(
+              (f) =>
+                ![
+                  FieldType.derivative,
+                  FieldType.aggregate,
+                  FieldType.subTable,
+                  FieldType.action,
+                ].includes(f)
+            )}
             onChange={(newType: any) => {
               handleChange("renderFieldType")(newType.target.value);
             }}
@@ -484,6 +494,15 @@ switch (triggerType){
           <Typography variant="overline">Field type of the output</Typography>
           <FieldsDropdown
             value={config.renderFieldType}
+            options={Object.values(FieldType).filter(
+              (f) =>
+                ![
+                  FieldType.derivative,
+                  FieldType.aggregate,
+                  FieldType.subTable,
+                  FieldType.action,
+                ].includes(f)
+            )}
             onChange={(newType: any) => {
               handleChange("renderFieldType")(newType.target.value);
             }}

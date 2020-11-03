@@ -1,10 +1,13 @@
 import React from "react";
 import clsx from "clsx";
-import { Column } from "react-data-grid";
+import { HeaderRendererProps } from "react-data-grid";
+import { useDrag, useDrop, DragObjectWithType } from "react-dnd";
+import { useCombinedRefs } from "react-data-grid/lib/hooks";
 
 import {
   makeStyles,
   createStyles,
+  fade,
   Tooltip,
   Fade,
   Grid,
@@ -14,7 +17,7 @@ import {
 import SortDescIcon from "@material-ui/icons/ArrowDownward";
 import DropdownIcon from "@material-ui/icons/ArrowDropDownCircle";
 
-import { getFieldIcon } from "constants/fields";
+import { getFieldIcon, FieldType } from "constants/fields";
 import { useFiretableContext } from "contexts/firetableContext";
 import { FiretableOrderBy } from "hooks/useFiretable";
 
@@ -23,11 +26,26 @@ const useStyles = makeStyles((theme) =>
     root: {
       height: "100%",
       "& svg, & button": { display: "block" },
+
       color: theme.palette.text.secondary,
       transition: theme.transitions.create("color", {
         duration: theme.transitions.duration.short,
       }),
       "&:hover": { color: theme.palette.text.primary },
+
+      cursor: "move",
+
+      margin: theme.spacing(0, -1.5),
+      padding: theme.spacing(0, 1.5),
+      width: `calc(100% + ${theme.spacing(1.5) * 2}px)`,
+    },
+    isDragging: { opacity: 0.5 },
+    isOver: {
+      backgroundColor: fade(
+        theme.palette.primary.main,
+        theme.palette.action.focusOpacity
+      ),
+      color: theme.palette.primary.main,
     },
 
     columnNameContainer: {
@@ -85,7 +103,15 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-const ColumnHeader: Column<any>["headerRenderer"] = ({ column }) => {
+interface ColumnDragObject extends DragObjectWithType {
+  key: string;
+}
+
+export default function DraggableHeaderRenderer<R>({
+  column,
+}: HeaderRendererProps<R> & {
+  onColumnsReorder: (sourceKey: string, targetKey: string) => void;
+}) {
   const classes = useStyles();
 
   const {
@@ -94,6 +120,28 @@ const ColumnHeader: Column<any>["headerRenderer"] = ({ column }) => {
     userClaims,
     columnMenuRef,
   } = useFiretableContext();
+  const [{ isDragging }, drag] = useDrag({
+    item: { key: column.key, type: "COLUMN_DRAG" },
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  });
+
+  const [{ isOver }, drop] = useDrop({
+    accept: "COLUMN_DRAG",
+    drop({ key, type }: ColumnDragObject) {
+      if (type === "COLUMN_DRAG") {
+        // onColumnsReorder(key, props.column.key);
+        tableActions?.column.reorder(key, column.key);
+      }
+    },
+    collect: (monitor) => ({
+      isOver: !!monitor.isOver(),
+      canDrop: !!monitor.canDrop(),
+    }),
+  });
+
+  const headerRef = useCombinedRefs(drag, drop);
   if (!columnMenuRef || !tableState || !tableActions) return null;
   const { orderBy } = tableState;
 
@@ -124,7 +172,17 @@ const ColumnHeader: Column<any>["headerRenderer"] = ({ column }) => {
   };
 
   return (
-    <Grid container className={classes.root} alignItems="center" wrap="nowrap">
+    <Grid
+      ref={headerRef}
+      container
+      className={clsx(
+        classes.root,
+        isDragging && classes.isDragging,
+        isOver && !isDragging && classes.isOver
+      )}
+      alignItems="center"
+      wrap="nowrap"
+    >
       <Tooltip
         title={
           <>
@@ -179,24 +237,26 @@ const ColumnHeader: Column<any>["headerRenderer"] = ({ column }) => {
         </Tooltip>
       </Grid>
 
-      <Grid
-        item
-        className={clsx(
-          classes.sortIconContainer,
-          isSorted && classes.sortIconContainerSorted
-        )}
-      >
-        <IconButton
-          disableFocusRipple={true}
-          size="small"
-          onClick={handleSortClick}
-          color="inherit"
-          aria-label={`Sort by ${isAsc ? "descending" : "ascending"}`}
-          className={clsx(classes.sortIcon, isAsc && classes.sortIconAsc)}
+      {(column as any).type !== FieldType.id && (
+        <Grid
+          item
+          className={clsx(
+            classes.sortIconContainer,
+            isSorted && classes.sortIconContainerSorted
+          )}
         >
-          <SortDescIcon />
-        </IconButton>
-      </Grid>
+          <IconButton
+            disableFocusRipple={true}
+            size="small"
+            onClick={handleSortClick}
+            color="inherit"
+            aria-label={`Sort by ${isAsc ? "descending" : "ascending"}`}
+            className={clsx(classes.sortIcon, isAsc && classes.sortIconAsc)}
+          >
+            <SortDescIcon />
+          </IconButton>
+        </Grid>
+      )}
 
       {userClaims?.roles?.includes("ADMIN") && (
         <Grid item>
@@ -213,6 +273,16 @@ const ColumnHeader: Column<any>["headerRenderer"] = ({ column }) => {
       )}
     </Grid>
   );
-};
-
-export default ColumnHeader;
+  //   return (
+  //     <div
+  //       ref={useCombinedRefs(drag, drop)}
+  //       style={{
+  //         opacity: isDragging ? 0.5 : 1,
+  //         backgroundColor: isOver ? '#ececec' : 'inherit',
+  //         cursor: 'move'
+  //       }}
+  //     >
+  //       {props.column.name}
+  //     </div>
+  //   );
+}
