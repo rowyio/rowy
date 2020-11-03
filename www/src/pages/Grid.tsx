@@ -10,7 +10,7 @@ import SideDrawer from "components/SideDrawer";
 import { FireTableFilter } from "hooks/useFiretable";
 import useRouter from "hooks/useRouter";
 
-export default function GridView() {
+export default function GridPage() {
   const router = useRouter();
   const tableCollection = decodeURIComponent(router.match.params.id);
 

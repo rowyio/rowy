@@ -3,14 +3,14 @@ import queryString from "query-string";
 
 import { Typography, Button } from "@material-ui/core";
 
-import AuthCard from "./AuthCard";
+import AuthCard from "components/Auth/AuthCard";
 
-import { handleGoogleAuth } from "./utils";
+import { handleGoogleAuth } from "../../utils/auth";
 import GoogleLogo from "assets/google-icon.svg";
 import { useSnackContext } from "contexts/snackContext";
-import { Link } from "react-router-dom";
 import { auth } from "../../firebase";
-export default function GoogleAuthView() {
+
+export default function GoogleAuthPage() {
   const [loading, setLoading] = useState(false);
   const snack = useSnackContext();
   const parsedQuery = queryString.parse(window.location.search);

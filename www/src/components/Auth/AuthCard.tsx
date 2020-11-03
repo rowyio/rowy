@@ -3,9 +3,7 @@ import React from "react";
 import {
   makeStyles,
   createStyles,
-  Typography,
   Card,
-  Button,
   Grid,
   LinearProgress,
 } from "@material-ui/core";

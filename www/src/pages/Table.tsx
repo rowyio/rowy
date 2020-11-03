@@ -18,7 +18,7 @@ import useRouter from "hooks/useRouter";
 import { DocActions } from "hooks/useDoc";
 import ActionParamsProvider from "components/Table/formatters/Action/FormDialog/Provider";
 
-export default function TableView() {
+export default function TablePage() {
   const router = useRouter();
   const tableCollection = decodeURIComponent(router.match.params.id);
 

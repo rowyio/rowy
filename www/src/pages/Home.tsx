@@ -83,7 +83,7 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-const TablesView = () => {
+export default function HomePage() {
   const classes = useStyles();
 
   const [settingsDialogState, setSettingsDialogState] = useState<{
@@ -259,6 +259,4 @@ const TablesView = () => {
       />
     </HomeNavigation>
   );
-};
-
-export default TablesView;
+}

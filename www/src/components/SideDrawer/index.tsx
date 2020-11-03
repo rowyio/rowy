@@ -81,7 +81,7 @@ export default function SideDrawer() {
           tableState?.rows[cell.row].ref.path
         )}`
       );
-      console.log(tableState?.tablePath, tableState?.rows[cell.row].id);
+      // console.log(tableState?.tablePath, tableState?.rows[cell.row].id);
       if (urlDocState.doc) {
         urlDocState.unsubscribe();
         dispatchUrlDoc({ path: "", doc: null });
