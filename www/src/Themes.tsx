@@ -15,7 +15,7 @@ export const BODY_FONT = '"Open Sans", sans-serif';
 export const MONO_FONT =
   "SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace";
 
-export const ANTLER_RED = "#ed4747";
+export const ANTLER_RED = "#ED4747";
 export const SECONDARY_GREY = "#282829";
 export const SECONDARY_TEXT = "rgba(0, 0, 0, 0.6)";
 export const ERROR = "#b00020";

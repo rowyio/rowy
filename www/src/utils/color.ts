@@ -1,7 +1,7 @@
 import { scale } from "chroma-js";
 
 export const resultColors = {
-  No: "#ed4746",
+  No: "#ED4747",
   Maybe: "#f3c900",
   Yes: "#1fad5f",
 };
