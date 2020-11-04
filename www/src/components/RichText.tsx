@@ -18,6 +18,12 @@ import { makeStyles, createStyles, useTheme } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
+    "@global": {
+      body: {
+        fontFamily: theme.typography.fontFamily,
+      },
+    },
+
     root: {
       "& .tox": {
         "&.tox-tinymce": {
