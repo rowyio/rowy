@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) =>
   createStyles({
     "@global": {
       body: {
-        fontFamily: theme.typography.fontFamily,
+        fontFamily: theme.typography.fontFamily + " !important",
       },
     },
 
