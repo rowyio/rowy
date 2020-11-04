@@ -118,7 +118,7 @@ export const tableSettings = (
     type: FIELDS.description,
     description: (
       <HelperText>
-        Choose which users have access to this table. Remember to set the
+        Choose which roles have access to this table. Remember to set the
         appropriate Firestore Security Rules for the “
         <span style={{ fontFamily: MONO_FONT }}>{values.collection}</span>”
         collection.
