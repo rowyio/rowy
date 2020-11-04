@@ -19,6 +19,7 @@ interface AppContextInterface {
   currentUser: firebase.User | null | undefined;
   userDoc: any;
   theme: keyof typeof Themes;
+  themeOverridden: boolean;
   setTheme: React.Dispatch<React.SetStateAction<keyof typeof Themes>>;
   setThemeOverridden: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -27,6 +28,7 @@ export const AppContext = React.createContext<AppContextInterface>({
   currentUser: undefined,
   userDoc: undefined,
   theme: "light",
+  themeOverridden: false,
   setTheme: () => {},
   setThemeOverridden: () => {},
 });
@@ -113,6 +115,7 @@ export const AppProvider: React.FC = ({ children }) => {
         userDoc: { state: userDoc, dispatch: dispatchUserDoc },
         currentUser,
         theme,
+        themeOverridden,
         setTheme,
         setThemeOverridden,
       }}
