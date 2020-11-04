@@ -2,11 +2,11 @@ import React from "react";
 
 import { useTheme } from "@material-ui/core";
 
-export default function Firetable() {
+export default function FiretableLogo() {
   const theme = useTheme();
 
   const primaryColor = theme.palette.primary.main;
-  const strokeColor = theme.palette.getContrastText(theme.palette.primary.main);
+  const strokeColor = "#FFF";
 
   return (
     <svg
