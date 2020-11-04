@@ -42,7 +42,6 @@ const JwtAuthPage = lazy(
 export default function App() {
   return (
     <>
-      <CssBaseline />
       <ErrorBoundary>
         <AppProvider>
           <ConfirmationProvider>
