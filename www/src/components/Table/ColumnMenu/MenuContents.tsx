@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) =>
 
       "&:hover": {
         backgroundColor: theme.palette.text.primary,
-        color: "#f1f1f3",
+        color: theme.palette.type === "light" ? "#f1f1f3" : "#212129",
       },
     },
     menuItemIcon: {

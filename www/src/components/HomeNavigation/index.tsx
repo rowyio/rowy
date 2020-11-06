@@ -14,7 +14,7 @@ import {
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 
-import FiretableLogo from "assets/Firetable";
+import FiretableLogo from "assets/FiretableLogo";
 import NavDrawer, { NAV_DRAWER_WIDTH } from "./NavDrawer";
 import UserMenu from "components/Navigation/UserMenu";
 
@@ -44,6 +44,9 @@ const useStyles = makeStyles((theme) =>
 
     appBar: {
       height: APP_BAR_HEIGHT,
+
+      backgroundColor: theme.palette.background.paper,
+
       [theme.breakpoints.down("sm")]: { paddingRight: 0 },
 
       [theme.breakpoints.up("md")]: {

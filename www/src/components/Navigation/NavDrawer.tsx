@@ -18,7 +18,7 @@ import HomeIcon from "@material-ui/icons/Home";
 import CloseIcon from "assets/icons/Backburger";
 
 import { APP_BAR_HEIGHT } from ".";
-import FiretableLogo from "assets/Firetable";
+import FiretableLogo from "assets/FiretableLogo";
 import NavDrawerItem from "./NavDrawerItem";
 
 import { useFiretableContext } from "contexts/firetableContext";

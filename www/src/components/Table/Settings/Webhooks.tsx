@@ -17,7 +17,7 @@ import Switch from "@material-ui/core/Switch";
 import CodeEditor from "../editors/CodeEditor";
 import { useFiretableContext } from "../../../contexts/firetableContext";
 import { WEBHOOK_URL } from "../../../firebase";
-import { makeId } from "../../../util/fns";
+import { makeId } from "../../../utils/fns";
 import { DocActions } from "hooks/useDoc";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

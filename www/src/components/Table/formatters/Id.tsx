@@ -3,7 +3,7 @@ import { CustomCellProps } from "./withCustomCell";
 
 import { useTheme } from "@material-ui/core";
 
-export default function Percentage({ docRef }: CustomCellProps) {
+export default function Id({ docRef }: CustomCellProps) {
   const theme = useTheme();
 
   return (

@@ -144,7 +144,9 @@ export default function StyledCard({
                     ))}
                   </Grid>
                 ) : (
-                  bodyContent
+                  <Typography variant="body2" color="textSecondary">
+                    {bodyContent}
+                  </Typography>
                 )}
               </Grid>
             </Grid>

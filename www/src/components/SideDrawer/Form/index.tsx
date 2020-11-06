@@ -2,14 +2,17 @@ import React, { lazy } from "react";
 import { useForm } from "react-hook-form";
 import _isFunction from "lodash/isFunction";
 import _isEmpty from "lodash/isEmpty";
+
 import { Grid } from "@material-ui/core";
 
 import { Fields, Values, getInitialValues, Field } from "./utils";
 import { FieldType } from "constants/fields";
 import Autosave from "./Autosave";
 import FieldWrapper from "./FieldWrapper";
+
 import { useAppContext } from "contexts/appContext";
 import { useFiretableContext } from "contexts/firetableContext";
+
 import Text from "./Fields/Text";
 const Url = lazy(
   () => import("./Fields/Url" /* webpackChunkName: "SideDrawer-Url" */)
@@ -85,7 +88,6 @@ const ConnectTable = lazy(
       "./Fields/ConnectTable" /* webpackChunkName: "SideDrawer-ConnectTable" */
     )
 );
-
 const ConnectService = lazy(
   () =>
     import(
@@ -104,6 +106,9 @@ const Action = lazy(
 );
 const Id = lazy(
   () => import("./Fields/Id" /* webpackChunkName: "SideDrawer-Id" */)
+);
+const User = lazy(
+  () => import("./Fields/User" /* webpackChunkName: "SideDrawer-User" */)
 );
 
 export interface IFormProps {
@@ -257,6 +262,10 @@ export default function Form({ fields, values }: IFormProps) {
 
               case FieldType.id:
                 fieldComponent = Id;
+                break;
+
+              case FieldType.user:
+                fieldComponent = User;
                 break;
 
               case undefined:
