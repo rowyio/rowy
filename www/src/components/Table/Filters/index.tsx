@@ -297,6 +297,10 @@ const Filters = () => {
             freeText={true}
           />
         );
+
+      case FieldType.date:
+      case FieldType.dateTime:
+        return <>//TODO:Date Time picker</>;
       default:
         return <>Not available</>;
         // return <TextField variant="filled" fullWidth disabled />;
@@ -442,7 +446,7 @@ const Filters = () => {
                   Select Condition
                 </MenuItem>
                 {operators.map((operator) => (
-                  <MenuItem value={operator.value}>{operator.label}</MenuItem>
+                  <MenuItem key={operator.value} value={operator.value}>{operator.label}</MenuItem>
                 ))}
               </TextField>
             </Grid>
