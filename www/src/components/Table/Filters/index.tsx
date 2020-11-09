@@ -442,7 +442,7 @@ const Filters = () => {
                   Select Condition
                 </MenuItem>
                 {operators.map((operator) => (
-                  <MenuItem value={operator.value}>{operator.label}</MenuItem>
+                  <MenuItem key={operator.value} value={operator.value}>{operator.label}</MenuItem>
                 ))}
               </TextField>
             </Grid>
