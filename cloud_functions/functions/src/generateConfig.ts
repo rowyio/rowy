@@ -59,6 +59,7 @@ const main = async (functionType: string, configString: string) => {
       configData = `export default ${configString}\n export const collectionPath=''`;
       break;
   }
+  console.log({ configData });
   fs.writeFileSync("./src/functionConfig.ts", configData);
   return;
 };
