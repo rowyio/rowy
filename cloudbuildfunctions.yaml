@@ -24,23 +24,23 @@ steps:
       - "${_FUNCTIONS_GROUP}"
       - "${_FUNCTION_CONFIG}"
     dir: "cloud_functions/functions"
-  # - name: node:10.15.1
-  #   entrypoint: yarn
-  #   args:
-  #     - "deployFT"
-  #     - "--project"
-  #     - "${_PROJECT_ID}"
-  #     - "--token"
-  #     - "${_FIREBASE_TOKEN}"
-  #     - "--only"
-  #     - "functions:${_FUNCTIONS_GROUP}"
-  #   dir: "cloud_functions/functions"
-  - name: gcr.io/cloud-builders/gcloud
+  - name: node:10.15.1
+    entrypoint: yarn
     args:
-      - functions
-      - deploy
-      - "${_FUNCTIONS_GROUP}"
+      - "deployFT"
+      - "--project"
+      - "${_PROJECT_ID}"
+      - "--token"
+      - "${_FIREBASE_TOKEN}"
+      - "--only"
+      - "functions:${_FUNCTIONS_GROUP}"
     dir: "cloud_functions/functions"
+  # - name: gcr.io/cloud-builders/gcloud
+  #   args:
+  #     - functions
+  #     - deploy
+  #     - "${_FUNCTIONS_GROUP}"
+  #   dir: "cloud_functions/functions"
   - name: node:10.15.1
     entrypoint: yarn
     args:
