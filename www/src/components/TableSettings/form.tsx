@@ -12,7 +12,8 @@ import { MONO_FONT } from "Themes";
 export const tableSettings = (
   mode: TableSettingsDialogModes | null,
   roles: string[] | undefined,
-  sections: string[] | undefined
+  sections: string[] | undefined,
+  tables: { label: string; value: any }[] | undefined
 ) => [
   {
     type: FIELDS.text,
@@ -20,7 +21,6 @@ export const tableSettings = (
     label: "Table Name*",
     validation: yup.string().required("Required"),
   },
-
   {
     type: FIELDS.text,
     name: "collection",
@@ -138,4 +138,14 @@ export const tableSettings = (
       </HelperText>
     ),
   }),
+  () =>
+    mode === TableSettingsDialogModes.create && tables?.length !== 0
+      ? {
+          type: FIELDS.singleSelect,
+          name: "schemaSource",
+          label: "Copy column configuration from an existing table",
+          options: tables,
+          freeText: false,
+        }
+      : null,
 ];

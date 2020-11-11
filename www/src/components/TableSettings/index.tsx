@@ -70,8 +70,7 @@ export default function TableSettingsDialog({
 }: ICreateTableDialogProps) {
   const classes = useStyles();
 
-  const { settingsActions, sections, roles } = useFiretableContext();
-
+  const { settingsActions, sections, roles, tables } = useFiretableContext();
   const sectionNames = sections ? Object.keys(sections) : [];
 
   const router = useRouter();
@@ -167,7 +166,12 @@ export default function TableSettingsDialog({
           ? "Create Table"
           : "Update Table"
       }
-      fields={tableSettings(mode, roles, sectionNames)}
+      fields={tableSettings(
+        mode,
+        roles,
+        sectionNames,
+        tables?.map((table) => ({ label: table.name, value: table }))
+      )}
       values={{
         tableType: data?.isCollectionGroup
           ? "collectionGroup"

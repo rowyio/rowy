@@ -23,24 +23,47 @@ const useSettings = () => {
     }
   }, [settingsState]);
 
-  const createTable = (data: {
+  const createTable = async (data: {
     name: string;
     collection: string;
     description: string;
+    tableType: string;
     roles: string[];
+    schemaSource: any;
   }) => {
     const { tables } = settingsState;
-    // updates the setting doc
+    const { schemaSource, ...tableSettings } = data;
+    const tableSchemaPath = `_FIRETABLE_/settings/${
+      tableSettings.tableType !== "collectionGroup" ? "schema" : "groupSchema"
+    }/${tableSettings.collection}`;
+    const tableSchemaDocRef = db.doc(tableSchemaPath);
 
-    db.doc("_FIRETABLE_/settings").set(
-      { tables: tables ? [...tables, data] : [data] },
-      { merge: true }
-    );
+    let columns = {};
+    if (schemaSource) {
+      const schemaSourcePath = `_FIRETABLE_/settings/${
+        schemaSource.tableType !== "collectionGroup" ? "schema" : "groupSchema"
+      }/${schemaSource.collection}`;
+      const sourceDoc = await db.doc(schemaSourcePath).get();
+      const schemaSourceData = sourceDoc.data();
+      columns = sourceDoc.get("columns");
+      console.log({
+        columns,
+        schemaSource,
+        schemaSourceData,
+        schemaSourcePath,
+      });
+    }
+    // updates the setting doc
+    await db
+      .doc("_FIRETABLE_/settings")
+      .set(
+        { tables: tables ? [...tables, tableSettings] : [tableSettings] },
+        { merge: true }
+      );
 
     //create the firetable collection doc with empty columns
-    db.collection("_FIRETABLE_/settings/schema")
-      .doc(data.collection)
-      .set({ ...data, columns: {} }, { merge: true });
+    console.log();
+    await tableSchemaDocRef.set({ ...tableSettings, columns }, { merge: true });
   };
 
   const updateTable = (data: {
