@@ -10,9 +10,12 @@ const main = async (functionType: string, configString: string) => {
   let configData;
   switch (functionType) {
     case "FT_derivatives":
-      const schemaDoc = await db
-        .doc(`_FIRETABLE_/settings/schema/${configString}`)
-        .get();
+      const isCollectionGroup = configString.includes("/");
+      const collectionPath = `${configString}`;
+      const schemaPath = isCollectionGroup
+        ? `/_FIRETABLE_/settings/groupSchema/${configString.split("/").pop()}`
+        : `_FIRETABLE_/settings/schema/${collectionPath}`;
+      const schemaDoc = await db.doc(schemaPath).get();
       const schemaData = schemaDoc.data();
       if (!schemaData) return;
       const derivativeColumns = Object.values(schemaData.columns).filter(
@@ -27,7 +30,7 @@ const main = async (functionType: string, configString: string) => {
           .join(",")}]},`;
       }, ``);
 
-      configData = `export default [${config}]\nexport const collectionPath ="${configString}"`;
+      configData = `export default [${config}]\nexport const collectionPath ="${collectionPath}"`;
       break;
 
     case "FT_aggregates":
