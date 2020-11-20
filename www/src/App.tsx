@@ -13,7 +13,7 @@ import Loading from "./components/Loading";
 
 import { SnackProvider } from "./utils/SnackProvider";
 import ConfirmationProvider from "components/ConfirmationDialog/Provider";
-import { AppProvider } from "contextsAppContext";
+import { AppProvider } from "contexts/AppContext";
 import { FiretableContextProvider } from "contexts/FiretableContext";
 import routes from "constants/routes";
 
