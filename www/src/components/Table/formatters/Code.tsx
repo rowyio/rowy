@@ -7,7 +7,7 @@ import {
   // Tooltip, Fade
 } from "@material-ui/core";
 
-// import { useFiretableContext } from "contexts/firetableContext";
+// import { useFiretableContext } from "contexts/FiretableContext";
 
 // type StylesProps = { width: number; rowHeight: number };
 

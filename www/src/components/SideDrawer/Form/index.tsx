@@ -10,8 +10,8 @@ import { FieldType } from "constants/fields";
 import Autosave from "./Autosave";
 import FieldWrapper from "./FieldWrapper";
 
-import { useAppContext } from "contexts/appContext";
-import { useFiretableContext } from "contexts/firetableContext";
+import { useAppContext } from "contexts/AppContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 
 import Text from "./Fields/Text";
 const Url = lazy(

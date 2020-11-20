@@ -12,7 +12,7 @@ import AddColumnIcon from "assets/icons/AddColumn";
 
 import { APP_BAR_HEIGHT } from "components/Navigation";
 
-import { useFiretableContext } from "contexts/firetableContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 import ColumnMenu from "./ColumnMenu";
 import ImportWizard from "components/Wizards/ImportWizard";
 import ImportCSV from "./TableHeader/ImportCsv";

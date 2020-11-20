@@ -13,7 +13,7 @@ import {
 import MultiSelect_ from "@antlerengineering/multiselect";
 import FormattedChip, { VARIANTS } from "components/FormattedChip";
 import { FieldType } from "constants/fields";
-import { useFiretableContext } from "contexts/firetableContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 
 const useStyles = makeStyles((theme) =>
   createStyles({

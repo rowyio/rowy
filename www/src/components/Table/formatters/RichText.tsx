@@ -4,7 +4,7 @@ import { CustomCellProps } from "./withCustomCell";
 
 import { makeStyles, createStyles, Tooltip, Fade } from "@material-ui/core";
 
-import { useFiretableContext } from "contexts/firetableContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 import RenderedHtml from "components/RenderedHtml";
 
 type StylesProps = { width: number; rowHeight: number };

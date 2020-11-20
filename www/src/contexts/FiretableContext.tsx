@@ -8,8 +8,8 @@ import useFiretable, {
   FiretableState,
 } from "hooks/useFiretable";
 import useSettings from "hooks/useSettings";
-import { useAppContext } from "./appContext";
-import { useSnackContext } from "./snackContext";
+import { useAppContext } from "./AppContext";
+import { useSnackContext } from "./SnackContext";
 import { SideDrawerRef } from "components/SideDrawer";
 import { ColumnMenuRef } from "components/Table/ColumnMenu";
 import { ImportWizardRef } from "components/Wizards/ImportWizard";
@@ -64,10 +64,10 @@ interface FiretableContextProps {
   importWizardRef: React.MutableRefObject<ImportWizardRef | undefined>;
 }
 
-const firetableContext = React.createContext<Partial<FiretableContextProps>>(
+const FiretableContext = React.createContext<Partial<FiretableContextProps>>(
   {}
 );
-export default firetableContext;
+export default FiretableContext;
 
 export const firetableUser = (currentUser) => {
   const {
@@ -88,7 +88,7 @@ export const firetableUser = (currentUser) => {
     photoURL,
   };
 };
-export const useFiretableContext = () => useContext(firetableContext);
+export const useFiretableContext = () => useContext(FiretableContext);
 
 export const FiretableContextProvider: React.FC = ({ children }) => {
   const { open } = useSnackContext();
@@ -181,7 +181,7 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
   const importWizardRef = useRef<ImportWizardRef>();
 
   return (
-    <firetableContext.Provider
+    <FiretableContext.Provider
       value={{
         tableState,
         tableActions,
@@ -198,6 +198,6 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
       }}
     >
       {children}
-    </firetableContext.Provider>
+    </FiretableContext.Provider>
   );
 };

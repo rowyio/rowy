@@ -5,7 +5,7 @@ import { Typography, Button, TextField } from "@material-ui/core";
 import AuthCard from "components/Auth/AuthCard";
 import { handleGoogleAuth, signOut } from "utils/auth";
 import GoogleLogo from "assets/google-icon.svg";
-import { useSnackContext } from "contexts/snackContext";
+import { useSnackContext } from "contexts/SnackContext";
 
 import { ImpersonatorAuth } from "../../firebase/callables";
 import { auth } from "../../firebase";

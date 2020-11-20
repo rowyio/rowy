@@ -23,7 +23,7 @@ import NewColumn from "./NewColumn";
 import TypeChange from "./TypeChange";
 import Settings from "./Settings";
 
-import { useFiretableContext } from "contexts/firetableContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 import { FIELDS, FieldType } from "constants/fields";
 import _find from "lodash/find";
 import { Column } from "react-data-grid";

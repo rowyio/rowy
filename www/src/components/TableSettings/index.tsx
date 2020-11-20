@@ -15,7 +15,7 @@ import GoIcon from "assets/icons/Go";
 import { FormDialog } from "@antlerengineering/form-builder";
 import { tableSettings } from "./form";
 
-import { useFiretableContext } from "../../contexts/firetableContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 import useRouter from "../../hooks/useRouter";
 import { db } from "../../firebase";
 

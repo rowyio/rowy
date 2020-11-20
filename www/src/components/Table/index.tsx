@@ -20,7 +20,7 @@ import ColumnMenu from "./ColumnMenu";
 import FinalColumnHeader from "./FinalColumnHeader";
 import FinalColumn from "./formatters/FinalColumn";
 
-import { useFiretableContext } from "contexts/firetableContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 
 import { FieldType } from "constants/fields";
 import { getFormatter } from "./formatters";
@@ -28,7 +28,7 @@ import { getEditor } from "./editors";
 
 import useWindowSize from "hooks/useWindowSize";
 import useStyles from "./styles";
-import { useAppContext } from "contexts/appContext";
+import { useAppContext } from "contexts/AppContext";
 import _get from "lodash/get";
 
 export type FiretableColumn = Column<any> & {

@@ -10,7 +10,7 @@ import Step3Types from "./Step3Types";
 import Step4Preview from "./Step4Preview";
 
 import { ColumnConfig } from "hooks/useFiretable/useTableConfig";
-import { useFiretableContext } from "contexts/firetableContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 
 export type TableColumnsConfig = { [key: string]: ColumnConfig };
 

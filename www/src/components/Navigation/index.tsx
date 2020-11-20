@@ -15,7 +15,7 @@ import Breadcrumbs from "./Breadcrumbs";
 import NavDrawer from "./NavDrawer";
 
 import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
-import { useFiretableContext } from "contexts/firetableContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 import UserMenu from "./UserMenu";
 
 export const APP_BAR_HEIGHT = 56;

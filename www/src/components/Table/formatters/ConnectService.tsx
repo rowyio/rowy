@@ -5,7 +5,7 @@ import _get from "lodash/get";
 import { createStyles, makeStyles, Grid, Chip } from "@material-ui/core";
 
 import ConnectServiceSelect from "components/ConnectServiceSelect";
-import { useFiretableContext } from "contexts/firetableContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 
 const useStyles = makeStyles((theme) =>
   createStyles({

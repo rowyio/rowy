@@ -24,8 +24,8 @@ import HomeNavigation from "components/HomeNavigation";
 import StyledCard from "components/StyledCard";
 
 import routes from "constants/routes";
-import { useFiretableContext } from "contexts/firetableContext";
-import { useAppContext } from "contexts/appContext";
+import { useFiretableContext } from "contexts/FiretableContext";
+import { useAppContext } from "contexts/AppContext";
 import { DocActions } from "hooks/useDoc";
 import TableSettingsDialog, {
   TableSettingsDialogModes,

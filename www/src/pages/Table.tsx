@@ -11,8 +11,8 @@ import TableHeaderSkeleton from "components/Table/Skeleton/TableHeaderSkeleton";
 import HeaderRowSkeleton from "components/Table/Skeleton/HeaderRowSkeleton";
 import EmptyTable from "components/Table/EmptyTable";
 
-import { useFiretableContext } from "contexts/firetableContext";
-import { useAppContext } from "contexts/appContext";
+import { useFiretableContext } from "contexts/FiretableContext";
+import { useAppContext } from "contexts/AppContext";
 import { FireTableFilter } from "hooks/useFiretable";
 import useRouter from "hooks/useRouter";
 import { DocActions } from "hooks/useDoc";

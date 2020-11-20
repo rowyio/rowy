@@ -21,7 +21,7 @@ import OpenIcon from "@material-ui/icons/OpenInNewOutlined";
 import { useConfirmation } from "components/ConfirmationDialog";
 import useUploader, { FileValue } from "hooks/useFiretable/useUploader";
 import { IMAGE_MIME_TYPES } from "constants/fields";
-import { useFiretableContext } from "contexts/firetableContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 import Thumbnail from "components/Thumbnail";
 
 const useStyles = makeStyles((theme) =>

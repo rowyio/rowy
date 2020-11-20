@@ -25,7 +25,7 @@ import Column from "../Column";
 import EmptyState from "components/EmptyState";
 import AddColumnIcon from "assets/icons/AddColumn";
 
-import { useFiretableContext } from "contexts/firetableContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 import { FieldType } from "constants/fields";
 import { suggestType } from "./utils";
 

@@ -21,8 +21,8 @@ import DeleteIcon from "@material-ui/icons/DeleteForever";
 import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp";
 
 import { useConfirmation } from "components/ConfirmationDialog/Context";
-import { useFiretableContext } from "contexts/firetableContext";
-import { useSnackContext } from "contexts/snackContext";
+import { useFiretableContext } from "contexts/FiretableContext";
+import { useSnackContext } from "contexts/SnackContext";
 import { formatPath } from "utils/fns";
 import { cloudFunction } from "firebase/callables";
 

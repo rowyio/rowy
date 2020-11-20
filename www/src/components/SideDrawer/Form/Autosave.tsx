@@ -9,8 +9,8 @@ import _reduce from "lodash/reduce";
 import { Control, useWatch } from "react-hook-form";
 import { Values } from "./utils";
 
-import { useAppContext } from "contexts/appContext";
-import { useFiretableContext, firetableUser } from "contexts/firetableContext";
+import { useAppContext } from "contexts/AppContext";
+import { useFiretableContext, firetableUser } from "contexts/FiretableContext";
 
 export interface IAutosaveProps {
   control: Control;

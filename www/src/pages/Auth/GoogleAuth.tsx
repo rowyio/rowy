@@ -7,7 +7,7 @@ import AuthCard from "components/Auth/AuthCard";
 
 import { handleGoogleAuth } from "../../utils/auth";
 import GoogleLogo from "assets/google-icon.svg";
-import { useSnackContext } from "contexts/snackContext";
+import { useSnackContext } from "contexts/SnackContext";
 import { auth } from "../../firebase";
 
 export default function GoogleAuthPage() {

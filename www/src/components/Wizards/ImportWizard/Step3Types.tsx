@@ -16,7 +16,7 @@ import Column from "../Column";
 import Cell from "../Cell";
 import FieldsDropdown from "components/Table/ColumnMenu/FieldsDropdown";
 
-import { useFiretableContext } from "contexts/firetableContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 import { FieldType } from "constants/fields";
 import { SELECTABLE_TYPES } from "./utils";
 

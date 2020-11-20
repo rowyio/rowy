@@ -10,8 +10,8 @@ import {
 import PlayIcon from "@material-ui/icons/PlayArrow";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import UndoIcon from "@material-ui/icons/Undo";
-import { useFiretableContext } from "contexts/firetableContext";
-import { SnackContext } from "contexts/snackContext";
+import { useFiretableContext } from "contexts/FiretableContext";
+import { SnackContext } from "contexts/SnackContext";
 import { cloudFunction } from "firebase/callables";
 import { sanitiseRowData } from "utils/fns";
 import { formatPath } from "../../../../utils/fns";

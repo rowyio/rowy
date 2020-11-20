@@ -5,7 +5,7 @@ import { FormatterProps } from "react-data-grid";
 import { Link } from "@material-ui/core";
 
 import ErrorBoundary from "components/ErrorBoundary";
-import { useFiretableContext } from "../../../contexts/firetableContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 
 import { FieldType } from "constants/fields";
 import { getCellValue } from "utils/fns";
