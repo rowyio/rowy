@@ -143,7 +143,10 @@ export default function MultiSelect({
     //   interactive
     //   placement="bottom-start"
     // >
-    <div>
+    <div
+      onClick={(e) => e.stopPropagation()}
+      onKeyDown={(e) => e.stopPropagation()}
+    >
       <MultiSelect_
         value={sanitisedValue}
         onChange={onSubmit}
