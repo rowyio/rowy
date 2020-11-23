@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import _camelCase from "lodash/camelCase";
+import _find from "lodash/find";
 
 import {
   makeStyles,
@@ -112,6 +113,9 @@ export default function TableSettingsDialog({
       isCollectionGroup: values.tableType === "collectionGroup",
     };
 
+    if (values.schemaSource)
+      data.schemaSource = _find(tables, { collection: values.schemaSource });
+
     if (mode === TableSettingsDialogModes.update) {
       await Promise.all([settingsActions?.updateTable(data), handleClose()]);
       window.location.reload();
@@ -170,7 +174,7 @@ export default function TableSettingsDialog({
         mode,
         roles,
         sectionNames,
-        tables?.map((table) => ({ label: table.name, value: table }))
+        tables?.map((table) => ({ label: table.name, value: table.collection }))
       )}
       values={{
         tableType: data?.isCollectionGroup
