@@ -11,7 +11,6 @@ type ActionData = {
     tablePath: string;
   };
   schemaDocPath?: string;
-  row: any;
   column: any;
   action: "run" | "redo" | "undo";
   actionParams: any;
@@ -45,11 +44,14 @@ export const actionScript = functions.https.onCall(
         throw Error(`You are unauthenticated`);
       }
 
-      const { ref, actionParams, row, column, action, schemaDocPath } = data;
-
+      const { ref, actionParams, column, action, schemaDocPath } = data;
       const _schemaDocPath =
         schemaDocPath ?? generateSchemaDocPath(ref.tablePath);
-      const schemaDoc = await db.doc(_schemaDocPath).get();
+      const [schemaDoc, rowQuery] = await Promise.all([
+        db.doc(_schemaDocPath).get(),
+        db.doc(ref.path).get(),
+      ]);
+      const row = rowQuery.data();
       const schemaDocData = schemaDoc.data();
       if (!schemaDocData) {
         return {
@@ -59,6 +61,9 @@ export const actionScript = functions.https.onCall(
       }
       const config = schemaDocData.columns[column.key].config;
       const { script, requiredRoles, requiredFields, undo, redo } = config;
+      if (!requiredRoles || requiredRoles.length === 0) {
+        throw Error(`You need to specify at least one role to run this script`);
+      }
       if (!hasAnyRole(requiredRoles, context)) {
         throw Error(`You don't have the required roles permissions`);
       }

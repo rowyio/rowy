@@ -4,7 +4,7 @@ import { Column } from "react-data-grid";
 import { makeStyles, createStyles, Grid, Button } from "@material-ui/core";
 import AddColumnIcon from "assets/icons/AddColumn";
 
-import { useFiretableContext } from "contexts/firetableContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 
 const useStyles = makeStyles(() =>
   createStyles({

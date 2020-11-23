@@ -13,8 +13,8 @@ import Loading from "./components/Loading";
 
 import { SnackProvider } from "./utils/SnackProvider";
 import ConfirmationProvider from "components/ConfirmationDialog/Provider";
-import { AppProvider } from "./contexts/appContext";
-import { FiretableContextProvider } from "./contexts/firetableContext";
+import { AppProvider } from "contexts/AppContext";
+import { FiretableContextProvider } from "contexts/FiretableContext";
 import routes from "constants/routes";
 
 import AuthView from "pages/Auth/GoogleAuth";

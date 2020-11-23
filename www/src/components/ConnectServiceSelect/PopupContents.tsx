@@ -23,7 +23,7 @@ import { IConnectServiceSelectProps } from ".";
 import useStyles from "./styles";
 import Loading from "components/Loading";
 
-import { useFiretableContext } from "../../contexts/firetableContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 
 export interface IPopupContentsProps
   extends Omit<IConnectServiceSelectProps, "className" | "TextFieldProps"> {}

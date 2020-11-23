@@ -9,8 +9,8 @@ import MultiSelect from "@antlerengineering/multiselect";
 import ButtonWithStatus from "components/ButtonWithStatus";
 import Column from "components/Wizards/Column";
 
-import { useFiretableContext } from "contexts/firetableContext";
-import { useAppContext } from "contexts/appContext";
+import { useFiretableContext } from "contexts/FiretableContext";
+import { useAppContext } from "contexts/AppContext";
 import { DocActions } from "hooks/useDoc";
 import { formatSubTableName } from "../../utils/fns";
 const useStyles = makeStyles((theme) =>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { auth } from "../firebase";
 import { SnackbarOrigin } from "@material-ui/core/Snackbar";
-import { SnackContext } from "../contexts/snackContext";
+import { SnackContext } from "contexts/SnackContext";
 
 interface ISnackProviderProps {
   children: React.ReactNode;

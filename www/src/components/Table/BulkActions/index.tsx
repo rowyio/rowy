@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import _find from "lodash/find";
 
 import {
@@ -21,9 +21,9 @@ import DeleteIcon from "@material-ui/icons/DeleteForever";
 import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp";
 
 import { useConfirmation } from "components/ConfirmationDialog/Context";
-import { useFiretableContext } from "contexts/firetableContext";
-import { useSnackContext } from "contexts/snackContext";
-import { sanitiseRowData, formatPath, asyncForEach } from "utils/fns";
+import { useFiretableContext } from "contexts/FiretableContext";
+import { useSnackContext } from "contexts/SnackContext";
+import { formatPath } from "utils/fns";
 import { cloudFunction } from "firebase/callables";
 
 const useStyles = makeStyles((theme) =>
@@ -106,7 +106,7 @@ const useStyles = makeStyles((theme) =>
 
 export default function BulkActions({ selectedRows, columns, clearSelection }) {
   const classes = useStyles();
-
+  const [loading, setLoading] = useState<Boolean>();
   const { tableActions, tableState } = useFiretableContext();
 
   const { requestConfirmation } = useConfirmation();
@@ -150,40 +150,46 @@ export default function BulkActions({ selectedRows, columns, clearSelection }) {
     console.log({ actionColumn, selectedRows, actionType });
     const callableName = actionColumn.config.callableName ?? "actionScript";
 
-    await asyncForEach(selectedRows, async (row) => {
-      const { ref, ..._rowData } = row;
-      const rowData = sanitiseRowData(Object.assign({}, _rowData));
+    const calls = selectedRows.map((row) => {
+      const { ref } = row;
       const data = {
         ref: {
           path: ref.path,
           id: ref.id,
           tablePath: window.location.pathname,
         },
-        row: rowData,
         column: actionColumn,
         action: actionType,
         schemaDocPath: formatPath(tableState?.tablePath ?? ""),
         actionParams: {},
       };
-      await cloudFunction(
+      return cloudFunction(
         callableName,
         data,
-        (response) => {
+        async (response) => {
           const { message, cellValue, success } = response.data;
           // setIsRunning(false);
           snack.open({
             message: JSON.stringify(message),
             severity: success ? "success" : "error",
           });
-          // if (cellValue && cellValue.status) onSubmit(cellValue);
+          if (cellValue && cellValue.status) {
+            return ref.update({ [actionColumn.key]: cellValue });
+          }
         },
         (error) => {
           console.error("ERROR", callableName, error);
           //setIsRunning(false);
-          //snack.open({ message: JSON.stringify(error), severity: "error" });
+          snack.open({ message: JSON.stringify(error), severity: "error" });
         }
       );
     });
+    setLoading(true);
+    const result = await Promise.all(calls);
+    await Promise.all(result);
+    console.log(result);
+    setLoading(false);
+    clearSelection();
   };
 
   const numSelected = selectedRows.length;

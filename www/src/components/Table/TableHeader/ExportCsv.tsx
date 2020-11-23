@@ -20,8 +20,8 @@ import {
 } from "@material-ui/core";
 import ExportIcon from "assets/icons/Export";
 
-import { SnackContext } from "contexts/snackContext";
-import { useFiretableContext } from "contexts/firetableContext";
+import { SnackContext } from "contexts/SnackContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 import { db } from "../../../firebase";
 import { FieldType } from "constants/fields";
 import { isCollectionGroup } from "utils/fns";

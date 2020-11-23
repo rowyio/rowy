@@ -6,7 +6,7 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import TableSettingsDialog, {
   TableSettingsDialogModes,
 } from "components/TableSettings";
-import { useFiretableContext } from "contexts/firetableContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 
 export default function TableSettings() {
   const [open, setOpen] = useState(false);

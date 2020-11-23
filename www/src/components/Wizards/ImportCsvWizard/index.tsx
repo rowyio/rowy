@@ -18,7 +18,7 @@ import Step2NewColumns from "./Step2NewColumns";
 import Step3Preview from "./Step3Preview";
 
 import { ColumnConfig } from "hooks/useFiretable/useTableConfig";
-import { useFiretableContext } from "contexts/firetableContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 import { FieldType } from "constants/fields";
 
 export type CsvConfig = {

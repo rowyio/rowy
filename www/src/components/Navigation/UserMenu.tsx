@@ -18,7 +18,7 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import CheckIcon from "@material-ui/icons/Check";
 
-import { useAppContext } from "contexts/appContext";
+import { useAppContext } from "contexts/AppContext";
 import routes from "constants/routes";
 
 const useStyles = makeStyles((theme) =>

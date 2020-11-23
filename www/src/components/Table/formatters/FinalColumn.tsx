@@ -11,9 +11,9 @@ import {
 import CopyCellsIcon from "assets/icons/CopyCells";
 import DeleteIcon from "@material-ui/icons/DeleteForever";
 
-import { SnackContext } from "contexts/snackContext";
+import { SnackContext } from "contexts/SnackContext";
 import { useConfirmation } from "components/ConfirmationDialog/Context";
-import { useFiretableContext } from "contexts/firetableContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 import useKeyPress from "hooks/useKeyPress";
 
 const useStyles = makeStyles((theme) =>

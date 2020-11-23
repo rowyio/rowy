@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { EditorProps } from "react-data-grid";
 import _findIndex from "lodash/findIndex";
-import { useFiretableContext } from "contexts/firetableContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 
 import { makeStyles } from "@material-ui/core";
 import styles from "./styles";

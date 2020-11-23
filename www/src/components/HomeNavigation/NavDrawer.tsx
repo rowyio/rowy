@@ -21,7 +21,7 @@ import AddIcon from "@material-ui/icons/Add";
 import { APP_BAR_HEIGHT } from ".";
 import FiretableLogo from "assets/FiretableLogo";
 
-import { useFiretableContext } from "contexts/firetableContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 import useRouter from "hooks/useRouter";
 
 export const NAV_DRAWER_WIDTH = 300;

@@ -1,4 +1,4 @@
-import * as algoliasearch from "algoliasearch";
+import algoliasearch from "algoliasearch";
 import * as functions from "firebase-functions";
 import * as _ from "lodash";
 import { env } from "../config";
@@ -90,7 +90,7 @@ const addToAlgolia = (
   const algoliaData = fieldsToSync.reduce(algoliaReducer(docData), {});
   if (Object.keys(algoliaData).length === 0) return false; // returns if theres nothing to sync
   const index = client.initIndex(_index); // initialize algolia index
-  return index.addObject({ ...algoliaData, objectID }); // add new algolia entry
+  return index.saveObject({ ...algoliaData, objectID }); // add new algolia entry
 };
 
 const updateAlgolia = (

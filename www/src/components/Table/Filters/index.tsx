@@ -24,10 +24,10 @@ import ButtonWithStatus from "components/ButtonWithStatus";
 
 import { FieldType } from "constants/fields";
 import { FireTableFilter } from "hooks/useFiretable";
-import { useFiretableContext } from "contexts/firetableContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 
 import DocSelector from "./DocSelector";
-import { useAppContext } from "contexts/appContext";
+import { useAppContext } from "contexts/AppContext";
 import { DocActions } from "hooks/useDoc";
 const OPERATORS = [
   {
@@ -297,6 +297,10 @@ const Filters = () => {
             freeText={true}
           />
         );
+
+      case FieldType.date:
+      case FieldType.dateTime:
+        return <>//TODO:Date/Time picker</>;
       default:
         return <>Not available</>;
         // return <TextField variant="filled" fullWidth disabled />;
@@ -442,7 +446,9 @@ const Filters = () => {
                   Select Condition
                 </MenuItem>
                 {operators.map((operator) => (
-                  <MenuItem value={operator.value}>{operator.label}</MenuItem>
+                  <MenuItem key={operator.value} value={operator.value}>
+                    {operator.label}
+                  </MenuItem>
                 ))}
               </TextField>
             </Grid>

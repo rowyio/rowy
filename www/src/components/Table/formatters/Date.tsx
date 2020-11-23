@@ -18,7 +18,7 @@ import {
   DatePickerProps,
 } from "@material-ui/pickers";
 
-import { useFiretableContext } from "contexts/firetableContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 
 const useStyles = makeStyles((theme) =>
   createStyles({

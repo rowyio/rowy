@@ -5,7 +5,7 @@ import React, { useEffect, useReducer, useContext } from "react";
 import equals from "ramda/es/equals";
 import firebase from "firebase/app";
 import { FireTableFilter, FiretableOrderBy } from ".";
-import { SnackContext } from "../../contexts/snackContext";
+import { SnackContext } from "contexts/SnackContext";
 import { cloudFunction } from "../../firebase/callables";
 import { isCollectionGroup, generateSmallerId } from "utils/fns";
 const CAP = 1000; // safety  paramter sets the  upper limit of number of docs fetched by this hook

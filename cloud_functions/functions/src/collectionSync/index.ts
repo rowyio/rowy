@@ -77,6 +77,14 @@ const syncDoc = (targetCollection: string, fieldsToSync: string[]) => async (
   return true;
 };
 
+const deleteDoc = (targetCollection: string) => async (
+  snapshot: FirebaseFirestore.DocumentSnapshot,
+  context: functions.EventContext
+) => {
+  const { docId } = context.params;
+  return db.collection(targetCollection).doc(docId).delete();
+};
+
 /**
  * onUpdate change to snapshot adapter
  * @param targetCollection
@@ -104,25 +112,39 @@ const syncDocOnUpdate = (
 
 /**
  * returns 2 different trigger functions (onCreate,onUpdate) in an object
- * @param collection configuration object
+ * @param collectionConfig configuration object
+ * onCreate
+ * onUpdate
+ * onDelete
+ * source
+ * target
+ * fieldsToSync
+ *
  */
-const collectionSyncFnsGenerator = (collection) =>
+const collectionSyncFnsGenerator = (collectionConfig) =>
   Object.entries({
-    onCreate: collection.onCreate
+    onCreate: collectionConfig.onCreate
       ? functions.firestore
-          .document(`${collection.source}/{docId}`)
-          .onCreate(cloneDoc(collection.target, collection.fieldsToSync))
+          .document(`${collectionConfig.source}/{docId}`)
+          .onCreate(
+            cloneDoc(collectionConfig.target, collectionConfig.fieldsToSync)
+          )
       : null,
-    onUpdate: collection.onUpdate
+    onUpdate: collectionConfig.onUpdate
       ? functions.firestore
-          .document(`${collection.source}/{docId}`)
+          .document(`${collectionConfig.source}/{docId}`)
           .onUpdate(
             syncDocOnUpdate(
-              collection.target,
-              collection.fieldsToSync,
-              collection.forcedUpdate
+              collectionConfig.target,
+              collectionConfig.fieldsToSync,
+              collectionConfig.forcedUpdate
             )
           )
+      : null,
+    onDelete: collectionConfig.onDelete
+      ? functions.firestore
+          .document(`${collectionConfig.source}/{docId}`)
+          .onDelete(deleteDoc(collectionConfig.target))
       : null,
   }).reduce((a, [k, v]) => (v === null ? a : { ...a, [k]: v }), {});
 

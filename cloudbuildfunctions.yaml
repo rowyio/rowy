@@ -4,15 +4,15 @@ steps:
   #     - --destination=gcr.io/$PROJECT_ID/image
   #     - --cache=true
   #     - --cache-ttl=24h
-  - name: gcr.io/cloud-builders/gcloud
-    args:
-      - kms
-      - decrypt
-      - --ciphertext-file=cloud_functions/functions/firebase-credentials.json.enc
-      - --plaintext-file=cloud_functions/functions/firebase-credentials.json
-      - --location=global
-      - --keyring=antler-vc
-      - --key=cloudbuild-env
+  # - name: gcr.io/cloud-builders/gcloud
+  #   args:
+  #     - kms
+  #     - decrypt
+  #     - --ciphertext-file=cloud_functions/functions/firebase-credentials.json.enc
+  #     - --plaintext-file=cloud_functions/functions/firebase-credentials.json
+  #     - --location=global
+  #     - --keyring=antler-vc
+  #     - --key=cloudbuild-env
   - name: node:10.15.1
     entrypoint: yarn
     args: ["install"]
@@ -35,6 +35,12 @@ steps:
       - "--only"
       - "functions:${_FUNCTIONS_GROUP}"
     dir: "cloud_functions/functions"
+  # - name: gcr.io/cloud-builders/gcloud
+  #   args:
+  #     - functions
+  #     - deploy
+  #     - "${_FUNCTIONS_GROUP}"
+  #   dir: "cloud_functions/functions"
   - name: node:10.15.1
     entrypoint: yarn
     args:

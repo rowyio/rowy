@@ -16,7 +16,7 @@ import {
 import CloseIcon from "@material-ui/icons/Close";
 import { FieldType } from "constants/fields";
 import OptionsInput from "./ConfigFields/OptionsInput";
-import { useFiretableContext } from "contexts/firetableContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 import MultiSelect from "@antlerengineering/multiselect";
 import _sortBy from "lodash/sortBy";
 import FieldsDropdown from "../FieldsDropdown";

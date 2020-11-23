@@ -20,7 +20,7 @@ import ColumnMenu from "./ColumnMenu";
 import FinalColumnHeader from "./FinalColumnHeader";
 import FinalColumn from "./formatters/FinalColumn";
 
-import { useFiretableContext } from "contexts/firetableContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 
 import { FieldType } from "constants/fields";
 import { getFormatter } from "./formatters";
@@ -28,7 +28,7 @@ import { getEditor } from "./editors";
 
 import useWindowSize from "hooks/useWindowSize";
 import useStyles from "./styles";
-import { useAppContext } from "contexts/appContext";
+import { useAppContext } from "contexts/AppContext";
 import _get from "lodash/get";
 
 export type FiretableColumn = Column<any> & {
@@ -91,6 +91,7 @@ export default function Table() {
         .filter((column) => !userDocHiddenFields.includes(column.key));
 
       setColumns([
+        // TODO: ENABLE ONCE BULK ACTIONS READY
         // SelectColumn,
         ..._columns,
         lastColumn,
@@ -232,24 +233,6 @@ export default function Table() {
               }}
               // TODO: Investigate why setting a numeric value causes
               // LOADING to pop up on screen when scrolling horizontally
-              // width={windowSize.width - DRAWER_COLLAPSED_WIDTH}
-              // minWidth={tableWidth}
-              // minHeight={windowSize.height - APP_BAR_HEIGHT - TABLE_HEADER_HEIGHT}
-              // RowsContainer={(props) => (
-              //   <>
-              //     <div {...props} ref={rowsContainerRef} />
-              //     <Grid
-              //       container
-              //       className={classes.loadingContainer}
-              //       alignItems="center"
-              //       justify="center"
-              //     >
-              //       {tableState.rows.length > 0 && tableState.loadingRows && (
-              //         <CircularProgress disableShrink />
-              //       )}
-              //     </Grid>
-              //   </>
-              // )}
             />
           </DndProvider>
         ) : (

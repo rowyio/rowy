@@ -18,7 +18,7 @@ import SortDescIcon from "@material-ui/icons/ArrowDownward";
 import DropdownIcon from "@material-ui/icons/ArrowDropDownCircle";
 
 import { getFieldIcon, FieldType } from "constants/fields";
-import { useFiretableContext } from "contexts/firetableContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 import { FiretableOrderBy } from "hooks/useFiretable";
 
 const useStyles = makeStyles((theme) =>

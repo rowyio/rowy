@@ -1,8 +1,7 @@
 import React, { useContext, useEffect } from "react";
-import Snackbar, { SnackbarOrigin } from "@material-ui/core/Snackbar";
-import { SnackContext } from "../contexts/snackContext";
+import Snackbar from "@material-ui/core/Snackbar";
+import { SnackContext } from "contexts/SnackContext";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
-import { makeStyles, Theme } from "@material-ui/core/styles";
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;

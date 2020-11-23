@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Route, RouteProps, Redirect } from "react-router-dom";
 
-import { AppContext } from "../contexts/appContext";
+import { AppContext } from "contexts/AppContext";
 import Loading from "../components/Loading";
 
 interface IPrivateRouteProps extends RouteProps {

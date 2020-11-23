@@ -12,6 +12,8 @@ import styles from "./styles";
  * Hides the editor container so the cell below remains editable inline.
  *
  * Use for cells that have inline editing and don’t need to be double-clicked.
+ *
+ * TODO: fix NullEditor overwriting the formatter component
  */
 class NullEditor extends React.Component<
   EditorProps<any, any> & WithStyles<typeof styles>

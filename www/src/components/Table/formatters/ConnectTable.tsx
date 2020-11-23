@@ -5,7 +5,7 @@ import { CustomCellProps } from "./withCustomCell";
 import { createStyles, makeStyles, Grid, Chip } from "@material-ui/core";
 
 import ConnectTableSelect from "components/ConnectTableSelect";
-import { useFiretableContext } from "contexts/firetableContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 
 const useStyles = makeStyles((theme) =>
   createStyles({

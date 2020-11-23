@@ -67,7 +67,10 @@ export const derivativeOnUpdate = async (
 };
 
 export const FT_derivatives = {
-  [collectionPath.replace("-", "_")]: {
+  [collectionPath
+    .replace("-", "_")
+    .replace(/\//g, "_")
+    .replace(/_{.*?}_/g, "_")]: {
     onUpdate: functions.firestore
       .document(`${collectionPath}/{docId}`)
       .onUpdate(derivativeOnUpdate),

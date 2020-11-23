@@ -22,7 +22,7 @@ import { IStepProps } from ".";
 import FadeList from "../FadeList";
 import Column from "../Column";
 
-import { useFiretableContext } from "contexts/firetableContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 import { FieldType } from "constants/fields";
 import { suggestType } from "../ImportWizard/utils";
 

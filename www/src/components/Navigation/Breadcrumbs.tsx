@@ -13,7 +13,7 @@ import {
 } from "@material-ui/core";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 
-import { useFiretableContext } from "contexts/firetableContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 import useRouter from "hooks/useRouter";
 import routes from "constants/routes";
 import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";

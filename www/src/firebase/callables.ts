@@ -10,20 +10,21 @@ export const cloudFunction = (
   input: any,
   success?: Function,
   fail?: Function
-) => {
-  const callable = functions.httpsCallable(name);
-  callable(input)
-    .then((result) => {
-      if (success) {
-        success(result);
-      }
-    })
-    .catch((error) => {
-      if (fail) {
-        fail(error);
-      }
-    });
-};
+) =>
+  new Promise((resolve, reject) => {
+    const callable = functions.httpsCallable(name);
+    callable(input)
+      .then((result) => {
+        if (success) {
+          resolve(success(result));
+        }
+      })
+      .catch((error) => {
+        if (fail) {
+          reject(fail(error));
+        }
+      });
+  });
 
 export const ImpersonatorAuth = (email: string) =>
   functions.httpsCallable(CLOUD_FUNCTIONS.ImpersonatorAuth)({ email });

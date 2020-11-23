@@ -13,7 +13,7 @@ import {
 import MultiSelect_ from "@antlerengineering/multiselect";
 import FormattedChip, { VARIANTS } from "components/FormattedChip";
 import { FieldType } from "constants/fields";
-import { useFiretableContext } from "contexts/firetableContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -143,7 +143,10 @@ export default function MultiSelect({
     //   interactive
     //   placement="bottom-start"
     // >
-    <div>
+    <div
+      onClick={(e) => e.stopPropagation()}
+      onKeyDown={(e) => e.stopPropagation()}
+    >
       <MultiSelect_
         value={sanitisedValue}
         onChange={onSubmit}

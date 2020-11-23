@@ -1,7 +1,7 @@
 import React, { useRef, useMemo, useState } from "react";
 import { useTheme, createStyles, makeStyles } from "@material-ui/core/styles";
 import Editor, { monaco } from "@monaco-editor/react";
-import { useFiretableContext } from "contexts/firetableContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 import { FieldType } from "constants/fields";
 import { setTimeout } from "timers";
 

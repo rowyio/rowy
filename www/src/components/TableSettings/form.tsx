@@ -5,14 +5,15 @@ import { FIELDS } from "@antlerengineering/form-builder";
 import { TableSettingsDialogModes } from "./index";
 
 import HelperText from "./HelperText";
-import { Link } from "@material-ui/core";
+import { Link, ListItemSecondaryAction, Typography } from "@material-ui/core";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import { MONO_FONT } from "Themes";
 
 export const tableSettings = (
   mode: TableSettingsDialogModes | null,
   roles: string[] | undefined,
-  sections: string[] | undefined
+  sections: string[] | undefined,
+  tables: { label: string; value: any }[] | undefined
 ) => [
   {
     type: FIELDS.text,
@@ -20,7 +21,6 @@ export const tableSettings = (
     label: "Table Name*",
     validation: yup.string().required("Required"),
   },
-
   {
     type: FIELDS.text,
     name: "collection",
@@ -138,4 +138,29 @@ export const tableSettings = (
       </HelperText>
     ),
   }),
+  () =>
+    mode === TableSettingsDialogModes.create && tables?.length !== 0
+      ? {
+          type: FIELDS.multiSelect,
+          name: "schemaSource",
+          label: "Copy column config from existing table",
+          labelPlural: "Tables",
+          options: tables,
+          multiple: false,
+          freeText: false,
+          itemRenderer: (option: { value: string; label: string }) => (
+            <span key={option.value}>
+              {option.label}
+              <Typography
+                variant="body2"
+                color="textSecondary"
+                component="span"
+                style={{ fontFamily: MONO_FONT, display: "block" }}
+              >
+                {option.value}
+              </Typography>
+            </span>
+          ),
+        }
+      : null,
 ];
