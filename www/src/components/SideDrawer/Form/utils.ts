@@ -34,9 +34,6 @@ export const initializeValue = (type) => {
     case FieldType.checkbox:
       return false;
 
-    case FieldType.number:
-      return 0;
-
     case FieldType.json:
       return {};
 
@@ -47,6 +44,7 @@ export const initializeValue = (type) => {
     case FieldType.url:
     case FieldType.code:
     case FieldType.richText:
+    case FieldType.number:
     default:
       break;
   }

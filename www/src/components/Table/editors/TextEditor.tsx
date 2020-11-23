@@ -47,7 +47,16 @@ export default function TextEditor({ row, column }: EditorProps<any>) {
   useEffect(() => {
     return () => {
       const newValue = inputRef.current?.value;
-      if (newValue !== undefined) row.ref.update({ [column.key]: newValue });
+      if (newValue !== undefined) {
+        if (
+          (column as any).type === FieldType.number ||
+          (column as any).type === FieldType.percentage
+        ) {
+          row.ref.update({ [column.key]: Number(newValue) });
+        } else {
+          row.ref.update({ [column.key]: newValue });
+        }
+      }
     };
   }, []);
 
