@@ -207,9 +207,9 @@ export const FIELD_TYPE_DESCRIPTIONS = {
     "File uploaded to Firebase Storage. Supports any file type.",
 
   [FieldType.singleSelect]:
-    "Dropdown selector with searchable options and radio button behaviour. Optionally allows users to input custom values. Max selection: 1 option.",
+    "Dropdown selector with searchable options and radio button behavior. Optionally allows users to input custom values. Max selection: 1 option.",
   [FieldType.multiSelect]:
-    "Dropdown selector with searchable options and check box behaviour. Optionally allows users to input custom values. Max selection: all options.",
+    "Dropdown selector with searchable options and check box behavior. Optionally allows users to input custom values. Max selection: all options.",
 
   [FieldType.subTable]:
     "Creates a sub-table. Also displays number of rows inside the sub-table. Max sub-table levels: 100.",
@@ -232,8 +232,8 @@ export const FIELD_TYPE_DESCRIPTIONS = {
   [FieldType.color]: "Visual color picker. Supports Hex, RGBA, HSLA.",
   [FieldType.slider]: "Slider with adjustable range. Returns a numeric value.",
 
-  [FieldType.user]: "Used to display _ft_updatedBy field for editing history",
-  [FieldType.user]: "Display’s the row’s document ID",
+  [FieldType.user]: "Displays the _ft_updatedBy field for editing history.",
+  [FieldType.id]: "Displays the row’s document ID. Cannot be sorted.",
   [FieldType.last]: "Internally used to display last column with row actions.",
 };
 

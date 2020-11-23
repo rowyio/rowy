@@ -96,6 +96,7 @@
     "@types/use-persisted-state": "^0.3.0",
     "firebase-tools": "^8.12.1",
     "husky": "^4.2.5",
+    "monaco-editor": "^0.21.2",
     "playwright": "^1.5.2",
     "prettier": "^2.1.1",
     "pretty-quick": "^3.0.0"
