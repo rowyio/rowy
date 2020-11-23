@@ -90,7 +90,12 @@ export default function Table() {
         }))
         .filter((column) => !userDocHiddenFields.includes(column.key));
 
-      setColumns([SelectColumn, ..._columns, lastColumn]);
+      setColumns([
+        // TODO: ENABLE ONCE BULK ACTIONS READY
+        // SelectColumn,
+        ..._columns,
+        lastColumn,
+      ]);
     }
   }, [
     tableState?.loadingColumns,
