@@ -1,35 +1,35 @@
 import React, { useEffect, useRef, useMemo, useState } from "react";
-
 import _orderBy from "lodash/orderBy";
 import _isEmpty from "lodash/isEmpty";
 import _find from "lodash/find";
 import _difference from "lodash/difference";
+import _get from "lodash/get";
+
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import BulkActions from "./BulkActions";
+
 import "react-data-grid/dist/react-data-grid.css";
 import DataGrid, {
   Column,
   SelectColumn as _SelectColumn,
 } from "react-data-grid";
-import { formatSubTableName } from "../../utils/fns";
+
 import Loading from "components/Loading";
 import TableHeader from "./TableHeader";
 import ColumnHeader from "./ColumnHeader";
 import ColumnMenu from "./ColumnMenu";
 import FinalColumnHeader from "./FinalColumnHeader";
 import FinalColumn from "./formatters/FinalColumn";
+import BulkActions from "./BulkActions";
 
-import { useFiretableContext } from "contexts/FiretableContext";
-
+import { getFieldProp } from "components/fields";
 import { FieldType } from "constants/fields";
-import { getFormatter } from "./formatters";
-import { getEditor } from "./editors";
+import { formatSubTableName } from "utils/fns";
 
+import { useAppContext } from "contexts/AppContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 import useWindowSize from "hooks/useWindowSize";
 import useStyles from "./styles";
-import { useAppContext } from "contexts/AppContext";
-import _get from "lodash/get";
 
 export type FiretableColumn = Column<any> & {
   isNew?: boolean;
@@ -77,14 +77,22 @@ export default function Table() {
         ),
         "index"
       )
-        .map((column: any, index) => ({
+        .map((column: any) => ({
           draggable: true,
           editable: true,
           resizable: true,
           frozen: column.fixed,
           headerRenderer: ColumnHeader,
-          formatter: getFormatter(column),
-          editor: getEditor(column),
+          formatter:
+            getFieldProp("TableCell", column.type) ??
+            function InDev() {
+              return null;
+            },
+          editor:
+            getFieldProp("TableEditor", column.type) ??
+            function InDev() {
+              return null;
+            },
           ...column,
           width: column.width ? (column.width > 380 ? 380 : column.width) : 150,
         }))
@@ -223,7 +231,7 @@ export default function Table() {
                     break;
                 }
               }}
-              onRowClick={(rowIdx, row, column) => {
+              onRowClick={(rowIdx, column) => {
                 if (sideDrawerRef?.current) {
                   sideDrawerRef.current.setCell({
                     row: rowIdx,
@@ -231,8 +239,6 @@ export default function Table() {
                   });
                 }
               }}
-              // TODO: Investigate why setting a numeric value causes
-              // LOADING to pop up on screen when scrolling horizontally
             />
           </DndProvider>
         ) : (

@@ -1,12 +1,20 @@
-import React from "react";
-import { IFieldConfig, FieldType } from "../types";
-import withCustomCell from "../withCustomCell";
+import React, { lazy } from "react";
+import { IFieldConfig, FieldType } from "components/fields/types";
+import withCustomCell from "components/Table/withCustomCell";
 
 import CheckboxIcon from "@material-ui/icons/CheckBox";
-import TableCell from "./TableCell";
 import BasicCell from "./BasicCell";
 import NullEditor from "components/Table/editors/NullEditor";
-import SideDrawerField from "./SideDrawerField";
+
+const TableCell = lazy(
+  () => import("./TableCell" /* webpackChunkName: "TableCell-Checkbox" */)
+);
+const SideDrawerField = lazy(
+  () =>
+    import(
+      "./SideDrawerField" /* webpackChunkName: "SideDrawerField-Checkbox" */
+    )
+);
 
 export const config: IFieldConfig = {
   type: FieldType.checkbox,

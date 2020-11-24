@@ -8,9 +8,9 @@ import {
   FormControlLabel,
   Switch,
 } from "@material-ui/core";
-import { green } from "@material-ui/core/colors";
 
 import Confirmation from "components/Confirmation";
+import { useSwitchStyles } from "./styles";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -24,13 +24,6 @@ const useStyles = makeStyles((theme) =>
       width: "calc(100% - 58px)",
       overflowX: "hidden",
     },
-
-    switchBase: {
-      "&$switchChecked": { color: green["A700"] },
-      "&$switchChecked + $switchTrack": { backgroundColor: green["A700"] },
-    },
-    switchChecked: {},
-    switchTrack: {},
   })
 );
 
@@ -47,16 +40,14 @@ export default function Checkbox({
   onSubmit,
 }: ICustomCellProps) {
   const classes = useStyles();
+  const switchClasses = useSwitchStyles();
+
   let component = (
     <Switch
       checked={!!value}
       onChange={() => onSubmit(!value)}
-      disabled={!column.editable}
-      classes={{
-        switchBase: classes.switchBase,
-        checked: classes.switchChecked,
-        track: classes.switchTrack,
-      }}
+      disabled={column.editable === false}
+      classes={switchClasses}
     />
   );
 
@@ -82,7 +73,7 @@ export default function Checkbox({
       label={column.name}
       labelPlacement="start"
       className="cell-collapse-padding"
-      classes={classes}
+      classes={{ root: classes.root, label: classes.label }}
     />
   );
 }

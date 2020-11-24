@@ -1,11 +1,11 @@
 import React, { Suspense, useState, useEffect } from "react";
 import { FormatterProps } from "react-data-grid";
-import { ICustomCellProps, IBasicCellProps } from "./types";
+import { ICustomCellProps, IBasicCellProps } from "components/fields/types";
 
 import ErrorBoundary from "components/ErrorBoundary";
 import { useFiretableContext } from "contexts/FiretableContext";
 
-import { FieldType } from ".";
+import { FieldType } from "constants/fields";
 import { getCellValue } from "utils/fns";
 
 /**

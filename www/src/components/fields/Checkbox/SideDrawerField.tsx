@@ -1,4 +1,5 @@
 import React from "react";
+import clsx from "clsx";
 import { Controller } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 
@@ -10,25 +11,19 @@ import {
   Switch,
 } from "@material-ui/core";
 
+import { useFieldStyles } from "components/SideDrawer/Form/utils";
+import { useSwitchStyles } from "./styles";
+
 const useStyles = makeStyles((theme) =>
   createStyles({
-    buttonBase: {
-      borderRadius: theme.shape.borderRadius,
-      backgroundColor:
-        theme.palette.type === "light"
-          ? "rgba(0, 0, 0, 0.09)"
-          : "rgba(255, 255, 255, 0.09)",
-      padding: theme.spacing(9 / 8, 1, 9 / 8, 1.5),
-
-      width: "100%",
-      display: "flex",
-      textAlign: "left",
-    },
+    root: { padding: 0 },
 
     formControlLabel: {
       margin: 0,
       width: "100%",
       display: "flex",
+
+      padding: theme.spacing(9 / 8, 1, 9 / 8, 1.5),
     },
 
     label: {
@@ -40,28 +35,28 @@ const useStyles = makeStyles((theme) =>
 
 export default function Checkbox({ column, control }: ISideDrawerFieldProps) {
   const classes = useStyles();
+  const fieldClasses = useFieldStyles();
+  const switchClasses = useSwitchStyles();
 
   return (
     <Controller
       control={control}
-      name={name}
+      name={column.key}
       render={({ onChange, onBlur, value }) => {
         const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
           onChange(event.target.checked);
         };
 
-        const handleClick = () => onChange(!value);
-
         return (
-          <ButtonBase className={classes.buttonBase} onClick={handleClick}>
+          <ButtonBase className={clsx(fieldClasses.root, classes.root)}>
             <FormControlLabel
               control={
                 <Switch
-                  color="secondary"
                   checked={value}
                   onChange={handleChange}
                   onBlur={onBlur}
                   disabled={column.editable === false}
+                  classes={switchClasses}
                 />
               }
               label={column.name}

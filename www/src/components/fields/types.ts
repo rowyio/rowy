@@ -1,9 +1,9 @@
-import { FieldType } from ".";
-export { FieldType };
+import { FieldType } from "constants/fields";
 
-import { ICustomCellProps, IBasicCellProps } from "./withCustomCell";
 import { FormatterProps, EditorProps } from "react-data-grid";
 import { Control } from "react-hook-form";
+
+export { FieldType };
 
 export interface IFieldConfig {
   type: FieldType;
@@ -14,7 +14,7 @@ export interface IFieldConfig {
   description?: string;
   setupGuideLink?: string;
   TableCell: React.ComponentType<FormatterProps>;
-  TableEditor: React.ComponentType<EditorProps>;
+  TableEditor: React.ComponentType<EditorProps<any>>;
   SideDrawerField: React.ComponentType<ISideDrawerFieldProps>;
   // settings
   csvExport?: (value: any) => string;
