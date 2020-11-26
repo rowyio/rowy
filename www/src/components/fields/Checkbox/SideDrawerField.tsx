@@ -48,7 +48,10 @@ export default function Checkbox({ column, control }: ISideDrawerFieldProps) {
         };
 
         return (
-          <ButtonBase className={clsx(fieldClasses.root, classes.root)}>
+          <ButtonBase
+            className={clsx(fieldClasses.root, classes.root)}
+            disabled={column.editable === false}
+          >
             <FormControlLabel
               control={
                 <Switch

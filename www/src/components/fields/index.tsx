@@ -6,9 +6,11 @@ import { IFieldConfig } from "./types";
 
 // Import field configs
 import Checkbox from "./Checkbox";
+import Date_ from "./Date";
+import DateTime from "./DateTime";
 
 // Export field configs in order for FieldsDropdown
-export const FIELDS: IFieldConfig[] = [Checkbox];
+export const FIELDS: IFieldConfig[] = [Checkbox, Date_, DateTime];
 
 /**
  * Returns specific property of field config
