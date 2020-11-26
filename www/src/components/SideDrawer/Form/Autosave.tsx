@@ -6,42 +6,43 @@ import _omitBy from "lodash/omitBy";
 import _isUndefined from "lodash/isUndefined";
 import _reduce from "lodash/reduce";
 
-import { Control, useWatch } from "react-hook-form";
+import { Control, UseFormMethods, useWatch } from "react-hook-form";
 import { Values } from "./utils";
 
 import { useAppContext } from "contexts/AppContext";
 import { useFiretableContext, firetableUser } from "contexts/FiretableContext";
+import { FiretableState } from "hooks/useFiretable";
 
 export interface IAutosaveProps {
   control: Control;
-  defaultValues: Values;
   docRef: firebase.firestore.DocumentReference;
   row: any;
+  reset: UseFormMethods["reset"];
 }
+
+const getEditables = (values: Values, tableState?: FiretableState) =>
+  _pick(
+    values,
+    (tableState &&
+      (Array.isArray(tableState?.columns)
+        ? tableState?.columns
+        : Object.values(tableState?.columns)
+      ).map((c) => c.key)) ??
+      []
+  );
 
 export default function Autosave({
   control,
-  defaultValues,
   docRef,
   row,
+  reset,
 }: IAutosaveProps) {
   const { currentUser } = useAppContext();
   const { tableState } = useFiretableContext();
 
   const values = useWatch({ control });
 
-  const getEditables = (value) =>
-    _pick(
-      value,
-      (tableState &&
-        (Array.isArray(tableState?.columns)
-          ? tableState?.columns
-          : Object.values(tableState?.columns)
-        ).map((c) => c.key)) ??
-        []
-    );
-
-  const [debouncedValue] = useDebounce(getEditables(values), 1000, {
+  const [debouncedValue] = useDebounce(getEditables(values, tableState), 1000, {
     equalityFn: _isEqual,
   });
 
@@ -68,7 +69,10 @@ export default function Autosave({
         _ft_updatedBy,
         updatedBy: _ft_updatedBy,
       })
-      .then(() => console.log("Updated row", row.ref.id, updatedValues));
+      .then(() => {
+        console.log("Updated row", row.ref.id, updatedValues);
+        reset();
+      });
   }, [debouncedValue]);
 
   return null;

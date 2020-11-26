@@ -9,6 +9,7 @@ import { Values } from "./utils";
 import { getFieldProp } from "components/fields";
 import { IFieldConfig } from "components/fields/types";
 import Autosave from "./Autosave";
+import Reset from "./Reset";
 import FieldWrapper from "./FieldWrapper";
 
 import { useAppContext } from "contexts/AppContext";
@@ -39,13 +40,10 @@ export default function Form({ values }: IFormProps) {
   const { ref: docRef, ...rowValues } = values;
   const defaultValues = { ...initialValues, ...rowValues };
 
-  const { control } = useForm({ mode: "onBlur", defaultValues });
-
-  // Update field values when Firestore document updates
-  // useEffect(() => {
-  //   console.log("RESET", defaultValues);
-  //   reset(defaultValues);
-  // }, [reset, JSON.stringify(rowValues)]);
+  const { control, reset, formState, getValues, handleSubmit } = useForm({
+    mode: "onBlur",
+    defaultValues,
+  });
 
   // const { sideDrawerRef } = useFiretableContext();
   // useEffect(() => {
@@ -61,11 +59,12 @@ export default function Form({ values }: IFormProps) {
 
   return (
     <form>
-      <Autosave
-        control={control}
+      <Autosave control={control} docRef={docRef} row={values} reset={reset} />
+      <Reset
+        formState={formState}
+        reset={reset}
         defaultValues={defaultValues}
-        docRef={docRef}
-        row={values}
+        getValues={getValues}
       />
 
       <Grid container spacing={4} direction="column" wrap="nowrap">
