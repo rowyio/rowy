@@ -18,12 +18,16 @@ import DateFnsUtils from "@date-io/date-fns";
 
 export interface IDateTimeProps
   extends ISideDrawerFieldProps,
-    Omit<KeyboardDateTimePickerProps, "name" | "onChange" | "value"> {}
+    Omit<
+      KeyboardDateTimePickerProps,
+      "name" | "onChange" | "value" | "disabled"
+    > {}
 
 export default function DateTime({
   column,
   control,
   docRef,
+  disabled,
   ...props
 }: IDateTimeProps) {
   const theme = useTheme();
@@ -71,7 +75,7 @@ export default function DateTime({
                   style={{ color: theme.palette.primary.contrastText }}
                 />
               }
-              disabled={column.editable === false}
+              disabled={disabled}
             />
           );
         }}

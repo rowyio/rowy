@@ -97,6 +97,7 @@ export default function Form({ values }: IFormProps) {
                 column: field,
                 control,
                 docRef,
+                disabled: field.editable === false,
               })}
             </FieldWrapper>
           );

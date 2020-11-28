@@ -15,12 +15,13 @@ import DateFnsUtils from "@date-io/date-fns";
 
 export interface IDateProps
   extends ISideDrawerFieldProps,
-    Omit<KeyboardDatePickerProps, "name" | "onChange" | "value"> {}
+    Omit<KeyboardDatePickerProps, "name" | "onChange" | "value" | "disabled"> {}
 
 export default function Date_({
   column,
   control,
   docRef,
+  disabled,
   ...props
 }: IDateProps) {
   const theme = useTheme();
@@ -58,7 +59,7 @@ export default function Date_({
               hiddenLabel
               // TODO: move this out to side drawer
               id={`sidedrawer-field-${column.key}`}
-              disabled={column.editable === false}
+              disabled={disabled}
             />
           );
         }}

@@ -52,12 +52,13 @@ export default function withCustomCell(
                 docRef={props.row.ref}
                 value={localValue}
                 onSubmit={handleSubmit}
+                disabled={props.column.editable === false}
               />
             </Suspense>
           </ErrorBoundary>
         );
       });
-    }, [localValue]);
+    }, [localValue, props.column.editable]);
 
     const handleSubmit = (value: any) => {
       if (updateCell && !readOnly) {

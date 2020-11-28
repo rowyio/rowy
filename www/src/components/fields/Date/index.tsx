@@ -29,3 +29,5 @@ export const config: IFieldConfig = {
   csvImportParser: (value) => parseJSON(value).getTime(),
 };
 export default config;
+
+export { DateIcon };

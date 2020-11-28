@@ -17,13 +17,15 @@ import {
 } from "@material-ui/pickers";
 
 import { useFiretableContext } from "contexts/FiretableContext";
+import BasicCell from "./BasicCell";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
-    root: {
+    root: { height: "100%" },
+    inputBase: {
       height: "100%",
+      color: "inherit",
     },
-    inputBase: { height: "100%" },
 
     inputAdornment: {
       height: "100%",
@@ -34,13 +36,19 @@ const useStyles = makeStyles((theme) =>
     input: {
       ...theme.typography.body2,
       fontSize: "0.75rem",
-      color: theme.palette.text.secondary,
+      color: "inherit",
       height: "100%",
       padding: theme.spacing(1.5, 0),
     },
 
     dateTabIcon: {
       color: theme.palette.primary.contrastText,
+    },
+
+    disabledCell: {
+      color: theme.palette.text.disabled,
+      display: "flex",
+      alignItems: "center",
     },
   })
 );
@@ -50,6 +58,7 @@ export default function Date_({
   column,
   value,
   onSubmit,
+  disabled,
 }: ICustomCellProps) {
   const classes = useStyles();
   const { dataGridRef } = useFiretableContext();
@@ -67,6 +76,17 @@ export default function Date_({
     },
     500
   );
+
+  if (disabled)
+    return (
+      <div className={classes.disabledCell}>
+        <BasicCell
+          value={value}
+          type={(column as any).type}
+          name={column.key}
+        />
+      </div>
+    );
 
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -90,10 +110,10 @@ export default function Date_({
         }}
         KeyboardButtonProps={{
           size: "small",
-          classes: { root: "row-hover-iconButton" },
+          classes: { root: !disabled ? "row-hover-iconButton" : undefined },
         }}
         DialogProps={{ onClick: (e) => e.stopPropagation() }}
-        disabled={column.editable === false}
+        disabled={disabled}
       />
     </MuiPickersUtilsProvider>
   );
