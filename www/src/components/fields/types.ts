@@ -9,7 +9,7 @@ export interface IFieldConfig {
   type: FieldType;
   name: string;
   dataType: string;
-  initialValue: any;
+  initialValue?: any;
   icon?: React.ReactNode;
   description?: string;
   setupGuideLink?: string;
