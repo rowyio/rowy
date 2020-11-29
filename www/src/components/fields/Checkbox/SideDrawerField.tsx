@@ -33,7 +33,11 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-export default function Checkbox({ column, control }: ISideDrawerFieldProps) {
+export default function Checkbox({
+  column,
+  control,
+  disabled,
+}: ISideDrawerFieldProps) {
   const classes = useStyles();
   const fieldClasses = useFieldStyles();
   const switchClasses = useSwitchStyles();
@@ -50,7 +54,7 @@ export default function Checkbox({ column, control }: ISideDrawerFieldProps) {
         return (
           <ButtonBase
             className={clsx(fieldClasses.root, classes.root)}
-            disabled={column.editable === false}
+            disabled={disabled}
           >
             <FormControlLabel
               control={
@@ -58,7 +62,7 @@ export default function Checkbox({ column, control }: ISideDrawerFieldProps) {
                   checked={value}
                   onChange={handleChange}
                   onBlur={onBlur}
-                  disabled={column.editable === false}
+                  disabled={disabled}
                   classes={switchClasses}
                 />
               }

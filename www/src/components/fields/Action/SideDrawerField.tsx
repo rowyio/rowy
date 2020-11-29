@@ -23,6 +23,7 @@ export default function Action({
   column,
   control,
   docRef,
+  disabled,
 }: ISideDrawerFieldProps) {
   const classes = useStyles();
   const fieldClasses = useFieldStyles();
@@ -64,6 +65,7 @@ export default function Action({
                 column={{ config: (column as any).config, key: column.key }}
                 onSubmit={onChange}
                 value={value}
+                disabled={disabled}
               />
             </Grid>
           </Grid>

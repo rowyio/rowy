@@ -38,6 +38,7 @@ export default function Checkbox({
   column,
   value,
   onSubmit,
+  disabled,
 }: ICustomCellProps) {
   const classes = useStyles();
   const switchClasses = useSwitchStyles();
@@ -46,7 +47,7 @@ export default function Checkbox({
     <Switch
       checked={!!value}
       onChange={() => onSubmit(!value)}
-      disabled={column.editable === false}
+      disabled={disabled}
       classes={switchClasses}
     />
   );

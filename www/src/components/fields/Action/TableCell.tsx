@@ -20,6 +20,7 @@ export default function Action({
   row,
   value,
   onSubmit,
+  disabled,
 }: ICustomCellProps) {
   const classes = useStyles();
 
@@ -53,6 +54,7 @@ export default function Action({
           size="small"
           color="secondary"
           style={{ width: 36, height: 36 }}
+          disabled={disabled}
         />
       </Grid>
     </Grid>

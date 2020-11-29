@@ -107,7 +107,6 @@ export default function ActionFab({
     typeof config.confirmation === "string" && config.confirmation !== "";
   return (
     <Fab
-      {...props}
       onClick={
         needsParams
           ? () =>
@@ -138,6 +137,7 @@ export default function ActionFab({
         ) ||
         disabled
       }
+      {...props}
     >
       {isRunning ? (
         <CircularProgress color="secondary" size={16} thickness={5.6} />
