@@ -110,8 +110,7 @@ export default function SideDrawer() {
                 <Form
                   key={urlDocState.path}
                   values={
-                    urlDocState.doc ??
-                    (cell && cell?.row ? tableState?.rows[cell!.row] ?? {} : {})
+                    urlDocState.doc ?? tableState?.rows[cell?.row ?? -1] ?? {}
                   }
                 />
               )}
