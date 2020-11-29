@@ -6,7 +6,7 @@ import { Tooltip, Chip, Avatar } from "@material-ui/core";
 import { format } from "date-fns";
 import { DATE_TIME_FORMAT } from "constants/dates";
 
-export default function Id({ value }: ICustomCellProps) {
+export default function User({ value }: ICustomCellProps) {
   if (!value || !value.displayName || !value.timestamp) return null;
 
   return (

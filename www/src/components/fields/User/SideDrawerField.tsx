@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-export default function Id({ control, column }: ISideDrawerFieldProps) {
+export default function User({ control, column }: ISideDrawerFieldProps) {
   const classes = useStyles();
   const fieldClasses = useFieldStyles();
 

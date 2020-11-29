@@ -18,6 +18,7 @@ export const config: IFieldConfig = {
   type: FieldType.action,
   name: "Action",
   dataType: "any",
+  initialValue: null,
   icon: <ActionIcon />,
   description:
     "A button with a pre-defined action. Triggers a Cloud Function. 3 different states: Disabled, Enabled, Active (Clicked). Supports Undo and Redo.",

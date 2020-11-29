@@ -3,7 +3,7 @@ import { IFieldConfig, FieldType } from "components/fields/types";
 import withCustomCell from "components/Table/withCustomCell";
 
 import SubTableIcon from "assets/icons/SubTable";
-import BasicCell from "./BasicCell";
+import BasicCell from "../_BasicCell/BasicCellName";
 import NullEditor from "components/Table/editors/NullEditor";
 
 const TableCell = lazy(
@@ -20,6 +20,7 @@ export const config: IFieldConfig = {
   type: FieldType.subTable,
   name: "SubTable",
   dataType: "undefined",
+  initialValue: undefined,
   icon: <SubTableIcon />,
   description:
     "Creates a sub-table. Also displays number of rows inside the sub-table. Max sub-table levels: 100.",

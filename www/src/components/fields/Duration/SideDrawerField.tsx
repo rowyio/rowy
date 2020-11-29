@@ -5,7 +5,7 @@ import { ISideDrawerFieldProps } from "../types";
 import { useFieldStyles } from "components/SideDrawer/Form/utils";
 import { getDurationString } from "./utils";
 
-export default function Checkbox({ column, control }: ISideDrawerFieldProps) {
+export default function Duration({ column, control }: ISideDrawerFieldProps) {
   const fieldClasses = useFieldStyles();
 
   return (

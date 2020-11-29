@@ -19,6 +19,7 @@ export const config: IFieldConfig = {
   name: "User",
   dataType:
     "{ displayName: string, email: string, emailVerified: boolean, isAnonymous: boolean, photoURL: string, timestamp: firebase.firestore.Timestamp, uid: string }",
+  initialValue: null,
   icon: <UserIcon />,
   description: "Displays the _ft_updatedBy field for editing history.",
   TableCell: withCustomCell(TableCell, BasicCell),

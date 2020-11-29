@@ -4,7 +4,7 @@ import { format } from "date-fns";
 import { DATE_FORMAT } from "constants/dates";
 import { DateIcon } from ".";
 
-export default function BasicCell({ value }: IBasicCellProps) {
+export default function Date_({ value }: IBasicCellProps) {
   if (!!value && "toDate" in value) {
     try {
       const formatted = format(value.toDate(), DATE_FORMAT);

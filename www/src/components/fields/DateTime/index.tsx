@@ -21,6 +21,7 @@ export const config: IFieldConfig = {
   type: FieldType.dateTime,
   name: "Time & Date",
   dataType: "firebase.firestore.Timestamp",
+  initialValue: null,
   icon: <DateTimeIcon />,
   description:
     "Time and Date can be written as YYYY/MM/DD hh:mm (am/pm) or input using a picker module.",
