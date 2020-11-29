@@ -2,7 +2,7 @@ import React, { lazy } from "react";
 import { IFieldConfig, FieldType } from "components/fields/types";
 import withCustomCell from "components/Table/withCustomCell";
 
-import IdIcon from "@material-ui/icons/CheckBox";
+import IdIcon from "assets/icons/Id";
 import BasicCell from "../_BasicCell/BasicCellNull";
 import NullEditor from "components/Table/editors/NullEditor";
 
