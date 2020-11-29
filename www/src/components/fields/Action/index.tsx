@@ -2,27 +2,25 @@ import React, { lazy } from "react";
 import { IFieldConfig, FieldType } from "components/fields/types";
 import withCustomCell from "components/Table/withCustomCell";
 
-import SubTableIcon from "assets/icons/SubTable";
+import ActionIcon from "assets/icons/Action";
 import BasicCell from "./BasicCell";
 import NullEditor from "components/Table/editors/NullEditor";
 
 const TableCell = lazy(
-  () => import("./TableCell" /* webpackChunkName: "TableCell-SubTable" */)
+  () => import("./TableCell" /* webpackChunkName: "TableCell-Action" */)
 );
 const SideDrawerField = lazy(
   () =>
-    import(
-      "./SideDrawerField" /* webpackChunkName: "SideDrawerField-SubTable" */
-    )
+    import("./SideDrawerField" /* webpackChunkName: "SideDrawerField-Action" */)
 );
 
 export const config: IFieldConfig = {
-  type: FieldType.subTable,
-  name: "SubTable",
-  dataType: "undefined",
-  icon: <SubTableIcon />,
+  type: FieldType.action,
+  name: "Action",
+  dataType: "any",
+  icon: <ActionIcon />,
   description:
-    "Creates a sub-table. Also displays number of rows inside the sub-table. Max sub-table levels: 100.",
+    "A button with a pre-defined action. Triggers a Cloud Function. 3 different states: Disabled, Enabled, Active (Clicked). Supports Undo and Redo.",
   TableCell: withCustomCell(TableCell, BasicCell),
   TableEditor: NullEditor,
   SideDrawerField,
