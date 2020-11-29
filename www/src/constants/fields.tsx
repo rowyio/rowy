@@ -77,43 +77,43 @@ export {
 // Define field type strings used in Firetable column config
 export enum FieldType {
   // TEXT
-  shortText = "SIMPLE_TEXT",
-  longText = "LONG_TEXT",
-  email = "EMAIL",
-  phone = "PHONE_NUMBER",
-  url = "URL",
+  shortText = "SIMPLE_TEXT", // TODO:
+  longText = "LONG_TEXT", // TODO:
+  email = "EMAIL", // TODO:
+  phone = "PHONE_NUMBER", // TODO:
+  url = "URL", // TODO:
   // NUMERIC
   checkbox = "CHECK_BOX",
-  number = "NUMBER",
-  percentage = "PERCENTAGE",
-  rating = "RATING",
-  slider = "SLIDER",
-  color = "COLOR",
+  number = "NUMBER", // TODO:
+  percentage = "PERCENTAGE", // TODO:
+  rating = "RATING", // TODO:
+  slider = "SLIDER", // TODO:
+  color = "COLOR", // TODO:
   // DATE & TIME
   date = "DATE",
   dateTime = "DATE_TIME",
   duration = "DURATION",
   // FILE
-  image = "IMAGE",
-  file = "FILE",
+  image = "IMAGE", // TODO:
+  file = "FILE", // TODO:
   // SELECT
-  singleSelect = "SINGLE_SELECT",
-  multiSelect = "MULTI_SELECT",
+  singleSelect = "SINGLE_SELECT", // TODO:
+  multiSelect = "MULTI_SELECT", // TODO:
   // CONNECTION
-  subTable = "SUB_TABLE",
-  connectTable = "DOCUMENT_SELECT",
-  connectService = "SERVICE_SELECT",
+  subTable = "SUB_TABLE", // TODO:
+  connectTable = "DOCUMENT_SELECT", // TODO:
+  connectService = "SERVICE_SELECT", // TODO:
   // CODE
-  json = "JSON",
-  code = "CODE",
-  richText = "RICH_TEXT",
+  json = "JSON", // TODO:
+  code = "CODE", // TODO:
+  richText = "RICH_TEXT", // TODO:
   // CLOUD FUNCTION
-  action = "ACTION",
-  derivative = "DERIVATIVE",
-  aggregate = "AGGREGATE",
+  action = "ACTION", // TODO:
+  derivative = "DERIVATIVE", // TODO:
+  aggregate = "AGGREGATE", // TODO:
   // FIRETABLE
-  user = "USER",
-  id = "ID",
+  user = "USER", // TODO:
+  id = "ID", // TODO:
   last = "LAST",
 }
 

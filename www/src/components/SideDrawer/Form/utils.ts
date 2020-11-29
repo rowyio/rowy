@@ -29,8 +29,14 @@ export const useFieldStyles = makeStyles((theme) =>
       padding: theme.spacing(9 / 8, 1, 9 / 8, 1.5),
 
       width: "100%",
+      minHeight: 56,
+
       display: "flex",
       textAlign: "left",
+      alignItems: "center",
+
+      ...theme.typography.body1,
+      color: theme.palette.text.primary,
     },
   })
 );

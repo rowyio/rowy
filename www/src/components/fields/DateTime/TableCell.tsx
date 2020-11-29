@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-export default function _Date({
+export default function DateTime({
   rowIdx,
   column,
   value,
