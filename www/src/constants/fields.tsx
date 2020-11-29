@@ -100,7 +100,7 @@ export enum FieldType {
   singleSelect = "SINGLE_SELECT", // TODO:
   multiSelect = "MULTI_SELECT", // TODO:
   // CONNECTION
-  subTable = "SUB_TABLE", // TODO:
+  subTable = "SUB_TABLE",
   connectTable = "DOCUMENT_SELECT", // TODO:
   connectService = "SERVICE_SELECT", // TODO:
   // CODE

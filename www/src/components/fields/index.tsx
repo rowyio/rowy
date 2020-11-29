@@ -9,9 +9,16 @@ import Checkbox from "./Checkbox";
 import Date_ from "./Date";
 import DateTime from "./DateTime";
 import Duration from "./Duration";
+import SubTable from "./SubTable";
 
 // Export field configs in order for FieldsDropdown
-export const FIELDS: IFieldConfig[] = [Checkbox, Date_, DateTime, Duration];
+export const FIELDS: IFieldConfig[] = [
+  Checkbox,
+  Date_,
+  DateTime,
+  Duration,
+  SubTable,
+];
 
 /**
  * Returns specific property of field config
