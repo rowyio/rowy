@@ -11,6 +11,7 @@ import DateTime from "./DateTime";
 import Duration from "./Duration";
 import SubTable from "./SubTable";
 import Action from "./Action";
+import Id from "./Id";
 
 // Export field configs in order for FieldsDropdown
 export const FIELDS: IFieldConfig[] = [
@@ -51,7 +52,7 @@ export const FIELDS: IFieldConfig[] = [
   // TODO: aggregate,
   // FIRETABLE
   // TODO: user,
-  // TODO: id,
+  Id,
 ];
 
 /**
