@@ -5,6 +5,7 @@ import { FieldType } from "constants/fields";
 import { IFieldConfig } from "./types";
 
 // Import field configs
+import ShortText from "./ShortText";
 import Checkbox from "./Checkbox";
 import Date_ from "./Date";
 import DateTime from "./DateTime";
@@ -17,7 +18,7 @@ import Id from "./Id";
 // Export field configs in order for FieldsDropdown
 export const FIELDS: IFieldConfig[] = [
   // TEXT
-  // TODO: shortText,
+  ShortText,
   // TODO: longText,
   // TODO: email,
   // TODO: phone,
