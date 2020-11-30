@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-export default function ShortText({
+export default function LongText({
   control,
   column,
   disabled,

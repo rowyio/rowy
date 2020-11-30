@@ -4,7 +4,7 @@ import { ISideDrawerFieldProps } from "../types";
 
 import { TextField } from "@material-ui/core";
 
-export default function ShortText({
+export default function Phone({
   control,
   column,
   disabled,
@@ -27,7 +27,11 @@ export default function ShortText({
             label=""
             hiddenLabel
             disabled={disabled}
-            inputProps={{ maxLength: column.config?.maxLength }}
+            type="tel"
+            inputProps={{
+              autoComplete: "tel",
+              maxLength: column.config?.maxLength,
+            }}
           />
         );
       }}

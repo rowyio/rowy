@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-export default function ShortText({ value }: ICustomCellProps) {
+export default function LongText({ value }: ICustomCellProps) {
   const classes = useStyles();
 
   return <div className={classes.root}>{value}</div>;

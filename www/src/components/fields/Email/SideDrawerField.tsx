@@ -4,7 +4,7 @@ import { ISideDrawerFieldProps } from "../types";
 
 import { TextField } from "@material-ui/core";
 
-export default function ShortText({
+export default function Email({
   control,
   column,
   disabled,
@@ -27,7 +27,10 @@ export default function ShortText({
             label=""
             hiddenLabel
             disabled={disabled}
-            inputProps={{ maxLength: column.config?.maxLength }}
+            inputProps={{
+              autoComplete: "email",
+              maxLength: column.config?.maxLength,
+            }}
           />
         );
       }}
