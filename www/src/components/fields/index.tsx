@@ -6,6 +6,7 @@ import { IFieldConfig } from "./types";
 
 // Import field configs
 import ShortText from "./ShortText";
+import LongText from "./LongText";
 import Checkbox from "./Checkbox";
 import Date_ from "./Date";
 import DateTime from "./DateTime";
@@ -19,7 +20,7 @@ import Id from "./Id";
 export const FIELDS: IFieldConfig[] = [
   // TEXT
   ShortText,
-  // TODO: longText,
+  LongText,
   // TODO: email,
   // TODO: phone,
   // TODO: url,
