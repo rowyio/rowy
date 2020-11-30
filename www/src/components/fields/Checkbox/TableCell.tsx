@@ -52,12 +52,12 @@ export default function Checkbox({
     />
   );
 
-  if ((column as any)?.config?.confirmation)
+  if (column?.config?.confirmation)
     component = (
       <Confirmation
         message={{
-          title: (column as any).config.confirmation.title,
-          body: (column as any).config.confirmation.body.replace(
+          title: column.config.confirmation.title,
+          body: column.config.confirmation.body.replace(
             /\{\{(.*?)\}\}/g,
             replacer(row)
           ),

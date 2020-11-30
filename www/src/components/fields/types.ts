@@ -22,6 +22,7 @@ export interface IFieldConfig {
 }
 
 export interface ICustomCellProps extends FormatterProps<any> {
+  column: FormatterProps<any>["column"] & { config?: Record<string, any> };
   value: any;
   onSubmit: (value: any) => void;
   docRef: firebase.firestore.DocumentReference;
@@ -35,7 +36,7 @@ export interface IBasicCellProps {
 }
 
 export interface ISideDrawerFieldProps {
-  column: FormatterProps<any>["column"];
+  column: FormatterProps<any>["column"] & { config?: Record<string, any> };
   control: Control;
   docRef: firebase.firestore.DocumentReference;
   disabled: boolean;

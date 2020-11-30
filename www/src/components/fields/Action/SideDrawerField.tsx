@@ -62,7 +62,7 @@ export default function Action({
             <Grid item>
               <ActionFab
                 row={{ ...row, ref: docRef }}
-                column={{ config: (column as any).config, key: column.key }}
+                column={{ config: column.config, key: column.key }}
                 onSubmit={onChange}
                 value={value}
                 disabled={disabled}
