@@ -4,7 +4,7 @@ import withCustomCell from "components/Table/withCustomCell";
 
 import UserIcon from "@material-ui/icons/Person";
 import BasicCell from "../_BasicCell/BasicCellNull";
-import NullEditor from "components/Table/editors/NullEditor";
+import SideDrawerEditor from "components/Table/editors/SideDrawerEditor";
 
 const TableCell = lazy(
   () => import("./TableCell" /* webpackChunkName: "TableCell-User" */)
@@ -23,7 +23,7 @@ export const config: IFieldConfig = {
   icon: <UserIcon />,
   description: "Displays the _ft_updatedBy field for editing history.",
   TableCell: withCustomCell(TableCell, BasicCell),
-  TableEditor: NullEditor,
+  TableEditor: SideDrawerEditor,
   SideDrawerField,
 };
 export default config;

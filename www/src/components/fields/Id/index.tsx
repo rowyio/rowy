@@ -3,8 +3,8 @@ import { IFieldConfig, FieldType } from "components/fields/types";
 import withCustomCell from "components/Table/withCustomCell";
 
 import IdIcon from "assets/icons/Id";
-import BasicCell from "../_BasicCell/BasicCellNull";
-import NullEditor from "components/Table/editors/NullEditor";
+import BasicCell from "../_BasicCell/BasicCellValue";
+import SideDrawerEditor from "components/Table/editors/SideDrawerEditor";
 
 const TableCell = lazy(
   () => import("./TableCell" /* webpackChunkName: "TableCell-Id" */)
@@ -21,7 +21,7 @@ export const config: IFieldConfig = {
   icon: <IdIcon />,
   description: "Displays the row’s document ID. Cannot be sorted.",
   TableCell: withCustomCell(TableCell, BasicCell),
-  TableEditor: NullEditor,
+  TableEditor: SideDrawerEditor,
   SideDrawerField,
 };
 export default config;
