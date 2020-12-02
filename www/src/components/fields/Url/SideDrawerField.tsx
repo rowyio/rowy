@@ -36,7 +36,7 @@ export default function Url({
               href={value.includes("http") ? value : `https://${value}`}
               target="_blank"
               rel="noopener noreferrer"
-              style={{ width: 56 }}
+              style={{ width: 56, marginLeft: 16 }}
               disabled={!value}
             >
               <LaunchIcon />

@@ -32,7 +32,7 @@ export default function SubTable({
       <IconButton
         component={Link}
         to={subTablePath}
-        style={{ width: 56 }}
+        style={{ width: 56, marginLeft: 16 }}
         disabled={!subTablePath}
       >
         <LaunchIcon />
