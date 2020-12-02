@@ -84,12 +84,18 @@ export default function Table() {
           frozen: column.fixed,
           headerRenderer: ColumnHeader,
           formatter:
-            getFieldProp("TableCell", column.type) ??
+            getFieldProp(
+              "TableCell",
+              column.config?.renderFieldType ?? column.type
+            ) ??
             function InDev() {
               return null;
             },
           editor:
-            getFieldProp("TableEditor", column.type) ??
+            getFieldProp(
+              "TableEditor",
+              column.config?.renderFieldType ?? column.type
+            ) ??
             function InDev() {
               return null;
             },

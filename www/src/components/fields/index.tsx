@@ -18,6 +18,8 @@ import DateTime from "./DateTime";
 import Duration from "./Duration";
 import SubTable from "./SubTable";
 import Action from "./Action";
+import Derivative from "./Derivative";
+import Aggregate from "./Aggregate";
 import User from "./User";
 import Id from "./Id";
 
@@ -56,8 +58,8 @@ export const FIELDS: IFieldConfig[] = [
   // TODO: richText,
   // CLOUD FUNCTION
   Action,
-  // TODO: derivative,
-  // TODO: aggregate,
+  Derivative,
+  Aggregate,
   // FIRETABLE
   User,
   Id,

@@ -89,7 +89,7 @@ export default function Form({ values }: IFormProps) {
           return (
             <FieldWrapper
               key={field.key ?? i}
-              type={type}
+              type={field.type}
               name={field.key}
               label={field.name}
             >
