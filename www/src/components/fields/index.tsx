@@ -11,6 +11,8 @@ import Email from "./Email";
 import Phone from "./Phone";
 import Url from "./Url";
 import Checkbox from "./Checkbox";
+import Number_ from "./Number";
+import Percentage from "./Percentage";
 import Date_ from "./Date";
 import DateTime from "./DateTime";
 import Duration from "./Duration";
@@ -29,8 +31,8 @@ export const FIELDS: IFieldConfig[] = [
   Url,
   // NUMERIC
   Checkbox,
-  // TODO: number,
-  // TODO: percentage,
+  Number_,
+  Percentage,
   // TODO: rating,
   // TODO: slider,
   // TODO: color,
