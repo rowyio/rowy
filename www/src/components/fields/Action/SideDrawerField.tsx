@@ -2,7 +2,13 @@ import React from "react";
 import { Controller, useWatch } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 
-import { makeStyles, createStyles, Grid, Typography } from "@material-ui/core";
+import {
+  makeStyles,
+  createStyles,
+  Grid,
+  Typography,
+  Link,
+} from "@material-ui/core";
 
 import ActionFab from "./ActionFab";
 import { useFieldStyles } from "components/SideDrawer/Form/utils";
@@ -43,13 +49,15 @@ export default function Action({
               <div className={fieldClasses.root}>
                 <Typography variant="body1" className={classes.label}>
                   {hasRan && isUrl(value.status) ? (
-                    <a
+                    <Link
                       href={value.status}
                       target="_blank"
                       rel="noopener noreferrer"
+                      variant="body2"
+                      underline="always"
                     >
                       {value.status}
-                    </a>
+                    </Link>
                   ) : hasRan ? (
                     value.status
                   ) : (
