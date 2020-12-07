@@ -71,10 +71,10 @@ export const FT_derivatives = {
     .replace("-", "_")
     .replace(/\//g, "_")
     .replace(/_{.*?}_/g, "_")]: {
-    onUpdate: functions.firestore
+    u: functions.firestore
       .document(`${collectionPath}/{docId}`)
       .onUpdate(derivativeOnUpdate),
-    onCreate: functions.firestore
+    c: functions.firestore
       .document(`${collectionPath}/{docId}`)
       .onCreate(derivativeOnCreate),
   },

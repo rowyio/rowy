@@ -3,7 +3,8 @@ const fs = require("fs");
 import * as admin from "firebase-admin";
 // Initialize Firebase Admin
 //const serverTimestamp = admin.firestore.FieldValue.serverTimestamp;
-
+//const serviceAccount = require('../firebase-credentials.json')
+//admin.initializeApp({credential: admin.credential.cert(serviceAccount)});
 admin.initializeApp();
 const db = admin.firestore();
 const main = async (functionType: string, configString: string) => {
@@ -11,10 +12,12 @@ const main = async (functionType: string, configString: string) => {
   switch (functionType) {
     case "FT_derivatives":
       const isCollectionGroup = configString.includes("/");
+      const isSubtable = configString.includes("/subTables/");
       const collectionPath = `${configString}`;
-      const schemaPath = isCollectionGroup
-        ? `/_FIRETABLE_/settings/groupSchema/${configString.split("/").pop()}`
-        : `_FIRETABLE_/settings/schema/${collectionPath}`;
+      const schemaPath =
+        isCollectionGroup && !isSubtable
+          ? `/_FIRETABLE_/settings/groupSchema/${configString.split("/").pop()}`
+          : `_FIRETABLE_/settings/schema/${collectionPath}`;
       const schemaDoc = await db.doc(schemaPath).get();
       const schemaData = schemaDoc.data();
       if (!schemaData) return;
@@ -30,7 +33,17 @@ const main = async (functionType: string, configString: string) => {
           .join(",")}]},`;
       }, ``);
 
-      configData = `export default [${config}]\nexport const collectionPath ="${collectionPath}"`;
+      configData = `export default [${config}]\nexport const collectionPath ="${
+        isSubtable
+          ? ((path) => {
+              const pathTables = path.split("/subTables/");
+              const subcollection = pathTables.pop();
+              return `${pathTables
+                .map((t) => `${t}/{${t}DocId}`)
+                .join("/")}/${subcollection}`;
+            })(collectionPath)
+          : collectionPath
+      }"`;
       break;
 
     case "FT_aggregates":
