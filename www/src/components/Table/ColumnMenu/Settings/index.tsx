@@ -22,7 +22,7 @@ import _sortBy from "lodash/sortBy";
 import FieldsDropdown from "../FieldsDropdown";
 import ColumnSelector from "./ConfigFields/ColumnSelector";
 import FieldSkeleton from "components/SideDrawer/Form/FieldSkeleton";
-
+import { ThemedJSONEditor } from "../../../SideDrawer/Form/Fields/JsonEditor";
 const CodeEditor = lazy(
   () => import("../../editors/CodeEditor" /* webpackChunkName: "CodeEditor" */)
 );
@@ -386,6 +386,13 @@ const ConfigFields = ({
               )}
             </>
           )}
+          <Typography variant="overline">
+            Action Params Configuration
+          </Typography>
+          <ThemedJSONEditor
+            value={config.params}
+            handleEdit={handleChange("params")}
+          />
         </>
       );
     case FieldType.aggregate:
