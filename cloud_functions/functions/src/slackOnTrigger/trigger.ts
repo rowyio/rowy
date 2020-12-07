@@ -10,24 +10,30 @@ const messageByChannel = async ({
   text,
   channel,
   blocks,
+  attachments,
 }: {
   channel: string;
   text: string;
   blocks: any[];
+  attachments: any[];
 }) =>
   await web.chat.postMessage({
+    link_names: true,
     text,
     channel,
     blocks,
+    attachments,
   });
 const messageByEmail = async ({
   email,
   text,
   blocks,
+  attachments,
 }: {
   email: string;
   text: string;
   blocks: any[];
+  attachments: any[];
 }) => {
   try {
     const user = await web.users.lookupByEmail({ email });
@@ -36,6 +42,7 @@ const messageByEmail = async ({
       return await messageByChannel({
         text,
         blocks,
+        attachments,
         channel,
       });
     } else {
@@ -66,6 +73,7 @@ export const slackBotMessageOnCreate = firestore
           await messageByChannel({
             text: docData.text,
             blocks: docData.blocks,
+            attachments: docData.attachments,
             channel,
           });
         });
@@ -74,6 +82,7 @@ export const slackBotMessageOnCreate = firestore
           await messageByEmail({
             text: docData.text,
             blocks: docData.blocks ?? [],
+            attachments: docData.attachments ?? [],
             email,
           });
         });

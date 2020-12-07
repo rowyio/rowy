@@ -12,6 +12,8 @@ import {
 } from "@material-ui/core";
 import Themes from "Themes";
 
+import ErrorBoundary from "components/ErrorBoundary";
+
 const useThemeState = createPersistedState("_FT_THEME");
 const useThemeOverriddenState = createPersistedState("_FT_THEME_OVERRIDDEN");
 
@@ -124,7 +126,7 @@ export const AppProvider: React.FC = ({ children }) => {
     >
       <MuiThemeProvider theme={generatedTheme}>
         <CssBaseline />
-        {children}
+        <ErrorBoundary>{children}</ErrorBoundary>
       </MuiThemeProvider>
     </AppContext.Provider>
   );
