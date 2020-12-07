@@ -29,7 +29,7 @@ export const derivativeOnChange = async (
       if (shouldEval) {
         const newValue = await currDerivative.eval(db)({
           row: afterData,
-          ref: { path: ref.path, id: ref.id },
+          ref,
         });
         if (newValue !== undefined) {
           return {
