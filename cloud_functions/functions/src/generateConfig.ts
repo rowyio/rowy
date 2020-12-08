@@ -39,7 +39,7 @@ const main = async (functionType: string, configString: string) => {
               const pathTables = path.split("/subTables/");
               const subcollection = pathTables.pop();
               return `${pathTables
-                .map((t) => `${t}/{${t}DocId}`)
+                .map((t) => `${t}/{${t.replace(/-/g, "_")}DocId}`)
                 .join("/")}/${subcollection}`;
             })(collectionPath)
           : collectionPath
@@ -75,6 +75,9 @@ const main = async (functionType: string, configString: string) => {
       configData = `export default ${configString}\n export const collectionPath=''`;
       break;
   }
+  configData =
+    configData +
+    '\nexport const functionName =  collectionPath.replace("-", "_").replace(/\\//g, "_").replace(/_{.*?}_/g, "_")';
   console.log({ configData });
   fs.writeFileSync("./src/functionConfig.ts", configData);
   return;

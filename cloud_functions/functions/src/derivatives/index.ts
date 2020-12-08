@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions";
 
 import { db } from "../config";
-import config, { collectionPath } from "../functionConfig";
+import config, { collectionPath, functionName } from "../functionConfig";
 // generated using generateConfig.ts
 const functionConfig: any = config;
 
@@ -67,10 +67,7 @@ export const derivativeOnUpdate = async (
 };
 
 export const FT_derivatives = {
-  [collectionPath
-    .replace("-", "_")
-    .replace(/\//g, "_")
-    .replace(/_{.*?}_/g, "_")]: {
+  [functionName]: {
     u: functions.firestore
       .document(`${collectionPath}/{docId}`)
       .onUpdate(derivativeOnUpdate),
