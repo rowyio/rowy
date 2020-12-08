@@ -319,12 +319,14 @@ const ConfigFields = ({
                       "     * actionParams are provided by dialog popup form",
                       "     */",
                       (config.params ?? []).map((param) => {
-                        const validationKeys = Object.keys(param.validation);
-                        if (validationKeys.includes("string")) {
-                          return `static ${param.name}:string`;
-                        } else if (validationKeys.includes("array")) {
-                          return `static ${param.name}:any[]`;
-                        } else return `static ${param.name}:any`;
+                        if (param) {
+                          const validationKeys = Object.keys(param.validation);
+                          if (validationKeys.includes("string")) {
+                            return `static ${param.name}:string`;
+                          } else if (validationKeys.includes("array")) {
+                            return `static ${param.name}:any[]`;
+                          } else return `static ${param.name}:any`;
+                        } else return "";
                       }),
                       "}",
                     ],
@@ -391,7 +393,14 @@ const ConfigFields = ({
           </Typography>
           <ThemedJSONEditor
             value={config.params}
-            handleEdit={handleChange("params")}
+            handleEdit={(update) => {
+              console.log({ update });
+              if (Array.isArray(update.new_value)) {
+                handleChange("params")(update.new_value);
+              } else {
+                handleChange("params")([]);
+              }
+            }}
           />
         </>
       );
