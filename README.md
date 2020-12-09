@@ -26,7 +26,7 @@
   - Resize and rename columns
 
 - 27 different column types.
-  [Read more](https://github.com/AntlerVC/firetable/wiki/Column-Types)
+  [Read more](https://github.com/AntlerVC/firetable/wiki/Field-Types)
 
   - Basic types: Short Text, Long Text, Email, Phone, URL…
   - Custom UI pickers: Date, Checkbox, Single Select, Multi Select…
