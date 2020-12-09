@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Controller } from "react-hook-form";
 import { IFieldProps } from "../utils";
-
+import { Prompt } from "react-router-dom";
 import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/theme-github";
@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) =>
       borderRadius: theme.shape.borderRadius,
       resize: "vertical",
 
-      fontFamily: "SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace",
+      fontFamily: theme.typography.fontFamilyMono,
     },
 
     resizeIcon: {
@@ -90,13 +90,21 @@ function ControlledCode({ onChange, onBlur, value }: IControlledCodeProps) {
       </div>
 
       {!autoSave && value !== localValue && (
-        <Button
-          onClick={() => onChange(localValue)}
-          className={classes.saveButton}
-          variant="contained"
-        >
-          Save Changes
-        </Button>
+        <>
+          <Prompt
+            when={true}
+            message={(location) =>
+              `You have some unsaved code changes, Are you sure you want to discard and continue?`
+            }
+          />
+          <Button
+            onClick={() => onChange(localValue)}
+            className={classes.saveButton}
+            variant="contained"
+          >
+            Save Changes
+          </Button>
+        </>
       )}
     </>
   );

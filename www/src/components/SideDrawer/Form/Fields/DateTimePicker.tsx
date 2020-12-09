@@ -9,7 +9,8 @@ import {
 } from "@material-ui/pickers";
 import { DATE_TIME_FORMAT } from "constants/dates";
 
-import AccessTimeIcon from "@material-ui/icons/AccessTime";
+import DateRangeIcon from "@material-ui/icons/DateRange";
+import TimeIcon from "@material-ui/icons/Schedule";
 
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
@@ -52,7 +53,7 @@ export default function DateTimePicker({
               InputAdornmentProps={{
                 style: { marginRight: theme.spacing(-1) },
               }}
-              keyboardIcon={<AccessTimeIcon />}
+              keyboardIcon={<TimeIcon />}
               {...props}
               value={transformedValue}
               onChange={handleChange}
@@ -60,6 +61,16 @@ export default function DateTimePicker({
               label=""
               hiddenLabel
               id={`sidedrawer-field-${name}`}
+              dateRangeIcon={
+                <DateRangeIcon
+                  style={{ color: theme.palette.primary.contrastText }}
+                />
+              }
+              timeIcon={
+                <TimeIcon
+                  style={{ color: theme.palette.primary.contrastText }}
+                />
+              }
             />
           );
         }}

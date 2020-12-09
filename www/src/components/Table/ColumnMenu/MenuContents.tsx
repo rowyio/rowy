@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) =>
 
       "&:hover": {
         backgroundColor: theme.palette.text.primary,
-        color: "#f1f1f3",
+        color: theme.palette.type === "light" ? "#f1f1f3" : "#212129",
       },
     },
     menuItemIcon: {
@@ -67,6 +67,7 @@ export interface IMenuContentsProps {
     onClick?: () => void;
     active?: boolean;
     color?: "error";
+    disabled?: boolean;
   }[];
 }
 
@@ -105,6 +106,7 @@ export default function MenuContents({ menuItems }: IMenuContentsProps) {
                 item.active && classes.menuItemActive,
                 item.color === "error" && classes.menuItemError
               )}
+              disabled={item.disabled}
             >
               <ListItemIcon className={classes.menuItemIcon}>
                 {icon}

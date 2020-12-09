@@ -2,7 +2,7 @@ import React from "react";
 import { CustomCellProps } from "./withCustomCell";
 
 import { makeStyles, createStyles } from "@material-ui/core";
-import { resultColorsScale } from "util/color";
+import { resultColorsScale } from "utils/color";
 
 const useStyles = makeStyles((theme) =>
   createStyles({

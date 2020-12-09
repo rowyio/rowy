@@ -1,6 +1,7 @@
 import React from "react";
 import DOMPurify from "dompurify";
 import clsx from "clsx";
+
 import { makeStyles, createStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) =>
@@ -66,12 +67,10 @@ const useStyles = makeStyles((theme) =>
         backgroundColor: "#e8e8e8",
         borderRadius: theme.shape.borderRadius,
         padding: "0.1rem 0.2rem",
-        fontFamily:
-          "SFMonoRegular, Consolas, Liberation Mono, Menlo, monospace",
+        fontFamily: theme.typography.fontFamilyMono,
       },
       "& pre": {
-        fontFamily:
-          "SFMonoRegular, Consolas, Liberation Mono, Menlo, monospace",
+        fontFamily: theme.typography.fontFamilyMono,
       },
       '& .mceContent-body:not([dir="rtl"]) blockquote': {
         borderLeft: `2px solid ${theme.palette.divider}`,

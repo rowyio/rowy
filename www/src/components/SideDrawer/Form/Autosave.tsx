@@ -9,8 +9,8 @@ import _reduce from "lodash/reduce";
 import { Control, useWatch } from "react-hook-form";
 import { Values } from "./utils";
 
-import { useAppContext } from "contexts/appContext";
-import { useFiretableContext, firetableUser } from "contexts/firetableContext";
+import { useAppContext } from "contexts/AppContext";
+import { useFiretableContext, firetableUser } from "contexts/FiretableContext";
 
 export interface IAutosaveProps {
   control: Control;
@@ -26,7 +26,7 @@ export default function Autosave({
   row,
 }: IAutosaveProps) {
   const { currentUser } = useAppContext();
-  const { tableState, sideDrawerRef } = useFiretableContext();
+  const { tableState } = useFiretableContext();
 
   const values = useWatch({ control });
 

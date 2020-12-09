@@ -7,16 +7,8 @@ import _sortBy from "lodash/sortBy";
 
 import useDoc, { DocActions } from "../useDoc";
 import { FieldType } from "constants/fields";
-import { arrayMover, isCollectionGroup } from "../../util/fns";
+import { arrayMover, formatPath } from "../../utils/fns";
 import { db, deleteField } from "../../firebase";
-
-const formatPathRegex = /\/[^\/]+\/([^\/]+)/g;
-
-const formatPath = (tablePath: string) => {
-  return `_FIRETABLE_/settings/${
-    isCollectionGroup() ? "groupSchema" : "schema"
-  }/${tablePath.replace(formatPathRegex, "/subTables/$1")}`;
-};
 
 export type ColumnConfig = {
   fieldName: string;
@@ -37,6 +29,7 @@ const useTableConfig = (tablePath?: string) => {
 
   useEffect(() => {
     const { doc, columns } = tableConfigState;
+    // Copy columns, rowHeight to tableConfigState
     if (doc && columns !== doc.columns) {
       documentDispatch({ columns: doc.columns, rowHeight: doc.rowHeight });
     }

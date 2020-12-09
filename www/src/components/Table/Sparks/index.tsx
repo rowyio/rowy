@@ -14,7 +14,7 @@ import { useTheme } from "@material-ui/core/styles";
 import SparksIcon from "@material-ui/icons/OfflineBolt";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/DeleteForever";
-import { useFiretableContext } from "contexts/firetableContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 import Grid from "@material-ui/core/Grid";
 import Form from "@antlerengineering/form-builder";
 import { newSparkForm } from "./forms";

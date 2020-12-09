@@ -12,7 +12,7 @@ import {
   Button,
 } from "@material-ui/core";
 
-import FiretableLogo from "assets/Firetable";
+import FiretableLogo from "assets/FiretableLogo";
 import routes from "constants/routes";
 
 const useStyles = makeStyles((theme) =>

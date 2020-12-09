@@ -1,7 +1,7 @@
 import React from "react";
 import useHotkeys from "../../hooks/useHotkeys";
 import { FieldType } from "constants/fields";
-import { useAppContext } from "contexts/appContext";
+import { useAppContext } from "contexts/AppContext";
 
 // TODO: Hook up to FiretableContext
 const onSubmit = (a: any, b: any, c?: any) => (a: any) => {};

@@ -16,17 +16,24 @@ import {
 import CloseIcon from "@material-ui/icons/Close";
 import { FieldType } from "constants/fields";
 import OptionsInput from "./ConfigFields/OptionsInput";
-import { useFiretableContext } from "contexts/firetableContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 import MultiSelect from "@antlerengineering/multiselect";
 import _sortBy from "lodash/sortBy";
 import FieldsDropdown from "../FieldsDropdown";
 import ColumnSelector from "./ConfigFields/ColumnSelector";
 import FieldSkeleton from "components/SideDrawer/Form/FieldSkeleton";
-import RoleSelector from "components/RolesSelector";
+import { ThemedJSONEditor } from "../../../SideDrawer/Form/Fields/JsonEditor";
 const CodeEditor = lazy(
   () => import("../../editors/CodeEditor" /* webpackChunkName: "CodeEditor" */)
 );
-const ConfigFields = ({ fieldType, config, handleChange, tables, columns }) => {
+const ConfigFields = ({
+  fieldType,
+  config,
+  handleChange,
+  tables,
+  columns,
+  roles,
+}) => {
   switch (fieldType) {
     case FieldType.longText:
     case FieldType.shortText:
@@ -64,6 +71,70 @@ const ConfigFields = ({ fieldType, config, handleChange, tables, columns }) => {
               }}
             />
           </Grid>
+        </>
+      );
+    case FieldType.connectService:
+      return (
+        <>
+          <TextField
+            label="Webservice Url"
+            name="url"
+            value={config.url}
+            fullWidth
+            onChange={(e) => {
+              handleChange("url")(e.target.value);
+            }}
+          />
+          <TextField
+            label="Results key Path"
+            name="resultsKey"
+            helperText="Can be specified as a key path"
+            placeholder="data.results"
+            value={config.resultsKey}
+            fullWidth
+            onChange={(e) => {
+              handleChange("resultsKey")(e.target.value);
+            }}
+          />
+          <TextField
+            label="Primary Key"
+            name="primaryKey"
+            value={config.primaryKey}
+            fullWidth
+            onChange={(e) => {
+              handleChange("primaryKey")(e.target.value);
+            }}
+          />
+          <TextField
+            label="Title Key (optional)"
+            name="titleKey"
+            value={config.titleKey}
+            fullWidth
+            onChange={(e) => {
+              handleChange("titleKey")(e.target.value);
+            }}
+          />
+          <TextField
+            label="SubTitle Key (optional)"
+            name="subtitleKey"
+            value={config.subtitleKey}
+            fullWidth
+            onChange={(e) => {
+              handleChange("subtitleKey")(e.target.value);
+            }}
+          />
+          <FormControlLabel
+            control={
+              <Switch
+                checked={config.multiple}
+                onChange={() =>
+                  handleChange("multiple")(!Boolean(config.multiple))
+                }
+                name="select-multiple"
+              />
+            }
+            label="Enable multiple item selection"
+          />
         </>
       );
     case FieldType.connectTable:
@@ -126,7 +197,7 @@ const ConfigFields = ({ fieldType, config, handleChange, tables, columns }) => {
             defaultValue={5}
             value={config.max}
             getAriaValueText={(v) => `${v} max stars`}
-            aria-labelledby="discrete-slider"
+            aria-labelledby="max-slider"
             valueLabelDisplay="auto"
             onChange={(_, v) => {
               handleChange("max")(v);
@@ -135,6 +206,21 @@ const ConfigFields = ({ fieldType, config, handleChange, tables, columns }) => {
             marks
             min={1}
             max={15}
+          />
+          <Typography variant="overline">Slider precision stars</Typography>
+          <Slider
+            defaultValue={0.5}
+            value={config.precision}
+            getAriaValueText={(v) => `${v} rating step size`}
+            aria-labelledby="precision-slider"
+            valueLabelDisplay="auto"
+            onChange={(_, v) => {
+              handleChange("precision")(v);
+            }}
+            step={0.25}
+            marks
+            min={0.25}
+            max={1}
           />
         </>
       );
@@ -145,10 +231,11 @@ const ConfigFields = ({ fieldType, config, handleChange, tables, columns }) => {
           <Typography variant="body2">
             Authenticated user must have at least one of these to run the script
           </Typography>
-          <RoleSelector
+          <MultiSelect
             label={"Allowed Roles"}
-            value={config.requiredRoles}
-            handleChange={handleChange("requiredRoles")}
+            options={roles}
+            value={config.requiredRoles ?? []}
+            onChange={handleChange("requiredRoles")}
           />
 
           <Typography variant="overline">Required fields</Typography>
@@ -201,6 +288,7 @@ const ConfigFields = ({ fieldType, config, handleChange, tables, columns }) => {
             <TextField
               label="callable name"
               name="callableName"
+              value={config.callableName}
               fullWidth
               onChange={(e) => {
                 handleChange("callableName")(e.target.value);
@@ -209,10 +297,40 @@ const ConfigFields = ({ fieldType, config, handleChange, tables, columns }) => {
           ) : (
             <>
               <Typography variant="overline">action script</Typography>
-              <Suspense fallback={<FieldSkeleton height={180} />}>
+              <Suspense fallback={<FieldSkeleton height={300} />}>
                 <CodeEditor
-                  height={180}
+                  height={300}
                   script={config.script}
+                  extraLibs={[
+                    [
+                      "declare class ref {",
+                      "    /**",
+                      "     * Reference object of the row running the action script",
+                      "     */",
+                      "static id:string",
+                      "static path:string",
+                      "static parentId:string",
+                      "static tablePath:string",
+                      "}",
+                    ].join("\n"),
+                    [
+                      "declare class actionParams {",
+                      "    /**",
+                      "     * actionParams are provided by dialog popup form",
+                      "     */",
+                      (config.params ?? []).map((param) => {
+                        if (param) {
+                          const validationKeys = Object.keys(param.validation);
+                          if (validationKeys.includes("string")) {
+                            return `static ${param.name}:string`;
+                          } else if (validationKeys.includes("array")) {
+                            return `static ${param.name}:any[]`;
+                          } else return `static ${param.name}:any`;
+                        } else return "";
+                      }),
+                      "}",
+                    ],
+                  ]}
                   handleChange={handleChange("script")}
                 />
               </Suspense>
@@ -259,9 +377,9 @@ const ConfigFields = ({ fieldType, config, handleChange, tables, columns }) => {
                     fullWidth
                   />
                   <Typography variant="overline">Undo Action script</Typography>
-                  <Suspense fallback={<FieldSkeleton height={180} />}>
+                  <Suspense fallback={<FieldSkeleton height={300} />}>
                     <CodeEditor
-                      height={180}
+                      height={300}
                       script={config["undo.script"]}
                       handleChange={handleChange("undo.script")}
                     />
@@ -270,6 +388,20 @@ const ConfigFields = ({ fieldType, config, handleChange, tables, columns }) => {
               )}
             </>
           )}
+          <Typography variant="overline">
+            Action Params Configuration
+          </Typography>
+          <ThemedJSONEditor
+            value={config.params}
+            handleEdit={(update) => {
+              console.log({ update });
+              if (Array.isArray(update.new_value)) {
+                handleChange("params")(update.new_value);
+              } else {
+                handleChange("params")([]);
+              }
+            }}
+          />
         </>
       );
     case FieldType.aggregate:
@@ -321,6 +453,15 @@ switch (triggerType){
           <Typography variant="overline">Field type of the output</Typography>
           <FieldsDropdown
             value={config.renderFieldType}
+            options={Object.values(FieldType).filter(
+              (f) =>
+                ![
+                  FieldType.derivative,
+                  FieldType.aggregate,
+                  FieldType.subTable,
+                  FieldType.action,
+                ].includes(f)
+            )}
             onChange={(newType: any) => {
               handleChange("renderFieldType")(newType.target.value);
             }}
@@ -334,6 +475,7 @@ switch (triggerType){
                 handleChange={handleChange}
                 tables={tables}
                 columns={columns}
+                roles={roles}
               />
             </>
           )}
@@ -368,6 +510,15 @@ switch (triggerType){
           <Typography variant="overline">Field type of the output</Typography>
           <FieldsDropdown
             value={config.renderFieldType}
+            options={Object.values(FieldType).filter(
+              (f) =>
+                ![
+                  FieldType.derivative,
+                  FieldType.aggregate,
+                  FieldType.subTable,
+                  FieldType.action,
+                ].includes(f)
+            )}
             onChange={(newType: any) => {
               handleChange("renderFieldType")(newType.target.value);
             }}
@@ -381,6 +532,7 @@ switch (triggerType){
                 handleChange={handleChange}
                 tables={tables}
                 columns={columns}
+                roles={roles}
               />
             </>
           )}
@@ -391,7 +543,7 @@ switch (triggerType){
   }
 };
 const ConfigForm = ({ type, config, handleChange }) => {
-  const { tableState, tables } = useFiretableContext();
+  const { tableState, tables, roles } = useFiretableContext();
 
   if (!tableState) return <></>;
   const { columns } = tableState;
@@ -403,6 +555,7 @@ const ConfigForm = ({ type, config, handleChange }) => {
       config={config}
       handleChange={handleChange}
       tables={tables}
+      roles={roles}
     />
   );
 };

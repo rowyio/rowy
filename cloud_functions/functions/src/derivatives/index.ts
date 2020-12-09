@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions";
 
 import { db } from "../config";
-import config, { collectionPath } from "../functionConfig";
+import config, { collectionPath, functionName } from "../functionConfig";
 // generated using generateConfig.ts
 const functionConfig: any = config;
 
@@ -15,7 +15,7 @@ const shouldEvaluateReducer = (listeners, before, after) =>
   }, false);
 
 export const derivativeOnChange = async (
-  ref,
+  ref: FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>,
   beforeData: FirebaseFirestore.DocumentData,
   afterData: FirebaseFirestore.DocumentData
 ) => {
@@ -27,7 +27,10 @@ export const derivativeOnChange = async (
         afterData
       );
       if (shouldEval) {
-        const newValue = await currDerivative.eval(db)(afterData);
+        const newValue = await currDerivative.eval(db)({
+          row: afterData,
+          ref,
+        });
         if (newValue !== undefined) {
           return {
             ...(await accUpdates),
@@ -64,11 +67,11 @@ export const derivativeOnUpdate = async (
 };
 
 export const FT_derivatives = {
-  [collectionPath.replace("-", "_")]: {
-    onUpdate: functions.firestore
+  [functionName]: {
+    u: functions.firestore
       .document(`${collectionPath}/{docId}`)
       .onUpdate(derivativeOnUpdate),
-    onCreate: functions.firestore
+    c: functions.firestore
       .document(`${collectionPath}/{docId}`)
       .onCreate(derivativeOnCreate),
   },

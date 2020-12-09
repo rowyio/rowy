@@ -33,9 +33,42 @@ const isValidJson = (val: any) => {
   return true;
 };
 
+export const ThemedJSONEditor = ({ value, handleEdit }) => {
+  const theme = useTheme();
+  return (
+    <ReactJson
+      src={isValidJson(value) ? value : {}}
+      onEdit={handleEdit}
+      onAdd={handleEdit}
+      onDelete={handleEdit}
+      theme={{
+        base00: "rgba(0, 0, 0, 0)",
+        base01: theme.palette.background.default,
+        base02: theme.palette.divider,
+        base03: "#93a1a1",
+        base04: theme.palette.text.disabled,
+        base05: theme.palette.text.secondary,
+        base06: "#073642",
+        base07: theme.palette.text.primary,
+        base08: "#d33682",
+        base09: "#cb4b16",
+        base0A: "#dc322f",
+        base0B: "#859900",
+        base0C: "#6c71c4",
+        base0D: theme.palette.text.secondary,
+        base0E: "#2aa198",
+        base0F: "#268bd2",
+      }}
+      iconStyle="triangle"
+      style={{
+        fontFamily: theme.typography.fontFamilyMono,
+        backgroundColor: "transparent",
+      }}
+    />
+  );
+};
 export default function JsonEditor({ control, name }: IFieldProps) {
   const classes = useStyles();
-  const theme = useTheme();
 
   return (
     <Controller
@@ -48,36 +81,7 @@ export default function JsonEditor({ control, name }: IFieldProps) {
 
         return (
           <div className={classes.root}>
-            <ReactJson
-              src={isValidJson(value) ? value : {}}
-              onEdit={handleEdit}
-              onAdd={handleEdit}
-              onDelete={handleEdit}
-              theme={{
-                base00: "rgba(0, 0, 0, 0)",
-                base01: theme.palette.background.default,
-                base02: theme.palette.divider,
-                base03: "#93a1a1",
-                base04: theme.palette.text.disabled,
-                base05: theme.palette.text.secondary,
-                base06: "#073642",
-                base07: theme.palette.text.primary,
-                base08: "#d33682",
-                base09: "#cb4b16",
-                base0A: "#dc322f",
-                base0B: "#859900",
-                base0C: "#6c71c4",
-                base0D: theme.palette.text.secondary,
-                base0E: "#2aa198",
-                base0F: "#268bd2",
-              }}
-              iconStyle="triangle"
-              style={{
-                fontFamily:
-                  "SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace",
-                backgroundColor: "transparent",
-              }}
-            />
+            <ThemedJSONEditor value={value} handleEdit={handleEdit} />
           </div>
         );
       }}

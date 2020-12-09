@@ -4,10 +4,10 @@ import { ScrollSync, ScrollSyncPane } from "react-scroll-sync";
 import { makeStyles, createStyles, Grid } from "@material-ui/core";
 
 import { IStepProps } from ".";
-import Column from "./Column";
-import Cell from "./Cell";
+import Column from "../Column";
+import Cell from "../Cell";
 
-import { useFiretableContext } from "contexts/firetableContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -25,7 +25,10 @@ const useStyles = makeStyles((theme) =>
         right: 0,
 
         height: theme.spacing(3),
-        backgroundImage: `linear-gradient(to top, ${theme.palette.background.paper}, transparent)`,
+        backgroundImage: `linear-gradient(to top, ${
+          theme.palette.background.elevation?.[24] ??
+          theme.palette.background.paper
+        }, transparent)`,
       },
 
       "&::before": {
@@ -40,7 +43,10 @@ const useStyles = makeStyles((theme) =>
         right: 0,
 
         width: theme.spacing(3),
-        backgroundImage: `linear-gradient(to left, ${theme.palette.background.paper}, transparent)`,
+        backgroundImage: `linear-gradient(to left, ${
+          theme.palette.background.elevation?.[24] ??
+          theme.palette.background.paper
+        }, transparent)`,
       },
     },
 
@@ -50,7 +56,7 @@ const useStyles = makeStyles((theme) =>
       flexShrink: 0,
     },
 
-    header: { overflowX: "scroll" },
+    header: { overflowX: "hidden" },
     data: {
       overflow: "scroll",
       height: 300,

@@ -40,6 +40,7 @@ export const getEditor = (column: any) => {
     case FieldType.phone:
     case FieldType.url:
     case FieldType.number:
+    case FieldType.percentage:
       return TextEditor;
 
     // No in-cell editing; must open side drawer
@@ -49,6 +50,7 @@ export const getEditor = (column: any) => {
     case FieldType.json:
     case FieldType.connectTable:
     case FieldType.action:
+    case FieldType.id:
     default:
       return SideDrawerEditor;
   }

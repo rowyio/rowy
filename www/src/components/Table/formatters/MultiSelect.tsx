@@ -2,12 +2,18 @@ import React from "react";
 import clsx from "clsx";
 import { CustomCellProps } from "./withCustomCell";
 
-import { makeStyles, createStyles, Grid, Tooltip } from "@material-ui/core";
+import {
+  makeStyles,
+  createStyles,
+  Grid,
+  Tooltip,
+  Button,
+} from "@material-ui/core";
 
 import MultiSelect_ from "@antlerengineering/multiselect";
 import FormattedChip, { VARIANTS } from "components/FormattedChip";
 import { FieldType } from "constants/fields";
-import { useFiretableContext } from "contexts/firetableContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -49,6 +55,21 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
+export const ConvertStringToArray = ({ value, onSubmit }) => (
+  <>
+    {value}
+    <Tooltip title="It looks like this is a string, click to convert it to an array">
+      <Button
+        onClick={() => {
+          onSubmit([value]);
+        }}
+      >
+        fix
+      </Button>
+    </Tooltip>
+  </>
+);
+
 export default function MultiSelect({
   rowIdx,
   column,
@@ -63,17 +84,30 @@ export default function MultiSelect({
   // Support SingleSelect field
   const isSingle = (column as any).type === FieldType.singleSelect;
 
+  let sanitisedValue: any;
+  if (isSingle) {
+    if (value === undefined || value === null || value === "")
+      sanitisedValue = null;
+    else if (Array.isArray(value)) sanitisedValue = value[0];
+    else sanitisedValue = value;
+  } else {
+    if (value === undefined || value === null || value === "")
+      sanitisedValue = [];
+    else sanitisedValue = value;
+  }
+
   // Render chips or basic string
   const renderValue = isSingle
     ? () =>
-        typeof value === "string" && VARIANTS.includes(value.toLowerCase()) ? (
-          <FormattedChip label={value} className={classes.chip} />
+        typeof sanitisedValue === "string" &&
+        VARIANTS.includes(sanitisedValue.toLowerCase()) ? (
+          <FormattedChip label={sanitisedValue} className={classes.chip} />
         ) : (
-          <span className={classes.selectSingleLabel}>{value}</span>
+          <span className={classes.selectSingleLabel}>{sanitisedValue}</span>
         )
     : () => (
         <Grid container spacing={1} wrap="nowrap" className={classes.chipList}>
-          {value?.map(
+          {sanitisedValue?.map(
             (item) =>
               typeof item === "string" && (
                 <Grid item key={item}>
@@ -92,64 +126,62 @@ export default function MultiSelect({
     if (dataGridRef?.current?.selectCell)
       dataGridRef.current.selectCell({ rowIdx, idx: column.idx });
   };
-
+  if (typeof value === "string" && value !== "" && !isSingle)
+    return <ConvertStringToArray value={value} onSubmit={onSubmit} />;
   return (
-    <Tooltip
-      title={
-        value
-          ? Array.isArray(value)
-            ? value.length > 1
-              ? value.join(", ")
-              : ``
-            : value
-          : ``
-      }
-      enterDelay={100}
-      interactive
-      placement="bottom-start"
+    // <Tooltip
+    //   title={
+    //     value
+    //       ? Array.isArray(value)
+    //         ? value.length > 1
+    //           ? value.join(", ")
+    //           : ``
+    //         : value
+    //       : ``
+    //   }
+    //   enterDelay={100}
+    //   interactive
+    //   placement="bottom-start"
+    // >
+    <div
+      onClick={(e) => e.stopPropagation()}
+      onKeyDown={(e) => e.stopPropagation()}
     >
-      <div>
-        <MultiSelect_
-          value={
-            value === undefined || value === null
-              ? isSingle
-                ? null
-                : []
-              : value
-          }
-          onChange={onSubmit}
-          freeText={!isSingle && config.freeText}
-          multiple={!isSingle as any}
-          label={column.name}
-          labelPlural={column.name}
-          options={config.options ?? []}
-          disabled={column.editable === false}
-          onOpen={handleOpen}
-          TextFieldProps={
-            {
-              label: "",
-              hiddenLabel: true,
-              variant: "standard",
-              className: classes.root,
-              InputProps: {
-                disableUnderline: true,
-                classes: { root: classes.inputBase },
+      <MultiSelect_
+        value={sanitisedValue}
+        onChange={onSubmit}
+        freeText={config.freeText}
+        multiple={!isSingle as any}
+        label={column.name}
+        labelPlural={column.name}
+        options={config.options ?? []}
+        disabled={column.editable === false}
+        onOpen={handleOpen}
+        TextFieldProps={
+          {
+            label: "",
+            hiddenLabel: true,
+            variant: "standard",
+            className: classes.root,
+            InputProps: {
+              disableUnderline: true,
+              classes: { root: classes.inputBase },
+            },
+            SelectProps: {
+              classes: {
+                root: clsx(classes.root, classes.select),
+                icon: classes.icon,
               },
-              SelectProps: {
-                classes: {
-                  root: clsx(classes.root, classes.select),
-                  icon: classes.icon,
-                },
-                renderValue,
-                MenuProps: {
-                  anchorOrigin: { vertical: "bottom", horizontal: "left" },
-                  transformOrigin: { vertical: "top", horizontal: "left" },
-                },
+              renderValue,
+              MenuProps: {
+                anchorOrigin: { vertical: "bottom", horizontal: "left" },
+                transformOrigin: { vertical: "top", horizontal: "left" },
               },
-            } as const
-          }
-        />
-      </div>
-    </Tooltip>
+            },
+          } as const
+        }
+      />
+    </div>
+    //  </Tooltip>
   );
 }

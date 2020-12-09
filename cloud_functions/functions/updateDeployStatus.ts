@@ -2,34 +2,18 @@
 import * as admin from "firebase-admin";
 // Initialize Firebase Admin
 const serverTimestamp = admin.firestore.FieldValue.serverTimestamp;
-const serviceAccount = requireIfExists(`./firebase-credentials.json`);
+admin.initializeApp();
+const db = admin.firestore();
 
-function requireIfExists(module) {
-  try {
-    return require(module);
-  } catch (error) {
-    console.log("serviceAccount json not found");
-    return false;
-  }
-}
-if (serviceAccount) {
-  console.log(`Running on ${serviceAccount.project_id}`);
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    databaseURL: `https://${serviceAccount.project_id}.firebaseio.com`,
+const main = async (deployRequestPath: string, currentBuild) => {
+  await db.doc(deployRequestPath).update({
+    deployedAt: serverTimestamp(),
+    currentBuild: currentBuild ?? "",
   });
-  const db = admin.firestore();
+  return true;
+};
 
-  const main = async (deployRequestPath: string, currentBuild) => {
-    await db.doc(deployRequestPath).update({
-      deployedAt: serverTimestamp(),
-      currentBuild: currentBuild ?? "",
-    });
-    return true;
-  };
-
-  main(process.argv[2], process.argv[3])
-    .catch((err) => console.log(err))
-    .then(() => console.log("this will succeed"))
-    .catch(() => "obligatory catch");
-}
+main(process.argv[2], process.argv[3])
+  .catch((err) => console.log(err))
+  .then(() => console.log("this will succeed"))
+  .catch(() => "obligatory catch");

@@ -1,0 +1,10 @@
+{
+  "devDependencies": {
+    "@types/node": "^14.14.6",
+    "playwright": "^1.5.2",
+    "playwright-cli": "^0.150.0"
+  },
+  "dependencies": {
+    "firebase-admin": "^9.3.0"
+  }
+}

@@ -14,7 +14,7 @@ import {
 import { fade } from "@material-ui/core/styles";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 
-import { Table } from "contexts/firetableContext";
+import { Table } from "contexts/FiretableContext";
 import { routes } from "constants/routes";
 
 const useStyles = makeStyles((theme) =>
@@ -113,7 +113,10 @@ export default function NavDrawerItem({
                 to={
                   table.isCollectionGroup
                     ? `${routes.tableGroup}/${table.collection}`
-                    : `${routes.table}/${table.collection}`
+                    : `${routes.table}/${table.collection.replace(
+                        /\//g,
+                        "~2F"
+                      )}`
                 }
               >
                 <ListItemText

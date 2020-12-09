@@ -74,7 +74,7 @@ export default function Text({
       name={name}
       render={({ onChange, onBlur, value }) => {
         const handleChange = (e) => {
-          if (fieldVariant === "number") onChange(parseInt(e.target.value, 10));
+          if (fieldVariant === "number") onChange(Number(e.target.value));
           else onChange(e.target.value);
         };
 

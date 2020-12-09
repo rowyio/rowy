@@ -15,9 +15,9 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import Switch from "@material-ui/core/Switch";
 import CodeEditor from "../editors/CodeEditor";
-import { useFiretableContext } from "../../../contexts/firetableContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 import { WEBHOOK_URL } from "../../../firebase";
-import { makeId } from "../../../util/fns";
+import { makeId } from "../../../utils/fns";
 import { DocActions } from "hooks/useDoc";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

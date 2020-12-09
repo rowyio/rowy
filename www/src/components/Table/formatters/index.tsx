@@ -2,6 +2,7 @@ import React, { lazy } from "react";
 import { FieldType } from "constants/fields";
 
 import withCustomCell from "./withCustomCell";
+import Text from "./Text";
 
 const MultiSelect = lazy(
   () => import("./MultiSelect" /* webpackChunkName: "MultiSelect" */)
@@ -31,12 +32,14 @@ const Action = lazy(() => import("./Action" /* webpackChunkName: "Action" */));
 const ConnectTable = lazy(
   () => import("./ConnectTable" /* webpackChunkName: "ConnectTable" */)
 );
+const ConnectService = lazy(() => import("./ConnectService"));
 const SubTable = lazy(
   () => import("./SubTable" /* webpackChunkName: "SubTable" */)
 );
 const Percentage = lazy(
   () => import("./Percentage" /* webpackChunkName: "Percentage" */)
 );
+const Id = lazy(() => import("./Id" /* webpackChunkName: "Id" */));
 
 /**
  * Gets the corresponding formatter for each cell.
@@ -106,15 +109,21 @@ export const getFormatter = (column: any, readOnly: boolean = false) => {
     case FieldType.connectTable:
       return withCustomCell(ConnectTable, readOnly);
 
+    case FieldType.connectService:
+      return withCustomCell(ConnectService, readOnly);
+
     case FieldType.subTable:
       return withCustomCell(SubTable, readOnly);
+
+    case FieldType.id:
+      return withCustomCell(Id, readOnly);
 
     case FieldType.shortText:
     case FieldType.email:
     case FieldType.phone:
     case FieldType.number:
     case FieldType.slider:
-      return undefined;
+      return withCustomCell(Text, readOnly);
 
     default:
       return () => <div />;

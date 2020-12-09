@@ -19,6 +19,9 @@ export const useStyles = makeStyles((theme) =>
       borderRadius: `${theme.shape.borderRadius * 2}px 0 0 ${
         theme.shape.borderRadius * 2
       }px`,
+      backgroundColor:
+        theme.palette.background.elevation?.[24] ??
+        theme.palette.background.paper,
 
       width: DRAWER_WIDTH,
       overflowX: "visible",
@@ -28,6 +31,8 @@ export const useStyles = makeStyles((theme) =>
         easing: theme.transitions.easing.custom,
         duration: theme.transitions.duration.standard,
       }),
+
+      zIndex: theme.zIndex.drawer + 50,
     },
     paperClose: {
       transform: `translateX(${DRAWER_WIDTH - DRAWER_COLLAPSED_WIDTH}px)`,
@@ -55,7 +60,8 @@ export const useStyles = makeStyles((theme) =>
 
       "&$disabled": {
         boxShadow: theme.shadows[6],
-        backgroundColor: theme.palette.grey[300],
+        backgroundColor:
+          theme.palette.grey[theme.palette.type === "light" ? 300 : 800],
       },
 
       "& + &": { marginTop: theme.spacing(4) },

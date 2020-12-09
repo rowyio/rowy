@@ -4,6 +4,9 @@ import { CustomCellProps } from "./withCustomCell";
 import { useDebouncedCallback } from "use-debounce";
 
 import { makeStyles, createStyles } from "@material-ui/core";
+import DateRangeIcon from "@material-ui/icons/DateRange";
+import TimeIcon from "@material-ui/icons/Schedule";
+
 import { FieldType, DateIcon, DateTimeIcon } from "constants/fields";
 import { DATE_FORMAT, DATE_TIME_FORMAT } from "constants/dates";
 
@@ -15,7 +18,7 @@ import {
   DatePickerProps,
 } from "@material-ui/pickers";
 
-import { useFiretableContext } from "contexts/firetableContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -37,10 +40,14 @@ const useStyles = makeStyles((theme) =>
       height: "100%",
       padding: theme.spacing(1.5, 0),
     },
+
+    dateTabIcon: {
+      color: theme.palette.primary.contrastText,
+    },
   })
 );
 
-export default function Date({
+export default function _Date({
   rowIdx,
   column,
   value,
@@ -49,7 +56,13 @@ export default function Date({
   const classes = useStyles();
   const { dataGridRef } = useFiretableContext();
 
-  const transformedValue = value && "toDate" in value ? value.toDate() : null;
+  const transformedValue = !value
+    ? null
+    : typeof value === "number"
+    ? new Date(value)
+    : "toDate" in value
+    ? value.toDate()
+    : null;
 
   const fieldType = (column as any).type;
   const Picker =
@@ -92,6 +105,8 @@ export default function Date({
           classes: { root: "row-hover-iconButton" },
         }}
         DialogProps={{ onClick: (e) => e.stopPropagation() }}
+        dateRangeIcon={<DateRangeIcon className={classes.dateTabIcon} />}
+        timeIcon={<TimeIcon className={classes.dateTabIcon} />}
       />
     </MuiPickersUtilsProvider>
   );

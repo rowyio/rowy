@@ -19,7 +19,10 @@ export default function Rating({
   onSubmit,
 }: CustomCellProps) {
   const classes = useStyles();
-  const { max } = (column as any).config as { max: number };
+  const { max, precision } = ((column as any).config ?? {}) as {
+    max: number;
+    precision: number;
+  };
   return (
     <MuiRating
       name={`${row.id}-${column.key as string}`}
@@ -30,6 +33,7 @@ export default function Rating({
       emptyIcon={<StarBorderIcon />}
       // TODO: Make this customisable in config
       max={max ?? 5}
+      precision={precision ?? 1}
       classes={{ root: classes.rating, iconEmpty: classes.iconEmpty }}
     />
   );

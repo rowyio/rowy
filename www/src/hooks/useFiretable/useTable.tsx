@@ -5,9 +5,9 @@ import React, { useEffect, useReducer, useContext } from "react";
 import equals from "ramda/es/equals";
 import firebase from "firebase/app";
 import { FireTableFilter, FiretableOrderBy } from ".";
-import { SnackContext } from "../../contexts/snackContext";
+import { SnackContext } from "contexts/SnackContext";
 import { cloudFunction } from "../../firebase/callables";
-import { isCollectionGroup, generateSmallerId } from "util/fns";
+import { isCollectionGroup, generateSmallerId } from "utils/fns";
 const CAP = 1000; // safety  paramter sets the  upper limit of number of docs fetched by this hook
 const serverTimestamp = firebase.firestore.FieldValue.serverTimestamp;
 
@@ -66,7 +66,7 @@ const useTable = (initialOverrides: any) => {
       | firebase.firestore.CollectionReference
       | firebase.firestore.Query = isCollectionGroup()
       ? db.collectionGroup(tableState.path)
-      : db.collection(tableState.path);
+      : db.collection(tableState.path.replace(/~2F/g, "/"));
 
     filters.forEach((filter) => {
       if (filter.key && filter.operator && filter.value !== undefined)
@@ -99,7 +99,7 @@ const useTable = (initialOverrides: any) => {
       },
       (error: any) => {
         //TODO:callable to create new index
-        if (error.message.includes("indexes?create_composite=")) {
+        if (error?.message.includes("indexes?create_composite=")) {
           const url =
             `https://console.firebase.google.com/project/${process.env.REACT_APP_FIREBASE_PROJECT_ID}/database/firestore/` +
             "indexes?create_composite=" +

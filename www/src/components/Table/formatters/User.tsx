@@ -1,26 +1,19 @@
 import React from "react";
 import { CustomCellProps } from "./withCustomCell";
-import DateFnsAdapter from "@date-io/date-fns";
-import Avatar from "@material-ui/core/Avatar";
-import Chip from "@material-ui/core/Chip";
-import { makeStyles, createStyles, Tooltip, Fade } from "@material-ui/core";
-const dateFns = new DateFnsAdapter();
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    root: {},
-  })
-);
 
-export default function FiretableUser({ column, value }: CustomCellProps) {
-  if (!value || !value.displayName || !value.timestamp) return <div />;
+import { Tooltip, Chip, Avatar } from "@material-ui/core";
 
-  const updatedAt = dateFns.format(value.timestamp.toDate(), "hh:mma ddMMM");
+import { format } from "date-fns";
+import { DATE_TIME_FORMAT } from "constants/dates";
+
+export default function User({ value }: CustomCellProps) {
+  if (!value || !value.displayName || !value.timestamp) return null;
+
   return (
-    <Tooltip title={updatedAt}>
+    <Tooltip title={format(value.timestamp.toDate(), DATE_TIME_FORMAT)}>
       <Chip
-        avatar={<Avatar alt={value.displayName} src={value.photoURL} />}
+        avatar={<Avatar alt="Avatar" src={value.photoURL} />}
         label={value.displayName}
-        //  onDelete={handleDelete}
       />
     </Tooltip>
   );

@@ -13,7 +13,6 @@ import {
   createStyles,
   Grid,
   Typography,
-  Button,
   Divider,
   FormControlLabel,
   Checkbox,
@@ -21,12 +20,12 @@ import {
 import DragHandleIcon from "@material-ui/icons/DragHandle";
 
 import { IStepProps } from ".";
-import FadeList from "./FadeList";
-import Column from "./Column";
+import FadeList from "../FadeList";
+import Column from "../Column";
 import EmptyState from "components/EmptyState";
-import AddColumnIcon from "assets/icons/ColumnPlusAfter";
+import AddColumnIcon from "assets/icons/AddColumn";
 
-import { useFiretableContext } from "contexts/firetableContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 import { FieldType } from "constants/fields";
 import { suggestType } from "./utils";
 
@@ -47,7 +46,9 @@ export default function Step1Columns({ config, setConfig }: IStepProps) {
     const sample = tableState!.rows.slice(0, 50);
     const fields_ = new Set<string>();
     sample.forEach((doc) =>
-      Object.keys(doc).forEach((key) => fields_.add(key))
+      Object.keys(doc).forEach((key) => {
+        if (key !== "ref") fields_.add(key);
+      })
     );
     return Array.from(fields_).sort();
   }, [tableState?.rows]);

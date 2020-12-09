@@ -10,9 +10,14 @@ import Step3Types from "./Step3Types";
 import Step4Preview from "./Step4Preview";
 
 import { ColumnConfig } from "hooks/useFiretable/useTableConfig";
-import { useFiretableContext } from "contexts/firetableContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 
 export type TableColumnsConfig = { [key: string]: ColumnConfig };
+
+export type ImportWizardRef = {
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
 export interface IStepProps {
   config: TableColumnsConfig;
@@ -25,21 +30,25 @@ export default function ImportWizard() {
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.down("xs"));
 
+  const { tableState, tableActions, importWizardRef } = useFiretableContext();
+
   const [open, setOpen] = useState(false);
+  if (importWizardRef) importWizardRef.current = { open, setOpen };
 
   const [config, setConfig] = useState<TableColumnsConfig>({});
   const updateConfig: IStepProps["updateConfig"] = (value) => {
     setConfig((prev) => ({ ..._merge(prev, value) }));
   };
 
-  const { tableState, tableActions } = useFiretableContext();
   useEffect(() => {
-    if (
-      tableState?.config.tableConfig.doc &&
-      !tableState?.config.tableConfig.doc?.columns
-    )
-      setOpen(true);
-  }, [tableState]);
+    if (!tableState || !open) return;
+
+    if (Array.isArray(tableState.filters) && tableState.filters?.length > 0)
+      tableActions!.table.filter([]);
+
+    if (Array.isArray(tableState.orderBy) && tableState.orderBy?.length > 0)
+      tableActions!.table.orderBy([]);
+  }, [open, tableState]);
 
   if (tableState?.rows.length === 0) return null;
 

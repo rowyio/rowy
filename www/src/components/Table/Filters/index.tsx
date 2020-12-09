@@ -24,10 +24,10 @@ import ButtonWithStatus from "components/ButtonWithStatus";
 
 import { FieldType } from "constants/fields";
 import { FireTableFilter } from "hooks/useFiretable";
-import { useFiretableContext } from "contexts/firetableContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 
 import DocSelector from "./DocSelector";
-import { useAppContext } from "contexts/appContext";
+import { useAppContext } from "contexts/AppContext";
 import { DocActions } from "hooks/useDoc";
 const OPERATORS = [
   {
@@ -133,6 +133,7 @@ const Filters = () => {
         tableActions?.table.filter(
           userDoc.state.doc.tables[tableState?.tablePath].filters
         );
+        tableActions?.table.orderBy();
       }
     }
   }, [userDoc.state, tableState?.tablePath]);
@@ -249,7 +250,7 @@ const Filters = () => {
           return (
             <MultiSelect
               multiple
-              freeText={false}
+              freeText={true}
               onChange={(value) => setQuery((query) => ({ ...query, value }))}
               options={
                 selectedColumn.config.options
@@ -264,8 +265,8 @@ const Filters = () => {
 
         return (
           <MultiSelect
+            freeText={true}
             multiple={false}
-            freeText={false}
             onChange={(value) => {
               if (value !== null) setQuery((query) => ({ ...query, value }));
             }}
@@ -296,6 +297,10 @@ const Filters = () => {
             freeText={true}
           />
         );
+
+      case FieldType.date:
+      case FieldType.dateTime:
+        return <>//TODO:Date/Time picker</>;
       default:
         return <>Not available</>;
         // return <TextField variant="filled" fullWidth disabled />;
@@ -349,8 +354,8 @@ const Filters = () => {
         anchorEl={anchorEl}
         classes={{ paper: classes.paper }}
         onClose={handleClose}
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        transformOrigin={{ vertical: "top", horizontal: "right" }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        transformOrigin={{ vertical: "top", horizontal: "left" }}
       >
         <IconButton className={classes.closeButton} onClick={handleClose}>
           <CloseIcon />
@@ -441,7 +446,9 @@ const Filters = () => {
                   Select Condition
                 </MenuItem>
                 {operators.map((operator) => (
-                  <MenuItem value={operator.value}>{operator.label}</MenuItem>
+                  <MenuItem key={operator.value} value={operator.value}>
+                    {operator.label}
+                  </MenuItem>
                 ))}
               </TextField>
             </Grid>
