@@ -1,5 +1,6 @@
 import * as admin from "firebase-admin";
 export const serverTimestamp = admin.firestore.FieldValue.serverTimestamp;
+import { sendEmail } from "./email";
 import { hasAnyRole } from "./auth";
 
 const characters =
@@ -13,7 +14,7 @@ export function generateId(length: number): string {
   return result;
 }
 
-const hasRequiredFields = (requiredFields: string[], data: any) =>
+export const hasRequiredFields = (requiredFields: string[], data: any) =>
   requiredFields.reduce((acc: boolean, currField: string) => {
     if (data[currField] === undefined || data[currField] === null) return false;
     else return acc;
@@ -33,6 +34,7 @@ const identifyTriggerType = (beforeData: any, afterData: any) =>
 export default {
   hasRequiredFields,
   generateId,
+  sendEmail,
   serverTimestamp,
   hasAnyRole,
   asyncForEach,
