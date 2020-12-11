@@ -9,7 +9,7 @@ function execute(command, callback) {
 
 export const addPackages = (packages: { name: string; version?: string }[]) => {
   //const command =`cd FT_functions/functions;yarn add ${packageName}@${version}`
-  const command = `cd FT_functions/functions;yarn add ${packages.reduce(
+  const command = `cd ../functions;yarn add ${packages.reduce(
     (acc, currPackage) => {
       return `${acc} ${currPackage.name}@${currPackage.version ?? "latest"}`;
     },

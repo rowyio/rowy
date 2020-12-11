@@ -6,7 +6,7 @@ import * as admin from "firebase-admin";
 //const serverTimestamp = admin.firestore.FieldValue.serverTimestamp;
 
 //admin.initializeApp();
-const serviceAccount = require("../antler-develop-firebase.json");
+const serviceAccount = require("./antler-vc-firebase.json");
 admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
 const db = admin.firestore();
 
@@ -26,9 +26,13 @@ export const generateConfigFromTableSchema = async (schemaDocPath) => {
         throw new Error(
           `${currColumn.key} derivative is missing listener fields`
         );
+      if (currColumn.config.listenerFields.includes(currColumn.key))
+        throw new Error(
+          `${currColumn.key} derivative has its own key as a listener field`
+        );
       return `${acc}{\nfieldName:'${
         currColumn.key
-      }',evaluate:async ({row,ref,db,auth}) =>{${
+      }',evaluate:async ({row,ref,db,auth,utilFns}) =>{${
         currColumn.config.script
       }},\nlistenerFields:[${currColumn.config.listenerFields
         .map((fieldKey) => `"${fieldKey}"`)
@@ -37,7 +41,9 @@ export const generateConfigFromTableSchema = async (schemaDocPath) => {
     ""
   )}]`;
 
-  const sparksConfig = `[${schemaData.sparks.join(",\n")}]`;
+  const sparksConfig = `[${
+    schemaData.sparks ? schemaData.sparks.join(",\n") : ""
+  }]`;
   const collectionId = schemaDocPath.split("/").pop();
   const functionName = `"${collectionId}"`;
   const triggerPath = `"${collectionId}/{docId}"`;
@@ -52,7 +58,7 @@ export const generateConfigFromTableSchema = async (schemaDocPath) => {
     return `${acc}\nexport const ${currKey} = ${exports[currKey]}`;
   }, ``);
   fs.writeFileSync(
-    "./src/functionConfig.ts",
+    "../functions/src/functionConfig.ts",
     beautify(fileData, { indent_size: 2 })
   );
 };

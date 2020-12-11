@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import { db, auth } from "../firebaseConfig";
-
+import utilFns from "../utils";
 const shouldEvaluateReducer = (listeners, before, after) =>
   listeners.reduce((acc: Boolean, currField: string) => {
     if (acc) return true;
@@ -20,6 +20,7 @@ const derivative = (
       ref: FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>;
       db: FirebaseFirestore.Firestore;
       auth: admin.auth.Auth;
+      utilFns: any;
     }) => any;
   }[]
 ) => async (
@@ -42,6 +43,7 @@ const derivative = (
           ref,
           db,
           auth,
+          utilFns,
         });
         if (newValue !== undefined) {
           return {

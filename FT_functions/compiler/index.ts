@@ -2,9 +2,12 @@ import { addPackages } from "./terminal";
 const fs = require("fs");
 import { generateConfigFromTableSchema } from "./loader";
 
-generateConfigFromTableSchema("/_FIRETABLE_/settings/schema/portfolio").then(
+generateConfigFromTableSchema("/_FIRETABLE_/settings/schema/icManagement").then(
   () => {
-    const configFile = fs.readFileSync("./src/functionConfig.ts", "utf-8");
+    const configFile = fs.readFileSync(
+      "../functions/src/functionConfig.ts",
+      "utf-8"
+    );
     const requiredDependencies = configFile.match(
       /(?<=(require\(("|'))).*?(?=("|')\))/g
     );
