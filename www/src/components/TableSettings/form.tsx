@@ -110,7 +110,7 @@ export const tableSettings = (
     type: FIELDS.multiSelect,
     name: "roles",
     label: "Accessed By*",
-    options: roles,
+    options: roles??[],
     validation: yup.array().of(yup.string()).required("Required"),
     freeText: true,
   },
@@ -139,7 +139,7 @@ export const tableSettings = (
     ),
   }),
   () =>
-    mode === TableSettingsDialogModes.create && tables?.length !== 0
+    mode === TableSettingsDialogModes.create && tables &&tables?.length !== 0
       ? {
           type: FIELDS.multiSelect,
           name: "schemaSource",
