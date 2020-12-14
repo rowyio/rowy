@@ -41,9 +41,8 @@ export const generateConfigFromTableSchema = async (schemaDocPath) => {
     ""
   )}]`;
 
-  const sparksConfig = `[${
-    schemaData.sparks ? schemaData.sparks.join(",\n") : ""
-  }]`;
+  const sparksConfig = schemaData.sparks ? schemaData.sparks : "[]";
+
   const collectionId = schemaDocPath.split("/").pop();
   const functionName = `"${collectionId}"`;
   const triggerPath = `"${collectionId}/{docId}"`;

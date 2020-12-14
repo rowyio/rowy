@@ -1,22 +1,20 @@
-import { addPackages } from "./terminal";
+import { addPackages, addSparkLib } from "./terminal";
 const fs = require("fs");
 import { generateConfigFromTableSchema } from "./loader";
-
-generateConfigFromTableSchema("/_FIRETABLE_/settings/schema/icManagement").then(
-  () => {
-    const configFile = fs.readFileSync(
-      "../functions/src/functionConfig.ts",
-      "utf-8"
-    );
-    const requiredDependencies = configFile.match(
-      /(?<=(require\(("|'))).*?(?=("|')\))/g
-    );
-
-    console.log(requiredDependencies);
-    if (requiredDependencies) {
-      addPackages(requiredDependencies.map((p) => ({ name: p })));
-    }
+generateConfigFromTableSchema(process.argv[2]).then(async () => {
+  const configFile = fs.readFileSync(
+    "../functions/src/functionConfig.ts",
+    "utf-8"
+  );
+  const requiredDependencies = configFile.match(
+    /(?<=(require\(("|'))).*?(?=("|')\))/g
+  );
+  if (requiredDependencies) {
+    await addPackages(requiredDependencies.map((p) => ({ name: p })));
   }
-);
 
-//addPackage('algoliasearch')
+  const { sparksConfig } = require("../functions/src/functionConfig");
+  const requiredSparks = sparksConfig.map((s) => s.type);
+  console.log({ requiredSparks });
+  await Promise.all(requiredSparks.map((s) => addSparkLib(s)));
+});

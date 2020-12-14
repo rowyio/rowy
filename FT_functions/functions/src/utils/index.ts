@@ -39,10 +39,10 @@ async function asyncForEach(array: any[], callback: Function) {
     await callback(array[index], index, array);
   }
 }
-const identifyTriggerType = (beforeData: any, afterData: any) =>
-  Boolean(beforeData) && Boolean(afterData)
+export const getTriggerType = (change) =>
+  Boolean(change.after.data()) && Boolean(change.before.data())
     ? "update"
-    : Boolean(afterData)
+    : Boolean(change.after.data())
     ? "create"
     : "delete";
 
@@ -54,5 +54,4 @@ export default {
   serverTimestamp,
   hasAnyRole,
   asyncForEach,
-  identifyTriggerType,
 };

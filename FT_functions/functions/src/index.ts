@@ -7,6 +7,8 @@ import {
   derivativesConfig,
   sparksConfig,
 } from "./functionConfig";
+
+import { getTriggerType } from "./utils";
 // import { //db, auth,
 //   env } from "./config";
 //import * as admin from "firebase-admin";
@@ -22,19 +24,25 @@ export const FT = {
   [functionName]: functions.firestore
     .document(triggerPath)
     .onWrite(async (change, context) => {
+      const triggerType = getTriggerType(change);
       let promises: Promise<any>[] = [];
       try {
-        const sparkPromises = sparksConfig.map((sparkConfig) =>
-          spark(sparkConfig)(change, context)
+        const sparkPromises = sparksConfig
+          .filter((sparkConfig) => sparkConfig.triggers.includes(triggerType))
+          .map((sparkConfig) => spark(sparkConfig)(change, context));
+        console.log(
+          `#${sparkPromises.length} sparks will be evaluted on ${triggerType}`
         );
         promises = sparkPromises;
       } catch (err) {}
       try {
-        const derivativePromise = derivative(derivativesConfig)(
-          change,
-          context
-        );
-        promises.push(derivativePromise);
+        if (triggerType !== "delete") {
+          const derivativePromise = derivative(derivativesConfig)(
+            change,
+            context
+          );
+          promises.push(derivativePromise);
+        }
       } catch (err) {}
       await Promise.all(promises);
     }),

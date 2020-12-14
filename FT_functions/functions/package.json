@@ -16,7 +16,6 @@
   "dependencies": {
     "@google-cloud/pubsub": "^2.7.0",
     "@google-cloud/secret-manager": "^3.2.3",
-    "algoliasearch": "^4.8.3",
     "firebase-admin": "^9.2.0",
     "firebase-functions": "^3.11.0"
   },
