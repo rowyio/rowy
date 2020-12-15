@@ -136,11 +136,6 @@
   resolved "https://registry.yarnpkg.com/@google-cloud/precise-date/-/precise-date-1.0.3.tgz#39c600ed52213f4158692a72c90d13b2162a93d2"
   integrity sha512-wWnDGh9y3cJHLuVEY8t6un78vizzMWsS7oIWKeFtPj+Ndy+dXvHW0HTx29ZUhen+tswSlQYlwFubvuRP5kKdzQ==
 
-"@google-cloud/precise-date@^2.0.0":
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/@google-cloud/precise-date/-/precise-date-2.0.3.tgz#14f6f28ce35dabf3882e7aeab1c9d51bd473faed"
-  integrity sha512-+SDJ3ZvGkF7hzo6BGa8ZqeK3F6Z4+S+KviC9oOK+XCs3tfMyJCh/4j93XIWINgMMDIh9BgEvlw4306VxlXIlYA==
-
 "@google-cloud/projectify@^1.0.0":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@google-cloud/projectify/-/projectify-1.0.4.tgz#28daabebba6579ed998edcadf1a8f3be17f3b5f0"
@@ -181,27 +176,6 @@
     lodash.snakecase "^4.1.1"
     p-defer "^3.0.0"
     protobufjs "^6.8.1"
-
-"@google-cloud/pubsub@^2.7.0":
-  version "2.7.0"
-  resolved "https://registry.yarnpkg.com/@google-cloud/pubsub/-/pubsub-2.7.0.tgz#b5c9cf776cbccb5a2c6594318934c14eab7de405"
-  integrity sha512-wc/XOo5Ibo3GWmuaLu80EBIhXSdu2vf99HUqBbdsSSkmRNIka2HqoIhLlOFnnncQn0lZnGL7wtKGIDLoH9LiBg==
-  dependencies:
-    "@google-cloud/paginator" "^3.0.0"
-    "@google-cloud/precise-date" "^2.0.0"
-    "@google-cloud/projectify" "^2.0.0"
-    "@google-cloud/promisify" "^2.0.0"
-    "@opentelemetry/api" "^0.11.0"
-    "@opentelemetry/tracing" "^0.11.0"
-    "@types/duplexify" "^3.6.0"
-    "@types/long" "^4.0.0"
-    arrify "^2.0.0"
-    extend "^3.0.2"
-    google-auth-library "^6.1.2"
-    google-gax "^2.9.2"
-    is-stream-ended "^0.1.4"
-    lodash.snakecase "^4.1.1"
-    p-defer "^3.0.0"
 
 "@google-cloud/secret-manager@^3.2.3":
   version "3.2.3"
@@ -283,51 +257,6 @@
   version "7.1.3"
   resolved "https://registry.yarnpkg.com/@jsdevtools/ono/-/ono-7.1.3.tgz#9df03bbd7c696a5c58885c34aa06da41c8543796"
   integrity sha512-4JQNk+3mVzK3xh2rqd6RB4J46qUR19azEHBneZyTZM+c456qOrbbM/5xcR8huNCCcbVt7+UmizG6GuUvPvKUYg==
-
-"@opentelemetry/api@^0.11.0":
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/@opentelemetry/api/-/api-0.11.0.tgz#e0f6d96b3754306e55fe6154d81ee048c7529fd6"
-  integrity sha512-K+1ADLMxduhsXoZ0GRfi9Pw162FvzBQLDQlHru1lg86rpIU+4XqdJkSGo6y3Kg+GmOWq1HNHOA/ydw/rzHQkRg==
-  dependencies:
-    "@opentelemetry/context-base" "^0.11.0"
-
-"@opentelemetry/context-base@^0.11.0":
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/@opentelemetry/context-base/-/context-base-0.11.0.tgz#60bb6daf0800b6a8aa9f48403a84825f3bb0b1d1"
-  integrity sha512-ESRk+572bftles7CVlugAj5Azrz61VO0MO0TS2pE9MLVL/zGmWuUBQryART6/nsrFqo+v9HPt37GPNcECTZR1w==
-
-"@opentelemetry/core@^0.11.0":
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/@opentelemetry/core/-/core-0.11.0.tgz#4f1aacc825fa25bc1b0977a9983713f814e27f98"
-  integrity sha512-ZEKjBXeDGBqzouz0uJmrbEKNExEsQOhsZ3tJDCLcz5dUNoVw642oIn2LYWdQK2YdIfZbEmltiF65/csGsaBtFA==
-  dependencies:
-    "@opentelemetry/api" "^0.11.0"
-    "@opentelemetry/context-base" "^0.11.0"
-    semver "^7.1.3"
-
-"@opentelemetry/resources@^0.11.0":
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/@opentelemetry/resources/-/resources-0.11.0.tgz#e522354eb791c3bb3b20a06b7793259ad1cedf6c"
-  integrity sha512-o7DwV1TcezqBtS5YW2AWBcn01nVpPptIbTr966PLlVBcS//w8LkjeOShiSZxQ0lmV4b2en0FiSouSDoXk/5qIQ==
-  dependencies:
-    "@opentelemetry/api" "^0.11.0"
-    "@opentelemetry/core" "^0.11.0"
-
-"@opentelemetry/semantic-conventions@^0.11.0":
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/@opentelemetry/semantic-conventions/-/semantic-conventions-0.11.0.tgz#9d2bb0d67620bb8c01c95174fbaaefc109189963"
-  integrity sha512-xsthnI/J+Cx0YVDGgUzvrH0ZTtfNtl866M454NarYwDrc0JvC24sYw+XS5PJyk2KDzAHtb0vlrumUc1OAut/Fw==
-
-"@opentelemetry/tracing@^0.11.0":
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/@opentelemetry/tracing/-/tracing-0.11.0.tgz#4003660e91d1069decc4754ba72ab6b32b6035b6"
-  integrity sha512-QweFmxzl32BcyzwdWCNjVXZT1WeENNS/RWETq/ohqu+fAsTcMyGcr6cOq/yDdFmtBy+bm5WVVdeByEjNS+c4/w==
-  dependencies:
-    "@opentelemetry/api" "^0.11.0"
-    "@opentelemetry/context-base" "^0.11.0"
-    "@opentelemetry/core" "^0.11.0"
-    "@opentelemetry/resources" "^0.11.0"
-    "@opentelemetry/semantic-conventions" "^0.11.0"
 
 "@protobufjs/aspromise@^1.1.1", "@protobufjs/aspromise@^1.1.2":
   version "1.1.2"
@@ -2273,7 +2202,7 @@ google-auth-library@^6.0.0, google-auth-library@^6.1.1:
     jws "^4.0.0"
     lru-cache "^6.0.0"
 
-google-auth-library@^6.1.2, google-auth-library@^6.1.3:
+google-auth-library@^6.1.3:
   version "6.1.3"
   resolved "https://registry.yarnpkg.com/google-auth-library/-/google-auth-library-6.1.3.tgz#39d868140b70d0c4b32c6f6d8f4ccc1400d84dca"
   integrity sha512-m9mwvY3GWbr7ZYEbl61isWmk+fvTmOt0YNUfPOUY2VH8K5pZlAIWJjxEi0PqR3OjMretyiQLI6GURMrPSwHQ2g==
@@ -4162,13 +4091,6 @@ semver@^7.0.0, semver@^7.3.2:
   version "7.3.2"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.3.2.tgz#604962b052b81ed0786aae84389ffba70ffd3938"
   integrity sha512-OrOb32TeeambH6UrhtShmF7CRDqhL6/5XpPNp2DuRH6+9QLw/orhp72j87v8Qa1ScDkvrrBNpZcDejAirJmfXQ==
-
-semver@^7.1.3:
-  version "7.3.4"
-  resolved "https://registry.yarnpkg.com/semver/-/semver-7.3.4.tgz#27aaa7d2e4ca76452f98d3add093a72c943edc97"
-  integrity sha512-tCfb2WLjqFAtXn4KEdxIhalnRtoKFN7nAwj0B3ZXCbQloV2tq5eDbcTmT68JJD3nRJq24/XgxtQKFIpQdtvmVw==
-  dependencies:
-    lru-cache "^6.0.0"
 
 send@0.17.1:
   version "0.17.1"

@@ -27,39 +27,47 @@ const derivative = (
   change: functions.Change<functions.firestore.DocumentSnapshot>,
   context: functions.EventContext
 ) => {
-  const beforeData = change.before?.data();
-  const afterData = change.after?.data();
-  const ref = change.after ? change.after.ref : change.before.ref;
-  const update = await functionConfig.reduce(
-    async (accUpdates: any, currDerivative) => {
-      const shouldEval = shouldEvaluateReducer(
-        currDerivative.listenerFields,
-        beforeData,
-        afterData
-      );
-      if (shouldEval) {
-        const newValue = await currDerivative.evaluate({
-          row: afterData,
-          ref,
-          db,
-          auth,
-          utilFns,
-        });
-        if (newValue !== undefined) {
-          return {
-            ...(await accUpdates),
-            [currDerivative.fieldName]: newValue,
-          };
+  try {
+    const beforeData = change.before?.data();
+    const afterData = change.after?.data();
+    const ref = change.after ? change.after.ref : change.before.ref;
+    const update = await functionConfig.reduce(
+      async (accUpdates: any, currDerivative) => {
+        const shouldEval = shouldEvaluateReducer(
+          currDerivative.listenerFields,
+          beforeData,
+          afterData
+        );
+        if (shouldEval) {
+          const newValue = await currDerivative.evaluate({
+            row: afterData,
+            ref,
+            db,
+            auth,
+            utilFns,
+          });
+          if (
+            newValue !== undefined &&
+            newValue !== afterData[currDerivative.fieldName]
+          ) {
+            return {
+              ...(await accUpdates),
+              [currDerivative.fieldName]: newValue,
+            };
+          }
         }
-      }
-      return await accUpdates;
-    },
-    {}
-  );
-  if (Object.keys(update).length !== 0) {
-    return ref.update(update);
+        return await accUpdates;
+      },
+      {}
+    );
+    if (Object.keys(update).length !== 0) {
+      return ref.update(update);
+    }
+    return false;
+  } catch (error) {
+    console.log(`Derivatives Error`, error);
+    return false;
   }
-  return false;
 };
 
 export default derivative;

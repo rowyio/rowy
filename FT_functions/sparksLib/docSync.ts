@@ -24,13 +24,17 @@ const docSync = async (data, sparkContext) => {
   const record = rowReducer(fieldsToSync, row);
   const { db } = require("../firebaseConfig");
 
-  switch (sparkContext.triggerType) {
+  switch (triggerType) {
     case "delete":
       await db.doc(targetPath).delete();
       break;
     case "update":
       if (significantDifference(fieldsToSync, change)) {
-        await db.doc(targetPath).update(record);
+        try {
+          await db.doc(targetPath).update(record);
+        } catch (error) {
+          console.log(error);
+        }
       }
       break;
     case "create":
