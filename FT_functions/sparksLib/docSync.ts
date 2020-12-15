@@ -6,7 +6,7 @@ const rowReducer = (fieldsToSync, row) =>
     if (row[curr] !== undefined && row[curr] !== null)
       return { ...acc, [curr]: row[curr] };
     else return acc;
-  });
+  }, {});
 
 const significantDifference = (fieldsToSync, change) => {
   const beforeData = change.before.data();
