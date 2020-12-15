@@ -60,7 +60,6 @@ export default function SparksEditor() {
   const handleSave = () => {
     tableActions?.table.updateConfig("sparks", localSparks);
     setOpen(false);
-
     requestConfirmation({
       title: "Deploy Changes",
       body: "Would you like to redeploy the cloud function for this table now?",

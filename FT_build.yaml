@@ -4,26 +4,20 @@ steps:
   #     - --destination=gcr.io/$PROJECT_ID/image
   #     - --cache=true
   #     - --cache-ttl=24h
-  # - name: gcr.io/cloud-builders/gcloud
-  #   args:
-  #     - kms
-  #     - decrypt
-  #     - --ciphertext-file=cloud_functions/functions/firebase-credentials.json.enc
-  #     - --plaintext-file=cloud_functions/functions/firebase-credentials.json
-  #     - --location=global
-  #     - --keyring=antler-vc
-  #     - --key=cloudbuild-env
-  - name: node:10.15.1
+  - name: node:12.20.0
     entrypoint: yarn
     args: ["install"]
-    dir: "cloud_functions/functions"
-  - name: node:10.15.1
+    dir: "FT_functions/compiler"
+  - name: node:12.20.0
     entrypoint: yarn
     args:
-      - "generateConfig"
-      - "${_FUNCTIONS_GROUP}"
-      - "${_FUNCTION_CONFIG}"
-    dir: "cloud_functions/functions"
+      - "compile"
+      - "${_SCHEMA_PATH}"
+    dir: "FT_functions/compiler"
+  - name: node:12.20.0
+    entrypoint: yarn
+    args: ["install"]
+    dir: "FT_functions/functions"
   - name: node:10.15.1
     entrypoint: yarn
     args:
@@ -33,24 +27,23 @@ steps:
       - "--token"
       - "${_FIREBASE_TOKEN}"
       - "--only"
-      - "functions:${_FUNCTIONS_GROUP}"
-    dir: "cloud_functions/functions"
+      - "functions"
+    dir: "FT_functions/functions"
   # - name: gcr.io/cloud-builders/gcloud
   #   args:
   #     - functions
   #     - deploy
   #     - "${_FUNCTIONS_GROUP}"
   #   dir: "cloud_functions/functions"
-  - name: node:10.15.1
-    entrypoint: yarn
-    args:
-      - "updateStatus"
-      - "${_REQUEST_DOC_PATH}"
-      - "${_FUNCTION_CONFIG}"
-    dir: "cloud_functions/functions"
+  # - name: node:10.15.1
+  #   entrypoint: yarn
+  #   args:
+  #     - "updateStatus"
+  #     - "${_REQUEST_DOC_PATH}"
+  #     - "${_FUNCTION_CONFIG}"
+  #   dir: "cloud_functions/functions"
 
 substitutions:
   _PROJECT_ID: "project-id" # default value
-  _FUNCTIONS_GROUP: "exportTable" # default value
 options:
   machineType: "N1_HIGHCPU_8"
