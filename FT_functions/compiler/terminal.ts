@@ -25,13 +25,13 @@ export const addPackages = (packages: { name: string; version?: string }[]) =>
   });
 
 export const addSparkLib = (name: string) =>
-  new Promise((resolve, reject) => {
+  new Promise(async (resolve, reject) => {
     const { dependencies } = require(`../sparksLib/${name}`);
     const packages = Object.keys(dependencies).map((key) => ({
       name: key,
       version: dependencies[key],
     }));
-    addPackages(packages);
+    await addPackages(packages);
     const command = `cp ../sparksLib/${name}.ts ../functions/src/sparks/${name}.ts`;
     execute(command, function () {
       resolve(true);
