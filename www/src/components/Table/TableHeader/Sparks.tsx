@@ -22,7 +22,7 @@ import SparkIcon from "@material-ui/icons/DeviceHubOutlined";
 import { SnackContext } from "contexts/SnackContext";
 import { useFiretableContext } from "contexts/FiretableContext";
 import CodeEditor from "../editors/CodeEditor";
-
+import { triggerCloudBuild } from "../../../firebase/callables";
 const useStyles = makeStyles(() =>
   createStyles({
     button: {
@@ -37,6 +37,8 @@ export default function SparksEditor() {
   const [open, setOpen] = useState(false);
 
   const { tableState, tableActions } = useFiretableContext();
+  console.log({ tableState });
+  console.log();
   const snackContext = useContext(SnackContext);
   const { requestConfirmation } = useConfirmation();
   const currentSparks = tableState?.config.sparks ?? "";
@@ -58,6 +60,19 @@ export default function SparksEditor() {
   const handleSave = () => {
     tableActions?.table.updateConfig("sparks", localSparks);
     setOpen(false);
+
+    requestConfirmation({
+      title: "Deploy Changes",
+      body: "Would you like to redeploy the cloud function for this table now?",
+      confirm: "Deploy",
+      cancel: "later",
+      handleConfirm: async () => {
+        const response = await triggerCloudBuild(
+          tableState?.config.tableConfig.path
+        );
+        console.log(response);
+      },
+    });
   };
 
   return (
