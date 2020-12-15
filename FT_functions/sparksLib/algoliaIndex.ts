@@ -32,7 +32,7 @@ const algoliaSpark = async (data, sparkContext) => {
   const client = algoliasearch(appId, adminKey);
   const _index = client.initIndex(index); // initialize algolia index
 
-  switch (sparkContext.triggerType) {
+  switch (triggerType) {
     case "delete":
       await _index.deleteObject(objectID);
       break;

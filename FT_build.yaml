@@ -18,7 +18,7 @@ steps:
     entrypoint: yarn
     args: ["install"]
     dir: "FT_functions/functions"
-  - name: node:10.15.1
+  - name: node:10.20.0
     entrypoint: yarn
     args:
       - "deployFT"
