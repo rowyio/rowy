@@ -3,6 +3,7 @@ export const dependencies = {
 };
 
 const isEmpty = (obj) =>
+  obj !== false &&
   [Object, Array].includes((obj || {}).constructor) &&
   !Object.entries(obj || {}).length;
 const get = (obj, path, defaultValue = undefined) => {
@@ -46,13 +47,13 @@ const rowReducer = (fieldsToSync, row) =>
             ...acc,
             [curr]: row[curr].toDate().getTime() / 1000,
           };
-        } else if (!isEmpty(row[curr])) {
+        } else if (row[curr] !== undefined || row[curr] !== null) {
           return { ...acc, [curr]: row[curr] };
         } else {
           return acc;
         }
       } else {
-        if (!isEmpty(row[curr.fieldName]) && curr.snapshotFields) {
+        if (row[curr.fieldName] && curr.snapshotFields) {
           return {
             ...acc,
             [curr.fieldName]: row[curr.fieldName].map((snapshot) =>
