@@ -22,6 +22,7 @@ import Derivative from "./Derivative";
 import Aggregate from "./Aggregate";
 import User from "./User";
 import Id from "./Id";
+import Rating from "./Rating";
 
 // Export field configs in order for FieldsDropdown
 export const FIELDS: IFieldConfig[] = [
@@ -35,7 +36,7 @@ export const FIELDS: IFieldConfig[] = [
   Checkbox,
   Number_,
   Percentage,
-  // TODO: rating,
+  Rating,
   // TODO: slider,
   // TODO: color,
   // DATE & TIME
