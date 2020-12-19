@@ -16,7 +16,7 @@ export interface IFieldConfig {
   TableCell: React.ComponentType<FormatterProps>;
   TableEditor: React.ComponentType<EditorProps<any>>;
   SideDrawerField: React.ComponentType<ISideDrawerFieldProps>;
-  // settings
+  settings?: React.ReactNode;
   csvExport?: (value: any) => string;
   csvImportParser?: (value: string) => any;
 }
