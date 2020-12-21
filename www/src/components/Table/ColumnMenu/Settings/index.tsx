@@ -1,10 +1,9 @@
-import React, { useState, lazy, Suspense } from "react";
+import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import Grid from "@material-ui/core/Grid";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import Slider from "@material-ui/core/Slider";
 import {
   Typography,
   IconButton,
@@ -19,9 +18,7 @@ import OptionsInput from "./ConfigFields/OptionsInput";
 import { useFiretableContext } from "contexts/FiretableContext";
 import MultiSelect from "@antlerengineering/multiselect";
 import _sortBy from "lodash/sortBy";
-import FieldsDropdown from "../FieldsDropdown";
 import ColumnSelector from "./ConfigFields/ColumnSelector";
-import FieldSkeleton from "components/SideDrawer/Form/FieldSkeleton";
 import {getFieldProp} from "components/fields"
 const ConfigFields = ({
   fieldType,
@@ -217,6 +214,8 @@ export default function FormDialog({
 }) {
   const [newConfig, setNewConfig] = useState(config ?? {});
   const customFieldSettings = getFieldProp('settings',type)
+
+
   return (
     <div>
       <Dialog
@@ -245,24 +244,21 @@ export default function FormDialog({
             </IconButton>
           </Grid>
           <Typography variant="overline">Required?</Typography>
-          <Typography variant="body2">new or changes on the row will not reflect unless all required values are set.</Typography>
-          <FormControlLabel
-                control={
-                  <Switch
-                    checked={config["required"]}
-                    onChange={() =>
-                      setNewConfig({ ...newConfig, required: !Boolean(newConfig["required"]) })}
-                    name="required"
-                  />
-                }
-                label="make this column required."
-              />
-          <Typography variant="overline">Default value</Typography>
-          <Typography variant="body2">The default value will be the initial value of the cells, when ever a new row is added</Typography>
-              <TextField fullWidth/>
+          <Typography variant="body2">The row will not be created or updated unless all required values are set.</Typography>
           
-      
-              {React.createElement(customFieldSettings, {
+          <Grid container justify="space-between">
+          <Typography variant="body1">make this column required.</Typography>
+              <Switch
+                checked={newConfig["required"]}
+                onChange={() =>
+                  setNewConfig({ ...newConfig, required: !Boolean(newConfig["required"]) })}
+                name="required"
+              />
+              </Grid>
+              <Typography variant="overline">Default value</Typography>
+          <Typography variant="body2">The default value will be the initial value of the cells, when ever a new row is added</Typography>
+             <>render field component here</>
+            {React.createElement(customFieldSettings, {
                 config: newConfig,
                 handleChange:(key) => (update) => {
                   setNewConfig({ ...newConfig, [key]: update });

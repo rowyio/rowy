@@ -33,7 +33,7 @@ export default function DateTime({
   const theme = useTheme();
 
   return (
-    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+   
       <Controller
         control={control}
         name={column.key}
@@ -47,6 +47,7 @@ export default function DateTime({
           };
 
           return (
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <KeyboardDateTimePicker
               variant="inline"
               inputVariant="filled"
@@ -77,9 +78,11 @@ export default function DateTime({
               }
               disabled={disabled}
             />
+              </MuiPickersUtilsProvider>
           );
+          
         }}
       />
-    </MuiPickersUtilsProvider>
+  
   );
 }

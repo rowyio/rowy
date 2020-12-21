@@ -68,13 +68,11 @@ export default function ActionFab({
 
     const data = {
       ref: { path: ref.path, id: ref.id, tablePath: window.location.pathname },
-      row: sanitiseRowData(Object.assign({}, docData)),
       column: { ...column, editor: undefined },
       action,
       schemaDocPath: formatPath(tableState?.tablePath ?? ""),
       actionParams,
     };
-    console.log({ data });
     cloudFunction(
       callableName,
       data,

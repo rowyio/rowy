@@ -21,13 +21,13 @@ const useStyles = makeStyles((theme) =>
       width: "100%",
       height: 56,
     },
-
     rating: { color: theme.palette.text.secondary },
     iconEmpty: { color: theme.palette.text.secondary },
   })
 );
 
-export default function Rating({   control,
+export default function Rating({
+  control,
   column,
   disabled,
 }: ISideDrawerFieldProps) {
