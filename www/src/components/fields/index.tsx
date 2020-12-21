@@ -23,6 +23,7 @@ import Aggregate from "./Aggregate";
 import User from "./User";
 import Id from "./Id";
 import Rating from "./Rating";
+import Slider from "./Slider";
 
 // Export field configs in order for FieldsDropdown
 export const FIELDS: IFieldConfig[] = [
@@ -37,7 +38,7 @@ export const FIELDS: IFieldConfig[] = [
   Number_,
   Percentage,
   Rating,
-  // TODO: slider,
+  Slider,
   // TODO: color,
   // DATE & TIME
   Date_,
