@@ -57,11 +57,12 @@ export default function Slider({   control,
     minLabel?:string;
     maxLabel?:string;
     precision: number;
-    unit: string
+    unit: string;
+    marks?:boolean;
   } = {
     max:10, precision:1,units:"",min:0,...(column as any).config
   }
-  const { max, precision ,min,unit,minLabel,maxLabel } = config
+  const { max, marks,min,unit,minLabel,maxLabel } = config
   const classes = useStyles();
 
   return (
@@ -99,6 +100,7 @@ export default function Slider({   control,
             valueLabelDisplay="auto"
             min={min}
             max={max}
+            marks={marks}
             getAriaValueText={getAriaValueText}
             valueLabelFormat={getValueLabelFormat}
             value={value ?? min}

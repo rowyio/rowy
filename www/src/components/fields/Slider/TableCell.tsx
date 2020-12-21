@@ -34,10 +34,12 @@ export default function Slider({
   } = {
     max:10, min:0,...(column as any).config
   }
+
+  const progress = value<min?0:((value-min)/(max-min))*100
   return (<>
   {value}/{max} {unit}
   <div className={classes.progress}>
-  <div className={classes.bar} style={{width: `${(value/max)*100}%`}}></div>
+  <div className={classes.bar} style={{width: `${progress}%`}}></div>
 </div>
   
   </>)
