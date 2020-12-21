@@ -22,10 +22,7 @@ import _sortBy from "lodash/sortBy";
 import FieldsDropdown from "../FieldsDropdown";
 import ColumnSelector from "./ConfigFields/ColumnSelector";
 import FieldSkeleton from "components/SideDrawer/Form/FieldSkeleton";
-
-const CodeEditor = lazy(
-  () => import("../../editors/CodeEditor" /* webpackChunkName: "CodeEditor" */)
-);
+import {getFieldProp} from "components/fields"
 const ConfigFields = ({
   fieldType,
   config,
@@ -219,7 +216,7 @@ export default function FormDialog({
   handleSave: Function;
 }) {
   const [newConfig, setNewConfig] = useState(config ?? {});
-
+  const customFieldSettings = getFieldProp('settings',type)
   return (
     <div>
       <Dialog
@@ -263,15 +260,24 @@ export default function FormDialog({
           <Typography variant="overline">Default value</Typography>
           <Typography variant="body2">The default value will be the initial value of the cells, when ever a new row is added</Typography>
               <TextField fullWidth/>
-          {
+          
+      
+              {React.createElement(customFieldSettings, {
+                config: newConfig,
+                handleChange:(key) => (update) => {
+                  setNewConfig({ ...newConfig, [key]: update });
+                }
+              })}
+          
+
+          
+          {/* {
             <ConfigForm
               type={type}
-              handleChange={(key) => (update) => {
-                setNewConfig({ ...newConfig, [key]: update });
-              }}
+              
               config={newConfig}
             />
-          }
+          } */}
         </DialogContent>
         <DialogActions>
           <Button
