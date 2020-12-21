@@ -18,12 +18,14 @@ export default function Rating({
   onSubmit,
 }: ICustomCellProps) {
   const classes = useStyles();
-  const { max, precision } = ((column as any).config ?? {
-    max:5, precision:1
-  }) as {
+
+  const { max, precision } :{
     max: number;
     precision: number;
-  };
+  } = {
+    max:5, precision:1,...(column as any).config
+  }
+  
   return (
     <MuiRating
       name={`${row.id}-${column.key as string}`}
@@ -32,7 +34,6 @@ export default function Rating({
       disabled={column.editable === false}
       onChange={(_, newValue) => onSubmit(newValue)}
       emptyIcon={<StarBorderIcon />}
-      // TODO: Make this customisable in config
       max={max}
       precision={precision}
       classes={{ root: classes.rating, iconEmpty: classes.iconEmpty }}

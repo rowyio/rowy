@@ -32,23 +32,23 @@ export default function Rating({   control,
   disabled,
 }: ISideDrawerFieldProps) {
   const value: number | undefined = useWatch({ control, name: column.key });
-  const { max, precision } = ((column as any).config ?? {
-    max:5, precision:1
-  }) as {
+  const { max, precision } :{
     max: number;
     precision: number;
-  };
-  const classes = useStyles();
+  } = {
+    max:5, precision:1,...(column as any).config
+  }
 
+  const classes = useStyles();
   return (
     <Controller
       control={control}
-      name={column.name}
+      name={column.key}
       render={({ onChange, onBlur, value }) => (
         <Grid container alignItems="center" className={classes.root}>
           <MuiRating
             disabled={disabled}
-            id={`sidedrawer-field-${column.name}`}
+            id={`sidedrawer-field-${column.key}`}
             value={typeof value === "number" ? value : 0}
             onChange={(event, newValue) => {
               onChange(newValue);

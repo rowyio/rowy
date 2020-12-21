@@ -14,7 +14,7 @@ const SideDrawerField = lazy(
 );
 const Settings = lazy(
   () =>
-    import("./SideDrawerField" /* webpackChunkName: "Settings-Rating" */)
+    import("./Settings" /* webpackChunkName: "Settings-Rating" */)
 );
 export const config: IFieldConfig = {
   type: FieldType.rating,
