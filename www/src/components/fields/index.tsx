@@ -24,7 +24,7 @@ import User from "./User";
 import Id from "./Id";
 import Rating from "./Rating";
 import Slider from "./Slider";
-
+import Json from './Json'
 // Export field configs in order for FieldsDropdown
 export const FIELDS: IFieldConfig[] = [
   // TEXT
@@ -55,7 +55,7 @@ export const FIELDS: IFieldConfig[] = [
   // TODO: connectTable,
   // TODO: connectService,
   // CODE
-  // TODO: json,
+  Json,
   // TODO: code,
   // TODO: richText,
   // CLOUD FUNCTION
