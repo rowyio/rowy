@@ -12,31 +12,35 @@ const documentInitialState = {
   doc: null,
   ref: null,
   loading: true,
-};
-
-const documentReducer = (prevState: any, newProps: any) => {
-  switch (newProps.action) {
-    case DocActions.clear:
-      return documentInitialState;
-    case DocActions.update:
-      // takes data object form the dispatcher and updates doc
-
-      prevState.ref.set({ ...newProps.data }, { merge: true });
-
-      return { ...prevState, doc: { ...prevState.doc, ...newProps.data } };
-    case DocActions.delete:
-      prevState.ref.delete();
-      return null;
-    default:
-      return { ...prevState, ...newProps };
-  }
+  error:null
 };
 
 const useDoc = (initialOverrides: any) => {
+  const documentReducer = (prevState: any, newProps: any) => {
+    switch (newProps.action) {
+      case DocActions.clear:
+        return documentInitialState;
+      case DocActions.update:
+        // takes data object form the dispatcher and updates doc
+  
+        (prevState.ref?prevState.ref:db.doc(prevState.path)).set({ ...newProps.data }, { merge: true }).then((result: any) => {
+        }).catch((error)=>{
+          console.log(error);
+          documentDispatch({error})
+        });
+        return { ...prevState, doc: { ...prevState.doc, ...newProps.data } };
+      case DocActions.delete:
+        prevState.ref.delete();
+        return null;
+      default:
+        return { ...prevState, ...newProps };
+    }
+  };
   const [documentState, documentDispatch] = useReducer(documentReducer, {
     ...documentInitialState,
     ...initialOverrides,
   });
+  
   const setDocumentListner = () => {
     documentDispatch({ prevPath: documentState.path });
     const unsubscribe = db.doc(documentState.path).onSnapshot((snapshot) => {
@@ -55,6 +59,11 @@ const useDoc = (initialOverrides: any) => {
           loading: false,
         });
       }
+    },(error)=>{
+      documentDispatch({
+        loading: false,
+        error
+      });
     });
     documentDispatch({ unsubscribe });
   };
