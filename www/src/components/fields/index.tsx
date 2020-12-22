@@ -22,6 +22,7 @@ import Derivative from "./Derivative";
 import Aggregate from "./Aggregate";
 import User from "./User";
 import Id from "./Id";
+import Image from "./Image";
 import Rating from "./Rating";
 import Slider from "./Slider";
 import Json from './Json'
@@ -46,7 +47,7 @@ export const FIELDS: IFieldConfig[] = [
   DateTime,
   Duration,
   // FILE
-  // TODO: image,
+  Image,
   // TODO: file,
   // SELECT
   // TODO: singleSelect,
