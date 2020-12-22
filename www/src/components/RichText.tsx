@@ -96,9 +96,10 @@ const useStyles = makeStyles((theme) =>
 export interface IRichTextProps {
   value?: string;
   onChange: (value: string) => void;
+  disabled?: boolean;
 }
 
-export default function RichText({ value, onChange }: IRichTextProps) {
+export default function RichText({ value, onChange,disabled }: IRichTextProps) {
   const classes = useStyles();
   const theme = useTheme();
   const [focus, setFocus] = useState(false);
@@ -106,6 +107,7 @@ export default function RichText({ value, onChange }: IRichTextProps) {
   return (
     <div className={clsx(classes.root, focus && classes.focus)}>
       <Editor
+      disabled={disabled}
         init={{
           minHeight: 300,
           menubar: false,

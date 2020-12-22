@@ -25,6 +25,7 @@ import Id from "./Id";
 import Rating from "./Rating";
 import Slider from "./Slider";
 import Json from './Json'
+import RichText from "./RichText"
 // Export field configs in order for FieldsDropdown
 export const FIELDS: IFieldConfig[] = [
   // TEXT
@@ -57,7 +58,7 @@ export const FIELDS: IFieldConfig[] = [
   // CODE
   Json,
   // TODO: code,
-  // TODO: richText,
+  RichText,
   // CLOUD FUNCTION
   Action,
   Derivative,

@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) =>
     // }),
   })
 );
-export default function Email({ value }: ICustomCellProps) {
+export default function Json({ value }: ICustomCellProps) {
  
 
     // const { tableState } = useFiretableContext();
