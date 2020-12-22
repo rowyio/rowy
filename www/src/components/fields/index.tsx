@@ -23,6 +23,7 @@ import Aggregate from "./Aggregate";
 import User from "./User";
 import Id from "./Id";
 import Image from "./Image";
+import File from "./File";
 import Rating from "./Rating";
 import Slider from "./Slider";
 import Json from './Json'
@@ -48,7 +49,7 @@ export const FIELDS: IFieldConfig[] = [
   Duration,
   // FILE
   Image,
-  // TODO: file,
+  File,
   // SELECT
   // TODO: singleSelect,
   // TODO: multiSelect,
