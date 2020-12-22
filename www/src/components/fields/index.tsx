@@ -25,6 +25,7 @@ import Id from "./Id";
 import Rating from "./Rating";
 import Slider from "./Slider";
 import Json from './Json'
+import Code from './Code'
 import RichText from "./RichText"
 // Export field configs in order for FieldsDropdown
 export const FIELDS: IFieldConfig[] = [
@@ -40,7 +41,6 @@ export const FIELDS: IFieldConfig[] = [
   Percentage,
   Rating,
   Slider,
-  // TODO: color,
   // DATE & TIME
   Date_,
   DateTime,
@@ -51,13 +51,14 @@ export const FIELDS: IFieldConfig[] = [
   // SELECT
   // TODO: singleSelect,
   // TODO: multiSelect,
+  // TODO: color,
   // CONNECTION
   SubTable,
   // TODO: connectTable,
   // TODO: connectService,
   // CODE
   Json,
-  // TODO: code,
+  Code,
   RichText,
   // CLOUD FUNCTION
   Action,
