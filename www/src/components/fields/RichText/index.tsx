@@ -1,8 +1,7 @@
 import React, { lazy } from "react";
 import { IFieldConfig, FieldType } from "components/fields/types";
 import withCustomCell from "components/Table/withCustomCell";
-import BasicCell from "../_BasicCell/BasicCellValue";
-import NullEditor from "components/Table/editors/NullEditor";
+import SideDrawerEditor from "components/Table/editors/SideDrawerEditor";
 import RichTextIcon from "@material-ui/icons/TextFormat";
 const TableCell = lazy(
   () => import("./TableCell" /* webpackChunkName: "TableCell-richText" */)
@@ -20,7 +19,7 @@ export const config: IFieldConfig = {
   icon: <RichTextIcon />,
   description: "Rich text editor with predefined HTML text styles.",
   TableCell: withCustomCell(TableCell, ()=><></>),
-  TableEditor: NullEditor,
+  TableEditor: SideDrawerEditor,
   SideDrawerField,
 };
 export default config;

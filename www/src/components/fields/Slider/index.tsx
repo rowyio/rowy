@@ -3,7 +3,7 @@ import { IFieldConfig, FieldType } from "components/fields/types";
 import withCustomCell from "components/Table/withCustomCell";
 
 import SliderIcon from "assets/icons/Slider";
-import NullEditor from "components/Table/editors/NullEditor";
+import SideDrawerEditor from "components/Table/editors/SideDrawerEditor";
 
 const TableCell = lazy(
   () => import("./TableCell" /* webpackChunkName: "TableCell-Slider" */)
@@ -24,7 +24,7 @@ export const config: IFieldConfig = {
   icon: <SliderIcon />,
   description: "Slider with adjustable range. Returns a numeric value.",
   TableCell: withCustomCell(TableCell,()=> <></>),
-  TableEditor: NullEditor,
+  TableEditor: SideDrawerEditor,
   settings:Settings,
   SideDrawerField,
 };

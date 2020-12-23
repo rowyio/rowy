@@ -50,14 +50,6 @@ export const FIELDS: IFieldConfig[] = [
   // FILE
   Image,
   File,
-  // SELECT
-  // TODO: singleSelect,
-  // TODO: multiSelect,
-  // TODO: color,
-  // CONNECTION
-  SubTable,
-  // TODO: connectTable,
-  // TODO: connectService,
   // CODE
   Json,
   Code,
@@ -69,6 +61,14 @@ export const FIELDS: IFieldConfig[] = [
   // FIRETABLE
   User,
   Id,
+  SubTable,
+   // SELECT
+  // TODO: singleSelect,
+  // TODO: multiSelect,
+  // TODO: color,
+  // CONNECTION
+  // TODO: connectTable,
+  // TODO: connectService,
 ];
 
 /**
