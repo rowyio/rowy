@@ -22,7 +22,7 @@ import _sortBy from "lodash/sortBy";
 import FieldsDropdown from "../FieldsDropdown";
 import ColumnSelector from "./ConfigFields/ColumnSelector";
 import FieldSkeleton from "components/SideDrawer/Form/FieldSkeleton";
-
+//import { ThemedJSONEditor } from "../../../SideDrawer/Form/Fields/JsonEditor";
 const CodeEditor = lazy(
   () => import("../../editors/CodeEditor" /* webpackChunkName: "CodeEditor" */)
 );
@@ -319,12 +319,14 @@ const ConfigFields = ({
                       "     * actionParams are provided by dialog popup form",
                       "     */",
                       (config.params ?? []).map((param) => {
-                        const validationKeys = Object.keys(param.validation);
-                        if (validationKeys.includes("string")) {
-                          return `static ${param.name}:string`;
-                        } else if (validationKeys.includes("array")) {
-                          return `static ${param.name}:any[]`;
-                        } else return `static ${param.name}:any`;
+                        if (param) {
+                          const validationKeys = Object.keys(param.validation);
+                          if (validationKeys.includes("string")) {
+                            return `static ${param.name}:string`;
+                          } else if (validationKeys.includes("array")) {
+                            return `static ${param.name}:any[]`;
+                          } else return `static ${param.name}:any`;
+                        } else return "";
                       }),
                       "}",
                     ],
@@ -386,6 +388,20 @@ const ConfigFields = ({
               )}
             </>
           )}
+          {/* <Typography variant="overline">
+            Action Params Configuration
+          </Typography>
+          <ThemedJSONEditor
+            value={config.params}
+            handleEdit={(update) => {
+              console.log({ update });
+              if (Array.isArray(update.new_value)) {
+                handleChange("params")(update.new_value);
+              } else {
+                handleChange("params")([]);
+              }
+            }}
+          /> */}
         </>
       );
     case FieldType.aggregate:
