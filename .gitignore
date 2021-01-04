@@ -3,7 +3,7 @@
 # dependencies
 /node_modules
 www/node_modules
-www/.firebaserc
+
 
 Firetable/node_modules
 cloud_functions/functions/node_modules
@@ -22,7 +22,6 @@ cloud_functions/functions/lib
 cloud_functions/functions/src/functionConfig.ts
 
 cloud_functions/functions/firebase-credentials.json
-cloud_functions/.firebaserc
 
 # misc
 .DS_Store
@@ -35,6 +34,7 @@ yarn-debug.log*
 yarn-error.log*
 firebase-debug.log*
 
+*.firebaserc
 
 
 # Accidental package installs to root directories
@@ -46,3 +46,5 @@ node_modules/
 cloud_functions/functions/src/functionConfig.json
 *.iml
 .idea
+
+*-firebase.json

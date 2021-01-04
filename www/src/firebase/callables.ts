@@ -1,8 +1,8 @@
 import { functions } from "./index";
-import { FireTableFilter } from "../hooks/useFiretable";
 
 export enum CLOUD_FUNCTIONS {
   ImpersonatorAuth = "callable-ImpersonatorAuth",
+  triggerCloudBuild = "FT_triggerCloudBuild",
 }
 
 export const cloudFunction = (
@@ -28,3 +28,6 @@ export const cloudFunction = (
 
 export const ImpersonatorAuth = (email: string) =>
   functions.httpsCallable(CLOUD_FUNCTIONS.ImpersonatorAuth)({ email });
+
+export const triggerCloudBuild = (schemaPath: string) =>
+  functions.httpsCallable(CLOUD_FUNCTIONS.triggerCloudBuild)({ schemaPath });

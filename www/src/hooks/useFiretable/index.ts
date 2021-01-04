@@ -23,7 +23,12 @@ export type FiretableActions = {
 export type FiretableState = {
   orderBy: FiretableOrderBy;
   tablePath: string;
-  config: { rowHeight: number; tableConfig: any; webhooks: any };
+  config: {
+    rowHeight: number;
+    tableConfig: any;
+    webhooks: any;
+    sparks: string;
+  };
   columns: any[];
   rows: { [key: string]: any }[];
   queryLimit: number;
@@ -70,6 +75,7 @@ const useFiretable = (
     config: {
       rowHeight: tableConfig.rowHeight,
       webhooks: tableConfig.doc?.webhooks,
+      sparks: tableConfig.doc?.sparks,
       tableConfig,
     },
     rows: tableState.rows,

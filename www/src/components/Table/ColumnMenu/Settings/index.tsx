@@ -22,7 +22,10 @@ import _sortBy from "lodash/sortBy";
 import FieldsDropdown from "../FieldsDropdown";
 import ColumnSelector from "./ConfigFields/ColumnSelector";
 import FieldSkeleton from "components/SideDrawer/Form/FieldSkeleton";
+
 //import { ThemedJSONEditor } from "../../../SideDrawer/Form/Fields/JsonEditor";
+import { triggerCloudBuild } from "../../../../firebase/callables";
+import { useConfirmation } from "components/ConfirmationDialog";
 const CodeEditor = lazy(
   () => import("../../editors/CodeEditor" /* webpackChunkName: "CodeEditor" */)
 );
@@ -578,7 +581,8 @@ export default function FormDialog({
   handleSave: Function;
 }) {
   const [newConfig, setNewConfig] = useState(config ?? {});
-
+  const { requestConfirmation } = useConfirmation();
+  const { tableState, tableActions } = useFiretableContext();
   return (
     <div>
       <Dialog
@@ -630,6 +634,24 @@ export default function FormDialog({
           <Button
             onClick={() => {
               handleSave(fieldName, { config: newConfig });
+              if (
+                type === FieldType.derivative &&
+                config.script !== newConfig.script
+              ) {
+                requestConfirmation({
+                  title: "Deploy Changes",
+                  body:
+                    "Would you like to redeploy the cloud function for this table now?",
+                  confirm: "Deploy",
+                  cancel: "later",
+                  handleConfirm: async () => {
+                    const response = await triggerCloudBuild(
+                      tableState?.config.tableConfig.path
+                    );
+                    console.log(response);
+                  },
+                });
+              }
             }}
             color="primary"
           >

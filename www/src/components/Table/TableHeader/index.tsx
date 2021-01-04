@@ -19,6 +19,8 @@ import ImportCSV from "./ImportCsv";
 import ExportCSV from "./ExportCsv";
 import TableSettings from "./TableSettings";
 
+import Sparks from "./Sparks";
+
 import { useFiretableContext } from "contexts/FiretableContext";
 import { FieldType } from "constants/fields";
 import HiddenFields from "../HiddenFields";
@@ -177,7 +179,9 @@ export default function TableHeader({
       <Grid item>
         <ExportCSV />
       </Grid>
-
+      <Grid item>
+        <Sparks />
+      </Grid>
       <Grid item>
         <TableSettings />
       </Grid>
