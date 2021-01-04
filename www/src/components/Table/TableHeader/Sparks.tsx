@@ -17,7 +17,7 @@ import {
   Dialog,
 } from "@material-ui/core";
 
-import SparkIcon from "@material-ui/icons/DeviceHubOutlined";
+import SparkIcon from "@material-ui/icons/OfflineBolt";
 
 import { SnackContext } from "contexts/SnackContext";
 import { useFiretableContext } from "contexts/FiretableContext";
@@ -37,8 +37,6 @@ export default function SparksEditor() {
   const [open, setOpen] = useState(false);
 
   const { tableState, tableActions } = useFiretableContext();
-  console.log({ tableState });
-  console.log();
   const snackContext = useContext(SnackContext);
   const { requestConfirmation } = useConfirmation();
   const currentSparks = tableState?.config.sparks ?? "";
