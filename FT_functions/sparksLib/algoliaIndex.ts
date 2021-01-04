@@ -2,23 +2,6 @@ export const dependencies = {
   algoliasearch: "^4.8.3",
 };
 
-const isEmpty = (obj) =>
-  obj !== false &&
-  [Object, Array].includes((obj || {}).constructor) &&
-  !Object.entries(obj || {}).length;
-const get = (obj, path, defaultValue = undefined) => {
-  const travel = (regexp) =>
-    String.prototype.split
-      .call(path, regexp)
-      .filter(Boolean)
-      .reduce(
-        (res, key) => (res !== null && res !== undefined ? res[key] : res),
-        obj
-      );
-  const result = travel(/[,[\]]+?/) || travel(/[,[\].]+?/);
-  return result === undefined || result === obj ? defaultValue : result;
-};
-
 const filterSnapshot = (
   field: { docPath: string; snapshot: any },
   preservedKeys: string[]
