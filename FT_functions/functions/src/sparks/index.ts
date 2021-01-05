@@ -33,8 +33,10 @@ const spark = (sparkConfig) => async (
       requiredFields &&
       requiredFields.length !== 0 &&
       !hasRequiredFields(requiredFields, afterData)
-    )
+    ) {
+      console.log("requiredFields are ", requiredFields, "type is", type);
       return false; // check if it hase required fields for the spark to run
+    }
     const dontRun = shouldRun
       ? !(typeof shouldRun === "function"
           ? await shouldRun(sparkContext)
