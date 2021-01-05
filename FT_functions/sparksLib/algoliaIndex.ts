@@ -2,10 +2,6 @@ export const dependencies = {
   algoliasearch: "^4.8.3",
 };
 
-const isEmpty = (obj) =>
-  obj !== false &&
-  [Object, Array].includes((obj || {}).constructor) &&
-  !Object.entries(obj || {}).length;
 const get = (obj, path, defaultValue = undefined) => {
   const travel = (regexp) =>
     String.prototype.split

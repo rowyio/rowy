@@ -9,16 +9,6 @@ import {
 } from "./functionConfig";
 
 import { getTriggerType } from "./utils";
-// import { //db, auth,
-//   env } from "./config";
-//import * as admin from "firebase-admin";
-
-/*export  const endpointTest = functions.https.onCall(
-  async (data: any, context: functions.https.CallableContext) => {
-    console.log({data,context})
-    return context
-  }
-);*/
 
 export const FT = {
   [functionName]: functions.firestore
