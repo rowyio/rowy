@@ -40,6 +40,9 @@ const spark = (sparkConfig) => async (
           ? await shouldRun(sparkContext)
           : shouldRun)
       : false; //
+
+    console.log("type is ", type, "dontRun value is", dontRun);
+
     if (dontRun) return false;
     const sparkData = await Object.keys(sparkBody).reduce(
       async (acc, key) => ({
