@@ -10,13 +10,15 @@ const useStyles = makeStyles((theme) =>
       maxHeight: "100%",
       padding: theme.spacing(0.5, 0),
 
-      whiteSpace: "pre-line",
+      whiteSpace: "pre-wrap",
       lineHeight: theme.typography.body2.lineHeight,
+      fontFamily: theme.typography.fontFamilyMono,
+      wordBreak: "break-word",
     },
   })
 );
 
-export default function CodeCell({ value }: ICustomCellProps) {
+export default function Code({ value }: ICustomCellProps) {
   const classes = useStyles();
 
   return <div className={classes.root}>{value}</div>;

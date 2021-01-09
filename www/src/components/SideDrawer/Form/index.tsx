@@ -92,6 +92,7 @@ export default function Form({ values }: IFormProps) {
               type={field.type}
               name={field.key}
               label={field.name}
+              disabled={field.editable === false}
             >
               {React.createElement(fieldComponent, {
                 column: field,

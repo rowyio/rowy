@@ -1,8 +1,10 @@
 import React, { useRef, useMemo, useState } from "react";
-import { useTheme, createStyles, makeStyles } from "@material-ui/core/styles";
+import clsx from "clsx";
 import Editor, { monaco } from "@monaco-editor/react";
+
+import { useTheme, createStyles, makeStyles } from "@material-ui/core/styles";
+
 import { useFiretableContext } from "contexts/FiretableContext";
-import { setTimeout } from "timers";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -19,8 +21,21 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-export default function CodeEditor(props: any) {
-  const { onChange, value, height = 400 } = props;
+export interface ICodeEditorProps {
+  onChange: (value: string) => void;
+  value: string;
+  height?: number;
+  wrapperProps?: Partial<React.HTMLAttributes<HTMLDivElement>>;
+  disabled?: boolean;
+}
+
+export default function CodeEditor({
+  onChange,
+  value,
+  height = 400,
+  wrapperProps,
+  disabled,
+}: ICodeEditorProps) {
   const theme = useTheme();
   const [initialEditorValue] = useState(value ?? "");
   const { tableState } = useFiretableContext();
@@ -35,7 +50,6 @@ export default function CodeEditor(props: any) {
   function listenEditorChanges() {
     setTimeout(() => {
       editorRef.current?.onDidChangeModelContent((ev) => {
-
         onChange(editorRef.current.getValue());
       });
     }, 2000);
@@ -67,17 +81,23 @@ export default function CodeEditor(props: any) {
       );
     listenEditorChanges();
   }, [tableState?.columns]);
+
   return (
-    <>
-      <div className={classes.editorWrapper}>
-        <Editor
-          theme={theme.palette.type}
-          height={height}
-          editorDidMount={handleEditorDidMount}
-          language="javascript"
-          value={initialEditorValue}
-        />
-      </div>
-    </>
+    <div
+      {...wrapperProps}
+      className={clsx(classes.editorWrapper, wrapperProps?.className)}
+    >
+      <Editor
+        theme={theme.palette.type}
+        height={height}
+        editorDidMount={handleEditorDidMount}
+        language="javascript"
+        value={initialEditorValue}
+        options={{
+          readOnly: disabled,
+          fontFamily: theme.typography.fontFamilyMono,
+        }}
+      />
+    </div>
   );
 }

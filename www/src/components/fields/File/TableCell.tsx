@@ -1,4 +1,3 @@
-
 import { ICustomCellProps } from "../types";
 import React, { useCallback } from "react";
 
@@ -53,11 +52,12 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-export default function File({
+export default function File_({
   column,
   row,
   value,
   onSubmit,
+  disabled,
 }: ICustomCellProps) {
   const classes = useStyles();
 
@@ -124,15 +124,15 @@ export default function File({
                     e.stopPropagation();
                   }}
                   onDelete={
-                    column.editable !== false
-                      ? () =>
+                    disabled
+                      ? undefined
+                      : () =>
                           requestConfirmation({
                             handleConfirm: () => handleDelete(file.ref),
                             title: "Delete File",
                             body: "Are you sure you want to delete this file?",
                             confirm: "Delete",
                           })
-                      : undefined
                   }
                   className={classes.chip}
                 />
@@ -143,7 +143,7 @@ export default function File({
 
       <Grid item className={classes.endButtonContainer}>
         {!isLoading ? (
-          column.editable !== false && (
+          !disabled && (
             <IconButton
               size="small"
               className="row-hover-iconButton"

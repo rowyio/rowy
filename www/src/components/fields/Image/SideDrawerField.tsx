@@ -1,7 +1,7 @@
 import { ISideDrawerFieldProps } from "../types";
 import React, { useCallback, useState } from "react";
 import clsx from "clsx";
-import { Controller ,useWatch} from "react-hook-form";
+import { Controller } from "react-hook-form";
 
 import { useDropzone } from "react-dropzone";
 import useUploader from "hooks/useFiretable/useUploader";
@@ -24,23 +24,13 @@ import OpenIcon from "@material-ui/icons/OpenInNewOutlined";
 import { IMAGE_MIME_TYPES } from "constants/fields";
 import Thumbnail from "components/Thumbnail";
 import { useConfirmation } from "components/ConfirmationDialog";
+
+import { useFieldStyles } from "components/SideDrawer/Form/utils";
 const useStyles = makeStyles((theme) =>
   createStyles({
     dropzoneButton: {
-      backgroundColor:
-        theme.palette.type === "light"
-          ? "rgba(0, 0, 0, 0.09)"
-          : "rgba(255, 255, 255, 0.09)",
-      borderRadius: theme.shape.borderRadius,
-      padding: theme.spacing(0, 2),
       justifyContent: "flex-start",
-
-      margin: 0,
-      width: "100%",
-      height: 56,
-
       color: theme.palette.text.secondary,
-
       "& svg": { marginRight: theme.spacing(2) },
     },
     dropzoneDragActive: {
@@ -109,16 +99,16 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-
-export function ControlledImageUploader({
+function ControlledImageUploader({
   onChange,
   value,
   column,
   docRef,
-  disabled
+  disabled,
 }) {
-
   const classes = useStyles();
+  const fieldClasses = useFieldStyles();
+
   const { requestConfirmation } = useConfirmation();
   const { uploaderState, upload, deleteUpload } = useUploader();
   const { progress } = uploaderState;
@@ -165,6 +155,7 @@ export function ControlledImageUploader({
       {!disabled && (
         <ButtonBase
           className={clsx(
+            fieldClasses.root,
             classes.dropzoneButton,
             isDragActive && classes.dropzoneDragActive
           )}
@@ -268,20 +259,24 @@ export function ControlledImageUploader({
     </>
   );
 }
-export default function ImageUploader({
+
+export default function Image_({
   control,
   column,
   disabled,
-  docRef
+  docRef,
 }: ISideDrawerFieldProps) {
-
   return (
     <Controller
       control={control}
       name={column.key}
-      render={({ onChange, onBlur, value}) => (
-        <ControlledImageUploader disabled={disabled} column={column} docRef={docRef}
-        onChange={onChange} value={value}
+      render={({ onChange, value }) => (
+        <ControlledImageUploader
+          disabled={disabled}
+          column={column}
+          docRef={docRef}
+          onChange={onChange}
+          value={value}
         />
       )}
     />

@@ -19,7 +19,8 @@ import { useFiretableContext } from "contexts/FiretableContext";
 import MultiSelect from "@antlerengineering/multiselect";
 import _sortBy from "lodash/sortBy";
 import ColumnSelector from "./ConfigFields/ColumnSelector";
-import {getFieldProp} from "components/fields"
+import { getFieldProp } from "components/fields";
+import SettingsHeading from "./SettingsHeading";
 const ConfigFields = ({
   fieldType,
   config,
@@ -53,7 +54,7 @@ const ConfigFields = ({
             options={config.options ?? []}
             handleChange={handleChange("options")}
           />
-          <Typography variant="overline">ADD NEW?</Typography>
+          <SettingsHeading>ADD NEW?</SettingsHeading>
           <Grid container direction="row" justify="space-between">
             <Typography variant="subtitle1">
               User can add new options.
@@ -172,7 +173,7 @@ const ConfigFields = ({
     case FieldType.action:
     case FieldType.aggregate:
     case FieldType.derivative:
-      
+
     default:
       return <></>;
   }
@@ -213,8 +214,7 @@ export default function FormDialog({
   handleSave: Function;
 }) {
   const [newConfig, setNewConfig] = useState(config ?? {});
-  const customFieldSettings = getFieldProp('settings',type)
-
+  const customFieldSettings = getFieldProp("settings", type);
 
   return (
     <div>
@@ -243,30 +243,41 @@ export default function FormDialog({
               <CloseIcon />
             </IconButton>
           </Grid>
-          <Typography variant="overline">Required?</Typography>
-          <Typography variant="body2">The row will not be created or updated unless all required values are set.</Typography>
-          
-          <Grid container justify="space-between">
-          <Typography variant="body1">make this column required.</Typography>
-              <Switch
-                checked={newConfig["required"]}
-                onChange={() =>
-                  setNewConfig({ ...newConfig, required: !Boolean(newConfig["required"]) })}
-                name="required"
-              />
-              </Grid>
-              <Typography variant="overline">Default value</Typography>
-          <Typography variant="body2">The default value will be the initial value of the cells, when ever a new row is added</Typography>
-             <>render field component here</>
-            {React.createElement(customFieldSettings, {
-                config: newConfig,
-                handleChange:(key) => (update) => {
-                  setNewConfig({ ...newConfig, [key]: update });
-                }
-              })}
-          
 
-          
+          <SettingsHeading style={{ marginTop: 0 }}>Required?</SettingsHeading>
+          <Typography color="textSecondary" paragraph>
+            The row will not be created or updated unless all required values
+            are set.
+          </Typography>
+
+          <Grid container justify="space-between">
+            <Typography variant="body1">Make this column required</Typography>
+            <Switch
+              checked={newConfig["required"]}
+              onChange={() =>
+                setNewConfig({
+                  ...newConfig,
+                  required: !Boolean(newConfig["required"]),
+                })
+              }
+              name="required"
+            />
+          </Grid>
+
+          {/* <SettingsHeading>Default value</SettingsHeading>
+          <Typography color="textSecondary" paragraph>
+            The default value will be the initial value of the cells, whenever a
+            new row is added.
+          </Typography> */}
+          {/* <>render field component here</> */}
+
+          {React.createElement(customFieldSettings, {
+            config: newConfig,
+            handleChange: (key) => (update) => {
+              setNewConfig({ ...newConfig, [key]: update });
+            },
+          })}
+
           {/* {
             <ConfigForm
               type={type}

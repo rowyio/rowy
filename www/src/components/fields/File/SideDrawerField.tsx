@@ -1,5 +1,5 @@
-import { ISideDrawerFieldProps } from "../types";
 import React, { useCallback, useState } from "react";
+import { ISideDrawerFieldProps } from "../types";
 import clsx from "clsx";
 import { Controller } from "react-hook-form";
 
@@ -16,29 +16,17 @@ import {
   Chip,
   CircularProgress,
 } from "@material-ui/core";
-
 import UploadIcon from "assets/icons/Upload";
 import { FileIcon } from "constants/fields";
 
 import Confirmation from "components/Confirmation";
 
+import { useFieldStyles } from "components/SideDrawer/Form/utils";
 const useStyles = makeStyles((theme) =>
   createStyles({
     dropzoneButton: {
-      backgroundColor:
-        theme.palette.type === "light"
-          ? "rgba(0, 0, 0, 0.09)"
-          : "rgba(255, 255, 255, 0.09)",
-      borderRadius: theme.shape.borderRadius,
-      padding: theme.spacing(0, 2),
       justifyContent: "flex-start",
-
-      margin: 0,
-      width: "100%",
-      height: 56,
-
       color: theme.palette.text.secondary,
-
       "& svg": { marginRight: theme.spacing(2) },
     },
     dropzoneDragActive: {
@@ -55,8 +43,7 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-
-export function ControlledFileUploader({
+function ControlledFileUploader({
   onChange,
 
   value,
@@ -65,6 +52,7 @@ export function ControlledFileUploader({
   disabled,
 }) {
   const classes = useStyles();
+  const fieldClasses = useFieldStyles();
 
   const { uploaderState, upload, deleteUpload } = useUploader();
   const { progress } = uploaderState;
@@ -110,6 +98,7 @@ export function ControlledFileUploader({
       {!disabled && (
         <ButtonBase
           className={clsx(
+            fieldClasses.root,
             classes.dropzoneButton,
             isDragActive && classes.dropzoneDragActive
           )}
@@ -140,9 +129,7 @@ export function ControlledFileUploader({
                   icon={<FileIcon />}
                   label={file.name}
                   onClick={() => window.open(file.downloadURL)}
-                  onDelete={
-                    !disabled ? () => handleDelete(i) : undefined
-                  }
+                  onDelete={!disabled ? () => handleDelete(i) : undefined}
                   className={classes.chip}
                 />
               </Confirmation>
@@ -168,20 +155,23 @@ export function ControlledFileUploader({
   );
 }
 
-export default function FileUploader({
+export default function File_({
   control,
   column,
   disabled,
-  docRef
+  docRef,
 }: ISideDrawerFieldProps) {
-
   return (
     <Controller
       control={control}
       name={column.key}
-      render={({ onChange, onBlur, value}) => (
-        <ControlledFileUploader disabled={disabled} column={column} docRef={docRef}
-        onChange={onChange} value={value}
+      render={({ onChange, onBlur, value }) => (
+        <ControlledFileUploader
+          disabled={disabled}
+          column={column}
+          docRef={docRef}
+          onChange={onChange}
+          value={value}
         />
       )}
     />

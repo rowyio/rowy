@@ -1,11 +1,13 @@
 import React from "react";
+import clsx from "clsx";
 import { Controller } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 
-
 import ReactJson from "react-json-view";
+import jsonFormat from "json-format";
 
 import { makeStyles, createStyles, useTheme } from "@material-ui/core";
+import { useFieldStyles } from "components/SideDrawer/Form/utils";
 
 const isValidJson = (val: any) => {
   try {
@@ -17,42 +19,56 @@ const isValidJson = (val: any) => {
   return true;
 };
 
-
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
-      backgroundColor:
-        theme.palette.type === "light"
-          ? "rgba(0, 0, 0, 0.09)"
-          : "rgba(255, 255, 255, 0.09)",
-      borderRadius: theme.shape.borderRadius,
       padding: theme.spacing(2),
       margin: 0,
-      width: "100%",
-      minHeight: 56,
       overflowX: "auto",
+      ...theme.typography.body2,
+    },
+
+    readOnly: {
+      whiteSpace: "pre-wrap",
+      ...theme.typography.body2,
+      fontFamily: theme.typography.fontFamilyMono,
+      wordBreak: "break-word",
     },
   })
 );
 
-export default function JsonEditor({
+export default function Json({
   control,
   column,
   disabled,
 }: ISideDrawerFieldProps) {
-  const classes = useStyles()
+  const fieldClasses = useFieldStyles();
+  const classes = useStyles();
   const theme = useTheme();
+
   return (
     <Controller
       control={control}
       name={column.key}
       render={({ onChange, onBlur, value }) => {
+        if (disabled)
+          return (
+            <div className={clsx(fieldClasses.root, classes.readOnly)}>
+              {value &&
+                jsonFormat(value, {
+                  type: "space",
+                  char: " ",
+                  size: 2,
+                })}
+            </div>
+          );
+
         const handleEdit = (edit) => {
           onChange(edit.updated_src);
         };
-  
+
         return (
-          <div className={classes.root}>
+          <div className={clsx(fieldClasses.root, classes.root)}>
             <ReactJson
               src={isValidJson(value) ? value : {}}
               onEdit={handleEdit}

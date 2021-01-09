@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) =>
       maxHeight: "100%",
       padding: theme.spacing(0.5, 0),
 
-      whiteSpace: "pre-line",
+      whiteSpace: "pre-wrap",
       lineHeight: theme.typography.body2.lineHeight,
       fontFamily: theme.typography.fontFamilyMono,
       wordBreak: "break-word",
@@ -51,43 +51,41 @@ const useStyles = makeStyles((theme) =>
   })
 );
 export default function Json({ value }: ICustomCellProps) {
- 
+  // const { tableState } = useFiretableContext();
+  const classes = useStyles();
+  // const classes = useStyles({
+  //   width: column.width,
+  //   rowHeight: tableState?.config?.rowHeight ?? 44,
+  // });
 
-    // const { tableState } = useFiretableContext();
-    const classes = useStyles();
-    // const classes = useStyles({
-    //   width: column.width,
-    //   rowHeight: tableState?.config?.rowHeight ?? 44,
-    // });
-  
-    if (!value) return null;
-  
-    const formattedJson = jsonFormat(value, {
-      type: "space",
-      char: " ",
-      size: 2,
-    });
-  
-    return (
-      // <Tooltip
-      //   title={formattedJson}
-      //   enterDelay={1000}
-      //   onClick={(e) => e.stopPropagation()}
-      //   placement="bottom-start"
-      //   PopperProps={{
-      //     modifiers: {
-      //       flip: { enabled: false },
-      //       preventOverflow: {
-      //         enabled: false,
-      //         boundariesElement: "scrollParent",
-      //       },
-      //       hide: { enabled: false },
-      //     },
-      //   }}
-      //   TransitionComponent={Fade}
-      //   classes={{ tooltip: classes.tooltip }}
-      // >
-      <div className={classes.root}>{formattedJson}</div>
-      // </Tooltip>
-    );
+  if (!value) return null;
+
+  const formattedJson = jsonFormat(value, {
+    type: "space",
+    char: " ",
+    size: 2,
+  });
+
+  return (
+    // <Tooltip
+    //   title={formattedJson}
+    //   enterDelay={1000}
+    //   onClick={(e) => e.stopPropagation()}
+    //   placement="bottom-start"
+    //   PopperProps={{
+    //     modifiers: {
+    //       flip: { enabled: false },
+    //       preventOverflow: {
+    //         enabled: false,
+    //         boundariesElement: "scrollParent",
+    //       },
+    //       hide: { enabled: false },
+    //     },
+    //   }}
+    //   TransitionComponent={Fade}
+    //   classes={{ tooltip: classes.tooltip }}
+    // >
+    <div className={classes.root}>{formattedJson}</div>
+    // </Tooltip>
+  );
 }

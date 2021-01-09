@@ -1,4 +1,3 @@
-
 import { ICustomCellProps } from "../types";
 import React, { useCallback, useState } from "react";
 
@@ -22,7 +21,7 @@ import OpenIcon from "@material-ui/icons/OpenInNewOutlined";
 
 import { useConfirmation } from "components/ConfirmationDialog";
 import useUploader, { FileValue } from "hooks/useFiretable/useUploader";
-import { IMAGE_MIME_TYPES } from "constants/fields";
+import { IMAGE_MIME_TYPES } from "./index";
 import { useFiretableContext } from "contexts/FiretableContext";
 import Thumbnail from "components/Thumbnail";
 
@@ -109,11 +108,12 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-export default function Image({
+export default function Image_({
   column,
   row,
   value,
   onSubmit,
+  disabled,
 }: ICustomCellProps) {
   const { tableState } = useFiretableContext();
   const { requestConfirmation } = useConfirmation();
@@ -158,7 +158,6 @@ export default function Image({
   });
 
   const dropzoneProps = getRootProps();
-  const disabled = column.editable === false;
 
   let thumbnailSize = "100x100";
   if (tableState?.config?.rowHeight) {

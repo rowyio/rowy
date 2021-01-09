@@ -13,22 +13,23 @@ import Url from "./Url";
 import Checkbox from "./Checkbox";
 import Number_ from "./Number";
 import Percentage from "./Percentage";
+import Rating from "./Rating";
+import Slider from "./Slider";
 import Date_ from "./Date";
 import DateTime from "./DateTime";
 import Duration from "./Duration";
+import Image_ from "./Image";
+import File_ from "./File";
 import SubTable from "./SubTable";
+import Json from "./Json";
+import Code from "./Code";
+import RichText from "./RichText";
 import Action from "./Action";
 import Derivative from "./Derivative";
 import Aggregate from "./Aggregate";
 import User from "./User";
 import Id from "./Id";
-import Image from "./Image";
-import File from "./File";
-import Rating from "./Rating";
-import Slider from "./Slider";
-import Json from './Json'
-import Code from './Code'
-import RichText from "./RichText"
+
 // Export field configs in order for FieldsDropdown
 export const FIELDS: IFieldConfig[] = [
   // TEXT
@@ -43,13 +44,21 @@ export const FIELDS: IFieldConfig[] = [
   Percentage,
   Rating,
   Slider,
+  // TODO: color,
   // DATE & TIME
   Date_,
   DateTime,
   Duration,
   // FILE
-  Image,
-  File,
+  Image_,
+  File_,
+  // SELECT
+  // TODO: singleSelect,
+  // TODO: multiSelect,
+  // CONNECTION
+  SubTable,
+  // TODO: connectTable,
+  // TODO: connectService,
   // CODE
   Json,
   Code,
@@ -61,14 +70,6 @@ export const FIELDS: IFieldConfig[] = [
   // FIRETABLE
   User,
   Id,
-  SubTable,
-   // SELECT
-  // TODO: singleSelect,
-  // TODO: multiSelect,
-  // TODO: color,
-  // CONNECTION
-  // TODO: connectTable,
-  // TODO: connectService,
 ];
 
 /**

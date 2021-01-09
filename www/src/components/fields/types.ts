@@ -16,7 +16,7 @@ export interface IFieldConfig {
   TableCell: React.ComponentType<FormatterProps>;
   TableEditor: React.ComponentType<EditorProps<any>>;
   SideDrawerField: React.ComponentType<ISideDrawerFieldProps>;
-  settings?: React.ReactNode;
+  settings?: React.ComponentType<ISettingsProps>;
   csvExport?: (value: any) => string;
   csvImportParser?: (value: string) => any;
 }
@@ -40,4 +40,9 @@ export interface ISideDrawerFieldProps {
   control: Control;
   docRef: firebase.firestore.DocumentReference;
   disabled: boolean;
+}
+
+export interface ISettingsProps {
+  handleChange: (key: string) => (value: any) => void;
+  config: Record<string, any>;
 }

@@ -1,9 +1,11 @@
 import React, { lazy } from "react";
 import { IFieldConfig, FieldType } from "components/fields/types";
 import withCustomCell from "components/Table/withCustomCell";
-import BasicCell from "../_BasicCell/BasicCellValue";
-import SideDrawerEditor from "components/Table/editors/SideDrawerEditor";
+
 import JsonIcon from "assets/icons/Json";
+import BasicCell from "../_BasicCell/BasicCellNull";
+import SideDrawerEditor from "components/Table/editors/SideDrawerEditor";
+
 const TableCell = lazy(
   () => import("./TableCell" /* webpackChunkName: "TableCell-Json" */)
 );
@@ -16,10 +18,10 @@ export const config: IFieldConfig = {
   type: FieldType.json,
   name: "JSON",
   dataType: "any",
-  initialValue: "",
+  initialValue: undefined,
   icon: <JsonIcon />,
   description: "JSON object editable with a visual JSON editor.",
-  TableCell: withCustomCell(TableCell, ({value,...props}) =>BasicCell({value:JSON.stringify(value),...props})),
+  TableCell: withCustomCell(TableCell, BasicCell),
   TableEditor: SideDrawerEditor,
   SideDrawerField,
 };

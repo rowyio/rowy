@@ -47,8 +47,13 @@ const useStyles = makeStyles((theme) =>
           },
         },
 
+        "& .tox-sidebar-wrap": {
+          margin: 1,
+        },
+
         "& .tox-toolbar-overlord, & .tox-edit-area__iframe, & .tox-toolbar__primary": {
           background: "transparent",
+          borderRadius: theme.shape.borderRadius - 1,
         },
 
         "& .tox-toolbar__primary": { padding: theme.spacing(0.5, 0) },
@@ -93,13 +98,17 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-export interface IRichTextProps {
+export interface IRichTextEditorProps {
   value?: string;
   onChange: (value: string) => void;
   disabled?: boolean;
 }
 
-export default function RichText({ value, onChange,disabled }: IRichTextProps) {
+export default function RichTextEditor({
+  value,
+  onChange,
+  disabled,
+}: IRichTextEditorProps) {
   const classes = useStyles();
   const theme = useTheme();
   const [focus, setFocus] = useState(false);
@@ -107,7 +116,7 @@ export default function RichText({ value, onChange,disabled }: IRichTextProps) {
   return (
     <div className={clsx(classes.root, focus && classes.focus)}>
       <Editor
-      disabled={disabled}
+        disabled={disabled}
         init={{
           minHeight: 300,
           menubar: false,
@@ -119,9 +128,10 @@ export default function RichText({ value, onChange,disabled }: IRichTextProps) {
           content_css: [
             "https://use.typekit.net/ngg8buf.css",
             "https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i&display=swap",
-            theme.palette.type === "light"
-              ? "/static/tinymce_content.css"
-              : "/static/tinymce_content-dark.css",
+            // theme.palette.type === "light"
+            // ?
+            "/static/tinymce_content.css",
+            // : "/static/tinymce_content-dark.css",
           ],
         }}
         value={value}
