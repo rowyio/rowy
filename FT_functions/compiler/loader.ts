@@ -61,7 +61,8 @@ export const generateConfigFromTableSchema = async (schemaDocPath) => {
       triggerPath =
         '"' +
         schemaDocPath
-          .replace("/_FIRETABLE_/settings/schema/", "")
+
+          .replace("_FIRETABLE_/settings/schema/", "")
           .replace(/subTables/g, function () {
             pathParentIncrement++;
             return `{parentDoc${pathParentIncrement}}`;
@@ -70,7 +71,7 @@ export const generateConfigFromTableSchema = async (schemaDocPath) => {
       functionName =
         '"' +
         schemaDocPath
-          .replace("/_FIRETABLE_/settings/schema/", "")
+          .replace("_FIRETABLE_/settings/schema/", "")
           .replace(/\/subTables\//g, "_") +
         '"';
       break;
