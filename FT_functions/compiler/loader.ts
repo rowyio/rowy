@@ -67,6 +67,7 @@ export const generateConfigFromTableSchema = async (schemaDocPath) => {
             pathParentIncrement++;
             return `{parentDoc${pathParentIncrement}}`;
           }) +
+        "/{docId}" +
         '"';
       functionName =
         '"' +
