@@ -77,7 +77,7 @@ export const generateConfigFromTableSchema = async (schemaDocPath) => {
       for (let i = 1; i <= collectionDepth; i++) {
         triggerPath = triggerPath + `{parentCol${i}}/{parentDoc${i}}/`;
       }
-      triggerPath = triggerPath + "{docId}";
+      triggerPath = triggerPath + collectionId + "/" + "{docId}";
       functionName = `CG_${collectionId}_${collectionDepth}`;
       break;
     default:
