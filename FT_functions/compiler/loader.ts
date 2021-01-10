@@ -42,10 +42,47 @@ export const generateConfigFromTableSchema = async (schemaDocPath) => {
   )}]`;
 
   const sparksConfig = schemaData.sparks ? schemaData.sparks : "[]";
-
-  const collectionId = schemaDocPath.split("/").pop();
-  const functionName = `"${collectionId}"`;
-  const triggerPath = `"${collectionId}/{docId}"`;
+  const collectionType = schemaDocPath.includes("subTables")
+    ? "subCollection"
+    : schemaDocPath.includes("groupSchema")
+    ? "groupCollection"
+    : "collection";
+  let collectionId = "";
+  let functionName = "";
+  let triggerPath = "";
+  switch (collectionType) {
+    case "collection":
+      collectionId = schemaDocPath.split("/").pop();
+      functionName = `"${collectionId}"`;
+      triggerPath = `"${collectionId}/{docId}"`;
+      break;
+    case "subCollection":
+      let pathParentIncrement = 0;
+      triggerPath = schemaDocPath
+        .replace("/_FIRETABLE_/settings/schema/", "")
+        .replace(/subTables/g, function () {
+          pathParentIncrement++;
+          return `{parentDoc${pathParentIncrement}}`;
+        });
+      functionName = schemaDocPath
+        .replace("/_FIRETABLE_/settings/schema/", "")
+        .replace(/\/subTables\//g, "_");
+      break;
+    case "groupCollection":
+      collectionId = schemaDocPath.split("/").pop();
+      const collectionDepth = schemaData.collectionDepth
+        ? schemaData.collectionDepth
+        : 2;
+      triggerPath = "";
+      for (let i = 1; i <= collectionDepth; i++) {
+        triggerPath = triggerPath + `{parentCol${i}}/{parentDoc${i}}/`;
+      }
+      triggerPath = triggerPath + "{docId}";
+      functionName = `CG_${collectionId}_${collectionDepth}`;
+      break;
+    default:
+      break;
+  }
   const exports = {
     triggerPath,
     functionName,
