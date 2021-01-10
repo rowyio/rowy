@@ -58,27 +58,35 @@ export const generateConfigFromTableSchema = async (schemaDocPath) => {
       break;
     case "subCollection":
       let pathParentIncrement = 0;
-      triggerPath = schemaDocPath
-        .replace("/_FIRETABLE_/settings/schema/", "")
-        .replace(/subTables/g, function () {
-          pathParentIncrement++;
-          return `{parentDoc${pathParentIncrement}}`;
-        });
-      functionName = schemaDocPath
-        .replace("/_FIRETABLE_/settings/schema/", "")
-        .replace(/\/subTables\//g, "_");
+      triggerPath =
+        '"' +
+        schemaDocPath
+          .replace("/_FIRETABLE_/settings/schema/", "")
+          .replace(/subTables/g, function () {
+            pathParentIncrement++;
+            return `{parentDoc${pathParentIncrement}}`;
+          }) +
+        '"';
+      functionName =
+        '"' +
+        schemaDocPath
+          .replace("/_FIRETABLE_/settings/schema/", "")
+          .replace(/\/subTables\//g, "_") +
+        '"';
       break;
     case "groupCollection":
       collectionId = schemaDocPath.split("/").pop();
       const collectionDepth = schemaData.collectionDepth
         ? schemaData.collectionDepth
-        : 2;
+        : 1;
       triggerPath = "";
       for (let i = 1; i <= collectionDepth; i++) {
         triggerPath = triggerPath + `{parentCol${i}}/{parentDoc${i}}/`;
       }
-      triggerPath = triggerPath + collectionId + "/" + "{docId}";
-      functionName = `CG_${collectionId}_${collectionDepth}`;
+      triggerPath = '"' + triggerPath + collectionId + "/" + "{docId}" + '"';
+      functionName = `"CG_${collectionId}${
+        collectionDepth > 1 ? `_${collectionDepth}` : ""
+      }"`;
       break;
     default:
       break;
