@@ -46,6 +46,13 @@ export const getTriggerType = (change) =>
     ? "create"
     : "delete";
 
+export const rowReducer = (fieldsToSync, row) =>
+  fieldsToSync.reduce((acc: any, curr: string) => {
+    if (row[curr] !== undefined && row[curr] !== null)
+      return { ...acc, [curr]: row[curr] };
+    else return acc;
+  }, {});
+
 export default {
   getSecret,
   hasRequiredFields,
