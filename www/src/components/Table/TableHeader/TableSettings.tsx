@@ -30,19 +30,7 @@ export default function TableSettings() {
       <TableSettingsDialog
         clearDialog={() => setOpen(false)}
         mode={open ? TableSettingsDialogModes.update : null}
-        data={
-          open
-            ? ({
-                collection: tableState?.config.tableConfig.doc.collection,
-                description: tableState?.config.tableConfig.doc.description,
-                roles: tableState?.config.tableConfig.doc.roles,
-                name: tableState?.config.tableConfig.doc.name,
-                section: tableState?.config.tableConfig.doc.section,
-                // isCollectionGroup: !"string",
-                // tableType: "string",
-              } as any)
-            : null
-        }
+        data={open ? tableState?.config.tableConfig.doc : null}
       />
     </>
   );

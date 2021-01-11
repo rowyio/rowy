@@ -77,16 +77,16 @@ export const generateConfigFromTableSchema = async (schemaDocPath) => {
       break;
     case "groupCollection":
       collectionId = schemaDocPath.split("/").pop();
-      const collectionDepth = schemaData.collectionDepth
-        ? schemaData.collectionDepth
+      const triggerDepth = schemaData.triggerDepth
+        ? schemaData.triggerDepth
         : 1;
       triggerPath = "";
-      for (let i = 1; i <= collectionDepth; i++) {
+      for (let i = 1; i <= triggerDepth; i++) {
         triggerPath = triggerPath + `{parentCol${i}}/{parentDoc${i}}/`;
       }
       triggerPath = '"' + triggerPath + collectionId + "/" + "{docId}" + '"';
       functionName = `"CG_${collectionId}${
-        collectionDepth > 1 ? `_${collectionDepth}` : ""
+        triggerDepth > 1 ? `_D${triggerDepth}` : ""
       }"`;
       break;
     default:
