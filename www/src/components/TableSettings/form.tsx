@@ -46,7 +46,6 @@ export const tableSettings = (
       </HelperText>
     ),
   },
-
   {
     type: FIELDS.singleSelect,
     name: "tableType",
@@ -110,7 +109,7 @@ export const tableSettings = (
     type: FIELDS.multiSelect,
     name: "roles",
     label: "Accessed By*",
-    options: roles??[],
+    options: roles ?? [],
     validation: yup.array().of(yup.string()).required("Required"),
     freeText: true,
   },
@@ -138,8 +137,20 @@ export const tableSettings = (
       </HelperText>
     ),
   }),
+  (values) =>
+    values.tableType === "collectionGroup"
+      ? {
+          type: FIELDS.slider,
+          name: "triggerDepth",
+          defaultValue: 1,
+          min: 1,
+          max: 5,
+          label: `Trigger Depth (used for table cloudFunction trigger Path)`,
+          hint: "triggerDepth",
+        }
+      : null,
   () =>
-    mode === TableSettingsDialogModes.create && tables &&tables?.length !== 0
+    mode === TableSettingsDialogModes.create && tables && tables?.length !== 0
       ? {
           type: FIELDS.multiSelect,
           name: "schemaSource",

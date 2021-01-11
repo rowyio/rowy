@@ -81,7 +81,7 @@ export default function TableHeader({
   updateConfig,
 }: ITableHeaderProps) {
   const classes = useStyles();
-  const { tableActions, tableState } = useFiretableContext();
+  const { tableActions, tableState, userClaims } = useFiretableContext();
 
   if (!tableState || !tableState.columns) return null;
   const { columns } = tableState;
@@ -179,9 +179,13 @@ export default function TableHeader({
       <Grid item>
         <ExportCSV />
       </Grid>
-      <Grid item>
-        <Sparks />
-      </Grid>
+
+      {userClaims?.roles?.includes("ADMIN") && (
+        <Grid item>
+          <Sparks />
+        </Grid>
+      )}
+
       <Grid item>
         <TableSettings />
       </Grid>

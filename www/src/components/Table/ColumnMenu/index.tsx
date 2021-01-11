@@ -119,17 +119,6 @@ export default function ColumnMenu() {
       active: !column.editable,
     },
     {
-      label: "Hide",
-      activeLabel: "Show",
-      icon: <VisibilityOffIcon />,
-      activeIcon: <VisibilityIcon />,
-      onClick: () => {
-        actions.update(column.key, { hidden: !column.hidden });
-        handleClose();
-      },
-      active: column.hidden,
-    },
-    {
       label: "Freeze",
       activeLabel: "Unfreeze",
       icon: <FreezeIcon />,
@@ -226,6 +215,18 @@ export default function ColumnMenu() {
             initializeColumn: { index: column.index ? column.index + 1 : 0 },
           },
         }),
+    },
+    {
+      label: "Hide for Everyone",
+      activeLabel: "Show",
+      icon: <VisibilityOffIcon />,
+      activeIcon: <VisibilityIcon />,
+      onClick: () => {
+        actions.update(column.key, { hidden: !column.hidden });
+        handleClose();
+      },
+      active: column.hidden,
+      color: "error" as "error",
     },
     {
       label: "Delete Column",

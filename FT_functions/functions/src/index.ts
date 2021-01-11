@@ -9,6 +9,7 @@ import {
 } from "./functionConfig";
 
 import { getTriggerType } from "./utils";
+//import {propagateChangesOnTrigger} from './propagates'
 
 export const FT = {
   [functionName]: functions.firestore
@@ -16,24 +17,28 @@ export const FT = {
     .onWrite(async (change, context) => {
       const triggerType = getTriggerType(change);
       let promises: Promise<any>[] = [];
-      try {
-        const sparkPromises = sparksConfig
-          .filter((sparkConfig) => sparkConfig.triggers.includes(triggerType))
-          .map((sparkConfig) => spark(sparkConfig)(change, context));
-        console.log(
-          `#${sparkPromises.length} sparks will be evaluted on ${triggerType}`
+      const sparkPromises = sparksConfig
+        .filter((sparkConfig) => sparkConfig.triggers.includes(triggerType))
+        .map((sparkConfig) => spark(sparkConfig)(change, context));
+      console.log(
+        `#${sparkPromises.length} sparks will be evaluted on ${triggerType}`
+      );
+      promises = sparkPromises;
+      if (triggerType !== "delete") {
+        const derivativePromise = derivative(derivativesConfig)(
+          change,
+          context
         );
-        promises = sparkPromises;
-      } catch (err) {}
+        promises.push(derivativePromise);
+      }
+      // const propagateChanges = propagateChangesOnTrigger(change,triggerType);
+      // promises.push(propagateChanges);
+
       try {
-        if (triggerType !== "delete") {
-          const derivativePromise = derivative(derivativesConfig)(
-            change,
-            context
-          );
-          promises.push(derivativePromise);
-        }
-      } catch (err) {}
-      await Promise.all(promises);
+        const result = await Promise.allSettled(promises);
+        console.log(result);
+      } catch (err) {
+        console.log(`caught error: ${err}`);
+      }
     }),
 };

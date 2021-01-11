@@ -42,13 +42,59 @@ export const generateConfigFromTableSchema = async (schemaDocPath) => {
   )}]`;
 
   const sparksConfig = schemaData.sparks ? schemaData.sparks : "[]";
-
-  const collectionId = schemaDocPath.split("/").pop();
-  const functionName = `"${collectionId}"`;
-  const triggerPath = `"${collectionId}/{docId}"`;
+  const collectionType = schemaDocPath.includes("subTables")
+    ? "subCollection"
+    : schemaDocPath.includes("groupSchema")
+    ? "groupCollection"
+    : "collection";
+  let collectionId = "";
+  let functionName = "";
+  let triggerPath = "";
+  switch (collectionType) {
+    case "collection":
+      collectionId = schemaDocPath.split("/").pop();
+      functionName = `"${collectionId}"`;
+      triggerPath = `"${collectionId}/{docId}"`;
+      break;
+    case "subCollection":
+      let pathParentIncrement = 0;
+      triggerPath =
+        '"' +
+        schemaDocPath
+          .replace("_FIRETABLE_/settings/schema/", "")
+          .replace(/subTables/g, function () {
+            pathParentIncrement++;
+            return `{parentDoc${pathParentIncrement}}`;
+          }) +
+        "/{docId}" +
+        '"';
+      functionName =
+        '"' +
+        schemaDocPath
+          .replace("_FIRETABLE_/settings/schema/", "")
+          .replace(/\/subTables\//g, "_") +
+        '"';
+      break;
+    case "groupCollection":
+      collectionId = schemaDocPath.split("/").pop();
+      const triggerDepth = schemaData.triggerDepth
+        ? schemaData.triggerDepth
+        : 1;
+      triggerPath = "";
+      for (let i = 1; i <= triggerDepth; i++) {
+        triggerPath = triggerPath + `{parentCol${i}}/{parentDoc${i}}/`;
+      }
+      triggerPath = '"' + triggerPath + collectionId + "/" + "{docId}" + '"';
+      functionName = `"CG_${collectionId}${
+        triggerDepth > 1 ? `_D${triggerDepth}` : ""
+      }"`;
+      break;
+    default:
+      break;
+  }
   const exports = {
     triggerPath,
-    functionName,
+    functionName: functionName.replace(/-/g, "_"),
     derivativesConfig,
     sparksConfig,
   };
