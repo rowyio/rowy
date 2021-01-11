@@ -61,7 +61,6 @@ export const generateConfigFromTableSchema = async (schemaDocPath) => {
       triggerPath =
         '"' +
         schemaDocPath
-
           .replace("_FIRETABLE_/settings/schema/", "")
           .replace(/subTables/g, function () {
             pathParentIncrement++;
@@ -95,7 +94,7 @@ export const generateConfigFromTableSchema = async (schemaDocPath) => {
   }
   const exports = {
     triggerPath,
-    functionName,
+    functionName: functionName.replace(/-/g, "_"),
     derivativesConfig,
     sparksConfig,
   };
