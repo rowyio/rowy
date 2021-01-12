@@ -28,11 +28,18 @@ export interface ICustomCellProps extends FormatterProps<any> {
   docRef: firebase.firestore.DocumentReference;
   disabled: boolean;
 }
-
 export interface IBasicCellProps {
   value: any;
   type: FieldType;
   name: string;
+}
+
+export interface IPopoverCellProps extends ICustomCellProps {
+  setShowComplexCell: React.Dispatch<React.SetStateAction<boolean>>;
+}
+export interface IPopoverBasicCellProps extends IBasicCellProps {
+  setShowComplexCell: React.Dispatch<React.SetStateAction<boolean>>;
+  disabled: boolean;
 }
 
 export interface ISideDrawerFieldProps {
