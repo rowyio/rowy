@@ -7,7 +7,8 @@ import SettingsHeading from "components/Table/ColumnMenu/Settings/SettingsHeadin
 import { useFiretableContext } from "contexts/FiretableContext";
 import _sortBy from "lodash/sortBy";
 import MultiSelect from "@antlerengineering/multiselect";
-export default function Rating({ handleChange, config }: ISettingsProps) {
+
+export default function Settings({ handleChange, config }: ISettingsProps) {
   const {  tables } = useFiretableContext();
       const tableOptions = _sortBy(
         tables?.map((t) => ({

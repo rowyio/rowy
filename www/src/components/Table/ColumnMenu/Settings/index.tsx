@@ -25,20 +25,6 @@ const ConfigFields = ({
   switch (fieldType) {
     case FieldType.longText:
     case FieldType.shortText:
-      return (
-        <>
-          <TextField
-            type="number"
-            value={config.maxLength}
-            label={"Character Limit"}
-            fullWidth
-            onChange={(e) => {
-              if (e.target.value === "0") handleChange("maxLength")(null);
-              else handleChange("maxLength")(e.target.value);
-            }}
-          />
-        </>
-      );
     case FieldType.singleSelect:
     case FieldType.multiSelect:
       return (
