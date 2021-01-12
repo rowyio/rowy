@@ -2,6 +2,7 @@ import { FieldType } from "constants/fields";
 
 import { FormatterProps, EditorProps } from "react-data-grid";
 import { Control } from "react-hook-form";
+import { PopoverProps } from "@material-ui/core";
 
 export { FieldType };
 
@@ -36,10 +37,12 @@ export interface IBasicCellProps {
 
 export interface IPopoverCellProps extends ICustomCellProps {
   setShowComplexCell: React.Dispatch<React.SetStateAction<boolean>>;
+  parentRef: PopoverProps["anchorEl"];
 }
 export interface IPopoverBasicCellProps extends IBasicCellProps {
   setShowComplexCell: React.Dispatch<React.SetStateAction<boolean>>;
   disabled: boolean;
+  onSubmit: (value: any) => void;
 }
 
 export interface ISideDrawerFieldProps {

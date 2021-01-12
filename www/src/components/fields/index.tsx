@@ -21,6 +21,8 @@ import DateTime from "./DateTime";
 import Duration from "./Duration";
 import Image_ from "./Image";
 import File_ from "./File";
+import SingleSelect from "./SingleSelect";
+import MultiSelect from "./MultiSelect";
 import SubTable from "./SubTable";
 import Json from "./Json";
 import Code from "./Code";
@@ -54,8 +56,8 @@ export const FIELDS: IFieldConfig[] = [
   Image_,
   File_,
   // SELECT
-  // TODO: singleSelect,
-  // TODO: multiSelect,
+  SingleSelect,
+  MultiSelect,
   // CONNECTION
   SubTable,
   // TODO: connectTable,

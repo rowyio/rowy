@@ -64,6 +64,13 @@ export default function withPopoverCell(
       setLocalValue(value);
     }, [value]);
 
+    const handleSubmit = (value: any) => {
+      if (updateCell && !options?.readOnly) {
+        updateCell(props.row.ref, props.column.key as string, value);
+        setLocalValue(value);
+      }
+    };
+
     const basicCell = (
       <BasicCell
         value={localValue}
@@ -72,19 +79,13 @@ export default function withPopoverCell(
         setShowComplexCell={setShowComplexCell}
         ref={basicCellRef}
         disabled={props.column.editable === false}
+        onSubmit={handleSubmit}
       />
     );
 
     if (!showComplexCell) return basicCell;
 
     const parentRef = basicCellRef.current?.parentElement;
-
-    const handleSubmit = (value: any) => {
-      if (updateCell && !options?.readOnly) {
-        updateCell(props.row.ref, props.column.key as string, value);
-        setLocalValue(value);
-      }
-    };
 
     // Switch to heavy cell Component once basic cell is clicked
     return (
@@ -104,6 +105,8 @@ export default function withPopoverCell(
                 },
                 ...popoverProps?.PaperProps,
               }}
+              onClick={(e) => e.stopPropagation()}
+              onKeyDown={(e) => e.stopPropagation()}
             >
               <Cell
                 {...props}
@@ -112,6 +115,7 @@ export default function withPopoverCell(
                 onSubmit={handleSubmit}
                 disabled={props.column.editable === false}
                 setShowComplexCell={setShowComplexCell}
+                parentRef={parentRef}
               />
             </Popover>
           </Suspense>
