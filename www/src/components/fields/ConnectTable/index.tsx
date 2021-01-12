@@ -16,6 +16,9 @@ const SideDrawerField = lazy(
       "./SideDrawerField" /* webpackChunkName: "SideDrawerField-ConnectTable" */
     )
 );
+const Settings = lazy(
+  () => import("./Settings" /* webpackChunkName: "Settings-ConnectTable" */)
+);
 
 export const config: IFieldConfig = {
   type: FieldType.connectTable,
@@ -31,5 +34,6 @@ export const config: IFieldConfig = {
   }),
   TableEditor: NullEditor,
   SideDrawerField,
+  settings:Settings
 };
 export default config;
