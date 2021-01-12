@@ -1,31 +1,26 @@
 import React from "react";
 import { ICustomCellProps } from "../types";
-import { makeStyles, createStyles } from "@material-ui/core";
+
+import { makeStyles, createStyles, Grid } from "@material-ui/core";
+
+import { resultColorsScale } from "utils/color";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
     progress: {
       width: "100%",
-      margin: 2,
-      marginLeft: theme.spacing(2),
       backgroundColor: theme.palette.divider,
       borderRadius: theme.shape.borderRadius,
     },
     bar: {
       borderRadius: theme.shape.borderRadius,
-      height: 25,
+      height: 16,
       maxWidth: "100%",
-      backgroundColor: theme.palette.primary.main,
     },
   })
 );
 
-export default function Slider({
-  row,
-  column,
-  value,
-  onSubmit,
-}: ICustomCellProps) {
+export default function Slider({ column, value }: ICustomCellProps) {
   const classes = useStyles();
 
   const {
@@ -46,12 +41,23 @@ export default function Slider({
     value < min || typeof value !== "number"
       ? 0
       : ((value - min) / (max - min)) * 100;
+
   return (
-    <>
-      {value ?? 0}/{max} {unit}
-      <div className={classes.progress}>
-        <div className={classes.bar} style={{ width: `${progress}%` }}></div>
-      </div>
-    </>
+    <Grid container alignItems="center" wrap="nowrap" spacing={1}>
+      <Grid item xs={6}>
+        {value ?? 0}/{max} {unit}
+      </Grid>
+      <Grid item xs={6}>
+        <div className={classes.progress}>
+          <div
+            className={classes.bar}
+            style={{
+              width: `${progress}%`,
+              backgroundColor: resultColorsScale(progress / 100).hex(),
+            }}
+          ></div>
+        </div>
+      </Grid>
+    </Grid>
   );
 }
