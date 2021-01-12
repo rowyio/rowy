@@ -19,7 +19,7 @@ const SideDrawerField = lazy(
 
 export const config: IFieldConfig = {
   type: FieldType.singleSelect,
-  name: "SingleSelect",
+  name: "Single Select",
   dataType: "string | null",
   initialValue: null,
   icon: <SingleSelectIcon />,

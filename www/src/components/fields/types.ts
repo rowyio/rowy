@@ -39,10 +39,8 @@ export interface IPopoverCellProps extends ICustomCellProps {
   setShowComplexCell: React.Dispatch<React.SetStateAction<boolean>>;
   parentRef: PopoverProps["anchorEl"];
 }
-export interface IPopoverBasicCellProps extends IBasicCellProps {
+export interface IPopoverBasicCellProps extends ICustomCellProps {
   setShowComplexCell: React.Dispatch<React.SetStateAction<boolean>>;
-  disabled: boolean;
-  onSubmit: (value: any) => void;
 }
 
 export interface ISideDrawerFieldProps {

@@ -24,6 +24,7 @@ import File_ from "./File";
 import SingleSelect from "./SingleSelect";
 import MultiSelect from "./MultiSelect";
 import SubTable from "./SubTable";
+import ConnectTable from "./ConnectTable";
 import Json from "./Json";
 import Code from "./Code";
 import RichText from "./RichText";
@@ -60,7 +61,7 @@ export const FIELDS: IFieldConfig[] = [
   MultiSelect,
   // CONNECTION
   SubTable,
-  // TODO: connectTable,
+  ConnectTable,
   // TODO: connectService,
   // CODE
   Json,

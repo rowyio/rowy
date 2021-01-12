@@ -2,11 +2,9 @@ import React from "react";
 import { IPopoverCellProps } from "../types";
 import _get from "lodash/get";
 
-import MultiSelect_ from "@antlerengineering/multiselect";
+import ConnectTableSelect from "./ConnectTableSelect";
 
-import { sanitiseValue } from "./utils";
-
-export default function MultiSelect({
+export default function ConnectTable({
   value,
   onSubmit,
   column,
@@ -15,17 +13,15 @@ export default function MultiSelect({
   disabled,
 }: IPopoverCellProps) {
   const config = column.config ?? {};
+  if (!config || !config.primaryKeys) return null;
 
   return (
-    <MultiSelect_
-      value={sanitiseValue(value)}
+    <ConnectTableSelect
+      column={column}
+      value={value}
       onChange={onSubmit}
-      options={config.options ?? []}
-      multiple
-      freeText={config.freeText}
+      config={(config as any) ?? {}}
       disabled={disabled}
-      label={column.name}
-      labelPlural={column.name}
       TextFieldProps={{
         style: { display: "none" },
         SelectProps: {
@@ -38,6 +34,7 @@ export default function MultiSelect({
         },
       }}
       onClose={() => setShowComplexCell(false)}
+      loadBeforeOpen
     />
   );
 }
