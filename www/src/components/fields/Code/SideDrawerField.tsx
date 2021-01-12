@@ -37,6 +37,11 @@ export default function Code({
           value={value}
           onChange={onChange}
           wrapperProps={{ className: classes.wrapper }}
+          editorOptions={{ 
+            minimap: {
+            enabled: false,
+          }
+        }}
         />
       )}
     />
