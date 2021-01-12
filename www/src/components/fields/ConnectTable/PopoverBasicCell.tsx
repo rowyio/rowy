@@ -2,12 +2,14 @@ import React from "react";
 import clsx from "clsx";
 import { IPopoverBasicCellProps } from "../types";
 
-import { makeStyles, createStyles, ButtonBase, Grid } from "@material-ui/core";
+import {
+  makeStyles,
+  createStyles,
+  ButtonBase,
+  Grid,
+  Chip,
+} from "@material-ui/core";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
-
-import { sanitiseValue } from "./utils";
-import FormattedChip from "components/FormattedChip";
-import { ConvertStringToArray } from "./ConvertStringToArray";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -44,14 +46,12 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-export const MultiSelect = React.forwardRef(function MultiSelect(
-  { value, setShowComplexCell, disabled, onSubmit }: IPopoverBasicCellProps,
+export const ConnectTable = React.forwardRef(function ConnectTable(
+  { value, setShowComplexCell, disabled, column }: IPopoverBasicCellProps,
   ref: React.Ref<any>
 ) {
   const classes = useStyles();
-
-  if (typeof value === "string" && value !== "")
-    return <ConvertStringToArray value={value} onSubmit={onSubmit} />;
+  const config = column.config ?? {};
 
   return (
     <ButtonBase
@@ -67,17 +67,17 @@ export const MultiSelect = React.forwardRef(function MultiSelect(
         spacing={1}
         className={classes.value}
       >
-        {sanitiseValue(value).map(
-          (item) =>
-            typeof item === "string" && (
-              <Grid item key={item}>
-                <FormattedChip
-                  label={item}
-                  classes={{ root: classes.chip, label: classes.chipLabel }}
-                />
-              </Grid>
-            )
-        )}
+        {Array.isArray(value) &&
+          value.map((doc: any) => (
+            <Grid item key={doc.docPath}>
+              <Chip
+                label={config.primaryKeys
+                  .map((key: string) => doc.snapshot[key])
+                  .join(" ")}
+                className={classes.chip}
+              />
+            </Grid>
+          ))}
       </Grid>
 
       <ArrowDropDownIcon
@@ -86,4 +86,4 @@ export const MultiSelect = React.forwardRef(function MultiSelect(
     </ButtonBase>
   );
 });
-export default MultiSelect;
+export default ConnectTable;

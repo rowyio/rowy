@@ -73,13 +73,14 @@ export default function withPopoverCell(
 
     const basicCell = (
       <BasicCell
+        {...props}
+        column={props.column}
         value={localValue}
-        name={(props.column as any).name}
-        type={(props.column as any).type as FieldType}
+        onSubmit={handleSubmit}
+        disabled={props.column.editable === false}
+        docRef={props.row.ref}
         setShowComplexCell={setShowComplexCell}
         ref={basicCellRef}
-        disabled={props.column.editable === false}
-        onSubmit={handleSubmit}
       />
     );
 

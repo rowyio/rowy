@@ -9,7 +9,7 @@ import FormattedChip from "components/FormattedChip";
 import { sanitiseValue } from "./utils";
 import { ConvertStringToArray } from "./ConvertStringToArray";
 
-export default function SingleSelect({
+export default function MultiSelect({
   column,
   control,
   disabled,
