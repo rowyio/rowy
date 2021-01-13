@@ -3,7 +3,7 @@ import React from "react";
 import { makeStyles, createStyles } from "@material-ui/core";
 
 import { FieldType } from "constants/fields";
-import { getFormatter } from "components/Table/formatters";
+//import { getFormatter } from "components/Table/formatters";
 import EmptyState from "components/EmptyState";
 
 const useStyles = makeStyles((theme) =>
@@ -68,8 +68,8 @@ export default function Cell({
   ...props
 }: ICellProps) {
   const classes = useStyles();
-
-  const formatter = type ? getFormatter({ type: type }, true) : null;
+  const formatter = null;
+  //const formatter = type ? getFormatter({ type: type }, true) : null;
 
   return (
     <div className={classes.root} {...props}>
