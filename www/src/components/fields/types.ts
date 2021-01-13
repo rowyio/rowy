@@ -53,4 +53,7 @@ export interface ISideDrawerFieldProps {
 export interface ISettingsProps {
   handleChange: (key: string) => (value: any) => void;
   config: Record<string, any>;
+  // TODO: WRITE TYPES
+  tables: any;
+  [key: string]: any;
 }
