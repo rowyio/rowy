@@ -10,42 +10,17 @@ import {
   TextField,
   Switch,
   FormControlLabel,
-  Divider,
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import { FieldType } from "constants/fields";
 import OptionsInput from "./ConfigFields/OptionsInput";
-import { useFiretableContext } from "contexts/FiretableContext";
-import MultiSelect from "@antlerengineering/multiselect";
 import _sortBy from "lodash/sortBy";
-import ColumnSelector from "./ConfigFields/ColumnSelector";
 import { getFieldProp } from "components/fields";
 import SettingsHeading from "./SettingsHeading";
-const ConfigFields = ({
-  fieldType,
-  config,
-  handleChange,
-  tables,
-  columns,
-  roles,
-}) => {
+const ConfigFields = ({ fieldType, config, handleChange }) => {
   switch (fieldType) {
     case FieldType.longText:
     case FieldType.shortText:
-      return (
-        <>
-          <TextField
-            type="number"
-            value={config.maxLength}
-            label={"Character Limit"}
-            fullWidth
-            onChange={(e) => {
-              if (e.target.value === "0") handleChange("maxLength")(null);
-              else handleChange("maxLength")(e.target.value);
-            }}
-          />
-        </>
-      );
     case FieldType.singleSelect:
     case FieldType.multiSelect:
       return (
@@ -132,42 +107,6 @@ const ConfigFields = ({
           />
         </>
       );
-    case FieldType.connectTable:
-      const tableOptions = _sortBy(
-        tables?.map((t) => ({
-          label: `${t.section} - ${t.name}`,
-          value: t.collection,
-        })) ?? [],
-        "label"
-      );
-
-      return (
-        <>
-          <MultiSelect
-            options={tableOptions}
-            freeText={false}
-            value={config.index}
-            onChange={handleChange("index")}
-            multiple={false}
-          />
-          <ColumnSelector
-            label={"Primary Keys"}
-            value={config.primaryKeys}
-            table={config.index}
-            handleChange={handleChange("primaryKeys")}
-            validTypes={[FieldType.shortText, FieldType.singleSelect]}
-          />
-          <TextField
-            label="filter template"
-            name="filters"
-            fullWidth
-            value={config.filters}
-            onChange={(e) => {
-              handleChange("filters")(e.target.value);
-            }}
-          />
-        </>
-      );
     case FieldType.subTable:
     case FieldType.rating:
     case FieldType.action:
@@ -177,23 +116,6 @@ const ConfigFields = ({
     default:
       return <></>;
   }
-};
-const ConfigForm = ({ type, config, handleChange }) => {
-  const { tableState, tables, roles } = useFiretableContext();
-
-  if (!tableState) return <></>;
-  const { columns } = tableState;
-
-  return (
-    <ConfigFields
-      fieldType={type}
-      columns={columns}
-      config={config}
-      handleChange={handleChange}
-      tables={tables}
-      roles={roles}
-    />
-  );
 };
 
 export default function FormDialog({

@@ -15,6 +15,9 @@ const SideDrawerField = lazy(
       "./SideDrawerField" /* webpackChunkName: "SideDrawerField-ShortText" */
     )
 );
+const Settings = lazy(
+  () => import("./Settings" /* webpackChunkName: "Settings-ShortText" */)
+);
 
 export const config: IFieldConfig = {
   type: FieldType.shortText,
@@ -26,5 +29,6 @@ export const config: IFieldConfig = {
   TableCell: withCustomCell(TableCell, BasicCell),
   TableEditor: TextEditor,
   SideDrawerField,
+  settings: Settings,
 };
 export default config;
