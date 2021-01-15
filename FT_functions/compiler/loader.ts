@@ -41,10 +41,10 @@ export const generateConfigFromTableSchema = async (schemaDocPath) => {
     ""
   )}]`;
 
-  const tableConnectColumns = Object.values(schemaData.columns).filter(
-    (col: any) => col.type === "DOC_SELECT" && col.config?.trackedFields
+  const documentSelectColumns = Object.values(schemaData.columns).filter(
+    (col: any) => col.type === "DOCUMENT_SELECT" && col.config?.trackedFields
   );
-  const tableConnectConfig = `[${tableConnectColumns.reduce(
+  const documentSelectConfig = `[${documentSelectColumns.reduce(
     (acc, currColumn: any) => {
       // if (
       //   !currColumn.config.trackedFields ||
@@ -117,7 +117,7 @@ export const generateConfigFromTableSchema = async (schemaDocPath) => {
     triggerPath,
     functionName: functionName.replace(/-/g, "_"),
     derivativesConfig,
-    tableConnectConfig,
+    documentSelectConfig,
     sparksConfig,
   };
 
