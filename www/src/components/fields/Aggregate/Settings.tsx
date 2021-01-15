@@ -11,25 +11,24 @@ import MultiSelect from "@antlerengineering/multiselect";
 import FieldSkeleton from "components/SideDrawer/Form/FieldSkeleton";
 import { FieldType } from "constants/fields";
 import FieldsDropdown from "components/Table/ColumnMenu/FieldsDropdown";
+import {useFiretableContext} from 'contexts/FiretableContext';
 const CodeEditor = lazy(
     () => import("components/Table/editors/CodeEditor" /* webpackChunkName: "CodeEditor" */)
   );
 
 const Settings = ({
-  fieldType,
   config,
   handleChange,
-  tables,
-  columns,
-  roles,
 })=>{
+  const {tableState} = useFiretableContext();
 
+  const columnOptions = Object.values(tableState?.columns??{}).filter(column => column.type === FieldType.subTable).map((c)=>({label:c.name,value:c.key}))
       return (
         <>
 
       <MultiSelect
             label={"Sub Tables"}
-            options={columns.filter(column => column.type === FieldType.subTable)}
+            options={columnOptions}
             value={config.requiredFields ?? []}
             onChange={handleChange("subtables")}
           />

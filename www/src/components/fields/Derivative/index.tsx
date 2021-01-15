@@ -5,7 +5,7 @@ import withCustomCell from "components/Table/withCustomCell";
 import DerivativeIcon from "assets/icons/Derivative";
 import BasicCell from "../_BasicCell/BasicCellNull";
 import NullEditor from "components/Table/editors/NullEditor";
-
+import Settings from './Settings'
 export const config: IFieldConfig = {
   type: FieldType.derivative,
   name: "Derivative",
@@ -17,5 +17,7 @@ export const config: IFieldConfig = {
   TableCell: withCustomCell(BasicCell as any, BasicCell),
   TableEditor: NullEditor,
   SideDrawerField: BasicCell as any,
+  settings:Settings
+
 };
 export default config;

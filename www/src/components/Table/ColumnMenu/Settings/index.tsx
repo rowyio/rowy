@@ -137,7 +137,6 @@ export default function FormDialog({
 }) {
   const [newConfig, setNewConfig] = useState(config ?? {});
   const customFieldSettings = getFieldProp("settings", type);
-
   return (
     <div>
       <Dialog

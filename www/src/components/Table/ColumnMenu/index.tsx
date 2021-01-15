@@ -28,6 +28,7 @@ import { FIELDS, FieldType } from "constants/fields";
 import _find from "lodash/find";
 import { Column } from "react-data-grid";
 import { PopoverProps } from "@material-ui/core";
+import { getFieldProp } from "components/fields";
 
 const INITIAL_MODAL = { type: "", data: {} };
 
@@ -99,6 +100,7 @@ export default function ColumnMenu() {
     setTimeout(() => setSelectedColumnHeader(null), 300);
   };
 
+  const isConfigurable = Boolean(getFieldProp("settings", column?.type));
   if (!column) return null;
   const isSorted = orderBy?.[0]?.key === (column.key as string);
   const isAsc = isSorted && orderBy?.[0]?.direction === "asc";
@@ -199,6 +201,7 @@ export default function ColumnMenu() {
       onClick: () => {
         setModal({ type: ModalStates.settings, data: { column } });
       },
+      disabled:!isConfigurable,
     },
     // {
     //   label: "Re-order",

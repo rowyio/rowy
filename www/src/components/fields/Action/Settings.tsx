@@ -9,6 +9,8 @@ import {
   } from "@material-ui/core"
 import MultiSelect from "@antlerengineering/multiselect";
 import FieldSkeleton from "components/SideDrawer/Form/FieldSkeleton";
+import { useFiretableContext } from "contexts/FiretableContext";
+
 const CodeEditor = lazy(
     () => import("components/Table/editors/CodeEditor" /* webpackChunkName: "CodeEditor" */)
   );
@@ -16,9 +18,9 @@ const CodeEditor = lazy(
   const Settings = ({ 
     config,
     handleChange,
-    columns,
-    roles})=>{
-
+  })=>{
+    const {tableState,roles} = useFiretableContext();
+    const columnOptions = Object.values(tableState?.columns??{}).map((c)=>({label:c.name,value:c.key}))
     return (
         <>
           <Typography variant="overline">Allowed roles</Typography>
@@ -27,7 +29,7 @@ const CodeEditor = lazy(
           </Typography>
           <MultiSelect
             label={"Allowed Roles"}
-            options={roles}
+            options={roles??[]}
             value={config.requiredRoles ?? []}
             onChange={handleChange("requiredRoles")}
           />
@@ -39,7 +41,7 @@ const CodeEditor = lazy(
 
           <MultiSelect
             label={"Required fields"}
-            options={columns}
+            options={columnOptions}
             value={config.requiredFields ?? []}
             onChange={handleChange("requiredFields")}
           />

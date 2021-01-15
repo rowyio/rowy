@@ -1,35 +1,30 @@
-import React , { useState, lazy, Suspense } from 'react';
+import React , { lazy, Suspense } from 'react';
 import {
     Typography,
-    IconButton,
-    TextField,
-    Switch,
-    FormControlLabel,
-    Divider,
+
   } from "@material-ui/core"
 import MultiSelect from "@antlerengineering/multiselect";
 import FieldSkeleton from "components/SideDrawer/Form/FieldSkeleton";
 import { FieldType } from "constants/fields";
 import FieldsDropdown from "components/Table/ColumnMenu/FieldsDropdown";
+import {useFiretableContext} from 'contexts/FiretableContext';
+
 const CodeEditor = lazy(
     () => import("components/Table/editors/CodeEditor" /* webpackChunkName: "CodeEditor" */)
   );
 
 const Settings = ({
-  fieldType,
   config,
   handleChange,
-  tables,
-  columns,
-  roles,
 })=>{
 
+  const {tableState} = useFiretableContext();
+  const columnOptions = Object.values(tableState?.columns??{}).filter(column => column.type === FieldType.subTable).map((c)=>({label:c.name,value:c.key}))
   return (
     <>
-
       <MultiSelect
             label={"Listener fields (this script runs when these fields change)"}
-            options={columns//.filter(column => column.key)
+            options={columnOptions
             }
             value={config.listenerFields ?? []}
             onChange={handleChange("listenerFields")}
@@ -61,14 +56,6 @@ const Settings = ({
       {config.renderFieldType && (
         <>
           <Typography variant="overline"> Rendered field config</Typography>
-          {/* <ConfigFields
-            fieldType={config.renderFieldType}
-            config={config}
-            handleChange={handleChange}
-            tables={tables}
-            columns={columns}
-            roles={roles}
-          /> */}
         </>
       )}
     </>
