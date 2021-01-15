@@ -93,7 +93,7 @@ const algoliaIndex = async (data, sparkContext) => {
       break;
     case "update":
       if (
-        significantDifference([...fieldsToSync, "_FT_forceUpateAt"], change)
+        significantDifference([...fieldsToSync, "_ft_forcedUpdateAt"], change)
       ) {
         _index.saveObject({ ...record, objectID });
       }
