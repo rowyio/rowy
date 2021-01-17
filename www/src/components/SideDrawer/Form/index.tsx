@@ -31,9 +31,9 @@ export default function Form({ values }: IFormProps) {
 
   // Get initial values from fields config
   const initialValues = fields.reduce(
-    (a, { key, type }) => ({
+    (a, { key, type,config }) => ({
       ...a,
-      [key]: getFieldProp("initialValue", type),
+      [key]:config.initialValue?? getFieldProp("initialValue", type),
     }),
     {}
   );

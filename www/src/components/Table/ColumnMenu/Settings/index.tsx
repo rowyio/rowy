@@ -17,6 +17,7 @@ import OptionsInput from "./ConfigFields/OptionsInput";
 import _sortBy from "lodash/sortBy";
 import { getFieldProp } from "components/fields";
 import SettingsHeading from "./SettingsHeading";
+import InitialValueInput from "./InitialValueInput"
 const ConfigFields = ({ fieldType, config, handleChange }) => {
   switch (fieldType) {
     case FieldType.longText:
@@ -137,6 +138,10 @@ export default function FormDialog({
 }) {
   const [newConfig, setNewConfig] = useState(config ?? {});
   const customFieldSettings = getFieldProp("settings", type);
+  const initializable = getFieldProp("initializable", type);
+  const handleChange = (key) => (update) => {
+    setNewConfig({ ...newConfig, [key]: update });
+  }
   return (
     <div>
       <Dialog
@@ -165,7 +170,7 @@ export default function FormDialog({
             </IconButton>
           </Grid>
 
-          <SettingsHeading style={{ marginTop: 0 }}>Required?</SettingsHeading>
+          {initializable && <><SettingsHeading style={{ marginTop: 0 }}>Required?</SettingsHeading>
           <Typography color="textSecondary" paragraph>
             The row will not be created or updated unless all required values
             are set.
@@ -184,19 +189,12 @@ export default function FormDialog({
               name="required"
             />
           </Grid>
-
-          {/* <SettingsHeading>Default value</SettingsHeading>
-          <Typography color="textSecondary" paragraph>
-            The default value will be the initial value of the cells, whenever a
-            new row is added.
-          </Typography> */}
-          {/* <>render field component here</> */}
-
-          {React.createElement(customFieldSettings, {
+          <InitialValueInput fieldType={type} config={newConfig} handleChange={handleChange}/>
+              </>}
+              
+          {customFieldSettings && React.createElement(customFieldSettings, {
             config: newConfig,
-            handleChange: (key) => (update) => {
-              setNewConfig({ ...newConfig, [key]: update });
-            },
+            handleChange
           })}
 
           {/* {

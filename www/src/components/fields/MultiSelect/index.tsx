@@ -22,6 +22,7 @@ export const config: IFieldConfig = {
   name: "Multi Select",
   dataType: "string[]",
   initialValue: [],
+  initializable:true,
   icon: <MultiSelectIcon />,
   description:
     "Dropdown selector with searchable options and check box behavior. Optionally allows users to input custom values. Max selection: all options.",

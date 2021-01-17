@@ -19,7 +19,8 @@ export const config: IFieldConfig = {
   type: FieldType.date,
   name: "Date",
   dataType: "firebase.firestore.Timestamp",
-  initialValue: null,
+  initialValue: undefined,
+  initializable: true,
   icon: <DateIcon />,
   description:
     "Date displayed and input as YYYY/MM/DD or input using a picker module.",

@@ -19,6 +19,7 @@ export const config: IFieldConfig = {
   name: "Code",
   dataType: "string",
   initialValue: undefined,
+  initializable: true,
   icon: <CodeIcon />,
   description: "Raw code editable with Monaco Editor.",
   TableCell: withCustomCell(TableCell, BasicCell),

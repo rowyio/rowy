@@ -19,6 +19,7 @@ export const config: IFieldConfig = {
   name: "Color",
   dataType: "Record<string, any>",
   initialValue: undefined,
+  initializable: true,
   icon: <ColorIcon />,
   description: "Visual color picker. Supports Hex, RGBA, HSLA.",
   TableCell: withPopoverCell(PopoverCell, PopoverBasicCell, {

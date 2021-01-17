@@ -21,6 +21,7 @@ export const config: IFieldConfig = {
   name: "Short Text",
   dataType: "string",
   initialValue: "",
+  initializable:true,
   icon: <LongTextIcon />,
   description: "Large amount of text, such as sentences and paragraphs.",
   TableCell: withCustomCell(TableCell, BasicCell),

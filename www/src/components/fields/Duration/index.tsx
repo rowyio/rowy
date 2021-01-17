@@ -21,7 +21,7 @@ export const config: IFieldConfig = {
   name: "Duration",
   dataType:
     "{ start: firebase.firestore.Timestamp, end?: firebase.firestore.Timestamp }",
-  initialValue: null,
+  initialValue: undefined,
   icon: <DurationIcon />,
   description: "Duration calculated from two timestamps.",
   TableCell: withCustomCell(TableCell, BasicCell),

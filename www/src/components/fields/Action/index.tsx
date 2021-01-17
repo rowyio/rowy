@@ -19,13 +19,13 @@ export const config: IFieldConfig = {
   type: FieldType.action,
   name: "Action",
   dataType: "any",
-  initialValue: null,
+  initialValue: undefined,
   icon: <ActionIcon />,
   description:
     "A button with a pre-defined action. Triggers a Cloud Function. 3 different states: Disabled, Enabled, Active (Clicked). Supports Undo and Redo.",
   TableCell: withCustomCell(TableCell, BasicCell),
   TableEditor: NullEditor,
   SideDrawerField,
-  settings:Settings
+  settings:Settings,
 };
 export default config;

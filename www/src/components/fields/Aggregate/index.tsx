@@ -10,10 +10,10 @@ export const config: IFieldConfig = {
   type: FieldType.aggregate,
   name: "Aggregate",
   dataType: "string",
-  initialValue:
-    "Value aggregated from a specified sub-table of the row. Displayed using any other field type. Requires Cloud Function setup.",
+  initialValue: undefined,
+  initializable:false,
   icon: <AggregateIcon />,
-  description: "Numeric data.",
+  description: "Value aggregated from a specified sub-table of the row. Displayed using any other field type. Requires Cloud Function setup.",
   TableCell: withCustomCell(BasicCell as any, BasicCell),
   TableEditor: NullEditor,
   SideDrawerField: BasicCell as any,

@@ -100,7 +100,7 @@ export default function ColumnMenu() {
     setTimeout(() => setSelectedColumnHeader(null), 300);
   };
 
-  const isConfigurable = Boolean(getFieldProp("settings", column?.type));
+  const isConfigurable = Boolean(getFieldProp("settings", column?.type) || getFieldProp("initializable", column?.type));
   if (!column) return null;
   const isSorted = orderBy?.[0]?.key === (column.key as string);
   const isAsc = isSorted && orderBy?.[0]?.direction === "asc";

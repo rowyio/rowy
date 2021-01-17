@@ -22,6 +22,7 @@ export const config: IFieldConfig = {
   name: "Single Select",
   dataType: "string | null",
   initialValue: null,
+  initializable:true,
   icon: <SingleSelectIcon />,
   description:
     "Dropdown selector with searchable options and radio button behavior. Optionally allows users to input custom values. Max selection: 1 option.",

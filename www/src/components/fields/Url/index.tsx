@@ -19,6 +19,7 @@ export const config: IFieldConfig = {
   name: "URL",
   dataType: "string",
   initialValue: "",
+  initializable:true,
   icon: <UrlIcon />,
   description: "Web address. Firetable does not validate URLs.",
   TableCell: withCustomCell(TableCell, BasicCell),

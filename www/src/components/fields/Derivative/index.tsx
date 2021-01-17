@@ -10,10 +10,10 @@ export const config: IFieldConfig = {
   type: FieldType.derivative,
   name: "Derivative",
   dataType: "string",
-  initialValue:
-    "Value derived from the rest of the row’s values. Displayed using any other field type. Requires Cloud Function setup.",
+  initialValue:undefined,
+  initializable: true,
   icon: <DerivativeIcon />,
-  description: "Numeric data.",
+  description: "Value derived from the rest of the row’s values. Displayed using any other field type. Requires Cloud Function setup.",
   TableCell: withCustomCell(BasicCell as any, BasicCell),
   TableEditor: NullEditor,
   SideDrawerField: BasicCell as any,

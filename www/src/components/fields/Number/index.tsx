@@ -19,6 +19,7 @@ export const config: IFieldConfig = {
   name: "Number",
   dataType: "number",
   initialValue: undefined,
+  initializable:true,
   icon: <NumberIcon />,
   description: "Numeric data.",
   TableCell: withCustomCell(TableCell, BasicCell),

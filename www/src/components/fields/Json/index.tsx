@@ -24,6 +24,7 @@ export const config: IFieldConfig = {
   name: "JSON",
   dataType: "any",
   initialValue: undefined,
+  initializable:true,
   icon: <JsonIcon />,
   description: "JSON object editable with a visual JSON editor.",
   TableCell: withCustomCell(TableCell, BasicCell),

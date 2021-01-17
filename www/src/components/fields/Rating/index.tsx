@@ -22,6 +22,7 @@ export const config: IFieldConfig = {
   name: "Rating",
   dataType: "number",
   initialValue: undefined,
+  initializable: true,
   icon: <RatingIcon />,
   description:
     "Rating displayed as stars from 0 to configurable number of stars. Default: 5 stars.",

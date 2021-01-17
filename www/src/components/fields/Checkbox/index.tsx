@@ -22,6 +22,7 @@ export const config: IFieldConfig = {
   name: "Checkbox",
   dataType: "boolean",
   initialValue: false,
+  initializable: true,
   icon: <CheckboxIcon />,
   description: "Either checked or unchecked. Unchecked by default.",
   TableCell: withCustomCell(TableCell, BasicCell),

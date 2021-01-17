@@ -19,6 +19,7 @@ export const config: IFieldConfig = {
   name: "Phone",
   dataType: "string",
   initialValue: "",
+  initializable:true,
   icon: <PhoneIcon />,
   description:
     "Phone numbers stored as text. Firetable does not validate phone numbers.",

@@ -10,6 +10,7 @@ export interface IFieldConfig {
   type: FieldType;
   name: string;
   dataType: string;
+  initializable?:Boolean;
   initialValue: any;
   icon?: React.ReactNode;
   description?: string;
@@ -20,6 +21,7 @@ export interface IFieldConfig {
   settings?: React.ComponentType<ISettingsProps>;
   csvExport?: (value: any) => string;
   csvImportParser?: (value: string) => any;
+  
 }
 
 export interface ICustomCellProps extends FormatterProps<any> {

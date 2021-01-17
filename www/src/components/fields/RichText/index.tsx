@@ -21,6 +21,7 @@ export const config: IFieldConfig = {
   name: "Rich Text",
   dataType: "string",
   initialValue: undefined,
+  initializable:true,
   icon: <RichTextIcon />,
   description: "Rich text editor with predefined HTML text styles.",
   TableCell: withCustomCell(TableCell, BasicCell),
