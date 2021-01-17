@@ -45,7 +45,6 @@ export default function Json({
   const fieldClasses = useFieldStyles();
   const classes = useStyles();
   const theme = useTheme();
-
   return (
     <Controller
       control={control}
@@ -70,7 +69,8 @@ export default function Json({
         return (
           <div className={clsx(fieldClasses.root, classes.root)}>
             <ReactJson
-              src={isValidJson(value) ? value : {}}
+              src={value !== undefined && isValidJson(value) ? value :
+                column.config?.isArray?[]:{}}
               onEdit={handleEdit}
               onAdd={handleEdit}
               onDelete={handleEdit}

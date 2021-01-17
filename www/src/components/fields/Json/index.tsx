@@ -14,6 +14,11 @@ const SideDrawerField = lazy(
     import("./SideDrawerField" /* webpackChunkName: "SideDrawerField-Json" */)
 );
 
+const Settings = lazy(
+  () =>
+    import("./Settings" /* webpackChunkName: "Settings-Json" */)
+);
+
 export const config: IFieldConfig = {
   type: FieldType.json,
   name: "JSON",
@@ -24,5 +29,6 @@ export const config: IFieldConfig = {
   TableCell: withCustomCell(TableCell, BasicCell),
   TableEditor: SideDrawerEditor,
   SideDrawerField,
+  settings:Settings
 };
 export default config;
