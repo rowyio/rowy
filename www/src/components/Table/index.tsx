@@ -56,19 +56,7 @@ export default function Table() {
       ?.hiddenFields ?? [];
 
   const [columns, setColumns] = useState<FiretableColumn[]>([]);
-  const lastColumn = {
-    isNew: true,
-    key: "new",
-    name: "Add column",
-    type: FieldType.last,
-    index: columns.length ?? 0,
-    width: 204,
-    headerRenderer: FinalColumnHeader,
-    headerCellClass: "final-column-header",
-    cellClass: "final-column-cell",
-    formatter: FinalColumn,
-    editable: false,
-  };
+
   useEffect(() => {
     if (!tableState?.loadingColumns && tableState?.columns) {
       const _columns = _orderBy(
@@ -108,7 +96,19 @@ export default function Table() {
         // TODO: ENABLE ONCE BULK ACTIONS READY
         // SelectColumn,
         ..._columns,
-        lastColumn,
+        {
+          isNew: true,
+          key: "new",
+          name: "Add column",
+          type: FieldType.last,
+          index: _columns.length ?? 0,
+          width: 204,
+          headerRenderer: FinalColumnHeader,
+          headerCellClass: "final-column-header",
+          cellClass: "final-column-cell",
+          formatter: FinalColumn,
+          editable: false,
+        },
       ]);
     }
   }, [
