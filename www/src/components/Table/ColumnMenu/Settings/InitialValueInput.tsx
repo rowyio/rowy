@@ -15,9 +15,9 @@ const InitialValueInput =({config,handleChange,fieldType})=>{
 
     const [tab, setTab] = React.useState(1);
 
-    const handleChangeTable = (event: React.ChangeEvent<{}>, newValue: number) => {
+    const handleChangeTab = (event: React.ChangeEvent<{}>, newValue: number) => {
       setTab(newValue);
-    
+      handleChange("initialValue.type")(newValue===0?'static':'dynamic')
     };
   
     
@@ -35,22 +35,26 @@ const InitialValueInput =({config,handleChange,fieldType})=>{
         value={tab}
         indicatorColor="primary"
         textColor="primary"
-        onChange={handleChangeTable}
-        aria-label="disabled tabs example"
+        onChange={handleChangeTab}
+        aria-label="initialization type tab"
       >
         <Tab label="Static" disabled />
         <Tab label="Dynamic" />
       </Tabs>
+      <Typography color="textSecondary" paragraph>
+            Dynamic default value is evaluated after the onCreate trigger in the
+            FT cloud function of this table
+          </Typography> 
       <CodeEditor
-                      height={120}
-                      value={config["initialValue.script"]}
-                      onChange={handleChange("initialValue.script")}
-                      editorOptions={{ 
-                        minimap: {
-                        enabled: false,
-                      }
-                    }}
-                    />
+        height={120}
+        value={config["initialValue.script"]}
+        onChange={handleChange("initialValue.script")}
+        editorOptions={{ 
+          minimap: {
+          enabled: false,
+        }
+      }}
+      />
     </Paper>
           {/* <>render field component here</> */} 
           {/* {customFieldInput && 
