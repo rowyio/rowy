@@ -16,6 +16,10 @@ const SideDrawerField = lazy(
       "./SideDrawerField" /* webpackChunkName: "SideDrawerField-SingleSelect" */
     )
 );
+const Settings = lazy(
+  () => import("./Settings" /* webpackChunkName: "Settings-SingleSelect" */)
+);
+
 
 export const config: IFieldConfig = {
   type: FieldType.singleSelect,
@@ -32,5 +36,6 @@ export const config: IFieldConfig = {
   }),
   TableEditor: NullEditor,
   SideDrawerField,
+  settings:Settings
 };
 export default config;
