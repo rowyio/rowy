@@ -72,8 +72,9 @@ export default function propagate(
   );
   const promises = [propagateChangesPromise];
   if (triggerType === "delete") {
-    const removeRefsPromise = removeRefsOnTargetDelete(change.before.ref);
-    promises.push(removeRefsPromise);
+    config.forEach((c) =>
+      promises.push(removeRefsOnTargetDelete(change.before.ref, c.fieldName))
+    );
   } else {
     config.forEach((c) => promises.push(updateLinks(change, c)));
   }

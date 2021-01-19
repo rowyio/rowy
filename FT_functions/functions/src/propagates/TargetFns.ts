@@ -29,19 +29,17 @@ export const addTargetRef = (
   targetFieldKey: string,
   trackedFields
 ) =>
-  db
-    .doc(`${TARGET_SUB_COLLECTION}/${encodeURIComponent(sourceDocPath)}`)
-    .set(
-      {
-        [encodeURIComponent(targetRef.parent.path)]: {
-          [targetFieldKey]: {
-            trackedFields,
-            targets: { [targetRef.id]: true },
-          },
+  db.doc(`${TARGET_SUB_COLLECTION}/${encodeURIComponent(sourceDocPath)}`).set(
+    {
+      [encodeURIComponent(targetRef.parent.path)]: {
+        [targetFieldKey]: {
+          trackedFields,
+          targets: { [targetRef.id]: true },
         },
       },
-      { merge: true }
-    );
+    },
+    { merge: true }
+  );
 
 // remove propagation reference from source subcollection
 export const removeTargetRef = (
@@ -49,18 +47,16 @@ export const removeTargetRef = (
   sourceDocPath: string,
   targetFieldKey: string
 ) =>
-  db
-    .doc(`${TARGET_SUB_COLLECTION}/${encodeURIComponent(sourceDocPath)}`)
-    .set(
-      {
-        [encodeURIComponent(targetRef.parent.path)]: {
-          [targetFieldKey]: {
-            targets: { [targetRef.id]: fieldValue.delete() },
-          },
+  db.doc(`${TARGET_SUB_COLLECTION}/${encodeURIComponent(sourceDocPath)}`).set(
+    {
+      [encodeURIComponent(targetRef.parent.path)]: {
+        [targetFieldKey]: {
+          targets: { [targetRef.id]: fieldValue.delete() },
         },
       },
-      { merge: true }
-    );
+    },
+    { merge: true }
+  );
 
 // db
 // .doc(`${sourceDocPath}/${TARGET_SUB_COLLECTION}/${encodeURIComponent(targetRef.parent.path)}`)
@@ -74,31 +70,33 @@ export const removeTargetRef = (
 
 // removes all references of deleted targets
 export const removeRefsOnTargetDelete = (
-  targetRef: FirebaseFirestore.DocumentReference
+  targetRef: FirebaseFirestore.DocumentReference,
+  targetFieldKey: string
 ) =>
   new Promise((resolve, reject) =>
     db
-      .collectionGroup(TARGET_SUB_COLLECTION)
-      .where("targetCollectionPath", "==", targetRef.parent.path)
+      .collection(TARGET_SUB_COLLECTION)
+      .where(
+        `${targetRef.parent.path}.${targetFieldKey}.targets.${targetRef.id}`,
+        "==",
+        true
+      )
       .get()
       .then((queryResult) =>
         resolve(
           Promise.all(
-            queryResult.docs.map((doc) => {
-              const { targetCollectionPath, ...targetFields } = doc.data();
-              const update = Object.keys(targetFields).reduce(
-                (acc, targetFieldKey) => {
-                  return {
-                    ...acc,
+            queryResult.docs.map((doc) =>
+              doc.ref.set(
+                {
+                  [encodeURIComponent(targetRef.parent.path)]: {
                     [targetFieldKey]: {
                       targets: { [targetRef.id]: fieldValue.delete() },
                     },
-                  };
+                  },
                 },
-                {}
-              );
-              return doc.ref.set(update, { merge: true });
-            })
+                { merge: true }
+              )
+            )
           )
         )
       )
