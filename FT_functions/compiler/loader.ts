@@ -5,9 +5,9 @@ import * as admin from "firebase-admin";
 // Initialize Firebase Admin
 //const serverTimestamp = admin.firestore.FieldValue.serverTimestamp;
 
-admin.initializeApp();
-// const serviceAccount = require("./antler-vc-firebase.json");
-// admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
+//admin.initializeApp();
+const serviceAccount = require("./antler-vc-firebase.json");
+admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
 const db = admin.firestore();
 
 export const generateConfigFromTableSchema = async (schemaDocPath) => {
@@ -41,18 +41,24 @@ export const generateConfigFromTableSchema = async (schemaDocPath) => {
     ""
   )}]`;
 
+  const initializableColumns = Object.values(schemaData.columns).filter(
+    (col: any) => col.config?.["initialValue.script"]
+  );
+  console.log(initializableColumns);
+  const initializeConfig = `[${initializableColumns.reduce(
+    (acc, currColumn: any) => {
+      return `${acc}{\nfieldName:'${currColumn.key}',\nfn:(snapshot)=>{if(snapshot.get("${currColumn.key}")){
+        return snapshot.get("${currColumn.key}")
+      }
+        ${currColumn.config["initialValue.script"]}}\n},\n`;
+    },
+    ""
+  )}]`;
   const documentSelectColumns = Object.values(schemaData.columns).filter(
     (col: any) => col.type === "DOCUMENT_SELECT" && col.config?.trackedFields
   );
   const documentSelectConfig = `[${documentSelectColumns.reduce(
     (acc, currColumn: any) => {
-      // if (
-      //   !currColumn.config.trackedFields ||
-      //   currColumn.config.trackedFields.length === 0
-      // )
-      //   throw new Error(
-      //     `${currColumn.key} derivative is missing listener fields`
-      //   );
       return `${acc}{\nfieldName:'${
         currColumn.key
       }',\ntrackedFields:[${currColumn.config.trackedFields
@@ -117,6 +123,7 @@ export const generateConfigFromTableSchema = async (schemaDocPath) => {
     triggerPath,
     functionName: functionName.replace(/-/g, "_"),
     derivativesConfig,
+    initializeConfig,
     documentSelectConfig,
     sparksConfig,
   };
