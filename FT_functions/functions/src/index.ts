@@ -5,11 +5,12 @@ import {
   functionName,
   triggerPath,
   derivativesConfig,
+  // documentSelectConfig,
   sparksConfig,
 } from "./functionConfig";
 
 import { getTriggerType } from "./utils";
-//import {propagateChangesOnTrigger} from './propagates'
+//import propagate from './propagates'
 
 export const FT = {
   [functionName]: functions.firestore
@@ -31,12 +32,12 @@ export const FT = {
         );
         promises.push(derivativePromise);
       }
-      // const propagateChanges = propagateChangesOnTrigger(change,triggerType);
-      // promises.push(propagateChanges);
-
+      // const propagatePromise = propagate(change,documentSelectConfig,triggerType);
+      // promises.push(propagatePromise);
       try {
         const result = await Promise.allSettled(promises);
-        console.log(result);
+        console.log(JSON.stringify(result));
+        //const pp = await propagate(change,documentSelectConfig,triggerType);
       } catch (err) {
         console.log(`caught error: ${err}`);
       }

@@ -41,6 +41,27 @@ export const generateConfigFromTableSchema = async (schemaDocPath) => {
     ""
   )}]`;
 
+  const documentSelectColumns = Object.values(schemaData.columns).filter(
+    (col: any) => col.type === "DOCUMENT_SELECT" && col.config?.trackedFields
+  );
+  const documentSelectConfig = `[${documentSelectColumns.reduce(
+    (acc, currColumn: any) => {
+      // if (
+      //   !currColumn.config.trackedFields ||
+      //   currColumn.config.trackedFields.length === 0
+      // )
+      //   throw new Error(
+      //     `${currColumn.key} derivative is missing listener fields`
+      //   );
+      return `${acc}{\nfieldName:'${
+        currColumn.key
+      }',\ntrackedFields:[${currColumn.config.trackedFields
+        .map((fieldKey) => `"${fieldKey}"`)
+        .join(",\n")}]},\n`;
+    },
+    ""
+  )}]`;
+
   const sparksConfig = schemaData.sparks ? schemaData.sparks : "[]";
   const collectionType = schemaDocPath.includes("subTables")
     ? "subCollection"
@@ -96,6 +117,7 @@ export const generateConfigFromTableSchema = async (schemaDocPath) => {
     triggerPath,
     functionName: functionName.replace(/-/g, "_"),
     derivativesConfig,
+    documentSelectConfig,
     sparksConfig,
   };
 
