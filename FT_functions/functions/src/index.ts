@@ -5,12 +5,12 @@ import {
   functionName,
   triggerPath,
   derivativesConfig,
-  // documentSelectConfig,
+  documentSelectConfig,
   sparksConfig,
 } from "./functionConfig";
 
-import { getTriggerType } from "./utils";
-//import propagate from './propagates'
+import { getTriggerType, changedDocPath } from "./utils";
+import propagate from "./propagates";
 
 export const FT = {
   [functionName]: functions.firestore
@@ -22,7 +22,11 @@ export const FT = {
         .filter((sparkConfig) => sparkConfig.triggers.includes(triggerType))
         .map((sparkConfig) => spark(sparkConfig)(change, context));
       console.log(
-        `#${sparkPromises.length} sparks will be evaluted on ${triggerType}`
+        `#${
+          sparkPromises.length
+        } sparks will be evaluted on ${triggerType} of ${changedDocPath(
+          change
+        )}`
       );
       promises = sparkPromises;
       if (triggerType !== "delete") {
@@ -32,12 +36,15 @@ export const FT = {
         );
         promises.push(derivativePromise);
       }
-      // const propagatePromise = propagate(change,documentSelectConfig,triggerType);
-      // promises.push(propagatePromise);
+      const propagatePromise = propagate(
+        change,
+        documentSelectConfig,
+        triggerType
+      );
+      promises.push(propagatePromise);
       try {
         const result = await Promise.allSettled(promises);
         console.log(JSON.stringify(result));
-        //const pp = await propagate(change,documentSelectConfig,triggerType);
       } catch (err) {
         console.log(`caught error: ${err}`);
       }

@@ -30,13 +30,6 @@ const updateLinks = (
   const afterDocPaths = change.after.get(config.fieldName)
     ? change.after.get(config.fieldName).map((x) => x.docPath)
     : [];
-  console.log({
-    before: change.before.get(config.fieldName),
-    after: change.after.get(config.fieldName),
-    fieldName: config.fieldName,
-    afterDocPaths,
-    beforeDocPaths,
-  });
   const addedDocPaths = afterDocPaths.filter(
     (x) => !beforeDocPaths.includes(x)
   );
@@ -57,7 +50,6 @@ const updateLinks = (
     );
     return Promise.all([...addPromises, ...removePromises]);
   } else {
-    console.log(`no change in ${config.fieldName} docSelect field`);
     return new Promise(() => false);
   }
 };

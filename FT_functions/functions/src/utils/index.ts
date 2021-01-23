@@ -1,4 +1,5 @@
 import * as admin from "firebase-admin";
+import * as functions from "firebase-functions";
 
 export const serverTimestamp = admin.firestore.FieldValue.serverTimestamp;
 import { sendEmail } from "./email";
@@ -46,6 +47,9 @@ export const getTriggerType = (change) =>
     ? "create"
     : "delete";
 
+export const changedDocPath = (
+  change: functions.Change<functions.firestore.DocumentSnapshot>
+) => change.before?.ref.path ?? change.after.ref.path;
 export const rowReducer = (fieldsToSync, row) =>
   fieldsToSync.reduce((acc: any, curr: string) => {
     if (row[curr] !== undefined && row[curr] !== null)
