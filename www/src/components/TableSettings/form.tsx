@@ -4,8 +4,8 @@ import * as yup from "yup";
 import { FIELDS } from "@antlerengineering/form-builder";
 import { TableSettingsDialogModes } from "./index";
 
-import HelperText from "./HelperText";
-import { Link, ListItemSecondaryAction, Typography } from "@material-ui/core";
+import HelperText from "../HelperText";
+import { Link, Typography } from "@material-ui/core";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import { MONO_FONT } from "Themes";
 
@@ -87,7 +87,6 @@ export const tableSettings = (
         </HelperText>
       ),
   }),
-
   {
     type: FIELDS.multiSelect,
     name: "section",
@@ -97,7 +96,6 @@ export const tableSettings = (
     options: sections,
     validation: yup.string().required("Required"),
   },
-
   {
     type: FIELDS.text,
     name: "description",
@@ -105,7 +103,6 @@ export const tableSettings = (
     fieldVariant: "long",
     validation: yup.string(),
   },
-
   {
     type: FIELDS.multiSelect,
     name: "roles",

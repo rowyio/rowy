@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import _groupBy from "lodash/groupBy";
 import _find from "lodash/find";
-
 import {
   createStyles,
   makeStyles,
@@ -16,6 +15,7 @@ import {
 } from "@material-ui/core";
 
 import AddIcon from "@material-ui/icons/Add";
+import SettingsIcon from "@material-ui/icons/Settings";
 import EditIcon from "@material-ui/icons/Edit";
 import Favorite from "@material-ui/icons/Favorite";
 import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
@@ -31,6 +31,7 @@ import TableSettingsDialog, {
   TableSettingsDialogModes,
 } from "components/TableSettings";
 
+import ProjectSettings from 'components/ProjectSettings';
 const useStyles = makeStyles((theme) =>
   createStyles({
     "@global": {
@@ -68,7 +69,15 @@ const useStyles = makeStyles((theme) =>
       margin: theme.spacing(-1),
       marginRight: theme.spacing(-0.5),
     },
-
+    configFab:{
+      right: theme.spacing(15),
+      position: "fixed",
+      bottom: theme.spacing(3),
+      width: 80,
+      height: 80,
+      borderRadius: theme.shape.borderRadius * 2,
+      "& svg": { width: "2em", height: "2em" },
+    },
     fab: {
       position: "fixed",
       bottom: theme.spacing(3),
@@ -120,8 +129,8 @@ export default function HomePage() {
       mode: TableSettingsDialogModes.create,
       data: null,
     });
-
   const [open, setOpen] = useState(false);
+  const [openProjectSettings, setOpenProjectSettings] = useState(false);
 
   const TableCard = ({ table }) => {
     const checked = Boolean(_find(favs, table));
@@ -248,6 +257,16 @@ export default function HomePage() {
                 <AddIcon />
               </Fab>
             </Tooltip>
+            <Tooltip title="Configure Firetable">
+              <Fab
+                className={classes.configFab}
+                color="secondary"
+                aria-label="Create table"
+                onClick={()=>setOpenProjectSettings(true)}
+              >
+                <SettingsIcon />
+              </Fab>
+            </Tooltip>
           </section>
         </Container>
       </main>
@@ -256,6 +275,9 @@ export default function HomePage() {
         clearDialog={clearDialog}
         mode={settingsDialogState.mode}
         data={settingsDialogState.data}
+      />
+      <ProjectSettings open={openProjectSettings}
+      handleClose={()=>setOpenProjectSettings(false)}
       />
     </HomeNavigation>
   );

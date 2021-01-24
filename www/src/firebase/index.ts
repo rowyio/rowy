@@ -20,7 +20,6 @@ db.enablePersistence({ synchronizeTabs: true });
 export const bucket = firebase.storage();
 export const functions = firebase.functions();
 
-console.log({ functions });
 export const WEBHOOK_URL = `https://${(functions as any).region_}-${
   appConfig.projectId
 }.cloudfunctions.net/webhook`;
