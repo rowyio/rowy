@@ -14,7 +14,8 @@ import LockIcon from "@material-ui/icons/Lock";
 import ErrorBoundary from "components/ErrorBoundary";
 import FieldSkeleton from "./FieldSkeleton";
 
-import { FieldType, getFieldIcon } from "constants/fields";
+import { FieldType } from "constants/fields";
+import { getFieldProp } from "components/fields";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -68,7 +69,7 @@ export default function FieldWrapper({
         htmlFor={`sidedrawer-field-${name}`}
       >
         <Grid item className={classes.iconContainer}>
-          {type === "debug" ? <DebugIcon /> : getFieldIcon(type)}
+          {type === "debug" ? <DebugIcon /> : getFieldProp("icon", type)}
         </Grid>
         <Grid item xs>
           <Typography variant="caption">{label}</Typography>

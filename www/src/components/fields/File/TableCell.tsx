@@ -18,7 +18,7 @@ import UploadIcon from "assets/icons/Upload";
 
 import { useConfirmation } from "components/ConfirmationDialog";
 import useUploader, { FileValue } from "hooks/useFiretable/useUploader";
-import { FileIcon } from "constants/fields";
+import { FileIcon } from ".";
 
 const useStyles = makeStyles((theme) =>
   createStyles({

@@ -24,11 +24,11 @@ import TypeChange from "./TypeChange";
 import Settings from "./Settings";
 
 import { useFiretableContext } from "contexts/FiretableContext";
-import { FIELDS, FieldType } from "constants/fields";
+import { FieldType } from "constants/fields";
+import { getFieldProp } from "components/fields";
 import _find from "lodash/find";
 import { Column } from "react-data-grid";
 import { PopoverProps } from "@material-ui/core";
-import { getFieldProp } from "components/fields";
 
 const INITIAL_MODAL = { type: "", data: {} };
 
@@ -218,7 +218,7 @@ export default function ColumnMenu() {
     {
       label: `Edit Type: ${getFieldProp("name", column.type)}`,
       // This is based off the cell type
-      icon: _find(FIELDS, { type: column.type })?.icon,
+      icon: getFieldProp("icon", column.type),
       onClick: () => {
         setModal({ type: ModalStates.typeChange, data: { column } });
       },

@@ -21,7 +21,7 @@ import AddIcon from "@material-ui/icons/AddAPhoto";
 import DeleteIcon from "@material-ui/icons/Delete";
 import OpenIcon from "@material-ui/icons/OpenInNewOutlined";
 
-import { IMAGE_MIME_TYPES } from "constants/fields";
+import { IMAGE_MIME_TYPES } from ".";
 import Thumbnail from "components/Thumbnail";
 import { useConfirmation } from "components/ConfirmationDialog";
 

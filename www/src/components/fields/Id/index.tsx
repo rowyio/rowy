@@ -15,7 +15,7 @@ const SideDrawerField = lazy(
 
 export const config: IFieldConfig = {
   type: FieldType.id,
-  name: "Id",
+  name: "ID",
   dataType: "undefined",
   initialValue: undefined,
   icon: <IdIcon />,

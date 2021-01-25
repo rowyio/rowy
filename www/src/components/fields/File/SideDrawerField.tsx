@@ -17,7 +17,7 @@ import {
   CircularProgress,
 } from "@material-ui/core";
 import UploadIcon from "assets/icons/Upload";
-import { FileIcon } from "constants/fields";
+import { FileIcon } from ".";
 
 import Confirmation from "components/Confirmation";
 

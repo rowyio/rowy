@@ -27,3 +27,5 @@ export const config: IFieldConfig = {
   SideDrawerField,
 };
 export default config;
+
+export { FileIcon };

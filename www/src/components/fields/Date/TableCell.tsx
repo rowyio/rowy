@@ -5,7 +5,7 @@ import { useDebouncedCallback } from "use-debounce";
 
 import { makeStyles, createStyles } from "@material-ui/core";
 
-import { DateIcon } from "constants/fields";
+import { DateIcon } from ".";
 import { DATE_FORMAT } from "constants/dates";
 import { transformValue, sanitizeValue } from "./utils";
 

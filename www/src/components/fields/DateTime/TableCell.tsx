@@ -7,7 +7,7 @@ import { makeStyles, createStyles } from "@material-ui/core";
 import DateRangeIcon from "@material-ui/icons/DateRange";
 import TimeIcon from "@material-ui/icons/Schedule";
 
-import { DateTimeIcon } from "constants/fields";
+import { DateTimeIcon } from ".";
 import { DATE_TIME_FORMAT } from "constants/dates";
 import { transformValue, sanitizeValue } from "../Date/utils";
 
