@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) =>
 
     content: {
       padding: theme.spacing(3, 8, 6),
-      [theme.breakpoints.down("xs")]: { padding: theme.spacing(1, 2, 2) },
+      [theme.breakpoints.down("xs")]: { padding: theme.spacing(2) },
 
       "& > section + section": { marginTop: theme.spacing(4) },
     },
