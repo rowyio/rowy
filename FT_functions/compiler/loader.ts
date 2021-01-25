@@ -5,9 +5,9 @@ import * as admin from "firebase-admin";
 // Initialize Firebase Admin
 //const serverTimestamp = admin.firestore.FieldValue.serverTimestamp;
 
-//admin.initializeApp();
-const serviceAccount = require("./antler-vc-firebase.json");
-admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
+admin.initializeApp();
+// const serviceAccount = require("./antler-vc-firebase.json");
+// admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
 const db = admin.firestore();
 
 export const generateConfigFromTableSchema = async (schemaDocPath) => {
