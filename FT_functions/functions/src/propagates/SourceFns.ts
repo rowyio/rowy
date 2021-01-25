@@ -34,7 +34,7 @@ export const propagateChanges = (docSnapshot: DocumentSnapshot) =>
         const promises = [];
         const docData = doc.data();
         if (!doc.exists) {
-          resolve(false);
+          return resolve(false);
         }
         const targetCollectionPaths = Object.keys(docData);
         targetCollectionPaths.forEach((cPath) => {
@@ -67,7 +67,7 @@ export const propagateChanges = (docSnapshot: DocumentSnapshot) =>
             fieldPromises.forEach((p) => promises.push(p));
           });
         });
-        resolve(Promise.allSettled(promises));
+        return resolve(Promise.allSettled(promises));
       })
   );
 
