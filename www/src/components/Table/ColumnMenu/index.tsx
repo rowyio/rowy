@@ -21,7 +21,7 @@ import MenuContents from "./MenuContents";
 import NameChange from "./NameChange";
 import NewColumn from "./NewColumn";
 import TypeChange from "./TypeChange";
-import Settings from "./Settings";
+import FieldSettings from "./FieldSettings";
 
 import { useFiretableContext } from "contexts/FiretableContext";
 import { FieldType } from "constants/fields";
@@ -124,12 +124,11 @@ export default function ColumnMenu() {
 
   const clearModal = () => {
     setModal(INITIAL_MODAL);
-    handleClose();
+    setTimeout(() => handleClose(), 300);
   };
 
   const handleModalSave = (key: string, update: Record<string, any>) => {
     actions.update(key, update);
-    setModal(INITIAL_MODAL);
     clearModal();
   };
 
@@ -310,7 +309,7 @@ export default function ColumnMenu() {
             {...menuModalProps}
             open={modal.type === ModalStates.typeChange}
           />
-          <Settings
+          <FieldSettings
             {...menuModalProps}
             open={modal.type === ModalStates.settings}
           />

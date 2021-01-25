@@ -31,16 +31,19 @@ export default function Form({ values }: IFormProps) {
 
   // Get initial values from fields config
   const initialValues = fields.reduce(
-    (a, { key, type,config }) => ({
+    (a, { key, type, config }) => ({
       ...a,
-      [key]:config.initialValue?? getFieldProp("initialValue", type),
+      [key]:
+        config.initialValue?.type === "static"
+          ? config.initialValue.value
+          : getFieldProp("initialValue", type),
     }),
     {}
   );
   const { ref: docRef, ...rowValues } = values;
   const defaultValues = { ...initialValues, ...rowValues };
 
-  const { control, reset, formState, getValues, handleSubmit } = useForm({
+  const { control, reset, formState, getValues } = useForm({
     mode: "onBlur",
     defaultValues,
   });

@@ -1,4 +1,6 @@
 import React from "react";
+import { useForm } from "react-hook-form";
+import { IMenuModalProps } from "..";
 
 import {
   makeStyles,
@@ -9,12 +11,13 @@ import {
 } from "@material-ui/core";
 import Subheading from "../Subheading";
 
-import { FieldType } from "constants/fields";
 import { getFieldProp } from "components/fields";
 import CodeEditor from "components/CodeEditor";
+import FormAutosave from "./FormAutosave";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
+    typeSelector: { marginBottom: theme.spacing(1) },
     helperText: {
       ...theme.typography.body2,
       marginTop: theme.spacing(1),
@@ -28,24 +31,32 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-export interface IDefaultValueInputProps {
-  fieldType: FieldType;
-  config: Record<string, any>;
+export interface IDefaultValueInputProps extends IMenuModalProps {
   handleChange: (key: any) => (update: any) => void;
 }
 
 export default function DefaultValueInput({
   config,
   handleChange,
-  fieldType,
+  type,
+  fieldName,
+  ...props
 }: IDefaultValueInputProps) {
   const classes = useStyles();
-  const customFieldInput = getFieldProp("SideDrawerField", fieldType);
+  const customFieldInput = getFieldProp("SideDrawerField", type);
+
+  const { control } = useForm({
+    mode: "onBlur",
+    defaultValues: {
+      [fieldName]:
+        config.initialValue?.value ?? getFieldProp("initialValue", type),
+    },
+  });
 
   return (
     <>
       <Subheading>Default Value</Subheading>
-      <Typography color="textSecondary" paragraph>
+      <Typography color="textSecondary" gutterBottom>
         The default value will be the initial value of the cells whenever a new
         row is added.
       </Typography>
@@ -64,27 +75,35 @@ export default function DefaultValueInput({
             ? "The default value will be evaluated and set by this table’s Firetable cloud function. Setup is required."
             : ""
         }
+        className={classes.typeSelector}
       >
         <MenuItem value="static">Static</MenuItem>
         <MenuItem value="dynamic">Dynamic</MenuItem>
       </TextField>
 
-      {/* {config.initialValue?.type === "static" && customFieldInput && (
+      {config.initialValue?.type === "static" && customFieldInput && (
         <form>
+          <FormAutosave
+            control={control}
+            handleSave={(values) =>
+              handleChange("initialValue.value")(values[fieldName])
+            }
+          />
+
           {React.createElement(customFieldInput, {
-            column: {},
+            column: { type, key: fieldName, ...props, ...config },
             control,
             docRef: {},
             disabled: false,
           })}
         </form>
-      )} */}
+      )}
 
       {config.initialValue?.type === "dynamic" && (
         <div className={classes.codeEditorContainer}>
           <CodeEditor
             height={120}
-            value={config["initialValue.script"]}
+            value={config.initialValue?.script}
             onChange={handleChange("initialValue.script")}
             editorOptions={{
               minimap: {
