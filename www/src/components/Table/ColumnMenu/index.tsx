@@ -50,6 +50,18 @@ export type ColumnMenuRef = {
   >;
 };
 
+export interface IMenuModalProps {
+  name: string;
+  fieldName: string;
+  type: FieldType;
+
+  open: boolean;
+  config: Record<string, any>;
+
+  handleClose: () => void;
+  handleSave: (fieldName: string, config: Record<string, any>) => void;
+}
+
 const useStyles = makeStyles((theme) =>
   createStyles({
     paper: {
@@ -100,10 +112,27 @@ export default function ColumnMenu() {
     setTimeout(() => setSelectedColumnHeader(null), 300);
   };
 
-  const isConfigurable = Boolean(getFieldProp("settings", column?.type) || getFieldProp("initializable", column?.type));
+  const isConfigurable = Boolean(
+    getFieldProp("settings", column?.type) ||
+      getFieldProp("initializable", column?.type)
+  );
+
   if (!column) return null;
-  const isSorted = orderBy?.[0]?.key === (column.key as string);
+
+  const isSorted = orderBy?.[0]?.key === column.key;
   const isAsc = isSorted && orderBy?.[0]?.direction === "asc";
+
+  const clearModal = () => {
+    setModal(INITIAL_MODAL);
+    handleClose();
+  };
+
+  const handleModalSave = (key: string, update: Record<string, any>) => {
+    actions.update(key, update);
+    setModal(INITIAL_MODAL);
+    clearModal();
+  };
+
   const menuItems = [
     {
       type: "subheader",
@@ -201,7 +230,7 @@ export default function ColumnMenu() {
       onClick: () => {
         setModal({ type: ModalStates.settings, data: { column } });
       },
-      disabled:!isConfigurable,
+      disabled: !isConfigurable,
     },
     // {
     //   label: "Re-order",
@@ -241,9 +270,16 @@ export default function ColumnMenu() {
     },
   ];
 
-  const clearModal = () => {
-    setModal(INITIAL_MODAL);
-    setSelectedColumnHeader(null);
+  const menuModalProps = {
+    name: column.name,
+    fieldName: column.key,
+    type: column.type,
+
+    open: modal.type === ModalStates.typeChange,
+    config: column.config,
+
+    handleClose: clearModal,
+    handleSave: handleModalSave,
   };
 
   return (
@@ -267,51 +303,21 @@ export default function ColumnMenu() {
       {column && (
         <>
           <NameChange
-            name={column.name}
-            fieldName={column.key as string}
+            {...menuModalProps}
             open={modal.type === ModalStates.nameChange}
-            handleClose={clearModal}
-            handleSave={(key, update) => {
-              actions.update(key, update);
-              clearModal();
-              handleClose();
-            }}
           />
-
           <TypeChange
-            name={column.name}
-            fieldName={column.key as string}
+            {...menuModalProps}
             open={modal.type === ModalStates.typeChange}
-            type={column.type}
-            handleClose={clearModal}
-            handleSave={(key, update) => {
-              actions.update(key, update);
-              clearModal();
-              handleClose();
-            }}
           />
           <Settings
-            config={column.config}
-            name={column.name}
-            fieldName={column.key as string}
+            {...menuModalProps}
             open={modal.type === ModalStates.settings}
-            type={column.type}
-            handleClose={clearModal}
-            handleSave={(key, update) => {
-              actions.update(key, update);
-              clearModal();
-              handleClose();
-            }}
           />
           <NewColumn
+            {...menuModalProps}
             open={modal.type === ModalStates.new}
             data={modal.data}
-            handleClose={clearModal}
-            handleSave={(key, update) => {
-              actions.update(key, update);
-              clearModal();
-              handleClose();
-            }}
           />
         </>
       )}

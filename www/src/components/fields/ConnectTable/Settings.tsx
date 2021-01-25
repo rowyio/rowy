@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { ISettingsProps } from "../types";
-import { db } from "../../../firebase";
-import { FieldType } from "constants/fields";
-import { TextField } from "@material-ui/core";
-import SettingsHeading from "components/Table/ColumnMenu/Settings/SettingsHeading";
-import { useFiretableContext } from "contexts/FiretableContext";
 import _sortBy from "lodash/sortBy";
+
+import { TextField } from "@material-ui/core";
+import Subheading from "components/Table/ColumnMenu/Subheading";
 import MultiSelect from "@antlerengineering/multiselect";
+
+import { FieldType } from "constants/fields";
+import { db } from "../../../firebase";
+import { useFiretableContext } from "contexts/FiretableContext";
 
 export default function Settings({ handleChange, config }: ISettingsProps) {
   const { tables } = useFiretableContext();
@@ -40,9 +42,10 @@ export default function Settings({ handleChange, config }: ISettingsProps) {
       getColumns(config.index);
     }
   }, [config.index]);
+
   return (
     <>
-      <SettingsHeading>Table Connect Config</SettingsHeading>
+      <Subheading>Table Connect Config</Subheading>
       <MultiSelect
         options={tableOptions}
         freeText={false}

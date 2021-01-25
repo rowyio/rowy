@@ -1,14 +1,14 @@
 import React from "react";
 
 import { TextField, FormControlLabel, Switch } from "@material-ui/core";
-import SettingsHeading from "components/Table/ColumnMenu/Settings/SettingsHeading";
+import Subheading from "components/Table/ColumnMenu/Subheading";
 
 import _sortBy from "lodash/sortBy";
 
-const Settings = ({ handleChange, config }) => {
+export default function Settings({ handleChange, config }) {
   return (
     <>
-      <SettingsHeading>Slider Config</SettingsHeading>
+      <Subheading>Slider Config</Subheading>
 
       <TextField
         variant="filled"
@@ -55,6 +55,4 @@ const Settings = ({ handleChange, config }) => {
       />
     </>
   );
-};
-
-export default Settings;
+}

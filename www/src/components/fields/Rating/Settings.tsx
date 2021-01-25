@@ -2,14 +2,14 @@ import React from "react";
 import { ISettingsProps } from "../types";
 
 import { Slider } from "@material-ui/core";
-import SettingsHeading from "components/Table/ColumnMenu/Settings/SettingsHeading";
+import Subheading from "components/Table/ColumnMenu/Subheading";
 
 import _sortBy from "lodash/sortBy";
 
-export default function Rating({ handleChange, config }: ISettingsProps) {
+export default function Settings({ handleChange, config }: ISettingsProps) {
   return (
     <>
-      <SettingsHeading>Maximum number of stars</SettingsHeading>
+      <Subheading>Maximum number of stars</Subheading>
       <Slider
         defaultValue={5}
         value={config.max}
@@ -24,7 +24,7 @@ export default function Rating({ handleChange, config }: ISettingsProps) {
         min={1}
         max={15}
       />
-      <SettingsHeading>Slider precision</SettingsHeading>
+      <Subheading>Slider precision</Subheading>
       <Slider
         defaultValue={0.5}
         value={config.precision}

@@ -1,14 +1,14 @@
 import React from "react";
 
 import { TextField } from "@material-ui/core";
-import SettingsHeading from "components/Table/ColumnMenu/Settings/SettingsHeading";
+import Subheading from "components/Table/ColumnMenu/Subheading";
 
 import _sortBy from "lodash/sortBy";
 
-const Settings = ({ handleChange, config }) => {
+export default function Settings({ handleChange, config }) {
   return (
     <>
-      <SettingsHeading>Short Text Config</SettingsHeading>
+      <Subheading>Short Text Config</Subheading>
       <TextField
         type="number"
         value={config.maxLength}
@@ -21,6 +21,4 @@ const Settings = ({ handleChange, config }) => {
       />
     </>
   );
-};
-
-export default Settings;
+}
