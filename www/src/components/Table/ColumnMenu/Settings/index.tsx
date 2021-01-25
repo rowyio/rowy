@@ -7,7 +7,7 @@ import { Grid, Typography, Switch } from "@material-ui/core";
 import StyledModal from "components/StyledModal";
 import { getFieldProp } from "components/fields";
 import Subheading from "../Subheading";
-import InitialValueInput from "./InitialValueInput";
+import DefaultValueInput from "./DefaultValueInput";
 
 export default function FieldSettings({
   name,
@@ -36,41 +36,47 @@ export default function FieldSettings({
         <>
           {initializable && (
             <>
-              <Subheading>Required?</Subheading>
-              <Typography color="textSecondary" paragraph>
-                The row will not be created or updated unless all required
-                values are set.
-              </Typography>
-
-              <Grid container justify="space-between">
-                <Typography variant="body1">
-                  Make this column required
+              <section>
+                <Subheading>Required?</Subheading>
+                <Typography color="textSecondary" paragraph>
+                  The row will not be created or updated unless all required
+                  values are set.
                 </Typography>
-                <Switch
-                  checked={newConfig["required"]}
-                  onChange={() =>
-                    setNewConfig({
-                      ...newConfig,
-                      required: !Boolean(newConfig["required"]),
-                    })
-                  }
-                  name="required"
-                />
-              </Grid>
 
-              <InitialValueInput
-                fieldType={type}
-                config={newConfig}
-                handleChange={handleChange}
-              />
+                <Grid container justify="space-between">
+                  <Typography variant="body1">
+                    Make this column required
+                  </Typography>
+                  <Switch
+                    checked={newConfig["required"]}
+                    onChange={() =>
+                      setNewConfig({
+                        ...newConfig,
+                        required: !Boolean(newConfig["required"]),
+                      })
+                    }
+                    name="required"
+                  />
+                </Grid>
+              </section>
+
+              <section>
+                <DefaultValueInput
+                  fieldType={type}
+                  config={newConfig}
+                  handleChange={handleChange}
+                />
+              </section>
             </>
           )}
 
-          {customFieldSettings &&
-            React.createElement(customFieldSettings, {
-              config: newConfig,
-              handleChange,
-            })}
+          <section>
+            {customFieldSettings &&
+              React.createElement(customFieldSettings, {
+                config: newConfig,
+                handleChange,
+              })}
+          </section>
 
           {/* {
             <ConfigForm

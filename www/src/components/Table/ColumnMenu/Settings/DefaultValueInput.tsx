@@ -7,7 +7,7 @@ import Paper from "@material-ui/core/Paper";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import CodeEditor from "components/CodeEditor";
-const InitialValueInput = ({ config, handleChange, fieldType }) => {
+const DefaultValueInput = ({ config, handleChange, fieldType }) => {
   const customFieldInput = getFieldProp("SideDrawerField", fieldType);
 
   const [tab, setTab] = React.useState(1);
@@ -65,4 +65,4 @@ const InitialValueInput = ({ config, handleChange, fieldType }) => {
   );
 };
 
-export default InitialValueInput;
+export default DefaultValueInput;
