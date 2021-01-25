@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import _sortBy from "lodash/sortBy";
+import _set from "lodash/set";
 import { IMenuModalProps } from "..";
 
-import { Grid, Typography, Switch } from "@material-ui/core";
+import { Typography, FormControlLabel, Switch } from "@material-ui/core";
 
 import StyledModal from "components/StyledModal";
 import { getFieldProp } from "components/fields";
@@ -22,8 +23,9 @@ export default function FieldSettings({
   const customFieldSettings = getFieldProp("settings", type);
   const initializable = getFieldProp("initializable", type);
 
-  const handleChange = (key) => (update) => {
-    setNewConfig({ ...newConfig, [key]: update });
+  const handleChange = (key: string) => (update: any) => {
+    const updatedConfig = _set({ ...newConfig }, key, update);
+    setNewConfig(updatedConfig);
   };
 
   return (
@@ -43,21 +45,27 @@ export default function FieldSettings({
                   values are set.
                 </Typography>
 
-                <Grid container justify="space-between">
-                  <Typography variant="body1">
-                    Make this column required
-                  </Typography>
-                  <Switch
-                    checked={newConfig["required"]}
-                    onChange={() =>
-                      setNewConfig({
-                        ...newConfig,
-                        required: !Boolean(newConfig["required"]),
-                      })
-                    }
-                    name="required"
-                  />
-                </Grid>
+                <FormControlLabel
+                  value="required"
+                  label="Make this column required"
+                  labelPlacement="start"
+                  control={
+                    <Switch
+                      checked={newConfig["required"]}
+                      onChange={() =>
+                        setNewConfig({
+                          ...newConfig,
+                          required: !Boolean(newConfig["required"]),
+                        })
+                      }
+                      name="required"
+                    />
+                  }
+                  style={{
+                    marginLeft: 0,
+                    justifyContent: "space-between",
+                  }}
+                />
               </section>
 
               <section>

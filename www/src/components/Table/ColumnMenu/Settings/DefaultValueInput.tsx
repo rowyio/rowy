@@ -1,68 +1,99 @@
 import React from "react";
+
+import {
+  makeStyles,
+  createStyles,
+  Typography,
+  TextField,
+  MenuItem,
+} from "@material-ui/core";
 import Subheading from "../Subheading";
-import { Typography } from "@material-ui/core";
+
+import { FieldType } from "constants/fields";
 import { getFieldProp } from "components/fields";
-//import { useForm } from "react-hook-form";
-import Paper from "@material-ui/core/Paper";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
 import CodeEditor from "components/CodeEditor";
-const DefaultValueInput = ({ config, handleChange, fieldType }) => {
+
+const useStyles = makeStyles((theme) =>
+  createStyles({
+    helperText: {
+      ...theme.typography.body2,
+      marginTop: theme.spacing(1),
+    },
+
+    codeEditorContainer: {
+      border: `1px solid ${theme.palette.divider}`,
+      borderRadius: theme.shape.borderRadius,
+      overflow: "hidden",
+    },
+  })
+);
+
+export interface IDefaultValueInputProps {
+  fieldType: FieldType;
+  config: Record<string, any>;
+  handleChange: (key: any) => (update: any) => void;
+}
+
+export default function DefaultValueInput({
+  config,
+  handleChange,
+  fieldType,
+}: IDefaultValueInputProps) {
+  const classes = useStyles();
   const customFieldInput = getFieldProp("SideDrawerField", fieldType);
-
-  const [tab, setTab] = React.useState(1);
-
-  const handleChangeTab = (event: React.ChangeEvent<{}>, newValue: number) => {
-    setTab(newValue);
-    handleChange("initialValue.type")(newValue === 0 ? "static" : "dynamic");
-  };
 
   return (
     <>
-      <Subheading>Default value</Subheading>
+      <Subheading>Default Value</Subheading>
       <Typography color="textSecondary" paragraph>
-        The default value will be the initial value of the cells, whenever a new
+        The default value will be the initial value of the cells whenever a new
         row is added.
       </Typography>
 
-      <Paper square>
-        <Tabs
-          value={tab}
-          indicatorColor="primary"
-          textColor="primary"
-          onChange={handleChangeTab}
-          aria-label="initialization type tab"
-        >
-          <Tab label="Static" disabled />
-          <Tab label="Dynamic" />
-        </Tabs>
-        <Typography color="textSecondary" paragraph>
-          Dynamic default value is evaluated after the onCreate trigger in the
-          FT cloud function of this table
-        </Typography>
-        <CodeEditor
-          height={120}
-          value={config["initialValue.script"]}
-          onChange={handleChange("initialValue.script")}
-          editorOptions={{
-            minimap: {
-              enabled: false,
-            },
-          }}
-        />
-      </Paper>
-      {/* <>render field component here</> */}
-      {/* {customFieldInput && 
-          <form>
-              {React.createElement(customFieldInput, {
+      <TextField
+        select
+        label="Default Value Type"
+        value={config.initialValue?.type ?? ""}
+        onChange={(e) => handleChange("initialValue.type")(e.target.value)}
+        fullWidth
+        FormHelperTextProps={{ classes: { root: classes.helperText } }}
+        helperText={
+          config.initialValue?.type === "static"
+            ? "The default value will be set when you click “Add Row”. No further setup is required."
+            : config.initialValue?.type === "dynamic"
+            ? "The default value will be evaluated and set by this table’s Firetable cloud function. Setup is required."
+            : ""
+        }
+      >
+        <MenuItem value="static">Static</MenuItem>
+        <MenuItem value="dynamic">Dynamic</MenuItem>
+      </TextField>
+
+      {/* {config.initialValue?.type === "static" && customFieldInput && (
+        <form>
+          {React.createElement(customFieldInput, {
             column: {},
             control,
-            docRef:{},
+            docRef: {},
             disabled: false,
           })}
-          </form>} */}
+        </form>
+      )} */}
+
+      {config.initialValue?.type === "dynamic" && (
+        <div className={classes.codeEditorContainer}>
+          <CodeEditor
+            height={120}
+            value={config["initialValue.script"]}
+            onChange={handleChange("initialValue.script")}
+            editorOptions={{
+              minimap: {
+                enabled: false,
+              },
+            }}
+          />
+        </div>
+      )}
     </>
   );
-};
-
-export default DefaultValueInput;
+}
