@@ -187,7 +187,7 @@ export default function ColumnMenu() {
       },
     },
     {
-      label: `Edit Type: ${column?.type}`,
+      label: `Edit Type: ${getFieldProp("name", column.type)}`,
       // This is based off the cell type
       icon: _find(FIELDS, { type: column.type })?.icon,
       onClick: () => {
