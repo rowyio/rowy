@@ -39,10 +39,6 @@ export default function Settings({ handleChange, config }) {
       setNewOption("");
     }
   };
-  const handleDelete = (optionToDelete: string) => () =>
-    handleChange("options")(
-      options.filter((option: string) => option !== optionToDelete)
-    );
 
   return (
     <>
@@ -63,9 +59,11 @@ export default function Settings({ handleChange, config }) {
               <Grid item>
                 <IconButton
                   aria-label="remove"
-                  onClick={(e: any) => {
-                    handleDelete(option);
-                  }}
+                  onClick={(e: any) => 
+                    handleChange("options")(
+                      options.filter((o: string) => o !== option)
+                    )
+                  }
                 >
                   {<RemoveIcon />}
                 </IconButton>
