@@ -17,9 +17,9 @@ const Settings = ({
   config,
   handleChange,
 })=>{
-
   const {tableState} = useFiretableContext();
-  const columnOptions = Object.values(tableState?.columns??{}).filter(column => column.type === FieldType.subTable).map((c)=>({label:c.name,value:c.key}))
+  if(!tableState?.columns)return <></>
+  const columnOptions = Object.values(tableState.columns).filter(column => column.type !== FieldType.subTable).map((c)=>({label:c.name,value:c.key}))
   return (
     <>
       <MultiSelect
