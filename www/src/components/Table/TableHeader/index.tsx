@@ -18,9 +18,8 @@ import Filters from "../Filters";
 import ImportCSV from "./ImportCsv";
 import ExportCSV from "./ExportCsv";
 import TableSettings from "./TableSettings";
-
-import { useFiretableContext } from "contexts/FiretableContext";
-import { FieldType } from "constants/fields";
+import { useAppContext } from "contexts/AppContext";
+import { useFiretableContext,firetableUser } from "contexts/FiretableContext";
 import HiddenFields from "../HiddenFields";
 
 export const TABLE_HEADER_HEIGHT = 56;
@@ -79,14 +78,11 @@ export default function TableHeader({
   updateConfig,
 }: ITableHeaderProps) {
   const classes = useStyles();
+  const { currentUser } = useAppContext();
   const { tableActions, tableState } = useFiretableContext();
 
   if (!tableState || !tableState.columns) return null;
   const { columns } = tableState;
-
-  const needsMigration = Array.isArray(columns) && columns.length !== 0;
-  const tempColumns = needsMigration ? columns : Object.values(columns);
-
   return (
     <Grid
       container
@@ -99,14 +95,15 @@ export default function TableHeader({
         <Grid item>
           <Button
             onClick={() => {
-              const initialVal = tempColumns.reduce((acc, currCol) => {
-                if (currCol.type === FieldType.checkbox) {
-                  return { ...acc, [currCol.key]: false };
-                } else {
-                  return acc;
-                }
-              }, {});
-              tableActions?.row.add(initialVal);
+              const initialVal = Object.values(columns).reduce((acc, column) =>{
+                if(column.config?.initialValue?.type === 'static'){
+                  return {...acc,[column.key]:column.config.initialValue.value}
+                }else if(column.config?.initialValue?.type === 'null'){
+                  return {...acc,[column.key]:null}
+                }else return acc
+              },{})
+              tableActions?.row.add({...initialVal, _ft_updatedBy : firetableUser(currentUser),
+                _ft_createdBy : firetableUser(currentUser)});
             }}
             variant="contained"
             color="primary"
