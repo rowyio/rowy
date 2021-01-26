@@ -64,7 +64,7 @@ export default function DefaultValueInput({
       <TextField
         select
         label="Default Value Type"
-        value={config.initialValue?.type ?? ""}
+        value={config.initialValue?.type ?? "undefined"}
         onChange={(e) => handleChange("initialValue.type")(e.target.value)}
         fullWidth
         FormHelperTextProps={{ classes: { root: classes.helperText } }}
@@ -77,8 +77,10 @@ export default function DefaultValueInput({
         }
         className={classes.typeSelector}
       >
+        <MenuItem value="undefined">Undefined</MenuItem>
+        <MenuItem value="null">Null</MenuItem>
         <MenuItem value="static">Static</MenuItem>
-        <MenuItem value="dynamic">Dynamic</MenuItem>
+        <MenuItem value="dynamic">Dynamic<em>(requires FT Cloud functions)</em></MenuItem>
       </TextField>
 
       {config.initialValue?.type === "static" && customFieldInput && (
