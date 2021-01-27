@@ -97,12 +97,12 @@ export default function TableHeader({
             onClick={() => {
               const initialVal = Object.values(columns).reduce(
                 (acc, column) => {
-                  if (column.config?.initialValue?.type === "static") {
+                  if (column.config?.defaultValue?.type === "static") {
                     return {
                       ...acc,
-                      [column.key]: column.config.initialValue.value,
+                      [column.key]: column.config.defaultValue.value,
                     };
-                  } else if (column.config?.initialValue?.type === "null") {
+                  } else if (column.config?.defaultValue?.type === "null") {
                     return { ...acc, [column.key]: null };
                   } else return acc;
                 },

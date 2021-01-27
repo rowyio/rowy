@@ -49,7 +49,7 @@ export default function DefaultValueInput({
     mode: "onBlur",
     defaultValues: {
       [fieldName]:
-        config.initialValue?.value ?? getFieldProp("initialValue", type),
+        config.defaultValue?.value ?? getFieldProp("defaultValue", type),
     },
   });
 
@@ -64,14 +64,14 @@ export default function DefaultValueInput({
       <TextField
         select
         label="Default Value Type"
-        value={config.initialValue?.type ?? "undefined"}
-        onChange={(e) => handleChange("initialValue.type")(e.target.value)}
+        value={config.defaultValue?.type ?? "undefined"}
+        onChange={(e) => handleChange("defaultValue.type")(e.target.value)}
         fullWidth
         FormHelperTextProps={{ classes: { root: classes.helperText } }}
         helperText={
-          config.initialValue?.type === "static"
+          config.defaultValue?.type === "static"
             ? "The default value will be set when you click “Add Row”. No further setup is required."
-            : config.initialValue?.type === "dynamic"
+            : config.defaultValue?.type === "dynamic"
             ? "The default value will be evaluated and set by this table’s Firetable cloud function. Setup is required."
             : ""
         }
@@ -85,12 +85,12 @@ export default function DefaultValueInput({
         </MenuItem>
       </TextField>
 
-      {config.initialValue?.type === "static" && customFieldInput && (
+      {config.defaultValue?.type === "static" && customFieldInput && (
         <form>
           <FormAutosave
             control={control}
             handleSave={(values) =>
-              handleChange("initialValue.value")(values[fieldName])
+              handleChange("defaultValue.value")(values[fieldName])
             }
           />
 
@@ -103,12 +103,12 @@ export default function DefaultValueInput({
         </form>
       )}
 
-      {config.initialValue?.type === "dynamic" && (
+      {config.defaultValue?.type === "dynamic" && (
         <div className={classes.codeEditorContainer}>
           <CodeEditor
             height={120}
-            value={config.initialValue?.script}
-            onChange={handleChange("initialValue.script")}
+            value={config.defaultValue?.script}
+            onChange={handleChange("defaultValue.script")}
             editorOptions={{
               minimap: {
                 enabled: false,

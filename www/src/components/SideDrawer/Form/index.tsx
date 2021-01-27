@@ -34,8 +34,8 @@ export default function Form({ values }: IFormProps) {
     (a, { key, type, config }) => ({
       ...a,
       [key]:
-        config.initialValue?.type === "static"
-          ? config.initialValue.value
+        config.defaultValue?.type === "static"
+          ? config.defaultValue.value
           : getFieldProp("initialValue", type),
     }),
     {}
