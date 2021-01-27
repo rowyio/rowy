@@ -49,7 +49,7 @@ export default function DefaultValueInput({
     mode: "onBlur",
     defaultValues: {
       [fieldName]:
-        config.defaultValue?.value ?? getFieldProp("defaultValue", type),
+        config.defaultValue?.value ?? getFieldProp("initialValue", type),
     },
   });
 
