@@ -8,6 +8,7 @@ import {
   Typography,
   TextField,
   MenuItem,
+  ListItemText,
 } from "@material-ui/core";
 import Subheading from "../Subheading";
 
@@ -17,16 +18,17 @@ import FormAutosave from "./FormAutosave";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
-    typeSelector: { marginBottom: theme.spacing(1) },
-    helperText: {
-      ...theme.typography.body2,
-      marginTop: theme.spacing(1),
-    },
+    typeSelect: { marginBottom: theme.spacing(1) },
+    typeSelectItem: { whiteSpace: "normal" },
 
     codeEditorContainer: {
       border: `1px solid ${theme.palette.divider}`,
       borderRadius: theme.shape.borderRadius,
       overflow: "hidden",
+    },
+
+    mono: {
+      fontFamily: theme.typography.fontFamilyMono,
     },
   })
 );
@@ -57,8 +59,8 @@ export default function DefaultValueInput({
     <>
       <Subheading>Default Value</Subheading>
       <Typography color="textSecondary" gutterBottom>
-        The default value will be the initial value of the cells whenever a new
-        row is added.
+        The default value will be the initial value of this cell when a new row
+        is added.
       </Typography>
 
       <TextField
@@ -67,21 +69,39 @@ export default function DefaultValueInput({
         value={config.defaultValue?.type ?? "undefined"}
         onChange={(e) => handleChange("defaultValue.type")(e.target.value)}
         fullWidth
-        FormHelperTextProps={{ classes: { root: classes.helperText } }}
-        helperText={
-          config.defaultValue?.type === "static"
-            ? "The default value will be set when you click “Add Row”. No further setup is required."
-            : config.defaultValue?.type === "dynamic"
-            ? "The default value will be evaluated and set by this table’s Firetable cloud function. Setup is required."
-            : ""
-        }
-        className={classes.typeSelector}
+        className={classes.typeSelect}
       >
-        <MenuItem value="undefined">Undefined</MenuItem>
-        <MenuItem value="null">Null</MenuItem>
-        <MenuItem value="static">Static</MenuItem>
+        <MenuItem value="undefined">
+          <ListItemText
+            primary="Undefined"
+            secondary="No default value. The field will not appear in the row’s corresponding Firestore document by default."
+            className={classes.typeSelectItem}
+          />
+        </MenuItem>
+        <MenuItem value="null">
+          <ListItemText
+            primary="Null"
+            secondary={
+              <>
+                Initialise as <span className={classes.mono}>null</span>.
+              </>
+            }
+            className={classes.typeSelectItem}
+          />
+        </MenuItem>
+        <MenuItem value="static">
+          <ListItemText
+            primary="Static"
+            secondary="Set a specific default value for all cells in this column."
+            className={classes.typeSelectItem}
+          />
+        </MenuItem>
         <MenuItem value="dynamic">
-          Dynamic<em>(requires FT Cloud functions)</em>
+          <ListItemText
+            primary="Dynamic (Requires Firetable Cloud Functions)"
+            secondary="Write code to set the default value using this table’s Firetable Cloud Function. Setup is required."
+            className={classes.typeSelectItem}
+          />
         </MenuItem>
       </TextField>
 
