@@ -20,7 +20,7 @@ export const config: IFieldConfig = {
   type: FieldType.subTable,
   name: "SubTable",
   dataType: "undefined",
-  initialValue: undefined,
+  initialValue: null,
   icon: <SubTableIcon />,
   description:
     "Creates a sub-table. Also displays number of rows inside the sub-table. Max sub-table levels: 100.",

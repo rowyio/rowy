@@ -18,7 +18,7 @@ export const config: IFieldConfig = {
   type: FieldType.color,
   name: "Color",
   dataType: "Record<string, any>",
-  initialValue: undefined,
+  initialValue: {},
   initializable: true,
   icon: <ColorIcon />,
   description: "Visual color picker. Supports Hex, RGBA, HSLA.",

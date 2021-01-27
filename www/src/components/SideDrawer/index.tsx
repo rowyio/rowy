@@ -65,10 +65,7 @@ export default function SideDrawer() {
 
   useEffect(() => {
     const rowRef = queryString.parse(window.location.search).rowRef as string;
-    if (rowRef) {
-      console.log(rowRef);
-      dispatchUrlDoc({ path: decodeURIComponent(rowRef) });
-    }
+    if (rowRef) dispatchUrlDoc({ path: decodeURIComponent(rowRef) });
   }, []);
 
   useEffect(() => {

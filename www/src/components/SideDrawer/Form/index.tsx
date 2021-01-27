@@ -29,15 +29,10 @@ export default function Form({ values }: IFormProps) {
     (f) => !userDocHiddenFields.includes(f.name)
   );
 
-  // Get initial values from fields config
+  // Get initial values from fields config. This won’t be written to the db
+  // when the SideDrawer is opened. Only dirty fields will be written
   const initialValues = fields.reduce(
-    (a, { key, type, config }) => ({
-      ...a,
-      [key]:
-        config.defaultValue?.type === "static"
-          ? config.defaultValue.value
-          : getFieldProp("initialValue", type),
-    }),
+    (a, { key, type }) => ({ ...a, [key]: getFieldProp("initialValue", type) }),
     {}
   );
   const { ref: docRef, ...rowValues } = values;
@@ -62,7 +57,14 @@ export default function Form({ values }: IFormProps) {
 
   return (
     <form>
-      <Autosave control={control} docRef={docRef} row={values} reset={reset} />
+      <Autosave
+        control={control}
+        docRef={docRef}
+        row={values}
+        reset={reset}
+        formState={formState}
+      />
+
       <Reset
         formState={formState}
         reset={reset}

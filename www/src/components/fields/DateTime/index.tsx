@@ -21,7 +21,7 @@ export const config: IFieldConfig = {
   type: FieldType.dateTime,
   name: "Time & Date",
   dataType: "firebase.firestore.Timestamp",
-  initialValue: undefined,
+  initialValue: null,
   initializable: true,
   icon: <DateTimeIcon />,
   description:

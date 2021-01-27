@@ -21,7 +21,7 @@ export const config: IFieldConfig = {
   type: FieldType.slider,
   name: "Slider",
   dataType: "number",
-  initialValue: undefined,
+  initialValue: 0,
   initializable: true,
   icon: <SliderIcon />,
   description: "Slider with adjustable range. Returns a numeric value.",

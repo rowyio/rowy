@@ -19,7 +19,7 @@ export const config: IFieldConfig = {
   name: "Image",
   dataType:
     "{ downloadURL: string, lastModifiedTS: number, name: string, type, ref }[]",
-  initialValue: undefined,
+  initialValue: [],
   icon: <ImageIcon />,
   description:
     "Image file uploaded to Firebase Storage. Supports JPEG, PNG, SVG, GIF, WebP.",

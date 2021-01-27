@@ -17,7 +17,7 @@ export const config: IFieldConfig = {
   type: FieldType.id,
   name: "ID",
   dataType: "undefined",
-  initialValue: undefined,
+  initialValue: "",
   icon: <IdIcon />,
   description: "Displays the row’s document ID. Cannot be sorted.",
   TableCell: withCustomCell(TableCell, BasicCell),

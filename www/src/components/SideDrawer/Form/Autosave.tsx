@@ -2,22 +2,21 @@ import { useEffect } from "react";
 import { useDebounce } from "use-debounce";
 import _isEqual from "lodash/isEqual";
 import _pick from "lodash/pick";
-import _omitBy from "lodash/omitBy";
+import _pickBy from "lodash/pickBy";
 import _isUndefined from "lodash/isUndefined";
 import _reduce from "lodash/reduce";
 
 import { Control, UseFormMethods, useWatch } from "react-hook-form";
 import { Values } from "./utils";
 
-import { useAppContext } from "contexts/AppContext";
-import { useFiretableContext, firetableUser } from "contexts/FiretableContext";
+import { useFiretableContext } from "contexts/FiretableContext";
 import { FiretableState } from "hooks/useFiretable";
 
-export interface IAutosaveProps {
+export interface IAutosaveProps
+  extends Pick<UseFormMethods, "reset" | "formState"> {
   control: Control;
   docRef: firebase.firestore.DocumentReference;
   row: any;
-  reset: UseFormMethods["reset"];
 }
 
 const getEditables = (values: Values, tableState?: FiretableState) =>
@@ -36,12 +35,11 @@ export default function Autosave({
   docRef,
   row,
   reset,
+  formState,
 }: IAutosaveProps) {
-  const { currentUser } = useAppContext();
-  const { tableState } = useFiretableContext();
+  const { tableState, updateCell } = useFiretableContext();
 
   const values = useWatch({ control });
-
   const [debouncedValue] = useDebounce(getEditables(values, tableState), 1000, {
     equalityFn: _isEqual,
   });
@@ -49,30 +47,27 @@ export default function Autosave({
   useEffect(() => {
     if (!row || !row.ref) return;
     if (row.ref.id !== docRef.id) return;
+    if (!updateCell) return;
 
-    // Get only fields that have changed and
-    // Remove undefined value to prevent Firestore crash
-    const updatedValues = _omitBy(
-      _omitBy(debouncedValue, _isUndefined),
-      (value, key) => _isEqual(value, row[key])
+    // Get only fields that have had their value updated by the user
+    const updatedValues = _pickBy(
+      _pickBy(debouncedValue, (_, key) => formState.dirtyFields[key]),
+      (value, key) => !_isEqual(value, row[key])
     );
 
     if (Object.keys(updatedValues).length === 0) return;
 
-    const _ft_updatedAt = new Date();
-    const _ft_updatedBy = firetableUser(currentUser);
-    row.ref
-      .update({
-        ...updatedValues,
-        _ft_updatedAt,
-        // updatedAt: _ft_updatedAt,
-        _ft_updatedBy,
-        // updatedBy: _ft_updatedBy,
-      })
-      .then(() => {
-        console.log("Updated row", row.ref.id, updatedValues);
-        reset();
-      });
+    Object.entries(updatedValues).forEach(([key, value]) =>
+      updateCell(
+        row.ref,
+        key,
+        value,
+        // After the cell is updated, set this field to be not dirty
+        // so it doesn’t get updated again when a different field in the form
+        // is updated + make sure the new value is kept after reset
+        () => reset({ ...values, [key]: value })
+      )
+    );
   }, [debouncedValue]);
 
   return null;

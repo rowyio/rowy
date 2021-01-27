@@ -21,7 +21,7 @@ export const config: IFieldConfig = {
   type: FieldType.rating,
   name: "Rating",
   dataType: "number",
-  initialValue: undefined,
+  initialValue: 0,
   initializable: true,
   icon: <RatingIcon />,
   description:

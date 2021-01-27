@@ -18,7 +18,7 @@ export const config: IFieldConfig = {
   type: FieldType.code,
   name: "Code",
   dataType: "string",
-  initialValue: undefined,
+  initialValue: "",
   initializable: true,
   icon: <CodeIcon />,
   description: "Raw code editable with Monaco Editor.",

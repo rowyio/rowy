@@ -20,7 +20,7 @@ export const config: IFieldConfig = {
   type: FieldType.richText,
   name: "Rich Text",
   dataType: "string",
-  initialValue: undefined,
+  initialValue: "",
   initializable: true,
   icon: <RichTextIcon />,
   description: "Rich text editor with predefined HTML text styles.",

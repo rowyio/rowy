@@ -20,7 +20,7 @@ export const config: IFieldConfig = {
   type: FieldType.percentage,
   name: "Percentage",
   dataType: "number",
-  initialValue: undefined,
+  initialValue: 0,
   initializable: true,
   icon: <PercentageIcon />,
   description: "Percentage stored as a number between 0 and 1.",

@@ -22,7 +22,7 @@ export const config: IFieldConfig = {
   type: FieldType.json,
   name: "JSON",
   dataType: "any",
-  initialValue: undefined,
+  initialValue: {},
   initializable: true,
   icon: <JsonIcon />,
   description: "JSON object editable with a visual JSON editor.",

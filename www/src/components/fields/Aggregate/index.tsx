@@ -10,7 +10,7 @@ export const config: IFieldConfig = {
   type: FieldType.aggregate,
   name: "Aggregate",
   dataType: "string",
-  initialValue: undefined,
+  initialValue: "",
   initializable: false,
   icon: <AggregateIcon />,
   description:

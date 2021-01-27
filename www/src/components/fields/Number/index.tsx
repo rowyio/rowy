@@ -18,7 +18,7 @@ export const config: IFieldConfig = {
   type: FieldType.number,
   name: "Number",
   dataType: "number",
-  initialValue: undefined,
+  initialValue: 0,
   initializable: true,
   icon: <NumberIcon />,
   description: "Numeric data.",

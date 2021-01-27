@@ -19,7 +19,7 @@ export const config: IFieldConfig = {
   name: "File",
   dataType:
     "{ downloadURL: string, lastModifiedTS: number, name: string, type, ref }[]",
-  initialValue: undefined,
+  initialValue: [],
   icon: <FileIcon />,
   description: "File uploaded to Firebase Storage. Supports any file type.",
   TableCell: withCustomCell(TableCell, BasicCell),
