@@ -23,7 +23,6 @@ export const functions = firebase.functions();
 export const WEBHOOK_URL = `https://${(functions as any).region_}-${
   appConfig.projectId
 }.cloudfunctions.net/webhook`;
-console.log({ WEBHOOK_URL });
 export const googleProvider = new firebase.auth.GoogleAuthProvider().setCustomParameters(
   {
     prompt: "select_account",
