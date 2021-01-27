@@ -18,7 +18,7 @@ const SideDrawerField = lazy(
 
 export const config: IFieldConfig = {
   type: FieldType.longText,
-  name: "Short Text",
+  name: "Long Text",
   dataType: "string",
   initialValue: "",
   initializable: true,
