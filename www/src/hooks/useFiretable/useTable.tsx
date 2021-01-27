@@ -238,8 +238,8 @@ const useTable = (initialOverrides: any) => {
 
     const docData = {
       ...valuesFromFilter,
-      createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp(),
+      _ft_createdAt: serverTimestamp(),
+      _ft_updatedAt: serverTimestamp(),
       ...data,
     };
     try {

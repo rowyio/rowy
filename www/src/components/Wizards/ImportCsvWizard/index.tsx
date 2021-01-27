@@ -20,6 +20,7 @@ import Step3Preview from "./Step3Preview";
 import { ColumnConfig } from "hooks/useFiretable/useTableConfig";
 import { useFiretableContext } from "contexts/FiretableContext";
 import { FieldType } from "constants/fields";
+import { useSnackContext } from "contexts/SnackContext";
 
 export type CsvConfig = {
   pairs: { csvKey: string; columnKey: string }[];
@@ -52,6 +53,7 @@ export default function ImportCsvWizard({
   const [open, setOpen] = useState(true);
 
   const { tableState, tableActions } = useFiretableContext();
+  const { open: openSnackbar } = useSnackContext();
 
   const [config, setConfig] = useState<CsvConfig>({
     pairs: [],
@@ -67,14 +69,9 @@ export default function ImportCsvWizard({
 
   const handleFinish = () => {
     if (!tableState || !tableActions || !csvData) return;
-    // Add any new columns to the end
-    config.newColumns.forEach((col) =>
-      setTimeout(() => {
-        tableActions.column.add(col.name, col.type, col);
-      })
-    );
-    // Add all new rows
-    csvData.rows.forEach((row) => {
+    openSnackbar({ message: "Importing data…" });
+    // Add all new rows — synchronous
+    for (const row of csvData.rows) {
       const newRow = config.pairs.reduce((a, pair) => {
         const matchingColumn =
           tableState.columns[pair.columnKey] ??
@@ -87,7 +84,11 @@ export default function ImportCsvWizard({
         return { ...a, [pair.columnKey]: value };
       }, {});
       tableActions.row.add(newRow);
-    });
+    }
+    // Add any new columns to the end
+    for (const col of config.newColumns) {
+      tableActions.column.add(col.name, col.type, col);
+    }
     // Close wizard
     setOpen(false);
     setTimeout(handleClose, 300);
