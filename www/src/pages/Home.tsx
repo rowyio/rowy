@@ -31,7 +31,7 @@ import TableSettingsDialog, {
   TableSettingsDialogModes,
 } from "components/TableSettings";
 
-import ProjectSettings from 'components/ProjectSettings';
+import ProjectSettings from "components/ProjectSettings";
 const useStyles = makeStyles((theme) =>
   createStyles({
     "@global": {
@@ -69,7 +69,7 @@ const useStyles = makeStyles((theme) =>
       margin: theme.spacing(-1),
       marginRight: theme.spacing(-0.5),
     },
-    configFab:{
+    configFab: {
       right: theme.spacing(15),
       position: "fixed",
       bottom: theme.spacing(3),
@@ -262,7 +262,7 @@ export default function HomePage() {
                 className={classes.configFab}
                 color="secondary"
                 aria-label="Create table"
-                onClick={()=>setOpenProjectSettings(true)}
+                onClick={() => setOpenProjectSettings(true)}
               >
                 <SettingsIcon />
               </Fab>
@@ -276,8 +276,9 @@ export default function HomePage() {
         mode={settingsDialogState.mode}
         data={settingsDialogState.data}
       />
-      <ProjectSettings open={openProjectSettings}
-      handleClose={()=>setOpenProjectSettings(false)}
+      <ProjectSettings
+        open={openProjectSettings}
+        handleClose={() => setOpenProjectSettings(false)}
       />
     </HomeNavigation>
   );

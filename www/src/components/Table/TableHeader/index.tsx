@@ -19,7 +19,7 @@ import ImportCSV from "./ImportCsv";
 import ExportCSV from "./ExportCsv";
 import TableSettings from "./TableSettings";
 import { useAppContext } from "contexts/AppContext";
-import { useFiretableContext,firetableUser } from "contexts/FiretableContext";
+import { useFiretableContext, firetableUser } from "contexts/FiretableContext";
 import HiddenFields from "../HiddenFields";
 
 export const TABLE_HEADER_HEIGHT = 56;
@@ -95,15 +95,24 @@ export default function TableHeader({
         <Grid item>
           <Button
             onClick={() => {
-              const initialVal = Object.values(columns).reduce((acc, column) =>{
-                if(column.config?.initialValue?.type === 'static'){
-                  return {...acc,[column.key]:column.config.initialValue.value}
-                }else if(column.config?.initialValue?.type === 'null'){
-                  return {...acc,[column.key]:null}
-                }else return acc
-              },{})
-              tableActions?.row.add({...initialVal, _ft_updatedBy : firetableUser(currentUser),
-                _ft_createdBy : firetableUser(currentUser)});
+              const initialVal = Object.values(columns).reduce(
+                (acc, column) => {
+                  if (column.config?.initialValue?.type === "static") {
+                    return {
+                      ...acc,
+                      [column.key]: column.config.initialValue.value,
+                    };
+                  } else if (column.config?.initialValue?.type === "null") {
+                    return { ...acc, [column.key]: null };
+                  } else return acc;
+                },
+                {}
+              );
+              tableActions?.row.add({
+                ...initialVal,
+                _ft_updatedBy: firetableUser(currentUser),
+                _ft_createdBy: firetableUser(currentUser),
+              });
             }}
             variant="contained"
             color="primary"

@@ -33,21 +33,20 @@ export default function DateTime({
   const theme = useTheme();
 
   return (
-   
-      <Controller
-        control={control}
-        name={column.key}
-        render={({ onChange, onBlur, value }) => {
-          const transformedValue = transformValue(value);
+    <Controller
+      control={control}
+      name={column.key}
+      render={({ onChange, onBlur, value }) => {
+        const transformedValue = transformValue(value);
 
-          const handleChange = (date: Date | null) => {
-            const sanitized = sanitizeValue(date);
-            if (sanitized === undefined) return;
-            onChange(sanitized);
-          };
+        const handleChange = (date: Date | null) => {
+          const sanitized = sanitizeValue(date);
+          if (sanitized === undefined) return;
+          onChange(sanitized);
+        };
 
-          return (
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        return (
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <KeyboardDateTimePicker
               variant="inline"
               inputVariant="filled"
@@ -78,11 +77,9 @@ export default function DateTime({
               }
               disabled={disabled}
             />
-              </MuiPickersUtilsProvider>
-          );
-          
-        }}
-      />
-  
+          </MuiPickersUtilsProvider>
+        );
+      }}
+    />
   );
 }

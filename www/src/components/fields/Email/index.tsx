@@ -19,7 +19,7 @@ export const config: IFieldConfig = {
   name: "Email",
   dataType: "string",
   initialValue: "",
-  initializable:true,
+  initializable: true,
   icon: <EmailIcon />,
   description: "Email address. Firetable does not validate emails.",
   TableCell: withCustomCell(TableCell, BasicCell),

@@ -5,9 +5,7 @@ import { FIELDS } from "@antlerengineering/form-builder";
 import HelperText from "../HelperText";
 
 export const settings = () => [
-  {type:FIELDS.heading,
-    label:'Cloud build configuration'
-  },
+  { type: FIELDS.heading, label: "Cloud build configuration" },
   {
     type: FIELDS.text,
     name: "cloudBuild.branch",
@@ -16,9 +14,9 @@ export const settings = () => [
   },
   {
     type: FIELDS.description,
-    description:<HelperText>
-      Firetable branch to build cloud functions from
-    </HelperText>
+    description: (
+      <HelperText>Firetable branch to build cloud functions from</HelperText>
+    ),
   },
   {
     type: FIELDS.text,

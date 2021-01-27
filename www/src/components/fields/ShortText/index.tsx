@@ -24,7 +24,7 @@ export const config: IFieldConfig = {
   name: "Short Text",
   dataType: "string",
   initialValue: "",
-  initializable:true,
+  initializable: true,
   icon: <ShortTextIcon />,
   description: "Small amount of text, such as names and taglines.",
   TableCell: withCustomCell(TableCell, BasicCell),

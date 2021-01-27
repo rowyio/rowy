@@ -2,7 +2,6 @@ import React from "react";
 
 import { ICustomCellProps } from "../types";
 
-
 import { makeStyles, createStyles, Tooltip, Fade } from "@material-ui/core";
 
 import { useFiretableContext } from "contexts/FiretableContext";
@@ -52,9 +51,7 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-
-export default function RichText({ column,value }: ICustomCellProps) {
- 
+export default function RichText({ column, value }: ICustomCellProps) {
   const { tableState } = useFiretableContext();
   const classes = useStyles({
     width: column.width,

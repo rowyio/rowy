@@ -21,7 +21,7 @@ export const config: IFieldConfig = {
   name: "Percentage",
   dataType: "number",
   initialValue: undefined,
-  initializable:true,
+  initializable: true,
   icon: <PercentageIcon />,
   description: "Percentage stored as a number between 0 and 1.",
   TableCell: withCustomCell(TableCell, BasicCell),

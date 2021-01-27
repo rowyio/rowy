@@ -80,7 +80,9 @@ export default function DefaultValueInput({
         <MenuItem value="undefined">Undefined</MenuItem>
         <MenuItem value="null">Null</MenuItem>
         <MenuItem value="static">Static</MenuItem>
-        <MenuItem value="dynamic">Dynamic<em>(requires FT Cloud functions)</em></MenuItem>
+        <MenuItem value="dynamic">
+          Dynamic<em>(requires FT Cloud functions)</em>
+        </MenuItem>
       </TextField>
 
       {config.initialValue?.type === "static" && customFieldInput && (

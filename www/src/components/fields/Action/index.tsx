@@ -6,7 +6,6 @@ import ActionIcon from "assets/icons/Action";
 import BasicCell from "./BasicCell";
 import NullEditor from "components/Table/editors/NullEditor";
 
-
 const TableCell = lazy(
   () => import("./TableCell" /* webpackChunkName: "TableCell-Action" */)
 );
@@ -14,7 +13,9 @@ const SideDrawerField = lazy(
   () =>
     import("./SideDrawerField" /* webpackChunkName: "SideDrawerField-Action" */)
 );
-const Settings = lazy(()=>import("./Settings"/* webpackChunkName: "Settings-Action" */))
+const Settings = lazy(
+  () => import("./Settings" /* webpackChunkName: "Settings-Action" */)
+);
 export const config: IFieldConfig = {
   type: FieldType.action,
   name: "Action",
@@ -26,6 +27,6 @@ export const config: IFieldConfig = {
   TableCell: withCustomCell(TableCell, BasicCell),
   TableEditor: NullEditor,
   SideDrawerField,
-  settings:Settings,
+  settings: Settings,
 };
 export default config;

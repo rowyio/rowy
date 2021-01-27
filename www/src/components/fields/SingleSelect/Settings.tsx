@@ -59,7 +59,7 @@ export default function Settings({ handleChange, config }) {
               <Grid item>
                 <IconButton
                   aria-label="remove"
-                  onClick={(e: any) => 
+                  onClick={(e: any) =>
                     handleChange("options")(
                       options.filter((o: string) => o !== option)
                     )

@@ -69,8 +69,13 @@ export default function Json({
         return (
           <div className={clsx(fieldClasses.root, classes.root)}>
             <ReactJson
-              src={value !== undefined && isValidJson(value) ? value :
-                column.config?.isArray?[]:{}}
+              src={
+                value !== undefined && isValidJson(value)
+                  ? value
+                  : column.config?.isArray
+                  ? []
+                  : {}
+              }
               onEdit={handleEdit}
               onAdd={handleEdit}
               onDelete={handleEdit}

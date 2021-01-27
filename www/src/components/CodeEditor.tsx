@@ -27,7 +27,7 @@ export interface ICodeEditorProps {
   height?: number;
   wrapperProps?: Partial<React.HTMLAttributes<HTMLDivElement>>;
   disabled?: boolean;
-  editorOptions?:any;
+  editorOptions?: any;
 }
 
 export default function CodeEditor({
@@ -36,7 +36,7 @@ export default function CodeEditor({
   height = 400,
   wrapperProps,
   disabled,
-  editorOptions
+  editorOptions,
 }: ICodeEditorProps) {
   const theme = useTheme();
   const [initialEditorValue] = useState(value ?? "");
@@ -98,7 +98,7 @@ export default function CodeEditor({
         options={{
           readOnly: disabled,
           fontFamily: theme.typography.fontFamilyMono,
-          ...editorOptions
+          ...editorOptions,
         }}
       />
     </div>

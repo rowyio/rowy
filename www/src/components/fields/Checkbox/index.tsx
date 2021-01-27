@@ -16,7 +16,6 @@ const SideDrawerField = lazy(
     )
 );
 
-
 export const config: IFieldConfig = {
   type: FieldType.checkbox,
   name: "Checkbox",

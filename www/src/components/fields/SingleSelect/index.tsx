@@ -20,13 +20,12 @@ const Settings = lazy(
   () => import("./Settings" /* webpackChunkName: "Settings-SingleSelect" */)
 );
 
-
 export const config: IFieldConfig = {
   type: FieldType.singleSelect,
   name: "Single Select",
   dataType: "string | null",
   initialValue: null,
-  initializable:true,
+  initializable: true,
   icon: <SingleSelectIcon />,
   description:
     "Dropdown selector with searchable options and radio button behavior. Optionally allows users to input custom values. Max selection: 1 option.",
@@ -36,6 +35,6 @@ export const config: IFieldConfig = {
   }),
   TableEditor: NullEditor,
   SideDrawerField,
-  settings:Settings
+  settings: Settings,
 };
 export default config;

@@ -2,23 +2,18 @@ import React, { useState, useEffect } from "react";
 import _camelCase from "lodash/camelCase";
 import _find from "lodash/find";
 
-import {
-  makeStyles,
-  createStyles,
-} from "@material-ui/core";
-
+import { makeStyles, createStyles } from "@material-ui/core";
 
 import { FormDialog } from "@antlerengineering/form-builder";
 import { settings } from "./form";
 
-import useDoc,{DocActions} from 'hooks/useDoc'
-
+import useDoc, { DocActions } from "hooks/useDoc";
 
 const FORM_EMPTY_STATE = {
-  cloudBuild:{
-    branch:"test",
-    triggerId:""
-  }
+  cloudBuild: {
+    branch: "test",
+    triggerId: "",
+  },
 };
 
 const useStyles = makeStyles((theme) =>
@@ -38,42 +33,42 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-export default function SettingsDialog({open,handleClose
-}:{open:boolean,handleClose:()=>void}) {
-
-
-  const [settingsDocState,settingsDocDispatch] = useDoc({path:"_FIRETABLE_/settings"})
+export default function SettingsDialog({
+  open,
+  handleClose,
+}: {
+  open: boolean;
+  handleClose: () => void;
+}) {
+  const [settingsDocState, settingsDocDispatch] = useDoc({
+    path: "_FIRETABLE_/settings",
+  });
 
   const [formState, setForm] = useState<any>();
 
   useEffect(() => {
-    if(!settingsDocState.loading){
-      const cloudBuild = settingsDocState?.doc?.cloudBuild
-      setForm(cloudBuild?{cloudBuild}:FORM_EMPTY_STATE)
+    if (!settingsDocState.loading) {
+      const cloudBuild = settingsDocState?.doc?.cloudBuild;
+      setForm(cloudBuild ? { cloudBuild } : FORM_EMPTY_STATE);
     }
-  
-  },[settingsDocState.doc,open])
+  }, [settingsDocState.doc, open]);
 
-  const handleSubmit = (values)=>{
-    settingsDocDispatch({action: DocActions.update,
-      data: values})
-    handleClose()
-  }
- 
+  const handleSubmit = (values) => {
+    settingsDocDispatch({ action: DocActions.update, data: values });
+    handleClose();
+  };
 
-
-  if(!formState)return <></>;
-  return (<>
-    <FormDialog
-      onClose={handleClose}
-      open={open}
-      title={
-        "Project Settings"
-      }
-      fields={settings()}
-      values={formState}
-      onSubmit={handleSubmit}
-    />
+  if (!formState) return <></>;
+  return (
+    <>
+      <FormDialog
+        onClose={handleClose}
+        open={open}
+        title={"Project Settings"}
+        fields={settings()}
+        values={formState}
+        onSubmit={handleSubmit}
+      />
     </>
   );
 }
