@@ -153,9 +153,9 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
       .update({
         ...update,
         _ft_updatedAt,
-        updatedAt: _ft_updatedAt,
+        // updatedAt: _ft_updatedAt,
         _ft_updatedBy,
-        updatedBy: _ft_updatedBy,
+        // updatedBy: _ft_updatedBy,
       })
       .then(
         (success) => {
