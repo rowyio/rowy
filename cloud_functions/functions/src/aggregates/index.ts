@@ -2,7 +2,7 @@ import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 
 import { db } from "../config";
-import config, { collectionPath } from "../functionConfig";
+import config, { collectionPath, functionName } from "../functionConfig";
 // generated using generateConfig.ts
 
 const incrementor = (v: number) => admin.firestore.FieldValue.increment(v);
@@ -75,7 +75,7 @@ const subDocTrigger = async (
 };
 
 export const FT_aggregates = {
-  [collectionPath.replace("-", "_")]: functions.firestore
+  [functionName]: functions.firestore
     .document(`${collectionPath}/{parentId}/{subCollectionId}/{docId}`)
     .onWrite(subDocTrigger),
 };

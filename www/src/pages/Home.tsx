@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import _groupBy from "lodash/groupBy";
 import _find from "lodash/find";
 import {
@@ -26,12 +26,13 @@ import StyledCard from "components/StyledCard";
 import routes from "constants/routes";
 import { useFiretableContext } from "contexts/FiretableContext";
 import { useAppContext } from "contexts/AppContext";
-import { DocActions } from "hooks/useDoc";
+import useDoc,{ DocActions } from "hooks/useDoc";
 import TableSettingsDialog, {
   TableSettingsDialogModes,
 } from "components/TableSettings";
 
 import ProjectSettings from "components/ProjectSettings";
+import EmptyState from 'components/EmptyState';
 const useStyles = makeStyles((theme) =>
   createStyles({
     "@global": {
@@ -131,6 +132,19 @@ export default function HomePage() {
     });
   const [open, setOpen] = useState(false);
   const [openProjectSettings, setOpenProjectSettings] = useState(false);
+
+
+  const [settingsDocState,settingsDocDispatch] = useDoc({path:'_FIRETABLE_/settings'})
+  useEffect(() => {
+    if(!settingsDocState.loading && !settingsDocState.doc){
+      settingsDocDispatch({action:DocActions.update,data:{createdAt:new Date()}});
+    }
+  },[settingsDocState])
+  if (settingsDocState.error?.code === "permission-denied") {
+    return <EmptyState fullScreen message="Access Denied" description={<><Typography variant="overline">You don't current have access to firetable, please contact this project's owner</Typography>
+    <Typography variant='body2'>If you are the project owner please follow the instructions <a href="https://github.com/AntlerVC/firetable/wiki/Role-Based-Security-Rules" target="_blank">here</a> to setup the project rules.</Typography>
+    </>}/>
+  }
 
   const TableCard = ({ table }) => {
     const checked = Boolean(_find(favs, table));
