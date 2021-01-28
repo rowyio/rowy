@@ -22,6 +22,7 @@ export interface IFieldConfig {
   csvExport?: (value: any) => string;
   csvImportParser?: (value: string) => any;
 }
+
 export interface IBasicCellProps {
   value: any;
   type: FieldType;
