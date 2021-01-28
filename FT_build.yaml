@@ -1,0 +1,31 @@
+steps:
+  - name: node:12.20.0
+    entrypoint: yarn
+    args: ["install"]
+    dir: "FT_functions/compiler"
+  - name: node:12.20.0
+    entrypoint: yarn
+    args:
+      - "compile"
+      - "${_SCHEMA_PATH}"
+    dir: "FT_functions/compiler"
+  - name: node:12.20.0
+    entrypoint: yarn
+    args: ["install"]
+    dir: "FT_functions/functions"
+  - name: node:12.20.0
+    entrypoint: yarn
+    args:
+      - "deployFT"
+      - "--project"
+      - "${_PROJECT_ID}"
+      - "--token"
+      - "${_FIREBASE_TOKEN}"
+      - "--only"
+      - "functions"
+    dir: "FT_functions/functions"
+
+substitutions:
+  _PROJECT_ID: "project-id" # default value
+options:
+  machineType: "N1_HIGHCPU_8"

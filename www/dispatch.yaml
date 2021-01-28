@@ -1,5 +1,0 @@
-dispatch:
-  - url: "firetable-magic.uc.r.appspot.com/"
-    service: default
-  - url: "*.firetable.io/"
-    service: default

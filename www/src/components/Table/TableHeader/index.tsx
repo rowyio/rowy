@@ -18,9 +18,11 @@ import Filters from "../Filters";
 import ImportCSV from "./ImportCsv";
 import ExportCSV from "./ExportCsv";
 import TableSettings from "./TableSettings";
+import HiddenFields from "../HiddenFields";
+import Sparks from "./Sparks";
+
 import { useAppContext } from "contexts/AppContext";
 import { useFiretableContext, firetableUser } from "contexts/FiretableContext";
-import HiddenFields from "../HiddenFields";
 
 export const TABLE_HEADER_HEIGHT = 56;
 
@@ -78,8 +80,9 @@ export default function TableHeader({
   updateConfig,
 }: ITableHeaderProps) {
   const classes = useStyles();
+
   const { currentUser } = useAppContext();
-  const { tableActions, tableState } = useFiretableContext();
+  const { tableActions, tableState, userClaims } = useFiretableContext();
 
   if (!tableState || !tableState.columns) return null;
   const { columns } = tableState;
@@ -183,6 +186,12 @@ export default function TableHeader({
       <Grid item>
         <ExportCSV />
       </Grid>
+
+      {userClaims?.roles?.includes("ADMIN") && (
+        <Grid item>
+          <Sparks />
+        </Grid>
+      )}
 
       <Grid item>
         <TableSettings />

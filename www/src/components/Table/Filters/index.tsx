@@ -250,6 +250,7 @@ const Filters = () => {
           return (
             <MultiSelect
               multiple
+              max={10}
               freeText={true}
               onChange={(value) => setQuery((query) => ({ ...query, value }))}
               options={
@@ -287,6 +288,7 @@ const Filters = () => {
             multiple
             onChange={(value) => setQuery((query) => ({ ...query, value }))}
             value={query.value as string[]}
+            max={10}
             options={
               selectedColumn.config.options
                 ? selectedColumn.config.options.sort()

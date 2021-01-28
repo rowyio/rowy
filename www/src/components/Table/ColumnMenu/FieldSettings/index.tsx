@@ -12,6 +12,11 @@ import DefaultValueInput from "./DefaultValueInput";
 import ErrorBoundary from "components/ErrorBoundary";
 import Loading from "components/Loading";
 
+import { useFiretableContext } from "contexts/FiretableContext";
+import { triggerCloudBuild } from "../../../../firebase/callables";
+import { useConfirmation } from "components/ConfirmationDialog";
+import { FieldType } from "constants/fields";
+
 export default function FieldSettings(props: IMenuModalProps) {
   const {
     name,
@@ -26,6 +31,9 @@ export default function FieldSettings(props: IMenuModalProps) {
   const [newConfig, setNewConfig] = useState(config ?? {});
   const customFieldSettings = getFieldProp("settings", type);
   const initializable = getFieldProp("initializable", type);
+
+  const { requestConfirmation } = useConfirmation();
+  const { tableState } = useFiretableContext();
 
   const handleChange = (key: string) => (update: any) => {
     const updatedConfig = _set({ ...newConfig }, key, update);
@@ -105,7 +113,28 @@ export default function FieldSettings(props: IMenuModalProps) {
       }
       actions={{
         primary: {
-          onClick: () => handleSave(fieldName, { config: newConfig }),
+          onClick: () => {
+            handleSave(fieldName, { config: newConfig });
+
+            if (
+              type === FieldType.derivative &&
+              config.script !== newConfig.script
+            ) {
+              requestConfirmation({
+                title: "Deploy Changes",
+                body:
+                  "Would you like to redeploy the Cloud Function for this table now?",
+                confirm: "Deploy",
+                cancel: "Later",
+                handleConfirm: async () => {
+                  const response = await triggerCloudBuild(
+                    tableState?.config.tableConfig.path
+                  );
+                  console.log(response);
+                },
+              });
+            }
+          },
           children: "Update",
         },
         secondary: {
