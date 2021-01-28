@@ -1,6 +1,5 @@
 import { Control } from "react-hook-form";
-import _isFunction from "lodash/isFunction";
-
+import { makeStyles, createStyles } from "@material-ui/core";
 import { FieldType } from "constants/fields";
 
 export interface IFieldProps {
@@ -10,7 +9,7 @@ export interface IFieldProps {
   editable?: boolean;
 }
 
-export type Values = { [key: string]: any };
+export type Values = Record<string, any>;
 export type Field = {
   type?: FieldType;
   name: string;
@@ -19,46 +18,25 @@ export type Field = {
 };
 export type Fields = (Field | ((values: Values) => Field))[];
 
-export const initializeValue = (type) => {
-  switch (type) {
-    case FieldType.multiSelect:
-    case FieldType.image:
-    case FieldType.file:
-      return [];
+export const useFieldStyles = makeStyles((theme) =>
+  createStyles({
+    root: {
+      borderRadius: theme.shape.borderRadius,
+      backgroundColor:
+        theme.palette.type === "light"
+          ? "rgba(0, 0, 0, 0.09)"
+          : "rgba(255, 255, 255, 0.09)",
+      padding: theme.spacing(1, 1, 1, 1.5),
 
-    case FieldType.singleSelect:
-    case FieldType.date:
-    case FieldType.dateTime:
-      return null;
+      width: "100%",
+      minHeight: 56,
 
-    case FieldType.checkbox:
-      return false;
+      display: "flex",
+      textAlign: "left",
+      alignItems: "center",
 
-    case FieldType.json:
-      return {};
-
-    case FieldType.shortText:
-    case FieldType.longText:
-    case FieldType.email:
-    case FieldType.phone:
-    case FieldType.url:
-    case FieldType.code:
-    case FieldType.richText:
-    case FieldType.number:
-    default:
-      break;
-  }
-};
-
-export const getInitialValues = (fields: Fields): Values =>
-  fields.reduce((acc, _field) => {
-    const field = _isFunction(_field) ? _field({}) : _field;
-    if (!field.name) return acc;
-    let _type = field.type;
-    if (field.config && field.config.renderFieldType) {
-      _type = field.config.renderFieldType;
-    }
-    const value = initializeValue(_type);
-
-    return { ...acc, [field.name]: value };
-  }, {});
+      ...theme.typography.body1,
+      color: theme.palette.text.primary,
+    },
+  })
+);

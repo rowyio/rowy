@@ -21,10 +21,11 @@ import MenuContents from "./MenuContents";
 import NameChange from "./NameChange";
 import NewColumn from "./NewColumn";
 import TypeChange from "./TypeChange";
-import Settings from "./Settings";
+import FieldSettings from "./FieldSettings";
 
 import { useFiretableContext } from "contexts/FiretableContext";
-import { FIELDS, FieldType } from "constants/fields";
+import { FieldType } from "constants/fields";
+import { getFieldProp } from "components/fields";
 import _find from "lodash/find";
 import { Column } from "react-data-grid";
 import { PopoverProps } from "@material-ui/core";
@@ -48,6 +49,18 @@ export type ColumnMenuRef = {
     React.SetStateAction<SelectedColumnHeader | null>
   >;
 };
+
+export interface IMenuModalProps {
+  name: string;
+  fieldName: string;
+  type: FieldType;
+
+  open: boolean;
+  config: Record<string, any>;
+
+  handleClose: () => void;
+  handleSave: (fieldName: string, config: Record<string, any>) => void;
+}
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -99,9 +112,26 @@ export default function ColumnMenu() {
     setTimeout(() => setSelectedColumnHeader(null), 300);
   };
 
+  const isConfigurable = Boolean(
+    getFieldProp("settings", column?.type) ||
+      getFieldProp("initializable", column?.type)
+  );
+
   if (!column) return null;
-  const isSorted = orderBy?.[0]?.key === (column.key as string);
+
+  const isSorted = orderBy?.[0]?.key === column.key;
   const isAsc = isSorted && orderBy?.[0]?.direction === "asc";
+
+  const clearModal = () => {
+    setModal(INITIAL_MODAL);
+    setTimeout(() => handleClose(), 300);
+  };
+
+  const handleModalSave = (key: string, update: Record<string, any>) => {
+    actions.update(key, update);
+    clearModal();
+  };
+
   const menuItems = [
     {
       type: "subheader",
@@ -174,9 +204,9 @@ export default function ColumnMenu() {
       },
     },
     {
-      label: `Edit Type: ${column?.type}`,
+      label: `Edit Type: ${getFieldProp("name", column.type)}`,
       // This is based off the cell type
-      icon: _find(FIELDS, { type: column.type })?.icon,
+      icon: getFieldProp("icon", column.type),
       onClick: () => {
         setModal({ type: ModalStates.typeChange, data: { column } });
       },
@@ -188,6 +218,7 @@ export default function ColumnMenu() {
       onClick: () => {
         setModal({ type: ModalStates.settings, data: { column } });
       },
+      disabled: !isConfigurable,
     },
     // {
     //   label: "Re-order",
@@ -239,9 +270,16 @@ export default function ColumnMenu() {
     },
   ];
 
-  const clearModal = () => {
-    setModal(INITIAL_MODAL);
-    setSelectedColumnHeader(null);
+  const menuModalProps = {
+    name: column.name,
+    fieldName: column.key,
+    type: column.type,
+
+    open: modal.type === ModalStates.typeChange,
+    config: column.config,
+
+    handleClose: clearModal,
+    handleSave: handleModalSave,
   };
 
   return (
@@ -265,51 +303,21 @@ export default function ColumnMenu() {
       {column && (
         <>
           <NameChange
-            name={column.name}
-            fieldName={column.key as string}
+            {...menuModalProps}
             open={modal.type === ModalStates.nameChange}
-            handleClose={clearModal}
-            handleSave={(key, update) => {
-              actions.update(key, update);
-              clearModal();
-              handleClose();
-            }}
           />
-
           <TypeChange
-            name={column.name}
-            fieldName={column.key as string}
+            {...menuModalProps}
             open={modal.type === ModalStates.typeChange}
-            type={column.type}
-            handleClose={clearModal}
-            handleSave={(key, update) => {
-              actions.update(key, update);
-              clearModal();
-              handleClose();
-            }}
           />
-          <Settings
-            config={column.config}
-            name={column.name}
-            fieldName={column.key as string}
+          <FieldSettings
+            {...menuModalProps}
             open={modal.type === ModalStates.settings}
-            type={column.type}
-            handleClose={clearModal}
-            handleSave={(key, update) => {
-              actions.update(key, update);
-              clearModal();
-              handleClose();
-            }}
           />
           <NewColumn
+            {...menuModalProps}
             open={modal.type === ModalStates.new}
             data={modal.data}
-            handleClose={clearModal}
-            handleSave={(key, update) => {
-              actions.update(key, update);
-              clearModal();
-              handleClose();
-            }}
           />
         </>
       )}

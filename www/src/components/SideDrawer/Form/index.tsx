@@ -1,141 +1,47 @@
-import React, { lazy } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
-import _isFunction from "lodash/isFunction";
+import _sortBy from "lodash/sortBy";
 import _isEmpty from "lodash/isEmpty";
 
 import { Grid } from "@material-ui/core";
 
-import { Fields, Values, getInitialValues, Field } from "./utils";
-import { FieldType } from "constants/fields";
+import { Values } from "./utils";
+import { getFieldProp } from "components/fields";
+import { IFieldConfig } from "components/fields/types";
 import Autosave from "./Autosave";
+import Reset from "./Reset";
 import FieldWrapper from "./FieldWrapper";
 
 import { useAppContext } from "contexts/AppContext";
 import { useFiretableContext } from "contexts/FiretableContext";
 
-import Text from "./Fields/Text";
-const Url = lazy(
-  () => import("./Fields/Url" /* webpackChunkName: "SideDrawer-Url" */)
-);
-const SingleSelect = lazy(
-  () =>
-    import(
-      "./Fields/SingleSelect" /* webpackChunkName: "SideDrawer-SingleSelect" */
-    )
-);
-const MultiSelect = lazy(
-  () =>
-    import(
-      "./Fields/MultiSelect" /* webpackChunkName: "SideDrawer-MultiSelect" */
-    )
-);
-const DatePicker = lazy(
-  () =>
-    import(
-      "./Fields/DatePicker" /* webpackChunkName: "SideDrawer-DatePicker" */
-    )
-);
-const DateTimePicker = lazy(
-  () =>
-    import(
-      "./Fields/DateTimePicker" /* webpackChunkName: "SideDrawer-DateTimePicker" */
-    )
-);
-const Checkbox = lazy(
-  () =>
-    import("./Fields/Checkbox" /* webpackChunkName: "SideDrawer-Checkbox" */)
-);
-const Rating = lazy(
-  () => import("./Fields/Rating" /* webpackChunkName: "SideDrawer-Rating" */)
-);
-const Percentage = lazy(
-  () =>
-    import(
-      "./Fields/Percentage" /* webpackChunkName: "SideDrawer-Percentage" */
-    )
-);
-const Color = lazy(
-  () => import("./Fields/Color" /* webpackChunkName: "SideDrawer-Color" */)
-);
-const Slider = lazy(
-  () => import("./Fields/Slider" /* webpackChunkName: "SideDrawer-Slider" */)
-);
-const ImageUploader = lazy(
-  () =>
-    import(
-      "./Fields/ImageUploader" /* webpackChunkName: "SideDrawer-ImageUploader" */
-    )
-);
-const FileUploader = lazy(
-  () =>
-    import(
-      "./Fields/FileUploader" /* webpackChunkName: "SideDrawer-FileUploader" */
-    )
-);
-const RichText = lazy(
-  () =>
-    import("./Fields/RichText" /* webpackChunkName: "SideDrawer-RichText" */)
-);
-const JsonEditor = lazy(
-  () =>
-    import(
-      "./Fields/JsonEditor" /* webpackChunkName: "SideDrawer-JsonEditor" */
-    )
-);
-const ConnectTable = lazy(
-  () =>
-    import(
-      "./Fields/ConnectTable" /* webpackChunkName: "SideDrawer-ConnectTable" */
-    )
-);
-const ConnectService = lazy(
-  () =>
-    import(
-      "./Fields/ConnectService" /* webpackChunkName: "SideDrawer-ConnectTable" */
-    )
-);
-const Code = lazy(
-  () => import("./Fields/Code" /* webpackChunkName: "SideDrawer-Code" */)
-);
-const SubTable = lazy(
-  () =>
-    import("./Fields/SubTable" /* webpackChunkName: "SideDrawer-SubTable" */)
-);
-const Action = lazy(
-  () => import("./Fields/Action" /* webpackChunkName: "SideDrawer-Action" */)
-);
-const Id = lazy(
-  () => import("./Fields/Id" /* webpackChunkName: "SideDrawer-Id" */)
-);
-const User = lazy(
-  () => import("./Fields/User" /* webpackChunkName: "SideDrawer-User" */)
-);
-
 export interface IFormProps {
-  fields: Fields;
   values: Values;
 }
 
-export default function Form({ fields, values }: IFormProps) {
-  const initialValues = getInitialValues(fields);
-  const { ref: docRef, ...rowValues } = values;
-  const defaultValues = { ...initialValues, ...rowValues };
-
+export default function Form({ values }: IFormProps) {
   const { tableState } = useFiretableContext();
   const { userDoc } = useAppContext();
   const userDocHiddenFields =
-    userDoc.state.doc?.tables?.[`${tableState?.tablePath}`]?.hiddenFields ?? [];
+    userDoc.state.doc?.tables?.[`${tableState!.tablePath}`]?.hiddenFields ?? [];
 
-  const { register, control } = useForm({
+  const fields = _sortBy(Object.values(tableState!.columns), "index").filter(
+    (f) => !userDocHiddenFields.includes(f.name)
+  );
+
+  // Get initial values from fields config. This won’t be written to the db
+  // when the SideDrawer is opened. Only dirty fields will be written
+  const initialValues = fields.reduce(
+    (a, { key, type }) => ({ ...a, [key]: getFieldProp("initialValue", type) }),
+    {}
+  );
+  const { ref: docRef, ...rowValues } = values;
+  const defaultValues = { ...initialValues, ...rowValues };
+
+  const { control, reset, formState, getValues } = useForm({
     mode: "onBlur",
     defaultValues,
   });
-
-  // Update field values when Firestore document updates
-  // useEffect(() => {
-  //   console.log("RESET", defaultValues);
-  //   reset(defaultValues);
-  // }, [reset, JSON.stringify(rowValues)]);
 
   // const { sideDrawerRef } = useFiretableContext();
   // useEffect(() => {
@@ -153,150 +59,55 @@ export default function Form({ fields, values }: IFormProps) {
     <form>
       <Autosave
         control={control}
-        defaultValues={defaultValues}
         docRef={docRef}
         row={values}
+        reset={reset}
+        formState={formState}
+      />
+
+      <Reset
+        formState={formState}
+        reset={reset}
+        defaultValues={defaultValues}
+        getValues={getValues}
       />
 
       <Grid container spacing={4} direction="column" wrap="nowrap">
-        {fields
-          .filter((f) => !userDocHiddenFields.includes(f.name))
-          .map((_field, i) => {
-            // Call the field function with values if necessary
-            // Otherwise, just use the field object
-            const field: Field = _isFunction(_field) ? _field(values) : _field;
-            const { type, ...fieldProps } = field;
-            let _type = type;
+        {fields.map((field, i) => {
+          // Derivative/aggregate field support
+          let type = field.type;
+          if (field.config && field.config.renderFieldType) {
+            type = field.config.renderFieldType;
+          }
 
-            // Derivative/aggregate field support
-            if (field.config && field.config.renderFieldType) {
-              _type = field.config.renderFieldType;
-            }
+          const fieldComponent: IFieldConfig["SideDrawerField"] = getFieldProp(
+            "SideDrawerField",
+            type
+          );
 
-            let fieldComponent: React.ComponentType<any> | null = null;
+          // Should not reach this state
+          if (_isEmpty(fieldComponent)) {
+            // console.error('Could not find SideDrawerField component', field);
+            return null;
+          }
 
-            switch (_type) {
-              case FieldType.shortText:
-              case FieldType.longText:
-              case FieldType.email:
-              case FieldType.phone:
-              case FieldType.number:
-                fieldComponent = Text;
-                break;
-
-              case FieldType.url:
-                fieldComponent = Url;
-                break;
-
-              case FieldType.singleSelect:
-                fieldComponent = SingleSelect;
-                break;
-
-              case FieldType.multiSelect:
-                fieldComponent = MultiSelect;
-                break;
-
-              case FieldType.date:
-                fieldComponent = DatePicker;
-                break;
-
-              case FieldType.dateTime:
-                fieldComponent = DateTimePicker;
-                break;
-
-              case FieldType.checkbox:
-                fieldComponent = Checkbox;
-                break;
-
-              case FieldType.color:
-                fieldComponent = Color;
-                break;
-
-              case FieldType.slider:
-                fieldComponent = Slider;
-                break;
-
-              case FieldType.richText:
-                fieldComponent = RichText;
-                break;
-
-              case FieldType.image:
-                fieldComponent = ImageUploader;
-                break;
-
-              case FieldType.file:
-                fieldComponent = FileUploader;
-                break;
-
-              case FieldType.rating:
-                fieldComponent = Rating;
-                break;
-
-              case FieldType.percentage:
-                fieldComponent = Percentage;
-                break;
-
-              case FieldType.connectTable:
-                fieldComponent = ConnectTable;
-                break;
-
-              case FieldType.connectService:
-                fieldComponent = ConnectService;
-                break;
-
-              case FieldType.subTable:
-                fieldComponent = SubTable;
-                break;
-
-              case FieldType.action:
-                fieldComponent = Action;
-                break;
-
-              case FieldType.json:
-                fieldComponent = JsonEditor;
-                break;
-
-              case FieldType.code:
-                fieldComponent = Code;
-                break;
-
-              case FieldType.id:
-                fieldComponent = Id;
-                break;
-
-              case FieldType.user:
-                fieldComponent = User;
-                break;
-
-              case undefined:
-                // default:
-                return null;
-
-              default:
-                break;
-            }
-
-            // Should not reach this state
-            if (fieldComponent === null) {
-              console.error("`fieldComponent` is null", field);
-              return null;
-            }
-
-            return (
-              <FieldWrapper
-                key={fieldProps.name ?? i}
-                type={_type}
-                name={field.name}
-                label={field.label}
-              >
-                {React.createElement(fieldComponent, {
-                  ...fieldProps,
-                  control,
-                  docRef,
-                })}
-              </FieldWrapper>
-            );
-          })}
+          return (
+            <FieldWrapper
+              key={field.key ?? i}
+              type={field.type}
+              name={field.key}
+              label={field.name}
+              disabled={field.editable === false}
+            >
+              {React.createElement(fieldComponent, {
+                column: field,
+                control,
+                docRef,
+                disabled: field.editable === false,
+              })}
+            </FieldWrapper>
+          );
+        })}
 
         <FieldWrapper
           type="debug"

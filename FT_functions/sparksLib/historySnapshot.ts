@@ -19,13 +19,11 @@ const historySnapshot = async (data, sparkContext) => {
     triggerType === "delete"
   ) {
     try {
-      await change.before.ref
-        .collection("historySnapshots")
-        .add({
-          ...change.before.data(),
-          archivedAt: new Date(),
-          archiveEvent: triggerType,
-        });
+      await change.before.ref.collection("historySnapshots").add({
+        ...change.before.data(),
+        archivedAt: new Date(),
+        archiveEvent: triggerType,
+      });
     } catch (error) {
       console.log(error);
     }
