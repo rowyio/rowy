@@ -2,7 +2,7 @@ import { db } from "../../firebase";
 
 import Button from "@material-ui/core/Button";
 import React, { useEffect, useReducer, useContext } from "react";
-import equals from "ramda/es/equals";
+import _isEqual from "lodash/isEqual";
 import firebase from "firebase/app";
 import { FireTableFilter, FiretableOrderBy } from ".";
 import { SnackContext } from "contexts/SnackContext";
@@ -165,7 +165,7 @@ const useTable = (initialOverrides: any) => {
 
     if (
       (prevPath !== path ||
-        !equals(prevFilters, filters) ||
+        !_isEqual(prevFilters, filters) ||
         prevLimit !== limit ||
         prevOrderBy !== orderBy) &&
       path
