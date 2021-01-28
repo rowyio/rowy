@@ -1,14 +1,11 @@
 import React, { lazy } from "react";
 import { IFieldConfig, FieldType } from "components/fields/types";
-import withCustomCell from "components/Table/withCustomCell";
+import withBasicCell from "../_withTableCell/withBasicCell";
 
 import ShortTextIcon from "@material-ui/icons/ShortText";
 import BasicCell from "../_BasicCell/BasicCellValue";
 import TextEditor from "components/Table/editors/TextEditor";
 
-const TableCell = lazy(
-  () => import("./TableCell" /* webpackChunkName: "TableCell-ShortText" */)
-);
 const SideDrawerField = lazy(
   () =>
     import(
@@ -27,7 +24,7 @@ export const config: IFieldConfig = {
   initializable: true,
   icon: <ShortTextIcon />,
   description: "Small amount of text, such as names and taglines.",
-  TableCell: withCustomCell(TableCell, BasicCell),
+  TableCell: withBasicCell(BasicCell),
   TableEditor: TextEditor,
   SideDrawerField,
   settings: Settings,

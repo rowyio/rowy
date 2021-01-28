@@ -1,5 +1,5 @@
-import { ICustomCellProps } from "../types";
 import React, { useCallback } from "react";
+import { IHeavyCellProps } from "../types";
 
 import { useDropzone } from "react-dropzone";
 import _findIndex from "lodash/findIndex";
@@ -58,7 +58,7 @@ export default function File_({
   value,
   onSubmit,
   disabled,
-}: ICustomCellProps) {
+}: IHeavyCellProps) {
   const classes = useStyles();
 
   const { uploaderState, upload, deleteUpload } = useUploader();

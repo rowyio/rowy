@@ -1,10 +1,10 @@
 import React, { lazy } from "react";
 import { IFieldConfig, FieldType } from "components/fields/types";
-import withCustomCell from "components/Table/withCustomCell";
+import withHeavyCell from "../_withTableCell/withHeavyCell";
 
 import UserIcon from "@material-ui/icons/Person";
 import BasicCell from "../_BasicCell/BasicCellNull";
-import SideDrawerEditor from "components/Table/editors/SideDrawerEditor";
+import withSideDrawerEditor from "components/Table/editors/withSideDrawerEditor";
 
 const TableCell = lazy(
   () => import("./TableCell" /* webpackChunkName: "TableCell-User" */)
@@ -22,8 +22,8 @@ export const config: IFieldConfig = {
   initialValue: null,
   icon: <UserIcon />,
   description: "Displays the _ft_updatedBy field for editing history.",
-  TableCell: withCustomCell(TableCell, BasicCell),
-  TableEditor: SideDrawerEditor,
+  TableCell: withHeavyCell(BasicCell, TableCell),
+  TableEditor: withSideDrawerEditor(TableCell),
   SideDrawerField,
 };
 export default config;

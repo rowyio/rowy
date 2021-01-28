@@ -1,6 +1,6 @@
 import React from "react";
 
-import { ICustomCellProps } from "../types";
+import { IHeavyCellProps } from "../types";
 
 import { makeStyles, createStyles, Tooltip, Fade } from "@material-ui/core";
 
@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-export default function RichText({ column, value }: ICustomCellProps) {
+export default function RichText({ column, value }: IHeavyCellProps) {
   const { tableState } = useFiretableContext();
   const classes = useStyles({
     width: column.width,

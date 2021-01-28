@@ -1,6 +1,6 @@
 import React from "react";
 import { IFieldConfig, FieldType } from "components/fields/types";
-import withCustomCell from "components/Table/withCustomCell";
+import withBasicCell from "../_withTableCell/withBasicCell";
 
 import AggregateIcon from "@material-ui/icons/Layers";
 import BasicCell from "../_BasicCell/BasicCellNull";
@@ -15,7 +15,7 @@ export const config: IFieldConfig = {
   icon: <AggregateIcon />,
   description:
     "Value aggregated from a specified sub-table of the row. Displayed using any other field type. Requires Cloud Function setup.",
-  TableCell: withCustomCell(BasicCell as any, BasicCell),
+  TableCell: withBasicCell(BasicCell),
   TableEditor: NullEditor,
   SideDrawerField: BasicCell as any,
 };

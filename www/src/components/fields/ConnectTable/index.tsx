@@ -1,9 +1,10 @@
 import React, { lazy } from "react";
 import { IFieldConfig, FieldType } from "components/fields/types";
-import withPopoverCell from "components/Table/withPopoverCell";
+import withPopoverCell from "../_withTableCell/withPopoverCell";
 
 import ConnectTableIcon from "assets/icons/ConnectTable";
-import PopoverBasicCell from "./PopoverBasicCell";
+import BasicCell from "../_BasicCell/BasicCellNull";
+import InlineCell from "./InlineCell";
 import NullEditor from "components/Table/editors/NullEditor";
 
 const PopoverCell = lazy(
@@ -28,7 +29,7 @@ export const config: IFieldConfig = {
   icon: <ConnectTableIcon />,
   description:
     "Connects to an existing table to fetch a snapshot of values from a row. Requires Algolia integration.",
-  TableCell: withPopoverCell(PopoverCell, PopoverBasicCell, {
+  TableCell: withPopoverCell(BasicCell, InlineCell, PopoverCell, {
     anchorOrigin: { horizontal: "left", vertical: "bottom" },
     transparent: true,
   }),

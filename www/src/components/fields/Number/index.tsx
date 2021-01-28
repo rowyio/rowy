@@ -1,14 +1,11 @@
 import React, { lazy } from "react";
 import { IFieldConfig, FieldType } from "components/fields/types";
-import withCustomCell from "components/Table/withCustomCell";
+import withBasicCell from "../_withTableCell/withBasicCell";
 
 import NumberIcon from "assets/icons/Number";
-import BasicCell from "../_BasicCell/BasicCellValue";
+import BasicCell from "./BasicCell";
 import TextEditor from "components/Table/editors/TextEditor";
 
-const TableCell = lazy(
-  () => import("./TableCell" /* webpackChunkName: "TableCell-Number" */)
-);
 const SideDrawerField = lazy(
   () =>
     import("./SideDrawerField" /* webpackChunkName: "SideDrawerField-Number" */)
@@ -22,7 +19,7 @@ export const config: IFieldConfig = {
   initializable: true,
   icon: <NumberIcon />,
   description: "Numeric data.",
-  TableCell: withCustomCell(TableCell, BasicCell),
+  TableCell: withBasicCell(BasicCell),
   TableEditor: TextEditor,
   SideDrawerField,
 };

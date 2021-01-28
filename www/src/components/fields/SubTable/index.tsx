@@ -1,6 +1,6 @@
 import React, { lazy } from "react";
 import { IFieldConfig, FieldType } from "components/fields/types";
-import withCustomCell from "components/Table/withCustomCell";
+import withHeavyCell from "../_withTableCell/withHeavyCell";
 
 import SubTableIcon from "assets/icons/SubTable";
 import BasicCell from "../_BasicCell/BasicCellName";
@@ -24,7 +24,7 @@ export const config: IFieldConfig = {
   icon: <SubTableIcon />,
   description:
     "Creates a sub-table. Also displays number of rows inside the sub-table. Max sub-table levels: 100.",
-  TableCell: withCustomCell(TableCell, BasicCell),
+  TableCell: withHeavyCell(BasicCell, TableCell),
   TableEditor: NullEditor,
   SideDrawerField,
 };

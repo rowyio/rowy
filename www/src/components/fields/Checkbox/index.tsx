@@ -1,6 +1,6 @@
 import React, { lazy } from "react";
 import { IFieldConfig, FieldType } from "components/fields/types";
-import withCustomCell from "components/Table/withCustomCell";
+import withHeavyCell from "../_withTableCell/withHeavyCell";
 
 import CheckboxIcon from "@material-ui/icons/CheckBox";
 import BasicCell from "../_BasicCell/BasicCellName";
@@ -24,7 +24,7 @@ export const config: IFieldConfig = {
   initializable: true,
   icon: <CheckboxIcon />,
   description: "Either checked or unchecked. Unchecked by default.",
-  TableCell: withCustomCell(TableCell, BasicCell),
+  TableCell: withHeavyCell(BasicCell, TableCell),
   TableEditor: NullEditor,
   SideDrawerField,
 };

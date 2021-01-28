@@ -1,6 +1,6 @@
 import React from "react";
 import clsx from "clsx";
-import { IPopoverBasicCellProps } from "../types";
+import { IPopoverInlineCellProps } from "../types";
 
 import { makeStyles, createStyles, ButtonBase } from "@material-ui/core";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) =>
 );
 
 export const SingleSelect = React.forwardRef(function SingleSelect(
-  { value, setShowComplexCell, disabled }: IPopoverBasicCellProps,
+  { value, showPopoverCell, disabled }: IPopoverInlineCellProps,
   ref: React.Ref<any>
 ) {
   const classes = useStyles();
@@ -46,7 +46,7 @@ export const SingleSelect = React.forwardRef(function SingleSelect(
   return (
     <ButtonBase
       className={clsx("cell-collapse-padding", classes.root)}
-      onClick={() => setShowComplexCell(true)}
+      onClick={() => showPopoverCell(true)}
       ref={ref}
       disabled={disabled}
     >

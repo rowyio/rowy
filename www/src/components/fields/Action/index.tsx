@@ -1,6 +1,6 @@
 import React, { lazy } from "react";
 import { IFieldConfig, FieldType } from "components/fields/types";
-import withCustomCell from "components/Table/withCustomCell";
+import withHeavyCell from "../_withTableCell/withHeavyCell";
 
 import ActionIcon from "assets/icons/Action";
 import BasicCell from "./BasicCell";
@@ -24,7 +24,7 @@ export const config: IFieldConfig = {
   icon: <ActionIcon />,
   description:
     "A button with a pre-defined action. Triggers a Cloud Function. 3 different states: Disabled, Enabled, Active (Clicked). Supports Undo and Redo.",
-  TableCell: withCustomCell(TableCell, BasicCell),
+  TableCell: withHeavyCell(BasicCell, TableCell),
   TableEditor: NullEditor,
   SideDrawerField,
   settings: Settings,

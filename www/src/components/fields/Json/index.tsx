@@ -1,14 +1,11 @@
 import React, { lazy } from "react";
 import { IFieldConfig, FieldType } from "components/fields/types";
-import withCustomCell from "components/Table/withCustomCell";
+import withBasicCell from "../_withTableCell/withBasicCell";
 
 import JsonIcon from "assets/icons/Json";
-import BasicCell from "../_BasicCell/BasicCellNull";
-import SideDrawerEditor from "components/Table/editors/SideDrawerEditor";
+import BasicCell from "./BasicCell";
+import withSideDrawerEditor from "components/Table/editors/withSideDrawerEditor";
 
-const TableCell = lazy(
-  () => import("./TableCell" /* webpackChunkName: "TableCell-Json" */)
-);
 const SideDrawerField = lazy(
   () =>
     import("./SideDrawerField" /* webpackChunkName: "SideDrawerField-Json" */)
@@ -26,8 +23,8 @@ export const config: IFieldConfig = {
   initializable: true,
   icon: <JsonIcon />,
   description: "JSON object editable with a visual JSON editor.",
-  TableCell: withCustomCell(TableCell, BasicCell),
-  TableEditor: SideDrawerEditor,
+  TableCell: withBasicCell(BasicCell),
+  TableEditor: withSideDrawerEditor(BasicCell),
   SideDrawerField,
   settings: Settings,
 };

@@ -1,4 +1,4 @@
-import { ICustomCellProps } from "../types";
+import { IHeavyCellProps } from "../types";
 import React, { useCallback, useState } from "react";
 
 import { useDropzone } from "react-dropzone";
@@ -114,7 +114,7 @@ export default function Image_({
   value,
   onSubmit,
   disabled,
-}: ICustomCellProps) {
+}: IHeavyCellProps) {
   const { tableState } = useFiretableContext();
   const { requestConfirmation } = useConfirmation();
   const classes = useStyles({ rowHeight: tableState?.config?.rowHeight ?? 44 });

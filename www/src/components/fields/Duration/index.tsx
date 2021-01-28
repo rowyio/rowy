@@ -1,6 +1,6 @@
 import React, { lazy } from "react";
 import { IFieldConfig, FieldType } from "components/fields/types";
-import withCustomCell from "components/Table/withCustomCell";
+import withHeavyCell from "../_withTableCell/withHeavyCell";
 
 import DurationIcon from "@material-ui/icons/CheckBox";
 import BasicCell from "../_BasicCell/BasicCellNull";
@@ -24,7 +24,7 @@ export const config: IFieldConfig = {
   initialValue: {},
   icon: <DurationIcon />,
   description: "Duration calculated from two timestamps.",
-  TableCell: withCustomCell(TableCell, BasicCell),
+  TableCell: withHeavyCell(BasicCell, TableCell),
   TableEditor: NullEditor,
   SideDrawerField,
 };

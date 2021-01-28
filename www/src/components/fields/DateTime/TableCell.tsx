@@ -1,6 +1,6 @@
 import React from "react";
 import clsx from "clsx";
-import { ICustomCellProps } from "../types";
+import { IHeavyCellProps } from "../types";
 import { useDebouncedCallback } from "use-debounce";
 
 import { makeStyles, createStyles } from "@material-ui/core";
@@ -61,7 +61,7 @@ export default function DateTime({
   value,
   onSubmit,
   disabled,
-}: ICustomCellProps) {
+}: IHeavyCellProps) {
   const classes = useStyles();
   const { dataGridRef } = useFiretableContext();
 

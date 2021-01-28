@@ -1,9 +1,10 @@
 import React, { lazy } from "react";
 import { IFieldConfig, FieldType } from "components/fields/types";
-import withPopoverCell from "components/Table/withPopoverCell";
+import withPopoverCell from "../_withTableCell/withPopoverCell";
 
 import ConnectServiceIcon from "@material-ui/icons/Http";
-import PopoverBasicCell from "./PopoverBasicCell";
+import BasicCell from "../_BasicCell/BasicCellNull";
+import InlineCell from "./InlineCell";
 import NullEditor from "components/Table/editors/NullEditor";
 
 const PopoverCell = lazy(
@@ -28,7 +29,7 @@ export const config: IFieldConfig = {
   icon: <ConnectServiceIcon />,
   description:
     "Connects to an external web service to fetch a list of results.",
-  TableCell: withPopoverCell(PopoverCell, PopoverBasicCell, {
+  TableCell: withPopoverCell(BasicCell, InlineCell, PopoverCell, {
     anchorOrigin: { horizontal: "left", vertical: "bottom" },
     transparent: true,
   }),

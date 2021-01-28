@@ -1,5 +1,5 @@
 import React from "react";
-import { ICustomCellProps } from "../types";
+import { IHeavyCellProps } from "../types";
 import clsx from "clsx";
 import { Link } from "react-router-dom";
 
@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-export default function SubTable({ column, row }: ICustomCellProps) {
+export default function SubTable({ column, row }: IHeavyCellProps) {
   const classes = useStyles();
   const { documentCount, label, subTablePath } = useSubTableData(
     column,

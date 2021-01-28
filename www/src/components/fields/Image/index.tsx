@@ -1,6 +1,6 @@
 import React, { lazy } from "react";
 import { IFieldConfig, FieldType } from "components/fields/types";
-import withCustomCell from "components/Table/withCustomCell";
+import withHeavyCell from "../_withTableCell/withHeavyCell";
 
 import ImageIcon from "@material-ui/icons/PhotoSizeSelectActual";
 import BasicCell from "../_BasicCell/BasicCellNull";
@@ -23,7 +23,7 @@ export const config: IFieldConfig = {
   icon: <ImageIcon />,
   description:
     "Image file uploaded to Firebase Storage. Supports JPEG, PNG, SVG, GIF, WebP.",
-  TableCell: withCustomCell(TableCell, BasicCell),
+  TableCell: withHeavyCell(BasicCell, TableCell),
   TableEditor: NullEditor,
   SideDrawerField,
 };

@@ -1,6 +1,6 @@
 import React from "react";
 import clsx from "clsx";
-import { IPopoverBasicCellProps } from "../types";
+import { IPopoverInlineCellProps } from "../types";
 
 import {
   makeStyles,
@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) =>
 );
 
 export const ConnectService = React.forwardRef(function ConnectService(
-  { value, setShowComplexCell, disabled, column }: IPopoverBasicCellProps,
+  { value, showPopoverCell, disabled, column }: IPopoverInlineCellProps,
   ref: React.Ref<any>
 ) {
   const classes = useStyles();
@@ -56,7 +56,7 @@ export const ConnectService = React.forwardRef(function ConnectService(
   return (
     <ButtonBase
       className={clsx("cell-collapse-padding", classes.root)}
-      onClick={() => setShowComplexCell(true)}
+      onClick={() => showPopoverCell(true)}
       ref={ref}
       disabled={disabled}
     >

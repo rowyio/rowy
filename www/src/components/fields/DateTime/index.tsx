@@ -1,6 +1,6 @@
 import React, { lazy } from "react";
 import { IFieldConfig, FieldType } from "components/fields/types";
-import withCustomCell from "components/Table/withCustomCell";
+import withHeavyCell from "../_withTableCell/withHeavyCell";
 import { parseJSON } from "date-fns";
 
 import DateTimeIcon from "@material-ui/icons/AccessTime";
@@ -26,7 +26,7 @@ export const config: IFieldConfig = {
   icon: <DateTimeIcon />,
   description:
     "Time and Date can be written as YYYY/MM/DD hh:mm (am/pm) or input using a picker module.",
-  TableCell: withCustomCell(TableCell, BasicCell),
+  TableCell: withHeavyCell(BasicCell, TableCell),
   TableEditor: NullEditor,
   SideDrawerField,
   csvImportParser: (value) => parseJSON(value).getTime(),

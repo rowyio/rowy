@@ -1,6 +1,6 @@
 import React, { lazy } from "react";
 import { IFieldConfig, FieldType } from "components/fields/types";
-import withCustomCell from "components/Table/withCustomCell";
+import withHeavyCell from "../_withTableCell/withHeavyCell";
 
 import RatingIcon from "@material-ui/icons/StarBorder";
 import BasicCell from "../_BasicCell/BasicCellNull";
@@ -26,7 +26,7 @@ export const config: IFieldConfig = {
   icon: <RatingIcon />,
   description:
     "Rating displayed as stars from 0 to configurable number of stars. Default: 5 stars.",
-  TableCell: withCustomCell(TableCell, BasicCell),
+  TableCell: withHeavyCell(BasicCell, TableCell),
   TableEditor: NullEditor,
   settings: Settings,
   SideDrawerField,

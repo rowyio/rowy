@@ -1,5 +1,5 @@
 import React from "react";
-import { ICustomCellProps } from "../types";
+import { IHeavyCellProps } from "../types";
 import clsx from "clsx";
 import _get from "lodash/get";
 
@@ -21,7 +21,7 @@ export default function Action({
   value,
   onSubmit,
   disabled,
-}: ICustomCellProps) {
+}: IHeavyCellProps) {
   const classes = useStyles();
 
   const hasRan = value && value.status;

@@ -1,12 +1,12 @@
 import React from "react";
-import { ICustomCellProps } from "../types";
+import { IHeavyCellProps } from "../types";
 
 import { Tooltip, Chip, Avatar } from "@material-ui/core";
 
 import { format } from "date-fns";
 import { DATE_TIME_FORMAT } from "constants/dates";
 
-export default function User({ value }: ICustomCellProps) {
+export default function User({ value }: IHeavyCellProps) {
   if (!value || !value.displayName || !value.timestamp) return null;
 
   return (

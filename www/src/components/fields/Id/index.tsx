@@ -1,10 +1,10 @@
 import React, { lazy } from "react";
 import { IFieldConfig, FieldType } from "components/fields/types";
-import withCustomCell from "components/Table/withCustomCell";
+import withHeavyCell from "../_withTableCell/withHeavyCell";
 
 import IdIcon from "assets/icons/Id";
 import BasicCell from "../_BasicCell/BasicCellValue";
-import SideDrawerEditor from "components/Table/editors/SideDrawerEditor";
+import withSideDrawerEditor from "components/Table/editors/withSideDrawerEditor";
 
 const TableCell = lazy(
   () => import("./TableCell" /* webpackChunkName: "TableCell-Id" */)
@@ -20,8 +20,8 @@ export const config: IFieldConfig = {
   initialValue: "",
   icon: <IdIcon />,
   description: "Displays the row’s document ID. Cannot be sorted.",
-  TableCell: withCustomCell(TableCell, BasicCell),
-  TableEditor: SideDrawerEditor,
+  TableCell: withHeavyCell(BasicCell, TableCell),
+  TableEditor: withSideDrawerEditor(TableCell),
   SideDrawerField,
 };
 export default config;

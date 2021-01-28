@@ -11,7 +11,7 @@ export default function MultiSelect({
   onSubmit,
   column,
   parentRef,
-  setShowComplexCell,
+  showPopoverCell,
   disabled,
 }: IPopoverCellProps) {
   const config = column.config ?? {};
@@ -37,7 +37,7 @@ export default function MultiSelect({
           },
         },
       }}
-      onClose={() => setShowComplexCell(false)}
+      onClose={() => showPopoverCell(false)}
     />
   );
 }

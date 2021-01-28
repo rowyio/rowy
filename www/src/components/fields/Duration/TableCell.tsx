@@ -1,10 +1,10 @@
 import React from "react";
-import { ICustomCellProps } from "../types";
+import { IHeavyCellProps } from "../types";
 import _get from "lodash/get";
 
 import { getDurationString } from "./utils";
 
-export default function Duration({ value }: ICustomCellProps) {
+export default function Duration({ value }: IHeavyCellProps) {
   if (
     !value ||
     !value.start ||

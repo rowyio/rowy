@@ -1,6 +1,6 @@
 import React from "react";
 import clsx from "clsx";
-import { IPopoverBasicCellProps } from "../types";
+import { IPopoverInlineCellProps } from "../types";
 
 import { makeStyles, createStyles, Grid, ButtonBase } from "@material-ui/core";
 
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) =>
 );
 
 export const Color = React.forwardRef(function Color(
-  { value, setShowComplexCell, disabled }: IPopoverBasicCellProps,
+  { value, showPopoverCell, disabled }: IPopoverInlineCellProps,
   ref: React.Ref<any>
 ) {
   const classes = useStyles();
@@ -38,7 +38,7 @@ export const Color = React.forwardRef(function Color(
       spacing={1}
       className={clsx("cell-collapse-padding", classes.root)}
       component={ButtonBase}
-      onClick={() => setShowComplexCell(true)}
+      onClick={() => showPopoverCell(true)}
       ref={ref}
       disabled={disabled}
     >

@@ -1,5 +1,5 @@
 import React from "react";
-import { ICustomCellProps } from "../types";
+import { IHeavyCellProps } from "../types";
 import _get from "lodash/get";
 
 import {
@@ -39,7 +39,7 @@ export default function Checkbox({
   value,
   onSubmit,
   disabled,
-}: ICustomCellProps) {
+}: IHeavyCellProps) {
   const classes = useStyles();
   const switchClasses = useSwitchStyles();
 

@@ -22,26 +22,23 @@ export interface IFieldConfig {
   csvExport?: (value: any) => string;
   csvImportParser?: (value: string) => any;
 }
-
-export interface ICustomCellProps extends FormatterProps<any> {
-  column: FormatterProps<any>["column"] & { config?: Record<string, any> };
-  value: any;
-  onSubmit: (value: any) => void;
-  docRef: firebase.firestore.DocumentReference;
-  disabled: boolean;
-}
 export interface IBasicCellProps {
   value: any;
   type: FieldType;
   name: string;
 }
-
-export interface IPopoverCellProps extends ICustomCellProps {
-  setShowComplexCell: React.Dispatch<React.SetStateAction<boolean>>;
-  parentRef: PopoverProps["anchorEl"];
+export interface IHeavyCellProps extends IBasicCellProps, FormatterProps<any> {
+  column: FormatterProps<any>["column"] & { config?: Record<string, any> };
+  onSubmit: (value: any) => void;
+  docRef: firebase.firestore.DocumentReference;
+  disabled: boolean;
 }
-export interface IPopoverBasicCellProps extends ICustomCellProps {
-  setShowComplexCell: React.Dispatch<React.SetStateAction<boolean>>;
+
+export interface IPopoverInlineCellProps extends IHeavyCellProps {
+  showPopoverCell: React.Dispatch<React.SetStateAction<boolean>>;
+}
+export interface IPopoverCellProps extends IPopoverInlineCellProps {
+  parentRef: PopoverProps["anchorEl"];
 }
 
 export interface ISideDrawerFieldProps {

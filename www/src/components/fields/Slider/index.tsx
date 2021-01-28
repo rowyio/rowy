@@ -1,10 +1,10 @@
 import React, { lazy } from "react";
 import { IFieldConfig, FieldType } from "components/fields/types";
-import withCustomCell from "components/Table/withCustomCell";
+import withHeavyCell from "../_withTableCell/withHeavyCell";
 
 import SliderIcon from "assets/icons/Slider";
 import BasicCell from "../_BasicCell/BasicCellNull";
-import SideDrawerEditor from "components/Table/editors/SideDrawerEditor";
+import withSideDrawerEditor from "components/Table/editors/withSideDrawerEditor";
 
 const TableCell = lazy(
   () => import("./TableCell" /* webpackChunkName: "TableCell-Slider" */)
@@ -25,8 +25,8 @@ export const config: IFieldConfig = {
   initializable: true,
   icon: <SliderIcon />,
   description: "Slider with adjustable range. Returns a numeric value.",
-  TableCell: withCustomCell(TableCell, BasicCell),
-  TableEditor: SideDrawerEditor,
+  TableCell: withHeavyCell(BasicCell, TableCell),
+  TableEditor: withSideDrawerEditor(TableCell),
   settings: Settings,
   SideDrawerField,
 };

@@ -1,5 +1,5 @@
 import React from "react";
-import { ICustomCellProps } from "../types";
+import { IHeavyCellProps } from "../types";
 
 import { makeStyles, createStyles, Grid } from "@material-ui/core";
 
@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-export default function Slider({ column, value }: ICustomCellProps) {
+export default function Slider({ column, value }: IHeavyCellProps) {
   const classes = useStyles();
 
   const {

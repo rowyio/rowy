@@ -1,6 +1,6 @@
 import React from "react";
 import { IFieldConfig, FieldType } from "components/fields/types";
-import withCustomCell from "components/Table/withCustomCell";
+import withBasicCell from "../_withTableCell/withBasicCell";
 
 import DerivativeIcon from "assets/icons/Derivative";
 import BasicCell from "../_BasicCell/BasicCellNull";
@@ -16,7 +16,7 @@ export const config: IFieldConfig = {
   icon: <DerivativeIcon />,
   description:
     "Value derived from the rest of the row’s values. Displayed using any other field type. Requires Cloud Function setup.",
-  TableCell: withCustomCell(BasicCell as any, BasicCell),
+  TableCell: withBasicCell(BasicCell),
   TableEditor: NullEditor,
   SideDrawerField: BasicCell as any,
   settings: Settings,

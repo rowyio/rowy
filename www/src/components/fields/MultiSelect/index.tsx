@@ -1,9 +1,10 @@
 import React, { lazy } from "react";
 import { IFieldConfig, FieldType } from "components/fields/types";
-import withPopoverCell from "components/Table/withPopoverCell";
+import withPopoverCell from "../_withTableCell/withPopoverCell";
 
 import MultiSelectIcon from "assets/icons/MultiSelect";
-import PopoverBasicCell from "./PopoverBasicCell";
+import BasicCell from "../_BasicCell/BasicCellNull";
+import InlineCell from "./InlineCell";
 import NullEditor from "components/Table/editors/NullEditor";
 
 const PopoverCell = lazy(
@@ -26,7 +27,7 @@ export const config: IFieldConfig = {
   icon: <MultiSelectIcon />,
   description:
     "Dropdown selector with searchable options and check box behavior. Optionally allows users to input custom values. Max selection: all options.",
-  TableCell: withPopoverCell(PopoverCell, PopoverBasicCell, {
+  TableCell: withPopoverCell(BasicCell, InlineCell, PopoverCell, {
     anchorOrigin: { horizontal: "left", vertical: "bottom" },
     transparent: true,
   }),

@@ -9,7 +9,7 @@ export default function ConnectTable({
   onSubmit,
   column,
   parentRef,
-  setShowComplexCell,
+  showPopoverCell,
   disabled,
 }: IPopoverCellProps) {
   const config = column.config ?? {};
@@ -33,7 +33,7 @@ export default function ConnectTable({
           },
         },
       }}
-      onClose={() => setShowComplexCell(false)}
+      onClose={() => showPopoverCell(false)}
       loadBeforeOpen
     />
   );

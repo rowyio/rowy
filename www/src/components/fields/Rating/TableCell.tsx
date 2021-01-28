@@ -1,5 +1,5 @@
 import React from "react";
-import { ICustomCellProps } from "../types";
+import { IHeavyCellProps } from "../types";
 
 import MuiRating from "@material-ui/lab/Rating";
 import StarBorderIcon from "@material-ui/icons/StarBorder";
@@ -12,7 +12,7 @@ export default function Rating({
   value,
   onSubmit,
   disabled,
-}: ICustomCellProps) {
+}: IHeavyCellProps) {
   const ratingClasses = useRatingStyles();
 
   // Set max and precision from config

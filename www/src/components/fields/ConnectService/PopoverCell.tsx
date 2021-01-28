@@ -9,7 +9,7 @@ export default function ConnectService({
   onSubmit,
   column,
   parentRef,
-  setShowComplexCell,
+  showPopoverCell,
   disabled,
   docRef,
 }: IPopoverCellProps) {
@@ -32,7 +32,7 @@ export default function ConnectService({
             anchorOrigin: { vertical: "bottom", horizontal: "left" },
             transformOrigin: { vertical: "top", horizontal: "left" },
           },
-          onClose: () => setShowComplexCell(false),
+          onClose: () => showPopoverCell(false),
         },
       }}
     />

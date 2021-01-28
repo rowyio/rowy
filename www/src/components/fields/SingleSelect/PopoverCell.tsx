@@ -11,7 +11,7 @@ export default function SingleSelect({
   onSubmit,
   column,
   parentRef,
-  setShowComplexCell,
+  showPopoverCell,
   disabled,
 }: IPopoverCellProps) {
   const config = column.config ?? {};
@@ -37,7 +37,7 @@ export default function SingleSelect({
           },
         },
       }}
-      onClose={() => setShowComplexCell(false)}
+      onClose={() => showPopoverCell(false)}
     />
   );
 }
