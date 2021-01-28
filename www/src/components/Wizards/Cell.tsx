@@ -3,7 +3,7 @@ import React from "react";
 import { makeStyles, createStyles } from "@material-ui/core";
 
 import { FieldType } from "constants/fields";
-import { getFormatter } from "components/Table/formatters";
+import { getFieldProp } from "components/fields";
 import EmptyState from "components/EmptyState";
 
 const useStyles = makeStyles((theme) =>
@@ -68,8 +68,7 @@ export default function Cell({
   ...props
 }: ICellProps) {
   const classes = useStyles();
-
-  const formatter = type ? getFormatter({ type: type }, true) : null;
+  const formatter = type ? getFieldProp("TableCell", type) : null;
 
   return (
     <div className={classes.root} {...props}>
@@ -83,6 +82,7 @@ export default function Cell({
               key: field,
               name,
               config: { options: [] },
+              editable: false,
             } as any,
             row: { [field]: value },
             isRowSelected: false,

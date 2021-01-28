@@ -333,6 +333,7 @@ export const defaultOverrides = (theme: Theme): ThemeOptions => ({
 
       valueLabel: {
         top: -22,
+        left: "calc(-25%)",
         ...theme.typography.caption,
         color: theme.palette.primary.main,
 

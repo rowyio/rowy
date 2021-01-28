@@ -1,7 +1,6 @@
-import React, { useState ,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import _groupBy from "lodash/groupBy";
 import _find from "lodash/find";
-
 import {
   createStyles,
   makeStyles,
@@ -16,6 +15,7 @@ import {
 } from "@material-ui/core";
 
 import AddIcon from "@material-ui/icons/Add";
+import SettingsIcon from "@material-ui/icons/Settings";
 import EditIcon from "@material-ui/icons/Edit";
 import Favorite from "@material-ui/icons/Favorite";
 import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
@@ -26,11 +26,13 @@ import StyledCard from "components/StyledCard";
 import routes from "constants/routes";
 import { useFiretableContext } from "contexts/FiretableContext";
 import { useAppContext } from "contexts/AppContext";
-import useDoc,{ DocActions } from "hooks/useDoc";
+import useDoc, { DocActions } from "hooks/useDoc";
 import TableSettingsDialog, {
   TableSettingsDialogModes,
 } from "components/TableSettings";
-import EmptyState from 'components/EmptyState';
+
+import ProjectSettings from "components/ProjectSettings";
+import EmptyState from "components/EmptyState";
 const useStyles = makeStyles((theme) =>
   createStyles({
     "@global": {
@@ -68,7 +70,15 @@ const useStyles = makeStyles((theme) =>
       margin: theme.spacing(-1),
       marginRight: theme.spacing(-0.5),
     },
-
+    configFab: {
+      right: theme.spacing(15),
+      position: "fixed",
+      bottom: theme.spacing(3),
+      width: 80,
+      height: 80,
+      borderRadius: theme.shape.borderRadius * 2,
+      "& svg": { width: "2em", height: "2em" },
+    },
     fab: {
       position: "fixed",
       bottom: theme.spacing(3),
@@ -120,20 +130,45 @@ export default function HomePage() {
       mode: TableSettingsDialogModes.create,
       data: null,
     });
-
   const [open, setOpen] = useState(false);
+  const [openProjectSettings, setOpenProjectSettings] = useState(false);
 
-
-  const [settingsDocState,settingsDocDispatch] = useDoc({path:'_FIRETABLE_/settings'})
+  const [settingsDocState, settingsDocDispatch] = useDoc({
+    path: "_FIRETABLE_/settings",
+  });
   useEffect(() => {
-    if(!settingsDocState.loading && !settingsDocState.doc){
-      settingsDocDispatch({action:DocActions.update,data:{createdAt:new Date()}});
+    if (!settingsDocState.loading && !settingsDocState.doc) {
+      settingsDocDispatch({
+        action: DocActions.update,
+        data: { createdAt: new Date() },
+      });
     }
-  },[settingsDocState])
+  }, [settingsDocState]);
   if (settingsDocState.error?.code === "permission-denied") {
-    return <EmptyState fullScreen message="Access Denied" description={<><Typography variant="overline">You don't current have access to firetable, please contact this project's owner</Typography>
-    <Typography variant='body2'>If you are the project owner please follow the instructions <a href="https://github.com/AntlerVC/firetable/wiki/Role-Based-Security-Rules" target="_blank">here</a> to setup the project rules.</Typography>
-    </>}/>
+    return (
+      <EmptyState
+        fullScreen
+        message="Access Denied"
+        description={
+          <>
+            <Typography variant="overline">
+              You don't current have access to firetable, please contact this
+              project's owner
+            </Typography>
+            <Typography variant="body2">
+              If you are the project owner please follow the instructions{" "}
+              <a
+                href="https://github.com/AntlerVC/firetable/wiki/Role-Based-Security-Rules"
+                target="_blank"
+              >
+                here
+              </a>{" "}
+              to setup the project rules.
+            </Typography>
+          </>
+        }
+      />
+    );
   }
 
   const TableCard = ({ table }) => {
@@ -261,6 +296,16 @@ export default function HomePage() {
                 <AddIcon />
               </Fab>
             </Tooltip>
+            <Tooltip title="Configure Firetable">
+              <Fab
+                className={classes.configFab}
+                color="secondary"
+                aria-label="Create table"
+                onClick={() => setOpenProjectSettings(true)}
+              >
+                <SettingsIcon />
+              </Fab>
+            </Tooltip>
           </section>
         </Container>
       </main>
@@ -269,6 +314,10 @@ export default function HomePage() {
         clearDialog={clearDialog}
         mode={settingsDialogState.mode}
         data={settingsDialogState.data}
+      />
+      <ProjectSettings
+        open={openProjectSettings}
+        handleClose={() => setOpenProjectSettings(false)}
       />
     </HomeNavigation>
   );

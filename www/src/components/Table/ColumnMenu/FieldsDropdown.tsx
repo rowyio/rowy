@@ -9,7 +9,8 @@ import {
   TextFieldProps,
 } from "@material-ui/core";
 
-import { FIELDS, FieldType, FIELD_TYPE_DESCRIPTIONS } from "constants/fields";
+import { FieldType } from "constants/fields";
+import { getFieldProp } from "components/fields";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -46,8 +47,10 @@ export default function FieldsDropdown({
   const classes = useStyles();
 
   const options = optionsProp
-    ? FIELDS.filter((field) => optionsProp.indexOf(field.type) > -1)
-    : FIELDS;
+    ? Object.values(FieldType).filter(
+        (fieldType) => optionsProp.indexOf(fieldType) > -1
+      )
+    : Object.values(FieldType);
 
   return (
     <TextField
@@ -59,20 +62,20 @@ export default function FieldsDropdown({
       label={!hideLabel ? "Field Type" : ""}
       aria-label="Field Type"
       hiddenLabel={hideLabel}
-      helperText={value && FIELD_TYPE_DESCRIPTIONS[value]}
+      helperText={value && getFieldProp("description", value)}
       FormHelperTextProps={{ classes: { root: classes.helperText } }}
       className={className}
     >
-      {options.map((field) => (
+      {options.map((fieldType) => (
         <MenuItem
-          key={`select-field-${field.name}`}
-          id={`select-field-${field.type}`}
-          value={field.type}
+          key={`select-field-${getFieldProp("name", fieldType)}`}
+          id={`select-field-${fieldType}`}
+          value={fieldType}
         >
           <ListItemIcon className={classes.listItemIcon}>
-            {field.icon}
+            {getFieldProp("icon", fieldType)}
           </ListItemIcon>
-          {field.name}
+          {getFieldProp("name", fieldType)}
         </MenuItem>
       ))}
     </TextField>
