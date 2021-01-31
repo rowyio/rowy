@@ -10,9 +10,11 @@ import {
   Menu,
   Link as MuiLink,
   MenuItem,
+  ListItemAvatar,
+  ListItemText,
   ListItemSecondaryAction,
   ListItemIcon,
-  // Divider,
+  Divider,
 } from "@material-ui/core";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
@@ -20,23 +22,26 @@ import CheckIcon from "@material-ui/icons/Check";
 
 import { useAppContext } from "contexts/AppContext";
 import routes from "constants/routes";
+import meta from "../../../package.json";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
+    spacer: {
+      width: 48,
+      height: 48,
+    },
+
+    iconButton: {},
     avatar: {
-      width: 24,
-      height: 24,
+      "$iconButton &": {
+        width: 24,
+        height: 24,
+      },
     },
 
     paper: { minWidth: 160 },
-    displayName: {
-      display: "block",
-      padding: theme.spacing(1, 2),
-      userSelect: "none",
-      color: theme.palette.text.disabled,
-    },
 
-    // divider: { margin: theme.spacing(1, 2) },
+    divider: { margin: theme.spacing(1, 2) },
 
     secondaryAction: { pointerEvents: "none" },
     secondaryIcon: {
@@ -49,6 +54,13 @@ const useStyles = makeStyles((theme) =>
         theme.palette.background.elevation?.[24] ??
         theme.palette.background.paper,
       marginTop: theme.spacing(-1),
+    },
+
+    version: {
+      display: "block",
+      padding: theme.spacing(1, 2),
+      userSelect: "none",
+      color: theme.palette.text.disabled,
     },
   })
 );
@@ -68,10 +80,18 @@ export default function UserMenu(props: IconButtonProps) {
     setTheme,
     setThemeOverridden,
   } = useAppContext();
-  if (!currentUser || !userDoc || !userDoc?.state?.doc) return null;
+  if (!currentUser || !userDoc || !userDoc?.state?.doc)
+    return <div className={classes.spacer} />;
 
   const displayName = userDoc?.state?.doc?.user?.displayName;
   const avatarUrl = userDoc?.state?.doc?.user?.photoURL;
+  const email = userDoc?.state?.doc?.user?.email;
+
+  const avatar = avatarUrl ? (
+    <Avatar src={avatarUrl} className={classes.avatar} />
+  ) : (
+    <AccountCircleIcon color="secondary" />
+  );
 
   const changeTheme = (option: "system" | "light" | "dark") => {
     switch (option) {
@@ -103,12 +123,9 @@ export default function UserMenu(props: IconButtonProps) {
         {...props}
         ref={anchorEl}
         onClick={() => setOpen(true)}
+        className={classes.iconButton}
       >
-        {avatarUrl ? (
-          <Avatar src={avatarUrl} className={classes.avatar} />
-        ) : (
-          <AccountCircleIcon />
-        )}
+        {avatar}
       </IconButton>
 
       <Menu
@@ -122,18 +139,17 @@ export default function UserMenu(props: IconButtonProps) {
         onClose={() => setOpen(false)}
         classes={{ paper: classes.paper }}
       >
-        {displayName && (
-          <MuiLink
-            variant="overline"
-            className={classes.displayName}
-            component="a"
-            href={`https://console.firebase.google.com/project/${process.env.REACT_APP_FIREBASE_PROJECT_ID}/firestore/data~2F_FT_USERS~2F${currentUser.uid}`}
-            target="_blank"
-            rel="noopener"
-          >
-            {displayName}
-          </MuiLink>
-        )}
+        <MenuItem
+          component="a"
+          href={`https://console.firebase.google.com/project/${process.env.REACT_APP_FIREBASE_PROJECT_ID}/firestore/data~2F_FT_USERS~2F${currentUser.uid}`}
+          target="_blank"
+          rel="noopener"
+        >
+          <ListItemAvatar>{avatar}</ListItemAvatar>
+          <ListItemText primary={displayName} secondary={email} />
+        </MenuItem>
+
+        <Divider className={classes.divider} />
 
         <MenuItem onClick={(e) => setThemeSubMenu(e.target)}>
           Theme
@@ -173,8 +189,21 @@ export default function UserMenu(props: IconButtonProps) {
         )}
 
         <MenuItem component={Link} to={routes.signOut}>
-          Sign Out
+          Sign out
         </MenuItem>
+
+        <Divider className={classes.divider} />
+
+        <MuiLink
+          variant="caption"
+          component="a"
+          href={meta.repository.url.replace(".git", "") + "/releases"}
+          target="_blank"
+          rel="noopener"
+          className={classes.version}
+        >
+          {meta.name} v{meta.version}
+        </MuiLink>
       </Menu>
     </>
   );
