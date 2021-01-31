@@ -49,7 +49,7 @@ export const FT_compressedThumbnail = functions.storage
     // Get Firebase Storage download token
     const token = object.metadata?.firebaseStorageDownloadTokens;
 
-    const filePath = object.name!;
+    const filePath: string = object.name!;
 
     // Check if file should be excluded based off path
     for (const excludePath of excludePaths)
@@ -84,6 +84,7 @@ export const FT_compressedThumbnail = functions.storage
 
         // Resize image to thumbnail size
         const resized = await sharp(tempLocalFile)
+          .rotate()
           .resize(
             parseInt(size.split("x")[0], 10),
             parseInt(size.split("x")[1], 10),
