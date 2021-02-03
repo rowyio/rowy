@@ -5,13 +5,14 @@ import {
   functionName,
   triggerPath,
   derivativesConfig,
-  documentSelectConfig,
+ documentSelectConfig,
   sparksConfig,
+  initializeConfig
 } from "./functionConfig";
 
 import { getTriggerType, changedDocPath } from "./utils";
 import propagate from "./propagates";
-
+import initialize from './initialize'
 export const FT = {
   [functionName]: functions.firestore
     .document(triggerPath)
@@ -29,13 +30,6 @@ export const FT = {
         )}`
       );
       promises = sparkPromises;
-      if (triggerType !== "delete") {
-        const derivativePromise = derivative(derivativesConfig)(
-          change,
-          context
-        );
-        promises.push(derivativePromise);
-      }
       const propagatePromise = propagate(
         change,
         documentSelectConfig,
@@ -43,6 +37,32 @@ export const FT = {
       );
       promises.push(propagatePromise);
       try {
+        let docUpdates = {}
+        if (triggerType === "update") {
+          try {
+            docUpdates = await derivative(derivativesConfig)(
+              change
+            );
+          }
+          catch(err) {
+            console.log(`caught error: ${err}`);
+          }
+         
+        }else if (triggerType === "create"){
+          try {
+            const initialData = await initialize(initializeConfig)(change.after)
+            const derivativeData = await derivative(derivativesConfig)(
+              change
+            );
+            docUpdates = {...initialData,...derivativeData}
+          }
+          catch(err) {
+            console.log(`caught error: ${err}`);
+          }
+        }
+        if(Object.keys(docUpdates).length !== 0){
+          promises.push(change.after.ref.update(docUpdates))
+        }
         const result = await Promise.allSettled(promises);
         console.log(JSON.stringify(result));
       } catch (err) {

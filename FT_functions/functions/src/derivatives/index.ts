@@ -25,7 +25,6 @@ const derivative = (
   }[]
 ) => async (
   change: functions.Change<functions.firestore.DocumentSnapshot>,
-  context: functions.EventContext
 ) => {
   try {
     const beforeData = change.before?.data();
@@ -60,13 +59,10 @@ const derivative = (
       },
       {}
     );
-    if (Object.keys(update).length !== 0) {
-      return ref.update(update);
-    }
-    return false;
+    return update;
   } catch (error) {
     console.log(`Derivatives Error`, error);
-    return false;
+    return {};
   }
 };
 
