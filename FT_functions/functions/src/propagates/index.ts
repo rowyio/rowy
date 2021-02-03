@@ -5,6 +5,7 @@ import {
   removeTargetRef,
   removeRefsOnTargetDelete,
 } from "./TargetFns";
+//import { asyncForEach} from '../utils'
 const propagateChangesOnTrigger = (
   change: functions.Change<functions.firestore.DocumentSnapshot>,
   triggerType: "delete" | "create" | "update"
@@ -16,7 +17,7 @@ const propagateChangesOnTrigger = (
       return removeCopiesOfDeleteDoc(change.before.ref);
     case "create":
     default:
-      return new Promise(() => false);
+      return false;
   }
 };
 
@@ -50,7 +51,7 @@ const updateLinks = (
     );
     return Promise.all([...addPromises, ...removePromises]);
   } else {
-    return new Promise(() => false);
+   return false
   }
 };
 export default function propagate(
@@ -58,17 +59,23 @@ export default function propagate(
   config: { fieldName: string; trackedFields: string[] }[],
   triggerType: "delete" | "create" | "update"
 ) {
-  const propagateChangesPromise = propagateChangesOnTrigger(
-    change,
-    triggerType
-  );
-  const promises = [propagateChangesPromise];
-  if (triggerType === "delete") {
-    config.forEach((c) =>
-      promises.push(removeRefsOnTargetDelete(change.before.ref, c.fieldName))
+  const promises = []
+  if (["delete","update"].includes(triggerType)){
+    const propagateChangesPromise = propagateChangesOnTrigger(
+      change,
+      triggerType
     );
-  } else {
-    config.forEach((c) => promises.push(updateLinks(change, c)));
+  
+  promises.push(propagateChangesPromise)
+  };
+  if(config.length > 0){
+    if (triggerType === "delete") {
+      config.forEach((c) =>
+        promises.push(removeRefsOnTargetDelete(change.before.ref, c.fieldName))
+      );
+    } else if (triggerType === "update") {
+      config.forEach((c) => promises.push(updateLinks(change, c)));
+    }
   }
-  return Promise.all(promises);
+  return Promise.allSettled(promises);
 }
