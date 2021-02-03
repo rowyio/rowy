@@ -1,5 +1,5 @@
 export const dependencies = {
-  "@sendgrid/mail": "^7.2.6",
+  "@sendgrid/mail": "^7.4.2",
 };
 const sendgridEmail = async (data) => {
   const { msg } = data;
