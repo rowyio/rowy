@@ -7029,7 +7029,7 @@ gauge@~2.7.3:
     strip-ansi "^3.0.1"
     wide-align "^1.1.0"
 
-gaxios@^2.1.1:
+gaxios@^2.1.0:
   version "2.3.4"
   resolved "https://registry.yarnpkg.com/gaxios/-/gaxios-2.3.4.tgz#eea99353f341c270c5f3c29fc46b8ead56f0a173"
   integrity sha512-US8UMj8C5pRnao3Zykc4AAVr+cffoNKRTg9Rsf2GiuZCW69vgJj38VK2PzlPuQU73FZ/nTk9/Av6/JGcE1N9vA==
@@ -7301,7 +7301,7 @@ google-p12-pem@^2.0.0:
   resolved "https://registry.yarnpkg.com/google-p12-pem/-/google-p12-pem-2.0.4.tgz#036462394e266472632a78b685f0cc3df4ef337b"
   integrity sha512-S4blHBQWZRnEW44OcR7TL9WR+QCqByRvhNDZ/uuQfpxywfupikf/miba8js1jZi6ZOGv5slgSuoshCWh6EMDzg==
   dependencies:
-    node-forge "^0.10.0"
+    node-forge "^0.9.0"
 
 google-p12-pem@^3.0.3:
   version "3.0.3"
@@ -10274,16 +10274,10 @@ node-fetch@^2.3.0, node-fetch@^2.6.0:
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.0.tgz#e633456386d4aa55863f676a7ab0daa8fdecb0fd"
   integrity sha512-8dG4H5ujfvFiqDmVu9fQ5bOHUC15JMjMY/Zumv26oOvvVJjM67KF8koCWIabKQ1GJIa9r2mMZscBq/TbdOcmNA==
 
-node-forge@^0.10.0:
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-0.9.0.tgz#d624050edbb44874adca12bb9a52ec63cb782579"
-  integrity sha512-7ASaDa3pD+lJ3WvXFsxekJQelBKRpne+GOVbLbtHYdd7pFspyeuJHnWfLplGf3SwKGbfs/aYl5V/JCIaHVUKKQ==
-
-node-forge@^0.10.0:
+node-forge@0.10.0, node-forge@^0.10.0:
   version "0.10.0"
   resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-0.10.0.tgz#32dea2afb3e9926f02ee5ce8794902691a676bf3"
   integrity sha512-PPmu8eEeG9saEUvI97fm4OYxXVB6bFvyNTyiUOBichBpFG8A1Ljw3bY62+5oOjDEMHRnd0Y7HQ+x7uzxOzC6JA==
-
 
 node-gyp@^7.1.0:
   version "7.1.0"
@@ -12415,11 +12409,6 @@ react-error-overlay@^6.0.7:
   integrity sha512-TAv1KJFh3RhqxNvhzxj6LeT5NWklP6rDr2a0jaTfsZ5wSZWHOGeqQyejUp3xxLfPt2UpyJEcVQB/zyPcmonNFA==
 
 react-hook-form@^6.2.0:
-  version "6.9.0"
-  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-6.9.0.tgz#e3fb510970cdf1fbab4e1095cc7e6e2a97935643"
-  integrity sha512-QLRUYI+vZfoFu4mF2CaKeq5tHgLvTe+H2ks3iVKaG07D9nnbV/pemWkg93ODb0l4kFsRb28Ti3s/1K1DHi8Z0g==
-
-react-hook-form@^6.2.0:
   version "6.8.4"
   resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-6.8.4.tgz#1aed2f7badba3622324e37d68f7637868ea54cf2"
   integrity sha512-qFd5SPPQUZWe+yXF6yjuJXKK8cLXywrzQuw74nL1jptW9Fad4HsEzfh+53Jg3c5TFPIwdIxrMNUvQfd0/p1y/w==
@@ -13234,7 +13223,7 @@ selfsigned@^1.10.7:
   resolved "https://registry.yarnpkg.com/selfsigned/-/selfsigned-1.10.7.tgz#da5819fd049d5574f28e88a9bcc6dbc6e6f3906b"
   integrity sha512-8M3wBCzeWIJnQfl43IKwOmC4H/RAp50S8DF60znzjW5GVqTcSe2vWclt7hmYVPkKPlHWOu5EaWOMZ2Y6W8ZXTA==
   dependencies:
-    node-forge "0.10.0"
+    node-forge "0.9.0"
 
 semver-compare@^1.0.0:
   version "1.0.0"
