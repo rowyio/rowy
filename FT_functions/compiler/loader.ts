@@ -44,20 +44,28 @@ export const generateConfigFromTableSchema = async (schemaDocPath) => {
   const initializableColumns = Object.values(
     schemaData.columns
   ).filter((col: any) => Boolean(col.config.defaultValue));
-  console.log({ initializableColumns });
+  console.log(JSON.stringify({ initializableColumns }));
   const initializeConfig = `[${initializableColumns.reduce(
     (acc, currColumn: any) => {
-      return `${acc}{\nfieldName:'${currColumn.key}',
-       type:"${currColumn.config.defaultValue.type}",
-       value:${
-         typeof currColumn.config.defaultValue.value === "string"
-           ? `"${currColumn.config.defaultValue.value}"`
-           : currColumn.config.defaultValue.value
-       },
-       script:async ({row,ref,db,auth,utilFns}) =>{${
-         currColumn.config.defaultValue.script
-       }},
-      },\n`;
+      if (currColumn.config.defaultValue.type === "static") {
+        return `${acc}{\nfieldName:'${currColumn.key}',
+        type:"${currColumn.config.defaultValue.type}",
+        value:${
+          typeof currColumn.config.defaultValue.value === "string"
+            ? `"${currColumn.config.defaultValue.value}"`
+            : currColumn.config.defaultValue.value
+        },
+       },\n`;
+      } else if (currColumn.config.defaultValue.type === "dynamic") {
+        return `${acc}{\nfieldName:'${currColumn.key}',
+        type:"${currColumn.config.defaultValue.type}",
+        script:async ({row,ref,db,auth,utilFns}) =>{${currColumn.config.defaultValue.script}},
+       },\n`;
+      } else {
+        return `${acc}{\nfieldName:'${currColumn.key}',
+        type:"${currColumn.config.defaultValue.type}"
+       },\n`;
+      }
     },
     ""
   )}]`;
