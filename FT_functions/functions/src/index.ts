@@ -5,14 +5,14 @@ import {
   functionName,
   triggerPath,
   derivativesConfig,
- documentSelectConfig,
+  documentSelectConfig,
   sparksConfig,
-  initializeConfig
+  initializeConfig,
 } from "./functionConfig";
 
 import { getTriggerType, changedDocPath } from "./utils";
 import propagate from "./propagates";
-import initialize from './initialize'
+import initialize from "./initialize";
 export const FT = {
   [functionName]: functions.firestore
     .document(triggerPath)
@@ -25,7 +25,7 @@ export const FT = {
       console.log(
         `#${
           sparkPromises.length
-        } sparks will be evaluted on ${triggerType} of ${changedDocPath(
+        } sparks will be evaluated on ${triggerType} of ${changedDocPath(
           change
         )}`
       );
@@ -37,31 +37,26 @@ export const FT = {
       );
       promises.push(propagatePromise);
       try {
-        let docUpdates = {}
+        let docUpdates = {};
         if (triggerType === "update") {
           try {
-            docUpdates = await derivative(derivativesConfig)(
-              change
-            );
-          }
-          catch(err) {
+            docUpdates = await derivative(derivativesConfig)(change);
+          } catch (err) {
             console.log(`caught error: ${err}`);
           }
-         
-        }else if (triggerType === "create"){
+        } else if (triggerType === "create") {
           try {
-            const initialData = await initialize(initializeConfig)(change.after)
-            const derivativeData = await derivative(derivativesConfig)(
-              change
+            const initialData = await initialize(initializeConfig)(
+              change.after
             );
-            docUpdates = {...initialData,...derivativeData}
-          }
-          catch(err) {
+            const derivativeData = await derivative(derivativesConfig)(change);
+            docUpdates = { ...initialData, ...derivativeData };
+          } catch (err) {
             console.log(`caught error: ${err}`);
           }
         }
-        if(Object.keys(docUpdates).length !== 0){
-          promises.push(change.after.ref.update(docUpdates))
+        if (Object.keys(docUpdates).length !== 0) {
+          promises.push(change.after.ref.update(docUpdates));
         }
         const result = await Promise.allSettled(promises);
         console.log(JSON.stringify(result));
