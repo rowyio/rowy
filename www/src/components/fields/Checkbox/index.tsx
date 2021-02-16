@@ -26,6 +26,11 @@ export const config: IFieldConfig = {
   description: "Either checked or unchecked. Unchecked by default.",
   TableCell: withHeavyCell(BasicCell, TableCell),
   TableEditor: NullEditor,
+  csvImportParser: (value: string) => {
+    if (["YES", "TRUE", "1"].includes(value.toUpperCase())) return true;
+    else if (["NO", "FALSE", "0"].includes(value.toUpperCase())) return false;
+    else return null;
+  },
   SideDrawerField,
 };
 export default config;
