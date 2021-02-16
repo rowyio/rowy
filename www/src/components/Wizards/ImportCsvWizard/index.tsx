@@ -21,6 +21,7 @@ import { ColumnConfig } from "hooks/useFiretable/useTableConfig";
 import { useFiretableContext } from "contexts/FiretableContext";
 import { FieldType } from "constants/fields";
 import { useSnackContext } from "contexts/SnackContext";
+import { getFieldProp } from "components/fields";
 
 export type CsvConfig = {
   pairs: { csvKey: string; columnKey: string }[];
@@ -76,11 +77,13 @@ export default function ImportCsvWizard({
         const matchingColumn =
           tableState.columns[pair.columnKey] ??
           _find(config.newColumns, { key: pair.columnKey });
-        const value =
-          matchingColumn.type === FieldType.date ||
-          matchingColumn.type === FieldType.dateTime
-            ? parseJSON(row[pair.csvKey])
-            : row[pair.csvKey];
+        const csvFieldParser = getFieldProp(
+          "csvImportParser",
+          matchingColumn.type
+        );
+        const value = csvFieldParser
+          ? csvFieldParser(row[pair.csvKey])
+          : row[pair.csvKey];
         return { ...a, [pair.columnKey]: value };
       }, {});
       tableActions.row.add(newRow);
