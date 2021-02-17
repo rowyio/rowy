@@ -43,7 +43,7 @@ export const generateConfigFromTableSchema = async (schemaDocPath) => {
 
   const initializableColumns = Object.values(
     schemaData.columns
-  ).filter((col: any) => Boolean(col.config.defaultValue));
+  ).filter((col: any) => Boolean(col.config?.defaultValue));
   console.log(JSON.stringify({ initializableColumns }));
   const initializeConfig = `[${initializableColumns.reduce(
     (acc, currColumn: any) => {
