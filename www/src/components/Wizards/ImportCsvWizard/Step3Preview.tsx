@@ -1,7 +1,6 @@
 import React from "react";
 import { ScrollSync, ScrollSyncPane } from "react-scroll-sync";
 import _find from "lodash/find";
-import { parseJSON } from "date-fns";
 
 import { makeStyles, createStyles, Grid } from "@material-ui/core";
 
@@ -83,6 +82,7 @@ export default function Step4Preview({ csvData, config }: IStepProps) {
 
   const columns = config.pairs.map(({ csvKey, columnKey }) => ({
     csvKey,
+    columnKey,
     ...(tableState!.columns[columnKey] ??
       _find(config.newColumns, { key: columnKey }) ??
       {}),
@@ -105,17 +105,13 @@ export default function Step4Preview({ csvData, config }: IStepProps) {
 
           <ScrollSyncPane>
             <Grid container wrap="nowrap" className={classes.data}>
-              {columns.map(({ csvKey, name, type }) => (
+              {columns.map(({ csvKey, name, columnKey, type }) => (
                 <Grid item key={csvKey} className={classes.column}>
                   {csvData.rows.map((row, i) => (
                     <Cell
                       key={csvKey + i}
-                      field={csvKey}
-                      value={
-                        type === FieldType.date || type === FieldType.dateTime
-                          ? parseJSON(row[csvKey]).getTime()
-                          : row[csvKey]
-                      }
+                      field={columnKey}
+                      value={row[columnKey]}
                       type={type}
                       name={name}
                     />

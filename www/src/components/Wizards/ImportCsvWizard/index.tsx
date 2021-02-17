@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useMemo } from "react";
 import _mergeWith from "lodash/mergeWith";
 import _find from "lodash/find";
 import { parseJSON } from "date-fns";
@@ -21,6 +21,7 @@ import { ColumnConfig } from "hooks/useFiretable/useTableConfig";
 import { useFiretableContext } from "contexts/FiretableContext";
 import { FieldType } from "constants/fields";
 import { useSnackContext } from "contexts/SnackContext";
+import { getFieldProp } from "components/fields";
 
 export type CsvConfig = {
   pairs: { csvKey: string; columnKey: string }[];
@@ -67,24 +68,32 @@ export default function ImportCsvWizard({
     }));
   };
 
-  const handleFinish = () => {
-    if (!tableState || !tableActions || !csvData) return;
-    openSnackbar({ message: "Importing data…" });
-    // Add all new rows — synchronous
-    for (const row of csvData.rows) {
-      const newRow = config.pairs.reduce((a, pair) => {
+  const parsedRows: any[] = useMemo(() => {
+    if (!tableState || !tableActions || !csvData) return [];
+    return csvData.rows.map((row) =>
+      config.pairs.reduce((a, pair) => {
         const matchingColumn =
           tableState.columns[pair.columnKey] ??
           _find(config.newColumns, { key: pair.columnKey });
-        const value =
-          matchingColumn.type === FieldType.date ||
-          matchingColumn.type === FieldType.dateTime
-            ? parseJSON(row[pair.csvKey])
-            : row[pair.csvKey];
+        console.log({ type: matchingColumn.type });
+        const csvFieldParser = getFieldProp(
+          "csvImportParser",
+          matchingColumn.type
+        );
+        const value = csvFieldParser
+          ? csvFieldParser(row[pair.csvKey])
+          : row[pair.csvKey];
         return { ...a, [pair.columnKey]: value };
-      }, {});
-      tableActions.row.add(newRow);
-    }
+      }, {})
+    );
+  }, [csvData, tableState, tableActions, config]);
+
+  const handleFinish = () => {
+    if (!tableState || !tableActions || !parsedRows) return;
+    openSnackbar({ message: "Importing data…" });
+    // Add all new rows — synchronous
+    parsedRows?.forEach((newRow) => tableActions.row.add(newRow));
+
     // Add any new columns to the end
     for (const col of config.newColumns) {
       tableActions.column.add(col.name, col.type, col);
@@ -172,7 +181,7 @@ export default function ImportCsvWizard({
               "Preview your data with your configured columns. You can change column types by clicking “Edit Type” from the column menu at any time.",
             content: (
               <Step3Preview
-                csvData={csvData}
+                csvData={{ ...csvData, rows: parsedRows }}
                 config={config}
                 setConfig={setConfig}
                 updateConfig={updateConfig}
