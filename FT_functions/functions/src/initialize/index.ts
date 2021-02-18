@@ -5,7 +5,7 @@ const initializedDoc = (
   columns: { fieldName: string; type: string; value?: any; script?: any }[]
 ) => async (snapshot: functions.firestore.DocumentSnapshot) =>
   columns.reduce(async (acc, column) => {
-    if (snapshot.get(column.fieldName) === undefined) return { ...(await acc) }; // prevents overwriting already initialised values
+    if (snapshot.get(column.fieldName) !== undefined) return { ...(await acc) }; // prevents overwriting already initialised values
     if (column.type === "static") {
       return {
         ...(await acc),
