@@ -259,23 +259,23 @@ export default function DraggableHeaderRenderer<R>({
         </Grid>
       )}
 
-      {userClaims?.roles?.includes("ADMIN") ||
+      {(userClaims?.roles?.includes("ADMIN") ||
         (userClaims?.roles?.includes("OPS") &&
           [FieldType.multiSelect, FieldType.singleSelect].includes(
             (column as any).type
-          ) && (
-            <Grid item>
-              <IconButton
-                size="small"
-                className={classes.dropdownButton}
-                aria-label={`Show ${column.name} column dropdown`}
-                color="inherit"
-                onClick={handleClick}
-              >
-                <DropdownIcon />
-              </IconButton>
-            </Grid>
-          ))}
+          ))) && (
+        <Grid item>
+          <IconButton
+            size="small"
+            className={classes.dropdownButton}
+            aria-label={`Show ${column.name} column dropdown`}
+            color="inherit"
+            onClick={handleClick}
+          >
+            <DropdownIcon />
+          </IconButton>
+        </Grid>
+      )}
     </Grid>
   );
   //   return (
