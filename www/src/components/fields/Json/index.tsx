@@ -25,6 +25,13 @@ export const config: IFieldConfig = {
   description: "JSON object editable with a visual JSON editor.",
   TableCell: withBasicCell(BasicCell),
   TableEditor: withSideDrawerEditor(BasicCell),
+  csvImportParser: (value) => {
+    try {
+      return JSON.parse(value);
+    } catch (e) {
+      return null;
+    }
+  },
   SideDrawerField,
   settings: Settings,
 };

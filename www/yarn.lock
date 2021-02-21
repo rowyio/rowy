@@ -129,6 +129,11 @@
   resolved "https://registry.yarnpkg.com/@antlerengineering/multiselect/-/multiselect-0.8.0.tgz#3faec82c8ef3055c01f2c7b37a874b9d079381e8"
   integrity sha512-w0Sg23T9Ob2xuAWT2gGc9rtElCMjZUUbB2Jx1zs1Gef81yN7ZM0RB0EwG+rMd/L1i+NI2Kr7MtF2P26llWVDyg==
 
+"@antlerengineering/multiselect@^0.8.2":
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/@antlerengineering/multiselect/-/multiselect-0.8.2.tgz#160294f75a5772aa2ceecdff3dd837520f5b90c8"
+  integrity sha512-u/J59NkTBMU8voB3RuvVo6OCZLg4mG+gOQQ1vT/hrCw66oPE48+nDmPQEZDhrGwXWSrsqaYNNbt8zjF6sdkYMQ==
+
 "@apidevtools/json-schema-ref-parser@^9.0.3":
   version "9.0.6"
   resolved "https://registry.yarnpkg.com/@apidevtools/json-schema-ref-parser/-/json-schema-ref-parser-9.0.6.tgz#5d9000a3ac1fd25404da886da6b266adcd99cf1c"
