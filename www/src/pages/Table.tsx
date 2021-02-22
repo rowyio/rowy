@@ -16,7 +16,7 @@ import { useAppContext } from "contexts/AppContext";
 import { FireTableFilter } from "hooks/useFiretable";
 import useRouter from "hooks/useRouter";
 import { DocActions } from "hooks/useDoc";
-import ActionParamsProvider from "components/Table/formatters/Action/FormDialog/Provider";
+import ActionParamsProvider from "components/fields/Action/FormDialog/Provider";
 
 export default function TablePage() {
   const router = useRouter();

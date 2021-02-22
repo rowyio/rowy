@@ -10,7 +10,8 @@ import {
 } from "@material-ui/core";
 import { fade } from "@material-ui/core/styles";
 
-import { FieldType, getFieldIcon } from "constants/fields";
+import { FieldType } from "constants/fields";
+import { getFieldProp } from "components/fields";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -88,7 +89,7 @@ export default function Column({
       {...props}
       className={clsx(classes.root, active && classes.active, props.className)}
     >
-      {type && <Grid item>{getFieldIcon(type)}</Grid>}
+      {type && <Grid item>{getFieldProp("icon", type)}</Grid>}
 
       <Grid item xs className={classes.columnNameContainer}>
         <Typography

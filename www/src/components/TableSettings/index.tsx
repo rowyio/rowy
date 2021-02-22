@@ -5,7 +5,6 @@ import _find from "lodash/find";
 import {
   makeStyles,
   createStyles,
-  Grid,
   Button,
   DialogContentText,
 } from "@material-ui/core";
@@ -183,35 +182,39 @@ export default function TableSettingsDialog({
         ...data,
       }}
       onSubmit={handleSubmit}
-      customActions={
-        <Grid
-          container
-          spacing={2}
-          justify="center"
-          className={classes.buttonGrid}
-        >
-          <Grid item>
-            <Button
-              size="large"
-              variant="outlined"
-              onClick={handleClose}
-              className={classes.button}
-            >
-              Cancel
-            </Button>
-          </Grid>
-          <Grid item>
-            <Button
-              size="large"
-              variant="contained"
-              type="submit"
-              className={classes.button}
-            >
-              {mode === TableSettingsDialogModes.create ? "Create" : "Update"}
-            </Button>
-          </Grid>
-        </Grid>
-      }
+      SubmitButtonProps={{
+        children:
+          mode === TableSettingsDialogModes.create ? "Create" : "Update",
+      }}
+      // customActions={
+      //   <Grid
+      //     container
+      //     spacing={2}
+      //     justify="center"
+      //     // className={classes.buttonGrid}
+      //   >
+      //     <Grid item>
+      //       <Button
+      //         size="large"
+      //         variant="outlined"
+      //         onClick={handleClose}
+      //         // className={classes.button}
+      //       >
+      //         Cancel
+      //       </Button>
+      //     </Grid>
+      //     <Grid item>
+      //       <Button
+      //         size="large"
+      //         variant="contained"
+      //         type="submit"
+      //         // className={classes.button}
+      //       >
+      //         {mode === TableSettingsDialogModes.create ? "Create" : "Update"}
+      //       </Button>
+      //     </Grid>
+      //   </Grid>
+      // }
       formFooter={
         mode === TableSettingsDialogModes.update ? (
           <div className={classes.formFooter}>

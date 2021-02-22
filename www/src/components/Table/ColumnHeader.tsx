@@ -17,7 +17,8 @@ import {
 import SortDescIcon from "@material-ui/icons/ArrowDownward";
 import DropdownIcon from "@material-ui/icons/ArrowDropDownCircle";
 
-import { getFieldIcon, FieldType } from "constants/fields";
+import { FieldType } from "constants/fields";
+import { getFieldProp } from "components/fields";
 import { useFiretableContext } from "contexts/FiretableContext";
 import { FiretableOrderBy } from "hooks/useFiretable";
 
@@ -203,7 +204,7 @@ export default function DraggableHeaderRenderer<R>({
             navigator.clipboard.writeText(column.key as string);
           }}
         >
-          {getFieldIcon((column as any).type)}
+          {getFieldProp("icon", (column as any).type)}
         </Grid>
       </Tooltip>
 
@@ -258,7 +259,11 @@ export default function DraggableHeaderRenderer<R>({
         </Grid>
       )}
 
-      {userClaims?.roles?.includes("ADMIN") && (
+      {(userClaims?.roles?.includes("ADMIN") ||
+        (userClaims?.roles?.includes("OPS") &&
+          [FieldType.multiSelect, FieldType.singleSelect].includes(
+            (column as any).type
+          ))) && (
         <Grid item>
           <IconButton
             size="small"

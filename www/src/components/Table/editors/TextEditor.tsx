@@ -35,10 +35,11 @@ const useStyles = makeStyles((theme) =>
 export default function TextEditor({ row, column }: EditorProps<any>) {
   const classes = useStyles();
 
+  const type = (column as any).config?.renderFieldType ?? (column as any).type;
+
   const cellValue = getCellValue(row, column.key);
   const defaultValue =
-    (column as any).type === FieldType.percentage &&
-    typeof cellValue === "number"
+    type === FieldType.percentage && typeof cellValue === "number"
       ? cellValue * 100
       : cellValue;
 
@@ -48,10 +49,7 @@ export default function TextEditor({ row, column }: EditorProps<any>) {
     return () => {
       const newValue = inputRef.current?.value;
       if (newValue !== undefined) {
-        if (
-          (column as any).type === FieldType.number ||
-          (column as any).type === FieldType.percentage
-        ) {
+        if (type === FieldType.number || type === FieldType.percentage) {
           row.ref.update({ [column.key]: Number(newValue) });
         } else {
           row.ref.update({ [column.key]: newValue });
@@ -61,7 +59,7 @@ export default function TextEditor({ row, column }: EditorProps<any>) {
   }, []);
 
   let inputType = "text";
-  switch ((column as any).type) {
+  switch (type) {
     case FieldType.email:
       inputType = "email";
       break;
