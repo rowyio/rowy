@@ -9,7 +9,7 @@ import UndoIcon from "@material-ui/icons/Undo";
 import { useFiretableContext } from "contexts/FiretableContext";
 import { SnackContext } from "contexts/SnackContext";
 import { cloudFunction } from "firebase/callables";
-import { sanitiseRowData, formatPath } from "utils/fns";
+import { formatPath } from "utils/fns";
 import { useConfirmation } from "components/ConfirmationDialog";
 import { useActionParams } from "./FormDialog/Context";
 
@@ -35,6 +35,7 @@ export interface IActionFabProps extends Partial<FabProps> {
   column: any;
   onSubmit: (value: any) => void;
   value: any;
+  disabled: boolean;
 }
 
 export default function ActionFab({
@@ -42,6 +43,7 @@ export default function ActionFab({
   column,
   onSubmit,
   value,
+  disabled,
   ...props
 }: IActionFabProps) {
   const { requestConfirmation } = useConfirmation();
@@ -58,7 +60,6 @@ export default function ActionFab({
     ? "redo"
     : "";
   const [isRunning, setIsRunning] = useState(false);
-  const disabled = column.editable === false;
   const snack = useContext(SnackContext);
 
   const callableName: string =
