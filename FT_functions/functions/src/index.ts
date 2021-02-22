@@ -5,13 +5,14 @@ import {
   functionName,
   triggerPath,
   derivativesConfig,
-  // documentSelectConfig,
+  documentSelectConfig,
   sparksConfig,
+  initializeConfig,
 } from "./functionConfig";
 
-import { getTriggerType } from "./utils";
-//import propagate from './propagates'
-
+import { getTriggerType, changedDocPath } from "./utils";
+import propagate from "./propagates";
+import initialize from "./initialize";
 export const FT = {
   [functionName]: functions.firestore
     .document(triggerPath)
@@ -22,22 +23,43 @@ export const FT = {
         .filter((sparkConfig) => sparkConfig.triggers.includes(triggerType))
         .map((sparkConfig) => spark(sparkConfig)(change, context));
       console.log(
-        `#${sparkPromises.length} sparks will be evaluted on ${triggerType}`
+        `#${
+          sparkPromises.length
+        } sparks will be evaluated on ${triggerType} of ${changedDocPath(
+          change
+        )}`
       );
       promises = sparkPromises;
-      if (triggerType !== "delete") {
-        const derivativePromise = derivative(derivativesConfig)(
-          change,
-          context
-        );
-        promises.push(derivativePromise);
-      }
-      // const propagatePromise = propagate(change,documentSelectConfig,triggerType);
-      // promises.push(propagatePromise);
+      const propagatePromise = propagate(
+        change,
+        documentSelectConfig,
+        triggerType
+      );
+      promises.push(propagatePromise);
       try {
+        let docUpdates = {};
+        if (triggerType === "update") {
+          try {
+            docUpdates = await derivative(derivativesConfig)(change);
+          } catch (err) {
+            console.log(`caught error: ${err}`);
+          }
+        } else if (triggerType === "create") {
+          try {
+            const initialData = await initialize(initializeConfig)(
+              change.after
+            );
+            const derivativeData = await derivative(derivativesConfig)(change);
+            docUpdates = { ...initialData, ...derivativeData };
+          } catch (err) {
+            console.log(`caught error: ${err}`);
+          }
+        }
+        if (Object.keys(docUpdates).length !== 0) {
+          promises.push(change.after.ref.update(docUpdates));
+        }
         const result = await Promise.allSettled(promises);
         console.log(JSON.stringify(result));
-        //const pp = await propagate(change,documentSelectConfig,triggerType);
       } catch (err) {
         console.log(`caught error: ${err}`);
       }

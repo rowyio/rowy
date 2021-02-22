@@ -29,7 +29,9 @@ const docSync = async (data, sparkContext) => {
       await db.doc(targetPath).delete();
       break;
     case "update":
-      if (significantDifference(fieldsToSync, change)) {
+      if (
+        significantDifference([...fieldsToSync, "_ft_forcedUpdateAt"], change)
+      ) {
         try {
           await db.doc(targetPath).update(record);
         } catch (error) {

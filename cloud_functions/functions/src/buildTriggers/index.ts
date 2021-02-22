@@ -13,13 +13,11 @@ export const triggerCloudBuild = functions.https.onCall(
         path: string;
         parentId: string;
       };
-      row: any;
       action: "run" | "redo" | "undo";
     },
     context: functions.https.CallableContext
   ) => {
     const {
-      row,
       ref, // action
     } = data;
 
@@ -31,8 +29,10 @@ export const triggerCloudBuild = functions.https.onCall(
         message: "you don't have permission to trigger a build",
       };
     }
+    const doc = await db.doc(ref.path).get();
+    const row = doc.data();
+    if (!row) throw Error("No row data");
     const { triggerId, branch, projectId, groupName, functionConfig } = row;
-
     // Starts a build against the branch provided.
     const [resp] = await cb.runBuildTrigger({
       projectId, //project hosting cloud build

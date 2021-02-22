@@ -3,7 +3,7 @@
 */
 
 export const dependencies = {
-  "@slack/web-api": "^5.10.0",
+  "@slack/web-api": "^6.0.0",
 };
 
 const initSlack = async () => {

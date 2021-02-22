@@ -12,19 +12,19 @@
     "logs": "firebase functions:log"
   },
   "engines": {
-    "node": "10"
+    "node": "14"
   },
   "main": "lib/index.js",
   "dependencies": {
-    "@google-cloud/cloudbuild": "^1.5.0",
-    "@google-cloud/firestore": "^3.7.5",
+    "@google-cloud/cloudbuild": "^2.0.6",
+    "@google-cloud/firestore": "^4.9.1",
     "@google-cloud/pubsub": "^2.5.0",
     "@google-cloud/storage": "^5.1.2",
-    "@sendgrid/mail": "^7.2.6",
-    "@slack/web-api": "^5.11.0",
+    "@sendgrid/mail": "^7.4.2",
+    "@slack/web-api": "^6.0.0",
     "algoliasearch": "^4.6.0",
-    "firebase-admin": "^8.9.2",
-    "firebase-functions": "^3.3.0",
+    "firebase-admin": "^9.4.2",
+    "firebase-functions": "^3.13.1",
     "imagemin": "^7.0.1",
     "imagemin-mozjpeg": "^9.0.0",
     "imagemin-pngquant": "^9.0.0",
@@ -39,7 +39,7 @@
     "@types/json2csv": "^5.0.1",
     "@types/lodash": "^4.14.158",
     "@types/sharp": "^0.25.1",
-    "firebase-tools": "^8.7.0",
+    "firebase-tools": "^9.2.2",
     "husky": "^4.2.5",
     "prettier": "^2.1.1",
     "pretty-quick": "^3.0.0",
