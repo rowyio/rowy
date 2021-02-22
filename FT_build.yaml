@@ -1,19 +1,19 @@
 steps:
-  - name: node:12.20.0
+  - name: node:14.9.0
     entrypoint: yarn
     args: ["install"]
     dir: "FT_functions/compiler"
-  - name: node:12.20.0
+  - name: node:14.9.0
     entrypoint: yarn
     args:
       - "compile"
       - "${_SCHEMA_PATH}"
     dir: "FT_functions/compiler"
-  - name: node:12.20.0
+  - name: node:14.9.0
     entrypoint: yarn
     args: ["install"]
     dir: "FT_functions/functions"
-  - name: node:12.20.0
+  - name: node:14.9.0
     entrypoint: yarn
     args:
       - "deployFT"

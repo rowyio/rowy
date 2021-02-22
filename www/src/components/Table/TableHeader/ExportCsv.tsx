@@ -5,6 +5,7 @@ import _camelCase from "lodash/camelCase";
 import _get from "lodash/get";
 import _find from "lodash/find";
 import _sortBy from "lodash/sortBy";
+import { isString } from "lodash";
 import MultiSelect from "@antlerengineering/multiselect";
 
 import {
@@ -189,7 +190,10 @@ export default function ExportCsv() {
             onChange={handleChange}
             options={(typeof tableState!.columns === "object" &&
             !Array.isArray(tableState!.columns)
-              ? _sortBy(Object.values(tableState!.columns), ["index"])
+              ? _sortBy(Object.values(tableState!.columns), ["index"]).filter(
+                  (column: any) =>
+                    isString(column?.name) && isString(column?.key)
+                )
               : []
             ).map((column: any) => ({ label: column.name, value: column.key }))}
             label="Columns to Export"

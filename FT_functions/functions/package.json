@@ -10,17 +10,17 @@
     "logs": "firebase functions:log"
   },
   "engines": {
-    "node": "12"
+    "node": "14"
   },
   "main": "lib/index.js",
   "dependencies": {
     "@google-cloud/secret-manager": "^3.2.3",
-    "firebase-admin": "^9.2.0",
-    "firebase-functions": "^3.11.0"
+    "firebase-admin": "^9.4.2",
+    "firebase-functions": "^3.13.1"
   },
   "devDependencies": {
     "@types/node": "^14.14.11",
-    "firebase-tools": "^8.7.0",
+    "firebase-tools": "^9.2.2",
     "husky": "^4.2.5",
     "prettier": "^2.1.1",
     "pretty-quick": "^3.0.0",
