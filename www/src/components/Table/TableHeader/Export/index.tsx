@@ -19,7 +19,7 @@ import {
 import ExportIcon from "assets/icons/Export";
 
 import ExportDetails from "./Export";
-
+import DownloadDetails from './Download'
 import { SnackContext } from "contexts/SnackContext";
 import { useFiretableContext } from "contexts/FiretableContext";
 import { db } from "../../../../firebase";
@@ -109,7 +109,9 @@ export default function Export() {
         {mode === "export" ? (
           <ExportDetails query={query} closeModal={handleClose} />
         ) : (
-          <></>
+            
+          <DownloadDetails query={query} closeModal={handleClose} />
+
         )}
       </Dialog>
     </>
