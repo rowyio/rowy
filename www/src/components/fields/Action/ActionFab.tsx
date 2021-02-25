@@ -82,14 +82,14 @@ export default function ActionFab({
         setIsRunning(false);
         snack.open({
           message: JSON.stringify(message),
-          severity: success ? "success" : "error",
+          variant: success ? "success" : "error",
         });
         if (cellValue && cellValue.status) onSubmit(cellValue);
       },
       (error) => {
         console.error("ERROR", callableName, error);
         setIsRunning(false);
-        snack.open({ message: JSON.stringify(error), severity: "error" });
+        snack.open({ message: JSON.stringify(error), variant: "error" });
       }
     );
   };

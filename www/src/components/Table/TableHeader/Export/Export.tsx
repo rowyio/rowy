@@ -120,7 +120,7 @@ export default function Export({ query, closeModal }) {
   const handleExport = async () => {
     handleClose();
     snackContext.open({
-      severity: "info",
+      variant: "info",
       message: "Preparing file. Download will start shortly",
       duration: 5000,
     });

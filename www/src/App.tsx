@@ -19,6 +19,7 @@ import routes from "constants/routes";
 
 import AuthView from "pages/Auth/GoogleAuth";
 import SignOutView from "pages/Auth/SignOut";
+import TestView from "pages/Test";
 
 const HomePage = lazy(
   () => import("./pages/Home" /* webpackChunkName: "HomePage" */)
@@ -69,7 +70,7 @@ export default function App() {
                       path={routes.signOut}
                       render={() => <SignOutView />}
                     />
-
+                    <Route exact path={"/test"} render={() => <TestView />} />
                     <PrivateRoute
                       exact
                       path={[

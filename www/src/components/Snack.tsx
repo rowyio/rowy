@@ -2,7 +2,9 @@ import React, { useContext, useEffect } from "react";
 import Snackbar from "@material-ui/core/Snackbar";
 import { SnackContext } from "contexts/SnackContext";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
-
+import Grid from "@material-ui/core/Grid";
+import Card from "@material-ui/core/Card";
+import CircularProgress from "@material-ui/core/CircularProgress";
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -16,12 +18,13 @@ export default function Snack() {
     message,
     duration,
     action,
-    severity,
+    variant,
+    progress,
   } = snackContext;
   const { vertical, horizontal } = position;
 
   useEffect(() => {
-    if (isOpen) setTimeout(close, 10000);
+    if (isOpen && variant !== "progress") setTimeout(close, duration ?? 1000);
   }, [isOpen]);
   return (
     <Snackbar
@@ -29,9 +32,30 @@ export default function Snack() {
       key={`${vertical},${horizontal}`}
       open={isOpen}
     >
-      <Alert onClose={close} action={action} severity={severity}>
-        {message}
-      </Alert>
+      {variant === "progress" ? (
+        <Card>
+          <Grid container direction="row" justify="space-between">
+            {message}
+            {progress.value
+              ? `${progress.value}${
+                  progress.target ? `/${progress.target}` : ""
+                }`
+              : ""}
+            <CircularProgress
+              variant={progress.value ? "determinate" : "indeterminate"}
+              value={
+                progress.target
+                  ? (progress.value / progress.target) * 100
+                  : progress.value
+              }
+            />
+          </Grid>
+        </Card>
+      ) : (
+        <Alert onClose={close} action={action} severity={variant}>
+          {message}
+        </Alert>
+      )}
     </Snackbar>
   );
 }

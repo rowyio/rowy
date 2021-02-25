@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { auth } from "../firebase";
 import { SnackbarOrigin } from "@material-ui/core/Snackbar";
-import { SnackContext } from "contexts/SnackContext";
+import { SnackContext, variantType } from "contexts/SnackContext";
 
 interface ISnackProviderProps {
   children: React.ReactNode;
@@ -11,10 +11,9 @@ export const SnackProvider: React.FC<ISnackProviderProps> = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [duration, setDuration] = useState(3000);
+  const [progress, setProgress] = useState({ value: 0, target: 0 });
   const [action, setAction] = useState(<div />);
-  const [severity, setSeverity] = useState<
-    "error" | "success" | "info" | "warning" | undefined
-  >("info");
+  const [variant, setvariant] = useState<variantType>("info");
   const [position, setPosition] = useState<SnackbarOrigin>({
     vertical: "bottom",
     horizontal: "left",
@@ -23,7 +22,7 @@ export const SnackProvider: React.FC<ISnackProviderProps> = ({ children }) => {
     setIsOpen(false);
     setMessage("");
     setDuration(0);
-    setSeverity(undefined);
+    setvariant(undefined);
     setAction(<div />);
   };
   const open = (props: {
@@ -31,12 +30,12 @@ export const SnackProvider: React.FC<ISnackProviderProps> = ({ children }) => {
     duration?: number;
     position?: SnackbarOrigin;
     action?: JSX.Element;
-    severity?: "error" | "success" | "info" | "warning" | undefined;
+    variant?: variantType;
   }) => {
-    const { message, duration, position, action, severity } = props;
+    const { message, duration, position, action, variant } = props;
     setMessage(message);
-    if (severity) {
-      setSeverity(severity);
+    if (variant) {
+      setvariant(variant);
     }
     if (action) {
       setAction(action);
@@ -61,10 +60,12 @@ export const SnackProvider: React.FC<ISnackProviderProps> = ({ children }) => {
         message,
         duration,
         position,
+        progress,
+        setProgress,
         close,
         open,
         action,
-        severity: severity,
+        variant: variant,
       }}
     >
       {children}
