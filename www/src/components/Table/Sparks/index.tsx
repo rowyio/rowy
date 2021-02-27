@@ -18,7 +18,6 @@ import { useFiretableContext } from "contexts/FiretableContext";
 import Grid from "@material-ui/core/Grid";
 import Form from "@antlerengineering/form-builder";
 import { newSparkForm } from "./forms";
-
 const NewSpark = ({ handleAddSpark }) => {
   const { tableState } = useFiretableContext();
   const columns = Object.keys(tableState?.columns as any);

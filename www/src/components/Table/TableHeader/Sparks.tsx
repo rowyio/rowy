@@ -15,10 +15,10 @@ import {
   DialogTitle,
   DialogContentText,
   Dialog,
+  Badge,
+  CircularProgress,
 } from "@material-ui/core";
-
 import SparkIcon from "@material-ui/icons/OfflineBolt";
-
 import { SnackContext } from "contexts/SnackContext";
 import { useFiretableContext } from "contexts/FiretableContext";
 import CodeEditor from "../editors/CodeEditor";
@@ -29,13 +29,13 @@ const useStyles = makeStyles(() =>
       padding: 0,
       minWidth: 32,
     },
+    progress: { position: "absolute", marginLeft: -2, marginTop: -2.5 },
   })
 );
 
 export default function SparksEditor() {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-
   const { tableState, tableActions } = useFiretableContext();
   const snackContext = useContext(SnackContext);
   const { requestConfirmation } = useConfirmation();
@@ -71,19 +71,31 @@ export default function SparksEditor() {
       },
     });
   };
-
+  const cloudBuild = tableState?.config.tableConfig.doc.cloudBuild;
   return (
     <>
       <Tooltip title="Edit sparks">
-        <Button
-          onClick={() => setOpen(true)}
-          variant="contained"
-          color="secondary"
-          aria-label="Sparks"
-          className={classes.button}
-        >
-          <SparkIcon />
-        </Button>
+        <div>
+          {["QUEUED", "WORKING"].includes(cloudBuild?.status) && (
+            <CircularProgress className={classes.progress} size={37} />
+          )}
+
+          <Button
+            onClick={() => setOpen(true)}
+            variant="contained"
+            color="secondary"
+            aria-label="Sparks"
+            className={classes.button}
+          >
+            {"ERROR" === cloudBuild?.status ? (
+              <Badge color={"error"}>
+                <SparkIcon />
+              </Badge>
+            ) : (
+              <SparkIcon />
+            )}
+          </Button>
+        </div>
       </Tooltip>
 
       <Dialog
