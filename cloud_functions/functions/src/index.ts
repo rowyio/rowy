@@ -22,11 +22,11 @@ export { FT_compressedThumbnail } from "./compressedThumbnail";
 
 export { slackBotMessageOnCreate } from "./slackOnTrigger/trigger";
 
-//migrated to FT_functions
-// export { FT_derivatives } from "./derivatives";
-// export { FT_algolia } from "./algolia";
-// export { FT_email } from "./emailOnTrigger";
-// export { FT_slack } from "./slackOnTrigger";
-// export { FT_sync } from "./collectionSync";
-// export { FT_spark } from "./sparks";
-// export { FT_history } from "./history";
+//deprecated, moved to FT_functions folder and used within sparks table functions
+export { FT_derivatives } from "./derivatives";
+export { FT_algolia } from "./algolia";
+export { FT_email } from "./emailOnTrigger";
+export { FT_slack } from "./slackOnTrigger";
+export { FT_sync } from "./collectionSync";
+export { FT_spark } from "./sparks";
+export { FT_history } from "./history";
