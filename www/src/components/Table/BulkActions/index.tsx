@@ -171,7 +171,7 @@ export default function BulkActions({ selectedRows, columns, clearSelection }) {
           // setIsRunning(false);
           snack.open({
             message: JSON.stringify(message),
-            severity: success ? "success" : "error",
+            variant: success ? "success" : "error",
           });
           if (cellValue && cellValue.status) {
             return ref.update({ [actionColumn.key]: cellValue });
@@ -180,7 +180,7 @@ export default function BulkActions({ selectedRows, columns, clearSelection }) {
         (error) => {
           console.error("ERROR", callableName, error);
           //setIsRunning(false);
-          snack.open({ message: JSON.stringify(error), severity: "error" });
+          snack.open({ message: JSON.stringify(error), variant: "error" });
         }
       );
     });

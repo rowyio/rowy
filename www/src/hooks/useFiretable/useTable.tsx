@@ -2,7 +2,7 @@ import { db } from "../../firebase";
 
 import Button from "@material-ui/core/Button";
 import React, { useEffect, useReducer, useContext } from "react";
-import equals from "ramda/es/equals";
+import _isEqual from "lodash/isEqual";
 import firebase from "firebase/app";
 import { FireTableFilter, FiretableOrderBy } from ".";
 import { SnackContext } from "contexts/SnackContext";
@@ -106,7 +106,7 @@ const useTable = (initialOverrides: any) => {
             error.message.split("indexes?create_composite=")[1];
 
           snack.open({
-            severity: "error",
+            variant: "error",
             message: "needs a new index",
             duration: 10000,
             action: (
@@ -132,7 +132,7 @@ const useTable = (initialOverrides: any) => {
               () => {
                 snack.open({
                   position: { horizontal: "center", vertical: "top" },
-                  severity: "error",
+                  variant: "error",
                   message: "You don't have permissions to see the results.",
                   duration: 10000,
                 });
@@ -141,7 +141,7 @@ const useTable = (initialOverrides: any) => {
           } else
             snack.open({
               position: { horizontal: "center", vertical: "top" },
-              severity: "error",
+              variant: "error",
               message: "You don't have permissions to see the results.",
               duration: 10000,
             });
@@ -165,7 +165,7 @@ const useTable = (initialOverrides: any) => {
 
     if (
       (prevPath !== path ||
-        !equals(prevFilters, filters) ||
+        !_isEqual(prevFilters, filters) ||
         prevLimit !== limit ||
         prevOrderBy !== orderBy) &&
       path
@@ -201,7 +201,7 @@ const useTable = (initialOverrides: any) => {
       console.log(error);
       if (error.code === "permission-denied") {
         snack.open({
-          severity: "error",
+          variant: "error",
           message: "You don't have permissions to delete row",
           duration: 3000,
           position: { vertical: "top", horizontal: "center" },
@@ -238,8 +238,8 @@ const useTable = (initialOverrides: any) => {
 
     const docData = {
       ...valuesFromFilter,
-      createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp(),
+      _ft_createdAt: serverTimestamp(),
+      _ft_updatedAt: serverTimestamp(),
       ...data,
     };
     try {
@@ -253,7 +253,7 @@ const useTable = (initialOverrides: any) => {
     } catch (error) {
       if (error.code === "permission-denied") {
         snack.open({
-          severity: "error",
+          variant: "error",
           message: "You don't have permissions to add a new row",
           duration: 3000,
           position: { vertical: "top", horizontal: "center" },

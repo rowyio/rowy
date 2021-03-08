@@ -16,12 +16,13 @@ import AddRowIcon from "assets/icons/AddRow";
 
 import Filters from "../Filters";
 import ImportCSV from "./ImportCsv";
-import ExportCSV from "./ExportCsv";
+import Export from "./Export";
 import TableSettings from "./TableSettings";
-
-import { useFiretableContext } from "contexts/FiretableContext";
-import { FieldType } from "constants/fields";
 import HiddenFields from "../HiddenFields";
+import Sparks from "./Sparks";
+
+import { useAppContext } from "contexts/AppContext";
+import { useFiretableContext, firetableUser } from "contexts/FiretableContext";
 
 export const TABLE_HEADER_HEIGHT = 56;
 
@@ -79,14 +80,12 @@ export default function TableHeader({
   updateConfig,
 }: ITableHeaderProps) {
   const classes = useStyles();
-  const { tableActions, tableState } = useFiretableContext();
+
+  const { currentUser } = useAppContext();
+  const { tableActions, tableState, userClaims } = useFiretableContext();
 
   if (!tableState || !tableState.columns) return null;
   const { columns } = tableState;
-
-  const needsMigration = Array.isArray(columns) && columns.length !== 0;
-  const tempColumns = needsMigration ? columns : Object.values(columns);
-
   return (
     <Grid
       container
@@ -99,14 +98,24 @@ export default function TableHeader({
         <Grid item>
           <Button
             onClick={() => {
-              const initialVal = tempColumns.reduce((acc, currCol) => {
-                if (currCol.type === FieldType.checkbox) {
-                  return { ...acc, [currCol.key]: false };
-                } else {
-                  return acc;
-                }
-              }, {});
-              tableActions?.row.add(initialVal);
+              const initialVal = Object.values(columns).reduce(
+                (acc, column) => {
+                  if (column.config?.defaultValue?.type === "static") {
+                    return {
+                      ...acc,
+                      [column.key]: column.config.defaultValue.value,
+                    };
+                  } else if (column.config?.defaultValue?.type === "null") {
+                    return { ...acc, [column.key]: null };
+                  } else return acc;
+                },
+                {}
+              );
+              tableActions?.row.add({
+                ...initialVal,
+                _ft_updatedBy: firetableUser(currentUser),
+                _ft_createdBy: firetableUser(currentUser),
+              });
             }}
             variant="contained"
             color="primary"
@@ -175,8 +184,14 @@ export default function TableHeader({
       )}
 
       <Grid item>
-        <ExportCSV />
+        <Export />
       </Grid>
+
+      {userClaims?.roles?.includes("ADMIN") && (
+        <Grid item>
+          <Sparks />
+        </Grid>
+      )}
 
       <Grid item>
         <TableSettings />

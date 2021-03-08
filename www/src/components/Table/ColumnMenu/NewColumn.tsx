@@ -1,49 +1,24 @@
 import React, { useState, useEffect } from "react";
 import _camel from "lodash/camelCase";
+import { IMenuModalProps } from ".";
 
-import {
-  makeStyles,
-  createStyles,
-  Dialog,
-  DialogTitle,
-  IconButton,
-  DialogContent,
-  Grid,
-  Button,
-  TextField,
-  DialogActions,
-} from "@material-ui/core";
-import CloseIcon from "@material-ui/icons/Close";
+import { makeStyles, createStyles, TextField } from "@material-ui/core";
 
+import Modal from "components/Modal";
 import { FieldType } from "constants/fields";
 import FieldsDropdown from "./FieldsDropdown";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
-    root: { userSelect: "none" },
-
-    closeButton: {
-      position: "absolute",
-      top: theme.spacing(0.5),
-      right: theme.spacing(0.5),
-    },
-
-    content: { paddingBottom: theme.spacing(1.5) },
-
     helperText: {
       ...theme.typography.body2,
       marginTop: theme.spacing(1),
     },
-
-    fieldKey: { fontFamily: theme.typography.fontFamilyMono },
   })
 );
 
-export interface IFormDialogProps {
-  open: boolean;
-  data: any;
-  handleClose: () => void;
-  handleSave: (fieldKey: string, data: any) => void;
+export interface IFormDialogProps extends IMenuModalProps {
+  data: Record<string, any>;
 }
 
 export default function FormDialog({
@@ -69,24 +44,17 @@ export default function FormDialog({
     }
   }, [type]);
 
+  if (!open) return null;
+
   return (
-    <Dialog
-      open={open}
+    <Modal
       onClose={handleClose}
-      aria-labelledby="add-new-column"
+      title="Add New Column"
       fullWidth
       maxWidth="xs"
-      className={classes.root}
-    >
-      <DialogTitle id="add-new-column">Add New Column</DialogTitle>
-
-      <IconButton onClick={handleClose} className={classes.closeButton}>
-        <CloseIcon />
-      </IconButton>
-
-      <DialogContent className={classes.content}>
-        <Grid container spacing={3} direction="column" wrap="nowrap">
-          <Grid item>
+      children={
+        <>
+          <section>
             <TextField
               value={columnLabel}
               autoFocus
@@ -99,9 +67,9 @@ export default function FormDialog({
               helperText="Set the user-facing name for this column."
               FormHelperTextProps={{ classes: { root: classes.helperText } }}
             />
-          </Grid>
+          </section>
 
-          <Grid item>
+          <section>
             <TextField
               value={fieldKey}
               variant="filled"
@@ -120,28 +88,19 @@ export default function FormDialog({
               }
               FormHelperTextProps={{ classes: { root: classes.helperText } }}
             />
-          </Grid>
+          </section>
 
-          <Grid item>
+          <section>
             <FieldsDropdown
               value={type}
               onChange={(newType) => setType(newType.target.value as FieldType)}
             />
-          </Grid>
-        </Grid>
-      </DialogContent>
-
-      <DialogActions>
-        <Button
-          onClick={() => {
-            handleClose();
-          }}
-          color="primary"
-        >
-          Cancel
-        </Button>
-        <Button
-          onClick={() => {
+          </section>
+        </>
+      }
+      actions={{
+        primary: {
+          onClick: () => {
             handleSave(fieldKey, {
               type,
               name: columnLabel,
@@ -150,14 +109,15 @@ export default function FormDialog({
               config: {},
               ...data.initializeColumn,
             });
-          }}
-          color="primary"
-          variant="contained"
-          disabled={!columnLabel || !fieldKey || !type}
-        >
-          Add
-        </Button>
-      </DialogActions>
-    </Dialog>
+          },
+          disabled: !columnLabel || !fieldKey || !type,
+          children: "Add",
+        },
+        secondary: {
+          onClick: handleClose,
+          children: "Cancel",
+        },
+      }}
+    />
   );
 }

@@ -4,14 +4,13 @@ import _merge from "lodash/merge";
 
 import { Button } from "@material-ui/core";
 
-import CustomBrowserRouter from "./utils/CustomBrowserRouter";
-import PrivateRoute from "./utils/PrivateRoute";
-import Snack from "./components/Snack";
-import ErrorBoundary from "./components/ErrorBoundary";
-import EmptyState from "./components/EmptyState";
-import Loading from "./components/Loading";
+import CustomBrowserRouter from "utils/CustomBrowserRouter";
+import PrivateRoute from "utils/PrivateRoute";
+import ErrorBoundary from "components/ErrorBoundary";
+import EmptyState from "components/EmptyState";
+import Loading from "components/Loading";
 
-import { SnackProvider } from "./utils/SnackProvider";
+import { SnackProvider } from "contexts/SnackContext";
 import ConfirmationProvider from "components/ConfirmationDialog/Provider";
 import { AppProvider } from "contexts/AppContext";
 import { FiretableContextProvider } from "contexts/FiretableContext";
@@ -19,6 +18,7 @@ import routes from "constants/routes";
 
 import AuthView from "pages/Auth/GoogleAuth";
 import SignOutView from "pages/Auth/SignOut";
+import TestView from "pages/Test";
 
 const HomePage = lazy(
   () => import("./pages/Home" /* webpackChunkName: "HomePage" */)
@@ -41,90 +41,83 @@ const JwtAuthPage = lazy(
 
 export default function App() {
   return (
-    <>
-      <ErrorBoundary>
-        <AppProvider>
-          <ConfirmationProvider>
-            <SnackProvider>
-              <CustomBrowserRouter>
-                <Suspense fallback={<Loading fullScreen />}>
-                  <Switch>
-                    <Route
-                      exact
-                      path={routes.auth}
-                      render={() => <AuthView />}
-                    />
-                    <Route
-                      exact
-                      path={routes.impersonatorAuth}
-                      render={() => <ImpersonatorAuthPage />}
-                    />
-                    <Route
-                      exact
-                      path={routes.jwtAuth}
-                      render={() => <JwtAuthPage />}
-                    />
-                    <Route
-                      exact
-                      path={routes.signOut}
-                      render={() => <SignOutView />}
-                    />
+    <ErrorBoundary>
+      <AppProvider>
+        <ConfirmationProvider>
+          <SnackProvider>
+            <CustomBrowserRouter>
+              <Suspense fallback={<Loading fullScreen />}>
+                <Switch>
+                  <Route exact path={routes.auth} render={() => <AuthView />} />
+                  <Route
+                    exact
+                    path={routes.impersonatorAuth}
+                    render={() => <ImpersonatorAuthPage />}
+                  />
+                  <Route
+                    exact
+                    path={routes.jwtAuth}
+                    render={() => <JwtAuthPage />}
+                  />
+                  <Route
+                    exact
+                    path={routes.signOut}
+                    render={() => <SignOutView />}
+                  />
+                  <Route exact path={"/test"} render={() => <TestView />} />
+                  <PrivateRoute
+                    exact
+                    path={[
+                      routes.home,
+                      routes.tableWithId,
+                      routes.tableGroupWithId,
+                      routes.gridWithId,
+                    ]}
+                    render={() => (
+                      <FiretableContextProvider>
+                        <Switch>
+                          <PrivateRoute
+                            exact
+                            path={routes.home}
+                            render={() => <HomePage />}
+                          />
+                          <PrivateRoute
+                            path={routes.tableWithId}
+                            render={() => <TablePage />}
+                          />
+                          <PrivateRoute
+                            path={routes.tableGroupWithId}
+                            render={() => <TablePage />}
+                          />
+                        </Switch>
+                      </FiretableContextProvider>
+                    )}
+                  />
 
-                    <PrivateRoute
-                      exact
-                      path={[
-                        routes.home,
-                        routes.tableWithId,
-                        routes.tableGroupWithId,
-                        routes.gridWithId,
-                      ]}
-                      render={() => (
-                        <FiretableContextProvider>
-                          <Switch>
-                            <PrivateRoute
-                              exact
-                              path={routes.home}
-                              render={() => <HomePage />}
-                            />
-                            <PrivateRoute
-                              path={routes.tableWithId}
-                              render={() => <TablePage />}
-                            />
-                            <PrivateRoute
-                              path={routes.tableGroupWithId}
-                              render={() => <TablePage />}
-                            />
-                          </Switch>
-                        </FiretableContextProvider>
-                      )}
-                    />
-
-                    <PrivateRoute
-                      render={() => (
-                        <EmptyState
-                          message="Page Not Found"
-                          description={
-                            <Button
-                              component={Link}
-                              to={routes.home}
-                              variant="outlined"
-                              style={{ marginTop: 8 }}
-                            >
-                              Go Home
-                            </Button>
-                          }
-                          fullScreen
-                        />
-                      )}
-                    />
-                  </Switch>
-                </Suspense>
-                <Snack />
-              </CustomBrowserRouter>
-            </SnackProvider>
-          </ConfirmationProvider>
-        </AppProvider>
-      </ErrorBoundary>
-    </>
+                  <PrivateRoute
+                    render={() => (
+                      <EmptyState
+                        message="Page Not Found"
+                        description={
+                          <Button
+                            component={Link}
+                            to={routes.home}
+                            variant="outlined"
+                            style={{ marginTop: 8 }}
+                          >
+                            Go Home
+                          </Button>
+                        }
+                        fullScreen
+                      />
+                    )}
+                  />
+                </Switch>
+              </Suspense>
+            </CustomBrowserRouter>
+          </SnackProvider>
+        </ConfirmationProvider>
+      </AppProvider>
+    </ErrorBoundary>
   );
 }

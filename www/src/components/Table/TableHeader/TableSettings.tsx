@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Tooltip, Button } from "@material-ui/core";
+import TableHeaderButton from "./TableHeaderButton";
 import SettingsIcon from "@material-ui/icons/Settings";
 
 import TableSettingsDialog, {
@@ -15,34 +15,16 @@ export default function TableSettings() {
 
   return (
     <>
-      <Tooltip title="Table Settings">
-        <Button
-          variant="contained"
-          color="secondary"
-          style={{ minWidth: 32, padding: 0 }}
-          aria-label="Table Settings"
-          onClick={() => setOpen(true)}
-        >
-          <SettingsIcon />
-        </Button>
-      </Tooltip>
+      <TableHeaderButton
+        title="Table Settings"
+        onClick={() => setOpen(true)}
+        icon={<SettingsIcon />}
+      />
 
       <TableSettingsDialog
         clearDialog={() => setOpen(false)}
         mode={open ? TableSettingsDialogModes.update : null}
-        data={
-          open
-            ? ({
-                collection: tableState?.config.tableConfig.doc.collection,
-                description: tableState?.config.tableConfig.doc.description,
-                roles: tableState?.config.tableConfig.doc.roles,
-                name: tableState?.config.tableConfig.doc.name,
-                section: tableState?.config.tableConfig.doc.section,
-                // isCollectionGroup: !"string",
-                // tableType: "string",
-              } as any)
-            : null
-        }
+        data={open ? tableState?.config.tableConfig.doc : null}
       />
     </>
   );

@@ -1,20 +1,19 @@
 import React, { useState, useEffect } from "react";
 import clsx from "clsx";
 import _isNil from "lodash/isNil";
-import _sortBy from "lodash/sortBy";
+import _isEmpty from "lodash/isEmpty";
 import queryString from "query-string";
+
 import { Drawer, Fab } from "@material-ui/core";
 import ChevronIcon from "@material-ui/icons/KeyboardArrowLeft";
 import ChevronUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import ChevronDownIcon from "@material-ui/icons/KeyboardArrowDown";
 
 import Form from "./Form";
-import { Field } from "./Form/utils";
 import ErrorBoundary from "components/ErrorBoundary";
 
 import { useStyles } from "./useStyles";
 import { useFiretableContext } from "contexts/FiretableContext";
-import { FieldType } from "constants/fields";
 import useDoc from "hooks/useDoc";
 
 export const DRAWER_WIDTH = 600;
@@ -66,10 +65,7 @@ export default function SideDrawer() {
 
   useEffect(() => {
     const rowRef = queryString.parse(window.location.search).rowRef as string;
-    if (rowRef) {
-      console.log(rowRef);
-      dispatchUrlDoc({ path: decodeURIComponent(rowRef) });
-    }
+    if (rowRef) dispatchUrlDoc({ path: decodeURIComponent(rowRef) });
   }, []);
 
   useEffect(() => {
@@ -89,52 +85,6 @@ export default function SideDrawer() {
     }
   }, [cell]);
 
-  // Map columns to form fields
-
-  const fields =
-    tableState?.columns &&
-    (Array.isArray(tableState?.columns)
-      ? tableState?.columns
-      : _sortBy(Object.values(tableState?.columns), "index")
-    ).map((column) => {
-      const field: Field = {
-        type: column.type,
-        name: column.key,
-        label: column.name,
-      };
-
-      switch (column.type) {
-        case FieldType.longText:
-          field.fieldVariant = "long";
-          break;
-
-        case FieldType.email:
-          field.fieldVariant = "email";
-          break;
-
-        case FieldType.phone:
-          field.fieldVariant = "phone";
-          break;
-
-        case FieldType.number:
-          field.fieldVariant = "number";
-          break;
-
-        // case FieldType.singleSelect:
-        // case FieldType.multiSelect:
-        // case FieldType.connectTable:
-        // case FieldType.subTable:
-        // case FieldType.action:
-        //   break;
-
-        default:
-          break;
-      }
-      field.editable = column.editable;
-      field.config = column.config;
-      return field;
-    });
-
   return (
     <div className={clsx(open && classes.open, disabled && classes.disabled)}>
       <Drawer
@@ -151,23 +101,16 @@ export default function SideDrawer() {
       >
         <ErrorBoundary>
           <div className={classes.drawerContents}>
-            {open && fields && urlDocState.doc ? (
-              <Form
-                key={urlDocState.path}
-                fields={fields}
-                values={urlDocState.doc ?? {}}
-              />
-            ) : (
-              open &&
-              fields &&
-              cell && (
+            {open &&
+              (urlDocState.doc || cell) &&
+              !_isEmpty(tableState?.columns) && (
                 <Form
-                  key={cell.row}
-                  fields={fields}
-                  values={tableState?.rows[cell.row] ?? {}}
+                  key={urlDocState.path}
+                  values={
+                    urlDocState.doc ?? tableState?.rows[cell?.row ?? -1] ?? {}
+                  }
                 />
-              )
-            )}
+              )}
           </div>
         </ErrorBoundary>
 

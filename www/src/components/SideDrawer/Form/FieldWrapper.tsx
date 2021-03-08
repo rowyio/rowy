@@ -9,21 +9,23 @@ import {
 } from "@material-ui/core";
 import DebugIcon from "@material-ui/icons/BugReportOutlined";
 import LaunchIcon from "@material-ui/icons/Launch";
+import LockIcon from "@material-ui/icons/Lock";
 
 import ErrorBoundary from "components/ErrorBoundary";
 import FieldSkeleton from "./FieldSkeleton";
 
-import { FieldType, getFieldIcon } from "constants/fields";
+import { FieldType } from "constants/fields";
+import { getFieldProp } from "components/fields";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
     header: {
       marginBottom: theme.spacing(1),
       color: theme.palette.text.disabled,
+      "& svg": { display: "block" },
     },
     iconContainer: {
       marginRight: theme.spacing(0.5),
-      "& svg": { display: "block" },
     },
 
     disabledText: {
@@ -43,6 +45,7 @@ export interface IFieldWrapperProps {
   name?: string;
   label?: React.ReactNode;
   debugText?: React.ReactNode;
+  disabled?: boolean;
 }
 
 export default function FieldWrapper({
@@ -51,6 +54,7 @@ export default function FieldWrapper({
   name,
   label,
   debugText,
+  disabled,
 }: IFieldWrapperProps) {
   const classes = useStyles();
 
@@ -65,11 +69,16 @@ export default function FieldWrapper({
         htmlFor={`sidedrawer-field-${name}`}
       >
         <Grid item className={classes.iconContainer}>
-          {type === "debug" ? <DebugIcon /> : getFieldIcon(type)}
+          {type === "debug" ? <DebugIcon /> : getFieldProp("icon", type)}
         </Grid>
         <Grid item xs>
           <Typography variant="caption">{label}</Typography>
         </Grid>
+        {disabled && (
+          <Grid item>
+            <LockIcon />
+          </Grid>
+        )}
       </Grid>
 
       <ErrorBoundary fullScreen={false} basic>

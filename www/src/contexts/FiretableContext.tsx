@@ -32,7 +32,12 @@ interface FiretableContextProps {
   updateCell: (
     ref: firebase.firestore.DocumentReference,
     fieldName: string,
-    value: any
+    value: any,
+    onSuccess?: (
+      ref: firebase.firestore.DocumentReference,
+      fieldName: string,
+      value: any
+    ) => void
   ) => void;
   settingsActions: {
     createTable: (data: {
@@ -138,34 +143,32 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
     }
   }, [currentUser]);
 
-  const updateCell = (
-    ref: firebase.firestore.DocumentReference,
-    fieldName: string,
-    value: any
+  const updateCell: FiretableContextProps["updateCell"] = (
+    ref,
+    fieldName,
+    value,
+    onSuccess
   ) => {
     if (value === undefined) return;
 
-    const ftUser = firetableUser(currentUser);
-    const _ft_updatedAt = new Date();
-    const _ft_updatedBy = ftUser;
-    let update = { [fieldName]: value };
+    const _ft_updatedBy = firetableUser(currentUser);
+    const _ft_updatedAt = _ft_updatedBy.timestamp;
     ref
       .update({
-        ...update,
+        [fieldName]: value,
         _ft_updatedAt,
-        updatedAt: _ft_updatedAt,
         _ft_updatedBy,
-        updatedBy: _ft_updatedBy,
       })
       .then(
-        (success) => {
-          console.log("successful update");
+        () => {
+          console.log("updateCell success", ref.path, fieldName, value);
+          if (onSuccess) onSuccess(ref, fieldName, value);
         },
         (error) => {
           if (error.code === "permission-denied") {
             open({
               message: `You don't have permissions to make this change`,
-              severity: "error",
+              variant: "error",
               duration: 2000,
               position: { horizontal: "center", vertical: "top" },
             });
