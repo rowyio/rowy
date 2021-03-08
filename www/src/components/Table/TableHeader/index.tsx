@@ -16,7 +16,7 @@ import AddRowIcon from "assets/icons/AddRow";
 
 import Filters from "../Filters";
 import ImportCSV from "./ImportCsv";
-import ExportCSV from "./ExportCsv";
+import Export from "./Export";
 import TableSettings from "./TableSettings";
 import HiddenFields from "../HiddenFields";
 import Sparks from "./Sparks";
@@ -184,7 +184,7 @@ export default function TableHeader({
       )}
 
       <Grid item>
-        <ExportCSV />
+        <Export />
       </Grid>
 
       {userClaims?.roles?.includes("ADMIN") && (

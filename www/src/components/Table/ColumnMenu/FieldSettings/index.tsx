@@ -51,6 +51,8 @@ export default function FieldSettings(props: IMenuModalProps) {
           <>
             {initializable && (
               <>
+                {/* 
+                //TODO
                 <section>
                   <Subheading>Required?</Subheading>
                   <Typography color="textSecondary" paragraph>
@@ -79,7 +81,7 @@ export default function FieldSettings(props: IMenuModalProps) {
                       justifyContent: "space-between",
                     }}
                   />
-                </section>
+                </section> */}
 
                 <section>
                   <ErrorBoundary fullScreen={false}>

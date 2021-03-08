@@ -41,7 +41,7 @@ export const FT_triggerCloudBuild = functions.https.onCall(
       const buildId = resp.metadata.build.id;
       const logUrl = resp.metadata.build.logUrl;
 
-      await db.doc(schemaPath).update({ cloudBuildLogs: logUrl });
+      await db.doc(schemaPath).update({ cloudBuild: { logUrl, buildId } });
       console.log({ buildId, logUrl });
 
       if (buildId && logUrl) {
@@ -60,27 +60,23 @@ export const FT_triggerCloudBuild = functions.https.onCall(
   }
 );
 
-// export const FT_cloudBuildUpdates = functions.pubsub
-//   .topic("cloud-builds")
-//   .onPublish(async (message, context) => {
-//     console.log(JSON.stringify(message));
-//     const { buildId, status } = message.attributes;
-//     console.log(JSON.stringify({ buildId, status }));
-//     //message
-//     //status: "SUCCESS"
-//     //buildId: "1a6d7819-aa35-486c-a29c-fb67eb39430f"
+export const FT_cloudBuildUpdates = functions.pubsub
+  .topic("cloud-builds")
+  .onPublish(async (message, context) => {
+    console.log(JSON.stringify(message));
+    const { buildId, status } = message.attributes;
+    console.log(JSON.stringify({ buildId, status }));
+    //message
+    //status: "SUCCESS"
+    //buildId: "1a6d7819-aa35-486c-a29c-fb67eb39430f"
 
-//     const query = await db
-//       .collection("cloudFunctions")
-//       .where("buildId", "==", buildId)
-//       .get();
+    const query = await db
+      .collection("_FIRETABLE_/settings/schema")
+      .where("cloudBuild.buildId", "==", buildId)
+      .get();
 
-//     if (query.docs.length !== 0) {
-//       const update = { status };
-//       if (status === "SUCCESS" || status === "FAILURE") {
-//         update["buildDuration.end"] = serverTimestamp();
-//       }
-//       await query.docs[0].ref.update(update);
-//     }
-//     return true;
-//   });
+    if (query.docs.length !== 0) {
+      await query.docs[0].ref.update({ "cloudBuild.status": status });
+    }
+    return true;
+  });

@@ -97,3 +97,12 @@ export const isFieldType = (fieldType: any) => {
   const fieldTypes = FIELDS.map((field) => field.type);
   return fieldTypes.includes(fieldType);
 };
+
+/**
+ * Returns array of fieldTypes with dataType included dataTypes array
+ * @param dataTypes
+ */
+export const hasDataTypes = (dataTypes:string[])=>{
+    const fieldTypes = FIELDS.map((field) => field.type);
+    return fieldTypes.filter((fieldType)=>dataTypes.includes(getFieldProp("dataType",fieldType)))
+}

@@ -168,7 +168,7 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
           if (error.code === "permission-denied") {
             open({
               message: `You don't have permissions to make this change`,
-              severity: "error",
+              variant: "error",
               duration: 2000,
               position: { horizontal: "center", vertical: "top" },
             });

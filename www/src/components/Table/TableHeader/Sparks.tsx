@@ -15,10 +15,10 @@ import {
   DialogTitle,
   DialogContentText,
   Dialog,
+  Badge,
+  CircularProgress,
 } from "@material-ui/core";
-
 import SparkIcon from "@material-ui/icons/OfflineBolt";
-
 import { SnackContext } from "contexts/SnackContext";
 import { useFiretableContext } from "contexts/FiretableContext";
 import CodeEditor from "../editors/CodeEditor";
@@ -29,13 +29,13 @@ const useStyles = makeStyles(() =>
       padding: 0,
       minWidth: 32,
     },
+    progress: { position: "absolute", marginLeft: -2, marginTop: -2.5 },
   })
 );
 
 export default function SparksEditor() {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-
   const { tableState, tableActions } = useFiretableContext();
   const snackContext = useContext(SnackContext);
   const { requestConfirmation } = useConfirmation();
@@ -71,19 +71,25 @@ export default function SparksEditor() {
       },
     });
   };
-
+  // const cloudBuild = tableState?.config.tableConfig.doc.cloudBuild;
   return (
     <>
-      <Tooltip title="Edit sparks">
-        <Button
-          onClick={() => setOpen(true)}
-          variant="contained"
-          color="secondary"
-          aria-label="Sparks"
-          className={classes.button}
-        >
-          <SparkIcon />
-        </Button>
+      <Tooltip title="Edit Sparks (ALPHA)">
+        <div>
+          {/* {["QUEUED", "WORKING"].includes(cloudBuild?.status) && (
+            <CircularProgress className={classes.progress} size={37} />
+          )} */}
+
+          <Button
+            onClick={() => setOpen(true)}
+            variant="contained"
+            color="secondary"
+            aria-label="Sparks"
+            className={classes.button}
+          >
+            <SparkIcon />
+          </Button>
+        </div>
       </Tooltip>
 
       <Dialog
@@ -95,12 +101,16 @@ export default function SparksEditor() {
         fullWidth
       >
         <DialogTitle id="form-dialog-title">
-          Edit {tableState?.tablePath} sparks
+          Edit {tableState?.tablePath} sparks (ALPHA)
         </DialogTitle>
 
         <DialogContent>
           <DialogContentText id="form-dialog-description">
-            array of sparks that will evaluate and run onWrite events
+            This is an alpha feature and currently requires undocumented cloud
+            functions/cloud build setup.
+            <br />
+            Once setup and deployed an array of sparks that will evaluated and
+            and executed onWrite events.
           </DialogContentText>
 
           <CodeEditor

@@ -22,5 +22,12 @@ export const config: IFieldConfig = {
   TableCell: withBasicCell(BasicCell),
   TableEditor: TextEditor,
   SideDrawerField,
+  csvImportParser: (v) => {
+    try {
+      return parseFloat(v);
+    } catch (e) {
+      return v;
+    }
+  },
 };
 export default config;
