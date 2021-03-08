@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import clsx from "clsx";
 
 import {
   makeStyles,
@@ -7,52 +8,61 @@ import {
   useMediaQuery,
   Dialog,
   DialogProps,
-  Grow,
+  DialogTitle,
   Grid,
   Typography,
   IconButton,
   MobileStepper,
-  Divider,
+  DialogContent,
   Button,
 } from "@material-ui/core";
-import { TransitionProps } from "@material-ui/core/transitions";
+import { fade } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 
-const Transition = React.forwardRef(function Transition(
-  props: TransitionProps & { children?: React.ReactElement<any, any> },
-  ref: React.Ref<unknown>
-) {
-  return <Grow ref={ref} {...props} />;
-});
+import { SlideTransitionMui } from "components/Modal/SlideTransition";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
-    paper: {
-      padding: theme.spacing(8),
-      maxWidth: 750,
+    root: {
+      "--spacing-modal": theme.spacing(3) + "px",
+      "--spacing-modal-contents": theme.spacing(3) + "px",
+      "--spacing-card": "var(--spacing-modal-contents)",
 
-      [theme.breakpoints.down("xs")]: {
-        padding: theme.spacing(3, 2),
+      [theme.breakpoints.down("sm")]: {
+        "--spacing-modal": theme.spacing(2) + "px",
       },
     },
 
-    paperFullScreen: {
-      display: "inline-flex",
-      flexDirection: "column",
+    paper: {
+      userSelect: "none",
+      overflowX: "hidden",
+
+      padding: "var(--spacing-modal)",
+      paddingBottom: "var(--spacing-modal-contents)",
     },
 
     closeButton: {
-      position: "absolute",
-      top: theme.spacing(0.5),
-      right: theme.spacing(0.5),
+      alignSelf: "flex-end",
+      margin:
+        "calc(var(--spacing-modal) * -1) calc(var(--spacing-modal) * -1) 0 0",
+    },
+
+    titleRow: { paddingBottom: "var(--spacing-modal)" },
+    titleContainer: { padding: 0 },
+    title: {
+      ...theme.typography.h5,
+      [theme.breakpoints.down("sm")]: theme.typography.h6,
     },
 
     stepper: {
       padding: 0,
       background: "none",
       marginRight: theme.spacing(-10 / 8),
+
+      marginBottom: theme.spacing(-0.5),
+      [theme.breakpoints.down("sm")]: { marginBottom: theme.spacing(-0.75) },
     },
     stepperButton: { padding: theme.spacing(0.5) },
 
@@ -65,19 +75,47 @@ const useStyles = makeStyles((theme) =>
       "& ~ $stepperDot": { backgroundColor: theme.palette.action.disabled },
     },
 
-    divider: { marginBottom: theme.spacing(2) },
-    description: { marginBottom: theme.spacing(5) },
-    content: { marginBottom: theme.spacing(5) },
+    content: {
+      padding: "0 var(--spacing-modal)",
+      margin: "0 calc(var(--spacing-modal) * -1)",
 
-    bigButtons: {
-      [theme.breakpoints.down("xs")]: {
-        margin: theme.spacing(0, -2),
-        width: `calc(100% + ${theme.spacing(2 * 2)}px)`,
+      ...theme.typography.body1,
 
-        marginTop: "auto",
+      // https://codepen.io/evank/pen/wWbRNO
+      background: `
+        linear-gradient(
+          var(--bg-paper) 50%,
+          ${fade(theme.palette.background.paper, 0)}
+        ),
+        linear-gradient(
+          ${fade(theme.palette.background.paper, 0)},
+          var(--bg-paper) 50%
+        ) 0 100%,
+        linear-gradient(
+          to top, ${theme.palette.divider} 1px,
+          ${fade(theme.palette.divider, 0)}
+        ),
+        linear-gradient(to top,
+          ${theme.palette.divider} 1px,
+          ${fade(theme.palette.divider, 0)}
+        ) 0 calc(100% - 0.5px)`,
+      backgroundRepeat: "no-repeat",
+      backgroundColor: "var(--bg-paper)",
+      backgroundSize: "100% 2px, 100% 3px, 100% 1px, 100% 1px",
+      backgroundAttachment: "local, local, scroll, scroll",
+
+      "&:last-child": {
+        marginBottom: "calc(var(--spacing-modal-contents) * -1)",
+        paddingBottom: "var(--spacing-modal-contents)",
       },
+
+      "& > * + *": { marginTop: "var(--spacing-modal-contents)" },
     },
-    bigButton: { width: 150 },
+
+    actions: {
+      paddingTop: "var(--spacing-modal-contents)",
+      "& button": { minWidth: 100 },
+    },
   })
 );
 
@@ -112,42 +150,51 @@ export default function WizardDialog({
 
   return (
     <Dialog
-      TransitionComponent={Transition}
+      TransitionComponent={SlideTransitionMui}
       aria-labelledby="wizard-title"
       aria-describedby="wizard-step-description"
       fullWidth
-      scroll="body"
+      maxWidth="md"
       disableBackdropClick
       fullScreen={isXs}
       {...props}
       classes={{
-        paper: classes.paper,
-        paperFullScreen: classes.paperFullScreen,
+        root: clsx(classes.root, props.classes?.root),
+        paper: clsx(classes.paper, props.classes?.paper),
         ...(props.classes ?? {}),
       }}
     >
-      {!isXs && (
-        <IconButton
-          aria-label="Close"
-          onClick={props.onClose as any}
-          className={classes.closeButton}
-        >
-          <CloseIcon />
-        </IconButton>
-      )}
+      <IconButton
+        aria-label="Close"
+        onClick={props.onClose as any}
+        className={classes.closeButton}
+        color="secondary"
+      >
+        <CloseIcon />
+      </IconButton>
 
-      <Grid container spacing={3} alignItems="flex-end">
+      <Grid
+        container
+        spacing={3}
+        alignItems="flex-end"
+        className={classes.titleRow}
+      >
         <Grid item xs>
-          <Typography
-            variant="h6"
-            component="h1"
-            color="textSecondary"
+          <DialogTitle
+            color="textPrimary"
             id="wizard-title"
-            gutterBottom
+            disableTypography
+            className={classes.titleContainer}
           >
-            {title}
-            {currentStep.title && `: ${currentStep.title}`}
-          </Typography>
+            <Typography
+              className={classes.title}
+              component="h2"
+              color="textPrimary"
+            >
+              {title}
+              {currentStep.title && `: ${currentStep.title}`}
+            </Typography>
+          </DialogTitle>
         </Grid>
 
         <Grid item>
@@ -185,43 +232,35 @@ export default function WizardDialog({
         </Grid>
       </Grid>
 
-      <Divider className={classes.divider} />
+      <DialogContent className={classes.content}>
+        {currentStep.description && (
+          <Typography
+            color="textSecondary"
+            id="wizard-step-description"
+            component={
+              typeof currentStep.description === "string" ? "p" : "div"
+            }
+          >
+            {currentStep.description}
+          </Typography>
+        )}
 
-      {currentStep.description && (
-        <Typography
-          color="textSecondary"
-          id="wizard-step-description"
-          component={typeof currentStep.description === "string" ? "p" : "div"}
-          className={classes.description}
-        >
-          {currentStep.description}
-        </Typography>
-      )}
-
-      <div className={classes.content}>{currentStep.content}</div>
+        {currentStep.content}
+      </DialogContent>
 
       <Grid
         container
-        spacing={isXs ? 1 : 4}
+        spacing={2}
         justify="center"
         alignItems="center"
-        className={classes.bigButtons}
+        className={classes.actions}
       >
         <Grid item>
-          <Button
-            size="large"
-            variant="outlined"
-            className={classes.bigButton}
-            onClick={handleBack}
-          >
-            {step > 0 ? "Back" : "Cancel"}
-          </Button>
+          <Button onClick={handleBack}>{step > 0 ? "Back" : "Cancel"}</Button>
         </Grid>
         <Grid item>
           <Button
-            size="large"
             variant="contained"
-            className={classes.bigButton}
             onClick={handleNext}
             disabled={currentStep.disableNext}
           >

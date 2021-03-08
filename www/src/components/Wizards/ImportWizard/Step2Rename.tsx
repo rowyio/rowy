@@ -62,7 +62,7 @@ export default function Step2Rename({
   };
 
   return (
-    <>
+    <div>
       <Grid container spacing={3}>
         {!isXs && (
           <Grid item xs={12} sm={6}>
@@ -137,6 +137,6 @@ export default function Step2Rename({
           </Grid>
         ))}
       </FadeList>
-    </>
+    </div>
   );
 }

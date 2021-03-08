@@ -7,7 +7,6 @@ import { useDebouncedCallback } from "use-debounce";
 import {
   makeStyles,
   createStyles,
-  Tooltip,
   Button,
   Popover,
   PopoverProps as MuiPopoverProps,
@@ -23,7 +22,9 @@ import TabContext from "@material-ui/lab/TabContext";
 import TabList from "@material-ui/lab/TabList";
 import TabPanel from "@material-ui/lab/TabPanel";
 
+import TableHeaderButton from "./TableHeaderButton";
 import ImportIcon from "assets/icons/Import";
+
 import FileUploadIcon from "assets/icons/FileUpload";
 import CheckIcon from "@material-ui/icons/CheckCircle";
 import GoIcon from "assets/icons/Go";
@@ -34,11 +35,6 @@ import ImportCsvWizard, {
 
 const useStyles = makeStyles((theme) =>
   createStyles({
-    button: {
-      padding: 0,
-      minWidth: 32,
-    },
-
     tabPanel: { padding: theme.spacing(4) },
     continueButton: {
       margin: theme.spacing(-2, 2.5, 4),
@@ -138,6 +134,7 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     multiple: false,
+    accept: "text/csv",
   });
 
   const [handlePaste] = useDebouncedCallback(
@@ -169,18 +166,11 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
       {render ? (
         render(handleOpen)
       ) : (
-        <Tooltip title="Import CSV">
-          <Button
-            aria-describedby={popoverId}
-            onClick={handleOpen}
-            variant="contained"
-            color="secondary"
-            aria-label="Import"
-            className={classes.button}
-          >
-            <ImportIcon />
-          </Button>
-        </Tooltip>
+        <TableHeaderButton
+          title="Import CSV"
+          onClick={handleOpen}
+          icon={<ImportIcon />}
+        />
       )}
 
       <Popover

@@ -8,21 +8,13 @@ import _sortBy from "lodash/sortBy";
 import { isString } from "lodash";
 import MultiSelect from "@antlerengineering/multiselect";
 
-import {
-  makeStyles,
-  createStyles,
-  Button,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-} from "@material-ui/core";
+import { Button, Grid } from "@material-ui/core";
 
 import { SnackContext } from "contexts/SnackContext";
 import { useFiretableContext } from "contexts/FiretableContext";
 
 import { FieldType } from "constants/fields";
 
-const useStyles = makeStyles(() => createStyles({}));
 const selectedColumnsJsonReducer = (doc: any) => (
   accumulator: any,
   currentColumn: any
@@ -98,7 +90,6 @@ const selectedColumnsCsvReducer = (doc: any) => (
 };
 
 export default function Export({ query, closeModal }) {
-  const classes = useStyles();
   const { tableState } = useFiretableContext();
   const snackContext = useContext(SnackContext);
 
@@ -157,60 +148,70 @@ export default function Export({ query, closeModal }) {
   };
   return (
     <>
-      <DialogContent>
-        <MultiSelect
-          value={columns.map((x) => x.key)}
-          onChange={handleChange}
-          options={(typeof tableState!.columns === "object" &&
-          !Array.isArray(tableState!.columns)
-            ? _sortBy(Object.values(tableState!.columns), ["index"]).filter(
-                (column: any) => isString(column?.name) && isString(column?.key)
-              )
-            : []
-          ).map((column: any) => ({ label: column.name, value: column.key }))}
-          label="Columns to Export"
-          labelPlural="columns"
-          TextFieldProps={{
-            autoFocus: true,
-            helperText: "Files and images will be added as URLs",
-          }}
-          multiple
-          selectAll
-        />
+      <MultiSelect
+        value={columns.map((x) => x.key)}
+        onChange={handleChange}
+        options={(typeof tableState!.columns === "object" &&
+        !Array.isArray(tableState!.columns)
+          ? _sortBy(Object.values(tableState!.columns), ["index"]).filter(
+              (column: any) => isString(column?.name) && isString(column?.key)
+            )
+          : []
+        ).map((column: any) => ({ label: column.name, value: column.key }))}
+        label="Columns to Export"
+        labelPlural="columns"
+        TextFieldProps={{
+          autoFocus: true,
+          helperText: "Files and images will be added as URLs",
+        }}
+        multiple
+        selectAll
+      />
 
-        <MultiSelect
-          value={exportType}
-          options={[
-            { label: ".json", value: "json" },
-            { label: ".csv", value: "csv" },
-          ]}
-          label="Export Type"
-          onChange={(v) => {
-            if (v) {
-              setExportType(v as "csv" | "json");
-            }
-          }}
-          multiple={false}
-          searchable={false}
-          clearable={false}
-          TextFieldProps={{ helperText: "Encoding: UTF-8" }}
-        />
-      </DialogContent>
+      <MultiSelect
+        value={exportType}
+        options={[
+          { label: ".json", value: "json" },
+          { label: ".csv", value: "csv" },
+        ]}
+        label="Export Type"
+        onChange={(v) => {
+          if (v) {
+            setExportType(v as "csv" | "json");
+          }
+        }}
+        multiple={false}
+        searchable={false}
+        clearable={false}
+        TextFieldProps={{ helperText: "Encoding: UTF-8" }}
+      />
 
-      <DialogActions>
-        <Button onClick={handleClose} color="primary">
-          Cancel
-        </Button>
+      <div style={{ flexGrow: 1, marginTop: 0 }} />
 
-        <Button
-          onClick={handleExport}
-          disabled={columns.length === 0}
-          color="primary"
-          variant="contained"
-        >
-          Export
-        </Button>
-      </DialogActions>
+      <Grid
+        container
+        spacing={2}
+        justify="center"
+        alignItems="center"
+        style={{ flexShrink: 0 }}
+      >
+        <Grid item>
+          <Button onClick={handleClose} color="primary">
+            Cancel
+          </Button>
+        </Grid>
+
+        <Grid item>
+          <Button
+            onClick={handleExport}
+            disabled={columns.length === 0}
+            color="primary"
+            variant="contained"
+          >
+            Export
+          </Button>
+        </Grid>
+      </Grid>
     </>
   );
 }

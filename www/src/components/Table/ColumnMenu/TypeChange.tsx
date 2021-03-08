@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import { IMenuModalProps } from ".";
-import StyledModal from "components/StyledModal";
+import Modal from "components/Modal";
 import FieldsDropdown from "./FieldsDropdown";
 
 export default function FormDialog({
@@ -13,9 +13,10 @@ export default function FormDialog({
 }: IMenuModalProps) {
   const [newType, setType] = useState(type);
 
+  if (!open) return null;
+
   return (
-    <StyledModal
-      open={open}
+    <Modal
       onClose={handleClose}
       title="Change Column Type"
       children={

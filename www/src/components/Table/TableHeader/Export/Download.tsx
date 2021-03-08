@@ -1,5 +1,4 @@
 import React, { useState, useContext } from "react";
-import { parse as json2csv } from "json2csv";
 import { saveAs } from "file-saver";
 import _camelCase from "lodash/camelCase";
 import _get from "lodash/get";
@@ -8,14 +7,13 @@ import _sortBy from "lodash/sortBy";
 import { isString } from "lodash";
 import MultiSelect from "@antlerengineering/multiselect";
 import JSZip from "jszip";
+
 import {
-  makeStyles,
-  createStyles,
+  Grid,
   Button,
-  DialogActions,
   TextField,
-  DialogContent,
-  DialogContentText,
+  FormControlLabel,
+  Checkbox,
 } from "@material-ui/core";
 
 import { SnackContext } from "contexts/SnackContext";
@@ -28,7 +26,7 @@ const DOWNLOADABLE_COLUMNS = [FieldType.image, FieldType.file];
 const LABEL_COLUMNS = hasDataTypes(["string", "number"]);
 
 const download = (url) => fetch(url).then((resp) => resp.blob());
-const useStyles = makeStyles(() => createStyles({}));
+
 const selectedColumnsFilesReducer = (doc: any, labelColumns: any[]) => (
   accumulator: any,
   currentColumn: any
@@ -59,11 +57,11 @@ const selectedColumnsFilesReducer = (doc: any, labelColumns: any[]) => (
 };
 
 export default function Export({ query, closeModal }) {
-  const classes = useStyles();
   const { tableState } = useFiretableContext();
   const snackContext = useContext(SnackContext);
 
   const [columns, setColumns] = useState<any[]>([]);
+  const [labelColumnsEnabled, setLabelColumnsEnabled] = useState(false);
   const [labelColumns, setLabelColumns] = useState<any[]>([]);
   const [packageName, setPackageName] = useState(tableState?.tablePath);
 
@@ -122,78 +120,100 @@ export default function Export({ query, closeModal }) {
   };
   return (
     <>
-      <DialogContent>
-        <MultiSelect
-          value={columns.map((x) => x.key)}
-          onChange={handleChange(setColumns)}
-          options={(typeof tableState!.columns === "object" &&
-          !Array.isArray(tableState!.columns)
-            ? _sortBy(Object.values(tableState!.columns), ["index"]).filter(
-                (column: any) =>
-                  isString(column?.name) &&
-                  isString(column?.key) &&
-                  DOWNLOADABLE_COLUMNS.includes(column.type)
-              )
-            : []
-          ).map((column: any) => ({ label: column.name, value: column.key }))}
-          label="Columns to Export"
-          labelPlural="columns"
-          TextFieldProps={{
-            helperText: "only Files and images columns are downloadable",
-          }}
-          multiple
-          selectAll
-        />
+      <MultiSelect
+        value={columns.map((x) => x.key)}
+        onChange={handleChange(setColumns)}
+        options={(typeof tableState!.columns === "object" &&
+        !Array.isArray(tableState!.columns)
+          ? _sortBy(Object.values(tableState!.columns), ["index"]).filter(
+              (column: any) =>
+                isString(column?.name) &&
+                isString(column?.key) &&
+                DOWNLOADABLE_COLUMNS.includes(column.type)
+            )
+          : []
+        ).map((column: any) => ({ label: column.name, value: column.key }))}
+        label="Columns to Export"
+        labelPlural="columns"
+        TextFieldProps={{
+          helperText: "only Files and images columns are downloadable",
+        }}
+        multiple
+        selectAll
+      />
 
-        <TextField
-          fullWidth
-          label="Name of the package"
-          value={packageName}
-          helperText={`${packageName}.zip`}
-          onChange={(e) => setPackageName(e.target.value)}
-        />
+      <TextField
+        fullWidth
+        label="Package Name"
+        value={packageName}
+        helperText={`${packageName}.zip`}
+        onChange={(e) => setPackageName(e.target.value)}
+      />
 
-        <MultiSelect
-          value={labelColumns.map((x) => x.key)}
-          onChange={handleChange(setLabelColumns)}
-          options={(typeof tableState!.columns === "object" &&
-          !Array.isArray(tableState!.columns)
-            ? _sortBy(Object.values(tableState!.columns), ["index"]).filter(
-                (column: any) =>
-                  isString(column?.name) &&
-                  isString(column?.key) &&
-                  LABEL_COLUMNS.includes(column.type)
-              )
-            : []
-          ).map((column: any) => ({ label: column.name, value: column.key }))}
-          label="column values to include in the filenames"
-          labelPlural="columns"
-          TextFieldProps={{
-            autoFocus: true,
-            helperText:
-              labelColumns.length === 0
-                ? `Use original file name`
-                : `eg. column/${labelColumns.map((c) => c.key).join("_")}.jpeg`,
-          }}
-          multiple
-          selectAll
-        />
-      </DialogContent>
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={labelColumnsEnabled}
+            onChange={(e) => setLabelColumnsEnabled(e.target.checked)}
+            name="labelColumnsEnabled"
+          />
+        }
+        label="Replace file names with table values"
+      />
 
-      <DialogActions>
-        <Button onClick={handleClose} color="primary">
-          Cancel
-        </Button>
+      <MultiSelect
+        disabled={!labelColumnsEnabled}
+        value={labelColumns.map((x) => x.key)}
+        onChange={handleChange(setLabelColumns)}
+        options={(typeof tableState!.columns === "object" &&
+        !Array.isArray(tableState!.columns)
+          ? _sortBy(Object.values(tableState!.columns), ["index"]).filter(
+              (column: any) =>
+                isString(column?.name) &&
+                isString(column?.key) &&
+                LABEL_COLUMNS.includes(column.type)
+            )
+          : []
+        ).map((column: any) => ({ label: column.name, value: column.key }))}
+        label="Column Values to Include in File Names"
+        labelPlural="columns"
+        TextFieldProps={{
+          autoFocus: true,
+          helperText:
+            labelColumns.length === 0
+              ? `Use original file name`
+              : `eg. column/${labelColumns.map((c) => c.key).join("_")}.jpeg`,
+        }}
+        multiple
+        selectAll
+      />
 
-        <Button
-          onClick={handleDownload}
-          disabled={columns.length === 0}
-          color="primary"
-          variant="contained"
-        >
-          Download
-        </Button>
-      </DialogActions>
+      <div style={{ flexGrow: 1, marginTop: 0 }} />
+
+      <Grid
+        container
+        spacing={2}
+        justify="center"
+        alignItems="center"
+        style={{ flexShrink: 0 }}
+      >
+        <Grid item>
+          <Button onClick={handleClose} color="primary">
+            Cancel
+          </Button>
+        </Grid>
+
+        <Grid>
+          <Button
+            onClick={handleDownload}
+            disabled={columns.length === 0}
+            color="primary"
+            variant="contained"
+          >
+            Download
+          </Button>
+        </Grid>
+      </Grid>
     </>
   );
 }

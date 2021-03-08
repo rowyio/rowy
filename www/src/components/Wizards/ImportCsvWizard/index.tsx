@@ -3,14 +3,9 @@ import _mergeWith from "lodash/mergeWith";
 import _find from "lodash/find";
 import { parseJSON } from "date-fns";
 
-import {
-  useTheme,
-  useMediaQuery,
-  Grid,
-  Typography,
-  Link,
-} from "@material-ui/core";
-import WarningIcon from "@material-ui/icons/Warning";
+import { useTheme, useMediaQuery, Typography, Link } from "@material-ui/core";
+import Alert from "@material-ui/lab/Alert";
+import AlertTitle from "@material-ui/lab/AlertTitle";
 
 import WizardDialog from "../WizardDialog";
 import Step1Columns from "./Step1Columns";
@@ -19,7 +14,6 @@ import Step3Preview from "./Step3Preview";
 
 import { ColumnConfig } from "hooks/useFiretable/useTableConfig";
 import { useFiretableContext } from "contexts/FiretableContext";
-import { FieldType } from "constants/fields";
 import { useSnackContext } from "contexts/SnackContext";
 import { getFieldProp } from "components/fields";
 
@@ -116,34 +110,24 @@ export default function ImportCsvWizard({
       steps={
         [
           {
-            title: "choose columns",
+            title: "Choose Columns",
             description: (
               <>
                 <Typography paragraph>
                   Select or add the columns to be imported to your table.
                 </Typography>
-                <Grid container spacing={1} wrap="nowrap">
-                  <Grid item>
-                    <WarningIcon />
-                  </Grid>
-                  <Grid item xs>
-                    <Typography variant="subtitle2" gutterBottom>
-                      Importing dates?
-                    </Typography>
-                    <Typography variant="body2">
-                      Make sure your dates are in UTC time and{" "}
-                      <Link
-                        href="https://date-fns.org/v2.16.1/docs/parseJSON"
-                        rel="noopener"
-                        target="_blank"
-                      >
-                        a supported format
-                      </Link>
-                      . If they’re not, you will need to re-import your CSV
-                      data.
-                    </Typography>
-                  </Grid>
-                </Grid>
+                <Alert severity="warning">
+                  <AlertTitle>Importing dates?</AlertTitle>
+                  Make sure your dates are in UTC time and{" "}
+                  <Link
+                    href="https://date-fns.org/v2.16.1/docs/parseJSON"
+                    rel="noopener"
+                    target="_blank"
+                  >
+                    a supported format
+                  </Link>
+                  . If they’re not, you will need to re-import your CSV data.
+                </Alert>
               </>
             ),
             content: (
@@ -158,7 +142,7 @@ export default function ImportCsvWizard({
             disableNext: config.pairs.length === 0,
           },
           config.newColumns.length > 0 && {
-            title: "set column types",
+            title: "Set Column Types",
             description:
               "Set the type of each column to display your data correctly. Some column types have been suggested based off your data.",
             content: (
@@ -176,7 +160,7 @@ export default function ImportCsvWizard({
             ),
           },
           {
-            title: "preview",
+            title: "Preview",
             description:
               "Preview your data with your configured columns. You can change column types by clicking “Edit Type” from the column menu at any time.",
             content: (

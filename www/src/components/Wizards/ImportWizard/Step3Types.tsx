@@ -49,7 +49,7 @@ export default function Step3Types({ config, updateConfig, isXs }: IStepProps) {
   const { tableState } = useFiretableContext();
 
   return (
-    <>
+    <div>
       <Grid container spacing={2} className={classes.typeSelectRow}>
         <Grid item xs={12} sm={6}>
           <Typography variant="overline" gutterBottom component="h2">
@@ -157,6 +157,6 @@ export default function Step3Types({ config, updateConfig, isXs }: IStepProps) {
           </Grid>
         ))}
       </FadeList>
-    </>
+    </div>
   );
 }

@@ -3,7 +3,7 @@ import { IMenuModalProps } from ".";
 
 import { TextField } from "@material-ui/core";
 
-import StyledModal from "components/StyledModal";
+import Modal from "components/Modal";
 
 export default function NameChange({
   name,
@@ -14,9 +14,10 @@ export default function NameChange({
 }: IMenuModalProps) {
   const [newName, setName] = useState(name);
 
+  if (!open) return null;
+
   return (
-    <StyledModal
-      open={open}
+    <Modal
       onClose={handleClose}
       title="Rename Column"
       maxWidth="xs"

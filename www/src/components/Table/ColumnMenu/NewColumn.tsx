@@ -4,7 +4,7 @@ import { IMenuModalProps } from ".";
 
 import { makeStyles, createStyles, TextField } from "@material-ui/core";
 
-import StyledModal from "components/StyledModal";
+import Modal from "components/Modal";
 import { FieldType } from "constants/fields";
 import FieldsDropdown from "./FieldsDropdown";
 
@@ -44,9 +44,10 @@ export default function FormDialog({
     }
   }, [type]);
 
+  if (!open) return null;
+
   return (
-    <StyledModal
-      open={open}
+    <Modal
       onClose={handleClose}
       title="Add New Column"
       fullWidth
