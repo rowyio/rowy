@@ -1,15 +1,32 @@
-import React, { useContext, useEffect } from "react";
-import Snackbar from "@material-ui/core/Snackbar";
-import { SnackContext } from "contexts/SnackContext";
-import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
-import Grid from "@material-ui/core/Grid";
-import Card from "@material-ui/core/Card";
-import CircularProgress from "@material-ui/core/CircularProgress";
-function Alert(props: AlertProps) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
+import React from "react";
+
+import {
+  makeStyles,
+  createStyles,
+  Snackbar,
+  CircularProgress,
+} from "@material-ui/core";
+import Alert from "@material-ui/lab/Alert";
+
+import { useSnackContext } from "contexts/SnackContext";
+import antlerPalette from "Theme/antlerPalette";
+
+const useStyles = makeStyles((theme) =>
+  createStyles({
+    progressAction: { marginRight: 0 },
+    progressText: { marginLeft: theme.spacing(2) },
+    progress: {
+      color: antlerPalette.green[100],
+      marginLeft: theme.spacing(2),
+    },
+
+    alertIcon: { padding: 0 },
+    alertMessage: { padding: theme.spacing(0.75, 2) },
+  })
+);
+
 export default function Snack() {
-  const snackContext = useContext(SnackContext);
+  const classes = useStyles();
 
   const {
     position,
@@ -20,42 +37,71 @@ export default function Snack() {
     action,
     variant,
     progress,
-  } = snackContext;
-  const { vertical, horizontal } = position;
+  } = useSnackContext();
 
-  useEffect(() => {
-    if (isOpen && variant !== "progress") setTimeout(close, duration ?? 1000);
-  }, [isOpen]);
-  return (
-    <Snackbar
-      anchorOrigin={{ vertical, horizontal }}
-      key={`${vertical},${horizontal}`}
-      open={isOpen}
-    >
-      {variant === "progress" ? (
-        <Card>
-          <Grid container direction="row" justify="space-between">
-            {message}
-            {progress.value
-              ? `${progress.value}${
-                  progress.target ? `/${progress.target}` : ""
-                }`
-              : ""}
+  if (variant === "progress")
+    return (
+      <Snackbar
+        anchorOrigin={position}
+        open={isOpen}
+        onClose={close}
+        message={message}
+        action={
+          <>
+            <span className={classes.progressText}>
+              {progress.value}
+              {progress.target && `/${progress.target}`}
+            </span>
+
             <CircularProgress
-              variant={progress.value ? "determinate" : "indeterminate"}
+              variant={progress.value ? "static" : "indeterminate"}
               value={
                 progress.target
                   ? (progress.value / progress.target) * 100
                   : progress.value
               }
+              size={24}
+              className={classes.progress}
             />
-          </Grid>
-        </Card>
-      ) : (
-        <Alert onClose={close} action={action} severity={variant}>
-          {message}
-        </Alert>
-      )}
+          </>
+        }
+        ContentProps={{ classes: { action: classes.progressAction } }}
+        // Stop closing when user clicks
+        ClickAwayListenerProps={{ mouseEvent: false }}
+      />
+    );
+
+  if (!variant)
+    return (
+      <Snackbar
+        anchorOrigin={position}
+        open={isOpen}
+        onClose={close}
+        autoHideDuration={duration}
+        message={message}
+        action={action}
+        ClickAwayListenerProps={{ mouseEvent: false }}
+        onClick={close}
+      />
+    );
+
+  return (
+    <Snackbar
+      anchorOrigin={position}
+      open={isOpen}
+      onClose={close}
+      autoHideDuration={duration}
+      ClickAwayListenerProps={{ mouseEvent: false }}
+      onClick={close}
+    >
+      <Alert
+        variant="filled"
+        action={action}
+        severity={variant}
+        classes={{ icon: classes.alertIcon, message: classes.alertMessage }}
+      >
+        {message}
+      </Alert>
     </Snackbar>
   );
 }

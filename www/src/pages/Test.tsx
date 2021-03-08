@@ -5,13 +5,14 @@ const TestView = () => {
   const snackContext = useContext(SnackContext);
 
   useEffect(() => {
+    // alert("OPEN");
     snackContext.open({
       variant: "progress",
-      message: "Preparing files to be downloading",
+      message: "Preparing files for download",
       duration: undefined,
     });
 
-    snackContext.setProgress({ value: 40, target: 120 });
+    snackContext.setProgress({ value: 90, target: 120 });
   }, []);
 
   return <></>;
