@@ -276,6 +276,10 @@ export const defaultOverrides = (theme: Theme): ThemeOptions => ({
       },
     },
     MuiPaper: {
+      root: {
+        backgroundColor: "var(--bg-paper)",
+        "--bg-paper": theme.palette.background.paper,
+      },
       rounded: { borderRadius: 8 },
       // Dark theme paper elevation backgrounds
       ...(() => {
@@ -292,8 +296,10 @@ export const defaultOverrides = (theme: Theme): ThemeOptions => ({
           }
 
           classes["elevation" + i] = {
-            backgroundColor:
-              theme.palette.background.elevation[closestElevation],
+            "&&": {
+              "--bg-paper":
+                theme.palette.background.elevation[closestElevation],
+            },
           };
         }
         return classes;
@@ -430,6 +436,9 @@ export const defaultOverrides = (theme: Theme): ThemeOptions => ({
       deleteIcon: <ClearIcon />,
     },
     MuiTextField: { variant: "filled" },
+    MuiDialog: {
+      PaperProps: { elevation: 4 },
+    },
   },
 });
 
