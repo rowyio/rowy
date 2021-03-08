@@ -63,116 +63,120 @@ export default function Step2NewColumns({
 
   return (
     <>
-      <Grid container spacing={2} className={classes.typeSelectRow}>
-        <Grid item xs={12} sm={6}>
-          <Typography variant="overline" gutterBottom component="h2">
-            New Firetable Columns
-          </Typography>
-          <Divider />
-
-          <FadeList>
-            {config.newColumns.map(({ key, name, type }, i) => (
-              <li key={key}>
-                <ButtonBase
-                  className={classes.buttonBase}
-                  onClick={() => setFieldToEdit(i)}
-                  aria-label={`Edit column ${key}`}
-                  focusRipple
-                >
-                  <Column
-                    label={name}
-                    type={type}
-                    active={i === fieldToEdit}
-                    secondaryItem={i === fieldToEdit && <ChevronRightIcon />}
-                  />
-                </ButtonBase>
-              </li>
-            ))}
-          </FadeList>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <Typography
-            variant="overline"
-            noWrap
-            component="h2"
-            className={classes.typeHeading}
-          >
-            Column Type: {config.newColumns[fieldToEdit].name}
-          </Typography>
-
-          <FieldsDropdown
-            value={config.newColumns[fieldToEdit].type}
-            onChange={handleChange}
-            hideLabel
-            options={SELECTABLE_TYPES}
-          />
-        </Grid>
-      </Grid>
-
-      <Grid container spacing={3}>
-        {!isXs && (
+      <div>
+        <Grid container spacing={2} className={classes.typeSelectRow}>
           <Grid item xs={12} sm={6}>
             <Typography variant="overline" gutterBottom component="h2">
-              Raw Data
+              New Firetable Columns
+            </Typography>
+            <Divider />
+
+            <FadeList>
+              {config.newColumns.map(({ key, name, type }, i) => (
+                <li key={key}>
+                  <ButtonBase
+                    className={classes.buttonBase}
+                    onClick={() => setFieldToEdit(i)}
+                    aria-label={`Edit column ${key}`}
+                    focusRipple
+                  >
+                    <Column
+                      label={name}
+                      type={type}
+                      active={i === fieldToEdit}
+                      secondaryItem={i === fieldToEdit && <ChevronRightIcon />}
+                    />
+                  </ButtonBase>
+                </li>
+              ))}
+            </FadeList>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Typography
+              variant="overline"
+              noWrap
+              component="h2"
+              className={classes.typeHeading}
+            >
+              Column Type: {config.newColumns[fieldToEdit].name}
+            </Typography>
+
+            <FieldsDropdown
+              value={config.newColumns[fieldToEdit].type}
+              onChange={handleChange}
+              hideLabel
+              options={SELECTABLE_TYPES}
+            />
+          </Grid>
+        </Grid>
+      </div>
+
+      <div>
+        <Grid container spacing={3}>
+          {!isXs && (
+            <Grid item xs={12} sm={6}>
+              <Typography variant="overline" gutterBottom component="h2">
+                Raw Data
+              </Typography>
+            </Grid>
+          )}
+          <Grid item xs={12} sm={6}>
+            <Typography variant="overline" gutterBottom component="h2">
+              Column Preview
             </Typography>
           </Grid>
-        )}
-        <Grid item xs={12} sm={6}>
-          <Typography variant="overline" gutterBottom component="h2">
-            Column Preview
-          </Typography>
         </Grid>
-      </Grid>
 
-      <Divider className={classes.previewDivider} />
+        <Divider className={classes.previewDivider} />
 
-      <Grid container spacing={3}>
-        {!isXs && (
+        <Grid container spacing={3}>
+          {!isXs && (
+            <Grid item xs={12} sm={6}>
+              <Column label={config.newColumns[fieldToEdit].key} />
+            </Grid>
+          )}
           <Grid item xs={12} sm={6}>
-            <Column label={config.newColumns[fieldToEdit].key} />
+            <Column
+              label={config.newColumns[fieldToEdit].name}
+              type={config.newColumns[fieldToEdit].type}
+            />
           </Grid>
-        )}
-        <Grid item xs={12} sm={6}>
-          <Column
-            label={config.newColumns[fieldToEdit].name}
-            type={config.newColumns[fieldToEdit].type}
-          />
         </Grid>
-      </Grid>
 
-      <FadeList classes={{ list: classes.previewList }}>
-        {rowData.slice(0, 20).map((cell, i) => (
-          <Grid container key={i} wrap="nowrap">
-            {!isXs && (
+        <FadeList classes={{ list: classes.previewList }}>
+          {rowData.slice(0, 20).map((cell, i) => (
+            <Grid container key={i} wrap="nowrap">
+              {!isXs && (
+                <Grid item xs className={classes.cellContainer}>
+                  <Cell
+                    field={config.newColumns[fieldToEdit].key}
+                    value={(JSON.stringify(cell) || "")
+                      .replace(/^"/, "")
+                      .replace(/"$/, "")}
+                    type={FieldType.shortText}
+                  />
+                </Grid>
+              )}
+
+              {!isXs && <Grid item className={classes.previewSpacer} />}
+
               <Grid item xs className={classes.cellContainer}>
                 <Cell
                   field={config.newColumns[fieldToEdit].key}
-                  value={(JSON.stringify(cell) || "")
-                    .replace(/^"/, "")
-                    .replace(/"$/, "")}
-                  type={FieldType.shortText}
+                  value={
+                    config.newColumns[fieldToEdit].type === FieldType.date ||
+                    config.newColumns[fieldToEdit].type === FieldType.dateTime
+                      ? parseJSON(cell).getTime()
+                      : cell
+                  }
+                  type={config.newColumns[fieldToEdit].type}
+                  name={config.newColumns[fieldToEdit].name}
                 />
               </Grid>
-            )}
-
-            {!isXs && <Grid item className={classes.previewSpacer} />}
-
-            <Grid item xs className={classes.cellContainer}>
-              <Cell
-                field={config.newColumns[fieldToEdit].key}
-                value={
-                  config.newColumns[fieldToEdit].type === FieldType.date ||
-                  config.newColumns[fieldToEdit].type === FieldType.dateTime
-                    ? parseJSON(cell).getTime()
-                    : cell
-                }
-                type={config.newColumns[fieldToEdit].type}
-                name={config.newColumns[fieldToEdit].name}
-              />
             </Grid>
-          </Grid>
-        ))}
-      </FadeList>
+          ))}
+        </FadeList>
+      </div>
     </>
   );
 }

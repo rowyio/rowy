@@ -431,10 +431,7 @@ export const defaultOverrides = (theme: Theme): ThemeOptions => ({
       color: "primary",
       underline: "hover",
     },
-    MuiChip: {
-      variant: "outlined",
-      deleteIcon: <ClearIcon />,
-    },
+    MuiChip: { deleteIcon: <ClearIcon /> },
     MuiTextField: { variant: "filled" },
     MuiDialog: {
       PaperProps: { elevation: 4 },

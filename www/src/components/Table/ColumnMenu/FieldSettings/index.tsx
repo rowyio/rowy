@@ -3,11 +3,8 @@ import _sortBy from "lodash/sortBy";
 import _set from "lodash/set";
 import { IMenuModalProps } from "..";
 
-import { Typography, FormControlLabel, Switch } from "@material-ui/core";
-
-import StyledModal from "components/StyledModal";
+import Modal from "components/Modal";
 import { getFieldProp } from "components/fields";
-import Subheading from "../Subheading";
 import DefaultValueInput from "./DefaultValueInput";
 import ErrorBoundary from "components/ErrorBoundary";
 import Loading from "components/Loading";
@@ -40,10 +37,11 @@ export default function FieldSettings(props: IMenuModalProps) {
     setNewConfig(updatedConfig);
   };
 
+  if (!open) return null;
+
   return (
-    <StyledModal
+    <Modal
       maxWidth="md"
-      open={open}
       onClose={handleClose}
       title={`${name}: Settings`}
       children={
@@ -83,7 +81,8 @@ export default function FieldSettings(props: IMenuModalProps) {
                   />
                 </section> */}
 
-                <section>
+                <section style={{ marginTop: 1 }}>
+                  {/* top margin fixes visual bug */}
                   <ErrorBoundary fullScreen={false}>
                     <DefaultValueInput
                       handleChange={handleChange}

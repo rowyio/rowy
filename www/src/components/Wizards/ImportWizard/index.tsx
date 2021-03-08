@@ -64,7 +64,7 @@ export default function ImportWizard() {
       title="Import"
       steps={[
         {
-          title: "choose columns",
+          title: "Choose Columns",
           description: (
             <>
               <Typography gutterBottom>
@@ -88,7 +88,7 @@ export default function ImportWizard() {
           disableNext: Object.keys(config).length === 0,
         },
         {
-          title: "rename columns",
+          title: "Rename Columns",
           description:
             "Rename your Firetable columns with user-friendly names. These changes will not update the field names in your database.",
           content: (
@@ -101,7 +101,7 @@ export default function ImportWizard() {
           ),
         },
         {
-          title: "set column types",
+          title: "Set Column Types",
           description:
             "Set the type of each column to display your data correctly. Some column types have been suggested based off your data.",
           content: (
@@ -114,7 +114,7 @@ export default function ImportWizard() {
           ),
         },
         {
-          title: "preview",
+          title: "Preview",
           description:
             "Preview your data with your configured columns. You can change column types by clicking “Edit Type” from the column menu at any time.",
           content: (
