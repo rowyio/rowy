@@ -26,9 +26,10 @@ export const config: IFieldConfig = {
   SideDrawerField,
   csvImportParser: (v) => {
     try {
-      return parseFloat(v);
+      const parsedValue = parseFloat(v);
+      return Number.isNaN(parsedValue) ? null : parsedValue;
     } catch (e) {
-      return v;
+      return null;
     }
   },
 };
