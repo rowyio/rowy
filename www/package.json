@@ -54,7 +54,7 @@
     "use-debounce": "^3.3.0",
     "use-persisted-state": "^0.3.0",
     "yarn": "^1.19.0",
-    "yup": "^0.27.0"
+    "yup": "^0.32.9"
   },
   "scripts": {
     "serve": "serve -s build",
