@@ -21,6 +21,7 @@ import SparkIcon from "@material-ui/icons/OfflineBolt";
 
 import { SnackContext } from "contexts/SnackContext";
 import { useFiretableContext } from "contexts/FiretableContext";
+import { useAppContext } from "contexts/AppContext";
 import CodeEditor from "../editors/CodeEditor";
 import { triggerCloudBuild } from "../../../firebase/callables";
 const useStyles = makeStyles(() =>
@@ -38,6 +39,7 @@ export default function SparksEditor() {
 
   const { tableState, tableActions } = useFiretableContext();
   const snackContext = useContext(SnackContext);
+  const appContext = useAppContext();
   const { requestConfirmation } = useConfirmation();
   const currentSparks = tableState?.config.sparks ?? "";
   const [localSparks, setLocalSparks] = useState(currentSparks);
@@ -64,10 +66,14 @@ export default function SparksEditor() {
       confirm: "Deploy",
       cancel: "later",
       handleConfirm: async () => {
-        const response = await triggerCloudBuild(
-          tableState?.config.tableConfig.path
-        );
-        console.log(response);
+        const userTokenInfo = await appContext?.currentUser?.getIdTokenResult();
+        const userToken = userTokenInfo?.token;
+        console.log(userToken);
+        // console.log(firebase.User.getIdToken());
+        // const response = await triggerCloudBuild(
+        //   tableState?.config.tableConfig.path
+        // );
+        // console.log(response);
       },
     });
   };
