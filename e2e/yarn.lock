@@ -334,11 +334,6 @@ color-name@~1.1.4:
   resolved "https://registry.yarnpkg.com/color-name/-/color-name-1.1.4.tgz#c2a09a87acbde69543de6f63fa3995c826c536a2"
   integrity sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==
 
-commander@^6.1.0:
-  version "6.2.0"
-  resolved "https://registry.yarnpkg.com/commander/-/commander-6.2.0.tgz#b990bfb8ac030aedc6d11bc04d1488ffef56db75"
-  integrity sha512-zP4jEKbe8SHzKJYQmq8Y9gYjtO/POJLgIdKgV7B9qNmABVFVc+ctqSX6iXh4mCpJfRBOabiZ2YKPg8ciDw6C+Q==
-
 compressible@^2.0.12:
   version "2.0.18"
   resolved "https://registry.yarnpkg.com/compressible/-/compressible-2.0.18.tgz#af53cca6b070d4c3c0750fbd77286a6d7cc46fba"
@@ -661,11 +656,6 @@ hash-stream-validation@^0.2.2:
   resolved "https://registry.yarnpkg.com/hash-stream-validation/-/hash-stream-validation-0.2.4.tgz#ee68b41bf822f7f44db1142ec28ba9ee7ccb7512"
   integrity sha512-Gjzu0Xn7IagXVkSu9cSFuK1fqzwtLwFhNhVL8IFJijRNMgUttFbBSIAzKuSIrsFMO1+g1RlsoN49zPIbwPDMGQ==
 
-highlight.js@^10.1.2:
-  version "10.4.1"
-  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-10.4.1.tgz#d48fbcf4a9971c4361b3f95f302747afe19dbad0"
-  integrity sha512-yR5lWvNz7c85OhVAEAeFhVCc/GV4C30Fjzc/rCP0aCWzc1UUOPUk55dK/qdwTZHBvMZo+eZ2jpk62ndX/xMFlg==
-
 http-parser-js@>=0.5.1:
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/http-parser-js/-/http-parser-js-0.5.2.tgz#da2e31d237b393aae72ace43882dd7e270a8ff77"
@@ -968,31 +958,10 @@ pend@~1.2.0:
   resolved "https://registry.yarnpkg.com/pend/-/pend-1.2.0.tgz#7a57eb550a6783f9115331fcf4663d5c8e007a50"
   integrity sha1-elfrVQpng/kRUzH89GY9XI4AelA=
 
-playwright-cli@^0.150.0:
-  version "0.150.0"
-  resolved "https://registry.yarnpkg.com/playwright-cli/-/playwright-cli-0.150.0.tgz#6b742eac17d43aa1e520b804d3ccaefefbdffc61"
-  integrity sha512-B+BqGeZhKh1JCOf1B+flHmwYtD4bjk2uoZ6cV0IiiBhP7ofI3RLmrUrXil9EeiLt5UtZq97OE9z+naN8DZaasw==
-  dependencies:
-    commander "^6.1.0"
-    highlight.js "^10.1.2"
-    playwright "=1.5.0"
-
-playwright@=1.5.0:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/playwright/-/playwright-1.5.0.tgz#27f80ea373b9eec4f735973de4e16ba983b37207"
-  integrity sha512-szV0YksBqKQ8XTaDhhvwoA+0nBICj2GOe8ptesSpmUq8xXjjSYSJqwH2J7haYwY35GD9zzH2+HGqeObI2i8tJw==
-  dependencies:
-    debug "^4.1.1"
-    extract-zip "^2.0.1"
-    https-proxy-agent "^5.0.0"
-    jpeg-js "^0.4.2"
-    mime "^2.4.6"
-    pngjs "^5.0.0"
-    progress "^2.0.3"
-    proper-lockfile "^4.1.1"
-    proxy-from-env "^1.1.0"
-    rimraf "^3.0.2"
-    ws "^7.3.1"
+playwright-cli@^0.180.0:
+  version "0.180.0"
+  resolved "https://registry.yarnpkg.com/playwright-cli/-/playwright-cli-0.180.0.tgz#5e95a517732b12f0f70e88e4a60bfbd622149b2f"
+  integrity sha512-T2mBkdIwSNz8K+wRYpZgPDWzS3pUjSomi+9W6ybg/FSTQvxceGg2n8upo4YGFkBrH4PyOcRTi+si+B7O6yRa+g==
 
 playwright@^1.5.2:
   version "1.5.2"
