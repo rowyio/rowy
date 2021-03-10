@@ -2475,10 +2475,10 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
-"@types/chroma-js@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@types/chroma-js/-/chroma-js-2.0.0.tgz#b0fc98c8625d963f14e8138e0a7961103303ab22"
-  integrity sha512-iomunXsXjDxhm2y1OeJt8NwmgC7RyNkPAOddlYVGsbGoX8+1jYt84SG4/tf6RWcwzROLx1kPXPE95by1s+ebIg==
+"@types/chroma-js@^2.1.3":
+  version "2.1.3"
+  resolved "https://registry.yarnpkg.com/@types/chroma-js/-/chroma-js-2.1.3.tgz#0b03d737ff28fad10eb884e0c6cedd5ffdc4ba0a"
+  integrity sha512-1xGPhoSGY1CPmXLCBcjVZSQinFjL26vlR8ZqprsBWiFyED4JacJJ9zHhh5aaUXqbY9B37mKQ73nlydVAXmr1+g==
 
 "@types/color-name@^1.1.1":
   version "1.1.1"
