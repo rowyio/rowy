@@ -24,7 +24,7 @@
     "date-fns": "^2.19.0",
     "dompurify": "^2.2.6",
     "file-saver": "^2.0.5",
-    "firebase": "^7.23.0",
+    "firebase": "^8.2.10",
     "hotkeys-js": "^3.7.2",
     "json-format": "^1.0.1",
     "json2csv": "^5.0.1",
