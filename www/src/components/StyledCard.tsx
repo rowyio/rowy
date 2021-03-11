@@ -160,7 +160,7 @@ export default function StyledCard({
             {primaryLink && (
               <Button
                 color="primary"
-                component={Link}
+                component={Link as any}
                 to={primaryLink.to}
                 children={primaryLink.children || primaryLink.label}
                 endIcon={<GoIcon />}

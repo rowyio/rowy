@@ -4,6 +4,7 @@ export enum routes {
   impersonatorAuth = "/impersonatorAuth",
   jwtAuth = "/jwtAuth",
   signOut = "/signOut",
+  authSetup = "/authSetup",
 
   table = "/table",
   tableGroup = "/tableGroup",
