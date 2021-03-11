@@ -43,7 +43,7 @@
     "react-hook-form": "^6.15.4",
     "react-image": "^4.0.3",
     "react-joyride": "^2.3.0",
-    "react-json-view": "^1.19.1",
+    "react-json-view": "^1.21.3",
     "react-router-dom": "^5.0.1",
     "react-scripts": "^3.4.3",
     "react-scroll-sync": "^0.8.0",
