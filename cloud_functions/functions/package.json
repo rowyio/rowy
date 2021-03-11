@@ -38,7 +38,7 @@
     "@types/imagemin-pngquant": "^7.0.0",
     "@types/json2csv": "^5.0.1",
     "@types/lodash": "^4.14.158",
-    "@types/sharp": "^0.25.1",
+    "@types/sharp": "^0.27.1",
     "firebase-tools": "^9.2.2",
     "husky": "^4.2.5",
     "prettier": "^2.1.1",
