@@ -70,7 +70,8 @@ export default function SparksEditor() {
         const cloudrunFTUrl = settingsDoc.get("cloudrunFTUrl");
         if (!cloudrunFTUrl) {
           snack.open({
-            message: "You need to configure cloud run FT URL.",
+            message:
+              "Cloud Run trigger URL not configured. Configuration guide: https://github.com/AntlerVC/firetable/wiki/Configure-Cloud-Run-trigger-URL",
             severity: "error",
           });
         }
