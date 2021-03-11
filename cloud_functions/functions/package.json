@@ -35,7 +35,7 @@
     "@types/algoliasearch": "^3.34.10",
     "@types/imagemin": "^7.0.0",
     "@types/imagemin-mozjpeg": "^8.0.0",
-    "@types/imagemin-pngquant": "^7.0.0",
+    "@types/imagemin-pngquant": "^8.0.0",
     "@types/json2csv": "^5.0.1",
     "@types/lodash": "^4.14.158",
     "@types/sharp": "^0.25.1",
