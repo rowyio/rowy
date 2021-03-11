@@ -2564,10 +2564,10 @@ firebase-admin@^9.4.2:
     "@google-cloud/firestore" "^4.5.0"
     "@google-cloud/storage" "^5.3.0"
 
-firebase-functions@^3.13.1:
-  version "3.13.1"
-  resolved "https://registry.yarnpkg.com/firebase-functions/-/firebase-functions-3.13.1.tgz#a34e61ab328903fe88a9532d267f031d9a0d9e23"
-  integrity sha512-tmYHN9OWWIij/8xO72AD2sKHm9T8pdLPYXy5RWk9VidP8+LDOUZ68vq1g1WKeSkRR7WyVYQ3scU2QoMDfe9T8g==
+firebase-functions@^3.13.2:
+  version "3.13.2"
+  resolved "https://registry.yarnpkg.com/firebase-functions/-/firebase-functions-3.13.2.tgz#e5728b91a51f16f538e53c4f50497056b5702d58"
+  integrity sha512-XHgAQZqA62awr4l9mNlJv6qnv5MkMkLuo+hafdW0T7IJj1PgrZtuIo5x+ib2npAcB0XhX5Sg0QR1hMYPAlfbaA==
   dependencies:
     "@types/express" "4.17.3"
     cors "^2.8.5"
@@ -4395,7 +4395,6 @@ node-forge@^0.10.0:
   version "0.10.0"
   resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-0.10.0.tgz#32dea2afb3e9926f02ee5ce8794902691a676bf3"
   integrity sha512-PPmu8eEeG9saEUvI97fm4OYxXVB6bFvyNTyiUOBichBpFG8A1Ljw3bY62+5oOjDEMHRnd0Y7HQ+x7uzxOzC6JA==
-
 
 node-gyp@^7.1.2:
   version "7.1.2"
