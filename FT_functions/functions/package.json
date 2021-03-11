@@ -22,7 +22,7 @@
     "@types/node": "^14.14.11",
     "firebase-tools": "^9.2.2",
     "husky": "^4.2.5",
-    "prettier": "^2.1.1",
+    "prettier": "^2.2.1",
     "pretty-quick": "^3.0.0",
     "ts-node": "^8.6.2",
     "tslint": "^6.1.0",
