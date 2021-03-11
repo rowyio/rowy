@@ -22,7 +22,7 @@ updates:
       - "dependencies"
 
   - package-ecosystem: "npm" # See documentation for possible values
-    directory: "/FT_functions" # Location of package manifests
+    directory: "/FT_functions/functions" # Location of package manifests
     schedule:
       interval: "daily"
     target-branch: "develop"
@@ -30,7 +30,7 @@ updates:
       - "dependencies"
 
   - package-ecosystem: "npm" # See documentation for possible values
-    directory: "/cloud_actions" # Location of package manifests
+    directory: "/FT_functions/compiler" # Location of package manifests
     schedule:
       interval: "daily"
     target-branch: "develop"
@@ -38,7 +38,7 @@ updates:
       - "dependencies"
 
   - package-ecosystem: "npm" # See documentation for possible values
-    directory: "/cloud_build_functions" # Location of package manifests
+    directory: "/cloud_actions/functions" # Location of package manifests
     schedule:
       interval: "daily"
     target-branch: "develop"
@@ -46,10 +46,17 @@ updates:
       - "dependencies"
 
   - package-ecosystem: "npm" # See documentation for possible values
-    directory: "/cloud_functions" # Location of package manifests
+    directory: "/cloud_build_functions/functions" # Location of package manifests
     schedule:
       interval: "daily"
     target-branch: "develop"
     labels:
       - "dependencies"
 
+  - package-ecosystem: "npm" # See documentation for possible values
+    directory: "/cloud_functions/functions" # Location of package manifests
+    schedule:
+      interval: "daily"
+    target-branch: "develop"
+    labels:
+      - "dependencies"
