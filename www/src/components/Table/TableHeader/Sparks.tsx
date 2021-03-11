@@ -21,11 +21,9 @@ import {
 
 import SparkIcon from "@material-ui/icons/OfflineBolt";
 
-import { SnackContext } from "contexts/SnackContext";
 import { useFiretableContext } from "contexts/FiretableContext";
 import { useAppContext } from "contexts/AppContext";
 import CodeEditor from "../editors/CodeEditor";
-import { triggerCloudBuild } from "../../../firebase/callables";
 const useStyles = makeStyles(() =>
   createStyles({
     button: {
@@ -41,7 +39,6 @@ export default function SparksEditor() {
   const snack = useSnackContext();
 
   const { tableState, tableActions } = useFiretableContext();
-  const snackContext = useContext(SnackContext);
   const appContext = useAppContext();
   const { requestConfirmation } = useConfirmation();
   const currentSparks = tableState?.config.sparks ?? "";

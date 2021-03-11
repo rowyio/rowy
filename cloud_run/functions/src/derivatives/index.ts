@@ -23,9 +23,7 @@ const derivative = (
       utilFns: any;
     }) => any;
   }[]
-) => async (
-  change: functions.Change<functions.firestore.DocumentSnapshot>,
-) => {
+) => async (change: functions.Change<functions.firestore.DocumentSnapshot>) => {
   try {
     const beforeData = change.before?.data();
     const afterData = change.after?.data();

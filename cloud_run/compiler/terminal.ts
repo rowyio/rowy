@@ -1,11 +1,19 @@
 import * as child from "child_process";
 
-function execute(command, callback) {
+function execute(command: string, callback: any) {
+  console.log(command);
   child.exec(command, function (error, stdout, stderr) {
     console.log({ error, stdout, stderr });
     callback(stdout);
   });
 }
+
+export const asyncExecute = async (command: string) =>
+  new Promise(async (resolve, reject) => {
+    execute(command, function () {
+      resolve(true);
+    });
+  });
 
 export const addPackages = (packages: { name: string; version?: string }[]) =>
   new Promise((resolve, reject) => {
