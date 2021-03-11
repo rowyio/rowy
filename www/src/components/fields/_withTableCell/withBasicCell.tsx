@@ -2,6 +2,7 @@ import React from "react";
 import { FormatterProps } from "react-data-grid";
 import { IBasicCellProps } from "../types";
 
+import ErrorBoundary from "components/ErrorBoundary";
 import { FieldType } from "constants/fields";
 import { getCellValue } from "utils/fns";
 
@@ -15,11 +16,13 @@ export default function withBasicCell(
 ) {
   return function BasicCell(props: FormatterProps<any>) {
     return (
-      <BasicCellComponent
-        value={getCellValue(props.row, props.column.key)}
-        name={props.column.name}
-        type={(props.column as any).type as FieldType}
-      />
+      <ErrorBoundary fullScreen={false} basic wrap="nowrap">
+        <BasicCellComponent
+          value={getCellValue(props.row, props.column.key)}
+          name={props.column.name}
+          type={(props.column as any).type as FieldType}
+        />
+      </ErrorBoundary>
     );
   };
 }
