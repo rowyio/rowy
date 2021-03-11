@@ -4,6 +4,8 @@ import _get from "lodash/get";
 import _find from "lodash/find";
 import _sortBy from "lodash/sortBy";
 import { useConfirmation } from "components/ConfirmationDialog";
+import { useSnackContext } from "contexts/SnackContext";
+import { db } from "../../../firebase";
 
 import {
   makeStyles,
@@ -36,6 +38,7 @@ const useStyles = makeStyles(() =>
 export default function SparksEditor() {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
+  const snack = useSnackContext();
 
   const { tableState, tableActions } = useFiretableContext();
   const snackContext = useContext(SnackContext);
@@ -66,22 +69,28 @@ export default function SparksEditor() {
       confirm: "Deploy",
       cancel: "later",
       handleConfirm: async () => {
+        const settingsDoc = await db.doc("/_FIRETABLE_/settings").get();
+        const cloudrunFTUrl = settingsDoc.get("cloudrunFTUrl");
+        if (!cloudrunFTUrl) {
+          snack.open({
+            message: "You need to configure cloud run FT URL.",
+            severity: "error",
+          });
+        }
+
         const userTokenInfo = await appContext?.currentUser?.getIdTokenResult();
         const userToken = userTokenInfo?.token;
         try {
-          const response = await fetch(
-            "https://helloworld-bobby-vqbitlhmnq-de.a.run.app/",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                configPath: tableState?.config.tableConfig.path,
-                token: userToken,
-              }),
-            }
-          );
+          const response = await fetch(cloudrunFTUrl, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              configPath: tableState?.config.tableConfig.path,
+              token: userToken,
+            }),
+          });
           const data = await response.json();
           console.log(data);
         } catch (e) {

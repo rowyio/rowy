@@ -48,8 +48,8 @@ export default function SettingsDialog({
 
   useEffect(() => {
     if (!settingsDocState.loading) {
-      const cloudBuild = settingsDocState?.doc?.cloudBuild;
-      setForm(cloudBuild ? { cloudBuild } : FORM_EMPTY_STATE);
+      const cloudrunFTUrl = settingsDocState?.doc?.cloudrunFTUrl;
+      setForm({ cloudrunFTUrl });
     }
   }, [settingsDocState.doc, open]);
 
