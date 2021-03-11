@@ -12,7 +12,7 @@
   },
   "devDependencies": {
     "@types/node": "^14.14.11",
-    "firebase-tools": "^8.7.0",
+    "firebase-tools": "^9.6.0",
     "husky": "^4.2.5",
     "js-beautify": "^1.13.0",
     "prettier": "^2.1.1",
