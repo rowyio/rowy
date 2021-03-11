@@ -19,7 +19,7 @@
     "@monaco-editor/react": "^3.5.5",
     "@tinymce/tinymce-react": "^3.4.0",
     "algoliasearch": "^4.8.6",
-    "chroma-js": "^2.1.0",
+    "chroma-js": "^2.1.1",
     "csv-parse": "^4.15.3",
     "date-fns": "^2.19.0",
     "dompurify": "^2.2.6",
