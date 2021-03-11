@@ -68,12 +68,25 @@ export default function SparksEditor() {
       handleConfirm: async () => {
         const userTokenInfo = await appContext?.currentUser?.getIdTokenResult();
         const userToken = userTokenInfo?.token;
-        console.log(userToken);
-        // console.log(firebase.User.getIdToken());
-        // const response = await triggerCloudBuild(
-        //   tableState?.config.tableConfig.path
-        // );
-        // console.log(response);
+        try {
+          const response = await fetch(
+            "https://helloworld-bobby-vqbitlhmnq-de.a.run.app/",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                configPath: tableState?.config.tableConfig.path,
+                token: userToken,
+              }),
+            }
+          );
+          const data = await response.json();
+          console.log(data);
+        } catch (e) {
+          console.error(e);
+        }
       },
     });
   };
