@@ -20,7 +20,7 @@
     "request": "^2.88.2"
   },
   "devDependencies": {
-    "firebase-tools": "^8.7.0",
+    "firebase-tools": "^9.6.0",
     "husky": "^4.2.5",
     "prettier": "^2.1.1",
     "pretty-quick": "^3.0.0",
