@@ -1493,13 +1493,6 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.11.0":
-  version "7.11.2"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.11.2.tgz#f549c13c754cc40b87644b9fa9f09a6a95fe0736"
-  integrity sha512-TeWkU52so0mPtDcaCTxNBI/IHiz0pZgr8VEFqXFtZWpYD08ZB6FaSwVAS8MKRQAP3bYKiVjwysOJgMFY28o6Tw==
-  dependencies:
-    regenerator-runtime "^0.13.4"
-
 "@babel/runtime@^7.3.1", "@babel/runtime@^7.4.4", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.0", "@babel/runtime@^7.8.3":
   version "7.10.5"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.10.5.tgz#303d8bd440ecd5a491eae6117fd3367698674c5c"
@@ -2224,12 +2217,21 @@
   resolved "https://registry.yarnpkg.com/@mdi/js/-/js-5.8.55.tgz#630bc5fafd8b1d2f6e63489a9ab170177559e41b"
   integrity sha512-2bvln56SW6V/nSDC/0/NTu1bMF/CgSyZox8mcWbAPWElBN3UYIrukKDUckEER8ifr8X2YJl1RLKQqi7T7qLzmg==
 
-"@monaco-editor/react@^3.5.5":
-  version "3.5.5"
-  resolved "https://registry.yarnpkg.com/@monaco-editor/react/-/react-3.5.5.tgz#7ebef1903bf7e7925084f16efb6550a83a7efed6"
-  integrity sha512-2/j9KFMu0Lr1DKX6ZqPwiCbhfv47yD8849Cyi8BTlGGRIzCcrF2pIQPbsZrsO+A+uG/352BfOsSF3zKQT84NQQ==
+"@monaco-editor/loader@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@monaco-editor/loader/-/loader-1.0.0.tgz#c7ea78ef07cebcae83d92bbfe2bddab563468102"
+  integrity sha512-CA35bf5Y7wFWfeJZfkLslOxiatln3oTBKkfbdo+TF5H+UdPP96qHvhOUjjd1DeQ2NWsRkVPSnoSYek7NE5B26w==
   dependencies:
-    "@babel/runtime" "^7.11.0"
+    state-local "^1.0.6"
+
+"@monaco-editor/react@^4.0.11":
+  version "4.0.11"
+  resolved "https://registry.yarnpkg.com/@monaco-editor/react/-/react-4.0.11.tgz#e5f9f651988f2f73ac776ffb8391e81d121d5c32"
+  integrity sha512-IxGpfvCx9p5bTI+T8i7KPbvqsNppUYMT6xA6u65BKmI3/mrlRVFdDyzZTcd+SAAs+5n7n0m/gzAoeglUL+lWDQ==
+  dependencies:
+    "@monaco-editor/loader" "^1.0.0"
+    prop-types "^15.7.2"
+    state-local "^1.0.7"
 
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
@@ -13813,6 +13815,11 @@ stack-utils@^1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/stack-utils/-/stack-utils-1.0.2.tgz#33eba3897788558bebfc2db059dc158ec36cebb8"
   integrity sha512-MTX+MeG5U994cazkjd/9KNAapsHnibjMLnfXodlkXw76JEea0UiNzrqidzo1emMwk7w5Qhc9jd4Bn9TBb1MFwA==
+
+state-local@^1.0.6, state-local@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/state-local/-/state-local-1.0.7.tgz#da50211d07f05748d53009bee46307a37db386d5"
+  integrity sha512-HTEHMNieakEnoe33shBYcZ7NX83ACUjCu8c40iOGEZsngj9zRnkqS9j1pqQPXwobB0ZcVTk27REb7COQ0UR59w==
 
 static-extend@^0.1.1:
   version "0.1.2"
