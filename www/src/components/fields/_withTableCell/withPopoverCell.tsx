@@ -87,7 +87,11 @@ export default function withPopoverCell(
     };
 
     if (displayedComponent === "basic")
-      return <BasicCellComponent {...basicCellProps} />;
+      return (
+        <ErrorBoundary fullScreen={false} basic wrap="nowrap">
+          <BasicCellComponent {...basicCellProps} />
+        </ErrorBoundary>
+      );
 
     const handleSubmit = (value: any) => {
       if (updateCell && !options?.readOnly) {
@@ -120,39 +124,42 @@ export default function withPopoverCell(
       <InlineCellComponent {...commonCellProps} ref={inlineCellRef} />
     );
 
-    if (displayedComponent === "inline") return inlineCell;
+    if (displayedComponent === "inline")
+      return (
+        <ErrorBoundary fullScreen={false} basic wrap="nowrap">
+          {inlineCell}
+        </ErrorBoundary>
+      );
 
     const parentRef = inlineCellRef.current?.parentElement;
 
     if (displayedComponent === "popover")
       return (
-        <>
+        <ErrorBoundary fullScreen={false} basic wrap="nowrap">
           {inlineCell}
 
-          <ErrorBoundary fullScreen={false} basic wrap="nowrap">
-            <Suspense fallback={null}>
-              <Popover
-                open={popoverOpen}
-                anchorEl={parentRef}
-                onClose={() => showPopoverCell(false)}
-                {...popoverProps}
-                PaperProps={{
-                  classes: {
-                    root: transparent ? classes.transparentPaper : "",
-                  },
-                  ...popoverProps?.PaperProps,
-                }}
-                onClick={(e) => e.stopPropagation()}
-                onKeyDown={(e) => e.stopPropagation()}
-              >
-                <PopoverCellComponent
-                  {...commonCellProps}
-                  parentRef={parentRef}
-                />
-              </Popover>
-            </Suspense>
-          </ErrorBoundary>
-        </>
+          <Suspense fallback={null}>
+            <Popover
+              open={popoverOpen}
+              anchorEl={parentRef}
+              onClose={() => showPopoverCell(false)}
+              {...popoverProps}
+              PaperProps={{
+                classes: {
+                  root: transparent ? classes.transparentPaper : "",
+                },
+                ...popoverProps?.PaperProps,
+              }}
+              onClick={(e) => e.stopPropagation()}
+              onKeyDown={(e) => e.stopPropagation()}
+            >
+              <PopoverCellComponent
+                {...commonCellProps}
+                parentRef={parentRef}
+              />
+            </Popover>
+          </Suspense>
+        </ErrorBoundary>
       );
 
     // Should not reach this line

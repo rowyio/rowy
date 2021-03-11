@@ -49,7 +49,12 @@ export default function withHeavyCell(
     };
     const basicCell = <BasicCellComponent {...basicCellProps} />;
 
-    if (displayedComponent === "basic") return basicCell;
+    if (displayedComponent === "basic")
+      return (
+        <ErrorBoundary fullScreen={false} basic wrap="nowrap">
+          {basicCell}
+        </ErrorBoundary>
+      );
 
     const handleSubmit = (value: any) => {
       if (updateCell && !readOnly) {
