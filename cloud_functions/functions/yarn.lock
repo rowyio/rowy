@@ -217,14 +217,15 @@
     retry-request "^4.1.1"
     teeny-request "^7.0.0"
 
-"@google-cloud/firestore@^4.5.0", "@google-cloud/firestore@^4.9.1":
-  version "4.9.1"
-  resolved "https://registry.yarnpkg.com/@google-cloud/firestore/-/firestore-4.9.1.tgz#ce56e3df9c10aaa32522efd6c871b476bc44f651"
-  integrity sha512-lmg9xXGq56uS/T2PxyYWZCJ4FeCMgWPwx5iNU/IjLvru90qXRlxVcT4pg2acxng+MC7RntnZJQaExWvJR7Jgsg==
+"@google-cloud/firestore@^4.5.0", "@google-cloud/firestore@^4.9.7":
+  version "4.9.7"
+  resolved "https://registry.yarnpkg.com/@google-cloud/firestore/-/firestore-4.9.7.tgz#8fb9080ba0f6e074013412835b60db926515d139"
+  integrity sha512-s5W6rRxD5y3Oe3KJUNztIy4eIi9dBwJU36jd/QM3L8frpCuSh1fn6z0BD8IAV0AirQAg6aOzSlcwAwd/yeXCkw==
   dependencies:
     fast-deep-equal "^3.1.1"
     functional-red-black-tree "^1.0.1"
     google-gax "^2.9.2"
+    protobufjs "^6.8.6"
 
 "@google-cloud/paginator@^3.0.0":
   version "3.0.5"
@@ -4395,7 +4396,6 @@ node-forge@^0.10.0:
   version "0.10.0"
   resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-0.10.0.tgz#32dea2afb3e9926f02ee5ce8794902691a676bf3"
   integrity sha512-PPmu8eEeG9saEUvI97fm4OYxXVB6bFvyNTyiUOBichBpFG8A1Ljw3bY62+5oOjDEMHRnd0Y7HQ+x7uzxOzC6JA==
-
 
 node-gyp@^7.1.2:
   version "7.1.2"
