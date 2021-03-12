@@ -14,7 +14,7 @@
   },
   "main": "lib/index.js",
   "dependencies": {
-    "@google-cloud/secret-manager": "^3.2.3",
+    "@google-cloud/secret-manager": "^3.5.0",
     "firebase-admin": "^9.4.2",
     "firebase-functions": "^3.13.1"
   },
