@@ -140,7 +140,7 @@ export default function FieldSettings(props: IMenuModalProps) {
                     snack.open({
                       message:
                         "Cloud Run trigger URL not configured. Configuration guide: https://github.com/AntlerVC/firetable/wiki/Configure-Cloud-Run-trigger-URL",
-                      severity: "error",
+                      variant: "error",
                     });
                   }
 
