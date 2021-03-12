@@ -21,7 +21,7 @@
     "@google-cloud/pubsub": "^2.5.0",
     "@google-cloud/storage": "^5.1.2",
     "@sendgrid/mail": "^7.4.2",
-    "@slack/web-api": "^6.0.0",
+    "@slack/web-api": "^6.1.0",
     "algoliasearch": "^4.6.0",
     "firebase-admin": "^9.4.2",
     "firebase-functions": "^3.13.1",
