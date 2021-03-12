@@ -27,7 +27,7 @@
     "firebase-functions": "^3.13.1",
     "imagemin": "^7.0.1",
     "imagemin-mozjpeg": "^9.0.0",
-    "imagemin-pngquant": "^9.0.0",
+    "imagemin-pngquant": "^9.0.2",
     "lodash": "^4.17.19",
     "sharp": "^0.25.4"
   },
