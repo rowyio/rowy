@@ -42,7 +42,7 @@ export default function Settings({ handleChange, config }) {
 
   return (
     <>
-      <Subheading>Single Select Config</Subheading>
+      <Subheading>OPTIONS</Subheading>
       <div className={classes.optionsList}>
         {options?.map((option: string) => (
           <>
