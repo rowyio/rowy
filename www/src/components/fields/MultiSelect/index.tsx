@@ -17,6 +17,12 @@ const SideDrawerField = lazy(
       "./SideDrawerField" /* webpackChunkName: "SideDrawerField-MultiSelect" */
     )
 );
+const Settings = lazy(
+  () =>
+    import(
+      "../SingleSelect/Settings" /* webpackChunkName: "Settings-SingleSelect" */
+    )
+);
 
 export const config: IFieldConfig = {
   type: FieldType.multiSelect,
@@ -33,5 +39,6 @@ export const config: IFieldConfig = {
   }),
   TableEditor: NullEditor,
   SideDrawerField,
+  settings: Settings,
 };
 export default config;
