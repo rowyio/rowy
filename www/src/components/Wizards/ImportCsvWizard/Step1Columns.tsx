@@ -163,7 +163,7 @@ export default function Step1Columns({
   };
 
   return (
-    <>
+    <div>
       <Grid container spacing={7}>
         {!isXs && (
           <Grid item xs={12} sm={6}>
@@ -275,6 +275,6 @@ export default function Step1Columns({
           );
         })}
       </FadeList>
-    </>
+    </div>
   );
 }

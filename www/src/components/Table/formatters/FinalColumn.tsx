@@ -48,7 +48,7 @@ export default function FinalColumn({ row }: FormatterProps<any, any>) {
       (error) => {
         if (error.code === "permission-denied") {
           snack.open({
-            severity: "error",
+            variant: "error",
             message: "You don't have permissions to delete this row",
             duration: 3000,
             position: { vertical: "top", horizontal: "center" },

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import _camelCase from "lodash/camelCase";
 import _get from "lodash/get";
 import _find from "lodash/find";
@@ -7,42 +7,25 @@ import { useConfirmation } from "components/ConfirmationDialog";
 import { useSnackContext } from "contexts/SnackContext";
 import { db } from "../../../firebase";
 
-import {
-  makeStyles,
-  createStyles,
-  Tooltip,
-  Button,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  DialogContentText,
-  Dialog,
-} from "@material-ui/core";
-
+import { DialogContentText, Chip } from "@material-ui/core";
+import Alert from "@material-ui/lab/Alert";
+import TableHeaderButton from "./TableHeaderButton";
 import SparkIcon from "@material-ui/icons/OfflineBolt";
-
+import Modal from "components/Modal";
 import { useFiretableContext } from "contexts/FiretableContext";
 import { useAppContext } from "contexts/AppContext";
+
 import CodeEditor from "../editors/CodeEditor";
-const useStyles = makeStyles(() =>
-  createStyles({
-    button: {
-      padding: 0,
-      minWidth: 32,
-    },
-  })
-);
 
 export default function SparksEditor() {
-  const classes = useStyles();
-  const [open, setOpen] = useState(false);
-  const snack = useSnackContext();
 
+  const snack = useSnackContext();
   const { tableState, tableActions } = useFiretableContext();
   const appContext = useAppContext();
   const { requestConfirmation } = useConfirmation();
   const currentSparks = tableState?.config.sparks ?? "";
   const [localSparks, setLocalSparks] = useState(currentSparks);
+  const [open, setOpen] = useState(false);
   const handleClose = () => {
     if (currentSparks !== localSparks) {
       requestConfirmation({
@@ -72,7 +55,7 @@ export default function SparksEditor() {
           snack.open({
             message:
               "Cloud Run trigger URL not configured. Configuration guide: https://github.com/AntlerVC/firetable/wiki/Configure-Cloud-Run-trigger-URL",
-            severity: "error",
+            variant: "error",
           });
         }
 
@@ -97,61 +80,61 @@ export default function SparksEditor() {
       },
     });
   };
-
+  
   return (
     <>
-      <Tooltip title="Edit sparks">
-        <Button
-          onClick={() => setOpen(true)}
-          variant="contained"
-          color="secondary"
-          aria-label="Sparks"
-          className={classes.button}
-        >
-          <SparkIcon />
-        </Button>
-      </Tooltip>
+      <TableHeaderButton
+        title="Edit Sparks (ALPHA)"
+        onClick={() => setOpen(true)}
+        icon={<SparkIcon />}
+      />
 
-      <Dialog
-        open={open && !!tableState}
-        onClose={handleClose}
-        aria-labelledby="sparks-dialog"
-        aria-describedby="edit table sparks"
-        maxWidth={"xl"}
-        fullWidth
-      >
-        <DialogTitle id="form-dialog-title">
-          Edit {tableState?.tablePath} sparks
-        </DialogTitle>
+      {open && !!tableState && (
+        <Modal
+          onClose={handleClose}
+          maxWidth="xl"
+          fullWidth
+          title={
+            <>
+              Edit “{tableState?.tablePath}” Sparks{" "}
+              <Chip label="ALPHA" size="small" />
+            </>
+          }
+          children={
+            <>
+              <Alert severity="warning">
+                This is an alpha feature. Cloud Functions and Google Cloud
+                integration setup is required, but the process is not yet
+                finalised.
+              </Alert>
 
-        <DialogContent>
-          <DialogContentText id="form-dialog-description">
-            array of sparks that will evaluate and run onWrite events
-          </DialogContentText>
+              <DialogContentText>
+                Write your Sparks configuration below. Each Spark will be
+                evaluated and executed by Cloud Firestore <code>onWrite</code>{" "}
+                triggers on rows in this table.
+              </DialogContentText>
 
-          <CodeEditor
-            script={currentSparks}
-            handleChange={(newValue) => {
-              setLocalSparks(newValue);
-            }}
-          />
-        </DialogContent>
-
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Cancel
-          </Button>
-
-          <Button
-            onClick={handleSave}
-            disabled={localSparks === tableState?.config.sparks}
-            color="primary"
-            variant="contained"
-          >
-            Save Changes
-          </Button>
-        </DialogActions>
-      </Dialog>
+              <CodeEditor
+                script={currentSparks}
+                handleChange={(newValue) => {
+                  setLocalSparks(newValue);
+                }}
+              />
+            </>
+          }
+          actions={{
+            primary: {
+              children: "Save Changes",
+              onClick: handleSave,
+              disabled: localSparks === tableState?.config.sparks,
+            },
+            secondary: {
+              children: "Cancel",
+              onClick: handleClose,
+            },
+          }}
+        />
+      )}
     </>
   );
 }

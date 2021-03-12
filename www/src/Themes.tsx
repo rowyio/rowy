@@ -1,6 +1,8 @@
 import React from "react";
 import _clone from "lodash/clone";
 import _merge from "lodash/merge";
+import _omit from "lodash/omit";
+import _mapValues from "lodash/mapValues";
 
 import {
   createMuiTheme,
@@ -9,6 +11,8 @@ import {
   fade,
 } from "@material-ui/core/styles";
 import ClearIcon from "@material-ui/icons/Clear";
+
+import antlerPalette from "./Theme/antlerPalette";
 
 export const HEADING_FONT = "Europa, sans-serif";
 export const BODY_FONT = '"Open Sans", sans-serif';
@@ -272,6 +276,10 @@ export const defaultOverrides = (theme: Theme): ThemeOptions => ({
       },
     },
     MuiPaper: {
+      root: {
+        backgroundColor: "var(--bg-paper)",
+        "--bg-paper": theme.palette.background.paper,
+      },
       rounded: { borderRadius: 8 },
       // Dark theme paper elevation backgrounds
       ...(() => {
@@ -288,8 +296,10 @@ export const defaultOverrides = (theme: Theme): ThemeOptions => ({
           }
 
           classes["elevation" + i] = {
-            backgroundColor:
-              theme.palette.background.elevation[closestElevation],
+            "&&": {
+              "--bg-paper":
+                theme.palette.background.elevation[closestElevation],
+            },
           };
         }
         return classes;
@@ -365,6 +375,34 @@ export const defaultOverrides = (theme: Theme): ThemeOptions => ({
     MuiListItemIcon: {
       root: { minWidth: theme.spacing(40 / 8) },
     },
+
+    MuiSnackbar: {
+      root: {
+        ..._omit(theme.typography.overline, ["color"]),
+
+        "&& > *": {
+          ..._mapValues(
+            _omit(theme.typography.overline, ["color"]),
+            () => "inherit"
+          ),
+          alignItems: "center",
+        },
+      },
+    },
+    MuiSnackbarContent: {
+      root: {
+        backgroundColor: antlerPalette.aGray[700],
+        color: theme.palette.common.white,
+        userSelect: "none",
+
+        padding: theme.spacing(0.5, 2),
+        boxShadow: "none",
+      },
+
+      message: {
+        padding: theme.spacing(1, 2),
+      },
+    },
   },
   props: {
     MuiTypography: {
@@ -393,11 +431,11 @@ export const defaultOverrides = (theme: Theme): ThemeOptions => ({
       color: "primary",
       underline: "hover",
     },
-    MuiChip: {
-      variant: "outlined",
-      deleteIcon: <ClearIcon />,
-    },
+    MuiChip: { deleteIcon: <ClearIcon /> },
     MuiTextField: { variant: "filled" },
+    MuiDialog: {
+      PaperProps: { elevation: 4 },
+    },
   },
 });
 

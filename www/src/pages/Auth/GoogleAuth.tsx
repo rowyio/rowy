@@ -35,7 +35,7 @@ export default function GoogleAuthPage() {
                 "The identity provider configuration is disabled."
               ) {
                 snack.open({
-                  severity: "warning",
+                  variant: "warning",
                   message:
                     "You must enable Google sign-in for your Firebase project",
                   action: (
@@ -52,7 +52,7 @@ export default function GoogleAuthPage() {
                 error.message === "This account does not have any roles"
               ) {
                 snack.open({
-                  severity: "warning",
+                  variant: "warning",
                   message: "You must set roles for this user",
                   action: (
                     <Button

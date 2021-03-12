@@ -15,6 +15,7 @@ import Subheading from "../Subheading";
 import { getFieldProp } from "components/fields";
 import CodeEditor from "components/CodeEditor";
 import FormAutosave from "./FormAutosave";
+import { FieldType } from "constants/fields";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -45,13 +46,16 @@ export default function DefaultValueInput({
   ...props
 }: IDefaultValueInputProps) {
   const classes = useStyles();
-  const customFieldInput = getFieldProp("SideDrawerField", type);
-
+  const _type =
+    type !== FieldType.derivative
+      ? type
+      : config.renderFieldType ?? FieldType.shortText;
+  const customFieldInput = getFieldProp("SideDrawerField", _type);
   const { control } = useForm({
     mode: "onBlur",
     defaultValues: {
       [fieldName]:
-        config.defaultValue?.value ?? getFieldProp("initialValue", type),
+        config.defaultValue?.value ?? getFieldProp("initialValue", _type),
     },
   });
 
@@ -115,7 +119,7 @@ export default function DefaultValueInput({
           />
 
           {React.createElement(customFieldInput, {
-            column: { type, key: fieldName, ...props, ...config },
+            column: { type, key: fieldName, config, ...props, ...config },
             control,
             docRef: {},
             disabled: false,

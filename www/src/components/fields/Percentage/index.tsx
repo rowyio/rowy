@@ -24,5 +24,13 @@ export const config: IFieldConfig = {
   TableCell: withBasicCell(BasicCell),
   TableEditor: TextEditor,
   SideDrawerField,
+  csvImportParser: (v) => {
+    try {
+      const parsedValue = parseFloat(v);
+      return Number.isNaN(parsedValue) ? null : parsedValue;
+    } catch (e) {
+      return null;
+    }
+  },
 };
 export default config;
