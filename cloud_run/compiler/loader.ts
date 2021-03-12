@@ -1,4 +1,4 @@
-import { db } from "../auth";
+import { db } from "../firebaseConfig";
 const fs = require("fs");
 const beautify = require("js-beautify").js;
 

@@ -3,7 +3,8 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 import { asyncExecute } from "./compiler/terminal";
 import generateConfig from "./compiler";
-import { auth } from "./auth";
+import { auth } from "./firebaseConfig";
+import meta from "./package.json";
 
 const app = express();
 const jsonParser = bodyParser.json();
@@ -11,7 +12,7 @@ const jsonParser = bodyParser.json();
 app.use(cors());
 
 app.get("/", async (req: any, res: any) => {
-  res.send("Express app started successfully.");
+  res.send(`Firetable cloud function builder version ${meta.version}`);
 });
 
 app.post("/", jsonParser, async (req: any, res: any) => {
