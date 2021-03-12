@@ -48,12 +48,13 @@ export default function SettingsDialog({
 
   useEffect(() => {
     if (!settingsDocState.loading) {
-      const cloudrunFTUrl = settingsDocState?.doc?.cloudrunFTUrl;
-      setForm({ cloudrunFTUrl });
+      const ftBuildUrl = settingsDocState?.doc?.ftBuildUrl;
+      setForm({ ftBuildUrl });
     }
   }, [settingsDocState.doc, open]);
 
   const handleSubmit = (values) => {
+    setForm(values)
     settingsDocDispatch({ action: DocActions.update, data: values });
     handleClose();
   };

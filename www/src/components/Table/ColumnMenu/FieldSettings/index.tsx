@@ -135,8 +135,8 @@ export default function FieldSettings(props: IMenuModalProps) {
                   const settingsDoc = await db
                     .doc("/_FIRETABLE_/settings")
                     .get();
-                  const cloudrunFTUrl = settingsDoc.get("cloudrunFTUrl");
-                  if (!cloudrunFTUrl) {
+                  const ftBuildUrl = settingsDoc.get("ftBuildUrl");
+                  if (!ftBuildUrl) {
                     snack.open({
                       message:
                         "Cloud Run trigger URL not configured. Configuration guide: https://github.com/AntlerVC/firetable/wiki/Configure-Cloud-Run-trigger-URL",
@@ -147,7 +147,7 @@ export default function FieldSettings(props: IMenuModalProps) {
                   const userTokenInfo = await appContext?.currentUser?.getIdTokenResult();
                   const userToken = userTokenInfo?.token;
                   try {
-                    const response = await fetch(cloudrunFTUrl, {
+                    const response = await fetch(ftBuildUrl, {
                       method: "POST",
                       headers: {
                         "Content-Type": "application/json",

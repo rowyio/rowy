@@ -8,7 +8,7 @@ export const settings = () => [
   { type: FIELDS.heading, label: "Cloud Run configuration" },
   {
     type: FIELDS.text,
-    name: "cloudrunFTUrl",
+    name: "ftBuildUrl",
     label: "Cloud Run trigger URL",
   },
 ];
