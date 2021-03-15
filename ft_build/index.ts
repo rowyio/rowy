@@ -115,5 +115,7 @@ app.post("/", jsonParser, async (req: any, res: any) => {
 
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
-  console.log(`helloworld: listening on port ${port}`);
+  console.log(
+    `Firetable cloud function builder ${meta.version}: listening on port ${port}`
+  );
 });
