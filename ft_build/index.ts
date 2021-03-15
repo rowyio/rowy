@@ -81,13 +81,6 @@ app.post("/", jsonParser, async (req: any, res: any) => {
   }
 
   await asyncExecute(
-    `asdgiohiusdfgoj; \
-     asdfasdfjnjia`,
-    commandErrorHandler,
-    uid
-  );
-
-  await asyncExecute(
     `cd build/functions; \
      yarn install`,
     commandErrorHandler,
