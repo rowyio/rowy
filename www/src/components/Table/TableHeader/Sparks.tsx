@@ -18,7 +18,6 @@ import { useAppContext } from "contexts/AppContext";
 import CodeEditor from "../editors/CodeEditor";
 
 export default function SparksEditor() {
-
   const snack = useSnackContext();
   const { tableState, tableActions } = useFiretableContext();
   const appContext = useAppContext();
@@ -54,7 +53,7 @@ export default function SparksEditor() {
         if (!ftBuildUrl) {
           snack.open({
             message:
-              "Cloud Run trigger URL not configured. Configuration guide: https://github.com/AntlerVC/firetable/wiki/Configure-Cloud-Run-trigger-URL",
+              "Cloud Run trigger URL not configured. Configuration guide: https://github.com/AntlerVC/firetable/wiki/Setting-up-cloud-Run-FT-Builder",
             variant: "error",
           });
         }
