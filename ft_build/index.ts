@@ -5,6 +5,7 @@ import { asyncExecute } from "./compiler/terminal";
 import generateConfig from "./compiler";
 import { auth } from "./firebaseConfig";
 import meta from "./package.json";
+import { commandErrorHandler, logErrorToDB } from "./utils";
 
 const app = express();
 const jsonParser = bodyParser.json();
@@ -16,6 +17,8 @@ app.get("/", async (req: any, res: any) => {
 });
 
 app.post("/", jsonParser, async (req: any, res: any) => {
+  let uid: string;
+
   const userToken = req?.body?.token;
   if (!userToken) {
     console.log("missing auth token");
@@ -28,11 +31,11 @@ app.post("/", jsonParser, async (req: any, res: any) => {
 
   try {
     const decodedToken = await auth.verifyIdToken(userToken);
-    const uid = decodedToken.uid;
+    uid = decodedToken.uid;
     const user = await auth.getUser(uid);
     const roles = user?.customClaims?.roles;
     if (!roles || !Array.isArray(roles) || !roles?.includes("ADMIN")) {
-      console.log("user is not admin");
+      logErrorToDB(`user is not admin, uid: ${uid}`, uid);
       res.send({
         success: false,
         reason: `user is not admin`,
@@ -41,7 +44,7 @@ app.post("/", jsonParser, async (req: any, res: any) => {
     }
     console.log("successfully authenticated");
   } catch (error) {
-    console.log(`error verifying auth token: ${error}`);
+    logErrorToDB(`error verifying auth token: ${error}`, uid);
     res.send({
       success: false,
       reason: `error verifying auth token: ${error}`,
@@ -50,7 +53,7 @@ app.post("/", jsonParser, async (req: any, res: any) => {
   }
 
   const configPath = req?.body?.configPath;
-  console.log(configPath);
+  console.log("configPath:", configPath);
 
   if (!configPath) {
     res.send({
@@ -59,24 +62,36 @@ app.post("/", jsonParser, async (req: any, res: any) => {
     });
   }
 
-  await generateConfig(configPath);
+  await generateConfig(configPath, uid);
 
   console.log("generateConfig done");
 
   let hasEnvError = false;
   if (!process.env._FIREBASE_TOKEN) {
-    console.warn("Invalid env: _FIREBASE_TOKEN");
+    logErrorToDB(
+      `Invalid env: _FIREBASE_TOKEN (${process.env._FIREBASE_TOKEN})`,
+      uid
+    );
     hasEnvError = true;
   }
 
   if (!process.env._PROJECT_ID) {
-    console.warn("Invalid env: _PROJECT_ID");
+    logErrorToDB(`Invalid env: _PROJECT_ID (${process.env._PROJECT_ID})`, uid);
     hasEnvError = true;
   }
 
   await asyncExecute(
+    `asdgiohiusdfgoj; \
+     asdfasdfjnjia`,
+    commandErrorHandler,
+    uid
+  );
+
+  await asyncExecute(
     `cd build/functions; \
-     yarn install`
+     yarn install`,
+    commandErrorHandler,
+    uid
   );
 
   if (!hasEnvError) {
@@ -85,7 +100,9 @@ app.post("/", jsonParser, async (req: any, res: any) => {
        yarn deployFT \
         --project ${process.env._PROJECT_ID} \
         --token ${process.env._FIREBASE_TOKEN} \
-        --only functions`
+        --only functions`,
+      commandErrorHandler,
+      uid
     );
   } else {
     console.warn("deployFT did not run. Check env variables first.");

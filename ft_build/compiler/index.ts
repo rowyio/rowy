@@ -1,6 +1,7 @@
 import { addPackages, addSparkLib, asyncExecute } from "./terminal";
 const fs = require("fs");
 import { generateConfigFromTableSchema } from "./loader";
+import { commandErrorHandler } from "../utils";
 const path = require("path");
 
 async function asyncForEach(array: any[], callback: Function) {
@@ -9,7 +10,7 @@ async function asyncForEach(array: any[], callback: Function) {
   }
 }
 
-export default async function generateConfig(schemaPath: string) {
+export default async function generateConfig(schemaPath: string, uid: string) {
   await generateConfigFromTableSchema(schemaPath).then(async () => {
     console.log("generateConfigFromTableSchema done");
     const configFile = fs.readFileSync(
@@ -23,7 +24,11 @@ export default async function generateConfig(schemaPath: string) {
       await addPackages(requiredDependencies.map((p: any) => ({ name: p })));
     }
 
-    await asyncExecute("cd build/functions/src; tsc functionConfig.ts");
+    await asyncExecute(
+      "cd build/functions/src; tsc functionConfig.ts",
+      commandErrorHandler,
+      uid
+    );
 
     const { sparksConfig } = require("../functions/src/functionConfig.js");
     const requiredSparks = sparksConfig.map((s: any) => s.type);
