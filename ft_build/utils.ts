@@ -15,7 +15,7 @@ function firetableUser(user: admin.auth.UserRecord) {
 export function commandErrorHandler(meta: {
   user: admin.auth.UserRecord;
   description?: string;
-  combiledScript?: string;
+  functionConfigTs?: string;
   sparksConfig?: string;
 }) {
   return async function (error, stdout, stderr) {
@@ -32,7 +32,7 @@ export function commandErrorHandler(meta: {
       errorStackTrace: error?.stack ?? "",
       command: error?.cmd ?? "",
       description: meta?.description ?? "",
-      combiledScript: meta?.combiledScript ?? "",
+      functionConfigTs: meta?.functionConfigTs ?? "",
       sparksConfig: meta?.sparksConfig ?? "",
     };
 

@@ -13,7 +13,7 @@ export const asyncExecute = async (command: string, callback: any) =>
     child.exec(command, async function (error, stdout, stderr) {
       console.log({ error, stdout, stderr });
       await callback(error, stdout, stderr);
-      resolve(true);
+      resolve(!error);
     });
   });
 

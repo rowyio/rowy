@@ -34,10 +34,17 @@ export default async function generateConfig(
         await addPackages(requiredDependencies.map((p: any) => ({ name: p })));
       }
 
-      await asyncExecute(
+      const isFunctionConfigValid = await asyncExecute(
         "cd build/functions/src; tsc functionConfig.ts",
-        commandErrorHandler({ user })
+        commandErrorHandler({
+          user,
+          functionConfigTs: configFile,
+          description: `Invalid compiled functionConfig.ts`,
+        })
       );
+      if (!isFunctionConfigValid) {
+        return false;
+      }
 
       const { sparksConfig } = require("../functions/src/functionConfig.js");
       const requiredSparks = sparksConfig.map((s: any) => s.type);
