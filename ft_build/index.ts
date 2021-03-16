@@ -104,24 +104,28 @@ app.post("/", jsonParser, async (req: any, res: any) => {
     hasEnvError = true;
   }
 
+  if (hasEnvError) {
+    res.send({
+      success: false,
+      reason: "Invalid env: _FIREBASE_TOKEN or _PROJECT_ID",
+    });
+    return;
+  }
+
   await asyncExecute(
     `cd build/functions; \
      yarn install`,
     commandErrorHandler({ user })
   );
 
-  if (!hasEnvError) {
-    await asyncExecute(
-      `cd build/functions; \
+  await asyncExecute(
+    `cd build/functions; \
        yarn deployFT \
         --project ${process.env._PROJECT_ID} \
         --token ${process.env._FIREBASE_TOKEN} \
         --only functions`,
-      commandErrorHandler({ user })
-    );
-  } else {
-    console.warn("deployFT did not run. Check env variables first.");
-  }
+    commandErrorHandler({ user })
+  );
 
   res.send({
     success: true,
