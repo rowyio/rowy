@@ -37,7 +37,7 @@ app.post("/", jsonParser, async (req: any, res: any) => {
     const user = await auth.getUser(uid);
     const roles = user?.customClaims?.roles;
     if (!roles || !Array.isArray(roles) || !roles?.includes("ADMIN")) {
-      logErrorToDB(`user is not admin, uid: ${uid}`, uid);
+      logErrorToDB({ errorDescription: `user is not admin, uid: ${uid}`, uid });
       res.send({
         success: false,
         reason: `user is not admin`,
@@ -46,7 +46,10 @@ app.post("/", jsonParser, async (req: any, res: any) => {
     }
     console.log("successfully authenticated");
   } catch (error) {
-    logErrorToDB(`error verifying auth token: ${error}`, uid);
+    logErrorToDB({
+      errorDescription: `error verifying auth token: ${error}`,
+      uid,
+    });
     res.send({
       success: false,
       reason: `error verifying auth token: ${error}`,
@@ -64,7 +67,15 @@ app.post("/", jsonParser, async (req: any, res: any) => {
     });
   }
 
-  await generateConfig(configPath, uid);
+  const success = await generateConfig(configPath, { uid });
+  if (!success) {
+    console.log(`generateConfig failed to complete`);
+    res.send({
+      success: false,
+      reason: `generateConfig failed to complete`,
+    });
+    return;
+  }
 
   try {
     const configFile = fs.readFileSync(
@@ -72,22 +83,28 @@ app.post("/", jsonParser, async (req: any, res: any) => {
       "utf-8"
     );
   } catch (e) {
-    logErrorToDB(`Error reading compiled functionConfig.ts`, uid);
+    logErrorToDB({
+      errorDescription: `Error reading compiled functionConfig.ts`,
+      uid,
+    });
   }
 
   console.log("generateConfig done");
 
   let hasEnvError = false;
   if (!process.env._FIREBASE_TOKEN) {
-    logErrorToDB(
-      `Invalid env: _FIREBASE_TOKEN (${process.env._FIREBASE_TOKEN})`,
-      uid
-    );
+    logErrorToDB({
+      errorDescription: `Invalid env: _FIREBASE_TOKEN (${process.env._FIREBASE_TOKEN})`,
+      uid,
+    });
     hasEnvError = true;
   }
 
   if (!process.env._PROJECT_ID) {
-    logErrorToDB(`Invalid env: _PROJECT_ID (${process.env._PROJECT_ID})`, uid);
+    logErrorToDB({
+      errorDescription: `Invalid env: _PROJECT_ID (${process.env._PROJECT_ID})`,
+      uid,
+    });
     hasEnvError = true;
   }
 

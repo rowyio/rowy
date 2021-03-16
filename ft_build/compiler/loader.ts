@@ -1,8 +1,15 @@
 import { db } from "../firebaseConfig";
 const fs = require("fs");
 const beautify = require("js-beautify").js;
+import { validateSparks } from "../utils";
 
-export const generateConfigFromTableSchema = async (schemaDocPath: string) => {
+export const generateConfigFromTableSchema = async (
+  schemaDocPath: string,
+  auth: {
+    uid?: string;
+    email?: string;
+  }
+) => {
   const schemaDoc = await db.doc(schemaDocPath).get();
   const schemaData = schemaDoc.data();
   if (!schemaData) throw new Error("no schema found");
@@ -76,6 +83,12 @@ export const generateConfigFromTableSchema = async (schemaDocPath: string) => {
   )}]`;
 
   const sparksConfig = schemaData.sparks ? schemaData.sparks : "[]";
+
+  const isSparksValid = validateSparks(sparksConfig, auth);
+  if (!isSparksValid) {
+    return false;
+  }
+
   const collectionType = schemaDocPath.includes("subTables")
     ? "subCollection"
     : schemaDocPath.includes("groupSchema")
@@ -144,4 +157,6 @@ export const generateConfigFromTableSchema = async (schemaDocPath: string) => {
     path.resolve(__dirname, "../functions/src/functionConfig.ts"),
     beautify(fileData, { indent_size: 2 })
   );
+
+  return true;
 };

@@ -10,29 +10,47 @@ async function asyncForEach(array: any[], callback: Function) {
   }
 }
 
-export default async function generateConfig(schemaPath: string, uid: string) {
-  await generateConfigFromTableSchema(schemaPath).then(async () => {
-    console.log("generateConfigFromTableSchema done");
-    const configFile = fs.readFileSync(
-      path.resolve(__dirname, "../functions/src/functionConfig.ts"),
-      "utf-8"
-    );
-    const requiredDependencies = configFile.match(
-      /(?<=(require\(("|'))).*?(?=("|')\))/g
-    );
-    if (requiredDependencies) {
-      await addPackages(requiredDependencies.map((p: any) => ({ name: p })));
+export default async function generateConfig(
+  schemaPath: string,
+  auth: {
+    uid?: string;
+    email?: string;
+  }
+) {
+  return await generateConfigFromTableSchema(schemaPath, auth).then(
+    async (success) => {
+      if (!success) {
+        console.log("generateConfigFromTableSchema failed to complete");
+        return false;
+      }
+
+      console.log("generateConfigFromTableSchema done");
+      const configFile = fs.readFileSync(
+        path.resolve(__dirname, "../functions/src/functionConfig.ts"),
+        "utf-8"
+      );
+      const requiredDependencies = configFile.match(
+        /(?<=(require\(("|'))).*?(?=("|')\))/g
+      );
+      if (requiredDependencies) {
+        await addPackages(requiredDependencies.map((p: any) => ({ name: p })));
+      }
+
+      await asyncExecute(
+        "cd build/functions/src; tsc functionConfig.ts",
+        commandErrorHandler(auth)
+      );
+
+      const { sparksConfig } = require("../functions/src/functionConfig.js");
+      const requiredSparks = sparksConfig.map((s: any) => s.type);
+      console.log({ requiredSparks });
+
+      await asyncForEach(
+        requiredSparks,
+        async (s: any) => await addSparkLib(s)
+      );
+
+      return true;
     }
-
-    await asyncExecute(
-      "cd build/functions/src; tsc functionConfig.ts",
-      commandErrorHandler({ uid })
-    );
-
-    const { sparksConfig } = require("../functions/src/functionConfig.js");
-    const requiredSparks = sparksConfig.map((s: any) => s.type);
-    console.log({ requiredSparks });
-
-    await asyncForEach(requiredSparks, async (s: any) => await addSparkLib(s));
-  });
+  );
 }
