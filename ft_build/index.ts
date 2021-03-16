@@ -65,6 +65,10 @@ app.post("/", jsonParser, async (req: any, res: any) => {
   console.log("configPath:", configPath);
 
   if (!configPath) {
+    await logErrorToDB({
+      errorDescription: `Invalid configPath (${configPath})`,
+      user,
+    });
     res.send({
       success: false,
       reason: "invalid configPath",
