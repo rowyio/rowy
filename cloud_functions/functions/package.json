@@ -17,7 +17,7 @@
   "main": "lib/index.js",
   "dependencies": {
     "@google-cloud/cloudbuild": "^2.0.6",
-    "@google-cloud/firestore": "^4.9.1",
+    "@google-cloud/firestore": "^4.9.7",
     "@google-cloud/pubsub": "^2.5.0",
     "@google-cloud/storage": "^5.1.2",
     "@sendgrid/mail": "^7.4.2",
