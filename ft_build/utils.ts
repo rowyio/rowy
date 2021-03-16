@@ -41,7 +41,7 @@ export function logErrorToDB(data: {
   console.log(data.errorDescription);
   db.collection("_FT_ERRORS").add({
     errorType: "codeError",
-    uid: data?.uid ?? "",
+    ranByUID: data?.uid ?? "",
     email: data?.email ?? "",
     description: data.errorDescription,
     createdAt: admin.firestore.FieldValue.serverTimestamp(),
