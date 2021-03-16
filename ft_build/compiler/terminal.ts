@@ -10,9 +10,9 @@ function execute(command: string, callback: any) {
 
 export const asyncExecute = async (command: string, callback: any) =>
   new Promise(async (resolve, reject) => {
-    child.exec(command, function (error, stdout, stderr) {
+    child.exec(command, async function (error, stdout, stderr) {
       console.log({ error, stdout, stderr });
-      callback(error, stdout, stderr);
+      await callback(error, stdout, stderr);
       resolve(true);
     });
   });

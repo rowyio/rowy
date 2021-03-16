@@ -3,6 +3,7 @@ const fs = require("fs");
 import { generateConfigFromTableSchema } from "./loader";
 import { commandErrorHandler } from "../utils";
 const path = require("path");
+import admin from "firebase-admin";
 
 async function asyncForEach(array: any[], callback: Function) {
   for (let index = 0; index < array.length; index++) {
@@ -12,12 +13,9 @@ async function asyncForEach(array: any[], callback: Function) {
 
 export default async function generateConfig(
   schemaPath: string,
-  auth: {
-    uid?: string;
-    email?: string;
-  }
+  user: admin.auth.UserRecord
 ) {
-  return await generateConfigFromTableSchema(schemaPath, auth).then(
+  return await generateConfigFromTableSchema(schemaPath, user).then(
     async (success) => {
       if (!success) {
         console.log("generateConfigFromTableSchema failed to complete");
@@ -38,7 +36,7 @@ export default async function generateConfig(
 
       await asyncExecute(
         "cd build/functions/src; tsc functionConfig.ts",
-        commandErrorHandler(auth)
+        commandErrorHandler({ user })
       );
 
       const { sparksConfig } = require("../functions/src/functionConfig.js");

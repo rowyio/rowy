@@ -1,21 +1,30 @@
 import { db } from "./firebaseConfig";
-const admin = require("firebase-admin");
+import admin from "firebase-admin";
+
+function firetableUser(user: admin.auth.UserRecord) {
+  return {
+    displayName: user?.displayName,
+    email: user?.email,
+    uid: user?.uid,
+    emailVerified: user?.emailVerified,
+    photoURL: user?.photoURL,
+  };
+}
 
 export function commandErrorHandler(meta: {
-  uid?: string;
-  email?: string;
+  user: admin.auth.UserRecord;
   description?: string;
   combiledScript?: string;
   sparksConfig?: string;
 }) {
-  return function (error, stdout, stderr) {
+  return async function (error, stdout, stderr) {
     if (!error) {
       return;
     }
 
     const errorRecord = {
       errorType: "commandError",
-      ranByUID: meta?.uid ?? "",
+      ranBy: firetableUser(meta.user),
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
       stdout: stdout ?? "",
       stderr: stderr ?? "",
@@ -26,23 +35,21 @@ export function commandErrorHandler(meta: {
       sparksConfig: meta?.sparksConfig ?? "",
     };
 
-    db.collection("_FT_ERRORS").add(errorRecord);
+    await db.collection("_FT_ERRORS").add(errorRecord);
   };
 }
 
-export function logErrorToDB(data: {
+export async function logErrorToDB(data: {
   errorDescription: string;
   errorExtraInfo?: string;
   errorTraceStack?: string;
-  uid?: string;
-  email?: string;
+  user: admin.auth.UserRecord;
   sparksConfig?: string;
 }) {
   console.log(data.errorDescription);
-  db.collection("_FT_ERRORS").add({
+  await db.collection("_FT_ERRORS").add({
     errorType: "codeError",
-    ranByUID: data?.uid ?? "",
-    email: data?.email ?? "",
+    ranBy: firetableUser(data.user),
     description: data.errorDescription,
     createdAt: admin.firestore.FieldValue.serverTimestamp(),
     sparksConfig: data?.sparksConfig ?? "",
@@ -51,12 +58,9 @@ export function logErrorToDB(data: {
   });
 }
 
-export function validateSparks(
+export async function validateSparks(
   sparks: string,
-  auth: {
-    uid?: string;
-    email?: string;
-  }
+  user: admin.auth.UserRecord
 ) {
   let parsedSparks;
 
@@ -64,12 +68,12 @@ export function validateSparks(
   try {
     parsedSparks = eval(sparks);
   } catch (e) {
-    logErrorToDB({
+    await logErrorToDB({
       errorDescription: "Invalid sparks config",
       errorExtraInfo: e?.message,
       errorTraceStack: e?.stack,
       sparksConfig: sparks,
-      ...auth,
+      user,
     });
     return false;
   }

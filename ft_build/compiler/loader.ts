@@ -2,13 +2,11 @@ import { db } from "../firebaseConfig";
 const fs = require("fs");
 const beautify = require("js-beautify").js;
 import { validateSparks } from "../utils";
+import admin from "firebase-admin";
 
 export const generateConfigFromTableSchema = async (
   schemaDocPath: string,
-  auth: {
-    uid?: string;
-    email?: string;
-  }
+  user: admin.auth.UserRecord
 ) => {
   const schemaDoc = await db.doc(schemaDocPath).get();
   const schemaData = schemaDoc.data();
@@ -84,7 +82,7 @@ export const generateConfigFromTableSchema = async (
 
   const sparksConfig = schemaData.sparks ? schemaData.sparks : "[]";
 
-  const isSparksValid = validateSparks(sparksConfig, auth);
+  const isSparksValid = await validateSparks(sparksConfig, user);
   if (!isSparksValid) {
     return false;
   }
