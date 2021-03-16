@@ -85,18 +85,6 @@ app.post("/", jsonParser, async (req: any, res: any) => {
     return;
   }
 
-  try {
-    const configFile = fs.readFileSync(
-      path.resolve(__dirname, "./functions/src/functionConfig.ts"),
-      "utf-8"
-    );
-  } catch (e) {
-    await logErrorToDB({
-      errorDescription: `Error reading compiled functionConfig.ts`,
-      user,
-    });
-  }
-
   console.log("generateConfig done");
 
   let hasEnvError = false;
