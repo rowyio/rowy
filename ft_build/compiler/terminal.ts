@@ -8,15 +8,11 @@ function execute(command: string, callback: any) {
   });
 }
 
-export const asyncExecute = async (
-  command: string,
-  callback: any,
-  uid: string
-) =>
+export const asyncExecute = async (command: string, callback: any) =>
   new Promise(async (resolve, reject) => {
     child.exec(command, function (error, stdout, stderr) {
       console.log({ error, stdout, stderr });
-      callback(error, stdout, stderr, uid);
+      callback(error, stdout, stderr);
       resolve(true);
     });
   });

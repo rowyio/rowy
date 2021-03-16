@@ -6,6 +6,8 @@ import generateConfig from "./compiler";
 import { auth } from "./firebaseConfig";
 import meta from "./package.json";
 import { commandErrorHandler, logErrorToDB } from "./utils";
+const fs = require("fs");
+const path = require("path");
 
 const app = express();
 const jsonParser = bodyParser.json();
@@ -64,6 +66,15 @@ app.post("/", jsonParser, async (req: any, res: any) => {
 
   await generateConfig(configPath, uid);
 
+  try {
+    const configFile = fs.readFileSync(
+      path.resolve(__dirname, "./functions/src/functionConfig.ts"),
+      "utf-8"
+    );
+  } catch (e) {
+    logErrorToDB(`Error reading compiled functionConfig.ts`, uid);
+  }
+
   console.log("generateConfig done");
 
   let hasEnvError = false;
@@ -83,8 +94,7 @@ app.post("/", jsonParser, async (req: any, res: any) => {
   await asyncExecute(
     `cd build/functions; \
      yarn install`,
-    commandErrorHandler,
-    uid
+    commandErrorHandler({ uid })
   );
 
   if (!hasEnvError) {
@@ -94,8 +104,7 @@ app.post("/", jsonParser, async (req: any, res: any) => {
         --project ${process.env._PROJECT_ID} \
         --token ${process.env._FIREBASE_TOKEN} \
         --only functions`,
-      commandErrorHandler,
-      uid
+      commandErrorHandler({ uid })
     );
   } else {
     console.warn("deployFT did not run. Check env variables first.");

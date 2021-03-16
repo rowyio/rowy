@@ -26,8 +26,7 @@ export default async function generateConfig(schemaPath: string, uid: string) {
 
     await asyncExecute(
       "cd build/functions/src; tsc functionConfig.ts",
-      commandErrorHandler,
-      uid
+      commandErrorHandler({ uid })
     );
 
     const { sparksConfig } = require("../functions/src/functionConfig.js");
