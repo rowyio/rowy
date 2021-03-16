@@ -29,7 +29,7 @@
     "json-format": "^1.0.1",
     "json2csv": "^5.0.1",
     "jszip": "^3.6.0",
-    "lodash": "^4.17.20",
+    "lodash": "^4.17.21",
     "query-string": "^6.8.3",
     "react": "^16.9.0",
     "react-beautiful-dnd": "^13.0.0",
