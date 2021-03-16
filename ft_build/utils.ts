@@ -8,6 +8,7 @@ function firetableUser(user: admin.auth.UserRecord) {
     uid: user?.uid,
     emailVerified: user?.emailVerified,
     photoURL: user?.photoURL,
+    timestamp: new Date(),
   };
 }
 
