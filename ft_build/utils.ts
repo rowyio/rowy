@@ -19,7 +19,7 @@ export function commandErrorHandler(meta: {
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
       stdout: stdout ?? "",
       stderr: stderr ?? "",
-      errorStack: error?.stack ?? "",
+      errorStackTrace: error?.stack ?? "",
       command: error?.cmd ?? "",
       description: meta?.description ?? "",
       combiledScript: meta?.combiledScript ?? "",
@@ -47,7 +47,7 @@ export function logErrorToDB(data: {
     createdAt: admin.firestore.FieldValue.serverTimestamp(),
     sparksConfig: data?.sparksConfig ?? "",
     errorExtraInfo: data?.errorExtraInfo ?? "",
-    errorTraceStack: data?.errorTraceStack ?? "",
+    errorStackTrace: data?.errorTraceStack ?? "",
   });
 }
 
