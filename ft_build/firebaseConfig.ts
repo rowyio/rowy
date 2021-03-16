@@ -5,7 +5,6 @@ admin.initializeApp();
 const db = admin.firestore();
 const auth = admin.auth();
 
-const settings = { timestampsInSnapshots: true };
-db.settings(settings);
+db.settings({ timestampsInSnapshots: true, ignoreUndefinedProperties: true });
 
 export { db, admin, auth };
