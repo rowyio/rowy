@@ -8,6 +8,7 @@ import { FireTableFilter, FiretableOrderBy } from ".";
 import { SnackContext } from "contexts/SnackContext";
 import { cloudFunction } from "../../firebase/callables";
 import { isCollectionGroup, generateSmallerId } from "utils/fns";
+import {projectId} from '../../firebase'
 const CAP = 1000; // safety  paramter sets the  upper limit of number of docs fetched by this hook
 const serverTimestamp = firebase.firestore.FieldValue.serverTimestamp;
 
@@ -101,7 +102,7 @@ const useTable = (initialOverrides: any) => {
         //TODO:callable to create new index
         if (error?.message.includes("indexes?create_composite=")) {
           const url =
-            `https://console.firebase.google.com/project/${process.env.REACT_APP_FIREBASE_PROJECT_ID}/database/firestore/` +
+            `https://console.firebase.google.com/project/${projectId}/database/firestore/` +
             "indexes?create_composite=" +
             error.message.split("indexes?create_composite=")[1];
 
