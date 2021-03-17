@@ -1,5 +1,6 @@
 import { db } from "./firebaseConfig";
 import admin from "firebase-admin";
+const safeEval = require("safe-eval");
 
 function firetableUser(user: admin.auth.UserRecord) {
   return {
@@ -67,7 +68,7 @@ export async function validateSparks(
 
   // try to parse sparks
   try {
-    parsedSparks = eval(sparks);
+    parsedSparks = safeEval(sparks);
   } catch (e) {
     await logErrorToDB({
       errorDescription: "Invalid sparks config",
