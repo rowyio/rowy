@@ -8,7 +8,7 @@ import HelperText from "../HelperText";
 import { Link, Typography } from "@material-ui/core";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import { MONO_FONT } from "Themes";
-
+import {projectId} from '../../firebase'
 export const tableSettings = (
   mode: TableSettingsDialogModes | null,
   roles: string[] | undefined,
@@ -32,7 +32,7 @@ export const tableSettings = (
     description: (
       <HelperText>
         <Link
-          href={`https://console.firebase.google.com/project/${process.env.REACT_APP_FIREBASE_PROJECT_ID}/firestore/data`}
+          href={`https://console.firebase.google.com/project/${projectId}/firestore/data`}
           target="_blank"
           rel="noopener"
         >
