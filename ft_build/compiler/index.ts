@@ -5,12 +5,6 @@ import { commandErrorHandler } from "../utils";
 const path = require("path");
 import admin from "firebase-admin";
 
-async function asyncForEach(array: any[], callback: Function) {
-  for (let index = 0; index < array.length; index++) {
-    await callback(array[index], index, array);
-  }
-}
-
 export default async function generateConfig(
   schemaPath: string,
   user: admin.auth.UserRecord
@@ -31,7 +25,13 @@ export default async function generateConfig(
         /(?<=(require\(("|'))).*?(?=("|')\))/g
       );
       if (requiredDependencies) {
-        await addPackages(requiredDependencies.map((p: any) => ({ name: p })));
+        const packgesAdded = await addPackages(
+          requiredDependencies.map((p: any) => ({ name: p })),
+          user
+        );
+        if (!packgesAdded) {
+          return false;
+        }
       }
 
       const isFunctionConfigValid = await asyncExecute(
@@ -50,10 +50,12 @@ export default async function generateConfig(
       const requiredSparks = sparksConfig.map((s: any) => s.type);
       console.log({ requiredSparks });
 
-      await asyncForEach(
-        requiredSparks,
-        async (s: any) => await addSparkLib(s)
-      );
+      for (const lib of requiredSparks) {
+        const success = await addSparkLib(lib, user);
+        if (!success) {
+          return false;
+        }
+      }
 
       return true;
     }

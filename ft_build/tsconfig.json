@@ -16,5 +16,5 @@
   },
   "compileOnSave": true,
   "exclude": ["functions", "build"],
-  "include": ["*.ts", "firebase.json"]
+  "include": ["*.ts", "firebase.json", "sparksLib"]
 }

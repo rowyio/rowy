@@ -6,8 +6,6 @@ import generateConfig from "./compiler";
 import { auth } from "./firebaseConfig";
 import meta from "./package.json";
 import { commandErrorHandler, logErrorToDB } from "./utils";
-const fs = require("fs");
-const path = require("path");
 import firebase from "firebase-admin";
 
 const app = express();
@@ -127,6 +125,7 @@ app.post("/", jsonParser, async (req: any, res: any) => {
     commandErrorHandler({ user })
   );
 
+  console.log("build complete");
   res.send({
     success: true,
   });

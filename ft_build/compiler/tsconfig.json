@@ -14,5 +14,5 @@
   },
   "compileOnSave": true,
   "include": ["src", "generateConfig.ts"],
-  "ignore": ["sparks","sparksLib"]
+  "ignore": ["sparks", "sparksLib"]
 }
