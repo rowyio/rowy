@@ -13,7 +13,11 @@ function firetableUser(user: admin.auth.UserRecord) {
   };
 }
 
-export function commandErrorHandler(meta: {
+async function insertErrorRecordToDB(errorRecord: object) {
+  await db.collection("_FT_ERRORS").add(errorRecord);
+}
+
+function commandErrorHandler(meta: {
   user: admin.auth.UserRecord;
   description?: string;
   functionConfigTs?: string;
@@ -36,20 +40,20 @@ export function commandErrorHandler(meta: {
       functionConfigTs: meta?.functionConfigTs ?? "",
       sparksConfig: meta?.sparksConfig ?? "",
     };
-
-    await db.collection("_FT_ERRORS").add(errorRecord);
+    insertErrorRecordToDB(errorRecord);
   };
 }
 
-export async function logErrorToDB(data: {
+async function logErrorToDB(data: {
   errorDescription: string;
   errorExtraInfo?: string;
   errorTraceStack?: string;
   user: admin.auth.UserRecord;
   sparksConfig?: string;
 }) {
-  console.log(data.errorDescription);
-  await db.collection("_FT_ERRORS").add({
+  console.error(data.errorDescription);
+
+  const errorRecord = {
     errorType: "codeError",
     ranBy: firetableUser(data.user),
     description: data.errorDescription,
@@ -57,16 +61,14 @@ export async function logErrorToDB(data: {
     sparksConfig: data?.sparksConfig ?? "",
     errorExtraInfo: data?.errorExtraInfo ?? "",
     errorStackTrace: data?.errorTraceStack ?? "",
-  });
+  };
+
+  insertErrorRecordToDB(errorRecord);
 }
 
-export async function validateSparks(
-  sparks: string,
-  user: admin.auth.UserRecord
-) {
+async function validateSparks(sparks: string, user: admin.auth.UserRecord) {
   let parsedSparks;
 
-  // try to parse sparks
   try {
     parsedSparks = safeEval(sparks);
   } catch (e) {
@@ -84,3 +86,5 @@ export async function validateSparks(
 
   return true;
 }
+
+export { commandErrorHandler, logErrorToDB, validateSparks };
