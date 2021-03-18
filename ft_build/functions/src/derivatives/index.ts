@@ -7,7 +7,7 @@ const shouldEvaluateReducer = (listeners, before, after) =>
     if (acc) return true;
     else
       return (
-        JSON.stringify(before[currField]) !== JSON.stringify(after[currField])
+        JSON.stringify(before?.[currField]) !== JSON.stringify(after[currField])
       );
   }, false);
 
@@ -23,14 +23,16 @@ const derivative = (
       utilFns: any;
     }) => any;
   }[]
-) => async (change: functions.Change<functions.firestore.DocumentSnapshot>) => {
+) => async (
+  change: functions.Change<functions.firestore.DocumentSnapshot>,
+) => {
   try {
     const beforeData = change.before?.data();
     const afterData = change.after?.data();
     const ref = change.after ? change.after.ref : change.before.ref;
     const update = await functionConfig.reduce(
       async (accUpdates: any, currDerivative) => {
-        const shouldEval = shouldEvaluateReducer(
+        const shouldEval = (!beforeData && afterData) || shouldEvaluateReducer(
           currDerivative.listenerFields,
           beforeData,
           afterData
