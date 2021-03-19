@@ -1,8 +1,8 @@
 import { db } from "../firebaseConfig";
 const fs = require("fs");
 const beautify = require("js-beautify").js;
-import { validateSparks } from "../utils";
 import admin from "firebase-admin";
+import { parseSparksConfig } from "../utils";
 
 export const generateConfigFromTableSchema = async (
   schemaDocPath: string,
@@ -80,12 +80,7 @@ export const generateConfigFromTableSchema = async (
     ""
   )}]`;
 
-  const sparksConfig = schemaData.sparks ? schemaData.sparks : "[]";
-
-  const isSparksValid = await validateSparks(sparksConfig, user);
-  if (!isSparksValid) {
-    return false;
-  }
+  const sparksConfig = parseSparksConfig(schemaData.sparks, user);
 
   const collectionType = schemaDocPath.includes("subTables")
     ? "subCollection"

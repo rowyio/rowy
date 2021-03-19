@@ -25,6 +25,8 @@ export default function SparksEditor() {
   const currentSparks = tableState?.config.sparks ?? "";
   const [localSparks, setLocalSparks] = useState(currentSparks);
   const [open, setOpen] = useState(false);
+  const [isSparksValid, setIsSparksValid] = useState(false);
+
   const handleClose = () => {
     if (currentSparks !== localSparks) {
       requestConfirmation({
@@ -118,14 +120,20 @@ export default function SparksEditor() {
                 handleChange={(newValue) => {
                   setLocalSparks(newValue);
                 }}
+                onValideStatusUpdate={({ isValid }) => {
+                  setIsSparksValid(isValid);
+                }}
               />
+              {!isSparksValid &&
+                "Please resolve all errors before you are able to save."}
             </>
           }
           actions={{
             primary: {
               children: "Save Changes",
               onClick: handleSave,
-              disabled: localSparks === tableState?.config.sparks,
+              disabled:
+                !isSparksValid || localSparks === tableState?.config.sparks,
             },
             secondary: {
               children: "Cancel",

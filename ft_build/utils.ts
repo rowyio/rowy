@@ -66,25 +66,27 @@ async function logErrorToDB(data: {
   insertErrorRecordToDB(errorRecord);
 }
 
-async function validateSparks(sparks: string, user: admin.auth.UserRecord) {
-  let parsedSparks;
-
-  try {
-    parsedSparks = safeEval(sparks);
-  } catch (e) {
-    await logErrorToDB({
-      errorDescription: "Invalid sparks config",
-      errorExtraInfo: e?.message,
-      errorTraceStack: e?.stack,
-      sparksConfig: sparks,
-      user,
-    });
-    return false;
+function parseSparksConfig(
+  sparks: string | undefined,
+  user: admin.auth.UserRecord
+) {
+  if (sparks) {
+    try {
+      // remove leading "sparks.config(" and trailing ")"
+      return sparks
+        .replace(/^(\s*)sparks.config\(/, "")
+        .replace(/\)(\s*)+$/, "");
+    } catch (error) {
+      logErrorToDB({
+        errorDescription: "Sparks is not wrapped with sparks.config",
+        errorTraceStack: error.stack,
+        user,
+        sparksConfig: sparks,
+      });
+    }
   }
 
-  //TODO define rules to validate sparks
-
-  return true;
+  return "[]";
 }
 
-export { commandErrorHandler, logErrorToDB, validateSparks };
+export { commandErrorHandler, logErrorToDB, parseSparksConfig };

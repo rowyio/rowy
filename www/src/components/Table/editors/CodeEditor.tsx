@@ -3,7 +3,6 @@ import { useTheme, createStyles, makeStyles } from "@material-ui/core/styles";
 import Editor, { useMonaco } from "@monaco-editor/react";
 import { useFiretableContext } from "contexts/FiretableContext";
 import { FieldType } from "constants/fields";
-import { setTimeout } from "timers";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -22,7 +21,13 @@ const useStyles = makeStyles((theme) =>
 );
 
 export default function CodeEditor(props: any) {
-  const { handleChange, extraLibs, script, height = 400 } = props;
+  const {
+    handleChange,
+    extraLibs,
+    script,
+    height = 400,
+    onValideStatusUpdate,
+  } = props;
   const theme = useTheme();
   const monacoInstance = useMonaco();
 
@@ -73,14 +78,15 @@ export default function CodeEditor(props: any) {
       // );
       monacoInstance.languages.typescript.javascriptDefaults.setDiagnosticsOptions(
         {
-          noSemanticValidation: true,
-          noSyntaxValidation: false,
+          noSemanticValidation: false,
+          noSyntaxValidation: true,
+          noSuggestionDiagnostics: true,
         }
       );
       // compiler options
       monacoInstance.languages.typescript.javascriptDefaults.setCompilerOptions(
         {
-          target: monacoInstance.languages.typescript.ScriptTarget.ES5,
+          target: monacoInstance.languages.typescript.ScriptTarget.ES2020,
           allowNonTsExtensions: true,
         }
       );
@@ -109,6 +115,172 @@ export default function CodeEditor(props: any) {
         "ts:filename/utils.d.ts"
       );
 
+      const rowDefinition = [
+        ...Object.keys(tableState?.columns!).map((columnKey: string) => {
+          const column = tableState?.columns[columnKey];
+          switch (column.type) {
+            case FieldType.shortText:
+            case FieldType.longText:
+            case FieldType.email:
+            case FieldType.phone:
+            case FieldType.code:
+              return `${columnKey}:string`;
+            case FieldType.singleSelect:
+              const typeString = [
+                ...(column.config?.options?.map((opt) => `"${opt}"`) ?? []),
+              ].join(" | ");
+              return `${columnKey}:${typeString}`;
+            case FieldType.multiSelect:
+              return `${columnKey}:string[]`;
+            case FieldType.checkbox:
+              return `${columnKey}:boolean`;
+            default:
+              return `${columnKey}:any`;
+          }
+        }),
+      ].join(";\n");
+
+      const availableFields = Object.keys(tableState?.columns!)
+        .map((columnKey: string) => `"${columnKey}"`)
+        .join("|\n");
+
+      const sparksDefinition = `declare namespace sparks {
+        type Row = {${rowDefinition}};
+        type Field = ${availableFields} | string | object;
+        type Fields = Field[];
+        type Trigger = "create" | "update" | "delete";
+        type Triggers = Trigger[];
+      
+        type SparkContext = {
+          row: Row;
+          ref: any;
+          db: any;
+          change: any;
+          triggerType: Triggers;
+          sparkConfig: any;
+        }
+      
+        type ShouldRun = boolean | ((data: SparkContext) => boolean | Promise<any>);
+        type ContextToString = ((data: SparkContext) => string | Promise<any>);
+        type ContextToStringList = ((data: SparkContext) => string[] | Promise<any>);
+        type ContextToObject = ((data: SparkContext) => object | Promise<any>);
+        type ContextToObjectList = ((data: SparkContext) => object[] | Promise<any>);
+        type ContextToRow = ((data: SparkContext) => Row | Promise<any>);
+        type ContextToAny = ((data: SparkContext) => any | Promise<any>);
+      
+        type docSync = {
+          type: "docSync";
+          triggers: Triggers;
+          shouldRun: ShouldRun;
+          requiredFields?: Fields;
+          sparkBody: {
+            fieldsToSync: Fields;
+            row: ContextToRow;
+            targetPath: ContextToString;
+          }
+        };
+      
+        type historySnapshot = {
+          type: "historySnapshot";
+          triggers: Triggers;
+          shouldRun: ShouldRun;
+          sparkBody: {
+            trackedFields: Fields;
+          }
+        }
+      
+        type algoliaIndex = { 
+          type: "algoliaIndex"; 
+          triggers: Triggers; 
+          shouldRun: ShouldRun;
+          requiredFields?: Fields;
+          sparkBody: {
+            fieldsToSync: Fields;
+            index: string;
+            row: ContextToRow;
+            objectID: ContextToString;
+          }
+        }
+      
+        type slackMessage = { 
+          type: "slackMessage"; 
+          triggers: Triggers; 
+          shouldRun: ShouldRun;
+          requiredFields?: Fields;
+          sparkBody: {
+            channels?: ContextToStringList;
+            text?: ContextToString;
+            emails?: ContextToStringList;
+            blocks?: ContextToObjectList;
+            attachments?: ContextToAny;
+          }
+        }
+      
+        type sendgridEmail = {
+          type: "sendgridEmail";
+          triggers: Triggers;
+          shouldRun: ShouldRun;
+          requiredFields?: Fields;
+          sparkBody: {
+            msg: ContextToAny;
+          }
+        }
+      
+        type apiCall = { 
+          type: "apiCall"; 
+          triggers: Triggers; 
+          shouldRun: ShouldRun;
+          requiredFields?: Fields;
+          sparkBody: {
+            body: ContextToString;
+            url: ContextToString;
+            method: ContextToString;
+            callback: ContextToAny;
+          }
+        }
+      
+        type twilioMessage = {
+          type: "twilioMessage";
+          triggers: Triggers;
+          shouldRun: ShouldRun;
+          requiredFields?: Fields;
+          sparkBody: {
+            body: ContextToAny;
+            from: ContextToAny;
+            to: ContextToAny;
+          }
+        }
+      
+        type Spark =
+          | docSync
+          | historySnapshot
+          | algoliaIndex
+          | slackMessage
+          | sendgridEmail
+          | apiCall
+          | twilioMessage;
+      
+        type Sparks = Spark[]
+      
+        function config(sparks: Sparks): void;
+      }`;
+
+      monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
+        [
+          "    /**",
+          "     * sparks type configuration",
+          "     */",
+          sparksDefinition,
+          // "interface sparks {",
+          // "    /**",
+          // "     * define your sparks for current table inside sparks.config",
+          // "     */",
+          // `config(spark: object[]):void;`,
+          // "}",
+        ].join("\n"),
+        "ts:filename/sparks.d.ts"
+      );
+
       monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
         [
           "  const db:FirebaseFirestore.Firestore;",
@@ -128,7 +300,7 @@ export default function CodeEditor(props: any) {
                 return `static ${columnKey}:string`;
               case FieldType.singleSelect:
                 const typeString = [
-                  ...column.config.options.map((opt) => `"${opt}"`),
+                  ...(column.config?.options?.map((opt) => `"${opt}"`) ?? []),
                   //     "string",
                 ].join(" | ");
                 return `static ${columnKey}:${typeString}`;
@@ -152,6 +324,14 @@ export default function CodeEditor(props: any) {
     }
   }, [tableState?.columns, monacoInstance]);
 
+  function handleEditorValidation(markers) {
+    if (onValideStatusUpdate) {
+      onValideStatusUpdate({
+        isValid: markers.length <= 0,
+      });
+    }
+  }
+
   return (
     <>
       <div className={classes.editorWrapper}>
@@ -162,6 +342,7 @@ export default function CodeEditor(props: any) {
           language="javascript"
           value={initialEditorValue}
           onChange={handleChange}
+          onValidate={handleEditorValidation}
         />
       </div>
     </>
