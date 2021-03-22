@@ -145,12 +145,15 @@ export default function CodeEditor(props: any) {
         .join("|\n");
 
       const sparksDefinition = `declare namespace sparks {
+
+        // basic types that are used in all places
         type Row = {${rowDefinition}};
         type Field = ${availableFields} | string | object;
         type Fields = Field[];
         type Trigger = "create" | "update" | "delete";
         type Triggers = Trigger[];
       
+        // the argument that the spark body takes in
         type SparkContext = {
           row: Row;
           ref: any;
@@ -160,6 +163,7 @@ export default function CodeEditor(props: any) {
           sparkConfig: any;
         }
       
+        // function types that defines spark body and shuold run
         type ShouldRun = boolean | ((data: SparkContext) => boolean | Promise<any>);
         type ContextToString = ((data: SparkContext) => string | Promise<any>);
         type ContextToStringList = ((data: SparkContext) => string[] | Promise<any>);
@@ -167,7 +171,25 @@ export default function CodeEditor(props: any) {
         type ContextToObjectList = ((data: SparkContext) => object[] | Promise<any>);
         type ContextToRow = ((data: SparkContext) => Row | Promise<any>);
         type ContextToAny = ((data: SparkContext) => any | Promise<any>);
+
+        // different types of bodies that slack message can use
+        type slackEmailBody = {
+          channels: ContextToStringList;
+          text?: ContextToString;
+          emails?: ContextToStringList;
+          blocks?: ContextToObjectList;
+          attachments?: ContextToAny;
+        }
+
+        type slackChannelBody = {
+          channels?: ContextToStringList;
+          text?: ContextToString;
+          emails: ContextToStringList;
+          blocks?: ContextToObjectList;
+          attachments?: ContextToAny;
+        }
       
+        // different types of sparks
         type docSync = {
           type: "docSync";
           triggers: Triggers;
@@ -207,13 +229,7 @@ export default function CodeEditor(props: any) {
           triggers: Triggers; 
           shouldRun: ShouldRun;
           requiredFields?: Fields;
-          sparkBody: {
-            channels?: ContextToStringList;
-            text?: ContextToString;
-            emails?: ContextToStringList;
-            blocks?: ContextToObjectList;
-            attachments?: ContextToAny;
-          }
+          sparkBody: slackEmailBody | slackChannelBody;
         }
       
         type sendgridEmail = {
@@ -251,6 +267,7 @@ export default function CodeEditor(props: any) {
           }
         }
       
+        // an individual spark 
         type Spark =
           | docSync
           | historySnapshot
@@ -262,6 +279,7 @@ export default function CodeEditor(props: any) {
       
         type Sparks = Spark[]
       
+        // use spark.config(sparks) in the code editor for static type check
         function config(sparks: Sparks): void;
       }`;
 
