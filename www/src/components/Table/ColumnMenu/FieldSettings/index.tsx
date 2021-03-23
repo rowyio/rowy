@@ -10,7 +10,9 @@ import ErrorBoundary from "components/ErrorBoundary";
 import Loading from "components/Loading";
 
 import { useFiretableContext } from "contexts/FiretableContext";
-import { triggerCloudBuild } from "../../../../firebase/callables";
+import { useSnackContext } from "contexts/SnackContext";
+import { db } from "../../../../firebase";
+import { useAppContext } from "contexts/AppContext";
 import { useConfirmation } from "components/ConfirmationDialog";
 import { FieldType } from "constants/fields";
 
@@ -31,6 +33,8 @@ export default function FieldSettings(props: IMenuModalProps) {
 
   const { requestConfirmation } = useConfirmation();
   const { tableState } = useFiretableContext();
+  const snack = useSnackContext();
+  const appContext = useAppContext();
 
   const handleChange = (key: string) => (update: any) => {
     const updatedConfig = _set({ ...newConfig }, key, update);
@@ -128,10 +132,36 @@ export default function FieldSettings(props: IMenuModalProps) {
                 confirm: "Deploy",
                 cancel: "Later",
                 handleConfirm: async () => {
-                  const response = await triggerCloudBuild(
-                    tableState?.config.tableConfig.path
-                  );
-                  console.log(response);
+                  const settingsDoc = await db
+                    .doc("/_FIRETABLE_/settings")
+                    .get();
+                  const ftBuildUrl = settingsDoc.get("ftBuildUrl");
+                  if (!ftBuildUrl) {
+                    snack.open({
+                      message:
+                        "Cloud Run trigger URL not configured. Configuration guide: https://github.com/AntlerVC/firetable/wiki/Setting-up-cloud-Run-FT-Builder",
+                      variant: "error",
+                    });
+                  }
+
+                  const userTokenInfo = await appContext?.currentUser?.getIdTokenResult();
+                  const userToken = userTokenInfo?.token;
+                  try {
+                    const response = await fetch(ftBuildUrl, {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({
+                        configPath: tableState?.config.tableConfig.path,
+                        token: userToken,
+                      }),
+                    });
+                    const data = await response.json();
+                    console.log(data);
+                  } catch (e) {
+                    console.error(e);
+                  }
                 },
               });
             }

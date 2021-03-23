@@ -51,7 +51,7 @@ const updateLinks = (
     );
     return Promise.all([...addPromises, ...removePromises]);
   } else {
-   return false
+    return false;
   }
 };
 export default function propagate(
@@ -59,16 +59,16 @@ export default function propagate(
   config: { fieldName: string; trackedFields: string[] }[],
   triggerType: "delete" | "create" | "update"
 ) {
-  const promises = []
-  if (["delete","update"].includes(triggerType)){
+  const promises = [];
+  if (["delete", "update"].includes(triggerType)) {
     const propagateChangesPromise = propagateChangesOnTrigger(
       change,
       triggerType
     );
-  
-  promises.push(propagateChangesPromise)
-  };
-  if(config.length > 0){
+
+    promises.push(propagateChangesPromise);
+  }
+  if (config.length > 0) {
     if (triggerType === "delete") {
       config.forEach((c) =>
         promises.push(removeRefsOnTargetDelete(change.before.ref, c.fieldName))

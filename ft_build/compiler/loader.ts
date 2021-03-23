@@ -1,16 +1,13 @@
+import { db } from "../firebaseConfig";
 const fs = require("fs");
 const beautify = require("js-beautify").js;
-// Initialize Firebase Admin
-import * as admin from "firebase-admin";
-// Initialize Firebase Admin
-//const serverTimestamp = admin.firestore.FieldValue.serverTimestamp;
+import admin from "firebase-admin";
+import { parseSparksConfig } from "../utils";
 
-admin.initializeApp();
-//const serviceAccount = require("./antler-vc-firebase.json");
-//admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
-const db = admin.firestore();
-
-export const generateConfigFromTableSchema = async (schemaDocPath) => {
+export const generateConfigFromTableSchema = async (
+  schemaDocPath: string,
+  user: admin.auth.UserRecord
+) => {
   const schemaDoc = await db.doc(schemaDocPath).get();
   const schemaData = schemaDoc.data();
   if (!schemaData) throw new Error("no schema found");
@@ -35,7 +32,7 @@ export const generateConfigFromTableSchema = async (schemaDocPath) => {
       }',evaluate:async ({row,ref,db,auth,utilFns}) =>{${
         currColumn.config.script
       }},\nlistenerFields:[${currColumn.config.listenerFields
-        .map((fieldKey) => `"${fieldKey}"`)
+        .map((fieldKey: string) => `"${fieldKey}"`)
         .join(",\n")}]},\n`;
     },
     ""
@@ -77,13 +74,14 @@ export const generateConfigFromTableSchema = async (schemaDocPath) => {
       return `${acc}{\nfieldName:'${
         currColumn.key
       }',\ntrackedFields:[${currColumn.config.trackedFields
-        .map((fieldKey) => `"${fieldKey}"`)
+        .map((fieldKey: string) => `"${fieldKey}"`)
         .join(",\n")}]},\n`;
     },
     ""
   )}]`;
 
-  const sparksConfig = schemaData.sparks ? schemaData.sparks : "[]";
+  const sparksConfig = parseSparksConfig(schemaData.sparks, user);
+
   const collectionType = schemaDocPath.includes("subTables")
     ? "subCollection"
     : schemaDocPath.includes("groupSchema")
@@ -94,7 +92,7 @@ export const generateConfigFromTableSchema = async (schemaDocPath) => {
   let triggerPath = "";
   switch (collectionType) {
     case "collection":
-      collectionId = schemaDocPath.split("/").pop();
+      collectionId = schemaDocPath.split("/").pop() ?? "";
       functionName = `"${collectionId}"`;
       triggerPath = `"${collectionId}/{docId}"`;
       break;
@@ -118,7 +116,7 @@ export const generateConfigFromTableSchema = async (schemaDocPath) => {
         '"';
       break;
     case "groupCollection":
-      collectionId = schemaDocPath.split("/").pop();
+      collectionId = schemaDocPath.split("/").pop() ?? "";
       const triggerDepth = schemaData.triggerDepth
         ? schemaData.triggerDepth
         : 1;
@@ -134,7 +132,7 @@ export const generateConfigFromTableSchema = async (schemaDocPath) => {
     default:
       break;
   }
-  const exports = {
+  const exports: any = {
     triggerPath,
     functionName: functionName.replace(/-/g, "_"),
     derivativesConfig,
@@ -146,8 +144,12 @@ export const generateConfigFromTableSchema = async (schemaDocPath) => {
   const fileData = Object.keys(exports).reduce((acc, currKey) => {
     return `${acc}\nexport const ${currKey} = ${exports[currKey]}`;
   }, ``);
+
+  const path = require("path");
   fs.writeFileSync(
-    "../functions/src/functionConfig.ts",
+    path.resolve(__dirname, "../functions/src/functionConfig.ts"),
     beautify(fileData, { indent_size: 2 })
   );
+
+  return true;
 };

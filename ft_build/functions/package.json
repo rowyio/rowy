@@ -1,5 +1,6 @@
 {
   "name": "functions",
+  "version": "0.0.1",
   "scripts": {
     "lint": "tslint --project tsconfig.json",
     "build": "tsc",
@@ -20,11 +21,11 @@
   },
   "devDependencies": {
     "@types/node": "^14.14.11",
-    "firebase-tools": "^9.2.2",
     "husky": "^4.2.5",
     "prettier": "^2.1.1",
     "pretty-quick": "^3.0.0",
     "ts-node": "^8.6.2",
+    "tsc": "^1.20150623.0",
     "tslint": "^6.1.0",
     "typescript": "^4.1.2"
   },

@@ -16,7 +16,7 @@
     "@material-ui/lab": "^4.0.0-alpha.56",
     "@material-ui/pickers": "^3.2.10",
     "@mdi/js": "^5.8.55",
-    "@monaco-editor/react": "^3.5.5",
+    "@monaco-editor/react": "^4.1.0",
     "@tinymce/tinymce-react": "^3.4.0",
     "algoliasearch": "^4.8.6",
     "chroma-js": "^2.1.0",
