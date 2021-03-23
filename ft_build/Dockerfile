@@ -6,19 +6,15 @@ FROM node:14-slim
 # Create and change to the app directory.
 WORKDIR /workdir
 
-# Copy application dependency manifests to the container image.
-# A wildcard is used to ensure copying both package.json AND package-lock.json (when available).
-# Copying this first prevents re-running npm install on every code change.
-COPY package*.json ./
-COPY yarn.lock ./
+# Copy local code to the container image.
+# If you've done yarn install locally, node_modules will be copied to 
+# docker work directory to save time to perform the same actions again.
+COPY . ./
 
-# Install production dependencies.
+# Install production missing dependencies from above copy command.
 # If you add a package-lock.json, speed your build by switching to 'npm ci'.
 # RUN npm ci --only=production
 RUN yarn
-
-# Copy local code to the container image.
-COPY . ./
 
 # Run the web service on container startup.
 CMD [ "yarn", "start" ]
