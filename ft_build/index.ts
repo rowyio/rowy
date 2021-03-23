@@ -86,13 +86,13 @@ app.post("/", jsonParser, async (req: any, res: any) => {
   console.log("generateConfig done");
 
   let hasEnvError = false;
-  if (!process.env._FIREBASE_TOKEN) {
-    await logErrorToDB({
-      errorDescription: `Invalid env: _FIREBASE_TOKEN (${process.env._FIREBASE_TOKEN})`,
-      user,
-    });
-    hasEnvError = true;
-  }
+  // if (!process.env._FIREBASE_TOKEN) {
+  //   await logErrorToDB({
+  //     errorDescription: `Invalid env: _FIREBASE_TOKEN (${process.env._FIREBASE_TOKEN})`,
+  //     user,
+  //   });
+  //   hasEnvError = true;
+  // }
 
   if (!process.env._PROJECT_ID) {
     await logErrorToDB({
@@ -120,7 +120,6 @@ app.post("/", jsonParser, async (req: any, res: any) => {
     `cd build/functions; \
        yarn deployFT \
         --project ${process.env._PROJECT_ID} \
-        --token ${process.env._FIREBASE_TOKEN} \
         --only functions`,
     commandErrorHandler({ user })
   );
