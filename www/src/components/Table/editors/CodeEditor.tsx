@@ -174,17 +174,17 @@ export default function CodeEditor(props: any) {
 
         // different types of bodies that slack message can use
         type slackEmailBody = {
-          channels: ContextToStringList;
+          channels?: ContextToStringList;
           text?: ContextToString;
-          emails?: ContextToStringList;
+          emails: ContextToStringList;
           blocks?: ContextToObjectList;
           attachments?: ContextToAny;
         }
 
         type slackChannelBody = {
-          channels?: ContextToStringList;
+          channels: ContextToStringList;
           text?: ContextToString;
-          emails: ContextToStringList;
+          emails?: ContextToStringList;
           blocks?: ContextToObjectList;
           attachments?: ContextToAny;
         }
