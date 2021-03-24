@@ -59,12 +59,17 @@ export default function ConnectTableSelect({
   const [localValue, setLocalValue] = useState(
     Array.isArray(value) ? value : []
   );
+  const filters = config.filters.replace(
+    /\{\{(.*?)\}\}/g,
+    replacer(row)
+  )
   const algoliaIndex = config.index;
   const [algoliaState, requestDispatch, , setAlgoliaConfig] = useAlgolia(
     process.env.REACT_APP_ALGOLIA_APP_ID!,
     process.env.REACT_APP_ALGOLIA_SEARCH_API_KEY!,
     // Don’t choose the index until the user opens the dropdown if !loadBeforeOpen
-    loadBeforeOpen ? algoliaIndex : ""
+    loadBeforeOpen ? algoliaIndex : "",
+    { filters}
   );
   const options = algoliaState.hits.map((hit) => ({
     label: config.primaryKeys?.map((key: string) => hit[key]).join(" "),
@@ -130,10 +135,7 @@ export default function ConnectTableSelect({
       onChange={handleChange}
       onOpen={() => {
       setAlgoliaConfig({ indexName: algoliaIndex })
-      requestDispatch({ filters:config.filters.replace(
-        /\{\{(.*?)\}\}/g,
-        replacer(row)
-      )});
+      requestDispatch({ filters});
     }}
       onClose={handleSave}
       options={options}
