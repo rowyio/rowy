@@ -59,10 +59,10 @@ export default function ConnectTableSelect({
   const [localValue, setLocalValue] = useState(
     Array.isArray(value) ? value : []
   );
-  const filters = config.filters.replace(
+  const filters = config.filters? config.filters.replace(
     /\{\{(.*?)\}\}/g,
     replacer(row)
-  )
+  ):''
   const algoliaIndex = config.index;
   const [algoliaState, requestDispatch, , setAlgoliaConfig] = useAlgolia(
     process.env.REACT_APP_ALGOLIA_APP_ID!,
