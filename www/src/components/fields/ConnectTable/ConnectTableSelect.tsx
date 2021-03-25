@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import useAlgolia from "use-algolia";
 import _find from "lodash/find";
 import { useDebounce } from "use-debounce";
+import _get from "lodash/get";
 
 import MultiSelect, { MultiSelectProps } from "@antlerengineering/multiselect";
 import Loading from "components/Loading";
@@ -9,6 +10,12 @@ import Loading from "components/Loading";
 export type ConnectTableValue = {
   docPath: string;
   snapshot: Record<string, any>;
+};
+
+const replacer = (data: any) => (m: string, key: string) => {
+  const objKey = key.split(":")[0];
+  const defaultValue = key.split(":")[1] || "";
+  return _get(data, objKey, defaultValue);
 };
 
 export interface IConnectTableSelectProps {
@@ -26,6 +33,7 @@ export interface IConnectTableSelectProps {
   disabled?: boolean;
   /** Optional style overrides for root MUI `TextField` component */
   className?: string;
+  row:any;
   /** Override any props of the root MUI `TextField` component */
   TextFieldProps?: MultiSelectProps<ConnectTableValue[]>["TextFieldProps"];
   onClose?: MultiSelectProps<ConnectTableValue[]>["onClose"];
@@ -37,7 +45,7 @@ export default function ConnectTableSelect({
   value = [],
   onChange,
   column,
-
+  row,
   config,
   disabled,
   className,
@@ -51,13 +59,17 @@ export default function ConnectTableSelect({
   const [localValue, setLocalValue] = useState(
     Array.isArray(value) ? value : []
   );
-
+  const filters = config.filters.replace(
+    /\{\{(.*?)\}\}/g,
+    replacer(row)
+  )
   const algoliaIndex = config.index;
   const [algoliaState, requestDispatch, , setAlgoliaConfig] = useAlgolia(
     process.env.REACT_APP_ALGOLIA_APP_ID!,
     process.env.REACT_APP_ALGOLIA_SEARCH_API_KEY!,
     // Don’t choose the index until the user opens the dropdown if !loadBeforeOpen
-    loadBeforeOpen ? algoliaIndex : ""
+    loadBeforeOpen ? algoliaIndex : "",
+    { filters}
   );
   const options = algoliaState.hits.map((hit) => ({
     label: config.primaryKeys?.map((key: string) => hit[key]).join(" "),
@@ -110,7 +122,6 @@ export default function ConnectTableSelect({
     if (config.multiple !== false) onChange(localValue);
     if (onClose) onClose();
   };
-
   // Change MultiSelect input field to search Algolia directly
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebounce(search, 1000);
@@ -122,7 +133,10 @@ export default function ConnectTableSelect({
     <MultiSelect
       value={config.multiple === false ? sanitisedValue[0] : sanitisedValue}
       onChange={handleChange}
-      onOpen={() => setAlgoliaConfig({ indexName: algoliaIndex })}
+      onOpen={() => {
+      setAlgoliaConfig({ indexName: algoliaIndex })
+      requestDispatch({ filters});
+    }}
       onClose={handleSave}
       options={options}
       TextFieldProps={{

@@ -30,6 +30,7 @@ export default function ConnectTable({
           <>
             {!disabled && (
               <ConnectTableSelect
+              row={control.getValues()}
                 column={column}
                 config={(config as any) ?? {}}
                 value={value}
