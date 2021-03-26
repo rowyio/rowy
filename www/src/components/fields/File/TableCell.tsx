@@ -4,12 +4,14 @@ import { IHeavyCellProps } from "../types";
 import { useDropzone } from "react-dropzone";
 import _findIndex from "lodash/findIndex";
 import clsx from "clsx";
+import { format } from "date-fns";
 
 import {
   makeStyles,
   createStyles,
   fade,
   Grid,
+  Tooltip,
   Chip,
   IconButton,
   CircularProgress,
@@ -19,6 +21,7 @@ import UploadIcon from "assets/icons/Upload";
 import { useConfirmation } from "components/ConfirmationDialog";
 import useUploader, { FileValue } from "hooks/useFiretable/useUploader";
 import { FileIcon } from ".";
+import { DATE_TIME_FORMAT } from "constants/dates";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -116,26 +119,34 @@ export default function File_({
           {Array.isArray(value) &&
             value.reverse().map((file: FileValue) => (
               <Grid item key={file.name} className={classes.chipGridItem}>
-                <Chip
-                  icon={<FileIcon />}
-                  label={file.name}
-                  onClick={(e) => {
-                    window.open(file.downloadURL);
-                    e.stopPropagation();
-                  }}
-                  onDelete={
-                    disabled
-                      ? undefined
-                      : () =>
-                          requestConfirmation({
-                            handleConfirm: () => handleDelete(file.ref),
-                            title: "Delete File",
-                            body: "Are you sure you want to delete this file?",
-                            confirm: "Delete",
-                          })
-                  }
-                  className={classes.chip}
-                />
+                <Tooltip
+                  title={`File last modified ${format(
+                    file.lastModifiedTS,
+                    DATE_TIME_FORMAT
+                  )}`}
+                >
+                  <Chip
+                    icon={<FileIcon />}
+                    label={file.name}
+                    onClick={(e) => {
+                      window.open(file.downloadURL);
+                      e.stopPropagation();
+                    }}
+                    onDelete={
+                      disabled
+                        ? undefined
+                        : () =>
+                            requestConfirmation({
+                              handleConfirm: () => handleDelete(file.ref),
+                              title: "Delete File",
+                              body:
+                                "Are you sure you want to delete this file?",
+                              confirm: "Delete",
+                            })
+                    }
+                    className={classes.chip}
+                  />
+                </Tooltip>
               </Grid>
             ))}
         </Grid>

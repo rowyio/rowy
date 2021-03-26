@@ -347,6 +347,7 @@ const Filters = () => {
               root: classes.filterChip,
               deleteIcon: classes.filterChipDelete,
             }}
+            variant="outlined"
           />
         ))}
       </Grid>

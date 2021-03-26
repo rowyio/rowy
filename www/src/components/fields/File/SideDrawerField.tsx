@@ -2,6 +2,7 @@ import React, { useCallback, useState } from "react";
 import { ISideDrawerFieldProps } from "../types";
 import clsx from "clsx";
 import { Controller } from "react-hook-form";
+import { format } from "date-fns";
 
 import { useDropzone } from "react-dropzone";
 import useUploader, { FileValue } from "hooks/useFiretable/useUploader";
@@ -13,6 +14,7 @@ import {
   ButtonBase,
   Typography,
   Grid,
+  Tooltip,
   Chip,
   CircularProgress,
 } from "@material-ui/core";
@@ -20,8 +22,10 @@ import UploadIcon from "assets/icons/Upload";
 import { FileIcon } from ".";
 
 import Confirmation from "components/Confirmation";
+import { DATE_TIME_FORMAT } from "constants/dates";
 
 import { useFieldStyles } from "components/SideDrawer/Form/utils";
+
 const useStyles = makeStyles((theme) =>
   createStyles({
     dropzoneButton: {
@@ -116,23 +120,32 @@ function ControlledFileUploader({
         {Array.isArray(value) &&
           value.map((file: FileValue, i) => (
             <Grid item key={file.name} className={classes.chipGridItem}>
-              <Confirmation
-                message={{
-                  title: "Delete File",
-                  body: "Are you sure you want to delete this file?",
-                  confirm: "Delete",
-                }}
-                functionName={!disabled ? "onDelete" : ""}
+              <Tooltip
+                title={`File last modified ${format(
+                  file.lastModifiedTS,
+                  DATE_TIME_FORMAT
+                )}`}
               >
-                <Chip
-                  size="medium"
-                  icon={<FileIcon />}
-                  label={file.name}
-                  onClick={() => window.open(file.downloadURL)}
-                  onDelete={!disabled ? () => handleDelete(i) : undefined}
-                  className={classes.chip}
-                />
-              </Confirmation>
+                <div>
+                  <Confirmation
+                    message={{
+                      title: "Delete File",
+                      body: "Are you sure you want to delete this file?",
+                      confirm: "Delete",
+                    }}
+                    functionName={!disabled ? "onDelete" : ""}
+                  >
+                    <Chip
+                      size="medium"
+                      icon={<FileIcon />}
+                      label={file.name}
+                      onClick={() => window.open(file.downloadURL)}
+                      onDelete={!disabled ? () => handleDelete(i) : undefined}
+                      className={classes.chip}
+                    />
+                  </Confirmation>
+                </div>
+              </Tooltip>
             </Grid>
           ))}
 
