@@ -27,6 +27,7 @@ export default function FieldSettings(props: IMenuModalProps) {
     handleSave,
   } = props;
 
+  const [showRebuildPrompt,setShowRebuildPrompt] = useState(false)
   const [newConfig, setNewConfig] = useState(config ?? {});
   const customFieldSettings = getFieldProp("settings", type);
   const initializable = getFieldProp("initializable", type);
@@ -37,10 +38,12 @@ export default function FieldSettings(props: IMenuModalProps) {
   const appContext = useAppContext();
 
   const handleChange = (key: string) => (update: any) => {
+    if(showRebuildPrompt===false && (key.includes('defaultValue') || type === FieldType.derivative) && config[key] !== update){
+      setShowRebuildPrompt(true)
+    }
     const updatedConfig = _set({ ...newConfig }, key, update);
     setNewConfig(updatedConfig);
   };
-
   if (!open) return null;
 
   return (
@@ -119,16 +122,13 @@ export default function FieldSettings(props: IMenuModalProps) {
       actions={{
         primary: {
           onClick: () => {
-            handleSave(fieldName, { config: newConfig });
-
             if (
-              type === FieldType.derivative &&
-              config.script !== newConfig.script
+             showRebuildPrompt
             ) {
               requestConfirmation({
                 title: "Deploy Changes",
                 body:
-                  "Would you like to redeploy the Cloud Function for this table now?",
+                  "You have made changes that affect the behavior of the cloud function of this table, Would you like to redeploy it now?",
                 confirm: "Deploy",
                 cancel: "Later",
                 handleConfirm: async () => {
@@ -143,7 +143,6 @@ export default function FieldSettings(props: IMenuModalProps) {
                       variant: "error",
                     });
                   }
-
                   const userTokenInfo = await appContext?.currentUser?.getIdTokenResult();
                   const userToken = userTokenInfo?.token;
                   try {
@@ -165,6 +164,8 @@ export default function FieldSettings(props: IMenuModalProps) {
                 },
               });
             }
+            handleSave(fieldName, { config: newConfig });
+            setShowRebuildPrompt(false)
           },
           children: "Update",
         },
