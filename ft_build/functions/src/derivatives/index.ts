@@ -15,9 +15,7 @@ const derivative = (
       utilFns: any;
     }) => any;
   }[]
-) => async (
-  change: functions.Change<functions.firestore.DocumentSnapshot>,
-) => {
+) => async (change: functions.Change<functions.firestore.DocumentSnapshot>) => {
   try {
     const row = change.after?.data();
     const ref = change.after ? change.after.ref : change.before.ref;
@@ -25,21 +23,25 @@ const derivative = (
       async (accUpdates: any, currDerivative) => {
         const shouldEval = utilFns.hasChanged(change)(currDerivative.listenerFields);
         if (shouldEval) {
-          const newValue = await currDerivative.evaluate({
-            row,
-            ref,
-            db,
-            auth,
-            utilFns,
-          });
-          if (
-            newValue !== undefined &&
-            newValue !== row[currDerivative.fieldName]
-          ) {
-            return {
-              ...(await accUpdates),
-              [currDerivative.fieldName]: newValue,
-            };
+          try {
+            const newValue = await currDerivative.evaluate({
+              row,
+              ref,
+              db,
+              auth,
+              utilFns,
+            });
+            if (
+              newValue !== undefined &&
+              newValue !== row[currDerivative.fieldName]
+            ) {
+              return {
+                ...(await accUpdates),
+                [currDerivative.fieldName]: newValue,
+              };
+            }
+          } catch (error) {
+            console.log(error);
           }
         }
         return await accUpdates;
