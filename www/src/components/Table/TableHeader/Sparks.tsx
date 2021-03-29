@@ -125,7 +125,10 @@ export default function SparksEditor() {
                 }}
               />
               {!isSparksValid &&
-                "Please resolve all errors before you are able to save."}
+              <Alert severity="error">
+         You need to resolve all errors before you are able to save."
+            </Alert>
+                }
             </>
           }
           actions={{
