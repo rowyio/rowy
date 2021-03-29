@@ -123,12 +123,17 @@ export default function SparksEditor() {
                 onValideStatusUpdate={({ isValid }) => {
                   setIsSparksValid(isValid);
                 }}
+                diagnosticsOptions={{
+                  noSemanticValidation: false,
+                  noSyntaxValidation: true,
+                  noSuggestionDiagnostics: true,
+                }}
               />
-              {!isSparksValid &&
-              <Alert severity="error">
-         You need to resolve all errors before you are able to save."
-            </Alert>
-                }
+              {!isSparksValid && (
+                <Alert severity="error">
+                  You need to resolve all errors before you are able to save."
+                </Alert>
+              )}
             </>
           }
           actions={{

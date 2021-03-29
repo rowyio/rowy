@@ -27,6 +27,7 @@ export default function CodeEditor(props: any) {
     script,
     height = 400,
     onValideStatusUpdate,
+    diagnosticsOptions,
   } = props;
   const theme = useTheme();
   const monacoInstance = useMonaco();
@@ -77,10 +78,9 @@ export default function CodeEditor(props: any) {
       //   firebaseAuthDefs
       // );
       monacoInstance.languages.typescript.javascriptDefaults.setDiagnosticsOptions(
-        {
-          noSemanticValidation: false,
-          noSyntaxValidation: true,
-          noSuggestionDiagnostics: true,
+        diagnosticsOptions ?? {
+          noSemanticValidation: true,
+          noSyntaxValidation: false,
         }
       );
       // compiler options
