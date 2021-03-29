@@ -23,36 +23,40 @@ const derivative = (
       utilFns: any;
     }) => any;
   }[]
-) => async (
-  change: functions.Change<functions.firestore.DocumentSnapshot>,
-) => {
+) => async (change: functions.Change<functions.firestore.DocumentSnapshot>) => {
   try {
     const beforeData = change.before?.data();
     const afterData = change.after?.data();
     const ref = change.after ? change.after.ref : change.before.ref;
     const update = await functionConfig.reduce(
       async (accUpdates: any, currDerivative) => {
-        const shouldEval = (!beforeData && afterData) || shouldEvaluateReducer(
-          currDerivative.listenerFields,
-          beforeData,
-          afterData
-        );
+        const shouldEval =
+          (!beforeData && afterData) ||
+          shouldEvaluateReducer(
+            currDerivative.listenerFields,
+            beforeData,
+            afterData
+          );
         if (shouldEval) {
-          const newValue = await currDerivative.evaluate({
-            row: afterData,
-            ref,
-            db,
-            auth,
-            utilFns,
-          });
-          if (
-            newValue !== undefined &&
-            newValue !== afterData[currDerivative.fieldName]
-          ) {
-            return {
-              ...(await accUpdates),
-              [currDerivative.fieldName]: newValue,
-            };
+          try {
+            const newValue = await currDerivative.evaluate({
+              row: afterData,
+              ref,
+              db,
+              auth,
+              utilFns,
+            });
+            if (
+              newValue !== undefined &&
+              newValue !== afterData[currDerivative.fieldName]
+            ) {
+              return {
+                ...(await accUpdates),
+                [currDerivative.fieldName]: newValue,
+              };
+            }
+          } catch (error) {
+            console.log(error);
           }
         }
         return await accUpdates;
