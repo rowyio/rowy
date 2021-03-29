@@ -61,22 +61,22 @@ export default function CodeEditor(props: any) {
     const firestoreDefsFile = await fetch(
       `${process.env.PUBLIC_URL}/firestore.d.ts`
     );
-    // const firebaseAuthDefsFile = await fetch(
-    //   `${process.env.PUBLIC_URL}/auth.d.ts`
-    // );
+    const firebaseAuthDefsFile = await fetch(
+      `${process.env.PUBLIC_URL}/auth.d.ts`
+    );
     const firestoreDefs = await firestoreDefsFile.text();
-    // const firebaseAuthDefs = await firebaseAuthDefsFile.text();
-    // console.timeLog(firebaseAuthDefs);
-    // monaco
-    //   .init()
-    //   .then((monacoInstance) => {
+    const firebaseAuthDefs = (await firebaseAuthDefsFile.text())
+      ?.replace("export", "declare")
+      ?.replace("admin.auth", "adminauth");
+    console.timeLog(firebaseAuthDefs);
+
     try {
       monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
         firestoreDefs
       );
-      // monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
-      //   firebaseAuthDefs
-      // );
+      monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
+        firebaseAuthDefs
+      );
       monacoInstance.languages.typescript.javascriptDefaults.setDiagnosticsOptions(
         diagnosticsOptions ?? {
           noSemanticValidation: true,
@@ -302,7 +302,7 @@ export default function CodeEditor(props: any) {
       monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
         [
           "  const db:FirebaseFirestore.Firestore;",
-          //     "  const auth:admin.auth;",
+          "  const auth:adminauth.BaseAuth;",
           "declare class row {",
           "    /**",
           "     * Returns the row fields",
