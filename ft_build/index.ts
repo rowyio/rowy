@@ -98,7 +98,7 @@ app.post("/", jsonParser, async (req: any, res: any) => {
   if (hasEnvError) {
     res.send({
       success: false,
-      reason: "Invalid env: _FIREBASE_TOKEN or _PROJECT_ID",
+      reason: "Invalid env:_PROJECT_ID",
     });
     return;
   }

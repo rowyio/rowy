@@ -2,14 +2,6 @@ import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import { db, auth } from "../firebaseConfig";
 import utilFns from "../utils";
-const shouldEvaluateReducer = (listeners, before, after) =>
-  listeners.reduce((acc: Boolean, currField: string) => {
-    if (acc) return true;
-    else
-      return (
-        JSON.stringify(before?.[currField]) !== JSON.stringify(after[currField])
-      );
-  }, false);
 
 const derivative = (
   functionConfig: {
@@ -27,19 +19,14 @@ const derivative = (
   change: functions.Change<functions.firestore.DocumentSnapshot>,
 ) => {
   try {
-    const beforeData = change.before?.data();
-    const afterData = change.after?.data();
+    const row = change.after?.data();
     const ref = change.after ? change.after.ref : change.before.ref;
     const update = await functionConfig.reduce(
       async (accUpdates: any, currDerivative) => {
-        const shouldEval = (!beforeData && afterData) || shouldEvaluateReducer(
-          currDerivative.listenerFields,
-          beforeData,
-          afterData
-        );
+        const shouldEval = utilFns.hasChanged(change)(currDerivative.listenerFields);
         if (shouldEval) {
           const newValue = await currDerivative.evaluate({
-            row: afterData,
+            row,
             ref,
             db,
             auth,
@@ -47,7 +34,7 @@ const derivative = (
           });
           if (
             newValue !== undefined &&
-            newValue !== afterData[currDerivative.fieldName]
+            newValue !== row[currDerivative.fieldName]
           ) {
             return {
               ...(await accUpdates),
