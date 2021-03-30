@@ -1,6 +1,6 @@
 import React, { useRef, useMemo, useState } from "react";
 import clsx from "clsx";
-import Editor, { monaco } from "@monaco-editor/react";
+import Editor, { useMonaco } from "@monaco-editor/react";
 
 import { useTheme, createStyles, makeStyles } from "@material-ui/core/styles";
 
@@ -42,6 +42,7 @@ export default function CodeEditor({
   const [initialEditorValue] = useState(value ?? "");
   const { tableState } = useFiretableContext();
   const classes = useStyles();
+  const monacoInstance = useMonaco();
 
   const editorRef = useRef<any>();
 
@@ -49,39 +50,42 @@ export default function CodeEditor({
     editorRef.current = editor;
   }
 
-  function listenEditorChanges() {
-    setTimeout(() => {
-      editorRef.current?.onDidChangeModelContent((ev) => {
-        onChange(editorRef.current.getValue());
-      });
-    }, 2000);
-  }
+  const themeTransformer = (theme: string) => {
+    switch (theme) {
+      case "dark":
+        return "vs-dark";
+      default:
+        return theme;
+    }
+  };
 
   useMemo(async () => {
-    monaco
-      .init()
-      .then((monacoInstance) => {
-        monacoInstance.languages.typescript.javascriptDefaults.setDiagnosticsOptions(
-          {
-            noSemanticValidation: true,
-            noSyntaxValidation: false,
-          }
-        );
-        // compiler options
-        monacoInstance.languages.typescript.javascriptDefaults.setCompilerOptions(
-          {
-            target: monacoInstance.languages.typescript.ScriptTarget.ES5,
-            allowNonTsExtensions: true,
-          }
-        );
-      })
-      .catch((error) =>
-        console.error(
-          "An error occurred during initialization of Monaco: ",
-          error
-        )
+    if (!monacoInstance) {
+      // useMonaco returns a monaco instance but initialisation is done asynchronously
+      // dont execute the logic until the instance is initialised
+      return;
+    }
+
+    try {
+      monacoInstance.languages.typescript.javascriptDefaults.setDiagnosticsOptions(
+        {
+          noSemanticValidation: true,
+          noSyntaxValidation: false,
+        }
       );
-    listenEditorChanges();
+      // compiler options
+      monacoInstance.languages.typescript.javascriptDefaults.setCompilerOptions(
+        {
+          target: monacoInstance.languages.typescript.ScriptTarget.ES5,
+          allowNonTsExtensions: true,
+        }
+      );
+    } catch (error) {
+      console.error(
+        "An error occurred during initialization of Monaco: ",
+        error
+      );
+    }
   }, [tableState?.columns]);
 
   return (
@@ -90,9 +94,9 @@ export default function CodeEditor({
       className={clsx(classes.editorWrapper, wrapperProps?.className)}
     >
       <Editor
-        theme={theme.palette.type}
+        theme={themeTransformer(theme.palette.type)}
         height={height}
-        editorDidMount={handleEditorDidMount}
+        onMount={handleEditorDidMount}
         language="javascript"
         value={initialEditorValue}
         options={{
@@ -100,6 +104,7 @@ export default function CodeEditor({
           fontFamily: theme.typography.fontFamilyMono,
           ...editorOptions,
         }}
+        onChange={onChange as any}
       />
     </div>
   );

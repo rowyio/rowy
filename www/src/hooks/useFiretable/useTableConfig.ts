@@ -133,7 +133,6 @@ const useTableConfig = (tablePath?: string) => {
     columnsArray
       .filter((c) => c) // arrayMover has a bug creating undefined items
       .forEach((column: any, index) => {
-        console.log({ column });
         updatedColumns[column.key] = { ...column, index };
       });
     documentDispatch({

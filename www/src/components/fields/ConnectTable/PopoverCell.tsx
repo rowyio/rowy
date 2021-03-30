@@ -10,6 +10,7 @@ export default function ConnectTable({
   column,
   parentRef,
   showPopoverCell,
+  row,
   disabled,
 }: IPopoverCellProps) {
   const config = column.config ?? {};
@@ -17,6 +18,7 @@ export default function ConnectTable({
 
   return (
     <ConnectTableSelect
+    row={row}
       column={column}
       value={value}
       onChange={onSubmit}

@@ -4,30 +4,29 @@ import _get from "lodash/get";
 import _find from "lodash/find";
 import _sortBy from "lodash/sortBy";
 import { useConfirmation } from "components/ConfirmationDialog";
+import { useSnackContext } from "contexts/SnackContext";
+import { db } from "../../../firebase";
 
 import { DialogContentText, Chip } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
-
 import TableHeaderButton from "./TableHeaderButton";
 import SparkIcon from "@material-ui/icons/OfflineBolt";
-
 import Modal from "components/Modal";
+import { useFiretableContext } from "contexts/FiretableContext";
+import { useAppContext } from "contexts/AppContext";
+
 import CodeEditor from "../editors/CodeEditor";
 
-// import { SnackContext } from "contexts/SnackContext";
-import { useFiretableContext } from "contexts/FiretableContext";
-import { triggerCloudBuild } from "firebase/callables";
-
 export default function SparksEditor() {
+  const snack = useSnackContext();
   const { tableState, tableActions } = useFiretableContext();
-
-  // const snackContext = useContext(SnackContext);
+  const appContext = useAppContext();
   const { requestConfirmation } = useConfirmation();
-
   const currentSparks = tableState?.config.sparks ?? "";
   const [localSparks, setLocalSparks] = useState(currentSparks);
-
   const [open, setOpen] = useState(false);
+  const [isSparksValid, setIsSparksValid] = useState(false);
+
   const handleClose = () => {
     if (currentSparks !== localSparks) {
       requestConfirmation({
@@ -51,14 +50,38 @@ export default function SparksEditor() {
       confirm: "Deploy",
       cancel: "later",
       handleConfirm: async () => {
-        const response = await triggerCloudBuild(
-          tableState?.config.tableConfig.path
-        );
-        console.log(response);
+        const settingsDoc = await db.doc("/_FIRETABLE_/settings").get();
+        const ftBuildUrl = settingsDoc.get("ftBuildUrl");
+        if (!ftBuildUrl) {
+          snack.open({
+            message:
+              "Cloud Run trigger URL not configured. Configuration guide: https://github.com/AntlerVC/firetable/wiki/Setting-up-cloud-Run-FT-Builder",
+            variant: "error",
+          });
+        }
+
+        const userTokenInfo = await appContext?.currentUser?.getIdTokenResult();
+        const userToken = userTokenInfo?.token;
+        try {
+          const response = await fetch(ftBuildUrl, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              configPath: tableState?.config.tableConfig.path,
+              token: userToken,
+            }),
+          });
+          const data = await response.json();
+          console.log(data);
+        } catch (e) {
+          console.error(e);
+        }
       },
     });
   };
-  // const cloudBuild = tableState?.config.tableConfig.doc.cloudBuild;
+
   return (
     <>
       <TableHeaderButton
@@ -97,14 +120,28 @@ export default function SparksEditor() {
                 handleChange={(newValue) => {
                   setLocalSparks(newValue);
                 }}
+                onValideStatusUpdate={({ isValid }) => {
+                  setIsSparksValid(isValid);
+                }}
+                diagnosticsOptions={{
+                  noSemanticValidation: false,
+                  noSyntaxValidation: true,
+                  noSuggestionDiagnostics: true,
+                }}
               />
+              {!isSparksValid && (
+                <Alert severity="error">
+                  You need to resolve all errors before you are able to save."
+                </Alert>
+              )}
             </>
           }
           actions={{
             primary: {
               children: "Save Changes",
               onClick: handleSave,
-              disabled: localSparks === tableState?.config.sparks,
+              disabled:
+                !isSparksValid || localSparks === tableState?.config.sparks,
             },
             secondary: {
               children: "Cancel",

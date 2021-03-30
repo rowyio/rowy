@@ -1,9 +1,8 @@
 import React, { useRef, useMemo, useState } from "react";
 import { useTheme, createStyles, makeStyles } from "@material-ui/core/styles";
-import Editor, { monaco } from "@monaco-editor/react";
+import Editor, { useMonaco } from "@monaco-editor/react";
 import { useFiretableContext } from "contexts/FiretableContext";
 import { FieldType } from "constants/fields";
-import { setTimeout } from "timers";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -22,8 +21,16 @@ const useStyles = makeStyles((theme) =>
 );
 
 export default function CodeEditor(props: any) {
-  const { handleChange, extraLibs, script, height = 400 } = props;
+  const {
+    handleChange,
+    extraLibs,
+    script,
+    height = 400,
+    onValideStatusUpdate,
+    diagnosticsOptions,
+  } = props;
   const theme = useTheme();
+  const monacoInstance = useMonaco();
 
   const [initialEditorValue] = useState(script ?? "");
   const { tableState } = useFiretableContext();
@@ -35,125 +42,325 @@ export default function CodeEditor(props: any) {
     editorRef.current = editor;
   }
 
-  function listenEditorChanges() {
-    setTimeout(() => {
-      editorRef.current?.onDidChangeModelContent((ev) => {
-        handleChange(editorRef.current.getValue());
-      });
-    }, 2000);
-  }
+  const themeTransformer = (theme: string) => {
+    switch (theme) {
+      case "dark":
+        return "vs-dark";
+      default:
+        return theme;
+    }
+  };
 
   useMemo(async () => {
+    if (!monacoInstance) {
+      // useMonaco returns a monaco instance but initialisation is done asynchronously
+      // dont execute the logic until the instance is initialised
+      return;
+    }
+
     const firestoreDefsFile = await fetch(
       `${process.env.PUBLIC_URL}/firestore.d.ts`
     );
-    // const firebaseAuthDefsFile = await fetch(
-    //   `${process.env.PUBLIC_URL}/auth.d.ts`
-    // );
+    const firebaseAuthDefsFile = await fetch(
+      `${process.env.PUBLIC_URL}/auth.d.ts`
+    );
     const firestoreDefs = await firestoreDefsFile.text();
-    // const firebaseAuthDefs = await firebaseAuthDefsFile.text();
-    // console.timeLog(firebaseAuthDefs);
-    monaco
-      .init()
-      .then((monacoInstance) => {
-        monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
-          firestoreDefs
-        );
-        // monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
-        //   firebaseAuthDefs
-        // );
-        monacoInstance.languages.typescript.javascriptDefaults.setDiagnosticsOptions(
-          {
-            noSemanticValidation: true,
-            noSyntaxValidation: false,
-          }
-        );
-        // compiler options
-        monacoInstance.languages.typescript.javascriptDefaults.setCompilerOptions(
-          {
-            target: monacoInstance.languages.typescript.ScriptTarget.ES5,
-            allowNonTsExtensions: true,
-          }
-        );
-        if (extraLibs) {
-          monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
-            extraLibs.join("\n"),
-            "ts:filename/extraLibs.d.ts"
-          );
+    const firebaseAuthDefs = (await firebaseAuthDefsFile.text())
+      ?.replace("export", "declare")
+      ?.replace("admin.auth", "adminauth");
+    console.timeLog(firebaseAuthDefs);
+
+    try {
+      monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
+        firestoreDefs
+      );
+      monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
+        firebaseAuthDefs
+      );
+      monacoInstance.languages.typescript.javascriptDefaults.setDiagnosticsOptions(
+        diagnosticsOptions ?? {
+          noSemanticValidation: true,
+          noSyntaxValidation: false,
         }
+      );
+      // compiler options
+      monacoInstance.languages.typescript.javascriptDefaults.setCompilerOptions(
+        {
+          target: monacoInstance.languages.typescript.ScriptTarget.ES2020,
+          allowNonTsExtensions: true,
+        }
+      );
+      if (extraLibs) {
         monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
-          [
-            "    /**",
-            "     * utility functions",
-            "     */",
-            "declare namespace utilFns {",
-            "    /**",
-            "     * Sends out an email through sendGrid",
-            "     */",
-            `function sendEmail(msg:{from: string,
+          extraLibs.join("\n"),
+          "ts:filename/extraLibs.d.ts"
+        );
+      }
+      monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
+        [
+          "    /**",
+          "     * utility functions",
+          "     */",
+          "declare namespace utilFns {",
+          "    /**",
+          "     * Sends out an email through sendGrid",
+          "     */",
+          `function sendEmail(msg:{from: string,
               templateId:string,
               personalizations:{to:string,dynamic_template_data:any}[]}):void {
 
               }`,
-            "}",
-          ].join("\n"),
-          "ts:filename/utils.d.ts"
-        );
-
-        monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
-          [
-            "  const db:FirebaseFirestore.Firestore;",
-            //     "  const auth:admin.auth;",
-            "declare class row {",
-            "    /**",
-            "     * Returns the row fields",
-            "     */",
-            ...Object.keys(tableState?.columns!).map((columnKey: string) => {
-              const column = tableState?.columns[columnKey];
-              switch (column.type) {
-                case FieldType.shortText:
-                case FieldType.longText:
-                case FieldType.email:
-                case FieldType.phone:
-                case FieldType.code:
-                  return `static ${columnKey}:string`;
-                case FieldType.singleSelect:
-                  const typeString = [
-                    ...column.config.options.map((opt) => `"${opt}"`),
-                    //     "string",
-                  ].join(" | ");
-                  return `static ${columnKey}:${typeString}`;
-                case FieldType.multiSelect:
-                  return `static ${columnKey}:string[]`;
-                case FieldType.checkbox:
-                  return `static ${columnKey}:boolean`;
-                default:
-                  return `static ${columnKey}:any`;
-              }
-            }),
-            "}",
-          ].join("\n"),
-          "ts:filename/rowFields.d.ts"
-        );
-        //  monacoInstance.editor.create(wrapper, properties);
-      })
-      .catch((error) =>
-        console.error(
-          "An error occurred during initialization of Monaco: ",
-          error
-        )
+          "}",
+        ].join("\n"),
+        "ts:filename/utils.d.ts"
       );
-    listenEditorChanges();
-  }, [tableState?.columns]);
+
+      const rowDefinition = [
+        ...Object.keys(tableState?.columns!).map((columnKey: string) => {
+          const column = tableState?.columns[columnKey];
+          switch (column.type) {
+            case FieldType.shortText:
+            case FieldType.longText:
+            case FieldType.email:
+            case FieldType.phone:
+            case FieldType.code:
+              return `${columnKey}:string`;
+            case FieldType.singleSelect:
+              const typeString = [
+                ...(column.config?.options?.map((opt) => `"${opt}"`) ?? []),
+              ].join(" | ");
+              return `${columnKey}:${typeString}`;
+            case FieldType.multiSelect:
+              return `${columnKey}:string[]`;
+            case FieldType.checkbox:
+              return `${columnKey}:boolean`;
+            default:
+              return `${columnKey}:any`;
+          }
+        }),
+      ].join(";\n");
+
+      const availableFields = Object.keys(tableState?.columns!)
+        .map((columnKey: string) => `"${columnKey}"`)
+        .join("|\n");
+
+      const sparksDefinition = `declare namespace sparks {
+
+        // basic types that are used in all places
+        type Row = {${rowDefinition}};
+        type Field = ${availableFields} | string | object;
+        type Fields = Field[];
+        type Trigger = "create" | "update" | "delete";
+        type Triggers = Trigger[];
+      
+        // the argument that the spark body takes in
+        type SparkContext = {
+          row: Row;
+          ref: any;
+          db: any;
+          change: any;
+          triggerType: Triggers;
+          sparkConfig: any;
+        }
+      
+        // function types that defines spark body and shuold run
+        type ShouldRun = boolean | ((data: SparkContext) => boolean | Promise<any>);
+        type ContextToString = ((data: SparkContext) => string | Promise<any>);
+        type ContextToStringList = ((data: SparkContext) => string[] | Promise<any>);
+        type ContextToObject = ((data: SparkContext) => object | Promise<any>);
+        type ContextToObjectList = ((data: SparkContext) => object[] | Promise<any>);
+        type ContextToRow = ((data: SparkContext) => Row | Promise<any>);
+        type ContextToAny = ((data: SparkContext) => any | Promise<any>);
+
+        // different types of bodies that slack message can use
+        type slackEmailBody = {
+          channels?: ContextToStringList;
+          text?: ContextToString;
+          emails: ContextToStringList;
+          blocks?: ContextToObjectList;
+          attachments?: ContextToAny;
+        }
+
+        type slackChannelBody = {
+          channels: ContextToStringList;
+          text?: ContextToString;
+          emails?: ContextToStringList;
+          blocks?: ContextToObjectList;
+          attachments?: ContextToAny;
+        }
+      
+        // different types of sparks
+        type docSync = {
+          type: "docSync";
+          triggers: Triggers;
+          shouldRun: ShouldRun;
+          requiredFields?: Fields;
+          sparkBody: {
+            fieldsToSync: Fields;
+            row: ContextToRow;
+            targetPath: ContextToString;
+          }
+        };
+      
+        type historySnapshot = {
+          type: "historySnapshot";
+          triggers: Triggers;
+          shouldRun: ShouldRun;
+          sparkBody: {
+            trackedFields: Fields;
+          }
+        }
+      
+        type algoliaIndex = { 
+          type: "algoliaIndex"; 
+          triggers: Triggers; 
+          shouldRun: ShouldRun;
+          requiredFields?: Fields;
+          sparkBody: {
+            fieldsToSync: Fields;
+            index: string;
+            row: ContextToRow;
+            objectID: ContextToString;
+          }
+        }
+      
+        type slackMessage = { 
+          type: "slackMessage"; 
+          triggers: Triggers; 
+          shouldRun: ShouldRun;
+          requiredFields?: Fields;
+          sparkBody: slackEmailBody | slackChannelBody;
+        }
+      
+        type sendgridEmail = {
+          type: "sendgridEmail";
+          triggers: Triggers;
+          shouldRun: ShouldRun;
+          requiredFields?: Fields;
+          sparkBody: {
+            msg: ContextToAny;
+          }
+        }
+      
+        type apiCall = { 
+          type: "apiCall"; 
+          triggers: Triggers; 
+          shouldRun: ShouldRun;
+          requiredFields?: Fields;
+          sparkBody: {
+            body: ContextToString;
+            url: ContextToString;
+            method: ContextToString;
+            callback: ContextToAny;
+          }
+        }
+      
+        type twilioMessage = {
+          type: "twilioMessage";
+          triggers: Triggers;
+          shouldRun: ShouldRun;
+          requiredFields?: Fields;
+          sparkBody: {
+            body: ContextToAny;
+            from: ContextToAny;
+            to: ContextToAny;
+          }
+        }
+      
+        // an individual spark 
+        type Spark =
+          | docSync
+          | historySnapshot
+          | algoliaIndex
+          | slackMessage
+          | sendgridEmail
+          | apiCall
+          | twilioMessage;
+      
+        type Sparks = Spark[]
+      
+        // use spark.config(sparks) in the code editor for static type check
+        function config(sparks: Sparks): void;
+      }`;
+
+      monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
+        [
+          "    /**",
+          "     * sparks type configuration",
+          "     */",
+          sparksDefinition,
+          // "interface sparks {",
+          // "    /**",
+          // "     * define your sparks for current table inside sparks.config",
+          // "     */",
+          // `config(spark: object[]):void;`,
+          // "}",
+        ].join("\n"),
+        "ts:filename/sparks.d.ts"
+      );
+
+      monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
+        [
+          "  const db:FirebaseFirestore.Firestore;",
+          "  const auth:adminauth.BaseAuth;",
+          "declare class row {",
+          "    /**",
+          "     * Returns the row fields",
+          "     */",
+          ...Object.keys(tableState?.columns!).map((columnKey: string) => {
+            const column = tableState?.columns[columnKey];
+            switch (column.type) {
+              case FieldType.shortText:
+              case FieldType.longText:
+              case FieldType.email:
+              case FieldType.phone:
+              case FieldType.code:
+                return `static ${columnKey}:string`;
+              case FieldType.singleSelect:
+                const typeString = [
+                  ...(column.config?.options?.map((opt) => `"${opt}"`) ?? []),
+                  //     "string",
+                ].join(" | ");
+                return `static ${columnKey}:${typeString}`;
+              case FieldType.multiSelect:
+                return `static ${columnKey}:string[]`;
+              case FieldType.checkbox:
+                return `static ${columnKey}:boolean`;
+              default:
+                return `static ${columnKey}:any`;
+            }
+          }),
+          "}",
+        ].join("\n"),
+        "ts:filename/rowFields.d.ts"
+      );
+    } catch (error) {
+      console.error(
+        "An error occurred during initialization of Monaco: ",
+        error
+      );
+    }
+  }, [tableState?.columns, monacoInstance]);
+
+  function handleEditorValidation(markers) {
+    if (onValideStatusUpdate) {
+      onValideStatusUpdate({
+        isValid: markers.length <= 0,
+      });
+    }
+  }
+
   return (
     <>
       <div className={classes.editorWrapper}>
         <Editor
-          theme={theme.palette.type}
+          theme={themeTransformer(theme.palette.type)}
           height={height}
-          editorDidMount={handleEditorDidMount}
+          onMount={handleEditorDidMount}
           language="javascript"
           value={initialEditorValue}
+          onChange={handleChange}
+          onValidate={handleEditorValidation}
         />
       </div>
     </>
