@@ -50,7 +50,7 @@ export const generateConfigFromTableSchema = async (
         value:${
           typeof currColumn.config.defaultValue.value === "string"
             ? `"${currColumn.config.defaultValue.value}"`
-            : currColumn.config.defaultValue.value
+            : JSON.stringify(currColumn.config.defaultValue.value)
         },
        },\n`;
       } else if (currColumn.config.defaultValue.type === "dynamic") {

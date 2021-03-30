@@ -223,7 +223,6 @@ export default function CodeEditor(props: any) {
             objectID: ContextToString;
           }
         }
-      
         type slackMessage = { 
           type: "slackMessage"; 
           triggers: Triggers; 
@@ -266,6 +265,16 @@ export default function CodeEditor(props: any) {
             to: ContextToAny;
           }
         }
+
+        type task = { 
+          type: "task"; 
+          triggers: Triggers; 
+          shouldRun: ShouldRun;
+          requiredFields?: Fields;
+          sparkBody: {
+            promises: ContextToAny;
+          }
+        }
       
         // an individual spark 
         type Spark =
@@ -275,7 +284,8 @@ export default function CodeEditor(props: any) {
           | slackMessage
           | sendgridEmail
           | apiCall
-          | twilioMessage;
+          | twilioMessage
+          | task;
       
         type Sparks = Spark[]
       
