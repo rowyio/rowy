@@ -125,7 +125,7 @@ export default function SparksEditor() {
                 }}
                 diagnosticsOptions={{
                   noSemanticValidation: false,
-                  noSyntaxValidation: true,
+                  noSyntaxValidation: false,
                   noSuggestionDiagnostics: true,
                 }}
               />
