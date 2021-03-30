@@ -36,6 +36,7 @@ export const addPackages = async (
     );
     return success;
   }
+  return true;
 };
 
 export const addSparkLib = async (
