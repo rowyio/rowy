@@ -61,8 +61,9 @@ export const rowReducer = (fieldsToSync, row) =>
 const hasChanged =(change:functions.Change<functions.firestore.DocumentSnapshot>)=> (trackedFields:string[]) =>{
     const before = change.before?.data();
     const after = change.after?.data();
-    if (!before && after || !after&&before)return true;
-    return trackedFields.some(trackedField =>JSON.stringify(before[trackedField]) !== JSON.stringify(after[trackedField]))
+    if (!before && after)return true;
+    else if (before && !after)return false;
+    else return trackedFields.some(trackedField =>JSON.stringify(before[trackedField]) !== JSON.stringify(after[trackedField]))
   }
 export default {
   hasChanged,
