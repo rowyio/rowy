@@ -1,6 +1,6 @@
 import * as child from "child_process";
 import admin from "firebase-admin";
-import { commandErrorHandler } from "../utils";
+import { commandErrorHandler, logErrorToDB } from "../utils";
 
 function execute(command: string, callback: any) {
   console.log(command);
@@ -43,17 +43,25 @@ export const addSparkLib = async (
   name: string,
   user: admin.auth.UserRecord
 ) => {
-  const { dependencies } = require(`../sparksLib/${name}`);
-  const packages = Object.keys(dependencies).map((key) => ({
-    name: key,
-    version: dependencies[key],
-  }));
-  let success = await addPackages(packages, user);
-  if (!success) {
+  try {
+    const { dependencies } = require(`../sparksLib/${name}`);
+    const packages = Object.keys(dependencies).map((key) => ({
+      name: key,
+      version: dependencies[key],
+    }));
+    const success = await addPackages(packages, user);
+    if (!success) {
+      return false;
+    }
+  } catch (error) {
+    logErrorToDB({
+      user,
+      errorDescription: "Error parsing dependencies",
+    });
     return false;
   }
 
-  success = await asyncExecute(
+  const success = await asyncExecute(
     `cp build/sparksLib/${name}.ts build/functions/src/sparks/${name}.ts`,
     commandErrorHandler({
       user,
