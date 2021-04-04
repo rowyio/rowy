@@ -191,6 +191,7 @@ export default function CodeEditor(props: any) {
       
         // different types of sparks
         type docSync = {
+          label?:string;
           type: "docSync";
           triggers: Triggers;
           shouldRun: ShouldRun;
@@ -203,6 +204,7 @@ export default function CodeEditor(props: any) {
         };
       
         type historySnapshot = {
+          label?:string;
           type: "historySnapshot";
           triggers: Triggers;
           shouldRun: ShouldRun;
@@ -211,7 +213,8 @@ export default function CodeEditor(props: any) {
           }
         }
       
-        type algoliaIndex = { 
+        type algoliaIndex = {
+          label?:string; 
           type: "algoliaIndex"; 
           triggers: Triggers; 
           shouldRun: ShouldRun;
@@ -223,7 +226,8 @@ export default function CodeEditor(props: any) {
             objectID: ContextToString;
           }
         }
-        type slackMessage = { 
+        type slackMessage = {
+          label?:string; 
           type: "slackMessage"; 
           triggers: Triggers; 
           shouldRun: ShouldRun;
@@ -232,6 +236,7 @@ export default function CodeEditor(props: any) {
         }
       
         type sendgridEmail = {
+          label?:string;
           type: "sendgridEmail";
           triggers: Triggers;
           shouldRun: ShouldRun;
@@ -241,7 +246,8 @@ export default function CodeEditor(props: any) {
           }
         }
       
-        type apiCall = { 
+        type apiCall = {
+          label?:string; 
           type: "apiCall"; 
           triggers: Triggers; 
           shouldRun: ShouldRun;
@@ -255,6 +261,7 @@ export default function CodeEditor(props: any) {
         }
       
         type twilioMessage = {
+          label?:string;
           type: "twilioMessage";
           triggers: Triggers;
           shouldRun: ShouldRun;
@@ -266,7 +273,8 @@ export default function CodeEditor(props: any) {
           }
         }
 
-        type task = { 
+        type task = {
+          label?:string; 
           type: "task"; 
           triggers: Triggers; 
           shouldRun: ShouldRun;
