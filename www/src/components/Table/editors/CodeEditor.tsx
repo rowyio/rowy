@@ -226,6 +226,20 @@ export default function CodeEditor(props: any) {
             objectID: ContextToString;
           }
         }
+        
+        type meiliIndex = { 
+          type: "meiliIndex"; 
+          triggers: Triggers; 
+          shouldRun: ShouldRun;
+          requiredFields?: Fields;
+          sparkBody: {
+            fieldsToSync: Fields;
+            index: string;
+            row: ContextToRow;
+            objectID: ContextToString;
+          }
+        }
+
         type slackMessage = {
           label?:string; 
           type: "slackMessage"; 
@@ -289,6 +303,7 @@ export default function CodeEditor(props: any) {
           | docSync
           | historySnapshot
           | algoliaIndex
+          | meiliIndex
           | slackMessage
           | sendgridEmail
           | apiCall
