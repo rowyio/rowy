@@ -68,7 +68,6 @@ export default function CodeEditor(props: any) {
     const firebaseAuthDefs = (await firebaseAuthDefsFile.text())
       ?.replace("export", "declare")
       ?.replace("admin.auth", "adminauth");
-    console.timeLog(firebaseAuthDefs);
 
     try {
       monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
@@ -107,9 +106,8 @@ export default function CodeEditor(props: any) {
           "     */",
           `function sendEmail(msg:{from: string,
               templateId:string,
-              personalizations:{to:string,dynamic_template_data:any}[]}):void {
-
-              }`,
+              personalizations:{to:string,dynamic_template_data:any}[]}):void {}`,
+          `async function getSecret(name: string, v?: string):any {}`,
           "}",
         ].join("\n"),
         "ts:filename/utils.d.ts"
@@ -226,6 +224,20 @@ export default function CodeEditor(props: any) {
             objectID: ContextToString;
           }
         }
+        
+        type meiliIndex = { 
+          type: "meiliIndex"; 
+          triggers: Triggers; 
+          shouldRun: ShouldRun;
+          requiredFields?: Fields;
+          sparkBody: {
+            fieldsToSync: Fields;
+            index: string;
+            row: ContextToRow;
+            objectID: ContextToString;
+          }
+        }
+
         type slackMessage = {
           label?:string; 
           type: "slackMessage"; 
@@ -289,6 +301,7 @@ export default function CodeEditor(props: any) {
           | docSync
           | historySnapshot
           | algoliaIndex
+          | meiliIndex
           | slackMessage
           | sendgridEmail
           | apiCall
@@ -319,6 +332,8 @@ export default function CodeEditor(props: any) {
 
       monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
         [
+          "  declare var require: any;",
+          "  declare var Buffer: any;",
           "  const db:FirebaseFirestore.Firestore;",
           "  const auth:adminauth.BaseAuth;",
           "declare class row {",
