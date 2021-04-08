@@ -26,6 +26,7 @@ export default function SparksEditor() {
   const [localSparks, setLocalSparks] = useState(currentSparks);
   const [open, setOpen] = useState(false);
   const [isSparksValid, setIsSparksValid] = useState(false);
+  const [showForceSave, setShowForceSave] = useState(false);
 
   const handleClose = () => {
     if (currentSparks !== localSparks) {
@@ -82,6 +83,10 @@ export default function SparksEditor() {
     });
   };
 
+  const handleKeyChange = (key) => {
+    setShowForceSave(key.shiftKey && key.ctrlKey);
+  };
+
   return (
     <>
       <TableHeaderButton
@@ -131,23 +136,27 @@ export default function SparksEditor() {
               />
               {!isSparksValid && (
                 <Alert severity="error">
-                  You need to resolve all errors before you are able to save."
+                  You need to resolve all errors before you are able to save. Or
+                  press shift and control key to enable force save.
                 </Alert>
               )}
             </>
           }
           actions={{
             primary: {
-              children: "Save Changes",
+              children: showForceSave ? "Force Save" : "Save Changes",
               onClick: handleSave,
               disabled:
-                !isSparksValid || localSparks === tableState?.config.sparks,
+                !showForceSave ??
+                (!isSparksValid || localSparks === tableState?.config.sparks),
             },
             secondary: {
               children: "Cancel",
               onClick: handleClose,
             },
           }}
+          onKeyDown={handleKeyChange}
+          onKeyUp={handleKeyChange}
         />
       )}
     </>
