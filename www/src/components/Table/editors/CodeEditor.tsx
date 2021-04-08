@@ -68,7 +68,6 @@ export default function CodeEditor(props: any) {
     const firebaseAuthDefs = (await firebaseAuthDefsFile.text())
       ?.replace("export", "declare")
       ?.replace("admin.auth", "adminauth");
-    console.timeLog(firebaseAuthDefs);
 
     try {
       monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
@@ -334,6 +333,7 @@ export default function CodeEditor(props: any) {
       monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
         [
           "  declare var require: any;",
+          "  declare var Buffer: any;",
           "  const db:FirebaseFirestore.Firestore;",
           "  const auth:adminauth.BaseAuth;",
           "declare class row {",
