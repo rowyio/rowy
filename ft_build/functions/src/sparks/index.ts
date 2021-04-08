@@ -1,6 +1,7 @@
 import * as functions from "firebase-functions";
 import { hasRequiredFields, getTriggerType } from "../utils";
 import { db, auth } from "../firebaseConfig";
+import utilFns from "../utils";
 
 const spark = (sparkConfig) => async (
   change: functions.Change<functions.firestore.DocumentSnapshot>,
@@ -27,6 +28,7 @@ const spark = (sparkConfig) => async (
       change,
       triggerType,
       sparkConfig,
+      utilFns
     };
     if (!triggers.includes(triggerType)) return false; //check if trigger type is included in the spark
     if (
