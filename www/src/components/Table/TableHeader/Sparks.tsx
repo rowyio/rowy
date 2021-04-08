@@ -84,7 +84,7 @@ export default function SparksEditor() {
   };
 
   const handleKeyChange = (key) => {
-    setShowForceSave(key.shiftKey);
+    setShowForceSave(key.shiftKey && key.ctrlKey);
   };
 
   return (
@@ -136,8 +136,8 @@ export default function SparksEditor() {
               />
               {!isSparksValid && (
                 <Alert severity="error">
-                  You need to resolve all errors before you are able to save.
-                  Press shift key to enable force save.
+                  You need to resolve all errors before you are able to save. Or
+                  press shift and control key to enable force save.
                 </Alert>
               )}
             </>
