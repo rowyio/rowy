@@ -26,7 +26,6 @@ import { FieldType } from "constants/fields";
 import { FireTableFilter } from "hooks/useFiretable";
 import { useFiretableContext } from "contexts/FiretableContext";
 
-import DocSelector from "./DocSelector";
 import { useAppContext } from "contexts/AppContext";
 import { DocActions } from "hooks/useDoc";
 const OPERATORS = [
