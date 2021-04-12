@@ -19,7 +19,7 @@ export const getAlgoliaSearchKey = functions.https.onCall(async (
     }
     const userRoles = context.auth.token.roles
     if (userRoles.some(role=> allIndicesRoles.includes(role)||rolesIndicesAccess[role].includes(requestedIndex))){
-      const validUntil = Math.floor(Date.now() / 1000) + 36000;
+      const validUntil = Math.floor(Date.now() / 1000) + 3600;
     const key = algoliaClient.generateSecuredApiKey(
               env.algolia.search,
               {
