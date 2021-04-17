@@ -39,4 +39,6 @@ export enum FieldType {
   user = "USER",
   id = "ID",
   last = "LAST",
+  status = "STATUS",
 }
+

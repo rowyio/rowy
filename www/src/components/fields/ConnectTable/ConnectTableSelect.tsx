@@ -86,7 +86,7 @@ export default function ConnectTableSelect({
       } else {
         console.log('get new key')
         const resp = await getAlgoliaSearchKey(algoliaIndex)
-        const key = resp.data.data?.key
+        const key = resp.data.data
         if (key) {
           const newKey = {
             key,
