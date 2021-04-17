@@ -75,7 +75,6 @@ export default function SparksEditor() {
             }),
           });
           const data = await response.json();
-          console.log(data);
         } catch (e) {
           console.error(e);
         }
@@ -86,10 +85,6 @@ export default function SparksEditor() {
   const handleKeyChange = (key) => {
     setShowForceSave(key.shiftKey && key.ctrlKey);
   };
-
-  console.log({
-    isSparksValid ,changed:localSparks === tableState?.config.sparks,localSparks,old:tableState?.config.sparks
-  })
 
   return (
     <>

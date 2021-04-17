@@ -81,10 +81,10 @@ export default function ConnectTableSelect({
       if (algoliaSearchKeys&&(algoliaSearchKeys?.[algoliaIndex] as any)?.key 
       && requestedAt < ((algoliaSearchKeys?.[algoliaIndex] as any).requestedAt) + 3600
       ) {
-        console.log('use existing key')
+        //'use existing key'
         setAlgoliaConfig({ indexName: algoliaIndex, searchKey: (algoliaSearchKeys?.[algoliaIndex] as any).key })
       } else {
-        console.log('get new key')
+        //'get new key'
         const resp = await getAlgoliaSearchKey(algoliaIndex)
         const key = resp.data.data
         if (key) {

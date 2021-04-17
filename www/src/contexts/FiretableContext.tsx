@@ -161,7 +161,6 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
       })
       .then(
         () => {
-          console.log("updateCell success", ref.path, fieldName, value);
           if (onSuccess) onSuccess(ref, fieldName, value);
         },
         (error) => {

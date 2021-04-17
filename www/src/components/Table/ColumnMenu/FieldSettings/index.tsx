@@ -157,7 +157,6 @@ export default function FieldSettings(props: IMenuModalProps) {
                       }),
                     });
                     const data = await response.json();
-                    console.log(data);
                   } catch (e) {
                     console.error(e);
                   }
