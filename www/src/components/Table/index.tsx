@@ -48,6 +48,7 @@ export default function Table() {
     tableActions,
     dataGridRef,
     sideDrawerRef,
+    updateCell
   } = useFiretableContext();
   const { userDoc } = useAppContext();
 
@@ -223,14 +224,12 @@ export default function Table() {
                   case "CELL_UPDATE":
                     break;
                   case "CELL_DRAG":
-                    if (toRow > fromRow)
-                      [...rows]
-                        .splice(fromRow, toRow - fromRow + 1)
-                        .forEach((row) => row.ref.update(updated));
-                    if (toRow < fromRow)
-                      [...rows]
-                        .splice(toRow, fromRow - toRow + 1)
-                        .forEach((row) => row.ref.update(updated));
+                    const rows2update = toRow > fromRow ? [...rows].splice(fromRow, toRow - fromRow + 1):[...rows].splice(toRow, fromRow - toRow + 1)
+                    rows2update.forEach((row) => {
+                          if (updateCell) {
+                            updateCell(row.ref, cellKey, updated[cellKey])
+                          }
+                        });
                     break;
                   default:
                     break;

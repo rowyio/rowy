@@ -5,6 +5,8 @@ import { makeStyles, createStyles, TextField } from "@material-ui/core";
 
 import { FieldType } from "constants/fields";
 import { getCellValue } from "utils/fns";
+import { useFiretableContext } from "contexts/FiretableContext";
+
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -33,6 +35,9 @@ const useStyles = makeStyles((theme) =>
 );
 
 export default function TextEditor({ row, column }: EditorProps<any>) {
+  const {
+    updateCell
+  } = useFiretableContext(); 
   const classes = useStyles();
 
   const type = (column as any).config?.renderFieldType ?? (column as any).type;
@@ -48,11 +53,11 @@ export default function TextEditor({ row, column }: EditorProps<any>) {
   useEffect(() => {
     return () => {
       const newValue = inputRef.current?.value;
-      if (newValue !== undefined) {
+      if (newValue !== undefined&&updateCell) {
         if (type === FieldType.number || type === FieldType.percentage) {
-          row.ref.update({ [column.key]: Number(newValue) });
+          updateCell(row.ref,column.key, Number(newValue))
         } else {
-          row.ref.update({ [column.key]: newValue });
+          updateCell(row.ref,column.key, newValue)
         }
       }
     };
