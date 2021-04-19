@@ -7,8 +7,9 @@ import firebase from "firebase/app";
 import { FireTableFilter, FiretableOrderBy } from ".";
 import { SnackContext } from "contexts/SnackContext";
 import { cloudFunction } from "../../firebase/callables";
-import { isCollectionGroup, generateSmallerId } from "utils/fns";
+import { isCollectionGroup, generateSmallerId,missingFieldsReducer } from "utils/fns";
 import {projectId} from '../../firebase'
+import _findIndex from 'lodash/findIndex';
 const CAP = 1000; // safety  paramter sets the  upper limit of number of docs fetched by this hook
 const serverTimestamp = firebase.firestore.FieldValue.serverTimestamp;
 
@@ -233,24 +234,20 @@ const useTable = (initialOverrides: any) => {
   /**  creating new document/row
    *  @param data(optional: default will create empty row)
    */
-  const addRow = async (data?: any) => {
+  const addRow = async (data: any,requiredFields:string[]) => { 
+    const missingRequiredFields = requiredFields ? requiredFields.reduce(missingFieldsReducer(data), []):[];
     const valuesFromFilter = tableState.filters.reduce(filterReducer, {});
     const { rows, path } = tableState;
-
+    const newId = generateSmallerId(rows[0]?.id??'zzzzzzzzzzzzzzzzzzzzzzzz');
     const docData = {
       ...valuesFromFilter,
       _ft_createdAt: serverTimestamp(),
       _ft_updatedAt: serverTimestamp(),
       ...data,
     };
+    if (missingRequiredFields.length===0){
     try {
-      if (rows.length === 0) {
-        await db.collection(path).add(docData);
-      } else {
-        const firstId = rows[0].id;
-        const newId = generateSmallerId(firstId);
         await db.collection(path).doc(newId).set(docData, { merge: true });
-      }
     } catch (error) {
       if (error.code === "permission-denied") {
         snack.open({
@@ -261,7 +258,32 @@ const useTable = (initialOverrides: any) => {
         });
       }
     }
+  }else{
+    // missing required fields
+    const id = newId ;
+    const ref = db.collection(path).doc(newId)
+    const newRow = { ...data, id, ref,_ft_missingRequiredFields: missingRequiredFields};
+    const _rows = [newRow,...tableState.rows]
+     tableDispatch({ rows: _rows });
+  }
   };
+
+  const options = {merge: true}
+  const updateRow = (rowRef,update,onSuccess,onError)=>{
+    const rowIndex = _findIndex(tableState.rows,{id:rowRef.id})
+    const row = tableState.rows[rowIndex]
+    const {ref,id,_ft_missingRequiredFields,...rowData} = row
+    const missingRequiredFields = _ft_missingRequiredFields?_ft_missingRequiredFields.reduce(missingFieldsReducer(row), []):[]
+    const _rows =[...tableState.rows]
+    _rows[rowIndex] = {...row,...update}
+    if(!missingRequiredFields || missingRequiredFields.length === 0){
+      ref.set({...rowData,...update},options).then(onSuccess,onError)
+      delete _rows[rowIndex]._ft_missingRequiredFields
+    }
+    tableDispatch({ rows: _rows });
+  }
+
+
   /**  used for incrementing the number of rows fetched
    *  @param additionalRows number additional rows to be fetched (optional: default is 150)
    */
@@ -281,6 +303,7 @@ const useTable = (initialOverrides: any) => {
     deleteRow,
     setTable,
     addRow,
+    updateRow,
     moreRows,
     dispatch: tableDispatch,
   };
