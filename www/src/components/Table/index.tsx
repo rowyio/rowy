@@ -187,8 +187,6 @@ export default function Table() {
               rowHeight={rowHeight ?? 43}
               headerRowHeight={44}
               className="rdg-light" // Handle dark mode in MUI theme
-              enableCellCopyPaste
-              enableCellDragAndDrop
               cellNavigationMode="LOOP_OVER_ROW"
               rowKeyGetter={rowKeyGetter}
               selectedRows={selectedRowsSet}
@@ -218,22 +216,20 @@ export default function Table() {
                 });
                 setSelectedRowsSet(newSelectedSet);
               }}
-              onRowsUpdate={(e) => {
-                const { action, fromRow, toRow, updated, cellKey } = e;
-                switch (action) {
-                  case "CELL_UPDATE":
-                    break;
-                  case "CELL_DRAG":
-                    const rows2update = toRow > fromRow ? [...rows].splice(fromRow, toRow - fromRow + 1):[...rows].splice(toRow, fromRow - toRow + 1)
-                    rows2update.forEach((row) => {
-                          if (updateCell) {
-                            updateCell(row.ref, cellKey, updated[cellKey])
-                          }
-                        });
-                    break;
-                  default:
-                    break;
-                }
+              onRowsChange={(rows)=>{
+                //console.log('onRowsChange',rows)
+              }}
+              onFill={(e)=>{
+                console.log('onFill',e)
+                const {columnKey, sourceRow,targetRows} = e
+                if(updateCell)targetRows.forEach(row=>updateCell(row.ref, columnKey, sourceRow[columnKey]))
+                return []
+              }}
+              onPaste={e=>{
+                const copiedValue = e.sourceRow[e.sourceColumnKey]
+                if(updateCell){
+                console.log(e.sourceRow.ref, e.targetColumnKey, copiedValue)       
+                updateCell(e.targetRow.ref, e.targetColumnKey, copiedValue)}
               }}
               onRowClick={(rowIdx, column) => {
                 if (sideDrawerRef?.current) {
