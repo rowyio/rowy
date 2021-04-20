@@ -29,7 +29,7 @@ export const generateConfigFromTableSchema = async (
         );
       return `${acc}{\nfieldName:'${
         currColumn.key
-      }',evaluate:async ({row,ref,db,auth,utilFns}) =>{${
+      }',evaluate:async ({row,ref,db,auth,storage,utilFns}) =>{${
         currColumn.config.script
       }},\nlistenerFields:[${currColumn.config.listenerFields
         .map((fieldKey: string) => `"${fieldKey}"`)
