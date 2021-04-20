@@ -2,7 +2,6 @@ import * as functions from "firebase-functions";
 import utilFns, { hasRequiredFields, getTriggerType } from "../utils";
 import { db, auth } from "../firebaseConfig";
 
-
 const spark = (sparkConfig) => async (
   change: functions.Change<functions.firestore.DocumentSnapshot>,
   context: functions.EventContext
@@ -28,7 +27,7 @@ const spark = (sparkConfig) => async (
       change,
       triggerType,
       sparkConfig,
-      utilFns
+      utilFns,
     };
     if (!triggers.includes(triggerType)) return false; //check if trigger type is included in the spark
     if (
@@ -46,7 +45,7 @@ const spark = (sparkConfig) => async (
           : shouldRun)
       : false; //
 
-    console.log(label,"type is ", type, "dontRun value is", dontRun);
+    console.log(label, "type is ", type, "dontRun value is", dontRun);
 
     if (dontRun) return false;
     const sparkData = await Object.keys(sparkBody).reduce(
@@ -64,11 +63,10 @@ const spark = (sparkConfig) => async (
     await sparkFn(sparkData, sparkContext);
     return true;
   } catch (err) {
-    const {
-      label,
-      type,
-    } = sparkConfig;
-    console.log(`error in ${label} spark of type ${type}, on ${context.eventType} in Doc ${context.resource.name}`)
+    const { label, type } = sparkConfig;
+    console.log(
+      `error in ${label} spark of type ${type}, on ${context.eventType} in Doc ${context.resource.name}`
+    );
     console.error(err);
     return Promise.reject(err);
   }
