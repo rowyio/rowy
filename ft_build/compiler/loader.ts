@@ -141,9 +141,13 @@ export const generateConfigFromTableSchema = async (
     sparksConfig,
   };
 
-  const fileData = Object.keys(exports).reduce((acc, currKey) => {
+  let fileData = Object.keys(exports).reduce((acc, currKey) => {
     return `${acc}\nexport const ${currKey} = ${exports[currKey]}`;
   }, ``);
+
+  if (fileData.includes("utilFns")) {
+    fileData = `import utilFns from './utils';${fileData}`;
+  }
 
   const path = require("path");
   fs.writeFileSync(

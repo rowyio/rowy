@@ -98,6 +98,9 @@ export default function TableHeader({
         <Grid item>
           <Button
             onClick={() => {
+              const requiredFields = Object.values(columns).map(column =>{if(column.config.required){
+                return column.key
+              }}).filter(c=>c)
               const initialVal = Object.values(columns).reduce(
                 (acc, column) => {
                   if (column.config?.defaultValue?.type === "static") {
@@ -115,7 +118,7 @@ export default function TableHeader({
                 ...initialVal,
                 _ft_updatedBy: firetableUser(currentUser),
                 _ft_createdBy: firetableUser(currentUser),
-              });
+              },requiredFields);
             }}
             variant="contained"
             color="primary"

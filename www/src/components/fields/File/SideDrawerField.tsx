@@ -25,6 +25,7 @@ import Confirmation from "components/Confirmation";
 import { DATE_TIME_FORMAT } from "constants/dates";
 
 import { useFieldStyles } from "components/SideDrawer/Form/utils";
+import { useFiretableContext } from "contexts/FiretableContext";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -57,6 +58,7 @@ function ControlledFileUploader({
 }) {
   const classes = useStyles();
   const fieldClasses = useFieldStyles();
+  const { updateCell } = useFiretableContext();
 
   const { uploaderState, upload, deleteUpload } = useUploader();
   const { progress } = uploaderState;
@@ -75,6 +77,7 @@ function ControlledFileUploader({
           files: [file],
           previousValue: value ?? [],
           onComplete: (newValue) => {
+            if(updateCell)updateCell(docRef,column.key,newValue)
             onChange(newValue);
             setLocalFile("");
           },

@@ -34,6 +34,7 @@ import Derivative from "./Derivative";
 import Aggregate from "./Aggregate";
 import User from "./User";
 import Id from "./Id";
+import Status from "./Status";
 
 // Export field configs in order for FieldsDropdown
 export const FIELDS: IFieldConfig[] = [
@@ -75,6 +76,7 @@ export const FIELDS: IFieldConfig[] = [
   // FIRETABLE
   User,
   Id,
+  Status
 ];
 
 /**

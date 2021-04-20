@@ -112,7 +112,6 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
         setError(err.message);
       } else {
         const columns = rows.shift() ?? [];
-        // console.log(columns, rows);
         if (columns.length === 0) {
           setError("No columns detected");
         } else {
@@ -149,7 +148,6 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
     fetch(value, { mode: "no-cors" })
       .then((res) => res.text())
       .then((data) => {
-        console.log(data);
         parseCsv(data);
         setLoading(false);
       })

@@ -38,7 +38,7 @@ export default function User({ control, column }: ISideDrawerFieldProps) {
       render={({ value }) => {
         if (!value || !value.displayName || !value.timestamp)
           return <div className={fieldClasses.root} />;
-
+          const dateLabel = format(value.timestamp.toDate?value.timestamp.toDate():value.timestamp, DATE_TIME_FORMAT)
         return (
           <Grid
             container
@@ -57,7 +57,7 @@ export default function User({ control, column }: ISideDrawerFieldProps) {
                 {value.displayName} ({value.email})
               </Typography>
               <Typography variant="body2" color="textSecondary">
-                {format(value.timestamp.toDate(), DATE_TIME_FORMAT)}
+                {dateLabel}
               </Typography>
             </Grid>
           </Grid>

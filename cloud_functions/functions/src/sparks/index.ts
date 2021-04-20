@@ -47,7 +47,7 @@ const sparkTrigger = async (
         requiredFields.length !== 0 &&
         !hasRequiredFields(requiredFields, afterData)
       )
-        return false; // check if it hase required fields for the spark to run
+        return false; // check if it has required fields for the spark to run
       const dontRun = shouldRun ? !(await shouldRun(sparkContext)) : false; //
       if (dontRun) return false;
       const sparkData = await Object.keys(sparkBody).reduce(

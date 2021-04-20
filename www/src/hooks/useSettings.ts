@@ -44,14 +44,7 @@ const useSettings = () => {
         schemaSource.tableType !== "collectionGroup" ? "schema" : "groupSchema"
       }/${schemaSource.collection}`;
       const sourceDoc = await db.doc(schemaSourcePath).get();
-      const schemaSourceData = sourceDoc.data();
       columns = sourceDoc.get("columns");
-      console.log({
-        columns,
-        schemaSource,
-        schemaSourceData,
-        schemaSourcePath,
-      });
     }
     // updates the setting doc
     await db
@@ -62,7 +55,6 @@ const useSettings = () => {
       );
 
     //create the firetable collection doc with empty columns
-    console.log();
     await tableSchemaDocRef.set({ ...tableSettings, columns }, { merge: true });
   };
 
