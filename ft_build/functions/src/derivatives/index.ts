@@ -22,9 +22,10 @@ const derivative = (
     const ref = change.after ? change.after.ref : change.before.ref;
     const update = await functionConfig.reduce(
       async (accUpdates: any, currDerivative) => {
-        const shouldEval = utilFns.hasChanged(change)(
-          currDerivative.listenerFields
-        );
+        const shouldEval = utilFns.hasChanged(change)([
+          ...currDerivative.listenerFields,
+          "_ft_forcedUpdateAt",
+        ]);
         if (shouldEval) {
           try {
             const newValue = await currDerivative.evaluate({
