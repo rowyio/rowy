@@ -145,7 +145,7 @@ export const generateConfigFromTableSchema = async (
     return `${acc}\nexport const ${currKey} = ${exports[currKey]}`;
   }, ``);
 
-  if (fileData.includes("utilFns")) {
+  if (sparksConfig.includes("utilFns")) {
     fileData = `import utilFns from './utils';${fileData}`;
   }
 
