@@ -159,6 +159,7 @@ export default function CodeEditor(props: any) {
           change: any;
           triggerType: Triggers;
           sparkConfig: any;
+          utilFns: any;
         }
       
         // function types that defines spark body and shuold run
