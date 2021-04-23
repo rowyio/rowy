@@ -48,7 +48,7 @@ export default function Table() {
     tableActions,
     dataGridRef,
     sideDrawerRef,
-    updateCell
+    updateCell,
   } = useFiretableContext();
   const { userDoc } = useAppContext();
 
@@ -216,20 +216,23 @@ export default function Table() {
                 });
                 setSelectedRowsSet(newSelectedSet);
               }}
-              onRowsChange={(rows)=>{
+              onRowsChange={(rows) => {
                 //console.log('onRowsChange',rows)
               }}
-              onFill={(e)=>{
-                console.log('onFill',e)
-                const {columnKey, sourceRow,targetRows} = e
-                if(updateCell)targetRows.forEach(row=>updateCell(row.ref, columnKey, sourceRow[columnKey]))
-                return []
+              onFill={(e) => {
+                console.log("onFill", e);
+                const { columnKey, sourceRow, targetRows } = e;
+                if (updateCell)
+                  targetRows.forEach((row) =>
+                    updateCell(row.ref, columnKey, sourceRow[columnKey])
+                  );
+                return [];
               }}
-              onPaste={e=>{
-                const copiedValue = e.sourceRow[e.sourceColumnKey]
-                if(updateCell){
-                console.log(e.sourceRow.ref, e.targetColumnKey, copiedValue)       
-                updateCell(e.targetRow.ref, e.targetColumnKey, copiedValue)}
+              onPaste={(e) => {
+                const copiedValue = e.sourceRow[e.sourceColumnKey];
+                if (updateCell) {
+                  updateCell(e.targetRow.ref, e.targetColumnKey, copiedValue);
+                }
               }}
               onRowClick={(rowIdx, column) => {
                 if (sideDrawerRef?.current) {
