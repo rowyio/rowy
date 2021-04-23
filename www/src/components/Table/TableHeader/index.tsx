@@ -20,7 +20,7 @@ import Export from "./Export";
 import TableSettings from "./TableSettings";
 import HiddenFields from "../HiddenFields";
 import Sparks from "./Sparks";
-import ForceRefresh from "./ForceRefresh";
+import ReExecute from "./ReExecute";
 
 import { useAppContext } from "contexts/AppContext";
 import { useFiretableContext, firetableUser } from "contexts/FiretableContext";
@@ -215,7 +215,7 @@ export default function TableHeader({
 
       {userClaims?.roles?.includes("ADMIN") && (hasDerivatives || hasSparks) && (
         <Grid item>
-          <ForceRefresh />
+          <ReExecute />
         </Grid>
       )}
 

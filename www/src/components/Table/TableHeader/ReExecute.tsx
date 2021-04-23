@@ -28,15 +28,16 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-export default function TableSettings() {
+export default function ReExecute() {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [updating, setUpdating] = useState(false);
   const handleClose = () => {
     setOpen(false);
   };
-  const { tableState } = useFiretableContext();
 
+  //
+  const { tableState } = useFiretableContext();
   const query: any = isCollectionGroup()
     ? db.collectionGroup(tableState?.tablePath!)
     : db.collection(tableState?.tablePath!);
@@ -44,7 +45,6 @@ export default function TableSettings() {
   const handleConfirm = async () => {
     setUpdating(true);
     const _ft_forcedUpdateAt = new Date();
-
     const batch = db.batch();
     const querySnapshot = await query.get();
     querySnapshot.docs.forEach((doc) => {
@@ -52,7 +52,7 @@ export default function TableSettings() {
     });
     await batch.commit();
     setUpdating(false);
-    setOpen(false);
+    setTimeout(() => setOpen(false), 3000); // give time to for ft function to run
   };
 
   return (
@@ -71,7 +71,7 @@ export default function TableSettings() {
           header={
             <>
               <DialogContentText>
-                Are you sure you want to force a refresh of all Sparks and
+                Are you sure you want to force a re-execute of all Sparks and
                 Derivatives?
               </DialogContentText>
             </>
