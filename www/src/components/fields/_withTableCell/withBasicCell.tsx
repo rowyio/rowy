@@ -17,16 +17,20 @@ export default function withBasicCell(
   return function BasicCell(props: FormatterProps<any>) {
     const { name, key } = props.column;
     const value = getCellValue(props.row, key);
-    const isMissing =
-      props.row._ft_missingRequiredFields?.includes(key) && value === undefined;
+    const { validationRegex, required } = (props.column as any).config;
+    const invalidInput =
+      validationRegex && !new RegExp(validationRegex).test(value);
+    const isMissing = required && value === undefined;
     if (isMissing) return <>missing!</>;
     return (
       <ErrorBoundary fullScreen={false} basic wrap="nowrap">
-        <BasicCellComponent
-          value={value}
-          name={name}
-          type={(props.column as any).type as FieldType}
-        />
+        <span style={invalidInput ? { color: "#f00" } : {}}>
+          <BasicCellComponent
+            value={value}
+            name={name}
+            type={(props.column as any).type as FieldType}
+          />
+        </span>
       </ErrorBoundary>
     );
   };
