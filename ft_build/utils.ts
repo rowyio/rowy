@@ -1,6 +1,5 @@
 import { db } from "./firebaseConfig";
 import admin from "firebase-admin";
-const safeEval = require("safe-eval");
 
 function firetableUser(user: admin.auth.UserRecord) {
   return {
