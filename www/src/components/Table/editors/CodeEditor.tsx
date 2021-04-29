@@ -238,6 +238,19 @@ export default function CodeEditor(props: any) {
             objectID: ContextToString;
           }
         }
+        
+        type bigqueryIndex = { 
+          type: "meiliIndex"; 
+          triggers: Triggers; 
+          shouldRun: ShouldRun;
+          requiredFields?: Fields;
+          sparkBody: {
+            fieldsToSync: Fields;
+            index: string;
+            row: ContextToRow;
+            objectID: ContextToString;
+          }
+        }
 
         type slackMessage = {
           label?:string; 
@@ -303,6 +316,7 @@ export default function CodeEditor(props: any) {
           | historySnapshot
           | algoliaIndex
           | meiliIndex
+          | bigqueryIndex
           | slackMessage
           | sendgridEmail
           | apiCall
