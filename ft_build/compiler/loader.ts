@@ -132,7 +132,19 @@ export const generateConfigFromTableSchema = async (
     default:
       break;
   }
+
+  // generate field types from table meta data
+  const fieldTypes = JSON.stringify(
+    Object.keys(schemaData.columns).reduce((acc, cur) => {
+      return {
+        [cur]: schemaData.columns[cur].type,
+        ...acc,
+      };
+    }, {})
+  );
+
   const exports: any = {
+    fieldTypes,
     triggerPath,
     functionName: functionName.replace(/-/g, "_"),
     derivativesConfig,

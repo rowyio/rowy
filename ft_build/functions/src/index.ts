@@ -8,6 +8,7 @@ import {
   documentSelectConfig,
   sparksConfig,
   initializeConfig,
+  fieldTypes,
 } from "./functionConfig";
 
 import { getTriggerType, changedDocPath } from "./utils";
@@ -21,7 +22,7 @@ export const FT = {
       let promises: Promise<any>[] = [];
       const sparkPromises = sparksConfig
         .filter((sparkConfig) => sparkConfig.triggers.includes(triggerType))
-        .map((sparkConfig) => spark(sparkConfig)(change, context));
+        .map((sparkConfig) => spark(sparkConfig, fieldTypes)(change, context));
       console.log(
         `#${
           sparkPromises.length

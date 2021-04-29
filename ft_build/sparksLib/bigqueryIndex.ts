@@ -78,7 +78,7 @@ const significantDifference = (fieldsToSync, change) => {
 const bigqueryIndex = async (payload, sparkContext) => {
   const { row, objectID, index, fieldsToSync } = payload;
 
-  const { triggerType, change } = sparkContext;
+  const { triggerType, change, fieldTypes } = sparkContext;
   const record = rowReducer(fieldsToSync, row);
   const { BigQuery } = require("@google-cloud/bigquery");
   const { getSecret } = require("../utils");
