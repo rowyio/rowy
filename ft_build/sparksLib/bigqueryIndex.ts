@@ -91,6 +91,7 @@ const transformToSQLValue = (value: any, ftType: string) => {
     case "RICH_TEXT":
     case "ID":
     case "SINGLE_SELECT":
+    case "URL":
       // STRING
       return `"${sanitise(value)}"`;
     case "JSON":
@@ -174,13 +175,12 @@ const bigqueryIndex = async (payload, sparkContext) => {
     console.log(res);
   }
 
-  async function update(data: Record<string, string>) {
-    const keys = Object.keys(data);
-    const dictValues = Array.from(Array(keys.length).keys())
-      .map((i) => `${keys[i]}=${transformToSQLValue(data[i], fieldTypes[i])}`)
+  async function update(data) {
+    const values = Object.keys(data)
+      .map((key) => `${key}=${transformToSQLValue(data[key], fieldTypes[key])}`)
       .join(",");
     const query = `UPDATE ${index}
-          SET ${dictValues}
+          SET ${values}
           WHERE objectID="${objectID}"
           ;`;
     console.log(query);
