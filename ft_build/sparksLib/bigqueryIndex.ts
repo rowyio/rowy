@@ -75,9 +75,12 @@ const significantDifference = (fieldsToSync, change) => {
   }, false);
 };
 
-const transformToSQLValue = (value: any, ftType: string) => {
+const transformToSQLData = (value: any, ftType: string) => {
   if (value === null || value === undefined) {
-    return `null`;
+    return {
+      value: `null`,
+      type: "STRING",
+    };
   }
 
   const sanitise = (x: string) => x?.replace?.(/\"/g, '\\"') ?? "";
@@ -92,8 +95,10 @@ const transformToSQLValue = (value: any, ftType: string) => {
     case "ID":
     case "SINGLE_SELECT":
     case "URL":
-      // SQL type: STRING
-      return `"${sanitise(value)}"`;
+      return {
+        value: `"${sanitise(value)}"`,
+        type: "STRING",
+      };
     case "JSON": // JSON
     case "FILE": // JSON
     case "IMAGE": // JSON
@@ -104,32 +109,56 @@ const transformToSQLValue = (value: any, ftType: string) => {
     case "ACTION":
     case "AGGREGATE":
     case "MULTI_SELECT": // array
-      // SQL type: STRING
-      return `"${sanitise(JSON.stringify(value))}"`;
+      return {
+        value: `"${sanitise(JSON.stringify(value))}"`,
+        type: "STRING",
+      };
     case "CHECK_BOX":
-      // SQL type: BOOLEAN
-      return value ? `true` : `false`;
+      return {
+        value: value ? `true` : `false`,
+        type: "BOOLEAN",
+      };
     case "NUMBER":
     case "PERCENTAGE":
     case "RATING":
     case "SLIDER":
-      // NUMERIC
-      return Number(value);
+      return {
+        value: Number(value),
+        type: "NUMERIC",
+      };
     case "DATE":
     case "DATE_TIME":
     case "DURATION":
-      // SQL type: TIMESTAMP
       if (!value?.toDate) {
-        return `null`;
+        return {
+          value: `null`,
+          type: "TIMESTAMP",
+        };
       }
-      return `timestamp("${value.toDate()}")`;
+      return {
+        value: `timestamp("${value?.toDate?.()}")`,
+        type: "TIMESTAMP",
+      };
     case "LAST":
     case "STATUS":
     case "SUB_TABLE":
     default:
       // unknown or meaningless to sync
-      return `null`;
+      return {
+        value: `null`,
+        type: "STRING",
+      };
   }
+};
+
+const transformToSQLValue = (ftValue: any, ftType: string) => {
+  const { value } = transformToSQLData(ftValue, ftType);
+  return value;
+};
+
+const transformToSQLType = (ftType: string) => {
+  const { type } = transformToSQLData("", ftType);
+  return type;
 };
 
 const bigqueryIndex = async (payload, sparkContext) => {
@@ -141,7 +170,7 @@ const bigqueryIndex = async (payload, sparkContext) => {
   const { getSecret } = require("../utils");
 
   const bigquery = new BigQuery();
-  const { projectID } = await getSecret("algolia");
+  const { projectID } = await getSecret("bigquery");
   const tableFullName = `${projectID}.firetable.${index}`;
   console.log(
     `projectID: ${projectID}, index: ${index}, tableFullName: ${tableFullName}`
@@ -173,13 +202,92 @@ const bigqueryIndex = async (payload, sparkContext) => {
       await table.create();
       console.log(`Table '${index}' created in dataset 'firetable'.`);
     } else {
-      console.log(`Table 'firetable' exists in 'firetable'.`);
+      console.log(`Table ${index} exists in 'firetable'.`);
     }
+  }
+
+  async function preprocessSchema() {
+    const dataset = bigquery.dataset("firetable");
+    const table = dataset.table(index);
+    const generatedTypes = Object.keys(fieldTypes)
+      .filter((field) => fieldsToSync.includes(field))
+      .reduce((acc, cur) => {
+        return {
+          [cur]: transformToSQLType(fieldTypes[cur]),
+          ...acc,
+        };
+      }, {});
+
+    const generatedSchema = [
+      { name: "objectID", type: "STRING", mode: "REQUIRED" },
+      ...Object.keys(generatedTypes).map((key) => {
+        return {
+          name: key,
+          type: generatedTypes[key],
+          mode: "NULLABLE",
+        };
+      }),
+    ];
+
+    const pushSchema = async () => {
+      console.log("pushing schema:", generatedSchema);
+      const metadata = {
+        schema: generatedSchema,
+      };
+      await table.setMetadata(metadata);
+      console.log("schema pushed.");
+    };
+
+    const existingRes = await table.getMetadata();
+    const existingSchema = existingRes[0].schema?.fields;
+
+    if (!existingSchema) {
+      console.log("Existing schema does not exist, pushing schema...");
+      await pushSchema();
+      return;
+    }
+
+    // check if schema update is needed
+    const objectIDFilter = (field) => field.name !== "objectID";
+    const schemaIdentical =
+      Object.keys(generatedTypes).length ===
+        existingSchema.filter(objectIDFilter).length &&
+      existingSchema
+        .filter(objectIDFilter)
+        .every((field) => generatedTypes[field.name] === field.type);
+
+    if (schemaIdentical) {
+      // no change to schema
+      console.log("Existing schema detected, no update needeed.");
+      return;
+    }
+
+    // check schema compatibility (only new field is accpted)
+    const compatible =
+      Object.keys(generatedTypes).length >
+        existingSchema.filter(objectIDFilter).length &&
+      existingSchema
+        .filter(objectIDFilter)
+        .filter((field) => Object.keys(generatedTypes).includes(field.name))
+        .every((field) => generatedTypes[field.name] === field.type);
+    if (!compatible) {
+      const errorMessage =
+        "New update to field types is not compatible with existing schema. Please manually remove the current bigquery table or update spark index";
+      console.log(errorMessage);
+      throw errorMessage;
+    } else {
+      console.log(
+        "New field types detected and it is compatible with current schema."
+      );
+    }
+
+    // push schema
+    await pushSchema();
   }
 
   // return if the objectID exists in bool
   async function exist() {
-    const query = `SELECT objectID FROM ${index}
+    const query = `SELECT objectID FROM ${tableFullName}
     WHERE objectID="${objectID}"
     ;`;
     console.log(query);
@@ -193,7 +301,7 @@ const bigqueryIndex = async (payload, sparkContext) => {
     const values = Object.keys(data)
       .map((key) => transformToSQLValue(data[key], fieldTypes[key]))
       .join(",");
-    const query = `INSERT INTO ${index}
+    const query = `INSERT INTO ${tableFullName}
     (objectID, ${keys})
     VALUES ("${objectID}", ${values})
     ;`;
@@ -206,7 +314,7 @@ const bigqueryIndex = async (payload, sparkContext) => {
     const values = Object.keys(data)
       .map((key) => `${key}=${transformToSQLValue(data[key], fieldTypes[key])}`)
       .join(",");
-    const query = `UPDATE ${index}
+    const query = `UPDATE ${tableFullName}
           SET ${values}
           WHERE objectID="${objectID}"
           ;`;
@@ -225,7 +333,7 @@ const bigqueryIndex = async (payload, sparkContext) => {
   }
 
   async function remove() {
-    const query = `DELETE FROM ${index}
+    const query = `DELETE FROM ${tableFullName}
     WHERE objectID="${objectID}"
      ;`;
     console.log(query);
@@ -236,6 +344,7 @@ const bigqueryIndex = async (payload, sparkContext) => {
   // preprocess before starting index logic
   await preprocessDataset();
   await preprocessTable();
+  await preprocessSchema();
   switch (triggerType) {
     case "delete":
       await remove();
