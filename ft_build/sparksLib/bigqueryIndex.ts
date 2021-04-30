@@ -92,23 +92,25 @@ const transformToSQLValue = (value: any, ftType: string) => {
     case "ID":
     case "SINGLE_SELECT":
     case "URL":
-      // STRING
+      // SQL type: STRING
       return `"${sanitise(value)}"`;
-    case "JSON":
-    case "FILE":
-    case "IMAGE":
-    case "USER":
-    case "COLOR":
-      // STRING (json representation)
+    case "JSON": // JSON
+    case "FILE": // JSON
+    case "IMAGE": // JSON
+    case "USER": // JSON
+    case "COLOR": // JSON
+    case "DOCUMENT_SELECT":
+    case "SERVICE_SELECT":
+    case "ACTION":
+    case "AGGREGATE":
+    case "MULTI_SELECT": // array
+      // SQL type: STRING
       if (!value.length) {
         return `null`;
       }
       return `"${sanitise(JSON.stringify(value))}"`;
-    case "MULTI_SELECT":
-      // STRING (array representation, comma separated)
-      return `"${sanitise(value.toString())}"`;
     case "CHECK_BOX":
-      // BOOLEAN
+      // SQL type: BOOLEAN
       return value ? `true` : `false`;
     case "NUMBER":
     case "PERCENTAGE":
@@ -119,7 +121,7 @@ const transformToSQLValue = (value: any, ftType: string) => {
     case "DATE":
     case "DATE_TIME":
     case "DURATION":
-      // TIMESTAMP
+      // SQL type: TIMESTAMP
       if (!value?.toDate) {
         return `null`;
       }
@@ -127,10 +129,6 @@ const transformToSQLValue = (value: any, ftType: string) => {
     case "LAST":
     case "STATUS":
     case "SUB_TABLE":
-    case "DOCUMENT_SELECT":
-    case "SERVICE_SELECT":
-    case "ACTION":
-    case "AGGREGATE":
     default:
       // unknown or meaningless to sync
       return `null`;
