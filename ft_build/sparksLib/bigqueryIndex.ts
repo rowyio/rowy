@@ -105,9 +105,6 @@ const transformToSQLValue = (value: any, ftType: string) => {
     case "AGGREGATE":
     case "MULTI_SELECT": // array
       // SQL type: STRING
-      if (!value.length) {
-        return `null`;
-      }
       return `"${sanitise(JSON.stringify(value))}"`;
     case "CHECK_BOX":
       // SQL type: BOOLEAN
