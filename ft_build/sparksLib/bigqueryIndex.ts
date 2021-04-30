@@ -130,7 +130,6 @@ const transformToSQLValue = (value: any, ftType: string) => {
     case "DOCUMENT_SELECT":
     case "SERVICE_SELECT":
     case "ACTION":
-    case "DERIVATIVE":
     case "AGGREGATE":
     default:
       // unknown or meaningless to sync

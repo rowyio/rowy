@@ -136,8 +136,13 @@ export const generateConfigFromTableSchema = async (
   // generate field types from table meta data
   const fieldTypes = JSON.stringify(
     Object.keys(schemaData.columns).reduce((acc, cur) => {
+      const field = schemaData.columns[cur];
+      let fieldType = field.type;
+      if (fieldType === "DERIVATIVE") {
+        fieldType = field.config.renderFieldType;
+      }
       return {
-        [cur]: schemaData.columns[cur].type,
+        [cur]: fieldType,
         ...acc,
       };
     }, {})
