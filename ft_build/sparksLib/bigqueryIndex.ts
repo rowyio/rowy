@@ -331,8 +331,7 @@ const bigqueryIndex = async (payload, sparkContext) => {
     VALUES ("${objectID}", ${values})
     ;`;
     console.log(query);
-    const res = await bigquery.query(query);
-    console.log(res);
+    executeQuery(query);
   }
 
   // execute a query, if rate limited, sleep and try again until success
