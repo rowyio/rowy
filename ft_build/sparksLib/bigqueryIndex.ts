@@ -311,10 +311,12 @@ const bigqueryIndex = async (payload, sparkContext) => {
         };
       }, {});
 
-    console.log(
-      "The following fields do not exist in Firetable and are ignored.",
-      unknownKeys
-    );
+    if (unknownKeys?.length > 0) {
+      console.log(
+        "The following fields do not exist in Firetable and are ignored.",
+        unknownKeys
+      );
+    }
 
     return knownRecord;
   }
@@ -369,7 +371,7 @@ const bigqueryIndex = async (payload, sparkContext) => {
   await preprocessTable();
   await preprocessSchema();
 
-  //
+  // only proceed with fields that have known types
   const typeKnownReccord = getTypeKnownRecord(record);
 
   switch (triggerType) {
