@@ -83,7 +83,8 @@ const transformToSQLData = (value: any, ftType: string) => {
     };
   }
 
-  const sanitise = (x: string) => x?.replace?.(/\"/g, '\\"') ?? "";
+  const sanitise = (x: string) =>
+    x?.replace?.(/\"/g, '\\"')?.replace?.(/\n/g, "\\n") ?? "";
 
   switch (ftType) {
     case "SIMPLE_TEXT":
@@ -296,6 +297,28 @@ const bigqueryIndex = async (payload, sparkContext) => {
     return !!rows?.length;
   }
 
+  function getTypeKnownRecord(data) {
+    const knownTypes = Object.keys(fieldTypes);
+    const givenKeys = Object.keys(data);
+    const knownKeys = givenKeys.filter((key) => knownTypes.includes(key));
+    const unknownKeys = givenKeys.filter((key) => !knownTypes.includes(key));
+    let knownRecord = Object.keys(data)
+      .filter((key) => knownKeys.includes(key))
+      .reduce((obj, key) => {
+        return {
+          ...obj,
+          [key]: data[key],
+        };
+      }, {});
+
+    console.log(
+      "The following fields do not exist in Firetable and are ignored.",
+      unknownKeys
+    );
+
+    return knownRecord;
+  }
+
   async function insert(data) {
     const keys = Object.keys(data).join(",");
     const values = Object.keys(data)
@@ -345,6 +368,10 @@ const bigqueryIndex = async (payload, sparkContext) => {
   await preprocessDataset();
   await preprocessTable();
   await preprocessSchema();
+
+  //
+  const typeKnownReccord = getTypeKnownRecord(record);
+
   switch (triggerType) {
     case "delete":
       await remove();
@@ -353,11 +380,13 @@ const bigqueryIndex = async (payload, sparkContext) => {
       if (
         significantDifference([...fieldsToSync, "_ft_forcedUpdateAt"], change)
       ) {
-        await insertOrUpdate(record);
+        await insertOrUpdate(typeKnownReccord);
+      } else {
+        console.log("significantDifference is false, no update needed.");
       }
       break;
     case "create":
-      await insertOrUpdate(record);
+      await insertOrUpdate(typeKnownReccord);
       break;
     default:
       break;
