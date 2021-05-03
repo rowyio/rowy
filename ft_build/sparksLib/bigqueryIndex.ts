@@ -344,12 +344,13 @@ const bigqueryIndex = async (payload, sparkContext) => {
     } catch (error) {
       if (
         error?.errors?.length === 1 &&
-        error?.errors?.[0]?.reason === "rateLimitExceeded"
+        (error?.errors?.[0]?.reason === "rateLimitExceeded" ||
+          error?.errors?.[0]?.reason === "quotaExceeded")
       ) {
         const delay = Math.round(
           Math.floor(Math.random() * 3_000 * (delayDepth % 20) + 1000)
         );
-        console.log(`API error: rateLimitExceeded, try again in ${delay}ms`);
+        console.log(`API rate limited, try again in ${delay}ms`);
         await sleep(delay);
         await executeQuery(query, delayDepth + 1);
       } else {
