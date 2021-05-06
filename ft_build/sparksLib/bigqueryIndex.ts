@@ -302,7 +302,7 @@ const bigqueryIndex = async (payload, sparkContext) => {
     const givenKeys = Object.keys(data);
     const knownKeys = givenKeys.filter((key) => knownTypes.includes(key));
     const unknownKeys = givenKeys.filter((key) => !knownTypes.includes(key));
-    let knownRecord = Object.keys(data)
+    const knownRecord = Object.keys(data)
       .filter((key) => knownKeys.includes(key))
       .reduce((obj, key) => {
         return {
@@ -331,7 +331,7 @@ const bigqueryIndex = async (payload, sparkContext) => {
     VALUES ("${objectID}", ${values})
     ;`;
     console.log(query);
-    executeQuery(query);
+    await executeQuery(query);
   }
 
   // execute a query, if rate limited, sleep and try again until success
