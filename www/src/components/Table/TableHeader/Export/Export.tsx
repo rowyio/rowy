@@ -74,7 +74,7 @@ const selectedColumnsCsvReducer = (doc: any) => (
     case FieldType.date:
       return {
         ...accumulator,
-        [currentColumn.name]: value ? value.toDate() : "",
+        [currentColumn.name]: value && value["toDate"] ? value.toDate() : "",
       };
     case FieldType.action:
       return {
