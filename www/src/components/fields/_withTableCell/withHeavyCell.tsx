@@ -3,6 +3,7 @@ import { FormatterProps } from "react-data-grid";
 import { IBasicCellProps, IHeavyCellProps } from "../types";
 
 import ErrorBoundary from "components/ErrorBoundary";
+import CellValidation from "components/Table/CellValidation";
 import { useFiretableContext } from "contexts/FiretableContext";
 
 import { FieldType } from "constants/fields";
@@ -22,6 +23,8 @@ export default function withHeavyCell(
 ) {
   return function HeavyCell(props: FormatterProps<any>) {
     const { updateCell } = useFiretableContext();
+
+    const { validationRegex, required } = (props.column as any).config;
 
     // Initially display BasicCell to improve scroll performance
     const [displayedComponent, setDisplayedComponent] = useState<
@@ -52,7 +55,13 @@ export default function withHeavyCell(
     if (displayedComponent === "basic")
       return (
         <ErrorBoundary fullScreen={false} basic wrap="nowrap">
-          {basicCell}
+          <CellValidation
+            value={value}
+            required={required}
+            validationRegex={validationRegex}
+          >
+            {basicCell}
+          </CellValidation>
         </ErrorBoundary>
       );
 
@@ -67,13 +76,19 @@ export default function withHeavyCell(
       return (
         <ErrorBoundary fullScreen={false} basic wrap="nowrap">
           <Suspense fallback={basicCell}>
-            <HeavyCellComponent
-              {...props}
-              {...basicCellProps}
-              docRef={props.row.ref}
-              onSubmit={handleSubmit}
-              disabled={props.column.editable === false}
-            />
+            <CellValidation
+              value={value}
+              required={required}
+              validationRegex={validationRegex}
+            >
+              <HeavyCellComponent
+                {...props}
+                {...basicCellProps}
+                docRef={props.row.ref}
+                onSubmit={handleSubmit}
+                disabled={props.column.editable === false}
+              />
+            </CellValidation>
           </Suspense>
         </ErrorBoundary>
       );

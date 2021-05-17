@@ -3,6 +3,7 @@ import { FormatterProps } from "react-data-grid";
 import { IBasicCellProps } from "../types";
 
 import ErrorBoundary from "components/ErrorBoundary";
+import CellValidation from "components/Table/CellValidation";
 import { FieldType } from "constants/fields";
 import { getCellValue } from "utils/fns";
 
@@ -17,20 +18,22 @@ export default function withBasicCell(
   return function BasicCell(props: FormatterProps<any>) {
     const { name, key } = props.column;
     const value = getCellValue(props.row, key);
+
     const { validationRegex, required } = (props.column as any).config;
-    const invalidInput =
-      validationRegex && !new RegExp(validationRegex).test(value);
-    const isMissing = required && value === undefined;
-    if (isMissing) return <>missing!</>;
+
     return (
       <ErrorBoundary fullScreen={false} basic wrap="nowrap">
-        <span style={invalidInput ? { color: "#f00" } : {}}>
+        <CellValidation
+          value={value}
+          required={required}
+          validationRegex={validationRegex}
+        >
           <BasicCellComponent
             value={value}
             name={name}
             type={(props.column as any).type as FieldType}
           />
-        </span>
+        </CellValidation>
       </ErrorBoundary>
     );
   };
