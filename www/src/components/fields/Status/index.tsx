@@ -2,7 +2,7 @@ import React, { lazy } from "react";
 import { IFieldConfig, FieldType } from "components/fields/types";
 import withHeavyCell from "../_withTableCell/withHeavyCell";
 
-import StatusIcon from "@material-ui/icons/WavesOutlined";
+import StatusIcon from "assets/icons/Status";
 import BasicCell from "../_BasicCell/BasicCellNull";
 import NullEditor from "components/Table/editors/NullEditor";
 
