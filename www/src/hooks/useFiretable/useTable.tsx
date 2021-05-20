@@ -53,7 +53,7 @@ const rowsReducer = (prevRows: any, update: any) => {
       });
       return _rows;
     case "delete":
-      return prevRows.splice(update.rowIndex, 1);
+      return prevRows.filter((row) => update.rowId !== row.id);
     case "set":
       return update.rows;
     case "add":
@@ -235,12 +235,12 @@ const useTable = (initialOverrides: any) => {
    *  @param rowIndex local position
    *  @param documentId firestore document id
    */
-  const deleteRow = (rowIndex: number, documentId: string) => {
+  const deleteRow = (rowId: string) => {
     //remove row locally
-    rowsDispatch({ type: "delete", rowIndex });
+    rowsDispatch({ type: "delete", rowId });
     // delete document
     try {
-      db.collection(tableState.path).doc(documentId).delete();
+      db.collection(tableState.path).doc(rowId).delete();
     } catch (error) {
       console.log(error);
       if (error.code === "permission-denied") {
