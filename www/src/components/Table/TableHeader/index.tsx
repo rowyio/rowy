@@ -20,9 +20,11 @@ import Export from "./Export";
 import TableSettings from "./TableSettings";
 import HiddenFields from "../HiddenFields";
 import Sparks from "./Sparks";
+import ReExecute from "./ReExecute";
 
 import { useAppContext } from "contexts/AppContext";
 import { useFiretableContext, firetableUser } from "contexts/FiretableContext";
+import { FieldType } from "constants/fields";
 
 export const TABLE_HEADER_HEIGHT = 56;
 
@@ -84,6 +86,14 @@ export default function TableHeader({
   const { currentUser } = useAppContext();
   const { tableActions, tableState, userClaims } = useFiretableContext();
 
+  const hasDerivatives =
+    tableState &&
+    Object.values(tableState.columns)?.filter(
+      (column) => column.type === FieldType.derivative
+    ).length > 0;
+  const hasSparks =
+    tableState && tableState.config?.sparks?.replace(/\W/g, "")?.length > 0;
+
   if (!tableState || !tableState.columns) return null;
   const { columns } = tableState;
   return (
@@ -98,6 +108,13 @@ export default function TableHeader({
         <Grid item>
           <Button
             onClick={() => {
+              const requiredFields = Object.values(columns)
+                .map((column) => {
+                  if (column.config.required) {
+                    return column.key;
+                  }
+                })
+                .filter((c) => c);
               const initialVal = Object.values(columns).reduce(
                 (acc, column) => {
                   if (column.config?.defaultValue?.type === "static") {
@@ -111,11 +128,14 @@ export default function TableHeader({
                 },
                 {}
               );
-              tableActions?.row.add({
-                ...initialVal,
-                _ft_updatedBy: firetableUser(currentUser),
-                _ft_createdBy: firetableUser(currentUser),
-              });
+              tableActions?.row.add(
+                {
+                  ...initialVal,
+                  _ft_updatedBy: firetableUser(currentUser),
+                  _ft_createdBy: firetableUser(currentUser),
+                },
+                requiredFields
+              );
             }}
             variant="contained"
             color="primary"
@@ -190,6 +210,12 @@ export default function TableHeader({
       {userClaims?.roles?.includes("ADMIN") && (
         <Grid item>
           <Sparks />
+        </Grid>
+      )}
+
+      {userClaims?.roles?.includes("ADMIN") && (hasDerivatives || hasSparks) && (
+        <Grid item>
+          <ReExecute />
         </Grid>
       )}
 

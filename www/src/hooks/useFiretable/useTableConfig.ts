@@ -58,7 +58,6 @@ const useTableConfig = (tablePath?: string) => {
     let updatedColumns = { ...columns };
     const key = _camelCase(name);
     updatedColumns[key] = { name, key, type, ...data, index: newIndex ?? 0 };
-    console.log(name, type, data, updatedColumns);
     documentDispatch({
       action: DocActions.update,
       data: { columns: updatedColumns },

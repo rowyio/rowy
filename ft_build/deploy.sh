@@ -26,4 +26,4 @@ then
 fi
 gcloud config set project $project_id
 gcloud builds submit --tag gcr.io/$project_id/ft-builder
-gcloud run deploy ft-builder --image gcr.io/$project_id/ft-builder --platform managed --memory 4Gi --allow-unauthenticated --set-env-vars="_PROJECT_ID=$project_id"
+gcloud run deploy ft-builder --image gcr.io/$project_id/ft-builder --platform managed --memory 4Gi --allow-unauthenticated --set-env-vars="_PROJECT_ID=$project_id" --region=australia-southeast1

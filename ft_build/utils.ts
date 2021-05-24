@@ -1,6 +1,5 @@
 import { db } from "./firebaseConfig";
 import admin from "firebase-admin";
-const safeEval = require("safe-eval");
 
 function firetableUser(user: admin.auth.UserRecord) {
   return {
@@ -75,7 +74,7 @@ function parseSparksConfig(
       // remove leading "sparks.config(" and trailing ")"
       return sparks
         .replace(/^(\s*)sparks.config\(/, "")
-        .replace(/\)(\s*)+$/, "");
+        .replace(/\);?\s*$/, "");
     } catch (error) {
       logErrorToDB({
         errorDescription: "Sparks is not wrapped with sparks.config",

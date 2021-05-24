@@ -16,6 +16,11 @@ import { useAppContext } from "contexts/AppContext";
 import { useConfirmation } from "components/ConfirmationDialog";
 import { FieldType } from "constants/fields";
 
+import Switch from '@material-ui/core/Switch'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Typography from '@material-ui/core/Typography'
+import Subheading from "components/Table/ColumnMenu/Subheading";
+
 export default function FieldSettings(props: IMenuModalProps) {
   const {
     name,
@@ -56,15 +61,13 @@ export default function FieldSettings(props: IMenuModalProps) {
           <>
             {initializable && (
               <>
-                {/* 
-                //TODO
+                {
                 <section>
                   <Subheading>Required?</Subheading>
                   <Typography color="textSecondary" paragraph>
                     The row will not be created or updated unless all required
                     values are set.
                   </Typography>
-
                   <FormControlLabel
                     value="required"
                     label="Make this column required"
@@ -86,8 +89,7 @@ export default function FieldSettings(props: IMenuModalProps) {
                       justifyContent: "space-between",
                     }}
                   />
-                </section> */}
-
+                </section>}
                 <section style={{ marginTop: 1 }}>
                   {/* top margin fixes visual bug */}
                   <ErrorBoundary fullScreen={false}>
@@ -157,7 +159,6 @@ export default function FieldSettings(props: IMenuModalProps) {
                       }),
                     });
                     const data = await response.json();
-                    console.log(data);
                   } catch (e) {
                     console.error(e);
                   }

@@ -14,6 +14,7 @@ import {
 } from "@material-ui/core";
 
 import ErrorBoundary from "components/ErrorBoundary";
+import CellValidation from "components/Table/CellValidation";
 import { useFiretableContext } from "contexts/FiretableContext";
 
 import { FieldType } from "constants/fields";
@@ -55,6 +56,8 @@ export default function withPopoverCell(
     const { transparent, readOnly, ...popoverProps } = options ?? {};
     const { updateCell } = useFiretableContext();
 
+    const { validationRegex, required } = (props.column as any).config;
+
     // Initially display BasicCell to improve scroll performance
     const [displayedComponent, setDisplayedComponent] = useState<
       "basic" | "inline" | "popover"
@@ -89,7 +92,13 @@ export default function withPopoverCell(
     if (displayedComponent === "basic")
       return (
         <ErrorBoundary fullScreen={false} basic wrap="nowrap">
-          <BasicCellComponent {...basicCellProps} />
+          <CellValidation
+            value={value}
+            required={required}
+            validationRegex={validationRegex}
+          >
+            <BasicCellComponent {...basicCellProps} />
+          </CellValidation>
         </ErrorBoundary>
       );
 
@@ -127,7 +136,13 @@ export default function withPopoverCell(
     if (displayedComponent === "inline")
       return (
         <ErrorBoundary fullScreen={false} basic wrap="nowrap">
-          {inlineCell}
+          <CellValidation
+            value={value}
+            required={required}
+            validationRegex={validationRegex}
+          >
+            {inlineCell}
+          </CellValidation>
         </ErrorBoundary>
       );
 
@@ -136,7 +151,13 @@ export default function withPopoverCell(
     if (displayedComponent === "popover")
       return (
         <ErrorBoundary fullScreen={false} basic wrap="nowrap">
-          {inlineCell}
+          <CellValidation
+            value={value}
+            required={required}
+            validationRegex={validationRegex}
+          >
+            {inlineCell}
+          </CellValidation>
 
           <Suspense fallback={null}>
             <Popover

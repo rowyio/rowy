@@ -25,7 +25,7 @@ export default function SparksEditor() {
   const currentSparks = tableState?.config.sparks ?? "";
   const [localSparks, setLocalSparks] = useState(currentSparks);
   const [open, setOpen] = useState(false);
-  const [isSparksValid, setIsSparksValid] = useState(false);
+  const [isSparksValid, setIsSparksValid] = useState(true);
   const [showForceSave, setShowForceSave] = useState(false);
 
   const handleClose = () => {
@@ -75,7 +75,6 @@ export default function SparksEditor() {
             }),
           });
           const data = await response.json();
-          console.log(data);
         } catch (e) {
           console.error(e);
         }
@@ -143,12 +142,14 @@ export default function SparksEditor() {
             </>
           }
           actions={{
-            primary: {
-              children: showForceSave ? "Force Save" : "Save Changes",
+            primary:showForceSave ? {
+              children: "Force Save",
               onClick: handleSave,
-              disabled:
-                !showForceSave ??
-                (!isSparksValid || localSparks === tableState?.config.sparks),
+             
+            }:{
+              children:  "Save Changes",
+              onClick: handleSave,
+              disabled:!isSparksValid || localSparks === tableState?.config.sparks  ,
             },
             secondary: {
               children: "Cancel",

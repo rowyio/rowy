@@ -19,6 +19,17 @@ export default function Settings({ handleChange, config }) {
           else handleChange("maxLength")(e.target.value);
         }}
       />
+      <Subheading>Validation Regex</Subheading>
+      <TextField
+        type="text"
+        value={config.maxLength}
+        label={"Validation Regex"}
+        fullWidth
+        onChange={(e) => {
+          if (e.target.value === "") handleChange("validationRegex")(null);
+          else handleChange("validationRegex")(e.target.value);
+        }}
+      />
     </>
   );
 }

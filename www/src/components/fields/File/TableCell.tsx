@@ -22,6 +22,7 @@ import { useConfirmation } from "components/ConfirmationDialog";
 import useUploader, { FileValue } from "hooks/useFiretable/useUploader";
 import { FileIcon } from ".";
 import { DATE_TIME_FORMAT } from "constants/dates";
+import { useFiretableContext } from "contexts/FiretableContext";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -63,6 +64,7 @@ export default function File_({
   disabled,
 }: IHeavyCellProps) {
   const classes = useStyles();
+  const { updateCell } = useFiretableContext();
 
   const { uploaderState, upload, deleteUpload } = useUploader();
   const { progress, isLoading } = uploaderState;
@@ -77,6 +79,10 @@ export default function File_({
           fieldName: column.key as string,
           files: [file],
           previousValue: value,
+          onComplete: (newValue) => {
+            if(updateCell)updateCell(row.ref,column.key,newValue)
+          },
+        
         });
       }
     },

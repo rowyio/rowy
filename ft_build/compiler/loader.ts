@@ -29,7 +29,7 @@ export const generateConfigFromTableSchema = async (
         );
       return `${acc}{\nfieldName:'${
         currColumn.key
-      }',evaluate:async ({row,ref,db,auth,utilFns}) =>{${
+      }',evaluate:async ({row,ref,db,auth,storage,utilFns}) =>{${
         currColumn.config.script
       }},\nlistenerFields:[${currColumn.config.listenerFields
         .map((fieldKey: string) => `"${fieldKey}"`)
@@ -132,7 +132,24 @@ export const generateConfigFromTableSchema = async (
     default:
       break;
   }
+
+  // generate field types from table meta data
+  const fieldTypes = JSON.stringify(
+    Object.keys(schemaData.columns).reduce((acc, cur) => {
+      const field = schemaData.columns[cur];
+      let fieldType = field.type;
+      if (fieldType === "DERIVATIVE") {
+        fieldType = field.config.renderFieldType;
+      }
+      return {
+        [cur]: fieldType,
+        ...acc,
+      };
+    }, {})
+  );
+
   const exports: any = {
+    fieldTypes,
     triggerPath,
     functionName: functionName.replace(/-/g, "_"),
     derivativesConfig,

@@ -17,8 +17,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "firebase-admin": "^9.2.0",
-    "firebase-functions": "^3.11.0",
-    "safe-eval": "^0.4.1"
+    "firebase-functions": "^3.11.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.11",
