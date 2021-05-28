@@ -66,6 +66,7 @@ const OPERATORS = [
   },
   { value: "<", label: "<", compatibleTypes: [FieldType.number] },
   { value: "<=", label: "<=", compatibleTypes: [FieldType.number] },
+  { value: "==", label: "==", compatibleTypes: [FieldType.number] },
   { value: ">=", label: ">=", compatibleTypes: [FieldType.number] },
   { value: ">", label: ">", compatibleTypes: [FieldType.number] },
   {
@@ -241,6 +242,24 @@ const Filters = () => {
             variant="filled"
             hiddenLabel
             placeholder="Text value"
+          />
+        );
+      case FieldType.number:
+        return (
+          <TextField
+            onChange={(e) => {
+              const value = e.target.value;
+              if (query.value || value)
+                setQuery((query) => ({
+                  ...query,
+                  value: value !== "" ? parseFloat(value) : "",
+                }));
+            }}
+            value={typeof query.value === "number" ? query.value : ""}
+            variant="filled"
+            hiddenLabel
+            type="number"
+            placeholder="number value"
           />
         );
 
@@ -486,7 +505,8 @@ const Filters = () => {
               disabled={
                 query.value !== true &&
                 query.value !== false &&
-                _isEmpty(query.value)
+                _isEmpty(query.value) &&
+                typeof query.value !== "number"
               }
               color="primary"
               onClick={() => {
