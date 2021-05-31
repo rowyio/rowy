@@ -131,8 +131,8 @@ export default function ActionFab({
         isRunning ||
         !!(
           hasRan &&
-          (config["redo.enabled"] ? false : !value.redo) &&
-          (config["undo.enabled"] ? false : !value.undo)
+          (config.redo?.enabled ? false : !value.redo) &&
+          (config.undo?.enabled ? false : !value.undo)
         ) ||
         disabled
       }
