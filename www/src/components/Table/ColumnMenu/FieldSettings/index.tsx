@@ -1,4 +1,4 @@
-import React, { useState, Suspense } from "react";
+import React, { useState, Suspense, useMemo } from "react";
 import _sortBy from "lodash/sortBy";
 import _set from "lodash/set";
 import { IMenuModalProps } from "..";
@@ -16,9 +16,10 @@ import { useAppContext } from "contexts/AppContext";
 import { useConfirmation } from "components/ConfirmationDialog";
 import { FieldType } from "constants/fields";
 
-import Switch from '@material-ui/core/Switch'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Typography from '@material-ui/core/Typography'
+import Switch from "@material-ui/core/Switch";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Typography from "@material-ui/core/Typography";
+import Divider from "@material-ui/core/Divider";
 import Subheading from "components/Table/ColumnMenu/Subheading";
 
 export default function FieldSettings(props: IMenuModalProps) {
@@ -32,7 +33,7 @@ export default function FieldSettings(props: IMenuModalProps) {
     handleSave,
   } = props;
 
-  const [showRebuildPrompt,setShowRebuildPrompt] = useState(false)
+  const [showRebuildPrompt, setShowRebuildPrompt] = useState(false);
   const [newConfig, setNewConfig] = useState(config ?? {});
   const customFieldSettings = getFieldProp("settings", type);
   const initializable = getFieldProp("initializable", type);
@@ -43,12 +44,24 @@ export default function FieldSettings(props: IMenuModalProps) {
   const appContext = useAppContext();
 
   const handleChange = (key: string) => (update: any) => {
-    if(showRebuildPrompt===false && (key.includes('defaultValue') || type === FieldType.derivative) && config[key] !== update){
-      setShowRebuildPrompt(true)
+    if (
+      showRebuildPrompt === false &&
+      (key.includes("defaultValue") || type === FieldType.derivative) &&
+      config[key] !== update
+    ) {
+      setShowRebuildPrompt(true);
     }
     const updatedConfig = _set({ ...newConfig }, key, update);
     setNewConfig(updatedConfig);
   };
+  const rendedFieldSettings = useMemo(
+    () =>
+      [FieldType.derivative, FieldType.aggregate].includes(type) &&
+      newConfig.renderFieldType
+        ? getFieldProp("settings", newConfig.renderFieldType)
+        : null,
+    [newConfig.renderFieldType, type]
+  );
   if (!open) return null;
 
   return (
@@ -62,34 +75,35 @@ export default function FieldSettings(props: IMenuModalProps) {
             {initializable && (
               <>
                 {
-                <section>
-                  <Subheading>Required?</Subheading>
-                  <Typography color="textSecondary" paragraph>
-                    The row will not be created or updated unless all required
-                    values are set.
-                  </Typography>
-                  <FormControlLabel
-                    value="required"
-                    label="Make this column required"
-                    labelPlacement="start"
-                    control={
-                      <Switch
-                        checked={newConfig["required"]}
-                        onChange={() =>
-                          setNewConfig({
-                            ...newConfig,
-                            required: !Boolean(newConfig["required"]),
-                          })
-                        }
-                        name="required"
-                      />
-                    }
-                    style={{
-                      marginLeft: 0,
-                      justifyContent: "space-between",
-                    }}
-                  />
-                </section>}
+                  <section>
+                    <Subheading>Required?</Subheading>
+                    <Typography color="textSecondary" paragraph>
+                      The row will not be created or updated unless all required
+                      values are set.
+                    </Typography>
+                    <FormControlLabel
+                      value="required"
+                      label="Make this column required"
+                      labelPlacement="start"
+                      control={
+                        <Switch
+                          checked={newConfig["required"]}
+                          onChange={() =>
+                            setNewConfig({
+                              ...newConfig,
+                              required: !Boolean(newConfig["required"]),
+                            })
+                          }
+                          name="required"
+                        />
+                      }
+                      style={{
+                        marginLeft: 0,
+                        justifyContent: "space-between",
+                      }}
+                    />
+                  </section>
+                }
                 <section style={{ marginTop: 1 }}>
                   {/* top margin fixes visual bug */}
                   <ErrorBoundary fullScreen={false}>
@@ -110,7 +124,19 @@ export default function FieldSettings(props: IMenuModalProps) {
                   handleChange,
                 })}
             </section>
-
+            {rendedFieldSettings && (
+              <section>
+                <Divider />
+                <Typography variant="overline">
+                  {" "}
+                  Rendered field config
+                </Typography>
+                {React.createElement(rendedFieldSettings, {
+                  config: newConfig,
+                  handleChange,
+                })}
+              </section>
+            )}
             {/* {
             <ConfigForm
               type={type}
@@ -124,9 +150,7 @@ export default function FieldSettings(props: IMenuModalProps) {
       actions={{
         primary: {
           onClick: () => {
-            if (
-             showRebuildPrompt
-            ) {
+            if (showRebuildPrompt) {
               requestConfirmation({
                 title: "Deploy Changes",
                 body:
@@ -166,7 +190,7 @@ export default function FieldSettings(props: IMenuModalProps) {
               });
             }
             handleSave(fieldName, { config: newConfig });
-            setShowRebuildPrompt(false)
+            setShowRebuildPrompt(false);
           },
           children: "Update",
         },

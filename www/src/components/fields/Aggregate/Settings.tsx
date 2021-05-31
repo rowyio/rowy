@@ -78,19 +78,6 @@ switch (triggerType){
           handleChange("renderFieldType")(newType.target.value);
         }}
       />
-      {config.renderFieldType && (
-        <>
-          <Typography variant="overline">Rendered field config</Typography>
-          {/* <ConfigFields
-                fieldType={config.renderFieldType}
-                config={config}
-                handleChange={handleChange}
-                tables={tables}
-                columns={columns}
-                roles={roles}
-              /> */}
-        </>
-      )}
     </>
   );
 };
