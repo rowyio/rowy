@@ -51,11 +51,6 @@ const Settings = ({ config, handleChange }) => {
           handleChange("renderFieldType")(newType.target.value);
         }}
       />
-      {config.renderFieldType && (
-        <>
-          <Typography variant="overline"> Rendered field config</Typography>
-        </>
-      )}
     </>
   );
 };
