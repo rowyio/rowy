@@ -94,7 +94,7 @@ export default function Date_({
         value={transformedValue}
         onChange={handleDateChange}
         onClick={(e) => e.stopPropagation()}
-        format={DATE_FORMAT}
+        format={column.config?.format ?? DATE_FORMAT}
         fullWidth
         clearable
         keyboardIcon={<DateIcon />}

@@ -14,6 +14,7 @@ import { SnackContext } from "contexts/SnackContext";
 import { useFiretableContext } from "contexts/FiretableContext";
 
 import { FieldType } from "constants/fields";
+import { getFieldProp } from "components/fields";
 
 const selectedColumnsJsonReducer = (doc: any) => (
   accumulator: any,
@@ -26,12 +27,19 @@ const selectedColumnsJsonReducer = (doc: any) => (
   };
 };
 
-// TODO: move to field csvExport
 const selectedColumnsCsvReducer = (doc: any) => (
   accumulator: any,
   currentColumn: any
 ) => {
   const value = _get(doc, currentColumn.key);
+  const formatter = getFieldProp("csvExportFormatter", currentColumn.type);
+  if (formatter) {
+    return {
+      ...accumulator,
+      [currentColumn.name]: value ? formatter(value, currentColumn.config) : "",
+    };
+  }
+  // TODO: move to field csvExportFormatter
   switch (currentColumn.type) {
     case FieldType.multiSelect:
       return {

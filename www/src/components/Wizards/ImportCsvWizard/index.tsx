@@ -74,7 +74,7 @@ export default function ImportCsvWizard({
           matchingColumn.type
         );
         const value = csvFieldParser
-          ? csvFieldParser(row[pair.csvKey])
+          ? csvFieldParser(row[pair.csvKey], matchingColumn.config)
           : row[pair.csvKey];
         return { ...a, [pair.columnKey]: value };
       }, {})
