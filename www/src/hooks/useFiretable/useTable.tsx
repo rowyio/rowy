@@ -15,6 +15,8 @@ import {
 import { projectId } from "../../firebase";
 import _findIndex from "lodash/findIndex";
 import _orderBy from "lodash/orderBy";
+import {firetableUser} from 'contexts/FiretableContext'
+import { useAppContext } from "contexts/AppContext";
 const CAP = 1000; // safety  paramter sets the  upper limit of number of docs fetched by this hook
 const serverTimestamp = firebase.firestore.FieldValue.serverTimestamp;
 
@@ -77,6 +79,7 @@ const tableInitialState = {
 
 const useTable = (initialOverrides: any) => {
   const snack = useContext(SnackContext);
+  const {currentUser}=useAppContext()
 
   const [tableState, tableDispatch] = useReducer(tableReducer, {
     ...tableInitialState,
@@ -286,7 +289,9 @@ const useTable = (initialOverrides: any) => {
     const docData = {
       ...valuesFromFilter,
       _ft_createdAt: serverTimestamp(),
+      _ft_createdBy: firetableUser(currentUser),
       _ft_updatedAt: serverTimestamp(),
+      _ft_updatedBy: firetableUser(currentUser),
       ...data,
     };
     if (missingRequiredFields.length === 0) {

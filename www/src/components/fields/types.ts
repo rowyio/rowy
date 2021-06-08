@@ -19,8 +19,8 @@ export interface IFieldConfig {
   TableEditor: React.ComponentType<EditorProps<any>>;
   SideDrawerField: React.ComponentType<ISideDrawerFieldProps>;
   settings?: React.ComponentType<ISettingsProps>;
-  csvExport?: (value: any) => string;
-  csvImportParser?: (value: string) => any;
+  csvExportFormatter?: (value: any, config?: any) => string;
+  csvImportParser?: (value: string, config?: any) => any;
 }
 
 export interface IBasicCellProps {
