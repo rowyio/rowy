@@ -16,13 +16,18 @@ async function insertErrorRecordToDB(errorRecord: object) {
   await db.collection("_FT_ERRORS").add(errorRecord);
 }
 
-function commandErrorHandler(meta: {
-  user: admin.auth.UserRecord;
-  description?: string;
-  functionConfigTs?: string;
-  sparksConfig?: string;
-}) {
+function commandErrorHandler(
+  meta: {
+    user: admin.auth.UserRecord;
+    description?: string;
+    functionConfigTs?: string;
+    sparksConfig?: string;
+  },
+  streamLogger
+) {
   return async function (error, stdout, stderr) {
+    await streamLogger(stdout);
+
     if (!error) {
       return;
     }
@@ -88,4 +93,45 @@ function parseSparksConfig(
   return "[]";
 }
 
-export { commandErrorHandler, logErrorToDB, parseSparksConfig };
+function createStreamLogger(
+  tableConfigPath: string,
+  startTimeStamp: number
+  // emitFn
+) {
+  const fullLog: string[] = [];
+  console.log("socketLogger created");
+
+  return async (log: string) => {
+    console.log(log);
+    fullLog.push(log);
+    await db.doc(tableConfigPath).update({
+      ftBuild: {
+        log,
+        tableConfigPath,
+        startTimeStamp,
+        fullLog,
+      },
+    });
+    // if (!emitFn) {
+    //   // await logErrorToDB({
+    //   //   errorDescription: `Invalid socket (${configPath})`,
+    //   //   user,
+    //   // });
+    // } else {
+    //   fullLog.push(log);
+    //   emitFn("log", {
+    //     log,
+    //     tableConfigPath,
+    //     startTimeStamp,
+    //     fullLog,
+    //   });
+    // }
+  };
+}
+
+export {
+  commandErrorHandler,
+  logErrorToDB,
+  parseSparksConfig,
+  createStreamLogger,
+};

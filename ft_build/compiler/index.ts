@@ -7,57 +7,70 @@ import admin from "firebase-admin";
 
 export default async function generateConfig(
   schemaPath: string,
-  user: admin.auth.UserRecord
+  user: admin.auth.UserRecord,
+  streamLogger
 ) {
-  return await generateConfigFromTableSchema(schemaPath, user).then(
-    async (success) => {
-      if (!success) {
-        console.log("generateConfigFromTableSchema failed to complete");
+  return await generateConfigFromTableSchema(
+    schemaPath,
+    user,
+    streamLogger
+  ).then(async (success) => {
+    if (!success) {
+      await streamLogger(`generateConfigFromTableSchema failed to complete`);
+      return false;
+    }
+
+    await streamLogger(`generateConfigFromTableSchema done`);
+    const configFile = fs.readFileSync(
+      path.resolve(__dirname, "../functions/src/functionConfig.ts"),
+      "utf-8"
+    );
+    await streamLogger(`configFile: ${JSON.stringify(configFile)}`);
+    const requiredDependencies = configFile.match(
+      /(?<=(require\(("|'))).*?(?=("|')\))/g
+    );
+    if (requiredDependencies) {
+      const packgesAdded = await addPackages(
+        requiredDependencies.map((p: any) => ({ name: p })),
+        user,
+        streamLogger
+      );
+      if (!packgesAdded) {
         return false;
       }
+    }
+    await streamLogger(
+      `requiredDependencies: ${JSON.stringify(requiredDependencies)}`
+    );
 
-      console.log("generateConfigFromTableSchema done");
-      const configFile = fs.readFileSync(
-        path.resolve(__dirname, "../functions/src/functionConfig.ts"),
-        "utf-8"
-      );
-      const requiredDependencies = configFile.match(
-        /(?<=(require\(("|'))).*?(?=("|')\))/g
-      );
-      if (requiredDependencies) {
-        const packgesAdded = await addPackages(
-          requiredDependencies.map((p: any) => ({ name: p })),
-          user
-        );
-        if (!packgesAdded) {
-          return false;
-        }
-      }
-
-      const isFunctionConfigValid = await asyncExecute(
-        "cd build/functions/src; tsc functionConfig.ts",
-        commandErrorHandler({
+    const isFunctionConfigValid = await asyncExecute(
+      "cd build/functions/src; tsc functionConfig.ts",
+      commandErrorHandler(
+        {
           user,
           functionConfigTs: configFile,
           description: `Invalid compiled functionConfig.ts`,
-        })
-      );
-      if (!isFunctionConfigValid) {
+        },
+        streamLogger
+      )
+    );
+    await streamLogger(
+      `isFunctionConfigValid: ${JSON.stringify(isFunctionConfigValid)}`
+    );
+    if (!isFunctionConfigValid) {
+      return false;
+    }
+
+    const { sparksConfig } = require("../functions/src/functionConfig.js");
+    const requiredSparks = sparksConfig.map((s: any) => s.type);
+    await streamLogger(`requiredSparks: ${JSON.stringify(requiredSparks)}`);
+
+    for (const lib of requiredSparks) {
+      const success = await addSparkLib(lib, user, streamLogger);
+      if (!success) {
         return false;
       }
-
-      const { sparksConfig } = require("../functions/src/functionConfig.js");
-      const requiredSparks = sparksConfig.map((s: any) => s.type);
-      console.log({ requiredSparks });
-
-      for (const lib of requiredSparks) {
-        const success = await addSparkLib(lib, user);
-        if (!success) {
-          return false;
-        }
-      }
-
-      return true;
     }
-  );
+    return true;
+  });
 }

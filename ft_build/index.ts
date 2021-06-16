@@ -2,14 +2,29 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 import { asyncExecute } from "./compiler/terminal";
+import { createStreamLogger } from "./utils";
 import generateConfig from "./compiler";
 import { auth } from "./firebaseConfig";
 import meta from "./package.json";
 import { commandErrorHandler, logErrorToDB } from "./utils";
 import firebase from "firebase-admin";
+import http from "http";
+// import { Server } from "socket.io";
 
 const app = express();
+// const httpServer = new http.Server(app);
 const jsonParser = bodyParser.json();
+
+// const io = new Server(httpServer, {
+//   cors: {
+//     origin: "*",
+//     methods: ["GET", "POST"],
+//   },
+// });
+
+// io.on("connection", () => {
+//   io.emit("log", "Hey!");
+// });
 
 app.use(cors());
 
@@ -73,7 +88,10 @@ app.post("/", jsonParser, async (req: any, res: any) => {
     });
   }
 
-  const success = await generateConfig(configPath, user);
+  const streamLogger = createStreamLogger(configPath, Date.now());
+  streamLogger("streamLogger created");
+
+  const success = await generateConfig(configPath, user, streamLogger);
   if (!success) {
     console.log(`generateConfig failed to complete`);
     res.send({
@@ -82,8 +100,7 @@ app.post("/", jsonParser, async (req: any, res: any) => {
     });
     return;
   }
-
-  console.log("generateConfig done");
+  streamLogger("generateConfig success");
 
   let hasEnvError = false;
 
@@ -106,7 +123,7 @@ app.post("/", jsonParser, async (req: any, res: any) => {
   await asyncExecute(
     `cd build/functions; \
      yarn install`,
-    commandErrorHandler({ user })
+    commandErrorHandler({ user }, streamLogger)
   );
 
   await asyncExecute(
@@ -114,10 +131,10 @@ app.post("/", jsonParser, async (req: any, res: any) => {
        yarn deployFT \
         --project ${process.env._PROJECT_ID} \
         --only functions`,
-    commandErrorHandler({ user })
+    commandErrorHandler({ user }, streamLogger)
   );
 
-  console.log("build complete");
+  await streamLogger(`build complete`);
   res.send({
     success: true,
   });
