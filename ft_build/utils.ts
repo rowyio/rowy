@@ -93,39 +93,26 @@ function parseSparksConfig(
   return "[]";
 }
 
-function createStreamLogger(
+async function createStreamLogger(
   tableConfigPath: string,
   startTimeStamp: number
-  // emitFn
 ) {
   const fullLog: string[] = [];
-  console.log("socketLogger created");
+  const logRef = db
+    .doc(tableConfigPath)
+    .collection("ftBuildLogs")
+    .doc(startTimeStamp.toString());
+  await logRef.set({ startTimeStamp });
+  console.log(
+    `streamLogger created. tableConfigPath: ${tableConfigPath}, startTimeStamp: ${startTimeStamp}`
+  );
 
   return async (log: string) => {
     console.log(log);
     fullLog.push(log);
-    await db.doc(tableConfigPath).update({
-      ftBuild: {
-        log,
-        tableConfigPath,
-        startTimeStamp,
-        fullLog,
-      },
+    await logRef.update({
+      fullLog,
     });
-    // if (!emitFn) {
-    //   // await logErrorToDB({
-    //   //   errorDescription: `Invalid socket (${configPath})`,
-    //   //   user,
-    //   // });
-    // } else {
-    //   fullLog.push(log);
-    //   emitFn("log", {
-    //     log,
-    //     tableConfigPath,
-    //     startTimeStamp,
-    //     fullLog,
-    //   });
-    // }
   };
 }
 
