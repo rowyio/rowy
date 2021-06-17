@@ -9,15 +9,17 @@ export const generateConfigFromTableSchema = async (
   user: admin.auth.UserRecord,
   streamLogger
 ) => {
-  await streamLogger("getting schema...");
+  await streamLogger.info("getting schema...");
   const schemaDoc = await db.doc(schemaDocPath).get();
   const schemaData = schemaDoc.data();
   if (!schemaData) throw new Error("no schema found");
-  await streamLogger(`schemaData: ${JSON.stringify(schemaData)}`);
+  await streamLogger.info(`schemaData: ${JSON.stringify(schemaData)}`);
   const derivativeColumns = Object.values(schemaData.columns).filter(
     (col: any) => col.type === "DERIVATIVE"
   );
-  await streamLogger(`derivativeColumns: ${JSON.stringify(derivativeColumns)}`);
+  await streamLogger.info(
+    `derivativeColumns: ${JSON.stringify(derivativeColumns)}`
+  );
   const derivativesConfig = `[${derivativeColumns.reduce(
     (acc, currColumn: any) => {
       if (
@@ -41,12 +43,14 @@ export const generateConfigFromTableSchema = async (
     },
     ""
   )}]`;
-  await streamLogger(`derivativesConfig: ${JSON.stringify(derivativesConfig)}`);
+  await streamLogger.info(
+    `derivativesConfig: ${JSON.stringify(derivativesConfig)}`
+  );
 
   const initializableColumns = Object.values(
     schemaData.columns
   ).filter((col: any) => Boolean(col.config?.defaultValue));
-  await streamLogger(
+  await streamLogger.info(
     `initializableColumns: ${JSON.stringify(initializableColumns)}`
   );
   const initializeConfig = `[${initializableColumns.reduce(
@@ -73,7 +77,9 @@ export const generateConfigFromTableSchema = async (
     },
     ""
   )}]`;
-  await streamLogger(`initializeConfig: ${JSON.stringify(initializeConfig)}`);
+  await streamLogger.info(
+    `initializeConfig: ${JSON.stringify(initializeConfig)}`
+  );
   const documentSelectColumns = Object.values(schemaData.columns).filter(
     (col: any) => col.type === "DOCUMENT_SELECT" && col.config?.trackedFields
   );
@@ -87,12 +93,12 @@ export const generateConfigFromTableSchema = async (
     },
     ""
   )}]`;
-  await streamLogger(
+  await streamLogger.info(
     `documentSelectColumns: ${JSON.stringify(documentSelectColumns)}`
   );
 
   const sparksConfig = parseSparksConfig(schemaData.sparks, user);
-  await streamLogger(`sparksConfig: ${JSON.stringify(sparksConfig)}`);
+  await streamLogger.info(`sparksConfig: ${JSON.stringify(sparksConfig)}`);
 
   const collectionType = schemaDocPath.includes("subTables")
     ? "subCollection"
@@ -144,7 +150,7 @@ export const generateConfigFromTableSchema = async (
     default:
       break;
   }
-  await streamLogger(`collectionType: ${JSON.stringify(collectionType)}`);
+  await streamLogger.info(`collectionType: ${JSON.stringify(collectionType)}`);
 
   // generate field types from table meta data
   const fieldTypes = JSON.stringify(
@@ -160,7 +166,7 @@ export const generateConfigFromTableSchema = async (
       };
     }, {})
   );
-  await streamLogger(`fieldTypes: ${JSON.stringify(fieldTypes)}`);
+  await streamLogger.info(`fieldTypes: ${JSON.stringify(fieldTypes)}`);
 
   const exports: any = {
     fieldTypes,
@@ -171,12 +177,12 @@ export const generateConfigFromTableSchema = async (
     documentSelectConfig,
     sparksConfig,
   };
-  await streamLogger(`exports: ${JSON.stringify(exports)}`);
+  await streamLogger.info(`exports: ${JSON.stringify(exports)}`);
 
   const fileData = Object.keys(exports).reduce((acc, currKey) => {
     return `${acc}\nexport const ${currKey} = ${exports[currKey]}`;
   }, ``);
-  await streamLogger(`fileData: ${JSON.stringify(fileData)}`);
+  await streamLogger.info(`fileData: ${JSON.stringify(fileData)}`);
 
   const path = require("path");
   fs.writeFileSync(

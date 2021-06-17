@@ -26,7 +26,7 @@ function commandErrorHandler(
   streamLogger
 ) {
   return async function (error, stdout, stderr) {
-    await streamLogger(stdout);
+    await streamLogger.info(stdout);
 
     if (!error) {
       return;
@@ -93,26 +93,60 @@ function parseSparksConfig(
   return "[]";
 }
 
-async function createStreamLogger(
-  tableConfigPath: string,
-  startTimeStamp: number
-) {
-  const fullLog: string[] = [];
+async function createStreamLogger(tableConfigPath: string) {
+  const startTimeStamp = Date.now();
+  const fullLog: {
+    log: string;
+    level: "info" | "error";
+    timestamp: number;
+  }[] = [];
   const logRef = db
     .doc(tableConfigPath)
     .collection("ftBuildLogs")
     .doc(startTimeStamp.toString());
-  await logRef.set({ startTimeStamp });
+  await logRef.set({ startTimeStamp, status: "BUILDING" });
+
   console.log(
     `streamLogger created. tableConfigPath: ${tableConfigPath}, startTimeStamp: ${startTimeStamp}`
   );
 
-  return async (log: string) => {
-    console.log(log);
-    fullLog.push(log);
-    await logRef.update({
-      fullLog,
-    });
+  return {
+    info: async (log: string) => {
+      console.log(log);
+      fullLog.push({
+        log,
+        level: "info",
+        timestamp: Date.now(),
+      });
+      await logRef.update({
+        fullLog,
+      });
+    },
+    error: async (log: string) => {
+      console.error(log);
+      fullLog.push({
+        log,
+        level: "error",
+        timestamp: Date.now(),
+      });
+      await logRef.update({
+        fullLog,
+      });
+    },
+    success: async () => {
+      console.log("streamLogger marked as SUCCESS");
+      await logRef.update({
+        status: "SUCCESS",
+        successTimeStamp: Date.now(),
+      });
+    },
+    fail: async () => {
+      console.log("streamLogger marked as FAIL");
+      await logRef.update({
+        status: "FAIL",
+        failTimeStamp: Date.now(),
+      });
+    },
   };
 }
 

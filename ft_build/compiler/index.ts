@@ -16,16 +16,18 @@ export default async function generateConfig(
     streamLogger
   ).then(async (success) => {
     if (!success) {
-      await streamLogger(`generateConfigFromTableSchema failed to complete`);
+      await streamLogger.info(
+        `generateConfigFromTableSchema failed to complete`
+      );
       return false;
     }
 
-    await streamLogger(`generateConfigFromTableSchema done`);
+    await streamLogger.info(`generateConfigFromTableSchema done`);
     const configFile = fs.readFileSync(
       path.resolve(__dirname, "../functions/src/functionConfig.ts"),
       "utf-8"
     );
-    await streamLogger(`configFile: ${JSON.stringify(configFile)}`);
+    await streamLogger.info(`configFile: ${JSON.stringify(configFile)}`);
     const requiredDependencies = configFile.match(
       /(?<=(require\(("|'))).*?(?=("|')\))/g
     );
@@ -39,7 +41,7 @@ export default async function generateConfig(
         return false;
       }
     }
-    await streamLogger(
+    await streamLogger.info(
       `requiredDependencies: ${JSON.stringify(requiredDependencies)}`
     );
 
@@ -54,7 +56,7 @@ export default async function generateConfig(
         streamLogger
       )
     );
-    await streamLogger(
+    await streamLogger.info(
       `isFunctionConfigValid: ${JSON.stringify(isFunctionConfigValid)}`
     );
     if (!isFunctionConfigValid) {
@@ -63,7 +65,9 @@ export default async function generateConfig(
 
     const { sparksConfig } = require("../functions/src/functionConfig.js");
     const requiredSparks = sparksConfig.map((s: any) => s.type);
-    await streamLogger(`requiredSparks: ${JSON.stringify(requiredSparks)}`);
+    await streamLogger.info(
+      `requiredSparks: ${JSON.stringify(requiredSparks)}`
+    );
 
     for (const lib of requiredSparks) {
       const success = await addSparkLib(lib, user, streamLogger);

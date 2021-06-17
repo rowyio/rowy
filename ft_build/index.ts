@@ -88,8 +88,8 @@ app.post("/", jsonParser, async (req: any, res: any) => {
     });
   }
 
-  const streamLogger = await createStreamLogger(configPath, Date.now());
-  await streamLogger("streamLogger created");
+  const streamLogger = await createStreamLogger(configPath);
+  await streamLogger.info("streamLogger created");
 
   const success = await generateConfig(configPath, user, streamLogger);
   if (!success) {
@@ -100,7 +100,7 @@ app.post("/", jsonParser, async (req: any, res: any) => {
     });
     return;
   }
-  await streamLogger("generateConfig success");
+  await streamLogger.info("generateConfig success");
 
   let hasEnvError = false;
 
@@ -134,7 +134,7 @@ app.post("/", jsonParser, async (req: any, res: any) => {
     commandErrorHandler({ user }, streamLogger)
   );
 
-  await streamLogger(`build complete`);
+  await streamLogger.success();
   res.send({
     success: true,
   });

@@ -9,14 +9,18 @@ import _find from "lodash/find";
 import _sortBy from "lodash/sortBy";
 import moment from "moment";
 
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
-import { Chip } from "@material-ui/core";
+import {
+  Chip,
+  CircularProgress,
+  Typography,
+  Box,
+  Tabs,
+  Tab,
+} from "@material-ui/core";
 import Modal from "components/Modal";
 import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import Box from "@material-ui/core/Box";
 import LogsIcon from "@material-ui/icons/QueryBuilder";
+import SuccessIcon from "@material-ui/icons/CheckCircleOutline";
 import TableHeaderButton from "./TableHeaderButton";
 import Ansi from "ansi-to-react";
 
@@ -39,6 +43,12 @@ const useStyles = makeStyles((theme) => ({
   tabs: {
     borderRight: `1px solid ${theme.palette.divider}`,
   },
+  tab: {
+    display: "flex",
+    flexWrap: "nowrap",
+    alignItems: "center",
+    justifyItems: "center",
+  },
 
   logPanel: {
     width: "100%",
@@ -59,15 +69,19 @@ const useStyles = makeStyles((theme) => ({
     whiteSpace: "break-spaces",
     userSelect: "text",
   },
+  logTimestamp: {
+    color: "green",
+  },
 }));
 
 LogPanel.propTypes = {
   logs: PropTypes.array,
+  status: PropTypes.string,
   index: PropTypes.any.isRequired,
   value: PropTypes.any.isRequired,
 };
 
-function LogRow({ logString, index }) {
+function LogRow({ logRecord, index }) {
   const classes = useStyles();
 
   return (
@@ -76,14 +90,20 @@ function LogRow({ logString, index }) {
         {index}
       </Typography>
       <Typography variant="body2" className={classes.logEntry}>
-        <Ansi>{logString.replaceAll("\\n", "\n").replaceAll("\\t", "\t")}</Ansi>
+        <Ansi className={classes.logTimestamp}>
+          {moment(logRecord.timestamp).format("LTS")}
+        </Ansi>
+        {"  "}
+        <Ansi>
+          {logRecord.log.replaceAll("\\n", "\n").replaceAll("\\t", "\t")}
+        </Ansi>
       </Typography>
     </Box>
   );
 }
 
 function LogPanel(props) {
-  const { logs, value, index, ...other } = props;
+  const { logs, status, value, index, ...other } = props;
   const classes = useStyles();
 
   return (
@@ -98,7 +118,7 @@ function LogPanel(props) {
       {value === index && (
         <Box p={3} className={classes.logEntryWrapper}>
           {logs?.map((log, index) => {
-            return <LogRow logString={log} index={index} />;
+            return <LogRow logRecord={log} index={index} />;
           })}
         </Box>
       )}
@@ -166,11 +186,23 @@ export default function TableLogs() {
                   onChange={handleTabChange}
                   className={classes.tabs}
                 >
-                  {collectionState.rows.map((value, index) => (
+                  {collectionState.rows.map((logEntry, index) => (
                     <Tab
-                      label={moment(value.startTimeStamp).format(
-                        "MMMM D YYYY h:mm:ssa"
-                      )}
+                      label={
+                        <Box className={classes.tab}>
+                          <Box>
+                            {moment(logEntry.startTimeStamp).format(
+                              "MMMM D YYYY h:mm:ssa"
+                            )}
+                          </Box>
+                          <Box>
+                            {logEntry.status === "BUILDING" && (
+                              <CircularProgress size={24} />
+                            )}
+                            {logEntry.status === "SUCCESS" && <SuccessIcon />}
+                          </Box>
+                        </Box>
+                      }
                       {...a11yProps(index)}
                     />
                   ))}
@@ -180,6 +212,7 @@ export default function TableLogs() {
                     value={tabIndex}
                     index={index}
                     logs={logEntry?.fullLog}
+                    status={logEntry?.status}
                   />
                 ))}
               </div>
