@@ -18,6 +18,7 @@ import Filters from "../Filters";
 import ImportCSV from "./ImportCsv";
 import Export from "./Export";
 import TableSettings from "./TableSettings";
+import TableLogs from "./TableLogs";
 import HiddenFields from "../HiddenFields";
 import Sparks from "./Sparks";
 import ReExecute from "./ReExecute";
@@ -218,6 +219,10 @@ export default function TableHeader({
           <ReExecute />
         </Grid>
       )}
+
+      <Grid item>
+        <TableLogs />
+      </Grid>
 
       <Grid item>
         <TableSettings />
