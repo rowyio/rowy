@@ -16,7 +16,6 @@ import {
   Box,
   Tabs,
   Tab,
-  Button,
 } from "@material-ui/core";
 import Modal from "components/Modal";
 import { makeStyles } from "@material-ui/core/styles";
@@ -24,6 +23,7 @@ import LogsIcon from "@material-ui/icons/QueryBuilder";
 import SuccessIcon from "@material-ui/icons/CheckCircle";
 import FailIcon from "@material-ui/icons/Cancel";
 import TableHeaderButton from "./TableHeaderButton";
+import { LOG_FONT, LOG_TEXT } from "Themes";
 import Ansi from "ansi-to-react";
 import EmptyState from "components/EmptyState";
 
@@ -55,6 +55,7 @@ const useStyles = makeStyles((theme) => ({
 
   logPanel: {
     width: "100%",
+    backgroundColor: "#1E1E1E",
   },
   logEntryWrapper: {
     overflowY: "scroll",
@@ -78,6 +79,17 @@ const useStyles = makeStyles((theme) => ({
   logTypeError: {
     color: "red",
   },
+  logFont: {
+    fontSize: 16,
+    fontFamily: LOG_FONT,
+    letterSpacing: 0.5,
+    lineHeight: 1.5,
+    color: LOG_TEXT,
+
+    "& code": {
+      fontFamily: LOG_FONT,
+    },
+  },
 }));
 
 LogPanel.propTypes = {
@@ -92,10 +104,16 @@ function LogRow({ logRecord, index }) {
 
   return (
     <Box>
-      <Typography variant="body2" className={classes.logNumber}>
+      <Typography
+        variant="body2"
+        className={`${classes.logNumber} ${classes.logFont}`}
+      >
         {index}
       </Typography>
-      <Typography variant="body2" className={classes.logEntry}>
+      <Typography
+        variant="body2"
+        className={`${classes.logEntry} ${classes.logFont}`}
+      >
         <Ansi
           className={
             logRecord.level === "info"
@@ -107,7 +125,10 @@ function LogRow({ logRecord, index }) {
         </Ansi>
         {"  "}
         <Ansi>
-          {logRecord.log.replaceAll("\\n", "\n").replaceAll("\\t", "\t")}
+          {logRecord.log
+            .replaceAll("\\n", "\n")
+            .replaceAll("\\t", "\t")
+            .replaceAll("\\", "")}
         </Ansi>
       </Typography>
     </Box>
