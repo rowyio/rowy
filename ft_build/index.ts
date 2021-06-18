@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 import { asyncExecute } from "./compiler/terminal";
+import { createStreamLogger } from "./utils";
 import generateConfig from "./compiler";
 import { auth } from "./firebaseConfig";
 import meta from "./package.json";
@@ -73,29 +74,37 @@ app.post("/", jsonParser, async (req: any, res: any) => {
     });
   }
 
-  const success = await generateConfig(configPath, user);
+  const streamLogger = await createStreamLogger(configPath);
+  await streamLogger.info("streamLogger created");
+
+  const success = await generateConfig(configPath, user, streamLogger);
   if (!success) {
-    console.log(`generateConfig failed to complete`);
+    await streamLogger.error("generateConfig failed to complete");
+    await streamLogger.fail();
     res.send({
       success: false,
       reason: `generateConfig failed to complete`,
     });
     return;
   }
-
-  console.log("generateConfig done");
+  await streamLogger.info("generateConfig success");
 
   let hasEnvError = false;
 
   if (!process.env._PROJECT_ID) {
-    await logErrorToDB({
-      errorDescription: `Invalid env: _PROJECT_ID (${process.env._PROJECT_ID})`,
-      user,
-    });
+    await logErrorToDB(
+      {
+        errorDescription: `Invalid env: _PROJECT_ID (${process.env._PROJECT_ID})`,
+        user,
+      },
+      streamLogger
+    );
     hasEnvError = true;
   }
 
   if (hasEnvError) {
+    await streamLogger.error("Invalid env:_PROJECT_ID");
+    await streamLogger.fail();
     res.send({
       success: false,
       reason: "Invalid env:_PROJECT_ID",
@@ -106,7 +115,7 @@ app.post("/", jsonParser, async (req: any, res: any) => {
   await asyncExecute(
     `cd build/functions; \
      yarn install`,
-    commandErrorHandler({ user })
+    commandErrorHandler({ user }, streamLogger)
   );
 
   await asyncExecute(
@@ -114,10 +123,10 @@ app.post("/", jsonParser, async (req: any, res: any) => {
        yarn deployFT \
         --project ${process.env._PROJECT_ID} \
         --only functions`,
-    commandErrorHandler({ user })
+    commandErrorHandler({ user }, streamLogger)
   );
 
-  console.log("build complete");
+  await streamLogger.success();
   res.send({
     success: true,
   });

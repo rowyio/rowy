@@ -142,15 +142,17 @@ export default function SparksEditor() {
             </>
           }
           actions={{
-            primary:showForceSave ? {
-              children: "Force Save",
-              onClick: handleSave,
-             
-            }:{
-              children:  "Save Changes",
-              onClick: handleSave,
-              disabled:!isSparksValid || localSparks === tableState?.config.sparks  ,
-            },
+            primary: showForceSave
+              ? {
+                  children: "Force Save",
+                  onClick: handleSave,
+                }
+              : {
+                  children: "Save Changes",
+                  onClick: handleSave,
+                  disabled:
+                    !isSparksValid || localSparks === tableState?.config.sparks,
+                },
             secondary: {
               children: "Cancel",
               onClick: handleClose,

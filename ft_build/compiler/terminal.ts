@@ -21,7 +21,8 @@ export const asyncExecute = async (command: string, callback: any) =>
 
 export const addPackages = async (
   packages: { name: string; version?: string }[],
-  user: admin.auth.UserRecord
+  user: admin.auth.UserRecord,
+  streamLogger
 ) => {
   const packagesString = packages.reduce((acc, currPackage) => {
     return `${acc} ${currPackage.name}@${currPackage.version ?? "latest"}`;
@@ -29,10 +30,13 @@ export const addPackages = async (
   if (packagesString.trim().length !== 0) {
     const success = await asyncExecute(
       `cd build/functions;yarn add ${packagesString}`,
-      commandErrorHandler({
-        user,
-        description: "Error adding packages",
-      })
+      commandErrorHandler(
+        {
+          user,
+          description: "Error adding packages",
+        },
+        streamLogger
+      )
     );
     return success;
   }
@@ -41,7 +45,8 @@ export const addPackages = async (
 
 export const addSparkLib = async (
   name: string,
-  user: admin.auth.UserRecord
+  user: admin.auth.UserRecord,
+  streamLogger
 ) => {
   try {
     const { dependencies } = require(`../sparksLib/${name}`);
@@ -49,24 +54,30 @@ export const addSparkLib = async (
       name: key,
       version: dependencies[key],
     }));
-    const success = await addPackages(packages, user);
+    const success = await addPackages(packages, user, streamLogger);
     if (!success) {
       return false;
     }
   } catch (error) {
-    logErrorToDB({
-      user,
-      errorDescription: "Error parsing dependencies",
-    });
+    logErrorToDB(
+      {
+        user,
+        errorDescription: "Error parsing dependencies",
+      },
+      streamLogger
+    );
     return false;
   }
 
   const success = await asyncExecute(
     `cp build/sparksLib/${name}.ts build/functions/src/sparks/${name}.ts`,
-    commandErrorHandler({
-      user,
-      description: "Error copying sparksLib",
-    })
+    commandErrorHandler(
+      {
+        user,
+        description: "Error copying sparksLib",
+      },
+      streamLogger
+    )
   );
   return success;
 };
