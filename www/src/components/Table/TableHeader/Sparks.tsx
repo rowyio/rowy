@@ -17,7 +17,7 @@ import { useAppContext } from "contexts/AppContext";
 
 import CodeEditor from "../editors/CodeEditor";
 
-export default function SparksEditor() {
+export default function SparksEditor({ requestSnackLog }) {
   const snack = useSnackContext();
   const { tableState, tableActions } = useFiretableContext();
   const appContext = useAppContext();
@@ -64,6 +64,7 @@ export default function SparksEditor() {
         const userTokenInfo = await appContext?.currentUser?.getIdTokenResult();
         const userToken = userTokenInfo?.token;
         try {
+          requestSnackLog(Date.now());
           const response = await fetch(ftBuildUrl, {
             method: "POST",
             headers: {
