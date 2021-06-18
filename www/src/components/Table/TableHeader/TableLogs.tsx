@@ -3,6 +3,7 @@ import useRouter from "hooks/useRouter";
 import useTable from "hooks/useFiretable/useTable";
 import { useFiretableContext } from "contexts/FiretableContext";
 import useStateRef from "react-usestateref";
+import { db } from "../../../firebase";
 
 import _camelCase from "lodash/camelCase";
 import _get from "lodash/get";
@@ -19,6 +20,7 @@ import {
   Tabs,
   Tab,
   IconButton,
+  Link,
 } from "@material-ui/core";
 import Modal from "components/Modal";
 import { makeStyles } from "@material-ui/core/styles";
@@ -375,8 +377,21 @@ export default function TableLogs({ requestSnackLog }) {
   const classes = useStyles();
   const [panalOpen, setPanelOpen] = useState(false);
   const [snackOpen, setSnackOpen] = useState(false);
+  const [buildURLConfigured, setBuildURLConfigured] = useState(true);
   const [tabIndex, setTabIndex] = React.useState(0);
   const [activeLogTimestamp, setActiveLogTimestamp] = useState(Date.now());
+
+  useEffect(() => {
+    checkBuildURL();
+  }, []);
+
+  const checkBuildURL = async () => {
+    const settingsDoc = await db.doc("/_FIRETABLE_/settings").get();
+    const ftBuildUrl = settingsDoc.get("ftBuildUrl");
+    if (!ftBuildUrl) {
+      setBuildURLConfigured(false);
+    }
+  };
 
   useEffect(() => {
     if (requestSnackLog > 0) {
@@ -450,11 +465,32 @@ export default function TableLogs({ requestSnackLog }) {
           }
           children={
             <>
-              {!latestStatus && (
+              {!latestStatus && buildURLConfigured && (
                 <EmptyState
                   message="No Logs Found"
                   description={
                     "When you start building, your logs should be shown here shortly"
+                  }
+                />
+              )}
+              {!latestStatus && !buildURLConfigured && (
+                <EmptyState
+                  message="Need Configuration"
+                  description={
+                    <>
+                      Cloud Run trigger URL not configured. Configuration guide:{" "}
+                      <Link
+                        href={
+                          "https://github.com/AntlerVC/firetable/wiki/Setting-up-cloud-Run-FT-Builder"
+                        }
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        variant="body2"
+                        underline="always"
+                      >
+                        https://github.com/AntlerVC/firetable/wiki/Setting-up-cloud-Run-FT-Builder
+                      </Link>
+                    </>
                   }
                 />
               )}
