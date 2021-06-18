@@ -16,14 +16,16 @@ import {
   Box,
   Tabs,
   Tab,
+  Button,
 } from "@material-ui/core";
 import Modal from "components/Modal";
 import { makeStyles } from "@material-ui/core/styles";
 import LogsIcon from "@material-ui/icons/QueryBuilder";
-import SuccessIcon from "@material-ui/icons/CheckCircleOutline";
+import SuccessIcon from "@material-ui/icons/CheckCircle";
 import FailIcon from "@material-ui/icons/Cancel";
 import TableHeaderButton from "./TableHeaderButton";
 import Ansi from "ansi-to-react";
+import EmptyState from "components/EmptyState";
 
 import PropTypes from "prop-types";
 
@@ -39,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
     display: "flex",
-    height: "80vh",
+    height: `calc(100vh - 200px)`,
   },
   tabs: {
     borderRight: `1px solid ${theme.palette.divider}`,
@@ -159,6 +161,7 @@ export default function TableLogs() {
     path: `${ftBuildStreamID}/ftBuildLogs`,
     orderBy: [{ key: "startTimeStamp", direction: "desc" }],
   });
+  const latestStatus = collectionState?.rows?.[0]?.status;
 
   const handleTabChange = (event, newValue) => {
     setTabIndex(newValue);
@@ -171,9 +174,16 @@ export default function TableLogs() {
   return (
     <>
       <TableHeaderButton
-        title="Table Logs"
+        title="Build Logs"
         onClick={() => setOpen(true)}
-        icon={<LogsIcon />}
+        icon={
+          <>
+            {latestStatus === "BUILDING" && <CircularProgress size={20} />}
+            {latestStatus === "SUCCESS" && <SuccessIcon />}
+            {latestStatus === "FAIL" && <FailIcon />}
+            {!latestStatus && <LogsIcon />}
+          </>
+        }
       />
 
       {open && !!tableState && (
@@ -188,45 +198,55 @@ export default function TableLogs() {
           }
           children={
             <>
-              <div className={classes.root}>
-                <Tabs
-                  orientation="vertical"
-                  variant="scrollable"
-                  value={tabIndex}
-                  onChange={handleTabChange}
-                  className={classes.tabs}
-                >
+              {!latestStatus && (
+                <EmptyState
+                  message="No Logs Found"
+                  description={
+                    "When you start building, your logs should be shown here shortly"
+                  }
+                />
+              )}
+              {latestStatus && (
+                <div className={classes.root}>
+                  <Tabs
+                    orientation="vertical"
+                    variant="scrollable"
+                    value={tabIndex}
+                    onChange={handleTabChange}
+                    className={classes.tabs}
+                  >
+                    {collectionState.rows.map((logEntry, index) => (
+                      <Tab
+                        label={
+                          <Box className={classes.tab}>
+                            <Box>
+                              {moment(logEntry.startTimeStamp).format(
+                                "MMMM D YYYY h:mm:ssa"
+                              )}
+                            </Box>
+                            <Box>
+                              {logEntry.status === "BUILDING" && (
+                                <CircularProgress size={24} />
+                              )}
+                              {logEntry.status === "SUCCESS" && <SuccessIcon />}
+                              {logEntry.status === "FAIL" && <FailIcon />}
+                            </Box>
+                          </Box>
+                        }
+                        {...a11yProps(index)}
+                      />
+                    ))}
+                  </Tabs>
                   {collectionState.rows.map((logEntry, index) => (
-                    <Tab
-                      label={
-                        <Box className={classes.tab}>
-                          <Box>
-                            {moment(logEntry.startTimeStamp).format(
-                              "MMMM D YYYY h:mm:ssa"
-                            )}
-                          </Box>
-                          <Box>
-                            {logEntry.status === "BUILDING" && (
-                              <CircularProgress size={24} />
-                            )}
-                            {logEntry.status === "SUCCESS" && <SuccessIcon />}
-                            {logEntry.status === "FAIL" && <FailIcon />}
-                          </Box>
-                        </Box>
-                      }
-                      {...a11yProps(index)}
+                    <LogPanel
+                      value={tabIndex}
+                      index={index}
+                      logs={logEntry?.fullLog}
+                      status={logEntry?.status}
                     />
                   ))}
-                </Tabs>
-                {collectionState.rows.map((logEntry, index) => (
-                  <LogPanel
-                    value={tabIndex}
-                    index={index}
-                    logs={logEntry?.fullLog}
-                    status={logEntry?.status}
-                  />
-                ))}
-              </div>
+                </div>
+              )}
             </>
           }
         />

@@ -13,7 +13,9 @@ export const generateConfigFromTableSchema = async (
   const schemaDoc = await db.doc(schemaDocPath).get();
   const schemaData = schemaDoc.data();
   if (!schemaData) throw new Error("no schema found");
-  await streamLogger.info(`schemaData: ${JSON.stringify(schemaData)}`);
+
+  // Temporarily disabled because this is super long
+  // await streamLogger.info(`schemaData: ${JSON.stringify(schemaData)}`);
   const derivativeColumns = Object.values(schemaData.columns).filter(
     (col: any) => col.type === "DERIVATIVE"
   );

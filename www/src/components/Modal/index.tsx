@@ -64,24 +64,6 @@ const useStyles = makeStyles((theme) =>
 
       ...theme.typography.body1,
 
-      // https://codepen.io/evank/pen/wWbRNO
-      background: `
-        linear-gradient(
-          var(--bg-paper) 50%,
-          ${fade(theme.palette.background.paper, 0)}
-        ),
-        linear-gradient(
-          ${fade(theme.palette.background.paper, 0)},
-          var(--bg-paper) 50%
-        ) 0 100%,
-        linear-gradient(
-          to top, ${theme.palette.divider} 1px,
-          ${fade(theme.palette.divider, 0)}
-        ),
-        linear-gradient(to top,
-          ${theme.palette.divider} 1px,
-          ${fade(theme.palette.divider, 0)}
-        ) 0 calc(100% - 0.5px)`,
       backgroundRepeat: "no-repeat",
       backgroundColor: "var(--bg-paper)",
       backgroundSize: "100% 2px, 100% 3px, 100% 1px, 100% 1px",
