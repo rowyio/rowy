@@ -97,7 +97,7 @@ export const generateConfigFromTableSchema = async (
     `documentSelectColumns: ${JSON.stringify(documentSelectColumns)}`
   );
 
-  const sparksConfig = parseSparksConfig(schemaData.sparks, user);
+  const sparksConfig = parseSparksConfig(schemaData.sparks, user, streamLogger);
   await streamLogger.info(`sparksConfig: ${JSON.stringify(sparksConfig)}`);
 
   const collectionType = schemaDocPath.includes("subTables")

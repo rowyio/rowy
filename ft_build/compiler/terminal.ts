@@ -59,10 +59,13 @@ export const addSparkLib = async (
       return false;
     }
   } catch (error) {
-    logErrorToDB({
-      user,
-      errorDescription: "Error parsing dependencies",
-    });
+    logErrorToDB(
+      {
+        user,
+        errorDescription: "Error parsing dependencies",
+      },
+      streamLogger
+    );
     return false;
   }
 

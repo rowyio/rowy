@@ -8,23 +8,9 @@ import { auth } from "./firebaseConfig";
 import meta from "./package.json";
 import { commandErrorHandler, logErrorToDB } from "./utils";
 import firebase from "firebase-admin";
-import http from "http";
-// import { Server } from "socket.io";
 
 const app = express();
-// const httpServer = new http.Server(app);
 const jsonParser = bodyParser.json();
-
-// const io = new Server(httpServer, {
-//   cors: {
-//     origin: "*",
-//     methods: ["GET", "POST"],
-//   },
-// });
-
-// io.on("connection", () => {
-//   io.emit("log", "Hey!");
-// });
 
 app.use(cors());
 
@@ -93,7 +79,8 @@ app.post("/", jsonParser, async (req: any, res: any) => {
 
   const success = await generateConfig(configPath, user, streamLogger);
   if (!success) {
-    console.log(`generateConfig failed to complete`);
+    await streamLogger.error("generateConfig failed to complete");
+    await streamLogger.fail();
     res.send({
       success: false,
       reason: `generateConfig failed to complete`,
@@ -105,14 +92,19 @@ app.post("/", jsonParser, async (req: any, res: any) => {
   let hasEnvError = false;
 
   if (!process.env._PROJECT_ID) {
-    await logErrorToDB({
-      errorDescription: `Invalid env: _PROJECT_ID (${process.env._PROJECT_ID})`,
-      user,
-    });
+    await logErrorToDB(
+      {
+        errorDescription: `Invalid env: _PROJECT_ID (${process.env._PROJECT_ID})`,
+        user,
+      },
+      streamLogger
+    );
     hasEnvError = true;
   }
 
   if (hasEnvError) {
+    await streamLogger.error("Invalid env:_PROJECT_ID");
+    await streamLogger.fail();
     res.send({
       success: false,
       reason: "Invalid env:_PROJECT_ID",

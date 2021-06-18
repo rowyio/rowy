@@ -21,6 +21,7 @@ import Modal from "components/Modal";
 import { makeStyles } from "@material-ui/core/styles";
 import LogsIcon from "@material-ui/icons/QueryBuilder";
 import SuccessIcon from "@material-ui/icons/CheckCircleOutline";
+import FailIcon from "@material-ui/icons/Cancel";
 import TableHeaderButton from "./TableHeaderButton";
 import Ansi from "ansi-to-react";
 
@@ -69,8 +70,11 @@ const useStyles = makeStyles((theme) => ({
     whiteSpace: "break-spaces",
     userSelect: "text",
   },
-  logTimestamp: {
+  logTypeInfo: {
     color: "green",
+  },
+  logTypeError: {
+    color: "red",
   },
 }));
 
@@ -90,7 +94,13 @@ function LogRow({ logRecord, index }) {
         {index}
       </Typography>
       <Typography variant="body2" className={classes.logEntry}>
-        <Ansi className={classes.logTimestamp}>
+        <Ansi
+          className={
+            logRecord.level === "info"
+              ? classes.logTypeInfo
+              : classes.logTypeError
+          }
+        >
           {moment(logRecord.timestamp).format("LTS")}
         </Ansi>
         {"  "}
@@ -200,6 +210,7 @@ export default function TableLogs() {
                               <CircularProgress size={24} />
                             )}
                             {logEntry.status === "SUCCESS" && <SuccessIcon />}
+                            {logEntry.status === "FAIL" && <FailIcon />}
                           </Box>
                         </Box>
                       }
