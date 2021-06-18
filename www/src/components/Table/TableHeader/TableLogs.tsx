@@ -18,12 +18,17 @@ import {
   Box,
   Tabs,
   Tab,
+  IconButton,
 } from "@material-ui/core";
 import Modal from "components/Modal";
 import { makeStyles } from "@material-ui/core/styles";
 import LogsIcon from "@material-ui/icons/QueryBuilder";
 import SuccessIcon from "@material-ui/icons/CheckCircle";
 import FailIcon from "@material-ui/icons/Cancel";
+import ExpandIcon from "@material-ui/icons/ExpandLess";
+import CollapseIcon from "@material-ui/icons/ExpandMore";
+import OpenIcon from "@material-ui/icons/OpenInNew";
+import CloseIcon from "@material-ui/icons/Close";
 import TableHeaderButton from "./TableHeaderButton";
 import { LOG_FONT, LOG_TEXT } from "Themes";
 import Ansi from "ansi-to-react";
@@ -37,6 +42,12 @@ function a11yProps(index) {
     "aria-controls": `vertical-tabpanel-${index}`,
   };
 }
+
+const isTargetInsideBox = (target, box) => {
+  const targetRect = target.getBoundingClientRect();
+  const boxRect = box.getBoundingClientRect();
+  return targetRect.y < boxRect.y + boxRect.height;
+};
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -60,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#1E1E1E",
   },
   logPanelProgress: {
-    marginLeft: "3em",
+    marginLeft: "2em",
     marginTop: "1em",
   },
   logEntryWrapper: {
@@ -69,13 +80,13 @@ const useStyles = makeStyles((theme) => ({
   },
   logNumber: {
     float: "left",
-    width: "3em",
+    width: "2em",
     textAlign: "right",
     paddingRight: "1em",
   },
   logEntry: {
     lineBreak: "anywhere",
-    paddingLeft: "3em",
+    paddingLeft: "2em",
     whiteSpace: "break-spaces",
     userSelect: "text",
   },
@@ -95,6 +106,22 @@ const useStyles = makeStyles((theme) => ({
     "& code": {
       fontFamily: LOG_FONT,
     },
+  },
+
+  snackLog: {
+    position: "absolute",
+    left: 40,
+    bottom: 40,
+    backgroundColor: "#282829",
+    width: "min(40vw, 640px)",
+    padding: theme.spacing(1, 2, 2, 2),
+    borderRadius: 4,
+    zIndex: 1,
+    height: 300,
+    transition: "height 300ms ease-out",
+  },
+  snackLogExpanded: {
+    height: "calc(100% - 300px)",
   },
 }));
 
@@ -161,19 +188,13 @@ function LogPanel(props) {
       console.log("live streaming:", liveStreamTargetVisible);
       setLiveStreaming(liveStreamTargetVisible);
     }
-  }, 100);
+  }, 500);
 
   const scrollToLive = () => {
     const liveStreamTarget = document.querySelector("#live-stream-target");
     liveStreamTarget?.scrollIntoView?.({
       behavior: "smooth",
     });
-  };
-
-  const isTargetInsideBox = (target, box) => {
-    const targetRect = target.getBoundingClientRect();
-    const boxRect = box.getBoundingClientRect();
-    return targetRect.y < boxRect.y + boxRect.height;
   };
 
   useEffect(() => {
@@ -230,13 +251,141 @@ function LogPanel(props) {
   );
 }
 
-export default function TableLogs() {
+function SnackLog({ log, onClose, onOpenPanel }) {
+  const logs = log?.fullLog;
+  const status = log?.status;
+  const classes = useStyles();
+  const [expanded, setExpanded] = useState(false);
+  const [liveStreaming, setLiveStreaming, liveStreamingStateRef] = useStateRef(
+    true
+  );
+  const liveStreamingRef = useRef<any>();
+
+  const handleScroll = _throttle(() => {
+    const target = document.querySelector("#live-stream-target-snack");
+    const scrollBox = document.querySelector("#live-stream-scroll-box-snack");
+    const liveStreamTargetVisible =
+      target && scrollBox && isTargetInsideBox(target, scrollBox);
+    if (liveStreamTargetVisible !== liveStreamingStateRef.current) {
+      console.log("live streaming:", liveStreamTargetVisible);
+      setLiveStreaming(liveStreamTargetVisible);
+    }
+  }, 100);
+
+  const scrollToLive = () => {
+    const liveStreamTarget = document.querySelector(
+      "#live-stream-target-snack"
+    );
+    liveStreamTarget?.scrollIntoView?.();
+  };
+
+  useEffect(() => {
+    if (liveStreaming && status === "BUILDING") {
+      if (!liveStreamingRef.current) {
+        scrollToLive();
+      } else {
+        setTimeout(scrollToLive, 500);
+      }
+    }
+  }, [log]);
+
+  useEffect(() => {
+    const liveStreamScrollBox = document.querySelector(
+      "#live-stream-scroll-box-snack"
+    );
+    liveStreamScrollBox!.addEventListener("scroll", () => {
+      handleScroll();
+    });
+  }, []);
+
+  return (
+    <Box
+      className={`${classes.snackLog} ${expanded && classes.snackLogExpanded}`}
+    >
+      <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Typography variant="overline">
+          {!log && <span>Build Pending...</span>}
+          {log?.status === "SUCCESS" && (
+            <span
+              style={{
+                color: "#aed581",
+              }}
+            >
+              Build Completed
+            </span>
+          )}
+          {log?.status === "FAIL" && (
+            <span
+              style={{
+                color: "#e57373",
+              }}
+            >
+              Build Failed
+            </span>
+          )}
+          {log?.status === "BUILDING" && <span>Building...</span>}
+        </Typography>
+        <Box>
+          <IconButton
+            aria-label="expand"
+            size="small"
+            onClick={() => setExpanded(!expanded)}
+          >
+            {expanded ? <CollapseIcon /> : <ExpandIcon />}
+          </IconButton>
+          <IconButton aria-label="open" size="small" onClick={onOpenPanel}>
+            <OpenIcon />
+          </IconButton>
+          <IconButton aria-label="close" size="small" onClick={onClose}>
+            <CloseIcon />
+          </IconButton>
+        </Box>
+      </Box>
+
+      <Box
+        className={classes.logEntryWrapper}
+        height={"calc(100% - 25px)"}
+        id="live-stream-scroll-box-snack"
+      >
+        {log && (
+          <>
+            {logs?.map((log, index) => {
+              return <LogRow logRecord={log} index={index} key={index} />;
+            })}
+            <div ref={liveStreamingRef} id="live-stream-target-snack">
+              {status === "BUILDING" && (
+                <CircularProgress
+                  className={classes.logPanelProgress}
+                  size={30}
+                />
+              )}
+            </div>
+            <div style={{ height: 10 }} />
+          </>
+        )}
+      </Box>
+    </Box>
+  );
+}
+
+export default function TableLogs({ requestSnackLog }) {
   const router = useRouter();
   const { tableState } = useFiretableContext();
 
   const classes = useStyles();
-  const [open, setOpen] = useState(false);
+  const [panalOpen, setPanelOpen] = useState(false);
+  const [snackOpen, setSnackOpen] = useState(false);
   const [tabIndex, setTabIndex] = React.useState(0);
+  const [activeLogTimestamp, setActiveLogTimestamp] = useState(Date.now());
+
+  useEffect(() => {
+    if (requestSnackLog > 0) {
+      setTimeout(() => {
+        setActiveLogTimestamp(requestSnackLog);
+        setSnackOpen(true);
+      }, 500);
+    }
+  }, [requestSnackLog]);
 
   const tableCollection = decodeURIComponent(router.match.params.id);
   const ftBuildStreamID =
@@ -253,21 +402,20 @@ export default function TableLogs() {
     path: `${ftBuildStreamID}/ftBuildLogs`,
     orderBy: [{ key: "startTimeStamp", direction: "desc" }],
   });
-  const latestStatus = collectionState?.rows?.[0]?.status;
+  const latestLog = collectionState?.rows?.[0];
+  const latestStatus = latestLog?.status;
+  const latestActiveLog =
+    latestLog?.startTimeStamp > activeLogTimestamp ? latestLog : null;
 
   const handleTabChange = (event, newValue) => {
     setTabIndex(newValue);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
   };
 
   return (
     <>
       <TableHeaderButton
         title="Build Logs"
-        onClick={() => setOpen(true)}
+        onClick={() => setPanelOpen(true)}
         icon={
           <>
             {latestStatus === "BUILDING" && <CircularProgress size={20} />}
@@ -278,9 +426,21 @@ export default function TableLogs() {
         }
       />
 
-      {open && !!tableState && (
+      {snackOpen && (
+        <SnackLog
+          log={latestActiveLog}
+          onClose={() => setSnackOpen(false)}
+          onOpenPanel={() => {
+            setPanelOpen(true);
+          }}
+        />
+      )}
+
+      {panalOpen && !!tableState && (
         <Modal
-          onClose={handleClose}
+          onClose={() => {
+            setPanelOpen(false);
+          }}
           maxWidth="xl"
           fullWidth
           title={

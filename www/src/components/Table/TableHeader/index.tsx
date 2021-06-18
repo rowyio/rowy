@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import {
   makeStyles,
@@ -86,6 +86,11 @@ export default function TableHeader({
 
   const { currentUser } = useAppContext();
   const { tableActions, tableState, userClaims } = useFiretableContext();
+  const [snackCount, setSnackCount] = useState(0);
+
+  const openSnackLog = (requestTimestamp) => {
+    setSnackCount(requestTimestamp);
+  };
 
   const hasDerivatives =
     tableState &&
@@ -210,7 +215,13 @@ export default function TableHeader({
 
       {userClaims?.roles?.includes("ADMIN") && (
         <Grid item>
-          <Sparks />
+          <Sparks requestSnackLog={openSnackLog} />
+        </Grid>
+      )}
+
+      {userClaims?.roles?.includes("ADMIN") && (
+        <Grid item>
+          <TableLogs requestSnackLog={snackCount} />
         </Grid>
       )}
 
@@ -219,10 +230,6 @@ export default function TableHeader({
           <ReExecute />
         </Grid>
       )}
-
-      <Grid item>
-        <TableLogs />
-      </Grid>
 
       <Grid item>
         <TableSettings />
