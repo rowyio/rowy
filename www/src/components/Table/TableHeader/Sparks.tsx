@@ -107,7 +107,7 @@ export default function SparksEditor({ requestSnackLog }) {
             </>
           }
           children={
-            <>
+            <div style={{ height: "calc(100vh - 250px)" }}>
               <Alert severity="warning">
                 This is an alpha feature. Cloud Functions and Google Cloud
                 integration setup is required, but the process is not yet
@@ -140,7 +140,7 @@ export default function SparksEditor({ requestSnackLog }) {
                   press shift and control key to enable force save.
                 </Alert>
               )}
-            </>
+            </div>
           }
           actions={{
             primary: showForceSave

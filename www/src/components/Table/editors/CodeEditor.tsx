@@ -6,7 +6,11 @@ import { FieldType } from "constants/fields";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
-    editorWrapper: { position: "relative", minWidth: 800 },
+    editorWrapper: {
+      position: "relative",
+      minWidth: 800,
+      height: "calc(100% - 200px)",
+    },
     resizeIcon: {
       position: "absolute",
       bottom: 0,
@@ -25,7 +29,6 @@ export default function CodeEditor(props: any) {
     handleChange,
     extraLibs,
     script,
-    height = 400,
     onValideStatusUpdate,
     diagnosticsOptions,
   } = props;
@@ -403,7 +406,6 @@ export default function CodeEditor(props: any) {
       <div className={classes.editorWrapper}>
         <Editor
           theme={themeTransformer(theme.palette.type)}
-          height={height}
           onMount={handleEditorDidMount}
           language="javascript"
           value={initialEditorValue}
