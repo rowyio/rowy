@@ -456,7 +456,7 @@ export default function TableLogs({ requestSnackLog }) {
         }
       />
 
-      {true && (
+      {snackOpen && (
         <SnackLog
           log={latestActiveLog}
           onClose={() => setSnackOpen(false)}
