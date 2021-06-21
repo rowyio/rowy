@@ -102,8 +102,15 @@ export default function SparksEditor({ requestSnackLog }) {
           fullWidth
           title={
             <>
-              Edit “{tableState?.tablePath}” Sparks{" "}
-              <Chip label="ALPHA" size="small" />
+              Edit “
+              {tableState?.tablePath
+                ?.split("/")
+                .filter(function (_, i) {
+                  // replace IDs with subTables that appears at even indexes
+                  return i % 2 === 0;
+                })
+                .join("-")}
+              ” Sparks <Chip label="ALPHA" size="small" />
             </>
           }
           children={
