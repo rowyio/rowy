@@ -125,6 +125,10 @@ const useStyles = makeStyles((theme) => ({
   snackLogExpanded: {
     height: "calc(100% - 300px)",
   },
+
+  whiteText: {
+    color: "white",
+  },
 }));
 
 LogPanel.propTypes = {
@@ -306,7 +310,7 @@ function SnackLog({ log, onClose, onOpenPanel }) {
     >
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Typography variant="overline">
-          {!log && <span>Build Pending...</span>}
+          {!log && <span className={classes.whiteText}>Build Pending...</span>}
           {log?.status === "SUCCESS" && (
             <span
               style={{
@@ -329,16 +333,27 @@ function SnackLog({ log, onClose, onOpenPanel }) {
         </Typography>
         <Box>
           <IconButton
+            className={classes.whiteText}
             aria-label="expand"
             size="small"
             onClick={() => setExpanded(!expanded)}
           >
             {expanded ? <CollapseIcon /> : <ExpandIcon />}
           </IconButton>
-          <IconButton aria-label="open" size="small" onClick={onOpenPanel}>
+          <IconButton
+            className={classes.whiteText}
+            aria-label="open"
+            size="small"
+            onClick={onOpenPanel}
+          >
             <OpenIcon />
           </IconButton>
-          <IconButton aria-label="close" size="small" onClick={onClose}>
+          <IconButton
+            className={classes.whiteText}
+            aria-label="close"
+            size="small"
+            onClick={onClose}
+          >
             <CloseIcon />
           </IconButton>
         </Box>
@@ -441,7 +456,7 @@ export default function TableLogs({ requestSnackLog }) {
         }
       />
 
-      {snackOpen && (
+      {true && (
         <SnackLog
           log={latestActiveLog}
           onClose={() => setSnackOpen(false)}
