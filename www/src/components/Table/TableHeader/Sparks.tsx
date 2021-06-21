@@ -106,7 +106,7 @@ export default function SparksEditor({ requestSnackLog }) {
               {tableState?.tablePath
                 ?.split("/")
                 .filter(function (_, i) {
-                  // replace IDs with subTables that appears at even indexes
+                  // replace IDs with dash that appears at even indexes
                   return i % 2 === 0;
                 })
                 .join("-")}
