@@ -86,11 +86,6 @@ export default function TableHeader({
 
   const { currentUser } = useAppContext();
   const { tableActions, tableState, userClaims } = useFiretableContext();
-  const [snackCount, setSnackCount] = useState(0);
-
-  const openSnackLog = (requestTimestamp) => {
-    setSnackCount(requestTimestamp);
-  };
 
   const hasDerivatives =
     tableState &&
@@ -215,13 +210,13 @@ export default function TableHeader({
 
       {userClaims?.roles?.includes("ADMIN") && (
         <Grid item>
-          <Sparks requestSnackLog={openSnackLog} />
+          <Sparks />
         </Grid>
       )}
 
       {userClaims?.roles?.includes("ADMIN") && (
         <Grid item>
-          <TableLogs requestSnackLog={snackCount} />
+          <TableLogs />
         </Grid>
       )}
 

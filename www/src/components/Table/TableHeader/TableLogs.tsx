@@ -4,6 +4,7 @@ import useTable from "hooks/useFiretable/useTable";
 import { useFiretableContext } from "contexts/FiretableContext";
 import useStateRef from "react-usestateref";
 import { db } from "../../../firebase";
+import { useSnackLogContext } from "contexts/SnackLogContext";
 
 import _camelCase from "lodash/camelCase";
 import _get from "lodash/get";
@@ -385,16 +386,15 @@ function SnackLog({ log, onClose, onOpenPanel }) {
   );
 }
 
-export default function TableLogs({ requestSnackLog }) {
+export default function TableLogs() {
   const router = useRouter();
   const { tableState } = useFiretableContext();
 
   const classes = useStyles();
   const [panalOpen, setPanelOpen] = useState(false);
-  const [snackOpen, setSnackOpen] = useState(false);
   const [buildURLConfigured, setBuildURLConfigured] = useState(true);
   const [tabIndex, setTabIndex] = React.useState(0);
-  const [activeLogTimestamp, setActiveLogTimestamp] = useState(Date.now());
+  const snackLogContext = useSnackLogContext();
 
   useEffect(() => {
     checkBuildURL();
@@ -407,15 +407,6 @@ export default function TableLogs({ requestSnackLog }) {
       setBuildURLConfigured(false);
     }
   };
-
-  useEffect(() => {
-    if (requestSnackLog > 0) {
-      setTimeout(() => {
-        setActiveLogTimestamp(requestSnackLog);
-        setSnackOpen(true);
-      }, 500);
-    }
-  }, [requestSnackLog]);
 
   const tableCollection = decodeURIComponent(router.match.params.id);
   const ftBuildStreamID =
@@ -435,7 +426,9 @@ export default function TableLogs({ requestSnackLog }) {
   const latestLog = collectionState?.rows?.[0];
   const latestStatus = latestLog?.status;
   const latestActiveLog =
-    latestLog?.startTimeStamp > activeLogTimestamp ? latestLog : null;
+    latestLog?.startTimeStamp > snackLogContext.latestBuildTimestamp
+      ? latestLog
+      : null;
 
   const handleTabChange = (event, newValue) => {
     setTabIndex(newValue);
@@ -456,10 +449,10 @@ export default function TableLogs({ requestSnackLog }) {
         }
       />
 
-      {snackOpen && (
+      {snackLogContext.isSnackLogOpen && (
         <SnackLog
           log={latestActiveLog}
-          onClose={() => setSnackOpen(false)}
+          onClose={snackLogContext.closeSnackLog}
           onOpenPanel={() => {
             setPanelOpen(true);
           }}

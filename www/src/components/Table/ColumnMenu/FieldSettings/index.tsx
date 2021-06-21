@@ -11,6 +11,7 @@ import Loading from "components/Loading";
 
 import { useFiretableContext } from "contexts/FiretableContext";
 import { useSnackContext } from "contexts/SnackContext";
+import { useSnackLogContext } from "contexts/SnackLogContext";
 import { db } from "../../../../firebase";
 import { useAppContext } from "contexts/AppContext";
 import { useConfirmation } from "components/ConfirmationDialog";
@@ -41,6 +42,7 @@ export default function FieldSettings(props: IMenuModalProps) {
   const { requestConfirmation } = useConfirmation();
   const { tableState } = useFiretableContext();
   const snack = useSnackContext();
+  const snackLog = useSnackLogContext();
   const appContext = useAppContext();
 
   const handleChange = (key: string) => (update: any) => {
@@ -172,6 +174,7 @@ export default function FieldSettings(props: IMenuModalProps) {
                   const userTokenInfo = await appContext?.currentUser?.getIdTokenResult();
                   const userToken = userTokenInfo?.token;
                   try {
+                    snackLog.requestSnackLog();
                     const response = await fetch(ftBuildUrl, {
                       method: "POST",
                       headers: {

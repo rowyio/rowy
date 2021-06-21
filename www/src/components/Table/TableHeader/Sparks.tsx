@@ -14,10 +14,10 @@ import SparkIcon from "@material-ui/icons/OfflineBolt";
 import Modal from "components/Modal";
 import { useFiretableContext } from "contexts/FiretableContext";
 import { useAppContext } from "contexts/AppContext";
-
+import { useSnackLogContext } from "contexts/SnackLogContext";
 import CodeEditor from "../editors/CodeEditor";
 
-export default function SparksEditor({ requestSnackLog }) {
+export default function SparksEditor() {
   const snack = useSnackContext();
   const { tableState, tableActions } = useFiretableContext();
   const appContext = useAppContext();
@@ -27,6 +27,7 @@ export default function SparksEditor({ requestSnackLog }) {
   const [open, setOpen] = useState(false);
   const [isSparksValid, setIsSparksValid] = useState(true);
   const [showForceSave, setShowForceSave] = useState(false);
+  const snackLogContext = useSnackLogContext();
 
   const handleClose = () => {
     if (currentSparks !== localSparks) {
@@ -64,7 +65,7 @@ export default function SparksEditor({ requestSnackLog }) {
         const userTokenInfo = await appContext?.currentUser?.getIdTokenResult();
         const userToken = userTokenInfo?.token;
         try {
-          requestSnackLog(Date.now());
+          snackLogContext.requestSnackLog();
           const response = await fetch(ftBuildUrl, {
             method: "POST",
             headers: {
