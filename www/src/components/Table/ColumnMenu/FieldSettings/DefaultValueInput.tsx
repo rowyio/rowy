@@ -9,13 +9,18 @@ import {
   TextField,
   MenuItem,
   ListItemText,
+  Box,
+  Tooltip,
+  Button,
 } from "@material-ui/core";
 import Subheading from "../Subheading";
 
 import { getFieldProp } from "components/fields";
-import CodeEditor from "components/CodeEditor";
+import CodeEditor from "components/Table/editors/CodeEditor";
 import FormAutosave from "./FormAutosave";
 import { FieldType } from "constants/fields";
+import { useFiretableContext } from "contexts/FiretableContext";
+import OpenIcon from "@material-ui/icons/OpenInNew";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -58,6 +63,7 @@ export default function DefaultValueInput({
         config.defaultValue?.value ?? getFieldProp("initialValue", _type),
     },
   });
+  const { tableState } = useFiretableContext();
 
   return (
     <>
@@ -128,18 +134,65 @@ export default function DefaultValueInput({
       )}
 
       {config.defaultValue?.type === "dynamic" && (
-        <div className={classes.codeEditorContainer}>
-          <CodeEditor
-            height={120}
-            value={config.defaultValue?.script}
-            onChange={handleChange("defaultValue.script")}
-            editorOptions={{
-              minimap: {
-                enabled: false,
-              },
-            }}
-          />
-        </div>
+        <>
+          <Box marginBottom={1} display="flex" justifyContent="space-between">
+            <Box>
+              You have access to:{" "}
+              <Tooltip
+                style={{
+                  zIndex: 9999,
+                }}
+                title={
+                  <>
+                    You have acces to the object "row" at the top level. Typing
+                    "row" in the code editor to get auto completion. Below are
+                    the fields of row you can use in this table:
+                    <br />
+                    <br />
+                    {Object.keys(tableState?.columns!).join(", ")}
+                  </>
+                }
+              >
+                <span>row</span>
+              </Tooltip>
+              ,{" "}
+              <Tooltip
+                style={{
+                  zIndex: 9999,
+                }}
+                title={
+                  <>
+                    You have acces to the db object that represents the
+                    firestore database object. Typing "db" in the code editor to
+                    get auto completion.
+                  </>
+                }
+              >
+                <span>db</span>
+              </Tooltip>
+            </Box>
+            <Button
+              size="small"
+              endIcon={<OpenIcon />}
+              target="_blank"
+              href="https://github.com/FiretableProject/firetable/wiki/Getting-Started" // TODO add doc link
+            >
+              Examples & Docs
+            </Button>
+          </Box>
+          <div className={classes.codeEditorContainer}>
+            <CodeEditor
+              height={120}
+              value={config.defaultValue?.script}
+              onChange={handleChange("defaultValue.script")}
+              editorOptions={{
+                minimap: {
+                  enabled: false,
+                },
+              }}
+            />
+          </div>
+        </>
       )}
     </>
   );

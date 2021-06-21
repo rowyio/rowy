@@ -130,6 +130,7 @@ export default function SparksEditor() {
 
               <CodeEditor
                 script={currentSparks}
+                height="100%"
                 handleChange={(newValue) => {
                   setLocalSparks(newValue);
                 }}

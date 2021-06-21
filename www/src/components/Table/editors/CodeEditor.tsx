@@ -28,6 +28,7 @@ export default function CodeEditor(props: any) {
   const {
     handleChange,
     extraLibs,
+    height = 400,
     script,
     onValideStatusUpdate,
     diagnosticsOptions,
@@ -408,6 +409,7 @@ export default function CodeEditor(props: any) {
           theme={themeTransformer(theme.palette.type)}
           onMount={handleEditorDidMount}
           language="javascript"
+          height={height}
           value={initialEditorValue}
           onChange={handleChange}
           onValidate={handleEditorValidation}
