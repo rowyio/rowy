@@ -14,10 +14,10 @@ import SparkIcon from "@material-ui/icons/OfflineBolt";
 import Modal from "components/Modal";
 import { useFiretableContext } from "contexts/FiretableContext";
 import { useAppContext } from "contexts/AppContext";
-
+import { useSnackLogContext } from "contexts/SnackLogContext";
 import CodeEditor from "../editors/CodeEditor";
 
-export default function SparksEditor({ requestSnackLog }) {
+export default function SparksEditor() {
   const snack = useSnackContext();
   const { tableState, tableActions } = useFiretableContext();
   const appContext = useAppContext();
@@ -27,6 +27,7 @@ export default function SparksEditor({ requestSnackLog }) {
   const [open, setOpen] = useState(false);
   const [isSparksValid, setIsSparksValid] = useState(true);
   const [showForceSave, setShowForceSave] = useState(false);
+  const snackLogContext = useSnackLogContext();
 
   const handleClose = () => {
     if (currentSparks !== localSparks) {
@@ -64,7 +65,7 @@ export default function SparksEditor({ requestSnackLog }) {
         const userTokenInfo = await appContext?.currentUser?.getIdTokenResult();
         const userToken = userTokenInfo?.token;
         try {
-          requestSnackLog(Date.now());
+          snackLogContext.requestSnackLog();
           const response = await fetch(ftBuildUrl, {
             method: "POST",
             headers: {
@@ -102,12 +103,19 @@ export default function SparksEditor({ requestSnackLog }) {
           fullWidth
           title={
             <>
-              Edit “{tableState?.tablePath}” Sparks{" "}
-              <Chip label="ALPHA" size="small" />
+              Edit “
+              {tableState?.tablePath
+                ?.split("/")
+                .filter(function (_, i) {
+                  // replace IDs with dash that appears at even indexes
+                  return i % 2 === 0;
+                })
+                .join("-")}
+              ” Sparks <Chip label="ALPHA" size="small" />
             </>
           }
           children={
-            <>
+            <div style={{ height: "calc(100vh - 250px)" }}>
               <Alert severity="warning">
                 This is an alpha feature. Cloud Functions and Google Cloud
                 integration setup is required, but the process is not yet
@@ -122,6 +130,7 @@ export default function SparksEditor({ requestSnackLog }) {
 
               <CodeEditor
                 script={currentSparks}
+                height="100%"
                 handleChange={(newValue) => {
                   setLocalSparks(newValue);
                 }}
@@ -140,7 +149,7 @@ export default function SparksEditor({ requestSnackLog }) {
                   press shift and control key to enable force save.
                 </Alert>
               )}
-            </>
+            </div>
           }
           actions={{
             primary: showForceSave

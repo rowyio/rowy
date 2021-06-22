@@ -5,6 +5,7 @@ import FieldSkeleton from "components/SideDrawer/Form/FieldSkeleton";
 import { FieldType } from "constants/fields";
 import FieldsDropdown from "components/Table/ColumnMenu/FieldsDropdown";
 import { useFiretableContext } from "contexts/FiretableContext";
+import CodeEditorHelper from "components/CodeEditorHelper";
 
 const CodeEditor = lazy(
   () =>
@@ -28,6 +29,7 @@ const Settings = ({ config, handleChange }) => {
         onChange={handleChange("listenerFields")}
       />
       <Typography variant="overline">derivative script</Typography>
+      <CodeEditorHelper docLink="https://github.com/FiretableProject/firetable/wiki/Derivatives" />
       <Suspense fallback={<FieldSkeleton height={200} />}>
         <CodeEditor
           script={config.script}

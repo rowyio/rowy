@@ -13,7 +13,8 @@ import {
 import Subheading from "../Subheading";
 
 import { getFieldProp } from "components/fields";
-import CodeEditor from "components/CodeEditor";
+import CodeEditorHelper from "components/CodeEditorHelper";
+import CodeEditor from "components/Table/editors/CodeEditor";
 import FormAutosave from "./FormAutosave";
 import { FieldType } from "constants/fields";
 
@@ -128,18 +129,21 @@ export default function DefaultValueInput({
       )}
 
       {config.defaultValue?.type === "dynamic" && (
-        <div className={classes.codeEditorContainer}>
-          <CodeEditor
-            height={120}
-            value={config.defaultValue?.script}
-            onChange={handleChange("defaultValue.script")}
-            editorOptions={{
-              minimap: {
-                enabled: false,
-              },
-            }}
-          />
-        </div>
+        <>
+          <CodeEditorHelper docLink="https://github.com/FiretableProject/firetable/wiki/Default-Values" />
+          <div className={classes.codeEditorContainer}>
+            <CodeEditor
+              height={120}
+              value={config.defaultValue?.script}
+              onChange={handleChange("defaultValue.script")}
+              editorOptions={{
+                minimap: {
+                  enabled: false,
+                },
+              }}
+            />
+          </div>
+        </>
       )}
     </>
   );

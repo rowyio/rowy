@@ -4,6 +4,7 @@ import useTable from "hooks/useFiretable/useTable";
 import { useFiretableContext } from "contexts/FiretableContext";
 import useStateRef from "react-usestateref";
 import { db } from "../../../firebase";
+import { useSnackLogContext } from "contexts/SnackLogContext";
 
 import _camelCase from "lodash/camelCase";
 import _get from "lodash/get";
@@ -124,6 +125,10 @@ const useStyles = makeStyles((theme) => ({
   },
   snackLogExpanded: {
     height: "calc(100% - 300px)",
+  },
+
+  whiteText: {
+    color: "white",
   },
 }));
 
@@ -306,7 +311,7 @@ function SnackLog({ log, onClose, onOpenPanel }) {
     >
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Typography variant="overline">
-          {!log && <span>Build Pending...</span>}
+          {!log && <span className={classes.whiteText}>Build Pending...</span>}
           {log?.status === "SUCCESS" && (
             <span
               style={{
@@ -329,16 +334,27 @@ function SnackLog({ log, onClose, onOpenPanel }) {
         </Typography>
         <Box>
           <IconButton
+            className={classes.whiteText}
             aria-label="expand"
             size="small"
             onClick={() => setExpanded(!expanded)}
           >
             {expanded ? <CollapseIcon /> : <ExpandIcon />}
           </IconButton>
-          <IconButton aria-label="open" size="small" onClick={onOpenPanel}>
+          <IconButton
+            className={classes.whiteText}
+            aria-label="open"
+            size="small"
+            onClick={onOpenPanel}
+          >
             <OpenIcon />
           </IconButton>
-          <IconButton aria-label="close" size="small" onClick={onClose}>
+          <IconButton
+            className={classes.whiteText}
+            aria-label="close"
+            size="small"
+            onClick={onClose}
+          >
             <CloseIcon />
           </IconButton>
         </Box>
@@ -370,16 +386,15 @@ function SnackLog({ log, onClose, onOpenPanel }) {
   );
 }
 
-export default function TableLogs({ requestSnackLog }) {
+export default function TableLogs() {
   const router = useRouter();
   const { tableState } = useFiretableContext();
 
   const classes = useStyles();
   const [panalOpen, setPanelOpen] = useState(false);
-  const [snackOpen, setSnackOpen] = useState(false);
   const [buildURLConfigured, setBuildURLConfigured] = useState(true);
   const [tabIndex, setTabIndex] = React.useState(0);
-  const [activeLogTimestamp, setActiveLogTimestamp] = useState(Date.now());
+  const snackLogContext = useSnackLogContext();
 
   useEffect(() => {
     checkBuildURL();
@@ -392,15 +407,6 @@ export default function TableLogs({ requestSnackLog }) {
       setBuildURLConfigured(false);
     }
   };
-
-  useEffect(() => {
-    if (requestSnackLog > 0) {
-      setTimeout(() => {
-        setActiveLogTimestamp(requestSnackLog);
-        setSnackOpen(true);
-      }, 500);
-    }
-  }, [requestSnackLog]);
 
   const tableCollection = decodeURIComponent(router.match.params.id);
   const ftBuildStreamID =
@@ -420,7 +426,9 @@ export default function TableLogs({ requestSnackLog }) {
   const latestLog = collectionState?.rows?.[0];
   const latestStatus = latestLog?.status;
   const latestActiveLog =
-    latestLog?.startTimeStamp > activeLogTimestamp ? latestLog : null;
+    latestLog?.startTimeStamp > snackLogContext.latestBuildTimestamp
+      ? latestLog
+      : null;
 
   const handleTabChange = (event, newValue) => {
     setTabIndex(newValue);
@@ -441,10 +449,10 @@ export default function TableLogs({ requestSnackLog }) {
         }
       />
 
-      {snackOpen && (
+      {snackLogContext.isSnackLogOpen && (
         <SnackLog
           log={latestActiveLog}
-          onClose={() => setSnackOpen(false)}
+          onClose={snackLogContext.closeSnackLog}
           onOpenPanel={() => {
             setPanelOpen(true);
           }}
