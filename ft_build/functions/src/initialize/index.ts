@@ -1,6 +1,6 @@
 import * as functions from "firebase-functions";
 import utilFns from "../utils";
-import { db, auth } from "../firebaseConfig";
+import { db, auth, storage } from "../firebaseConfig";
 const initializedDoc = (
   columns: { fieldName: string; type: string; value?: any; script?: any }[]
 ) => async (snapshot: functions.firestore.DocumentSnapshot) =>
@@ -21,6 +21,7 @@ const initializedDoc = (
           ref: snapshot.ref,
           db,
           auth,
+          storage,
           utilFns,
         }),
       };
