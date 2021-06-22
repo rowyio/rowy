@@ -68,7 +68,11 @@ export default function CodeEditor(props: any) {
     const firebaseAuthDefsFile = await fetch(
       `${process.env.PUBLIC_URL}/auth.d.ts`
     );
+    const firebaseStorageDefsFile = await fetch(
+      `${process.env.PUBLIC_URL}/storage.d.ts`
+    );
     const firestoreDefs = await firestoreDefsFile.text();
+    const firebaseStorageDefs = await firebaseStorageDefsFile.text();
     const firebaseAuthDefs = (await firebaseAuthDefsFile.text())
       ?.replace("export", "declare")
       ?.replace("admin.auth", "adminauth");
@@ -79,6 +83,9 @@ export default function CodeEditor(props: any) {
       );
       monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
         firebaseAuthDefs
+      );
+      monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
+        firebaseStorageDefs
       );
       monacoInstance.languages.typescript.javascriptDefaults.setDiagnosticsOptions(
         diagnosticsOptions ?? {
@@ -104,15 +111,41 @@ export default function CodeEditor(props: any) {
           "    /**",
           "     * utility functions",
           "     */",
-          "declare namespace utilFns {",
-          "    /**",
-          "     * Sends out an email through sendGrid",
-          "     */",
-          `function sendEmail(msg:{from: string,
-              templateId:string,
-              personalizations:{to:string,dynamic_template_data:any}[]}):void {}`,
-          `async function getSecret(name: string, v?: string):any {}`,
-          "}",
+          `
+          declare namespace utilFns {
+            /**
+             * Sends out an email through sendGrid
+             */
+            function sendEmail(msg: {
+              from: string;
+              templateId: string;
+              personalizations: { to: string; dynamic_template_data: any }[];
+            }): void {}
+          
+            /**
+             * Gets the secret defined in Google Cloud Secret
+             */
+            async function getSecret(name: string, v?: string): any {}
+          
+            /**
+             * Async version of forEach
+             */
+            async function asyncForEach(array: any[], callback: Function): void {}
+          
+            /**
+             * Generate random ID from numbers and English charactors inlcuding lowercase and uppercase
+             */
+            function generateId(): string {}
+          
+            function hasRequiredFields(requiredFields: string[], data: any): boolean {}
+          
+            function hasAnyRole(
+              authorizedRoles: string[],
+              context: functions.https.CallableContext
+            ): boolean {}
+          }
+          
+          `,
         ].join("\n"),
         "ts:filename/utils.d.ts"
       );
@@ -158,8 +191,10 @@ export default function CodeEditor(props: any) {
         // the argument that the spark body takes in
         type SparkContext = {
           row: Row;
-          ref: any;
-          db: any;
+          ref:FirebaseFirestore.DocumentReference;
+          storage:firebasestorage.Storage;
+          db:FirebaseFirestore.Firestore;
+          auth:adminauth.BaseAuth;
           change: any;
           triggerType: Triggers;
           sparkConfig: any;
@@ -339,12 +374,6 @@ export default function CodeEditor(props: any) {
           "     * sparks type configuration",
           "     */",
           sparksDefinition,
-          // "interface sparks {",
-          // "    /**",
-          // "     * define your sparks for current table inside sparks.config",
-          // "     */",
-          // `config(spark: object[]):void;`,
-          // "}",
         ].join("\n"),
         "ts:filename/sparks.d.ts"
       );
@@ -353,6 +382,8 @@ export default function CodeEditor(props: any) {
         [
           "  declare var require: any;",
           "  declare var Buffer: any;",
+          "  const ref:FirebaseFirestore.DocumentReference",
+          "  const storage:firebasestorage.Storage",
           "  const db:FirebaseFirestore.Firestore;",
           "  const auth:adminauth.BaseAuth;",
           "declare class row {",
