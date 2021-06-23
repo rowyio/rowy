@@ -158,7 +158,7 @@ Make sure to provide console log outputs and screenshots!
 </a>
 <br> -->
 
-## Contributing 🙌 
+# Contributing 🙌 
 
 We welcome any contributions from the open source community. 
 
