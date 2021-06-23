@@ -330,7 +330,9 @@ function SnackLog({ log, onClose, onOpenPanel }) {
               Build Failed
             </span>
           )}
-          {log?.status === "BUILDING" && <span>Building...</span>}
+          {log?.status === "BUILDING" && (
+            <span className={classes.whiteText}>Building...</span>
+          )}
         </Typography>
         <Box>
           <IconButton

@@ -163,18 +163,17 @@ const transformToSQLType = (ftType: string) => {
 };
 
 const bigqueryIndex = async (payload, sparkContext) => {
-  const { row, objectID, index, fieldsToSync } = payload;
+  const { row, objectID, index, fieldsToSync, projectID } = payload;
 
   const { triggerType, change, fieldTypes } = sparkContext;
   const record = rowReducer(fieldsToSync, row);
   const { BigQuery } = require("@google-cloud/bigquery");
-  const { getSecret } = require("../utils");
 
   const bigquery = new BigQuery();
-  const { projectID } = await getSecret("bigquery");
-  const tableFullName = `${projectID}.firetable.${index}`;
+  const _projectID = projectID ?? process.env.GCLOUD_PROJECT;
+  const tableFullName = `${_projectID}.firetable.${index}`;
   console.log(
-    `projectID: ${projectID}, index: ${index}, tableFullName: ${tableFullName}`
+    `projectID: ${_projectID}, index: ${index}, tableFullName: ${tableFullName}`
   );
 
   // create dataset with exact name "firetable" if not exists

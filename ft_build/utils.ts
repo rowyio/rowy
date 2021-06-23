@@ -161,12 +161,24 @@ async function createStreamLogger(tableConfigPath: string) {
         fullLog,
       });
     },
-    success: async () => {
-      console.log("streamLogger marked as SUCCESS");
-      await logRef.update({
-        status: "SUCCESS",
-        successTimeStamp: Date.now(),
-      });
+    end: async () => {
+      const logsDoc = await logRef.get();
+      const errorLog = logsDoc
+        .get("fullLog")
+        .filter((log) => log.level === "error");
+      if (errorLog.length !== 0) {
+        console.log("streamLogger marked as FAIL");
+        await logRef.update({
+          status: "FAIL",
+          failTimeStamp: Date.now(),
+        });
+      } else {
+        console.log("streamLogger marked as SUCCESS");
+        await logRef.update({
+          status: "SUCCESS",
+          successTimeStamp: Date.now(),
+        });
+      }
     },
     fail: async () => {
       console.log("streamLogger marked as FAIL");

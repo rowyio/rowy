@@ -126,7 +126,7 @@ app.post("/", jsonParser, async (req: any, res: any) => {
     commandErrorHandler({ user }, streamLogger)
   );
 
-  await streamLogger.success();
+  await streamLogger.end();
   res.send({
     success: true,
   });
