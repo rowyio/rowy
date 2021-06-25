@@ -28,15 +28,6 @@ const Settings = ({ config, handleChange }) => {
         value={config.listenerFields ?? []}
         onChange={handleChange("listenerFields")}
       />
-      <Typography variant="overline">derivative script</Typography>
-      <CodeEditorHelper docLink="https://github.com/FiretableProject/firetable/wiki/Derivatives" />
-      <Suspense fallback={<FieldSkeleton height={200} />}>
-        <CodeEditor
-          script={config.script}
-          handleChange={handleChange("script")}
-        />
-      </Suspense>
-
       <Typography variant="overline">Field type of the output</Typography>
       <FieldsDropdown
         value={config.renderFieldType}
@@ -53,6 +44,14 @@ const Settings = ({ config, handleChange }) => {
           handleChange("renderFieldType")(newType.target.value);
         }}
       />
+      <Typography variant="overline">derivative script</Typography>
+      <CodeEditorHelper docLink="https://github.com/FiretableProject/firetable/wiki/Derivatives" />
+      <Suspense fallback={<FieldSkeleton height={200} />}>
+        <CodeEditor
+          script={config.script}
+          handleChange={handleChange("script")}
+        />
+      </Suspense>
     </>
   );
 };
