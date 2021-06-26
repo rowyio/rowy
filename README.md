@@ -81,6 +81,9 @@
   action they can take with powerful set of access controls based on custom user
   roles.
   [Read more](https://github.com/FiretableProject/firetable/wiki/Role-Based-Security-Rules)
+  
+  
+- **Bulk data actions.** You can import and export your Firestore data from/to CSV files.
 
 - **Supercharge your database with your own scripts.**
 
