@@ -4,7 +4,7 @@ import useRouter from "hooks/useRouter";
 export const useSubTableData = (
   column: any,
   row: any,
-  docRef: firebase.firestore.DocumentReference
+  docRef: firebase.default.firestore.DocumentReference
 ) => {
   const { parentLabel, config } = column as any;
   const label: string = parentLabel

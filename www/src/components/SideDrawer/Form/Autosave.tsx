@@ -15,7 +15,7 @@ import { FiretableState } from "hooks/useFiretable";
 export interface IAutosaveProps
   extends Pick<UseFormMethods, "reset" | "formState"> {
   control: Control;
-  docRef: firebase.firestore.DocumentReference;
+  docRef: firebase.default.firestore.DocumentReference;
   row: any;
 }
 
