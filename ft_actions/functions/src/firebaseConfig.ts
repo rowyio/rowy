@@ -8,6 +8,6 @@ export const db = admin.firestore();
 // Initialize Auth
 export const auth = admin.auth();
 
-const settings = { timestampsInSnapshots: true };
+const settings = { timestampsInSnapshots: true, ignoreUndefinedProperties: true};
 db.settings(settings);
 export const env = functions.config();
