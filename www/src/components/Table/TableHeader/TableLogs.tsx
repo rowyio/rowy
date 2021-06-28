@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import useRouter from "hooks/useRouter";
-import useTable from "hooks/useFiretable/useTable";
+import useCollection from "hooks/useCollection";
 import { useFiretableContext } from "contexts/FiretableContext";
 import useStateRef from "react-usestateref";
 import { db } from "../../../firebase";
 import { useSnackLogContext } from "contexts/SnackLogContext";
+import { isCollectionGroup } from "utils/fns";
 
 import _camelCase from "lodash/camelCase";
 import _get from "lodash/get";
@@ -192,7 +193,6 @@ function LogPanel(props) {
     const scrollBox = document.querySelector("#live-stream-scroll-box");
     const liveStreamTargetVisible = isTargetInsideBox(target, scrollBox);
     if (liveStreamTargetVisible !== liveStreamingStateRef.current) {
-      console.log("live streaming:", liveStreamTargetVisible);
       setLiveStreaming(liveStreamTargetVisible);
     }
   }, 500);
@@ -274,7 +274,6 @@ function SnackLog({ log, onClose, onOpenPanel }) {
     const liveStreamTargetVisible =
       target && scrollBox && isTargetInsideBox(target, scrollBox);
     if (liveStreamTargetVisible !== liveStreamingStateRef.current) {
-      console.log("live streaming:", liveStreamTargetVisible);
       setLiveStreaming(liveStreamTargetVisible);
     }
   }, 100);
@@ -412,7 +411,8 @@ export default function TableLogs() {
 
   const tableCollection = decodeURIComponent(router.match.params.id);
   const ftBuildStreamID =
-    "_FIRETABLE_/settings/schema/" +
+    "_FIRETABLE_/settings/" +
+    `${isCollectionGroup() ? "groupSchema/" : "schema/"}` +
     tableCollection
       .split("/")
       .filter(function (_, i) {
@@ -421,11 +421,12 @@ export default function TableLogs() {
       })
       .join("/subTables/");
 
-  const [collectionState] = useTable({
+  const [collectionState] = useCollection({
     path: `${ftBuildStreamID}/ftBuildLogs`,
     orderBy: [{ key: "startTimeStamp", direction: "desc" }],
+    limit: 30,
   });
-  const latestLog = collectionState?.rows?.[0];
+  const latestLog = collectionState?.documents?.[0];
   const latestStatus = latestLog?.status;
   const latestActiveLog =
     latestLog?.startTimeStamp > snackLogContext.latestBuildTimestamp
@@ -513,7 +514,7 @@ export default function TableLogs() {
                     onChange={handleTabChange}
                     className={classes.tabs}
                   >
-                    {collectionState.rows.map((logEntry, index) => (
+                    {collectionState.documents?.map((logEntry, index) => (
                       <Tab
                         key={index}
                         label={
@@ -536,7 +537,7 @@ export default function TableLogs() {
                       />
                     ))}
                   </Tabs>
-                  {collectionState.rows.map((logEntry, index) => (
+                  {collectionState.documents.map((logEntry, index) => (
                     <LogPanel
                       key={index}
                       value={tabIndex}

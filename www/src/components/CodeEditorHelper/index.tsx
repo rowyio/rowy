@@ -26,44 +26,39 @@ function AvailableValueTag({ label, details }) {
 */
 export default function CodeEditorHelper({ docLink }) {
   const { tableState } = useFiretableContext();
-
+  const availableVariables = [
+    {
+      key: "row",
+      description: `row has the value of doc.data() it has type definitions using this table's schema, but you can access any field in the document.`,
+    },
+    {
+      key: "db",
+      description: `db object provides access to firestore database instance of this project. giving you access to any collection or document in this firestore instance`,
+    },
+    {
+      key: "ref",
+      description: `ref object that represents the reference to the current row in firestore db (ie: doc.ref).`,
+    },
+    {
+      key: "auth",
+      description: `auth provides access to a firebase auth instance, can be used to manage auth users or generate tokens.`,
+    },
+    {
+      key: "storage",
+      description: `firebase Storage can be accessed through this, storage.bucket() returns default storage bucket of the firebase project.`,
+    },
+    {
+      key: "utilFns",
+      description: `utilFns provides a set of functions that are commonly used, such as easy access to GCP Secret Manager`,
+    },
+  ];
   return (
     <Box marginBottom={1} display="flex" justifyContent="space-between">
       <Box>
         You have access to:{" "}
-        <AvailableValueTag
-          label="row"
-          details={
-            <>
-              You have acces to the object "row" at the top level. Typing "row"
-              in the code editor to get auto completion. Below are the fields of
-              row you can use in this table:
-              <br />
-              <br />
-              {Object.keys(tableState?.columns!).join(", ")}
-            </>
-          }
-        />
-        <AvailableValueTag
-          label="db"
-          details={`You have acces to the db object that represents the firestore database object. Typing "db" in the code editor to get auto completion.`}
-        />
-        <AvailableValueTag
-          label="ref"
-          details={`You have acces to the ref object that represents the referecne to the current row in firestore db. Typing "ref" in the code editor to get auto completion.`}
-        />
-        <AvailableValueTag
-          label="auth"
-          details={`You have acces to the auth object that represents firebase auth. Typing "auth" in the code editor to get auto completion.`}
-        />
-        <AvailableValueTag
-          label="storage"
-          details={`You have acces to the storage object that represents firebase storage. Typing "storage" in the code editor to get auto completion.`}
-        />
-        <AvailableValueTag
-          label="utilFns"
-          details={`You have acces to the utilFns object which has some helper methods. Typing "utilFns" in the code editor to get auto completion.`}
-        />
+        {availableVariables.map((v) => (
+          <AvailableValueTag label={v.key} details={v.description} />
+        ))}
       </Box>
       <Button
         size="small"

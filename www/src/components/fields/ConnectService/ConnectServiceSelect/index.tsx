@@ -25,7 +25,7 @@ export interface IConnectServiceSelectProps {
   className?: string;
   /** Override any props of the root MUI `TextField` component */
   TextFieldProps?: Partial<TextFieldProps>;
-  docRef: firebase.firestore.DocumentReference;
+  docRef: firebase.default.firestore.DocumentReference;
   disabled?: boolean;
 }
 
