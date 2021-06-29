@@ -279,7 +279,7 @@ export default function CodeEditor(props: any) {
         }
         
         type bigqueryIndex = { 
-          type: "meiliIndex"; 
+          type: "bigqueryIndex"; 
           triggers: Triggers; 
           shouldRun: ShouldRun;
           requiredFields?: Fields;

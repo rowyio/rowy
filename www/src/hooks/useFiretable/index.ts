@@ -11,7 +11,7 @@ export type FiretableActions = {
     update: Function;
     reorder: Function;
   };
-  row: { add: Function; delete: Function; more: Function, update:Function};
+  row: { add: Function; delete: Function; more: Function; update: Function };
   table: {
     set: Function;
     filter: Function;
@@ -28,6 +28,7 @@ export type FiretableState = {
     tableConfig: any;
     webhooks: any;
     sparks: string;
+    sparkObjects?: any[];
   };
   columns: any[];
   rows: { [key: string]: any }[];
@@ -94,7 +95,7 @@ const useFiretable = (
     },
     row: {
       add: tableActions.addRow,
-      update:tableActions.updateRow,
+      update: tableActions.updateRow,
       delete: tableActions.deleteRow,
       more: tableActions.moreRows,
     },

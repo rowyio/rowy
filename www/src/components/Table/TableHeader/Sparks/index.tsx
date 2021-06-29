@@ -5,17 +5,27 @@ import _find from "lodash/find";
 import _sortBy from "lodash/sortBy";
 import { useConfirmation } from "components/ConfirmationDialog";
 import { useSnackContext } from "contexts/SnackContext";
-import { db } from "../../../firebase";
+import { db } from "../../../../firebase";
 
-import { DialogContentText, Chip } from "@material-ui/core";
+import {
+  DialogContentText,
+  Chip,
+  Breadcrumbs,
+  Typography,
+  Box,
+} from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
-import TableHeaderButton from "./TableHeaderButton";
+import TableHeaderButton from "../TableHeaderButton";
 import SparkIcon from "@material-ui/icons/OfflineBolt";
 import Modal from "components/Modal";
 import { useFiretableContext } from "contexts/FiretableContext";
 import { useAppContext } from "contexts/AppContext";
 import { useSnackLogContext } from "contexts/SnackLogContext";
-import CodeEditor from "../editors/CodeEditor";
+import CodeEditor from "../../editors/CodeEditor";
+import SparkList from "./SparkList";
+import SparkModal from "./SparkModal";
+
+import { parseSparkConfig, serialiseSpark, ISpark } from "./utils";
 
 export default function SparksEditor() {
   const snack = useSnackContext();
@@ -23,11 +33,21 @@ export default function SparksEditor() {
   const appContext = useAppContext();
   const { requestConfirmation } = useConfirmation();
   const currentSparks = tableState?.config.sparks ?? "";
+  const currentSparkObjects = (tableState?.config.sparkObjects ??
+    []) as ISpark[];
   const [localSparks, setLocalSparks] = useState(currentSparks);
   const [open, setOpen] = useState(false);
   const [isSparksValid, setIsSparksValid] = useState(true);
-  const [showForceSave, setShowForceSave] = useState(false);
+  const [sparkModalOpen, setSparkModalOpen] = useState(false);
   const snackLogContext = useSnackLogContext();
+
+  const tablePathTokens =
+    tableState?.tablePath?.split("/").filter(function (_, i) {
+      // replace IDs with dash that appears at even indexes
+      return i % 2 === 0;
+    }) ?? [];
+
+  console.log("currentSparkObjects", currentSparkObjects);
 
   const handleClose = () => {
     if (currentSparks !== localSparks) {
@@ -84,10 +104,6 @@ export default function SparksEditor() {
     });
   };
 
-  const handleKeyChange = (key) => {
-    setShowForceSave(key.shiftKey && key.ctrlKey);
-  };
-
   return (
     <>
       <TableHeaderButton
@@ -99,77 +115,50 @@ export default function SparksEditor() {
       {open && !!tableState && (
         <Modal
           onClose={handleClose}
-          maxWidth="xl"
+          maxWidth="xs"
           fullWidth
-          title={
-            <>
-              Edit “
-              {tableState?.tablePath
-                ?.split("/")
-                .filter(function (_, i) {
-                  // replace IDs with dash that appears at even indexes
-                  return i % 2 === 0;
-                })
-                .join("-")}
-              ” Sparks <Chip label="ALPHA" size="small" />
-            </>
-          }
+          title={<>Sparks</>}
           children={
-            <div style={{ height: "calc(100vh - 250px)" }}>
-              <Alert severity="warning">
-                This is an alpha feature. Cloud Functions and Google Cloud
-                integration setup is required, but the process is not yet
-                finalised.
-              </Alert>
-
-              <DialogContentText>
-                Write your Sparks configuration below. Each Spark will be
-                evaluated and executed by Cloud Firestore <code>onWrite</code>{" "}
-                triggers on rows in this table.
-              </DialogContentText>
-
-              <CodeEditor
-                script={currentSparks}
-                height="100%"
-                handleChange={(newValue) => {
-                  setLocalSparks(newValue);
-                }}
-                onValideStatusUpdate={({ isValid }) => {
-                  setIsSparksValid(isValid);
-                }}
-                diagnosticsOptions={{
-                  noSemanticValidation: false,
-                  noSyntaxValidation: false,
-                  noSuggestionDiagnostics: true,
+            <>
+              <Breadcrumbs aria-label="breadcrumb">
+                {tablePathTokens.map((pathToken, index) => {
+                  console.log(pathToken);
+                  return <Typography>{pathToken}</Typography>;
+                })}
+              </Breadcrumbs>
+              <SparkList
+                sparks={currentSparkObjects}
+                handleAddSpark={() => {
+                  setSparkModalOpen(true);
                 }}
               />
-              {!isSparksValid && (
-                <Alert severity="error">
-                  You need to resolve all errors before you are able to save. Or
-                  press shift and control key to enable force save.
-                </Alert>
-              )}
-            </div>
+            </>
           }
           actions={{
-            primary: showForceSave
-              ? {
-                  children: "Force Save",
-                  onClick: handleSave,
-                }
-              : {
-                  children: "Save Changes",
-                  onClick: handleSave,
-                  disabled:
-                    !isSparksValid || localSparks === tableState?.config.sparks,
-                },
+            primary: {
+              children: "Save & Deploy",
+              onClick: handleSave,
+              disabled:
+                !isSparksValid || localSparks === tableState?.config.sparks,
+            },
             secondary: {
-              children: "Cancel",
+              children: "Save",
               onClick: handleClose,
+              disabled:
+                !isSparksValid || localSparks === tableState?.config.sparks,
             },
           }}
-          onKeyDown={handleKeyChange}
-          onKeyUp={handleKeyChange}
+        />
+      )}
+
+      {sparkModalOpen && (
+        <SparkModal
+          handleClose={() => {
+            setSparkModalOpen(false);
+          }}
+          handleSave={() => {
+            console.log("SAVE");
+          }}
         />
       )}
     </>
