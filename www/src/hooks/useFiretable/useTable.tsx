@@ -1,21 +1,70 @@
 import { db } from "../../firebase";
 
 import Button from "@material-ui/core/Button";
-import React, { useEffect, useReducer, useContext } from "react";
+import React, { useEffect, useReducer, useContext, useCallback } from "react";
 import _isEqual from "lodash/isEqual";
 import firebase from "firebase/app";
 import { FireTableFilter, FiretableOrderBy } from ".";
 import { SnackContext } from "contexts/SnackContext";
 import { cloudFunction } from "../../firebase/callables";
-import { isCollectionGroup, generateSmallerId } from "utils/fns";
+import {
+  isCollectionGroup,
+  generateSmallerId,
+  missingFieldsReducer,
+} from "utils/fns";
+import { projectId } from "../../firebase";
+import _findIndex from "lodash/findIndex";
+import _orderBy from "lodash/orderBy";
+import {firetableUser} from 'contexts/FiretableContext'
+import { useAppContext } from "contexts/AppContext";
 const CAP = 1000; // safety  paramter sets the  upper limit of number of docs fetched by this hook
 const serverTimestamp = firebase.firestore.FieldValue.serverTimestamp;
 
 const tableReducer = (prevState: any, newProps: any) => {
   return { ...prevState, ...newProps };
 };
+
+const doc2row = (doc) => {
+  const data = doc.data();
+  const id = doc.id;
+  const ref = doc.ref;
+  return { ...data, id, ref };
+};
+
+const rowsReducer = (prevRows: any, update: any) => {
+  switch (update.type) {
+    case "onSnapshot":
+      const localRowsIds = prevRows.map((r) => r.id); // used to remove added docs that were added from this client
+      const addedRows = update.changes
+        .filter((change) => change.type === "added")
+        .map((change) => doc2row(change.doc))
+        .filter((row) => !localRowsIds.includes(row.id));
+      const removedRowIds = update.changes
+        .filter((change) => change.type === "removed")
+        .map((change) => change.doc.id);
+      const _rows = [
+        ...addedRows,
+        ...prevRows.filter((row) => !removedRowIds.includes(row.id)),
+      ];
+      const modifiedRows = update.changes
+        .filter((change) => change.type === "modified")
+        .map((change) => doc2row(change.doc));
+      modifiedRows.forEach((row) => {
+        const rowIndex = _findIndex(_rows, (r) => r.id === row.id);
+        _rows[rowIndex] = row;
+      });
+      return _rows;
+    case "delete":
+      return prevRows.filter((row) => update.rowId !== row.id);
+    case "set":
+      return update.rows;
+    case "add":
+      return [update.newRow, ...prevRows];
+    case "queryChange":
+      return [];
+  }
+};
 const tableInitialState = {
-  rows: [],
   prevFilters: null,
   prevPath: null,
   orderBy: [],
@@ -30,11 +79,13 @@ const tableInitialState = {
 
 const useTable = (initialOverrides: any) => {
   const snack = useContext(SnackContext);
+  const {currentUser}=useAppContext()
 
   const [tableState, tableDispatch] = useReducer(tableReducer, {
     ...tableInitialState,
     ...initialOverrides,
   });
+  const [rows, rowsDispatch] = useReducer(rowsReducer, []);
 
   /**  set collection listener
    *  @param filters
@@ -55,6 +106,13 @@ const useTable = (initialOverrides: any) => {
       tableState.unsubscribe();
     }
     //updates previous values
+    if (
+      tableState.prevFilters !== tableState.filters ||
+      tableState.prevOrderBy !== tableState.orderBy ||
+      tableState.prevPath !== tableState.path
+    ) {
+      rowsDispatch({ type: "queryChange" });
+    }
     tableDispatch({
       prevFilters: filters,
       prevLimit: limit,
@@ -80,28 +138,18 @@ const useTable = (initialOverrides: any) => {
     const unsubscribe = query.limit(limit).onSnapshot(
       (snapshot) => {
         if (snapshot.docs.length > 0) {
-          const rows = snapshot.docs.map((doc) => {
-            const data = doc.data();
-            const id = doc.id;
-            const ref = doc.ref;
-            return { ...data, id, ref };
-          });
-          tableDispatch({
-            rows,
-            loading: false,
-          });
-        } else {
-          tableDispatch({
-            rows: [],
-            loading: false,
-          });
+          const changes = snapshot.docChanges();
+          rowsDispatch({ type: "onSnapshot", changes });
         }
+        tableDispatch({
+          loading: false,
+        });
       },
       (error: any) => {
         //TODO:callable to create new index
         if (error?.message.includes("indexes?create_composite=")) {
           const url =
-            `https://console.firebase.google.com/project/${process.env.REACT_APP_FIREBASE_PROJECT_ID}/database/firestore/` +
+            `https://console.firebase.google.com/project/${projectId}/database/firestore/` +
             "indexes?create_composite=" +
             error.message.split("indexes?create_composite=")[1];
 
@@ -190,13 +238,12 @@ const useTable = (initialOverrides: any) => {
    *  @param rowIndex local position
    *  @param documentId firestore document id
    */
-  const deleteRow = (rowIndex: number, documentId: string) => {
+  const deleteRow = (rowId: string) => {
     //remove row locally
-    tableState.rows.splice(rowIndex, 1);
-    tableDispatch({ rows: tableState.rows });
+    rowsDispatch({ type: "delete", rowId });
     // delete document
     try {
-      db.collection(tableState.path).doc(documentId).delete();
+      db.collection(tableState.path).doc(rowId).delete();
     } catch (error) {
       console.log(error);
       if (error.code === "permission-denied") {
@@ -232,35 +279,68 @@ const useTable = (initialOverrides: any) => {
   /**  creating new document/row
    *  @param data(optional: default will create empty row)
    */
-  const addRow = async (data?: any) => {
+  const addRow = async (data: any, requiredFields: string[]) => {
+    const missingRequiredFields = requiredFields
+      ? requiredFields.reduce(missingFieldsReducer(data), [])
+      : [];
     const valuesFromFilter = tableState.filters.reduce(filterReducer, {});
-    const { rows, path } = tableState;
-
+    const { path } = tableState;
+    const newId = generateSmallerId(rows[0]?.id ?? "zzzzzzzzzzzzzzzzzzzzzzzz");
     const docData = {
       ...valuesFromFilter,
       _ft_createdAt: serverTimestamp(),
+      _ft_createdBy: firetableUser(currentUser),
       _ft_updatedAt: serverTimestamp(),
+      _ft_updatedBy: firetableUser(currentUser),
       ...data,
     };
-    try {
-      if (rows.length === 0) {
-        await db.collection(path).add(docData);
-      } else {
-        const firstId = rows[0].id;
-        const newId = generateSmallerId(firstId);
+    if (missingRequiredFields.length === 0) {
+      try {
         await db.collection(path).doc(newId).set(docData, { merge: true });
+      } catch (error) {
+        if (error.code === "permission-denied") {
+          snack.open({
+            variant: "error",
+            message: "You don't have permissions to add a new row",
+            duration: 3000,
+            position: { vertical: "top", horizontal: "center" },
+          });
+        }
       }
-    } catch (error) {
-      if (error.code === "permission-denied") {
-        snack.open({
-          variant: "error",
-          message: "You don't have permissions to add a new row",
-          duration: 3000,
-          position: { vertical: "top", horizontal: "center" },
-        });
-      }
+    } else {
+      // missing required fields
+      const id = newId;
+      const ref = db.collection(path).doc(newId);
+      const newRow = {
+        ...data,
+        id,
+        ref,
+        _ft_missingRequiredFields: missingRequiredFields,
+      };
+      rowsDispatch({ type: "add", newRow });
     }
   };
+
+  const options = { merge: true };
+  const updateRow = (rowRef, update, onSuccess, onError) => {
+    const rowIndex = _findIndex(rows, { id: rowRef.id });
+    const row = rows[rowIndex];
+    const { ref, id, _ft_missingRequiredFields, ...rowData } = row;
+    const _rows = [...rows];
+    _rows[rowIndex] = { ...row, ...update };
+    const missingRequiredFields = _ft_missingRequiredFields
+      ? _ft_missingRequiredFields.reduce(
+          missingFieldsReducer(_rows[rowIndex]),
+          []
+        )
+      : [];
+    if (missingRequiredFields.length === 0) {
+      ref.set({ ...rowData, ...update }, options).then(onSuccess, onError);
+      delete _rows[rowIndex]._ft_missingRequiredFields;
+    }
+    rowsDispatch({ type: "set", rows: _rows });
+  };
+
   /**  used for incrementing the number of rows fetched
    *  @param additionalRows number additional rows to be fetched (optional: default is 150)
    */
@@ -269,7 +349,7 @@ const useTable = (initialOverrides: any) => {
     if (tableState.loading) return;
 
     // Don’t request more if none remaining.
-    if (tableState.rows.length < tableState.limit) return;
+    if (rows.length < tableState.limit) return;
 
     tableDispatch({
       limit: tableState.limit + (additionalRows ? additionalRows : 100),
@@ -280,10 +360,18 @@ const useTable = (initialOverrides: any) => {
     deleteRow,
     setTable,
     addRow,
+    updateRow,
     moreRows,
     dispatch: tableDispatch,
   };
-  return [tableState, tableActions];
+  const orderedRows = tableState.orderBy?.[0]
+    ? _orderBy(
+        rows,
+        [tableState.orderBy[0].key],
+        [tableState.orderBy[0].direction]
+      )
+    : _orderBy(rows, ["id"], ["asc"]);
+  return [{ ...tableState, rows: orderedRows }, tableActions];
 };
 
 export default useTable;

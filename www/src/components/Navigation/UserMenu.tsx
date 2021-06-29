@@ -23,7 +23,7 @@ import CheckIcon from "@material-ui/icons/Check";
 import { useAppContext } from "contexts/AppContext";
 import routes from "constants/routes";
 import meta from "../../../package.json";
-
+import { projectId } from "../../firebase";
 const useStyles = makeStyles((theme) =>
   createStyles({
     spacer: {
@@ -141,7 +141,7 @@ export default function UserMenu(props: IconButtonProps) {
       >
         <MenuItem
           component="a"
-          href={`https://console.firebase.google.com/project/${process.env.REACT_APP_FIREBASE_PROJECT_ID}/firestore/data~2F_FT_USERS~2F${currentUser.uid}`}
+          href={`https://console.firebase.google.com/project/${projectId}/firestore/data/~2F_FT_USERS~2F${currentUser.uid}`}
           target="_blank"
           rel="noopener"
         >

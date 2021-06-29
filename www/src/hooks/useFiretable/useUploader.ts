@@ -109,8 +109,7 @@ const useUploader = () => {
                 lastModifiedTS: file.lastModified,
               });
               // STore in the document if docRef provided
-              if (docRef && docRef.update)
-                docRef.update({ [fieldName]: newValue });
+              // if (docRef && docRef.update)docRef.update({ [fieldName]: newValue });
               // Also call callback if it exists
               // IMPORTANT: SideDrawer form may not update its local values after this
               // function updates the doc, so you MUST update it manually

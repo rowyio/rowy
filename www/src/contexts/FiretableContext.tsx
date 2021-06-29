@@ -13,7 +13,7 @@ import { useSnackContext } from "./SnackContext";
 import { SideDrawerRef } from "components/SideDrawer";
 import { ColumnMenuRef } from "components/Table/ColumnMenu";
 import { ImportWizardRef } from "components/Wizards/ImportWizard";
-
+import _find from "lodash/find";
 export type Table = {
   collection: string;
   name: string;
@@ -111,7 +111,8 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
       const filteredTables = _sortBy(tables, "name")
         .filter(
           (table) =>
-            !table.roles || table.roles.some((role) => userRoles.includes(role))
+            userRoles.includes("ADMIN") ||
+            table.roles.some((role) => userRoles.includes(role))
         )
         .map((table) => ({
           ...table,
@@ -150,31 +151,31 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
     onSuccess
   ) => {
     if (value === undefined) return;
-
     const _ft_updatedBy = firetableUser(currentUser);
     const _ft_updatedAt = _ft_updatedBy.timestamp;
-    ref
-      .update({
-        [fieldName]: value,
-        _ft_updatedAt,
-        _ft_updatedBy,
-      })
-      .then(
-        () => {
-          console.log("updateCell success", ref.path, fieldName, value);
-          if (onSuccess) onSuccess(ref, fieldName, value);
-        },
-        (error) => {
-          if (error.code === "permission-denied") {
-            open({
-              message: `You don't have permissions to make this change`,
-              variant: "error",
-              duration: 2000,
-              position: { horizontal: "center", vertical: "top" },
-            });
-          }
+
+    const update = {
+      [fieldName]: value,
+      _ft_updatedAt,
+      _ft_updatedBy,
+    };
+    tableActions.row.update(
+      ref,
+      update,
+      () => {
+        if (onSuccess) onSuccess(ref, fieldName, value);
+      },
+      (error) => {
+        if (error.code === "permission-denied") {
+          open({
+            message: `You don't have permissions to make this change`,
+            variant: "error",
+            duration: 2000,
+            position: { horizontal: "center", vertical: "top" },
+          });
         }
-      );
+      }
+    );
   };
 
   // A ref to the data grid. Contains data grid functions

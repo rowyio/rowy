@@ -5,7 +5,7 @@ import { FieldType } from "constants/fields";
 export interface IFieldProps {
   control: Control;
   name: string;
-  docRef: firebase.firestore.DocumentReference;
+  docRef: firebase.default.firestore.DocumentReference;
   editable?: boolean;
 }
 

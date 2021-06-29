@@ -18,10 +18,12 @@ export const HEADING_FONT = "Europa, sans-serif";
 export const BODY_FONT = '"Open Sans", sans-serif';
 export const MONO_FONT =
   "SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace";
+export const LOG_FONT = "IBM Plex Mono, monospace";
 
 export const ANTLER_RED = "#ED4747";
 export const SECONDARY_GREY = "#282829";
 export const SECONDARY_TEXT = "rgba(0, 0, 0, 0.6)";
+export const LOG_TEXT = "#cccccc";
 export const ERROR = "#b00020";
 
 export const ROOT_FONT_SIZE = 16;
@@ -48,7 +50,7 @@ export const themeBase = {
   palette: {
     primary: { main: ANTLER_RED, light: ANTLER_RED },
     secondary: { main: SECONDARY_GREY },
-    text: { secondary: SECONDARY_TEXT },
+    text: { secondary: SECONDARY_TEXT, log: LOG_TEXT },
     error: { main: ERROR },
   },
   typography: {
@@ -144,6 +146,7 @@ export const darkThemeBase = {
     text: {
       // primary: "rgba(255, 255, 255, 0.87)",
       secondary: "rgba(255, 255, 255, 0.7)",
+      log: "black",
       // disabled: "rgba(255, 255, 255, 0.38)",
     },
     error: { main: "#CF6679" },

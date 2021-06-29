@@ -1,0 +1,38 @@
+{
+  "name": "functions",
+  "version": "0.0.1",
+  "scripts": {
+    "lint": "tslint --project tsconfig.json",
+    "build": "tsc",
+    "serve": "npm run build && firebase serve --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell",
+    "deployFT": "echo 'n\n' | firebase deploy --interactive",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "14"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "@google-cloud/secret-manager": "^3.2.3",
+    "firebase-admin": "^9.4.2",
+    "firebase-functions": "^3.13.1"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.11",
+    "husky": "^4.2.5",
+    "prettier": "^2.1.1",
+    "pretty-quick": "^3.0.0",
+    "ts-node": "^8.6.2",
+    "tsc": "^1.20150623.0",
+    "tslint": "^6.1.0",
+    "typescript": "^4.1.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  },
+  "private": true
+}

@@ -26,7 +26,6 @@ import { FieldType } from "constants/fields";
 import { FireTableFilter } from "hooks/useFiretable";
 import { useFiretableContext } from "contexts/FiretableContext";
 
-import DocSelector from "./DocSelector";
 import { useAppContext } from "contexts/AppContext";
 import { DocActions } from "hooks/useDoc";
 const OPERATORS = [
@@ -67,6 +66,7 @@ const OPERATORS = [
   },
   { value: "<", label: "<", compatibleTypes: [FieldType.number] },
   { value: "<=", label: "<=", compatibleTypes: [FieldType.number] },
+  { value: "==", label: "==", compatibleTypes: [FieldType.number] },
   { value: ">=", label: ">=", compatibleTypes: [FieldType.number] },
   { value: ">", label: ">", compatibleTypes: [FieldType.number] },
   {
@@ -244,6 +244,24 @@ const Filters = () => {
             placeholder="Text value"
           />
         );
+      case FieldType.number:
+        return (
+          <TextField
+            onChange={(e) => {
+              const value = e.target.value;
+              if (query.value || value)
+                setQuery((query) => ({
+                  ...query,
+                  value: value !== "" ? parseFloat(value) : "",
+                }));
+            }}
+            value={typeof query.value === "number" ? query.value : ""}
+            variant="filled"
+            hiddenLabel
+            type="number"
+            placeholder="number value"
+          />
+        );
 
       case FieldType.singleSelect:
         if (operator === "in")
@@ -347,6 +365,7 @@ const Filters = () => {
               root: classes.filterChip,
               deleteIcon: classes.filterChipDelete,
             }}
+            variant="outlined"
           />
         ))}
       </Grid>
@@ -486,7 +505,8 @@ const Filters = () => {
               disabled={
                 query.value !== true &&
                 query.value !== false &&
-                _isEmpty(query.value)
+                _isEmpty(query.value) &&
+                typeof query.value !== "number"
               }
               color="primary"
               onClick={() => {

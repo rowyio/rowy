@@ -53,6 +53,7 @@ export const useStyles = makeStyles((theme) =>
         "--checkbox-disabled-background-color": "#ddd",
         "--selection-color": theme.palette.primary.main,
         "--font-size": "0.75rem",
+        "--cell-padding": theme.spacing(0, 1.5),
 
         border: "none",
         backgroundColor: "transparent",
@@ -64,7 +65,10 @@ export const useStyles = makeStyles((theme) =>
         "& .rdg-cell": {
           display: "flex",
           alignItems: "center",
-          padding: theme.spacing(0, 1.5),
+          padding: "var(--cell-padding)",
+
+          overflow: "visible",
+          contain: "none",
         },
 
         "& .rdg-cell-frozen-last": {

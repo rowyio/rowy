@@ -73,7 +73,7 @@ export default function Export() {
     tableState?.filters.forEach((filter) => {
       _query = _query.where(
         filter.key,
-        filter.operator as firebase.firestore.WhereFilterOp,
+        filter.operator as firebase.default.firestore.WhereFilterOp,
         filter.value
       );
     });
