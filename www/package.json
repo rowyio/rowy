@@ -42,6 +42,7 @@
     "react-dnd-html5-backend": "^11.1.3",
     "react-dom": "^16.9.0",
     "react-dropzone": "^10.1.8",
+    "react-firebaseui": "^5.0.2",
     "react-hook-form": "^6.15.5",
     "react-image": "^4.0.3",
     "react-joyride": "^2.3.0",
