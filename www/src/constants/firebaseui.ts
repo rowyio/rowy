@@ -16,8 +16,18 @@ export const uiConfig: firebaseui.auth.Config = {
     // {
     //   provider: "apple.com",
     // },
-    // firebase.auth.EmailAuthProvider.PROVIDER_ID,
+    // {
+    //   provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
+    //   requireDisplayName: true,
+    //   disableSignUp: { status: true },
+    // },
     // firebase.auth.PhoneAuthProvider.PROVIDER_ID,
     // firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID,
   ],
+  callbacks: {
+    uiShown: () => {
+      const node = document.getElementById("firetable-firebaseui-skeleton");
+      if (node) node.style.display = "none";
+    },
+  },
 };
