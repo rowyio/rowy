@@ -43,6 +43,6 @@ jobs:
             twitter_app_consumer_api_secret_key: ${{ secrets.TWITTER_API_SECRET_KEY }}
             twitter_app_access_token: ${{ secrets.TWITTER_ACCESS_TOKEN }}
             twitter_app_access_token_secret: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
-          with:
-            message: "Testing github action for tweeting new releases and updates to Firetable project"
+        with:
+          message: "Testing github action for tweeting new releases and updates to Firetable project"
        
