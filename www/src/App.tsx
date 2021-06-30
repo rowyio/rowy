@@ -17,7 +17,7 @@ import { FiretableContextProvider } from "contexts/FiretableContext";
 import { SnackLogProvider } from "contexts/SnackLogContext";
 import routes from "constants/routes";
 
-import AuthView from "pages/Auth/GoogleAuth";
+import AuthView from "pages/Auth";
 import SignOutView from "pages/Auth/SignOut";
 import TestView from "pages/Test";
 const AuthSetupGuidePage = lazy(

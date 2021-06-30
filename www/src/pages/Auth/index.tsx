@@ -1,78 +1,126 @@
-import React, { useState } from "react";
-import Div100vh from "react-div-100vh";
+import React from "react";
+import { auth } from "../../firebase";
+import { uiConfig } from "constants/firebaseui";
+import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 
-import {
-  makeStyles,
-  createStyles,
-  Grid,
-  Button,
-  CircularProgress,
-} from "@material-ui/core";
+import { makeStyles, createStyles, Typography } from "@material-ui/core";
 
-import { googleProvider, auth } from "../../firebase";
-import useRouter from "hooks/useRouter";
-import FiretableLogo from "assets/firetable-with-wordmark.svg";
+import AuthLayout from "components/Auth/AuthLayout";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
-    root: {
-      height: "100%",
-      padding: theme.spacing(3),
+    "@global": {
+      ".firetable-firebaseui": {
+        "& .firebaseui-container": { fontFamily: theme.typography.fontFamily },
 
-      margin: 0,
-      width: "100%",
+        "& .firebaseui-card-content, & .firebaseui-card-footer": { padding: 0 },
+        "& .firebaseui-idp-list, & .firebaseui-tenant-list": { margin: 0 },
+        "& .firebaseui-idp-list>.firebaseui-list-item, & .firebaseui-tenant-list>.firebaseui-list-item": {
+          margin: 0,
+        },
+        "& .firebaseui-list-item + .firebaseui-list-item": {
+          paddingTop: theme.spacing(2),
+        },
+
+        "& .mdl-button": {
+          borderRadius: 24,
+          ...theme.typography.button,
+        },
+        "& .mdl-button--raised": { boxShadow: "none" },
+        "& .mdl-card": {
+          boxShadow: "none",
+          minHeight: 0,
+        },
+        "& .mdl-button--primary.mdl-button--primary": {
+          color: theme.palette.primary.main,
+        },
+        "& .mdl-button--raised.mdl-button--colored": {
+          backgroundColor: theme.palette.primary.main,
+          color: theme.palette.primary.contrastText,
+        },
+
+        "& .firebaseui-idp-button, & .firebaseui-tenant-button": {
+          maxWidth: "none",
+          minHeight: 48,
+        },
+        "& .firebaseui-idp-text": {
+          ...theme.typography.button,
+
+          paddingLeft: theme.spacing(2),
+          paddingRight: theme.spacing(2) + 18,
+          marginLeft: -18,
+          width: "100%",
+          textAlign: "center",
+
+          [theme.breakpoints.down("xs")]: {
+            "&.firebaseui-idp-text-long": { display: "none" },
+            "&.firebaseui-idp-text-short": { display: "table-cell" },
+          },
+        },
+
+        "& .firebaseui-idp-google": {
+          backgroundColor: "#4285F4 !important",
+
+          "& .firebaseui-idp-icon-wrapper::before": {
+            content: "''",
+            display: "block",
+            position: "absolute",
+            top: 2,
+            left: 2,
+            width: 48 - 4,
+            height: 48 - 4,
+            zIndex: 0,
+
+            backgroundColor: "#fff",
+            borderRadius: "50%",
+          },
+          "& .firebaseui-idp-icon-wrapper img": {
+            position: "relative",
+            left: -1,
+          },
+
+          "&>.firebaseui-idp-text": {
+            color: "#fff",
+          },
+        },
+        '& .firebaseui-idp-github, & [data-provider-id="microsoft.com"]': {
+          backgroundColor: "#000 !important",
+        },
+
+        "& .firebaseui-card-header": { padding: 0 },
+        "& .firebaseui-subtitle, .firebaseui-title": theme.typography.h5,
+        "& .firebaseui-card-actions": { padding: 0 },
+
+        "& .firebaseui-textfield.mdl-textfield .firebaseui-label:after": {
+          backgroundColor: theme.palette.primary.main,
+        },
+      },
     },
-    logo: { display: "block" },
+
+    signInText: {
+      display: "none",
+      [theme.breakpoints.down("xs")]: { display: "block" },
+
+      textAlign: "center",
+      color: theme.palette.text.disabled,
+      marginBottom: theme.spacing(-2),
+    },
   })
 );
 
 export default function AuthPage() {
   const classes = useStyles();
-  const router = useRouter();
-  const [loading, setLoading] = useState(false);
-
-  const handleAuth = async () => {
-    setLoading(true);
-    await auth.signInWithPopup(googleProvider);
-    router.history.replace("/");
-  };
 
   return (
-    <Grid
-      container
-      className={classes.root}
-      spacing={4}
-      direction="column"
-      wrap="nowrap"
-      justify="center"
-      alignItems="center"
-      component={Div100vh}
-      style={{ minHeight: "100rvh" }}
-    >
-      <Grid item>
-        <img
-          src={FiretableLogo}
-          alt="firetable"
-          width={175}
-          height={40}
-          className={classes.logo}
-        />
-      </Grid>
-
-      <Grid item>
-        {loading ? (
-          <CircularProgress />
-        ) : (
-          <Button
-            onClick={handleAuth}
-            color="primary"
-            size="large"
-            variant="contained"
-          >
-            Sign in with Google
-          </Button>
-        )}
-      </Grid>
-    </Grid>
+    <AuthLayout>
+      <Typography variant="button" className={classes.signInText}>
+        Sign in with
+      </Typography>
+      <StyledFirebaseAuth
+        firebaseAuth={auth}
+        uiConfig={uiConfig}
+        className="firetable-firebaseui"
+      />
+    </AuthLayout>
   );
 }
