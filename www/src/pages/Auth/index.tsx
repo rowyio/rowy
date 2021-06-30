@@ -179,7 +179,7 @@ export default function AuthPage() {
   const classes = useStyles();
   const [uiConfig,setUiConfig] = useState<firebaseui.auth.Config|undefined>(); 
   useEffect(() =>{
-    db.doc("/_FIRETABLE_/authSettings").get().then((doc) =>{
+    db.doc("/_FIRETABLE_/publicSettings").get().then((doc) =>{
       const signInOptions = doc?.get("signInOptions")
       setUiConfig(getUiConfig(signInOptions))
     }).catch((err) =>{
