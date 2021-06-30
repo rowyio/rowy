@@ -4,6 +4,8 @@ import { uiConfig } from "constants/firebaseui";
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 
 import { makeStyles, createStyles, Typography } from "@material-ui/core";
+import { fade } from "@material-ui/core/styles";
+import Skeleton from "@material-ui/lab/Skeleton";
 
 import AuthLayout from "components/Auth/AuthLayout";
 
@@ -11,7 +13,27 @@ const useStyles = makeStyles((theme) =>
   createStyles({
     "@global": {
       ".firetable-firebaseui": {
-        "& .firebaseui-container": { fontFamily: theme.typography.fontFamily },
+        "& .firebaseui-container": {
+          backgroundColor: "transparent",
+          color: theme.palette.text.primary,
+          fontFamily: theme.typography.fontFamily,
+        },
+        "& .firebaseui-text": {
+          color: theme.palette.text.secondary,
+          fontFamily: theme.typography.fontFamily,
+        },
+        "& .firebaseui-title": {
+          ...theme.typography.h5,
+          color: theme.palette.text.primary,
+        },
+        "& .firebaseui-subtitle": {
+          ...theme.typography.h6,
+          color: theme.palette.text.secondary,
+        },
+        "& .firebaseui-error": {
+          ...theme.typography.caption,
+          color: theme.palette.error.main,
+        },
 
         "& .firebaseui-card-content, & .firebaseui-card-footer": { padding: 0 },
         "& .firebaseui-idp-list, & .firebaseui-tenant-list": { margin: 0 },
@@ -37,6 +59,10 @@ const useStyles = makeStyles((theme) =>
         "& .mdl-button--raised.mdl-button--colored": {
           backgroundColor: theme.palette.primary.main,
           color: theme.palette.primary.contrastText,
+
+          "&:active, &:focus:not(:active), &:hover": {
+            backgroundColor: theme.palette.primary.main,
+          },
         },
 
         "& .firebaseui-idp-button, & .firebaseui-tenant-button": {
@@ -88,11 +114,37 @@ const useStyles = makeStyles((theme) =>
         },
 
         "& .firebaseui-card-header": { padding: 0 },
-        "& .firebaseui-subtitle, .firebaseui-title": theme.typography.h5,
         "& .firebaseui-card-actions": { padding: 0 },
 
+        "& .firebaseui-input, & .firebaseui-input-invalid": {
+          ...theme.typography.body1,
+          color: theme.palette.text.primary,
+        },
+        "& .firebaseui-textfield.mdl-textfield .firebaseui-input": {
+          borderColor: theme.palette.divider,
+        },
+        "& .mdl-textfield.is-invalid .mdl-textfield__input": {
+          borderColor: theme.palette.error.main,
+        },
+        "& .firebaseui-label": {
+          ...theme.typography.subtitle2,
+          color: theme.palette.text.secondary,
+        },
+        "& .mdl-textfield--floating-label.is-dirty .mdl-textfield__label, .mdl-textfield--floating-label.is-focused .mdl-textfield__label": {
+          color: theme.palette.text.primary,
+        },
         "& .firebaseui-textfield.mdl-textfield .firebaseui-label:after": {
           backgroundColor: theme.palette.primary.main,
+        },
+        "& .mdl-textfield.is-invalid .mdl-textfield__label:after": {
+          backgroundColor: theme.palette.error.main,
+        },
+
+        "& .mdl-progress>.bufferbar": {
+          background: fade(theme.palette.primary.main, 0.25),
+        },
+        "& .mdl-progress>.progressbar": {
+          backgroundColor: theme.palette.primary.main + " !important",
         },
       },
     },
@@ -103,7 +155,21 @@ const useStyles = makeStyles((theme) =>
 
       textAlign: "center",
       color: theme.palette.text.disabled,
-      marginBottom: theme.spacing(-2),
+      marginBottom: theme.spacing(-1),
+    },
+
+    skeleton: {
+      marginBottom: theme.spacing(-4),
+
+      "& > *": {
+        width: "100%",
+        height: 48,
+        borderRadius: 24,
+      },
+
+      "& > * + *": {
+        marginTop: theme.spacing(2),
+      },
     },
   })
 );
@@ -116,6 +182,13 @@ export default function AuthPage() {
       <Typography variant="button" className={classes.signInText}>
         Sign in with
       </Typography>
+
+      <div id="firetable-firebaseui-skeleton" className={classes.skeleton}>
+        {uiConfig.signInOptions?.map((_, i) => (
+          <Skeleton key={i} variant="rect" />
+        ))}
+      </div>
+
       <StyledFirebaseAuth
         firebaseAuth={auth}
         uiConfig={uiConfig}
