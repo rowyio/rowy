@@ -1,6 +1,6 @@
-import React from "react";
-import { auth } from "../../firebase";
-import { uiConfig } from "constants/firebaseui";
+import React,{useState,useEffect} from "react";
+import { auth,db } from "../../firebase";
+import { getUiConfig } from "constants/firebaseui";
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 
 import { makeStyles, createStyles, Typography } from "@material-ui/core";
@@ -8,6 +8,7 @@ import { fade } from "@material-ui/core/styles";
 import Skeleton from "@material-ui/lab/Skeleton";
 
 import AuthLayout from "components/Auth/AuthLayout";
+import * as firebaseui from "firebaseui";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -176,9 +177,19 @@ const useStyles = makeStyles((theme) =>
 
 export default function AuthPage() {
   const classes = useStyles();
+  const [uiConfig,setUiConfig] = useState<firebaseui.auth.Config|undefined>(); 
+  useEffect(() =>{
+    db.doc("/_FIRETABLE_/authSettings").get().then((doc) =>{
+      const signInOptions = doc?.get("signInOptions")
+      setUiConfig(getUiConfig(signInOptions))
+    }).catch((err) =>{
+      setUiConfig(getUiConfig({google:true}))
+    })
+  },[])
 
   return (
     <AuthLayout>
+      {uiConfig?<>
       <Typography variant="button" className={classes.signInText}>
         Sign in with
       </Typography>
@@ -193,7 +204,7 @@ export default function AuthPage() {
         firebaseAuth={auth}
         uiConfig={uiConfig}
         className="firetable-firebaseui"
-      />
+      /></>:<><Skeleton variant="rect"/><Skeleton variant="rect"/></>}
     </AuthLayout>
   );
 }
