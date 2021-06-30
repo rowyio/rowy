@@ -122,7 +122,6 @@ export default function SparksEditor() {
             <>
               <Breadcrumbs aria-label="breadcrumb">
                 {tablePathTokens.map((pathToken, index) => {
-                  console.log(pathToken);
                   return <Typography>{pathToken}</Typography>;
                 })}
               </Breadcrumbs>

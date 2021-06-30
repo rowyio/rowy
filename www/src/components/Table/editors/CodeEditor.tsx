@@ -8,8 +8,9 @@ const useStyles = makeStyles((theme) =>
   createStyles({
     editorWrapper: {
       position: "relative",
-      minWidth: 800,
-      height: "calc(100% - 200px)",
+      minWidth: 400,
+      minHeight: 100,
+      height: "calc(100% - 50px)",
     },
     resizeIcon: {
       position: "absolute",
