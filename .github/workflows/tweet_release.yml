@@ -21,12 +21,13 @@ on:
         steps:
           - name: Post Twitter Status
             uses: julb/action-post-twitter-status@v1
-            with:
-              message: "Testing github action for tweeting new releases and updates to Firetable project"
+            env:
               twitter_app_consumer_api_key: ${{ secrets.TWITTER_API_KEY }}
               twitter_app_consumer_api_secret_key: ${{ secrets.TWITTER_API_SECRET_KEY }}
               twitter_app_access_token: ${{ secrets.TWITTER_ACCESS_TOKEN }}
               twitter_app_access_token_secret: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
+            with:
+              message: "Testing github action for tweeting new releases and updates to Firetable project"
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -37,10 +38,11 @@ jobs:
     steps:
       - name: Post Twitter Status
         uses: julb/action-post-twitter-status@v1
-        with:
-          message: "New update available to Firetable"
-          twitter_app_consumer_api_key: ${{ secrets.TWITTER_API_KEY }}
-          twitter_app_consumer_api_secret_key: ${{ secrets.TWITTER_API_SECRET_KEY }}
-          twitter_app_access_token: ${{ secrets.TWITTER_ACCESS_TOKEN }}
-          twitter_app_access_token_secret: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
+        env:
+            twitter_app_consumer_api_key: ${{ secrets.TWITTER_API_KEY }}
+            twitter_app_consumer_api_secret_key: ${{ secrets.TWITTER_API_SECRET_KEY }}
+            twitter_app_access_token: ${{ secrets.TWITTER_ACCESS_TOKEN }}
+            twitter_app_access_token_secret: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
+          with:
+            message: "Testing github action for tweeting new releases and updates to Firetable project"
        
