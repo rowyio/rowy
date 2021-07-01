@@ -118,7 +118,7 @@ export const tableSettings = (
           Choose which roles have access to this table. Remember to set the
           appropriate Firestore Security Rules for this collection.
           <Link
-            href="https://github.com/AntlerVC/firetable/wiki/Role-Based-Security-Rules"
+            href="https://github.com/FiretableProject/firetable/wiki/Role-Based-Security-Rules"
             target="_blank"
             rel="noopener"
             display="block"
