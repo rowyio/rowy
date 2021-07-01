@@ -27,7 +27,10 @@ export const arrayMover = (
   return arr; // for testing purposes
 };
 
-export const missingFieldsReducer = (data: any) => (acc: string[], curr: string) => {
+export const missingFieldsReducer = (data: any) => (
+  acc: string[],
+  curr: string
+) => {
   if (data[curr] === undefined) {
     return [...acc, curr];
   } else return acc;

@@ -2,7 +2,7 @@ import { functions } from "./index";
 
 export enum CLOUD_FUNCTIONS {
   ImpersonatorAuth = "callable-ImpersonatorAuth",
-  getAlgoliaSearchKey = 'getAlgoliaSearchKey'
+  getAlgoliaSearchKey = "getAlgoliaSearchKey",
 }
 
 export const cloudFunction = (
@@ -29,5 +29,5 @@ export const cloudFunction = (
 export const ImpersonatorAuth = (email: string) =>
   functions.httpsCallable(CLOUD_FUNCTIONS.ImpersonatorAuth)({ email });
 
-  export const getAlgoliaSearchKey = (index: string) =>
+export const getAlgoliaSearchKey = (index: string) =>
   functions.httpsCallable(CLOUD_FUNCTIONS.getAlgoliaSearchKey)({ index });
