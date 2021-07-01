@@ -24,6 +24,13 @@ const useStyles = makeStyles((theme) =>
           color: theme.palette.text.secondary,
           fontFamily: theme.typography.fontFamily,
         },
+        "& .firebaseui-tos": {
+          ...theme.typography.caption,
+          color: theme.palette.text.disabled,
+        },
+        "& .firebaseui-country-selector": {
+          color: theme.palette.text.primary,
+        },
         "& .firebaseui-title": {
           ...theme.typography.h5,
           color: theme.palette.text.primary,
@@ -87,8 +94,6 @@ const useStyles = makeStyles((theme) =>
         },
 
         "& .firebaseui-idp-google": {
-          backgroundColor: "#4285F4 !important",
-
           "& .firebaseui-idp-icon-wrapper::before": {
             content: "''",
             display: "block",
@@ -110,9 +115,6 @@ const useStyles = makeStyles((theme) =>
           "&>.firebaseui-idp-text": {
             color: "#fff",
           },
-        },
-        '& .firebaseui-idp-github, & [data-provider-id="microsoft.com"]': {
-          backgroundColor: "#000 !important",
         },
 
         "& .firebaseui-card-header": { padding: 0 },
@@ -185,13 +187,8 @@ export default function FirebaseUi(props: Partial<FirebaseUiProps>) {
   useEffect(() => {
     db.doc("/_FIRETABLE_/publicSettings")
       .get()
-      .then((doc) => {
-        const signInOptions = doc?.get("signInOptions");
-        setSignInOptions(signInOptions);
-      })
-      .catch(() => {
-        setSignInOptions({ google: true });
-      });
+      .then((doc) => setSignInOptions(doc?.get("signInOptions")))
+      .catch(() => setSignInOptions(["google"]));
   }, []);
 
   if (!signInOptions)
@@ -201,7 +198,6 @@ export default function FirebaseUi(props: Partial<FirebaseUiProps>) {
         className={classes.skeleton}
         style={{ marginBottom: 0 }}
       >
-        <Skeleton variant="rect" />
         <Skeleton variant="rect" />
       </div>
     );

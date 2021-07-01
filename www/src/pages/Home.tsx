@@ -315,10 +315,9 @@ export default function HomePage() {
         mode={settingsDialogState.mode}
         data={settingsDialogState.data}
       />
-      <ProjectSettings
-        open={openProjectSettings}
-        handleClose={() => setOpenProjectSettings(false)}
-      />
+      {openProjectSettings && (
+        <ProjectSettings handleClose={() => setOpenProjectSettings(false)} />
+      )}
     </HomeNavigation>
   );
 }
