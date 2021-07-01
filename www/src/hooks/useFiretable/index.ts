@@ -77,6 +77,7 @@ const useFiretable = (
       rowHeight: tableConfig.rowHeight,
       webhooks: tableConfig.doc?.webhooks,
       sparks: tableConfig.doc?.sparks,
+      sparkObjects: tableConfig.doc?.sparkObjects,
       tableConfig,
     },
     rows: tableState.rows,

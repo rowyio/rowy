@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { parseSparkConfig, serialiseSpark, ISpark } from "./utils";
-import EmptyState from "components/EmptyState";
+import { emptySparkObject, ISpark, ISparkType, triggerTypes } from "./utils";
 import BackIcon from "@material-ui/icons/ArrowBack";
 import Modal from "components/Modal";
 import CodeEditor from "../../editors/CodeEditor";
@@ -99,35 +98,28 @@ function TabPanel(props: TabPanelProps) {
 export interface ISparkModalProps {
   // sparks: ISpark[];
   handleClose: () => void;
-  handleSave: () => void;
+  handleSave: (sparkObject: ISpark) => void;
+  mode: "add" | "update";
+  type: ISparkType;
 }
 
 export default function SparkModal({
   handleClose,
   handleSave,
+  mode,
+  type,
 }: ISparkModalProps) {
-  const [activated, setActivated] = useState(false);
+  const [sparkObject, setSparkObject] = useState<ISpark>(
+    mode === "add" ? emptySparkObject(type) : emptySparkObject(type)
+  );
   const [tabIndex, setTabIndex] = useState(0);
   const [firestoreFields, setFirestoreFields] = useState<string[]>([]);
   const classes = useStyles();
   const { tableState } = useFiretableContext();
+  const columns = Object.keys(tableState?.columns ?? {});
 
-  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+  const handleChange = (_, newValue: number) => {
     setTabIndex(newValue);
-  };
-
-  const handleNewField = () => {
-    setFirestoreFields([...firestoreFields, ""]);
-  };
-
-  const handleUpdateField = (newValue, index) => {
-    setFirestoreFields(
-      firestoreFields.map((value, i) => (i === index ? newValue : value))
-    );
-  };
-
-  const handleRemoveField = (index) => {
-    setFirestoreFields(firestoreFields.filter((_, i) => i !== index));
   };
 
   return (
@@ -163,6 +155,13 @@ export default function SparkModal({
                 label="Spark Name"
                 variant="filled"
                 fullWidth
+                value={sparkObject.name}
+                onChange={(event) => {
+                  setSparkObject({
+                    ...sparkObject,
+                    name: event.target.value,
+                  });
+                }}
               />
             </Grid>
             <Grid item xs={4}>
@@ -171,11 +170,16 @@ export default function SparkModal({
                 alignItems="center"
                 className={classes.hoverable}
                 onClick={() => {
-                  setActivated(!activated);
+                  setSparkObject({
+                    ...sparkObject,
+                    active: !sparkObject.active,
+                  });
                 }}
               >
-                <Switch color="primary" checked={activated} />
-                <Typography>Spark is {!activated && "de"}activated</Typography>
+                <Switch color="primary" checked={sparkObject.active} />
+                <Typography>
+                  Spark is {!sparkObject.active && "de"}activated
+                </Typography>
               </Box>
             </Grid>
             <Grid item xs={4}>
@@ -183,7 +187,7 @@ export default function SparkModal({
                 <TextField
                   size="small"
                   label="Spark Type"
-                  value="task"
+                  value={type}
                   variant="filled"
                   fullWidth
                   disabled
@@ -227,17 +231,29 @@ export default function SparkModal({
                       Triggers
                     </Typography>
                   </Box>
-                  {["create", "update", "delete"].map((trigger, index) => (
+                  {triggerTypes.map((trigger) => (
                     <Box
                       display="flex"
                       alignItems="center"
                       className={classes.hoverable}
+                      onClick={() => {
+                        if (sparkObject.triggers.includes(trigger)) {
+                          setSparkObject({
+                            ...sparkObject,
+                            triggers: sparkObject.triggers.filter(
+                              (t) => t !== trigger
+                            ),
+                          });
+                        } else {
+                          setSparkObject({
+                            ...sparkObject,
+                            triggers: [...sparkObject.triggers, trigger],
+                          });
+                        }
+                      }}
                     >
                       <Checkbox
-                        checked={false}
-                        onChange={() => {
-                          console.log("yay");
-                        }}
+                        checked={sparkObject.triggers.includes(trigger)}
                         name={trigger}
                       />
                       <Typography>{trigger}</Typography>
@@ -255,52 +271,89 @@ export default function SparkModal({
                       Required Fields (Optional)
                     </Typography>
                   </Box>
-                  {tableState?.columns &&
-                    Object.keys(tableState?.columns).map((trigger) => (
-                      <Box
-                        display="flex"
-                        alignItems="center"
-                        className={classes.hoverable}
-                      >
-                        <Checkbox
-                          checked={false}
-                          onChange={() => {
-                            console.log("yay");
-                          }}
-                          name={trigger}
-                        />
-                        <Typography>{trigger}</Typography>
-                      </Box>
-                    ))}
-                  {firestoreFields.map((trigger, index) => (
-                    <Box display="flex" alignItems="center">
-                      <IconButton
-                        color="secondary"
-                        component="span"
-                        className={classes.removeField}
-                        onClick={() => {
-                          handleRemoveField(index);
-                        }}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                      <TextField
-                        label="Firestore field"
-                        variant="outlined"
-                        value={trigger}
-                        size="small"
-                        onChange={(event) => {
-                          handleUpdateField(event.target.value, index);
-                        }}
+                  {columns.map((field) => (
+                    <Box
+                      display="flex"
+                      alignItems="center"
+                      className={classes.hoverable}
+                      onClick={() => {
+                        if (sparkObject.requiredFields.includes(field)) {
+                          setSparkObject({
+                            ...sparkObject,
+                            requiredFields: sparkObject.requiredFields.filter(
+                              (t) => t !== field
+                            ),
+                          });
+                        } else {
+                          setSparkObject({
+                            ...sparkObject,
+                            requiredFields: [
+                              ...sparkObject.requiredFields,
+                              field,
+                            ],
+                          });
+                        }
+                      }}
+                    >
+                      <Checkbox
+                        checked={sparkObject.requiredFields.includes(field)}
+                        name={field}
                       />
+                      <Typography>{field}</Typography>
                     </Box>
                   ))}
+                  {sparkObject.requiredFields.map((trigger, index) => {
+                    const isFiretableColumn = columns.includes(trigger);
+                    if (isFiretableColumn) {
+                      return null;
+                    }
+
+                    return (
+                      <Box display="flex" alignItems="center">
+                        <IconButton
+                          color="secondary"
+                          component="span"
+                          className={classes.removeField}
+                          onClick={() => {
+                            setSparkObject({
+                              ...sparkObject,
+                              requiredFields: sparkObject.requiredFields.filter(
+                                (t) => t !== trigger
+                              ),
+                            });
+                          }}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                        <TextField
+                          label="Firestore field"
+                          variant="outlined"
+                          value={trigger}
+                          size="small"
+                          onChange={(event) => {
+                            setSparkObject({
+                              ...sparkObject,
+                              requiredFields: sparkObject.requiredFields.map(
+                                (value, i) =>
+                                  i === index ? event.target.value : value
+                              ),
+                            });
+                          }}
+                        />
+                      </Box>
+                    );
+                  })}
                   <Button
                     variant="text"
                     color="secondary"
                     className={classes.addField}
                     startIcon={<AddIcon />}
-                    onClick={handleNewField}
+                    onClick={() => {
+                      setSparkObject({
+                        ...sparkObject,
+                        requiredFields: [...sparkObject.requiredFields, ""],
+                      });
+                    }}
                   >
                     Add a new Firestore field
                   </Button>
@@ -311,10 +364,13 @@ export default function SparkModal({
                   Conditions
                 </Typography>
                 <CodeEditor
-                  script={"currentSparks"}
+                  script={sparkObject.shouldRun}
                   height="100%"
                   handleChange={(newValue) => {
-                    // setLocalSparks(newValue);
+                    setSparkObject({
+                      ...sparkObject,
+                      shouldRun: newValue,
+                    });
                   }}
                   onValideStatusUpdate={({ isValid }) => {
                     // setIsSparksValid(isValid);
@@ -335,10 +391,13 @@ export default function SparkModal({
                 </Typography>
                 {/* TODO break spark body fields into editable UI components */}
                 <CodeEditor
-                  script={"currentSparks"}
+                  script={sparkObject.sparkBody}
                   height="100%"
                   handleChange={(newValue) => {
-                    // setLocalSparks(newValue);
+                    setSparkObject({
+                      ...sparkObject,
+                      sparkBody: newValue,
+                    });
                   }}
                   onValideStatusUpdate={({ isValid }) => {
                     // setIsSparksValid(isValid);
@@ -356,8 +415,10 @@ export default function SparkModal({
       }
       actions={{
         primary: {
-          children: "Update Settings",
-          onClick: handleSave,
+          children: mode === "add" ? "Save" : "Update",
+          onClick: () => {
+            handleSave(sparkObject);
+          },
         },
       }}
     />

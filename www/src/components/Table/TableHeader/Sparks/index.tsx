@@ -25,7 +25,7 @@ import CodeEditor from "../../editors/CodeEditor";
 import SparkList from "./SparkList";
 import SparkModal from "./SparkModal";
 
-import { parseSparkConfig, serialiseSpark, ISpark } from "./utils";
+import { serialiseSpark, sparkTypes, ISpark, ISparkType } from "./utils";
 
 export default function SparksEditor() {
   const snack = useSnackContext();
@@ -38,7 +38,10 @@ export default function SparksEditor() {
   const [localSparks, setLocalSparks] = useState(currentSparks);
   const [open, setOpen] = useState(false);
   const [isSparksValid, setIsSparksValid] = useState(true);
-  const [sparkModalOpen, setSparkModalOpen] = useState(false);
+  const [sparkModal, setSparkModal] = useState<{
+    mode: "add" | "update";
+    type: ISparkType;
+  } | null>(null);
   const snackLogContext = useSnackLogContext();
 
   const tablePathTokens =
@@ -104,6 +107,14 @@ export default function SparksEditor() {
     });
   };
 
+  const handleAddSpark = (sparkObject: ISpark) => {
+    tableActions?.table.updateConfig("sparkObjects", [
+      ...currentSparkObjects,
+      sparkObject,
+    ]);
+    setSparkModal(null);
+  };
+
   return (
     <>
       <TableHeaderButton
@@ -127,8 +138,8 @@ export default function SparksEditor() {
               </Breadcrumbs>
               <SparkList
                 sparks={currentSparkObjects}
-                handleAddSpark={() => {
-                  setSparkModalOpen(true);
+                handleAddSpark={(type: ISparkType) => {
+                  setSparkModal({ mode: "add", type });
                 }}
               />
             </>
@@ -150,14 +161,14 @@ export default function SparksEditor() {
         />
       )}
 
-      {sparkModalOpen && (
+      {sparkModal && (
         <SparkModal
           handleClose={() => {
-            setSparkModalOpen(false);
+            setSparkModal(null);
           }}
-          handleSave={() => {
-            console.log("SAVE");
-          }}
+          handleSave={handleAddSpark}
+          mode={sparkModal.mode}
+          type={sparkModal.type}
         />
       )}
     </>

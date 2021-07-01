@@ -1,24 +1,57 @@
+type ISparkType =
+  | "task"
+  | "docSync"
+  | "historySnapshot"
+  | "algoliaIndex"
+  | "meiliIndex"
+  | "bigqueryIndex"
+  | "slackMessage"
+  | "sendgridEmail"
+  | "apiCall"
+  | "twilioMessage";
+
+type ISparkTrigger = "create" | "update" | "delete";
+
 interface ISpark {
   // firetable meta fields
   name: string;
   active: boolean;
 
   // ft build fields
-  triggers: "create" | "update" | "delete";
-  type:
-    | "task"
-    | "docSync"
-    | "historySnapshot"
-    | "algoliaIndex"
-    | "meiliIndex"
-    | "bigqueryIndex"
-    | "slackMessage"
-    | "sendgridEmail"
-    | "apiCall"
-    | "twilioMessage";
-  shouldRun: boolean;
-  requiredFields?: string[];
-  sparkBody: any;
+  triggers: ISparkTrigger[];
+  type: ISparkType;
+  requiredFields: string[];
+  sparkBody: string;
+  shouldRun: boolean | string;
+
+  // TODO break spark body into editable fields
+}
+
+const triggerTypes: ISparkTrigger[] = ["create", "update", "delete"];
+
+const sparkTypes: ISparkType[] = [
+  "task",
+  "docSync",
+  "historySnapshot",
+  "algoliaIndex",
+  "meiliIndex",
+  "bigqueryIndex",
+  "slackMessage",
+  "sendgridEmail",
+  "apiCall",
+  "twilioMessage",
+];
+
+function emptySparkObject(type: ISparkType): ISpark {
+  return {
+    name: "",
+    active: false,
+    triggers: [],
+    type,
+    sparkBody: "{}",
+    requiredFields: [],
+    shouldRun: "return true;",
+  };
 }
 
 /* Convert spark objects into a single ft-build readable string */
@@ -45,5 +78,11 @@ function parseSparkConfig(sparkConfig): ISpark[] {
   }
 }
 
-export { parseSparkConfig, serialiseSpark };
-export type { ISpark };
+export {
+  parseSparkConfig,
+  serialiseSpark,
+  sparkTypes,
+  triggerTypes,
+  emptySparkObject,
+};
+export type { ISpark, ISparkType };
