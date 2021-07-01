@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from "react";
+import { lazy, Suspense } from "react";
 import { Route, Switch, Link } from "react-router-dom";
 import _merge from "lodash/merge";
 

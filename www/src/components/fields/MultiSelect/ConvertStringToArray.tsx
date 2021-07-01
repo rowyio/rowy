@@ -1,4 +1,3 @@
-import React from "react";
 import { Grid, Tooltip, Button } from "@material-ui/core";
 
 export const ConvertStringToArray = ({ value, onSubmit }) => (

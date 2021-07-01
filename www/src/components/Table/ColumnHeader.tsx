@@ -1,4 +1,3 @@
-import React from "react";
 import clsx from "clsx";
 import { HeaderRendererProps } from "react-data-grid";
 import { useDrag, useDrop, DragObjectWithType } from "react-dnd";

@@ -1,4 +1,3 @@
-import React from "react";
 import queryString from "query-string";
 
 import { Hidden } from "@material-ui/core";

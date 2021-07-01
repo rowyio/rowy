@@ -1,4 +1,3 @@
-import React from "react";
 import MultiSelect from "@antlerengineering/multiselect";
 import { FieldType } from "constants/fields";
 import { useFiretableContext } from "contexts/FiretableContext";

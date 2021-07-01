@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { ISettingsProps } from "../types";
 
 import Subheading from "components/Table/ColumnMenu/Subheading";

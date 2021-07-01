@@ -1,4 +1,3 @@
-import React from "react";
 import { ScrollSync, ScrollSyncPane } from "react-scroll-sync";
 import _find from "lodash/find";
 

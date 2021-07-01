@@ -1,4 +1,3 @@
-import React from "react";
 import { IHeavyCellProps } from "../types";
 
 import { makeStyles, createStyles, Grid } from "@material-ui/core";

@@ -1,4 +1,3 @@
-import React from "react";
 import { useFiretableContext } from "contexts/FiretableContext";
 import { Box, Tooltip, Button, Chip } from "@material-ui/core";
 import OpenIcon from "@material-ui/icons/OpenInNew";

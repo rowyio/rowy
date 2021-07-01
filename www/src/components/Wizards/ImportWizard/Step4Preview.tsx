@@ -1,4 +1,3 @@
-import React from "react";
 import { ScrollSync, ScrollSyncPane } from "react-scroll-sync";
 
 import { makeStyles, createStyles, Grid } from "@material-ui/core";

@@ -1,4 +1,3 @@
-import React from "react";
 import { IBasicCellProps } from "../types";
 
 import { Link } from "@material-ui/core";

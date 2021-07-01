@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { auth } from "../../firebase";
 
 import { Link } from "react-router-dom";

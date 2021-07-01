@@ -1,4 +1,3 @@
-import React from "react";
 import { FormatterProps } from "react-data-grid";
 import { IBasicCellProps } from "../types";
 

@@ -1,4 +1,3 @@
-import React from "react";
 import { IHeavyCellProps } from "../types";
 
 import { useTheme } from "@material-ui/core";

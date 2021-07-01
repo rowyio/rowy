@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import { useState, useContext } from "react";
 import { parse as json2csv } from "json2csv";
 import { saveAs } from "file-saver";
 import _camelCase from "lodash/camelCase";

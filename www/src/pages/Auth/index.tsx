@@ -1,5 +1,3 @@
-import React from "react";
-
 import AuthLayout from "components/Auth/AuthLayout";
 import FirebaseUi from "components/Auth/FirebaseUi";
 

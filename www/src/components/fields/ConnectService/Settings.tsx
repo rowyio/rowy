@@ -1,5 +1,3 @@
-import React from "react";
-
 import { TextField, FormControlLabel, Switch } from "@material-ui/core";
 
 export default function Settings({ config, handleChange }) {

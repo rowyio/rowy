@@ -1,4 +1,3 @@
-import React from "react";
 import _clone from "lodash/clone";
 import _merge from "lodash/merge";
 import _omit from "lodash/omit";

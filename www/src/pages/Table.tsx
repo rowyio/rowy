@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import queryString from "query-string";
 import _isEmpty from "lodash/isEmpty";
 

@@ -1,5 +1,3 @@
-import React from "react";
-
 import { Tooltip, Button, ButtonProps } from "@material-ui/core";
 
 export interface ITableHeaderButtonProps extends Partial<ButtonProps> {

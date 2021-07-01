@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import queryString from "query-string";
 
 import { Typography, Button } from "@material-ui/core";
