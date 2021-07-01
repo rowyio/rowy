@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { emptySparkObject, ISpark, ISparkType, triggerTypes } from "./utils";
+import { ISpark, triggerTypes } from "./utils";
 import BackIcon from "@material-ui/icons/ArrowBack";
 import Modal from "components/Modal";
 import CodeEditor from "../../editors/CodeEditor";
@@ -96,24 +96,22 @@ function TabPanel(props: TabPanelProps) {
 }
 
 export interface ISparkModalProps {
-  // sparks: ISpark[];
   handleClose: () => void;
-  handleSave: (sparkObject: ISpark) => void;
+  handleAdd: (sparkObject: ISpark) => void;
+  handleUpdate: (sparkObject: ISpark) => void;
   mode: "add" | "update";
-  type: ISparkType;
+  sparkObject: ISpark;
 }
 
 export default function SparkModal({
   handleClose,
-  handleSave,
+  handleAdd,
+  handleUpdate,
   mode,
-  type,
+  sparkObject: initialObject,
 }: ISparkModalProps) {
-  const [sparkObject, setSparkObject] = useState<ISpark>(
-    mode === "add" ? emptySparkObject(type) : emptySparkObject(type)
-  );
+  const [sparkObject, setSparkObject] = useState<ISpark>(initialObject);
   const [tabIndex, setTabIndex] = useState(0);
-  const [firestoreFields, setFirestoreFields] = useState<string[]>([]);
   const classes = useStyles();
   const { tableState } = useFiretableContext();
   const columns = Object.keys(tableState?.columns ?? {});
@@ -187,7 +185,7 @@ export default function SparkModal({
                 <TextField
                   size="small"
                   label="Spark Type"
-                  value={type}
+                  value={sparkObject.type}
                   variant="filled"
                   fullWidth
                   disabled
@@ -415,9 +413,16 @@ export default function SparkModal({
       }
       actions={{
         primary: {
-          children: mode === "add" ? "Save" : "Update",
+          children: mode === "add" ? "Add" : "Update",
           onClick: () => {
-            handleSave(sparkObject);
+            switch (mode) {
+              case "add":
+                handleAdd(sparkObject);
+                return;
+              case "update":
+                handleUpdate(sparkObject);
+                return;
+            }
           },
         },
       }}

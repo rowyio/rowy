@@ -12,10 +12,17 @@ type ISparkType =
 
 type ISparkTrigger = "create" | "update" | "delete";
 
+interface ISparkEditor {
+  displayName: string;
+  photoURL: string;
+  lastUpdate: number;
+}
+
 interface ISpark {
   // firetable meta fields
   name: string;
   active: boolean;
+  lastEditor: ISparkEditor;
 
   // ft build fields
   triggers: ISparkTrigger[];
@@ -42,7 +49,7 @@ const sparkTypes: ISparkType[] = [
   "twilioMessage",
 ];
 
-function emptySparkObject(type: ISparkType): ISpark {
+function emptySparkObject(type: ISparkType, user: ISparkEditor): ISpark {
   return {
     name: "",
     active: false,
@@ -51,6 +58,7 @@ function emptySparkObject(type: ISparkType): ISpark {
     sparkBody: "{}",
     requiredFields: [],
     shouldRun: "return true;",
+    lastEditor: user,
   };
 }
 
@@ -85,4 +93,4 @@ export {
   triggerTypes,
   emptySparkObject,
 };
-export type { ISpark, ISparkType };
+export type { ISpark, ISparkType, ISparkEditor };

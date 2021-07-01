@@ -3,46 +3,42 @@ import _camelCase from "lodash/camelCase";
 import _get from "lodash/get";
 import _find from "lodash/find";
 import _sortBy from "lodash/sortBy";
+import _isEqual from "lodash/isEqual";
 import { useConfirmation } from "components/ConfirmationDialog";
 import { useSnackContext } from "contexts/SnackContext";
 import { db } from "../../../../firebase";
 
-import {
-  DialogContentText,
-  Chip,
-  Breadcrumbs,
-  Typography,
-  Box,
-} from "@material-ui/core";
-import Alert from "@material-ui/lab/Alert";
+import { Breadcrumbs, Typography } from "@material-ui/core";
 import TableHeaderButton from "../TableHeaderButton";
 import SparkIcon from "@material-ui/icons/OfflineBolt";
 import Modal from "components/Modal";
 import { useFiretableContext } from "contexts/FiretableContext";
 import { useAppContext } from "contexts/AppContext";
 import { useSnackLogContext } from "contexts/SnackLogContext";
-import CodeEditor from "../../editors/CodeEditor";
 import SparkList from "./SparkList";
 import SparkModal from "./SparkModal";
 
-import { serialiseSpark, sparkTypes, ISpark, ISparkType } from "./utils";
+import { serialiseSpark, emptySparkObject, ISpark, ISparkType } from "./utils";
 
 export default function SparksEditor() {
   const snack = useSnackContext();
   const { tableState, tableActions } = useFiretableContext();
   const appContext = useAppContext();
   const { requestConfirmation } = useConfirmation();
-  const currentSparks = tableState?.config.sparks ?? "";
   const currentSparkObjects = (tableState?.config.sparkObjects ??
     []) as ISpark[];
-  const [localSparks, setLocalSparks] = useState(currentSparks);
+  const [localSparksObjects, setLocalSparksObjects] = useState(
+    currentSparkObjects
+  );
   const [open, setOpen] = useState(false);
-  const [isSparksValid, setIsSparksValid] = useState(true);
   const [sparkModal, setSparkModal] = useState<{
     mode: "add" | "update";
-    type: ISparkType;
+    sparkObject: ISpark;
+    index?: number;
   } | null>(null);
   const snackLogContext = useSnackLogContext();
+
+  const edited = !_isEqual(currentSparkObjects, localSparksObjects);
 
   const tablePathTokens =
     tableState?.tablePath?.split("/").filter(function (_, i) {
@@ -50,24 +46,24 @@ export default function SparksEditor() {
       return i % 2 === 0;
     }) ?? [];
 
-  console.log("currentSparkObjects", currentSparkObjects);
-
   const handleClose = () => {
-    if (currentSparks !== localSparks) {
+    if (edited) {
       requestConfirmation({
         title: "Discard Changes",
-        body: "You will lose changes you have made to this spark",
+        body: "You will lose changes you have made to sparks",
         confirm: "Discard",
         handleConfirm: () => {
+          setLocalSparksObjects(currentSparkObjects);
           setOpen(false);
-          setLocalSparks(currentSparks);
         },
       });
-    } else setOpen(false);
+    } else {
+      setOpen(false);
+    }
   };
 
   const handleSave = () => {
-    tableActions?.table.updateConfig("sparks", localSparks);
+    // tableActions?.table.updateConfig("sparks", localSparks);
     setOpen(false);
     requestConfirmation({
       title: "Deploy Changes",
@@ -107,55 +103,133 @@ export default function SparksEditor() {
     });
   };
 
+  const handleSaveSparks = () => {
+    tableActions?.table.updateConfig("sparkObjects", localSparksObjects);
+    setOpen(false);
+  };
+
+  const handleSaveDeploy = () => {
+    handleSaveSparks();
+  };
+
   const handleAddSpark = (sparkObject: ISpark) => {
-    tableActions?.table.updateConfig("sparkObjects", [
-      ...currentSparkObjects,
-      sparkObject,
-    ]);
+    setLocalSparksObjects([...currentSparkObjects, sparkObject]);
     setSparkModal(null);
   };
+
+  const handleUpdateSpark = (sparkObject: ISpark) => {
+    setLocalSparksObjects(
+      currentSparkObjects.map((spark, index) => {
+        if (index === sparkModal?.index) {
+          return {
+            ...sparkObject,
+            lastEditor: currentEditor(),
+          };
+        } else {
+          return spark;
+        }
+      })
+    );
+    setSparkModal(null);
+  };
+
+  const handleUpdateActive = (index: number, active: boolean) => {
+    setLocalSparksObjects(
+      localSparksObjects.map((sparkObject, i) => {
+        if (i === index) {
+          return {
+            ...sparkObject,
+            active,
+            lastEditor: currentEditor(),
+          };
+        } else {
+          return sparkObject;
+        }
+      })
+    );
+  };
+
+  const handleDuplicate = (index: number) => {
+    setLocalSparksObjects([
+      ...localSparksObjects,
+      {
+        ...localSparksObjects[index],
+        name: `${
+          localSparksObjects[index].name.length > 0
+            ? localSparksObjects[index].name
+            : "Unnamed"
+        } (duplicate)`,
+        active: false,
+        lastEditor: currentEditor(),
+      },
+    ]);
+  };
+
+  const handleEdit = (index: number) => {
+    setSparkModal({
+      mode: "update",
+      sparkObject: localSparksObjects[index],
+      index,
+    });
+  };
+
+  const handleDelete = (index: number) => {
+    setLocalSparksObjects(localSparksObjects.filter((_, i) => i !== index));
+  };
+
+  const currentEditor = () => ({
+    displayName: appContext?.currentUser?.displayName ?? "Unknown user",
+    photoURL: appContext?.currentUser?.photoURL ?? "",
+    lastUpdate: Date.now(),
+  });
 
   return (
     <>
       <TableHeaderButton
-        title="Edit Sparks (ALPHA)"
+        title="Sparks"
         onClick={() => setOpen(true)}
         icon={<SparkIcon />}
       />
 
       {open && !!tableState && (
         <Modal
+          open={open}
           onClose={handleClose}
-          maxWidth="xs"
+          maxWidth="sm"
           fullWidth
           title={<>Sparks</>}
           children={
             <>
               <Breadcrumbs aria-label="breadcrumb">
-                {tablePathTokens.map((pathToken, index) => {
+                {tablePathTokens.map((pathToken) => {
                   return <Typography>{pathToken}</Typography>;
                 })}
               </Breadcrumbs>
               <SparkList
-                sparks={currentSparkObjects}
+                sparks={localSparksObjects}
                 handleAddSpark={(type: ISparkType) => {
-                  setSparkModal({ mode: "add", type });
+                  setSparkModal({
+                    mode: "add",
+                    sparkObject: emptySparkObject(type, currentEditor()),
+                  });
                 }}
+                handleUpdateActive={handleUpdateActive}
+                handleEdit={handleEdit}
+                handleDuplicate={handleDuplicate}
+                handleDelete={handleDelete}
               />
             </>
           }
           actions={{
             primary: {
               children: "Save & Deploy",
-              onClick: handleSave,
-              disabled:
-                !isSparksValid || localSparks === tableState?.config.sparks,
+              onClick: handleSaveDeploy,
+              disabled: !edited,
             },
             secondary: {
               children: "Save",
-              onClick: handleClose,
-              disabled:
-                !isSparksValid || localSparks === tableState?.config.sparks,
+              onClick: handleSaveSparks,
+              disabled: !edited,
             },
           }}
         />
@@ -166,9 +240,10 @@ export default function SparksEditor() {
           handleClose={() => {
             setSparkModal(null);
           }}
-          handleSave={handleAddSpark}
+          handleAdd={handleAddSpark}
+          handleUpdate={handleUpdateSpark}
           mode={sparkModal.mode}
-          type={sparkModal.type}
+          sparkObject={sparkModal.sparkObject}
         />
       )}
     </>
