@@ -362,10 +362,6 @@ export const defaultOverrides = (theme: Theme): ThemeOptions => ({
       },
       markLabel: theme.typography.caption,
     },
-    MuiLinearProgress: {
-      colorPrimary: { backgroundColor: "#e7e7e7" },
-      colorSecondary: { backgroundColor: "#e7e7e7" },
-    },
     MuiFormHelperText: {
       contained: {
         marginLeft: theme.spacing(1.5),

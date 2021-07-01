@@ -145,7 +145,7 @@ const useStyles = makeStyles((theme) =>
         },
 
         "& .mdl-progress>.bufferbar": {
-          background: fade(theme.palette.primary.main, 0.25),
+          background: fade(theme.palette.primary.main, 0.33),
         },
         "& .mdl-progress>.progressbar": {
           backgroundColor: theme.palette.primary.main + " !important",
@@ -163,7 +163,7 @@ const useStyles = makeStyles((theme) =>
     },
 
     skeleton: {
-      marginBottom: theme.spacing(-4),
+      marginBottom: "calc(var(--spacing-contents) * -1)",
 
       "& > *": {
         width: "100%",
@@ -205,6 +205,13 @@ export default function FirebaseUi(props: Partial<FirebaseUiProps>) {
   const uiConfig: firebaseui.auth.Config = {
     ...defaultUiConfig,
     ...props.uiConfig,
+    callbacks: {
+      uiShown: () => {
+        const node = document.getElementById("firetable-firebaseui-skeleton");
+        if (node) node.style.display = "none";
+      },
+      ...props.uiConfig?.callbacks,
+    },
     signInOptions: getSignInOptions(signInOptions),
   };
 

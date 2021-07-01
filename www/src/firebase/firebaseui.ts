@@ -31,12 +31,6 @@ export const authOptions = {
 export const defaultUiConfig: firebaseui.auth.Config = {
   signInFlow: "popup",
   signInSuccessUrl: "/",
-  callbacks: {
-    uiShown: () => {
-      const node = document.getElementById("firetable-firebaseui-skeleton");
-      if (node) node.style.display = "none";
-    },
-  },
   signInOptions: [authOptions.google],
 };
 

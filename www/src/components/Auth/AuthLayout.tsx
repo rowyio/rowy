@@ -1,7 +1,13 @@
 import Div100vh from "react-div-100vh";
 
-import { makeStyles, createStyles, Paper, Typography } from "@material-ui/core";
-import { fade, lighten } from "@material-ui/core/styles";
+import {
+  makeStyles,
+  createStyles,
+  Paper,
+  Typography,
+  LinearProgress,
+} from "@material-ui/core";
+import { fade } from "@material-ui/core/styles";
 
 import bgPattern from "assets/bg-pattern.svg";
 
@@ -38,6 +44,9 @@ const useStyles = makeStyles((theme) =>
     },
 
     paper: {
+      position: "relative",
+      overflow: "hidden",
+
       maxWidth: 400,
       width: "100%",
       padding: theme.spacing(4),
@@ -45,12 +54,14 @@ const useStyles = makeStyles((theme) =>
         theme.palette.background.elevation?.[8] ||
         theme.palette.background.paper,
 
-      "& > * + *": { marginTop: theme.spacing(4) },
+      "--spacing-contents": theme.spacing(4) + "px",
+      "& > * + *": { marginTop: "var(--spacing-contents)" },
+
+      textAlign: "center",
     },
 
     wordmark: {
       display: "block",
-      textAlign: "center",
 
       color: theme.palette.primary.main,
       letterSpacing: 0,
@@ -59,19 +70,27 @@ const useStyles = makeStyles((theme) =>
 
     projectName: {
       display: "block",
-      textAlign: "center",
       marginTop: theme.spacing(1),
 
       color: theme.palette.text.disabled,
+    },
+
+    progress: {
+      position: "absolute",
+      left: 0,
+      right: 0,
+      top: 0,
+      marginTop: 0,
     },
   })
 );
 
 export interface IAuthLayoutProps {
   children: React.ReactNode;
+  loading?: boolean;
 }
 
-export default function AuthLayout({ children }: IAuthLayoutProps) {
+export default function AuthLayout({ children, loading }: IAuthLayoutProps) {
   const classes = useStyles();
 
   return (
@@ -84,6 +103,8 @@ export default function AuthLayout({ children }: IAuthLayoutProps) {
           {process.env.REACT_APP_FIREBASE_PROJECT_ID}
         </Typography>
         {children}
+
+        {loading && <LinearProgress className={classes.progress} />}
       </Paper>
     </Div100vh>
   );

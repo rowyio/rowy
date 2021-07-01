@@ -158,8 +158,9 @@ export default function HomePage() {
             <Typography variant="body2">
               If you are the project owner please follow the instructions{" "}
               <a
-                href="https://github.com/AntlerVC/firetable/wiki/Role-Based-Security-Rules"
+                href="https://github.com/FiretableProject/firetable/wiki/Role-Based-Security-Rules"
                 target="_blank"
+                rel="noopener"
               >
                 here
               </a>{" "}
