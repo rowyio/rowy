@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { ISettingsProps } from "../types";
 import _sortBy from "lodash/sortBy";
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { IMenuModalProps } from ".";
 
 import { TextField } from "@material-ui/core";

@@ -1,5 +1,5 @@
 import { IHeavyCellProps } from "../types";
-import React, { useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 
 import { useDropzone } from "react-dropzone";
 import _findIndex from "lodash/findIndex";
@@ -136,8 +136,9 @@ export default function Image_({
           files: [imageFile],
           previousValue: value,
           onComplete: (newValue) => {
-            if(updateCell)updateCell(row.ref,column.key,newValue)
-            setLocalImage("")},
+            if (updateCell) updateCell(row.ref, column.key, newValue);
+            setLocalImage("");
+          },
         });
         setLocalImage(URL.createObjectURL(imageFile));
       }

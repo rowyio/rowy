@@ -41,4 +41,3 @@ export enum FieldType {
   last = "LAST",
   status = "STATUS",
 }
-

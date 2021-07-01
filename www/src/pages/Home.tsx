@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import _groupBy from "lodash/groupBy";
 import _find from "lodash/find";
 import {
@@ -315,10 +315,9 @@ export default function HomePage() {
         mode={settingsDialogState.mode}
         data={settingsDialogState.data}
       />
-      <ProjectSettings
-        open={openProjectSettings}
-        handleClose={() => setOpenProjectSettings(false)}
-      />
+      {openProjectSettings && (
+        <ProjectSettings handleClose={() => setOpenProjectSettings(false)} />
+      )}
     </HomeNavigation>
   );
 }

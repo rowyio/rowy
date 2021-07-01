@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from "react";
+import { lazy, Suspense } from "react";
 import { Typography } from "@material-ui/core";
 import MultiSelect from "@antlerengineering/multiselect";
 import FieldSkeleton from "components/SideDrawer/Form/FieldSkeleton";

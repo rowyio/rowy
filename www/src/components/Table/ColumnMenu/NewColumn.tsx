@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import _camel from "lodash/camelCase";
 import { IMenuModalProps } from ".";
 

@@ -1,5 +1,5 @@
 import { ISideDrawerFieldProps } from "../types";
-import React, { useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import clsx from "clsx";
 import { Controller } from "react-hook-form";
 
@@ -129,7 +129,7 @@ function ControlledImageUploader({
           files: [imageFile],
           previousValue: value ?? [],
           onComplete: (newValue) => {
-            if(updateCell)updateCell(docRef,column.key,newValue)
+            if (updateCell) updateCell(docRef, column.key, newValue);
             onChange(newValue);
             setLocalImage("");
           },

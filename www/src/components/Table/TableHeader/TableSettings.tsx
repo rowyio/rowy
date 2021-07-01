@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 import TableHeaderButton from "./TableHeaderButton";
 import SettingsIcon from "@material-ui/icons/Settings";

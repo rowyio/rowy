@@ -1,4 +1,3 @@
-import React from "react";
 import SvgIcon, { SvgIconProps } from "@material-ui/core/SvgIcon";
 import { mdiGestureTap } from "@mdi/js";
 

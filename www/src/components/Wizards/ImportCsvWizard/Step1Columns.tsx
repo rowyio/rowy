@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import MultiSelect from "@antlerengineering/multiselect";
 import _find from "lodash/find";
 import _findIndex from "lodash/findIndex";

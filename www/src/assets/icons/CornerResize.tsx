@@ -1,4 +1,3 @@
-import React from "react";
 import SvgIcon, { SvgIconProps } from "@material-ui/core/SvgIcon";
 import { mdiResizeBottomRight } from "@mdi/js";
 

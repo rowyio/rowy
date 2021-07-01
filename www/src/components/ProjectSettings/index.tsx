@@ -1,75 +1,46 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import _camelCase from "lodash/camelCase";
 import _find from "lodash/find";
-
-import { makeStyles, createStyles } from "@material-ui/core";
+import _pickBy from "lodash/pickBy";
 
 import { FormDialog } from "@antlerengineering/form-builder";
-import { settings } from "./form";
+import { projectSettingsForm } from "./form";
 
 import useDoc, { DocActions } from "hooks/useDoc";
+import { IFormDialogProps } from "components/Table/ColumnMenu/NewColumn";
 
-const FORM_EMPTY_STATE = {
-  cloudBuild: {
-    branch: "test",
-    triggerId: "",
-  },
-};
+export interface IProjectSettings
+  extends Pick<IFormDialogProps, "handleClose"> {}
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    buttonGrid: { padding: theme.spacing(3, 0) },
-    button: { width: 160 },
-
-    formFooter: {
-      marginTop: theme.spacing(4),
-
-      "& button": {
-        paddingLeft: theme.spacing(1.5),
-        display: "flex",
-      },
-    },
-    collectionName: { fontFamily: theme.typography.fontFamilyMono },
-  })
-);
-
-export default function SettingsDialog({
-  open,
-  handleClose,
-}: {
-  open: boolean;
-  handleClose: () => void;
-}) {
-  const [settingsDocState, settingsDocDispatch] = useDoc({
+export default function ProjectSettings({ handleClose }: IProjectSettings) {
+  const [settingsState, settingsDispatch] = useDoc({
     path: "_FIRETABLE_/settings",
   });
+  const [publicSettingsState, publicSettingsDispatch] = useDoc({
+    path: "_FIRETABLE_/publicSettings",
+  });
 
-  const [formState, setForm] = useState<any>();
+  if (settingsState.loading || publicSettingsState.loading) return null;
 
-  useEffect(() => {
-    if (!settingsDocState.loading) {
-      const ftBuildUrl = settingsDocState?.doc?.ftBuildUrl;
-      setForm({ ftBuildUrl });
-    }
-  }, [settingsDocState.doc, open]);
+  const handleSubmit = (v) => {
+    const { signInOptions, ...values } = v;
 
-  const handleSubmit = (values) => {
-    setForm(values)
-    settingsDocDispatch({ action: DocActions.update, data: values });
-    handleClose();
+    settingsDispatch({ action: DocActions.update, data: values });
+    publicSettingsDispatch({
+      action: DocActions.update,
+      data: { signInOptions },
+    });
   };
 
-  if (!formState) return <></>;
   return (
-    <>
-      <FormDialog
-        onClose={handleClose}
-        open={open}
-        title={"Project Settings"}
-        fields={settings()}
-        values={formState}
-        onSubmit={handleSubmit}
-      />
-    </>
+    <FormDialog
+      onClose={handleClose}
+      open
+      title="Project Settings"
+      fields={projectSettingsForm}
+      values={{ ...settingsState.doc, ...publicSettingsState.doc }}
+      onSubmit={handleSubmit}
+      SubmitButtonProps={{ children: "Save" }}
+    />
   );
 }

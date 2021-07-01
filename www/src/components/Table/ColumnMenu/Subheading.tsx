@@ -1,5 +1,3 @@
-import React from "react";
-
 import { useTheme, Typography, TypographyProps } from "@material-ui/core";
 
 export default function Subheading(props: TypographyProps<"h2">) {

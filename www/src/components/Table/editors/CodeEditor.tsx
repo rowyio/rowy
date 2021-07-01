@@ -1,4 +1,4 @@
-import React, { useRef, useMemo, useState } from "react";
+import { useRef, useMemo, useState } from "react";
 import { useTheme, createStyles, makeStyles } from "@material-ui/core/styles";
 import Editor, { useMonaco } from "@monaco-editor/react";
 import { useFiretableContext } from "contexts/FiretableContext";

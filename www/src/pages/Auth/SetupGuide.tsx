@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function AuthSetupGuide() {
   // setup steps for the auth setup
   // enable google auth
