@@ -139,9 +139,37 @@ export const tableSettings = (
       defaultValue: 1,
       min: 1,
       max: 5,
-      label: "Cloud Function Trigger Depth",
+      label: "Collection Depth",
       displayCondition: "return values.tableType === 'collectionGroup'",
-      assistiveText: "Used for table Cloud Function trigger path",
+      assistiveText: (
+        <>
+          Firetable Cloud Functions that rely on{" "}
+          <Link
+            href="https://firebase.google.com/docs/functions/firestore-events#function_triggers"
+            target="_blank"
+            rel="noopener"
+          >
+            Firestore triggers
+          </Link>{" "}
+          on this table require you to manually set the depth of this collection
+          group.
+          <br />
+          A collection depth of 1 is equivalent to a primary collection.
+          <br />
+          <Link
+            href="https://stackoverflow.com/questions/58186741/watch-a-collectiongroup-with-firestore-using-cloud-functions"
+            target="_blank"
+            rel="noopener"
+          >
+            Learn more about this requirement
+            <OpenInNewIcon
+              aria-label="Open in new tab"
+              fontSize="small"
+              style={{ verticalAlign: "bottom", marginLeft: 4 }}
+            />
+          </Link>
+        </>
+      ),
     },
     mode === TableSettingsDialogModes.create && tables && tables?.length !== 0
       ? {
