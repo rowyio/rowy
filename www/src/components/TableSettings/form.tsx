@@ -154,8 +154,6 @@ export const tableSettings = (
           on this table require you to manually set the depth of this collection
           group.
           <br />
-          A collection depth of 1 is equivalent to a primary collection.
-          <br />
           <Link
             href="https://stackoverflow.com/questions/58186741/watch-a-collectiongroup-with-firestore-using-cloud-functions"
             target="_blank"
