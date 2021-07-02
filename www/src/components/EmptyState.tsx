@@ -90,12 +90,7 @@ export default function EmptyState({
       <Grid item className={classes.content}>
         <Icon className={classes.icon} />
 
-        <Typography
-          variant="h6"
-          className={classes.message}
-          color="textSecondary"
-          gutterBottom
-        >
+        <Typography variant="h6" className={classes.message} gutterBottom>
           {message}
         </Typography>
 

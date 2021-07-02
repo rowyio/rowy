@@ -43,11 +43,7 @@ export default function Loading({
     >
       <Grid item className={classes.content}>
         <CircularProgress className={classes.progress} />
-        <Typography
-          variant="h6"
-          className={classes.message}
-          color="textSecondary"
-        >
+        <Typography variant="h6" className={classes.message}>
           {message}
         </Typography>
       </Grid>

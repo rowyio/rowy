@@ -45,7 +45,7 @@ declare module "@material-ui/core/styles/transitions" {
 
 export const themeBase = {
   palette: {
-    primary: { main: ANTLER_RED, light: ANTLER_RED },
+    // primary: { main: ANTLER_RED, light: ANTLER_RED },
     secondary: { main: SECONDARY_GREY },
     text: { secondary: SECONDARY_TEXT, log: LOG_TEXT },
     error: { main: ERROR },
@@ -182,7 +182,10 @@ export const defaultOverrides = (theme: Theme): ThemeOptions => ({
       },
     },
     MuiTooltip: {
-      tooltip: theme.typography.caption,
+      tooltip: {
+        ...theme.typography.caption,
+        fontWeight: theme.typography.fontWeightMedium,
+      },
     },
     MuiButton: {
       root: {
