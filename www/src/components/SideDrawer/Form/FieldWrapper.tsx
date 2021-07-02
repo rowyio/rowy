@@ -72,7 +72,7 @@ export default function FieldWrapper({
           {type === "debug" ? <DebugIcon /> : getFieldProp("icon", type)}
         </Grid>
         <Grid item xs>
-          <Typography variant="caption">{label}</Typography>
+          <Typography variant="subtitle2">{label}</Typography>
         </Grid>
         {disabled && (
           <Grid item>

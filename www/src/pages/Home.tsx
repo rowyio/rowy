@@ -50,8 +50,6 @@ const useStyles = makeStyles((theme) =>
     },
     sectionHeader: {
       color: theme.palette.text.secondary,
-      textTransform: "uppercase",
-      letterSpacing: `${2 / 13}em`,
     },
     divider: { margin: theme.spacing(1, 0, 3) },
 
@@ -236,7 +234,7 @@ export default function HomePage() {
           {favs.length !== 0 && (
             <section id="favorites" className={classes.section}>
               <Typography
-                variant="subtitle2"
+                variant="h6"
                 component="h1"
                 className={classes.sectionHeader}
               >
@@ -264,7 +262,7 @@ export default function HomePage() {
                 className={classes.section}
               >
                 <Typography
-                  variant="subtitle2"
+                  variant="h6"
                   component="h1"
                   className={classes.sectionHeader}
                 >
