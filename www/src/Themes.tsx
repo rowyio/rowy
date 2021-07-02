@@ -1,4 +1,3 @@
-import _clone from "lodash/clone";
 import _merge from "lodash/merge";
 import _omit from "lodash/omit";
 import _mapValues from "lodash/mapValues";
@@ -13,11 +12,9 @@ import ClearIcon from "@material-ui/icons/Clear";
 
 import antlerPalette from "./Theme/antlerPalette";
 
-export const HEADING_FONT = "Europa, sans-serif";
-export const BODY_FONT = '"Open Sans", sans-serif';
-export const MONO_FONT =
-  "SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace";
-export const LOG_FONT = "IBM Plex Mono, monospace";
+export const HEADING_FONT = "Space Grotesk, system-ui, sans-serif";
+export const BODY_FONT = "Inter, system-ui, sans-serif";
+export const MONO_FONT = "IBM Plex Mono, ui-monospace, monospace";
 
 export const ANTLER_RED = "#ED4747";
 export const SECONDARY_GREY = "#282829";
@@ -37,6 +34,7 @@ declare module "@material-ui/core/styles/createPalette" {
 declare module "@material-ui/core/styles/createTypography" {
   interface FontStyle {
     fontFamilyMono: string;
+    fontFamilyHeading: string;
   }
 }
 declare module "@material-ui/core/styles/transitions" {
@@ -55,6 +53,7 @@ export const themeBase = {
   typography: {
     fontFamily: BODY_FONT,
     fontFamilyMono: MONO_FONT,
+    fontFamilyHeading: HEADING_FONT,
     h1: { fontFamily: HEADING_FONT },
     h2: { fontFamily: HEADING_FONT },
     h3: {
@@ -97,10 +96,10 @@ export const themeBase = {
       letterSpacing: toEm(0.25, 14),
     },
     button: {
-      fontFamily: HEADING_FONT,
-      fontSize: toRem(16),
-      fontWeight: "bold",
-      letterSpacing: toEm(0.75, 16),
+      fontFamily: BODY_FONT,
+      fontSize: toRem(14),
+      fontWeight: 600,
+      letterSpacing: toEm(0.75, 14),
       lineHeight: 1,
     },
     caption: {
@@ -109,7 +108,7 @@ export const themeBase = {
       lineHeight: 20 / 14,
     },
     overline: {
-      fontFamily: HEADING_FONT,
+      fontFamily: BODY_FONT,
       fontSize: toRem(13),
       fontWeight: "bold",
       letterSpacing: toEm(2, 13),
@@ -221,8 +220,8 @@ export const defaultOverrides = (theme: Theme): ThemeOptions => ({
     // Override text field label
     MuiFormLabel: {
       root: {
-        ...theme.typography.subtitle2,
-        lineHeight: 1,
+        fontWeight: theme.typography.fontWeightMedium,
+        // lineHeight: 1,
       },
     },
     // Override radio & checkbox labels

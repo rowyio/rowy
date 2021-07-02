@@ -17,11 +17,7 @@ const useStyles = makeStyles((theme) =>
     },
     progress: { color: theme.palette.text.secondary },
     content: { maxWidth: "25em" },
-    message: {
-      textTransform: "uppercase",
-      marginTop: theme.spacing(1),
-      letterSpacing: 1,
-    },
+    message: { marginTop: theme.spacing(1) },
   })
 );
 interface ILoading {

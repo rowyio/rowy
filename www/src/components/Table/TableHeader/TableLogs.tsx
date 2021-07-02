@@ -34,7 +34,7 @@ import CollapseIcon from "@material-ui/icons/ExpandMore";
 import OpenIcon from "@material-ui/icons/OpenInNew";
 import CloseIcon from "@material-ui/icons/Close";
 import TableHeaderButton from "./TableHeaderButton";
-import { LOG_FONT, LOG_TEXT } from "Themes";
+import { MONO_FONT, LOG_TEXT } from "Themes";
 import Ansi from "ansi-to-react";
 import EmptyState from "components/EmptyState";
 
@@ -102,13 +102,13 @@ const useStyles = makeStyles((theme) => ({
   },
   logFont: {
     fontSize: 16,
-    fontFamily: LOG_FONT,
+    fontFamily: MONO_FONT,
     letterSpacing: 0.5,
     lineHeight: 1.5,
     color: LOG_TEXT,
 
     "& code": {
-      fontFamily: LOG_FONT,
+      fontFamily: MONO_FONT,
     },
   },
 

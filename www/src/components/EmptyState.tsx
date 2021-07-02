@@ -26,9 +26,7 @@ const useStyles = makeStyles((theme) =>
     },
 
     message: {
-      textTransform: "uppercase",
       marginTop: theme.spacing(1),
-      letterSpacing: 1,
     },
 
     basicIcon: { display: "block" },
