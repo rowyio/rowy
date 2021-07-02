@@ -84,7 +84,7 @@ export default function Breadcrumbs(props: BreadcrumbsProps) {
         // If it’s the first breadcrumb, show with specific style
         const crumbProps = {
           key: index,
-          variant: index === 0 ? "h6" : "caption",
+          variant: index === 0 ? "h6" : "subtitle2",
           component: index === 0 ? "h2" : "div",
           color: index === 0 ? "textPrimary" : "textSecondary",
         } as const;

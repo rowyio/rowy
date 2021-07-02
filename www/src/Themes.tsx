@@ -83,9 +83,9 @@ export const themeBase = {
     },
     subtitle2: {
       fontFamily: HEADING_FONT,
-      fontSize: toRem(16),
+      fontSize: toRem(14),
       fontWeight: "bold",
-      letterSpacing: toEm(0.4, 16),
+      letterSpacing: toEm(0.4, 14),
       lineHeight: 1.5,
     },
     body1: {

@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) =>
       border: `1px solid ${theme.palette.divider}`,
       borderRadius: 0,
 
-      ...theme.typography.caption,
+      ...theme.typography.subtitle2,
       color: theme.palette.text.secondary,
       transition: theme.transitions.create("color", {
         duration: theme.transitions.duration.short,

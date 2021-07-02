@@ -94,7 +94,7 @@ export default function Column({
         <Typography
           component={Grid}
           item
-          variant="caption"
+          variant="subtitle2"
           noWrap
           className={classes.columnName}
         >
