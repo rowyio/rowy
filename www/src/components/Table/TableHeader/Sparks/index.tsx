@@ -113,7 +113,7 @@ export default function SparksEditor() {
   };
 
   const handleAddSpark = (sparkObject: ISpark) => {
-    setLocalSparksObjects([...currentSparkObjects, sparkObject]);
+    setLocalSparksObjects([...localSparksObjects, sparkObject]);
     setSparkModal(null);
   };
 
@@ -154,11 +154,7 @@ export default function SparksEditor() {
       ...localSparksObjects,
       {
         ...localSparksObjects[index],
-        name: `${
-          localSparksObjects[index].name.length > 0
-            ? localSparksObjects[index].name
-            : "Unnamed"
-        } (duplicate)`,
+        name: `${localSparksObjects[index].name} (duplicate)`,
         active: false,
         lastEditor: currentEditor(),
       },
@@ -174,7 +170,14 @@ export default function SparksEditor() {
   };
 
   const handleDelete = (index: number) => {
-    setLocalSparksObjects(localSparksObjects.filter((_, i) => i !== index));
+    requestConfirmation({
+      title: `Delete ${localSparksObjects[index].name}?`,
+      body: "This spark will be permanently deleted.",
+      confirm: "Confirm",
+      handleConfirm: () => {
+        setLocalSparksObjects(localSparksObjects.filter((_, i) => i !== index));
+      },
+    });
   };
 
   const currentEditor = () => ({

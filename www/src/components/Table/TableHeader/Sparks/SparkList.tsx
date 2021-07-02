@@ -45,6 +45,10 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(4),
     height: theme.spacing(4),
   },
+  sparkList: {
+    height: "50vh",
+    overflowY: "scroll",
+  },
 }));
 
 export interface ISparkListProps {
@@ -119,17 +123,18 @@ export default function SparkList({
         </Menu>
       </Box>
 
-      {sparks.length === 0 && (
-        <EmptyState
-          message="Add your first spark"
-          description={"When you add sparks, your sparks should be shown here."}
-          Icon={EmptyIcon}
-          className={classes.hoverableEmptyState}
-          onClick={handleAddButton}
-        />
-      )}
-
-      <Box>
+      <Box className={classes.sparkList}>
+        {sparks.length === 0 && (
+          <EmptyState
+            message="Add your first spark"
+            description={
+              "When you add sparks, your sparks should be shown here."
+            }
+            Icon={EmptyIcon}
+            className={classes.hoverableEmptyState}
+            onClick={handleAddButton}
+          />
+        )}
         {sparks.map((sparkObject, index) => {
           return (
             <>
@@ -144,7 +149,7 @@ export default function SparkList({
                   justifyContent="space-between"
                 >
                   <Typography variant="body2" className={classes.sparkName}>
-                    {sparkObject.name.length > 0 ? sparkObject.name : "Unnamed"}
+                    {sparkObject.name}
                   </Typography>
                   <Typography variant="overline" className={classes.sparkType}>
                     {sparkObject.type}

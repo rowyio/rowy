@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import _isEqual from "lodash/isEqual";
 import { ISpark, triggerTypes } from "./utils";
 import BackIcon from "@material-ui/icons/ArrowBack";
 import Modal from "components/Modal";
@@ -115,6 +116,7 @@ export default function SparkModal({
   const classes = useStyles();
   const { tableState } = useFiretableContext();
   const columns = Object.keys(tableState?.columns ?? {});
+  const edited = !_isEqual(initialObject, sparkObject);
 
   const handleChange = (_, newValue: number) => {
     setTabIndex(newValue);
@@ -150,10 +152,15 @@ export default function SparkModal({
             <Grid item xs={4}>
               <TextField
                 size="small"
-                label="Spark Name"
+                label={
+                  edited && !sparkObject.name.length
+                    ? "Spark name (required)"
+                    : "Spark name"
+                }
                 variant="filled"
                 fullWidth
                 value={sparkObject.name}
+                error={edited && !sparkObject.name.length}
                 onChange={(event) => {
                   setSparkObject({
                     ...sparkObject,
@@ -414,6 +421,7 @@ export default function SparkModal({
       actions={{
         primary: {
           children: mode === "add" ? "Add" : "Update",
+          disabled: !edited || !sparkObject.name.length,
           onClick: () => {
             switch (mode) {
               case "add":

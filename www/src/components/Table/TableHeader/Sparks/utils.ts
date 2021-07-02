@@ -51,7 +51,7 @@ const sparkTypes: ISparkType[] = [
 
 function emptySparkObject(type: ISparkType, user: ISparkEditor): ISpark {
   return {
-    name: "",
+    name: "Unnamed",
     active: false,
     triggers: [],
     type,
