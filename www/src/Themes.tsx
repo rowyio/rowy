@@ -1,6 +1,4 @@
 import _merge from "lodash/merge";
-import _omit from "lodash/omit";
-import _mapValues from "lodash/mapValues";
 
 import {
   createMuiTheme,
@@ -9,8 +7,6 @@ import {
   fade,
 } from "@material-ui/core/styles";
 import ClearIcon from "@material-ui/icons/Clear";
-
-import antlerPalette from "./Theme/antlerPalette";
 
 export const HEADING_FONT = "Space Grotesk, system-ui, sans-serif";
 export const BODY_FONT = "Inter, system-ui, sans-serif";
@@ -234,93 +230,65 @@ export const defaultOverrides = (theme: Theme): ThemeOptions => ({
     },
     MuiChip: {
       root: {
-        borderRadius: 4,
+        // borderRadius: theme.shape.borderRadius,
         maxWidth: "100%",
 
         height: "auto",
         minHeight: 32,
-
-        color: theme.palette.text.secondary,
       },
       label: {
         ...theme.typography.caption,
         color: "inherit",
-        padding: theme.spacing(1, 1.5),
-        // whiteSpace: "normal",
+        padding: theme.spacing(0.75, 1.5),
 
         "$outlined &": {
-          paddingTop: theme.spacing(0.875),
-          paddingBottom: theme.spacing(0.875),
+          paddingTop: theme.spacing(0.75) - 1,
+          paddingBottom: theme.spacing(0.75) - 1,
         },
       },
       sizeSmall: { minHeight: 24 },
-      labelSmall: {
-        padding: theme.spacing(0.5, 1.5),
-      },
-
-      outlined: {
-        backgroundColor: theme.palette.action.selected,
-        borderColor: theme.palette.action.selected,
-      },
-      outlinedPrimary: {
-        backgroundColor: fade(
-          theme.palette.primary.main,
-          theme.palette.action.selectedOpacity
-        ),
-      },
+      labelSmall: { padding: theme.spacing(0.5, 1.5) },
 
       deleteIcon: { color: "inherit" },
     },
-    MuiBadge: {
-      badge: {
-        ...theme.typography.caption,
-        fontFeatureSettings: '"tnum"',
-      },
-    },
-    MuiPaper: {
-      root: {
-        backgroundColor: "var(--bg-paper)",
-        "--bg-paper": theme.palette.background.paper,
-      },
-      rounded: { borderRadius: 8 },
-      // Dark theme paper elevation backgrounds
-      ...(() => {
-        const classes: Record<string, any> = {};
-        for (let i = 0; i <= 24; i++) {
-          if (theme.palette.background.elevation === undefined) continue;
+    // MuiPaper: {
+    // root: {
+    //   backgroundColor: "var(--bg-paper)",
+    //   "--bg-paper": theme.palette.background.paper,
+    // },
+    // rounded: { borderRadius: theme.shape.borderRadius * 2 },
+    // Dark theme paper elevation backgrounds
+    // ...(() => {
+    //   const classes: Record<string, any> = {};
+    //   for (let i = 0; i <= 24; i++) {
+    //     if (theme.palette.background.elevation === undefined) continue;
 
-          let closestElevation = i;
-          for (let j = i; j > 0; j--) {
-            if (theme.palette.background.elevation[j] !== undefined) {
-              closestElevation = j;
-              break;
-            }
-          }
+    //     let closestElevation = i;
+    //     for (let j = i; j > 0; j--) {
+    //       if (theme.palette.background.elevation[j] !== undefined) {
+    //         closestElevation = j;
+    //         break;
+    //       }
+    //     }
 
-          classes["elevation" + i] = {
-            "&&": {
-              "--bg-paper":
-                theme.palette.background.elevation[closestElevation],
-            },
-          };
-        }
-        return classes;
-      })(),
-    },
+    //     classes["elevation" + i] = {
+    //       "&&": {
+    //         "--bg-paper":
+    //           theme.palette.background.elevation[closestElevation],
+    //       },
+    //     };
+    //   }
+    //   return classes;
+    // })(),
+    // },
     MuiSlider: {
-      disabled: {},
-      rail: {
-        backgroundColor: "#e7e7e7",
-        opacity: 1,
-      },
-
       mark: {
         width: 4,
         height: 4,
         borderRadius: "50%",
         marginLeft: -2,
         marginTop: -1,
-        backgroundColor: "#69696a",
+        // backgroundColor: "#69696a",
         "$disabled &": { backgroundColor: "currentColor" },
       },
       markActive: {
@@ -328,13 +296,11 @@ export const defaultOverrides = (theme: Theme): ThemeOptions => ({
         backgroundColor: "currentColor",
         "$disabled &": { backgroundColor: "currentColor" },
       },
-
       thumb: {
         width: 16,
         height: 16,
         marginTop: -7,
         marginLeft: -8,
-
         "$disabled &": {
           width: 12,
           height: 12,
@@ -342,26 +308,28 @@ export const defaultOverrides = (theme: Theme): ThemeOptions => ({
           marginLeft: -6,
         },
       },
-
       valueLabel: {
+        "& *": { transform: "none" },
+
         top: -22,
-        left: "calc(-25%)",
-        ...theme.typography.caption,
-        color: theme.palette.primary.main,
+        left: "auto",
+        right: "auto",
+        color: "inherit",
 
         "& > *": {
           width: "auto",
           minWidth: 24,
           height: 24,
-
-          whiteSpace: "nowrap",
           borderRadius: 500,
 
-          padding: theme.spacing(0, 1),
-          paddingRight: theme.spacing(0.875),
+          paddingLeft: 6,
+          paddingRight: `calc(6px - ${theme.typography.caption.letterSpacing})`,
+
+          ...theme.typography.caption,
+          whiteSpace: "nowrap",
         },
-        "& *": { transform: "none" },
       },
+
       markLabel: theme.typography.caption,
     },
     MuiFormHelperText: {
@@ -372,34 +340,6 @@ export const defaultOverrides = (theme: Theme): ThemeOptions => ({
     },
     MuiListItemIcon: {
       root: { minWidth: theme.spacing(40 / 8) },
-    },
-
-    MuiSnackbar: {
-      root: {
-        ..._omit(theme.typography.overline, ["color"]),
-
-        "&& > *": {
-          ..._mapValues(
-            _omit(theme.typography.overline, ["color"]),
-            () => "inherit"
-          ),
-          alignItems: "center",
-        },
-      },
-    },
-    MuiSnackbarContent: {
-      root: {
-        backgroundColor: antlerPalette.aGray[700],
-        color: theme.palette.common.white,
-        userSelect: "none",
-
-        padding: theme.spacing(0.5, 2),
-        boxShadow: "none",
-      },
-
-      message: {
-        padding: theme.spacing(1, 2),
-      },
     },
   },
   props: {
