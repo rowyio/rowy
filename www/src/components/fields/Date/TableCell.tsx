@@ -8,12 +8,12 @@ import { DateIcon } from ".";
 import { DATE_FORMAT } from "constants/dates";
 import { transformValue, sanitizeValue } from "./utils";
 
-import DateFnsUtils from "@date-io/date-fns";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-  DatePickerProps,
-} from "@material-ui/pickers";
+// import DateFnsUtils from "@date-io/date-fns";
+// import {
+//   MuiPickersUtilsProvider,
+//   KeyboardDatePicker,
+//   DatePickerProps,
+// } from "@material-ui/pickers";
 
 import { useFiretableContext } from "contexts/FiretableContext";
 import BasicCell from "./BasicCell";
@@ -64,56 +64,52 @@ export default function Date_({
 
   const transformedValue = transformValue(value);
 
-  const [handleDateChange] = useDebouncedCallback<DatePickerProps["onChange"]>(
-    (date) => {
-      const sanitized = sanitizeValue(date);
-      if (sanitized === undefined) return;
+  // const [handleDateChange] = useDebouncedCallback<DatePickerProps["onChange"]>(
+  //   (date) => {
+  //     const sanitized = sanitizeValue(date);
+  //     if (sanitized === undefined) return;
 
-      onSubmit(sanitized);
-      if (dataGridRef?.current?.selectCell)
-        dataGridRef.current.selectCell({ rowIdx, idx: column.idx });
-    },
-    500
-  );
+  //     onSubmit(sanitized);
+  //     if (dataGridRef?.current?.selectCell)
+  //       dataGridRef.current.selectCell({ rowIdx, idx: column.idx });
+  //   },
+  //   500
+  // );
 
-  if (disabled)
-    return (
-      <div className={classes.disabledCell}>
-        <BasicCell
-          value={value}
-          type={(column as any).type}
-          name={column.key}
-        />
-      </div>
-    );
-
+  // if (disabled)
   return (
-    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-      <KeyboardDatePicker
-        value={transformedValue}
-        onChange={handleDateChange}
-        onClick={(e) => e.stopPropagation()}
-        format={column.config?.format ?? DATE_FORMAT}
-        fullWidth
-        clearable
-        keyboardIcon={<DateIcon />}
-        className={clsx("cell-collapse-padding", classes.root)}
-        inputVariant="standard"
-        InputProps={{
-          disableUnderline: true,
-          classes: { root: classes.inputBase, input: classes.input },
-        }}
-        InputAdornmentProps={{
-          position: "start",
-          classes: { root: classes.inputAdornment },
-        }}
-        KeyboardButtonProps={{
-          size: "small",
-          classes: { root: !disabled ? "row-hover-iconButton" : undefined },
-        }}
-        DialogProps={{ onClick: (e) => e.stopPropagation() }}
-        disabled={disabled}
-      />
-    </MuiPickersUtilsProvider>
+    <div className={classes.disabledCell}>
+      <BasicCell value={value} type={(column as any).type} name={column.key} />
+    </div>
   );
+
+  // return (
+  //   <MuiPickersUtilsProvider utils={DateFnsUtils}>
+  //     <KeyboardDatePicker
+  //       value={transformedValue}
+  //       onChange={handleDateChange}
+  //       onClick={(e) => e.stopPropagation()}
+  //       format={column.config?.format ?? DATE_FORMAT}
+  //       fullWidth
+  //       clearable
+  //       keyboardIcon={<DateIcon />}
+  //       className={clsx("cell-collapse-padding", classes.root)}
+  //       inputVariant="standard"
+  //       InputProps={{
+  //         disableUnderline: true,
+  //         classes: { root: classes.inputBase, input: classes.input },
+  //       }}
+  //       InputAdornmentProps={{
+  //         position: "start",
+  //         classes: { root: classes.inputAdornment },
+  //       }}
+  //       KeyboardButtonProps={{
+  //         size: "small",
+  //         classes: { root: !disabled ? "row-hover-iconButton" : undefined },
+  //       }}
+  //       DialogProps={{ onClick: (e) => e.stopPropagation() }}
+  //       disabled={disabled}
+  //     />
+  //   </MuiPickersUtilsProvider>
+  // );
 }

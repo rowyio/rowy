@@ -2,19 +2,17 @@ import { Controller } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 
 import { useTheme } from "@material-ui/core";
-import {
-  KeyboardDatePicker,
-  KeyboardDatePickerProps,
-} from "@material-ui/pickers";
+import LocalizationProvider from "@material-ui/lab/LocalizationProvider";
+import AdapterDateFns from "@material-ui/lab/AdapterDateFns";
+import DatePicker, { DatePickerProps } from "@material-ui/lab/DatePicker";
+import { TextField } from "@material-ui/core";
+
 import { DATE_FORMAT } from "constants/dates";
 import { transformValue, sanitizeValue } from "./utils";
 
-import { MuiPickersUtilsProvider } from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
-
 export interface IDateProps
   extends ISideDrawerFieldProps,
-    Omit<KeyboardDatePickerProps, "name" | "onChange" | "value" | "disabled"> {}
+    Omit<DatePickerProps, "name" | "onChange" | "value" | "disabled"> {}
 
 export default function Date_({
   column,
@@ -26,7 +24,7 @@ export default function Date_({
   const theme = useTheme();
 
   return (
-    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
       <Controller
         control={control}
         name={column.key}
@@ -40,29 +38,32 @@ export default function Date_({
           };
 
           return (
-            <KeyboardDatePicker
-              variant="inline"
-              inputVariant="filled"
-              fullWidth
-              margin="none"
-              format={column.config?.format ?? DATE_FORMAT}
-              placeholder={column.config?.format ?? DATE_FORMAT}
-              InputAdornmentProps={{
-                style: { marginRight: theme.spacing(-1) },
-              }}
+            <DatePicker
+              inputFormat={column.config?.format ?? DATE_FORMAT}
               {...props}
+              renderInput={(props) => (
+                <TextField
+                  {...props}
+                  fullWidth
+                  margin="none"
+                  placeholder={column.config?.format ?? DATE_FORMAT}
+                  // TODO: InputAdornmentProps={{
+                  //   style: { marginRight: theme.spacing(-1) },
+                  // }}
+                  // TODO: move this out to side drawer
+                  id={`sidedrawer-field-${column.key}`}
+                  onBlur={onBlur}
+                  label=""
+                  hiddenLabel
+                />
+              )}
               value={transformedValue}
               onChange={handleChange}
-              onBlur={onBlur}
-              label=""
-              hiddenLabel
-              // TODO: move this out to side drawer
-              id={`sidedrawer-field-${column.key}`}
               disabled={disabled}
             />
           );
         }}
       />
-    </MuiPickersUtilsProvider>
+    </LocalizationProvider>
   );
 }

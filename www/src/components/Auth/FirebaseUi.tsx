@@ -5,7 +5,7 @@ import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 import { Props as FirebaseUiProps } from "react-firebaseui";
 
 import { makeStyles, createStyles, Typography } from "@material-ui/core";
-import { fade } from "@material-ui/core/styles";
+import { alpha } from "@material-ui/core/styles";
 import Skeleton from "@material-ui/lab/Skeleton";
 
 import { auth, db } from "../../firebase";
@@ -145,7 +145,7 @@ const useStyles = makeStyles((theme) =>
         },
 
         "& .mdl-progress>.bufferbar": {
-          background: fade(theme.palette.primary.main, 0.33),
+          background: alpha(theme.palette.primary.main, 0.33),
         },
         "& .mdl-progress>.progressbar": {
           backgroundColor: theme.palette.primary.main + " !important",

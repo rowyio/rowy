@@ -1,10 +1,10 @@
 import _merge from "lodash/merge";
 
 import {
-  createMuiTheme,
+  createTheme,
   Theme,
   ThemeOptions,
-  fade,
+  alpha,
 } from "@material-ui/core/styles";
 import ClearIcon from "@material-ui/icons/Clear";
 
@@ -200,7 +200,7 @@ export const defaultOverrides = (theme: Theme): ThemeOptions => ({
       outlined: { padding: theme.spacing(3 / 8, 15 / 8) },
       outlinedPrimary: {
         // Same as outlined text field
-        borderColor: fade(theme.palette.divider, 0.23),
+        borderColor: alpha(theme.palette.divider, 0.23),
       },
       outlinedSizeLarge: {
         padding: theme.spacing(1, 4),
@@ -378,22 +378,22 @@ export const defaultOverrides = (theme: Theme): ThemeOptions => ({
 });
 
 export const customizableLightTheme = (customization: ThemeOptions) => {
-  const customizedLightThemeBase = createMuiTheme(
+  const customizedLightThemeBase = createTheme(
     _merge({}, themeBase, customization)
   );
 
-  return createMuiTheme(
+  return createTheme(
     customizedLightThemeBase,
     _merge({}, defaultOverrides(customizedLightThemeBase), customization)
   );
 };
 
 export const customizableDarkTheme = (customization: ThemeOptions) => {
-  const customizedDarkThemeBase = createMuiTheme(
+  const customizedDarkThemeBase = createTheme(
     _merge({}, themeBase, darkThemeBase, customization)
   );
 
-  return createMuiTheme(
+  return createTheme(
     customizedDarkThemeBase,
     _merge({}, defaultOverrides(customizedDarkThemeBase), customization)
   );

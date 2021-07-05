@@ -1,7 +1,7 @@
 import {
   makeStyles,
   createStyles,
-  fade,
+  alpha,
   emphasize,
   darken,
   lighten,
@@ -98,7 +98,7 @@ export const useStyles = makeStyles((theme) =>
 
         ".rdg-row:hover &": {
           color: theme.palette.text.primary,
-          backgroundColor: fade(
+          backgroundColor: alpha(
             theme.palette.text.primary,
             theme.palette.action.hoverOpacity * 2
           ),

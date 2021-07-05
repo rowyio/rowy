@@ -6,7 +6,7 @@ import createPersistedState from "use-persisted-state";
 
 import {
   useMediaQuery,
-  MuiThemeProvider,
+  ThemeProvider,
   ThemeOptions,
   CssBaseline,
 } from "@material-ui/core";
@@ -124,10 +124,10 @@ export const AppProvider: React.FC = ({ children }) => {
         setThemeOverridden,
       }}
     >
-      <MuiThemeProvider theme={generatedTheme}>
+      <ThemeProvider theme={generatedTheme}>
         <CssBaseline />
         <ErrorBoundary>{children}</ErrorBoundary>
-      </MuiThemeProvider>
+      </ThemeProvider>
     </AppContext.Provider>
   );
 };

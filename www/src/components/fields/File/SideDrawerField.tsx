@@ -10,7 +10,7 @@ import useUploader, { FileValue } from "hooks/useFiretable/useUploader";
 import {
   makeStyles,
   createStyles,
-  fade,
+  alpha,
   ButtonBase,
   Typography,
   Grid,
@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) =>
       "& svg": { marginRight: theme.spacing(2) },
     },
     dropzoneDragActive: {
-      backgroundColor: fade(
+      backgroundColor: alpha(
         theme.palette.primary.light,
         theme.palette.action.hoverOpacity * 2
       ),

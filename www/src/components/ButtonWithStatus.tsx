@@ -7,20 +7,20 @@ import {
   Button,
   ButtonProps,
 } from "@material-ui/core";
-import { fade } from "@material-ui/core/styles";
+import { alpha } from "@material-ui/core/styles";
 
 export const useStyles = makeStyles((theme) =>
   createStyles({
     active: {
       borderColor: "currentColor",
-      backgroundColor: fade(
+      backgroundColor: alpha(
         theme.palette.primary.main,
         theme.palette.action.hoverOpacity
       ),
 
       "&:hover": {
         color: theme.palette.primary.dark,
-        backgroundColor: fade(
+        backgroundColor: alpha(
           theme.palette.primary.dark,
           theme.palette.action.hoverOpacity
         ),

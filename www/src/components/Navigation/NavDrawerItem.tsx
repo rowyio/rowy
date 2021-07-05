@@ -11,7 +11,7 @@ import {
   ListItemText,
   Collapse,
 } from "@material-ui/core";
-import { fade } from "@material-ui/core/styles";
+import { alpha } from "@material-ui/core/styles";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 
 import { Table } from "contexts/FiretableContext";
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) =>
     listItemSelected: {
       "&&, &&:hover": {
         color: theme.palette.primary.main,
-        backgroundColor: fade(
+        backgroundColor: alpha(
           theme.palette.primary.main,
           theme.palette.action.selectedOpacity
         ),

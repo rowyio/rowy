@@ -9,7 +9,7 @@ import { format } from "date-fns";
 import {
   makeStyles,
   createStyles,
-  fade,
+  alpha,
   Grid,
   Tooltip,
   Chip,
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) =>
       outline: "none",
     },
     dragActive: {
-      backgroundColor: fade(
+      backgroundColor: alpha(
         theme.palette.primary.main,
         theme.palette.action.hoverOpacity * 2
       ),

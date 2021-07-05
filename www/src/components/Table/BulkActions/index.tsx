@@ -4,7 +4,7 @@ import _find from "lodash/find";
 import {
   createStyles,
   makeStyles,
-  fade,
+  alpha,
   Grow,
   Paper,
   Grid,
@@ -83,7 +83,7 @@ const useStyles = makeStyles((theme) =>
       borderRadius: theme.shape.borderRadius,
       backgroundColor:
         theme.palette.type === "dark"
-          ? fade(theme.palette.text.primary, 0.06)
+          ? alpha(theme.palette.text.primary, 0.06)
           : undefined,
     },
     dropdownLabel: {

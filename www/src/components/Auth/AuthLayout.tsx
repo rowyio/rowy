@@ -7,7 +7,7 @@ import {
   Typography,
   LinearProgress,
 } from "@material-ui/core";
-import { fade } from "@material-ui/core/styles";
+import { alpha } from "@material-ui/core/styles";
 
 import bgPattern from "assets/bg-pattern.svg";
 
@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) =>
       //   linear-gradient(161deg, #ecf4ff -31%, #fff4f4 160%)
       // `,
       backgroundImage: `
-        linear-gradient(to bottom, ${fade(
+        linear-gradient(to bottom, ${alpha(
           theme.palette.background.default,
           0
         )}, ${theme.palette.background.default} 75%),
@@ -30,10 +30,10 @@ const useStyles = makeStyles((theme) =>
         theme.palette.secondary.main
       } 90%),
         url('${bgPattern}'),
-        linear-gradient(161deg, ${fade(
+        linear-gradient(161deg, ${alpha(
           theme.palette.background.default,
           0.95
-        )} -31%, ${fade(theme.palette.background.default, 0.98)} 160%)
+        )} -31%, ${alpha(theme.palette.background.default, 0.98)} 160%)
       `,
 
       display: "grid",

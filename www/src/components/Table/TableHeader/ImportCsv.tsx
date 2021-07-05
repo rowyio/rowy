@@ -15,7 +15,7 @@ import {
   TextField,
   FormHelperText,
 } from "@material-ui/core";
-import { fade } from "@material-ui/core/styles";
+import { alpha } from "@material-ui/core/styles";
 
 import Tab from "@material-ui/core/Tab";
 import TabContext from "@material-ui/lab/TabContext";
@@ -45,13 +45,13 @@ const useStyles = makeStyles((theme) =>
     dropzone: {
       height: 137,
       borderRadius: theme.shape.borderRadius,
-      border: `dashed 3px ${fade(theme.palette.text.primary, 0.42)}`,
-      backgroundColor: fade(theme.palette.text.primary, 0.09),
+      border: `dashed 3px ${alpha(theme.palette.text.primary, 0.42)}`,
+      backgroundColor: alpha(theme.palette.text.primary, 0.09),
       color: theme.palette.text.secondary,
       cursor: "pointer",
 
       "&:focus": {
-        backgroundColor: fade(theme.palette.primary.main, 0.09),
+        backgroundColor: alpha(theme.palette.primary.main, 0.09),
         borderColor: theme.palette.primary.main,
         color: theme.palette.primary.main,
         outline: "none",
@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) =>
     },
     error: {
       "$dropzone&": {
-        backgroundColor: fade(theme.palette.error.main, 0.09),
+        backgroundColor: alpha(theme.palette.error.main, 0.09),
         borderColor: theme.palette.error.main,
         color: theme.palette.error.main,
       },

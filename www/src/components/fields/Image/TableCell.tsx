@@ -8,7 +8,7 @@ import clsx from "clsx";
 import {
   makeStyles,
   createStyles,
-  fade,
+  alpha,
   Grid,
   IconButton,
   ButtonBase,
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) =>
       outline: "none",
     },
     dragActive: {
-      backgroundColor: fade(
+      backgroundColor: alpha(
         theme.palette.primary.main,
         theme.palette.action.hoverOpacity * 2
       ),
@@ -89,7 +89,7 @@ const useStyles = makeStyles((theme) =>
       },
 
       "$img:hover &": {
-        backgroundColor: fade(theme.palette.background.paper, 0.8),
+        backgroundColor: alpha(theme.palette.background.paper, 0.8),
         "& *": { opacity: 1 },
       },
     },

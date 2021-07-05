@@ -12,7 +12,7 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@material-ui/core";
-import { fade } from "@material-ui/core/styles";
+import { alpha } from "@material-ui/core/styles";
 import CloseIcon from "assets/icons/Backburger";
 import AddIcon from "@material-ui/icons/Add";
 
@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme) =>
     listItemSelected: {
       "&&, &&:hover": {
         color: theme.palette.primary.main,
-        backgroundColor: fade(
+        backgroundColor: alpha(
           theme.palette.primary.main,
           theme.palette.action.selectedOpacity
         ),

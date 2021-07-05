@@ -6,7 +6,7 @@ import { useCombinedRefs } from "react-data-grid/lib/hooks";
 import {
   makeStyles,
   createStyles,
-  fade,
+  alpha,
   Tooltip,
   Fade,
   Grid,
@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) =>
     },
     isDragging: { opacity: 0.5 },
     isOver: {
-      backgroundColor: fade(
+      backgroundColor: alpha(
         theme.palette.primary.main,
         theme.palette.action.focusOpacity
       ),

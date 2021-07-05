@@ -16,7 +16,7 @@ import {
   DialogContent,
   Button,
 } from "@material-ui/core";
-import { fade } from "@material-ui/core/styles";
+import { alpha } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
@@ -85,19 +85,19 @@ const useStyles = makeStyles((theme) =>
       background: `
         linear-gradient(
           var(--bg-paper) 50%,
-          ${fade(theme.palette.background.paper, 0)}
+          ${alpha(theme.palette.background.paper, 0)}
         ),
         linear-gradient(
-          ${fade(theme.palette.background.paper, 0)},
+          ${alpha(theme.palette.background.paper, 0)},
           var(--bg-paper) 50%
         ) 0 100%,
         linear-gradient(
           to top, ${theme.palette.divider} 1px,
-          ${fade(theme.palette.divider, 0)}
+          ${alpha(theme.palette.divider, 0)}
         ),
         linear-gradient(to top,
           ${theme.palette.divider} 1px,
-          ${fade(theme.palette.divider, 0)}
+          ${alpha(theme.palette.divider, 0)}
         ) 0 calc(100% - 0.5px)`,
       backgroundRepeat: "no-repeat",
       backgroundColor: "var(--bg-paper)",

@@ -9,7 +9,7 @@ import useUploader from "hooks/useFiretable/useUploader";
 import {
   makeStyles,
   createStyles,
-  fade,
+  alpha,
   ButtonBase,
   Typography,
   Grid,
@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) =>
       "& svg": { marginRight: theme.spacing(2) },
     },
     dropzoneDragActive: {
-      backgroundColor: fade(
+      backgroundColor: alpha(
         theme.palette.primary.light,
         theme.palette.action.hoverOpacity * 2
       ),
@@ -72,7 +72,7 @@ const useStyles = makeStyles((theme) =>
       bottom: 0,
       right: 0,
 
-      backgroundColor: fade(theme.palette.background.paper, 0.8),
+      backgroundColor: alpha(theme.palette.background.paper, 0.8),
       color: theme.palette.text.secondary,
       boxShadow: `0 0 0 1px ${theme.palette.divider} inset`,
       borderRadius: theme.shape.borderRadius,
@@ -86,7 +86,7 @@ const useStyles = makeStyles((theme) =>
       backgroundColor: "transparent",
 
       "$img:hover &": {
-        backgroundColor: fade(theme.palette.background.paper, 0.8),
+        backgroundColor: alpha(theme.palette.background.paper, 0.8),
         "& *": { opacity: 1 },
       },
 

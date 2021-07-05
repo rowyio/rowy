@@ -7,7 +7,7 @@ import {
   GridProps,
   Typography,
 } from "@material-ui/core";
-import { fade } from "@material-ui/core/styles";
+import { alpha } from "@material-ui/core/styles";
 
 import { FieldType } from "constants/fields";
 import { getFieldProp } from "components/fields";
@@ -32,12 +32,12 @@ const useStyles = makeStyles((theme) =>
     },
 
     active: {
-      backgroundColor: fade(
+      backgroundColor: alpha(
         theme.palette.primary.main,
         theme.palette.action.activatedOpacity
       ),
       color: theme.palette.primary.main,
-      borderColor: fade(
+      borderColor: alpha(
         theme.palette.primary.main,
         theme.palette.action.disabledOpacity
       ),
