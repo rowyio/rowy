@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import _isEqual from "lodash/isEqual";
 import { ISpark, triggerTypes } from "./utils";
-import BackIcon from "@material-ui/icons/ArrowBack";
 import Modal from "components/Modal";
+import CodeEditorHelper from "components/CodeEditorHelper";
 import CodeEditor from "../../editors/CodeEditor";
 import { useFiretableContext } from "contexts/FiretableContext";
+import BackIcon from "@material-ui/icons/ArrowBack";
 import AddIcon from "@material-ui/icons/AddBox";
 import DeleteIcon from "@material-ui/icons/RemoveCircle";
 import {
@@ -22,6 +23,28 @@ import {
   Tooltip,
   Typography,
 } from "@material-ui/core";
+
+const additionalVariables = [
+  {
+    key: "change",
+    description:
+      "you can pass in field name to change.before.get() or change.after.get() to get changes",
+  },
+  {
+    key: "triggerType",
+    description: "triggerType indicates the type of the spark invocation",
+  },
+  {
+    key: "fieldTypes",
+    description:
+      "fieldTypes is a map of all fields and its corresponding Firetable column type",
+  },
+  {
+    key: "sparkConfig",
+    description:
+      "you can pass in field name to change.before.get() or change.after.get() to get changes",
+  },
+];
 
 const useStyles = makeStyles((theme) => ({
   modalRoot: {
@@ -387,14 +410,16 @@ export default function SparkModal({
                   }}
                 />
               </Box>
+              <CodeEditorHelper
+                docLink="https://github.com/FiretableProject/firetable/wiki/Sparks"
+                additionalVariables={additionalVariables}
+              />
             </TabPanel>
             <TabPanel value={tabIndex} index={1}>
               <Box className={classes.tabPanel} flexGrow={1}>
-                {/* TODO add editor help info */}
                 <Typography variant="overline" className={classes.label}>
                   Spark Body
                 </Typography>
-                {/* TODO break spark body fields into editable UI components */}
                 <CodeEditor
                   script={sparkObject.sparkBody}
                   height="100%"
@@ -414,6 +439,10 @@ export default function SparkModal({
                   }}
                 />
               </Box>
+              <CodeEditorHelper
+                docLink="https://github.com/FiretableProject/firetable/wiki/Sparks"
+                additionalVariables={additionalVariables}
+              />
             </TabPanel>
           </Box>
         </Box>

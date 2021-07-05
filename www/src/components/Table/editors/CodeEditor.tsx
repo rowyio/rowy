@@ -187,6 +187,9 @@ export default function CodeEditor(props: any) {
         type Fields = Field[];
         type Trigger = "create" | "update" | "delete";
         type Triggers = Trigger[];
+
+        // function types that defines spark body and shuold run
+        type Condition = boolean | ((data: SparkContext) => boolean | Promise<boolean>);
       
         // the argument that the spark body takes in
         type SparkContext = {
@@ -197,12 +200,17 @@ export default function CodeEditor(props: any) {
           auth:adminauth.BaseAuth;
           change: any;
           triggerType: Triggers;
-          sparkConfig: any;
+          fieldTypes: any;
+          sparkConfig: {
+            label: string;
+            type: sring;
+            triggers: Trigger[];
+            shouldRun: Condition;
+            requiredFields: string[];
+            sparkBody: any;
+          };
           utilFns: any;
         }
-
-        // function types that defines spark body and shuold run
-        type Condition = boolean | ((data: SparkContext) => boolean | Promise<boolean>);
 
         // spark body definition
         type slackEmailBody = {
