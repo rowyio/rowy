@@ -62,54 +62,47 @@ export default function SparksEditor() {
     }
   };
 
-  const handleSave = () => {
-    // tableActions?.table.updateConfig("sparks", localSparks);
-    setOpen(false);
-    requestConfirmation({
-      title: "Deploy Changes",
-      body: "Would you like to redeploy the cloud function for this table now?",
-      confirm: "Deploy",
-      cancel: "later",
-      handleConfirm: async () => {
-        const settingsDoc = await db.doc("/_FIRETABLE_/settings").get();
-        const ftBuildUrl = settingsDoc.get("ftBuildUrl");
-        if (!ftBuildUrl) {
-          snack.open({
-            message:
-              "Cloud Run trigger URL not configured. Configuration guide: https://github.com/AntlerVC/firetable/wiki/Setting-up-cloud-Run-FT-Builder",
-            variant: "error",
-          });
-        }
-
-        const userTokenInfo = await appContext?.currentUser?.getIdTokenResult();
-        const userToken = userTokenInfo?.token;
-        try {
-          snackLogContext.requestSnackLog();
-          const response = await fetch(ftBuildUrl, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              configPath: tableState?.config.tableConfig.path,
-              token: userToken,
-            }),
-          });
-          const data = await response.json();
-        } catch (e) {
-          console.error(e);
-        }
-      },
-    });
-  };
-
   const handleSaveSparks = () => {
     tableActions?.table.updateConfig("sparkObjects", localSparksObjects);
     setOpen(false);
   };
 
-  const handleSaveDeploy = () => {
+  const handleSaveDeploy = async () => {
     handleSaveSparks();
+
+    // compile spark objects into ft-build readable spark string
+    const serialisedSpark = serialiseSpark(localSparksObjects);
+    tableActions?.table.updateConfig("sparks", serialisedSpark);
+
+    const settingsDoc = await db.doc("/_FIRETABLE_/settings").get();
+    const ftBuildUrl = settingsDoc.get("ftBuildUrl");
+    if (!ftBuildUrl) {
+      snack.open({
+        message:
+          "Cloud Run trigger URL not configured. Configuration guide: https://github.com/AntlerVC/firetable/wiki/Setting-up-cloud-Run-FT-Builder",
+        variant: "error",
+      });
+    }
+
+    // request GCP build
+    const userTokenInfo = await appContext?.currentUser?.getIdTokenResult();
+    const userToken = userTokenInfo?.token;
+    try {
+      snackLogContext.requestSnackLog();
+      const response = await fetch(ftBuildUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          configPath: tableState?.config.tableConfig.path,
+          token: userToken,
+        }),
+      });
+      const data = await response.json();
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const handleAddSpark = (sparkObject: ISpark) => {

@@ -29,7 +29,7 @@ interface ISpark {
   type: ISparkType;
   requiredFields: string[];
   sparkBody: string;
-  shouldRun: boolean | string;
+  shouldRun: string;
 }
 
 const triggerTypes: ISparkTrigger[] = ["create", "update", "delete"];
@@ -160,7 +160,32 @@ function emptySparkObject(type: ISparkType, user: ISparkEditor): ISpark {
 
 /* Convert spark objects into a single ft-build readable string */
 function serialiseSpark(sparks: ISpark[]): string {
-  return "[]";
+  const serialisedSpark =
+    "[" +
+    sparks
+      .filter((spark) => spark.active)
+      .map(
+        (spark) => `{
+          name: "${spark.name}",
+          type: "${spark.type}",
+          triggers: [${spark.triggers
+            .map((trigger) => `"${trigger}"`)
+            .join(", ")}],
+          shouldRun: ${spark.shouldRun
+            .replace(/^.*:\s*Condition\s*=/, "")
+            .replace(/\s*;\s*$/, "")},
+          requiredFields: [${spark.requiredFields
+            .map((field) => `"${field}"`)
+            .join(", ")}],
+          sparkBody: ${spark.sparkBody
+            .replace(/^.*:\s*\w*Body\s*=/, "")
+            .replace(/\s*;\s*$/, "")}
+        }`
+      )
+      .join(",") +
+    "]";
+  console.log("serialisedSpark", serialisedSpark);
+  return serialisedSpark;
 }
 
 export { serialiseSpark, sparkTypes, triggerTypes, emptySparkObject };
