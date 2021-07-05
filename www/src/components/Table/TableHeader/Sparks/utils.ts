@@ -48,11 +48,11 @@ const sparkTypes: ISparkType[] = [
 ];
 
 const sparkBodyTemplate = {
-  task: `async({row, db, change, ref}) => {
+  task: `const sparkBody: TaskBody = async({row, db, change, ref}) => {
     // feel free to add your own code logic here
     console.log("Spark is invoked.")
 }`,
-  docSync: `async({row, db, change, ref}) => {
+  docSync: `const sparkBody: DocSyncBody = async({row, db, change, ref}) => {
     // feel free to add your own code logic here
     const body = {
         fieldsToSync: [],    // a list of string of column names
@@ -61,14 +61,14 @@ const sparkBodyTemplate = {
     }
     return body
 }`,
-  historySnapshot: `async({row, db, change, ref}) => {
+  historySnapshot: `const sparkBody: HistorySnapshotBody = async({row, db, change, ref}) => {
     // feel free to add your own code logic here
     const body = {
         trackedFields: [],    // a list of string of column names
     }
     return body
 }`,
-  algoliaIndex: `async({row, db, change, ref}) => {
+  algoliaIndex: `const sparkBody: AlgoliaIndexBody = async({row, db, change, ref}) => {
     // feel free to add your own code logic here
     const body = {
         fieldsToSync: [],    // a list of string of column names
@@ -78,7 +78,7 @@ const sparkBodyTemplate = {
     }
     return body
 }`,
-  meiliIndex: `async({row, db, change, ref}) => {
+  meiliIndex: `const sparkBody: MeiliIndexBody = async({row, db, change, ref}) => {
     // feel free to add your own code logic here
     const body = {
         fieldsToSync: [],    // a list of string of column names
@@ -88,7 +88,7 @@ const sparkBodyTemplate = {
     }
     return body
 }`,
-  bigqueryIndex: `async({row, db, change, ref}) => {
+  bigqueryIndex: `const sparkBody: BigqueryIndexBody = async({row, db, change, ref}) => {
     // feel free to add your own code logic here
     const body = {
         fieldsToSync: [],    // a list of string of column names
@@ -98,7 +98,7 @@ const sparkBodyTemplate = {
     }
     return body
 }`,
-  slackMessage: `async({row, db, change, ref}) => {
+  slackMessage: `const sparkBody: SlackMessageBody = async({row, db, change, ref}) => {
     // feel free to add your own code logic here
     const body = {
         channels: [],    // a list of slack channel IDs in string
@@ -108,7 +108,7 @@ const sparkBodyTemplate = {
     }
     return body
 }`,
-  sendgridEmail: `async({row, db, change, ref}) => {
+  sendgridEmail: `const sparkBody: SendgridEmailBody = async({row, db, change, ref}) => {
     // feel free to add your own code logic here
     const body = {
         from: "Name<example@domain.com>",   // send from field
@@ -124,13 +124,17 @@ const sparkBodyTemplate = {
     }
     return body
 }`,
-  apiCall: `async({row, db, change, ref}) => {
+  apiCall: `const sparkBody: ApiCallBody = async({row, db, change, ref}) => {
     // feel free to add your own code logic here
     const body = {
+      body: "",
+      url: "",
+      method: "",
+      callback: ()=>{},
     }
     return body
 }`,
-  twilioMessage: `async({row, db, change, ref}) => {
+  twilioMessage: `const sparkBody: TwilioMessageBody = async({row, db, change, ref}) => {
     // feel free to add your own code logic here
     const body = {
     }
@@ -140,13 +144,13 @@ const sparkBodyTemplate = {
 
 function emptySparkObject(type: ISparkType, user: ISparkEditor): ISpark {
   return {
-    name: "Unnamed",
+    name: "Untitled spark",
     active: false,
     triggers: [],
     type,
     sparkBody: sparkBodyTemplate[type] ?? sparkBodyTemplate["task"],
     requiredFields: [],
-    shouldRun: `async({row, change}) => {
+    shouldRun: `const condition: Condition = async({row, change}) => {
     // feel free to add your own code logic here
     return true;
 }`,

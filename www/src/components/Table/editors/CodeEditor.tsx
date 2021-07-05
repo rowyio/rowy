@@ -180,8 +180,7 @@ export default function CodeEditor(props: any) {
         .map((columnKey: string) => `"${columnKey}"`)
         .join("|\n");
 
-      const sparksDefinition = `declare namespace sparks {
-
+      const sparksDefinition = `
         // basic types that are used in all places
         type Row = {${rowDefinition}};
         type Field = ${availableFields} | string | object;
@@ -201,173 +200,77 @@ export default function CodeEditor(props: any) {
           sparkConfig: any;
           utilFns: any;
         }
-      
-        // function types that defines spark body and shuold run
-        type ShouldRun = boolean | ((data: SparkContext) => boolean | Promise<any>);
-        type ContextToString = ((data: SparkContext) => string | Promise<any>);
-        type ContextToStringList = ((data: SparkContext) => string[] | Promise<any>);
-        type ContextToObject = ((data: SparkContext) => object | Promise<any>);
-        type ContextToObjectList = ((data: SparkContext) => object[] | Promise<any>);
-        type ContextToRow = ((data: SparkContext) => Row | Promise<any>);
-        type ContextToAny = ((data: SparkContext) => any | Promise<any>);
 
-        // different types of bodies that slack message can use
+        // function types that defines spark body and shuold run
+        type Condition = boolean | ((data: SparkContext) => boolean | Promise<boolean>);
+
+        // spark body definition
         type slackEmailBody = {
-          channels?: ContextToStringList;
-          text?: ContextToString;
-          emails: ContextToStringList;
-          blocks?: ContextToObjectList;
-          attachments?: ContextToAny;
+          channels?: string[];
+          text?: string;
+          emails: string[];
+          blocks?: object[];
+          attachments?: any;
         }
 
         type slackChannelBody = {
-          channels: ContextToStringList;
-          text?: ContextToString;
-          emails?: ContextToStringList;
-          blocks?: ContextToObjectList;
-          attachments?: ContextToAny;
-        }
-      
-        // different types of sparks
-        type docSync = {
-          label?:string;
-          type: "docSync";
-          triggers: Triggers;
-          shouldRun: ShouldRun;
-          requiredFields?: Fields;
-          sparkBody: {
-            fieldsToSync: Fields;
-            row: ContextToRow;
-            targetPath: ContextToString;
-          }
-        };
-      
-        type historySnapshot = {
-          label?:string;
-          type: "historySnapshot";
-          triggers: Triggers;
-          shouldRun: ShouldRun;
-          sparkBody: {
-            trackedFields: Fields;
-          }
-        }
-      
-        type algoliaIndex = {
-          label?:string; 
-          type: "algoliaIndex"; 
-          triggers: Triggers; 
-          shouldRun: ShouldRun;
-          requiredFields?: Fields;
-          sparkBody: {
-            fieldsToSync: Fields;
-            index: string;
-            row: ContextToRow;
-            objectID: ContextToString;
-          }
-        }
-        
-        type meiliIndex = { 
-          type: "meiliIndex"; 
-          triggers: Triggers; 
-          shouldRun: ShouldRun;
-          requiredFields?: Fields;
-          sparkBody: {
-            fieldsToSync: Fields;
-            index: string;
-            row: ContextToRow;
-            objectID: ContextToString;
-          }
-        }
-        
-        type bigqueryIndex = { 
-          type: "bigqueryIndex"; 
-          triggers: Triggers; 
-          shouldRun: ShouldRun;
-          requiredFields?: Fields;
-          sparkBody: {
-            fieldsToSync: Fields;
-            index: string;
-            row: ContextToRow;
-            objectID: ContextToString;
-          }
+          channels: string[];
+          text?: string;
+          emails?: string[];
+          blocks?: object[];
+          attachments?: any;
         }
 
-        type slackMessage = {
-          label?:string; 
-          type: "slackMessage"; 
-          triggers: Triggers; 
-          shouldRun: ShouldRun;
-          requiredFields?: Fields;
-          sparkBody: slackEmailBody | slackChannelBody;
-        }
-      
-        type sendgridEmail = {
-          label?:string;
-          type: "sendgridEmail";
-          triggers: Triggers;
-          shouldRun: ShouldRun;
-          requiredFields?: Fields;
-          sparkBody: {
-            msg: ContextToAny;
-          }
-        }
-      
-        type apiCall = {
-          label?:string; 
-          type: "apiCall"; 
-          triggers: Triggers; 
-          shouldRun: ShouldRun;
-          requiredFields?: Fields;
-          sparkBody: {
-            body: ContextToString;
-            url: ContextToString;
-            method: ContextToString;
-            callback: ContextToAny;
-          }
-        }
-      
-        type twilioMessage = {
-          label?:string;
-          type: "twilioMessage";
-          triggers: Triggers;
-          shouldRun: ShouldRun;
-          requiredFields?: Fields;
-          sparkBody: {
-            body: ContextToAny;
-            from: ContextToAny;
-            to: ContextToAny;
-          }
-        }
+        type DocSyncBody = (SparkContext) => Promise<{
+          fieldsToSync: Fields;
+          row: Row;
+          targetPath: string;
+        }>
 
-        type task = {
-          label?:string; 
-          type: "task"; 
-          triggers: Triggers; 
-          shouldRun: ShouldRun;
-          requiredFields?: Fields;
-          sparkBody: {
-            promises: ContextToAny;
-          }
-        }
-      
-        // an individual spark 
-        type Spark =
-          | docSync
-          | historySnapshot
-          | algoliaIndex
-          | meiliIndex
-          | bigqueryIndex
-          | slackMessage
-          | sendgridEmail
-          | apiCall
-          | twilioMessage
-          | task;
-      
-        type Sparks = Spark[]
-      
-        // use spark.config(sparks) in the code editor for static type check
-        function config(sparks: Sparks): void;
-      }`;
+        type HistorySnapshotBody = (SparkContext) => Promise<{
+          trackedFields: Fields;
+        }>
+
+        type AlgoliaIndexBody = (SparkContext) => Promise<{
+          fieldsToSync: Fields;
+          index: string;
+          row: Row;
+          objectID: string;
+        }>
+
+        type MeiliIndexBody = (SparkContext) => Promise<{
+          fieldsToSync: Fields;
+          index: string;
+          row: Row;
+          objectID: string;
+        }>
+
+        type BigqueryIndexBody = (SparkContext) => Promise<{
+          fieldsToSync: Fields;
+          index: string;
+          row: Row;
+          objectID: string;
+        }>
+
+        type SlackMessageBody = (SparkContext) => Promise<slackEmailBody | slackChannelBody>;
+
+        type SendgridEmailBody = (SparkContext) => Promise<any>;
+
+        type ApiCallBody = (SparkContext) => Promise<{
+          body: string;
+          url: string;
+          method: string;
+          callback: any;
+        }>
+
+        type TwilioMessageBody = (SparkContext) => Promise<{
+          body: any;
+          from: any;
+          to: any;
+        }>
+
+        type TaskBody = (SparkContext) => Promise<any>
+      `;
 
       monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
         [
