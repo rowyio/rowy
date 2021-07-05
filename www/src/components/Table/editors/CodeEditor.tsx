@@ -3,6 +3,7 @@ import { useTheme, createStyles, makeStyles } from "@material-ui/core/styles";
 import Editor, { useMonaco } from "@monaco-editor/react";
 import { useFiretableContext } from "contexts/FiretableContext";
 import { FieldType } from "constants/fields";
+import { useEffect } from "react";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -33,6 +34,8 @@ export default function CodeEditor(props: any) {
     script,
     onValideStatusUpdate,
     diagnosticsOptions,
+    onUnmount,
+    onMount,
   } = props;
   const theme = useTheme();
   const monacoInstance = useMonaco();
@@ -43,8 +46,15 @@ export default function CodeEditor(props: any) {
 
   const editorRef = useRef<any>();
 
+  useEffect(() => {
+    return () => {
+      onUnmount?.();
+    };
+  }, []);
+
   function handleEditorDidMount(_, editor) {
     editorRef.current = editor;
+    onMount?.();
   }
 
   const themeTransformer = (theme: string) => {

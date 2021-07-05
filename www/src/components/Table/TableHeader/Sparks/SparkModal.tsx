@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import _isEqual from "lodash/isEqual";
+import useStateRef from "react-usestateref";
 import { ISpark, triggerTypes } from "./utils";
 import Modal from "components/Modal";
 import CodeEditorHelper from "components/CodeEditorHelper";
+import { useConfirmation } from "components/ConfirmationDialog";
 import CodeEditor from "../../editors/CodeEditor";
 import { useFiretableContext } from "contexts/FiretableContext";
 import BackIcon from "@material-ui/icons/ArrowBack";
@@ -134,8 +136,23 @@ export default function SparkModal({
   mode,
   sparkObject: initialObject,
 }: ISparkModalProps) {
+  const { requestConfirmation } = useConfirmation();
   const [sparkObject, setSparkObject] = useState<ISpark>(initialObject);
   const [tabIndex, setTabIndex] = useState(0);
+  const [validation, setValidation, validationRef] = useStateRef({
+    condition: true,
+    sparkBody: true,
+  });
+  const [
+    conditionEditorActive,
+    setConditionEditorActive,
+    conditionEditorActiveRef,
+  ] = useStateRef(false);
+  const [
+    bodyEditorActive,
+    setBodyEditorActive,
+    bodyEditorActiveRef,
+  ] = useStateRef(false);
   const classes = useStyles();
   const { tableState } = useFiretableContext();
   const columns = Object.keys(tableState?.columns ?? {});
@@ -143,6 +160,17 @@ export default function SparkModal({
 
   const handleChange = (_, newValue: number) => {
     setTabIndex(newValue);
+  };
+
+  const handleAddOrUpdate = () => {
+    switch (mode) {
+      case "add":
+        handleAdd(sparkObject);
+        return;
+      case "update":
+        handleUpdate(sparkObject);
+        return;
+    }
   };
 
   return (
@@ -401,12 +429,25 @@ export default function SparkModal({
                     });
                   }}
                   onValideStatusUpdate={({ isValid }) => {
-                    // setIsSparksValid(isValid);
+                    if (!conditionEditorActiveRef.current) {
+                      return;
+                    }
+                    setValidation({
+                      ...validationRef.current,
+                      condition: isValid,
+                    });
+                    console.log(validationRef.current);
                   }}
                   diagnosticsOptions={{
                     noSemanticValidation: false,
                     noSyntaxValidation: false,
                     noSuggestionDiagnostics: true,
+                  }}
+                  onMount={() => {
+                    setConditionEditorActive(true);
+                  }}
+                  onUnmount={() => {
+                    setConditionEditorActive(false);
                   }}
                 />
               </Box>
@@ -430,12 +471,25 @@ export default function SparkModal({
                     });
                   }}
                   onValideStatusUpdate={({ isValid }) => {
-                    // setIsSparksValid(isValid);
+                    if (!bodyEditorActiveRef.current) {
+                      return;
+                    }
+                    setValidation({
+                      ...validationRef.current,
+                      sparkBody: isValid,
+                    });
+                    console.log(validationRef.current);
                   }}
                   diagnosticsOptions={{
                     noSemanticValidation: false,
                     noSyntaxValidation: false,
                     noSuggestionDiagnostics: true,
+                  }}
+                  onMount={() => {
+                    setBodyEditorActive(true);
+                  }}
+                  onUnmount={() => {
+                    setBodyEditorActive(false);
                   }}
                 />
               </Box>
@@ -452,13 +506,25 @@ export default function SparkModal({
           children: mode === "add" ? "Add" : "Update",
           disabled: !edited || !sparkObject.name.length,
           onClick: () => {
-            switch (mode) {
-              case "add":
-                handleAdd(sparkObject);
-                return;
-              case "update":
-                handleUpdate(sparkObject);
-                return;
+            let warningMessage;
+            if (!validation.condition && !validation.sparkBody) {
+              warningMessage = "Condition and spark body are not valid";
+            } else if (!validation.condition) {
+              warningMessage = "Condition is not valid";
+            } else if (!validation.sparkBody) {
+              warningMessage = "Spark body is not valid";
+            }
+
+            if (warningMessage) {
+              requestConfirmation({
+                title: "Validation failed",
+                body: `${warningMessage}, do you want to continue?`,
+                confirm: "Yes, I know what I am doing",
+                cancel: "No, I'll fix the errors",
+                handleConfirm: handleAddOrUpdate,
+              });
+            } else {
+              handleAddOrUpdate();
             }
           },
         },
