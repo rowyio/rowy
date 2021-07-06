@@ -239,55 +239,55 @@ export default function CodeEditor(props: any) {
           attachments?: any;
         }
 
-        type DocSyncBody = (SparkContext) => Promise<{
+        type DocSyncBody = (context: SparkContext) => Promise<{
           fieldsToSync: Fields;
           row: Row;
           targetPath: string;
         }>
 
-        type HistorySnapshotBody = (SparkContext) => Promise<{
+        type HistorySnapshotBody = (context: SparkContext) => Promise<{
           trackedFields: Fields;
         }>
 
-        type AlgoliaIndexBody = (SparkContext) => Promise<{
+        type AlgoliaIndexBody = (context: SparkContext) => Promise<{
           fieldsToSync: Fields;
           index: string;
           row: Row;
           objectID: string;
         }>
 
-        type MeiliIndexBody = (SparkContext) => Promise<{
+        type MeiliIndexBody = (context: SparkContext) => Promise<{
           fieldsToSync: Fields;
           index: string;
           row: Row;
           objectID: string;
         }>
 
-        type BigqueryIndexBody = (SparkContext) => Promise<{
+        type BigqueryIndexBody = (context: SparkContext) => Promise<{
           fieldsToSync: Fields;
           index: string;
           row: Row;
           objectID: string;
         }>
 
-        type SlackMessageBody = (SparkContext) => Promise<slackEmailBody | slackChannelBody>;
+        type SlackMessageBody = (context: SparkContext) => Promise<slackEmailBody | slackChannelBody>;
 
-        type SendgridEmailBody = (SparkContext) => Promise<any>;
+        type SendgridEmailBody = (context: SparkContext) => Promise<any>;
 
-        type ApiCallBody = (SparkContext) => Promise<{
+        type ApiCallBody = (context: SparkContext) => Promise<{
           body: string;
           url: string;
           method: string;
           callback: any;
         }>
 
-        type TwilioMessageBody = (SparkContext) => Promise<{
+        type TwilioMessageBody = (context: SparkContext) => Promise<{
           body: any;
           from: any;
           to: any;
         }>
 
-        type TaskBody = (SparkContext) => Promise<any>
+        type TaskBody = (context: SparkContext) => Promise<any>
       `;
 
       monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
