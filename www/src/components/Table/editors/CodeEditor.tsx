@@ -282,9 +282,9 @@ export default function CodeEditor(props: any) {
         }>
 
         type TwilioMessageBody = (SparkContext) => Promise<{
-          body: any;
-          from: any;
-          to: any;
+          body: string;
+          from: string;
+          to: string;
         }>
 
         type TaskBody = (SparkContext) => Promise<any>
