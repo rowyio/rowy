@@ -257,7 +257,7 @@ export default function SparkModal({
             display="flex"
             flexDirection="column"
           >
-            <AppBar position="static" className={classes.tabRoot}>
+            <AppBar position="static" className={classes.tabRoot} elevation={0}>
               <Tabs
                 value={tabIndex}
                 onChange={handleChange}
@@ -327,7 +327,7 @@ export default function SparkModal({
                       Required Fields (Optional)
                     </Typography>
                   </Box>
-                  {columns.map((field) => (
+                  {columns.sort().map((field) => (
                     <Box
                       display="flex"
                       alignItems="center"
