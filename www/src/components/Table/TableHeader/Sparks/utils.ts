@@ -160,7 +160,7 @@ const sparkBodyTemplate = {
 
 function emptySparkObject(type: ISparkType, user: ISparkEditor): ISpark {
   return {
-    name: "Untitled spark",
+    name: "Untitled extension",
     active: false,
     triggers: [],
     type,

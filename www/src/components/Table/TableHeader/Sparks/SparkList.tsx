@@ -96,14 +96,14 @@ export default function SparkList({
         marginTop={"0px !important"}
       >
         <Typography variant="overline">
-          SPARKS ({activeSparkCount}/{sparks.length})
+          EXTENSION ({activeSparkCount}/{sparks.length})
         </Typography>
         <Button
           startIcon={<AddIcon />}
           onClick={handleAddButton}
           ref={addButtonRef}
         >
-          ADD SPARK
+          ADD EXTENTION
         </Button>
         <Menu
           anchorEl={anchorEl}
@@ -126,9 +126,9 @@ export default function SparkList({
       <Box className={classes.sparkList}>
         {sparks.length === 0 && (
           <EmptyState
-            message="Add your first spark"
+            message="Add your first extension"
             description={
-              "When you add sparks, your sparks should be shown here."
+              "When you add extentions, your extentions should be shown here."
             }
             Icon={EmptyIcon}
             className={classes.hoverableEmptyState}

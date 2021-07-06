@@ -182,7 +182,7 @@ export default function SparksEditor() {
   return (
     <>
       <TableHeaderButton
-        title="Sparks"
+        title="Extensions"
         onClick={() => setOpen(true)}
         icon={<SparkIcon />}
       />
@@ -193,7 +193,7 @@ export default function SparksEditor() {
           onClose={handleClose}
           maxWidth="sm"
           fullWidth
-          title={<>Sparks</>}
+          title={<>Extensions</>}
           children={
             <>
               <Breadcrumbs aria-label="breadcrumb">

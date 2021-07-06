@@ -34,7 +34,7 @@ const additionalVariables = [
   },
   {
     key: "triggerType",
-    description: "triggerType indicates the type of the spark invocation",
+    description: "triggerType indicates the type of the extention invocation",
   },
   {
     key: "fieldTypes",
@@ -184,7 +184,7 @@ export default function SparkModal({
           startIcon={<BackIcon />}
           onClick={handleClose}
         >
-          SPARKS
+          EXTENSIONS
         </Button>
       }
       children={
@@ -205,8 +205,8 @@ export default function SparkModal({
                 size="small"
                 label={
                   edited && !sparkObject.name.length
-                    ? "Spark name (required)"
-                    : "Spark name"
+                    ? "Extension name (required)"
+                    : "Extension name"
                 }
                 variant="filled"
                 fullWidth
@@ -234,15 +234,15 @@ export default function SparkModal({
               >
                 <Switch color="primary" checked={sparkObject.active} />
                 <Typography>
-                  Spark is {!sparkObject.active && "de"}activated
+                  Extention is {!sparkObject.active && "de"}activated
                 </Typography>
               </Box>
             </Grid>
             <Grid item xs={4}>
-              <Tooltip title="Spark type cannot be changed once created.">
+              <Tooltip title="Extension type cannot be changed once created.">
                 <TextField
                   size="small"
-                  label="Spark Type"
+                  label="Extension Type"
                   value={sparkObject.type}
                   variant="filled"
                   fullWidth
@@ -508,11 +508,11 @@ export default function SparkModal({
           onClick: () => {
             let warningMessage;
             if (!validation.condition && !validation.sparkBody) {
-              warningMessage = "Condition and spark body are not valid";
+              warningMessage = "Condition and extention body are not valid";
             } else if (!validation.condition) {
               warningMessage = "Condition is not valid";
             } else if (!validation.sparkBody) {
-              warningMessage = "Spark body is not valid";
+              warningMessage = "Extention body is not valid";
             }
 
             if (warningMessage) {
