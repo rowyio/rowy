@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import SettingsMenu from "./Menu";
 //import Webhooks from "./Webhooks";
 export default function Settings() {

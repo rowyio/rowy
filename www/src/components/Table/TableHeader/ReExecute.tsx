@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 import TableHeaderButton from "./TableHeaderButton";
 import LoopIcon from "@material-ui/icons/Loop";

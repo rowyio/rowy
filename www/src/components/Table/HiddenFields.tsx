@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import _isEqual from "lodash/isEqual";
 import _sortBy from "lodash/sortBy";
 

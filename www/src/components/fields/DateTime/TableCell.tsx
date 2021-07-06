@@ -1,4 +1,3 @@
-import React from "react";
 import clsx from "clsx";
 import { IHeavyCellProps } from "../types";
 import { useDebouncedCallback } from "use-debounce";

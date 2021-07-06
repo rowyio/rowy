@@ -492,14 +492,14 @@ export default function TableLogs() {
                       Cloud Run trigger URL not configured. Configuration guide:{" "}
                       <Link
                         href={
-                          "https://github.com/AntlerVC/firetable/wiki/Setting-up-cloud-Run-FT-Builder"
+                          "https://github.com/FiretableProject/firetable/wiki/Setting-up-cloud-Run-FT-Builder"
                         }
                         target="_blank"
                         rel="noopener noreferrer"
                         variant="body2"
                         underline="always"
                       >
-                        https://github.com/AntlerVC/firetable/wiki/Setting-up-cloud-Run-FT-Builder
+                        https://github.com/FiretableProject/firetable/wiki/Setting-up-cloud-Run-FT-Builder
                       </Link>
                     </>
                   }

@@ -1,4 +1,3 @@
-import React from "react";
 import { IPopoverCellProps } from "../types";
 import _get from "lodash/get";
 
@@ -18,7 +17,7 @@ export default function ConnectTable({
 
   return (
     <ConnectTableSelect
-    row={row}
+      row={row}
       column={column}
       value={value}
       onChange={onSubmit}

@@ -1,7 +1,7 @@
 import { db } from "../../firebase";
 
 import Button from "@material-ui/core/Button";
-import React, { useEffect, useReducer, useContext, useCallback } from "react";
+import { useEffect, useReducer, useContext, useCallback } from "react";
 import _isEqual from "lodash/isEqual";
 import firebase from "firebase/app";
 import { FireTableFilter, FiretableOrderBy } from ".";
@@ -15,7 +15,7 @@ import {
 import { projectId } from "../../firebase";
 import _findIndex from "lodash/findIndex";
 import _orderBy from "lodash/orderBy";
-import {firetableUser} from 'contexts/FiretableContext'
+import { firetableUser } from "contexts/FiretableContext";
 import { useAppContext } from "contexts/AppContext";
 const CAP = 1000; // safety  paramter sets the  upper limit of number of docs fetched by this hook
 const serverTimestamp = firebase.firestore.FieldValue.serverTimestamp;
@@ -79,7 +79,7 @@ const tableInitialState = {
 
 const useTable = (initialOverrides: any) => {
   const snack = useContext(SnackContext);
-  const {currentUser}=useAppContext()
+  const { currentUser } = useAppContext();
 
   const [tableState, tableDispatch] = useReducer(tableReducer, {
     ...tableInitialState,

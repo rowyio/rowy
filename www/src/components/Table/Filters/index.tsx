@@ -108,6 +108,10 @@ const useStyles = makeStyles((theme) =>
       marginLeft: -1,
       borderColor: theme.palette.action.disabled,
     },
+    filterChipLabel: {
+      ...theme.typography.subtitle2,
+      lineHeight: 1,
+    },
     filterChipDelete: {
       color: theme.palette.primary.main,
       "&:hover": { color: theme.palette.primary.dark },
@@ -363,6 +367,7 @@ const Filters = () => {
             onDelete={() => handleUpdateFilters([])}
             classes={{
               root: classes.filterChip,
+              label: classes.filterChipLabel,
               deleteIcon: classes.filterChipDelete,
             }}
             variant="outlined"

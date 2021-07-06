@@ -1,4 +1,3 @@
-import React from "react";
 import { IHeavyCellProps } from "../types";
 import clsx from "clsx";
 import { Link } from "react-router-dom";

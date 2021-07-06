@@ -1,22 +1,24 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Typography, Button, TextField } from "@material-ui/core";
 
-import AuthCard from "components/Auth/AuthCard";
-import { handleGoogleAuth, signOut } from "utils/auth";
-import GoogleLogo from "assets/google-icon.svg";
-import { useSnackContext } from "contexts/SnackContext";
+import AuthLayout from "components/Auth/AuthLayout";
+import FirebaseUi from "components/Auth/FirebaseUi";
 
+import { signOut } from "utils/auth";
+import { useSnackContext } from "contexts/SnackContext";
 import { ImpersonatorAuth } from "../../firebase/callables";
 import { auth } from "../../firebase";
 
 export default function ImpersonatorAuthPage() {
+  const snack = useSnackContext();
+
   useEffect(() => {
     //sign out user on initial load
     signOut();
   }, []);
+
   const [loading, setLoading] = useState(false);
-  const snack = useSnackContext();
   const [adminUser, setAdminUser] = useState();
   const [email, setEmail] = useState("");
 
@@ -25,59 +27,60 @@ export default function ImpersonatorAuthPage() {
     const resp = await ImpersonatorAuth(email);
     setLoading(false);
     if (resp.data.success) {
-      snack.open({ message: resp.data.message });
-
+      snack.open({ message: resp.data.message, variant: "success" });
       await auth.signInWithCustomToken(resp.data.jwt);
       window.location.href = "/";
+    } else {
+      snack.open({ message: resp.data.message, variant: "error" });
     }
   };
 
   return (
-    <AuthCard height={400} loading={loading}>
-      <Typography variant="overline">Admin Authentication</Typography>
+    <AuthLayout loading={loading}>
+      <Typography variant="h6" component="h2">
+        Admin Authentication
+      </Typography>
+
       {adminUser === undefined ? (
-        <>
-          <Typography variant="body1">
-            Please select an admin account to authenticate
-          </Typography>
-          <Button
-            onClick={() => {
-              handleGoogleAuth(
-                (authUser, roles) => {
-                  if (roles.includes("ADMIN")) {
+        <FirebaseUi
+          uiConfig={{
+            callbacks: {
+              signInSuccessWithAuthResult: (authUser) => {
+                authUser.user.getIdTokenResult().then((result) => {
+                  if (result.claims.roles?.includes("ADMIN")) {
                     setAdminUser(authUser.user);
                   } else {
-                    snack.open({ message: "this account is not an admin" });
+                    snack.open({
+                      message: "Not an admin account",
+                      variant: "error",
+                    });
                     signOut();
                   }
-                },
-                (error: Error) => {
-                  snack.open({ message: error.message });
-                }
-              );
-            }}
-            color="primary"
-            size="large"
-            variant="outlined"
-            startIcon={
-              <img
-                src={GoogleLogo}
-                width={16}
-                style={{ marginRight: 8, display: "block" }}
-              />
-            }
-          >
-            SIGN IN WITH GOOGLE
-          </Button>
-        </>
+                });
+
+                return false;
+              },
+            },
+          }}
+        />
       ) : (
         <>
-          <TextField name="email" onChange={(e) => setEmail(e.target.value)} />
-          <Button disabled={email === ""} onClick={() => handleAuth(email)}>
-            Sign in
+          <TextField
+            name="email"
+            label="Email"
+            fullWidth
+            autoFocus
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <Button
+            variant="contained"
+            disabled={email === ""}
+            onClick={() => handleAuth(email)}
+          >
+            Sign In
           </Button>
         </>
       )}
-    </AuthCard>
+    </AuthLayout>
   );
 }

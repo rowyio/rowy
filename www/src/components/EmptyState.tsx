@@ -1,4 +1,3 @@
-import React from "react";
 import clsx from "clsx";
 import Div100vh from "react-div-100vh";
 

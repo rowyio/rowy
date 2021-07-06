@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import _groupBy from "lodash/groupBy";
 import _find from "lodash/find";
 import {
@@ -50,8 +50,6 @@ const useStyles = makeStyles((theme) =>
     },
     sectionHeader: {
       color: theme.palette.text.secondary,
-      textTransform: "uppercase",
-      letterSpacing: `${2 / 13}em`,
     },
     divider: { margin: theme.spacing(1, 0, 3) },
 
@@ -158,8 +156,9 @@ export default function HomePage() {
             <Typography variant="body2">
               If you are the project owner please follow the instructions{" "}
               <a
-                href="https://github.com/AntlerVC/firetable/wiki/Role-Based-Security-Rules"
+                href="https://github.com/FiretableProject/firetable/wiki/Role-Based-Security-Rules"
                 target="_blank"
+                rel="noopener"
               >
                 here
               </a>{" "}
@@ -235,7 +234,7 @@ export default function HomePage() {
           {favs.length !== 0 && (
             <section id="favorites" className={classes.section}>
               <Typography
-                variant="subtitle2"
+                variant="h6"
                 component="h1"
                 className={classes.sectionHeader}
               >
@@ -263,7 +262,7 @@ export default function HomePage() {
                 className={classes.section}
               >
                 <Typography
-                  variant="subtitle2"
+                  variant="h6"
                   component="h1"
                   className={classes.sectionHeader}
                 >
@@ -315,10 +314,9 @@ export default function HomePage() {
         mode={settingsDialogState.mode}
         data={settingsDialogState.data}
       />
-      <ProjectSettings
-        open={openProjectSettings}
-        handleClose={() => setOpenProjectSettings(false)}
-      />
+      {openProjectSettings && (
+        <ProjectSettings handleClose={() => setOpenProjectSettings(false)} />
+      )}
     </HomeNavigation>
   );
 }

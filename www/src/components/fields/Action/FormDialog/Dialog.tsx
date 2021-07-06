@@ -1,5 +1,3 @@
-import React from "react";
-
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import * as yup from "yup";
@@ -43,7 +41,6 @@ export default function ParamsDialog({
 }: any) {
   const classes = useStyles();
 
-
   /*
  Refrence fields config  
   const _fields = [{
@@ -62,7 +59,7 @@ export default function ParamsDialog({
 */
   const fields = column.config.params.map((field) => ({
     ...field,
-    validation:field.validation? validationCompiler(field.validation):null,
+    validation: field.validation ? validationCompiler(field.validation) : null,
   }));
   return (
     <>
@@ -73,7 +70,7 @@ export default function ParamsDialog({
         fields={fields}
         values={{}}
         onSubmit={handleRun}
-        SubmitButtonProps={{ children: 'Run' }}
+        SubmitButtonProps={{ children: "Run" }}
       />
     </>
   );

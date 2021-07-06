@@ -1,4 +1,3 @@
-import React from "react";
 import jsonFormat from "json-format";
 import { IBasicCellProps } from "../types";
 

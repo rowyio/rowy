@@ -1,5 +1,3 @@
-import React from "react";
-
 import { TextField, FormControlLabel, Switch } from "@material-ui/core";
 import Subheading from "components/Table/ColumnMenu/Subheading";
 

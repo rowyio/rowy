@@ -1,4 +1,3 @@
-import React from "react";
 import { ISettingsProps } from "../types";
 import _sortBy from "lodash/sortBy";
 import Subheading from "components/Table/ColumnMenu/Subheading";

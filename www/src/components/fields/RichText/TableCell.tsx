@@ -1,5 +1,3 @@
-import React from "react";
-
 import { IHeavyCellProps } from "../types";
 
 import { makeStyles, createStyles, Tooltip, Fade } from "@material-ui/core";

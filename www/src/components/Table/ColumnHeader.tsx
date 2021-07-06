@@ -1,4 +1,3 @@
-import React from "react";
 import clsx from "clsx";
 import { HeaderRendererProps } from "react-data-grid";
 import { useDrag, useDrop, DragObjectWithType } from "react-dnd";
@@ -187,7 +186,7 @@ export default function DraggableHeaderRenderer<R>({
       <Tooltip
         title={
           <>
-            <Typography variant="caption" component="p">
+            <Typography variant="subtitle2" component="p">
               {column.key as string}
             </Typography>
             <Typography variant="body2" component="p">
@@ -210,7 +209,7 @@ export default function DraggableHeaderRenderer<R>({
 
       <Grid item xs className={classes.columnNameContainer}>
         <Tooltip
-          title={<Typography variant="caption">{column.name}</Typography>}
+          title={<Typography variant="subtitle2">{column.name}</Typography>}
           enterDelay={1000}
           placement="bottom-start"
           PopperProps={{
@@ -227,7 +226,7 @@ export default function DraggableHeaderRenderer<R>({
           classes={{ tooltip: classes.columnNameTooltip }}
         >
           <Typography
-            variant="caption"
+            variant="subtitle2"
             noWrap
             className={classes.columnName}
             component="div"

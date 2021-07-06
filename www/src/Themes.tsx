@@ -1,4 +1,3 @@
-import React from "react";
 import _clone from "lodash/clone";
 import _merge from "lodash/merge";
 import _omit from "lodash/omit";
@@ -84,9 +83,9 @@ export const themeBase = {
     },
     subtitle2: {
       fontFamily: HEADING_FONT,
-      fontSize: toRem(16),
+      fontSize: toRem(14),
       fontWeight: "bold",
-      letterSpacing: toEm(0.4, 16),
+      letterSpacing: toEm(0.4, 14),
       lineHeight: 1.5,
     },
     body1: {
@@ -105,11 +104,9 @@ export const themeBase = {
       lineHeight: 1,
     },
     caption: {
-      fontFamily: HEADING_FONT,
-      fontSize: toRem(13),
-      fontWeight: "bold",
-      letterSpacing: toEm(0.4, 13),
-      lineHeight: 16 / 13,
+      fontSize: toRem(14),
+      letterSpacing: toEm(0.4, 14),
+      lineHeight: 20 / 14,
     },
     overline: {
       fontFamily: HEADING_FONT,
@@ -364,10 +361,6 @@ export const defaultOverrides = (theme: Theme): ThemeOptions => ({
         "& *": { transform: "none" },
       },
       markLabel: theme.typography.caption,
-    },
-    MuiLinearProgress: {
-      colorPrimary: { backgroundColor: "#e7e7e7" },
-      colorSecondary: { backgroundColor: "#e7e7e7" },
     },
     MuiFormHelperText: {
       contained: {

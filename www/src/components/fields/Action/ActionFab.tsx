@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import _get from "lodash/get";
 
 import { Fab, FabProps, CircularProgress } from "@material-ui/core";

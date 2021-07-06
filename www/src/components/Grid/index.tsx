@@ -1,5 +1,3 @@
-import React from "react";
-
 import { Grid as MuiGrid } from "@material-ui/core";
 import Card from "./Card";
 import useAlgolia from "use-algolia";
