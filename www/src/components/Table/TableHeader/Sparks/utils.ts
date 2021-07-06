@@ -49,126 +49,126 @@ const sparkTypes: ISparkType[] = [
 
 const sparkBodyTemplate = {
   task: `const sparkBody: TaskBody = async({row, db, change, ref}) => {
-    // task sparks are very flexible you can do anything from updating other documents in your database, to making an api request to 3rd party service.
+  // task sparks are very flexible you can do anything from updating other documents in your database, to making an api request to 3rd party service.
 
-    // eg:
-    // const got = require('got');
-    // const {body} = await got.post('https://httpbin.org/anything', {
-		// json: {
-		//	  hello: 'world'
-		// },
-		// responseType: 'json'
-	  // });
+  // eg:
+  // const got = require('got');
+  // const {body} = await got.post('https://httpbin.org/anything', {
+  // json: {
+  //    hello: 'world'
+  // },
+  // responseType: 'json'
+  // });
 
-	  // console.log(body.data);
-	  // => {hello: 'world'}
+  // console.log(body.data);
+  // => {hello: 'world'}
     
-    console.log("Task Spark completed.")
+  console.log("Task Spark completed.")
 }`,
   docSync: `const sparkBody: DocSyncBody = async({row, db, change, ref}) => {
-    // feel free to add your own code logic here
+  // feel free to add your own code logic here
 
-    return ({
-      fieldsToSync: [],    // a list of string of column names
-      row: row,    // object of data to sync, usually the row itself
-      targetPath: "",  // fill in the path here
+  return ({
+    fieldsToSync: [],    // a list of string of column names
+    row: row,    // object of data to sync, usually the row itself
+    targetPath: "",  // fill in the path here
   })
 }`,
   historySnapshot: `const sparkBody: HistorySnapshotBody = async({row, db, change, ref}) => {
-    // feel free to add your own code logic here
-    
-    return ({
-      trackedFields: [],    // a list of string of column names
-    })
+  // feel free to add your own code logic here
+  
+  return ({
+    trackedFields: [],    // a list of string of column names
+  })
 }`,
   algoliaIndex: `const sparkBody: AlgoliaIndexBody = async({row, db, change, ref}) => {
-    // feel free to add your own code logic here
-    
-    return ({
-      fieldsToSync: [],    // a list of string of column names
-      row: row,    // object of data to sync, usually the row itself
-      index: "",    // algolia index to sync to
-      objectID: ref.id,    // algolia object ID, ref.id is one possible choice
-    })
+  // feel free to add your own code logic here
+  
+  return ({
+    fieldsToSync: [],    // a list of string of column names
+    row: row,    // object of data to sync, usually the row itself
+    index: "",    // algolia index to sync to
+    objectID: ref.id,    // algolia object ID, ref.id is one possible choice
+  })
 }`,
   meiliIndex: `const sparkBody: MeiliIndexBody = async({row, db, change, ref}) => {
-    // feel free to add your own code logic here
+  // feel free to add your own code logic here
 
-    return({
-      fieldsToSync: [],    // a list of string of column names
-      row: row,    // object of data to sync, usually the row itself
-      index: "",    // algolia index to sync to
-      objectID: ref.id,    // algolia object ID, ref.id is one possible choice
-    })
+  return({
+    fieldsToSync: [],    // a list of string of column names
+    row: row,    // object of data to sync, usually the row itself
+    index: "",    // algolia index to sync to
+    objectID: ref.id,    // algolia object ID, ref.id is one possible choice
+  })
 }`,
   bigqueryIndex: `const sparkBody: BigqueryIndexBody = async({row, db, change, ref}) => {
-    // feel free to add your own code logic here
+  // feel free to add your own code logic here
 
-    return ({
-      fieldsToSync: [],    // a list of string of column names
-      row: row,    // object of data to sync, usually the row itself
-      index: "",    // algolia index to sync to
-      objectID: ref.id,    // algolia object ID, ref.id is one possible choice
-    })
+  return ({
+    fieldsToSync: [],    // a list of string of column names
+    row: row,    // object of data to sync, usually the row itself
+    index: "",    // algolia index to sync to
+    objectID: ref.id,    // algolia object ID, ref.id is one possible choice
+  })
 }`,
   slackMessage: `const sparkBody: SlackMessageBody = async({row, db, change, ref}) => {
-    // feel free to add your own code logic here
-    
-    return ({
-      channels: [],    // a list of slack channel IDs in string
-      blocks: [],    // the blocks parameter to pass in to slack api
-      text: "",    // the text parameter to pass in to slack api
-      attachments: [],    // the attachments parameter to pass in to slack api
-    })
+  // feel free to add your own code logic here
+  
+  return ({
+    channels: [],    // a list of slack channel IDs in string
+    blocks: [],    // the blocks parameter to pass in to slack api
+    text: "",    // the text parameter to pass in to slack api
+    attachments: [],    // the attachments parameter to pass in to slack api
+  })
 }`,
   sendgridEmail: `const sparkBody: SendgridEmailBody = async({row, db, change, ref}) => {
-    // feel free to add your own code logic here
-    
-    return ({
-      from: "Name<example@domain.com>",   // send from field
-      personalizations: [
-          {
-              to: [{ name: "", email: "" }],  // recipient
-              dynamic_template_data: {
-              },  // template parameters
-          },
-      ],
-      template_id: "",    // sendgrid template ID
-      categories: [], // helper info to categorise sendgrid emails
-    })
+  // feel free to add your own code logic here
+  
+  return ({
+    from: "Name<example@domain.com>",   // send from field
+    personalizations: [
+        {
+            to: [{ name: "", email: "" }],  // recipient
+            dynamic_template_data: {
+            },  // template parameters
+        },
+    ],
+    template_id: "",    // sendgrid template ID
+    categories: [], // helper info to categorise sendgrid emails
+  })
 }`,
   apiCall: `const sparkBody: ApiCallBody = async({row, db, change, ref}) => {
-    // feel free to add your own code logic here
-   
-    return ({
-      body: "",
-      url: "",
-      method: "",
-      callback: ()=>{},
-    })
+  // feel free to add your own code logic here
+  
+  return ({
+    body: "",
+    url: "",
+    method: "",
+    callback: ()=>{},
+  })
 }`,
   twilioMessage: `const sparkBody: TwilioMessageBody = async({row, db, change, ref}) => {
-    // feel free to add your own code logic here
-    
-    return ({
-      from:"",
-      to:"",
-      body:"Hi there!"
-    })
+  // feel free to add your own code logic here
+  
+  return ({
+    from:"",
+    to:"",
+    body:"Hi there!"
+  })
 }`,
 };
 
 function emptySparkObject(type: ISparkType, user: ISparkEditor): ISpark {
   return {
-    name: "Untitled spark",
+    name: "Untitled extension",
     active: false,
     triggers: [],
     type,
     sparkBody: sparkBodyTemplate[type] ?? sparkBodyTemplate["task"],
     requiredFields: [],
     shouldRun: `const condition: Condition = async({row, change}) => {
-    // feel free to add your own code logic here
-    return true;
+  // feel free to add your own code logic here
+  return true;
 }`,
     lastEditor: user,
   };

@@ -1,7 +1,6 @@
 export const dependencies = {};
-  const task = async (args) => {
-    const { promises } = args;
-   const result =  await Promise.allSettled(Array.isArray(promises)?promises:[promises])
-    return result
-  };
-  export default task;
+const task = () => {
+  // the code logic of task spark should be defined in spark body
+  // and the return value of spark body is ignored
+};
+export default task;
