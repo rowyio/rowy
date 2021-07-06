@@ -112,7 +112,7 @@ export default function SparksEditor() {
 
   const handleUpdateSpark = (sparkObject: ISpark) => {
     setLocalSparksObjects(
-      currentSparkObjects.map((spark, index) => {
+      localSparksObjects.map((spark, index) => {
         if (index === sparkModal?.index) {
           return {
             ...sparkObject,

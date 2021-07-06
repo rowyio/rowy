@@ -50,17 +50,8 @@ const spark = (sparkConfig, fieldTypes) => async (
     console.log(label, "type is ", type, "dontRun value is", dontRun);
 
     if (dontRun) return false;
-    const sparkData = await Object.keys(sparkBody).reduce(
-      async (acc, key) => ({
-        [key]:
-          typeof sparkBody[key] === "function"
-            ? await sparkBody[key](sparkContext)
-            : sparkBody[key],
-        ...(await acc),
-      }),
-      {}
-    );
-    console.log(JSON.stringify(sparkData));
+    const sparkData = await sparkBody(sparkContext);
+    console.log(`sparkData: ${JSON.stringify(sparkData)}`);
     const sparkFn = require(`./${type}`).default;
     await sparkFn(sparkData, sparkContext);
     return true;
