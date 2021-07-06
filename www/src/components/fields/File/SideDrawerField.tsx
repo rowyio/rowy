@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import { ISideDrawerFieldProps } from "../types";
 import clsx from "clsx";
 import { Controller } from "react-hook-form";
@@ -77,7 +77,7 @@ function ControlledFileUploader({
           files: [file],
           previousValue: value ?? [],
           onComplete: (newValue) => {
-            if(updateCell)updateCell(docRef,column.key,newValue)
+            if (updateCell) updateCell(docRef, column.key, newValue);
             onChange(newValue);
             setLocalFile("");
           },

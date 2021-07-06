@@ -1,4 +1,3 @@
-import React from "react";
 import { useWatch } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 import { Link } from "react-router-dom";

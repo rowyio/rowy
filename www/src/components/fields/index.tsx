@@ -76,7 +76,7 @@ export const FIELDS: IFieldConfig[] = [
   // FIRETABLE
   User,
   Id,
-  Status
+  Status,
 ];
 
 /**
@@ -104,7 +104,9 @@ export const isFieldType = (fieldType: any) => {
  * Returns array of fieldTypes with dataType included dataTypes array
  * @param dataTypes
  */
-export const hasDataTypes = (dataTypes:string[])=>{
-    const fieldTypes = FIELDS.map((field) => field.type);
-    return fieldTypes.filter((fieldType)=>dataTypes.includes(getFieldProp("dataType",fieldType)))
-}
+export const hasDataTypes = (dataTypes: string[]) => {
+  const fieldTypes = FIELDS.map((field) => field.type);
+  return fieldTypes.filter((fieldType) =>
+    dataTypes.includes(getFieldProp("dataType", fieldType))
+  );
+};

@@ -1,4 +1,3 @@
-import React from "react";
 import { Controller, useWatch } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 

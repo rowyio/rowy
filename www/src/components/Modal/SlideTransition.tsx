@@ -1,5 +1,4 @@
 import React from "react";
-
 import { useTheme } from "@material-ui/core";
 import { Transition } from "react-transition-group";
 import { TransitionProps } from "react-transition-group/Transition";

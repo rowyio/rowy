@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import useAlgolia from "use-algolia";
 import _find from "lodash/find";
 import { useDebounce } from "use-debounce";
@@ -6,9 +6,9 @@ import _get from "lodash/get";
 
 import MultiSelect, { MultiSelectProps } from "@antlerengineering/multiselect";
 import Loading from "components/Loading";
-import { getAlgoliaSearchKey } from '../../../firebase/callables'
-import createPersistedState from 'use-persisted-state';
-const useAlgoliaSearchKeys = createPersistedState('algolia-search');
+import { getAlgoliaSearchKey } from "../../../firebase/callables";
+import createPersistedState from "use-persisted-state";
+const useAlgoliaSearchKeys = createPersistedState("algolia-search");
 
 export type ConnectTableValue = {
   docPath: string;
@@ -61,47 +61,58 @@ export default function ConnectTableSelect({
   const [localValue, setLocalValue] = useState(
     Array.isArray(value) ? value : []
   );
-  const filters = config.filters ? config.filters.replace(
-    /\{\{(.*?)\}\}/g,
-    replacer(row)
-  ) : ''
+  const filters = config.filters
+    ? config.filters.replace(/\{\{(.*?)\}\}/g, replacer(row))
+    : "";
   const algoliaIndex = config.index;
 
-  const [algoliaSearchKeys, setAlgoliaSearchKeys] = useAlgoliaSearchKeys<any>({});
+  const [algoliaSearchKeys, setAlgoliaSearchKeys] = useAlgoliaSearchKeys<any>(
+    {}
+  );
   const [algoliaState, requestDispatch, , setAlgoliaConfig] = useAlgolia(
     process.env.REACT_APP_ALGOLIA_APP_ID!,
-    process.env.REACT_APP_ALGOLIA_SEARCH_API_KEY??'',
+    process.env.REACT_APP_ALGOLIA_SEARCH_API_KEY ?? "",
     // Don’t choose the index until the user opens the dropdown if !loadBeforeOpen
     loadBeforeOpen ? algoliaIndex : "",
     { filters }
   );
 
   const setAlgoliaSearchKey = async (algoliaIndex: string) => {
-      const requestedAt = Date.now() / 1000
-      if (algoliaSearchKeys&&(algoliaSearchKeys?.[algoliaIndex] as any)?.key 
-      && requestedAt < ((algoliaSearchKeys?.[algoliaIndex] as any).requestedAt) + 3600
-      ) {
-        //'use existing key'
-        setAlgoliaConfig({ indexName: algoliaIndex, searchKey: (algoliaSearchKeys?.[algoliaIndex] as any).key })
-      } else {
-        //'get new key'
-        const resp = await getAlgoliaSearchKey(algoliaIndex)
-        const key = resp.data.data
-        if (key) {
-          const newKey = {
-            key,
-            requestedAt
-          }
-          setAlgoliaSearchKeys(algoliaSearchKeys ? { ...algoliaSearchKeys, [algoliaIndex]: newKey } : { [algoliaIndex]: newKey })
-          setAlgoliaConfig({ indexName: algoliaIndex, searchKey: key })
-        }
+    const requestedAt = Date.now() / 1000;
+    if (
+      algoliaSearchKeys &&
+      (algoliaSearchKeys?.[algoliaIndex] as any)?.key &&
+      requestedAt <
+        (algoliaSearchKeys?.[algoliaIndex] as any).requestedAt + 3600
+    ) {
+      //'use existing key'
+      setAlgoliaConfig({
+        indexName: algoliaIndex,
+        searchKey: (algoliaSearchKeys?.[algoliaIndex] as any).key,
+      });
+    } else {
+      //'get new key'
+      const resp = await getAlgoliaSearchKey(algoliaIndex);
+      const key = resp.data.data;
+      if (key) {
+        const newKey = {
+          key,
+          requestedAt,
+        };
+        setAlgoliaSearchKeys(
+          algoliaSearchKeys
+            ? { ...algoliaSearchKeys, [algoliaIndex]: newKey }
+            : { [algoliaIndex]: newKey }
+        );
+        setAlgoliaConfig({ indexName: algoliaIndex, searchKey: key });
       }
-  }
+    }
+  };
 
   useEffect(() => {
-    if (!process.env.REACT_APP_ALGOLIA_SEARCH_API_KEY)setAlgoliaSearchKey(algoliaIndex)
-  }, [algoliaIndex])
-
+    if (!process.env.REACT_APP_ALGOLIA_SEARCH_API_KEY)
+      setAlgoliaSearchKey(algoliaIndex);
+  }, [algoliaIndex]);
 
   const options = algoliaState.hits.map((hit) => ({
     label: config.primaryKeys?.map((key: string) => hit[key]).join(" "),
@@ -118,8 +129,8 @@ export default function ConnectTableSelect({
     const newValue = Array.isArray(_newValue)
       ? _newValue
       : _newValue !== null
-        ? [_newValue]
-        : [];
+      ? [_newValue]
+      : [];
 
     // Calculate new value
     const newLocalValue = newValue.map((objectID) => {
@@ -167,8 +178,8 @@ export default function ConnectTableSelect({
       onChange={handleChange}
       onOpen={() => {
         setAlgoliaConfig({
-          indexName: algoliaIndex
-        })
+          indexName: algoliaIndex,
+        });
         requestDispatch({ filters });
       }}
       onClose={handleSave}
@@ -190,10 +201,10 @@ export default function ConnectTableSelect({
         },
         filterOptions: () => options,
       }}
-      countText={`${localValue.length} of ${algoliaState.response?.nbHits ?? "?"
-        }`}
+      countText={`${localValue.length} of ${
+        algoliaState.response?.nbHits ?? "?"
+      }`}
       disabled={disabled}
-      
     />
   );
 }

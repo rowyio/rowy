@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import { useState, useRef } from "react";
 import _sortBy from "lodash/sortBy";
 import _includes from "lodash/includes";
 import _camelCase from "lodash/camelCase";

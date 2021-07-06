@@ -1,4 +1,3 @@
-import React from "react";
 import { IBasicCellProps } from "../types";
 import { format } from "date-fns";
 import { DATE_FORMAT } from "constants/dates";

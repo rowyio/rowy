@@ -163,7 +163,7 @@ const transformToSQLType = (ftType: string) => {
 };
 
 const bigqueryIndex = async (payload, sparkContext) => {
-  const { objectID, index, fieldsToSync, projectID } = payload;
+  const { objectID, index, fieldsToSync, projectID, datasetLocation } = payload;
 
   const { triggerType, change, fieldTypes } = sparkContext;
   const record = rowReducer(fieldsToSync, sparkContext.row);
@@ -178,7 +178,9 @@ const bigqueryIndex = async (payload, sparkContext) => {
 
   // create dataset with exact name "firetable" if not exists
   async function preprocessDataset() {
-    const dataset = bigquery.dataset("firetable");
+    const dataset = bigquery.dataset("firetable", {
+      location: datasetLocation ?? "US",
+    });
     const res = await dataset.exists();
     const exists = res[0];
     if (!exists) {

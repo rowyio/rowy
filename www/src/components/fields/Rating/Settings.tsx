@@ -1,4 +1,3 @@
-import React from "react";
 import { ISettingsProps } from "../types";
 
 import { Slider } from "@material-ui/core";

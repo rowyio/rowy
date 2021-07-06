@@ -1,4 +1,3 @@
-import React from "react";
 import { IPopoverCellProps } from "../types";
 import { ChromePicker } from "react-color";
 import _get from "lodash/get";

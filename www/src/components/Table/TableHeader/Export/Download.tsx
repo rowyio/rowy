@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import { useState, useContext } from "react";
 import { saveAs } from "file-saver";
 import _camelCase from "lodash/camelCase";
 import _get from "lodash/get";

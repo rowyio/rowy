@@ -1,5 +1,3 @@
-import React from "react";
-
 import { makeStyles, createStyles, Button } from "@material-ui/core";
 import Skeleton from "@material-ui/lab/Skeleton";
 import AddColumnIcon from "assets/icons/AddColumn";

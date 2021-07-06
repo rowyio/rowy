@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import { useCallback } from "react";
 import { IHeavyCellProps } from "../types";
 
 import { useDropzone } from "react-dropzone";
@@ -80,9 +80,8 @@ export default function File_({
           files: [file],
           previousValue: value,
           onComplete: (newValue) => {
-            if(updateCell)updateCell(row.ref,column.key,newValue)
+            if (updateCell) updateCell(row.ref, column.key, newValue);
           },
-        
         });
       }
     },

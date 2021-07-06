@@ -1,4 +1,3 @@
-import React from "react";
 import { Switch, FormControlLabel } from "@material-ui/core";
 
 const Settings = ({ config, handleChange }) => {

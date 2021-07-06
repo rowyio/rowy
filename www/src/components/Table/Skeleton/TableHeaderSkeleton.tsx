@@ -1,5 +1,3 @@
-import React from "react";
-
 import { makeStyles, createStyles, Grid, Button } from "@material-ui/core";
 import Skeleton from "@material-ui/lab/Skeleton";
 import AddRowIcon from "assets/icons/AddRow";

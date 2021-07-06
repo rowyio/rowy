@@ -1,4 +1,3 @@
-import React from "react";
 import SvgIcon, { SvgIconProps } from "@material-ui/core/SvgIcon";
 
 export default function SubTable(props: SvgIconProps) {
