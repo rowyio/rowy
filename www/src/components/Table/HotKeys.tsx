@@ -3,7 +3,7 @@ import { FieldType } from "constants/fields";
 import { useAppContext } from "contexts/AppContext";
 
 // TODO: Hook up to FiretableContext
-const onSubmit = () => () => {};
+const onSubmit: any = () => () => {};
 
 /**
  * Listens Hot Keys combination keys to trigger keyboard shortcuts
