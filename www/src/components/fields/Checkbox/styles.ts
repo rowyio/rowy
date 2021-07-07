@@ -1,4 +1,4 @@
-import { makeStyles, createStyles } from "@material-ui/core";
+import { makeStyles, createStyles } from "@material-ui/styles";
 import { green } from "@material-ui/core/colors";
 
 export const useSwitchStyles = makeStyles(() =>

@@ -31,7 +31,7 @@ export default function DateTime({
 }: IDateTimeProps) {
   const theme = useTheme();
 
-  return null;
+  return <></>;
 
   // TODO: return (
   //   <Controller

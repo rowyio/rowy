@@ -1,8 +1,7 @@
 import clsx from "clsx";
 
+import { makeStyles, createStyles } from "@material-ui/styles";
 import {
-  createStyles,
-  makeStyles,
   MenuItem,
   ListItemIcon,
   ListSubheader,
@@ -36,7 +35,7 @@ const useStyles = makeStyles((theme) =>
 
       "&:hover": {
         backgroundColor: theme.palette.text.primary,
-        color: theme.palette.type === "light" ? "#f1f1f3" : "#212129",
+        color: theme.palette.mode === "light" ? "#f1f1f3" : "#212129",
       },
     },
     menuItemIcon: {

@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import clsx from "clsx";
 
+import { makeStyles, createStyles } from "@material-ui/styles";
 import {
-  makeStyles,
-  createStyles,
   useTheme,
   useMediaQuery,
   Dialog,
@@ -26,12 +25,12 @@ import { SlideTransitionMui } from "components/Modal/SlideTransition";
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
-      "--spacing-modal": theme.spacing(3) + "px",
-      "--spacing-modal-contents": theme.spacing(3) + "px",
+      "--spacing-modal": theme.spacing(3),
+      "--spacing-modal-contents": theme.spacing(3),
       "--spacing-card": "var(--spacing-modal-contents)",
 
-      [theme.breakpoints.down("sm")]: {
-        "--spacing-modal": theme.spacing(2) + "px",
+      [theme.breakpoints.down("md")]: {
+        "--spacing-modal": theme.spacing(2),
       },
     },
 
@@ -53,7 +52,7 @@ const useStyles = makeStyles((theme) =>
     titleContainer: { padding: 0 },
     title: {
       ...theme.typography.h5,
-      [theme.breakpoints.down("sm")]: theme.typography.h6,
+      [theme.breakpoints.down("md")]: theme.typography.h6,
     },
 
     stepper: {
@@ -62,7 +61,7 @@ const useStyles = makeStyles((theme) =>
       marginRight: theme.spacing(-10 / 8),
 
       marginBottom: theme.spacing(-0.5),
-      [theme.breakpoints.down("sm")]: { marginBottom: theme.spacing(-0.75) },
+      [theme.breakpoints.down("md")]: { marginBottom: theme.spacing(-0.75) },
     },
     stepperButton: { padding: theme.spacing(0.5) },
 
@@ -138,7 +137,7 @@ export default function WizardDialog({
 }: IWizardDialogProps) {
   const classes = useStyles();
   const theme = useTheme();
-  const isXs = useMediaQuery(theme.breakpoints.down("xs"));
+  const isXs = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [step, setStep] = useState(0);
   const currentStep = steps[step];
@@ -155,7 +154,6 @@ export default function WizardDialog({
       aria-describedby="wizard-step-description"
       fullWidth
       maxWidth="md"
-      disableBackdropClick
       fullScreen={isXs}
       {...props}
       classes={{
@@ -183,7 +181,6 @@ export default function WizardDialog({
           <DialogTitle
             color="textPrimary"
             id="wizard-title"
-            disableTypography
             className={classes.titleContainer}
           >
             <Typography
@@ -251,7 +248,7 @@ export default function WizardDialog({
       <Grid
         container
         spacing={2}
-        justify="center"
+        justifyContent="center"
         alignItems="center"
         className={classes.actions}
       >

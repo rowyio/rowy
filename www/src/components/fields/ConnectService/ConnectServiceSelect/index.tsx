@@ -59,7 +59,6 @@ export default function ConnectServiceSelect({
         MenuProps: {
           classes: { paper: classes.paper, list: classes.menuChild },
           MenuListProps: { disablePadding: true },
-          getContentAnchorEl: null,
           anchorOrigin: { vertical: "bottom", horizontal: "center" },
           transformOrigin: { vertical: "top", horizontal: "center" },
           ...TextFieldProps.SelectProps?.MenuProps,

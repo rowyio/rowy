@@ -1,6 +1,5 @@
+import { makeStyles, createStyles } from "@material-ui/styles";
 import {
-  makeStyles,
-  createStyles,
   FormLabel,
   FormLabelProps,
   Tooltip,

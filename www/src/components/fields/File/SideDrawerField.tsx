@@ -7,9 +7,8 @@ import { format } from "date-fns";
 import { useDropzone } from "react-dropzone";
 import useUploader, { FileValue } from "hooks/useFiretable/useUploader";
 
+import { makeStyles, createStyles } from "@material-ui/styles";
 import {
-  makeStyles,
-  createStyles,
   alpha,
   ButtonBase,
   Typography,

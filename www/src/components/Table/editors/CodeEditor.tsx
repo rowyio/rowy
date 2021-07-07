@@ -1,5 +1,6 @@
 import { useRef, useMemo, useState } from "react";
-import { useTheme, createStyles, makeStyles } from "@material-ui/core/styles";
+import { makeStyles, createStyles } from "@material-ui/styles";
+import { useTheme } from "@material-ui/core/styles";
 import Editor, { useMonaco } from "@monaco-editor/react";
 import { useFiretableContext } from "contexts/FiretableContext";
 import { FieldType } from "constants/fields";
@@ -437,7 +438,7 @@ export default function CodeEditor(props: any) {
     <>
       <div className={classes.editorWrapper}>
         <Editor
-          theme={themeTransformer(theme.palette.type)}
+          theme={themeTransformer(theme.palette.mode)}
           onMount={handleEditorDidMount}
           language="javascript"
           height={height}

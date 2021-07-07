@@ -2,7 +2,8 @@ import React from "react";
 import clsx from "clsx";
 import { IPopoverInlineCellProps } from "../types";
 
-import { makeStyles, createStyles, ButtonBase } from "@material-ui/core";
+import { makeStyles, createStyles } from "@material-ui/styles";
+import { ButtonBase } from "@material-ui/core";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 
 import { sanitiseValue } from "./utils";

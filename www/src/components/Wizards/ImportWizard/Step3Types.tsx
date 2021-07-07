@@ -1,13 +1,7 @@
 import { useState } from "react";
 
-import {
-  makeStyles,
-  createStyles,
-  Grid,
-  Typography,
-  Divider,
-  ButtonBase,
-} from "@material-ui/core";
+import { makeStyles, createStyles } from "@material-ui/styles";
+import { Grid, Typography, Divider, ButtonBase } from "@material-ui/core";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 
 import { IStepProps } from ".";

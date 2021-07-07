@@ -2,12 +2,8 @@ import { useState, useEffect } from "react";
 import _camelCase from "lodash/camelCase";
 import _find from "lodash/find";
 
-import {
-  makeStyles,
-  createStyles,
-  Button,
-  DialogContentText,
-} from "@material-ui/core";
+import { makeStyles, createStyles } from "@material-ui/styles";
+import { Button, DialogContentText } from "@material-ui/core";
 
 import Confirmation from "components/Confirmation";
 import GoIcon from "assets/icons/Go";

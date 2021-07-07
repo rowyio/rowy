@@ -6,9 +6,8 @@ import { Controller } from "react-hook-form";
 import { useDropzone } from "react-dropzone";
 import useUploader from "hooks/useFiretable/useUploader";
 
+import { makeStyles, createStyles } from "@material-ui/styles";
 import {
-  makeStyles,
-  createStyles,
   alpha,
   ButtonBase,
   Typography,
@@ -190,7 +189,7 @@ function ControlledImageUploader({
                     />
                     <Grid
                       container
-                      justify="center"
+                      justifyContent="center"
                       alignItems="center"
                       className={clsx(classes.overlay, classes.deleteImgHover)}
                     >
@@ -220,7 +219,7 @@ function ControlledImageUploader({
                       />
                       <Grid
                         container
-                        justify="center"
+                        justifyContent="center"
                         alignItems="center"
                         className={clsx(
                           classes.overlay,
@@ -244,14 +243,14 @@ function ControlledImageUploader({
             >
               <Grid
                 container
-                justify="center"
+                justifyContent="center"
                 alignItems="center"
                 className={classes.overlay}
               >
                 <CircularProgress
                   color="inherit"
                   size={48}
-                  variant={progress === 0 ? "indeterminate" : "static"}
+                  variant={progress === 0 ? "indeterminate" : "determinate"}
                   value={progress}
                 />
               </Grid>

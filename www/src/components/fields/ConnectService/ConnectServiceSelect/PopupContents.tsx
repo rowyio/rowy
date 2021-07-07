@@ -175,7 +175,7 @@ export default function PopupContents({
           <Grid
             container
             direction="row"
-            justify="space-between"
+            justifyContent="space-between"
             alignItems="center"
           >
             <Typography

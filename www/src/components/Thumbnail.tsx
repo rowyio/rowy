@@ -2,8 +2,8 @@ import React, { Suspense } from "react";
 import clsx from "clsx";
 import { useImage } from "react-image";
 
-import { makeStyles, createStyles } from "@material-ui/core";
-import Skeleton from "@material-ui/lab/Skeleton";
+import { makeStyles, createStyles } from "@material-ui/styles";
+import Skeleton from "@material-ui/core/Skeleton";
 
 import ErrorBoundary from "./ErrorBoundary";
 
@@ -114,7 +114,7 @@ export default function Thumbnail(props: IThubmnailProps) {
       <Suspense
         fallback={
           <Skeleton
-            variant="rect"
+            variant="rectangular"
             className={clsx(classes.skeleton, props.className)}
           />
         }

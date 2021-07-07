@@ -1,6 +1,7 @@
 import { Column } from "react-data-grid";
 
-import { makeStyles, createStyles, Grid, Button } from "@material-ui/core";
+import { makeStyles, createStyles } from "@material-ui/styles";
+import { Grid, Button } from "@material-ui/core";
 import AddColumnIcon from "assets/icons/AddColumn";
 
 import { useFiretableContext } from "contexts/FiretableContext";
@@ -54,7 +55,7 @@ const FinalColumnHeader: Column<any>["headerRenderer"] = ({ column }) => {
     <Grid
       container
       alignItems="center"
-      justify="center"
+      justifyContent="center"
       className={classes.root}
     >
       <Button

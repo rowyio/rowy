@@ -2,13 +2,8 @@ import clsx from "clsx";
 import { Controller } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 
-import {
-  makeStyles,
-  createStyles,
-  ButtonBase,
-  FormControlLabel,
-  Switch,
-} from "@material-ui/core";
+import { makeStyles, createStyles } from "@material-ui/styles";
+import { ButtonBase, FormControlLabel, Switch } from "@material-ui/core";
 
 import { useFieldStyles } from "components/SideDrawer/Form/utils";
 import { useSwitchStyles } from "./styles";

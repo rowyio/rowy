@@ -1,7 +1,8 @@
 import { Controller, useWatch } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 
-import { makeStyles, createStyles, TextField } from "@material-ui/core";
+import { makeStyles, createStyles } from "@material-ui/styles";
+import { TextField } from "@material-ui/core";
 import { emphasize } from "@material-ui/core/styles";
 import { resultColorsScale } from "utils/color";
 

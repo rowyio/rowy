@@ -14,7 +14,8 @@ import "tinymce/plugins/help";
 import "tinymce/plugins/code";
 import { Editor } from "@tinymce/tinymce-react";
 
-import { makeStyles, createStyles, useTheme } from "@material-ui/core";
+import { makeStyles, createStyles } from "@material-ui/styles";
+import { useTheme } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -30,7 +31,7 @@ const useStyles = makeStyles((theme) =>
           borderRadius: theme.shape.borderRadius,
           border: "none",
           backgroundColor:
-            theme.palette.type === "light"
+            theme.palette.mode === "light"
               ? "rgba(0, 0, 0, 0.09)"
               : "rgba(255, 255, 255, 0.09)",
 
@@ -41,7 +42,7 @@ const useStyles = makeStyles((theme) =>
 
           "&:hover": {
             backgroundColor:
-              theme.palette.type === "light"
+              theme.palette.mode === "light"
                 ? "rgba(0, 0, 0, 0.13)"
                 : "rgba(255, 255, 255, 0.13)",
           },
@@ -53,7 +54,7 @@ const useStyles = makeStyles((theme) =>
 
         "& .tox-toolbar-overlord, & .tox-edit-area__iframe, & .tox-toolbar__primary": {
           background: "transparent",
-          borderRadius: theme.shape.borderRadius - 1,
+          borderRadius: (theme.shape.borderRadius as number) - 1,
         },
 
         "& .tox-toolbar__primary": { padding: theme.spacing(0.5, 0) },
@@ -90,7 +91,7 @@ const useStyles = makeStyles((theme) =>
     focus: {
       "& .tox.tox-tinymce": {
         backgroundColor:
-          (theme.palette.type === "light"
+          (theme.palette.mode === "light"
             ? "rgba(0, 0, 0, 0.09)"
             : "rgba(255, 255, 255, 0.09)") + "!important",
       },
@@ -128,7 +129,7 @@ export default function RichTextEditor({
           content_css: [
             "https://use.typekit.net/ngg8buf.css",
             "https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i&display=swap",
-            // theme.palette.type === "light"
+            // theme.palette.mode === "light"
             // ?
             "/static/tinymce_content.css",
             // : "/static/tinymce_content-dark.css",

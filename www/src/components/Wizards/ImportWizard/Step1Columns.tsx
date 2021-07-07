@@ -8,9 +8,8 @@ import {
 import _sortBy from "lodash/sortBy";
 import _startCase from "lodash/startCase";
 
+import { makeStyles, createStyles } from "@material-ui/styles";
 import {
-  makeStyles,
-  createStyles,
   Grid,
   Typography,
   Divider,
@@ -58,7 +57,9 @@ export default function Step1Columns({ config, setConfig }: IStepProps) {
     _sortBy(Object.keys(config), "index")
   );
 
-  const handleSelect = (field: string) => (_, checked: boolean) => {
+  const handleSelect = (field: string) => (e) => {
+    const checked = e.target.checked;
+
     if (checked) {
       setSelectedFields([...selectedFields, field]);
     } else {

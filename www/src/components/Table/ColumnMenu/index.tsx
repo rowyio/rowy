@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 
-import { createStyles, makeStyles, Menu } from "@material-ui/core";
+import { makeStyles, createStyles } from "@material-ui/styles";
+import { Menu } from "@material-ui/core";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
 import LockIcon from "@material-ui/icons/Lock";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
@@ -66,7 +67,7 @@ const useStyles = makeStyles((theme) =>
   createStyles({
     paper: {
       backgroundColor:
-        theme.palette.type === "light"
+        theme.palette.mode === "light"
           ? "#f1f1f3"
           : theme.palette.background.elevation?.[8] ??
             theme.palette.background.paper,
@@ -291,7 +292,6 @@ export default function ColumnMenu() {
           keepMounted
           open={Boolean(anchorEl)}
           onClose={handleClose}
-          getContentAnchorEl={null}
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           transformOrigin={{ vertical: "top", horizontal: "right" }}
           classes={{ paper: classes.paper }}

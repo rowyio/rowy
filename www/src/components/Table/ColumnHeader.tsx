@@ -3,9 +3,8 @@ import { HeaderRendererProps } from "react-data-grid";
 import { useDrag, useDrop, DragObjectWithType } from "react-dnd";
 import { useCombinedRefs } from "react-data-grid/lib/hooks";
 
+import { makeStyles, createStyles } from "@material-ui/styles";
 import {
-  makeStyles,
-  createStyles,
   alpha,
   Tooltip,
   Fade,
@@ -37,7 +36,7 @@ const useStyles = makeStyles((theme) =>
 
       margin: theme.spacing(0, -1.5),
       padding: theme.spacing(0, 1.5),
-      width: `calc(100% + ${theme.spacing(1.5) * 2}px)`,
+      width: `calc(100% + ${theme.spacing(1.5 * 2)})`,
     },
     isDragging: { opacity: 0.5 },
     isOver: {
@@ -213,14 +212,27 @@ export default function DraggableHeaderRenderer<R>({
           enterDelay={1000}
           placement="bottom-start"
           PopperProps={{
-            modifiers: {
-              flip: { enabled: false },
-              preventOverflow: {
-                enabled: false,
-                boundariesElement: "scrollParent",
+            modifiers: [
+              {
+                name: "flip",
+                options: {
+                  enabled: false,
+                },
               },
-              hide: { enabled: false },
-            },
+              {
+                name: "preventOverflow",
+                options: {
+                  enabled: false,
+                  boundariesElement: "scrollParent",
+                },
+              },
+              {
+                name: "hide",
+                options: {
+                  enabled: false,
+                },
+              },
+            ],
           }}
           TransitionComponent={Fade}
           classes={{ tooltip: classes.columnNameTooltip }}

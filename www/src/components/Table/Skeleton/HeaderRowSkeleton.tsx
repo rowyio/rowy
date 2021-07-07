@@ -1,5 +1,6 @@
-import { makeStyles, createStyles, Button } from "@material-ui/core";
-import Skeleton from "@material-ui/lab/Skeleton";
+import { makeStyles, createStyles } from "@material-ui/styles";
+import { Button } from "@material-ui/core";
+import Skeleton from "@material-ui/core/Skeleton";
 import AddColumnIcon from "assets/icons/AddColumn";
 
 const useStyles = makeStyles((theme) =>
@@ -34,12 +35,16 @@ export default function HeaderRowSkeleton() {
   return (
     <div className={classes.root}>
       {new Array(NUM_CELLS).fill(undefined).map((_, i) => (
-        <Skeleton key={i} variant="rect" className={classes.cell} />
+        <Skeleton key={i} variant="rectangular" className={classes.cell} />
       ))}
 
-      <Skeleton variant="rect" className={classes.cell} style={{ width: 46 }} />
+      <Skeleton
+        variant="rectangular"
+        className={classes.cell}
+        style={{ width: 46 }}
+      />
 
-      <Skeleton variant="rect" className={classes.addColumn}>
+      <Skeleton variant="rectangular" className={classes.addColumn}>
         <Button
           variant="contained"
           startIcon={<AddColumnIcon className={classes.addColumnIcon} />}

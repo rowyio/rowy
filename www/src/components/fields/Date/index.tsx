@@ -28,7 +28,7 @@ export const config: IFieldConfig = {
   description:
     "Date displayed and input by default as YYYY/MM/DD or input using a picker module.",
   TableCell: withHeavyCell(BasicCell, TableCell),
-  TableEditor: NullEditor,
+  TableEditor: NullEditor as any,
   SideDrawerField,
   settings: Settings,
   csvImportParser: (value, config) =>

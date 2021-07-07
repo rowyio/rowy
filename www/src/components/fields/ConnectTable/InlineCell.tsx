@@ -2,13 +2,8 @@ import React from "react";
 import clsx from "clsx";
 import { IPopoverInlineCellProps } from "../types";
 
-import {
-  makeStyles,
-  createStyles,
-  ButtonBase,
-  Grid,
-  Chip,
-} from "@material-ui/core";
+import { makeStyles, createStyles } from "@material-ui/styles";
+import { ButtonBase, Grid, Chip } from "@material-ui/core";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 
 const useStyles = makeStyles((theme) =>

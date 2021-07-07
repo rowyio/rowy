@@ -34,7 +34,7 @@ export const config: IFieldConfig = {
     anchorOrigin: { horizontal: "left", vertical: "bottom" },
     transparent: true,
   }),
-  TableEditor: NullEditor,
+  TableEditor: NullEditor as any,
   SideDrawerField,
   settings: Settings,
 };

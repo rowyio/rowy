@@ -2,7 +2,8 @@ import { IHeavyCellProps } from "../types";
 import clsx from "clsx";
 import { Link } from "react-router-dom";
 
-import { createStyles, makeStyles, Grid, IconButton } from "@material-ui/core";
+import { makeStyles, createStyles } from "@material-ui/styles";
+import { Grid, IconButton } from "@material-ui/core";
 import LaunchIcon from "@material-ui/icons/Launch";
 
 import { useSubTableData } from "./utils";

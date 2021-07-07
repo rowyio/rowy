@@ -2,9 +2,8 @@ import _find from "lodash/find";
 import queryString from "query-string";
 import { Link as RouterLink } from "react-router-dom";
 
+import { makeStyles, createStyles } from "@material-ui/styles";
 import {
-  makeStyles,
-  createStyles,
   Breadcrumbs as MuiBreadcrumbs,
   BreadcrumbsProps,
   Link,

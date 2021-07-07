@@ -26,7 +26,7 @@ export const config: IFieldConfig = {
   TableCell: withPopoverCell(BasicCell, InlineCell, PopoverCell, {
     anchorOrigin: { horizontal: "left", vertical: "bottom" },
   }),
-  TableEditor: NullEditor,
+  TableEditor: NullEditor as any,
   SideDrawerField,
 };
 export default config;

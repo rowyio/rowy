@@ -1,10 +1,6 @@
-import {
-  makeStyles,
-  createStyles,
-  Snackbar,
-  CircularProgress,
-} from "@material-ui/core";
-import Alert from "@material-ui/lab/Alert";
+import { makeStyles, createStyles } from "@material-ui/styles";
+import { Snackbar, CircularProgress } from "@material-ui/core";
+import Alert from "@material-ui/core/Alert";
 
 import { useSnackContext } from "contexts/SnackContext";
 import antlerPalette from "Theme/antlerPalette";
@@ -52,7 +48,7 @@ export default function Snack() {
             </span>
 
             <CircularProgress
-              variant={progress.value ? "static" : "indeterminate"}
+              variant={progress.value ? "determinate" : "indeterminate"}
               value={
                 progress.target
                   ? (progress.value / progress.target) * 100

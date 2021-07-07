@@ -1,12 +1,8 @@
 import React from "react";
 import clsx from "clsx";
 
-import {
-  makeStyles,
-  createStyles,
-  Button,
-  ButtonProps,
-} from "@material-ui/core";
+import { makeStyles, createStyles } from "@material-ui/styles";
+import { Button, ButtonProps } from "@material-ui/core";
 import { alpha } from "@material-ui/core/styles";
 
 export const useStyles = makeStyles((theme) =>

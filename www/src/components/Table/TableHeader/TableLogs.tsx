@@ -25,7 +25,7 @@ import {
   Link,
 } from "@material-ui/core";
 import Modal from "components/Modal";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, createStyles } from "@material-ui/styles";
 import LogsIcon from "@material-ui/icons/QueryBuilder";
 import SuccessIcon from "@material-ui/icons/CheckCircle";
 import FailIcon from "@material-ui/icons/Cancel";
@@ -53,85 +53,87 @@ const isTargetInsideBox = (target, box) => {
   return targetRect.y < boxRect.y + boxRect.height;
 };
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
-    display: "flex",
-    height: `calc(100vh - 200px)`,
-  },
-  tabs: {
-    borderRight: `1px solid ${theme.palette.divider}`,
-  },
-  tab: {
-    display: "flex",
-    flexWrap: "nowrap",
-    alignItems: "center",
-    justifyItems: "center",
-  },
-
-  logPanel: {
-    width: "100%",
-    backgroundColor: "#1E1E1E",
-  },
-  logPanelProgress: {
-    marginLeft: "2em",
-    marginTop: "1em",
-  },
-  logEntryWrapper: {
-    overflowY: "scroll",
-    maxHeight: "100%",
-  },
-  logNumber: {
-    float: "left",
-    width: "2em",
-    textAlign: "right",
-    paddingRight: "1em",
-  },
-  logEntry: {
-    lineBreak: "anywhere",
-    paddingLeft: "2em",
-    whiteSpace: "break-spaces",
-    userSelect: "text",
-  },
-  logTypeInfo: {
-    color: "green",
-  },
-  logTypeError: {
-    color: "red",
-  },
-  logFont: {
-    fontSize: 16,
-    fontFamily: MONO_FONT,
-    letterSpacing: 0.5,
-    lineHeight: 1.5,
-    color: LOG_TEXT,
-
-    "& code": {
-      fontFamily: MONO_FONT,
+const useStyles = makeStyles((theme) =>
+  createStyles({
+    root: {
+      flexGrow: 1,
+      backgroundColor: theme.palette.background.paper,
+      display: "flex",
+      height: `calc(100vh - 200px)`,
     },
-  },
+    tabs: {
+      borderRight: `1px solid ${theme.palette.divider}`,
+    },
+    tab: {
+      display: "flex",
+      flexWrap: "nowrap",
+      alignItems: "center",
+      justifyItems: "center",
+    },
 
-  snackLog: {
-    position: "absolute",
-    left: 40,
-    bottom: 40,
-    backgroundColor: "#282829",
-    width: "min(40vw, 640px)",
-    padding: theme.spacing(1, 2, 2, 2),
-    borderRadius: 4,
-    zIndex: 1,
-    height: 300,
-    transition: "height 300ms ease-out",
-  },
-  snackLogExpanded: {
-    height: "calc(100% - 300px)",
-  },
+    logPanel: {
+      width: "100%",
+      backgroundColor: "#1E1E1E",
+    },
+    logPanelProgress: {
+      marginLeft: "2em",
+      marginTop: "1em",
+    },
+    logEntryWrapper: {
+      overflowY: "scroll",
+      maxHeight: "100%",
+    },
+    logNumber: {
+      float: "left",
+      width: "2em",
+      textAlign: "right",
+      paddingRight: "1em",
+    },
+    logEntry: {
+      lineBreak: "anywhere",
+      paddingLeft: "2em",
+      whiteSpace: "break-spaces",
+      userSelect: "text",
+    },
+    logTypeInfo: {
+      color: "green",
+    },
+    logTypeError: {
+      color: "red",
+    },
+    logFont: {
+      fontSize: 16,
+      fontFamily: MONO_FONT,
+      letterSpacing: 0.5,
+      lineHeight: 1.5,
+      color: LOG_TEXT,
 
-  whiteText: {
-    color: "white",
-  },
-}));
+      "& code": {
+        fontFamily: MONO_FONT,
+      },
+    },
+
+    snackLog: {
+      position: "absolute",
+      left: 40,
+      bottom: 40,
+      backgroundColor: "#282829",
+      width: "min(40vw, 640px)",
+      padding: theme.spacing(1, 2, 2, 2),
+      borderRadius: 4,
+      zIndex: 1,
+      height: 300,
+      transition: "height 300ms ease-out",
+    },
+    snackLogExpanded: {
+      height: "calc(100% - 300px)",
+    },
+
+    whiteText: {
+      color: "white",
+    },
+  })
+);
 
 LogPanel.propTypes = {
   logs: PropTypes.array,

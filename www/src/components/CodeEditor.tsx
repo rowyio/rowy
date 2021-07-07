@@ -2,7 +2,8 @@ import React, { useRef, useMemo, useState } from "react";
 import clsx from "clsx";
 import Editor, { useMonaco } from "@monaco-editor/react";
 
-import { useTheme, createStyles, makeStyles } from "@material-ui/core/styles";
+import { makeStyles, createStyles } from "@material-ui/styles";
+import { useTheme } from "@material-ui/core";
 
 import { useFiretableContext } from "contexts/FiretableContext";
 
@@ -94,7 +95,7 @@ export default function CodeEditor({
       className={clsx(classes.editorWrapper, wrapperProps?.className)}
     >
       <Editor
-        theme={themeTransformer(theme.palette.type)}
+        theme={themeTransformer(theme.palette.mode)}
         height={height}
         onMount={handleEditorDidMount}
         language="javascript"

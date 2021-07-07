@@ -159,7 +159,7 @@ export default function BasicCard({
                           container
                           direction="column"
                           wrap="nowrap"
-                          justify="space-between"
+                          justifyContent="space-between"
                           spacing={3}
                           className={classes.tabContentGrid}
                         >
@@ -182,7 +182,7 @@ export default function BasicCard({
                       container
                       direction="column"
                       wrap="nowrap"
-                      justify="space-between"
+                      justifyContent="space-between"
                       className={classes.container}
                     >
                       {bodyContent.map((element, i) => (

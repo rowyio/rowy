@@ -27,7 +27,7 @@ export const config: IFieldConfig = {
   description:
     "Time and Date can be written as YYYY/MM/DD hh:mm (am/pm) or input using a picker module.",
   TableCell: withHeavyCell(BasicCell, TableCell),
-  TableEditor: NullEditor,
+  TableEditor: NullEditor as any,
   SideDrawerField,
   csvImportParser: (value) => parseJSON(value).getTime(),
 };

@@ -2,7 +2,8 @@ import React from "react";
 import clsx from "clsx";
 import { IPopoverInlineCellProps } from "../types";
 
-import { makeStyles, createStyles, Grid, ButtonBase } from "@material-ui/core";
+import { makeStyles, createStyles } from "@material-ui/styles";
+import { Grid, ButtonBase } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -20,7 +21,7 @@ const useStyles = makeStyles((theme) =>
       height: 20,
 
       boxShadow: `0 0 0 1px ${theme.palette.text.disabled} inset`,
-      borderRadius: theme.shape.borderRadius / 2,
+      borderRadius: (theme.shape.borderRadius as number) / 2,
     },
   })
 );

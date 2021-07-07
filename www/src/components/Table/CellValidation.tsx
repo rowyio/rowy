@@ -1,6 +1,6 @@
 import clsx from "clsx";
 
-import { makeStyles, createStyles } from "@material-ui/core";
+import { makeStyles, createStyles } from "@material-ui/styles";
 import RichTooltip from "components/RichTooltip";
 
 const useStyles = makeStyles((theme) =>

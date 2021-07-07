@@ -1,6 +1,5 @@
+import { makeStyles, createStyles } from "@material-ui/styles";
 import {
-  makeStyles,
-  createStyles,
   useTheme,
   useMediaQuery,
   Drawer,
@@ -88,7 +87,7 @@ export default function NavDrawer({
 }: INavDrawerProps) {
   const classes = useStyles();
   const theme = useTheme();
-  const isSm = useMediaQuery(theme.breakpoints.down("sm"));
+  const isSm = useMediaQuery(theme.breakpoints.down("md"));
 
   const { sections } = useFiretableContext();
   const { location } = useRouter();

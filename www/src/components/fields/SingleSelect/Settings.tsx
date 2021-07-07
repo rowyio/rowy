@@ -3,9 +3,8 @@ import _sortBy from "lodash/sortBy";
 import _includes from "lodash/includes";
 import _camelCase from "lodash/camelCase";
 
+import { makeStyles, createStyles } from "@material-ui/styles";
 import {
-  createStyles,
-  makeStyles,
   TextField,
   Grid,
   IconButton,
@@ -54,7 +53,7 @@ export default function Settings({ handleChange, config }) {
               container
               direction="row"
               key={`option-${option}`}
-              justify="space-between"
+              justifyContent="space-between"
               alignItems="center"
             >
               <Grid item>

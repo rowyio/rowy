@@ -125,7 +125,7 @@ const ConditionModal = ({ modal, setModal, conditions, setConditions }) => {
           )}
 
           {modal.condition.type === "number" && (
-            <Grid container direction="row" justify="space-between">
+            <Grid container direction="row" justifyContent="space-between">
               <div style={{ width: "45%" }}>
                 <MultiSelect
                   options={[
@@ -181,7 +181,11 @@ export default function Settings({ handleChange, config }: ISettingsProps) {
         conditions.map((condition, index) => {
           return (
             <>
-              <Grid container justify="space-between" alignItems={"center"}>
+              <Grid
+                container
+                justifyContent="space-between"
+                alignItems={"center"}
+              >
                 {condition.label}
                 <Grid item>
                   {["undefined", "null"].includes(condition.type)

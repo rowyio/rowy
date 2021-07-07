@@ -1,12 +1,7 @@
 import Div100vh from "react-div-100vh";
 
-import {
-  makeStyles,
-  createStyles,
-  Grid,
-  CircularProgress,
-  Typography,
-} from "@material-ui/core";
+import { makeStyles, createStyles } from "@material-ui/styles";
+import { Grid, CircularProgress, Typography } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -36,7 +31,7 @@ export default function Loading({
       container
       className={classes.root}
       direction="column"
-      justify="center"
+      justifyContent="center"
       alignItems="center"
       component={fullScreen ? Div100vh : "div"}
       style={{ height: fullScreen ? "100rvh" : "100%" }}

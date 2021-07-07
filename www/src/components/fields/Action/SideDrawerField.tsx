@@ -1,13 +1,8 @@
 import { Controller, useWatch } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 
-import {
-  makeStyles,
-  createStyles,
-  Grid,
-  Typography,
-  Link,
-} from "@material-ui/core";
+import { makeStyles, createStyles } from "@material-ui/styles";
+import { Grid, Typography, Link } from "@material-ui/core";
 
 import ActionFab from "./ActionFab";
 import { useFieldStyles } from "components/SideDrawer/Form/utils";
@@ -15,7 +10,7 @@ import { sanitiseCallableName, isUrl } from "utils/fns";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
-    labelGridItem: { width: `calc(100% - 56px - ${theme.spacing(2)}px)` },
+    labelGridItem: { width: `calc(100% - 56px - ${theme.spacing(2)})` },
     label: {
       whiteSpace: "normal",
       width: "100%",

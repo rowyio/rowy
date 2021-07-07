@@ -27,7 +27,7 @@ export const config: IFieldConfig = {
   description:
     "Rating displayed as stars from 0 to configurable number of stars. Default: 5 stars.",
   TableCell: withHeavyCell(BasicCell, TableCell),
-  TableEditor: NullEditor,
+  TableEditor: NullEditor as any,
   settings: Settings,
   SideDrawerField,
 };

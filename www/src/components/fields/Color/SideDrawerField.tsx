@@ -3,14 +3,8 @@ import { Controller } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 import { ChromePicker } from "react-color";
 
-import {
-  makeStyles,
-  createStyles,
-  Grid,
-  ButtonBase,
-  Typography,
-  Collapse,
-} from "@material-ui/core";
+import { makeStyles, createStyles } from "@material-ui/styles";
+import { Grid, ButtonBase, Typography, Collapse } from "@material-ui/core";
 
 import { useFieldStyles } from "components/SideDrawer/Form/utils";
 
@@ -23,7 +17,7 @@ const useStyles = makeStyles((theme) =>
       borderRadius: theme.shape.borderRadius,
 
       backgroundColor:
-        theme.palette.type === "light"
+        theme.palette.mode === "light"
           ? "rgba(0, 0, 0, 0.09)"
           : "rgba(255, 255, 255, 0.09)",
       margin: 0,

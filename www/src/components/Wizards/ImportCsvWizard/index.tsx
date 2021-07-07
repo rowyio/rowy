@@ -4,8 +4,8 @@ import _find from "lodash/find";
 import { parseJSON } from "date-fns";
 
 import { useTheme, useMediaQuery, Typography, Link } from "@material-ui/core";
-import Alert from "@material-ui/lab/Alert";
-import AlertTitle from "@material-ui/lab/AlertTitle";
+import Alert from "@material-ui/core/Alert";
+import AlertTitle from "@material-ui/core/AlertTitle";
 
 import WizardDialog from "../WizardDialog";
 import Step1Columns from "./Step1Columns";
@@ -43,7 +43,7 @@ export default function ImportCsvWizard({
   csvData,
 }: IImportCsvWizardProps) {
   const theme = useTheme();
-  const isXs = useMediaQuery(theme.breakpoints.down("xs"));
+  const isXs = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [open, setOpen] = useState(true);
 

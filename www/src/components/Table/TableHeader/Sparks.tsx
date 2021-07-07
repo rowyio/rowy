@@ -8,7 +8,7 @@ import { useSnackContext } from "contexts/SnackContext";
 import { db } from "../../../firebase";
 
 import { DialogContentText, Chip } from "@material-ui/core";
-import Alert from "@material-ui/lab/Alert";
+import Alert from "@material-ui/core/Alert";
 import TableHeaderButton from "./TableHeaderButton";
 import SparkIcon from "@material-ui/icons/OfflineBolt";
 import Modal from "components/Modal";

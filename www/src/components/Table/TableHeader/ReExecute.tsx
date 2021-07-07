@@ -13,7 +13,8 @@ import _get from "lodash/get";
 import _find from "lodash/find";
 import _sortBy from "lodash/sortBy";
 
-import { makeStyles, createStyles, DialogContentText } from "@material-ui/core";
+import { makeStyles, createStyles } from "@material-ui/styles";
+import { DialogContentText } from "@material-ui/core";
 
 import Modal from "components/Modal";
 

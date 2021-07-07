@@ -1,5 +1,5 @@
 import React from "react";
-import { makeStyles, createStyles } from "@material-ui/core";
+import { makeStyles, createStyles } from "@material-ui/styles";
 
 import { FieldType } from "constants/fields";
 import { getFieldProp } from "components/fields";
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) =>
 
       "& .cell-collapse-padding": {
         margin: theme.spacing(0, -1.5),
-        width: `calc(100% + ${theme.spacing(3)}px)`,
+        width: `calc(100% + ${theme.spacing(3)})`,
       },
     },
 

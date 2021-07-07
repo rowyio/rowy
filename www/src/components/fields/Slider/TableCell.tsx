@@ -1,6 +1,7 @@
 import { IHeavyCellProps } from "../types";
 
-import { makeStyles, createStyles, Grid } from "@material-ui/core";
+import { makeStyles, createStyles } from "@material-ui/styles";
+import { Grid } from "@material-ui/core";
 
 import { resultColorsScale } from "utils/color";
 

@@ -1,6 +1,7 @@
 import { IHeavyCellProps } from "../types";
 
-import { makeStyles, createStyles, Tooltip, Fade } from "@material-ui/core";
+import { makeStyles, createStyles } from "@material-ui/styles";
+import { Tooltip, Fade } from "@material-ui/core";
 
 import { useFiretableContext } from "contexts/FiretableContext";
 import RenderedHtml from "components/RenderedHtml";
@@ -30,7 +31,7 @@ const useStyles = makeStyles((theme) =>
     },
 
     tooltip: ({ width, rowHeight }: StylesProps) => ({
-      margin: `-${rowHeight - 1}px 0 0 -${theme.spacing(1.5)}px`,
+      margin: `-${rowHeight - 1}px 0 0 -${theme.spacing(1.5)}`,
       padding: theme.spacing(0.5, 1.5),
 
       width: width - 1,
@@ -62,14 +63,27 @@ export default function RichText({ column, value }: IHeavyCellProps) {
       enterDelay={1000}
       placement="bottom-start"
       PopperProps={{
-        modifiers: {
-          flip: { enabled: false },
-          preventOverflow: {
-            enabled: false,
-            boundariesElement: "scrollParent",
+        modifiers: [
+          {
+            name: "flip",
+            options: {
+              enabled: false,
+            },
           },
-          hide: { enabled: false },
-        },
+          {
+            name: "preventOverflow",
+            options: {
+              enabled: false,
+              boundariesElement: "scrollParent",
+            },
+          },
+          {
+            name: "hide",
+            options: {
+              enabled: false,
+            },
+          },
+        ],
       }}
       TransitionComponent={Fade}
       classes={{ tooltip: classes.tooltip }}

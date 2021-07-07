@@ -1,5 +1,6 @@
-import { makeStyles, createStyles, Grid, Button } from "@material-ui/core";
-import Skeleton from "@material-ui/lab/Skeleton";
+import { makeStyles, createStyles } from "@material-ui/styles";
+import { Grid, Button } from "@material-ui/core";
+import Skeleton from "@material-ui/core/Skeleton";
 import AddRowIcon from "assets/icons/AddRow";
 
 import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
@@ -19,7 +20,7 @@ const useStyles = makeStyles((theme) =>
       userSelect: "none",
       pointerEvents: "none",
 
-      [theme.breakpoints.down("sm")]: {
+      [theme.breakpoints.down("md")]: {
         width: "100%",
         paddingRight: theme.spacing(1),
       },
@@ -52,7 +53,7 @@ export default function TableHeaderSkeleton() {
       className={classes.root}
     >
       <Grid item>
-        <Skeleton variant="rect" className={classes.addRow}>
+        <Skeleton variant="rectangular" className={classes.addRow}>
           <Button
             variant="contained"
             startIcon={<AddRowIcon className={classes.addRowIcon} />}
@@ -65,14 +66,14 @@ export default function TableHeaderSkeleton() {
       <Grid item />
 
       <Grid item>
-        <Skeleton variant="rect" className={classes.button}>
+        <Skeleton variant="rectangular" className={classes.button}>
           <Button variant="contained" startIcon={<AddRowIcon />}>
             Hide
           </Button>
         </Skeleton>
       </Grid>
       <Grid item>
-        <Skeleton variant="rect" className={classes.button}>
+        <Skeleton variant="rectangular" className={classes.button}>
           <Button variant="contained" startIcon={<AddRowIcon />}>
             Filter
           </Button>
@@ -83,7 +84,7 @@ export default function TableHeaderSkeleton() {
 
       <Grid item>
         <Skeleton
-          variant="rect"
+          variant="rectangular"
           className={classes.button}
           style={{ width: 120 }}
         />
@@ -92,13 +93,13 @@ export default function TableHeaderSkeleton() {
       <Grid item />
 
       <Grid item>
-        <Skeleton variant="circle" className={classes.circleButton} />
+        <Skeleton variant="circular" className={classes.circleButton} />
       </Grid>
       <Grid item>
-        <Skeleton variant="circle" className={classes.circleButton} />
+        <Skeleton variant="circular" className={classes.circleButton} />
       </Grid>
       <Grid item>
-        <Skeleton variant="circle" className={classes.circleButton} />
+        <Skeleton variant="circular" className={classes.circleButton} />
       </Grid>
     </Grid>
   );

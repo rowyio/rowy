@@ -1,8 +1,7 @@
 import { Link } from "react-router-dom";
 
+import { makeStyles, createStyles } from "@material-ui/styles";
 import {
-  createStyles,
-  makeStyles,
   useTheme,
   useScrollTrigger,
   AppBar as MuiAppBar,

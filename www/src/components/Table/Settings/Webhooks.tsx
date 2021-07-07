@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
+import { makeStyles, createStyles } from "@material-ui/styles";
+
 import Button from "@material-ui/core/Button";
 import Dialog, { DialogProps } from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -19,7 +20,7 @@ import { useFiretableContext } from "contexts/FiretableContext";
 import { WEBHOOK_URL } from "../../../firebase";
 import { makeId } from "../../../utils/fns";
 import { DocActions } from "hooks/useDoc";
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     form: {
       display: "flex",

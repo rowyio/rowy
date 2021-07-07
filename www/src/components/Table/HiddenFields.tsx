@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from "react";
 import _isEqual from "lodash/isEqual";
 import _sortBy from "lodash/sortBy";
 
-import { makeStyles, createStyles } from "@material-ui/core/styles";
+import { makeStyles, createStyles } from "@material-ui/styles";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
 
 import MultiSelect from "@antlerengineering/multiselect";
@@ -112,10 +112,12 @@ export default function HiddenFields() {
           className: classes.textField,
           SelectProps: { open, MenuProps: { anchorEl: buttonRef.current } },
         }}
-        AutocompleteProps={{
-          classes: { option: classes.option },
-          renderOption,
-        }}
+        {...({
+          AutocompleteProps: {
+            classes: { option: classes.option },
+            renderOption,
+          },
+        } as any)}
         label="Hidden fields"
         labelPlural="Fields"
         options={tableColumns}

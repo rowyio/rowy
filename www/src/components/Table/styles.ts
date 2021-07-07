@@ -1,11 +1,5 @@
-import {
-  makeStyles,
-  createStyles,
-  alpha,
-  emphasize,
-  darken,
-  lighten,
-} from "@material-ui/core";
+import { makeStyles, createStyles } from "@material-ui/styles";
+import { alpha, emphasize, darken, lighten } from "@material-ui/core";
 import { APP_BAR_HEIGHT } from "components/Navigation";
 import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
 
@@ -40,11 +34,11 @@ export const useStyles = makeStyles((theme) =>
           0.04
         ),
         "--row-selected-background-color":
-          theme.palette.type === "light"
+          theme.palette.mode === "light"
             ? lighten(theme.palette.primary.main, 0.9)
             : darken(theme.palette.primary.main, 0.8),
         "--row-selected-hover-background-color":
-          theme.palette.type === "light"
+          theme.palette.mode === "light"
             ? lighten(theme.palette.primary.main, 0.8)
             : darken(theme.palette.primary.main, 0.7),
         "--checkbox-color": theme.palette.primary.main,
@@ -73,14 +67,14 @@ export const useStyles = makeStyles((theme) =>
 
         "& .rdg-cell-frozen-last": {
           boxShadow:
-            theme.palette.type === "light"
+            theme.palette.mode === "light"
               ? "2px 0 4px 0px rgba(0, 0, 0, .08)"
               : "2px 0 4px 0px rgba(0, 0, 0, .67)",
         },
 
         "& .rdg-cell-copied": {
           backgroundColor:
-            theme.palette.type === "light"
+            theme.palette.mode === "light"
               ? lighten(theme.palette.primary.main, 0.7)
               : darken(theme.palette.primary.main, 0.6),
         },

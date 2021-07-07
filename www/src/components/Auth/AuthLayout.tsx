@@ -1,12 +1,7 @@
 import Div100vh from "react-div-100vh";
 
-import {
-  makeStyles,
-  createStyles,
-  Paper,
-  Typography,
-  LinearProgress,
-} from "@material-ui/core";
+import { makeStyles, createStyles } from "@material-ui/styles";
+import { Paper, Typography, LinearProgress } from "@material-ui/core";
 import { alpha } from "@material-ui/core/styles";
 
 import bgPattern from "assets/bg-pattern.svg";
@@ -54,7 +49,7 @@ const useStyles = makeStyles((theme) =>
         theme.palette.background.elevation?.[8] ||
         theme.palette.background.paper,
 
-      "--spacing-contents": theme.spacing(4) + "px",
+      "--spacing-contents": theme.spacing(4),
       "& > * + *": { marginTop: "var(--spacing-contents)" },
 
       textAlign: "center",

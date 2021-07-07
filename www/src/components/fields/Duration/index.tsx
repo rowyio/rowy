@@ -25,7 +25,7 @@ export const config: IFieldConfig = {
   icon: <DurationIcon />,
   description: "Duration calculated from two timestamps.",
   TableCell: withHeavyCell(BasicCell, TableCell),
-  TableEditor: NullEditor,
+  TableEditor: NullEditor as any,
   SideDrawerField,
 };
 export default config;

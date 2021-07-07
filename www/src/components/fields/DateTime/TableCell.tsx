@@ -2,7 +2,7 @@ import clsx from "clsx";
 import { IHeavyCellProps } from "../types";
 import { useDebouncedCallback } from "use-debounce";
 
-import { makeStyles, createStyles } from "@material-ui/core";
+import { makeStyles, createStyles } from "@material-ui/styles";
 import DateRangeIcon from "@material-ui/icons/DateRange";
 import TimeIcon from "@material-ui/icons/Schedule";
 

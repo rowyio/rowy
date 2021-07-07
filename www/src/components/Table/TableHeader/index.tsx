@@ -1,8 +1,7 @@
 import { useState } from "react";
 
+import { makeStyles, createStyles } from "@material-ui/styles";
 import {
-  makeStyles,
-  createStyles,
   Grid,
   TextField,
   MenuItem,
@@ -42,7 +41,7 @@ const useStyles = makeStyles((theme) =>
 
       userSelect: "none",
 
-      [theme.breakpoints.down("sm")]: {
+      [theme.breakpoints.down("md")]: {
         width: "100%",
         paddingRight: theme.spacing(1),
       },
@@ -59,7 +58,7 @@ const useStyles = makeStyles((theme) =>
     inputBaseRoot: {
       borderRadius: theme.shape.borderRadius,
       backgroundColor:
-        theme.palette.type === "dark"
+        theme.palette.mode === "dark"
           ? alpha(theme.palette.text.primary, 0.06)
           : undefined,
     },

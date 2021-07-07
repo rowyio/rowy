@@ -5,9 +5,8 @@ import { useDropzone } from "react-dropzone";
 import _findIndex from "lodash/findIndex";
 import clsx from "clsx";
 
+import { makeStyles, createStyles } from "@material-ui/styles";
 import {
-  makeStyles,
-  createStyles,
   alpha,
   Grid,
   IconButton,
@@ -49,8 +48,8 @@ const useStyles = makeStyles((theme) =>
       position: "relative",
       display: "flex",
 
-      width: rowHeight - theme.spacing(1) - 1,
-      height: rowHeight - theme.spacing(1) - 1,
+      width: `calc(${rowHeight}px - ${theme.spacing(1)} - 1)`,
+      height: `calc(${rowHeight}px - ${theme.spacing(1)} - 1)`,
 
       backgroundSize: "contain",
       backgroundPosition: "center center",
@@ -203,7 +202,7 @@ export default function Image_({
                       />
                       <Grid
                         container
-                        justify="center"
+                        justifyContent="center"
                         alignItems="center"
                         className={classes.deleteImgHover}
                       >
@@ -237,7 +236,7 @@ export default function Image_({
                         />
                         <Grid
                           container
-                          justify="center"
+                          justifyContent="center"
                           alignItems="center"
                           className={classes.deleteImgHover}
                         >
@@ -279,7 +278,7 @@ export default function Image_({
         ) : (
           <CircularProgress
             size={24}
-            variant={progress === 0 ? "indeterminate" : "static"}
+            variant={progress === 0 ? "indeterminate" : "determinate"}
             value={progress}
             thickness={4.6}
             className={classes.circularProgress}

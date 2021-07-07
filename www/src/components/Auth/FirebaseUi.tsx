@@ -4,9 +4,10 @@ import clsx from "clsx";
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 import { Props as FirebaseUiProps } from "react-firebaseui";
 
-import { makeStyles, createStyles, Typography } from "@material-ui/core";
+import { makeStyles, createStyles } from "@material-ui/styles";
+import { Typography } from "@material-ui/core";
 import { alpha } from "@material-ui/core/styles";
-import Skeleton from "@material-ui/lab/Skeleton";
+import Skeleton from "@material-ui/core/Skeleton";
 
 import { auth, db } from "../../firebase";
 import { defaultUiConfig, getSignInOptions } from "../../firebase/firebaseui";
@@ -87,7 +88,7 @@ const useStyles = makeStyles((theme) =>
           width: "100%",
           textAlign: "center",
 
-          [theme.breakpoints.down("xs")]: {
+          [theme.breakpoints.down("sm")]: {
             "&.firebaseui-idp-text-long": { display: "none" },
             "&.firebaseui-idp-text-short": { display: "table-cell" },
           },
@@ -155,7 +156,7 @@ const useStyles = makeStyles((theme) =>
 
     signInText: {
       display: "none",
-      [theme.breakpoints.down("xs")]: { display: "block" },
+      [theme.breakpoints.down("sm")]: { display: "block" },
 
       textAlign: "center",
       color: theme.palette.text.disabled,
@@ -198,7 +199,7 @@ export default function FirebaseUi(props: Partial<FirebaseUiProps>) {
         className={classes.skeleton}
         style={{ marginBottom: 0 }}
       >
-        <Skeleton variant="rect" />
+        <Skeleton variant="rectangular" />
       </div>
     );
 
@@ -223,7 +224,7 @@ export default function FirebaseUi(props: Partial<FirebaseUiProps>) {
 
       <div id="firetable-firebaseui-skeleton" className={classes.skeleton}>
         {Object.keys(signInOptions).map((_, i) => (
-          <Skeleton key={i} variant="rect" />
+          <Skeleton key={i} variant="rectangular" />
         ))}
       </div>
 

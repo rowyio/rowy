@@ -16,7 +16,7 @@ export const config: IFieldConfig = {
   description:
     "Value derived from the rest of the row’s values. Displayed using any other field type. Requires Cloud Function setup.",
   TableCell: withBasicCell(BasicCell),
-  TableEditor: NullEditor,
+  TableEditor: NullEditor as any,
   SideDrawerField: BasicCell as any,
   settings: Settings,
 };

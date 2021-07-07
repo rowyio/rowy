@@ -4,9 +4,8 @@ import { FacetHit } from "@algolia/client-search";
 import useAlgolia from "use-algolia";
 import { useDebouncedCallback } from "use-debounce";
 
+import { makeStyles, createStyles } from "@material-ui/styles";
 import {
-  makeStyles,
-  createStyles,
   Grid,
   Typography,
   Button,

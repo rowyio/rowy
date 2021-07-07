@@ -6,12 +6,8 @@ import {
   IPopoverCellProps,
 } from "../types";
 
-import {
-  makeStyles,
-  createStyles,
-  Popover,
-  PopoverProps,
-} from "@material-ui/core";
+import { makeStyles, createStyles } from "@material-ui/styles";
+import { Popover, PopoverProps } from "@material-ui/core";
 
 import ErrorBoundary from "components/ErrorBoundary";
 import CellValidation from "components/Table/CellValidation";

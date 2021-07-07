@@ -2,7 +2,7 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import * as yup from "yup";
 
-import { makeStyles, createStyles } from "@material-ui/core/styles";
+import { makeStyles, createStyles } from "@material-ui/styles";
 import { FormDialog } from "@antlerengineering/form-builder";
 
 const useStyles = makeStyles((theme) =>

@@ -28,7 +28,7 @@ export interface IStepProps {
 
 export default function ImportWizard() {
   const theme = useTheme();
-  const isXs = useMediaQuery(theme.breakpoints.down("xs"));
+  const isXs = useMediaQuery(theme.breakpoints.down("sm"));
 
   const { tableState, tableActions, importWizardRef } = useFiretableContext();
 

@@ -27,7 +27,7 @@ export const config: IFieldConfig = {
   description:
     "Status is read only field that displays field values in more visual format",
   TableCell: withHeavyCell(BasicCell, TableCell),
-  TableEditor: NullEditor,
+  TableEditor: NullEditor as any,
   settings: Settings,
   SideDrawerField,
 };

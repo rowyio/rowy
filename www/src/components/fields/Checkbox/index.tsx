@@ -25,7 +25,7 @@ export const config: IFieldConfig = {
   icon: <CheckboxIcon />,
   description: "Either checked or unchecked. Unchecked by default.",
   TableCell: withHeavyCell(BasicCell, TableCell),
-  TableEditor: NullEditor,
+  TableEditor: NullEditor as any,
   csvImportParser: (value: string) => {
     if (["YES", "TRUE", "1"].includes(value.toUpperCase())) return true;
     else if (["NO", "FALSE", "0"].includes(value.toUpperCase())) return false;

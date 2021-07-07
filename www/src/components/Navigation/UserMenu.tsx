@@ -1,9 +1,8 @@
 import { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 
+import { makeStyles, createStyles } from "@material-ui/styles";
 import {
-  makeStyles,
-  createStyles,
   IconButton,
   IconButtonProps,
   Avatar,
@@ -133,7 +132,6 @@ export default function UserMenu(props: IconButtonProps) {
         id="user-menu"
         keepMounted
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        getContentAnchorEl={null}
         transformOrigin={{ vertical: "top", horizontal: "right" }}
         open={open}
         onClose={() => setOpen(false)}
@@ -163,7 +161,6 @@ export default function UserMenu(props: IconButtonProps) {
             anchorEl={themeSubMenu as any}
             id="theme-sub-menu"
             anchorOrigin={{ vertical: "top", horizontal: "left" }}
-            getContentAnchorEl={null}
             transformOrigin={{ vertical: "top", horizontal: "right" }}
             open
             onClose={() => setThemeSubMenu(null)}

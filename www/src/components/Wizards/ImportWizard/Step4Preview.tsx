@@ -1,6 +1,7 @@
 import { ScrollSync, ScrollSyncPane } from "react-scroll-sync";
 
-import { makeStyles, createStyles, Grid } from "@material-ui/core";
+import { makeStyles, createStyles } from "@material-ui/styles";
+import { Grid } from "@material-ui/core";
 
 import { IStepProps } from ".";
 import Column from "../Column";

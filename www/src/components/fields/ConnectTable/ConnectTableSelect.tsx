@@ -192,15 +192,17 @@ export default function ConnectTableSelect({
       label={column?.name}
       labelPlural={config.searchLabel}
       multiple={(config.multiple ?? true) as any}
-      AutocompleteProps={{
-        loading: algoliaState.loading,
-        loadingText: <Loading />,
-        inputValue: search,
-        onInputChange: (_, value, reason) => {
-          if (reason === "input") setSearch(value);
+      {...({
+        AutocompleteProps: {
+          loading: algoliaState.loading,
+          loadingText: <Loading />,
+          inputValue: search,
+          onInputChange: (_, value, reason) => {
+            if (reason === "input") setSearch(value);
+          },
+          filterOptions: () => options,
         },
-        filterOptions: () => options,
-      }}
+      } as any)}
       countText={`${localValue.length} of ${
         algoliaState.response?.nbHits ?? "?"
       }`}

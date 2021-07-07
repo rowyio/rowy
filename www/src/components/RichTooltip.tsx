@@ -1,14 +1,8 @@
 import React, { useState } from "react";
 import clsx from "clsx";
 
-import {
-  makeStyles,
-  createStyles,
-  Tooltip,
-  TooltipProps,
-  Button,
-  ButtonProps,
-} from "@material-ui/core";
+import { makeStyles, createStyles } from "@material-ui/styles";
+import { Tooltip, TooltipProps, Button, ButtonProps } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -87,7 +81,6 @@ export default function RichTooltip({
       disableHoverListener
       disableTouchListener
       arrow
-      interactive
       open={open}
       onClose={closeTooltip}
       classes={{ tooltip: classes.tooltip, arrow: classes.arrow }}

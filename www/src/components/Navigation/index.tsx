@@ -2,13 +2,8 @@ import React, { useState, useEffect } from "react";
 import clsx from "clsx";
 import _find from "lodash/find";
 
-import {
-  createStyles,
-  makeStyles,
-  AppBar,
-  Toolbar,
-  IconButton,
-} from "@material-ui/core";
+import { makeStyles, createStyles } from "@material-ui/styles";
+import { AppBar, Toolbar, IconButton } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 
 import Breadcrumbs from "./Breadcrumbs";
@@ -25,7 +20,7 @@ const useStyles = makeStyles((theme) =>
     appBar: {
       paddingRight: DRAWER_COLLAPSED_WIDTH,
       height: APP_BAR_HEIGHT,
-      [theme.breakpoints.down("sm")]: { paddingRight: 0 },
+      [theme.breakpoints.down("md")]: { paddingRight: 0 },
 
       backgroundColor: theme.palette.background.paper,
     },

@@ -28,7 +28,7 @@ export const config: IFieldConfig = {
   description:
     "Creates a sub-table. Also displays number of rows inside the sub-table. Max sub-table levels: 100.",
   TableCell: withHeavyCell(BasicCell, TableCell),
-  TableEditor: NullEditor,
+  TableEditor: NullEditor as any,
   SideDrawerField,
   initializable: false,
 };

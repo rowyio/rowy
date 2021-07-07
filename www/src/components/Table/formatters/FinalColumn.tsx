@@ -1,13 +1,8 @@
 import { useContext } from "react";
 import { FormatterProps } from "react-data-grid";
 
-import {
-  makeStyles,
-  createStyles,
-  Grid,
-  Tooltip,
-  IconButton,
-} from "@material-ui/core";
+import { makeStyles, createStyles } from "@material-ui/styles";
+import { Grid, Tooltip, IconButton } from "@material-ui/core";
 import CopyCellsIcon from "assets/icons/CopyCells";
 import DeleteIcon from "@material-ui/icons/DeleteForever";
 

@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import _groupBy from "lodash/groupBy";
 import _find from "lodash/find";
+import { makeStyles, createStyles } from "@material-ui/styles";
 import {
-  createStyles,
-  makeStyles,
   Container,
   Grid,
   Typography,
@@ -54,12 +53,12 @@ const useStyles = makeStyles((theme) =>
     divider: { margin: theme.spacing(1, 0, 3) },
 
     cardGrid: {
-      [theme.breakpoints.down("xs")]: { maxWidth: 360, margin: "0 auto" },
+      [theme.breakpoints.down("sm")]: { maxWidth: 360, margin: "0 auto" },
     },
     card: {
       height: "100%",
       [theme.breakpoints.up("md")]: { minHeight: 220 },
-      [theme.breakpoints.down("md")]: { minHeight: 180 },
+      [theme.breakpoints.down("lg")]: { minHeight: 180 },
     },
     favButton: {
       margin: theme.spacing(-0.5, -1, 0, 0),
@@ -74,7 +73,7 @@ const useStyles = makeStyles((theme) =>
       bottom: theme.spacing(3),
       width: 80,
       height: 80,
-      borderRadius: theme.shape.borderRadius * 2,
+      borderRadius: (theme.shape.borderRadius as number) * 2,
       "& svg": { width: "2em", height: "2em" },
     },
     fab: {
@@ -85,7 +84,7 @@ const useStyles = makeStyles((theme) =>
       width: 80,
       height: 80,
 
-      borderRadius: theme.shape.borderRadius * 2,
+      borderRadius: (theme.shape.borderRadius as number) * 2,
       "& svg": { width: "2em", height: "2em" },
     },
   })
@@ -244,7 +243,7 @@ export default function HomePage() {
               <Grid
                 container
                 spacing={4}
-                justify="flex-start"
+                justifyContent="flex-start"
                 className={classes.cardGrid}
               >
                 {favs.map((table) => (
@@ -274,7 +273,7 @@ export default function HomePage() {
                 <Grid
                   container
                   spacing={4}
-                  justify="flex-start"
+                  justifyContent="flex-start"
                   className={classes.cardGrid}
                 >
                   {sections[sectionName].map((table, i) => (

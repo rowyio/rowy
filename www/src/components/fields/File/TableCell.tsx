@@ -6,9 +6,8 @@ import _findIndex from "lodash/findIndex";
 import clsx from "clsx";
 import { format } from "date-fns";
 
+import { makeStyles, createStyles } from "@material-ui/styles";
 import {
-  makeStyles,
-  createStyles,
   alpha,
   Grid,
   Tooltip,
@@ -42,7 +41,7 @@ const useStyles = makeStyles((theme) =>
     chipList: { overflow: "hidden" },
     chipGridItem: {
       // Truncate so multiple files still visible
-      maxWidth: `calc(100% - ${theme.spacing(3.5)}px)`,
+      maxWidth: `calc(100% - ${theme.spacing(3.5)})`,
     },
     chip: { width: "100%" },
 
@@ -174,7 +173,7 @@ export default function File_({
         ) : (
           <CircularProgress
             size={24}
-            variant={progress === 0 ? "indeterminate" : "static"}
+            variant={progress === 0 ? "indeterminate" : "determinate"}
             value={progress}
             thickness={4.6}
             className={classes.circularProgress}

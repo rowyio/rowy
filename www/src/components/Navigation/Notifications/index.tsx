@@ -13,13 +13,14 @@ import {
   ListItemSecondaryAction,
 } from "@material-ui/core";
 
-import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles, createStyles } from "@material-ui/styles";
+
 import ErrorIcon from "@material-ui/icons/Error";
 import DeleteIcon from "@material-ui/icons/Delete";
 import LinkIcon from "@material-ui/icons/Link";
 import BellIcon from "@material-ui/icons/Notifications";
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     typography: {
       padding: theme.spacing(2),

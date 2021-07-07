@@ -1,9 +1,8 @@
 import { useState } from "react";
 import _find from "lodash/find";
 
+import { makeStyles, createStyles } from "@material-ui/styles";
 import {
-  createStyles,
-  makeStyles,
   alpha,
   Grow,
   Paper,
@@ -44,7 +43,7 @@ const useStyles = makeStyles((theme) =>
       zIndex: theme.zIndex.modal,
 
       backgroundColor:
-        theme.palette.type === "light"
+        theme.palette.mode === "light"
           ? theme.palette.background.default
           : theme.palette.background.elevation?.[12] ??
             theme.palette.background.default,
@@ -82,7 +81,7 @@ const useStyles = makeStyles((theme) =>
     inputBaseRoot: {
       borderRadius: theme.shape.borderRadius,
       backgroundColor:
-        theme.palette.type === "dark"
+        theme.palette.mode === "dark"
           ? alpha(theme.palette.text.primary, 0.06)
           : undefined,
     },
@@ -244,7 +243,6 @@ export default function BulkActions({ selectedRows, columns, clearSelection }) {
                   classes: { root: classes.select },
                   displayEmpty: true,
                   MenuProps: {
-                    getContentAnchorEl: null,
                     anchorOrigin: { vertical: "top", horizontal: "left" },
                     transformOrigin: { vertical: "bottom", horizontal: "left" },
                     classes: { paper: classes.dropdownMenu },

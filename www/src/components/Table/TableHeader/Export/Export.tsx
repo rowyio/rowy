@@ -199,7 +199,7 @@ export default function Export({ query, closeModal }) {
       <Grid
         container
         spacing={2}
-        justify="center"
+        justifyContent="center"
         alignItems="center"
         style={{ flexShrink: 0 }}
       >

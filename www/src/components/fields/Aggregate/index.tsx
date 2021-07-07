@@ -15,7 +15,7 @@ export const config: IFieldConfig = {
   description:
     "Value aggregated from a specified sub-table of the row. Displayed using any other field type. Requires Cloud Function setup.",
   TableCell: withBasicCell(BasicCell),
-  TableEditor: NullEditor,
+  TableEditor: NullEditor as any,
   SideDrawerField: BasicCell as any,
 };
 export default config;

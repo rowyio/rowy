@@ -1,9 +1,8 @@
 import clsx from "clsx";
 import { Link, LinkProps } from "react-router-dom";
 
+import { makeStyles, createStyles } from "@material-ui/styles";
 import {
-  makeStyles,
-  createStyles,
   Card,
   Grid,
   Typography,
@@ -108,7 +107,11 @@ export default function StyledCard({
                         {overline}
                       </Typography>
                     )}
-                    <Grid container direction="row" justify="space-between">
+                    <Grid
+                      container
+                      direction="row"
+                      justifyContent="space-between"
+                    >
                       {title && (
                         <Typography variant="h5" className={classes.title}>
                           {title}
@@ -136,7 +139,7 @@ export default function StyledCard({
                     container
                     direction="column"
                     wrap="nowrap"
-                    justify="space-between"
+                    justifyContent="space-between"
                   >
                     {bodyContent.map((element) => (
                       <Grid item>{element}</Grid>

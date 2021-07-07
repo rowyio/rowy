@@ -1,13 +1,9 @@
 import clsx from "clsx";
 import Div100vh from "react-div-100vh";
 
-import {
-  makeStyles,
-  createStyles,
-  Grid,
-  GridProps,
-  Typography,
-} from "@material-ui/core";
+import { makeStyles, createStyles } from "@material-ui/styles";
+import { Grid, GridProps, Typography, SvgIconTypeMap } from "@material-ui/core";
+import { OverridableComponent } from "@material-ui/core/OverridableComponent";
 import ErrorIcon from "@material-ui/icons/Error";
 
 const useStyles = makeStyles((theme) =>
@@ -39,7 +35,7 @@ export interface IEmptyStateProps extends Partial<GridProps> {
   /** Description text displayed under primary message */
   description?: React.ReactNode;
   /** Override icon component */
-  Icon?: typeof ErrorIcon;
+  Icon?: OverridableComponent<SvgIconTypeMap>;
   /** Set height to `100vh`. Default: `false` */
   fullScreen?: boolean;
   /** Basic inline presentation without padding. Default: `false` */
@@ -80,7 +76,7 @@ export default function EmptyState({
     <Grid
       container
       direction="column"
-      justify="center"
+      justifyContent="center"
       alignItems="center"
       component={fullScreen ? Div100vh : "div"}
       style={{ height: fullScreen ? "100rvh" : "100%" }}

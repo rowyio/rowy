@@ -1,6 +1,6 @@
 import { IHeavyCellProps } from "../types";
 
-import MuiRating from "@material-ui/lab/Rating";
+import MuiRating from "@material-ui/core/Rating";
 import StarBorderIcon from "@material-ui/icons/StarBorder";
 
 import { useRatingStyles } from "./styles";

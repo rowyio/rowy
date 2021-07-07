@@ -1,7 +1,8 @@
 import { useRef, useEffect } from "react";
 import { EditorProps } from "react-data-grid";
 
-import { makeStyles, createStyles, TextField } from "@material-ui/core";
+import { makeStyles, createStyles } from "@material-ui/styles";
+import { TextField } from "@material-ui/core";
 
 import { FieldType } from "constants/fields";
 import { getCellValue } from "utils/fns";
@@ -11,7 +12,7 @@ const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       margin: theme.spacing(0, -1.5),
-      width: `calc(100% + ${theme.spacing(1.5) * 2}px)`,
+      width: `calc(100% + ${theme.spacing(1.5 * 2)})`,
       height: "100%",
 
       backgroundColor:

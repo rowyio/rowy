@@ -10,9 +10,7 @@ import { TextField } from "@material-ui/core";
 import { DATE_FORMAT } from "constants/dates";
 import { transformValue, sanitizeValue } from "./utils";
 
-export interface IDateProps
-  extends ISideDrawerFieldProps,
-    Omit<DatePickerProps, "name" | "onChange" | "value" | "disabled"> {}
+export interface IDateProps extends ISideDrawerFieldProps {}
 
 export default function Date_({
   column,
@@ -37,31 +35,31 @@ export default function Date_({
             onChange(sanitized);
           };
 
-          return (
-            <DatePicker
-              inputFormat={column.config?.format ?? DATE_FORMAT}
-              {...props}
-              renderInput={(props) => (
-                <TextField
-                  {...props}
-                  fullWidth
-                  margin="none"
-                  placeholder={column.config?.format ?? DATE_FORMAT}
-                  // TODO: InputAdornmentProps={{
-                  //   style: { marginRight: theme.spacing(-1) },
-                  // }}
-                  // TODO: move this out to side drawer
-                  id={`sidedrawer-field-${column.key}`}
-                  onBlur={onBlur}
-                  label=""
-                  hiddenLabel
-                />
-              )}
-              value={transformedValue}
-              onChange={handleChange}
-              disabled={disabled}
-            />
-          );
+          return <></>;
+          // TODO:
+          // <DatePicker
+          //   inputFormat={column.config?.format ?? DATE_FORMAT}
+          //   {...props}
+          //   renderInput={(props) => (
+          //     <TextField
+          //       {...props}
+          //       fullWidth
+          //       margin="none"
+          //       placeholder={column.config?.format ?? DATE_FORMAT}
+          //       // TODO: InputAdornmentProps={{
+          //       //   style: { marginRight: theme.spacing(-1) },
+          //       // }}
+          //       // TODO: move this out to side drawer
+          //       id={`sidedrawer-field-${column.key}`}
+          //       onBlur={onBlur}
+          //       label=""
+          //       hiddenLabel
+          //     />
+          //   )}
+          //   value={transformedValue}
+          //   onChange={handleChange}
+          //   disabled={disabled}
+          // />
         }}
       />
     </LocalizationProvider>

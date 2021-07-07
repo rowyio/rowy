@@ -4,9 +4,8 @@ import parse from "csv-parse";
 import { useDropzone } from "react-dropzone";
 import { useDebouncedCallback } from "use-debounce";
 
+import { makeStyles, createStyles } from "@material-ui/styles";
 import {
-  makeStyles,
-  createStyles,
   Button,
   Popover,
   PopoverProps as MuiPopoverProps,
@@ -206,7 +205,7 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
           <TabPanel value="upload" className={classes.tabPanel}>
             <Grid
               container
-              justify="center"
+              justifyContent="center"
               alignContent="center"
               alignItems="center"
               direction="column"

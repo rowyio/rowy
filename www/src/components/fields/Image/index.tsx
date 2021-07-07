@@ -24,7 +24,7 @@ export const config: IFieldConfig = {
   description:
     "Image file uploaded to Firebase Storage. Supports JPEG, PNG, SVG, GIF, WebP.",
   TableCell: withHeavyCell(BasicCell, TableCell),
-  TableEditor: NullEditor,
+  TableEditor: NullEditor as any,
   SideDrawerField,
 };
 export default config;

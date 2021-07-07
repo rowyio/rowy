@@ -6,9 +6,8 @@ import _camel from "lodash/camelCase";
 import _sortBy from "lodash/sortBy";
 import clsx from "clsx";
 
+import { makeStyles, createStyles } from "@material-ui/styles";
 import {
-  makeStyles,
-  createStyles,
   Grid,
   Typography,
   Divider,
@@ -98,7 +97,9 @@ export default function Step1Columns({
     config.pairs.map((pair) => pair.csvKey)
   );
 
-  const handleSelect = (field: string) => (_, checked: boolean) => {
+  const handleSelect = (field: string) => (e) => {
+    const checked = e.target.checked;
+
     if (checked) {
       setSelectedFields((x) => [...x, field]);
     } else {
@@ -241,7 +242,6 @@ export default function Step1Columns({
                                   <Chip
                                     label="New"
                                     size="small"
-                                    variant="default"
                                     className={classes.newColumnChip}
                                   />
                                 )}

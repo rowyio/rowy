@@ -1,4 +1,4 @@
-import { makeStyles, createStyles } from "@material-ui/core";
+import { makeStyles, createStyles } from "@material-ui/styles";
 import { DRAWER_WIDTH, DRAWER_COLLAPSED_WIDTH } from "./index";
 
 export const useStyles = makeStyles((theme) =>
@@ -16,8 +16,8 @@ export const useStyles = makeStyles((theme) =>
       border: "none",
       boxShadow:
         "0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 8px 10px 1px rgba(0, 0, 0, 0.14)",
-      borderRadius: `${theme.shape.borderRadius * 2}px 0 0 ${
-        theme.shape.borderRadius * 2
+      borderRadius: `${(theme.shape.borderRadius as number) * 2}px 0 0 ${
+        (theme.shape.borderRadius as number) * 2
       }px`,
       backgroundColor:
         theme.palette.background.elevation?.[24] ??
@@ -43,9 +43,9 @@ export const useStyles = makeStyles((theme) =>
         transform: `translateX(${DRAWER_WIDTH - DRAWER_COLLAPSED_WIDTH}px)`,
       },
       "50%": {
-        transform: `translateX(${
-          DRAWER_WIDTH - DRAWER_COLLAPSED_WIDTH - theme.spacing(4)
-        }px)`,
+        transform: `translateX(calc(${
+          DRAWER_WIDTH - DRAWER_COLLAPSED_WIDTH
+        }px - ${theme.spacing(4)}))`,
       },
       "100%": {
         transform: `translateX(${DRAWER_WIDTH - DRAWER_COLLAPSED_WIDTH}px)`,
@@ -61,7 +61,7 @@ export const useStyles = makeStyles((theme) =>
       "&$disabled": {
         boxShadow: theme.shadows[6],
         backgroundColor:
-          theme.palette.grey[theme.palette.type === "light" ? 300 : 800],
+          theme.palette.grey[theme.palette.mode === "light" ? 300 : 800],
       },
 
       "& + &": { marginTop: theme.spacing(4) },

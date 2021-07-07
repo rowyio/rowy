@@ -1,9 +1,8 @@
 import clsx from "clsx";
 import _find from "lodash/find";
 
+import { makeStyles, createStyles } from "@material-ui/styles";
 import {
-  createStyles,
-  makeStyles,
   useScrollTrigger,
   Grid,
   AppBar,
@@ -46,7 +45,7 @@ const useStyles = makeStyles((theme) =>
 
       backgroundColor: theme.palette.background.paper,
 
-      [theme.breakpoints.down("sm")]: { paddingRight: 0 },
+      [theme.breakpoints.down("md")]: { paddingRight: 0 },
 
       [theme.breakpoints.up("md")]: {
         transition: theme.transitions.create("width", {

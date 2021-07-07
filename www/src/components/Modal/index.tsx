@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import clsx from "clsx";
 
+import { makeStyles, createStyles } from "@material-ui/styles";
 import {
-  makeStyles,
-  createStyles,
   useTheme,
   useMediaQuery,
   Dialog,
@@ -24,12 +23,12 @@ import { SlideTransitionMui } from "./SlideTransition";
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
-      "--spacing-modal": theme.spacing(3) + "px",
-      "--spacing-modal-contents": theme.spacing(3) + "px",
+      "--spacing-modal": theme.spacing(3),
+      "--spacing-modal-contents": theme.spacing(3),
       "--spacing-card": "var(--spacing-modal-contents)",
 
-      [theme.breakpoints.down("sm")]: {
-        "--spacing-modal": theme.spacing(2) + "px",
+      [theme.breakpoints.down("md")]: {
+        "--spacing-modal": theme.spacing(2),
       },
     },
 
@@ -51,7 +50,7 @@ const useStyles = makeStyles((theme) =>
     },
     title: {
       ...theme.typography.h5,
-      [theme.breakpoints.down("sm")]: theme.typography.h6,
+      [theme.breakpoints.down("md")]: theme.typography.h6,
     },
     closeButton: {
       margin: theme.spacing(-1.5),
@@ -115,7 +114,7 @@ export default function Modal({
 }: IModalProps) {
   const classes = useStyles();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("xs"));
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [open, setOpen] = useState(true);
   const handleClose = () => {
@@ -138,11 +137,7 @@ export default function Modal({
         paper: clsx(classes.paper, props.classes?.paper),
       }}
     >
-      <DialogTitle
-        id="modal-title"
-        className={classes.titleRow}
-        disableTypography
-      >
+      <DialogTitle id="modal-title" className={classes.titleRow}>
         <Typography
           className={classes.title}
           component="h2"
@@ -175,7 +170,7 @@ export default function Modal({
         <Grid
           container
           spacing={2}
-          justify="center"
+          justifyContent="center"
           alignItems="center"
           className={classes.actions}
         >

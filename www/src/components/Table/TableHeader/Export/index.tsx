@@ -4,13 +4,8 @@ import _get from "lodash/get";
 import _find from "lodash/find";
 import _sortBy from "lodash/sortBy";
 
-import {
-  makeStyles,
-  createStyles,
-  DialogContentText,
-  Tab,
-  Divider,
-} from "@material-ui/core";
+import { makeStyles, createStyles } from "@material-ui/styles";
+import { DialogContentText, Tab, Divider } from "@material-ui/core";
 import TabContext from "@material-ui/lab/TabContext";
 import TabList from "@material-ui/lab/TabList";
 import TabPanel from "@material-ui/lab/TabPanel";

@@ -1,10 +1,5 @@
-import {
-  makeStyles,
-  createStyles,
-  Grid,
-  Typography,
-  Button,
-} from "@material-ui/core";
+import { makeStyles, createStyles } from "@material-ui/styles";
+import { Grid, Typography, Button } from "@material-ui/core";
 import ImportIcon from "assets/icons/Import";
 import AddColumnIcon from "assets/icons/AddColumn";
 
@@ -43,7 +38,7 @@ export default function EmptyTable() {
         direction="column"
         wrap="nowrap"
         alignItems="center"
-        justify="center"
+        justifyContent="center"
         spacing={2}
         className={classes.root}
       >
@@ -88,7 +83,7 @@ export default function EmptyTable() {
       direction="column"
       wrap="nowrap"
       alignItems="center"
-      justify="center"
+      justifyContent="center"
       spacing={2}
       className={classes.root}
     >

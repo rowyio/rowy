@@ -3,9 +3,8 @@ import _find from "lodash/find";
 import _sortBy from "lodash/sortBy";
 import _isEmpty from "lodash/isEmpty";
 
+import { makeStyles, createStyles } from "@material-ui/styles";
 import {
-  makeStyles,
-  createStyles,
   Popover,
   Button,
   Typography,
@@ -227,8 +226,8 @@ const Filters = () => {
         return (
           <Switch
             value={query.value}
-            onChange={(e, checked) => {
-              setQuery((query) => ({ ...query, value: checked }));
+            onChange={(e) => {
+              setQuery((query) => ({ ...query, value: e.target.checked }));
             }}
           />
         );
@@ -389,34 +388,34 @@ const Filters = () => {
 
         <div className={classes.content}>
           {/* <Grid
-            container
-            alignItems="center"
-            spacing={2}
-            className={classes.topRow}
-          >
-            <Grid item>
-              <Typography component="span">Results match</Typography>
-            </Grid>
+          container
+          alignItems="center"
+          spacing={2}
+          className={classes.topRow}
+        >
+          <Grid item>
+            <Typography component="span">Results match</Typography>
+          </Grid>
 
-            <Grid item>
-              <TextField
-                select
-                variant="filled"
-                id="demo-simple-select-filled"
-                value={combineType}
-                hiddenLabel
-                // disabled
-                // onChange={handleChange}
-              >
-                <MenuItem value="all">all</MenuItem>
-                <MenuItem value="any">any</MenuItem>
-              </TextField>
-            </Grid>
+          <Grid item>
+            <TextField
+              select
+              variant="filled"
+              id="demo-simple-select-filled"
+              value={combineType}
+              hiddenLabel
+              // disabled
+              // onChange={handleChange}
+            >
+              <MenuItem value="all">all</MenuItem>
+              <MenuItem value="any">any</MenuItem>
+            </TextField>
+          </Grid>
 
-            <Grid item>
-              <Typography component="span">of the filter criteria.</Typography>
-            </Grid>
-          </Grid> */}
+          <Grid item>
+            <Typography component="span">of the filter criteria.</Typography>
+          </Grid>
+        </Grid> */}
 
           <Grid container spacing={2}>
             <Grid item xs={4}>
@@ -488,7 +487,7 @@ const Filters = () => {
           <Grid
             container
             className={classes.bottomButtons}
-            justify="space-between"
+            justifyContent="space-between"
           >
             {/* <Button color="primary">+ ADD FILTER</Button> */}
             <Button

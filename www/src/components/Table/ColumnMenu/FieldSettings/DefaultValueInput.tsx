@@ -2,9 +2,8 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { IMenuModalProps } from "..";
 
+import { makeStyles, createStyles } from "@material-ui/styles";
 import {
-  makeStyles,
-  createStyles,
   Typography,
   TextField,
   MenuItem,

@@ -23,7 +23,7 @@ export const config: IFieldConfig = {
   icon: <FileIcon />,
   description: "File uploaded to Firebase Storage. Supports any file type.",
   TableCell: withHeavyCell(BasicCell, TableCell),
-  TableEditor: NullEditor,
+  TableEditor: NullEditor as any,
   SideDrawerField,
 };
 export default config;

@@ -2,13 +2,8 @@ import clsx from "clsx";
 import { Controller } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 
-import {
-  createStyles,
-  makeStyles,
-  Grid,
-  Typography,
-  Avatar,
-} from "@material-ui/core";
+import { makeStyles, createStyles } from "@material-ui/styles";
+import { Grid, Typography, Avatar } from "@material-ui/core";
 import { useFieldStyles } from "components/SideDrawer/Form/utils";
 
 import { format } from "date-fns";
