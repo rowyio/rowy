@@ -1,8 +1,6 @@
 import { TextField } from "@material-ui/core";
 import Subheading from "components/Table/ColumnMenu/Subheading";
 
-import _sortBy from "lodash/sortBy";
-
 export default function Settings({ handleChange, config }) {
   return (
     <>

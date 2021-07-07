@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { IActionParams, paramsDialogProps } from "./props";
+import { paramsDialogProps } from "./props";
 import Dialog from "./Dialog";
 import ActionParamsContext from "./Context";
 interface IActionParamsProviderProps {

@@ -23,8 +23,6 @@ import { IConnectServiceSelectProps } from ".";
 import useStyles from "./styles";
 import Loading from "components/Loading";
 
-import { useFiretableContext } from "contexts/FiretableContext";
-
 export interface IPopupContentsProps
   extends Omit<IConnectServiceSelectProps, "className" | "TextFieldProps"> {}
 
@@ -33,7 +31,7 @@ export default function PopupContents({
   value = [],
   onChange,
   config,
-  row,
+
   docRef,
 }: IPopupContentsProps) {
   const url = config.url;

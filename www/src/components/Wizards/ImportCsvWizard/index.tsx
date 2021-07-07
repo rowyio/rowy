@@ -1,7 +1,6 @@
 import React, { useState, useMemo } from "react";
 import _mergeWith from "lodash/mergeWith";
 import _find from "lodash/find";
-import { parseJSON } from "date-fns";
 
 import { useTheme, useMediaQuery, Typography, Link } from "@material-ui/core";
 import Alert from "@material-ui/core/Alert";

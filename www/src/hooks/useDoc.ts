@@ -25,7 +25,7 @@ const useDoc = (initialOverrides: any) => {
 
         (prevState.ref ? prevState.ref : db.doc(prevState.path))
           .set({ ...newProps.data }, { merge: true })
-          .then((result: any) => {})
+          .then(() => {})
           .catch((error) => {
             console.log(error);
             documentDispatch({ error });

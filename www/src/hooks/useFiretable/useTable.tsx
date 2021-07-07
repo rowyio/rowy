@@ -1,7 +1,7 @@
 import { db } from "../../firebase";
 
 import Button from "@material-ui/core/Button";
-import { useEffect, useReducer, useContext, useCallback } from "react";
+import { useEffect, useReducer, useContext } from "react";
 import _isEqual from "lodash/isEqual";
 import firebase from "firebase/app";
 import { FireTableFilter, FiretableOrderBy } from ".";
@@ -325,7 +325,7 @@ const useTable = (initialOverrides: any) => {
   const updateRow = (rowRef, update, onSuccess, onError) => {
     const rowIndex = _findIndex(rows, { id: rowRef.id });
     const row = rows[rowIndex];
-    const { ref, id, _ft_missingRequiredFields, ...rowData } = row;
+    const { ref, _ft_missingRequiredFields, ...rowData } = row;
     const _rows = [...rows];
     _rows[rowIndex] = { ...row, ...update };
     const missingRequiredFields = _ft_missingRequiredFields

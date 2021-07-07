@@ -49,7 +49,7 @@ export default function Json({
     <Controller
       control={control}
       name={column.key}
-      render={({ onChange, onBlur, value }) => {
+      render={({ onChange, value }) => {
         if (disabled)
           return (
             <div className={clsx(fieldClasses.root, classes.readOnly)}>

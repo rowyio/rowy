@@ -1,6 +1,5 @@
 import { lazy, Suspense } from "react";
 import { Route, Switch, Link } from "react-router-dom";
-import _merge from "lodash/merge";
 
 import { Button } from "@material-ui/core";
 

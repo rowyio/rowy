@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import _groupBy from "lodash/groupBy";
+
 import _find from "lodash/find";
 import { makeStyles, createStyles } from "@material-ui/styles";
 import {
@@ -157,7 +157,7 @@ export default function HomePage() {
               <a
                 href="https://github.com/FiretableProject/firetable/wiki/Role-Based-Security-Rules"
                 target="_blank"
-                rel="noopener"
+                rel="noopener noreferrer"
               >
                 here
               </a>{" "}

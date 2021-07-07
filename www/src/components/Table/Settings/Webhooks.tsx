@@ -5,7 +5,7 @@ import Button from "@material-ui/core/Button";
 import Dialog, { DialogProps } from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
+
 import DialogTitle from "@material-ui/core/DialogTitle";
 import FormControl from "@material-ui/core/FormControl";
 import Typography from "@material-ui/core/Typography";
@@ -19,7 +19,7 @@ import CodeEditor from "../editors/CodeEditor";
 import { useFiretableContext } from "contexts/FiretableContext";
 import { WEBHOOK_URL } from "../../../firebase";
 import { makeId } from "../../../utils/fns";
-import { DocActions } from "hooks/useDoc";
+
 const useStyles = makeStyles((theme) =>
   createStyles({
     form: {
@@ -123,7 +123,7 @@ export default function WebhooksDialog({ open, handleClose }) {
               labelPlacement="end"
               checked={state.enabled}
               onChange={
-                (e) => {
+                () => {
                   handleChange("enabled")(!state.enabled);
                 }
                 //  handleChange("isCollectionGroup", !formState.isCollectionGroup)

@@ -1,5 +1,4 @@
 import { IHeavyCellProps } from "../types";
-import _get from "lodash/get";
 
 import { getDurationString } from "./utils";
 

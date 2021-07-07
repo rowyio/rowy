@@ -49,7 +49,7 @@ export default function ActionFab({
   const { requestConfirmation } = useConfirmation();
   const { requestParams } = useActionParams();
   const { tableState } = useFiretableContext();
-  const { createdAt, updatedAt, id, ref, ...docData } = row;
+  const { ref } = row;
   const { config } = column as any;
 
   const action = !value

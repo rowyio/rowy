@@ -1,8 +1,7 @@
 import { useEffect } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import _camelCase from "lodash/camelCase";
-import _findIndex from "lodash/findIndex";
-import _find from "lodash/find";
+
 import _sortBy from "lodash/sortBy";
 
 import useDoc, { DocActions } from "../useDoc";
@@ -86,7 +85,7 @@ const useTableConfig = (tablePath?: string) => {
       data: { columns: updatedColumns },
     });
   }, 1000);
-  type updatable = { field: string; value: unknown };
+  // type updatable = { field: string; value: unknown };
 
   /**  used for updating column properties such as type,name etc.
    *  @param index of column.

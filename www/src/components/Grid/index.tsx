@@ -24,8 +24,8 @@ const CARD_CONFIG = {
   image: "{{profilePhoto[0].downloadURL}}",
   body: "{{bio}}",
 };
-export default function Grid({ collection, filters }: IGridProps) {
-  const [algoliaState, requestDispatch, , setAlgoliaConfig] = useAlgolia(
+export default function Grid({ collection }: IGridProps) {
+  const [algoliaState, requestDispatch, ,] = useAlgolia(
     process.env.REACT_APP_ALGOLIA_APP_ID!,
     process.env.REACT_APP_ALGOLIA_SEARCH_API_KEY!,
     collection,

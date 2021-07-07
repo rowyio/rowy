@@ -1,12 +1,5 @@
-import { useState, lazy, Suspense } from "react";
-import {
-  Typography,
-  IconButton,
-  TextField,
-  Switch,
-  FormControlLabel,
-  Divider,
-} from "@material-ui/core";
+import { lazy, Suspense } from "react";
+import { Typography } from "@material-ui/core";
 import MultiSelect from "@antlerengineering/multiselect";
 import FieldSkeleton from "components/SideDrawer/Form/FieldSkeleton";
 import { FieldType } from "constants/fields";

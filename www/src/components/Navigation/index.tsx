@@ -12,7 +12,7 @@ import NavDrawer from "./NavDrawer";
 import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
 import { useFiretableContext } from "contexts/FiretableContext";
 import UserMenu from "./UserMenu";
-import Notifications from "./Notifications";
+
 export const APP_BAR_HEIGHT = 56;
 
 const useStyles = makeStyles((theme) =>

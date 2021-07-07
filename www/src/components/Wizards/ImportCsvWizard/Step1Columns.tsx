@@ -232,7 +232,7 @@ export default function Step1Columns({
                     TextFieldProps={{
                       hiddenLabel: true,
                       SelectProps: {
-                        renderValue: (_) => {
+                        renderValue: () => {
                           if (!ftColumnKey) return "Select or add column";
                           else
                             return (

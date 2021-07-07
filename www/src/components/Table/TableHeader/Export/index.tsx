@@ -1,8 +1,4 @@
 import { useState, useMemo } from "react";
-import _camelCase from "lodash/camelCase";
-import _get from "lodash/get";
-import _find from "lodash/find";
-import _sortBy from "lodash/sortBy";
 
 import { makeStyles, createStyles } from "@material-ui/styles";
 import { DialogContentText, Tab, Divider } from "@material-ui/core";

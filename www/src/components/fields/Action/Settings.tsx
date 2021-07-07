@@ -1,7 +1,6 @@
-import { useState, lazy, Suspense } from "react";
+import { lazy, Suspense } from "react";
 import {
   Typography,
-  IconButton,
   TextField,
   Switch,
   FormControlLabel,

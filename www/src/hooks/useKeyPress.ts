@@ -1,4 +1,4 @@
-import react, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 // Hook
 export default function useKeyPress(targetKey) {
   // State for keeping track of whether key is pressed

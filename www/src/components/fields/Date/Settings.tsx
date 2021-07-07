@@ -1,5 +1,5 @@
 import { ISettingsProps } from "../types";
-import _sortBy from "lodash/sortBy";
+
 import Subheading from "components/Table/ColumnMenu/Subheading";
 import MultiSelect from "@antlerengineering/multiselect";
 import { DATE_FORMAT } from "constants/dates";

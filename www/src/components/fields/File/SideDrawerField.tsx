@@ -60,7 +60,7 @@ function ControlledFileUploader({
   const { updateCell } = useFiretableContext();
 
   const { uploaderState, upload, deleteUpload } = useUploader();
-  const { progress } = uploaderState;
+  const {} = uploaderState;
 
   // Store a preview image locally while uploading
   const [localFile, setLocalFile] = useState<string>("");
@@ -180,7 +180,7 @@ export default function File_({
     <Controller
       control={control}
       name={column.key}
-      render={({ onChange, onBlur, value }) => (
+      render={({ onChange, value }) => (
         <ControlledFileUploader
           disabled={disabled}
           column={column}

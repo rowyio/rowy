@@ -1,12 +1,8 @@
 import React from "react";
 import {
   IconButton,
-  Tooltip,
-  Badge,
   Popover,
-  Typography,
   ListItemAvatar,
-  List,
   ListItem,
   Avatar,
   ListItemText,
@@ -17,7 +13,7 @@ import { makeStyles, createStyles } from "@material-ui/styles";
 
 import ErrorIcon from "@material-ui/icons/Error";
 import DeleteIcon from "@material-ui/icons/Delete";
-import LinkIcon from "@material-ui/icons/Link";
+
 import BellIcon from "@material-ui/icons/Notifications";
 
 const useStyles = makeStyles((theme) =>

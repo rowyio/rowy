@@ -15,7 +15,7 @@ import {
   Button,
   ButtonProps,
 } from "@material-ui/core";
-import { alpha } from "@material-ui/core/styles";
+
 import CloseIcon from "@material-ui/icons/Close";
 
 import { SlideTransitionMui } from "./SlideTransition";

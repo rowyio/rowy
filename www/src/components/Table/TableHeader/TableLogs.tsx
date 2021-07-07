@@ -7,10 +7,6 @@ import { db } from "../../../firebase";
 import { useSnackLogContext } from "contexts/SnackLogContext";
 import { isCollectionGroup } from "utils/fns";
 
-import _camelCase from "lodash/camelCase";
-import _get from "lodash/get";
-import _find from "lodash/find";
-import _sortBy from "lodash/sortBy";
 import _throttle from "lodash/throttle";
 import moment from "moment";
 
@@ -179,7 +175,7 @@ function LogRow({ logRecord, index }) {
 }
 
 function LogPanel(props) {
-  const { logs, status, value, index, isOpen, ...other } = props;
+  const { logs, status, value, index, ...other } = props;
   const classes = useStyles();
 
   // useStateRef is necessary to resolve the state syncing issue

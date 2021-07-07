@@ -1,8 +1,5 @@
 import { useState } from "react";
-import _camelCase from "lodash/camelCase";
-import _get from "lodash/get";
-import _find from "lodash/find";
-import _sortBy from "lodash/sortBy";
+
 import { useConfirmation } from "components/ConfirmationDialog";
 import { useSnackContext } from "contexts/SnackContext";
 import { db } from "../../../firebase";

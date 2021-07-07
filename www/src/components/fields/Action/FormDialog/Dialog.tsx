@@ -1,20 +1,7 @@
-import Button from "@material-ui/core/Button";
-import Grid from "@material-ui/core/Grid";
 import * as yup from "yup";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
 import { FormDialog } from "@antlerengineering/form-builder";
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    root: {
-      display: "flex",
-      flexWrap: "wrap",
-    },
-    buttonGrid: { padding: theme.spacing(3, 0) },
-    button: { width: 160 },
-  })
-);
 const yupReducer = (validationConfig) => (acc, currKey) => {
   if (validationConfig[currKey] !== null) {
     const args = Array.isArray(validationConfig[currKey])
@@ -39,8 +26,6 @@ export default function ParamsDialog({
   open,
   handleClose,
 }: any) {
-  const classes = useStyles();
-
   /*
  Refrence fields config  
   const _fields = [{

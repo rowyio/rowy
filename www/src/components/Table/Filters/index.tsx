@@ -127,7 +127,7 @@ const UNFILTERABLES = [
   FieldType.longText,
 ];
 const Filters = () => {
-  const { userClaims, tableState, tableActions } = useFiretableContext();
+  const { tableState, tableActions } = useFiretableContext();
   const { userDoc } = useAppContext();
 
   useEffect(() => {
@@ -151,7 +151,7 @@ const Filters = () => {
     }));
   const classes = useStyles();
   const filters = [];
-  const combineType = "all";
+
   const [selectedColumn, setSelectedColumn] = useState<any>();
 
   const [query, setQuery] = useState<FireTableFilter>({

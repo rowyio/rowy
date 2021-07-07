@@ -13,7 +13,7 @@ import { useSnackContext } from "./SnackContext";
 import { SideDrawerRef } from "components/SideDrawer";
 import { ColumnMenuRef } from "components/Table/ColumnMenu";
 import { ImportWizardRef } from "components/Wizards/ImportWizard";
-import _find from "lodash/find";
+
 export type Table = {
   collection: string;
   name: string;

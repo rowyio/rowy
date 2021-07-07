@@ -1,5 +1,4 @@
 import clsx from "clsx";
-import _find from "lodash/find";
 
 import { makeStyles, createStyles } from "@material-ui/styles";
 import {

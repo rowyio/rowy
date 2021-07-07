@@ -145,7 +145,7 @@ export default function ConnectTableSelect({
       // If this is a completely new selection, grab the snapshot from the
       // current Algolia query
       const match = _find(algoliaState.hits, { objectID });
-      const { _highlightResult, ...snapshot } = match;
+      const { ...snapshot } = match;
       return {
         snapshot,
         docPath: `${algoliaIndex}/${snapshot.objectID}`,

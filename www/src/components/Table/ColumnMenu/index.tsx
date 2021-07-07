@@ -27,7 +27,7 @@ import FieldSettings from "./FieldSettings";
 import { useFiretableContext } from "contexts/FiretableContext";
 import { FieldType } from "constants/fields";
 import { getFieldProp } from "components/fields";
-import _find from "lodash/find";
+
 import { Column } from "react-data-grid";
 import { PopoverProps } from "@material-ui/core";
 

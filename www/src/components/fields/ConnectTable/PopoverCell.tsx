@@ -1,5 +1,4 @@
 import { IPopoverCellProps } from "../types";
-import _get from "lodash/get";
 
 import ConnectTableSelect from "./ConnectTableSelect";
 

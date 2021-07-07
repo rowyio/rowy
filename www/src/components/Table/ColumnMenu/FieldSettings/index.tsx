@@ -1,5 +1,5 @@
 import React, { useState, Suspense, useMemo } from "react";
-import _sortBy from "lodash/sortBy";
+
 import _set from "lodash/set";
 import { IMenuModalProps } from "..";
 

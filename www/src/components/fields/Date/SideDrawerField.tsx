@@ -4,21 +4,12 @@ import { ISideDrawerFieldProps } from "../types";
 import { useTheme } from "@material-ui/core";
 import LocalizationProvider from "@material-ui/lab/LocalizationProvider";
 import AdapterDateFns from "@material-ui/lab/AdapterDateFns";
-import DatePicker, { DatePickerProps } from "@material-ui/lab/DatePicker";
-import { TextField } from "@material-ui/core";
 
-import { DATE_FORMAT } from "constants/dates";
 import { transformValue, sanitizeValue } from "./utils";
 
 export interface IDateProps extends ISideDrawerFieldProps {}
 
-export default function Date_({
-  column,
-  control,
-  docRef,
-  disabled,
-  ...props
-}: IDateProps) {
+export default function Date_({ column, control }: IDateProps) {
   const theme = useTheme();
 
   return (
@@ -26,7 +17,7 @@ export default function Date_({
       <Controller
         control={control}
         name={column.key}
-        render={({ onChange, onBlur, value }) => {
+        render={({ onChange, value }) => {
           const transformedValue = transformValue(value);
 
           const handleChange = (date: Date | null) => {

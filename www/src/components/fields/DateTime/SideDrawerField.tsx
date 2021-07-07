@@ -1,4 +1,3 @@
-import { Controller } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 
 import { useTheme } from "@material-ui/core";
@@ -6,11 +5,6 @@ import { useTheme } from "@material-ui/core";
 //   KeyboardDateTimePicker,
 //   KeyboardDateTimePickerProps,
 // } from "@material-ui/pickers";
-import { DATE_TIME_FORMAT } from "constants/dates";
-import { transformValue, sanitizeValue } from "../Date/utils";
-
-import DateRangeIcon from "@material-ui/icons/DateRange";
-import TimeIcon from "@material-ui/icons/Schedule";
 
 // import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 // import DateFnsUtils from "@date-io/date-fns";
@@ -22,13 +16,7 @@ export interface IDateTimeProps extends ISideDrawerFieldProps {
   // >
 }
 
-export default function DateTime({
-  column,
-  control,
-  docRef,
-  disabled,
-  ...props
-}: IDateTimeProps) {
+export default function DateTime({}: IDateTimeProps) {
   const theme = useTheme();
 
   return <></>;

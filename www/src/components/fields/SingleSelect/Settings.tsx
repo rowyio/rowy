@@ -1,7 +1,4 @@
 import { useState, useRef } from "react";
-import _sortBy from "lodash/sortBy";
-import _includes from "lodash/includes";
-import _camelCase from "lodash/camelCase";
 
 import { makeStyles, createStyles } from "@material-ui/styles";
 import {
@@ -62,7 +59,7 @@ export default function Settings({ handleChange, config }) {
               <Grid item>
                 <IconButton
                   aria-label="remove"
-                  onClick={(e: any) =>
+                  onClick={() =>
                     handleChange("options")(
                       options.filter((o: string) => o !== option)
                     )
@@ -82,7 +79,7 @@ export default function Settings({ handleChange, config }) {
         <Grid item>
           <IconButton
             aria-label="add new"
-            onClick={(e: any) => {
+            onClick={() => {
               handleAdd();
             }}
           >

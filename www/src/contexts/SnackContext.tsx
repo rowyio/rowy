@@ -23,8 +23,8 @@ const DEFAULT_STATE = {
 };
 const DEFAULT_FUNCTIONS = {
   close: () => {},
-  setProgress: (progress: Progress) => {},
-  open: (newState: Partial<typeof DEFAULT_STATE>) => {},
+  setProgress: () => {},
+  open: () => {},
 };
 
 export const SnackContext = React.createContext({

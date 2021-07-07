@@ -113,7 +113,6 @@ const useCollection = (initialOverrides: useCollectionOverrides) => {
   };
   useEffect(() => {
     const {
-      prevFilters,
       filters,
       prevLimit,
       limit,

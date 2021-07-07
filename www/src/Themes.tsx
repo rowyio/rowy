@@ -1,12 +1,6 @@
 import _merge from "lodash/merge";
 
-import {
-  createTheme,
-  Theme,
-  ThemeOptions,
-  alpha,
-} from "@material-ui/core/styles";
-import ClearIcon from "@material-ui/icons/Clear";
+import { createTheme, ThemeOptions } from "@material-ui/core/styles";
 
 export const HEADING_FONT = "Space Grotesk, system-ui, sans-serif";
 export const BODY_FONT = "Inter, system-ui, sans-serif";

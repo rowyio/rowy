@@ -105,7 +105,7 @@ const useStyles = makeStyles((theme) =>
 
 export default function BulkActions({ selectedRows, columns, clearSelection }) {
   const classes = useStyles();
-  const [loading, setLoading] = useState<Boolean>();
+  const [, setLoading] = useState<Boolean>();
   const { tableActions, tableState } = useFiretableContext();
 
   const { requestConfirmation } = useConfirmation();

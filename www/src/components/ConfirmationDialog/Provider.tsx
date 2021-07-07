@@ -1,10 +1,6 @@
 import React, { useState } from "react";
 
-import {
-  IConfirmation,
-  CONFIRMATION_EMPTY_STATE,
-  confirmationProps,
-} from "./props";
+import { confirmationProps } from "./props";
 import Dialog from "./Dialog";
 import ConfirmationContext from "./Context";
 interface IConfirmationProviderProps {

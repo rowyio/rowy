@@ -24,7 +24,7 @@ function AvailableValueTag({ label, details }) {
 }
 */
 export default function CodeEditorHelper({ docLink }) {
-  const { tableState } = useFiretableContext();
+  const {} = useFiretableContext();
   const availableVariables = [
     {
       key: "row",

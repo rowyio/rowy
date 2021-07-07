@@ -1,16 +1,9 @@
-import clsx from "clsx";
 import { IHeavyCellProps } from "../types";
-import { useDebouncedCallback } from "use-debounce";
 
 import { makeStyles, createStyles } from "@material-ui/styles";
-import DateRangeIcon from "@material-ui/icons/DateRange";
-import TimeIcon from "@material-ui/icons/Schedule";
 
-import { DateTimeIcon } from ".";
-import { DATE_TIME_FORMAT } from "constants/dates";
-import { transformValue, sanitizeValue } from "../Date/utils";
+import { transformValue } from "../Date/utils";
 
-import DateFnsUtils from "@date-io/date-fns";
 // import {
 //   MuiPickersUtilsProvider,
 //   KeyboardDateTimePicker,
@@ -54,15 +47,9 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-export default function DateTime({
-  rowIdx,
-  column,
-  value,
-  onSubmit,
-  disabled,
-}: IHeavyCellProps) {
+export default function DateTime({ column, value }: IHeavyCellProps) {
   const classes = useStyles();
-  const { dataGridRef } = useFiretableContext();
+  const {} = useFiretableContext();
 
   const transformedValue = transformValue(value);
 

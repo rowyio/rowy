@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useMemo, useState } from "react";
 import _orderBy from "lodash/orderBy";
-import _isEmpty from "lodash/isEmpty";
+
 import _find from "lodash/find";
 import _difference from "lodash/difference";
 import _get from "lodash/get";
@@ -216,7 +216,7 @@ export default function Table() {
                 });
                 setSelectedRowsSet(newSelectedSet);
               }}
-              onRowsChange={(rows) => {
+              onRowsChange={() => {
                 //console.log('onRowsChange',rows)
               }}
               onFill={(e) => {

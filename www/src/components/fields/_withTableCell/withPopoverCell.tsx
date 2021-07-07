@@ -49,7 +49,7 @@ export default function withPopoverCell(
 ) {
   return function PopoverCell(props: FormatterProps<any>) {
     const classes = useStyles();
-    const { transparent, readOnly, ...popoverProps } = options ?? {};
+    const { transparent, ...popoverProps } = options ?? {};
     const { updateCell } = useFiretableContext();
 
     const { validationRegex, required } = (props.column as any).config;

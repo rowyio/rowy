@@ -1,8 +1,3 @@
-import { useState, useEffect } from "react";
-import _camelCase from "lodash/camelCase";
-import _find from "lodash/find";
-import _pickBy from "lodash/pickBy";
-
 import { FormDialog } from "@antlerengineering/form-builder";
 import { projectSettingsForm } from "./form";
 

@@ -1,12 +1,8 @@
-import clsx from "clsx";
 import { IHeavyCellProps } from "../types";
-import { useDebouncedCallback } from "use-debounce";
 
 import { makeStyles, createStyles } from "@material-ui/styles";
 
-import { DateIcon } from ".";
-import { DATE_FORMAT } from "constants/dates";
-import { transformValue, sanitizeValue } from "./utils";
+import { transformValue } from "./utils";
 
 // import DateFnsUtils from "@date-io/date-fns";
 // import {
@@ -52,15 +48,9 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-export default function Date_({
-  rowIdx,
-  column,
-  value,
-  onSubmit,
-  disabled,
-}: IHeavyCellProps) {
+export default function Date_({ column, value }: IHeavyCellProps) {
   const classes = useStyles();
-  const { dataGridRef } = useFiretableContext();
+  const {} = useFiretableContext();
 
   const transformedValue = transformValue(value);
 

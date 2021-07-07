@@ -9,7 +9,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles, createStyles } from "@material-ui/styles";
 //import {confirmationProps} from './props'
-const useStyles = makeStyles((theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     root: {
       display: "flex",

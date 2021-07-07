@@ -6,7 +6,7 @@ import { ChromePicker } from "react-color";
 import { makeStyles, createStyles } from "@material-ui/styles";
 import { Grid, ButtonBase, Typography, Collapse } from "@material-ui/core";
 
-import { useFieldStyles } from "components/SideDrawer/Form/utils";
+// import { useFieldStyles } from "components/SideDrawer/Form/utils";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -42,7 +42,7 @@ export default function Color({
   disabled,
 }: ISideDrawerFieldProps) {
   const classes = useStyles();
-  const fieldClasses = useFieldStyles();
+  // const fieldClasses = useFieldStyles();
 
   const [showPicker, setShowPicker] = useState(false);
   const toggleOpen = () => setShowPicker((s) => !s);
