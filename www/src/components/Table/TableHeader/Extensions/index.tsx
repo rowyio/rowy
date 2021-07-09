@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import _camelCase from "lodash/camelCase";
 import _get from "lodash/get";
 import _find from "lodash/find";
@@ -17,6 +17,7 @@ import { useAppContext } from "contexts/AppContext";
 import { useSnackLogContext } from "contexts/SnackLogContext";
 import ExtensionList from "./ExtensionList";
 import ExtensionModal from "./ExtensionModal";
+import ExtensionMigration from "./ExtensionMigration";
 
 import {
   serialiseExtension,
@@ -36,13 +37,13 @@ export default function ExtensionsEditor() {
     currentextensionObjects
   );
   const [open, setOpen] = useState(false);
+  const [openMigrationGuide, setOpenMigrationGuide] = useState(false);
   const [extensionModal, setExtensionModal] = useState<{
     mode: "add" | "update";
     extensionObject: IExtension;
     index?: number;
   } | null>(null);
   const snackLogContext = useSnackLogContext();
-
   const edited = !_isEqual(currentextensionObjects, localExtensionsObjects);
 
   const tablePathTokens =
@@ -50,6 +51,16 @@ export default function ExtensionsEditor() {
       // replace IDs with dash that appears at even indexes
       return i % 2 === 0;
     }) ?? [];
+
+  const handleOpen = () => {
+    if (tableState?.config.sparks) {
+      // migration is required
+      console.log("Extension migration required.");
+      setOpenMigrationGuide(true);
+    } else {
+      setOpen(true);
+    }
+  };
 
   const handleClose = () => {
     if (edited) {
@@ -193,7 +204,7 @@ export default function ExtensionsEditor() {
     <>
       <TableHeaderButton
         title="Extensions"
-        onClick={() => setOpen(true)}
+        onClick={handleOpen}
         icon={<ExtensionIcon />}
       />
 
@@ -253,6 +264,14 @@ export default function ExtensionsEditor() {
           handleUpdate={handleUpdateExtension}
           mode={extensionModal.mode}
           extensionObject={extensionModal.extensionObject}
+        />
+      )}
+
+      {openMigrationGuide && (
+        <ExtensionMigration
+          handleClose={() => {
+            setOpenMigrationGuide(false);
+          }}
         />
       )}
     </>
