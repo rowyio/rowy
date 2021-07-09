@@ -162,11 +162,11 @@ const transformToSQLType = (ftType: string) => {
   return type;
 };
 
-const bigqueryIndex = async (payload, sparkContext) => {
+const bigqueryIndex = async (payload, extensionContext) => {
   const { objectID, index, fieldsToSync, projectID, datasetLocation } = payload;
 
-  const { triggerType, change, fieldTypes } = sparkContext;
-  const record = rowReducer(fieldsToSync, sparkContext.row);
+  const { triggerType, change, fieldTypes } = extensionContext;
+  const record = rowReducer(fieldsToSync, extensionContext.row);
   const { BigQuery } = require("@google-cloud/bigquery");
 
   const bigquery = new BigQuery();
@@ -274,7 +274,7 @@ const bigqueryIndex = async (payload, sparkContext) => {
         .every((field) => generatedTypes[field.name] === field.type);
     if (!compatible) {
       const errorMessage =
-        "New update to field types is not compatible with existing schema. Please manually remove the current bigquery table or update spark index";
+        "New update to field types is not compatible with existing schema. Please manually remove the current bigquery table or update extension index";
       console.log(errorMessage);
       throw errorMessage;
     } else {

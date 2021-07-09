@@ -10,9 +10,9 @@ const significantDifference = (fieldsToSync, change) => {
   }, false);
 };
 
-const historySnapshot = async (data, sparkContext) => {
+const historySnapshot = async (data, extensionContext) => {
   const { trackedFields } = data;
-  const { triggerType, change } = sparkContext;
+  const { triggerType, change } = extensionContext;
   if (
     (triggerType === "update" &&
       significantDifference(trackedFields, change)) ||

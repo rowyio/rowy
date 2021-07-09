@@ -75,10 +75,10 @@ const significantDifference = (fieldsToSync, change) => {
   }, false);
 };
 
-const meiliIndex = async (data, sparkContext) => {
+const meiliIndex = async (data, extensionContext) => {
   const { row, objectID, index, fieldsToSync } = data;
 
-  const { triggerType, change } = sparkContext;
+  const { triggerType, change } = extensionContext;
   const record = rowReducer(fieldsToSync, row);
   const { MeiliSearch } = require("meilisearch");
   const { getSecret } = require("../utils");
