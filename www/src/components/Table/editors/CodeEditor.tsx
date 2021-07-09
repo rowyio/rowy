@@ -215,7 +215,7 @@ export default function CodeEditor(props: any) {
             label: string;
             type: sring;
             triggers: Trigger[];
-            shouldRun: Condition;
+            conditions: Condition;
             requiredFields: string[];
             extensionBody: any;
           };

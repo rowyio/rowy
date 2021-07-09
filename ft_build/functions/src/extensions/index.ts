@@ -12,10 +12,10 @@ const extension = (extensionConfig, fieldTypes) => async (
   const triggerType = getTriggerType(change);
   try {
     const {
-      label,
+      name,
       type,
       triggers,
-      shouldRun,
+      conditions,
       requiredFields,
       extensionBody,
     } = extensionConfig;
@@ -41,13 +41,13 @@ const extension = (extensionConfig, fieldTypes) => async (
       console.log("requiredFields are ", requiredFields, "type is", type);
       return false; // check if it hase required fields for the extension to run
     }
-    const dontRun = shouldRun
-      ? !(typeof shouldRun === "function"
-          ? await shouldRun(extensionContext)
-          : shouldRun)
+    const dontRun = conditions
+      ? !(typeof conditions === "function"
+          ? await conditions(extensionContext)
+          : conditions)
       : false; //
 
-    console.log(label, "type is ", type, "dontRun value is", dontRun);
+    console.log(`name: "${name}", type: "${type}", dontRun: ${dontRun}`);
 
     if (dontRun) return false;
     const extensionData = await extensionBody(extensionContext);
@@ -56,9 +56,9 @@ const extension = (extensionConfig, fieldTypes) => async (
     await extensionFn(extensionData, extensionContext);
     return true;
   } catch (err) {
-    const { label, type } = extensionConfig;
+    const { name, type } = extensionConfig;
     console.log(
-      `error in ${label} extension of type ${type}, on ${context.eventType} in Doc ${context.resource.name}`
+      `error in ${name} extension of type ${type}, on ${context.eventType} in Doc ${context.resource.name}`
     );
     console.error(err);
     return Promise.reject(err);

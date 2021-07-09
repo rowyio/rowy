@@ -421,12 +421,12 @@ export default function ExtensionModal({
                   Conditions
                 </Typography>
                 <CodeEditor
-                  script={extensionObject.shouldRun}
+                  script={extensionObject.conditions}
                   height="100%"
                   handleChange={(newValue) => {
                     setExtensionObject({
                       ...extensionObject,
-                      shouldRun: newValue,
+                      conditions: newValue,
                     });
                   }}
                   onValideStatusUpdate={({ isValid }) => {

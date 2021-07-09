@@ -29,7 +29,7 @@ interface IExtension {
   type: IExtensionType;
   requiredFields: string[];
   extensionBody: string;
-  shouldRun: string;
+  conditions: string;
 }
 
 const triggerTypes: IExtensionTrigger[] = ["create", "update", "delete"];
@@ -169,7 +169,7 @@ function emptyExtensionObject(
     type,
     extensionBody: extensionBodyTemplate[type] ?? extensionBodyTemplate["task"],
     requiredFields: [],
-    shouldRun: `const condition: Condition = async({row, change}) => {
+    conditions: `const condition: Condition = async({row, change}) => {
   // feel free to add your own code logic here
   return true;
 }`,
@@ -190,7 +190,7 @@ function serialiseExtension(extensions: IExtension[]): string {
           triggers: [${extension.triggers
             .map((trigger) => `"${trigger}"`)
             .join(", ")}],
-          shouldRun: ${extension.shouldRun
+          conditions: ${extension.conditions
             .replace(/^.*:\s*Condition\s*=/, "")
             .replace(/\s*;\s*$/, "")},
           requiredFields: [${extension.requiredFields
