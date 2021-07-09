@@ -27,9 +27,8 @@ const docSync = async (data, sparkContext) => {
   switch (triggerType) {
     case "delete":
       try {
-      await db.doc(targetPath).delete();
-      }
-      catch (error) {
+        await db.doc(targetPath).delete();
+      } catch (error) {
         console.log(error);
       }
       break;

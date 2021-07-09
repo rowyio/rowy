@@ -1,4 +1,4 @@
-type ISparkType =
+type IExtensionType =
   | "task"
   | "docSync"
   | "historySnapshot"
@@ -10,31 +10,31 @@ type ISparkType =
   | "apiCall"
   | "twilioMessage";
 
-type ISparkTrigger = "create" | "update" | "delete";
+type IExtensionTrigger = "create" | "update" | "delete";
 
-interface ISparkEditor {
+interface IExtensionEditor {
   displayName: string;
   photoURL: string;
   lastUpdate: number;
 }
 
-interface ISpark {
+interface IExtension {
   // firetable meta fields
   name: string;
   active: boolean;
-  lastEditor: ISparkEditor;
+  lastEditor: IExtensionEditor;
 
   // ft build fields
-  triggers: ISparkTrigger[];
-  type: ISparkType;
+  triggers: IExtensionTrigger[];
+  type: IExtensionType;
   requiredFields: string[];
-  sparkBody: string;
+  extensionBody: string;
   shouldRun: string;
 }
 
-const triggerTypes: ISparkTrigger[] = ["create", "update", "delete"];
+const triggerTypes: IExtensionTrigger[] = ["create", "update", "delete"];
 
-const sparkTypes: ISparkType[] = [
+const extensionTypes: IExtensionType[] = [
   "task",
   "docSync",
   "historySnapshot",
@@ -47,9 +47,9 @@ const sparkTypes: ISparkType[] = [
   "twilioMessage",
 ];
 
-const sparkBodyTemplate = {
-  task: `const sparkBody: TaskBody = async({row, db, change, ref}) => {
-  // task sparks are very flexible you can do anything from updating other documents in your database, to making an api request to 3rd party service.
+const extensionBodyTemplate = {
+  task: `const extensionBody: TaskBody = async({row, db, change, ref}) => {
+  // task extensions are very flexible you can do anything from updating other documents in your database, to making an api request to 3rd party service.
 
   // eg:
   // const got = require('got');
@@ -63,9 +63,9 @@ const sparkBodyTemplate = {
   // console.log(body.data);
   // => {hello: 'world'}
     
-  console.log("Task Spark completed.")
+  console.log("Task Extension completed.")
 }`,
-  docSync: `const sparkBody: DocSyncBody = async({row, db, change, ref}) => {
+  docSync: `const extensionBody: DocSyncBody = async({row, db, change, ref}) => {
   // feel free to add your own code logic here
 
   return ({
@@ -74,14 +74,14 @@ const sparkBodyTemplate = {
     targetPath: "",  // fill in the path here
   })
 }`,
-  historySnapshot: `const sparkBody: HistorySnapshotBody = async({row, db, change, ref}) => {
+  historySnapshot: `const extensionBody: HistorySnapshotBody = async({row, db, change, ref}) => {
   // feel free to add your own code logic here
   
   return ({
     trackedFields: [],    // a list of string of column names
   })
 }`,
-  algoliaIndex: `const sparkBody: AlgoliaIndexBody = async({row, db, change, ref}) => {
+  algoliaIndex: `const extensionBody: AlgoliaIndexBody = async({row, db, change, ref}) => {
   // feel free to add your own code logic here
   
   return ({
@@ -91,7 +91,7 @@ const sparkBodyTemplate = {
     objectID: ref.id,    // algolia object ID, ref.id is one possible choice
   })
 }`,
-  meiliIndex: `const sparkBody: MeiliIndexBody = async({row, db, change, ref}) => {
+  meiliIndex: `const extensionBody: MeiliIndexBody = async({row, db, change, ref}) => {
   // feel free to add your own code logic here
 
   return({
@@ -101,7 +101,7 @@ const sparkBodyTemplate = {
     objectID: ref.id,    // algolia object ID, ref.id is one possible choice
   })
 }`,
-  bigqueryIndex: `const sparkBody: BigqueryIndexBody = async({row, db, change, ref}) => {
+  bigqueryIndex: `const extensionBody: BigqueryIndexBody = async({row, db, change, ref}) => {
   // feel free to add your own code logic here
 
   return ({
@@ -111,7 +111,7 @@ const sparkBodyTemplate = {
     objectID: ref.id,    // algolia object ID, ref.id is one possible choice
   })
 }`,
-  slackMessage: `const sparkBody: SlackMessageBody = async({row, db, change, ref}) => {
+  slackMessage: `const extensionBody: SlackMessageBody = async({row, db, change, ref}) => {
   // feel free to add your own code logic here
   
   return ({
@@ -121,7 +121,7 @@ const sparkBodyTemplate = {
     attachments: [],    // the attachments parameter to pass in to slack api
   })
 }`,
-  sendgridEmail: `const sparkBody: SendgridEmailBody = async({row, db, change, ref}) => {
+  sendgridEmail: `const extensionBody: SendgridEmailBody = async({row, db, change, ref}) => {
   // feel free to add your own code logic here
   
   return ({
@@ -137,7 +137,7 @@ const sparkBodyTemplate = {
     categories: [], // helper info to categorise sendgrid emails
   })
 }`,
-  apiCall: `const sparkBody: ApiCallBody = async({row, db, change, ref}) => {
+  apiCall: `const extensionBody: ApiCallBody = async({row, db, change, ref}) => {
   // feel free to add your own code logic here
   
   return ({
@@ -147,7 +147,7 @@ const sparkBodyTemplate = {
     callback: ()=>{},
   })
 }`,
-  twilioMessage: `const sparkBody: TwilioMessageBody = async({row, db, change, ref}) => {
+  twilioMessage: `const extensionBody: TwilioMessageBody = async({row, db, change, ref}) => {
   // feel free to add your own code logic here
   
   return ({
@@ -158,13 +158,16 @@ const sparkBodyTemplate = {
 }`,
 };
 
-function emptySparkObject(type: ISparkType, user: ISparkEditor): ISpark {
+function emptyExtensionObject(
+  type: IExtensionType,
+  user: IExtensionEditor
+): IExtension {
   return {
     name: "Untitled extension",
     active: false,
     triggers: [],
     type,
-    sparkBody: sparkBodyTemplate[type] ?? sparkBodyTemplate["task"],
+    extensionBody: extensionBodyTemplate[type] ?? extensionBodyTemplate["task"],
     requiredFields: [],
     shouldRun: `const condition: Condition = async({row, change}) => {
   // feel free to add your own code logic here
@@ -174,35 +177,40 @@ function emptySparkObject(type: ISparkType, user: ISparkEditor): ISpark {
   };
 }
 
-/* Convert spark objects into a single ft-build readable string */
-function serialiseSpark(sparks: ISpark[]): string {
-  const serialisedSpark =
+/* Convert extension objects into a single ft-build readable string */
+function serialiseExtension(extensions: IExtension[]): string {
+  const serialisedExtension =
     "[" +
-    sparks
-      .filter((spark) => spark.active)
+    extensions
+      .filter((extension) => extension.active)
       .map(
-        (spark) => `{
-          name: "${spark.name}",
-          type: "${spark.type}",
-          triggers: [${spark.triggers
+        (extension) => `{
+          name: "${extension.name}",
+          type: "${extension.type}",
+          triggers: [${extension.triggers
             .map((trigger) => `"${trigger}"`)
             .join(", ")}],
-          shouldRun: ${spark.shouldRun
+          shouldRun: ${extension.shouldRun
             .replace(/^.*:\s*Condition\s*=/, "")
             .replace(/\s*;\s*$/, "")},
-          requiredFields: [${spark.requiredFields
+          requiredFields: [${extension.requiredFields
             .map((field) => `"${field}"`)
             .join(", ")}],
-          sparkBody: ${spark.sparkBody
+          extensionBody: ${extension.extensionBody
             .replace(/^.*:\s*\w*Body\s*=/, "")
             .replace(/\s*;\s*$/, "")}
         }`
       )
       .join(",") +
     "]";
-  console.log("serialisedSpark", serialisedSpark);
-  return serialisedSpark;
+  console.log("serialisedExtension", serialisedExtension);
+  return serialisedExtension;
 }
 
-export { serialiseSpark, sparkTypes, triggerTypes, emptySparkObject };
-export type { ISpark, ISparkType, ISparkEditor };
+export {
+  serialiseExtension,
+  extensionTypes,
+  triggerTypes,
+  emptyExtensionObject,
+};
+export type { IExtension, IExtensionType, IExtensionEditor };

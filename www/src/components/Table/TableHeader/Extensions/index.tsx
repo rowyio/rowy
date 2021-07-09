@@ -10,35 +10,40 @@ import { db } from "../../../../firebase";
 
 import { Breadcrumbs, Typography } from "@material-ui/core";
 import TableHeaderButton from "../TableHeaderButton";
-import SparkIcon from "@material-ui/icons/OfflineBolt";
+import ExtensionIcon from "@material-ui/icons/OfflineBolt";
 import Modal from "components/Modal";
 import { useFiretableContext } from "contexts/FiretableContext";
 import { useAppContext } from "contexts/AppContext";
 import { useSnackLogContext } from "contexts/SnackLogContext";
-import SparkList from "./SparkList";
-import SparkModal from "./SparkModal";
+import ExtensionList from "./ExtensionList";
+import ExtensionModal from "./ExtensionModal";
 
-import { serialiseSpark, emptySparkObject, ISpark, ISparkType } from "./utils";
+import {
+  serialiseExtension,
+  emptyExtensionObject,
+  IExtension,
+  IExtensionType,
+} from "./utils";
 
-export default function SparksEditor() {
+export default function ExtensionsEditor() {
   const snack = useSnackContext();
   const { tableState, tableActions } = useFiretableContext();
   const appContext = useAppContext();
   const { requestConfirmation } = useConfirmation();
-  const currentSparkObjects = (tableState?.config.sparkObjects ??
-    []) as ISpark[];
-  const [localSparksObjects, setLocalSparksObjects] = useState(
-    currentSparkObjects
+  const currentextensionObjects = (tableState?.config.extensionObjects ??
+    []) as IExtension[];
+  const [localExtensionsObjects, setLocalExtensionsObjects] = useState(
+    currentextensionObjects
   );
   const [open, setOpen] = useState(false);
-  const [sparkModal, setSparkModal] = useState<{
+  const [extensionModal, setExtensionModal] = useState<{
     mode: "add" | "update";
-    sparkObject: ISpark;
+    extensionObject: IExtension;
     index?: number;
   } | null>(null);
   const snackLogContext = useSnackLogContext();
 
-  const edited = !_isEqual(currentSparkObjects, localSparksObjects);
+  const edited = !_isEqual(currentextensionObjects, localExtensionsObjects);
 
   const tablePathTokens =
     tableState?.tablePath?.split("/").filter(function (_, i) {
@@ -50,10 +55,10 @@ export default function SparksEditor() {
     if (edited) {
       requestConfirmation({
         title: "Discard Changes",
-        body: "You will lose changes you have made to sparks",
+        body: "You will lose changes you have made to extensions",
         confirm: "Discard",
         handleConfirm: () => {
-          setLocalSparksObjects(currentSparkObjects);
+          setLocalExtensionsObjects(currentextensionObjects);
           setOpen(false);
         },
       });
@@ -62,17 +67,20 @@ export default function SparksEditor() {
     }
   };
 
-  const handleSaveSparks = () => {
-    tableActions?.table.updateConfig("sparkObjects", localSparksObjects);
+  const handleSaveExtensions = () => {
+    tableActions?.table.updateConfig(
+      "extensionObjects",
+      localExtensionsObjects
+    );
     setOpen(false);
   };
 
   const handleSaveDeploy = async () => {
-    handleSaveSparks();
+    handleSaveExtensions();
 
-    // compile spark objects into ft-build readable spark string
-    const serialisedSpark = serialiseSpark(localSparksObjects);
-    tableActions?.table.updateConfig("sparks", serialisedSpark);
+    // compile extension objects into ft-build readable extension string
+    const serialisedExtension = serialiseExtension(localExtensionsObjects);
+    tableActions?.table.updateConfig("extensions", serialisedExtension);
 
     const settingsDoc = await db.doc("/_FIRETABLE_/settings").get();
     const ftBuildUrl = settingsDoc.get("ftBuildUrl");
@@ -105,49 +113,49 @@ export default function SparksEditor() {
     }
   };
 
-  const handleAddSpark = (sparkObject: ISpark) => {
-    setLocalSparksObjects([...localSparksObjects, sparkObject]);
-    setSparkModal(null);
+  const handleAddExtension = (extensionObject: IExtension) => {
+    setLocalExtensionsObjects([...localExtensionsObjects, extensionObject]);
+    setExtensionModal(null);
   };
 
-  const handleUpdateSpark = (sparkObject: ISpark) => {
-    setLocalSparksObjects(
-      localSparksObjects.map((spark, index) => {
-        if (index === sparkModal?.index) {
+  const handleUpdateExtension = (extensionObject: IExtension) => {
+    setLocalExtensionsObjects(
+      localExtensionsObjects.map((extension, index) => {
+        if (index === extensionModal?.index) {
           return {
-            ...sparkObject,
+            ...extensionObject,
             lastEditor: currentEditor(),
           };
         } else {
-          return spark;
+          return extension;
         }
       })
     );
-    setSparkModal(null);
+    setExtensionModal(null);
   };
 
   const handleUpdateActive = (index: number, active: boolean) => {
-    setLocalSparksObjects(
-      localSparksObjects.map((sparkObject, i) => {
+    setLocalExtensionsObjects(
+      localExtensionsObjects.map((extensionObject, i) => {
         if (i === index) {
           return {
-            ...sparkObject,
+            ...extensionObject,
             active,
             lastEditor: currentEditor(),
           };
         } else {
-          return sparkObject;
+          return extensionObject;
         }
       })
     );
   };
 
   const handleDuplicate = (index: number) => {
-    setLocalSparksObjects([
-      ...localSparksObjects,
+    setLocalExtensionsObjects([
+      ...localExtensionsObjects,
       {
-        ...localSparksObjects[index],
-        name: `${localSparksObjects[index].name} (duplicate)`,
+        ...localExtensionsObjects[index],
+        name: `${localExtensionsObjects[index].name} (duplicate)`,
         active: false,
         lastEditor: currentEditor(),
       },
@@ -155,20 +163,22 @@ export default function SparksEditor() {
   };
 
   const handleEdit = (index: number) => {
-    setSparkModal({
+    setExtensionModal({
       mode: "update",
-      sparkObject: localSparksObjects[index],
+      extensionObject: localExtensionsObjects[index],
       index,
     });
   };
 
   const handleDelete = (index: number) => {
     requestConfirmation({
-      title: `Delete ${localSparksObjects[index].name}?`,
-      body: "This spark will be permanently deleted.",
+      title: `Delete ${localExtensionsObjects[index].name}?`,
+      body: "This extension will be permanently deleted.",
       confirm: "Confirm",
       handleConfirm: () => {
-        setLocalSparksObjects(localSparksObjects.filter((_, i) => i !== index));
+        setLocalExtensionsObjects(
+          localExtensionsObjects.filter((_, i) => i !== index)
+        );
       },
     });
   };
@@ -184,7 +194,7 @@ export default function SparksEditor() {
       <TableHeaderButton
         title="Extensions"
         onClick={() => setOpen(true)}
-        icon={<SparkIcon />}
+        icon={<ExtensionIcon />}
       />
 
       {open && !!tableState && (
@@ -201,12 +211,15 @@ export default function SparksEditor() {
                   return <Typography>{pathToken}</Typography>;
                 })}
               </Breadcrumbs>
-              <SparkList
-                sparks={localSparksObjects}
-                handleAddSpark={(type: ISparkType) => {
-                  setSparkModal({
+              <ExtensionList
+                extensions={localExtensionsObjects}
+                handleAddExtension={(type: IExtensionType) => {
+                  setExtensionModal({
                     mode: "add",
-                    sparkObject: emptySparkObject(type, currentEditor()),
+                    extensionObject: emptyExtensionObject(
+                      type,
+                      currentEditor()
+                    ),
                   });
                 }}
                 handleUpdateActive={handleUpdateActive}
@@ -224,22 +237,22 @@ export default function SparksEditor() {
             },
             secondary: {
               children: "Save",
-              onClick: handleSaveSparks,
+              onClick: handleSaveExtensions,
               disabled: !edited,
             },
           }}
         />
       )}
 
-      {sparkModal && (
-        <SparkModal
+      {extensionModal && (
+        <ExtensionModal
           handleClose={() => {
-            setSparkModal(null);
+            setExtensionModal(null);
           }}
-          handleAdd={handleAddSpark}
-          handleUpdate={handleUpdateSpark}
-          mode={sparkModal.mode}
-          sparkObject={sparkModal.sparkObject}
+          handleAdd={handleAddExtension}
+          handleUpdate={handleUpdateExtension}
+          mode={extensionModal.mode}
+          extensionObject={extensionModal.extensionObject}
         />
       )}
     </>

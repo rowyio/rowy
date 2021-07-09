@@ -13,7 +13,7 @@ import {
 } from "@material-ui/core";
 import React, { useState } from "react";
 import moment from "moment";
-import { sparkTypes, ISpark, ISparkType } from "./utils";
+import { extensionTypes, IExtension, IExtensionType } from "./utils";
 import EmptyState from "components/EmptyState";
 import AddIcon from "@material-ui/icons/Add";
 import EmptyIcon from "@material-ui/icons/AddBox";
@@ -34,10 +34,10 @@ const useStyles = makeStyles((theme) => ({
   divider: {
     margin: theme.spacing(1, 0),
   },
-  sparkName: {
+  extensionName: {
     marginTop: theme.spacing(1),
   },
-  sparkType: {
+  extensionType: {
     marginBottom: theme.spacing(1),
   },
   avatar: {
@@ -45,42 +45,44 @@ const useStyles = makeStyles((theme) => ({
     width: theme.spacing(4),
     height: theme.spacing(4),
   },
-  sparkList: {
+  extensionList: {
     height: "50vh",
     overflowY: "scroll",
   },
 }));
 
-export interface ISparkListProps {
-  sparks: ISpark[];
-  handleAddSpark: (type: ISparkType) => void;
+export interface IExtensionListProps {
+  extensions: IExtension[];
+  handleAddExtension: (type: IExtensionType) => void;
   handleUpdateActive: (index: number, active: boolean) => void;
   handleDuplicate: (index: number) => void;
   handleEdit: (index: number) => void;
   handleDelete: (index: number) => void;
 }
 
-export default function SparkList({
-  sparks,
-  handleAddSpark,
+export default function ExtensionList({
+  extensions,
+  handleAddExtension,
   handleUpdateActive,
   handleDuplicate,
   handleEdit,
   handleDelete,
-}: ISparkListProps) {
+}: IExtensionListProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const addButtonRef = useRef(null);
   const classes = useStyles();
 
-  const activeSparkCount = sparks.filter((spark) => spark.active).length;
+  const activeExtensionCount = extensions.filter(
+    (extension) => extension.active
+  ).length;
 
   const handleAddButton = () => {
     setAnchorEl(addButtonRef.current);
   };
 
-  const handleChooseAddType = (type: ISparkType) => {
+  const handleChooseAddType = (type: IExtensionType) => {
     handleClose();
-    handleAddSpark(type);
+    handleAddExtension(type);
   };
 
   const handleClose = () => {
@@ -96,7 +98,7 @@ export default function SparkList({
         marginTop={"0px !important"}
       >
         <Typography variant="overline">
-          EXTENSION ({activeSparkCount}/{sparks.length})
+          EXTENSION ({activeExtensionCount}/{extensions.length})
         </Typography>
         <Button
           startIcon={<AddIcon />}
@@ -111,7 +113,7 @@ export default function SparkList({
           open={Boolean(anchorEl)}
           onClose={handleClose}
         >
-          {sparkTypes.map((type) => (
+          {extensionTypes.map((type) => (
             <MenuItem
               onClick={() => {
                 handleChooseAddType(type);
@@ -123,8 +125,8 @@ export default function SparkList({
         </Menu>
       </Box>
 
-      <Box className={classes.sparkList}>
-        {sparks.length === 0 && (
+      <Box className={classes.extensionList}>
+        {extensions.length === 0 && (
           <EmptyState
             message="Add your first extension"
             description={
@@ -135,7 +137,7 @@ export default function SparkList({
             onClick={handleAddButton}
           />
         )}
-        {sparks.map((sparkObject, index) => {
+        {extensions.map((extensionObject, index) => {
           return (
             <>
               <Box
@@ -148,11 +150,14 @@ export default function SparkList({
                   flexDirection="column"
                   justifyContent="space-between"
                 >
-                  <Typography variant="body2" className={classes.sparkName}>
-                    {sparkObject.name}
+                  <Typography variant="body2" className={classes.extensionName}>
+                    {extensionObject.name}
                   </Typography>
-                  <Typography variant="overline" className={classes.sparkType}>
-                    {sparkObject.type}
+                  <Typography
+                    variant="overline"
+                    className={classes.extensionType}
+                  >
+                    {extensionObject.type}
                   </Typography>
                 </Box>
                 <Box
@@ -163,13 +168,13 @@ export default function SparkList({
                 >
                   <Box display="flex" alignItems="center">
                     <Tooltip
-                      title={sparkObject.active ? "Deactivate" : "Activate"}
+                      title={extensionObject.active ? "Deactivate" : "Activate"}
                     >
                       <Switch
                         color="primary"
-                        checked={sparkObject.active}
+                        checked={extensionObject.active}
                         onClick={() => {
-                          handleUpdateActive(index, !sparkObject.active);
+                          handleUpdateActive(index, !extensionObject.active);
                         }}
                       />
                     </Tooltip>
@@ -206,25 +211,27 @@ export default function SparkList({
                   </Box>
                   <Tooltip
                     title={`Last updated by ${
-                      sparkObject.lastEditor.displayName
-                    } on ${moment(sparkObject.lastEditor.lastUpdate).format(
+                      extensionObject.lastEditor.displayName
+                    } on ${moment(extensionObject.lastEditor.lastUpdate).format(
                       "LLLL"
                     )}`}
                   >
                     <Box display="flex" alignItems="center">
                       <Avatar
                         alt="profile"
-                        src={sparkObject.lastEditor.photoURL}
+                        src={extensionObject.lastEditor.photoURL}
                         className={classes.avatar}
                       />
                       <Typography variant="caption" color="textSecondary">
-                        {moment(sparkObject.lastEditor.lastUpdate).calendar()}
+                        {moment(
+                          extensionObject.lastEditor.lastUpdate
+                        ).calendar()}
                       </Typography>
                     </Box>
                   </Tooltip>
                 </Box>
               </Box>
-              {index + 1 !== sparks.length && (
+              {index + 1 !== extensions.length && (
                 <Divider light className={classes.divider} />
               )}
             </>

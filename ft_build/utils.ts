@@ -22,7 +22,7 @@ async function insertErrorToStreamer(errorRecord: object, streamLogger) {
     "command",
     "description",
     "functionConfigTs",
-    "sparksConfig",
+    "extensionsConfig",
     "stderr",
     "errorStackTrace",
   ]) {
@@ -39,7 +39,7 @@ function commandErrorHandler(
     user: admin.auth.UserRecord;
     description?: string;
     functionConfigTs?: string;
-    sparksConfig?: string;
+    extensionsConfig?: string;
   },
   streamLogger
 ) {
@@ -60,7 +60,7 @@ function commandErrorHandler(
       command: error?.cmd ?? "",
       description: meta?.description ?? "",
       functionConfigTs: meta?.functionConfigTs ?? "",
-      sparksConfig: meta?.sparksConfig ?? "",
+      extensionsConfig: meta?.extensionsConfig ?? "",
     };
     await insertErrorToStreamer(errorRecord, streamLogger);
     insertErrorRecordToDB(errorRecord);
@@ -73,7 +73,7 @@ async function logErrorToDB(
     errorExtraInfo?: string;
     errorTraceStack?: string;
     user: admin.auth.UserRecord;
-    sparksConfig?: string;
+    extensionsConfig?: string;
   },
   streamLogger?
 ) {
@@ -84,7 +84,7 @@ async function logErrorToDB(
     ranBy: firetableUser(data.user),
     description: data.errorDescription,
     createdAt: admin.firestore.FieldValue.serverTimestamp(),
-    sparksConfig: data?.sparksConfig ?? "",
+    extensionsConfig: data?.extensionsConfig ?? "",
     errorExtraInfo: data?.errorExtraInfo ?? "",
     errorStackTrace: data?.errorTraceStack ?? "",
   };
@@ -94,24 +94,24 @@ async function logErrorToDB(
   insertErrorRecordToDB(errorRecord);
 }
 
-function parseSparksConfig(
-  sparks: string | undefined,
+function parseExtensionsConfig(
+  extensions: string | undefined,
   user: admin.auth.UserRecord,
   streamLogger
 ) {
-  if (sparks) {
+  if (extensions) {
     try {
-      // remove leading "sparks.config(" and trailing ")"
-      return sparks
-        .replace(/^(\s*)sparks.config\(/, "")
+      // remove leading "extensions.config(" and trailing ")"
+      return extensions
+        .replace(/^(\s*)extensions.config\(/, "")
         .replace(/\);?\s*$/, "");
     } catch (error) {
       logErrorToDB(
         {
-          errorDescription: "Sparks is not wrapped with sparks.config",
+          errorDescription: "Extensions is not wrapped with extensions.config",
           errorTraceStack: error.stack,
           user,
-          sparksConfig: sparks,
+          extensionsConfig: extensions,
         },
         streamLogger
       );
@@ -193,6 +193,6 @@ async function createStreamLogger(tableConfigPath: string) {
 export {
   commandErrorHandler,
   logErrorToDB,
-  parseSparksConfig,
+  parseExtensionsConfig,
   createStreamLogger,
 };

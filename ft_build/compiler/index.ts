@@ -1,4 +1,4 @@
-import { addPackages, addSparkLib, asyncExecute } from "./terminal";
+import { addPackages, addExtensionLib, asyncExecute } from "./terminal";
 const fs = require("fs");
 import { generateConfigFromTableSchema } from "./loader";
 import { commandErrorHandler } from "../utils";
@@ -63,14 +63,14 @@ export default async function generateConfig(
       return false;
     }
 
-    const { sparksConfig } = require("../functions/src/functionConfig.js");
-    const requiredSparks = sparksConfig.map((s: any) => s.type);
+    const { extensionsConfig } = require("../functions/src/functionConfig.js");
+    const requiredExtensions = extensionsConfig.map((s: any) => s.type);
     await streamLogger.info(
-      `requiredSparks: ${JSON.stringify(requiredSparks)}`
+      `requiredExtensions: ${JSON.stringify(requiredExtensions)}`
     );
 
-    for (const lib of requiredSparks) {
-      const success = await addSparkLib(lib, user, streamLogger);
+    for (const lib of requiredExtensions) {
+      const success = await addExtensionLib(lib, user, streamLogger);
       if (!success) {
         return false;
       }

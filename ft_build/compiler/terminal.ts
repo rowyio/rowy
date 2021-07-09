@@ -43,13 +43,13 @@ export const addPackages = async (
   return true;
 };
 
-export const addSparkLib = async (
+export const addExtensionLib = async (
   name: string,
   user: admin.auth.UserRecord,
   streamLogger
 ) => {
   try {
-    const { dependencies } = require(`../sparksLib/${name}`);
+    const { dependencies } = require(`../extensionsLib/${name}`);
     const packages = Object.keys(dependencies).map((key) => ({
       name: key,
       version: dependencies[key],
@@ -70,11 +70,11 @@ export const addSparkLib = async (
   }
 
   const success = await asyncExecute(
-    `cp build/sparksLib/${name}.ts build/functions/src/sparks/${name}.ts`,
+    `cp build/extensionsLib/${name}.ts build/functions/src/extensions/${name}.ts`,
     commandErrorHandler(
       {
         user,
-        description: "Error copying sparksLib",
+        description: "Error copying extensionsLib",
       },
       streamLogger
     )

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import _isEqual from "lodash/isEqual";
 import useStateRef from "react-usestateref";
-import { ISpark, triggerTypes } from "./utils";
+import { IExtension, triggerTypes } from "./utils";
 import Modal from "components/Modal";
 import CodeEditorHelper from "components/CodeEditorHelper";
 import { useConfirmation } from "components/ConfirmationDialog";
@@ -42,9 +42,8 @@ const additionalVariables = [
       "fieldTypes is a map of all fields and its corresponding Firetable column type",
   },
   {
-    key: "sparkConfig",
-    description:
-      "you can pass in field name to change.before.get() or change.after.get() to get changes",
+    key: "extensionConfig",
+    description: "the configuration object of this extension",
   },
 ];
 
@@ -121,27 +120,29 @@ function TabPanel(props: TabPanelProps) {
   );
 }
 
-export interface ISparkModalProps {
+export interface IExtensionModalProps {
   handleClose: () => void;
-  handleAdd: (sparkObject: ISpark) => void;
-  handleUpdate: (sparkObject: ISpark) => void;
+  handleAdd: (extensionObject: IExtension) => void;
+  handleUpdate: (extensionObject: IExtension) => void;
   mode: "add" | "update";
-  sparkObject: ISpark;
+  extensionObject: IExtension;
 }
 
-export default function SparkModal({
+export default function ExtensionModal({
   handleClose,
   handleAdd,
   handleUpdate,
   mode,
-  sparkObject: initialObject,
-}: ISparkModalProps) {
+  extensionObject: initialObject,
+}: IExtensionModalProps) {
   const { requestConfirmation } = useConfirmation();
-  const [sparkObject, setSparkObject] = useState<ISpark>(initialObject);
+  const [extensionObject, setExtensionObject] = useState<IExtension>(
+    initialObject
+  );
   const [tabIndex, setTabIndex] = useState(0);
   const [validation, setValidation, validationRef] = useStateRef({
     condition: true,
-    sparkBody: true,
+    extensionBody: true,
   });
   const [
     conditionEditorActive,
@@ -156,7 +157,7 @@ export default function SparkModal({
   const classes = useStyles();
   const { tableState } = useFiretableContext();
   const columns = Object.keys(tableState?.columns ?? {});
-  const edited = !_isEqual(initialObject, sparkObject);
+  const edited = !_isEqual(initialObject, extensionObject);
 
   const handleChange = (_, newValue: number) => {
     setTabIndex(newValue);
@@ -165,10 +166,10 @@ export default function SparkModal({
   const handleAddOrUpdate = () => {
     switch (mode) {
       case "add":
-        handleAdd(sparkObject);
+        handleAdd(extensionObject);
         return;
       case "update":
-        handleUpdate(sparkObject);
+        handleUpdate(extensionObject);
         return;
     }
   };
@@ -204,17 +205,17 @@ export default function SparkModal({
               <TextField
                 size="small"
                 label={
-                  edited && !sparkObject.name.length
+                  edited && !extensionObject.name.length
                     ? "Extension name (required)"
                     : "Extension name"
                 }
                 variant="filled"
                 fullWidth
-                value={sparkObject.name}
-                error={edited && !sparkObject.name.length}
+                value={extensionObject.name}
+                error={edited && !extensionObject.name.length}
                 onChange={(event) => {
-                  setSparkObject({
-                    ...sparkObject,
+                  setExtensionObject({
+                    ...extensionObject,
                     name: event.target.value,
                   });
                 }}
@@ -226,15 +227,15 @@ export default function SparkModal({
                 alignItems="center"
                 className={classes.hoverable}
                 onClick={() => {
-                  setSparkObject({
-                    ...sparkObject,
-                    active: !sparkObject.active,
+                  setExtensionObject({
+                    ...extensionObject,
+                    active: !extensionObject.active,
                   });
                 }}
               >
-                <Switch color="primary" checked={sparkObject.active} />
+                <Switch color="primary" checked={extensionObject.active} />
                 <Typography>
-                  Extention is {!sparkObject.active && "de"}activated
+                  Extention is {!extensionObject.active && "de"}activated
                 </Typography>
               </Box>
             </Grid>
@@ -243,7 +244,7 @@ export default function SparkModal({
                 <TextField
                   size="small"
                   label="Extension Type"
-                  value={sparkObject.type}
+                  value={extensionObject.type}
                   variant="filled"
                   fullWidth
                   disabled
@@ -279,8 +280,8 @@ export default function SparkModal({
               >
                 <Grid item xs={6}>
                   <Typography variant="body2">
-                    Select a trigger that runs your spark code. Selected actions
-                    on any cells will trigger the spark.
+                    Select a trigger that runs your extension code. Selected
+                    actions on any cells will trigger the extension.
                   </Typography>
                   <Box>
                     <Typography variant="overline" className={classes.label}>
@@ -293,23 +294,23 @@ export default function SparkModal({
                       alignItems="center"
                       className={classes.hoverable}
                       onClick={() => {
-                        if (sparkObject.triggers.includes(trigger)) {
-                          setSparkObject({
-                            ...sparkObject,
-                            triggers: sparkObject.triggers.filter(
+                        if (extensionObject.triggers.includes(trigger)) {
+                          setExtensionObject({
+                            ...extensionObject,
+                            triggers: extensionObject.triggers.filter(
                               (t) => t !== trigger
                             ),
                           });
                         } else {
-                          setSparkObject({
-                            ...sparkObject,
-                            triggers: [...sparkObject.triggers, trigger],
+                          setExtensionObject({
+                            ...extensionObject,
+                            triggers: [...extensionObject.triggers, trigger],
                           });
                         }
                       }}
                     >
                       <Checkbox
-                        checked={sparkObject.triggers.includes(trigger)}
+                        checked={extensionObject.triggers.includes(trigger)}
                         name={trigger}
                       />
                       <Typography>{trigger}</Typography>
@@ -318,9 +319,9 @@ export default function SparkModal({
                 </Grid>
                 <Grid item xs={6} className={classes.requiredFields}>
                   <Typography variant="body2">
-                    Any cell can trigger a spark, only when the required fields
-                    of its row has values in them. Select your requried fields
-                    (optional.)
+                    Any cell can trigger a extension, only when the required
+                    fields of its row has values in them. Select your requried
+                    fields (optional.)
                   </Typography>
                   <Box>
                     <Typography variant="overline" className={classes.label}>
@@ -333,18 +334,18 @@ export default function SparkModal({
                       alignItems="center"
                       className={classes.hoverable}
                       onClick={() => {
-                        if (sparkObject.requiredFields.includes(field)) {
-                          setSparkObject({
-                            ...sparkObject,
-                            requiredFields: sparkObject.requiredFields.filter(
+                        if (extensionObject.requiredFields.includes(field)) {
+                          setExtensionObject({
+                            ...extensionObject,
+                            requiredFields: extensionObject.requiredFields.filter(
                               (t) => t !== field
                             ),
                           });
                         } else {
-                          setSparkObject({
-                            ...sparkObject,
+                          setExtensionObject({
+                            ...extensionObject,
                             requiredFields: [
-                              ...sparkObject.requiredFields,
+                              ...extensionObject.requiredFields,
                               field,
                             ],
                           });
@@ -352,13 +353,13 @@ export default function SparkModal({
                       }}
                     >
                       <Checkbox
-                        checked={sparkObject.requiredFields.includes(field)}
+                        checked={extensionObject.requiredFields.includes(field)}
                         name={field}
                       />
                       <Typography>{field}</Typography>
                     </Box>
                   ))}
-                  {sparkObject.requiredFields.map((trigger, index) => {
+                  {extensionObject.requiredFields.map((trigger, index) => {
                     const isFiretableColumn = columns.includes(trigger);
                     if (isFiretableColumn) {
                       return null;
@@ -371,9 +372,9 @@ export default function SparkModal({
                           component="span"
                           className={classes.removeField}
                           onClick={() => {
-                            setSparkObject({
-                              ...sparkObject,
-                              requiredFields: sparkObject.requiredFields.filter(
+                            setExtensionObject({
+                              ...extensionObject,
+                              requiredFields: extensionObject.requiredFields.filter(
                                 (t) => t !== trigger
                               ),
                             });
@@ -387,9 +388,9 @@ export default function SparkModal({
                           value={trigger}
                           size="small"
                           onChange={(event) => {
-                            setSparkObject({
-                              ...sparkObject,
-                              requiredFields: sparkObject.requiredFields.map(
+                            setExtensionObject({
+                              ...extensionObject,
+                              requiredFields: extensionObject.requiredFields.map(
                                 (value, i) =>
                                   i === index ? event.target.value : value
                               ),
@@ -405,9 +406,9 @@ export default function SparkModal({
                     className={classes.addField}
                     startIcon={<AddIcon />}
                     onClick={() => {
-                      setSparkObject({
-                        ...sparkObject,
-                        requiredFields: [...sparkObject.requiredFields, ""],
+                      setExtensionObject({
+                        ...extensionObject,
+                        requiredFields: [...extensionObject.requiredFields, ""],
                       });
                     }}
                   >
@@ -420,11 +421,11 @@ export default function SparkModal({
                   Conditions
                 </Typography>
                 <CodeEditor
-                  script={sparkObject.shouldRun}
+                  script={extensionObject.shouldRun}
                   height="100%"
                   handleChange={(newValue) => {
-                    setSparkObject({
-                      ...sparkObject,
+                    setExtensionObject({
+                      ...extensionObject,
                       shouldRun: newValue,
                     });
                   }}
@@ -452,22 +453,22 @@ export default function SparkModal({
                 />
               </Box>
               <CodeEditorHelper
-                docLink="https://github.com/FiretableProject/firetable/wiki/Sparks"
+                docLink="https://github.com/FiretableProject/firetable/wiki/Extensions"
                 additionalVariables={additionalVariables}
               />
             </TabPanel>
             <TabPanel value={tabIndex} index={1}>
               <Box className={classes.tabPanel} flexGrow={1}>
                 <Typography variant="overline" className={classes.label}>
-                  Spark Body
+                  Extension Body
                 </Typography>
                 <CodeEditor
-                  script={sparkObject.sparkBody}
+                  script={extensionObject.extensionBody}
                   height="100%"
                   handleChange={(newValue) => {
-                    setSparkObject({
-                      ...sparkObject,
-                      sparkBody: newValue,
+                    setExtensionObject({
+                      ...extensionObject,
+                      extensionBody: newValue,
                     });
                   }}
                   onValideStatusUpdate={({ isValid }) => {
@@ -476,7 +477,7 @@ export default function SparkModal({
                     }
                     setValidation({
                       ...validationRef.current,
-                      sparkBody: isValid,
+                      extensionBody: isValid,
                     });
                     console.log(validationRef.current);
                   }}
@@ -494,7 +495,7 @@ export default function SparkModal({
                 />
               </Box>
               <CodeEditorHelper
-                docLink="https://github.com/FiretableProject/firetable/wiki/Sparks"
+                docLink="https://github.com/FiretableProject/firetable/wiki/Extensions"
                 additionalVariables={additionalVariables}
               />
             </TabPanel>
@@ -504,14 +505,14 @@ export default function SparkModal({
       actions={{
         primary: {
           children: mode === "add" ? "Add" : "Update",
-          disabled: !edited || !sparkObject.name.length,
+          disabled: !edited || !extensionObject.name.length,
           onClick: () => {
             let warningMessage;
-            if (!validation.condition && !validation.sparkBody) {
+            if (!validation.condition && !validation.extensionBody) {
               warningMessage = "Condition and extention body are not valid";
             } else if (!validation.condition) {
               warningMessage = "Condition is not valid";
-            } else if (!validation.sparkBody) {
+            } else if (!validation.extensionBody) {
               warningMessage = "Extention body is not valid";
             }
 

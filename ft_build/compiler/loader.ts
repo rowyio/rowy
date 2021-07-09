@@ -2,7 +2,7 @@ import { db } from "../firebaseConfig";
 const fs = require("fs");
 const beautify = require("js-beautify").js;
 import admin from "firebase-admin";
-import { parseSparksConfig } from "../utils";
+import { parseExtensionsConfig } from "../utils";
 
 export const generateConfigFromTableSchema = async (
   schemaDocPath: string,
@@ -100,12 +100,14 @@ export const generateConfigFromTableSchema = async (
       `documentSelectColumns: ${JSON.stringify(documentSelectColumns)}`
     );
 
-    const sparksConfig = parseSparksConfig(
-      schemaData.sparks,
+    const extensionsConfig = parseExtensionsConfig(
+      schemaData.extensions,
       user,
       streamLogger
     );
-    await streamLogger.info(`sparksConfig: ${JSON.stringify(sparksConfig)}`);
+    await streamLogger.info(
+      `extensionsConfig: ${JSON.stringify(extensionsConfig)}`
+    );
 
     const collectionType = schemaDocPath.includes("subTables")
       ? "subCollection"
@@ -184,7 +186,7 @@ export const generateConfigFromTableSchema = async (
       derivativesConfig,
       initializeConfig,
       documentSelectConfig,
-      sparksConfig,
+      extensionsConfig,
     };
     await streamLogger.info(`exports: ${JSON.stringify(exports)}`);
 

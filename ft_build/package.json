@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "start": "yarn build && node build",
-    "build": "rm -rf build && tsc --project ./ && cp -r functions build && cp -r sparksLib build",
+    "build": "rm -rf build && tsc --project ./ && cp -r functions build && cp -r extensionsLib build",
     "deploy": "./deploy.sh"
   },
   "engines": {

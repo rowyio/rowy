@@ -190,7 +190,7 @@ export default function CodeEditor(props: any) {
         .map((columnKey: string) => `"${columnKey}"`)
         .join("|\n");
 
-      const sparksDefinition = `
+      const extensionsDefinition = `
         // basic types that are used in all places
         type Row = {${rowDefinition}};
         type Field = ${availableFields} | string | object;
@@ -198,11 +198,11 @@ export default function CodeEditor(props: any) {
         type Trigger = "create" | "update" | "delete";
         type Triggers = Trigger[];
 
-        // function types that defines spark body and shuold run
-        type Condition = boolean | ((data: SparkContext) => boolean | Promise<boolean>);
+        // function types that defines extension body and shuold run
+        type Condition = boolean | ((data: ExtensionContext) => boolean | Promise<boolean>);
       
-        // the argument that the spark body takes in
-        type SparkContext = {
+        // the argument that the extension body takes in
+        type ExtensionContext = {
           row: Row;
           ref:FirebaseFirestore.DocumentReference;
           storage:firebasestorage.Storage;
@@ -211,18 +211,18 @@ export default function CodeEditor(props: any) {
           change: any;
           triggerType: Triggers;
           fieldTypes: any;
-          sparkConfig: {
+          extensionConfig: {
             label: string;
             type: sring;
             triggers: Trigger[];
             shouldRun: Condition;
             requiredFields: string[];
-            sparkBody: any;
+            extensionBody: any;
           };
           utilFns: any;
         }
 
-        // spark body definition
+        // extension body definition
         type slackEmailBody = {
           channels?: string[];
           text?: string;
@@ -239,65 +239,65 @@ export default function CodeEditor(props: any) {
           attachments?: any;
         }
 
-        type DocSyncBody = (context: SparkContext) => Promise<{
+        type DocSyncBody = (context: ExtensionContext) => Promise<{
           fieldsToSync: Fields;
           row: Row;
           targetPath: string;
         }>
 
-        type HistorySnapshotBody = (context: SparkContext) => Promise<{
+        type HistorySnapshotBody = (context: ExtensionContext) => Promise<{
           trackedFields: Fields;
         }>
 
-        type AlgoliaIndexBody = (context: SparkContext) => Promise<{
+        type AlgoliaIndexBody = (context: ExtensionContext) => Promise<{
           fieldsToSync: Fields;
           index: string;
           row: Row;
           objectID: string;
         }>
 
-        type MeiliIndexBody = (context: SparkContext) => Promise<{
+        type MeiliIndexBody = (context: ExtensionContext) => Promise<{
           fieldsToSync: Fields;
           index: string;
           row: Row;
           objectID: string;
         }>
 
-        type BigqueryIndexBody = (context: SparkContext) => Promise<{
+        type BigqueryIndexBody = (context: ExtensionContext) => Promise<{
           fieldsToSync: Fields;
           index: string;
           row: Row;
           objectID: string;
         }>
 
-        type SlackMessageBody = (context: SparkContext) => Promise<slackEmailBody | slackChannelBody>;
+        type SlackMessageBody = (context: ExtensionContext) => Promise<slackEmailBody | slackChannelBody>;
 
-        type SendgridEmailBody = (context: SparkContext) => Promise<any>;
+        type SendgridEmailBody = (context: ExtensionContext) => Promise<any>;
 
-        type ApiCallBody = (context: SparkContext) => Promise<{
+        type ApiCallBody = (context: ExtensionContext) => Promise<{
           body: string;
           url: string;
           method: string;
           callback: any;
         }>
 
-        type TwilioMessageBody = (context: SparkContext) => Promise<{
+        type TwilioMessageBody = (context: ExtensionContext) => Promise<{
           body: string;
           from: string;
           to: string;
         }>
 
-        type TaskBody = (context: SparkContext) => Promise<any>
+        type TaskBody = (context: ExtensionContext) => Promise<any>
       `;
 
       monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
         [
           "    /**",
-          "     * sparks type configuration",
+          "     * extensions type configuration",
           "     */",
-          sparksDefinition,
+          extensionsDefinition,
         ].join("\n"),
-        "ts:filename/sparks.d.ts"
+        "ts:filename/extensions.d.ts"
       );
 
       monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(

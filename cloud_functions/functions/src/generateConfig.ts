@@ -46,13 +46,13 @@ const main = async (functionType: string, configString: string) => {
       }"`;
       break;
 
-    case "FT_spark":
-      const sparkSchemaDoc = await db
+    case "FT_extension":
+      const extensionSchemaDoc = await db
         .doc(`_FIRETABLE_/settings/schema/${configString}`)
         .get();
-      const sparkSchemaData = sparkSchemaDoc.data();
+      const extensionSchemaData = extensionSchemaDoc.data();
 
-      configData = `export default [${sparkSchemaData?.sparks.join(
+      configData = `export default [${extensionSchemaData?.extensions.join(
         ",\n"
       )}]\n export const collectionPath='${configString}';`;
     case "FT_aggregates":
