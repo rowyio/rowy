@@ -319,9 +319,8 @@ export default function ExtensionModal({
                 </Grid>
                 <Grid item xs={6} className={classes.requiredFields}>
                   <Typography variant="body2">
-                    Any cell can trigger a extension, only when the required
-                    fields of its row has values in them. Select your requried
-                    fields (optional.)
+                    Optionally, select the fields that are required for the
+                    extension to be triggered for a row.
                   </Typography>
                   <Box>
                     <Typography variant="overline" className={classes.label}>
