@@ -36,7 +36,7 @@ export default function ExtensionsEditor() {
   const [localExtensionsObjects, setLocalExtensionsObjects] = useState(
     currentextensionObjects
   );
-  const [open, setOpen] = useState(false);
+  const [openExtensionList, setOpenExtensionList] = useState(false);
   const [openMigrationGuide, setOpenMigrationGuide] = useState(false);
   const [extensionModal, setExtensionModal] = useState<{
     mode: "add" | "update";
@@ -58,7 +58,7 @@ export default function ExtensionsEditor() {
       console.log("Extension migration required.");
       setOpenMigrationGuide(true);
     } else {
-      setOpen(true);
+      setOpenExtensionList(true);
     }
   };
 
@@ -70,11 +70,11 @@ export default function ExtensionsEditor() {
         confirm: "Discard",
         handleConfirm: () => {
           setLocalExtensionsObjects(currentextensionObjects);
-          setOpen(false);
+          setOpenExtensionList(false);
         },
       });
     } else {
-      setOpen(false);
+      setOpenExtensionList(false);
     }
   };
 
@@ -83,7 +83,7 @@ export default function ExtensionsEditor() {
       "extensionObjects",
       localExtensionsObjects
     );
-    setOpen(false);
+    setOpenExtensionList(false);
   };
 
   const handleSaveDeploy = async () => {
@@ -208,9 +208,9 @@ export default function ExtensionsEditor() {
         icon={<ExtensionIcon />}
       />
 
-      {open && !!tableState && (
+      {openExtensionList && !!tableState && (
         <Modal
-          open={open}
+          open={openExtensionList}
           onClose={handleClose}
           maxWidth="sm"
           fullWidth
@@ -271,6 +271,10 @@ export default function ExtensionsEditor() {
         <ExtensionMigration
           handleClose={() => {
             setOpenMigrationGuide(false);
+          }}
+          handleUpgradeComplete={() => {
+            setOpenMigrationGuide(false);
+            setOpenExtensionList(true);
           }}
         />
       )}

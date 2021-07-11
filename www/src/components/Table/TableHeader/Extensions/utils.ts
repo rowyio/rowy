@@ -207,10 +207,72 @@ function serialiseExtension(extensions: IExtension[]): string {
   return serialisedExtension;
 }
 
+function sparkToExtensionObjects(
+  sparkConfig: string,
+  user: IExtensionEditor
+): IExtension[] {
+  const parseString2Array = (str: string): string[] => {
+    return str
+      .trim()
+      .replace(/\[|\]/g, "")
+      .split(",")
+      .map((x) => x.trim().replace(/'/g, ""));
+  };
+  const oldSparks = sparkConfig.replace(/"/g, "'");
+  const sparkTypes = oldSparks
+    .match(/(?<=type:).*(?=,)/g)
+    ?.map((x) => x.trim().replace(/'/g, ""));
+  const triggers = oldSparks
+    .match(/(?<=triggers:).*(?=,)/g)
+    ?.map((x) => parseString2Array(x));
+  const shouldRun = oldSparks
+    .match(/(?<=shouldRun:).*(?=,)/g)
+    ?.map((x) => x.trim());
+  const requiredFields = oldSparks
+    .match(/(?<=requiredFields:).*(?=,)/g)
+    ?.map((x) => parseString2Array(x));
+  const splitSparks = oldSparks.split(`type:`);
+  const sparks = sparkTypes?.map((x, index) => {
+    const sparkBody = splitSparks[index + 1]
+      ?.split("sparkBody:")[1]
+      ?.trim()
+      .slice(0, -1);
+    const _triggers = triggers?.[index];
+    const _shouldRun = shouldRun?.[index];
+    const _requiredFields = requiredFields?.[index];
+    return {
+      type: x,
+      triggers: _triggers,
+      shouldRun: _shouldRun,
+      requiredFields: _requiredFields,
+      sparkBody,
+    };
+  });
+  const extensionObjects = sparks?.map(
+    (spark, index): IExtension => {
+      return {
+        // firetable meta fields
+        name: `Migrated spark ${index}`,
+        active: true,
+        lastEditor: user,
+
+        // ft build fields
+        triggers: (spark.triggers ?? []) as IExtensionTrigger[],
+        type: spark.type as IExtensionType,
+        requiredFields: spark.requiredFields ?? [],
+        extensionBody: spark.sparkBody,
+        conditions: spark.shouldRun ?? "",
+      };
+    }
+  );
+  return extensionObjects ?? [];
+}
+
 export {
   serialiseExtension,
   extensionTypes,
   triggerTypes,
   emptyExtensionObject,
+  sparkToExtensionObjects,
 };
 export type { IExtension, IExtensionType, IExtensionEditor };
