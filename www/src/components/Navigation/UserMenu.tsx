@@ -8,7 +8,6 @@ import {
   IconButtonProps,
   Avatar,
   Menu,
-  Link as MuiLink,
   MenuItem,
   ListItemAvatar,
   ListItemText,
@@ -20,10 +19,11 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import CheckIcon from "@material-ui/icons/Check";
 
+import UpdateChecker from "./UpdateChecker";
 import { useAppContext } from "contexts/AppContext";
 import routes from "constants/routes";
-import meta from "../../../package.json";
 import { projectId } from "../../firebase";
+
 const useStyles = makeStyles((theme) =>
   createStyles({
     spacer: {
@@ -54,13 +54,6 @@ const useStyles = makeStyles((theme) =>
         theme.palette.background.elevation?.[24] ??
         theme.palette.background.paper,
       marginTop: theme.spacing(-1),
-    },
-
-    version: {
-      display: "block",
-      padding: theme.spacing(1, 2),
-      userSelect: "none",
-      color: theme.palette.text.disabled,
     },
   })
 );
@@ -194,16 +187,7 @@ export default function UserMenu(props: IconButtonProps) {
 
         <Divider className={classes.divider} />
 
-        <MuiLink
-          variant="caption"
-          component="a"
-          href={meta.repository.url.replace(".git", "") + "/releases"}
-          target="_blank"
-          rel="noopener"
-          className={classes.version}
-        >
-          {meta.name} v{meta.version}
-        </MuiLink>
+        <UpdateChecker />
       </Menu>
     </>
   );
