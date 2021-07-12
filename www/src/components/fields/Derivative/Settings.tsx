@@ -7,6 +7,8 @@ import FieldsDropdown from "components/Table/ColumnMenu/FieldsDropdown";
 import { useFiretableContext } from "contexts/FiretableContext";
 import CodeEditorHelper from "components/CodeEditorHelper";
 
+import WIKI_LINKS from "constants/wikiLinks";
+
 const CodeEditor = lazy(
   () =>
     import(
@@ -45,7 +47,7 @@ const Settings = ({ config, handleChange }) => {
         }}
       />
       <Typography variant="overline">derivative script</Typography>
-      <CodeEditorHelper docLink="https://github.com/FiretableProject/firetable/wiki/Derivatives" />
+      <CodeEditorHelper docLink={WIKI_LINKS.derivatives} />
       <Suspense fallback={<FieldSkeleton height={200} />}>
         <CodeEditor
           script={config.script}
