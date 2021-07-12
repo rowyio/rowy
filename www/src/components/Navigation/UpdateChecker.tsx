@@ -18,7 +18,7 @@ import WIKI_LINKS from "constants/wikiLinks";
 const useLastCheckedUpdateState = createPersistedState(
   "_FT_LAST_CHECKED_UPDATE"
 );
-const useLatestUpdateState = createPersistedState("_FT_LATEST_UPDATE");
+export const useLatestUpdateState = createPersistedState("_FT_LATEST_UPDATE");
 
 const useStyles = makeStyles((theme) =>
   createStyles({

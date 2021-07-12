@@ -14,15 +14,17 @@ import {
   ListItemSecondaryAction,
   ListItemIcon,
   Divider,
+  Badge,
 } from "@material-ui/core";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import CheckIcon from "@material-ui/icons/Check";
 
-import UpdateChecker from "./UpdateChecker";
+import UpdateChecker, { useLatestUpdateState } from "./UpdateChecker";
 import { useAppContext } from "contexts/AppContext";
 import routes from "constants/routes";
 import { projectId } from "../../firebase";
+import meta from "../../../package.json";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -64,6 +66,7 @@ export default function UserMenu(props: IconButtonProps) {
   const anchorEl = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
   const [themeSubMenu, setThemeSubMenu] = useState<EventTarget | null>(null);
+  const [latestUpdate] = useLatestUpdateState<null | Record<string, any>>();
 
   const {
     currentUser,
@@ -118,7 +121,13 @@ export default function UserMenu(props: IconButtonProps) {
         onClick={() => setOpen(true)}
         className={classes.iconButton}
       >
-        {avatar}
+        {latestUpdate?.tag_name > "v" + meta.version ? (
+          <Badge color="primary" overlap="circular" variant="dot">
+            {avatar}
+          </Badge>
+        ) : (
+          avatar
+        )}
       </IconButton>
 
       <Menu
