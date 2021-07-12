@@ -7,7 +7,7 @@ export const BODY_FONT = "Inter, system-ui, sans-serif";
 export const MONO_FONT = "IBM Plex Mono, ui-monospace, monospace";
 
 export const ANTLER_RED = "#ED4747";
-export const SECONDARY_GREY = "#282829";
+export const SECONDARY_GREY = "#070042";
 export const SECONDARY_TEXT = "rgba(0, 0, 0, 0.6)";
 export const LOG_TEXT = "#cccccc";
 export const ERROR = "#b00020";
@@ -35,10 +35,11 @@ declare module "@material-ui/core/styles/createTransitions" {
 
 export const themeBase = {
   palette: {
-    // primary: { main: ANTLER_RED, light: ANTLER_RED },
+    primary: { main: "#371FFF" },
     secondary: { main: SECONDARY_GREY },
     text: { secondary: SECONDARY_TEXT, log: LOG_TEXT },
     error: { main: ERROR },
+    background: { default: "#F9F9FB" },
   },
   typography: {
     fontFamily: BODY_FONT,
@@ -105,11 +106,94 @@ export const themeBase = {
       // color: SECONDARY_TEXT,
     },
   },
+  shadows: [
+    // Based on https://tailwindcss.com/docs/box-shadow
+    // with additional “outline” shadow
+    "none", // 0
+    "0 0 0 1px rgba(0, 0, 0, 0.04), 0 1px 3px 0 rgba(0, 0, 0, 0.10), 0 1px 2px 0 rgba(0, 0, 0, 0.06)", // 1
+    "0 0 0 1px rgba(0, 0, 0, 0.04), 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)", // 2
+    "0 0 0 1px rgba(0, 0, 0, 0.04), 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)", // 3
+    "0 0 0 1px rgba(0, 0, 0, 0.05), 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)", // 4
+    "0 0 0 1px rgba(0, 0, 0, 0.05), 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)", // 5
+    "0 0 0 1px rgba(0, 0, 0, 0.05), 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)", // 6
+    "0 0 0 1px rgba(0, 0, 0, 0.05), 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)", // 7
+    "0 0 0 1px rgba(0, 0, 0, 0.06), 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)", // 8
+    "0 0 0 1px rgba(0, 0, 0, 0.06), 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)", // 9
+    "0 0 0 1px rgba(0, 0, 0, 0.06), 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)", // 10
+    "0 0 0 1px rgba(0, 0, 0, 0.06), 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)", // 11
+    "0 0 0 1px rgba(0, 0, 0, 0.06), 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)", // 12
+    "0 0 0 1px rgba(0, 0, 0, 0.06), 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)", // 13
+    "0 0 0 1px rgba(0, 0, 0, 0.06), 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)", // 14
+    "0 0 0 1px rgba(0, 0, 0, 0.06), 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)", // 15
+    "0 0 0 1px rgba(0, 0, 0, 0.08), 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)", // 16
+    "0 0 0 1px rgba(0, 0, 0, 0.08), 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)", // 17
+    "0 0 0 1px rgba(0, 0, 0, 0.08), 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)", // 18
+    "0 0 0 1px rgba(0, 0, 0, 0.08), 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)", // 19
+    "0 0 0 1px rgba(0, 0, 0, 0.08), 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)", // 20
+    "0 0 0 1px rgba(0, 0, 0, 0.08), 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)", // 21
+    "0 0 0 1px rgba(0, 0, 0, 0.08), 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)", // 22
+    "0 0 0 1px rgba(0, 0, 0, 0.08), 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)", // 23
+    "0 0 0 1px rgba(0, 0, 0, 0.08), 0 25px 50px -12px rgba(0, 0, 0, 0.25)", // 24
+  ],
+  shape: {
+    borderRadius: 4,
+  },
   components: {
     MuiTextField: {
       defaultProps: {
         variant: "filled",
         // size: "small",
+      },
+    },
+    MuiPaper: {
+      styleOverrides: {
+        rounded: {
+          borderRadius: 8,
+        },
+      },
+    },
+    MuiDialog: {
+      styleOverrides: {
+        paper: {
+          borderRadius: 8,
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: 24,
+        },
+      },
+    },
+    MuiListItem: {
+      styleOverrides: {
+        root: {
+          width: "calc(100% - 16px)",
+          margin: "4px 8px",
+          padding: "4px 8px",
+          borderRadius: 4,
+        },
+      },
+    },
+    MuiMenu: {
+      styleOverrides: {
+        list: {
+          padding: "4px 0",
+        },
+      },
+    },
+    MuiMenuItem: {
+      styleOverrides: {
+        root: {
+          width: "calc(100% - 8px)",
+          margin: "0 4px",
+          padding: "6px 12px",
+          borderRadius: 4,
+          "&.Mui-selected": {
+            color: "#371FFF",
+          },
+        },
       },
     },
   },
@@ -119,6 +203,7 @@ export const darkThemeBase = {
   // https://material.io/design/color/dark-theme.html#ui-application
   palette: {
     mode: "dark",
+    primary: { main: "#8A99FF" },
     secondary: { main: "#E4E4E5" },
     text: {
       // primary: "rgba(255, 255, 255, 0.87)",
@@ -127,6 +212,7 @@ export const darkThemeBase = {
       // disabled: "rgba(255, 255, 255, 0.38)",
     },
     error: { main: "#CF6679" },
+    background: { default: "#121212" },
   },
   // typography: {
   //   overline: { color: "rgba(255, 255, 255, 0.6)" },

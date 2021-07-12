@@ -6,7 +6,6 @@ import {
   Typography,
   Button,
 } from "@material-ui/core";
-import { alpha } from "@material-ui/core/styles";
 
 import { isCollectionGroup } from "utils/fns";
 import AddRowIcon from "assets/icons/AddRow";
@@ -31,7 +30,7 @@ const useStyles = makeStyles((theme) =>
     root: {
       width: "100%",
       margin: 0,
-      padding: theme.spacing(0, 1.5),
+      padding: theme.spacing(0, 1.5, 1.5),
       minHeight: TABLE_HEADER_HEIGHT,
 
       overflowX: "auto",
@@ -43,9 +42,15 @@ const useStyles = makeStyles((theme) =>
         width: "100%",
         paddingRight: theme.spacing(1),
       },
+
+      "& > *": { paddingTop: "0 !important" },
     },
 
-    addRowIcon: { fontSize: "26px !important" },
+    addRowIcon: {
+      fontSize: "26px !important",
+      marginTop: -1,
+      marginBottom: -1,
+    },
 
     spacer: { minWidth: theme.spacing(8) },
 
@@ -55,14 +60,6 @@ const useStyles = makeStyles((theme) =>
     },
     inputBaseRoot: {
       borderRadius: theme.shape.borderRadius,
-      backgroundColor:
-        theme.palette.mode === "dark"
-          ? alpha(theme.palette.text.primary, 0.06)
-          : undefined,
-    },
-    select: {
-      paddingTop: "6px !important",
-      paddingBottom: "7px !important",
     },
   })
 );
@@ -175,13 +172,14 @@ export default function TableHeader({
             name: "rowHeight",
             id: "rowHeight",
           }}
-          margin="dense"
+          // margin="dense"
+          size="small"
           InputProps={{
             disableUnderline: true,
             classes: { root: classes.inputBaseRoot },
           }}
           SelectProps={{
-            classes: { root: classes.select },
+            // classes: { root: classes.select },
             displayEmpty: true,
           }}
           hiddenLabel

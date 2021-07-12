@@ -15,6 +15,7 @@ export default function User({ value }: IHeavyCellProps) {
   return (
     <Tooltip title={dateLabel}>
       <Chip
+        size="small"
         avatar={<Avatar alt="Avatar" src={value.photoURL} />}
         label={value.displayName}
       />

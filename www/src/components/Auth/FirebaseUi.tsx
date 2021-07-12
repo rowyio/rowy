@@ -83,7 +83,7 @@ const useStyles = makeStyles((theme) =>
           ...theme.typography.button,
 
           paddingLeft: theme.spacing(2),
-          paddingRight: theme.spacing(2) + 18,
+          paddingRight: Number(theme.spacing(2).replace("px", "")) + 18,
           marginLeft: -18,
           width: "100%",
           textAlign: "center",

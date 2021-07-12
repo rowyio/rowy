@@ -5,6 +5,7 @@ import { Paper, Typography, LinearProgress } from "@material-ui/core";
 import { alpha } from "@material-ui/core/styles";
 
 import bgPattern from "assets/bg-pattern.svg";
+import FiretableLogo from "assets/FiretableLogo";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -55,14 +56,6 @@ const useStyles = makeStyles((theme) =>
       textAlign: "center",
     },
 
-    wordmark: {
-      display: "block",
-
-      color: theme.palette.primary.main,
-      letterSpacing: 0,
-      fontVariantLigatures: "common-ligatures",
-    },
-
     projectName: {
       display: "block",
       marginTop: theme.spacing(1),
@@ -91,9 +84,7 @@ export default function AuthLayout({ children, loading }: IAuthLayoutProps) {
   return (
     <Div100vh className={classes.root} style={{ minHeight: "100rvh" }}>
       <Paper className={classes.paper}>
-        <Typography variant="h4" component="h1" className={classes.wordmark}>
-          firetable
-        </Typography>
+        <FiretableLogo />
         <Typography variant="overline" className={classes.projectName}>
           {process.env.REACT_APP_FIREBASE_PROJECT_ID}
         </Typography>

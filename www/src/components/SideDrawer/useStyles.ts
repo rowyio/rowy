@@ -19,9 +19,6 @@ export const useStyles = makeStyles((theme) =>
       borderRadius: `${(theme.shape.borderRadius as number) * 2}px 0 0 ${
         (theme.shape.borderRadius as number) * 2
       }px`,
-      backgroundColor:
-        theme.palette.background.elevation?.[24] ??
-        theme.palette.background.paper,
 
       width: DRAWER_WIDTH,
       overflowX: "visible",
@@ -60,8 +57,8 @@ export const useStyles = makeStyles((theme) =>
 
       "&$disabled": {
         boxShadow: theme.shadows[6],
-        backgroundColor:
-          theme.palette.grey[theme.palette.mode === "light" ? 300 : 800],
+        // backgroundColor:
+        //   theme.palette.grey[theme.palette.mode === "light" ? 300 : 800],
       },
 
       "& + &": { marginTop: theme.spacing(4) },

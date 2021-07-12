@@ -7,7 +7,7 @@ export const useStyles = makeStyles((theme) =>
 
     paper: { overflow: "hidden", maxHeight: "calc(100% - 48px)" },
     menuChild: {
-      padding: `0 ${theme.spacing(2)}px`,
+      padding: `0 ${theme.spacing(2)}`,
       minWidth: 340,
       // Need to set fixed height here so popup is positioned correctly
       height: 340,
@@ -23,7 +23,7 @@ export const useStyles = makeStyles((theme) =>
       background: `${theme.palette.background.paper} no-repeat`,
       position: "relative",
       margin: theme.spacing(0, -2),
-      maxWidth: `calc(100% + ${theme.spacing(4)}px)`,
+      maxWidth: `calc(100% + ${theme.spacing(4)})`,
 
       "&::before, &::after": {
         content: '""',

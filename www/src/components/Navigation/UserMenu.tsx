@@ -166,17 +166,26 @@ export default function UserMenu(props: IconButtonProps) {
             onClose={() => setThemeSubMenu(null)}
             classes={{ paper: classes.subMenu }}
           >
-            <MenuItem onClick={() => changeTheme("system")}>
+            <MenuItem
+              onClick={() => changeTheme("system")}
+              selected={!themeOverridden}
+            >
               <ListItemIcon>{!themeOverridden && <CheckIcon />}</ListItemIcon>
               System
             </MenuItem>
-            <MenuItem onClick={() => changeTheme("light")}>
+            <MenuItem
+              onClick={() => changeTheme("light")}
+              selected={themeOverridden && theme === "light"}
+            >
               <ListItemIcon>
                 {themeOverridden && theme === "light" && <CheckIcon />}
               </ListItemIcon>
               Light
             </MenuItem>
-            <MenuItem onClick={() => changeTheme("dark")}>
+            <MenuItem
+              onClick={() => changeTheme("dark")}
+              selected={themeOverridden && theme === "dark"}
+            >
               <ListItemIcon>
                 {themeOverridden && theme === "dark" && <CheckIcon />}
               </ListItemIcon>
@@ -184,6 +193,18 @@ export default function UserMenu(props: IconButtonProps) {
             </MenuItem>
           </Menu>
         )}
+
+        <MenuItem component={Link} to={routes.userSettings}>
+          User settings
+        </MenuItem>
+
+        <Divider className={classes.divider} />
+
+        <MenuItem component={Link} to={routes.projectSettings}>
+          Project settings
+        </MenuItem>
+
+        <Divider className={classes.divider} />
 
         <MenuItem component={Link} to={routes.signOut}>
           Sign out

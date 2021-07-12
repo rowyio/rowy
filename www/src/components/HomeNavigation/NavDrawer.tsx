@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) =>
 
     listItem: {
       color: theme.palette.text.secondary,
-      minHeight: 48,
+      // minHeight: 48,
       transition: theme.transitions.create(["background-color", "color"]),
       "& $listItemIcon": { transition: theme.transitions.create("color") },
     },
@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme) =>
     },
     listItemIcon: {},
     listItemText: {
-      ...theme.typography.button,
+      // ...theme.typography.button,
       display: "block",
       color: "inherit",
     },

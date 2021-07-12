@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) =>
     tabDivider: { marginTop: -1 },
 
     tabSection: { paddingTop: theme.spacing(2), height: "100%" },
-    tabContentGrid: { height: `calc(100% + ${theme.spacing(3)}px)` },
+    tabContentGrid: { height: `calc(100% + ${theme.spacing(3)})` },
 
     divider: {
       margin: theme.spacing(2),

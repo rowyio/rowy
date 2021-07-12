@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) =>
       height: APP_BAR_HEIGHT,
       [theme.breakpoints.down("md")]: { paddingRight: 0 },
 
-      backgroundColor: theme.palette.background.paper,
+      backgroundColor: theme.palette.background.default,
     },
 
     maxHeight: {

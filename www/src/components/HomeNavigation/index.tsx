@@ -42,22 +42,47 @@ const useStyles = makeStyles((theme) =>
     appBar: {
       height: APP_BAR_HEIGHT,
 
-      backgroundColor: theme.palette.background.paper,
-
       [theme.breakpoints.down("md")]: { paddingRight: 0 },
 
       [theme.breakpoints.up("md")]: {
-        transition: theme.transitions.create("width", {
-          easing: theme.transitions.easing.sharp,
-          duration: theme.transitions.duration.leavingScreen,
-        }),
+        transition:
+          theme.transitions.create("width", {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+          }) +
+          ", " +
+          theme.transitions.create(["box-shadow", "background-color"]),
         "$open &": {
           width: `calc(100% - ${NAV_DRAWER_WIDTH}px)`,
-          transition: theme.transitions.create("width", {
-            easing: theme.transitions.easing.easeOut,
-            duration: theme.transitions.duration.enteringScreen,
-          }),
+          transition:
+            theme.transitions.create("width", {
+              easing: theme.transitions.easing.easeOut,
+              duration: theme.transitions.duration.enteringScreen,
+            }) +
+            ", " +
+            theme.transitions.create(["box-shadow", "background-color"]),
         },
+      },
+
+      // Elevation 8
+      backgroundImage:
+        "linear-gradient(rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.09))",
+      "&::before": {
+        content: "''",
+        display: "block",
+        position: "absolute",
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+
+        backgroundColor: theme.palette.background.default,
+        transition: theme.transitions.create("opacity"),
+      },
+    },
+    appBarScrolled: {
+      "&::before": {
+        opacity: 0,
       },
     },
     maxHeight: {
@@ -122,7 +147,7 @@ export default function HomeNavigation({
         <AppBar
           color="inherit"
           elevation={trigger ? 4 : 0}
-          className={classes.appBar}
+          className={clsx(classes.appBar, trigger && classes.appBarScrolled)}
         >
           <Container>
             <Toolbar className={clsx(classes.maxHeight, classes.toolbar)}>

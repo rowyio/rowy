@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) =>
   createStyles({
     listItem: {
       color: theme.palette.text.secondary,
-      minHeight: 48,
+      // minHeight: 48,
     },
     listItemSelected: {
       "&&, &&:hover": {
@@ -33,7 +33,9 @@ const useStyles = makeStyles((theme) =>
     },
     listItemIcon: {},
     listItemText: {
-      ...theme.typography.button,
+      ...theme.typography.body2,
+      fontWeight: theme.typography.fontWeightMedium,
+      // ...theme.typography.button,
       display: "block",
       color: "inherit",
     },
@@ -42,11 +44,12 @@ const useStyles = makeStyles((theme) =>
     dropdownIconOpen: { transform: "rotate(180deg)" },
 
     childListItem: {
-      minHeight: 40,
+      minHeight: 36,
       paddingLeft: theme.spacing(4),
     },
     childListItemText: {
-      ...theme.typography.overline,
+      ...theme.typography.body2,
+      fontWeight: theme.typography.fontWeightMedium,
       display: "block",
       color: "inherit",
     },

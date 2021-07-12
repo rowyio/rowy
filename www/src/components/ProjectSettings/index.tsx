@@ -30,7 +30,6 @@ export default function ProjectSettings({ handleClose }: IProjectSettings) {
   return (
     <FormDialog
       onClose={handleClose}
-      open
       title="Project Settings"
       fields={projectSettingsForm}
       values={{ ...settingsState.doc, ...publicSettingsState.doc }}

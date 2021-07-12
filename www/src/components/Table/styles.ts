@@ -24,7 +24,7 @@ export const useStyles = makeStyles((theme) =>
 
     "@global": {
       ".rdg.rdg": {
-        "--color": theme.palette.text.secondary,
+        "--color": theme.palette.text.primary,
         "--border-color": theme.palette.divider,
         // "--summary-border-color": "#aaa",
         "--background-color": theme.palette.background.paper,
@@ -101,7 +101,7 @@ export const useStyles = makeStyles((theme) =>
 
       ".cell-collapse-padding": {
         margin: theme.spacing(0, -1.5),
-        width: `calc(100% + ${theme.spacing(3)}px)`,
+        width: `calc(100% + ${theme.spacing(3)})`,
       },
     },
   })

@@ -116,7 +116,7 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
         )
         .map((table) => ({
           ...table,
-          section: table.section ? table.section.toUpperCase().trim() : "OTHER",
+          section: table.section ? table.section.trim() : "OTHER",
         }));
 
       const _sections = _groupBy(filteredTables, "section");

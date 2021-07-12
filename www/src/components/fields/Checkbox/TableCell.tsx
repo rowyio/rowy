@@ -5,7 +5,7 @@ import { makeStyles, createStyles } from "@material-ui/styles";
 import { FormControlLabel, Switch } from "@material-ui/core";
 
 import Confirmation from "components/Confirmation";
-import { useSwitchStyles } from "./styles";
+// import { useSwitchStyles } from "./styles";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -36,14 +36,15 @@ export default function Checkbox({
   disabled,
 }: IHeavyCellProps) {
   const classes = useStyles();
-  const switchClasses = useSwitchStyles();
+  // const switchClasses = useSwitchStyles();
 
   let component = (
     <Switch
       checked={!!value}
       onChange={() => onSubmit(!value)}
       disabled={disabled}
-      classes={switchClasses}
+      // classes={switchClasses}
+      color="success"
     />
   );
 

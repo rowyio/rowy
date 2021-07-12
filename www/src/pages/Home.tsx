@@ -63,29 +63,15 @@ const useStyles = makeStyles((theme) =>
     favButton: {
       margin: theme.spacing(-0.5, -1, 0, 0),
     },
-    editButton: {
-      margin: theme.spacing(-1),
-      marginRight: theme.spacing(-0.5),
-    },
     configFab: {
-      right: theme.spacing(15),
       position: "fixed",
       bottom: theme.spacing(3),
-      width: 80,
-      height: 80,
-      borderRadius: (theme.shape.borderRadius as number) * 2,
-      "& svg": { width: "2em", height: "2em" },
+      right: theme.spacing(12),
     },
     fab: {
       position: "fixed",
       bottom: theme.spacing(3),
       right: theme.spacing(3),
-
-      width: 80,
-      height: 80,
-
-      borderRadius: (theme.shape.borderRadius as number) * 2,
-      "& svg": { width: "2em", height: "2em" },
     },
   })
 );
@@ -172,7 +158,7 @@ export default function HomePage() {
   const TableCard = ({ table }) => {
     const checked = Boolean(_find(favs, table));
     return (
-      <Grid key={table.name} item xs={12} sm={6} md={open ? 6 : 4}>
+      <Grid key={table.name} item xs={12} sm={6} md={open ? 6 : 4} lg={4}>
         <StyledCard
           className={classes.card}
           overline={table.section}
@@ -212,7 +198,6 @@ export default function HomePage() {
                 })
               }
               aria-label="Edit table"
-              className={classes.editButton}
             >
               <EditIcon />
             </IconButton>

@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) =>
     },
 
     cardActions: {
-      padding: theme.spacing(1),
+      // padding: theme.spacing(1),
 
       display: "flex",
       justifyContent: "space-between",

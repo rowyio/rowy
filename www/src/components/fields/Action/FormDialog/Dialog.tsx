@@ -46,17 +46,17 @@ export default function ParamsDialog({
     ...field,
     validation: field.validation ? validationCompiler(field.validation) : null,
   }));
+
+  if (!open) return null;
+
   return (
-    <>
-      <FormDialog
-        onClose={handleClose}
-        open={open}
-        title={`${column.name}`}
-        fields={fields}
-        values={{}}
-        onSubmit={handleRun}
-        SubmitButtonProps={{ children: "Run" }}
-      />
-    </>
+    <FormDialog
+      onClose={handleClose}
+      title={`${column.name}`}
+      fields={fields}
+      values={{}}
+      onSubmit={handleRun}
+      SubmitButtonProps={{ children: "Run" }}
+    />
   );
 }

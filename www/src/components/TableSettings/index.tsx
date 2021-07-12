@@ -72,15 +72,6 @@ export default function TableSettingsDialog({
   const router = useRouter();
   const open = mode !== null;
 
-  const [mounted, setMounted] = useState(open);
-  useEffect(() => {
-    if (open && !mounted) setMounted(true);
-    if (!open && mounted)
-      setTimeout(() => {
-        if (mounted) setMounted(false);
-      }, 300);
-  }, [open]);
-
   const [formState, setForm] = useState(FORM_EMPTY_STATE);
 
   const handleChange = (key: string, value: any) =>
@@ -100,7 +91,7 @@ export default function TableSettingsDialog({
     if (data) setForm(data);
   }, [data]);
 
-  if (!mounted) return null;
+  if (!open) return null;
 
   const handleSubmit = async (values) => {
     const data: any = {
@@ -159,7 +150,6 @@ export default function TableSettingsDialog({
   return (
     <FormDialog
       onClose={handleClose}
-      open={open}
       title={
         mode === TableSettingsDialogModes.create
           ? "Create Table"

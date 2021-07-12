@@ -30,9 +30,13 @@ export default function FormattedChip(props: ChipProps) {
 
   if (VARIANTS.includes(label)) {
     return (
-      <Chip {...props} className={clsx(props.className, classes[label])} />
+      <Chip
+        size="small"
+        {...props}
+        className={clsx(props.className, classes[label])}
+      />
     );
   }
 
-  return <Chip {...props} />;
+  return <Chip size="small" {...props} />;
 }

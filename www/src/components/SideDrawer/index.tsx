@@ -98,6 +98,7 @@ export default function SideDrawer() {
           ),
           paper: clsx({ [classes.paperClose]: !open }),
         }}
+        PaperProps={{ elevation: 8 }}
       >
         <ErrorBoundary>
           <div className={classes.drawerContents}>

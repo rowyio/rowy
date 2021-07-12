@@ -14,6 +14,10 @@ export enum routes {
   grid = "/grid",
   gridWithId = "/grid/:id",
   editor = "/editor",
+
+  settings = "/settings",
+  userSettings = "/settings/user",
+  projectSettings = "/settings/project",
 }
 
 export default routes;

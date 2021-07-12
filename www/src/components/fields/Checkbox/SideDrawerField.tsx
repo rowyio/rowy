@@ -34,7 +34,7 @@ export default function Checkbox({
 }: ISideDrawerFieldProps) {
   const classes = useStyles();
   const fieldClasses = useFieldStyles();
-  const switchClasses = useSwitchStyles();
+  // const switchClasses = useSwitchStyles();
 
   return (
     <Controller
@@ -57,7 +57,8 @@ export default function Checkbox({
                   onChange={handleChange}
                   onBlur={onBlur}
                   disabled={disabled}
-                  classes={switchClasses}
+                  // classes={switchClasses}
+                  color="success"
                 />
               }
               label={column.name}

@@ -93,9 +93,8 @@ export const tableSettings = (
       ) as any,
     },
     {
-      type: FieldType.multiSelect,
+      type: FieldType.singleSelect,
       name: "section",
-      multiple: false,
       label: "Section",
       freeText: true,
       options: sections,
@@ -171,12 +170,11 @@ export const tableSettings = (
     },
     mode === TableSettingsDialogModes.create && tables && tables?.length !== 0
       ? {
-          type: FieldType.multiSelect,
+          type: FieldType.singleSelect,
           name: "schemaSource",
           label: "Copy column config from existing table",
           labelPlural: "Tables",
           options: tables,
-          multiple: false,
           freeText: false,
           itemRenderer: (option: { value: string; label: string }) => (
             <span key={option.value}>
