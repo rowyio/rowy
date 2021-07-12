@@ -5,6 +5,7 @@ import { Link, Typography } from "@material-ui/core";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import { MONO_FONT } from "Themes";
 import { projectId } from "../../firebase";
+import WIKI_LINKS from "constants/wikiLinks";
 
 export const tableSettings = (
   mode: TableSettingsDialogModes | null,
@@ -117,7 +118,7 @@ export const tableSettings = (
           Choose which roles have access to this table. Remember to set the
           appropriate Firestore Security Rules for this collection.
           <Link
-            href="https://github.com/FiretableProject/firetable/wiki/Role-Based-Security-Rules"
+            href={WIKI_LINKS.securityRules}
             target="_blank"
             rel="noopener"
             display="block"

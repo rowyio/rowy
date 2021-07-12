@@ -33,6 +33,7 @@ import TableSettingsDialog, {
 
 import ProjectSettings from "components/ProjectSettings";
 import EmptyState from "components/EmptyState";
+import WIKI_LINKS from "constants/wikiLinks";
 const useStyles = makeStyles((theme) =>
   createStyles({
     "@global": {
@@ -155,11 +156,7 @@ export default function HomePage() {
             </Typography>
             <Typography variant="body2">
               If you are the project owner please follow the instructions{" "}
-              <a
-                href="https://github.com/FiretableProject/firetable/wiki/Role-Based-Security-Rules"
-                target="_blank"
-                rel="noopener"
-              >
+              <a href={WIKI_LINKS.securityRules} target="_blank" rel="noopener">
                 here
               </a>{" "}
               to setup the project rules.

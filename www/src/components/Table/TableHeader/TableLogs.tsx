@@ -39,6 +39,7 @@ import Ansi from "ansi-to-react";
 import EmptyState from "components/EmptyState";
 
 import PropTypes from "prop-types";
+import WIKI_LINKS from "constants/wikiLinks";
 
 function a11yProps(index) {
   return {
@@ -489,17 +490,15 @@ export default function TableLogs() {
                   message="Need Configuration"
                   description={
                     <>
-                      Cloud Run trigger URL not configured. Configuration guide:{" "}
+                      Cloud Run trigger URL not configured.
                       <Link
-                        href={
-                          "https://github.com/FiretableProject/firetable/wiki/Setting-up-cloud-Run-FT-Builder"
-                        }
+                        href={WIKI_LINKS.cloudRunFtBuilder}
                         target="_blank"
                         rel="noopener noreferrer"
                         variant="body2"
                         underline="always"
                       >
-                        https://github.com/FiretableProject/firetable/wiki/Setting-up-cloud-Run-FT-Builder
+                        Configuration guide
                       </Link>
                     </>
                   }
