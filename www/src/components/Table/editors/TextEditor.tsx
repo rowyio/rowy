@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useLayoutEffect } from "react";
 import { EditorProps } from "react-data-grid";
 
 import { makeStyles, createStyles } from "@material-ui/styles";
@@ -48,7 +48,7 @@ export default function TextEditor({ row, column }: EditorProps<any>) {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     return () => {
       const newValue = inputRef.current?.value;
       if (newValue !== undefined && updateCell) {

@@ -188,7 +188,14 @@ export default function FirebaseUi(props: Partial<FirebaseUiProps>) {
   useEffect(() => {
     db.doc("/_FIRETABLE_/publicSettings")
       .get()
-      .then((doc) => setSignInOptions(doc?.get("signInOptions")))
+      .then((doc) => {
+        const options = doc?.get("signInOptions");
+        if (!options) {
+          setSignInOptions(["google"]);
+        } else {
+          setSignInOptions(options);
+        }
+      })
       .catch(() => setSignInOptions(["google"]));
   }, []);
 

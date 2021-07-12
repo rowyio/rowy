@@ -16,6 +16,7 @@ import CodeEditorHelper from "components/CodeEditorHelper";
 import CodeEditor from "components/Table/editors/CodeEditor";
 import FormAutosave from "./FormAutosave";
 import { FieldType } from "constants/fields";
+import WIKI_LINKS from "constants/wikiLinks";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -129,7 +130,7 @@ export default function DefaultValueInput({
 
       {config.defaultValue?.type === "dynamic" && (
         <>
-          <CodeEditorHelper docLink="https://github.com/FiretableProject/firetable/wiki/Default-Values" />
+          <CodeEditorHelper docLink={WIKI_LINKS.defaultValues} />
           <div className={classes.codeEditorContainer}>
             <CodeEditor
               height={120}

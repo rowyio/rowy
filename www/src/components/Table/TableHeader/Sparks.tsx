@@ -13,6 +13,7 @@ import { useFiretableContext } from "contexts/FiretableContext";
 import { useAppContext } from "contexts/AppContext";
 import { useSnackLogContext } from "contexts/SnackLogContext";
 import CodeEditor from "../editors/CodeEditor";
+import WIKI_LINKS from "constants/wikiLinks";
 
 export default function SparksEditor() {
   const snack = useSnackContext();
@@ -53,8 +54,7 @@ export default function SparksEditor() {
         const ftBuildUrl = settingsDoc.get("ftBuildUrl");
         if (!ftBuildUrl) {
           snack.open({
-            message:
-              "Cloud Run trigger URL not configured. Configuration guide: https://github.com/FiretableProject/firetable/wiki/Setting-up-cloud-Run-FT-Builder",
+            message: `Cloud Run trigger URL not configured. Configuration guide: ${WIKI_LINKS.cloudRunFtBuilder}`,
             variant: "error",
           });
         }
