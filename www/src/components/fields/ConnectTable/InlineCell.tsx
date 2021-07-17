@@ -74,6 +74,7 @@ export const ConnectTable = React.forwardRef(function ConnectTable(
                 label={config.primaryKeys
                   .map((key: string) => doc.snapshot[key])
                   .join(" ")}
+                size="small"
                 className={classes.chip}
               />
             </Grid>

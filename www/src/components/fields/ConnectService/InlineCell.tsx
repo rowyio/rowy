@@ -70,7 +70,11 @@ export const ConnectService = React.forwardRef(function ConnectService(
         {Array.isArray(value) &&
           value.map((doc: any) => (
             <Grid item key={doc.primaryKey}>
-              <Chip label={config.titleKey} className={classes.chip} />
+              <Chip
+                label={config.titleKey}
+                className={classes.chip}
+                size="small"
+              />
             </Grid>
           ))}
       </Grid>
