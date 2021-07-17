@@ -47,7 +47,7 @@ export const scheduledFirestoreImport = functions.pubsub
 
 const firestoreBackup = (collectionIds: string[] = []) => {
   const projectId = process.env.GCP_PROJECT || process.env.GCLOUD_PROJECT;
-  const databaseName = client.databasePath(projectId, "(default)");
+  const databaseName = client.databasePath(projectId ?? "", "(default)");
   const date = new Date();
 
   const backupFolder = `${date.getUTCFullYear()}-${
