@@ -279,7 +279,7 @@ export default function CodeEditor(props: any) {
         }
         
         type bigqueryIndex = { 
-          type: "meiliIndex"; 
+          type: "bigqueryIndex"; 
           triggers: Triggers; 
           shouldRun: ShouldRun;
           requiredFields?: Fields;
@@ -348,6 +348,19 @@ export default function CodeEditor(props: any) {
             promises: ContextToAny;
           }
         }
+
+        type mailchimp = {
+          label?:string; 
+          type: "mailchimp"; 
+          triggers: Triggers; 
+          shouldRun: ShouldRun;
+          requiredFields?: Fields;
+          sparkBody: {
+            method: any;
+            path: any;
+            body: any;
+          }
+        }
       
         // an individual spark 
         type Spark =
@@ -360,6 +373,7 @@ export default function CodeEditor(props: any) {
           | sendgridEmail
           | apiCall
           | twilioMessage
+          | mailchimp
           | task;
       
         type Sparks = Spark[]

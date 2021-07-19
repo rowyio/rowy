@@ -2,6 +2,7 @@ import { Typography, Button } from "@material-ui/core";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 
 import AuthLayout from "components/Auth/AuthLayout";
+import WIKI_LINKS from "constants/wikiLinks";
 
 export default function AuthSetupGuide() {
   return (
@@ -20,7 +21,7 @@ export default function AuthSetupGuide() {
         variant="contained"
         endIcon={<OpenInNewIcon />}
         component="a"
-        href="https://github.com/FiretableProject/firetable/wiki/Set-Up-Firebase-Authentication"
+        href={WIKI_LINKS.setUpAuth}
         target="_blank"
         rel="noopener"
       >

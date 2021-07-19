@@ -22,6 +22,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import Subheading from "components/Table/ColumnMenu/Subheading";
+import WIKI_LINKS from "constants/wikiLinks";
 
 export default function FieldSettings(props: IMenuModalProps) {
   const {
@@ -166,8 +167,7 @@ export default function FieldSettings(props: IMenuModalProps) {
                   const ftBuildUrl = settingsDoc.get("ftBuildUrl");
                   if (!ftBuildUrl) {
                     snack.open({
-                      message:
-                        "Cloud Run trigger URL not configured. Configuration guide: https://github.com/FiretableProject/firetable/wiki/Setting-up-cloud-Run-FT-Builder",
+                      message: `Cloud Run trigger URL not configured. Configuration guide: ${WIKI_LINKS.cloudRunFtBuilder}`,
                       variant: "error",
                     });
                   }
