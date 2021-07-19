@@ -247,7 +247,7 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
             <TextField
               variant="filled"
               multiline
-              inputProps={{ rowsMin: 5 }}
+              inputProps={{ minRows: 5 }}
               autoFocus
               fullWidth
               label="Paste your CSV here"
