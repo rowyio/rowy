@@ -21,6 +21,10 @@ const useStyles = makeStyles((theme) =>
     saveButton: {
       marginTop: theme.spacing(1),
     },
+    editor: {
+      // overwrite user-select: none that causes editor not focusable in Safari
+      userSelect: "auto",
+    },
   })
 );
 
@@ -458,6 +462,7 @@ export default function CodeEditor(props: any) {
           value={initialEditorValue}
           onChange={handleChange}
           onValidate={handleEditorValidation}
+          className={classes.editor}
         />
       </div>
     </>
