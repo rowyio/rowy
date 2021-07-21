@@ -13,6 +13,7 @@ export const config: IFieldConfig = {
   initialValue: "",
   initializable: true,
   icon: <DerivativeIcon />,
+  requireConfiguration: true,
   description:
     "Value derived from the rest of the row’s values. Displayed using any other field type. Requires Cloud Function setup.",
   TableCell: withBasicCell(BasicCell),

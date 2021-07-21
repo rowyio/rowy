@@ -29,7 +29,10 @@ export default function FormDialog({
       }
       actions={{
         primary: {
-          onClick: () => handleSave(fieldName, { type: newType }),
+          onClick: () => {
+            handleSave(fieldName, { type: newType });
+            handleClose();
+          },
           children: "Update",
         },
         secondary: {

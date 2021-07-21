@@ -193,6 +193,7 @@ export default function FieldSettings(props: IMenuModalProps) {
               });
             }
             handleSave(fieldName, { config: newConfig });
+            handleClose();
             setShowRebuildPrompt(false);
           },
           children: "Update",

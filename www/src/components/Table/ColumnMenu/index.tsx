@@ -129,9 +129,13 @@ export default function ColumnMenu() {
 
   const handleModalSave = (key: string, update: Record<string, any>) => {
     actions.update(key, update);
-    clearModal();
   };
-
+  const openSettings = (column) => {
+    setSelectedColumnHeader({
+      column,
+    });
+    setModal({ type: ModalStates.settings, data: { column } });
+  };
   const menuItems = [
     {
       type: "subheader",
@@ -216,7 +220,7 @@ export default function ColumnMenu() {
       // This is based off the cell type
       icon: <SettingsIcon />,
       onClick: () => {
-        setModal({ type: ModalStates.settings, data: { column } });
+        openSettings(column);
       },
       disabled: !isConfigurable,
     },
@@ -318,6 +322,7 @@ export default function ColumnMenu() {
             {...menuModalProps}
             open={modal.type === ModalStates.new}
             data={modal.data}
+            openSettings={openSettings}
           />
         </>
       )}

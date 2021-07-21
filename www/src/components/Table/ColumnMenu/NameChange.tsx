@@ -37,7 +37,10 @@ export default function NameChange({
       }
       actions={{
         primary: {
-          onClick: () => handleSave(fieldName, { name: newName }),
+          onClick: () => {
+            handleSave(fieldName, { name: newName });
+            handleClose();
+          },
           children: "Update",
         },
         secondary: {
