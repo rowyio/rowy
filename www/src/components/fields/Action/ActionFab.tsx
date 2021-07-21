@@ -77,14 +77,18 @@ export default function ActionFab({
     cloudFunction(
       callableName,
       data,
-      (response) => {
+      async (response) => {
         const { message, cellValue, success } = response.data;
         setIsRunning(false);
         snack.open({
           message: JSON.stringify(message),
           variant: success ? "success" : "error",
         });
-        if (cellValue && cellValue.status) onSubmit(cellValue);
+        if (cellValue && cellValue.status) {
+          await ref.update({
+            [column.key]: cellValue,
+          });
+        }
       },
       (error) => {
         console.error("ERROR", callableName, error);
