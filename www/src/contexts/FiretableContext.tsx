@@ -14,6 +14,7 @@ import { SideDrawerRef } from "components/SideDrawer";
 import { ColumnMenuRef } from "components/Table/ColumnMenu";
 import { ImportWizardRef } from "components/Wizards/ImportWizard";
 import _find from "lodash/find";
+import { deepen } from "utils/fns";
 export type Table = {
   collection: string;
   name: string;
@@ -155,7 +156,7 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
     const _ft_updatedAt = _ft_updatedBy.timestamp;
 
     const update = {
-      [fieldName]: value,
+      ...deepen({ [fieldName]: value }),
       _ft_updatedAt,
       _ft_updatedBy,
     };

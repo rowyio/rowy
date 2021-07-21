@@ -54,9 +54,11 @@ export default function Autosave({
       _pickBy(debouncedValue, (_, key) => formState.dirtyFields[key]),
       (value, key) => !_isEqual(value, row[key])
     );
-
+    console.log(debouncedValue, row);
+    console.log(updatedValues);
     if (Object.keys(updatedValues).length === 0) return;
 
+    // Update the document
     Object.entries(updatedValues).forEach(([key, value]) =>
       updateCell(
         row.ref,

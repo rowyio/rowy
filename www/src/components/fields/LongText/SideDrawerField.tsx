@@ -15,7 +15,6 @@ export default function LongText({
   disabled,
 }: ISideDrawerFieldProps) {
   const classes = useStyles();
-
   return (
     <Controller
       control={control}
@@ -36,7 +35,7 @@ export default function LongText({
             disabled={disabled}
             multiline
             InputProps={{ classes: { multiline: classes.multiline } }}
-            inputProps={{ rowsMin: 5, maxLength: column.config?.maxLength }}
+            inputProps={{ minRows: 5, maxLength: column.config?.maxLength }}
           />
         );
       }}
