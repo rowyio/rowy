@@ -46,5 +46,6 @@ export const config: IFieldConfig = {
     } else if (v !== "") return [v];
     else return v;
   },
+  requireConfiguration: true,
 };
 export default config;

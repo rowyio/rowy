@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
+import { useDebounce } from "use-debounce";
 import useAlgolia from "use-algolia";
 import _find from "lodash/find";
-import { useDebounce } from "use-debounce";
 import _get from "lodash/get";
+import _pick from "lodash/pick";
 
 import MultiSelect, { MultiSelectProps } from "@antlerengineering/multiselect";
 import Loading from "components/Loading";
@@ -29,6 +30,8 @@ export interface IConnectTableSelectProps {
     filters: string;
     primaryKeys: string[];
     secondaryKeys?: string[];
+    snapshotFields?: string[];
+    trackedFields?: string[];
     multiple?: boolean;
     searchLabel?: string;
     [key: string]: any;
@@ -146,8 +149,17 @@ export default function ConnectTableSelect({
       // current Algolia query
       const match = _find(algoliaState.hits, { objectID });
       const { _highlightResult, ...snapshot } = match;
+
+      // Use snapshotFields to limit snapshots
+      let partialSnapshot = snapshot;
+      if (
+        Array.isArray(config.snapshotFields) &&
+        config.snapshotFields.length > 0
+      )
+        partialSnapshot = _pick(snapshot, config.snapshotFields);
+
       return {
-        snapshot,
+        snapshot: partialSnapshot,
         docPath: `${algoliaIndex}/${snapshot.objectID}`,
       };
     });
@@ -192,15 +204,17 @@ export default function ConnectTableSelect({
       label={column?.name}
       labelPlural={config.searchLabel}
       multiple={(config.multiple ?? true) as any}
-      AutocompleteProps={{
-        loading: algoliaState.loading,
-        loadingText: <Loading />,
-        inputValue: search,
-        onInputChange: (_, value, reason) => {
-          if (reason === "input") setSearch(value);
+      {...({
+        AutocompleteProps: {
+          loading: algoliaState.loading,
+          loadingText: <Loading />,
+          inputValue: search,
+          onInputChange: (_, value, reason) => {
+            if (reason === "input") setSearch(value);
+          },
+          filterOptions: () => options,
         },
-        filterOptions: () => options,
-      }}
+      } as any)}
       countText={`${localValue.length} of ${
         algoliaState.response?.nbHits ?? "?"
       }`}
