@@ -156,7 +156,7 @@ export const FiretableContextProvider: React.FC = ({ children }) => {
     const _ft_updatedAt = _ft_updatedBy.timestamp;
 
     const update = {
-      ...deepen({ [fieldName]: value }),
+      [fieldName]: value,
       _ft_updatedAt,
       _ft_updatedBy,
     };

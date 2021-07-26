@@ -27,7 +27,6 @@ const useStyles = makeStyles((theme) =>
     codeEditorContainer: {
       border: `1px solid ${theme.palette.divider}`,
       borderRadius: theme.shape.borderRadius,
-      overflow: "hidden",
     },
 
     mono: {
@@ -135,8 +134,8 @@ export default function DefaultValueInput({
           <div className={classes.codeEditorContainer}>
             <CodeEditor
               height={120}
-              value={config.defaultValue?.script}
-              onChange={handleChange("defaultValue.script")}
+              script={config.defaultValue?.script}
+              handleChange={handleChange("defaultValue.script")}
               editorOptions={{
                 minimap: {
                   enabled: false,

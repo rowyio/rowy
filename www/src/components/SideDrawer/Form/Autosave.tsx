@@ -12,11 +12,12 @@ import { Values } from "./utils";
 import { useFiretableContext } from "contexts/FiretableContext";
 import { FiretableState } from "hooks/useFiretable";
 
-export interface IAutosaveProps
-  extends Pick<UseFormMethods, "reset" | "formState"> {
+export interface IAutosaveProps {
   control: Control;
   docRef: firebase.default.firestore.DocumentReference;
   row: any;
+  reset: UseFormMethods["reset"];
+  dirtyFields: UseFormMethods["formState"]["dirtyFields"];
 }
 
 const getEditables = (values: Values, tableState?: FiretableState) =>
@@ -35,7 +36,7 @@ export default function Autosave({
   docRef,
   row,
   reset,
-  formState,
+  dirtyFields,
 }: IAutosaveProps) {
   const { tableState, updateCell } = useFiretableContext();
 
@@ -51,11 +52,11 @@ export default function Autosave({
 
     // Get only fields that have had their value updated by the user
     const updatedValues = _pickBy(
-      _pickBy(debouncedValue, (_, key) => formState.dirtyFields[key]),
+      _pickBy(debouncedValue, (_, key) => dirtyFields[key]),
       (value, key) => !_isEqual(value, row[key])
     );
     console.log(debouncedValue, row);
-    console.log(updatedValues);
+    console.log(updatedValues, dirtyFields);
     if (Object.keys(updatedValues).length === 0) return;
 
     // Update the document

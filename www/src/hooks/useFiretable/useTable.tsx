@@ -12,6 +12,7 @@ import {
   generateSmallerId,
   missingFieldsReducer,
   deepMerge,
+  deepen,
 } from "utils/fns";
 import { projectId } from "../../firebase";
 import _findIndex from "lodash/findIndex";
@@ -328,7 +329,7 @@ const useTable = (initialOverrides: any) => {
     const row = rows[rowIndex];
     const { ref, id, _ft_missingRequiredFields, ...rowData } = row;
     const _rows = [...rows];
-    _rows[rowIndex] = deepMerge(row, update);
+    _rows[rowIndex] = { ...deepMerge(row, { ...deepen(update) }), ...update };
     const missingRequiredFields = _ft_missingRequiredFields
       ? _ft_missingRequiredFields.reduce(
           missingFieldsReducer(_rows[rowIndex]),
@@ -336,7 +337,10 @@ const useTable = (initialOverrides: any) => {
         )
       : [];
     if (missingRequiredFields.length === 0) {
-      const _rowData = deepMerge(rowData, update);
+      const _rowData = {
+        ...deepMerge(rowData, { ...deepen(update) }),
+        ...update,
+      };
       ref.set(_rowData, options).then(onSuccess, onError);
       delete _rows[rowIndex]._ft_missingRequiredFields;
     }

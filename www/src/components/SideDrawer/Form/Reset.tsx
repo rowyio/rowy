@@ -5,9 +5,11 @@ import _isEqual from "lodash/isEqual";
 
 import { Values } from "./utils";
 
-export interface IResetProps
-  extends Pick<UseFormMethods, "formState" | "reset" | "getValues"> {
+export interface IResetProps {
   defaultValues: Values;
+  dirtyFields: UseFormMethods["formState"]["dirtyFields"];
+  reset: UseFormMethods["reset"];
+  getValues: UseFormMethods["getValues"];
 }
 
 /**
@@ -15,7 +17,7 @@ export interface IResetProps
  */
 export default function Reset({
   defaultValues,
-  formState,
+  dirtyFields,
   reset,
   getValues,
 }: IResetProps) {
@@ -26,7 +28,7 @@ export default function Reset({
 
       // If the field is dirty, (i.e. the user input a value but it hasn’t been)
       // saved to the db yet, keep its current value and keep it marked as dirty
-      for (const [field, isDirty] of Object.entries(formState.dirtyFields)) {
+      for (const [field, isDirty] of Object.entries(dirtyFields)) {
         if (isDirty) {
           resetValues[field] = currentValues[field];
         }

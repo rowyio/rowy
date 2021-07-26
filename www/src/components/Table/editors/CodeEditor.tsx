@@ -141,6 +141,21 @@ export default function CodeEditor(props: any) {
              */
             function generateId(): string {}
           
+            /**
+             * Add an item to an array field
+             */
+            function arrayUnion(val: string): void {}
+
+            /**
+             * Remove an item to an array field
+             */
+            function arrayRemove(val: string): void {}
+
+            /**
+             * Increment a number field
+             */
+            function increment(val: number): void {}
+
             function hasRequiredFields(requiredFields: string[], data: any): boolean {}
           
             function hasAnyRole(

@@ -30,6 +30,18 @@ export function generateId(length: number): string {
   return result;
 }
 
+export const arrayUnion = (union: any) => {
+  return admin.firestore.FieldValue.arrayUnion(union);
+};
+
+export const arrayRemove = (union: any) => {
+  return admin.firestore.FieldValue.arrayRemove(union);
+};
+
+export const increment = (val: number) => {
+  return admin.firestore.FieldValue.increment(val);
+};
+
 export const hasRequiredFields = (requiredFields: string[], data: any) =>
   requiredFields.reduce((acc: boolean, currField: string) => {
     if (data[currField] === undefined || data[currField] === null) return false;
@@ -57,14 +69,20 @@ export const rowReducer = (fieldsToSync, row) =>
     else return acc;
   }, {});
 
-
-const hasChanged =(change:functions.Change<functions.firestore.DocumentSnapshot>)=> (trackedFields:string[]) =>{
-    const before = change.before?.data();
-    const after = change.after?.data();
-    if (!before && after)return true;
-    else if (before && !after)return false;
-    else return trackedFields.some(trackedField =>JSON.stringify(before[trackedField]) !== JSON.stringify(after[trackedField]))
-  }
+const hasChanged = (
+  change: functions.Change<functions.firestore.DocumentSnapshot>
+) => (trackedFields: string[]) => {
+  const before = change.before?.data();
+  const after = change.after?.data();
+  if (!before && after) return true;
+  else if (before && !after) return false;
+  else
+    return trackedFields.some(
+      (trackedField) =>
+        JSON.stringify(before[trackedField]) !==
+        JSON.stringify(after[trackedField])
+    );
+};
 export default {
   hasChanged,
   getSecret,
@@ -74,4 +92,7 @@ export default {
   serverTimestamp,
   hasAnyRole,
   asyncForEach,
+  arrayUnion,
+  arrayRemove,
+  increment,
 };
