@@ -34,6 +34,7 @@ import TableSettingsDialog, {
 import ProjectSettings from "components/ProjectSettings";
 import EmptyState from "components/EmptyState";
 import WIKI_LINKS from "constants/wikiLinks";
+import BuilderInstaller from "../components/BuilderInstaller";
 const useStyles = makeStyles((theme) =>
   createStyles({
     "@global": {
@@ -131,6 +132,7 @@ export default function HomePage() {
     });
   const [open, setOpen] = useState(false);
   const [openProjectSettings, setOpenProjectSettings] = useState(false);
+  const [openBuilderInstaller, setOpenBuilderInstaller] = useState(false);
 
   const [settingsDocState, settingsDocDispatch] = useDoc({
     path: "_FIRETABLE_/settings",
@@ -156,7 +158,11 @@ export default function HomePage() {
             </Typography>
             <Typography variant="body2">
               If you are the project owner please follow the instructions{" "}
-              <a href={WIKI_LINKS.securityRules} target="_blank" rel="noopener">
+              <a
+                href={WIKI_LINKS.securityRules}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 here
               </a>{" "}
               to setup the project rules.
@@ -312,7 +318,13 @@ export default function HomePage() {
         data={settingsDialogState.data}
       />
       {openProjectSettings && (
-        <ProjectSettings handleClose={() => setOpenProjectSettings(false)} />
+        <ProjectSettings
+          handleClose={() => setOpenProjectSettings(false)}
+          handleOpenBuilderInstaller={() => setOpenBuilderInstaller(true)}
+        />
+      )}
+      {openBuilderInstaller && (
+        <BuilderInstaller handleClose={() => setOpenBuilderInstaller(false)} />
       )}
     </HomeNavigation>
   );

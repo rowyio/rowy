@@ -8,11 +8,17 @@ import { projectSettingsForm } from "./form";
 
 import useDoc, { DocActions } from "hooks/useDoc";
 import { IFormDialogProps } from "components/Table/ColumnMenu/NewColumn";
+import { Button } from "@material-ui/core";
 
 export interface IProjectSettings
-  extends Pick<IFormDialogProps, "handleClose"> {}
+  extends Pick<IFormDialogProps, "handleClose"> {
+  handleOpenBuilderInstaller: () => void;
+}
 
-export default function ProjectSettings({ handleClose }: IProjectSettings) {
+export default function ProjectSettings({
+  handleClose,
+  handleOpenBuilderInstaller,
+}: IProjectSettings) {
   const [settingsState, settingsDispatch] = useDoc({
     path: "_FIRETABLE_/settings",
   });
@@ -32,6 +38,13 @@ export default function ProjectSettings({ handleClose }: IProjectSettings) {
     });
   };
 
+  const onOpenBuilderInstaller = () => {
+    handleClose();
+    handleOpenBuilderInstaller();
+  };
+
+  const hasCloudRunConfig = !!settingsState.doc.ftBuildUrl;
+
   return (
     <FormDialog
       onClose={handleClose}
@@ -41,6 +54,11 @@ export default function ProjectSettings({ handleClose }: IProjectSettings) {
       values={{ ...settingsState.doc, ...publicSettingsState.doc }}
       onSubmit={handleSubmit}
       SubmitButtonProps={{ children: "Save" }}
+      formFooter={
+        hasCloudRunConfig ? null : (
+          <Button onClick={onOpenBuilderInstaller}>One click deploy</Button>
+        )
+      }
     />
   );
 }
