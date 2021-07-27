@@ -4,4 +4,5 @@ export default {
   databaseURL: `https://${process.env.REACT_APP_FIREBASE_PROJECT_ID}.firebaseio.com`,
   projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
   storageBucket: `${process.env.REACT_APP_FIREBASE_PROJECT_ID}.appspot.com`,
+  appId: "x",
 };
