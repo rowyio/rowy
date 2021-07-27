@@ -1,4 +1,3 @@
-import React from "react";
 import { Controller } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 
@@ -46,8 +45,8 @@ export default function Date_({
               inputVariant="filled"
               fullWidth
               margin="none"
-              format={DATE_FORMAT}
-              placeholder={DATE_FORMAT}
+              format={column.config?.format ?? DATE_FORMAT}
+              placeholder={column.config?.format ?? DATE_FORMAT}
               InputAdornmentProps={{
                 style: { marginRight: theme.spacing(-1) },
               }}

@@ -17,18 +17,18 @@
   "main": "lib/index.js",
   "dependencies": {
     "@google-cloud/cloudbuild": "^2.0.6",
-    "@google-cloud/firestore": "^4.9.1",
+    "@google-cloud/firestore": "^4.9.7",
     "@google-cloud/pubsub": "^2.5.0",
     "@google-cloud/storage": "^5.1.2",
     "@sendgrid/mail": "^7.4.2",
     "@slack/web-api": "^6.0.0",
-    "algoliasearch": "^4.6.0",
+    "algoliasearch": "^4.8.6",
     "firebase-admin": "^9.4.2",
     "firebase-functions": "^3.13.1",
     "imagemin": "^7.0.1",
     "imagemin-mozjpeg": "^9.0.0",
-    "imagemin-pngquant": "^9.0.0",
-    "lodash": "^4.17.19",
+    "imagemin-pngquant": "^9.0.2",
+    "lodash": "^4.17.21",
     "sharp": "^0.25.4"
   },
   "devDependencies": {

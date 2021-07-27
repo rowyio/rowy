@@ -1,4 +1,4 @@
-import React, { useState, lazy, Suspense } from "react";
+import { useState, lazy, Suspense } from "react";
 import {
   Typography,
   IconButton,
@@ -126,9 +126,9 @@ const Settings = ({ config, handleChange }) => {
           <FormControlLabel
             control={
               <Switch
-                checked={config["redo.enabled"]}
+                checked={config.redo?.enabled}
                 onChange={() =>
-                  handleChange("redo.enabled")(!Boolean(config["redo.enabled"]))
+                  handleChange("redo.enabled")(!Boolean(config.redo?.enabled))
                 }
                 name="redo toggle"
               />
@@ -138,9 +138,9 @@ const Settings = ({ config, handleChange }) => {
           <FormControlLabel
             control={
               <Switch
-                checked={config["undo.enabled"]}
+                checked={config.undo?.enabled}
                 onChange={() =>
-                  handleChange("undo.enabled")(!Boolean(config["undo.enabled"]))
+                  handleChange("undo.enabled")(!Boolean(config.undo?.enabled))
                 }
                 name="undo toggle"
               />

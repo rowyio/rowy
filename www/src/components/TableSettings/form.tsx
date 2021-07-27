@@ -1,38 +1,33 @@
-import React from "react";
-
-import * as yup from "yup";
-import { FIELDS } from "@antlerengineering/form-builder";
+import { Field, FieldType } from "@antlerengineering/form-builder";
 import { TableSettingsDialogModes } from "./index";
 
-import HelperText from "../HelperText";
 import { Link, Typography } from "@material-ui/core";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import { MONO_FONT } from "Themes";
+import { projectId } from "../../firebase";
+import WIKI_LINKS from "constants/wikiLinks";
 
 export const tableSettings = (
   mode: TableSettingsDialogModes | null,
   roles: string[] | undefined,
   sections: string[] | undefined,
   tables: { label: string; value: any }[] | undefined
-) => [
-  {
-    type: FIELDS.text,
-    name: "name",
-    label: "Table Name*",
-    validation: yup.string().required("Required"),
-  },
-  {
-    type: FIELDS.text,
-    name: "collection",
-    label: "Collection Name*",
-    validation: yup.string().required("Required"),
-  },
-  {
-    type: FIELDS.description,
-    description: (
-      <HelperText>
+): Field[] =>
+  [
+    {
+      type: FieldType.shortText,
+      name: "name",
+      label: "Table Name",
+      required: true,
+    },
+    {
+      type: FieldType.shortText,
+      name: "collection",
+      label: "Collection Name",
+      required: true,
+      assistiveText: (
         <Link
-          href={`https://console.firebase.google.com/project/${process.env.REACT_APP_FIREBASE_PROJECT_ID}/firestore/data`}
+          href={`https://console.firebase.google.com/project/${projectId}/firestore/data`}
           target="_blank"
           rel="noopener"
         >
@@ -43,118 +38,144 @@ export const tableSettings = (
             style={{ verticalAlign: "bottom", marginLeft: 4 }}
           />
         </Link>
-      </HelperText>
-    ),
-  },
-  {
-    type: FIELDS.singleSelect,
-    name: "tableType",
-    label: "Table Type*",
-    defaultValue: "primaryCollection",
-    options: [
-      { label: "Primary Collection", value: "primaryCollection" },
-      { label: "Collection Group", value: "collectionGroup" },
-    ],
-    validation: yup.string().required("Required"),
-    disabled: mode === TableSettingsDialogModes.update,
-  },
-  (values) => ({
-    type: FIELDS.description,
-    description:
-      values.tableType === "primaryCollection" ? (
-        <HelperText>
-          Connect this table to the collection named “
-          <span style={{ fontFamily: MONO_FONT }}>{values.collection}</span>”
-        </HelperText>
-      ) : (
-        <HelperText>
-          Connect this table to all collections and subcollections named “
-          <span style={{ fontFamily: MONO_FONT }}>{values.collection}</span>”
-          <Link
-            href="https://firebase.googleblog.com/2019/06/understanding-collection-group-queries.html"
-            target="_blank"
-            rel="noopener"
+      ) as any,
+    },
+    {
+      type: FieldType.singleSelect,
+      name: "tableType",
+      label: "Table Type",
+      labelPlural: "table types",
+      searchable: false,
+      defaultValue: "primaryCollection",
+      options: [
+        {
+          label: "Primary Collection",
+          description: `
+          Connect this table to the <strong>single collection</strong>
+          matching the collection name entered above`,
+          value: "primaryCollection",
+        },
+        {
+          label: "Collection Group",
+          description: `
+          Connect this table to <strong>all collections and subcollections</strong>
+          matching the collection name entered above`,
+          value: "collectionGroup",
+        },
+      ],
+      required: true,
+      disabled: mode === TableSettingsDialogModes.update,
+      itemRenderer: (option) => (
+        <span key={option.value}>
+          {option.label}
+          <Typography
+            variant="body2"
+            color="textSecondary"
+            component="span"
             display="block"
-          >
-            Learn more about collection groups
-            <OpenInNewIcon
-              aria-label="Open in new tab"
-              fontSize="small"
-              style={{ verticalAlign: "bottom", marginLeft: 4 }}
-            />
-          </Link>
-        </HelperText>
+            dangerouslySetInnerHTML={{ __html: option.description }}
+          />
+        </span>
       ),
-  }),
-  {
-    type: FIELDS.multiSelect,
-    name: "section",
-    multiple: false,
-    label: "Section*",
-    freeText: true,
-    options: sections,
-    validation: yup.string().required("Required"),
-  },
-  {
-    type: FIELDS.text,
-    name: "description",
-    label: "Description",
-    fieldVariant: "long",
-    validation: yup.string(),
-  },
-  {
-    type: FIELDS.multiSelect,
-    name: "roles",
-    label: "Accessed By*",
-    options: roles ?? [],
-    validation: yup.array().of(yup.string()).required("Required"),
-    freeText: true,
-  },
-  (values) => ({
-    type: FIELDS.description,
-    description: (
-      <HelperText>
-        Choose which roles have access to this table. Remember to set the
-        appropriate Firestore Security Rules for the “
-        <span style={{ fontFamily: MONO_FONT }}>{values.collection}</span>”
-        collection.
+      assistiveText: (
         <Link
-          href="https://github.com/AntlerVC/firetable/wiki/Role-Based-Security-Rules"
+          href="https://firebase.googleblog.com/2019/06/understanding-collection-group-queries.html"
           target="_blank"
           rel="noopener"
           display="block"
         >
-          Read about role-based security rules
+          Learn more about collection groups
           <OpenInNewIcon
             aria-label="Open in new tab"
             fontSize="small"
             style={{ verticalAlign: "bottom", marginLeft: 4 }}
           />
         </Link>
-      </HelperText>
-    ),
-  }),
-  (values) =>
-    values.tableType === "collectionGroup"
-      ? {
-          type: FIELDS.slider,
-          name: "triggerDepth",
-          defaultValue: 1,
-          min: 1,
-          max: 5,
-          label: `Trigger Depth (used for table cloudFunction trigger Path)`,
-          hint: "triggerDepth",
-        }
-      : null,
-  () =>
+      ) as any,
+    },
+    {
+      type: FieldType.singleSelect,
+      name: "section",
+      label: "Section",
+      freeText: true,
+      options: sections,
+      required: true,
+    },
+    {
+      type: FieldType.paragraph,
+      name: "description",
+      label: "Description",
+    },
+    {
+      type: FieldType.multiSelect,
+      name: "roles",
+      label: "Accessed By",
+      options: roles ?? [],
+      required: true,
+      freeText: true,
+      assistiveText: (
+        <>
+          Choose which roles have access to this table. Remember to set the
+          appropriate Firestore Security Rules for this collection.
+          <Link
+            href={WIKI_LINKS.securityRules}
+            target="_blank"
+            rel="noopener"
+            display="block"
+          >
+            Read about role-based security rules
+            <OpenInNewIcon
+              aria-label="Open in new tab"
+              fontSize="small"
+              style={{ verticalAlign: "bottom", marginLeft: 4 }}
+            />
+          </Link>
+        </>
+      ) as any,
+    },
+    {
+      type: FieldType.slider,
+      name: "triggerDepth",
+      defaultValue: 1,
+      min: 1,
+      max: 5,
+      label: "Collection Depth",
+      displayCondition: "return values.tableType === 'collectionGroup'",
+      assistiveText: (
+        <>
+          Firetable Cloud Functions that rely on{" "}
+          <Link
+            href="https://firebase.google.com/docs/functions/firestore-events#function_triggers"
+            target="_blank"
+            rel="noopener"
+          >
+            Firestore triggers
+          </Link>{" "}
+          on this table require you to manually set the depth of this collection
+          group.
+          <br />
+          <Link
+            href="https://stackoverflow.com/questions/58186741/watch-a-collectiongroup-with-firestore-using-cloud-functions"
+            target="_blank"
+            rel="noopener"
+          >
+            Learn more about this requirement
+            <OpenInNewIcon
+              aria-label="Open in new tab"
+              fontSize="small"
+              style={{ verticalAlign: "bottom", marginLeft: 4 }}
+            />
+          </Link>
+        </>
+      ),
+    },
     mode === TableSettingsDialogModes.create && tables && tables?.length !== 0
       ? {
-          type: FIELDS.multiSelect,
+          type: FieldType.singleSelect,
           name: "schemaSource",
           label: "Copy column config from existing table",
           labelPlural: "Tables",
           options: tables,
-          multiple: false,
           freeText: false,
           itemRenderer: (option: { value: string; label: string }) => (
             <span key={option.value}>
@@ -171,4 +192,4 @@ export const tableSettings = (
           ),
         }
       : null,
-];
+  ].filter((field) => field !== null) as Field[];

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { FormatterProps } from "react-data-grid";
 
 import {
@@ -40,23 +40,7 @@ export default function FinalColumn({ row }: FormatterProps<any, any>) {
   const shiftPress = useKeyPress("Shift");
   const snack = useContext(SnackContext);
 
-  const handleDelete = async () => {
-    row.ref.delete().then(
-      (r) => {
-        console.log("r", r);
-      },
-      (error) => {
-        if (error.code === "permission-denied") {
-          snack.open({
-            variant: "error",
-            message: "You don't have permissions to delete this row",
-            duration: 3000,
-            position: { vertical: "top", horizontal: "center" },
-          });
-        }
-      }
-    );
-  };
+  const handleDelete = async () => tableActions?.row.delete(row.id);
   return (
     <Grid container spacing={1}>
       <Grid item>

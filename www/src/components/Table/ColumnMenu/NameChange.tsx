@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { IMenuModalProps } from ".";
 
 import { TextField } from "@material-ui/core";
@@ -37,7 +37,10 @@ export default function NameChange({
       }
       actions={{
         primary: {
-          onClick: () => handleSave(fieldName, { name: newName }),
+          onClick: () => {
+            handleSave(fieldName, { name: newName });
+            handleClose();
+          },
           children: "Update",
         },
         secondary: {

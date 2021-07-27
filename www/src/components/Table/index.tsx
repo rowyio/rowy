@@ -48,6 +48,7 @@ export default function Table() {
     tableActions,
     dataGridRef,
     sideDrawerRef,
+    updateCell,
   } = useFiretableContext();
   const { userDoc } = useAppContext();
 
@@ -186,8 +187,6 @@ export default function Table() {
               rowHeight={rowHeight ?? 43}
               headerRowHeight={44}
               className="rdg-light" // Handle dark mode in MUI theme
-              enableCellCopyPaste
-              enableCellDragAndDrop
               cellNavigationMode="LOOP_OVER_ROW"
               rowKeyGetter={rowKeyGetter}
               selectedRows={selectedRowsSet}
@@ -217,24 +216,22 @@ export default function Table() {
                 });
                 setSelectedRowsSet(newSelectedSet);
               }}
-              onRowsUpdate={(e) => {
-                const { action, fromRow, toRow, updated, cellKey } = e;
-                console.log(e);
-                switch (action) {
-                  case "CELL_UPDATE":
-                    break;
-                  case "CELL_DRAG":
-                    if (toRow > fromRow)
-                      [...rows]
-                        .splice(fromRow, toRow - fromRow + 1)
-                        .forEach((row) => row.ref.update(updated));
-                    if (toRow < fromRow)
-                      [...rows]
-                        .splice(toRow, fromRow - toRow + 1)
-                        .forEach((row) => row.ref.update(updated));
-                    break;
-                  default:
-                    break;
+              onRowsChange={(rows) => {
+                //console.log('onRowsChange',rows)
+              }}
+              onFill={(e) => {
+                console.log("onFill", e);
+                const { columnKey, sourceRow, targetRows } = e;
+                if (updateCell)
+                  targetRows.forEach((row) =>
+                    updateCell(row.ref, columnKey, sourceRow[columnKey])
+                  );
+                return [];
+              }}
+              onPaste={(e) => {
+                const copiedValue = e.sourceRow[e.sourceColumnKey];
+                if (updateCell) {
+                  updateCell(e.targetRow.ref, e.targetColumnKey, copiedValue);
                 }
               }}
               onRowClick={(rowIdx, column) => {

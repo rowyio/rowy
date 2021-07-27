@@ -1,27 +1,74 @@
-import React from "react";
+import { FieldType } from "@antlerengineering/form-builder";
+import _startCase from "lodash/startCase";
+import { authOptions } from "firebase/firebaseui";
 
-import * as yup from "yup";
-import { FIELDS } from "@antlerengineering/form-builder";
-import HelperText from "../HelperText";
+import { Link } from "@material-ui/core";
+import OpenInNewIcon from "@material-ui/icons/OpenInNew";
+import WIKI_LINKS from "constants/wikiLinks";
 
-export const settings = () => [
-  { type: FIELDS.heading, label: "Cloud build configuration" },
+export const projectSettingsForm = [
   {
-    type: FIELDS.text,
-    name: "cloudBuild.branch",
-    label: "FT Branch",
-    //validation: yup.string().required("Required"),
+    type: FieldType.contentHeader,
+    name: "_contentHeading_signInOptions",
+    label: "Authentication",
   },
   {
-    type: FIELDS.description,
-    description: (
-      <HelperText>Firetable branch to build cloud functions from</HelperText>
-    ),
+    type: FieldType.multiSelect,
+    name: "signInOptions",
+    label: "Sign-In Options",
+    options: Object.keys(authOptions).map((option) => ({
+      value: option,
+      label: _startCase(option).replace("Github", "GitHub"),
+    })),
+    defaultValue: ["google"],
+    required: true,
+    assistiveText: (
+      <>
+        Before enabling a new sign-in option, make sure it’s configured in your
+        Firebase project.
+        <br />
+        <Link
+          href={`https://github.com/firebase/firebaseui-web#configuring-sign-in-providers`}
+          target="_blank"
+          rel="noopener"
+        >
+          How to configure sign-in options
+          <OpenInNewIcon
+            aria-label="Open in new tab"
+            fontSize="small"
+            style={{ verticalAlign: "bottom", marginLeft: 4 }}
+          />
+        </Link>
+      </>
+    ) as any,
   },
   {
-    type: FIELDS.text,
-    name: "cloudBuild.triggerId",
-    label: "Trigger Id",
-    //validation: yup.string().required("Required"),
+    type: FieldType.contentHeader,
+    name: "_contentHeading_cloudRun",
+    label: "Functions Builder",
+  },
+  {
+    type: FieldType.shortText,
+    name: "ftBuildUrl",
+    label: "Cloud Run Trigger URL",
+    format: "url",
+    assistiveText: (
+      <>
+        Firetable requires a cloud run instance to build and deploy Firetable
+        cloud functions ,
+        <Link href={WIKI_LINKS.FtFunctions} target="_blank" rel="noopener">
+          more info
+          <OpenInNewIcon
+            aria-label="Open in new tab"
+            fontSize="small"
+            style={{ verticalAlign: "bottom", marginLeft: 4 }}
+          />
+        </Link>
+        .
+        <br />
+        To deploy the cloud run instance simply click the button bellow and
+        follow the cloud shell prompts.
+      </>
+    ) as any,
   },
 ];

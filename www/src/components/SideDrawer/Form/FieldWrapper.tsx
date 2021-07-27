@@ -16,7 +16,7 @@ import FieldSkeleton from "./FieldSkeleton";
 
 import { FieldType } from "constants/fields";
 import { getFieldProp } from "components/fields";
-
+import { projectId } from "../../../firebase";
 const useStyles = makeStyles((theme) =>
   createStyles({
     header: {
@@ -72,7 +72,7 @@ export default function FieldWrapper({
           {type === "debug" ? <DebugIcon /> : getFieldProp("icon", type)}
         </Grid>
         <Grid item xs>
-          <Typography variant="caption">{label}</Typography>
+          <Typography variant="subtitle2">{label}</Typography>
         </Grid>
         {disabled && (
           <Grid item>
@@ -103,9 +103,7 @@ export default function FieldWrapper({
           <Grid item>
             <IconButton
               component="a"
-              href={`https://console.firebase.google.com/project/${
-                process.env.REACT_APP_FIREBASE_PROJECT_ID
-              }/firestore/data~2F${(debugText as string).replace(
+              href={`https://console.firebase.google.com/project/${projectId}/firestore/data/~2F${(debugText as string).replace(
                 /\//g,
                 "~2F"
               )}`}

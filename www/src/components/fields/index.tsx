@@ -34,6 +34,7 @@ import Derivative from "./Derivative";
 import Aggregate from "./Aggregate";
 import User from "./User";
 import Id from "./Id";
+import Status from "./Status";
 
 // Export field configs in order for FieldsDropdown
 export const FIELDS: IFieldConfig[] = [
@@ -75,6 +76,7 @@ export const FIELDS: IFieldConfig[] = [
   // FIRETABLE
   User,
   Id,
+  Status,
 ];
 
 /**
@@ -102,7 +104,9 @@ export const isFieldType = (fieldType: any) => {
  * Returns array of fieldTypes with dataType included dataTypes array
  * @param dataTypes
  */
-export const hasDataTypes = (dataTypes:string[])=>{
-    const fieldTypes = FIELDS.map((field) => field.type);
-    return fieldTypes.filter((fieldType)=>dataTypes.includes(getFieldProp("dataType",fieldType)))
-}
+export const hasDataTypes = (dataTypes: string[]) => {
+  const fieldTypes = FIELDS.map((field) => field.type);
+  return fieldTypes.filter((fieldType) =>
+    dataTypes.includes(getFieldProp("dataType", fieldType))
+  );
+};

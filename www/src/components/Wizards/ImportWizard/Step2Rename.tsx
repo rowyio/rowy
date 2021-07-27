@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 import {
   makeStyles,
@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) =>
       boxShadow: `0 0 0 1px inset ${theme.palette.divider}`,
       backgroundColor: theme.palette.background.default + " !important",
 
-      ...theme.typography.caption,
+      ...theme.typography.subtitle2,
     },
     inputHiddenLabel: {
       paddingTop: theme.spacing(14 / 8) + 1,

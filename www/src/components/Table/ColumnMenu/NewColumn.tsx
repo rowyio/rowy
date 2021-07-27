@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import _camel from "lodash/camelCase";
 import { IMenuModalProps } from ".";
 
@@ -7,6 +7,7 @@ import { makeStyles, createStyles, TextField } from "@material-ui/core";
 import Modal from "components/Modal";
 import { FieldType } from "constants/fields";
 import FieldsDropdown from "./FieldsDropdown";
+import { getFieldProp } from "components/fields";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -19,11 +20,13 @@ const useStyles = makeStyles((theme) =>
 
 export interface IFormDialogProps extends IMenuModalProps {
   data: Record<string, any>;
+  openSettings: (column: any) => void;
 }
 
 export default function FormDialog({
   open,
   data,
+  openSettings,
   handleClose,
   handleSave,
 }: IFormDialogProps) {
@@ -32,7 +35,7 @@ export default function FormDialog({
   const [columnLabel, setColumnLabel] = useState("");
   const [fieldKey, setFieldKey] = useState("");
   const [type, setType] = useState(FieldType.shortText);
-
+  const requireConfiguration = getFieldProp("requireConfiguration", type);
   useEffect(() => {
     if (type !== FieldType.id) setFieldKey(_camel(columnLabel));
   }, [columnLabel]);
@@ -109,9 +112,19 @@ export default function FormDialog({
               config: {},
               ...data.initializeColumn,
             });
+            if (requireConfiguration) {
+              openSettings({
+                type,
+                name: columnLabel,
+                fieldName: fieldKey,
+                key: fieldKey,
+                config: {},
+                ...data.initializeColumn,
+              });
+            } else handleClose();
           },
           disabled: !columnLabel || !fieldKey || !type,
-          children: "Add",
+          children: requireConfiguration ? "Next" : "Add",
         },
         secondary: {
           onClick: handleClose,

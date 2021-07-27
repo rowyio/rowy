@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { IMenuModalProps } from ".";
 import Modal from "components/Modal";
@@ -29,7 +29,10 @@ export default function FormDialog({
       }
       actions={{
         primary: {
-          onClick: () => handleSave(fieldName, { type: newType }),
+          onClick: () => {
+            handleSave(fieldName, { type: newType });
+            handleClose();
+          },
           children: "Update",
         },
         secondary: {

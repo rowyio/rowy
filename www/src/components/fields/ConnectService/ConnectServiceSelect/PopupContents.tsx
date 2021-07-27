@@ -124,7 +124,6 @@ export default function PopupContents({
           {hits.map((hit) => {
             const isSelected =
               selectedValues.indexOf(_get(hit, primaryKey)) !== -1;
-            console.log(`Selected Values: ${selectedValues}`);
             return (
               <React.Fragment key={_get(hit, primaryKey)}>
                 <MenuItem

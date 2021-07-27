@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import _camelCase from "lodash/camelCase";
 import _get from "lodash/get";
 import _find from "lodash/find";
@@ -73,7 +73,7 @@ export default function Export() {
     tableState?.filters.forEach((filter) => {
       _query = _query.where(
         filter.key,
-        filter.operator as firebase.firestore.WhereFilterOp,
+        filter.operator as firebase.default.firestore.WhereFilterOp,
         filter.value
       );
     });

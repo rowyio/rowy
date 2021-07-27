@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { ISettingsProps } from "../types";
 import _sortBy from "lodash/sortBy";
 
@@ -69,6 +69,12 @@ export default function Settings({ handleChange, config }: ISettingsProps) {
           [FieldType.shortText, FieldType.singleSelect].includes(c.type)
         )}
         onChange={handleChange("primaryKeys")}
+      />
+      <MultiSelect
+        label={"Snapshot Fields"}
+        value={config.snapshotFields ?? []}
+        options={columns.filter((c) => ![FieldType.subTable].includes(c.type))}
+        onChange={handleChange("snapshotFields")}
       />
       <MultiSelect
         label={"Tracked Fields"}

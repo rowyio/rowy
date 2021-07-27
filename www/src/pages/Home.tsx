@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import _groupBy from "lodash/groupBy";
 import _find from "lodash/find";
 import {
@@ -31,8 +31,11 @@ import TableSettingsDialog, {
   TableSettingsDialogModes,
 } from "components/TableSettings";
 
+import queryString from "query-string";
 import ProjectSettings from "components/ProjectSettings";
 import EmptyState from "components/EmptyState";
+import WIKI_LINKS from "constants/wikiLinks";
+import BuilderInstaller from "../components/BuilderInstaller";
 const useStyles = makeStyles((theme) =>
   createStyles({
     "@global": {
@@ -50,8 +53,6 @@ const useStyles = makeStyles((theme) =>
     },
     sectionHeader: {
       color: theme.palette.text.secondary,
-      textTransform: "uppercase",
-      letterSpacing: `${2 / 13}em`,
     },
     divider: { margin: theme.spacing(1, 0, 3) },
 
@@ -118,6 +119,20 @@ export default function HomePage() {
       data: null,
     });
 
+  useEffect(() => {
+    const modal = decodeURIComponent(
+      queryString.parse(window.location.search).modal as string
+    );
+    if (modal) {
+      switch (modal) {
+        case "settings":
+          setOpenProjectSettings(true);
+          break;
+        default:
+          break;
+      }
+    }
+  }, [window.location.search]);
   const { sections } = useFiretableContext();
   const { userDoc } = useAppContext();
 
@@ -132,6 +147,7 @@ export default function HomePage() {
     });
   const [open, setOpen] = useState(false);
   const [openProjectSettings, setOpenProjectSettings] = useState(false);
+  const [openBuilderInstaller, setOpenBuilderInstaller] = useState(false);
 
   const [settingsDocState, settingsDocDispatch] = useDoc({
     path: "_FIRETABLE_/settings",
@@ -158,8 +174,9 @@ export default function HomePage() {
             <Typography variant="body2">
               If you are the project owner please follow the instructions{" "}
               <a
-                href="https://github.com/AntlerVC/firetable/wiki/Role-Based-Security-Rules"
+                href={WIKI_LINKS.securityRules}
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 here
               </a>{" "}
@@ -235,7 +252,7 @@ export default function HomePage() {
           {favs.length !== 0 && (
             <section id="favorites" className={classes.section}>
               <Typography
-                variant="subtitle2"
+                variant="h6"
                 component="h1"
                 className={classes.sectionHeader}
               >
@@ -263,7 +280,7 @@ export default function HomePage() {
                 className={classes.section}
               >
                 <Typography
-                  variant="subtitle2"
+                  variant="h6"
                   component="h1"
                   className={classes.sectionHeader}
                 >
@@ -315,10 +332,15 @@ export default function HomePage() {
         mode={settingsDialogState.mode}
         data={settingsDialogState.data}
       />
-      <ProjectSettings
-        open={openProjectSettings}
-        handleClose={() => setOpenProjectSettings(false)}
-      />
+      {openProjectSettings && (
+        <ProjectSettings
+          handleClose={() => setOpenProjectSettings(false)}
+          handleOpenBuilderInstaller={() => setOpenBuilderInstaller(true)}
+        />
+      )}
+      {openBuilderInstaller && (
+        <BuilderInstaller handleClose={() => setOpenBuilderInstaller(false)} />
+      )}
     </HomeNavigation>
   );
 }

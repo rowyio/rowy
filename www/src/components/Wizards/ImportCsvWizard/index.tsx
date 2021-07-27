@@ -69,13 +69,12 @@ export default function ImportCsvWizard({
         const matchingColumn =
           tableState.columns[pair.columnKey] ??
           _find(config.newColumns, { key: pair.columnKey });
-        console.log({ type: matchingColumn.type });
         const csvFieldParser = getFieldProp(
           "csvImportParser",
           matchingColumn.type
         );
         const value = csvFieldParser
-          ? csvFieldParser(row[pair.csvKey])
+          ? csvFieldParser(row[pair.csvKey], matchingColumn.config)
           : row[pair.csvKey];
         return { ...a, [pair.columnKey]: value };
       }, {})

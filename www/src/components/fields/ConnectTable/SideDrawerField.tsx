@@ -1,4 +1,3 @@
-import React from "react";
 import { Controller } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 
@@ -30,6 +29,7 @@ export default function ConnectTable({
           <>
             {!disabled && (
               <ConnectTableSelect
+                row={control.getValues()}
                 column={column}
                 config={(config as any) ?? {}}
                 value={value}

@@ -1,8 +1,8 @@
-import React, { lazy } from "react";
+import { lazy } from "react";
 import { IFieldConfig, FieldType } from "components/fields/types";
 import withHeavyCell from "../_withTableCell/withHeavyCell";
 
-import DurationIcon from "@material-ui/icons/CheckBox";
+import DurationIcon from "@material-ui/icons/Timer";
 import BasicCell from "../_BasicCell/BasicCellNull";
 import NullEditor from "components/Table/editors/NullEditor";
 

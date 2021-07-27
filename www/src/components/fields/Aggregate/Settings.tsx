@@ -1,4 +1,4 @@
-import React, { useState, lazy, Suspense } from "react";
+import { useState, lazy, Suspense } from "react";
 import {
   Typography,
   IconButton,
@@ -38,7 +38,7 @@ const Settings = ({ config, handleChange }) => {
         <CodeEditor
           script={
             config.script ??
-            `//triggerType:  create | update | delete\n//aggregateState: the subtable accumenlator stored in the cell of this column\n//snapshot: the triggered document snapshot of the the subcollection\n//incrementor: short for firebase.firestore.FieldValue.increment(n);\n//This script needs to return the new aggregateState cell value.
+            `//triggerType:  create | update | delete\n//aggregateState: the subtable accumulator stored in the cell of this column\n//snapshot: the triggered document snapshot of the the subcollection\n//incrementor: short for firebase.firestore.FieldValue.increment(n);\n//This script needs to return the new aggregateState cell value.
 switch (triggerType){
   case "create":return {
       count:incrementor(1)
@@ -78,19 +78,6 @@ switch (triggerType){
           handleChange("renderFieldType")(newType.target.value);
         }}
       />
-      {config.renderFieldType && (
-        <>
-          <Typography variant="overline">Rendered field config</Typography>
-          {/* <ConfigFields
-                fieldType={config.renderFieldType}
-                config={config}
-                handleChange={handleChange}
-                tables={tables}
-                columns={columns}
-                roles={roles}
-              /> */}
-        </>
-      )}
     </>
   );
 };

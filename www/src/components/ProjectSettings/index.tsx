@@ -1,74 +1,68 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import _camelCase from "lodash/camelCase";
 import _find from "lodash/find";
-
-import { makeStyles, createStyles } from "@material-ui/core";
+import _pickBy from "lodash/pickBy";
 
 import { FormDialog } from "@antlerengineering/form-builder";
-import { settings } from "./form";
+import { projectSettingsForm } from "./form";
 
 import useDoc, { DocActions } from "hooks/useDoc";
+import { IFormDialogProps } from "components/Table/ColumnMenu/NewColumn";
+import { Button } from "@material-ui/core";
 
-const FORM_EMPTY_STATE = {
-  cloudBuild: {
-    branch: "test",
-    triggerId: "",
-  },
-};
+export interface IProjectSettings
+  extends Pick<IFormDialogProps, "handleClose"> {
+  handleOpenBuilderInstaller: () => void;
+}
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    buttonGrid: { padding: theme.spacing(3, 0) },
-    button: { width: 160 },
-
-    formFooter: {
-      marginTop: theme.spacing(4),
-
-      "& button": {
-        paddingLeft: theme.spacing(1.5),
-        display: "flex",
-      },
-    },
-    collectionName: { fontFamily: theme.typography.fontFamilyMono },
-  })
-);
-
-export default function SettingsDialog({
-  open,
+export default function ProjectSettings({
   handleClose,
-}: {
-  open: boolean;
-  handleClose: () => void;
-}) {
-  const [settingsDocState, settingsDocDispatch] = useDoc({
+  handleOpenBuilderInstaller,
+}: IProjectSettings) {
+  const [settingsState, settingsDispatch] = useDoc({
     path: "_FIRETABLE_/settings",
   });
+  const [publicSettingsState, publicSettingsDispatch] = useDoc({
+    path: "_FIRETABLE_/publicSettings",
+  });
 
-  const [formState, setForm] = useState<any>();
+  if (settingsState.loading || publicSettingsState.loading) return null;
 
-  useEffect(() => {
-    if (!settingsDocState.loading) {
-      const cloudBuild = settingsDocState?.doc?.cloudBuild;
-      setForm(cloudBuild ? { cloudBuild } : FORM_EMPTY_STATE);
-    }
-  }, [settingsDocState.doc, open]);
+  const handleSubmit = (v) => {
+    const { signInOptions, ...values } = v;
 
-  const handleSubmit = (values) => {
-    settingsDocDispatch({ action: DocActions.update, data: values });
-    handleClose();
+    settingsDispatch({ action: DocActions.update, data: values });
+    publicSettingsDispatch({
+      action: DocActions.update,
+      data: { signInOptions },
+    });
   };
 
-  if (!formState) return <></>;
+  const onOpenBuilderInstaller = () => {
+    handleClose();
+    window.open(
+      "https://deploy.cloud.run/?git_repo=https://github.com/FiretableProject/FunctionsBuilder.git",
+      "_blank"
+    );
+    handleOpenBuilderInstaller();
+  };
+
+  const hasCloudRunConfig = !!settingsState.doc.ftBuildUrl;
+
   return (
-    <>
-      <FormDialog
-        onClose={handleClose}
-        open={open}
-        title={"Project Settings"}
-        fields={settings()}
-        values={formState}
-        onSubmit={handleSubmit}
-      />
-    </>
+    <FormDialog
+      onClose={handleClose}
+      open
+      title="Project Settings"
+      fields={projectSettingsForm}
+      values={{ ...settingsState.doc, ...publicSettingsState.doc }}
+      onSubmit={handleSubmit}
+      SubmitButtonProps={{ children: "Save" }}
+      formFooter={
+        hasCloudRunConfig ? null : (
+          <Button onClick={onOpenBuilderInstaller}>One click deploy</Button>
+        )
+      }
+    />
   );
 }

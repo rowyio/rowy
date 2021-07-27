@@ -1,4 +1,3 @@
-import React from "react";
 import { IFieldConfig, FieldType } from "components/fields/types";
 import withBasicCell from "../_withTableCell/withBasicCell";
 

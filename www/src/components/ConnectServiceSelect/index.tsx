@@ -1,8 +1,7 @@
-import React, { lazy, Suspense } from "react";
+import { lazy, Suspense } from "react";
 import clsx from "clsx";
 
 import { TextField, TextFieldProps } from "@material-ui/core";
-
 import useStyles from "./styles";
 import Loading from "components/Loading";
 import ErrorBoundary from "components/ErrorBoundary";
@@ -26,7 +25,7 @@ export interface IConnectServiceSelectProps {
   className?: string;
   /** Override any props of the root MUI `TextField` component */
   TextFieldProps?: Partial<TextFieldProps>;
-  docRef: firebase.firestore.DocumentReference;
+  docRef: firebase.default.firestore.DocumentReference;
 }
 
 export default function ConnectServiceSelect({

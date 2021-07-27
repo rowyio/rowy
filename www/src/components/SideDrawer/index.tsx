@@ -69,7 +69,7 @@ export default function SideDrawer() {
   }, []);
 
   useEffect(() => {
-    if (cell) {
+    if (cell && tableState?.rows[cell.row]) {
       window.history.pushState(
         "",
         `${tableState?.tablePath}`,

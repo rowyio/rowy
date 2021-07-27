@@ -1,6 +1,6 @@
 import React from "react";
 import { EditorProps } from "react-data-grid";
-import _findIndex from "lodash/findIndex";
+// import _findIndex from "lodash/findIndex";
 
 import { withStyles, WithStyles } from "@material-ui/core";
 import styles from "./styles";

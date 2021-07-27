@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useRef } from "react";
 import _sortBy from "lodash/sortBy";
 import _includes from "lodash/includes";
 import _camelCase from "lodash/camelCase";
@@ -23,13 +23,16 @@ const useStyles = makeStyles(() =>
       width: "100%",
     },
     optionsList: {
-      maxHeight: 150,
-      overflowX: "scroll",
+      maxHeight: 180,
+      overflowY: "scroll",
+      overflowX: "hidden",
+      marginBottom: 5,
     },
   })
 );
 
 export default function Settings({ handleChange, config }) {
+  const listEndRef: any = useRef(null);
   const options = config.options ?? [];
   const classes = useStyles();
   const [newOption, setNewOption] = useState("");
@@ -37,6 +40,7 @@ export default function Settings({ handleChange, config }) {
     if (newOption.trim() !== "") {
       handleChange("options")([...options, newOption.trim()]);
       setNewOption("");
+      listEndRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
     }
   };
 
@@ -72,6 +76,7 @@ export default function Settings({ handleChange, config }) {
             <Divider />
           </>
         ))}
+        <div ref={listEndRef} style={{ height: 40 }} />
       </div>
 
       <Grid container direction="row">

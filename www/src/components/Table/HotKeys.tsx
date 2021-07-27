@@ -1,4 +1,3 @@
-import React from "react";
 import useHotkeys from "../../hooks/useHotkeys";
 import { FieldType } from "constants/fields";
 import { useAppContext } from "contexts/AppContext";

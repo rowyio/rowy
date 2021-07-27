@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "rootDir": "./",
+    "outDir": "./build",
+    "esModuleInterop": true,
+    "strict": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": false,
+    "sourceMap": true,
+    "noImplicitAny": false,
+    "resolveJsonModule": true,
+    "lib": ["ESNext"],
+    "strictNullChecks": false
+  },
+  "compileOnSave": true,
+  "exclude": ["functions", "build"],
+  "include": ["*.ts", "firebase.json", "sparksLib"]
+}

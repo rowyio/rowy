@@ -1,4 +1,3 @@
-import React from "react";
 import _clone from "lodash/clone";
 import _merge from "lodash/merge";
 import _omit from "lodash/omit";
@@ -18,10 +17,12 @@ export const HEADING_FONT = "Europa, sans-serif";
 export const BODY_FONT = '"Open Sans", sans-serif';
 export const MONO_FONT =
   "SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace";
+export const LOG_FONT = "IBM Plex Mono, monospace";
 
 export const ANTLER_RED = "#ED4747";
 export const SECONDARY_GREY = "#282829";
 export const SECONDARY_TEXT = "rgba(0, 0, 0, 0.6)";
+export const LOG_TEXT = "#cccccc";
 export const ERROR = "#b00020";
 
 export const ROOT_FONT_SIZE = 16;
@@ -48,7 +49,7 @@ export const themeBase = {
   palette: {
     primary: { main: ANTLER_RED, light: ANTLER_RED },
     secondary: { main: SECONDARY_GREY },
-    text: { secondary: SECONDARY_TEXT },
+    text: { secondary: SECONDARY_TEXT, log: LOG_TEXT },
     error: { main: ERROR },
   },
   typography: {
@@ -82,9 +83,9 @@ export const themeBase = {
     },
     subtitle2: {
       fontFamily: HEADING_FONT,
-      fontSize: toRem(16),
+      fontSize: toRem(14),
       fontWeight: "bold",
-      letterSpacing: toEm(0.4, 16),
+      letterSpacing: toEm(0.4, 14),
       lineHeight: 1.5,
     },
     body1: {
@@ -103,11 +104,9 @@ export const themeBase = {
       lineHeight: 1,
     },
     caption: {
-      fontFamily: HEADING_FONT,
-      fontSize: toRem(13),
-      fontWeight: "bold",
-      letterSpacing: toEm(0.4, 13),
-      lineHeight: 16 / 13,
+      fontSize: toRem(14),
+      letterSpacing: toEm(0.4, 14),
+      lineHeight: 20 / 14,
     },
     overline: {
       fontFamily: HEADING_FONT,
@@ -144,6 +143,7 @@ export const darkThemeBase = {
     text: {
       // primary: "rgba(255, 255, 255, 0.87)",
       secondary: "rgba(255, 255, 255, 0.7)",
+      log: "black",
       // disabled: "rgba(255, 255, 255, 0.38)",
     },
     error: { main: "#CF6679" },
@@ -361,10 +361,6 @@ export const defaultOverrides = (theme: Theme): ThemeOptions => ({
         "& *": { transform: "none" },
       },
       markLabel: theme.typography.caption,
-    },
-    MuiLinearProgress: {
-      colorPrimary: { backgroundColor: "#e7e7e7" },
-      colorSecondary: { backgroundColor: "#e7e7e7" },
     },
     MuiFormHelperText: {
       contained: {

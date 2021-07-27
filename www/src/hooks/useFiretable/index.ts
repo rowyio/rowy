@@ -11,7 +11,7 @@ export type FiretableActions = {
     update: Function;
     reorder: Function;
   };
-  row: { add: Function; delete: Function; more: Function };
+  row: { add: Function; delete: Function; more: Function; update: Function };
   table: {
     set: Function;
     filter: Function;
@@ -94,6 +94,7 @@ const useFiretable = (
     },
     row: {
       add: tableActions.addRow,
+      update: tableActions.updateRow,
       delete: tableActions.deleteRow,
       more: tableActions.moreRows,
     },

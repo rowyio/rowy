@@ -1,4 +1,3 @@
-import React from "react";
 import { ISideDrawerFieldProps } from "../types";
 
 import { useTheme } from "@material-ui/core";

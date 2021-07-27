@@ -1,5 +1,3 @@
-import React from "react";
-
 import { TextField } from "@material-ui/core";
 import Subheading from "components/Table/ColumnMenu/Subheading";
 
@@ -17,6 +15,17 @@ export default function Settings({ handleChange, config }) {
         onChange={(e) => {
           if (e.target.value === "0") handleChange("maxLength")(null);
           else handleChange("maxLength")(e.target.value);
+        }}
+      />
+      <Subheading>Validation Regex</Subheading>
+      <TextField
+        type="text"
+        value={config.maxLength}
+        label={"Validation Regex"}
+        fullWidth
+        onChange={(e) => {
+          if (e.target.value === "") handleChange("validationRegex")(null);
+          else handleChange("validationRegex")(e.target.value);
         }}
       />
     </>

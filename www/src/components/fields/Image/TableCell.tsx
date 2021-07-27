@@ -1,5 +1,5 @@
 import { IHeavyCellProps } from "../types";
-import React, { useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 
 import { useDropzone } from "react-dropzone";
 import _findIndex from "lodash/findIndex";
@@ -115,7 +115,7 @@ export default function Image_({
   onSubmit,
   disabled,
 }: IHeavyCellProps) {
-  const { tableState } = useFiretableContext();
+  const { tableState, updateCell } = useFiretableContext();
   const { requestConfirmation } = useConfirmation();
   const classes = useStyles({ rowHeight: tableState?.config?.rowHeight ?? 44 });
 
@@ -135,7 +135,10 @@ export default function Image_({
           fieldName: column.key as string,
           files: [imageFile],
           previousValue: value,
-          onComplete: () => setLocalImage(""),
+          onComplete: (newValue) => {
+            if (updateCell) updateCell(row.ref, column.key, newValue);
+            setLocalImage("");
+          },
         });
         setLocalImage(URL.createObjectURL(imageFile));
       }

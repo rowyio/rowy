@@ -1,5 +1,3 @@
-import React from "react";
-
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import * as yup from "yup";
@@ -42,11 +40,6 @@ export default function ParamsDialog({
   handleClose,
 }: any) {
   const classes = useStyles();
-  const handleSubmit = (values) => {
-    handleRun(values);
-
-    handleClose();
-  };
 
   /*
  Refrence fields config  
@@ -64,13 +57,10 @@ export default function ParamsDialog({
     validation:{array:null,required:'needs to specific the cohort to new cohort',max:[1,'only one cohort is allowed']},
   }]
 */
-
-  console.log(column.config.params);
   const fields = column.config.params.map((field) => ({
     ...field,
-    validation: validationCompiler(field.validation),
+    validation: field.validation ? validationCompiler(field.validation) : null,
   }));
-  console.log(fields);
   return (
     <>
       <FormDialog
@@ -79,36 +69,8 @@ export default function ParamsDialog({
         title={`${column.name}`}
         fields={fields}
         values={{}}
-        onSubmit={handleSubmit}
-        customActions={
-          <Grid
-            container
-            spacing={2}
-            justify="center"
-            className={classes.buttonGrid}
-          >
-            <Grid item>
-              <Button
-                size="large"
-                variant="outlined"
-                onClick={handleClose}
-                className={classes.button}
-              >
-                Cancel
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                size="large"
-                variant="contained"
-                type="submit"
-                className={classes.button}
-              >
-                Run
-              </Button>
-            </Grid>
-          </Grid>
-        }
+        onSubmit={handleRun}
+        SubmitButtonProps={{ children: "Run" }}
       />
     </>
   );

@@ -1,4 +1,3 @@
-import React from "react";
 import { Controller } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 
@@ -14,17 +13,17 @@ export default function Slider({
     min: number;
     minLabel?: string;
     maxLabel?: string;
-    precision: number;
+    step: number;
     unit: string;
     marks?: boolean;
   } = {
     max: 10,
-    precision: 1,
+    step: 1,
     units: "",
     min: 0,
     ...(column as any).config,
   };
-  const { max, marks, min, unit, minLabel, maxLabel } = config;
+  const { max, marks, min, unit, minLabel, maxLabel, step } = config;
 
   return (
     <Controller
@@ -60,6 +59,7 @@ export default function Slider({
                 min={min}
                 max={max}
                 marks={marks}
+                step={step ?? 1}
                 getAriaValueText={getAriaValueText}
                 valueLabelFormat={getValueLabelFormat}
                 value={value ?? min}

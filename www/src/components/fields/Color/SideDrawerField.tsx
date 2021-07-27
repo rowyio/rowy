@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Controller } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 import { ChromePicker } from "react-color";

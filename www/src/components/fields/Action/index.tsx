@@ -1,4 +1,4 @@
-import React, { lazy } from "react";
+import { lazy } from "react";
 import { IFieldConfig, FieldType } from "components/fields/types";
 import withHeavyCell from "../_withTableCell/withHeavyCell";
 
@@ -28,5 +28,6 @@ export const config: IFieldConfig = {
   TableEditor: NullEditor,
   SideDrawerField,
   settings: Settings,
+  requireConfiguration: true,
 };
 export default config;

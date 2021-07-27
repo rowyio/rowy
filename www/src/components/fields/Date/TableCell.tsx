@@ -1,4 +1,3 @@
-import React from "react";
 import clsx from "clsx";
 import { IHeavyCellProps } from "../types";
 import { useDebouncedCallback } from "use-debounce";
@@ -94,7 +93,7 @@ export default function Date_({
         value={transformedValue}
         onChange={handleDateChange}
         onClick={(e) => e.stopPropagation()}
-        format={DATE_FORMAT}
+        format={column.config?.format ?? DATE_FORMAT}
         fullWidth
         clearable
         keyboardIcon={<DateIcon />}

@@ -11,6 +11,7 @@ export interface IFieldConfig {
   name: string;
   dataType: string;
   initializable?: boolean;
+  requireConfiguration?: boolean;
   initialValue: any;
   icon?: React.ReactNode;
   description?: string;
@@ -19,8 +20,8 @@ export interface IFieldConfig {
   TableEditor: React.ComponentType<EditorProps<any>>;
   SideDrawerField: React.ComponentType<ISideDrawerFieldProps>;
   settings?: React.ComponentType<ISettingsProps>;
-  csvExport?: (value: any) => string;
-  csvImportParser?: (value: string) => any;
+  csvExportFormatter?: (value: any, config?: any) => string;
+  csvImportParser?: (value: string, config?: any) => any;
 }
 
 export interface IBasicCellProps {
@@ -31,7 +32,7 @@ export interface IBasicCellProps {
 export interface IHeavyCellProps extends IBasicCellProps, FormatterProps<any> {
   column: FormatterProps<any>["column"] & { config?: Record<string, any> };
   onSubmit: (value: any) => void;
-  docRef: firebase.firestore.DocumentReference;
+  docRef: firebase.default.firestore.DocumentReference;
   disabled: boolean;
 }
 
@@ -45,7 +46,7 @@ export interface IPopoverCellProps extends IPopoverInlineCellProps {
 export interface ISideDrawerFieldProps {
   column: FormatterProps<any>["column"] & { config?: Record<string, any> };
   control: Control;
-  docRef: firebase.firestore.DocumentReference;
+  docRef: firebase.default.firestore.DocumentReference;
   disabled: boolean;
 }
 

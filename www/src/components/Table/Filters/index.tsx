@@ -26,9 +26,12 @@ import { FieldType } from "constants/fields";
 import { FireTableFilter } from "hooks/useFiretable";
 import { useFiretableContext } from "contexts/FiretableContext";
 
-import DocSelector from "./DocSelector";
 import { useAppContext } from "contexts/AppContext";
 import { DocActions } from "hooks/useDoc";
+const getType = (column) =>
+  column.type === FieldType.derivative
+    ? column.config.renderFieldType
+    : column.type;
 const OPERATORS = [
   {
     value: "==",
@@ -67,6 +70,7 @@ const OPERATORS = [
   },
   { value: "<", label: "<", compatibleTypes: [FieldType.number] },
   { value: "<=", label: "<=", compatibleTypes: [FieldType.number] },
+  { value: "==", label: "==", compatibleTypes: [FieldType.number] },
   { value: ">=", label: ">=", compatibleTypes: [FieldType.number] },
   { value: ">", label: ">", compatibleTypes: [FieldType.number] },
   {
@@ -107,6 +111,10 @@ const useStyles = makeStyles((theme) =>
       backgroundColor: theme.palette.background.paper,
       marginLeft: -1,
       borderColor: theme.palette.action.disabled,
+    },
+    filterChipLabel: {
+      ...theme.typography.subtitle2,
+      lineHeight: 1,
     },
     filterChipDelete: {
       color: theme.palette.primary.main,
@@ -164,6 +172,7 @@ const Filters = () => {
         operator: "",
         value: "",
       };
+      const type = getType(selectedColumn);
       if (
         [
           FieldType.phone,
@@ -171,21 +180,21 @@ const Filters = () => {
           FieldType.url,
           FieldType.email,
           FieldType.checkbox,
-        ].includes(selectedColumn.type)
+        ].includes(type)
       ) {
         updatedQuery = { ...updatedQuery, operator: "==" };
       }
-      if (selectedColumn.type === FieldType.checkbox) {
+      if (type === FieldType.checkbox) {
         updatedQuery = { ...updatedQuery, value: false };
       }
-      if (selectedColumn.type === FieldType.connectTable) {
+      if (type === FieldType.connectTable) {
         updatedQuery = {
           key: `${selectedColumn.key}ID`,
           operator: "array-contains-any",
           value: [],
         };
       }
-      if (selectedColumn.type === FieldType.multiSelect) {
+      if (type === FieldType.multiSelect) {
         updatedQuery = {
           ...updatedQuery,
           operator: "array-contains-any",
@@ -198,7 +207,7 @@ const Filters = () => {
 
   const operators = selectedColumn
     ? OPERATORS.filter((operator) =>
-        operator.compatibleTypes.includes(selectedColumn.type)
+        operator.compatibleTypes.includes(getType(selectedColumn))
       )
     : [];
 
@@ -218,7 +227,8 @@ const Filters = () => {
   const id = open ? "simple-popper" : undefined;
 
   const renderInputField = (selectedColumn, operator) => {
-    switch (selectedColumn.type) {
+    const type = getType(selectedColumn);
+    switch (type) {
       case FieldType.checkbox:
         return (
           <Switch
@@ -242,6 +252,24 @@ const Filters = () => {
             variant="filled"
             hiddenLabel
             placeholder="Text value"
+          />
+        );
+      case FieldType.number:
+        return (
+          <TextField
+            onChange={(e) => {
+              const value = e.target.value;
+              if (query.value || value)
+                setQuery((query) => ({
+                  ...query,
+                  value: value !== "" ? parseFloat(value) : "",
+                }));
+            }}
+            value={typeof query.value === "number" ? query.value : ""}
+            variant="filled"
+            hiddenLabel
+            type="number"
+            placeholder="number value"
           />
         );
 
@@ -345,8 +373,10 @@ const Filters = () => {
             onDelete={() => handleUpdateFilters([])}
             classes={{
               root: classes.filterChip,
+              label: classes.filterChipLabel,
               deleteIcon: classes.filterChipDelete,
             }}
+            variant="outlined"
           />
         ))}
       </Grid>
@@ -486,7 +516,8 @@ const Filters = () => {
               disabled={
                 query.value !== true &&
                 query.value !== false &&
-                _isEmpty(query.value)
+                _isEmpty(query.value) &&
+                typeof query.value !== "number"
               }
               color="primary"
               onClick={() => {

@@ -1,4 +1,3 @@
-import React from "react";
 import { IHeavyCellProps } from "../types";
 
 import MuiRating from "@material-ui/lab/Rating";

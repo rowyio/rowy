@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect } from "react";
 import {
   DragDropContext,
   DropResult,
@@ -126,7 +126,7 @@ export default function Step1Columns({ config, setConfig }: IStepProps) {
                 />
               }
               label={
-                <Typography variant="caption" color="textSecondary">
+                <Typography variant="subtitle2" color="textSecondary">
                   Select all
                 </Typography>
               }

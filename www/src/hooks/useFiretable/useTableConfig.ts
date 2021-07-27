@@ -28,10 +28,14 @@ const useTableConfig = (tablePath?: string) => {
   });
 
   useEffect(() => {
-    const { doc, columns } = tableConfigState;
+    const { doc, columns, rowHeight } = tableConfigState;
+    // TODO: REMOVE THIS
     // Copy columns, rowHeight to tableConfigState
     if (doc && columns !== doc.columns) {
-      documentDispatch({ columns: doc.columns, rowHeight: doc.rowHeight });
+      documentDispatch({ columns: doc.columns });
+    }
+    if (doc && rowHeight !== doc.rowHeight) {
+      documentDispatch({ rowHeight: doc.rowHeight });
     }
   }, [tableConfigState.doc]);
   /**  used for specifying the table in use
@@ -58,7 +62,6 @@ const useTableConfig = (tablePath?: string) => {
     let updatedColumns = { ...columns };
     const key = _camelCase(name);
     updatedColumns[key] = { name, key, type, ...data, index: newIndex ?? 0 };
-    console.log(name, type, data, updatedColumns);
     documentDispatch({
       action: DocActions.update,
       data: { columns: updatedColumns },
@@ -133,7 +136,6 @@ const useTableConfig = (tablePath?: string) => {
     columnsArray
       .filter((c) => c) // arrayMover has a bug creating undefined items
       .forEach((column: any, index) => {
-        console.log({ column });
         updatedColumns[column.key] = { ...column, index };
       });
     documentDispatch({

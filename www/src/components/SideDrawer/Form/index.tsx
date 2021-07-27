@@ -42,6 +42,7 @@ export default function Form({ values }: IFormProps) {
     mode: "onBlur",
     defaultValues,
   });
+  const { dirtyFields } = formState;
 
   // const { sideDrawerRef } = useFiretableContext();
   // useEffect(() => {
@@ -62,11 +63,11 @@ export default function Form({ values }: IFormProps) {
         docRef={docRef}
         row={values}
         reset={reset}
-        formState={formState}
+        dirtyFields={dirtyFields}
       />
 
       <Reset
-        formState={formState}
+        dirtyFields={dirtyFields}
         reset={reset}
         defaultValues={defaultValues}
         getValues={getValues}

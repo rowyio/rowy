@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import { useState, useContext } from "react";
 import { saveAs } from "file-saver";
 import _camelCase from "lodash/camelCase";
 import _get from "lodash/get";
@@ -44,7 +44,6 @@ const selectedColumnsFilesReducer = (doc: any, labelColumns: any[]) => (
           : `${currentColumn.key}/${labelColumns
               .map((labelColumn) => {
                 const value = _get(doc, labelColumn.key);
-                console.log(value);
                 return value && typeof value === "string"
                   ? value.replace(/[^a-zA-Z ]/g, "")
                   : "";
@@ -96,7 +95,6 @@ export default function Export({ query, closeModal }) {
       download(file.downloadURL).then((blob: any) => {
         zip.file(file.name, blob, { base64: true });
         completedCount++;
-        console.log(completedCount, files.length);
         snackContext.open({
           variant: "progress",
           message: "Downloading",

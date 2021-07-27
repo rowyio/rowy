@@ -1,5 +1,5 @@
 import { ISideDrawerFieldProps } from "../types";
-import React, { useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import clsx from "clsx";
 import { Controller } from "react-hook-form";
 
@@ -24,6 +24,7 @@ import OpenIcon from "@material-ui/icons/OpenInNewOutlined";
 import { IMAGE_MIME_TYPES } from ".";
 import Thumbnail from "components/Thumbnail";
 import { useConfirmation } from "components/ConfirmationDialog";
+import { useFiretableContext } from "contexts/FiretableContext";
 
 import { useFieldStyles } from "components/SideDrawer/Form/utils";
 const useStyles = makeStyles((theme) =>
@@ -108,6 +109,7 @@ function ControlledImageUploader({
 }) {
   const classes = useStyles();
   const fieldClasses = useFieldStyles();
+  const { updateCell } = useFiretableContext();
 
   const { requestConfirmation } = useConfirmation();
   const { uploaderState, upload, deleteUpload } = useUploader();
@@ -127,6 +129,7 @@ function ControlledImageUploader({
           files: [imageFile],
           previousValue: value ?? [],
           onComplete: (newValue) => {
+            if (updateCell) updateCell(docRef, column.key, newValue);
             onChange(newValue);
             setLocalImage("");
           },
