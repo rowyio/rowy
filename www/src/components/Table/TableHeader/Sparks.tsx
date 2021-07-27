@@ -11,13 +11,14 @@ import { DialogContentText, Chip } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 import TableHeaderButton from "./TableHeaderButton";
 import SparkIcon from "@material-ui/icons/OfflineBolt";
+import Button from "@material-ui/core/Button";
 import Modal from "components/Modal";
 import { useFiretableContext } from "contexts/FiretableContext";
 import { useAppContext } from "contexts/AppContext";
 import { useSnackLogContext } from "contexts/SnackLogContext";
 import CodeEditor from "../editors/CodeEditor";
-import WIKI_LINKS from "constants/wikiLinks";
 
+import routes from "constants/routes";
 export default function SparksEditor() {
   const snack = useSnackContext();
   const { tableState, tableActions } = useFiretableContext();
@@ -57,8 +58,19 @@ export default function SparksEditor() {
         const ftBuildUrl = settingsDoc.get("ftBuildUrl");
         if (!ftBuildUrl) {
           snack.open({
-            message: `Cloud Run trigger URL not configured. Configuration guide: ${WIKI_LINKS.cloudRunFtBuilder}`,
+            message: `Firetable functions builder is not yet setup`,
             variant: "error",
+            action: (
+              <Button
+                variant="contained"
+                component={"a"}
+                target="_blank"
+                href={routes.projectSettings}
+                rel="noopener noreferrer"
+              >
+                Go to Settings
+              </Button>
+            ),
           });
         }
 

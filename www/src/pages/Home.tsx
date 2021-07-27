@@ -31,6 +31,7 @@ import TableSettingsDialog, {
   TableSettingsDialogModes,
 } from "components/TableSettings";
 
+import queryString from "query-string";
 import ProjectSettings from "components/ProjectSettings";
 import EmptyState from "components/EmptyState";
 import WIKI_LINKS from "constants/wikiLinks";
@@ -118,6 +119,20 @@ export default function HomePage() {
       data: null,
     });
 
+  useEffect(() => {
+    const modal = decodeURIComponent(
+      queryString.parse(window.location.search).modal as string
+    );
+    if (modal) {
+      switch (modal) {
+        case "settings":
+          setOpenProjectSettings(true);
+          break;
+        default:
+          break;
+      }
+    }
+  }, [window.location.search]);
   const { sections } = useFiretableContext();
   const { userDoc } = useAppContext();
 

@@ -22,18 +22,11 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import Subheading from "components/Table/ColumnMenu/Subheading";
-import WIKI_LINKS from "constants/wikiLinks";
-
+import Button from "@material-ui/core/Button";
+import routes from "constants/routes";
 export default function FieldSettings(props: IMenuModalProps) {
-  const {
-    name,
-    fieldName,
-    type,
-    open,
-    config,
-    handleClose,
-    handleSave,
-  } = props;
+  const { name, fieldName, type, open, config, handleClose, handleSave } =
+    props;
 
   const [showRebuildPrompt, setShowRebuildPrompt] = useState(false);
   const [newConfig, setNewConfig] = useState(config ?? {});
@@ -156,8 +149,7 @@ export default function FieldSettings(props: IMenuModalProps) {
             if (showRebuildPrompt) {
               requestConfirmation({
                 title: "Deploy Changes",
-                body:
-                  "You have made changes that affect the behavior of the cloud function of this table, Would you like to redeploy it now?",
+                body: "You have made changes that affect the behavior of the cloud function of this table, Would you like to redeploy it now?",
                 confirm: "Deploy",
                 cancel: "Later",
                 handleConfirm: async () => {
@@ -167,11 +159,23 @@ export default function FieldSettings(props: IMenuModalProps) {
                   const ftBuildUrl = settingsDoc.get("ftBuildUrl");
                   if (!ftBuildUrl) {
                     snack.open({
-                      message: `Cloud Run trigger URL not configured. Configuration guide: ${WIKI_LINKS.cloudRunFtBuilder}`,
+                      message: `Firetable functions builder is not yet setup`,
                       variant: "error",
+                      action: (
+                        <Button
+                          variant="contained"
+                          component={"a"}
+                          target="_blank"
+                          href={routes.projectSettings}
+                          rel="noopener noreferrer"
+                        >
+                          Go to Settings
+                        </Button>
+                      ),
                     });
                   }
-                  const userTokenInfo = await appContext?.currentUser?.getIdTokenResult();
+                  const userTokenInfo =
+                    await appContext?.currentUser?.getIdTokenResult();
                   const userToken = userTokenInfo?.token;
                   try {
                     snackLog.requestSnackLog();
