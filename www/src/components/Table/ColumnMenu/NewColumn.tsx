@@ -122,9 +122,8 @@ export default function FormDialog({
                 ...data.initializeColumn,
               });
             } else handleClose();
-            analytics.logEvent("new_column", {
+            analytics.logEvent("create_column", {
               type,
-              origin: window.location.hostname,
             });
           },
           disabled: !columnLabel || !fieldKey || !type,

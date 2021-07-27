@@ -32,10 +32,9 @@ export default function FormDialog({
           onClick: () => {
             handleSave(fieldName, { type: newType });
             handleClose();
-            analytics.logEvent("update_column_type", {
+            analytics.logEvent("change_column_type", {
               newType,
               prevType: type,
-              origin: window.location.hostname,
             });
           },
           children: "Update",
