@@ -8,7 +8,7 @@ import Modal from "components/Modal";
 import { FieldType } from "constants/fields";
 import FieldsDropdown from "./FieldsDropdown";
 import { getFieldProp } from "components/fields";
-
+import { analytics } from "analytics";
 const useStyles = makeStyles((theme) =>
   createStyles({
     helperText: {
@@ -122,6 +122,9 @@ export default function FormDialog({
                 ...data.initializeColumn,
               });
             } else handleClose();
+            analytics.logEvent("create_column", {
+              type,
+            });
           },
           disabled: !columnLabel || !fieldKey || !type,
           children: requireConfiguration ? "Next" : "Add",
