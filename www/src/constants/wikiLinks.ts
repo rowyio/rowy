@@ -5,7 +5,7 @@ const WIKI_PATHS = {
   updatingFiretable: "/Updating-Firetable",
   derivatives: "/Derivatives",
   defaultValues: "/Default-Values",
-  cloudRunFtBuilder: "/Setting-up-cloud-Run-FT-Builder",
+  FtFunctions: "/FT-Functions",
   securityRules: "/Role-Based-Security-Rules",
   setUpAuth: "/Set-Up-Firebase-Authentication",
 };
