@@ -40,6 +40,10 @@ export default function ProjectSettings({
 
   const onOpenBuilderInstaller = () => {
     handleClose();
+    window.open(
+      "https://deploy.cloud.run/?git_repo=https://github.com/FiretableProject/FunctionsBuilder.git",
+      "_blank"
+    );
     handleOpenBuilderInstaller();
   };
 

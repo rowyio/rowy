@@ -35,20 +35,6 @@ export default function BuilderInstaller({ handleClose }: IProjectSettings) {
           </Typography>
           <br />
 
-          <Button
-            variant="contained"
-            endIcon={<OpenInNewIcon />}
-            onClick={() => {
-              window.open(
-                "https://deploy.cloud.run/?git_repo=https://github.com/FiretableProject/FunctionsBuilder.git",
-                "_blank"
-              );
-            }}
-          >
-            Deploy
-          </Button>
-          <br />
-
           <Box
             display="flex"
             justifyContent="center"
