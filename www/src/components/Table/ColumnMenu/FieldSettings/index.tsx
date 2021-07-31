@@ -17,16 +17,21 @@ import { useAppContext } from "contexts/AppContext";
 import { useConfirmation } from "components/ConfirmationDialog";
 import { FieldType } from "constants/fields";
 
-import Switch from "@material-ui/core/Switch";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import Subheading from "components/Table/ColumnMenu/Subheading";
 import Button from "@material-ui/core/Button";
 import routes from "constants/routes";
 export default function FieldSettings(props: IMenuModalProps) {
-  const { name, fieldName, type, open, config, handleClose, handleSave } =
-    props;
+  const {
+    name,
+    fieldName,
+    type,
+    open,
+    config,
+    handleClose,
+    handleSave,
+  } = props;
 
   const [showRebuildPrompt, setShowRebuildPrompt] = useState(false);
   const [newConfig, setNewConfig] = useState(config ?? {});
@@ -47,6 +52,7 @@ export default function FieldSettings(props: IMenuModalProps) {
     ) {
       setShowRebuildPrompt(true);
     }
+    console.log(key, update);
     const updatedConfig = _set({ ...newConfig }, key, update);
     setNewConfig(updatedConfig);
   };
@@ -59,7 +65,7 @@ export default function FieldSettings(props: IMenuModalProps) {
     [newConfig.renderFieldType, type]
   );
   if (!open) return null;
-
+  console.log(newConfig);
   return (
     <Modal
       maxWidth="md"
@@ -70,36 +76,6 @@ export default function FieldSettings(props: IMenuModalProps) {
           <>
             {initializable && (
               <>
-                {
-                  <section>
-                    <Subheading>Required?</Subheading>
-                    <Typography color="textSecondary" paragraph>
-                      The row will not be created or updated unless all required
-                      values are set.
-                    </Typography>
-                    <FormControlLabel
-                      value="required"
-                      label="Make this column required"
-                      labelPlacement="start"
-                      control={
-                        <Switch
-                          checked={newConfig["required"]}
-                          onChange={() =>
-                            setNewConfig({
-                              ...newConfig,
-                              required: !Boolean(newConfig["required"]),
-                            })
-                          }
-                          name="required"
-                        />
-                      }
-                      style={{
-                        marginLeft: 0,
-                        justifyContent: "space-between",
-                      }}
-                    />
-                  </section>
-                }
                 <section style={{ marginTop: 1 }}>
                   {/* top margin fixes visual bug */}
                   <ErrorBoundary fullScreen={false}>
@@ -149,7 +125,8 @@ export default function FieldSettings(props: IMenuModalProps) {
             if (showRebuildPrompt) {
               requestConfirmation({
                 title: "Deploy Changes",
-                body: "You have made changes that affect the behavior of the cloud function of this table, Would you like to redeploy it now?",
+                body:
+                  "You have made changes that affect the behavior of the cloud function of this table, Would you like to redeploy it now?",
                 confirm: "Deploy",
                 cancel: "Later",
                 handleConfirm: async () => {
@@ -174,8 +151,7 @@ export default function FieldSettings(props: IMenuModalProps) {
                       ),
                     });
                   }
-                  const userTokenInfo =
-                    await appContext?.currentUser?.getIdTokenResult();
+                  const userTokenInfo = await appContext?.currentUser?.getIdTokenResult();
                   const userToken = userTokenInfo?.token;
                   try {
                     snackLog.requestSnackLog();

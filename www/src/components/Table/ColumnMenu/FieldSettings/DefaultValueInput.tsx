@@ -1,7 +1,8 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { IMenuModalProps } from "..";
-
+import Switch from "@material-ui/core/Switch";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 import {
   makeStyles,
   createStyles,
@@ -59,7 +60,7 @@ export default function DefaultValueInput({
         config.defaultValue?.value ?? getFieldProp("initialValue", _type),
     },
   });
-
+  console.log(config);
   return (
     <>
       <Subheading>Default Value</Subheading>
@@ -109,7 +110,32 @@ export default function DefaultValueInput({
           />
         </MenuItem>
       </TextField>
-
+      {(!config.defaultValue || config.defaultValue.type === "undefined") && (
+        <>
+          <FormControlLabel
+            value="required"
+            label="Make this column required"
+            labelPlacement="start"
+            control={
+              <Switch
+                checked={config.required}
+                onChange={(event, checked) => handleChange("required")(checked)}
+                name="required"
+              />
+            }
+            style={{
+              marginLeft: 0,
+              justifyContent: "space-between",
+            }}
+          />
+          {
+            <Typography color="textSecondary" paragraph>
+              The row will not be created or updated unless all required values
+              are set.
+            </Typography>
+          }
+        </>
+      )}
       {config.defaultValue?.type === "static" && customFieldInput && (
         <form>
           <FormAutosave
