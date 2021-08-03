@@ -3,11 +3,11 @@ import meta from "../../package.json";
 
 const WIKI_PATHS = {
   updatingFiretable: "/Updating-Firetable",
-  derivatives: "/Derivatives",
+  derivatives: "/Derivative-Fields",
   defaultValues: "/Default-Values",
-  FtFunctions: "/FT-Functions",
+  FtFunctions: "/Firetable-Cloud-Functions",
   securityRules: "/Role-Based-Security-Rules",
-  setUpAuth: "/Set-Up-Firebase-Authentication",
+  setUpAuth: "/Setting-Up-Firebase-Authentication",
 };
 
 const WIKI_LINK_ROOT = meta.repository.url.replace(".git", "/wiki");
