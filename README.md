@@ -12,30 +12,30 @@
 
 <!-- [![Firetable: Combine the power of Firestore with the simplicity of spreadsheets](https://firetable.io/social-image.jpg)](https://firetable.io) -->
 
+
+
 <h3 align="center">
-  <a href="https://firetable.io">Website</a>
-  <span> · </span>
-  <a href="https://discord.gg/B8yAD5PDX4">Discord</a>
-  <span> · </span>
-  <a href="https://twitter.com/firetableio">Twitter</a>
-  
+<a href="https://github.com/FiretableProject/firetable/wiki/Getting-Started">
+✨ Getting Started Guide ✨
 </h3>
 
 <p align="center">
-  
   <a aria-label="License" href="https://github.com/FiretableProject/firetable/blob/master/LICENSE">
     <img src="https://badgen.net/github/license/FiretableProject/firetable" />
   </a>
-  
   <a aria-label="Commits" href="https://github.com/FiretableProject/firetable/commits/develop">
     <img src="https://badgen.net/github/last-commit/FiretableProject/firetable/develop" />
   </a>
-  
   <a aria-label="Firetable CLI" href="https://npmjs.com/package/firetable">
     <img src="https://badgen.net/npm/v/firetable" />
   </a>
-
 </p>
+
+<h3 align="center">
+  <a href="https://discord.gg/B8yAD5PDX4">Discord</a>
+  <span> · </span>
+  <a href="https://twitter.com/firetableio">Twitter</a>
+</h3>
 
 <p align="center">
   <a href="https://try.firetable.io" >
@@ -77,11 +77,12 @@
   - Uploaders: Image, File
   - Rich Editors: JSON, Code, Rich Text (HTML)
 
+- **Default values and Required fields.** You can assign default values to any Firestore fields on row creation (null, static or undefined). You can also define which fields are required for a row creation.
+
 - **Permission controlled views.** You can customize who sees what data and what
   action they can take with powerful set of access controls based on custom user
   roles.
   [Read more](https://github.com/FiretableProject/firetable/wiki/Role-Based-Security-Rules)
-  
   
 - **Bulk data actions.** You can import and export your Firestore data from/to CSV files.
 
@@ -119,16 +120,8 @@
 
 # Getting started
 
-To set up Firetable, you must be comfortable with working with the command line.
-
-You must have at least a basic understanding of how to use npm and install npm
-packages globally.
-
-We’ve created the Firetable CLI to automate the steps required to set up
-Firetable.
-
+To set up Firetable, you must be comfortable with working with the command line and have basic how to use npm. 
 ### [**Read the getting started guide →**](https://github.com/FiretableProject/firetable/wiki/Getting-Started)
-
 
 # Documentation
 
