@@ -12,7 +12,7 @@
 
 <!-- [![Firetable: Combine the power of Firestore with the simplicity of spreadsheets](https://firetable.io/social-image.jpg)](https://firetable.io) -->
 
-<h3 align="center"> ✨  <a href="https://github.com/FiretableProject/firetable/wiki/Getting-Started">Getting Started Guide</a> ✨</h3>
+<h3 align="center"> ✨ <a href="https://github.com/FiretableProject/firetable/wiki/Getting-Started">Getting Started Guide</a>✨</h3>
 
 <p align="center">
   <a aria-label="License" href="https://github.com/FiretableProject/firetable/blob/master/LICENSE">
