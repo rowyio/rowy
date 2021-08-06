@@ -52,6 +52,12 @@
 </h3>
 <br/>
 
+# Stay Up-to-Date
+Watch the releases of this repository to be notified for future updates
+
+<img src="https://user-images.githubusercontent.com/307298/128521637-4735b890-18bd-4ee5-940e-0013e25393a1.gif" alt="drawing" width="450"/>
+
+
 # Features
 
 - **Intuitive spreadsheet like interface for Firestore.** With Firetable UI you
