@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
 import { Menu } from "@material-ui/core";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
 import LockIcon from "@material-ui/icons/Lock";
@@ -63,20 +62,7 @@ export interface IMenuModalProps {
   handleSave: (fieldName: string, config: Record<string, any>) => void;
 }
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    paper: {
-      backgroundColor:
-        theme.palette.mode === "light"
-          ? "#f1f1f3"
-          : theme.palette.background.elevation?.[8] ??
-            theme.palette.background.paper,
-    },
-  })
-);
-
 export default function ColumnMenu() {
-  const classes = useStyles();
   const [modal, setModal] = useState(INITIAL_MODAL);
   const { tableState, tableActions, columnMenuRef } = useFiretableContext();
 
@@ -140,7 +126,7 @@ export default function ColumnMenu() {
     },
     {
       label: "Lock",
-      activeLabel: "Locked (unlock)",
+      activeLabel: "Unlock",
       icon: <LockOpenIcon />,
       activeIcon: <LockIcon />,
       onClick: () => {
@@ -171,8 +157,8 @@ export default function ColumnMenu() {
       active: column.resizable,
     },
     {
-      label: "Sort: Decreasing",
-      activeLabel: "Sorted: Decreasing",
+      label: "Sort: descending",
+      activeLabel: "Sorted: descending",
       icon: <ArrowDownwardIcon />,
       onClick: () => {
         tableActions.table.orderBy(
@@ -184,8 +170,8 @@ export default function ColumnMenu() {
       disabled: column.type === FieldType.id,
     },
     {
-      label: "Sort: Increasing",
-      activeLabel: "Sorted: Increasing",
+      label: "Sort: ascending",
+      activeLabel: "Sorted: ascending",
       icon: <ArrowUpwardIcon />,
       onClick: () => {
         tableActions.table.orderBy(
@@ -205,7 +191,7 @@ export default function ColumnMenu() {
       },
     },
     {
-      label: `Edit Type: ${getFieldProp("name", column.type)}`,
+      label: `Edit type: ${getFieldProp("name", column.type)}`,
       // This is based off the cell type
       icon: getFieldProp("icon", column.type),
       onClick: () => {
@@ -213,7 +199,7 @@ export default function ColumnMenu() {
       },
     },
     {
-      label: `Column Settings`,
+      label: `Column settings`,
       // This is based off the cell type
       icon: <SettingsIcon />,
       onClick: () => {
@@ -227,7 +213,7 @@ export default function ColumnMenu() {
     //   onClick: () => alert("REORDER"),
     // },
     {
-      label: "Add New to Left",
+      label: "Add new to left",
       icon: <ColumnPlusBeforeIcon />,
       onClick: () =>
         setModal({
@@ -238,7 +224,7 @@ export default function ColumnMenu() {
         }),
     },
     {
-      label: "Add New to Right",
+      label: "Add new to right",
       icon: <ColumnPlusAfterIcon />,
       onClick: () =>
         setModal({
@@ -249,7 +235,7 @@ export default function ColumnMenu() {
         }),
     },
     {
-      label: "Hide for Everyone",
+      label: "Hide for everyone",
       activeLabel: "Show",
       icon: <VisibilityOffIcon />,
       activeIcon: <VisibilityIcon />,
@@ -261,7 +247,7 @@ export default function ColumnMenu() {
       color: "error" as "error",
     },
     {
-      label: "Delete Column",
+      label: "Delete column",
       icon: <ColumnRemoveIcon />,
       onClick: () => {
         actions.remove(column.key);
@@ -294,7 +280,7 @@ export default function ColumnMenu() {
           onClose={handleClose}
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
           transformOrigin={{ vertical: "top", horizontal: "right" }}
-          classes={{ paper: classes.paper }}
+          sx={{ "& .MuiMenu-paper": { backgroundColor: "background.default" } }}
           MenuListProps={{ disablePadding: true }}
         >
           <MenuContents menuItems={menuItems} />

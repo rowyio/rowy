@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import clsx from "clsx";
 import _find from "lodash/find";
 
 import { makeStyles, createStyles } from "@material-ui/styles";
@@ -25,15 +24,13 @@ const useStyles = makeStyles((theme) =>
       backgroundColor: theme.palette.background.default,
     },
 
-    maxHeight: {
+    toolbar: {
       height: APP_BAR_HEIGHT,
       minHeight: "auto",
       minWidth: 0,
       maxWidth: "none",
-      padding: theme.spacing(0.75, 2),
+      padding: theme.spacing(0, 2),
     },
-
-    toolbar: { padding: theme.spacing(0, 3) },
 
     breadcrumbs: { flex: 1 },
   })
@@ -76,10 +73,11 @@ export default function Navigation({
         elevation={0}
         className={classes.appBar}
       >
-        <Toolbar className={clsx(classes.maxHeight, classes.toolbar)}>
+        <Toolbar className={classes.toolbar}>
           <IconButton
             aria-label="Open navigation drawer"
             onClick={() => setOpen(true)}
+            size="large"
             edge="start"
           >
             <MenuIcon />

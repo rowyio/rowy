@@ -7,18 +7,33 @@ import { alpha } from "@material-ui/core/styles";
 
 export const useStyles = makeStyles((theme) =>
   createStyles({
+    root: {
+      position: "relative",
+      zIndex: 1,
+    },
+
     active: {
-      borderColor: "currentColor",
+      color:
+        theme.palette.mode === "dark"
+          ? theme.palette.primary.light
+          : theme.palette.primary.dark,
       backgroundColor: alpha(
         theme.palette.primary.main,
-        theme.palette.action.hoverOpacity
+        theme.palette.action.selectedOpacity
       ),
+      borderColor: theme.palette.primary.main,
 
       "&:hover": {
-        color: theme.palette.primary.dark,
+        color:
+          theme.palette.mode === "dark"
+            ? theme.palette.primary.light
+            : theme.palette.primary.dark,
         backgroundColor: alpha(
-          theme.palette.primary.dark,
-          theme.palette.action.hoverOpacity
+          theme.palette.mode === "dark"
+            ? theme.palette.primary.light
+            : theme.palette.primary.dark,
+          theme.palette.action.selectedOpacity +
+            theme.palette.action.hoverOpacity
         ),
         borderColor: "currentColor",
       },
@@ -42,7 +57,7 @@ export const ButtonWithStatus = React.forwardRef(function ButtonWithStatus_(
       ref={ref}
       variant="outlined"
       color="primary"
-      className={clsx(active && classes.active, className)}
+      className={clsx(classes.root, active && classes.active, className)}
     />
   );
 });

@@ -12,6 +12,8 @@ import {
   ListItemText,
   ListItemSecondaryAction,
   ListItemIcon,
+  ListItem,
+  Link as MuiLink,
   Divider,
   Badge,
 } from "@material-ui/core";
@@ -42,7 +44,7 @@ const useStyles = makeStyles((theme) =>
 
     paper: { minWidth: 160 },
 
-    divider: { margin: theme.spacing(1, 2) },
+    // divider: { margin: theme.spacing(1, 2) },
 
     secondaryAction: { pointerEvents: "none" },
     secondaryIcon: {
@@ -50,11 +52,12 @@ const useStyles = makeStyles((theme) =>
       color: theme.palette.action.active,
     },
 
-    subMenu: {
-      backgroundColor:
-        theme.palette.background.elevation?.[24] ??
-        theme.palette.background.paper,
-      marginTop: theme.spacing(-1),
+    subMenu: { marginTop: theme.spacing(-0.5) },
+
+    version: {
+      userSelect: "none",
+      color: theme.palette.text.disabled,
+      margin: 0,
     },
   })
 );
@@ -115,6 +118,7 @@ export default function UserMenu(props: IconButtonProps) {
         aria-controls="user-menu"
         aria-haspopup="true"
         edge="end"
+        size="large"
         {...props}
         ref={anchorEl}
         onClick={() => setOpen(true)}
@@ -149,7 +153,7 @@ export default function UserMenu(props: IconButtonProps) {
           <ListItemText primary={displayName} secondary={email} />
         </MenuItem>
 
-        <Divider className={classes.divider} />
+        <Divider variant="middle" />
 
         <MenuItem onClick={(e) => setThemeSubMenu(e.target)}>
           Theme
@@ -196,25 +200,58 @@ export default function UserMenu(props: IconButtonProps) {
           </Menu>
         )}
 
-        <MenuItem component={Link} to={routes.userSettings}>
+        <MenuItem component={Link} to={routes.userSettings} disabled>
           User settings
         </MenuItem>
 
-        <Divider className={classes.divider} />
-
-        <MenuItem component={Link} to={routes.projectSettings}>
-          Project settings
-        </MenuItem>
-
-        <Divider className={classes.divider} />
+        <Divider variant="middle" />
 
         <MenuItem component={Link} to={routes.signOut}>
           Sign out
         </MenuItem>
 
-        <Divider className={classes.divider} />
+        <Divider variant="middle" />
+
+        <MenuItem component={Link} to={routes.projectSettings} disabled>
+          Project settings
+        </MenuItem>
 
         <UpdateChecker />
+
+        <ListItem>
+          <ListItemText
+            primary={
+              <MuiLink
+                component="a"
+                href={meta.repository.url.replace(".git", "") + "/releases"}
+                target="_blank"
+                rel="noopener"
+                underline="hover"
+                color="inherit"
+              >
+                {meta.name} v{meta.version}
+              </MuiLink>
+            }
+            secondary={
+              <>
+                Project:{" "}
+                <MuiLink
+                  component="a"
+                  href={`https://console.firebase.google.com/project/${projectId}`}
+                  target="_blank"
+                  rel="noopener"
+                  underline="hover"
+                  color="inherit"
+                >
+                  {projectId}
+                </MuiLink>
+              </>
+            }
+            primaryTypographyProps={{ variant: "caption", color: "inherit" }}
+            secondaryTypographyProps={{ variant: "caption", color: "inherit" }}
+            className={classes.version}
+          />
+        </ListItem>
       </Menu>
     </>
   );

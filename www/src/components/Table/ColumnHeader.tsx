@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import clsx from "clsx";
 import { HeaderRendererProps } from "react-data-grid";
 import { useDrag, useDrop, DragObjectWithType } from "react-dnd";
@@ -59,7 +60,7 @@ const useStyles = makeStyles((theme) =>
       background: theme.palette.background.default,
       color: theme.palette.text.primary,
 
-      margin: "-43px 0 0",
+      margin: "-43px 0 0 !important",
       padding: theme.spacing(0, 1.5, 0, 0),
 
       "& *": { lineHeight: "42px" },
@@ -141,16 +142,18 @@ export default function DraggableHeaderRenderer<R>({
   });
 
   const headerRef = useCombinedRefs(drag, drop);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
   if (!columnMenuRef || !tableState || !tableActions) return null;
   const { orderBy } = tableState;
 
-  const handleClick = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) =>
+  const handleOpenMenu = (e: React.MouseEvent) => {
+    e.preventDefault();
     columnMenuRef?.current?.setSelectedColumnHeader({
       column,
-      anchorEl: event.currentTarget,
+      anchorEl: buttonRef.current,
     });
+  };
 
   const isSorted = orderBy?.[0]?.key === (column.key as string);
   const isAsc = isSorted && orderBy?.[0]?.direction === "asc";
@@ -181,15 +184,18 @@ export default function DraggableHeaderRenderer<R>({
       )}
       alignItems="center"
       wrap="nowrap"
+      onContextMenu={handleOpenMenu}
     >
       <Tooltip
         title={
           <>
-            <Typography variant="subtitle2" component="p">
+            Click to copy field key:
+            <Typography
+              variant="subtitle2"
+              component="div"
+              sx={{ fontFamily: "fontFamilyMono" }}
+            >
               {column.key as string}
-            </Typography>
-            <Typography variant="body2" component="p">
-              <small>(Click to copy)</small>
             </Typography>
           </>
         }
@@ -211,29 +217,30 @@ export default function DraggableHeaderRenderer<R>({
           title={<Typography variant="subtitle2">{column.name}</Typography>}
           enterDelay={1000}
           placement="bottom-start"
-          PopperProps={{
-            modifiers: [
-              {
-                name: "flip",
-                options: {
-                  enabled: false,
-                },
-              },
-              {
-                name: "preventOverflow",
-                options: {
-                  enabled: false,
-                  boundariesElement: "scrollParent",
-                },
-              },
-              {
-                name: "hide",
-                options: {
-                  enabled: false,
-                },
-              },
-            ],
-          }}
+          disableInteractive
+          // PopperProps={{
+          //   modifiers: [
+          //     {
+          //       name: "flip",
+          //       options: {
+          //         enabled: false,
+          //       },
+          //     },
+          //     {
+          //       name: "preventOverflow",
+          //       options: {
+          //         enabled: false,
+          //         boundariesElement: "scrollParent",
+          //       },
+          //     },
+          //     {
+          //       name: "hide",
+          //       options: {
+          //         enabled: false,
+          //       },
+          //     },
+          //   ],
+          // }}
           TransitionComponent={Fade}
           classes={{ tooltip: classes.columnNameTooltip }}
         >
@@ -281,7 +288,8 @@ export default function DraggableHeaderRenderer<R>({
             className={classes.dropdownButton}
             aria-label={`Show ${column.name} column dropdown`}
             color="inherit"
-            onClick={handleClick}
+            onClick={handleOpenMenu}
+            ref={buttonRef}
           >
             <DropdownIcon />
           </IconButton>

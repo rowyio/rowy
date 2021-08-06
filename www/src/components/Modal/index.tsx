@@ -85,6 +85,7 @@ const useStyles = makeStyles((theme) =>
 
 export interface IModalProps extends Partial<Omit<DialogProps, "title">> {
   onClose: () => void;
+  disableBackdropClick?: boolean;
 
   title: React.ReactNode;
   header?: React.ReactNode;
@@ -103,6 +104,7 @@ export interface IModalProps extends Partial<Omit<DialogProps, "title">> {
 
 export default function Modal({
   onClose,
+  disableBackdropClick,
   title,
   header,
   footer,
@@ -117,9 +119,11 @@ export default function Modal({
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [open, setOpen] = useState(true);
-  const handleClose = () => {
+  const handleClose = (_, reason?: string) => {
+    if (disableBackdropClick && reason === "backdropClick") return;
+
     setOpen(false);
-    setTimeout(onClose, 300);
+    setTimeout(() => onClose(), 300);
   };
 
   return (

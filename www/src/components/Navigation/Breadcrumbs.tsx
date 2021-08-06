@@ -74,6 +74,7 @@ export default function Breadcrumbs(props: BreadcrumbsProps) {
           to={`${routes.home}#${section}`}
           variant="h6"
           color="textPrimary"
+          underline="hover"
         >
           {section}
         </Link>
@@ -117,6 +118,7 @@ export default function Breadcrumbs(props: BreadcrumbsProps) {
             )}`}
             variant={crumbProps.variant}
             color={crumbProps.color}
+            underline="hover"
           >
             {getLabel(crumb) || crumb.replace(/([A-Z])/g, " $1")}
           </Link>

@@ -1,6 +1,7 @@
 import _merge from "lodash/merge";
 
 import { createTheme, ThemeOptions } from "@material-ui/core/styles";
+import { lightThemeColors } from "theme/colors";
 
 export const HEADING_FONT = "Space Grotesk, system-ui, sans-serif";
 export const BODY_FONT = "Inter, system-ui, sans-serif";
@@ -34,13 +35,6 @@ declare module "@material-ui/core/styles/createTransitions" {
 }
 
 export const themeBase = {
-  palette: {
-    primary: { main: "#371FFF" },
-    secondary: { main: SECONDARY_GREY },
-    text: { secondary: SECONDARY_TEXT, log: LOG_TEXT },
-    error: { main: ERROR },
-    background: { default: "#F9F9FB" },
-  },
   typography: {
     fontFamily: BODY_FONT,
     fontFamilyMono: MONO_FONT,
@@ -49,100 +43,90 @@ export const themeBase = {
     h2: { fontFamily: HEADING_FONT },
     h3: {
       fontFamily: HEADING_FONT,
-      fontSize: toRem(36),
+      // fontSize: toRem(36),
       fontWeight: "bold",
     },
     h4: {
       fontFamily: HEADING_FONT,
-      fontSize: toRem(32),
+      // fontSize: toRem(32),
       fontWeight: "bold",
     },
     h5: {
       fontFamily: HEADING_FONT,
-      fontSize: toRem(24),
+      // fontSize: toRem(24),
       fontWeight: "bold",
     },
     h6: {
       fontFamily: HEADING_FONT,
-      fontSize: toRem(18),
+      // fontSize: toRem(18),
       fontWeight: "bold",
-      lineHeight: "normal",
+      // lineHeight: "normal",
     },
     subtitle1: {
-      lineHeight: 1.5,
+      // lineHeight: 1.5,
     },
     subtitle2: {
       fontFamily: HEADING_FONT,
-      fontSize: toRem(14),
+      // fontSize: toRem(14),
       fontWeight: "bold",
-      letterSpacing: toEm(0.4, 14),
-      lineHeight: 1.5,
+      // letterSpacing: toEm(0.4, 14),
+      // lineHeight: 1.5,
     },
     body1: {
       letterSpacing: toEm(0.5, 16),
-      lineHeight: 1.75,
+      // lineHeight: 1.75,
     },
     body2: {
-      fontSize: toRem(14),
-      letterSpacing: toEm(0.25, 14),
+      // fontSize: toRem(14),
+      // letterSpacing: toEm(0.25, 14),
     },
     button: {
-      fontFamily: BODY_FONT,
-      fontSize: toRem(14),
+      // fontFamily: BODY_FONT,
+      // fontSize: toRem(14),
       fontWeight: 600,
-      letterSpacing: toEm(0.75, 14),
+      letterSpacing: toEm(1.25, 14),
     },
     caption: {
-      fontSize: toRem(14),
-      letterSpacing: toEm(0.4, 14),
-      lineHeight: 20 / 14,
+      // fontSize: toRem(12),
+      // letterSpacing: toEm(0.4, 12),
+      // lineHeight: 20 / 12,
     },
     overline: {
-      fontFamily: BODY_FONT,
-      fontSize: toRem(13),
-      fontWeight: "bold",
-      letterSpacing: toEm(2, 13),
-      lineHeight: 16 / 13,
+      fontFamily: HEADING_FONT,
+      // fontSize: toRem(13),
+      // fontWeight: "bold",
+      // letterSpacing: toEm(2, 13),
+      // lineHeight: 16 / 13,
       // color: SECONDARY_TEXT,
     },
   },
-  shadows: [
-    // Based on https://tailwindcss.com/docs/box-shadow
-    // with additional “outline” shadow
-    "none", // 0
-    "0 0 0 1px rgba(0, 0, 0, 0.04), 0 1px 3px 0 rgba(0, 0, 0, 0.10), 0 1px 2px 0 rgba(0, 0, 0, 0.06)", // 1
-    "0 0 0 1px rgba(0, 0, 0, 0.04), 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)", // 2
-    "0 0 0 1px rgba(0, 0, 0, 0.04), 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)", // 3
-    "0 0 0 1px rgba(0, 0, 0, 0.05), 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)", // 4
-    "0 0 0 1px rgba(0, 0, 0, 0.05), 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)", // 5
-    "0 0 0 1px rgba(0, 0, 0, 0.05), 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)", // 6
-    "0 0 0 1px rgba(0, 0, 0, 0.05), 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)", // 7
-    "0 0 0 1px rgba(0, 0, 0, 0.06), 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)", // 8
-    "0 0 0 1px rgba(0, 0, 0, 0.06), 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)", // 9
-    "0 0 0 1px rgba(0, 0, 0, 0.06), 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)", // 10
-    "0 0 0 1px rgba(0, 0, 0, 0.06), 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)", // 11
-    "0 0 0 1px rgba(0, 0, 0, 0.06), 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)", // 12
-    "0 0 0 1px rgba(0, 0, 0, 0.06), 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)", // 13
-    "0 0 0 1px rgba(0, 0, 0, 0.06), 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)", // 14
-    "0 0 0 1px rgba(0, 0, 0, 0.06), 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)", // 15
-    "0 0 0 1px rgba(0, 0, 0, 0.08), 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)", // 16
-    "0 0 0 1px rgba(0, 0, 0, 0.08), 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)", // 17
-    "0 0 0 1px rgba(0, 0, 0, 0.08), 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)", // 18
-    "0 0 0 1px rgba(0, 0, 0, 0.08), 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)", // 19
-    "0 0 0 1px rgba(0, 0, 0, 0.08), 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)", // 20
-    "0 0 0 1px rgba(0, 0, 0, 0.08), 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)", // 21
-    "0 0 0 1px rgba(0, 0, 0, 0.08), 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)", // 22
-    "0 0 0 1px rgba(0, 0, 0, 0.08), 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)", // 23
-    "0 0 0 1px rgba(0, 0, 0, 0.08), 0 25px 50px -12px rgba(0, 0, 0, 0.25)", // 24
-  ],
-  shape: {
-    borderRadius: 4,
-  },
   components: {
+    MuiContainer: {
+      defaultProps: {
+        maxWidth: "xl",
+      },
+    },
     MuiTextField: {
       defaultProps: {
         variant: "filled",
-        // size: "small",
+        size: "small",
+      },
+    },
+    MuiInputBase: {
+      styleOverrides: {
+        inputSizeSmall: {
+          // TODO: spread body2
+          fontSize: toRem(14),
+          letterSpacing: toEm(0.25, 14),
+          lineHeight: toEm(20, 14),
+        },
+      },
+    },
+    MuiSelect: {
+      styleOverrides: {
+        iconOpen: {
+          transform: "rotate(180deg)",
+        },
       },
     },
     MuiPaper: {
@@ -155,7 +139,7 @@ export const themeBase = {
     MuiDialog: {
       styleOverrides: {
         paper: {
-          borderRadius: 8,
+          borderRadius: 12,
         },
       },
     },
@@ -163,6 +147,22 @@ export const themeBase = {
       styleOverrides: {
         root: {
           borderRadius: 24,
+        },
+      },
+    },
+    MuiFab: {
+      styleOverrides: {
+        sizeSmall: {
+          width: 36,
+          height: 36,
+        },
+      },
+    },
+    MuiSnackbar: {
+      styleOverrides: {
+        root: {
+          left: "calc(env(safe-area-inset-left) + 8px)",
+          bottom: "calc(env(safe-area-inset-bottom) + 8px)",
         },
       },
     },
@@ -174,6 +174,9 @@ export const themeBase = {
           padding: "4px 8px",
           borderRadius: 4,
         },
+      },
+      defaultProps: {
+        dense: true,
       },
     },
     MuiMenu: {
@@ -190,10 +193,10 @@ export const themeBase = {
           margin: "0 4px",
           padding: "6px 12px",
           borderRadius: 4,
-          "&.Mui-selected": {
-            color: "#371FFF",
-          },
         },
+      },
+      defaultProps: {
+        dense: true,
       },
     },
   },
@@ -444,7 +447,7 @@ export const darkThemeBase = {
 
 export const customizableLightTheme = (customization: ThemeOptions) => {
   const customizedLightThemeBase = createTheme(
-    _merge({}, themeBase, customization)
+    _merge({}, lightThemeColors(), themeBase, customization)
   );
 
   return createTheme(

@@ -6,7 +6,6 @@ import {
   Grid,
   AppBar,
   Toolbar,
-  Container,
   IconButton,
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
@@ -85,14 +84,13 @@ const useStyles = makeStyles((theme) =>
         opacity: 0,
       },
     },
-    maxHeight: {
+    toolbar: {
       height: APP_BAR_HEIGHT,
       minHeight: "auto",
       minWidth: 0,
       maxWidth: "none",
-      padding: theme.spacing(0.75, 2),
+      padding: theme.spacing(0, 2),
     },
-    toolbar: { padding: 0 },
 
     openButton: {
       opacity: 1,
@@ -149,24 +147,23 @@ export default function HomeNavigation({
           elevation={trigger ? 4 : 0}
           className={clsx(classes.appBar, trigger && classes.appBarScrolled)}
         >
-          <Container>
-            <Toolbar className={clsx(classes.maxHeight, classes.toolbar)}>
-              <IconButton
-                aria-label="Open navigation drawer"
-                onClick={() => setOpen(true)}
-                edge="start"
-                className={classes.openButton}
-              >
-                <MenuIcon />
-              </IconButton>
+          <Toolbar className={classes.toolbar}>
+            <IconButton
+              aria-label="Open navigation drawer"
+              onClick={() => setOpen(true)}
+              edge="start"
+              size="large"
+              className={classes.openButton}
+            >
+              <MenuIcon />
+            </IconButton>
 
-              <div className={classes.logo}>
-                <FiretableLogo />
-              </div>
+            <div className={classes.logo}>
+              <FiretableLogo />
+            </div>
 
-              <UserMenu />
-            </Toolbar>
-          </Container>
+            <UserMenu />
+          </Toolbar>
         </AppBar>
 
         {children}

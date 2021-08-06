@@ -155,7 +155,15 @@ export default function HomePage() {
   const TableCard = ({ table }) => {
     const checked = Boolean(_find(favs, table));
     return (
-      <Grid key={table.name} item xs={12} sm={6} md={open ? 6 : 4} lg={4}>
+      <Grid
+        key={table.name}
+        item
+        xs={12}
+        sm={6}
+        md={open ? 6 : 4}
+        lg={4}
+        xl={3}
+      >
         <StyledCard
           className={classes.card}
           overline={table.section}

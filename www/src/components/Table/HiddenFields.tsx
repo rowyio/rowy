@@ -15,31 +15,40 @@ import { DocActions } from "hooks/useDoc";
 import { formatSubTableName } from "../../utils/fns";
 const useStyles = makeStyles((theme) =>
   createStyles({
-    textField: { display: "none" },
-
+    listbox: {},
     option: {
-      padding: theme.spacing(0, 2),
-      marginBottom: -1,
+      "$listbox &": {
+        padding: theme.spacing(0, 2),
+        marginBottom: -1,
 
-      "&::after": { content: "none" },
+        "&::after": { content: "none" },
 
-      "&:hover": { backgroundColor: "transparent" },
-      "&:hover $hiddenIcon": { opacity: 0.5 },
+        "&:hover, &.Mui-focused, &.Mui-focusVisible": {
+          backgroundColor: "transparent",
 
-      '&[aria-selected="true"]': {
-        backgroundColor: "transparent",
+          position: "relative",
+          zIndex: 2,
 
-        position: "relative",
-        zIndex: 1,
+          "& > div": {
+            color: theme.palette.text.primary,
+            borderColor: "currentColor",
+            boxShadow: `0 0 0 1px ${theme.palette.text.primary} inset`,
+          },
+          "& $hiddenIcon": { opacity: 0.5 },
+        },
 
-        "& $hiddenIcon": { opacity: "1 !important" },
+        '&[aria-selected="true"], &[aria-selected="true"].Mui-focused, &[aria-selected="true"].Mui-focusVisible': {
+          backgroundColor: "transparent",
+
+          position: "relative",
+          zIndex: 1,
+
+          "& $hiddenIcon": { opacity: 1 },
+        },
       },
     },
 
-    hiddenIcon: {
-      opacity: 0,
-      transition: theme.transitions.create("opacity"),
-    },
+    hiddenIcon: { opacity: 0 },
   })
 );
 
@@ -89,13 +98,15 @@ export default function HiddenFields() {
 
     setOpen(false);
   };
-  const renderOption = (option, { selected }) => (
-    <Column
-      label={option.label}
-      type={tableState.columns[option.value].type}
-      secondaryItem={<VisibilityOffIcon className={classes.hiddenIcon} />}
-      active={selected}
-    />
+  const renderOption = (props, option, { selected }) => (
+    <li {...props}>
+      <Column
+        label={option.label}
+        type={tableState.columns[option.value]?.type}
+        secondaryItem={<VisibilityOffIcon className={classes.hiddenIcon} />}
+        active={selected}
+      />
+    </li>
   );
   return (
     <>
@@ -109,12 +120,12 @@ export default function HiddenFields() {
       </ButtonWithStatus>
       <MultiSelect
         TextFieldProps={{
-          className: classes.textField,
+          style: { display: "none" },
           SelectProps: { open, MenuProps: { anchorEl: buttonRef.current } },
         }}
         {...({
           AutocompleteProps: {
-            classes: { option: classes.option },
+            classes: { listbox: classes.listbox, option: classes.option },
             renderOption,
           },
         } as any)}

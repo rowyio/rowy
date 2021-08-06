@@ -14,11 +14,9 @@ export const useStyles = makeStyles((theme) =>
 
     paper: {
       border: "none",
-      boxShadow:
-        "0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 8px 10px 1px rgba(0, 0, 0, 0.14)",
-      borderRadius: `${(theme.shape.borderRadius as number) * 2}px 0 0 ${
-        (theme.shape.borderRadius as number) * 2
-      }px`,
+      boxShadow: theme.shadows[16].replace(/, 0 (\d+px)/g, ", -$1 0"),
+      borderTopLeftRadius: `${(theme.shape.borderRadius as number) * 3}px`,
+      borderBottomLeftRadius: `${(theme.shape.borderRadius as number) * 3}px`,
 
       width: DRAWER_WIDTH,
       overflowX: "visible",
@@ -29,7 +27,7 @@ export const useStyles = makeStyles((theme) =>
         duration: theme.transitions.duration.standard,
       }),
 
-      zIndex: theme.zIndex.drawer + 50,
+      zIndex: theme.zIndex.drawer - 1,
     },
     paperClose: {
       transform: `translateX(${DRAWER_WIDTH - DRAWER_COLLAPSED_WIDTH}px)`,
@@ -55,8 +53,12 @@ export const useStyles = makeStyles((theme) =>
     fab: {
       display: "flex",
 
-      "&$disabled": {
-        boxShadow: theme.shadows[6],
+      boxShadow: theme.shadows[16],
+      "&:active": { boxShadow: theme.shadows[16] },
+
+      "&.Mui-disabled": {
+        boxShadow: theme.shadows[16],
+        backgroundColor: theme.palette.background.default,
         // backgroundColor:
         //   theme.palette.grey[theme.palette.mode === "light" ? 300 : 800],
       },
@@ -67,7 +69,7 @@ export const useStyles = makeStyles((theme) =>
     navFabContainer: {
       position: "absolute",
       top: theme.spacing(8),
-      left: -theme.spacing(2.5),
+      left: theme.spacing(-2.5),
       zIndex: theme.zIndex.drawer + 1,
     },
     "@keyframes navFab": {
@@ -82,12 +84,12 @@ export const useStyles = makeStyles((theme) =>
       position: "absolute",
       top: "50%",
       transform: "translateY(-50%)",
-      left: -theme.spacing(3.5),
+      left: theme.spacing(-3.5),
       zIndex: theme.zIndex.drawer + 1,
     },
     drawerFabIcon: {
-      width: "2em",
-      height: "2em",
+      // width: "2em",
+      // height: "2em",
       "$open &": { transform: "rotate(180deg)" },
     },
 

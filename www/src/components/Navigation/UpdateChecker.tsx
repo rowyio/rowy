@@ -2,14 +2,11 @@ import { useState, useEffect } from "react";
 import createPersistedState from "use-persisted-state";
 import { differenceInDays } from "date-fns";
 
-import {
-  makeStyles,
-  createStyles,}from'@material-ui/styles'
+import { makeStyles, createStyles } from "@material-ui/styles";
 import {
   MenuItem,
   ListItemText,
   ListItemSecondaryAction,
-  Link,
 } from "@material-ui/core";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 
@@ -27,13 +24,6 @@ const useStyles = makeStyles((theme) =>
     secondaryIcon: {
       display: "block",
       color: theme.palette.action.active,
-    },
-
-    version: {
-      display: "block",
-      padding: theme.spacing(1, 2),
-      userSelect: "none",
-      color: theme.palette.text.disabled,
     },
   })
 );
@@ -96,59 +86,45 @@ export default function UpdateChecker() {
     if (latestUpdate?.tag_name <= "v" + meta.version) setLatestUpdate(null);
   }, [latestUpdate, setLatestUpdate]);
 
+  if (checkState === "LOADING")
+    return <MenuItem disabled>Checking for updates…</MenuItem>;
+  if (checkState === "NO_UPDATE")
+    return <MenuItem disabled>No updates available</MenuItem>;
+  if (latestUpdate === null)
+    return <MenuItem onClick={checkForUpdate}>Check for updates</MenuItem>;
+
   return (
     <>
-      {checkState === "LOADING" ? (
-        <MenuItem disabled>Checking for updates…</MenuItem>
-      ) : checkState === "NO_UPDATE" ? (
-        <MenuItem disabled>No updates available</MenuItem>
-      ) : latestUpdate === null ? (
-        <MenuItem onClick={checkForUpdate}>Check for updates</MenuItem>
-      ) : (
-        <>
-          <MenuItem
-            component="a"
-            href={latestUpdate?.html_url}
-            target="_blank"
-            rel="noopener"
-          >
-            <ListItemText
-              primary="Update available"
-              secondary={latestUpdate?.tag_name}
-            />
-            <ListItemSecondaryAction className={classes.secondaryAction}>
-              <OpenInNewIcon className={classes.secondaryIcon} />
-            </ListItemSecondaryAction>
-          </MenuItem>
-
-          <MenuItem
-            component="a"
-            href={WIKI_LINKS.updatingFiretable}
-            target="_blank"
-            rel="noopener"
-          >
-            <ListItemText secondary="How to update Firetable" />
-            <ListItemSecondaryAction className={classes.secondaryAction}>
-              <OpenInNewIcon
-                color="secondary"
-                fontSize="small"
-                className={classes.secondaryIcon}
-              />
-            </ListItemSecondaryAction>
-          </MenuItem>
-        </>
-      )}
-
-      <Link
-        variant="caption"
+      <MenuItem
         component="a"
-        href={meta.repository.url.replace(".git", "") + "/releases"}
+        href={latestUpdate?.html_url}
         target="_blank"
         rel="noopener"
-        className={classes.version}
       >
-        {meta.name} v{meta.version}
-      </Link>
+        <ListItemText
+          primary="Update available"
+          secondary={latestUpdate?.tag_name}
+        />
+        <ListItemSecondaryAction className={classes.secondaryAction}>
+          <OpenInNewIcon className={classes.secondaryIcon} />
+        </ListItemSecondaryAction>
+      </MenuItem>
+
+      <MenuItem
+        component="a"
+        href={WIKI_LINKS.updatingFiretable}
+        target="_blank"
+        rel="noopener"
+      >
+        <ListItemText secondary="How to update Firetable" />
+        <ListItemSecondaryAction className={classes.secondaryAction}>
+          <OpenInNewIcon
+            color="secondary"
+            fontSize="small"
+            className={classes.secondaryIcon}
+          />
+        </ListItemSecondaryAction>
+      </MenuItem>
     </>
   );
 }

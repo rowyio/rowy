@@ -18,9 +18,6 @@ const useStyles = makeStyles((theme) =>
       padding: theme.spacing(0, 1, 0, 1.5),
 
       color: theme.palette.text.secondary,
-      transition: theme.transitions.create("color", {
-        duration: theme.transitions.duration.short,
-      }),
       "&:hover": { color: theme.palette.text.primary },
 
       "& svg": { display: "block" },
@@ -29,15 +26,23 @@ const useStyles = makeStyles((theme) =>
     active: {
       backgroundColor: alpha(
         theme.palette.primary.main,
-        theme.palette.action.activatedOpacity
+        theme.palette.action.selectedOpacity
       ),
-      color: theme.palette.primary.main,
+      color:
+        theme.palette.mode === "dark"
+          ? theme.palette.text.primary
+          : theme.palette.primary.dark,
       borderColor: alpha(
         theme.palette.primary.main,
         theme.palette.action.disabledOpacity
       ),
 
-      "&:hover": { color: theme.palette.primary.dark },
+      "&:hover": {
+        color:
+          theme.palette.mode === "dark"
+            ? theme.palette.text.primary
+            : theme.palette.primary.dark,
+      },
     },
 
     columnNameContainer: {

@@ -96,24 +96,23 @@ const useStyles = makeStyles((theme) =>
     bottomButtons: { marginTop: theme.spacing(4.5) },
 
     activeButton: {
-      borderTopRightRadius: 0,
-      borderBottomRightRadius: 0,
+      // borderTopRightRadius: 0,
+      // borderBottomRightRadius: 0,
     },
 
     filterChip: {
       borderTopLeftRadius: 0,
       borderBottomLeftRadius: 0,
-      backgroundColor: theme.palette.background.paper,
-      marginLeft: -1,
-      borderColor: theme.palette.action.disabled,
+      borderTopRightRadius: 24,
+      borderBottomRightRadius: 24,
+      borderLeft: "none",
+      // backgroundColor: theme.palette.background.paper,
+      height: 36,
+      paddingLeft: 36 / 2,
+      marginLeft: -36 / 2,
     },
     filterChipLabel: {
-      ...theme.typography.subtitle2,
-      lineHeight: 1,
-    },
-    filterChipDelete: {
-      color: theme.palette.primary.main,
-      "&:hover": { color: theme.palette.primary.dark },
+      paddingLeft: theme.spacing(1),
     },
   })
 );
@@ -367,7 +366,6 @@ const Filters = () => {
             classes={{
               root: classes.filterChip,
               label: classes.filterChipLabel,
-              deleteIcon: classes.filterChipDelete,
             }}
             variant="outlined"
           />

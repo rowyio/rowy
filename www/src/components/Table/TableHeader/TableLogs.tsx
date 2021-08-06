@@ -103,7 +103,8 @@ const useStyles = makeStyles((theme) =>
       fontFamily: MONO_FONT,
       letterSpacing: 0.5,
       lineHeight: 1.5,
-      color: LOG_TEXT,
+      // TODO:
+      color: "#CCC",
 
       "& code": {
         fontFamily: MONO_FONT,

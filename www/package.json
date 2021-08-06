@@ -1,6 +1,6 @@
 {
   "name": "Firetable",
-  "version": "1.4.0",
+  "version": "2.0.0",
   "homepage": "https://firetable.io/",
   "repository": {
     "type": "git",
@@ -8,12 +8,12 @@
   },
   "private": true,
   "dependencies": {
-    "@antlerengineering/form-builder": "^3.0.0-1",
+    "@antlerengineering/form-builder": "^3.0.0-2",
     "@antlerengineering/multiselect": "^1.0.0-0",
     "@date-io/date-fns": "1.x",
     "@emotion/react": "^11.4.0",
     "@emotion/styled": "^11.3.0",
-    "@material-ui/core": "^5.0.0-beta.0",
+    "@material-ui/core": "^5.0.0-beta.1",
     "@material-ui/icons": "^5.0.0-beta.0",
     "@material-ui/lab": "^5.0.0-alpha.39",
     "@material-ui/styles": "^5.0.0-beta.0",
@@ -22,7 +22,7 @@
     "@tinymce/tinymce-react": "^3.4.0",
     "algoliasearch": "^4.8.6",
     "ansi-to-react": "^6.1.5",
-    "chroma-js": "^2.1.0",
+    "chroma-js": "^2.1.2",
     "csv-parse": "^4.15.3",
     "date-fns": "^2.19.0",
     "dompurify": "^2.2.6",

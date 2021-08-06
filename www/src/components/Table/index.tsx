@@ -171,10 +171,7 @@ export default function Table() {
         <Hotkeys selectedCell={selectedCell} />
       </Suspense> */}
       <div className={classes.tableWrapper} ref={rowsContainerRef}>
-        <TableHeader
-          rowHeight={rowHeight}
-          updateConfig={tableActions.table.updateConfig}
-        />
+        <TableHeader />
 
         {!tableState.loadingColumns ? (
           <DndProvider backend={HTML5Backend}>

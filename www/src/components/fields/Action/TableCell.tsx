@@ -50,7 +50,6 @@ export default function Action({
           column={column}
           onSubmit={onSubmit}
           value={value}
-          size="small"
           color="secondary"
           style={{ width: 36, height: 36 }}
           disabled={disabled}

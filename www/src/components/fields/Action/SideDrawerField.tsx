@@ -2,7 +2,7 @@ import { Controller, useWatch } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 
 import { makeStyles, createStyles } from "@material-ui/styles";
-import { Grid, Typography, Link } from "@material-ui/core";
+import { Grid, Link } from "@material-ui/core";
 
 import ActionFab from "./ActionFab";
 import { useFieldStyles } from "components/SideDrawer/Form/utils";
@@ -41,7 +41,7 @@ export default function Action({
           <Grid container alignItems="center" wrap="nowrap" spacing={2}>
             <Grid item xs className={classes.labelGridItem}>
               <div className={fieldClasses.root}>
-                <Typography variant="body1" className={classes.label}>
+                <span className={classes.label}>
                   {hasRan && isUrl(value.status) ? (
                     <Link
                       href={value.status}
@@ -57,7 +57,7 @@ export default function Action({
                   ) : (
                     sanitiseCallableName(column.key)
                   )}
-                </Typography>
+                </span>
               </div>
             </Grid>
 

@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) =>
       marginTop: 0,
       marginBottom: theme.spacing(1),
 
-      padding: theme.spacing(0, 2, 0, 0.5),
+      padding: theme.spacing(0, 2),
     },
     logo: { marginLeft: theme.spacing(1.5) },
 
@@ -88,6 +88,8 @@ export default function NavDrawer({
           <IconButton
             aria-label="Close navigation drawer"
             onClick={props.onClose as any}
+            edge="start"
+            size="large"
           >
             <CloseIcon />
           </IconButton>

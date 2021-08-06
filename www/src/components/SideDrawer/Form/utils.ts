@@ -22,20 +22,28 @@ export const useFieldStyles = makeStyles((theme) =>
   createStyles({
     root: {
       borderRadius: theme.shape.borderRadius,
-      backgroundColor:
-        theme.palette.mode === "light"
-          ? "rgba(0, 0, 0, 0.09)"
-          : "rgba(255, 255, 255, 0.09)",
       padding: theme.spacing(1, 1, 1, 1.5),
 
+      // https://github.com/mui-org/material-ui/blob/next/packages/material-ui/src/FilledInput/FilledInput.js#L46
+      backgroundColor:
+        theme.palette.mode === "light"
+          ? "rgba(0, 0, 0, 0.06)"
+          : "rgba(255, 255, 255, 0.09)",
+      "&.Mui-disabled": {
+        backgroundColor:
+          theme.palette.mode === "light"
+            ? "rgba(0, 0, 0, 0.12)"
+            : "rgba(255, 255, 255, 0.12)",
+      },
+
       width: "100%",
-      minHeight: 56,
+      minHeight: 36,
 
       display: "flex",
       textAlign: "left",
       alignItems: "center",
 
-      ...theme.typography.body1,
+      ...theme.typography.body2,
       color: theme.palette.text.primary,
     },
   })

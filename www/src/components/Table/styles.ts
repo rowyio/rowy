@@ -66,10 +66,15 @@ export const useStyles = makeStyles((theme) =>
         },
 
         "& .rdg-cell-frozen-last": {
-          boxShadow:
-            theme.palette.mode === "light"
-              ? "2px 0 4px 0px rgba(0, 0, 0, .08)"
-              : "2px 0 4px 0px rgba(0, 0, 0, .67)",
+          // boxShadow:
+          //   theme.palette.mode === "light"
+          //     ? "2px 0 4px 0px rgba(0, 0, 0, .08)"
+          //     : "2px 0 4px 0px rgba(0, 0, 0, .67)",
+          boxShadow: theme.shadows[2]
+            .replace(/, 0 (\d+px)/g, ", $1 0")
+            .split("),")
+            .slice(1)
+            .join("),"),
         },
 
         "& .rdg-cell-copied": {

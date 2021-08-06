@@ -1,4 +1,4 @@
-export const antlerPalette = {
+export const palette = {
   aBlack: {
     500: "#282829",
   },
@@ -137,7 +137,7 @@ export const antlerPalette = {
   },
 } as const;
 
-export const antlerPaletteToMui = (
+export const paletteToMui = (
   color: Record<"700" | "300" | "500" | "100", string>
 ) => ({
   main: color[500],
@@ -145,4 +145,4 @@ export const antlerPaletteToMui = (
   dark: color[700],
 });
 
-export default antlerPalette;
+export default palette;

@@ -17,10 +17,11 @@ const useStyles = makeStyles((theme) =>
       width: "100%",
       display: "flex",
 
-      padding: theme.spacing(9 / 8, 1, 9 / 8, 1.5),
+      padding: theme.spacing(0, 0, 0, 1.5),
     },
 
     label: {
+      ...theme.typography.body2,
       flexGrow: 1,
       whiteSpace: "normal",
     },

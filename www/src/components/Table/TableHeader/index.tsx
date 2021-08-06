@@ -1,11 +1,5 @@
 import { makeStyles, createStyles } from "@material-ui/styles";
-import {
-  Grid,
-  TextField,
-  MenuItem,
-  Typography,
-  Button,
-} from "@material-ui/core";
+import { Grid, Button } from "@material-ui/core";
 
 import { isCollectionGroup } from "utils/fns";
 import AddRowIcon from "assets/icons/AddRow";
@@ -16,6 +10,7 @@ import Export from "./Export";
 import TableSettings from "./TableSettings";
 import TableLogs from "./TableLogs";
 import HiddenFields from "../HiddenFields";
+import RowHeight from "./RowHeight";
 import Sparks from "./Sparks";
 import ReExecute from "./ReExecute";
 
@@ -30,7 +25,7 @@ const useStyles = makeStyles((theme) =>
     root: {
       width: "100%",
       margin: 0,
-      padding: theme.spacing(0, 1.5, 1.5),
+      padding: theme.spacing(0, 1.25, 1.5, 0.5),
       minHeight: TABLE_HEADER_HEIGHT,
 
       overflowX: "auto",
@@ -53,29 +48,13 @@ const useStyles = makeStyles((theme) =>
     },
 
     spacer: { minWidth: theme.spacing(8) },
-
-    dropdown: {
-      minWidth: 120,
-      margin: theme.spacing(0, 0, 0, -1),
-    },
-    inputBaseRoot: {
-      borderRadius: theme.shape.borderRadius,
-    },
   })
 );
-
-interface ITableHeaderProps {
-  rowHeight: number;
-  updateConfig: Function;
-}
 
 /**
  * TODO: Make this properly mobile responsive, not just horizontally scrolling
  */
-export default function TableHeader({
-  rowHeight,
-  updateConfig,
-}: ITableHeaderProps) {
+export default function TableHeader() {
   const classes = useStyles();
 
   const { currentUser } = useAppContext();
@@ -95,7 +74,7 @@ export default function TableHeader({
     <Grid
       container
       alignItems="center"
-      spacing={2}
+      spacing={1.5}
       wrap="nowrap"
       className={classes.root}
     >
@@ -154,43 +133,10 @@ export default function TableHeader({
       <Grid item xs className={classes.spacer} />
 
       <Grid item>
-        <Typography variant="overline" component="label" htmlFor="rowHeight">
-          Height
-        </Typography>
+        <RowHeight />
       </Grid>
 
-      <Grid item>
-        <TextField
-          select
-          variant="filled"
-          className={classes.dropdown}
-          value={rowHeight ?? 43}
-          onChange={(event) => {
-            updateConfig("rowHeight", event.target.value);
-          }}
-          inputProps={{
-            name: "rowHeight",
-            id: "rowHeight",
-          }}
-          // margin="dense"
-          size="small"
-          InputProps={{
-            disableUnderline: true,
-            classes: { root: classes.inputBaseRoot },
-          }}
-          SelectProps={{
-            // classes: { root: classes.select },
-            displayEmpty: true,
-          }}
-          hiddenLabel
-        >
-          <MenuItem value={43}>Tall</MenuItem>
-          <MenuItem value={65}>Grande</MenuItem>
-          <MenuItem value={100}>Venti</MenuItem>
-          <MenuItem value={150}>Trenta</MenuItem>
-        </TextField>
-      </Grid>
-
+      {/* Spacer */}
       <Grid item />
 
       {!isCollectionGroup() && (

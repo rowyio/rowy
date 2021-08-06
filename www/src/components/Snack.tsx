@@ -3,7 +3,7 @@ import { Snackbar, CircularProgress } from "@material-ui/core";
 import Alert from "@material-ui/core/Alert";
 
 import { useSnackContext } from "contexts/SnackContext";
-import antlerPalette from "Theme/antlerPalette";
+import antlerPalette from "theme/palette";
 
 const useStyles = makeStyles((theme) =>
   createStyles({

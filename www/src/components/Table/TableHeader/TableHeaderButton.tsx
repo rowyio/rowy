@@ -15,7 +15,7 @@ export default function TableHeaderButton({
       <Button
         variant="contained"
         color="secondary"
-        style={{ minWidth: 36, height: 36, padding: 0 }}
+        style={{ minWidth: 36, height: 36, padding: 0, borderRadius: 18 }}
         aria-label={title}
         {...props}
       >

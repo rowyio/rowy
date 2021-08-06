@@ -71,6 +71,12 @@ export default function Settings({ handleChange, config }: ISettingsProps) {
         onChange={handleChange("primaryKeys")}
       />
       <MultiSelect
+        label={"Snapshot Fields"}
+        value={config.snapshotFields ?? []}
+        options={columns.filter((c) => ![FieldType.subTable].includes(c.type))}
+        onChange={handleChange("snapshotFields")}
+      />
+      <MultiSelect
         label={"Tracked Fields"}
         value={config.trackedFields ?? []}
         options={columns.filter((c) => ![FieldType.subTable].includes(c.type))}

@@ -196,6 +196,7 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
             action={(actions) =>
               setTimeout(() => actions?.updateIndicator(), 200)
             }
+            variant="fullWidth"
           >
             <Tab label="Upload" value="upload" />
             <Tab label="Paste" value="paste" />

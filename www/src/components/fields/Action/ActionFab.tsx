@@ -136,6 +136,7 @@ export default function ActionFab({
         ) ||
         disabled
       }
+      size="small"
       {...props}
     >
       {isRunning ? (

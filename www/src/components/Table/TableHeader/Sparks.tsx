@@ -4,7 +4,7 @@ import { useConfirmation } from "components/ConfirmationDialog";
 import { useSnackContext } from "contexts/SnackContext";
 import { db } from "../../../firebase";
 
-import { DialogContentText, Chip } from "@material-ui/core";
+import { DialogContentText, Chip, Stack } from "@material-ui/core";
 import Alert from "@material-ui/core/Alert";
 import TableHeaderButton from "./TableHeaderButton";
 import SparkIcon from "@material-ui/icons/OfflineBolt";
@@ -96,6 +96,8 @@ export default function SparksEditor() {
       {open && !!tableState && (
         <Modal
           onClose={handleClose}
+          disableBackdropClick
+          disableEscapeKeyDown
           maxWidth="xl"
           fullWidth
           title={
@@ -112,7 +114,7 @@ export default function SparksEditor() {
             </>
           }
           children={
-            <div style={{ height: "calc(100vh - 250px)" }}>
+            <Stack style={{ height: "calc(100vh - 228px)" }}>
               <Alert severity="warning">
                 This is an alpha feature. Cloud Functions and Google Cloud
                 integration setup is required, but the process is not yet
@@ -125,28 +127,31 @@ export default function SparksEditor() {
                 triggers on rows in this table.
               </DialogContentText>
 
-              <CodeEditor
-                script={currentSparks}
-                height="100%"
-                handleChange={(newValue) => {
-                  setLocalSparks(newValue);
-                }}
-                onValideStatusUpdate={({ isValid }) => {
-                  setIsSparksValid(isValid);
-                }}
-                diagnosticsOptions={{
-                  noSemanticValidation: false,
-                  noSyntaxValidation: false,
-                  noSuggestionDiagnostics: true,
-                }}
-              />
+              <div style={{ flexGrow: 1, flexBasis: 240 }}>
+                <CodeEditor
+                  script={currentSparks}
+                  height="100%"
+                  handleChange={(newValue) => {
+                    setLocalSparks(newValue);
+                  }}
+                  onValideStatusUpdate={({ isValid }) => {
+                    setIsSparksValid(isValid);
+                  }}
+                  diagnosticsOptions={{
+                    noSemanticValidation: false,
+                    noSyntaxValidation: false,
+                    noSuggestionDiagnostics: true,
+                  }}
+                />
+              </div>
+
               {!isSparksValid && (
                 <Alert severity="error">
                   You need to resolve all errors before you are able to save. Or
                   press shift and control key to enable force save.
                 </Alert>
               )}
-            </div>
+            </Stack>
           }
           actions={{
             primary: showForceSave
