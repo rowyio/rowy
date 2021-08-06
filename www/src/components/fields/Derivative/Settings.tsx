@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { Typography } from "@material-ui/core";
+import { Typography, Grid } from "@material-ui/core";
 import MultiSelect from "@antlerengineering/multiselect";
 import FieldSkeleton from "components/SideDrawer/Form/FieldSkeleton";
 import { FieldType } from "constants/fields";
@@ -24,28 +24,38 @@ const Settings = ({ config, handleChange }) => {
     .map((c) => ({ label: c.name, value: c.key }));
   return (
     <>
-      <MultiSelect
-        label={"Listener fields (this script runs when these fields change)"}
-        options={columnOptions}
-        value={config.listenerFields ?? []}
-        onChange={handleChange("listenerFields")}
-      />
-      <Typography variant="overline">Field type of the output</Typography>
-      <FieldsDropdown
-        value={config.renderFieldType}
-        options={Object.values(FieldType).filter(
-          (f) =>
-            ![
-              FieldType.derivative,
-              FieldType.aggregate,
-              FieldType.subTable,
-              FieldType.action,
-            ].includes(f)
-        )}
-        onChange={(newType: any) => {
-          handleChange("renderFieldType")(newType.target.value);
-        }}
-      />
+      <Grid container direction="row" spacing={2}>
+        <Grid item xs={12} md={6}>
+          <Typography variant="overline">listener Fields</Typography>
+          <MultiSelect
+            //label={"Listener fields"}
+            options={columnOptions}
+            value={config.listenerFields ?? []}
+            onChange={handleChange("listenerFields")}
+          />
+          <Typography color="textSecondary" paragraph>
+            Changes to these fields will trigger the evaluation of the column.
+          </Typography>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Typography variant="overline">Output Field type</Typography>
+          <FieldsDropdown
+            value={config.renderFieldType}
+            options={Object.values(FieldType).filter(
+              (f) =>
+                ![
+                  FieldType.derivative,
+                  FieldType.aggregate,
+                  FieldType.subTable,
+                  FieldType.action,
+                ].includes(f)
+            )}
+            onChange={(newType: any) => {
+              handleChange("renderFieldType")(newType.target.value);
+            }}
+          />
+        </Grid>
+      </Grid>
       <Typography variant="overline">derivative script</Typography>
       <CodeEditorHelper docLink={WIKI_LINKS.derivatives} />
       <Suspense fallback={<FieldSkeleton height={200} />}>

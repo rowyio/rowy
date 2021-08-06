@@ -31,5 +31,6 @@ export const config: IFieldConfig = {
   TableEditor: NullEditor as any,
   SideDrawerField,
   initializable: false,
+  requireConfiguration: true,
 };
 export default config;

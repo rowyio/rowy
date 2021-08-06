@@ -27,6 +27,10 @@ import { useFiretableContext } from "contexts/FiretableContext";
 
 import { useAppContext } from "contexts/AppContext";
 import { DocActions } from "hooks/useDoc";
+const getType = (column) =>
+  column.type === FieldType.derivative
+    ? column.config.renderFieldType
+    : column.type;
 const OPERATORS = [
   {
     value: "==",
@@ -166,6 +170,7 @@ const Filters = () => {
         operator: "",
         value: "",
       };
+      const type = getType(selectedColumn);
       if (
         [
           FieldType.phone,
@@ -173,21 +178,21 @@ const Filters = () => {
           FieldType.url,
           FieldType.email,
           FieldType.checkbox,
-        ].includes(selectedColumn.type)
+        ].includes(type)
       ) {
         updatedQuery = { ...updatedQuery, operator: "==" };
       }
-      if (selectedColumn.type === FieldType.checkbox) {
+      if (type === FieldType.checkbox) {
         updatedQuery = { ...updatedQuery, value: false };
       }
-      if (selectedColumn.type === FieldType.connectTable) {
+      if (type === FieldType.connectTable) {
         updatedQuery = {
           key: `${selectedColumn.key}ID`,
           operator: "array-contains-any",
           value: [],
         };
       }
-      if (selectedColumn.type === FieldType.multiSelect) {
+      if (type === FieldType.multiSelect) {
         updatedQuery = {
           ...updatedQuery,
           operator: "array-contains-any",
@@ -200,7 +205,7 @@ const Filters = () => {
 
   const operators = selectedColumn
     ? OPERATORS.filter((operator) =>
-        operator.compatibleTypes.includes(selectedColumn.type)
+        operator.compatibleTypes.includes(getType(selectedColumn))
       )
     : [];
 
@@ -220,7 +225,8 @@ const Filters = () => {
   const id = open ? "simple-popper" : undefined;
 
   const renderInputField = (selectedColumn, operator) => {
-    switch (selectedColumn.type) {
+    const type = getType(selectedColumn);
+    switch (type) {
       case FieldType.checkbox:
         return (
           <Switch

@@ -1,5 +1,6 @@
 export enum routes {
   home = "/",
+  projectSettings = "/?modal=settings",
   auth = "/auth",
   impersonatorAuth = "/impersonatorAuth",
   jwtAuth = "/jwtAuth",

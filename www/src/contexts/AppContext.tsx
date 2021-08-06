@@ -3,7 +3,7 @@ import { auth, db } from "../firebase";
 import firebase from "firebase/app";
 import useDoc from "hooks/useDoc";
 import createPersistedState from "use-persisted-state";
-
+import { analytics } from "analytics";
 import {
   useMediaQuery,
   ThemeProvider,
@@ -53,6 +53,10 @@ export const AppProvider: React.FC = ({ children }) => {
   // Get userDoc
   useEffect(() => {
     if (currentUser) {
+      analytics.setUserId(currentUser.uid);
+      analytics.setUserProperties({
+        ft_instance: window.location.hostname,
+      });
       dispatchUserDoc({ path: `_FT_USERS/${currentUser.uid}` });
     }
   }, [currentUser]);

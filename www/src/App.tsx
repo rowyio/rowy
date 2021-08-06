@@ -20,6 +20,7 @@ import routes from "constants/routes";
 import AuthView from "pages/Auth";
 import SignOutView from "pages/Auth/SignOut";
 import TestView from "pages/Test";
+import { analytics } from "analytics";
 const AuthSetupGuidePage = lazy(
   () => import("pages/Auth/SetupGuide" /* webpackChunkName: "AuthSetupGuide" */)
 );

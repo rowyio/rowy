@@ -22,6 +22,10 @@ const useStyles = makeStyles((theme) =>
     saveButton: {
       marginTop: theme.spacing(1),
     },
+    editor: {
+      // overwrite user-select: none that causes editor not focusable in Safari
+      userSelect: "auto",
+    },
   })
 );
 
@@ -138,6 +142,21 @@ export default function CodeEditor(props: any) {
              */
             function generateId(): string {}
           
+            /**
+             * Add an item to an array field
+             */
+            function arrayUnion(val: string): void {}
+
+            /**
+             * Remove an item to an array field
+             */
+            function arrayRemove(val: string): void {}
+
+            /**
+             * Increment a number field
+             */
+            function increment(val: number): void {}
+
             function hasRequiredFields(requiredFields: string[], data: any): boolean {}
           
             function hasAnyRole(
@@ -280,7 +299,7 @@ export default function CodeEditor(props: any) {
         }
         
         type bigqueryIndex = { 
-          type: "meiliIndex"; 
+          type: "bigqueryIndex"; 
           triggers: Triggers; 
           shouldRun: ShouldRun;
           requiredFields?: Fields;
@@ -349,6 +368,19 @@ export default function CodeEditor(props: any) {
             promises: ContextToAny;
           }
         }
+
+        type mailchimp = {
+          label?:string; 
+          type: "mailchimp"; 
+          triggers: Triggers; 
+          shouldRun: ShouldRun;
+          requiredFields?: Fields;
+          sparkBody: {
+            method: any;
+            path: any;
+            body: any;
+          }
+        }
       
         // an individual spark 
         type Spark =
@@ -361,6 +393,7 @@ export default function CodeEditor(props: any) {
           | sendgridEmail
           | apiCall
           | twilioMessage
+          | mailchimp
           | task;
       
         type Sparks = Spark[]
@@ -445,6 +478,7 @@ export default function CodeEditor(props: any) {
           value={initialEditorValue}
           onChange={handleChange}
           onValidate={handleEditorValidation}
+          className={classes.editor}
         />
       </div>
     </>

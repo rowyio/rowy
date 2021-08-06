@@ -3,7 +3,7 @@ import { useState } from "react";
 import { IMenuModalProps } from ".";
 import Modal from "components/Modal";
 import FieldsDropdown from "./FieldsDropdown";
-
+import { analytics } from "analytics";
 export default function FormDialog({
   fieldName,
   type,
@@ -29,7 +29,14 @@ export default function FormDialog({
       }
       actions={{
         primary: {
-          onClick: () => handleSave(fieldName, { type: newType }),
+          onClick: () => {
+            handleSave(fieldName, { type: newType });
+            handleClose();
+            analytics.logEvent("change_column_type", {
+              newType,
+              prevType: type,
+            });
+          },
           children: "Update",
         },
         secondary: {

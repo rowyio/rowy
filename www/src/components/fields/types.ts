@@ -11,6 +11,7 @@ export interface IFieldConfig {
   name: string;
   dataType: string;
   initializable?: boolean;
+  requireConfiguration?: boolean;
   initialValue: any;
   icon?: React.ReactNode;
   description?: string;

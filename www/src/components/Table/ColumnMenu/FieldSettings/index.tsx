@@ -17,13 +17,11 @@ import { useAppContext } from "contexts/AppContext";
 import { useConfirmation } from "components/ConfirmationDialog";
 import { FieldType } from "constants/fields";
 
-import Switch from "@material-ui/core/Switch";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import Subheading from "components/Table/ColumnMenu/Subheading";
-import WIKI_LINKS from "constants/wikiLinks";
-
+import Button from "@material-ui/core/Button";
+import routes from "constants/routes";
 export default function FieldSettings(props: IMenuModalProps) {
   const {
     name,
@@ -54,6 +52,7 @@ export default function FieldSettings(props: IMenuModalProps) {
     ) {
       setShowRebuildPrompt(true);
     }
+    console.log(key, update);
     const updatedConfig = _set({ ...newConfig }, key, update);
     setNewConfig(updatedConfig);
   };
@@ -66,7 +65,7 @@ export default function FieldSettings(props: IMenuModalProps) {
     [newConfig.renderFieldType, type]
   );
   if (!open) return null;
-
+  console.log(newConfig);
   return (
     <Modal
       maxWidth="md"
@@ -77,36 +76,6 @@ export default function FieldSettings(props: IMenuModalProps) {
           <>
             {initializable && (
               <>
-                {
-                  <section>
-                    <Subheading>Required?</Subheading>
-                    <Typography color="textSecondary" paragraph>
-                      The row will not be created or updated unless all required
-                      values are set.
-                    </Typography>
-                    <FormControlLabel
-                      value="required"
-                      label="Make this column required"
-                      labelPlacement="start"
-                      control={
-                        <Switch
-                          checked={newConfig["required"]}
-                          onChange={() =>
-                            setNewConfig({
-                              ...newConfig,
-                              required: !Boolean(newConfig["required"]),
-                            })
-                          }
-                          name="required"
-                        />
-                      }
-                      style={{
-                        marginLeft: 0,
-                        justifyContent: "space-between",
-                      }}
-                    />
-                  </section>
-                }
                 <section style={{ marginTop: 1 }}>
                   {/* top margin fixes visual bug */}
                   <ErrorBoundary fullScreen={false}>
@@ -167,8 +136,19 @@ export default function FieldSettings(props: IMenuModalProps) {
                   const ftBuildUrl = settingsDoc.get("ftBuildUrl");
                   if (!ftBuildUrl) {
                     snack.open({
-                      message: `Cloud Run trigger URL not configured. Configuration guide: ${WIKI_LINKS.cloudRunFtBuilder}`,
+                      message: `Firetable functions builder is not yet setup`,
                       variant: "error",
+                      action: (
+                        <Button
+                          variant="contained"
+                          component={"a"}
+                          target="_blank"
+                          href={routes.projectSettings}
+                          rel="noopener noreferrer"
+                        >
+                          Go to Settings
+                        </Button>
+                      ),
                     });
                   }
                   const userTokenInfo = await appContext?.currentUser?.getIdTokenResult();
@@ -193,6 +173,7 @@ export default function FieldSettings(props: IMenuModalProps) {
               });
             }
             handleSave(fieldName, { config: newConfig });
+            handleClose();
             setShowRebuildPrompt(false);
           },
           children: "Update",

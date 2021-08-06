@@ -18,7 +18,7 @@ export default function Settings({ handleChange, config }) {
       <Subheading>Validation Regex</Subheading>
       <TextField
         type="text"
-        value={config.maxLength}
+        value={config.validationRegex}
         label={"Validation Regex"}
         fullWidth
         onChange={(e) => {

@@ -19,6 +19,7 @@ import {
   Tab,
   IconButton,
   Link,
+  Button,
 } from "@material-ui/core";
 import Modal from "components/Modal";
 import { makeStyles, createStyles } from "@material-ui/styles";
@@ -35,7 +36,7 @@ import Ansi from "ansi-to-react";
 import EmptyState from "components/EmptyState";
 
 import PropTypes from "prop-types";
-import WIKI_LINKS from "constants/wikiLinks";
+import routes from "constants/routes";
 
 function a11yProps(index) {
   return {
@@ -489,16 +490,17 @@ export default function TableLogs() {
                   message="Need Configuration"
                   description={
                     <>
-                      Cloud Run trigger URL not configured.
-                      <Link
-                        href={WIKI_LINKS.cloudRunFtBuilder}
+                      <Typography>
+                        Function builder is not currently setup.{" "}
+                      </Typography>
+                      <Button
+                        component={"a"}
+                        href={routes.projectSettings}
                         target="_blank"
                         rel="noopener noreferrer"
-                        variant="body2"
-                        underline="always"
                       >
-                        Configuration guide
-                      </Link>
+                        Go to Settings
+                      </Button>
                     </>
                   }
                 />

@@ -40,5 +40,12 @@ export const config: IFieldConfig = {
   TableEditor: NullEditor as any,
   SideDrawerField,
   settings: Settings,
+  csvImportParser: (v) => {
+    if (v.includes(",")) {
+      return v.split(",").map((i) => i.trim());
+    } else if (v !== "") return [v];
+    else return v;
+  },
+  requireConfiguration: true,
 };
 export default config;

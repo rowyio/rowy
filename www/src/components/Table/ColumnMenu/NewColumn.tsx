@@ -8,7 +8,8 @@ import { TextField } from "@material-ui/core";
 import Modal from "components/Modal";
 import { FieldType } from "constants/fields";
 import FieldsDropdown from "./FieldsDropdown";
-
+import { getFieldProp } from "components/fields";
+import { analytics } from "analytics";
 const useStyles = makeStyles((theme) =>
   createStyles({
     helperText: {
@@ -20,11 +21,13 @@ const useStyles = makeStyles((theme) =>
 
 export interface IFormDialogProps extends IMenuModalProps {
   data: Record<string, any>;
+  openSettings: (column: any) => void;
 }
 
 export default function FormDialog({
   open,
   data,
+  openSettings,
   handleClose,
   handleSave,
 }: IFormDialogProps) {
@@ -33,7 +36,7 @@ export default function FormDialog({
   const [columnLabel, setColumnLabel] = useState("");
   const [fieldKey, setFieldKey] = useState("");
   const [type, setType] = useState(FieldType.shortText);
-
+  const requireConfiguration = getFieldProp("requireConfiguration", type);
   useEffect(() => {
     if (type !== FieldType.id) setFieldKey(_camel(columnLabel));
   }, [columnLabel]);
@@ -110,9 +113,22 @@ export default function FormDialog({
               config: {},
               ...data.initializeColumn,
             });
+            if (requireConfiguration) {
+              openSettings({
+                type,
+                name: columnLabel,
+                fieldName: fieldKey,
+                key: fieldKey,
+                config: {},
+                ...data.initializeColumn,
+              });
+            } else handleClose();
+            analytics.logEvent("create_column", {
+              type,
+            });
           },
           disabled: !columnLabel || !fieldKey || !type,
-          children: "Add",
+          children: requireConfiguration ? "Next" : "Add",
         },
         secondary: {
           onClick: handleClose,

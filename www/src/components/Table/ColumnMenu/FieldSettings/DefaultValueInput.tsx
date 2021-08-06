@@ -3,6 +3,8 @@ import { useForm } from "react-hook-form";
 import { IMenuModalProps } from "..";
 
 import { makeStyles, createStyles } from "@material-ui/styles";
+import Switch from "@material-ui/core/Switch";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 import {
   Typography,
   TextField,
@@ -26,7 +28,6 @@ const useStyles = makeStyles((theme) =>
     codeEditorContainer: {
       border: `1px solid ${theme.palette.divider}`,
       borderRadius: theme.shape.borderRadius,
-      overflow: "hidden",
     },
 
     mono: {
@@ -59,7 +60,7 @@ export default function DefaultValueInput({
         config.defaultValue?.value ?? getFieldProp("initialValue", _type),
     },
   });
-
+  console.log(config);
   return (
     <>
       <Subheading>Default Value</Subheading>
@@ -109,7 +110,32 @@ export default function DefaultValueInput({
           />
         </MenuItem>
       </TextField>
-
+      {(!config.defaultValue || config.defaultValue.type === "undefined") && (
+        <>
+          <FormControlLabel
+            value="required"
+            label="Make this column required"
+            labelPlacement="start"
+            control={
+              <Switch
+                checked={config.required}
+                onChange={(event, checked) => handleChange("required")(checked)}
+                name="required"
+              />
+            }
+            style={{
+              marginLeft: 0,
+              justifyContent: "space-between",
+            }}
+          />
+          {
+            <Typography color="textSecondary" paragraph>
+              The row will not be created or updated unless all required values
+              are set.
+            </Typography>
+          }
+        </>
+      )}
       {config.defaultValue?.type === "static" && customFieldInput && (
         <form>
           <FormAutosave
@@ -134,8 +160,8 @@ export default function DefaultValueInput({
           <div className={classes.codeEditorContainer}>
             <CodeEditor
               height={120}
-              value={config.defaultValue?.script}
-              onChange={handleChange("defaultValue.script")}
+              script={config.defaultValue?.script}
+              handleChange={handleChange("defaultValue.script")}
               editorOptions={{
                 minimap: {
                   enabled: false,

@@ -1,0 +1,55 @@
+# This is a basic workflow to help you get started with Actions
+
+name: tweet_releases
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  release:
+    types:
+      - published
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    build:
+      name: Tweet
+      runs-on: ubuntu-latest
+      steps:
+        - name: Post Twitter Status
+          uses: julb/action-post-twitter-status@v1
+          env:
+            twitter_app_consumer_api_key: ${{ secrets.TWITTER_API_KEY }}
+            twitter_app_consumer_api_secret_key:
+              ${{ secrets.TWITTER_API_SECRET_KEY }}
+            twitter_app_access_token: ${{ secrets.TWITTER_ACCESS_TOKEN }}
+            twitter_app_access_token_secret:
+              ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
+          with:
+            message:
+              "Testing github action for tweeting new releases and updates to
+              Firetable project"
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    name: Tweet
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post Twitter Status
+        uses: julb/action-post-twitter-status@v1
+        env:
+          twitter_app_consumer_api_key: ${{ secrets.TWITTER_API_KEY }}
+          twitter_app_consumer_api_secret_key:
+            ${{ secrets.TWITTER_API_SECRET_KEY }}
+          twitter_app_access_token: ${{ secrets.TWITTER_ACCESS_TOKEN }}
+          twitter_app_access_token_secret:
+            ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
+        with:
+          message:
+            "Testing github action for tweeting new releases and updates to
+            Firetable project"
