@@ -31,7 +31,7 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "cross-env PORT=7699 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -64,6 +64,7 @@
     "@types/dompurify": "^2.2.3",
     "@types/lodash": "^4.14.172",
     "@types/react-router-dom": "^5.1.8",
+    "cross-env": "^7.0.3",
     "eslint": "^7.11.0",
     "eslint-config-prettier": "^8.3.0",
     "husky": ">=6",
