@@ -18,7 +18,7 @@ export enum routes {
 
   settings = "/settings",
   userSettings = "/settings/user",
-  projectSettings = "/settings/project",
+  // projectSettings = "/settings/project",
 }
 
 export default routes;

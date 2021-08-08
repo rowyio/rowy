@@ -77,8 +77,9 @@ export const themeBase = {
       // lineHeight: 1.75,
     },
     body2: {
-      // fontSize: toRem(14),
-      // letterSpacing: toEm(0.25, 14),
+      fontSize: toRem(13),
+      letterSpacing: toEm(0.5, 13),
+      lineHeight: toEm(20, 13),
     },
     button: {
       // fontFamily: BODY_FONT,
@@ -143,13 +144,13 @@ export const themeBase = {
         },
       },
     },
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          borderRadius: 24,
-        },
-      },
-    },
+    // MuiButton: {
+    //   styleOverrides: {
+    //     root: {
+    //       borderRadius: 24,
+    //     },
+    //   },
+    // },
     MuiFab: {
       styleOverrides: {
         sizeSmall: {
@@ -191,7 +192,8 @@ export const themeBase = {
         root: {
           width: "calc(100% - 8px)",
           margin: "0 4px",
-          padding: "6px 12px",
+          padding: "4px 12px",
+          minHeight: 28,
           borderRadius: 4,
         },
       },
