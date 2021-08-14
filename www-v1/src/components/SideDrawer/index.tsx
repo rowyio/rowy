@@ -16,7 +16,7 @@ import { useStyles } from "./useStyles";
 import { useFiretableContext } from "contexts/FiretableContext";
 import useDoc from "hooks/useDoc";
 
-export const DRAWER_WIDTH = 600;
+export const DRAWER_WIDTH = 540;
 export const DRAWER_COLLAPSED_WIDTH = 36;
 
 type SelectedCell = { row: number; column: string } | null;
@@ -123,7 +123,7 @@ export default function SideDrawer() {
                 disabled: classes.disabled,
               }}
               style={{ animationDelay: "0.2s" }}
-              color="secondary"
+              // color="secondary"
               size="small"
               disabled={disabled || !cell || cell.row <= 0}
               onClick={handleNavigate("up")}
@@ -137,7 +137,7 @@ export default function SideDrawer() {
                 disabled: classes.disabled,
               }}
               style={{ animationDelay: "0.1s" }}
-              color="secondary"
+              // color="secondary"
               size="small"
               disabled={
                 disabled ||
@@ -155,7 +155,7 @@ export default function SideDrawer() {
         <div className={classes.drawerFabContainer}>
           <Fab
             classes={{ root: classes.fab, disabled: classes.disabled }}
-            color="secondary"
+            // color="secondary"
             disabled={disabled}
             onClick={() => {
               if (setOpen) setOpen((o) => !o);

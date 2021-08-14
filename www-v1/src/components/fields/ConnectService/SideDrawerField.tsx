@@ -62,7 +62,6 @@ export default function ConnectService({
                   <Grid item key={get(snapshot, config.primaryKey)}>
                     <Chip
                       component="li"
-                      size="medium"
                       label={get(snapshot, displayKey)}
                       onDelete={disabled ? undefined : handleDelete(snapshot)}
                     />

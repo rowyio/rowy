@@ -3,7 +3,7 @@ import _isEqual from "lodash/isEqual";
 import _sortBy from "lodash/sortBy";
 
 import { makeStyles, createStyles } from "@material-ui/styles";
-import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
+import VisibilityOffIcon from "@material-ui/icons/VisibilityOffOutlined";
 
 import MultiSelect from "@antlerengineering/multiselect";
 import ButtonWithStatus from "components/ButtonWithStatus";

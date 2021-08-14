@@ -2,7 +2,7 @@ import { lazy } from "react";
 import { IFieldConfig, FieldType } from "components/fields/types";
 import withHeavyCell from "../_withTableCell/withHeavyCell";
 
-import ActionIcon from "assets/icons/Action";
+import ActionIcon from "@material-ui/icons/TouchAppOutlined";
 import BasicCell from "./BasicCell";
 import NullEditor from "components/Table/editors/NullEditor";
 

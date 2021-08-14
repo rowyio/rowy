@@ -1,6 +1,6 @@
-import { Tooltip, Button, ButtonProps } from "@material-ui/core";
+import { Tooltip, IconButton, IconButtonProps } from "@material-ui/core";
 
-export interface ITableHeaderButtonProps extends Partial<ButtonProps> {
+export interface ITableHeaderButtonProps extends Partial<IconButtonProps> {
   title: string;
   icon: React.ReactNode;
 }
@@ -12,15 +12,16 @@ export default function TableHeaderButton({
 }: ITableHeaderButtonProps) {
   return (
     <Tooltip title={title}>
-      <Button
-        variant="contained"
+      <IconButton
+        // variant="outlined"
         color="secondary"
-        style={{ minWidth: 36, height: 36, padding: 0, borderRadius: 18 }}
+        size="small"
+        style={{ width: 32, height: 32 }}
         aria-label={title}
         {...props}
       >
         {icon}
-      </Button>
+      </IconButton>
     </Tooltip>
   );
 }

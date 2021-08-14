@@ -49,14 +49,13 @@ export default function ConnectTable({
             {Array.isArray(value) && (
               <Grid
                 container
-                spacing={1}
+                spacing={0.5}
                 style={{ marginTop: theme.spacing(1) }}
               >
                 {value.map(({ snapshot }) => (
                   <Grid item key={snapshot.objectID}>
                     <Chip
                       component="li"
-                      size="medium"
                       label={column.config?.primaryKeys
                         ?.map((key: string) => snapshot[key])
                         .join(" ")}

@@ -8,7 +8,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import Breadcrumbs from "./Breadcrumbs";
 import NavDrawer from "./NavDrawer";
 
-import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
+// import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
 import { useFiretableContext } from "contexts/FiretableContext";
 import UserMenu from "./UserMenu";
 
@@ -17,7 +17,7 @@ export const APP_BAR_HEIGHT = 56;
 const useStyles = makeStyles((theme) =>
   createStyles({
     appBar: {
-      paddingRight: DRAWER_COLLAPSED_WIDTH,
+      // paddingRight: DRAWER_COLLAPSED_WIDTH,
       height: APP_BAR_HEIGHT,
       [theme.breakpoints.down("md")]: { paddingRight: 0 },
 

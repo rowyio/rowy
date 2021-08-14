@@ -7,7 +7,7 @@ import { db } from "../../../firebase";
 import { DialogContentText, Chip, Stack } from "@material-ui/core";
 import Alert from "@material-ui/core/Alert";
 import TableHeaderButton from "./TableHeaderButton";
-import SparkIcon from "@material-ui/icons/OfflineBolt";
+import SparkIcon from "@material-ui/icons/OfflineBoltOutlined";
 import Button from "@material-ui/core/Button";
 import Modal from "components/Modal";
 import { useFiretableContext } from "contexts/FiretableContext";

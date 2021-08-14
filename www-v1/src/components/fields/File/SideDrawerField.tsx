@@ -138,7 +138,6 @@ function ControlledFileUploader({
                     functionName={!disabled ? "onDelete" : ""}
                   >
                     <Chip
-                      size="medium"
                       icon={<FileIcon />}
                       label={file.name}
                       onClick={() => window.open(file.downloadURL)}
@@ -154,7 +153,6 @@ function ControlledFileUploader({
         {localFile && (
           <Grid item className={classes.chipGridItem}>
             <Chip
-              size="medium"
               icon={<FileIcon />}
               label={localFile}
               className={classes.chip}

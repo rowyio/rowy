@@ -58,7 +58,6 @@ export default function MultiSelect({
                     item?.length > 0 && (
                       <Grid item key={item}>
                         <FormattedChip
-                          size="medium"
                           label={item}
                           onDelete={disabled ? undefined : handleDelete(i)}
                         />

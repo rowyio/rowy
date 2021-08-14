@@ -33,6 +33,7 @@ export const lightThemeColors = (
     shadows: new Array(25).fill(undefined).map((_, i) => {
       // Based on https://tailwindcss.com/docs/box-shadow
       // with additional “outline” shadow
+      // and bigger shadow from https://github.com/outline/outline/blob/37fd7ec97a496094077a59f4d10fa0081516e3ef/shared/theme.js#L148
 
       if (i === 0) return "none";
 
@@ -42,19 +43,19 @@ export const lightThemeColors = (
 
       if (i < 8)
         // prettier-ignore
-        return `0 0 0 1px ${shadowBase.alpha(0.05).css()}, 0 4px 6px -1px ${shadowBase.alpha(0.1).css()}, 0 2px 4px -1px ${shadowBase.alpha(0.06).css()}`;
+        return `0 0 0 1px ${shadowBase.alpha(0.05).css()}, 0 4px 6px -1px ${shadowBase.alpha(0.1).css()}, 0 2px 4px ${shadowBase.alpha(0.06).css()}`;
 
       if (i < 16)
         // prettier-ignore
-        return `0 0 0 1px ${shadowBase.alpha(0.06).css()}, 0 10px 15px -3px ${shadowBase.alpha(0.1).css()}, 0 4px 6px -2px ${shadowBase.alpha(0.05).css()}`;
+        return `0 0 0 1px ${shadowBase.alpha(0.06).css()}, 0 10px 15px -3px ${shadowBase.alpha(0.1).css()}, 0 4px 6px ${shadowBase.alpha(0.05).css()}, 0 30px 40px ${shadowBase.alpha(0.05).css()}`;
 
       if (i < 24)
         // prettier-ignore
-        return `0 0 0 1px ${shadowBase.alpha(0.08).css()}, 0 20px 25px -5px ${shadowBase.alpha(0.1).css()}, 0 10px 10px -5px ${shadowBase.alpha(0.04).css()}`;
+        return `0 0 0 1px ${shadowBase.alpha(0.08).css()}, 0 20px 25px -5px ${shadowBase.alpha(0.1).css()}, 0 10px 10px ${shadowBase.alpha(0.04).css()}, 0 40px 60px ${shadowBase.alpha(0.06).css()}`;
 
       else
         // prettier-ignore
-        return `0 0 0 1px ${shadowBase.alpha(0.08).css()}, 0 25px 50px -12px ${shadowBase.alpha(0.25).css()}`;
+        return `0 0 0 1px ${shadowBase.alpha(0.08).css()}, 0 25px 50px -12px ${shadowBase.alpha(0.25).css()}, 0 50px 80px ${shadowBase.alpha(0.06).css()}`;
     }) as Shadows,
 
     components: {

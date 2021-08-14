@@ -1,14 +1,14 @@
 import { makeStyles, createStyles } from "@material-ui/styles";
 import { alpha, emphasize, darken, lighten } from "@material-ui/core";
 import { APP_BAR_HEIGHT } from "components/Navigation";
-import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
+// import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
 
 export const useStyles = makeStyles((theme) =>
   createStyles({
     tableWrapper: {
       display: "flex",
       flexDirection: "column",
-      width: `calc(100% - ${DRAWER_COLLAPSED_WIDTH}px)`,
+      // width: `calc(100% - ${DRAWER_COLLAPSED_WIDTH}px)`,
       height: `calc(100vh - ${APP_BAR_HEIGHT}px)`,
 
       "& > .rdg": { flex: 1 },
@@ -53,7 +53,7 @@ export const useStyles = makeStyles((theme) =>
         backgroundColor: "transparent",
 
         ...theme.typography.body2,
-        fontSize: "0.75rem",
+        fontSize: "0.8125rem",
         lineHeight: "inherit !important",
 
         "& .rdg-cell": {

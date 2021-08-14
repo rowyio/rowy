@@ -9,7 +9,7 @@ import {
   Link,
   Typography,
 } from "@material-ui/core";
-import ArrowRightIcon from "@material-ui/icons/ArrowRight";
+import ArrowRightIcon from "@material-ui/icons/ChevronRight";
 
 import { useFiretableContext } from "contexts/FiretableContext";
 import useRouter from "hooks/useRouter";
@@ -19,25 +19,29 @@ import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
 const useStyles = makeStyles((theme) =>
   createStyles({
     ol: {
-      alignItems: "baseline",
+      // alignItems: "baseline",
 
       paddingLeft: theme.spacing(2),
-      paddingRight: DRAWER_COLLAPSED_WIDTH,
+      // paddingRight: DRAWER_COLLAPSED_WIDTH,
 
       userSelect: "none",
     },
 
     li: {
-      display: "flex",
-      alignItems: "center",
+      // display: "flex",
+      // alignItems: "center",
+      // lineHeight: 32,
 
       textTransform: "capitalize",
-      "&:first-of-type": { textTransform: "uppercase" },
+      "&:first-of-type": { textTransform: "capitalize" },
     },
 
     separator: {
-      alignSelf: "flex-end",
-      marginBottom: -2,
+      // alignSelf: "flex-end",
+      // "& svg": {
+      //   position: "relative",
+      //   bottom: -1.5,
+      // },
     },
   })
 );
@@ -64,7 +68,7 @@ export default function Breadcrumbs(props: BreadcrumbsProps) {
       separator={<ArrowRightIcon />}
       aria-label="sub-table breadcrumbs"
       classes={classes}
-      component="div"
+      // component="div"
       {...(props as any)}
     >
       {/* Section name */}
@@ -73,7 +77,7 @@ export default function Breadcrumbs(props: BreadcrumbsProps) {
           component={RouterLink}
           to={`${routes.home}#${section}`}
           variant="h6"
-          color="textPrimary"
+          color="textSecondary"
           underline="hover"
         >
           {section}
@@ -84,9 +88,10 @@ export default function Breadcrumbs(props: BreadcrumbsProps) {
         // If it’s the first breadcrumb, show with specific style
         const crumbProps = {
           key: index,
-          variant: index === 0 ? "h6" : "subtitle2",
+          variant: "h6",
           component: index === 0 ? "h2" : "div",
-          color: index === 0 ? "textPrimary" : "textSecondary",
+          color:
+            index === breadcrumbs.length - 1 ? "textPrimary" : "textSecondary",
         } as const;
 
         // If it’s the last crumb, just show the label without linking
@@ -97,27 +102,32 @@ export default function Breadcrumbs(props: BreadcrumbsProps) {
             </Typography>
           );
 
-        // If odd: breadcrumb points to a document — don’t show a link
+        // If odd: breadcrumb points to a document — link to rowRef
         // TODO: show a picker here to switch between sub tables
         if (index % 2 === 1)
           return (
-            <Typography {...crumbProps}>
+            <Link
+              {...crumbProps}
+              component={RouterLink}
+              to={`${routes.table}/${encodeURIComponent(
+                breadcrumbs.slice(0, index).join("/")
+              )}?rowRef=${breadcrumbs.slice(0, index + 1).join("%2F")}`}
+              underline="hover"
+            >
               {getLabel(
                 parentLabel.split(",")[Math.ceil(index / 2) - 1] || crumb
               )}
-            </Typography>
+            </Link>
           );
 
         // Otherwise, even: breadcrumb points to a Firestore collection
         return (
           <Link
-            key={crumbProps.key}
+            {...crumbProps}
             component={RouterLink}
             to={`${routes.table}/${encodeURIComponent(
               breadcrumbs.slice(0, index + 1).join("/")
             )}`}
-            variant={crumbProps.variant}
-            color={crumbProps.color}
             underline="hover"
           >
             {getLabel(crumb) || crumb.replace(/([A-Z])/g, " $1")}

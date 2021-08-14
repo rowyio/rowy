@@ -38,7 +38,7 @@ export default function SingleSelect({
 
           {value?.length > 0 && (
             <div style={{ marginTop: theme.spacing(1) }}>
-              <FormattedChip size="medium" label={value} />
+              <FormattedChip label={value} />
             </div>
           )}
         </>

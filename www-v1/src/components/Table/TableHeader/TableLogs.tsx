@@ -23,9 +23,9 @@ import {
 } from "@material-ui/core";
 import Modal from "components/Modal";
 import { makeStyles, createStyles } from "@material-ui/styles";
-import LogsIcon from "@material-ui/icons/QueryBuilder";
-import SuccessIcon from "@material-ui/icons/CheckCircle";
-import FailIcon from "@material-ui/icons/Cancel";
+import LogsIcon from "@material-ui/icons/QueryBuilderOutlined";
+import SuccessIcon from "@material-ui/icons/CheckCircleOutlined";
+import FailIcon from "@material-ui/icons/CancelOutlined";
 import ExpandIcon from "@material-ui/icons/ExpandLess";
 import CollapseIcon from "@material-ui/icons/ExpandMore";
 import OpenIcon from "@material-ui/icons/OpenInNew";

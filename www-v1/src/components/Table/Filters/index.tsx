@@ -100,23 +100,26 @@ const useStyles = makeStyles((theme) =>
     bottomButtons: { marginTop: theme.spacing(4.5) },
 
     activeButton: {
-      // borderTopRightRadius: 0,
-      // borderBottomRightRadius: 0,
+      borderTopRightRadius: 0,
+      borderBottomRightRadius: 0,
+      position: "relative",
+      zIndex: 1,
     },
 
     filterChip: {
       borderTopLeftRadius: 0,
       borderBottomLeftRadius: 0,
-      borderTopRightRadius: 24,
-      borderBottomRightRadius: 24,
+      borderTopRightRadius: theme.shape.borderRadius,
+      borderBottomRightRadius: theme.shape.borderRadius,
       borderLeft: "none",
-      // backgroundColor: theme.palette.background.paper,
-      height: 36,
-      paddingLeft: 36 / 2,
-      marginLeft: -36 / 2,
+      backgroundColor: theme.palette.background.paper,
+      height: 32,
+      // paddingLeft: theme.shape.borderRadius,
+      // marginLeft: -theme.shape.borderRadius,
+      paddingRight: theme.spacing(0.5) + " !important",
     },
     filterChipLabel: {
-      paddingLeft: theme.spacing(1),
+      padding: theme.spacing(0, 1.5),
     },
   })
 );

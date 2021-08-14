@@ -1,10 +1,17 @@
 import { makeStyles, createStyles } from "@material-ui/styles";
 import { DRAWER_WIDTH, DRAWER_COLLAPSED_WIDTH } from "./index";
+import { APP_BAR_HEIGHT } from "components/Navigation";
+import { TABLE_HEADER_HEIGHT } from "components/Table/TableHeader";
 
 export const useStyles = makeStyles((theme) =>
   createStyles({
     open: {},
-    disabled: {},
+    disabled: {
+      "& $paper": {
+        transform: `translateX(${DRAWER_WIDTH + 32}px)`,
+        boxShadow: "none",
+      },
+    },
 
     drawer: {
       width: DRAWER_WIDTH,
@@ -14,13 +21,16 @@ export const useStyles = makeStyles((theme) =>
 
     paper: {
       border: "none",
-      boxShadow: theme.shadows[16].replace(/, 0 (\d+px)/g, ", -$1 0"),
+      boxShadow: theme.shadows[12].replace(/, 0 (\d+px)/g, ", -$1 0"),
       borderTopLeftRadius: `${(theme.shape.borderRadius as number) * 3}px`,
       borderBottomLeftRadius: `${(theme.shape.borderRadius as number) * 3}px`,
 
       width: DRAWER_WIDTH,
       overflowX: "visible",
       overflowY: "visible",
+
+      top: APP_BAR_HEIGHT + TABLE_HEADER_HEIGHT,
+      height: `calc(100% - ${APP_BAR_HEIGHT + TABLE_HEADER_HEIGHT}px)`,
 
       transition: theme.transitions.create("transform", {
         easing: theme.transitions.easing.custom,
@@ -94,7 +104,7 @@ export const useStyles = makeStyles((theme) =>
     },
 
     drawerContents: {
-      padding: theme.spacing(8),
+      padding: theme.spacing(6),
       overflowY: "auto",
     },
   })

@@ -6,11 +6,15 @@ import {
   Container,
   Stack,
   Grid,
+  Button,
   Chip,
   Paper,
+  MenuList,
+  MenuItem,
   Slider,
   Tooltip,
   Switch,
+  TextField,
 } from "@material-ui/core";
 
 export default function TestView() {
@@ -32,9 +36,98 @@ export default function TestView() {
       <Container style={{ margin: "24px 0 200px" }}>
         <Stack spacing={8}>
           <Stack spacing={1} direction="row" alignItems="center">
+            <Button size="small">Button</Button>
+            <Button size="medium">Button</Button>
+            <Button size="large">Button</Button>
+
+            <Button color="secondary" size="small">
+              Button
+            </Button>
+            <Button color="secondary" size="medium">
+              Button
+            </Button>
+            <Button color="secondary" size="large">
+              Button
+            </Button>
+
+            <Button disabled size="small">
+              Button
+            </Button>
+            <Button disabled size="medium">
+              Button
+            </Button>
+            <Button disabled size="large">
+              Button
+            </Button>
+          </Stack>
+
+          <Stack spacing={1} direction="row" alignItems="center">
+            <Button variant="outlined" size="small">
+              Button
+            </Button>
+            <Button variant="outlined" size="medium">
+              Button
+            </Button>
+            <Button variant="outlined" size="large">
+              Button
+            </Button>
+            <Button color="secondary" variant="outlined" size="small">
+              Button
+            </Button>
+            <Button color="secondary" variant="outlined" size="medium">
+              Button
+            </Button>
+            <Button color="secondary" variant="outlined" size="large">
+              Button
+            </Button>
+
+            <Button disabled variant="outlined" size="small">
+              Button
+            </Button>
+            <Button disabled variant="outlined" size="medium">
+              Button
+            </Button>
+            <Button disabled variant="outlined" size="large">
+              Button
+            </Button>
+          </Stack>
+
+          <Stack spacing={1} direction="row" alignItems="center">
+            <Button variant="contained" size="small">
+              Button
+            </Button>
+            <Button variant="contained" size="medium">
+              Button
+            </Button>
+            <Button variant="contained" size="large">
+              Button
+            </Button>
+            <Button color="secondary" variant="contained" size="small">
+              Button
+            </Button>
+            <Button color="secondary" variant="contained" size="medium">
+              Button
+            </Button>
+            <Button color="secondary" variant="contained" size="large">
+              Button
+            </Button>
+
+            <Button disabled variant="contained" size="small">
+              Button
+            </Button>
+            <Button disabled variant="contained" size="medium">
+              Button
+            </Button>
+            <Button disabled variant="contained" size="large">
+              Button
+            </Button>
+          </Stack>
+
+          <Stack spacing={1} direction="row" alignItems="center">
             <Chip size="small" label="Main" />
-            <Chip label="Main" />
+            <Chip size="medium" label="Main" />
             <Chip
+              size="medium"
               label={
                 <>
                   Main
@@ -44,8 +137,20 @@ export default function TestView() {
               }
             />
             <Chip size="small" variant="outlined" label="Main" />
-            <Chip variant="outlined" label="Main" />
             <Chip
+              size="small"
+              variant="outlined"
+              label={
+                <>
+                  Main
+                  <br />
+                  Multiline
+                </>
+              }
+            />
+            <Chip size="medium" variant="outlined" label="Main" />
+            <Chip
+              size="medium"
               variant="outlined"
               label={
                 <>
@@ -59,8 +164,9 @@ export default function TestView() {
 
           <Stack spacing={1} direction="row" alignItems="center">
             <Chip color="primary" size="small" label="Main" />
-            <Chip color="primary" label="Main" />
+            <Chip size="medium" color="primary" label="Main" />
             <Chip
+              size="medium"
               color="primary"
               label={
                 <>
@@ -76,8 +182,14 @@ export default function TestView() {
               variant="outlined"
               label="Main"
             />
-            <Chip color="primary" variant="outlined" label="Main" />
             <Chip
+              size="medium"
+              color="primary"
+              variant="outlined"
+              label="Main"
+            />
+            <Chip
+              size="medium"
               color="primary"
               variant="outlined"
               label={
@@ -92,8 +204,9 @@ export default function TestView() {
 
           <Stack spacing={1} direction="row" alignItems="center">
             <Chip color="secondary" size="small" label="Main" />
-            <Chip color="secondary" label="Main" />
+            <Chip size="medium" color="secondary" label="Main" />
             <Chip
+              size="medium"
               color="secondary"
               label={
                 <>
@@ -109,8 +222,14 @@ export default function TestView() {
               variant="outlined"
               label="Main"
             />
-            <Chip color="secondary" variant="outlined" label="Main" />
             <Chip
+              size="medium"
+              color="secondary"
+              variant="outlined"
+              label="Main"
+            />
+            <Chip
+              size="medium"
               color="secondary"
               variant="outlined"
               label={
@@ -122,6 +241,40 @@ export default function TestView() {
               }
             />
           </Stack>
+
+          <Stack spacing={1} direction="row" alignItems="flex-start">
+            <TextField id="1" label="Label" placeholder="Placeholder" />
+            <TextField id="2" label="Label" defaultValue="Default Value" />
+            <TextField
+              id="3"
+              label="Hidden Label"
+              placeholder="Placeholder"
+              hiddenLabel
+            />
+            <TextField id="4" label="Label" />
+            <TextField
+              id="long"
+              label="Label"
+              placeholder="Placeholder"
+              multiline
+            />
+          </Stack>
+
+          <TextField
+            id="longLabel"
+            label="Long Label Long Label Long Label Long Label Long Label Long Label Long Label Long Label Long Label Long Label Long Label Long Label Long Label Long Label Long Label Long Label Long Label Long Label Long Label Long Label Long Label Long Label Long Label Long Label"
+            placeholder="Placeholder"
+            fullWidth
+          />
+
+          <Paper elevation={8} style={{ width: "min-content" }}>
+            <MenuList sx={{ pt: 0.5, pb: 0.5 }}>
+              <MenuItem>Profile</MenuItem>
+              <MenuItem>My account</MenuItem>
+              <MenuItem selected>Selected</MenuItem>
+              <MenuItem>Logout</MenuItem>
+            </MenuList>
+          </Paper>
 
           <div>
             <Grid container spacing={4}>
@@ -164,11 +317,17 @@ export default function TestView() {
             disabled
           />
 
-          <Stack direction="row">
+          <Stack spacing={1} direction="row">
             <Switch />
             <Switch color="secondary" />
             <Switch color="success" />
             <Switch disabled />
+          </Stack>
+          <Stack spacing={1} direction="row">
+            <Switch checked />
+            <Switch checked color="secondary" />
+            <Switch checked color="success" />
+            <Switch checked disabled />
           </Stack>
         </Stack>
       </Container>

@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import TableHeaderButton from "./TableHeaderButton";
-import SettingsIcon from "@material-ui/icons/Settings";
+import SettingsIcon from "@material-ui/icons/SettingsOutlined";
 
 import TableSettingsDialog, {
   TableSettingsDialogModes,

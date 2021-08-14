@@ -134,7 +134,7 @@ export default function WebhooksDialog({ open, handleClose }) {
             <Select
               autoFocus
               value={state.type}
-              onChange={handleWebhookTypeChange}
+              onChange={handleWebhookTypeChange as any}
               inputProps={{
                 name: "webhook-type",
                 id: "webhook-type",

@@ -9,7 +9,12 @@ import Confirmation from "components/Confirmation";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
-    root: { paddingLeft: theme.spacing(1.5) },
+    root: {
+      paddingLeft: theme.spacing(0),
+      marginLeft: 0,
+      marginRight: -4,
+      width: "calc(100% + 4px)",
+    },
 
     label: {
       font: "inherit",
@@ -69,7 +74,7 @@ export default function Checkbox({
       control={component}
       label={column.name}
       labelPlacement="start"
-      className="cell-collapse-padding"
+      // className="cell-collapse-padding"
       classes={{ root: classes.root, label: classes.label }}
     />
   );

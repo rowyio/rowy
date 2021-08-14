@@ -3,8 +3,9 @@ import _merge from "lodash/merge";
 import { createTheme, ThemeOptions } from "@material-ui/core/styles";
 import { lightThemeColors } from "theme/colors";
 
-export const HEADING_FONT = "Space Grotesk, system-ui, sans-serif";
-export const BODY_FONT = "Inter, system-ui, sans-serif";
+export const HEADING_FONT = "system-ui, Space Grotesk, system-ui, sans-serif";
+export const BODY_FONT =
+  "Segoe UI Variable Small, system-ui, Inter, system-ui, sans-serif";
 export const MONO_FONT = "IBM Plex Mono, ui-monospace, monospace";
 
 export const ANTLER_RED = "#ED4747";
@@ -44,22 +45,22 @@ export const themeBase = {
     h3: {
       fontFamily: HEADING_FONT,
       // fontSize: toRem(36),
-      fontWeight: "bold",
+      fontWeight: 600,
     },
     h4: {
       fontFamily: HEADING_FONT,
       // fontSize: toRem(32),
-      fontWeight: "bold",
+      fontWeight: 600,
     },
     h5: {
       fontFamily: HEADING_FONT,
       // fontSize: toRem(24),
-      fontWeight: "bold",
+      fontWeight: 600,
     },
     h6: {
       fontFamily: HEADING_FONT,
       // fontSize: toRem(18),
-      fontWeight: "bold",
+      fontWeight: 600,
       // lineHeight: "normal",
     },
     subtitle1: {
@@ -68,7 +69,7 @@ export const themeBase = {
     subtitle2: {
       fontFamily: HEADING_FONT,
       // fontSize: toRem(14),
-      fontWeight: "bold",
+      fontWeight: 600,
       // letterSpacing: toEm(0.4, 14),
       // lineHeight: 1.5,
     },
@@ -77,15 +78,17 @@ export const themeBase = {
       // lineHeight: 1.75,
     },
     body2: {
-      fontSize: toRem(13),
-      letterSpacing: toEm(0.5, 13),
-      lineHeight: toEm(20, 13),
+      fontSize: toRem(14),
+      letterSpacing: toEm(0.5, 14),
+      lineHeight: toEm(20, 14),
     },
     button: {
       // fontFamily: BODY_FONT,
-      // fontSize: toRem(14),
-      fontWeight: 600,
-      letterSpacing: toEm(1.25, 14),
+      fontSize: toRem(14),
+      fontWeight: 500,
+      letterSpacing: toEm(0.1, 14),
+      textTransform: "none",
+      lineHeight: toEm(20, 14),
     },
     caption: {
       // fontSize: toRem(12),
@@ -123,6 +126,58 @@ export const themeBase = {
         },
       },
     },
+    MuiFilledInput: {
+      styleOverrides: {
+        root: {
+          backgroundColor: "white",
+          "&:hover:not(.Mui-disabled), &:focus, &.Mui-focused": {
+            backgroundColor: "white",
+          },
+
+          boxShadow: `0 0 0 1px rgba(0, 0, 0, 0.12) inset`,
+          borderRadius: 4,
+
+          overflow: "hidden",
+          "&::before": {
+            borderRadius: 4,
+            height: 8,
+
+            borderColor: "rgba(0, 0, 0, 0.24)",
+          },
+          "&.Mui-focused::before, &.Mui-focused:hover::before": {
+            borderColor: "red",
+          },
+        },
+        inputSizeSmall: {
+          padding: "6px 12px",
+          height: 20,
+        },
+        multiline: { padding: 0 },
+      },
+    },
+    MuiInputLabel: {
+      defaultProps: {
+        shrink: true,
+      },
+      styleOverrides: {
+        filled: {
+          "&, &.MuiInputLabel-shrink": { transform: "none" },
+
+          position: "static",
+          padding: "2px 12px",
+          pointerEvents: "auto",
+
+          maxWidth: "none",
+          overflow: "visible",
+          whiteSpace: "normal",
+
+          // TODO: spread caption
+          fontSize: toRem(12),
+          letterSpacing: toEm(0.4, 12),
+          lineHeight: 20 / 12,
+        },
+      },
+    },
     MuiSelect: {
       styleOverrides: {
         iconOpen: {
@@ -140,7 +195,7 @@ export const themeBase = {
     MuiDialog: {
       styleOverrides: {
         paper: {
-          borderRadius: 12,
+          borderRadius: 8,
         },
       },
     },
@@ -192,13 +247,146 @@ export const themeBase = {
         root: {
           width: "calc(100% - 8px)",
           margin: "0 4px",
-          padding: "4px 12px",
-          minHeight: 28,
+          padding: "6px 12px",
+          minHeight: 32,
           borderRadius: 4,
         },
       },
       defaultProps: {
         dense: true,
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          minHeight: 32,
+          paddingTop: 4,
+          paddingBottom: 4,
+        },
+        sizeSmall: {
+          minHeight: 28,
+          paddingTop: 2,
+          paddingBottom: 2,
+        },
+        sizeLarge: {
+          minHeight: 48,
+          fontSize: 16,
+          borderRadius: 6,
+        },
+
+        outlined: {
+          "&, &:hover, &.Mui-disabled": { border: "none" },
+          boxShadow: `0 0 0 1px rgba(0, 0, 0, 0.12) inset,
+            0 -1px 0 0 rgba(0, 0, 0, 0.12) inset`,
+          backgroundColor: "white",
+
+          "&.Mui-disabled": {
+            boxShadow: `0 0 0 1px rgba(0, 0, 0, 0.12) inset`,
+            backgroundColor: "transparent",
+          },
+        },
+      },
+    },
+    MuiButtonGroup: {
+      styleOverrides: {
+        grouped: {
+          minWidth: 32,
+        },
+      },
+    },
+    MuiChip: {
+      defaultProps: {
+        size: "small",
+      },
+      styleOverrides: {
+        sizeMedium: {
+          height: "auto",
+          minHeight: 32,
+          padding: "4px 0",
+          "&.MuiChip-outlined": { padding: "3px 0" },
+        },
+        sizeSmall: {
+          // height: "auto",
+          minHeight: 24,
+          padding: "2px 0",
+          "&.MuiChip-outlined": { padding: "1px 0" },
+        },
+      },
+    },
+    MuiSwitch: {
+      styleOverrides: {
+        root: {
+          width: 42,
+          height: 24,
+          padding: 0,
+
+          "&:active": {
+            "& .MuiSwitch-switchBase:not(.Mui-disabled) .MuiSwitch-thumb": {
+              width: 24,
+            },
+            "& .MuiSwitch-switchBase.Mui-checked:not(.Mui-disabled) .MuiSwitch-thumb": {
+              transform: "translateX(-4px)",
+            },
+          },
+        },
+        switchBase: {
+          padding: 0,
+          margin: 2,
+          "&.Mui-checked": {
+            transform: "translateX(18px)",
+            color: "#fff",
+            "& + .MuiSwitch-track": {
+              backgroundColor: "#65C466",
+              // backgroundColor: theme.palette.mode === 'dark' ? '#2ECA45' : '#65C466',
+              opacity: 1,
+              border: 0,
+            },
+            "&.Mui-disabled + .MuiSwitch-track": {
+              opacity: 0.5,
+            },
+          },
+          "&.Mui-focusVisible .MuiSwitch-thumb": {
+            color: "#33cf4d",
+            border: "6px solid #fff",
+          },
+          "&.Mui-disabled .MuiSwitch-thumb": {
+            color: "#fff",
+            // opacity: 0.6,
+            //   color:
+            //     theme.palette.mode === 'light'
+            //       ? theme.palette.grey[100]
+            //       : theme.palette.grey[600],
+          },
+          "&.Mui-disabled + .MuiSwitch-track": {
+            opacity: 0.5,
+            // opacity: theme.palette.mode === 'light' ? 0.7 : 0.3,
+          },
+        },
+        thumb: {
+          width: 20,
+          height: 20,
+          borderRadius: 10,
+          // transition: theme.transitions.create(['width'], {
+          //   duration: 200,
+          // }),
+          transition: "width .2s, transform .2s",
+        },
+        track: {
+          borderRadius: 24 / 2,
+          backgroundColor: "#E9E9EA",
+          // backgroundColor: theme.palette.mode === 'light' ? '#E9E9EA' : '#39393D',
+          opacity: 1,
+          // transition: theme.transitions.create(['background-color'], {
+          //   duration: 500,
+          // }),
+        },
+      },
+    },
+    MuiSlider: {
+      styleOverrides: {
+        thumb: {
+          color: "#fff",
+        },
       },
     },
   },

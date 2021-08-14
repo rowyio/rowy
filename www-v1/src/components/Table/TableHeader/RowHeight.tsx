@@ -30,21 +30,20 @@ export default function RowHeight() {
         InputProps={{
           disableUnderline: true,
           sx: {
-            borderRadius: 1,
-            "& .MuiInputBase-input": {
-              paddingTop: `${(36 - 24) / 2}px`,
-              paddingBottom: `${(36 - 24) / 2}px`,
-              display: "flex",
-              alignItems: "center",
+            background: "transparent",
+            boxShadow: "none",
+            height: 32,
+            "&:hover:not(.Mui-disabled), &:focus, &.Mui-focused": {
+              backgroundColor: theme.palette.action.hover,
             },
           },
         }}
-        InputLabelProps={{ style: { opacity: 0 } }}
+        InputLabelProps={{ style: { display: "none" } }}
         SelectProps={{
           displayEmpty: true,
           renderValue: () => (
             <RowHeightIcon
-              style={{ display: "block", color: theme.palette.action.active }}
+              style={{ display: "block", color: theme.palette.secondary.main }}
             />
           ),
           MenuProps: {

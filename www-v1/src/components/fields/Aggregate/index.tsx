@@ -1,7 +1,7 @@
 import { IFieldConfig, FieldType } from "components/fields/types";
 import withBasicCell from "../_withTableCell/withBasicCell";
 
-import AggregateIcon from "@material-ui/icons/Layers";
+import AggregateIcon from "@material-ui/icons/LayersOutlined";
 import BasicCell from "../_BasicCell/BasicCellNull";
 import NullEditor from "components/Table/editors/NullEditor";
 

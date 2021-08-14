@@ -144,7 +144,7 @@ export default function HomeNavigation({
       <Grid item xs>
         <AppBar
           color="inherit"
-          elevation={trigger ? 4 : 0}
+          elevation={trigger ? 1 : 0}
           className={clsx(classes.appBar, trigger && classes.appBarScrolled)}
         >
           <Toolbar className={classes.toolbar}>

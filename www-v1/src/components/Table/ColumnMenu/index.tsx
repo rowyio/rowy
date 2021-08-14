@@ -3,16 +3,16 @@ import React, { useState, useEffect } from "react";
 import { Menu } from "@material-ui/core";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
 import LockIcon from "@material-ui/icons/Lock";
-import VisibilityOffIcon from "@material-ui/icons/VisibilityOff";
-import VisibilityIcon from "@material-ui/icons/Visibility";
+import VisibilityOffIcon from "@material-ui/icons/VisibilityOffOutlined";
+import VisibilityIcon from "@material-ui/icons/VisibilityOutlined";
 import FreezeIcon from "assets/icons/Freeze";
 import UnfreezeIcon from "assets/icons/Unfreeze";
 import CellResizeIcon from "assets/icons/CellResize";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
-import EditIcon from "@material-ui/icons/Edit";
+import EditIcon from "@material-ui/icons/EditOutlined";
 // import ReorderIcon from "@material-ui/icons/Reorder";
-import SettingsIcon from "@material-ui/icons/Settings";
+import SettingsIcon from "@material-ui/icons/SettingsOutlined";
 import ColumnPlusBeforeIcon from "assets/icons/ColumnPlusBefore";
 import ColumnPlusAfterIcon from "assets/icons/ColumnPlusAfter";
 import ColumnRemoveIcon from "assets/icons/ColumnRemove";
@@ -188,14 +188,14 @@ export default function ColumnMenu() {
     },
     { type: "subheader", label: "Edit" },
     {
-      label: "Rename",
+      label: "Rename…",
       icon: <EditIcon />,
       onClick: () => {
         setModal({ type: ModalStates.nameChange, data: {} });
       },
     },
     {
-      label: `Edit type: ${getFieldProp("name", column.type)}`,
+      label: `Edit type: ${getFieldProp("name", column.type)}…`,
       // This is based off the cell type
       icon: getFieldProp("icon", column.type),
       onClick: () => {
@@ -203,7 +203,7 @@ export default function ColumnMenu() {
       },
     },
     {
-      label: `Column settings`,
+      label: `Column settings…`,
       // This is based off the cell type
       icon: <SettingsIcon />,
       onClick: () => {
@@ -217,7 +217,7 @@ export default function ColumnMenu() {
     //   onClick: () => alert("REORDER"),
     // },
     {
-      label: "Add new to left",
+      label: "Add new to left…",
       icon: <ColumnPlusBeforeIcon />,
       onClick: () =>
         setModal({
@@ -228,7 +228,7 @@ export default function ColumnMenu() {
         }),
     },
     {
-      label: "Add new to right",
+      label: "Add new to right…",
       icon: <ColumnPlusAfterIcon />,
       onClick: () =>
         setModal({
