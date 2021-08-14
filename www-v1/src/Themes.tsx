@@ -373,8 +373,12 @@ export const themeBase = {
 
           transition: "transform .2s, width .2s",
 
-          ".MuiSwitch-root:active &": { width: 24 },
-          ".MuiSwitch-root.MuiSwitch-sizeSmall:active &": { width: 20 },
+          ".MuiSwitch-root:active .MuiSwitch-switchBase:not(.Mui-disabled) &": {
+            width: 24,
+          },
+          ".MuiSwitch-root.MuiSwitch-sizeSmall:active .MuiSwitch-switchBase:not(.Mui-disabled) &": {
+            width: 20,
+          },
           "& + .MuiTouchRipple-root": {
             borderRadius: 24 / 2,
             zIndex: -1,

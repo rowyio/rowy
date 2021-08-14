@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) =>
       width: "100%",
       display: "flex",
 
-      padding: theme.spacing(0, 0.5, 0, 1.5),
+      padding: theme.spacing(0, 0.25, 0, 1.5),
     },
 
     label: {
