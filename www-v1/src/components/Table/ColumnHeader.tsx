@@ -15,6 +15,7 @@ import {
 } from "@material-ui/core";
 import SortDescIcon from "@material-ui/icons/ArrowDownward";
 import DropdownIcon from "@material-ui/icons/MoreHoriz";
+import LockIcon from "@material-ui/icons/Lock";
 
 import { FieldType } from "constants/fields";
 import { getFieldProp } from "components/fields";
@@ -36,7 +37,7 @@ const useStyles = makeStyles((theme) =>
       cursor: "move",
 
       margin: theme.spacing(0, -1.5),
-      padding: theme.spacing(0, 1.5),
+      padding: theme.spacing(0, 0.5, 0, 1.5),
       width: `calc(100% + ${theme.spacing(1.5 * 2)})`,
     },
     isDragging: { opacity: 0.5 },
@@ -52,9 +53,14 @@ const useStyles = makeStyles((theme) =>
       flexShrink: 1,
       overflow: "hidden",
       margin: theme.spacing(0, 0.5),
-      marginRight: -26,
+      marginRight: -30,
     },
-    columnName: { lineHeight: "44px" },
+    columnName: {
+      ...theme.typography.caption,
+      fontWeight: theme.typography.fontWeightMedium,
+      lineHeight: "44px",
+      textOverflow: "clip",
+    },
 
     columnNameTooltip: {
       background: theme.palette.background.default,
@@ -68,8 +74,8 @@ const useStyles = makeStyles((theme) =>
 
     sortIconContainer: {
       backgroundColor: theme.palette.background.default,
-      width: 30,
-      height: 30,
+      // width: 30,
+      // height: 30,
 
       opacity: 0,
       transition: theme.transitions.create("opacity", {
@@ -89,16 +95,12 @@ const useStyles = makeStyles((theme) =>
     },
 
     dropdownButton: {
-      opacity: 0.5,
-      transition: theme.transitions.create("opacity", {
+      transition: theme.transitions.create("color", {
         duration: theme.transitions.duration.short,
       }),
-      "&:hover": {
-        backgroundColor: "transparent",
-        opacity: 1,
-      },
 
-      padding: 0,
+      color: theme.palette.text.disabled,
+      "$root:hover &": { color: theme.palette.text.primary },
     },
   })
 );
@@ -208,13 +210,21 @@ export default function DraggableHeaderRenderer<R>({
             navigator.clipboard.writeText(column.key as string);
           }}
         >
-          {getFieldProp("icon", (column as any).type)}
+          {column.editable === false ? (
+            <LockIcon />
+          ) : (
+            getFieldProp("icon", (column as any).type)
+          )}
         </Grid>
       </Tooltip>
 
       <Grid item xs className={classes.columnNameContainer}>
         <Tooltip
-          title={<Typography variant="subtitle2">{column.name}</Typography>}
+          title={
+            <Typography className={classes.columnName} color="inherit">
+              {column.name}
+            </Typography>
+          }
           enterDelay={1000}
           placement="bottom-start"
           disableInteractive
@@ -245,7 +255,6 @@ export default function DraggableHeaderRenderer<R>({
           classes={{ tooltip: classes.columnNameTooltip }}
         >
           <Typography
-            variant="subtitle2"
             noWrap
             className={classes.columnName}
             component="div"

@@ -315,19 +315,28 @@ export default function TestView() {
               { value: 40, label: 40 },
             ]}
             disabled
+            defaultValue={30}
           />
 
           <Stack spacing={1} direction="row">
-            <Switch />
-            <Switch color="secondary" />
-            <Switch color="success" />
-            <Switch disabled />
+            <Switch size="medium" />
+            <Switch size="medium" color="secondary" />
+            <Switch size="medium" color="success" />
+            <Switch size="medium" disabled />
+            <Switch size="small" />
+            <Switch size="small" color="secondary" />
+            <Switch size="small" color="success" />
+            <Switch size="small" disabled />
           </Stack>
           <Stack spacing={1} direction="row">
-            <Switch checked />
-            <Switch checked color="secondary" />
-            <Switch checked color="success" />
-            <Switch checked disabled />
+            <Switch size="medium" checked />
+            <Switch size="medium" checked color="secondary" />
+            <Switch size="medium" checked color="success" />
+            <Switch size="medium" checked disabled />
+            <Switch size="small" checked />
+            <Switch size="small" checked color="secondary" />
+            <Switch size="small" checked color="success" />
+            <Switch size="small" checked disabled />
           </Stack>
         </Stack>
       </Container>

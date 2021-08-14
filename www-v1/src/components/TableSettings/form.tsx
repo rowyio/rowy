@@ -34,8 +34,7 @@ export const tableSettings = (
           View your Firestore collections
           <OpenInNewIcon
             aria-label="Open in new tab"
-            fontSize="small"
-            style={{ verticalAlign: "bottom", marginLeft: 4 }}
+            style={{ verticalAlign: "middle", marginLeft: 4, fontSize: "1em" }}
           />
         </Link>
       ) as any,
@@ -87,8 +86,7 @@ export const tableSettings = (
           Learn more about collection groups
           <OpenInNewIcon
             aria-label="Open in new tab"
-            fontSize="small"
-            style={{ verticalAlign: "bottom", marginLeft: 4 }}
+            style={{ verticalAlign: "middle", marginLeft: 4, fontSize: "1em" }}
           />
         </Link>
       ) as any,
@@ -126,8 +124,11 @@ export const tableSettings = (
             Read about role-based security rules
             <OpenInNewIcon
               aria-label="Open in new tab"
-              fontSize="small"
-              style={{ verticalAlign: "bottom", marginLeft: 4 }}
+              style={{
+                verticalAlign: "middle",
+                marginLeft: 4,
+                fontSize: "1em",
+              }}
             />
           </Link>
         </>
@@ -162,8 +163,11 @@ export const tableSettings = (
             Learn more about this requirement
             <OpenInNewIcon
               aria-label="Open in new tab"
-              fontSize="small"
-              style={{ verticalAlign: "bottom", marginLeft: 4 }}
+              style={{
+                verticalAlign: "middle",
+                marginLeft: 4,
+                fontSize: "1em",
+              }}
             />
           </Link>
         </>

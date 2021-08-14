@@ -16,7 +16,7 @@ import { useStyles } from "./useStyles";
 import { useFiretableContext } from "contexts/FiretableContext";
 import useDoc from "hooks/useDoc";
 
-export const DRAWER_WIDTH = 540;
+export const DRAWER_WIDTH = 512;
 export const DRAWER_COLLAPSED_WIDTH = 36;
 
 type SelectedCell = { row: number; column: string } | null;

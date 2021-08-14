@@ -3,9 +3,10 @@ import _merge from "lodash/merge";
 import { createTheme, ThemeOptions } from "@material-ui/core/styles";
 import { lightThemeColors } from "theme/colors";
 
-export const HEADING_FONT = "system-ui, Space Grotesk, system-ui, sans-serif";
+export const HEADING_FONT =
+  "Segoe UI Variable Display, system-ui, Space Grotesk, system-ui, sans-serif";
 export const BODY_FONT =
-  "Segoe UI Variable Small, system-ui, Inter, system-ui, sans-serif";
+  "Segoe UI Variable Text, system-ui, Inter, system-ui, sans-serif";
 export const MONO_FONT = "IBM Plex Mono, ui-monospace, monospace";
 
 export const ANTLER_RED = "#ED4747";
@@ -175,11 +176,22 @@ export const themeBase = {
           fontSize: toRem(12),
           letterSpacing: toEm(0.4, 12),
           lineHeight: 20 / 12,
+          fontWeight: 500,
         },
       },
     },
     MuiSelect: {
       styleOverrides: {
+        select: {
+          "& > *": {
+            margin: 0,
+            paddingTop: 0,
+            paddingBottom: 0,
+          },
+        },
+        icon: {
+          transition: "transform 0.2s",
+        },
         iconOpen: {
           transform: "rotate(180deg)",
         },
@@ -219,6 +231,13 @@ export const themeBase = {
         root: {
           left: "calc(env(safe-area-inset-left) + 8px)",
           bottom: "calc(env(safe-area-inset-bottom) + 8px)",
+        },
+      },
+    },
+    MuiSnackbarContent: {
+      styleOverrides: {
+        root: {
+          borderRadius: 8,
         },
       },
     },
@@ -294,6 +313,13 @@ export const themeBase = {
         },
       },
     },
+    MuiIconButton: {
+      styleOverrides: {
+        sizeSmall: {
+          borderRadius: 4,
+        },
+      },
+    },
     MuiChip: {
       defaultProps: {
         size: "small",
@@ -314,71 +340,50 @@ export const themeBase = {
       },
     },
     MuiSwitch: {
+      defaultProps: {
+        size: "small",
+      },
       styleOverrides: {
-        root: {
-          width: 42,
-          height: 24,
-          padding: 0,
+        sizeMedium: {
+          width: 42 + (38 - 24),
+          height: 24 + (38 - 24),
+          padding: (38 - 24) / 2,
+        },
+        sizeSmall: {
+          width: 36 + (28 - 20),
+          height: 20 + (28 - 20),
+          padding: (28 - 20) / 2,
 
-          "&:active": {
-            "& .MuiSwitch-switchBase:not(.Mui-disabled) .MuiSwitch-thumb": {
-              width: 24,
-            },
-            "& .MuiSwitch-switchBase.Mui-checked:not(.Mui-disabled) .MuiSwitch-thumb": {
-              transform: "translateX(-4px)",
-            },
+          "& .MuiSwitch-switchBase": { padding: 6 },
+        },
+
+        track: {
+          borderRadius: 24 / 2,
+          ".MuiSwitch-switchBase.Mui-checked:not(.Mui-disabled) + &": {
+            opacity: 1,
           },
         },
         switchBase: {
-          padding: 0,
-          margin: 2,
-          "&.Mui-checked": {
-            transform: "translateX(18px)",
-            color: "#fff",
-            "& + .MuiSwitch-track": {
-              backgroundColor: "#65C466",
-              // backgroundColor: theme.palette.mode === 'dark' ? '#2ECA45' : '#65C466',
-              opacity: 1,
-              border: 0,
-            },
-            "&.Mui-disabled + .MuiSwitch-track": {
-              opacity: 0.5,
-            },
-          },
-          "&.Mui-focusVisible .MuiSwitch-thumb": {
-            color: "#33cf4d",
-            border: "6px solid #fff",
-          },
-          "&.Mui-disabled .MuiSwitch-thumb": {
-            color: "#fff",
-            // opacity: 0.6,
-            //   color:
-            //     theme.palette.mode === 'light'
-            //       ? theme.palette.grey[100]
-            //       : theme.palette.grey[600],
-          },
-          "&.Mui-disabled + .MuiSwitch-track": {
-            opacity: 0.5,
-            // opacity: theme.palette.mode === 'light' ? 0.7 : 0.3,
-          },
+          color: "#000",
+          "&.Mui-checked": { transform: "translateX(18px)" },
         },
         thumb: {
-          width: 20,
-          height: 20,
-          borderRadius: 10,
-          // transition: theme.transitions.create(['width'], {
-          //   duration: 200,
-          // }),
-          transition: "width .2s, transform .2s",
-        },
-        track: {
+          background: "#fff",
           borderRadius: 24 / 2,
-          backgroundColor: "#E9E9EA",
-          // backgroundColor: theme.palette.mode === 'light' ? '#E9E9EA' : '#39393D',
-          opacity: 1,
-          // transition: theme.transitions.create(['background-color'], {
-          //   duration: 500,
-          // }),
+
+          transition: "transform .2s, width .2s",
+
+          ".MuiSwitch-root:active &": { width: 24 },
+          ".MuiSwitch-root.MuiSwitch-sizeSmall:active &": { width: 20 },
+          "& + .MuiTouchRipple-root": {
+            borderRadius: 24 / 2,
+            zIndex: -1,
+          },
+
+          ".MuiSwitch-root:active .MuiSwitch-switchBase.Mui-checked:not(.Mui-disabled) &": {
+            transform: "translateX(-4px)",
+            "& + .MuiTouchRipple-root": { left: -4 },
+          },
         },
       },
     },

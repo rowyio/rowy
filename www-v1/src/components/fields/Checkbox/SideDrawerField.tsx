@@ -6,7 +6,6 @@ import { makeStyles, createStyles } from "@material-ui/styles";
 import { ButtonBase, FormControlLabel, Switch } from "@material-ui/core";
 
 import { useFieldStyles } from "components/SideDrawer/Form/utils";
-import { useSwitchStyles } from "./styles";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -17,7 +16,7 @@ const useStyles = makeStyles((theme) =>
       width: "100%",
       display: "flex",
 
-      padding: theme.spacing(0, 0, 0, 1.5),
+      padding: theme.spacing(0, 0.5, 0, 1.5),
     },
 
     label: {
@@ -35,7 +34,6 @@ export default function Checkbox({
 }: ISideDrawerFieldProps) {
   const classes = useStyles();
   const fieldClasses = useFieldStyles();
-  // const switchClasses = useSwitchStyles();
 
   return (
     <Controller
@@ -58,7 +56,6 @@ export default function Checkbox({
                   onChange={handleChange}
                   onBlur={onBlur}
                   disabled={disabled}
-                  // classes={switchClasses}
                   color="success"
                 />
               }

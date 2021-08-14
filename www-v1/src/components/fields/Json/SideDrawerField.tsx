@@ -25,12 +25,12 @@ const useStyles = makeStyles((theme) =>
       padding: theme.spacing(2),
       margin: 0,
       overflowX: "auto",
-      ...theme.typography.body2,
+      ...theme.typography.caption,
     },
 
     readOnly: {
       whiteSpace: "pre-wrap",
-      ...theme.typography.body2,
+      ...theme.typography.caption,
       fontFamily: theme.typography.fontFamilyMono,
       wordBreak: "break-word",
     },

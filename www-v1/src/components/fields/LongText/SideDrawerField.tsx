@@ -1,21 +1,13 @@
 import { Controller } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
 import { TextField } from "@material-ui/core";
-
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    multiline: { padding: theme.spacing(2.25, 1.5) },
-  })
-);
 
 export default function LongText({
   control,
   column,
   disabled,
 }: ISideDrawerFieldProps) {
-  const classes = useStyles();
   return (
     <Controller
       control={control}
@@ -35,8 +27,8 @@ export default function LongText({
             hiddenLabel
             disabled={disabled}
             multiline
-            InputProps={{ classes: { multiline: classes.multiline } }}
-            inputProps={{ minRows: 5, maxLength: column.config?.maxLength }}
+            minRows={5}
+            inputProps={{ maxLength: column.config?.maxLength }}
           />
         );
       }}

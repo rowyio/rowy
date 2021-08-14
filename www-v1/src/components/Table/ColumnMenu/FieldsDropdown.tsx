@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme) =>
     listItemIcon: {
       verticalAlign: "text-bottom",
       minWidth: theme.spacing(5),
+      "& svg": { margin: theme.spacing(-0.5, 0) },
     },
   })
 );

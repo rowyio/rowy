@@ -21,7 +21,7 @@ export const useStyles = makeStyles((theme) =>
 
     paper: {
       border: "none",
-      boxShadow: theme.shadows[12].replace(/, 0 (\d+px)/g, ", -$1 0"),
+      boxShadow: theme.shadows[7].replace(/, 0 (\d+px)/g, ", -$1 0"),
       borderTopLeftRadius: `${(theme.shape.borderRadius as number) * 3}px`,
       borderBottomLeftRadius: `${(theme.shape.borderRadius as number) * 3}px`,
 
@@ -63,11 +63,11 @@ export const useStyles = makeStyles((theme) =>
     fab: {
       display: "flex",
 
-      boxShadow: theme.shadows[16],
-      "&:active": { boxShadow: theme.shadows[16] },
+      boxShadow: theme.shadows[7],
+      "&:active": { boxShadow: theme.shadows[7] },
 
       "&.Mui-disabled": {
-        boxShadow: theme.shadows[16],
+        boxShadow: theme.shadows[7],
         backgroundColor: theme.palette.background.default,
         // backgroundColor:
         //   theme.palette.grey[theme.palette.mode === "light" ? 300 : 800],
@@ -104,7 +104,7 @@ export const useStyles = makeStyles((theme) =>
     },
 
     drawerContents: {
-      padding: theme.spacing(6),
+      padding: theme.spacing(5),
       overflowY: "auto",
     },
   })

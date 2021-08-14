@@ -15,22 +15,32 @@ import { projectId } from "../../../firebase";
 const useStyles = makeStyles((theme) =>
   createStyles({
     header: {
-      marginBottom: theme.spacing(1),
-      color: theme.palette.text.disabled,
-      "& svg": { display: "block" },
+      paddingBottom: theme.spacing(1),
+      color: theme.palette.text.secondary,
+
+      "& svg": {
+        display: "block",
+        fontSize: 18,
+      },
     },
     iconContainer: {
-      marginRight: theme.spacing(0.5),
+      marginRight: theme.spacing(1),
+    },
+
+    label: {
+      ...theme.typography.caption,
+      lineHeight: "18px",
+      fontWeight: 500,
     },
 
     disabledText: {
-      paddingLeft: theme.spacing(3 + 0.5),
+      paddingLeft: theme.spacing(18 / 8 + 1),
       color: theme.palette.text.disabled,
 
       whiteSpace: "normal",
       wordBreak: "break-all",
     },
-    launchButton: { margin: theme.spacing(-4, 0.5, 0, 0) },
+    launchButton: { margin: theme.spacing(-3, -1.5, 0, 0) },
   })
 );
 
@@ -66,8 +76,8 @@ export default function FieldWrapper({
         <Grid item className={classes.iconContainer}>
           {type === "debug" ? <DebugIcon /> : getFieldProp("icon", type)}
         </Grid>
-        <Grid item xs>
-          <Typography variant="subtitle2">{label}</Typography>
+        <Grid item xs component={Typography} className={classes.label}>
+          {label}
         </Grid>
         {disabled && (
           <Grid item>
@@ -81,7 +91,7 @@ export default function FieldWrapper({
           {children ??
             (!debugText && (
               <Typography variant="body2" className={classes.disabledText}>
-                This field can’t be edited here.
+                This field cannot be edited here
               </Typography>
             ))}
         </Suspense>
@@ -90,7 +100,11 @@ export default function FieldWrapper({
       {debugText && (
         <Grid container spacing={1} wrap="nowrap" alignItems="center">
           <Grid item xs>
-            <Typography variant="body2" className={classes.disabledText}>
+            <Typography
+              variant="body2"
+              className={classes.disabledText}
+              style={{ userSelect: "all" }}
+            >
               {debugText}
             </Typography>
           </Grid>

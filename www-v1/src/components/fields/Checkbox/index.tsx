@@ -18,12 +18,12 @@ const SideDrawerField = lazy(
 
 export const config: IFieldConfig = {
   type: FieldType.checkbox,
-  name: "Checkbox",
+  name: "Toggle",
   dataType: "boolean",
   initialValue: false,
   initializable: true,
   icon: <CheckboxIcon />,
-  description: "Either checked or unchecked. Unchecked by default.",
+  description: "Either toggled on or off. Toggled off by default.",
   TableCell: withHeavyCell(BasicCell, TableCell),
   TableEditor: NullEditor as any,
   csvImportParser: (value: string) => {

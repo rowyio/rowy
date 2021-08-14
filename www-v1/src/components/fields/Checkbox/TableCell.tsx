@@ -5,15 +5,13 @@ import { makeStyles, createStyles } from "@material-ui/styles";
 import { FormControlLabel, Switch } from "@material-ui/core";
 
 import Confirmation from "components/Confirmation";
-// import { useSwitchStyles } from "./styles";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
-      paddingLeft: theme.spacing(0),
       marginLeft: 0,
-      marginRight: -4,
-      width: "calc(100% + 4px)",
+      marginRight: theme.spacing(-1),
+      width: `calc(100% + ${theme.spacing(1)})`,
     },
 
     label: {
@@ -41,14 +39,12 @@ export default function Checkbox({
   disabled,
 }: IHeavyCellProps) {
   const classes = useStyles();
-  // const switchClasses = useSwitchStyles();
 
   let component = (
     <Switch
       checked={!!value}
       onChange={() => onSubmit(!value)}
       disabled={disabled}
-      // classes={switchClasses}
       color="success"
     />
   );

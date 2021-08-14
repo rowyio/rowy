@@ -6,7 +6,6 @@ import { makeStyles, createStyles } from "@material-ui/styles";
 import { Button, DialogContentText } from "@material-ui/core";
 
 import Confirmation from "components/Confirmation";
-import GoIcon from "assets/icons/Go";
 
 import { FormDialog } from "@antlerengineering/form-builder";
 import { tableSettings } from "./form";
@@ -224,13 +223,21 @@ export default function TableSettingsDialog({
                   </>
                 ),
                 confirm: "Reset",
+                color: "error",
               }}
               functionName="onClick"
             >
-              <Button onClick={handleResetStructure} endIcon={<GoIcon />}>
-                Reset Table Structure
+              <Button
+                variant="outlined"
+                color="error"
+                onClick={handleResetStructure}
+                // endIcon={<GoIcon />}
+              >
+                Reset Table Structure…
               </Button>
             </Confirmation>
+
+            <br />
 
             <Confirmation
               message={{
@@ -250,12 +257,18 @@ export default function TableSettingsDialog({
                     </DialogContentText>
                   </>
                 ),
-                confirm: "DELETE",
+                confirm: "Delete",
+                color: "error",
               }}
               functionName="onClick"
             >
-              <Button onClick={handleDelete} endIcon={<GoIcon />}>
-                Delete Table
+              <Button
+                variant="outlined"
+                color="error"
+                onClick={handleDelete}
+                // endIcon={<GoIcon />}
+              >
+                Delete Table…
               </Button>
             </Confirmation>
           </div>

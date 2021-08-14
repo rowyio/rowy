@@ -8,8 +8,9 @@ export const PRIMARY = "#421AFD";
 // export const PRIMARY = "#0F0";
 // export const PRIMARY = "#F15A29";
 // export const PRIMARY = "#c4492c";
+// export const PRIMARY = "#0070EB";
 export const ERROR = "#B00020"; // https://material.io/design/color/dark-theme.html#ui-application
-export const SUCCESS = "#27CD41";
+export const SUCCESS = "#34c759";
 
 const defaultTheme = createTheme();
 

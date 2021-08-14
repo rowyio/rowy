@@ -28,6 +28,7 @@ export interface IConfirmationProps {
     body?: string | React.ReactNode;
     cancel?: string;
     confirm?: string | JSX.Element;
+    color?: "error";
   };
   confirmationCommand?: string;
   functionName?: string;
@@ -97,7 +98,7 @@ export default function Confirmation({
           </DialogContent>
         )}
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={handleClose} color={message?.color || "primary"}>
             {(message && message.cancel) || "Cancel"}
           </Button>
           <Button
@@ -105,8 +106,8 @@ export default function Confirmation({
               confirmHandler();
               handleClose();
             }}
-            color="primary"
             variant="contained"
+            color={message?.color || "primary"}
             autoFocus
             disabled={
               confirmationCommand ? dryText !== confirmationCommand : false
