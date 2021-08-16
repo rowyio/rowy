@@ -78,27 +78,40 @@ export const actionScript = functions.https.onCall(
           action === "undo" ? config["undo.script"] : script
         }}`
       )({ row, db, auth, utilFns, ref, actionParams, context });
-      if (result.success){
-          const cellValue = {
-            redo: config["redo.enabled"],
-            status: result.status,
-            completedAt: serverTimestamp(),
-            ranBy: context.auth!.token.email,
-            undo: config["undo.enabled"],
-          }
-          const userDoc = await db.collection("_FT_USERS").doc(context.auth!.uid).get()
-          const user = userDoc?.get('user')
-         await db.doc(ref.path).update({[column.key]:cellValue, _ft_updatedBy:user? {  
-        ...user,
-          ...context.auth!,
-          timestamp: new Date(),
-        }:null })
-          return {
-            ...result,
-            cellValue,
-          }
-      }  
-      else return {
+      if (result.success) {
+        const cellValue = {
+          redo: config["redo.enabled"],
+          status: result.status,
+          completedAt: serverTimestamp(),
+          ranBy: context.auth!.token.email,
+          undo: config["undo.enabled"],
+        };
+        try {
+          const userDoc = await db
+            .collection("_FT_USERS")
+            .doc(context.auth!.uid)
+            .get();
+          const user = userDoc?.get("user");
+          await db.doc(ref.path).update({
+            [column.key]: cellValue,
+            _ft_updatedBy: user
+              ? {
+                  ...user,
+                  ...context.auth!,
+                  timestamp: new Date(),
+                }
+              : null,
+          });
+        } catch (error) {
+          // handle failed edit log update
+        }
+
+        return {
+          ...result,
+          cellValue,
+        };
+      } else
+        return {
           success: false,
           message: result.message,
         };

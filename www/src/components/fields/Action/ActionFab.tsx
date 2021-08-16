@@ -65,10 +65,6 @@ export default function ActionFab({
   const callableName: string =
     (column as any).callableName ?? config.callableName ?? "actionScript";
   const handleRun = (actionParams = null) => {
-    if (!ref.path || !ref.id) {
-      snack.open({ message: "no ref set", variant: "error" });
-      return;
-    }
     setIsRunning(true);
     const data = {
       ref: { path: ref.path, id: ref.id, tablePath: window.location.pathname },
