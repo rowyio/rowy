@@ -19,10 +19,7 @@ const useStyles = makeStyles((theme) =>
         right: 0,
 
         height: theme.spacing(3),
-        backgroundImage: `linear-gradient(to top, ${
-          theme.palette.background.elevation?.[24] ??
-          theme.palette.background.paper
-        }, transparent)`,
+        backgroundImage: `linear-gradient(to top, ${theme.palette.background.paper}, transparent)`,
       },
     },
     list: {

@@ -46,9 +46,7 @@ const useStyles = makeStyles((theme) =>
       maxWidth: 400,
       width: "100%",
       padding: theme.spacing(4),
-      backgroundColor:
-        theme.palette.background.elevation?.[8] ||
-        theme.palette.background.paper,
+      backgroundColor: theme.palette.background.paper,
 
       "--spacing-contents": theme.spacing(4),
       "& > * + *": { marginTop: "var(--spacing-contents)" },

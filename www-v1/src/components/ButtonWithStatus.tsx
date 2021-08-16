@@ -56,7 +56,7 @@ export const ButtonWithStatus = React.forwardRef(function ButtonWithStatus_(
       {...props}
       ref={ref}
       variant="outlined"
-      color="primary"
+      color={active ? "primary" : "secondary"}
       className={clsx(classes.root, active && classes.active, className)}
     />
   );

@@ -15,9 +15,7 @@ const useStyles = makeStyles((theme) =>
       width: `calc(100% + ${theme.spacing(1.5 * 2)})`,
       height: "100%",
 
-      backgroundColor:
-        theme.palette.background.elevation?.[8] ??
-        theme.palette.background.paper,
+      backgroundColor: theme.palette.background.paper,
     },
 
     inputBase: {

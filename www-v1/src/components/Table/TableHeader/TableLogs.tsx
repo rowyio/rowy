@@ -31,7 +31,7 @@ import CollapseIcon from "@material-ui/icons/ExpandMore";
 import OpenIcon from "@material-ui/icons/OpenInNew";
 import CloseIcon from "@material-ui/icons/Close";
 import TableHeaderButton from "./TableHeaderButton";
-import { MONO_FONT, LOG_TEXT } from "Themes";
+import { MONO_FONT } from "Themes";
 import Ansi from "ansi-to-react";
 import EmptyState from "components/EmptyState";
 

@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) =>
     headerSection: { marginBottom: theme.spacing(1) },
     overline: {
       marginBottom: theme.spacing(2),
-      color: theme.palette.text.disabled,
+      color: theme.palette.text.secondary,
     },
     title: { whiteSpace: "pre-line" },
     image: {

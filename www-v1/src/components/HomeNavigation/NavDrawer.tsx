@@ -28,9 +28,7 @@ const useStyles = makeStyles((theme) =>
     paper: {
       width: NAV_DRAWER_WIDTH,
       overflowX: "hidden",
-      backgroundColor:
-        theme.palette.background.elevation?.[1] ??
-        theme.palette.background.paper,
+      backgroundColor: theme.palette.background.paper,
     },
 
     logoRow: {

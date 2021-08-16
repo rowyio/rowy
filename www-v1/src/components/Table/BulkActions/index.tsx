@@ -42,11 +42,7 @@ const useStyles = makeStyles((theme) =>
 
       zIndex: theme.zIndex.modal,
 
-      backgroundColor:
-        theme.palette.mode === "light"
-          ? theme.palette.background.default
-          : theme.palette.background.elevation?.[12] ??
-            theme.palette.background.default,
+      backgroundColor: theme.palette.background.default,
 
       width: 470,
       maxWidth: "100vw",
