@@ -3,6 +3,7 @@ import { Route, Switch, Link } from "react-router-dom";
 
 import { StyledEngineProvider } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
+import "./space-grotesk.css";
 
 import CustomBrowserRouter from "utils/CustomBrowserRouter";
 import PrivateRoute from "utils/PrivateRoute";

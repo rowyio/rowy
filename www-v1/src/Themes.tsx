@@ -238,7 +238,11 @@ declare module "@material-ui/core/styles/createTransitions" {
 
 export const customizableLightTheme = (customization: ThemeOptions) => {
   const customizedLightThemeBase = createTheme(
-    _merge({}, typography(), colorsLight())
+    _merge(
+      {},
+      typography((customization?.typography as any) ?? {}),
+      colorsLight()
+    )
   );
 
   return createTheme(
@@ -253,7 +257,11 @@ export const customizableLightTheme = (customization: ThemeOptions) => {
 
 export const customizableDarkTheme = (customization: ThemeOptions) => {
   const customizedDarkThemeBase = createTheme(
-    _merge({}, typography(), colorsDark())
+    _merge(
+      {},
+      typography((customization?.typography as any) ?? {}),
+      colorsDark()
+    )
   );
 
   return createTheme(

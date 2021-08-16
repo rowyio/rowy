@@ -117,7 +117,6 @@ export default function TableHeader() {
                   requiredFields
                 );
               }}
-              variant="contained"
               color="primary"
               startIcon={
                 <AddRowIcon

@@ -248,6 +248,10 @@ export const components = (theme: Theme): ThemeOptions => {
               backgroundColor: "transparent",
             },
           },
+
+          contained: {
+            boxShadow: `${theme.shadows[2]}, 0 -1px 0 0 rgba(0, 0, 0, 0.12) inset`,
+          },
         },
       },
       MuiButtonGroup: {
