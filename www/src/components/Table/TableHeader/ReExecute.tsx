@@ -45,14 +45,20 @@ export default function ReExecute() {
   const handleConfirm = async () => {
     setUpdating(true);
     const _ft_forcedUpdateAt = new Date();
-    const batch = db.batch();
     const querySnapshot = await query.get();
-    querySnapshot.docs.forEach((doc) => {
-      batch.update(doc.ref, { _ft_forcedUpdateAt });
-    });
-    await batch.commit();
-    setUpdating(false);
-    setTimeout(() => setOpen(false), 3000); // give time to for ft function to run
+    const docs = [...querySnapshot.docs];
+    while (docs.length) {
+      const batch = db.batch();
+      const temp = docs.splice(0, 499);
+      temp.forEach((doc) => {
+        batch.update(doc.ref, { _ft_forcedUpdateAt });
+      });
+      await batch.commit();
+    }
+    setTimeout(() => {
+      setUpdating(false);
+      setOpen(false);
+    }, 3000); // give time to for ft function to run
   };
 
   return (

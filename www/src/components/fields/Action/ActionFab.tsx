@@ -49,7 +49,7 @@ export default function ActionFab({
   const { requestConfirmation } = useConfirmation();
   const { requestParams } = useActionParams();
   const { tableState } = useFiretableContext();
-  const { createdAt, updatedAt, id, ref, ...docData } = row;
+  const { ref } = row;
   const { config } = column as any;
 
   const action = !value
@@ -65,8 +65,11 @@ export default function ActionFab({
   const callableName: string =
     (column as any).callableName ?? config.callableName ?? "actionScript";
   const handleRun = (actionParams = null) => {
+    if (!ref.path || !ref.id) {
+      snack.open({ message: "no ref set", variant: "error" });
+      return;
+    }
     setIsRunning(true);
-
     const data = {
       ref: { path: ref.path, id: ref.id, tablePath: window.location.pathname },
       column: { ...column, editor: undefined },
