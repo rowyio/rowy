@@ -1,10 +1,21 @@
 import { Theme, ThemeOptions } from "@material-ui/core/styles";
-import { colord } from "colord";
+
+import { colord, extend } from "colord";
+import mixPlugin from "colord/plugins/mix";
+extend([mixPlugin]);
 
 export const components = (theme: Theme): ThemeOptions => {
   const colorDividerHalf = colord(theme.palette.divider)
     .alpha(colord(theme.palette.divider).alpha() / 2)
     .toHslString();
+
+  const fabBackgroundColor =
+    theme.palette.mode === "dark"
+      ? colord(theme.palette.background.default)
+          .mix(theme.palette.action.selected, 0.24)
+          .alpha(1)
+          .toHslString()
+      : theme.palette.background.paper;
 
   return {
     components: {
@@ -122,14 +133,6 @@ export const components = (theme: Theme): ThemeOptions => {
           },
         },
       },
-      MuiFab: {
-        styleOverrides: {
-          sizeSmall: {
-            width: 36,
-            height: 36,
-          },
-        },
-      },
       MuiSnackbar: {
         styleOverrides: {
           root: {
@@ -141,7 +144,8 @@ export const components = (theme: Theme): ThemeOptions => {
       MuiSnackbarContent: {
         styleOverrides: {
           root: {
-            borderRadius: 8,
+            borderRadius: (theme.shape.borderRadius as number) * 2,
+            backgroundColor: theme.palette.secondary.main,
           },
         },
       },
@@ -248,9 +252,45 @@ export const components = (theme: Theme): ThemeOptions => {
               backgroundColor: "transparent",
             },
           },
+          outlinedPrimary: {
+            "&:hover": {
+              backgroundColor: colord(theme.palette.input)
+                .mix(
+                  theme.palette.primary.main,
+                  theme.palette.action.hoverOpacity
+                )
+                .toHslString(),
+            },
+          },
+          outlinedSecondary: {
+            "&:hover": {
+              backgroundColor: colord(theme.palette.input)
+                .mix(
+                  theme.palette.secondary.main,
+                  theme.palette.action.hoverOpacity
+                )
+                .toHslString(),
+            },
+          },
 
           contained: {
             boxShadow: `${theme.shadows[2]}, 0 -1px 0 0 rgba(0, 0, 0, 0.12) inset`,
+          },
+          containedPrimary: {
+            "&:hover": {
+              backgroundColor:
+                theme.palette.mode === "dark"
+                  ? theme.palette.primary.light
+                  : theme.palette.primary.dark,
+            },
+          },
+          containedSecondary: {
+            "&:hover": {
+              backgroundColor: colord(theme.palette.secondary.main)
+                .mix(theme.palette.secondary.contrastText, 0.12)
+                .alpha(1)
+                .toHslString(),
+            },
           },
         },
       },
@@ -271,6 +311,60 @@ export const components = (theme: Theme): ThemeOptions => {
           },
         },
       },
+      MuiFab: {
+        styleOverrides: {
+          root: {
+            "&:not(.MuiFab-primary):not(.MuiFab-secondary):not(.Mui-disabled)": {
+              backgroundColor: fabBackgroundColor,
+              color: theme.palette.text.primary,
+
+              "&:hover": {
+                backgroundColor: colord(fabBackgroundColor)
+                  .mix(
+                    theme.palette.action.hover,
+                    theme.palette.action.hoverOpacity
+                  )
+                  .alpha(1)
+                  .toHslString(),
+              },
+            },
+
+            "&.Mui-disabled": {
+              backgroundColor: colord(theme.palette.background.default)
+                .mix(
+                  theme.palette.action.disabledBackground,
+                  colord(theme.palette.action.disabledBackground).alpha()
+                )
+                .alpha(1)
+                .toHslString(),
+            },
+          },
+          primary: {
+            boxShadow: `${theme.shadows[6]}, 0 -1px 0 0 rgba(0, 0, 0, 0.12) inset`,
+
+            "&:hover": {
+              backgroundColor:
+                theme.palette.mode === "dark"
+                  ? theme.palette.primary.light
+                  : theme.palette.primary.dark,
+            },
+          },
+          secondary: {
+            boxShadow: `${theme.shadows[6]}, 0 -1px 0 0 rgba(0, 0, 0, 0.12) inset`,
+
+            "&:hover": {
+              backgroundColor: colord(theme.palette.secondary.main)
+                .mix(theme.palette.secondary.contrastText, 0.12)
+                .alpha(1)
+                .toHslString(),
+            },
+          },
+          sizeSmall: {
+            width: 36,
+            height: 36,
+          },
+        },
+      },
 
       MuiChip: {
         defaultProps: {
@@ -288,6 +382,20 @@ export const components = (theme: Theme): ThemeOptions => {
             minHeight: 24,
             padding: "2px 0",
             "&.MuiChip-outlined": { padding: "1px 0" },
+          },
+
+          clickable: {
+            "&.MuiChip-filledPrimary:hover": {
+              backgroundColor:
+                theme.palette.mode === "dark"
+                  ? theme.palette.primary.light
+                  : theme.palette.primary.dark,
+            },
+            "&.MuiChip-filledSecondary:hover": {
+              backgroundColor: colord(theme.palette.secondary.main)
+                .mix(theme.palette.secondary.contrastText, 0.12)
+                .toHslString(),
+            },
           },
         },
       },

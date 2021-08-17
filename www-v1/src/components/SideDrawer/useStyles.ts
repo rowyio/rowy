@@ -21,7 +21,7 @@ export const useStyles = makeStyles((theme) =>
 
     paper: {
       border: "none",
-      boxShadow: theme.shadows[7].replace(/, 0 (\d+px)/g, ", -$1 0"),
+      boxShadow: theme.shadows[4].replace(/, 0 (\d+px)/g, ", -$1 0"),
       borderTopLeftRadius: `${(theme.shape.borderRadius as number) * 3}px`,
       borderBottomLeftRadius: `${(theme.shape.borderRadius as number) * 3}px`,
 
@@ -33,7 +33,7 @@ export const useStyles = makeStyles((theme) =>
       height: `calc(100% - ${APP_BAR_HEIGHT + TABLE_HEADER_HEIGHT}px)`,
 
       transition: theme.transitions.create("transform", {
-        easing: theme.transitions.easing.custom,
+        easing: theme.transitions.easing.easeInOut,
         duration: theme.transitions.duration.standard,
       }),
 
@@ -57,37 +57,38 @@ export const useStyles = makeStyles((theme) =>
       },
     },
     bumpPaper: {
-      animation: `${theme.transitions.duration.standard}ms ${theme.transitions.easing.custom} $bumpPaper`,
+      animation: `${theme.transitions.duration.standard}ms ${theme.transitions.easing.easeInOut} $bumpPaper`,
     },
 
     fab: {
       display: "flex",
 
-      boxShadow: theme.shadows[7],
-      "&:active": { boxShadow: theme.shadows[7] },
+      boxShadow: theme.shadows[4],
+      "&:active": { boxShadow: theme.shadows[4] },
 
-      "&.Mui-disabled": {
-        boxShadow: theme.shadows[7],
-        backgroundColor: theme.palette.background.default,
-        // backgroundColor:
-        //   theme.palette.grey[theme.palette.mode === "light" ? 300 : 800],
-      },
+      "&.Mui-disabled": { boxShadow: theme.shadows[4] },
 
       "& + &": { marginTop: theme.spacing(4) },
     },
 
     navFabContainer: {
       position: "absolute",
-      top: theme.spacing(8),
-      left: theme.spacing(-2.5),
+      top: theme.spacing(6),
+      left: -18,
       zIndex: theme.zIndex.drawer + 1,
     },
     "@keyframes navFab": {
-      from: { transform: "translateY(-50vh)" },
-      to: { transform: "translateY(0)" },
+      from: {
+        opacity: 0,
+        transform: "translateY(-48px)",
+      },
+      to: {
+        opacity: 1,
+        transform: "translateY(0)",
+      },
     },
     navFab: {
-      animation: `${theme.transitions.duration.standard}ms ${theme.transitions.easing.custom} both $navFab`,
+      animation: `${theme.transitions.duration.standard}ms ${theme.transitions.easing.easeInOut} both $navFab`,
     },
 
     drawerFabContainer: {

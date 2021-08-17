@@ -14,6 +14,8 @@ import {
   TableCell,
   Typography,
   Button,
+  IconButton,
+  Fab,
   Chip,
   Paper,
   MenuList,
@@ -25,6 +27,7 @@ import {
   Switch,
   TextField,
 } from "@material-ui/core";
+import SparkIcon from "@material-ui/icons/OfflineBoltOutlined";
 
 const typographyVariants = [
   "h1",
@@ -261,9 +264,89 @@ export default function TestView() {
           </Stack>
 
           <Stack spacing={1} direction="row" alignItems="center">
-            <Chip size="small" label="Main" />
-            <Chip size="medium" label="Main" />
+            <IconButton size="small">
+              <SparkIcon />
+            </IconButton>
+            <IconButton size="medium">
+              <SparkIcon />
+            </IconButton>
+            <IconButton size="large">
+              <SparkIcon />
+            </IconButton>
+            <IconButton color="primary" size="small">
+              <SparkIcon />
+            </IconButton>
+            <IconButton color="primary" size="medium">
+              <SparkIcon />
+            </IconButton>
+            <IconButton color="primary" size="large">
+              <SparkIcon />
+            </IconButton>
+            <IconButton color="secondary" size="small">
+              <SparkIcon />
+            </IconButton>
+            <IconButton color="secondary" size="medium">
+              <SparkIcon />
+            </IconButton>
+            <IconButton color="secondary" size="large">
+              <SparkIcon />
+            </IconButton>
+            <IconButton disabled size="small">
+              <SparkIcon />
+            </IconButton>
+            <IconButton disabled size="medium">
+              <SparkIcon />
+            </IconButton>
+            <IconButton disabled size="large">
+              <SparkIcon />
+            </IconButton>
+          </Stack>
+
+          <Stack spacing={1} direction="row" alignItems="center">
+            <Fab size="small">
+              <SparkIcon />
+            </Fab>
+            <Fab size="medium">
+              <SparkIcon />
+            </Fab>
+            <Fab size="large">
+              <SparkIcon />
+            </Fab>
+            <Fab color="primary" size="small">
+              <SparkIcon />
+            </Fab>
+            <Fab color="primary" size="medium">
+              <SparkIcon />
+            </Fab>
+            <Fab color="primary" size="large">
+              <SparkIcon />
+            </Fab>
+            <Fab color="secondary" size="small">
+              <SparkIcon />
+            </Fab>
+            <Fab color="secondary" size="medium">
+              <SparkIcon />
+            </Fab>
+            <Fab color="secondary" size="large">
+              <SparkIcon />
+            </Fab>
+            <Fab disabled size="small">
+              <SparkIcon />
+            </Fab>
+            <Fab disabled size="medium">
+              <SparkIcon />
+            </Fab>
+            <Fab disabled size="large">
+              <SparkIcon />
+            </Fab>
+          </Stack>
+
+          <Stack spacing={1} direction="row" alignItems="center">
+            <Chip clickable variant="filled" size="small" label="Main" />
+            <Chip clickable variant="filled" size="medium" label="Main" />
             <Chip
+              clickable
+              variant="filled"
               size="medium"
               label={
                 <>
@@ -273,10 +356,25 @@ export default function TestView() {
                 </>
               }
             />
-            <Chip size="small" variant="outlined" label="Main" />
             <Chip
+              clickable
+              variant="filled"
+              color="primary"
               size="small"
-              variant="outlined"
+              label="Main"
+            />
+            <Chip
+              clickable
+              variant="filled"
+              color="primary"
+              size="medium"
+              label="Main"
+            />
+            <Chip
+              clickable
+              variant="filled"
+              color="primary"
+              size="medium"
               label={
                 <>
                   Main
@@ -285,10 +383,25 @@ export default function TestView() {
                 </>
               }
             />
-            <Chip size="medium" variant="outlined" label="Main" />
             <Chip
+              clickable
+              variant="filled"
+              color="secondary"
+              size="small"
+              label="Main"
+            />
+            <Chip
+              clickable
+              variant="filled"
+              color="secondary"
               size="medium"
-              variant="outlined"
+              label="Main"
+            />
+            <Chip
+              clickable
+              variant="filled"
+              color="secondary"
+              size="medium"
               label={
                 <>
                   Main
@@ -300,11 +413,12 @@ export default function TestView() {
           </Stack>
 
           <Stack spacing={1} direction="row" alignItems="center">
-            <Chip color="primary" size="small" label="Main" />
-            <Chip size="medium" color="primary" label="Main" />
+            <Chip clickable variant="outlined" size="small" label="Main" />
+            <Chip clickable variant="outlined" size="medium" label="Main" />
             <Chip
+              clickable
+              variant="outlined"
               size="medium"
-              color="primary"
               label={
                 <>
                   Main
@@ -314,37 +428,24 @@ export default function TestView() {
               }
             />
             <Chip
+              clickable
+              variant="outlined"
               color="primary"
               size="small"
-              variant="outlined"
               label="Main"
             />
             <Chip
-              size="medium"
-              color="primary"
+              clickable
               variant="outlined"
+              color="primary"
+              size="medium"
               label="Main"
             />
             <Chip
-              size="medium"
-              color="primary"
+              clickable
               variant="outlined"
-              label={
-                <>
-                  Main
-                  <br />
-                  Multiline
-                </>
-              }
-            />
-          </Stack>
-
-          <Stack spacing={1} direction="row" alignItems="center">
-            <Chip color="secondary" size="small" label="Main" />
-            <Chip size="medium" color="secondary" label="Main" />
-            <Chip
+              color="primary"
               size="medium"
-              color="secondary"
               label={
                 <>
                   Main
@@ -354,21 +455,24 @@ export default function TestView() {
               }
             />
             <Chip
+              clickable
+              variant="outlined"
               color="secondary"
               size="small"
-              variant="outlined"
               label="Main"
             />
             <Chip
-              size="medium"
-              color="secondary"
+              clickable
               variant="outlined"
+              color="secondary"
+              size="medium"
               label="Main"
             />
             <Chip
-              size="medium"
-              color="secondary"
+              clickable
               variant="outlined"
+              color="secondary"
+              size="medium"
               label={
                 <>
                   Main

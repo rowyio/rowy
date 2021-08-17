@@ -22,9 +22,10 @@ export const PRIMARY = "#420AFD";
 // export const PRIMARY = "#c4492c";
 // export const PRIMARY = "#0070EB";
 // export const PRIMARY = "#015FB8";
+// export const PRIMARY = "#E8016D";
 export const ERROR = "#B00020"; // https://material.io/design/color/dark-theme.html#ui-application
 
-export const DARK_PRIMARY = "#A2BAFF"; // l: 75, c: 65, h: 275
+export const DARK_PRIMARY = "#B0B6FD"; // l: 75, c: 65, h: 275
 
 export const colorsLight = (
   _primary: Parameters<typeof colord>[0] = PRIMARY
@@ -32,6 +33,7 @@ export const colorsLight = (
   const primary = colord(_primary);
   const h = primary.toLch().h;
   const secondary = colord({ l: 10, c: 20, h });
+  const secondaryDark = colord({ l: 0, c: 0, h });
   const bgDefault = colord({ l: 98, c: 2, h });
   const shadowBase = colord({ l: 0, c: 20, h });
   const tooltip = shadowBase.alpha(0.8);
@@ -39,7 +41,10 @@ export const colorsLight = (
   return {
     palette: {
       primary: { main: primary.toHslString() },
-      secondary: { main: secondary.toHslString() },
+      secondary: {
+        main: secondary.toHslString(),
+        dark: secondaryDark.toHslString(),
+      },
       error: { main: ERROR },
       success: { light: "#34c759", main: "#00802e", dark: "#105e24" },
       background: { default: bgDefault.toHslString() },
@@ -122,6 +127,10 @@ export const colorsDark = (
           c: 72,
           h: colord(ERROR).toLch().h,
         }).toHslString(),
+      },
+      action: {
+        hover: "rgba(255, 255, 255, 0.08)",
+        hoverOpacity: 0.08,
       },
       // success: { light: "#34c759" },
       // input: "rgba(255, 255, 255, 0.24)",

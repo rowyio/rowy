@@ -68,7 +68,7 @@ export default function Navigation({
   return (
     <>
       <AppBar
-        position="static"
+        position="sticky"
         color="inherit"
         elevation={0}
         className={classes.appBar}
