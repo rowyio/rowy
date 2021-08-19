@@ -184,7 +184,7 @@ export const components = (theme: Theme): ThemeOptions => {
           root: {
             width: `calc(100% - ${theme.spacing(1)})`,
             margin: theme.spacing(0, 0.5),
-            padding: theme.spacing(0.75, 1.5),
+            padding: theme.spacing(0.75, 0.75, 0.75, 1.5),
             minHeight: 32,
             borderRadius: theme.shape.borderRadius,
 
@@ -228,6 +228,11 @@ export const components = (theme: Theme): ThemeOptions => {
           root: {
             ".Mui-selected &": { color: "inherit" },
           },
+        },
+      },
+      MuiListItemSecondaryAction: {
+        styleOverrides: {
+          root: { right: theme.spacing(0.75) },
         },
       },
 
