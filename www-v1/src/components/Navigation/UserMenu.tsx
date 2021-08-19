@@ -11,7 +11,6 @@ import {
   ListItemAvatar,
   ListItemText,
   ListItemSecondaryAction,
-  ListItemIcon,
   ListItem,
   Link as MuiLink,
   Divider,
@@ -19,7 +18,6 @@ import {
 } from "@material-ui/core";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
-import CheckIcon from "@material-ui/icons/Check";
 
 import UpdateChecker, { useLatestUpdateState } from "./UpdateChecker";
 import { useAppContext } from "contexts/AppContext";
@@ -176,25 +174,18 @@ export default function UserMenu(props: IconButtonProps) {
               onClick={() => changeTheme("system")}
               selected={!themeOverridden}
             >
-              <ListItemIcon>{!themeOverridden && <CheckIcon />}</ListItemIcon>
               System
             </MenuItem>
             <MenuItem
               onClick={() => changeTheme("light")}
               selected={themeOverridden && theme === "light"}
             >
-              <ListItemIcon>
-                {themeOverridden && theme === "light" && <CheckIcon />}
-              </ListItemIcon>
               Light
             </MenuItem>
             <MenuItem
               onClick={() => changeTheme("dark")}
               selected={themeOverridden && theme === "dark"}
             >
-              <ListItemIcon>
-                {themeOverridden && theme === "dark" && <CheckIcon />}
-              </ListItemIcon>
               Dark
             </MenuItem>
           </Menu>

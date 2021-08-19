@@ -1,6 +1,7 @@
 import { Control } from "react-hook-form";
 import { makeStyles, createStyles } from "@material-ui/styles";
 import { FieldType } from "constants/fields";
+import { colord } from "colord";
 
 export interface IFieldProps {
   control: Control;
@@ -24,10 +25,20 @@ export const useFieldStyles = makeStyles((theme) =>
       borderRadius: theme.shape.borderRadius,
       padding: theme.spacing(0.75, 1, 0.75, 1.5),
 
-      backgroundColor: theme.palette.background.paper,
-      boxShadow: `0 0 0 1px ${theme.palette.divider} inset`,
+      backgroundColor: theme.palette.input,
+      boxShadow: `0 0 0 1px ${
+        theme.palette.mode === "dark"
+          ? colord(theme.palette.divider)
+              .alpha(colord(theme.palette.divider).alpha() / 2)
+              .toHslString()
+          : theme.palette.divider
+      } inset`,
+
       "&.Mui-disabled": {
-        backgroundColor: theme.palette.action.disabledBackground,
+        backgroundColor:
+          theme.palette.mode === "dark"
+            ? "transparent"
+            : theme.palette.action.disabledBackground,
       },
 
       width: "100%",

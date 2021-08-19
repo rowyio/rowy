@@ -26,8 +26,11 @@ import {
   Tooltip,
   Switch,
   TextField,
+  Tabs,
+  Tab,
 } from "@material-ui/core";
 import SparkIcon from "@material-ui/icons/OfflineBoltOutlined";
+import { useState } from "react";
 
 const typographyVariants = [
   "h1",
@@ -59,6 +62,9 @@ export default function TestView() {
 
     snackContext.setProgress({ value: 90, target: 120 });
   }, []);
+
+  const [tab, setTab] = useState(0);
+  const handleTabChange = (_, newTab) => setTab(newTab);
 
   return (
     <Navigation tableCollection="">
@@ -599,6 +605,20 @@ export default function TestView() {
             <Switch size="small" checked disabled color="secondary" />
             <Switch size="small" checked disabled color="success" />
           </Stack>
+
+          <Tabs value={tab} onChange={handleTabChange}>
+            <Tab label="Item One" />
+            <Tab label="Item Two" />
+            <Tab label="Item Three" />
+          </Tabs>
+
+          <div style={{ width: 100 }}>
+            <Tabs orientation="vertical" value={tab} onChange={handleTabChange}>
+              <Tab label="Item One" />
+              <Tab label="Item Two" />
+              <Tab label="Item Three" />
+            </Tabs>
+          </div>
         </Stack>
       </Container>
     </Navigation>

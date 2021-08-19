@@ -4,9 +4,24 @@ import { colord, extend } from "colord";
 import mixPlugin from "colord/plugins/mix";
 extend([mixPlugin]);
 
+declare module "@material-ui/core/styles/createTransitions" {
+  interface Easing {
+    custom: string;
+  }
+}
+
 export const components = (theme: Theme): ThemeOptions => {
   const colorDividerHalf = colord(theme.palette.divider)
     .alpha(colord(theme.palette.divider).alpha() / 2)
+    .toHslString();
+
+  const buttonPrimaryHover = colord(theme.palette.primary.main)
+    .mix(theme.palette.primary.contrastText, 0.12)
+    .alpha(1)
+    .toHslString();
+  const buttonSecondaryHover = colord(theme.palette.secondary.main)
+    .mix(theme.palette.secondary.contrastText, 0.12)
+    .alpha(1)
     .toHslString();
 
   const fabBackgroundColor =
@@ -18,12 +33,40 @@ export const components = (theme: Theme): ThemeOptions => {
       : theme.palette.background.paper;
 
   return {
+    transitions: {
+      easing: { custom: "cubic-bezier(0.25, 0.1, 0.25, 1)" },
+    },
     components: {
       MuiContainer: {
-        defaultProps: {
-          maxWidth: "xl",
+        defaultProps: { maxWidth: "xl" },
+      },
+      MuiPaper: {
+        styleOverrides: {
+          rounded: { borderRadius: (theme.shape.borderRadius as number) * 2 },
         },
       },
+      MuiDialog: {
+        styleOverrides: {
+          paper: { borderRadius: (theme.shape.borderRadius as number) * 2 },
+        },
+      },
+      MuiSnackbar: {
+        styleOverrides: {
+          root: {
+            left: `calc(env(safe-area-inset-left) + ${theme.spacing(1)})`,
+            bottom: `calc(env(safe-area-inset-bottom) + ${theme.spacing(1)})`,
+          },
+        },
+      },
+      MuiSnackbarContent: {
+        styleOverrides: {
+          root: {
+            borderRadius: (theme.shape.borderRadius as number) * 2,
+            backgroundColor: theme.palette.secondary.main,
+          },
+        },
+      },
+
       MuiTextField: {
         defaultProps: {
           variant: "filled",
@@ -32,9 +75,7 @@ export const components = (theme: Theme): ThemeOptions => {
       },
       MuiInputBase: {
         styleOverrides: {
-          inputSizeSmall: {
-            ...theme.typography.body2,
-          },
+          inputSizeSmall: theme.typography.body2,
         },
       },
       MuiFilledInput: {
@@ -45,16 +86,17 @@ export const components = (theme: Theme): ThemeOptions => {
               backgroundColor: theme.palette.input,
             },
 
-            boxShadow:
+            boxShadow: `0 0 0 1px ${
               theme.palette.mode === "dark"
-                ? `0 0 0 1px ${colorDividerHalf} inset`
-                : `0 0 0 1px ${theme.palette.divider} inset`,
-            borderRadius: 4,
+                ? colorDividerHalf
+                : theme.palette.divider
+            } inset`,
+            borderRadius: theme.shape.borderRadius,
 
             overflow: "hidden",
             "&::before": {
-              borderRadius: 4,
-              height: 8,
+              borderRadius: theme.shape.borderRadius,
+              height: (theme.shape.borderRadius as number) * 2,
 
               borderColor: theme.palette.text.disabled,
             },
@@ -102,9 +144,11 @@ export const components = (theme: Theme): ThemeOptions => {
           },
         },
       },
+
       MuiSelect: {
         styleOverrides: {
           select: {
+            // If Select option is a MenuItem, don’t add spacing
             "& > *": {
               margin: 0,
               paddingTop: 0,
@@ -112,78 +156,52 @@ export const components = (theme: Theme): ThemeOptions => {
             },
           },
           icon: {
-            transition: "transform 0.2s",
+            transition: theme.transitions.create("transform", {
+              duration: theme.transitions.duration.short,
+            }),
           },
-          iconOpen: {
-            transform: "rotate(180deg)",
-          },
+          iconOpen: { transform: "rotate(180deg)" },
         },
       },
-      MuiPaper: {
-        styleOverrides: {
-          rounded: {
-            borderRadius: 8,
-          },
-        },
-      },
-      MuiDialog: {
-        styleOverrides: {
-          paper: {
-            borderRadius: 8,
-          },
-        },
-      },
-      MuiSnackbar: {
-        styleOverrides: {
-          root: {
-            left: "calc(env(safe-area-inset-left) + 8px)",
-            bottom: "calc(env(safe-area-inset-bottom) + 8px)",
-          },
-        },
-      },
-      MuiSnackbarContent: {
-        styleOverrides: {
-          root: {
-            borderRadius: (theme.shape.borderRadius as number) * 2,
-            backgroundColor: theme.palette.secondary.main,
-          },
-        },
-      },
-
       MuiListItem: {
         styleOverrides: {
           root: {
-            width: "calc(100% - 16px)",
-            margin: "4px 8px",
-            padding: "4px 8px",
-            borderRadius: 4,
+            width: `calc(100% - ${theme.spacing(2)})`,
+            margin: theme.spacing(0.5, 1),
+            padding: theme.spacing(0.5, 1),
+            borderRadius: theme.shape.borderRadius,
           },
         },
-        defaultProps: {
-          dense: true,
-        },
+        defaultProps: { dense: true },
       },
       MuiMenu: {
         styleOverrides: {
-          list: {
-            padding: "4px 0",
-          },
+          list: { padding: theme.spacing(0.5, 0) },
         },
       },
       MuiMenuItem: {
         styleOverrides: {
           root: {
-            width: "calc(100% - 8px)",
-            margin: "0 4px",
-            padding: "6px 12px",
+            width: `calc(100% - ${theme.spacing(1)})`,
+            margin: theme.spacing(0, 0.5),
+            padding: theme.spacing(0.75, 1.5),
             minHeight: 32,
-            borderRadius: 4,
+            borderRadius: theme.shape.borderRadius,
 
             "&.Mui-selected": {
-              color:
-                theme.palette.mode === "dark"
-                  ? theme.palette.primary.light
-                  : theme.palette.primary.dark,
+              backgroundColor: theme.palette.action.selected,
+              "&::before": {
+                content: "''",
+                display: "block",
+                position: "absolute",
+                top: (32 - 16) / 2,
+                left: 0,
+
+                width: 3,
+                height: 16,
+                borderRadius: 1.5,
+                backgroundColor: theme.palette.primary.main,
+              },
             },
 
             "& + .MuiDivider-root": {
@@ -192,14 +210,10 @@ export const components = (theme: Theme): ThemeOptions => {
             },
           },
         },
-        defaultProps: {
-          dense: true,
-        },
+        defaultProps: { dense: true },
       },
       MuiListSubheader: {
-        defaultProps: {
-          disableSticky: true,
-        },
+        defaultProps: { disableSticky: true },
         styleOverrides: {
           root: {
             ...theme.typography.subtitle2,
@@ -212,9 +226,7 @@ export const components = (theme: Theme): ThemeOptions => {
       MuiListItemIcon: {
         styleOverrides: {
           root: {
-            ".Mui-selected &": {
-              color: "inherit",
-            },
+            ".Mui-selected &": { color: "inherit" },
           },
         },
       },
@@ -223,18 +235,18 @@ export const components = (theme: Theme): ThemeOptions => {
         styleOverrides: {
           root: {
             minHeight: 32,
-            paddingTop: 4,
-            paddingBottom: 4,
+            paddingTop: theme.spacing(0.5),
+            paddingBottom: theme.spacing(0.5),
           },
           sizeSmall: {
             minHeight: 28,
-            paddingTop: 2,
-            paddingBottom: 2,
+            paddingTop: theme.spacing(0.25),
+            paddingBottom: theme.spacing(0.25),
           },
           sizeLarge: {
             minHeight: 48,
-            fontSize: 16,
-            borderRadius: 6,
+            fontSize: "1rem",
+            borderRadius: (theme.shape.borderRadius as number) * (16 / 14),
           },
 
           outlined: {
@@ -277,38 +289,25 @@ export const components = (theme: Theme): ThemeOptions => {
             boxShadow: `${theme.shadows[2]}, 0 -1px 0 0 rgba(0, 0, 0, 0.12) inset`,
           },
           containedPrimary: {
-            "&:hover": {
-              backgroundColor:
-                theme.palette.mode === "dark"
-                  ? theme.palette.primary.light
-                  : theme.palette.primary.dark,
-            },
+            "&:hover": { backgroundColor: buttonPrimaryHover },
           },
           containedSecondary: {
-            "&:hover": {
-              backgroundColor: colord(theme.palette.secondary.main)
-                .mix(theme.palette.secondary.contrastText, 0.12)
-                .alpha(1)
-                .toHslString(),
-            },
+            "&:hover": { backgroundColor: buttonSecondaryHover },
           },
         },
       },
       MuiButtonGroup: {
         styleOverrides: {
-          grouped: {
-            minWidth: 32,
-          },
+          grouped: { minWidth: 32 },
         },
       },
+
       MuiIconButton: {
         defaultProps: {
           TouchRippleProps: { center: false },
         },
         styleOverrides: {
-          sizeSmall: {
-            borderRadius: 4,
-          },
+          sizeSmall: { borderRadius: theme.shape.borderRadius },
         },
       },
       MuiFab: {
@@ -341,35 +340,18 @@ export const components = (theme: Theme): ThemeOptions => {
           },
           primary: {
             boxShadow: `${theme.shadows[6]}, 0 -1px 0 0 rgba(0, 0, 0, 0.12) inset`,
-
-            "&:hover": {
-              backgroundColor:
-                theme.palette.mode === "dark"
-                  ? theme.palette.primary.light
-                  : theme.palette.primary.dark,
-            },
+            "&:hover": { backgroundColor: buttonPrimaryHover },
           },
           secondary: {
             boxShadow: `${theme.shadows[6]}, 0 -1px 0 0 rgba(0, 0, 0, 0.12) inset`,
-
-            "&:hover": {
-              backgroundColor: colord(theme.palette.secondary.main)
-                .mix(theme.palette.secondary.contrastText, 0.12)
-                .alpha(1)
-                .toHslString(),
-            },
+            "&:hover": { backgroundColor: buttonSecondaryHover },
           },
-          sizeSmall: {
-            width: 36,
-            height: 36,
-          },
+          sizeSmall: { width: 36, height: 36 },
         },
       },
 
       MuiChip: {
-        defaultProps: {
-          size: "small",
-        },
+        defaultProps: { size: "small" },
         styleOverrides: {
           sizeMedium: {
             height: "auto",
@@ -378,7 +360,7 @@ export const components = (theme: Theme): ThemeOptions => {
             "&.MuiChip-outlined": { padding: "3px 0" },
           },
           sizeSmall: {
-            // height: "auto",
+            height: "auto",
             minHeight: 24,
             padding: "2px 0",
             "&.MuiChip-outlined": { padding: "1px 0" },
@@ -386,33 +368,24 @@ export const components = (theme: Theme): ThemeOptions => {
 
           clickable: {
             "&.MuiChip-filledPrimary:hover": {
-              backgroundColor:
-                theme.palette.mode === "dark"
-                  ? theme.palette.primary.light
-                  : theme.palette.primary.dark,
+              backgroundColor: buttonPrimaryHover,
             },
             "&.MuiChip-filledSecondary:hover": {
-              backgroundColor: colord(theme.palette.secondary.main)
-                .mix(theme.palette.secondary.contrastText, 0.12)
-                .toHslString(),
+              backgroundColor: buttonSecondaryHover,
             },
           },
         },
       },
+
       MuiSwitch: {
-        defaultProps: {
-          size: "small",
-        },
+        defaultProps: { size: "small" },
         styleOverrides: {
           sizeMedium: {
             width: 42 + (38 - 24),
             height: 24 + (38 - 24),
             padding: (38 - 24) / 2,
 
-            "& .MuiSwitch-thumb": {
-              width: 16,
-              height: 16,
-            },
+            "& .MuiSwitch-thumb": { width: 16, height: 16 },
             "& .MuiSwitch-switchBase": { padding: 11 },
           },
           sizeSmall: {
@@ -420,10 +393,7 @@ export const components = (theme: Theme): ThemeOptions => {
             height: 20 + (28 - 20),
             padding: (28 - 20) / 2,
 
-            "& .MuiSwitch-thumb": {
-              width: 12,
-              height: 12,
-            },
+            "& .MuiSwitch-thumb": { width: 12, height: 12 },
             "& .MuiSwitch-switchBase": { padding: 8 },
           },
 
@@ -461,10 +431,10 @@ export const components = (theme: Theme): ThemeOptions => {
               { duration: theme.transitions.duration.shortest }
             ),
 
-            ".MuiSwitch-root:hover &": {
+            ".MuiSwitch-root:hover .MuiSwitch-switchBase:not(.Mui-disabled) &": {
               transform: `scale(${1 + 2 / 16})`,
             },
-            ".MuiSwitch-root.MuiSwitch-sizeSmall:hover &": {
+            ".MuiSwitch-root.MuiSwitch-sizeSmall:hover .MuiSwitch-switchBase:not(.Mui-disabled) &": {
               transform: `scale(${1 + 2 / 12})`,
             },
 
@@ -519,10 +489,53 @@ export const components = (theme: Theme): ThemeOptions => {
             },
 
             "&:hover": {
-              "& > input": {
-                transform: `scale(${1 + 2 / 20})`,
-                // transformOrigin: "50% 50%",
-              },
+              "& > input": { transform: `scale(${1 + 2 / 20})` },
+            },
+          },
+        },
+      },
+
+      MuiTabs: {
+        defaultProps: {
+          TabIndicatorProps: {
+            children: <span className="MuiTabs-indicatorSpan" />,
+          },
+        },
+        styleOverrides: {
+          indicator: {
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "transparent",
+
+            height: 3,
+            ".MuiTabs-vertical &": { width: 3 },
+
+            "& > .MuiTabs-indicatorSpan": {
+              width: "100%",
+              height: "100%",
+              maxWidth: 32,
+              maxHeight: 16,
+
+              borderRadius: 1.5,
+              backgroundColor: theme.palette.primary.main,
+            },
+          },
+        },
+      },
+      MuiTab: {
+        styleOverrides: {
+          root: {
+            borderRadius: theme.shape.borderRadius,
+
+            transition: theme.transitions.create("background-color", {
+              duration: theme.transitions.duration.shortest,
+            }),
+            "&:hover": { backgroundColor: theme.palette.action.hover },
+            "&.Mui-selected:hover": {
+              backgroundColor: colord(theme.palette.primary.main)
+                .alpha(theme.palette.action.hoverOpacity)
+                .toHslString(),
             },
           },
         },
