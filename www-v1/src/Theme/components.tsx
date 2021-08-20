@@ -6,7 +6,7 @@ extend([mixPlugin]);
 
 declare module "@material-ui/core/styles/createTransitions" {
   interface Easing {
-    custom: string;
+    strong: string;
   }
 }
 
@@ -32,9 +32,11 @@ export const components = (theme: Theme): ThemeOptions => {
           .toHslString()
       : theme.palette.background.paper;
 
+  const transitionEasingStrong = "cubic-bezier(0.85, 0, 0, 1)"; // https://docs.microsoft.com/en-us/windows/apps/design/signature-experiences/motion#animation-properties
+
   return {
     transitions: {
-      easing: { custom: "cubic-bezier(0.25, 0.1, 0.25, 1)" },
+      easing: { strong: transitionEasingStrong },
     },
     components: {
       MuiContainer: {
@@ -497,6 +499,19 @@ export const components = (theme: Theme): ThemeOptions => {
               "& > input": { transform: `scale(${1 + 2 / 20})` },
             },
           },
+
+          mark: { width: 3, height: 3 },
+
+          valueLabel: {
+            borderRadius: theme.shape.borderRadius,
+
+            "&::before": {
+              borderRadius: (theme.shape.borderRadius as number) / 2,
+              width: 10,
+              height: 10,
+              bottom: 1,
+            },
+          },
         },
       },
 
@@ -512,6 +527,9 @@ export const components = (theme: Theme): ThemeOptions => {
             justifyContent: "center",
             alignItems: "center",
             backgroundColor: "transparent",
+
+            transitionTimingFunction: transitionEasingStrong,
+            transitionDuration: `${theme.transitions.duration.complex}ms`,
 
             height: 3,
             ".MuiTabs-vertical &": { width: 3 },
@@ -533,9 +551,10 @@ export const components = (theme: Theme): ThemeOptions => {
           root: {
             borderRadius: theme.shape.borderRadius,
 
-            transition: theme.transitions.create("background-color", {
-              duration: theme.transitions.duration.shortest,
-            }),
+            transition: theme.transitions.create(
+              ["background-color", "color"],
+              { duration: theme.transitions.duration.shortest }
+            ),
             "&:hover": { backgroundColor: theme.palette.action.hover },
             "&.Mui-selected:hover": {
               backgroundColor: colord(theme.palette.primary.main)

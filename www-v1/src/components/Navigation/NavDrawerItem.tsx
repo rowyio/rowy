@@ -19,9 +19,10 @@ import { routes } from "constants/routes";
 const useStyles = makeStyles((theme) =>
   createStyles({
     listItem: {
-      color: theme.palette.text.primary,
-      // minHeight: 48,
-      // margin: theme.spacing(0, 1),
+      // color: theme.palette.text.primary,
+      width: `calc(100% - ${theme.spacing(2)})`,
+      margin: theme.spacing(0, 1),
+      padding: theme.spacing(0.75, 0.25, 0.75, 1),
     },
     listItemSelected: {
       "&&, &&:hover": {
