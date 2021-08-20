@@ -18,14 +18,13 @@ import {
   Tabs,
   Tab,
   IconButton,
-  Link,
   Button,
 } from "@material-ui/core";
 import Modal from "components/Modal";
 import { makeStyles, createStyles } from "@material-ui/styles";
-import LogsIcon from "@material-ui/icons/QueryBuilderOutlined";
-import SuccessIcon from "@material-ui/icons/CheckCircleOutlined";
-import FailIcon from "@material-ui/icons/CancelOutlined";
+import LogsIcon from "assets/icons/CloudLogs";
+import SuccessIcon from "@material-ui/icons/CheckCircle";
+import FailIcon from "@material-ui/icons/Cancel";
 import ExpandIcon from "@material-ui/icons/ExpandLess";
 import CollapseIcon from "@material-ui/icons/ExpandMore";
 import OpenIcon from "@material-ui/icons/OpenInNew";
@@ -53,6 +52,18 @@ const isTargetInsideBox = (target, box) => {
 
 const useStyles = makeStyles((theme) =>
   createStyles({
+    toolbarStatusIcon: {
+      fontSize: 12,
+
+      position: "absolute",
+      bottom: 2,
+      right: 2,
+
+      backgroundColor: theme.palette.background.default,
+      boxShadow: `0 0 0 1px ${theme.palette.background.default}`,
+      borderRadius: "50%",
+    },
+
     root: {
       flexGrow: 1,
       backgroundColor: theme.palette.background.paper,
@@ -445,10 +456,24 @@ export default function TableLogs() {
         onClick={() => setPanelOpen(true)}
         icon={
           <>
-            {latestStatus === "BUILDING" && <CircularProgress size={20} />}
-            {latestStatus === "SUCCESS" && <SuccessIcon />}
-            {latestStatus === "FAIL" && <FailIcon />}
-            {!latestStatus && <LogsIcon />}
+            <LogsIcon />
+            {latestStatus === "BUILDING" && (
+              <CircularProgress
+                className={classes.toolbarStatusIcon}
+                size={12}
+                thickness={6}
+                style={{ padding: 1 }}
+              />
+            )}
+            {latestStatus === "SUCCESS" && (
+              <SuccessIcon
+                color="success"
+                className={classes.toolbarStatusIcon}
+              />
+            )}
+            {latestStatus === "FAIL" && (
+              <FailIcon color="error" className={classes.toolbarStatusIcon} />
+            )}
           </>
         }
       />
