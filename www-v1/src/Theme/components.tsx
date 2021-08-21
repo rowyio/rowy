@@ -542,6 +542,12 @@ export const components = (theme: Theme): ThemeOptions => {
 
               borderRadius: 1.5,
               backgroundColor: theme.palette.primary.main,
+
+              transition: theme.transitions.create("transform", {
+                duration: theme.transitions.duration.shortest,
+              }),
+              ".MuiTabs-root:active &": { transform: "scaleX(1.25)" },
+              ".MuiTabs-vertical:active &": { transform: "scaleY(1.25)" },
             },
           },
         },
