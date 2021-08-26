@@ -102,18 +102,7 @@ export const AppProvider: React.FC = ({ children }) => {
         }
         return acc;
       }, {});
-      db.doc(userDoc.path).set(
-        {
-          tables: {},
-          user: userData,
-          theme: {
-            palette: {
-              primary: { main: "#ef4747" },
-            },
-          },
-        },
-        { merge: true }
-      );
+      db.doc(userDoc.path).set({ tables: {}, user: userData }, { merge: true });
     }
   }, [userDoc]);
 
