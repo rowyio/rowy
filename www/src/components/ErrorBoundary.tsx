@@ -19,6 +19,7 @@ class ErrorBoundary extends React.Component<IEmptyStateProps> {
               variant="outlined"
               color="secondary"
               startIcon={<ReloadIcon />}
+              onClick={() => window.location.reload()}
             >
               Reload
             </Button>
