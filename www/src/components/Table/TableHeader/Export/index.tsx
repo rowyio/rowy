@@ -66,9 +66,10 @@ export default function Export() {
   const { tableState } = useFiretableContext();
 
   const query: any = useMemo(() => {
+    const _path = tableState?.tablePath!.replaceAll("~2F", "/") ?? ""
     let _query = isCollectionGroup()
-      ? db.collectionGroup(tableState?.tablePath!)
-      : db.collection(tableState?.tablePath!);
+      ? db.collectionGroup(_path)
+      : db.collection(_path);
     // add filters
     tableState?.filters.forEach((filter) => {
       _query = _query.where(
@@ -109,7 +110,7 @@ export default function Export() {
               <>
                 <DialogContentText>
                   {(tableState?.filters && tableState?.filters.length !== 0) ||
-                  (tableState?.orderBy && tableState?.orderBy.length !== 0)
+                    (tableState?.orderBy && tableState?.orderBy.length !== 0)
                     ? "The filters and sorting applied to the table will be used in the export"
                     : "No filters or sorting will be applied on the exported data"}
                 </DialogContentText>
