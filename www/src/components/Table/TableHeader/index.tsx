@@ -12,7 +12,7 @@ import TableSettings from "./TableSettings";
 import TableLogs from "./TableLogs";
 import HiddenFields from "../HiddenFields";
 import RowHeight from "./RowHeight";
-import Sparks from "./Sparks";
+import Extensions from "./Extensions";
 import ReExecute from "./ReExecute";
 
 import { useAppContext } from "contexts/AppContext";
@@ -66,8 +66,9 @@ export default function TableHeader() {
     Object.values(tableState.columns)?.filter(
       (column) => column.type === FieldType.derivative
     ).length > 0;
-  const hasSparks =
-    tableState && tableState.config?.sparks?.replace(/\W/g, "")?.length > 0;
+  const hasExtensions =
+    tableState &&
+    tableState.config?.compiledExtension?.replace(/\W/g, "")?.length > 0;
 
   if (!tableState || !tableState.columns) return null;
   const { columns } = tableState;
@@ -171,7 +172,7 @@ export default function TableHeader() {
 
       {userClaims?.roles?.includes("ADMIN") && (
         <Grid item>
-          <Sparks />
+          <Extensions />
         </Grid>
       )}
 
@@ -181,11 +182,12 @@ export default function TableHeader() {
         </Grid>
       )}
 
-      {userClaims?.roles?.includes("ADMIN") && (hasDerivatives || hasSparks) && (
-        <Grid item>
-          <ReExecute />
-        </Grid>
-      )}
+      {userClaims?.roles?.includes("ADMIN") &&
+        (hasDerivatives || hasExtensions) && (
+          <Grid item>
+            <ReExecute />
+          </Grid>
+        )}
 
       <Grid item>
         <TableSettings />

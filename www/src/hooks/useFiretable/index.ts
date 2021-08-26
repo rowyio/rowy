@@ -28,6 +28,8 @@ export type FiretableState = {
     tableConfig: any;
     webhooks: any;
     sparks: string;
+    compiledExtension: string;
+    extensionObjects?: any[];
   };
   columns: any[];
   rows: { [key: string]: any }[];
@@ -76,6 +78,8 @@ const useFiretable = (
       rowHeight: tableConfig.rowHeight,
       webhooks: tableConfig.doc?.webhooks,
       sparks: tableConfig.doc?.sparks,
+      compiledExtension: tableConfig.doc?.compiledExtension,
+      extensionObjects: tableConfig.doc?.extensionObjects,
       tableConfig,
     },
     rows: tableState.rows,

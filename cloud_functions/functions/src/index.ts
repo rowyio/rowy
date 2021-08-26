@@ -20,14 +20,14 @@
 
 // export { FT_compressedThumbnail } from "./compressedThumbnail";
 
-export {getAlgoliaSearchKey} from './algoliaSearchKey'
+export { getAlgoliaSearchKey } from "./algoliaSearchKey";
 
-//deprecated, updated implementation moved to FT_build folder and used within sparks table functions
+//deprecated, updated implementation moved to FT_build folder and used within extensions table functions
 // export { FT_derivatives } from "./derivatives";
 // export { FT_algolia } from "./algolia";
 // export { FT_email } from "./emailOnTrigger";
 // export { FT_slack } from "./slackOnTrigger";
 // export { FT_sync } from "./collectionSync";
-// export { FT_spark } from "./sparks";
+// export { FT_extension } from "./extensions";
 // export { FT_history } from "./history";
 // export { slackBotMessageOnCreate } from "./slackOnTrigger/trigger";

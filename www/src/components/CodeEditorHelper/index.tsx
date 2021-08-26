@@ -16,15 +16,19 @@ function AvailableValueTag({ label, details }) {
   );
 }
 
-/* TODO implement parameter "tags" that defines available tags and values
-{
-    row: "You have access to the object 'row' at...",
-    ref: "...",
-    ...: ...
+export interface ICodeEditorHelperProps {
+  docLink: string;
+  additionalVariables?: {
+    key: string;
+    description: string;
+  }[];
 }
-*/
-export default function CodeEditorHelper({ docLink }) {
-  const {} = useFiretableContext();
+
+export default function CodeEditorHelper({
+  docLink,
+  additionalVariables,
+}: ICodeEditorHelperProps) {
+  const { tableState } = useFiretableContext();
   const availableVariables = [
     {
       key: "row",
@@ -55,7 +59,7 @@ export default function CodeEditorHelper({ docLink }) {
     <Box marginBottom={1} display="flex" justifyContent="space-between">
       <Box>
         You have access to:{" "}
-        {availableVariables.map((v) => (
+        {availableVariables.concat(additionalVariables ?? []).map((v) => (
           <AvailableValueTag label={v.key} details={v.description} />
         ))}
       </Box>

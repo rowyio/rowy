@@ -4,13 +4,15 @@ import { useTheme } from "@material-ui/core/styles";
 import Editor, { useMonaco } from "@monaco-editor/react";
 import { useFiretableContext } from "contexts/FiretableContext";
 import { FieldType } from "constants/fields";
+import { useEffect } from "react";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
     editorWrapper: {
       position: "relative",
-      minWidth: 800,
-      height: "100%",
+      minWidth: 400,
+      minHeight: 100,
+      height: "calc(100% - 50px)",
     },
     resizeIcon: {
       position: "absolute",
@@ -37,6 +39,8 @@ export default function CodeEditor(props: any) {
     script,
     onValideStatusUpdate,
     diagnosticsOptions,
+    onUnmount,
+    onMount,
   } = props;
   const theme = useTheme();
   const monacoInstance = useMonaco();
@@ -47,8 +51,15 @@ export default function CodeEditor(props: any) {
 
   const editorRef = useRef<any>();
 
+  useEffect(() => {
+    return () => {
+      onUnmount?.();
+    };
+  }, []);
+
   function handleEditorDidMount(_, editor) {
     editorRef.current = editor;
+    onMount?.();
   }
 
   const themeTransformer = (theme: string) => {
@@ -199,17 +210,19 @@ export default function CodeEditor(props: any) {
         .map((columnKey: string) => `"${columnKey}"`)
         .join("|\n");
 
-      const sparksDefinition = `declare namespace sparks {
-
+      const extensionsDefinition = `
         // basic types that are used in all places
         type Row = {${rowDefinition}};
         type Field = ${availableFields} | string | object;
         type Fields = Field[];
         type Trigger = "create" | "update" | "delete";
         type Triggers = Trigger[];
+
+        // function types that defines extension body and shuold run
+        type Condition = boolean | ((data: ExtensionContext) => boolean | Promise<boolean>);
       
-        // the argument that the spark body takes in
-        type SparkContext = {
+        // the argument that the extension body takes in
+        type ExtensionContext = {
           row: Row;
           ref:FirebaseFirestore.DocumentReference;
           storage:firebasestorage.Storage;
@@ -217,199 +230,94 @@ export default function CodeEditor(props: any) {
           auth:adminauth.BaseAuth;
           change: any;
           triggerType: Triggers;
-          sparkConfig: any;
+          fieldTypes: any;
+          extensionConfig: {
+            label: string;
+            type: sring;
+            triggers: Trigger[];
+            conditions: Condition;
+            requiredFields: string[];
+            extensionBody: any;
+          };
           utilFns: any;
         }
-      
-        // function types that defines spark body and shuold run
-        type ShouldRun = boolean | ((data: SparkContext) => boolean | Promise<any>);
-        type ContextToString = ((data: SparkContext) => string | Promise<any>);
-        type ContextToStringList = ((data: SparkContext) => string[] | Promise<any>);
-        type ContextToObject = ((data: SparkContext) => object | Promise<any>);
-        type ContextToObjectList = ((data: SparkContext) => object[] | Promise<any>);
-        type ContextToRow = ((data: SparkContext) => Row | Promise<any>);
-        type ContextToAny = ((data: SparkContext) => any | Promise<any>);
 
-        // different types of bodies that slack message can use
+        // extension body definition
         type slackEmailBody = {
-          channels?: ContextToStringList;
-          text?: ContextToString;
-          emails: ContextToStringList;
-          blocks?: ContextToObjectList;
-          attachments?: ContextToAny;
+          channels?: string[];
+          text?: string;
+          emails: string[];
+          blocks?: object[];
+          attachments?: any;
         }
 
         type slackChannelBody = {
-          channels: ContextToStringList;
-          text?: ContextToString;
-          emails?: ContextToStringList;
-          blocks?: ContextToObjectList;
-          attachments?: ContextToAny;
-        }
-      
-        // different types of sparks
-        type docSync = {
-          label?:string;
-          type: "docSync";
-          triggers: Triggers;
-          shouldRun: ShouldRun;
-          requiredFields?: Fields;
-          sparkBody: {
-            fieldsToSync: Fields;
-            row: ContextToRow;
-            targetPath: ContextToString;
-          }
-        };
-      
-        type historySnapshot = {
-          label?:string;
-          type: "historySnapshot";
-          triggers: Triggers;
-          shouldRun: ShouldRun;
-          sparkBody: {
-            trackedFields: Fields;
-          }
-        }
-      
-        type algoliaIndex = {
-          label?:string; 
-          type: "algoliaIndex"; 
-          triggers: Triggers; 
-          shouldRun: ShouldRun;
-          requiredFields?: Fields;
-          sparkBody: {
-            fieldsToSync: Fields;
-            index: string;
-            row: ContextToRow;
-            objectID: ContextToString;
-          }
-        }
-        
-        type meiliIndex = { 
-          type: "meiliIndex"; 
-          triggers: Triggers; 
-          shouldRun: ShouldRun;
-          requiredFields?: Fields;
-          sparkBody: {
-            fieldsToSync: Fields;
-            index: string;
-            row: ContextToRow;
-            objectID: ContextToString;
-          }
-        }
-        
-        type bigqueryIndex = { 
-          type: "bigqueryIndex"; 
-          triggers: Triggers; 
-          shouldRun: ShouldRun;
-          requiredFields?: Fields;
-          sparkBody: {
-            fieldsToSync: Fields;
-            index: string;
-            row: ContextToRow;
-            objectID: ContextToString;
-          }
+          channels: string[];
+          text?: string;
+          emails?: string[];
+          blocks?: object[];
+          attachments?: any;
         }
 
-        type slackMessage = {
-          label?:string; 
-          type: "slackMessage"; 
-          triggers: Triggers; 
-          shouldRun: ShouldRun;
-          requiredFields?: Fields;
-          sparkBody: slackEmailBody | slackChannelBody;
-        }
-      
-        type sendgridEmail = {
-          label?:string;
-          type: "sendgridEmail";
-          triggers: Triggers;
-          shouldRun: ShouldRun;
-          requiredFields?: Fields;
-          sparkBody: {
-            msg: ContextToAny;
-          }
-        }
-      
-        type apiCall = {
-          label?:string; 
-          type: "apiCall"; 
-          triggers: Triggers; 
-          shouldRun: ShouldRun;
-          requiredFields?: Fields;
-          sparkBody: {
-            body: ContextToString;
-            url: ContextToString;
-            method: ContextToString;
-            callback: ContextToAny;
-          }
-        }
-      
-        type twilioMessage = {
-          label?:string;
-          type: "twilioMessage";
-          triggers: Triggers;
-          shouldRun: ShouldRun;
-          requiredFields?: Fields;
-          sparkBody: {
-            body: ContextToAny;
-            from: ContextToAny;
-            to: ContextToAny;
-          }
-        }
+        type DocSyncBody = (context: ExtensionContext) => Promise<{
+          fieldsToSync: Fields;
+          row: Row;
+          targetPath: string;
+        }>
 
-        type task = {
-          label?:string; 
-          type: "task"; 
-          triggers: Triggers; 
-          shouldRun: ShouldRun;
-          requiredFields?: Fields;
-          sparkBody: {
-            promises: ContextToAny;
-          }
-        }
+        type HistorySnapshotBody = (context: ExtensionContext) => Promise<{
+          trackedFields: Fields;
+        }>
 
-        type mailchimp = {
-          label?:string; 
-          type: "mailchimp"; 
-          triggers: Triggers; 
-          shouldRun: ShouldRun;
-          requiredFields?: Fields;
-          sparkBody: {
-            method: any;
-            path: any;
-            body: any;
-          }
-        }
-      
-        // an individual spark 
-        type Spark =
-          | docSync
-          | historySnapshot
-          | algoliaIndex
-          | meiliIndex
-          | bigqueryIndex
-          | slackMessage
-          | sendgridEmail
-          | apiCall
-          | twilioMessage
-          | mailchimp
-          | task;
-      
-        type Sparks = Spark[]
-      
-        // use spark.config(sparks) in the code editor for static type check
-        function config(sparks: Sparks): void;
-      }`;
+        type AlgoliaIndexBody = (context: ExtensionContext) => Promise<{
+          fieldsToSync: Fields;
+          index: string;
+          row: Row;
+          objectID: string;
+        }>
+
+        type MeiliIndexBody = (context: ExtensionContext) => Promise<{
+          fieldsToSync: Fields;
+          index: string;
+          row: Row;
+          objectID: string;
+        }>
+
+        type BigqueryIndexBody = (context: ExtensionContext) => Promise<{
+          fieldsToSync: Fields;
+          index: string;
+          row: Row;
+          objectID: string;
+        }>
+
+        type SlackMessageBody = (context: ExtensionContext) => Promise<slackEmailBody | slackChannelBody>;
+
+        type SendgridEmailBody = (context: ExtensionContext) => Promise<any>;
+
+        type ApiCallBody = (context: ExtensionContext) => Promise<{
+          body: string;
+          url: string;
+          method: string;
+          callback: any;
+        }>
+
+        type TwilioMessageBody = (context: ExtensionContext) => Promise<{
+          body: string;
+          from: string;
+          to: string;
+        }>
+
+        type TaskBody = (context: ExtensionContext) => Promise<any>
+      `;
 
       monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(
         [
           "    /**",
-          "     * sparks type configuration",
+          "     * extensions type configuration",
           "     */",
-          sparksDefinition,
+          extensionsDefinition,
         ].join("\n"),
-        "ts:filename/sparks.d.ts"
+        "ts:filename/extensions.d.ts"
       );
 
       monacoInstance.languages.typescript.javascriptDefaults.addExtraLib(

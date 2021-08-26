@@ -73,8 +73,8 @@ export default function ReExecute() {
           header={
             <>
               <DialogContentText>
-                Are you sure you want to force a re-execute of all Sparks and
-                Derivatives?
+                Are you sure you want to force a re-execute of all Extensions
+                and Derivatives?
               </DialogContentText>
             </>
           }
