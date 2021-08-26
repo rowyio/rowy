@@ -30,12 +30,15 @@ export default function RowHeight() {
         InputProps={{
           disableUnderline: true,
           sx: {
-            background: "transparent",
-            boxShadow: "none",
             height: 32,
-            "&:hover:not(.Mui-disabled), &:focus, &.Mui-focused": {
-              backgroundColor: theme.palette.action.hover,
+            "&:hover": {
+              backgroundColor: theme.palette.action.hover + " !important",
             },
+
+            "& .MuiSelect-select": {
+              padding: theme.spacing(0.5, 1) + " !important",
+            },
+            "& .MuiSelect-icon": { display: "none" },
           },
         }}
         InputLabelProps={{ style: { display: "none" } }}

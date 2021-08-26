@@ -6,7 +6,7 @@ import { db } from "../../../../firebase";
 
 import { Breadcrumbs, Typography, Button } from "@material-ui/core";
 import TableHeaderButton from "../TableHeaderButton";
-import ExtensionIcon from "@material-ui/icons/ExtensionOutlined";
+import ExtensionIcon from "assets/icons/Extension";
 import Modal from "components/Modal";
 import { useFiretableContext } from "contexts/FiretableContext";
 import { useAppContext } from "contexts/AppContext";

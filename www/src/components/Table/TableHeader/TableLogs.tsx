@@ -57,10 +57,10 @@ const useStyles = makeStyles((theme) =>
 
       position: "absolute",
       bottom: 2,
-      right: 2,
+      right: 5,
 
-      backgroundColor: theme.palette.background.default,
-      boxShadow: `0 0 0 1px ${theme.palette.background.default}`,
+      backgroundColor: theme.palette.background.paper,
+      boxShadow: `0 0 0 1px ${theme.palette.background.paper}`,
       borderRadius: "50%",
     },
 

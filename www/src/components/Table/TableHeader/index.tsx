@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) =>
     root: {
       width: "100%",
       margin: 0,
-      padding: theme.spacing(0, 1.5, 1.5, 0.5),
+      padding: theme.spacing(0, 2, 1.5, 1),
       height: TABLE_HEADER_HEIGHT,
 
       overflowX: "auto",
