@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import _isEqual from "lodash/isEqual";
 import useStateRef from "react-usestateref";
 import { IExtension, triggerTypes } from "./utils";
@@ -10,6 +10,7 @@ import { useFiretableContext } from "contexts/FiretableContext";
 import BackIcon from "@material-ui/icons/ArrowBack";
 import AddIcon from "@material-ui/icons/AddBox";
 import DeleteIcon from "@material-ui/icons/RemoveCircle";
+import { makeStyles, createStyles } from "@material-ui/styles";
 import {
   AppBar,
   Box,
@@ -17,7 +18,6 @@ import {
   Checkbox,
   Grid,
   IconButton,
-  makeStyles,
   Switch,
   Tab,
   Tabs,
@@ -47,46 +47,48 @@ const additionalVariables = [
   },
 ];
 
-const useStyles = makeStyles((theme) => ({
-  modalRoot: {
-    height: `calc(100vh - 250px)`,
-  },
-  metaRoot: {
-    marginBottom: theme.spacing(2),
-  },
-  tabWrapper: {
-    backgroundColor: theme.palette.background.default,
-  },
-  tabRoot: {
-    backgroundColor: theme.palette.background.paper,
-  },
-  tabPanel: {
-    padding: 0,
-  },
-  label: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(1),
-    display: "block",
-  },
-  hoverable: {
-    borderRadius: theme.spacing(1),
-    cursor: "pointer",
-    padding: theme.spacing(1, 0),
-    "&:hover": {
-      background: theme.palette.background.paper,
+const useStyles = makeStyles((theme) =>
+  createStyles({
+    modalRoot: {
+      height: `calc(100vh - 250px)`,
     },
-  },
-  requiredFields: {
-    maxHeight: `max(300px, 30vh)`,
-    overflowY: "scroll",
-  },
-  addField: {
-    paddingLeft: 13, // align icons to the left
-  },
-  removeField: {
-    marginLeft: -3, // align icons to the left
-  },
-}));
+    metaRoot: {
+      marginBottom: theme.spacing(2),
+    },
+    tabWrapper: {
+      backgroundColor: theme.palette.background.default,
+    },
+    tabRoot: {
+      backgroundColor: theme.palette.background.paper,
+    },
+    tabPanel: {
+      padding: 0,
+    },
+    label: {
+      marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(1),
+      display: "block",
+    },
+    hoverable: {
+      borderRadius: theme.spacing(1),
+      cursor: "pointer",
+      padding: theme.spacing(1, 0),
+      "&:hover": {
+        background: theme.palette.background.paper,
+      },
+    },
+    requiredFields: {
+      maxHeight: `max(300px, 30vh)`,
+      overflowY: "scroll",
+    },
+    addField: {
+      paddingLeft: 13, // align icons to the left
+    },
+    removeField: {
+      marginLeft: -3, // align icons to the left
+    },
+  })
+);
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -197,7 +199,7 @@ export default function ExtensionModal({
           <Grid
             container
             spacing={3}
-            justify="center"
+            justifyContent="center"
             alignItems="center"
             className={classes.metaRoot}
           >
@@ -275,7 +277,7 @@ export default function ExtensionModal({
               <Grid
                 container
                 spacing={3}
-                justify="center"
+                justifyContent="center"
                 alignItems="flex-start"
               >
                 <Grid item xs={6}>

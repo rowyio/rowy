@@ -1,17 +1,18 @@
+import { useState } from "react";
+
+import { makeStyles, createStyles } from "@material-ui/styles";
 import {
   Avatar,
   Box,
   Button,
   Divider,
   IconButton,
-  makeStyles,
   Menu,
   MenuItem,
   Switch,
   Tooltip,
   Typography,
 } from "@material-ui/core";
-import React, { useState } from "react";
 import moment from "moment";
 import { extensionTypes, IExtension, IExtensionType } from "./utils";
 import EmptyState from "components/EmptyState";
@@ -22,34 +23,36 @@ import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/DeleteForever";
 import { useRef } from "react";
 
-const useStyles = makeStyles((theme) => ({
-  hoverableEmptyState: {
-    borderRadius: theme.spacing(1),
-    cursor: "pointer",
-    padding: theme.spacing(2),
-    "&:hover": {
-      background: theme.palette.background.paper,
+const useStyles = makeStyles((theme) =>
+  createStyles({
+    hoverableEmptyState: {
+      borderRadius: theme.spacing(1),
+      cursor: "pointer",
+      padding: theme.spacing(2),
+      "&:hover": {
+        background: theme.palette.background.paper,
+      },
     },
-  },
-  divider: {
-    margin: theme.spacing(1, 0),
-  },
-  extensionName: {
-    marginTop: theme.spacing(1),
-  },
-  extensionType: {
-    marginBottom: theme.spacing(1),
-  },
-  avatar: {
-    marginRight: theme.spacing(1),
-    width: theme.spacing(4),
-    height: theme.spacing(4),
-  },
-  extensionList: {
-    height: "50vh",
-    overflowY: "scroll",
-  },
-}));
+    divider: {
+      margin: theme.spacing(1, 0),
+    },
+    extensionName: {
+      marginTop: theme.spacing(1),
+    },
+    extensionType: {
+      marginBottom: theme.spacing(1),
+    },
+    avatar: {
+      marginRight: theme.spacing(1),
+      width: theme.spacing(4),
+      height: theme.spacing(4),
+    },
+    extensionList: {
+      height: "50vh",
+      overflowY: "scroll",
+    },
+  })
+);
 
 export interface IExtensionListProps {
   extensions: IExtension[];

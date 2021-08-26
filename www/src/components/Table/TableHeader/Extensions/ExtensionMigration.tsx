@@ -1,28 +1,23 @@
-import React, { useState } from "react";
-import _isEqual from "lodash/isEqual";
+import { useState } from "react";
+import { makeStyles, createStyles } from "@material-ui/styles";
 import { sparkToExtensionObjects } from "./utils";
 import Modal from "components/Modal";
 import { useFiretableContext } from "contexts/FiretableContext";
 import { useAppContext } from "contexts/AppContext";
 import firebase from "firebase/app";
-import {
-  Box,
-  Button,
-  CircularProgress,
-  IconButton,
-  makeStyles,
-  Typography,
-} from "@material-ui/core";
+import { Box, Button, CircularProgress, Typography } from "@material-ui/core";
 
-const useStyles = makeStyles((theme) => ({
-  modalRoot: {
-    height: `calc(100vh - 200px)`,
-  },
-  download: {
-    maxWidth: 320,
-    marginTop: theme.spacing(0.5),
-  },
-}));
+const useStyles = makeStyles((theme) =>
+  createStyles({
+    modalRoot: {
+      height: `calc(100vh - 200px)`,
+    },
+    download: {
+      maxWidth: 320,
+      marginTop: theme.spacing(0.5),
+    },
+  })
+);
 
 export interface IExtensionMigrationProps {
   handleClose: () => void;
