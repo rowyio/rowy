@@ -1,11 +1,31 @@
 import React from "react";
 import EmptyState, { IEmptyStateProps } from "./EmptyState";
 
+import { Stack, Button } from "@material-ui/core";
+import ReloadIcon from "@material-ui/icons/Refresh";
 class ErrorBoundary extends React.Component<IEmptyStateProps> {
   state = { hasError: false, errorMessage: "" };
 
   static getDerivedStateFromError(error: Error) {
     // Update state so the next render will show the fallback UI.
+    // Special error message for chunk loading failures:
+    if (error.message.startsWith("Loading chunk"))
+      return {
+        hasError: true,
+        errorMessage: (
+          <Stack spacing={2} alignItems="center">
+            <span>{error.message}</span>
+            <Button
+              variant="outlined"
+              color="secondary"
+              startIcon={<ReloadIcon />}
+            >
+              Reload
+            </Button>
+          </Stack>
+        ),
+      };
+
     return { hasError: true, errorMessage: error.message };
   }
 

@@ -4,7 +4,7 @@ import Div100vh from "react-div-100vh";
 import { makeStyles, createStyles } from "@material-ui/styles";
 import { Grid, GridProps, Typography, SvgIconTypeMap } from "@material-ui/core";
 import { OverridableComponent } from "@material-ui/core/OverridableComponent";
-import ErrorIcon from "@material-ui/icons/Error";
+import ErrorIcon from "@material-ui/icons/ErrorOutlined";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) =>
     content: { maxWidth: "25em" },
 
     icon: {
-      color: theme.palette.text.disabled,
+      color: theme.palette.action.active,
       fontSize: "3.5rem",
     },
 
@@ -86,15 +86,16 @@ export default function EmptyState({
       <Grid item className={classes.content}>
         <Icon className={classes.icon} />
 
-        <Typography variant="h6" className={classes.message} gutterBottom>
+        <Typography
+          component="h1"
+          variant="h6"
+          className={classes.message}
+          gutterBottom
+        >
           {message}
         </Typography>
 
-        {description && (
-          <Typography color="textSecondary" variant="body2">
-            {description}
-          </Typography>
-        )}
+        {description && <Typography variant="body2">{description}</Typography>}
       </Grid>
     </Grid>
   );
