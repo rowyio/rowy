@@ -26,7 +26,6 @@ import ImportIcon from "assets/icons/Import";
 
 import FileUploadIcon from "assets/icons/FileUpload";
 import CheckIcon from "@material-ui/icons/CheckCircle";
-import GoIcon from "assets/icons/Go";
 
 import ImportCsvWizard, {
   IImportCsvWizardProps,
@@ -34,11 +33,14 @@ import ImportCsvWizard, {
 
 const useStyles = makeStyles((theme) =>
   createStyles({
-    tabPanel: { padding: theme.spacing(4) },
+    tabPanel: {
+      padding: theme.spacing(3),
+      width: 400,
+      height: 200,
+    },
     continueButton: {
-      margin: theme.spacing(-2, 2.5, 4),
+      margin: theme.spacing(-2, "auto", 3),
       display: "flex",
-      marginLeft: "auto",
     },
 
     dropzone: {
@@ -250,7 +252,8 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
               inputProps={{ minRows: 5 }}
               autoFocus
               fullWidth
-              label="Paste your CSV here"
+              label="Paste CSV Text"
+              placeholder="column, column, …"
               onChange={(e) => {
                 if (csvData !== null) setCsvData(null);
                 handlePaste(e.target.value);
@@ -271,7 +274,8 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
               variant="filled"
               autoFocus
               fullWidth
-              label="Paste the link to the CSV file here"
+              label="Paste URL to CSV File"
+              placeholder="https://"
               onChange={(e) => {
                 if (csvData !== null) setCsvData(null);
                 handleUrl(e.target.value);
@@ -283,7 +287,7 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
         </TabContext>
 
         <Button
-          endIcon={<GoIcon />}
+          variant="contained"
           disabled={!validCsv}
           className={classes.continueButton}
           onClick={() => setOpenWizard(true)}

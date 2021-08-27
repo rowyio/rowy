@@ -121,7 +121,14 @@ export default function HiddenFields() {
       <MultiSelect
         TextFieldProps={{
           style: { display: "none" },
-          SelectProps: { open, MenuProps: { anchorEl: buttonRef.current } },
+          SelectProps: {
+            open,
+            MenuProps: {
+              anchorEl: buttonRef.current,
+              anchorOrigin: { vertical: "bottom", horizontal: "left" },
+              transformOrigin: { vertical: "top", horizontal: "left" },
+            },
+          },
         }}
         {...({
           AutocompleteProps: {

@@ -42,13 +42,8 @@ const useStyles = makeStyles((theme) =>
       "& > *": { paddingTop: "0 !important" },
     },
 
-    // addRowIcon: {
-    // fontSize: "26px !important",
-    // marginTop: -1,
-    // marginBottom: -1,
-    // },
-
-    spacer: { minWidth: theme.spacing(8) },
+    spacer: { width: theme.spacing(2) },
+    midSpacer: { minWidth: theme.spacing(8) },
   })
 );
 
@@ -82,53 +77,50 @@ export default function TableHeader() {
     >
       {!isCollectionGroup() && (
         <Grid item>
-          <ButtonGroup
+          {/* <ButtonGroup
             variant="contained"
             aria-label="Split button"
             style={{ display: "flex" }}
+          > */}
+          <Button
+            onClick={() => {
+              const requiredFields = Object.values(columns)
+                .map((column) => {
+                  if (column.config.required) {
+                    return column.key;
+                  }
+                })
+                .filter((c) => c);
+              const initialVal = Object.values(columns).reduce(
+                (acc, column) => {
+                  if (column.config?.defaultValue?.type === "static") {
+                    return {
+                      ...acc,
+                      [column.key]: column.config.defaultValue.value,
+                    };
+                  } else if (column.config?.defaultValue?.type === "null") {
+                    return { ...acc, [column.key]: null };
+                  } else return acc;
+                },
+                {}
+              );
+              tableActions?.row.add(
+                {
+                  ...initialVal,
+                  _ft_updatedBy: firetableUser(currentUser),
+                  _ft_createdBy: firetableUser(currentUser),
+                },
+                requiredFields
+              );
+            }}
+            variant="contained"
+            color="primary"
+            startIcon={<AddRowIcon />}
+            // sx={{ pr: 1.5 }}
           >
-            <Button
-              onClick={() => {
-                const requiredFields = Object.values(columns)
-                  .map((column) => {
-                    if (column.config.required) {
-                      return column.key;
-                    }
-                  })
-                  .filter((c) => c);
-                const initialVal = Object.values(columns).reduce(
-                  (acc, column) => {
-                    if (column.config?.defaultValue?.type === "static") {
-                      return {
-                        ...acc,
-                        [column.key]: column.config.defaultValue.value,
-                      };
-                    } else if (column.config?.defaultValue?.type === "null") {
-                      return { ...acc, [column.key]: null };
-                    } else return acc;
-                  },
-                  {}
-                );
-                tableActions?.row.add(
-                  {
-                    ...initialVal,
-                    _ft_updatedBy: firetableUser(currentUser),
-                    _ft_createdBy: firetableUser(currentUser),
-                  },
-                  requiredFields
-                );
-              }}
-              color="primary"
-              startIcon={
-                <AddRowIcon
-                //  className={classes.addRowIcon}
-                />
-              }
-              sx={{ pr: 1.5 }}
-            >
-              Add Row
-            </Button>
-            <Button
+            Add Row
+          </Button>
+          {/* <Button
               // aria-controls={open ? 'split-button-menu' : undefined}
               // aria-expanded={open ? 'true' : undefined}
               // aria-label="select merge strategy"
@@ -137,12 +129,12 @@ export default function TableHeader() {
             >
               <ArrowDropDownIcon />
             </Button>
-          </ButtonGroup>
+          </ButtonGroup> */}
         </Grid>
       )}
 
       {/* Spacer */}
-      <Grid item />
+      <Grid item className={classes.spacer} />
 
       <Grid item>
         <HiddenFields />
@@ -151,14 +143,14 @@ export default function TableHeader() {
         <Filters />
       </Grid>
 
-      <Grid item xs className={classes.spacer} />
+      <Grid item xs className={classes.midSpacer} />
 
       <Grid item>
         <RowHeight />
       </Grid>
 
       {/* Spacer */}
-      <Grid item />
+      <Grid item className={classes.spacer} />
 
       {!isCollectionGroup() && (
         <Grid item>
@@ -169,6 +161,9 @@ export default function TableHeader() {
       <Grid item>
         <Export />
       </Grid>
+
+      {/* Spacer */}
+      <Grid item className={classes.spacer} />
 
       {userClaims?.roles?.includes("ADMIN") && (
         <Grid item>
@@ -188,6 +183,9 @@ export default function TableHeader() {
             <ReExecute />
           </Grid>
         )}
+
+      {/* Spacer */}
+      <Grid item className={classes.spacer} />
 
       <Grid item>
         <TableSettings />
