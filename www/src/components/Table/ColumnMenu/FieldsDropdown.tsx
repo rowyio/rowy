@@ -6,6 +6,7 @@ import {
   TextFieldProps,
 } from "@material-ui/core";
 
+import { FIELDS } from "components/fields";
 import { FieldType } from "constants/fields";
 import { getFieldProp } from "components/fields";
 
@@ -45,10 +46,8 @@ export default function FieldsDropdown({
   const classes = useStyles();
 
   const options = optionsProp
-    ? Object.values(FieldType).filter(
-        (fieldType) => optionsProp.indexOf(fieldType) > -1
-      )
-    : Object.values(FieldType);
+    ? FIELDS.filter((fieldConfig) => optionsProp.indexOf(fieldConfig.type) > -1)
+    : FIELDS;
 
   return (
     <TextField
@@ -64,16 +63,16 @@ export default function FieldsDropdown({
       FormHelperTextProps={{ classes: { root: classes.helperText } }}
       className={className}
     >
-      {options.map((fieldType) => (
+      {options.map((fieldConfig) => (
         <MenuItem
-          key={`select-field-${getFieldProp("name", fieldType)}`}
-          id={`select-field-${fieldType}`}
-          value={fieldType}
+          key={`select-field-${fieldConfig.type}`}
+          id={`select-field-${fieldConfig.type}`}
+          value={fieldConfig.type}
         >
           <ListItemIcon className={classes.listItemIcon}>
-            {getFieldProp("icon", fieldType)}
+            {fieldConfig.icon}
           </ListItemIcon>
-          {getFieldProp("name", fieldType)}
+          {fieldConfig.name}
         </MenuItem>
       ))}
     </TextField>

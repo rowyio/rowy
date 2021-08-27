@@ -107,6 +107,8 @@ export default function UserMenu(props: IconButtonProps) {
         break;
     }
     setThemeOverridden(true);
+    setThemeSubMenu(null);
+    setOpen(false);
   };
 
   return (

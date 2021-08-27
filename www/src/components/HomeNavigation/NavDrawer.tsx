@@ -7,11 +7,10 @@ import {
   Grid,
   IconButton,
   List,
-  ListItem,
+  MenuItem,
   ListItemIcon,
   ListItemText,
 } from "@material-ui/core";
-import { alpha } from "@material-ui/core/styles";
 import CloseIcon from "assets/icons/Backburger";
 import AddIcon from "@material-ui/icons/Add";
 
@@ -47,28 +46,6 @@ const useStyles = makeStyles((theme) =>
       flexWrap: "nowrap",
 
       height: "100%",
-    },
-
-    listItem: {
-      color: theme.palette.text.secondary,
-      // minHeight: 48,
-      transition: theme.transitions.create(["background-color", "color"]),
-      "& $listItemIcon": { transition: theme.transitions.create("color") },
-    },
-    listItemSelected: {
-      "&&, &&:hover": {
-        color: theme.palette.primary.main,
-        backgroundColor: alpha(
-          theme.palette.primary.main,
-          theme.palette.action.selectedOpacity
-        ),
-      },
-    },
-    listItemIcon: {},
-    listItemText: {
-      // ...theme.typography.button,
-      display: "block",
-      color: "inherit",
     },
 
     createTable: { marginTop: "auto" },
@@ -126,41 +103,26 @@ export default function NavDrawer({
           {sections &&
             Object.keys(sections).map((section) => (
               <li key={section}>
-                <ListItem
-                  button
+                <MenuItem
                   component="a"
                   href={`#${section}`}
                   selected={
                     section === decodeURIComponent(hash.replace("#", ""))
                   }
-                  classes={{
-                    root: classes.listItem,
-                    selected: classes.listItemSelected,
-                  }}
                   onClick={isSm ? (props.onClose as any) : undefined}
                 >
-                  <ListItemText
-                    primary={section}
-                    classes={{ primary: classes.listItemText }}
-                  />
-                </ListItem>
+                  <ListItemText primary={section} />
+                </MenuItem>
               </li>
             ))}
 
           <li className={classes.createTable}>
-            <ListItem
-              button
-              onClick={handleCreateTable}
-              classes={{ root: classes.listItem }}
-            >
+            <MenuItem onClick={handleCreateTable}>
               <ListItemIcon>
                 <AddIcon />
               </ListItemIcon>
-              <ListItemText
-                primary="Create Table"
-                classes={{ primary: classes.listItemText }}
-              />
-            </ListItem>
+              <ListItemText primary="Create Table" />
+            </MenuItem>
           </li>
         </List>
       </nav>

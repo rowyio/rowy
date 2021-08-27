@@ -182,11 +182,12 @@ export const components = (theme: Theme): ThemeOptions => {
         },
       },
       MuiMenuItem: {
+        defaultProps: { dense: true },
         styleOverrides: {
           root: {
             width: `calc(100% - ${theme.spacing(1)})`,
             margin: theme.spacing(0, 0.5),
-            padding: theme.spacing(0.75, 0.75, 0.75, 1.5),
+            padding: theme.spacing(0.5, 0.75, 0.5, 1.5),
             minHeight: 32,
             borderRadius: theme.shape.borderRadius,
 
@@ -206,13 +207,17 @@ export const components = (theme: Theme): ThemeOptions => {
               },
             },
 
+            "& .MuiListItemIcon-root": {
+              minWidth: 40,
+              "& svg": { fontSize: "1.5rem" },
+            },
+
             "& + .MuiDivider-root": {
               marginTop: theme.spacing(0.5),
               marginBottom: theme.spacing(0.5),
             },
           },
         },
-        defaultProps: { dense: true },
       },
       MuiListSubheader: {
         defaultProps: { disableSticky: true },
@@ -244,6 +249,7 @@ export const components = (theme: Theme): ThemeOptions => {
             minHeight: 32,
             paddingTop: theme.spacing(0.5),
             paddingBottom: theme.spacing(0.5),
+            "& .MuiButton-iconSizeMedium > *:nth-of-type(1)": { fontSize: 24 },
           },
           sizeSmall: {
             minHeight: 28,
@@ -254,6 +260,7 @@ export const components = (theme: Theme): ThemeOptions => {
             minHeight: 48,
             fontSize: "1rem",
             borderRadius: (theme.shape.borderRadius as number) * (16 / 14),
+            "& .MuiButton-iconSizeLarge > *:nth-of-type(1)": { fontSize: 24 },
           },
 
           outlined: {

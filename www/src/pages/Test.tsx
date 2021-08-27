@@ -20,6 +20,8 @@ import {
   Paper,
   MenuList,
   MenuItem,
+  ListItemIcon,
+  ListItemText,
   Divider,
   ListSubheader,
   Slider,
@@ -182,89 +184,239 @@ export default function TestView() {
           </Table>
 
           <Stack spacing={1} direction="row" alignItems="center">
-            <Button size="small">Button</Button>
-            <Button size="medium">Button</Button>
-            <Button size="large">Button</Button>
+            <Button
+              startIcon={<SparkIcon />}
+              endIcon={<SparkIcon />}
+              size="small"
+            >
+              Button
+            </Button>
+            <Button
+              startIcon={<SparkIcon />}
+              endIcon={<SparkIcon />}
+              size="medium"
+            >
+              Button
+            </Button>
+            <Button
+              startIcon={<SparkIcon />}
+              endIcon={<SparkIcon />}
+              size="large"
+            >
+              Button
+            </Button>
 
-            <Button color="secondary" size="small">
+            <Button
+              startIcon={<SparkIcon />}
+              endIcon={<SparkIcon />}
+              color="secondary"
+              size="small"
+            >
               Button
             </Button>
-            <Button color="secondary" size="medium">
+            <Button
+              startIcon={<SparkIcon />}
+              endIcon={<SparkIcon />}
+              color="secondary"
+              size="medium"
+            >
               Button
             </Button>
-            <Button color="secondary" size="large">
+            <Button
+              startIcon={<SparkIcon />}
+              endIcon={<SparkIcon />}
+              color="secondary"
+              size="large"
+            >
               Button
             </Button>
 
-            <Button disabled size="small">
+            <Button
+              startIcon={<SparkIcon />}
+              endIcon={<SparkIcon />}
+              disabled
+              size="small"
+            >
               Button
             </Button>
-            <Button disabled size="medium">
+            <Button
+              startIcon={<SparkIcon />}
+              endIcon={<SparkIcon />}
+              disabled
+              size="medium"
+            >
               Button
             </Button>
-            <Button disabled size="large">
+            <Button
+              startIcon={<SparkIcon />}
+              endIcon={<SparkIcon />}
+              disabled
+              size="large"
+            >
               Button
             </Button>
           </Stack>
 
           <Stack spacing={1} direction="row" alignItems="center">
-            <Button variant="outlined" size="small">
+            <Button
+              startIcon={<SparkIcon />}
+              endIcon={<SparkIcon />}
+              variant="outlined"
+              size="small"
+            >
               Button
             </Button>
-            <Button variant="outlined" size="medium">
+            <Button
+              startIcon={<SparkIcon />}
+              endIcon={<SparkIcon />}
+              variant="outlined"
+              size="medium"
+            >
               Button
             </Button>
-            <Button variant="outlined" size="large">
+            <Button
+              startIcon={<SparkIcon />}
+              endIcon={<SparkIcon />}
+              variant="outlined"
+              size="large"
+            >
               Button
             </Button>
-            <Button color="secondary" variant="outlined" size="small">
+            <Button
+              startIcon={<SparkIcon />}
+              endIcon={<SparkIcon />}
+              color="secondary"
+              variant="outlined"
+              size="small"
+            >
               Button
             </Button>
-            <Button color="secondary" variant="outlined" size="medium">
+            <Button
+              startIcon={<SparkIcon />}
+              endIcon={<SparkIcon />}
+              color="secondary"
+              variant="outlined"
+              size="medium"
+            >
               Button
             </Button>
-            <Button color="secondary" variant="outlined" size="large">
+            <Button
+              startIcon={<SparkIcon />}
+              endIcon={<SparkIcon />}
+              color="secondary"
+              variant="outlined"
+              size="large"
+            >
               Button
             </Button>
 
-            <Button disabled variant="outlined" size="small">
+            <Button
+              startIcon={<SparkIcon />}
+              endIcon={<SparkIcon />}
+              disabled
+              variant="outlined"
+              size="small"
+            >
               Button
             </Button>
-            <Button disabled variant="outlined" size="medium">
+            <Button
+              startIcon={<SparkIcon />}
+              endIcon={<SparkIcon />}
+              disabled
+              variant="outlined"
+              size="medium"
+            >
               Button
             </Button>
-            <Button disabled variant="outlined" size="large">
+            <Button
+              startIcon={<SparkIcon />}
+              endIcon={<SparkIcon />}
+              disabled
+              variant="outlined"
+              size="large"
+            >
               Button
             </Button>
           </Stack>
 
           <Stack spacing={1} direction="row" alignItems="center">
-            <Button variant="contained" size="small">
+            <Button
+              startIcon={<SparkIcon />}
+              endIcon={<SparkIcon />}
+              variant="contained"
+              size="small"
+            >
               Button
             </Button>
-            <Button variant="contained" size="medium">
+            <Button
+              startIcon={<SparkIcon />}
+              endIcon={<SparkIcon />}
+              variant="contained"
+              size="medium"
+            >
               Button
             </Button>
-            <Button variant="contained" size="large">
+            <Button
+              startIcon={<SparkIcon />}
+              endIcon={<SparkIcon />}
+              variant="contained"
+              size="large"
+            >
               Button
             </Button>
-            <Button color="secondary" variant="contained" size="small">
+            <Button
+              startIcon={<SparkIcon />}
+              endIcon={<SparkIcon />}
+              color="secondary"
+              variant="contained"
+              size="small"
+            >
               Button
             </Button>
-            <Button color="secondary" variant="contained" size="medium">
+            <Button
+              startIcon={<SparkIcon />}
+              endIcon={<SparkIcon />}
+              color="secondary"
+              variant="contained"
+              size="medium"
+            >
               Button
             </Button>
-            <Button color="secondary" variant="contained" size="large">
+            <Button
+              startIcon={<SparkIcon />}
+              endIcon={<SparkIcon />}
+              color="secondary"
+              variant="contained"
+              size="large"
+            >
               Button
             </Button>
 
-            <Button disabled variant="contained" size="small">
+            <Button
+              startIcon={<SparkIcon />}
+              endIcon={<SparkIcon />}
+              disabled
+              variant="contained"
+              size="small"
+            >
               Button
             </Button>
-            <Button disabled variant="contained" size="medium">
+            <Button
+              startIcon={<SparkIcon />}
+              endIcon={<SparkIcon />}
+              disabled
+              variant="contained"
+              size="medium"
+            >
               Button
             </Button>
-            <Button disabled variant="contained" size="large">
+            <Button
+              startIcon={<SparkIcon />}
+              endIcon={<SparkIcon />}
+              disabled
+              variant="contained"
+              size="large"
+            >
               Button
             </Button>
           </Stack>
@@ -525,6 +677,12 @@ export default function TestView() {
               <ListSubheader>Subheader</ListSubheader>
               <MenuItem>Profile</MenuItem>
               <MenuItem>My account</MenuItem>
+              <MenuItem>
+                <ListItemIcon>
+                  <SparkIcon />
+                </ListItemIcon>
+                <ListItemText primary="With Icon" />
+              </MenuItem>
               <Divider variant="middle" />
               <MenuItem>Logout</MenuItem>
             </MenuList>

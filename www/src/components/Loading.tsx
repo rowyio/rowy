@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) =>
       width: "100%",
       textAlign: "center",
     },
-    progress: { color: theme.palette.text.secondary },
+    progress: { color: theme.palette.action.active },
     content: { maxWidth: "25em" },
     message: { marginTop: theme.spacing(1) },
   })

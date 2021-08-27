@@ -2,11 +2,8 @@ import SvgIcon, { SvgIconProps } from "@material-ui/core/SvgIcon";
 
 export default function SubTable(props: SvgIconProps) {
   return (
-    <SvgIcon viewBox="0 0 24 12" {...props}>
-      <path
-        d="M16 12H0V0h16v12zM7 7H2v3h5V7zm7 0H9v3h5V7zM7 2H2v3h5V2zm7 0H9v3h5V2zM24 6.5L19 9V4z"
-        fillRule="nonzero"
-      />
+    <SvgIcon {...props}>
+      <path d="M20 9v7l4-3.5L20 9zM4 5h12a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V7a2 2 0 012-2zm0 7h5V9H4v3m0 5h5v-3H4v3m7-5h5V9h-5v3m0 5h5v-3h-5v3" />
     </SvgIcon>
   );
 }

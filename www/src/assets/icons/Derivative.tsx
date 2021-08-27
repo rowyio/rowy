@@ -3,7 +3,7 @@ import { mdiFunctionVariant } from "@mdi/js";
 
 export default function Derivative(props: SvgIconProps) {
   return (
-    <SvgIcon viewBox="0 0 24 24" {...props}>
+    <SvgIcon {...props}>
       <path d={mdiFunctionVariant} />
     </SvgIcon>
   );

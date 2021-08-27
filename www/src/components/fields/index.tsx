@@ -73,10 +73,10 @@ export const FIELDS: IFieldConfig[] = [
   Action,
   Derivative,
   Aggregate,
+  Status,
   // FIRETABLE
   User,
   Id,
-  Status,
 ];
 
 /**

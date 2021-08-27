@@ -23,7 +23,7 @@ const Settings = lazy(
 
 export const config: IFieldConfig = {
   type: FieldType.connectService,
-  name: "Connect Table",
+  name: "Connect Service",
   dataType: "{ docPath: string; snapshot: Record<string, any>; }",
   initialValue: [],
   icon: <ConnectServiceIcon />,

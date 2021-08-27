@@ -3,7 +3,7 @@ import { mdiUpload } from "@mdi/js";
 
 export default function FileUpload(props: SvgIconProps) {
   return (
-    <SvgIcon viewBox="0 0 24 24" {...props}>
+    <SvgIcon {...props}>
       <path d={mdiUpload} />
     </SvgIcon>
   );

@@ -7,7 +7,7 @@ import {
   Grid,
   IconButton,
   List,
-  ListItem,
+  MenuItem,
   ListItemIcon,
   ListItemText,
   Divider,
@@ -39,20 +39,6 @@ const useStyles = makeStyles((theme) =>
       padding: theme.spacing(0, 2),
     },
     logo: { marginLeft: theme.spacing(1.5) },
-
-    listItem: {
-      color: theme.palette.text.secondary,
-      // minHeight: 48,
-      transition: theme.transitions.create(["background-color", "color"]),
-      "& $listItemIcon": { transition: theme.transitions.create("color") },
-    },
-    listItemIcon: {},
-    listItemText: {
-      ...theme.typography.body2,
-      fontWeight: theme.typography.fontWeightMedium,
-      display: "block",
-      color: "inherit",
-    },
 
     divider: {
       marginTop: theme.spacing(1),
@@ -103,20 +89,12 @@ export default function NavDrawer({
       <nav>
         <List>
           <li>
-            <ListItem
-              button
-              classes={{ root: classes.listItem }}
-              component={Link}
-              to={routes.home}
-            >
-              <ListItemIcon className={classes.listItemIcon}>
+            <MenuItem component={Link} to={routes.home}>
+              <ListItemIcon>
                 <HomeIcon />
               </ListItemIcon>
-              <ListItemText
-                primary="Home"
-                classes={{ primary: classes.listItemText }}
-              />
-            </ListItem>
+              <ListItemText primary="Home" />
+            </MenuItem>
           </li>
 
           <Divider variant="middle" className={classes.divider} />
