@@ -8,6 +8,7 @@ const WIKI_PATHS = {
   FtFunctions: "/Firetable-Cloud-Functions",
   securityRules: "/Role-Based-Security-Rules",
   setUpAuth: "/Setting-Up-Firebase-Authentication",
+  extensions: "/Extensions",
 };
 
 const WIKI_LINK_ROOT = meta.repository.url.replace(".git", "/wiki");

@@ -1,19 +1,21 @@
 import { useState } from "react";
 import _isEqual from "lodash/isEqual";
-import { useConfirmation } from "components/ConfirmationDialog";
-import { useSnackContext } from "contexts/SnackContext";
 import { db } from "../../../../firebase";
 
 import { Breadcrumbs, Typography, Button } from "@material-ui/core";
+
 import TableHeaderButton from "../TableHeaderButton";
 import ExtensionIcon from "assets/icons/Extension";
 import Modal from "components/Modal";
-import { useFiretableContext } from "contexts/FiretableContext";
-import { useAppContext } from "contexts/AppContext";
-import { useSnackLogContext } from "contexts/SnackLogContext";
 import ExtensionList from "./ExtensionList";
 import ExtensionModal from "./ExtensionModal";
 import ExtensionMigration from "./ExtensionMigration";
+
+import { useFiretableContext } from "contexts/FiretableContext";
+import { useAppContext } from "contexts/AppContext";
+import { useConfirmation } from "components/ConfirmationDialog";
+import { useSnackContext } from "contexts/SnackContext";
+import { useSnackLogContext } from "contexts/SnackLogContext";
 
 import {
   serialiseExtension,
@@ -217,11 +219,10 @@ export default function ExtensionsEditor() {
 
       {openExtensionList && !!tableState && (
         <Modal
-          open={openExtensionList}
           onClose={handleClose}
           maxWidth="sm"
           fullWidth
-          title={<>Extensions</>}
+          title="Extensions"
           children={
             <>
               <Breadcrumbs aria-label="breadcrumb">

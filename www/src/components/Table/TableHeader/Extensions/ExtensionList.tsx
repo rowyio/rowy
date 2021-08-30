@@ -1,11 +1,14 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { format, formatRelative } from "date-fns";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
 import {
+  Stack,
+  ButtonBase,
+  List,
+  ListItem,
+  ListItemText,
   Avatar,
-  Box,
   Button,
-  Divider,
   IconButton,
   Menu,
   MenuItem,
@@ -13,46 +16,14 @@ import {
   Tooltip,
   Typography,
 } from "@material-ui/core";
-import moment from "moment";
-import { extensionTypes, IExtension, IExtensionType } from "./utils";
-import EmptyState from "components/EmptyState";
 import AddIcon from "@material-ui/icons/Add";
-import EmptyIcon from "@material-ui/icons/AddBox";
-import DuplicateIcon from "@material-ui/icons/FileCopy";
+import ExtensionIcon from "assets/icons/Extension";
+import DuplicateIcon from "@material-ui/icons/ContentCopy";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/DeleteForever";
-import { useRef } from "react";
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    hoverableEmptyState: {
-      borderRadius: theme.spacing(1),
-      cursor: "pointer",
-      padding: theme.spacing(2),
-      "&:hover": {
-        background: theme.palette.background.paper,
-      },
-    },
-    divider: {
-      margin: theme.spacing(1, 0),
-    },
-    extensionName: {
-      marginTop: theme.spacing(1),
-    },
-    extensionType: {
-      marginBottom: theme.spacing(1),
-    },
-    avatar: {
-      marginRight: theme.spacing(1),
-      width: theme.spacing(4),
-      height: theme.spacing(4),
-    },
-    extensionList: {
-      height: "50vh",
-      overflowY: "scroll",
-    },
-  })
-);
+import EmptyState from "components/EmptyState";
+import { extensionTypes, IExtension, IExtensionType } from "./utils";
 
 export interface IExtensionListProps {
   extensions: IExtension[];
@@ -73,7 +44,6 @@ export default function ExtensionList({
 }: IExtensionListProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const addButtonRef = useRef(null);
-  const classes = useStyles();
 
   const activeExtensionCount = extensions.filter(
     (extension) => extension.active
@@ -94,27 +64,35 @@ export default function ExtensionList({
 
   return (
     <>
-      <Box
-        display="flex"
+      <Stack
+        direction="row"
+        spacing={2}
         justifyContent="space-between"
         alignItems="center"
-        marginTop={"0px !important"}
+        style={{ marginTop: 0 }}
       >
-        <Typography variant="overline">
-          EXTENSION ({activeExtensionCount}/{extensions.length})
+        <Typography
+          variant="subtitle2"
+          component="h2"
+          style={{ fontFeatureSettings: "'case', 'tnum'" }}
+        >
+          Extensions ({activeExtensionCount} / {extensions.length})
         </Typography>
+
         <Button
+          color="primary"
           startIcon={<AddIcon />}
           onClick={handleAddButton}
           ref={addButtonRef}
         >
-          ADD EXTENTION
+          Add Extension…
         </Button>
         <Menu
           anchorEl={anchorEl}
-          keepMounted
           open={Boolean(anchorEl)}
           onClose={handleClose}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          transformOrigin={{ vertical: "top", horizontal: "right" }}
         >
           {extensionTypes.map((type) => (
             <MenuItem
@@ -126,121 +104,117 @@ export default function ExtensionList({
             </MenuItem>
           ))}
         </Menu>
-      </Box>
+      </Stack>
 
-      <Box className={classes.extensionList}>
-        {extensions.length === 0 && (
+      {extensions.length === 0 ? (
+        <ButtonBase
+          onClick={handleAddButton}
+          sx={{
+            width: "100%",
+            height: 72 * 3,
+            borderRadius: 1,
+            "&:hover": { bgcolor: "action.hover" },
+          }}
+        >
           <EmptyState
-            message="Add your first extension"
-            description={
-              "When you add extentions, your extentions should be shown here."
-            }
-            Icon={EmptyIcon}
-            className={classes.hoverableEmptyState}
-            onClick={handleAddButton}
+            message="Add Your First Extension"
+            description="Your extensions will appear here."
+            Icon={ExtensionIcon}
           />
-        )}
-        {extensions.map((extensionObject, index) => {
-          return (
-            <>
-              <Box
-                display="flex"
-                flexDirection="row"
-                justifyContent="space-between"
-              >
-                <Box
-                  display="flex"
-                  flexDirection="column"
-                  justifyContent="space-between"
-                >
-                  <Typography variant="body2" className={classes.extensionName}>
-                    {extensionObject.name}
-                  </Typography>
-                  <Typography
-                    variant="overline"
-                    className={classes.extensionType}
-                  >
-                    {extensionObject.type}
-                  </Typography>
-                </Box>
-                <Box
-                  display="flex"
-                  flexDirection="column"
-                  justifyContent="space-between"
-                  alignItems="flex-end"
-                >
-                  <Box display="flex" alignItems="center">
+        </ButtonBase>
+      ) : (
+        <List style={{ paddingTop: 0, minHeight: 72 * 3 }}>
+          {extensions.map((extensionObject, index) => (
+            <ListItem
+              disableGutters
+              dense={false}
+              divider={index !== extensions.length - 1}
+              children={
+                <ListItemText
+                  primary={extensionObject.name}
+                  secondary={extensionObject.type}
+                />
+              }
+              secondaryAction={
+                <Stack alignItems="flex-end">
+                  <Stack direction="row" alignItems="center" spacing={1}>
                     <Tooltip
                       title={extensionObject.active ? "Deactivate" : "Activate"}
                     >
                       <Switch
-                        color="primary"
                         checked={extensionObject.active}
-                        onClick={() => {
-                          handleUpdateActive(index, !extensionObject.active);
-                        }}
+                        onClick={() =>
+                          handleUpdateActive(index, !extensionObject.active)
+                        }
+                        inputProps={{ "aria-label": "Activate" }}
+                        sx={{ mr: 1 }}
                       />
                     </Tooltip>
-                    <Tooltip title={"Edit"}>
+
+                    <Tooltip title="Duplicate">
                       <IconButton
-                        color="secondary"
-                        onClick={() => {
-                          handleEdit(index);
-                        }}
-                      >
-                        <EditIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title={"Duplicate"}>
-                      <IconButton
-                        color="secondary"
-                        onClick={() => {
-                          handleDuplicate(index);
-                        }}
+                        aria-label="Duplicate"
+                        onClick={() => handleDuplicate(index)}
                       >
                         <DuplicateIcon />
                       </IconButton>
                     </Tooltip>
-                    <Tooltip title={"Delete"}>
+                    <Tooltip title="Edit">
                       <IconButton
-                        color="primary"
-                        onClick={() => {
-                          handleDelete(index);
-                        }}
+                        aria-label="Edit"
+                        onClick={() => handleEdit(index)}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Delete">
+                      <IconButton
+                        aria-label="Delete"
+                        color="error"
+                        onClick={() => handleDelete(index)}
+                        sx={{ "&&": { mr: -1.5 } }}
                       >
                         <DeleteIcon />
                       </IconButton>
                     </Tooltip>
-                  </Box>
+                  </Stack>
+
                   <Tooltip
-                    title={`Last updated by ${
-                      extensionObject.lastEditor.displayName
-                    } on ${moment(extensionObject.lastEditor.lastUpdate).format(
-                      "LLLL"
-                    )}`}
+                    title={
+                      <>
+                        Last updated by {extensionObject.lastEditor.displayName}
+                        <br />
+                        on{" "}
+                        {format(extensionObject.lastEditor.lastUpdate, "PPPP")}
+                        <br />
+                        at{" "}
+                        {format(extensionObject.lastEditor.lastUpdate, "pppp")}
+                      </>
+                    }
                   >
-                    <Box display="flex" alignItems="center">
-                      <Avatar
-                        alt="profile"
-                        src={extensionObject.lastEditor.photoURL}
-                        className={classes.avatar}
-                      />
-                      <Typography variant="caption" color="textSecondary">
-                        {moment(
-                          extensionObject.lastEditor.lastUpdate
-                        ).calendar()}
+                    <Stack direction="row" spacing={1} alignItems="center">
+                      <Typography
+                        variant="body2"
+                        sx={{ color: "text.disabled" }}
+                      >
+                        {formatRelative(
+                          extensionObject.lastEditor.lastUpdate,
+                          new Date()
+                        )}
                       </Typography>
-                    </Box>
+                      <Avatar
+                        alt={`${extensionObject.lastEditor.displayName}’s profile photo`}
+                        src={extensionObject.lastEditor.photoURL}
+                        sx={{ width: 24, height: 24, "&&": { mr: -0.5 } }}
+                      />
+                    </Stack>
                   </Tooltip>
-                </Box>
-              </Box>
-              {index + 1 !== extensions.length && (
-                <Divider light className={classes.divider} />
-              )}
-            </>
-          );
-        })}
-      </Box>
+                </Stack>
+              }
+            />
+          ))}
+        </List>
+      )}
     </>
   );
 }

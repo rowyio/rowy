@@ -2,9 +2,15 @@ import clsx from "clsx";
 import Div100vh from "react-div-100vh";
 
 import { makeStyles, createStyles } from "@material-ui/styles";
-import { Grid, GridProps, Typography, SvgIconTypeMap } from "@material-ui/core";
+import {
+  Grid,
+  GridProps,
+  Stack,
+  Typography,
+  SvgIconTypeMap,
+} from "@material-ui/core";
 import { OverridableComponent } from "@material-ui/core/OverridableComponent";
-import ErrorIcon from "@material-ui/icons/ErrorOutlined";
+import ErrorIcon from "@material-ui/icons/ErrorOutline";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -12,9 +18,13 @@ const useStyles = makeStyles((theme) =>
       height: "100%",
       width: "100%",
       textAlign: "center",
+
+      ...theme.typography.body2,
     },
 
-    content: { maxWidth: "25em" },
+    content: {
+      "&&": { maxWidth: "25em" },
+    },
 
     icon: {
       color: theme.palette.action.active,
@@ -95,7 +105,11 @@ export default function EmptyState({
           {message}
         </Typography>
 
-        {description && <Typography variant="body2">{description}</Typography>}
+        {description && (
+          <Stack spacing={2} alignItems="center">
+            {description}
+          </Stack>
+        )}
       </Grid>
     </Grid>
   );

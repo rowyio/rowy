@@ -50,10 +50,14 @@ export const components = (theme: Theme): ThemeOptions => {
       MuiDialog: {
         styleOverrides: {
           paper: { borderRadius: (theme.shape.borderRadius as number) * 2 },
+          paperWidthXs: { maxWidth: 360 },
         },
       },
       MuiDialogContentText: {
-        defaultProps: { variant: "body2" },
+        defaultProps: {
+          variant: "body2",
+          color: "textPrimary",
+        },
       },
       MuiSnackbar: {
         styleOverrides: {
@@ -178,14 +182,6 @@ export const components = (theme: Theme): ThemeOptions => {
         },
       },
       MuiListItem: {
-        styleOverrides: {
-          root: {
-            width: `calc(100% - ${theme.spacing(2)})`,
-            margin: theme.spacing(0.5, 1),
-            padding: theme.spacing(0.5, 1),
-            borderRadius: theme.shape.borderRadius,
-          },
-        },
         defaultProps: { dense: true },
       },
       MuiMenu: {
@@ -265,15 +261,27 @@ export const components = (theme: Theme): ThemeOptions => {
             minHeight: 32,
             paddingTop: theme.spacing(0.5),
             paddingBottom: theme.spacing(0.5),
+            "&.MuiButton-outlined, &.MuiButton-contained": {
+              paddingLeft: theme.spacing(2),
+              paddingRight: theme.spacing(2),
+            },
             "& .MuiButton-iconSizeMedium > *:nth-of-type(1)": { fontSize: 24 },
           },
           sizeSmall: {
-            minHeight: 28,
+            minHeight: 24,
             paddingTop: theme.spacing(0.25),
             paddingBottom: theme.spacing(0.25),
+            "&.MuiButton-outlined, &.MuiButton-contained": {
+              paddingLeft: theme.spacing(10 / 8),
+              paddingRight: theme.spacing(10 / 8),
+            },
           },
           sizeLarge: {
             minHeight: 48,
+            "&.MuiButton-outlined, &.MuiButton-contained": {
+              paddingLeft: theme.spacing(22 / 8),
+              paddingRight: theme.spacing(22 / 8),
+            },
             fontSize: "1rem",
             borderRadius: (theme.shape.borderRadius as number) * (16 / 14),
             "& .MuiButton-iconSizeLarge > *:nth-of-type(1)": { fontSize: 24 },

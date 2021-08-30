@@ -13,12 +13,9 @@ const useStyles = makeStyles((theme) =>
       minWidth: 400,
       minHeight: 100,
       height: "calc(100% - 50px)",
-    },
-    resizeIcon: {
-      position: "absolute",
-      bottom: 0,
-      right: 0,
-      color: theme.palette.text.disabled,
+      border: `1px solid ${theme.palette.divider}`,
+      borderRadius: theme.shape.borderRadius,
+      overflow: "hidden",
     },
 
     saveButton: {
@@ -386,6 +383,13 @@ export default function CodeEditor(props: any) {
           value={initialEditorValue}
           onChange={handleChange}
           onValidate={handleEditorValidation}
+          options={{
+            // readOnly: disabled,
+            fontFamily: theme.typography.fontFamilyMono,
+            rulers: [80],
+            minimap: { enabled: false },
+            // ...editorOptions,
+          }}
           className={classes.editor}
         />
       </div>

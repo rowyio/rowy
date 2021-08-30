@@ -83,13 +83,7 @@ export default function FormDialog({
               fullWidth
               onChange={(e) => setFieldKey(e.target.value)}
               disabled={type === FieldType.id && fieldKey === "id"}
-              helperText={
-                <>
-                  Set the Firestore field key to link to this column.
-                  <br />
-                  It will display any existing data for this field key.
-                </>
-              }
+              helperText="Set the Firestore field key to link to this column. It will display any existing data for this field key."
               FormHelperTextProps={{ classes: { root: classes.helperText } }}
             />
           </section>

@@ -188,72 +188,81 @@ export default function TestView() {
 
           <Stack spacing={1} direction="row" alignItems="center">
             <Button
-              startIcon={<SparkIcon />}
-              endIcon={<SparkIcon />}
+              // startIcon={<SparkIcon />}
+              // endIcon={<SparkIcon />}
+              variant="text"
               size="small"
             >
               Button
             </Button>
             <Button
-              startIcon={<SparkIcon />}
-              endIcon={<SparkIcon />}
+              // startIcon={<SparkIcon />}
+              // endIcon={<SparkIcon />}
+              variant="text"
               size="medium"
             >
               Button
             </Button>
             <Button
-              startIcon={<SparkIcon />}
-              endIcon={<SparkIcon />}
+              // startIcon={<SparkIcon />}
+              // endIcon={<SparkIcon />}
+              variant="text"
               size="large"
             >
               Button
             </Button>
 
             <Button
-              startIcon={<SparkIcon />}
-              endIcon={<SparkIcon />}
+              // startIcon={<SparkIcon />}
+              // endIcon={<SparkIcon />}
               color="secondary"
+              variant="text"
               size="small"
             >
               Button
             </Button>
             <Button
-              startIcon={<SparkIcon />}
-              endIcon={<SparkIcon />}
+              // startIcon={<SparkIcon />}
+              // endIcon={<SparkIcon />}
               color="secondary"
+              variant="text"
               size="medium"
             >
               Button
             </Button>
             <Button
-              startIcon={<SparkIcon />}
-              endIcon={<SparkIcon />}
+              // startIcon={<SparkIcon />}
+              // endIcon={<SparkIcon />}
               color="secondary"
+              variant="text"
               size="large"
             >
               Button
             </Button>
 
             <Button
-              startIcon={<SparkIcon />}
-              endIcon={<SparkIcon />}
+              // startIcon={<SparkIcon />}
+              // endIcon={<SparkIcon />}
               disabled
+              variant="text"
               size="small"
             >
               Button
             </Button>
             <Button
-              startIcon={<SparkIcon />}
-              endIcon={<SparkIcon />}
+              // startIcon={<SparkIcon />}
+              // endIcon={<SparkIcon />}
               disabled
+              variant="text"
               size="medium"
             >
               Button
             </Button>
             <Button
-              startIcon={<SparkIcon />}
-              endIcon={<SparkIcon />}
+              // startIcon={<SparkIcon />}
+              // endIcon={<SparkIcon />}
               disabled
+              variant="text"
               size="large"
             >
               Button
@@ -262,32 +271,32 @@ export default function TestView() {
 
           <Stack spacing={1} direction="row" alignItems="center">
             <Button
-              startIcon={<SparkIcon />}
-              endIcon={<SparkIcon />}
+              // startIcon={<SparkIcon />}
+              // endIcon={<SparkIcon />}
               variant="outlined"
               size="small"
             >
               Button
             </Button>
             <Button
-              startIcon={<SparkIcon />}
-              endIcon={<SparkIcon />}
+              // startIcon={<SparkIcon />}
+              // endIcon={<SparkIcon />}
               variant="outlined"
               size="medium"
             >
               Button
             </Button>
             <Button
-              startIcon={<SparkIcon />}
-              endIcon={<SparkIcon />}
+              // startIcon={<SparkIcon />}
+              // endIcon={<SparkIcon />}
               variant="outlined"
               size="large"
             >
               Button
             </Button>
             <Button
-              startIcon={<SparkIcon />}
-              endIcon={<SparkIcon />}
+              // startIcon={<SparkIcon />}
+              // endIcon={<SparkIcon />}
               color="secondary"
               variant="outlined"
               size="small"
@@ -295,8 +304,8 @@ export default function TestView() {
               Button
             </Button>
             <Button
-              startIcon={<SparkIcon />}
-              endIcon={<SparkIcon />}
+              // startIcon={<SparkIcon />}
+              // endIcon={<SparkIcon />}
               color="secondary"
               variant="outlined"
               size="medium"
@@ -304,8 +313,8 @@ export default function TestView() {
               Button
             </Button>
             <Button
-              startIcon={<SparkIcon />}
-              endIcon={<SparkIcon />}
+              // startIcon={<SparkIcon />}
+              // endIcon={<SparkIcon />}
               color="secondary"
               variant="outlined"
               size="large"
@@ -314,8 +323,8 @@ export default function TestView() {
             </Button>
 
             <Button
-              startIcon={<SparkIcon />}
-              endIcon={<SparkIcon />}
+              // startIcon={<SparkIcon />}
+              // endIcon={<SparkIcon />}
               disabled
               variant="outlined"
               size="small"
@@ -323,8 +332,8 @@ export default function TestView() {
               Button
             </Button>
             <Button
-              startIcon={<SparkIcon />}
-              endIcon={<SparkIcon />}
+              // startIcon={<SparkIcon />}
+              // endIcon={<SparkIcon />}
               disabled
               variant="outlined"
               size="medium"
@@ -332,8 +341,8 @@ export default function TestView() {
               Button
             </Button>
             <Button
-              startIcon={<SparkIcon />}
-              endIcon={<SparkIcon />}
+              // startIcon={<SparkIcon />}
+              // endIcon={<SparkIcon />}
               disabled
               variant="outlined"
               size="large"
@@ -344,32 +353,32 @@ export default function TestView() {
 
           <Stack spacing={1} direction="row" alignItems="center">
             <Button
-              startIcon={<SparkIcon />}
-              endIcon={<SparkIcon />}
+              // startIcon={<SparkIcon />}
+              // endIcon={<SparkIcon />}
               variant="contained"
               size="small"
             >
               Button
             </Button>
             <Button
-              startIcon={<SparkIcon />}
-              endIcon={<SparkIcon />}
+              // startIcon={<SparkIcon />}
+              // endIcon={<SparkIcon />}
               variant="contained"
               size="medium"
             >
               Button
             </Button>
             <Button
-              startIcon={<SparkIcon />}
-              endIcon={<SparkIcon />}
+              // startIcon={<SparkIcon />}
+              // endIcon={<SparkIcon />}
               variant="contained"
               size="large"
             >
               Button
             </Button>
             <Button
-              startIcon={<SparkIcon />}
-              endIcon={<SparkIcon />}
+              // startIcon={<SparkIcon />}
+              // endIcon={<SparkIcon />}
               color="secondary"
               variant="contained"
               size="small"
@@ -377,8 +386,8 @@ export default function TestView() {
               Button
             </Button>
             <Button
-              startIcon={<SparkIcon />}
-              endIcon={<SparkIcon />}
+              // startIcon={<SparkIcon />}
+              // endIcon={<SparkIcon />}
               color="secondary"
               variant="contained"
               size="medium"
@@ -386,8 +395,8 @@ export default function TestView() {
               Button
             </Button>
             <Button
-              startIcon={<SparkIcon />}
-              endIcon={<SparkIcon />}
+              // startIcon={<SparkIcon />}
+              // endIcon={<SparkIcon />}
               color="secondary"
               variant="contained"
               size="large"
@@ -396,8 +405,8 @@ export default function TestView() {
             </Button>
 
             <Button
-              startIcon={<SparkIcon />}
-              endIcon={<SparkIcon />}
+              // startIcon={<SparkIcon />}
+              // endIcon={<SparkIcon />}
               disabled
               variant="contained"
               size="small"
@@ -405,8 +414,8 @@ export default function TestView() {
               Button
             </Button>
             <Button
-              startIcon={<SparkIcon />}
-              endIcon={<SparkIcon />}
+              // startIcon={<SparkIcon />}
+              // endIcon={<SparkIcon />}
               disabled
               variant="contained"
               size="medium"
@@ -414,8 +423,8 @@ export default function TestView() {
               Button
             </Button>
             <Button
-              startIcon={<SparkIcon />}
-              endIcon={<SparkIcon />}
+              // startIcon={<SparkIcon />}
+              // endIcon={<SparkIcon />}
               disabled
               variant="contained"
               size="large"

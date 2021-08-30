@@ -1,21 +1,12 @@
-import { useFiretableContext } from "contexts/FiretableContext";
-import { Box, Tooltip, Button, Chip } from "@material-ui/core";
+import {
+  Stack,
+  Typography,
+  Grid,
+  Tooltip,
+  Chip,
+  Button,
+} from "@material-ui/core";
 import OpenIcon from "@material-ui/icons/OpenInNew";
-
-function AvailableValueTag({ label, details }) {
-  return (
-    <Tooltip
-      style={{
-        zIndex: 9999,
-        marginRight: 4,
-      }}
-      title={<>{details}</>}
-    >
-      <Chip label={label} size="small" />
-    </Tooltip>
-  );
-}
-
 export interface ICodeEditorHelperProps {
   docLink: string;
   additionalVariables?: {
@@ -28,7 +19,6 @@ export default function CodeEditorHelper({
   docLink,
   additionalVariables,
 }: ICodeEditorHelperProps) {
-  const { tableState } = useFiretableContext();
   const availableVariables = [
     {
       key: "row",
@@ -55,22 +45,42 @@ export default function CodeEditorHelper({
       description: `utilFns provides a set of functions that are commonly used, such as easy access to GCP Secret Manager`,
     },
   ];
+
   return (
-    <Box marginBottom={1} display="flex" justifyContent="space-between">
-      <Box>
-        You have access to:{" "}
+    <Stack
+      direction="row"
+      spacing={0.25}
+      alignItems="baseline"
+      justifyContent="space-between"
+      sx={{ mb: 1 }}
+    >
+      <Typography
+        variant="body2"
+        color="textSecondary"
+        style={{ flexShrink: 0 }}
+      >
+        You can access:
+      </Typography>
+
+      <Grid container spacing={0.5}>
         {availableVariables.concat(additionalVariables ?? []).map((v) => (
-          <AvailableValueTag label={v.key} details={v.description} />
+          <Grid item key={v.key}>
+            <Tooltip title={v.description}>
+              <Chip label={v.key} size="small" />
+            </Tooltip>
+          </Grid>
         ))}
-      </Box>
+      </Grid>
+
       <Button
         size="small"
         endIcon={<OpenIcon />}
         target="_blank"
         href={docLink}
+        style={{ flexShrink: 0 }}
       >
         Examples & Docs
       </Button>
-    </Box>
+    </Stack>
   );
 }

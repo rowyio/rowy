@@ -1,32 +1,15 @@
 import React from "react";
 import EmptyState, { IEmptyStateProps } from "./EmptyState";
 
-import { Stack, Button } from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import ReloadIcon from "@material-ui/icons/Refresh";
+import OpenInNewIcon from "@material-ui/icons/OpenInNew";
+import meta from "../../package.json";
 class ErrorBoundary extends React.Component<IEmptyStateProps> {
   state = { hasError: false, errorMessage: "" };
 
   static getDerivedStateFromError(error: Error) {
     // Update state so the next render will show the fallback UI.
-    // Special error message for chunk loading failures:
-    if (error.message.startsWith("Loading chunk"))
-      return {
-        hasError: true,
-        errorMessage: (
-          <Stack spacing={2} alignItems="center">
-            <span>{error.message}</span>
-            <Button
-              variant="outlined"
-              color="secondary"
-              startIcon={<ReloadIcon />}
-              onClick={() => window.location.reload()}
-            >
-              Reload
-            </Button>
-          </Stack>
-        ),
-      };
-
     return { hasError: true, errorMessage: error.message };
   }
 
@@ -42,7 +25,33 @@ class ErrorBoundary extends React.Component<IEmptyStateProps> {
       return (
         <EmptyState
           message="Something Went Wrong"
-          description={this.state.errorMessage}
+          description={
+            <>
+              <span>{this.state.errorMessage}</span>
+              {this.state.errorMessage.startsWith("Loading chunk") ? (
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  startIcon={<ReloadIcon />}
+                  onClick={() => window.location.reload()}
+                >
+                  Reload
+                </Button>
+              ) : (
+                <Button
+                  href={
+                    meta.repository.url.replace(".git", "") +
+                    "/issues/new/choose"
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  endIcon={<OpenInNewIcon />}
+                >
+                  Report Issue
+                </Button>
+              )}
+            </>
+          }
           fullScreen
           {...this.props}
         />

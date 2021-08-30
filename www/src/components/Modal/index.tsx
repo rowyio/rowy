@@ -62,7 +62,7 @@ const useStyles = makeStyles((theme) =>
       padding: "0 var(--spacing-modal)",
       margin: "0 calc(var(--spacing-modal) * -1)",
 
-      ...theme.typography.body1,
+      ...theme.typography.body2,
 
       backgroundRepeat: "no-repeat",
       backgroundColor: "var(--bg-paper)",

@@ -103,6 +103,8 @@ export default function CodeEditor({
         options={{
           readOnly: disabled,
           fontFamily: theme.typography.fontFamilyMono,
+          rulers: [80],
+          minimap: { enabled: false },
           ...editorOptions,
         }}
         onChange={onChange as any}

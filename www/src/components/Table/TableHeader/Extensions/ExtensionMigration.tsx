@@ -1,23 +1,17 @@
 import { useState } from "react";
-import { makeStyles, createStyles } from "@material-ui/styles";
-import { sparkToExtensionObjects } from "./utils";
+import firebase from "firebase/app";
+
+import { Button, Link, Typography } from "@material-ui/core";
+import LoadingButton from "@material-ui/lab/LoadingButton";
+import DownloadIcon from "@material-ui/icons/FileDownloadOutlined";
+import OpenInNewIcon from "@material-ui/icons/OpenInNew";
+import GoIcon from "@material-ui/icons/ChevronRight";
+
 import Modal from "components/Modal";
 import { useFiretableContext } from "contexts/FiretableContext";
 import { useAppContext } from "contexts/AppContext";
-import firebase from "firebase/app";
-import { Box, Button, CircularProgress, Typography } from "@material-ui/core";
-
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    modalRoot: {
-      height: `calc(100vh - 200px)`,
-    },
-    download: {
-      maxWidth: 320,
-      marginTop: theme.spacing(0.5),
-    },
-  })
-);
+import { sparkToExtensionObjects } from "./utils";
+import WIKI_LINKS from "constants/wikiLinks";
 
 export interface IExtensionMigrationProps {
   handleClose: () => void;
@@ -28,9 +22,9 @@ export default function ExtensionMigration({
   handleClose,
   handleUpgradeComplete,
 }: IExtensionMigrationProps) {
-  const classes = useStyles();
-  const { tableState, tableActions } = useFiretableContext();
   const appContext = useAppContext();
+  const { tableState, tableActions } = useFiretableContext();
+
   const [isSaved, setIsSaved] = useState(false);
   const [isUpgrading, setIsUpgrading] = useState(false);
 
@@ -78,60 +72,84 @@ export default function ExtensionMigration({
   return (
     <Modal
       onClose={handleClose}
-      maxWidth="lg"
+      maxWidth="xs"
       fullWidth
-      title={"Extensions Migration Guide"}
+      disableBackdropClick
+      disableEscapeKeyDown
+      title="Welcome to Extensions"
       children={
-        <Box
-          display="flex"
-          flexDirection="column"
-          className={classes.modalRoot}
-        >
-          <Typography variant="body2">
-            We have upgraded spark editor to extension editor with a better UI.
-            The old sparks are not compatible with this change, however you can
-            use this tool to upgrade your sparks.
-          </Typography>
-          <br />
+        <>
+          <div>
+            <Typography paragraph>
+              It looks like you have Sparks configured for this table.
+            </Typography>
+            <Typography>
+              Sparks have been revamped to Extensions, with a brand new UI. Your
+              existing Sparks are not compatible with this change, but you can
+              migrate your Sparks to Extensions.
+            </Typography>
+          </div>
 
-          <Typography variant="overline">
-            1. Save your sparks for backup
-          </Typography>
-          <Typography variant="body2">
-            You must save your sparks before upgrade.
-          </Typography>
-          <Button
-            className={classes.download}
-            variant="contained"
-            color={isSaved ? "secondary" : "primary"}
-            onClick={downloadSparkFile}
-          >
-            Save sparks
-          </Button>
-          <br />
+          <div>
+            <Typography variant="subtitle1" component="h3" gutterBottom>
+              1. Back Up Existing Sparks
+            </Typography>
+            <Typography paragraph>
+              Back up your existing Sparks to a .ts file.
+            </Typography>
+            <Button
+              variant={isSaved ? "outlined" : "contained"}
+              color={isSaved ? "secondary" : "primary"}
+              onClick={downloadSparkFile}
+              endIcon={<DownloadIcon />}
+              style={{ width: "100%" }}
+            >
+              Save Sparks
+            </Button>
+          </div>
 
-          <Typography variant="overline">
-            2. Upgrade sparks to extensions
-          </Typography>
-          {/* TODO add documentation link */}
-          <Typography variant="body2">
-            After the upgrade, your old sparks will be removed from database.
-            And you might need to do some manual change to the code. See this
-            documentation for more information.
-          </Typography>
-          <Button
-            className={classes.download}
-            variant="contained"
-            onClick={upgradeToExtensions}
-            disabled={!isSaved || isUpgrading}
-            startIcon={
-              isUpgrading && <CircularProgress size={20} thickness={5} />
-            }
-          >
-            {isUpgrading && "Upgrading..."}
-            {!isUpgrading && "Upgrade to extensions"}
-          </Button>
-        </Box>
+          <div>
+            <Typography variant="subtitle1" component="h3" gutterBottom>
+              2. Migrate Sparks to Extensions
+            </Typography>
+
+            <Typography gutterBottom>
+              After the upgrade, Sparks will be removed from this table. You may
+              need to make manual changes to your Extensions code.
+            </Typography>
+
+            <Link
+              href={WIKI_LINKS.extensions}
+              target="_blank"
+              rel="noopener noreferrer"
+              paragraph
+              display="block"
+            >
+              Read the Extensions documentation
+              <OpenInNewIcon
+                aria-label="Open in new tab"
+                sx={{
+                  fontSize: "1rem",
+                  ml: 0.5,
+                  verticalAlign: "middle",
+                }}
+              />
+            </Link>
+
+            <LoadingButton
+              variant="contained"
+              color="primary"
+              loading={isUpgrading}
+              loadingPosition="end"
+              onClick={upgradeToExtensions}
+              disabled={!isSaved || isUpgrading}
+              endIcon={<GoIcon />}
+              style={{ width: "100%" }}
+            >
+              Migrate to Extensions
+            </LoadingButton>
+          </div>
+        </>
       }
     />
   );
