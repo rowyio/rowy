@@ -6,11 +6,12 @@ import AddColumnIcon from "assets/icons/AddColumn";
 
 import { useFiretableContext } from "contexts/FiretableContext";
 
-const useStyles = makeStyles(() =>
+const useStyles = makeStyles((theme) =>
   createStyles({
     "@global": {
       ".rdg-header-row .rdg-cell.final-column-header": {
         border: "none",
+        ".rdg.rdg &": { padding: theme.spacing(0, 0.75) },
 
         "&::before": {
           content: "''",
@@ -24,6 +25,8 @@ const useStyles = makeStyles(() =>
 
           border: "1px solid var(--border-color)",
           borderLeftWidth: 0,
+          borderTopRightRadius: theme.shape.borderRadius,
+          borderBottomRightRadius: theme.shape.borderRadius,
         },
       },
     },

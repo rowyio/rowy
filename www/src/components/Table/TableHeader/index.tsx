@@ -1,9 +1,8 @@
 import { makeStyles, createStyles } from "@material-ui/styles";
-import { Grid, ButtonGroup, Button } from "@material-ui/core";
+import { Stack, Button } from "@material-ui/core";
 
 import { isCollectionGroup } from "utils/fns";
 import AddRowIcon from "assets/icons/AddRow";
-import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 
 import Filters from "../Filters";
 import ImportCSV from "./ImportCsv";
@@ -51,8 +50,6 @@ const useStyles = makeStyles((theme) =>
  * TODO: Make this properly mobile responsive, not just horizontally scrolling
  */
 export default function TableHeader() {
-  const classes = useStyles();
-
   const { currentUser } = useAppContext();
   const { tableActions, tableState, userClaims } = useFiretableContext();
 
@@ -67,60 +64,62 @@ export default function TableHeader() {
 
   if (!tableState || !tableState.columns) return null;
   const { columns } = tableState;
+
   return (
-    <Grid
-      container
+    <Stack
+      direction="row"
       alignItems="center"
       spacing={1}
-      wrap="nowrap"
-      className={classes.root}
+      sx={{
+        pl: 2,
+        pr: 2,
+        pb: 1.5,
+        height: TABLE_HEADER_HEIGHT,
+        "& > *": { flexShrink: 0 },
+      }}
     >
       {!isCollectionGroup() && (
-        <Grid item>
-          {/* <ButtonGroup
+        /* <ButtonGroup
             variant="contained"
             aria-label="Split button"
             style={{ display: "flex" }}
-          > */}
-          <Button
-            onClick={() => {
-              const requiredFields = Object.values(columns)
-                .map((column) => {
-                  if (column.config.required) {
-                    return column.key;
-                  }
-                })
-                .filter((c) => c);
-              const initialVal = Object.values(columns).reduce(
-                (acc, column) => {
-                  if (column.config?.defaultValue?.type === "static") {
-                    return {
-                      ...acc,
-                      [column.key]: column.config.defaultValue.value,
-                    };
-                  } else if (column.config?.defaultValue?.type === "null") {
-                    return { ...acc, [column.key]: null };
-                  } else return acc;
-                },
-                {}
-              );
-              tableActions?.row.add(
-                {
-                  ...initialVal,
-                  _ft_updatedBy: firetableUser(currentUser),
-                  _ft_createdBy: firetableUser(currentUser),
-                },
-                requiredFields
-              );
-            }}
-            variant="contained"
-            color="primary"
-            startIcon={<AddRowIcon />}
-            // sx={{ pr: 1.5 }}
-          >
-            Add Row
-          </Button>
-          {/* <Button
+          > */
+        <Button
+          onClick={() => {
+            const requiredFields = Object.values(columns)
+              .map((column) => {
+                if (column.config.required) {
+                  return column.key;
+                }
+              })
+              .filter((c) => c);
+            const initialVal = Object.values(columns).reduce((acc, column) => {
+              if (column.config?.defaultValue?.type === "static") {
+                return {
+                  ...acc,
+                  [column.key]: column.config.defaultValue.value,
+                };
+              } else if (column.config?.defaultValue?.type === "null") {
+                return { ...acc, [column.key]: null };
+              } else return acc;
+            }, {});
+            tableActions?.row.add(
+              {
+                ...initialVal,
+                _ft_updatedBy: firetableUser(currentUser),
+                _ft_createdBy: firetableUser(currentUser),
+              },
+              requiredFields
+            );
+          }}
+          variant="contained"
+          color="primary"
+          startIcon={<AddRowIcon />}
+          // sx={{ pr: 1.5 }}
+        >
+          Add Row
+        </Button>
+        /* <Button
               // aria-controls={open ? 'split-button-menu' : undefined}
               // aria-expanded={open ? 'true' : undefined}
               // aria-label="select merge strategy"
@@ -129,67 +128,26 @@ export default function TableHeader() {
             >
               <ArrowDropDownIcon />
             </Button>
-          </ButtonGroup> */}
-        </Grid>
+          </ButtonGroup> */
       )}
-
-      {/* Spacer */}
-      <Grid item className={classes.spacer} />
-
-      <Grid item>
-        <HiddenFields />
-      </Grid>
-      <Grid item>
-        <Filters />
-      </Grid>
-
-      <Grid item xs className={classes.midSpacer} />
-
-      <Grid item>
-        <RowHeight />
-      </Grid>
-
-      {/* Spacer */}
-      <Grid item className={classes.spacer} />
-
-      {!isCollectionGroup() && (
-        <Grid item>
-          <ImportCSV />
-        </Grid>
-      )}
-
-      <Grid item>
-        <Export />
-      </Grid>
-
-      {/* Spacer */}
-      <Grid item className={classes.spacer} />
-
+      {/* Spacer */} <div />
+      <HiddenFields />
+      <Filters />
+      <div style={{ flexGrow: 1, minWidth: 64 }} />
+      <RowHeight />
+      {/* Spacer */} <div />
+      {!isCollectionGroup() && <ImportCSV />}
+      <Export />
       {userClaims?.roles?.includes("ADMIN") && (
-        <Grid item>
+        <>
+          {/* Spacer */} <div />
           <Extensions />
-        </Grid>
-      )}
-
-      {userClaims?.roles?.includes("ADMIN") && (
-        <Grid item>
           <TableLogs />
-        </Grid>
+          {(hasDerivatives || hasExtensions) && <ReExecute />}
+        </>
       )}
-
-      {userClaims?.roles?.includes("ADMIN") &&
-        (hasDerivatives || hasExtensions) && (
-          <Grid item>
-            <ReExecute />
-          </Grid>
-        )}
-
-      {/* Spacer */}
-      <Grid item className={classes.spacer} />
-
-      <Grid item>
-        <TableSettings />
-      </Grid>
-    </Grid>
+      {/* Spacer */} <div />
+      <TableSettings />
+    </Stack>
   );
 }

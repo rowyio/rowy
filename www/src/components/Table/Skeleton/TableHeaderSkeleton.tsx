@@ -1,106 +1,48 @@
-import { makeStyles, createStyles } from "@material-ui/styles";
-import { Grid, Button } from "@material-ui/core";
+import { Stack, Button } from "@material-ui/core";
 import Skeleton from "@material-ui/core/Skeleton";
 import AddRowIcon from "assets/icons/AddRow";
 
-import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
-import { TABLE_HEADER_HEIGHT } from "../TableHeader";
+import { TABLE_HEADER_HEIGHT } from "components/Table/TableHeader";
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    root: {
-      width: `calc(100% - ${DRAWER_COLLAPSED_WIDTH}px)`,
-      margin: 0,
-      padding: theme.spacing(0, 1.5),
-      minHeight: TABLE_HEADER_HEIGHT,
-
-      overflowX: "auto",
-      whiteSpace: "nowrap",
-
-      userSelect: "none",
-      pointerEvents: "none",
-
-      [theme.breakpoints.down("md")]: {
-        width: "100%",
-        paddingRight: theme.spacing(1),
-      },
-    },
-
-    addRow: { borderRadius: 500 },
-    addRowIcon: { fontSize: "26px !important" },
-
-    button: {
-      borderRadius: theme.shape.borderRadius,
-      height: 32,
-    },
-
-    circleButton: {
-      width: 32,
-      height: 32,
-    },
-  })
+const ButtonSkeleton = (props) => (
+  <Skeleton variant="rect" {...props} sx={{ borderRadius: 1, ...props.sx }} />
 );
 
 export default function TableHeaderSkeleton() {
-  const classes = useStyles();
-
   return (
-    <Grid
-      container
+    <Stack
+      direction="row"
       alignItems="center"
-      spacing={2}
-      wrap="nowrap"
-      className={classes.root}
+      spacing={1}
+      sx={{ pl: 2, pr: 2, pb: 1.5, height: TABLE_HEADER_HEIGHT }}
     >
-      <Grid item>
-        <Skeleton variant="rectangular" className={classes.addRow}>
-          <Button
-            variant="contained"
-            startIcon={<AddRowIcon className={classes.addRowIcon} />}
-          >
-            Add Row
-          </Button>
-        </Skeleton>
-      </Grid>
+      <ButtonSkeleton>
+        <Button variant="contained" startIcon={<AddRowIcon />}>
+          Add Row
+        </Button>
+      </ButtonSkeleton>
 
-      <Grid item />
+      <div />
 
-      <Grid item>
-        <Skeleton variant="rectangular" className={classes.button}>
-          <Button variant="contained" startIcon={<AddRowIcon />}>
-            Hide
-          </Button>
-        </Skeleton>
-      </Grid>
-      <Grid item>
-        <Skeleton variant="rectangular" className={classes.button}>
-          <Button variant="contained" startIcon={<AddRowIcon />}>
-            Filter
-          </Button>
-        </Skeleton>
-      </Grid>
+      <ButtonSkeleton>
+        <Button variant="contained" startIcon={<AddRowIcon />}>
+          Hide
+        </Button>
+      </ButtonSkeleton>
+      <ButtonSkeleton>
+        <Button variant="contained" startIcon={<AddRowIcon />}>
+          Filter
+        </Button>
+      </ButtonSkeleton>
 
-      <Grid item xs />
+      <div style={{ flexGrow: 1 }} />
 
-      <Grid item>
-        <Skeleton
-          variant="rectangular"
-          className={classes.button}
-          style={{ width: 120 }}
-        />
-      </Grid>
-
-      <Grid item />
-
-      <Grid item>
-        <Skeleton variant="circular" className={classes.circleButton} />
-      </Grid>
-      <Grid item>
-        <Skeleton variant="circular" className={classes.circleButton} />
-      </Grid>
-      <Grid item>
-        <Skeleton variant="circular" className={classes.circleButton} />
-      </Grid>
-    </Grid>
+      <ButtonSkeleton style={{ width: 40, height: 32 }} />
+      <div />
+      <ButtonSkeleton style={{ width: 40, height: 32 }} />
+      <ButtonSkeleton style={{ width: 40, height: 32 }} />
+      <div />
+      <ButtonSkeleton style={{ width: 40, height: 32 }} />
+    </Stack>
   );
 }

@@ -349,7 +349,7 @@ const Filters = () => {
   };
   return (
     <>
-      <Grid container direction="row" wrap="nowrap">
+      <Grid container direction="row" wrap="nowrap" style={{ width: "auto" }}>
         <ButtonWithStatus
           variant="outlined"
           color="primary"
