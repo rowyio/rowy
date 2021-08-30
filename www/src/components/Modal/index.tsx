@@ -39,8 +39,10 @@ const useStyles = makeStyles((theme) =>
       padding: "var(--spacing-modal)",
       paddingBottom: "var(--spacing-modal-contents)",
     },
+    fullHeight: { height: "100%" },
 
     titleRow: {
+      minHeight: 16,
       padding: 0,
       paddingBottom: "var(--spacing-modal)",
 
@@ -49,8 +51,7 @@ const useStyles = makeStyles((theme) =>
       justifyContent: "space-between",
     },
     title: {
-      ...theme.typography.h5,
-      [theme.breakpoints.down("md")]: theme.typography.h6,
+      margin: `-${(28 - 16) / 2}px 0`,
     },
     closeButton: {
       margin: theme.spacing(-1.5),
@@ -100,6 +101,7 @@ export interface IModalProps extends Partial<Omit<DialogProps, "title">> {
   };
 
   hideCloseButton?: boolean;
+  fullHeight?: boolean;
 }
 
 export default function Modal({
@@ -112,6 +114,7 @@ export default function Modal({
   body,
   actions,
   hideCloseButton,
+  fullHeight,
   ...props
 }: IModalProps) {
   const classes = useStyles();
@@ -138,15 +141,15 @@ export default function Modal({
       classes={{
         ...props.classes,
         root: clsx(classes.root, props.classes?.root),
-        paper: clsx(classes.paper, props.classes?.paper),
+        paper: clsx(
+          classes.paper,
+          fullHeight && classes.fullHeight,
+          props.classes?.paper
+        ),
       }}
     >
       <DialogTitle id="modal-title" className={classes.titleRow}>
-        <Typography
-          className={classes.title}
-          component="h2"
-          color="textPrimary"
-        >
+        <Typography variant="h6" component="span" className={classes.title}>
           {title}
         </Typography>
 
@@ -186,7 +189,11 @@ export default function Modal({
 
           {actions.primary && (
             <Grid item>
-              <Button variant="contained" {...actions.primary} />
+              <Button
+                variant="contained"
+                color="primary"
+                {...actions.primary}
+              />
             </Grid>
           )}
         </Grid>

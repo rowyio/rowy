@@ -1,59 +1,10 @@
-import clsx from "clsx";
-
-import { makeStyles, createStyles } from "@material-ui/styles";
-import { alpha } from "@material-ui/core/styles";
 import {
   MenuItem,
   ListItemIcon,
   ListSubheader,
   Divider,
 } from "@material-ui/core";
-
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    subheader: {
-      // ...theme.typography.overline,
-      // color: theme.palette.text.disabled,
-      padding: theme.spacing(1, 2),
-      lineHeight: 1,
-
-      cursor: "default",
-      userSelect: "none",
-
-      "&:focus": { outline: 0 },
-    },
-
-    menuItem: {
-      // minHeight: 42,
-      // padding: theme.spacing(0.75, 1.25),
-      // ...theme.typography.h6,
-      // fontSize: "0.875rem",
-      // color: theme.palette.text.secondary,
-      // transition: theme.transitions.create(["background-color", "color"], {
-      //   duration: theme.transitions.duration.shortest,
-      // }),
-      // "&:hover": {
-      //   backgroundColor: theme.palette.text.primary,
-      //   color: theme.palette.mode === "light" ? "#f1f1f3" : "#212129",
-      // },
-    },
-    menuItemIcon: {
-      // minWidth: 24,
-      // marginRight: theme.spacing(1.25),
-      color: "inherit",
-    },
-
-    menuItemError: {
-      color: theme.palette.error.main,
-      "&:hover": {
-        backgroundColor: alpha(
-          theme.palette.error.main,
-          theme.palette.action.hoverOpacity
-        ),
-      },
-    },
-  })
-);
+import { alpha } from "@material-ui/core/styles";
 
 export interface IMenuContentsProps {
   menuItems: {
@@ -70,8 +21,6 @@ export interface IMenuContentsProps {
 }
 
 export default function MenuContents({ menuItems }: IMenuContentsProps) {
-  const classes = useStyles();
-
   return (
     <>
       {menuItems.map((item, index) => {
@@ -79,12 +28,7 @@ export default function MenuContents({ menuItems }: IMenuContentsProps) {
           return (
             <>
               {index !== 0 && <Divider variant="middle" />}
-              <ListSubheader
-                key={index}
-                className={classes.subheader}
-                disableGutters
-                disableSticky
-              >
+              <ListSubheader key={index} disableSticky>
                 {item.label}
               </ListSubheader>
             </>
@@ -94,24 +38,43 @@ export default function MenuContents({ menuItems }: IMenuContentsProps) {
         if (item.active && !!item.activeIcon) icon = item.activeIcon;
 
         return (
-          <>
-            {/* {index !== 0 && <Divider />} */}
-            <MenuItem
-              key={index}
-              onClick={item.onClick}
-              className={clsx(
-                classes.menuItem,
-                item.color === "error" && classes.menuItemError
-              )}
-              selected={item.active}
-              disabled={item.disabled}
+          <MenuItem
+            key={index}
+            onClick={item.onClick}
+            sx={
+              item.color === "error"
+                ? {
+                    color: "error.main",
+                    "&:hover": {
+                      backgroundColor: (theme) =>
+                        alpha(
+                          theme.palette.error.main,
+                          theme.palette.action.hoverOpacity
+                        ),
+                    },
+                  }
+                : undefined
+            }
+            selected={item.active}
+            disabled={item.disabled}
+          >
+            <ListItemIcon
+              sx={
+                item.color === "error"
+                  ? {
+                      color: (theme) =>
+                        alpha(
+                          theme.palette.error.main,
+                          theme.palette.action.activeOpacity
+                        ),
+                    }
+                  : undefined
+              }
             >
-              <ListItemIcon className={classes.menuItemIcon}>
-                {icon}
-              </ListItemIcon>
-              {item.active ? item.activeLabel : item.label}
-            </MenuItem>
-          </>
+              {icon}
+            </ListItemIcon>
+            {item.active ? item.activeLabel : item.label}
+          </MenuItem>
         );
       })}
     </>

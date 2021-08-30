@@ -25,7 +25,7 @@ export const useFieldStyles = makeStyles((theme) =>
       borderRadius: theme.shape.borderRadius,
       padding: theme.spacing(0.75, 1, 0.75, 1.5),
 
-      backgroundColor: theme.palette.input,
+      backgroundColor: theme.palette.action.input,
       boxShadow: `0 0 0 1px ${
         theme.palette.mode === "dark"
           ? colord(theme.palette.divider)

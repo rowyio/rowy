@@ -26,6 +26,9 @@ import {
   ListSubheader,
   Slider,
   Tooltip,
+  FormControlLabel,
+  Checkbox,
+  Radio,
   Switch,
   TextField,
   Tabs,
@@ -731,35 +734,58 @@ export default function TestView() {
             disabled
           />
 
+          <Stack>
+            <FormControlLabel control={<Checkbox />} label="Label" />
+            <FormControlLabel control={<Radio />} label="Label" />
+          </Stack>
+
+          <div>
+            <FormControlLabel control={<Switch />} label="Label" />
+            <FormControlLabel
+              control={<Switch size="medium" />}
+              label="Label"
+            />
+            <FormControlLabel
+              labelPlacement="start"
+              control={<Switch />}
+              label="Label"
+            />
+            <FormControlLabel
+              labelPlacement="start"
+              control={<Switch size="medium" />}
+              label="Label"
+            />
+          </div>
+
           <Stack spacing={1} direction="row" alignItems="center">
-            <Switch size="medium" />
+            <Switch size="medium" color="primary" />
             <Switch size="medium" color="secondary" />
             <Switch size="medium" color="success" />
-            <Switch size="small" />
+            <Switch size="small" color="primary" />
             <Switch size="small" color="secondary" />
             <Switch size="small" color="success" />
           </Stack>
           <Stack spacing={1} direction="row" alignItems="center">
-            <Switch size="medium" checked />
+            <Switch size="medium" checked color="primary" />
             <Switch size="medium" checked color="secondary" />
             <Switch size="medium" checked color="success" />
-            <Switch size="small" checked />
+            <Switch size="small" checked color="primary" />
             <Switch size="small" checked color="secondary" />
             <Switch size="small" checked color="success" />
           </Stack>
           <Stack spacing={1} direction="row" alignItems="center">
-            <Switch size="medium" disabled />
+            <Switch size="medium" disabled color="primary" />
             <Switch size="medium" disabled color="secondary" />
             <Switch size="medium" disabled color="success" />
-            <Switch size="small" disabled />
+            <Switch size="small" disabled color="primary" />
             <Switch size="small" disabled color="secondary" />
             <Switch size="small" disabled color="success" />
           </Stack>
           <Stack spacing={1} direction="row" alignItems="center">
-            <Switch size="medium" checked disabled />
+            <Switch size="medium" checked disabled color="primary" />
             <Switch size="medium" checked disabled color="secondary" />
             <Switch size="medium" checked disabled color="success" />
-            <Switch size="small" checked disabled />
+            <Switch size="small" checked disabled color="primary" />
             <Switch size="small" checked disabled color="secondary" />
             <Switch size="small" checked disabled color="success" />
           </Stack>

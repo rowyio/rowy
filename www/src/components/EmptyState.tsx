@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) =>
 
     icon: {
       color: theme.palette.action.active,
-      fontSize: "3.5rem",
+      fontSize: "3rem",
     },
 
     message: {
@@ -48,7 +48,7 @@ export interface IEmptyStateProps extends Partial<GridProps> {
  * Override with props that are passed to the root MUI `Grid` component.
  */
 export default function EmptyState({
-  message = "Nothing here",
+  message = "Nothing Here",
   description,
   Icon = ErrorIcon,
   fullScreen = false,

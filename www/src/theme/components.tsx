@@ -52,6 +52,9 @@ export const components = (theme: Theme): ThemeOptions => {
           paper: { borderRadius: (theme.shape.borderRadius as number) * 2 },
         },
       },
+      MuiDialogContentText: {
+        defaultProps: { variant: "body2" },
+      },
       MuiSnackbar: {
         styleOverrides: {
           root: {
@@ -69,6 +72,10 @@ export const components = (theme: Theme): ThemeOptions => {
         },
       },
 
+      MuiTypography: {
+        defaultProps: { variant: "body2" },
+      },
+
       MuiTextField: {
         defaultProps: {
           variant: "filled",
@@ -83,9 +90,9 @@ export const components = (theme: Theme): ThemeOptions => {
       MuiFilledInput: {
         styleOverrides: {
           root: {
-            backgroundColor: theme.palette.input,
+            backgroundColor: theme.palette.action.input,
             "&:hover:not(.Mui-disabled), &:focus, &.Mui-focused": {
-              backgroundColor: theme.palette.input,
+              backgroundColor: theme.palette.action.input,
             },
 
             boxShadow: `0 0 0 1px ${
@@ -144,6 +151,11 @@ export const components = (theme: Theme): ThemeOptions => {
             ...theme.typography.caption,
             fontWeight: 500,
           },
+        },
+      },
+      MuiFormHelperText: {
+        styleOverrides: {
+          filled: { margin: theme.spacing(0.5, 1.5, 0) },
         },
       },
 
@@ -208,7 +220,7 @@ export const components = (theme: Theme): ThemeOptions => {
             },
 
             "& .MuiListItemIcon-root": {
-              minWidth: 40,
+              minWidth: 24 + 12,
               "& svg": { fontSize: "1.5rem" },
             },
 
@@ -244,6 +256,10 @@ export const components = (theme: Theme): ThemeOptions => {
       },
 
       MuiButton: {
+        defaultProps: {
+          variant: "outlined",
+          color: "secondary",
+        },
         styleOverrides: {
           root: {
             minHeight: 32,
@@ -271,7 +287,7 @@ export const components = (theme: Theme): ThemeOptions => {
                  0 1px 0 0 ${colorDividerHalf} inset`
                 : `0 0 0 1px ${theme.palette.divider} inset,
                  0 -1px 0 0 ${theme.palette.divider} inset`,
-            backgroundColor: theme.palette.input,
+            backgroundColor: theme.palette.action.input,
 
             "&.Mui-disabled": {
               boxShadow: `0 0 0 1px ${theme.palette.divider} inset`,
@@ -280,7 +296,7 @@ export const components = (theme: Theme): ThemeOptions => {
           },
           outlinedPrimary: {
             "&:hover": {
-              backgroundColor: colord(theme.palette.input)
+              backgroundColor: colord(theme.palette.action.input)
                 .mix(
                   theme.palette.primary.main,
                   theme.palette.action.hoverOpacity
@@ -290,7 +306,7 @@ export const components = (theme: Theme): ThemeOptions => {
           },
           outlinedSecondary: {
             "&:hover": {
-              backgroundColor: colord(theme.palette.input)
+              backgroundColor: colord(theme.palette.action.input)
                 .mix(
                   theme.palette.secondary.main,
                   theme.palette.action.hoverOpacity
@@ -392,15 +408,18 @@ export const components = (theme: Theme): ThemeOptions => {
       },
 
       MuiSwitch: {
-        defaultProps: { size: "small" },
+        defaultProps: {
+          size: "small",
+          color: "success",
+        },
         styleOverrides: {
           sizeMedium: {
-            width: 42 + (38 - 24),
-            height: 24 + (38 - 24),
-            padding: (38 - 24) / 2,
+            width: 56 + (38 - 32),
+            height: 32 + (38 - 32),
+            padding: (38 - 32) / 2,
 
-            "& .MuiSwitch-thumb": { width: 16, height: 16 },
-            "& .MuiSwitch-switchBase": { padding: 11 },
+            "& .MuiSwitch-thumb": { width: 22, height: 22 },
+            "& .MuiSwitch-switchBase": { padding: 8 },
           },
           sizeSmall: {
             width: 36 + (28 - 20),
@@ -412,7 +431,7 @@ export const components = (theme: Theme): ThemeOptions => {
           },
 
           track: {
-            borderRadius: 24 / 2,
+            borderRadius: 32 / 2,
             backgroundColor: "transparent",
             boxShadow: `0 0 0 1px ${theme.palette.text.disabled} inset`,
             ".Mui-disabled + &": {
@@ -429,10 +448,10 @@ export const components = (theme: Theme): ThemeOptions => {
           },
           switchBase: {
             color: theme.palette.text.primary,
-            "&.Mui-checked": { transform: "translateX(18px)" },
+            "&.Mui-checked": { transform: "translateX(24px)" },
           },
           thumb: {
-            borderRadius: 24 / 2,
+            borderRadius: 22 / 2,
             boxShadow: theme.shadows[1],
 
             background: theme.palette.text.secondary,
@@ -446,29 +465,29 @@ export const components = (theme: Theme): ThemeOptions => {
             ),
 
             ".MuiSwitch-root:hover .MuiSwitch-switchBase:not(.Mui-disabled) &": {
-              transform: `scale(${1 + 2 / 16})`,
+              transform: `scale(${1 + 2 / 22})`,
             },
             ".MuiSwitch-root.MuiSwitch-sizeSmall:hover .MuiSwitch-switchBase:not(.Mui-disabled) &": {
               transform: `scale(${1 + 2 / 12})`,
             },
 
             ".MuiSwitch-root:active .MuiSwitch-switchBase:not(.Mui-disabled) &": {
-              width: 16 + 4,
+              width: 22 * 1.333,
             },
             ".MuiSwitch-root.MuiSwitch-sizeSmall:active .MuiSwitch-switchBase:not(.Mui-disabled) &": {
-              width: 12 + 4,
+              width: 12 * 1.333,
             },
             "& + .MuiTouchRipple-root": {
-              borderRadius: 24 / 2,
+              borderRadius: 22 / 2,
               zIndex: -1,
             },
 
             ".MuiSwitch-root:active .MuiSwitch-switchBase.Mui-checked:not(.Mui-disabled) &": {
-              transform: `translateX(-4px) scale(${1 + 2 / 16})`,
+              transform: `translateX(-${0.333 * 22}px) scale(${1 + 2 / 22})`,
               "& + .MuiTouchRipple-root": { left: -4 },
             },
             ".MuiSwitch-root.MuiSwitch-sizeSmall:active .MuiSwitch-switchBase.Mui-checked:not(.Mui-disabled) &": {
-              transform: `translateX(-4px) scale(${1 + 2 / 12})`,
+              transform: `translateX(-${0.333 * 12}px) scale(${1 + 2 / 12})`,
             },
 
             ".MuiSwitch-switchBase.Mui-disabled &": {
@@ -518,6 +537,20 @@ export const components = (theme: Theme): ThemeOptions => {
               height: 10,
               bottom: 1,
             },
+          },
+        },
+      },
+
+      MuiFormControlLabel: {
+        defaultProps: {
+          componentsProps: { typography: { variant: "body2" } },
+        },
+        styleOverrides: {
+          root: {
+            "& .MuiSwitch-root": { marginRight: theme.spacing(1) },
+          },
+          labelPlacementStart: {
+            "& .MuiSwitch-root": { marginLeft: theme.spacing(1) },
           },
         },
       },

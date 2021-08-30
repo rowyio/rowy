@@ -5,12 +5,18 @@ import { colord, extend } from "colord";
 import lchPlugin from "colord/plugins/lch";
 extend([lchPlugin]);
 
-declare module "@material-ui/core/styles" {
-  interface Palette {
+// declare module "@material-ui/core/styles" {
+//   interface Palette {
+//     input: string;
+//   }
+//   interface PaletteOptions {
+//     input?: string;
+//   }
+// }
+declare module "@material-ui/core/styles/createPalette" {
+  interface TypeAction {
+    activeOpacity: number;
     input: string;
-  }
-  interface PaletteOptions {
-    input?: string;
   }
 }
 
@@ -32,10 +38,11 @@ export const colorsLight = (
 ): ThemeOptions => {
   const primary = colord(_primary);
   const h = primary.toLch().h;
-  const secondary = colord({ l: 10, c: 20, h });
+  const secondary = colord({ l: 10, c: 10, h });
   const secondaryDark = colord({ l: 0, c: 0, h });
-  const bgDefault = colord({ l: 98, c: 2, h });
-  const shadowBase = colord({ l: 0, c: 20, h });
+  const bgDefault = colord({ l: 98, c: 1, h });
+  const textBase = colord({ l: 0, c: 10, h });
+  const shadowBase = colord({ l: 0, c: 10, h });
   const tooltip = shadowBase.alpha(0.8);
 
   return {
@@ -48,8 +55,21 @@ export const colorsLight = (
       error: { main: ERROR },
       success: { light: "#34c759", main: "#00802e", dark: "#105e24" },
       background: { default: bgDefault.toHslString() },
+      text: {
+        primary: textBase.alpha(0.87).toHslString(),
+        secondary: textBase.alpha(0.6).toHslString(),
+        disabled: textBase.alpha(0.38).toHslString(),
+      },
+      action: {
+        active: textBase.alpha(0.6).toHslString(),
+        activeOpacity: 0.6,
+        hover: textBase.alpha(0.04).toHslString(),
+        selected: textBase.alpha(0.08).toHslString(),
+        disabled: textBase.alpha(0.26).toHslString(),
+        disabledBackground: textBase.alpha(0.12).toHslString(),
+        input: "#fff",
+      },
       divider: shadowBase.alpha(0.12).toRgbString(), // Using hsl string breaks table borders
-      input: "#fff",
     },
     shadows: new Array(25).fill(undefined).map((_, i) => {
       // Based on https://tailwindcss.com/docs/box-shadow
@@ -80,6 +100,11 @@ export const colorsLight = (
     }) as Shadows,
 
     components: {
+      MuiCssBaseline: {
+        styleOverrides: {
+          ":root": { colorScheme: "light" },
+        },
+      },
       MuiBackdrop: {
         styleOverrides: {
           root: {
@@ -129,12 +154,13 @@ export const colorsDark = (
         }).toHslString(),
       },
       action: {
+        active: "rgba(255, 255, 255, 0.7)",
+        activeOpacity: 0.7,
         hover: "rgba(255, 255, 255, 0.08)",
         hoverOpacity: 0.08,
+        input: "rgba(255, 255, 255, 0.06)",
       },
       // success: { light: "#34c759" },
-      // input: "rgba(255, 255, 255, 0.24)",
-      input: "rgba(255, 255, 255, 0.06)",
     },
     shadows: new Array(25).fill(undefined).map((_, i) => {
       // Based on https://tailwindcss.com/docs/box-shadow
@@ -165,6 +191,11 @@ export const colorsDark = (
     }) as Shadows,
 
     components: {
+      MuiCssBaseline: {
+        styleOverrides: {
+          ":root": { colorScheme: "dark" },
+        },
+      },
       MuiBackdrop: {
         styleOverrides: {
           root: {

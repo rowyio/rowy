@@ -204,9 +204,7 @@ export default function Export({ query, closeModal }) {
         style={{ flexShrink: 0 }}
       >
         <Grid item>
-          <Button onClick={handleClose} color="primary">
-            Cancel
-          </Button>
+          <Button onClick={handleClose}>Cancel</Button>
         </Grid>
 
         <Grid item>
