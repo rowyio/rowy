@@ -1,99 +1,32 @@
-import React, { useState } from "react";
-import clsx from "clsx";
+import { ReactNode, useState } from "react";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
 import {
   useTheme,
   useMediaQuery,
   Dialog,
   DialogProps,
+  Stack,
   DialogTitle,
-  Typography,
   IconButton,
   DialogContent,
-  Grid,
+  DialogActions,
   Button,
   ButtonProps,
 } from "@material-ui/core";
-
 import CloseIcon from "@material-ui/icons/Close";
 
 import { SlideTransitionMui } from "./SlideTransition";
-
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    root: {
-      "--spacing-modal": theme.spacing(3),
-      "--spacing-modal-contents": theme.spacing(3),
-      "--spacing-card": "var(--spacing-modal-contents)",
-
-      [theme.breakpoints.down("md")]: {
-        "--spacing-modal": theme.spacing(2),
-      },
-    },
-
-    paper: {
-      userSelect: "none",
-      overflowX: "hidden",
-
-      padding: "var(--spacing-modal)",
-      paddingBottom: "var(--spacing-modal-contents)",
-    },
-    fullHeight: { height: "100%" },
-
-    titleRow: {
-      minHeight: 16,
-      padding: 0,
-      paddingBottom: "var(--spacing-modal)",
-
-      display: "flex",
-      alignItems: "flex-start",
-      justifyContent: "space-between",
-    },
-    title: {
-      margin: `-${(28 - 16) / 2}px 0`,
-    },
-    closeButton: {
-      margin: theme.spacing(-1.5),
-      marginLeft: "var(--spacing-modal)",
-    },
-
-    content: {
-      padding: "0 var(--spacing-modal)",
-      margin: "0 calc(var(--spacing-modal) * -1)",
-
-      ...theme.typography.body2,
-
-      backgroundRepeat: "no-repeat",
-      backgroundColor: "var(--bg-paper)",
-      backgroundSize: "100% 2px, 100% 3px, 100% 1px, 100% 1px",
-      backgroundAttachment: "local, local, scroll, scroll",
-
-      "&:last-child": {
-        marginBottom: "calc(var(--spacing-modal-contents) * -1)",
-        paddingBottom: "var(--spacing-modal-contents)",
-      },
-
-      "& > * + *": { marginTop: "var(--spacing-modal-contents)" },
-    },
-
-    actions: {
-      paddingTop: "var(--spacing-modal-contents)",
-      "& button": { minWidth: 100 },
-    },
-  })
-);
 
 export interface IModalProps extends Partial<Omit<DialogProps, "title">> {
   onClose: () => void;
   disableBackdropClick?: boolean;
 
-  title: React.ReactNode;
-  header?: React.ReactNode;
-  footer?: React.ReactNode;
+  title: ReactNode;
+  header?: ReactNode;
+  footer?: ReactNode;
 
-  children?: React.ReactNode;
-  body?: React.ReactNode;
+  children?: ReactNode;
+  body?: ReactNode;
 
   actions?: {
     primary?: Partial<ButtonProps>;
@@ -117,7 +50,6 @@ export default function Modal({
   fullHeight,
   ...props
 }: IModalProps) {
-  const classes = useStyles();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -138,65 +70,54 @@ export default function Modal({
       fullScreen={isMobile}
       aria-labelledby="modal-title"
       {...props}
-      classes={{
-        ...props.classes,
-        root: clsx(classes.root, props.classes?.root),
-        paper: clsx(
-          classes.paper,
-          fullHeight && classes.fullHeight,
-          props.classes?.paper
-        ),
-      }}
+      sx={
+        fullHeight
+          ? {
+              ...props.sx,
+              "& .MuiDialog-paper": {
+                height: "100%",
+                ...props.sx?.["& .MuiDialog-paper"],
+              },
+            }
+          : props.sx
+      }
     >
-      <DialogTitle id="modal-title" className={classes.titleRow}>
-        <Typography variant="h6" component="span" className={classes.title}>
+      <Stack direction="row" alignItems="flex-start">
+        <DialogTitle id="modal-title" style={{ flexGrow: 1 }}>
           {title}
-        </Typography>
+        </DialogTitle>
 
         {!hideCloseButton && (
           <IconButton
             onClick={handleClose}
-            className={classes.closeButton}
             aria-label="Close"
             color="secondary"
+            sx={{
+              mt: { xs: 0.5, sm: 1.5 },
+              mb: { xs: 0.5, sm: 1.5 },
+              ml: "var(--dialog-spacing)",
+              mr: -1.5,
+            }}
           >
             <CloseIcon />
           </IconButton>
         )}
-      </DialogTitle>
+      </Stack>
 
       {header}
 
-      <DialogContent className={classes.content}>
-        {children || body}
-      </DialogContent>
+      <DialogContent>{children || body}</DialogContent>
 
       {footer}
 
       {actions && (
-        <Grid
-          container
-          spacing={2}
-          justifyContent="center"
-          alignItems="center"
-          className={classes.actions}
-        >
-          {actions.secondary && (
-            <Grid item>
-              <Button {...actions.secondary} />
-            </Grid>
-          )}
+        <DialogActions>
+          {actions.secondary && <Button {...actions.secondary} />}
 
           {actions.primary && (
-            <Grid item>
-              <Button
-                variant="contained"
-                color="primary"
-                {...actions.primary}
-              />
-            </Grid>
+            <Button variant="contained" color="primary" {...actions.primary} />
           )}
-        </Grid>
+        </DialogActions>
       )}
     </Dialog>
   );

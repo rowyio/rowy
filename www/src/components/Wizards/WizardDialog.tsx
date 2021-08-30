@@ -25,12 +25,11 @@ import { SlideTransitionMui } from "components/Modal/SlideTransition";
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
-      "--spacing-modal": theme.spacing(3),
-      "--spacing-modal-contents": theme.spacing(3),
-      "--spacing-card": "var(--spacing-modal-contents)",
+      "--dialog-spacing": theme.spacing(3),
+      "--dialog-contents-spacing": theme.spacing(3),
 
       [theme.breakpoints.down("md")]: {
-        "--spacing-modal": theme.spacing(2),
+        "--dialog-spacing": theme.spacing(2),
       },
     },
 
@@ -38,17 +37,17 @@ const useStyles = makeStyles((theme) =>
       userSelect: "none",
       overflowX: "hidden",
 
-      padding: "var(--spacing-modal)",
-      paddingBottom: "var(--spacing-modal-contents)",
+      padding: "var(--dialog-spacing)",
+      paddingBottom: "var(--dialog-contents-spacing)",
     },
 
     closeButton: {
       alignSelf: "flex-end",
       margin:
-        "calc(var(--spacing-modal) * -1) calc(var(--spacing-modal) * -1) 0 0",
+        "calc(var(--dialog-spacing) * -1) calc(var(--dialog-spacing) * -1) 0 0",
     },
 
-    titleRow: { paddingBottom: "var(--spacing-modal)" },
+    titleRow: { paddingBottom: "var(--dialog-spacing)" },
     titleContainer: { padding: 0 },
     title: {
       ...theme.typography.h5,
@@ -75,8 +74,8 @@ const useStyles = makeStyles((theme) =>
     },
 
     content: {
-      padding: "0 var(--spacing-modal)",
-      margin: "0 calc(var(--spacing-modal) * -1)",
+      padding: "0 var(--dialog-spacing)",
+      margin: "0 calc(var(--dialog-spacing) * -1)",
 
       ...theme.typography.body1,
 
@@ -104,15 +103,15 @@ const useStyles = makeStyles((theme) =>
       backgroundAttachment: "local, local, scroll, scroll",
 
       "&:last-child": {
-        marginBottom: "calc(var(--spacing-modal-contents) * -1)",
-        paddingBottom: "var(--spacing-modal-contents)",
+        marginBottom: "calc(var(--dialog-contents-spacing) * -1)",
+        paddingBottom: "var(--dialog-contents-spacing)",
       },
 
-      "& > * + *": { marginTop: "var(--spacing-modal-contents)" },
+      "& > * + *": { marginTop: "var(--dialog-contents-spacing)" },
     },
 
     actions: {
-      paddingTop: "var(--spacing-modal-contents)",
+      paddingTop: "var(--dialog-contents-spacing)",
       "& button": { minWidth: 100 },
     },
   })

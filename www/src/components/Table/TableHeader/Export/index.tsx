@@ -27,24 +27,24 @@ const useStyles = makeStyles((theme) =>
     },
 
     tabs: {
-      marginLeft: "calc(var(--spacing-modal) * -1)",
-      marginRight: "calc(var(--spacing-modal) * -1)",
+      marginLeft: "calc(var(--dialog-spacing) * -1)",
+      marginRight: "calc(var(--dialog-spacing) * -1)",
     },
     tab: { minWidth: 0 },
     divider: {
-      margin: "-1px calc(var(--spacing-modal) * -1) 0",
+      margin: "-1px calc(var(--dialog-spacing) * -1) 0",
     },
 
     tabPanel: {
-      marginTop: "var(--spacing-modal-contents)",
+      marginTop: "var(--dialog-contents-spacing)",
       padding: 0,
 
       flexGrow: 1,
       display: "flex",
       flexDirection: "column",
-      height: "calc(100% - var(--spacing-modal-contents))",
+      height: "calc(100% - var(--dialog-contents-spacing))",
 
-      "& > * + *": { marginTop: "var(--spacing-modal-contents)" },
+      "& > * + *": { marginTop: "var(--dialog-contents-spacing)" },
       "&[hidden]": { display: "none" },
     },
   })

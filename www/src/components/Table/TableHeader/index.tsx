@@ -75,6 +75,8 @@ export default function TableHeader() {
         pr: 2,
         pb: 1.5,
         height: TABLE_HEADER_HEIGHT,
+        overflowX: "auto",
+        overflowY: "hidden",
         "& > *": { flexShrink: 0 },
       }}
     >

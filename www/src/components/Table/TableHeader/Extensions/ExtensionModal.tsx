@@ -60,8 +60,8 @@ const StyledTabPanel = styled(TabPanel)({
   flexGrow: 1,
 
   overflowY: "auto",
-  margin: "0 calc(var(--spacing-modal) * -1) 0 !important",
-  padding: "var(--spacing-modal) var(--spacing-modal) 0",
+  margin: "0 calc(var(--dialog-spacing) * -1) 0 !important",
+  padding: "var(--dialog-spacing) var(--dialog-spacing) 0",
 
   "&[hidden]": { display: "none" },
 
@@ -198,8 +198,8 @@ export default function ExtensionModal({
               centered
               style={{
                 marginTop: 0,
-                marginLeft: "calc(var(--spacing-modal) * -1)",
-                marginRight: "calc(var(--spacing-modal) * -1)",
+                marginLeft: "calc(var(--dialog-spacing) * -1)",
+                marginRight: "calc(var(--dialog-spacing) * -1)",
               }}
             >
               <Tab
@@ -211,8 +211,8 @@ export default function ExtensionModal({
             <Divider
               style={{
                 marginTop: -1,
-                marginLeft: "calc(var(--spacing-modal) * -1)",
-                marginRight: "calc(var(--spacing-modal) * -1)",
+                marginLeft: "calc(var(--dialog-spacing) * -1)",
+                marginRight: "calc(var(--dialog-spacing) * -1)",
               }}
             />
 

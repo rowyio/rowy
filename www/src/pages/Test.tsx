@@ -36,6 +36,7 @@ import {
 } from "@material-ui/core";
 import SparkIcon from "@material-ui/icons/OfflineBoltOutlined";
 import { useState } from "react";
+import { useConfirmation } from "components/ConfirmationDialog";
 
 const typographyVariants = [
   "h1",
@@ -56,6 +57,7 @@ const typographyVariants = [
 export default function TestView() {
   const snackContext = useContext(SnackContext);
   const theme = useTheme();
+  const { requestConfirmation } = useConfirmation();
 
   useEffect(() => {
     // alert("OPEN");
@@ -811,6 +813,19 @@ export default function TestView() {
               <Tab label="Item Two" />
               <Tab label="Item Three" />
             </Tabs>
+          </div>
+
+          <div>
+            <Button
+              onClick={() =>
+                requestConfirmation({
+                  body: "Additional information here",
+                  handleConfirm: () => alert("Confirmed!"),
+                })
+              }
+            >
+              Confirmation
+            </Button>
           </div>
         </Stack>
       </Container>

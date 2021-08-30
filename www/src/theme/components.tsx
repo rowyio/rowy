@@ -47,10 +47,47 @@ export const components = (theme: Theme): ThemeOptions => {
           rounded: { borderRadius: (theme.shape.borderRadius as number) * 2 },
         },
       },
+
       MuiDialog: {
         styleOverrides: {
-          paper: { borderRadius: (theme.shape.borderRadius as number) * 2 },
+          paper: {
+            borderRadius: (theme.shape.borderRadius as number) * 2,
+
+            "--dialog-spacing": theme.spacing(3),
+            [theme.breakpoints.down("sm")]: {
+              "--dialog-spacing": theme.spacing(2),
+            },
+            padding: "0 var(--dialog-spacing)",
+          },
+
           paperWidthXs: { maxWidth: 360 },
+          paperFullScreen: {
+            borderBottomLeftRadius: 0,
+            borderBottomRightRadius: 0,
+            marginTop: theme.spacing(1),
+            maxHeight: `calc(100% - ${theme.spacing(1)})`,
+          },
+        },
+      },
+      MuiDialogTitle: {
+        styleOverrides: {
+          root: {
+            padding: `calc(var(--dialog-spacing) - (28px - 16px) / 2) 0`,
+          },
+        },
+      },
+      MuiDialogContent: {
+        styleOverrides: {
+          root: {
+            margin: "0 calc(var(--dialog-spacing) * -1)",
+            padding: theme.spacing(0, "var(--dialog-spacing)", 1),
+            "&:last-child": { paddingBottom: "var(--dialog-spacing)" },
+
+            "--dialog-contents-spacing": theme.spacing(3),
+            "& > * + *": { marginTop: "var(--dialog-contents-spacing)" },
+
+            ...theme.typography.body2,
+          },
         },
       },
       MuiDialogContentText: {
@@ -59,6 +96,19 @@ export const components = (theme: Theme): ThemeOptions => {
           color: "textPrimary",
         },
       },
+      MuiDialogActions: {
+        styleOverrides: {
+          root: {
+            justifyContent: "center",
+            "& .MuiButton-root": { minWidth: 100 },
+          },
+          spacing: {
+            padding: theme.spacing(2, 0),
+            [theme.breakpoints.down("sm")]: { padding: theme.spacing(1.5, 0) },
+          },
+        },
+      },
+
       MuiSnackbar: {
         styleOverrides: {
           root: {
