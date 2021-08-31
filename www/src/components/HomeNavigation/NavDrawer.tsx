@@ -15,7 +15,7 @@ import CloseIcon from "assets/icons/Backburger";
 import AddIcon from "@material-ui/icons/Add";
 
 import { APP_BAR_HEIGHT } from ".";
-import FiretableLogo from "assets/FiretableLogo";
+import Logo from "assets/Logo";
 
 import { useFiretableContext } from "contexts/FiretableContext";
 import useRouter from "hooks/useRouter";
@@ -94,7 +94,7 @@ export default function NavDrawer({
         </Grid>
 
         <Grid item className={classes.logo}>
-          <FiretableLogo />
+          <Logo />
         </Grid>
       </Grid>
 

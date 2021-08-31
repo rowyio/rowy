@@ -10,7 +10,7 @@ import {
   Button,
 } from "@material-ui/core";
 
-import FiretableLogo from "assets/FiretableLogo";
+import Logo from "assets/Logo";
 import routes from "constants/routes";
 
 const useStyles = makeStyles((theme) =>
@@ -55,7 +55,7 @@ const AppBar: React.FunctionComponent<IAppBarProps> = () => {
     >
       <Toolbar>
         <Grid item xs>
-          <FiretableLogo />
+          <Logo />
         </Grid>
 
         <Grid item>

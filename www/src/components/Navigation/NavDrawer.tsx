@@ -16,7 +16,7 @@ import SettingsIcon from "@material-ui/icons/SettingsOutlined";
 import CloseIcon from "assets/icons/Backburger";
 
 import { APP_BAR_HEIGHT } from ".";
-import FiretableLogo from "assets/FiretableLogo";
+import Logo from "assets/Logo";
 import NavDrawerItem from "./NavDrawerItem";
 
 import { useFiretableContext } from "contexts/FiretableContext";
@@ -56,7 +56,7 @@ export default function NavDrawer({
           <CloseIcon />
         </IconButton>
 
-        <FiretableLogo />
+        <Logo />
       </Stack>
 
       <nav>
