@@ -1,11 +1,9 @@
 import { createTheme, ThemeOptions } from "@material-ui/core/styles";
 import _merge from "lodash/merge";
 
-import { typography, MONO_FONT } from "theme/typography";
+import { typography } from "theme/typography";
 import { colorsLight, colorsDark } from "theme/colors";
 import { components } from "theme/components";
-
-export { MONO_FONT };
 
 export const customizableLightTheme = (customization: ThemeOptions) => {
   const customizedLightThemeBase = createTheme(

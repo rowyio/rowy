@@ -21,14 +21,15 @@ const useStyles = makeStyles((theme) =>
   createStyles({
     paper: {
       [theme.breakpoints.up("sm")]: {
-        maxWidth: 500,
-        height: 620,
+        maxWidth: 440,
+        height: 610,
       },
     },
 
     tabs: {
       marginLeft: "calc(var(--dialog-spacing) * -1)",
       marginRight: "calc(var(--dialog-spacing) * -1)",
+      marginTop: theme.spacing(1),
     },
     tab: { minWidth: 0 },
     divider: {
@@ -37,12 +38,14 @@ const useStyles = makeStyles((theme) =>
 
     tabPanel: {
       marginTop: "var(--dialog-contents-spacing)",
+      marginBottom: "calc(var(--dialog-spacing) * -1)",
       padding: 0,
 
       flexGrow: 1,
       display: "flex",
       flexDirection: "column",
-      height: "calc(100% - var(--dialog-contents-spacing))",
+      height:
+        "calc(100% - var(--dialog-contents-spacing) + var(--dialog-spacing))",
 
       "& > * + *": { marginTop: "var(--dialog-contents-spacing)" },
       "&[hidden]": { display: "none" },
@@ -101,8 +104,8 @@ export default function Export() {
                 <DialogContentText>
                   {(tableState?.filters && tableState?.filters.length !== 0) ||
                   (tableState?.orderBy && tableState?.orderBy.length !== 0)
-                    ? "The filters and sorting applied to the table will be used in the export"
-                    : "No filters or sorting will be applied on the exported data"}
+                    ? "The filters and sorting applied to the table will be used in the export."
+                    : "No filters or sorting will be applied on the exported data."}
                 </DialogContentText>
 
                 <TabList

@@ -3,7 +3,6 @@ import { TableSettingsDialogModes } from "./index";
 
 import { Link, Typography } from "@material-ui/core";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
-import { MONO_FONT } from "Themes";
 import { projectId } from "../../firebase";
 import WIKI_LINKS from "constants/wikiLinks";
 
@@ -188,7 +187,10 @@ export const tableSettings = (
                 variant="body2"
                 color="textSecondary"
                 component="span"
-                style={{ fontFamily: MONO_FONT, display: "block" }}
+                sx={{
+                  fontFamily: (theme) => theme.typography.fontFamilyMono,
+                  display: "block",
+                }}
               >
                 {option.value}
               </Typography>

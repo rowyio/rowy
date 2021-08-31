@@ -8,10 +8,12 @@ import { useSnackLogContext } from "contexts/SnackLogContext";
 import { isCollectionGroup } from "utils/fns";
 
 import _throttle from "lodash/throttle";
+import { format } from "date-fns";
 import moment from "moment";
 
 import {
   Chip,
+  Stack,
   CircularProgress,
   Typography,
   Box,
@@ -30,12 +32,12 @@ import CollapseIcon from "@material-ui/icons/ExpandMore";
 import OpenIcon from "@material-ui/icons/OpenInNew";
 import CloseIcon from "@material-ui/icons/Close";
 import TableHeaderButton from "./TableHeaderButton";
-import { MONO_FONT } from "Themes";
 import Ansi from "ansi-to-react";
 import EmptyState from "components/EmptyState";
 
 import PropTypes from "prop-types";
 import routes from "constants/routes";
+import { DATE_TIME_FORMAT } from "constants/dates";
 
 function a11yProps(index) {
   return {
@@ -65,19 +67,8 @@ const useStyles = makeStyles((theme) =>
     },
 
     root: {
-      flexGrow: 1,
-      backgroundColor: theme.palette.background.paper,
       display: "flex",
-      height: `calc(100vh - 200px)`,
-    },
-    tabs: {
-      borderRight: `1px solid ${theme.palette.divider}`,
-    },
-    tab: {
-      display: "flex",
-      flexWrap: "nowrap",
-      alignItems: "center",
-      justifyItems: "center",
+      height: "100%",
     },
 
     logPanel: {
@@ -111,15 +102,13 @@ const useStyles = makeStyles((theme) =>
       color: "red",
     },
     logFont: {
-      fontSize: 16,
-      fontFamily: MONO_FONT,
-      letterSpacing: 0.5,
-      lineHeight: 1.5,
+      ...theme.typography.body2,
+      fontFamily: theme.typography.fontFamilyMono,
       // TODO:
       color: "#CCC",
 
       "& code": {
-        fontFamily: MONO_FONT,
+        fontFamily: theme.typography.fontFamilyMono,
       },
     },
 
@@ -495,6 +484,7 @@ export default function TableLogs() {
           }}
           maxWidth="xl"
           fullWidth
+          fullHeight
           title={
             <>
               Build Logs <Chip label="ALPHA" size="small" />
@@ -537,26 +527,35 @@ export default function TableLogs() {
                     variant="scrollable"
                     value={tabIndex}
                     onChange={handleTabChange}
-                    className={classes.tabs}
                   >
                     {collectionState.documents?.map((logEntry, index) => (
                       <Tab
                         key={index}
                         label={
-                          <Box className={classes.tab}>
-                            <Box>
-                              {moment(logEntry.startTimeStamp).format(
-                                "MMMM D YYYY h:mm:ssa"
+                          <Stack
+                            direction="row"
+                            alignItems="center"
+                            spacing={2}
+                            style={{ textAlign: "left" }}
+                          >
+                            {logEntry.status === "BUILDING" && (
+                              <CircularProgress size={24} />
+                            )}
+                            {logEntry.status === "SUCCESS" && <SuccessIcon />}
+                            {logEntry.status === "FAIL" && <FailIcon />}
+
+                            <div
+                              style={{
+                                fontFeatureSettings: "'tnum'",
+                                width: 100,
+                              }}
+                            >
+                              {format(
+                                logEntry.startTimeStamp,
+                                DATE_TIME_FORMAT
                               )}
-                            </Box>
-                            <Box>
-                              {logEntry.status === "BUILDING" && (
-                                <CircularProgress size={24} />
-                              )}
-                              {logEntry.status === "SUCCESS" && <SuccessIcon />}
-                              {logEntry.status === "FAIL" && <FailIcon />}
-                            </Box>
-                          </Box>
+                            </div>
+                          </Stack>
                         }
                         {...a11yProps(index)}
                       />

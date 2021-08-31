@@ -8,7 +8,7 @@ import _sortBy from "lodash/sortBy";
 import { isString } from "lodash";
 import MultiSelect from "@antlerengineering/multiselect";
 
-import { Button, Grid } from "@material-ui/core";
+import { Button, DialogActions } from "@material-ui/core";
 
 import { SnackContext } from "contexts/SnackContext";
 import { useFiretableContext } from "contexts/FiretableContext";
@@ -196,28 +196,18 @@ export default function Export({ query, closeModal }) {
 
       <div style={{ flexGrow: 1, marginTop: 0 }} />
 
-      <Grid
-        container
-        spacing={2}
-        justifyContent="center"
-        alignItems="center"
-        style={{ flexShrink: 0 }}
-      >
-        <Grid item>
-          <Button onClick={handleClose}>Cancel</Button>
-        </Grid>
+      <DialogActions>
+        <Button onClick={handleClose}>Cancel</Button>
 
-        <Grid item>
-          <Button
-            onClick={handleExport}
-            disabled={columns.length === 0}
-            color="primary"
-            variant="contained"
-          >
-            Export
-          </Button>
-        </Grid>
-      </Grid>
+        <Button
+          onClick={handleExport}
+          disabled={columns.length === 0}
+          color="primary"
+          variant="contained"
+        >
+          Export
+        </Button>
+      </DialogActions>
     </>
   );
 }

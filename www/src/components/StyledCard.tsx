@@ -158,10 +158,13 @@ export default function StyledCard({
         <Grid item>
           <Divider className={classes.divider} />
           <CardActions className={classes.cardActions}>
-            {primaryButton && <Button color="primary" {...primaryButton} />}
+            {primaryButton && (
+              <Button color="primary" variant="text" {...primaryButton} />
+            )}
             {primaryLink && (
               <Button
                 color="primary"
+                variant="text"
                 component={Link as any}
                 to={primaryLink.to}
                 children={primaryLink.children || primaryLink.label}

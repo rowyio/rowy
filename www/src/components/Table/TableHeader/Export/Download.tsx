@@ -9,7 +9,7 @@ import MultiSelect from "@antlerengineering/multiselect";
 import JSZip from "jszip";
 
 import {
-  Grid,
+  DialogActions,
   Button,
   TextField,
   FormControlLabel,
@@ -134,7 +134,7 @@ export default function Export({ query, closeModal }) {
         label="Columns to Export"
         labelPlural="columns"
         TextFieldProps={{
-          helperText: "only Files and images columns are downloadable",
+          helperText: "Only File and Image columns are downloadable",
         }}
         multiple
         selectAll
@@ -188,30 +188,18 @@ export default function Export({ query, closeModal }) {
 
       <div style={{ flexGrow: 1, marginTop: 0 }} />
 
-      <Grid
-        container
-        spacing={2}
-        justifyContent="center"
-        alignItems="center"
-        style={{ flexShrink: 0 }}
-      >
-        <Grid item>
-          <Button onClick={handleClose} color="primary">
-            Cancel
-          </Button>
-        </Grid>
+      <DialogActions>
+        <Button onClick={handleClose}>Cancel</Button>
 
-        <Grid>
-          <Button
-            onClick={handleDownload}
-            disabled={columns.length === 0}
-            color="primary"
-            variant="contained"
-          >
-            Download
-          </Button>
-        </Grid>
-      </Grid>
+        <Button
+          onClick={handleDownload}
+          disabled={columns.length === 0}
+          color="primary"
+          variant="contained"
+        >
+          Download
+        </Button>
+      </DialogActions>
     </>
   );
 }

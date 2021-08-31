@@ -14,7 +14,6 @@ import {
   TextField,
   FormHelperText,
 } from "@material-ui/core";
-import { alpha } from "@material-ui/core/styles";
 
 import Tab from "@material-ui/core/Tab";
 import TabContext from "@material-ui/lab/TabContext";
@@ -34,25 +33,26 @@ import ImportCsvWizard, {
 const useStyles = makeStyles((theme) =>
   createStyles({
     tabPanel: {
-      padding: theme.spacing(3),
+      padding: theme.spacing(2, 3),
       width: 400,
       height: 200,
     },
     continueButton: {
-      margin: theme.spacing(-2, "auto", 3),
+      margin: theme.spacing(-4, "auto", 2),
       display: "flex",
+      minWidth: 100,
     },
 
     dropzone: {
       height: 137,
       borderRadius: theme.shape.borderRadius,
-      border: `dashed 3px ${alpha(theme.palette.text.primary, 0.42)}`,
-      backgroundColor: alpha(theme.palette.text.primary, 0.09),
-      color: theme.palette.text.secondary,
+      border: `dashed 2px ${theme.palette.divider}`,
+      backgroundColor: theme.palette.action.input,
       cursor: "pointer",
 
+      "& svg": { opacity: theme.palette.action.activeOpacity },
+
       "&:focus": {
-        backgroundColor: alpha(theme.palette.primary.main, 0.09),
         borderColor: theme.palette.primary.main,
         color: theme.palette.primary.main,
         outline: "none",
@@ -60,7 +60,6 @@ const useStyles = makeStyles((theme) =>
     },
     error: {
       "$dropzone&": {
-        backgroundColor: alpha(theme.palette.error.main, 0.09),
         borderColor: theme.palette.error.main,
         color: theme.palette.error.main,
       },
@@ -217,18 +216,16 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
             >
               <input {...getInputProps()} />
               {isDragActive ? (
-                <Typography variant="overline">Drop CSV file here…</Typography>
+                <Typography variant="button" color="primary">
+                  Drop CSV file here…
+                </Typography>
               ) : (
                 <>
                   <Grid item>
-                    {validCsv ? (
-                      <CheckIcon color="inherit" />
-                    ) : (
-                      <FileUploadIcon color="inherit" />
-                    )}
+                    {validCsv ? <CheckIcon /> : <FileUploadIcon />}
                   </Grid>
                   <Grid item>
-                    <Typography variant="overline" color="inherit">
+                    <Typography variant="button" color="inherit">
                       {validCsv
                         ? "Valid CSV"
                         : "Click to upload or drop CSV file here"}
@@ -288,6 +285,7 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
 
         <Button
           variant="contained"
+          color="primary"
           disabled={!validCsv}
           className={classes.continueButton}
           onClick={() => setOpenWizard(true)}

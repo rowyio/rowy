@@ -1,10 +1,9 @@
 import { Link } from "react-router-dom";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
 import {
   Drawer,
   DrawerProps,
-  Grid,
+  Stack,
   IconButton,
   List,
   MenuItem,
@@ -12,7 +11,8 @@ import {
   ListItemText,
   Divider,
 } from "@material-ui/core";
-import HomeIcon from "@material-ui/icons/Home";
+import HomeIcon from "@material-ui/icons/HomeOutlined";
+import SettingsIcon from "@material-ui/icons/SettingsOutlined";
 import CloseIcon from "assets/icons/Backburger";
 
 import { APP_BAR_HEIGHT } from ".";
@@ -22,30 +22,7 @@ import NavDrawerItem from "./NavDrawerItem";
 import { useFiretableContext } from "contexts/FiretableContext";
 import { routes } from "constants/routes";
 
-export const NAV_DRAWER_WIDTH = 300;
-
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    paper: {
-      width: NAV_DRAWER_WIDTH,
-      overflowX: "hidden",
-    },
-
-    logoRow: {
-      height: APP_BAR_HEIGHT,
-      marginTop: 0,
-      marginBottom: theme.spacing(1),
-
-      padding: theme.spacing(0, 2),
-    },
-    logo: { marginLeft: theme.spacing(1.5) },
-
-    divider: {
-      marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(1),
-    },
-  })
-);
+export const NAV_DRAWER_WIDTH = 256;
 
 export interface INavDrawerProps extends DrawerProps {
   currentSection?: string;
@@ -57,37 +34,33 @@ export default function NavDrawer({
   currentTable,
   ...props
 }: INavDrawerProps) {
-  const classes = useStyles();
-
   const { sections } = useFiretableContext();
 
   return (
-    <Drawer open {...props} classes={{ paper: classes.paper }}>
-      <Grid
-        container
-        spacing={1}
-        wrap="nowrap"
+    <Drawer
+      open
+      {...props}
+      sx={{ "& .MuiDrawer-paper": { minWidth: NAV_DRAWER_WIDTH } }}
+    >
+      <Stack
+        direction="row"
+        spacing={1.5}
         alignItems="center"
-        className={classes.logoRow}
+        sx={{ height: APP_BAR_HEIGHT, pl: 0.5 }}
       >
-        <Grid item>
-          <IconButton
-            aria-label="Close navigation drawer"
-            onClick={props.onClose as any}
-            edge="start"
-            size="large"
-          >
-            <CloseIcon />
-          </IconButton>
-        </Grid>
+        <IconButton
+          aria-label="Close navigation drawer"
+          onClick={props.onClose as any}
+          size="large"
+        >
+          <CloseIcon />
+        </IconButton>
 
-        <Grid item className={classes.logo}>
-          <FiretableLogo />
-        </Grid>
-      </Grid>
+        <FiretableLogo />
+      </Stack>
 
       <nav>
-        <List>
+        <List disablePadding>
           <li>
             <MenuItem component={Link} to={routes.home}>
               <ListItemIcon>
@@ -96,8 +69,16 @@ export default function NavDrawer({
               <ListItemText primary="Home" />
             </MenuItem>
           </li>
+          <li>
+            <MenuItem component={Link} to={routes.settings}>
+              <ListItemIcon>
+                <SettingsIcon />
+              </ListItemIcon>
+              <ListItemText primary="Settings" />
+            </MenuItem>
+          </li>
 
-          <Divider variant="middle" className={classes.divider} />
+          <Divider variant="middle" sx={{ mt: 1, mb: 1 }} />
 
           {sections &&
             Object.entries(sections).map(([section, tables]) => (

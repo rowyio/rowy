@@ -20,7 +20,7 @@ declare module "@material-ui/core/styles/createPalette" {
   }
 }
 
-export const PRIMARY = "#420AFD";
+export const PRIMARY = "#4200FF";
 // export const PRIMARY = "#ED4747";
 // export const PRIMARY = "#FA0";
 // export const PRIMARY = "#0F0";

@@ -30,12 +30,13 @@ export default function Confirmation({
   handleConfirm,
   open,
   handleClose,
+  maxWidth = "xs",
 }: any) {
   const classes = useStyles();
   const [dryText, setDryText] = useState("");
   return (
     <>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={open} onClose={handleClose} maxWidth={maxWidth}>
         <DialogTitle>{title ?? "Are you sure?"}</DialogTitle>
 
         <DialogContent>
