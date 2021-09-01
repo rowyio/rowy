@@ -24,9 +24,7 @@ export default function Settings({ handleChange, config }: ISettingsProps) {
     { value: string; label: string; type: FieldType }[]
   >([]);
   const getColumns = async (table) => {
-    const tableConfigDoc = await db
-      .doc(`_rowy_/settings/schema/${table}`)
-      .get();
+    const tableConfigDoc = await db.doc(`_rowy_/settings/table/${table}`).get();
     const tableConfig = tableConfigDoc.data();
     if (tableConfig && tableConfig.columns)
       setColumns(

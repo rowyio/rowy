@@ -80,7 +80,7 @@ const useSettings = () => {
       ),
       //update the rowy collection doc with empty columns
       db
-        .collection("_rowy_/settings/schema")
+        .collection("_rowy_/settings/table")
         .doc(data.collection)
         .set({ ...data }, { merge: true }),
     ]);
@@ -91,7 +91,7 @@ const useSettings = () => {
     db.doc("_rowy_/settings").update({
       tables: tables.filter((table) => table.collection !== collection),
     });
-    db.collection("_rowy_/settings/schema").doc(collection).delete();
+    db.collection("_rowy_/settings/table").doc(collection).delete();
   };
   const settingsActions = { createTable, updateTable, deleteTable };
   return [settingsState, settingsActions];

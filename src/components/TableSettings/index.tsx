@@ -122,7 +122,7 @@ export default function TableSettingsDialog({
   };
 
   const handleResetStructure = async () => {
-    const schemaDocRef = db.doc(`_rowy_/settings/schema/${data!.collection}`);
+    const schemaDocRef = db.doc(`_rowy_/settings/table/${data!.collection}`);
     await schemaDocRef.update({ columns: {} });
     handleClose();
   };
