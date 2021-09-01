@@ -28,6 +28,7 @@ import {
   Tooltip,
   FormControlLabel,
   Checkbox,
+  RadioGroup,
   Radio,
   Switch,
   TextField,
@@ -192,6 +193,7 @@ export default function TestView() {
             <Button
               // startIcon={<SparkIcon />}
               // endIcon={<SparkIcon />}
+              color="primary"
               variant="text"
               size="small"
             >
@@ -200,6 +202,7 @@ export default function TestView() {
             <Button
               // startIcon={<SparkIcon />}
               // endIcon={<SparkIcon />}
+              color="primary"
               variant="text"
               size="medium"
             >
@@ -208,6 +211,7 @@ export default function TestView() {
             <Button
               // startIcon={<SparkIcon />}
               // endIcon={<SparkIcon />}
+              color="primary"
               variant="text"
               size="large"
             >
@@ -275,6 +279,7 @@ export default function TestView() {
             <Button
               // startIcon={<SparkIcon />}
               // endIcon={<SparkIcon />}
+              color="primary"
               variant="outlined"
               size="small"
             >
@@ -283,6 +288,7 @@ export default function TestView() {
             <Button
               // startIcon={<SparkIcon />}
               // endIcon={<SparkIcon />}
+              color="primary"
               variant="outlined"
               size="medium"
             >
@@ -291,6 +297,7 @@ export default function TestView() {
             <Button
               // startIcon={<SparkIcon />}
               // endIcon={<SparkIcon />}
+              color="primary"
               variant="outlined"
               size="large"
             >
@@ -357,6 +364,7 @@ export default function TestView() {
             <Button
               // startIcon={<SparkIcon />}
               // endIcon={<SparkIcon />}
+              color="primary"
               variant="contained"
               size="small"
             >
@@ -365,6 +373,7 @@ export default function TestView() {
             <Button
               // startIcon={<SparkIcon />}
               // endIcon={<SparkIcon />}
+              color="primary"
               variant="contained"
               size="medium"
             >
@@ -373,6 +382,7 @@ export default function TestView() {
             <Button
               // startIcon={<SparkIcon />}
               // endIcon={<SparkIcon />}
+              color="primary"
               variant="contained"
               size="large"
             >
@@ -747,7 +757,14 @@ export default function TestView() {
 
           <Stack>
             <FormControlLabel control={<Checkbox />} label="Label" />
-            <FormControlLabel control={<Radio />} label="Label" />
+            <FormControlLabel
+              control={<Checkbox indeterminate />}
+              label="Label indeterminate"
+            />
+            <RadioGroup>
+              <FormControlLabel control={<Radio />} value="1" label="Label 1" />
+              <FormControlLabel control={<Radio />} value="2" label="Label 2" />
+            </RadioGroup>
           </Stack>
 
           <div>

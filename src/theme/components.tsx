@@ -1,5 +1,9 @@
 import { Theme, ThemeOptions } from "@material-ui/core/styles";
 
+import RadioIcon from "theme/RadioIcon";
+import CheckboxIcon from "theme/CheckboxIcon";
+import CheckboxIndeterminateIcon from "theme/CheckboxIndeterminateIcon";
+
 import { colord, extend } from "colord";
 import mixPlugin from "colord/plugins/mix";
 extend([mixPlugin]);
@@ -503,7 +507,7 @@ export const components = (theme: Theme): ThemeOptions => {
 
           track: {
             borderRadius: 32 / 2,
-            backgroundColor: "transparent",
+            backgroundColor: theme.palette.action.input,
             boxShadow: `0 0 0 1px ${theme.palette.text.disabled} inset`,
             ".Mui-disabled + &": {
               backgroundColor: theme.palette.text.disabled,
@@ -585,6 +589,21 @@ export const components = (theme: Theme): ThemeOptions => {
           },
         } as any,
       },
+
+      MuiRadio: {
+        defaultProps: {
+          icon: <RadioIcon />,
+          checkedIcon: <RadioIcon />,
+        },
+      },
+      MuiCheckbox: {
+        defaultProps: {
+          icon: <CheckboxIcon />,
+          checkedIcon: <CheckboxIcon />,
+          indeterminateIcon: <CheckboxIndeterminateIcon />,
+        },
+      },
+
       MuiSlider: {
         styleOverrides: {
           thumb: {
