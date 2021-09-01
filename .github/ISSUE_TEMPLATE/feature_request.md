@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest an idea for Firetable
+about: Suggest an idea for Rowy
 title: ''
 labels: ''
 assignees: ''

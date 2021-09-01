@@ -2,26 +2,17 @@
 
 # dependencies
 /node_modules
-www/node_modules
-
-
-Firetable/node_modules
-cloud_functions/functions/node_modules
 /.pnp
 .pnp.js
 
-# testing
-/coverage
-
 # production
-www/build
+/build
 cloud_functions/functions/lib
 
-
-# cloud function config
-cloud_functions/functions/src/functionConfig.ts
-
-cloud_functions/functions/firebase-credentials.json
+# firebase
+*.firebaserc
+*-firebase.json
+.firebase/
 
 # misc
 .DS_Store
@@ -34,16 +25,5 @@ yarn-debug.log*
 yarn-error.log*
 firebase-debug.log*
 
-*.firebaserc
-
-
-# Accidental package installs to root directories
-/yarn.lock
-/package.json
-package-lock.json
-node_modules/
-
-cloud_functions/functions/src/functionConfig.json
-*.iml
-.idea
-*-firebase.json
+.eslintcache
+.npm
