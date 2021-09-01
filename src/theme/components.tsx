@@ -374,7 +374,13 @@ export const components = (theme: Theme): ThemeOptions => {
           },
 
           contained: {
-            boxShadow: `${theme.shadows[2]}, 0 -1px 0 0 rgba(0, 0, 0, 0.12) inset`,
+            boxShadow: `0 -1px 0 0 rgba(0, 0, 0, 0.12) inset, ${theme.shadows[2]}`,
+            "&:hover": {
+              boxShadow: `0 -1px 0 0 rgba(0, 0, 0, 0.12) inset, ${theme.shadows[4]}`,
+            },
+            "&:active": {
+              boxShadow: `0 -1px 0 0 rgba(0, 0, 0, 0.12) inset, ${theme.shadows[8]}`,
+            },
           },
           containedPrimary: {
             "&:hover": { backgroundColor: buttonPrimaryHover },
@@ -401,20 +407,21 @@ export const components = (theme: Theme): ThemeOptions => {
       MuiFab: {
         styleOverrides: {
           root: {
-            "&:not(.MuiFab-primary):not(.MuiFab-secondary):not(.Mui-disabled)": {
-              backgroundColor: fabBackgroundColor,
-              color: theme.palette.text.primary,
+            "&:not(.MuiFab-primary):not(.MuiFab-secondary):not(.Mui-disabled)":
+              {
+                backgroundColor: fabBackgroundColor,
+                color: theme.palette.text.primary,
 
-              "&:hover": {
-                backgroundColor: colord(fabBackgroundColor)
-                  .mix(
-                    theme.palette.action.hover,
-                    theme.palette.action.hoverOpacity
-                  )
-                  .alpha(1)
-                  .toHslString(),
+                "&:hover": {
+                  backgroundColor: colord(fabBackgroundColor)
+                    .mix(
+                      theme.palette.action.hover,
+                      theme.palette.action.hoverOpacity
+                    )
+                    .alpha(1)
+                    .toHslString(),
+                },
               },
-            },
 
             "&.Mui-disabled": {
               backgroundColor: colord(theme.palette.background.default)
@@ -427,12 +434,18 @@ export const components = (theme: Theme): ThemeOptions => {
             },
           },
           primary: {
-            boxShadow: `${theme.shadows[6]}, 0 -1px 0 0 rgba(0, 0, 0, 0.12) inset`,
+            boxShadow: `0 -1px 0 0 rgba(0, 0, 0, 0.12) inset, ${theme.shadows[6]}`,
             "&:hover": { backgroundColor: buttonPrimaryHover },
+            "&:active": {
+              boxShadow: `0 -1px 0 0 rgba(0, 0, 0, 0.12) inset, ${theme.shadows[12]}`,
+            },
           },
           secondary: {
-            boxShadow: `${theme.shadows[6]}, 0 -1px 0 0 rgba(0, 0, 0, 0.12) inset`,
+            boxShadow: `0 -1px 0 0 rgba(0, 0, 0, 0.12) inset, ${theme.shadows[6]}`,
             "&:hover": { backgroundColor: buttonSecondaryHover },
+            "&:active": {
+              boxShadow: `0 -1px 0 0 rgba(0, 0, 0, 0.12) inset, ${theme.shadows[12]}`,
+            },
           },
           sizeSmall: { width: 36, height: 36 },
         },
@@ -522,31 +535,37 @@ export const components = (theme: Theme): ThemeOptions => {
               { duration: theme.transitions.duration.shortest }
             ),
 
-            ".MuiSwitch-root:hover .MuiSwitch-switchBase:not(.Mui-disabled) &": {
-              transform: `scale(${1 + 2 / 22})`,
-            },
-            ".MuiSwitch-root.MuiSwitch-sizeSmall:hover .MuiSwitch-switchBase:not(.Mui-disabled) &": {
-              transform: `scale(${1 + 2 / 12})`,
-            },
+            ".MuiSwitch-root:hover .MuiSwitch-switchBase:not(.Mui-disabled) &":
+              {
+                transform: `scale(${1 + 2 / 22})`,
+              },
+            ".MuiSwitch-root.MuiSwitch-sizeSmall:hover .MuiSwitch-switchBase:not(.Mui-disabled) &":
+              {
+                transform: `scale(${1 + 2 / 12})`,
+              },
 
-            ".MuiSwitch-root:active .MuiSwitch-switchBase:not(.Mui-disabled) &": {
-              width: 22 * 1.333,
-            },
-            ".MuiSwitch-root.MuiSwitch-sizeSmall:active .MuiSwitch-switchBase:not(.Mui-disabled) &": {
-              width: 12 * 1.333,
-            },
+            ".MuiSwitch-root:active .MuiSwitch-switchBase:not(.Mui-disabled) &":
+              {
+                width: 22 * 1.333,
+              },
+            ".MuiSwitch-root.MuiSwitch-sizeSmall:active .MuiSwitch-switchBase:not(.Mui-disabled) &":
+              {
+                width: 12 * 1.333,
+              },
             "& + .MuiTouchRipple-root": {
               borderRadius: 22 / 2,
               zIndex: -1,
             },
 
-            ".MuiSwitch-root:active .MuiSwitch-switchBase.Mui-checked:not(.Mui-disabled) &": {
-              transform: `translateX(-${0.333 * 22}px) scale(${1 + 2 / 22})`,
-              "& + .MuiTouchRipple-root": { left: -4 },
-            },
-            ".MuiSwitch-root.MuiSwitch-sizeSmall:active .MuiSwitch-switchBase.Mui-checked:not(.Mui-disabled) &": {
-              transform: `translateX(-${0.333 * 12}px) scale(${1 + 2 / 12})`,
-            },
+            ".MuiSwitch-root:active .MuiSwitch-switchBase.Mui-checked:not(.Mui-disabled) &":
+              {
+                transform: `translateX(-${0.333 * 22}px) scale(${1 + 2 / 22})`,
+                "& + .MuiTouchRipple-root": { left: -4 },
+              },
+            ".MuiSwitch-root.MuiSwitch-sizeSmall:active .MuiSwitch-switchBase.Mui-checked:not(.Mui-disabled) &":
+              {
+                transform: `translateX(-${0.333 * 12}px) scale(${1 + 2 / 12})`,
+              },
 
             ".MuiSwitch-switchBase.Mui-disabled &": {
               opacity: theme.palette.action.disabledOpacity,
