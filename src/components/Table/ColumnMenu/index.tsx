@@ -33,285 +33,285 @@ import { PopoverProps } from "@material-ui/core";
 const INITIAL_MODAL = { type: "", data: {} };
 
 enum ModalStates {
-	nameChange = "NAME_CHANGE",
-	typeChange = "TYPE_CHANGE",
-	new = "NEW_COLUMN",
-	settings = "COLUMN_SETTINGS",
+  nameChange = "NAME_CHANGE",
+  typeChange = "TYPE_CHANGE",
+  new = "NEW_COLUMN",
+  settings = "COLUMN_SETTINGS",
 }
 
 type SelectedColumnHeader = {
-	column: Column<any> & { [key: string]: any };
-	anchorEl: PopoverProps["anchorEl"];
+  column: Column<any> & { [key: string]: any };
+  anchorEl: PopoverProps["anchorEl"];
 };
 export type ColumnMenuRef = {
-	selectedColumnHeader: SelectedColumnHeader | null;
-	setSelectedColumnHeader: React.Dispatch<
-		React.SetStateAction<SelectedColumnHeader | null>
-	>;
+  selectedColumnHeader: SelectedColumnHeader | null;
+  setSelectedColumnHeader: React.Dispatch<
+    React.SetStateAction<SelectedColumnHeader | null>
+  >;
 };
 
 export interface IMenuModalProps {
-	name: string;
-	fieldName: string;
-	type: FieldType;
+  name: string;
+  fieldName: string;
+  type: FieldType;
 
-	open: boolean;
-	config: Record<string, any>;
+  open: boolean;
+  config: Record<string, any>;
 
-	handleClose: () => void;
-	handleSave: (fieldName: string, config: Record<string, any>) => void;
+  handleClose: () => void;
+  handleSave: (fieldName: string, config: Record<string, any>) => void;
 }
 
 export default function ColumnMenu() {
-	const [modal, setModal] = useState(INITIAL_MODAL);
-	const { tableState, tableActions, columnMenuRef } = useRowyContext();
+  const [modal, setModal] = useState(INITIAL_MODAL);
+  const { tableState, tableActions, columnMenuRef } = useRowyContext();
 
-	const [selectedColumnHeader, setSelectedColumnHeader] = useState<any>(null);
-	if (columnMenuRef)
-		columnMenuRef.current = {
-			selectedColumnHeader,
-			setSelectedColumnHeader,
-		} as any;
+  const [selectedColumnHeader, setSelectedColumnHeader] = useState<any>(null);
+  if (columnMenuRef)
+    columnMenuRef.current = {
+      selectedColumnHeader,
+      setSelectedColumnHeader,
+    } as any;
 
-	const { column, anchorEl } = (selectedColumnHeader ?? {}) as any;
+  const { column, anchorEl } = (selectedColumnHeader ?? {}) as any;
 
-	useEffect(() => {
-		if (column && column.type === FieldType.last) {
-			setModal({
-				type: ModalStates.new,
-				data: {
-					initializeColumn: { index: column.index ? column.index + 1 : 0 },
-				},
-			});
-		}
-	}, [column]);
-	if (!tableState || !tableActions) return null;
-	const { orderBy } = tableState;
+  useEffect(() => {
+    if (column && column.type === FieldType.last) {
+      setModal({
+        type: ModalStates.new,
+        data: {
+          initializeColumn: { index: column.index ? column.index + 1 : 0 },
+        },
+      });
+    }
+  }, [column]);
+  if (!tableState || !tableActions) return null;
+  const { orderBy } = tableState;
 
-	const actions = tableActions!.column;
+  const actions = tableActions!.column;
 
-	const handleClose = () => {
-		if (!setSelectedColumnHeader) return;
-		setSelectedColumnHeader({
-			column: column!,
-			anchorEl: null,
-		});
-		setTimeout(() => setSelectedColumnHeader(null), 300);
-	};
+  const handleClose = () => {
+    if (!setSelectedColumnHeader) return;
+    setSelectedColumnHeader({
+      column: column!,
+      anchorEl: null,
+    });
+    setTimeout(() => setSelectedColumnHeader(null), 300);
+  };
 
-	const isConfigurable = Boolean(
-		getFieldProp("settings", column?.type) ||
-			getFieldProp("initializable", column?.type)
-	);
+  const isConfigurable = Boolean(
+    getFieldProp("settings", column?.type) ||
+      getFieldProp("initializable", column?.type)
+  );
 
-	if (!column) return null;
+  if (!column) return null;
 
-	const isSorted = orderBy?.[0]?.key === column.key;
-	const isAsc = isSorted && orderBy?.[0]?.direction === "asc";
+  const isSorted = orderBy?.[0]?.key === column.key;
+  const isAsc = isSorted && orderBy?.[0]?.direction === "asc";
 
-	const clearModal = () => {
-		setModal(INITIAL_MODAL);
-		setTimeout(() => handleClose(), 300);
-	};
+  const clearModal = () => {
+    setModal(INITIAL_MODAL);
+    setTimeout(() => handleClose(), 300);
+  };
 
-	const handleModalSave = (key: string, update: Record<string, any>) => {
-		actions.update(key, update);
-	};
-	const openSettings = (column) => {
-		setSelectedColumnHeader({
-			column,
-		});
-		setModal({ type: ModalStates.settings, data: { column } });
-	};
-	const menuItems = [
-		{
-			type: "subheader",
-			label: column.name,
-		},
-		{
-			label: "Lock",
-			activeLabel: "Unlock",
-			icon: <LockOpenIcon />,
-			activeIcon: <LockIcon />,
-			onClick: () => {
-				actions.update(column.key, { editable: !column.editable });
-				handleClose();
-			},
-			active: !column.editable,
-		},
-		{
-			label: "Freeze",
-			activeLabel: "Unfreeze",
-			icon: <FreezeIcon />,
-			activeIcon: <UnfreezeIcon />,
-			onClick: () => {
-				actions.update(column.key, { fixed: !column.fixed });
-				handleClose();
-			},
-			active: column.fixed,
-		},
-		{
-			label: "Enable resize",
-			activeLabel: "Disable resize",
-			icon: <CellResizeIcon />,
-			onClick: () => {
-				actions.update(column.key, { resizable: !column.resizable });
-				handleClose();
-			},
-			active: column.resizable,
-		},
-		{
-			label: "Sort: descending",
-			activeLabel: "Sorted: descending",
-			icon: <ArrowDownwardIcon />,
-			onClick: () => {
-				tableActions.table.orderBy(
-					isSorted && !isAsc ? [] : [{ key: column.key, direction: "desc" }]
-				);
-				handleClose();
-			},
-			active: isSorted && !isAsc,
-			disabled: column.type === FieldType.id,
-		},
-		{
-			label: "Sort: ascending",
-			activeLabel: "Sorted: ascending",
-			icon: <ArrowUpwardIcon />,
-			onClick: () => {
-				tableActions.table.orderBy(
-					isSorted && isAsc ? [] : [{ key: column.key, direction: "asc" }]
-				);
-				handleClose();
-			},
-			active: isSorted && isAsc,
-			disabled: column.type === FieldType.id,
-		},
-		{ type: "subheader", label: "Edit" },
-		{
-			label: "Rename…",
-			icon: <EditIcon />,
-			onClick: () => {
-				setModal({ type: ModalStates.nameChange, data: {} });
-			},
-		},
-		{
-			label: `Edit type: ${getFieldProp("name", column.type)}…`,
-			// This is based off the cell type
-			icon: getFieldProp("icon", column.type),
-			onClick: () => {
-				setModal({ type: ModalStates.typeChange, data: { column } });
-			},
-		},
-		{
-			label: `Column settings…`,
-			// This is based off the cell type
-			icon: <SettingsIcon />,
-			onClick: () => {
-				openSettings(column);
-			},
-			disabled: !isConfigurable,
-		},
-		// {
-		//   label: "Re-order",
-		//   icon: <ReorderIcon />,
-		//   onClick: () => alert("REORDER"),
-		// },
-		{
-			label: "Add new to left…",
-			icon: <ColumnPlusBeforeIcon />,
-			onClick: () =>
-				setModal({
-					type: ModalStates.new,
-					data: {
-						initializeColumn: { index: column.index ? column.index - 1 : 0 },
-					},
-				}),
-		},
-		{
-			label: "Add new to right…",
-			icon: <ColumnPlusAfterIcon />,
-			onClick: () =>
-				setModal({
-					type: ModalStates.new,
-					data: {
-						initializeColumn: { index: column.index ? column.index + 1 : 0 },
-					},
-				}),
-		},
-		{
-			label: "Hide for everyone",
-			activeLabel: "Show",
-			icon: <VisibilityOffIcon />,
-			activeIcon: <VisibilityIcon />,
-			onClick: () => {
-				actions.update(column.key, { hidden: !column.hidden });
-				handleClose();
-			},
-			active: column.hidden,
-			color: "error" as "error",
-		},
-		{
-			label: "Delete column",
-			icon: <ColumnRemoveIcon />,
-			onClick: () => {
-				actions.remove(column.key);
-				handleClose();
-			},
-			color: "error" as "error",
-		},
-	];
+  const handleModalSave = (key: string, update: Record<string, any>) => {
+    actions.update(key, update);
+  };
+  const openSettings = (column) => {
+    setSelectedColumnHeader({
+      column,
+    });
+    setModal({ type: ModalStates.settings, data: { column } });
+  };
+  const menuItems = [
+    {
+      type: "subheader",
+      label: column.name,
+    },
+    {
+      label: "Lock",
+      activeLabel: "Unlock",
+      icon: <LockOpenIcon />,
+      activeIcon: <LockIcon />,
+      onClick: () => {
+        actions.update(column.key, { editable: !column.editable });
+        handleClose();
+      },
+      active: !column.editable,
+    },
+    {
+      label: "Freeze",
+      activeLabel: "Unfreeze",
+      icon: <FreezeIcon />,
+      activeIcon: <UnfreezeIcon />,
+      onClick: () => {
+        actions.update(column.key, { fixed: !column.fixed });
+        handleClose();
+      },
+      active: column.fixed,
+    },
+    {
+      label: "Enable resize",
+      activeLabel: "Disable resize",
+      icon: <CellResizeIcon />,
+      onClick: () => {
+        actions.update(column.key, { resizable: !column.resizable });
+        handleClose();
+      },
+      active: column.resizable,
+    },
+    {
+      label: "Sort: descending",
+      activeLabel: "Sorted: descending",
+      icon: <ArrowDownwardIcon />,
+      onClick: () => {
+        tableActions.table.orderBy(
+          isSorted && !isAsc ? [] : [{ key: column.key, direction: "desc" }]
+        );
+        handleClose();
+      },
+      active: isSorted && !isAsc,
+      disabled: column.type === FieldType.id,
+    },
+    {
+      label: "Sort: ascending",
+      activeLabel: "Sorted: ascending",
+      icon: <ArrowUpwardIcon />,
+      onClick: () => {
+        tableActions.table.orderBy(
+          isSorted && isAsc ? [] : [{ key: column.key, direction: "asc" }]
+        );
+        handleClose();
+      },
+      active: isSorted && isAsc,
+      disabled: column.type === FieldType.id,
+    },
+    { type: "subheader", label: "Edit" },
+    {
+      label: "Rename…",
+      icon: <EditIcon />,
+      onClick: () => {
+        setModal({ type: ModalStates.nameChange, data: {} });
+      },
+    },
+    {
+      label: `Edit type: ${getFieldProp("name", column.type)}…`,
+      // This is based off the cell type
+      icon: getFieldProp("icon", column.type),
+      onClick: () => {
+        setModal({ type: ModalStates.typeChange, data: { column } });
+      },
+    },
+    {
+      label: `Column settings…`,
+      // This is based off the cell type
+      icon: <SettingsIcon />,
+      onClick: () => {
+        openSettings(column);
+      },
+      disabled: !isConfigurable,
+    },
+    // {
+    //   label: "Re-order",
+    //   icon: <ReorderIcon />,
+    //   onClick: () => alert("REORDER"),
+    // },
+    {
+      label: "Add new to left…",
+      icon: <ColumnPlusBeforeIcon />,
+      onClick: () =>
+        setModal({
+          type: ModalStates.new,
+          data: {
+            initializeColumn: { index: column.index ? column.index - 1 : 0 },
+          },
+        }),
+    },
+    {
+      label: "Add new to right…",
+      icon: <ColumnPlusAfterIcon />,
+      onClick: () =>
+        setModal({
+          type: ModalStates.new,
+          data: {
+            initializeColumn: { index: column.index ? column.index + 1 : 0 },
+          },
+        }),
+    },
+    {
+      label: "Hide for everyone",
+      activeLabel: "Show",
+      icon: <VisibilityOffIcon />,
+      activeIcon: <VisibilityIcon />,
+      onClick: () => {
+        actions.update(column.key, { hidden: !column.hidden });
+        handleClose();
+      },
+      active: column.hidden,
+      color: "error" as "error",
+    },
+    {
+      label: "Delete column",
+      icon: <ColumnRemoveIcon />,
+      onClick: () => {
+        actions.remove(column.key);
+        handleClose();
+      },
+      color: "error" as "error",
+    },
+  ];
 
-	const menuModalProps = {
-		name: column.name,
-		fieldName: column.key,
-		type: column.type,
+  const menuModalProps = {
+    name: column.name,
+    fieldName: column.key,
+    type: column.type,
 
-		open: modal.type === ModalStates.typeChange,
-		config: column.config,
+    open: modal.type === ModalStates.typeChange,
+    config: column.config,
 
-		handleClose: clearModal,
-		handleSave: handleModalSave,
-	};
+    handleClose: clearModal,
+    handleSave: handleModalSave,
+  };
 
-	return (
-		<>
-			{column.type !== FieldType.last && (
-				<Menu
-					id="simple-menu"
-					anchorEl={anchorEl}
-					keepMounted
-					open={Boolean(anchorEl)}
-					onClose={handleClose}
-					anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-					transformOrigin={{ vertical: "top", horizontal: "right" }}
-					sx={{ "& .MuiMenu-paper": { backgroundColor: "background.default" } }}
-					MenuListProps={{ disablePadding: true }}
-				>
-					<MenuContents menuItems={menuItems} />
-				</Menu>
-			)}
-			{column && (
-				<>
-					<NameChange
-						{...menuModalProps}
-						open={modal.type === ModalStates.nameChange}
-					/>
-					<TypeChange
-						{...menuModalProps}
-						open={modal.type === ModalStates.typeChange}
-					/>
-					<FieldSettings
-						{...menuModalProps}
-						open={modal.type === ModalStates.settings}
-					/>
-					<NewColumn
-						{...menuModalProps}
-						open={modal.type === ModalStates.new}
-						data={modal.data}
-						openSettings={openSettings}
-					/>
-				</>
-			)}
-		</>
-	);
+  return (
+    <>
+      {column.type !== FieldType.last && (
+        <Menu
+          id="simple-menu"
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          transformOrigin={{ vertical: "top", horizontal: "right" }}
+          sx={{ "& .MuiMenu-paper": { backgroundColor: "background.default" } }}
+          MenuListProps={{ disablePadding: true }}
+        >
+          <MenuContents menuItems={menuItems} />
+        </Menu>
+      )}
+      {column && (
+        <>
+          <NameChange
+            {...menuModalProps}
+            open={modal.type === ModalStates.nameChange}
+          />
+          <TypeChange
+            {...menuModalProps}
+            open={modal.type === ModalStates.typeChange}
+          />
+          <FieldSettings
+            {...menuModalProps}
+            open={modal.type === ModalStates.settings}
+          />
+          <NewColumn
+            {...menuModalProps}
+            open={modal.type === ModalStates.new}
+            data={modal.data}
+            openSettings={openSettings}
+          />
+        </>
+      )}
+    </>
+  );
 }

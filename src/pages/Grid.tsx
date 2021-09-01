@@ -10,29 +10,29 @@ import { RowyFilter } from "hooks/useRowy";
 import useRouter from "hooks/useRouter";
 
 export default function GridPage() {
-	const router = useRouter();
-	const tableCollection = decodeURIComponent(router.match.params.id);
+  const router = useRouter();
+  const tableCollection = decodeURIComponent(router.match.params.id);
 
-	let filters: RowyFilter[] = [];
-	const parsed = queryString.parse(router.location.search);
-	if (typeof parsed.filters === "string") {
-		// decoded
-		//[{"key":"cohort","operator":"==","value":"AMS1"}]
-		filters = JSON.parse(parsed.filters);
-		//TODO: json schema validator
-	}
+  let filters: RowyFilter[] = [];
+  const parsed = queryString.parse(router.location.search);
+  if (typeof parsed.filters === "string") {
+    // decoded
+    //[{"key":"cohort","operator":"==","value":"AMS1"}]
+    filters = JSON.parse(parsed.filters);
+    //TODO: json schema validator
+  }
 
-	return (
-		<Navigation tableCollection={tableCollection}>
-			<Grid
-				key={tableCollection}
-				collection={tableCollection}
-				filters={filters}
-			/>
+  return (
+    <Navigation tableCollection={tableCollection}>
+      <Grid
+        key={tableCollection}
+        collection={tableCollection}
+        filters={filters}
+      />
 
-			<Hidden smDown>
-				<SideDrawer />
-			</Hidden>
-		</Navigation>
-	);
+      <Hidden smDown>
+        <SideDrawer />
+      </Hidden>
+    </Navigation>
+  );
 }

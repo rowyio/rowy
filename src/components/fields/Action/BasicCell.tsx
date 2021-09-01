@@ -1,5 +1,5 @@
 import { IBasicCellProps } from "../types";
 
 export default function Action({ name, value }: IBasicCellProps) {
-	return <>{value ? value.status : name}</>;
+  return <>{value ? value.status : name}</>;
 }

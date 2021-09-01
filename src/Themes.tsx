@@ -6,45 +6,45 @@ import { colorsLight, colorsDark } from "theme/colors";
 import { components } from "theme/components";
 
 export const customizableLightTheme = (customization: ThemeOptions) => {
-	const customizedLightThemeBase = createTheme(
-		_merge(
-			{},
-			typography((customization?.typography as any) ?? {}),
-			colorsLight()
-		)
-	);
+  const customizedLightThemeBase = createTheme(
+    _merge(
+      {},
+      typography((customization?.typography as any) ?? {}),
+      colorsLight()
+    )
+  );
 
-	return createTheme(
-		_merge(
-			{},
-			customizedLightThemeBase,
-			components(customizedLightThemeBase),
-			customization
-		)
-	);
+  return createTheme(
+    _merge(
+      {},
+      customizedLightThemeBase,
+      components(customizedLightThemeBase),
+      customization
+    )
+  );
 };
 
 export const customizableDarkTheme = (customization: ThemeOptions) => {
-	const customizedDarkThemeBase = createTheme(
-		_merge(
-			{},
-			typography((customization?.typography as any) ?? {}),
-			colorsDark()
-		)
-	);
+  const customizedDarkThemeBase = createTheme(
+    _merge(
+      {},
+      typography((customization?.typography as any) ?? {}),
+      colorsDark()
+    )
+  );
 
-	return createTheme(
-		_merge(
-			{},
-			customizedDarkThemeBase,
-			components(customizedDarkThemeBase),
-			customization
-		)
-	);
+  return createTheme(
+    _merge(
+      {},
+      customizedDarkThemeBase,
+      components(customizedDarkThemeBase),
+      customization
+    )
+  );
 };
 
 const Themes = {
-	light: customizableLightTheme,
-	dark: customizableDarkTheme,
+  light: customizableLightTheme,
+  dark: customizableDarkTheme,
 };
 export default Themes;

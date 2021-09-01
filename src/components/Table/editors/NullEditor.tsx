@@ -16,11 +16,11 @@ import styles from "./styles";
  * TODO: fix NullEditor overwriting the formatter component
  */
 class NullEditor extends React.Component<
-	EditorProps<any, any> & WithStyles<typeof styles>
+  EditorProps<any, any> & WithStyles<typeof styles>
 > {
-	getInputNode = () => null;
-	getValue = () => null;
-	render = () => null;
+  getInputNode = () => null;
+  getValue = () => null;
+  render = () => null;
 }
 
 export default withStyles(styles)(NullEditor);

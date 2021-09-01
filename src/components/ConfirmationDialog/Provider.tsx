@@ -4,36 +4,36 @@ import { confirmationProps } from "./props";
 import Dialog from "./Dialog";
 import ConfirmationContext from "./Context";
 interface IConfirmationProviderProps {
-	children: React.ReactNode;
+  children: React.ReactNode;
 }
 
 const ConfirmationProvider: React.FC<IConfirmationProviderProps> = ({
-	children,
+  children,
 }) => {
-	const [state, setState] = useState<confirmationProps>();
-	const [open, setOpen] = useState(false);
-	const handleClose = () => {
-		setState(undefined);
-		setOpen(false);
-	};
-	const requestConfirmation = (props: confirmationProps) => {
-		setState(props);
-		setOpen(true);
-	};
-	return (
-		<ConfirmationContext.Provider
-			value={{
-				dialogProps: state,
-				open,
-				handleClose,
-				requestConfirmation,
-			}}
-		>
-			{children}
+  const [state, setState] = useState<confirmationProps>();
+  const [open, setOpen] = useState(false);
+  const handleClose = () => {
+    setState(undefined);
+    setOpen(false);
+  };
+  const requestConfirmation = (props: confirmationProps) => {
+    setState(props);
+    setOpen(true);
+  };
+  return (
+    <ConfirmationContext.Provider
+      value={{
+        dialogProps: state,
+        open,
+        handleClose,
+        requestConfirmation,
+      }}
+    >
+      {children}
 
-			<Dialog {...state} open={open} handleClose={handleClose} />
-		</ConfirmationContext.Provider>
-	);
+      <Dialog {...state} open={open} handleClose={handleClose} />
+    </ConfirmationContext.Provider>
+  );
 };
 
 export default ConfirmationProvider;

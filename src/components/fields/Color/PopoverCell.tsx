@@ -2,9 +2,9 @@ import { IPopoverCellProps } from "../types";
 import { ChromePicker } from "react-color";
 
 export default function Color({ value, onSubmit }: IPopoverCellProps) {
-	const handleChangeComplete = (color) => onSubmit(color);
+  const handleChangeComplete = (color) => onSubmit(color);
 
-	return (
-		<ChromePicker color={value?.rgb} onChangeComplete={handleChangeComplete} />
-	);
+  return (
+    <ChromePicker color={value?.rgb} onChangeComplete={handleChangeComplete} />
+  );
 }

@@ -5,28 +5,28 @@ import AuthLayout from "components/Auth/AuthLayout";
 import WIKI_LINKS from "constants/wikiLinks";
 
 export default function AuthSetupGuide() {
-	return (
-		<AuthLayout>
-			<div>
-				<Typography variant="h6" component="h2" gutterBottom>
-					Firebase Authentication Not Set Up
-				</Typography>
+  return (
+    <AuthLayout>
+      <div>
+        <Typography variant="h6" component="h2" gutterBottom>
+          Firebase Authentication Not Set Up
+        </Typography>
 
-				<Typography variant="body1" color="textSecondary">
-					Firebase Authentication must be enabled to sign in to Rowy.
-				</Typography>
-			</div>
+        <Typography variant="body1" color="textSecondary">
+          Firebase Authentication must be enabled to sign in to Rowy.
+        </Typography>
+      </div>
 
-			<Button
-				variant="contained"
-				endIcon={<OpenInNewIcon />}
-				component="a"
-				href={WIKI_LINKS.setUpAuth}
-				target="_blank"
-				rel="noopener"
-			>
-				Set-Up Guide
-			</Button>
-		</AuthLayout>
-	);
+      <Button
+        variant="contained"
+        endIcon={<OpenInNewIcon />}
+        component="a"
+        href={WIKI_LINKS.setUpAuth}
+        target="_blank"
+        rel="noopener"
+      >
+        Set-Up Guide
+      </Button>
+    </AuthLayout>
+  );
 }

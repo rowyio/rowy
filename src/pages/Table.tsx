@@ -19,62 +19,62 @@ import { DocActions } from "hooks/useDoc";
 import ActionParamsProvider from "components/fields/Action/FormDialog/Provider";
 
 export default function TablePage() {
-	const router = useRouter();
-	const tableCollection = decodeURIComponent(router.match.params.id);
+  const router = useRouter();
+  const tableCollection = decodeURIComponent(router.match.params.id);
 
-	const { tableState, tableActions, sideDrawerRef } = useRowyContext();
-	const { userDoc } = useAppContext();
+  const { tableState, tableActions, sideDrawerRef } = useRowyContext();
+  const { userDoc } = useAppContext();
 
-	let filters: RowyFilter[] = [];
-	const parsed = queryString.parse(router.location.search);
-	if (typeof parsed.filters === "string") {
-		filters = JSON.parse(parsed.filters);
-		// TODO: json schema validator
-	}
+  let filters: RowyFilter[] = [];
+  const parsed = queryString.parse(router.location.search);
+  if (typeof parsed.filters === "string") {
+    filters = JSON.parse(parsed.filters);
+    // TODO: json schema validator
+  }
 
-	useEffect(() => {
-		if (
-			tableActions &&
-			tableState &&
-			tableState.tablePath !== tableCollection
-		) {
-			tableActions.table.set(tableCollection, filters);
-			if (filters && filters.length !== 0) {
-				userDoc.dispatch({
-					action: DocActions.update,
-					data: {
-						tables: { [`${tableState.tablePath}`]: { filters } },
-					},
-				});
-			}
-			if (sideDrawerRef?.current) sideDrawerRef.current.setCell!(null);
-		}
-	}, [tableCollection]);
+  useEffect(() => {
+    if (
+      tableActions &&
+      tableState &&
+      tableState.tablePath !== tableCollection
+    ) {
+      tableActions.table.set(tableCollection, filters);
+      if (filters && filters.length !== 0) {
+        userDoc.dispatch({
+          action: DocActions.update,
+          data: {
+            tables: { [`${tableState.tablePath}`]: { filters } },
+          },
+        });
+      }
+      if (sideDrawerRef?.current) sideDrawerRef.current.setCell!(null);
+    }
+  }, [tableCollection]);
 
-	if (!tableState) return null;
+  if (!tableState) return null;
 
-	return (
-		<Navigation tableCollection={tableCollection}>
-			<ActionParamsProvider>
-				{tableState.loadingColumns && (
-					<>
-						<TableHeaderSkeleton />
-						<HeaderRowSkeleton />
-					</>
-				)}
+  return (
+    <Navigation tableCollection={tableCollection}>
+      <ActionParamsProvider>
+        {tableState.loadingColumns && (
+          <>
+            <TableHeaderSkeleton />
+            <HeaderRowSkeleton />
+          </>
+        )}
 
-				{!tableState.loadingColumns && !_isEmpty(tableState.columns) && (
-					<Table key={tableCollection} />
-				)}
+        {!tableState.loadingColumns && !_isEmpty(tableState.columns) && (
+          <Table key={tableCollection} />
+        )}
 
-				{!tableState.loadingColumns && _isEmpty(tableState.columns) && (
-					<EmptyTable />
-				)}
+        {!tableState.loadingColumns && _isEmpty(tableState.columns) && (
+          <EmptyTable />
+        )}
 
-				<Hidden smDown>
-					<SideDrawer />
-				</Hidden>
-			</ActionParamsProvider>
-		</Navigation>
-	);
+        <Hidden smDown>
+          <SideDrawer />
+        </Hidden>
+      </ActionParamsProvider>
+    </Navigation>
+  );
 }

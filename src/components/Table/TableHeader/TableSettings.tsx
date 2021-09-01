@@ -4,28 +4,28 @@ import TableHeaderButton from "./TableHeaderButton";
 import SettingsIcon from "@material-ui/icons/SettingsOutlined";
 
 import TableSettingsDialog, {
-	TableSettingsDialogModes,
+  TableSettingsDialogModes,
 } from "components/TableSettings";
 import { useRowyContext } from "contexts/RowyContext";
 
 export default function TableSettings() {
-	const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
-	const { tableState } = useRowyContext();
+  const { tableState } = useRowyContext();
 
-	return (
-		<>
-			<TableHeaderButton
-				title="Table Settings"
-				onClick={() => setOpen(true)}
-				icon={<SettingsIcon />}
-			/>
+  return (
+    <>
+      <TableHeaderButton
+        title="Table Settings"
+        onClick={() => setOpen(true)}
+        icon={<SettingsIcon />}
+      />
 
-			<TableSettingsDialog
-				clearDialog={() => setOpen(false)}
-				mode={open ? TableSettingsDialogModes.update : null}
-				data={open ? tableState?.config.tableConfig.doc : null}
-			/>
-		</>
-	);
+      <TableSettingsDialog
+        clearDialog={() => setOpen(false)}
+        mode={open ? TableSettingsDialogModes.update : null}
+        data={open ? tableState?.config.tableConfig.doc : null}
+      />
+    </>
+  );
 }

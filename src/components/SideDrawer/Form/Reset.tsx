@@ -6,45 +6,45 @@ import _isEqual from "lodash/isEqual";
 import { Values } from "./utils";
 
 export interface IResetProps {
-	defaultValues: Values;
-	dirtyFields: UseFormMethods["formState"]["dirtyFields"];
-	reset: UseFormMethods["reset"];
-	getValues: UseFormMethods["getValues"];
+  defaultValues: Values;
+  dirtyFields: UseFormMethods["formState"]["dirtyFields"];
+  reset: UseFormMethods["reset"];
+  getValues: UseFormMethods["getValues"];
 }
 
 /**
  * Reset the form’s values and errors when the Firestore doc’s data updates
  */
 export default function Reset({
-	defaultValues,
-	dirtyFields,
-	reset,
-	getValues,
+  defaultValues,
+  dirtyFields,
+  reset,
+  getValues,
 }: IResetProps) {
-	useEffect(
-		() => {
-			const resetValues = { ...defaultValues };
-			const currentValues = getValues();
+  useEffect(
+    () => {
+      const resetValues = { ...defaultValues };
+      const currentValues = getValues();
 
-			// If the field is dirty, (i.e. the user input a value but it hasn’t been)
-			// saved to the db yet, keep its current value and keep it marked as dirty
-			for (const [field, isDirty] of Object.entries(dirtyFields)) {
-				if (isDirty) {
-					resetValues[field] = currentValues[field];
-				}
-			}
+      // If the field is dirty, (i.e. the user input a value but it hasn’t been)
+      // saved to the db yet, keep its current value and keep it marked as dirty
+      for (const [field, isDirty] of Object.entries(dirtyFields)) {
+        if (isDirty) {
+          resetValues[field] = currentValues[field];
+        }
+      }
 
-			// Compare currentValues to resetValues
-			const diff = _pickBy(getValues(), (v, k) => !_isEqual(v, resetValues[k]));
-			// Reset if needed & keep the current dirty fields
-			if (Object.keys(diff).length > 0) {
-				reset(resetValues, { isDirty: true, dirtyFields: true });
-			}
-		},
-		// `defaultValues` is the `initialValue` of each field type +
-		// the current value in the Firestore doc
-		[JSON.stringify(defaultValues)]
-	);
+      // Compare currentValues to resetValues
+      const diff = _pickBy(getValues(), (v, k) => !_isEqual(v, resetValues[k]));
+      // Reset if needed & keep the current dirty fields
+      if (Object.keys(diff).length > 0) {
+        reset(resetValues, { isDirty: true, dirtyFields: true });
+      }
+    },
+    // `defaultValues` is the `initialValue` of each field type +
+    // the current value in the Firestore doc
+    [JSON.stringify(defaultValues)]
+  );
 
-	return null;
+  return null;
 }

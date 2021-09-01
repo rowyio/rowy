@@ -8,88 +8,88 @@ import bgPattern from "assets/bg-pattern.svg";
 import Logo from "assets/Logo";
 
 const useStyles = makeStyles((theme) =>
-	createStyles({
-		root: {
-			backgroundBlendMode: "normal, overlay, normal, normal",
-			// backgroundImage: `
-			//   linear-gradient(to bottom, rgba(255,255,255,0), #fff),
-			//   linear-gradient(155deg, #303030 -4%, ${theme.palette.primary.main} 92%),
-			//   url('${bgPattern}'),
-			//   linear-gradient(161deg, #ecf4ff -31%, #fff4f4 160%)
-			// `,
-			backgroundImage: `
+  createStyles({
+    root: {
+      backgroundBlendMode: "normal, overlay, normal, normal",
+      // backgroundImage: `
+      //   linear-gradient(to bottom, rgba(255,255,255,0), #fff),
+      //   linear-gradient(155deg, #303030 -4%, ${theme.palette.primary.main} 92%),
+      //   url('${bgPattern}'),
+      //   linear-gradient(161deg, #ecf4ff -31%, #fff4f4 160%)
+      // `,
+      backgroundImage: `
         linear-gradient(to bottom, ${alpha(
-					theme.palette.background.default,
-					0
-				)}, ${theme.palette.background.default} 75%),
+          theme.palette.background.default,
+          0
+        )}, ${theme.palette.background.default} 75%),
         linear-gradient(155deg, ${theme.palette.primary.main} 10%, ${
-				theme.palette.secondary.main
-			} 90%),
+        theme.palette.secondary.main
+      } 90%),
         url('${bgPattern}'),
         linear-gradient(161deg, ${alpha(
-					theme.palette.background.default,
-					0.95
-				)} -31%, ${alpha(theme.palette.background.default, 0.98)} 160%)
+          theme.palette.background.default,
+          0.95
+        )} -31%, ${alpha(theme.palette.background.default, 0.98)} 160%)
       `,
 
-			display: "grid",
-			placeItems: "center",
-			padding: theme.spacing(1),
+      display: "grid",
+      placeItems: "center",
+      padding: theme.spacing(1),
 
-			cursor: "default",
-		},
+      cursor: "default",
+    },
 
-		paper: {
-			position: "relative",
-			overflow: "hidden",
+    paper: {
+      position: "relative",
+      overflow: "hidden",
 
-			maxWidth: 400,
-			width: "100%",
-			padding: theme.spacing(4),
-			backgroundColor: theme.palette.background.paper,
+      maxWidth: 400,
+      width: "100%",
+      padding: theme.spacing(4),
+      backgroundColor: theme.palette.background.paper,
 
-			"--spacing-contents": theme.spacing(4),
-			"& > * + *": { marginTop: "var(--spacing-contents)" },
+      "--spacing-contents": theme.spacing(4),
+      "& > * + *": { marginTop: "var(--spacing-contents)" },
 
-			textAlign: "center",
-		},
+      textAlign: "center",
+    },
 
-		projectName: {
-			display: "block",
-			marginTop: theme.spacing(1),
+    projectName: {
+      display: "block",
+      marginTop: theme.spacing(1),
 
-			color: theme.palette.text.disabled,
-		},
+      color: theme.palette.text.disabled,
+    },
 
-		progress: {
-			position: "absolute",
-			left: 0,
-			right: 0,
-			top: 0,
-			marginTop: 0,
-		},
-	})
+    progress: {
+      position: "absolute",
+      left: 0,
+      right: 0,
+      top: 0,
+      marginTop: 0,
+    },
+  })
 );
 
 export interface IAuthLayoutProps {
-	children: React.ReactNode;
-	loading?: boolean;
+  children: React.ReactNode;
+  loading?: boolean;
 }
 
 export default function AuthLayout({ children, loading }: IAuthLayoutProps) {
-	const classes = useStyles();
+  const classes = useStyles();
 
-	return (
-		<Div100vh className={classes.root} style={{ minHeight: "100rvh" }}>
-			<Paper className={classes.paper}>
-				<Logo />
-				<Typography variant="overline" className={classes.projectName}>
-					{process.env.REACT_APP_FIREBASE_PROJECT_ID}
-				</Typography>
-				{children}
+  return (
+    <Div100vh className={classes.root} style={{ minHeight: "100rvh" }}>
+      <Paper className={classes.paper}>
+        <Logo />
+        <Typography variant="overline" className={classes.projectName}>
+          {process.env.REACT_APP_FIREBASE_PROJECT_ID}
+        </Typography>
+        {children}
 
-				{loading && <LinearProgress className={classes.progress} />}
-			</Paper>
-		</Div100vh>
-	);
+        {loading && <LinearProgress className={classes.progress} />}
+      </Paper>
+    </Div100vh>
+  );
 }

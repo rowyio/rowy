@@ -7,32 +7,32 @@ import BasicCell from "../_BasicCell/BasicCellNull";
 import NullEditor from "components/Table/editors/NullEditor";
 
 const TableCell = lazy(
-	() => import("./TableCell" /* webpackChunkName: "TableCell-Image" */)
+  () => import("./TableCell" /* webpackChunkName: "TableCell-Image" */)
 );
 const SideDrawerField = lazy(
-	() =>
-		import("./SideDrawerField" /* webpackChunkName: "SideDrawerField-Image" */)
+  () =>
+    import("./SideDrawerField" /* webpackChunkName: "SideDrawerField-Image" */)
 );
 
 export const config: IFieldConfig = {
-	type: FieldType.image,
-	name: "Image",
-	dataType:
-		"{ downloadURL: string, lastModifiedTS: number, name: string, type, ref }[]",
-	initialValue: [],
-	icon: <ImageIcon />,
-	description:
-		"Image file uploaded to Firebase Storage. Supports JPEG, PNG, SVG, GIF, WebP.",
-	TableCell: withHeavyCell(BasicCell, TableCell),
-	TableEditor: NullEditor as any,
-	SideDrawerField,
+  type: FieldType.image,
+  name: "Image",
+  dataType:
+    "{ downloadURL: string, lastModifiedTS: number, name: string, type, ref }[]",
+  initialValue: [],
+  icon: <ImageIcon />,
+  description:
+    "Image file uploaded to Firebase Storage. Supports JPEG, PNG, SVG, GIF, WebP.",
+  TableCell: withHeavyCell(BasicCell, TableCell),
+  TableEditor: NullEditor as any,
+  SideDrawerField,
 };
 export default config;
 
 export const IMAGE_MIME_TYPES = [
-	"image/jpeg",
-	"image/png",
-	"image/svg+xml",
-	"image/gif",
-	"image/webp",
+  "image/jpeg",
+  "image/png",
+  "image/svg+xml",
+  "image/gif",
+  "image/webp",
 ];

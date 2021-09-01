@@ -14,27 +14,27 @@ import { getCellValue } from "utils/fns";
  * Use for cells that do not support any type of in-cell editing.
  */
 export default function withSideDrawerEditor(
-	HeavyCell?: React.ComponentType<IHeavyCellProps>
+  HeavyCell?: React.ComponentType<IHeavyCellProps>
 ) {
-	return function SideDrawerEditor(props: EditorProps<any, any>) {
-		const { row, column } = props;
-		const { sideDrawerRef } = useRowyContext();
+  return function SideDrawerEditor(props: EditorProps<any, any>) {
+    const { row, column } = props;
+    const { sideDrawerRef } = useRowyContext();
 
-		useEffect(() => {
-			if (!sideDrawerRef?.current?.open && sideDrawerRef?.current?.setOpen)
-				sideDrawerRef?.current?.setOpen(true);
-		}, [column]);
+    useEffect(() => {
+      if (!sideDrawerRef?.current?.open && sideDrawerRef?.current?.setOpen)
+        sideDrawerRef?.current?.setOpen(true);
+    }, [column]);
 
-		return HeavyCell ? (
-			<HeavyCell
-				{...(props as any)}
-				value={getCellValue(row, column.key)}
-				name={column.name}
-				type={(column as any).type}
-				docRef={props.row.ref}
-				onSubmit={() => {}}
-				disabled={props.column.editable === false}
-			/>
-		) : null;
-	};
+    return HeavyCell ? (
+      <HeavyCell
+        {...(props as any)}
+        value={getCellValue(row, column.key)}
+        name={column.name}
+        type={(column as any).type}
+        docRef={props.row.ref}
+        onSubmit={() => {}}
+        disabled={props.column.editable === false}
+      />
+    ) : null;
+  };
 }

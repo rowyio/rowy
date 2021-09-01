@@ -5,22 +5,22 @@ import { AppContext } from "contexts/AppContext";
 import Loading from "../components/Loading";
 
 interface IPrivateRouteProps extends RouteProps {
-	render: NonNullable<RouteProps["render"]>;
+  render: NonNullable<RouteProps["render"]>;
 }
 
 const PrivateRoute: React.FC<IPrivateRouteProps> = ({ render, ...rest }) => {
-	const { currentUser } = useContext(AppContext);
+  const { currentUser } = useContext(AppContext);
 
-	if (!!currentUser) return <Route {...rest} render={render} />;
+  if (!!currentUser) return <Route {...rest} render={render} />;
 
-	if (currentUser === null) return <Redirect to="/auth" />;
+  if (currentUser === null) return <Redirect to="/auth" />;
 
-	return (
-		<Route
-			{...rest}
-			render={() => <Loading message="Authenticating" fullScreen />}
-		/>
-	);
+  return (
+    <Route
+      {...rest}
+      render={() => <Loading message="Authenticating" fullScreen />}
+    />
+  );
 };
 
 export default PrivateRoute;

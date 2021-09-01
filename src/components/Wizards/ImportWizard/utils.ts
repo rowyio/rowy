@@ -4,30 +4,30 @@ import _sortBy from "lodash/sortBy";
 import { FieldType } from "constants/fields";
 
 export const SELECTABLE_TYPES = [
-	FieldType.shortText,
-	FieldType.longText,
-	FieldType.email,
-	FieldType.phone,
+  FieldType.shortText,
+  FieldType.longText,
+  FieldType.email,
+  FieldType.phone,
 
-	FieldType.checkbox,
-	FieldType.number,
-	FieldType.percentage,
+  FieldType.checkbox,
+  FieldType.number,
+  FieldType.percentage,
 
-	FieldType.date,
-	FieldType.dateTime,
+  FieldType.date,
+  FieldType.dateTime,
 
-	FieldType.url,
-	FieldType.rating,
+  FieldType.url,
+  FieldType.rating,
 
-	FieldType.singleSelect,
-	FieldType.multiSelect,
+  FieldType.singleSelect,
+  FieldType.multiSelect,
 
-	FieldType.json,
-	FieldType.code,
+  FieldType.json,
+  FieldType.code,
 
-	FieldType.richText,
-	FieldType.color,
-	FieldType.slider,
+  FieldType.richText,
+  FieldType.color,
+  FieldType.slider,
 ];
 
 export const REGEX_EMAIL = /([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)/;
@@ -36,57 +36,57 @@ export const REGEX_URL = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-z
 export const REGEX_HTML = /<\/?[a-z][\s\S]*>/;
 
 const inferTypeFromValue = (value: any) => {
-	if (!value || typeof value === "function") return;
+  if (!value || typeof value === "function") return;
 
-	if (Array.isArray(value) && typeof value[0] === "string")
-		return FieldType.multiSelect;
-	if (typeof value === "boolean") return FieldType.checkbox;
-	if (_isDate(value)) return FieldType.dateTime;
+  if (Array.isArray(value) && typeof value[0] === "string")
+    return FieldType.multiSelect;
+  if (typeof value === "boolean") return FieldType.checkbox;
+  if (_isDate(value)) return FieldType.dateTime;
 
-	if (typeof value === "object") {
-		if ("hex" in value && "rgb" in value) return FieldType.color;
-		if ("toDate" in value) return FieldType.dateTime;
-		return FieldType.json;
-	}
+  if (typeof value === "object") {
+    if ("hex" in value && "rgb" in value) return FieldType.color;
+    if ("toDate" in value) return FieldType.dateTime;
+    return FieldType.json;
+  }
 
-	if (typeof value === "number") {
-		if (Math.abs(value) > 0 && Math.abs(value) < 1) return FieldType.percentage;
-		return FieldType.number;
-	}
+  if (typeof value === "number") {
+    if (Math.abs(value) > 0 && Math.abs(value) < 1) return FieldType.percentage;
+    return FieldType.number;
+  }
 
-	if (typeof value === "string") {
-		if (REGEX_EMAIL.test(value)) return FieldType.email;
-		if (REGEX_PHONE.test(value)) return FieldType.phone;
-		if (REGEX_URL.test(value)) return FieldType.url;
-		if (REGEX_HTML.test(value)) return FieldType.richText;
-		if (value.length >= 50) return FieldType.longText;
-		return FieldType.shortText;
-	}
+  if (typeof value === "string") {
+    if (REGEX_EMAIL.test(value)) return FieldType.email;
+    if (REGEX_PHONE.test(value)) return FieldType.phone;
+    if (REGEX_URL.test(value)) return FieldType.url;
+    if (REGEX_HTML.test(value)) return FieldType.richText;
+    if (value.length >= 50) return FieldType.longText;
+    return FieldType.shortText;
+  }
 
-	return;
+  return;
 };
 
 export const suggestType = (data: { [key: string]: any }[], field: string) => {
-	const results: Record<string, number> = {};
+  const results: Record<string, number> = {};
 
-	data.forEach((row) => {
-		const result = inferTypeFromValue(row[field]);
-		if (!result) return;
-		if (results[result] === undefined) results[result] = 1;
-		else results[result] += 1;
-	});
+  data.forEach((row) => {
+    const result = inferTypeFromValue(row[field]);
+    if (!result) return;
+    if (results[result] === undefined) results[result] = 1;
+    else results[result] += 1;
+  });
 
-	const sortedResults = _sortBy(Object.entries(results), 1).reverse();
-	if (!sortedResults || !sortedResults[0]) return FieldType.json;
-	const bestMatch = sortedResults[0][0];
+  const sortedResults = _sortBy(Object.entries(results), 1).reverse();
+  if (!sortedResults || !sortedResults[0]) return FieldType.json;
+  const bestMatch = sortedResults[0][0];
 
-	if (bestMatch === FieldType.shortText) {
-		const values = data.map((row) => row[field]);
-		const uniqueValues = new Set(values);
-		const hasDuplicates = values.length !== uniqueValues.size;
+  if (bestMatch === FieldType.shortText) {
+    const values = data.map((row) => row[field]);
+    const uniqueValues = new Set(values);
+    const hasDuplicates = values.length !== uniqueValues.size;
 
-		if (hasDuplicates && uniqueValues.size < 30) return FieldType.singleSelect;
-	}
+    if (hasDuplicates && uniqueValues.size < 30) return FieldType.singleSelect;
+  }
 
-	return bestMatch;
+  return bestMatch;
 };

@@ -1,3 +1,3 @@
 export default function BasicCellNull() {
-	return null;
+  return null;
 }

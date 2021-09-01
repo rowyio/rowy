@@ -7,30 +7,30 @@ import BasicCell from "../_BasicCell/BasicCellName";
 import NullEditor from "components/Table/editors/NullEditor";
 
 const TableCell = lazy(
-	() => import("./TableCell" /* webpackChunkName: "TableCell-Checkbox" */)
+  () => import("./TableCell" /* webpackChunkName: "TableCell-Checkbox" */)
 );
 const SideDrawerField = lazy(
-	() =>
-		import(
-			"./SideDrawerField" /* webpackChunkName: "SideDrawerField-Checkbox" */
-		)
+  () =>
+    import(
+      "./SideDrawerField" /* webpackChunkName: "SideDrawerField-Checkbox" */
+    )
 );
 
 export const config: IFieldConfig = {
-	type: FieldType.checkbox,
-	name: "Toggle",
-	dataType: "boolean",
-	initialValue: false,
-	initializable: true,
-	icon: <CheckboxIcon />,
-	description: "Either toggled on or off. Toggled off by default.",
-	TableCell: withHeavyCell(BasicCell, TableCell),
-	TableEditor: NullEditor as any,
-	csvImportParser: (value: string) => {
-		if (["YES", "TRUE", "1"].includes(value.toUpperCase())) return true;
-		else if (["NO", "FALSE", "0"].includes(value.toUpperCase())) return false;
-		else return null;
-	},
-	SideDrawerField,
+  type: FieldType.checkbox,
+  name: "Toggle",
+  dataType: "boolean",
+  initialValue: false,
+  initializable: true,
+  icon: <CheckboxIcon />,
+  description: "Either toggled on or off. Toggled off by default.",
+  TableCell: withHeavyCell(BasicCell, TableCell),
+  TableEditor: NullEditor as any,
+  csvImportParser: (value: string) => {
+    if (["YES", "TRUE", "1"].includes(value.toUpperCase())) return true;
+    else if (["NO", "FALSE", "0"].includes(value.toUpperCase())) return false;
+    else return null;
+  },
+  SideDrawerField,
 };
 export default config;

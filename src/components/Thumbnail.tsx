@@ -8,62 +8,62 @@ import Skeleton from "@material-ui/core/Skeleton";
 import ErrorBoundary from "./ErrorBoundary";
 
 const useStyles = makeStyles((theme) =>
-	createStyles({
-		root: ({
-			objectFit,
-			shape,
-			border,
-		}: Pick<IThubmnailProps, "objectFit" | "shape" | "border">) => ({
-			objectFit: objectFit as any,
-			borderRadius:
-				shape === "circle"
-					? "50%"
-					: shape === "square"
-					? 0
-					: theme.shape.borderRadius,
+  createStyles({
+    root: ({
+      objectFit,
+      shape,
+      border,
+    }: Pick<IThubmnailProps, "objectFit" | "shape" | "border">) => ({
+      objectFit: objectFit as any,
+      borderRadius:
+        shape === "circle"
+          ? "50%"
+          : shape === "square"
+          ? 0
+          : theme.shape.borderRadius,
 
-			display: "block",
-			pointerEvents: "none",
-			userSelect: "none",
+      display: "block",
+      pointerEvents: "none",
+      userSelect: "none",
 
-			position: "relative",
+      position: "relative",
 
-			"&::after": {
-				content: '""',
-				display: "block",
-				position: "absolute",
-				top: 0,
-				left: 0,
-				width: "100%",
-				height: "100%",
+      "&::after": {
+        content: '""',
+        display: "block",
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
 
-				boxShadow: border ? `0 0 0 1px ${theme.palette.divider} inset` : "none",
-			},
-		}),
+        boxShadow: border ? `0 0 0 1px ${theme.palette.divider} inset` : "none",
+      },
+    }),
 
-		skeleton: ({ shape }: Pick<IThubmnailProps, "shape">) => ({
-			borderRadius:
-				shape === "circle"
-					? "50%"
-					: shape === "square"
-					? 0
-					: theme.shape.borderRadius,
-			display: "block",
-		}),
-	})
+    skeleton: ({ shape }: Pick<IThubmnailProps, "shape">) => ({
+      borderRadius:
+        shape === "circle"
+          ? "50%"
+          : shape === "square"
+          ? 0
+          : theme.shape.borderRadius,
+      display: "block",
+    }),
+  })
 );
 
 export interface IThubmnailProps
-	extends React.DetailedHTMLProps<
-		React.ImgHTMLAttributes<HTMLImageElement>,
-		HTMLImageElement
-	> {
-	imageUrl: string;
-	size?: string;
+  extends React.DetailedHTMLProps<
+    React.ImgHTMLAttributes<HTMLImageElement>,
+    HTMLImageElement
+  > {
+  imageUrl: string;
+  size?: string;
 
-	objectFit?: string;
-	shape?: "roundedRectangle" | "square" | "circle";
-	border?: boolean;
+  objectFit?: string;
+  shape?: "roundedRectangle" | "square" | "circle";
+  border?: boolean;
 }
 
 /**
@@ -73,54 +73,54 @@ export interface IThubmnailProps
  * Uses react-image: https://github.com/mbrevda/react-image
  */
 export function Thubmnail_({
-	imageUrl,
-	size = "200x200",
+  imageUrl,
+  size = "200x200",
 
-	objectFit = "cover",
-	shape = "roundedRectangle",
-	border = false,
+  objectFit = "cover",
+  shape = "roundedRectangle",
+  border = false,
 
-	...props
+  ...props
 }: IThubmnailProps) {
-	const classes = useStyles({ objectFit, shape, border });
+  const classes = useStyles({ objectFit, shape, border });
 
-	// Add size suffix just before file name extension (e.g. .jpg)
-	const thumbnailUrl = imageUrl.replace(
-		/(\.[\w]+\?.*token=[\w-]+$)/,
-		`__${size}$1`
-	);
+  // Add size suffix just before file name extension (e.g. .jpg)
+  const thumbnailUrl = imageUrl.replace(
+    /(\.[\w]+\?.*token=[\w-]+$)/,
+    `__${size}$1`
+  );
 
-	const { src } = useImage({
-		srcList: [thumbnailUrl, imageUrl],
-	});
+  const { src } = useImage({
+    srcList: [thumbnailUrl, imageUrl],
+  });
 
-	return (
-		<img {...props} src={src} className={clsx(classes.root, props.className)} />
-	);
+  return (
+    <img {...props} src={src} className={clsx(classes.root, props.className)} />
+  );
 }
 
 /**
  * Wrap thumbnail in an ErrorBoundary and Skeleton for loading
  */
 export default function Thumbnail(props: IThubmnailProps) {
-	const classes = useStyles({ shape: props.shape });
+  const classes = useStyles({ shape: props.shape });
 
-	return (
-		<ErrorBoundary
-			basic
-			message="Failed to load image"
-			className={props.className}
-		>
-			<Suspense
-				fallback={
-					<Skeleton
-						variant="rectangular"
-						className={clsx(classes.skeleton, props.className)}
-					/>
-				}
-			>
-				<Thubmnail_ {...props} />
-			</Suspense>
-		</ErrorBoundary>
-	);
+  return (
+    <ErrorBoundary
+      basic
+      message="Failed to load image"
+      className={props.className}
+    >
+      <Suspense
+        fallback={
+          <Skeleton
+            variant="rectangular"
+            className={clsx(classes.skeleton, props.className)}
+          />
+        }
+      >
+        <Thubmnail_ {...props} />
+      </Suspense>
+    </ErrorBoundary>
+  );
 }

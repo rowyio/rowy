@@ -11,65 +11,65 @@ import { useRowyContext } from "contexts/RowyContext";
 import { RowyState } from "hooks/useRowy";
 
 export interface IAutosaveProps {
-	control: Control;
-	docRef: firebase.default.firestore.DocumentReference;
-	row: any;
-	reset: UseFormMethods["reset"];
-	dirtyFields: UseFormMethods["formState"]["dirtyFields"];
+  control: Control;
+  docRef: firebase.default.firestore.DocumentReference;
+  row: any;
+  reset: UseFormMethods["reset"];
+  dirtyFields: UseFormMethods["formState"]["dirtyFields"];
 }
 
 const getEditables = (values: Values, tableState?: RowyState) =>
-	_pick(
-		values,
-		(tableState &&
-			(Array.isArray(tableState?.columns)
-				? tableState?.columns
-				: Object.values(tableState?.columns)
-			).map((c) => c.key)) ??
-			[]
-	);
+  _pick(
+    values,
+    (tableState &&
+      (Array.isArray(tableState?.columns)
+        ? tableState?.columns
+        : Object.values(tableState?.columns)
+      ).map((c) => c.key)) ??
+      []
+  );
 
 export default function Autosave({
-	control,
-	docRef,
-	row,
-	reset,
-	dirtyFields,
+  control,
+  docRef,
+  row,
+  reset,
+  dirtyFields,
 }: IAutosaveProps) {
-	const { tableState, updateCell } = useRowyContext();
+  const { tableState, updateCell } = useRowyContext();
 
-	const values = useWatch({ control });
-	const [debouncedValue] = useDebounce(getEditables(values, tableState), 1000, {
-		equalityFn: _isEqual,
-	});
+  const values = useWatch({ control });
+  const [debouncedValue] = useDebounce(getEditables(values, tableState), 1000, {
+    equalityFn: _isEqual,
+  });
 
-	useEffect(() => {
-		if (!row || !row.ref) return;
-		if (row.ref.id !== docRef.id) return;
-		if (!updateCell) return;
+  useEffect(() => {
+    if (!row || !row.ref) return;
+    if (row.ref.id !== docRef.id) return;
+    if (!updateCell) return;
 
-		// Get only fields that have had their value updated by the user
-		const updatedValues = _pickBy(
-			_pickBy(debouncedValue, (_, key) => dirtyFields[key]),
-			(value, key) => !_isEqual(value, row[key])
-		);
-		console.log(debouncedValue, row);
-		console.log(updatedValues, dirtyFields);
-		if (Object.keys(updatedValues).length === 0) return;
+    // Get only fields that have had their value updated by the user
+    const updatedValues = _pickBy(
+      _pickBy(debouncedValue, (_, key) => dirtyFields[key]),
+      (value, key) => !_isEqual(value, row[key])
+    );
+    console.log(debouncedValue, row);
+    console.log(updatedValues, dirtyFields);
+    if (Object.keys(updatedValues).length === 0) return;
 
-		// Update the document
-		Object.entries(updatedValues).forEach(([key, value]) =>
-			updateCell(
-				row.ref,
-				key,
-				value,
-				// After the cell is updated, set this field to be not dirty
-				// so it doesn’t get updated again when a different field in the form
-				// is updated + make sure the new value is kept after reset
-				() => reset({ ...values, [key]: value })
-			)
-		);
-	}, [debouncedValue]);
+    // Update the document
+    Object.entries(updatedValues).forEach(([key, value]) =>
+      updateCell(
+        row.ref,
+        key,
+        value,
+        // After the cell is updated, set this field to be not dirty
+        // so it doesn’t get updated again when a different field in the form
+        // is updated + make sure the new value is kept after reset
+        () => reset({ ...values, [key]: value })
+      )
+    );
+  }, [debouncedValue]);
 
-	return null;
+  return null;
 }

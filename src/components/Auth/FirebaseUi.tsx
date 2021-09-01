@@ -13,234 +13,234 @@ import { auth, db } from "../../firebase";
 import { defaultUiConfig, getSignInOptions } from "../../firebase/firebaseui";
 
 const useStyles = makeStyles((theme) =>
-	createStyles({
-		"@global": {
-			".rowy-firebaseui": {
-				"& .firebaseui-container": {
-					backgroundColor: "transparent",
-					color: theme.palette.text.primary,
-					fontFamily: theme.typography.fontFamily,
-				},
-				"& .firebaseui-text": {
-					color: theme.palette.text.secondary,
-					fontFamily: theme.typography.fontFamily,
-				},
-				"& .firebaseui-tos": {
-					...theme.typography.caption,
-					color: theme.palette.text.disabled,
-				},
-				"& .firebaseui-country-selector": {
-					color: theme.palette.text.primary,
-				},
-				"& .firebaseui-title": {
-					...theme.typography.h5,
-					color: theme.palette.text.primary,
-				},
-				"& .firebaseui-subtitle": {
-					...theme.typography.h6,
-					color: theme.palette.text.secondary,
-				},
-				"& .firebaseui-error": {
-					...theme.typography.caption,
-					color: theme.palette.error.main,
-				},
+  createStyles({
+    "@global": {
+      ".rowy-firebaseui": {
+        "& .firebaseui-container": {
+          backgroundColor: "transparent",
+          color: theme.palette.text.primary,
+          fontFamily: theme.typography.fontFamily,
+        },
+        "& .firebaseui-text": {
+          color: theme.palette.text.secondary,
+          fontFamily: theme.typography.fontFamily,
+        },
+        "& .firebaseui-tos": {
+          ...theme.typography.caption,
+          color: theme.palette.text.disabled,
+        },
+        "& .firebaseui-country-selector": {
+          color: theme.palette.text.primary,
+        },
+        "& .firebaseui-title": {
+          ...theme.typography.h5,
+          color: theme.palette.text.primary,
+        },
+        "& .firebaseui-subtitle": {
+          ...theme.typography.h6,
+          color: theme.palette.text.secondary,
+        },
+        "& .firebaseui-error": {
+          ...theme.typography.caption,
+          color: theme.palette.error.main,
+        },
 
-				"& .firebaseui-card-content, & .firebaseui-card-footer": { padding: 0 },
-				"& .firebaseui-idp-list, & .firebaseui-tenant-list": { margin: 0 },
-				"& .firebaseui-idp-list>.firebaseui-list-item, & .firebaseui-tenant-list>.firebaseui-list-item": {
-					margin: 0,
-				},
-				"& .firebaseui-list-item + .firebaseui-list-item": {
-					paddingTop: theme.spacing(2),
-				},
+        "& .firebaseui-card-content, & .firebaseui-card-footer": { padding: 0 },
+        "& .firebaseui-idp-list, & .firebaseui-tenant-list": { margin: 0 },
+        "& .firebaseui-idp-list>.firebaseui-list-item, & .firebaseui-tenant-list>.firebaseui-list-item": {
+          margin: 0,
+        },
+        "& .firebaseui-list-item + .firebaseui-list-item": {
+          paddingTop: theme.spacing(2),
+        },
 
-				"& .mdl-button": {
-					borderRadius: 24,
-					...theme.typography.button,
-				},
-				"& .mdl-button--raised": { boxShadow: "none" },
-				"& .mdl-card": {
-					boxShadow: "none",
-					minHeight: 0,
-				},
-				"& .mdl-button--primary.mdl-button--primary": {
-					color: theme.palette.primary.main,
-				},
-				"& .mdl-button--raised.mdl-button--colored": {
-					backgroundColor: theme.palette.primary.main,
-					color: theme.palette.primary.contrastText,
+        "& .mdl-button": {
+          borderRadius: 24,
+          ...theme.typography.button,
+        },
+        "& .mdl-button--raised": { boxShadow: "none" },
+        "& .mdl-card": {
+          boxShadow: "none",
+          minHeight: 0,
+        },
+        "& .mdl-button--primary.mdl-button--primary": {
+          color: theme.palette.primary.main,
+        },
+        "& .mdl-button--raised.mdl-button--colored": {
+          backgroundColor: theme.palette.primary.main,
+          color: theme.palette.primary.contrastText,
 
-					"&:active, &:focus:not(:active), &:hover": {
-						backgroundColor: theme.palette.primary.main,
-					},
-				},
+          "&:active, &:focus:not(:active), &:hover": {
+            backgroundColor: theme.palette.primary.main,
+          },
+        },
 
-				"& .firebaseui-idp-button, & .firebaseui-tenant-button": {
-					maxWidth: "none",
-					minHeight: 48,
-				},
-				"& .firebaseui-idp-text": {
-					...theme.typography.button,
+        "& .firebaseui-idp-button, & .firebaseui-tenant-button": {
+          maxWidth: "none",
+          minHeight: 48,
+        },
+        "& .firebaseui-idp-text": {
+          ...theme.typography.button,
 
-					paddingLeft: theme.spacing(2),
-					paddingRight: Number(theme.spacing(2).replace("px", "")) + 18,
-					marginLeft: -18,
-					width: "100%",
-					textAlign: "center",
+          paddingLeft: theme.spacing(2),
+          paddingRight: Number(theme.spacing(2).replace("px", "")) + 18,
+          marginLeft: -18,
+          width: "100%",
+          textAlign: "center",
 
-					[theme.breakpoints.down("sm")]: {
-						"&.firebaseui-idp-text-long": { display: "none" },
-						"&.firebaseui-idp-text-short": { display: "table-cell" },
-					},
-				},
+          [theme.breakpoints.down("sm")]: {
+            "&.firebaseui-idp-text-long": { display: "none" },
+            "&.firebaseui-idp-text-short": { display: "table-cell" },
+          },
+        },
 
-				"& .firebaseui-idp-google": {
-					"& .firebaseui-idp-icon-wrapper::before": {
-						content: "''",
-						display: "block",
-						position: "absolute",
-						top: 2,
-						left: 2,
-						width: 48 - 4,
-						height: 48 - 4,
-						zIndex: 0,
+        "& .firebaseui-idp-google": {
+          "& .firebaseui-idp-icon-wrapper::before": {
+            content: "''",
+            display: "block",
+            position: "absolute",
+            top: 2,
+            left: 2,
+            width: 48 - 4,
+            height: 48 - 4,
+            zIndex: 0,
 
-						backgroundColor: "#fff",
-						borderRadius: "50%",
-					},
-					"& .firebaseui-idp-icon-wrapper img": {
-						position: "relative",
-						left: -1,
-					},
+            backgroundColor: "#fff",
+            borderRadius: "50%",
+          },
+          "& .firebaseui-idp-icon-wrapper img": {
+            position: "relative",
+            left: -1,
+          },
 
-					"&>.firebaseui-idp-text": {
-						color: "#fff",
-					},
-				},
+          "&>.firebaseui-idp-text": {
+            color: "#fff",
+          },
+        },
 
-				"& .firebaseui-card-header": { padding: 0 },
-				"& .firebaseui-card-actions": { padding: 0 },
+        "& .firebaseui-card-header": { padding: 0 },
+        "& .firebaseui-card-actions": { padding: 0 },
 
-				"& .firebaseui-input, & .firebaseui-input-invalid": {
-					...theme.typography.body1,
-					color: theme.palette.text.primary,
-				},
-				"& .firebaseui-textfield.mdl-textfield .firebaseui-input": {
-					borderColor: theme.palette.divider,
-				},
-				"& .mdl-textfield.is-invalid .mdl-textfield__input": {
-					borderColor: theme.palette.error.main,
-				},
-				"& .firebaseui-label": {
-					...theme.typography.subtitle2,
-					color: theme.palette.text.secondary,
-				},
-				"& .mdl-textfield--floating-label.is-dirty .mdl-textfield__label, .mdl-textfield--floating-label.is-focused .mdl-textfield__label": {
-					color: theme.palette.text.primary,
-				},
-				"& .firebaseui-textfield.mdl-textfield .firebaseui-label:after": {
-					backgroundColor: theme.palette.primary.main,
-				},
-				"& .mdl-textfield.is-invalid .mdl-textfield__label:after": {
-					backgroundColor: theme.palette.error.main,
-				},
+        "& .firebaseui-input, & .firebaseui-input-invalid": {
+          ...theme.typography.body1,
+          color: theme.palette.text.primary,
+        },
+        "& .firebaseui-textfield.mdl-textfield .firebaseui-input": {
+          borderColor: theme.palette.divider,
+        },
+        "& .mdl-textfield.is-invalid .mdl-textfield__input": {
+          borderColor: theme.palette.error.main,
+        },
+        "& .firebaseui-label": {
+          ...theme.typography.subtitle2,
+          color: theme.palette.text.secondary,
+        },
+        "& .mdl-textfield--floating-label.is-dirty .mdl-textfield__label, .mdl-textfield--floating-label.is-focused .mdl-textfield__label": {
+          color: theme.palette.text.primary,
+        },
+        "& .firebaseui-textfield.mdl-textfield .firebaseui-label:after": {
+          backgroundColor: theme.palette.primary.main,
+        },
+        "& .mdl-textfield.is-invalid .mdl-textfield__label:after": {
+          backgroundColor: theme.palette.error.main,
+        },
 
-				"& .mdl-progress>.bufferbar": {
-					background: alpha(theme.palette.primary.main, 0.33),
-				},
-				"& .mdl-progress>.progressbar": {
-					backgroundColor: theme.palette.primary.main + " !important",
-				},
-			},
-		},
+        "& .mdl-progress>.bufferbar": {
+          background: alpha(theme.palette.primary.main, 0.33),
+        },
+        "& .mdl-progress>.progressbar": {
+          backgroundColor: theme.palette.primary.main + " !important",
+        },
+      },
+    },
 
-		signInText: {
-			display: "none",
-			[theme.breakpoints.down("sm")]: { display: "block" },
+    signInText: {
+      display: "none",
+      [theme.breakpoints.down("sm")]: { display: "block" },
 
-			textAlign: "center",
-			color: theme.palette.text.disabled,
-			marginBottom: theme.spacing(-1),
-		},
+      textAlign: "center",
+      color: theme.palette.text.disabled,
+      marginBottom: theme.spacing(-1),
+    },
 
-		skeleton: {
-			marginBottom: "calc(var(--spacing-contents) * -1)",
+    skeleton: {
+      marginBottom: "calc(var(--spacing-contents) * -1)",
 
-			"& > *": {
-				width: "100%",
-				height: 48,
-				borderRadius: 24,
-			},
+      "& > *": {
+        width: "100%",
+        height: 48,
+        borderRadius: 24,
+      },
 
-			"& > * + *": {
-				marginTop: theme.spacing(2),
-			},
-		},
-	})
+      "& > * + *": {
+        marginTop: theme.spacing(2),
+      },
+    },
+  })
 );
 
 export default function FirebaseUi(props: Partial<FirebaseUiProps>) {
-	const classes = useStyles();
+  const classes = useStyles();
 
-	const [signInOptions, setSignInOptions] = useState<
-		Parameters<typeof getSignInOptions>[0] | undefined
-	>();
-	useEffect(() => {
-		db.doc("/_rowy_/publicSettings")
-			.get()
-			.then((doc) => {
-				const options = doc?.get("signInOptions");
-				if (!options) {
-					setSignInOptions(["google"]);
-				} else {
-					setSignInOptions(options);
-				}
-			})
-			.catch(() => setSignInOptions(["google"]));
-	}, []);
+  const [signInOptions, setSignInOptions] = useState<
+    Parameters<typeof getSignInOptions>[0] | undefined
+  >();
+  useEffect(() => {
+    db.doc("/_rowy_/publicSettings")
+      .get()
+      .then((doc) => {
+        const options = doc?.get("signInOptions");
+        if (!options) {
+          setSignInOptions(["google"]);
+        } else {
+          setSignInOptions(options);
+        }
+      })
+      .catch(() => setSignInOptions(["google"]));
+  }, []);
 
-	if (!signInOptions)
-		return (
-			<div
-				id="rowy-firebaseui-skeleton"
-				className={classes.skeleton}
-				style={{ marginBottom: 0 }}
-			>
-				<Skeleton variant="rectangular" />
-			</div>
-		);
+  if (!signInOptions)
+    return (
+      <div
+        id="rowy-firebaseui-skeleton"
+        className={classes.skeleton}
+        style={{ marginBottom: 0 }}
+      >
+        <Skeleton variant="rectangular" />
+      </div>
+    );
 
-	const uiConfig: firebaseui.auth.Config = {
-		...defaultUiConfig,
-		...props.uiConfig,
-		callbacks: {
-			uiShown: () => {
-				const node = document.getElementById("rowy-firebaseui-skeleton");
-				if (node) node.style.display = "none";
-			},
-			...props.uiConfig?.callbacks,
-		},
-		signInOptions: getSignInOptions(signInOptions),
-	};
+  const uiConfig: firebaseui.auth.Config = {
+    ...defaultUiConfig,
+    ...props.uiConfig,
+    callbacks: {
+      uiShown: () => {
+        const node = document.getElementById("rowy-firebaseui-skeleton");
+        if (node) node.style.display = "none";
+      },
+      ...props.uiConfig?.callbacks,
+    },
+    signInOptions: getSignInOptions(signInOptions),
+  };
 
-	return (
-		<>
-			<Typography variant="button" className={classes.signInText}>
-				Sign in with
-			</Typography>
+  return (
+    <>
+      <Typography variant="button" className={classes.signInText}>
+        Sign in with
+      </Typography>
 
-			<div id="rowy-firebaseui-skeleton" className={classes.skeleton}>
-				{Object.keys(signInOptions).map((_, i) => (
-					<Skeleton key={i} variant="rectangular" />
-				))}
-			</div>
+      <div id="rowy-firebaseui-skeleton" className={classes.skeleton}>
+        {Object.keys(signInOptions).map((_, i) => (
+          <Skeleton key={i} variant="rectangular" />
+        ))}
+      </div>
 
-			<StyledFirebaseAuth
-				{...props}
-				firebaseAuth={auth}
-				uiConfig={uiConfig}
-				className={clsx("rowy-firebaseui", props.className)}
-			/>
-		</>
-	);
+      <StyledFirebaseAuth
+        {...props}
+        firebaseAuth={auth}
+        uiConfig={uiConfig}
+        className={clsx("rowy-firebaseui", props.className)}
+      />
+    </>
+  );
 }

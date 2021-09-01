@@ -1,5 +1,5 @@
 const FiltersRow = () => {
-	return <></>;
+  return <></>;
 };
 
 export default FiltersRow;

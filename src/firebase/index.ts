@@ -12,8 +12,8 @@ export const auth = firebase.auth();
 
 export const db = firebase.firestore();
 db.settings({
-	cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED,
-	ignoreUndefinedProperties: true,
+  cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED,
+  ignoreUndefinedProperties: true,
 });
 db.enablePersistence({ synchronizeTabs: true });
 
@@ -22,12 +22,12 @@ export const functions = firebase.functions();
 
 export const projectId = process.env.REACT_APP_FIREBASE_PROJECT_ID;
 export const WEBHOOK_URL = `https://${(functions as any).region_}-${
-	appConfig.projectId
+  appConfig.projectId
 }.cloudfunctions.net/webhook`;
 export const googleProvider = new firebase.auth.GoogleAuthProvider().setCustomParameters(
-	{
-		prompt: "select_account",
-	}
+  {
+    prompt: "select_account",
+  }
 );
 
 export const deleteField = firebase.firestore.FieldValue.delete;

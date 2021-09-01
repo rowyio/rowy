@@ -10,78 +10,78 @@ import TextField from "@material-ui/core/TextField";
 import { makeStyles, createStyles } from "@material-ui/styles";
 //import {confirmationProps} from './props'
 const useStyles = makeStyles(() =>
-	createStyles({
-		root: {
-			display: "flex",
-			flexWrap: "wrap",
-		},
-		dryWrapper: {},
-		dryField: {},
-	})
+  createStyles({
+    root: {
+      display: "flex",
+      flexWrap: "wrap",
+    },
+    dryWrapper: {},
+    dryField: {},
+  })
 );
 
 export default function Confirmation({
-	title,
-	customBody,
-	body,
-	cancel,
-	confirm,
-	confirmationCommand,
-	handleConfirm,
-	open,
-	handleClose,
-	maxWidth = "xs",
+  title,
+  customBody,
+  body,
+  cancel,
+  confirm,
+  confirmationCommand,
+  handleConfirm,
+  open,
+  handleClose,
+  maxWidth = "xs",
 }: any) {
-	const classes = useStyles();
-	const [dryText, setDryText] = useState("");
-	return (
-		<>
-			<Dialog open={open} onClose={handleClose} maxWidth={maxWidth}>
-				<DialogTitle>{title ?? "Are you sure?"}</DialogTitle>
+  const classes = useStyles();
+  const [dryText, setDryText] = useState("");
+  return (
+    <>
+      <Dialog open={open} onClose={handleClose} maxWidth={maxWidth}>
+        <DialogTitle>{title ?? "Are you sure?"}</DialogTitle>
 
-				<DialogContent>
-					{customBody}
-					{body && <DialogContentText>{body}</DialogContentText>}
-					{confirmationCommand && (
-						<div className={classes.dryWrapper}>
-							<DialogContentText>
-								Type {confirmationCommand} below to continue:
-							</DialogContentText>
-							<TextField
-								value={dryText}
-								variant="filled"
-								onChange={(e) => {
-									setDryText(e.target.value);
-								}}
-								className={classes.dryField}
-								InputProps={{ disableUnderline: true }}
-								autoFocus
-								margin="dense"
-								label={confirmationCommand}
-								fullWidth
-							/>
-						</div>
-					)}
-				</DialogContent>
+        <DialogContent>
+          {customBody}
+          {body && <DialogContentText>{body}</DialogContentText>}
+          {confirmationCommand && (
+            <div className={classes.dryWrapper}>
+              <DialogContentText>
+                Type {confirmationCommand} below to continue:
+              </DialogContentText>
+              <TextField
+                value={dryText}
+                variant="filled"
+                onChange={(e) => {
+                  setDryText(e.target.value);
+                }}
+                className={classes.dryField}
+                InputProps={{ disableUnderline: true }}
+                autoFocus
+                margin="dense"
+                label={confirmationCommand}
+                fullWidth
+              />
+            </div>
+          )}
+        </DialogContent>
 
-				<DialogActions>
-					<Button onClick={handleClose}>{cancel ?? "Cancel"}</Button>
-					<Button
-						onClick={() => {
-							handleConfirm();
-							handleClose();
-						}}
-						color="primary"
-						variant="contained"
-						autoFocus
-						disabled={
-							confirmationCommand ? dryText !== confirmationCommand : false
-						}
-					>
-						{confirm ?? "Confirm"}
-					</Button>
-				</DialogActions>
-			</Dialog>
-		</>
-	);
+        <DialogActions>
+          <Button onClick={handleClose}>{cancel ?? "Cancel"}</Button>
+          <Button
+            onClick={() => {
+              handleConfirm();
+              handleClose();
+            }}
+            color="primary"
+            variant="contained"
+            autoFocus
+            disabled={
+              confirmationCommand ? dryText !== confirmationCommand : false
+            }
+          >
+            {confirm ?? "Confirm"}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
+  );
 }

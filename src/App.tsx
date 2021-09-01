@@ -23,120 +23,120 @@ import SignOutView from "pages/Auth/SignOut";
 import TestView from "pages/Test";
 import { analytics } from "analytics";
 const AuthSetupGuidePage = lazy(
-	() => import("pages/Auth/SetupGuide" /* webpackChunkName: "AuthSetupGuide" */)
+  () => import("pages/Auth/SetupGuide" /* webpackChunkName: "AuthSetupGuide" */)
 );
 
 const HomePage = lazy(
-	() => import("./pages/Home" /* webpackChunkName: "HomePage" */)
+  () => import("./pages/Home" /* webpackChunkName: "HomePage" */)
 );
 const TablePage = lazy(
-	() => import("./pages/Table" /* webpackChunkName: "TablePage" */)
+  () => import("./pages/Table" /* webpackChunkName: "TablePage" */)
 );
 const ImpersonatorAuthPage = lazy(
-	() =>
-		import(
-			"./pages/Auth/ImpersonatorAuth" /* webpackChunkName: "ImpersonatorAuthPage" */
-		)
+  () =>
+    import(
+      "./pages/Auth/ImpersonatorAuth" /* webpackChunkName: "ImpersonatorAuthPage" */
+    )
 );
 const JwtAuthPage = lazy(
-	() => import("./pages/Auth/JwtAuth" /* webpackChunkName: "JwtAuthPage" */)
+  () => import("./pages/Auth/JwtAuth" /* webpackChunkName: "JwtAuthPage" */)
 );
 // const GridView = lazy(
 //   () => import("./views/GridView" /* webpackChunkName: "GridView" */)
 // );
 
 export default function App() {
-	return (
-		<StyledEngineProvider injectFirst>
-			<ErrorBoundary>
-				<AppProvider>
-					<ConfirmationProvider>
-						<SnackProvider>
-							<SnackLogProvider>
-								<CustomBrowserRouter>
-									<Suspense fallback={<Loading fullScreen />}>
-										<Switch>
-											<Route
-												exact
-												path={routes.auth}
-												render={() => <AuthView />}
-											/>
-											<Route
-												exact
-												path={routes.impersonatorAuth}
-												render={() => <ImpersonatorAuthPage />}
-											/>
-											<Route
-												exact
-												path={routes.authSetup}
-												render={() => <AuthSetupGuidePage />}
-											/>
-											<Route
-												exact
-												path={routes.jwtAuth}
-												render={() => <JwtAuthPage />}
-											/>
-											<Route
-												exact
-												path={routes.signOut}
-												render={() => <SignOutView />}
-											/>
-											<Route exact path={"/test"} render={() => <TestView />} />
-											<PrivateRoute
-												exact
-												path={[
-													routes.home,
-													routes.tableWithId,
-													routes.tableGroupWithId,
-													routes.gridWithId,
-												]}
-												render={() => (
-													<RowyContextProvider>
-														<Switch>
-															<PrivateRoute
-																exact
-																path={routes.home}
-																render={() => <HomePage />}
-															/>
-															<PrivateRoute
-																path={routes.tableWithId}
-																render={() => <TablePage />}
-															/>
-															<PrivateRoute
-																path={routes.tableGroupWithId}
-																render={() => <TablePage />}
-															/>
-														</Switch>
-													</RowyContextProvider>
-												)}
-											/>
+  return (
+    <StyledEngineProvider injectFirst>
+      <ErrorBoundary>
+        <AppProvider>
+          <ConfirmationProvider>
+            <SnackProvider>
+              <SnackLogProvider>
+                <CustomBrowserRouter>
+                  <Suspense fallback={<Loading fullScreen />}>
+                    <Switch>
+                      <Route
+                        exact
+                        path={routes.auth}
+                        render={() => <AuthView />}
+                      />
+                      <Route
+                        exact
+                        path={routes.impersonatorAuth}
+                        render={() => <ImpersonatorAuthPage />}
+                      />
+                      <Route
+                        exact
+                        path={routes.authSetup}
+                        render={() => <AuthSetupGuidePage />}
+                      />
+                      <Route
+                        exact
+                        path={routes.jwtAuth}
+                        render={() => <JwtAuthPage />}
+                      />
+                      <Route
+                        exact
+                        path={routes.signOut}
+                        render={() => <SignOutView />}
+                      />
+                      <Route exact path={"/test"} render={() => <TestView />} />
+                      <PrivateRoute
+                        exact
+                        path={[
+                          routes.home,
+                          routes.tableWithId,
+                          routes.tableGroupWithId,
+                          routes.gridWithId,
+                        ]}
+                        render={() => (
+                          <RowyContextProvider>
+                            <Switch>
+                              <PrivateRoute
+                                exact
+                                path={routes.home}
+                                render={() => <HomePage />}
+                              />
+                              <PrivateRoute
+                                path={routes.tableWithId}
+                                render={() => <TablePage />}
+                              />
+                              <PrivateRoute
+                                path={routes.tableGroupWithId}
+                                render={() => <TablePage />}
+                              />
+                            </Switch>
+                          </RowyContextProvider>
+                        )}
+                      />
 
-											<PrivateRoute
-												render={() => (
-													<EmptyState
-														message="Page Not Found"
-														description={
-															<Button
-																component={Link}
-																to={routes.home}
-																variant="outlined"
-																style={{ marginTop: 8 }}
-															>
-																Go Home
-															</Button>
-														}
-														fullScreen
-													/>
-												)}
-											/>
-										</Switch>
-									</Suspense>
-								</CustomBrowserRouter>
-							</SnackLogProvider>
-						</SnackProvider>
-					</ConfirmationProvider>
-				</AppProvider>
-			</ErrorBoundary>
-		</StyledEngineProvider>
-	);
+                      <PrivateRoute
+                        render={() => (
+                          <EmptyState
+                            message="Page Not Found"
+                            description={
+                              <Button
+                                component={Link}
+                                to={routes.home}
+                                variant="outlined"
+                                style={{ marginTop: 8 }}
+                              >
+                                Go Home
+                              </Button>
+                            }
+                            fullScreen
+                          />
+                        )}
+                      />
+                    </Switch>
+                  </Suspense>
+                </CustomBrowserRouter>
+              </SnackLogProvider>
+            </SnackProvider>
+          </ConfirmationProvider>
+        </AppProvider>
+      </ErrorBoundary>
+    </StyledEngineProvider>
+  );
 }

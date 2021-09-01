@@ -9,15 +9,15 @@ type CallbackFn = (event: KeyboardEvent, handler: HotkeysEvent) => void;
  * @param deps
  */
 export default function useHotkeys(
-	keys: string,
-	callback: CallbackFn,
-	deps: any[] = []
+  keys: string,
+  callback: CallbackFn,
+  deps: any[] = []
 ) {
-	const memoisedCallback = useCallback(callback, deps);
+  const memoisedCallback = useCallback(callback, deps);
 
-	useEffect(() => {
-		hotkeys(keys, memoisedCallback);
+  useEffect(() => {
+    hotkeys(keys, memoisedCallback);
 
-		return () => hotkeys.unbind(keys, memoisedCallback);
-	}, [memoisedCallback]);
+    return () => hotkeys.unbind(keys, memoisedCallback);
+  }, [memoisedCallback]);
 }

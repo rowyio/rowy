@@ -4,32 +4,32 @@ import { ISideDrawerFieldProps } from "../types";
 import { TextField } from "@material-ui/core";
 
 export default function ShortText({
-	control,
-	column,
-	disabled,
+  control,
+  column,
+  disabled,
 }: ISideDrawerFieldProps) {
-	return (
-		<Controller
-			control={control}
-			name={column.key}
-			render={({ onChange, onBlur, value }) => {
-				return (
-					<TextField
-						variant="filled"
-						fullWidth
-						margin="none"
-						placeholder={column.name}
-						onChange={onChange}
-						onBlur={onBlur}
-						value={value}
-						id={`sidedrawer-field-${column.key}`}
-						label=""
-						hiddenLabel
-						disabled={disabled}
-						inputProps={{ maxLength: column.config?.maxLength }}
-					/>
-				);
-			}}
-		/>
-	);
+  return (
+    <Controller
+      control={control}
+      name={column.key}
+      render={({ onChange, onBlur, value }) => {
+        return (
+          <TextField
+            variant="filled"
+            fullWidth
+            margin="none"
+            placeholder={column.name}
+            onChange={onChange}
+            onBlur={onBlur}
+            value={value}
+            id={`sidedrawer-field-${column.key}`}
+            label=""
+            hiddenLabel
+            disabled={disabled}
+            inputProps={{ maxLength: column.config?.maxLength }}
+          />
+        );
+      }}
+    />
+  );
 }

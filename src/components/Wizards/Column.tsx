@@ -8,105 +8,105 @@ import { FieldType } from "constants/fields";
 import { getFieldProp } from "components/fields";
 
 const useStyles = makeStyles((theme) =>
-	createStyles({
-		root: {
-			width: "100%",
-			height: 44,
-			border: `1px solid ${theme.palette.divider}`,
-			backgroundColor: theme.palette.background.default,
+  createStyles({
+    root: {
+      width: "100%",
+      height: 44,
+      border: `1px solid ${theme.palette.divider}`,
+      backgroundColor: theme.palette.background.default,
 
-			padding: theme.spacing(0, 1, 0, 1.5),
+      padding: theme.spacing(0, 1, 0, 1.5),
 
-			color: theme.palette.text.secondary,
-			"&:hover": { color: theme.palette.text.primary },
+      color: theme.palette.text.secondary,
+      "&:hover": { color: theme.palette.text.primary },
 
-			"& svg": { display: "block" },
-		},
+      "& svg": { display: "block" },
+    },
 
-		active: {
-			backgroundColor: alpha(
-				theme.palette.primary.main,
-				theme.palette.action.selectedOpacity
-			),
-			color:
-				theme.palette.mode === "dark"
-					? theme.palette.text.primary
-					: theme.palette.primary.dark,
-			borderColor: alpha(
-				theme.palette.primary.main,
-				theme.palette.action.disabledOpacity
-			),
+    active: {
+      backgroundColor: alpha(
+        theme.palette.primary.main,
+        theme.palette.action.selectedOpacity
+      ),
+      color:
+        theme.palette.mode === "dark"
+          ? theme.palette.text.primary
+          : theme.palette.primary.dark,
+      borderColor: alpha(
+        theme.palette.primary.main,
+        theme.palette.action.disabledOpacity
+      ),
 
-			"&:hover": {
-				color:
-					theme.palette.mode === "dark"
-						? theme.palette.text.primary
-						: theme.palette.primary.dark,
-			},
-		},
+      "&:hover": {
+        color:
+          theme.palette.mode === "dark"
+            ? theme.palette.text.primary
+            : theme.palette.primary.dark,
+      },
+    },
 
-		columnNameContainer: {
-			flexShrink: 1,
-			overflow: "hidden",
-		},
-		columnName: {
-			lineHeight: "44px",
-			display: "block",
+    columnNameContainer: {
+      flexShrink: 1,
+      overflow: "hidden",
+    },
+    columnName: {
+      lineHeight: "44px",
+      display: "block",
 
-			userSelect: "none",
+      userSelect: "none",
 
-			marginLeft: theme.spacing(0.5),
-		},
+      marginLeft: theme.spacing(0.5),
+    },
 
-		secondaryItem: { marginLeft: theme.spacing(1) },
-	})
+    secondaryItem: { marginLeft: theme.spacing(1) },
+  })
 );
 
 export interface IColumnProps extends Partial<GridProps> {
-	label: string;
-	type?: FieldType;
-	secondaryItem?: React.ReactNode;
+  label: string;
+  type?: FieldType;
+  secondaryItem?: React.ReactNode;
 
-	active?: boolean;
+  active?: boolean;
 }
 
 export default function Column({
-	label,
-	type,
-	secondaryItem,
+  label,
+  type,
+  secondaryItem,
 
-	active,
-	...props
+  active,
+  ...props
 }: IColumnProps) {
-	const classes = useStyles();
+  const classes = useStyles();
 
-	return (
-		<Grid
-			container
-			alignItems="center"
-			wrap="nowrap"
-			{...props}
-			className={clsx(classes.root, active && classes.active, props.className)}
-		>
-			{type && <Grid item>{getFieldProp("icon", type)}</Grid>}
+  return (
+    <Grid
+      container
+      alignItems="center"
+      wrap="nowrap"
+      {...props}
+      className={clsx(classes.root, active && classes.active, props.className)}
+    >
+      {type && <Grid item>{getFieldProp("icon", type)}</Grid>}
 
-			<Grid item xs className={classes.columnNameContainer}>
-				<Typography
-					component={Grid}
-					item
-					variant="subtitle2"
-					noWrap
-					className={classes.columnName}
-				>
-					{label}
-				</Typography>
-			</Grid>
+      <Grid item xs className={classes.columnNameContainer}>
+        <Typography
+          component={Grid}
+          item
+          variant="subtitle2"
+          noWrap
+          className={classes.columnName}
+        >
+          {label}
+        </Typography>
+      </Grid>
 
-			{secondaryItem && (
-				<Grid item className={classes.secondaryItem}>
-					{secondaryItem}
-				</Grid>
-			)}
-		</Grid>
-	);
+      {secondaryItem && (
+        <Grid item className={classes.secondaryItem}>
+          {secondaryItem}
+        </Grid>
+      )}
+    </Grid>
+  );
 }

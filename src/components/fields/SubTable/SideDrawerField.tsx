@@ -9,33 +9,33 @@ import { useFieldStyles } from "components/SideDrawer/Form/utils";
 import { useSubTableData } from "./utils";
 
 export default function SubTable({
-	column,
-	control,
-	docRef,
+  column,
+  control,
+  docRef,
 }: ISideDrawerFieldProps) {
-	const fieldClasses = useFieldStyles();
+  const fieldClasses = useFieldStyles();
 
-	const row = useWatch({ control });
-	const { documentCount, label, subTablePath } = useSubTableData(
-		column,
-		row,
-		docRef
-	);
+  const row = useWatch({ control });
+  const { documentCount, label, subTablePath } = useSubTableData(
+    column,
+    row,
+    docRef
+  );
 
-	return (
-		<Grid container wrap="nowrap">
-			<div className={fieldClasses.root}>
-				{documentCount} {column.name}: {label}
-			</div>
+  return (
+    <Grid container wrap="nowrap">
+      <div className={fieldClasses.root}>
+        {documentCount} {column.name}: {label}
+      </div>
 
-			<IconButton
-				component={Link}
-				to={subTablePath}
-				style={{ width: 56, marginLeft: 16 }}
-				disabled={!subTablePath}
-			>
-				<LaunchIcon />
-			</IconButton>
-		</Grid>
-	);
+      <IconButton
+        component={Link}
+        to={subTablePath}
+        style={{ width: 56, marginLeft: 16 }}
+        disabled={!subTablePath}
+      >
+        <LaunchIcon />
+      </IconButton>
+    </Grid>
+  );
 }

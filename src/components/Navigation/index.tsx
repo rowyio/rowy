@@ -15,89 +15,89 @@ import UserMenu from "./UserMenu";
 export const APP_BAR_HEIGHT = 56;
 
 const useStyles = makeStyles((theme) =>
-	createStyles({
-		appBar: {
-			// paddingRight: DRAWER_COLLAPSED_WIDTH,
-			height: APP_BAR_HEIGHT,
-			[theme.breakpoints.down("md")]: { paddingRight: 0 },
+  createStyles({
+    appBar: {
+      // paddingRight: DRAWER_COLLAPSED_WIDTH,
+      height: APP_BAR_HEIGHT,
+      [theme.breakpoints.down("md")]: { paddingRight: 0 },
 
-			backgroundColor: theme.palette.background.default,
-		},
+      backgroundColor: theme.palette.background.default,
+    },
 
-		toolbar: {
-			height: APP_BAR_HEIGHT,
-			minHeight: "auto",
-			minWidth: 0,
-			maxWidth: "none",
-			padding: theme.spacing(0, 2),
-		},
+    toolbar: {
+      height: APP_BAR_HEIGHT,
+      minHeight: "auto",
+      minWidth: 0,
+      maxWidth: "none",
+      padding: theme.spacing(0, 2),
+    },
 
-		breadcrumbs: { flex: 1 },
-	})
+    breadcrumbs: { flex: 1 },
+  })
 );
 
 export default function Navigation({
-	children,
-	tableCollection,
+  children,
+  tableCollection,
 }: React.PropsWithChildren<{ tableCollection: string }>) {
-	const { tables } = useRowyContext();
-	const classes = useStyles();
+  const { tables } = useRowyContext();
+  const classes = useStyles();
 
-	const [open, setOpen] = useState(false);
-	useEffect(() => {
-		setOpen(false);
-	}, [tableCollection]);
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    setOpen(false);
+  }, [tableCollection]);
 
-	// Find the matching section for the current route
-	const currentSection = _find(tables, [
-		"collection",
-		tableCollection?.split("/")[0],
-	])?.section;
-	const currentTable = tableCollection?.split("/")[0];
+  // Find the matching section for the current route
+  const currentSection = _find(tables, [
+    "collection",
+    tableCollection?.split("/")[0],
+  ])?.section;
+  const currentTable = tableCollection?.split("/")[0];
 
-	useEffect(() => {
-		const name =
-			_find(tables, ["collection", currentTable])?.name || currentTable;
-		document.title = `${name} | Rowy`;
+  useEffect(() => {
+    const name =
+      _find(tables, ["collection", currentTable])?.name || currentTable;
+    document.title = `${name} | Rowy`;
 
-		return () => {
-			document.title = "Rowy";
-		};
-	}, [currentTable]);
+    return () => {
+      document.title = "Rowy";
+    };
+  }, [currentTable]);
 
-	return (
-		<>
-			<AppBar
-				position="sticky"
-				color="inherit"
-				elevation={0}
-				className={classes.appBar}
-			>
-				<Toolbar className={classes.toolbar}>
-					<IconButton
-						aria-label="Open navigation drawer"
-						onClick={() => setOpen(true)}
-						size="large"
-						edge="start"
-					>
-						<MenuIcon />
-					</IconButton>
+  return (
+    <>
+      <AppBar
+        position="sticky"
+        color="inherit"
+        elevation={0}
+        className={classes.appBar}
+      >
+        <Toolbar className={classes.toolbar}>
+          <IconButton
+            aria-label="Open navigation drawer"
+            onClick={() => setOpen(true)}
+            size="large"
+            edge="start"
+          >
+            <MenuIcon />
+          </IconButton>
 
-					<Breadcrumbs className={classes.breadcrumbs} />
+          <Breadcrumbs className={classes.breadcrumbs} />
 
-					<UserMenu />
-					{/* <Notifications /> */}
-				</Toolbar>
-			</AppBar>
+          <UserMenu />
+          {/* <Notifications /> */}
+        </Toolbar>
+      </AppBar>
 
-			<NavDrawer
-				currentSection={currentSection}
-				currentTable={currentTable}
-				open={open}
-				onClose={() => setOpen(false)}
-			/>
+      <NavDrawer
+        currentSection={currentSection}
+        currentTable={currentTable}
+        open={open}
+        onClose={() => setOpen(false)}
+      />
 
-			{children}
-		</>
-	);
+      {children}
+    </>
+  );
 }

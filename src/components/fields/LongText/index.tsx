@@ -7,22 +7,22 @@ import BasicCell from "./BasicCell";
 import withSideDrawerEditor from "components/Table/editors/withSideDrawerEditor";
 
 const SideDrawerField = lazy(
-	() =>
-		import(
-			"./SideDrawerField" /* webpackChunkName: "SideDrawerField-LongText" */
-		)
+  () =>
+    import(
+      "./SideDrawerField" /* webpackChunkName: "SideDrawerField-LongText" */
+    )
 );
 
 export const config: IFieldConfig = {
-	type: FieldType.longText,
-	name: "Long Text",
-	dataType: "string",
-	initialValue: "",
-	initializable: true,
-	icon: <LongTextIcon />,
-	description: "Large amount of text, such as sentences and paragraphs.",
-	TableCell: withBasicCell(BasicCell),
-	TableEditor: withSideDrawerEditor(BasicCell),
-	SideDrawerField,
+  type: FieldType.longText,
+  name: "Long Text",
+  dataType: "string",
+  initialValue: "",
+  initializable: true,
+  icon: <LongTextIcon />,
+  description: "Large amount of text, such as sentences and paragraphs.",
+  TableCell: withBasicCell(BasicCell),
+  TableEditor: withSideDrawerEditor(BasicCell),
+  SideDrawerField,
 };
 export default config;

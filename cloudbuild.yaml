@@ -1,37 +1,37 @@
 steps:
-	- name: node:10.17.0
-		entrypoint: yarn
-		args: ["install"]
-	- name: node:10.17.0
-		entrypoint: yarn
-		args:
-			- env
-			- "${_PROJECT_ID}"
-			- "${_FIREBASE_WEB_API_KEY}"
-			- "${_ALGOLIA_APP_ID}"
-			- "${_ALGOLIA_APP_KEY}"
-	- name: node:10.17.0
-		entrypoint: yarn
-		args: ["build"]
-	- name: node:10.17.0
-		entrypoint: yarn
-		args:
-			- "target"
-			- "${_HOSTING_TARGET}"
-			- --project
-			- "${_PROJECT_ID}"
-	- name: node:10.17.0
-		entrypoint: yarn
-		args:
-			- deploy
-			- --project
-			- "${_PROJECT_ID}"
-			- --debug
-			- --token
-			- "${_FIREBASE_TOKEN}"
-			- --only
-			- hosting
+  - name: node:10.17.0
+    entrypoint: yarn
+    args: ["install"]
+  - name: node:10.17.0
+    entrypoint: yarn
+    args:
+      - env
+      - "${_PROJECT_ID}"
+      - "${_FIREBASE_WEB_API_KEY}"
+      - "${_ALGOLIA_APP_ID}"
+      - "${_ALGOLIA_APP_KEY}"
+  - name: node:10.17.0
+    entrypoint: yarn
+    args: ["build"]
+  - name: node:10.17.0
+    entrypoint: yarn
+    args:
+      - "target"
+      - "${_HOSTING_TARGET}"
+      - --project
+      - "${_PROJECT_ID}"
+  - name: node:10.17.0
+    entrypoint: yarn
+    args:
+      - deploy
+      - --project
+      - "${_PROJECT_ID}"
+      - --debug
+      - --token
+      - "${_FIREBASE_TOKEN}"
+      - --only
+      - hosting
 substitutions:
-	_PROJECT_ID: "project-id" # default value
+  _PROJECT_ID: "project-id" # default value
 options:
-	machineType: "N1_HIGHCPU_8"
+  machineType: "N1_HIGHCPU_8"

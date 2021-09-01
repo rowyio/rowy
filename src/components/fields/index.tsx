@@ -38,45 +38,45 @@ import Status from "./Status";
 
 // Export field configs in order for FieldsDropdown
 export const FIELDS: IFieldConfig[] = [
-	// TEXT
-	ShortText,
-	LongText,
-	Email,
-	Phone,
-	Url,
-	// NUMERIC
-	Checkbox,
-	Number_,
-	Percentage,
-	Rating,
-	Slider,
-	Color,
-	// DATE & TIME
-	Date_,
-	DateTime,
-	Duration,
-	// FILE
-	Image_,
-	File_,
-	// SELECT
-	SingleSelect,
-	MultiSelect,
-	// CONNECTION
-	SubTable,
-	ConnectTable,
-	ConnectService,
-	// CODE
-	Json,
-	Code,
-	RichText,
-	// CLOUD FUNCTION
-	Action,
-	Derivative,
-	Aggregate,
-	Status,
-	// INTERNAL
-	User,
-	Id,
+  // TEXT
+  ShortText,
+  LongText,
+  Email,
+  Phone,
+  Url,
+  // NUMERIC
+  Checkbox,
+  Number_,
+  Percentage,
+  Rating,
+  Slider,
+  Color,
+  // DATE & TIME
+  Date_,
+  DateTime,
+  Duration,
+  // FILE
+  Image_,
+  File_,
+  // SELECT
+  SingleSelect,
+  MultiSelect,
+  // CONNECTION
+  SubTable,
+  ConnectTable,
+  ConnectService,
+  // CODE
+  Json,
+  Code,
+  RichText,
+  // CLOUD FUNCTION
+  Action,
+  Derivative,
+  Aggregate,
+  Status,
+  // INTERNAL
+  User,
+  Id,
 ];
 
 /**
@@ -84,11 +84,11 @@ export const FIELDS: IFieldConfig[] = [
  * @param fieldType
  */
 export const getFieldProp = (
-	prop: keyof IFieldConfig,
-	fieldType: FieldType
+  prop: keyof IFieldConfig,
+  fieldType: FieldType
 ) => {
-	const field = _find(FIELDS, { type: fieldType });
-	return _get(field, prop);
+  const field = _find(FIELDS, { type: fieldType });
+  return _get(field, prop);
 };
 
 /**
@@ -96,8 +96,8 @@ export const getFieldProp = (
  * @param fieldType
  */
 export const isFieldType = (fieldType: any) => {
-	const fieldTypes = FIELDS.map((field) => field.type);
-	return fieldTypes.includes(fieldType);
+  const fieldTypes = FIELDS.map((field) => field.type);
+  return fieldTypes.includes(fieldType);
 };
 
 /**
@@ -105,8 +105,8 @@ export const isFieldType = (fieldType: any) => {
  * @param dataTypes
  */
 export const hasDataTypes = (dataTypes: string[]) => {
-	const fieldTypes = FIELDS.map((field) => field.type);
-	return fieldTypes.filter((fieldType) =>
-		dataTypes.includes(getFieldProp("dataType", fieldType))
-	);
+  const fieldTypes = FIELDS.map((field) => field.type);
+  return fieldTypes.filter((fieldType) =>
+    dataTypes.includes(getFieldProp("dataType", fieldType))
+  );
 };

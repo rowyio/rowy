@@ -7,20 +7,20 @@ import BasicCell from "../_BasicCell/BasicCellValue";
 import TextEditor from "components/Table/editors/TextEditor";
 
 const SideDrawerField = lazy(
-	() =>
-		import("./SideDrawerField" /* webpackChunkName: "SideDrawerField-Url" */)
+  () =>
+    import("./SideDrawerField" /* webpackChunkName: "SideDrawerField-Url" */)
 );
 
 export const config: IFieldConfig = {
-	type: FieldType.url,
-	name: "URL",
-	dataType: "string",
-	initialValue: "",
-	initializable: true,
-	icon: <UrlIcon />,
-	description: "Web address. Rowy does not validate URLs.",
-	TableCell: withBasicCell(BasicCell),
-	TableEditor: TextEditor,
-	SideDrawerField,
+  type: FieldType.url,
+  name: "URL",
+  dataType: "string",
+  initialValue: "",
+  initializable: true,
+  icon: <UrlIcon />,
+  description: "Web address. Rowy does not validate URLs.",
+  TableCell: withBasicCell(BasicCell),
+  TableEditor: TextEditor,
+  SideDrawerField,
 };
 export default config;
