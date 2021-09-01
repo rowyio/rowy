@@ -35,8 +35,8 @@ export default function CheckboxIndeterminateIcon() {
         },
         "& .tick": {
           stroke: (theme) => theme.palette.primary.contrastText,
-          strokeDasharray: 10,
-          strokeDashoffset: 10,
+          strokeDasharray: 12,
+          strokeDashoffset: 12,
           transition: (theme) =>
             theme.transitions.create(["stroke-dashoffset"], {
               easing: theme.transitions.easing.easeIn,
@@ -69,7 +69,7 @@ export default function CheckboxIndeterminateIcon() {
       }}
     >
       <svg viewBox="0 0 18 18">
-        <line x1="4" y1="9" x2="14" y2="9" stroke-width="2" className="tick" />
+        <line x1="3" y1="9" x2="15" y2="9" stroke-width="2" className="tick" />
       </svg>
     </Box>
   );
