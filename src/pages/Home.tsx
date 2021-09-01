@@ -14,8 +14,7 @@ import {
 } from "@material-ui/core";
 
 import AddIcon from "@material-ui/icons/Add";
-import AddTableIcon from "assets/icons/AddTable";
-import SettingsIcon from "@material-ui/icons/Settings";
+// import SettingsIcon from "@material-ui/icons/Settings";
 import EditIcon from "@material-ui/icons/Edit";
 import Favorite from "@material-ui/icons/Favorite";
 import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
