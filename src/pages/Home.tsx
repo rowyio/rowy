@@ -14,6 +14,7 @@ import {
 } from "@material-ui/core";
 
 import AddIcon from "@material-ui/icons/Add";
+import AddTableIcon from "assets/icons/AddTable";
 import SettingsIcon from "@material-ui/icons/Settings";
 import EditIcon from "@material-ui/icons/Edit";
 import Favorite from "@material-ui/icons/Favorite";
@@ -35,6 +36,8 @@ import ProjectSettings from "components/ProjectSettings";
 import EmptyState from "components/EmptyState";
 import WIKI_LINKS from "constants/wikiLinks";
 import BuilderInstaller from "../components/BuilderInstaller";
+import HomeWelcomePrompt from "components/HomeWelcomePrompt";
+
 const useStyles = makeStyles((theme) =>
   createStyles({
     "@global": {
@@ -240,72 +243,77 @@ export default function HomePage() {
       handleCreateTable={handleCreateTable}
     >
       <main className={classes.root}>
-        <Container>
-          {favs.length !== 0 && (
-            <section id="favorites" className={classes.section}>
-              <Typography
-                variant="h6"
-                component="h1"
-                className={classes.sectionHeader}
-              >
-                Favorites
-              </Typography>
-              <Divider className={classes.divider} />
-              <Grid
-                container
-                spacing={4}
-                justifyContent="flex-start"
-                className={classes.cardGrid}
-              >
-                {favs.map((table) => (
-                  <TableCard key={table.collection} table={table} />
-                ))}
-              </Grid>
-            </section>
-          )}
-
-          {sections &&
-            Object.keys(sections).map((sectionName) => (
-              <section
-                key={sectionName}
-                id={sectionName}
-                className={classes.section}
-              >
+        {sections && Object.keys(sections).length > 0 ? (
+          <Container>
+            {favs.length !== 0 && (
+              <section id="favorites" className={classes.section}>
                 <Typography
                   variant="h6"
                   component="h1"
                   className={classes.sectionHeader}
                 >
-                  {sectionName === "undefined" ? "Other" : sectionName}
+                  Favorites
                 </Typography>
-
                 <Divider className={classes.divider} />
-
                 <Grid
                   container
                   spacing={4}
                   justifyContent="flex-start"
                   className={classes.cardGrid}
                 >
-                  {sections[sectionName].map((table, i) => (
-                    <TableCard key={`${i}-${table.collection}`} table={table} />
+                  {favs.map((table) => (
+                    <TableCard key={table.collection} table={table} />
                   ))}
                 </Grid>
               </section>
-            ))}
+            )}
 
-          <section className={classes.section}>
-            <Tooltip title="Create a table">
-              <Fab
-                className={classes.fab}
-                color="secondary"
-                aria-label="Create table"
-                onClick={handleCreateTable}
-              >
-                <AddIcon />
-              </Fab>
-            </Tooltip>
-            <Tooltip title="Configure Rowy">
+            {sections &&
+              Object.keys(sections).length > 0 &&
+              Object.keys(sections).map((sectionName) => (
+                <section
+                  key={sectionName}
+                  id={sectionName}
+                  className={classes.section}
+                >
+                  <Typography
+                    variant="h6"
+                    component="h1"
+                    className={classes.sectionHeader}
+                  >
+                    {sectionName === "undefined" ? "Other" : sectionName}
+                  </Typography>
+
+                  <Divider className={classes.divider} />
+
+                  <Grid
+                    container
+                    spacing={4}
+                    justifyContent="flex-start"
+                    className={classes.cardGrid}
+                  >
+                    {sections[sectionName].map((table, i) => (
+                      <TableCard
+                        key={`${i}-${table.collection}`}
+                        table={table}
+                      />
+                    ))}
+                  </Grid>
+                </section>
+              ))}
+
+            <section className={classes.section}>
+              <Tooltip title="Create Table">
+                <Fab
+                  className={classes.fab}
+                  color="secondary"
+                  aria-label="Create table"
+                  onClick={handleCreateTable}
+                >
+                  <AddIcon />
+                </Fab>
+              </Tooltip>
+              {/* <Tooltip title="Configure Rowy">
               <Fab
                 className={classes.configFab}
                 color="secondary"
@@ -314,9 +322,22 @@ export default function HomePage() {
               >
                 <SettingsIcon />
               </Fab>
-            </Tooltip>
-          </section>
-        </Container>
+            </Tooltip> */}
+            </section>
+          </Container>
+        ) : (
+          <Container>
+            <HomeWelcomePrompt />
+            <Fab
+              className={classes.fab}
+              color="secondary"
+              aria-label="Create table"
+              onClick={handleCreateTable}
+            >
+              <AddIcon />
+            </Fab>
+          </Container>
+        )}
       </main>
 
       <TableSettingsDialog
