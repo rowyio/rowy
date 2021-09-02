@@ -1,8 +1,7 @@
 import useDoc from "hooks/useDoc";
 import Modal from "components/Modal";
-import { Box, Button, CircularProgress, Typography } from "@material-ui/core";
+import { Box, CircularProgress, Typography } from "@material-ui/core";
 import { IFormDialogProps } from "./Table/ColumnMenu/NewColumn";
-import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 
 export interface IProjectSettings
@@ -29,7 +28,7 @@ export default function BuilderInstaller({ handleClose }: IProjectSettings) {
       children={
         <Box display="flex" flexDirection="column">
           <Typography variant="body2">
-            You will be redirected to Google Cloud Shell to deploy Rowy Function
+            You will be redirected to Google Cloud Shell to deploy Function
             Builder to Cloud Run.
           </Typography>
           <br />

@@ -22,8 +22,8 @@ import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import UpdateChecker, { useLatestUpdateState } from "./UpdateChecker";
 import { useAppContext } from "contexts/AppContext";
 import routes from "constants/routes";
-import { projectId } from "../../firebase";
-import meta from "../../../package.json";
+import { projectId } from "@src/firebase";
+import meta from "@root/package.json";
 
 const useStyles = makeStyles((theme) =>
   createStyles({

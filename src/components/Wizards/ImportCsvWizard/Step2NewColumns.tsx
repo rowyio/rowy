@@ -61,7 +61,7 @@ export default function Step2NewColumns({
         <Grid container spacing={2} className={classes.typeSelectRow}>
           <Grid item xs={12} sm={6}>
             <Typography variant="overline" gutterBottom component="h2">
-              New Rowy Columns
+              New Table Columns
             </Typography>
             <Divider />
 

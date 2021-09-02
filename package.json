@@ -1,5 +1,5 @@
 {
-  "name": "rowy",
+  "name": "Rowy",
   "version": "2.0.0",
   "homepage": "https://rowy.io/",
   "repository": {
@@ -106,6 +106,7 @@
     "@types/react-dom": "^17.0.8",
     "@types/react-router-dom": "^5.1.7",
     "@types/use-persisted-state": "^0.3.0",
+    "craco-alias": "^3.0.1",
     "firebase-tools": "^8.12.1",
     "husky": "^4.2.5",
     "monaco-editor": "^0.21.2",

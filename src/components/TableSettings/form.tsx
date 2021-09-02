@@ -5,6 +5,7 @@ import { Link, Typography } from "@material-ui/core";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import { projectId } from "../../firebase";
 import WIKI_LINKS from "constants/wikiLinks";
+import { name } from "@root/package.json";
 
 export const tableSettings = (
   mode: TableSettingsDialogModes | null,
@@ -143,7 +144,7 @@ export const tableSettings = (
       displayCondition: "return values.tableType === 'collectionGroup'",
       assistiveText: (
         <>
-          Rowy Cloud Functions that rely on{" "}
+          {name} Cloud Functions that rely on{" "}
           <Link
             href="https://firebase.google.com/docs/functions/firestore-events#function_triggers"
             target="_blank"

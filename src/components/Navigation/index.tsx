@@ -12,6 +12,9 @@ import NavDrawer from "./NavDrawer";
 import { useRowyContext } from "contexts/RowyContext";
 import UserMenu from "./UserMenu";
 
+import { name } from "@root/package.json";
+import { projectId } from "@src/firebase";
+
 export const APP_BAR_HEIGHT = 56;
 
 const useStyles = makeStyles((theme) =>
@@ -56,12 +59,12 @@ export default function Navigation({
   const currentTable = tableCollection?.split("/")[0];
 
   useEffect(() => {
-    const name =
+    const tableName =
       _find(tables, ["collection", currentTable])?.name || currentTable;
-    document.title = `${name} | Rowy`;
+    document.title = `${tableName} | ${projectId} | ${name}`;
 
     return () => {
-      document.title = "Rowy";
+      document.title = `${projectId} | ${name}`;
     };
   }, [currentTable]);
 

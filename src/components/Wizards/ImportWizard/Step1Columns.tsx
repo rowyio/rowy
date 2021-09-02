@@ -163,7 +163,7 @@ export default function Step1Columns({ config, setConfig }: IStepProps) {
       </Grid>
       <Grid item xs={12} sm={6}>
         <Typography variant="overline" gutterBottom component="h2">
-          Sort Rowy Columns
+          Sort Table Columns
         </Typography>
         <Divider />
 

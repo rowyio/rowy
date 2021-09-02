@@ -13,6 +13,7 @@ import { tableSettings } from "./form";
 import { useRowyContext } from "contexts/RowyContext";
 import useRouter from "../../hooks/useRouter";
 import { db } from "../../firebase";
+import { name } from "@root/package.json";
 
 export enum TableSettingsDialogModes {
   create,
@@ -243,7 +244,7 @@ export default function TableSettingsDialog({
                 body: (
                   <>
                     <DialogContentText>
-                      This will only delete the Rowy configuration data.
+                      This will only delete the {name} configuration data.
                     </DialogContentText>
                     <DialogContentText>
                       You will not lose any data in your Firestore collection

@@ -175,7 +175,7 @@ export default function Step1Columns({
         )}
         <Grid item xs={12} sm={6}>
           <Typography variant="overline" gutterBottom component="h2">
-            Rowy Columns
+            Table Columns
           </Typography>
         </Grid>
       </Grid>

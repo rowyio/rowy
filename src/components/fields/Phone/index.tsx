@@ -18,8 +18,7 @@ export const config: IFieldConfig = {
   initialValue: "",
   initializable: true,
   icon: <PhoneIcon />,
-  description:
-    "Phone numbers stored as text. Rowy does not validate phone numbers.",
+  description: "Phone numbers stored as text.",
   TableCell: withBasicCell(BasicCell),
   TableEditor: TextEditor,
   SideDrawerField,

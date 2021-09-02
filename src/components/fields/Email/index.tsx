@@ -18,7 +18,7 @@ export const config: IFieldConfig = {
   initialValue: "",
   initializable: true,
   icon: <EmailIcon />,
-  description: "Email address. Rowy does not validate emails.",
+  description: "Email address.",
   TableCell: withBasicCell(BasicCell),
   TableEditor: TextEditor,
   SideDrawerField,

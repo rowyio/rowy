@@ -48,7 +48,7 @@ const additionalVariables = [
   {
     key: "fieldTypes",
     description:
-      "fieldTypes is a map of all fields and its corresponding Rowy column type",
+      "fieldTypes is a map of all fields and its corresponding field type",
   },
   {
     key: "extensionConfig",

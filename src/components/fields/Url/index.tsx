@@ -18,7 +18,7 @@ export const config: IFieldConfig = {
   initialValue: "",
   initializable: true,
   icon: <UrlIcon />,
-  description: "Web address. Rowy does not validate URLs.",
+  description: "Web address.",
   TableCell: withBasicCell(BasicCell),
   TableEditor: TextEditor,
   SideDrawerField,

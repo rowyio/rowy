@@ -134,7 +134,7 @@ export default function FieldSettings(props: IMenuModalProps) {
                   const buildUrl = settingsDoc.get("buildUrl");
                   if (!buildUrl) {
                     snack.open({
-                      message: `Rowy functions builder is not yet setup`,
+                      message: `Functions Builder is not yet setup`,
                       variant: "error",
                       action: (
                         <Button

@@ -5,6 +5,7 @@ import { authOptions } from "firebase/firebaseui";
 import { Link } from "@material-ui/core";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import WIKI_LINKS from "constants/wikiLinks";
+import { name } from "@root/package.json";
 
 export const projectSettingsForm = [
   {
@@ -54,7 +55,7 @@ export const projectSettingsForm = [
     format: "url",
     assistiveText: (
       <>
-        A Cloud Run instance is required to build and deploy Rowy Cloud
+        A Cloud Run instance is required to build and deploy {name} Cloud
         Functions.
         <Link href={WIKI_LINKS.functions} target="_blank" rel="noopener">
           Learn more

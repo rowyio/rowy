@@ -1,4 +1,4 @@
-// Define field type strings used in Rowy column config
+// Define field type strings used in column config
 export enum FieldType {
   // TEXT
   shortText = "SIMPLE_TEXT",

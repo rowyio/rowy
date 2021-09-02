@@ -47,7 +47,7 @@ export default function Step3Types({ config, updateConfig, isXs }: IStepProps) {
       <Grid container spacing={2} className={classes.typeSelectRow}>
         <Grid item xs={12} sm={6}>
           <Typography variant="overline" gutterBottom component="h2">
-            Rowy Columns
+            Table Columns
           </Typography>
           <Divider />
 

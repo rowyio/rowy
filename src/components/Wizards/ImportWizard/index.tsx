@@ -90,7 +90,7 @@ export default function ImportWizard() {
         {
           title: "Rename Columns",
           description:
-            "Rename your Rowy columns with user-friendly names. These changes will not update the field names in your database.",
+            "Rename your table columns with user-friendly names. These changes will not update the field names in your database.",
           content: (
             <Step2Rename
               config={config}
