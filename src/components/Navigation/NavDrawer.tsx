@@ -13,6 +13,7 @@ import {
 } from "@material-ui/core";
 import HomeIcon from "@material-ui/icons/HomeOutlined";
 import SettingsIcon from "@material-ui/icons/SettingsOutlined";
+import ProjectSettingsIcon from "assets/icons/ProjectSettings";
 import CloseIcon from "assets/icons/Backburger";
 
 import { APP_BAR_HEIGHT } from ".";
@@ -26,19 +27,21 @@ export const NAV_DRAWER_WIDTH = 256;
 
 export interface INavDrawerProps extends DrawerProps {
   currentSection?: string;
-  currentTable: string;
+  currentTable?: string;
+  onClose: NonNullable<DrawerProps["onClose"]>;
 }
 
 export default function NavDrawer({
   currentSection,
-  currentTable,
+  currentTable = "",
   ...props
 }: INavDrawerProps) {
-  const { sections } = useRowyContext();
+  const { userClaims, sections } = useRowyContext();
+
+  const closeDrawer = (e: {}) => props.onClose(e, "escapeKeyDown");
 
   return (
     <Drawer
-      open
       {...props}
       sx={{ "& .MuiDrawer-paper": { minWidth: NAV_DRAWER_WIDTH } }}
     >
@@ -62,7 +65,7 @@ export default function NavDrawer({
       <nav>
         <List disablePadding>
           <li>
-            <MenuItem component={Link} to={routes.home}>
+            <MenuItem component={Link} to={routes.home} onClick={closeDrawer}>
               <ListItemIcon>
                 <HomeIcon />
               </ListItemIcon>
@@ -70,13 +73,31 @@ export default function NavDrawer({
             </MenuItem>
           </li>
           <li>
-            <MenuItem component={Link} to={routes.settings}>
+            <MenuItem
+              component={Link}
+              to={routes.settings}
+              onClick={closeDrawer}
+            >
               <ListItemIcon>
                 <SettingsIcon />
               </ListItemIcon>
               <ListItemText primary="Settings" />
             </MenuItem>
           </li>
+          {userClaims?.roles?.includes("ADMIN") && (
+            <li>
+              <MenuItem
+                component={Link}
+                to={routes.projectSettings}
+                onClick={closeDrawer}
+              >
+                <ListItemIcon>
+                  <ProjectSettingsIcon />
+                </ListItemIcon>
+                <ListItemText primary="Project Settings" />
+              </MenuItem>
+            </li>
+          )}
 
           <Divider variant="middle" sx={{ mt: 1, mb: 1 }} />
 
@@ -88,6 +109,7 @@ export default function NavDrawer({
                 tables={tables}
                 currentSection={currentSection}
                 currentTable={currentTable}
+                closeDrawer={closeDrawer}
               />
             ))}
         </List>

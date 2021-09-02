@@ -1,7 +1,6 @@
 import { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
 import {
   IconButton,
   IconButtonProps,
@@ -14,59 +13,19 @@ import {
   ListItemSecondaryAction,
   Link as MuiLink,
   Divider,
-  Badge,
 } from "@material-ui/core";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 
-import UpdateChecker, { useLatestUpdateState } from "./UpdateChecker";
 import { useAppContext } from "contexts/AppContext";
 import routes from "constants/routes";
 import { projectId } from "@src/firebase";
 import meta from "@root/package.json";
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    spacer: {
-      width: 48,
-      height: 48,
-    },
-
-    iconButton: {},
-    avatar: {
-      "$iconButton &": {
-        width: 24,
-        height: 24,
-      },
-    },
-
-    paper: { minWidth: 160 },
-
-    // divider: { margin: theme.spacing(1, 2) },
-
-    secondaryAction: { pointerEvents: "none" },
-    secondaryIcon: {
-      display: "block",
-      color: theme.palette.action.active,
-    },
-
-    subMenu: { marginTop: theme.spacing(-0.5) },
-
-    version: {
-      userSelect: "none",
-      color: theme.palette.text.disabled,
-      margin: 0,
-    },
-  })
-);
-
 export default function UserMenu(props: IconButtonProps) {
-  const classes = useStyles();
-
   const anchorEl = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
   const [themeSubMenu, setThemeSubMenu] = useState<EventTarget | null>(null);
-  const [latestUpdate] = useLatestUpdateState<null | Record<string, any>>();
 
   const {
     currentUser,
@@ -77,14 +36,14 @@ export default function UserMenu(props: IconButtonProps) {
     setThemeOverridden,
   } = useAppContext();
   if (!currentUser || !userDoc || !userDoc?.state?.doc)
-    return <div className={classes.spacer} />;
+    return <div style={{ width: 48, height: 48 }} />;
 
   const displayName = userDoc?.state?.doc?.user?.displayName;
   const avatarUrl = userDoc?.state?.doc?.user?.photoURL;
   const email = userDoc?.state?.doc?.user?.email;
 
   const avatar = avatarUrl ? (
-    <Avatar src={avatarUrl} className={classes.avatar} />
+    <Avatar src={avatarUrl} />
   ) : (
     <AccountCircleIcon color="secondary" />
   );
@@ -122,15 +81,9 @@ export default function UserMenu(props: IconButtonProps) {
         {...props}
         ref={anchorEl}
         onClick={() => setOpen(true)}
-        className={classes.iconButton}
+        sx={{ "& .MuiAvatar-root": { width: 24, height: 24 } }}
       >
-        {latestUpdate?.tag_name > "v" + meta.version ? (
-          <Badge color="primary" overlap="circular" variant="dot">
-            {avatar}
-          </Badge>
-        ) : (
-          avatar
-        )}
+        {avatar}
       </IconButton>
 
       <Menu
@@ -141,19 +94,19 @@ export default function UserMenu(props: IconButtonProps) {
         transformOrigin={{ vertical: "top", horizontal: "right" }}
         open={open}
         onClose={() => setOpen(false)}
-        classes={{ paper: classes.paper }}
+        sx={{ "& .MuiPaper-root": { minWidth: 160 } }}
       >
-        <ListItem>
+        <ListItem style={{ cursor: "default" }}>
           <ListItemAvatar>{avatar}</ListItemAvatar>
           <ListItemText primary={displayName} secondary={email} />
         </ListItem>
 
-        <Divider variant="middle" />
+        <Divider variant="middle" sx={{ mt: 0.5, mb: 0.5 }} />
 
         <MenuItem onClick={(e) => setThemeSubMenu(e.target)}>
           Theme
-          <ListItemSecondaryAction className={classes.secondaryAction}>
-            <ArrowRightIcon className={classes.secondaryIcon} />
+          <ListItemSecondaryAction style={{ pointerEvents: "none" }}>
+            <ArrowRightIcon style={{ display: "block" }} />
           </ListItemSecondaryAction>
         </MenuItem>
 
@@ -165,7 +118,7 @@ export default function UserMenu(props: IconButtonProps) {
             transformOrigin={{ vertical: "top", horizontal: "right" }}
             open
             onClose={() => setThemeSubMenu(null)}
-            classes={{ paper: classes.subMenu }}
+            sx={{ "& .MuiPaper-root": { mt: -0.5 } }}
           >
             <MenuItem
               onClick={() => changeTheme("system")}
@@ -189,7 +142,7 @@ export default function UserMenu(props: IconButtonProps) {
         )}
 
         <MenuItem component={Link} to={routes.userSettings} disabled>
-          User settings
+          Settings
         </MenuItem>
 
         <Divider variant="middle" />
@@ -199,12 +152,6 @@ export default function UserMenu(props: IconButtonProps) {
         </MenuItem>
 
         <Divider variant="middle" />
-
-        <MenuItem component={Link} to={routes.projectSettings} disabled>
-          Project settings
-        </MenuItem>
-
-        <UpdateChecker />
 
         <ListItem>
           <ListItemText
@@ -237,7 +184,11 @@ export default function UserMenu(props: IconButtonProps) {
             }
             primaryTypographyProps={{ variant: "caption", color: "inherit" }}
             secondaryTypographyProps={{ variant: "caption", color: "inherit" }}
-            className={classes.version}
+            sx={{
+              userSelect: "none",
+              color: "text.disabled",
+              margin: 0,
+            }}
           />
         </ListItem>
       </Menu>

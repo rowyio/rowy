@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { Route, Switch, Link } from "react-router-dom";
+import { Route, Switch, Link, Redirect } from "react-router-dom";
 
 import { StyledEngineProvider } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
@@ -25,28 +25,22 @@ import TestView from "pages/Test";
 import Favicon from "assets/Favicon";
 import "analytics";
 
-const AuthSetupGuidePage = lazy(
-  () => import("pages/Auth/SetupGuide" /* webpackChunkName: "AuthSetupGuide" */)
-);
+// prettier-ignore
+const AuthSetupGuidePage = lazy(() => import("pages/Auth/SetupGuide" /* webpackChunkName: "AuthSetupGuide" */));
+// prettier-ignore
+const ImpersonatorAuthPage = lazy(() => import("./pages/Auth/ImpersonatorAuth" /* webpackChunkName: "ImpersonatorAuthPage" */));
+// prettier-ignore
+const JwtAuthPage = lazy(() => import("./pages/Auth/JwtAuth" /* webpackChunkName: "JwtAuthPage" */));
 
-const HomePage = lazy(
-  () => import("./pages/Home" /* webpackChunkName: "HomePage" */)
-);
-const TablePage = lazy(
-  () => import("./pages/Table" /* webpackChunkName: "TablePage" */)
-);
-const ImpersonatorAuthPage = lazy(
-  () =>
-    import(
-      "./pages/Auth/ImpersonatorAuth" /* webpackChunkName: "ImpersonatorAuthPage" */
-    )
-);
-const JwtAuthPage = lazy(
-  () => import("./pages/Auth/JwtAuth" /* webpackChunkName: "JwtAuthPage" */)
-);
-// const GridView = lazy(
-//   () => import("./views/GridView" /* webpackChunkName: "GridView" */)
-// );
+// prettier-ignore
+const HomePage = lazy(() => import("./pages/Home" /* webpackChunkName: "HomePage" */));
+// prettier-ignore
+const TablePage = lazy(() => import("./pages/Table" /* webpackChunkName: "TablePage" */));
+
+// prettier-ignore
+const ProjectSettingsPage = lazy(() => import("./pages/Settings/ProjectSettings" /* webpackChunkName: "ProjectSettingsPage" */));
+// prettier-ignore
+const UserSettingsPage = lazy(() => import("./pages/Settings/UserSettings" /* webpackChunkName: "UserSettingsPage" */));
 
 export default function App() {
   return (
@@ -85,7 +79,9 @@ export default function App() {
                         path={routes.signOut}
                         render={() => <SignOutView />}
                       />
+
                       <Route exact path={"/test"} render={() => <TestView />} />
+
                       <PrivateRoute
                         exact
                         path={[
@@ -93,6 +89,9 @@ export default function App() {
                           routes.tableWithId,
                           routes.tableGroupWithId,
                           routes.gridWithId,
+                          routes.settings,
+                          routes.projectSettings,
+                          routes.userSettings,
                         ]}
                         render={() => (
                           <RowyContextProvider>
@@ -109,6 +108,24 @@ export default function App() {
                               <PrivateRoute
                                 path={routes.tableGroupWithId}
                                 render={() => <TablePage />}
+                              />
+
+                              <PrivateRoute
+                                exact
+                                path={routes.settings}
+                                render={() => (
+                                  <Redirect to={routes.userSettings} />
+                                )}
+                              />
+                              <PrivateRoute
+                                exact
+                                path={routes.projectSettings}
+                                render={() => <ProjectSettingsPage />}
+                              />
+                              <PrivateRoute
+                                exact
+                                path={routes.userSettings}
+                                render={() => <UserSettingsPage />}
                               />
                             </Switch>
                           </RowyContextProvider>

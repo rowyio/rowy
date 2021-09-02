@@ -1,10 +1,12 @@
 import { useEffect } from "react";
 import queryString from "query-string";
 import _isEmpty from "lodash/isEmpty";
+import _find from "lodash/find";
 
 import { Hidden } from "@material-ui/core";
 
 import Navigation from "components/Navigation";
+import Breadcrumbs from "components/Navigation/Breadcrumbs";
 import Table from "components/Table";
 import SideDrawer from "components/SideDrawer";
 import TableHeaderSkeleton from "components/Table/Skeleton/TableHeaderSkeleton";
@@ -18,12 +20,32 @@ import useRouter from "hooks/useRouter";
 import { DocActions } from "hooks/useDoc";
 import ActionParamsProvider from "components/fields/Action/FormDialog/Provider";
 
+import { name } from "@root/package.json";
+import { projectId } from "@src/firebase";
+
 export default function TablePage() {
   const router = useRouter();
   const tableCollection = decodeURIComponent(router.match.params.id);
 
-  const { tableState, tableActions, sideDrawerRef } = useRowyContext();
+  const { tableState, tableActions, sideDrawerRef, tables } = useRowyContext();
   const { userDoc } = useAppContext();
+
+  // Find the matching section for the current route
+  const currentSection = _find(tables, [
+    "collection",
+    tableCollection?.split("/")[0],
+  ])?.section;
+  const currentTable = tableCollection?.split("/")[0];
+
+  useEffect(() => {
+    const tableName =
+      _find(tables, ["collection", currentTable])?.name || currentTable;
+    document.title = `${tableName} | ${projectId} | ${name}`;
+
+    return () => {
+      document.title = `${projectId} | ${name}`;
+    };
+  }, [currentTable]);
 
   let filters: RowyFilter[] = [];
   const parsed = queryString.parse(router.location.search);
@@ -54,7 +76,7 @@ export default function TablePage() {
   if (!tableState) return null;
 
   return (
-    <Navigation tableCollection={tableCollection}>
+    <Navigation title={<Breadcrumbs />}>
       <ActionParamsProvider>
         {tableState.loadingColumns && (
           <>

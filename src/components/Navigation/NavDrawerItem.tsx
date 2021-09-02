@@ -53,6 +53,8 @@ export interface INavDrawerItemProps {
 
   currentSection?: string;
   currentTable: string;
+
+  closeDrawer: (e: {}) => void;
 }
 
 export default function NavDrawerItem({
@@ -60,6 +62,7 @@ export default function NavDrawerItem({
   tables,
   currentSection,
   currentTable,
+  closeDrawer,
 }: INavDrawerItemProps) {
   const classes = useStyles();
 
@@ -111,6 +114,7 @@ export default function NavDrawerItem({
                         "~2F"
                       )}`
                 }
+                onClick={closeDrawer}
               >
                 <ListItemText
                   primary={table.name}

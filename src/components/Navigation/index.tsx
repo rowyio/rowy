@@ -1,72 +1,29 @@
-import React, { useState, useEffect } from "react";
-import _find from "lodash/find";
+import { ReactNode, useState } from "react";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
-import { AppBar, Toolbar, IconButton } from "@material-ui/core";
+import {
+  useScrollTrigger,
+  AppBar,
+  Toolbar,
+  IconButton,
+  Box,
+  Typography,
+} from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 
-import Breadcrumbs from "./Breadcrumbs";
 import NavDrawer from "./NavDrawer";
-
-// import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
-import { useRowyContext } from "contexts/RowyContext";
 import UserMenu from "./UserMenu";
-
-import { name } from "@root/package.json";
-import { projectId } from "@src/firebase";
 
 export const APP_BAR_HEIGHT = 56;
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    appBar: {
-      // paddingRight: DRAWER_COLLAPSED_WIDTH,
-      height: APP_BAR_HEIGHT,
-      [theme.breakpoints.down("md")]: { paddingRight: 0 },
+export interface INavigationProps {
+  children: ReactNode;
+  title?: ReactNode;
+}
 
-      backgroundColor: theme.palette.background.default,
-    },
-
-    toolbar: {
-      height: APP_BAR_HEIGHT,
-      minHeight: "auto",
-      minWidth: 0,
-      maxWidth: "none",
-      padding: theme.spacing(0, 2),
-    },
-
-    breadcrumbs: { flex: 1 },
-  })
-);
-
-export default function Navigation({
-  children,
-  tableCollection,
-}: React.PropsWithChildren<{ tableCollection: string }>) {
-  const { tables } = useRowyContext();
-  const classes = useStyles();
-
+export default function Navigation({ children, title }: INavigationProps) {
   const [open, setOpen] = useState(false);
-  useEffect(() => {
-    setOpen(false);
-  }, [tableCollection]);
 
-  // Find the matching section for the current route
-  const currentSection = _find(tables, [
-    "collection",
-    tableCollection?.split("/")[0],
-  ])?.section;
-  const currentTable = tableCollection?.split("/")[0];
-
-  useEffect(() => {
-    const tableName =
-      _find(tables, ["collection", currentTable])?.name || currentTable;
-    document.title = `${tableName} | ${projectId} | ${name}`;
-
-    return () => {
-      document.title = `${projectId} | ${name}`;
-    };
-  }, [currentTable]);
+  const trigger = useScrollTrigger({ disableHysteresis: true, threshold: 0 });
 
   return (
     <>
@@ -74,9 +31,44 @@ export default function Navigation({
         position="sticky"
         color="inherit"
         elevation={0}
-        className={classes.appBar}
+        className={trigger ? "scrolled" : ""}
+        sx={{
+          height: APP_BAR_HEIGHT, // Elevation 8
+          backgroundImage:
+            "linear-gradient(rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.09))",
+
+          "&::before": {
+            content: "''",
+            display: "block",
+            position: "absolute",
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+
+            bgcolor: "background.default",
+            transition: (theme) => theme.transitions.create("opacity"),
+          },
+
+          "&:hover, &.scrolled": {
+            boxShadow: 1,
+            "&::before": { opacity: 0 },
+          },
+        }}
       >
-        <Toolbar className={classes.toolbar}>
+        <Toolbar
+          sx={{
+            height: APP_BAR_HEIGHT,
+            minWidth: 0,
+            maxWidth: "none",
+            "&&": {
+              minHeight: APP_BAR_HEIGHT,
+              p: 0,
+              pl: 2,
+              pr: 2,
+            },
+          }}
+        >
           <IconButton
             aria-label="Open navigation drawer"
             onClick={() => setOpen(true)}
@@ -86,19 +78,22 @@ export default function Navigation({
             <MenuIcon />
           </IconButton>
 
-          <Breadcrumbs className={classes.breadcrumbs} />
+          <Box sx={{ flex: 1, ml: 20 / 8, mr: 20 / 8, userSelect: "none" }}>
+            {typeof title === "string" ? (
+              <Typography variant="h6" component="h1">
+                {title}
+              </Typography>
+            ) : (
+              title
+            )}
+          </Box>
 
           <UserMenu />
           {/* <Notifications /> */}
         </Toolbar>
       </AppBar>
 
-      <NavDrawer
-        currentSection={currentSection}
-        currentTable={currentTable}
-        open={open}
-        onClose={() => setOpen(false)}
-      />
+      <NavDrawer open={open} onClose={() => setOpen(false)} />
 
       {children}
     </>

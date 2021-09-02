@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { auth, db } from "../firebase";
+import { projectId, auth, db } from "@src/firebase";
 import firebase from "firebase/app";
 import useDoc from "hooks/useDoc";
 import createPersistedState from "use-persisted-state";
@@ -13,6 +13,7 @@ import {
 import Themes from "Themes";
 
 import ErrorBoundary from "components/ErrorBoundary";
+import { name } from "@root/package.json";
 
 const useThemeState = createPersistedState("__ROWY__THEME");
 const useThemeOverriddenState = createPersistedState(
@@ -48,6 +49,10 @@ export const AppProvider: React.FC = ({ children }) => {
     auth.onAuthStateChanged((auth) => {
       setCurrentUser(auth);
     });
+  }, []);
+
+  useEffect(() => {
+    document.title = `${projectId} | ${name}`;
   }, []);
 
   // Store matching userDoc

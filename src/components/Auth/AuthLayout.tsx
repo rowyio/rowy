@@ -83,8 +83,8 @@ export default function AuthLayout({ children, loading }: IAuthLayoutProps) {
     <Div100vh className={classes.root} style={{ minHeight: "100rvh" }}>
       <Paper className={classes.paper}>
         <Logo />
-        <Typography variant="overline" className={classes.projectName}>
-          {process.env.REACT_APP_FIREBASE_PROJECT_ID}
+        <Typography variant="body2" className={classes.projectName}>
+          Project: {process.env.REACT_APP_FIREBASE_PROJECT_ID}
         </Typography>
         {children}
 

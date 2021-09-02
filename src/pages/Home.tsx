@@ -19,7 +19,8 @@ import EditIcon from "@material-ui/icons/Edit";
 import Favorite from "@material-ui/icons/Favorite";
 import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
 
-import HomeNavigation from "components/HomeNavigation";
+import Navigation from "components/Navigation";
+import Logo from "assets/Logo";
 import StyledCard from "components/StyledCard";
 
 import routes from "constants/routes";
@@ -132,7 +133,6 @@ export default function HomePage() {
       mode: TableSettingsDialogModes.create,
       data: null,
     });
-  const [open, setOpen] = useState(false);
   const [openProjectSettings, setOpenProjectSettings] = useState(false);
   const [openBuilderInstaller, setOpenBuilderInstaller] = useState(false);
 
@@ -178,15 +178,7 @@ export default function HomePage() {
   const TableCard = ({ table }) => {
     const checked = Boolean(_find(favs, table));
     return (
-      <Grid
-        key={table.name}
-        item
-        xs={12}
-        sm={6}
-        md={open ? 6 : 4}
-        lg={4}
-        xl={3}
-      >
+      <Grid key={table.name} item xs={12} sm={6} md={4} lg={4} xl={3}>
         <StyledCard
           className={classes.card}
           overline={table.section}
@@ -236,10 +228,12 @@ export default function HomePage() {
   };
 
   return (
-    <HomeNavigation
-      open={open}
-      setOpen={setOpen}
-      handleCreateTable={handleCreateTable}
+    <Navigation
+      title={
+        <div style={{ textAlign: "center" }}>
+          <Logo />
+        </div>
+      }
     >
       <main className={classes.root}>
         {sections && Object.keys(sections).length > 0 ? (
@@ -353,6 +347,6 @@ export default function HomePage() {
       {openBuilderInstaller && (
         <BuilderInstaller handleClose={() => setOpenBuilderInstaller(false)} />
       )}
-    </HomeNavigation>
+    </Navigation>
   );
 }

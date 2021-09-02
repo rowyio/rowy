@@ -75,7 +75,7 @@ export default function TestView() {
   const handleTabChange = (_, newTab) => setTab(newTab);
 
   return (
-    <Navigation tableCollection="">
+    <Navigation title="Theme Test">
       <Container style={{ margin: "24px 0 200px" }}>
         <Stack spacing={8}>
           <Table stickyHeader>

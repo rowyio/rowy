@@ -1,4 +1,3 @@
-import { makeStyles, createStyles } from "@material-ui/styles";
 import { Stack, Button } from "@material-ui/core";
 
 import { isCollectionGroup } from "utils/fns";
@@ -20,35 +19,6 @@ import { FieldType } from "constants/fields";
 
 export const TABLE_HEADER_HEIGHT = 44;
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    root: {
-      width: "100%",
-      margin: 0,
-      padding: theme.spacing(0, 2, 1.5, 1),
-      height: TABLE_HEADER_HEIGHT,
-
-      overflowX: "auto",
-      whiteSpace: "nowrap",
-
-      userSelect: "none",
-
-      [theme.breakpoints.down("md")]: {
-        width: "100%",
-        paddingRight: theme.spacing(1),
-      },
-
-      "& > *": { paddingTop: "0 !important" },
-    },
-
-    spacer: { width: theme.spacing(2) },
-    midSpacer: { minWidth: theme.spacing(8) },
-  })
-);
-
-/**
- * TODO: Make this properly mobile responsive, not just horizontally scrolling
- */
 export default function TableHeader() {
   const { currentUser } = useAppContext();
   const { tableActions, tableState, userClaims } = useRowyContext();

@@ -18,7 +18,7 @@
     "@material-ui/icons": "^5.0.0-beta.4",
     "@material-ui/lab": "^5.0.0-alpha.43",
     "@material-ui/styles": "^5.0.0-beta.4",
-    "@mdi/js": "^5.8.55",
+    "@mdi/js": "^5.9.55",
     "@monaco-editor/react": "^4.1.0",
     "@tinymce/tinymce-react": "^3.4.0",
     "algoliasearch": "^4.8.6",
