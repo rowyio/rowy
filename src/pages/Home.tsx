@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import queryString from "query-string";
+import { Link } from "react-router-dom";
 
 import _find from "lodash/find";
 import { makeStyles, createStyles } from "@material-ui/styles";
@@ -12,7 +13,8 @@ import {
   Checkbox,
   Tooltip,
   IconButton,
-  Link,
+  Link as MuiLink,
+  Button,
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import EditIcon from "@material-ui/icons/Edit";
@@ -156,17 +158,30 @@ export default function HomePage() {
             </Typography>
             <Typography>
               If you are the project owner, please follow{" "}
-              <Link
+              <MuiLink
                 href={WIKI_LINKS.securityRules}
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 these instructions
-              </Link>{" "}
-              to set up the project rules.
+              </MuiLink>{" "}
+              to set up the project’s security rules.
             </Typography>
+
+            <Button component={Link} to={routes.signOut}>
+              Sign Out
+            </Button>
           </>
         }
+        sx={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          bgcolor: "background.default",
+          zIndex: 9999,
+        }}
       />
     );
   }
