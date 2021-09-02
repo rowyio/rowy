@@ -197,7 +197,7 @@ export const components = (theme: Theme): ThemeOptions => {
             "&, &.MuiInputLabel-shrink": { transform: "none" },
 
             position: "static",
-            padding: "2px 12px",
+            padding: theme.spacing(2 / 8, 2 / 8),
             pointerEvents: "auto",
 
             maxWidth: "none",
@@ -212,7 +212,9 @@ export const components = (theme: Theme): ThemeOptions => {
       },
       MuiFormHelperText: {
         styleOverrides: {
-          filled: { margin: theme.spacing(0.5, 1.5, 0) },
+          contained: {
+            margin: theme.spacing(0.5, 2 / 8, 0),
+          },
         },
       },
 

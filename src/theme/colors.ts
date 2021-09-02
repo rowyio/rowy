@@ -148,7 +148,7 @@ export const colorsDark = (
       },
       error: {
         main: colord({
-          l: 65,
+          l: 75,
           c: 72,
           h: colord(ERROR).toLch().h,
         }).toHslString(),

@@ -43,8 +43,8 @@ export const customizableDarkTheme = (customization: ThemeOptions) => {
   );
 };
 
-const Themes = {
+const themes = {
   light: customizableLightTheme,
   dark: customizableDarkTheme,
 };
-export default Themes;
+export default themes;

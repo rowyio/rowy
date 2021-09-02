@@ -10,7 +10,7 @@ import {
   ThemeOptions,
   CssBaseline,
 } from "@material-ui/core";
-import Themes from "Themes";
+import themes from "theme";
 
 import ErrorBoundary from "components/ErrorBoundary";
 import { name } from "@root/package.json";
@@ -24,9 +24,9 @@ const useThemeOverriddenState = createPersistedState(
 interface AppContextInterface {
   currentUser: firebase.User | null | undefined;
   userDoc: any;
-  theme: keyof typeof Themes;
+  theme: keyof typeof themes;
   themeOverridden: boolean;
-  setTheme: React.Dispatch<React.SetStateAction<keyof typeof Themes>>;
+  setTheme: React.Dispatch<React.SetStateAction<keyof typeof themes>>;
   setThemeOverridden: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -72,7 +72,7 @@ export const AppProvider: React.FC = ({ children }) => {
     noSsr: true,
   });
   // Store theme
-  const [theme, setTheme] = useThemeState<keyof typeof Themes>(
+  const [theme, setTheme] = useThemeState<keyof typeof themes>(
     prefersDarkTheme ? "dark" : "light"
   );
   // Store if theme was overridden
@@ -88,7 +88,7 @@ export const AppProvider: React.FC = ({ children }) => {
   const [themeCustomization, setThemeCustomization] = useState<ThemeOptions>(
     {}
   );
-  const generatedTheme = Themes[theme](themeCustomization);
+  const generatedTheme = themes[theme](themeCustomization);
 
   useEffect(() => {
     if (userDoc.doc) {
