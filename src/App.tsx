@@ -10,6 +10,9 @@ import PrivateRoute from "utils/PrivateRoute";
 import ErrorBoundary from "components/ErrorBoundary";
 import EmptyState from "components/EmptyState";
 import Loading from "components/Loading";
+import Navigation from "components/Navigation";
+import Logo from "assets/Logo";
+import MigrateToV2 from "components/Settings/MigrateToV2";
 
 import { SnackProvider } from "contexts/SnackContext";
 import ConfirmationProvider from "components/ConfirmationDialog/Provider";
@@ -41,6 +44,8 @@ const TablePage = lazy(() => import("./pages/Table" /* webpackChunkName: "TableP
 const ProjectSettingsPage = lazy(() => import("./pages/Settings/ProjectSettings" /* webpackChunkName: "ProjectSettingsPage" */));
 // prettier-ignore
 const UserSettingsPage = lazy(() => import("./pages/Settings/UserSettings" /* webpackChunkName: "UserSettingsPage" */));
+// prettier-ignore
+const UserManagementPage = lazy(() => import("./pages/Settings/UserManagement" /* webpackChunkName: "UserManagementPage" */));
 
 export default function App() {
   return (
@@ -92,6 +97,7 @@ export default function App() {
                           routes.settings,
                           routes.projectSettings,
                           routes.userSettings,
+                          routes.userManagement,
                         ]}
                         render={() => (
                           <RowyContextProvider>
@@ -99,7 +105,17 @@ export default function App() {
                               <PrivateRoute
                                 exact
                                 path={routes.home}
-                                render={() => <HomePage />}
+                                render={() => (
+                                  <Navigation
+                                    title={
+                                      <div style={{ textAlign: "center" }}>
+                                        <Logo />
+                                      </div>
+                                    }
+                                  >
+                                    <HomePage />
+                                  </Navigation>
+                                )}
                               />
                               <PrivateRoute
                                 path={routes.tableWithId}
@@ -120,14 +136,33 @@ export default function App() {
                               <PrivateRoute
                                 exact
                                 path={routes.projectSettings}
-                                render={() => <ProjectSettingsPage />}
+                                render={() => (
+                                  <Navigation title="Project Settings">
+                                    <ProjectSettingsPage />
+                                  </Navigation>
+                                )}
                               />
                               <PrivateRoute
                                 exact
                                 path={routes.userSettings}
-                                render={() => <UserSettingsPage />}
+                                render={() => (
+                                  <Navigation title="Settings">
+                                    <UserSettingsPage />
+                                  </Navigation>
+                                )}
+                              />
+                              <PrivateRoute
+                                exact
+                                path={routes.userManagement}
+                                render={() => (
+                                  <Navigation title="User Management">
+                                    <UserManagementPage />
+                                  </Navigation>
+                                )}
                               />
                             </Switch>
+
+                            <MigrateToV2 />
                           </RowyContextProvider>
                         )}
                       />

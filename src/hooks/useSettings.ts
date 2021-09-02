@@ -1,11 +1,10 @@
 import { useEffect } from "react";
 import useDoc from "./useDoc";
 import { db } from "../firebase";
+import { SETTINGS, TABLE_GROUP_SCHEMAS, TABLE_SCHEMAS } from "config/dbPaths";
 
 const useSettings = () => {
-  const [settingsState, documentDispatch] = useDoc({
-    path: "_rowy_/settings",
-  });
+  const [settingsState, documentDispatch] = useDoc({ path: SETTINGS });
   useEffect(() => {
     //updates tables data on document change
     const { doc, tables } = settingsState;
@@ -31,22 +30,26 @@ const useSettings = () => {
   }) => {
     const { tables } = settingsState;
     const { schemaSource, ...tableSettings } = data;
-    const tableSchemaPath = `_rowy_/settings/${
-      tableSettings.tableType !== "collectionGroup" ? "schema" : "groupSchema"
+    const tableSchemaPath = `${
+      tableSettings.tableType !== "collectionGroup"
+        ? TABLE_SCHEMAS
+        : TABLE_GROUP_SCHEMAS
     }/${tableSettings.collection}`;
     const tableSchemaDocRef = db.doc(tableSchemaPath);
 
     let columns = {};
     if (schemaSource) {
-      const schemaSourcePath = `_rowy_/settings/${
-        schemaSource.tableType !== "collectionGroup" ? "schema" : "groupSchema"
+      const schemaSourcePath = `${
+        tableSettings.tableType !== "collectionGroup"
+          ? TABLE_SCHEMAS
+          : TABLE_GROUP_SCHEMAS
       }/${schemaSource.collection}`;
       const sourceDoc = await db.doc(schemaSourcePath).get();
       columns = sourceDoc.get("columns");
     }
     // updates the setting doc
     await db
-      .doc("_rowy_/settings")
+      .doc(SETTINGS)
       .set(
         { tables: tables ? [...tables, tableSettings] : [tableSettings] },
         { merge: true }
@@ -65,7 +68,7 @@ const useSettings = () => {
     const { tables } = settingsState;
     const table = tables.filter((t) => t.collection === data.collection)[0];
     return Promise.all([
-      db.doc("_rowy_/settings").set(
+      db.doc(SETTINGS).set(
         {
           tables: tables
             ? [
@@ -80,7 +83,7 @@ const useSettings = () => {
       ),
       //update the rowy collection doc with empty columns
       db
-        .collection("_rowy_/settings/table")
+        .collection(TABLE_SCHEMAS)
         .doc(data.collection)
         .set({ ...data }, { merge: true }),
     ]);
@@ -88,10 +91,10 @@ const useSettings = () => {
   const deleteTable = (collection: string) => {
     const { tables } = settingsState;
 
-    db.doc("_rowy_/settings").update({
+    db.doc(SETTINGS).update({
       tables: tables.filter((table) => table.collection !== collection),
     });
-    db.collection("_rowy_/settings/table").doc(collection).delete();
+    db.collection(TABLE_SCHEMAS).doc(collection).delete();
   };
   const settingsActions = { createTable, updateTable, deleteTable };
   return [settingsState, settingsActions];

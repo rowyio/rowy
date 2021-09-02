@@ -23,6 +23,7 @@ import {
   IExtension,
   IExtensionType,
 } from "./utils";
+import { SETTINGS } from "config/dbPaths";
 import WIKI_LINKS from "constants/wikiLinks";
 
 export default function ExtensionsEditor() {
@@ -92,7 +93,7 @@ export default function ExtensionsEditor() {
     const serialisedExtension = serialiseExtension(localExtensionsObjects);
     tableActions?.table.updateConfig("extensions", serialisedExtension);
 
-    const settingsDoc = await db.doc("/_rowy_/settings").get();
+    const settingsDoc = await db.doc(SETTINGS).get();
     const buildUrl = settingsDoc.get("buildUrl");
     if (!buildUrl) {
       snack.open({

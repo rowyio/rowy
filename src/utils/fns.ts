@@ -1,4 +1,6 @@
 import _get from "lodash/get";
+import { TABLE_GROUP_SCHEMAS, TABLE_SCHEMAS } from "config/dbPaths";
+
 /**
  * reposition an element in an array
  * @param arr array
@@ -26,14 +28,12 @@ export const arrayMover = (
   return arr; // for testing purposes
 };
 
-export const missingFieldsReducer = (data: any) => (
-  acc: string[],
-  curr: string
-) => {
-  if (data[curr] === undefined) {
-    return [...acc, curr];
-  } else return acc;
-};
+export const missingFieldsReducer =
+  (data: any) => (acc: string[], curr: string) => {
+    if (data[curr] === undefined) {
+      return [...acc, curr];
+    } else return acc;
+  };
 
 export const sanitiseCallableName = (name: string) => {
   if (!name || typeof name !== "string") return "";
@@ -96,8 +96,8 @@ export const generateBiggerId = (id: string) => {
 const formatPathRegex = /\/[^\/]+\/([^\/]+)/g;
 
 export const formatPath = (tablePath: string) => {
-  return `_rowy_/settings/${
-    isCollectionGroup() ? "groupSchema" : "schema"
+  return `${
+    isCollectionGroup() ? TABLE_GROUP_SCHEMAS : TABLE_SCHEMAS
   }/${tablePath.replace(formatPathRegex, "/subTables/$1")}`;
 };
 

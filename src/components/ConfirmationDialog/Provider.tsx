@@ -13,8 +13,8 @@ const ConfirmationProvider: React.FC<IConfirmationProviderProps> = ({
   const [state, setState] = useState<confirmationProps>();
   const [open, setOpen] = useState(false);
   const handleClose = () => {
-    setState(undefined);
     setOpen(false);
+    setTimeout(() => setState(undefined), 300);
   };
   const requestConfirmation = (props: confirmationProps) => {
     setState(props);

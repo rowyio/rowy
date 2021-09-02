@@ -38,6 +38,7 @@ import EmptyState from "components/EmptyState";
 import PropTypes from "prop-types";
 import routes from "constants/routes";
 import { DATE_TIME_FORMAT } from "constants/dates";
+import { SETTINGS, TABLE_SCHEMAS, TABLE_GROUP_SCHEMAS } from "config/dbPaths";
 
 function a11yProps(index) {
   return {
@@ -183,9 +184,8 @@ function LogPanel(props) {
 
   // useStateRef is necessary to resolve the state syncing issue
   // https://stackoverflow.com/a/63039797/12208834
-  const [liveStreaming, setLiveStreaming, liveStreamingStateRef] = useStateRef(
-    true
-  );
+  const [liveStreaming, setLiveStreaming, liveStreamingStateRef] =
+    useStateRef(true);
   const liveStreamingRef = useRef<any>();
   const isActive = value === index;
 
@@ -264,9 +264,8 @@ function SnackLog({ log, onClose, onOpenPanel }) {
   const status = log?.status;
   const classes = useStyles();
   const [expanded, setExpanded] = useState(false);
-  const [liveStreaming, setLiveStreaming, liveStreamingStateRef] = useStateRef(
-    true
-  );
+  const [liveStreaming, setLiveStreaming, liveStreamingStateRef] =
+    useStateRef(true);
   const liveStreamingRef = useRef<any>();
 
   const handleScroll = _throttle(() => {
@@ -403,7 +402,7 @@ export default function TableLogs() {
   }, []);
 
   const checkBuildURL = async () => {
-    const settingsDoc = await db.doc("/_rowy_/settings").get();
+    const settingsDoc = await db.doc(SETTINGS).get();
     const buildUrl = settingsDoc.get("buildUrl");
     if (!buildUrl) {
       setBuildURLConfigured(false);
@@ -412,8 +411,8 @@ export default function TableLogs() {
 
   const tableCollection = decodeURIComponent(router.match.params.id);
   const buildStreamID =
-    "_rowy_/settings/" +
-    `${isCollectionGroup() ? "groupSchema/" : "schema/"}` +
+    (isCollectionGroup() ? TABLE_GROUP_SCHEMAS : TABLE_SCHEMAS) +
+    "/" +
     tableCollection
       .split("/")
       .filter(function (_, i) {

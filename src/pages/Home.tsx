@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import queryString from "query-string";
 
 import _find from "lodash/find";
 import { makeStyles, createStyles } from "@material-ui/styles";
@@ -11,17 +12,17 @@ import {
   Checkbox,
   Tooltip,
   IconButton,
+  Link,
 } from "@material-ui/core";
-
 import AddIcon from "@material-ui/icons/Add";
-// import SettingsIcon from "@material-ui/icons/Settings";
 import EditIcon from "@material-ui/icons/Edit";
 import Favorite from "@material-ui/icons/Favorite";
 import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
+import SecurityIcon from "@material-ui/icons/SecurityOutlined";
 
-import Navigation from "components/Navigation";
-import Logo from "assets/Logo";
 import StyledCard from "components/StyledCard";
+import HomeWelcomePrompt from "components/HomeWelcomePrompt";
+import EmptyState from "components/EmptyState";
 
 import routes from "constants/routes";
 import { useRowyContext } from "contexts/RowyContext";
@@ -31,12 +32,8 @@ import TableSettingsDialog, {
   TableSettingsDialogModes,
 } from "components/TableSettings";
 
-import queryString from "query-string";
-import ProjectSettings from "components/ProjectSettings";
-import EmptyState from "components/EmptyState";
 import WIKI_LINKS from "constants/wikiLinks";
-import BuilderInstaller from "../components/BuilderInstaller";
-import HomeWelcomePrompt from "components/HomeWelcomePrompt";
+import { SETTINGS } from "config/dbPaths";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -136,9 +133,7 @@ export default function HomePage() {
   const [openProjectSettings, setOpenProjectSettings] = useState(false);
   const [openBuilderInstaller, setOpenBuilderInstaller] = useState(false);
 
-  const [settingsDocState, settingsDocDispatch] = useDoc({
-    path: "_rowy_/settings",
-  });
+  const [settingsDocState, settingsDocDispatch] = useDoc({ path: SETTINGS });
   useEffect(() => {
     if (!settingsDocState.loading && !settingsDocState.doc) {
       settingsDocDispatch({
@@ -151,22 +146,23 @@ export default function HomePage() {
     return (
       <EmptyState
         fullScreen
+        Icon={SecurityIcon}
         message="Access Denied"
         description={
           <>
-            <Typography variant="overline">
+            <Typography>
               You do not have access to this project. Please contact the project
               owner.
             </Typography>
-            <Typography variant="body2">
+            <Typography>
               If you are the project owner, please follow{" "}
-              <a
+              <Link
                 href={WIKI_LINKS.securityRules}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                the instructions
-              </a>{" "}
+                these instructions
+              </Link>{" "}
               to set up the project rules.
             </Typography>
           </>
@@ -228,125 +224,95 @@ export default function HomePage() {
   };
 
   return (
-    <Navigation
-      title={
-        <div style={{ textAlign: "center" }}>
-          <Logo />
-        </div>
-      }
-    >
-      <main className={classes.root}>
-        {sections && Object.keys(sections).length > 0 ? (
-          <Container>
-            {favs.length !== 0 && (
-              <section id="favorites" className={classes.section}>
+    <main className={classes.root}>
+      {sections && Object.keys(sections).length > 0 ? (
+        <Container>
+          {favs.length !== 0 && (
+            <section id="favorites" className={classes.section}>
+              <Typography
+                variant="h6"
+                component="h1"
+                className={classes.sectionHeader}
+              >
+                Favorites
+              </Typography>
+              <Divider className={classes.divider} />
+              <Grid
+                container
+                spacing={4}
+                justifyContent="flex-start"
+                className={classes.cardGrid}
+              >
+                {favs.map((table) => (
+                  <TableCard key={table.collection} table={table} />
+                ))}
+              </Grid>
+            </section>
+          )}
+
+          {sections &&
+            Object.keys(sections).length > 0 &&
+            Object.keys(sections).map((sectionName) => (
+              <section
+                key={sectionName}
+                id={sectionName}
+                className={classes.section}
+              >
                 <Typography
                   variant="h6"
                   component="h1"
                   className={classes.sectionHeader}
                 >
-                  Favorites
+                  {sectionName === "undefined" ? "Other" : sectionName}
                 </Typography>
+
                 <Divider className={classes.divider} />
+
                 <Grid
                   container
                   spacing={4}
                   justifyContent="flex-start"
                   className={classes.cardGrid}
                 >
-                  {favs.map((table) => (
-                    <TableCard key={table.collection} table={table} />
+                  {sections[sectionName].map((table, i) => (
+                    <TableCard key={`${i}-${table.collection}`} table={table} />
                   ))}
                 </Grid>
               </section>
-            )}
+            ))}
 
-            {sections &&
-              Object.keys(sections).length > 0 &&
-              Object.keys(sections).map((sectionName) => (
-                <section
-                  key={sectionName}
-                  id={sectionName}
-                  className={classes.section}
-                >
-                  <Typography
-                    variant="h6"
-                    component="h1"
-                    className={classes.sectionHeader}
-                  >
-                    {sectionName === "undefined" ? "Other" : sectionName}
-                  </Typography>
-
-                  <Divider className={classes.divider} />
-
-                  <Grid
-                    container
-                    spacing={4}
-                    justifyContent="flex-start"
-                    className={classes.cardGrid}
-                  >
-                    {sections[sectionName].map((table, i) => (
-                      <TableCard
-                        key={`${i}-${table.collection}`}
-                        table={table}
-                      />
-                    ))}
-                  </Grid>
-                </section>
-              ))}
-
-            <section className={classes.section}>
-              <Tooltip title="Create Table">
-                <Fab
-                  className={classes.fab}
-                  color="secondary"
-                  aria-label="Create table"
-                  onClick={handleCreateTable}
-                >
-                  <AddIcon />
-                </Fab>
-              </Tooltip>
-              {/* <Tooltip title="Configure Rowy">
+          <section className={classes.section}>
+            <Tooltip title="Create Table">
               <Fab
-                className={classes.configFab}
+                className={classes.fab}
                 color="secondary"
                 aria-label="Create table"
-                onClick={() => setOpenProjectSettings(true)}
+                onClick={handleCreateTable}
               >
-                <SettingsIcon />
+                <AddIcon />
               </Fab>
-            </Tooltip> */}
-            </section>
-          </Container>
-        ) : (
-          <Container>
-            <HomeWelcomePrompt />
-            <Fab
-              className={classes.fab}
-              color="secondary"
-              aria-label="Create table"
-              onClick={handleCreateTable}
-            >
-              <AddIcon />
-            </Fab>
-          </Container>
-        )}
-      </main>
+            </Tooltip>
+          </section>
+        </Container>
+      ) : (
+        <Container>
+          <HomeWelcomePrompt />
+          <Fab
+            className={classes.fab}
+            color="secondary"
+            aria-label="Create table"
+            onClick={handleCreateTable}
+          >
+            <AddIcon />
+          </Fab>
+        </Container>
+      )}
 
       <TableSettingsDialog
         clearDialog={clearDialog}
         mode={settingsDialogState.mode}
         data={settingsDialogState.data}
       />
-      {openProjectSettings && (
-        <ProjectSettings
-          handleClose={() => setOpenProjectSettings(false)}
-          handleOpenBuilderInstaller={() => setOpenBuilderInstaller(true)}
-        />
-      )}
-      {openBuilderInstaller && (
-        <BuilderInstaller handleClose={() => setOpenBuilderInstaller(false)} />
-      )}
-    </Navigation>
+    </main>
   );
 }

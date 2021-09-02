@@ -9,6 +9,7 @@ import MultiSelect from "@antlerengineering/multiselect";
 import { FieldType } from "constants/fields";
 import { db } from "../../../firebase";
 import { useRowyContext } from "contexts/RowyContext";
+import { TABLE_SCHEMAS } from "config/dbPaths";
 
 export default function Settings({ handleChange, config }: ISettingsProps) {
   const { tables } = useRowyContext();
@@ -24,7 +25,7 @@ export default function Settings({ handleChange, config }: ISettingsProps) {
     { value: string; label: string; type: FieldType }[]
   >([]);
   const getColumns = async (table) => {
-    const tableConfigDoc = await db.doc(`_rowy_/settings/table/${table}`).get();
+    const tableConfigDoc = await db.doc(`${TABLE_SCHEMAS}/${table}`).get();
     const tableConfig = tableConfigDoc.data();
     if (tableConfig && tableConfig.columns)
       setColumns(

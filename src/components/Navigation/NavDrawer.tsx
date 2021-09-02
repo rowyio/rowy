@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 
 import {
   Drawer,
@@ -13,7 +13,8 @@ import {
 } from "@material-ui/core";
 import HomeIcon from "@material-ui/icons/HomeOutlined";
 import SettingsIcon from "@material-ui/icons/SettingsOutlined";
-import ProjectSettingsIcon from "assets/icons/ProjectSettings";
+import ProjectSettingsIcon from "@material-ui/icons/BuildCircleOutlined";
+import UserManagementIcon from "@material-ui/icons/AccountCircleOutlined";
 import CloseIcon from "assets/icons/Backburger";
 
 import { APP_BAR_HEIGHT } from ".";
@@ -37,6 +38,7 @@ export default function NavDrawer({
   ...props
 }: INavDrawerProps) {
   const { userClaims, sections } = useRowyContext();
+  const { pathname } = useLocation();
 
   const closeDrawer = (e: {}) => props.onClose(e, "escapeKeyDown");
 
@@ -65,7 +67,12 @@ export default function NavDrawer({
       <nav>
         <List disablePadding>
           <li>
-            <MenuItem component={Link} to={routes.home} onClick={closeDrawer}>
+            <MenuItem
+              component={Link}
+              to={routes.home}
+              selected={pathname === routes.home}
+              onClick={closeDrawer}
+            >
               <ListItemIcon>
                 <HomeIcon />
               </ListItemIcon>
@@ -75,7 +82,8 @@ export default function NavDrawer({
           <li>
             <MenuItem
               component={Link}
-              to={routes.settings}
+              to={routes.userSettings}
+              selected={pathname === routes.userSettings}
               onClick={closeDrawer}
             >
               <ListItemIcon>
@@ -89,12 +97,28 @@ export default function NavDrawer({
               <MenuItem
                 component={Link}
                 to={routes.projectSettings}
+                selected={pathname === routes.projectSettings}
                 onClick={closeDrawer}
               >
                 <ListItemIcon>
                   <ProjectSettingsIcon />
                 </ListItemIcon>
                 <ListItemText primary="Project Settings" />
+              </MenuItem>
+            </li>
+          )}
+          {userClaims?.roles?.includes("ADMIN") && (
+            <li>
+              <MenuItem
+                component={Link}
+                to={routes.userManagement}
+                selected={pathname === routes.userManagement}
+                onClick={closeDrawer}
+              >
+                <ListItemIcon>
+                  <UserManagementIcon />
+                </ListItemIcon>
+                <ListItemText primary="User Management" />
               </MenuItem>
             </li>
           )}

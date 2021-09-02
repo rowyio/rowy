@@ -15,7 +15,10 @@ const documentInitialState = {
   error: null,
 };
 
-const useDoc = (initialOverrides: any) => {
+const useDoc = (
+  initialOverrides: any,
+  options: { createIfMissing?: boolean } = {}
+) => {
   const documentReducer = (prevState: any, newProps: any) => {
     switch (newProps.action) {
       case DocActions.clear:
@@ -43,7 +46,7 @@ const useDoc = (initialOverrides: any) => {
     ...initialOverrides,
   });
 
-  const setDocumentListner = () => {
+  const setDocumentListener = () => {
     documentDispatch({ prevPath: documentState.path });
     const unsubscribe = db.doc(documentState.path).onSnapshot(
       (snapshot) => {
@@ -58,9 +61,17 @@ const useDoc = (initialOverrides: any) => {
             loading: false,
           });
         } else {
-          documentDispatch({
-            loading: false,
-          });
+          if (options.createIfMissing)
+            try {
+              db.doc(documentState.path).set({}, { merge: true });
+            } catch (e) {
+              console.error(
+                `Could not create ${documentState.path}`,
+                e.message
+              );
+            }
+
+          documentDispatch({ loading: false });
         }
       },
       (error) => {
@@ -76,7 +87,7 @@ const useDoc = (initialOverrides: any) => {
     const { path, prevPath, unsubscribe } = documentState;
     if (path && path !== prevPath) {
       if (unsubscribe) unsubscribe();
-      setDocumentListner();
+      setDocumentListener();
     }
   }, [documentState]);
   useEffect(

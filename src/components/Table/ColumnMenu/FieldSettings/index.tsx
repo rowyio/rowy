@@ -19,19 +19,13 @@ import { FieldType } from "constants/fields";
 
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
-import Subheading from "components/Table/ColumnMenu/Subheading";
 import Button from "@material-ui/core/Button";
 import routes from "constants/routes";
+import { SETTINGS } from "config/dbPaths";
+
 export default function FieldSettings(props: IMenuModalProps) {
-  const {
-    name,
-    fieldName,
-    type,
-    open,
-    config,
-    handleClose,
-    handleSave,
-  } = props;
+  const { name, fieldName, type, open, config, handleClose, handleSave } =
+    props;
 
   const [showRebuildPrompt, setShowRebuildPrompt] = useState(false);
   const [newConfig, setNewConfig] = useState(config ?? {});
@@ -125,12 +119,11 @@ export default function FieldSettings(props: IMenuModalProps) {
             if (showRebuildPrompt) {
               requestConfirmation({
                 title: "Deploy Changes",
-                body:
-                  "You have made changes that affect the behavior of the cloud function of this table, Would you like to redeploy it now?",
+                body: "You have made changes that affect the behavior of the cloud function of this table, Would you like to redeploy it now?",
                 confirm: "Deploy",
                 cancel: "Later",
                 handleConfirm: async () => {
-                  const settingsDoc = await db.doc("/_rowy_/settings").get();
+                  const settingsDoc = await db.doc(SETTINGS).get();
                   const buildUrl = settingsDoc.get("buildUrl");
                   if (!buildUrl) {
                     snack.open({
@@ -149,7 +142,8 @@ export default function FieldSettings(props: IMenuModalProps) {
                       ),
                     });
                   }
-                  const userTokenInfo = await appContext?.currentUser?.getIdTokenResult();
+                  const userTokenInfo =
+                    await appContext?.currentUser?.getIdTokenResult();
                   const userToken = userTokenInfo?.token;
                   try {
                     snackLog.requestSnackLog();

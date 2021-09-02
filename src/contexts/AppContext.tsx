@@ -14,6 +14,7 @@ import Themes from "Themes";
 
 import ErrorBoundary from "components/ErrorBoundary";
 import { name } from "@root/package.json";
+import { USERS } from "config/dbPaths";
 
 const useThemeState = createPersistedState("__ROWY__THEME");
 const useThemeOverriddenState = createPersistedState(
@@ -62,7 +63,7 @@ export const AppProvider: React.FC = ({ children }) => {
     if (currentUser) {
       analytics.setUserId(currentUser.uid);
       analytics.setUserProperties({ instance: window.location.hostname });
-      dispatchUserDoc({ path: `_rowy_/settings/users/${currentUser.uid}` });
+      dispatchUserDoc({ path: `${USERS}/${currentUser.uid}` });
     }
   }, [currentUser]);
 

@@ -76,7 +76,11 @@ export default function TablePage() {
   if (!tableState) return null;
 
   return (
-    <Navigation title={<Breadcrumbs />}>
+    <Navigation
+      title={<Breadcrumbs />}
+      currentSection={currentSection}
+      currentTable={currentTable}
+    >
       <ActionParamsProvider>
         {tableState.loadingColumns && (
           <>

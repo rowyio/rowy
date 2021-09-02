@@ -144,5 +144,10 @@ export const typography = ({
         lineHeight: 20 / 12,
       },
     },
+    components: {
+      MuiTypography: {
+        defaultProps: { variant: "body2" },
+      },
+    },
   };
 };

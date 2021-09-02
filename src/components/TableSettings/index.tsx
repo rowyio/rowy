@@ -14,6 +14,7 @@ import { useRowyContext } from "contexts/RowyContext";
 import useRouter from "../../hooks/useRouter";
 import { db } from "../../firebase";
 import { name } from "@root/package.json";
+import { SETTINGS, TABLE_SCHEMAS } from "config/dbPaths";
 
 export enum TableSettingsDialogModes {
   create,
@@ -123,13 +124,13 @@ export default function TableSettingsDialog({
   };
 
   const handleResetStructure = async () => {
-    const schemaDocRef = db.doc(`_rowy_/settings/table/${data!.collection}`);
+    const schemaDocRef = db.doc(`${TABLE_SCHEMAS}/${data!.collection}`);
     await schemaDocRef.update({ columns: {} });
     handleClose();
   };
 
   const handleDelete = async () => {
-    const tablesDocRef = db.doc(`_rowy_/settings`);
+    const tablesDocRef = db.doc(SETTINGS);
     const tableData = (await tablesDocRef.get()).data();
     const updatedTables = tableData?.tables.filter(
       (table) =>

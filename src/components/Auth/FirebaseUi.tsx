@@ -9,8 +9,9 @@ import { Typography } from "@material-ui/core";
 import { alpha } from "@material-ui/core/styles";
 import Skeleton from "@material-ui/core/Skeleton";
 
-import { auth, db } from "../../firebase";
-import { defaultUiConfig, getSignInOptions } from "../../firebase/firebaseui";
+import { auth, db } from "@src/firebase";
+import { defaultUiConfig, getSignInOptions } from "@src/firebase/firebaseui";
+import { PUBLIC_SETTINGS } from "config/dbPaths";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -47,9 +48,10 @@ const useStyles = makeStyles((theme) =>
 
         "& .firebaseui-card-content, & .firebaseui-card-footer": { padding: 0 },
         "& .firebaseui-idp-list, & .firebaseui-tenant-list": { margin: 0 },
-        "& .firebaseui-idp-list>.firebaseui-list-item, & .firebaseui-tenant-list>.firebaseui-list-item": {
-          margin: 0,
-        },
+        "& .firebaseui-idp-list>.firebaseui-list-item, & .firebaseui-tenant-list>.firebaseui-list-item":
+          {
+            margin: 0,
+          },
         "& .firebaseui-list-item + .firebaseui-list-item": {
           paddingTop: theme.spacing(2),
         },
@@ -135,9 +137,10 @@ const useStyles = makeStyles((theme) =>
           ...theme.typography.subtitle2,
           color: theme.palette.text.secondary,
         },
-        "& .mdl-textfield--floating-label.is-dirty .mdl-textfield__label, .mdl-textfield--floating-label.is-focused .mdl-textfield__label": {
-          color: theme.palette.text.primary,
-        },
+        "& .mdl-textfield--floating-label.is-dirty .mdl-textfield__label, .mdl-textfield--floating-label.is-focused .mdl-textfield__label":
+          {
+            color: theme.palette.text.primary,
+          },
         "& .firebaseui-textfield.mdl-textfield .firebaseui-label:after": {
           backgroundColor: theme.palette.primary.main,
         },
@@ -186,7 +189,7 @@ export default function FirebaseUi(props: Partial<FirebaseUiProps>) {
     Parameters<typeof getSignInOptions>[0] | undefined
   >();
   useEffect(() => {
-    db.doc("/_rowy_/publicSettings")
+    db.doc(PUBLIC_SETTINGS)
       .get()
       .then((doc) => {
         const options = doc?.get("signInOptions");

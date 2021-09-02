@@ -64,7 +64,9 @@ export const components = (theme: Theme): ThemeOptions => {
             padding: "0 var(--dialog-spacing)",
           },
 
-          paperWidthXs: { maxWidth: 360 },
+          paperWidthXs: {
+            [theme.breakpoints.up("sm")]: { maxWidth: 360 },
+          },
           paperFullScreen: {
             borderBottomLeftRadius: 0,
             borderBottomRightRadius: 0,
@@ -128,10 +130,6 @@ export const components = (theme: Theme): ThemeOptions => {
             backgroundColor: theme.palette.secondary.main,
           },
         },
-      },
-
-      MuiTypography: {
-        defaultProps: { variant: "body2" },
       },
 
       MuiTextField: {
@@ -208,6 +206,7 @@ export const components = (theme: Theme): ThemeOptions => {
 
             ...theme.typography.caption,
             fontWeight: 500,
+            color: theme.palette.text.primary,
           },
         },
       },

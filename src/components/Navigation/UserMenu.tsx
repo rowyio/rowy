@@ -11,7 +11,6 @@ import {
   ListItemAvatar,
   ListItemText,
   ListItemSecondaryAction,
-  Link as MuiLink,
   Divider,
 } from "@material-ui/core";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
@@ -19,8 +18,6 @@ import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 
 import { useAppContext } from "contexts/AppContext";
 import routes from "constants/routes";
-import { projectId } from "@src/firebase";
-import meta from "@root/package.json";
 
 export default function UserMenu(props: IconButtonProps) {
   const anchorEl = useRef<HTMLButtonElement>(null);
@@ -96,9 +93,27 @@ export default function UserMenu(props: IconButtonProps) {
         onClose={() => setOpen(false)}
         sx={{ "& .MuiPaper-root": { minWidth: 160 } }}
       >
-        <ListItem style={{ cursor: "default" }}>
-          <ListItemAvatar>{avatar}</ListItemAvatar>
-          <ListItemText primary={displayName} secondary={email} />
+        <ListItem
+          sx={{
+            cursor: "default",
+            flexDirection: "column",
+            textAlign: "center",
+            pt: 1.5,
+          }}
+        >
+          <ListItemAvatar
+            sx={{
+              minWidth: 48,
+              "& > *": { width: 48, height: 48, fontSize: 48 },
+            }}
+          >
+            {avatar}
+          </ListItemAvatar>
+          <ListItemText
+            primary={displayName}
+            secondary={email}
+            primaryTypographyProps={{ variant: "subtitle1" }}
+          />
         </ListItem>
 
         <Divider variant="middle" sx={{ mt: 0.5, mb: 0.5 }} />
@@ -150,47 +165,6 @@ export default function UserMenu(props: IconButtonProps) {
         <MenuItem component={Link} to={routes.signOut}>
           Sign out
         </MenuItem>
-
-        <Divider variant="middle" />
-
-        <ListItem>
-          <ListItemText
-            primary={
-              <MuiLink
-                component="a"
-                href={meta.repository.url.replace(".git", "") + "/releases"}
-                target="_blank"
-                rel="noopener"
-                underline="hover"
-                color="inherit"
-              >
-                {meta.name} v{meta.version}
-              </MuiLink>
-            }
-            secondary={
-              <>
-                Project:{" "}
-                <MuiLink
-                  component="a"
-                  href={`https://console.firebase.google.com/project/${projectId}`}
-                  target="_blank"
-                  rel="noopener"
-                  underline="hover"
-                  color="inherit"
-                >
-                  {projectId}
-                </MuiLink>
-              </>
-            }
-            primaryTypographyProps={{ variant: "caption", color: "inherit" }}
-            secondaryTypographyProps={{ variant: "caption", color: "inherit" }}
-            sx={{
-              userSelect: "none",
-              color: "text.disabled",
-              margin: 0,
-            }}
-          />
-        </ListItem>
       </Menu>
     </>
   );

@@ -7,21 +7,35 @@ import {
   IconButton,
   Box,
   Typography,
+  Fade,
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 
 import NavDrawer from "./NavDrawer";
 import UserMenu from "./UserMenu";
 
+import { name } from "@root/package.json";
+import { projectId } from "@src/firebase";
+
 export const APP_BAR_HEIGHT = 56;
 
 export interface INavigationProps {
   children: ReactNode;
   title?: ReactNode;
+  currentSection?: string;
+  currentTable?: string;
 }
 
-export default function Navigation({ children, title }: INavigationProps) {
+export default function Navigation({
+  children,
+  title,
+  currentSection,
+  currentTable,
+}: INavigationProps) {
   const [open, setOpen] = useState(false);
+
+  if (typeof title === "string")
+    document.title = `${title} | ${projectId} | ${name}`;
 
   const trigger = useScrollTrigger({ disableHysteresis: true, threshold: 0 });
 
@@ -30,8 +44,7 @@ export default function Navigation({ children, title }: INavigationProps) {
       <AppBar
         position="sticky"
         color="inherit"
-        elevation={0}
-        className={trigger ? "scrolled" : ""}
+        elevation={trigger ? 1 : 0}
         sx={{
           height: APP_BAR_HEIGHT, // Elevation 8
           backgroundImage:
@@ -47,12 +60,8 @@ export default function Navigation({ children, title }: INavigationProps) {
             left: 0,
 
             bgcolor: "background.default",
+            opacity: trigger ? 0 : 1,
             transition: (theme) => theme.transitions.create("opacity"),
-          },
-
-          "&:hover, &.scrolled": {
-            boxShadow: 1,
-            "&::before": { opacity: 0 },
           },
         }}
       >
@@ -78,9 +87,9 @@ export default function Navigation({ children, title }: INavigationProps) {
             <MenuIcon />
           </IconButton>
 
-          <Box sx={{ flex: 1, ml: 20 / 8, mr: 20 / 8, userSelect: "none" }}>
+          <Box sx={{ flex: 1, userSelect: "none" }}>
             {typeof title === "string" ? (
-              <Typography variant="h6" component="h1">
+              <Typography variant="h6" component="h1" textAlign="center">
                 {title}
               </Typography>
             ) : (
@@ -93,7 +102,12 @@ export default function Navigation({ children, title }: INavigationProps) {
         </Toolbar>
       </AppBar>
 
-      <NavDrawer open={open} onClose={() => setOpen(false)} />
+      <NavDrawer
+        open={open}
+        onClose={() => setOpen(false)}
+        currentSection={currentSection}
+        currentTable={currentTable}
+      />
 
       {children}
     </>
