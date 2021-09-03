@@ -176,6 +176,7 @@ export const tableSettings = (
           label: "Copy column config from existing table",
           labelPlural: "Tables",
           options: tables,
+          clearable: true,
           freeText: false,
           itemRenderer: (option: { value: string; label: string }) => (
             <span key={option.value}>
