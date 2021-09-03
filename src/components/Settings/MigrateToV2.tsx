@@ -33,7 +33,9 @@ const checkIfMigrationRequired = async () => {
 
 const migrate = async () => {
   const oldSettings = (await db.doc("_FIRETABLE_/settings").get()).data() ?? {};
-  await db.doc(SETTINGS).set(oldSettings, { merge: true });
+  await db
+    .doc(SETTINGS)
+    .set({ ...oldSettings, buildUrl: oldSettings.ftBuildUrl }, { merge: true });
 
   const tables = await db.collection("_FIRETABLE_/settings/schema").get();
   const promises = tables.docs.map((table) =>
