@@ -21,7 +21,7 @@ export interface IProjectSettingsChildProps {
   updatePublicSettings: (data: Record<string, any>) => void;
 }
 
-export default function ProjectSettings() {
+export default function ProjectSettingsPage() {
   const snack = useSnackContext();
 
   const [settingsState] = useDoc({ path: SETTINGS }, { createIfMissing: true });

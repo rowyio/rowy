@@ -4,9 +4,9 @@ import { FormatterProps } from "react-data-grid";
 import { makeStyles, createStyles } from "@material-ui/styles";
 import { Grid, Tooltip, IconButton } from "@material-ui/core";
 import CopyCellsIcon from "assets/icons/CopyCells";
-import DeleteIcon from "@material-ui/icons/DeleteForever";
+import DeleteIcon from "@material-ui/icons/DeleteOutlined";
 
-import { SnackContext } from "contexts/SnackContext";
+// import { SnackContext } from "contexts/SnackContext";
 import { useConfirmation } from "components/ConfirmationDialog/Context";
 import { useRowyContext } from "contexts/RowyContext";
 import useKeyPress from "hooks/useKeyPress";
@@ -33,13 +33,13 @@ export default function FinalColumn({ row }: FormatterProps<any, any>) {
   const { requestConfirmation } = useConfirmation();
   const { tableActions } = useRowyContext();
   const shiftPress = useKeyPress("Shift");
-  const snack = useContext(SnackContext);
+  // const snack = useContext(SnackContext);
 
   const handleDelete = async () => tableActions?.row.delete(row.id);
   return (
     <Grid container spacing={1}>
       <Grid item>
-        <Tooltip title="Duplicate row">
+        <Tooltip title="Duplicate Row">
           <IconButton
             size="small"
             color="inherit"
@@ -58,7 +58,7 @@ export default function FinalColumn({ row }: FormatterProps<any, any>) {
               });
               if (tableActions) tableActions?.row.add(clonedRow);
             }}
-            aria-label="Duplicate row"
+            aria-label="Duplicate Row"
           >
             <CopyCellsIcon />
           </IconButton>
@@ -66,13 +66,13 @@ export default function FinalColumn({ row }: FormatterProps<any, any>) {
       </Grid>
 
       <Grid item>
-        <Tooltip title="Delete row">
+        <Tooltip title="Delete Row">
           {shiftPress ? (
             <IconButton
               size="small"
               color="inherit"
               onClick={handleDelete}
-              aria-label="Delete row"
+              aria-label="Delete Row"
             >
               <DeleteIcon />
             </IconButton>

@@ -55,6 +55,7 @@
     "react-router-dom": "^5.0.1",
     "react-scripts": "^4.0.3",
     "react-scroll-sync": "^0.8.0",
+    "react-use-search": "^0.3.1",
     "react-usestateref": "^1.0.5",
     "serve": "^11.3.2",
     "tinymce": "^5.2.0",

@@ -13740,6 +13740,13 @@ react-transition-group@^4.4.0, react-transition-group@^4.4.1:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
+react-use-search@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/react-use-search/-/react-use-search-0.3.1.tgz#1a36434a0f0a0fc2600a743a2c170ad88f718787"
+  integrity sha512-Ec8+5AnOMunnA532ziNLzs3W/4l9MhecvRF1fi2ho9JvXBgT/pmdFpgN3fRfPCHAsMf9LpEo4LxDZDs/BdTfNQ==
+  dependencies:
+    lodash.debounce "^4.0.8"
+
 react-usestateref@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/react-usestateref/-/react-usestateref-1.0.5.tgz#0b5659217022a7e88087875ec1745730940b7882"
