@@ -4,4 +4,5 @@ export const PUBLIC_SETTINGS = "_rowy_/publicSettings";
 export const TABLE_SCHEMAS = SETTINGS + "/schema";
 export const TABLE_GROUP_SCHEMAS = SETTINGS + "/groupSchema";
 
-export const USERS = SETTINGS + "/users";
+export const USER_MANAGEMENT = "_rowy_/userManagement";
+export const USERS = USER_MANAGEMENT + "/users";
