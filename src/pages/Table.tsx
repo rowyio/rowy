@@ -20,9 +20,6 @@ import useRouter from "hooks/useRouter";
 import { DocActions } from "hooks/useDoc";
 import ActionParamsProvider from "components/fields/Action/FormDialog/Provider";
 
-import { name } from "@root/package.json";
-import { projectId } from "@src/firebase";
-
 export default function TablePage() {
   const router = useRouter();
   const tableCollection = decodeURIComponent(router.match.params.id);
@@ -36,16 +33,8 @@ export default function TablePage() {
     tableCollection?.split("/")[0],
   ])?.section;
   const currentTable = tableCollection?.split("/")[0];
-
-  useEffect(() => {
-    const tableName =
-      _find(tables, ["collection", currentTable])?.name || currentTable;
-    document.title = `${tableName} | ${projectId} | ${name}`;
-
-    return () => {
-      document.title = `${projectId} | ${name}`;
-    };
-  }, [currentTable]);
+  const tableName =
+    _find(tables, ["collection", currentTable])?.name || currentTable;
 
   let filters: RowyFilter[] = [];
   const parsed = queryString.parse(router.location.search);
@@ -77,9 +66,9 @@ export default function TablePage() {
 
   return (
     <Navigation
-      title={<Breadcrumbs />}
+      title={tableName}
+      titleComponent={<Breadcrumbs />}
       currentSection={currentSection}
-      currentTable={currentTable}
     >
       <ActionParamsProvider>
         {tableState.loadingColumns && (

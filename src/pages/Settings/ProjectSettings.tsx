@@ -3,8 +3,8 @@ import { Container, Stack } from "@material-ui/core";
 import SettingsSkeleton from "components/Settings/SettingsSkeleton";
 import SettingsSection from "components/Settings/SettingsSection";
 import About from "components/Settings/ProjectSettings/About";
+import CloudRun from "@src/components/Settings/ProjectSettings/CloudRun";
 import Authentication from "components/Settings/ProjectSettings/Authentication";
-import FunctionsBuilder from "components/Settings/ProjectSettings/FunctionsBuilder";
 
 import { SETTINGS, PUBLIC_SETTINGS } from "config/dbPaths";
 import useDoc from "hooks/useDoc";
@@ -12,6 +12,7 @@ import { db } from "@src/firebase";
 import { useSnackContext } from "contexts/SnackContext";
 import { useDebouncedCallback } from "use-debounce";
 import { useEffect } from "react";
+import { name } from "@root/package.json";
 
 export interface IProjectSettingsChildProps {
   settings: Record<string, any>;
@@ -81,12 +82,12 @@ export default function ProjectSettings() {
             <About />
           </SettingsSection>
 
-          <SettingsSection title="Authentication">
-            <Authentication {...childProps} />
+          <SettingsSection title={`${name} Run`}>
+            <CloudRun {...childProps} />
           </SettingsSection>
 
-          <SettingsSection title="Functions Builder">
-            <FunctionsBuilder {...childProps} />
+          <SettingsSection title="Authentication">
+            <Authentication {...childProps} />
           </SettingsSection>
         </Stack>
       )}

@@ -107,7 +107,8 @@ export default function App() {
                                 path={routes.home}
                                 render={() => (
                                   <Navigation
-                                    title={
+                                    title="Home"
+                                    titleComponent={
                                       <div style={{ textAlign: "center" }}>
                                         <Logo />
                                       </div>

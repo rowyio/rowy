@@ -4,17 +4,17 @@ import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 
 import { IProjectSettingsChildProps } from "pages/Settings/ProjectSettings";
 import WIKI_LINKS from "constants/wikiLinks";
-import { repository } from "@root/package.json";
+import { name, repository } from "@root/package.json";
 
-export default function FunctionsBuilder({
+export default function CloudRun({
   settings,
   updateSettings,
 }: IProjectSettingsChildProps) {
   return (
     <>
       <Typography>
-        Functions Builder is a Cloud Run instance that deploys this project’s
-        Cloud Functions.{" "}
+        {name} Run is a Cloud Run instance that deploys this project’s Cloud
+        Functions.{" "}
         <Link
           href={WIKI_LINKS.functions}
           target="_blank"
@@ -38,8 +38,8 @@ export default function FunctionsBuilder({
         >
           <Grid item xs={12} sm>
             <Typography>
-              If you have not yet deployed Functions Builder, click this button
-              and follow the prompts on Cloud Shell.
+              If you have not yet deployed {name} Run, click this button and
+              follow the prompts on Cloud Shell.
             </Typography>
           </Grid>
 
@@ -53,11 +53,13 @@ export default function FunctionsBuilder({
               rel="noopener noreferrer"
               endIcon={<OpenInNewIcon aria-label="Open in new tab" />}
               loading={
-                settings.buildStatus === "BUILDING" ||
-                settings.buildStatus === "COMPLETE"
+                settings.cloudRunDeployStatus === "BUILDING" ||
+                settings.cloudRunDeployStatus === "COMPLETE"
               }
               loadingIndicator={
-                settings.buildStatus === "COMPLETE" ? "Deployed" : undefined
+                settings.cloudRunDeployStatus === "COMPLETE"
+                  ? "Deployed"
+                  : undefined
               }
             >
               Deploy to Cloud Run
@@ -68,9 +70,9 @@ export default function FunctionsBuilder({
 
       <TextField
         label="Cloud Run Instance URL"
-        id="buildUrl"
-        defaultValue={settings.buildUrl}
-        onChange={(e) => updateSettings({ buildUrl: e.target.value })}
+        id="cloudRunUrl"
+        defaultValue={settings.cloudRunUrl}
+        onChange={(e) => updateSettings({ cloudRunUrl: e.target.value })}
         fullWidth
         placeholder="https://<id>.run.app"
         type="url"

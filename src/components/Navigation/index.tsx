@@ -7,7 +7,6 @@ import {
   IconButton,
   Box,
   Typography,
-  Fade,
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 
@@ -21,23 +20,21 @@ export const APP_BAR_HEIGHT = 56;
 
 export interface INavigationProps {
   children: ReactNode;
-  title?: ReactNode;
+  title: string;
+  titleComponent?: ReactNode;
   currentSection?: string;
-  currentTable?: string;
 }
 
 export default function Navigation({
   children,
   title,
+  titleComponent,
   currentSection,
-  currentTable,
 }: INavigationProps) {
   const [open, setOpen] = useState(false);
-
-  if (typeof title === "string")
-    document.title = `${title} | ${projectId} | ${name}`;
-
   const trigger = useScrollTrigger({ disableHysteresis: true, threshold: 0 });
+
+  document.title = `${title} • ${projectId} • ${name}`;
 
   return (
     <>
@@ -88,12 +85,10 @@ export default function Navigation({
           </IconButton>
 
           <Box sx={{ flex: 1, userSelect: "none" }}>
-            {typeof title === "string" ? (
+            {titleComponent || (
               <Typography variant="h6" component="h1" textAlign="center">
                 {title}
               </Typography>
-            ) : (
-              title
             )}
           </Box>
 
@@ -106,7 +101,6 @@ export default function Navigation({
         open={open}
         onClose={() => setOpen(false)}
         currentSection={currentSection}
-        currentTable={currentTable}
       />
 
       {children}

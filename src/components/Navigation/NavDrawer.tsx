@@ -1,4 +1,4 @@
-import { useLocation, Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 import {
   Drawer,
@@ -6,7 +6,6 @@ import {
   Stack,
   IconButton,
   List,
-  MenuItem,
   ListItemIcon,
   ListItemText,
   Divider,
@@ -19,7 +18,8 @@ import CloseIcon from "assets/icons/Backburger";
 
 import { APP_BAR_HEIGHT } from ".";
 import Logo from "assets/Logo";
-import NavDrawerItem from "./NavDrawerItem";
+import NavItem from "./NavItem";
+import NavTableSection from "./NavTableSection";
 
 import { useRowyContext } from "contexts/RowyContext";
 import { routes } from "constants/routes";
@@ -28,17 +28,14 @@ export const NAV_DRAWER_WIDTH = 256;
 
 export interface INavDrawerProps extends DrawerProps {
   currentSection?: string;
-  currentTable?: string;
   onClose: NonNullable<DrawerProps["onClose"]>;
 }
 
 export default function NavDrawer({
   currentSection,
-  currentTable = "",
   ...props
 }: INavDrawerProps) {
   const { userClaims, sections } = useRowyContext();
-  const { pathname } = useLocation();
 
   const closeDrawer = (e: {}) => props.onClose(e, "escapeKeyDown");
 
@@ -67,72 +64,51 @@ export default function NavDrawer({
       <nav>
         <List disablePadding>
           <li>
-            <MenuItem
-              component={Link}
-              to={routes.home}
-              selected={pathname === routes.home}
-              onClick={closeDrawer}
-            >
+            <NavItem to={routes.home} onClick={closeDrawer}>
               <ListItemIcon>
                 <HomeIcon />
               </ListItemIcon>
               <ListItemText primary="Home" />
-            </MenuItem>
+            </NavItem>
           </li>
           <li>
-            <MenuItem
-              component={Link}
-              to={routes.userSettings}
-              selected={pathname === routes.userSettings}
-              onClick={closeDrawer}
-            >
+            <NavItem to={routes.userSettings} onClick={closeDrawer}>
               <ListItemIcon>
                 <SettingsIcon />
               </ListItemIcon>
               <ListItemText primary="Settings" />
-            </MenuItem>
+            </NavItem>
           </li>
           {userClaims?.roles?.includes("ADMIN") && (
             <li>
-              <MenuItem
-                component={Link}
-                to={routes.projectSettings}
-                selected={pathname === routes.projectSettings}
-                onClick={closeDrawer}
-              >
+              <NavItem to={routes.projectSettings} onClick={closeDrawer}>
                 <ListItemIcon>
                   <ProjectSettingsIcon />
                 </ListItemIcon>
                 <ListItemText primary="Project Settings" />
-              </MenuItem>
+              </NavItem>
             </li>
           )}
           {userClaims?.roles?.includes("ADMIN") && (
             <li>
-              <MenuItem
-                component={Link}
-                to={routes.userManagement}
-                selected={pathname === routes.userManagement}
-                onClick={closeDrawer}
-              >
+              <NavItem to={routes.userManagement} onClick={closeDrawer}>
                 <ListItemIcon>
                   <UserManagementIcon />
                 </ListItemIcon>
                 <ListItemText primary="User Management" />
-              </MenuItem>
+              </NavItem>
             </li>
           )}
 
-          <Divider variant="middle" sx={{ mt: 1, mb: 1 }} />
+          <Divider variant="middle" sx={{ my: 1 }} />
 
           {sections &&
             Object.entries(sections).map(([section, tables]) => (
-              <NavDrawerItem
+              <NavTableSection
                 key={section}
                 section={section}
                 tables={tables}
                 currentSection={currentSection}
-                currentTable={currentTable}
                 closeDrawer={closeDrawer}
               />
             ))}

@@ -71,14 +71,8 @@ const RowyContext = React.createContext<Partial<RowyContextProps>>({});
 export default RowyContext;
 
 export const rowyUser = (currentUser) => {
-  const {
-    displayName,
-    email,
-    uid,
-    emailVerified,
-    isAnonymous,
-    photoURL,
-  } = currentUser;
+  const { displayName, email, uid, emailVerified, isAnonymous, photoURL } =
+    currentUser;
   return {
     timestamp: new Date(),
     displayName,
@@ -112,7 +106,7 @@ export const RowyContextProvider: React.FC = ({ children }) => {
         )
         .map((table) => ({
           ...table,
-          section: table.section ? table.section.trim() : "OTHER",
+          section: table.section ? table.section.trim() : "Other",
         }));
 
       const _sections = _groupBy(filteredTables, "section");
