@@ -1,7 +1,5 @@
-import clsx from "clsx";
 import Div100vh from "react-div-100vh";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
 import {
   Grid,
   GridProps,
@@ -11,33 +9,6 @@ import {
 } from "@material-ui/core";
 import { OverridableComponent } from "@material-ui/core/OverridableComponent";
 import ErrorIcon from "@material-ui/icons/ErrorOutline";
-
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    root: {
-      height: "100%",
-      width: "100%",
-      textAlign: "center",
-
-      ...theme.typography.body2,
-    },
-
-    content: {
-      "&&": { maxWidth: "25em" },
-    },
-
-    icon: {
-      color: theme.palette.action.active,
-      fontSize: "3rem",
-    },
-
-    message: {
-      marginTop: theme.spacing(1),
-    },
-
-    basicIcon: { display: "block" },
-  })
-);
 
 export interface IEmptyStateProps extends Partial<GridProps> {
   /** Primary message displayed under the icon */
@@ -65,13 +36,11 @@ export default function EmptyState({
   basic = false,
   ...props
 }: IEmptyStateProps) {
-  const classes = useStyles({});
-
   if (basic)
     return (
       <Grid container alignItems="center" spacing={1} {...props}>
         <Grid item>
-          <Icon className={classes.basicIcon} />
+          <Icon style={{ display: "block" }} />
         </Grid>
 
         <Grid item>
@@ -89,18 +58,36 @@ export default function EmptyState({
       justifyContent="center"
       alignItems="center"
       component={fullScreen ? Div100vh : "div"}
-      style={{ height: fullScreen ? "100rvh" : "100%" }}
       {...props}
-      className={clsx(classes.root, props.className)}
+      style={{
+        width: "100%",
+        height: fullScreen ? "100rvh" : "100%",
+        textAlign: "center",
+        ...props.style,
+      }}
     >
-      <Grid item className={classes.content}>
-        <Icon className={classes.icon} />
+      <Grid
+        item
+        sx={{
+          maxWidth: "25em",
+          px: 2,
+
+          "& .icon": {
+            color: "action.active",
+            fontSize: "3rem",
+            mx: "auto",
+            display: "block",
+            mb: 1,
+          },
+        }}
+      >
+        <Icon className="icon" />
 
         <Typography
           component="h1"
           variant="h6"
-          className={classes.message}
           gutterBottom
+          style={{ cursor: "default" }}
         >
           {message}
         </Typography>

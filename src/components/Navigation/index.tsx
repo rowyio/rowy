@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useState, Suspense } from "react";
 
 import {
   useScrollTrigger,
@@ -12,6 +12,8 @@ import MenuIcon from "@material-ui/icons/Menu";
 
 import NavDrawer from "./NavDrawer";
 import UserMenu from "./UserMenu";
+import ErrorBoundary from "components/ErrorBoundary";
+import Loading from "components/Loading";
 
 import { name } from "@root/package.json";
 import { projectId } from "@src/firebase";
@@ -103,7 +105,15 @@ export default function Navigation({
         currentSection={currentSection}
       />
 
-      {children}
+      <ErrorBoundary style={{ marginTop: -APP_BAR_HEIGHT }}>
+        <Suspense
+          fallback={
+            <Loading fullScreen style={{ marginTop: -APP_BAR_HEIGHT }} />
+          }
+        >
+          {children}
+        </Suspense>
+      </ErrorBoundary>
     </>
   );
 }

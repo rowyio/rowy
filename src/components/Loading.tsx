@@ -1,21 +1,7 @@
 import Div100vh from "react-div-100vh";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
-import { Grid, CircularProgress, Typography } from "@material-ui/core";
-
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    root: {
-      height: "100%",
-      width: "100%",
-      textAlign: "center",
-    },
-    progress: { color: theme.palette.action.active },
-    content: { maxWidth: "25em" },
-    message: { marginTop: theme.spacing(1) },
-  })
-);
-interface ILoading {
+import { Stack, StackProps,CircularProgress, Typography } from "@material-ui/core";
+interface ILoadingProps extends Partial<StackProps> {
   message?: string;
   fullScreen?: boolean;
 }
@@ -23,25 +9,25 @@ interface ILoading {
 export default function Loading({
   message = "Loading",
   fullScreen = false,
-}: ILoading) {
-  const classes = useStyles({});
-
+  ...props
+}: ILoadingProps) {
   return (
-    <Grid
-      container
-      className={classes.root}
-      direction="column"
+    <Stack
       justifyContent="center"
       alignItems="center"
       component={fullScreen ? Div100vh : "div"}
-      style={{ height: fullScreen ? "100rvh" : "100%" }}
+      {...props}
+      style={{
+        width: "100%",
+        height: fullScreen ? "100rvh" : "100%",
+        alignItems: "center",
+        ...props.style,
+      }}
     >
-      <Grid item className={classes.content}>
-        <CircularProgress className={classes.progress} />
-        <Typography variant="h6" className={classes.message}>
-          {message}
-        </Typography>
-      </Grid>
-    </Grid>
+      <CircularProgress sx={{ color: "action.active", mb: 1 }} />
+      <Typography variant="h6" component="div" style={{ userSelect: "none" }}>
+        {message}
+      </Typography>
+    </Stack>
   );
 }
