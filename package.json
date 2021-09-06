@@ -42,7 +42,7 @@
     "react-beautiful-dnd": "^13.0.0",
     "react-color": "^2.17.3",
     "react-data-grid": "7.0.0-canary.30",
-    "react-div-100vh": "^0.3.8",
+    "react-div-100vh": "^0.6.0",
     "react-dnd": "^11.1.3",
     "react-dnd-html5-backend": "^11.1.3",
     "react-dom": "^17.0.2",

@@ -7,6 +7,7 @@ import {
   IconButton,
   Box,
   Typography,
+  Grow,
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 
@@ -77,22 +78,26 @@ export default function Navigation({
             },
           }}
         >
-          <IconButton
-            aria-label="Open navigation drawer"
-            onClick={() => setOpen(true)}
-            size="large"
-            edge="start"
-          >
-            <MenuIcon />
-          </IconButton>
+          <Grow in>
+            <IconButton
+              aria-label="Open navigation drawer"
+              onClick={() => setOpen(true)}
+              size="large"
+              edge="start"
+            >
+              <MenuIcon />
+            </IconButton>
+          </Grow>
 
-          <Box sx={{ flex: 1, userSelect: "none" }}>
-            {titleComponent || (
-              <Typography variant="h6" component="h1" textAlign="center">
-                {title}
-              </Typography>
-            )}
-          </Box>
+          <Grow in key={title}>
+            <Box sx={{ flex: 1, userSelect: "none" }}>
+              {titleComponent || (
+                <Typography variant="h6" component="h1" textAlign="center">
+                  {title}
+                </Typography>
+              )}
+            </Box>
+          </Grow>
 
           <UserMenu />
           {/* <Notifications /> */}

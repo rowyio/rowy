@@ -12,6 +12,7 @@ import {
   ListItemText,
   ListItemSecondaryAction,
   Divider,
+  Grow,
 } from "@material-ui/core";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
@@ -69,19 +70,21 @@ export default function UserMenu(props: IconButtonProps) {
 
   return (
     <>
-      <IconButton
-        aria-label="Open user menu"
-        aria-controls="user-menu"
-        aria-haspopup="true"
-        edge="end"
-        size="large"
-        {...props}
-        ref={anchorEl}
-        onClick={() => setOpen(true)}
-        sx={{ "& .MuiAvatar-root": { width: 24, height: 24 } }}
-      >
-        {avatar}
-      </IconButton>
+      <Grow in>
+        <IconButton
+          aria-label="Open user menu"
+          aria-controls="user-menu"
+          aria-haspopup="true"
+          edge="end"
+          size="large"
+          {...props}
+          ref={anchorEl}
+          onClick={() => setOpen(true)}
+          sx={{ "& .MuiAvatar-root": { width: 24, height: 24 } }}
+        >
+          {avatar}
+        </IconButton>
+      </Grow>
 
       <Menu
         anchorEl={anchorEl.current}

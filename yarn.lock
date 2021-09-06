@@ -13464,10 +13464,10 @@ react-dev-utils@^11.0.3:
     strip-ansi "6.0.0"
     text-table "0.2.0"
 
-react-div-100vh@^0.3.8:
-  version "0.3.8"
-  resolved "https://registry.yarnpkg.com/react-div-100vh/-/react-div-100vh-0.3.8.tgz#54e4c32d0286a65e92367fc0a07cc3f2f00739d8"
-  integrity sha512-1kDFW+HXYpfac1tfJ4BcQmgTSeTtLVs2FO2ZNHcwLIga+oVluexUEISCBJvr9xq98DK8tcygY3259EvIy5O+3g==
+react-div-100vh@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/react-div-100vh/-/react-div-100vh-0.6.0.tgz#577972d8ac17693edcd44061c1a4b5a7578e49ec"
+  integrity sha512-ErV0VTNXUd8jZqofC0ExZr5u+XDD2kN2te4SbwtqsyTm0UOjVYu53kP+FalGQrTe+DoMG8VYR2dITcAFu7c/5w==
 
 react-dnd-html5-backend@^11.1.3:
   version "11.1.3"

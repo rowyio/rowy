@@ -1,4 +1,4 @@
-import Div100vh from "react-div-100vh";
+import { use100vh } from "react-div-100vh";
 
 import {
   Grid,
@@ -36,6 +36,8 @@ export default function EmptyState({
   basic = false,
   ...props
 }: IEmptyStateProps) {
+  const fullScreenHeight = use100vh() ?? "100vh";
+
   if (basic)
     return (
       <Grid container alignItems="center" spacing={1} {...props}>
@@ -57,11 +59,10 @@ export default function EmptyState({
       direction="column"
       justifyContent="center"
       alignItems="center"
-      component={fullScreen ? Div100vh : "div"}
       {...props}
       style={{
         width: "100%",
-        height: fullScreen ? "100rvh" : "100%",
+        height: fullScreen ? fullScreenHeight : "100%",
         textAlign: "center",
         ...props.style,
       }}
