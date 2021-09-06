@@ -71,6 +71,7 @@ export default function EmptyState({
         sx={{
           maxWidth: "25em",
           px: 2,
+          typography: "body2",
 
           "& .icon": {
             color: "action.active",

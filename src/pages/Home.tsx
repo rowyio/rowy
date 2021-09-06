@@ -14,6 +14,7 @@ import {
   Checkbox,
   IconButton,
   Zoom,
+  Fade,
 } from "@material-ui/core";
 import ViewListIcon from "@material-ui/icons/ViewListOutlined";
 import ViewGridIcon from "@material-ui/icons/ViewModuleOutlined";
@@ -89,7 +90,13 @@ export default function HomePage() {
   );
 
   if (!Array.isArray(tables))
-    return view === "list" ? <TableListSkeleton /> : <TableGridSkeleton />;
+    return (
+      <Fade in style={{ transitionDelay: "1s" }} unmountOnExit>
+        <div>
+          {view === "list" ? <TableListSkeleton /> : <TableGridSkeleton />}
+        </div>
+      </Fade>
+    );
 
   if (settingsDocState.error?.code === "permission-denied")
     return <AccessDenied />;

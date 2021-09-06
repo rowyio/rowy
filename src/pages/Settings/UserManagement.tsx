@@ -1,4 +1,11 @@
-import { Container, Stack, Typography, Paper, List } from "@material-ui/core";
+import {
+  Container,
+  Stack,
+  Typography,
+  Paper,
+  List,
+  Fade,
+} from "@material-ui/core";
 
 import FloatingSearch from "components/FloatingSearch";
 import SlideTransition from "components/Modal/SlideTransition";
@@ -61,13 +68,15 @@ export default function UserManagementPage() {
       </SlideTransition>
 
       {loading || (query === "" && results.length === 0) ? (
-        <Paper>
-          <List>
-            <UserSkeleton />
-            <UserSkeleton />
-            <UserSkeleton />
-          </List>
-        </Paper>
+        <Fade in style={{ transitionDelay: "1s" }} unmountOnExit>
+          <Paper>
+            <List>
+              <UserSkeleton />
+              <UserSkeleton />
+              <UserSkeleton />
+            </List>
+          </Paper>
+        </Fade>
       ) : (
         <SlideTransition in timeout={100 + 50}>
           <Paper>

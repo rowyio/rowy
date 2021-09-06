@@ -1,4 +1,4 @@
-import { Container, Stack } from "@material-ui/core";
+import { Container, Stack, Fade } from "@material-ui/core";
 
 import SettingsSkeleton from "components/Settings/SettingsSkeleton";
 import SettingsSection from "components/Settings/SettingsSection";
@@ -71,11 +71,13 @@ export default function ProjectSettingsPage() {
   return (
     <Container maxWidth="sm" sx={{ px: 1, pt: 1, pb: 7 + 3 + 3 }}>
       {settingsState.loading || publicSettingsState.loading ? (
-        <Stack spacing={4}>
-          <SettingsSkeleton />
-          <SettingsSkeleton />
-          <SettingsSkeleton />
-        </Stack>
+        <Fade in style={{ transitionDelay: "1s" }} unmountOnExit>
+          <Stack spacing={4}>
+            <SettingsSkeleton />
+            <SettingsSkeleton />
+            <SettingsSkeleton />
+          </Stack>
+        </Fade>
       ) : (
         <Stack spacing={4}>
           <SettingsSection title="About" transitionTimeout={100}>
