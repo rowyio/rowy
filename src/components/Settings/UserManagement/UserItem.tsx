@@ -26,12 +26,9 @@ export default function UserItem({
           <ListItemText
             primary={displayName}
             secondary={email}
-            primaryTypographyProps={{
-              style: { userSelect: "all" },
-            }}
-            secondaryTypographyProps={{
-              noWrap: true,
-              style: { userSelect: "all" },
+            sx={{
+              overflowX: "hidden",
+              "& > *": { userSelect: "all" },
             }}
           />
         </>
@@ -55,6 +52,7 @@ export default function UserItem({
                 },
 
                 "& .MuiFilledInput-root": {
+                  bgcolor: "transparent",
                   boxShadow: 0,
                   "&::before": { content: "none" },
 
@@ -63,7 +61,7 @@ export default function UserItem({
                 "& .MuiSelect-select.MuiFilledInput-input": {
                   typography: "button",
                   pl: 1,
-                  pr: 3.5,
+                  pr: 3.25,
                 },
                 "& .MuiSelect-icon": {
                   right: 2,

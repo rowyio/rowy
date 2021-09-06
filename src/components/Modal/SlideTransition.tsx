@@ -14,11 +14,11 @@ export const SlideTransition: React.ForwardRefExoticComponent<
 
     const defaultStyle = {
       opacity: 0,
-      transform: "translateY(16px)",
+      transform: "translateY(40px)",
 
       transition: theme.transitions.create(["transform", "opacity"], {
         duration: "300ms",
-        easing: "cubic-bezier(0.075, 0.82, 0.165, 1)",
+        easing: "cubic-bezier(0.1, 0.8, 0.1, 1)",
       }),
     };
 

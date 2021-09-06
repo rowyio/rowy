@@ -13,6 +13,7 @@ import { ImportWizardRef } from "components/Wizards/ImportWizard";
 import _find from "lodash/find";
 import { deepen } from "utils/fns";
 export type Table = {
+  id: string;
   collection: string;
   name: string;
   roles: string[];
@@ -111,7 +112,9 @@ export const RowyContextProvider: React.FC = ({ children }) => {
 
       const _sections = _groupBy(filteredTables, "section");
       setSections(_sections);
-      setTables(filteredTables);
+      setTables(
+        filteredTables.map((table) => ({ ...table, id: table.collection }))
+      );
     }
   }, [settings, userRoles, sections]);
 

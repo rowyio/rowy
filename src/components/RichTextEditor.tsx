@@ -52,10 +52,11 @@ const useStyles = makeStyles((theme) =>
           margin: 1,
         },
 
-        "& .tox-toolbar-overlord, & .tox-edit-area__iframe, & .tox-toolbar__primary": {
-          background: "transparent",
-          borderRadius: (theme.shape.borderRadius as number) - 1,
-        },
+        "& .tox-toolbar-overlord, & .tox-edit-area__iframe, & .tox-toolbar__primary":
+          {
+            background: "transparent",
+            borderRadius: (theme.shape.borderRadius as number) - 1,
+          },
 
         "& .tox-toolbar__primary": { padding: theme.spacing(0.5, 0) },
         "& .tox-toolbar__group": {

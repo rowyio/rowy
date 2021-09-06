@@ -54,8 +54,12 @@ export default function NavDrawerItem({
                       )}`
                 }
                 onClick={closeDrawer}
+                sx={{
+                  ml: 2,
+                  width: (theme) => `calc(100% - ${theme.spacing(2 + 0.5)})`,
+                }}
               >
-                <ListItemText primary={table.name} sx={{ pl: 2 }} />
+                <ListItemText primary={table.name} />
               </NavItem>
             </li>
           ))}

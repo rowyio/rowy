@@ -33,7 +33,7 @@ export default function UserMenu(props: IconButtonProps) {
     setThemeOverridden,
   } = useAppContext();
   if (!currentUser || !userDoc || !userDoc?.state?.doc)
-    return <div style={{ width: 48, height: 48 }} />;
+    return <div style={{ width: 48 - 12, height: 48 }} />;
 
   const displayName = userDoc?.state?.doc?.user?.displayName;
   const avatarUrl = userDoc?.state?.doc?.user?.photoURL;

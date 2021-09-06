@@ -5,18 +5,11 @@ import { colord, extend } from "colord";
 import lchPlugin from "colord/plugins/lch";
 extend([lchPlugin]);
 
-// declare module "@material-ui/core/styles" {
-//   interface Palette {
-//     input: string;
-//   }
-//   interface PaletteOptions {
-//     input?: string;
-//   }
-// }
 declare module "@material-ui/core/styles/createPalette" {
   interface TypeAction {
     activeOpacity: number;
     input: string;
+    inputOutline: string;
   }
 }
 
@@ -68,6 +61,7 @@ export const colorsLight = (
         disabled: textBase.alpha(0.26).toHslString(),
         disabledBackground: textBase.alpha(0.12).toHslString(),
         input: "#fff",
+        inputOutline: shadowBase.alpha(0.12).toRgbString(),
       },
       divider: shadowBase.alpha(0.12).toRgbString(), // Using hsl string breaks table borders
     },
@@ -159,6 +153,7 @@ export const colorsDark = (
         hover: "rgba(255, 255, 255, 0.08)",
         hoverOpacity: 0.08,
         input: "rgba(255, 255, 255, 0.06)",
+        inputOutline: "rgba(255, 255, 255, 0.08)",
       },
       // success: { light: "#34c759" },
     },

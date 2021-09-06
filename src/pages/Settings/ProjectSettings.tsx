@@ -69,7 +69,7 @@ export default function ProjectSettingsPage() {
   );
 
   return (
-    <Container maxWidth="sm" sx={{ px: 1, pt: 2, pb: 7 }}>
+    <Container maxWidth="sm" sx={{ px: 1, pt: 1, pb: 7 + 3 + 3 }}>
       {settingsState.loading || publicSettingsState.loading ? (
         <Stack spacing={4}>
           <SettingsSkeleton />
@@ -78,15 +78,15 @@ export default function ProjectSettingsPage() {
         </Stack>
       ) : (
         <Stack spacing={4}>
-          <SettingsSection title="About">
+          <SettingsSection title="About" transitionTimeout={100}>
             <About />
           </SettingsSection>
 
-          <SettingsSection title={`${name} Run`}>
+          <SettingsSection title={`${name} Run`} transitionTimeout={200}>
             <CloudRun {...childProps} />
           </SettingsSection>
 
-          <SettingsSection title="Authentication">
+          <SettingsSection title="Authentication" transitionTimeout={300}>
             <Authentication {...childProps} />
           </SettingsSection>
         </Stack>

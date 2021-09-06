@@ -53,7 +53,7 @@ export const AppProvider: React.FC = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    document.title = `${projectId} | ${name}`;
+    document.title = `${projectId} • ${name}`;
   }, []);
 
   // Store matching userDoc

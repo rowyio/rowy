@@ -10,6 +10,7 @@ export default function NavItem(props: MenuItemProps<Link>) {
       selected={pathname === props.to}
       {...props}
       sx={{
+        ...props.sx,
         "&&::before": {
           left: "auto",
           right: 0,

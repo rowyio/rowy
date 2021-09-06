@@ -2,13 +2,7 @@ import { Zoom, Stack, Typography } from "@material-ui/core";
 
 export default function HomeWelcomePrompt() {
   return (
-    <Zoom
-      in
-      style={{
-        transformOrigin: `${320 - 52}px ${320 - 52}px`,
-        transitionDelay: "3s",
-      }}
-    >
+    <Zoom in style={{ transformOrigin: `${320 - 52}px ${320 - 52}px` }}>
       <Stack
         justifyContent="center"
         sx={{

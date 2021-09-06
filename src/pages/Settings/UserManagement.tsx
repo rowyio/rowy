@@ -1,12 +1,13 @@
-import { useSearch } from "react-use-search";
-
 import { Container, Stack, Typography, Paper, List } from "@material-ui/core";
 
 import FloatingSearch from "components/FloatingSearch";
+import SlideTransition from "components/Modal/SlideTransition";
 import UserItem from "components/Settings/UserManagement/UserItem";
 import UserSkeleton from "components/Settings/UserManagement/UserSkeleton";
+import InviteUser from "components/Settings/UserManagement/InviteUser";
 
 import useCollection from "hooks/useCollection";
+import useBasicSearch from "hooks/useBasicSearch";
 import { USERS } from "config/dbPaths";
 
 export interface User {
@@ -20,53 +21,66 @@ export interface User {
 
 export default function UserManagementPage() {
   const [usersState] = useCollection({ path: USERS });
+  const users: User[] = usersState.documents ?? [];
   const loading = usersState.loading || !Array.isArray(usersState.documents);
 
-  const [filteredUsers, query, handleChange] = useSearch<User>(
-    usersState.documents ?? [],
+  const [results, query, handleQuery] = useBasicSearch(
+    users,
     (user, query) =>
-      user.id === query ||
-      user.user.displayName.includes(query) ||
-      user.user.email.includes(query),
-    { filter: true, debounce: 200 }
+      user.id.toLowerCase() === query ||
+      user.user.displayName.toLowerCase().includes(query) ||
+      user.user.email.toLowerCase().includes(query)
   );
 
   return (
-    <Container maxWidth="sm" sx={{ px: 1, pt: 2, pb: 7 }}>
-      <FloatingSearch label="Search Users" onChange={handleChange as any} />
+    <Container maxWidth="sm" sx={{ px: 1, pt: 1, pb: 7 + 3 + 3 }}>
+      <FloatingSearch
+        label="Search Users"
+        onChange={(e) => handleQuery(e.target.value)}
+      />
 
-      <Stack
-        direction="row"
-        spacing={2}
-        justifyContent="space-between"
-        alignItems="baseline"
-        sx={{ mt: 4, mx: 1, mb: 0.5, cursor: "default" }}
-      >
-        <Typography variant="subtitle1" component="h2">
-          Users
-        </Typography>
-        {!loading && (
-          <Typography variant="button" component="div">
-            {query
-              ? `${filteredUsers.length} of ${usersState.documents.length}`
-              : usersState.documents.length}
+      <SlideTransition in timeout={100}>
+        <Stack
+          direction="row"
+          spacing={2}
+          justifyContent="space-between"
+          alignItems="baseline"
+          sx={{ mt: 4, mx: 1, mb: 0.5, cursor: "default" }}
+        >
+          <Typography variant="subtitle1" component="h2">
+            Users
           </Typography>
-        )}
-      </Stack>
-
-      <Paper>
-        <List>
-          {loading || (query === "" && filteredUsers.length === 0) ? (
-            <>
-              <UserSkeleton />
-              <UserSkeleton />
-              <UserSkeleton />
-            </>
-          ) : (
-            filteredUsers.map((user) => <UserItem key={user.id} {...user} />)
+          {!loading && (
+            <Typography variant="button" component="div">
+              {query
+                ? `${results.length} of ${usersState.documents.length}`
+                : usersState.documents.length}
+            </Typography>
           )}
-        </List>
-      </Paper>
+        </Stack>
+      </SlideTransition>
+
+      {loading || (query === "" && results.length === 0) ? (
+        <Paper>
+          <List>
+            <UserSkeleton />
+            <UserSkeleton />
+            <UserSkeleton />
+          </List>
+        </Paper>
+      ) : (
+        <SlideTransition in timeout={100 + 50}>
+          <Paper>
+            <List>
+              {results.map((user) => (
+                <UserItem key={user.id} {...user} />
+              ))}
+            </List>
+          </Paper>
+        </SlideTransition>
+      )}
+
+      <InviteUser />
     </Container>
   );
 }

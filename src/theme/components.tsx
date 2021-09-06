@@ -1,4 +1,5 @@
 import { Theme, ThemeOptions } from "@material-ui/core/styles";
+import { toRem } from "./typography";
 
 import RadioIcon from "theme/RadioIcon";
 import CheckboxIcon from "theme/CheckboxIcon";
@@ -15,10 +16,6 @@ declare module "@material-ui/core/styles/createTransitions" {
 }
 
 export const components = (theme: Theme): ThemeOptions => {
-  const colorDividerHalf = colord(theme.palette.divider)
-    .alpha(colord(theme.palette.divider).alpha() / 2)
-    .toHslString();
-
   const buttonPrimaryHover = colord(theme.palette.primary.main)
     .mix(theme.palette.primary.contrastText, 0.12)
     .alpha(1)
@@ -151,22 +148,29 @@ export const components = (theme: Theme): ThemeOptions => {
               backgroundColor: theme.palette.action.input,
             },
 
-            boxShadow: `0 0 0 1px ${
-              theme.palette.mode === "dark"
-                ? colorDividerHalf
-                : theme.palette.divider
-            } inset`,
-            borderRadius: theme.shape.borderRadius,
+            boxShadow: `0 0 0 1px ${theme.palette.action.inputOutline} inset,
+                        0 -1px 0 0 ${theme.palette.text.disabled} inset`,
+            transition: theme.transitions.create("box-shadow", {
+              duration: theme.transitions.duration.short,
+            }),
 
-            overflow: "hidden",
-            "&::before": {
-              borderRadius: theme.shape.borderRadius,
-              height: (theme.shape.borderRadius as number) * 2,
-
-              borderColor: theme.palette.text.disabled,
+            "&:hover": {
+              boxShadow: `0 0 0 1px ${theme.palette.action.inputOutline} inset,
+                          0 -1px 0 0 ${theme.palette.text.primary} inset`,
             },
-            "&.Mui-focused::before, &.Mui-focused:hover::before": {
-              borderColor: theme.palette.primary.main,
+            "&.Mui-focused, &.Mui-focused:hover": {
+              boxShadow: `0 0 0 1px ${theme.palette.action.inputOutline} inset,
+                          0 -2px 0 0 ${theme.palette.primary.main} inset`,
+            },
+
+            borderRadius: theme.shape.borderRadius,
+            overflow: "hidden",
+            "&::before": { content: "none" },
+            "&::after": {
+              width: `calc(100% - ${
+                (theme.shape.borderRadius as number) * 2
+              }px)`,
+              left: theme.shape.borderRadius,
             },
 
             "&.Mui-disabled": {
@@ -181,9 +185,14 @@ export const components = (theme: Theme): ThemeOptions => {
               borderColor: theme.palette.secondary.main,
             },
           },
+          input: {
+            paddingTop: theme.spacing(1.5),
+            paddingBottom: theme.spacing(13 / 8),
+            height: toRem(23),
+          },
           inputSizeSmall: {
-            padding: "6px 12px",
-            height: 20,
+            padding: theme.spacing(0.75, 1.5),
+            height: toRem(20),
           },
           multiline: { padding: 0 },
         },
@@ -272,7 +281,7 @@ export const components = (theme: Theme): ThemeOptions => {
 
             "& .MuiListItemIcon-root": {
               minWidth: 24 + 12,
-              "& svg": { fontSize: "1.5rem" },
+              "& svg": { fontSize: toRem(24) },
             },
 
             "& + .MuiDivider-root": {
@@ -344,12 +353,10 @@ export const components = (theme: Theme): ThemeOptions => {
 
           outlined: {
             "&, &:hover, &.Mui-disabled": { border: "none" },
-            boxShadow:
-              theme.palette.mode === "dark"
-                ? `0 0 0 1px ${colorDividerHalf} inset,
-                 0 1px 0 0 ${colorDividerHalf} inset`
-                : `0 0 0 1px ${theme.palette.divider} inset,
-                 0 -1px 0 0 ${theme.palette.divider} inset`,
+            boxShadow: `0 0 0 1px ${theme.palette.action.inputOutline} inset,
+                 0 ${theme.palette.mode === "dark" ? "" : "-"}1px 0 0 ${
+              theme.palette.action.inputOutline
+            } inset`,
             backgroundColor: theme.palette.action.input,
 
             "&.Mui-disabled": {
@@ -406,7 +413,10 @@ export const components = (theme: Theme): ThemeOptions => {
           TouchRippleProps: { center: false },
         },
         styleOverrides: {
-          sizeSmall: { borderRadius: theme.shape.borderRadius },
+          sizeSmall: {
+            borderRadius: theme.shape.borderRadius,
+            padding: theme.spacing(0.5),
+          },
         },
       },
       MuiFab: {
@@ -596,12 +606,18 @@ export const components = (theme: Theme): ThemeOptions => {
           icon: <RadioIcon />,
           checkedIcon: <RadioIcon />,
         },
+        styleOverrides: {
+          root: { padding: theme.spacing(1) },
+        },
       },
       MuiCheckbox: {
         defaultProps: {
           icon: <CheckboxIcon />,
           checkedIcon: <CheckboxIcon />,
           indeterminateIcon: <CheckboxIndeterminateIcon />,
+        },
+        styleOverrides: {
+          root: { padding: theme.spacing(1) },
         },
       },
 

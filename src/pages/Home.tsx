@@ -1,104 +1,75 @@
-import { useState, useEffect } from "react";
-import queryString from "query-string";
-import { Link } from "react-router-dom";
-
+import { useState, ChangeEvent } from "react";
+import createPersistedState from "use-persisted-state";
+import _groupBy from "lodash/groupBy";
 import _find from "lodash/find";
-import { makeStyles, createStyles } from "@material-ui/styles";
+
 import {
   Container,
-  Grid,
+  Stack,
   Typography,
-  Divider,
+  ToggleButtonGroup,
+  ToggleButton,
+  Tooltip,
   Fab,
   Checkbox,
-  Tooltip,
   IconButton,
-  Link as MuiLink,
-  Button,
+  Zoom,
 } from "@material-ui/core";
+import ViewListIcon from "@material-ui/icons/ViewListOutlined";
+import ViewGridIcon from "@material-ui/icons/ViewModuleOutlined";
+import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
+import FavoriteIcon from "@material-ui/icons/Favorite";
+import EditIcon from "@material-ui/icons/EditOutlined";
 import AddIcon from "@material-ui/icons/Add";
-import EditIcon from "@material-ui/icons/Edit";
-import Favorite from "@material-ui/icons/Favorite";
-import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
-import SecurityIcon from "@material-ui/icons/SecurityOutlined";
 
-import StyledCard from "components/StyledCard";
-import HomeWelcomePrompt from "components/HomeWelcomePrompt";
-import EmptyState from "components/EmptyState";
+import FloatingSearch from "components/FloatingSearch";
+import TableGrid from "components/Home/TableGrid";
+import TableList from "components/Home/TableList";
+import TableGridSkeleton from "components/Home/TableGrid/TableGridSkeleton";
+import TableListSkeleton from "components/Home/TableList/TableListSkeleton";
+import HomeWelcomePrompt from "components/Home/HomeWelcomePrompt";
+import AccessDenied from "components/Home/AccessDenied";
 
 import routes from "constants/routes";
-import { useRowyContext } from "contexts/RowyContext";
 import { useAppContext } from "contexts/AppContext";
+import { useRowyContext, Table } from "contexts/RowyContext";
 import useDoc, { DocActions } from "hooks/useDoc";
+import useBasicSearch from "hooks/useBasicSearch";
 import TableSettingsDialog, {
   TableSettingsDialogModes,
 } from "components/TableSettings";
 
-import WIKI_LINKS from "constants/wikiLinks";
 import { SETTINGS } from "config/dbPaths";
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    "@global": {
-      html: { scrollBehavior: "smooth" },
-    },
-
-    root: {
-      minHeight: "100vh",
-      paddingBottom: theme.spacing(8),
-    },
-
-    section: {
-      paddingTop: theme.spacing(10),
-      "&:first-of-type": { marginTop: theme.spacing(2) },
-    },
-    sectionHeader: {
-      color: theme.palette.text.secondary,
-    },
-    divider: { margin: theme.spacing(1, 0, 3) },
-
-    cardGrid: {
-      [theme.breakpoints.down("sm")]: { maxWidth: 360, margin: "0 auto" },
-    },
-    card: {
-      height: "100%",
-      [theme.breakpoints.up("md")]: { minHeight: 220 },
-      [theme.breakpoints.down("lg")]: { minHeight: 180 },
-    },
-    favButton: {
-      margin: theme.spacing(-0.5, -1, 0, 0),
-    },
-    configFab: {
-      position: "fixed",
-      bottom: theme.spacing(3),
-      right: theme.spacing(12),
-    },
-    fab: {
-      position: "fixed",
-      bottom: theme.spacing(3),
-      right: theme.spacing(3),
-    },
-  })
-);
+const useHomeViewState = createPersistedState("__ROWY__HOME_VIEW");
 
 export default function HomePage() {
-  const classes = useStyles();
+  const { userDoc } = useAppContext();
+  const { tables, userClaims } = useRowyContext();
+
+  const [results, query, handleQuery] = useBasicSearch(
+    tables ?? [],
+    (table, query) =>
+      table.id.toLowerCase().includes(query) ||
+      table.name.toLowerCase().includes(query) ||
+      table.section.toLowerCase().includes(query) ||
+      table.description.toLowerCase().includes(query)
+  );
+
+  const [view, setView] = useHomeViewState("grid");
+
+  const favorites = Array.isArray(userDoc.state.doc?.favoriteTables)
+    ? userDoc.state.doc.favoriteTables
+    : [];
+  const sections = {
+    Favorites: favorites.map((id) => _find(results, { id })),
+    ..._groupBy(results, "section"),
+  };
 
   const [settingsDialogState, setSettingsDialogState] = useState<{
     mode: null | TableSettingsDialogModes;
-    data: null | {
-      collection: string;
-      description: string;
-      roles: string[];
-      name: string;
-      section: string;
-      isCollectionGroup: boolean;
-      tableType: string;
-    };
-  }>({
-    mode: null,
-    data: null,
-  });
+    data: null | (Table & { tableType: string });
+  }>({ mode: null, data: null });
 
   const clearDialog = () =>
     setSettingsDialogState({
@@ -106,228 +77,170 @@ export default function HomePage() {
       data: null,
     });
 
-  useEffect(() => {
-    const modal = decodeURIComponent(
-      queryString.parse(window.location.search).modal as string
-    );
-    if (modal) {
-      switch (modal) {
-        case "settings":
-          setOpenProjectSettings(true);
-          break;
-        default:
-          break;
-      }
-    }
-  }, [window.location.search]);
-  const { sections } = useRowyContext();
-  const { userDoc } = useAppContext();
-
-  const favs = userDoc.state.doc?.favoriteTables
-    ? userDoc.state.doc.favoriteTables
-    : [];
-
   const handleCreateTable = () =>
     setSettingsDialogState({
       mode: TableSettingsDialogModes.create,
       data: null,
     });
-  const [openProjectSettings, setOpenProjectSettings] = useState(false);
-  const [openBuilderInstaller, setOpenBuilderInstaller] = useState(false);
 
-  const [settingsDocState, settingsDocDispatch] = useDoc({ path: SETTINGS });
-  useEffect(() => {
-    if (!settingsDocState.loading && !settingsDocState.doc) {
-      settingsDocDispatch({
-        action: DocActions.update,
-        data: { createdAt: new Date() },
-      });
-    }
-  }, [settingsDocState]);
-  if (settingsDocState.error?.code === "permission-denied") {
-    return (
-      <EmptyState
-        fullScreen
-        Icon={SecurityIcon}
-        message="Access Denied"
-        description={
-          <>
-            <Typography>
-              You do not have access to this project. Please contact the project
-              owner.
-            </Typography>
-            <Typography>
-              If you are the project owner, please follow{" "}
-              <MuiLink
-                href={WIKI_LINKS.securityRules}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                these instructions
-              </MuiLink>{" "}
-              to set up the project’s security rules.
-            </Typography>
+  const [settingsDocState] = useDoc(
+    { path: SETTINGS },
+    { createIfMissing: true }
+  );
 
-            <Button component={Link} to={routes.signOut}>
-              Sign Out
-            </Button>
-          </>
-        }
-        sx={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          bgcolor: "background.default",
-          zIndex: 9999,
-        }}
-      />
-    );
-  }
+  if (!Array.isArray(tables))
+    return view === "list" ? <TableListSkeleton /> : <TableGridSkeleton />;
 
-  const TableCard = ({ table }) => {
-    const checked = Boolean(_find(favs, table));
-    return (
-      <Grid key={table.name} item xs={12} sm={6} md={4} lg={4} xl={3}>
-        <StyledCard
-          className={classes.card}
-          overline={table.section}
-          title={table.name}
-          headerAction={
-            <Checkbox
-              onClick={() => {
-                userDoc.dispatch({
-                  action: DocActions.update,
-                  data: {
-                    favoriteTables: checked
-                      ? favs.filter((t) => t.collection !== table.collection)
-                      : [...favs, table],
-                  },
-                });
-              }}
-              checked={checked}
-              icon={<FavoriteBorder />}
-              checkedIcon={<Favorite />}
-              name="checkedH"
-              className={classes.favButton}
-            />
-          }
-          bodyContent={table.description}
-          primaryLink={{
-            to: `${
-              table.isCollectionGroup ? routes.tableGroup : routes.table
-            }/${table.collection.replace(/\//g, "~2F")}`,
-            label: "Open",
+  if (settingsDocState.error?.code === "permission-denied")
+    return <AccessDenied />;
+
+  const createTableFab = (
+    <Tooltip title="Create Table">
+      <Zoom in>
+        <Fab
+          color="secondary"
+          aria-label="Create table"
+          onClick={handleCreateTable}
+          sx={{
+            zIndex: "speedDial",
+            position: "fixed",
+            bottom: (theme) => ({ xs: theme.spacing(2), sm: theme.spacing(3) }),
+            right: (theme) => ({ xs: theme.spacing(2), sm: theme.spacing(3) }),
           }}
-          secondaryAction={
-            <IconButton
-              onClick={() =>
-                setSettingsDialogState({
-                  mode: TableSettingsDialogModes.update,
-                  data: table,
-                })
-              }
-              aria-label="Edit table"
-            >
-              <EditIcon />
-            </IconButton>
-          }
-        />
-      </Grid>
+        >
+          <AddIcon />
+        </Fab>
+      </Zoom>
+    </Tooltip>
+  );
+
+  if (tables.length === 0 && userClaims.roles.includes("ADMIN"))
+    return (
+      <>
+        <HomeWelcomePrompt />
+        {createTableFab}
+      </>
     );
+
+  const getLink = (table: Table) =>
+    `${
+      table.isCollectionGroup ? routes.tableGroup : routes.table
+    }/${table.id.replace(/\//g, "~2F")}`;
+
+  const handleFavorite = (id: string) => (e: ChangeEvent<HTMLInputElement>) => {
+    const newFavorites = e.target.checked
+      ? [...favorites, id]
+      : favorites.filter((f) => f !== id);
+
+    userDoc.dispatch({
+      action: DocActions.update,
+      data: { favoriteTables: newFavorites },
+    });
   };
 
+  const getActions = (table: Table) => (
+    <>
+      {userClaims.roles.includes("ADMIN") && (
+        <IconButton
+          aria-label="Edit table"
+          onClick={() =>
+            setSettingsDialogState({
+              mode: TableSettingsDialogModes.update,
+              data: table as any,
+            })
+          }
+          size={view === "list" ? "large" : undefined}
+        >
+          <EditIcon />
+        </IconButton>
+      )}
+      <Checkbox
+        onChange={handleFavorite(table.id)}
+        checked={favorites.includes(table.id)}
+        icon={<FavoriteBorderIcon />}
+        checkedIcon={
+          <Zoom in>
+            <FavoriteIcon />
+          </Zoom>
+        }
+        name={`favorite-${table.id}`}
+        inputProps={{ "aria-label": "Favorite" }}
+        sx={view === "list" ? { p: 1.5 } : undefined}
+        color="secondary"
+      />
+    </>
+  );
+
   return (
-    <main className={classes.root}>
-      {sections && Object.keys(sections).length > 0 ? (
-        <Container>
-          {favs.length !== 0 && (
-            <section id="favorites" className={classes.section}>
-              <Typography
-                variant="h6"
-                component="h1"
-                className={classes.sectionHeader}
-              >
-                Favorites
-              </Typography>
-              <Divider className={classes.divider} />
-              <Grid
-                container
-                spacing={4}
-                justifyContent="flex-start"
-                className={classes.cardGrid}
-              >
-                {favs.map((table) => (
-                  <TableCard key={table.collection} table={table} />
-                ))}
-              </Grid>
-            </section>
-          )}
+    <Container component="main" sx={{ px: 1, pt: 1, pb: 7 + 3 + 3 }}>
+      <FloatingSearch
+        label="Search Tables"
+        onChange={(e) => handleQuery(e.target.value)}
+        paperSx={{
+          maxWidth: (theme) => theme.breakpoints.values.sm - 48,
+          width: { xs: "100%", md: "50%", lg: "100%" },
+          mx: "auto",
+          mb: { xs: 2, md: -6 },
+        }}
+      />
 
-          {sections &&
-            Object.keys(sections).length > 0 &&
-            Object.keys(sections).map((sectionName) => (
-              <section
-                key={sectionName}
-                id={sectionName}
-                className={classes.section}
-              >
-                <Typography
-                  variant="h6"
-                  component="h1"
-                  className={classes.sectionHeader}
-                >
-                  {sectionName === "undefined" ? "Other" : sectionName}
-                </Typography>
+      <Stack
+        direction="row"
+        spacing={2}
+        alignItems="center"
+        justifyContent="space-between"
+      >
+        <Typography
+          variant="h6"
+          component="h1"
+          sx={{ pl: 2, cursor: "default" }}
+        >
+          {query ? `${results.length} of ${tables.length}` : tables.length}{" "}
+          Tables
+        </Typography>
 
-                <Divider className={classes.divider} />
+        <ToggleButtonGroup
+          value={view}
+          exclusive
+          onChange={(_, v) => {
+            if (v !== null) setView(v);
+          }}
+          aria-label="Table view"
+          sx={{ "& .MuiToggleButton-root": { borderRadius: 2 } }}
+        >
+          <ToggleButton value="list" aria-label="List view">
+            <ViewListIcon style={{ transform: "rotate(180deg)" }} />
+          </ToggleButton>
+          <ToggleButton value="grid" aria-label="Grid view">
+            <ViewGridIcon />
+          </ToggleButton>
+        </ToggleButtonGroup>
+      </Stack>
 
-                <Grid
-                  container
-                  spacing={4}
-                  justifyContent="flex-start"
-                  className={classes.cardGrid}
-                >
-                  {sections[sectionName].map((table, i) => (
-                    <TableCard key={`${i}-${table.collection}`} table={table} />
-                  ))}
-                </Grid>
-              </section>
-            ))}
-
-          <section className={classes.section}>
-            <Tooltip title="Create Table">
-              <Fab
-                className={classes.fab}
-                color="secondary"
-                aria-label="Create table"
-                onClick={handleCreateTable}
-              >
-                <AddIcon />
-              </Fab>
-            </Tooltip>
-          </section>
-        </Container>
+      {view === "list" ? (
+        <TableList
+          sections={sections}
+          getLink={getLink}
+          getActions={getActions}
+        />
       ) : (
-        <Container>
-          <HomeWelcomePrompt />
-          <Fab
-            className={classes.fab}
-            color="secondary"
-            aria-label="Create table"
-            onClick={handleCreateTable}
-          >
-            <AddIcon />
-          </Fab>
-        </Container>
+        <TableGrid
+          sections={sections}
+          getLink={getLink}
+          getActions={getActions}
+        />
       )}
 
-      <TableSettingsDialog
-        clearDialog={clearDialog}
-        mode={settingsDialogState.mode}
-        data={settingsDialogState.data}
-      />
-    </main>
+      {userClaims.roles.includes("ADMIN") && (
+        <>
+          {createTableFab}
+          <TableSettingsDialog
+            clearDialog={clearDialog}
+            mode={settingsDialogState.mode}
+            data={settingsDialogState.data}
+          />
+        </>
+      )}
+    </Container>
   );
 }

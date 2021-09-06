@@ -1,36 +1,43 @@
-import { Typography, Paper } from "@material-ui/core";
+import { Paper, PaperProps } from "@material-ui/core";
+
+import SectionHeading from "components/SectionHeading";
+import SlideTransition from "components/Modal/SlideTransition";
 
 export interface ISettingsSectionProps {
   children: React.ReactNode;
   title: string;
+  paperSx?: PaperProps["sx"];
+  transitionTimeout?: number;
 }
 
 export default function SettingsSection({
   children,
   title,
+  paperSx,
+  transitionTimeout = 100,
 }: ISettingsSectionProps) {
   return (
     <section style={{ cursor: "default" }}>
-      <Typography
-        variant="subtitle1"
-        component="h2"
-        sx={{ mx: 1, mb: 0.5 }}
-        id={title}
-      >
-        {title}
-      </Typography>
-      <Paper
-        sx={{
-          p: { xs: 2, sm: 3 },
+      <SlideTransition in timeout={transitionTimeout}>
+        <SectionHeading sx={{ mx: 1 }}>{title}</SectionHeading>
+      </SlideTransition>
 
-          "& > :not(style) + :not(style)": {
-            m: 0,
-            mt: { xs: 2, sm: 3 },
-          },
-        }}
-      >
-        {children}
-      </Paper>
+      <SlideTransition in timeout={transitionTimeout + 50}>
+        <Paper
+          sx={{
+            p: { xs: 2, sm: 3 },
+
+            "& > :not(style) + :not(style)": {
+              m: 0,
+              mt: { xs: 2, sm: 3 },
+            },
+
+            ...paperSx,
+          }}
+        >
+          {children}
+        </Paper>
+      </SlideTransition>
     </section>
   );
 }

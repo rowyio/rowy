@@ -7,12 +7,16 @@ import {
 } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 
+import { APP_BAR_HEIGHT } from "components/Navigation";
+
 export interface IFloatingSearchProps extends Partial<FilledTextFieldProps> {
   label: string;
+  paperSx?: FilledTextFieldProps["sx"];
 }
 
 export default function FloatingSearch({
   label,
+  paperSx,
   ...props
 }: IFloatingSearchProps) {
   const trigger = useScrollTrigger({ disableHysteresis: true, threshold: 0 });
@@ -22,8 +26,9 @@ export default function FloatingSearch({
       elevation={trigger ? 8 : 1}
       sx={{
         position: "sticky",
-        top: (theme) => theme.spacing(7 + 1),
+        top: (theme) => theme.spacing(APP_BAR_HEIGHT / 8 + 1),
         zIndex: "appBar",
+        ...paperSx,
       }}
     >
       <TextField
@@ -34,6 +39,7 @@ export default function FloatingSearch({
         type="search"
         id="user-management-search"
         size="medium"
+        autoFocus
         InputProps={{
           startAdornment: (
             <InputAdornment
@@ -46,16 +52,32 @@ export default function FloatingSearch({
         }}
         sx={{
           "& .MuiInputLabel-root": {
+            height: "0px",
+            m: 0,
+            p: 0,
+            pointerEvents: "none",
             opacity: 0,
-            mt: -5,
-            mb: 2,
           },
           "& .MuiFilledInput-root": {
-            boxShadow: 0,
             borderRadius: 2,
-            "&::before": {
-              borderRadius: 2,
-              height: (theme) => (theme.shape.borderRadius as number) * 4,
+
+            boxShadow: (theme) =>
+              `0 -1px 0 0 ${theme.palette.text.disabled} inset`,
+            "&:hover": {
+              boxShadow: (theme) =>
+                `0 -1px 0 0 ${theme.palette.text.primary} inset`,
+            },
+            "&.Mui-focused, &.Mui-focused:hover": {
+              boxShadow: (theme) =>
+                `0 -2px 0 0 ${theme.palette.primary.main} inset`,
+            },
+
+            "&::after": {
+              width: (theme) =>
+                `calc(100% - ${
+                  (theme.shape.borderRadius as number) * 2 * 2
+                }px)`,
+              left: (theme) => (theme.shape.borderRadius as number) * 2,
             },
           },
         }}
