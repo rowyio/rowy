@@ -71,6 +71,7 @@ export default function EmptyState({
         item
         sx={{
           maxWidth: "25em",
+          width: (theme) => `calc(100% - ${theme.spacing(2 * 2)})`,
           px: 2,
           typography: "body2",
 

@@ -1,16 +1,18 @@
+import { SVGProps } from "react";
 import { useTheme } from "@material-ui/core";
 
-export default function Logo() {
+export default function Logo(props: SVGProps<SVGSVGElement>) {
   const theme = useTheme();
 
   return (
     <svg
       width="102"
-      height="33"
-      viewBox="0 -3 68 22"
+      height="32"
+      viewBox="0 -1.5 68 21"
       xmlns="http://www.w3.org/2000/svg"
       aria-labelledby="rowy-logo-title"
       role="img"
+      {...props}
     >
       <title id="rowy-logo-title">rowy</title>
 

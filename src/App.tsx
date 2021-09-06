@@ -109,9 +109,12 @@ export default function App() {
                                   <Navigation
                                     title="Home"
                                     titleComponent={
-                                      <div style={{ textAlign: "center" }}>
-                                        <Logo />
-                                      </div>
+                                      <Logo
+                                        style={{
+                                          display: "block",
+                                          margin: "0 auto",
+                                        }}
+                                      />
                                     }
                                   >
                                     <HomePage />
