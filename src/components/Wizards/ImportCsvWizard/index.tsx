@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from "react";
+import { useSnackbar } from "notistack";
 import _mergeWith from "lodash/mergeWith";
 import _find from "lodash/find";
 
@@ -13,7 +14,6 @@ import Step3Preview from "./Step3Preview";
 
 import { ColumnConfig } from "hooks/useTable/useTableConfig";
 import { useProjectContext } from "contexts/ProjectContext";
-import { useSnackContext } from "contexts/SnackContext";
 import { getFieldProp } from "components/fields";
 
 export type CsvConfig = {
@@ -47,7 +47,7 @@ export default function ImportCsvWizard({
   const [open, setOpen] = useState(true);
 
   const { tableState, tableActions } = useProjectContext();
-  const { open: openSnackbar } = useSnackContext();
+  const { enqueueSnackbar } = useSnackbar();
 
   const [config, setConfig] = useState<CsvConfig>({
     pairs: [],
@@ -82,7 +82,7 @@ export default function ImportCsvWizard({
 
   const handleFinish = () => {
     if (!tableState || !tableActions || !parsedRows) return;
-    openSnackbar({ message: "Importing data…" });
+    enqueueSnackbar("Importing data…");
     // Add all new rows — synchronous
     parsedRows?.forEach((newRow) => tableActions.row.add(newRow));
 

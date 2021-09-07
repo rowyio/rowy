@@ -31,6 +31,14 @@ export default function FloatingSearch({
           top: (theme) => theme.spacing(APP_BAR_HEIGHT / 8 + 1),
           zIndex: "appBar",
           height: 48,
+          transition: (theme) =>
+            theme.transitions.create(["box-shadow", "transform", "opacity"]) +
+            " !important",
+          transitionTimingFunction: (
+            theme
+          ) => `${theme.transitions.easing.easeInOut},
+                cubic-bezier(0.1, 0.8, 0.1, 1),
+                cubic-bezier(0.1, 0.8, 0.1, 1) !important`,
           ...paperSx,
         }}
       >

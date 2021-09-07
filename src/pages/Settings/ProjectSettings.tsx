@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useSnackbar } from "notistack";
 import { useDebouncedCallback } from "use-debounce";
 
 import { Container, Stack, Fade } from "@material-ui/core";
@@ -10,7 +11,6 @@ import CloudRun from "@src/components/Settings/ProjectSettings/CloudRun";
 import Authentication from "components/Settings/ProjectSettings/Authentication";
 import Customization from "components/Settings/ProjectSettings/Customization";
 
-import { useSnackContext } from "contexts/SnackContext";
 import { SETTINGS, PUBLIC_SETTINGS } from "config/dbPaths";
 import useDoc from "hooks/useDoc";
 import { db } from "@src/firebase";
@@ -24,7 +24,7 @@ export interface IProjectSettingsChildProps {
 }
 
 export default function ProjectSettingsPage() {
-  const snack = useSnackContext();
+  const { enqueueSnackbar } = useSnackbar();
 
   const [settingsState] = useDoc({ path: SETTINGS }, { createIfMissing: true });
   const settings = settingsState.doc;
@@ -33,9 +33,7 @@ export default function ProjectSettingsPage() {
       db
         .doc(SETTINGS)
         .update(data)
-        .then(() =>
-          snack.open({ message: "Saved", variant: "success", duration: 3000 })
-        ),
+        .then(() => enqueueSnackbar("Saved", { variant: "success" })),
     1000
   );
 
@@ -49,9 +47,7 @@ export default function ProjectSettingsPage() {
       db
         .doc(PUBLIC_SETTINGS)
         .update(data)
-        .then(() =>
-          snack.open({ message: "Saved", variant: "success", duration: 3000 })
-        ),
+        .then(() => enqueueSnackbar("Saved", { variant: "success" })),
     1000
   );
 

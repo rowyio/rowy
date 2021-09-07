@@ -1,6 +1,7 @@
 import { useState, useContext } from "react";
 import { parse as json2csv } from "json2csv";
 import { saveAs } from "file-saver";
+import { useSnackbar } from "notistack";
 
 import _get from "lodash/get";
 import _find from "lodash/find";
@@ -10,9 +11,7 @@ import MultiSelect from "@antlerengineering/multiselect";
 
 import { Button, DialogActions } from "@material-ui/core";
 
-import { SnackContext } from "contexts/SnackContext";
 import { useProjectContext } from "contexts/ProjectContext";
-
 import { FieldType } from "constants/fields";
 import { getFieldProp } from "components/fields";
 
@@ -97,7 +96,7 @@ const selectedColumnsCsvReducer =
 
 export default function Export({ query, closeModal }) {
   const { tableState } = useProjectContext();
-  const snackContext = useContext(SnackContext);
+  const { enqueueSnackbar } = useSnackbar();
 
   const [columns, setColumns] = useState<any[]>([]);
   const [exportType, setExportType] = useState<"csv" | "json">("csv");
@@ -116,11 +115,7 @@ export default function Export({ query, closeModal }) {
 
   const handleExport = async () => {
     handleClose();
-    snackContext.open({
-      variant: "info",
-      message: "Preparing file. Download will start shortly",
-      duration: 5000,
-    });
+    enqueueSnackbar("Preparing file. Download will start shortly.");
     let querySnapshot = await query.get();
     let docs = querySnapshot.docs.map((doc) => ({
       id: doc.ref.id,

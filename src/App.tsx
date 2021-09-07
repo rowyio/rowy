@@ -13,10 +13,10 @@ import Loading from "components/Loading";
 import Navigation from "components/Navigation";
 import Logo from "assets/Logo";
 
-import { SnackProvider } from "contexts/SnackContext";
 import ConfirmationProvider from "components/ConfirmationDialog/Provider";
 import { AppProvider } from "contexts/AppContext";
 import { ProjectContextProvider } from "contexts/ProjectContext";
+import { SnackbarProvider } from "contexts/SnackbarContext";
 import { SnackLogProvider } from "contexts/SnackLogContext";
 import routes from "constants/routes";
 
@@ -52,8 +52,8 @@ export default function App() {
       <ErrorBoundary>
         <AppProvider>
           <Favicon />
-          <ConfirmationProvider>
-            <SnackProvider>
+          <SnackbarProvider>
+            <ConfirmationProvider>
               <SnackLogProvider>
                 <CustomBrowserRouter>
                   <Suspense fallback={<Loading fullScreen />}>
@@ -170,28 +170,34 @@ export default function App() {
 
                       <PrivateRoute
                         render={() => (
-                          <EmptyState
-                            message="Page Not Found"
-                            description={
-                              <Button
-                                component={Link}
-                                to={routes.home}
-                                variant="outlined"
-                                style={{ marginTop: 8 }}
-                              >
-                                Go Home
-                              </Button>
-                            }
-                            fullScreen
-                          />
+                          <Navigation
+                            title="Page Not Found"
+                            titleComponent={<div />}
+                          >
+                            <EmptyState
+                              message="Page Not Found"
+                              description={
+                                <Button
+                                  component={Link}
+                                  to={routes.home}
+                                  variant="outlined"
+                                  style={{ marginTop: 8 }}
+                                >
+                                  Go Home
+                                </Button>
+                              }
+                              fullScreen
+                              style={{ marginTop: -64 }}
+                            />
+                          </Navigation>
                         )}
                       />
                     </Switch>
                   </Suspense>
                 </CustomBrowserRouter>
               </SnackLogProvider>
-            </SnackProvider>
-          </ConfirmationProvider>
+            </ConfirmationProvider>
+          </SnackbarProvider>
         </AppProvider>
       </ErrorBoundary>
     </StyledEngineProvider>

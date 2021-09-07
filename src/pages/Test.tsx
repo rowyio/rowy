@@ -1,5 +1,5 @@
-import { useContext, useEffect, Fragment } from "react";
-import { SnackContext } from "contexts/SnackContext";
+import { Fragment, useRef, useState } from "react";
+import { useSnackbar } from "notistack";
 
 import Navigation from "components/Navigation";
 import {
@@ -36,8 +36,11 @@ import {
   Tab,
 } from "@material-ui/core";
 import SparkIcon from "@material-ui/icons/OfflineBoltOutlined";
-import { useState } from "react";
 import { useConfirmation } from "components/ConfirmationDialog";
+
+import SnackbarProgress, {
+  ISnackbarProgressRef,
+} from "components/SnackbarProgress";
 
 const typographyVariants = [
   "h1",
@@ -56,23 +59,14 @@ const typographyVariants = [
 ];
 
 export default function TestView() {
-  const snackContext = useContext(SnackContext);
   const theme = useTheme();
   const { requestConfirmation } = useConfirmation();
-
-  useEffect(() => {
-    // alert("OPEN");
-    snackContext.open({
-      variant: "progress",
-      message: "Preparing files for download",
-      duration: undefined,
-    });
-
-    snackContext.setProgress({ value: 90, target: 120 });
-  }, []);
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const [tab, setTab] = useState(0);
   const handleTabChange = (_, newTab) => setTab(newTab);
+
+  const snackbarProgressRef = useRef<ISnackbarProgressRef>();
 
   return (
     <Navigation title="Theme Test">
@@ -844,6 +838,64 @@ export default function TestView() {
               Confirmation
             </Button>
           </div>
+
+          <Stack spacing={1} direction="row" flexWrap="wrap">
+            <Button onClick={() => enqueueSnackbar("Message")}>Snackbar</Button>
+            <Button
+              onClick={() =>
+                enqueueSnackbar(
+                  "You do not have the permissions to make this change.",
+                  {
+                    variant: "error",
+                    action: (
+                      <Button variant="contained" color="secondary">
+                        OK
+                      </Button>
+                    ),
+                  }
+                )
+              }
+            >
+              Error
+            </Button>
+            <Button
+              onClick={() => enqueueSnackbar("Message", { variant: "info" })}
+            >
+              Info
+            </Button>
+            <Button
+              onClick={() => enqueueSnackbar("Message", { variant: "success" })}
+            >
+              Success
+            </Button>
+            <Button
+              onClick={() => enqueueSnackbar("Message", { variant: "warning" })}
+            >
+              Warning
+            </Button>
+            <Button
+              onClick={() => {
+                const snackId = enqueueSnackbar("Downloading files", {
+                  action: <SnackbarProgress stateRef={snackbarProgressRef} />,
+                  persist: true,
+                });
+
+                const interval = setInterval(
+                  () =>
+                    snackbarProgressRef.current?.setProgress((p) => {
+                      if (p === 100) {
+                        clearInterval(interval);
+                        setTimeout(() => closeSnackbar(snackId), 1000);
+                      }
+                      return p + 1;
+                    }),
+                  100
+                );
+              }}
+            >
+              Progress
+            </Button>
+          </Stack>
         </Stack>
       </Container>
     </Navigation>

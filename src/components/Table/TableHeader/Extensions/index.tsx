@@ -1,6 +1,7 @@
 import { useState } from "react";
 import _isEqual from "lodash/isEqual";
 import { db } from "../../../../firebase";
+import { useSnackbar } from "notistack";
 
 import { Breadcrumbs, Typography, Button } from "@material-ui/core";
 
@@ -14,7 +15,6 @@ import ExtensionMigration from "./ExtensionMigration";
 import { useProjectContext } from "contexts/ProjectContext";
 import { useAppContext } from "contexts/AppContext";
 import { useConfirmation } from "components/ConfirmationDialog";
-import { useSnackContext } from "contexts/SnackContext";
 import { useSnackLogContext } from "contexts/SnackLogContext";
 
 import {
@@ -25,9 +25,10 @@ import {
 } from "./utils";
 import { SETTINGS } from "config/dbPaths";
 import WIKI_LINKS from "constants/wikiLinks";
+import { name } from "@root/package.json";
 
 export default function ExtensionsEditor() {
-  const snack = useSnackContext();
+  const { enqueueSnackbar } = useSnackbar();
   const { tableState, tableActions } = useProjectContext();
   const appContext = useAppContext();
   const { requestConfirmation } = useConfirmation();
@@ -96,13 +97,12 @@ export default function ExtensionsEditor() {
     const settingsDoc = await db.doc(SETTINGS).get();
     const buildUrl = settingsDoc.get("buildUrl");
     if (!buildUrl) {
-      snack.open({
-        message: "Cloud Run Trigger URL not set.",
+      enqueueSnackbar(`${name} Run is not set up`, {
         variant: "error",
         action: (
           <Button
             variant="contained"
-            component="a"
+            color="secondary"
             target="_blank"
             href={WIKI_LINKS.functions}
             rel="noopener noreferrer"

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import _find from "lodash/find";
+import { useSnackbar } from "notistack";
 
 import { makeStyles, createStyles } from "@material-ui/styles";
 import {
@@ -21,7 +22,6 @@ import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp";
 
 import { useConfirmation } from "components/ConfirmationDialog/Context";
 import { useProjectContext } from "contexts/ProjectContext";
-import { useSnackContext } from "contexts/SnackContext";
 import { formatPath } from "utils/fns";
 import { cloudFunction } from "firebase/callables";
 
@@ -105,7 +105,7 @@ export default function BulkActions({ selectedRows, columns, clearSelection }) {
   const { tableActions, tableState } = useProjectContext();
 
   const { requestConfirmation } = useConfirmation();
-  const snack = useSnackContext();
+  const { enqueueSnackbar } = useSnackbar();
 
   const actionColumns: { name: string; key: string; config: any }[] = columns
     .filter((column) => column.type === "ACTION")
@@ -164,8 +164,7 @@ export default function BulkActions({ selectedRows, columns, clearSelection }) {
         async (response) => {
           const { message, cellValue, success } = response.data;
           // setIsRunning(false);
-          snack.open({
-            message: JSON.stringify(message),
+          enqueueSnackbar(JSON.stringify(message), {
             variant: success ? "success" : "error",
           });
           if (cellValue && cellValue.status) {
@@ -175,7 +174,7 @@ export default function BulkActions({ selectedRows, columns, clearSelection }) {
         (error) => {
           console.error("ERROR", callableName, error);
           //setIsRunning(false);
-          snack.open({ message: JSON.stringify(error), variant: "error" });
+          enqueueSnackbar(JSON.stringify(error), { variant: "error" });
         }
       );
     });

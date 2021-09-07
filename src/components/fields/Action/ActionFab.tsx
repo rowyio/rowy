@@ -1,5 +1,6 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import _get from "lodash/get";
+import { useSnackbar } from "notistack";
 
 import { Fab, FabProps, CircularProgress } from "@material-ui/core";
 import PlayIcon from "@material-ui/icons/PlayArrow";
@@ -7,7 +8,6 @@ import RefreshIcon from "@material-ui/icons/Refresh";
 import UndoIcon from "@material-ui/icons/Undo";
 
 import { useProjectContext } from "contexts/ProjectContext";
-import { SnackContext } from "contexts/SnackContext";
 import { cloudFunction } from "firebase/callables";
 import { formatPath } from "utils/fns";
 import { useConfirmation } from "components/ConfirmationDialog";
@@ -47,6 +47,7 @@ export default function ActionFab({
   ...props
 }: IActionFabProps) {
   const { requestConfirmation } = useConfirmation();
+  const { enqueueSnackbar } = useSnackbar();
   const { requestParams } = useActionParams();
   const { tableState } = useProjectContext();
   const { ref } = row;
@@ -60,7 +61,6 @@ export default function ActionFab({
     ? "redo"
     : "";
   const [isRunning, setIsRunning] = useState(false);
-  const snack = useContext(SnackContext);
 
   const callableName: string =
     (column as any).callableName ?? config.callableName ?? "actionScript";
@@ -80,8 +80,7 @@ export default function ActionFab({
       async (response) => {
         const { message, cellValue, success } = response.data;
         setIsRunning(false);
-        snack.open({
-          message: JSON.stringify(message),
+        enqueueSnackbar(JSON.stringify(message), {
           variant: success ? "success" : "error",
         });
         if (cellValue && cellValue.status) {
@@ -93,7 +92,7 @@ export default function ActionFab({
       (error) => {
         console.error("ERROR", callableName, error);
         setIsRunning(false);
-        snack.open({ message: JSON.stringify(error), variant: "error" });
+        enqueueSnackbar(JSON.stringify(error), { variant: "error" });
       }
     );
   };

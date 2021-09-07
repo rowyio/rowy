@@ -4,8 +4,9 @@ import { differenceInDays } from "date-fns";
 
 import { Grid, Typography, Button, Link, Divider } from "@material-ui/core";
 import LoadingButton from "@material-ui/lab/LoadingButton";
+
 import Logo from "assets/Logo";
-import OpenInNewIcon from "@material-ui/icons/OpenInNew";
+import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
 
 import { name, version, repository } from "@root/package.json";
 import { projectId } from "@src/firebase";
@@ -74,58 +75,55 @@ export default function About() {
 
   return (
     <>
-      <Grid
-        container
-        spacing={1}
-        alignItems="center"
-        justifyContent="space-between"
-      >
-        <Grid item>
-          <Logo />
-        </Grid>
-        <Grid item style={{ textAlign: "right" }}>
-          <Link
-            component="a"
-            href={repository.url.replace(".git", "")}
-            target="_blank"
-            rel="noopener noreferrer"
-            variant="body2"
-            display="block"
-          >
-            GitHub
-            <OpenInNewIcon
-              aria-label="Open in new tab"
-              fontSize="small"
-              sx={{ verticalAlign: "bottom", ml: 0.5 }}
-            />
-          </Link>
+      <Logo
+        style={{ display: "block", marginLeft: "auto", marginRight: "auto" }}
+      />
 
-          <Link
-            component="a"
-            href={repository.url.replace(".git", "") + "/releases"}
-            target="_blank"
-            rel="noopener noreferrer"
-            variant="body2"
-            display="block"
-          >
-            Release notes
-            <OpenInNewIcon
-              aria-label="Open in new tab"
-              fontSize="small"
-              sx={{ verticalAlign: "bottom", ml: 0.5 }}
-            />
-          </Link>
+      <div style={{ marginTop: 12 }}>
+        <Grid container justifyContent="center" spacing={3}>
+          <Grid item>
+            <Link
+              variant="body2"
+              href={repository.url.replace(".git", "")}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              GitHub
+              <InlineOpenInNewIcon />
+            </Link>
+          </Grid>
+
+          <Grid item>
+            <Link
+              variant="body2"
+              // href={repository.url.replace(".git", "")}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Discord
+              <InlineOpenInNewIcon />
+            </Link>
+          </Grid>
+
+          <Grid item>
+            <Link
+              variant="body2"
+              // href={repository.url.replace(".git", "")}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Twitter
+              <InlineOpenInNewIcon />
+            </Link>
+          </Grid>
         </Grid>
-      </Grid>
+      </div>
+
+      <Divider />
 
       <div>
-        <Grid
-          container
-          spacing={1}
-          alignItems="center"
-          justifyContent="space-between"
-        >
-          <Grid item>
+        <Grid container spacing={1} alignItems="center" direction="row">
+          <Grid item xs>
             <Typography display="block">
               {name} v{version}
             </Typography>
@@ -142,11 +140,7 @@ export default function About() {
                 display="block"
               >
                 Update available: {latestUpdate.tag_name}
-                <OpenInNewIcon
-                  aria-label="Open in new tab"
-                  fontSize="small"
-                  sx={{ verticalAlign: "bottom", ml: 0.5 }}
-                />
+                <InlineOpenInNewIcon />
               </Link>
             )}
           </Grid>
@@ -164,7 +158,9 @@ export default function About() {
                 href={WIKI_LINKS.updating}
                 target="_blank"
                 rel="noopener noreferrer"
-                endIcon={<OpenInNewIcon aria-label="Open in new tab" />}
+                endIcon={
+                  <InlineOpenInNewIcon sx={{ fontSize: "18px !important" }} />
+                }
               >
                 How to Update
               </Button>
@@ -194,11 +190,7 @@ export default function About() {
               variant="body2"
             >
               Firebase Console
-              <OpenInNewIcon
-                aria-label="Open in new tab"
-                fontSize="small"
-                sx={{ verticalAlign: "bottom", ml: 0.5 }}
-              />
+              <InlineOpenInNewIcon />
             </Link>
           </Grid>
         </Grid>

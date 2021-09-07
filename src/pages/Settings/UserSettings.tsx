@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useSnackbar } from "notistack";
 import { useDebouncedCallback } from "use-debounce";
 
 import { Container, Stack, Fade } from "@material-ui/core";
@@ -10,7 +11,6 @@ import Theme from "components/Settings/UserSettings/Theme";
 import Personalization from "components/Settings/UserSettings/Personalization";
 
 import { useAppContext } from "@src/contexts/AppContext";
-import { useSnackContext } from "contexts/SnackContext";
 import { USERS } from "config/dbPaths";
 import useDoc from "hooks/useDoc";
 import { db } from "@src/firebase";
@@ -22,7 +22,7 @@ export interface IUserSettingsChildProps {
 
 export default function UserSettingsPage() {
   const { currentUser } = useAppContext();
-  const snack = useSnackContext();
+  const { enqueueSnackbar } = useSnackbar();
 
   const path = `${USERS}/${currentUser?.uid}`;
 
@@ -33,9 +33,7 @@ export default function UserSettingsPage() {
       db
         .doc(path)
         .update(data)
-        .then(() =>
-          snack.open({ message: "Saved", variant: "success", duration: 3000 })
-        ),
+        .then(() => enqueueSnackbar("Saved", { variant: "success" })),
     1000
   );
 

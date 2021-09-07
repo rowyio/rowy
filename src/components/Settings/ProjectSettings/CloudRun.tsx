@@ -1,6 +1,6 @@
 import { Typography, Link, Grid, TextField } from "@material-ui/core";
 import LoadingButton from "@material-ui/lab/LoadingButton";
-import OpenInNewIcon from "@material-ui/icons/OpenInNew";
+import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
 
 import { IProjectSettingsChildProps } from "pages/Settings/ProjectSettings";
 import WIKI_LINKS from "constants/wikiLinks";
@@ -21,11 +21,7 @@ export default function CloudRun({
           rel="noopener noreferrer"
         >
           Learn more
-          <OpenInNewIcon
-            aria-label="Open in new tab"
-            fontSize="small"
-            sx={{ verticalAlign: "bottom", ml: 0.5 }}
-          />
+          <InlineOpenInNewIcon />
         </Link>
       </Typography>
 
@@ -51,7 +47,6 @@ export default function CloudRun({
                 .join("/")}/FunctionsBuilder.git`}
               target="_blank"
               rel="noopener noreferrer"
-              endIcon={<OpenInNewIcon aria-label="Open in new tab" />}
               loading={
                 settings.cloudRunDeployStatus === "BUILDING" ||
                 settings.cloudRunDeployStatus === "COMPLETE"

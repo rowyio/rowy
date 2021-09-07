@@ -1,5 +1,6 @@
-import { useState, useContext } from "react";
+import { useState, useRef } from "react";
 import { saveAs } from "file-saver";
+import { useSnackbar } from "notistack";
 
 import _get from "lodash/get";
 import _find from "lodash/find";
@@ -16,8 +17,10 @@ import {
   Checkbox,
 } from "@material-ui/core";
 
-import { SnackContext } from "contexts/SnackContext";
 import { useProjectContext } from "contexts/ProjectContext";
+import SnackbarProgress, {
+  ISnackbarProgressRef,
+} from "components/SnackbarProgress";
 
 import { FieldType } from "constants/fields";
 import { hasDataTypes } from "components/fields";
@@ -55,7 +58,8 @@ const selectedColumnsFilesReducer =
 
 export default function Export({ query, closeModal }) {
   const { tableState } = useProjectContext();
-  const snackContext = useContext(SnackContext);
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const snackbarProgressRef = useRef<ISnackbarProgressRef>();
 
   const [columns, setColumns] = useState<any[]>([]);
   const [labelColumnsEnabled, setLabelColumnsEnabled] = useState(false);
@@ -76,10 +80,12 @@ export default function Export({ query, closeModal }) {
 
   const handleDownload = async () => {
     handleClose();
-    snackContext.open({
-      variant: "progress",
-      message: "Preparing file. Download will start shortly",
-    });
+
+    const preparingSnackbar = enqueueSnackbar(
+      "Preparing file. Download will start shortly.",
+      { persist: true }
+    );
+
     let querySnapshot = await query.get();
     let docs = querySnapshot.docs.map((doc) => doc.data());
     const files = docs
@@ -89,18 +95,23 @@ export default function Export({ query, closeModal }) {
       .reduce((acc, row) => [...acc, ...row], []);
     var zip = new JSZip();
     let completedCount = 0;
+
+    closeSnackbar(preparingSnackbar);
+    const downloadingSnackbar = enqueueSnackbar("Downloading", {
+      action: (
+        <SnackbarProgress
+          stateRef={snackbarProgressRef}
+          target={files.length}
+        />
+      ),
+      persist: true,
+    });
+
     const downloads = files.map((file) =>
       download(file.downloadURL).then((blob: any) => {
         zip.file(file.name, blob, { base64: true });
         completedCount++;
-        snackContext.open({
-          variant: "progress",
-          message: "Downloading",
-        });
-        snackContext.setProgress({
-          value: completedCount,
-          target: files.length,
-        });
+        snackbarProgressRef.current?.setProgress(completedCount);
       })
     );
 
@@ -108,11 +119,9 @@ export default function Export({ query, closeModal }) {
     zip
       .generateAsync({ type: "blob" })
       .then((content) => saveAs(content, `${packageName}.zip`));
-    snackContext.open({
-      variant: "success",
-      message: "Download completed successfully",
-      duration: 2000,
-    });
+
+    closeSnackbar(downloadingSnackbar);
+    enqueueSnackbar("Download complete", { variant: "success" });
   };
   return (
     <>

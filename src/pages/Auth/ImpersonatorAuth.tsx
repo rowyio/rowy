@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSnackbar } from "notistack";
 
 import { Typography, Button, TextField } from "@material-ui/core";
 
@@ -6,12 +7,11 @@ import AuthLayout from "components/Auth/AuthLayout";
 import FirebaseUi from "components/Auth/FirebaseUi";
 
 import { signOut } from "utils/auth";
-import { useSnackContext } from "contexts/SnackContext";
 import { ImpersonatorAuth } from "../../firebase/callables";
 import { auth } from "../../firebase";
 
 export default function ImpersonatorAuthPage() {
-  const snack = useSnackContext();
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     //sign out user on initial load
@@ -27,11 +27,11 @@ export default function ImpersonatorAuthPage() {
     const resp = await ImpersonatorAuth(email);
     setLoading(false);
     if (resp.data.success) {
-      snack.open({ message: resp.data.message, variant: "success" });
+      enqueueSnackbar(resp.data.message, { variant: "success" });
       await auth.signInWithCustomToken(resp.data.jwt);
       window.location.href = "/";
     } else {
-      snack.open({ message: resp.data.message, variant: "error" });
+      enqueueSnackbar(resp.data.message, { variant: "error" });
     }
   };
 
@@ -50,8 +50,7 @@ export default function ImpersonatorAuthPage() {
                   if (result.claims.roles?.includes("ADMIN")) {
                     setAdminUser(authUser.user);
                   } else {
-                    snack.open({
-                      message: "Not an admin account",
+                    enqueueSnackbar("Not an admin account", {
                       variant: "error",
                     });
                     signOut();

@@ -1,12 +1,13 @@
 import React, { useState, useContext, useEffect, useRef, useMemo } from "react";
+import { useSnackbar } from "notistack";
 import _groupBy from "lodash/groupBy";
 import _sortBy from "lodash/sortBy";
 import { DataGridHandle } from "react-data-grid";
 import firebase from "firebase/app";
+
 import useTable, { TableActions, TableState } from "@src/hooks/useTable";
 import useSettings from "hooks/useSettings";
 import { useAppContext } from "./AppContext";
-import { useSnackContext } from "./SnackContext";
 import { SideDrawerRef } from "components/SideDrawer";
 import { ColumnMenuRef } from "components/Table/ColumnMenu";
 import { ImportWizardRef } from "components/Wizards/ImportWizard";
@@ -86,7 +87,7 @@ export const rowyUser = (currentUser) => {
 export const useProjectContext = () => useContext(ProjectContext);
 
 export const ProjectContextProvider: React.FC = ({ children }) => {
-  const { open } = useSnackContext();
+  const { enqueueSnackbar } = useSnackbar();
   const { tableState, tableActions } = useTable();
   const [tables, setTables] = useState<ProjectContextProps["tables"]>();
   const [sections, setSections] = useState<ProjectContextProps["sections"]>();
@@ -159,12 +160,13 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
       },
       (error) => {
         if (error.code === "permission-denied") {
-          open({
-            message: `You don't have permissions to make this change`,
-            variant: "error",
-            duration: 2000,
-            position: { horizontal: "center", vertical: "top" },
-          });
+          enqueueSnackbar(
+            `You do not have the permissions to make this change.`,
+            {
+              variant: "error",
+              anchorOrigin: { horizontal: "center", vertical: "top" },
+            }
+          );
         }
       }
     );

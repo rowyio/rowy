@@ -4,7 +4,7 @@ import _startCase from "lodash/startCase";
 
 import MultiSelect from "@antlerengineering/multiselect";
 import { Typography, Link } from "@material-ui/core";
-import OpenInNewIcon from "@material-ui/icons/OpenInNew";
+import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
 
 import { IProjectSettingsChildProps } from "pages/Settings/ProjectSettings";
 
@@ -42,11 +42,7 @@ export default function Authentication({
           rel="noopener"
         >
           How to configure sign-in options
-          <OpenInNewIcon
-            aria-label="Open in new tab"
-            fontSize="small"
-            sx={{ verticalAlign: "bottom", ml: 0.5 }}
-          />
+          <InlineOpenInNewIcon />
         </Link>
       </Typography>
     </>

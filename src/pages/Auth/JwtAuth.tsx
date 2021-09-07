@@ -1,13 +1,13 @@
 import { useState } from "react";
+import { useSnackbar } from "notistack";
 
 import { TextField, Typography, Button } from "@material-ui/core";
 
 import { auth } from "../../firebase";
-import { useSnackContext } from "contexts/SnackContext";
 import AuthLayout from "components/Auth/AuthLayout";
 
 export default function JwtAuthPage() {
-  const snack = useSnackContext();
+  const { enqueueSnackbar } = useSnackbar();
 
   const [jwt, setJWT] = useState("");
   const [loading, setLoading] = useState(false);
@@ -17,10 +17,10 @@ export default function JwtAuthPage() {
 
     try {
       await auth.signInWithCustomToken(jwt);
-      snack.open({ message: "Success", variant: "success" });
+      enqueueSnackbar("Success", { variant: "success" });
       window.location.assign("/");
     } catch (e) {
-      snack.open({ message: e.message, variant: "error" });
+      enqueueSnackbar(e.message, { variant: "error" });
     } finally {
       setLoading(false);
     }

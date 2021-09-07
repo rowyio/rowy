@@ -61,14 +61,6 @@ export default function ThemeColorPicker({
               textColor={lightTheme.palette.getContrastText(light)}
             />
             <Swatch
-              backgroundColor={lightTheme.palette.background.default}
-              textColor={light}
-            />
-            <Swatch
-              backgroundColor={lightTheme.palette.background.paper}
-              textColor={light}
-            />
-            <Swatch
               backgroundColor={colord(lightTheme.palette.background.default)
                 .mix(light, lightTheme.palette.action.hoverOpacity)
                 .alpha(1)
@@ -76,11 +68,12 @@ export default function ThemeColorPicker({
               textColor={light}
             />
             <Swatch
-              backgroundColor={colord(lightTheme.palette.background.default)
-                .mix(light, lightTheme.palette.action.selectedOpacity)
-                .alpha(1)
-                .toHslString()}
-              textColor={lightTheme.palette.text.primary}
+              backgroundColor={lightTheme.palette.background.default}
+              textColor={light}
+            />
+            <Swatch
+              backgroundColor={lightTheme.palette.background.paper}
+              textColor={light}
             />
           </Stack>
         </Grid>
@@ -113,14 +106,6 @@ export default function ThemeColorPicker({
               textColor={darkTheme.palette.getContrastText(dark)}
             />
             <Swatch
-              backgroundColor={darkTheme.palette.background.default}
-              textColor={dark}
-            />
-            <Swatch
-              backgroundColor={darkTheme.palette.background.paper}
-              textColor={dark}
-            />
-            <Swatch
               backgroundColor={colord(darkTheme.palette.background.paper)
                 .mix("#fff", 0.16)
                 .mix(dark, darkTheme.palette.action.hoverOpacity)
@@ -131,10 +116,13 @@ export default function ThemeColorPicker({
             <Swatch
               backgroundColor={colord(darkTheme.palette.background.paper)
                 .mix("#fff", 0.16)
-                .mix(dark, darkTheme.palette.action.selectedOpacity)
                 .alpha(1)
                 .toHslString()}
-              textColor={darkTheme.palette.text.primary}
+              textColor={dark}
+            />
+            <Swatch
+              backgroundColor={darkTheme.palette.background.default}
+              textColor={dark}
             />
           </Stack>
         </Grid>
@@ -148,8 +136,16 @@ export default function ThemeColorPicker({
           borderRadius: 1,
           borderTopLeftRadius: 0,
           borderTopRightRadius: 0,
-          bgcolor: "background.paper",
-          boxShadow: (theme) => `0 0 0 16px ${theme.palette.background.paper}`,
+          bgcolor: (theme) =>
+            theme.palette.mode === "dark"
+              ? "#1C1E21"
+              : theme.palette.background.paper,
+          boxShadow: (theme) =>
+            `0 0 0 16px ${
+              theme.palette.mode === "dark"
+                ? "#1C1E21"
+                : theme.palette.background.paper
+            }`,
           paddingBottom: "env(safe-area-inset-bottom)",
         }}
       >
@@ -185,39 +181,40 @@ function Swatch({ backgroundColor, textColor }: Record<string, string>) {
         bgcolor: backgroundColor,
         color: textColor,
         p: 1,
-        pl: 1.5,
+        pr: 1.5,
         typography: "button",
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
         fontVariantNumeric: "tabular-nums",
+        textAlign: "right",
       }}
     >
-      {contrast}
-
       <Box
         component="span"
         sx={{
           display: "flex",
           alignItems: "center",
-          justifyContent: "flex-end",
-          width: 64,
+          justifyContent: "flex-start",
           height: 24,
-          px: 1,
+          pl: 1,
+          pr: 0.75,
           borderRadius: 0.5,
-          bgcolor: AAA || AA ? "white" : "error.main",
-          color: AAA || AA ? "black" : "error.contrastText",
+          bgcolor: AAA || AA ? "transparent" : "error.main",
+          color: AAA || AA ? "inherit" : "error.contrastText",
 
           "& svg": {
             fontSize: "1.125rem",
-            ml: 0.5,
-            mr: -0.5,
+            ml: -0.5,
+            mr: 0.5,
           },
         }}
       >
-        {AAA ? "AAA" : AA ? "AA" : "FAIL"}
         {AAA || AA ? <PassIcon /> : <FailIcon />}
+        {AAA ? "AAA" : AA ? "AA" : "FAIL"}
       </Box>
+
+      {contrast.toFixed(2)}
     </Box>
   );
 }

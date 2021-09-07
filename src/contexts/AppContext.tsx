@@ -120,7 +120,6 @@ export const AppProvider: React.FC = ({ children }) => {
       dark: themes.dark(darkCustomizations),
     };
   }, [userDoc.doc, publicSettings.doc]);
-  console.log(customizedThemes);
 
   return (
     <AppContext.Provider

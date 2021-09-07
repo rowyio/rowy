@@ -1,4 +1,3 @@
-import { useContext } from "react";
 import { FormatterProps } from "react-data-grid";
 
 import { makeStyles, createStyles } from "@material-ui/styles";
@@ -6,7 +5,6 @@ import { Grid, Tooltip, IconButton } from "@material-ui/core";
 import CopyCellsIcon from "assets/icons/CopyCells";
 import DeleteIcon from "@material-ui/icons/DeleteOutlined";
 
-// import { SnackContext } from "contexts/SnackContext";
 import { useConfirmation } from "components/ConfirmationDialog/Context";
 import { useProjectContext } from "contexts/ProjectContext";
 import useKeyPress from "hooks/useKeyPress";
@@ -33,7 +31,6 @@ export default function FinalColumn({ row }: FormatterProps<any, any>) {
   const { requestConfirmation } = useConfirmation();
   const { tableActions } = useProjectContext();
   const shiftPress = useKeyPress("Shift");
-  // const snack = useContext(SnackContext);
 
   const handleDelete = async () => tableActions?.row.delete(row.id);
   return (

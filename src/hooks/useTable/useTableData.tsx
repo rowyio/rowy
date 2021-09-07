@@ -1,12 +1,12 @@
 import { db } from "../../firebase";
+import { useSnackbar } from "notistack";
 
 import Button from "@material-ui/core/Button";
 import { useEffect, useReducer, useContext } from "react";
 import _isEqual from "lodash/isEqual";
 import firebase from "firebase/app";
 import { TableFilter, TableOrder } from ".";
-import { SnackContext } from "contexts/SnackContext";
-import { cloudFunction } from "../../firebase/callables";
+
 import {
   isCollectionGroup,
   generateSmallerId,
@@ -80,7 +80,7 @@ const tableInitialState = {
 };
 
 const useTableData = (initialOverrides: any) => {
-  const snack = useContext(SnackContext);
+  const { enqueueSnackbar } = useSnackbar();
   const { currentUser } = useAppContext();
 
   const [tableState, tableDispatch] = useReducer(tableReducer, {
@@ -155,27 +155,30 @@ const useTableData = (initialOverrides: any) => {
             "indexes?create_composite=" +
             error.message.split("indexes?create_composite=")[1];
 
-          snack.open({
-            variant: "error",
-            message: "needs a new index",
-            duration: 10000,
-            action: (
-              <Button
-                onClick={() => {
-                  window.open(url, "_blank");
-                }}
-              >
-                create
-              </Button>
-            ),
-          });
+          enqueueSnackbar(
+            "Filtering while sorting by a column requires a new Firestore index",
+            {
+              variant: "warning",
+              action: (
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Create Index
+                </Button>
+              ),
+            }
+          );
         } else if (error.code === "permission-denied") {
-          snack.open({
-            position: { horizontal: "center", vertical: "top" },
-            variant: "error",
-            message: "You don't have permissions to see the results.",
-            duration: 10000,
-          });
+          enqueueSnackbar(
+            "You do not have the permissions to see the results.",
+            {
+              variant: "error",
+            }
+          );
         }
       }
     );
@@ -230,11 +233,8 @@ const useTableData = (initialOverrides: any) => {
     } catch (error) {
       console.log(error);
       if (error.code === "permission-denied") {
-        snack.open({
+        enqueueSnackbar("You do not have the permissions to delete rows.", {
           variant: "error",
-          message: "You don't have permissions to delete row",
-          duration: 3000,
-          position: { vertical: "top", horizontal: "center" },
         });
       }
     }
@@ -282,11 +282,8 @@ const useTableData = (initialOverrides: any) => {
         await db.collection(path).doc(newId).set(docData, { merge: true });
       } catch (error) {
         if (error.code === "permission-denied") {
-          snack.open({
+          enqueueSnackbar("You do not have the permissions to add new rows.", {
             variant: "error",
-            message: "You don't have permissions to add a new row",
-            duration: 3000,
-            position: { vertical: "top", horizontal: "center" },
           });
         }
       }

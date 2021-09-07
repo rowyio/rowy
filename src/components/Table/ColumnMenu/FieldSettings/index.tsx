@@ -1,4 +1,5 @@
-import React, { useState, Suspense, useMemo } from "react";
+import { useState, Suspense, useMemo, createElement } from "react";
+import { useSnackbar } from "notistack";
 
 import _set from "lodash/set";
 import { IMenuModalProps } from "..";
@@ -10,7 +11,6 @@ import ErrorBoundary from "components/ErrorBoundary";
 import Loading from "components/Loading";
 
 import { useProjectContext } from "contexts/ProjectContext";
-import { useSnackContext } from "contexts/SnackContext";
 import { useSnackLogContext } from "contexts/SnackLogContext";
 import { db } from "../../../../firebase";
 import { useAppContext } from "contexts/AppContext";
@@ -22,6 +22,7 @@ import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
 import routes from "constants/routes";
 import { SETTINGS } from "config/dbPaths";
+import { name as appName } from "@root/package.json";
 
 export default function FieldSettings(props: IMenuModalProps) {
   const { name, fieldName, type, open, config, handleClose, handleSave } =
@@ -33,8 +34,8 @@ export default function FieldSettings(props: IMenuModalProps) {
   const initializable = getFieldProp("initializable", type);
 
   const { requestConfirmation } = useConfirmation();
+  const { enqueueSnackbar } = useSnackbar();
   const { tableState } = useProjectContext();
-  const snack = useSnackContext();
   const snackLog = useSnackLogContext();
   const appContext = useAppContext();
 
@@ -85,7 +86,7 @@ export default function FieldSettings(props: IMenuModalProps) {
 
             <section>
               {customFieldSettings &&
-                React.createElement(customFieldSettings, {
+                createElement(customFieldSettings, {
                   config: newConfig,
                   handleChange,
                 })}
@@ -94,10 +95,9 @@ export default function FieldSettings(props: IMenuModalProps) {
               <section>
                 <Divider />
                 <Typography variant="overline">
-                  {" "}
                   Rendered field config
                 </Typography>
-                {React.createElement(rendedFieldSettings, {
+                {createElement(rendedFieldSettings, {
                   config: newConfig,
                   handleChange,
                 })}
@@ -126,12 +126,12 @@ export default function FieldSettings(props: IMenuModalProps) {
                   const settingsDoc = await db.doc(SETTINGS).get();
                   const buildUrl = settingsDoc.get("buildUrl");
                   if (!buildUrl) {
-                    snack.open({
-                      message: `Functions Builder is not yet setup`,
+                    enqueueSnackbar(`${appName} Run is not set up`, {
                       variant: "error",
                       action: (
                         <Button
                           variant="contained"
+                          color="secondary"
                           component={"a"}
                           target="_blank"
                           href={routes.projectSettings}
