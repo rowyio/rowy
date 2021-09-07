@@ -112,7 +112,7 @@ function ControlledFileUploader({
         >
           <input id={`sidedrawer-field-${column.key}`} {...getInputProps()} />
           <UploadIcon />
-          <Typography variant="body1" color="textSecondary">
+          <Typography color="textSecondary">
             Upload file
           </Typography>
         </ButtonBase>

@@ -8,14 +8,15 @@ import clsx from "clsx";
 import { makeStyles, createStyles } from "@material-ui/styles";
 import {
   alpha,
+  Stack,
   Grid,
   IconButton,
   ButtonBase,
   CircularProgress,
   Tooltip,
 } from "@material-ui/core";
-import AddIcon from "@material-ui/icons/AddAPhoto";
-import DeleteIcon from "@material-ui/icons/Delete";
+import AddIcon from "@material-ui/icons/AddAPhotoOutlined";
+import DeleteIcon from "@material-ui/icons/DeleteOutlined";
 import OpenIcon from "@material-ui/icons/OpenInNewOutlined";
 
 import { useConfirmation } from "components/ConfirmationDialog";
@@ -40,16 +41,17 @@ const useStyles = makeStyles((theme) =>
     },
 
     imglistContainer: {
-      maxWidth: `calc(100% - 30px)`,
+      width: `calc(100% - 30px)`,
       overflowX: "hidden",
+      marginLeft: "0 !important",
     },
 
     img: ({ rowHeight }: { rowHeight: number }) => ({
       position: "relative",
       display: "flex",
 
-      width: `calc(${rowHeight}px - ${theme.spacing(1)} - 1)`,
-      height: `calc(${rowHeight}px - ${theme.spacing(1)} - 1)`,
+      width: `calc(${rowHeight}px - ${theme.spacing(1)} - 1px)`,
+      height: `calc(${rowHeight}px - ${theme.spacing(1)} - 1px)`,
 
       backgroundSize: "contain",
       backgroundPosition: "center center",
@@ -98,7 +100,7 @@ const useStyles = makeStyles((theme) =>
     },
 
     endButtonContainer: {
-      width: 29 + theme.spacing(1),
+      width: `calc(29px + theme.spacing(1))`,
     },
     circularProgress: {
       display: "block",
@@ -168,14 +170,13 @@ export default function Image_({
   }
 
   return (
-    <Grid
-      container
+    <Stack
+      direction="row"
       className={clsx(
         "cell-collapse-padding",
         classes.root,
         isDragActive && classes.dragActive
       )}
-      wrap="nowrap"
       alignItems="center"
       spacing={1}
       {...dropzoneProps}
@@ -183,7 +184,7 @@ export default function Image_({
     >
       <input {...getInputProps()} />
 
-      <Grid item xs className={classes.imglistContainer}>
+      <div className={classes.imglistContainer}>
         <Grid container spacing={1} wrap="nowrap">
           {Array.isArray(value) &&
             value.map((file: FileValue) => (
@@ -258,9 +259,9 @@ export default function Image_({
             </Grid>
           )}
         </Grid>
-      </Grid>
+      </div>
 
-      <Grid item className={classes.endButtonContainer}>
+      <div className={classes.endButtonContainer}>
         {!isLoading ? (
           !disabled && (
             <IconButton
@@ -284,7 +285,7 @@ export default function Image_({
             className={classes.circularProgress}
           />
         )}
-      </Grid>
-    </Grid>
+      </div>
+    </Stack>
   );
 }

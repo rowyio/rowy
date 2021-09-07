@@ -74,10 +74,7 @@ export default function Color({
             </Grid>
 
             <Grid item xs>
-              <Typography
-                variant="body1"
-                color={value?.hex ? "textPrimary" : "textSecondary"}
-              >
+              <Typography color={value?.hex ? "textPrimary" : "textSecondary"}>
                 {value?.hex ?? "Choose a color…"}
               </Typography>
             </Grid>

@@ -16,8 +16,8 @@ import {
   Tooltip,
 } from "@material-ui/core";
 
-import AddIcon from "@material-ui/icons/AddAPhoto";
-import DeleteIcon from "@material-ui/icons/Delete";
+import AddIcon from "@material-ui/icons/AddAPhotoOutlined";
+import DeleteIcon from "@material-ui/icons/DeleteOutlined";
 import OpenIcon from "@material-ui/icons/OpenInNewOutlined";
 
 import { IMAGE_MIME_TYPES } from ".";
@@ -165,7 +165,7 @@ function ControlledImageUploader({
         >
           <input id={`sidedrawer-field-${column.key}`} {...getInputProps()} />
           <AddIcon />
-          <Typography variant="body1" color="inherit">
+          <Typography color="inherit">
             {isDragActive ? "Drop your image here" : "Upload image"}
           </Typography>
         </ButtonBase>
