@@ -27,9 +27,9 @@ export default function CheckboxIndeterminateIcon() {
 
         "& svg": {
           position: "absolute",
+          width: toRem(18),
+          height: toRem(18),
           top: -1,
-          right: -1,
-          bottom: -1,
           left: -1,
           color: "inherit",
         },
