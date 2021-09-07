@@ -30,6 +30,7 @@ import TableGridSkeleton from "components/Home/TableGrid/TableGridSkeleton";
 import TableListSkeleton from "components/Home/TableList/TableListSkeleton";
 import HomeWelcomePrompt from "components/Home/HomeWelcomePrompt";
 import AccessDenied from "components/Home/AccessDenied";
+import EmptyState from "components/EmptyState";
 
 import routes from "constants/routes";
 import { useAppContext } from "contexts/AppContext";
@@ -41,6 +42,7 @@ import TableSettingsDialog, {
 } from "components/TableSettings";
 
 import { SETTINGS } from "config/dbPaths";
+import { APP_BAR_HEIGHT } from "components/Navigation";
 
 const useHomeViewState = createPersistedState("__ROWY__HOME_VIEW");
 
@@ -121,13 +123,24 @@ export default function HomePage() {
     </Tooltip>
   );
 
-  if (tables.length === 0 && userClaims.roles.includes("ADMIN"))
+  if (tables.length === 0) {
+    if (userClaims.roles.includes("ADMIN"))
+      return (
+        <>
+          <HomeWelcomePrompt />
+          {createTableFab}
+        </>
+      );
+
     return (
-      <>
-        <HomeWelcomePrompt />
-        {createTableFab}
-      </>
+      <EmptyState
+        message="No Tables"
+        description="There are no tables in this project. Sign in with an admin account to create tables."
+        fullScreen
+        style={{ marginTop: -APP_BAR_HEIGHT }}
+      />
     );
+  }
 
   const getLink = (table: Table) =>
     `${

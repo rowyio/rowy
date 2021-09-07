@@ -29,7 +29,7 @@ export default function AccessDenied() {
             >
               these instructions
             </MuiLink>{" "}
-            to set up the project’s security rules.
+            to set up this project’s security rules.
           </Typography>
 
           <Button component={Link} to={routes.signOut}>
