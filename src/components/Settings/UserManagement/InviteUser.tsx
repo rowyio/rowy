@@ -2,9 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import {
-  Tooltip,
-  Zoom,
-  Fab,
+  Button,
   DialogContentText,
   Link as MuiLink,
   TextField,
@@ -20,29 +18,16 @@ export default function InviteUser() {
 
   return (
     <>
-      <Tooltip title="Invite User">
-        <Zoom in>
-          <Fab
-            aria-label="Invite User"
-            onClick={() => setOpen(true)}
-            color="secondary"
-            sx={{
-              zIndex: "speedDial",
-              position: "fixed",
-              bottom: (theme) => ({
-                xs: theme.spacing(2),
-                sm: theme.spacing(3),
-              }),
-              right: (theme) => ({
-                xs: theme.spacing(2),
-                sm: theme.spacing(3),
-              }),
-            }}
-          >
-            <AddIcon />
-          </Fab>
-        </Zoom>
-      </Tooltip>
+      <Button
+        aria-label="Invite User"
+        onClick={() => setOpen(true)}
+        variant="text"
+        color="primary"
+        startIcon={<AddIcon />}
+        sx={{ "&&": { mb: -0.5 } }}
+      >
+        Invite User
+      </Button>
 
       {open && (
         <Modal

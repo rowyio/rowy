@@ -10,7 +10,7 @@ export const customizableLightTheme = (customization: ThemeOptions) => {
     _merge(
       {},
       typography((customization?.typography as any) ?? {}),
-      colorsLight()
+      colorsLight((customization?.palette?.primary as any)?.main)
     )
   );
 
@@ -29,7 +29,7 @@ export const customizableDarkTheme = (customization: ThemeOptions) => {
     _merge(
       {},
       typography((customization?.typography as any) ?? {}),
-      colorsDark()
+      colorsDark((customization?.palette?.primary as any)?.main)
     )
   );
 

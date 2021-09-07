@@ -40,6 +40,18 @@ export const components = (theme: Theme): ThemeOptions => {
       easing: { strong: transitionEasingStrong },
     },
     components: {
+      MuiCssBaseline: {
+        styleOverrides: {
+          ".chrome-picker": {
+            colorScheme: "light",
+            boxShadow: theme.shadows[1] + " !important",
+            borderRadius: theme.shape.borderRadius + "px !important",
+
+            "& input, & label": theme.typography.body2,
+          },
+        },
+      },
+
       MuiContainer: {
         defaultProps: { maxWidth: "xl" },
       },
@@ -123,7 +135,7 @@ export const components = (theme: Theme): ThemeOptions => {
       MuiSnackbarContent: {
         styleOverrides: {
           root: {
-            borderRadius: (theme.shape.borderRadius as number) * 2,
+            borderRadius: (theme.shape.borderRadius as number) * 1.5,
             backgroundColor: theme.palette.secondary.main,
           },
         },
@@ -347,7 +359,7 @@ export const components = (theme: Theme): ThemeOptions => {
               paddingRight: theme.spacing(22 / 8),
             },
             fontSize: "1rem",
-            borderRadius: (theme.shape.borderRadius as number) * (16 / 14),
+            borderRadius: (theme.shape.borderRadius as number) * (48 / 32),
             "& .MuiButton-iconSizeLarge > *:nth-of-type(1)": { fontSize: 24 },
           },
 
@@ -660,6 +672,7 @@ export const components = (theme: Theme): ThemeOptions => {
         },
         styleOverrides: {
           root: {
+            display: "flex",
             "& .MuiSwitch-root": { marginRight: theme.spacing(1) },
           },
           labelPlacementStart: {

@@ -47,23 +47,13 @@ export default function UserMenu(props: IconButtonProps) {
   );
 
   const changeTheme = (option: "system" | "light" | "dark") => {
-    switch (option) {
-      case "system":
-        setThemeOverridden(false);
-        return;
-
-      case "light":
-        setTheme("light");
-        break;
-
-      case "dark":
-        setTheme("dark");
-        break;
-
-      default:
-        break;
+    if (option === "system") {
+      setThemeOverridden(false);
+    } else {
+      setTheme(option);
+      setThemeOverridden(true);
     }
-    setThemeOverridden(true);
+
     setThemeSubMenu(null);
     setOpen(false);
   };
@@ -159,13 +149,21 @@ export default function UserMenu(props: IconButtonProps) {
           </Menu>
         )}
 
-        <MenuItem component={Link} to={routes.userSettings} disabled>
+        <MenuItem
+          component={Link}
+          to={routes.userSettings}
+          onClick={() => setOpen(false)}
+        >
           Settings
         </MenuItem>
 
         <Divider variant="middle" />
 
-        <MenuItem component={Link} to={routes.signOut}>
+        <MenuItem
+          component={Link}
+          to={routes.signOut}
+          onClick={() => setOpen(false)}
+        >
           Sign out
         </MenuItem>
       </Menu>

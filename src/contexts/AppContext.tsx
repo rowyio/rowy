@@ -1,20 +1,18 @@
-import React, { useEffect, useState, useContext } from "react";
-import { projectId, auth, db } from "@src/firebase";
+import React, { useEffect, useState, useContext, useMemo } from "react";
 import firebase from "firebase/app";
-import useDoc from "hooks/useDoc";
 import createPersistedState from "use-persisted-state";
-import { analytics } from "analytics";
-import {
-  useMediaQuery,
-  ThemeProvider,
-  ThemeOptions,
-  CssBaseline,
-} from "@material-ui/core";
-import themes from "theme";
+import _merge from "lodash/merge";
+
+import { useMediaQuery, ThemeProvider, CssBaseline } from "@material-ui/core";
 
 import ErrorBoundary from "components/ErrorBoundary";
+
+import { projectId, auth, db } from "@src/firebase";
+import useDoc from "hooks/useDoc";
 import { name } from "@root/package.json";
-import { USERS } from "config/dbPaths";
+import { PUBLIC_SETTINGS, USERS } from "config/dbPaths";
+import { analytics } from "analytics";
+import themes from "theme";
 
 const useThemeState = createPersistedState("__ROWY__THEME");
 const useThemeOverriddenState = createPersistedState(
@@ -56,6 +54,11 @@ export const AppProvider: React.FC = ({ children }) => {
     document.title = `${projectId} • ${name}`;
   }, []);
 
+  const [publicSettings] = useDoc(
+    { path: PUBLIC_SETTINGS },
+    { createIfMissing: true }
+  );
+
   // Store matching userDoc
   const [userDoc, dispatchUserDoc] = useDoc({});
   // Get userDoc
@@ -66,6 +69,18 @@ export const AppProvider: React.FC = ({ children }) => {
       dispatchUserDoc({ path: `${USERS}/${currentUser.uid}` });
     }
   }, [currentUser]);
+
+  // Set userDoc if it doesn’t exist
+  useEffect(() => {
+    if (!userDoc.doc && !userDoc.loading && userDoc.path && currentUser) {
+      const userFields = ["email", "displayName", "photoURL", "phoneNumber"];
+      const user = userFields.reduce((acc, curr) => {
+        if (currentUser[curr]) return { ...acc, [curr]: currentUser[curr] };
+        return acc;
+      }, {});
+      db.doc(userDoc.path).set({ user }, { merge: true });
+    }
+  }, [userDoc, currentUser]);
 
   // Infer theme based on system settings
   const prefersDarkTheme = useMediaQuery("(prefers-color-scheme: dark)", {
@@ -83,34 +98,29 @@ export const AppProvider: React.FC = ({ children }) => {
     if (prefersDarkTheme && theme !== "dark") setTheme("dark");
     if (!prefersDarkTheme && theme !== "light") setTheme("light");
   }, [prefersDarkTheme, themeOverridden]);
+  // Customize theme from project public settings & user settings
+  const customizedThemes = useMemo(() => {
+    const lightCustomizations = _merge(
+      {},
+      publicSettings.doc?.theme?.base,
+      userDoc.doc?.theme?.base,
+      publicSettings.doc?.theme?.light,
+      userDoc.doc?.theme?.light
+    );
+    const darkCustomizations = _merge(
+      {},
+      publicSettings.doc?.theme?.base,
+      userDoc.doc?.theme?.base,
+      publicSettings.doc?.theme?.dark,
+      userDoc.doc?.theme?.dark
+    );
 
-  // Store themeCustomization from userDoc
-  const [themeCustomization, setThemeCustomization] = useState<ThemeOptions>(
-    {}
-  );
-  const generatedTheme = themes[theme](themeCustomization);
-
-  useEffect(() => {
-    if (userDoc.doc) {
-      // Set theme customizations from user doc
-      setThemeCustomization(userDoc.doc.theme);
-    } else if (
-      !userDoc.doc &&
-      !userDoc.loading &&
-      userDoc.path &&
-      currentUser
-    ) {
-      // Set userDoc if it doesn’t exist
-      const userFields = ["email", "displayName", "photoURL", "phoneNumber"];
-      const userData = userFields.reduce((acc, curr) => {
-        if (currentUser[curr]) {
-          return { ...acc, [curr]: currentUser[curr] };
-        }
-        return acc;
-      }, {});
-      db.doc(userDoc.path).set({ tables: {}, user: userData }, { merge: true });
-    }
-  }, [userDoc]);
+    return {
+      light: themes.light(lightCustomizations),
+      dark: themes.dark(darkCustomizations),
+    };
+  }, [userDoc.doc, publicSettings.doc]);
+  console.log(customizedThemes);
 
   return (
     <AppContext.Provider
@@ -123,7 +133,7 @@ export const AppProvider: React.FC = ({ children }) => {
         setThemeOverridden,
       }}
     >
-      <ThemeProvider theme={generatedTheme}>
+      <ThemeProvider theme={customizedThemes[theme]}>
         <CssBaseline />
         <ErrorBoundary>{children}</ErrorBoundary>
       </ThemeProvider>

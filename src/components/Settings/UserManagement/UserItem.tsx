@@ -30,6 +30,7 @@ export default function UserItem({
               overflowX: "hidden",
               "& > *": { userSelect: "all" },
             }}
+            primaryTypographyProps={{ variant: "body1" }}
           />
         </>
       }
@@ -40,6 +41,7 @@ export default function UserItem({
             value={["ADMIN"]}
             options={["ADMIN"]}
             onChange={console.log}
+            freeText
             TextFieldProps={{
               fullWidth: false,
 

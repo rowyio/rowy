@@ -92,7 +92,12 @@ export default function Navigation({
           <Grow in key={title}>
             <Box sx={{ flex: 1, userSelect: "none" }}>
               {titleComponent || (
-                <Typography variant="h6" component="h1" textAlign="center">
+                <Typography
+                  variant="h6"
+                  component="h1"
+                  textAlign="center"
+                  sx={{ typography: { sm: "h5" } }}
+                >
                   {title}
                 </Typography>
               )}

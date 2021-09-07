@@ -1,13 +1,78 @@
-import { Container, Stack } from "@material-ui/core";
+import { useEffect } from "react";
+import { useDebouncedCallback } from "use-debounce";
 
+import { Container, Stack, Fade } from "@material-ui/core";
+
+import SettingsSkeleton from "components/Settings/SettingsSkeleton";
 import SettingsSection from "components/Settings/SettingsSection";
+import Account from "components/Settings/UserSettings/Account";
+import Theme from "components/Settings/UserSettings/Theme";
+import Personalization from "components/Settings/UserSettings/Personalization";
+
+import { useAppContext } from "@src/contexts/AppContext";
+import { useSnackContext } from "contexts/SnackContext";
+import { USERS } from "config/dbPaths";
+import useDoc from "hooks/useDoc";
+import { db } from "@src/firebase";
+
+export interface IUserSettingsChildProps {
+  settings: Record<string, any>;
+  updateSettings: (data: Record<string, any>) => void;
+}
 
 export default function UserSettingsPage() {
+  const { currentUser } = useAppContext();
+  const snack = useSnackContext();
+
+  const path = `${USERS}/${currentUser?.uid}`;
+
+  const [settingsState] = useDoc({ path }, { createIfMissing: true });
+  const settings = settingsState.doc;
+  const [updateSettings, , callPending] = useDebouncedCallback(
+    (data: Record<string, any>) =>
+      db
+        .doc(path)
+        .update(data)
+        .then(() =>
+          snack.open({ message: "Saved", variant: "success", duration: 3000 })
+        ),
+    1000
+  );
+
+  useEffect(
+    () => () => {
+      callPending();
+    },
+    []
+  );
+
+  const childProps: IUserSettingsChildProps = { settings, updateSettings };
+
+  const sections = [
+    { title: "Account", Component: Account, props: childProps },
+    { title: "Theme", Component: Theme },
+    { title: "Personalization", Component: Personalization, props: childProps },
+  ];
+
   return (
     <Container maxWidth="sm" sx={{ px: 1, pt: 1, pb: 7 + 3 + 3 }}>
-      <Stack spacing={4}>
-        <SettingsSection title="Your Account">TODO:</SettingsSection>
-      </Stack>
+      {!currentUser || settingsState.loading ? (
+        <Fade in style={{ transitionDelay: "1s" }} unmountOnExit>
+          <Stack spacing={4}>
+            {new Array(sections.length).fill(null).map((_, i) => (
+              <SettingsSkeleton key={i} />
+            ))}
+          </Stack>
+        </Fade>
+      ) : (
+        <Stack spacing={4}>
+          {sections.map(({ title, Component, props }, i) => (
+            <SettingsSection title={title} transitionTimeout={(i + 1) * 100}>
+              <Component {...(props as any)} />
+            </SettingsSection>
+          ))}
+        </Stack>
+      )}
     </Container>
   );
 }

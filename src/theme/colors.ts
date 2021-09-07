@@ -14,16 +14,7 @@ declare module "@material-ui/core/styles/createPalette" {
 }
 
 export const PRIMARY = "#4200FF";
-// export const PRIMARY = "#ED4747";
-// export const PRIMARY = "#FA0";
-// export const PRIMARY = "#0F0";
-// export const PRIMARY = "#F15A29";
-// export const PRIMARY = "#c4492c";
-// export const PRIMARY = "#0070EB";
-// export const PRIMARY = "#015FB8";
-// export const PRIMARY = "#E8016D";
 export const ERROR = "#B00020"; // https://material.io/design/color/dark-theme.html#ui-application
-
 export const DARK_PRIMARY = "#B0B6FD"; // l: 75, c: 65, h: 275
 
 export const colorsLight = (

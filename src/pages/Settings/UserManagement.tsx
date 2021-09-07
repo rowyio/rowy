@@ -1,3 +1,5 @@
+import { TransitionGroup } from "react-transition-group";
+
 import {
   Container,
   Stack,
@@ -5,6 +7,7 @@ import {
   Paper,
   List,
   Fade,
+  Collapse,
 } from "@material-ui/core";
 
 import FloatingSearch from "components/FloatingSearch";
@@ -51,26 +54,24 @@ export default function UserManagementPage() {
           direction="row"
           spacing={2}
           justifyContent="space-between"
-          alignItems="baseline"
-          sx={{ mt: 4, mx: 1, mb: 0.5, cursor: "default" }}
+          alignItems="flex-end"
+          sx={{ mt: 4, ml: 1, mb: 0.5, cursor: "default" }}
         >
           <Typography variant="subtitle1" component="h2">
+            {!loading && query
+              ? `${results.length} of ${usersState.documents.length}`
+              : usersState.documents.length}{" "}
             Users
           </Typography>
-          {!loading && (
-            <Typography variant="button" component="div">
-              {query
-                ? `${results.length} of ${usersState.documents.length}`
-                : usersState.documents.length}
-            </Typography>
-          )}
+
+          <InviteUser />
         </Stack>
       </SlideTransition>
 
       {loading || (query === "" && results.length === 0) ? (
         <Fade in style={{ transitionDelay: "1s" }} unmountOnExit>
           <Paper>
-            <List>
+            <List sx={{ py: { xs: 0, sm: 1.5 }, px: { xs: 0, sm: 1 } }}>
               <UserSkeleton />
               <UserSkeleton />
               <UserSkeleton />
@@ -80,16 +81,18 @@ export default function UserManagementPage() {
       ) : (
         <SlideTransition in timeout={100 + 50}>
           <Paper>
-            <List>
-              {results.map((user) => (
-                <UserItem key={user.id} {...user} />
-              ))}
+            <List sx={{ py: { xs: 0, sm: 1.5 }, px: { xs: 0, sm: 1 } }}>
+              <TransitionGroup>
+                {results.map((user) => (
+                  <Collapse key={user.id}>
+                    <UserItem {...user} />
+                  </Collapse>
+                ))}
+              </TransitionGroup>
             </List>
           </Paper>
         </SlideTransition>
       )}
-
-      <InviteUser />
     </Container>
   );
 }

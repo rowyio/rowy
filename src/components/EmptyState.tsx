@@ -70,9 +70,9 @@ export default function EmptyState({
       <Grid
         item
         sx={{
-          maxWidth: "25em",
-          width: (theme) => `calc(100% - ${theme.spacing(2 * 2)})`,
-          px: 2,
+          maxWidth: "25em !important",
+          width: (theme) => `calc(100% - ${theme.spacing(1 * 2)})`,
+          px: 1,
           typography: "body2",
 
           "& .icon": {

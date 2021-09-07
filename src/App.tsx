@@ -12,7 +12,6 @@ import EmptyState from "components/EmptyState";
 import Loading from "components/Loading";
 import Navigation from "components/Navigation";
 import Logo from "assets/Logo";
-import MigrateToV2 from "components/Settings/MigrateToV2";
 
 import { SnackProvider } from "contexts/SnackContext";
 import ConfirmationProvider from "components/ConfirmationDialog/Provider";
@@ -165,8 +164,6 @@ export default function App() {
                                 )}
                               />
                             </Switch>
-
-                            <MigrateToV2 />
                           </RowyContextProvider>
                         )}
                       />
