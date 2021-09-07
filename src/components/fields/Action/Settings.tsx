@@ -8,7 +8,7 @@ import {
 } from "@material-ui/core";
 import MultiSelect from "@antlerengineering/multiselect";
 import FieldSkeleton from "components/SideDrawer/Form/FieldSkeleton";
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 
 const CodeEditor = lazy(
   () =>
@@ -18,7 +18,7 @@ const CodeEditor = lazy(
 );
 
 const Settings = ({ config, handleChange }) => {
-  const { tableState, roles } = useRowyContext();
+  const { tableState, roles } = useProjectContext();
   const columnOptions = Object.values(tableState?.columns ?? {}).map((c) => ({
     label: c.name,
     value: c.key,

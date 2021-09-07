@@ -4,7 +4,7 @@ import { IBasicCellProps, IHeavyCellProps } from "../types";
 
 import ErrorBoundary from "components/ErrorBoundary";
 import CellValidation from "components/Table/CellValidation";
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 
 import { FieldType } from "constants/fields";
 import { getCellValue } from "utils/fns";
@@ -22,7 +22,7 @@ export default function withHeavyCell(
   readOnly: boolean = false
 ) {
   return function HeavyCell(props: FormatterProps<any>) {
-    const { updateCell } = useRowyContext();
+    const { updateCell } = useProjectContext();
 
     const { validationRegex, required } = (props.column as any).config;
 

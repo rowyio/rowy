@@ -7,7 +7,7 @@ import { IStepProps } from ".";
 import Column from "../Column";
 import Cell from "../Cell";
 
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme) =>
 
 export default function Step4Preview({ config }: IStepProps) {
   const classes = useStyles();
-  const { tableState } = useRowyContext();
+  const { tableState } = useProjectContext();
 
   return (
     <div className={classes.root}>

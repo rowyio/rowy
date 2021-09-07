@@ -27,11 +27,11 @@ import { FieldType } from "constants/fields";
 import { formatSubTableName } from "utils/fns";
 
 import { useAppContext } from "contexts/AppContext";
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 import useWindowSize from "hooks/useWindowSize";
 import useStyles from "./styles";
 
-export type RowyColumn = Column<any> & {
+export type TableColumn = Column<any> & {
   isNew?: boolean;
   type: FieldType;
   [key: string]: any;
@@ -43,20 +43,15 @@ const SelectColumn = { ..._SelectColumn, width: 44, maxWidth: 44 };
 export default function Table() {
   const classes = useStyles();
 
-  const {
-    tableState,
-    tableActions,
-    dataGridRef,
-    sideDrawerRef,
-    updateCell,
-  } = useRowyContext();
+  const { tableState, tableActions, dataGridRef, sideDrawerRef, updateCell } =
+    useProjectContext();
   const { userDoc } = useAppContext();
 
   const userDocHiddenFields =
     userDoc.state.doc?.tables?.[formatSubTableName(tableState?.tablePath)]
       ?.hiddenFields ?? [];
 
-  const [columns, setColumns] = useState<RowyColumn[]>([]);
+  const [columns, setColumns] = useState<TableColumn[]>([]);
 
   useEffect(() => {
     if (!tableState?.loadingColumns && tableState?.columns) {

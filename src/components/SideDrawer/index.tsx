@@ -13,7 +13,7 @@ import Form from "./Form";
 import ErrorBoundary from "components/ErrorBoundary";
 
 import { useStyles } from "./useStyles";
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 import useDoc from "hooks/useDoc";
 
 export const DRAWER_WIDTH = 512;
@@ -29,7 +29,7 @@ export type SideDrawerRef = {
 
 export default function SideDrawer() {
   const classes = useStyles();
-  const { tableState, dataGridRef, sideDrawerRef } = useRowyContext();
+  const { tableState, dataGridRef, sideDrawerRef } = useProjectContext();
 
   const [cell, setCell] = useState<SelectedCell>(null);
   const [open, setOpen] = useState(false);

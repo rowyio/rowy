@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import useRouter from "hooks/useRouter";
 import useCollection from "hooks/useCollection";
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 import useStateRef from "react-usestateref";
 import { db } from "../../../firebase";
 import { useSnackLogContext } from "contexts/SnackLogContext";
@@ -389,7 +389,7 @@ function SnackLog({ log, onClose, onOpenPanel }) {
 
 export default function TableLogs() {
   const router = useRouter();
-  const { tableState } = useRowyContext();
+  const { tableState } = useProjectContext();
 
   const classes = useStyles();
   const [panalOpen, setPanelOpen] = useState(false);

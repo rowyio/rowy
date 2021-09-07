@@ -11,94 +11,92 @@ import MultiSelect from "@antlerengineering/multiselect";
 import { Button, DialogActions } from "@material-ui/core";
 
 import { SnackContext } from "contexts/SnackContext";
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 
 import { FieldType } from "constants/fields";
 import { getFieldProp } from "components/fields";
 
-const selectedColumnsJsonReducer = (doc: any) => (
-  accumulator: any,
-  currentColumn: any
-) => {
-  const value = _get(doc, currentColumn.key);
-  return {
-    ...accumulator,
-    [currentColumn.key]: value,
-  };
-};
-
-const selectedColumnsCsvReducer = (doc: any) => (
-  accumulator: any,
-  currentColumn: any
-) => {
-  const value = _get(doc, currentColumn.key);
-  const formatter = getFieldProp("csvExportFormatter", currentColumn.type);
-  if (formatter) {
+const selectedColumnsJsonReducer =
+  (doc: any) => (accumulator: any, currentColumn: any) => {
+    const value = _get(doc, currentColumn.key);
     return {
       ...accumulator,
-      [currentColumn.name]: value ? formatter(value, currentColumn.config) : "",
+      [currentColumn.key]: value,
     };
-  }
-  // TODO: move to field csvExportFormatter
-  switch (currentColumn.type) {
-    case FieldType.multiSelect:
-      return {
-        ...accumulator,
-        [currentColumn.name]: value ? value.join() : "",
-      };
-    case FieldType.file:
-    case FieldType.image:
+  };
+
+const selectedColumnsCsvReducer =
+  (doc: any) => (accumulator: any, currentColumn: any) => {
+    const value = _get(doc, currentColumn.key);
+    const formatter = getFieldProp("csvExportFormatter", currentColumn.type);
+    if (formatter) {
       return {
         ...accumulator,
         [currentColumn.name]: value
-          ? value
-              .map((item: { downloadURL: string }) => item.downloadURL)
-              .join()
+          ? formatter(value, currentColumn.config)
           : "",
       };
-    case FieldType.connectTable:
-      return {
-        ...accumulator,
-        [currentColumn.name]:
-          value && Array.isArray(value)
+    }
+    // TODO: move to field csvExportFormatter
+    switch (currentColumn.type) {
+      case FieldType.multiSelect:
+        return {
+          ...accumulator,
+          [currentColumn.name]: value ? value.join() : "",
+        };
+      case FieldType.file:
+      case FieldType.image:
+        return {
+          ...accumulator,
+          [currentColumn.name]: value
             ? value
-                .map((item: any) =>
-                  currentColumn.config.primaryKeys.reduce(
-                    (labelAccumulator: string, currentKey: any) =>
-                      `${labelAccumulator} ${item.snapshot[currentKey]}`,
-                    ""
-                  )
-                )
+                .map((item: { downloadURL: string }) => item.downloadURL)
                 .join()
             : "",
-      };
-    case FieldType.checkbox:
-      return {
-        ...accumulator,
-        [currentColumn.name]:
-          typeof value === "boolean" ? (value ? "YES" : "NO") : "",
-      };
-    case FieldType.dateTime:
-    case FieldType.date:
-      return {
-        ...accumulator,
-        [currentColumn.name]: value && value["toDate"] ? value.toDate() : "",
-      };
-    case FieldType.action:
-      return {
-        ...accumulator,
-        [currentColumn.name]: value && value.status ? value.status : "",
-      };
-    default:
-      return {
-        ...accumulator,
-        [currentColumn.name]: value ? value : "",
-      };
-  }
-};
+        };
+      case FieldType.connectTable:
+        return {
+          ...accumulator,
+          [currentColumn.name]:
+            value && Array.isArray(value)
+              ? value
+                  .map((item: any) =>
+                    currentColumn.config.primaryKeys.reduce(
+                      (labelAccumulator: string, currentKey: any) =>
+                        `${labelAccumulator} ${item.snapshot[currentKey]}`,
+                      ""
+                    )
+                  )
+                  .join()
+              : "",
+        };
+      case FieldType.checkbox:
+        return {
+          ...accumulator,
+          [currentColumn.name]:
+            typeof value === "boolean" ? (value ? "YES" : "NO") : "",
+        };
+      case FieldType.dateTime:
+      case FieldType.date:
+        return {
+          ...accumulator,
+          [currentColumn.name]: value && value["toDate"] ? value.toDate() : "",
+        };
+      case FieldType.action:
+        return {
+          ...accumulator,
+          [currentColumn.name]: value && value.status ? value.status : "",
+        };
+      default:
+        return {
+          ...accumulator,
+          [currentColumn.name]: value ? value : "",
+        };
+    }
+  };
 
 export default function Export({ query, closeModal }) {
-  const { tableState } = useRowyContext();
+  const { tableState } = useProjectContext();
   const snackContext = useContext(SnackContext);
 
   const [columns, setColumns] = useState<any[]>([]);

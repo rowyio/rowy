@@ -14,14 +14,14 @@ import Extensions from "./Extensions";
 import ReExecute from "./ReExecute";
 
 import { useAppContext } from "contexts/AppContext";
-import { useRowyContext, rowyUser } from "contexts/RowyContext";
+import { useProjectContext, rowyUser } from "contexts/ProjectContext";
 import { FieldType } from "constants/fields";
 
 export const TABLE_HEADER_HEIGHT = 44;
 
 export default function TableHeader() {
   const { currentUser } = useAppContext();
-  const { tableActions, tableState, userClaims } = useRowyContext();
+  const { tableActions, tableState, userClaims } = useProjectContext();
 
   const hasDerivatives =
     tableState &&

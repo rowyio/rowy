@@ -1,7 +1,7 @@
-import useTable from "./useTable";
+import useTableData from "./useTableData";
 import useTableConfig from "./useTableConfig";
 
-export type RowyActions = {
+export type TableActions = {
   // TODO: Stricter types here
   column: {
     add: Function;
@@ -20,8 +20,8 @@ export type RowyActions = {
   };
 };
 
-export type RowyState = {
-  orderBy: RowyOrderBy;
+export type TableState = {
+  orderBy: TableOrder;
   tablePath: string;
   config: {
     rowHeight: number;
@@ -34,42 +34,43 @@ export type RowyState = {
   columns: any[];
   rows: { [key: string]: any }[];
   queryLimit: number;
-  filters: RowyFilter[];
+  filters: TableFilter[];
   loadingRows: boolean;
   loadingColumns: boolean;
 };
-export type RowyFilter = {
+export type TableFilter = {
   key: string;
   operator: "==" | "<" | ">" | ">=" | "<=" | string;
   value: string | number | boolean | string[];
 };
-export type RowyOrderBy = { key: string; direction: "asc" | "desc" }[];
-const useRowy = (
+export type TableOrder = { key: string; direction: "asc" | "desc" }[];
+
+export default function useTable(
   collectionName?: string,
-  filters?: RowyFilter[],
-  orderBy?: RowyOrderBy
-) => {
+  filters?: TableFilter[],
+  orderBy?: TableOrder
+) {
   const [tableConfig, configActions] = useTableConfig(collectionName);
-  const [tableState, tableActions] = useTable({
+  const [tableState, tableActions] = useTableData({
     path: collectionName,
     filters,
     orderBy,
   });
 
   /** set collection path of table */
-  const setTable = (collectionName: string, filters: RowyFilter[]) => {
+  const setTable = (collectionName: string, filters: TableFilter[]) => {
     if (collectionName !== tableState.path || filters !== tableState.filters) {
       configActions.setTable(collectionName);
       tableActions.setTable(collectionName, filters);
     }
   };
-  const filterTable = (filters: RowyFilter[]) => {
+  const filterTable = (filters: TableFilter[]) => {
     tableActions.dispatch({ filters });
   };
-  const setOrder = (orderBy: RowyOrderBy) => {
+  const setOrder = (orderBy: TableOrder) => {
     tableActions.dispatch({ orderBy });
   };
-  const state: RowyState = {
+  const state: TableState = {
     orderBy: tableState.orderBy,
     tablePath: tableState.path,
     filters: tableState.filters,
@@ -87,7 +88,7 @@ const useRowy = (
     loadingRows: tableState.loading,
     loadingColumns: tableConfig.loading,
   };
-  const actions: RowyActions = {
+  const actions: TableActions = {
     column: {
       add: configActions.addColumn,
       resize: configActions.resize,
@@ -111,6 +112,4 @@ const useRowy = (
   };
 
   return { tableState: state, tableActions: actions };
-};
-
-export default useRowy;
+}

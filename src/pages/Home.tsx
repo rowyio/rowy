@@ -33,7 +33,7 @@ import AccessDenied from "components/Home/AccessDenied";
 
 import routes from "constants/routes";
 import { useAppContext } from "contexts/AppContext";
-import { useRowyContext, Table } from "contexts/RowyContext";
+import { useProjectContext, Table } from "contexts/ProjectContext";
 import useDoc, { DocActions } from "hooks/useDoc";
 import useBasicSearch from "hooks/useBasicSearch";
 import TableSettingsDialog, {
@@ -46,7 +46,7 @@ const useHomeViewState = createPersistedState("__ROWY__HOME_VIEW");
 
 export default function HomePage() {
   const { userDoc } = useAppContext();
-  const { tables, userClaims } = useRowyContext();
+  const { tables, userClaims } = useProjectContext();
 
   const [results, query, handleQuery] = useBasicSearch(
     tables ?? [],

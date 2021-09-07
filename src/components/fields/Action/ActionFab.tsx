@@ -6,7 +6,7 @@ import PlayIcon from "@material-ui/icons/PlayArrow";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import UndoIcon from "@material-ui/icons/Undo";
 
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 import { SnackContext } from "contexts/SnackContext";
 import { cloudFunction } from "firebase/callables";
 import { formatPath } from "utils/fns";
@@ -48,7 +48,7 @@ export default function ActionFab({
 }: IActionFabProps) {
   const { requestConfirmation } = useConfirmation();
   const { requestParams } = useActionParams();
-  const { tableState } = useRowyContext();
+  const { tableState } = useProjectContext();
   const { ref } = row;
   const { config } = column as any;
 

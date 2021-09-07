@@ -30,7 +30,7 @@ import CodeEditor from "../../editors/CodeEditor";
 import CodeEditorHelper from "components/CodeEditorHelper";
 
 import { useConfirmation } from "components/ConfirmationDialog";
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 
 import { IExtension, triggerTypes } from "./utils";
 import WIKI_LINKS from "constants/wikiLinks";
@@ -85,19 +85,17 @@ export default function ExtensionModal({
   extensionObject: initialObject,
 }: IExtensionModalProps) {
   const { requestConfirmation } = useConfirmation();
-  const [extensionObject, setExtensionObject] = useState<IExtension>(
-    initialObject
-  );
+  const [extensionObject, setExtensionObject] =
+    useState<IExtension>(initialObject);
   const [tab, setTab] = useState("triggersRequirements");
   const [validation, setValidation, validationRef] = useStateRef({
     condition: true,
     extensionBody: true,
   });
-  const [, setConditionEditorActive, conditionEditorActiveRef] = useStateRef(
-    false
-  );
+  const [, setConditionEditorActive, conditionEditorActiveRef] =
+    useStateRef(false);
   const [, setBodyEditorActive, bodyEditorActiveRef] = useStateRef(false);
-  const { tableState } = useRowyContext();
+  const { tableState } = useProjectContext();
   const columns = Object.keys(tableState?.columns ?? {});
   const edited = !_isEqual(initialObject, extensionObject);
 
@@ -320,9 +318,10 @@ export default function ExtensionModal({
                                 ) {
                                   setExtensionObject({
                                     ...extensionObject,
-                                    requiredFields: extensionObject.requiredFields.filter(
-                                      (t) => t !== field
-                                    ),
+                                    requiredFields:
+                                      extensionObject.requiredFields.filter(
+                                        (t) => t !== field
+                                      ),
                                   });
                                 } else {
                                   setExtensionObject({
@@ -340,8 +339,8 @@ export default function ExtensionModal({
                       ))}
 
                       {extensionObject.requiredFields.map((trigger, index) => {
-                        const isRowyColumn = columns.includes(trigger);
-                        if (isRowyColumn) {
+                        const isTableColumn = columns.includes(trigger);
+                        if (isTableColumn) {
                           return null;
                         }
 
@@ -358,9 +357,10 @@ export default function ExtensionModal({
                               onClick={() => {
                                 setExtensionObject({
                                   ...extensionObject,
-                                  requiredFields: extensionObject.requiredFields.filter(
-                                    (t) => t !== trigger
-                                  ),
+                                  requiredFields:
+                                    extensionObject.requiredFields.filter(
+                                      (t) => t !== trigger
+                                    ),
                                 });
                               }}
                             >
@@ -378,10 +378,11 @@ export default function ExtensionModal({
                               onChange={(event) => {
                                 setExtensionObject({
                                   ...extensionObject,
-                                  requiredFields: extensionObject.requiredFields.map(
-                                    (value, i) =>
-                                      i === index ? event.target.value : value
-                                  ),
+                                  requiredFields:
+                                    extensionObject.requiredFields.map(
+                                      (value, i) =>
+                                        i === index ? event.target.value : value
+                                    ),
                                 });
                               }}
                             />

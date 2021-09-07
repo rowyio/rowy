@@ -4,7 +4,7 @@ import { makeStyles, createStyles } from "@material-ui/styles";
 import { Grid, Button } from "@material-ui/core";
 import AddColumnIcon from "assets/icons/AddColumn";
 
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) =>
 const FinalColumnHeader: Column<any>["headerRenderer"] = ({ column }) => {
   const classes = useStyles();
 
-  const { columnMenuRef } = useRowyContext();
+  const { columnMenuRef } = useProjectContext();
   if (!columnMenuRef) return null;
 
   const handleClick = (

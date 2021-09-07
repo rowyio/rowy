@@ -6,12 +6,12 @@ import SettingsIcon from "@material-ui/icons/SettingsOutlined";
 import TableSettingsDialog, {
   TableSettingsDialogModes,
 } from "components/TableSettings";
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 
 export default function TableSettings() {
   const [open, setOpen] = useState(false);
 
-  const { tableState } = useRowyContext();
+  const { tableState } = useProjectContext();
 
   return (
     <>

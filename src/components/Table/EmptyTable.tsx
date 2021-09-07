@@ -5,7 +5,7 @@ import AddColumnIcon from "assets/icons/AddColumn";
 
 import { APP_BAR_HEIGHT } from "components/Navigation";
 
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 import ColumnMenu from "./ColumnMenu";
 import ImportWizard from "components/Wizards/ImportWizard";
 import ImportCSV from "./TableHeader/ImportCsv";
@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) =>
 
 export default function EmptyTable() {
   const classes = useStyles();
-  const { tableState, importWizardRef, columnMenuRef } = useRowyContext();
+  const { tableState, importWizardRef, columnMenuRef } = useProjectContext();
 
   if (tableState?.rows && tableState?.rows.length > 0)
     return (

@@ -4,7 +4,7 @@ import Button from "@material-ui/core/Button";
 import { useEffect, useReducer, useContext } from "react";
 import _isEqual from "lodash/isEqual";
 import firebase from "firebase/app";
-import { RowyFilter, RowyOrderBy } from ".";
+import { TableFilter, TableOrder } from ".";
 import { SnackContext } from "contexts/SnackContext";
 import { cloudFunction } from "../../firebase/callables";
 import {
@@ -17,7 +17,7 @@ import {
 import { projectId } from "../../firebase";
 import _findIndex from "lodash/findIndex";
 import _orderBy from "lodash/orderBy";
-import { rowyUser } from "contexts/RowyContext";
+import { rowyUser } from "contexts/ProjectContext";
 import { useAppContext } from "contexts/AppContext";
 const CAP = 1000; // safety  paramter sets the  upper limit of number of docs fetched by this hook
 const serverTimestamp = firebase.firestore.FieldValue.serverTimestamp;
@@ -79,7 +79,7 @@ const tableInitialState = {
   cap: CAP,
 };
 
-const useTable = (initialOverrides: any) => {
+const useTableData = (initialOverrides: any) => {
   const snack = useContext(SnackContext);
   const { currentUser } = useAppContext();
 
@@ -101,7 +101,7 @@ const useTable = (initialOverrides: any) => {
       value: string;
     }[],
     limit: number,
-    orderBy: RowyOrderBy
+    orderBy: TableOrder
   ) => {
     //unsubscribe from old path
     if (tableState.prevPath && tableState.path !== tableState.prevPath) {
@@ -170,31 +170,12 @@ const useTable = (initialOverrides: any) => {
             ),
           });
         } else if (error.code === "permission-denied") {
-          if (filters.length === 0) {
-            cloudFunction(
-              "callable-setRowyPersonalizedFilter",
-              {
-                table: tableState.path,
-              },
-              (resp) => {
-                console.log(resp);
-              },
-              () => {
-                snack.open({
-                  position: { horizontal: "center", vertical: "top" },
-                  variant: "error",
-                  message: "You don't have permissions to see the results.",
-                  duration: 10000,
-                });
-              }
-            );
-          } else
-            snack.open({
-              position: { horizontal: "center", vertical: "top" },
-              variant: "error",
-              message: "You don't have permissions to see the results.",
-              duration: 10000,
-            });
+          snack.open({
+            position: { horizontal: "center", vertical: "top" },
+            variant: "error",
+            message: "You don't have permissions to see the results.",
+            duration: 10000,
+          });
         }
       }
     );
@@ -262,7 +243,7 @@ const useTable = (initialOverrides: any) => {
    *  @param tableCollection firestore collection path
    *  @param filters specify filters to be applied to the query
    */
-  const setTable = (tableCollection: string, filters?: RowyFilter) => {
+  const setTable = (tableCollection: string, filters?: TableFilter) => {
     if (tableCollection !== tableState.path) {
       tableDispatch({
         path: tableCollection,
@@ -377,4 +358,4 @@ const useTable = (initialOverrides: any) => {
   return [{ ...tableState, rows: orderedRows }, tableActions];
 };
 
-export default useTable;
+export default useTableData;

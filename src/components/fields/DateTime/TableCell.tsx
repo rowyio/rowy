@@ -10,7 +10,7 @@ import { transformValue } from "../Date/utils";
 //   DatePickerProps,
 // } from "@material-ui/pickers";
 
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 import BasicCell from "./BasicCell";
 
 const useStyles = makeStyles((theme) =>
@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) =>
 
 export default function DateTime({ column, value }: IHeavyCellProps) {
   const classes = useStyles();
-  const {} = useRowyContext();
+  const {} = useProjectContext();
 
   const transformedValue = transformValue(value);
 

@@ -3,7 +3,7 @@ import { useState } from "react";
 import TableHeaderButton from "./TableHeaderButton";
 import LoopIcon from "@material-ui/icons/Loop";
 
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 import { db } from "../../../firebase";
 import { isCollectionGroup } from "utils/fns";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -19,7 +19,7 @@ export default function ReExecute() {
     setOpen(false);
   };
 
-  const { tableState } = useRowyContext();
+  const { tableState } = useProjectContext();
   const query: any = isCollectionGroup()
     ? db.collectionGroup(tableState?.tablePath!)
     : db.collection(tableState?.tablePath!);

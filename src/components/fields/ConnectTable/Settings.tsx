@@ -8,11 +8,11 @@ import MultiSelect from "@antlerengineering/multiselect";
 
 import { FieldType } from "constants/fields";
 import { db } from "../../../firebase";
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 import { TABLE_SCHEMAS } from "config/dbPaths";
 
 export default function Settings({ handleChange, config }: ISettingsProps) {
-  const { tables } = useRowyContext();
+  const { tables } = useProjectContext();
   const tableOptions = _sortBy(
     tables?.map((t) => ({
       label: `${t.section} - ${t.name}`,

@@ -7,8 +7,8 @@ import _pickBy from "lodash/pickBy";
 import { Control, UseFormMethods, useWatch } from "react-hook-form";
 import { Values } from "./utils";
 
-import { useRowyContext } from "contexts/RowyContext";
-import { RowyState } from "hooks/useRowy";
+import { useProjectContext } from "contexts/ProjectContext";
+import { TableState } from "hooks/useTable";
 
 export interface IAutosaveProps {
   control: Control;
@@ -18,7 +18,7 @@ export interface IAutosaveProps {
   dirtyFields: UseFormMethods["formState"]["dirtyFields"];
 }
 
-const getEditables = (values: Values, tableState?: RowyState) =>
+const getEditables = (values: Values, tableState?: TableState) =>
   _pick(
     values,
     (tableState &&
@@ -36,7 +36,7 @@ export default function Autosave({
   reset,
   dirtyFields,
 }: IAutosaveProps) {
-  const { tableState, updateCell } = useRowyContext();
+  const { tableState, updateCell } = useProjectContext();
 
   const values = useWatch({ control });
   const [debouncedValue] = useDebounce(getEditables(values, tableState), 1000, {

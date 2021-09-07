@@ -16,7 +16,7 @@ import Logo from "assets/Logo";
 import { SnackProvider } from "contexts/SnackContext";
 import ConfirmationProvider from "components/ConfirmationDialog/Provider";
 import { AppProvider } from "contexts/AppContext";
-import { RowyContextProvider } from "contexts/RowyContext";
+import { ProjectContextProvider } from "contexts/ProjectContext";
 import { SnackLogProvider } from "contexts/SnackLogContext";
 import routes from "constants/routes";
 
@@ -99,7 +99,7 @@ export default function App() {
                           routes.userManagement,
                         ]}
                         render={() => (
-                          <RowyContextProvider>
+                          <ProjectContextProvider>
                             <Switch>
                               <PrivateRoute
                                 exact
@@ -164,7 +164,7 @@ export default function App() {
                                 )}
                               />
                             </Switch>
-                          </RowyContextProvider>
+                          </ProjectContextProvider>
                         )}
                       />
 

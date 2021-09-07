@@ -3,15 +3,14 @@ import _groupBy from "lodash/groupBy";
 import _sortBy from "lodash/sortBy";
 import { DataGridHandle } from "react-data-grid";
 import firebase from "firebase/app";
-import useRowy, { RowyActions, RowyState } from "hooks/useRowy";
+import useTable, { TableActions, TableState } from "@src/hooks/useTable";
 import useSettings from "hooks/useSettings";
 import { useAppContext } from "./AppContext";
 import { useSnackContext } from "./SnackContext";
 import { SideDrawerRef } from "components/SideDrawer";
 import { ColumnMenuRef } from "components/Table/ColumnMenu";
 import { ImportWizardRef } from "components/Wizards/ImportWizard";
-import _find from "lodash/find";
-import { deepen } from "utils/fns";
+
 export type Table = {
   id: string;
   collection: string;
@@ -22,12 +21,12 @@ export type Table = {
   isCollectionGroup: boolean;
 };
 
-interface RowyContextProps {
+interface ProjectContextProps {
   tables: Table[];
   roles: string[];
   sections: { [sectionName: string]: Table[] };
-  tableState: RowyState;
-  tableActions: RowyActions;
+  tableState: TableState;
+  tableActions: TableActions;
   updateCell: (
     ref: firebase.firestore.DocumentReference,
     fieldName: string,
@@ -68,8 +67,8 @@ interface RowyContextProps {
   importWizardRef: React.MutableRefObject<ImportWizardRef | undefined>;
 }
 
-const RowyContext = React.createContext<Partial<RowyContextProps>>({});
-export default RowyContext;
+const ProjectContext = React.createContext<Partial<ProjectContextProps>>({});
+export default ProjectContext;
 
 export const rowyUser = (currentUser) => {
   const { displayName, email, uid, emailVerified, isAnonymous, photoURL } =
@@ -84,13 +83,13 @@ export const rowyUser = (currentUser) => {
     photoURL,
   };
 };
-export const useRowyContext = () => useContext(RowyContext);
+export const useProjectContext = () => useContext(ProjectContext);
 
-export const RowyContextProvider: React.FC = ({ children }) => {
+export const ProjectContextProvider: React.FC = ({ children }) => {
   const { open } = useSnackContext();
-  const { tableState, tableActions } = useRowy();
-  const [tables, setTables] = useState<RowyContextProps["tables"]>();
-  const [sections, setSections] = useState<RowyContextProps["sections"]>();
+  const { tableState, tableActions } = useTable();
+  const [tables, setTables] = useState<ProjectContextProps["tables"]>();
+  const [sections, setSections] = useState<ProjectContextProps["sections"]>();
   const [settings, settingsActions] = useSettings();
   const [userRoles, setUserRoles] = useState<null | string[]>();
   const [userClaims, setUserClaims] = useState<any>();
@@ -137,7 +136,7 @@ export const RowyContextProvider: React.FC = ({ children }) => {
     }
   }, [currentUser]);
 
-  const updateCell: RowyContextProps["updateCell"] = (
+  const updateCell: ProjectContextProps["updateCell"] = (
     ref,
     fieldName,
     value,
@@ -178,7 +177,7 @@ export const RowyContextProvider: React.FC = ({ children }) => {
   const importWizardRef = useRef<ImportWizardRef>();
 
   return (
-    <RowyContext.Provider
+    <ProjectContext.Provider
       value={{
         tableState,
         tableActions,
@@ -195,6 +194,6 @@ export const RowyContextProvider: React.FC = ({ children }) => {
       }}
     >
       {children}
-    </RowyContext.Provider>
+    </ProjectContext.Provider>
   );
 };

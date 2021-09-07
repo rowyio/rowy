@@ -10,7 +10,7 @@ import {
 } from "@material-ui/core";
 import GoIcon from "assets/icons/Go";
 
-import { Table } from "contexts/RowyContext";
+import { Table } from "contexts/ProjectContext";
 
 export interface ITableCardProps extends Table {
   link: string;

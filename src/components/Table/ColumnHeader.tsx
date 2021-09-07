@@ -19,8 +19,8 @@ import LockIcon from "@material-ui/icons/Lock";
 
 import { FieldType } from "constants/fields";
 import { getFieldProp } from "components/fields";
-import { useRowyContext } from "contexts/RowyContext";
-import { RowyOrderBy } from "hooks/useRowy";
+import { useProjectContext } from "contexts/ProjectContext";
+import { TableOrder } from "@src/hooks/useTable";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -116,12 +116,8 @@ export default function DraggableHeaderRenderer<R>({
 }) {
   const classes = useStyles();
 
-  const {
-    tableState,
-    tableActions,
-    userClaims,
-    columnMenuRef,
-  } = useRowyContext();
+  const { tableState, tableActions, userClaims, columnMenuRef } =
+    useProjectContext();
   const [{ isDragging }, drag] = useDrag({
     item: { key: column.key, type: "COLUMN_DRAG" },
     collect: (monitor) => ({
@@ -162,13 +158,13 @@ export default function DraggableHeaderRenderer<R>({
 
   const handleSortClick = () => {
     if (isAsc) {
-      const ordering: RowyOrderBy = [
+      const ordering: TableOrder = [
         { key: column.key as string, direction: "desc" },
       ];
 
       tableActions.table.orderBy(ordering);
     } else {
-      const ordering: RowyOrderBy = [
+      const ordering: TableOrder = [
         { key: column.key as string, direction: "asc" },
       ];
       tableActions.table.orderBy(ordering);

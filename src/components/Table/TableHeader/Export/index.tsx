@@ -13,7 +13,7 @@ import Modal from "components/Modal";
 import ExportDetails from "./Export";
 import DownloadDetails from "./Download";
 
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 import { db } from "../../../../firebase";
 import { isCollectionGroup } from "utils/fns";
 
@@ -57,7 +57,7 @@ export default function Export() {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<"Export" | "Download">("Export");
-  const { tableState } = useRowyContext();
+  const { tableState } = useProjectContext();
 
   const query: any = useMemo(() => {
     let _query = isCollectionGroup()

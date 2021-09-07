@@ -11,7 +11,7 @@ import ExtensionList from "./ExtensionList";
 import ExtensionModal from "./ExtensionModal";
 import ExtensionMigration from "./ExtensionMigration";
 
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 import { useAppContext } from "contexts/AppContext";
 import { useConfirmation } from "components/ConfirmationDialog";
 import { useSnackContext } from "contexts/SnackContext";
@@ -28,7 +28,7 @@ import WIKI_LINKS from "constants/wikiLinks";
 
 export default function ExtensionsEditor() {
   const snack = useSnackContext();
-  const { tableState, tableActions } = useRowyContext();
+  const { tableState, tableActions } = useProjectContext();
   const appContext = useAppContext();
   const { requestConfirmation } = useConfirmation();
   const currentextensionObjects = (tableState?.config.extensionObjects ??

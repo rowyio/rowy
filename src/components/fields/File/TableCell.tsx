@@ -18,10 +18,10 @@ import {
 import UploadIcon from "assets/icons/Upload";
 
 import { useConfirmation } from "components/ConfirmationDialog";
-import useUploader, { FileValue } from "hooks/useRowy/useUploader";
+import useUploader, { FileValue } from "hooks/useTable/useUploader";
 import { FileIcon } from ".";
 import { DATE_TIME_FORMAT } from "constants/dates";
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -63,7 +63,7 @@ export default function File_({
   disabled,
 }: IHeavyCellProps) {
   const classes = useStyles();
-  const { updateCell } = useRowyContext();
+  const { updateCell } = useProjectContext();
 
   const { uploaderState, upload, deleteUpload } = useUploader();
   const { progress, isLoading } = uploaderState;
@@ -143,8 +143,7 @@ export default function File_({
                             requestConfirmation({
                               handleConfirm: () => handleDelete(file.ref),
                               title: "Delete File",
-                              body:
-                                "Are you sure you want to delete this file?",
+                              body: "Are you sure you want to delete this file?",
                               confirm: "Delete",
                             })
                     }

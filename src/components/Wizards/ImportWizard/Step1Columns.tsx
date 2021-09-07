@@ -24,7 +24,7 @@ import Column from "../Column";
 import EmptyState from "components/EmptyState";
 import AddColumnIcon from "assets/icons/AddColumn";
 
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 import { FieldType } from "constants/fields";
 import { suggestType } from "./utils";
 
@@ -40,7 +40,7 @@ export default function Step1Columns({ config, setConfig }: IStepProps) {
   const classes = useStyles();
 
   // Get a list of fields from first 50 documents
-  const { tableState } = useRowyContext();
+  const { tableState } = useProjectContext();
   const allFields = useMemo(() => {
     const sample = tableState!.rows.slice(0, 50);
     const fields_ = new Set<string>();

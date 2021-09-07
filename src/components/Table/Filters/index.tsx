@@ -22,8 +22,8 @@ import MultiSelect from "@antlerengineering/multiselect";
 import ButtonWithStatus from "components/ButtonWithStatus";
 
 import { FieldType } from "constants/fields";
-import { RowyFilter } from "hooks/useRowy";
-import { useRowyContext } from "contexts/RowyContext";
+import { TableFilter } from "hooks/useTable";
+import { useProjectContext } from "contexts/ProjectContext";
 
 import { useAppContext } from "contexts/AppContext";
 import { DocActions } from "hooks/useDoc";
@@ -133,7 +133,7 @@ const UNFILTERABLES = [
   FieldType.longText,
 ];
 const Filters = () => {
-  const { tableState, tableActions } = useRowyContext();
+  const { tableState, tableActions } = useProjectContext();
   const { userDoc } = useAppContext();
 
   useEffect(() => {
@@ -160,7 +160,7 @@ const Filters = () => {
 
   const [selectedColumn, setSelectedColumn] = useState<any>();
 
-  const [query, setQuery] = useState<RowyFilter>({
+  const [query, setQuery] = useState<TableFilter>({
     key: "",
     operator: "",
     value: "",
@@ -168,7 +168,7 @@ const Filters = () => {
 
   useEffect(() => {
     if (selectedColumn) {
-      let updatedQuery: RowyFilter = {
+      let updatedQuery: TableFilter = {
         key: selectedColumn.key,
         operator: "",
         value: "",
@@ -339,7 +339,7 @@ const Filters = () => {
     }
   };
 
-  const handleUpdateFilters = (filters: RowyFilter[]) => {
+  const handleUpdateFilters = (filters: TableFilter[]) => {
     userDoc.dispatch({
       action: DocActions.update,
       data: {

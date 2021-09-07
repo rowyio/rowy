@@ -11,7 +11,7 @@ import { Popover, PopoverProps } from "@material-ui/core";
 
 import ErrorBoundary from "components/ErrorBoundary";
 import CellValidation from "components/Table/CellValidation";
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 
 import { FieldType } from "constants/fields";
 import { getCellValue } from "utils/fns";
@@ -50,7 +50,7 @@ export default function withPopoverCell(
   return function PopoverCell(props: FormatterProps<any>) {
     const classes = useStyles();
     const { transparent, ...popoverProps } = options ?? {};
-    const { updateCell } = useRowyContext();
+    const { updateCell } = useProjectContext();
 
     const { validationRegex, required } = (props.column as any).config;
 

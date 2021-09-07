@@ -6,7 +6,7 @@ import LoadingButton from "@material-ui/lab/LoadingButton";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import Modal from "components/Modal";
 
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 import { useConfirmation } from "components/ConfirmationDialog";
 import { db, projectId } from "@src/firebase";
 import { name } from "@root/package.json";
@@ -50,7 +50,7 @@ const migrate = async () => {
 };
 
 export default function MigrateToV2() {
-  const { userClaims } = useRowyContext();
+  const { userClaims } = useProjectContext();
   const { requestConfirmation } = useConfirmation();
 
   const [requiresMigration, setRequiresMigration] = useMigrateToV2State<

@@ -8,7 +8,7 @@ import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import GoIcon from "@material-ui/icons/ChevronRight";
 
 import Modal from "components/Modal";
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 import { useAppContext } from "contexts/AppContext";
 import { sparkToExtensionObjects } from "./utils";
 import WIKI_LINKS from "constants/wikiLinks";
@@ -23,7 +23,7 @@ export default function ExtensionMigration({
   handleUpgradeComplete,
 }: IExtensionMigrationProps) {
   const appContext = useAppContext();
-  const { tableState, tableActions } = useRowyContext();
+  const { tableState, tableActions } = useProjectContext();
 
   const [isSaved, setIsSaved] = useState(false);
   const [isUpgrading, setIsUpgrading] = useState(false);

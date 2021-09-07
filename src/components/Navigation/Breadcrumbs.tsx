@@ -11,7 +11,7 @@ import {
 } from "@material-ui/core";
 import ArrowRightIcon from "@material-ui/icons/ChevronRight";
 
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 import useRouter from "hooks/useRouter";
 import routes from "constants/routes";
 import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) =>
 export default function Breadcrumbs(props: BreadcrumbsProps) {
   const classes = useStyles();
 
-  const { tables, tableState } = useRowyContext();
+  const { tables, tableState } = useProjectContext();
   const collection = tableState?.tablePath || "";
 
   const router = useRouter();

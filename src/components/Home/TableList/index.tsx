@@ -6,7 +6,7 @@ import SectionHeading from "components/SectionHeading";
 import TableListItem from "./TableListItem";
 import SlideTransition from "components/Modal/SlideTransition";
 
-import { Table } from "contexts/RowyContext";
+import { Table } from "contexts/ProjectContext";
 
 export interface ITableListProps {
   sections: Record<string, Table[]>;

@@ -8,7 +8,7 @@ import {
 } from "@material-ui/core";
 import GoIcon from "@material-ui/icons/ArrowForward";
 
-import { Table } from "contexts/RowyContext";
+import { Table } from "contexts/ProjectContext";
 
 export interface ITableListItemProps extends Table {
   link: string;

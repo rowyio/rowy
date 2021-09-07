@@ -6,7 +6,7 @@ import { TextField } from "@material-ui/core";
 
 import { FieldType } from "constants/fields";
 import { getCellValue } from "utils/fns";
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) =>
 );
 
 export default function TextEditor({ row, column }: EditorProps<any>) {
-  const { updateCell } = useRowyContext();
+  const { updateCell } = useProjectContext();
   const classes = useStyles();
 
   const type = (column as any).config?.renderFieldType ?? (column as any).type;

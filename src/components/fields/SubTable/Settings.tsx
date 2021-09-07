@@ -1,9 +1,9 @@
 import MultiSelect from "@antlerengineering/multiselect";
 import { FieldType } from "constants/fields";
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 
 const Settings = ({ config, handleChange }) => {
-  const { tableState } = useRowyContext();
+  const { tableState } = useProjectContext();
   if (!tableState?.columns) return <></>;
   const columnOptions = Object.values(tableState.columns)
     .filter((column) =>

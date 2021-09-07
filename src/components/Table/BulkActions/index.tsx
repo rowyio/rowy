@@ -20,7 +20,7 @@ import DeleteIcon from "@material-ui/icons/DeleteForever";
 import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp";
 
 import { useConfirmation } from "components/ConfirmationDialog/Context";
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 import { useSnackContext } from "contexts/SnackContext";
 import { formatPath } from "utils/fns";
 import { cloudFunction } from "firebase/callables";
@@ -102,7 +102,7 @@ const useStyles = makeStyles((theme) =>
 export default function BulkActions({ selectedRows, columns, clearSelection }) {
   const classes = useStyles();
   const [, setLoading] = useState<Boolean>();
-  const { tableActions, tableState } = useRowyContext();
+  const { tableActions, tableState } = useProjectContext();
 
   const { requestConfirmation } = useConfirmation();
   const snack = useSnackContext();

@@ -9,8 +9,8 @@ import Step2Rename from "./Step2Rename";
 import Step3Types from "./Step3Types";
 import Step4Preview from "./Step4Preview";
 
-import { ColumnConfig } from "hooks/useRowy/useTableConfig";
-import { useRowyContext } from "contexts/RowyContext";
+import { ColumnConfig } from "hooks/useTable/useTableConfig";
+import { useProjectContext } from "contexts/ProjectContext";
 
 export type TableColumnsConfig = { [key: string]: ColumnConfig };
 
@@ -30,7 +30,7 @@ export default function ImportWizard() {
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const { tableState, tableActions, importWizardRef } = useRowyContext();
+  const { tableState, tableActions, importWizardRef } = useProjectContext();
 
   const [open, setOpen] = useState(false);
   if (importWizardRef) importWizardRef.current = { open, setOpen };

@@ -10,7 +10,7 @@ import Column from "../Column";
 import Cell from "../Cell";
 import FieldsDropdown from "components/Table/ColumnMenu/FieldsDropdown";
 
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 import { FieldType } from "constants/fields";
 import { SELECTABLE_TYPES } from "./utils";
 
@@ -40,7 +40,7 @@ export default function Step3Types({ config, updateConfig, isXs }: IStepProps) {
   const handleChange = (e) =>
     updateConfig({ [fieldToEdit]: { type: e.target.value } });
 
-  const { tableState } = useRowyContext();
+  const { tableState } = useProjectContext();
 
   return (
     <div>

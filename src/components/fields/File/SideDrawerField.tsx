@@ -5,7 +5,7 @@ import { Controller } from "react-hook-form";
 import { format } from "date-fns";
 
 import { useDropzone } from "react-dropzone";
-import useUploader, { FileValue } from "hooks/useRowy/useUploader";
+import useUploader, { FileValue } from "hooks/useTable/useUploader";
 
 import { makeStyles, createStyles } from "@material-ui/styles";
 import {
@@ -24,7 +24,7 @@ import Confirmation from "components/Confirmation";
 import { DATE_TIME_FORMAT } from "constants/dates";
 
 import { useFieldStyles } from "components/SideDrawer/Form/utils";
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -57,7 +57,7 @@ function ControlledFileUploader({
 }) {
   const classes = useStyles();
   const fieldClasses = useFieldStyles();
-  const { updateCell } = useRowyContext();
+  const { updateCell } = useProjectContext();
 
   const { uploaderState, upload, deleteUpload } = useUploader();
   const {} = uploaderState;

@@ -11,8 +11,8 @@ import Step1Columns from "./Step1Columns";
 import Step2NewColumns from "./Step2NewColumns";
 import Step3Preview from "./Step3Preview";
 
-import { ColumnConfig } from "hooks/useRowy/useTableConfig";
-import { useRowyContext } from "contexts/RowyContext";
+import { ColumnConfig } from "hooks/useTable/useTableConfig";
+import { useProjectContext } from "contexts/ProjectContext";
 import { useSnackContext } from "contexts/SnackContext";
 import { getFieldProp } from "components/fields";
 
@@ -46,7 +46,7 @@ export default function ImportCsvWizard({
 
   const [open, setOpen] = useState(true);
 
-  const { tableState, tableActions } = useRowyContext();
+  const { tableState, tableActions } = useProjectContext();
   const { open: openSnackbar } = useSnackContext();
 
   const [config, setConfig] = useState<CsvConfig>({

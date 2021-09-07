@@ -9,7 +9,7 @@ import MultiSelect from "@antlerengineering/multiselect";
 import ButtonWithStatus from "components/ButtonWithStatus";
 import Column from "components/Wizards/Column";
 
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 import { useAppContext } from "contexts/AppContext";
 import { DocActions } from "hooks/useDoc";
 import { formatSubTableName } from "../../utils/fns";
@@ -37,14 +37,15 @@ const useStyles = makeStyles((theme) =>
           "& $hiddenIcon": { opacity: 0.5 },
         },
 
-        '&[aria-selected="true"], &[aria-selected="true"].Mui-focused, &[aria-selected="true"].Mui-focusVisible': {
-          backgroundColor: "transparent",
+        '&[aria-selected="true"], &[aria-selected="true"].Mui-focused, &[aria-selected="true"].Mui-focusVisible':
+          {
+            backgroundColor: "transparent",
 
-          position: "relative",
-          zIndex: 1,
+            position: "relative",
+            zIndex: 1,
 
-          "& $hiddenIcon": { opacity: 1 },
-        },
+            "& $hiddenIcon": { opacity: 1 },
+          },
       },
     },
 
@@ -56,7 +57,7 @@ export default function HiddenFields() {
   const classes = useStyles();
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  const { tableState } = useRowyContext();
+  const { tableState } = useProjectContext();
   const { userDoc } = useAppContext();
 
   const [open, setOpen] = useState(false);

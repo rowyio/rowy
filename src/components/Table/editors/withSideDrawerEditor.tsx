@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { EditorProps } from "react-data-grid";
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 import { IHeavyCellProps } from "components/fields/types";
 
 import { getCellValue } from "utils/fns";
@@ -18,7 +18,7 @@ export default function withSideDrawerEditor(
 ) {
   return function SideDrawerEditor(props: EditorProps<any, any>) {
     const { row, column } = props;
-    const { sideDrawerRef } = useRowyContext();
+    const { sideDrawerRef } = useProjectContext();
 
     useEffect(() => {
       if (!sideDrawerRef?.current?.open && sideDrawerRef?.current?.setOpen)

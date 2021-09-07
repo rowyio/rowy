@@ -16,7 +16,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import Switch from "@material-ui/core/Switch";
 import CodeEditor from "../editors/CodeEditor";
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 import { WEBHOOK_URL } from "../../../firebase";
 import { makeId } from "../../../utils/fns";
 
@@ -51,7 +51,7 @@ const EmptyState = {
 export default function WebhooksDialog({ open, handleClose }) {
   const classes = useStyles();
 
-  const { tableState, tableActions } = useRowyContext();
+  const { tableState, tableActions } = useProjectContext();
 
   const [state, setState] = useState<{
     enabled: boolean;

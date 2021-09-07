@@ -9,7 +9,7 @@ import DefaultValueInput from "./DefaultValueInput";
 import ErrorBoundary from "components/ErrorBoundary";
 import Loading from "components/Loading";
 
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 import { useSnackContext } from "contexts/SnackContext";
 import { useSnackLogContext } from "contexts/SnackLogContext";
 import { db } from "../../../../firebase";
@@ -33,7 +33,7 @@ export default function FieldSettings(props: IMenuModalProps) {
   const initializable = getFieldProp("initializable", type);
 
   const { requestConfirmation } = useConfirmation();
-  const { tableState } = useRowyContext();
+  const { tableState } = useProjectContext();
   const snack = useSnackContext();
   const snackLog = useSnackLogContext();
   const appContext = useAppContext();

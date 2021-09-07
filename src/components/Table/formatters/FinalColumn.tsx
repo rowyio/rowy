@@ -8,7 +8,7 @@ import DeleteIcon from "@material-ui/icons/DeleteOutlined";
 
 // import { SnackContext } from "contexts/SnackContext";
 import { useConfirmation } from "components/ConfirmationDialog/Context";
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 import useKeyPress from "hooks/useKeyPress";
 
 const useStyles = makeStyles((theme) =>
@@ -31,7 +31,7 @@ export default function FinalColumn({ row }: FormatterProps<any, any>) {
   useStyles();
 
   const { requestConfirmation } = useConfirmation();
-  const { tableActions } = useRowyContext();
+  const { tableActions } = useProjectContext();
   const shiftPress = useKeyPress("Shift");
   // const snack = useContext(SnackContext);
 

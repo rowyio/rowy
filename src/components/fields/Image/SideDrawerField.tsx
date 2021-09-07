@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { Controller } from "react-hook-form";
 
 import { useDropzone } from "react-dropzone";
-import useUploader from "hooks/useRowy/useUploader";
+import useUploader from "hooks/useTable/useUploader";
 
 import { makeStyles, createStyles } from "@material-ui/styles";
 import {
@@ -23,7 +23,7 @@ import OpenIcon from "@material-ui/icons/OpenInNewOutlined";
 import { IMAGE_MIME_TYPES } from ".";
 import Thumbnail from "components/Thumbnail";
 import { useConfirmation } from "components/ConfirmationDialog";
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 
 import { useFieldStyles } from "components/SideDrawer/Form/utils";
 const useStyles = makeStyles((theme) =>
@@ -108,7 +108,7 @@ function ControlledImageUploader({
 }) {
   const classes = useStyles();
   const fieldClasses = useFieldStyles();
-  const { updateCell } = useRowyContext();
+  const { updateCell } = useProjectContext();
 
   const { requestConfirmation } = useConfirmation();
   const { uploaderState, upload, deleteUpload } = useUploader();

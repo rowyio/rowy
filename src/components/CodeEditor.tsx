@@ -5,7 +5,7 @@ import Editor, { useMonaco } from "@monaco-editor/react";
 import { makeStyles, createStyles } from "@material-ui/styles";
 import { useTheme } from "@material-ui/core";
 
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -41,7 +41,7 @@ export default function CodeEditor({
 }: ICodeEditorProps) {
   const theme = useTheme();
   const [initialEditorValue] = useState(value ?? "");
-  const { tableState } = useRowyContext();
+  const { tableState } = useProjectContext();
   const classes = useStyles();
   const monacoInstance = useMonaco();
 

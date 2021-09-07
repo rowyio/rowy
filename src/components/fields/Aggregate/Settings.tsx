@@ -4,7 +4,7 @@ import MultiSelect from "@antlerengineering/multiselect";
 import FieldSkeleton from "components/SideDrawer/Form/FieldSkeleton";
 import { FieldType } from "constants/fields";
 import FieldsDropdown from "components/Table/ColumnMenu/FieldsDropdown";
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 const CodeEditor = lazy(
   () =>
     import(
@@ -13,7 +13,7 @@ const CodeEditor = lazy(
 );
 
 const Settings = ({ config, handleChange }) => {
-  const { tableState } = useRowyContext();
+  const { tableState } = useProjectContext();
 
   const columnOptions = Object.values(tableState?.columns ?? {})
     .filter((column) => column.type === FieldType.subTable)

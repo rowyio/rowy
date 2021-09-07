@@ -19,9 +19,9 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import OpenIcon from "@material-ui/icons/OpenInNewOutlined";
 
 import { useConfirmation } from "components/ConfirmationDialog";
-import useUploader, { FileValue } from "hooks/useRowy/useUploader";
+import useUploader, { FileValue } from "hooks/useTable/useUploader";
 import { IMAGE_MIME_TYPES } from "./index";
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 import Thumbnail from "components/Thumbnail";
 
 const useStyles = makeStyles((theme) =>
@@ -114,7 +114,7 @@ export default function Image_({
   onSubmit,
   disabled,
 }: IHeavyCellProps) {
-  const { tableState, updateCell } = useRowyContext();
+  const { tableState, updateCell } = useProjectContext();
   const { requestConfirmation } = useConfirmation();
   const classes = useStyles({ rowHeight: tableState?.config?.rowHeight ?? 44 });
 

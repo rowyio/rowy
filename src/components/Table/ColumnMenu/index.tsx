@@ -23,7 +23,7 @@ import NewColumn from "./NewColumn";
 import TypeChange from "./TypeChange";
 import FieldSettings from "./FieldSettings";
 
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 import { FieldType } from "constants/fields";
 import { getFieldProp } from "components/fields";
 
@@ -64,7 +64,7 @@ export interface IMenuModalProps {
 
 export default function ColumnMenu() {
   const [modal, setModal] = useState(INITIAL_MODAL);
-  const { tableState, tableActions, columnMenuRef } = useRowyContext();
+  const { tableState, tableActions, columnMenuRef } = useProjectContext();
 
   const [selectedColumnHeader, setSelectedColumnHeader] = useState<any>(null);
   if (columnMenuRef)

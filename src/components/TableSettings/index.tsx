@@ -10,7 +10,7 @@ import Confirmation from "components/Confirmation";
 import { FormDialog } from "@antlerengineering/form-builder";
 import { tableSettings } from "./form";
 
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 import useRouter from "../../hooks/useRouter";
 import { db } from "../../firebase";
 import { name } from "@root/package.json";
@@ -67,7 +67,7 @@ export default function TableSettingsDialog({
 }: ICreateTableDialogProps) {
   const classes = useStyles();
 
-  const { settingsActions, sections, roles, tables } = useRowyContext();
+  const { settingsActions, sections, roles, tables } = useProjectContext();
   const sectionNames = sections ? Object.keys(sections) : [];
 
   const router = useRouter();

@@ -9,7 +9,7 @@ import {
 import RowHeightIcon from "assets/icons/RowHeight";
 
 import TableHeaderButton from "./TableHeaderButton";
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 
 export default function RowHeight() {
   const theme = useTheme();
@@ -20,7 +20,7 @@ export default function RowHeight() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const { tableActions, tableState } = useRowyContext();
+  const { tableActions, tableState } = useProjectContext();
 
   const rowHeight = tableState?.config.rowHeight;
   const updateConfig = tableActions?.table.updateConfig;

@@ -6,7 +6,7 @@ import SectionHeading from "components/SectionHeading";
 import TableCard from "./TableCard";
 import SlideTransition from "components/Modal/SlideTransition";
 
-import { Table } from "contexts/RowyContext";
+import { Table } from "contexts/ProjectContext";
 
 export interface ITableGridProps {
   sections: Record<string, Table[]>;

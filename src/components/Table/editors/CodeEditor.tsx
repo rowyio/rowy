@@ -2,7 +2,7 @@ import { useRef, useMemo, useState } from "react";
 import { makeStyles, createStyles } from "@material-ui/styles";
 import { useTheme } from "@material-ui/core/styles";
 import Editor, { useMonaco } from "@monaco-editor/react";
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 import { FieldType } from "constants/fields";
 import { useEffect } from "react";
 
@@ -43,7 +43,7 @@ export default function CodeEditor(props: any) {
   const monacoInstance = useMonaco();
 
   const [initialEditorValue] = useState(script ?? "");
-  const { tableState } = useRowyContext();
+  const { tableState } = useProjectContext();
   const classes = useStyles();
 
   const editorRef = useRef<any>();

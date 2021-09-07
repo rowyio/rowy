@@ -17,7 +17,7 @@ import {
 } from "@material-ui/core";
 
 import { SnackContext } from "contexts/SnackContext";
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 
 import { FieldType } from "constants/fields";
 import { hasDataTypes } from "components/fields";
@@ -27,36 +27,34 @@ const LABEL_COLUMNS = hasDataTypes(["string", "number"]);
 
 const download = (url) => fetch(url).then((resp) => resp.blob());
 
-const selectedColumnsFilesReducer = (doc: any, labelColumns: any[]) => (
-  accumulator: any,
-  currentColumn: any
-) => {
-  const files = _get(doc, currentColumn.key);
-  if (!files || files.length === 0) return accumulator;
-  return [
-    ...accumulator,
-    ...files.map((file, index) => ({
-      ...file,
-      fieldKey: currentColumn.key,
-      name:
-        labelColumns.length === 0
-          ? file.name
-          : `${currentColumn.key}/${labelColumns
-              .map((labelColumn) => {
-                const value = _get(doc, labelColumn.key);
-                return value && typeof value === "string"
-                  ? value.replace(/[^a-zA-Z ]/g, "")
-                  : "";
-              })
-              .join("_")}${
-              files.length === 1 ? "" : `_${index}`
-            }.${file.name.split(".").pop()}`,
-    })),
-  ];
-};
+const selectedColumnsFilesReducer =
+  (doc: any, labelColumns: any[]) => (accumulator: any, currentColumn: any) => {
+    const files = _get(doc, currentColumn.key);
+    if (!files || files.length === 0) return accumulator;
+    return [
+      ...accumulator,
+      ...files.map((file, index) => ({
+        ...file,
+        fieldKey: currentColumn.key,
+        name:
+          labelColumns.length === 0
+            ? file.name
+            : `${currentColumn.key}/${labelColumns
+                .map((labelColumn) => {
+                  const value = _get(doc, labelColumn.key);
+                  return value && typeof value === "string"
+                    ? value.replace(/[^a-zA-Z ]/g, "")
+                    : "";
+                })
+                .join("_")}${files.length === 1 ? "" : `_${index}`}.${file.name
+                .split(".")
+                .pop()}`,
+      })),
+    ];
+  };
 
 export default function Export({ query, closeModal }) {
-  const { tableState } = useRowyContext();
+  const { tableState } = useProjectContext();
   const snackContext = useContext(SnackContext);
 
   const [columns, setColumns] = useState<any[]>([]);

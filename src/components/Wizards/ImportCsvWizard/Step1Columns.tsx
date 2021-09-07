@@ -21,7 +21,7 @@ import { IStepProps } from ".";
 import FadeList from "../FadeList";
 import Column from "../Column";
 
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 import { FieldType } from "constants/fields";
 import { suggestType } from "../ImportWizard/utils";
 
@@ -88,7 +88,7 @@ export default function Step1Columns({
 }: IStepProps) {
   const classes = useStyles();
 
-  const { tableState } = useRowyContext();
+  const { tableState } = useProjectContext();
   const tableColumns = _sortBy(Object.values(tableState?.columns ?? {}), [
     "index",
   ]).map((column) => ({ label: column.name, value: column.key }));

@@ -21,7 +21,7 @@ import Logo from "assets/Logo";
 import NavItem from "./NavItem";
 import NavTableSection from "./NavTableSection";
 
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 import { routes } from "constants/routes";
 
 export const NAV_DRAWER_WIDTH = 256;
@@ -35,7 +35,7 @@ export default function NavDrawer({
   currentSection,
   ...props
 }: INavDrawerProps) {
-  const { userClaims, sections } = useRowyContext();
+  const { userClaims, sections } = useProjectContext();
 
   const closeDrawer = (e: {}) => props.onClose(e, "escapeKeyDown");
 

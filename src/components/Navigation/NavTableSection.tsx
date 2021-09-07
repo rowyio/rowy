@@ -4,7 +4,7 @@ import { List, ListItemText, Collapse } from "@material-ui/core";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import NavItem from "./NavItem";
 
-import { Table } from "contexts/RowyContext";
+import { Table } from "contexts/ProjectContext";
 import { routes } from "constants/routes";
 
 export interface INavDrawerItemProps {

@@ -13,9 +13,9 @@ import TableHeaderSkeleton from "components/Table/Skeleton/TableHeaderSkeleton";
 import HeaderRowSkeleton from "components/Table/Skeleton/HeaderRowSkeleton";
 import EmptyTable from "components/Table/EmptyTable";
 
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 import { useAppContext } from "contexts/AppContext";
-import { RowyFilter } from "hooks/useRowy";
+import { TableFilter } from "hooks/useTable";
 import useRouter from "hooks/useRouter";
 import { DocActions } from "hooks/useDoc";
 import ActionParamsProvider from "components/fields/Action/FormDialog/Provider";
@@ -24,7 +24,8 @@ export default function TablePage() {
   const router = useRouter();
   const tableCollection = decodeURIComponent(router.match.params.id);
 
-  const { tableState, tableActions, sideDrawerRef, tables } = useRowyContext();
+  const { tableState, tableActions, sideDrawerRef, tables } =
+    useProjectContext();
   const { userDoc } = useAppContext();
 
   // Find the matching section for the current route
@@ -36,7 +37,7 @@ export default function TablePage() {
   const tableName =
     _find(tables, ["collection", currentTable])?.name || currentTable;
 
-  let filters: RowyFilter[] = [];
+  let filters: TableFilter[] = [];
   const parsed = queryString.parse(router.location.search);
   if (typeof parsed.filters === "string") {
     filters = JSON.parse(parsed.filters);

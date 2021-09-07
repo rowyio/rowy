@@ -3,7 +3,7 @@ import { IHeavyCellProps } from "../types";
 import { makeStyles, createStyles } from "@material-ui/styles";
 import { Tooltip, Fade } from "@material-ui/core";
 
-import { useRowyContext } from "contexts/RowyContext";
+import { useProjectContext } from "contexts/ProjectContext";
 import RenderedHtml from "components/RenderedHtml";
 
 type StylesProps = { width: number; rowHeight: number };
@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme) =>
 );
 
 export default function RichText({ column, value }: IHeavyCellProps) {
-  const { tableState } = useRowyContext();
+  const { tableState } = useProjectContext();
   const classes = useStyles({
     width: column.width,
     rowHeight: tableState?.config?.rowHeight ?? 44,
