@@ -1,5 +1,4 @@
-import { makeStyles, createStyles } from "@material-ui/styles";
-import { Grid, Typography, Button } from "@material-ui/core";
+import { Grid, Stack, Typography, Button, Divider } from "@material-ui/core";
 import ImportIcon from "assets/icons/Import";
 import AddColumnIcon from "assets/icons/AddColumn";
 
@@ -10,62 +9,35 @@ import ColumnMenu from "./ColumnMenu";
 import ImportWizard from "components/Wizards/ImportWizard";
 import ImportCSV from "./TableHeader/ImportCsv";
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    root: {
-      height: `calc(100vh - ${APP_BAR_HEIGHT}px)`,
-      width: 300,
-      margin: "0 auto",
-      textAlign: "center",
-      userSelect: "none",
-    },
-
-    tablePath: {
-      fontFamily: theme.typography.fontFamilyMono,
-      textTransform: "none",
-    },
-  })
-);
-
 export default function EmptyTable() {
-  const classes = useStyles();
   const { tableState, importWizardRef, columnMenuRef } = useProjectContext();
 
-  if (tableState?.rows && tableState?.rows.length > 0)
-    return (
-      <Grid
-        container
-        direction="column"
-        wrap="nowrap"
-        alignItems="center"
-        justifyContent="center"
-        spacing={2}
-        className={classes.root}
-      >
-        <Grid item>
-          <Typography variant="overline">
-            You have existing data in your Firestore collection
+  let contents = <></>;
+
+  if (tableState?.rows && tableState!.rows.length > 0) {
+    contents = (
+      <>
+        <div>
+          <Typography variant="h6" component="h2" gutterBottom>
+            Get Started
+          </Typography>
+          <Typography>
+            There is existing data in the Firestore collection:
             <br />
-            <Typography
-              variant="body2"
-              component="span"
-              className={classes.tablePath}
-            >
-              “{tableState?.tablePath}”
+            <Typography component="span" sx={{ fontFamily: "mono" }}>
+              {tableState?.tablePath}
             </Typography>
           </Typography>
-        </Grid>
+        </div>
 
-        <Grid item>
-          <Typography variant="overline">
-            You can start by importing this existing data to this table
+        <div>
+          <Typography paragraph>
+            You can import that existing data to this table.
           </Typography>
-        </Grid>
 
-        <Grid item>
           <Button
             variant="contained"
-            color="secondary"
+            color="primary"
             startIcon={<ImportIcon />}
             onClick={() => importWizardRef?.current?.setOpen(true)}
           >
@@ -73,83 +45,98 @@ export default function EmptyTable() {
           </Button>
 
           <ImportWizard />
-        </Grid>
-      </Grid>
+        </div>
+      </>
     );
+  } else {
+    contents = (
+      <>
+        <div>
+          <Typography variant="h6" component="h2" gutterBottom>
+            Get Started
+          </Typography>
+          <Typography>There is no data in this table.</Typography>
+        </div>
 
-  return (
-    <Grid
-      container
-      direction="column"
-      wrap="nowrap"
-      alignItems="center"
-      justifyContent="center"
-      spacing={2}
-      className={classes.root}
-    >
-      <Grid item>
-        <Typography variant="overline">
-          You have no data in this table
-        </Typography>
-      </Grid>
+        <Grid container spacing={1}>
+          <Grid item xs>
+            <Typography paragraph>
+              You can import data from an external CSV file:
+            </Typography>
 
-      <Grid item>
-        <Typography variant="overline">
-          You can start by importing data from an external CSV file
-        </Typography>
-      </Grid>
+            <ImportCSV
+              render={(onClick) => (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<ImportIcon />}
+                  onClick={onClick}
+                >
+                  Import CSV
+                </Button>
+              )}
+              PopoverProps={{
+                anchorOrigin: {
+                  vertical: "bottom",
+                  horizontal: "center",
+                },
+                transformOrigin: {
+                  vertical: "top",
+                  horizontal: "center",
+                },
+              }}
+            />
+          </Grid>
 
-      <Grid item>
-        <ImportCSV
-          render={(onClick) => (
+          <Grid item>
+            <Divider orientation="vertical">
+              <Typography variant="overline">or</Typography>
+            </Divider>
+          </Grid>
+
+          <Grid item xs>
+            <Typography paragraph>
+              You can manually add new columns and rows:
+            </Typography>
+
             <Button
               variant="contained"
-              color="secondary"
-              startIcon={<ImportIcon />}
-              onClick={onClick}
+              color="primary"
+              startIcon={<AddColumnIcon />}
+              onClick={(event) =>
+                columnMenuRef?.current?.setSelectedColumnHeader({
+                  column: { isNew: true, key: "new", type: "LAST" } as any,
+                  anchorEl: event.currentTarget,
+                })
+              }
+              disabled={!columnMenuRef?.current}
             >
-              Import CSV
+              Add Column
             </Button>
-          )}
-          PopoverProps={{
-            anchorOrigin: {
-              vertical: "bottom",
-              horizontal: "center",
-            },
-            transformOrigin: {
-              vertical: "top",
-              horizontal: "center",
-            },
-          }}
-        />
-      </Grid>
 
-      <Grid item />
+            <ColumnMenu />
+          </Grid>
+        </Grid>
+      </>
+    );
+  }
 
-      <Grid item>
-        <Typography variant="overline">
-          Or you can manually add new columns and rows
-        </Typography>
-      </Grid>
-
-      <Grid item>
-        <Button
-          variant="contained"
-          color="primary"
-          startIcon={<AddColumnIcon />}
-          onClick={(event) =>
-            columnMenuRef?.current?.setSelectedColumnHeader({
-              column: { isNew: true, key: "new", type: "LAST" } as any,
-              anchorEl: event.currentTarget,
-            })
-          }
-          disabled={!columnMenuRef?.current}
-        >
-          Add Column
-        </Button>
-
-        <ColumnMenu />
-      </Grid>
-    </Grid>
+  return (
+    <Stack
+      spacing={3}
+      justifyContent="center"
+      alignItems="center"
+      sx={{
+        height: `calc(100vh - ${APP_BAR_HEIGHT}px)`,
+        width: "100%",
+        p: 2,
+        maxWidth: 480,
+        margin: "0 auto",
+        textAlign: "center",
+        userSelect: "none",
+      }}
+    >
+      {contents}
+    </Stack>
   );
 }

@@ -72,24 +72,21 @@ export default function TablePage() {
       currentSection={currentSection}
     >
       <ActionParamsProvider>
-        {tableState.loadingColumns && (
+        {tableState.loadingColumns ? (
           <>
             <TableHeaderSkeleton />
             <HeaderRowSkeleton />
           </>
-        )}
-
-        {!tableState.loadingColumns && !_isEmpty(tableState.columns) && (
-          <Table key={tableCollection} />
-        )}
-
-        {!tableState.loadingColumns && _isEmpty(tableState.columns) && (
+        ) : _isEmpty(tableState.columns) ? (
           <EmptyTable />
+        ) : (
+          <>
+            <Table key={tableCollection} />
+            <Hidden smDown>
+              <SideDrawer />
+            </Hidden>
+          </>
         )}
-
-        <Hidden smDown>
-          <SideDrawer />
-        </Hidden>
       </ActionParamsProvider>
     </Navigation>
   );
