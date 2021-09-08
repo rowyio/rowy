@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) =>
 
     inputAdornment: {
       height: "100%",
-      marginLeft: theme.spacing(1) + 1,
+      marginLeft: theme.spacing(9 / 8),
       marginRight: theme.spacing(0.25),
     },
 

@@ -4,6 +4,8 @@ import { useSnackbar } from "notistack";
 import Button from "@material-ui/core/Button";
 import { useEffect, useReducer, useContext } from "react";
 import _isEqual from "lodash/isEqual";
+import _merge from "lodash/merge";
+import _find from "lodash/find";
 import firebase from "firebase/app";
 import { TableFilter, TableOrder } from ".";
 
@@ -60,6 +62,28 @@ const rowsReducer = (prevRows: any, update: any) => {
       return prevRows.filter((row) => update.rowId !== row.id);
     case "set":
       return update.rows;
+
+    case "update":
+      const rowIndex = _findIndex(
+        prevRows,
+        (r: any) => r.id === update.rowRef.id
+      );
+      const _newRows = [...prevRows];
+      _newRows[rowIndex] = _merge(_newRows[rowIndex], deepen(update.update));
+
+      const missingRequiredFields = (
+        prevRows[rowIndex]._missingRequiredFields ?? []
+      ).reduce(missingFieldsReducer(_newRows[rowIndex]), []);
+
+      if (missingRequiredFields.length === 0) {
+        update.rowRef
+          .set(_newRows[rowIndex], { merge: true })
+          .then(update.onSuccess, update.onError);
+        delete _newRows[rowIndex]._missingRequiredFields;
+      }
+
+      return _newRows;
+
     case "add":
       return [update.newRow, ...prevRows];
     case "queryChange":
@@ -301,25 +325,27 @@ const useTableData = (initialOverrides: any) => {
     }
   };
 
-  const options = { merge: true };
   const updateRow = (rowRef, update, onSuccess, onError) => {
-    const rowIndex = _findIndex(rows, { id: rowRef.id });
-    const row = rows[rowIndex];
-    const { ref, _missingRequiredFields, ...rowData } = row;
-    const _rows = [...rows];
-    _rows[rowIndex] = { ...deepMerge(row, { ...deepen(update) }), ...update };
-    const missingRequiredFields = _missingRequiredFields
-      ? _missingRequiredFields.reduce(missingFieldsReducer(_rows[rowIndex]), [])
-      : [];
-    if (missingRequiredFields.length === 0) {
-      const _rowData = {
-        ...deepMerge(rowData, { ...deepen(update) }),
-        ...update,
-      };
-      ref.set(_rowData, options).then(onSuccess, onError);
-      delete _rows[rowIndex]._missingRequiredFields;
-    }
-    rowsDispatch({ type: "set", rows: _rows });
+    // const rowIndex = _findIndex(rows, { id: rowRef.id });
+    // const row = _find(rows, { id: rowRef.id });
+    // const { ref, _missingRequiredFields, ...rowData } = row;
+    // // const _rows = [...rows];
+    // // _rows[rowIndex] = { ...deepMerge(row, { ...deepen(update) }), ...update };
+
+    // const missingRequiredFields = _missingRequiredFields
+    //   ? _missingRequiredFields.reduce(missingFieldsReducer(row), [])
+    //   : [];
+
+    // if (missingRequiredFields.length === 0) {
+    //   const _rowData = {
+    //     ...deepMerge(rowData, { ...deepen(update) }),
+    //     ...update,
+    //   };
+    //   ref.set(_rowData, { merge: true }).then(onSuccess, onError);
+    //   delete _rows[rowIndex]._missingRequiredFields;
+    // }
+
+    rowsDispatch({ type: "update", update, rowRef, onSuccess, onError });
   };
 
   /**  used for incrementing the number of rows fetched

@@ -1,6 +1,7 @@
 import _find from "lodash/find";
 import queryString from "query-string";
 import { Link as RouterLink } from "react-router-dom";
+import _camelCase from "lodash/camelCase";
 
 import { makeStyles, createStyles } from "@material-ui/styles";
 import {
@@ -75,7 +76,7 @@ export default function Breadcrumbs(props: BreadcrumbsProps) {
       {section && (
         <Link
           component={RouterLink}
-          to={`${routes.home}#${section}`}
+          to={`${routes.home}#${_camelCase(section)}`}
           variant="h6"
           color="textSecondary"
           underline="hover"

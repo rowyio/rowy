@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) =>
       backgroundColor: theme.palette.background.default,
       boxShadow: theme.shadows[2],
 
-      ...theme.typography.caption,
+      ...theme.typography.body2,
       color: theme.palette.text.primary,
       padding: 0,
     },

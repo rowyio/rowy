@@ -1,3 +1,5 @@
+import { Fragment } from "react";
+
 import {
   MenuItem,
   ListItemIcon,
@@ -26,12 +28,12 @@ export default function MenuContents({ menuItems }: IMenuContentsProps) {
       {menuItems.map((item, index) => {
         if (item.type === "subheader")
           return (
-            <>
-              {index !== 0 && <Divider variant="middle" />}
-              <ListSubheader key={index} disableSticky>
-                {item.label}
-              </ListSubheader>
-            </>
+            <Fragment key={index}>
+              <Divider variant="middle" sx={{ my: 0.5 }} />
+              {item.label && (
+                <ListSubheader disableSticky>{item.label}</ListSubheader>
+              )}
+            </Fragment>
           );
 
         let icon: JSX.Element = item.icon ?? <></>;
@@ -65,7 +67,7 @@ export default function MenuContents({ menuItems }: IMenuContentsProps) {
                       color: (theme) =>
                         alpha(
                           theme.palette.error.main,
-                          theme.palette.action.activeOpacity
+                          theme.palette.action.activeOpacity * 1.1
                         ),
                     }
                   : undefined

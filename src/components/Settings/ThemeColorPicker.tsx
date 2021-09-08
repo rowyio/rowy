@@ -61,6 +61,17 @@ export default function ThemeColorPicker({
               textColor={lightTheme.palette.getContrastText(light)}
             />
             <Swatch
+              backgroundColor={colord(lightTheme.palette.background.paper)
+                .mix(
+                  light,
+                  lightTheme.palette.action.selectedOpacity +
+                    lightTheme.palette.action.focusOpacity
+                )
+                .alpha(1)
+                .toHslString()}
+              textColor={lightTheme.palette.text.primary}
+            />
+            <Swatch
               backgroundColor={colord(lightTheme.palette.background.default)
                 .mix(light, lightTheme.palette.action.hoverOpacity)
                 .alpha(1)
@@ -104,6 +115,18 @@ export default function ThemeColorPicker({
             <Swatch
               backgroundColor={dark}
               textColor={darkTheme.palette.getContrastText(dark)}
+            />
+            <Swatch
+              backgroundColor={colord(darkTheme.palette.background.paper)
+                .mix("#fff", 0.16)
+                .mix(
+                  dark,
+                  darkTheme.palette.action.selectedOpacity +
+                    darkTheme.palette.action.focusOpacity
+                )
+                .alpha(1)
+                .toHslString()}
+              textColor={darkTheme.palette.text.primary}
             />
             <Swatch
               backgroundColor={colord(darkTheme.palette.background.paper)

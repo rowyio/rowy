@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import { Menu } from "@material-ui/core";
+import { Menu, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
 import LockIcon from "@material-ui/icons/Lock";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOffOutlined";
@@ -124,10 +124,7 @@ export default function ColumnMenu() {
     setModal({ type: ModalStates.settings, data: { column } });
   };
   const menuItems = [
-    {
-      type: "subheader",
-      label: column.name,
-    },
+    { type: "subheader" },
     {
       label: "Lock",
       activeLabel: "Unlock",
@@ -186,7 +183,30 @@ export default function ColumnMenu() {
       active: isSorted && isAsc,
       disabled: column.type === FieldType.id,
     },
-    { type: "subheader", label: "Edit" },
+    { type: "subheader" },
+    {
+      label: "Add new to left…",
+      icon: <ColumnPlusBeforeIcon />,
+      onClick: () =>
+        setModal({
+          type: ModalStates.new,
+          data: {
+            initializeColumn: { index: column.index ? column.index - 1 : 0 },
+          },
+        }),
+    },
+    {
+      label: "Add new to right…",
+      icon: <ColumnPlusAfterIcon />,
+      onClick: () =>
+        setModal({
+          type: ModalStates.new,
+          data: {
+            initializeColumn: { index: column.index ? column.index + 1 : 0 },
+          },
+        }),
+    },
+    { type: "subheader" },
     {
       label: "Rename…",
       icon: <EditIcon />,
@@ -216,28 +236,7 @@ export default function ColumnMenu() {
     //   icon: <ReorderIcon />,
     //   onClick: () => alert("REORDER"),
     // },
-    {
-      label: "Add new to left…",
-      icon: <ColumnPlusBeforeIcon />,
-      onClick: () =>
-        setModal({
-          type: ModalStates.new,
-          data: {
-            initializeColumn: { index: column.index ? column.index - 1 : 0 },
-          },
-        }),
-    },
-    {
-      label: "Add new to right…",
-      icon: <ColumnPlusAfterIcon />,
-      onClick: () =>
-        setModal({
-          type: ModalStates.new,
-          data: {
-            initializeColumn: { index: column.index ? column.index + 1 : 0 },
-          },
-        }),
-    },
+
     {
       label: "Hide for everyone",
       activeLabel: "Show",
@@ -287,6 +286,22 @@ export default function ColumnMenu() {
           sx={{ "& .MuiMenu-paper": { backgroundColor: "background.default" } }}
           MenuListProps={{ disablePadding: true }}
         >
+          <ListItem>
+            <ListItemIcon style={{ minWidth: 36 }}>
+              {getFieldProp("icon", column.type)}
+            </ListItemIcon>
+            <ListItemText
+              primary={column.name}
+              secondary={
+                <>
+                  Key: <span style={{ userSelect: "all" }}>{column.key}</span>
+                </>
+              }
+              primaryTypographyProps={{ variant: "subtitle2" }}
+              secondaryTypographyProps={{ variant: "caption" }}
+              sx={{ m: 0, minHeight: 40, "& > *": { userSelect: "none" } }}
+            />
+          </ListItem>
           <MenuContents menuItems={menuItems} />
         </Menu>
       )}

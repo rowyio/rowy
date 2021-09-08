@@ -25,8 +25,6 @@ export default function RowHeight() {
   const rowHeight = tableState?.config.rowHeight;
   const updateConfig = tableActions?.table.updateConfig;
 
-  console.log(buttonRef);
-
   return (
     <>
       <TableHeaderButton

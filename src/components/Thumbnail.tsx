@@ -4,6 +4,7 @@ import { useImage } from "react-image";
 
 import { makeStyles, createStyles } from "@material-ui/styles";
 import Skeleton from "@material-ui/core/Skeleton";
+import BrokenImageIcon from "@material-ui/icons/BrokenImageOutlined";
 
 import ErrorBoundary from "./ErrorBoundary";
 
@@ -90,9 +91,11 @@ export function Thubmnail_({
     `__${size}$1`
   );
 
-  const { src } = useImage({
+  const { src, error } = useImage({
     srcList: [thumbnailUrl, imageUrl],
   });
+
+  if (error) return <>x</>;
 
   return (
     <img {...props} src={src} className={clsx(classes.root, props.className)} />
@@ -110,6 +113,7 @@ export default function Thumbnail(props: IThubmnailProps) {
       basic
       message="Failed to load image"
       className={props.className}
+      render={(m) => <BrokenImageIcon color="disabled" />}
     >
       <Suspense
         fallback={

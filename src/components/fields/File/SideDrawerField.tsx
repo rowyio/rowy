@@ -113,7 +113,7 @@ function ControlledFileUploader({
           <input id={`sidedrawer-field-${column.key}`} {...getInputProps()} />
           <UploadIcon />
           <Typography color="textSecondary">
-            Upload file
+            Click to upload or drop file here
           </Typography>
         </ButtonBase>
       )}
@@ -131,8 +131,7 @@ function ControlledFileUploader({
                 <div>
                   <Confirmation
                     message={{
-                      title: "Delete File",
-                      body: "Are you sure you want to delete this file?",
+                      title: "Delete File?",
                       confirm: "Delete",
                     }}
                     functionName={!disabled ? "onDelete" : ""}

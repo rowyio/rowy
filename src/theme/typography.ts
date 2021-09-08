@@ -100,16 +100,16 @@ export const typography = ({
       subtitle1: {
         ...fontStyleHeading,
         fontWeight: 600,
-        fontSize: toRem(16),
+        fontSize: toRem(17),
         letterSpacing: toEm(0.2, 16),
-        lineHeight: 24 / 16,
+        lineHeight: 24 / 17,
       },
       subtitle2: {
         ...fontStyleHeading,
         fontWeight: 600,
-        fontSize: toRem(14),
+        fontSize: toRem(15),
         letterSpacing: toEm(0.25, 14),
-        lineHeight: 20 / 14,
+        lineHeight: 20 / 15,
       },
       body1: {
         ...fontStyleBody,

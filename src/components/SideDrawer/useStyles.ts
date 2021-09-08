@@ -8,8 +8,10 @@ export const useStyles = makeStyles((theme) =>
     open: {},
     disabled: {
       "& $paper": {
-        transform: `translateX(${DRAWER_WIDTH + 32}px)`,
-        boxShadow: "none",
+        transform: `translateX(${DRAWER_WIDTH - DRAWER_COLLAPSED_WIDTH}px)`,
+      },
+      "& $fab": {
+        transform: "scale(0)",
       },
     },
 
@@ -62,6 +64,9 @@ export const useStyles = makeStyles((theme) =>
 
     fab: {
       display: "flex",
+      transition: theme.transitions.create("transform", {
+        duration: theme.transitions.duration.short,
+      }),
 
       boxShadow: theme.shadows[4],
       "&:active": { boxShadow: theme.shadows[4] },

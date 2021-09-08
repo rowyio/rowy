@@ -28,7 +28,7 @@ import Thumbnail from "components/Thumbnail";
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
-      padding: theme.spacing(0, 0.875, 0, 1.125),
+      padding: theme.spacing(0, 0.5, 0, 1),
       outline: "none",
     },
     dragActive: {
@@ -99,12 +99,11 @@ const useStyles = makeStyles((theme) =>
       boxShadow: `0 0 0 1px ${theme.palette.divider} inset`,
     },
 
-    endButtonContainer: {
-      width: `calc(29px + theme.spacing(1))`,
-    },
+    endButtonContainer: {},
     circularProgress: {
+      color: theme.palette.action.active,
       display: "block",
-      margin: "0 auto",
+      margin: theme.spacing(0, 0.5),
     },
   })
 );
@@ -178,7 +177,7 @@ export default function Image_({
         isDragActive && classes.dragActive
       )}
       alignItems="center"
-      spacing={1}
+      spacing={0.5}
       {...dropzoneProps}
       onClick={undefined}
     >
@@ -190,7 +189,7 @@ export default function Image_({
             value.map((file: FileValue) => (
               <Grid item key={file.downloadURL}>
                 {disabled ? (
-                  <Tooltip title="Click to open">
+                  <Tooltip title="Open">
                     <ButtonBase
                       className={classes.img}
                       onClick={() => window.open(file.downloadURL, "_blank")}
@@ -216,14 +215,13 @@ export default function Image_({
                     </ButtonBase>
                   </Tooltip>
                 ) : (
-                  <Tooltip title="Click to delete">
+                  <Tooltip title="Delete…">
                     <div>
                       <ButtonBase
                         className={classes.img}
                         onClick={() => {
                           requestConfirmation({
-                            title: "Delete Image",
-                            body: "Are you sure you want to delete this image?",
+                            title: "Delete image?",
                             confirm: "Delete",
                             handleConfirm: handleDelete(file.ref),
                           });
@@ -241,7 +239,7 @@ export default function Image_({
                           alignItems="center"
                           className={classes.deleteImgHover}
                         >
-                          <DeleteIcon color="inherit" />
+                          <DeleteIcon color="error" />
                         </Grid>
                       </ButtonBase>
                     </div>
@@ -272,6 +270,7 @@ export default function Image_({
                 e.stopPropagation();
               }}
               color="inherit"
+              style={{ display: "flex" }}
             >
               <AddIcon />
             </IconButton>
@@ -281,7 +280,7 @@ export default function Image_({
             size={24}
             variant={progress === 0 ? "indeterminate" : "determinate"}
             value={progress}
-            thickness={4.6}
+            thickness={4}
             className={classes.circularProgress}
           />
         )}

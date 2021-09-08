@@ -23,7 +23,7 @@ import TabPanel from "@material-ui/lab/TabPanel";
 import TableHeaderButton from "./TableHeaderButton";
 import ImportIcon from "assets/icons/Import";
 
-import FileUploadIcon from "assets/icons/FileUpload";
+import FileUploadIcon from "assets/icons/Upload";
 import CheckIcon from "@material-ui/icons/CheckCircle";
 
 import ImportCsvWizard, {
@@ -89,9 +89,8 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
 
   const [open, setOpen] = useState<HTMLButtonElement | null>(null);
   const [tab, setTab] = useState("upload");
-  const [csvData, setCsvData] = useState<IImportCsvWizardProps["csvData"]>(
-    null
-  );
+  const [csvData, setCsvData] =
+    useState<IImportCsvWizardProps["csvData"]>(null);
   const [error, setError] = useState("");
   const validCsv =
     csvData !== null && csvData?.columns.length > 0 && csvData?.rows.length > 0;

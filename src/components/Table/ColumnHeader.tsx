@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) =>
       cursor: "move",
 
       margin: theme.spacing(0, -1.5),
-      padding: theme.spacing(0, 0.5, 0, 1.5),
+      padding: theme.spacing(0, 0.5, 0, 1),
       width: `calc(100% + ${theme.spacing(1.5 * 2)})`,
     },
     isDragging: { opacity: 0.5 },
@@ -184,35 +184,32 @@ export default function DraggableHeaderRenderer<R>({
       wrap="nowrap"
       onContextMenu={handleOpenMenu}
     >
-      <Tooltip
-        title={
-          <>
-            Click to copy field key:
-            <Typography
-              variant="subtitle2"
-              component="div"
-              sx={{ fontFamily: "fontFamilyMono" }}
-            >
-              {column.key as string}
-            </Typography>
-          </>
-        }
-        enterDelay={1000}
-        placement="bottom-start"
-      >
-        <Grid
-          item
-          onClick={() => {
-            navigator.clipboard.writeText(column.key as string);
-          }}
+      {column.width > 140 && (
+        <Tooltip
+          title={
+            <>
+              Click to copy field key:
+              <br />
+              <b>{column.key as string}</b>
+            </>
+          }
+          enterDelay={1000}
+          placement="bottom-start"
         >
-          {column.editable === false ? (
-            <LockIcon />
-          ) : (
-            getFieldProp("icon", (column as any).type)
-          )}
-        </Grid>
-      </Tooltip>
+          <Grid
+            item
+            onClick={() => {
+              navigator.clipboard.writeText(column.key as string);
+            }}
+          >
+            {column.editable === false ? (
+              <LockIcon />
+            ) : (
+              getFieldProp("icon", (column as any).type)
+            )}
+          </Grid>
+        </Tooltip>
+      )}
 
       <Grid item xs className={classes.columnNameContainer}>
         <Tooltip

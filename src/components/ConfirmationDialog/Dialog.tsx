@@ -32,6 +32,7 @@ export default function Confirmation({
       onClose={handleClose}
       maxWidth={maxWidth}
       TransitionComponent={SlideTransitionMui}
+      style={{ cursor: "default" }}
     >
       <DialogTitle>{title ?? "Are you sure?"}</DialogTitle>
 

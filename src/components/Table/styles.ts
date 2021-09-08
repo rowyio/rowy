@@ -1,17 +1,19 @@
 import { makeStyles, createStyles } from "@material-ui/styles";
 import { alpha, emphasize, darken, lighten } from "@material-ui/core";
 import { APP_BAR_HEIGHT } from "components/Navigation";
-// import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
+import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
 
 export const useStyles = makeStyles((theme) =>
   createStyles({
     tableWrapper: {
       display: "flex",
       flexDirection: "column",
-      // width: `calc(100% - ${DRAWER_COLLAPSED_WIDTH}px)`,
       height: `calc(100vh - ${APP_BAR_HEIGHT}px)`,
 
-      "& > .rdg": { flex: 1 },
+      "& > .rdg": {
+        width: `calc(100% - ${DRAWER_COLLAPSED_WIDTH}px)`,
+        flex: 1,
+      },
 
       [theme.breakpoints.down("sm")]: { width: "100%" },
     },
@@ -52,8 +54,8 @@ export const useStyles = makeStyles((theme) =>
         border: "none",
         backgroundColor: "transparent",
 
-        ...theme.typography.body2,
-        fontSize: "0.8125rem",
+        ...theme.typography.caption,
+        // fontSize: "0.8125rem",
         lineHeight: "inherit !important",
 
         "& .rdg-cell": {
@@ -98,8 +100,8 @@ export const useStyles = makeStyles((theme) =>
         ".rdg-row:hover &": {
           color: theme.palette.text.primary,
           backgroundColor: alpha(
-            theme.palette.text.primary,
-            theme.palette.action.hoverOpacity * 2
+            theme.palette.action.hover,
+            theme.palette.action.hoverOpacity * 1.5
           ),
         },
       },

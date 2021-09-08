@@ -1,4 +1,5 @@
 import _get from "lodash/get";
+import _set from "lodash/set";
 import { TABLE_GROUP_SCHEMAS, TABLE_SCHEMAS } from "config/dbPaths";
 
 /**
@@ -123,18 +124,7 @@ export function deepen(obj) {
 
   // For each object path (property key) in the object
   for (const objectPath in obj) {
-    // Split path into component parts
-    const parts = objectPath.split(".");
-
-    // Create sub-objects along path as needed
-    let target = result;
-    while (parts.length > 1) {
-      const part = parts.shift();
-      target = target[part!] = target[part!] || {};
-    }
-
-    // Set value at end of path
-    target[parts[0]] = obj[objectPath];
+    _set(result, objectPath, obj[objectPath]);
   }
 
   return result;

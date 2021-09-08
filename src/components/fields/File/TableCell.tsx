@@ -9,6 +9,7 @@ import { format } from "date-fns";
 import { makeStyles, createStyles } from "@material-ui/styles";
 import {
   alpha,
+  Stack,
   Grid,
   Tooltip,
   Chip,
@@ -26,7 +27,7 @@ import { useProjectContext } from "contexts/ProjectContext";
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
-      padding: theme.spacing(0, 0.75, 0, 1),
+      padding: theme.spacing(0, 0.5, 0, 1),
       outline: "none",
     },
     dragActive: {
@@ -38,19 +39,21 @@ const useStyles = makeStyles((theme) =>
       "& .row-hover-iconButton": { color: theme.palette.primary.main },
     },
 
-    chipList: { overflow: "hidden" },
-    chipGridItem: {
-      // Truncate so multiple files still visible
-      maxWidth: `calc(100% - ${theme.spacing(3.5)})`,
+    chipList: {
+      overflow: "hidden",
+      flexGrow: 1,
+      marginLeft: "0 !important",
     },
-    chip: { width: "100%" },
+    chip: {
+      width: "100%",
+      height: 24,
+    },
 
-    endButtonContainer: {
-      width: 29 + theme.spacing(1),
-    },
+    endButtonContainer: {},
     circularProgress: {
+      color: theme.palette.action.active,
       display: "block",
-      margin: "0 auto",
+      margin: theme.spacing(0, 0.5),
     },
   })
 );
@@ -103,26 +106,36 @@ export default function File_({
   const dropzoneProps = getRootProps();
 
   return (
-    <Grid
-      container
+    <Stack
+      direction="row"
       className={clsx(
         "cell-collapse-padding",
         classes.root,
         isDragActive && classes.dragActive
       )}
-      wrap="nowrap"
       alignItems="center"
-      spacing={1}
+      spacing={0.5}
       {...dropzoneProps}
       onClick={undefined}
     >
       <input {...getInputProps()} />
 
-      <Grid item xs className={classes.chipList}>
-        <Grid container spacing={1} wrap="nowrap">
+      <div className={classes.chipList}>
+        <Grid container spacing={0.5} wrap="nowrap">
           {Array.isArray(value) &&
-            value.reverse().map((file: FileValue) => (
-              <Grid item key={file.name} className={classes.chipGridItem}>
+            value.map((file: FileValue) => (
+              <Grid
+                item
+                key={file.downloadURL}
+                style={
+                  value.length > 1
+                    ? {
+                        // Truncate so multiple files still visible
+                        maxWidth: `calc(100% - 12px)`,
+                      }
+                    : {}
+                }
+              >
                 <Tooltip
                   title={`File last modified ${format(
                     file.lastModifiedTS,
@@ -153,9 +166,9 @@ export default function File_({
               </Grid>
             ))}
         </Grid>
-      </Grid>
+      </div>
 
-      <Grid item className={classes.endButtonContainer}>
+      <div className={classes.endButtonContainer}>
         {!isLoading ? (
           !disabled && (
             <IconButton
@@ -165,6 +178,7 @@ export default function File_({
                 dropzoneProps.onClick!(e);
                 e.stopPropagation();
               }}
+              style={{ display: "flex" }}
             >
               <UploadIcon />
             </IconButton>
@@ -174,11 +188,11 @@ export default function File_({
             size={24}
             variant={progress === 0 ? "indeterminate" : "determinate"}
             value={progress}
-            thickness={4.6}
+            thickness={4}
             className={classes.circularProgress}
           />
         )}
-      </Grid>
-    </Grid>
+      </div>
+    </Stack>
   );
 }

@@ -38,9 +38,9 @@ const useStyles = makeStyles((theme) =>
       ...theme.typography.subtitle2,
     },
     inputHiddenLabel: {
-      paddingTop: theme.spacing(14 / 8) + 1,
+      paddingTop: theme.spacing(15 / 8),
       paddingBottom: theme.spacing(14 / 8),
-      paddingLeft: theme.spacing(2) + 1,
+      paddingLeft: theme.spacing(17 / 8),
     },
   })
 );

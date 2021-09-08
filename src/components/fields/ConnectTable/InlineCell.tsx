@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme) =>
     chip: {
       display: "flex",
       cursor: "inherit",
+      height: 24,
     },
     chipLabel: { whiteSpace: "nowrap" },
 

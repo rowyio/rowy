@@ -5,7 +5,9 @@ import { Button } from "@material-ui/core";
 import ReloadIcon from "@material-ui/icons/Refresh";
 import OpenInNewIcon from "@material-ui/icons/OpenInNew";
 import meta from "../../package.json";
-class ErrorBoundary extends React.Component<IEmptyStateProps> {
+class ErrorBoundary extends React.Component<
+  IEmptyStateProps & { render?: (errorMessage: string) => React.ReactNode }
+> {
   state = { hasError: false, errorMessage: "" };
 
   static getDerivedStateFromError(error: Error) {
@@ -21,7 +23,8 @@ class ErrorBoundary extends React.Component<IEmptyStateProps> {
 
   render() {
     if (this.state.hasError) {
-      // You can render any custom fallback UI
+      if (this.props.render) return this.props.render(this.state.errorMessage);
+
       return (
         <EmptyState
           message="Something Went Wrong"

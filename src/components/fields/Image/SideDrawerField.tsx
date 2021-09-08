@@ -166,7 +166,9 @@ function ControlledImageUploader({
           <input id={`sidedrawer-field-${column.key}`} {...getInputProps()} />
           <AddIcon />
           <Typography color="inherit">
-            {isDragActive ? "Drop your image here" : "Upload image"}
+            {isDragActive
+              ? "Drop image here"
+              : "Click to upload or drop image here"}
           </Typography>
         </ButtonBase>
       )}
@@ -176,7 +178,7 @@ function ControlledImageUploader({
           value.map((image, i) => (
             <Grid item key={image.downloadURL}>
               {disabled ? (
-                <Tooltip title="Click to open">
+                <Tooltip title="Open">
                   <ButtonBase
                     className={classes.img}
                     onClick={() => window.open(image.downloadURL, "_blank")}
@@ -193,19 +195,18 @@ function ControlledImageUploader({
                       alignItems="center"
                       className={clsx(classes.overlay, classes.deleteImgHover)}
                     >
-                      {disabled ? <OpenIcon /> : <DeleteIcon color="inherit" />}
+                      {disabled ? <OpenIcon /> : <DeleteIcon color="error" />}
                     </Grid>
                   </ButtonBase>
                 </Tooltip>
               ) : (
-                <Tooltip title="Click to delete">
+                <Tooltip title="Delete…">
                   <div>
                     <ButtonBase
                       className={classes.img}
                       onClick={() =>
                         requestConfirmation({
-                          title: "Delete Image",
-                          body: "Are you sure you want to delete this image?",
+                          title: "Delete image?",
                           confirm: "Delete",
                           handleConfirm: () => handleDelete(i),
                         })
@@ -226,7 +227,7 @@ function ControlledImageUploader({
                           classes.deleteImgHover
                         )}
                       >
-                        <DeleteIcon color="inherit" />
+                        <DeleteIcon color="error" />
                       </Grid>
                     </ButtonBase>
                   </div>
