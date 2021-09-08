@@ -1,6 +1,8 @@
 import { IHeavyCellProps } from "../types";
 
 import { makeStyles, createStyles } from "@material-ui/styles";
+import MobileDatePicker from "@material-ui/lab/MobileDatePicker";
+import { TextField } from "@material-ui/core";
 
 import { transformValue } from "./utils";
 
@@ -48,9 +50,9 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-export default function Date_({ column, value }: IHeavyCellProps) {
+export default function Date_({ column, value, disabled }: IHeavyCellProps) {
   const classes = useStyles();
-  const {} = useProjectContext();
+  const { updateCell } = useProjectContext();
 
   const transformedValue = transformValue(value);
 
@@ -66,40 +68,57 @@ export default function Date_({ column, value }: IHeavyCellProps) {
   //   500
   // );
 
-  // if (disabled)
-  return (
-    <div className={classes.disabledCell}>
-      <BasicCell value={value} type={(column as any).type} name={column.key} />
-    </div>
-  );
+  if (disabled)
+    return (
+      <div className={classes.disabledCell}>
+        <BasicCell
+          value={value}
+          type={(column as any).type}
+          name={column.key}
+        />
+      </div>
+    );
 
-  // return (
-  //   <MuiPickersUtilsProvider utils={DateFnsUtils}>
-  //     <KeyboardDatePicker
-  //       value={transformedValue}
-  //       onChange={handleDateChange}
-  //       onClick={(e) => e.stopPropagation()}
-  //       format={column.config?.format ?? DATE_FORMAT}
-  //       fullWidth
-  //       clearable
-  //       keyboardIcon={<DateIcon />}
-  //       className={clsx("cell-collapse-padding", classes.root)}
-  //       inputVariant="standard"
-  //       InputProps={{
-  //         disableUnderline: true,
-  //         classes: { root: classes.inputBase, input: classes.input },
-  //       }}
-  //       InputAdornmentProps={{
-  //         position: "start",
-  //         classes: { root: classes.inputAdornment },
-  //       }}
-  //       KeyboardButtonProps={{
-  //         size: "small",
-  //         classes: { root: !disabled ? "row-hover-iconButton" : undefined },
-  //       }}
-  //       DialogProps={{ onClick: (e) => e.stopPropagation() }}
-  //       disabled={disabled}
-  //     />
-  //   </MuiPickersUtilsProvider>
-  // );
+  return (
+    <MobileDatePicker
+      renderInput={(props) => (
+        <TextField
+          {...props}
+          fullWidth
+          variant="standard"
+          InputProps={{
+            disableUnderline: true,
+            classes: { root: classes.inputBase, input: classes.input },
+          }}
+          // InputAdornmentProps={{
+          //   position: "start",
+          //   classes: { root: classes.inputAdornment },
+          // }}
+        />
+      )}
+      value={transformedValue}
+      onChange={console.log}
+      // onChange={handleDateChange}
+      // onClick={(e) => e.stopPropagation()}
+      // format={column.config?.format ?? DATE_FORMAT}
+      clearable
+      // keyboardIcon={<DateIcon />}
+      // className={clsx("cell-collapse-padding", classes.root)}
+      // inputVariant="standard"
+      // InputProps={{
+      //   disableUnderline: true,
+      //   classes: { root: classes.inputBase, input: classes.input },
+      // }}
+      // InputAdornmentProps={{
+      //   position: "start",
+      //   classes: { root: classes.inputAdornment },
+      // }}
+      // KeyboardButtonProps={{
+      //   size: "small",
+      //   classes: { root: !disabled ? "row-hover-iconButton" : undefined },
+      // }}
+      // DialogProps={{ onClick: (e) => e.stopPropagation() }}
+      // disabled={disabled}
+    />
+  );
 }
