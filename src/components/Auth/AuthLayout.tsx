@@ -1,9 +1,11 @@
+import Helmet from "react-helmet";
 import { use100vh } from "react-div-100vh";
 
-import { Box, Paper, Typography, LinearProgress } from "@material-ui/core";
+import { useTheme, Paper, Typography, LinearProgress } from "@material-ui/core";
 import { alpha } from "@material-ui/core/styles";
 
 import bgPattern from "assets/bg-pattern.svg";
+import bgPatternDark from "assets/bg-pattern-dark.svg";
 import Logo from "assets/Logo";
 
 export interface IAuthLayoutProps {
@@ -12,43 +14,72 @@ export interface IAuthLayoutProps {
 }
 
 export default function AuthLayout({ children, loading }: IAuthLayoutProps) {
+  const theme = useTheme();
   const fullScreenHeight = use100vh() ?? "100vh";
 
   return (
-    <Box
-      sx={{
-        minHeight: fullScreenHeight,
-        backgroundBlendMode: "normal, overlay, normal, normal",
-        // backgroundImage: `
-        //   linear-gradient(to bottom, rgba(255,255,255,0), #fff),
-        //   linear-gradient(155deg, #303030 -4%, ${theme.palette.primary.main} 92%),
-        //   url('${bgPattern}'),
-        //   linear-gradient(161deg, #ecf4ff -31%, #fff4f4 160%)
-        // `,
-        backgroundImage: (theme) => `
-      linear-gradient(to bottom, ${alpha(
-        theme.palette.background.default,
-        0
-      )}, ${theme.palette.background.default} 75%),
-      linear-gradient(155deg, ${theme.palette.primary.main} 10%, ${
-          theme.palette.secondary.main
-        } 90%),
-      url('${bgPattern}'),
-      linear-gradient(161deg, ${alpha(
-        theme.palette.background.default,
-        0.95
-      )} -31%, ${alpha(theme.palette.background.default, 0.98)} 160%)
-    `,
+    <>
+      <Helmet>
+        <style type="text/css">
+          {`
+          body {
+            background-blend-mode: ${
+              // prettier-ignore
+              [
+                "normal",
+                "normal",
+                "normal",
 
-        display: "grid",
-        placeItems: "center",
-        p: 1,
+                "overlay",
 
-        cursor: "default",
-      }}
-    >
+                "normal",
+                "normal",
+              ].join(", ")
+            };
+            background-size: ${
+              // prettier-ignore
+              [
+                "100%",
+                "100%",
+                "100%",
+
+                `${480 * 10 / 14}px`,
+
+                "100%",
+                "100%",
+              ].join(", ")
+            };
+            background-image: ${
+              // prettier-ignore
+              [
+                `radial-gradient(circle   at  85% 100%, ${theme.palette.background.paper} 20%, ${alpha(theme.palette.background.paper, 0)})`,
+                `radial-gradient(80%  80% at  15% 100%, ${alpha("#FA0", 0.1)} 25%, ${alpha("#F0A", 0.1)} 50%, ${alpha("#F0A", 0)} 100%)`,
+                `linear-gradient(to top, ${alpha(theme.palette.background.paper, 1)}, ${alpha(theme.palette.background.paper, 0)})`,
+
+                `url('${theme.palette.mode==="dark" ? bgPatternDark : bgPattern}')`,
+
+                `radial-gradient(60% 180% at 100%  15%, ${alpha("#0FA", 0.3)} 25%, ${alpha("#0AF", 0.2)} 50%, ${alpha("#0AF", 0)} 100%)`,
+                `linear-gradient(${alpha(theme.palette.primary.main, 0.2)}, ${alpha(theme.palette.primary.main, 0.2)})`,
+              ].join(", ")
+            };
+          }
+          
+          #root {
+            display: grid;
+            place-items: center;
+            padding: ${theme.spacing(1)};
+            cursor: default;
+            min-height: ${
+              fullScreenHeight > 0 ? `${fullScreenHeight}px` : "100vh"
+            };
+          }
+          `}
+        </style>
+      </Helmet>
+
       <Paper
         component="main"
+        elevation={8}
         sx={
           {
             position: "relative",
@@ -57,7 +88,6 @@ export default function AuthLayout({ children, loading }: IAuthLayoutProps) {
             maxWidth: 400,
             width: "100%",
             p: 4,
-            bgcolor: "background.paper",
 
             "--spacing-contents": (theme) => theme.spacing(4),
             "& > * + *": { marginTop: "var(--spacing-contents)" },
@@ -92,6 +122,6 @@ export default function AuthLayout({ children, loading }: IAuthLayoutProps) {
           />
         )}
       </Paper>
-    </Box>
+    </>
   );
 }
