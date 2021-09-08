@@ -88,6 +88,7 @@ export const colorsLight = (
       MuiCssBaseline: {
         styleOverrides: {
           ":root": { colorScheme: "light" },
+          ".rdg": { colorScheme: "light" },
         },
       },
       MuiBackdrop: {
@@ -180,6 +181,7 @@ export const colorsDark = (
       MuiCssBaseline: {
         styleOverrides: {
           ":root": { colorScheme: "dark" },
+          ".rdg": { colorScheme: "dark" },
         },
       },
       MuiBackdrop: {
