@@ -3,7 +3,6 @@ import queryString from "query-string";
 import { Link as RouterLink } from "react-router-dom";
 import _camelCase from "lodash/camelCase";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
 import {
   Breadcrumbs as MuiBreadcrumbs,
   BreadcrumbsProps,
@@ -15,41 +14,8 @@ import ArrowRightIcon from "@material-ui/icons/ChevronRight";
 import { useProjectContext } from "contexts/ProjectContext";
 import useRouter from "hooks/useRouter";
 import routes from "constants/routes";
-import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
-
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    ol: {
-      // alignItems: "baseline",
-
-      paddingLeft: theme.spacing(2),
-      // paddingRight: DRAWER_COLLAPSED_WIDTH,
-
-      userSelect: "none",
-    },
-
-    li: {
-      // display: "flex",
-      // alignItems: "center",
-      // lineHeight: 32,
-
-      textTransform: "capitalize",
-      "&:first-of-type": { textTransform: "capitalize" },
-    },
-
-    separator: {
-      // alignSelf: "flex-end",
-      // "& svg": {
-      //   position: "relative",
-      //   bottom: -1.5,
-      // },
-    },
-  })
-);
 
 export default function Breadcrumbs(props: BreadcrumbsProps) {
-  const classes = useStyles();
-
   const { tables, tableState } = useProjectContext();
   const collection = tableState?.tablePath || "";
 
@@ -68,8 +34,19 @@ export default function Breadcrumbs(props: BreadcrumbsProps) {
     <MuiBreadcrumbs
       separator={<ArrowRightIcon />}
       aria-label="sub-table breadcrumbs"
-      classes={classes}
-      // component="div"
+      sx={{
+        "& ol": {
+          pl: 2,
+          userSelect: "none",
+          flexWrap: "nowrap",
+          whiteSpace: "nowrap",
+        },
+
+        "& li": {
+          textTransform: "capitalize",
+          "&:first-of-type": { textTransform: "capitalize" },
+        },
+      }}
       {...(props as any)}
     >
       {/* Section name */}
