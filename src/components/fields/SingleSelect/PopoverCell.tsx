@@ -22,8 +22,8 @@ export default function SingleSelect({
       multiple={false}
       freeText={config.freeText}
       disabled={disabled}
-      label={column.name}
-      labelPlural={column.name}
+      label={column.name as string}
+      labelPlural={column.name as string}
       TextFieldProps={{
         style: { display: "none" },
         SelectProps: {

@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) =>
 export default function RichText({ column, value }: IHeavyCellProps) {
   const { tableState } = useProjectContext();
   const classes = useStyles({
-    width: column.width,
+    width: column.width as number,
     rowHeight: tableState?.config?.rowHeight ?? 44,
   });
 

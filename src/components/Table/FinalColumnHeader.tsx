@@ -13,10 +13,11 @@ const useStyles = makeStyles((theme) =>
         border: "none",
         ".rdg.rdg &": { padding: theme.spacing(0, 0.75) },
 
+        position: "relative",
         "&::before": {
           content: "''",
           display: "block",
-          width: 46,
+          width: 43,
           height: "100%",
 
           position: "absolute",

@@ -13,10 +13,11 @@ const useStyles = makeStyles((theme) =>
   createStyles({
     "@global": {
       ".final-column-cell": {
-        ".rdg .rdg-cell&": {
+        ".rdg.rdg .rdg-cell&": {
           backgroundColor: "var(--header-background-color)",
           borderColor: "var(--header-background-color)",
           color: theme.palette.text.disabled,
+          padding: "var(--cell-padding)",
         },
       },
     },

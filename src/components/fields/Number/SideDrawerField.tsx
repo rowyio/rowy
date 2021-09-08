@@ -20,7 +20,7 @@ export default function Number_({
             variant="filled"
             fullWidth
             margin="none"
-            placeholder={column.name}
+            placeholder={column.name as string}
             onChange={handleChange}
             onBlur={onBlur}
             value={value}

@@ -72,7 +72,7 @@ export default function withPopoverCell(
     const inlineCellRef = useRef<any>(null);
 
     // TODO: Investigate if this still needs to be a state
-    const value = getCellValue(props.row, props.column.key as string);
+    const value = getCellValue(props.row, props.column.key);
     const [localValue, setLocalValue] = useState(value);
     useEffect(() => {
       setLocalValue(value);
@@ -81,7 +81,7 @@ export default function withPopoverCell(
     // Declare basicCell here so props can be reused by HeavyCellComponent
     const basicCellProps = {
       value: localValue,
-      name: props.column.name,
+      name: props.column.name as string,
       type: (props.column as any).type as FieldType,
     };
 
@@ -100,7 +100,7 @@ export default function withPopoverCell(
 
     const handleSubmit = (value: any) => {
       if (updateCell && !options?.readOnly) {
-        updateCell(props.row.ref, props.column.key as string, value);
+        updateCell(props.row.ref, props.column.key, value);
         setLocalValue(value);
       }
     };

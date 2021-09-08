@@ -45,7 +45,12 @@ export default function SideDrawer() {
     setCell!((cell) => ({ column: cell!.column, row }));
 
     const idx = tableState?.columns[cell!.column]?.index;
-    dataGridRef?.current?.selectCell({ rowIdx: row, idx });
+    console.log(
+      "selectCell",
+      { rowIdx: cell!.row, idx },
+      dataGridRef?.current?.selectCell
+    );
+    dataGridRef?.current?.selectCell({ rowIdx: row, idx }, false);
   };
 
   const [urlDocState, dispatchUrlDoc] = useDoc({});

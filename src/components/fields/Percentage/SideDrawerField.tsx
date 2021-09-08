@@ -47,7 +47,7 @@ export default function Percentage({
             variant="filled"
             fullWidth
             margin="none"
-            placeholder={column.name}
+            placeholder={column.name as string}
             onChange={handleChange}
             onBlur={onBlur}
             value={typeof value === "number" ? value * 100 : value}

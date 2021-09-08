@@ -132,7 +132,7 @@ export default function Image_({
       if (imageFile) {
         upload({
           docRef: row.ref,
-          fieldName: column.key as string,
+          fieldName: column.key,
           files: [imageFile],
           previousValue: value,
           onComplete: (newValue) => {
@@ -184,7 +184,7 @@ export default function Image_({
       <input {...getInputProps()} />
 
       <div className={classes.imglistContainer}>
-        <Grid container spacing={1} wrap="nowrap">
+        <Grid container spacing={0.5} wrap="nowrap">
           {Array.isArray(value) &&
             value.map((file: FileValue) => (
               <Grid item key={file.downloadURL}>

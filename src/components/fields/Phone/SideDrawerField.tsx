@@ -18,7 +18,7 @@ export default function Phone({
             variant="filled"
             fullWidth
             margin="none"
-            placeholder={column.name}
+            placeholder={column.name as string}
             onChange={onChange}
             onBlur={onBlur}
             value={value}

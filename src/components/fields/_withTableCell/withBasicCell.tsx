@@ -29,7 +29,7 @@ export default function withBasicCell(
         >
           <BasicCellComponent
             value={value}
-            name={name}
+            name={name as string}
             type={(props.column as any).type as FieldType}
           />
         </CellValidation>

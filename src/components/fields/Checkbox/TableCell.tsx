@@ -68,7 +68,7 @@ export default function Checkbox({
   return (
     <FormControlLabel
       control={component}
-      label={column.name}
+      label={column.name as string}
       labelPlacement="start"
       // className="cell-collapse-padding"
       classes={{ root: classes.root, label: classes.label }}

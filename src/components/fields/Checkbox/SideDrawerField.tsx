@@ -59,7 +59,7 @@ export default function Checkbox({
                   color="success"
                 />
               }
-              label={column.name}
+              label={column.name as string}
               labelPlacement="start"
               classes={{ root: classes.formControlLabel, label: classes.label }}
             />

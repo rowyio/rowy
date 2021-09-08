@@ -47,7 +47,7 @@ export default function withHeavyCell(
     // Declare basicCell here so props can be reused by HeavyCellComponent
     const basicCellProps = {
       value: localValue,
-      name: props.column.name,
+      name: props.column.name as string,
       type: (props.column as any).type as FieldType,
     };
     const basicCell = <BasicCellComponent {...basicCellProps} />;
@@ -67,7 +67,7 @@ export default function withHeavyCell(
 
     const handleSubmit = (value: any) => {
       if (updateCell && !readOnly) {
-        updateCell(props.row.ref, props.column.key as string, value);
+        updateCell(props.row.ref, props.column.key, value);
         setLocalValue(value);
       }
     };

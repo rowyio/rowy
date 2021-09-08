@@ -1,45 +1,35 @@
-import clsx from "clsx";
+import { styled } from "@material-ui/core/styles";
+import { Box } from "@material-ui/core";
+import ErrorIcon from "@material-ui/icons/ErrorOutline";
+import WarningIcon from "@material-ui/icons/WarningAmber";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
 import RichTooltip from "components/RichTooltip";
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    root: {
-      "&&": {
-        position: "absolute",
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-        padding: "var(--cell-padding)",
+const Root = styled(Box)({
+  width: "100%",
+  height: "100%",
+  padding: "var(--cell-padding)",
+  position: "relative",
 
-        overflow: "hidden",
-        contain: "strict",
-        display: "flex",
-        alignItems: "center",
-      },
-    },
+  overflow: "hidden",
+  contain: "strict",
+  display: "flex",
+  alignItems: "center",
+});
 
-    isInvalid: {
-      boxShadow: `inset 0 0 0 2px ${theme.palette.error.main}`,
-    },
+const Dot = styled("div")(({ theme }) => ({
+  position: "absolute",
+  right: -5,
+  top: "50%",
+  transform: "translateY(-50%)",
+  zIndex: 1,
 
-    dot: {
-      position: "absolute",
-      right: -5,
-      top: "50%",
-      transform: "translateY(-50%)",
-      zIndex: 1,
+  width: 12,
+  height: 12,
 
-      width: 12,
-      height: 12,
-
-      borderRadius: "50%",
-      backgroundColor: theme.palette.error.main,
-    },
-  })
-);
+  borderRadius: "50%",
+  backgroundColor: theme.palette.error.main,
+}));
 
 export interface ICellValidationProps
   extends React.DetailedHTMLProps<
@@ -55,13 +45,9 @@ export default function CellValidation({
   value,
   required,
   validationRegex,
-
-  className,
   children,
-  ...props
-}: ICellValidationProps) {
-  const classes = useStyles();
-
+}: // ...props
+ICellValidationProps) {
   const isInvalid = validationRegex && !new RegExp(validationRegex).test(value);
   const isMissing = required && value === undefined;
 
@@ -69,20 +55,21 @@ export default function CellValidation({
     return (
       <>
         <RichTooltip
-          emoji="⛔️"
-          message="Invalid data. This row will not be registered to the database until all the required fields are validated."
+          icon={<ErrorIcon fontSize="inherit" color="error" />}
+          title="Invalid Data"
+          message="This row will not be saved until all the required fields contain valid data"
           placement="right"
-          render={({ openTooltip }) => (
-            <div className={classes.dot} onClick={openTooltip} />
-          )}
+          render={({ openTooltip }) => <Dot onClick={openTooltip} />}
         />
 
-        <div
-          {...props}
-          className={clsx(classes.root, classes.isInvalid, className)}
+        <Root
+          // {...props}
+          sx={{
+            boxShadow: (theme) => `inset 0 0 0 2px ${theme.palette.error.main}`,
+          }}
         >
           {children}
-        </div>
+        </Root>
       </>
     );
 
@@ -90,26 +77,29 @@ export default function CellValidation({
     return (
       <>
         <RichTooltip
-          emoji="⚠️"
-          message="Required field. This row will not be registered to the database until all the required fields contain valid data."
+          icon={<WarningIcon fontSize="inherit" color="warning" />}
+          title="Required Field"
+          message="This row will not be saved until all the required fields contain valid data"
           placement="right"
-          render={({ openTooltip }) => (
-            <div className={classes.dot} onClick={openTooltip} />
-          )}
+          render={({ openTooltip }) => <Dot onClick={openTooltip} />}
         />
 
-        <div
-          {...props}
-          className={clsx(classes.root, classes.isInvalid, className)}
+        <Root
+          // {...props}
+          sx={{
+            boxShadow: (theme) => `inset 0 0 0 2px ${theme.palette.error.main}`,
+          }}
         >
           {children}
-        </div>
+        </Root>
       </>
     );
 
   return (
-    <div {...props} className={clsx(classes.root, className)}>
+    <Root
+    // {...props}
+    >
       {children}
-    </div>
+    </Root>
   );
 }

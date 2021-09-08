@@ -291,7 +291,7 @@ export default function ColumnMenu() {
               {getFieldProp("icon", column.type)}
             </ListItemIcon>
             <ListItemText
-              primary={column.name}
+              primary={column.name as string}
               secondary={
                 <>
                   Key: <span style={{ userSelect: "all" }}>{column.key}</span>

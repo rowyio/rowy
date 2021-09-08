@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useMemo, useState } from "react";
 import _orderBy from "lodash/orderBy";
-
 import _find from "lodash/find";
+import _findIndex from "lodash/findIndex";
 import _difference from "lodash/difference";
 import _get from "lodash/get";
 
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
-import "react-data-grid/dist/react-data-grid.css";
+// import "react-data-grid/dist/react-data-grid.css";
 import DataGrid, {
   Column,
   SelectColumn as _SelectColumn,
@@ -84,7 +84,11 @@ export default function Table() {
               return null;
             },
           ...column,
-          width: column.width ? (column.width > 380 ? 380 : column.width) : 150,
+          width: (column.width as number)
+            ? (column.width as number) > 380
+              ? 380
+              : (column.width as number)
+            : 150,
         }))
         .filter((column) => !userDocHiddenFields.includes(column.key));
 
@@ -95,7 +99,7 @@ export default function Table() {
         {
           isNew: true,
           key: "new",
-          name: "Add column",
+          name: "Add Column",
           type: FieldType.last,
           index: _columns.length ?? 0,
           width: 204,
@@ -119,7 +123,7 @@ export default function Table() {
         tableState?.rows.map((row) =>
           columns.reduce(
             (acc, currColumn) => {
-              if ((currColumn.key as string).includes(".")) {
+              if (currColumn.key.includes(".")) {
                 return {
                   ...acc,
                   [currColumn.key]: _get(row, currColumn.key),
@@ -208,29 +212,29 @@ export default function Table() {
                 });
                 setSelectedRowsSet(newSelectedSet);
               }}
-              onRowsChange={() => {
-                //console.log('onRowsChange',rows)
-              }}
-              onFill={(e) => {
-                console.log("onFill", e);
-                const { columnKey, sourceRow, targetRows } = e;
-                if (updateCell)
-                  targetRows.forEach((row) =>
-                    updateCell(row.ref, columnKey, sourceRow[columnKey])
-                  );
-                return [];
-              }}
+              // onRowsChange={() => {
+              //console.log('onRowsChange',rows)
+              // }}
+              // TODO: onFill={(e) => {
+              //   console.log("onFill", e);
+              //   const { columnKey, sourceRow, targetRows } = e;
+              //   if (updateCell)
+              //     targetRows.forEach((row) =>
+              //       updateCell(row.ref, columnKey, sourceRow[columnKey])
+              //     );
+              //   return [];
+              // }}
               onPaste={(e) => {
                 const copiedValue = e.sourceRow[e.sourceColumnKey];
                 if (updateCell) {
                   updateCell(e.targetRow.ref, e.targetColumnKey, copiedValue);
                 }
               }}
-              onRowClick={(rowIdx, column) => {
+              onRowClick={(row, column) => {
                 if (sideDrawerRef?.current) {
                   sideDrawerRef.current.setCell({
-                    row: rowIdx,
-                    column: column.key as string,
+                    row: _findIndex(tableState.rows, { id: row.id }),
+                    column: column.key,
                   });
                 }
               }}

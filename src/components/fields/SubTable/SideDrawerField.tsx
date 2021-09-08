@@ -25,7 +25,7 @@ export default function SubTable({
   return (
     <Grid container wrap="nowrap">
       <div className={fieldClasses.root}>
-        {documentCount} {column.name}: {label}
+        {documentCount} {column.name as string}: {label}
       </div>
 
       <IconButton

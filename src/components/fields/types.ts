@@ -16,7 +16,7 @@ export interface IFieldConfig {
   icon?: React.ReactNode;
   description?: string;
   setupGuideLink?: string;
-  TableCell: React.ComponentType<FormatterProps>;
+  TableCell: React.ComponentType<FormatterProps<any>>;
   TableEditor: React.ComponentType<EditorProps<any, any>>;
   SideDrawerField: React.ComponentType<ISideDrawerFieldProps>;
   settings?: React.ComponentType<ISettingsProps>;

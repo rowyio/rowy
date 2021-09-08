@@ -1,4 +1,4 @@
-import { Stack, Button } from "@material-ui/core";
+import { Stack, Button, Typography } from "@material-ui/core";
 
 import { isCollectionGroup } from "utils/fns";
 import AddRowIcon from "assets/icons/AddRow";
@@ -105,6 +105,15 @@ export default function TableHeader() {
       {/* Spacer */} <div />
       <HiddenFields />
       <Filters />
+      {/* Spacer */} <div />
+      <Typography
+        variant="body2"
+        color="text.disabled"
+        display="block"
+        style={{ userSelect: "none" }}
+      >
+        Loaded {tableState.rows.length} rows
+      </Typography>
       <div style={{ flexGrow: 1, minWidth: 64 }} />
       <RowHeight />
       {/* Spacer */} <div />

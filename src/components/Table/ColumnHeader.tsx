@@ -2,7 +2,7 @@ import { useRef } from "react";
 import clsx from "clsx";
 import { HeaderRendererProps } from "react-data-grid";
 import { useDrag, useDrop, DragObjectWithType } from "react-dnd";
-import { useCombinedRefs } from "react-data-grid/lib/hooks";
+import useCombinedRefs from "hooks/useCombinedRefs";
 
 import { makeStyles, createStyles } from "@material-ui/styles";
 import {
@@ -36,9 +36,8 @@ const useStyles = makeStyles((theme) =>
 
       cursor: "move",
 
-      margin: theme.spacing(0, -1.5),
       padding: theme.spacing(0, 0.5, 0, 1),
-      width: `calc(100% + ${theme.spacing(1.5 * 2)})`,
+      width: "100%",
     },
     isDragging: { opacity: 0.5 },
     isOver: {
@@ -153,20 +152,16 @@ export default function DraggableHeaderRenderer<R>({
     });
   };
 
-  const isSorted = orderBy?.[0]?.key === (column.key as string);
+  const isSorted = orderBy?.[0]?.key === column.key;
   const isAsc = isSorted && orderBy?.[0]?.direction === "asc";
 
   const handleSortClick = () => {
     if (isAsc) {
-      const ordering: TableOrder = [
-        { key: column.key as string, direction: "desc" },
-      ];
+      const ordering: TableOrder = [{ key: column.key, direction: "desc" }];
 
       tableActions.table.orderBy(ordering);
     } else {
-      const ordering: TableOrder = [
-        { key: column.key as string, direction: "asc" },
-      ];
+      const ordering: TableOrder = [{ key: column.key, direction: "asc" }];
       tableActions.table.orderBy(ordering);
     }
   };
@@ -184,13 +179,13 @@ export default function DraggableHeaderRenderer<R>({
       wrap="nowrap"
       onContextMenu={handleOpenMenu}
     >
-      {column.width > 140 && (
+      {(column.width as number) > 140 && (
         <Tooltip
           title={
             <>
               Click to copy field key:
               <br />
-              <b>{column.key as string}</b>
+              <b>{column.key}</b>
             </>
           }
           enterDelay={1000}
@@ -199,7 +194,7 @@ export default function DraggableHeaderRenderer<R>({
           <Grid
             item
             onClick={() => {
-              navigator.clipboard.writeText(column.key as string);
+              navigator.clipboard.writeText(column.key);
             }}
           >
             {column.editable === false ? (
@@ -215,7 +210,7 @@ export default function DraggableHeaderRenderer<R>({
         <Tooltip
           title={
             <Typography className={classes.columnName} color="inherit">
-              {column.name}
+              {column.name as string}
             </Typography>
           }
           enterDelay={1000}
@@ -253,7 +248,7 @@ export default function DraggableHeaderRenderer<R>({
             component="div"
             color="inherit"
           >
-            {column.name}
+            {column.name as string}
           </Typography>
         </Tooltip>
       </Grid>
@@ -288,7 +283,7 @@ export default function DraggableHeaderRenderer<R>({
           <IconButton
             size="small"
             className={classes.dropdownButton}
-            aria-label={`Show ${column.name} column dropdown`}
+            aria-label={`Show ${column.name as string} column dropdown`}
             color="inherit"
             onClick={handleOpenMenu}
             ref={buttonRef}
@@ -308,7 +303,7 @@ export default function DraggableHeaderRenderer<R>({
   //         cursor: 'move'
   //       }}
   //     >
-  //       {props.column.name}
+  //       {props.column.name as string}
   //     </div>
   //   );
 }

@@ -29,7 +29,7 @@ export default function withSideDrawerEditor(
       <HeavyCell
         {...(props as any)}
         value={getCellValue(row, column.key)}
-        name={column.name}
+        name={column.name as string}
         type={(column as any).type}
         docRef={props.row.ref}
         onSubmit={() => {}}

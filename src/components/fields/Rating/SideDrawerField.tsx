@@ -37,7 +37,7 @@ export default function Rating({
       render={({ onChange, value }) => (
         <Grid container alignItems="center" className={fieldClasses.root}>
           <MuiRating
-            name={column.key as string}
+            name={column.key}
             id={`sidedrawer-field-${column.key}`}
             value={typeof value === "number" ? value : 0}
             disabled={disabled}

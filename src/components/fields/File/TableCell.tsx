@@ -47,6 +47,7 @@ const useStyles = makeStyles((theme) =>
     chip: {
       width: "100%",
       height: 24,
+      display: "flex",
     },
 
     endButtonContainer: {},
@@ -78,7 +79,7 @@ export default function File_({
       if (file) {
         upload({
           docRef: row.ref,
-          fieldName: column.key as string,
+          fieldName: column.key,
           files: [file],
           previousValue: value,
           onComplete: (newValue) => {
@@ -121,7 +122,7 @@ export default function File_({
       <input {...getInputProps()} />
 
       <div className={classes.chipList}>
-        <Grid container spacing={0.5} wrap="nowrap">
+        <Grid container spacing={0.5} wrap="nowrap" style={{ height: "100%" }}>
           {Array.isArray(value) &&
             value.map((file: FileValue) => (
               <Grid

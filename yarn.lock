@@ -13442,10 +13442,10 @@ react-color@^2.17.3, react-color@^2.19.3:
     reactcss "^1.2.0"
     tinycolor2 "^1.4.1"
 
-react-data-grid@7.0.0-canary.30:
-  version "7.0.0-canary.30"
-  resolved "https://registry.yarnpkg.com/react-data-grid/-/react-data-grid-7.0.0-canary.30.tgz#779cf014abcebc41a4635c22519beb3f183e64c1"
-  integrity sha512-NxGqaHnjHBWTh2eBCae5bb57+N3UBy9DQLnlg3JUZ1ggRnruXDl9Qgci6Xg2XwLdJBC5i0B0F0MbeKTucgArJA==
+react-data-grid@^7.0.0-beta.5:
+  version "7.0.0-beta.5"
+  resolved "https://registry.yarnpkg.com/react-data-grid/-/react-data-grid-7.0.0-beta.5.tgz#bc39ce45b7a7f42ebfb66840e0ec1c8619d60f10"
+  integrity sha512-rtN4wnePrQ80UN6lYF/zUQqVVJMT3HW5bTLx9nR5XOKQiG72cGzX2d2+b+e82vUh23zTFBicEnuWSlN9Fa/83Q==
   dependencies:
     clsx "^1.1.1"
 
@@ -13546,6 +13546,11 @@ react-error-overlay@^6.0.9:
   version "6.0.9"
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-6.0.9.tgz#3c743010c9359608c375ecd6bc76f35d93995b0a"
   integrity sha512-nQTTcUu+ATDbrSD1BZHr5kgSD4oF8OFjxun8uAaL8RwPBacGBNPf/yAuVVdx17N8XNzRDMrZ9XcKZHCjPW+9ew==
+
+react-fast-compare@^3.1.1:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-3.2.0.tgz#641a9da81b6a6320f270e89724fb45a0b39e43bb"
+  integrity sha512-rtGImPZ0YyLrscKI9xTpV8psd6I8VAtjKCzQDlzyDvqJA8XOW78TXYQwNRNd8g8JZnDu8q9Fu/1v4HPAVwVdHA==
 
 react-firebaseui@^5.0.2:
   version "5.0.2"

@@ -29,7 +29,7 @@ export default function Rating({
 
   return (
     <MuiRating
-      name={`${row.id}-${column.key as string}`}
+      name={`${row.id}-${column.key}`}
       value={typeof value === "number" ? value : 0}
       onClick={(e) => e.stopPropagation()}
       disabled={disabled}

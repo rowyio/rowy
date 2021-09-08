@@ -34,7 +34,7 @@ export default function SubTable({ column, row }: IHeavyCellProps) {
       className={clsx("cell-collapse-padding", classes.root)}
     >
       <Grid item xs className={classes.labelContainer}>
-        {documentCount} {column.name}: {label}
+        {documentCount} {column.name as string}: {label}
       </Grid>
 
       <Grid item>

@@ -52,7 +52,7 @@ export default function ParamsDialog({
   return (
     <FormDialog
       onClose={handleClose}
-      title={`${column.name}`}
+      title={`${column.name as string}`}
       fields={fields}
       values={{}}
       onSubmit={handleRun}

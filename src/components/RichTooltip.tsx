@@ -2,13 +2,19 @@ import React, { useState } from "react";
 import clsx from "clsx";
 
 import { makeStyles, createStyles } from "@material-ui/styles";
-import { Tooltip, TooltipProps, Button, ButtonProps } from "@material-ui/core";
+import {
+  Tooltip,
+  TooltipProps,
+  Typography,
+  Button,
+  ButtonProps,
+} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
     tooltip: {
       backgroundColor: theme.palette.background.default,
-      boxShadow: theme.shadows[2],
+      boxShadow: theme.shadows[8],
 
       ...theme.typography.body2,
       color: theme.palette.text.primary,
@@ -27,42 +33,42 @@ const useStyles = makeStyles((theme) =>
       cursor: "default",
 
       display: "grid",
-      gridTemplateColumns: "40px auto",
-      gap: theme.spacing(1, 2),
+      gridTemplateColumns: "48px auto",
+      gap: theme.spacing(1, 1.5),
     },
-    emoji: {
-      fontSize: `${40 / 16}rem`,
-      fontWeight: 400,
-      fontFamily:
-        "apple color emoji, segoe ui emoji, noto color emoji, android emoji, emojisymbols, emojione mozilla, twemoji mozilla, segoe ui symbol",
+    icon: {
+      marginTop: theme.spacing(-0.5),
+      fontSize: `${48 / 16}rem`,
     },
     message: {
       alignSelf: "center",
     },
     dismissButton: {
-      marginLeft: theme.spacing(-1),
       gridColumn: 2,
       justifySelf: "flex-start",
     },
   })
 );
 
-export interface IRichTooltipProps extends Partial<TooltipProps> {
+export interface IRichTooltipProps
+  extends Partial<Omit<TooltipProps, "title">> {
   render: (props: {
     openTooltip: () => void;
     closeTooltip: () => void;
     toggleTooltip: () => void;
   }) => TooltipProps["children"];
 
-  emoji?: React.ReactNode;
-  message: React.ReactNode;
+  icon?: React.ReactNode;
+  title: React.ReactNode;
+  message?: React.ReactNode;
   dismissButtonText?: React.ReactNode;
   dismissButtonProps?: Partial<ButtonProps>;
 }
 
 export default function RichTooltip({
   render,
-  emoji,
+  icon,
+  title,
   message,
   dismissButtonText,
   dismissButtonProps,
@@ -86,11 +92,16 @@ export default function RichTooltip({
       classes={{ tooltip: classes.tooltip, arrow: classes.arrow }}
       title={
         <div className={classes.grid} onClick={closeTooltip}>
-          <span className={classes.emoji}>{emoji}</span>
+          <span className={classes.icon}>{icon}</span>
 
-          <div className={classes.message}>{message}</div>
+          <div className={classes.message}>
+            <Typography variant="subtitle2" gutterBottom>
+              {title}
+            </Typography>
+            <Typography>{message}</Typography>
+          </div>
 
-          {dismissButtonText && (
+          {dismissButtonText ? (
             <Button
               {...dismissButtonProps}
               onClick={closeTooltip}
@@ -101,6 +112,14 @@ export default function RichTooltip({
             >
               {dismissButtonText}
             </Button>
+          ) : (
+            <Typography
+              variant="caption"
+              color="text.disabled"
+              className={classes.dismissButton}
+            >
+              Click to dismiss
+            </Typography>
           )}
         </div>
       }

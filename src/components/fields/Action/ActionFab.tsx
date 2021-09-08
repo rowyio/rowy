@@ -120,7 +120,7 @@ export default function ActionFab({
           : needsConfirmation
           ? () =>
               requestConfirmation({
-                title: `${column.name} Confirmation`,
+                title: `${column.name as string} Confirmation`,
                 body: (actionState === "undo" && config.undoConfirmation
                   ? config.undoConfirmation
                   : config.confirmation

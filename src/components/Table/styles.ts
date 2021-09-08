@@ -61,10 +61,11 @@ export const useStyles = makeStyles((theme) =>
         "& .rdg-cell": {
           display: "flex",
           alignItems: "center",
-          padding: "var(--cell-padding)",
+          padding: 0,
 
           overflow: "visible",
           contain: "none",
+          position: "relative",
         },
 
         "& .rdg-cell-frozen-last": {

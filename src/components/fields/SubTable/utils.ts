@@ -15,7 +15,7 @@ export const useSubTableData = (
         else return row[curr];
       }, "")
     : "";
-  const fieldName = column.key as string;
+  const fieldName = column.key;
   const documentCount: string = row[fieldName]?.count ?? "";
 
   const router = useRouter();
