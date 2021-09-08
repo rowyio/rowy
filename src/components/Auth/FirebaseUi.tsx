@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme) =>
         },
 
         "& .mdl-button": {
-          borderRadius: 24,
+          borderRadius: (theme.shape.borderRadius as number) * (48 / 32),
           ...theme.typography.button,
         },
         "& .mdl-button--raised": { boxShadow: "none" },
@@ -108,7 +108,7 @@ const useStyles = makeStyles((theme) =>
             zIndex: 0,
 
             backgroundColor: "#fff",
-            borderRadius: "50%",
+            borderRadius: theme.shape.borderRadius,
           },
           "& .firebaseui-idp-icon-wrapper img": {
             position: "relative",
@@ -162,8 +162,8 @@ const useStyles = makeStyles((theme) =>
       [theme.breakpoints.down("sm")]: { display: "block" },
 
       textAlign: "center",
-      color: theme.palette.text.disabled,
-      marginBottom: theme.spacing(-1),
+      color: theme.palette.text.primary,
+      margin: theme.spacing(3, 0, -3),
     },
 
     skeleton: {
@@ -172,7 +172,7 @@ const useStyles = makeStyles((theme) =>
       "& > *": {
         width: "100%",
         height: 48,
-        borderRadius: 24,
+        borderRadius: (theme.shape.borderRadius as number) * (48 / 32),
       },
 
       "& > * + *": {

@@ -97,15 +97,7 @@ export default function AuthLayout({ children, loading }: IAuthLayoutProps) {
         }
       >
         <Logo />
-        <Typography
-          variant="body2"
-          sx={{
-            display: "block",
-            mt: 1,
-
-            color: "text.disabled",
-          }}
-        >
+        <Typography variant="body2" color="text.disabled" display="block">
           Project: {process.env.REACT_APP_FIREBASE_PROJECT_ID}
         </Typography>
         {children}
