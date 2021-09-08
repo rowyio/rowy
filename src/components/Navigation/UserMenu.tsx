@@ -14,7 +14,7 @@ import {
   Divider,
   Grow,
 } from "@material-ui/core";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import AccountCircleIcon from "@material-ui/icons/AccountCircleOutlined";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 
 import { useAppContext } from "contexts/AppContext";
@@ -25,16 +25,8 @@ export default function UserMenu(props: IconButtonProps) {
   const [open, setOpen] = useState(false);
   const [themeSubMenu, setThemeSubMenu] = useState<EventTarget | null>(null);
 
-  const {
-    currentUser,
-    userDoc,
-    theme,
-    themeOverridden,
-    setTheme,
-    setThemeOverridden,
-  } = useAppContext();
-  if (!currentUser || !userDoc || !userDoc?.state?.doc)
-    return <div style={{ width: 48 - 12, height: 48 }} />;
+  const { userDoc, theme, themeOverridden, setTheme, setThemeOverridden } =
+    useAppContext();
 
   const displayName = userDoc?.state?.doc?.user?.displayName;
   const avatarUrl = userDoc?.state?.doc?.user?.photoURL;
