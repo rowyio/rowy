@@ -10,10 +10,23 @@ import {
   ButtonProps,
 } from "@material-ui/core";
 
+import { colord, extend } from "colord";
+import mixPlugin from "colord/plugins/lch";
+extend([mixPlugin]);
+
 const useStyles = makeStyles((theme) =>
   createStyles({
+    popper: {
+      zIndex: theme.zIndex.drawer - 1,
+    },
+
     tooltip: {
-      backgroundColor: theme.palette.background.default,
+      backgroundColor:
+        theme.palette.mode === "light"
+          ? theme.palette.background.default
+          : colord(theme.palette.background.paper)
+              .mix("#fff", 0.16)
+              .toHslString(),
       boxShadow: theme.shadows[8],
 
       ...theme.typography.body2,
@@ -23,8 +36,13 @@ const useStyles = makeStyles((theme) =>
 
     arrow: {
       "&::before": {
-        backgroundColor: theme.palette.background.default,
-        boxShadow: theme.shadows[2],
+        backgroundColor:
+          theme.palette.mode === "light"
+            ? theme.palette.background.default
+            : colord(theme.palette.background.paper)
+                .mix("#fff", 0.16)
+                .toHslString(),
+        boxShadow: theme.shadows[8],
       },
     },
 
@@ -89,7 +107,11 @@ export default function RichTooltip({
       arrow
       open={open}
       onClose={closeTooltip}
-      classes={{ tooltip: classes.tooltip, arrow: classes.arrow }}
+      classes={{
+        popper: classes.popper,
+        tooltip: classes.tooltip,
+        arrow: classes.arrow,
+      }}
       title={
         <div className={classes.grid} onClick={closeTooltip}>
           <span className={classes.icon}>{icon}</span>

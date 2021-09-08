@@ -1,7 +1,11 @@
 import { makeStyles, createStyles } from "@material-ui/styles";
-import { alpha, emphasize, darken, lighten } from "@material-ui/core";
+import { alpha, darken, lighten } from "@material-ui/core";
 import { APP_BAR_HEIGHT } from "components/Navigation";
 import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
+
+import { colord, extend } from "colord";
+import mixPlugin from "colord/plugins/lch";
+extend([mixPlugin]);
 
 export const useStyles = makeStyles((theme) =>
   createStyles({
@@ -29,12 +33,18 @@ export const useStyles = makeStyles((theme) =>
         "--color": theme.palette.text.primary,
         "--border-color": theme.palette.divider,
         // "--summary-border-color": "#aaa",
-        "--background-color": theme.palette.background.paper,
+        "--background-color":
+          theme.palette.mode === "light"
+            ? theme.palette.background.paper
+            : colord(theme.palette.background.paper)
+                .mix("#fff", 0.04)
+                .alpha(1)
+                .toHslString(),
         "--header-background-color": theme.palette.background.default,
-        "--row-hover-background-color": emphasize(
-          theme.palette.background.paper,
-          0.04
-        ),
+        "--row-hover-background-color": colord(theme.palette.background.paper)
+          .mix(theme.palette.action.hover, theme.palette.action.hoverOpacity)
+          .alpha(1)
+          .toHslString(),
         "--row-selected-background-color":
           theme.palette.mode === "light"
             ? lighten(theme.palette.primary.main, 0.9)
