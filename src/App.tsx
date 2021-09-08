@@ -68,11 +68,6 @@ export default function App() {
                         />
                         <Route
                           exact
-                          path={routes.impersonatorAuth}
-                          render={() => <ImpersonatorAuthPage />}
-                        />
-                        <Route
-                          exact
                           path={routes.authSetup}
                           render={() => <AuthSetupGuidePage />}
                         />
@@ -104,10 +99,16 @@ export default function App() {
                             routes.projectSettings,
                             routes.userSettings,
                             routes.userManagement,
+                            routes.impersonatorAuth,
                           ]}
                           render={() => (
                             <ProjectContextProvider>
                               <Switch>
+                                <Route
+                                  exact
+                                  path={routes.impersonatorAuth}
+                                  render={() => <ImpersonatorAuthPage />}
+                                />
                                 <PrivateRoute
                                   exact
                                   path={routes.home}
