@@ -23,6 +23,7 @@ import Button from "@material-ui/core/Button";
 import routes from "constants/routes";
 import { SETTINGS } from "config/dbPaths";
 import { name as appName } from "@root/package.json";
+import { RunRoutes } from "@src/constants/runRoutes";
 
 export default function FieldSettings(props: IMenuModalProps) {
   const { name, fieldName, type, open, config, handleClose, handleSave } =
@@ -35,7 +36,7 @@ export default function FieldSettings(props: IMenuModalProps) {
 
   const { requestConfirmation } = useConfirmation();
   const { enqueueSnackbar } = useSnackbar();
-  const { tableState } = useProjectContext();
+  const { tableState, rowyRun } = useProjectContext();
   const snackLog = useSnackLogContext();
   const appContext = useAppContext();
 
@@ -123,44 +124,14 @@ export default function FieldSettings(props: IMenuModalProps) {
                 confirm: "Deploy",
                 cancel: "Later",
                 handleConfirm: async () => {
-                  const settingsDoc = await db.doc(SETTINGS).get();
-                  const buildUrl = settingsDoc.get("buildUrl");
-                  if (!buildUrl) {
-                    enqueueSnackbar(`${appName} Run is not set up`, {
-                      variant: "error",
-                      action: (
-                        <Button
-                          variant="contained"
-                          color="secondary"
-                          component={"a"}
-                          target="_blank"
-                          href={routes.projectSettings}
-                          rel="noopener noreferrer"
-                        >
-                          Go to Settings
-                        </Button>
-                      ),
-                    });
-                  }
-                  const userTokenInfo =
-                    await appContext?.currentUser?.getIdTokenResult();
-                  const userToken = userTokenInfo?.token;
-                  try {
-                    snackLog.requestSnackLog();
-                    const response = await fetch(buildUrl, {
-                      method: "POST",
-                      headers: {
-                        "Content-Type": "application/json",
-                      },
-                      body: JSON.stringify({
-                        configPath: tableState?.config.tableConfig.path,
-                        token: userToken,
-                      }),
-                    });
-                    const data = await response.json();
-                  } catch (e) {
-                    console.error(e);
-                  }
+                  if (!rowyRun) return;
+                  rowyRun({
+                    route: RunRoutes.buildFunction,
+                    body: {
+                      configPath: tableState?.config.tableConfig.path,
+                    },
+                    params: [],
+                  });
                 },
               });
             }
