@@ -17,7 +17,7 @@ export const useStyles = makeStyles((theme) =>
       "& > .rdg": {
         width: `calc(100% - ${DRAWER_COLLAPSED_WIDTH}px)`,
         flex: 1,
-        paddingBottom: "env(safe-area-inset-bottom)",
+        paddingBottom: `max(env(safe-area-inset-bottom), ${theme.spacing(2)})`,
       },
 
       [theme.breakpoints.down("sm")]: { width: "100%" },
