@@ -7,15 +7,17 @@ import AuthLayout from "components/Auth/AuthLayout";
 import FirebaseUi from "components/Auth/FirebaseUi";
 
 import { signOut } from "utils/auth";
-import { ImpersonatorAuth } from "../../firebase/callables";
 import { auth } from "../../firebase";
+import { useProjectContext } from "@src/contexts/ProjectContext";
+import { RunRoutes } from "@src/constants/runRoutes";
 
 export default function ImpersonatorAuthPage() {
   const { enqueueSnackbar } = useSnackbar();
+  const { rowyRun } = useProjectContext();
 
   useEffect(() => {
     //sign out user on initial load
-    signOut();
+    // signOut();
   }, []);
 
   const [loading, setLoading] = useState(false);
@@ -23,15 +25,23 @@ export default function ImpersonatorAuthPage() {
   const [email, setEmail] = useState("");
 
   const handleAuth = async (email: string) => {
+    console.log("!rowyRun");
+
+    if (!rowyRun) return;
+    console.log("rowyRun");
     setLoading(true);
-    const resp = await ImpersonatorAuth(email);
+    const resp = await rowyRun({
+      route: RunRoutes.impersonateUser,
+      params: [email],
+    });
+    console.log(resp);
     setLoading(false);
-    if (resp.data.success) {
-      enqueueSnackbar(resp.data.message, { variant: "success" });
-      await auth.signInWithCustomToken(resp.data.jwt);
+    if (resp.success) {
+      enqueueSnackbar(resp.message, { variant: "success" });
+      await auth.signInWithCustomToken(resp.token);
       window.location.href = "/";
     } else {
-      enqueueSnackbar(resp.data.message, { variant: "error" });
+      enqueueSnackbar(resp.error.message, { variant: "error" });
     }
   };
 

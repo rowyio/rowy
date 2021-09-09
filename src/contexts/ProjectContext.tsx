@@ -11,6 +11,7 @@ import { useAppContext } from "./AppContext";
 import { SideDrawerRef } from "components/SideDrawer";
 import { ColumnMenuRef } from "components/Table/ColumnMenu";
 import { ImportWizardRef } from "components/Wizards/ImportWizard";
+import { RunRoute } from "@src/constants/runRoutes";
 
 export type Table = {
   id: string;
@@ -66,6 +67,12 @@ interface ProjectContextProps {
   columnMenuRef: React.MutableRefObject<ColumnMenuRef | undefined>;
   // A ref ot the import wizard. Prevents unnecessary re-renders
   importWizardRef: React.MutableRefObject<ImportWizardRef | undefined>;
+
+  rowyRun: (args: {
+    route: RunRoute;
+    body?: any;
+    params: string[];
+  }) => Promise<any>;
 }
 
 const ProjectContext = React.createContext<Partial<ProjectContextProps>>({});
@@ -96,6 +103,7 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
   const [userClaims, setUserClaims] = useState<any>();
 
   const { currentUser } = useAppContext();
+  const [authToken, setAuthToken] = useState("");
   useEffect(() => {
     const { tables } = settings;
     if (tables && userRoles && !sections) {
@@ -131,6 +139,7 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
   useEffect(() => {
     if (currentUser && !userClaims) {
       currentUser.getIdTokenResult(true).then((results) => {
+        setAuthToken(results.token);
         setUserRoles(results.claims.roles || []);
         setUserClaims(results.claims);
       });
@@ -172,6 +181,38 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
     );
   };
 
+  // rowyRun access
+  const rowyRun = async ({
+    route,
+    body,
+    params,
+  }: {
+    route: RunRoute;
+    body?: any;
+    params: string[];
+  }) => {
+    const { method, path } = route;
+    let url =
+      //'http://localhost:8080'
+      settings.doc.rowyRunUrl + path;
+    if (params && params.length > 0) url = url + "/" + params.join("/");
+    const response = await fetch(url, {
+      method: method, // *GET, POST, PUT, DELETE, etc.
+      mode: "cors", // no-cors, *cors, same-origin
+      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+      credentials: "same-origin", // include, *same-origin, omit
+      headers: {
+        "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: "Bearer " + authToken,
+      },
+      redirect: "follow", // manual, *follow, error
+      referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+      body: method !== "GET" ? JSON.stringify(body) : null, // body data type must match "Content-Type" header
+    });
+    console.log(response);
+    return response.json(); // parses JSON response into native JavaScript objects
+  };
   // A ref to the data grid. Contains data grid functions
   const dataGridRef = useRef<DataGridHandle>(null);
   const sideDrawerRef = useRef<SideDrawerRef>();
@@ -193,6 +234,7 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
         sideDrawerRef,
         columnMenuRef,
         importWizardRef,
+        rowyRun,
       }}
     >
       {children}

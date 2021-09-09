@@ -66,7 +66,7 @@ export default function CloudRun({
       <TextField
         label="Cloud Run Instance URL"
         id="cloudRunUrl"
-        defaultValue={settings.cloudRunUrl}
+        defaultValue={settings.rowyRunUrl}
         onChange={(e) => updateSettings({ cloudRunUrl: e.target.value })}
         fullWidth
         placeholder="https://<id>.run.app"

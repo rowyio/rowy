@@ -12,6 +12,7 @@ import { cloudFunction } from "firebase/callables";
 import { formatPath } from "utils/fns";
 import { useConfirmation } from "components/ConfirmationDialog";
 import { useActionParams } from "./FormDialog/Context";
+import { RunRoutes } from "@src/constants/runRoutes";
 
 const replacer = (data: any) => (m: string, key: string) => {
   const objKey = key.split(":")[0];
@@ -49,7 +50,7 @@ export default function ActionFab({
   const { requestConfirmation } = useConfirmation();
   const { enqueueSnackbar } = useSnackbar();
   const { requestParams } = useActionParams();
-  const { tableState } = useProjectContext();
+  const { tableState, rowyRun } = useProjectContext();
   const { ref } = row;
   const { config } = column as any;
 
@@ -64,7 +65,8 @@ export default function ActionFab({
 
   const callableName: string =
     (column as any).callableName ?? config.callableName ?? "actionScript";
-  const handleRun = (actionParams = null) => {
+  const handleRun = async (actionParams = null) => {
+    if (!rowyRun) return;
     setIsRunning(true);
 
     const data = {
@@ -74,27 +76,34 @@ export default function ActionFab({
       schemaDocPath: formatPath(tableState?.tablePath ?? ""),
       actionParams,
     };
-    cloudFunction(
-      callableName,
-      data,
-      async (response) => {
-        const { message, cellValue, success } = response.data;
-        setIsRunning(false);
-        enqueueSnackbar(JSON.stringify(message), {
-          variant: success ? "success" : "error",
-        });
-        if (cellValue && cellValue.status) {
-          await ref.update({
-            [column.key]: cellValue,
-          });
-        }
-      },
-      (error) => {
-        console.error("ERROR", callableName, error);
-        setIsRunning(false);
-        enqueueSnackbar(JSON.stringify(error), { variant: "error" });
-      }
-    );
+
+    const resp = await rowyRun({
+      route: RunRoutes.actionScript,
+      body: data,
+      params: [],
+    });
+    const { message, success } = resp;
+    setIsRunning(false);
+    enqueueSnackbar(JSON.stringify(message), {
+      variant: success ? "success" : "error",
+    });
+
+    // cloudFunction(
+    //   callableName,
+    //   data,
+    //   async (response) => {
+    //     const { message, cellValue, success } = response.data;
+    //     setIsRunning(false);
+    //     enqueueSnackbar(JSON.stringify(message), {
+    //       variant: success ? "success" : "error",
+    //     });
+    //   },
+    //   (error) => {
+    //     console.error("ERROR", callableName, error);
+    //     setIsRunning(false);
+    //     enqueueSnackbar(JSON.stringify(error), { variant: "error" });
+    //   }
+    // );
   };
   const hasRan = value && value.status;
 
