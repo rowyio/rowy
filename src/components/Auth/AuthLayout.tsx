@@ -88,6 +88,7 @@ export default function AuthLayout({ children, loading }: IAuthLayoutProps) {
             maxWidth: 400,
             width: "100%",
             p: 4,
+            boxShadow: 4,
 
             "--spacing-contents": (theme) => theme.spacing(4),
             "& > * + *": { marginTop: "var(--spacing-contents)" },

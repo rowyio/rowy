@@ -60,7 +60,15 @@ const useStyles = makeStyles((theme) =>
           borderRadius: (theme.shape.borderRadius as number) * (48 / 32),
           ...theme.typography.button,
         },
-        "& .mdl-button--raised": { boxShadow: "none" },
+        "& .mdl-button--raised": {
+          boxShadow: `0 -1px 0 0 rgba(0, 0, 0, 0.12) inset, ${theme.shadows[2]}`,
+          "&:hover": {
+            boxShadow: `0 -1px 0 0 rgba(0, 0, 0, 0.12) inset, ${theme.shadows[4]}`,
+          },
+          "&:active, &:focus": {
+            boxShadow: `0 -1px 0 0 rgba(0, 0, 0, 0.12) inset, ${theme.shadows[8]}`,
+          },
+        },
         "& .mdl-card": {
           boxShadow: "none",
           minHeight: 0,
