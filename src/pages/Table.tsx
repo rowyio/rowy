@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useLocation, useRouteMatch } from "react-router-dom";
 import queryString from "query-string";
 import _isEmpty from "lodash/isEmpty";
 import _find from "lodash/find";
@@ -16,29 +17,27 @@ import EmptyTable from "components/Table/EmptyTable";
 import { useProjectContext } from "contexts/ProjectContext";
 import { useAppContext } from "contexts/AppContext";
 import { TableFilter } from "hooks/useTable";
-import useRouter from "hooks/useRouter";
 import { DocActions } from "hooks/useDoc";
 import ActionParamsProvider from "components/fields/Action/FormDialog/Provider";
 
 export default function TablePage() {
-  const router = useRouter();
-  const tableCollection = decodeURIComponent(router.match.params.id);
+  const location = useLocation();
+  const match = useRouteMatch<{ id: string }>();
+  const urlPath = decodeURIComponent(match.params.id);
+  const urlPathSplit = urlPath.split("/");
 
   const { tableState, tableActions, sideDrawerRef, tables } =
     useProjectContext();
   const { userDoc } = useAppContext();
 
   // Find the matching section for the current route
-  const currentSection = _find(tables, [
-    "collection",
-    tableCollection?.split("/")[0],
-  ])?.section;
-  const currentTable = tableCollection?.split("/")[0];
-  const tableName =
-    _find(tables, ["collection", currentTable])?.name || currentTable;
+  const currentTableId = urlPathSplit[0];
+  const currentSection = _find(tables, ["id", currentTableId])?.section;
+  const table = _find(tables, ["id", currentTableId]);
+  const tableName = table?.name || currentTableId;
 
   let filters: TableFilter[] = [];
-  const parsed = queryString.parse(router.location.search);
+  const parsed = queryString.parse(location.search);
   if (typeof parsed.filters === "string") {
     filters = JSON.parse(parsed.filters);
     // TODO: json schema validator
@@ -46,24 +45,26 @@ export default function TablePage() {
 
   useEffect(() => {
     if (
+      table &&
       tableActions &&
       tableState &&
-      tableState.tablePath !== tableCollection
+      tableState.config.id !== urlPath
     ) {
-      tableActions.table.set(tableCollection, filters);
+      // Support multiple tables for top-level collection but unique sub-table configs
+      const collection = [table.collection, ...urlPathSplit.slice(1)].join("/");
+
+      tableActions.table.set(urlPath, collection, filters);
       if (filters && filters.length !== 0) {
         userDoc.dispatch({
           action: DocActions.update,
-          data: {
-            tables: { [`${tableState.tablePath}`]: { filters } },
-          },
+          data: { tables: { [urlPath]: { filters } } },
         });
       }
       if (sideDrawerRef?.current) sideDrawerRef.current.setCell!(null);
     }
-  }, [tableCollection]);
+  }, [urlPath, tableActions, tableState, table]);
 
-  if (!tableState) return null;
+  if (!tableState || !table) return null;
 
   return (
     <Navigation
@@ -81,7 +82,7 @@ export default function TablePage() {
           <EmptyTable />
         ) : (
           <>
-            <Table key={tableCollection} />
+            <Table key={currentTableId} />
             <Hidden smDown>
               <SideDrawer />
             </Hidden>

@@ -2,10 +2,9 @@ import { db } from "../../firebase";
 import { useSnackbar } from "notistack";
 
 import Button from "@material-ui/core/Button";
-import { useEffect, useReducer, useContext } from "react";
+import { useEffect, useReducer } from "react";
 import _isEqual from "lodash/isEqual";
 import _merge from "lodash/merge";
-import _find from "lodash/find";
 import firebase from "firebase/app";
 import { TableFilter, TableOrder } from ".";
 
@@ -13,7 +12,6 @@ import {
   isCollectionGroup,
   generateSmallerId,
   missingFieldsReducer,
-  deepMerge,
   deepen,
 } from "utils/fns";
 import { projectId } from "../../firebase";
@@ -103,14 +101,14 @@ const tableInitialState = {
   cap: CAP,
 };
 
-const useTableData = (initialOverrides: any) => {
+const useTableData = () => {
   const { enqueueSnackbar } = useSnackbar();
   const { currentUser } = useAppContext();
 
-  const [tableState, tableDispatch] = useReducer(tableReducer, {
-    ...tableInitialState,
-    ...initialOverrides,
-  });
+  const [tableState, tableDispatch] = useReducer(
+    tableReducer,
+    tableInitialState
+  );
   const [rows, rowsDispatch] = useReducer(rowsReducer, []);
 
   /**  set collection listener

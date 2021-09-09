@@ -8,8 +8,6 @@ import { db } from "../../../firebase";
 import { isCollectionGroup } from "utils/fns";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-import { DialogContentText } from "@material-ui/core";
-
 import Modal from "components/Modal";
 
 export default function ReExecute() {

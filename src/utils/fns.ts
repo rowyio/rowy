@@ -94,6 +94,7 @@ export const generateBiggerId = (id: string) => {
   else return id[0] + generateBiggerId(id.substr(1, id.length - 1));
 };
 
+// Gets sub-table ID in $1
 const formatPathRegex = /\/[^\/]+\/([^\/]+)/g;
 
 export const formatPath = (tablePath: string) => {

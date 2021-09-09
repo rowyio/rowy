@@ -40,12 +40,13 @@ const useTableConfig = (tablePath?: string) => {
   /**  used for specifying the table in use
    *  @param table firestore collection path
    */
-  const setTable = (table: string) => {
+  const setTable = (id: string) => {
     documentDispatch({
-      path: formatPath(table),
+      id,
+      path: formatPath(id),
       columns: [],
       doc: null,
-      ref: db.doc(formatPath(table)),
+      ref: db.doc(formatPath(id)),
       loading: true,
     });
   };
