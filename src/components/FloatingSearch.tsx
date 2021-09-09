@@ -58,7 +58,11 @@ export default function FloatingSearch({
           ...paperSx,
 
           ...(dockedTransition
-            ? { width: `calc(100vw - ${(48 + 8) * 2}px)` }
+            ? {
+                width: `calc(100vw - ${
+                  (48 + 8) * 2
+                }px - env(safe-area-inset-left) - env(safe-area-inset-right))`,
+              }
             : {}),
 
           ...(docked ? { boxShadow: "none" } : {}),

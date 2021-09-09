@@ -48,7 +48,7 @@ export default function NavDrawer({
         direction="row"
         spacing={1.5}
         alignItems="center"
-        sx={{ height: APP_BAR_HEIGHT, pl: 0.5 }}
+        sx={{ height: APP_BAR_HEIGHT, flexShrink: 0, pl: 0.5 }}
       >
         <IconButton
           aria-label="Close navigation drawer"

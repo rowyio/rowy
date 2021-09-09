@@ -54,7 +54,35 @@ export const components = (theme: Theme): ThemeOptions => {
 
       MuiContainer: {
         defaultProps: { maxWidth: "xl" },
+        styleOverrides: {
+          root: {
+            paddingLeft: `max(${theme.spacing(2)}, env(safe-area-inset-left))`,
+            paddingRight: `max(${theme.spacing(
+              2
+            )}, env(safe-area-inset-right))`,
+            [theme.breakpoints.up("sm")]: {
+              paddingLeft: `max(${theme.spacing(
+                3
+              )}, env(safe-area-inset-left))`,
+              paddingRight: `max(${theme.spacing(
+                3
+              )}, env(safe-area-inset-right))`,
+            },
+
+            marginBottom: `env(safe-area-inset-bottom)`,
+          },
+        },
       },
+
+      MuiDrawer: {
+        styleOverrides: {
+          paper: { paddingBottom: "env(safe-area-inset-bottom)" },
+          paperAnchorLeft: { paddingLeft: "env(safe-area-inset-left)" },
+          paperAnchorRight: { paddingRight: "env(safe-area-inset-right)" },
+          paperAnchorTop: { paddingTop: "env(safe-area-inset-top)" },
+        },
+      },
+
       MuiPaper: {
         styleOverrides: {
           rounded: { borderRadius: (theme.shape.borderRadius as number) * 2 },
@@ -127,8 +155,8 @@ export const components = (theme: Theme): ThemeOptions => {
       MuiSnackbar: {
         styleOverrides: {
           root: {
-            left: `calc(env(safe-area-inset-left) + ${theme.spacing(1)})`,
-            bottom: `calc(env(safe-area-inset-bottom) + ${theme.spacing(1)})`,
+            left: `max(${theme.spacing(1)}, env(safe-area-inset-left))`,
+            bottom: `max(${theme.spacing(1)}, env(safe-area-inset-bottom))`,
           },
         },
       },

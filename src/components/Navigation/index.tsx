@@ -73,8 +73,10 @@ export default function Navigation({
             "&&": {
               minHeight: APP_BAR_HEIGHT,
               p: 0,
-              pl: 2,
-              pr: 2,
+              pl: (theme) =>
+                `max(env(safe-area-inset-left), ${theme.spacing(2)})`,
+              pr: (theme) =>
+                `max(env(safe-area-inset-right), ${theme.spacing(2)})`,
             },
           }}
         >
@@ -90,7 +92,7 @@ export default function Navigation({
           </Grow>
 
           <Grow in key={title}>
-            <Box sx={{ flex: 1, userSelect: "none" }}>
+            <Box sx={{ flex: 1, overflowX: "auto", userSelect: "none" }}>
               {titleComponent || (
                 <Typography
                   variant="h6"

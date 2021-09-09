@@ -113,8 +113,14 @@ export default function HomePage() {
           sx={{
             zIndex: "speedDial",
             position: "fixed",
-            bottom: (theme) => ({ xs: theme.spacing(2), sm: theme.spacing(3) }),
-            right: (theme) => ({ xs: theme.spacing(2), sm: theme.spacing(3) }),
+            bottom: (theme) => ({
+              xs: `max(${theme.spacing(2)}, env(safe-area-inset-bottom))`,
+              sm: `max(${theme.spacing(3)}, env(safe-area-inset-bottom))`,
+            }),
+            right: (theme) => ({
+              xs: `max(${theme.spacing(2)}, env(safe-area-inset-right))`,
+              sm: `max(${theme.spacing(3)}, env(safe-area-inset-right))`,
+            }),
           }}
         >
           <AddIcon />

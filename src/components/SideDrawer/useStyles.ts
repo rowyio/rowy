@@ -31,6 +31,9 @@ export const useStyles = makeStyles((theme) =>
       overflowX: "visible",
       overflowY: "visible",
 
+      paddingRight: "env(safe-area-inset-right)",
+      boxSizing: "content-box",
+
       top: APP_BAR_HEIGHT + TABLE_HEADER_HEIGHT,
       height: `calc(100% - ${APP_BAR_HEIGHT + TABLE_HEADER_HEIGHT}px)`,
 
@@ -111,6 +114,7 @@ export const useStyles = makeStyles((theme) =>
 
     drawerContents: {
       padding: theme.spacing(5),
+      paddingBottom: `max(env(safe-area-inset-bottom), ${theme.spacing(5)})`,
       overflowY: "auto",
     },
   })

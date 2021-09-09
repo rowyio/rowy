@@ -41,6 +41,8 @@ export default function TableHeader() {
       alignItems="center"
       spacing={1}
       sx={{
+        ml: "env(safe-area-inset-left)",
+        mr: "env(safe-area-inset-right)",
         pl: 2,
         pr: 2,
         pb: 1.5,

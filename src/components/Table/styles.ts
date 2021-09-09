@@ -17,6 +17,7 @@ export const useStyles = makeStyles((theme) =>
       "& > .rdg": {
         width: `calc(100% - ${DRAWER_COLLAPSED_WIDTH}px)`,
         flex: 1,
+        paddingBottom: "env(safe-area-inset-bottom)",
       },
 
       [theme.breakpoints.down("sm")]: { width: "100%" },
@@ -95,6 +96,31 @@ export const useStyles = makeStyles((theme) =>
             theme.palette.mode === "light"
               ? lighten(theme.palette.primary.main, 0.7)
               : darken(theme.palette.primary.main, 0.6),
+        },
+      },
+
+      ".rdg-row, .rdg-header-row": {
+        marginLeft: `max(env(safe-area-inset-left), ${theme.spacing(2)})`,
+        marginRight: `env(safe-area-inset-right)`,
+      },
+
+      ".rdg-header-row .rdg-cell:first-child": {
+        borderTopLeftRadius: theme.shape.borderRadius,
+      },
+
+      ".rdg-row .rdg-cell:first-child, .rdg-header-row .rdg-cell:first-child": {
+        borderLeft: "1px solid var(--border-color)",
+      },
+
+      ".rdg-row:last-child": {
+        borderBottomLeftRadius: theme.shape.borderRadius,
+        borderBottomRightRadius: theme.shape.borderRadius,
+
+        "& .rdg-cell:first-child": {
+          borderBottomLeftRadius: theme.shape.borderRadius,
+        },
+        "& .rdg-cell:nth-last-child(2)": {
+          borderBottomRightRadius: theme.shape.borderRadius,
         },
       },
 
