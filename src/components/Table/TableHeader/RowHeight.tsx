@@ -11,6 +11,8 @@ import RowHeightIcon from "assets/icons/RowHeight";
 import TableHeaderButton from "./TableHeaderButton";
 import { useProjectContext } from "contexts/ProjectContext";
 
+const ROW_HEIGHTS = [37, 43, 65, 100, 150];
+
 export default function RowHeight() {
   const theme = useTheme();
 
@@ -57,11 +59,11 @@ export default function RowHeight() {
         id="row-height-select"
       >
         <ListSubheader>Row Height</ListSubheader>
-        <MenuItem value={37}>Short</MenuItem>
-        <MenuItem value={43}>Tall</MenuItem>
-        <MenuItem value={65}>Grande</MenuItem>
-        <MenuItem value={100}>Venti</MenuItem>
-        <MenuItem value={150}>Trenta</MenuItem>
+        {ROW_HEIGHTS.map((height) => (
+          <MenuItem key={height} value={height}>
+            {height}px
+          </MenuItem>
+        ))}
       </TextField>
     </>
   );
