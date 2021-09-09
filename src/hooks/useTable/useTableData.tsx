@@ -254,7 +254,7 @@ const useTableData = (initialOverrides: any) => {
     // delete document
     try {
       db.collection(tableState.path).doc(rowId).delete();
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
       if (error.code === "permission-denied") {
         enqueueSnackbar("You do not have the permissions to delete rows.", {
@@ -304,7 +304,7 @@ const useTableData = (initialOverrides: any) => {
     if (missingRequiredFields.length === 0) {
       try {
         await db.collection(path).doc(newId).set(docData, { merge: true });
-      } catch (error) {
+      } catch (error: any) {
         if (error.code === "permission-denied") {
           enqueueSnackbar("You do not have the permissions to add new rows.", {
             variant: "error",
