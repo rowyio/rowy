@@ -114,15 +114,17 @@ export default function NavDrawer({
           <Divider variant="middle" sx={{ my: 1 }} />
 
           {sections &&
-            Object.entries(sections).map(([section, tables]) => (
-              <NavTableSection
-                key={section}
-                section={section}
-                tables={tables}
-                currentSection={currentSection}
-                closeDrawer={closeDrawer}
-              />
-            ))}
+            Object.entries(sections)
+              .filter(([, tables]) => tables.length > 0)
+              .map(([section, tables]) => (
+                <NavTableSection
+                  key={section}
+                  section={section}
+                  tables={tables}
+                  currentSection={currentSection}
+                  closeDrawer={closeDrawer}
+                />
+              ))}
         </List>
       </nav>
     </Drawer>
