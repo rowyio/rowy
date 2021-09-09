@@ -1,6 +1,5 @@
 import React, { useState, useContext, useEffect, useRef, useMemo } from "react";
 import { useSnackbar } from "notistack";
-import _groupBy from "lodash/groupBy";
 import _sortBy from "lodash/sortBy";
 import { DataGridHandle } from "react-data-grid";
 import firebase from "firebase/app";
@@ -21,12 +20,12 @@ export type Table = {
   description: string;
   section: string;
   isCollectionGroup: boolean;
+  tableType: string;
 };
 
 interface ProjectContextProps {
   tables: Table[];
   roles: string[];
-  sections: { [sectionName: string]: Table[] };
   tableState: TableState;
   tableActions: TableActions;
   updateCell: (
@@ -41,6 +40,7 @@ interface ProjectContextProps {
   ) => void;
   settingsActions: {
     createTable: (data: {
+      id: string;
       collection: string;
       name: string;
       description: string;
@@ -48,13 +48,14 @@ interface ProjectContextProps {
       section: string;
     }) => void;
     updateTable: (data: {
+      id: string;
       collection: string;
       name: string;
       description: string;
       roles: string[];
       section: string;
     }) => Promise<any>;
-    deleteTable: (collection: string) => void;
+    deleteTable: (id: string) => void;
   };
 
   userClaims: any;
@@ -97,7 +98,6 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
   const { enqueueSnackbar } = useSnackbar();
   const { tableState, tableActions } = useTable();
   const [tables, setTables] = useState<ProjectContextProps["tables"]>();
-  const [sections, setSections] = useState<ProjectContextProps["sections"]>();
   const [settings, settingsActions] = useSettings();
   const [userRoles, setUserRoles] = useState<null | string[]>();
   const [userClaims, setUserClaims] = useState<any>();
@@ -106,7 +106,7 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
   const [authToken, setAuthToken] = useState("");
   useEffect(() => {
     const { tables } = settings;
-    if (tables && userRoles && !sections) {
+    if (tables && userRoles) {
       const filteredTables = _sortBy(tables, "name")
         .filter(
           (table) =>
@@ -118,13 +118,14 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
           section: table.section ? table.section.trim() : "Other",
         }));
 
-      const _sections = _groupBy(filteredTables, "section");
-      setSections(_sections);
       setTables(
-        filteredTables.map((table) => ({ ...table, id: table.collection }))
+        filteredTables.map((table) => ({
+          ...table,
+          id: table.id || table.collection, // Ensure id exists
+        }))
       );
     }
-  }, [settings, userRoles, sections]);
+  }, [settings, userRoles]);
 
   const roles = useMemo(
     () =>
@@ -228,7 +229,6 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
         settingsActions,
         roles,
         tables,
-        sections,
         userClaims,
         dataGridRef,
         sideDrawerRef,

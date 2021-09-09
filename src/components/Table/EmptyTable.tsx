@@ -55,7 +55,13 @@ export default function EmptyTable() {
           <Typography variant="h6" component="h2" gutterBottom>
             Get Started
           </Typography>
-          <Typography>There is no data in this table.</Typography>
+          <Typography>
+            There is no data in the Firestore collection:
+            <br />
+            <Typography component="span" sx={{ fontFamily: "mono" }}>
+              {tableState?.tablePath}
+            </Typography>
+          </Typography>
         </div>
 
         <Grid container spacing={1}>

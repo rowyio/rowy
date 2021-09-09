@@ -1,5 +1,5 @@
 import queryString from "query-string";
-import useRouter from "hooks/useRouter";
+import { useLocation } from "react-router-dom";
 
 export const useSubTableData = (
   column: any,
@@ -18,18 +18,21 @@ export const useSubTableData = (
   const fieldName = column.key;
   const documentCount: string = row[fieldName]?.count ?? "";
 
-  const router = useRouter();
-  const parentLabels = queryString.parse(router.location.search).parentLabel;
+  const location = useLocation();
+  const parentLabels = queryString.parse(location.search).parentLabel;
+  const parentPath = decodeURIComponent(
+    location.pathname.split("/").pop() ?? ""
+  );
 
   let subTablePath = "";
   if (parentLabels)
     subTablePath =
-      encodeURIComponent(`${docRef.path}/${fieldName}`) +
-      `?parentLabel=${parentLabels},${label}`;
+      encodeURIComponent(`${parentPath}/${docRef.id}/${fieldName}`) +
+      `?parentLabel=${parentLabels ?? ""},${label ?? ""}`;
   else
     subTablePath =
-      encodeURIComponent(`${docRef.path}/${fieldName}`) +
-      `?parentLabel=${encodeURIComponent(label)}`;
+      encodeURIComponent(`${parentPath}/${docRef.id}/${fieldName}`) +
+      `?parentLabel=${encodeURIComponent(label ?? "")}`;
 
   return { documentCount, label, subTablePath };
 };

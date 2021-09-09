@@ -1,4 +1,5 @@
-import { useLocation } from "react-router-dom";
+import _find from "lodash/find";
+import _groupBy from "lodash/groupBy";
 
 import {
   Drawer,
@@ -21,6 +22,7 @@ import Logo from "assets/Logo";
 import NavItem from "./NavItem";
 import NavTableSection from "./NavTableSection";
 
+import { useAppContext } from "contexts/AppContext";
 import { useProjectContext } from "contexts/ProjectContext";
 import { routes } from "constants/routes";
 
@@ -35,7 +37,16 @@ export default function NavDrawer({
   currentSection,
   ...props
 }: INavDrawerProps) {
-  const { userClaims, sections } = useProjectContext();
+  const { userDoc } = useAppContext();
+  const { userClaims, tables } = useProjectContext();
+
+  const favorites = Array.isArray(userDoc.state.doc?.favoriteTables)
+    ? userDoc.state.doc.favoriteTables
+    : [];
+  const sections = {
+    Favorites: favorites.map((id) => _find(tables, { id })),
+    ..._groupBy(tables, "section"),
+  };
 
   const closeDrawer = (e: {}) => props.onClose(e, "escapeKeyDown");
 
@@ -103,15 +114,17 @@ export default function NavDrawer({
           <Divider variant="middle" sx={{ my: 1 }} />
 
           {sections &&
-            Object.entries(sections).map(([section, tables]) => (
-              <NavTableSection
-                key={section}
-                section={section}
-                tables={tables}
-                currentSection={currentSection}
-                closeDrawer={closeDrawer}
-              />
-            ))}
+            Object.entries(sections)
+              .filter(([, tables]) => tables.length > 0)
+              .map(([section, tables]) => (
+                <NavTableSection
+                  key={section}
+                  section={section}
+                  tables={tables}
+                  currentSection={currentSection}
+                  closeDrawer={closeDrawer}
+                />
+              ))}
         </List>
       </nav>
     </Drawer>

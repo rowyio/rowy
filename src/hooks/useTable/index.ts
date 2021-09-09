@@ -13,7 +13,7 @@ export type TableActions = {
   };
   row: { add: Function; delete: Function; more: Function; update: Function };
   table: {
-    set: Function;
+    set: (id: string, collection: string, filters: TableFilter[]) => void;
     filter: Function;
     updateConfig: Function;
     orderBy: Function;
@@ -24,6 +24,7 @@ export type TableState = {
   orderBy: TableOrder;
   tablePath: string;
   config: {
+    id: string;
     rowHeight: number;
     tableConfig: any;
     webhooks: any;
@@ -45,25 +46,19 @@ export type TableFilter = {
 };
 export type TableOrder = { key: string; direction: "asc" | "desc" }[];
 
-export default function useTable(
-  collectionName?: string,
-  filters?: TableFilter[],
-  orderBy?: TableOrder
-) {
-  const [tableConfig, configActions] = useTableConfig(collectionName);
-  const [tableState, tableActions] = useTableData({
-    path: collectionName,
-    filters,
-    orderBy,
-  });
+export default function useTable() {
+  const [tableConfig, configActions] = useTableConfig();
+  const [tableState, tableActions] = useTableData();
 
   /** set collection path of table */
-  const setTable = (collectionName: string, filters: TableFilter[]) => {
-    if (collectionName !== tableState.path || filters !== tableState.filters) {
-      configActions.setTable(collectionName);
-      tableActions.setTable(collectionName, filters);
+  const setTable = (id: string, collection: string, filters: TableFilter[]) => {
+    if (collection !== tableState.path || filters !== tableState.filters) {
+      configActions.setTable(id);
+      // Wait for config doc to load to get collection path
+      tableActions.setTable(collection, filters);
     }
   };
+
   const filterTable = (filters: TableFilter[]) => {
     tableActions.dispatch({ filters });
   };
@@ -76,6 +71,7 @@ export default function useTable(
     filters: tableState.filters,
     columns: tableConfig.columns,
     config: {
+      id: tableConfig.id,
       rowHeight: tableConfig.rowHeight,
       webhooks: tableConfig.doc?.webhooks,
       sparks: tableConfig.doc?.sparks,

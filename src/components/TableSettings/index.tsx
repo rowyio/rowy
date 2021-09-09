@@ -10,11 +10,11 @@ import Confirmation from "components/Confirmation";
 import { FormDialog } from "@antlerengineering/form-builder";
 import { tableSettings } from "./form";
 
-import { useProjectContext } from "contexts/ProjectContext";
+import { useProjectContext, Table } from "contexts/ProjectContext";
 import useRouter from "../../hooks/useRouter";
 import { db } from "../../firebase";
 import { name } from "@root/package.json";
-import { SETTINGS, TABLE_SCHEMAS } from "config/dbPaths";
+import { SETTINGS, TABLE_SCHEMAS, TABLE_GROUP_SCHEMAS } from "config/dbPaths";
 
 export enum TableSettingsDialogModes {
   create,
@@ -23,15 +23,7 @@ export enum TableSettingsDialogModes {
 export interface ICreateTableDialogProps {
   mode: TableSettingsDialogModes | null;
   clearDialog: () => void;
-  data: {
-    name: string;
-    collection: string;
-    tableType: string;
-    section: string;
-    description: string;
-    isCollectionGroup: boolean;
-    roles: string[];
-  } | null;
+  data: Table | null;
 }
 
 const FORM_EMPTY_STATE = {
@@ -67,8 +59,10 @@ export default function TableSettingsDialog({
 }: ICreateTableDialogProps) {
   const classes = useStyles();
 
-  const { settingsActions, sections, roles, tables } = useProjectContext();
-  const sectionNames = sections ? Object.keys(sections) : [];
+  const { settingsActions, roles, tables } = useProjectContext();
+  const sectionNames = Array.from(
+    new Set((tables ?? []).map((t) => t.section))
+  );
 
   const router = useRouter();
   const open = mode !== null;
@@ -101,22 +95,21 @@ export default function TableSettingsDialog({
     };
 
     if (values.schemaSource)
-      data.schemaSource = _find(tables, { collection: values.schemaSource });
+      data.schemaSource = _find(tables, { id: values.schemaSource });
 
     if (mode === TableSettingsDialogModes.update) {
       await Promise.all([settingsActions?.updateTable(data), handleClose()]);
-      window.location.reload();
     } else {
       settingsActions?.createTable(data);
 
       if (router.location.pathname === "/") {
         router.history.push(
           `${values.tableType === "collectionGroup" ? "tableGroup" : "table"}/${
-            values.collection
+            values.id
           }`
         );
       } else {
-        router.history.push(values.collection);
+        router.history.push(values.id);
       }
     }
 
@@ -124,7 +117,7 @@ export default function TableSettingsDialog({
   };
 
   const handleResetStructure = async () => {
-    const schemaDocRef = db.doc(`${TABLE_SCHEMAS}/${data!.collection}`);
+    const schemaDocRef = db.doc(`${TABLE_SCHEMAS}/${data!.id}`);
     await schemaDocRef.update({ columns: {} });
     handleClose();
   };
@@ -134,13 +127,13 @@ export default function TableSettingsDialog({
     const tableData = (await tablesDocRef.get()).data();
     const updatedTables = tableData?.tables.filter(
       (table) =>
-        table.collection !== data?.collection ||
+        table.id !== data?.id ||
         table.isCollectionGroup !== data?.isCollectionGroup
     );
     await tablesDocRef.update({ tables: updatedTables });
-    await tablesDocRef
-      .collection(Boolean(data?.isCollectionGroup) ? "schema" : "groupSchema")
-      .doc(data?.collection)
+    await db
+      .collection(data?.isCollectionGroup ? TABLE_SCHEMAS : TABLE_GROUP_SCHEMAS)
+      .doc(data?.id)
       .delete();
     window.location.reload();
     handleClose();
@@ -158,7 +151,7 @@ export default function TableSettingsDialog({
         mode,
         roles,
         sectionNames,
-        tables?.map((table) => ({ label: table.name, value: table.collection }))
+        tables?.map((table) => ({ label: table.name, value: table.id }))
       )}
       values={{
         tableType: data?.isCollectionGroup
@@ -205,7 +198,7 @@ export default function TableSettingsDialog({
           <div className={classes.formFooter}>
             <Confirmation
               message={{
-                title: `Are you sure you want to delete the table structure for “${formState.name}”?`,
+                title: `Delete the table structure for “${formState.name}”?`,
                 body: (
                   <>
                     <DialogContentText>
@@ -241,7 +234,7 @@ export default function TableSettingsDialog({
 
             <Confirmation
               message={{
-                title: `Are you sure you want to delete the table “${formState.name}”?`,
+                title: `Delete the table “${formState.name}”?`,
                 body: (
                   <>
                     <DialogContentText>

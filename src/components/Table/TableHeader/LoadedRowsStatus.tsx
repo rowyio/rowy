@@ -22,7 +22,7 @@ export default function LoadedRowsStatus() {
         variant="body2"
         color="text.disabled"
         display="block"
-        style={{ userSelect: "none", display: "flex", alignItems: "center" }}
+        style={{ userSelect: "none" }}
       >
         Loaded {allLoaded && "all "}
         {tableState.rows.length} rows

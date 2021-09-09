@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 
 import { List, ListItemText, Collapse } from "@material-ui/core";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
@@ -8,6 +9,7 @@ import { Table } from "contexts/ProjectContext";
 import { routes } from "constants/routes";
 
 export interface INavDrawerItemProps {
+  open?: boolean;
   section: string;
   tables: Table[];
   currentSection?: string;
@@ -15,12 +17,14 @@ export interface INavDrawerItemProps {
 }
 
 export default function NavDrawerItem({
+  open: openProp,
   section,
   tables,
   currentSection,
   closeDrawer,
 }: INavDrawerItemProps) {
-  const [open, setOpen] = useState(section === currentSection);
+  const { pathname } = useLocation();
+  const [open, setOpen] = useState(openProp || section === currentSection);
 
   return (
     <li>
@@ -42,27 +46,30 @@ export default function NavDrawerItem({
 
       <Collapse in={open}>
         <List disablePadding>
-          {tables.map((table) => (
-            <li key={table.collection}>
-              <NavItem
-                to={
-                  table.isCollectionGroup
-                    ? `${routes.tableGroup}/${table.collection}`
-                    : `${routes.table}/${table.collection.replace(
-                        /\//g,
-                        "~2F"
-                      )}`
-                }
-                onClick={closeDrawer}
-                sx={{
-                  ml: 2,
-                  width: (theme) => `calc(100% - ${theme.spacing(2 + 0.5)})`,
-                }}
-              >
-                <ListItemText primary={table.name} />
-              </NavItem>
-            </li>
-          ))}
+          {tables
+            .filter((x) => x)
+            .map((table) => {
+              const route = table.isCollectionGroup
+                ? `${routes.tableGroup}/${table.id}`
+                : `${routes.table}/${table.id.replace(/\//g, "~2F")}`;
+
+              return (
+                <li key={table.id}>
+                  <NavItem
+                    to={route}
+                    selected={pathname.split("%2F")[0] === route}
+                    onClick={closeDrawer}
+                    sx={{
+                      ml: 2,
+                      width: (theme) =>
+                        `calc(100% - ${theme.spacing(2 + 0.5)})`,
+                    }}
+                  >
+                    <ListItemText primary={table.name} />
+                  </NavItem>
+                </li>
+              );
+            })}
         </List>
       </Collapse>
     </li>

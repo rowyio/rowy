@@ -22,6 +22,12 @@ export const tableSettings = (
     },
     {
       type: FieldType.shortText,
+      name: "id",
+      label: "Table ID",
+      required: true,
+    },
+    {
+      type: FieldType.shortText,
       name: "collection",
       label: "Collection Name",
       required: true,

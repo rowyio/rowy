@@ -3,7 +3,6 @@ import { ISettingsProps } from "../types";
 import _sortBy from "lodash/sortBy";
 
 import { TextField } from "@material-ui/core";
-import Subheading from "components/Table/ColumnMenu/Subheading";
 import MultiSelect from "@antlerengineering/multiselect";
 
 import { FieldType } from "constants/fields";
@@ -15,8 +14,8 @@ export default function Settings({ handleChange, config }: ISettingsProps) {
   const { tables } = useProjectContext();
   const tableOptions = _sortBy(
     tables?.map((t) => ({
-      label: `${t.section} - ${t.name}`,
-      value: t.collection,
+      label: `${t.section} – ${t.name} (${t.collection})`,
+      value: t.id,
     })) ?? [],
     "label"
   );
@@ -44,16 +43,17 @@ export default function Settings({ handleChange, config }: ISettingsProps) {
 
   return (
     <>
-      <Subheading>Table Connect Config</Subheading>
       <MultiSelect
         options={tableOptions}
         freeText={false}
         value={config.index}
         onChange={handleChange("index")}
         multiple={false}
+        label="Table"
+        labelPlural="Tables"
       />
       <TextField
-        label="filter template"
+        label="Filter Template"
         name="filters"
         fullWidth
         value={config.filters}

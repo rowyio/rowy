@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
 export default function useBasicSearch<T>(
-  collection: T[],
+  list: T[],
   predicate: (item: T, query: string) => boolean,
   debounce: number = 400
 ) {
@@ -10,8 +10,8 @@ export default function useBasicSearch<T>(
   const [handleQuery] = useDebouncedCallback(setQuery, debounce);
 
   const results = query
-    ? collection.filter((user) => predicate(user, query.toLowerCase()))
-    : collection;
+    ? list.filter((user) => predicate(user, query.toLowerCase()))
+    : list;
 
   return [results, query, handleQuery] as const;
 }

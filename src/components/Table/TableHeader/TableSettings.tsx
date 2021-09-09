@@ -1,4 +1,5 @@
 import { useState } from "react";
+import _find from "lodash/find";
 
 import TableHeaderButton from "./TableHeaderButton";
 import SettingsIcon from "@material-ui/icons/SettingsOutlined";
@@ -11,7 +12,8 @@ import { useProjectContext } from "contexts/ProjectContext";
 export default function TableSettings() {
   const [open, setOpen] = useState(false);
 
-  const { tableState } = useProjectContext();
+  const { tableState, tables } = useProjectContext();
+  const table = _find(tables, { id: tableState?.config.id });
 
   return (
     <>
@@ -19,13 +21,16 @@ export default function TableSettings() {
         title="Table Settings"
         onClick={() => setOpen(true)}
         icon={<SettingsIcon />}
+        disabled={!table}
       />
 
-      <TableSettingsDialog
-        clearDialog={() => setOpen(false)}
-        mode={open ? TableSettingsDialogModes.update : null}
-        data={open ? tableState?.config.tableConfig.doc : null}
-      />
+      {table && (
+        <TableSettingsDialog
+          clearDialog={() => setOpen(false)}
+          mode={open ? TableSettingsDialogModes.update : null}
+          data={open ? table : null}
+        />
+      )}
     </>
   );
 }

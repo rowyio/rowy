@@ -1,4 +1,6 @@
 import { useEffect } from "react";
+import _findIndex from "lodash/findIndex";
+
 import useDoc from "./useDoc";
 import { db } from "../firebase";
 import { SETTINGS, TABLE_GROUP_SCHEMAS, TABLE_SCHEMAS } from "config/dbPaths";
@@ -21,6 +23,7 @@ const useSettings = () => {
   }, [settingsState]);
 
   const createTable = async (data: {
+    id: string;
     name: string;
     collection: string;
     description: string;
@@ -34,67 +37,58 @@ const useSettings = () => {
       tableSettings.tableType !== "collectionGroup"
         ? TABLE_SCHEMAS
         : TABLE_GROUP_SCHEMAS
-    }/${tableSettings.collection}`;
+    }/${tableSettings.id}`;
     const tableSchemaDocRef = db.doc(tableSchemaPath);
 
-    let columns = {};
+    // Get columns from schemaSource if provided
+    let columns = [];
     if (schemaSource) {
       const schemaSourcePath = `${
         tableSettings.tableType !== "collectionGroup"
           ? TABLE_SCHEMAS
           : TABLE_GROUP_SCHEMAS
-      }/${schemaSource.collection}`;
+      }/${schemaSource.id}`;
       const sourceDoc = await db.doc(schemaSourcePath).get();
       columns = sourceDoc.get("columns");
     }
-    // updates the setting doc
-    await db
-      .doc(SETTINGS)
-      .set(
-        { tables: tables ? [...tables, tableSettings] : [tableSettings] },
-        { merge: true }
-      );
 
-    //create the rowy collection doc with empty columns
-    await tableSchemaDocRef.set({ ...tableSettings, columns }, { merge: true });
+    // Appends table to settings doc
+    await db.doc(SETTINGS).set(
+      {
+        tables: Array.isArray(tables)
+          ? [...tables, tableSettings]
+          : [tableSettings],
+      },
+      { merge: true }
+    );
+
+    // Creates schema doc with columns
+    await tableSchemaDocRef.set({ columns }, { merge: true });
   };
 
-  const updateTable = (data: {
+  const updateTable = async (data: {
+    id: string;
     name: string;
     collection: string;
     description: string;
     roles: string[];
   }) => {
     const { tables } = settingsState;
-    const table = tables.filter((t) => t.collection === data.collection)[0];
-    return Promise.all([
-      db.doc(SETTINGS).set(
-        {
-          tables: tables
-            ? [
-                ...tables.filter(
-                  (table) => table.collection !== data.collection
-                ),
-                { table, ...data },
-              ]
-            : [data],
-        },
-        { merge: true }
-      ),
-      //update the rowy collection doc with empty columns
-      db
-        .collection(TABLE_SCHEMAS)
-        .doc(data.collection)
-        .set({ ...data }, { merge: true }),
-    ]);
+    const newTables = Array.isArray(tables) ? [...tables] : [];
+    const foundIndex = _findIndex(newTables, { id: data.id });
+    const tableIndex = foundIndex > -1 ? foundIndex : tables.length;
+    newTables[tableIndex] = { ...newTables[tableIndex], ...data };
+
+    await db.doc(SETTINGS).set({ tables: newTables }, { merge: true });
   };
-  const deleteTable = (collection: string) => {
+
+  const deleteTable = (id: string) => {
     const { tables } = settingsState;
 
     db.doc(SETTINGS).update({
-      tables: tables.filter((table) => table.collection !== collection),
+      tables: tables.filter((table) => table.id !== id),
     });
-    db.collection(TABLE_SCHEMAS).doc(collection).delete();
+    db.collection(TABLE_SCHEMAS).doc(id).delete();
   };
   const settingsActions = { createTable, updateTable, deleteTable };
   return [settingsState, settingsActions];

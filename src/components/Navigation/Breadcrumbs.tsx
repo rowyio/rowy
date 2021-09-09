@@ -17,18 +17,19 @@ import routes from "constants/routes";
 
 export default function Breadcrumbs(props: BreadcrumbsProps) {
   const { tables, tableState } = useProjectContext();
-  const collection = tableState?.tablePath || "";
+  const id = tableState?.config.id || "";
+  const collection = id || tableState?.tablePath || "";
 
   const router = useRouter();
-  const parentLabel = decodeURIComponent(
+  let parentLabel = decodeURIComponent(
     queryString.parse(router.location.search).parentLabel as string
   );
+  if (parentLabel === "undefined") parentLabel = "";
 
   const breadcrumbs = collection.split("/");
 
-  const section = _find(tables, ["collection", breadcrumbs[0]])?.section || "";
-  const getLabel = (collection: string) =>
-    _find(tables, ["collection", collection])?.name || collection;
+  const section = _find(tables, ["id", breadcrumbs[0]])?.section || "";
+  const getLabel = (id: string) => _find(tables, ["id", id])?.name || id;
 
   return (
     <MuiBreadcrumbs
@@ -40,11 +41,6 @@ export default function Breadcrumbs(props: BreadcrumbsProps) {
           userSelect: "none",
           flexWrap: "nowrap",
           whiteSpace: "nowrap",
-        },
-
-        "& li": {
-          textTransform: "capitalize",
-          "&:first-of-type": { textTransform: "capitalize" },
         },
       }}
       {...(props as any)}
