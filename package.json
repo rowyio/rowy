@@ -61,7 +61,7 @@
     "react-usestateref": "^1.0.5",
     "serve": "^11.3.2",
     "tinymce": "^5.2.0",
-    "typescript": "^4.3.5",
+    "typescript": "^4.4.2",
     "use-algolia": "^1.4.1",
     "use-debounce": "^3.3.0",
     "use-persisted-state": "^0.3.3",

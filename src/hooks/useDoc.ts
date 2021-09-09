@@ -64,7 +64,7 @@ const useDoc = (
           if (options.createIfMissing)
             try {
               db.doc(documentState.path).set({}, { merge: true });
-            } catch (e) {
+            } catch (e: any) {
               console.error(
                 `Could not create ${documentState.path}`,
                 e.message

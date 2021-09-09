@@ -19,7 +19,7 @@ export default function JwtAuthPage() {
       await auth.signInWithCustomToken(jwt);
       enqueueSnackbar("Success", { variant: "success" });
       window.location.assign("/");
-    } catch (e) {
+    } catch (e: any) {
       enqueueSnackbar(e.message, { variant: "error" });
     } finally {
       setLoading(false);
