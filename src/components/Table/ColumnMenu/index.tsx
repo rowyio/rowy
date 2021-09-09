@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import { Menu, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
 import LockOpenIcon from "@material-ui/icons/LockOpen";
-import LockIcon from "@material-ui/icons/Lock";
+import LockIcon from "@material-ui/icons/LockOutlined";
 import VisibilityOffIcon from "@material-ui/icons/VisibilityOffOutlined";
 import VisibilityIcon from "@material-ui/icons/VisibilityOutlined";
 import FreezeIcon from "assets/icons/Freeze";

@@ -4,7 +4,7 @@ import { makeStyles, createStyles } from "@material-ui/styles";
 import { Grid, Typography, IconButton } from "@material-ui/core";
 import DebugIcon from "@material-ui/icons/BugReportOutlined";
 import LaunchIcon from "@material-ui/icons/Launch";
-import LockIcon from "@material-ui/icons/Lock";
+import LockIcon from "@material-ui/icons/LockOutlined";
 
 import ErrorBoundary from "components/ErrorBoundary";
 import FieldSkeleton from "./FieldSkeleton";
@@ -112,10 +112,9 @@ export default function FieldWrapper({
           <Grid item>
             <IconButton
               component="a"
-              href={`https://console.firebase.google.com/project/${projectId}/firestore/data/~2F${(debugText as string).replace(
-                /\//g,
-                "~2F"
-              )}`}
+              href={`https://console.firebase.google.com/project/${projectId}/firestore/data/~2F${(
+                debugText as string
+              ).replace(/\//g, "~2F")}`}
               target="_blank"
               rel="noopener"
               aria-label="Open in Firebase Console"

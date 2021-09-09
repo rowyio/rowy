@@ -15,7 +15,7 @@ import {
 } from "@material-ui/core";
 import SortDescIcon from "@material-ui/icons/ArrowDownward";
 import DropdownIcon from "@material-ui/icons/MoreHoriz";
-import LockIcon from "@material-ui/icons/Lock";
+import LockIcon from "@material-ui/icons/LockOutlined";
 
 import { FieldType } from "constants/fields";
 import { getFieldProp } from "components/fields";
