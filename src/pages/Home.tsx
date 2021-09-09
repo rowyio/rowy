@@ -24,6 +24,7 @@ import EditIcon from "@material-ui/icons/EditOutlined";
 import AddIcon from "@material-ui/icons/Add";
 
 import FloatingSearch from "components/FloatingSearch";
+import SlideTransition from "components/Modal/SlideTransition";
 import TableGrid from "components/Home/TableGrid";
 import TableList from "components/Home/TableList";
 import TableGridSkeleton from "components/Home/TableGrid/TableGridSkeleton";
@@ -31,15 +32,15 @@ import TableListSkeleton from "components/Home/TableList/TableListSkeleton";
 import HomeWelcomePrompt from "components/Home/HomeWelcomePrompt";
 import AccessDenied from "components/Home/AccessDenied";
 import EmptyState from "components/EmptyState";
+import TableSettingsDialog, {
+  TableSettingsDialogModes,
+} from "components/TableSettings";
 
 import routes from "constants/routes";
 import { useAppContext } from "contexts/AppContext";
 import { useProjectContext, Table } from "contexts/ProjectContext";
 import useDoc, { DocActions } from "hooks/useDoc";
 import useBasicSearch from "hooks/useBasicSearch";
-import TableSettingsDialog, {
-  TableSettingsDialogModes,
-} from "components/TableSettings";
 
 import { SETTINGS } from "config/dbPaths";
 import { APP_BAR_HEIGHT } from "components/Navigation";
@@ -208,38 +209,40 @@ export default function HomePage() {
         }}
       />
 
-      <Stack
-        direction="row"
-        spacing={2}
-        alignItems="center"
-        justifyContent="space-between"
-      >
-        <Typography
-          variant="h6"
-          component="h1"
-          sx={{ pl: 2, cursor: "default" }}
+      <SlideTransition in timeout={50}>
+        <Stack
+          direction="row"
+          spacing={2}
+          alignItems="center"
+          justifyContent="space-between"
         >
-          {query ? `${results.length} of ${tables.length}` : tables.length}{" "}
-          Tables
-        </Typography>
+          <Typography
+            variant="h6"
+            component="h1"
+            sx={{ pl: 2, cursor: "default" }}
+          >
+            {query ? `${results.length} of ${tables.length}` : tables.length}{" "}
+            Tables
+          </Typography>
 
-        <ToggleButtonGroup
-          value={view}
-          exclusive
-          onChange={(_, v) => {
-            if (v !== null) setView(v);
-          }}
-          aria-label="Table view"
-          sx={{ "& .MuiToggleButton-root": { borderRadius: 2 } }}
-        >
-          <ToggleButton value="list" aria-label="List view">
-            <ViewListIcon style={{ transform: "rotate(180deg)" }} />
-          </ToggleButton>
-          <ToggleButton value="grid" aria-label="Grid view">
-            <ViewGridIcon />
-          </ToggleButton>
-        </ToggleButtonGroup>
-      </Stack>
+          <ToggleButtonGroup
+            value={view}
+            exclusive
+            onChange={(_, v) => {
+              if (v !== null) setView(v);
+            }}
+            aria-label="Table view"
+            sx={{ "& .MuiToggleButton-root": { borderRadius: 2 } }}
+          >
+            <ToggleButton value="list" aria-label="List view">
+              <ViewListIcon style={{ transform: "rotate(180deg)" }} />
+            </ToggleButton>
+            <ToggleButton value="grid" aria-label="Grid view">
+              <ViewGridIcon />
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </Stack>
+      </SlideTransition>
 
       {view === "list" ? (
         <TableList
