@@ -5,7 +5,7 @@ import WarningIcon from "@material-ui/icons/WarningAmber";
 
 import RichTooltip from "components/RichTooltip";
 
-const Root = styled(Box)({
+const Root = styled(Box)(({ theme, ...props }) => ({
   width: "100%",
   height: "100%",
   padding: "var(--cell-padding)",
@@ -15,7 +15,15 @@ const Root = styled(Box)({
   contain: "strict",
   display: "flex",
   alignItems: "center",
-});
+
+  ...((props as any).error
+    ? {
+        ".rdg-cell:not([aria-selected=true]) &": {
+          boxShadow: `inset 0 0 0 2px ${theme.palette.error.main}`,
+        },
+      }
+    : {}),
+}));
 
 const Dot = styled("div")(({ theme }) => ({
   position: "absolute",
@@ -51,8 +59,7 @@ export default function CellValidation({
   required,
   validationRegex,
   children,
-}: // ...props
-ICellValidationProps) {
+}: ICellValidationProps) {
   const isInvalid = validationRegex && !new RegExp(validationRegex).test(value);
   const isMissing = required && value === undefined;
 
@@ -67,14 +74,7 @@ ICellValidationProps) {
           render={({ openTooltip }) => <Dot onClick={openTooltip} />}
         />
 
-        <Root
-          // {...props}
-          sx={{
-            boxShadow: (theme) => `inset 0 0 0 2px ${theme.palette.error.main}`,
-          }}
-        >
-          {children}
-        </Root>
+        <Root {...({ error: true } as any)}>{children}</Root>
       </>
     );
 
@@ -89,22 +89,9 @@ ICellValidationProps) {
           render={({ openTooltip }) => <Dot onClick={openTooltip} />}
         />
 
-        <Root
-          // {...props}
-          sx={{
-            boxShadow: (theme) => `inset 0 0 0 2px ${theme.palette.error.main}`,
-          }}
-        >
-          {children}
-        </Root>
+        <Root {...({ error: true } as any)}>{children}</Root>
       </>
     );
 
-  return (
-    <Root
-    // {...props}
-    >
-      {children}
-    </Root>
-  );
+  return <Root>{children}</Root>;
 }
