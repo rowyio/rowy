@@ -1,11 +1,10 @@
 import { styled } from "@material-ui/core/styles";
-import { Box } from "@material-ui/core";
 import ErrorIcon from "@material-ui/icons/ErrorOutline";
 import WarningIcon from "@material-ui/icons/WarningAmber";
 
 import RichTooltip from "components/RichTooltip";
 
-const Root = styled(Box)(({ theme, ...props }) => ({
+const Root = styled("div")(({ theme, ...props }) => ({
   width: "100%",
   height: "100%",
   padding: "var(--cell-padding)",
