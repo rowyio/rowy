@@ -20,26 +20,48 @@ export default function FloatingSearch({
   paperSx,
   ...props
 }: IFloatingSearchProps) {
-  const trigger = useScrollTrigger({ disableHysteresis: true, threshold: 0 });
+  const dockedTransition = useScrollTrigger({
+    disableHysteresis: true,
+    threshold: 4,
+  });
+  const docked = useScrollTrigger({
+    disableHysteresis: true,
+    threshold: APP_BAR_HEIGHT,
+  });
 
   return (
     <SlideTransition in timeout={50}>
       <Paper
-        elevation={trigger ? 8 : 1}
+        elevation={dockedTransition ? 4 : 1}
         sx={{
           position: "sticky",
-          top: (theme) => theme.spacing(APP_BAR_HEIGHT / 8 + 1),
+          top: (theme) => theme.spacing(0.5),
           zIndex: "appBar",
           height: 48,
+          maxWidth: (theme) => theme.breakpoints.values.sm - 48,
+          width: "100%",
+          mx: "auto",
+
           transition: (theme) =>
-            theme.transitions.create(["box-shadow", "transform", "opacity"]) +
-            " !important",
+            theme.transitions.create([
+              "box-shadow",
+              "transform",
+              "opacity",
+              "width",
+            ]) + " !important",
           transitionTimingFunction: (
             theme
           ) => `${theme.transitions.easing.easeInOut},
                 cubic-bezier(0.1, 0.8, 0.1, 1),
                 cubic-bezier(0.1, 0.8, 0.1, 1) !important`,
+
           ...paperSx,
+
+          ...(dockedTransition
+            ? { width: `calc(100vw - ${(48 + 8) * 2}px)` }
+            : {}),
+
+          ...(docked ? { boxShadow: "none" } : {}),
         }}
       >
         <TextField
@@ -72,16 +94,20 @@ export default function FloatingSearch({
             "& .MuiFilledInput-root": {
               borderRadius: 2,
 
-              boxShadow: (theme) =>
-                `0 -1px 0 0 ${theme.palette.text.disabled} inset`,
-              "&:hover": {
-                boxShadow: (theme) =>
-                  `0 -1px 0 0 ${theme.palette.text.primary} inset`,
-              },
-              "&.Mui-focused, &.Mui-focused:hover": {
-                boxShadow: (theme) =>
-                  `0 -2px 0 0 ${theme.palette.primary.main} inset`,
-              },
+              ...(docked
+                ? {}
+                : {
+                    boxShadow: (theme) =>
+                      `0 -1px 0 0 ${theme.palette.text.disabled} inset`,
+                    "&:hover": {
+                      boxShadow: (theme) =>
+                        `0 -1px 0 0 ${theme.palette.text.primary} inset`,
+                    },
+                    "&.Mui-focused, &.Mui-focused:hover": {
+                      boxShadow: (theme) =>
+                        `0 -2px 0 0 ${theme.palette.primary.main} inset`,
+                    },
+                  }),
 
               "&::after": {
                 width: (theme) =>

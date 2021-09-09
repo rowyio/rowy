@@ -1,7 +1,7 @@
 import { useState, ChangeEvent } from "react";
 import createPersistedState from "use-persisted-state";
-import _groupBy from "lodash/groupBy";
 import _find from "lodash/find";
+import _groupBy from "lodash/groupBy";
 
 import {
   Container,
@@ -197,9 +197,7 @@ export default function HomePage() {
         label="Search Tables"
         onChange={(e) => handleQuery(e.target.value)}
         paperSx={{
-          maxWidth: (theme) => theme.breakpoints.values.sm - 48,
-          width: { xs: "100%", md: "50%", lg: "100%" },
-          mx: "auto",
+          maxWidth: (theme) => ({ md: theme.breakpoints.values.sm - 48 }),
           mb: { xs: 2, md: -6 },
         }}
       />
