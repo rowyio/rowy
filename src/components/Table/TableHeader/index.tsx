@@ -1,4 +1,4 @@
-import { Stack, Button, Typography } from "@material-ui/core";
+import { Stack, Button } from "@material-ui/core";
 
 import { isCollectionGroup } from "utils/fns";
 import AddRowIcon from "assets/icons/AddRow";
@@ -6,6 +6,7 @@ import AddRowIcon from "assets/icons/AddRow";
 import Filters from "../Filters";
 import ImportCSV from "./ImportCsv";
 import Export from "./Export";
+import LoadedRowsStatus from "./LoadedRowsStatus";
 import TableSettings from "./TableSettings";
 import TableLogs from "./TableLogs";
 import HiddenFields from "../HiddenFields";
@@ -108,14 +109,7 @@ export default function TableHeader() {
       <HiddenFields />
       <Filters />
       {/* Spacer */} <div />
-      <Typography
-        variant="body2"
-        color="text.disabled"
-        display="block"
-        style={{ userSelect: "none" }}
-      >
-        Loaded {tableState.rows.length} rows
-      </Typography>
+      <LoadedRowsStatus />
       <div style={{ flexGrow: 1, minWidth: 64 }} />
       <RowHeight />
       {/* Spacer */} <div />
@@ -127,10 +121,10 @@ export default function TableHeader() {
           <Extensions />
           <TableLogs />
           {(hasDerivatives || hasExtensions) && <ReExecute />}
+          {/* Spacer */} <div />
+          <TableSettings />
         </>
       )}
-      {/* Spacer */} <div />
-      <TableSettings />
     </Stack>
   );
 }
