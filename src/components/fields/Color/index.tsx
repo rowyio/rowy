@@ -18,6 +18,7 @@ const SideDrawerField = lazy(
 export const config: IFieldConfig = {
   type: FieldType.color,
   name: "Color",
+  group: "Numeric",
   dataType: "Record<string, any>",
   initialValue: {},
   initializable: true,

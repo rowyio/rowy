@@ -9,6 +9,7 @@ import Settings from "./Settings";
 export const config: IFieldConfig = {
   type: FieldType.derivative,
   name: "Derivative",
+  group: "Cloud Function",
   dataType: "string",
   initialValue: "",
   initializable: true,

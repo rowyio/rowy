@@ -20,6 +20,7 @@ const SideDrawerField = lazy(
 export const config: IFieldConfig = {
   type: FieldType.dateTime,
   name: "Time & Date",
+  group: "Date & Time",
   dataType: "firebase.firestore.Timestamp",
   initialValue: null,
   initializable: true,

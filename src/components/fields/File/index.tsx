@@ -17,6 +17,7 @@ const SideDrawerField = lazy(
 export const config: IFieldConfig = {
   type: FieldType.file,
   name: "File",
+  group: "File",
   dataType:
     "{ downloadURL: string, lastModifiedTS: number, name: string, type, ref }[]",
   initialValue: [],

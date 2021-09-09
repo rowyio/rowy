@@ -16,6 +16,7 @@ const SideDrawerField = lazy(
 export const config: IFieldConfig = {
   type: FieldType.percentage,
   name: "Percentage",
+  group: "Numeric",
   dataType: "number",
   initialValue: 0,
   initializable: true,

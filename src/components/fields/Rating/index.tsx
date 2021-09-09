@@ -20,6 +20,7 @@ const Settings = lazy(
 export const config: IFieldConfig = {
   type: FieldType.rating,
   name: "Rating",
+  group: "Numeric",
   dataType: "number",
   initialValue: 0,
   initializable: true,

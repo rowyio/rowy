@@ -20,6 +20,7 @@ const Settings = lazy(
 export const config: IFieldConfig = {
   type: FieldType.status,
   name: "Status",
+  group: "Cloud Function",
   dataType: "any",
   initialValue: undefined,
   initializable: true,

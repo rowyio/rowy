@@ -19,14 +19,7 @@ export default function FormDialog({
     <Modal
       onClose={handleClose}
       title="Change Column Type"
-      children={
-        <FieldsDropdown
-          value={newType}
-          onChange={(newType: any) => {
-            setType(newType.target.value);
-          }}
-        />
-      }
+      children={<FieldsDropdown value={newType} onChange={setType} />}
       actions={{
         primary: {
           onClick: () => {
@@ -38,10 +31,6 @@ export default function FormDialog({
             });
           },
           children: "Update",
-        },
-        secondary: {
-          onClick: handleClose,
-          children: "Cancel",
         },
       }}
       maxWidth="xs"

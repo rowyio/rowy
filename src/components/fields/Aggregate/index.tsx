@@ -8,6 +8,7 @@ import NullEditor from "components/Table/editors/NullEditor";
 export const config: IFieldConfig = {
   type: FieldType.aggregate,
   name: "Aggregate",
+  group: "Cloud Function",
   dataType: "string",
   initialValue: "",
   initializable: false,

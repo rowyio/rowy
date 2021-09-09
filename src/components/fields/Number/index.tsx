@@ -14,6 +14,7 @@ const SideDrawerField = lazy(
 export const config: IFieldConfig = {
   type: FieldType.number,
   name: "Number",
+  group: "Numeric",
   dataType: "number",
   initialValue: 0,
   initializable: true,

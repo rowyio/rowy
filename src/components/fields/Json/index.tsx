@@ -18,6 +18,7 @@ const Settings = lazy(
 export const config: IFieldConfig = {
   type: FieldType.json,
   name: "JSON",
+  group: "Code",
   dataType: "any",
   initialValue: {},
   initializable: true,

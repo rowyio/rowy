@@ -44,6 +44,9 @@ export const FIELDS: IFieldConfig[] = [
   Email,
   Phone,
   Url,
+  // SELECT
+  SingleSelect,
+  MultiSelect,
   // NUMERIC
   Checkbox,
   Number_,
@@ -58,9 +61,6 @@ export const FIELDS: IFieldConfig[] = [
   // FILE
   Image_,
   File_,
-  // SELECT
-  SingleSelect,
-  MultiSelect,
   // CONNECTION
   SubTable,
   ConnectTable,
@@ -74,7 +74,7 @@ export const FIELDS: IFieldConfig[] = [
   Derivative,
   Aggregate,
   Status,
-  // INTERNAL
+  // METADATA
   User,
   Id,
 ];

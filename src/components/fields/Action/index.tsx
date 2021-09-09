@@ -19,6 +19,7 @@ const Settings = lazy(
 export const config: IFieldConfig = {
   type: FieldType.action,
   name: "Action",
+  group: "Cloud Function",
   dataType: "any",
   initialValue: {},
   icon: <ActionIcon />,

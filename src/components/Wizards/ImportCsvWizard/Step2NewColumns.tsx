@@ -43,9 +43,9 @@ export default function Step2NewColumns({
 
   const [fieldToEdit, setFieldToEdit] = useState(0);
 
-  const handleChange = (e) => {
+  const handleChange = (v) => {
     const newColumns = [...config.newColumns];
-    newColumns[fieldToEdit].type = e.target.value;
+    newColumns[fieldToEdit].type = v;
 
     setConfig((config) => ({ ...config, newColumns }));
   };

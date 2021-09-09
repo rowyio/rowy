@@ -27,6 +27,7 @@ const Settings = lazy(
 export const config: IFieldConfig = {
   type: FieldType.multiSelect,
   name: "Multi Select",
+  group: "Select",
   dataType: "string[]",
   initialValue: [],
   initializable: true,

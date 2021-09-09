@@ -1,34 +1,13 @@
-import { makeStyles, createStyles } from "@material-ui/styles";
-import {
-  TextField,
-  MenuItem,
-  ListItemIcon,
-  TextFieldProps,
-} from "@material-ui/core";
+import MultiSelect from "@antlerengineering/multiselect";
+import { ListItemIcon } from "@material-ui/core";
 
 import { FIELDS } from "components/fields";
 import { FieldType } from "constants/fields";
 import { getFieldProp } from "components/fields";
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    helperText: {
-      ...theme.typography.body2,
-      marginTop: theme.spacing(1),
-    },
-
-    listItemIcon: {
-      verticalAlign: "text-bottom",
-      minWidth: theme.spacing(5),
-      "& svg": { margin: theme.spacing(-0.5, 0) },
-    },
-  })
-);
-
 export interface IFieldsDropdownProps {
   value: FieldType;
-  onChange: TextFieldProps["onChange"];
-  className?: string;
+  onChange: (value: FieldType) => void;
   hideLabel?: boolean;
   options?: FieldType[];
 }
@@ -39,42 +18,58 @@ export interface IFieldsDropdownProps {
 export default function FieldsDropdown({
   value,
   onChange,
-  className,
   hideLabel = false,
   options: optionsProp,
 }: IFieldsDropdownProps) {
-  const classes = useStyles();
-
   const options = optionsProp
     ? FIELDS.filter((fieldConfig) => optionsProp.indexOf(fieldConfig.type) > -1)
     : FIELDS;
 
   return (
-    <TextField
-      fullWidth
-      select
+    <MultiSelect
+      multiple={false}
       value={value ? value : ""}
       onChange={onChange}
-      inputProps={{ name: "type", id: "type" }}
-      label={!hideLabel ? "Field Type" : ""}
-      aria-label="Field Type"
-      hiddenLabel={hideLabel}
-      helperText={value && getFieldProp("description", value)}
-      FormHelperTextProps={{ classes: { root: classes.helperText } }}
-      className={className}
-    >
-      {options.map((fieldConfig) => (
-        <MenuItem
-          key={`select-field-${fieldConfig.type}`}
-          id={`select-field-${fieldConfig.type}`}
-          value={fieldConfig.type}
-        >
-          <ListItemIcon className={classes.listItemIcon}>
-            {fieldConfig.icon}
+      options={options.map((fieldConfig) => ({
+        label: fieldConfig.name,
+        value: fieldConfig.type,
+      }))}
+      {...({
+        AutocompleteProps: {
+          groupBy: (option) => getFieldProp("group", option.value),
+        },
+      } as any)}
+      itemRenderer={(option) => (
+        <>
+          <ListItemIcon style={{ minWidth: 40 }}>
+            {getFieldProp("icon", option.value as FieldType)}
           </ListItemIcon>
-          {fieldConfig.name}
-        </MenuItem>
-      ))}
-    </TextField>
+          {option.label}
+        </>
+      )}
+      label="Field Type"
+      labelPlural="Field Types"
+      TextFieldProps={{
+        hiddenLabel: hideLabel,
+        helperText: value && getFieldProp("description", value),
+        SelectProps: {
+          displayEmpty: true,
+          renderValue: () => (
+            <>
+              <ListItemIcon
+                sx={{
+                  minWidth: 40,
+                  verticalAlign: "text-bottom",
+                  "& svg": { my: -0.5 },
+                }}
+              >
+                {getFieldProp("icon", value as FieldType)}
+              </ListItemIcon>
+              {getFieldProp("name", value as FieldType)}
+            </>
+          ),
+        },
+      }}
+    />
   );
 }

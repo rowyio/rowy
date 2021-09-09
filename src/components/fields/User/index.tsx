@@ -17,6 +17,7 @@ const SideDrawerField = lazy(
 export const config: IFieldConfig = {
   type: FieldType.user,
   name: "User",
+  group: "Metadata",
   dataType:
     "{ displayName: string, email: string, emailVerified: boolean, isAnonymous: boolean, photoURL: string, timestamp: firebase.firestore.Timestamp, uid: string }",
   initialValue: null,

@@ -9,6 +9,7 @@ export { FieldType };
 export interface IFieldConfig {
   type: FieldType;
   name: string;
+  group: string;
   dataType: string;
   initializable?: boolean;
   requireConfiguration?: boolean;

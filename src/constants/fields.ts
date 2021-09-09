@@ -6,6 +6,9 @@ export enum FieldType {
   email = "EMAIL",
   phone = "PHONE_NUMBER",
   url = "URL",
+  // SELECT
+  singleSelect = "SINGLE_SELECT",
+  multiSelect = "MULTI_SELECT",
   // NUMERIC
   checkbox = "CHECK_BOX",
   number = "NUMBER",
@@ -20,9 +23,6 @@ export enum FieldType {
   // FILE
   image = "IMAGE",
   file = "FILE",
-  // SELECT
-  singleSelect = "SINGLE_SELECT",
-  multiSelect = "MULTI_SELECT",
   // CONNECTION
   subTable = "SUB_TABLE",
   connectTable = "DOCUMENT_SELECT",
@@ -35,9 +35,9 @@ export enum FieldType {
   action = "ACTION",
   derivative = "DERIVATIVE",
   aggregate = "AGGREGATE",
-  // INTERNAL
+  status = "STATUS",
+  // METADATA
   user = "USER",
   id = "ID",
   last = "LAST",
-  status = "STATUS",
 }

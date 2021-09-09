@@ -21,6 +21,7 @@ const Settings = lazy(
 export const config: IFieldConfig = {
   type: FieldType.subTable,
   name: "SubTable",
+  group: "Connection",
   dataType: "undefined",
   initialValue: null,
   icon: <SubTableIcon />,

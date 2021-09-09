@@ -67,8 +67,8 @@ switch (triggerType){
               FieldType.action,
             ].includes(f)
         )}
-        onChange={(newType: any) => {
-          handleChange("renderFieldType")(newType.target.value);
+        onChange={(value) => {
+          handleChange("renderFieldType")(value);
         }}
       />
     </>

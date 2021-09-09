@@ -83,7 +83,10 @@ export default function Modal({
       }
     >
       <Stack direction="row" alignItems="flex-start">
-        <DialogTitle id="modal-title" style={{ flexGrow: 1 }}>
+        <DialogTitle
+          id="modal-title"
+          style={{ flexGrow: 1, userSelect: "none" }}
+        >
           {title}
         </DialogTitle>
 

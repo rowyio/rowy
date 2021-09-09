@@ -21,6 +21,7 @@ const Settings = lazy(
 export const config: IFieldConfig = {
   type: FieldType.date,
   name: "Date",
+  group: "Date & Time",
   dataType: "firebase.firestore.Timestamp",
   initialValue: null,
   initializable: true,

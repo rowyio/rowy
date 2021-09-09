@@ -89,10 +89,7 @@ export default function FormDialog({
           </section>
 
           <section>
-            <FieldsDropdown
-              value={type}
-              onChange={(newType) => setType(newType.target.value as FieldType)}
-            />
+            <FieldsDropdown value={type} onChange={setType} />
           </section>
         </>
       }

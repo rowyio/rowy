@@ -19,6 +19,7 @@ const Settings = lazy(
 export const config: IFieldConfig = {
   type: FieldType.shortText,
   name: "Short Text",
+  group: "Text",
   dataType: "string",
   initialValue: "",
   initializable: true,

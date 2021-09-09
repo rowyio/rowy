@@ -14,6 +14,7 @@ const SideDrawerField = lazy(
 export const config: IFieldConfig = {
   type: FieldType.email,
   name: "Email",
+  group: "Text",
   dataType: "string",
   initialValue: "",
   initializable: true,

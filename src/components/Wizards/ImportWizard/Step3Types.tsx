@@ -37,8 +37,7 @@ export default function Step3Types({ config, updateConfig, isXs }: IStepProps) {
 
   const [fieldToEdit, setFieldToEdit] = useState(Object.keys(config)[0]);
 
-  const handleChange = (e) =>
-    updateConfig({ [fieldToEdit]: { type: e.target.value } });
+  const handleChange = (v) => updateConfig({ [fieldToEdit]: { type: v } });
 
   const { tableState } = useProjectContext();
 

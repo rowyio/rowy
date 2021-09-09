@@ -19,6 +19,7 @@ const SideDrawerField = lazy(
 export const config: IFieldConfig = {
   type: FieldType.checkbox,
   name: "Toggle",
+  group: "Numeric",
   dataType: "boolean",
   initialValue: false,
   initializable: true,
