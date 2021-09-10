@@ -32,11 +32,15 @@ export default function Url({
             />
             <IconButton
               component="a"
-              href={value.includes("http") ? value : `https://${value}`}
+              href={
+                typeof value !== "string" || value.includes("http")
+                  ? value
+                  : `https://${value}`
+              }
               target="_blank"
               rel="noopener noreferrer"
               style={{ width: 56, marginLeft: 16 }}
-              disabled={!value}
+              disabled={!value || typeof value !== "string"}
             >
               <LaunchIcon />
             </IconButton>
