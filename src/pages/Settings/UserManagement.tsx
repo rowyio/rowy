@@ -69,7 +69,7 @@ export default function UserManagementPage() {
       </SlideTransition>
 
       {loading || (query === "" && results.length === 0) ? (
-        <Fade in style={{ transitionDelay: "1s" }} unmountOnExit>
+        <Fade in timeout={1000} style={{ transitionDelay: "1s" }} unmountOnExit>
           <Paper>
             <List sx={{ py: { xs: 0, sm: 1.5 }, px: { xs: 0, sm: 1 } }}>
               <UserSkeleton />

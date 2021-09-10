@@ -71,6 +71,7 @@ export default function TablePage() {
       title={tableName}
       titleComponent={<Breadcrumbs />}
       currentSection={currentSection}
+      titleTransitionProps={{ style: { transformOrigin: "0 50%" } }}
     >
       <ActionParamsProvider>
         {tableState.loadingColumns ? (

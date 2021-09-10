@@ -53,58 +53,61 @@ export default function TableHeader() {
         "& > *": { flexShrink: 0 },
       }}
     >
-      {!isCollectionGroup() && (
-        /* <ButtonGroup
-            variant="contained"
-            aria-label="Split button"
-            style={{ display: "flex" }}
-          > */
+      {/*
+      <ButtonGroup
+        variant="contained"
+        aria-label="Split button"
+        style={{ display: "flex" }}
+      >
+        */}
+      <Button
+        disabled={isCollectionGroup()}
+        onClick={() => {
+          const requiredFields = Object.values(columns)
+            .map((column) => {
+              if (column.config.required) {
+                return column.key;
+              }
+            })
+            .filter((c) => c);
+          const initialVal = Object.values(columns).reduce((acc, column) => {
+            if (column.config?.defaultValue?.type === "static") {
+              return {
+                ...acc,
+                [column.key]: column.config.defaultValue.value,
+              };
+            } else if (column.config?.defaultValue?.type === "null") {
+              return { ...acc, [column.key]: null };
+            } else return acc;
+          }, {});
+          tableActions?.row.add(
+            {
+              ...initialVal,
+              _updatedBy: rowyUser(currentUser),
+              _createdBy: rowyUser(currentUser),
+            },
+            requiredFields
+          );
+        }}
+        variant="contained"
+        color="primary"
+        startIcon={<AddRowIcon />}
+        // sx={{ pr: 1.5 }}
+      >
+        Add Row
+      </Button>
+      {/*
         <Button
-          onClick={() => {
-            const requiredFields = Object.values(columns)
-              .map((column) => {
-                if (column.config.required) {
-                  return column.key;
-                }
-              })
-              .filter((c) => c);
-            const initialVal = Object.values(columns).reduce((acc, column) => {
-              if (column.config?.defaultValue?.type === "static") {
-                return {
-                  ...acc,
-                  [column.key]: column.config.defaultValue.value,
-                };
-              } else if (column.config?.defaultValue?.type === "null") {
-                return { ...acc, [column.key]: null };
-              } else return acc;
-            }, {});
-            tableActions?.row.add(
-              {
-                ...initialVal,
-                _updatedBy: rowyUser(currentUser),
-                _createdBy: rowyUser(currentUser),
-              },
-              requiredFields
-            );
-          }}
-          variant="contained"
-          color="primary"
-          startIcon={<AddRowIcon />}
-          // sx={{ pr: 1.5 }}
+          // aria-controls={open ? 'split-button-menu' : undefined}
+          // aria-expanded={open ? 'true' : undefined}
+          // aria-label="select merge strategy"
+          aria-haspopup="menu"
+          style={{ padding: 0 }}
         >
-          Add Row
+          <ArrowDropDownIcon />
         </Button>
-        /* <Button
-              // aria-controls={open ? 'split-button-menu' : undefined}
-              // aria-expanded={open ? 'true' : undefined}
-              // aria-label="select merge strategy"
-              aria-haspopup="menu"
-              style={{ padding: 0 }}
-            >
-              <ArrowDropDownIcon />
-            </Button>
-          </ButtonGroup> */
-      )}
+      </ButtonGroup>
+      */}
       {/* Spacer */} <div />
       <HiddenFields />
       <Filters />

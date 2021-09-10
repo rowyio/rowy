@@ -94,7 +94,7 @@ export default function HomePage() {
 
   if (!Array.isArray(tables))
     return (
-      <Fade in style={{ transitionDelay: "1s" }} unmountOnExit>
+      <Fade in timeout={1000} style={{ transitionDelay: "1s" }} unmountOnExit>
         <div>
           {view === "list" ? <TableListSkeleton /> : <TableGridSkeleton />}
         </div>

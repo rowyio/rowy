@@ -76,7 +76,7 @@ export default function ProjectSettingsPage() {
   return (
     <Container maxWidth="sm" sx={{ px: 1, pt: 1, pb: 7 + 3 + 3 }}>
       {settingsState.loading || publicSettingsState.loading ? (
-        <Fade in style={{ transitionDelay: "1s" }} unmountOnExit>
+        <Fade in timeout={1000} style={{ transitionDelay: "1s" }} unmountOnExit>
           <Stack spacing={4}>
             {new Array(sections.length).fill(null).map((_, i) => (
               <SettingsSkeleton key={i} />

@@ -20,7 +20,7 @@ export default function Loading({
   const fullScreenHeight = use100vh() ?? "100vh";
 
   return (
-    <Fade in style={{ transitionDelay: "1s" }} unmountOnExit>
+    <Fade in timeout={1000} style={{ transitionDelay: "1s" }} unmountOnExit>
       <Stack
         justifyContent="center"
         alignItems="center"

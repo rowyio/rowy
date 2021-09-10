@@ -7,7 +7,7 @@ import {
   IconButton,
   Box,
   Typography,
-  Grow,
+  Grow,GrowProps
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 
@@ -26,6 +26,7 @@ export interface INavigationProps {
   title: string;
   titleComponent?: ReactNode;
   currentSection?: string;
+  titleTransitionProps?:Partial<GrowProps>
 }
 
 export default function Navigation({
@@ -33,6 +34,7 @@ export default function Navigation({
   title,
   titleComponent,
   currentSection,
+  titleTransitionProps,
 }: INavigationProps) {
   const [open, setOpen] = useState(false);
   const trigger = useScrollTrigger({ disableHysteresis: true, threshold: 0 });
@@ -91,7 +93,7 @@ export default function Navigation({
             </IconButton>
           </Grow>
 
-          <Grow in key={title}>
+          <Grow in key={title} {...titleTransitionProps}>
             <Box sx={{ flex: 1, overflowX: "auto", userSelect: "none" }}>
               {titleComponent || (
                 <Typography

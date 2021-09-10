@@ -1,4 +1,4 @@
-import { Stack, Button } from "@material-ui/core";
+import { Fade, Stack, Button } from "@material-ui/core";
 import Skeleton from "@material-ui/core/Skeleton";
 import AddRowIcon from "assets/icons/AddRow";
 
@@ -10,39 +10,46 @@ const ButtonSkeleton = (props) => (
 
 export default function TableHeaderSkeleton() {
   return (
-    <Stack
-      direction="row"
-      alignItems="center"
-      spacing={1}
-      sx={{ pl: 2, pr: 2, pb: 1.5, height: TABLE_HEADER_HEIGHT }}
-    >
-      <ButtonSkeleton>
-        <Button variant="contained" startIcon={<AddRowIcon />}>
-          Add Row
-        </Button>
-      </ButtonSkeleton>
+    <Fade in timeout={1000} style={{ transitionDelay: "1s" }} unmountOnExit>
+      <Stack
+        direction="row"
+        alignItems="center"
+        spacing={1}
+        sx={{
+          ml: "env(safe-area-inset-left)",
+          mr: "env(safe-area-inset-right)",
+          pl: 2,
+          pr: 2,
+          pb: 1.5,
+          height: TABLE_HEADER_HEIGHT,
+        }}
+      >
+        <ButtonSkeleton>
+          <Button variant="contained" startIcon={<AddRowIcon />}>
+            Add Row
+          </Button>
+        </ButtonSkeleton>
 
-      <div />
+        <div />
 
-      <ButtonSkeleton>
-        <Button variant="contained" startIcon={<AddRowIcon />}>
-          Hide
-        </Button>
-      </ButtonSkeleton>
-      <ButtonSkeleton>
-        <Button variant="contained" startIcon={<AddRowIcon />}>
-          Filter
-        </Button>
-      </ButtonSkeleton>
+        <ButtonSkeleton>
+          <Button variant="contained" startIcon={<AddRowIcon />}>
+            Hide
+          </Button>
+        </ButtonSkeleton>
+        <ButtonSkeleton>
+          <Button variant="contained" startIcon={<AddRowIcon />}>
+            Filter
+          </Button>
+        </ButtonSkeleton>
 
-      <div style={{ flexGrow: 1 }} />
+        <div style={{ flexGrow: 1 }} />
 
-      <ButtonSkeleton style={{ width: 40, height: 32 }} />
-      <div />
-      <ButtonSkeleton style={{ width: 40, height: 32 }} />
-      <ButtonSkeleton style={{ width: 40, height: 32 }} />
-      <div />
-      <ButtonSkeleton style={{ width: 40, height: 32 }} />
-    </Stack>
+        <ButtonSkeleton style={{ width: 40, height: 32 }} />
+        <div />
+        <ButtonSkeleton style={{ width: 40, height: 32 }} />
+        <ButtonSkeleton style={{ width: 40, height: 32 }} />
+      </Stack>
+    </Fade>
   );
 }
