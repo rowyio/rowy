@@ -24,7 +24,7 @@ const Settings = lazy(
 export const config: IFieldConfig = {
   type: FieldType.singleSelect,
   name: "Single Select",
-  group: "File",
+  group: "Select",
   dataType: "string | null",
   initialValue: null,
   initializable: true,
