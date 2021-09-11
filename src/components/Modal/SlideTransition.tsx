@@ -1,8 +1,8 @@
 import React from "react";
-import { useTheme } from "@material-ui/core";
+import { useTheme } from "@mui/material";
 import { Transition } from "react-transition-group";
 import { TransitionProps } from "react-transition-group/Transition";
-import { TransitionProps as MuiTransitionProps } from "@material-ui/core/transitions";
+import { TransitionProps as MuiTransitionProps } from "@mui/material/transitions";
 
 export const SlideTransition: React.ForwardRefExoticComponent<
   Pick<TransitionProps, React.ReactText> & React.RefAttributes<any>

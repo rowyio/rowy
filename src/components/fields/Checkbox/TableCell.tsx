@@ -1,8 +1,8 @@
 import { IHeavyCellProps } from "../types";
 import _get from "lodash/get";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
-import { FormControlLabel, Switch } from "@material-ui/core";
+import { makeStyles, createStyles } from "@mui/styles";
+import { FormControlLabel, Switch } from "@mui/material";
 
 import Confirmation from "components/Confirmation";
 

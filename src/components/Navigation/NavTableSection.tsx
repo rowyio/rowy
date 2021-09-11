@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 
-import { List, ListItemText, Collapse } from "@material-ui/core";
-import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
+import { List, ListItemText, Collapse } from "@mui/material";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import NavItem from "./NavItem";
 
 import { Table } from "contexts/ProjectContext";

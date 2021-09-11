@@ -3,7 +3,7 @@ import _find from "lodash/find";
 import _sortBy from "lodash/sortBy";
 import _isEmpty from "lodash/isEmpty";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
+import { makeStyles, createStyles } from "@mui/styles";
 import {
   Popover,
   Button,
@@ -14,11 +14,11 @@ import {
   TextField,
   Switch,
   Chip,
-} from "@material-ui/core";
-import FilterIcon from "@material-ui/icons/FilterList";
-import CloseIcon from "@material-ui/icons/Close";
+} from "@mui/material";
+import FilterIcon from "@mui/icons-material/FilterList";
+import CloseIcon from "@mui/icons-material/Close";
 
-import MultiSelect from "@antlerengineering/multiselect";
+import MultiSelect from "@rowy/multiselect";
 import ButtonWithStatus from "components/ButtonWithStatus";
 
 import { FieldType } from "constants/fields";

@@ -1,8 +1,8 @@
 import { useState } from "react";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
-import { Grid, Typography, Divider, ButtonBase } from "@material-ui/core";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import { makeStyles, createStyles } from "@mui/styles";
+import { Grid, Typography, Divider, ButtonBase } from "@mui/material";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 import { IStepProps } from ".";
 import FadeList from "../FadeList";

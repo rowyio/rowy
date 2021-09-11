@@ -2,7 +2,7 @@ import { lazy } from "react";
 import { IFieldConfig, FieldType } from "components/fields/types";
 import withBasicCell from "../_withTableCell/withBasicCell";
 
-import LongTextIcon from "@material-ui/icons/Notes";
+import LongTextIcon from "@mui/icons-material/Notes";
 import BasicCell from "./BasicCell";
 import withSideDrawerEditor from "components/Table/editors/withSideDrawerEditor";
 

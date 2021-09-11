@@ -6,8 +6,8 @@ import {
   DialogContentText,
   Link as MuiLink,
   TextField,
-} from "@material-ui/core";
-import AddIcon from "@material-ui/icons/PersonAddOutlined";
+} from "@mui/material";
+import AddIcon from "@mui/icons-material/PersonAddOutlined";
 
 import Modal from "components/Modal";
 
@@ -53,7 +53,6 @@ export default function InviteUser() {
                 label="Email Address"
                 id="invite-email"
                 fullWidth
-                autoFocus
                 placeholder="name@example.com"
               />
             </>

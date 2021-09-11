@@ -1,10 +1,10 @@
 import { lazy, Suspense } from "react";
 import { Route, Switch, Link, Redirect } from "react-router-dom";
-import LocalizationProvider from "@material-ui/lab/LocalizationProvider";
-import AdapterDateFns from "@material-ui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
 
-import { StyledEngineProvider } from "@material-ui/core/styles";
-import { Button } from "@material-ui/core";
+import { StyledEngineProvider } from "@mui/material/styles";
+import { Button } from "@mui/material";
 import "./space-grotesk.css";
 
 import CustomBrowserRouter from "utils/CustomBrowserRouter";

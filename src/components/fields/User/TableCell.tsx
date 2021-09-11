@@ -1,6 +1,6 @@
 import { IHeavyCellProps } from "../types";
 
-import { Tooltip, Chip, Avatar } from "@material-ui/core";
+import { Tooltip, Chip, Avatar } from "@mui/material";
 
 import { format } from "date-fns";
 import { DATE_TIME_FORMAT } from "constants/dates";
@@ -18,6 +18,7 @@ export default function User({ value }: IHeavyCellProps) {
         size="small"
         avatar={<Avatar alt="Avatar" src={value.photoURL} />}
         label={value.displayName}
+        sx={{ height: 24 }}
       />
     </Tooltip>
   );

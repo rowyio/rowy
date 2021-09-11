@@ -3,8 +3,8 @@ import { Controller } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 import { ChromePicker } from "react-color";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
-import { Grid, ButtonBase, Typography, Collapse } from "@material-ui/core";
+import { makeStyles, createStyles } from "@mui/styles";
+import { Grid, ButtonBase, Typography, Collapse } from "@mui/material";
 
 // import { useFieldStyles } from "components/SideDrawer/Form/utils";
 

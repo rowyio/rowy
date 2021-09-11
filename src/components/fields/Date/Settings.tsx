@@ -1,7 +1,7 @@
 import { ISettingsProps } from "../types";
 
 import Subheading from "components/Table/ColumnMenu/Subheading";
-import MultiSelect from "@antlerengineering/multiselect";
+import MultiSelect from "@rowy/multiselect";
 import { DATE_FORMAT } from "constants/dates";
 
 export default function Settings({ handleChange, config }: ISettingsProps) {

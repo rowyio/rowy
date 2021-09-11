@@ -1,9 +1,9 @@
 import { Controller } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 
-import { Grid } from "@material-ui/core";
+import { Grid } from "@mui/material";
 
-import "@material-ui/lab";
+import "@mui/lab";
 
 import { useFieldStyles } from "components/SideDrawer/Form/utils";
 import { useStatusStyles } from "./styles";

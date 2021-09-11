@@ -14,8 +14,8 @@ import "tinymce/plugins/help";
 import "tinymce/plugins/code";
 import { Editor } from "@tinymce/tinymce-react";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
-import { useTheme } from "@material-ui/core";
+import { makeStyles, createStyles } from "@mui/styles";
+import { useTheme } from "@mui/material";
 
 const useStyles = makeStyles((theme) =>
   createStyles({

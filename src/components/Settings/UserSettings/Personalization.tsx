@@ -1,7 +1,7 @@
 import { lazy, Suspense, useState } from "react";
 import { IUserSettingsChildProps } from "pages/Settings/UserSettings";
 
-import { FormControlLabel, Checkbox, Collapse } from "@material-ui/core";
+import { FormControlLabel, Checkbox, Collapse } from "@mui/material";
 import Loading from "components/Loading";
 
 // prettier-ignore

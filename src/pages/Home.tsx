@@ -15,13 +15,13 @@ import {
   IconButton,
   Zoom,
   Fade,
-} from "@material-ui/core";
-import ViewListIcon from "@material-ui/icons/ViewListOutlined";
-import ViewGridIcon from "@material-ui/icons/ViewModuleOutlined";
-import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import EditIcon from "@material-ui/icons/EditOutlined";
-import AddIcon from "@material-ui/icons/Add";
+} from "@mui/material";
+import ViewListIcon from "@mui/icons-material/ViewListOutlined";
+import ViewGridIcon from "@mui/icons-material/ViewModuleOutlined";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import EditIcon from "@mui/icons-material/EditOutlined";
+import AddIcon from "@mui/icons-material/Add";
 
 import FloatingSearch from "components/FloatingSearch";
 import SlideTransition from "components/Modal/SlideTransition";

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import _merge from "lodash/merge";
 
-import { useTheme, useMediaQuery, Typography } from "@material-ui/core";
+import { useTheme, useMediaQuery, Typography } from "@mui/material";
 
 import WizardDialog from "../WizardDialog";
 import Step1Columns from "./Step1Columns";

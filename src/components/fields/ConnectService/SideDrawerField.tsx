@@ -2,7 +2,7 @@ import { Controller } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 import { get } from "lodash";
 
-import { useTheme, Grid, Chip } from "@material-ui/core";
+import { useTheme, Grid, Chip } from "@mui/material";
 
 import ConnectServiceSelect from "./ConnectServiceSelect";
 

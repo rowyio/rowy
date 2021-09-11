@@ -1,9 +1,9 @@
 import { FormatterProps } from "react-data-grid";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
-import { Stack, Tooltip, IconButton, alpha } from "@material-ui/core";
+import { makeStyles, createStyles } from "@mui/styles";
+import { Stack, Tooltip, IconButton, alpha } from "@mui/material";
 import CopyCellsIcon from "assets/icons/CopyCells";
-import DeleteIcon from "@material-ui/icons/DeleteOutlined";
+import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 
 import { useConfirmation } from "components/ConfirmationDialog/Context";
 import { useProjectContext } from "contexts/ProjectContext";

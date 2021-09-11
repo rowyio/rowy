@@ -1,4 +1,4 @@
-import { ListItem, Skeleton } from "@material-ui/core";
+import { ListItem, Skeleton } from "@mui/material";
 
 export default function TableListItemSkeleton() {
   return (

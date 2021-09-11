@@ -1,4 +1,4 @@
-import { Zoom, Stack, Typography } from "@material-ui/core";
+import { Zoom, Stack, Typography } from "@mui/material";
 
 export default function HomeWelcomePrompt() {
   return (

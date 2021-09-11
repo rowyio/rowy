@@ -2,15 +2,15 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { IMenuModalProps } from "..";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
-import Switch from "@material-ui/core/Switch";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
+import { makeStyles, createStyles } from "@mui/styles";
+import Switch from "@mui/material/Switch";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import {
   Typography,
   TextField,
   MenuItem,
   ListItemText,
-} from "@material-ui/core";
+} from "@mui/material";
 import Subheading from "../Subheading";
 
 import { getFieldProp } from "components/fields";

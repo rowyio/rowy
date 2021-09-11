@@ -1,6 +1,6 @@
 import { IBasicCellProps } from "../types";
 
-import { Link } from "@material-ui/core";
+import { Link } from "@mui/material";
 
 export default function Url({ value }: IBasicCellProps) {
   if (!value || typeof value !== "string") return null;

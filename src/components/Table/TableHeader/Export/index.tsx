@@ -1,10 +1,10 @@
 import { useState, useMemo } from "react";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
-import { DialogContentText, Tab, Divider } from "@material-ui/core";
-import TabContext from "@material-ui/lab/TabContext";
-import TabList from "@material-ui/lab/TabList";
-import TabPanel from "@material-ui/lab/TabPanel";
+import { makeStyles, createStyles } from "@mui/styles";
+import { DialogContent, Tab, Divider } from "@mui/material";
+import TabContext from "@mui/lab/TabContext";
+import TabList from "@mui/lab/TabList";
+import TabPanel from "@mui/lab/TabPanel";
 
 import TableHeaderButton from "../TableHeaderButton";
 import ExportIcon from "assets/icons/Export";
@@ -26,11 +26,6 @@ const useStyles = makeStyles((theme) =>
       },
     },
 
-    tabs: {
-      marginLeft: "calc(var(--dialog-spacing) * -1)",
-      marginRight: "calc(var(--dialog-spacing) * -1)",
-      marginTop: theme.spacing(1),
-    },
     tab: { minWidth: 0 },
     divider: {
       margin: "-1px calc(var(--dialog-spacing) * -1) 0",
@@ -101,15 +96,14 @@ export default function Export() {
             title={mode}
             header={
               <>
-                <DialogContentText>
+                <DialogContent>
                   {(tableState?.filters && tableState?.filters.length !== 0) ||
                   (tableState?.orderBy && tableState?.orderBy.length !== 0)
                     ? "The filters and sorting applied to the table will be used in the export."
                     : "No filters or sorting will be applied on the exported data."}
-                </DialogContentText>
+                </DialogContent>
 
                 <TabList
-                  className={classes.tabs}
                   onChange={(_, v) => setMode(v)}
                   indicatorColor="primary"
                   textColor="primary"
@@ -118,6 +112,7 @@ export default function Export() {
                   action={(actions) =>
                     setTimeout(() => actions?.updateIndicator(), 200)
                   }
+                  sx={{ mt: 1 }}
                 >
                   <Tab className={classes.tab} label="Export" value="Export" />
                   <Tab
@@ -129,6 +124,10 @@ export default function Export() {
                 <Divider className={classes.divider} />
               </>
             }
+            ScrollableDialogContentProps={{
+              disableTopDivider: true,
+              disableBottomDivider: true,
+            }}
           >
             <TabPanel value="Export" className={classes.tabPanel}>
               <ExportDetails query={query} closeModal={handleClose} />

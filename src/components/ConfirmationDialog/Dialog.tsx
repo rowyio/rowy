@@ -8,7 +8,7 @@ import {
   DialogTitle,
   TextField,
   Button,
-} from "@material-ui/core";
+} from "@mui/material";
 
 import { SlideTransitionMui } from "components/Modal/SlideTransition";
 

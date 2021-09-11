@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import { Button } from "@material-ui/core";
-import CheckIcon from "@material-ui/icons/Check";
+import { Button } from "@mui/material";
+import CheckIcon from "@mui/icons-material/Check";
 
 import AuthLayout from "components/Auth/AuthLayout";
 import EmptyState from "components/EmptyState";

@@ -1,6 +1,6 @@
 import { IHeavyCellProps } from "../types";
 
-import { useTheme } from "@material-ui/core";
+import { useTheme } from "@mui/material";
 
 export default function Id({ docRef }: IHeavyCellProps) {
   const theme = useTheme();

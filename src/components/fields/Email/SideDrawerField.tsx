@@ -1,7 +1,7 @@
 import { Controller } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 
-import { TextField } from "@material-ui/core";
+import { TextField } from "@mui/material";
 
 export default function Email({
   control,

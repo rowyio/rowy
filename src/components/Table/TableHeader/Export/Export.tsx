@@ -7,9 +7,9 @@ import _get from "lodash/get";
 import _find from "lodash/find";
 import _sortBy from "lodash/sortBy";
 import { isString } from "lodash";
-import MultiSelect from "@antlerengineering/multiselect";
+import MultiSelect from "@rowy/multiselect";
 
-import { Button, DialogActions } from "@material-ui/core";
+import { Button, DialogActions } from "@mui/material";
 
 import { useProjectContext } from "contexts/ProjectContext";
 import { FieldType } from "constants/fields";

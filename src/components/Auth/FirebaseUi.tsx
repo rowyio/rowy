@@ -4,10 +4,10 @@ import clsx from "clsx";
 import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 import { Props as FirebaseUiProps } from "react-firebaseui";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
-import { Typography } from "@material-ui/core";
-import { alpha } from "@material-ui/core/styles";
-import Skeleton from "@material-ui/core/Skeleton";
+import { makeStyles, createStyles } from "@mui/styles";
+import { Typography } from "@mui/material";
+import { alpha } from "@mui/material/styles";
+import Skeleton from "@mui/material/Skeleton";
 
 import { auth, db } from "@src/firebase";
 import { defaultUiConfig, getSignInOptions } from "@src/firebase/firebaseui";

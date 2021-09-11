@@ -1,5 +1,5 @@
-import { SvgIconProps } from "@material-ui/core/SvgIcon";
-import OpenInNewIcon from "@material-ui/icons/OpenInNew";
+import { SvgIconProps } from "@mui/material/SvgIcon";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
 export default function InlineOpenInNewIcon(props: SvgIconProps) {
   return (

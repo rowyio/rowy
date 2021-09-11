@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { ISettingsProps } from "../types";
 import _sortBy from "lodash/sortBy";
 
-import { TextField } from "@material-ui/core";
-import MultiSelect from "@antlerengineering/multiselect";
+import { TextField } from "@mui/material";
+import MultiSelect from "@rowy/multiselect";
 
 import { FieldType } from "constants/fields";
 import { db } from "../../../firebase";

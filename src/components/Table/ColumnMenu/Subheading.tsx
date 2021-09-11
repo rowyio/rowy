@@ -1,4 +1,4 @@
-import { useTheme, Typography, TypographyProps } from "@material-ui/core";
+import { useTheme, Typography, TypographyProps } from "@mui/material";
 
 export default function Subheading(props: TypographyProps<"h2">) {
   const theme = useTheme();

@@ -2,10 +2,10 @@ import { useRef, useState, useEffect } from "react";
 import _isEqual from "lodash/isEqual";
 import _sortBy from "lodash/sortBy";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
-import VisibilityOffIcon from "@material-ui/icons/VisibilityOffOutlined";
+import { makeStyles, createStyles } from "@mui/styles";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOffOutlined";
 
-import MultiSelect from "@antlerengineering/multiselect";
+import MultiSelect from "@rowy/multiselect";
 import ButtonWithStatus from "components/ButtonWithStatus";
 import Column from "components/Wizards/Column";
 

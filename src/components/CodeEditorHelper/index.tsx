@@ -5,8 +5,8 @@ import {
   Tooltip,
   Chip,
   Button,
-} from "@material-ui/core";
-import OpenIcon from "@material-ui/icons/OpenInNew";
+} from "@mui/material";
+import OpenIcon from "@mui/icons-material/OpenInNew";
 export interface ICodeEditorHelperProps {
   docLink: string;
   additionalVariables?: {

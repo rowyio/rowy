@@ -10,11 +10,11 @@ import {
   ListItemIcon,
   ListItemText,
   Divider,
-} from "@material-ui/core";
-import HomeIcon from "@material-ui/icons/HomeOutlined";
-import SettingsIcon from "@material-ui/icons/SettingsOutlined";
-import ProjectSettingsIcon from "@material-ui/icons/BuildCircleOutlined";
-import UserManagementIcon from "@material-ui/icons/AccountCircleOutlined";
+} from "@mui/material";
+import HomeIcon from "@mui/icons-material/HomeOutlined";
+import SettingsIcon from "@mui/icons-material/SettingsOutlined";
+import ProjectSettingsIcon from "@mui/icons-material/BuildCircleOutlined";
+import UserManagementIcon from "@mui/icons-material/AccountCircleOutlined";
 import CloseIcon from "assets/icons/Backburger";
 
 import { APP_BAR_HEIGHT } from ".";

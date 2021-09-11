@@ -1,4 +1,4 @@
-import { Switch, FormControlLabel } from "@material-ui/core";
+import { Switch, FormControlLabel } from "@mui/material";
 
 const Settings = ({ config, handleChange }) => {
   return (

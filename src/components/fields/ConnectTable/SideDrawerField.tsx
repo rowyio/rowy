@@ -1,7 +1,7 @@
 import { Controller } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 
-import { useTheme, Grid, Chip } from "@material-ui/core";
+import { useTheme, Grid, Chip } from "@mui/material";
 
 import ConnectTableSelect from "./ConnectTableSelect";
 

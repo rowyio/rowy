@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import _camel from "lodash/camelCase";
 import { IMenuModalProps } from ".";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
-import { TextField } from "@material-ui/core";
+import { makeStyles, createStyles } from "@mui/styles";
+import { TextField } from "@mui/material";
 
 import Modal from "components/Modal";
 import { FieldType } from "constants/fields";

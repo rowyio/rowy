@@ -1,11 +1,11 @@
-import { ThemeOptions } from "@material-ui/core/styles";
-import { Shadows } from "@material-ui/core/styles/shadows";
+import { ThemeOptions } from "@mui/material/styles";
+import { Shadows } from "@mui/material/styles/shadows";
 
 import { colord, extend } from "colord";
 import lchPlugin from "colord/plugins/lch";
 extend([lchPlugin]);
 
-declare module "@material-ui/core/styles/createPalette" {
+declare module "@mui/material/styles/createPalette" {
   interface TypeAction {
     activeOpacity: number;
     input: string;

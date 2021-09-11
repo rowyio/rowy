@@ -1,9 +1,9 @@
 import { Controller } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 
-import { useTheme } from "@material-ui/core";
-import LocalizationProvider from "@material-ui/lab/LocalizationProvider";
-import AdapterDateFns from "@material-ui/lab/AdapterDateFns";
+import { useTheme } from "@mui/material";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
 
 import { transformValue, sanitizeValue } from "./utils";
 

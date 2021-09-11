@@ -5,7 +5,7 @@ import {
   Avatar,
   ListItemText,
   Stack,
-} from "@material-ui/core";
+} from "@mui/material";
 
 export default function UserSkeleton() {
   return (

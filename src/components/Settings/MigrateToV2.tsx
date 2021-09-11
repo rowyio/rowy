@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import createPersistedState from "use-persisted-state";
 
-import { Typography, Link, Button } from "@material-ui/core";
-import LoadingButton from "@material-ui/lab/LoadingButton";
-import OpenInNewIcon from "@material-ui/icons/OpenInNew";
+import { Typography, Link, Button } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import Modal from "components/Modal";
 
 import { useProjectContext } from "contexts/ProjectContext";

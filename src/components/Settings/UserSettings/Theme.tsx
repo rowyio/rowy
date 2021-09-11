@@ -3,7 +3,7 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
-} from "@material-ui/core";
+} from "@mui/material";
 
 import { useAppContext } from "contexts/AppContext";
 

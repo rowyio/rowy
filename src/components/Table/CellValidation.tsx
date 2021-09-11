@@ -1,6 +1,6 @@
-import { styled } from "@material-ui/core/styles";
-import ErrorIcon from "@material-ui/icons/ErrorOutline";
-import WarningIcon from "@material-ui/icons/WarningAmber";
+import { styled } from "@mui/material/styles";
+import ErrorIcon from "@mui/icons-material/ErrorOutline";
+import WarningIcon from "@mui/icons-material/WarningAmber";
 
 import RichTooltip from "components/RichTooltip";
 

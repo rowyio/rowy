@@ -1,11 +1,11 @@
-import { makeStyles, createStyles } from "@material-ui/styles";
+import { makeStyles, createStyles } from "@mui/styles";
 import {
   FormLabel,
   FormLabelProps,
   Tooltip,
   IconButton,
-} from "@material-ui/core";
-import HelpIcon from "@material-ui/icons/HelpOutline";
+} from "@mui/material";
+import HelpIcon from "@mui/icons-material/HelpOutline";
 
 const useStyles = makeStyles((theme) =>
   createStyles({

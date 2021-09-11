@@ -3,9 +3,9 @@ import { useSnackbar } from "notistack";
 import _mergeWith from "lodash/mergeWith";
 import _find from "lodash/find";
 
-import { useTheme, useMediaQuery, Typography, Link } from "@material-ui/core";
-import Alert from "@material-ui/core/Alert";
-import AlertTitle from "@material-ui/core/AlertTitle";
+import { useTheme, useMediaQuery, Typography, Link } from "@mui/material";
+import Alert from "@mui/material/Alert";
+import AlertTitle from "@mui/material/AlertTitle";
 
 import WizardDialog from "../WizardDialog";
 import Step1Columns from "./Step1Columns";

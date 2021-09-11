@@ -1,8 +1,8 @@
 import { IHeavyCellProps } from "../types";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
-import MobileDatePicker from "@material-ui/lab/MobileDatePicker";
-import { TextField } from "@material-ui/core";
+import { makeStyles, createStyles } from "@mui/styles";
+import MobileDatePicker from "@mui/lab/MobileDatePicker";
+import { TextField } from "@mui/material";
 
 import { transformValue } from "./utils";
 

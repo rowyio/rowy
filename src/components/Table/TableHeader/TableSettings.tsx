@@ -2,7 +2,7 @@ import { useState } from "react";
 import _find from "lodash/find";
 
 import TableHeaderButton from "./TableHeaderButton";
-import SettingsIcon from "@material-ui/icons/SettingsOutlined";
+import SettingsIcon from "@mui/icons-material/SettingsOutlined";
 
 import TableSettingsDialog, {
   TableSettingsDialogModes,

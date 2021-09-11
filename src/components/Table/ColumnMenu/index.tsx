@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
 
-import { Menu, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
-import LockOpenIcon from "@material-ui/icons/LockOpen";
-import LockIcon from "@material-ui/icons/LockOutlined";
-import VisibilityOffIcon from "@material-ui/icons/VisibilityOffOutlined";
-import VisibilityIcon from "@material-ui/icons/VisibilityOutlined";
+import { Menu, ListItem, ListItemIcon, ListItemText } from "@mui/material";
+import LockOpenIcon from "@mui/icons-material/LockOpen";
+import LockIcon from "@mui/icons-material/LockOutlined";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOffOutlined";
+import VisibilityIcon from "@mui/icons-material/VisibilityOutlined";
 import FreezeIcon from "assets/icons/Freeze";
 import UnfreezeIcon from "assets/icons/Unfreeze";
 import CellResizeIcon from "assets/icons/CellResize";
-import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
-import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
-import EditIcon from "@material-ui/icons/EditOutlined";
-// import ReorderIcon from "@material-ui/icons/Reorder";
-import SettingsIcon from "@material-ui/icons/SettingsOutlined";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import EditIcon from "@mui/icons-material/EditOutlined";
+// import ReorderIcon from "@mui/icons-material/Reorder";
+import SettingsIcon from "@mui/icons-material/SettingsOutlined";
 import ColumnPlusBeforeIcon from "assets/icons/ColumnPlusBefore";
 import ColumnPlusAfterIcon from "assets/icons/ColumnPlusAfter";
 import ColumnRemoveIcon from "assets/icons/ColumnRemove";
@@ -28,7 +28,7 @@ import { FieldType } from "constants/fields";
 import { getFieldProp } from "components/fields";
 
 import { Column } from "react-data-grid";
-import { PopoverProps } from "@material-ui/core";
+import { PopoverProps } from "@mui/material";
 
 const INITIAL_MODAL = { type: "", data: {} };
 
@@ -276,9 +276,8 @@ export default function ColumnMenu() {
     <>
       {column.type !== FieldType.last && (
         <Menu
-          id="simple-menu"
+          id="column-menu"
           anchorEl={anchorEl}
-          keepMounted
           open={Boolean(anchorEl)}
           onClose={handleClose}
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}

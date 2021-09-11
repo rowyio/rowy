@@ -1,7 +1,7 @@
 import jsonFormat from "json-format";
 import { IBasicCellProps } from "../types";
 
-import { useTheme } from "@material-ui/core";
+import { useTheme } from "@mui/material";
 
 export default function Json({ value }: IBasicCellProps) {
   const theme = useTheme();

@@ -1,4 +1,4 @@
-import { Grid, Tooltip, Button } from "@material-ui/core";
+import { Grid, Tooltip, Button } from "@mui/material";
 
 export const ConvertStringToArray = ({ value, onSubmit }) => (
   <Grid container wrap="nowrap" alignItems="center">

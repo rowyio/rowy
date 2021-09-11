@@ -2,8 +2,8 @@ import React, { useRef, useMemo, useState } from "react";
 import clsx from "clsx";
 import Editor, { useMonaco } from "@monaco-editor/react";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
-import { useTheme } from "@material-ui/core";
+import { makeStyles, createStyles } from "@mui/styles";
+import { useTheme } from "@mui/material";
 
 import { useProjectContext } from "contexts/ProjectContext";
 

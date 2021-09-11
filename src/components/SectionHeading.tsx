@@ -2,8 +2,8 @@ import { forwardRef } from "react";
 import _camelCase from "lodash/camelCase";
 import { HashLink } from "react-router-hash-link";
 
-import { Stack, StackProps, Typography, IconButton } from "@material-ui/core";
-import LinkIcon from "@material-ui/icons/Link";
+import { Stack, StackProps, Typography, IconButton } from "@mui/material";
+import LinkIcon from "@mui/icons-material/Link";
 
 import { APP_BAR_HEIGHT } from "components/Navigation";
 

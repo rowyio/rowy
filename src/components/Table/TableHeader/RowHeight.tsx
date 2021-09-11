@@ -5,7 +5,7 @@ import {
   TextField,
   ListSubheader,
   MenuItem,
-} from "@material-ui/core";
+} from "@mui/material";
 import RowHeightIcon from "assets/icons/RowHeight";
 
 import TableHeaderButton from "./TableHeaderButton";

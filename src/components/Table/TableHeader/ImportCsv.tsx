@@ -4,7 +4,7 @@ import parse from "csv-parse";
 import { useDropzone } from "react-dropzone";
 import { useDebouncedCallback } from "use-debounce";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
+import { makeStyles, createStyles } from "@mui/styles";
 import {
   Button,
   Popover,
@@ -13,18 +13,18 @@ import {
   Typography,
   TextField,
   FormHelperText,
-} from "@material-ui/core";
+} from "@mui/material";
 
-import Tab from "@material-ui/core/Tab";
-import TabContext from "@material-ui/lab/TabContext";
-import TabList from "@material-ui/lab/TabList";
-import TabPanel from "@material-ui/lab/TabPanel";
+import Tab from "@mui/material/Tab";
+import TabContext from "@mui/lab/TabContext";
+import TabList from "@mui/lab/TabList";
+import TabPanel from "@mui/lab/TabPanel";
 
 import TableHeaderButton from "./TableHeaderButton";
 import ImportIcon from "assets/icons/Import";
 
 import FileUploadIcon from "assets/icons/Upload";
-import CheckIcon from "@material-ui/icons/CheckCircle";
+import CheckIcon from "@mui/icons-material/CheckCircle";
 
 import ImportCsvWizard, {
   IImportCsvWizardProps,

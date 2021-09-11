@@ -1,7 +1,7 @@
 import { Controller } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 
-import { Slider as MuiSlider, Grid, Typography } from "@material-ui/core";
+import { Slider as MuiSlider, Grid, Typography } from "@mui/material";
 
 export default function Slider({
   control,

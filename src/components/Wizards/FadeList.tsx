@@ -1,7 +1,7 @@
 import React from "react";
 import clsx from "clsx";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
+import { makeStyles, createStyles } from "@mui/styles";
 
 const useStyles = makeStyles((theme) =>
   createStyles({

@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { ChromePicker } from "react-color";
 
-import { Grid, Typography, Stack, Box, Button } from "@material-ui/core";
-import PassIcon from "@material-ui/icons/Check";
-import FailIcon from "@material-ui/icons/Error";
+import { Grid, Typography, Stack, Box, Button } from "@mui/material";
+import PassIcon from "@mui/icons-material/Check";
+import FailIcon from "@mui/icons-material/Error";
 
 import { PRIMARY, DARK_PRIMARY } from "theme/colors";
 import themes from "theme";

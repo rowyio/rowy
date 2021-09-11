@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSnackbar } from "notistack";
 
-import { Typography, Button, TextField } from "@material-ui/core";
+import { Typography, Button, TextField } from "@mui/material";
 
 import AuthLayout from "components/Auth/AuthLayout";
 import FirebaseUi from "components/Auth/FirebaseUi";

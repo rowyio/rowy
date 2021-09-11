@@ -5,7 +5,7 @@ import { useDropzone } from "react-dropzone";
 import _findIndex from "lodash/findIndex";
 import clsx from "clsx";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
+import { makeStyles, createStyles } from "@mui/styles";
 import {
   alpha,
   Stack,
@@ -14,10 +14,10 @@ import {
   ButtonBase,
   CircularProgress,
   Tooltip,
-} from "@material-ui/core";
-import AddIcon from "@material-ui/icons/AddAPhotoOutlined";
-import DeleteIcon from "@material-ui/icons/DeleteOutlined";
-import OpenIcon from "@material-ui/icons/OpenInNewOutlined";
+} from "@mui/material";
+import AddIcon from "@mui/icons-material/AddAPhotoOutlined";
+import DeleteIcon from "@mui/icons-material/DeleteOutlined";
+import OpenIcon from "@mui/icons-material/OpenInNewOutlined";
 
 import { useConfirmation } from "components/ConfirmationDialog";
 import useUploader, { FileValue } from "hooks/useTable/useUploader";

@@ -5,7 +5,7 @@ import _find from "lodash/find";
 import _get from "lodash/get";
 import _pick from "lodash/pick";
 
-import MultiSelect, { MultiSelectProps } from "@antlerengineering/multiselect";
+import MultiSelect, { MultiSelectProps } from "@rowy/multiselect";
 import Loading from "components/Loading";
 import { getAlgoliaSearchKey } from "../../../firebase/callables";
 import createPersistedState from "use-persisted-state";

@@ -13,9 +13,9 @@ import {
   ListItemSecondaryAction,
   Divider,
   Grow,
-} from "@material-ui/core";
-import AccountCircleIcon from "@material-ui/icons/AccountCircleOutlined";
-import ArrowRightIcon from "@material-ui/icons/ArrowRight";
+} from "@mui/material";
+import AccountCircleIcon from "@mui/icons-material/AccountCircleOutlined";
+import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 
 import { useAppContext } from "contexts/AppContext";
 import routes from "constants/routes";
@@ -71,7 +71,6 @@ export default function UserMenu(props: IconButtonProps) {
       <Menu
         anchorEl={anchorEl.current}
         id="user-menu"
-        keepMounted
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         transformOrigin={{ vertical: "top", horizontal: "right" }}
         open={open}

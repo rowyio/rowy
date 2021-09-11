@@ -1,5 +1,5 @@
-import { Typography, Link, Grid, TextField } from "@material-ui/core";
-import LoadingButton from "@material-ui/lab/LoadingButton";
+import { Typography, Link, Grid, TextField } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
 import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
 
 import { IProjectSettingsChildProps } from "pages/Settings/ProjectSettings";

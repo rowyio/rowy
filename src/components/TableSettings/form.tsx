@@ -1,8 +1,8 @@
-import { Field, FieldType } from "@antlerengineering/form-builder";
+import { Field, FieldType } from "@rowy/form-builder";
 import { TableSettingsDialogModes } from "./index";
 
-import { Link, Typography } from "@material-ui/core";
-import OpenInNewIcon from "@material-ui/icons/OpenInNew";
+import { Link, Typography } from "@mui/material";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { projectId } from "../../firebase";
 import WIKI_LINKS from "constants/wikiLinks";
 import { name } from "@root/package.json";

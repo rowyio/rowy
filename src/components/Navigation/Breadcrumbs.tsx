@@ -8,8 +8,8 @@ import {
   BreadcrumbsProps,
   Link,
   Typography,
-} from "@material-ui/core";
-import ArrowRightIcon from "@material-ui/icons/ChevronRight";
+} from "@mui/material";
+import ArrowRightIcon from "@mui/icons-material/ChevronRight";
 
 import { useProjectContext } from "contexts/ProjectContext";
 import useRouter from "hooks/useRouter";

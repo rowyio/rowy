@@ -1,8 +1,8 @@
 import { useRef, useLayoutEffect } from "react";
 import { EditorProps } from "react-data-grid";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
-import { TextField } from "@material-ui/core";
+import { makeStyles, createStyles } from "@mui/styles";
+import { TextField } from "@mui/material";
 
 import { FieldType } from "constants/fields";
 import { getCellValue } from "utils/fns";

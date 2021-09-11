@@ -15,12 +15,12 @@ import {
   Switch,
   Tooltip,
   Typography,
-} from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
+} from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 import ExtensionIcon from "assets/icons/Extension";
-import DuplicateIcon from "@material-ui/icons/ContentCopy";
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/DeleteForever";
+import DuplicateIcon from "@mui/icons-material/ContentCopy";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/DeleteForever";
 
 import EmptyState from "components/EmptyState";
 import { extensionTypes, IExtension, IExtensionType } from "./utils";

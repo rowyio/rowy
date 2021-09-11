@@ -5,8 +5,8 @@ import {
   ListItemIcon,
   ListSubheader,
   Divider,
-} from "@material-ui/core";
-import { alpha } from "@material-ui/core/styles";
+} from "@mui/material";
+import { alpha } from "@mui/material/styles";
 
 export interface IMenuContentsProps {
   menuItems: {

@@ -2,17 +2,17 @@ import { useState, useEffect } from "react";
 import { ISettingsProps } from "../types";
 
 import Subheading from "components/Table/ColumnMenu/Subheading";
-import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
-import Grid from "@material-ui/core/Grid";
-import Divider from "@material-ui/core/Divider";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import Grid from "@mui/material/Grid";
+import Divider from "@mui/material/Divider";
 
-import EditIcon from "@material-ui/icons/Edit";
+import EditIcon from "@mui/icons-material/Edit";
 import Modal from "components/Modal";
-import DeleteIcon from "@material-ui/icons/Delete";
-import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
-import MultiSelect from "@antlerengineering/multiselect";
+import DeleteIcon from "@mui/icons-material/Delete";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
+import MultiSelect from "@rowy/multiselect";
 
 const EMPTY_STATE: {
   isOpen: boolean;

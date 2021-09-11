@@ -1,8 +1,8 @@
 import { Controller } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 
-import { useTheme } from "@material-ui/core";
-import MultiSelect_ from "@antlerengineering/multiselect";
+import { useTheme } from "@mui/material";
+import MultiSelect_ from "@rowy/multiselect";
 import FormattedChip from "components/FormattedChip";
 
 import { sanitiseValue } from "./utils";

@@ -2,8 +2,8 @@ import { useState, useCallback, useEffect } from "react";
 import createPersistedState from "use-persisted-state";
 import { differenceInDays } from "date-fns";
 
-import { Grid, Typography, Button, Link, Divider } from "@material-ui/core";
-import LoadingButton from "@material-ui/lab/LoadingButton";
+import { Grid, Typography, Button, Link, Divider } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 import Logo from "assets/Logo";
 import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";

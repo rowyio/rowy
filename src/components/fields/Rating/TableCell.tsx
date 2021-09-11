@@ -1,7 +1,7 @@
 import { IHeavyCellProps } from "../types";
 
-import MuiRating from "@material-ui/core/Rating";
-import StarBorderIcon from "@material-ui/icons/StarBorder";
+import MuiRating from "@mui/material/Rating";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
 
 import { useRatingStyles } from "./styles";
 

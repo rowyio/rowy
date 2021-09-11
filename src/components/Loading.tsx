@@ -6,7 +6,7 @@ import {
   StackProps,
   CircularProgress,
   Typography,
-} from "@material-ui/core";
+} from "@mui/material";
 interface ILoadingProps extends Partial<StackProps> {
   message?: string;
   fullScreen?: boolean;

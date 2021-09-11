@@ -1,6 +1,6 @@
-import { useTheme } from "@material-ui/core";
-import { Skeleton } from "@material-ui/core";
-import { SkeletonProps } from "@material-ui/lab";
+import { useTheme } from "@mui/material";
+import { Skeleton } from "@mui/material";
+import { SkeletonProps } from "@mui/lab";
 
 export default function FieldSkeleton(props: SkeletonProps) {
   const theme = useTheme();

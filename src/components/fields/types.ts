@@ -2,7 +2,7 @@ import { FieldType } from "constants/fields";
 
 import { FormatterProps, EditorProps } from "react-data-grid";
 import { Control } from "react-hook-form";
-import { PopoverProps } from "@material-ui/core";
+import { PopoverProps } from "@mui/material";
 
 export { FieldType };
 

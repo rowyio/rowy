@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 
-import { Typography, Link as MuiLink, Button } from "@material-ui/core";
-import SecurityIcon from "@material-ui/icons/SecurityOutlined";
+import { Typography, Link as MuiLink, Button } from "@mui/material";
+import SecurityIcon from "@mui/icons-material/SecurityOutlined";
 
 import EmptyState from "components/EmptyState";
 

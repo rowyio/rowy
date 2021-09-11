@@ -1,6 +1,6 @@
 import { ISideDrawerFieldProps } from "../types";
 
-import { useTheme } from "@material-ui/core";
+import { useTheme } from "@mui/material";
 import { useFieldStyles } from "components/SideDrawer/Form/utils";
 
 export default function Id({ docRef }: ISideDrawerFieldProps) {

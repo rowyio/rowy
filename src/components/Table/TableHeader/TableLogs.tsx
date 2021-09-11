@@ -21,16 +21,16 @@ import {
   Tab,
   IconButton,
   Button,
-} from "@material-ui/core";
+} from "@mui/material";
 import Modal from "components/Modal";
-import { makeStyles, createStyles } from "@material-ui/styles";
+import { makeStyles, createStyles } from "@mui/styles";
 import LogsIcon from "assets/icons/CloudLogs";
-import SuccessIcon from "@material-ui/icons/CheckCircle";
-import FailIcon from "@material-ui/icons/Cancel";
-import ExpandIcon from "@material-ui/icons/ExpandLess";
-import CollapseIcon from "@material-ui/icons/ExpandMore";
-import OpenIcon from "@material-ui/icons/OpenInNew";
-import CloseIcon from "@material-ui/icons/Close";
+import SuccessIcon from "@mui/icons-material/CheckCircle";
+import FailIcon from "@mui/icons-material/Cancel";
+import ExpandIcon from "@mui/icons-material/ExpandLess";
+import CollapseIcon from "@mui/icons-material/ExpandMore";
+import OpenIcon from "@mui/icons-material/OpenInNew";
+import CloseIcon from "@mui/icons-material/Close";
 import TableHeaderButton from "./TableHeaderButton";
 import Ansi from "ansi-to-react";
 import EmptyState from "components/EmptyState";

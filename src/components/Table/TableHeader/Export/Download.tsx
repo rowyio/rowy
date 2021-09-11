@@ -6,7 +6,7 @@ import _get from "lodash/get";
 import _find from "lodash/find";
 import _sortBy from "lodash/sortBy";
 import { isString } from "lodash";
-import MultiSelect from "@antlerengineering/multiselect";
+import MultiSelect from "@rowy/multiselect";
 import JSZip from "jszip";
 
 import {
@@ -15,7 +15,7 @@ import {
   TextField,
   FormControlLabel,
   Checkbox,
-} from "@material-ui/core";
+} from "@mui/material";
 
 import { useProjectContext } from "contexts/ProjectContext";
 import SnackbarProgress, {

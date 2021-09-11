@@ -1,8 +1,8 @@
 import { IHeavyCellProps } from "../types";
 import clsx from "clsx";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
-import { Grid } from "@material-ui/core";
+import { makeStyles, createStyles } from "@mui/styles";
+import { Grid } from "@mui/material";
 
 import ActionFab from "./ActionFab";
 import { sanitiseCallableName, isUrl } from "utils/fns";

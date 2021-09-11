@@ -1,5 +1,5 @@
-import { Button } from "@material-ui/core";
-import OpenInNewIcon from "@material-ui/icons/OpenInNew";
+import { Button } from "@mui/material";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
 import AuthLayout from "components/Auth/AuthLayout";
 import EmptyState from "components/EmptyState";

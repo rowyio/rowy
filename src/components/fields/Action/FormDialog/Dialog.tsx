@@ -1,6 +1,6 @@
 import * as yup from "yup";
 
-import { FormDialog } from "@antlerengineering/form-builder";
+import { FormDialog } from "@rowy/form-builder";
 
 const yupReducer = (validationConfig) => (acc, currKey) => {
   if (validationConfig[currKey] !== null) {

@@ -1,5 +1,5 @@
-import { makeStyles, createStyles } from "@material-ui/styles";
-import { alpha, darken, lighten } from "@material-ui/core";
+import { makeStyles, createStyles } from "@mui/styles";
+import { alpha, darken, lighten } from "@mui/material";
 import { APP_BAR_HEIGHT } from "components/Navigation";
 import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
 
@@ -60,7 +60,7 @@ export const useStyles = makeStyles((theme) =>
         "--checkbox-disabled-background-color": "#ddd",
         "--selection-color": theme.palette.primary.main,
         "--font-size": "0.75rem",
-        "--cell-padding": theme.spacing(0, 1.5),
+        "--cell-padding": theme.spacing(0, 1.25),
 
         border: "none",
         backgroundColor: "transparent",

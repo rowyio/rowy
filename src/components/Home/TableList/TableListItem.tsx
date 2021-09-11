@@ -5,8 +5,8 @@ import {
   ListItemButton,
   Typography,
   IconButton,
-} from "@material-ui/core";
-import GoIcon from "@material-ui/icons/ArrowForward";
+} from "@mui/material";
+import GoIcon from "@mui/icons-material/ArrowForward";
 
 import { Table } from "contexts/ProjectContext";
 

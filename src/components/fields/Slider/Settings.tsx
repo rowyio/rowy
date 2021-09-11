@@ -1,4 +1,4 @@
-import { TextField, FormControlLabel, Switch } from "@material-ui/core";
+import { TextField, FormControlLabel, Switch } from "@mui/material";
 import Subheading from "components/Table/ColumnMenu/Subheading";
 
 export default function Settings({ handleChange, config }) {

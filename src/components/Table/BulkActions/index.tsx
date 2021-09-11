@@ -2,7 +2,7 @@ import { useState } from "react";
 import _find from "lodash/find";
 import { useSnackbar } from "notistack";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
+import { makeStyles, createStyles } from "@mui/styles";
 import {
   alpha,
   Grow,
@@ -13,12 +13,12 @@ import {
   Typography,
   TextField,
   MenuItem,
-} from "@material-ui/core";
+} from "@mui/material";
 
 import CopyCellsIcon from "assets/icons/CopyCells";
-import ClearSelectionIcon from "@material-ui/icons/IndeterminateCheckBox";
-import DeleteIcon from "@material-ui/icons/DeleteForever";
-import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp";
+import ClearSelectionIcon from "@mui/icons-material/IndeterminateCheckBox";
+import DeleteIcon from "@mui/icons-material/DeleteForever";
+import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 
 import { useConfirmation } from "components/ConfirmationDialog/Context";
 import { useProjectContext } from "contexts/ProjectContext";

@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
+import { makeStyles, createStyles } from "@mui/styles";
 import {
   Grid,
   Typography,
@@ -9,9 +9,9 @@ import {
   ButtonBase,
   TextField,
   InputAdornment,
-} from "@material-ui/core";
-import EditIcon from "@material-ui/icons/Edit";
-import DoneIcon from "@material-ui/icons/Done";
+} from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import DoneIcon from "@mui/icons-material/Done";
 
 import { IStepProps } from ".";
 import FadeList from "../FadeList";

@@ -3,7 +3,7 @@ import { IFieldConfig, FieldType } from "components/fields/types";
 import withHeavyCell from "../_withTableCell/withHeavyCell";
 import { parse, format } from "date-fns";
 import { DATE_FORMAT } from "constants/dates";
-import DateIcon from "@material-ui/icons/TodayOutlined";
+import DateIcon from "@mui/icons-material/TodayOutlined";
 import BasicCell from "./BasicCell";
 import NullEditor from "components/Table/editors/NullEditor";
 

@@ -1,6 +1,6 @@
 import { ISettingsProps } from "../types";
 
-import { Slider } from "@material-ui/core";
+import { Slider } from "@mui/material";
 import Subheading from "components/Table/ColumnMenu/Subheading";
 
 export default function Settings({ handleChange, config }: ISettingsProps) {

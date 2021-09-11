@@ -1,8 +1,8 @@
 import clsx from "clsx";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
-import { Grid, GridProps, Typography } from "@material-ui/core";
-import { alpha } from "@material-ui/core/styles";
+import { makeStyles, createStyles } from "@mui/styles";
+import { Grid, GridProps, Typography } from "@mui/material";
+import { alpha } from "@mui/material/styles";
 
 import { FieldType } from "constants/fields";
 import { getFieldProp } from "components/fields";

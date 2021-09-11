@@ -1,4 +1,4 @@
-import { Fade, Stack, Skeleton, Button } from "@material-ui/core";
+import { Fade, Stack, Skeleton, Button } from "@mui/material";
 import AddColumnIcon from "assets/icons/AddColumn";
 
 const NUM_CELLS = 5;

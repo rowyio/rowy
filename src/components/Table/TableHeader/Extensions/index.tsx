@@ -3,7 +3,7 @@ import _isEqual from "lodash/isEqual";
 import { db } from "../../../../firebase";
 import { useSnackbar } from "notistack";
 
-import { Breadcrumbs, Typography, Button } from "@material-ui/core";
+import { Breadcrumbs, Typography, Button } from "@mui/material";
 
 import TableHeaderButton from "../TableHeaderButton";
 import ExtensionIcon from "assets/icons/Extension";

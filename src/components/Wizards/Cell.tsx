@@ -1,5 +1,5 @@
 import React from "react";
-import { makeStyles, createStyles } from "@material-ui/styles";
+import { makeStyles, createStyles } from "@mui/styles";
 
 import { FieldType } from "constants/fields";
 import { getFieldProp } from "components/fields";

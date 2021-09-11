@@ -1,10 +1,10 @@
 import { Controller } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 
-import { Grid } from "@material-ui/core";
-import { Rating as MuiRating } from "@material-ui/core";
-import "@material-ui/lab";
-import StarBorderIcon from "@material-ui/icons/StarBorder";
+import { Grid } from "@mui/material";
+import { Rating as MuiRating } from "@mui/material";
+import "@mui/lab";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
 
 import { useFieldStyles } from "components/SideDrawer/Form/utils";
 import { useRatingStyles } from "./styles";

@@ -1,6 +1,6 @@
 import { useRef, useMemo, useState } from "react";
-import { makeStyles, createStyles } from "@material-ui/styles";
-import { useTheme } from "@material-ui/core/styles";
+import { makeStyles, createStyles } from "@mui/styles";
+import { useTheme } from "@mui/material/styles";
 import Editor, { useMonaco } from "@monaco-editor/react";
 import { useProjectContext } from "contexts/ProjectContext";
 import { FieldType } from "constants/fields";

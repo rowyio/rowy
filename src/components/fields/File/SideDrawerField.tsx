@@ -7,7 +7,7 @@ import { format } from "date-fns";
 import { useDropzone } from "react-dropzone";
 import useUploader, { FileValue } from "hooks/useTable/useUploader";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
+import { makeStyles, createStyles } from "@mui/styles";
 import {
   alpha,
   ButtonBase,
@@ -16,7 +16,7 @@ import {
   Tooltip,
   Chip,
   CircularProgress,
-} from "@material-ui/core";
+} from "@mui/material";
 import UploadIcon from "assets/icons/Upload";
 import { FileIcon } from ".";
 

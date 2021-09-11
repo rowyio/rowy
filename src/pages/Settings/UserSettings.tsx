@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useSnackbar } from "notistack";
 import { useDebouncedCallback } from "use-debounce";
 
-import { Container, Stack, Fade } from "@material-ui/core";
+import { Container, Stack, Fade } from "@mui/material";
 
 import SettingsSkeleton from "components/Settings/SettingsSkeleton";
 import SettingsSection from "components/Settings/SettingsSection";

@@ -1,8 +1,8 @@
 import Helmet from "react-helmet";
 import { use100vh } from "react-div-100vh";
 
-import { useTheme, Paper, Typography, LinearProgress } from "@material-ui/core";
-import { alpha } from "@material-ui/core/styles";
+import { useTheme, Paper, Typography, LinearProgress } from "@mui/material";
+import { alpha } from "@mui/material/styles";
 
 import bgPattern from "assets/bg-pattern.svg";
 import bgPatternDark from "assets/bg-pattern-dark.svg";

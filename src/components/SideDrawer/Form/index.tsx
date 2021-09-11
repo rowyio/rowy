@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import _sortBy from "lodash/sortBy";
 import _isEmpty from "lodash/isEmpty";
 
-import { Grid } from "@material-ui/core";
+import { Grid } from "@mui/material";
 
 import { Values } from "./utils";
 import { getFieldProp } from "components/fields";

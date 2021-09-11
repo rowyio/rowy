@@ -1,6 +1,6 @@
 import { TransitionGroup } from "react-transition-group";
 
-import { Box, Grid, Collapse } from "@material-ui/core";
+import { Box, Grid, Collapse } from "@mui/material";
 
 import SectionHeading from "components/SectionHeading";
 import TableCard from "./TableCard";

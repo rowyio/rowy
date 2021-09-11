@@ -2,10 +2,10 @@ import { useState } from "react";
 import _get from "lodash/get";
 import { useSnackbar } from "notistack";
 
-import { Fab, FabProps, CircularProgress } from "@material-ui/core";
-import PlayIcon from "@material-ui/icons/PlayArrow";
-import RefreshIcon from "@material-ui/icons/Refresh";
-import UndoIcon from "@material-ui/icons/Undo";
+import { Fab, FabProps, CircularProgress } from "@mui/material";
+import PlayIcon from "@mui/icons-material/PlayArrow";
+import RefreshIcon from "@mui/icons-material/Refresh";
+import UndoIcon from "@mui/icons-material/Undo";
 
 import { useProjectContext } from "contexts/ProjectContext";
 import { cloudFunction } from "firebase/callables";

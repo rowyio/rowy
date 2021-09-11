@@ -1,4 +1,4 @@
-import { Grid, Stack, Typography, Button, Divider } from "@material-ui/core";
+import { Grid, Stack, Typography, Button, Divider } from "@mui/material";
 import ImportIcon from "assets/icons/Import";
 import AddColumnIcon from "assets/icons/AddColumn";
 

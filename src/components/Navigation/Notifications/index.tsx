@@ -9,14 +9,14 @@ import {
   ListItemText,
   ListItemSecondaryAction,
   Badge,
-} from "@material-ui/core";
+} from "@mui/material";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
+import { makeStyles, createStyles } from "@mui/styles";
 
-import ErrorIcon from "@material-ui/icons/Error";
-import DeleteIcon from "@material-ui/icons/Delete";
+import ErrorIcon from "@mui/icons-material/Error";
+import DeleteIcon from "@mui/icons-material/Delete";
 
-import BellIcon from "@material-ui/icons/Notifications";
+import BellIcon from "@mui/icons-material/Notifications";
 
 const useStyles = makeStyles((theme) =>
   createStyles({

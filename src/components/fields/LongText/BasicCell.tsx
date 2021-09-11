@@ -1,6 +1,6 @@
 import { IBasicCellProps } from "../types";
 
-import { useTheme } from "@material-ui/core";
+import { useTheme } from "@mui/material";
 
 export default function LongText({ value }: IBasicCellProps) {
   const theme = useTheme();

@@ -1,9 +1,9 @@
 import { Controller, useWatch } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
-import { TextField } from "@material-ui/core";
-import { emphasize } from "@material-ui/core/styles";
+import { makeStyles, createStyles } from "@mui/styles";
+import { TextField } from "@mui/material";
+import { emphasize } from "@mui/material/styles";
 import { resultColorsScale } from "utils/color";
 
 const useStyles = makeStyles((theme) =>

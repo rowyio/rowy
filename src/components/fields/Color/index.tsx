@@ -2,7 +2,7 @@ import { lazy } from "react";
 import { IFieldConfig, FieldType } from "components/fields/types";
 import withPopoverCell from "../_withTableCell/withPopoverCell";
 
-import ColorIcon from "@material-ui/icons/Colorize";
+import ColorIcon from "@mui/icons-material/Colorize";
 import BasicCell from "../_BasicCell/BasicCellNull";
 import InlineCell from "./InlineCell";
 import NullEditor from "components/Table/editors/NullEditor";

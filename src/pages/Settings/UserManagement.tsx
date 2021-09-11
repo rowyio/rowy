@@ -8,7 +8,7 @@ import {
   List,
   Fade,
   Collapse,
-} from "@material-ui/core";
+} from "@mui/material";
 
 import FloatingSearch from "components/FloatingSearch";
 import SlideTransition from "components/Modal/SlideTransition";

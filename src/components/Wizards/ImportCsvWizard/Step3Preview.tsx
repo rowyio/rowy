@@ -1,8 +1,8 @@
 import { ScrollSync, ScrollSyncPane } from "react-scroll-sync";
 import _find from "lodash/find";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
-import { Grid } from "@material-ui/core";
+import { makeStyles, createStyles } from "@mui/styles";
+import { Grid } from "@mui/material";
 
 import { IStepProps } from ".";
 import Column from "../Column";

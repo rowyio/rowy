@@ -1,8 +1,8 @@
 import { Controller, useWatch } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
-import { Grid, Link } from "@material-ui/core";
+import { makeStyles, createStyles } from "@mui/styles";
+import { Grid, Link } from "@mui/material";
 
 import ActionFab from "./ActionFab";
 import { useFieldStyles } from "components/SideDrawer/Form/utils";

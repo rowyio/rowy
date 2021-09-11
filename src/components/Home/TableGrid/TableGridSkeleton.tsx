@@ -1,4 +1,4 @@
-import { Container, Paper, Box, Grid } from "@material-ui/core";
+import { Container, Paper, Box, Grid } from "@mui/material";
 
 import SectionHeadingSkeleton from "components/SectionHeadingSkeleton";
 import TableCardSkeleton from "./TableCardSkeleton";

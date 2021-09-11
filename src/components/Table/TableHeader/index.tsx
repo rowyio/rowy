@@ -1,4 +1,4 @@
-import { Stack, Button } from "@material-ui/core";
+import { Stack, Button } from "@mui/material";
 
 import { isCollectionGroup } from "utils/fns";
 import AddRowIcon from "assets/icons/AddRow";

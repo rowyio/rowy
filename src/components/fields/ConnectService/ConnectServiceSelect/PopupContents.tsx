@@ -16,8 +16,8 @@ import {
   TextField,
   Typography,
   Radio,
-} from "@material-ui/core";
-import SearchIcon from "@material-ui/icons/Search";
+} from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 
 import { IConnectServiceSelectProps } from ".";
 import useStyles from "./styles";

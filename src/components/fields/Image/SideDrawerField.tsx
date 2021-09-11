@@ -6,7 +6,7 @@ import { Controller } from "react-hook-form";
 import { useDropzone } from "react-dropzone";
 import useUploader from "hooks/useTable/useUploader";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
+import { makeStyles, createStyles } from "@mui/styles";
 import {
   alpha,
   ButtonBase,
@@ -14,11 +14,11 @@ import {
   Grid,
   CircularProgress,
   Tooltip,
-} from "@material-ui/core";
+} from "@mui/material";
 
-import AddIcon from "@material-ui/icons/AddAPhotoOutlined";
-import DeleteIcon from "@material-ui/icons/DeleteOutlined";
-import OpenIcon from "@material-ui/icons/OpenInNewOutlined";
+import AddIcon from "@mui/icons-material/AddAPhotoOutlined";
+import DeleteIcon from "@mui/icons-material/DeleteOutlined";
+import OpenIcon from "@mui/icons-material/OpenInNewOutlined";
 
 import { IMAGE_MIME_TYPES } from ".";
 import Thumbnail from "components/Thumbnail";

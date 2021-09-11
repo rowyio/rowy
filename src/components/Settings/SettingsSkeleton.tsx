@@ -1,4 +1,4 @@
-import { Typography, Paper, Skeleton, Stack, Divider } from "@material-ui/core";
+import { Typography, Paper, Skeleton, Stack, Divider } from "@mui/material";
 
 export default function SettingsSkeleton() {
   return (

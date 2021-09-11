@@ -1,4 +1,4 @@
-import { TextField, FormControlLabel, Switch } from "@material-ui/core";
+import { TextField, FormControlLabel, Switch } from "@mui/material";
 
 export default function Settings({ config, handleChange }) {
   return (

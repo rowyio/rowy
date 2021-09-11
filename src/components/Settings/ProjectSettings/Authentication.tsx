@@ -2,8 +2,8 @@ import { useState } from "react";
 import { authOptions } from "firebase/firebaseui";
 import _startCase from "lodash/startCase";
 
-import MultiSelect from "@antlerengineering/multiselect";
-import { Typography, Link } from "@material-ui/core";
+import MultiSelect from "@rowy/multiselect";
+import { Typography, Link } from "@mui/material";
 import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
 
 import { IProjectSettingsChildProps } from "pages/Settings/ProjectSettings";

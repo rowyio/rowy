@@ -5,8 +5,8 @@ import { ISideDrawerFieldProps } from "../types";
 import ReactJson from "react-json-view";
 import jsonFormat from "json-format";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
-import { useTheme } from "@material-ui/core";
+import { makeStyles, createStyles } from "@mui/styles";
+import { useTheme } from "@mui/material";
 import { useFieldStyles } from "components/SideDrawer/Form/utils";
 
 const isValidJson = (val: any) => {

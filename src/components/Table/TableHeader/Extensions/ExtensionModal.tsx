@@ -18,12 +18,12 @@ import {
   Tab,
   TextField,
   Typography,
-} from "@material-ui/core";
-import TabContext from "@material-ui/lab/TabContext";
-import TabList from "@material-ui/lab/TabList";
-import TabPanel from "@material-ui/lab/TabPanel";
-import AddIcon from "@material-ui/icons/AddBox";
-import DeleteIcon from "@material-ui/icons/RemoveCircle";
+} from "@mui/material";
+import TabContext from "@mui/lab/TabContext";
+import TabList from "@mui/lab/TabList";
+import TabPanel from "@mui/lab/TabPanel";
+import AddIcon from "@mui/icons-material/AddBox";
+import DeleteIcon from "@mui/icons-material/RemoveCircle";
 
 import Modal, { IModalProps } from "components/Modal";
 import CodeEditor from "../../editors/CodeEditor";

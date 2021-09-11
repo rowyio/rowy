@@ -106,32 +106,6 @@
     "@algolia/logger-common" "4.10.4"
     "@algolia/requester-common" "4.10.4"
 
-"@antlerengineering/form-builder@^3.0.0-2":
-  version "3.0.0-2"
-  resolved "https://registry.yarnpkg.com/@antlerengineering/form-builder/-/form-builder-3.0.0-2.tgz#08d65e3ddf72ded2fcf8dfbbeb7afa20baa4d205"
-  integrity sha512-+RWHaXZ/AsHEcShZjy68nhOStC2bubkfk7wdavCG1dzGRmevxLtyB1hPa7LzX+i7lTwVHHFzeZRu/S50Bj6yQw==
-  dependencies:
-    "@antlerengineering/multiselect" "^1.0.0-0"
-    "@hookform/resolvers" "^2.6.0"
-    "@mdi/js" "^5.9.55"
-    array-move "^3.0.1"
-    date-fns "^2.22.1"
-    dompurify "^2.2.9"
-    lodash "^4.17.21"
-    lodash-es "^4.17.21"
-    react-color "^2.19.3"
-    react-dnd "^14.0.2"
-    react-dnd-html5-backend "^14.0.0"
-    react-element-scroll-hook "^1.1.0"
-    react-hook-form "^7.10.0"
-    use-debounce "^3.4.3"
-    yup "^0.32.9"
-
-"@antlerengineering/multiselect@^1.0.0-0":
-  version "1.0.0-0"
-  resolved "https://registry.yarnpkg.com/@antlerengineering/multiselect/-/multiselect-1.0.0-0.tgz#589908f5f7a9485b3d615a1f2193e6fd32f26074"
-  integrity sha512-7hPWwtzO0SmjA+JHKgYQSCUlBOrE4jD7fhsmKAzNAISwdSUoOE3qDZN7kMSpdoc0vndVfoDgOkPs5UUwOFDQ2g==
-
 "@apidevtools/json-schema-ref-parser@^9.0.3":
   version "9.0.9"
   resolved "https://registry.yarnpkg.com/@apidevtools/json-schema-ref-parser/-/json-schema-ref-parser-9.0.9.tgz#d720f9256e3609621280584f2b47ae165359268b"
@@ -2175,9 +2149,9 @@
     "@hapi/hoek" "^8.3.0"
 
 "@hookform/resolvers@^2.6.0":
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/@hookform/resolvers/-/resolvers-2.6.0.tgz#a4497fe33807d4ba09c34f41549f87a642550886"
-  integrity sha512-1Pbxjc4HEzATEcRsyDfkEQR/3OWaQwbemW9HTTYH+ZiLF2mzafl5Pn++65gwNnJSGzXUp5LIq3Nz2+Cz4m2U8A==
+  version "2.8.0"
+  resolved "https://registry.yarnpkg.com/@hookform/resolvers/-/resolvers-2.8.0.tgz#32e82b072ff71c71e62fb2901b129642a0c5897e"
+  integrity sha512-ALlr0Bg6zDHdRsdqkwfWGPMnIxP4hqMRPvFDHp7lWXQeA7rKykto3cWqQQh1s0PzX043RHwMB6OHVPMwFJqwxg==
 
 "@icons/material@^0.2.4":
   version "0.2.4"
@@ -2395,32 +2369,6 @@
     react-is "^17.0.2"
     react-transition-group "^4.4.0"
 
-"@material-ui/icons@^5.0.0-beta.4":
-  version "5.0.0-beta.5"
-  resolved "https://registry.yarnpkg.com/@material-ui/icons/-/icons-5.0.0-beta.5.tgz#54295b9aa120910c88900e3d08082b7acbeb73c0"
-  integrity sha512-C2KHSf8mvDn22rzsV0UfsJyBYI3Nt/LItcKPJBAG9kgqdBHAuLMH2lfKmdMuX55qd8O+NO5rM7aIHdYQRjfcMQ==
-  dependencies:
-    "@babel/runtime" "^7.14.8"
-
-"@material-ui/lab@^5.0.0-alpha.43":
-  version "5.0.0-alpha.44"
-  resolved "https://registry.yarnpkg.com/@material-ui/lab/-/lab-5.0.0-alpha.44.tgz#3b914047031a12ff7575fa5bb775dda7e90519f1"
-  integrity sha512-x5Tovc8rgxAoLZ8Hcm45tfCVlgYnUEbxIoRAQ2Bc+rEulYfdZY+xq492mt4wzwSCh8ZoTq7IwrL1sXN/SaLPdA==
-  dependencies:
-    "@babel/runtime" "^7.14.8"
-    "@date-io/date-fns" "^2.10.6"
-    "@date-io/dayjs" "^2.10.6"
-    "@date-io/luxon" "^2.10.6"
-    "@date-io/moment" "^2.10.6"
-    "@material-ui/system" "5.0.0-beta.5"
-    "@material-ui/unstyled" "5.0.0-alpha.44"
-    "@material-ui/utils" "5.0.0-beta.5"
-    clsx "^1.0.4"
-    prop-types "^15.7.2"
-    react-is "^17.0.2"
-    react-transition-group "^4.4.1"
-    rifm "^0.12.0"
-
 "@material-ui/private-theming@5.0.0-beta.5":
   version "5.0.0-beta.5"
   resolved "https://registry.yarnpkg.com/@material-ui/private-theming/-/private-theming-5.0.0-beta.5.tgz#b8168bd15a609a78bf411e5afac2f38b513b5f18"
@@ -2437,29 +2385,6 @@
   dependencies:
     "@babel/runtime" "^7.14.8"
     "@emotion/cache" "^11.4.0"
-    prop-types "^15.7.2"
-
-"@material-ui/styles@^5.0.0-beta.4":
-  version "5.0.0-beta.5"
-  resolved "https://registry.yarnpkg.com/@material-ui/styles/-/styles-5.0.0-beta.5.tgz#776626c7e57c96f248f7999fa767ef6d75b06690"
-  integrity sha512-qG88DGXNWgsdO8uhmJy0qVXX7TOIvCg9v6sL6CNDluPlao1cgw5UiHBkVBDqMJIOj+KiqThWzh/akzV+oEngSQ==
-  dependencies:
-    "@babel/runtime" "^7.14.8"
-    "@emotion/hash" "^0.8.0"
-    "@material-ui/private-theming" "5.0.0-beta.5"
-    "@material-ui/types" "6.0.2"
-    "@material-ui/utils" "5.0.0-beta.5"
-    clsx "^1.0.4"
-    csstype "^3.0.2"
-    hoist-non-react-statics "^3.3.2"
-    jss "^10.7.1"
-    jss-plugin-camel-case "^10.7.1"
-    jss-plugin-default-unit "^10.7.1"
-    jss-plugin-global "^10.7.1"
-    jss-plugin-nested "^10.7.1"
-    jss-plugin-props-sort "^10.7.1"
-    jss-plugin-rule-value-function "^10.7.1"
-    jss-plugin-vendor-prefixer "^10.7.1"
     prop-types "^15.7.2"
 
 "@material-ui/system@5.0.0-beta.5":
@@ -2523,6 +2448,134 @@
   dependencies:
     "@monaco-editor/loader" "^1.1.1"
     prop-types "^15.7.2"
+
+"@mui/core@5.0.0-alpha.46":
+  version "5.0.0-alpha.46"
+  resolved "https://registry.yarnpkg.com/@mui/core/-/core-5.0.0-alpha.46.tgz#f4c0e5b2ad346e31e74bb96b684f6734b55cc9e6"
+  integrity sha512-LZa0s450YSHv58xlMRIWszE0zsqqTyxgP+l70gUyPvYwCfQErkxsvRjEInKI5GCrYDcr3N+jlKJ5MSRZDvtvig==
+  dependencies:
+    "@babel/runtime" "^7.14.8"
+    "@emotion/is-prop-valid" "^1.1.0"
+    "@mui/utils" "5.0.0-rc.1"
+    clsx "^1.1.1"
+    prop-types "^15.7.2"
+    react-is "^17.0.2"
+
+"@mui/icons-material@^5.0.0-rc.1":
+  version "5.0.0-rc.1"
+  resolved "https://registry.yarnpkg.com/@mui/icons-material/-/icons-material-5.0.0-rc.1.tgz#ffb5ec5195d2bf8105da6a78b7d6b9fc195c8511"
+  integrity sha512-w9tfGQaND221fkPaCp70gHg/8f4mk1RYx22YBLtV4wV0SLoI3d4+41DRrqTxeyKB1WIxETDVxaAqeBthrXM6hg==
+  dependencies:
+    "@babel/runtime" "^7.14.8"
+
+"@mui/lab@^5.0.0-alpha.46":
+  version "5.0.0-alpha.46"
+  resolved "https://registry.yarnpkg.com/@mui/lab/-/lab-5.0.0-alpha.46.tgz#456403bf1c8a810f052733119b9013778054bdf8"
+  integrity sha512-aGgX3GWOOPq7RuxDI4wQMrm+J7q7cvPDLxN1uS85oIZnMrFLTrFZaQlf4x6LQJtFpVTa7LKuhzNU6kLT37BWMg==
+  dependencies:
+    "@babel/runtime" "^7.14.8"
+    "@date-io/date-fns" "^2.10.6"
+    "@date-io/dayjs" "^2.10.6"
+    "@date-io/luxon" "^2.10.6"
+    "@date-io/moment" "^2.10.6"
+    "@mui/core" "5.0.0-alpha.46"
+    "@mui/system" "5.0.0-rc.1"
+    "@mui/utils" "5.0.0-rc.1"
+    clsx "^1.1.1"
+    prop-types "^15.7.2"
+    react-is "^17.0.2"
+    react-transition-group "^4.4.1"
+    rifm "^0.12.0"
+
+"@mui/material@^5.0.0-rc.1":
+  version "5.0.0-rc.1"
+  resolved "https://registry.yarnpkg.com/@mui/material/-/material-5.0.0-rc.1.tgz#456218bfeb659dfb17c516ecc03f86013feaf253"
+  integrity sha512-23lEM2n0Y8VcFbk7mjNZzbAHDh7wu5P4foe1hDiSJaipBX4ESWnBAwo9exxQbFrDd+l2xtLzaoTmTOVOgkElrA==
+  dependencies:
+    "@babel/runtime" "^7.14.8"
+    "@mui/core" "5.0.0-alpha.46"
+    "@mui/system" "5.0.0-rc.1"
+    "@mui/types" "7.0.0-rc.1"
+    "@mui/utils" "5.0.0-rc.1"
+    "@popperjs/core" "^2.4.4"
+    "@types/react-transition-group" "^4.2.0"
+    clsx "^1.1.1"
+    csstype "^3.0.8"
+    hoist-non-react-statics "^3.3.2"
+    prop-types "^15.7.2"
+    react-is "^17.0.2"
+    react-transition-group "^4.4.0"
+
+"@mui/private-theming@5.0.0-rc.1":
+  version "5.0.0-rc.1"
+  resolved "https://registry.yarnpkg.com/@mui/private-theming/-/private-theming-5.0.0-rc.1.tgz#eab6d20db119b6f2176d76ed725f53b9ebc12e97"
+  integrity sha512-dibj1bc+tX4+sKOhSAYoJVndk7MAVZkYLKRa3E3GDObDe5I/YOv0fS8cvfB3sTFiQWxbdKj//p2QJtos6o83NQ==
+  dependencies:
+    "@babel/runtime" "^7.14.8"
+    "@mui/utils" "5.0.0-rc.1"
+    prop-types "^15.7.2"
+
+"@mui/styled-engine@5.0.0-rc.1":
+  version "5.0.0-rc.1"
+  resolved "https://registry.yarnpkg.com/@mui/styled-engine/-/styled-engine-5.0.0-rc.1.tgz#8a0c68e88868c42944042e01e28a0d11b6caf756"
+  integrity sha512-cYK3oGHzriPqULPSy5iitupk6JbvvwVqBC1n1gxISZzm7wEsBx0hDCDhh7tgCa1B7CXdl0Ntl27PXJjtukoo/A==
+  dependencies:
+    "@babel/runtime" "^7.14.8"
+    "@emotion/cache" "^11.4.0"
+    prop-types "^15.7.2"
+
+"@mui/styles@^5.0.0-rc.1":
+  version "5.0.0-rc.1"
+  resolved "https://registry.yarnpkg.com/@mui/styles/-/styles-5.0.0-rc.1.tgz#479c082afbdef116ad5323e15e3f1324efd29205"
+  integrity sha512-lOAEpHDTOv/mLGBXvu0zO+FJihezo3Z4PKggTEGIdEuZUvz2slyJOtlSGwvbURK7+dGT04jFBfMOHbPR1JODSw==
+  dependencies:
+    "@babel/runtime" "^7.14.8"
+    "@emotion/hash" "^0.8.0"
+    "@mui/private-theming" "5.0.0-rc.1"
+    "@mui/types" "7.0.0-rc.1"
+    "@mui/utils" "5.0.0-rc.1"
+    clsx "^1.1.1"
+    csstype "^3.0.8"
+    hoist-non-react-statics "^3.3.2"
+    jss "^10.7.1"
+    jss-plugin-camel-case "^10.7.1"
+    jss-plugin-default-unit "^10.7.1"
+    jss-plugin-global "^10.7.1"
+    jss-plugin-nested "^10.7.1"
+    jss-plugin-props-sort "^10.7.1"
+    jss-plugin-rule-value-function "^10.7.1"
+    jss-plugin-vendor-prefixer "^10.7.1"
+    prop-types "^15.7.2"
+
+"@mui/system@5.0.0-rc.1":
+  version "5.0.0-rc.1"
+  resolved "https://registry.yarnpkg.com/@mui/system/-/system-5.0.0-rc.1.tgz#24c99469b48c350802929f6097f671742be9a7f1"
+  integrity sha512-c+esT+9wZR5aNcssMHg5Wm19VdX+uyhNLLTzqAg8oW36LBeIMTfiN18GShcxnFV3faje78Nr3BhmMFn9yBunMA==
+  dependencies:
+    "@babel/runtime" "^7.14.8"
+    "@mui/private-theming" "5.0.0-rc.1"
+    "@mui/styled-engine" "5.0.0-rc.1"
+    "@mui/types" "7.0.0-rc.1"
+    "@mui/utils" "5.0.0-rc.1"
+    clsx "^1.1.1"
+    csstype "^3.0.8"
+    prop-types "^15.7.2"
+
+"@mui/types@7.0.0-rc.1":
+  version "7.0.0-rc.1"
+  resolved "https://registry.yarnpkg.com/@mui/types/-/types-7.0.0-rc.1.tgz#276090e2cd062a5e9241cf8d4ad795a4ee10eb03"
+  integrity sha512-4vYFVi8ExcC7EEuk5melw/XPG2DVPeXI/HUYnQj+3t5NESpdvLJhbbvmHH366ZWAhXR2FechYWo/cQfGIsSG8Q==
+
+"@mui/utils@5.0.0-rc.1":
+  version "5.0.0-rc.1"
+  resolved "https://registry.yarnpkg.com/@mui/utils/-/utils-5.0.0-rc.1.tgz#8427d1117a380b8c861be9a6bbf51075e776cd63"
+  integrity sha512-FSh/zaZqfzz0Iz7/RHb2ajA/q6dfFKeNIXZCl7sZeYq9L1u8GR4IHi4n1MphLiJTco02XBw3KwME9Bqmk73LEQ==
+  dependencies:
+    "@babel/runtime" "^7.14.8"
+    "@types/prop-types" "^15.7.4"
+    "@types/react-is" "^16.7.1 || ^17.0.0"
+    prop-types "^15.7.2"
+    react-is "^17.0.2"
 
 "@napi-rs/triples@^1.0.3":
   version "1.0.3"
@@ -2677,6 +2730,31 @@
     "@types/estree" "0.0.39"
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
+
+"@rowy/form-builder@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@rowy/form-builder/-/form-builder-0.1.1.tgz#17bbf7bfe2fcd2c4ec95edcdcb17ef0d22eb7f12"
+  integrity sha512-KEuQrljHwM+ByTzVZ3AaUPsECebPYqjbO3Yyj9y10gGA+AScdQk3En66nT2TdZjdkGsGKk+EwQi5E3FwN0jMrA==
+  dependencies:
+    "@hookform/resolvers" "^2.6.0"
+    "@mdi/js" "^5.9.55"
+    array-move "^3.0.1"
+    date-fns "^2.22.1"
+    dompurify "^2.2.9"
+    lodash "^4.17.21"
+    lodash-es "^4.17.21"
+    react-color "^2.19.3"
+    react-dnd "^14.0.2"
+    react-dnd-html5-backend "^14.0.0"
+    react-element-scroll-hook "^1.1.0"
+    react-hook-form "^7.10.0"
+    use-debounce "^3.4.3"
+    yup "^0.32.9"
+
+"@rowy/multiselect@^0.1.4":
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/@rowy/multiselect/-/multiselect-0.1.4.tgz#b95045ed56949a1560a8439f269529cd50908dfb"
+  integrity sha512-jhDq2oRiV3cGMJ4nRzIkWKGxrbtQBKecGssOlOJjLqqR/O4FNKO1UwR4PA7WsX69zuo18sC7ndqr7M0gN6sEHw==
 
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"
@@ -6041,7 +6119,7 @@ cssstyle@^2.3.0:
   dependencies:
     cssom "~0.3.6"
 
-csstype@^3.0.2:
+csstype@^3.0.2, csstype@^3.0.8:
   version "3.0.8"
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.0.8.tgz#d2266a792729fb227cd216fb572f43728e1ad340"
   integrity sha512-jXKhWqXPmlUeoQnF/EhTtTl4C9SnrxSH/jZUih3jmO6lBKr99rP3/+FmrMj4EFpOXzMtXHAZkd3x0E6h6Fgflw==
@@ -6092,15 +6170,10 @@ data-urls@^2.0.0:
     whatwg-mimetype "^2.3.0"
     whatwg-url "^8.0.0"
 
-date-fns@^2.19.0:
+date-fns@^2.19.0, date-fns@^2.22.1:
   version "2.23.0"
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.23.0.tgz#4e886c941659af0cf7b30fafdd1eaa37e88788a9"
   integrity sha512-5ycpauovVyAk0kXNZz6ZoB9AYMZB4DObse7P3BPWmyEjXNORTI8EJ6X0uaSAq4sCHzM1uajzrkr6HnsLQpxGXA==
-
-date-fns@^2.22.1:
-  version "2.22.1"
-  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.22.1.tgz#1e5af959831ebb1d82992bf67b765052d8f0efc4"
-  integrity sha512-yUFPQjrxEmIsMqlHhAhmxkuH769baF21Kk+nZwZGyrMoyLA+LugaQtC0+Tqf9CBUUULWwUJt6Q5ySI3LJDDCGg==
 
 debug@2.6.9, debug@^2.2.0, debug@^2.3.3, debug@^2.6.0, debug@^2.6.9:
   version "2.6.9"
@@ -6449,15 +6522,10 @@ domhandler@^2.3.0:
   dependencies:
     domelementtype "1"
 
-dompurify@^2.2.6:
+dompurify@^2.2.6, dompurify@^2.2.9:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/dompurify/-/dompurify-2.3.1.tgz#a47059ca21fd1212d3c8f71fdea6943b8bfbdf6a"
   integrity sha512-xGWt+NHAQS+4tpgbOAI08yxW0Pr256Gu/FNE2frZVTbgrBUn8M7tz7/ktS/LZ2MHeGqz6topj0/xY+y8R5FBFw==
-
-dompurify@^2.2.9:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/dompurify/-/dompurify-2.3.0.tgz#07bb39515e491588e5756b1d3e8375b5964814e2"
-  integrity sha512-VV5C6Kr53YVHGOBKO/F86OYX6/iLTw2yVSI721gKetxpHCK/V5TaLEf9ODjRgl1KLSWRMY6cUhAbv/c+IUnwQw==
 
 domutils@1.5.1:
   version "1.5.1"
@@ -13492,9 +13560,9 @@ react-dnd-html5-backend@^11.1.3:
     dnd-core "^11.1.3"
 
 react-dnd-html5-backend@^14.0.0:
-  version "14.0.0"
-  resolved "https://registry.yarnpkg.com/react-dnd-html5-backend/-/react-dnd-html5-backend-14.0.0.tgz#28d660a2ad1e07447c34a65cd25f7de8f1657194"
-  integrity sha512-2wAQqRFC1hbRGmk6+dKhOXsyQQOn3cN8PSZyOUeOun9J8t3tjZ7PS2+aFu7CVu2ujMDwTJR3VTwZh8pj2kCv7g==
+  version "14.0.1"
+  resolved "https://registry.yarnpkg.com/react-dnd-html5-backend/-/react-dnd-html5-backend-14.0.1.tgz#37d43d6b6ddd91069101969d9eac6d688a9d57ef"
+  integrity sha512-ZDmpvFpd1NR4riw/CMbr8C3mgP6ZhsTf0c48a36kw4ZW8emgiugNlAz/qhhZ4/Pz9TO6DZ63sQohUTTl+AWGiA==
   dependencies:
     dnd-core "14.0.0"
 
@@ -13509,9 +13577,9 @@ react-dnd@^11.1.3:
     hoist-non-react-statics "^3.3.0"
 
 react-dnd@^14.0.2:
-  version "14.0.2"
-  resolved "https://registry.yarnpkg.com/react-dnd/-/react-dnd-14.0.2.tgz#57266baec92b887301f81fa3b77f87168d159733"
-  integrity sha512-JoEL78sBCg8SzjOKMlkR70GWaPORudhWuTNqJ56lb2P8Vq0eM2+er3ZrMGiSDhOmzaRPuA9SNBz46nHCrjn11A==
+  version "14.0.3"
+  resolved "https://registry.yarnpkg.com/react-dnd/-/react-dnd-14.0.3.tgz#1762c1ec84815439f2d8a6a40efd1f57eee41ba6"
+  integrity sha512-i73Hx5SKfDRdwXe30+CjF/DidiRdt/gwpPN14ajkPR20t/0osnNKFNHg3DLV6RZym+DJ0pO9H5APeMsBWGU3+Q==
   dependencies:
     "@react-dnd/invariant" "^2.0.0"
     "@react-dnd/shallowequal" "^2.0.0"
@@ -13587,9 +13655,9 @@ react-hook-form@^6:
   integrity sha512-prq82ofMbnRyj5wqDe8hsTRcdR25jQ+B8KtCS7BLCzjFHAwNuCjRwzPuP4eYLsEBjEIeYd6try+pdLdw0kPkpg==
 
 react-hook-form@^7.10.0:
-  version "7.11.0"
-  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.11.0.tgz#9cae5e21ba1c1a98a40c65cfee07db9e677edc21"
-  integrity sha512-aJVvL5VV6JqUWvwx9fbrhc6La83aQAfXfqQr+TD/sWy3LPdqYBgBIHBt8WAKWzKRm3g29YV2CLfn4wkhNB9b+g==
+  version "7.15.2"
+  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.15.2.tgz#c4d4fa44a5df755648ab19034062ae37087536b0"
+  integrity sha512-tPcLlsTXaOtZkyc1IGGaJfQ6amo2sJiM6DDufE7WG+S4N8s5Wr60HGtnKS7gPnnZL93pFPQYrSj7WDB5An2VVw==
 
 react-image@^4.0.3:
   version "4.0.3"
@@ -13910,17 +13978,10 @@ redeyed@~2.1.0:
   dependencies:
     esprima "~4.0.0"
 
-redux@^4.0.0, redux@^4.0.4:
+redux@^4.0.0, redux@^4.0.4, redux@^4.0.5:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/redux/-/redux-4.1.1.tgz#76f1c439bb42043f985fbd9bf21990e60bd67f47"
   integrity sha512-hZQZdDEM25UY2P493kPYuKqviVwZ58lEmGQNeQ+gXa+U0gYPUBf7NKYazbe3m+bs/DzM/ahN12DbF+NG8i0CWw==
-  dependencies:
-    "@babel/runtime" "^7.9.2"
-
-redux@^4.0.5:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/redux/-/redux-4.1.0.tgz#eb049679f2f523c379f1aff345c8612f294c88d4"
-  integrity sha512-uI2dQN43zqLWCt6B/BMGRMY6db7TTY4qeHHfGeKb3EOhmOKjU3KdWvNLJyqaHRksv/ErdNH7cFZWg9jXtewy4g==
   dependencies:
     "@babel/runtime" "^7.9.2"
 

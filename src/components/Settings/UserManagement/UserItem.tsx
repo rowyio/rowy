@@ -5,11 +5,11 @@ import {
   ListItemText,
   Tooltip,
   IconButton,
-} from "@material-ui/core";
+} from "@mui/material";
 import CopyIcon from "assets/icons/Copy";
-import DeleteIcon from "@material-ui/icons/DeleteOutlined";
+import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 
-import MultiSelect from "@antlerengineering/multiselect";
+import MultiSelect from "@rowy/multiselect";
 import { User } from "pages/Settings/UserManagement";
 
 export default function UserItem({

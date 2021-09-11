@@ -2,7 +2,7 @@ import { lazy } from "react";
 import { IFieldConfig, FieldType } from "components/fields/types";
 import withBasicCell from "../_withTableCell/withBasicCell";
 
-import UrlIcon from "@material-ui/icons/Link";
+import UrlIcon from "@mui/icons-material/Link";
 import BasicCell from "../_BasicCell/BasicCellValue";
 import TextEditor from "components/Table/editors/TextEditor";
 

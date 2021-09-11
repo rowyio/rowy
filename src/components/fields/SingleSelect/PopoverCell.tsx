@@ -1,6 +1,6 @@
 import { IPopoverCellProps } from "../types";
 
-import MultiSelect_ from "@antlerengineering/multiselect";
+import MultiSelect_ from "@rowy/multiselect";
 
 import { sanitiseValue } from "./utils";
 

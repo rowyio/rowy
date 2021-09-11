@@ -1,9 +1,9 @@
 import React from "react";
 import EmptyState, { IEmptyStateProps } from "./EmptyState";
 
-import { Button } from "@material-ui/core";
-import ReloadIcon from "@material-ui/icons/Refresh";
-import OpenInNewIcon from "@material-ui/icons/OpenInNew";
+import { Button } from "@mui/material";
+import ReloadIcon from "@mui/icons-material/Refresh";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import meta from "../../package.json";
 class ErrorBoundary extends React.Component<
   IEmptyStateProps & { render?: (errorMessage: string) => React.ReactNode }

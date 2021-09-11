@@ -1,4 +1,4 @@
-import MultiSelect from "@antlerengineering/multiselect";
+import MultiSelect from "@rowy/multiselect";
 import { FieldType } from "constants/fields";
 import { useProjectContext } from "contexts/ProjectContext";
 

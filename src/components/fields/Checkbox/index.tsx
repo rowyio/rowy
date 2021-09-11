@@ -2,7 +2,7 @@ import { lazy } from "react";
 import { IFieldConfig, FieldType } from "components/fields/types";
 import withHeavyCell from "../_withTableCell/withHeavyCell";
 
-import CheckboxIcon from "@material-ui/icons/ToggleOnOutlined";
+import CheckboxIcon from "@mui/icons-material/ToggleOnOutlined";
 import BasicCell from "../_BasicCell/BasicCellName";
 import NullEditor from "components/Table/editors/NullEditor";
 

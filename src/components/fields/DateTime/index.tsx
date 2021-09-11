@@ -3,7 +3,7 @@ import { IFieldConfig, FieldType } from "components/fields/types";
 import withHeavyCell from "../_withTableCell/withHeavyCell";
 import { parseJSON } from "date-fns";
 
-import DateTimeIcon from "@material-ui/icons/AccessTime";
+import DateTimeIcon from "@mui/icons-material/AccessTime";
 import BasicCell from "./BasicCell";
 import NullEditor from "components/Table/editors/NullEditor";
 

@@ -1,7 +1,7 @@
 import { IUserSettingsChildProps } from "pages/Settings/UserSettings";
 import { Link } from "react-router-dom";
 
-import { Grid, Avatar, Typography, Button } from "@material-ui/core";
+import { Grid, Avatar, Typography, Button } from "@mui/material";
 
 import routes from "constants/routes";
 

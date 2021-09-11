@@ -1,5 +1,5 @@
-import MultiSelect from "@antlerengineering/multiselect";
-import { ListItemIcon } from "@material-ui/core";
+import MultiSelect from "@rowy/multiselect";
+import { ListItemIcon } from "@mui/material";
 
 import { FIELDS } from "components/fields";
 import { FieldType } from "constants/fields";

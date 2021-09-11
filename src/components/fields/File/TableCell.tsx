@@ -6,7 +6,7 @@ import _findIndex from "lodash/findIndex";
 import clsx from "clsx";
 import { format } from "date-fns";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
+import { makeStyles, createStyles } from "@mui/styles";
 import {
   alpha,
   Stack,
@@ -15,7 +15,7 @@ import {
   Chip,
   IconButton,
   CircularProgress,
-} from "@material-ui/core";
+} from "@mui/material";
 import UploadIcon from "assets/icons/Upload";
 
 import { useConfirmation } from "components/ConfirmationDialog";

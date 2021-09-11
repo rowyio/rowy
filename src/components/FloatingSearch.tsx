@@ -4,8 +4,8 @@ import {
   TextField,
   FilledTextFieldProps,
   InputAdornment,
-} from "@material-ui/core";
-import SearchIcon from "@material-ui/icons/Search";
+} from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 
 import SlideTransition from "components/Modal/SlideTransition";
 import { APP_BAR_HEIGHT } from "components/Navigation";

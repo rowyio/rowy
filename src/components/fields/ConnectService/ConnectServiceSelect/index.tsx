@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import clsx from "clsx";
 
-import { TextField, TextFieldProps } from "@material-ui/core";
+import { TextField, TextFieldProps } from "@mui/material";
 
 import useStyles from "./styles";
 import Loading from "components/Loading";

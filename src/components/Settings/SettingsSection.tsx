@@ -1,4 +1,4 @@
-import { Paper, PaperProps } from "@material-ui/core";
+import { Paper, PaperProps } from "@mui/material";
 
 import SectionHeading from "components/SectionHeading";
 import SlideTransition from "components/Modal/SlideTransition";

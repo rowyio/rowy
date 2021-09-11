@@ -1,7 +1,7 @@
 import { Column } from "react-data-grid";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
-import { Grid, Button } from "@material-ui/core";
+import { makeStyles, createStyles } from "@mui/styles";
+import { Grid, Button } from "@mui/material";
 import AddColumnIcon from "assets/icons/AddColumn";
 
 import { useProjectContext } from "contexts/ProjectContext";

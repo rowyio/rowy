@@ -1,8 +1,8 @@
 import { Controller } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 
-import { Grid, TextField, IconButton } from "@material-ui/core";
-import LaunchIcon from "@material-ui/icons/Launch";
+import { Grid, TextField, IconButton } from "@mui/material";
+import LaunchIcon from "@mui/icons-material/Launch";
 
 export default function Url({
   control,

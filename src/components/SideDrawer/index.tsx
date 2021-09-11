@@ -4,10 +4,10 @@ import _isNil from "lodash/isNil";
 import _isEmpty from "lodash/isEmpty";
 import queryString from "query-string";
 
-import { Drawer, Fab } from "@material-ui/core";
-import ChevronIcon from "@material-ui/icons/KeyboardArrowLeft";
-import ChevronUpIcon from "@material-ui/icons/KeyboardArrowUp";
-import ChevronDownIcon from "@material-ui/icons/KeyboardArrowDown";
+import { Drawer, Fab } from "@mui/material";
+import ChevronIcon from "@mui/icons-material/KeyboardArrowLeft";
+import ChevronUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import ChevronDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 import Form from "./Form";
 import ErrorBoundary from "components/ErrorBoundary";

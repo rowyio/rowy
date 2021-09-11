@@ -1,4 +1,4 @@
-import { Theme, ThemeOptions } from "@material-ui/core/styles";
+import { Theme, ThemeOptions } from "@mui/material/styles";
 import { toRem } from "./typography";
 
 import RadioIcon from "theme/RadioIcon";
@@ -9,7 +9,7 @@ import { colord, extend } from "colord";
 import mixPlugin from "colord/plugins/mix";
 extend([mixPlugin]);
 
-declare module "@material-ui/core/styles/createTransitions" {
+declare module "@mui/material/styles/createTransitions" {
   interface Easing {
     strong: string;
   }
@@ -96,9 +96,8 @@ export const components = (theme: Theme): ThemeOptions => {
 
             "--dialog-spacing": theme.spacing(3),
             [theme.breakpoints.down("sm")]: {
-              "--dialog-spacing": theme.spacing(2),
+              "--dialog-spacing": theme.spacing(2.5),
             },
-            padding: "0 var(--dialog-spacing)",
           },
 
           paperWidthXs: {
@@ -107,22 +106,35 @@ export const components = (theme: Theme): ThemeOptions => {
           paperFullScreen: {
             borderBottomLeftRadius: 0,
             borderBottomRightRadius: 0,
-            marginTop: theme.spacing(1),
-            maxHeight: `calc(100% - ${theme.spacing(1)})`,
+            marginTop: `calc(env(safe-area-inset-top) + ${theme.spacing(1)})`,
+            maxHeight: `calc(100% - env(safe-area-inset-top) - ${theme.spacing(
+              1
+            )})`,
+            maxWidth: "100% !important",
+
+            paddingLeft: "env(safe-area-inset-left)",
+            paddingRight: "env(safe-area-inset-right)",
+            paddingBottom: "env(safe-area-inset-bottom)",
           },
         },
       },
       MuiDialogTitle: {
         styleOverrides: {
           root: {
-            padding: `calc(var(--dialog-spacing) - (28px - 16px) / 2) 0`,
+            padding: "var(--dialog-spacing)",
+            paddingTop: (64 - 28) / 2,
+            paddingBottom: (64 - 28) / 2,
+
+            [theme.breakpoints.down("sm")]: {
+              paddingTop: (56 - 28) / 2,
+              paddingBottom: (56 - 28) / 2,
+            },
           },
         },
       },
       MuiDialogContent: {
         styleOverrides: {
           root: {
-            margin: "0 calc(var(--dialog-spacing) * -1)",
             padding: theme.spacing(0, "var(--dialog-spacing)", 1),
             "&:last-child": { paddingBottom: "var(--dialog-spacing)" },
 
@@ -146,8 +158,8 @@ export const components = (theme: Theme): ThemeOptions => {
             "& .MuiButton-root": { minWidth: 100 },
           },
           spacing: {
-            padding: theme.spacing(2, 0),
-            [theme.breakpoints.down("sm")]: { padding: theme.spacing(1.5, 0) },
+            padding: theme.spacing(2, 1),
+            [theme.breakpoints.down("sm")]: { padding: theme.spacing(1.5, 1) },
           },
         },
       },
@@ -352,6 +364,22 @@ export const components = (theme: Theme): ThemeOptions => {
       MuiListItemSecondaryAction: {
         styleOverrides: {
           root: { right: theme.spacing(0.75) },
+        },
+      },
+      MuiAutocomplete: {
+        styleOverrides: {
+          listbox: {
+            "& .MuiAutocomplete-option": {
+              margin: theme.spacing(0, 1),
+              padding: theme.spacing(0.5, 1),
+              paddingLeft: theme.spacing(1) + " !important",
+              minHeight: 32,
+              borderRadius: theme.shape.borderRadius,
+            },
+          },
+          groupLabel: {
+            background: "transparent",
+          },
         },
       },
 

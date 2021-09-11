@@ -1,6 +1,6 @@
 import { IHeavyCellProps } from "../types";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
+import { makeStyles, createStyles } from "@mui/styles";
 
 import { transformValue } from "../Date/utils";
 

@@ -2,12 +2,12 @@ import { useState, useEffect } from "react";
 import _camelCase from "lodash/camelCase";
 import _find from "lodash/find";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
-import { Button, DialogContentText } from "@material-ui/core";
+import { makeStyles, createStyles } from "@mui/styles";
+import { Button, DialogContentText } from "@mui/material";
 
 import Confirmation from "components/Confirmation";
 
-import { FormDialog } from "@antlerengineering/form-builder";
+import { FormDialog } from "@rowy/form-builder";
 import { tableSettings } from "./form";
 
 import { useProjectContext, Table } from "contexts/ProjectContext";

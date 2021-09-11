@@ -1,11 +1,11 @@
 import { useState } from "react";
 import firebase from "firebase/app";
 
-import { Button, Link, Typography } from "@material-ui/core";
-import LoadingButton from "@material-ui/lab/LoadingButton";
-import DownloadIcon from "@material-ui/icons/FileDownloadOutlined";
-import OpenInNewIcon from "@material-ui/icons/OpenInNew";
-import GoIcon from "@material-ui/icons/ChevronRight";
+import { Button, Link, Typography } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
+import DownloadIcon from "@mui/icons-material/FileDownloadOutlined";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import GoIcon from "@mui/icons-material/ChevronRight";
 
 import Modal from "components/Modal";
 import { useProjectContext } from "contexts/ProjectContext";

@@ -5,8 +5,8 @@ import {
   Switch,
   FormControlLabel,
   Divider,
-} from "@material-ui/core";
-import MultiSelect from "@antlerengineering/multiselect";
+} from "@mui/material";
+import MultiSelect from "@rowy/multiselect";
 import FieldSkeleton from "components/SideDrawer/Form/FieldSkeleton";
 import { useProjectContext } from "contexts/ProjectContext";
 

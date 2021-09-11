@@ -4,7 +4,7 @@ import {
   Typography,
   CardActions,
   Skeleton,
-} from "@material-ui/core";
+} from "@mui/material";
 
 export default function TableCardSkeleton() {
   return (

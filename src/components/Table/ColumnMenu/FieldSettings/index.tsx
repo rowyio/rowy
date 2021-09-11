@@ -17,9 +17,9 @@ import { useAppContext } from "contexts/AppContext";
 import { useConfirmation } from "components/ConfirmationDialog";
 import { FieldType } from "constants/fields";
 
-import Typography from "@material-ui/core/Typography";
-import Divider from "@material-ui/core/Divider";
-import Button from "@material-ui/core/Button";
+import Typography from "@mui/material/Typography";
+import Divider from "@mui/material/Divider";
+import Button from "@mui/material/Button";
 import routes from "constants/routes";
 import { SETTINGS } from "config/dbPaths";
 import { name as appName } from "@root/package.json";

@@ -8,14 +8,17 @@ import {
   Stack,
   DialogTitle,
   IconButton,
-  DialogContent,
   DialogActions,
   Button,
   ButtonProps,
-} from "@material-ui/core";
-import CloseIcon from "@material-ui/icons/Close";
+  Slide,
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 
 import { SlideTransitionMui } from "./SlideTransition";
+import ScrollableDialogContent, {
+  IScrollableDialogContentProps,
+} from "./ScrollableDialogContent";
 
 export interface IModalProps extends Partial<Omit<DialogProps, "title">> {
   onClose: () => void;
@@ -35,6 +38,7 @@ export interface IModalProps extends Partial<Omit<DialogProps, "title">> {
 
   hideCloseButton?: boolean;
   fullHeight?: boolean;
+  ScrollableDialogContentProps?: Partial<IScrollableDialogContentProps>;
 }
 
 export default function Modal({
@@ -48,6 +52,7 @@ export default function Modal({
   actions,
   hideCloseButton,
   fullHeight,
+  ScrollableDialogContentProps,
   ...props
 }: IModalProps) {
   const theme = useTheme();
@@ -64,10 +69,11 @@ export default function Modal({
   return (
     <Dialog
       open={open}
-      TransitionComponent={SlideTransitionMui}
       onClose={handleClose}
       fullWidth
       fullScreen={isMobile}
+      TransitionComponent={isMobile ? Slide : SlideTransitionMui}
+      TransitionProps={isMobile ? ({ direction: "up" } as any) : undefined}
       aria-labelledby="modal-title"
       {...props}
       sx={
@@ -94,13 +100,11 @@ export default function Modal({
           <IconButton
             onClick={handleClose}
             aria-label="Close"
-            color="secondary"
             sx={{
-              mt: { xs: 0.5, sm: 1.5 },
-              mb: { xs: 0.5, sm: 1.5 },
-              ml: "var(--dialog-spacing)",
-              mr: -1.5,
+              m: { xs: 1, sm: 1.5 },
+              ml: { xs: -1, sm: -1 },
             }}
+            className="dialog-close"
           >
             <CloseIcon />
           </IconButton>
@@ -109,7 +113,9 @@ export default function Modal({
 
       {header}
 
-      <DialogContent>{children || body}</DialogContent>
+      <ScrollableDialogContent {...ScrollableDialogContentProps}>
+        {children || body}
+      </ScrollableDialogContent>
 
       {footer}
 

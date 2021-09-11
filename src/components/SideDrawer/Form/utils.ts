@@ -1,5 +1,5 @@
 import { Control } from "react-hook-form";
-import { makeStyles, createStyles } from "@material-ui/styles";
+import { makeStyles, createStyles } from "@mui/styles";
 import { FieldType } from "constants/fields";
 import { colord } from "colord";
 

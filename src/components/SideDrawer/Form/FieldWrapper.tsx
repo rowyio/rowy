@@ -1,10 +1,10 @@
 import React, { Suspense } from "react";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
-import { Grid, Typography, IconButton } from "@material-ui/core";
-import DebugIcon from "@material-ui/icons/BugReportOutlined";
-import LaunchIcon from "@material-ui/icons/Launch";
-import LockIcon from "@material-ui/icons/LockOutlined";
+import { makeStyles, createStyles } from "@mui/styles";
+import { Grid, Typography, IconButton } from "@mui/material";
+import DebugIcon from "@mui/icons-material/BugReportOutlined";
+import LaunchIcon from "@mui/icons-material/Launch";
+import LockIcon from "@mui/icons-material/LockOutlined";
 
 import ErrorBoundary from "components/ErrorBoundary";
 import FieldSkeleton from "./FieldSkeleton";

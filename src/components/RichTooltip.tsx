@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import clsx from "clsx";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
+import { makeStyles, createStyles } from "@mui/styles";
 import {
   Tooltip,
   TooltipProps,
   Typography,
   Button,
   ButtonProps,
-} from "@material-ui/core";
+} from "@mui/material";
 
 import { colord, extend } from "colord";
 import mixPlugin from "colord/plugins/lch";

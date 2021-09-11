@@ -1,12 +1,12 @@
 import { useState } from "react";
-import MultiSelect from "@antlerengineering/multiselect";
+import MultiSelect from "@rowy/multiselect";
 import _find from "lodash/find";
 import _findIndex from "lodash/findIndex";
 import _camel from "lodash/camelCase";
 import _sortBy from "lodash/sortBy";
 import clsx from "clsx";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
+import { makeStyles, createStyles } from "@mui/styles";
 import {
   Grid,
   Typography,
@@ -14,8 +14,8 @@ import {
   FormControlLabel,
   Checkbox,
   Chip,
-} from "@material-ui/core";
-import ArrowIcon from "@material-ui/icons/ArrowForward";
+} from "@mui/material";
+import ArrowIcon from "@mui/icons-material/ArrowForward";
 
 import { IStepProps } from ".";
 import FadeList from "../FadeList";

@@ -7,7 +7,7 @@ import {
   Typography,
   CardActions,
   Button,
-} from "@material-ui/core";
+} from "@mui/material";
 import GoIcon from "assets/icons/Go";
 
 import { Table } from "contexts/ProjectContext";

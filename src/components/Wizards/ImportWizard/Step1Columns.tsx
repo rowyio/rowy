@@ -8,15 +8,15 @@ import {
 import _sortBy from "lodash/sortBy";
 import _startCase from "lodash/startCase";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
+import { makeStyles, createStyles } from "@mui/styles";
 import {
   Grid,
   Typography,
   Divider,
   FormControlLabel,
   Checkbox,
-} from "@material-ui/core";
-import DragHandleIcon from "@material-ui/icons/DragHandle";
+} from "@mui/material";
+import DragHandleIcon from "@mui/icons-material/DragHandle";
 
 import { IStepProps } from ".";
 import FadeList from "../FadeList";

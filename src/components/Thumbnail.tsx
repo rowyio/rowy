@@ -2,9 +2,9 @@ import React, { Suspense } from "react";
 import clsx from "clsx";
 import { useImage } from "react-image";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
-import Skeleton from "@material-ui/core/Skeleton";
-import BrokenImageIcon from "@material-ui/icons/BrokenImageOutlined";
+import { makeStyles, createStyles } from "@mui/styles";
+import Skeleton from "@mui/material/Skeleton";
+import BrokenImageIcon from "@mui/icons-material/BrokenImageOutlined";
 
 import ErrorBoundary from "./ErrorBoundary";
 

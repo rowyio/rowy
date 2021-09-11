@@ -1,6 +1,6 @@
 import clsx from "clsx";
-import { makeStyles, createStyles } from "@material-ui/styles";
-import { Chip, ChipProps } from "@material-ui/core";
+import { makeStyles, createStyles } from "@mui/styles";
+import { Chip, ChipProps } from "@mui/material";
 
 export const VARIANTS = ["yes", "no", "maybe"];
 

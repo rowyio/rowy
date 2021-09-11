@@ -1,15 +1,15 @@
 import { useState, useRef } from "react";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
+import { makeStyles, createStyles } from "@mui/styles";
 import {
   TextField,
   Grid,
   IconButton,
   Typography,
   Divider,
-} from "@material-ui/core";
-import AddIcon from "@material-ui/icons/AddCircle";
-import RemoveIcon from "@material-ui/icons/CancelRounded";
+} from "@mui/material";
+import AddIcon from "@mui/icons-material/AddCircle";
+import RemoveIcon from "@mui/icons-material/CancelRounded";
 
 import Subheading from "components/Table/ColumnMenu/Subheading";
 

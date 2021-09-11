@@ -1,6 +1,6 @@
 import { IBasicCellProps } from "../types";
 
-import { useTheme } from "@material-ui/core";
+import { useTheme } from "@mui/material";
 import { resultColorsScale } from "utils/color";
 
 export default function Percentage({ value }: IBasicCellProps) {

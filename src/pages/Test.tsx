@@ -34,8 +34,8 @@ import {
   TextField,
   Tabs,
   Tab,
-} from "@material-ui/core";
-import SparkIcon from "@material-ui/icons/OfflineBoltOutlined";
+} from "@mui/material";
+import SparkIcon from "@mui/icons-material/OfflineBoltOutlined";
 import { useConfirmation } from "components/ConfirmationDialog";
 
 import SnackbarProgress, {

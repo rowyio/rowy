@@ -1,6 +1,6 @@
 import { lazy, Suspense } from "react";
-import { Typography } from "@material-ui/core";
-import MultiSelect from "@antlerengineering/multiselect";
+import { Typography } from "@mui/material";
+import MultiSelect from "@rowy/multiselect";
 import FieldSkeleton from "components/SideDrawer/Form/FieldSkeleton";
 import { FieldType } from "constants/fields";
 import FieldsDropdown from "components/Table/ColumnMenu/FieldsDropdown";

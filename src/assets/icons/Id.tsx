@@ -1,4 +1,4 @@
-import SvgIcon, { SvgIconProps } from "@material-ui/core/SvgIcon";
+import SvgIcon, { SvgIconProps } from "@mui/material/SvgIcon";
 import { mdiIdentifier } from "@mdi/js";
 
 export default function Id(props: SvgIconProps) {

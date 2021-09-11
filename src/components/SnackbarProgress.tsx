@@ -1,5 +1,5 @@
 import { useState, Dispatch, SetStateAction, MutableRefObject } from "react";
-import { Stack, CircularProgress } from "@material-ui/core";
+import { Stack, CircularProgress } from "@mui/material";
 
 export interface ISnackbarProgressRef {
   setProgress: Dispatch<SetStateAction<number>>;

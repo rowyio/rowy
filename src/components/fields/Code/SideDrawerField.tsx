@@ -2,7 +2,7 @@ import { Controller } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 
 import CodeEditor from "components/CodeEditor";
-import { makeStyles, createStyles } from "@material-ui/styles";
+import { makeStyles, createStyles } from "@mui/styles";
 
 const useStyles = makeStyles((theme) =>
   createStyles({

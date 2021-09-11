@@ -2,9 +2,9 @@ import React from "react";
 import clsx from "clsx";
 import { IPopoverInlineCellProps } from "../types";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
-import { ButtonBase, Grid } from "@material-ui/core";
-import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
+import { makeStyles, createStyles } from "@mui/styles";
+import { ButtonBase, Grid } from "@mui/material";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 import { sanitiseValue } from "./utils";
 import FormattedChip from "components/FormattedChip";

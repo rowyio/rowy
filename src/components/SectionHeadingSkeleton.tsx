@@ -1,4 +1,4 @@
-import { Stack, StackProps, Skeleton } from "@material-ui/core";
+import { Stack, StackProps, Skeleton } from "@mui/material";
 
 export default function SectionHeadingSkeleton({ sx, ...props }: StackProps) {
   return (

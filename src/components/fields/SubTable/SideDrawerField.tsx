@@ -2,8 +2,8 @@ import { useWatch } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 import { Link } from "react-router-dom";
 
-import { Grid, IconButton } from "@material-ui/core";
-import LaunchIcon from "@material-ui/icons/Launch";
+import { Grid, IconButton } from "@mui/material";
+import LaunchIcon from "@mui/icons-material/Launch";
 
 import { useFieldStyles } from "components/SideDrawer/Form/utils";
 import { useSubTableData } from "./utils";

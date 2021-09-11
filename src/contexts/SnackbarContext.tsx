@@ -3,12 +3,12 @@ import {
   SnackbarProviderProps,
 } from "notistack";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
-import { Grow } from "@material-ui/core";
-import ErrorIcon from "@material-ui/icons/ErrorOutline";
-import InfoIcon from "@material-ui/icons/InfoOutlined";
-import SuccessIcon from "@material-ui/icons/Check";
-import WarningIcon from "@material-ui/icons/WarningAmber";
+import { makeStyles, createStyles } from "@mui/styles";
+import { Grow } from "@mui/material";
+import ErrorIcon from "@mui/icons-material/ErrorOutline";
+import InfoIcon from "@mui/icons-material/InfoOutlined";
+import SuccessIcon from "@mui/icons-material/Check";
+import WarningIcon from "@mui/icons-material/WarningAmber";
 
 const useStyles = makeStyles((theme) =>
   createStyles({

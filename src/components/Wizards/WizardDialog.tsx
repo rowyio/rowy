@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import clsx from "clsx";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
+import { makeStyles, createStyles } from "@mui/styles";
 import {
   useTheme,
   useMediaQuery,
@@ -14,11 +14,11 @@ import {
   MobileStepper,
   DialogContent,
   Button,
-} from "@material-ui/core";
-import { alpha } from "@material-ui/core/styles";
-import CloseIcon from "@material-ui/icons/Close";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+} from "@mui/material";
+import { alpha } from "@mui/material/styles";
+import CloseIcon from "@mui/icons-material/Close";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 
 import { SlideTransitionMui } from "components/Modal/SlideTransition";
 

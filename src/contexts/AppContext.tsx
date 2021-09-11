@@ -3,7 +3,7 @@ import firebase from "firebase/app";
 import createPersistedState from "use-persisted-state";
 import _merge from "lodash/merge";
 
-import { useMediaQuery, ThemeProvider, CssBaseline } from "@material-ui/core";
+import { useMediaQuery, ThemeProvider, CssBaseline } from "@mui/material";
 
 import ErrorBoundary from "components/ErrorBoundary";
 

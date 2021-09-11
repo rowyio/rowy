@@ -1,4 +1,4 @@
-import { makeStyles, createStyles } from "@material-ui/styles";
+import { makeStyles, createStyles } from "@mui/styles";
 import { DRAWER_WIDTH, DRAWER_COLLAPSED_WIDTH } from "./index";
 import { APP_BAR_HEIGHT } from "components/Navigation";
 import { TABLE_HEADER_HEIGHT } from "components/Table/TableHeader";

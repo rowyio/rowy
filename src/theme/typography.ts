@@ -1,10 +1,10 @@
-import { ThemeOptions } from "@material-ui/core/styles";
+import { ThemeOptions } from "@mui/material/styles";
 import {
   FontStyle,
   TypographyStyleOptions,
-} from "@material-ui/core/styles/createTypography";
+} from "@mui/material/styles/createTypography";
 
-declare module "@material-ui/core/styles/createTypography" {
+declare module "@mui/material/styles/createTypography" {
   interface FontStyle {
     fontFamilyMono: string;
     fontFamilyHeading: string;

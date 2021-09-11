@@ -6,9 +6,9 @@ import {
   Stack,
   Typography,
   SvgIconTypeMap,
-} from "@material-ui/core";
-import { OverridableComponent } from "@material-ui/core/OverridableComponent";
-import ErrorIcon from "@material-ui/icons/ErrorOutline";
+} from "@mui/material";
+import { OverridableComponent } from "@mui/material/OverridableComponent";
+import ErrorIcon from "@mui/icons-material/ErrorOutline";
 
 export interface IEmptyStateProps extends Partial<GridProps> {
   /** Primary message displayed under the icon */

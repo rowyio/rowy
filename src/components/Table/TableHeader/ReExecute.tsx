@@ -1,12 +1,12 @@
 import { useState } from "react";
 
 import TableHeaderButton from "./TableHeaderButton";
-import LoopIcon from "@material-ui/icons/Loop";
+import LoopIcon from "@mui/icons-material/Loop";
 
 import { useProjectContext } from "contexts/ProjectContext";
 import { db } from "../../../firebase";
 import { isCollectionGroup } from "utils/fns";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import Modal from "components/Modal";
 

@@ -2,8 +2,8 @@ import React from "react";
 import clsx from "clsx";
 import { IPopoverInlineCellProps } from "../types";
 
-import { makeStyles, createStyles } from "@material-ui/styles";
-import { Grid, ButtonBase } from "@material-ui/core";
+import { makeStyles, createStyles } from "@mui/styles";
+import { Grid, ButtonBase } from "@mui/material";
 
 const useStyles = makeStyles((theme) =>
   createStyles({

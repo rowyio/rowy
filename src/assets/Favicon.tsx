@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useTheme } from "@material-ui/core";
+import { useTheme } from "@mui/material";
 
 export default function Favicon() {
   const theme = useTheme();

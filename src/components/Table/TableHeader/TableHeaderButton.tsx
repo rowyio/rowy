@@ -1,5 +1,5 @@
 import { forwardRef } from "react";
-import { Tooltip, Button, ButtonProps } from "@material-ui/core";
+import { Tooltip, Button, ButtonProps } from "@mui/material";
 
 export interface ITableHeaderButtonProps extends Partial<ButtonProps> {
   title: string;

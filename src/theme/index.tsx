@@ -1,4 +1,4 @@
-import { createTheme, ThemeOptions } from "@material-ui/core/styles";
+import { createTheme, ThemeOptions } from "@mui/material/styles";
 import _merge from "lodash/merge";
 
 import { typography } from "theme/typography";
