@@ -41,6 +41,7 @@ export const FIELDS: IFieldConfig[] = [
   // TEXT
   ShortText,
   LongText,
+  RichText,
   Email,
   Phone,
   Url,
@@ -68,7 +69,6 @@ export const FIELDS: IFieldConfig[] = [
   // CODE
   Json,
   Code,
-  RichText,
   // CLOUD FUNCTION
   Action,
   Derivative,
