@@ -7,6 +7,7 @@ import { IFieldConfig } from "./types";
 // Import field configs
 import ShortText from "./ShortText";
 import LongText from "./LongText";
+import RichText from "./RichText";
 import Email from "./Email";
 import Phone from "./Phone";
 import Url from "./Url";
@@ -28,7 +29,6 @@ import ConnectTable from "./ConnectTable";
 import ConnectService from "./ConnectService";
 import Json from "./Json";
 import Code from "./Code";
-import RichText from "./RichText";
 import Action from "./Action";
 import Derivative from "./Derivative";
 import Aggregate from "./Aggregate";

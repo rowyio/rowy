@@ -19,7 +19,7 @@ const SideDrawerField = lazy(
 export const config: IFieldConfig = {
   type: FieldType.richText,
   name: "Rich Text",
-  group: "Code",
+  group: "Text",
   dataType: "string",
   initialValue: "",
   initializable: true,

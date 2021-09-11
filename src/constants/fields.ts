@@ -3,6 +3,7 @@ export enum FieldType {
   // TEXT
   shortText = "SIMPLE_TEXT",
   longText = "LONG_TEXT",
+  richText = "RICH_TEXT",
   email = "EMAIL",
   phone = "PHONE_NUMBER",
   url = "URL",
@@ -30,7 +31,6 @@ export enum FieldType {
   // CODE
   json = "JSON",
   code = "CODE",
-  richText = "RICH_TEXT",
   // CLOUD FUNCTION
   action = "ACTION",
   derivative = "DERIVATIVE",

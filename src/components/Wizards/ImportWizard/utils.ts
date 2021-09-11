@@ -6,6 +6,7 @@ import { FieldType } from "constants/fields";
 export const SELECTABLE_TYPES = [
   FieldType.shortText,
   FieldType.longText,
+  FieldType.richText,
   FieldType.email,
   FieldType.phone,
 
@@ -25,14 +26,16 @@ export const SELECTABLE_TYPES = [
   FieldType.json,
   FieldType.code,
 
-  FieldType.richText,
   FieldType.color,
   FieldType.slider,
 ];
 
-export const REGEX_EMAIL = /([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)/;
-export const REGEX_PHONE = /(([+][(]?[0-9]{1,3}[)]?)|([(]?[0-9]{4}[)]?))\s*[)]?[-\s\.]?[(]?[0-9]{1,3}[)]?([-\s\.]?[0-9]{3})([-\s\.]?[0-9]{3,4})/;
-export const REGEX_URL = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
+export const REGEX_EMAIL =
+  /([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)/;
+export const REGEX_PHONE =
+  /(([+][(]?[0-9]{1,3}[)]?)|([(]?[0-9]{4}[)]?))\s*[)]?[-\s\.]?[(]?[0-9]{1,3}[)]?([-\s\.]?[0-9]{3})([-\s\.]?[0-9]{3,4})/;
+export const REGEX_URL =
+  /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
 export const REGEX_HTML = /<\/?[a-z][\s\S]*>/;
 
 const inferTypeFromValue = (value: any) => {
