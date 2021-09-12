@@ -1,5 +1,5 @@
-import { Theme } from "@material-ui/core/styles";
+import { Theme } from "@mui/material/styles";
 
-declare module "@material-ui/styles" {
+declare module "@mui/styles" {
   interface DefaultTheme extends Theme {}
 }
