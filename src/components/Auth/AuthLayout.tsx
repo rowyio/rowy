@@ -7,6 +7,7 @@ import { alpha } from "@mui/material/styles";
 import bgPattern from "assets/bg-pattern.svg";
 import bgPatternDark from "assets/bg-pattern-dark.svg";
 import Logo from "assets/Logo";
+import { homepage } from "@root/package.json";
 
 export interface IAuthLayoutProps {
   children: React.ReactNode;
@@ -97,7 +98,9 @@ export default function AuthLayout({ children, loading }: IAuthLayoutProps) {
           } as any
         }
       >
-        <Logo />
+        <a href={homepage} target="_blank" rel="noopener noreferrer">
+          <Logo />
+        </a>
         <Typography variant="body2" color="text.disabled" display="block">
           Project: {process.env.REACT_APP_FIREBASE_PROJECT_ID}
         </Typography>

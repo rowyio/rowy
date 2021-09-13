@@ -10,6 +10,7 @@ import { signOut } from "utils/auth";
 import { auth } from "../../firebase";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import { RunRoutes } from "@src/constants/runRoutes";
+import { name } from "@root/package.json";
 
 export default function ImpersonatorAuthPage() {
   const { enqueueSnackbar } = useSnackbar();
@@ -47,9 +48,19 @@ export default function ImpersonatorAuthPage() {
 
   return (
     <AuthLayout loading={loading}>
-      <Typography variant="h6" component="h2">
-        Admin Authentication
-      </Typography>
+      <div>
+        <Typography variant="h6" component="h2" gutterBottom>
+          Admin Authentication
+        </Typography>
+        <Typography gutterBottom>
+          Using an admin account, sign in as another user on this project to
+          test permissions and access controls.
+        </Typography>
+        <Typography>
+          Make sure the {name} Run service account has the{" "}
+          <b>Service Account Token Creator</b> IAM role.
+        </Typography>
+      </div>
 
       {adminUser === undefined ? (
         <FirebaseUi
