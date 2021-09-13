@@ -25,6 +25,7 @@ import routes from "constants/routes";
 import AuthView from "pages/Auth";
 import SignOutView from "pages/Auth/SignOut";
 import TestView from "pages/Test";
+import RowyRunTestView from "pages/RowyRunTest";
 
 import Favicon from "assets/Favicon";
 import "analytics";
@@ -100,6 +101,7 @@ export default function App() {
                             routes.userSettings,
                             routes.userManagement,
                             routes.impersonatorAuth,
+                            routes.rowyRunTest,
                           ]}
                           render={() => (
                             <ProjectContextProvider>
@@ -108,6 +110,11 @@ export default function App() {
                                   exact
                                   path={routes.impersonatorAuth}
                                   render={() => <ImpersonatorAuthPage />}
+                                />
+                                <Route
+                                  exact
+                                  path={routes.rowyRunTest}
+                                  render={() => <RowyRunTestView />}
                                 />
                                 <PrivateRoute
                                   exact

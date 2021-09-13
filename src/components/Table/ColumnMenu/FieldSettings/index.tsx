@@ -128,7 +128,8 @@ export default function FieldSettings(props: IMenuModalProps) {
                   rowyRun({
                     route: RunRoutes.buildFunction,
                     body: {
-                      configPath: tableState?.config.tableConfig.path,
+                      triggerPath: "demoAllFieldTypes/{docId}",
+                      // configPath: tableState?.config.tableConfig.path,
                     },
                     params: [],
                   });

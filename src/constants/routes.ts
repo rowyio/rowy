@@ -20,6 +20,7 @@ export enum routes {
   userSettings = "/settings/user",
   projectSettings = "/settings/project",
   userManagement = "/settings/userManagement",
+  rowyRunTest = "/rrTest",
 }
 
 export default routes;
