@@ -154,16 +154,16 @@ export default function DraggableHeaderRenderer<R>({
 
   const isSorted = orderBy?.[0]?.key === column.key;
   const isAsc = isSorted && orderBy?.[0]?.direction === "asc";
+  const isDesc = isSorted && orderBy?.[0]?.direction === "desc";
 
   const handleSortClick = () => {
-    if (isAsc) {
-      const ordering: TableOrder = [{ key: column.key, direction: "desc" }];
+    let ordering: TableOrder = [];
 
-      tableActions.table.orderBy(ordering);
-    } else {
-      const ordering: TableOrder = [{ key: column.key, direction: "asc" }];
-      tableActions.table.orderBy(ordering);
-    }
+    if (!isSorted) ordering = [{ key: column.key, direction: "desc" }];
+    else if (isDesc) ordering = [{ key: column.key, direction: "asc" }];
+    else ordering = [];
+
+    tableActions.table.orderBy(ordering);
   };
 
   return (
@@ -261,16 +261,28 @@ export default function DraggableHeaderRenderer<R>({
             isSorted && classes.sortIconContainerSorted
           )}
         >
-          <IconButton
-            disableFocusRipple={true}
-            size="small"
-            onClick={handleSortClick}
-            color="inherit"
-            aria-label={`Sort by ${isAsc ? "descending" : "ascending"}`}
-            className={clsx(classes.sortIcon, isAsc && classes.sortIconAsc)}
+          <Tooltip
+            title={
+              isAsc
+                ? "Unsort"
+                : `Sort by ${isDesc ? "Ascending" : "Descending"}`
+            }
           >
-            <SortDescIcon />
-          </IconButton>
+            <IconButton
+              disableFocusRipple={true}
+              size="small"
+              onClick={handleSortClick}
+              color="inherit"
+              aria-label={
+                isAsc
+                  ? "Unsort"
+                  : `Sort by ${isDesc ? "Ascending" : "Descending"}`
+              }
+              className={clsx(classes.sortIcon, isAsc && classes.sortIconAsc)}
+            >
+              <SortDescIcon />
+            </IconButton>
+          </Tooltip>
         </Grid>
       )}
 
@@ -280,16 +292,18 @@ export default function DraggableHeaderRenderer<R>({
             (column as any).type
           ))) && (
         <Grid item>
-          <IconButton
-            size="small"
-            className={classes.dropdownButton}
-            aria-label={`Show ${column.name as string} column dropdown`}
-            color="inherit"
-            onClick={handleOpenMenu}
-            ref={buttonRef}
-          >
-            <DropdownIcon />
-          </IconButton>
+          <Tooltip title="Column Settings">
+            <IconButton
+              size="small"
+              className={classes.dropdownButton}
+              aria-label={`Column settings for ${column.name as string}`}
+              color="inherit"
+              onClick={handleOpenMenu}
+              ref={buttonRef}
+            >
+              <DropdownIcon />
+            </IconButton>
+          </Tooltip>
         </Grid>
       )}
     </Grid>
