@@ -3,9 +3,14 @@ import { useSnackbar } from "notistack";
 import _mergeWith from "lodash/mergeWith";
 import _find from "lodash/find";
 
-import { useTheme, useMediaQuery, Typography, Link } from "@mui/material";
-import Alert from "@mui/material/Alert";
-import AlertTitle from "@mui/material/AlertTitle";
+import {
+  useTheme,
+  useMediaQuery,
+  Typography,
+  Link,
+  Alert,
+  AlertTitle,
+} from "@mui/material";
 
 import WizardDialog from "../WizardDialog";
 import Step1Columns from "./Step1Columns";
@@ -116,15 +121,16 @@ export default function ImportCsvWizard({
                 </Typography>
                 <Alert severity="warning">
                   <AlertTitle>Importing dates?</AlertTitle>
-                  Make sure your dates are in UTC time and{" "}
+                  Make sure they’re in UTC time and{" "}
                   <Link
                     href="https://date-fns.org/v2.16.1/docs/parseJSON"
                     rel="noopener"
                     target="_blank"
+                    color="inherit"
                   >
                     a supported format
                   </Link>
-                  . If they’re not, you will need to re-import your CSV data.
+                  . If they’re not, you’ll need to re-import your CSV data.
                 </Alert>
               </>
             ),
@@ -142,7 +148,7 @@ export default function ImportCsvWizard({
           config.newColumns.length > 0 && {
             title: "Set Column Types",
             description:
-              "Set the type of each column to display your data correctly. Some column types have been suggested based off your data.",
+              "Set the type of each column to display your data correctly. Some column types have been suggested based on your data.",
             content: (
               <Step2NewColumns
                 csvData={csvData}

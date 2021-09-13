@@ -13,35 +13,14 @@ const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
       position: "relative",
+      minHeight: 300,
+      height: "calc(100% - 80px)",
+    },
 
-      "&::after": {
-        content: '""',
-        display: "block",
-        pointerEvents: "none",
-
-        position: "absolute",
-        bottom: 0,
-        left: 0,
-        right: 0,
-
-        height: theme.spacing(3),
-        backgroundImage: `linear-gradient(to top, ${theme.palette.background.paper}, transparent)`,
-      },
-
-      "&::before": {
-        content: '""',
-        display: "block",
-        pointerEvents: "none",
-        zIndex: 1,
-
-        position: "absolute",
-        top: 0,
-        bottom: 0,
-        right: 0,
-
-        width: theme.spacing(3),
-        backgroundImage: `linear-gradient(to left, ${theme.palette.background.paper}, transparent)`,
-      },
+    container: {
+      height: "100%",
+      display: "flex",
+      flexDirection: "column",
     },
 
     spacer: {
@@ -53,7 +32,7 @@ const useStyles = makeStyles((theme) =>
     header: { overflowX: "hidden" },
     data: {
       overflow: "scroll",
-      height: 300,
+      flexGrow: 1,
     },
 
     column: {
@@ -73,7 +52,7 @@ export default function Step4Preview({ config }: IStepProps) {
   return (
     <div className={classes.root}>
       <ScrollSync vertical={false} proportional={false}>
-        <div>
+        <div className={classes.container}>
           <ScrollSyncPane>
             <Grid container wrap="nowrap" className={classes.header}>
               {Object.entries(config).map(([field, { name, type }]) => (

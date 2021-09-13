@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) =>
 
       display: "flex",
       alignItems: "center",
-      padding: theme.spacing(0, 1.5),
+      padding: theme.spacing(0, 1.25),
 
       ...theme.typography.body2,
       fontSize: "0.75rem",
@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) =>
 
     value: {
       width: "100%",
-      maxHeight: 43,
+      height: 43,
 
       display: "flex",
       justifyContent: "flex-start",

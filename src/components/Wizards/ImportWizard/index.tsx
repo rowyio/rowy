@@ -103,7 +103,7 @@ export default function ImportWizard() {
         {
           title: "Set Column Types",
           description:
-            "Set the type of each column to display your data correctly. Some column types have been suggested based off your data.",
+            "Set the type of each column to display your data correctly. Some column types have been suggested based on your data.",
           content: (
             <Step3Types
               config={config}

@@ -18,7 +18,7 @@ import {
 import ArrowIcon from "@mui/icons-material/ArrowForward";
 
 import { IStepProps } from ".";
-import FadeList from "../FadeList";
+import FadeList from "../ScrollableList";
 import Column from "../Column";
 
 import { useProjectContext } from "contexts/ProjectContext";
@@ -48,15 +48,15 @@ const useStyles = makeStyles((theme) =>
       backgroundColor: theme.palette.background.default,
       border: `1px solid ${theme.palette.divider}`,
       borderRadius: 0,
+      boxShadow: "none",
+      height: 44,
 
       ...theme.typography.subtitle2,
       color: theme.palette.text.secondary,
-      transition: theme.transitions.create("color", {
-        duration: theme.transitions.duration.short,
-      }),
       "&:hover": {
         backgroundColor: theme.palette.background.default,
         color: theme.palette.text.primary,
+        boxShadow: "none",
       },
 
       "&::before": { content: "none" },
@@ -64,16 +64,12 @@ const useStyles = makeStyles((theme) =>
     },
     noneSelected: { color: theme.palette.text.disabled },
     multiSelectInputLabel: {
-      padding: theme.spacing(0, 2),
-      height: 44 - 2,
-
       display: "flex",
       alignItems: "center",
     },
     newColumnChip: {
-      marginLeft: theme.spacing(1),
+      marginLeft: theme.spacing(1) + " !important",
       backgroundColor: theme.palette.action.focus,
-      ...theme.typography.overline,
       pointerEvents: "none",
     },
   })
@@ -168,13 +164,13 @@ export default function Step1Columns({
       <Grid container spacing={7}>
         {!isXs && (
           <Grid item xs={12} sm={6}>
-            <Typography variant="overline" gutterBottom component="h2">
+            <Typography variant="subtitle2" gutterBottom component="h2">
               Select Columns ({config.pairs.length} of {csvData.columns.length})
             </Typography>
           </Grid>
         )}
         <Grid item xs={12} sm={6}>
-          <Typography variant="overline" gutterBottom component="h2">
+          <Typography variant="subtitle2" gutterBottom component="h2">
             Table Columns
           </Typography>
         </Grid>

@@ -5,6 +5,7 @@ export enum routes {
   jwtAuth = "/jwtAuth",
   signOut = "/signOut",
   authSetup = "/authSetup",
+  setup = "/setup",
 
   table = "/table",
   tableGroup = "/tableGroup",

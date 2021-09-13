@@ -19,7 +19,7 @@ import {
 import DragHandleIcon from "@mui/icons-material/DragHandle";
 
 import { IStepProps } from ".";
-import FadeList from "../FadeList";
+import FadeList from "../ScrollableList";
 import Column from "../Column";
 import EmptyState from "components/EmptyState";
 import AddColumnIcon from "assets/icons/AddColumn";
@@ -107,7 +107,7 @@ export default function Step1Columns({ config, setConfig }: IStepProps) {
   return (
     <Grid container spacing={3}>
       <Grid item xs={12} sm={6}>
-        <Typography variant="overline" gutterBottom component="h2">
+        <Typography variant="subtitle2" gutterBottom component="h2">
           Select Columns ({selectedFields.length} of {allFields.length})
         </Typography>
         <Divider />
@@ -126,18 +126,14 @@ export default function Step1Columns({ config, setConfig }: IStepProps) {
                   color="default"
                 />
               }
-              label={
-                <Typography variant="subtitle2" color="textSecondary">
-                  Select all
-                </Typography>
-              }
+              label="Select all"
               classes={{
                 root: classes.formControlLabel,
                 label: classes.columnLabel,
               }}
+              style={{ height: 44 }}
             />
           </li>
-          <li className={classes.spacer} />
 
           {allFields.map((field) => (
             <li key={field}>
@@ -162,7 +158,7 @@ export default function Step1Columns({ config, setConfig }: IStepProps) {
         </FadeList>
       </Grid>
       <Grid item xs={12} sm={6}>
-        <Typography variant="overline" gutterBottom component="h2">
+        <Typography variant="subtitle2" gutterBottom component="h2">
           Sort Table Columns
         </Typography>
         <Divider />

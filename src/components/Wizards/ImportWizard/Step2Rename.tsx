@@ -14,7 +14,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DoneIcon from "@mui/icons-material/Done";
 
 import { IStepProps } from ".";
-import FadeList from "../FadeList";
+import FadeList from "../ScrollableList";
 import Column from "../Column";
 
 const useStyles = makeStyles((theme) =>
@@ -65,13 +65,13 @@ export default function Step2Rename({
       <Grid container spacing={3}>
         {!isXs && (
           <Grid item xs={12} sm={6}>
-            <Typography variant="overline" gutterBottom component="h2">
+            <Typography variant="subtitle2" gutterBottom component="h2">
               Field Names
             </Typography>
           </Grid>
         )}
         <Grid item xs={12} sm={6}>
-          <Typography variant="overline" gutterBottom component="h2">
+          <Typography variant="subtitle2" gutterBottom component="h2">
             Set Column Names
           </Typography>
         </Grid>

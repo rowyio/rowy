@@ -18,7 +18,9 @@ const useStyles = makeStyles((theme) =>
     listbox: {},
     option: {
       "$listbox &": {
-        padding: theme.spacing(0, 2),
+        padding: 0,
+        paddingLeft: "0 !important",
+        borderRadius: 0,
         marginBottom: -1,
 
         "&::after": { content: "none" },

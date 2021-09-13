@@ -796,6 +796,15 @@ export const components = (theme: Theme): ThemeOptions => {
           },
         },
       },
+
+      MuiAlertTitle: {
+        styleOverrides: {
+          root: {
+            ...theme.typography.subtitle2,
+            lineHeight: "1.5rem",
+          },
+        },
+      },
     },
   };
 };

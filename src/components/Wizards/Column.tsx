@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) =>
       border: `1px solid ${theme.palette.divider}`,
       backgroundColor: theme.palette.background.default,
 
-      padding: theme.spacing(0, 1, 0, 1.5),
+      padding: theme.spacing(0, 1),
 
       color: theme.palette.text.secondary,
       "&:hover": { color: theme.palette.text.primary },
@@ -50,6 +50,7 @@ const useStyles = makeStyles((theme) =>
       overflow: "hidden",
     },
     columnName: {
+      fontWeight: theme.typography.fontWeightMedium,
       lineHeight: "44px",
       display: "block",
 
@@ -94,7 +95,7 @@ export default function Column({
         <Typography
           component={Grid}
           item
-          variant="subtitle2"
+          variant="caption"
           noWrap
           className={classes.columnName}
         >

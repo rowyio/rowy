@@ -5,7 +5,7 @@ import { Grid, Typography, Divider, ButtonBase } from "@mui/material";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 import { IStepProps } from ".";
-import FadeList from "../FadeList";
+import FadeList from "../ScrollableList";
 import Column from "../Column";
 import Cell from "../Cell";
 import FieldsDropdown from "components/Table/ColumnMenu/FieldsDropdown";
@@ -23,10 +23,9 @@ const useStyles = makeStyles((theme) =>
       textAlign: "left",
     },
 
-    typeHeading: { margin: theme.spacing(5, 0, 1) },
+    typeHeading: { margin: theme.spacing(52 / 8, 0, 1) },
 
     previewDivider: { marginBottom: theme.spacing(2) },
-    previewList: { paddingTop: 0 },
     previewSpacer: { width: theme.spacing(3) },
     cellContainer: { overflow: "hidden" },
   })
@@ -45,7 +44,7 @@ export default function Step3Types({ config, updateConfig, isXs }: IStepProps) {
     <div>
       <Grid container spacing={2} className={classes.typeSelectRow}>
         <Grid item xs={12} sm={6}>
-          <Typography variant="overline" gutterBottom component="h2">
+          <Typography variant="subtitle2" gutterBottom component="h2">
             Table Columns
           </Typography>
           <Divider />
@@ -74,7 +73,7 @@ export default function Step3Types({ config, updateConfig, isXs }: IStepProps) {
         </Grid>
         <Grid item xs={12} sm={6}>
           <Typography
-            variant="overline"
+            variant="subtitle2"
             noWrap
             component="h2"
             className={classes.typeHeading}
@@ -94,13 +93,13 @@ export default function Step3Types({ config, updateConfig, isXs }: IStepProps) {
       <Grid container spacing={3}>
         {!isXs && (
           <Grid item xs={12} sm={6}>
-            <Typography variant="overline" gutterBottom component="h2">
+            <Typography variant="subtitle2" gutterBottom component="h2">
               Raw Data
             </Typography>
           </Grid>
         )}
         <Grid item xs={12} sm={6}>
-          <Typography variant="overline" gutterBottom component="h2">
+          <Typography variant="subtitle2" gutterBottom component="h2">
             Column Preview
           </Typography>
         </Grid>
@@ -122,7 +121,7 @@ export default function Step3Types({ config, updateConfig, isXs }: IStepProps) {
         </Grid>
       </Grid>
 
-      <FadeList classes={{ list: classes.previewList }}>
+      <FadeList listSx={{ pt: 0 }}>
         {tableState!.rows!.slice(0, 20).map((row) => (
           <Grid container key={row.id} wrap="nowrap">
             {!isXs && (
