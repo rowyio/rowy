@@ -102,7 +102,10 @@ export default function AuthLayout({ children, loading }: IAuthLayoutProps) {
           <Logo />
         </a>
         <Typography variant="body2" color="text.disabled" display="block">
-          Project: {process.env.REACT_APP_FIREBASE_PROJECT_ID}
+          Project:{" "}
+          <span style={{ userSelect: "all" }}>
+            {process.env.REACT_APP_FIREBASE_PROJECT_ID}
+          </span>
         </Typography>
         {children}
 
