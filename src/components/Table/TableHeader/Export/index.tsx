@@ -96,7 +96,7 @@ export default function Export() {
             title={mode}
             header={
               <>
-                <DialogContent>
+                <DialogContent style={{ flexGrow: 0, flexShrink: 0 }}>
                   {(tableState?.filters && tableState?.filters.length !== 0) ||
                   (tableState?.orderBy && tableState?.orderBy.length !== 0)
                     ? "The filters and sorting applied to the table will be used in the export."
