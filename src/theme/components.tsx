@@ -214,6 +214,10 @@ export const components = (theme: Theme): ThemeOptions => {
               boxShadow: `0 0 0 1px ${theme.palette.action.inputOutline} inset,
                           0 -2px 0 0 ${theme.palette.primary.main} inset`,
             },
+            "&.Mui-error, &.Mui-error:hover": {
+              boxShadow: `0 0 0 1px ${theme.palette.action.inputOutline} inset,
+                          0 -2px 0 0 ${theme.palette.error.main} inset`,
+            },
 
             borderRadius: theme.shape.borderRadius,
             overflow: "hidden",
