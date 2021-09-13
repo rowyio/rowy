@@ -7,6 +7,8 @@ import { alpha } from "@mui/material/styles";
 import bgPattern from "assets/bg-pattern.svg";
 import bgPatternDark from "assets/bg-pattern-dark.svg";
 import Logo from "assets/Logo";
+
+import { useAppContext } from "contexts/AppContext";
 import { homepage } from "@root/package.json";
 
 export interface IAuthLayoutProps {
@@ -17,6 +19,8 @@ export interface IAuthLayoutProps {
 export default function AuthLayout({ children, loading }: IAuthLayoutProps) {
   const theme = useTheme();
   const fullScreenHeight = use100vh() ?? "100vh";
+
+  const { projectId } = useAppContext();
 
   return (
     <>
@@ -102,10 +106,7 @@ export default function AuthLayout({ children, loading }: IAuthLayoutProps) {
           <Logo />
         </a>
         <Typography variant="body2" color="text.disabled" display="block">
-          Project:{" "}
-          <span style={{ userSelect: "all" }}>
-            {process.env.REACT_APP_FIREBASE_PROJECT_ID}
-          </span>
+          Project: <span style={{ userSelect: "all" }}>{projectId}</span>
         </Typography>
         {children}
 

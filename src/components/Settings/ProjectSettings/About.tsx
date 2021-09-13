@@ -9,7 +9,7 @@ import Logo from "assets/Logo";
 import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
 
 import { name, version, repository } from "@root/package.json";
-import { projectId } from "@src/firebase";
+import { useAppContext } from "contexts/AppContext";
 import WIKI_LINKS from "constants/wikiLinks";
 
 const useLastCheckedUpdateState = createPersistedState(
@@ -20,6 +20,8 @@ export const useLatestUpdateState = createPersistedState(
 );
 
 export default function About() {
+  const { projectId } = useAppContext();
+
   const [lastCheckedUpdate, setLastCheckedUpdate] =
     useLastCheckedUpdateState<string>();
   const [latestUpdate, setLatestUpdate] = useLatestUpdateState<null | Record<

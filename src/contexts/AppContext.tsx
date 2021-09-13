@@ -20,6 +20,7 @@ const useThemeOverriddenState = createPersistedState(
 );
 
 interface AppContextInterface {
+  projectId: string;
   currentUser: firebase.User | null | undefined;
   userDoc: any;
   theme: keyof typeof themes;
@@ -29,6 +30,7 @@ interface AppContextInterface {
 }
 
 export const AppContext = React.createContext<AppContextInterface>({
+  projectId: "",
   currentUser: undefined,
   userDoc: undefined,
   theme: "light",
@@ -124,6 +126,7 @@ export const AppProvider: React.FC = ({ children }) => {
   return (
     <AppContext.Provider
       value={{
+        projectId,
         userDoc: { state: userDoc, dispatch: dispatchUserDoc },
         currentUser,
         theme,

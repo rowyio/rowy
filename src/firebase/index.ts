@@ -20,14 +20,13 @@ db.enablePersistence({ synchronizeTabs: true });
 export const bucket = firebase.storage();
 export const functions = firebase.functions();
 
-export const projectId = process.env.REACT_APP_FIREBASE_PROJECT_ID;
+export const projectId = process.env.REACT_APP_FIREBASE_PROJECT_ID!;
 export const WEBHOOK_URL = `https://${(functions as any).region_}-${
   appConfig.projectId
 }.cloudfunctions.net/webhook`;
-export const googleProvider = new firebase.auth.GoogleAuthProvider().setCustomParameters(
-  {
+export const googleProvider =
+  new firebase.auth.GoogleAuthProvider().setCustomParameters({
     prompt: "select_account",
-  }
-);
+  });
 
 export const deleteField = firebase.firestore.FieldValue.delete;

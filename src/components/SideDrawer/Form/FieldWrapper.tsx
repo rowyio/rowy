@@ -11,7 +11,8 @@ import FieldSkeleton from "./FieldSkeleton";
 
 import { FieldType } from "constants/fields";
 import { getFieldProp } from "components/fields";
-import { projectId } from "../../../firebase";
+import { useAppContext } from "contexts/AppContext";
+
 const useStyles = makeStyles((theme) =>
   createStyles({
     header: {
@@ -62,6 +63,8 @@ export default function FieldWrapper({
   disabled,
 }: IFieldWrapperProps) {
   const classes = useStyles();
+
+  const { projectId } = useAppContext();
 
   return (
     <Grid item xs={12}>

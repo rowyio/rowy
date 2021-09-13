@@ -3,7 +3,7 @@ import { TableSettingsDialogModes } from "./index";
 
 import { Link, Typography } from "@mui/material";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import { projectId } from "../../firebase";
+
 import WIKI_LINKS from "constants/wikiLinks";
 import { name } from "@root/package.json";
 
@@ -33,7 +33,7 @@ export const tableSettings = (
       required: true,
       assistiveText: (
         <Link
-          href={`https://console.firebase.google.com/project/${projectId}/firestore/data`}
+          href={`https://console.firebase.google.com/project/_/firestore/data`}
           target="_blank"
           rel="noopener"
         >

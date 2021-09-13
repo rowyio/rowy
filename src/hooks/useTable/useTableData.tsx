@@ -14,11 +14,11 @@ import {
   missingFieldsReducer,
   deepen,
 } from "utils/fns";
-import { projectId } from "../../firebase";
 import _findIndex from "lodash/findIndex";
 import _orderBy from "lodash/orderBy";
 import { rowyUser } from "contexts/ProjectContext";
 import { useAppContext } from "contexts/AppContext";
+
 const CAP = 1000; // safety  paramter sets the  upper limit of number of docs fetched by this hook
 const serverTimestamp = firebase.firestore.FieldValue.serverTimestamp;
 
@@ -103,7 +103,7 @@ const tableInitialState = {
 
 const useTableData = () => {
   const { enqueueSnackbar } = useSnackbar();
-  const { currentUser } = useAppContext();
+  const { currentUser, projectId } = useAppContext();
 
   const [tableState, tableDispatch] = useReducer(
     tableReducer,

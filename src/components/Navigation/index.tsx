@@ -7,7 +7,8 @@ import {
   IconButton,
   Box,
   Typography,
-  Grow,GrowProps
+  Grow,
+  GrowProps,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 
@@ -17,7 +18,7 @@ import ErrorBoundary from "components/ErrorBoundary";
 import Loading from "components/Loading";
 
 import { name } from "@root/package.json";
-import { projectId } from "@src/firebase";
+import { useAppContext } from "contexts/AppContext";
 
 export const APP_BAR_HEIGHT = 56;
 
@@ -26,7 +27,7 @@ export interface INavigationProps {
   title: string;
   titleComponent?: ReactNode;
   currentSection?: string;
-  titleTransitionProps?:Partial<GrowProps>
+  titleTransitionProps?: Partial<GrowProps>;
 }
 
 export default function Navigation({
@@ -36,6 +37,8 @@ export default function Navigation({
   currentSection,
   titleTransitionProps,
 }: INavigationProps) {
+  const { projectId } = useAppContext();
+
   const [open, setOpen] = useState(false);
   const trigger = useScrollTrigger({ disableHysteresis: true, threshold: 0 });
 
