@@ -110,7 +110,7 @@ const ConditionModal = ({ modal, setModal, conditions, setConditions }) => {
             multiple={false}
             label={"Select data type"}
           />
-          <Typography variant="overline">Condition</Typography>
+          <Typography variant="overline">Condition </Typography>
           {modal.condition.type === "boolean" && (
             <MultiSelect
               options={[
