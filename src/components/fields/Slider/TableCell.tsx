@@ -10,11 +10,11 @@ const useStyles = makeStyles((theme) =>
     progress: {
       width: "100%",
       backgroundColor: theme.palette.divider,
-      borderRadius: theme.shape.borderRadius,
+      borderRadius: 4,
     },
     bar: {
-      borderRadius: theme.shape.borderRadius,
-      height: 16,
+      borderRadius: 4,
+      height: 8,
       maxWidth: "100%",
     },
   })
