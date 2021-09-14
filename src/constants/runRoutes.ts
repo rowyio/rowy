@@ -33,7 +33,11 @@ export const RunRoutes: { [key: string]: RunRoute } = {
   impersonateUser: { path: "/impersonateUser", method: "GET" },
   version: { path: "/version", method: "GET" },
   region: { path: "/region", method: "GET" },
+  firestoreRules: { path: "/firestoreRules", method: "GET" },
   listCollections: { path: "/listCollections", method: "GET" },
+  serviceAccountAccess: { path: "/serviceAccountAccess", method: "GET" },
+  checkFT2Rowy: { path: "/checkFT2Rowy", method: "GET" },
+  migrateFT2Rowy: { path: "/migrateFT2Rowy", method: "GET" },
   actionScript: { path: "/actionScript", method: "POST" },
   buildFunction: { path: "/buildFunction", method: "POST" },
 };

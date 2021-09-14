@@ -40,7 +40,6 @@ export default function TestView() {
     }
   };
   const handleRun = async () => {
-    console.log("run");
     if (!rowyRun) return;
     setLoading(true);
     const resp = await rowyRun({

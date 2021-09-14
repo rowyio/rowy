@@ -182,7 +182,6 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
       }
     );
   };
-  console.log("tableState", tableState);
   // rowyRun access
   const rowyRun = async ({
     route,
