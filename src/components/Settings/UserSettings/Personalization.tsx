@@ -1,5 +1,7 @@
 import { lazy, Suspense, useState } from "react";
 import { IUserSettingsChildProps } from "pages/Settings/UserSettings";
+import _merge from "lodash/merge";
+import _unset from "lodash/unset";
 
 import { FormControlLabel, Checkbox, Collapse } from "@mui/material";
 import Loading from "components/Loading";
@@ -18,10 +20,10 @@ export default function Personalization({
 
   const handleSave = ({ light, dark }: { light: string; dark: string }) => {
     updateSettings({
-      theme: {
+      theme: _merge(settings.theme, {
         light: { palette: { primary: { main: light } } },
         dark: { palette: { primary: { main: dark } } },
-      },
+      }),
     });
   };
 
@@ -33,7 +35,12 @@ export default function Personalization({
             checked={customizedThemeColor}
             onChange={(e) => {
               setCustomizedThemeColor(e.target.checked);
-              if (!e.target.checked) updateSettings({ theme: {} });
+              if (!e.target.checked) {
+                const newTheme = settings.theme;
+                _unset(newTheme, "light.palette.primary.main");
+                _unset(newTheme, "dark.palette.primary.main");
+                updateSettings({ theme: newTheme });
+              }
             }}
           />
         }

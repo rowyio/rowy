@@ -8,6 +8,7 @@ declare module "@mui/material/styles/createTypography" {
   interface FontStyle {
     fontFamilyMono: string;
     fontFamilyHeading: string;
+    fontCssUrls?: string[];
   }
 }
 
@@ -20,21 +21,31 @@ export const toRem = (px: number) => `${px / ROOT_FONT_SIZE}rem`;
 export const toEm = (px: number, root: number) => `${px / root}em`;
 
 export const typography = ({
-  fontFamily = BODY_FONT,
-  fontFamilyMono = MONO_FONT,
-  fontFamilyHeading = HEADING_FONT,
+  fontFamily: customizedFontFamily,
+  fontFamilyMono: customizedFontFamilyMono,
+  fontFamilyHeading: customizedFontFamilyHeading,
 
   fontWeightLight = 300,
   fontWeightRegular = 400,
   fontWeightMedium = 500,
   fontWeightBold = 600,
 }: Partial<ThemeOptions["typography"] & FontStyle>): ThemeOptions => {
+  const fontFamily = [customizedFontFamily, BODY_FONT]
+    .filter((x) => x)
+    .join(", ");
+  const fontFamilyMono = [customizedFontFamilyMono, MONO_FONT]
+    .filter((x) => x)
+    .join(", ");
+  const fontFamilyHeading = [customizedFontFamilyHeading, HEADING_FONT]
+    .filter((x) => x)
+    .join(", ");
+
   const fontStyleBody: TypographyStyleOptions = {
-    fontFamily: fontFamily,
+    fontFamily,
     fontFeatureSettings:
       fontFamily !== BODY_FONT
         ? "normal"
-        : `"calt", "ss01", "ss03", "cv05", "cv09"`,
+        : `"calt", "ss01", "ss03", "cv05", "cv08", "cv09"`,
   };
   const fontStyleHeading: TypographyStyleOptions = {
     fontFamily: fontFamilyHeading,
@@ -55,35 +66,35 @@ export const typography = ({
 
       h1: {
         ...fontStyleHeading,
-        fontWeight: 600,
+        fontWeight: fontWeightBold,
         fontSize: toRem(96),
         letterSpacing: toEm(-1.5, 96),
         lineHeight: 112 / 96,
       },
       h2: {
         ...fontStyleHeading,
-        fontWeight: 600,
+        fontWeight: fontWeightBold,
         fontSize: toRem(60),
         letterSpacing: toEm(-0.75, 60),
         lineHeight: 72 / 60,
       },
       h3: {
         ...fontStyleHeading,
-        fontWeight: 600,
+        fontWeight: fontWeightBold,
         fontSize: toRem(48),
         letterSpacing: toEm(-0.5, 48),
         lineHeight: 60 / 48,
       },
       h4: {
         ...fontStyleHeading,
-        fontWeight: 600,
+        fontWeight: fontWeightBold,
         fontSize: toRem(34),
         letterSpacing: toEm(-0.35, 34),
         lineHeight: 44 / 34,
       },
       h5: {
         ...fontStyleHeading,
-        fontWeight: 600,
+        fontWeight: fontWeightBold,
         fontSize: toRem(24),
         letterSpacing: "0",
         // letterSpacing: toEm(-0.2, 24),
@@ -91,7 +102,7 @@ export const typography = ({
       },
       h6: {
         ...fontStyleHeading,
-        fontWeight: 600,
+        fontWeight: fontWeightBold,
         fontSize: toRem(20),
         letterSpacing: "0",
         // letterSpacing: toEm(-0.15, 20),
@@ -99,14 +110,14 @@ export const typography = ({
       },
       subtitle1: {
         ...fontStyleHeading,
-        fontWeight: 600,
+        fontWeight: fontWeightBold,
         fontSize: toRem(17),
         letterSpacing: toEm(0.2, 16),
         lineHeight: 24 / 17,
       },
       subtitle2: {
         ...fontStyleHeading,
-        fontWeight: 600,
+        fontWeight: fontWeightBold,
         fontSize: toRem(15),
         letterSpacing: toEm(0.25, 14),
         lineHeight: 20 / 15,
@@ -125,7 +136,7 @@ export const typography = ({
       },
       button: {
         ...fontStyleBody,
-        fontWeight: 500,
+        fontWeight: fontWeightMedium,
         fontSize: toRem(14),
         letterSpacing: toEm(0.25, 14),
         lineHeight: 20 / 14,

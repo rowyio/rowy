@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext, useMemo } from "react";
 import firebase from "firebase/app";
 import createPersistedState from "use-persisted-state";
 import _merge from "lodash/merge";
+import Helmet from "react-helmet";
 
 import { useMediaQuery, ThemeProvider, CssBaseline } from "@mui/material";
 
@@ -105,15 +106,15 @@ export const AppProvider: React.FC = ({ children }) => {
     const lightCustomizations = _merge(
       {},
       publicSettings.doc?.theme?.base,
-      userDoc.doc?.theme?.base,
       publicSettings.doc?.theme?.light,
+      userDoc.doc?.theme?.base,
       userDoc.doc?.theme?.light
     );
     const darkCustomizations = _merge(
       {},
       publicSettings.doc?.theme?.base,
-      userDoc.doc?.theme?.base,
       publicSettings.doc?.theme?.dark,
+      userDoc.doc?.theme?.base,
       userDoc.doc?.theme?.dark
     );
 
@@ -135,6 +136,14 @@ export const AppProvider: React.FC = ({ children }) => {
         setThemeOverridden,
       }}
     >
+      {Array.isArray(customizedThemes[theme].typography.fontCssUrls) && (
+        <Helmet>
+          {customizedThemes[theme].typography.fontCssUrls!.map((url) => (
+            <link key={url} rel="stylesheet" href={url} />
+          ))}
+        </Helmet>
+      )}
+
       <ThemeProvider theme={customizedThemes[theme]}>
         <CssBaseline />
         <ErrorBoundary>{children}</ErrorBoundary>
