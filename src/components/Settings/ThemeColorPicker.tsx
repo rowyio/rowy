@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { ChromePicker } from "react-color";
+import { ColorPicker, toColor } from "react-color-palette";
+import "react-color-palette/lib/css/styles.css";
 
-import { Grid, Typography, Stack, Box, Button } from "@mui/material";
+import { useTheme, Grid, Typography, Stack, Box, Button } from "@mui/material";
 import PassIcon from "@mui/icons-material/Check";
 import FailIcon from "@mui/icons-material/Error";
 
@@ -24,6 +25,8 @@ export default function ThemeColorPicker({
   currentDark = DARK_PRIMARY,
   handleSave,
 }: IThemeColorPickerProps) {
+  const theme = useTheme();
+
   const [light, setLight] = useState(currentLight);
   const [dark, setDark] = useState(currentDark);
 
@@ -32,25 +35,31 @@ export default function ThemeColorPicker({
 
   return (
     <>
-      <Grid container spacing={2} style={{ marginTop: 0 }}>
+      <Grid
+        container
+        spacing={2}
+        sx={{
+          mt: 0,
+          "& .rcp": {
+            borderRadius: 1,
+            boxShadow: (theme) =>
+              `0 0 0 1px ${theme.palette.divider} inset !important`,
+
+            "& .rcp-fields-element-input": theme.typography.body2,
+          },
+        }}
+      >
         <Grid item xs={12} sm={6}>
           <Typography variant="subtitle2" component="h3" gutterBottom>
             Light Theme
           </Typography>
-          <Box
-            sx={{
-              "& .chrome-picker": {
-                width: "100% !important",
-                boxShadow: (theme) =>
-                  `0 0 0 1px ${theme.palette.divider} inset !important`,
-              },
-            }}
-          >
-            <ChromePicker
-              color={light}
-              onChangeComplete={(c) => setLight(c.hex)}
-            />
-          </Box>
+          <ColorPicker
+            width={244}
+            height={140}
+            color={toColor("hex", light)}
+            onChange={(c: any) => setLight(c.hex)}
+            dark={theme.palette.mode === "dark"}
+          />
 
           <Stack
             spacing={0}
@@ -93,20 +102,13 @@ export default function ThemeColorPicker({
           <Typography variant="subtitle2" component="h3" gutterBottom>
             Dark Theme
           </Typography>
-          <Box
-            sx={{
-              "& .chrome-picker": {
-                width: "100% !important",
-                boxShadow: (theme) =>
-                  `0 0 0 1px ${theme.palette.divider} inset !important`,
-              },
-            }}
-          >
-            <ChromePicker
-              color={dark}
-              onChangeComplete={(c) => setDark(c.hex)}
-            />
-          </Box>
+          <ColorPicker
+            width={244}
+            height={140}
+            color={toColor("hex", dark)}
+            onChange={(c: any) => setDark(c.hex)}
+            dark={theme.palette.mode === "dark"}
+          />
 
           <Stack
             spacing={0}
