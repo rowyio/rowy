@@ -10,10 +10,7 @@ import {
   Tabs,
   Tab,
   LinearProgress,
-  Select,
-  InputLabel,
   MenuItem,
-  FormControl,
 } from "@mui/material";
 import SparkIcon from "@mui/icons-material/OfflineBoltOutlined";
 import { useConfirmation } from "components/ConfirmationDialog";
@@ -59,23 +56,28 @@ export default function TestView() {
   };
   return (
     <Navigation title="Rowy Run Sandbox">
-      {loading && <LinearProgress />}
+      {loading && (
+        <LinearProgress
+          style={{ position: "fixed", top: 56, left: 0, right: 0 }}
+        />
+      )}
+
       <Container style={{ margin: "24px 0 200px" }}>
-        <FormControl style={{ minWidth: 240 }}>
-          <InputLabel>Defined Route</InputLabel>
-          <Select
-            value={
-              Object.values(RunRoutes).find((r) => r.path === path)?.path ?? ""
-            }
-            onChange={setDefinedRoute}
-          >
-            {Object.values(RunRoutes).map((route) => (
-              <MenuItem key={route.path} value={route.path}>
-                {route.path}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <TextField
+          label="Defined Route"
+          select
+          value={
+            Object.values(RunRoutes).find((r) => r.path === path)?.path ?? ""
+          }
+          onChange={setDefinedRoute}
+          style={{ width: 255 }}
+        >
+          {Object.values(RunRoutes).map((route) => (
+            <MenuItem key={route.path} value={route.path}>
+              {route.path}
+            </MenuItem>
+          ))}
+        </TextField>
         <Tabs value={method} onChange={handleMethodChange}>
           <Tab label="GET" value="GET" />
           <Tab label="POST" value="POST" />
