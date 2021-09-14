@@ -805,6 +805,29 @@ export const components = (theme: Theme): ThemeOptions => {
           },
         },
       },
+
+      MuiStepIcon: {
+        styleOverrides: {
+          root: {
+            color: theme.palette.divider,
+          },
+          text: {
+            fontWeight: theme.typography.fontWeightBold,
+            fill: theme.palette.text.secondary,
+
+            ".Mui-active &": {
+              fill: theme.palette.primary.contrastText,
+            },
+          },
+        },
+      },
+      MuiStepConnector: {
+        styleOverrides: {
+          line: {
+            borderColor: theme.palette.divider,
+          },
+        },
+      },
     },
   };
 };

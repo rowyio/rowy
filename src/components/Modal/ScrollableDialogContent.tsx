@@ -35,19 +35,31 @@ export default function ScrollableDialogContent({
 
   return (
     <>
-      {!disableTopDivider &&
-        scrollInfo.y.percentage !== null &&
-        scrollInfo.y.percentage > 0 && (
-          <Divider sx={{ ...dividerSx, ...topDividerSx }} />
-        )}
+      <Divider
+        style={{
+          visibility:
+            !disableTopDivider &&
+            scrollInfo.y.percentage !== null &&
+            scrollInfo.y.percentage > 0
+              ? "visible"
+              : "hidden",
+        }}
+        sx={{ ...dividerSx, ...topDividerSx }}
+      />
 
       <MemoizedDialogContent {...props} setRef={setRef} />
 
-      {!disableBottomDivider &&
-        scrollInfo.y.percentage !== null &&
-        scrollInfo.y.percentage < 1 && (
-          <Divider sx={{ ...dividerSx, ...bottomDividerSx }} />
-        )}
+      <Divider
+        style={{
+          visibility:
+            !disableBottomDivider &&
+            scrollInfo.y.percentage !== null &&
+            scrollInfo.y.percentage < 1
+              ? "visible"
+              : "hidden",
+        }}
+        sx={{ ...dividerSx, ...bottomDividerSx }}
+      />
     </>
   );
 }

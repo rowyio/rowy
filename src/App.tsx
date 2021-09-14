@@ -47,6 +47,8 @@ const ProjectSettingsPage = lazy(() => import("./pages/Settings/ProjectSettings"
 const UserSettingsPage = lazy(() => import("./pages/Settings/UserSettings" /* webpackChunkName: "UserSettingsPage" */));
 // prettier-ignore
 const UserManagementPage = lazy(() => import("./pages/Settings/UserManagement" /* webpackChunkName: "UserManagementPage" */));
+// prettier-ignore
+const SetupPage = lazy(() => import("pages/Setup" /* webpackChunkName: "SetupPage" */));
 
 export default function App() {
   return (
@@ -80,6 +82,11 @@ export default function App() {
                           exact
                           path={routes.signOut}
                           render={() => <SignOutView />}
+                        />
+                        <Route
+                          exact
+                          path={routes.setup}
+                          render={() => <SetupPage />}
                         />
 
                         <Route
