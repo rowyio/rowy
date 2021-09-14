@@ -73,6 +73,7 @@ interface ProjectContextProps {
     route: RunRoute;
     body?: any;
     params?: string[];
+    localhost?: boolean;
   }) => Promise<any>;
 }
 
@@ -187,15 +188,17 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
     route,
     body,
     params,
+    localhost = false,
   }: {
     route: RunRoute;
     body?: any;
     params?: string[];
+    localhost?: boolean;
   }) => {
     const { method, path } = route;
-    let url =
-      //'http://localhost:8080'
-      settings.doc.rowyRunUrl + path;
+    let url = `${
+      localhost ? "http://localhost:8080" : settings.doc.rowyRunUrl
+    }${path}`;
     if (params && params.length > 0) url = url + "/" + params.join("/");
     const response = await fetch(url, {
       method: method, // *GET, POST, PUT, DELETE, etc.

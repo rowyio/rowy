@@ -11,13 +11,10 @@ import {
   Tab,
   LinearProgress,
   MenuItem,
+  Switch,
+  FormControlLabel,
 } from "@mui/material";
-import SparkIcon from "@mui/icons-material/OfflineBoltOutlined";
 import { useConfirmation } from "components/ConfirmationDialog";
-
-import SnackbarProgress, {
-  ISnackbarProgressRef,
-} from "components/SnackbarProgress";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import { RunRoutes } from "@src/constants/runRoutes";
 
@@ -26,6 +23,7 @@ export default function TestView() {
   const { requestConfirmation } = useConfirmation();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [loading, setLoading] = useState(false);
+  const [localhost, setLocalhost] = useState(false);
   const { rowyRun } = useProjectContext();
   const [result, setResult] = useState<any>({});
 
@@ -50,6 +48,7 @@ export default function TestView() {
         method,
         path,
       },
+      localhost,
     });
     setResult(resp);
     setLoading(false);
@@ -63,6 +62,17 @@ export default function TestView() {
       )}
 
       <Container style={{ margin: "24px 0 200px" }}>
+        <FormControlLabel
+          control={
+            <Switch
+              size="medium"
+              onClick={() => {
+                setLocalhost(!localhost);
+              }}
+            />
+          }
+          label="Localhost?"
+        />
         <TextField
           label="Defined Route"
           select
