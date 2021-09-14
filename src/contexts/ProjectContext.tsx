@@ -72,7 +72,7 @@ interface ProjectContextProps {
   rowyRun: (args: {
     route: RunRoute;
     body?: any;
-    params: string[];
+    params?: string[];
   }) => Promise<any>;
 }
 
@@ -181,7 +181,7 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
       }
     );
   };
-
+  console.log("tableState", tableState);
   // rowyRun access
   const rowyRun = async ({
     route,
@@ -190,11 +190,11 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
   }: {
     route: RunRoute;
     body?: any;
-    params: string[];
+    params?: string[];
   }) => {
     const { method, path } = route;
     let url =
-      // 'http://localhost:8080'
+      //'http://localhost:8080'
       settings.doc.rowyRunUrl + path;
     if (params && params.length > 0) url = url + "/" + params.join("/");
     const response = await fetch(url, {

@@ -32,6 +32,7 @@ type RunRoutes = actionScriptRequest | impersonateUserRequest;
 export const RunRoutes: { [key: string]: RunRoute } = {
   impersonateUser: { path: "/impersonateUser", method: "GET" },
   version: { path: "/version", method: "GET" },
+  region: { path: "/region", method: "GET" },
   listCollections: { path: "/listCollections", method: "GET" },
   actionScript: { path: "/actionScript", method: "POST" },
   buildFunction: { path: "/buildFunction", method: "POST" },
