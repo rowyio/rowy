@@ -15,6 +15,7 @@ import ErrorBoundary from "components/ErrorBoundary";
 import { useStyles } from "./useStyles";
 import { useProjectContext } from "contexts/ProjectContext";
 import useDoc from "hooks/useDoc";
+import { analytics } from "@src/analytics";
 
 export const DRAWER_WIDTH = 512;
 export const DRAWER_COLLAPSED_WIDTH = 36;
@@ -163,7 +164,13 @@ export default function SideDrawer() {
             // color="secondary"
             disabled={disabled}
             onClick={() => {
-              if (setOpen) setOpen((o) => !o);
+              if (setOpen)
+                setOpen((o) => {
+                  analytics.logEvent(
+                    o ? "side_drawer_close" : "side_drawer_open"
+                  );
+                  return !o;
+                });
             }}
           >
             <ChevronIcon className={classes.drawerFabIcon} />

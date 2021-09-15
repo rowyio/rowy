@@ -14,6 +14,7 @@ import { Button, DialogActions } from "@mui/material";
 import { useProjectContext } from "contexts/ProjectContext";
 import { FieldType } from "constants/fields";
 import { getFieldProp } from "components/fields";
+import { analytics } from "@src/analytics";
 
 const selectedColumnsJsonReducer =
   (doc: any) => (accumulator: any, currentColumn: any) => {
@@ -115,6 +116,9 @@ export default function Export({ query, closeModal }) {
 
   const handleExport = async () => {
     handleClose();
+    analytics.logEvent("export_table", {
+      type: exportType,
+    });
     enqueueSnackbar("Preparing file. Download will start shortly.");
     let querySnapshot = await query.get();
     let docs = querySnapshot.docs.map((doc) => ({
