@@ -90,7 +90,8 @@ export default function ExtensionsEditor() {
         rowyRun({
           route: RunRoutes.buildFunction,
           body: {
-            triggerPath: "",
+            tablePath: tableState?.tablePath,
+            pathname: window.location.pathname,
           },
         });
       analytics.logEvent("deployed_extensions");

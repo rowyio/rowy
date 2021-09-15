@@ -255,7 +255,7 @@ const useTableData = () => {
     } catch (error: any) {
       console.log(error);
       if (error.code === "permission-denied") {
-        enqueueSnackbar("You do not have the permissions to delete rows.", {
+        enqueueSnackbar("You do not have the permissions to delete this row.", {
           variant: "error",
         });
       }
