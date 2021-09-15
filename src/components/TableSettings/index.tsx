@@ -15,6 +15,7 @@ import useRouter from "../../hooks/useRouter";
 import { db } from "../../firebase";
 import { name } from "@root/package.json";
 import { SETTINGS, TABLE_SCHEMAS, TABLE_GROUP_SCHEMAS } from "config/dbPaths";
+import { analytics } from "@src/analytics";
 
 export enum TableSettingsDialogModes {
   create,
@@ -112,7 +113,12 @@ export default function TableSettingsDialog({
         router.history.push(values.id);
       }
     }
-
+    analytics.logEvent(
+      TableSettingsDialogModes.update ? "update_table" : "create_table",
+      {
+        type: values.tableType,
+      }
+    );
     handleClose();
   };
 

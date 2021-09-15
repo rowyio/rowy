@@ -20,6 +20,7 @@ import Step3Preview from "./Step3Preview";
 import { ColumnConfig } from "hooks/useTable/useTableConfig";
 import { useProjectContext } from "contexts/ProjectContext";
 import { getFieldProp } from "components/fields";
+import { analytics } from "@src/analytics";
 
 export type CsvConfig = {
   pairs: { csvKey: string; columnKey: string }[];
@@ -95,6 +96,7 @@ export default function ImportCsvWizard({
     for (const col of config.newColumns) {
       tableActions.column.add(col.name, col.type, col);
     }
+    analytics.logEvent("import_csv");
     // Close wizard
     setOpen(false);
     setTimeout(handleClose, 300);

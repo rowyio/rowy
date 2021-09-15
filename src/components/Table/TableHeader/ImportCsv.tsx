@@ -42,7 +42,6 @@ const useStyles = makeStyles((theme) =>
       display: "flex",
       minWidth: 100,
     },
-
     dropzone: {
       height: 137,
       borderRadius: theme.shape.borderRadius,

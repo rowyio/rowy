@@ -17,19 +17,14 @@ import { useAppContext } from "contexts/AppContext";
 import { useConfirmation } from "components/ConfirmationDialog";
 import { useSnackLogContext } from "contexts/SnackLogContext";
 
-import {
-  serialiseExtension,
-  emptyExtensionObject,
-  IExtension,
-  IExtensionType,
-} from "./utils";
-import { SETTINGS } from "config/dbPaths";
-import WIKI_LINKS from "constants/wikiLinks";
+import { emptyExtensionObject, IExtension, IExtensionType } from "./utils";
 import { name } from "@root/package.json";
+import { RunRoutes } from "@src/constants/runRoutes";
+import { analytics } from "@src/analytics";
 
 export default function ExtensionsEditor() {
   const { enqueueSnackbar } = useSnackbar();
-  const { tableState, tableActions } = useProjectContext();
+  const { tableState, tableActions, rowyRun } = useProjectContext();
   const appContext = useAppContext();
   const { requestConfirmation } = useConfirmation();
   const currentextensionObjects = (tableState?.config.extensionObjects ??
@@ -89,46 +84,16 @@ export default function ExtensionsEditor() {
 
   const handleSaveDeploy = async () => {
     handleSaveExtensions();
-
-    // compile extension objects into ft-build readable extension string
-    const serialisedExtension = serialiseExtension(localExtensionsObjects);
-    tableActions?.table.updateConfig("extensions", serialisedExtension);
-
-    const settingsDoc = await db.doc(SETTINGS).get();
-    const buildUrl = settingsDoc.get("buildUrl");
-    if (!buildUrl) {
-      enqueueSnackbar(`${name} Run is not set up`, {
-        variant: "error",
-        action: (
-          <Button
-            variant="contained"
-            color="secondary"
-            target="_blank"
-            href={WIKI_LINKS.functions}
-            rel="noopener noreferrer"
-          >
-            Setup Guide
-          </Button>
-        ),
-      });
-    }
-
-    // request GCP build
-    const userTokenInfo = await appContext?.currentUser?.getIdTokenResult();
-    const userToken = userTokenInfo?.token;
     try {
       snackLogContext.requestSnackLog();
-      const response = await fetch(buildUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          configPath: tableState?.config.tableConfig.path,
-          token: userToken,
-        }),
-      });
-      const data = await response.json();
+      if (rowyRun)
+        rowyRun({
+          route: RunRoutes.buildFunction,
+          body: {
+            triggerPath: "",
+          },
+        });
+      analytics.logEvent("deployed_extensions");
     } catch (e) {
       console.error(e);
     }
@@ -136,6 +101,7 @@ export default function ExtensionsEditor() {
 
   const handleAddExtension = (extensionObject: IExtension) => {
     setLocalExtensionsObjects([...localExtensionsObjects, extensionObject]);
+    analytics.logEvent("created_extension", { type: extensionObject.type });
     setExtensionModal(null);
   };
 
@@ -152,6 +118,7 @@ export default function ExtensionsEditor() {
         }
       })
     );
+    analytics.logEvent("updated_extension", { type: extensionObject.type });
     setExtensionModal(null);
   };
 
@@ -181,6 +148,9 @@ export default function ExtensionsEditor() {
         lastEditor: currentEditor(),
       },
     ]);
+    analytics.logEvent("duplicated_extension", {
+      type: localExtensionsObjects[index].type,
+    });
   };
 
   const handleEdit = (index: number) => {
