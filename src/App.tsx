@@ -102,7 +102,6 @@ export default function App() {
                             routes.home,
                             routes.tableWithId,
                             routes.tableGroupWithId,
-                            routes.gridWithId,
                             routes.settings,
                             routes.projectSettings,
                             routes.userSettings,

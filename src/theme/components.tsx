@@ -810,14 +810,15 @@ export const components = (theme: Theme): ThemeOptions => {
         styleOverrides: {
           root: {
             color: theme.palette.divider,
+            "&.Mui-completed:not(.Mui-active)": {
+              color: theme.palette.text.disabled,
+            },
           },
           text: {
             fontWeight: theme.typography.fontWeightBold,
             fill: theme.palette.text.secondary,
 
-            ".Mui-active &": {
-              fill: theme.palette.primary.contrastText,
-            },
+            ".Mui-active &": { fill: theme.palette.primary.contrastText },
           },
         },
       },

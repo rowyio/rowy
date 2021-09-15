@@ -8,13 +8,9 @@ export enum routes {
   setup = "/setup",
 
   table = "/table",
-  tableGroup = "/tableGroup",
-
   tableWithId = "/table/:id",
+  tableGroup = "/tableGroup",
   tableGroupWithId = "/tableGroup/:id",
-  grid = "/grid",
-  gridWithId = "/grid/:id",
-  editor = "/editor",
 
   settings = "/settings",
   userSettings = "/settings/user",

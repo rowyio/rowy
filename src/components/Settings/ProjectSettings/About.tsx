@@ -41,15 +41,15 @@ export default function About() {
       .replace("github.com", "api.github.com/repos")
       .replace(/.git$/, "/releases/latest");
     try {
-      const res = await fetch(endpoint, {
+      const req = await fetch(endpoint, {
         headers: {
           Accept: "application/vnd.github.v3+json",
         },
       });
-      const json = await res.json();
+      const res = await req.json();
 
-      if (json.tag_name > "v" + version) {
-        setLatestUpdate(json);
+      if (res.tag_name > "v" + version) {
+        setLatestUpdate(res);
         setCheckState(null);
       } else {
         setCheckState("NO_UPDATE");

@@ -4,17 +4,19 @@ import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
 
 import { IProjectSettingsChildProps } from "pages/Settings/ProjectSettings";
 import WIKI_LINKS from "constants/wikiLinks";
-import { name, repository } from "@root/package.json";
+import { name } from "@root/package.json";
+import { runRepoUrl } from "constants/runRoutes";
 
-export default function CloudRun({
+export default function rowyRun({
   settings,
   updateSettings,
 }: IProjectSettingsChildProps) {
   return (
     <>
       <Typography>
-        {name} Run is a Cloud Run instance that deploys this project’s Cloud
-        Functions.{" "}
+        {name} Run is a Cloud Run instance that provides back-end functionality,
+        such as table action scripts, user management, and easy Cloud Function
+        deployment.{" "}
         <Link
           href={WIKI_LINKS.functions}
           target="_blank"
@@ -41,18 +43,15 @@ export default function CloudRun({
 
           <Grid item>
             <LoadingButton
-              href={`https://deploy.cloud.run/?git_repo=${repository.url
-                .split("/")
-                .slice(0, -1)
-                .join("/")}/FunctionsBuilder.git`}
+              href={`https://deploy.cloud.run/?git_repo=${runRepoUrl}.git`}
               target="_blank"
               rel="noopener noreferrer"
               loading={
-                settings.cloudRunDeployStatus === "BUILDING" ||
-                settings.cloudRunDeployStatus === "COMPLETE"
+                settings.rowyRunDeployStatus === "BUILDING" ||
+                settings.rowyRunDeployStatus === "COMPLETE"
               }
               loadingIndicator={
-                settings.cloudRunDeployStatus === "COMPLETE"
+                settings.rowyRunDeployStatus === "COMPLETE"
                   ? "Deployed"
                   : undefined
               }
@@ -65,9 +64,9 @@ export default function CloudRun({
 
       <TextField
         label="Cloud Run Instance URL"
-        id="cloudRunUrl"
+        id="rowyRunUrl"
         defaultValue={settings.rowyRunUrl}
-        onChange={(e) => updateSettings({ cloudRunUrl: e.target.value })}
+        onChange={(e) => updateSettings({ rowyRunUrl: e.target.value })}
         fullWidth
         placeholder="https://<id>.run.app"
         type="url"

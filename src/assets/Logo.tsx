@@ -1,13 +1,17 @@
 import { SVGProps } from "react";
 import { useTheme } from "@mui/material";
 
-export default function Logo(props: SVGProps<SVGSVGElement>) {
+export interface ILogoProps extends SVGProps<SVGSVGElement> {
+  size?: number;
+}
+
+export default function Logo({ size = 1.5, ...props }: ILogoProps) {
   const theme = useTheme();
 
   return (
     <svg
-      width="102"
-      height="32"
+      width={Math.round(68 * size)}
+      height={Math.round(21 * size)}
       viewBox="0 -1.5 68 21"
       xmlns="http://www.w3.org/2000/svg"
       aria-labelledby="rowy-logo-title"
