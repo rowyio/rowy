@@ -41,7 +41,7 @@
     "query-string": "^6.8.3",
     "react": "^17.0.2",
     "react-beautiful-dnd": "^13.0.0",
-    "react-color": "^2.17.3",
+    "react-color-palette": "^6.1.0",
     "react-data-grid": "^7.0.0-beta.5",
     "react-div-100vh": "^0.6.0",
     "react-dnd": "^11.1.3",
