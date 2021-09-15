@@ -17,12 +17,7 @@ import { useAppContext } from "contexts/AppContext";
 import { useConfirmation } from "components/ConfirmationDialog";
 import { useSnackLogContext } from "contexts/SnackLogContext";
 
-import {
-  serialiseExtension,
-  emptyExtensionObject,
-  IExtension,
-  IExtensionType,
-} from "./utils";
+import { emptyExtensionObject, IExtension, IExtensionType } from "./utils";
 import { SETTINGS } from "config/dbPaths";
 import WIKI_LINKS from "constants/wikiLinks";
 import { name } from "@root/package.json";
@@ -89,13 +84,8 @@ export default function ExtensionsEditor() {
 
   const handleSaveDeploy = async () => {
     handleSaveExtensions();
-
-    // compile extension objects into ft-build readable extension string
-    const serialisedExtension = serialiseExtension(localExtensionsObjects);
-    tableActions?.table.updateConfig("extensions", serialisedExtension);
-
     const settingsDoc = await db.doc(SETTINGS).get();
-    const buildUrl = settingsDoc.get("buildUrl");
+    const buildUrl = settingsDoc.get("rowyRunUrl");
     if (!buildUrl) {
       enqueueSnackbar(`${name} Run is not set up`, {
         variant: "error",
