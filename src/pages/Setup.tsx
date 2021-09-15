@@ -27,21 +27,20 @@ import Logo from "assets/Logo";
 import ScrollableDialogContent from "components/Modal/ScrollableDialogContent";
 import { SlideTransition } from "components/Modal/SlideTransition";
 
-import Step0Welcome from "@src/components/Setup/Step0Welcome";
-import Step1RowyRun, {
-  checkCompletionRowyRun,
-} from "@src/components/Setup/Step1RowyRun";
+import Step0Welcome from "components/Setup/Step0Welcome";
+import Step1RowyRun, { checkRowyRun } from "components/Setup/Step1RowyRun";
+// prettier-ignore
+import Step2ServiceAccount, { checkServiceAccount } from "components/Setup/Step2ServiceAccount";
 
-import { useAppContext } from "contexts/AppContext";
 import { name } from "@root/package.json";
 import routes from "constants/routes";
 
 export interface ISetupStep {
   id: string;
-  layout?: "centered" | "step";
+  layout?: "centered";
   shortTitle: string;
   title: React.ReactNode;
-  description: React.ReactNode;
+  description?: React.ReactNode;
   body: React.ReactNode;
   actions?: React.ReactNode;
 }
@@ -60,9 +59,12 @@ const checkAllSteps = async (
   console.log("Check all steps");
   const completion: Record<string, boolean> = {};
 
-  const checkRowyRun = await checkCompletionRowyRun(rowyRunUrl);
-  if (checkRowyRun.isValidRowyRunUrl) {
-    if (checkRowyRun.isLatestVersion) completion.rowyRun = true;
+  const rowyRunValidation = await checkRowyRun(rowyRunUrl);
+  if (rowyRunValidation.isValidRowyRunUrl) {
+    if (rowyRunValidation.isLatestVersion) completion.rowyRun = true;
+
+    const serviceAccount = await checkServiceAccount(rowyRunUrl);
+    if (serviceAccount) completion.serviceAccount = true;
   }
 
   if (Object.keys(completion).length > 0)
@@ -70,7 +72,6 @@ const checkAllSteps = async (
 };
 
 export default function SetupPage() {
-  const { projectId } = useAppContext();
   const fullScreenHeight = use100vh() ?? 0;
   const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down("sm"));
 
@@ -85,7 +86,6 @@ export default function SetupPage() {
     serviceAccount: false,
     signIn: false,
     rules: false,
-    migrate: false,
   });
 
   useEffect(() => {
@@ -97,23 +97,9 @@ export default function SetupPage() {
   const steps: ISetupStep[] = [
     {
       id: "welcome",
-      layout: "centered",
+      layout: "centered" as "centered",
       shortTitle: "Welcome",
       title: `Welcome to ${name}`,
-      description: (
-        <>
-          <Typography variant="body1" gutterBottom>
-            Get up and running in around 5 minutes.
-          </Typography>
-          <Typography variant="body1" paragraph>
-            You’ll easily set up backend functionality, Firestore Rules, and
-            user management.
-          </Typography>
-          <Typography variant="body1">
-            You’ll set up the project: <b>{projectId}</b>
-          </Typography>
-        </>
-      ),
       body: <Step0Welcome {...stepProps} />,
       actions: completion.welcome ? (
         <Button variant="contained" color="primary" type="submit">
@@ -133,15 +119,13 @@ export default function SetupPage() {
       id: "rowyRun",
       shortTitle: `${name} Run`,
       title: `Set Up ${name} Run`,
-      description: `${name} Run is a Google Cloud Run instance that provides back-end functionality, such as table action scripts, user management, and easy Cloud Function deployment.`,
       body: <Step1RowyRun {...stepProps} />,
     },
     {
       id: "serviceAccount",
       shortTitle: `Service Account`,
       title: `Set Up Service Account`,
-      description: `${name} Run is a Google Cloud Run instance that provides back-end functionality, such as table action scripts, user management, and easy Cloud Functions deployment. Learn more`,
-      body: `x`,
+      body: <Step2ServiceAccount {...stepProps} />,
     },
     {
       id: "signIn",
@@ -157,20 +141,26 @@ export default function SetupPage() {
       description: `${name} Run is a Google Cloud Run instance that provides back-end functionality, such as table action scripts, user management, and easy Cloud Functions deployment. Learn more`,
       body: `x`,
     },
-    {
-      id: "migrate",
-      shortTitle: `Migrate`,
-      title: `Migrate to ${name}`,
-      description: `${name} Run is a Google Cloud Run instance that provides back-end functionality, such as table action scripts, user management, and easy Cloud Functions deployment. Learn more`,
-      body: `x`,
-    },
+    completion.migrate !== undefined
+      ? {
+          id: "migrate",
+          shortTitle: `Migrate`,
+          title: `Migrate to ${name}`,
+          description: `${name} Run is a Google Cloud Run instance that provides back-end functionality, such as table action scripts, user management, and easy Cloud Functions deployment. Learn more`,
+          body: `x`,
+        }
+      : ({} as ISetupStep),
     {
       id: "finish",
-      layout: "centered",
+      layout: "centered" as "centered",
       shortTitle: `Finish`,
       title: `You’re all set up!`,
-      description: `You can now create a table from your Firestore collections or continue to ${name}.`,
-      body: <div>x</div>,
+      body: (
+        <div>
+          You can now create a table from your Firestore collections or continue
+          to {name}
+        </div>
+      ),
       actions: (
         <>
           <Button variant="contained" color="primary">
@@ -182,7 +172,7 @@ export default function SetupPage() {
         </>
       ),
     },
-  ];
+  ].filter((x) => x.id);
 
   const step =
     steps.find((step) => step.id === (stepId || steps[0].id)) ?? steps[0];
@@ -212,7 +202,7 @@ export default function SetupPage() {
             alpha(theme.palette.background.paper, 0.5),
           backdropFilter: "blur(20px) saturate(150%)",
 
-          maxWidth: (theme) => theme.breakpoints.values.md,
+          maxWidth: 840,
           width: "100%",
           maxHeight: (theme) =>
             `calc(${
@@ -220,7 +210,7 @@ export default function SetupPage() {
             } - ${theme.spacing(
               2
             )} - env(safe-area-inset-top) - env(safe-area-inset-bottom))`,
-          height: (theme) => theme.breakpoints.values.md * 0.75,
+          height: 840 * 0.75,
 
           p: 0,
           "& > *": { px: { xs: 2, sm: 4 } },
@@ -312,19 +302,13 @@ export default function SetupPage() {
 
               <SwitchTransition mode="out-in">
                 <SlideTransition key={stepId} appear timeout={100}>
-                  <div>
-                    <Typography
-                      variant="h4"
-                      component="h1"
-                      sx={{ mb: 1, typography: { xs: "h5", md: "h4" } }}
-                    >
-                      {step.title}
-                    </Typography>
-
-                    <Typography variant="inherit" component="div">
-                      {step.description}
-                    </Typography>
-                  </div>
+                  <Typography
+                    variant="h4"
+                    component="h1"
+                    sx={{ mb: 1, typography: { xs: "h5", md: "h4" } }}
+                  >
+                    {step.title}
+                  </Typography>
                 </SlideTransition>
               </SwitchTransition>
 
@@ -354,12 +338,7 @@ export default function SetupPage() {
             <SwitchTransition mode="out-in">
               <SlideTransition key={stepId} appear timeout={100}>
                 <ScrollableDialogContent disableTopDivider>
-                  <Stack spacing={4}>
-                    <Typography variant="body1" style={{ maxWidth: "70ch" }}>
-                      {step.description}
-                    </Typography>
-                    {step.body}
-                  </Stack>
+                  <Stack spacing={4}>{step.body}</Stack>
                 </ScrollableDialogContent>
               </SlideTransition>
             </SwitchTransition>

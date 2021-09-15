@@ -9,6 +9,7 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
 import SetupItem from "./SetupItem";
 
+import { name } from "@root/package.json";
 import { runRepoUrl, RunRoutes } from "constants/runRoutes";
 
 export default function Step1RowyRun({
@@ -34,7 +35,7 @@ export default function Step1RowyRun({
     setVerificationStatus("loading");
 
     try {
-      const result = await checkCompletionRowyRun(rowyRunUrl);
+      const result = await checkRowyRun(rowyRunUrl);
       setVerificationStatus("pass");
 
       if (result.isValidRowyRunUrl) setIsValidRowyRunUrl(true);
@@ -81,6 +82,12 @@ export default function Step1RowyRun({
 
   return (
     <>
+      <Typography variant="inherit">
+        {name} Run is a Google Cloud Run instance that provides back-end
+        functionality, such as table action scripts, user management, and easy
+        Cloud Function deployment.
+      </Typography>
+
       <SetupItem
         status={isValidRowyRunUrl ? "complete" : "incomplete"}
         title={
@@ -131,7 +138,6 @@ export default function Step1RowyRun({
           </>
         )}
       </SetupItem>
-
       {isValidRowyRunUrl && (
         <SetupItem
           status={isLatestVersion ? "complete" : "incomplete"}
@@ -162,7 +168,7 @@ export default function Step1RowyRun({
   );
 }
 
-export const checkCompletionRowyRun = async (rowyRunUrl: string) => {
+export const checkRowyRun = async (rowyRunUrl: string) => {
   const result = {
     isValidRowyRunUrl: false,
     isLatestVersion: false,
