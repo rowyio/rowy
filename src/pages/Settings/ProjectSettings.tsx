@@ -7,7 +7,7 @@ import { Container, Stack, Fade } from "@mui/material";
 import SettingsSkeleton from "components/Settings/SettingsSkeleton";
 import SettingsSection from "components/Settings/SettingsSection";
 import About from "components/Settings/ProjectSettings/About";
-import CloudRun from "@src/components/Settings/ProjectSettings/CloudRun";
+import RowyRun from "@src/components/Settings/ProjectSettings/RowyRun";
 import Authentication from "components/Settings/ProjectSettings/Authentication";
 import Customization from "components/Settings/ProjectSettings/Customization";
 
@@ -68,7 +68,7 @@ export default function ProjectSettingsPage() {
 
   const sections = [
     { title: "About", Component: About },
-    { title: `${name} Run`, Component: CloudRun, props: childProps },
+    { title: `${name} Run`, Component: RowyRun, props: childProps },
     { title: "Authentication", Component: Authentication, props: childProps },
     { title: "Customization", Component: Customization, props: childProps },
   ];

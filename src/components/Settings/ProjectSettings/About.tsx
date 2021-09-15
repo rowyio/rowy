@@ -129,7 +129,11 @@ export default function About() {
             <Typography display="block">
               {name} v{version}
             </Typography>
-            {latestUpdate === null ? (
+            {checkState === "LOADING" ? (
+              <Typography color="textSecondary" display="block">
+                Checking for updates…
+              </Typography>
+            ) : latestUpdate === null ? (
               <Typography color="textSecondary" display="block">
                 Up to date
               </Typography>
