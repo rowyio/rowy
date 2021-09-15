@@ -27,3 +27,5 @@ firebase-debug.log*
 
 .eslintcache
 .npm
+
+.vercel
