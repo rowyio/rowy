@@ -16,53 +16,39 @@ export default function Step1RowyRun({
   setCompletion,
   rowyRunUrl: paramsRowyRunUrl,
 }: ISetupStepBodyProps) {
-  const history = useHistory();
   const { pathname } = useLocation();
+  const history = useHistory();
 
-  const [isValidRowyRunUrl, setIsValidRowyRunUrl] = useState(false);
-  const [isLatestVersion, setIsLatestVersion] = useState(false);
+  const [isValidRowyRunUrl, setIsValidRowyRunUrl] = useState(
+    completion.rowyRun
+  );
+  const [isLatestVersion, setIsLatestVersion] = useState(completion.rowyRun);
 
   const [rowyRunUrl, setRowyRunUrl] = useState(paramsRowyRunUrl);
   const [latestVersion, setLatestVersion] = useState("");
   const [verificationStatus, setVerificationStatus] = useState<
     "idle" | "loading" | "pass" | "fail"
   >("idle");
-  const verifyRowyRunUrl = async () => {
+
+  const verifyRowyRun = async () => {
     setVerificationStatus("loading");
+
     try {
-      const req = await fetch(rowyRunUrl + RunRoutes.version.path, {
-        method: RunRoutes.version.method,
-      });
-      if (!req.ok) throw new Error("Request failed");
-      const res = await req.json();
-      if (!res.version) throw new Error("Invalid response");
+      const result = await checkCompletionRowyRun(rowyRunUrl);
+      setVerificationStatus("pass");
 
-      // https://docs.github.com/en/rest/reference/repos#get-the-latest-release
-      const endpoint =
-        runRepoUrl.replace("github.com", "api.github.com/repos") +
-        "/releases/latest";
-      const latestVersionReq = await fetch(endpoint, {
-        headers: { Accept: "application/vnd.github.v3+json" },
-      });
-      const latestVersion = await latestVersionReq.json();
-      if (!latestVersion.tag_name) throw new Error("No releases");
+      if (result.isValidRowyRunUrl) setIsValidRowyRunUrl(true);
 
-      if (latestVersion.tag_name > "v" + res.version) {
-        setVerificationStatus("pass");
-        setIsLatestVersion(false);
-        setLatestVersion(latestVersion.tag_name);
-      } else {
-        setVerificationStatus("pass");
+      setLatestVersion(result.latestVersion);
+
+      if (result.isLatestVersion) {
         setIsLatestVersion(true);
-        setLatestVersion("v" + res.version);
         setCompletion((c) => ({ ...c, rowyRun: true }));
+        history.replace({
+          pathname,
+          search: queryString.stringify({ rowyRunUrl }),
+        });
       }
-
-      setIsValidRowyRunUrl(true);
-      history.replace({
-        pathname,
-        search: queryString.stringify({ rowyRunUrl }),
-      });
     } catch (e: any) {
       console.error(`Failed to verify Rowy Run URL: ${e.message}`);
       setVerificationStatus("fail");
@@ -136,7 +122,7 @@ export default function Step1RowyRun({
                   variant="contained"
                   color="primary"
                   loading={verificationStatus === "loading"}
-                  onClick={verifyRowyRunUrl}
+                  onClick={verifyRowyRun}
                 >
                   Verify
                 </LoadingButton>
@@ -151,7 +137,9 @@ export default function Step1RowyRun({
           status={isLatestVersion ? "complete" : "incomplete"}
           title={
             isLatestVersion
-              ? `Rowy Run is up to date: ${latestVersion}`
+              ? latestVersion
+                ? `Rowy Run is up to date: ${latestVersion}`
+                : "Rowy Run is up to date."
               : `Update your Rowy Run instance. Latest version: ${latestVersion}`
           }
         >
@@ -162,7 +150,7 @@ export default function Step1RowyRun({
                 variant="contained"
                 color="primary"
                 loading={verificationStatus === "loading"}
-                onClick={verifyRowyRunUrl}
+                onClick={verifyRowyRun}
               >
                 Verify
               </LoadingButton>
@@ -173,3 +161,40 @@ export default function Step1RowyRun({
     </>
   );
 }
+
+export const checkCompletionRowyRun = async (rowyRunUrl: string) => {
+  const result = {
+    isValidRowyRunUrl: false,
+    isLatestVersion: false,
+    latestVersion: "",
+  };
+
+  const req = await fetch(rowyRunUrl + RunRoutes.version.path, {
+    method: RunRoutes.version.method,
+  });
+  if (!req.ok) return result;
+  const res = await req.json();
+  if (!res.version) return result;
+
+  result.isValidRowyRunUrl = true;
+
+  // https://docs.github.com/en/rest/reference/repos#get-the-latest-release
+  const endpoint =
+    runRepoUrl.replace("github.com", "api.github.com/repos") +
+    "/releases/latest";
+  const latestVersionReq = await fetch(endpoint, {
+    headers: { Accept: "application/vnd.github.v3+json" },
+  });
+  const latestVersion = await latestVersionReq.json();
+  if (!latestVersion.tag_name) return result;
+
+  if (latestVersion.tag_name > "v" + res.version) {
+    result.isLatestVersion = false;
+    result.latestVersion = latestVersion.tag_name;
+  } else {
+    result.isLatestVersion = true;
+    result.latestVersion = res.version;
+  }
+
+  return result;
+};

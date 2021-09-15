@@ -28,7 +28,9 @@ import ScrollableDialogContent from "components/Modal/ScrollableDialogContent";
 import { SlideTransition } from "components/Modal/SlideTransition";
 
 import Step0Welcome from "@src/components/Setup/Step0Welcome";
-import Step1RowyRun from "@src/components/Setup/Step1RowyRun";
+import Step1RowyRun, {
+  checkCompletionRowyRun,
+} from "@src/components/Setup/Step1RowyRun";
 
 import { useAppContext } from "contexts/AppContext";
 import { name } from "@root/package.json";
@@ -47,9 +49,25 @@ export interface ISetupStep {
 export interface ISetupStepBodyProps {
   completion: Record<string, boolean>;
   setCompletion: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
-  checkAllSteps: () => void;
+  checkAllSteps: typeof checkAllSteps;
   rowyRunUrl: string;
 }
+
+const checkAllSteps = async (
+  rowyRunUrl: string,
+  setCompletion: React.Dispatch<React.SetStateAction<Record<string, boolean>>>
+) => {
+  console.log("Check all steps");
+  const completion: Record<string, boolean> = {};
+
+  const checkRowyRun = await checkCompletionRowyRun(rowyRunUrl);
+  if (checkRowyRun.isValidRowyRunUrl) {
+    if (checkRowyRun.isLatestVersion) completion.rowyRun = true;
+  }
+
+  if (Object.keys(completion).length > 0)
+    setCompletion((c) => ({ ...c, ...completion }));
+};
 
 export default function SetupPage() {
   const { projectId } = useAppContext();
@@ -70,10 +88,8 @@ export default function SetupPage() {
     migrate: false,
   });
 
-  const checkAllSteps = () => {};
-
   useEffect(() => {
-    if (rowyRunUrl) checkAllSteps();
+    if (rowyRunUrl) checkAllSteps(rowyRunUrl, setCompletion);
   }, [rowyRunUrl]);
 
   const stepProps = { completion, setCompletion, checkAllSteps, rowyRunUrl };
