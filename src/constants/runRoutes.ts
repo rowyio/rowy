@@ -42,4 +42,5 @@ export const RunRoutes: { [key: string]: RunRoute } = {
   migrateFT2Rowy: { path: "/migrateFT2Rowy", method: "GET" },
   actionScript: { path: "/actionScript", method: "POST" },
   buildFunction: { path: "/buildFunction", method: "POST" },
+  projectOwner: { path: "/projectOwner", method: "GET" },
 };
