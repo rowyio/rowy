@@ -20,9 +20,12 @@ const useThemeOverriddenState = createPersistedState(
   "__ROWY__THEME_OVERRIDDEN"
 );
 
-interface AppContextInterface {
+interface IAppContext {
   projectId: string;
   currentUser: firebase.User | null | undefined;
+  userClaims: Record<string, any> | undefined;
+  userRoles: null | string[];
+  authToken: string;
   userDoc: any;
   theme: keyof typeof themes;
   themeOverridden: boolean;
@@ -30,9 +33,12 @@ interface AppContextInterface {
   setThemeOverridden: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const AppContext = React.createContext<AppContextInterface>({
+export const AppContext = React.createContext<IAppContext>({
   projectId: "",
   currentUser: undefined,
+  userClaims: undefined,
+  userRoles: [],
+  authToken: "",
   userDoc: undefined,
   theme: "light",
   themeOverridden: false,
@@ -47,9 +53,23 @@ export const AppProvider: React.FC = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<
     firebase.User | null | undefined
   >();
+  // Store user auth data
+  const [userClaims, setUserClaims] =
+    useState<IAppContext["userClaims"]>(undefined);
+  const [userRoles, setUserRoles] = useState<IAppContext["userRoles"]>([]);
+  const [authToken, setAuthToken] = useState<IAppContext["authToken"]>("");
+
+  // Get user data from Firebase Auth event
   useEffect(() => {
     auth.onAuthStateChanged((auth) => {
       setCurrentUser(auth);
+
+      if (auth)
+        auth.getIdTokenResult(true).then((results) => {
+          setAuthToken(results.token);
+          setUserRoles(results.claims.roles || []);
+          setUserClaims(results.claims);
+        });
     });
   }, []);
 
@@ -128,8 +148,11 @@ export const AppProvider: React.FC = ({ children }) => {
     <AppContext.Provider
       value={{
         projectId,
-        userDoc: { state: userDoc, dispatch: dispatchUserDoc },
         currentUser,
+        userClaims,
+        userRoles,
+        authToken,
+        userDoc: { state: userDoc, dispatch: dispatchUserDoc },
         theme,
         themeOverridden,
         setTheme,

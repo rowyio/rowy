@@ -43,4 +43,5 @@ export const RunRoutes: { [key: string]: RunRoute } = {
   actionScript: { path: "/actionScript", method: "POST" },
   buildFunction: { path: "/buildFunction", method: "POST" },
   projectOwner: { path: "/projectOwner", method: "GET" },
+  setOwnerRoles: { path: "/setOwnerRoles", method: "GET" },
 };

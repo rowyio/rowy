@@ -19,6 +19,7 @@ import LockIcon from "@mui/icons-material/LockOutlined";
 
 import { FieldType } from "constants/fields";
 import { getFieldProp } from "components/fields";
+import { useAppContext } from "contexts/AppContext";
 import { useProjectContext } from "contexts/ProjectContext";
 import { TableOrder } from "@src/hooks/useTable";
 
@@ -115,7 +116,8 @@ export default function DraggableHeaderRenderer<R>({
 }) {
   const classes = useStyles();
 
-  const { tableState, tableActions, userClaims, columnMenuRef } =
+  const {userClaims}=useAppContext()
+  const { tableState, tableActions,  columnMenuRef } =
     useProjectContext();
   const [{ isDragging }, drag] = useDrag({
     item: { key: column.key, type: "COLUMN_DRAG" },

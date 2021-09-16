@@ -10,7 +10,8 @@ import { useAppContext } from "./AppContext";
 import { SideDrawerRef } from "components/SideDrawer";
 import { ColumnMenuRef } from "components/Table/ColumnMenu";
 import { ImportWizardRef } from "components/Wizards/ImportWizard";
-import { RunRoute } from "@src/constants/runRoutes";
+
+import { rowyRun, IRowyRunRequestProps } from "utils/rowyRun";
 
 export type Table = {
   id: string;
@@ -23,7 +24,7 @@ export type Table = {
   tableType: string;
 };
 
-interface ProjectContextProps {
+interface IProjectContext {
   tables: Table[];
   roles: string[];
   tableState: TableState;
@@ -58,8 +59,6 @@ interface ProjectContextProps {
     deleteTable: (id: string) => void;
   };
 
-  userClaims: any;
-
   // A ref to the data grid. Contains data grid functions
   dataGridRef: React.RefObject<DataGridHandle>;
   // A ref to the side drawer state. Prevents unnecessary re-renders
@@ -69,15 +68,12 @@ interface ProjectContextProps {
   // A ref ot the import wizard. Prevents unnecessary re-renders
   importWizardRef: React.MutableRefObject<ImportWizardRef | undefined>;
 
-  rowyRun: (args: {
-    route: RunRoute;
-    body?: any;
-    params?: string[];
-    localhost?: boolean;
-  }) => Promise<any>;
+  rowyRun: (
+    args: Omit<IRowyRunRequestProps, "rowyRunUrl" | "authToken">
+  ) => Promise<any>;
 }
 
-const ProjectContext = React.createContext<Partial<ProjectContextProps>>({});
+const ProjectContext = React.createContext<Partial<IProjectContext>>({});
 export default ProjectContext;
 
 export const rowyUser = (currentUser) => {
@@ -96,15 +92,13 @@ export const rowyUser = (currentUser) => {
 export const useProjectContext = () => useContext(ProjectContext);
 
 export const ProjectContextProvider: React.FC = ({ children }) => {
+  const { currentUser, userRoles, authToken } = useAppContext();
+
   const { enqueueSnackbar } = useSnackbar();
   const { tableState, tableActions } = useTable();
-  const [tables, setTables] = useState<ProjectContextProps["tables"]>();
+  const [tables, setTables] = useState<IProjectContext["tables"]>();
   const [settings, settingsActions] = useSettings();
-  const [userRoles, setUserRoles] = useState<null | string[]>();
-  const [userClaims, setUserClaims] = useState<any>();
 
-  const { currentUser } = useAppContext();
-  const [authToken, setAuthToken] = useState("");
   useEffect(() => {
     const { tables } = settings;
     if (tables && userRoles) {
@@ -138,17 +132,7 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
     [tables]
   );
 
-  useEffect(() => {
-    if (currentUser && !userClaims) {
-      currentUser.getIdTokenResult(true).then((results) => {
-        setAuthToken(results.token);
-        setUserRoles(results.claims.roles || []);
-        setUserClaims(results.claims);
-      });
-    }
-  }, [currentUser]);
-
-  const updateCell: ProjectContextProps["updateCell"] = (
+  const updateCell: IProjectContext["updateCell"] = (
     ref,
     fieldName,
     value,
@@ -182,40 +166,11 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
       }
     );
   };
+
   // rowyRun access
-  const rowyRun = async ({
-    route,
-    body,
-    params,
-    localhost = false,
-  }: {
-    route: RunRoute;
-    body?: any;
-    params?: string[];
-    localhost?: boolean;
-  }) => {
-    const { method, path } = route;
-    let url = `${
-      localhost ? "http://localhost:8080" : settings.doc.rowyRunUrl
-    }${path}`;
-    if (params && params.length > 0) url = url + "/" + params.join("/");
-    const response = await fetch(url, {
-      method: method, // *GET, POST, PUT, DELETE, etc.
-      mode: "cors", // no-cors, *cors, same-origin
-      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-      credentials: "same-origin", // include, *same-origin, omit
-      headers: {
-        "Content-Type": "application/json",
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-        Authorization: "Bearer " + authToken,
-      },
-      redirect: "follow", // manual, *follow, error
-      referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-      body: body && method !== "GET" ? JSON.stringify(body) : null, // body data type must match "Content-Type" header
-    });
-    console.log(response);
-    return response.json(); // parses JSON response into native JavaScript objects
-  };
+  const _rowyRun: IProjectContext["rowyRun"] = async (args) =>
+    rowyRun({ rowyRunUrl: settings.doc.rowyRunUrl, authToken, ...args });
+
   // A ref to the data grid. Contains data grid functions
   const dataGridRef = useRef<DataGridHandle>(null);
   const sideDrawerRef = useRef<SideDrawerRef>();
@@ -231,12 +186,11 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
         settingsActions,
         roles,
         tables,
-        userClaims,
         dataGridRef,
         sideDrawerRef,
         columnMenuRef,
         importWizardRef,
-        rowyRun,
+        rowyRun: _rowyRun,
       }}
     >
       {children}

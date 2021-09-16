@@ -21,8 +21,8 @@ import { FieldType } from "constants/fields";
 export const TABLE_HEADER_HEIGHT = 44;
 
 export default function TableHeader() {
-  const { currentUser } = useAppContext();
-  const { tableActions, tableState, userClaims } = useProjectContext();
+  const { currentUser, userClaims } = useAppContext();
+  const { tableActions, tableState,  } = useProjectContext();
 
   const hasDerivatives =
     tableState &&

@@ -37,8 +37,8 @@ export default function NavDrawer({
   currentSection,
   ...props
 }: INavDrawerProps) {
-  const { userDoc } = useAppContext();
-  const { userClaims, tables } = useProjectContext();
+  const { userDoc, userClaims } = useAppContext();
+  const { tables } = useProjectContext();
 
   const favorites = Array.isArray(userDoc.state.doc?.favoriteTables)
     ? userDoc.state.doc.favoriteTables
