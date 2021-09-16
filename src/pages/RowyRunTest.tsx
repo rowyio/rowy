@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useSnackbar } from "notistack";
-
+import createPersistedState from "use-persisted-state";
 import Navigation from "components/Navigation";
+import ReactJson from "react-json-view";
 import {
   useTheme,
   Container,
@@ -13,11 +14,13 @@ import {
   MenuItem,
   Switch,
   FormControlLabel,
+  Typography,
 } from "@mui/material";
 import { useConfirmation } from "components/ConfirmationDialog";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import { RunRoutes } from "@src/constants/runRoutes";
 
+const useBodyCacheState = createPersistedState("__ROWY__RR_TEST_REQ_BODY");
 export default function TestView() {
   const theme = useTheme();
   const { requestConfirmation } = useConfirmation();
@@ -27,8 +30,10 @@ export default function TestView() {
   const { rowyRun } = useProjectContext();
   const [result, setResult] = useState<any>({});
 
+  const [cachedBody, setCachedBody] = useBodyCacheState<any>();
   const [method, setMethod] = useState<"GET" | "POST">("GET");
   const [path, setPath] = useState<string>("/");
+  const cachedBodyKey = path.replace("/", "");
   const handleMethodChange = (_, newMethod) => setMethod(newMethod);
   const setDefinedRoute = (newPath) => {
     setPath(newPath.target.value);
@@ -39,14 +44,21 @@ export default function TestView() {
       setMethod(_method);
     }
   };
+  const handleEdit = (edit) =>
+    setCachedBody((o) => ({ ...o, [cachedBodyKey]: edit.updated_src }));
   const handleRun = async () => {
     if (!rowyRun) return;
     setLoading(true);
+    const body =
+      ["POST", "PUT"].includes(method) && cachedBody[cachedBodyKey]
+        ? cachedBody[cachedBodyKey]
+        : undefined;
     const resp = await rowyRun({
       route: {
         method,
         path,
       },
+      body,
       localhost,
     });
     setResult(resp);
@@ -100,6 +112,46 @@ export default function TestView() {
           }}
         />
         <Button onClick={handleRun}>Call</Button>
+        <br />
+        {["POST", "PUT"].includes(method) && (
+          <>
+            <Typography variant="overline">Body</Typography>
+            <ReactJson
+              src={
+                cachedBody && cachedBody[cachedBodyKey]
+                  ? cachedBody[cachedBodyKey]
+                  : {}
+              }
+              onEdit={handleEdit}
+              onAdd={handleEdit}
+              onDelete={handleEdit}
+              theme={{
+                base00: "rgba(0, 0, 0, 0)",
+                base01: theme.palette.background.default,
+                base02: theme.palette.divider,
+                base03: "#93a1a1",
+                base04: theme.palette.text.disabled,
+                base05: theme.palette.text.secondary,
+                base06: "#073642",
+                base07: theme.palette.text.primary,
+                base08: "#d33682",
+                base09: "#cb4b16",
+                base0A: "#dc322f",
+                base0B: "#859900",
+                base0C: "#6c71c4",
+                base0D: theme.palette.text.secondary,
+                base0E: "#2aa198",
+                base0F: "#268bd2",
+              }}
+              iconStyle="triangle"
+              style={{
+                fontFamily: theme.typography.fontFamilyMono,
+                backgroundColor: "transparent",
+              }}
+            />
+          </>
+        )}
+        <Typography variant="overline">Result</Typography>
         <pre>{JSON.stringify(result, null, 2)}</pre>
       </Container>
     </Navigation>
