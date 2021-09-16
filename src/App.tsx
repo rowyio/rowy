@@ -1,16 +1,14 @@
 import { lazy, Suspense } from "react";
-import { Route, Switch, Link, Redirect } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 
 import { StyledEngineProvider } from "@mui/material/styles";
-import { Button } from "@mui/material";
 import "./space-grotesk.css";
 
 import CustomBrowserRouter from "utils/CustomBrowserRouter";
 import PrivateRoute from "utils/PrivateRoute";
 import ErrorBoundary from "components/ErrorBoundary";
-import EmptyState from "components/EmptyState";
 import Loading from "components/Loading";
 import Navigation from "components/Navigation";
 import Logo from "assets/Logo";
@@ -22,10 +20,11 @@ import { SnackbarProvider } from "contexts/SnackbarContext";
 import { SnackLogProvider } from "contexts/SnackLogContext";
 import routes from "constants/routes";
 
-import AuthView from "pages/Auth";
-import SignOutView from "pages/Auth/SignOut";
-import TestView from "pages/Test";
-import RowyRunTestView from "pages/RowyRunTest";
+import AuthPage from "pages/Auth";
+import SignOutPage from "pages/Auth/SignOut";
+import TestPage from "pages/Test";
+import RowyRunTestPage from "pages/RowyRunTest";
+import PageNotFound from "pages/PageNotFound";
 
 import Favicon from "assets/Favicon";
 import "analytics";
@@ -67,7 +66,7 @@ export default function App() {
                         <Route
                           exact
                           path={routes.auth}
-                          render={() => <AuthView />}
+                          render={() => <AuthPage />}
                         />
                         <Route
                           exact
@@ -82,7 +81,7 @@ export default function App() {
                         <Route
                           exact
                           path={routes.signOut}
-                          render={() => <SignOutView />}
+                          render={() => <SignOutPage />}
                         />
                         <Route
                           exact
@@ -93,7 +92,7 @@ export default function App() {
                         <Route
                           exact
                           path={"/test"}
-                          render={() => <TestView />}
+                          render={() => <TestPage />}
                         />
 
                         <PrivateRoute
@@ -120,7 +119,7 @@ export default function App() {
                                 <Route
                                   exact
                                   path={routes.rowyRunTest}
-                                  render={() => <RowyRunTestView />}
+                                  render={() => <RowyRunTestPage />}
                                 />
                                 <PrivateRoute
                                   exact
@@ -189,30 +188,12 @@ export default function App() {
                           )}
                         />
 
-                        <PrivateRoute
-                          render={() => (
-                            <Navigation
-                              title="Page Not Found"
-                              titleComponent={<div />}
-                            >
-                              <EmptyState
-                                message="Page Not Found"
-                                description={
-                                  <Button
-                                    component={Link}
-                                    to={routes.home}
-                                    variant="outlined"
-                                    style={{ marginTop: 8 }}
-                                  >
-                                    Go Home
-                                  </Button>
-                                }
-                                fullScreen
-                                style={{ marginTop: -64 }}
-                              />
-                            </Navigation>
-                          )}
+                        <Route
+                          exact
+                          path={routes.pageNotFound}
+                          render={() => <PageNotFound />}
                         />
+                        <Route render={() => <PageNotFound />} />
                       </Switch>
                     </Suspense>
                   </CustomBrowserRouter>

@@ -18,13 +18,7 @@ export default function SignOutPage() {
       <EmptyState
         message="Signed Out"
         description={
-          <Button
-            component={Link}
-            to="/auth"
-            variant="outlined"
-            color="primary"
-            style={{ marginTop: 24 }}
-          >
+          <Button component={Link} to="/auth" variant="outlined" sx={{ mt: 3 }}>
             Sign In Again
           </Button>
         }

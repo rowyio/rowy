@@ -49,7 +49,7 @@ export default function ImpersonatorAuthPage() {
   return (
     <AuthLayout loading={loading}>
       <div>
-        <Typography variant="h6" component="h2" gutterBottom>
+        <Typography variant="h6" component="h1" gutterBottom>
           Admin Authentication
         </Typography>
         <Typography gutterBottom>

@@ -6,6 +6,7 @@ export enum routes {
   signOut = "/signOut",
   authSetup = "/authSetup",
   setup = "/setup",
+  pageNotFound = "/404",
 
   table = "/table",
   tableWithId = "/table/:id",

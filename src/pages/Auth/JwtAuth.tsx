@@ -28,7 +28,7 @@ export default function JwtAuthPage() {
 
   return (
     <AuthLayout loading={loading}>
-      <Typography variant="h6" component="h2">
+      <Typography variant="h6" component="h1">
         Test Authentication
       </Typography>
 
