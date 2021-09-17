@@ -32,7 +32,6 @@ const FORM_EMPTY_STATE = {
   collection: "",
   section: "",
   description: "",
-  isCollectionGroup: false,
   roles: ["ADMIN"],
 };
 
@@ -92,7 +91,6 @@ export default function TableSettingsDialog({
   const handleSubmit = async (values) => {
     const data: any = {
       ...values,
-      isCollectionGroup: values.tableType === "collectionGroup",
     };
 
     if (values.schemaSource)
@@ -132,13 +130,15 @@ export default function TableSettingsDialog({
     const tablesDocRef = db.doc(SETTINGS);
     const tableData = (await tablesDocRef.get()).data();
     const updatedTables = tableData?.tables.filter(
-      (table) =>
-        table.id !== data?.id ||
-        table.isCollectionGroup !== data?.isCollectionGroup
+      (table) => table.id !== data?.id || table.tableType !== data?.tableType
     );
     await tablesDocRef.update({ tables: updatedTables });
     await db
-      .collection(data?.isCollectionGroup ? TABLE_SCHEMAS : TABLE_GROUP_SCHEMAS)
+      .collection(
+        data?.tableType === "primaryCollection"
+          ? TABLE_SCHEMAS
+          : TABLE_GROUP_SCHEMAS
+      )
       .doc(data?.id)
       .delete();
     window.location.reload();
@@ -160,9 +160,6 @@ export default function TableSettingsDialog({
         tables?.map((table) => ({ label: table.name, value: table.id }))
       )}
       values={{
-        tableType: data?.isCollectionGroup
-          ? "collectionGroup"
-          : "primaryCollection",
         ...data,
       }}
       onSubmit={handleSubmit}

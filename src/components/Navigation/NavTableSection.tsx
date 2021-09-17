@@ -49,9 +49,10 @@ export default function NavDrawerItem({
           {tables
             .filter((x) => x)
             .map((table) => {
-              const route = table.isCollectionGroup
-                ? `${routes.tableGroup}/${table.id}`
-                : `${routes.table}/${table.id.replace(/\//g, "~2F")}`;
+              const route =
+                table.tableType === "collectionGroup"
+                  ? `${routes.tableGroup}/${table.id}`
+                  : `${routes.table}/${table.id.replace(/\//g, "~2F")}`;
 
               return (
                 <li key={table.id}>

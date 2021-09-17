@@ -151,7 +151,7 @@ export default function HomePage() {
 
   const getLink = (table: Table) =>
     `${
-      table.isCollectionGroup ? routes.tableGroup : routes.table
+      table.tableType === "primaryCollection" ? routes.table : routes.tableGroup
     }/${table.id.replace(/\//g, "~2F")}`;
 
   const handleFavorite = (id: string) => (e: ChangeEvent<HTMLInputElement>) => {

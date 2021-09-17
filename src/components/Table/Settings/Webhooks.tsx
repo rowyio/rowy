@@ -122,12 +122,9 @@ export default function WebhooksDialog({ open, handleClose }) {
               label={"Enable webhooks for this table"}
               labelPlacement="end"
               checked={state.enabled}
-              onChange={
-                () => {
-                  handleChange("enabled")(!state.enabled);
-                }
-                //  handleChange("isCollectionGroup", !formState.isCollectionGroup)
-              }
+              onChange={() => {
+                handleChange("enabled")(!state.enabled);
+              }}
               // classes={{ root: classes.formControlLabel, label: classes.label }}
             />
             <InputLabel htmlFor="webhook-type">Webhook Type</InputLabel>

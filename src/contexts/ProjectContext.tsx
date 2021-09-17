@@ -20,8 +20,7 @@ export type Table = {
   roles: string[];
   description: string;
   section: string;
-  isCollectionGroup: boolean;
-  tableType: string;
+  tableType: "primaryCollection" | "collectionGroup";
 };
 
 interface IProjectContext {
