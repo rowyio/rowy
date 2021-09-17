@@ -24,7 +24,7 @@ interface IAppContext {
   projectId: string;
   currentUser: firebase.User | null | undefined;
   userClaims: Record<string, any> | undefined;
-  userRoles: null | string[];
+  userRoles: string[];
   authToken: string;
   userDoc: any;
   theme: keyof typeof themes;

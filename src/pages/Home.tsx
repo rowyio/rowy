@@ -48,7 +48,7 @@ import { APP_BAR_HEIGHT } from "components/Navigation";
 const useHomeViewState = createPersistedState("__ROWY__HOME_VIEW");
 
 export default function HomePage() {
-  const { userDoc, userClaims } = useAppContext();
+  const { userDoc, userRoles } = useAppContext();
   const { tables } = useProjectContext();
 
   const [results, query, handleQuery] = useBasicSearch(
@@ -131,7 +131,7 @@ export default function HomePage() {
   );
 
   if (tables.length === 0) {
-    if (userClaims?.roles.includes("ADMIN"))
+    if (userRoles.includes("ADMIN"))
       return (
         <>
           <HomeWelcomePrompt />
@@ -167,7 +167,7 @@ export default function HomePage() {
 
   const getActions = (table: Table) => (
     <>
-      {userClaims?.roles.includes("ADMIN") && (
+      {userRoles.includes("ADMIN") && (
         <IconButton
           aria-label="Edit table"
           onClick={() =>
@@ -258,7 +258,7 @@ export default function HomePage() {
         />
       )}
 
-      {userClaims?.roles.includes("ADMIN") && (
+      {userRoles.includes("ADMIN") && (
         <>
           {createTableFab}
           <TableSettingsDialog
