@@ -36,6 +36,7 @@ export const RunRoutes: { [key: string]: RunRoute } = {
   version: { path: "/version", method: "GET" },
   region: { path: "/region", method: "GET" },
   firestoreRules: { path: "/firestoreRules", method: "GET" },
+  setFirestoreRules: { path: "/setFirestoreRules", method: "POST" },
   listCollections: { path: "/listCollections", method: "GET" },
   serviceAccountAccess: { path: "/serviceAccountAccess", method: "GET" },
   checkFT2Rowy: { path: "/checkFT2Rowy", method: "GET" },
