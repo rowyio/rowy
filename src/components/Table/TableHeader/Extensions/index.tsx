@@ -19,7 +19,7 @@ import { useSnackLogContext } from "contexts/SnackLogContext";
 
 import { emptyExtensionObject, IExtension, IExtensionType } from "./utils";
 import { name } from "@root/package.json";
-import { RunRoutes } from "@src/constants/runRoutes";
+import { runRoutes } from "@src/constants/runRoutes";
 import { analytics } from "@src/analytics";
 
 export default function ExtensionsEditor() {
@@ -88,7 +88,7 @@ export default function ExtensionsEditor() {
       snackLogContext.requestSnackLog();
       if (rowyRun)
         rowyRun({
-          route: RunRoutes.buildFunction,
+          route: runRoutes.buildFunction,
           body: {
             tablePath: tableState?.tablePath,
             pathname: window.location.pathname,

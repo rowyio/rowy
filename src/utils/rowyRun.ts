@@ -8,6 +8,7 @@ export interface IRowyRunRequestProps {
   params?: string[];
   localhost?: boolean;
   json?: boolean;
+  signal?: AbortSignal;
 }
 
 export const rowyRun = async ({
@@ -18,6 +19,7 @@ export const rowyRun = async ({
   params,
   localhost = false,
   json = true,
+  signal,
 }: IRowyRunRequestProps) => {
   const { method, path } = route;
   let url = (localhost ? "http://localhost:8080" : rowyRunUrl) + path;
@@ -35,6 +37,7 @@ export const rowyRun = async ({
     redirect: "follow",
     referrerPolicy: "no-referrer",
     body: body && method !== "GET" ? JSON.stringify(body) : null, // body data type must match "Content-Type" header
+    signal,
   });
 
   if (json) return await response.json();

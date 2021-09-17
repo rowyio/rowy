@@ -29,9 +29,9 @@ type actionScriptRequest = {
   body: ActionData;
 };
 
-type RunRoutes = actionScriptRequest | impersonateUserRequest;
+export type runRouteRequest = actionScriptRequest | impersonateUserRequest;
 
-export const RunRoutes: { [key: string]: RunRoute } = {
+export const runRoutes: Record<string, RunRoute> = {
   impersonateUser: { path: "/impersonateUser", method: "GET" },
   version: { path: "/version", method: "GET" },
   region: { path: "/region", method: "GET" },
