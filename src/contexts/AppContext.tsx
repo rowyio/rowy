@@ -67,7 +67,9 @@ export const AppProvider: React.FC = ({ children }) => {
       if (auth)
         auth.getIdTokenResult(true).then((results) => {
           setAuthToken(results.token);
-          setUserRoles(results.claims.roles || []);
+          setUserRoles(
+            Array.isArray(results.claims.roles) ? results.claims.roles : []
+          );
           setUserClaims(results.claims);
         });
     });
