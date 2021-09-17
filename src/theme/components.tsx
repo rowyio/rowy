@@ -42,6 +42,15 @@ export const components = (theme: Theme): ThemeOptions => {
     components: {
       MuiCssBaseline: {
         styleOverrides: {
+          code: {
+            fontFamily: theme.typography.fontFamilyMono,
+            letterSpacing: 0,
+
+            backgroundColor: theme.palette.action.selected,
+            borderRadius: theme.shape.borderRadius,
+            padding: `${1 / 16}em ${4 / 16}em`,
+          },
+
           ".chrome-picker": {
             colorScheme: "light",
             boxShadow: theme.shadows[1] + " !important",
@@ -809,7 +818,7 @@ export const components = (theme: Theme): ThemeOptions => {
       MuiStepIcon: {
         styleOverrides: {
           root: {
-            color: theme.palette.divider,
+            color: theme.palette.action.selected,
             "&.Mui-completed:not(.Mui-active)": {
               color: theme.palette.text.disabled,
             },
