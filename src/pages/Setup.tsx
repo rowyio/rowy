@@ -19,6 +19,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import { alpha } from "@mui/material/styles";
+import LoadingButton from "@mui/lab/LoadingButton";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
@@ -31,9 +32,12 @@ import Step0Welcome from "components/Setup/Step0Welcome";
 import Step1RowyRun, { checkRowyRun } from "components/Setup/Step1RowyRun";
 // prettier-ignore
 import Step2ServiceAccount, { checkServiceAccount } from "components/Setup/Step2ServiceAccount";
+// prettier-ignore
+import Step3ProjectOwner, { checkProjectOwner } from "@src/components/Setup/Step3ProjectOwner";
 
 import { name } from "@root/package.json";
 import routes from "constants/routes";
+import { useAppContext } from "contexts/AppContext";
 
 export interface ISetupStep {
   id: string;
@@ -54,24 +58,35 @@ export interface ISetupStepBodyProps {
 
 const checkAllSteps = async (
   rowyRunUrl: string,
-  setCompletion: React.Dispatch<React.SetStateAction<Record<string, boolean>>>
+  currentUser: firebase.default.User | null | undefined,
+  userRoles: string[] | null,
+  signal: AbortSignal
 ) => {
   console.log("Check all steps");
   const completion: Record<string, boolean> = {};
 
-  const rowyRunValidation = await checkRowyRun(rowyRunUrl);
+  const rowyRunValidation = await checkRowyRun(rowyRunUrl, signal);
   if (rowyRunValidation.isValidRowyRunUrl) {
     if (rowyRunValidation.isLatestVersion) completion.rowyRun = true;
 
-    const serviceAccount = await checkServiceAccount(rowyRunUrl);
+    const serviceAccount = await checkServiceAccount(rowyRunUrl, signal);
     if (serviceAccount) completion.serviceAccount = true;
+
+    const projectOwner = await checkProjectOwner(
+      rowyRunUrl,
+      currentUser,
+      userRoles,
+      signal
+    );
+    if (projectOwner) completion.projectOwner = true;
   }
 
-  if (Object.keys(completion).length > 0)
-    setCompletion((c) => ({ ...c, ...completion }));
+  return completion;
 };
 
 export default function SetupPage() {
+  const { currentUser, userRoles } = useAppContext();
+
   const fullScreenHeight = use100vh() ?? 0;
   const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down("sm"));
 
@@ -84,13 +99,27 @@ export default function SetupPage() {
     welcome: false,
     rowyRun: false,
     serviceAccount: false,
-    signIn: false,
+    projectOwner: false,
     rules: false,
   });
 
+  const [checkingAllSteps, setCheckingAllSteps] = useState(false);
   useEffect(() => {
-    if (rowyRunUrl) checkAllSteps(rowyRunUrl, setCompletion);
-  }, [rowyRunUrl]);
+    const controller = new AbortController();
+    const signal = controller.signal;
+
+    if (rowyRunUrl) {
+      setCheckingAllSteps(true);
+      checkAllSteps(rowyRunUrl, currentUser, userRoles, signal).then(
+        (result) => {
+          if (!signal.aborted) setCompletion((c) => ({ ...c, ...result }));
+          setCheckingAllSteps(false);
+        }
+      );
+    }
+
+    return () => controller.abort();
+  }, [rowyRunUrl, currentUser, userRoles]);
 
   const stepProps = { completion, setCompletion, checkAllSteps, rowyRunUrl };
 
@@ -102,15 +131,25 @@ export default function SetupPage() {
       title: `Welcome to ${name}`,
       body: <Step0Welcome {...stepProps} />,
       actions: completion.welcome ? (
-        <Button variant="contained" color="primary" type="submit">
+        <LoadingButton
+          loading={checkingAllSteps}
+          variant="contained"
+          color="primary"
+          type="submit"
+        >
           Get Started
-        </Button>
+        </LoadingButton>
       ) : (
         <Tooltip title="Please accept the terms and conditions">
           <div>
-            <Button variant="contained" color="primary" disabled>
+            <LoadingButton
+              loading={checkingAllSteps}
+              variant="contained"
+              color="primary"
+              disabled
+            >
               Get Started
-            </Button>
+            </LoadingButton>
           </div>
         </Tooltip>
       ),
@@ -128,25 +167,22 @@ export default function SetupPage() {
       body: <Step2ServiceAccount {...stepProps} />,
     },
     {
-      id: "signIn",
-      shortTitle: `Sign In`,
-      title: `Sign In as the Project Owner`,
-      description: `${name} Run is a Google Cloud Run instance that provides back-end functionality, such as table action scripts, user management, and easy Cloud Functions deployment. Learn more`,
-      body: `x`,
+      id: "projectOwner",
+      shortTitle: `Project Owner`,
+      title: `Set Up Project Owner`,
+      body: <Step3ProjectOwner {...stepProps} />,
     },
     {
       id: "rules",
       shortTitle: `Rules`,
       title: `Set Up Firestore Rules`,
-      description: `${name} Run is a Google Cloud Run instance that provides back-end functionality, such as table action scripts, user management, and easy Cloud Functions deployment. Learn more`,
       body: `x`,
     },
     completion.migrate !== undefined
       ? {
           id: "migrate",
           shortTitle: `Migrate`,
-          title: `Migrate to ${name}`,
-          description: `${name} Run is a Google Cloud Run instance that provides back-end functionality, such as table action scripts, user management, and easy Cloud Functions deployment. Learn more`,
+          title: `Migrate to ${name} (optional)`,
           body: `x`,
         }
       : ({} as ISetupStep),
@@ -358,14 +394,15 @@ export default function SetupPage() {
         >
           <DialogActions>
             {step.actions ?? (
-              <Button
+              <LoadingButton
                 variant="contained"
                 color="primary"
                 type="submit"
+                loading={checkingAllSteps}
                 disabled={!completion[stepId]}
               >
                 Continue
-              </Button>
+              </LoadingButton>
             )}
           </DialogActions>
         </form>

@@ -12,7 +12,7 @@ import { cloudFunction } from "firebase/callables";
 import { formatPath } from "utils/fns";
 import { useConfirmation } from "components/ConfirmationDialog";
 import { useActionParams } from "./FormDialog/Context";
-import { RunRoutes } from "@src/constants/runRoutes";
+import { runRoutes } from "@src/constants/runRoutes";
 
 const replacer = (data: any) => (m: string, key: string) => {
   const objKey = key.split(":")[0];
@@ -78,7 +78,7 @@ export default function ActionFab({
     };
 
     const resp = await rowyRun({
-      route: RunRoutes.actionScript,
+      route: runRoutes.actionScript,
       body: data,
       params: [],
     });

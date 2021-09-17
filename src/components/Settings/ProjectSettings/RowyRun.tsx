@@ -16,7 +16,7 @@ import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
 import { IProjectSettingsChildProps } from "pages/Settings/ProjectSettings";
 import WIKI_LINKS from "constants/wikiLinks";
 import { name } from "@root/package.json";
-import { RunRoutes, runRepoUrl } from "constants/runRoutes";
+import { runRoutes, runRepoUrl } from "constants/runRoutes";
 
 const useLastCheckedUpdateState = createPersistedState(
   "__ROWY__RUN_LAST_CHECKED_UPDATE"
@@ -34,8 +34,8 @@ export default function RowyRun({
   const handleVerify = async () => {
     setVerified("LOADING");
     try {
-      const versionReq = await fetch(inputRowyRunUrl + RunRoutes.version.path, {
-        method: RunRoutes.version.method,
+      const versionReq = await fetch(inputRowyRunUrl + runRoutes.version.path, {
+        method: runRoutes.version.method,
       }).then((res) => res.json());
 
       if (!versionReq.version) throw new Error("No version found");
@@ -62,8 +62,8 @@ export default function RowyRun({
   );
   const [version, setVersion] = useState("");
   useEffect(() => {
-    fetch(settings.rowyRunUrl + RunRoutes.version.path, {
-      method: RunRoutes.version.method,
+    fetch(settings.rowyRunUrl + runRoutes.version.path, {
+      method: runRoutes.version.method,
     })
       .then((res) => res.json())
       .then((data) => setVersion(data.version));
@@ -78,8 +78,8 @@ export default function RowyRun({
       "/releases/latest";
     try {
       const versionReq = await fetch(
-        settings.rowyRunUrl + RunRoutes.version.path,
-        { method: RunRoutes.version.method }
+        settings.rowyRunUrl + runRoutes.version.path,
+        { method: runRoutes.version.method }
       ).then((res) => res.json());
       const version = versionReq.version;
       setVersion(version);

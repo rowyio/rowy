@@ -9,7 +9,7 @@ import FirebaseUi from "components/Auth/FirebaseUi";
 import { signOut } from "utils/auth";
 import { auth } from "../../firebase";
 import { useProjectContext } from "@src/contexts/ProjectContext";
-import { RunRoutes } from "@src/constants/runRoutes";
+import { runRoutes } from "@src/constants/runRoutes";
 import { name } from "@root/package.json";
 
 export default function ImpersonatorAuthPage() {
@@ -32,7 +32,7 @@ export default function ImpersonatorAuthPage() {
     console.log("rowyRun");
     setLoading(true);
     const resp = await rowyRun({
-      route: RunRoutes.impersonateUser,
+      route: runRoutes.impersonateUser,
       params: [email],
     });
     console.log(resp);

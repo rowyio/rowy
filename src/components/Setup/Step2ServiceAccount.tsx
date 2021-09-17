@@ -11,7 +11,8 @@ import SetupItem from "./SetupItem";
 
 import { name } from "@root/package.json";
 import { useAppContext } from "contexts/AppContext";
-import { RunRoutes } from "constants/runRoutes";
+import { rowyRun } from "utils/rowyRun";
+import { runRoutes } from "constants/runRoutes";
 
 export default function Step2ServiceAccount({
   rowyRunUrl,
@@ -20,14 +21,14 @@ export default function Step2ServiceAccount({
 }: ISetupStepBodyProps) {
   const [hasAllRoles, setHasAllRoles] = useState(completion.serviceAccount);
   const [verificationStatus, setVerificationStatus] = useState<
-    "idle" | "loading" | "pass" | "fail"
-  >("idle");
+    "IDLE" | "LOADING" | "FAIL"
+  >("IDLE");
 
   const { projectId } = useAppContext();
   const [region, setRegion] = useState("");
   useEffect(() => {
-    fetch(rowyRunUrl + RunRoutes.region.path, {
-      method: RunRoutes.region.method,
+    fetch(rowyRunUrl + runRoutes.region.path, {
+      method: runRoutes.region.method,
     })
       .then((res) => res.json())
       .then((data) => setRegion(data.region))
@@ -35,26 +36,26 @@ export default function Step2ServiceAccount({
   }, []);
 
   const verifyRoles = async () => {
-    setVerificationStatus("loading");
+    setVerificationStatus("LOADING");
     try {
       const result = await checkServiceAccount(rowyRunUrl);
       if (result) {
-        setVerificationStatus("pass");
+        setVerificationStatus("IDLE");
         setHasAllRoles(true);
         setCompletion((c) => ({ ...c, serviceAccount: true }));
       } else {
-        setVerificationStatus("fail");
+        setVerificationStatus("FAIL");
         setHasAllRoles(false);
       }
     } catch (e) {
       console.error(e);
-      setVerificationStatus("fail");
+      setVerificationStatus("FAIL");
     }
   };
 
   return (
     <>
-      <Typography variant="inherit">
+      <Typography variant="inherit" paragraph>
         {name} Run uses the{" "}
         <Link
           href="https://firebase.google.com/docs/admin/setup"
@@ -79,8 +80,11 @@ export default function Step2ServiceAccount({
         >
           service account
         </Link>
-        . Rowy Run operates exclusively on your GCP project and we will never
-        have access to your service account or any of your data.
+        .
+      </Typography>
+      <Typography variant="inherit" style={{ marginTop: 0 }}>
+        Rowy Run operates exclusively on your GCP project and we will never have
+        access to your service account or any of your data.
       </Typography>
 
       <SetupItem
@@ -91,7 +95,7 @@ export default function Step2ServiceAccount({
             : "Set up a service account with the following IAM roles:"
         }
       >
-        <ul style={{ marginTop: 0 }}>
+        <ul>
           <li>Service Account User – required to deploy Cloud Functions</li>
           <li>Firebase Authentication Admin</li>
           <li>Firestore Service Agent</li>
@@ -113,11 +117,17 @@ export default function Step2ServiceAccount({
                 variant="contained"
                 color="primary"
                 onClick={verifyRoles}
-                loading={verificationStatus === "loading"}
+                loading={verificationStatus === "LOADING"}
               >
                 Verify
               </LoadingButton>
             </Stack>
+
+            {verificationStatus === "FAIL" && (
+              <Typography variant="caption" color="error">
+                The service account does not have the required IAM roles.
+              </Typography>
+            )}
 
             <Stack direction="row" spacing={1}>
               <InfoIcon aria-label="Info" color="action" sx={{ mt: -0.25 }} />
@@ -133,7 +143,6 @@ export default function Step2ServiceAccount({
           href="https://cloud.google.com/iam/docs/understanding-roles"
           target="_blank"
           rel="noopener noreferrer"
-          variant="body2"
         >
           Learn about IAM roles
           <InlineOpenInNewIcon />
@@ -143,15 +152,21 @@ export default function Step2ServiceAccount({
   );
 }
 
-export const checkServiceAccount = async (rowyRunUrl: string) => {
-  const req = await fetch(rowyRunUrl + RunRoutes.serviceAccountAccess.path, {
-    method: RunRoutes.serviceAccountAccess.method,
-  });
-  if (!req.ok) return false;
-
-  const res = await req.json();
-  return Object.values(res).reduce(
-    (acc, value) => acc && value,
-    true
-  ) as boolean;
+export const checkServiceAccount = async (
+  rowyRunUrl: string,
+  signal?: AbortSignal
+) => {
+  try {
+    const res = await rowyRun({
+      rowyRunUrl,
+      route: runRoutes.serviceAccountAccess,
+    });
+    return Object.values(res).reduce(
+      (acc, value) => acc && value,
+      true
+    ) as boolean;
+  } catch (e: any) {
+    console.error(e);
+    return false;
+  }
 };

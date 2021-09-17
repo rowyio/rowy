@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 import { useConfirmation } from "components/ConfirmationDialog";
 import { useProjectContext } from "@src/contexts/ProjectContext";
-import { RunRoutes } from "@src/constants/runRoutes";
+import { runRoutes } from "@src/constants/runRoutes";
 
 const useBodyCacheState = createPersistedState("__ROWY__RR_TEST_REQ_BODY");
 export default function TestView() {
@@ -37,7 +37,7 @@ export default function TestView() {
   const handleMethodChange = (_, newMethod) => setMethod(newMethod);
   const setDefinedRoute = (newPath) => {
     setPath(newPath.target.value);
-    const _method = Object.values(RunRoutes).find(
+    const _method = Object.values(runRoutes).find(
       (r) => r.path === path
     )?.method;
     if (_method) {
@@ -88,12 +88,12 @@ export default function TestView() {
           label="Defined Route"
           select
           value={
-            Object.values(RunRoutes).find((r) => r.path === path)?.path ?? ""
+            Object.values(runRoutes).find((r) => r.path === path)?.path ?? ""
           }
           onChange={setDefinedRoute}
           style={{ width: 255 }}
         >
-          {Object.values(RunRoutes).map((route) => (
+          {Object.values(runRoutes).map((route) => (
             <MenuItem key={route.path} value={route.path}>
               {route.path}
             </MenuItem>

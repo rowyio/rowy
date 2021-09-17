@@ -10,7 +10,8 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import SetupItem from "./SetupItem";
 
 import { name } from "@root/package.json";
-import { runRepoUrl, RunRoutes } from "constants/runRoutes";
+import { rowyRun } from "utils/rowyRun";
+import { runRepoUrl, runRoutes } from "constants/runRoutes";
 
 export default function Step1RowyRun({
   completion,
@@ -28,15 +29,15 @@ export default function Step1RowyRun({
   const [rowyRunUrl, setRowyRunUrl] = useState(paramsRowyRunUrl);
   const [latestVersion, setLatestVersion] = useState("");
   const [verificationStatus, setVerificationStatus] = useState<
-    "idle" | "loading" | "pass" | "fail"
-  >("idle");
+    "IDLE" | "LOADING" | "FAIL"
+  >("IDLE");
 
   const verifyRowyRun = async () => {
-    setVerificationStatus("loading");
+    setVerificationStatus("LOADING");
 
     try {
       const result = await checkRowyRun(rowyRunUrl);
-      setVerificationStatus("pass");
+      setVerificationStatus("IDLE");
 
       if (result.isValidRowyRunUrl) setIsValidRowyRunUrl(true);
 
@@ -51,8 +52,8 @@ export default function Step1RowyRun({
         });
       }
     } catch (e: any) {
-      console.error(`Failed to verify Rowy Run URL: ${e.message}`);
-      setVerificationStatus("fail");
+      console.error(`Failed to verify Rowy Run URL: ${e}`);
+      setVerificationStatus("FAIL");
     }
   };
 
@@ -120,15 +121,15 @@ export default function Step1RowyRun({
                   type="url"
                   autoComplete="url"
                   fullWidth
-                  error={verificationStatus === "fail"}
+                  error={verificationStatus === "FAIL"}
                   helperText={
-                    verificationStatus === "fail" ? "Invalid URL" : " "
+                    verificationStatus === "FAIL" ? "Invalid URL" : " "
                   }
                 />
                 <LoadingButton
                   variant="contained"
                   color="primary"
-                  loading={verificationStatus === "loading"}
+                  loading={verificationStatus === "LOADING"}
                   onClick={verifyRowyRun}
                 >
                   Verify
@@ -155,7 +156,7 @@ export default function Step1RowyRun({
               <LoadingButton
                 variant="contained"
                 color="primary"
-                loading={verificationStatus === "loading"}
+                loading={verificationStatus === "LOADING"}
                 onClick={verifyRowyRun}
               >
                 Verify
@@ -168,39 +169,43 @@ export default function Step1RowyRun({
   );
 }
 
-export const checkRowyRun = async (rowyRunUrl: string) => {
+export const checkRowyRun = async (
+  rowyRunUrl: string,
+  signal?: AbortSignal
+) => {
   const result = {
     isValidRowyRunUrl: false,
     isLatestVersion: false,
     latestVersion: "",
   };
 
-  const req = await fetch(rowyRunUrl + RunRoutes.version.path, {
-    method: RunRoutes.version.method,
-  });
-  if (!req.ok) return result;
-  const res = await req.json();
-  if (!res.version) return result;
+  try {
+    const res = await rowyRun({ rowyRunUrl, route: runRoutes.version, signal });
+    if (!res.version) return result;
 
-  result.isValidRowyRunUrl = true;
+    result.isValidRowyRunUrl = true;
 
-  // https://docs.github.com/en/rest/reference/repos#get-the-latest-release
-  const endpoint =
-    runRepoUrl.replace("github.com", "api.github.com/repos") +
-    "/releases/latest";
-  const latestVersionReq = await fetch(endpoint, {
-    headers: { Accept: "application/vnd.github.v3+json" },
-  });
-  const latestVersion = await latestVersionReq.json();
-  if (!latestVersion.tag_name) return result;
+    // https://docs.github.com/en/rest/reference/repos#get-the-latest-release
+    const endpoint =
+      runRepoUrl.replace("github.com", "api.github.com/repos") +
+      "/releases/latest";
+    const latestVersionReq = await fetch(endpoint, {
+      headers: { Accept: "application/vnd.github.v3+json" },
+      signal,
+    });
+    const latestVersion = await latestVersionReq.json();
+    if (!latestVersion.tag_name) return result;
 
-  if (latestVersion.tag_name > "v" + res.version) {
-    result.isLatestVersion = false;
-    result.latestVersion = latestVersion.tag_name;
-  } else {
-    result.isLatestVersion = true;
-    result.latestVersion = res.version;
+    if (latestVersion.tag_name > "v" + res.version) {
+      result.isLatestVersion = false;
+      result.latestVersion = latestVersion.tag_name;
+    } else {
+      result.isLatestVersion = true;
+      result.latestVersion = res.version;
+    }
+  } catch (e: any) {
+    console.error(e);
+  } finally {
+    return result;
   }
-
-  return result;
 };

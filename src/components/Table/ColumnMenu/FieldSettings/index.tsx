@@ -23,7 +23,7 @@ import Button from "@mui/material/Button";
 import routes from "constants/routes";
 import { SETTINGS } from "config/dbPaths";
 import { name as appName } from "@root/package.json";
-import { RunRoutes } from "@src/constants/runRoutes";
+import { runRoutes } from "@src/constants/runRoutes";
 
 export default function FieldSettings(props: IMenuModalProps) {
   const { name, fieldName, type, open, config, handleClose, handleSave } =
@@ -126,7 +126,7 @@ export default function FieldSettings(props: IMenuModalProps) {
                 handleConfirm: async () => {
                   if (!rowyRun) return;
                   rowyRun({
-                    route: RunRoutes.buildFunction,
+                    route: runRoutes.buildFunction,
                     body: {
                       tablePath: tableState?.tablePath,
                       pathname: window.location.pathname,
