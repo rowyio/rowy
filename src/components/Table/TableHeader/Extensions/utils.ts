@@ -176,37 +176,6 @@ function emptyExtensionObject(
     lastEditor: user,
   };
 }
-
-/* Convert extension objects into a single ft-build readable string */
-function serialiseExtension(extensions: IExtension[]): string {
-  const serialisedExtension =
-    "[" +
-    extensions
-      .filter((extension) => extension.active)
-      .map(
-        (extension) => `{
-          name: "${extension.name}",
-          type: "${extension.type}",
-          triggers: [${extension.triggers
-            .map((trigger) => `"${trigger}"`)
-            .join(", ")}],
-          conditions: ${extension.conditions
-            .replace(/^.*:\s*Condition\s*=/, "")
-            .replace(/\s*;\s*$/, "")},
-          requiredFields: [${extension.requiredFields
-            .map((field) => `"${field}"`)
-            .join(", ")}],
-          extensionBody: ${extension.extensionBody
-            .replace(/^.*:\s*\w*Body\s*=/, "")
-            .replace(/\s*;\s*$/, "")}
-        }`
-      )
-      .join(",") +
-    "]";
-  console.log("serialisedExtension", serialisedExtension);
-  return serialisedExtension;
-}
-
 function sparkToExtensionObjects(
   sparkConfig: string,
   user: IExtensionEditor
@@ -248,28 +217,25 @@ function sparkToExtensionObjects(
       sparkBody,
     };
   });
-  const extensionObjects = sparks?.map(
-    (spark, index): IExtension => {
-      return {
-        // rowy meta fields
-        name: `Migrated spark ${index}`,
-        active: true,
-        lastEditor: user,
+  const extensionObjects = sparks?.map((spark, index): IExtension => {
+    return {
+      // rowy meta fields
+      name: `Migrated spark ${index}`,
+      active: true,
+      lastEditor: user,
 
-        // ft build fields
-        triggers: (spark.triggers ?? []) as IExtensionTrigger[],
-        type: spark.type as IExtensionType,
-        requiredFields: spark.requiredFields ?? [],
-        extensionBody: spark.sparkBody,
-        conditions: spark.shouldRun ?? "",
-      };
-    }
-  );
+      // ft build fields
+      triggers: (spark.triggers ?? []) as IExtensionTrigger[],
+      type: spark.type as IExtensionType,
+      requiredFields: spark.requiredFields ?? [],
+      extensionBody: spark.sparkBody,
+      conditions: spark.shouldRun ?? "",
+    };
+  });
   return extensionObjects ?? [];
 }
 
 export {
-  serialiseExtension,
   extensionTypes,
   triggerTypes,
   emptyExtensionObject,

@@ -3,7 +3,7 @@ import firebase from "firebase/app";
 import createPersistedState from "use-persisted-state";
 import _merge from "lodash/merge";
 import Helmet from "react-helmet";
-
+import jwt_decode from "jwt-decode";
 import { useMediaQuery, ThemeProvider, CssBaseline } from "@mui/material";
 
 import ErrorBoundary from "components/ErrorBoundary";
@@ -25,7 +25,7 @@ interface IAppContext {
   currentUser: firebase.User | null | undefined;
   userClaims: Record<string, any> | undefined;
   userRoles: null | string[];
-  authToken: string;
+  getAuthToken: () => Promise<string>;
   userDoc: any;
   theme: keyof typeof themes;
   themeOverridden: boolean;
@@ -38,7 +38,7 @@ export const AppContext = React.createContext<IAppContext>({
   currentUser: undefined,
   userClaims: undefined,
   userRoles: [],
-  authToken: "",
+  getAuthToken: async () => await "",
   userDoc: undefined,
   theme: "light",
   themeOverridden: false,
@@ -57,13 +57,26 @@ export const AppProvider: React.FC = ({ children }) => {
   const [userClaims, setUserClaims] =
     useState<IAppContext["userClaims"]>(undefined);
   const [userRoles, setUserRoles] = useState<IAppContext["userRoles"]>([]);
-  const [authToken, setAuthToken] = useState<IAppContext["authToken"]>("");
+  const [authToken, setAuthToken] = useState<string>("");
 
   // Get user data from Firebase Auth event
+
+  const getAuthToken = async () => {
+    // check if token is expired
+    if (currentUser) {
+      const token: any = jwt_decode(authToken);
+      if (token && token.exp * 1000 < Date.now()) {
+        // token is expired
+        console.log("token is expired,getting new token");
+        const res = await currentUser.getIdTokenResult(true);
+        setAuthToken(res.token as string);
+        return res.token;
+      } else return authToken;
+    } else return "";
+  };
   useEffect(() => {
     auth.onAuthStateChanged((auth) => {
       setCurrentUser(auth);
-
       if (auth)
         auth.getIdTokenResult(true).then((results) => {
           setAuthToken(results.token);
@@ -151,7 +164,7 @@ export const AppProvider: React.FC = ({ children }) => {
         currentUser,
         userClaims,
         userRoles,
-        authToken,
+        getAuthToken,
         userDoc: { state: userDoc, dispatch: dispatchUserDoc },
         theme,
         themeOverridden,

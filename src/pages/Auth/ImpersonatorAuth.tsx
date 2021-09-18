@@ -26,16 +26,12 @@ export default function ImpersonatorAuthPage() {
   const [email, setEmail] = useState("");
 
   const handleAuth = async (email: string) => {
-    console.log("!rowyRun");
-
     if (!rowyRun) return;
-    console.log("rowyRun");
     setLoading(true);
     const resp = await rowyRun({
       route: runRoutes.impersonateUser,
       params: [email],
     });
-    console.log(resp);
     setLoading(false);
     if (resp.success) {
       enqueueSnackbar(resp.message, { variant: "success" });
