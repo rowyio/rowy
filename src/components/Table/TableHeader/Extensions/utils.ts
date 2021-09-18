@@ -176,37 +176,6 @@ function emptyExtensionObject(
     lastEditor: user,
   };
 }
-
-/* Convert extension objects into a single ft-build readable string */
-function serialiseExtension(extensions: IExtension[]): string {
-  const serialisedExtension =
-    "[" +
-    extensions
-      .filter((extension) => extension.active)
-      .map(
-        (extension) => `{
-          name: "${extension.name}",
-          type: "${extension.type}",
-          triggers: [${extension.triggers
-            .map((trigger) => `"${trigger}"`)
-            .join(", ")}],
-          conditions: ${extension.conditions
-            .replace(/^.*:\s*Condition\s*=/, "")
-            .replace(/\s*;\s*$/, "")},
-          requiredFields: [${extension.requiredFields
-            .map((field) => `"${field}"`)
-            .join(", ")}],
-          extensionBody: ${extension.extensionBody
-            .replace(/^.*:\s*\w*Body\s*=/, "")
-            .replace(/\s*;\s*$/, "")}
-        }`
-      )
-      .join(",") +
-    "]";
-  console.log("serialisedExtension", serialisedExtension);
-  return serialisedExtension;
-}
-
 function sparkToExtensionObjects(
   sparkConfig: string,
   user: IExtensionEditor
@@ -267,7 +236,6 @@ function sparkToExtensionObjects(
 }
 
 export {
-  serialiseExtension,
   extensionTypes,
   triggerTypes,
   emptyExtensionObject,

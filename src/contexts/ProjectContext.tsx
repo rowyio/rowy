@@ -91,7 +91,7 @@ export const rowyUser = (currentUser) => {
 export const useProjectContext = () => useContext(ProjectContext);
 
 export const ProjectContextProvider: React.FC = ({ children }) => {
-  const { currentUser, userRoles, authToken } = useAppContext();
+  const { currentUser, userRoles, getAuthToken } = useAppContext();
 
   const { enqueueSnackbar } = useSnackbar();
   const { tableState, tableActions } = useTable();
@@ -165,10 +165,11 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
       }
     );
   };
-
   // rowyRun access
-  const _rowyRun: IProjectContext["rowyRun"] = async (args) =>
-    rowyRun({ rowyRunUrl: settings.doc.rowyRunUrl, authToken, ...args });
+  const _rowyRun: IProjectContext["rowyRun"] = async (args) => {
+    const authToken = await getAuthToken();
+    return rowyRun({ rowyRunUrl: settings.doc.rowyRunUrl, authToken, ...args });
+  };
 
   // A ref to the data grid. Contains data grid functions
   const dataGridRef = useRef<DataGridHandle>(null);

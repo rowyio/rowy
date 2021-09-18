@@ -17,7 +17,7 @@ export default function Step3ProjectOwner({
   completion,
   setCompletion,
 }: ISetupStepBodyProps) {
-  const { projectId, currentUser, authToken } = useAppContext();
+  const { projectId, currentUser, getAuthToken } = useAppContext();
 
   const [email, setEmail] = useState("");
   useEffect(() => {
@@ -37,6 +37,7 @@ export default function Step3ProjectOwner({
   const setRoles = async () => {
     setHasRoles("LOADING");
     try {
+      const authToken = await getAuthToken();
       const res = await rowyRun({
         route: runRoutes.setOwnerRoles,
         rowyRunUrl,
