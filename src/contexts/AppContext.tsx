@@ -24,7 +24,7 @@ interface IAppContext {
   projectId: string;
   currentUser: firebase.User | null | undefined;
   userClaims: Record<string, any> | undefined;
-  userRoles: null | string[];
+  userRoles: string[];
   getAuthToken: () => Promise<string>;
   userDoc: any;
   theme: keyof typeof themes;
@@ -80,7 +80,9 @@ export const AppProvider: React.FC = ({ children }) => {
       if (auth)
         auth.getIdTokenResult(true).then((results) => {
           setAuthToken(results.token);
-          setUserRoles(results.claims.roles || []);
+          setUserRoles(
+            Array.isArray(results.claims.roles) ? results.claims.roles : []
+          );
           setUserClaims(results.claims);
         });
     });
@@ -96,7 +98,7 @@ export const AppProvider: React.FC = ({ children }) => {
   );
 
   // Store matching userDoc
-  const [userDoc, dispatchUserDoc] = useDoc({});
+  const [userDoc, dispatchUserDoc] = useDoc({}, { createIfMissing: true });
   // Get userDoc
   useEffect(() => {
     if (currentUser) {
@@ -108,12 +110,18 @@ export const AppProvider: React.FC = ({ children }) => {
 
   // Set userDoc if it doesn’t exist
   useEffect(() => {
-    if (!userDoc.doc && !userDoc.loading && userDoc.path && currentUser) {
+    if (
+      (!userDoc.doc || !userDoc.doc.user) &&
+      !userDoc.loading &&
+      userDoc.path &&
+      currentUser
+    ) {
       const userFields = ["email", "displayName", "photoURL", "phoneNumber"];
       const user = userFields.reduce((acc, curr) => {
         if (currentUser[curr]) return { ...acc, [curr]: currentUser[curr] };
         return acc;
       }, {});
+      console.log("create user", userDoc.path, user);
       db.doc(userDoc.path).set({ user }, { merge: true });
     }
   }, [userDoc, currentUser]);

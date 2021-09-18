@@ -8,6 +8,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
+import { SlideTransitionMui } from "components/Modal/SlideTransition";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -62,7 +63,12 @@ export default function Confirmation({
     <>
       {button}
 
-      <Dialog open={showDialog} onClose={handleClose}>
+      <Dialog
+        open={showDialog}
+        onClose={handleClose}
+        TransitionComponent={SlideTransitionMui}
+        maxWidth="xs"
+      >
         <DialogTitle>
           {(message && message.title) || "Are you sure?"}
         </DialogTitle>
@@ -98,7 +104,7 @@ export default function Confirmation({
           </DialogContent>
         )}
         <DialogActions>
-          <Button onClick={handleClose} color={message?.color || "primary"}>
+          <Button onClick={handleClose}>
             {(message && message.cancel) || "Cancel"}
           </Button>
           <Button

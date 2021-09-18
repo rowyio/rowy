@@ -27,9 +27,6 @@ const useStyles = makeStyles((theme) =>
     },
 
     tab: { minWidth: 0 },
-    divider: {
-      margin: "-1px calc(var(--dialog-spacing) * -1) 0",
-    },
 
     tabPanel: {
       marginTop: "var(--dialog-contents-spacing)",
@@ -121,7 +118,7 @@ export default function Export() {
                     value="Download"
                   />
                 </TabList>
-                <Divider className={classes.divider} />
+                <Divider style={{ marginTop: -1 }} />
               </>
             }
             ScrollableDialogContentProps={{
