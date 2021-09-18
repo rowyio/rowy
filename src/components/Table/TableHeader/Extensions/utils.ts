@@ -219,18 +219,18 @@ function sparkToExtensionObjects(
       .map((x) => x.trim().replace(/'/g, ""));
   };
   const oldSparks = sparkConfig.replace(/"/g, "'");
-  const sparkTypes = oldSparks
-    .match(/(?<=type:).*(?=,)/g)
-    ?.map((x) => x.trim().replace(/'/g, ""));
-  const triggers = oldSparks
-    .match(/(?<=triggers:).*(?=,)/g)
-    ?.map((x) => parseString2Array(x));
-  const shouldRun = oldSparks
-    .match(/(?<=shouldRun:).*(?=,)/g)
-    ?.map((x) => x.trim());
-  const requiredFields = oldSparks
-    .match(/(?<=requiredFields:).*(?=,)/g)
-    ?.map((x) => parseString2Array(x));
+  const sparkTypes = [...oldSparks.matchAll(/type:(.*),/g)].map((x) =>
+    x[1].trim().replace(/'/g, "")
+  );
+  const triggers = [...oldSparks.matchAll(/triggers:(.*),/g)].map((x) =>
+    parseString2Array(x[1])
+  );
+  const shouldRun = [...oldSparks.matchAll(/shouldRun:(.*),/g)].map((x) =>
+    x[1].trim()
+  );
+  const requiredFields = [...oldSparks.matchAll(/requiredFields:(.*),/g)].map(
+    (x) => parseString2Array(x[1])
+  );
   const splitSparks = oldSparks.split(`type:`);
   const sparks = sparkTypes?.map((x, index) => {
     const sparkBody = splitSparks[index + 1]
@@ -248,23 +248,21 @@ function sparkToExtensionObjects(
       sparkBody,
     };
   });
-  const extensionObjects = sparks?.map(
-    (spark, index): IExtension => {
-      return {
-        // rowy meta fields
-        name: `Migrated spark ${index}`,
-        active: true,
-        lastEditor: user,
+  const extensionObjects = sparks?.map((spark, index): IExtension => {
+    return {
+      // rowy meta fields
+      name: `Migrated spark ${index}`,
+      active: true,
+      lastEditor: user,
 
-        // ft build fields
-        triggers: (spark.triggers ?? []) as IExtensionTrigger[],
-        type: spark.type as IExtensionType,
-        requiredFields: spark.requiredFields ?? [],
-        extensionBody: spark.sparkBody,
-        conditions: spark.shouldRun ?? "",
-      };
-    }
-  );
+      // ft build fields
+      triggers: (spark.triggers ?? []) as IExtensionTrigger[],
+      type: spark.type as IExtensionType,
+      requiredFields: spark.requiredFields ?? [],
+      extensionBody: spark.sparkBody,
+      conditions: spark.shouldRun ?? "",
+    };
+  });
   return extensionObjects ?? [];
 }
 
