@@ -94,7 +94,9 @@ export const colorsLight = (
       MuiBackdrop: {
         styleOverrides: {
           root: {
-            backgroundColor: colord({ l: 5, c: 5, h }).alpha(0.2).toHslString(),
+            backgroundColor: colord({ l: 70, c: 5, h })
+              .alpha(0.6)
+              .toHslString(),
           },
           invisible: { backgroundColor: "transparent" },
         },
