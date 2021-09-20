@@ -130,6 +130,7 @@ export default function FieldSettings(props: IMenuModalProps) {
                     body: {
                       tablePath: tableState?.tablePath,
                       pathname: window.location.pathname,
+                      tableConfigPath: tableState?.config.tableConfig.path,
                     },
                     params: [],
                   });

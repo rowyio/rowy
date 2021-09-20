@@ -3,10 +3,8 @@ import useRouter from "hooks/useRouter";
 import useCollection from "hooks/useCollection";
 import { useProjectContext } from "contexts/ProjectContext";
 import useStateRef from "react-usestateref";
-import { db } from "../../../firebase";
 import { useSnackLogContext } from "contexts/SnackLogContext";
 import { isCollectionGroup } from "utils/fns";
-
 import _throttle from "lodash/throttle";
 import { format } from "date-fns";
 import moment from "moment";
@@ -390,42 +388,25 @@ function SnackLog({ log, onClose, onOpenPanel }) {
 export default function TableLogs() {
   const router = useRouter();
   const { tableState } = useProjectContext();
-
   const classes = useStyles();
   const [panalOpen, setPanelOpen] = useState(false);
-  const [buildURLConfigured, setBuildURLConfigured] = useState(true);
   const [tabIndex, setTabIndex] = React.useState(0);
   const snackLogContext = useSnackLogContext();
+  const functionConfigPath = tableState?.config.functionConfigPath;
+  console.log(functionConfigPath);
 
+  const [collectionState, collectionDispatch] = useCollection({});
   useEffect(() => {
-    checkBuildURL();
-  }, []);
-
-  const checkBuildURL = async () => {
-    const settingsDoc = await db.doc(SETTINGS).get();
-    const buildUrl = settingsDoc.get("buildUrl");
-    if (!buildUrl) {
-      setBuildURLConfigured(false);
+    if (functionConfigPath) {
+      const path = `${functionConfigPath}/buildLogs`;
+      console.log(path);
+      collectionDispatch({
+        path,
+        orderBy: [{ key: "startTimeStamp", direction: "desc" }],
+        limit: 30,
+      });
     }
-  };
-
-  const tableCollection = decodeURIComponent(router.match.params.id);
-  const buildStreamID =
-    (isCollectionGroup() ? TABLE_GROUP_SCHEMAS : TABLE_SCHEMAS) +
-    "/" +
-    tableCollection
-      .split("/")
-      .filter(function (_, i) {
-        // replace IDs with subTables that appears at even indexes
-        return i % 2 === 0;
-      })
-      .join("/subTables/");
-
-  const [collectionState] = useCollection({
-    path: `${buildStreamID}/buildLogs`,
-    orderBy: [{ key: "startTimeStamp", direction: "desc" }],
-    limit: 30,
-  });
+  }, [functionConfigPath]);
   const latestLog = collectionState?.documents?.[0];
   const latestStatus = latestLog?.status;
   const latestActiveLog =
@@ -491,31 +472,11 @@ export default function TableLogs() {
           }
           children={
             <>
-              {!latestStatus && buildURLConfigured && (
+              {!latestStatus && (
                 <EmptyState
                   message="No Logs Found"
                   description={
                     "When you start building, your logs should be shown here shortly"
-                  }
-                />
-              )}
-              {!latestStatus && !buildURLConfigured && (
-                <EmptyState
-                  message="Need Configuration"
-                  description={
-                    <>
-                      <Typography>
-                        Function builder is not currently setup.{" "}
-                      </Typography>
-                      <Button
-                        component={"a"}
-                        href={routes.projectSettings}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Go to Settings
-                      </Button>
-                    </>
                   }
                 />
               )}
