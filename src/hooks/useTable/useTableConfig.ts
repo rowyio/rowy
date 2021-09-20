@@ -27,7 +27,7 @@ const useTableConfig = (tablePath?: string) => {
   });
 
   useEffect(() => {
-    const { doc, columns, rowHeight } = tableConfigState;
+    const { doc, columns, rowHeight, functionConfigPath } = tableConfigState;
     // TODO: REMOVE THIS
     // Copy columns, rowHeight to tableConfigState
     if (doc && columns !== doc.columns) {
@@ -35,6 +35,9 @@ const useTableConfig = (tablePath?: string) => {
     }
     if (doc && rowHeight !== doc.rowHeight) {
       documentDispatch({ rowHeight: doc.rowHeight });
+    }
+    if (doc && functionConfigPath !== doc.functionConfigPath) {
+      documentDispatch({ functionConfigPath: doc.functionConfigPath });
     }
   }, [tableConfigState.doc]);
   /**  used for specifying the table in use

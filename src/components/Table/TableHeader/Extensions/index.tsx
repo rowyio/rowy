@@ -92,6 +92,7 @@ export default function ExtensionsEditor() {
           body: {
             tablePath: tableState?.tablePath,
             pathname: window.location.pathname,
+            tableConfigPath: tableState?.config.tableConfig.path,
           },
         });
       analytics.logEvent("deployed_extensions");

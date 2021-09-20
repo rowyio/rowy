@@ -1,6 +1,5 @@
 import useTableData from "./useTableData";
 import useTableConfig from "./useTableConfig";
-
 export type TableActions = {
   // TODO: Stricter types here
   column: {
@@ -31,6 +30,7 @@ export type TableState = {
     sparks: string;
     compiledExtension: string;
     extensionObjects?: any[];
+    functionConfigPath?: string;
   };
   columns: any[];
   rows: { [key: string]: any }[];
@@ -77,6 +77,7 @@ export default function useTable() {
       sparks: tableConfig.doc?.sparks,
       compiledExtension: tableConfig.doc?.compiledExtension,
       extensionObjects: tableConfig.doc?.extensionObjects,
+      functionConfigPath: tableConfig.doc?.functionConfigPath,
       tableConfig,
     },
     rows: tableState.rows,
