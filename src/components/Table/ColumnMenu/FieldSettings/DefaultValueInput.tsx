@@ -5,12 +5,7 @@ import { IMenuModalProps } from "..";
 import { makeStyles, createStyles } from "@mui/styles";
 import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import {
-  Typography,
-  TextField,
-  MenuItem,
-  ListItemText,
-} from "@mui/material";
+import { Typography, TextField, MenuItem, ListItemText } from "@mui/material";
 import Subheading from "../Subheading";
 
 import { getFieldProp } from "components/fields";
@@ -61,7 +56,6 @@ export default function DefaultValueInput({
         config.defaultValue?.value ?? getFieldProp("initialValue", _type),
     },
   });
-  console.log(config);
   return (
     <>
       <Subheading>Default Value</Subheading>

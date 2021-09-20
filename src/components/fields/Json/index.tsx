@@ -20,7 +20,7 @@ export const config: IFieldConfig = {
   name: "JSON",
   group: "Code",
   dataType: "any",
-  initialValue: {},
+  initialValue: undefined,
   initializable: true,
   icon: <JsonIcon />,
   description: "JSON object editable with a visual JSON editor.",
