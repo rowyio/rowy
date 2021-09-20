@@ -13,6 +13,7 @@ import {
   ButtonProps,
   Slide,
 } from "@mui/material";
+import LoadingButton, { LoadingButtonProps } from "@mui/lab/LoadingButton";
 import CloseIcon from "@mui/icons-material/Close";
 
 import { SlideTransitionMui } from "./SlideTransition";
@@ -32,7 +33,7 @@ export interface IModalProps extends Partial<Omit<DialogProps, "title">> {
   body?: ReactNode;
 
   actions?: {
-    primary?: Partial<ButtonProps>;
+    primary?: Partial<LoadingButtonProps>;
     secondary?: Partial<ButtonProps>;
   };
 
@@ -124,7 +125,11 @@ export default function Modal({
           {actions.secondary && <Button {...actions.secondary} />}
 
           {actions.primary && (
-            <Button variant="contained" color="primary" {...actions.primary} />
+            <LoadingButton
+              variant="contained"
+              color="primary"
+              {...actions.primary}
+            />
           )}
         </DialogActions>
       )}
