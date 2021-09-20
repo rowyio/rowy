@@ -7,8 +7,10 @@ import EmptyState from "components/EmptyState";
 
 import WIKI_LINKS from "constants/wikiLinks";
 import routes from "constants/routes";
+import { useAppContext } from "@src/contexts/AppContext";
 
 export default function AccessDenied() {
+  const { currentUser } = useAppContext();
   return (
     <EmptyState
       fullScreen
@@ -16,6 +18,9 @@ export default function AccessDenied() {
       message="Access Denied"
       description={
         <>
+          <Typography>
+            You are currently signed in as {currentUser?.email}
+          </Typography>
           <Typography>
             You do not have access to this project. Please contact the project
             owner.
