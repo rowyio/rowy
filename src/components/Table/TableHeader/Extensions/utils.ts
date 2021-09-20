@@ -188,18 +188,18 @@ function sparkToExtensionObjects(
       .map((x) => x.trim().replace(/'/g, ""));
   };
   const oldSparks = sparkConfig.replace(/"/g, "'");
-  const sparkTypes = oldSparks
-    .match(/(?<=type:).*(?=,)/g)
-    ?.map((x) => x.trim().replace(/'/g, ""));
-  const triggers = oldSparks
-    .match(/(?<=triggers:).*(?=,)/g)
-    ?.map((x) => parseString2Array(x));
-  const shouldRun = oldSparks
-    .match(/(?<=shouldRun:).*(?=,)/g)
-    ?.map((x) => x.trim());
-  const requiredFields = oldSparks
-    .match(/(?<=requiredFields:).*(?=,)/g)
-    ?.map((x) => parseString2Array(x));
+  const sparkTypes = [...oldSparks.matchAll(/type:(.*),/g)].map((x) =>
+    x[1].trim().replace(/'/g, "")
+  );
+  const triggers = [...oldSparks.matchAll(/triggers:(.*),/g)].map((x) =>
+    parseString2Array(x[1])
+  );
+  const shouldRun = [...oldSparks.matchAll(/shouldRun:(.*),/g)].map((x) =>
+    x[1].trim()
+  );
+  const requiredFields = [...oldSparks.matchAll(/requiredFields:(.*),/g)].map(
+    (x) => parseString2Array(x[1])
+  );
   const splitSparks = oldSparks.split(`type:`);
   const sparks = sparkTypes?.map((x, index) => {
     const sparkBody = splitSparks[index + 1]
