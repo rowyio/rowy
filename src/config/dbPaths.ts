@@ -1,8 +1,10 @@
-export const SETTINGS = "_rowy_/settings";
-export const PUBLIC_SETTINGS = "_rowy_/publicSettings";
+export const CONFIG = "_rowy_" as const;
 
-export const TABLE_SCHEMAS = SETTINGS + "/schema";
-export const TABLE_GROUP_SCHEMAS = SETTINGS + "/groupSchema";
+export const SETTINGS = `${CONFIG}/settings` as const;
+export const PUBLIC_SETTINGS = `${CONFIG}/publicSettings` as const;
 
-export const USER_MANAGEMENT = "_rowy_/userManagement";
-export const USERS = USER_MANAGEMENT + "/users";
+export const TABLE_SCHEMAS = `${SETTINGS}/schema` as const;
+export const TABLE_GROUP_SCHEMAS = `${SETTINGS}/groupSchema` as const;
+
+export const USER_MANAGEMENT = `${CONFIG}/userManagement` as const;
+export const USERS = `${USER_MANAGEMENT}/users` as const;

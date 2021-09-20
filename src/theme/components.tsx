@@ -42,13 +42,28 @@ export const components = (theme: Theme): ThemeOptions => {
     components: {
       MuiCssBaseline: {
         styleOverrides: {
-          code: {
+          // https://css-tricks.com/revisiting-prefers-reduced-motion-the-reduced-motion-media-query/
+          "@media screen and (prefers-reduced-motion: reduce), (update: slow)":
+            {
+              "*:not(.MuiCircularProgress-root *):not(.MuiLinearProgress-root *)":
+                {
+                  animationDuration: "0.001ms !important",
+                  animationIteratonCount: "1 !important",
+                  transitionDuration: "0.001ms !important",
+                  scrollBehavior: "auto !important",
+                },
+            },
+
+          "code, pre, pre.MuiTypography-root": {
             fontFamily: theme.typography.fontFamilyMono,
             letterSpacing: 0,
 
-            backgroundColor: theme.palette.action.selected,
+            backgroundColor: theme.palette.action.hover,
             borderRadius: theme.shape.borderRadius,
             padding: `${1 / 16}em ${4 / 16}em`,
+          },
+          "pre, pre.MuiTypography-root": {
+            padding: `${4 / 16}em ${8 / 16}em`,
           },
 
           ".chrome-picker": {
@@ -818,7 +833,7 @@ export const components = (theme: Theme): ThemeOptions => {
       MuiStepIcon: {
         styleOverrides: {
           root: {
-            color: theme.palette.action.selected,
+            color: theme.palette.action.hover,
             "&.Mui-completed:not(.Mui-active)": {
               color: theme.palette.text.disabled,
             },

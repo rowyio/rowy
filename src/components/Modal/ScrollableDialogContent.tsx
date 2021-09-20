@@ -40,7 +40,7 @@ export default function ScrollableDialogContent({
           style={{
             visibility: scrollInfo.y.percentage > 0 ? "visible" : "hidden",
           }}
-          sx={{ mb: "-1px", ...dividerSx, ...topDividerSx }}
+          sx={{ ...dividerSx, ...topDividerSx }}
         />
       )}
 
@@ -51,7 +51,7 @@ export default function ScrollableDialogContent({
           style={{
             visibility: scrollInfo.y.percentage < 1 ? "visible" : "hidden",
           }}
-          sx={{ mt: "-1px", ...dividerSx, ...bottomDividerSx }}
+          sx={{ ...dividerSx, ...bottomDividerSx }}
         />
       )}
     </>
