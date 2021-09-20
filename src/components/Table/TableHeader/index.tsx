@@ -43,7 +43,6 @@ export default function TableHeader() {
       spacing={1}
       sx={{
         pl: (theme) => `max(env(safe-area-inset-left), ${theme.spacing(2)})`,
-        pr: 2,
         pb: 1.5,
         height: TABLE_HEADER_HEIGHT,
         overflowX: "auto",
@@ -51,7 +50,8 @@ export default function TableHeader() {
         "& > *": { flexShrink: 0 },
 
         "& > .end-spacer": {
-          width: `env(safe-area-inset-right)`,
+          width: (theme) =>
+            `max(env(safe-area-inset-right), ${theme.spacing(2)})`,
           height: "100%",
           ml: 0,
         },
