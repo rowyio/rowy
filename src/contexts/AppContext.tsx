@@ -63,7 +63,7 @@ export const AppProvider: React.FC = ({ children }) => {
 
   const getAuthToken = async () => {
     // check if token is expired
-    if (currentUser) {
+    if (currentUser && authToken) {
       const token: any = jwt_decode(authToken);
       if (token && token.exp * 1000 < Date.now()) {
         // token is expired
