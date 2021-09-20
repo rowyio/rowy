@@ -8,7 +8,7 @@ export const useStyles = makeStyles((theme) =>
     open: {},
     disabled: {
       "& $paper": {
-        transform: `translateX(${DRAWER_WIDTH - DRAWER_COLLAPSED_WIDTH}px)`,
+        transform: `translateX(calc(100% - env(safe-area-inset-right) - ${DRAWER_COLLAPSED_WIDTH}px))`,
       },
       "& $fab": {
         transform: "scale(0)",
@@ -28,10 +28,10 @@ export const useStyles = makeStyles((theme) =>
       borderBottomLeftRadius: `${(theme.shape.borderRadius as number) * 3}px`,
 
       width: DRAWER_WIDTH,
+      maxWidth: `calc(100% - 28px - ${theme.spacing(1)})`,
       overflowX: "visible",
       overflowY: "visible",
 
-      paddingRight: "env(safe-area-inset-right)",
       boxSizing: "content-box",
 
       top: APP_BAR_HEIGHT + TABLE_HEADER_HEIGHT,
@@ -45,20 +45,20 @@ export const useStyles = makeStyles((theme) =>
       zIndex: theme.zIndex.drawer - 1,
     },
     paperClose: {
-      transform: `translateX(${DRAWER_WIDTH - DRAWER_COLLAPSED_WIDTH}px)`,
+      transform: `translateX(calc(100% - env(safe-area-inset-right) - ${DRAWER_COLLAPSED_WIDTH}px))`,
     },
 
     "@keyframes bumpPaper": {
       "0%": {
-        transform: `translateX(${DRAWER_WIDTH - DRAWER_COLLAPSED_WIDTH}px)`,
+        transform: `translateX(calc(100% - env(safe-area-inset-right) - ${DRAWER_COLLAPSED_WIDTH}px))`,
       },
       "50%": {
-        transform: `translateX(calc(${
-          DRAWER_WIDTH - DRAWER_COLLAPSED_WIDTH
-        }px - ${theme.spacing(4)}))`,
+        transform: `translateX(calc(100% - env(safe-area-inset-right) - ${DRAWER_COLLAPSED_WIDTH}px - ${theme.spacing(
+          4
+        )}))`,
       },
       "100%": {
-        transform: `translateX(${DRAWER_WIDTH - DRAWER_COLLAPSED_WIDTH}px)`,
+        transform: `translateX(calc(100% - env(safe-area-inset-right) - ${DRAWER_COLLAPSED_WIDTH}px))`,
       },
     },
     bumpPaper: {
@@ -114,6 +114,7 @@ export const useStyles = makeStyles((theme) =>
 
     drawerContents: {
       padding: theme.spacing(5),
+      paddingRight: `max(env(safe-area-inset-right), ${theme.spacing(5)})`,
       paddingBottom: `max(env(safe-area-inset-bottom), ${theme.spacing(5)})`,
       overflowY: "auto",
     },

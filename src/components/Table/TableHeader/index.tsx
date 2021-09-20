@@ -22,7 +22,7 @@ export const TABLE_HEADER_HEIGHT = 44;
 
 export default function TableHeader() {
   const { currentUser, userClaims } = useAppContext();
-  const { tableActions, tableState,  } = useProjectContext();
+  const { tableActions, tableState } = useProjectContext();
 
   const hasDerivatives =
     tableState &&
@@ -42,15 +42,19 @@ export default function TableHeader() {
       alignItems="center"
       spacing={1}
       sx={{
-        ml: "env(safe-area-inset-left)",
-        mr: "env(safe-area-inset-right)",
-        pl: 2,
+        pl: (theme) => `max(env(safe-area-inset-left), ${theme.spacing(2)})`,
         pr: 2,
         pb: 1.5,
         height: TABLE_HEADER_HEIGHT,
         overflowX: "auto",
         overflowY: "hidden",
         "& > *": { flexShrink: 0 },
+
+        "& > .end-spacer": {
+          width: `env(safe-area-inset-right)`,
+          height: "100%",
+          ml: 0,
+        },
       }}
     >
       {/*
@@ -128,6 +132,7 @@ export default function TableHeader() {
           <TableSettings />
         </>
       )}
+      <div className="end-spacer" />
     </Stack>
   );
 }

@@ -4,8 +4,6 @@ import queryString from "query-string";
 import _isEmpty from "lodash/isEmpty";
 import _find from "lodash/find";
 
-import { Hidden } from "@mui/material";
-
 import Navigation from "components/Navigation";
 import Breadcrumbs from "components/Navigation/Breadcrumbs";
 import Table from "components/Table";
@@ -84,9 +82,7 @@ export default function TablePage() {
         ) : (
           <>
             <Table key={currentTableId} />
-            <Hidden smDown>
-              <SideDrawer />
-            </Hidden>
+            <SideDrawer />
           </>
         )}
       </ActionParamsProvider>
