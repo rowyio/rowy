@@ -27,6 +27,7 @@ export interface User {
     email: string;
     photoURL: string;
   };
+  roles?: string[];
 }
 
 export default function UserManagementPage() {

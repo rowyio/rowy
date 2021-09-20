@@ -31,7 +31,7 @@ export default function TestView() {
   const [result, setResult] = useState<any>({});
 
   const [cachedBody, setCachedBody] = useBodyCacheState<any>();
-  const [method, setMethod] = useState<"GET" | "POST">("GET");
+  const [method, setMethod] = useState<"GET" | "POST" | "DELETE">("GET");
   const [path, setPath] = useState<string>("/");
   const cachedBodyKey = path.replace("/", "");
   const handleMethodChange = (_, newMethod) => setMethod(newMethod);

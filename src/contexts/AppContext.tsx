@@ -123,6 +123,15 @@ export const AppProvider: React.FC = ({ children }) => {
       db.doc(userDoc.path).set({ user }, { merge: true });
     }
   }, [userDoc, currentUser]);
+  // Sync userRoles
+  useEffect(() => {
+    if (
+      userDoc.path &&
+      userRoles.length > 0 &&
+      (!Array.isArray(userDoc.doc?.roles) || userDoc.doc.roles.length === 0)
+    )
+      db.doc(userDoc.path).update({ roles: userRoles });
+  }, [userDoc.path, userDoc.doc, userRoles]);
 
   // Infer theme based on system settings
   const prefersDarkTheme = useMediaQuery("(prefers-color-scheme: dark)", {

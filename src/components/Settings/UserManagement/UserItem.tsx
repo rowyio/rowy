@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { useSnackbar } from "notistack";
+
 import {
   ListItem,
   ListItemAvatar,
@@ -5,46 +8,118 @@ import {
   ListItemText,
   Tooltip,
   IconButton,
+  Typography,
 } from "@mui/material";
 import CopyIcon from "assets/icons/Copy";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 
 import MultiSelect from "@rowy/multiselect";
 import { User } from "pages/Settings/UserManagement";
+import { useProjectContext } from "@src/contexts/ProjectContext";
+import { runRoutes } from "constants/runRoutes";
+import { db } from "@src/firebase";
+import { USERS } from "config/dbPaths";
+import { useConfirmation } from "components/ConfirmationDialog";
 
 export default function UserItem({
   id,
   user: { displayName, email, photoURL },
+  roles: rolesProp,
 }: User) {
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { requestConfirmation } = useConfirmation();
+
+  const { roles: projectRoles, rowyRun } = useProjectContext();
+
+  const [value, setValue] = useState(Array.isArray(rolesProp) ? rolesProp : []);
+  const allRoles = new Set(["ADMIN", ...(projectRoles ?? []), ...value]);
+
+  const handleSave = async () => {
+    try {
+      if (JSON.stringify(value) === JSON.stringify(rolesProp)) return;
+
+      const loadingSnackbarId = enqueueSnackbar("Setting roles…");
+
+      const res = await rowyRun?.({
+        route: runRoutes.setUserRoles,
+        body: { email, roles: value },
+      });
+      if (res.success) {
+        await db.collection(USERS).doc(id).update({ roles: value });
+        closeSnackbar(loadingSnackbarId);
+        enqueueSnackbar(`Set roles for ${email}: ${value.join(", ")}`);
+      }
+    } catch (e: any) {
+      console.error(e);
+      enqueueSnackbar(`Failed to set roles for ${email}: ${e.message}`);
+    }
+  };
+
+  const listItemChildren = (
+    <>
+      <ListItemAvatar>
+        <Avatar src={photoURL}>SM</Avatar>
+      </ListItemAvatar>
+      <ListItemText
+        primary={displayName}
+        secondary={email}
+        sx={{
+          overflowX: "hidden",
+          "& > *": { userSelect: "all" },
+        }}
+        primaryTypographyProps={{ variant: "body1" }}
+      />
+    </>
+  );
+
+  const handleDelete = async () => {
+    requestConfirmation({
+      title: "Delete user?",
+      customBody: (
+        <>
+          <ListItem children={listItemChildren} disablePadding sx={{ mb: 3 }} />
+          You will delete the user in Firebase Authentication and the
+          corresponding user document in <code>{USERS}</code>.
+        </>
+      ),
+      confirm: "Delete",
+      confirmColor: "error",
+      handleConfirm: async () => {
+        const loadingSnackbarId = enqueueSnackbar("Deleting user…");
+        await rowyRun?.({ route: runRoutes.deleteUser, body: { email } });
+        closeSnackbar(loadingSnackbarId);
+        enqueueSnackbar(`Deleted user: ${email}`);
+      },
+    });
+  };
+
   return (
     <ListItem
-      children={
-        <>
-          <ListItemAvatar>
-            <Avatar src={photoURL}>SM</Avatar>
-          </ListItemAvatar>
-          <ListItemText
-            primary={displayName}
-            secondary={email}
-            sx={{
-              overflowX: "hidden",
-              "& > *": { userSelect: "all" },
-            }}
-            primaryTypographyProps={{ variant: "body1" }}
-          />
-        </>
-      }
+      children={listItemChildren}
       secondaryAction={
         <>
           <MultiSelect
             label="Roles"
-            value={["ADMIN"]}
-            options={["ADMIN"]}
-            onChange={console.log}
+            value={value}
+            options={Array.from(allRoles)}
+            onChange={setValue}
             freeText
             TextFieldProps={{
-              fullWidth: false,
+              SelectProps: {
+                renderValue: (_) => {
+                  if (Array.isArray(value)) {
+                    if (value.length === 1) return value[0];
+                    if (value.length > 1) return `${value.length} Roles`;
+                    return (
+                      <Typography variant="inherit" color="text.disabled">
+                        No Roles
+                      </Typography>
+                    );
+                  }
+                },
+              },
 
+              fullWidth: false,
               sx: {
                 mr: 0.5,
 
@@ -70,18 +145,26 @@ export default function UserItem({
                 },
               },
             }}
+            onClose={handleSave}
           />
 
           <Tooltip title="Copy UID">
             <IconButton
               aria-label="Copy UID"
-              onClick={() => navigator.clipboard.writeText(id)}
+              onClick={async () => {
+                await navigator.clipboard.writeText(id);
+                enqueueSnackbar(`Copied UID for ${email}: ${id}`);
+              }}
             >
               <CopyIcon />
             </IconButton>
           </Tooltip>
           <Tooltip title="Delete">
-            <IconButton aria-label="Delete" color="error">
+            <IconButton
+              aria-label="Delete"
+              color="error"
+              onClick={handleDelete}
+            >
               <DeleteIcon />
             </IconButton>
           </Tooltip>

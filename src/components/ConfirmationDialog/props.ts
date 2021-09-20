@@ -1,13 +1,14 @@
 export type confirmationProps =
   | {
       title?: string;
-      customBody?: string;
+      customBody?: React.ReactNode;
       body?: string;
       cancel?: string;
       confirm?: string | JSX.Element;
       confirmationCommand?: string;
       handleConfirm: () => void;
       open?: Boolean;
+      confirmColor?: string;
     }
   | undefined;
 export interface IConfirmation {

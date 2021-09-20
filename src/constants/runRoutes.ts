@@ -2,7 +2,7 @@ export const runRepoUrl = "https://github.com/rowyio/rowyRun";
 
 export type RunRoute = {
   path: string;
-  method: "POST" | "GET";
+  method: "POST" | "GET" | "DELETE";
 };
 
 type impersonateUserRequest = {
@@ -48,4 +48,7 @@ export const runRoutes = {
   buildFunction: { path: "/buildFunction", method: "POST" } as RunRoute,
   projectOwner: { path: "/projectOwner", method: "GET" } as RunRoute,
   setOwnerRoles: { path: "/setOwnerRoles", method: "GET" } as RunRoute,
+  inviteUser: { path: "/inviteUser", method: "POST" } as RunRoute,
+  setUserRoles: { path: "/setUserRoles", method: "POST" } as RunRoute,
+  deleteUser: { path: "/deleteUser", method: "DELETE" } as RunRoute,
 } as const;

@@ -20,6 +20,7 @@ export default function Confirmation({
   confirm,
   confirmationCommand,
   handleConfirm,
+  confirmColor,
   open,
   handleClose,
   maxWidth = "xs",
@@ -40,19 +41,16 @@ export default function Confirmation({
         {customBody}
         {body && <DialogContentText>{body}</DialogContentText>}
         {confirmationCommand && (
-          <div>
-            <DialogContentText>
-              Type {confirmationCommand} below to continue:
-            </DialogContentText>
-            <TextField
-              value={dryText}
-              onChange={(e) => setDryText(e.target.value)}
-              autoFocus
-              label={confirmationCommand}
-              placeholder={confirmationCommand}
-              fullWidth
-            />
-          </div>
+          <TextField
+            value={dryText}
+            onChange={(e) => setDryText(e.target.value)}
+            autoFocus
+            label={`Type ${confirmationCommand} below to continue:`}
+            placeholder={confirmationCommand}
+            fullWidth
+            id="dryText"
+            sx={{ mt: 3 }}
+          />
         )}
       </DialogContent>
 
@@ -63,7 +61,7 @@ export default function Confirmation({
             handleConfirm();
             handleClose();
           }}
-          color="primary"
+          color={confirmColor || "primary"}
           variant="contained"
           autoFocus
           disabled={
