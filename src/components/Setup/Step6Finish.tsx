@@ -17,7 +17,7 @@ export default function Step6Finish() {
 
   const handleRate = (e) => {
     setRating(e.target.value);
-    analytics.logEvent("rate_setup", { rating: e.target.value });
+    analytics.logEvent("setup_rating", { rating: e.target.value });
     enqueueSnackbar("Thanks for your feedback!");
   };
 

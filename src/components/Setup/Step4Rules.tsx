@@ -61,9 +61,7 @@ export default function Step4Rules({
     setNewRules(inserted);
   }, [currentRules, rules]);
 
-  const [rulesStatus, setRulesStatus] = useState<"IDLE" | "LOADING" | string>(
-    "IDLE"
-  );
+  const [rulesStatus, setRulesStatus] = useState<"LOADING" | string>("");
   const setRules = async () => {
     setRulesStatus("LOADING");
     try {

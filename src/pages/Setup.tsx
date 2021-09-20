@@ -41,6 +41,7 @@ import Step6Finish from "components/Setup/Step6Finish";
 import { name } from "@root/package.json";
 import routes from "constants/routes";
 import { useAppContext } from "contexts/AppContext";
+import { analytics } from "analytics";
 
 export interface ISetupStep {
   id: string;
@@ -239,7 +240,9 @@ export default function SetupPage() {
       nextIncompleteStepIndex++;
     }
 
-    setStepId(steps[nextIncompleteStepIndex].id);
+    const nextStepId = steps[nextIncompleteStepIndex].id;
+    analytics.logEvent("setup_step", { step: nextStepId });
+    setStepId(nextStepId);
   };
 
   return (
