@@ -34,10 +34,14 @@ import Step1RowyRun, { checkRowyRun } from "components/Setup/Step1RowyRun";
 import Step2ServiceAccount, { checkServiceAccount } from "components/Setup/Step2ServiceAccount";
 // prettier-ignore
 import Step3ProjectOwner, { checkProjectOwner } from "@src/components/Setup/Step3ProjectOwner";
+import Step4Rules, { checkRules } from "components/Setup/Step4Rules";
+import Step5Migrate, { checkMigrate } from "components/Setup/Step5Migrate";
+import Step6Finish from "components/Setup/Step6Finish";
 
 import { name } from "@root/package.json";
 import routes from "constants/routes";
 import { useAppContext } from "contexts/AppContext";
+import { analytics } from "analytics";
 
 export interface ISetupStep {
   id: string;
@@ -60,6 +64,7 @@ const checkAllSteps = async (
   rowyRunUrl: string,
   currentUser: firebase.default.User | null | undefined,
   userRoles: string[] | null,
+  authToken: string,
   signal: AbortSignal
 ) => {
   console.log("Check all steps");
@@ -69,23 +74,30 @@ const checkAllSteps = async (
   if (rowyRunValidation.isValidRowyRunUrl) {
     if (rowyRunValidation.isLatestVersion) completion.rowyRun = true;
 
-    const serviceAccount = await checkServiceAccount(rowyRunUrl, signal);
-    if (serviceAccount) completion.serviceAccount = true;
-
-    const projectOwner = await checkProjectOwner(
-      rowyRunUrl,
-      currentUser,
-      userRoles,
-      signal
-    );
-    if (projectOwner) completion.projectOwner = true;
+    const promises = [
+      checkServiceAccount(rowyRunUrl, signal).then((serviceAccount) => {
+        if (serviceAccount) completion.serviceAccount = true;
+      }),
+      checkProjectOwner(rowyRunUrl, currentUser, userRoles, signal).then(
+        (projectOwner) => {
+          if (projectOwner) completion.projectOwner = true;
+        }
+      ),
+      checkRules(rowyRunUrl, authToken, signal).then((rules) => {
+        if (rules) completion.rules = true;
+      }),
+      checkMigrate(rowyRunUrl, authToken, signal).then((requiresMigration) => {
+        if (requiresMigration) completion.migrate = false;
+      }),
+    ];
+    await Promise.all(promises);
   }
 
   return completion;
 };
 
 export default function SetupPage() {
-  const { currentUser, userRoles } = useAppContext();
+  const { currentUser, userRoles, getAuthToken } = useAppContext();
 
   const fullScreenHeight = use100vh() ?? 0;
   const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down("sm"));
@@ -110,16 +122,24 @@ export default function SetupPage() {
 
     if (rowyRunUrl) {
       setCheckingAllSteps(true);
-      checkAllSteps(rowyRunUrl, currentUser, userRoles, signal).then(
-        (result) => {
-          if (!signal.aborted) setCompletion((c) => ({ ...c, ...result }));
-          setCheckingAllSteps(false);
-        }
+      getAuthToken().then((authToken) =>
+        checkAllSteps(
+          rowyRunUrl,
+          currentUser,
+          userRoles,
+          authToken,
+          signal
+        ).then((result) => {
+          if (!signal.aborted) {
+            setCompletion((c) => ({ ...c, ...result }));
+            setCheckingAllSteps(false);
+          }
+        })
       );
     }
 
     return () => controller.abort();
-  }, [rowyRunUrl, currentUser, userRoles]);
+  }, [rowyRunUrl, currentUser, userRoles, getAuthToken]);
 
   const stepProps = { completion, setCompletion, checkAllSteps, rowyRunUrl };
 
@@ -176,14 +196,14 @@ export default function SetupPage() {
       id: "rules",
       shortTitle: `Rules`,
       title: `Set Up Firestore Rules`,
-      body: `x`,
+      body: <Step4Rules {...stepProps} />,
     },
     completion.migrate !== undefined
       ? {
           id: "migrate",
           shortTitle: `Migrate`,
           title: `Migrate to ${name} (optional)`,
-          body: `x`,
+          body: <Step5Migrate {...stepProps} />,
         }
       : ({} as ISetupStep),
     {
@@ -191,21 +211,17 @@ export default function SetupPage() {
       layout: "centered" as "centered",
       shortTitle: `Finish`,
       title: `You’re all set up!`,
-      body: (
-        <div>
-          You can now create a table from your Firestore collections or continue
-          to {name}
-        </div>
-      ),
+      body: <Step6Finish />,
       actions: (
-        <>
-          <Button variant="contained" color="primary">
-            Create Table
-          </Button>
-          <Button component={Link} to={routes.home} sx={{ ml: 1 }}>
-            Continue to {name}
-          </Button>
-        </>
+        <Button
+          variant="contained"
+          color="primary"
+          component={Link}
+          to={routes.home}
+          sx={{ ml: 1 }}
+        >
+          Continue to {name}
+        </Button>
       ),
     },
   ].filter((x) => x.id);
@@ -224,7 +240,9 @@ export default function SetupPage() {
       nextIncompleteStepIndex++;
     }
 
-    setStepId(steps[nextIncompleteStepIndex].id);
+    const nextStepId = steps[nextIncompleteStepIndex].id;
+    analytics.logEvent("setup_step", { step: nextStepId });
+    setStepId(nextStepId);
   };
 
   return (
@@ -239,7 +257,7 @@ export default function SetupPage() {
           backdropFilter: "blur(20px) saturate(150%)",
 
           maxWidth: 840,
-          width: "100%",
+          width: (theme) => `calc(100vw - ${theme.spacing(2)})`,
           maxHeight: (theme) =>
             `calc(${
               fullScreenHeight > 0 ? `${fullScreenHeight}px` : "100vh"
@@ -249,7 +267,7 @@ export default function SetupPage() {
           height: 840 * 0.75,
 
           p: 0,
-          "& > *": { px: { xs: 2, sm: 4 } },
+          "& > *, & > .MuiDialogContent-root": { px: { xs: 2, sm: 4 } },
           display: "flex",
           flexDirection: "column",
 
@@ -373,7 +391,10 @@ export default function SetupPage() {
 
             <SwitchTransition mode="out-in">
               <SlideTransition key={stepId} appear timeout={100}>
-                <ScrollableDialogContent disableTopDivider>
+                <ScrollableDialogContent
+                  disableTopDivider={step.layout === "centered"}
+                  sx={{ overflowX: "auto" }}
+                >
                   <Stack spacing={4}>{step.body}</Stack>
                 </ScrollableDialogContent>
               </SlideTransition>

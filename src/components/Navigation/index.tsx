@@ -19,6 +19,7 @@ import Loading from "components/Loading";
 
 import { name } from "@root/package.json";
 import { useAppContext } from "contexts/AppContext";
+import useDocumentTitle from "hooks/useDocumentTitle";
 
 export const APP_BAR_HEIGHT = 56;
 
@@ -38,11 +39,10 @@ export default function Navigation({
   titleTransitionProps,
 }: INavigationProps) {
   const { projectId } = useAppContext();
+  useDocumentTitle(projectId, title);
 
   const [open, setOpen] = useState(false);
   const trigger = useScrollTrigger({ disableHysteresis: true, threshold: 0 });
-
-  document.title = `${title} • ${projectId} • ${name}`;
 
   return (
     <>

@@ -10,10 +10,10 @@ import ErrorBoundary from "components/ErrorBoundary";
 
 import { projectId, auth, db } from "@src/firebase";
 import useDoc from "hooks/useDoc";
-import { name } from "@root/package.json";
 import { PUBLIC_SETTINGS, USERS } from "config/dbPaths";
 import { analytics } from "analytics";
 import themes from "theme";
+import useDocumentTitle from "hooks/useDocumentTitle";
 
 const useThemeState = createPersistedState("__ROWY__THEME");
 const useThemeOverriddenState = createPersistedState(
@@ -88,9 +88,7 @@ export const AppProvider: React.FC = ({ children }) => {
     });
   }, []);
 
-  useEffect(() => {
-    document.title = `${projectId} • ${name}`;
-  }, []);
+  useDocumentTitle(projectId);
 
   const [publicSettings] = useDoc(
     { path: PUBLIC_SETTINGS },

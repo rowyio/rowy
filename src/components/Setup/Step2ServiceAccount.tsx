@@ -160,6 +160,7 @@ export const checkServiceAccount = async (
     const res = await rowyRun({
       rowyRunUrl,
       route: runRoutes.serviceAccountAccess,
+      signal,
     });
     return Object.values(res).reduce(
       (acc, value) => acc && value,

@@ -20,6 +20,7 @@ export default function SetupItem({
       alignItems="flex-start"
       aria-busy={status === "loading"}
       aria-describedby={status === "loading" ? "progress" : undefined}
+      style={{ width: "100%" }}
     >
       {status === "complete" ? (
         <CheckIcon aria-label="Item complete" color="action" />
