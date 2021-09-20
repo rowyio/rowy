@@ -109,10 +109,10 @@ export default function UserItem({
                 renderValue: (_) => {
                   if (Array.isArray(value)) {
                     if (value.length === 1) return value[0];
-                    if (value.length > 1) return `${value.length} Roles`;
+                    if (value.length > 1) return `${value.length} roles`;
                     return (
                       <Typography variant="inherit" color="text.disabled">
-                        No Roles
+                        No roles
                       </Typography>
                     );
                   }
