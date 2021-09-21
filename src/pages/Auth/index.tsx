@@ -14,7 +14,7 @@ export default function AuthPage() {
   }
 
   return (
-    <AuthLayout>
+    <AuthLayout title="Sign In">
       <FirebaseUi uiConfig={uiConfig} />
     </AuthLayout>
   );

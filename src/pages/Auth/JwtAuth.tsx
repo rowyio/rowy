@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useSnackbar } from "notistack";
 
-import { TextField, Typography, Button } from "@mui/material";
+import { TextField, Button } from "@mui/material";
 
 import { auth } from "../../firebase";
 import AuthLayout from "components/Auth/AuthLayout";
@@ -27,11 +27,7 @@ export default function JwtAuthPage() {
   };
 
   return (
-    <AuthLayout loading={loading}>
-      <Typography variant="h6" component="h1">
-        Test Authentication
-      </Typography>
-
+    <AuthLayout loading={loading} title="Test Authentication">
       <TextField
         name="JWT"
         label="JWT"

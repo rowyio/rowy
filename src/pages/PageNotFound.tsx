@@ -18,20 +18,15 @@ export default function PageNotFound() {
 
   if (!currentUser)
     return (
-      <AuthLayout>
-        <EmptyState
-          message="Page Not Found"
-          description={
-            <Button
-              variant="outlined"
-              sx={{ mt: 3 }}
-              href={homepage}
-              endIcon={<GoIcon style={{ margin: "0 -0.33em" }} />}
-            >
-              {homepage.split("//")[1].replace(/\//g, "")}
-            </Button>
-          }
-        />
+      <AuthLayout title="Page Not Found">
+        <Button
+          variant="outlined"
+          sx={{ mt: 3 }}
+          href={homepage}
+          endIcon={<GoIcon style={{ margin: "0 -0.33em" }} />}
+        >
+          {homepage.split("//")[1].replace(/\//g, "")}
+        </Button>
       </AuthLayout>
     );
 

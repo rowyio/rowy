@@ -17,6 +17,9 @@ const useStyles = makeStyles((theme) =>
   createStyles({
     "@global": {
       ".rowy-firebaseui": {
+        width: "100%",
+        minHeight: 48,
+
         "& .firebaseui-container": {
           backgroundColor: "transparent",
           color: theme.palette.text.primary,
@@ -89,8 +92,12 @@ const useStyles = makeStyles((theme) =>
           maxWidth: "none",
           minHeight: 48,
         },
+        "& .firebaseui-idp-icon": {
+          display: "block",
+        },
         "& .firebaseui-idp-text": {
           ...theme.typography.button,
+          fontSize: "1rem",
 
           paddingLeft: theme.spacing(2),
           paddingRight: Number(theme.spacing(2).replace("px", "")) + 18,
@@ -98,10 +105,10 @@ const useStyles = makeStyles((theme) =>
           width: "100%",
           textAlign: "center",
 
-          [theme.breakpoints.down("sm")]: {
-            "&.firebaseui-idp-text-long": { display: "none" },
-            "&.firebaseui-idp-text-short": { display: "table-cell" },
-          },
+          // [theme.breakpoints.down("sm")]: {
+          "&.firebaseui-idp-text-long": { display: "none" },
+          "&.firebaseui-idp-text-short": { display: "table-cell" },
+          // },
         },
 
         "& .firebaseui-idp-google": {
@@ -166,15 +173,15 @@ const useStyles = makeStyles((theme) =>
     },
 
     signInText: {
-      display: "none",
-      [theme.breakpoints.down("sm")]: { display: "block" },
-
+      fontSize: "1rem",
+      display: "block",
       textAlign: "center",
-      color: theme.palette.text.primary,
-      margin: theme.spacing(3, 0, -3),
+      color: theme.palette.text.secondary,
+      margin: theme.spacing(-1, 0, -2.5),
     },
 
     skeleton: {
+      width: "100%",
       marginBottom: "calc(var(--spacing-contents) * -1)",
 
       "& > *": {
@@ -212,13 +219,15 @@ export default function FirebaseUi(props: Partial<FirebaseUiProps>) {
 
   if (!signInOptions)
     return (
-      <div
-        id="rowy-firebaseui-skeleton"
-        className={classes.skeleton}
-        style={{ marginBottom: 0 }}
-      >
-        <Skeleton variant="rectangular" />
-      </div>
+      <>
+        <Typography variant="button" className={classes.signInText}>
+          Continue with
+        </Typography>
+
+        <div id="rowy-firebaseui-skeleton" className={classes.skeleton}>
+          <Skeleton variant="rectangular" />
+        </div>
+      </>
     );
 
   const uiConfig: firebaseui.auth.Config = {
@@ -237,7 +246,7 @@ export default function FirebaseUi(props: Partial<FirebaseUiProps>) {
   return (
     <>
       <Typography variant="button" className={classes.signInText}>
-        Sign in with
+        Continue with
       </Typography>
 
       <div id="rowy-firebaseui-skeleton" className={classes.skeleton}>

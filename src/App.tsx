@@ -22,6 +22,7 @@ import routes from "constants/routes";
 
 import AuthPage from "pages/Auth";
 import SignOutPage from "pages/Auth/SignOut";
+import SignUpPage from "pages/Auth/SignUp";
 import TestPage from "pages/Test";
 import RowyRunTestPage from "pages/RowyRunTest";
 import PageNotFound from "pages/PageNotFound";
@@ -82,6 +83,11 @@ export default function App() {
                           exact
                           path={routes.signOut}
                           render={() => <SignOutPage />}
+                        />
+                        <Route
+                          exact
+                          path={routes.signUp}
+                          render={() => <SignUpPage />}
                         />
                         <Route
                           exact

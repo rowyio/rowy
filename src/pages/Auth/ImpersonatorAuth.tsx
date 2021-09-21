@@ -43,21 +43,27 @@ export default function ImpersonatorAuthPage() {
   };
 
   return (
-    <AuthLayout loading={loading}>
-      <div>
-        <Typography variant="h6" component="h1" gutterBottom>
-          Admin Authentication
-        </Typography>
-        <Typography gutterBottom>
-          Using an admin account, sign in as another user on this project to
-          test permissions and access controls.
-        </Typography>
-        <Typography>
-          Make sure the {name} Run service account has the{" "}
-          <b>Service Account Token Creator</b> IAM role.
-        </Typography>
-      </div>
-
+    <AuthLayout
+      loading={loading}
+      title="Admin Auth"
+      description={
+        <>
+          <Typography
+            variant="inherit"
+            component="span"
+            display="block"
+            gutterBottom
+          >
+            Using an admin account, sign in as another user on this project to
+            test permissions and access controls.
+          </Typography>
+          <Typography variant="inherit" component="span">
+            Make sure the {name} Run service account has the{" "}
+            <b>Service Account Token Creator</b> IAM role.
+          </Typography>
+        </>
+      }
+    >
       {adminUser === undefined ? (
         <FirebaseUi
           uiConfig={{

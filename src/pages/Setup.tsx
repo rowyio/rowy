@@ -246,7 +246,7 @@ export default function SetupPage() {
   };
 
   return (
-    <>
+    <div className="wrapper">
       <BrandedBackground />
       <Paper
         component="main"
@@ -428,6 +428,6 @@ export default function SetupPage() {
           </DialogActions>
         </form>
       </Paper>
-    </>
+    </div>
   );
 }

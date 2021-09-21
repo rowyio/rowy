@@ -55,12 +55,18 @@ export default function BrandedBackground() {
               ].join(", ")
             };
           }
-          
+
           #root {
+            cursor: default;
+          }
+          
+          .wrapper {
             display: grid;
             place-items: center;
+            align-content: center;
+            gap: ${theme.spacing(3)};
+            grid-auto-rows: max-content;
 
-            cursor: default;
             ${["top", "right", "bottom", "left"]
               .map(
                 (side) =>
