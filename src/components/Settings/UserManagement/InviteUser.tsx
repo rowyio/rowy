@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import MultiSelect from "@rowy/multiselect";
+import { useSnackbar } from "notistack";
 
 import {
   Button,
@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/PersonAddOutlined";
 
+import MultiSelect from "@rowy/multiselect";
 import Modal from "components/Modal";
 
 import { useProjectContext } from "contexts/ProjectContext";
@@ -19,6 +20,7 @@ import { runRoutes } from "constants/runRoutes";
 
 export default function InviteUser() {
   const { roles: projectRoles, rowyRun } = useProjectContext();
+  const { enqueueSnackbar } = useSnackbar();
 
   const [open, setOpen] = useState(false);
   const [status, setStatus] = useState<"LOADING" | string>("");
@@ -34,6 +36,9 @@ export default function InviteUser() {
         body: { email, roles },
       });
       if (!res.success) throw new Error(res.message);
+      setStatus("");
+      setOpen(false);
+      enqueueSnackbar(`Sent invite to: ${email}`);
     } catch (e: any) {
       console.error(e);
       setStatus("Failed to invite user: " + e.message);
@@ -81,6 +86,7 @@ export default function InviteUser() {
                 onChange={(e) => setEmail(e.target.value)}
                 fullWidth
                 placeholder="name@example.com"
+                sx={{ mt: 3 }}
               />
 
               <MultiSelect
@@ -103,6 +109,7 @@ export default function InviteUser() {
                       }
                     },
                   },
+                  sx: { mt: 3 },
                 }}
               />
             </>
