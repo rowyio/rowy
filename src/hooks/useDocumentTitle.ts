@@ -3,7 +3,6 @@ import { name } from "@root/package.json";
 
 export default function useDocumentTitle(projectId: string, title?: string) {
   useEffect(() => {
-    console.log("set document title", projectId);
     document.title = [
       title,
       projectId,
