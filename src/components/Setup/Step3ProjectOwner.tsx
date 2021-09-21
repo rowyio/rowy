@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { ISetupStepBodyProps } from "pages/Setup";
 
-import { Typography, Button } from "@mui/material";
+import { Typography, Stack, Button } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
@@ -29,6 +29,9 @@ export default function Step3ProjectOwner({
       });
   }, [rowyRunUrl]);
 
+  const [isDomainAuthorized, setIsDomainAuthorized] = useState(
+    !!currentUser || completion.projectOwner
+  );
   const isSignedIn = currentUser?.email === email;
   const [hasRoles, setHasRoles] = useState<boolean | "LOADING" | string>(
     completion.projectOwner
@@ -65,14 +68,14 @@ export default function Step3ProjectOwner({
       </Typography>
 
       <SetupItem
-        status={isSignedIn ? "complete" : "incomplete"}
+        status={isSignedIn || isDomainAuthorized ? "complete" : "incomplete"}
         title={
-          isSignedIn
+          isSignedIn || isDomainAuthorized
             ? "Firebase Authentication is set up."
             : "Check that Firebase Authentication is set up with:"
         }
       >
-        {!isSignedIn && (
+        {!(isSignedIn || isDomainAuthorized) && (
           <>
             <ol>
               <li>the Google auth provider enabled and</li>
@@ -82,39 +85,51 @@ export default function Step3ProjectOwner({
               </li>
             </ol>
 
-            <Button
-              href={`https://console.firebase.google.com/project/${
-                projectId || "_"
-              }/authentication/providers`}
-              target="_blank"
-              rel="noopener noreferrer"
-              endIcon={<OpenInNewIcon />}
-            >
-              Set Up in Firebase Console
-            </Button>
+            <Stack spacing={1} direction="row">
+              <Button
+                href={`https://console.firebase.google.com/project/${
+                  projectId || "_"
+                }/authentication/providers`}
+                target="_blank"
+                rel="noopener noreferrer"
+                endIcon={<OpenInNewIcon />}
+              >
+                Set Up in Firebase Console
+              </Button>
+
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => setIsDomainAuthorized(true)}
+              >
+                Done
+              </Button>
+            </Stack>
           </>
         )}
       </SetupItem>
 
-      <SetupItem
-        status={isSignedIn ? "complete" : "incomplete"}
-        title={
-          isSignedIn ? (
-            `You’re signed in as the project owner.`
-          ) : (
-            <>
-              Sign in as the project owner: <b>{email}</b>
-            </>
-          )
-        }
-      >
-        {!isSignedIn && (
-          <SignInWithGoogle
-            matchEmail={email}
-            loading={!email ? true : undefined}
-          />
-        )}
-      </SetupItem>
+      {isDomainAuthorized && (
+        <SetupItem
+          status={isSignedIn ? "complete" : "incomplete"}
+          title={
+            isSignedIn ? (
+              `You’re signed in as the project owner.`
+            ) : (
+              <>
+                Sign in as the project owner: <b>{email}</b>
+              </>
+            )
+          }
+        >
+          {!isSignedIn && (
+            <SignInWithGoogle
+              matchEmail={email}
+              loading={!email ? true : undefined}
+            />
+          )}
+        </SetupItem>
+      )}
 
       {isSignedIn && (
         <SetupItem
