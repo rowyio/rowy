@@ -12,7 +12,6 @@ import {
 import AddIcon from "@mui/icons-material/PersonAddOutlined";
 
 import Modal from "components/Modal";
-import Logo from "assets/Logo";
 
 import { useProjectContext } from "contexts/ProjectContext";
 import routes from "constants/routes";
@@ -61,13 +60,10 @@ export default function InviteUser() {
           maxWidth="xs"
           body={
             <>
-              <Logo style={{ marginBottom: "8px", display: "block" }} />
-
               <DialogContentText paragraph>
-                Send an email using Rowy Service to this user, inviting them to
-                join your project.
+                Invite a user to join your project via email.
               </DialogContentText>
-              <DialogContentText paragraph>
+              <DialogContentText>
                 They can sign up with any of the sign-in options{" "}
                 <MuiLink
                   component={Link}
@@ -85,7 +81,6 @@ export default function InviteUser() {
                 onChange={(e) => setEmail(e.target.value)}
                 fullWidth
                 placeholder="name@example.com"
-                sx={{ mb: 3 }}
               />
 
               <MultiSelect
