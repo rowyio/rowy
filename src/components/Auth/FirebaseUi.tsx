@@ -13,10 +13,6 @@ import { auth, db } from "@src/firebase";
 import { defaultUiConfig, getSignInOptions } from "@src/firebase/firebaseui";
 import { PUBLIC_SETTINGS } from "config/dbPaths";
 
-import { colord, extend } from "colord";
-import mixPlugin from "colord/plugins/mix";
-extend([mixPlugin]);
-
 const useStyles = makeStyles((theme) =>
   createStyles({
     "@global": {
@@ -272,12 +268,6 @@ export default function FirebaseUi(props: Partial<FirebaseUiProps>) {
       <Typography variant="button" className={classes.signInText}>
         Continue with
       </Typography>
-
-      <div id="rowy-firebaseui-skeleton" className={classes.skeleton}>
-        {Object.keys(signInOptions).map((_, i) => (
-          <Skeleton key={i} variant="rectangular" />
-        ))}
-      </div>
 
       <StyledFirebaseAuth
         {...props}
