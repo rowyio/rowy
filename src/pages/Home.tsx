@@ -136,6 +136,11 @@ export default function HomePage() {
         <>
           <HomeWelcomePrompt />
           {createTableFab}
+          <TableSettingsDialog
+            clearDialog={clearDialog}
+            mode={settingsDialogState.mode}
+            data={settingsDialogState.data}
+          />
         </>
       );
 
