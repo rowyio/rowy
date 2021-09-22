@@ -11,23 +11,20 @@ import { useProjectContext } from "contexts/ProjectContext";
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
-      margin: theme.spacing(0, -1.5),
-      width: `calc(100% + ${theme.spacing(1.5 * 2)})`,
+      width: "100%",
       height: "100%",
-
-      backgroundColor: theme.palette.background.paper,
+      backgroundColor: "var(--background-color)",
     },
 
     inputBase: {
-      padding: theme.spacing(0, 1.5),
       height: "100%",
-      font: "inherit",
+      font: "inherit", // Prevent text jumping
       letterSpacing: "inherit", // Prevent text jumping
     },
     input: {
-      paddingBottom: theme.spacing(0.75), // Align baselines
+      font: "inherit", // Prevent text jumping
       letterSpacing: "inherit", // Prevent text jumping
-      height: "100%", // Stop text clipping
+      padding: "var(--cell-padding)",
     },
   })
 );
