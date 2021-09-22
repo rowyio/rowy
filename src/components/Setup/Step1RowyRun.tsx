@@ -92,7 +92,7 @@ export default function Step1RowyRun({
   return (
     <>
       <Typography variant="inherit">
-        {name} Run is a Google Cloud Run instance that provides back-end
+        {name} Run is a Google Cloud Run instance that provides backend
         functionality, such as table action scripts, user management, and easy
         Cloud Function deployment.
       </Typography>

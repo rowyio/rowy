@@ -19,7 +19,7 @@ export default function Step0Welcome({
           Get up and running in around 5 minutes.
         </Typography>
         <Typography variant="body1" paragraph>
-          You’ll easily set up back-end functionality, Firestore Rules, and user
+          You’ll easily set up backend functionality, Firestore Rules, and user
           management.
         </Typography>
         <Typography variant="body1">

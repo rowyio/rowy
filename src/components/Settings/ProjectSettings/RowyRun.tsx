@@ -164,7 +164,7 @@ export default function RowyRun({
   return (
     <>
       <Typography>
-        {name} Run is a Cloud Run instance that provides back-end functionality,
+        {name} Run is a Cloud Run instance that provides backend functionality,
         such as table action scripts, user management, and easy Cloud Function
         deployment.{" "}
         <Link
