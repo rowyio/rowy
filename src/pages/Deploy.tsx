@@ -64,8 +64,8 @@ export default function DeployPage() {
               src="https://deploy.cloud.run/button.svg"
               alt="Run on Google Cloud"
               style={{ display: "block" }}
-              width={286}
-              height={50}
+              width={183}
+              height={32}
             />
           </a>
 

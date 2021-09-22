@@ -13,12 +13,16 @@ import { auth, db } from "@src/firebase";
 import { defaultUiConfig, getSignInOptions } from "@src/firebase/firebaseui";
 import { PUBLIC_SETTINGS } from "config/dbPaths";
 
+import { colord, extend } from "colord";
+import mixPlugin from "colord/plugins/mix";
+extend([mixPlugin]);
+
 const useStyles = makeStyles((theme) =>
   createStyles({
     "@global": {
       ".rowy-firebaseui": {
         width: "100%",
-        minHeight: 48,
+        minHeight: 32,
 
         "& .firebaseui-container": {
           backgroundColor: "transparent",
@@ -56,11 +60,11 @@ const useStyles = makeStyles((theme) =>
             margin: 0,
           },
         "& .firebaseui-list-item + .firebaseui-list-item": {
-          paddingTop: theme.spacing(2),
+          paddingTop: theme.spacing(1),
         },
 
         "& .mdl-button": {
-          borderRadius: (theme.shape.borderRadius as number) * (48 / 32),
+          borderRadius: theme.shape.borderRadius,
           ...theme.typography.button,
         },
         "& .mdl-button--raised": {
@@ -88,16 +92,35 @@ const useStyles = makeStyles((theme) =>
           },
         },
 
-        "& .firebaseui-idp-button, & .firebaseui-tenant-button": {
-          maxWidth: "none",
-          minHeight: 48,
-        },
+        "& .firebaseui-idp-button.mdl-button--raised, & .firebaseui-tenant-button.mdl-button--raised":
+          {
+            maxWidth: "none",
+            minHeight: 32,
+            padding: theme.spacing(0.5, 1.5),
+
+            backgroundColor: theme.palette.action.input + " !important",
+            "&:hover": {
+              backgroundColor: theme.palette.action.hover + " !important",
+            },
+            "&:active, &:focus": {
+              backgroundColor:
+                theme.palette.action.disabledBackground + " !important",
+            },
+
+            "&, &:hover, &.Mui-disabled": { border: "none" },
+            "&, &:hover, &:active, &:focus": {
+              boxShadow: `0 0 0 1px ${theme.palette.action.inputOutline} inset,
+               0 ${theme.palette.mode === "dark" ? "" : "-"}1px 0 0 ${
+                theme.palette.action.inputOutline
+              } inset`,
+            },
+          },
         "& .firebaseui-idp-icon": {
           display: "block",
         },
         "& .firebaseui-idp-text": {
           ...theme.typography.button,
-          fontSize: "1rem",
+          color: theme.palette.text.primary,
 
           paddingLeft: theme.spacing(2),
           paddingRight: Number(theme.spacing(2).replace("px", "")) + 18,
@@ -105,35 +128,37 @@ const useStyles = makeStyles((theme) =>
           width: "100%",
           textAlign: "center",
 
-          // [theme.breakpoints.down("sm")]: {
           "&.firebaseui-idp-text-long": { display: "none" },
           "&.firebaseui-idp-text-short": { display: "table-cell" },
-          // },
         },
 
-        "& .firebaseui-idp-google": {
-          "& .firebaseui-idp-icon-wrapper::before": {
-            content: "''",
-            display: "block",
-            position: "absolute",
-            top: 2,
-            left: 2,
-            width: 48 - 4,
-            height: 48 - 4,
-            zIndex: 0,
-
-            backgroundColor: "#fff",
-            borderRadius: theme.shape.borderRadius,
-          },
-          "& .firebaseui-idp-icon-wrapper img": {
-            position: "relative",
-            left: -1,
-          },
-
-          "&>.firebaseui-idp-text": {
-            color: "#fff",
-          },
+        "& .firebaseui-idp-google > .firebaseui-idp-text": {
+          color: theme.palette.text.primary,
         },
+        "& .firebaseui-idp-github .firebaseui-idp-icon, & [data-provider-id='apple.com'] .firebaseui-idp-icon":
+          {
+            filter: theme.palette.mode === "dark" ? "invert(1)" : "",
+          },
+        "& [data-provider-id='microsoft.com'] .firebaseui-idp-icon": {
+          width: 21,
+          height: 21,
+          position: "relative",
+          left: -1,
+          top: -1,
+        },
+        "& [data-provider-id='yahoo.com'] > .firebaseui-idp-icon-wrapper > .firebaseui-idp-icon":
+          {
+            width: 18,
+            height: 18,
+            filter:
+              theme.palette.mode === "dark"
+                ? "invert(1) saturate(0) brightness(1.5)"
+                : "",
+          },
+        "& .firebaseui-idp-password .firebaseui-idp-icon, & .firebaseui-idp-phone .firebaseui-idp-icon, & .firebaseui-idp-anonymous .firebaseui-idp-icon":
+          {
+            filter: theme.palette.mode === "light" ? "invert(1)" : "",
+          },
 
         "& .firebaseui-card-header": { padding: 0 },
         "& .firebaseui-card-actions": { padding: 0 },
@@ -173,11 +198,10 @@ const useStyles = makeStyles((theme) =>
     },
 
     signInText: {
-      fontSize: "1rem",
       display: "block",
       textAlign: "center",
       color: theme.palette.text.secondary,
-      margin: theme.spacing(-1, 0, -2.5),
+      margin: theme.spacing(-1, 0, -3),
     },
 
     skeleton: {
@@ -186,12 +210,12 @@ const useStyles = makeStyles((theme) =>
 
       "& > *": {
         width: "100%",
-        height: 48,
-        borderRadius: (theme.shape.borderRadius as number) * (48 / 32),
+        height: 32,
+        borderRadius: theme.shape.borderRadius,
       },
 
       "& > * + *": {
-        marginTop: theme.spacing(2),
+        marginTop: theme.spacing(1),
       },
     },
   })

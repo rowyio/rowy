@@ -124,7 +124,6 @@ export default function AuthLayout({
         <Typography
           variant="caption"
           color="text.secondary"
-          textAlign="center"
           sx={{ pt: 1, display: hideProject ? "none" : "block" }}
         >
           Project: <span style={{ userSelect: "all" }}>{projectId}</span>
