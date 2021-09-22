@@ -1,4 +1,4 @@
-import { ReactNode, Suspense, useEffect } from "react";
+import { ReactNode, Suspense } from "react";
 import createPersistedState from "use-persisted-state";
 
 import {
@@ -51,12 +51,6 @@ export default function Navigation({
   const trigger = useScrollTrigger({ disableHysteresis: true, threshold: 0 });
 
   const canPin = !useMediaQuery((theme: any) => theme.breakpoints.down("lg"));
-  useEffect(() => {
-    if (!canPin && pinned) {
-      setPinned(false);
-      setOpen(false);
-    }
-  }, [canPin, pinned, setPinned, setOpen]);
 
   return (
     <>
@@ -110,7 +104,7 @@ export default function Navigation({
             },
           }}
         >
-          {!(open && pinned) && (
+          {!(open && canPin && pinned) && (
             <Grow in>
               <IconButton
                 aria-label="Open navigation drawer"
@@ -129,11 +123,11 @@ export default function Navigation({
                 flex: 1,
                 overflowX: "auto",
                 userSelect: "none",
-                pl: open && pinned ? 48 / 8 : 0,
+                pl: open && canPin && pinned ? 48 / 8 : 0,
               }}
             >
               {titleComponent ? (
-                titleComponent(open, pinned)
+                titleComponent(open, canPin && pinned)
               ) : (
                 <Typography
                   variant="h6"
@@ -155,7 +149,7 @@ export default function Navigation({
       <Stack direction="row">
         <NavDrawer
           open={open}
-          pinned={pinned}
+          pinned={canPin && pinned}
           setPinned={setPinned}
           canPin={canPin}
           onClose={() => setOpen(false)}
