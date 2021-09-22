@@ -15,47 +15,34 @@ export default function BrandedBackground() {
       <style type="text/css">
         {`
           body {
-            background-blend-mode: ${
-              // prettier-ignore
-              [
-                "normal",
-                "normal",
-                "normal",
-
-                "overlay",
-
-                "normal",
-                "normal",
-              ].join(", ")
-            };
-            background-size: ${
-              // prettier-ignore
-              [
-                "100%",
-                "100%",
-                "100%",
-
-                `${480 * 10 / 14}px`,
-
-                "100%",
-                "100%",
-              ].join(", ")
-            };
+            background-size: 100%;
             background-image: ${
               // prettier-ignore
               [
                 `radial-gradient(circle   at  85% 100%, ${theme.palette.background.paper} 20%, ${alpha(theme.palette.background.paper, 0)})`,
                 `radial-gradient(80%  80% at  15% 100%, ${alpha("#FA0", 0.1)} 25%, ${alpha("#F0A", 0.1)} 50%, ${alpha("#F0A", 0)} 100%)`,
                 `linear-gradient(to top, ${alpha(theme.palette.background.paper, 1)}, ${alpha(theme.palette.background.paper, 0)})`,
-
-                `url('${theme.palette.mode==="dark" ? bgPatternDark : bgPattern}')`,
-
                 `radial-gradient(60% 180% at 100%  15%, ${alpha("#0FA", 0.3)} 25%, ${alpha("#0AF", 0.2)} 50%, ${alpha("#0AF", 0)} 100%)`,
                 `linear-gradient(${alpha(theme.palette.primary.main, 0.2)}, ${alpha(theme.palette.primary.main, 0.2)})`,
               ].join(", ")
             };
           }
-          `}
+          body::before {
+            content: "";
+            display: block;
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+
+            background-image: url('${
+              theme.palette.mode === "dark" ? bgPatternDark : bgPattern
+            }');
+            background-size: ${(480 * 10) / 14}px;
+            mix-blend-mode: overlay;
+          }
+        `}
       </style>
     </Helmet>
   );
