@@ -139,13 +139,15 @@ export default function App() {
                                   render={() => (
                                     <Navigation
                                       title="Home"
-                                      titleComponent={
-                                        <Logo
-                                          style={{
-                                            display: "block",
-                                            margin: "0 auto",
-                                          }}
-                                        />
+                                      titleComponent={(open, pinned) =>
+                                        !(open && pinned) && (
+                                          <Logo
+                                            style={{
+                                              display: "block",
+                                              margin: "0 auto",
+                                            }}
+                                          />
+                                        )
                                       }
                                     >
                                       <HomePage />

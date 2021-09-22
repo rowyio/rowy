@@ -70,7 +70,9 @@ export default function TestView() {
 
   return (
     <Navigation title="Theme Test">
-      <Container style={{ margin: "24px 0 200px", overflowX: "auto" }}>
+      <Container
+        style={{ margin: "24px 0 200px", overflowX: "auto", width: "100%" }}
+      >
         <Stack spacing={8}>
           <Table stickyHeader>
             <TableHead>

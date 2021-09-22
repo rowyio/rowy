@@ -67,7 +67,9 @@ export default function TablePage() {
   return (
     <Navigation
       title={tableName}
-      titleComponent={<Breadcrumbs />}
+      titleComponent={(open, pinned) => (
+        <Breadcrumbs sx={{ ml: open && pinned ? -48 / 8 : 2 }} />
+      )}
       currentSection={currentSection}
       titleTransitionProps={{ style: { transformOrigin: "0 50%" } }}
     >

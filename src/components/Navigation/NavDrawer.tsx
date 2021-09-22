@@ -16,6 +16,8 @@ import SettingsIcon from "@mui/icons-material/SettingsOutlined";
 import ProjectSettingsIcon from "@mui/icons-material/BuildCircleOutlined";
 import UserManagementIcon from "@mui/icons-material/AccountCircleOutlined";
 import CloseIcon from "assets/icons/Backburger";
+import PinIcon from "@mui/icons-material/PushPinOutlined";
+import UnpinIcon from "@mui/icons-material/PushPin";
 
 import { APP_BAR_HEIGHT } from ".";
 import Logo from "assets/Logo";
@@ -31,10 +33,17 @@ export const NAV_DRAWER_WIDTH = 256;
 export interface INavDrawerProps extends DrawerProps {
   currentSection?: string;
   onClose: NonNullable<DrawerProps["onClose"]>;
+  pinned: boolean;
+  setPinned: React.Dispatch<React.SetStateAction<boolean>>;
+  canPin: boolean;
 }
 
 export default function NavDrawer({
+  open,
   currentSection,
+  pinned,
+  setPinned,
+  canPin,
   ...props
 }: INavDrawerProps) {
   const { userDoc, userClaims } = useAppContext();
@@ -52,14 +61,45 @@ export default function NavDrawer({
 
   return (
     <Drawer
+      open={open}
       {...props}
-      sx={{ "& .MuiDrawer-paper": { minWidth: NAV_DRAWER_WIDTH } }}
+      variant={pinned ? "persistent" : "temporary"}
+      anchor="left"
+      sx={{
+        width: open ? NAV_DRAWER_WIDTH : 0,
+        transition: (theme) =>
+          theme.transitions.create("width", {
+            easing: pinned
+              ? theme.transitions.easing.easeOut
+              : theme.transitions.easing.sharp,
+            duration: pinned
+              ? theme.transitions.duration.enteringScreen
+              : theme.transitions.duration.leavingScreen,
+          }),
+
+        flexShrink: 0,
+
+        "& .MuiDrawer-paper": {
+          minWidth: NAV_DRAWER_WIDTH,
+          bgcolor: pinned ? "background.default" : "background.paper",
+        },
+      }}
     >
       <Stack
         direction="row"
         spacing={1.5}
         alignItems="center"
-        sx={{ height: APP_BAR_HEIGHT, flexShrink: 0, pl: 0.5 }}
+        sx={{
+          height: APP_BAR_HEIGHT,
+          flexShrink: 0,
+          px: 0.5,
+
+          position: "sticky",
+          top: 0,
+          zIndex: "appBar",
+          backgroundColor: "inherit",
+          backgroundImage: "inherit",
+        }}
       >
         <IconButton
           aria-label="Close navigation drawer"
@@ -70,12 +110,27 @@ export default function NavDrawer({
         </IconButton>
 
         <Logo />
+
+        {canPin && (
+          <IconButton
+            aria-label="Pin navigation drawer"
+            onClick={() => setPinned((p) => !p)}
+            aria-pressed={pinned}
+            size="large"
+            style={{ marginLeft: "auto" }}
+          >
+            {pinned ? <UnpinIcon /> : <PinIcon />}
+          </IconButton>
+        )}
       </Stack>
 
       <nav>
         <List disablePadding>
           <li>
-            <NavItem to={routes.home} onClick={closeDrawer}>
+            <NavItem
+              to={routes.home}
+              onClick={pinned ? undefined : closeDrawer}
+            >
               <ListItemIcon>
                 <HomeIcon />
               </ListItemIcon>
@@ -83,7 +138,10 @@ export default function NavDrawer({
             </NavItem>
           </li>
           <li>
-            <NavItem to={routes.userSettings} onClick={closeDrawer}>
+            <NavItem
+              to={routes.userSettings}
+              onClick={pinned ? undefined : closeDrawer}
+            >
               <ListItemIcon>
                 <SettingsIcon />
               </ListItemIcon>
@@ -92,7 +150,10 @@ export default function NavDrawer({
           </li>
           {userClaims?.roles?.includes("ADMIN") && (
             <li>
-              <NavItem to={routes.projectSettings} onClick={closeDrawer}>
+              <NavItem
+                to={routes.projectSettings}
+                onClick={pinned ? undefined : closeDrawer}
+              >
                 <ListItemIcon>
                   <ProjectSettingsIcon />
                 </ListItemIcon>
@@ -102,7 +163,10 @@ export default function NavDrawer({
           )}
           {userClaims?.roles?.includes("ADMIN") && (
             <li>
-              <NavItem to={routes.userManagement} onClick={closeDrawer}>
+              <NavItem
+                to={routes.userManagement}
+                onClick={pinned ? undefined : closeDrawer}
+              >
                 <ListItemIcon>
                   <UserManagementIcon />
                 </ListItemIcon>
@@ -122,7 +186,7 @@ export default function NavDrawer({
                   section={section}
                   tables={tables}
                   currentSection={currentSection}
-                  closeDrawer={closeDrawer}
+                  closeDrawer={pinned ? undefined : closeDrawer}
                 />
               ))}
         </List>

@@ -1,7 +1,10 @@
-import { ReactNode, useState, Suspense } from "react";
+import { ReactNode, Suspense, useEffect } from "react";
+import createPersistedState from "use-persisted-state";
 
 import {
   useScrollTrigger,
+  useMediaQuery,
+  Stack,
   AppBar,
   Toolbar,
   IconButton,
@@ -12,21 +15,23 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 
-import NavDrawer from "./NavDrawer";
+import NavDrawer, { NAV_DRAWER_WIDTH } from "./NavDrawer";
 import UserMenu from "./UserMenu";
 import ErrorBoundary from "components/ErrorBoundary";
 import Loading from "components/Loading";
 
-import { name } from "@root/package.json";
 import { useAppContext } from "contexts/AppContext";
 import useDocumentTitle from "hooks/useDocumentTitle";
 
 export const APP_BAR_HEIGHT = 56;
 
+const useOpenState = createPersistedState("__ROWY__NAV_OPEN");
+const usePinnedState = createPersistedState("__ROWY__NAV_PINNED");
+
 export interface INavigationProps {
   children: ReactNode;
   title: string;
-  titleComponent?: ReactNode;
+  titleComponent?: (open: boolean, pinned: boolean) => ReactNode;
   currentSection?: string;
   titleTransitionProps?: Partial<GrowProps>;
 }
@@ -41,8 +46,17 @@ export default function Navigation({
   const { projectId } = useAppContext();
   useDocumentTitle(projectId, title);
 
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useOpenState(false);
+  const [pinned, setPinned] = usePinnedState(false);
   const trigger = useScrollTrigger({ disableHysteresis: true, threshold: 0 });
+
+  const canPin = !useMediaQuery((theme: any) => theme.breakpoints.down("lg"));
+  useEffect(() => {
+    if (!canPin && pinned) {
+      setPinned(false);
+      setOpen(false);
+    }
+  }, [canPin, pinned, setPinned, setOpen]);
 
   return (
     <>
@@ -68,6 +82,17 @@ export default function Navigation({
             opacity: trigger ? 0 : 1,
             transition: (theme) => theme.transitions.create("opacity"),
           },
+
+          pl: pinned && open ? `${NAV_DRAWER_WIDTH}px` : 0,
+          transition: (theme) =>
+            theme.transitions.create("padding-left", {
+              easing: pinned
+                ? theme.transitions.easing.easeOut
+                : theme.transitions.easing.sharp,
+              duration: pinned
+                ? theme.transitions.duration.enteringScreen
+                : theme.transitions.duration.leavingScreen,
+            }),
         }}
       >
         <Toolbar
@@ -85,20 +110,31 @@ export default function Navigation({
             },
           }}
         >
-          <Grow in>
-            <IconButton
-              aria-label="Open navigation drawer"
-              onClick={() => setOpen(true)}
-              size="large"
-              edge="start"
-            >
-              <MenuIcon />
-            </IconButton>
-          </Grow>
+          {!(open && pinned) && (
+            <Grow in>
+              <IconButton
+                aria-label="Open navigation drawer"
+                onClick={() => setOpen(true)}
+                size="large"
+                edge="start"
+              >
+                <MenuIcon />
+              </IconButton>
+            </Grow>
+          )}
 
           <Grow in key={title} {...titleTransitionProps}>
-            <Box sx={{ flex: 1, overflowX: "auto", userSelect: "none" }}>
-              {titleComponent || (
+            <Box
+              sx={{
+                flex: 1,
+                overflowX: "auto",
+                userSelect: "none",
+                pl: open && pinned ? 48 / 8 : 0,
+              }}
+            >
+              {titleComponent ? (
+                titleComponent(open, pinned)
+              ) : (
                 <Typography
                   variant="h6"
                   component="h1"
@@ -116,21 +152,26 @@ export default function Navigation({
         </Toolbar>
       </AppBar>
 
-      <NavDrawer
-        open={open}
-        onClose={() => setOpen(false)}
-        currentSection={currentSection}
-      />
+      <Stack direction="row">
+        <NavDrawer
+          open={open}
+          pinned={pinned}
+          setPinned={setPinned}
+          canPin={canPin}
+          onClose={() => setOpen(false)}
+          currentSection={currentSection}
+        />
 
-      <ErrorBoundary style={{ marginTop: -APP_BAR_HEIGHT }}>
-        <Suspense
-          fallback={
-            <Loading fullScreen style={{ marginTop: -APP_BAR_HEIGHT }} />
-          }
-        >
-          {children}
-        </Suspense>
-      </ErrorBoundary>
+        <ErrorBoundary style={{ marginTop: -APP_BAR_HEIGHT }}>
+          <Suspense
+            fallback={
+              <Loading fullScreen style={{ marginTop: -APP_BAR_HEIGHT }} />
+            }
+          >
+            <div style={{ flexGrow: 1 }}>{children}</div>
+          </Suspense>
+        </ErrorBoundary>
+      </Stack>
     </>
   );
 }

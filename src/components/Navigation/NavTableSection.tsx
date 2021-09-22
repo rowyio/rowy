@@ -13,7 +13,7 @@ export interface INavDrawerItemProps {
   section: string;
   tables: Table[];
   currentSection?: string;
-  closeDrawer: (e: {}) => void;
+  closeDrawer?: (e: {}) => void;
 }
 
 export default function NavDrawerItem({

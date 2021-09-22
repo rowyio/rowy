@@ -31,7 +31,7 @@ export default function PageNotFound() {
     );
 
   return (
-    <Navigation title="Page Not Found" titleComponent={<div />}>
+    <Navigation title="Page Not Found" titleComponent={() => <div />}>
       <EmptyState
         message="Page Not Found"
         description={
