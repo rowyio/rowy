@@ -62,15 +62,22 @@ export default function Step1RowyRun({
     if (!isValidRowyRunUrl && paramsRowyRunUrl) console.log(paramsRowyRunUrl);
   }, [paramsRowyRunUrl, isValidRowyRunUrl]);
 
-  const deployButton = window.location.hostname.includes("rowy.app") ? (
-    <Button
+  const deployButton = !window.location.hostname.includes(
+    EXTERNAL_LINKS.rowyAppHostName
+  ) ? (
+    <a
       href={EXTERNAL_LINKS.rowyRunDeploy}
       target="_blank"
       rel="noopener noreferrer"
-      endIcon={<OpenInNewIcon />}
     >
-      One-Click Deploy
-    </Button>
+      <img
+        src="https://deploy.cloud.run/button.svg"
+        alt="Run on Google Cloud"
+        width={183}
+        height={32}
+        style={{ display: "block" }}
+      />
+    </a>
   ) : (
     <Button
       href={EXTERNAL_LINKS.rowyRunDocs}
@@ -95,7 +102,7 @@ export default function Step1RowyRun({
         title={
           isValidRowyRunUrl
             ? `Rowy Run is set up at: ${rowyRunUrl}`
-            : "Deploy Rowy Run to your GCP project."
+            : "Deploy Rowy Run to your Google Cloud Platform project."
         }
       >
         {!isValidRowyRunUrl && (

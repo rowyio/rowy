@@ -1,8 +1,7 @@
 import { useLocation } from "react-router-dom";
 import queryString from "query-string";
 
-import { useMediaQuery, Stack, Typography, Link, Button } from "@mui/material";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import { useMediaQuery, Stack, Typography, Link } from "@mui/material";
 
 import MarketingBanner from "components/Auth/MarketingBanner";
 import AuthLayout from "components/Auth/AuthLayout";
@@ -45,6 +44,7 @@ export default function DeployPage() {
             <img
               src="https://deploy.cloud.run/button.svg"
               alt="Run on Google Cloud"
+              style={{ display: "block" }}
             />
           </a>
 

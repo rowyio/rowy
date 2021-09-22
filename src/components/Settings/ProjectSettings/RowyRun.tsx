@@ -121,21 +121,36 @@ export default function RowyRun({
       setLatestUpdate(null);
   }, [latestUpdate, setLatestUpdate, version]);
 
-  const deployButton = window.location.hostname.includes("rowy.app") ? (
-    <LoadingButton
-      href={EXTERNAL_LINKS.rowyRunDeploy}
-      target="_blank"
-      rel="noopener noreferrer"
-      loading={
-        settings.rowyRunDeployStatus === "BUILDING" ||
-        settings.rowyRunDeployStatus === "COMPLETE"
-      }
-      loadingIndicator={
-        settings.rowyRunDeployStatus === "COMPLETE" ? "Deployed" : undefined
-      }
-    >
-      One-Click Deploy
-    </LoadingButton>
+  const deployButton = window.location.hostname.includes(
+    EXTERNAL_LINKS.rowyAppHostName
+  ) ? (
+    settings.rowyRunDeployStatus === "BUILDING" ||
+    settings.rowyRunDeployStatus === "COMPLETE" ? (
+      <LoadingButton
+        variant="contained"
+        loading
+        loadingIndicator={
+          settings.rowyRunDeployStatus === "COMPLETE" ? "Deployed" : undefined
+        }
+        style={{ width: 183, borderRadius: 12 }}
+      >
+        Run on Google Cloud
+      </LoadingButton>
+    ) : (
+      <a
+        href={EXTERNAL_LINKS.rowyRunDeploy}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <img
+          src="https://deploy.cloud.run/button.svg"
+          alt="Run on Google Cloud"
+          width={183}
+          height={32}
+          style={{ display: "block" }}
+        />
+      </a>
+    )
   ) : (
     <Button
       href={EXTERNAL_LINKS.rowyRunDocs}
