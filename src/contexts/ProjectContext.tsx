@@ -118,6 +118,8 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
           id: table.id || table.collection, // Ensure id exists
         }))
       );
+    } else if (!settings.loading) {
+      setTables([]);
     }
   }, [settings, userRoles]);
 
