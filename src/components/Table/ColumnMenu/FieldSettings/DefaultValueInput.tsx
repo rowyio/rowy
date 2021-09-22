@@ -13,7 +13,7 @@ import CodeEditorHelper from "components/CodeEditorHelper";
 import CodeEditor from "components/Table/editors/CodeEditor";
 import FormAutosave from "./FormAutosave";
 import { FieldType } from "constants/fields";
-import WIKI_LINKS from "constants/wikiLinks";
+import { WIKI_LINKS } from "constants/externalLinks";
 import { name } from "@root/package.json";
 
 const useStyles = makeStyles((theme) =>

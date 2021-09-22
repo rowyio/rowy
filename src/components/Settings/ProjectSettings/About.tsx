@@ -4,13 +4,16 @@ import { differenceInDays } from "date-fns";
 
 import { Grid, Typography, Button, Link, Divider } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import DiscordIcon from "assets/icons/Discord";
+import TwitterIcon from "@mui/icons-material/Twitter";
 
 import Logo from "assets/Logo";
 import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
 
 import { name, version, repository } from "@root/package.json";
 import { useAppContext } from "contexts/AppContext";
-import WIKI_LINKS from "constants/wikiLinks";
+import { EXTERNAL_LINKS, WIKI_LINKS } from "constants/externalLinks";
 
 const useLastCheckedUpdateState = createPersistedState(
   "__ROWY__LAST_CHECKED_UPDATE"
@@ -82,41 +85,44 @@ export default function About() {
       />
 
       <div style={{ marginTop: 12 }}>
-        <Grid container justifyContent="center" spacing={3}>
+        <Grid container justifyContent="center" spacing={1}>
           <Grid item>
-            <Link
-              variant="body2"
-              href={repository.url.replace(".git", "")}
+            <Button
+              variant="outlined"
+              color="secondary"
+              startIcon={<GitHubIcon viewBox="-1 -1 26 26" color="action" />}
+              href={EXTERNAL_LINKS.gitHub}
               target="_blank"
               rel="noopener noreferrer"
             >
               GitHub
-              <InlineOpenInNewIcon />
-            </Link>
+            </Button>
           </Grid>
 
           <Grid item>
-            <Link
-              variant="body2"
-              // href={repository.url.replace(".git", "")}
+            <Button
+              variant="outlined"
+              color="secondary"
+              startIcon={<DiscordIcon color="action" />}
+              href={EXTERNAL_LINKS.discord}
               target="_blank"
               rel="noopener noreferrer"
             >
               Discord
-              <InlineOpenInNewIcon />
-            </Link>
+            </Button>
           </Grid>
 
           <Grid item>
-            <Link
-              variant="body2"
-              // href={repository.url.replace(".git", "")}
+            <Button
+              variant="outlined"
+              color="secondary"
+              startIcon={<TwitterIcon color="action" />}
+              href={EXTERNAL_LINKS.twitter}
               target="_blank"
               rel="noopener noreferrer"
             >
               Twitter
-              <InlineOpenInNewIcon />
-            </Link>
+            </Button>
           </Grid>
         </Grid>
       </div>
@@ -126,29 +132,27 @@ export default function About() {
       <div>
         <Grid container spacing={1} alignItems="center" direction="row">
           <Grid item xs>
-            <Typography display="block">
+            {checkState === "LOADING" ? (
+              <Typography display="block">Checking for updates…</Typography>
+            ) : latestUpdate === null ? (
+              <Typography display="block">Up to date</Typography>
+            ) : (
+              <Typography display="block">
+                Update available:{" "}
+                <Link
+                  href={latestUpdate.html_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {latestUpdate.tag_name}
+                  <InlineOpenInNewIcon />
+                </Link>
+              </Typography>
+            )}
+
+            <Typography display="block" color="textSecondary">
               {name} v{version}
             </Typography>
-            {checkState === "LOADING" ? (
-              <Typography color="textSecondary" display="block">
-                Checking for updates…
-              </Typography>
-            ) : latestUpdate === null ? (
-              <Typography color="textSecondary" display="block">
-                Up to date
-              </Typography>
-            ) : (
-              <Link
-                href={latestUpdate.html_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                variant="body2"
-                display="block"
-              >
-                Update available: {latestUpdate.tag_name}
-                <InlineOpenInNewIcon />
-              </Link>
-            )}
           </Grid>
 
           <Grid item>

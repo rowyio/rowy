@@ -7,14 +7,15 @@ import {
   LinkProps,
 } from "@mui/material";
 import { alpha } from "@mui/material/styles";
-import BrandedBackground from "assets/BrandedBackground";
+import BrandedBackground, { Wrapper } from "assets/BrandedBackground";
 import Logo from "assets/Logo";
 
 import { useAppContext } from "contexts/AppContext";
-import { homepage } from "@root/package.json";
+import { EXTERNAL_LINKS } from "constants/externalLinks";
 
 export interface IAuthLayoutProps {
   hideLogo?: boolean;
+  hideProject?: boolean;
   title?: React.ReactNode;
   description?: React.ReactNode;
   children: React.ReactNode;
@@ -23,6 +24,7 @@ export interface IAuthLayoutProps {
 
 export default function AuthLayout({
   hideLogo,
+  hideProject,
   title,
   description,
   children,
@@ -39,7 +41,7 @@ export default function AuthLayout({
   };
 
   return (
-    <div className="wrapper">
+    <Wrapper sx={hideLogo ? { gap: (theme) => theme.spacing(2) } : {}}>
       <BrandedBackground />
 
       <div
@@ -49,7 +51,11 @@ export default function AuthLayout({
           visibility: hideLogo ? "hidden" : "visible",
         }}
       >
-        <a href={homepage} target="_blank" rel="noopener noreferrer">
+        <a
+          href={EXTERNAL_LINKS.homepage}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <Logo />
         </a>
       </div>
@@ -115,43 +121,42 @@ export default function AuthLayout({
         <Typography
           variant="caption"
           color="text.secondary"
-          display="block"
           textAlign="center"
-          sx={{ pt: 1 }}
+          sx={{ pt: 1, display: hideProject ? "none" : "block" }}
         >
           Project: <span style={{ userSelect: "all" }}>{projectId}</span>
         </Typography>
       </Paper>
 
       <Stack
-        spacing={1.25}
+        spacing={{ xs: 1.25, sm: 2 }}
         direction="row"
         flexWrap="wrap"
         justifyContent="center"
         style={{ maxWidth: 360, width: "100%", padding: "0 4px" }}
       >
-        <Link href={homepage} {...linkProps}>
-          {homepage.split("//").pop()?.replace(/\//g, "")}
+        <Link href={EXTERNAL_LINKS.homepage} {...linkProps}>
+          {EXTERNAL_LINKS.homepage.split("//").pop()?.replace(/\//g, "")}
         </Link>
-        <Link href={homepage} {...linkProps}>
+        <Link href={EXTERNAL_LINKS.discord} {...linkProps}>
           Discord
         </Link>
-        <Link href={homepage} {...linkProps}>
+        <Link href={EXTERNAL_LINKS.twitter} {...linkProps}>
           Twitter
         </Link>
 
         <div style={{ flexGrow: 1, marginLeft: 0 }} />
 
-        <Link href={homepage} {...linkProps}>
+        <Link href={EXTERNAL_LINKS.docs} {...linkProps}>
           Docs
         </Link>
-        <Link href={homepage} {...linkProps}>
+        <Link href={EXTERNAL_LINKS.privacy} {...linkProps}>
           Privacy
         </Link>
-        <Link href={homepage} {...linkProps}>
+        <Link href={EXTERNAL_LINKS.terms} {...linkProps}>
           Terms
         </Link>
       </Stack>
-    </div>
+    </Wrapper>
   );
 }

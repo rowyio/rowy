@@ -33,7 +33,7 @@ import { useConfirmation } from "components/ConfirmationDialog";
 import { useProjectContext } from "contexts/ProjectContext";
 
 import { IExtension, triggerTypes } from "./utils";
-import WIKI_LINKS from "constants/wikiLinks";
+import { WIKI_LINKS } from "constants/externalLinks";
 
 const additionalVariables = [
   {

@@ -54,6 +54,8 @@ export const components = (theme: Theme): ThemeOptions => {
                 },
             },
 
+          body: { cursor: "default" },
+
           "code, pre, pre.MuiTypography-root": {
             fontFamily: theme.typography.fontFamilyMono,
             letterSpacing: 0,

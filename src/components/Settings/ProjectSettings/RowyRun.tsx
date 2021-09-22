@@ -14,9 +14,9 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
 
 import { IProjectSettingsChildProps } from "pages/Settings/ProjectSettings";
-import WIKI_LINKS from "constants/wikiLinks";
+import { EXTERNAL_LINKS } from "constants/externalLinks";
 import { name } from "@root/package.json";
-import { runRoutes, runRepoUrl } from "constants/runRoutes";
+import { runRoutes } from "constants/runRoutes";
 
 const useLastCheckedUpdateState = createPersistedState(
   "__ROWY__RUN_LAST_CHECKED_UPDATE"
@@ -74,8 +74,10 @@ export default function RowyRun({
 
     // https://docs.github.com/en/rest/reference/repos#get-the-latest-release
     const endpoint =
-      runRepoUrl.replace("github.com", "api.github.com/repos") +
-      "/releases/latest";
+      EXTERNAL_LINKS.rowyRunGitHub.replace(
+        "github.com",
+        "api.github.com/repos"
+      ) + "/releases/latest";
     try {
       const versionReq = await fetch(
         settings.rowyRunUrl + runRoutes.version.path,
@@ -121,7 +123,7 @@ export default function RowyRun({
 
   const deployButton = window.location.hostname.includes("rowy.app") ? (
     <LoadingButton
-      href={`https://deploy.cloud.run/?git_repo=${runRepoUrl}.git`}
+      href={EXTERNAL_LINKS.rowyRunDeploy}
       target="_blank"
       rel="noopener noreferrer"
       loading={
@@ -135,7 +137,11 @@ export default function RowyRun({
       One-Click Deploy
     </LoadingButton>
   ) : (
-    <Button href={runRepoUrl} target="_blank" rel="noopener noreferrer">
+    <Button
+      href={EXTERNAL_LINKS.rowyRunDocs}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
       Deploy Instructions
     </Button>
   );
@@ -147,7 +153,7 @@ export default function RowyRun({
         such as table action scripts, user management, and easy Cloud Function
         deployment.{" "}
         <Link
-          href={WIKI_LINKS.functions}
+          href={EXTERNAL_LINKS.rowyRun}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -162,29 +168,27 @@ export default function RowyRun({
         <div>
           <Grid container spacing={1} alignItems="center" direction="row">
             <Grid item xs>
-              <Typography display="block">
+              {checkState === "LOADING" ? (
+                <Typography display="block">Checking for updates…</Typography>
+              ) : latestUpdate === null ? (
+                <Typography display="block">Up to date</Typography>
+              ) : (
+                <Typography display="block">
+                  Update available:{" "}
+                  <Link
+                    href={latestUpdate.html_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {latestUpdate.tag_name}
+                    <InlineOpenInNewIcon />
+                  </Link>
+                </Typography>
+              )}
+
+              <Typography display="block" color="textSecondary">
                 {name} Run v{version}
               </Typography>
-              {checkState === "LOADING" ? (
-                <Typography color="textSecondary" display="block">
-                  Checking for updates…
-                </Typography>
-              ) : latestUpdate === null ? (
-                <Typography color="textSecondary" display="block">
-                  Up to date
-                </Typography>
-              ) : (
-                <Link
-                  href={latestUpdate.html_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  variant="body2"
-                  display="block"
-                >
-                  Update available: {latestUpdate.tag_name}
-                  <InlineOpenInNewIcon />
-                </Link>
-              )}
             </Grid>
 
             <Grid item>

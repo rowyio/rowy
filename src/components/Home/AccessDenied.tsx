@@ -5,7 +5,7 @@ import SecurityIcon from "@mui/icons-material/SecurityOutlined";
 
 import EmptyState from "components/EmptyState";
 
-import WIKI_LINKS from "constants/wikiLinks";
+import { WIKI_LINKS } from "constants/externalLinks";
 import routes from "constants/routes";
 import { useAppContext } from "@src/contexts/AppContext";
 

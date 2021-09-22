@@ -19,7 +19,7 @@ import { useSnackLogContext } from "contexts/SnackLogContext";
 
 import { emptyExtensionObject, IExtension, IExtensionType } from "./utils";
 import { name } from "@root/package.json";
-import { runRoutes } from "@src/constants/runRoutes";
+import { runRoutes } from "constants/runRoutes";
 import { analytics } from "@src/analytics";
 
 export default function ExtensionsEditor() {

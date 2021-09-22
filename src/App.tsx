@@ -23,6 +23,7 @@ import routes from "constants/routes";
 import AuthPage from "pages/Auth";
 import SignOutPage from "pages/Auth/SignOut";
 import SignUpPage from "pages/Auth/SignUp";
+import DeployPage from "pages/Deploy";
 import TestPage from "pages/Test";
 import RowyRunTestPage from "pages/RowyRunTest";
 import PageNotFound from "pages/PageNotFound";
@@ -93,6 +94,11 @@ export default function App() {
                           exact
                           path={routes.setup}
                           render={() => <SetupPage />}
+                        />
+                        <Route
+                          exact
+                          path={routes.deploy}
+                          render={() => <DeployPage />}
                         />
 
                         <Route

@@ -11,7 +11,7 @@ import Modal from "components/Modal";
 import { useProjectContext } from "contexts/ProjectContext";
 import { useAppContext } from "contexts/AppContext";
 import { sparkToExtensionObjects } from "./utils";
-import WIKI_LINKS from "constants/wikiLinks";
+import { WIKI_LINKS } from "constants/externalLinks";
 
 export interface IExtensionMigrationProps {
   handleClose: () => void;

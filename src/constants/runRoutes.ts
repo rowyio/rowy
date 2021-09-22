@@ -1,5 +1,3 @@
-export const runRepoUrl = "https://github.com/rowyio/rowyRun";
-
 export type RunRoute = {
   path: string;
   method: "POST" | "GET" | "DELETE";

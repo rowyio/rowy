@@ -12,7 +12,7 @@ import { cloudFunction } from "firebase/callables";
 import { formatPath } from "utils/fns";
 import { useConfirmation } from "components/ConfirmationDialog";
 import { useActionParams } from "./FormDialog/Context";
-import { runRoutes } from "@src/constants/runRoutes";
+import { runRoutes } from "constants/runRoutes";
 
 const replacer = (data: any) => (m: string, key: string) => {
   const objKey = key.split(":")[0];

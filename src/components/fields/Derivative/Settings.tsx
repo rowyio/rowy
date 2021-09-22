@@ -7,7 +7,7 @@ import FieldsDropdown from "components/Table/ColumnMenu/FieldsDropdown";
 import { useProjectContext } from "contexts/ProjectContext";
 import CodeEditorHelper from "components/CodeEditorHelper";
 
-import WIKI_LINKS from "constants/wikiLinks";
+import { WIKI_LINKS } from "constants/externalLinks";
 
 const CodeEditor = lazy(
   () =>

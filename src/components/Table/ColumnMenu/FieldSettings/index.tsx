@@ -23,7 +23,7 @@ import Button from "@mui/material/Button";
 import routes from "constants/routes";
 import { SETTINGS } from "config/dbPaths";
 import { name as appName } from "@root/package.json";
-import { runRoutes } from "@src/constants/runRoutes";
+import { runRoutes } from "constants/runRoutes";
 
 export default function FieldSettings(props: IMenuModalProps) {
   const { name, fieldName, type, open, config, handleClose, handleSave } =

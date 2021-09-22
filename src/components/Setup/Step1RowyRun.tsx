@@ -11,7 +11,8 @@ import SetupItem from "./SetupItem";
 
 import { name } from "@root/package.json";
 import { rowyRun } from "utils/rowyRun";
-import { runRepoUrl, runRoutes } from "constants/runRoutes";
+import { runRoutes } from "constants/runRoutes";
+import { EXTERNAL_LINKS } from "constants/externalLinks";
 
 export default function Step1RowyRun({
   completion,
@@ -63,7 +64,7 @@ export default function Step1RowyRun({
 
   const deployButton = window.location.hostname.includes("rowy.app") ? (
     <Button
-      href={`https://deploy.cloud.run/?git_repo=${runRepoUrl}.git`}
+      href={EXTERNAL_LINKS.rowyRunDeploy}
       target="_blank"
       rel="noopener noreferrer"
       endIcon={<OpenInNewIcon />}
@@ -72,7 +73,7 @@ export default function Step1RowyRun({
     </Button>
   ) : (
     <Button
-      href={runRepoUrl}
+      href={EXTERNAL_LINKS.rowyRunDocs}
       target="_blank"
       rel="noopener noreferrer"
       endIcon={<OpenInNewIcon />}
@@ -187,8 +188,10 @@ export const checkRowyRun = async (
 
     // https://docs.github.com/en/rest/reference/repos#get-the-latest-release
     const endpoint =
-      runRepoUrl.replace("github.com", "api.github.com/repos") +
-      "/releases/latest";
+      EXTERNAL_LINKS.rowyRunGitHub.replace(
+        "github.com",
+        "api.github.com/repos"
+      ) + "/releases/latest";
     const latestVersionReq = await fetch(endpoint, {
       headers: { Accept: "application/vnd.github.v3+json" },
       signal,

@@ -3,7 +3,7 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
 import AuthLayout from "components/Auth/AuthLayout";
 
-import WIKI_LINKS from "constants/wikiLinks";
+import { WIKI_LINKS } from "constants/externalLinks";
 import { name } from "@root/package.json";
 
 export default function AuthSetupGuide() {

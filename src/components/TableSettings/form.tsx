@@ -4,7 +4,7 @@ import { TableSettingsDialogModes } from "./index";
 import { Link, Typography } from "@mui/material";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
-import WIKI_LINKS from "constants/wikiLinks";
+import { WIKI_LINKS } from "constants/externalLinks";
 import { name } from "@root/package.json";
 
 export const tableSettings = (

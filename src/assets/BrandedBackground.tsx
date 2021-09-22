@@ -2,13 +2,13 @@ import Helmet from "react-helmet";
 import { use100vh } from "react-div-100vh";
 
 import { useTheme, alpha } from "@mui/material/styles";
+import { Box, BoxProps } from "@mui/material";
 
 import bgPattern from "assets/bg-pattern.svg";
 import bgPatternDark from "assets/bg-pattern-dark.svg";
 
 export default function BrandedBackground() {
   const theme = useTheme();
-  const fullScreenHeight = use100vh() ?? 0;
 
   return (
     <Helmet>
@@ -55,33 +55,32 @@ export default function BrandedBackground() {
               ].join(", ")
             };
           }
-
-          #root {
-            cursor: default;
-          }
-          
-          .wrapper {
-            display: grid;
-            place-items: center;
-            align-content: center;
-            gap: ${theme.spacing(3)};
-            grid-auto-rows: max-content;
-
-            ${["top", "right", "bottom", "left"]
-              .map(
-                (side) =>
-                  `padding-${side}: max(env(safe-area-inset-${side}), ${theme.spacing(
-                    1
-                  )});`
-              )
-              .join("\n")}
-            
-            min-height: ${
-              fullScreenHeight > 0 ? `${fullScreenHeight}px` : "100vh"
-            };
-          }
           `}
       </style>
     </Helmet>
+  );
+}
+
+export function Wrapper(props: BoxProps) {
+  const fullScreenHeight = use100vh() ?? 0;
+
+  return (
+    <Box
+      {...props}
+      sx={{
+        display: "grid",
+        placeItems: "center",
+        alignContent: "center",
+        gap: (theme) => ({ xs: theme.spacing(2), sm: theme.spacing(3) }),
+        gridAutoRows: "max-content",
+        minHeight: fullScreenHeight > 0 ? `${fullScreenHeight}px` : "100vh",
+
+        pt: (theme) => `max(env(safe-area-inset-top), ${theme.spacing(1)})`,
+        pb: (theme) => `max(env(safe-area-inset-bottom), ${theme.spacing(1)})`,
+        pl: (theme) => `max(env(safe-area-inset-left), ${theme.spacing(1)})`,
+        pr: (theme) => `max(env(safe-area-inset-right), ${theme.spacing(1)})`,
+        ...props.sx,
+      }}
+    />
   );
 }

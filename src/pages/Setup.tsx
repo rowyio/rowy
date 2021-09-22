@@ -23,7 +23,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
-import BrandedBackground from "assets/BrandedBackground";
+import BrandedBackground, { Wrapper } from "assets/BrandedBackground";
 import Logo from "assets/Logo";
 import ScrollableDialogContent from "components/Modal/ScrollableDialogContent";
 import { SlideTransition } from "components/Modal/SlideTransition";
@@ -246,7 +246,7 @@ export default function SetupPage() {
   };
 
   return (
-    <div className="wrapper">
+    <Wrapper>
       <BrandedBackground />
       <Paper
         component="main"
@@ -428,6 +428,6 @@ export default function SetupPage() {
           </DialogActions>
         </form>
       </Paper>
-    </div>
+    </Wrapper>
   );
 }
