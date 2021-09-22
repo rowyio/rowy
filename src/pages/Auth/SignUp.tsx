@@ -26,6 +26,7 @@ export default function SignUpPage() {
       <div style={{ flexGrow: 1 }}>
         <AuthLayout
           hideLogo={!isMobile}
+          hideLinks={!isMobile}
           title="Sign Up"
           description={
             <>

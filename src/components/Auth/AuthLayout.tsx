@@ -16,6 +16,7 @@ import { EXTERNAL_LINKS } from "constants/externalLinks";
 export interface IAuthLayoutProps {
   hideLogo?: boolean;
   hideProject?: boolean;
+  hideLinks?: boolean;
   title?: React.ReactNode;
   description?: React.ReactNode;
   children: React.ReactNode;
@@ -25,6 +26,7 @@ export interface IAuthLayoutProps {
 export default function AuthLayout({
   hideLogo,
   hideProject,
+  hideLinks,
   title,
   description,
   children,
@@ -48,6 +50,7 @@ export default function AuthLayout({
         style={{
           textAlign: "center",
           marginBottom: -8,
+          display: hideLogo && hideLinks ? "none" : "block",
           visibility: hideLogo ? "hidden" : "visible",
         }}
       >
@@ -133,7 +136,13 @@ export default function AuthLayout({
         direction="row"
         flexWrap="wrap"
         justifyContent="center"
-        style={{ maxWidth: 360, width: "100%", padding: "0 4px" }}
+        style={{
+          maxWidth: 360,
+          width: "100%",
+          padding: "0 4px",
+          display: hideLogo && hideLinks ? "none" : "flex",
+          visibility: hideLinks ? "hidden" : "visible",
+        }}
       >
         <Link href={EXTERNAL_LINKS.homepage} {...linkProps}>
           {EXTERNAL_LINKS.homepage.split("//").pop()?.replace(/\//g, "")}

@@ -2,11 +2,12 @@ import { useLocation } from "react-router-dom";
 import queryString from "query-string";
 
 import { useMediaQuery, Stack, Typography, Link } from "@mui/material";
+import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
 
 import MarketingBanner from "components/Auth/MarketingBanner";
 import AuthLayout from "components/Auth/AuthLayout";
 
-import { EXTERNAL_LINKS } from "constants/externalLinks";
+import { EXTERNAL_LINKS, WIKI_LINKS } from "constants/externalLinks";
 import { name } from "@root/package.json";
 
 export default function DeployPage() {
@@ -28,11 +29,29 @@ export default function DeployPage() {
         <AuthLayout
           hideLogo={!isMobile}
           hideProject
+          hideLinks={!isMobile}
           title="Get Started"
           description={
             <>
-              To get started with {name}, set up {name} Run on your Google Cloud
-              Platform project with this one-click deploy button.
+              <Typography variant="inherit" paragraph>
+                Set up {name} on your Google Cloud Platform project with this
+                one-click deploy button.
+              </Typography>
+
+              <Typography variant="inherit">
+                You must have a project set up on Google Cloud Platform or
+                Firebase.
+                <br />
+                <Link
+                  href={WIKI_LINKS.setUpAuth}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  color="text.primary"
+                >
+                  Learn how to create one
+                  <InlineOpenInNewIcon />
+                </Link>
+              </Typography>
             </>
           }
         >
