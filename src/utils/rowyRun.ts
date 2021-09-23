@@ -24,7 +24,6 @@ export const rowyRun = async ({
   const { method, path } = route;
   let url = (localhost ? "http://localhost:8080" : rowyRunUrl) + path;
   if (params && params.length > 0) url = url + "/" + params.join("/");
-
   const response = await fetch(url, {
     method: method,
     mode: "cors",

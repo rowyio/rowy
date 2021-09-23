@@ -49,4 +49,6 @@ export const runRoutes = {
   inviteUser: { path: "/inviteUser", method: "POST" } as RunRoute,
   setUserRoles: { path: "/setUserRoles", method: "POST" } as RunRoute,
   deleteUser: { path: "/deleteUser", method: "DELETE" } as RunRoute,
+  algoliaSearchKey: { path: `/algoliaSearchKey`, method: "GET" } as RunRoute,
+  algoliaAppId: { path: `/algoliaAppId`, method: "GET" } as RunRoute,
 } as const;

@@ -24,6 +24,3 @@ export const cloudFunction = (
         }
       });
   });
-
-export const getAlgoliaSearchKey = (index: string) =>
-  functions.httpsCallable(CLOUD_FUNCTIONS.getAlgoliaSearchKey)({ index });
