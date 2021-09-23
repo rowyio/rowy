@@ -77,6 +77,8 @@ export const useStyles = makeStyles((theme) =>
           overflow: "visible",
           contain: "none",
           position: "relative",
+
+          lineHeight: "calc(var(--row-height) - 1px)",
         },
 
         "& .rdg-cell-frozen": {

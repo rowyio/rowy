@@ -1,17 +1,12 @@
 import { useRef, useState } from "react";
 
-import {
-  useTheme,
-  TextField,
-  ListSubheader,
-  MenuItem,
-} from "@mui/material";
+import { useTheme, TextField, ListSubheader, MenuItem } from "@mui/material";
 import RowHeightIcon from "assets/icons/RowHeight";
 
 import TableHeaderButton from "./TableHeaderButton";
 import { useProjectContext } from "contexts/ProjectContext";
 
-const ROW_HEIGHTS = [37, 43, 65, 100, 150];
+const ROW_HEIGHTS = [33, 41, 65, 97, 129, 161];
 
 export default function RowHeight() {
   const theme = useTheme();
@@ -39,7 +34,7 @@ export default function RowHeight() {
 
       <TextField
         select
-        value={rowHeight ?? 43}
+        value={rowHeight ?? 41}
         onChange={(event) => {
           if (updateConfig) updateConfig("rowHeight", event.target.value);
         }}
@@ -61,7 +56,7 @@ export default function RowHeight() {
         <ListSubheader>Row Height</ListSubheader>
         {ROW_HEIGHTS.map((height) => (
           <MenuItem key={height} value={height}>
-            {height}px
+            {height - 1}px
           </MenuItem>
         ))}
       </TextField>

@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme) =>
     columnName: {
       ...theme.typography.caption,
       fontWeight: theme.typography.fontWeightMedium,
-      lineHeight: "44px",
+      lineHeight: "42px",
       textOverflow: "clip",
     },
 
@@ -66,17 +66,14 @@ const useStyles = makeStyles((theme) =>
       background: theme.palette.background.default,
       color: theme.palette.text.primary,
 
-      margin: "-43px 0 0 !important",
+      margin: "-41px 0 0 !important",
       padding: theme.spacing(0, 1.5, 0, 0),
 
-      "& *": { lineHeight: "42px" },
+      "& *": { lineHeight: "40px" },
     },
 
     sortIconContainer: {
       backgroundColor: theme.palette.background.default,
-      // width: 30,
-      // height: 30,
-
       opacity: 0,
       transition: theme.transitions.create("opacity", {
         duration: theme.transitions.duration.shortest,

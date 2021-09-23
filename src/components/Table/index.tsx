@@ -38,7 +38,7 @@ export type TableColumn = Column<any> & {
 };
 
 const rowKeyGetter = (row: any) => row.id;
-const SelectColumn = { ..._SelectColumn, width: 44, maxWidth: 44 };
+const SelectColumn = { ..._SelectColumn, width: 42, maxWidth: 42 };
 
 export default function Table() {
   const classes = useStyles();
@@ -180,8 +180,8 @@ export default function Table() {
               ref={dataGridRef}
               rows={rows}
               columns={columns}
-              rowHeight={rowHeight ?? 43}
-              headerRowHeight={44}
+              rowHeight={rowHeight ?? 41}
+              headerRowHeight={42}
               className="rdg-light" // Handle dark mode in MUI theme
               cellNavigationMode="LOOP_OVER_ROW"
               rowKeyGetter={rowKeyGetter}
