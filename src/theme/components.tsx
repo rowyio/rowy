@@ -1,4 +1,5 @@
 import { Theme, ThemeOptions } from "@mui/material/styles";
+import type {} from "@mui/lab/themeAugmentation";
 import { toRem } from "./typography";
 
 import RadioIcon from "theme/RadioIcon";
@@ -352,10 +353,10 @@ export const components = (theme: Theme): ThemeOptions => {
                 display: "block",
                 position: "absolute",
                 top: (32 - 16) / 2,
+                bottom: (32 - 16) / 2,
                 left: 0,
 
                 width: 3,
-                height: 16,
                 borderRadius: 1.5,
                 backgroundColor: theme.palette.primary.main,
               },
@@ -867,6 +868,24 @@ export const components = (theme: Theme): ThemeOptions => {
         styleOverrides: {
           root: { borderRadius: theme.shape.borderRadius },
           bar: { borderRadius: theme.shape.borderRadius },
+        },
+      },
+
+      MuiYearPicker: {
+        styleOverrides: {
+          root: {
+            "& .PrivatePickersYear-yearButton": {
+              ...theme.typography.button,
+              fontSize: "1rem",
+            },
+          },
+        },
+      },
+      MuiPickersDay: {
+        styleOverrides: {
+          root: {
+            background: "none",
+          },
         },
       },
     },

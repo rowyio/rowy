@@ -79,11 +79,10 @@ export const useStyles = makeStyles((theme) =>
           position: "relative",
         },
 
+        "& .rdg-cell-frozen": {
+          position: "sticky",
+        },
         "& .rdg-cell-frozen-last": {
-          // boxShadow:
-          //   theme.palette.mode === "light"
-          //     ? "2px 0 4px 0px rgba(0, 0, 0, .08)"
-          //     : "2px 0 4px 0px rgba(0, 0, 0, .67)",
           boxShadow: theme.shadows[2]
             .replace(/, 0 (\d+px)/g, ", $1 0")
             .split("),")
@@ -144,8 +143,8 @@ export const useStyles = makeStyles((theme) =>
       },
 
       ".cell-collapse-padding": {
-        margin: theme.spacing(0, -1.5),
-        width: `calc(100% + ${theme.spacing(3)})`,
+        margin: theme.spacing(0, -1.25),
+        width: `calc(100% + ${theme.spacing(1.25 * 2)})`,
       },
     },
   })

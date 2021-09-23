@@ -3,6 +3,7 @@ import { IFieldConfig, FieldType } from "components/fields/types";
 import withHeavyCell from "../_withTableCell/withHeavyCell";
 import { parse, format } from "date-fns";
 import { DATE_FORMAT } from "constants/dates";
+
 import DateIcon from "@mui/icons-material/TodayOutlined";
 import BasicCell from "./BasicCell";
 import NullEditor from "components/Table/editors/NullEditor";
@@ -15,7 +16,7 @@ const SideDrawerField = lazy(
     import("./SideDrawerField" /* webpackChunkName: "SideDrawerField-Date" */)
 );
 const Settings = lazy(
-  () => import("./Settings" /* webpackChunkName: "Settings-ConnectTable" */)
+  () => import("./Settings" /* webpackChunkName: "Settings-Date" */)
 );
 
 export const config: IFieldConfig = {
@@ -26,8 +27,7 @@ export const config: IFieldConfig = {
   initialValue: null,
   initializable: true,
   icon: <DateIcon />,
-  description:
-    "Date displayed and input by default as YYYY/MM/DD or input using a picker module.",
+  description: `Date displayed by default as ${DATE_FORMAT}.`,
   TableCell: withHeavyCell(BasicCell, TableCell),
   TableEditor: NullEditor as any,
   SideDrawerField,

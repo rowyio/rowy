@@ -73,7 +73,7 @@ export default function Form({ values }: IFormProps) {
         getValues={getValues}
       />
 
-      <Grid container spacing={4} direction="column" wrap="nowrap">
+      <Grid container spacing={3} direction="column" wrap="nowrap">
         {fields.map((field, i) => {
           // Derivative/aggregate field support
           let type = field.type;

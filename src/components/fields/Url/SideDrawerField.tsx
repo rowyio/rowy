@@ -20,7 +20,6 @@ export default function Url({
               variant="filled"
               fullWidth
               margin="none"
-              placeholder={column.name as string}
               onChange={onChange}
               onBlur={onBlur}
               value={value}

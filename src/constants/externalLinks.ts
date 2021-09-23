@@ -33,4 +33,6 @@ export const EXTERNAL_LINKS = {
   rowyRunDocs: meta.homepage.replace("//", "//docs.") + "/rowyRun",
 
   rowyAppHostName: "rowy.app",
+
+  dateFormat: "https://date-fns.org/v2.24.0/docs/format",
 };

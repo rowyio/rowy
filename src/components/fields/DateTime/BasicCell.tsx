@@ -1,17 +1,16 @@
 import { IBasicCellProps } from "../types";
 import { format } from "date-fns";
 import { DATE_TIME_FORMAT } from "constants/dates";
-import { DateTimeIcon } from ".";
 
-export default function DateTime({ value }: IBasicCellProps) {
+export default function DateTime({
+  value,
+  format: formatProp,
+}: IBasicCellProps & { format?: string }) {
   if (!!value && "toDate" in value) {
     try {
-      const formatted = format(value.toDate(), DATE_TIME_FORMAT);
+      const formatted = format(value.toDate(), formatProp || DATE_TIME_FORMAT);
       return (
-        <>
-          <DateTimeIcon style={{ marginRight: 5 }} />
-          {formatted}
-        </>
+        <span style={{ fontVariantNumeric: "tabular-nums" }}>{formatted}</span>
       );
     } catch (e) {
       return null;

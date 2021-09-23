@@ -1,74 +1,68 @@
+import { Controller } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 
-import { useTheme } from "@mui/material";
-// import {
-//   KeyboardDateTimePicker,
-//   KeyboardDateTimePickerProps,
-// } from "@material-ui/pickers";
+import DatePicker from "@mui/lab/DatePicker";
+import { TextField } from "@mui/material";
 
-// import { MuiPickersUtilsProvider } from "@material-ui/pickers";
-// import DateFnsUtils from "@date-io/date-fns";
+import { transformValue, sanitizeValue } from "../Date/utils";
+import { DATE_TIME_FORMAT } from "constants/dates";
+import { DateTimeIcon } from ".";
 
-export interface IDateTimeProps extends ISideDrawerFieldProps {
-  // ,Omit<
-  //   KeyboardDateTimePickerProps,
-  //   "name" | "onChange" | "value" | "disabled"
-  // >
-}
+export interface IDateProps extends ISideDrawerFieldProps {}
 
-export default function DateTime({}: IDateTimeProps) {
-  const theme = useTheme();
+export default function Date_({ column, control }: IDateProps) {
+  const format = column.config?.format ?? DATE_TIME_FORMAT;
 
-  return <></>;
+  return (
+    <Controller
+      control={control}
+      name={column.key}
+      render={({ onChange, value }) => {
+        const transformedValue = transformValue(value);
 
-  // TODO: return (
-  //   <Controller
-  //     control={control}
-  //     name={column.key}
-  //     render={({ onChange, onBlur, value }) => {
-  //       const transformedValue = transformValue(value);
+        const handleChange = (date: Date | null) => {
+          const sanitized = sanitizeValue(date);
+          if (sanitized === undefined) return;
+          onChange(sanitized);
+        };
 
-  //       const handleChange = (date: Date | null) => {
-  //         const sanitized = sanitizeValue(date);
-  //         if (sanitized === undefined) return;
-  //         onChange(sanitized);
-  //       };
-
-  //       return (
-  //         <MuiPickersUtilsProvider utils={DateFnsUtils}>
-  //           <KeyboardDateTimePicker
-  //             variant="inline"
-  //             inputVariant="filled"
-  //             fullWidth
-  //             margin="none"
-  //             format={DATE_TIME_FORMAT}
-  //             placeholder={DATE_TIME_FORMAT}
-  //             InputAdornmentProps={{
-  //               style: { marginRight: theme.spacing(-1) },
-  //             }}
-  //             keyboardIcon={<TimeIcon />}
-  //             {...props}
-  //             value={transformedValue}
-  //             onChange={handleChange}
-  //             onBlur={onBlur}
-  //             label=""
-  //             hiddenLabel
-  //             id={`sidedrawer-field-${column.key}`}
-  //             dateRangeIcon={
-  //               <DateRangeIcon
-  //                 style={{ color: theme.palette.primary.contrastText }}
-  //               />
-  //             }
-  //             timeIcon={
-  //               <TimeIcon
-  //                 style={{ color: theme.palette.primary.contrastText }}
-  //               />
-  //             }
-  //             disabled={disabled}
-  //           />
-  //         </MuiPickersUtilsProvider>
-  //       );
-  //     }}
-  //   />
-  // );
+        return (
+          <DatePicker
+            renderInput={(props) => (
+              <TextField
+                {...props}
+                fullWidth
+                label=""
+                hiddenLabel
+                aria-label={column.name as string}
+                InputProps={{
+                  ...props.InputProps,
+                  endAdornment: props.InputProps?.endAdornment || (
+                    <DateTimeIcon color="action" />
+                  ),
+                }}
+                sx={{
+                  "& .MuiInputBase-input": {
+                    fontVariantNumeric: "tabular-nums",
+                  },
+                  "& .MuiInputAdornment-root": { m: 0 },
+                }}
+                // Touch mode: make the whole field clickable
+                onClick={props.inputProps?.onClick as any}
+              />
+            )}
+            label={column.name}
+            value={transformedValue}
+            onChange={handleChange}
+            inputFormat={format}
+            mask={format.replace(/[A-Za-z]/g, "_")}
+            clearable
+            OpenPickerButtonProps={{ size: "small" }}
+            components={{ OpenPickerIcon: DateTimeIcon }}
+            disableOpenPicker={false}
+          />
+        );
+      }}
+    />
+  );
 }

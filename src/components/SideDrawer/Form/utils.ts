@@ -23,7 +23,7 @@ export const useFieldStyles = makeStyles((theme) =>
   createStyles({
     root: {
       borderRadius: theme.shape.borderRadius,
-      padding: theme.spacing(0.75, 1, 0.75, 1.5),
+      padding: theme.spacing(0.5, 1),
 
       backgroundColor: theme.palette.action.input,
       boxShadow: `0 0 0 1px ${

@@ -18,7 +18,6 @@ export default function Email({
             variant="filled"
             fullWidth
             margin="none"
-            placeholder={column.name as string}
             onChange={onChange}
             onBlur={onBlur}
             value={value}

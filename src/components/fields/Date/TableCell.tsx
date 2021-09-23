@@ -1,124 +1,115 @@
+import { useDebouncedCallback } from "use-debounce";
 import { IHeavyCellProps } from "../types";
 
-import { makeStyles, createStyles } from "@mui/styles";
-import MobileDatePicker from "@mui/lab/MobileDatePicker";
+import DatePicker from "@mui/lab/DatePicker";
 import { TextField } from "@mui/material";
 
-import { transformValue } from "./utils";
-
-// import DateFnsUtils from "@date-io/date-fns";
-// import {
-//   MuiPickersUtilsProvider,
-//   KeyboardDatePicker,
-//   DatePickerProps,
-// } from "@material-ui/pickers";
-
-import { useProjectContext } from "contexts/ProjectContext";
+import { transformValue, sanitizeValue } from "./utils";
+import { DATE_FORMAT } from "constants/dates";
 import BasicCell from "./BasicCell";
+import { DateIcon } from ".";
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    root: { height: "100%" },
-    inputBase: {
-      height: "100%",
-      color: "inherit",
-    },
-
-    inputAdornment: {
-      height: "100%",
-      marginLeft: theme.spacing(9 / 8),
-      marginRight: theme.spacing(0.25),
-    },
-
-    input: {
-      ...theme.typography.body2,
-      fontSize: "0.75rem",
-      color: "inherit",
-      height: "100%",
-      padding: theme.spacing(1.5, 0),
-    },
-
-    dateTabIcon: {
-      color: theme.palette.primary.contrastText,
-    },
-
-    disabledCell: {
-      color: theme.palette.text.disabled,
-      display: "flex",
-      alignItems: "center",
-    },
-  })
-);
-
-export default function Date_({ column, value, disabled }: IHeavyCellProps) {
-  const classes = useStyles();
-  const { updateCell } = useProjectContext();
-
+export default function Date_({
+  column,
+  value,
+  disabled,
+  onSubmit,
+}: IHeavyCellProps) {
+  const format = column.config?.format ?? DATE_FORMAT;
   const transformedValue = transformValue(value);
 
-  // const [handleDateChange] = useDebouncedCallback<DatePickerProps["onChange"]>(
-  //   (date) => {
-  //     const sanitized = sanitizeValue(date);
-  //     if (sanitized === undefined) return;
-
-  //     onSubmit(sanitized);
-  //     if (dataGridRef?.current?.selectCell)
-  //       dataGridRef.current.selectCell({ rowIdx, idx: column.idx });
-  //   },
-  //   500
-  // );
+  const [handleDateChange] = useDebouncedCallback((date: Date | null) => {
+    const sanitized = sanitizeValue(date);
+    if (sanitized === undefined) return;
+    onSubmit(sanitized);
+  }, 500);
 
   if (disabled)
     return (
-      <div className={classes.disabledCell}>
-        <BasicCell
-          value={value}
-          type={(column as any).type}
-          name={column.key}
-        />
-      </div>
+      <BasicCell
+        value={value}
+        type={(column as any).type}
+        name={column.key}
+        format={format}
+      />
     );
 
   return (
-    <MobileDatePicker
+    <DatePicker
       renderInput={(props) => (
         <TextField
           {...props}
           fullWidth
-          variant="standard"
+          label=""
+          hiddenLabel
+          aria-label={column.name as string}
           InputProps={{
-            disableUnderline: true,
-            classes: { root: classes.inputBase, input: classes.input },
+            ...props.InputProps,
+            endAdornment: props.InputProps?.endAdornment || (
+              <DateIcon
+                className="row-hover-iconButton"
+                sx={{
+                  borderRadius: 1,
+                  p: (32 - 24) / 2 / 8,
+                  boxSizing: "content-box",
+                  mr: 0.5,
+                }}
+              />
+            ),
           }}
-          // InputAdornmentProps={{
-          //   position: "start",
-          //   classes: { root: classes.inputAdornment },
-          // }}
+          className="cell-collapse-padding"
+          sx={{
+            width: "100%",
+            height: "100%",
+
+            "& .MuiInputBase-root": {
+              height: "100%",
+              font: "inherit", // Prevent text jumping
+              letterSpacing: "inherit", // Prevent text jumping
+
+              ".rdg-cell &": {
+                background: "none !important",
+                boxShadow: "none",
+                borderRadius: 0,
+                padding: 0,
+
+                "&::after": { width: "100%", left: 0 },
+              },
+            },
+            "& .MuiInputBase-input": {
+              height: "100%",
+              font: "inherit", // Prevent text jumping
+              letterSpacing: "inherit", // Prevent text jumping
+              fontVariantNumeric: "tabular-nums",
+
+              ".rdg-cell &": {
+                padding: "var(--cell-padding)",
+                pr: 0,
+              },
+            },
+            "& .MuiInputAdornment-root": { m: 0 },
+          }}
+          // Prevent react-data-grid showing NullEditor, which unmounts this field
+          onDoubleClick={(e) => e.stopPropagation()}
+          onKeyDown={(e) => e.stopPropagation()}
+          // Touch mode: make the whole field clickable
+          onClick={props.inputProps?.onClick as any}
         />
       )}
+      label={column.name}
       value={transformedValue}
-      onChange={console.log}
-      // onChange={handleDateChange}
-      // onClick={(e) => e.stopPropagation()}
-      // format={column.config?.format ?? DATE_FORMAT}
+      onChange={handleDateChange}
+      inputFormat={format}
+      mask={format.replace(/[A-Za-z]/g, "_")}
       clearable
-      // keyboardIcon={<DateIcon />}
-      // className={clsx("cell-collapse-padding", classes.root)}
-      // inputVariant="standard"
-      // InputProps={{
-      //   disableUnderline: true,
-      //   classes: { root: classes.inputBase, input: classes.input },
-      // }}
-      // InputAdornmentProps={{
-      //   position: "start",
-      //   classes: { root: classes.inputAdornment },
-      // }}
-      // KeyboardButtonProps={{
-      //   size: "small",
-      //   classes: { root: !disabled ? "row-hover-iconButton" : undefined },
-      // }}
-      // DialogProps={{ onClick: (e) => e.stopPropagation() }}
-      // disabled={disabled}
+      OpenPickerButtonProps={{
+        size: "small",
+        className: "row-hover-iconButton",
+        edge: false,
+        sx: { mr: 0.5 },
+      }}
+      components={{ OpenPickerIcon: DateIcon }}
+      disableOpenPicker={false}
     />
   );
 }

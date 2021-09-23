@@ -24,9 +24,7 @@ export default function EmptyTable() {
           <Typography>
             There is existing data in the Firestore collection:
             <br />
-            <Typography component="span" sx={{ fontFamily: "mono" }}>
-              {tableState?.tablePath}
-            </Typography>
+            <code>{tableState?.tablePath}</code>
           </Typography>
         </div>
 
@@ -58,9 +56,7 @@ export default function EmptyTable() {
           <Typography>
             There is no data in the Firestore collection:
             <br />
-            <Typography component="span" sx={{ fontFamily: "mono" }}>
-              {tableState?.tablePath}
-            </Typography>
+            <code>{tableState?.tablePath}</code>
           </Typography>
         </div>
 
@@ -139,7 +135,6 @@ export default function EmptyTable() {
         maxWidth: 480,
         margin: "0 auto",
         textAlign: "center",
-        userSelect: "none",
       }}
     >
       {contents}
