@@ -92,7 +92,7 @@ const useStyles = makeStyles((theme) =>
           {
             maxWidth: "none",
             minHeight: 32,
-            padding: theme.spacing(0.5, 1.5),
+            padding: theme.spacing(0.5, 1),
 
             backgroundColor: theme.palette.action.input + " !important",
             "&:hover": {
@@ -113,6 +113,8 @@ const useStyles = makeStyles((theme) =>
           },
         "& .firebaseui-idp-icon": {
           display: "block",
+          width: 20,
+          height: 20,
         },
         "& .firebaseui-idp-text": {
           ...theme.typography.button,
@@ -153,6 +155,10 @@ const useStyles = makeStyles((theme) =>
           },
         "& .firebaseui-idp-password .firebaseui-idp-icon, & .firebaseui-idp-phone .firebaseui-idp-icon, & .firebaseui-idp-anonymous .firebaseui-idp-icon":
           {
+            width: 24,
+            height: 24,
+            position: "relative",
+            left: -2,
             filter: theme.palette.mode === "light" ? "invert(1)" : "",
           },
 

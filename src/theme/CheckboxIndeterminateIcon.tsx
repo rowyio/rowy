@@ -10,6 +10,7 @@ export default function CheckboxIndeterminateIcon() {
         height: toRem(18),
         margin: toRem((24 - 18) / 2),
         borderRadius: 1,
+        display: "flex",
 
         position: "relative",
 
@@ -46,7 +47,7 @@ export default function CheckboxIndeterminateIcon() {
           boxShadow: 1,
         },
 
-        ".Mui-checked &": {
+        ".Mui-checked &, [aria-selected='true'] &": {
           backgroundColor: "currentColor",
           borderColor: "currentColor",
 

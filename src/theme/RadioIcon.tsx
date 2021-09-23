@@ -10,6 +10,7 @@ export default function RadioIcon() {
         height: toRem(20),
         margin: toRem((24 - 20) / 2),
         borderRadius: "50%",
+        display: "flex",
 
         backgroundColor: "transparent",
         border: "1px solid",
@@ -37,7 +38,7 @@ export default function RadioIcon() {
             }),
         },
 
-        ".Mui-checked &": {
+        ".Mui-checked &, [aria-selected='true'] &": {
           backgroundColor: "currentColor",
           borderColor: "currentColor",
 
