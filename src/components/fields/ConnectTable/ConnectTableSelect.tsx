@@ -4,12 +4,14 @@ import useAlgolia from "use-algolia";
 import _find from "lodash/find";
 import _get from "lodash/get";
 import _pick from "lodash/pick";
-
+import { useSnackbar } from "notistack";
 import MultiSelect, { MultiSelectProps } from "@rowy/multiselect";
 import Loading from "components/Loading";
-import { getAlgoliaSearchKey } from "../../../firebase/callables";
 import createPersistedState from "use-persisted-state";
-const useAlgoliaSearchKeys = createPersistedState("algolia-search");
+import { useProjectContext } from "@src/contexts/ProjectContext";
+import { runRoutes } from "@src/constants/runRoutes";
+const useAlgoliaSearchKeys = createPersistedState("_ROWY_algolia-search-keys");
+const useAlgoliaAppId = createPersistedState("_ROWY_algolia-app-id");
 
 export type ConnectTableValue = {
   docPath: string;
@@ -61,6 +63,25 @@ export default function ConnectTableSelect({
 }: IConnectTableSelectProps) {
   // Store a local copy of the value so the dropdown doesn’t automatically close
   // when the user selects a new item and we allow for multiple selections
+  const { enqueueSnackbar } = useSnackbar();
+  const { rowyRun } = useProjectContext();
+  const [algoliaAppId, setAlgoliaAppId] = useAlgoliaAppId<string | undefined>(
+    undefined
+  );
+
+  useEffect(() => {
+    if (!algoliaAppId && rowyRun) {
+      rowyRun({ route: runRoutes.algoliaAppId }).then(
+        ({ success, appId, message }) => {
+          if (success) {
+            setAlgoliaAppId(appId);
+          } else {
+            enqueueSnackbar(message, { variant: "error" });
+          }
+        }
+      );
+    }
+  }, []);
   const [localValue, setLocalValue] = useState(
     Array.isArray(value) ? value : []
   );
@@ -72,9 +93,10 @@ export default function ConnectTableSelect({
   const [algoliaSearchKeys, setAlgoliaSearchKeys] = useAlgoliaSearchKeys<any>(
     {}
   );
+
   const [algoliaState, requestDispatch, , setAlgoliaConfig] = useAlgolia(
-    process.env.REACT_APP_ALGOLIA_APP_ID!,
-    process.env.REACT_APP_ALGOLIA_SEARCH_API_KEY ?? "",
+    "",
+    "",
     // Don’t choose the index until the user opens the dropdown if !loadBeforeOpen
     loadBeforeOpen ? algoliaIndex : "",
     { filters }
@@ -90,31 +112,37 @@ export default function ConnectTableSelect({
     ) {
       //'use existing key'
       setAlgoliaConfig({
+        appId: algoliaAppId,
         indexName: algoliaIndex,
         searchKey: (algoliaSearchKeys?.[algoliaIndex] as any).key,
       });
     } else {
       //'get new key'
-      const resp = await getAlgoliaSearchKey(algoliaIndex);
-      const key = resp.data.data;
-      if (key) {
-        const newKey = {
-          key,
-          requestedAt,
-        };
-        setAlgoliaSearchKeys(
-          algoliaSearchKeys
-            ? { ...algoliaSearchKeys, [algoliaIndex]: newKey }
-            : { [algoliaIndex]: newKey }
-        );
-        setAlgoliaConfig({ indexName: algoliaIndex, searchKey: key });
+      if (rowyRun) {
+        const resp = await rowyRun({
+          route: runRoutes.algoliaSearchKey,
+          params: [algoliaIndex as string],
+        });
+        const { key } = resp;
+        console.log(key);
+        if (key) {
+          const newKey = {
+            key,
+            requestedAt,
+          };
+          setAlgoliaSearchKeys(
+            algoliaSearchKeys
+              ? { ...algoliaSearchKeys, [algoliaIndex]: newKey }
+              : { [algoliaIndex]: newKey }
+          );
+          setAlgoliaConfig({ indexName: algoliaIndex, searchKey: key });
+        }
       }
     }
   };
 
   useEffect(() => {
-    if (!process.env.REACT_APP_ALGOLIA_SEARCH_API_KEY)
-      setAlgoliaSearchKey(algoliaIndex);
+    setAlgoliaSearchKey(algoliaIndex);
   }, [algoliaIndex]);
 
   const options = algoliaState.hits.map((hit) => ({
