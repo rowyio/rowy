@@ -116,13 +116,14 @@ export const colorsLight = (
 };
 
 export const colorsDark = (
-  _primary: Parameters<typeof colord>[0] = DARK_PRIMARY
+  _primary: Parameters<typeof colord>[0] = DARK_PRIMARY,
+  darker?: boolean
 ): ThemeOptions => {
   const primary = colord(_primary);
   const h = primary.toLch().h;
   const secondary = colord({ l: 96, c: 1, h });
-  const bgDefault = colord({ l: 5, c: 2, h });
-  const bgPaper = colord({ l: 5, c: 2, h });
+  const bgDefault = darker ? colord("#000") : colord({ l: 5, c: 2, h });
+  const bgPaper = darker ? colord("#000") : bgDefault;
   const shadowBase = colord({ l: 0, c: 2, h });
 
   return {
