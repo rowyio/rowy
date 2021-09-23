@@ -1,37 +1,14 @@
 import { useRef, useLayoutEffect } from "react";
 import { EditorProps } from "react-data-grid";
 
-import { makeStyles, createStyles } from "@mui/styles";
 import { TextField } from "@mui/material";
 
 import { FieldType } from "constants/fields";
 import { getCellValue } from "utils/fns";
 import { useProjectContext } from "contexts/ProjectContext";
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    root: {
-      width: "100%",
-      height: "100%",
-      backgroundColor: "var(--background-color)",
-    },
-
-    inputBase: {
-      height: "100%",
-      font: "inherit", // Prevent text jumping
-      letterSpacing: "inherit", // Prevent text jumping
-    },
-    input: {
-      font: "inherit", // Prevent text jumping
-      letterSpacing: "inherit", // Prevent text jumping
-      padding: "var(--cell-padding)",
-    },
-  })
-);
-
 export default function TextEditor({ row, column }: EditorProps<any>) {
   const { updateCell } = useProjectContext();
-  const classes = useStyles();
 
   const type = (column as any).config?.renderFieldType ?? (column as any).type;
 
@@ -88,9 +65,23 @@ export default function TextEditor({ row, column }: EditorProps<any>) {
         ref: inputRef,
         maxLength: maxLength,
       }}
-      className={classes.root}
+      sx={{
+        width: "100%",
+        height: "100%",
+        backgroundColor: "var(--background-color)",
+
+        "& .MuiInputBase-root": {
+          height: "100%",
+          font: "inherit", // Prevent text jumping
+          letterSpacing: "inherit", // Prevent text jumping
+        },
+        "& .MuiInputBase-input": {
+          font: "inherit", // Prevent text jumping
+          letterSpacing: "inherit", // Prevent text jumping
+          padding: "var(--cell-padding)",
+        },
+      }}
       InputProps={{
-        classes: { root: classes.inputBase, input: classes.input },
         endAdornment:
           (column as any).type === FieldType.percentage ? "%" : undefined,
       }}
