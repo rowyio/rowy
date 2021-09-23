@@ -77,15 +77,17 @@ export default function Navigation({
             transition: (theme) => theme.transitions.create("opacity"),
           },
 
-          pl: pinned && open ? `${NAV_DRAWER_WIDTH}px` : 0,
+          pl: canPin && pinned && open ? `${NAV_DRAWER_WIDTH}px` : 0,
           transition: (theme) =>
             theme.transitions.create("padding-left", {
-              easing: pinned
-                ? theme.transitions.easing.easeOut
-                : theme.transitions.easing.sharp,
-              duration: pinned
-                ? theme.transitions.duration.enteringScreen
-                : theme.transitions.duration.leavingScreen,
+              easing:
+                canPin && pinned
+                  ? theme.transitions.easing.easeOut
+                  : theme.transitions.easing.sharp,
+              duration:
+                canPin && pinned
+                  ? theme.transitions.duration.enteringScreen
+                  : theme.transitions.duration.leavingScreen,
             }),
         }}
       >
@@ -162,7 +164,17 @@ export default function Navigation({
               <Loading fullScreen style={{ marginTop: -APP_BAR_HEIGHT }} />
             }
           >
-            <div style={{ flexGrow: 1 }}>{children}</div>
+            <div
+              style={{
+                flexGrow: 1,
+                maxWidth:
+                  canPin && pinned && open
+                    ? `calc(100% - ${NAV_DRAWER_WIDTH}px)`
+                    : "100%",
+              }}
+            >
+              {children}
+            </div>
           </Suspense>
         </ErrorBoundary>
       </Stack>
