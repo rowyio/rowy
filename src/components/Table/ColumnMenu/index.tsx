@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from "react";
 
-import { Menu, ListItem, ListItemIcon, ListItemText } from "@mui/material";
+import {
+  Menu,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Typography,
+} from "@mui/material";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import LockIcon from "@mui/icons-material/LockOutlined";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOffOutlined";
-import VisibilityIcon from "@mui/icons-material/VisibilityOutlined";
+// import VisibilityOffIcon from "@mui/icons-material/VisibilityOffOutlined";
+// import VisibilityIcon from "@mui/icons-material/VisibilityOutlined";
 import FreezeIcon from "assets/icons/Freeze";
 import UnfreezeIcon from "assets/icons/Unfreeze";
 import CellResizeIcon from "assets/icons/CellResize";
@@ -22,6 +28,7 @@ import NameChange from "./NameChange";
 import NewColumn from "./NewColumn";
 import TypeChange from "./TypeChange";
 import FieldSettings from "./FieldSettings";
+import ColumnHeader from "components/Wizards/Column";
 
 import { useProjectContext } from "contexts/ProjectContext";
 import { FieldType } from "constants/fields";
@@ -29,6 +36,7 @@ import { getFieldProp } from "components/fields";
 
 import { Column } from "react-data-grid";
 import { PopoverProps } from "@mui/material";
+import { useConfirmation } from "components/ConfirmationDialog";
 
 const INITIAL_MODAL = { type: "", data: {} };
 
@@ -65,6 +73,7 @@ export interface IMenuModalProps {
 export default function ColumnMenu() {
   const [modal, setModal] = useState(INITIAL_MODAL);
   const { tableState, tableActions, columnMenuRef } = useProjectContext();
+  const { requestConfirmation } = useConfirmation();
 
   const [selectedColumnHeader, setSelectedColumnHeader] = useState<any>(null);
   if (columnMenuRef)
@@ -250,12 +259,30 @@ export default function ColumnMenu() {
     //   color: "error" as "error",
     // },
     {
-      label: "Delete column",
+      label: "Delete column…",
       icon: <ColumnRemoveIcon />,
-      onClick: () => {
-        actions.remove(column.key);
-        handleClose();
-      },
+      onClick: () =>
+        requestConfirmation({
+          title: "Delete column?",
+          customBody: (
+            <>
+              <Typography>
+                Only the column configuration will be deleted. No data will be
+                deleted.
+              </Typography>
+              <ColumnHeader type={column.type} label={column.name} />
+              <Typography sx={{ mt: 1 }}>
+                Key: <code style={{ userSelect: "all" }}>{column.key}</code>
+              </Typography>
+            </>
+          ),
+          confirm: "Delete",
+          confirmColor: "error",
+          handleConfirm: () => {
+            actions.remove(column.key);
+            handleClose();
+          },
+        }),
       color: "error" as "error",
     },
   ];
@@ -293,7 +320,7 @@ export default function ColumnMenu() {
               primary={column.name as string}
               secondary={
                 <>
-                  Key: <span style={{ userSelect: "all" }}>{column.key}</span>
+                  Key: <code style={{ userSelect: "all" }}>{column.key}</code>
                 </>
               }
               primaryTypographyProps={{ variant: "subtitle2" }}

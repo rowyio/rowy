@@ -69,13 +69,25 @@ export default function FinalColumn({ row }: FormatterProps<any, any>) {
               ? handleDelete
               : () => {
                   requestConfirmation({
-                    title: "Delete Row?",
+                    title: "Delete row?",
+                    customBody: (
+                      <>
+                        Row path:
+                        <br />
+                        <code
+                          style={{ userSelect: "all", wordBreak: "break-all" }}
+                        >
+                          {row.ref.path}
+                        </code>
+                      </>
+                    ),
                     confirm: "Delete",
+                    confirmColor: "error",
                     handleConfirm: handleDelete,
                   });
                 }
           }
-          aria-label="Delete row…"
+          aria-label={`Delete Row${altPress ? "" : "…"}`}
           className="row-hover-iconButton"
           sx={{
             ".rdg-row:hover &.row-hover-iconButton": {

@@ -116,9 +116,8 @@ export default function DraggableHeaderRenderer<R>({
 }) {
   const classes = useStyles();
 
-  const {userClaims}=useAppContext()
-  const { tableState, tableActions,  columnMenuRef } =
-    useProjectContext();
+  const { userClaims } = useAppContext();
+  const { tableState, tableActions, columnMenuRef } = useProjectContext();
   const [{ isDragging }, drag] = useDrag({
     item: { key: column.key, type: "COLUMN_DRAG" },
     collect: (monitor) => ({
@@ -187,7 +186,7 @@ export default function DraggableHeaderRenderer<R>({
             <>
               Click to copy field key:
               <br />
-              <b>{column.key}</b>
+              <code style={{ padding: 0 }}>{column.key}</code>
             </>
           }
           enterDelay={1000}

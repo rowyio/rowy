@@ -184,8 +184,8 @@ export const components = (theme: Theme): ThemeOptions => {
             "& .MuiButton-root": { minWidth: 100 },
           },
           spacing: {
-            padding: theme.spacing(2, 1),
-            [theme.breakpoints.down("sm")]: { padding: theme.spacing(1.5, 1) },
+            padding: theme.spacing(2),
+            [theme.breakpoints.down("sm")]: { padding: theme.spacing(1.5) },
           },
         },
       },
