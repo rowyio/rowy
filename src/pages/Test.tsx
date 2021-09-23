@@ -34,7 +34,8 @@ import {
   TextField,
   Tabs,
   Tab,
-  CircularProgress,LinearProgress
+  CircularProgress,
+  LinearProgress,
 } from "@mui/material";
 import SparkIcon from "@mui/icons-material/OfflineBoltOutlined";
 import { useConfirmation } from "components/ConfirmationDialog";
@@ -71,11 +72,12 @@ export default function TestView() {
 
   return (
     <Navigation title="Theme Test">
-      <Container
-        style={{ margin: "24px 0 200px", overflowX: "auto", width: "100%" }}
-      >
+      <Container style={{ margin: "24px 0 200px", width: "100%" }}>
         <Stack spacing={8}>
-          <Table stickyHeader>
+          <Table
+            stickyHeader
+            style={{ overflowX: "auto", display: "block", width: "100%" }}
+          >
             <TableHead>
               <TableRow>
                 <TableCell>Variant</TableCell>
