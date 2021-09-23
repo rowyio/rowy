@@ -21,11 +21,7 @@ import { db } from "@src/firebase";
 import { USERS } from "config/dbPaths";
 import { useConfirmation } from "components/ConfirmationDialog";
 
-export default function UserItem({
-  id,
-  user: { displayName, email, photoURL },
-  roles: rolesProp,
-}: User) {
+export default function UserItem({ id, user, roles: rolesProp }: User) {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const { requestConfirmation } = useConfirmation();
 
@@ -36,33 +32,36 @@ export default function UserItem({
 
   const handleSave = async () => {
     try {
+      if (!user) throw new Error("User is not defined");
       if (JSON.stringify(value) === JSON.stringify(rolesProp)) return;
 
       const loadingSnackbarId = enqueueSnackbar("Setting roles…");
 
       const res = await rowyRun?.({
         route: runRoutes.setUserRoles,
-        body: { email, roles: value },
+        body: { email: user!.email, roles: value },
       });
       if (res.success) {
         await db.collection(USERS).doc(id).update({ roles: value });
         closeSnackbar(loadingSnackbarId);
-        enqueueSnackbar(`Set roles for ${email}: ${value.join(", ")}`);
+        enqueueSnackbar(`Set roles for ${user!.email}: ${value.join(", ")}`);
       }
     } catch (e: any) {
       console.error(e);
-      enqueueSnackbar(`Failed to set roles for ${email}: ${e.message}`);
+      enqueueSnackbar(`Failed to set roles for ${user!.email}: ${e.message}`);
     }
   };
 
   const listItemChildren = (
     <>
       <ListItemAvatar>
-        <Avatar src={photoURL}>SM</Avatar>
+        <Avatar src={user?.photoURL}>
+          {user?.displayName ? user.displayName[0] : undefined}
+        </Avatar>
       </ListItemAvatar>
       <ListItemText
-        primary={displayName}
-        secondary={email}
+        primary={user?.displayName}
+        secondary={user?.email}
         sx={{
           overflowX: "hidden",
           "& > *": { userSelect: "all" },
@@ -85,10 +84,14 @@ export default function UserItem({
       confirm: "Delete",
       confirmColor: "error",
       handleConfirm: async () => {
+        if (!user) return;
         const loadingSnackbarId = enqueueSnackbar("Deleting user…");
-        await rowyRun?.({ route: runRoutes.deleteUser, body: { email } });
+        await rowyRun?.({
+          route: runRoutes.deleteUser,
+          body: { email: user.email },
+        });
         closeSnackbar(loadingSnackbarId);
-        enqueueSnackbar(`Deleted user: ${email}`);
+        enqueueSnackbar(`Deleted user: ${user.email}`);
       },
     });
   };
@@ -152,8 +155,9 @@ export default function UserItem({
             <IconButton
               aria-label="Copy UID"
               onClick={async () => {
+                if (!id) return;
                 await navigator.clipboard.writeText(id);
-                enqueueSnackbar(`Copied UID for ${email}: ${id}`);
+                enqueueSnackbar(`Copied UID for ${user?.email}: ${id}`);
               }}
             >
               <CopyIcon />
