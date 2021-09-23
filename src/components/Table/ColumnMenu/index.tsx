@@ -237,18 +237,18 @@ export default function ColumnMenu() {
     //   onClick: () => alert("REORDER"),
     // },
 
-    {
-      label: "Hide for everyone",
-      activeLabel: "Show",
-      icon: <VisibilityOffIcon />,
-      activeIcon: <VisibilityIcon />,
-      onClick: () => {
-        actions.update(column.key, { hidden: !column.hidden });
-        handleClose();
-      },
-      active: column.hidden,
-      color: "error" as "error",
-    },
+    // {
+    //   label: "Hide for everyone",
+    //   activeLabel: "Show",
+    //   icon: <VisibilityOffIcon />,
+    //   activeIcon: <VisibilityIcon />,
+    //   onClick: () => {
+    //     actions.update(column.key, { hidden: !column.hidden });
+    //     handleClose();
+    //   },
+    //   active: column.hidden,
+    //   color: "error" as "error",
+    // },
     {
       label: "Delete column",
       icon: <ColumnRemoveIcon />,
