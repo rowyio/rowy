@@ -34,6 +34,7 @@ import {
   TextField,
   Tabs,
   Tab,
+  CircularProgress,LinearProgress
 } from "@mui/material";
 import SparkIcon from "@mui/icons-material/OfflineBoltOutlined";
 import { useConfirmation } from "components/ConfirmationDialog";
@@ -898,6 +899,9 @@ export default function TestView() {
               Progress
             </Button>
           </Stack>
+
+          <CircularProgress />
+          <LinearProgress />
         </Stack>
       </Container>
     </Navigation>

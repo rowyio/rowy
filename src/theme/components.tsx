@@ -855,6 +855,20 @@ export const components = (theme: Theme): ThemeOptions => {
           },
         },
       },
+
+      MuiCircularProgress: {
+        styleOverrides: {
+          circle: {
+            strokeLinecap: "round",
+          },
+        },
+      },
+      MuiLinearProgress: {
+        styleOverrides: {
+          root: { borderRadius: theme.shape.borderRadius },
+          bar: { borderRadius: theme.shape.borderRadius },
+        },
+      },
     },
   };
 };
