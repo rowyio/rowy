@@ -188,7 +188,6 @@ export const tableSettings = (
           options: tables,
           clearable: true,
           freeText: false,
-          clearable: true,
           itemRenderer: (option: { value: string; label: string }) => (
             <span key={option.value}>
               {option.label}
