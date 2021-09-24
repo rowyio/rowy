@@ -15,7 +15,6 @@ import CopyIcon from "assets/icons/Copy";
 import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
 
 import SetupItem from "./SetupItem";
-import SignInWithGoogle from "./SignInWithGoogle";
 
 import { name } from "@root/package.json";
 import { useAppContext } from "contexts/AppContext";
