@@ -15,11 +15,11 @@ With Rowy you can
 ✅ Connect to your favorite third party platforms  
 and do more with a fully flexible open source platform
 
-<img src="https://firebasestorage.googleapis.com/v0/b/rowyio.appspot.com/o/publicDemo%2FRowy%20Website%20Video.gif?alt=media&token=184ed868-e9dd-4082-b881-436845076d8b" />
+<img src="https://firebasestorage.googleapis.com/v0/b/rowyio.appspot.com/o/publicDemo%2FRowy%20Website%20Video%20GIF%20Small.gif?alt=media&token=3f699a8f-c1f2-4046-8ed5-e4ff66947cd8" />
 
 ### Quick Try
 
-<p>Set up Rowy on your Google Cloud Platform project with this one-click deploy button.
+<p>Set up Rowy on your Google Cloud Platform project with this one-click deploy button.<br/>
 <a href="https://deploy.cloud.run/?git_repo=https://github.com/rowyio/rowyRun.git" target="_blank">
 <img src="https://storage.googleapis.com/cloudrun/button.png" alt="One Click Deploy"
 title="One Click Deploy" width="250" /></a>
