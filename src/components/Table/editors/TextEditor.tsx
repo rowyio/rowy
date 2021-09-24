@@ -24,8 +24,10 @@ export default function TextEditor({ row, column }: EditorProps<any>) {
     return () => {
       const newValue = inputRef.current?.value;
       if (newValue !== undefined && updateCell) {
-        if (type === FieldType.number || type === FieldType.percentage) {
+        if (type === FieldType.number) {
           updateCell(row.ref, column.key, Number(newValue));
+        } else if (type === FieldType.percentage) {
+          updateCell(row.ref, column.key, Number(newValue) / 100);
         } else {
           updateCell(row.ref, column.key, newValue);
         }
