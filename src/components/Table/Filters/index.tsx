@@ -7,11 +7,11 @@ import { makeStyles, createStyles } from "@mui/styles";
 import {
   Popover,
   Button,
-  Typography,
   IconButton,
   Grid,
   MenuItem,
   TextField,
+  FormControlLabel,
   Switch,
   Chip,
 } from "@mui/material";
@@ -94,10 +94,13 @@ const useStyles = makeStyles((theme) =>
       right: theme.spacing(0.5),
     },
 
-    content: { padding: theme.spacing(4) },
+    content: { padding: theme.spacing(2, 3) },
 
     topRow: { marginBottom: theme.spacing(3.5) },
-    bottomButtons: { marginTop: theme.spacing(4.5) },
+    bottomButtons: {
+      marginTop: theme.spacing(3),
+      "& .MuiButton-root": { minWidth: 100 },
+    },
 
     activeButton: {
       borderTopRightRadius: 0,
@@ -232,10 +235,27 @@ const Filters = () => {
     switch (type) {
       case FieldType.checkbox:
         return (
-          <Switch
-            value={query.value}
-            onChange={(e) => {
-              setQuery((query) => ({ ...query, value: e.target.checked }));
+          <FormControlLabel
+            control={
+              <Switch
+                value={query.value}
+                onChange={(e) => {
+                  setQuery((query) => ({ ...query, value: e.target.checked }));
+                }}
+                size="medium"
+              />
+            }
+            label="Value"
+            labelPlacement="top"
+            componentsProps={{
+              typography: { variant: "caption", fontWeight: "medium" },
+            }}
+            sx={{
+              mr: 0,
+              ml: -0.5,
+              position: "relative",
+              bottom: -2,
+              "& .MuiFormControlLabel-label": { mt: 0, mb: -1 / 8, ml: 0.75 },
             }}
           />
         );
@@ -246,18 +266,20 @@ const Filters = () => {
       case FieldType.url:
         return (
           <TextField
+            label="Value"
+            id="value"
             onChange={(e) => {
               const value = e.target.value;
               if (value) setQuery((query) => ({ ...query, value: value }));
             }}
-            variant="filled"
-            hiddenLabel
             placeholder="Text value"
           />
         );
       case FieldType.number:
         return (
           <TextField
+            label="Value"
+            id="value"
             onChange={(e) => {
               const value = e.target.value;
               if (query.value || value)
@@ -267,10 +289,8 @@ const Filters = () => {
                 }));
             }}
             value={typeof query.value === "number" ? query.value : ""}
-            variant="filled"
-            hiddenLabel
             type="number"
-            placeholder="number value"
+            placeholder="Number value"
           />
         );
 
@@ -278,6 +298,7 @@ const Filters = () => {
         if (operator === "in")
           return (
             <MultiSelect
+              label="Value"
               multiple
               max={10}
               freeText={true}
@@ -287,14 +308,13 @@ const Filters = () => {
                   ? selectedColumn.config.options.sort()
                   : []
               }
-              label=""
               value={Array.isArray(query?.value) ? query.value : []}
-              TextFieldProps={{ hiddenLabel: true }}
             />
           );
 
         return (
           <MultiSelect
+            label="Value"
             freeText={true}
             multiple={false}
             onChange={(value) => {
@@ -305,15 +325,14 @@ const Filters = () => {
                 ? selectedColumn.config.options.sort()
                 : []
             }
-            label=""
             value={typeof query?.value === "string" ? query.value : null}
-            TextFieldProps={{ hiddenLabel: true }}
           />
         );
 
       case FieldType.multiSelect:
         return (
           <MultiSelect
+            label="Value"
             multiple
             onChange={(value) => setQuery((query) => ({ ...query, value }))}
             value={query.value as string[]}
@@ -323,7 +342,6 @@ const Filters = () => {
                 ? selectedColumn.config.options.sort()
                 : []
             }
-            label={""}
             searchable={false}
             freeText={true}
           />
@@ -426,19 +444,8 @@ const Filters = () => {
 
           <Grid container spacing={2}>
             <Grid item xs={4}>
-              <Typography variant="overline">Column</Typography>
-            </Grid>
-            <Grid item xs={4}>
-              <Typography variant="overline">Condition</Typography>
-            </Grid>
-            <Grid item xs={4}>
-              <Typography variant="overline">Value</Typography>
-            </Grid>
-          </Grid>
-
-          <Grid container spacing={2}>
-            <Grid item xs={4}>
               <TextField
+                label="Column"
                 select
                 variant="filled"
                 hiddenLabel
@@ -460,6 +467,7 @@ const Filters = () => {
 
             <Grid item xs={4}>
               <TextField
+                label="Condition"
                 select
                 variant="filled"
                 hiddenLabel
@@ -494,39 +502,45 @@ const Filters = () => {
           <Grid
             container
             className={classes.bottomButtons}
-            justifyContent="space-between"
+            justifyContent="center"
+            spacing={1}
           >
-            {/* <Button color="primary">+ ADD FILTER</Button> */}
-            <Button
-              disabled={query.key === ""}
-              onClick={() => {
-                handleUpdateFilters([]);
-                setQuery({
-                  key: "",
-                  operator: "",
-                  value: "",
-                });
-                setSelectedColumn(null);
-                //handleClose();
-              }}
-            >
-              Clear
-            </Button>
-            <Button
-              disabled={
-                query.value !== true &&
-                query.value !== false &&
-                _isEmpty(query.value) &&
-                typeof query.value !== "number"
-              }
-              color="primary"
-              onClick={() => {
-                handleUpdateFilters([query]);
-                handleClose();
-              }}
-            >
-              Apply
-            </Button>
+            <Grid item>
+              <Button
+                disabled={query.key === ""}
+                onClick={() => {
+                  handleUpdateFilters([]);
+                  setQuery({
+                    key: "",
+                    operator: "",
+                    value: "",
+                  });
+                  setSelectedColumn(null);
+                  //handleClose();
+                }}
+              >
+                Clear
+              </Button>
+            </Grid>
+
+            <Grid item>
+              <Button
+                disabled={
+                  query.value !== true &&
+                  query.value !== false &&
+                  _isEmpty(query.value) &&
+                  typeof query.value !== "number"
+                }
+                color="primary"
+                variant="contained"
+                onClick={() => {
+                  handleUpdateFilters([query]);
+                  handleClose();
+                }}
+              >
+                Apply
+              </Button>
+            </Grid>
           </Grid>
         </div>
       </Popover>
