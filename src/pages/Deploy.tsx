@@ -43,7 +43,7 @@ export default function DeployPage() {
                 Firebase.
                 <br />
                 <Link
-                  href={WIKI_LINKS.setUpAuth}
+                  href={"https://firebase.google.com/docs/web/setup#create-project"}
                   target="_blank"
                   rel="noopener noreferrer"
                   color="text.primary"
