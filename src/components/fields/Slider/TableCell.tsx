@@ -48,7 +48,7 @@ export default function Slider({ column, value }: IHeavyCellProps) {
               maxWidth: "100%",
 
               width: `${progress}%`,
-              backgroundColor: resultColorsScale(progress / 100).hex(),
+              backgroundColor: resultColorsScale(progress / 100).toHex(),
             }}
           />
         </Box>

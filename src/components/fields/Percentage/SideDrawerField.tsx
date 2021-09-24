@@ -11,11 +11,11 @@ const useStyles = makeStyles((theme) =>
     resultColor: ({ value }: { value: number | undefined }) => ({
       backgroundColor:
         typeof value === "number"
-          ? resultColorsScale(value).hex() + "!important"
+          ? resultColorsScale(value).toHex() + "!important"
           : undefined,
       color:
         typeof value === "number"
-          ? emphasize(resultColorsScale(value).hex(), 1) + "!important"
+          ? emphasize(resultColorsScale(value).toHex(), 1) + "!important"
           : undefined,
     }),
 

@@ -11,7 +11,7 @@ export default function Percentage({ value }: IBasicCellProps) {
       <>
         <div
           style={{
-            backgroundColor: resultColorsScale(value).hex(),
+            backgroundColor: resultColorsScale(value).toHex(),
 
             position: "absolute",
             top: 0,
