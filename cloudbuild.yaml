@@ -2,7 +2,6 @@ steps:
   - name: node:10.17.0
     entrypoint: yarn
     args: ["install"]
-    dir: "www"
   - name: node:10.17.0
     entrypoint: yarn
     args:
@@ -11,11 +10,9 @@ steps:
       - "${_FIREBASE_WEB_API_KEY}"
       - "${_ALGOLIA_APP_ID}"
       - "${_ALGOLIA_APP_KEY}"
-    dir: "www"
   - name: node:10.17.0
     entrypoint: yarn
     args: ["build"]
-    dir: "www"
   - name: node:10.17.0
     entrypoint: yarn
     args:
@@ -23,7 +20,6 @@ steps:
       - "${_HOSTING_TARGET}"
       - --project
       - "${_PROJECT_ID}"
-    dir: "www"
   - name: node:10.17.0
     entrypoint: yarn
     args:
@@ -35,7 +31,6 @@ steps:
       - "${_FIREBASE_TOKEN}"
       - --only
       - hosting
-    dir: "www"
 substitutions:
   _PROJECT_ID: "project-id" # default value
 options:

@@ -1,163 +1,36 @@
 <h1 align="center">
-    Firetable
+    Rowy
 </h1>
 
 <h3 align="center">
-  Firetable is an open-source platform to unlock the full potential of Google Firestore
+
+Rowy is an open source platform that allows you to build on Google Cloud
+Platform in minutes.
+
 </h3>
 
-<p align="center">
-   With Firetable, non-technical team members can access Firestore data with a permission controlled intuitive UI while developers can build fast on the GCP stack (manage their data models, create and deploy cloud functions, connect to third party apps via webhooks and APIs...and more!) 🚀
+With Rowy you can  
+✅ Manage Firestore data in a spreadsheet-like UI  
+✅ Write Cloud Functions effortlessly in the browser  
+✅ Connect to your favorite third party platforms  
+and do more with a fully flexible open source platform
+
+<img src="https://firebasestorage.googleapis.com/v0/b/rowyio.appspot.com/o/publicDemo%2FRowy%20Website%20Video.gif?alt=media&token=184ed868-e9dd-4082-b881-436845076d8b" />
+
+### Quick Try
+
+<p>Set up Rowy on your Google Cloud Platform project with this one-click deploy button.
+<a href="https://deploy.cloud.run/?git_repo=https://github.com/rowyio/rowyRun.git" target="_blank">
+<img src="https://storage.googleapis.com/cloudrun/button.png" alt="One Click Deploy"
+title="One Click Deploy" width="250" /></a>
 </p>
 
-<!-- [![Firetable: Combine the power of Firestore with the simplicity of spreadsheets](https://firetable.io/social-image.jpg)](https://firetable.io) -->
+Full installation guide is available [here](./install).
 
-<h3 align="center"> ✨ <a href="https://github.com/FiretableProject/firetable/wiki/Getting-Started">Getting Started Guide</a>✨</h3>
+### Reach us
 
-<p align="center">
-  <a aria-label="License" href="https://github.com/FiretableProject/firetable/blob/master/LICENSE">
-    <img src="https://badgen.net/github/license/FiretableProject/firetable" />
-  </a>
-  <a aria-label="Commits" href="https://github.com/FiretableProject/firetable/commits/develop">
-    <img src="https://badgen.net/github/last-commit/FiretableProject/firetable/develop" />
-  </a>
-  <a aria-label="Firetable CLI" href="https://npmjs.com/package/firetable">
-    <img src="https://badgen.net/npm/v/firetable" />
-  </a>
-</p>
+We would love to connect and hear what you think!
 
-<h3 align="center">
-  <a href="https://discord.gg/B8yAD5PDX4">Discord</a>
-  <span> · </span>
-  <a href="https://twitter.com/firetableio">Twitter</a>
-</h3>
-
-<p align="center">
-  <a href="https://try.firetable.io" >
-    <img align="center" alt="Firetable demo GIF" src="https://firetable.io/demo.gif" width="100%">
-  </a>
-</p>
-
-<h3 align="center">
-  <a href="https://try.firetable.io">Live Demo</a>
-  <span> · </span>
-  <a href="https://github.com/FiretableProject/firetable/wiki/Getting-Started">Get started</a>
-  <span> · </span>
-  <a href="https://github.com/FiretableProject/firetable/issues/new?assignees=&labels=&template=feature_request.md&title=">Feature request</a>
-  <span> · </span>
-  <a href="https://github.com/FiretableProject/firetable/issues/new?assignees=&labels=&template=bug_report.md&title=">Report a bug</a>
-  <span> · </span>
-  <a href="https://discord.gg/B8yAD5PDX4">Discussions</a>
-  </a>
-</h3>
-<br/>
-
-# Stay Up-to-Date
-Watch the releases of this repository to be notified for future updates
-
-<img src="https://user-images.githubusercontent.com/307298/128521637-4735b890-18bd-4ee5-940e-0013e25393a1.gif" alt="drawing" width="450"/>
-
-
-# Features
-
-- **Intuitive spreadsheet like interface for Firestore.** With Firetable UI you
-  can view and directly edit the data in Firestore but not just that, you can
-  completely manage your existing data model or create from scratch.
-
-  - CRUD operations on your data - Add, edit, and delete rows
-  - Create table collections, add column fields
-  - Sort and filter data
-  - Resize and rename columns
-
-- **Rich set of data fields.**
-  [29+ field types](https://github.com/FiretableProject/firetable/wiki/Field-Types)
-  supported and growing
-
-  - Basic types: Short Text, Long Text, Email, Phone, URL…
-  - Custom UI pickers: Date, Checkbox, Single Select, Multi Select…
-  - Uploaders: Image, File
-  - Rich Editors: JSON, Code, Rich Text (HTML)
-
-- **Default values and Required fields.** You can assign default values to any Firestore fields on row creation (null, static or undefined). You can also define which fields are required for a row creation.
-
-- **Permission controlled views.** You can customize who sees what data and what
-  action they can take with powerful set of access controls based on custom user
-  roles.
-  [Read more](https://github.com/FiretableProject/firetable/wiki/Role-Based-Security-Rules)
-  
-- **Bulk data actions.** You can import and export your Firestore data from/to CSV files.
-
-- **Supercharge your database with your own scripts.**
-
-  - Action field: trigger any Cloud Function
-  - Derivative field: populate cell with value derived from the rest of the
-    row’s values
-  - Aggregate field: populate cell with value aggregated from the row’s
-    sub-table
-
-- **Integrations with external services.**
-  - Connect Table uses Algolia to get a snapshot of another table’s row values
-  - Connect Service uses any HTTP endpoint to get a cell value
-
-## Firetable makes it easy to use key Firebase products
-
-<p align="center">
-  <a href="https://firebase.google.com/products/firestore">
-    <img src="https://github.com/FiretableProject/firetable/wiki/images/firebase/firestore.png" alt="Cloud Firestore" width="19%" />
-  </a>
-  <a href="https://firebase.google.com/products/auth">
-    <img src="https://github.com/FiretableProject/firetable/wiki/images/firebase/authentication.png" alt="Firebase Authentication" width="19%" />
-  </a>
-  <a href="https://firebase.google.com/products/functions">
-    <img src="https://github.com/FiretableProject/firetable/wiki/images/firebase/functions.png" alt="Firebase Functions" width="19%" />
-  </a>
-  <a href="https://firebase.google.com/products/hosting">
-    <img src="https://github.com/FiretableProject/firetable/wiki/images/firebase/hosting.png" alt="Firebase Hosting" width="19%" />
-  </a>
-  <a href="https://firebase.google.com/products/storage">
-    <img src="https://github.com/FiretableProject/firetable/wiki/images/firebase/storage.png" alt="Firebase Storage" width="19%" />
-  </a>
-</p>
-
-# Getting started
-
-To set up Firetable, you must be comfortable with working with the command line and have basic how to use npm. 
-### [**Read the getting started guide →**](https://github.com/FiretableProject/firetable/wiki/Getting-Started)
-
-# Documentation
-
-We’re still working on improving our documentation and writing more
-beginner-friendly guides.
-
-[**Documentation on GitHub Wiki →**](https://github.com/FiretableProject/firetable/wiki)
-
-# Issues
-
-[![Open issues](https://badgen.net/github/open-issues/FiretableProject/firetable)](https://github.com/antlervc/firetable/issues)
-
-[Create issues and bug reports here.](https://github.com/antlervc/firetable/issues)  
-Make sure to provide console log outputs and screenshots!
-
-# Roadmap and feature requests
-
-- [Roadmap](https://github.com/FiretableProject/firetable/wiki/Roadmap)
-- [View our ideas and feature requests](https://github.com/FiretableProject/firetable/projects/1)
-
----
-
-<!-- # Join Our Community
-
-<a href="https://discord.gg/B8yAD5PDX4">
-    <img
-    src="https://invidget.switchblade.xyz/B8yAD5PDX4"
-    alt="Join Firetable Open Source Project"
-    >
-</a>
-<br> -->
-
-# Contributing 🙌 
-
-We welcome any contributions from the open source community. 
-
-- **[Good First Issues](https://github.com/FiretableProject/firetable/projects/3)** project is a good place to start for contributing to Firetable. 
-- For new feature or enhancement, please create an issue first or send us a message on **[Discord](https://discord.gg/B8yAD5PDX4)** so that we can discuss and guide you as needed ahead of you starting the work.
+- [Discord](https://discord.gg/B8yAD5PDX4)
+- [Twitter](https://twitter.com/rowyio)
+- [Email](mailto:rowy.io)

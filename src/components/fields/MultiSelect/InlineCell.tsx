@@ -1,0 +1,69 @@
+import { forwardRef } from "react";
+import { IPopoverInlineCellProps } from "../types";
+
+import { ButtonBase, Grid } from "@mui/material";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+
+import { sanitiseValue } from "./utils";
+import FormattedChip from "components/FormattedChip";
+import { ConvertStringToArray } from "./ConvertStringToArray";
+
+export const MultiSelect = forwardRef(function MultiSelect(
+  { value, showPopoverCell, disabled, onSubmit }: IPopoverInlineCellProps,
+  ref: React.Ref<any>
+) {
+  if (typeof value === "string" && value !== "")
+    return <ConvertStringToArray value={value} onSubmit={onSubmit} />;
+
+  return (
+    <ButtonBase
+      onClick={() => showPopoverCell(true)}
+      ref={ref}
+      disabled={disabled}
+      className="cell-collapse-padding"
+      sx={{
+        pl: 1,
+        pr: 0,
+        height: "100%",
+
+        font: "inherit",
+        color: "inherit !important",
+        letterSpacing: "inherit",
+        textAlign: "inherit",
+        justifyContent: "flex-start",
+      }}
+    >
+      <Grid
+        container
+        wrap="nowrap"
+        alignItems="center"
+        spacing={0.5}
+        style={{ flexGrow: 1, overflow: "hidden" }}
+      >
+        {sanitiseValue(value).map(
+          (item) =>
+            typeof item === "string" && (
+              <Grid item key={item}>
+                <FormattedChip label={item} />
+              </Grid>
+            )
+        )}
+      </Grid>
+
+      {!disabled && (
+        <ArrowDropDownIcon
+          className="row-hover-iconButton"
+          sx={{
+            flexShrink: 0,
+            mr: 0.5,
+            borderRadius: 1,
+            p: (32 - 24) / 2 / 8,
+            boxSizing: "content-box",
+          }}
+        />
+      )}
+    </ButtonBase>
+  );
+});
+
+export default MultiSelect;
