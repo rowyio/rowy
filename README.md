@@ -27,7 +27,7 @@ Manage Firestore data in a spreadsheet-like UI, write Cloud Functions effortless
     <a href="https://twitter.com/RowyIO"><b>Twitter</b></a>
 </p> 
 
-<img src="https://firebasestorage.googleapis.com/v0/b/rowyio.appspot.com/o/publicDemo%2FRowy%20Website%20Video%20GIF%20Small.gif?alt=media&token=3f699a8f-c1f2-4046-8ed5-e4ff66947cd8" />
+<img width="1000" src="https://firebasestorage.googleapis.com/v0/b/rowyio.appspot.com/o/publicDemo%2FRowy%20Website%20Video%20GIF%20Small.gif?alt=media&token=3f699a8f-c1f2-4046-8ed5-e4ff66947cd8" />
 
 ### Quick Try
 
