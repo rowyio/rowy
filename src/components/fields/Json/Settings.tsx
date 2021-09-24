@@ -11,7 +11,11 @@ const Settings = ({ config, handleChange }) => {
             name="isArray"
           />
         }
-        label="Set as an array"
+        label="Set as array"
+        sx={{
+          alignItems: "center",
+          "& .MuiFormControlLabel-label": { mt: 0 },
+        }}
       />
     </>
   );

@@ -59,6 +59,10 @@ export default function Settings({ config, handleChange }) {
           />
         }
         label="Enable multiple item selection"
+        sx={{
+          alignItems: "center",
+          "& .MuiFormControlLabel-label": { mt: 0 },
+        }}
       />
     </>
   );

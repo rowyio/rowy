@@ -394,7 +394,7 @@ export default function ExtensionModal({
                         direction="row"
                         justifyContent="flex-start"
                         alignItems="center"
-                        sx={{ height: 42, ml: -0.75 }}
+                        sx={{ height: 42, ml: -0.875 }}
                       >
                         <Button
                           variant="text"

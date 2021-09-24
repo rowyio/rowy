@@ -125,6 +125,10 @@ export default function WebhooksDialog({ open, handleClose }) {
               onChange={() => {
                 handleChange("enabled")(!state.enabled);
               }}
+              sx={{
+                alignItems: "center",
+                "& .MuiFormControlLabel-label": { mt: 0 },
+              }}
               // classes={{ root: classes.formControlLabel, label: classes.label }}
             />
             <InputLabel htmlFor="webhook-type">Webhook Type</InputLabel>

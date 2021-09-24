@@ -48,6 +48,10 @@ export default function Settings({ handleChange, config }) {
           />
         }
         label="Show slider steps"
+        sx={{
+          alignItems: "center",
+          "& .MuiFormControlLabel-label": { mt: 0 },
+        }}
       />
     </>
   );
