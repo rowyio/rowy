@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { IHeavyCellProps } from "../types";
 
 import { makeStyles, createStyles } from "@mui/styles";
@@ -11,12 +12,11 @@ type StylesProps = { width: number; rowHeight: number };
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
-      padding: theme.spacing(0.5, 0),
+      width: "100%",
+      padding: theme.spacing(3 / 8, 1.25),
       position: "absolute",
       top: 0,
       bottom: 0,
-      right: theme.spacing(1.5),
-      left: theme.spacing(1.5),
 
       display: "flex",
       alignItems: "center",
@@ -28,11 +28,13 @@ const useStyles = makeStyles((theme) =>
 
       ...theme.typography.body2,
       fontSize: "0.75rem",
+      font: "inherit",
     },
 
     tooltip: ({ width, rowHeight }: StylesProps) => ({
-      margin: `-${rowHeight - 1}px 0 0 -${theme.spacing(1.5)}`,
-      padding: theme.spacing(0.5, 1.5),
+      margin: 0,
+      marginTop: `-${rowHeight - 1}px !important`,
+      padding: theme.spacing(3 / 8, 1.25),
 
       width: width - 1,
       maxWidth: "none",
@@ -41,7 +43,7 @@ const useStyles = makeStyles((theme) =>
 
       background: theme.palette.background.paper,
       borderRadius: 0,
-      boxShadow: theme.shadows[4],
+      boxShadow: `0 0 0 1px ${theme.palette.divider}, ${theme.shadows[4]}`,
       color: theme.palette.text.primary,
 
       display: "flex",
@@ -57,6 +59,8 @@ export default function RichText({ column, value }: IHeavyCellProps) {
     rowHeight: tableState?.config?.rowHeight ?? 44,
   });
 
+  if (!value) return null;
+
   return (
     <Tooltip
       title={<RenderedHtml html={value} className={classes.renderedHtml} />}
@@ -64,31 +68,15 @@ export default function RichText({ column, value }: IHeavyCellProps) {
       placement="bottom-start"
       PopperProps={{
         modifiers: [
-          {
-            name: "flip",
-            options: {
-              enabled: false,
-            },
-          },
-          {
-            name: "preventOverflow",
-            options: {
-              enabled: false,
-              boundariesElement: "scrollParent",
-            },
-          },
-          {
-            name: "hide",
-            options: {
-              enabled: false,
-            },
-          },
+          { name: "flip", enabled: false },
+          { name: "preventOverflow", enabled: false },
+          { name: "hide", enabled: false },
         ],
       }}
       TransitionComponent={Fade}
       classes={{ tooltip: classes.tooltip }}
     >
-      <div className={classes.root}>
+      <div className={clsx("cell-collapse-padding", classes.root)}>
         <RenderedHtml html={value} className={classes.renderedHtml} />
       </div>
     </Tooltip>

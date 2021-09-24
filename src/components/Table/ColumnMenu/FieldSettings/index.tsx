@@ -1,8 +1,8 @@
 import { useState, Suspense, useMemo, createElement } from "react";
-import { useSnackbar } from "notistack";
-
 import _set from "lodash/set";
 import { IMenuModalProps } from "..";
+
+import { Typography, Divider, Stack } from "@mui/material";
 
 import Modal from "components/Modal";
 import { getFieldProp } from "components/fields";
@@ -11,18 +11,8 @@ import ErrorBoundary from "components/ErrorBoundary";
 import Loading from "components/Loading";
 
 import { useProjectContext } from "contexts/ProjectContext";
-import { useSnackLogContext } from "contexts/SnackLogContext";
-import { db } from "../../../../firebase";
-import { useAppContext } from "contexts/AppContext";
 import { useConfirmation } from "components/ConfirmationDialog";
 import { FieldType } from "constants/fields";
-
-import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
-import Button from "@mui/material/Button";
-import routes from "constants/routes";
-import { SETTINGS } from "config/dbPaths";
-import { name as appName } from "@root/package.json";
 import { runRoutes } from "constants/runRoutes";
 
 export default function FieldSettings(props: IMenuModalProps) {
@@ -35,10 +25,7 @@ export default function FieldSettings(props: IMenuModalProps) {
   const initializable = getFieldProp("initializable", type);
 
   const { requestConfirmation } = useConfirmation();
-  const { enqueueSnackbar } = useSnackbar();
   const { tableState, rowyRun } = useProjectContext();
-  const snackLog = useSnackLogContext();
-  const appContext = useAppContext();
 
   const handleChange = (key: string) => (update: any) => {
     if (
@@ -62,6 +49,7 @@ export default function FieldSettings(props: IMenuModalProps) {
   );
   if (!open) return null;
   console.log(newConfig);
+
   return (
     <Modal
       maxWidth="md"
@@ -85,24 +73,31 @@ export default function FieldSettings(props: IMenuModalProps) {
               </>
             )}
 
-            <section>
-              {customFieldSettings &&
-                createElement(customFieldSettings, {
+            {customFieldSettings && (
+              <Stack
+                spacing={3}
+                sx={{ borderTop: 1, borderColor: "divider", pt: 3 }}
+              >
+                {createElement(customFieldSettings, {
                   config: newConfig,
                   handleChange,
                 })}
-            </section>
+              </Stack>
+            )}
+
             {rendedFieldSettings && (
-              <section>
-                <Divider />
-                <Typography variant="overline">
-                  Rendered field config
+              <Stack
+                spacing={3}
+                sx={{ borderTop: 1, borderColor: "divider", pt: 3 }}
+              >
+                <Typography variant="subtitle1">
+                  Rendered Field Config
                 </Typography>
                 {createElement(rendedFieldSettings, {
                   config: newConfig,
                   handleChange,
                 })}
-              </section>
+              </Stack>
             )}
             {/* {
             <ConfigForm

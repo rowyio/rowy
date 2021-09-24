@@ -10,7 +10,7 @@ export default function LongText({ value }: IBasicCellProps) {
       style={{
         width: "100%",
         maxHeight: "100%",
-        padding: theme.spacing(0.5, 0),
+        padding: theme.spacing(3 / 8, 0),
 
         whiteSpace: "pre-line",
         lineHeight: theme.typography.body2.lineHeight,

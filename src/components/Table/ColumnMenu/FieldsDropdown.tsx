@@ -9,6 +9,7 @@ export interface IFieldsDropdownProps {
   value: FieldType;
   onChange: (value: FieldType) => void;
   hideLabel?: boolean;
+  label?: string;
   options?: FieldType[];
 }
 
@@ -19,6 +20,7 @@ export default function FieldsDropdown({
   value,
   onChange,
   hideLabel = false,
+  label,
   options: optionsProp,
 }: IFieldsDropdownProps) {
   const options = optionsProp
@@ -47,7 +49,7 @@ export default function FieldsDropdown({
           {option.label}
         </>
       )}
-      label="Field Type"
+      label={label || "Field Type"}
       labelPlural="Field Types"
       TextFieldProps={{
         hiddenLabel: hideLabel,

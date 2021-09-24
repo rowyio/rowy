@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import _camel from "lodash/camelCase";
 import { IMenuModalProps } from ".";
 
-import { makeStyles, createStyles } from "@mui/styles";
 import { TextField } from "@mui/material";
 
 import Modal from "components/Modal";
@@ -10,33 +9,24 @@ import { FieldType } from "constants/fields";
 import FieldsDropdown from "./FieldsDropdown";
 import { getFieldProp } from "components/fields";
 import { analytics } from "analytics";
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    helperText: {
-      ...theme.typography.body2,
-      marginTop: theme.spacing(1),
-    },
-  })
-);
 
-export interface IFormDialogProps extends IMenuModalProps {
+export interface INewColumnProps extends IMenuModalProps {
   data: Record<string, any>;
   openSettings: (column: any) => void;
 }
 
-export default function FormDialog({
+export default function NewColumn({
   open,
   data,
   openSettings,
   handleClose,
   handleSave,
-}: IFormDialogProps) {
-  const classes = useStyles();
-
+}: INewColumnProps) {
   const [columnLabel, setColumnLabel] = useState("");
   const [fieldKey, setFieldKey] = useState("");
   const [type, setType] = useState(FieldType.shortText);
   const requireConfiguration = getFieldProp("requireConfiguration", type);
+
   useEffect(() => {
     if (type !== FieldType.id) setFieldKey(_camel(columnLabel));
   }, [columnLabel]);
@@ -69,7 +59,6 @@ export default function FormDialog({
               fullWidth
               onChange={(e) => setColumnLabel(e.target.value)}
               helperText="Set the user-facing name for this column."
-              FormHelperTextProps={{ classes: { root: classes.helperText } }}
             />
           </section>
 
@@ -84,7 +73,6 @@ export default function FormDialog({
               onChange={(e) => setFieldKey(e.target.value)}
               disabled={type === FieldType.id && fieldKey === "id"}
               helperText="Set the Firestore field key to link to this column. It will display any existing data for this field key."
-              FormHelperTextProps={{ classes: { root: classes.helperText } }}
             />
           </section>
 

@@ -26,7 +26,7 @@ export default function LongText({
             hiddenLabel
             disabled={disabled}
             multiline
-            minRows={5}
+            minRows={3}
             inputProps={{ maxLength: column.config?.maxLength }}
           />
         );

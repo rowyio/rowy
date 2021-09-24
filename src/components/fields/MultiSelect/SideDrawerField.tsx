@@ -1,8 +1,8 @@
 import { Controller } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 
-import { useTheme, Grid } from "@mui/material";
-import MultiSelect_ from "@rowy/multiselect";
+import { Grid } from "@mui/material";
+import MultiSelectComponent from "@rowy/multiselect";
 import FormattedChip from "components/FormattedChip";
 
 import { sanitiseValue } from "./utils";
@@ -13,8 +13,6 @@ export default function MultiSelect({
   control,
   disabled,
 }: ISideDrawerFieldProps) {
-  const theme = useTheme();
-
   const config = column.config ?? {};
 
   return (
@@ -33,7 +31,7 @@ export default function MultiSelect({
 
         return (
           <>
-            <MultiSelect_
+            <MultiSelectComponent
               value={sanitiseValue(value)}
               onChange={onChange}
               options={config.options ?? []}
@@ -44,15 +42,12 @@ export default function MultiSelect({
                 label: "",
                 hiddenLabel: true,
                 onBlur,
+                id: `sidedrawer-field-${column.key}`,
               }}
             />
 
             {value && Array.isArray(value) && (
-              <Grid
-                container
-                spacing={1}
-                style={{ marginTop: theme.spacing(1) }}
-              >
+              <Grid container spacing={0.5} style={{ marginTop: 2 }}>
                 {value.map(
                   (item, i) =>
                     item?.length > 0 && (

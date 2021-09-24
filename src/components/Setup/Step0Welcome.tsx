@@ -16,10 +16,10 @@ export default function Step0Welcome({
     <>
       <div>
         <Typography variant="body1" gutterBottom>
-          You will be up and running in just a few minutes.
+          You’ll be up and running in just a few minutes.
         </Typography>
-        <Typography variant="body1">
-          Configure your project backend functionality, Firestore Rules, and
+        <Typography variant="body1" gutterBottom>
+          Configure your project’s backend functionality, Firestore Rules, and
           user management.
         </Typography>
         <Typography variant="body1">

@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 
 import { makeStyles, createStyles } from "@mui/styles";
 import {
+  InputLabel,
   TextField,
   Grid,
   IconButton,
@@ -41,8 +42,8 @@ export default function Settings({ handleChange, config }) {
   };
 
   return (
-    <>
-      <Subheading>OPTIONS</Subheading>
+    <div>
+      <InputLabel>Options</InputLabel>
       <div className={classes.optionsList}>
         {options?.map((option: string) => (
           <>
@@ -75,7 +76,7 @@ export default function Settings({ handleChange, config }) {
         <div ref={listEndRef} style={{ height: 40 }} />
       </div>
 
-      <Grid container direction="row">
+      <Grid container direction="row" alignItems="center">
         <Grid item>
           <IconButton
             aria-label="add new"
@@ -92,6 +93,7 @@ export default function Settings({ handleChange, config }) {
             className={classes.field}
             fullWidth
             label={"New Option"}
+            id="new-option"
             onChange={(e) => {
               setNewOption(e.target.value);
             }}
@@ -100,9 +102,10 @@ export default function Settings({ handleChange, config }) {
                 handleAdd();
               }
             }}
+            helperText=" "
           />
         </Grid>
       </Grid>
-    </>
+    </div>
   );
 }

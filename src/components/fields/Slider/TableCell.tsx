@@ -1,28 +1,10 @@
 import { IHeavyCellProps } from "../types";
 
-import { makeStyles, createStyles } from "@mui/styles";
-import { Grid } from "@mui/material";
+import { Grid, Box } from "@mui/material";
 
 import { resultColorsScale } from "utils/color";
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    progress: {
-      width: "100%",
-      backgroundColor: theme.palette.divider,
-      borderRadius: 4,
-    },
-    bar: {
-      borderRadius: 4,
-      height: 8,
-      maxWidth: "100%",
-    },
-  })
-);
-
 export default function Slider({ column, value }: IHeavyCellProps) {
-  const classes = useStyles();
-
   const {
     max,
     min,
@@ -44,19 +26,32 @@ export default function Slider({ column, value }: IHeavyCellProps) {
 
   return (
     <Grid container alignItems="center" wrap="nowrap" spacing={1}>
-      <Grid item xs={6}>
+      <Grid item xs={6} style={{ fontVariantNumeric: "tabular-nums" }}>
         {value ?? 0}/{max} {unit}
       </Grid>
+
       <Grid item xs={6}>
-        <div className={classes.progress}>
-          <div
-            className={classes.bar}
-            style={{
+        <Box
+          sx={{
+            width: "100%",
+            height: 8,
+            borderRadius: 1,
+            bgcolor: "divider",
+
+            ml: -2 / 8,
+          }}
+        >
+          <Box
+            sx={{
+              borderRadius: "inherit",
+              height: "100%",
+              maxWidth: "100%",
+
               width: `${progress}%`,
               backgroundColor: resultColorsScale(progress / 100).hex(),
             }}
-          ></div>
-        </div>
+          />
+        </Box>
       </Grid>
     </Grid>
   );

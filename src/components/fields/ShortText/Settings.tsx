@@ -1,25 +1,24 @@
 import { TextField } from "@mui/material";
-import Subheading from "components/Table/ColumnMenu/Subheading";
 
 export default function Settings({ handleChange, config }) {
   return (
     <>
-      <Subheading>Short Text Config</Subheading>
       <TextField
         type="number"
+        label="Character Limit"
+        id="character-limit"
         value={config.maxLength}
-        label={"Character Limit"}
         fullWidth
         onChange={(e) => {
           if (e.target.value === "0") handleChange("maxLength")(null);
           else handleChange("maxLength")(e.target.value);
         }}
       />
-      <Subheading>Validation Regex</Subheading>
       <TextField
         type="text"
+        label="Validation Regex"
+        id="validation-regex"
         value={config.validationRegex}
-        label={"Validation Regex"}
         fullWidth
         onChange={(e) => {
           if (e.target.value === "") handleChange("validationRegex")(null);

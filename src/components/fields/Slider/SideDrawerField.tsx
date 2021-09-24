@@ -1,7 +1,7 @@
 import { Controller } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 
-import { Slider as MuiSlider, Grid, Typography } from "@mui/material";
+import { Slider as MuiSlider, Grid, Stack, Typography } from "@mui/material";
 
 export default function Slider({
   control,
@@ -42,44 +42,30 @@ export default function Slider({
           `${value}${unit ? " " + unit : ""}`;
 
         return (
-          <Grid container spacing={2} alignItems="center">
-            <Grid item>
-              <Typography
-                variant="overline"
-                component="span"
-                color="textSecondary"
-              >
-                {minLabel ?? `${min}${unit ? " " + unit : ""}`}
-              </Typography>
-            </Grid>
+          <Stack direction="row" spacing={2} alignItems="center">
+            <Typography variant="button" component="span" color="textSecondary">
+              {minLabel ?? `${min}${unit ? " " + unit : ""}`}
+            </Typography>
 
-            <Grid item xs>
-              <MuiSlider
-                valueLabelDisplay="auto"
-                min={min}
-                max={max}
-                marks={marks}
-                step={step ?? 1}
-                getAriaValueText={getAriaValueText}
-                valueLabelFormat={getValueLabelFormat}
-                value={value ?? min}
-                onClick={onBlur}
-                onChange={handleChange}
-                disabled={disabled}
-                style={{ display: "block" }}
-              />
-            </Grid>
+            <MuiSlider
+              valueLabelDisplay="auto"
+              min={min}
+              max={max}
+              marks={marks}
+              step={step ?? 1}
+              getAriaValueText={getAriaValueText}
+              valueLabelFormat={getValueLabelFormat}
+              value={value ?? min}
+              onClick={onBlur}
+              onChange={handleChange}
+              disabled={disabled}
+              style={{ display: "block", flexGrow: 1 }}
+            />
 
-            <Grid item>
-              <Typography
-                variant="overline"
-                component="span"
-                color="textSecondary"
-              >
-                {maxLabel ?? `${max}${unit ? " " + unit : ""}`}
-              </Typography>
-            </Grid>
-          </Grid>
+            <Typography variant="button" component="span" color="textSecondary">
+              {maxLabel ?? `${max}${unit ? " " + unit : ""}`}
+            </Typography>
+          </Stack>
         );
       }}
     />

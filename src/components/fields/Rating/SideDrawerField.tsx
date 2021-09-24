@@ -7,7 +7,6 @@ import "@mui/lab";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 
 import { useFieldStyles } from "components/SideDrawer/Form/utils";
-import { useRatingStyles } from "./styles";
 
 export default function Rating({
   control,
@@ -15,7 +14,6 @@ export default function Rating({
   disabled,
 }: ISideDrawerFieldProps) {
   const fieldClasses = useFieldStyles();
-  const ratingClasses = useRatingStyles();
 
   // Set max and precision from config
   const {
@@ -45,7 +43,7 @@ export default function Rating({
             emptyIcon={<StarBorderIcon fontSize="inherit" />}
             max={max}
             precision={precision}
-            classes={ratingClasses}
+            sx={{ ml: -0.5 }}
           />
         </Grid>
       )}

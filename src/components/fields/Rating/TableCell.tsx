@@ -3,8 +3,6 @@ import { IHeavyCellProps } from "../types";
 import MuiRating from "@mui/material/Rating";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 
-import { useRatingStyles } from "./styles";
-
 export default function Rating({
   row,
   column,
@@ -12,8 +10,6 @@ export default function Rating({
   onSubmit,
   disabled,
 }: IHeavyCellProps) {
-  const ratingClasses = useRatingStyles();
-
   // Set max and precision from config
   const {
     max,
@@ -37,7 +33,7 @@ export default function Rating({
       emptyIcon={<StarBorderIcon />}
       max={max}
       precision={precision}
-      classes={ratingClasses}
+      sx={{ mx: -0.25 }}
     />
   );
 }

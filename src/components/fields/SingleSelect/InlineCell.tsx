@@ -1,62 +1,51 @@
-import React from "react";
-import clsx from "clsx";
+import { forwardRef } from "react";
 import { IPopoverInlineCellProps } from "../types";
 
-import { makeStyles, createStyles } from "@mui/styles";
 import { ButtonBase } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 import { sanitiseValue } from "./utils";
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    root: {
-      height: "100%",
-      padding: theme.spacing(0, 1, 0, 1.5),
-
-      font: "inherit",
-      color: "inherit !important",
-      letterSpacing: "inherit",
-      textAlign: "inherit",
-      justifyContent: "flex-start",
-    },
-
-    value: {
-      flex: 1,
-      maxWidth: `calc(100% - 24px)`,
-      overflow: "hidden",
-      textOverflow: "ellipsis",
-    },
-
-    icon: {
-      display: "block",
-      color: theme.palette.action.active,
-    },
-    disabled: {
-      color: theme.palette.action.disabled,
-    },
-  })
-);
-
-export const SingleSelect = React.forwardRef(function SingleSelect(
+export const SingleSelect = forwardRef(function SingleSelect(
   { value, showPopoverCell, disabled }: IPopoverInlineCellProps,
   ref: React.Ref<any>
 ) {
-  const classes = useStyles();
-
   return (
     <ButtonBase
-      className={clsx("cell-collapse-padding", classes.root)}
       onClick={() => showPopoverCell(true)}
       ref={ref}
       disabled={disabled}
-    >
-      <div className={classes.value}>{sanitiseValue(value)}</div>
+      className="cell-collapse-padding"
+      style={{
+        padding: "var(--cell-padding)",
+        paddingRight: 0,
+        height: "100%",
 
-      <ArrowDropDownIcon
-        className={clsx(classes.icon, disabled && classes.disabled)}
-      />
+        font: "inherit",
+        color: "inherit !important",
+        letterSpacing: "inherit",
+        textAlign: "inherit",
+        justifyContent: "flex-start",
+      }}
+    >
+      <div style={{ flexGrow: 1, overflow: "hidden" }}>
+        {sanitiseValue(value)}
+      </div>
+
+      {!disabled && (
+        <ArrowDropDownIcon
+          className="row-hover-iconButton"
+          sx={{
+            flexShrink: 0,
+            mr: 0.5,
+            borderRadius: 1,
+            p: (32 - 24) / 2 / 8,
+            boxSizing: "content-box",
+          }}
+        />
+      )}
     </ButtonBase>
   );
 });
+
 export default SingleSelect;

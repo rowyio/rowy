@@ -114,7 +114,7 @@ export const useStyles = makeStyles((theme) =>
 
     drawerContents: {
       padding: theme.spacing(5),
-      paddingRight: `max(env(safe-area-inset-right), ${theme.spacing(5)})`,
+      paddingRight: `max(env(safe-area-inset-right), ${theme.spacing(4)})`,
       paddingBottom: `max(env(safe-area-inset-bottom), ${theme.spacing(5)})`,
       overflowY: "auto",
     },

@@ -1,11 +1,9 @@
-import clsx from "clsx";
 import { Controller } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 
 import ReactJson from "react-json-view";
 import jsonFormat from "json-format";
 
-import { makeStyles, createStyles } from "@mui/styles";
 import { useTheme } from "@mui/material";
 import { useFieldStyles } from "components/SideDrawer/Form/utils";
 
@@ -19,32 +17,14 @@ const isValidJson = (val: any) => {
   return true;
 };
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    root: {
-      padding: theme.spacing(2),
-      margin: 0,
-      overflowX: "auto",
-      ...theme.typography.caption,
-    },
-
-    readOnly: {
-      whiteSpace: "pre-wrap",
-      ...theme.typography.caption,
-      fontFamily: theme.typography.fontFamilyMono,
-      wordBreak: "break-word",
-    },
-  })
-);
-
 export default function Json({
   control,
   column,
   disabled,
 }: ISideDrawerFieldProps) {
   const fieldClasses = useFieldStyles();
-  const classes = useStyles();
   const theme = useTheme();
+
   return (
     <Controller
       control={control}
@@ -52,7 +32,15 @@ export default function Json({
       render={({ onChange, value }) => {
         if (disabled)
           return (
-            <div className={clsx(fieldClasses.root, classes.readOnly)}>
+            <div
+              className={fieldClasses.root}
+              style={{
+                whiteSpace: "pre-wrap",
+                ...theme.typography.caption,
+                fontFamily: theme.typography.fontFamilyMono,
+                wordBreak: "break-word",
+              }}
+            >
               {value &&
                 jsonFormat(value, {
                   type: "space",
@@ -67,7 +55,10 @@ export default function Json({
         };
 
         return (
-          <div className={clsx(fieldClasses.root, classes.root)}>
+          <div
+            className={fieldClasses.root}
+            style={{ overflowX: "auto", ...theme.typography.caption }}
+          >
             <ReactJson
               src={
                 value !== undefined && isValidJson(value)

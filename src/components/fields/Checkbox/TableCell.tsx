@@ -1,29 +1,8 @@
 import { IHeavyCellProps } from "../types";
 import _get from "lodash/get";
 
-import { makeStyles, createStyles } from "@mui/styles";
 import { FormControlLabel, Switch } from "@mui/material";
-
 import Confirmation from "components/Confirmation";
-
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    root: {
-      marginLeft: 0,
-      marginRight: theme.spacing(-1),
-      width: `calc(100% + ${theme.spacing(1)})`,
-    },
-
-    label: {
-      font: "inherit",
-      letterSpacing: "inherit",
-
-      flexGrow: 1,
-      width: "calc(100% - 58px)",
-      overflowX: "hidden",
-    },
-  })
-);
 
 const replacer = (data: any) => (m: string, key: string) => {
   const objKey = key.split(":")[0];
@@ -38,8 +17,6 @@ export default function Checkbox({
   onSubmit,
   disabled,
 }: IHeavyCellProps) {
-  const classes = useStyles();
-
   let component = (
     <Switch
       checked={!!value}
@@ -70,8 +47,21 @@ export default function Checkbox({
       control={component}
       label={column.name as string}
       labelPlacement="start"
-      // className="cell-collapse-padding"
-      classes={{ root: classes.root, label: classes.label }}
+      sx={{
+        m: 0,
+        width: "100%",
+        alignItems: "center",
+
+        "& .MuiFormControlLabel-label": {
+          font: "inherit",
+          letterSpacing: "inherit",
+          flexGrow: 1,
+          overflowX: "hidden",
+          mt: 0,
+        },
+
+        "& .MuiSwitch-root": { mr: -0.75 },
+      }}
     />
   );
 }

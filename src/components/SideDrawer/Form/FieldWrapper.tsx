@@ -16,7 +16,7 @@ import { useAppContext } from "contexts/AppContext";
 const useStyles = makeStyles((theme) =>
   createStyles({
     header: {
-      paddingBottom: theme.spacing(1),
+      padding: theme.spacing(3 / 8, 0),
       color: theme.palette.text.secondary,
 
       "& svg": {
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) =>
       },
     },
     iconContainer: {
-      marginRight: theme.spacing(1),
+      marginRight: theme.spacing(0.75),
     },
 
     label: {

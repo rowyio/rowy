@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { IMenuModalProps } from "..";
 
 import { makeStyles, createStyles } from "@mui/styles";
-import Switch from "@mui/material/Switch";
+import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { Typography, TextField, MenuItem, ListItemText } from "@mui/material";
 import Subheading from "../Subheading";
@@ -58,12 +58,6 @@ export default function DefaultValueInput({
   });
   return (
     <>
-      <Subheading>Default Value</Subheading>
-      <Typography color="textSecondary" gutterBottom>
-        The default value will be the initial value of this cell when a new row
-        is added.
-      </Typography>
-
       <TextField
         select
         label="Default Value Type"
@@ -109,26 +103,27 @@ export default function DefaultValueInput({
         <>
           <FormControlLabel
             value="required"
-            label="Make this column required"
-            labelPlacement="start"
+            label={
+              <>
+                Make this column required
+                <Typography
+                  variant="caption"
+                  color="text.secondary"
+                  display="block"
+                >
+                  The row will not be created or updated unless all required
+                  values are set.
+                </Typography>
+              </>
+            }
             control={
-              <Switch
+              <Checkbox
                 checked={config.required}
-                onChange={(event, checked) => handleChange("required")(checked)}
+                onChange={(e) => handleChange("required")(e.target.checked)}
                 name="required"
               />
             }
-            style={{
-              marginLeft: 0,
-              justifyContent: "space-between",
-            }}
           />
-          {
-            <Typography color="textSecondary" paragraph>
-              The row will not be created or updated unless all required values
-              are set.
-            </Typography>
-          }
         </>
       )}
       {config.defaultValue?.type === "static" && customFieldInput && (

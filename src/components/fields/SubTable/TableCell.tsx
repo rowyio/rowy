@@ -1,22 +1,12 @@
 import { IHeavyCellProps } from "../types";
-import clsx from "clsx";
 import { Link } from "react-router-dom";
 
-import { makeStyles, createStyles } from "@mui/styles";
-import { Grid, IconButton } from "@mui/material";
+import { Stack, IconButton } from "@mui/material";
 import LaunchIcon from "@mui/icons-material/Launch";
 
 import { useSubTableData } from "./utils";
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    root: { padding: theme.spacing(0, 0.625, 0, 1) },
-    labelContainer: { overflowX: "hidden" },
-  })
-);
-
 export default function SubTable({ column, row }: IHeavyCellProps) {
-  const classes = useStyles();
   const { documentCount, label, subTablePath } = useSubTableData(
     column,
     row,
@@ -26,28 +16,27 @@ export default function SubTable({ column, row }: IHeavyCellProps) {
   if (!row.ref) return null;
 
   return (
-    <Grid
-      container
-      wrap="nowrap"
+    <Stack
+      direction="row"
       alignItems="center"
-      spacing={1}
-      className={clsx("cell-collapse-padding", classes.root)}
+      justifyContent="space-between"
+      className="cell-collapse-padding"
+      sx={{ p: "var(--cell-padding)", pr: 0.5 }}
     >
-      <Grid item xs className={classes.labelContainer}>
+      <div style={{ flexGrow: 1, overflow: "hidden" }}>
         {documentCount} {column.name as string}: {label}
-      </Grid>
+      </div>
 
-      <Grid item>
-        <IconButton
-          component={Link}
-          to={subTablePath}
-          className="row-hover-iconButton"
-          size="small"
-          disabled={!subTablePath}
-        >
-          <LaunchIcon />
-        </IconButton>
-      </Grid>
-    </Grid>
+      <IconButton
+        component={Link}
+        to={subTablePath}
+        className="row-hover-iconButton"
+        size="small"
+        disabled={!subTablePath}
+        style={{ flexShrink: 0 }}
+      >
+        <LaunchIcon />
+      </IconButton>
+    </Stack>
   );
 }

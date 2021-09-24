@@ -1,38 +1,15 @@
-import clsx from "clsx";
 import { Controller } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 
-import { makeStyles, createStyles } from "@mui/styles";
 import { ButtonBase, FormControlLabel, Switch } from "@mui/material";
 
 import { useFieldStyles } from "components/SideDrawer/Form/utils";
-
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    root: { padding: 0 },
-
-    formControlLabel: {
-      margin: 0,
-      width: "100%",
-      display: "flex",
-
-      padding: theme.spacing(0, 0.25, 0, 1.5),
-    },
-
-    label: {
-      ...theme.typography.body2,
-      flexGrow: 1,
-      whiteSpace: "normal",
-    },
-  })
-);
 
 export default function Checkbox({
   column,
   control,
   disabled,
 }: ISideDrawerFieldProps) {
-  const classes = useStyles();
   const fieldClasses = useFieldStyles();
 
   return (
@@ -45,10 +22,7 @@ export default function Checkbox({
         };
 
         return (
-          <ButtonBase
-            className={clsx(fieldClasses.root, classes.root)}
-            disabled={disabled}
-          >
+          <ButtonBase className={fieldClasses.root} disabled={disabled}>
             <FormControlLabel
               control={
                 <Switch
@@ -61,7 +35,22 @@ export default function Checkbox({
               }
               label={column.name as string}
               labelPlacement="start"
-              classes={{ root: classes.formControlLabel, label: classes.label }}
+              sx={{
+                mx: 0,
+                my: -0.25,
+                width: "100%",
+                alignItems: "center",
+
+                "& .MuiFormControlLabel-label": {
+                  font: "inherit",
+                  letterSpacing: "inherit",
+                  flexGrow: 1,
+                  overflowX: "hidden",
+                  mt: 0,
+                },
+
+                "& .MuiSwitch-root": { mr: -1.25 },
+              }}
             />
           </ButtonBase>
         );

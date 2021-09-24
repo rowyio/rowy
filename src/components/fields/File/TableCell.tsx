@@ -44,11 +44,7 @@ const useStyles = makeStyles((theme) =>
       flexGrow: 1,
       marginLeft: "0 !important",
     },
-    chip: {
-      width: "100%",
-      height: 24,
-      display: "flex",
-    },
+    chip: { width: "100%" },
 
     endButtonContainer: {},
     circularProgress: {

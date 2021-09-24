@@ -20,7 +20,7 @@
     "@mui/styles": "^5.0.0",
     "@rowy/form-builder": "^0.1.2",
     "@rowy/multiselect": "^0.1.12",
-    "@tinymce/tinymce-react": "^3.4.0",
+    "@tinymce/tinymce-react": "^3.12.6",
     "algoliasearch": "^4.8.6",
     "ansi-to-react": "^6.1.5",
     "chroma-js": "^2.1.2",
@@ -62,7 +62,7 @@
     "react-scroll-sync": "^0.8.0",
     "react-usestateref": "^1.0.5",
     "serve": "^11.3.2",
-    "tinymce": "^5.2.0",
+    "tinymce": "^5.9.2",
     "typescript": "^4.4.2",
     "use-algolia": "^1.4.1",
     "use-debounce": "^3.3.0",
@@ -120,7 +120,8 @@
     "monaco-editor": "^0.21.2",
     "playwright": "^1.5.2",
     "prettier": "^2.2.1",
-    "pretty-quick": "^3.0.0"
+    "pretty-quick": "^3.0.0",
+    "raw-loader": "^4.0.2"
   },
   "husky": {
     "hooks": {

@@ -1,10 +1,24 @@
 import { useState } from "react";
 import clsx from "clsx";
 
+import { Editor } from "@tinymce/tinymce-react";
+
+// TinyMCE so the global var exists
 import "tinymce/tinymce.min.js";
+// Theme
 import "tinymce/themes/silver";
+// Toolbar icons
+import "tinymce/icons/default";
+// Editor styles
 import "tinymce/skins/ui/oxide/skin.min.css";
-import "tinymce/skins/ui/oxide/content.min.css";
+// Content styles, including inline UI like fake cursors
+/* eslint import/no-webpack-loader-syntax: off */
+import contentCss from "!!raw-loader!tinymce/skins/content/default/content.min.css";
+import contentUiCss from "!!raw-loader!tinymce/skins/ui/oxide/content.min.css";
+import contentCssDark from "!!raw-loader!tinymce/skins/content/dark/content.min.css";
+import contentUiCssDark from "!!raw-loader!tinymce/skins/ui/oxide-dark/content.min.css";
+
+// Plugins
 import "tinymce/plugins/autoresize";
 import "tinymce/plugins/lists";
 import "tinymce/plugins/link";
@@ -12,11 +26,9 @@ import "tinymce/plugins/image";
 import "tinymce/plugins/paste";
 import "tinymce/plugins/help";
 import "tinymce/plugins/code";
-import { Editor } from "@tinymce/tinymce-react";
 
 import { makeStyles, createStyles } from "@mui/styles";
 import { useTheme } from "@mui/material";
-
 const useStyles = makeStyles((theme) =>
   createStyles({
     "@global": {
@@ -30,21 +42,17 @@ const useStyles = makeStyles((theme) =>
         "&.tox-tinymce": {
           borderRadius: theme.shape.borderRadius,
           border: "none",
-          backgroundColor:
-            theme.palette.mode === "light"
-              ? "rgba(0, 0, 0, 0.09)"
-              : "rgba(255, 255, 255, 0.09)",
 
-          transition: theme.transitions.create("background-color", {
-            duration: theme.transitions.duration.shorter,
-            easing: theme.transitions.easing.easeOut,
+          backgroundColor: theme.palette.action.input,
+          boxShadow: `0 0 0 1px ${theme.palette.action.inputOutline} inset,
+                        0 -1px 0 0 ${theme.palette.text.disabled} inset`,
+          transition: theme.transitions.create("box-shadow", {
+            duration: theme.transitions.duration.short,
           }),
 
           "&:hover": {
-            backgroundColor:
-              theme.palette.mode === "light"
-                ? "rgba(0, 0, 0, 0.13)"
-                : "rgba(255, 255, 255, 0.13)",
+            boxShadow: `0 0 0 1px ${theme.palette.action.inputOutline} inset,
+                          0 -1px 0 0 ${theme.palette.text.primary} inset`,
           },
         },
 
@@ -90,11 +98,18 @@ const useStyles = makeStyles((theme) =>
     },
 
     focus: {
-      "& .tox.tox-tinymce": {
+      "& .tox.tox-tinymce, & .tox.tox-tinymce:hover": {
+        boxShadow: `0 0 0 1px ${theme.palette.action.inputOutline} inset,
+                    0 -2px 0 0 ${theme.palette.primary.main} inset`,
+      },
+    },
+
+    disabled: {
+      "& .tox.tox-tinymce, & .tox.tox-tinymce:hover": {
         backgroundColor:
-          (theme.palette.mode === "light"
-            ? "rgba(0, 0, 0, 0.09)"
-            : "rgba(255, 255, 255, 0.09)") + "!important",
+          theme.palette.mode === "dark"
+            ? "transparent"
+            : theme.palette.action.disabledBackground,
       },
     },
   })
@@ -104,37 +119,53 @@ export interface IRichTextEditorProps {
   value?: string;
   onChange: (value: string) => void;
   disabled?: boolean;
+  id: string;
 }
 
 export default function RichTextEditor({
   value,
   onChange,
   disabled,
+  id,
 }: IRichTextEditorProps) {
   const classes = useStyles();
   const theme = useTheme();
   const [focus, setFocus] = useState(false);
 
   return (
-    <div className={clsx(classes.root, focus && classes.focus)}>
+    <div
+      className={clsx(
+        classes.root,
+        focus && classes.focus,
+        disabled && classes.disabled
+      )}
+    >
       <Editor
         disabled={disabled}
         init={{
+          skin: false,
+          content_css: false,
+          content_style: [
+            theme.palette.mode === "dark" ? contentCssDark : contentCss,
+            theme.palette.mode === "dark" ? contentUiCssDark : contentUiCss,
+            `:root { font-size: 14px; }
+              body {
+                background-color: ${
+                  theme.palette.mode === "dark"
+                    ? theme.palette.background.paper
+                    : "transparent"
+                };
+                font-family: ${theme.typography.fontFamily};
+                color: ${theme.palette.text.primary};
+              }`,
+          ].join("\n"),
           minHeight: 300,
           menubar: false,
           plugins: ["autoresize", "lists link image", "paste help", "code"],
           statusbar: false,
           toolbar:
             "formatselect | bold italic forecolor | link | bullist numlist outdent indent | removeformat code | help",
-          skin: false,
-          content_css: [
-            "https://use.typekit.net/ngg8buf.css",
-            "https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i&display=swap",
-            // theme.palette.mode === "light"
-            // ?
-            "/static/tinymce_content.css",
-            // : "/static/tinymce_content-dark.css",
-          ],
+          body_id: id,
         }}
         value={value}
         onEditorChange={onChange}

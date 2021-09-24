@@ -2904,7 +2904,7 @@
   dependencies:
     defer-to-connect "^1.0.1"
 
-"@tinymce/tinymce-react@^3.4.0":
+"@tinymce/tinymce-react@^3.12.6":
   version "3.12.6"
   resolved "https://registry.yarnpkg.com/@tinymce/tinymce-react/-/tinymce-react-3.12.6.tgz#8a4e2a5c5026b7a0c9c4c839af4d691804aa0604"
   integrity sha512-a7/Ns7uVsSr2N0fCxn+OhDx8f9JqfywTlHbXsgcwlWB6vIBMIjjRBJ6PGo/5H0y2vfzO6fBzd4gc6h05Cm5R7A==
@@ -13369,6 +13369,14 @@ raw-body@^2.3.3:
     iconv-lite "0.4.24"
     unpipe "1.0.0"
 
+raw-loader@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/raw-loader/-/raw-loader-4.0.2.tgz#1aac6b7d1ad1501e66efdac1522c73e59a584eb6"
+  integrity sha512-ZnScIV3ag9A4wPX/ZayxL/jZH+euYb6FcUinPcgiQW0+UBtEv0O6Q3lGd3cqJ+GHH+rksEv3Pj99oxJ3u3VIKA==
+  dependencies:
+    loader-utils "^2.0.0"
+    schema-utils "^3.0.0"
+
 rc@^1.0.1, rc@^1.1.6, rc@^1.2.8:
   version "1.2.8"
   resolved "https://registry.yarnpkg.com/rc/-/rc-1.2.8.tgz#cd924bf5200a075b83c188cd6b9e211b7fc0d3ed"
@@ -15666,10 +15674,15 @@ tinycolor2@^1.4.1:
   resolved "https://registry.yarnpkg.com/tinycolor2/-/tinycolor2-1.4.2.tgz#3f6a4d1071ad07676d7fa472e1fac40a719d8803"
   integrity sha512-vJhccZPs965sV/L2sU4oRQVAos0pQXwsvTLkWYdqJ+a8Q5kPFzJTuOFwy7UniPli44NKQGAglksjvOcpo95aZA==
 
-tinymce@^5.2.0, tinymce@^5.5.1:
+tinymce@^5.5.1:
   version "5.9.0"
   resolved "https://registry.yarnpkg.com/tinymce/-/tinymce-5.9.0.tgz#c579ab337e315cc54f568f65d081002e6e1dc3e6"
   integrity sha512-kaCTgR2NtJe9mgU46WPgUZFy5e2x9IgC9/kxqHg8ikFePi8bYE3bf3qmiWR+hXH/pr8PDFRsRCpqOuLEtdhG8Q==
+
+tinymce@^5.9.2:
+  version "5.9.2"
+  resolved "https://registry.yarnpkg.com/tinymce/-/tinymce-5.9.2.tgz#c56a1d7800ac23026fbe6e0fcf444c0f157ccafe"
+  integrity sha512-/dHTsbxo0YwLvB5krRqiw/qHEm04/k6l0dvAQ3hO5oNw4e9QalKcUQCdr+g/b/FWcsUMP6scvKmm8MX50/j3Cg==
 
 tmp@0.0.33, tmp@^0.0.33:
   version "0.0.33"

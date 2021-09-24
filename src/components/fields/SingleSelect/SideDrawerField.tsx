@@ -1,10 +1,7 @@
 import { Controller } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 
-import { useTheme } from "@mui/material";
-import MultiSelect_ from "@rowy/multiselect";
-import FormattedChip from "components/FormattedChip";
-
+import MultiSelect from "@rowy/multiselect";
 import { sanitiseValue } from "./utils";
 
 export default function SingleSelect({
@@ -12,8 +9,6 @@ export default function SingleSelect({
   control,
   disabled,
 }: ISideDrawerFieldProps) {
-  const theme = useTheme();
-
   const config = column.config ?? {};
 
   return (
@@ -22,7 +17,7 @@ export default function SingleSelect({
       name={column.key}
       render={({ onChange, onBlur, value }) => (
         <>
-          <MultiSelect_
+          <MultiSelect
             value={sanitiseValue(value)}
             onChange={onChange}
             options={config.options ?? []}
@@ -33,14 +28,9 @@ export default function SingleSelect({
               label: "",
               hiddenLabel: true,
               onBlur,
+              id: `sidedrawer-field-${column.key}`,
             }}
           />
-
-          {value?.length > 0 && (
-            <div style={{ marginTop: theme.spacing(1) }}>
-              <FormattedChip label={value} />
-            </div>
-          )}
         </>
       )}
     />

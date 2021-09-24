@@ -25,12 +25,6 @@ const useStyles = makeStyles((theme) =>
       overflow: "hidden",
       marginRight: 0,
     },
-    chip: {
-      display: "flex",
-      cursor: "inherit",
-      height: 24,
-    },
-    chipLabel: { whiteSpace: "nowrap" },
 
     icon: {
       display: "block",
@@ -71,8 +65,6 @@ export const ConnectTable = React.forwardRef(function ConnectTable(
                 label={config.primaryKeys
                   .map((key: string) => doc.snapshot[key])
                   .join(" ")}
-                // size="small"
-                className={classes.chip}
               />
             </Grid>
           ))}

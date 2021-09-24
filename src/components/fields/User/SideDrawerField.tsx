@@ -1,28 +1,13 @@
-import clsx from "clsx";
 import { Controller } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 
-import { makeStyles, createStyles } from "@mui/styles";
-import { Grid, Typography, Avatar } from "@mui/material";
+import { Stack, Typography, Avatar } from "@mui/material";
 import { useFieldStyles } from "components/SideDrawer/Form/utils";
 
 import { format } from "date-fns";
 import { DATE_TIME_FORMAT } from "constants/dates";
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    labelContainer: { cursor: "default" },
-
-    avatar: {
-      width: 32,
-      height: 32,
-      marginRight: theme.spacing(1.5),
-    },
-  })
-);
-
 export default function User({ control, column }: ISideDrawerFieldProps) {
-  const classes = useStyles();
   const fieldClasses = useFieldStyles();
 
   return (
@@ -37,27 +22,28 @@ export default function User({ control, column }: ISideDrawerFieldProps) {
           DATE_TIME_FORMAT
         );
         return (
-          <Grid
-            container
+          <Stack
+            direction="row"
             alignItems="center"
-            className={clsx(fieldClasses.root, classes.labelContainer)}
+            className={fieldClasses.root}
           >
-            <Grid item>
-              <Avatar
-                alt="Avatar"
-                src={value.photoURL}
-                className={classes.avatar}
-              />
-            </Grid>
-            <Grid item>
-              <Typography variant="body2">
-                {value.displayName} ({value.email})
+            <Avatar
+              alt="Avatar"
+              src={value.photoURL}
+              sx={{ width: 32, height: 32, ml: -0.5, mr: 1.5 }}
+            />
+
+            <Typography variant="body2" component="div">
+              {value.displayName} ({value.email})
+              <Typography
+                variant="caption"
+                color="textSecondary"
+                component="div"
+              >
+                Updated at {dateLabel}
               </Typography>
-              <Typography variant="body2" color="textSecondary">
-                {dateLabel}
-              </Typography>
-            </Grid>
-          </Grid>
+            </Typography>
+          </Stack>
         );
       }}
     />

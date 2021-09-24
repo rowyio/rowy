@@ -281,10 +281,12 @@ export const components = (theme: Theme): ThemeOptions => {
         },
       },
       MuiInputLabel: {
-        defaultProps: {
-          shrink: true,
-        },
         styleOverrides: {
+          root: {
+            ...theme.typography.caption,
+            fontWeight: 500,
+            color: theme.palette.text.primary,
+          },
           filled: {
             "&, &.MuiInputLabel-shrink": { transform: "none" },
 
@@ -295,10 +297,6 @@ export const components = (theme: Theme): ThemeOptions => {
             maxWidth: "none",
             overflow: "visible",
             whiteSpace: "normal",
-
-            ...theme.typography.caption,
-            fontWeight: 500,
-            color: theme.palette.text.primary,
           },
         },
       },
@@ -760,7 +758,11 @@ export const components = (theme: Theme): ThemeOptions => {
         styleOverrides: {
           root: {
             display: "flex",
+            alignItems: "flex-start",
             "& .MuiSwitch-root": { marginRight: theme.spacing(1) },
+          },
+          label: {
+            marginTop: 10,
           },
           labelPlacementStart: {
             "& .MuiSwitch-root": { marginLeft: theme.spacing(1) },
@@ -868,6 +870,12 @@ export const components = (theme: Theme): ThemeOptions => {
         styleOverrides: {
           root: { borderRadius: theme.shape.borderRadius },
           bar: { borderRadius: theme.shape.borderRadius },
+        },
+      },
+
+      MuiRating: {
+        styleOverrides: {
+          iconFilled: { color: theme.palette.text.secondary },
         },
       },
 

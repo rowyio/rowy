@@ -76,9 +76,11 @@ export default function TextEditor({ row, column }: EditorProps<any>) {
           letterSpacing: "inherit", // Prevent text jumping
         },
         "& .MuiInputBase-input": {
+          height: "100%",
           font: "inherit", // Prevent text jumping
           letterSpacing: "inherit", // Prevent text jumping
-          padding: "var(--cell-padding)",
+          p: "var(--cell-padding)",
+          pb: 1 / 8,
         },
       }}
       InputProps={{

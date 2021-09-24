@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) =>
       },
 
       "& h1, & h2, & h3, & h4, & h5, & h6": {
-        fontFamily: '"Europa", "Open Sans", sans-serif',
+        fontFamily: theme.typography.fontFamily,
         margin: 0,
         lineHeight: 1.2,
         fontWeight: "bold",

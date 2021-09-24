@@ -3,7 +3,7 @@ import { IFieldConfig, FieldType } from "components/fields/types";
 import withBasicCell from "../_withTableCell/withBasicCell";
 
 import UrlIcon from "@mui/icons-material/Link";
-import BasicCell from "../_BasicCell/BasicCellValue";
+import TableCell from "./TableCell";
 import TextEditor from "components/Table/editors/TextEditor";
 
 const SideDrawerField = lazy(
@@ -20,7 +20,7 @@ export const config: IFieldConfig = {
   initializable: true,
   icon: <UrlIcon />,
   description: "Web address.",
-  TableCell: withBasicCell(BasicCell),
+  TableCell: withBasicCell(TableCell),
   TableEditor: TextEditor,
   SideDrawerField,
 };

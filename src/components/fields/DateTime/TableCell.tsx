@@ -86,6 +86,7 @@ export default function DateTime({
               ".rdg-cell &": {
                 padding: "var(--cell-padding)",
                 pr: 0,
+                pb: 1 / 8,
               },
             },
             "& .MuiInputAdornment-root": { m: 0 },

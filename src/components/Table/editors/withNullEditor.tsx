@@ -1,29 +1,21 @@
-import { useEffect } from "react";
 import { EditorProps } from "react-data-grid";
-import { useProjectContext } from "contexts/ProjectContext";
 import { IHeavyCellProps } from "components/fields/types";
 
 import { getCellValue } from "utils/fns";
 
 /**
  * Allow the cell to be editable, but disable react-data-grid’s default
- * text editor to show. Opens the side drawer in the appropriate position.
+ * text editor to show.
  *
- * Displays the current HeavyCell or HeavyCell since it overwrites cell contents.
+ * Hides the editor container so the cell below remains editable inline.
  *
- * Use for cells that do not support any type of in-cell editing.
+ * Use for cells that have inline editing and don’t need to be double-clicked.
  */
-export default function withSideDrawerEditor(
+export default function withNullEditor(
   HeavyCell?: React.ComponentType<IHeavyCellProps>
 ) {
-  return function SideDrawerEditor(props: EditorProps<any, any>) {
+  return function NullEditor(props: EditorProps<any, any>) {
     const { row, column } = props;
-    const { sideDrawerRef } = useProjectContext();
-
-    useEffect(() => {
-      if (!sideDrawerRef?.current?.open && sideDrawerRef?.current?.setOpen)
-        sideDrawerRef?.current?.setOpen(true);
-    }, [column]);
 
     return HeavyCell ? (
       <div

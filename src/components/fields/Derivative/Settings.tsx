@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { Typography, Grid } from "@mui/material";
+import { Grid, InputLabel } from "@mui/material";
 import MultiSelect from "@rowy/multiselect";
 import FieldSkeleton from "components/SideDrawer/Form/FieldSkeleton";
 import { FieldType } from "constants/fields";
@@ -22,24 +22,26 @@ const Settings = ({ config, handleChange }) => {
   const columnOptions = Object.values(tableState.columns)
     .filter((column) => column.type !== FieldType.subTable)
     .map((c) => ({ label: c.name, value: c.key }));
+
   return (
     <>
-      <Grid container direction="row" spacing={2}>
+      <Grid container direction="row" spacing={2} flexWrap="nowrap">
         <Grid item xs={12} md={6}>
-          <Typography variant="overline">listener Fields</Typography>
           <MultiSelect
-            //label={"Listener fields"}
+            label={"Listener Fields"}
             options={columnOptions}
             value={config.listenerFields ?? []}
             onChange={handleChange("listenerFields")}
+            TextFieldProps={{
+              helperText:
+                "Changes to these fields will trigger the evaluation of the column.",
+            }}
           />
-          <Typography color="textSecondary" paragraph>
-            Changes to these fields will trigger the evaluation of the column.
-          </Typography>
         </Grid>
+
         <Grid item xs={12} md={6}>
-          <Typography variant="overline">Output Field type</Typography>
           <FieldsDropdown
+            label="Output Field Type"
             value={config.renderFieldType}
             options={Object.values(FieldType).filter(
               (f) =>
@@ -56,7 +58,9 @@ const Settings = ({ config, handleChange }) => {
           />
         </Grid>
       </Grid>
-      <Typography variant="overline">derivative script</Typography>
+
+<div>
+      <InputLabel>Derivative Script</InputLabel>
       <CodeEditorHelper docLink={WIKI_LINKS.derivatives} />
       <Suspense fallback={<FieldSkeleton height={200} />}>
         <CodeEditor
@@ -64,6 +68,7 @@ const Settings = ({ config, handleChange }) => {
           handleChange={handleChange("script")}
         />
       </Suspense>
+      </div>
     </>
   );
 };

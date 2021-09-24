@@ -25,12 +25,6 @@ const useStyles = makeStyles((theme) =>
       overflow: "hidden",
       marginRight: 0,
     },
-    chip: {
-      display: "flex",
-      cursor: "inherit",
-      height: 24,
-    },
-    chipLabel: { whiteSpace: "nowrap" },
 
     icon: {
       display: "block",
@@ -66,11 +60,7 @@ export const ConnectService = React.forwardRef(function ConnectService(
         {Array.isArray(value) &&
           value.map((doc: any) => (
             <Grid item key={doc.primaryKey}>
-              <Chip
-                label={config.titleKey}
-                className={classes.chip}
-                size="small"
-              />
+              <Chip label={config.titleKey} size="small" />
             </Grid>
           ))}
       </Grid>
