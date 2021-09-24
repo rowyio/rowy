@@ -1,21 +1,6 @@
 import _mapValues from "lodash/mapValues";
 import meta from "@root/package.json";
 
-const WIKI_PATHS = {
-  updating: "/Updating",
-  derivatives: "/Derivative-Fields",
-  defaultValues: "/Default-Values",
-  functions: "/Cloud-Functions",
-  securityRules: "/Role-Based-Security-Rules",
-  setUpAuth: "/Setting-Up-Firebase-Authentication",
-  extensions: "/Extensions",
-};
-const WIKI_LINK_ROOT = meta.repository.url.replace(".git", "/wiki");
-export const WIKI_LINKS = _mapValues(
-  WIKI_PATHS,
-  (path) => WIKI_LINK_ROOT + path
-);
-
 export const EXTERNAL_LINKS = {
   homepage: meta.homepage,
   privacy: meta.homepage + "/privacy",
@@ -36,3 +21,17 @@ export const EXTERNAL_LINKS = {
 
   dateFormat: "https://date-fns.org/v2.24.0/docs/format",
 };
+
+const WIKI_PATHS = {
+  updating: "/Updating",
+  derivatives: "/field-types/derivative",
+  defaultValues: "/Default-Values",
+  functions: "/Cloud-Functions",
+  securityRules: "/Role-Based-Security-Rules",
+  setUpAuth: "/Setting-Up-Firebase-Authentication",
+  extensions: "/Extensions",
+};
+export const WIKI_LINKS = _mapValues(
+  WIKI_PATHS,
+  (path) => EXTERNAL_LINKS.docs + path
+);
