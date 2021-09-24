@@ -208,6 +208,10 @@ export default function Step1Columns({
                     root: classes.formControlLabel,
                     label: classes.columnLabel,
                   }}
+                  sx={{
+                    alignItems: "center",
+                    "& .MuiFormControlLabel-label": { mt: 0 },
+                  }}
                 />
               </Grid>
 

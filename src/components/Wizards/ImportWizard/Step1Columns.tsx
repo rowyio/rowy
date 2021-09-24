@@ -132,6 +132,10 @@ export default function Step1Columns({ config, setConfig }: IStepProps) {
                 label: classes.columnLabel,
               }}
               style={{ height: 44 }}
+              sx={{
+                alignItems: "center",
+                "& .MuiFormControlLabel-label": { mt: 0 },
+              }}
             />
           </li>
 
@@ -151,6 +155,10 @@ export default function Step1Columns({ config, setConfig }: IStepProps) {
                 classes={{
                   root: classes.formControlLabel,
                   label: classes.columnLabel,
+                }}
+                sx={{
+                  alignItems: "center",
+                  "& .MuiFormControlLabel-label": { mt: 0 },
                 }}
               />
             </li>
