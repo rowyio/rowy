@@ -3,11 +3,22 @@
 </h1>
 
 <h3 align="center">
+GCP as easy as ABC
 
 Rowy is an open source platform that allows you to build on Google Cloud
 Platform in minutes.
 
 </h3>
+
+<p align="center">
+  <a aria-label="License" href="https://github.com/RowyIO/rowy/blob/rc/LICENSE">
+    <img src="https://badgen.net/github/license/RowyIO/rowy" />
+  </a>
+  <a aria-label="Commits" href="https://github.com/RowyIO/rowy/commits/rc">
+    <img src="https://badgen.net/github/last-commit/RowyIO/rowy/rc" />
+  </a>
+</p>
+
 
 With Rowy you can  
 ✅ Manage Firestore data in a spreadsheet-like UI  
