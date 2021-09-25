@@ -25,7 +25,7 @@ interface IAppContext {
   currentUser: firebase.User | null | undefined;
   userClaims: Record<string, any> | undefined;
   userRoles: string[];
-  getAuthToken: () => Promise<string>;
+  getAuthToken: (forceRefresh?: boolean) => Promise<string>;
   userDoc: any;
   theme: keyof typeof themes;
   themeOverridden: boolean;
@@ -61,8 +61,14 @@ export const AppProvider: React.FC = ({ children }) => {
 
   // Get user data from Firebase Auth event
 
-  const getAuthToken = async () => {
+  const getAuthToken = async (forceRefresh: boolean = false) => {
     // check if token is expired
+    if (currentUser && forceRefresh) {
+      const res = await currentUser.getIdTokenResult(true);
+      setAuthToken(res.token as string);
+      return res.token;
+    }
+
     if (currentUser && authToken) {
       const token: any = jwt_decode(authToken);
       if (token && token.exp * 1000 < Date.now()) {

@@ -40,7 +40,7 @@ export default function Step4Rules({
   const [currentRules, setCurrentRules] = useState("");
   useEffect(() => {
     if (rowyRunUrl && !hasRules && !currentRules)
-      getAuthToken()
+      getAuthToken(true)
         .then((authToken) =>
           rowyRun({
             rowyRunUrl,
