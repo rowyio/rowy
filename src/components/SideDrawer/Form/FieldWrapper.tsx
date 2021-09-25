@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 
 import { Stack, InputLabel, Typography, IconButton } from "@mui/material";
-import DebugIcon from "@mui/icons-material/BugReportOutlined";
+import DocumentPathIcon from "assets/icons/DocumentPath";
 import LaunchIcon from "@mui/icons-material/Launch";
 import LockIcon from "@mui/icons-material/LockOutlined";
 
@@ -46,7 +46,7 @@ export default function FieldWrapper({
           },
         }}
       >
-        {type === "debug" ? <DebugIcon /> : getFieldProp("icon", type)}
+        {type === "debug" ? <DocumentPathIcon /> : getFieldProp("icon", type)}
         <InputLabel
           id={`sidedrawer-label-${name}`}
           htmlFor={`sidedrawer-field-${name}`}
