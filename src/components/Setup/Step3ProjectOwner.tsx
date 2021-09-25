@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { ISetupStepBodyProps } from "pages/Setup";
 
-import { Typography, Stack, Button } from "@mui/material";
+import { Typography, Stack, Button, IconButton } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
@@ -11,6 +11,7 @@ import SignInWithGoogle from "./SignInWithGoogle";
 import { useAppContext } from "contexts/AppContext";
 import { rowyRun } from "utils/rowyRun";
 import { runRoutes } from "constants/runRoutes";
+import CopyIcon from "assets/icons/Copy";
 
 export default function Step3ProjectOwner({
   rowyRunUrl,
@@ -82,6 +83,13 @@ export default function Step3ProjectOwner({
               <li>
                 this domain authorized:{" "}
                 <b style={{ userSelect: "all" }}>{window.location.hostname}</b>
+                <IconButton
+                  onClick={() =>
+                    navigator.clipboard.writeText(window.location.hostname)
+                  }
+                >
+                  <CopyIcon />
+                </IconButton>
               </li>
             </ol>
 

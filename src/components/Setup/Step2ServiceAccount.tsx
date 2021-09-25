@@ -39,6 +39,7 @@ export default function Step2ServiceAccount({
     setVerificationStatus("LOADING");
     try {
       const result = await checkServiceAccount(rowyRunUrl);
+      console.log(result);
       if (result) {
         setVerificationStatus("IDLE");
         setHasAllRoles(true);
@@ -162,6 +163,7 @@ export const checkServiceAccount = async (
       route: runRoutes.serviceAccountAccess,
       signal,
     });
+    console.log(res);
     return Object.values(res).reduce(
       (acc, value) => acc && value,
       true

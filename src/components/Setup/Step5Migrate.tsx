@@ -3,10 +3,8 @@ import { ISetupStepBodyProps } from "pages/Setup";
 
 import { Typography, Button } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
 import SetupItem from "./SetupItem";
-import SignInWithGoogle from "./SignInWithGoogle";
 
 import { name } from "@root/package.json";
 import { useAppContext } from "contexts/AppContext";
