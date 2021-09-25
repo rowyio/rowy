@@ -149,6 +149,14 @@ export default function ActionFab({
         disabled
       }
       size="small"
+      sx={{
+        "&:not(.MuiFab-primary):not(.MuiFab-secondary):not(.Mui-disabled)": {
+          bgcolor: (theme) =>
+            theme.palette.mode === "dark"
+              ? undefined
+              : theme.palette.background.default,
+        },
+      }}
       {...props}
     >
       {isRunning ? (

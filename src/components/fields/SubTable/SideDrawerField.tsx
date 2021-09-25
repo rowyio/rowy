@@ -2,7 +2,7 @@ import { useWatch } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 import { Link } from "react-router-dom";
 
-import { Grid, IconButton } from "@mui/material";
+import { Stack, IconButton } from "@mui/material";
 import LaunchIcon from "@mui/icons-material/Launch";
 
 import { useFieldStyles } from "components/SideDrawer/Form/utils";
@@ -23,7 +23,7 @@ export default function SubTable({
   );
 
   return (
-    <Grid container wrap="nowrap">
+    <Stack direction="row">
       <div className={fieldClasses.root}>
         {documentCount} {column.name as string}: {label}
       </div>
@@ -31,11 +31,13 @@ export default function SubTable({
       <IconButton
         component={Link}
         to={subTablePath}
-        style={{ width: 56, marginLeft: 16 }}
+        edge="end"
+        size="small"
+        sx={{ ml: 1 }}
         disabled={!subTablePath}
       >
         <LaunchIcon />
       </IconButton>
-    </Grid>
+    </Stack>
   );
 }

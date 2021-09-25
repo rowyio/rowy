@@ -148,14 +148,6 @@ export const useStyles = makeStyles((theme) =>
         margin: theme.spacing(0, -1.25),
         width: `calc(100% + ${theme.spacing(1.25 * 2)})`,
       },
-
-      ".rdg-cell .MuiChip-root": {
-        height: 24,
-        font: "inherit",
-        letterSpacing: "inherit",
-        display: "flex",
-        cursor: "inherit",
-      },
     },
   })
 );

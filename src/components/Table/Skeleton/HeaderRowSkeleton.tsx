@@ -25,7 +25,7 @@ export default function HeaderRowSkeleton() {
               borderColor: "divider",
               borderLeftWidth: i === 0 ? 1 : 0,
               width: i === NUM_CELLS ? 46 : 150,
-              height: 44,
+              height: 42,
               borderRadius: i === NUM_CELLS ? 1 : 0,
               borderTopLeftRadius:
                 i === 0 ? (theme) => theme.shape.borderRadius : 0,

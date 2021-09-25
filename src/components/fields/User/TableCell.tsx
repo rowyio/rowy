@@ -18,7 +18,7 @@ export default function User({ value }: IHeavyCellProps) {
         size="small"
         avatar={<Avatar alt="Avatar" src={value.photoURL} />}
         label={value.displayName}
-        sx={{ mx: -0.25 }}
+        sx={{ mx: -0.25, height: 24 }}
       />
     </Tooltip>
   );

@@ -82,7 +82,7 @@ export const useStyles = makeStyles((theme) =>
     navFabContainer: {
       position: "absolute",
       top: theme.spacing(6),
-      left: -18,
+      left: -32 / 2,
       zIndex: theme.zIndex.drawer + 1,
     },
     "@keyframes navFab": {

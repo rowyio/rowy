@@ -66,7 +66,7 @@ const useStyles = makeStyles((theme) =>
       background: theme.palette.background.default,
       color: theme.palette.text.primary,
 
-      margin: "-41px 0 0 !important",
+      margin: "-42px 0 0 !important",
       padding: theme.spacing(0, 1.5, 0, 0),
 
       "& *": { lineHeight: "40px" },

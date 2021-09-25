@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) =>
       border: `1px solid ${theme.palette.divider}`,
       borderRadius: 0,
       boxShadow: "none",
-      height: 44,
+      height: 42,
 
       ...theme.typography.subtitle2,
       color: theme.palette.text.secondary,

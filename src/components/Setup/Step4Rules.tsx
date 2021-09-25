@@ -29,7 +29,7 @@ export default function Step4Rules({
   completion,
   setCompletion,
 }: ISetupStepBodyProps) {
-  const { projectId, currentUser, getAuthToken } = useAppContext();
+  const { projectId, getAuthToken } = useAppContext();
 
   const [hasRules, setHasRules] = useState(completion.rules);
   const [adminRule, setAdminRule] = useState(true);

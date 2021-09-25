@@ -43,6 +43,7 @@ export const useFieldStyles = makeStyles((theme) =>
 
       width: "100%",
       minHeight: 32,
+      boxSizing: "border-box",
 
       display: "flex",
       textAlign: "left",

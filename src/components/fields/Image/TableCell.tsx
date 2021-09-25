@@ -177,12 +177,9 @@ export default function Image_({
         isDragActive && classes.dragActive
       )}
       alignItems="center"
-      spacing={0.5}
       {...dropzoneProps}
       onClick={undefined}
     >
-      <input {...getInputProps()} />
-
       <div className={classes.imglistContainer}>
         <Grid container spacing={0.5} wrap="nowrap">
           {Array.isArray(value) &&
@@ -259,32 +256,33 @@ export default function Image_({
         </Grid>
       </div>
 
-      <div className={classes.endButtonContainer}>
-        {!isLoading ? (
-          !disabled && (
-            <IconButton
-              size="small"
-              className="row-hover-iconButton"
-              onClick={(e) => {
-                dropzoneProps.onClick!(e);
-                e.stopPropagation();
-              }}
-              color="inherit"
-              style={{ display: "flex" }}
-            >
-              <AddIcon />
-            </IconButton>
-          )
-        ) : (
+      {!isLoading ? (
+        !disabled && (
+          <IconButton
+            size="small"
+            className="row-hover-iconButton"
+            onClick={(e) => {
+              dropzoneProps.onClick!(e);
+              e.stopPropagation();
+            }}
+            style={{ display: "flex" }}
+          >
+            <AddIcon />
+          </IconButton>
+        )
+      ) : (
+        <div style={{ padding: 4 }}>
           <CircularProgress
             size={24}
             variant={progress === 0 ? "indeterminate" : "determinate"}
             value={progress}
             thickness={4}
-            className={classes.circularProgress}
+            style={{ display: "block" }}
           />
-        )}
-      </div>
+        </div>
+      )}
+
+      <input {...getInputProps()} />
     </Stack>
   );
 }

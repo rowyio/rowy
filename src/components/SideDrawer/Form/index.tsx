@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import _sortBy from "lodash/sortBy";
 import _isEmpty from "lodash/isEmpty";
 
-import { Grid } from "@mui/material";
+import { Stack } from "@mui/material";
 
 import { Values } from "./utils";
 import { getFieldProp } from "components/fields";
@@ -73,7 +73,7 @@ export default function Form({ values }: IFormProps) {
         getValues={getValues}
       />
 
-      <Grid container spacing={3} direction="column" wrap="nowrap">
+      <Stack spacing={3}>
         {fields.map((field, i) => {
           // Derivative/aggregate field support
           let type = field.type;
@@ -116,7 +116,7 @@ export default function Form({ values }: IFormProps) {
           label="Document Path"
           debugText={values.ref?.path ?? values.id ?? "No ref"}
         />
-      </Grid>
+      </Stack>
     </form>
   );
 }

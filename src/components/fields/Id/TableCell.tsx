@@ -7,7 +7,11 @@ export default function Id({ docRef }: IHeavyCellProps) {
 
   return (
     <span
-      style={{ fontFamily: theme.typography.fontFamilyMono, userSelect: "all" }}
+      style={{
+        fontFamily: theme.typography.fontFamilyMono,
+        fontFeatureSettings: "normal",
+        userSelect: "all",
+      }}
     >
       {docRef.id}
     </span>

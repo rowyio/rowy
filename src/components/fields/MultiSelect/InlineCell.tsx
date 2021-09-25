@@ -5,6 +5,7 @@ import { ButtonBase, Grid } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 import { sanitiseValue } from "./utils";
+import ChipList from "components/Table/formatters/ChipList";
 import FormattedChip from "components/FormattedChip";
 import { ConvertStringToArray } from "./ConvertStringToArray";
 
@@ -22,10 +23,7 @@ export const MultiSelect = forwardRef(function MultiSelect(
       disabled={disabled}
       className="cell-collapse-padding"
       sx={{
-        pl: 1,
-        pr: 0,
         height: "100%",
-
         font: "inherit",
         color: "inherit !important",
         letterSpacing: "inherit",
@@ -33,13 +31,7 @@ export const MultiSelect = forwardRef(function MultiSelect(
         justifyContent: "flex-start",
       }}
     >
-      <Grid
-        container
-        wrap="nowrap"
-        alignItems="center"
-        spacing={0.5}
-        style={{ flexGrow: 1, overflow: "hidden" }}
-      >
+      <ChipList>
         {sanitiseValue(value).map(
           (item) =>
             typeof item === "string" && (
@@ -48,7 +40,7 @@ export const MultiSelect = forwardRef(function MultiSelect(
               </Grid>
             )
         )}
-      </Grid>
+      </ChipList>
 
       {!disabled && (
         <ArrowDropDownIcon

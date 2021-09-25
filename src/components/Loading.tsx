@@ -24,6 +24,7 @@ export default function Loading({
       <Stack
         justifyContent="center"
         alignItems="center"
+        spacing={1}
         {...props}
         style={{
           width: "100%",
@@ -32,8 +33,12 @@ export default function Loading({
           ...props.style,
         }}
       >
-        <CircularProgress sx={{ color: "action.active", mb: 1 }} />
-        <Typography variant="h6" component="div" style={{ userSelect: "none" }}>
+        <CircularProgress />
+        <Typography
+          variant="subtitle1"
+          component="div"
+          style={{ userSelect: "none" }}
+        >
           {message}
         </Typography>
       </Stack>

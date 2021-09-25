@@ -1,74 +1,55 @@
-import React from "react";
-import clsx from "clsx";
+import { forwardRef } from "react";
 import { IPopoverInlineCellProps } from "../types";
 
-import { makeStyles, createStyles } from "@mui/styles";
 import { ButtonBase, Grid, Chip } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    root: {
-      height: "100%",
-      padding: theme.spacing(0, 1, 0, 1.5),
+import ChipList from "components/Table/formatters/ChipList";
 
-      font: "inherit",
-      color: "inherit !important",
-      letterSpacing: "inherit",
-      textAlign: "inherit",
-      justifyContent: "flex-start",
-    },
-
-    value: {
-      flex: 1,
-      maxWidth: `calc(100% - 24px + 4px)`,
-      overflow: "hidden",
-      marginRight: 0,
-    },
-
-    icon: {
-      display: "block",
-      color: theme.palette.action.active,
-    },
-    disabled: {
-      color: theme.palette.action.disabled,
-    },
-  })
-);
-
-export const ConnectService = React.forwardRef(function ConnectService(
+export const ConnectService = forwardRef(function ConnectService(
   { value, showPopoverCell, disabled, column }: IPopoverInlineCellProps,
   ref: React.Ref<any>
 ) {
-  const classes = useStyles();
   const config = column.config ?? {};
 
   return (
     <ButtonBase
-      className={clsx("cell-collapse-padding", classes.root)}
       onClick={() => showPopoverCell(true)}
       ref={ref}
       disabled={disabled}
+      className="cell-collapse-padding"
+      sx={{
+        height: "100%",
+        font: "inherit",
+        color: "inherit !important",
+        letterSpacing: "inherit",
+        textAlign: "inherit",
+        justifyContent: "flex-start",
+      }}
     >
-      <Grid
-        container
-        wrap="nowrap"
-        alignItems="center"
-        spacing={1}
-        className={classes.value}
-      >
+      <ChipList>
         {Array.isArray(value) &&
           value.map((doc: any) => (
             <Grid item key={doc.primaryKey}>
               <Chip label={config.titleKey} size="small" />
             </Grid>
           ))}
-      </Grid>
+      </ChipList>
 
-      <ArrowDropDownIcon
-        className={clsx(classes.icon, disabled && classes.disabled)}
-      />
+      {!disabled && (
+        <ArrowDropDownIcon
+          className="row-hover-iconButton"
+          sx={{
+            flexShrink: 0,
+            mr: 0.5,
+            borderRadius: 1,
+            p: (32 - 24) / 2 / 8,
+            boxSizing: "content-box",
+          }}
+        />
+      )}
     </ButtonBase>
   );
 });
+
 export default ConnectService;

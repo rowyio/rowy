@@ -17,6 +17,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import UploadIcon from "assets/icons/Upload";
+import ChipList from "components/Table/formatters/ChipList";
 
 import { useConfirmation } from "components/ConfirmationDialog";
 import useUploader, { FileValue } from "hooks/useTable/useUploader";
@@ -27,7 +28,7 @@ import { useProjectContext } from "contexts/ProjectContext";
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
-      padding: theme.spacing(0, 0.5, 0, 1),
+      paddingRight: theme.spacing(0.5),
       outline: "none",
     },
     dragActive: {
@@ -105,91 +106,96 @@ export default function File_({
   return (
     <Stack
       direction="row"
-      className={clsx(
-        "cell-collapse-padding",
-        classes.root,
-        isDragActive && classes.dragActive
-      )}
+      className="cell-collapse-padding"
       alignItems="center"
-      spacing={0.5}
+      sx={{
+        height: "100%",
+        pr: 0.5,
+
+        ...(isDragActive
+          ? {
+              backgroundColor: (theme) =>
+                alpha(
+                  theme.palette.primary.main,
+                  theme.palette.action.hoverOpacity * 2
+                ),
+
+              "& .row-hover-iconButton": { color: "primary.main" },
+            }
+          : {}),
+      }}
       {...dropzoneProps}
       onClick={undefined}
     >
-      <input {...getInputProps()} />
-
-      <div className={classes.chipList}>
-        <Grid container spacing={0.5} wrap="nowrap" style={{ height: "100%" }}>
-          {Array.isArray(value) &&
-            value.map((file: FileValue) => (
-              <Grid
-                item
-                key={file.downloadURL}
-                style={
-                  value.length > 1
-                    ? {
-                        // Truncate so multiple files still visible
-                        maxWidth: `calc(100% - 12px)`,
-                      }
-                    : {}
-                }
-              >
-                <Tooltip
-                  title={`File last modified ${format(
-                    file.lastModifiedTS,
-                    DATE_TIME_FORMAT
-                  )}`}
-                >
-                  <Chip
-                    icon={<FileIcon />}
-                    label={file.name}
-                    onClick={(e) => {
-                      window.open(file.downloadURL);
-                      e.stopPropagation();
-                    }}
-                    onDelete={
-                      disabled
-                        ? undefined
-                        : () =>
-                            requestConfirmation({
-                              handleConfirm: () => handleDelete(file.ref),
-                              title: "Delete File",
-                              body: "Are you sure you want to delete this file?",
-                              confirm: "Delete",
-                            })
-                    }
-                    className={classes.chip}
-                  />
-                </Tooltip>
-              </Grid>
-            ))}
-        </Grid>
-      </div>
-
-      <div className={classes.endButtonContainer}>
-        {!isLoading ? (
-          !disabled && (
-            <IconButton
-              size="small"
-              className="row-hover-iconButton"
-              onClick={(e) => {
-                dropzoneProps.onClick!(e);
-                e.stopPropagation();
-              }}
-              style={{ display: "flex" }}
+      <ChipList>
+        {Array.isArray(value) &&
+          value.map((file: FileValue) => (
+            <Grid
+              item
+              key={file.downloadURL}
+              style={
+                // Truncate so multiple files still visible
+                value.length > 1 ? { maxWidth: `calc(100% - 12px)` } : {}
+              }
             >
-              <UploadIcon />
-            </IconButton>
-          )
-        ) : (
+              <Tooltip
+                title={`File last modified ${format(
+                  file.lastModifiedTS,
+                  DATE_TIME_FORMAT
+                )}`}
+              >
+                <Chip
+                  icon={<FileIcon />}
+                  label={file.name}
+                  onClick={(e) => {
+                    window.open(file.downloadURL);
+                    e.stopPropagation();
+                  }}
+                  onDelete={
+                    disabled
+                      ? undefined
+                      : () =>
+                          requestConfirmation({
+                            handleConfirm: () => handleDelete(file.ref),
+                            title: "Delete File",
+                            body: "Are you sure you want to delete this file?",
+                            confirm: "Delete",
+                          })
+                  }
+                  className={classes.chip}
+                />
+              </Tooltip>
+            </Grid>
+          ))}
+      </ChipList>
+
+      {!isLoading ? (
+        !disabled && (
+          <IconButton
+            size="small"
+            className="row-hover-iconButton"
+            onClick={(e) => {
+              dropzoneProps.onClick!(e);
+              e.stopPropagation();
+            }}
+            style={{ display: "flex" }}
+          >
+            <UploadIcon />
+          </IconButton>
+        )
+      ) : (
+        <div style={{ padding: 4 }}>
           <CircularProgress
             size={24}
             variant={progress === 0 ? "indeterminate" : "determinate"}
             value={progress}
             thickness={4}
-            className={classes.circularProgress}
+            style={{ display: "block" }}
           />
-        )}
-      </div>
+        </div>
+      )}
+
+      <input {...getInputProps()} />
     </Stack>
   );
 }

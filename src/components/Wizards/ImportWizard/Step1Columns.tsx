@@ -131,7 +131,7 @@ export default function Step1Columns({ config, setConfig }: IStepProps) {
                 root: classes.formControlLabel,
                 label: classes.columnLabel,
               }}
-              style={{ height: 44 }}
+              style={{ height: 42 }}
               sx={{
                 alignItems: "center",
                 "& .MuiFormControlLabel-label": { mt: 0 },

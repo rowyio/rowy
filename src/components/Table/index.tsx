@@ -180,7 +180,7 @@ export default function Table() {
               ref={dataGridRef}
               rows={rows}
               columns={columns}
-              rowHeight={rowHeight ?? 41}
+              rowHeight={rowHeight ?? 42}
               headerRowHeight={42}
               className="rdg-light" // Handle dark mode in MUI theme
               cellNavigationMode="LOOP_OVER_ROW"

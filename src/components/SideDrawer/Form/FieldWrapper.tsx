@@ -1,7 +1,6 @@
-import React, { Suspense } from "react";
+import { Suspense } from "react";
 
-import { makeStyles, createStyles } from "@mui/styles";
-import { Grid, Typography, IconButton } from "@mui/material";
+import { Stack, InputLabel, Typography, IconButton } from "@mui/material";
 import DebugIcon from "@mui/icons-material/BugReportOutlined";
 import LaunchIcon from "@mui/icons-material/Launch";
 import LockIcon from "@mui/icons-material/LockOutlined";
@@ -12,38 +11,6 @@ import FieldSkeleton from "./FieldSkeleton";
 import { FieldType } from "constants/fields";
 import { getFieldProp } from "components/fields";
 import { useAppContext } from "contexts/AppContext";
-
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    header: {
-      padding: theme.spacing(3 / 8, 0),
-      color: theme.palette.text.secondary,
-
-      "& svg": {
-        display: "block",
-        fontSize: 18,
-      },
-    },
-    iconContainer: {
-      marginRight: theme.spacing(0.75),
-    },
-
-    label: {
-      ...theme.typography.caption,
-      lineHeight: "18px",
-      fontWeight: 500,
-    },
-
-    disabledText: {
-      paddingLeft: theme.spacing(18 / 8 + 1),
-      color: theme.palette.text.disabled,
-
-      whiteSpace: "normal",
-      wordBreak: "break-all",
-    },
-    launchButton: { margin: theme.spacing(-3, -1.5, 0, 0) },
-  })
-);
 
 export interface IFieldWrapperProps {
   children?: React.ReactNode;
@@ -62,72 +29,82 @@ export default function FieldWrapper({
   debugText,
   disabled,
 }: IFieldWrapperProps) {
-  const classes = useStyles();
-
   const { projectId } = useAppContext();
 
   return (
-    <Grid item xs={12}>
-      <Grid
-        container
+    <div>
+      <Stack
+        direction="row"
         alignItems="center"
-        className={classes.header}
-        component="label"
-        id={`sidedrawer-label-${name}`}
-        htmlFor={`sidedrawer-field-${name}`}
+        sx={{
+          color: "text.primary",
+          height: 24,
+          "& svg": {
+            display: "block",
+            color: "action.active",
+            fontSize: `${18 / 16}rem`,
+          },
+        }}
       >
-        <Grid item className={classes.iconContainer}>
-          {type === "debug" ? <DebugIcon /> : getFieldProp("icon", type)}
-        </Grid>
-        <Grid item xs component={Typography} className={classes.label}>
+        {type === "debug" ? <DebugIcon /> : getFieldProp("icon", type)}
+        <InputLabel
+          id={`sidedrawer-label-${name}`}
+          htmlFor={`sidedrawer-field-${name}`}
+          sx={{ flexGrow: 1, lineHeight: "18px", ml: 0.75 }}
+        >
           {label}
-        </Grid>
-        {disabled && (
-          <Grid item>
-            <LockIcon />
-          </Grid>
-        )}
-      </Grid>
+        </InputLabel>
+        {disabled && <LockIcon />}
+      </Stack>
 
       <ErrorBoundary fullScreen={false} basic>
         <Suspense fallback={<FieldSkeleton />}>
           {children ??
             (!debugText && (
-              <Typography variant="body2" className={classes.disabledText}>
-                This field cannot be edited here
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                sx={{ paddingLeft: 18 / 8 + 0.75 }}
+              >
+                This field cannot be edited here.
               </Typography>
             ))}
         </Suspense>
       </ErrorBoundary>
 
       {debugText && (
-        <Grid container spacing={1} wrap="nowrap" alignItems="center">
-          <Grid item xs>
-            <Typography
-              variant="body2"
-              className={classes.disabledText}
-              style={{ userSelect: "all" }}
-            >
-              {debugText}
-            </Typography>
-          </Grid>
+        <Stack direction="row" alignItems="center">
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{
+              flexGrow: 1,
+              paddingLeft: 18 / 8 + 0.75,
 
-          <Grid item>
-            <IconButton
-              component="a"
-              href={`https://console.firebase.google.com/project/${projectId}/firestore/data/~2F${(
-                debugText as string
-              ).replace(/\//g, "~2F")}`}
-              target="_blank"
-              rel="noopener"
-              aria-label="Open in Firebase Console"
-              className={classes.launchButton}
-            >
-              <LaunchIcon />
-            </IconButton>
-          </Grid>
-        </Grid>
+              fontFamily: "mono",
+              whiteSpace: "normal",
+              wordBreak: "break-all",
+              userSelect: "all",
+            }}
+          >
+            {debugText}
+          </Typography>
+
+          <IconButton
+            href={`https://console.firebase.google.com/project/${projectId}/firestore/data/~2F${(
+              debugText as string
+            ).replace(/\//g, "~2F")}`}
+            target="_blank"
+            rel="noopener"
+            aria-label="Open in Firebase Console"
+            size="small"
+            edge="end"
+            sx={{ ml: 1 }}
+          >
+            <LaunchIcon />
+          </IconButton>
+        </Stack>
       )}
-    </Grid>
+    </div>
   );
 }

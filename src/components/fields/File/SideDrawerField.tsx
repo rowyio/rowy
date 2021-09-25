@@ -31,7 +31,6 @@ const useStyles = makeStyles((theme) =>
     dropzoneButton: {
       justifyContent: "flex-start",
       color: theme.palette.text.secondary,
-      "& svg": { marginRight: theme.spacing(2) },
     },
     dropzoneDragActive: {
       backgroundColor: alpha(
@@ -40,10 +39,6 @@ const useStyles = makeStyles((theme) =>
       ),
       color: theme.palette.primary.main,
     },
-
-    chipList: { marginTop: theme.spacing(1) },
-    chipGridItem: { maxWidth: "100%" },
-    chip: { width: "100%" },
   })
 );
 
@@ -111,17 +106,17 @@ function ControlledFileUploader({
           {...getRootProps()}
         >
           <input id={`sidedrawer-field-${column.key}`} {...getInputProps()} />
-          <UploadIcon />
-          <Typography color="textSecondary">
+          <Typography color="inherit" style={{ flexGrow: 1 }}>
             Click to upload or drop file here
           </Typography>
+          <UploadIcon sx={{ ml: 1, mr: 2 / 8 }} />
         </ButtonBase>
       )}
 
-      <Grid container spacing={1} className={classes.chipList}>
+      <Grid container spacing={0.5} style={{ marginTop: 2 }}>
         {Array.isArray(value) &&
           value.map((file: FileValue, i) => (
-            <Grid item key={file.name} className={classes.chipGridItem}>
+            <Grid item key={file.name}>
               <Tooltip
                 title={`File last modified ${format(
                   file.lastModifiedTS,
@@ -141,7 +136,6 @@ function ControlledFileUploader({
                       label={file.name}
                       onClick={() => window.open(file.downloadURL)}
                       onDelete={!disabled ? () => handleDelete(i) : undefined}
-                      className={classes.chip}
                     />
                   </Confirmation>
                 </div>
@@ -150,12 +144,10 @@ function ControlledFileUploader({
           ))}
 
         {localFile && (
-          <Grid item className={classes.chipGridItem}>
+          <Grid item>
             <Chip
               icon={<FileIcon />}
               label={localFile}
-              className={classes.chip}
-              //onDelete={() => {}}
               deleteIcon={
                 <CircularProgress size={20} thickness={4.5} color="inherit" />
               }

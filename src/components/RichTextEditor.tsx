@@ -56,21 +56,14 @@ const useStyles = makeStyles((theme) =>
           },
         },
 
-        "& .tox-sidebar-wrap": {
-          margin: 1,
-        },
-
         "& .tox-toolbar-overlord, & .tox-edit-area__iframe, & .tox-toolbar__primary":
           {
             background: "transparent",
-            borderRadius: (theme.shape.borderRadius as number) - 1,
+            borderRadius: theme.shape.borderRadius,
           },
+        "& .tox-edit-area__iframe": { colorScheme: "auto" },
 
-        "& .tox-toolbar__primary": { padding: theme.spacing(0.5, 0) },
-        "& .tox-toolbar__group": {
-          padding: theme.spacing(0, 1),
-          border: "none !important",
-        },
+        "& .tox-toolbar__group": { border: "none !important" },
 
         "& .tox-tbtn": {
           borderRadius: theme.shape.borderRadius,
@@ -148,16 +141,24 @@ export default function RichTextEditor({
           content_style: [
             theme.palette.mode === "dark" ? contentCssDark : contentCss,
             theme.palette.mode === "dark" ? contentUiCssDark : contentUiCss,
-            `:root { font-size: 14px; }
+            `
+              :root {
+                font-size: 14px;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+              }
+
+              html, body { background-color: transparent; }
               body {
-                background-color: ${
-                  theme.palette.mode === "dark"
-                    ? theme.palette.background.paper
-                    : "transparent"
-                };
                 font-family: ${theme.typography.fontFamily};
                 color: ${theme.palette.text.primary};
-              }`,
+                margin: ${theme.spacing(12 / 8)};
+                margin-top: ${theme.spacing(1)};
+                padding: 0 !important;
+              }
+              body :first-child { margin-top: 0; }
+              a { color: ${theme.palette.primary.main}; }
+            `,
           ].join("\n"),
           minHeight: 300,
           menubar: false,

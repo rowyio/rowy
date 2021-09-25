@@ -47,11 +47,7 @@ export default function ConnectTable({
             )}
 
             {Array.isArray(value) && (
-              <Grid
-                container
-                spacing={0.5}
-                style={{ marginTop: theme.spacing(1) }}
-              >
+              <Grid container spacing={0.5} style={{ marginTop: 2 }}>
                 {value.map(({ snapshot }) => (
                   <Grid item key={snapshot.objectID}>
                     <Chip

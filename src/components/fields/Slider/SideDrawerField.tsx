@@ -1,13 +1,16 @@
 import { Controller } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 
-import { Slider as MuiSlider, Grid, Stack, Typography } from "@mui/material";
+import { Slider as MuiSlider, Stack, Typography } from "@mui/material";
+import { useFieldStyles } from "components/SideDrawer/Form/utils";
 
 export default function Slider({
   control,
   column,
   disabled,
 }: ISideDrawerFieldProps) {
+  const fieldClasses = useFieldStyles();
+
   const config: {
     max: number;
     min: number;
@@ -42,7 +45,13 @@ export default function Slider({
           `${value}${unit ? " " + unit : ""}`;
 
         return (
-          <Stack direction="row" spacing={2} alignItems="center">
+          <Stack
+            direction="row"
+            spacing={2}
+            alignItems="center"
+            className={fieldClasses.root}
+            style={{ paddingTop: 0, paddingBottom: 0 }}
+          >
             <Typography variant="button" component="span" color="textSecondary">
               {minLabel ?? `${min}${unit ? " " + unit : ""}`}
             </Typography>

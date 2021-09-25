@@ -31,7 +31,6 @@ const useStyles = makeStyles((theme) =>
     dropzoneButton: {
       justifyContent: "flex-start",
       color: theme.palette.text.secondary,
-      "& svg": { marginRight: theme.spacing(2) },
     },
     dropzoneDragActive: {
       backgroundColor: alpha(
@@ -42,7 +41,7 @@ const useStyles = makeStyles((theme) =>
     },
 
     imagesContainer: {
-      marginTop: theme.spacing(1),
+      marginTop: 0,
     },
 
     img: {
@@ -164,12 +163,12 @@ function ControlledImageUploader({
           {...getRootProps()}
         >
           <input id={`sidedrawer-field-${column.key}`} {...getInputProps()} />
-          <AddIcon />
-          <Typography color="inherit">
+          <Typography color="inherit" style={{ flexGrow: 1 }}>
             {isDragActive
               ? "Drop image here"
               : "Click to upload or drop image here"}
           </Typography>
+          <AddIcon sx={{ ml: 1, mr: 2 / 8 }} />
         </ButtonBase>
       )}
 

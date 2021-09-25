@@ -59,6 +59,7 @@ export const components = (theme: Theme): ThemeOptions => {
 
           "code, pre, pre.MuiTypography-root": {
             fontFamily: theme.typography.fontFamilyMono,
+            fontFeatureSettings: "normal",
             letterSpacing: 0,
 
             backgroundColor: theme.palette.action.hover,
@@ -558,7 +559,12 @@ export const components = (theme: Theme): ThemeOptions => {
               boxShadow: `0 -1px 0 0 rgba(0, 0, 0, 0.12) inset, ${theme.shadows[12]}`,
             },
           },
-          sizeSmall: { width: 36, height: 36 },
+          sizeSmall: {
+            minWidth: 32,
+            minHeight: 32,
+            width: 32,
+            height: 32,
+          },
         },
       },
 

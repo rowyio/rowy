@@ -25,11 +25,8 @@ const useStyles = makeStyles((theme) =>
       },
 
       "& a": {
-        fontWeight: "bold",
         color: theme.palette.primary.main,
         textDecoration: "underline",
-
-        "&:hover": { color: theme.palette.primary.dark },
       },
 
       "& ul, & ol": {

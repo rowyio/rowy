@@ -18,6 +18,7 @@ export const Color = forwardRef(function Color(
         letterSpacing: "inherit",
         p: "var(--cell-padding)",
         justifyContent: "flex-start",
+        height: "100%",
       }}
     >
       <Box

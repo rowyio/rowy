@@ -1,18 +1,9 @@
 import { IHeavyCellProps } from "../types";
-import clsx from "clsx";
 
-import { makeStyles, createStyles } from "@mui/styles";
-import { Grid } from "@mui/material";
+import { Stack } from "@mui/material";
 
 import ActionFab from "./ActionFab";
 import { sanitiseCallableName, isUrl } from "utils/fns";
-
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    root: { padding: theme.spacing(0, 0.375, 0, 1.5) },
-    labelContainer: { overflowX: "hidden" },
-  })
-);
 
 export default function Action({
   column,
@@ -21,18 +12,16 @@ export default function Action({
   onSubmit,
   disabled,
 }: IHeavyCellProps) {
-  const classes = useStyles();
-
   const hasRan = value && value.status;
 
   return (
-    <Grid
-      container
+    <Stack
+      direction="row"
       alignItems="center"
-      wrap="nowrap"
-      className={clsx("cell-collapse-padding", classes.root)}
+      className="cell-collapse-padding"
+      sx={{ padding: "var(--cell-padding)", pr: 0.5 }}
     >
-      <Grid item xs className={classes.labelContainer}>
+      <div style={{ flexGrow: 1, overflow: "hidden" }}>
         {hasRan && isUrl(value.status) ? (
           <a href={value.status} target="_blank" rel="noopener noreferrer">
             {value.status}
@@ -42,19 +31,15 @@ export default function Action({
         ) : (
           sanitiseCallableName(column.key)
         )}
-      </Grid>
+      </div>
 
-      <Grid item>
-        <ActionFab
-          row={row}
-          column={column}
-          onSubmit={onSubmit}
-          value={value}
-          color="secondary"
-          style={{ width: 36, height: 36 }}
-          disabled={disabled}
-        />
-      </Grid>
-    </Grid>
+      <ActionFab
+        row={row}
+        column={column}
+        onSubmit={onSubmit}
+        value={value}
+        disabled={disabled}
+      />
+    </Stack>
   );
 }
