@@ -283,8 +283,7 @@ export const components = (theme: Theme): ThemeOptions => {
       MuiInputLabel: {
         styleOverrides: {
           root: {
-            ...theme.typography.caption,
-            fontWeight: 500,
+            ...theme.typography.button,
             color: theme.palette.text.primary,
           },
           filled: {
