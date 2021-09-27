@@ -17,7 +17,6 @@ import Select from "@mui/material/Select";
 import Switch from "@mui/material/Switch";
 import CodeEditor from "../editors/CodeEditor";
 import { useProjectContext } from "contexts/ProjectContext";
-import { WEBHOOK_URL } from "../../../firebase";
 import { makeId } from "../../../utils/fns";
 
 const useStyles = makeStyles((theme) =>
@@ -156,8 +155,8 @@ export default function WebhooksDialog({ open, handleClose }) {
             <>
               <Typography variant="overline">Web hook url:</Typography>
               <Typography variant="body1">
-                {WEBHOOK_URL}?tablePath={tableState?.tablePath}
-                &type=TYPE_FORM&secret={state.secret}
+                {/* {WEBHOOK_URL}?tablePath={tableState?.tablePath}
+                &type=TYPE_FORM&secret={state.secret} */}
               </Typography>
               <Typography variant="overline">instructions:</Typography>
               <Typography variant="body1">

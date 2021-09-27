@@ -8,7 +8,7 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 import UndoIcon from "@mui/icons-material/Undo";
 
 import { useProjectContext } from "contexts/ProjectContext";
-import { cloudFunction } from "firebase/callables";
+import { functions } from "@src/firebase";
 import { formatPath } from "utils/fns";
 import { useConfirmation } from "components/ConfirmationDialog";
 import { useActionParams } from "./FormDialog/Context";
@@ -65,45 +65,44 @@ export default function ActionFab({
 
   const callableName: string =
     (column as any).callableName ?? config.callableName ?? "actionScript";
-  const handleRun = async (actionParams = null) => {
+
+  const fnParams = (actionParams = null) => ({
+    ref: { path: ref.path },
+    column: { ...column, editor: undefined },
+    action,
+    schemaDocPath: formatPath(tableState?.tablePath ?? ""),
+    actionParams,
+  });
+
+  const handleActionScript = async (data) => {
     if (!rowyRun) return;
-    setIsRunning(true);
-
-    const data = {
-      ref: { path: ref.path, id: ref.id, tablePath: window.location.pathname },
-      column: { ...column, editor: undefined },
-      action,
-      schemaDocPath: formatPath(tableState?.tablePath ?? ""),
-      actionParams,
-    };
-
     const resp = await rowyRun({
       route: runRoutes.actionScript,
       body: data,
-      params: [],
     });
-    const { message, success } = resp;
+    return resp;
+  };
+  const handleCallableAction = async (data) => {
+    const resp: any = await functions.httpsCallable(callableName)(data);
+    return resp.data;
+  };
+
+  const handleRun = async (actionParams = null) => {
+    setIsRunning(true);
+    const data = fnParams(actionParams);
+    let result;
+
+    if (callableName === "actionScript") {
+      result = await handleActionScript(data);
+    } else {
+      result = await handleCallableAction(data);
+    }
+    console.log(result);
+    const { message, success } = result;
     setIsRunning(false);
     enqueueSnackbar(JSON.stringify(message), {
       variant: success ? "success" : "error",
     });
-
-    // cloudFunction(
-    //   callableName,
-    //   data,
-    //   async (response) => {
-    //     const { message, cellValue, success } = response.data;
-    //     setIsRunning(false);
-    //     enqueueSnackbar(JSON.stringify(message), {
-    //       variant: success ? "success" : "error",
-    //     });
-    //   },
-    //   (error) => {
-    //     console.error("ERROR", callableName, error);
-    //     setIsRunning(false);
-    //     enqueueSnackbar(JSON.stringify(error), { variant: "error" });
-    //   }
-    // );
   };
   const hasRan = value && value.status;
 
@@ -129,7 +128,7 @@ export default function ActionFab({
           : needsConfirmation
           ? () =>
               requestConfirmation({
-                title: `${column.name as string} Confirmation`,
+                title: `${column.name ?? column.key} Confirmation`,
                 body: (actionState === "undo" && config.undoConfirmation
                   ? config.undoConfirmation
                   : config.confirmation

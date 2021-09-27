@@ -23,7 +23,6 @@ import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import { useConfirmation } from "components/ConfirmationDialog/Context";
 import { useProjectContext } from "contexts/ProjectContext";
 import { formatPath } from "utils/fns";
-import { cloudFunction } from "firebase/callables";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -141,8 +140,6 @@ export default function BulkActions({ selectedRows, columns, clearSelection }) {
   const executeAction = async (key: string, actionType: string) => {
     const actionColumn = _find(actionColumns, { key });
     if (!actionColumn) return;
-
-    console.log({ actionColumn, selectedRows, actionType });
     const callableName = actionColumn.config.callableName ?? "actionScript";
 
     const calls = selectedRows.map((row) => {
@@ -158,25 +155,26 @@ export default function BulkActions({ selectedRows, columns, clearSelection }) {
         schemaDocPath: formatPath(tableState?.tablePath ?? ""),
         actionParams: {},
       };
-      return cloudFunction(
-        callableName,
-        data,
-        async (response) => {
-          const { message, cellValue, success } = response.data;
-          // setIsRunning(false);
-          enqueueSnackbar(JSON.stringify(message), {
-            variant: success ? "success" : "error",
-          });
-          if (cellValue && cellValue.status) {
-            return ref.update({ [actionColumn.key]: cellValue });
-          }
-        },
-        (error) => {
-          console.error("ERROR", callableName, error);
-          //setIsRunning(false);
-          enqueueSnackbar(JSON.stringify(error), { variant: "error" });
-        }
-      );
+      return true;
+      //   cloudFunction(
+      //     callableName,
+      //     data,
+      //     async (response) => {
+      //       const { message, cellValue, success } = response.data;
+      //       // setIsRunning(false);
+      //       enqueueSnackbar(JSON.stringify(message), {
+      //         variant: success ? "success" : "error",
+      //       });
+      //       if (cellValue && cellValue.status) {
+      //         return ref.update({ [actionColumn.key]: cellValue });
+      //       }
+      //     },
+      //     (error) => {
+      //       console.error("ERROR", callableName, error);
+      //       //setIsRunning(false);
+      //       enqueueSnackbar(JSON.stringify(error), { variant: "error" });
+      //     }
+      //   );
     });
     setLoading(true);
     const result = await Promise.all(calls);
