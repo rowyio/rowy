@@ -19,7 +19,7 @@ export const config: IFieldConfig = {
   initialValue: 0,
   initializable: true,
   icon: <NumberIcon />,
-  description: "Numeric data.",
+  description: "Numeric value.",
   TableCell: withBasicCell(BasicCell),
   TableEditor: TextEditor,
   SideDrawerField,

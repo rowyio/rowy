@@ -29,7 +29,7 @@ export const config: IFieldConfig = {
   initialValue: null,
   initializable: true,
   icon: <DateTimeIcon />,
-  description: `Date & Time displayed by default as ${DATE_TIME_FORMAT}.`,
+  description: `Formatted date & time. Format is configurable, default: ${DATE_TIME_FORMAT}. Edited with a visual picker.`,
   TableCell: withHeavyCell(BasicCell, TableCell),
   TableEditor: NullEditor as any,
   SideDrawerField,

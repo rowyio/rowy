@@ -45,8 +45,19 @@ export default function Step0Welcome({
               variant="body2"
               color="text.primary"
             >
-              terms and conditions
+              Terms and Conditions
+            </Link>{" "}
+            and
+            <Link
+              href={EXTERNAL_LINKS.privacy}
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="body2"
+              color="text.primary"
+            >
+              Privacy Policy
             </Link>
+            .
           </>
         }
         sx={{ pr: 1, textAlign: "left", alignItems: "flex-start", p: 0, m: 0 }}

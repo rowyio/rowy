@@ -25,7 +25,7 @@ export const config: IFieldConfig = {
   type: FieldType.connectTable,
   name: "Connect Table (Alpha)",
   group: "Connection",
-  dataType: "{ docPath: string; snapshot: Record<string, any>; }",
+  dataType: "{ docPath: string; snapshot: Record<string, any>; }[]",
   initialValue: [],
   icon: <ConnectTableIcon />,
   description:

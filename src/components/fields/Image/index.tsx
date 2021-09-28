@@ -19,11 +19,11 @@ export const config: IFieldConfig = {
   name: "Image",
   group: "File",
   dataType:
-    "{ downloadURL: string, lastModifiedTS: number, name: string, type, ref }[]",
+    "{ downloadURL: string; lastModifiedTS: number; name: string; type: string; ref: string; }[]",
   initialValue: [],
   icon: <ImageIcon />,
   description:
-    "Image file uploaded to Firebase Storage. Supports JPEG, PNG, SVG, GIF, WebP.",
+    "Image file uploaded to Firebase Storage. Supports JPEG, PNG, SVG, GIF, WebP, AVIF, JPEG XL.",
   TableCell: withHeavyCell(BasicCell, TableCell),
   TableEditor: NullEditor as any,
   SideDrawerField,
@@ -36,4 +36,6 @@ export const IMAGE_MIME_TYPES = [
   "image/svg+xml",
   "image/gif",
   "image/webp",
+  "image/avif",
+  "image/jxl",
 ];

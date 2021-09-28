@@ -19,7 +19,7 @@ export const config: IFieldConfig = {
   initialValue: "",
   initializable: true,
   icon: <PhoneIcon />,
-  description: "Phone numbers stored as text.",
+  description: "Phone number stored as text. Not validated.",
   TableCell: withBasicCell(BasicCell),
   TableEditor: TextEditor,
   SideDrawerField,

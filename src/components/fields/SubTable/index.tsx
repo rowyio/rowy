@@ -20,14 +20,14 @@ const Settings = lazy(
 );
 export const config: IFieldConfig = {
   type: FieldType.subTable,
-  name: "SubTable",
+  name: "Sub-Table",
   group: "Connection",
   dataType: "undefined",
   initialValue: null,
   icon: <SubTableIcon />,
   settings: Settings,
   description:
-    "Creates a sub-table. Also displays number of rows inside the sub-table. Max sub-table levels: 100.",
+    "Connects to a sub-table in the current row. Also displays number of rows inside the sub-table. Max sub-table depth: 100.",
   TableCell: withHeavyCell(BasicCell, TableCell),
   TableEditor: NullEditor as any,
   SideDrawerField,

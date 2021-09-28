@@ -27,7 +27,7 @@ export const config: IFieldConfig = {
   initialValue: null,
   initializable: true,
   icon: <DateIcon />,
-  description: `Date displayed by default as ${DATE_FORMAT}.`,
+  description: `Formatted date. Format is configurable, default: ${DATE_FORMAT}. Edited with a visual picker.`,
   TableCell: withHeavyCell(BasicCell, TableCell),
   TableEditor: NullEditor as any,
   SideDrawerField,

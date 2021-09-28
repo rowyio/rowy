@@ -30,7 +30,7 @@ export const config: IFieldConfig = {
   initializable: true,
   icon: <SingleSelectIcon />,
   description:
-    "Dropdown selector with searchable options and radio button behavior. Optionally allows users to input custom values. Max selection: 1 option.",
+    "Single value from predefined options. Options are searchable and users can optionally input custom values.",
   TableCell: withPopoverCell(BasicCell, InlineCell, PopoverCell, {
     anchorOrigin: { horizontal: "left", vertical: "bottom" },
     transparent: true,
