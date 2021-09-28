@@ -93,12 +93,7 @@ export default function Step2ServiceAccount({
           <>
             <ul>
               <li>Service Account User</li>
-              <li>
-                <Typography color="error" variant="inherit" component="span">
-                  Missing:{" "}
-                </Typography>
-                ) Firebase Admin
-              </li>
+              <li>Firebase Admin</li>
             </ul>
 
             <Stack direction="row" spacing={1}>
