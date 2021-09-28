@@ -14,8 +14,7 @@ Manage Firestore data in a spreadsheet-like UI, write Cloud Functions effortless
 
 <div align="center">
 
-[![Discord](https://img.shields.io/discord/853498675484819476?color=%234200FF&label=Chat%20with%20us&logo=discord&logoColor=%23FFFFFF&style=for-the-badge)](https://discord.com/invite/B8yAD5PDX4)
-[![Twitter Follow](https://img.shields.io/twitter/follow/rowyio?color=%234200ff&logo=twitter&logoColor=%23fff&style=for-the-badge)](https://twitter.com/rowyio)
+[![Discord](https://img.shields.io/discord/853498675484819476?color=%234200FF&label=Chat%20with%20us&logo=discord&logoColor=%23FFFFFF&style=for-the-badge)](https://discord.gg/B8yAD5PDX4)
 
 <p align="center">
     <a href="http://www.rowy.io"><b>Website</b></a> •
@@ -24,9 +23,9 @@ Manage Firestore data in a spreadsheet-like UI, write Cloud Functions effortless
     <a href="https://twitter.com/rowyio"><b>Twitter</b></a>
 </p>
 
-[![License](https://img.shields.io/github/license/rowyio/rowy?style=for-the-badge)](https://github.com/rowyio/rowy/blob/main/LICENSE)
-[![Last commit](https://img.shields.io/github/last-commit/rowyio/rowy/rc?style=for-the-badge)](https://github.com/rowyio/rowy/commits/rc)
-[![GitHub stars](https://img.shields.io/github/stars/rowyio/rowy?style=for-the-badge)](https://github.com/rowyio/rowy/stargazers/)
+[![License](https://img.shields.io/github/license/rowyio/rowy)](https://github.com/rowyio/rowy/blob/main/LICENSE)
+[![Last commit](https://img.shields.io/github/last-commit/rowyio/rowy/rc)](https://github.com/rowyio/rowy/commits/rc)
+[![GitHub stars](https://img.shields.io/github/stars/rowyio/rowy)](https://github.com/rowyio/rowy/stargazers/)
 
 </div>
 
@@ -55,18 +54,25 @@ You can find the full documentation with how-to guides
 - Multiple views for the same collection
 - Bulk import or export data - csv, json
 
+### Supercharge your database with cloud functions and ready made extension
+
+- Effortlessly build cloud functions on field level triggers right in the browser
+    -  Use any NPM modules or APIs
+- Connect to your favourite tool with pre-built extensions or create your own
+    - SendGrid, Algolia, Twilio, Bigquery and more
+
 ### Rich and flexible data fields
 
 - [30+ fields supported](https://docs.rowy.io/field-types/supported-fields)
-- Basic types: Short Text, Long Text, Email, Phone, URL…
-- Custom UI pickers: Date, Checkbox, Single Select, Multi Select…
-- Uploaders: Image, File
-- Rich Editors: JSON, Code, Rich Text (HTML)
-- Data validation, default values, required fields
+    - Basic types: Short Text, Long Text, Email, Phone, URL…
+    - Custom UI pickers: Date, Checkbox, Single Select, Multi Select…
+    - Uploaders: Image, File
+    - Rich Editors: JSON, Code, Rich Text (HTML)
+ - Data validation, default values, required fields
 - Action field: Clickable trigger for any Cloud Function
-- Derivative field: Populate a cell with value derived from your database,  
-  npm modules, api calls - called on field level triggers
 - Aggregate field: Populate cell with value aggregated from the row’s sub-table
+- Connect Table: Get snapshot of data from another data table using Algolia
+- Connect Service: Get data from any HTTP endpoint
 
 ### Collaborate with your team
 
@@ -74,14 +80,6 @@ You can find the full documentation with how-to guides
   with custom user roles
 - Built in user management
 - Customizable views for different user roles
-
-### Supercharge your database with cloud functions
-
-- Effortless build cloud functions right in the browser
-- Connect to your favourite tools: SendGrid, Algolia, Twilio, Bigquery and more
-- Integrations with external services
-  - Connect Table uses Algolia to get a snapshot of another table’s row values
-  - Connect Service uses any HTTP endpoint to get a cell value
 
 ## Install
 
