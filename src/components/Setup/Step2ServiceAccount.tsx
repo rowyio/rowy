@@ -5,7 +5,6 @@ import { Typography, Link, Stack } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
-import InfoIcon from "@mui/icons-material/InfoOutlined";
 
 import SetupItem from "./SetupItem";
 
@@ -13,6 +12,8 @@ import { name } from "@root/package.json";
 import { useAppContext } from "contexts/AppContext";
 import { rowyRun } from "utils/rowyRun";
 import { runRoutes } from "constants/runRoutes";
+import { WIKI_LINKS } from "constants/externalLinks";
+import screenRecording from "assets/service-account.mp4";
 
 export default function Step2ServiceAccount({
   rowyRunUrl,
@@ -56,57 +57,48 @@ export default function Step2ServiceAccount({
 
   return (
     <>
-      <Typography variant="inherit" paragraph>
-        {name} Run uses the{" "}
-        <Link
-          href="https://firebase.google.com/docs/admin/setup"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Firebase Admin SDK
-        </Link>{" "}
-        and{" "}
-        <Link
-          href="https://github.com/googleapis/google-cloud-node"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Google Cloud SDKs
-        </Link>{" "}
-        to make changes to your Firestore database, authenticated with a{" "}
+      <Typography variant="inherit">
+        {name} Run uses a{" "}
         <Link
           href="https://firebase.google.com/support/guides/service-accounts"
           target="_blank"
           rel="noopener noreferrer"
+          color="text.primary"
         >
           service account
+        </Link>{" "}
+        to access your project. It operates exclusively on your GCP project, so
+        we never have access to any of your data.{" "}
+        <Link
+          href={WIKI_LINKS.rowyRun}
+          target="_blank"
+          rel="noopener noreferrer"
+          color="text.secondary"
+        >
+          Learn more
+          <InlineOpenInNewIcon />
         </Link>
-        .
-      </Typography>
-      <Typography variant="inherit" style={{ marginTop: 0 }}>
-        Rowy Run operates exclusively on your GCP project and we will never have
-        access to your service account or any of your data.
       </Typography>
 
       <SetupItem
         status={hasAllRoles ? "complete" : "incomplete"}
         title={
           hasAllRoles
-            ? "Rowy Run has access to a service account with all the required IAM roles:"
-            : "Set up a service account with the following IAM roles:"
+            ? "Rowy Run has access to a service account with all the required roles."
+            : "Set up a service account with the following roles:"
         }
       >
-        <ul>
-          <li>Service Account User – required to deploy Cloud Functions</li>
-          <li>Firebase Authentication Admin</li>
-          <li>Firestore Service Agent</li>
-        </ul>
-
         {!hasAllRoles && (
           <>
+            <ul>
+              <li>Service Account User</li>
+              <li>Firebase Authentication Admin</li>
+              <li>Firestore Service Agent</li>
+            </ul>
+
             <Stack direction="row" spacing={1}>
               <LoadingButton
-                loading={!region}
+                // loading={!region}
                 href={`https://console.cloud.google.com/run/deploy/${region}/rowy-run?project=${projectId}`}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -130,24 +122,19 @@ export default function Step2ServiceAccount({
               </Typography>
             )}
 
-            <Stack direction="row" spacing={1}>
-              <InfoIcon aria-label="Info" color="action" sx={{ mt: -0.25 }} />
-              <Typography variant="body2">
-                On the Google Cloud Console page, click the Security tab to set
-                the service account for Rowy Run.
-              </Typography>
-            </Stack>
+            <Typography variant="inherit">
+              Follow the steps in the screen recording below:
+            </Typography>
+
+            <video
+              src={screenRecording}
+              controls
+              muted
+              playsInline
+              style={{ width: "100%" }}
+            />
           </>
         )}
-
-        <Link
-          href="https://cloud.google.com/iam/docs/understanding-roles"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn about IAM roles
-          <InlineOpenInNewIcon />
-        </Link>
       </SetupItem>
     </>
   );

@@ -62,10 +62,9 @@ export default function Step3ProjectOwner({
   return (
     <>
       <Typography variant="inherit">
-        The project owner requires the admin and owner roles to have full access
-        to manage this project. The default project owner is the Google Cloud
-        account used to deploy Rowy Run:{" "}
-        <b style={{ userSelect: "all" }}>{email}</b>
+        The project owner requires full access to manage this project. The
+        default project owner is the Google Cloud account used to deploy Rowy
+        Run: <b style={{ userSelect: "all" }}>{email}</b>
       </Typography>
 
       <SetupItem

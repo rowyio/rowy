@@ -1,7 +1,6 @@
 import { ISetupStepBodyProps } from "pages/Setup";
 
 import { FormControlLabel, Checkbox, Typography, Link } from "@mui/material";
-import OpenInNewIcon from "components/InlineOpenInNewIcon";
 
 import { useAppContext } from "contexts/AppContext";
 import { EXTERNAL_LINKS } from "constants/externalLinks";
@@ -38,30 +37,15 @@ export default function Step0Welcome({
         }
         label={
           <>
-            <Typography sx={{ mt: 1.25, mb: 0.5 }}>
-              I agree to the terms and conditions
-            </Typography>
+            I agree to the{" "}
             <Link
               href={EXTERNAL_LINKS.terms}
               target="_blank"
               rel="noopener noreferrer"
-              display="block"
               variant="body2"
-              color="text.secondary"
+              color="text.primary"
             >
-              Read the simple English version
-              <OpenInNewIcon />
-            </Link>
-            <Link
-              href={EXTERNAL_LINKS.terms}
-              target="_blank"
-              rel="noopener noreferrer"
-              display="block"
-              variant="body2"
-              color="text.secondary"
-            >
-              Read the full terms and conditions
-              <OpenInNewIcon />
+              terms and conditions
             </Link>
           </>
         }

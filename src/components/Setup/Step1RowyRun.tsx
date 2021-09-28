@@ -102,7 +102,7 @@ export default function Step1RowyRun({
         title={
           isValidRowyRunUrl
             ? `Rowy Run is set up at: ${rowyRunUrl}`
-            : "Deploy Rowy Run to your Google Cloud Platform project."
+            : "Deploy Rowy Run to your Google Cloud project."
         }
       >
         {!isValidRowyRunUrl && (

@@ -1,8 +1,18 @@
+import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import queryString from "query-string";
 
-import { useMediaQuery, Stack, Typography, Link } from "@mui/material";
-import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
+import {
+  useMediaQuery,
+  Stack,
+  Typography,
+  Link,
+  FormControl,
+  FormLabel,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
+} from "@mui/material";
 
 import MarketingBanner from "components/Auth/MarketingBanner";
 import AuthLayout from "components/Auth/AuthLayout";
@@ -21,6 +31,10 @@ export default function DeployPage() {
 
   const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down("md"));
 
+  const [confirmProject, setConfirmProject] = useState(false);
+  const [confirmFirestore, setConfirmFirestore] = useState(false);
+  const [confirmAuth, setConfirmAuth] = useState(false);
+
   return (
     <Stack direction="row">
       <MarketingBanner />
@@ -33,41 +47,81 @@ export default function DeployPage() {
           title="Get Started"
           description={
             <>
-              <Typography variant="inherit" paragraph>
-                Set up {name} on your Google Cloud Platform project with this
-                one-click deploy button.
-              </Typography>
+              <FormControl component="fieldset" variant="standard">
+                <FormLabel
+                  component="legend"
+                  sx={{ fontWeight: "medium", color: "text.primary" }}
+                >
+                  Make sure you have the following:
+                </FormLabel>
+                <FormGroup style={{ textAlign: "left" }}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={confirmProject}
+                        onChange={(e) => setConfirmProject(e.target.checked)}
+                      />
+                    }
+                    label="A Google Cloud or Firebase project"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={confirmFirestore}
+                        onChange={(e) => setConfirmFirestore(e.target.checked)}
+                      />
+                    }
+                    label="Firestore enabled"
+                  />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={confirmAuth}
+                        onChange={(e) => setConfirmAuth(e.target.checked)}
+                      />
+                    }
+                    label="Firebase Authentication with the Google sign-in method enabled"
+                  />
+                </FormGroup>
+              </FormControl>
 
-              <Typography variant="inherit">
-                You must have a project set up on Google Cloud Platform or
-                Firebase.
-                <br />
+              <Typography sx={{ mt: 3 }}>
+                Don’t have a project? Follow our{" "}
                 <Link
-                  href={"https://firebase.google.com/docs/web/setup#create-project"}
+                  href={WIKI_LINKS.firebaseProject}
                   target="_blank"
                   rel="noopener noreferrer"
-                  color="text.primary"
                 >
-                  Learn how to create one
-                  <InlineOpenInNewIcon />
-                </Link>
+                  step-by-step guide
+                </Link>{" "}
+                to get started.
               </Typography>
             </>
           }
         >
-          <a
-            href={EXTERNAL_LINKS.rowyRunDeploy}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          {confirmProject && confirmFirestore && confirmAuth ? (
+            <a
+              href={EXTERNAL_LINKS.rowyRunDeploy}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src="https://deploy.cloud.run/button.svg"
+                alt="Run on Google Cloud"
+                style={{ display: "block" }}
+                width={183}
+                height={32}
+              />
+            </a>
+          ) : (
             <img
               src="https://deploy.cloud.run/button.svg"
               alt="Run on Google Cloud"
-              style={{ display: "block" }}
+              style={{ display: "block", filter: "grayscale(1)", opacity: 0.6 }}
               width={183}
               height={32}
             />
-          </a>
+          )}
 
           <Typography
             variant="caption"
