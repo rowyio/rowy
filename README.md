@@ -34,11 +34,10 @@ Manage Firestore data in a spreadsheet-like UI, write Cloud Functions effortless
 
 ## Quick try
 
-<p>Set up Rowy on your Google Cloud Platform project with this one-click deploy button.<br/><br/>
-<a href="https://deploy.cloud.run/?git_repo=https://github.com/rowyio/rowyRun.git" target="_blank">
-<img width="300" src="https://storage.googleapis.com/cloudrun/button.png" alt="One Click Deploy"
-title="One Click Deploy" width="250" /></a>
-</p>
+Set up Rowy on your Google Cloud Platform project with this one-click deploy
+button.
+
+[![Run on Google Cloud](https://deploy.cloud.run/button.svg)](https://deploy.cloud.run/?git_repo=https://github.com/rowyio/rowyRun.git)
 
 ## Documentation
 
