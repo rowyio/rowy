@@ -24,7 +24,7 @@ export const config: IFieldConfig = {
   initialValue: {},
   icon: <ActionIcon />,
   description:
-    "A button with a pre-defined action. Triggers a Cloud Function. 3 different states: Disabled, Enabled, Active (Clicked). Supports Undo and Redo.",
+    "Button with pre-defined action script or triggers a Cloud Function. Optionally supports Undo and Redo.",
   TableCell: withHeavyCell(BasicCell, TableCell),
   TableEditor: NullEditor as any,
   SideDrawerField,

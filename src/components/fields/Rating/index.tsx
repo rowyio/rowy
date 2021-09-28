@@ -26,7 +26,7 @@ export const config: IFieldConfig = {
   initializable: true,
   icon: <RatingIcon />,
   description:
-    "Rating displayed as stars from 0 to configurable number of stars. Default: 5 stars.",
+    "Rating displayed as stars. Max stars is configurable, default: 5 stars.",
   TableCell: withHeavyCell(BasicCell, TableCell),
   TableEditor: NullEditor as any,
   settings: Settings,

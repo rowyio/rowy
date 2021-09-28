@@ -19,11 +19,11 @@ export const config: IFieldConfig = {
   type: FieldType.json,
   name: "JSON",
   group: "Code",
-  dataType: "any",
+  dataType: "object",
   initialValue: undefined,
   initializable: true,
   icon: <JsonIcon />,
-  description: "JSON object editable with a visual JSON editor.",
+  description: "Object edited with a visual JSON editor.",
   TableCell: withBasicCell(BasicCell),
   TableEditor: withSideDrawerEditor(BasicCell),
   csvImportParser: (value) => {

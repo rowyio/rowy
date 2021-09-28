@@ -25,8 +25,7 @@ export const config: IFieldConfig = {
   initialValue: undefined,
   initializable: true,
   icon: <StatusIcon />,
-  description:
-    "Status is read only field that displays field values in more visual format",
+  description: "Displays field value as custom status text. Read-only.	",
   TableCell: withHeavyCell(BasicCell, TableCell),
   TableEditor: NullEditor as any,
   settings: Settings,

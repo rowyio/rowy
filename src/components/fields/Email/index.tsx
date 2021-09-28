@@ -19,7 +19,7 @@ export const config: IFieldConfig = {
   initialValue: "",
   initializable: true,
   icon: <EmailIcon />,
-  description: "Email address.",
+  description: "Email address. Not validated.",
   TableCell: withBasicCell(BasicCell),
   TableEditor: TextEditor,
   SideDrawerField,

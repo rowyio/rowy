@@ -19,7 +19,7 @@ export const config: IFieldConfig = {
   initialValue: "",
   initializable: true,
   icon: <UrlIcon />,
-  description: "Web address.",
+  description: "Web address. Not validated.",
   TableCell: withBasicCell(TableCell),
   TableEditor: TextEditor,
   SideDrawerField,

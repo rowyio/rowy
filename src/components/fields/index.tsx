@@ -11,8 +11,8 @@ import RichText from "./RichText";
 import Email from "./Email";
 import Phone from "./Phone";
 import Url from "./Url";
-import Checkbox from "./Checkbox";
 import Number_ from "./Number";
+import Checkbox from "./Checkbox";
 import Percentage from "./Percentage";
 import Rating from "./Rating";
 import Slider from "./Slider";
@@ -49,8 +49,8 @@ export const FIELDS: IFieldConfig[] = [
   SingleSelect,
   MultiSelect,
   // NUMERIC
-  Checkbox,
   Number_,
+  Checkbox,
   Percentage,
   Rating,
   Slider,

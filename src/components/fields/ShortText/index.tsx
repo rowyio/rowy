@@ -24,7 +24,7 @@ export const config: IFieldConfig = {
   initialValue: "",
   initializable: true,
   icon: <ShortTextIcon />,
-  description: "Small amount of text, such as names and taglines.",
+  description: "Text displayed on a single line.",
   TableCell: withBasicCell(BasicCell),
   TableEditor: TextEditor,
   SideDrawerField,

@@ -24,7 +24,7 @@ export const config: IFieldConfig = {
   initialValue: false,
   initializable: true,
   icon: <CheckboxIcon />,
-  description: "Either toggled on or off. Toggled off by default.",
+  description: "True/false value. Default: false.",
   TableCell: withHeavyCell(BasicCell, TableCell),
   TableEditor: NullEditor as any,
   csvImportParser: (value: string) => {

@@ -20,8 +20,7 @@ export const config: IFieldConfig = {
   type: FieldType.duration,
   name: "Duration (Alpha)",
   group: "Date & Time",
-  dataType:
-    "{ start: firebase.firestore.Timestamp, end?: firebase.firestore.Timestamp }",
+  dataType: "Record<'start' | 'end', firebase.firestore.Timestamp>",
   initialValue: {},
   icon: <DurationIcon />,
   description: "Duration calculated from two timestamps.",

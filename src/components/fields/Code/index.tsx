@@ -19,7 +19,7 @@ export const config: IFieldConfig = {
   initialValue: "",
   initializable: true,
   icon: <CodeIcon />,
-  description: "Raw code editable with Monaco Editor.",
+  description: "Raw code edited with the Monaco Editor.",
   TableCell: withBasicCell(BasicCell),
   TableEditor: withSideDrawerEditor(BasicCell),
   SideDrawerField,

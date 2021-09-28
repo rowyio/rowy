@@ -33,7 +33,7 @@ export const config: IFieldConfig = {
   initializable: true,
   icon: <MultiSelectIcon />,
   description:
-    "Dropdown selector with searchable options and check box behavior. Optionally allows users to input custom values. Max selection: all options.",
+    "Multiple values from predefined options. Options are searchable and users can optionally input custom values.",
   TableCell: withPopoverCell(BasicCell, InlineCell, PopoverCell, {
     anchorOrigin: { horizontal: "left", vertical: "bottom" },
     transparent: true,

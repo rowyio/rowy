@@ -23,7 +23,8 @@ export const config: IFieldConfig = {
   initialValue: {},
   initializable: true,
   icon: <ColorIcon />,
-  description: "Visual color picker. Supports Hex, RGBA, HSLA.",
+  description:
+    "Color stored as Hex, RGB, and HSV. Edited with a visual picker.",
   TableCell: withPopoverCell(BasicCell, InlineCell, PopoverCell, {
     anchorOrigin: { horizontal: "left", vertical: "bottom" },
   }),

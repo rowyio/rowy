@@ -21,7 +21,7 @@ export const config: IFieldConfig = {
   initialValue: "",
   initializable: true,
   icon: <LongTextIcon />,
-  description: "Large amount of text, such as sentences and paragraphs.",
+  description: "Text displayed on multiple lines.",
   TableCell: withBasicCell(BasicCell),
   TableEditor: withSideDrawerEditor(BasicCell),
   SideDrawerField,

@@ -3,7 +3,6 @@ import { IHeavyCellProps } from "../types";
 
 import { useDropzone } from "react-dropzone";
 import _findIndex from "lodash/findIndex";
-import clsx from "clsx";
 import { format } from "date-fns";
 
 import { makeStyles, createStyles } from "@mui/styles";

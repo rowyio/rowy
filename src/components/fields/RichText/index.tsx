@@ -24,7 +24,7 @@ export const config: IFieldConfig = {
   initialValue: "",
   initializable: true,
   icon: <RichTextIcon />,
-  description: "Rich text editor with predefined HTML text styles.",
+  description: "HTML edited with a rich text editor.",
   TableCell: withHeavyCell(BasicCell, TableCell),
   TableEditor: withSideDrawerEditor(TableCell),
   SideDrawerField,
