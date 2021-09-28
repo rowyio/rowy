@@ -146,7 +146,7 @@ export default function CodeEditor(props: any) {
             async function asyncForEach(array: any[], callback: Function): void {}
           
             /**
-             * Generate random ID from numbers and English charactors inlcuding lowercase and uppercase
+             * Generate random ID from numbers and English characters including lowercase and uppercase
              */
             function generateId(): string {}
           
@@ -215,7 +215,7 @@ export default function CodeEditor(props: any) {
         type Trigger = "create" | "update" | "delete";
         type Triggers = Trigger[];
 
-        // function types that defines extension body and shuold run
+        // function types that defines extension body and should run
         type Condition = boolean | ((data: ExtensionContext) => boolean | Promise<boolean>);
       
         // the argument that the extension body takes in
@@ -230,7 +230,7 @@ export default function CodeEditor(props: any) {
           fieldTypes: any;
           extensionConfig: {
             label: string;
-            type: sring;
+            type: string;
             triggers: Trigger[];
             conditions: Condition;
             requiredFields: string[];
