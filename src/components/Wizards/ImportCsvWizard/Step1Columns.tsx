@@ -165,13 +165,13 @@ export default function Step1Columns({
         {!isXs && (
           <Grid item xs={12} sm={6}>
             <Typography variant="subtitle2" gutterBottom component="h2">
-              Select Columns ({config.pairs.length} of {csvData.columns.length})
+              Select columns ({config.pairs.length} of {csvData.columns.length})
             </Typography>
           </Grid>
         )}
         <Grid item xs={12} sm={6}>
           <Typography variant="subtitle2" gutterBottom component="h2">
-            Table Columns
+            Table columns
           </Typography>
         </Grid>
       </Grid>
@@ -263,10 +263,10 @@ export default function Step1Columns({
                     displayEmpty
                     labelPlural="columns"
                     freeText
-                    AddButtonProps={{ children: "Add New Column" }}
+                    AddButtonProps={{ children: "Add new column" }}
                     AddDialogProps={{
-                      title: "Add New Column",
-                      textFieldLabel: "Column Name",
+                      title: "Add new column",
+                      textFieldLabel: "Column name",
                     }}
                   />
                 )}

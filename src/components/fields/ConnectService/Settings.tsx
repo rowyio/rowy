@@ -4,7 +4,7 @@ export default function Settings({ config, handleChange }) {
   return (
     <>
       <TextField
-        label="Webservice Url"
+        label="Web service URL"
         name="url"
         value={config.url}
         fullWidth
@@ -13,7 +13,7 @@ export default function Settings({ config, handleChange }) {
         }}
       />
       <TextField
-        label="Results key Path"
+        label="Results key path"
         name="resultsKey"
         helperText="Can be specified as a key path"
         placeholder="data.results"
@@ -24,7 +24,7 @@ export default function Settings({ config, handleChange }) {
         }}
       />
       <TextField
-        label="Primary Key"
+        label="Primary key"
         name="primaryKey"
         value={config.primaryKey}
         fullWidth
@@ -33,7 +33,7 @@ export default function Settings({ config, handleChange }) {
         }}
       />
       <TextField
-        label="Title Key (optional)"
+        label="Title key (optional)"
         name="titleKey"
         value={config.titleKey}
         fullWidth
@@ -42,7 +42,7 @@ export default function Settings({ config, handleChange }) {
         }}
       />
       <TextField
-        label="SubTitle Key (optional)"
+        label="Subtitle key (optional)"
         name="subtitleKey"
         value={config.subtitleKey}
         fullWidth

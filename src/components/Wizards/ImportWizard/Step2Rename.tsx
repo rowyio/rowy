@@ -66,13 +66,13 @@ export default function Step2Rename({
         {!isXs && (
           <Grid item xs={12} sm={6}>
             <Typography variant="subtitle2" gutterBottom component="h2">
-              Field Names
+              Field names
             </Typography>
           </Grid>
         )}
         <Grid item xs={12} sm={6}>
           <Typography variant="subtitle2" gutterBottom component="h2">
-            Set Column Names
+            Set column names
           </Typography>
         </Grid>
       </Grid>

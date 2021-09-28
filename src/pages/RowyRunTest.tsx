@@ -85,7 +85,7 @@ export default function TestView() {
           label="Localhost?"
         />
         <TextField
-          label="Defined Route"
+          label="Defined route"
           select
           value={
             Object.values(runRoutes).find((r) => r.path === path)?.path ?? ""

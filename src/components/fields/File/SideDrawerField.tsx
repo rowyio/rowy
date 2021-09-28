@@ -126,7 +126,7 @@ function ControlledFileUploader({
                 <div>
                   <Confirmation
                     message={{
-                      title: "Delete File?",
+                      title: "Delete file?",
                       confirm: "Delete",
                     }}
                     functionName={!disabled ? "onDelete" : ""}

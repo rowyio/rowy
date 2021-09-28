@@ -39,7 +39,7 @@ export default function HeaderRowSkeleton() {
           sx={{ transform: "none", ml: (-46 + 6) / 8, borderRadius: 1 }}
         >
           <Button variant="contained" startIcon={<AddColumnIcon />}>
-            Add Column
+            Add column
           </Button>
         </Skeleton>
       </Stack>

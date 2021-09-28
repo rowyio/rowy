@@ -34,7 +34,7 @@ export default function Breadcrumbs(props: BreadcrumbsProps) {
   return (
     <MuiBreadcrumbs
       separator={<ArrowRightIcon />}
-      aria-label="sub-table breadcrumbs"
+      aria-label="Sub-table breadcrumbs"
       sx={{
         "& ol": {
           pl: 2,

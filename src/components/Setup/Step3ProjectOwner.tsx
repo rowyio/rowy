@@ -101,7 +101,7 @@ export default function Step3ProjectOwner({
                 rel="noopener noreferrer"
                 endIcon={<OpenInNewIcon />}
               >
-                Set Up in Firebase Console
+                Set up in Firebase Console
               </Button>
 
               <Button
@@ -155,7 +155,7 @@ export default function Step3ProjectOwner({
                 loading={hasRoles === "LOADING"}
                 onClick={setRoles}
               >
-                Assign Roles
+                Assign roles
               </LoadingButton>
 
               {typeof hasRoles === "string" && hasRoles !== "LOADING" && (

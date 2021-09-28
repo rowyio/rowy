@@ -60,7 +60,7 @@ export default function DefaultValueInput({
     <>
       <TextField
         select
-        label="Default Value Type"
+        label="Default value type"
         value={config.defaultValue?.type ?? "undefined"}
         onChange={(e) => handleChange("defaultValue.type")(e.target.value)}
         fullWidth

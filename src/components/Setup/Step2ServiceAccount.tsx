@@ -120,7 +120,7 @@ export default function Step2ServiceAccount({
                 rel="noopener noreferrer"
                 endIcon={<OpenInNewIcon />}
               >
-                Set Up Service Account
+                Set up service account
               </LoadingButton>
               <LoadingButton
                 variant="contained"
@@ -142,7 +142,7 @@ export default function Step2ServiceAccount({
                   rel="noopener noreferrer"
                   color="text.primary"
                 >
-                  Setup Guide
+                  Setup guide
                   <InlineOpenInNewIcon />
                 </Link>
               </Typography>

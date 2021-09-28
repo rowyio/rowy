@@ -60,7 +60,7 @@ export default function Step2NewColumns({
         <Grid container spacing={2} className={classes.typeSelectRow}>
           <Grid item xs={12} sm={6}>
             <Typography variant="subtitle2" gutterBottom component="h2">
-              New Table Columns
+              New table columns
             </Typography>
             <Divider />
 
@@ -91,7 +91,7 @@ export default function Step2NewColumns({
               component="h2"
               className={classes.typeHeading}
             >
-              Column Type: {config.newColumns[fieldToEdit].name}
+              Column type: {config.newColumns[fieldToEdit].name}
             </Typography>
 
             <FieldsDropdown
@@ -109,13 +109,13 @@ export default function Step2NewColumns({
           {!isXs && (
             <Grid item xs={12} sm={6}>
               <Typography variant="subtitle2" gutterBottom component="h2">
-                Raw Data
+                Raw data
               </Typography>
             </Grid>
           )}
           <Grid item xs={12} sm={6}>
             <Typography variant="subtitle2" gutterBottom component="h2">
-              Column Preview
+              Column preview
             </Typography>
           </Grid>
         </Grid>

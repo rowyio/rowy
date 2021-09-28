@@ -59,7 +59,7 @@ export default function Settings({ handleChange, config }) {
               </Grid>
               <Grid item>
                 <IconButton
-                  aria-label="remove"
+                  aria-label="Remove"
                   onClick={() =>
                     handleChange("options")(
                       options.filter((o: string) => o !== option)
@@ -79,7 +79,7 @@ export default function Settings({ handleChange, config }) {
       <Grid container direction="row" alignItems="center">
         <Grid item>
           <IconButton
-            aria-label="add new"
+            aria-label="Add new"
             onClick={() => {
               handleAdd();
             }}
@@ -92,7 +92,7 @@ export default function Settings({ handleChange, config }) {
             value={newOption}
             className={classes.field}
             fullWidth
-            label={"New Option"}
+            label="New option"
             id="new-option"
             onChange={(e) => {
               setNewOption(e.target.value);

@@ -12,9 +12,9 @@ export default function SignOutPage() {
   }, []);
 
   return (
-    <AuthLayout title="Signed Out">
+    <AuthLayout title="Signed out">
       <Button component={Link} to="/auth" variant="outlined">
-        Sign In Again
+        Sign in again
       </Button>
     </AuthLayout>
   );

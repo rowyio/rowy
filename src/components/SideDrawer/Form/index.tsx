@@ -113,7 +113,7 @@ export default function Form({ values }: IFormProps) {
         <FieldWrapper
           type="debug"
           name="_debug_path"
-          label="Document Path"
+          label="Document path"
           debugText={values.ref?.path ?? values.id ?? "No ref"}
         />
       </Stack>

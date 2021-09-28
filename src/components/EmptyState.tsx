@@ -29,7 +29,7 @@ export interface IEmptyStateProps extends Partial<GridProps> {
  * Override with props that are passed to the root MUI `Grid` component.
  */
 export default function EmptyState({
-  message = "Nothing Here",
+  message = "Nothing here",
   description,
   Icon = ErrorIcon,
   fullScreen = false,

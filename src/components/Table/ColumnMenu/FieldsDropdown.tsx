@@ -49,8 +49,8 @@ export default function FieldsDropdown({
           {option.label}
         </>
       )}
-      label={label || "Field Type"}
-      labelPlural="Field Types"
+      label={label || "Field type"}
+      labelPlural="field types"
       TextFieldProps={{
         hiddenLabel: hideLabel,
         helperText: value && getFieldProp("description", value),

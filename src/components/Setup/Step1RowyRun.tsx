@@ -85,7 +85,7 @@ export default function Step1RowyRun({
       rel="noopener noreferrer"
       endIcon={<OpenInNewIcon />}
     >
-      Deploy Instructions
+      Deploy instructions
     </Button>
   );
 
@@ -122,7 +122,7 @@ export default function Step1RowyRun({
               >
                 <TextField
                   id="rowyRunUrl"
-                  label="Rowy Run Instance URL"
+                  label="Rowy Run instance URL"
                   placeholder="https://*.run.app"
                   value={rowyRunUrl}
                   onChange={(e) => setRowyRunUrl(e.target.value)}

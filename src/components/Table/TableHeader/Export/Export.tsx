@@ -163,7 +163,7 @@ export default function Export({ query, closeModal }) {
             )
           : []
         ).map((column: any) => ({ label: column.name, value: column.key }))}
-        label="Columns to Export"
+        label="Columns to export"
         labelPlural="columns"
         TextFieldProps={{
           autoFocus: true,
@@ -179,7 +179,7 @@ export default function Export({ query, closeModal }) {
           { label: ".json", value: "json" },
           { label: ".csv", value: "csv" },
         ]}
-        label="Export Type"
+        label="Export type"
         onChange={(v) => {
           if (v) {
             setExportType(v as "csv" | "json");

@@ -192,7 +192,7 @@ export default function PopupContents({
               color="primary"
               className={classes.selectAllButton}
             >
-              Clear Selection
+              Clear selection
             </Button>
           </Grid>
         </Grid>

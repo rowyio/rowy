@@ -4,7 +4,7 @@ import Subheading from "components/Table/ColumnMenu/Subheading";
 export default function Settings({ handleChange, config }) {
   return (
     <>
-      <Subheading>Slider Config</Subheading>
+      <Subheading>Slider config</Subheading>
 
       <TextField
         variant="filled"
@@ -13,7 +13,7 @@ export default function Settings({ handleChange, config }) {
         onChange={(e) => handleChange("min")(parseFloat(e.target.value))}
         value={config["min"]}
         id={`settings-field-min`}
-        label="Minimum Value"
+        label="Minimum value"
         type="number"
       />
 
@@ -24,7 +24,7 @@ export default function Settings({ handleChange, config }) {
         onChange={(e) => handleChange("max")(parseFloat(e.target.value))}
         value={config["max"]}
         id={`settings-field-max`}
-        label="Maximum Value"
+        label="Maximum value"
         type="number"
       />
 
@@ -35,7 +35,7 @@ export default function Settings({ handleChange, config }) {
         onChange={(e) => handleChange("step")(parseFloat(e.target.value))}
         value={config["step"]}
         id={`settings-field-step`}
-        label="Step Value"
+        label="Step value"
         type="number"
       />
 

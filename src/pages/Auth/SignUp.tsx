@@ -27,7 +27,7 @@ export default function SignUpPage() {
         <AuthLayout
           hideLogo={!isMobile}
           hideLinks={!isMobile}
-          title="Sign Up"
+          title="Sign up"
           description={
             <>
               Welcome! To join this project, sign in with the email address

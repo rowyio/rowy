@@ -105,7 +105,7 @@ export default function HomePage() {
     return <AccessDenied />;
 
   const createTableFab = (
-    <Tooltip title="Create Table">
+    <Tooltip title="Create table">
       <Zoom in>
         <Fab
           color="secondary"
@@ -146,7 +146,7 @@ export default function HomePage() {
 
     return (
       <EmptyState
-        message="No Tables"
+        message="No tables"
         description="There are no tables in this project. Sign in with an admin account to create tables."
         fullScreen
         style={{ marginTop: -APP_BAR_HEIGHT }}
@@ -206,7 +206,7 @@ export default function HomePage() {
   return (
     <Container component="main" sx={{ px: 1, pt: 1, pb: 7 + 3 + 3 }}>
       <FloatingSearch
-        label="Search Tables"
+        label="Search tables"
         onChange={(e) => handleQuery(e.target.value)}
         paperSx={{
           maxWidth: (theme) => ({ md: theme.breakpoints.values.sm - 48 }),
@@ -227,7 +227,7 @@ export default function HomePage() {
             sx={{ pl: 2, cursor: "default" }}
           >
             {query ? `${results.length} of ${tables.length}` : tables.length}{" "}
-            Tables
+            tables
           </Typography>
 
           <ToggleButtonGroup

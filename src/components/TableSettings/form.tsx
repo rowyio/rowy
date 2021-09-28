@@ -17,7 +17,7 @@ export const tableSettings = (
     {
       type: FieldType.shortText,
       name: "name",
-      label: "Table Name",
+      label: "Table name",
       required: true,
     },
     {
@@ -29,7 +29,7 @@ export const tableSettings = (
     {
       type: FieldType.shortText,
       name: "collection",
-      label: "Collection Name",
+      label: "Collection name",
       required: true,
       assistiveText: (
         <Link
@@ -48,20 +48,20 @@ export const tableSettings = (
     {
       type: FieldType.singleSelect,
       name: "tableType",
-      label: "Table Type",
+      label: "Table type",
       labelPlural: "table types",
       searchable: false,
       defaultValue: "primaryCollection",
       options: [
         {
-          label: "Primary Collection",
+          label: "Primary collection",
           description: `
           Connect this table to the <strong>single collection</strong>
           matching the collection name entered above`,
           value: "primaryCollection",
         },
         {
-          label: "Collection Group",
+          label: "Collection group",
           description: `
           Connect this table to <strong>all collections and subcollections</strong>
           matching the collection name entered above`,
@@ -113,7 +113,7 @@ export const tableSettings = (
     {
       type: FieldType.multiSelect,
       name: "roles",
-      label: "Accessed By",
+      label: "Accessed by",
       options: roles ?? [],
       required: true,
       freeText: true,
@@ -146,7 +146,7 @@ export const tableSettings = (
       defaultValue: 1,
       min: 1,
       max: 5,
-      label: "Collection Depth",
+      label: "Collection depth",
       displayCondition: "return values.tableType === 'collectionGroup'",
       assistiveText: (
         <>

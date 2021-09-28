@@ -18,7 +18,7 @@ export default function FormDialog({
   return (
     <Modal
       onClose={handleClose}
-      title="Change Column Type"
+      title="Change column type"
       children={<FieldsDropdown value={newType} onChange={setType} />}
       actions={{
         primary: {

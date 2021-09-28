@@ -98,7 +98,7 @@ export default function TableHeader() {
         startIcon={<AddRowIcon />}
         // sx={{ pr: 1.5 }}
       >
-        Add Row
+        Add row
       </Button>
       {/*
         <Button

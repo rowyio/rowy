@@ -1,11 +1,4 @@
-import {
-  Stack,
-  Typography,
-  Grid,
-  Tooltip,
-  Chip,
-  Button,
-} from "@mui/material";
+import { Stack, Typography, Grid, Tooltip, Chip, Button } from "@mui/material";
 import OpenIcon from "@mui/icons-material/OpenInNew";
 export interface ICodeEditorHelperProps {
   docLink: string;
@@ -79,7 +72,7 @@ export default function CodeEditorHelper({
         href={docLink}
         style={{ flexShrink: 0 }}
       >
-        Examples & Docs
+        Examples & docs
       </Button>
     </Stack>
   );

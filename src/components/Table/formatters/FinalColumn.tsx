@@ -34,7 +34,7 @@ export default function FinalColumn({ row }: FormatterProps<any, any>) {
   const handleDelete = async () => tableActions?.row.delete(row.id);
   return (
     <Stack direction="row" spacing={0.5}>
-      <Tooltip title="Duplicate Row">
+      <Tooltip title="Duplicate row">
         <IconButton
           size="small"
           color="inherit"
@@ -53,14 +53,14 @@ export default function FinalColumn({ row }: FormatterProps<any, any>) {
             });
             if (tableActions) tableActions?.row.add(clonedRow);
           }}
-          aria-label="Duplicate Row"
+          aria-label="Duplicate row"
           className="row-hover-iconButton"
         >
           <CopyCellsIcon />
         </IconButton>
       </Tooltip>
 
-      <Tooltip title={`Delete Row${altPress ? "" : "…"}`}>
+      <Tooltip title={`Delete row${altPress ? "" : "…"}`}>
         <IconButton
           size="small"
           color="inherit"
@@ -87,7 +87,7 @@ export default function FinalColumn({ row }: FormatterProps<any, any>) {
                   });
                 }
           }
-          aria-label={`Delete Row${altPress ? "" : "…"}`}
+          aria-label={`Delete row${altPress ? "" : "…"}`}
           className="row-hover-iconButton"
           sx={{
             ".rdg-row:hover &.row-hover-iconButton": {

@@ -163,9 +163,9 @@ export default function UserItem({ id, user, roles: rolesProp }: User) {
               <CopyIcon />
             </IconButton>
           </Tooltip>
-          <Tooltip title="Delete">
+          <Tooltip title="Delete…">
             <IconButton
-              aria-label="Delete"
+              aria-label="Delete…"
               color="error"
               onClick={handleDelete}
             >

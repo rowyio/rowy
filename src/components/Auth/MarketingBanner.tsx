@@ -76,7 +76,7 @@ export default function MarketingBanner() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Join our Community
+            Join our community
           </Button>
           <Button
             variant="outlined"

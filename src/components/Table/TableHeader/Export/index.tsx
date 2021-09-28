@@ -114,7 +114,7 @@ export default function Export() {
                   <Tab className={classes.tab} label="Export" value="Export" />
                   <Tab
                     className={classes.tab}
-                    label="Download Attachments"
+                    label="Download attachments"
                     value="Download"
                   />
                 </TabList>

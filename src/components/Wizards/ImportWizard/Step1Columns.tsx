@@ -108,7 +108,7 @@ export default function Step1Columns({ config, setConfig }: IStepProps) {
     <Grid container spacing={3}>
       <Grid item xs={12} sm={6}>
         <Typography variant="subtitle2" gutterBottom component="h2">
-          Select Columns ({selectedFields.length} of {allFields.length})
+          Select columns ({selectedFields.length} of {allFields.length})
         </Typography>
         <Divider />
 
@@ -167,7 +167,7 @@ export default function Step1Columns({ config, setConfig }: IStepProps) {
       </Grid>
       <Grid item xs={12} sm={6}>
         <Typography variant="subtitle2" gutterBottom component="h2">
-          Sort Table Columns
+          Sort table columns
         </Typography>
         <Divider />
 

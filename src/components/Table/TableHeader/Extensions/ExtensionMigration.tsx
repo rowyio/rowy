@@ -92,7 +92,7 @@ export default function ExtensionMigration({
 
           <div>
             <Typography variant="subtitle1" component="h3" gutterBottom>
-              1. Back Up Existing Sparks
+              1. Back up existing Sparks
             </Typography>
             <Typography paragraph>
               Back up your existing Sparks to a .ts file.

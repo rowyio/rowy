@@ -50,10 +50,10 @@ export default function Settings({ handleChange, config }: ISettingsProps) {
         onChange={handleChange("index")}
         multiple={false}
         label="Table"
-        labelPlural="Tables"
+        labelPlural="tables"
       />
       <TextField
-        label="Filter Template"
+        label="Filter template"
         name="filters"
         fullWidth
         value={config.filters}
@@ -62,7 +62,7 @@ export default function Settings({ handleChange, config }: ISettingsProps) {
         }}
       />
       <MultiSelect
-        label={"Primary Keys"}
+        label="Primary keys"
         value={config.primaryKeys ?? []}
         options={columns.filter((c) =>
           [FieldType.shortText, FieldType.singleSelect].includes(c.type)
@@ -70,13 +70,13 @@ export default function Settings({ handleChange, config }: ISettingsProps) {
         onChange={handleChange("primaryKeys")}
       />
       <MultiSelect
-        label={"Snapshot Fields"}
+        label="Snapshot fields"
         value={config.snapshotFields ?? []}
         options={columns.filter((c) => ![FieldType.subTable].includes(c.type))}
         onChange={handleChange("snapshotFields")}
       />
       <MultiSelect
-        label={"Tracked Fields"}
+        label="Tracked fields"
         value={config.trackedFields ?? []}
         options={columns.filter((c) => ![FieldType.subTable].includes(c.type))}
         onChange={handleChange("trackedFields")}
