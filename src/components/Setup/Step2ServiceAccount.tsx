@@ -21,6 +21,7 @@ export default function Step2ServiceAccount({
   setCompletion,
 }: ISetupStepBodyProps) {
   const [hasAllRoles, setHasAllRoles] = useState(completion.serviceAccount);
+  const [roles, setRoles] = useState<Record<string, any>>({});
   const [verificationStatus, setVerificationStatus] = useState<
     "IDLE" | "LOADING" | "FAIL"
   >("IDLE");
@@ -40,8 +41,8 @@ export default function Step2ServiceAccount({
     setVerificationStatus("LOADING");
     try {
       const result = await checkServiceAccount(rowyRunUrl);
-      console.log(result);
-      if (result) {
+      setRoles(result);
+      if (result.hasAllRoles) {
         setVerificationStatus("IDLE");
         setHasAllRoles(true);
         setCompletion((c) => ({ ...c, serviceAccount: true }));
@@ -92,8 +93,7 @@ export default function Step2ServiceAccount({
           <>
             <ul>
               <li>Service Account User</li>
-              <li>Firebase Authentication Admin</li>
-              <li>Firestore Service Agent</li>
+              <li>Firebase Admin</li>
             </ul>
 
             <Stack direction="row" spacing={1}>
@@ -117,8 +117,18 @@ export default function Step2ServiceAccount({
             </Stack>
 
             {verificationStatus === "FAIL" && (
-              <Typography variant="caption" color="error">
-                The service account does not have the required IAM roles.
+              <Typography variant="inherit" color="error">
+                Some roles are missing. Also make sure your Firebase project has
+                Firestore and Authentication enabled.{" "}
+                <Link
+                  href={WIKI_LINKS.firebaseProject}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  color="text.primary"
+                >
+                  Setup Guide
+                  <InlineOpenInNewIcon />
+                </Link>
               </Typography>
             )}
 
@@ -150,11 +160,14 @@ export const checkServiceAccount = async (
       route: runRoutes.serviceAccountAccess,
       signal,
     });
-    console.log(res);
-    return Object.values(res).reduce(
-      (acc, value) => acc && value,
-      true
-    ) as boolean;
+
+    return {
+      ...res,
+      hasAllRoles: Object.values(res).reduce(
+        (acc, value) => acc && value,
+        true
+      ) as boolean,
+    };
   } catch (e: any) {
     console.error(e);
     return false;
