@@ -76,7 +76,7 @@ const checkAllSteps = async (
 
     const promises = [
       checkServiceAccount(rowyRunUrl, signal).then((serviceAccount) => {
-        if (serviceAccount) completion.serviceAccount = true;
+        if (serviceAccount.hasAllRoles) completion.serviceAccount = true;
       }),
       checkProjectOwner(rowyRunUrl, currentUser, userRoles, signal).then(
         (projectOwner) => {
@@ -340,7 +340,7 @@ export default function SetupPage() {
               spacing={3}
               sx={{
                 minHeight: "100%",
-                maxWidth: 400,
+                maxWidth: 440,
                 margin: "0 auto",
                 textAlign: "center",
                 py: 3,
