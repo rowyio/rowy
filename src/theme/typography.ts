@@ -159,6 +159,11 @@ export const typography = ({
       MuiTypography: {
         defaultProps: { variant: "body2" },
       },
+      MuiLink: {
+        styleOverrides: {
+          root: { textUnderlineOffset: toRem(1) },
+        },
+      },
     },
   };
 };

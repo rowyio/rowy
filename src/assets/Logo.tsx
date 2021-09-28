@@ -18,7 +18,7 @@ export default function Logo({ size = 1.5, ...props }: ILogoProps) {
       role="img"
       {...props}
     >
-      <title id="rowy-logo-title">rowy</title>
+      <title id="rowy-logo-title">Rowy</title>
 
       <path
         d="M58 3l4 9 4-9h2l-7 16h-2l2-4.5L56 3h2zm-26-.25a6.25 6.25 0 110 12.5 6.25 6.25 0 010-12.5zM26 3v2h-4v10h-2V3h6zm14 0l3 9 3-9h2l3 9 3-9h2l-4 12h-2l-3-9-3 9h-2L38 3h2zm-8 1.75a4.25 4.25 0 100 8.5 4.25 4.25 0 000-8.5z"
