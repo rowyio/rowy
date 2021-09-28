@@ -96,8 +96,8 @@ It deploys [Rowy Run](https://github.com/rowyio/rowyrun), an open-source Cloud
 Run instance that operates exclusively on your GCP project. So we never have
 access to your service account or any of your data.
 
-Alternatively, you can manually install using the full installation guide is
-available [here](https://docs.rowy.io/install).
+Alternatively, you can manually install by
+[following this guide](https://docs.rowy.io/setup/install).
 
 ## Join our community
 
