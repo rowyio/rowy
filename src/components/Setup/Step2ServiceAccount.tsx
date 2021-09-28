@@ -94,21 +94,10 @@ export default function Step2ServiceAccount({
             <ul>
               <li>Service Account User</li>
               <li>
-                {roles.auth === false && (
-                  <Typography color="error" variant="inherit" component="span">
-                    Missing:{" "}
-                  </Typography>
-                )}
-                Firebase Authentication Admin
-              </li>
-              <li>
-                {(roles.firestore === false ||
-                  roles.firestoreRules === false) && (
-                  <Typography color="error" variant="inherit" component="span">
-                    Missing:{" "}
-                  </Typography>
-                )}
-                Firestore Service Agent
+                <Typography color="error" variant="inherit" component="span">
+                  Missing:{" "}
+                </Typography>
+                ) Firebase Admin
               </li>
             </ul>
 
