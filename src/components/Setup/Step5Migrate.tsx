@@ -50,8 +50,8 @@ export default function Step5Migrate({
     <>
       <Typography variant="inherit">
         It looks like you’ve previously configured your Firestore database for
-        Firetable. You can migrate this configuration, including your XX tables
-        to {name}.
+        Firetable. You can migrate this configuration, including your tables to{" "}
+        {name}.
       </Typography>
 
       <SetupItem

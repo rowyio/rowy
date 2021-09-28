@@ -23,6 +23,9 @@ export const EXTERNAL_LINKS = {
 };
 
 const WIKI_PATHS = {
+  firebaseProject: "/setup/firebase-project",
+  rowyRun: "/rowy-run",
+
   updating: "/Updating",
   derivatives: "/field-types/derivative",
   defaultValues: "/Default-Values",
