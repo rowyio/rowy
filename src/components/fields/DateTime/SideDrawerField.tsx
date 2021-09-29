@@ -17,7 +17,7 @@ export default function Date_({ column, control }: IDateProps) {
     <Controller
       control={control}
       name={column.key}
-      render={({ onChange, value }) => {
+      render={({ field: { onChange, value } }) => {
         const transformedValue = transformValue(value);
 
         const handleChange = (date: Date | null) => {

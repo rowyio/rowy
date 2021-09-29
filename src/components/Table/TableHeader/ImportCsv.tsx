@@ -247,7 +247,7 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
               inputProps={{ minRows: 3 }}
               autoFocus
               fullWidth
-              label="Paste CSV Text"
+              label="Paste CSV text"
               placeholder="column, column, …"
               onChange={(e) => {
                 if (csvData !== null) setCsvData(null);
@@ -269,7 +269,7 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
               variant="filled"
               autoFocus
               fullWidth
-              label="Paste URL to CSV File"
+              label="Paste URL to CSV file"
               placeholder="https://"
               onChange={(e) => {
                 if (csvData !== null) setCsvData(null);

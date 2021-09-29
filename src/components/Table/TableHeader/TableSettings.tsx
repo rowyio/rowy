@@ -18,7 +18,7 @@ export default function TableSettings() {
   return (
     <>
       <TableHeaderButton
-        title="Table Settings"
+        title="Table settings"
         onClick={() => setOpen(true)}
         icon={<SettingsIcon />}
         disabled={!table}

@@ -32,7 +32,7 @@ export default function Rating({
     <Controller
       control={control}
       name={column.key}
-      render={({ onChange, value }) => (
+      render={({ field: { onChange, value } }) => (
         <Grid container alignItems="center" className={fieldClasses.root}>
           <MuiRating
             name={column.key}

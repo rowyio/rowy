@@ -30,7 +30,7 @@ export default function Code({
     <Controller
       control={control}
       name={column.key}
-      render={({ onChange, value }) => (
+      render={({ field: { onChange, value } }) => (
         <CodeEditor
           disabled={disabled}
           value={value}

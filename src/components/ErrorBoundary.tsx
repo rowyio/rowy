@@ -3,7 +3,7 @@ import EmptyState, { IEmptyStateProps } from "./EmptyState";
 
 import { Button } from "@mui/material";
 import ReloadIcon from "@mui/icons-material/Refresh";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
 import meta from "../../package.json";
 class ErrorBoundary extends React.Component<
   IEmptyStateProps & { render?: (errorMessage: string) => React.ReactNode }
@@ -27,7 +27,7 @@ class ErrorBoundary extends React.Component<
 
       return (
         <EmptyState
-          message="Something Went Wrong"
+          message="Something went wrong"
           description={
             <>
               <span>{this.state.errorMessage}</span>
@@ -48,9 +48,9 @@ class ErrorBoundary extends React.Component<
                   }
                   target="_blank"
                   rel="noopener noreferrer"
-                  endIcon={<OpenInNewIcon />}
                 >
-                  Report Issue
+                  Report issue
+                  <InlineOpenInNewIcon />
                 </Button>
               )}
             </>

@@ -60,7 +60,7 @@ export default function DefaultValueInput({
     <>
       <TextField
         select
-        label="Default Value Type"
+        label="Default value type"
         value={config.defaultValue?.type ?? "undefined"}
         onChange={(e) => handleChange("defaultValue.type")(e.target.value)}
         fullWidth
@@ -146,7 +146,7 @@ export default function DefaultValueInput({
 
       {config.defaultValue?.type === "dynamic" && (
         <>
-          <CodeEditorHelper docLink={WIKI_LINKS.defaultValues} />
+          <CodeEditorHelper docLink={WIKI_LINKS.howToDefaultValues} />
           <div className={classes.codeEditorContainer}>
             <CodeEditor
               height={120}

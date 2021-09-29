@@ -1,7 +1,7 @@
 import { Controller } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 
-import { useTheme, Grid, Chip } from "@mui/material";
+import { Grid, Chip } from "@mui/material";
 
 import ConnectTableSelect from "./ConnectTableSelect";
 
@@ -9,16 +9,15 @@ export default function ConnectTable({
   column,
   control,
   disabled,
+  useFormMethods,
 }: ISideDrawerFieldProps) {
-  const theme = useTheme();
-
   const config = column.config ?? {};
 
   return (
     <Controller
       control={control}
       name={column.key}
-      render={({ onChange, onBlur, value }) => {
+      render={({ field: { onChange, onBlur, value } }) => {
         const handleDelete = (hit: any) => () => {
           // if (multiple)
           onChange(value.filter((v) => v.snapshot.objectID !== hit.objectID));
@@ -29,7 +28,7 @@ export default function ConnectTable({
           <>
             {!disabled && (
               <ConnectTableSelect
-                row={control.getValues()}
+                row={useFormMethods.getValues()}
                 column={column}
                 config={(config as any) ?? {}}
                 value={value}

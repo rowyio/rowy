@@ -161,18 +161,16 @@ export default function About() {
                 onClick={checkForUpdate}
                 loading={checkState === "LOADING"}
               >
-                Check for Updates
+                Check for updates
               </LoadingButton>
             ) : (
               <Button
-                href={WIKI_LINKS.updating}
+                href={WIKI_LINKS.setupUpdate}
                 target="_blank"
                 rel="noopener noreferrer"
-                endIcon={
-                  <InlineOpenInNewIcon sx={{ fontSize: "18px !important" }} />
-                }
               >
-                How to Update
+                How to update
+                <InlineOpenInNewIcon />
               </Button>
             )}
           </Grid>
@@ -189,7 +187,7 @@ export default function About() {
           justifyContent="space-between"
         >
           <Grid item>
-            <Typography>Firebase Project: {projectId}</Typography>
+            <Typography>Firebase project: {projectId}</Typography>
           </Grid>
 
           <Grid item>

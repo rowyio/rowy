@@ -1,20 +1,20 @@
-import { useState, useEffect } from "react";
-import _camelCase from "lodash/camelCase";
+import useSWR from "swr";
 import _find from "lodash/find";
 
-import { makeStyles, createStyles } from "@mui/styles";
-import { Button, DialogContentText } from "@mui/material";
-
-import Confirmation from "components/Confirmation";
+import { Stack, Button, DialogContentText } from "@mui/material";
 
 import { FormDialog } from "@rowy/form-builder";
 import { tableSettings } from "./form";
+import CamelCaseId from "./CamelCaseId";
+import SuggestedRules from "./SuggestedRules";
+import Confirmation from "components/Confirmation";
 
 import { useProjectContext, Table } from "contexts/ProjectContext";
 import useRouter from "../../hooks/useRouter";
 import { db } from "../../firebase";
 import { name } from "@root/package.json";
 import { SETTINGS, TABLE_SCHEMAS, TABLE_GROUP_SCHEMAS } from "config/dbPaths";
+import { runRoutes } from "constants/runRoutes";
 import { analytics } from "@src/analytics";
 
 export enum TableSettingsDialogModes {
@@ -27,68 +27,30 @@ export interface ICreateTableDialogProps {
   data: Table | null;
 }
 
-const FORM_EMPTY_STATE = {
-  name: "",
-  collection: "",
-  section: "",
-  description: "",
-  roles: ["ADMIN"],
-};
-
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    buttonGrid: { padding: theme.spacing(3, 0) },
-    button: { width: 160 },
-
-    formFooter: {
-      marginTop: theme.spacing(4),
-
-      "& button": {
-        paddingLeft: theme.spacing(1.5),
-        display: "flex",
-      },
-    },
-    collectionName: { fontFamily: theme.typography.fontFamilyMono },
-  })
-);
-
 export default function TableSettingsDialog({
   mode,
   clearDialog,
   data,
 }: ICreateTableDialogProps) {
-  const classes = useStyles();
-
-  const { settingsActions, roles, tables } = useProjectContext();
+  const { settingsActions, roles, tables, rowyRun } = useProjectContext();
   const sectionNames = Array.from(
     new Set((tables ?? []).map((t) => t.section))
   );
 
   const router = useRouter();
+
+  const { data: collections } = useSWR(
+    "firebaseCollections",
+    () => rowyRun?.({ route: runRoutes.listCollections }),
+    { fallbackData: [], revalidateIfStale: false, dedupingInterval: 60_000 }
+  );
+
   const open = mode !== null;
-
-  const [formState, setForm] = useState(FORM_EMPTY_STATE);
-
-  const handleChange = (key: string, value: any) =>
-    setForm({ ...formState, [key]: value });
-
-  useEffect(() => {
-    if (mode === TableSettingsDialogModes.create)
-      handleChange("collection", _camelCase(formState.name));
-  }, [formState.name]);
-
-  const handleClose = () => {
-    setForm(FORM_EMPTY_STATE);
-    clearDialog();
-  };
-
-  useEffect(() => {
-    if (data) setForm(data);
-  }, [data]);
 
   if (!open) return null;
 
-  const handleSubmit = async (values) => {
+  const handleSubmit = async (v) => {
+    const { _suggestedRules, ...values } = v;
     const data: any = {
       ...values,
     };
@@ -97,7 +59,7 @@ export default function TableSettingsDialog({
       data.schemaSource = _find(tables, { id: values.schemaSource });
 
     if (mode === TableSettingsDialogModes.update) {
-      await Promise.all([settingsActions?.updateTable(data), handleClose()]);
+      await Promise.all([settingsActions?.updateTable(data), clearDialog()]);
     } else {
       settingsActions?.createTable(data);
 
@@ -117,13 +79,13 @@ export default function TableSettingsDialog({
         type: values.tableType,
       }
     );
-    handleClose();
+    clearDialog();
   };
 
   const handleResetStructure = async () => {
     const schemaDocRef = db.doc(`${TABLE_SCHEMAS}/${data!.id}`);
     await schemaDocRef.update({ columns: {} });
-    handleClose();
+    clearDialog();
   };
 
   const handleDelete = async () => {
@@ -142,79 +104,62 @@ export default function TableSettingsDialog({
       .doc(data?.id)
       .delete();
     window.location.reload();
-    handleClose();
+    clearDialog();
   };
 
   return (
     <FormDialog
-      onClose={handleClose}
+      onClose={clearDialog}
       title={
         mode === TableSettingsDialogModes.create
-          ? "Create Table"
-          : "Update Table"
+          ? "Create table"
+          : "Table settings"
       }
       fields={tableSettings(
         mode,
         roles,
         sectionNames,
-        tables?.map((table) => ({ label: table.name, value: table.id }))
+        tables?.map((table) => ({ label: table.name, value: table.id })),
+        collections
       )}
-      values={{
-        ...data,
+      customComponents={{
+        camelCaseId: {
+          component: CamelCaseId,
+          defaultValue: "",
+          validation: [["string"]],
+        },
+        suggestedRules: {
+          component: SuggestedRules,
+          defaultValue: "",
+          validation: [["string"]],
+        },
       }}
+      values={{ ...data }}
       onSubmit={handleSubmit}
       SubmitButtonProps={{
         children:
           mode === TableSettingsDialogModes.create ? "Create" : "Update",
       }}
-      // customActions={
-      //   <Grid
-      //     container
-      //     spacing={2}
-      //     justify="center"
-      //     // className={classes.buttonGrid}
-      //   >
-      //     <Grid item>
-      //       <Button
-      //         size="large"
-      //         variant="outlined"
-      //         onClick={handleClose}
-      //         // className={classes.button}
-      //       >
-      //         Cancel
-      //       </Button>
-      //     </Grid>
-      //     <Grid item>
-      //       <Button
-      //         size="large"
-      //         variant="contained"
-      //         type="submit"
-      //         // className={classes.button}
-      //       >
-      //         {mode === TableSettingsDialogModes.create ? "Create" : "Update"}
-      //       </Button>
-      //     </Grid>
-      //   </Grid>
-      // }
       formFooter={
         mode === TableSettingsDialogModes.update ? (
-          <div className={classes.formFooter}>
+          <Stack
+            direction="row"
+            justifyContent="center"
+            spacing={1}
+            sx={{ mt: 6 }}
+          >
             <Confirmation
               message={{
-                title: `Delete the table structure for “${formState.name}”?`,
+                title: `Reset columns of “${data?.name}”?`,
                 body: (
                   <>
-                    <DialogContentText>
-                      This will only delete the column structure for this table,
-                      so you can set up the columns again.
+                    <DialogContentText paragraph>
+                      This will only reset the columns of this column so you can
+                      set up the columns again.
                     </DialogContentText>
                     <DialogContentText>
-                      You will not lose any data in your Firestore collection
-                      named “
-                      <span className={classes.collectionName}>
-                        {formState.collection}
-                      </span>
-                      ” .
+                      You will not lose any data in your Firestore collection{" "}
+                      <code>{data?.collection}</code>.
                     </DialogContentText>
                   </>
                 ),
@@ -227,29 +172,23 @@ export default function TableSettingsDialog({
                 variant="outlined"
                 color="error"
                 onClick={handleResetStructure}
-                // endIcon={<GoIcon />}
+                style={{ width: 150 }}
               >
-                Reset Table Structure…
+                Reset columns…
               </Button>
             </Confirmation>
 
-            <br />
-
             <Confirmation
               message={{
-                title: `Delete the table “${formState.name}”?`,
+                title: `Delete the table “${data?.name}”?`,
                 body: (
                   <>
-                    <DialogContentText>
+                    <DialogContentText paragraph>
                       This will only delete the {name} configuration data.
                     </DialogContentText>
                     <DialogContentText>
-                      You will not lose any data in your Firestore collection
-                      named “
-                      <span className={classes.collectionName}>
-                        {formState.collection}
-                      </span>
-                      ” .
+                      You will not lose any data in your Firestore collection{" "}
+                      <code>{data?.collection}</code>.
                     </DialogContentText>
                   </>
                 ),
@@ -262,12 +201,12 @@ export default function TableSettingsDialog({
                 variant="outlined"
                 color="error"
                 onClick={handleDelete}
-                // endIcon={<GoIcon />}
+                style={{ width: 150 }}
               >
-                Delete Table…
+                Delete table…
               </Button>
             </Confirmation>
-          </div>
+          </Stack>
         ) : null
       }
     />

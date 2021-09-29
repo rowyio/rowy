@@ -67,7 +67,7 @@ export default function CellValidation({
       <>
         <RichTooltip
           icon={<ErrorIcon fontSize="inherit" color="error" />}
-          title="Invalid Data"
+          title="Invalid data"
           message="This row will not be saved until all the required fields contain valid data"
           placement="right"
           render={({ openTooltip }) => <Dot onClick={openTooltip} />}
@@ -82,7 +82,7 @@ export default function CellValidation({
       <>
         <RichTooltip
           icon={<WarningIcon fontSize="inherit" color="warning" />}
-          title="Required Field"
+          title="Required field"
           message="This row will not be saved until all the required fields contain valid data"
           placement="right"
           render={({ openTooltip }) => <Dot onClick={openTooltip} />}

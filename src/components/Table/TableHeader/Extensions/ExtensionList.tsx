@@ -117,7 +117,7 @@ export default function ExtensionList({
           }}
         >
           <EmptyState
-            message="Add Your First Extension"
+            message="Add your first extension"
             description="Your extensions will appear here."
             Icon={ExtensionIcon}
           />

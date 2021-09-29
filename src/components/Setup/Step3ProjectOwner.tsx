@@ -3,7 +3,7 @@ import { ISetupStepBodyProps } from "pages/Setup";
 
 import { Typography, Stack, Button, IconButton } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
 
 import SetupItem from "./SetupItem";
 import SignInWithGoogle from "./SignInWithGoogle";
@@ -99,9 +99,9 @@ export default function Step3ProjectOwner({
                 }/authentication/providers`}
                 target="_blank"
                 rel="noopener noreferrer"
-                endIcon={<OpenInNewIcon />}
               >
-                Set Up in Firebase Console
+                Set up in Firebase Console
+                <InlineOpenInNewIcon />
               </Button>
 
               <Button
@@ -155,7 +155,7 @@ export default function Step3ProjectOwner({
                 loading={hasRoles === "LOADING"}
                 onClick={setRoles}
               >
-                Assign Roles
+                Assign roles
               </LoadingButton>
 
               {typeof hasRoles === "string" && hasRoles !== "LOADING" && (

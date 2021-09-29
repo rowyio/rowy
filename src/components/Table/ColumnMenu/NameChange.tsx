@@ -19,7 +19,7 @@ export default function NameChange({
   return (
     <Modal
       onClose={handleClose}
-      title="Rename Column"
+      title="Rename column"
       maxWidth="xs"
       children={
         <TextField
@@ -27,7 +27,7 @@ export default function NameChange({
           autoFocus
           variant="filled"
           id="name"
-          label="Column Name"
+          label="Column name"
           type="text"
           fullWidth
           onChange={(e) => {

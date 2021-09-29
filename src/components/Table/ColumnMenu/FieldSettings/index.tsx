@@ -91,7 +91,7 @@ export default function FieldSettings(props: IMenuModalProps) {
                 sx={{ borderTop: 1, borderColor: "divider", pt: 3 }}
               >
                 <Typography variant="subtitle1">
-                  Rendered Field Config
+                  Rendered field config
                 </Typography>
                 {createElement(rendedFieldSettings, {
                   config: newConfig,
@@ -114,7 +114,7 @@ export default function FieldSettings(props: IMenuModalProps) {
           onClick: () => {
             if (showRebuildPrompt) {
               requestConfirmation({
-                title: "Deploy Changes",
+                title: "Deploy changes",
                 body: "You have made changes that affect the behavior of the cloud function of this table, Would you like to redeploy it now?",
                 confirm: "Deploy",
                 cancel: "Later",

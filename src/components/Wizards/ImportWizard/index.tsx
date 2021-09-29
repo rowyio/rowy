@@ -64,7 +64,7 @@ export default function ImportWizard() {
       title="Import"
       steps={[
         {
-          title: "Choose Columns",
+          title: "Choose columns",
           description: (
             <>
               <Typography gutterBottom>
@@ -88,7 +88,7 @@ export default function ImportWizard() {
           disableNext: Object.keys(config).length === 0,
         },
         {
-          title: "Rename Columns",
+          title: "Rename columns",
           description:
             "Rename your table columns with user-friendly names. These changes will not update the field names in your database.",
           content: (
@@ -101,7 +101,7 @@ export default function ImportWizard() {
           ),
         },
         {
-          title: "Set Column Types",
+          title: "Set column types",
           description:
             "Set the type of each column to display your data correctly. Some column types have been suggested based on your data.",
           content: (
@@ -116,7 +116,7 @@ export default function ImportWizard() {
         {
           title: "Preview",
           description:
-            "Preview your data with your configured columns. You can change column types by clicking “Edit Type” from the column menu at any time.",
+            "Preview your data with your configured columns. You can change column types by clicking “Edit type” from the column menu at any time.",
           content: (
             <Step4Preview
               config={config}

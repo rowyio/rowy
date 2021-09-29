@@ -44,7 +44,7 @@ export default function ReExecute() {
   return (
     <>
       <TableHeaderButton
-        title="Force Refresh"
+        title="Force refresh"
         onClick={() => setOpen(true)}
         icon={<LoopIcon />}
       />
@@ -55,7 +55,7 @@ export default function ReExecute() {
           maxWidth="xs"
           fullWidth
           hideCloseButton
-          title="Force Refresh?"
+          title="Force refresh?"
           children="All Extensions and Derivatives in this table will re-execute."
           actions={{
             primary: {

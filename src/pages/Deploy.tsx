@@ -44,7 +44,7 @@ export default function DeployPage() {
           hideLogo={!isMobile}
           hideProject
           hideLinks={!isMobile}
-          title="Get Started"
+          title="Get started"
           description={
             <>
               <FormControl component="fieldset" variant="standard">
@@ -88,7 +88,7 @@ export default function DeployPage() {
               <Typography sx={{ mt: 3 }}>
                 Don’t have a project? Follow our{" "}
                 <Link
-                  href={WIKI_LINKS.firebaseProject}
+                  href={WIKI_LINKS.setupFirebaseProject}
                   target="_blank"
                   rel="noopener noreferrer"
                 >

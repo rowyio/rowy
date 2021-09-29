@@ -263,7 +263,7 @@ export default function DraggableHeaderRenderer<R>({
             title={
               isAsc
                 ? "Unsort"
-                : `Sort by ${isDesc ? "Ascending" : "Descending"}`
+                : `Sort by ${isDesc ? "ascending" : "descending"}`
             }
           >
             <IconButton
@@ -274,7 +274,7 @@ export default function DraggableHeaderRenderer<R>({
               aria-label={
                 isAsc
                   ? "Unsort"
-                  : `Sort by ${isDesc ? "Ascending" : "Descending"}`
+                  : `Sort by ${isDesc ? "ascending" : "descending"}`
               }
               className={clsx(classes.sortIcon, isAsc && classes.sortIconAsc)}
             >
@@ -290,7 +290,7 @@ export default function DraggableHeaderRenderer<R>({
             (column as any).type
           ))) && (
         <Grid item>
-          <Tooltip title="Column Settings">
+          <Tooltip title="Column settings">
             <IconButton
               size="small"
               className={classes.dropdownButton}

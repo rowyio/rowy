@@ -140,7 +140,7 @@ export default function HiddenFields() {
           },
         } as any)}
         label="Hidden fields"
-        labelPlural="Fields"
+        labelPlural="fields"
         options={tableColumns}
         value={hiddenFields ?? []}
         onChange={setHiddenFields}

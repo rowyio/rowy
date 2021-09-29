@@ -24,7 +24,7 @@ export default function SettingsMenu({ modal, setModal }) {
   return (
     <div>
       <IconButton
-        aria-label="more"
+        aria-label="More"
         aria-controls="long-menu"
         aria-haspopup="true"
         onClick={handleClick}

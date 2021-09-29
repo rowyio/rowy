@@ -61,7 +61,7 @@ export default function ExtensionsEditor() {
   const handleClose = () => {
     if (edited) {
       requestConfirmation({
-        title: "Discard Changes",
+        title: "Discard changes",
         body: "You will lose changes you have made to extensions",
         confirm: "Discard",
         handleConfirm: () => {

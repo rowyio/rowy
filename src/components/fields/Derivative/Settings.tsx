@@ -28,7 +28,7 @@ const Settings = ({ config, handleChange }) => {
       <Grid container direction="row" spacing={2} flexWrap="nowrap">
         <Grid item xs={12} md={6}>
           <MultiSelect
-            label={"Listener Fields"}
+            label="Listener fields"
             options={columnOptions}
             value={config.listenerFields ?? []}
             onChange={handleChange("listenerFields")}
@@ -41,7 +41,7 @@ const Settings = ({ config, handleChange }) => {
 
         <Grid item xs={12} md={6}>
           <FieldsDropdown
-            label="Output Field Type"
+            label="Output field type"
             value={config.renderFieldType}
             options={Object.values(FieldType).filter(
               (f) =>
@@ -59,15 +59,15 @@ const Settings = ({ config, handleChange }) => {
         </Grid>
       </Grid>
 
-<div>
-      <InputLabel>Derivative Script</InputLabel>
-      <CodeEditorHelper docLink={WIKI_LINKS.derivatives} />
-      <Suspense fallback={<FieldSkeleton height={200} />}>
-        <CodeEditor
-          script={config.script}
-          handleChange={handleChange("script")}
-        />
-      </Suspense>
+      <div>
+        <InputLabel>Derivative script</InputLabel>
+        <CodeEditorHelper docLink={WIKI_LINKS.fieldTypesDerivative} />
+        <Suspense fallback={<FieldSkeleton height={200} />}>
+          <CodeEditor
+            script={config.script}
+            handleChange={handleChange("script")}
+          />
+        </Suspense>
       </div>
     </>
   );

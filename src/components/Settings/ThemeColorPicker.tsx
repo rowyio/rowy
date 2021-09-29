@@ -51,7 +51,7 @@ export default function ThemeColorPicker({
       >
         <Grid item xs={12} sm={6}>
           <Typography variant="subtitle2" component="h3" gutterBottom>
-            Light Theme
+            Light theme
           </Typography>
           <ColorPicker
             width={244}
@@ -100,7 +100,7 @@ export default function ThemeColorPicker({
 
         <Grid item xs={12} sm={6}>
           <Typography variant="subtitle2" component="h3" gutterBottom>
-            Dark Theme
+            Dark theme
           </Typography>
           <ColorPicker
             width={244}

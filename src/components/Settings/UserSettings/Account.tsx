@@ -27,7 +27,7 @@ export default function Account({ settings }: IUserSettingsChildProps) {
 
       <Grid item>
         <Button component={Link} to={routes.signOut}>
-          Sign Out
+          Sign out
         </Button>
       </Grid>
     </Grid>

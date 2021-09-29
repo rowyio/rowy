@@ -130,7 +130,7 @@ export default function WebhooksDialog({ open, handleClose }) {
               }}
               // classes={{ root: classes.formControlLabel, label: classes.label }}
             />
-            <InputLabel htmlFor="webhook-type">Webhook Type</InputLabel>
+            <InputLabel htmlFor="webhook-type">Webhook type</InputLabel>
             <Select
               autoFocus
               value={state.type}

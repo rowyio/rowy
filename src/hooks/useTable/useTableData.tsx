@@ -189,7 +189,7 @@ const useTableData = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Create Index
+                  Create index
                 </Button>
               ),
             }

@@ -115,7 +115,7 @@ export default function ImportCsvWizard({
       steps={
         [
           {
-            title: "Choose Columns",
+            title: "Choose columns",
             description: (
               <>
                 <Typography paragraph>
@@ -148,7 +148,7 @@ export default function ImportCsvWizard({
             disableNext: config.pairs.length === 0,
           },
           config.newColumns.length > 0 && {
-            title: "Set Column Types",
+            title: "Set column types",
             description:
               "Set the type of each column to display your data correctly. Some column types have been suggested based on your data.",
             content: (
@@ -168,7 +168,7 @@ export default function ImportCsvWizard({
           {
             title: "Preview",
             description:
-              "Preview your data with your configured columns. You can change column types by clicking “Edit Type” from the column menu at any time.",
+              "Preview your data with your configured columns. You can change column types by clicking “Edit type” from the column menu at any time.",
             content: (
               <Step3Preview
                 csvData={{ ...csvData, rows: parsedRows }}

@@ -8,7 +8,6 @@ import {
   Button,
   Link,
   TextField,
-  Grid,
 } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import CopyIcon from "assets/icons/Copy";
@@ -53,10 +52,20 @@ export default function Step4Rules({
 
   const [newRules, setNewRules] = useState("");
   useEffect(() => {
+    let rulesToInsert = rules;
+
+    if (currentRules.indexOf("function isDocOwner") > -1) {
+      rulesToInsert = rulesToInsert.replace(/function isDocOwner[^}]*}/s, "");
+    }
+    if (currentRules.indexOf("function hasAnyRole") > -1) {
+      rulesToInsert = rulesToInsert.replace(/function hasAnyRole[^}]*}/s, "");
+    }
+
     const inserted = currentRules.replace(
       /match\s*\/databases\/\{database\}\/documents\s*\{/,
-      `match /databases/{database}/documents {\n` + rules
+      `match /databases/{database}/documents {\n` + rulesToInsert
     );
+
     setNewRules(inserted);
   }, [currentRules, rules]);
 
@@ -140,7 +149,7 @@ export default function Step4Rules({
               startIcon={<CopyIcon />}
               onClick={() => navigator.clipboard.writeText(rules)}
             >
-              Copy to Clipboard
+              Copy to clipboard
             </Button>
           </>
         )}
@@ -168,7 +177,7 @@ export default function Step4Rules({
         >
           <TextField
             id="new-rules"
-            label="New Rules"
+            label="New rules"
             value={newRules}
             onChange={(e) => setNewRules(e.target.value)}
             multiline
@@ -182,6 +191,15 @@ export default function Step4Rules({
               },
             }}
           />
+
+          <Typography
+            variant="inherit"
+            color={
+              rulesStatus !== "LOADING" && rulesStatus ? "error" : undefined
+            }
+          >
+            Please check the generated rules first.
+          </Typography>
 
           <LoadingButton
             variant="contained"

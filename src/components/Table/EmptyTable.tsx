@@ -19,7 +19,7 @@ export default function EmptyTable() {
       <>
         <div>
           <Typography variant="h6" component="h2" gutterBottom>
-            Get Started
+            Get started
           </Typography>
           <Typography>
             There is existing data in the Firestore collection:
@@ -51,7 +51,7 @@ export default function EmptyTable() {
       <>
         <div>
           <Typography variant="h6" component="h2" gutterBottom>
-            Get Started
+            Get started
           </Typography>
           <Typography>
             There is no data in the Firestore collection:
@@ -113,7 +113,7 @@ export default function EmptyTable() {
               }
               disabled={!columnMenuRef?.current}
             >
-              Add Column
+              Add column
             </Button>
 
             <ColumnMenu />

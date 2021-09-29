@@ -16,7 +16,7 @@ export default function Checkbox({
     <Controller
       control={control}
       name={column.key}
-      render={({ onChange, onBlur, value }) => {
+      render={({ field: { onChange, onBlur, value } }) => {
         const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
           onChange(event.target.checked);
         };

@@ -46,7 +46,7 @@ export default function UserManagementPage() {
   return (
     <Container maxWidth="sm" sx={{ px: 1, pt: 1, pb: 7 + 3 + 3 }}>
       <FloatingSearch
-        label="Search Users"
+        label="Search users"
         onChange={(e) => handleQuery(e.target.value)}
       />
 
@@ -62,7 +62,7 @@ export default function UserManagementPage() {
             {!loading && query
               ? `${results.length} of ${usersState.documents.length}`
               : usersState.documents.length}{" "}
-            Users
+            users
           </Typography>
 
           <InviteUser />

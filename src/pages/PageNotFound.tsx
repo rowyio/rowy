@@ -18,7 +18,7 @@ export default function PageNotFound() {
 
   if (!currentUser)
     return (
-      <AuthLayout title="Page Not Found">
+      <AuthLayout title="Page not found">
         <Button
           variant="outlined"
           sx={{ mt: 3 }}
@@ -31,9 +31,9 @@ export default function PageNotFound() {
     );
 
   return (
-    <Navigation title="Page Not Found" titleComponent={() => <div />}>
+    <Navigation title="Page not found" titleComponent={() => <div />}>
       <EmptyState
-        message="Page Not Found"
+        message="Page not found"
         description={
           <Button
             variant="outlined"

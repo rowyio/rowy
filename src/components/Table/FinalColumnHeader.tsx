@@ -69,7 +69,7 @@ const FinalColumnHeader: Column<any>["headerRenderer"] = ({ column }) => {
         className={classes.button}
         startIcon={<AddColumnIcon />}
       >
-        Add Column
+        Add column
       </Button>
     </Grid>
   );

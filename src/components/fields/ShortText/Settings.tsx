@@ -5,7 +5,7 @@ export default function Settings({ handleChange, config }) {
     <>
       <TextField
         type="number"
-        label="Character Limit"
+        label="Character limit"
         id="character-limit"
         value={config.maxLength}
         fullWidth
@@ -16,7 +16,7 @@ export default function Settings({ handleChange, config }) {
       />
       <TextField
         type="text"
-        label="Validation Regex"
+        label="Validation regex"
         id="validation-regex"
         value={config.validationRegex}
         fullWidth

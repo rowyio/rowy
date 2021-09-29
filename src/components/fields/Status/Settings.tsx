@@ -8,6 +8,7 @@ import Grid from "@mui/material/Grid";
 import Divider from "@mui/material/Divider";
 
 import EditIcon from "@mui/icons-material/Edit";
+import AddIcon from "@mui/icons-material/Add";
 import Modal from "components/Modal";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Typography from "@mui/material/Typography";
@@ -64,19 +65,19 @@ const ConditionModal = ({ modal, setModal, conditions, setConditions }) => {
   return (
     <Modal
       open={modal.isOpen}
-      title={`${modal.index ? "Edit" : "Add"} Condition`}
+      title={`${modal.index ? "Edit" : "Add"} condition`}
       maxWidth={"xs"}
       onClose={handleClose}
       actions={{
         primary:
           modal.index === null
             ? {
-                children: "Add Condition",
+                children: "Add condition",
                 onClick: handleAdd,
                 disabled: false,
               }
             : {
-                children: "Save Changes",
+                children: "Save changes",
                 onClick: handleSave,
                 disabled: false,
               },
@@ -90,7 +91,7 @@ const ConditionModal = ({ modal, setModal, conditions, setConditions }) => {
               }
             : {
                 startIcon: <DeleteIcon />,
-                children: "Remove Condition",
+                children: "Remove condition",
                 onClick: handleRemove,
               },
       }}
@@ -108,7 +109,7 @@ const ConditionModal = ({ modal, setModal, conditions, setConditions }) => {
             onChange={handleUpdate("type")}
             value={modal.condition.type}
             multiple={false}
-            label={"Select data type"}
+            label="Select data type"
           />
           <Typography variant="overline">Condition </Typography>
           {modal.condition.type === "boolean" && (
@@ -120,7 +121,7 @@ const ConditionModal = ({ modal, setModal, conditions, setConditions }) => {
               onChange={(v) => handleUpdate("value")(v === "true")}
               value={modal.condition.value ? "true" : "false"}
               multiple={false}
-              label={"Select Condition Value"}
+              label="Select condition value"
             />
           )}
 
@@ -129,21 +130,21 @@ const ConditionModal = ({ modal, setModal, conditions, setConditions }) => {
               <div style={{ width: "45%" }}>
                 <MultiSelect
                   options={[
-                    { label: "Less Than", value: "<" },
-                    { label: "Less Than or Equal", value: "<=" },
+                    { label: "Less than", value: "<" },
+                    { label: "Less than or equal", value: "<=" },
                     { label: "Equal", value: "==" },
-                    { label: "Equal or More Than", value: ">=" },
-                    { label: "More Than", value: ">" },
+                    { label: "Equal or more than", value: ">=" },
+                    { label: "More than", value: ">" },
                   ]}
                   onChange={handleUpdate("operator")}
                   value={modal.condition.operator}
                   multiple={false}
-                  label={"Select Operator"}
+                  label="Select operator"
                 />
               </div>
               <TextField
-                type={"number"}
-                label={"Value"}
+                type="number"
+                label="Value"
                 value={modal.condition.value}
                 onChange={(e) => handleUpdate("value")(e.target.value)}
               />
@@ -152,16 +153,16 @@ const ConditionModal = ({ modal, setModal, conditions, setConditions }) => {
           {modal.condition.type === "string" && (
             <TextField
               fullWidth
-              label={"Value"}
+              label="Value"
               value={modal.condition.value}
               onChange={(e) => handleUpdate("value")(e.target.value)}
             />
           )}
 
-          <Typography variant="overline">assigned label (output)</Typography>
+          <Typography variant="overline">Assigned label (output)</Typography>
           <TextField
             value={modal.condition.label}
-            label={"Type the cell output"}
+            label="Type the cell output"
             fullWidth
             onChange={(e) => handleUpdate("label")(e.target.value)}
           />
@@ -212,13 +213,16 @@ export default function Settings({ handleChange, config }: ISettingsProps) {
         })
       ) : (
         <>
-          no conditions set yet
+          No conditions set yet
           <br />
         </>
       )}
 
-      <Button onClick={() => setModal({ ...EMPTY_STATE, isOpen: true })}>
-        + ADD CONDITION
+      <Button
+        onClick={() => setModal({ ...EMPTY_STATE, isOpen: true })}
+        startIcon={<AddIcon />}
+      >
+        Add condition
       </Button>
       <ConditionModal
         modal={modal}

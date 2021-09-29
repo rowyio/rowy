@@ -1,7 +1,7 @@
 import { FieldType } from "constants/fields";
 
 import { FormatterProps, EditorProps } from "react-data-grid";
-import { Control } from "react-hook-form";
+import { Control, UseFormReturn } from "react-hook-form";
 import { PopoverProps } from "@mui/material";
 
 export { FieldType };
@@ -49,6 +49,7 @@ export interface ISideDrawerFieldProps {
   control: Control;
   docRef: firebase.default.firestore.DocumentReference;
   disabled: boolean;
+  useFormMethods: UseFormReturn;
 }
 
 export interface ISettingsProps {

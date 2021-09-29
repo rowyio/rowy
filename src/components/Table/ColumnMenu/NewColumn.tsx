@@ -43,7 +43,7 @@ export default function NewColumn({
   return (
     <Modal
       onClose={handleClose}
-      title="Add New Column"
+      title="Add new column"
       fullWidth
       maxWidth="xs"
       children={
@@ -54,7 +54,7 @@ export default function NewColumn({
               autoFocus
               variant="filled"
               id="columnName"
-              label="Column Name"
+              label="Column name"
               type="text"
               fullWidth
               onChange={(e) => setColumnLabel(e.target.value)}
@@ -67,7 +67,7 @@ export default function NewColumn({
               value={fieldKey}
               variant="filled"
               id="fieldKey"
-              label="Field Key"
+              label="Field key"
               type="text"
               fullWidth
               onChange={(e) => setFieldKey(e.target.value)}

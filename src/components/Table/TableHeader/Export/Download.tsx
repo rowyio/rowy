@@ -138,7 +138,7 @@ export default function Export({ query, closeModal }) {
             )
           : []
         ).map((column: any) => ({ label: column.name, value: column.key }))}
-        label="Columns to Export"
+        label="Columns to export"
         labelPlural="columns"
         TextFieldProps={{
           helperText: "Only File and Image columns are downloadable",
@@ -149,7 +149,7 @@ export default function Export({ query, closeModal }) {
 
       <TextField
         fullWidth
-        label="Package Name"
+        label="Package name"
         value={packageName}
         helperText={`${packageName}.zip`}
         onChange={(e) => setPackageName(e.target.value)}
@@ -180,7 +180,7 @@ export default function Export({ query, closeModal }) {
             )
           : []
         ).map((column: any) => ({ label: column.name, value: column.key }))}
-        label="Column Values to Include in File Names"
+        label="Column values to include in file names"
         labelPlural="columns"
         TextFieldProps={{
           autoFocus: true,

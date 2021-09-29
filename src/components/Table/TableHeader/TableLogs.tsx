@@ -308,14 +308,14 @@ function SnackLog({ log, onClose, onOpenPanel }) {
     >
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Typography variant="overline">
-          {!log && <span className={classes.whiteText}>Build Pending...</span>}
+          {!log && <span className={classes.whiteText}>Build pending…</span>}
           {log?.status === "SUCCESS" && (
             <span
               style={{
                 color: "#aed581",
               }}
             >
-              Build Completed
+              Build completed
             </span>
           )}
           {log?.status === "FAIL" && (
@@ -324,7 +324,7 @@ function SnackLog({ log, onClose, onOpenPanel }) {
                 color: "#e57373",
               }}
             >
-              Build Failed
+              Build failed
             </span>
           )}
           {log?.status === "BUILDING" && (
@@ -421,7 +421,7 @@ export default function TableLogs() {
   return (
     <>
       <TableHeaderButton
-        title="Build Logs"
+        title="Build logs"
         onClick={() => setPanelOpen(true)}
         icon={
           <>
@@ -467,14 +467,14 @@ export default function TableLogs() {
           fullHeight
           title={
             <>
-              Build Logs <Chip label="ALPHA" size="small" />
+              Build logs <Chip label="ALPHA" size="small" />
             </>
           }
           children={
             <>
               {!latestStatus && (
                 <EmptyState
-                  message="No Logs Found"
+                  message="No logs found"
                   description={
                     "When you start building, your logs should be shown here shortly"
                   }
