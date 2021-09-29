@@ -2672,10 +2672,10 @@
     use-debounce "^3.4.3"
     yup "^0.32.9"
 
-"@rowy/multiselect@^0.1.12":
-  version "0.1.12"
-  resolved "https://registry.yarnpkg.com/@rowy/multiselect/-/multiselect-0.1.12.tgz#03380ceaaed9f6847c59b6ccae6d216ce149d95a"
-  integrity sha512-1JmH5EDt0OSxcUWjQXfqGwp4w2xDJ5OjfS1uV9pXv7AcTw++RqwQKsF15llKYyatvpZohSyaVQIogPh7Zzpe/g==
+"@rowy/multiselect@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@rowy/multiselect/-/multiselect-0.2.0.tgz#b915d3cfcd5f7fc2947e97d242510894e454281e"
+  integrity sha512-PAQ6LCMkEbAS558krXq8UyI8/9rZ/jmNU9cxSyvtnjHF7GVS7ZIRFDU8InV+nzYHsJWF/QYtH7o3X64kRmDrgQ==
 
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"

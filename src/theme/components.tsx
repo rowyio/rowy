@@ -1,10 +1,13 @@
 import { Theme, ThemeOptions } from "@mui/material/styles";
 import type {} from "@mui/lab/themeAugmentation";
+import { MultiSelectProps } from "@rowy/multiselect";
 import { toRem } from "./typography";
 
 import RadioIcon from "theme/RadioIcon";
 import CheckboxIcon from "theme/CheckboxIcon";
 import CheckboxIndeterminateIcon from "theme/CheckboxIndeterminateIcon";
+import AddCircleIcon from "@mui/icons-material/AddCircleOutline";
+import { SvgIcon } from "@mui/material";
 
 import { colord, extend } from "colord";
 import mixPlugin from "colord/plugins/mix";
@@ -13,6 +16,17 @@ extend([mixPlugin]);
 declare module "@mui/material/styles/createTransitions" {
   interface Easing {
     strong: string;
+  }
+}
+
+declare module "@mui/material/styles" {
+  interface Components {
+    RowyMultiSelect?: {
+      defaultProps?: Omit<
+        MultiSelectProps<any>,
+        "multiple" | "value" | "onChange" | "options"
+      >;
+    };
   }
 }
 
@@ -898,6 +912,19 @@ export const components = (theme: Theme): ThemeOptions => {
         styleOverrides: {
           root: {
             background: "none",
+          },
+        },
+      },
+
+      RowyMultiSelect: {
+        defaultProps: {
+          AddButtonProps: {
+            singleIcon: <AddCircleIcon />,
+            multipleIcon: (
+              <SvgIcon>
+                <path d="M17 3a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V7a4 4 0 0 1 4-4h10Zm0 2H7a2 2 0 0 0-1.995 1.85L5 7v10a2 2 0 0 0 1.85 1.995L7 19h10a2 2 0 0 0 1.995-1.85L19 17V7a2 2 0 0 0-1.85-1.995L17 5Zm-6 12h2v-4h4v-2h-4V7h-2v4H7v2h4v4Z" />
+              </SvgIcon>
+            ),
           },
         },
       },
