@@ -38,7 +38,7 @@
     "jwt-decode": "^3.1.2",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
-    "notistack": "^1.0.6-next.3",
+    "notistack": "^2.0.2",
     "query-string": "^6.8.3",
     "react": "^17.0.2",
     "react-beautiful-dnd": "^13.0.0",
