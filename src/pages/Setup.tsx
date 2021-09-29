@@ -265,6 +265,7 @@ export default function SetupPage() {
               2
             )} - env(safe-area-inset-top) - env(safe-area-inset-bottom))`,
           height: 840 * 0.75,
+          resize: "both",
 
           p: 0,
           "& > *, & > .MuiDialogContent-root": { px: { xs: 2, sm: 4 } },
