@@ -72,10 +72,10 @@
     "yup": "^0.32.9"
   },
   "scripts": {
-    "upstream": "git fetch upstream;git merge upstream/v2;git commit -m'merge upstream';git push",
+    "upstream": "git fetch upstream;git merge upstream/main;git commit -m'merge upstream';git push",
     "serve": "serve -s build",
     "start": "craco start",
-    "build": "craco build",
+    "build": "craco build CI=false",
     "test": "craco test --env=jsdom",
     "eject": "craco eject",
     "env": "node createDotEnv",
