@@ -150,8 +150,8 @@ export default function TableSettingsDialog({
       onClose={handleClose}
       title={
         mode === TableSettingsDialogModes.create
-          ? "Create Table"
-          : "Update Table"
+          ? "Create table"
+          : "Update table"
       }
       fields={tableSettings(
         mode,
@@ -229,7 +229,7 @@ export default function TableSettingsDialog({
                 onClick={handleResetStructure}
                 // endIcon={<GoIcon />}
               >
-                Reset Table Structure…
+                Reset table structure…
               </Button>
             </Confirmation>
 
@@ -264,7 +264,7 @@ export default function TableSettingsDialog({
                 onClick={handleDelete}
                 // endIcon={<GoIcon />}
               >
-                Delete Table…
+                Delete table…
               </Button>
             </Confirmation>
           </div>

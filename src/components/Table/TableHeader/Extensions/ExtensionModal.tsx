@@ -137,7 +137,7 @@ export default function ExtensionModal({
               <TextField
                 size="small"
                 required
-                label="Extension Name"
+                label="Extension name"
                 variant="filled"
                 fullWidth
                 autoFocus
@@ -178,7 +178,7 @@ export default function ExtensionModal({
             <Grid item xs={4}>
               <TextField
                 size="small"
-                label="Extension Type"
+                label="Extension type"
                 value={extensionObject.type}
                 variant="filled"
                 fullWidth
@@ -202,7 +202,7 @@ export default function ExtensionModal({
             >
               <Tab
                 value="triggersRequirements"
-                label="Triggers & Requirements"
+                label="Triggers & requirements"
               />
               <Tab value="parameters" label="Parameters" />
             </TabList>
@@ -286,7 +286,7 @@ export default function ExtensionModal({
                         mb: 1,
                       }}
                     >
-                      Required Fields (optional)
+                      Required fields (optional)
                     </FormLabel>
                     <Typography gutterBottom>
                       Optionally, select the fields that are required for the
@@ -353,7 +353,7 @@ export default function ExtensionModal({
                             <IconButton
                               color="secondary"
                               component="span"
-                              aria-label="Delete Firestore Field"
+                              aria-label="Delete Firestore field"
                               onClick={() => {
                                 setExtensionObject({
                                   ...extensionObject,
@@ -368,7 +368,7 @@ export default function ExtensionModal({
                             </IconButton>
                             <TextField
                               id={`extensions-requiredFields-firestoreField-${index}`}
-                              label="Firestore Field"
+                              label="Firestore field"
                               sx={{
                                 flexDirection: "row",
                                 alignItems: "baseline",
@@ -410,7 +410,7 @@ export default function ExtensionModal({
                             });
                           }}
                         >
-                          Add Firestore Field
+                          Add Firestore field
                         </Button>
                       </Stack>
                     </FormGroup>
@@ -464,7 +464,7 @@ export default function ExtensionModal({
             <StyledTabPanel value="parameters">
               <div style={{ flexGrow: 1 }}>
                 <Typography variant="subtitle2" gutterBottom>
-                  Extension Body
+                  Extension body
                 </Typography>
 
                 <CodeEditor
@@ -523,7 +523,7 @@ export default function ExtensionModal({
 
             if (warningMessage) {
               requestConfirmation({
-                title: "Validation Failed",
+                title: "Validation failed",
                 body: `${warningMessage}. Continue?`,
                 confirm: "Yes, I know what I’m doing",
                 cancel: "No, I’ll fix the errors",

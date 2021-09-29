@@ -26,7 +26,7 @@ export default function RowHeight() {
     <>
       <TableHeaderButton
         disabled={!tableState || !tableActions}
-        title="Row Height"
+        title="Row height"
         icon={<RowHeightIcon />}
         onClick={handleOpen}
         ref={buttonRef}
@@ -50,10 +50,10 @@ export default function RowHeight() {
             style: { zIndex: theme.zIndex.tooltip },
           },
         }}
-        label="Row Height"
+        label="Row height"
         id="row-height-select"
       >
-        <ListSubheader>Row Height</ListSubheader>
+        <ListSubheader>Row height</ListSubheader>
         {ROW_HEIGHTS.map((height) => (
           <MenuItem key={height} value={height}>
             {height - 1}px

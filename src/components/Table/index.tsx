@@ -99,7 +99,7 @@ export default function Table() {
         {
           isNew: true,
           key: "new",
-          name: "Add Column",
+          name: "Add column",
           type: FieldType.last,
           index: _columns.length ?? 0,
           width: 204,

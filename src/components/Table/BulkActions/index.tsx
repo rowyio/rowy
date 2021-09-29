@@ -262,11 +262,11 @@ export default function BulkActions({ selectedRows, columns, clearSelection }) {
                   color="secondary"
                   onClick={() => {
                     requestConfirmation({
-                      title: "Duplicate Rows?",
+                      title: "Duplicate rows?",
                       body: `Are you sure you want to duplicate the ${numSelected} selected row${
                         numSelected !== 1 ? "s" : ""
                       }?`,
-                      confirm: "Duplicate Rows",
+                      confirm: "Duplicate rows",
                       handleConfirm: handleDuplicate,
                     });
                   }}
@@ -283,11 +283,11 @@ export default function BulkActions({ selectedRows, columns, clearSelection }) {
                   color="secondary"
                   onClick={() => {
                     requestConfirmation({
-                      title: "Delete Rows?",
+                      title: "Delete rows?",
                       body: `Are you sure you want to delete the ${numSelected} select row${
                         numSelected !== 1 ? "s" : ""
                       }?`,
-                      confirm: "Delete Rows",
+                      confirm: "Delete rows",
                       handleConfirm: handleDelete,
                     });
                   }}

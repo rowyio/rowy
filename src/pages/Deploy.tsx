@@ -44,7 +44,7 @@ export default function DeployPage() {
           hideLogo={!isMobile}
           hideProject
           hideLinks={!isMobile}
-          title="Get Started"
+          title="Get started"
           description={
             <>
               <FormControl component="fieldset" variant="standard">

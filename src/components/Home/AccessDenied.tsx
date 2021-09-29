@@ -15,7 +15,7 @@ export default function AccessDenied() {
     <EmptyState
       fullScreen
       Icon={SecurityIcon}
-      message="Access Denied"
+      message="Access denied"
       description={
         <>
           <Typography>
@@ -38,7 +38,7 @@ export default function AccessDenied() {
           </Typography>
 
           <Button component={Link} to={routes.signOut}>
-            Sign Out
+            Sign out
           </Button>
         </>
       }

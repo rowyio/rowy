@@ -21,7 +21,7 @@ const Settings = ({ config, handleChange }) => {
   return (
     <>
       <MultiSelect
-        label={"Sub Tables"}
+        label="Sub-tables"
         options={columnOptions}
         value={config.requiredFields ?? []}
         onChange={handleChange("subtables")}

@@ -48,19 +48,19 @@ export default function InviteUser() {
   return (
     <>
       <Button
-        aria-label="Invite User"
+        aria-label="Invite user"
         onClick={() => setOpen(true)}
         variant="text"
         color="primary"
         startIcon={<AddIcon />}
         sx={{ "&&": { mb: -0.5 } }}
       >
-        Invite User
+        Invite user
       </Button>
 
       {open && (
         <Modal
-          title="Invite User"
+          title="Invite user"
           onClose={() => setOpen(false)}
           maxWidth="xs"
           body={
@@ -80,7 +80,7 @@ export default function InviteUser() {
               </DialogContentText>
 
               <TextField
-                label="Email Address"
+                label="Email address"
                 id="invite-email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}

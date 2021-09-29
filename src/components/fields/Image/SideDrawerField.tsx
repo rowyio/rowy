@@ -272,7 +272,7 @@ export default function Image_({
     <Controller
       control={control}
       name={column.key}
-      render={({ onChange, value }) => (
+      render={({ field: { onChange, value } }) => (
         <ControlledImageUploader
           disabled={disabled}
           column={column}

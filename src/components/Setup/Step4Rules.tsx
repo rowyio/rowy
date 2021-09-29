@@ -140,7 +140,7 @@ export default function Step4Rules({
               startIcon={<CopyIcon />}
               onClick={() => navigator.clipboard.writeText(rules)}
             >
-              Copy to Clipboard
+              Copy to clipboard
             </Button>
           </>
         )}
@@ -168,7 +168,7 @@ export default function Step4Rules({
         >
           <TextField
             id="new-rules"
-            label="New Rules"
+            label="New rules"
             value={newRules}
             onChange={(e) => setNewRules(e.target.value)}
             multiline
@@ -189,7 +189,7 @@ export default function Step4Rules({
             onClick={setRules}
             loading={rulesStatus === "LOADING"}
           >
-            Set Firestore Rules
+            Set Firestore rules
           </LoadingButton>
 
           {rulesStatus !== "LOADING" && typeof rulesStatus === "string" && (

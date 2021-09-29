@@ -45,7 +45,7 @@ export default function Step3Types({ config, updateConfig, isXs }: IStepProps) {
       <Grid container spacing={2} className={classes.typeSelectRow}>
         <Grid item xs={12} sm={6}>
           <Typography variant="subtitle2" gutterBottom component="h2">
-            Table Columns
+            Table columns
           </Typography>
           <Divider />
 
@@ -78,7 +78,7 @@ export default function Step3Types({ config, updateConfig, isXs }: IStepProps) {
             component="h2"
             className={classes.typeHeading}
           >
-            Column Type: {config[fieldToEdit].name}
+            Column type: {config[fieldToEdit].name}
           </Typography>
 
           <FieldsDropdown
@@ -94,13 +94,13 @@ export default function Step3Types({ config, updateConfig, isXs }: IStepProps) {
         {!isXs && (
           <Grid item xs={12} sm={6}>
             <Typography variant="subtitle2" gutterBottom component="h2">
-              Raw Data
+              Raw data
             </Typography>
           </Grid>
         )}
         <Grid item xs={12} sm={6}>
           <Typography variant="subtitle2" gutterBottom component="h2">
-            Column Preview
+            Column preview
           </Typography>
         </Grid>
       </Grid>

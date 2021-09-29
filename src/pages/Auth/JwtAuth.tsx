@@ -27,7 +27,7 @@ export default function JwtAuthPage() {
   };
 
   return (
-    <AuthLayout loading={loading} title="Test Authentication">
+    <AuthLayout loading={loading} title="Test auth">
       <TextField
         name="JWT"
         label="JWT"

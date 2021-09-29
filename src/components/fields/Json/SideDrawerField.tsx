@@ -29,7 +29,7 @@ export default function Json({
     <Controller
       control={control}
       name={column.key}
-      render={({ onChange, value }) => {
+      render={({ field: { onChange, value } }) => {
         if (disabled)
           return (
             <div

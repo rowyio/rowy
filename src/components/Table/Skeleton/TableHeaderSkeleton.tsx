@@ -26,7 +26,7 @@ export default function TableHeaderSkeleton() {
       >
         <ButtonSkeleton>
           <Button variant="contained" startIcon={<AddRowIcon />}>
-            Add Row
+            Add row
           </Button>
         </ButtonSkeleton>
 

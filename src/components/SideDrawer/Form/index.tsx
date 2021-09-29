@@ -38,10 +38,8 @@ export default function Form({ values }: IFormProps) {
   const { ref: docRef, ...rowValues } = values;
   const defaultValues = { ...initialValues, ...rowValues };
 
-  const { control, reset, formState, getValues } = useForm({
-    mode: "onBlur",
-    defaultValues,
-  });
+  const methods = useForm({ mode: "onBlur", defaultValues });
+  const { control, reset, formState, getValues } = methods;
   const { dirtyFields } = formState;
 
   // const { sideDrawerRef } = useProjectContext();
@@ -105,6 +103,7 @@ export default function Form({ values }: IFormProps) {
                 control,
                 docRef,
                 disabled: field.editable === false,
+                useFormMethods: methods,
               })}
             </FieldWrapper>
           );
@@ -113,7 +112,7 @@ export default function Form({ values }: IFormProps) {
         <FieldWrapper
           type="debug"
           name="_debug_path"
-          label="Document Path"
+          label="Document path"
           debugText={values.ref?.path ?? values.id ?? "No ref"}
         />
       </Stack>

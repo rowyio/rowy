@@ -455,7 +455,7 @@ const Filters = () => {
                 SelectProps={{ displayEmpty: true }}
               >
                 <MenuItem disabled value="" style={{ display: "none" }}>
-                  Select Column
+                  Select column
                 </MenuItem>
                 {filterColumns.map((c) => (
                   <MenuItem key={c.key} value={c.key}>
@@ -483,7 +483,7 @@ const Filters = () => {
                 SelectProps={{ displayEmpty: true }}
               >
                 <MenuItem disabled value="" style={{ display: "none" }}>
-                  Select Condition
+                  Select condition
                 </MenuItem>
                 {operators.map((operator) => (
                   <MenuItem key={operator.value} value={operator.value}>

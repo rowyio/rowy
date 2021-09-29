@@ -12,7 +12,7 @@ export default function Number_({
     <Controller
       control={control}
       name={column.key}
-      render={({ onChange, onBlur, value }) => {
+      render={({ field: { onChange, onBlur, value } }) => {
         const handleChange = (e) => onChange(Number(e.target.value));
 
         return (

@@ -16,7 +16,7 @@ export default function Rating({ control, column }: ISideDrawerFieldProps) {
     <Controller
       control={control}
       name={column.key}
-      render={({ value }) => (
+      render={({ field: { value } }) => (
         <Grid container alignItems="center" className={fieldClasses.root}>
           <>{value}</>
         </Grid>

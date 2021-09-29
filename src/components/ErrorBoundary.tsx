@@ -27,7 +27,7 @@ class ErrorBoundary extends React.Component<
 
       return (
         <EmptyState
-          message="Something Went Wrong"
+          message="Something went wrong"
           description={
             <>
               <span>{this.state.errorMessage}</span>
@@ -50,7 +50,7 @@ class ErrorBoundary extends React.Component<
                   rel="noopener noreferrer"
                   endIcon={<OpenInNewIcon />}
                 >
-                  Report Issue
+                  Report issue
                 </Button>
               )}
             </>

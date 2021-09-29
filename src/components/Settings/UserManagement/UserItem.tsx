@@ -126,24 +126,24 @@ export default function UserItem({ id, user, roles: rolesProp }: User) {
               sx: {
                 mr: 0.5,
 
-                "& .MuiInputLabel-root": {
+                "&& .MuiInputLabel-root": {
                   opacity: 0,
                   mt: -3,
                 },
 
-                "& .MuiFilledInput-root": {
+                "&& .MuiFilledInput-root": {
                   bgcolor: "transparent",
                   boxShadow: 0,
                   "&::before": { content: "none" },
 
                   "&:hover, &.Mui-focused": { bgcolor: "action.hover" },
                 },
-                "& .MuiSelect-select.MuiFilledInput-input": {
+                "&& .MuiSelect-select.MuiFilledInput-input": {
                   typography: "button",
                   pl: 1,
                   pr: 3.25,
                 },
-                "& .MuiSelect-icon": {
+                "&& .MuiSelect-icon": {
                   right: 2,
                 },
               },
@@ -163,9 +163,9 @@ export default function UserItem({ id, user, roles: rolesProp }: User) {
               <CopyIcon />
             </IconButton>
           </Tooltip>
-          <Tooltip title="Delete">
+          <Tooltip title="Delete…">
             <IconButton
-              aria-label="Delete"
+              aria-label="Delete…"
               color="error"
               onClick={handleDelete}
             >

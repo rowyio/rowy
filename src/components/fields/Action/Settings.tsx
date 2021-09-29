@@ -30,7 +30,7 @@ const Settings = ({ config, handleChange }) => {
         Authenticated user must have at least one of these to run the script
       </Typography>
       <MultiSelect
-        label={"Allowed Roles"}
+        label="Allowed roles"
         options={roles ?? []}
         value={config.requiredRoles ?? []}
         onChange={handleChange("requiredRoles")}
@@ -42,19 +42,19 @@ const Settings = ({ config, handleChange }) => {
       </Typography>
 
       <MultiSelect
-        label={"Required fields"}
+        label="Required fields"
         options={columnOptions}
         value={config.requiredFields ?? []}
         onChange={handleChange("requiredFields")}
       />
       <Divider />
-      <Typography variant="overline">Confirmation Template</Typography>
+      <Typography variant="overline">Confirmation template</Typography>
       <Typography variant="body2">
         The action button will not ask for confirmation if this is left empty
       </Typography>
 
       <TextField
-        label="Confirmation Template"
+        label="Confirmation template"
         placeholder="Are sure you want to invest {{stockName}}?"
         value={config.confirmation}
         onChange={(e) => {
@@ -80,7 +80,7 @@ const Settings = ({ config, handleChange }) => {
       />
       {!Boolean(config.isActionScript) ? (
         <TextField
-          label="callable name"
+          label="Callable name"
           name="callableName"
           value={config.callableName}
           fullWidth
@@ -161,10 +161,10 @@ const Settings = ({ config, handleChange }) => {
           {config["undo.enabled"] && (
             <>
               <Typography variant="overline">
-                Undo Confirmation Template
+                Undo confirmation template
               </Typography>
               <TextField
-                label="template"
+                label="Template"
                 placeholder="are you sure you want to sell your stocks in {{stockName}}"
                 value={config["undo.confirmation"]}
                 onChange={(e) => {
@@ -172,7 +172,7 @@ const Settings = ({ config, handleChange }) => {
                 }}
                 fullWidth
               />
-              <Typography variant="overline">Undo Action script</Typography>
+              <Typography variant="overline">Undo action script</Typography>
               <Suspense fallback={<FieldSkeleton height={300} />}>
                 <CodeEditor
                   height={300}

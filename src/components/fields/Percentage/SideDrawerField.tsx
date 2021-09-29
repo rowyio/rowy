@@ -39,7 +39,7 @@ export default function Percentage({
     <Controller
       control={control}
       name={column.key}
-      render={({ onChange, onBlur, value }) => {
+      render={({ field: { onChange, onBlur, value } }) => {
         const handleChange = (e) => onChange(Number(e.target.value) / 100);
 
         return (

@@ -157,7 +157,7 @@ export default function RowyRun({
       target="_blank"
       rel="noopener noreferrer"
     >
-      Deploy Instructions
+      Deploy instructions
     </Button>
   );
 
@@ -212,7 +212,7 @@ export default function RowyRun({
                   onClick={checkForUpdate}
                   loading={checkState === "LOADING"}
                 >
-                  Check for Updates
+                  Check for updates
                 </LoadingButton>
               ) : (
                 deployButton
@@ -248,7 +248,7 @@ export default function RowyRun({
         <Grid container spacing={1} alignItems="center" direction="row">
           <Grid item xs>
             <TextField
-              label="Cloud Run Instance URL"
+              label="Cloud Run instance URL"
               id="rowyRunUrl"
               value={inputRowyRunUrl}
               onChange={(e) => setInputRowyRunUrl(e.target.value)}

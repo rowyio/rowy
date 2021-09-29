@@ -21,7 +21,7 @@ export default function Action({
     <Controller
       control={control}
       name={column.key}
-      render={({ onChange, value }) => {
+      render={({ field: { onChange, value } }) => {
         const hasRan = value && value.status;
 
         return (

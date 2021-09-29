@@ -157,7 +157,7 @@ export default function SetupPage() {
           color="primary"
           type="submit"
         >
-          Get Started
+          Get started
         </LoadingButton>
       ) : (
         <Tooltip title="Please accept the terms and conditions">
@@ -168,7 +168,7 @@ export default function SetupPage() {
               color="primary"
               disabled
             >
-              Get Started
+              Get started
             </LoadingButton>
           </div>
         </Tooltip>
@@ -177,25 +177,25 @@ export default function SetupPage() {
     {
       id: "rowyRun",
       shortTitle: `${name} Run`,
-      title: `Set Up ${name} Run`,
+      title: `Set up ${name} Run`,
       body: <Step1RowyRun {...stepProps} />,
     },
     {
       id: "serviceAccount",
-      shortTitle: `Service Account`,
-      title: `Set Up Service Account`,
+      shortTitle: `Service account`,
+      title: `Set up service account`,
       body: <Step2ServiceAccount {...stepProps} />,
     },
     {
       id: "projectOwner",
-      shortTitle: `Project Owner`,
-      title: `Set Up Project Owner`,
+      shortTitle: `Project owner`,
+      title: `Set up project owner`,
       body: <Step3ProjectOwner {...stepProps} />,
     },
     {
       id: "rules",
       shortTitle: `Rules`,
-      title: `Set Up Firestore Rules`,
+      title: `Set up Firestore Rules`,
       body: <Step4Rules {...stepProps} />,
     },
     completion.migrate !== undefined

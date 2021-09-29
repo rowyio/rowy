@@ -9,7 +9,7 @@ import { name } from "@root/package.json";
 export default function AuthSetupGuide() {
   return (
     <AuthLayout
-      title="Set Up Firebase Authentication"
+      title="Set up Firebase Authentication"
       description={
         <>
           To sign in to {name}, first set up Firebase Authentication in the
@@ -25,7 +25,7 @@ export default function AuthSetupGuide() {
         target="_blank"
         rel="noopener noreferrer"
       >
-        Setup Guide
+        Setup guide
       </Button>
     </AuthLayout>
   );

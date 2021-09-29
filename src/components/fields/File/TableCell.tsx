@@ -156,7 +156,7 @@ export default function File_({
                       : () =>
                           requestConfirmation({
                             handleConfirm: () => handleDelete(file.ref),
-                            title: "Delete File",
+                            title: "Delete file",
                             body: "Are you sure you want to delete this file?",
                             confirm: "Delete",
                           })

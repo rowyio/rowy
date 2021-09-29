@@ -18,7 +18,7 @@ const Settings = ({ config, handleChange }) => {
   return (
     <>
       <MultiSelect
-        label={"Parent Label"}
+        label="Parent label"
         options={columnOptions}
         value={config.parentLabel ?? []}
         onChange={handleChange("parentLabel")}

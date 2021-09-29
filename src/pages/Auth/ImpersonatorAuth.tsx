@@ -45,7 +45,7 @@ export default function ImpersonatorAuthPage() {
   return (
     <AuthLayout
       loading={loading}
-      title="Admin Auth"
+      title="Admin auth"
       description={
         <>
           <Typography
@@ -99,7 +99,7 @@ export default function ImpersonatorAuthPage() {
             disabled={email === ""}
             onClick={() => handleAuth(email)}
           >
-            Sign In
+            Sign in
           </Button>
         </>
       )}

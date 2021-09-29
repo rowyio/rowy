@@ -21,7 +21,7 @@ export default function ConnectService({
     <Controller
       control={control}
       name={column.key}
-      render={({ onChange, onBlur, value }) => {
+      render={({ field: { onChange, onBlur, value } }) => {
         const handleDelete = (hit: any) => () => {
           // if (multiple)
           onChange(

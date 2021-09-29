@@ -4,7 +4,7 @@ import _isEqual from "lodash/isEqual";
 import _pick from "lodash/pick";
 import _pickBy from "lodash/pickBy";
 
-import { Control, UseFormMethods, useWatch } from "react-hook-form";
+import { Control, UseFormReturn, useWatch } from "react-hook-form";
 import { Values } from "./utils";
 
 import { useProjectContext } from "contexts/ProjectContext";
@@ -14,8 +14,8 @@ export interface IAutosaveProps {
   control: Control;
   docRef: firebase.default.firestore.DocumentReference;
   row: any;
-  reset: UseFormMethods["reset"];
-  dirtyFields: UseFormMethods["formState"]["dirtyFields"];
+  reset: UseFormReturn["reset"];
+  dirtyFields: UseFormReturn["formState"]["dirtyFields"];
 }
 
 const getEditables = (values: Values, tableState?: TableState) =>

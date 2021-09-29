@@ -21,7 +21,7 @@ export default function Authentication({
   return (
     <>
       <MultiSelect
-        label="Sign-In Options"
+        label="Sign-in options"
         value={signInOptions}
         options={Object.keys(authOptions).map((option) => ({
           value: option,
