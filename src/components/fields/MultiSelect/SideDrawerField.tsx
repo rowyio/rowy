@@ -19,7 +19,7 @@ export default function MultiSelect({
     <Controller
       control={control}
       name={column.key}
-      render={({ onChange, onBlur, value }) => {
+      render={({ field: { onChange, onBlur, value } }) => {
         const handleDelete = (index: number) => () => {
           const newValues = [...value];
           newValues.splice(index, 1);

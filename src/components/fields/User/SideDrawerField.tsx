@@ -14,7 +14,7 @@ export default function User({ control, column }: ISideDrawerFieldProps) {
     <Controller
       control={control}
       name={column.key}
-      render={({ value }) => {
+      render={({ field: { value } }) => {
         if (!value || !value.displayName || !value.timestamp)
           return <div className={fieldClasses.root} />;
         const dateLabel = format(

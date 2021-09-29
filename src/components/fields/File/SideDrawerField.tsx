@@ -169,7 +169,7 @@ export default function File_({
     <Controller
       control={control}
       name={column.key}
-      render={({ onChange, value }) => (
+      render={({ field: { onChange, value } }) => (
         <ControlledFileUploader
           disabled={disabled}
           column={column}

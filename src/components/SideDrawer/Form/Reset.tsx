@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { UseFormMethods } from "react-hook-form";
+import { UseFormReturn } from "react-hook-form";
 import _pickBy from "lodash/pickBy";
 import _isEqual from "lodash/isEqual";
 
@@ -7,9 +7,9 @@ import { Values } from "./utils";
 
 export interface IResetProps {
   defaultValues: Values;
-  dirtyFields: UseFormMethods["formState"]["dirtyFields"];
-  reset: UseFormMethods["reset"];
-  getValues: UseFormMethods["getValues"];
+  dirtyFields: UseFormReturn["formState"]["dirtyFields"];
+  reset: UseFormReturn["reset"];
+  getValues: UseFormReturn["getValues"];
 }
 
 /**
@@ -38,7 +38,7 @@ export default function Reset({
       const diff = _pickBy(getValues(), (v, k) => !_isEqual(v, resetValues[k]));
       // Reset if needed & keep the current dirty fields
       if (Object.keys(diff).length > 0) {
-        reset(resetValues, { isDirty: true, dirtyFields: true });
+        reset(resetValues, { keepDirty: true });
       }
     },
     // `defaultValues` is the `initialValue` of each field type +

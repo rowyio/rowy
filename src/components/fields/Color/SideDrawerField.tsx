@@ -52,7 +52,7 @@ export default function Color({
     <Controller
       control={control}
       name={column.key}
-      render={({ onChange, onBlur, value }) => {
+      render={({ field: { onChange, onBlur, value } }) => {
         console.log(value);
         return (
           <>

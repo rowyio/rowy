@@ -32,7 +32,7 @@ export default function Slider({
     <Controller
       control={control}
       name={column.key}
-      render={({ onChange, onBlur, value }) => {
+      render={({ field: { onChange, onBlur, value } }) => {
         const handleChange = (_: any, value: number | number[]) => {
           onChange(value);
           onBlur();

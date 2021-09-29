@@ -11,7 +11,7 @@ export default function Duration({ column, control }: ISideDrawerFieldProps) {
     <Controller
       control={control}
       name={column.key}
-      render={({ value }) => {
+      render={({ field: { value } }) => {
         if (
           !value ||
           !value.start ||

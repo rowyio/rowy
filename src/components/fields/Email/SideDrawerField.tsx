@@ -12,7 +12,7 @@ export default function Email({
     <Controller
       control={control}
       name={column.key}
-      render={({ onChange, onBlur, value }) => {
+      render={({ field: { onChange, onBlur, value } }) => {
         return (
           <TextField
             variant="filled"

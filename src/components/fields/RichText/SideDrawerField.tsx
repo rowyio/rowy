@@ -11,7 +11,7 @@ export default function RichText({
     <Controller
       control={control}
       name={column.key}
-      render={({ onChange, value }) => (
+      render={({ field: { onChange, value } }) => (
         <RichTextEditor
           disabled={disabled}
           value={value}
