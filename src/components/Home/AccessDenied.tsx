@@ -28,7 +28,7 @@ export default function AccessDenied() {
           <Typography>
             If you are the project owner, please follow{" "}
             <MuiLink
-              href={WIKI_LINKS.securityRules}
+              href={WIKI_LINKS.setupRoles}
               target="_blank"
               rel="noopener noreferrer"
             >

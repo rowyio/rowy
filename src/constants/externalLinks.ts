@@ -46,13 +46,6 @@ const WIKI_PATHS = {
   extensionsSendgridEmail: "/extensions/sendgrid-email",
   extensionsTwilioMessage: "/extensions/twilio-message",
   extensionsSlackMessage: "/extensions/slack-message",
-
-  updating: "/Updating",
-  derivatives: "/field-types/derivative",
-  defaultValues: "/Default-Values",
-  functions: "/Cloud-Functions",
-  securityRules: "/Role-Based-Security-Rules",
-  setUpAuth: "/Setting-Up-Firebase-Authentication",
 };
 export const WIKI_LINKS = _mapValues(
   WIKI_PATHS,

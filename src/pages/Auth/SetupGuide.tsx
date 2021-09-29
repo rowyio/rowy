@@ -1,5 +1,5 @@
 import { Button } from "@mui/material";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
 
 import AuthLayout from "components/Auth/AuthLayout";
 
@@ -20,12 +20,12 @@ export default function AuthSetupGuide() {
       <Button
         variant="contained"
         color="primary"
-        endIcon={<OpenInNewIcon />}
-        href={WIKI_LINKS.setUpAuth}
+        href={WIKI_LINKS.setupFirebaseProject}
         target="_blank"
         rel="noopener noreferrer"
       >
         Setup guide
+        <InlineOpenInNewIcon />
       </Button>
     </AuthLayout>
   );

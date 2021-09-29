@@ -5,7 +5,7 @@ import { ISetupStepBodyProps } from "pages/Setup";
 
 import { Button, Typography, Stack, TextField } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
 
 import SetupItem from "./SetupItem";
 
@@ -62,7 +62,7 @@ export default function Step1RowyRun({
     if (!isValidRowyRunUrl && paramsRowyRunUrl) console.log(paramsRowyRunUrl);
   }, [paramsRowyRunUrl, isValidRowyRunUrl]);
 
-  const deployButton = !window.location.hostname.includes(
+  const deployButton = window.location.hostname.includes(
     EXTERNAL_LINKS.rowyAppHostName
   ) ? (
     <a
@@ -83,9 +83,9 @@ export default function Step1RowyRun({
       href={EXTERNAL_LINKS.rowyRunDocs}
       target="_blank"
       rel="noopener noreferrer"
-      endIcon={<OpenInNewIcon />}
     >
       Deploy instructions
+      <InlineOpenInNewIcon />
     </Button>
   );
 

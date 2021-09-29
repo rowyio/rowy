@@ -3,7 +3,6 @@ import { ISetupStepBodyProps } from "pages/Setup";
 
 import { Typography, Link, Stack } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
 
 import SetupItem from "./SetupItem";
@@ -102,9 +101,9 @@ export default function Step2ServiceAccount({
                 href={`https://console.cloud.google.com/run/deploy/${region}/rowy-run?project=${projectId}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                endIcon={<OpenInNewIcon />}
               >
                 Set up service account
+                <InlineOpenInNewIcon />
               </LoadingButton>
               <LoadingButton
                 variant="contained"
@@ -121,7 +120,7 @@ export default function Step2ServiceAccount({
                 Some roles are missing. Also make sure your Firebase project has
                 Firestore and Authentication enabled.{" "}
                 <Link
-                  href={WIKI_LINKS.firebaseProject}
+                  href={WIKI_LINKS.setupFirebaseProject}
                   target="_blank"
                   rel="noopener noreferrer"
                   color="text.primary"

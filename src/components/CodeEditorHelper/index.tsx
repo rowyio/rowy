@@ -1,5 +1,5 @@
 import { Stack, Typography, Grid, Tooltip, Chip, Button } from "@mui/material";
-import OpenIcon from "@mui/icons-material/OpenInNew";
+import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
 export interface ICodeEditorHelperProps {
   docLink: string;
   additionalVariables?: {
@@ -67,12 +67,13 @@ export default function CodeEditorHelper({
 
       <Button
         size="small"
-        endIcon={<OpenIcon />}
         target="_blank"
+        rel="noopener noreferrer"
         href={docLink}
         style={{ flexShrink: 0 }}
       >
         Examples & docs
+        <InlineOpenInNewIcon />
       </Button>
     </Stack>
   );

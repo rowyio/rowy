@@ -3,7 +3,7 @@ import EmptyState, { IEmptyStateProps } from "./EmptyState";
 
 import { Button } from "@mui/material";
 import ReloadIcon from "@mui/icons-material/Refresh";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
 import meta from "../../package.json";
 class ErrorBoundary extends React.Component<
   IEmptyStateProps & { render?: (errorMessage: string) => React.ReactNode }
@@ -48,9 +48,9 @@ class ErrorBoundary extends React.Component<
                   }
                   target="_blank"
                   rel="noopener noreferrer"
-                  endIcon={<OpenInNewIcon />}
                 >
                   Report issue
+                  <InlineOpenInNewIcon />
                 </Button>
               )}
             </>

@@ -146,7 +146,7 @@ export default function DefaultValueInput({
 
       {config.defaultValue?.type === "dynamic" && (
         <>
-          <CodeEditorHelper docLink={WIKI_LINKS.defaultValues} />
+          <CodeEditorHelper docLink={WIKI_LINKS.howToDefaultValues} />
           <div className={classes.codeEditorContainer}>
             <CodeEditor
               height={120}

@@ -61,7 +61,7 @@ const Settings = ({ config, handleChange }) => {
 
       <div>
         <InputLabel>Derivative script</InputLabel>
-        <CodeEditorHelper docLink={WIKI_LINKS.derivatives} />
+        <CodeEditorHelper docLink={WIKI_LINKS.fieldTypesDerivative} />
         <Suspense fallback={<FieldSkeleton height={200} />}>
           <CodeEditor
             script={config.script}

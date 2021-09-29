@@ -4,7 +4,7 @@ import firebase from "firebase/app";
 import { Button, Link, Typography } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import DownloadIcon from "@mui/icons-material/FileDownloadOutlined";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
 import GoIcon from "@mui/icons-material/ChevronRight";
 
 import Modal from "components/Modal";
@@ -126,14 +126,7 @@ export default function ExtensionMigration({
               display="block"
             >
               Read the Extensions documentation
-              <OpenInNewIcon
-                aria-label="Open in new tab"
-                sx={{
-                  fontSize: "1rem",
-                  ml: 0.5,
-                  verticalAlign: "middle",
-                }}
-              />
+              <InlineOpenInNewIcon />
             </Link>
 
             <LoadingButton

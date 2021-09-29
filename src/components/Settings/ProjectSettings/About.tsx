@@ -165,14 +165,12 @@ export default function About() {
               </LoadingButton>
             ) : (
               <Button
-                href={WIKI_LINKS.updating}
+                href={WIKI_LINKS.setupUpdate}
                 target="_blank"
                 rel="noopener noreferrer"
-                endIcon={
-                  <InlineOpenInNewIcon sx={{ fontSize: "18px !important" }} />
-                }
               >
                 How to update
+                <InlineOpenInNewIcon />
               </Button>
             )}
           </Grid>
