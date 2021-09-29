@@ -1,18 +1,19 @@
-import { SvgIconProps } from "@mui/material/SvgIcon";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import { styled } from "@mui/material";
 
-export default function InlineOpenInNewIcon(props: SvgIconProps) {
-  return (
-    <OpenInNewIcon
-      aria-label="Open in new tab"
-      {...props}
-      sx={{
-        fontSize: 16,
-        verticalAlign: "text-bottom",
-        ml: 0.5,
-        opacity: 0.6,
-        ...props.sx,
-      }}
-    />
-  );
-}
+export const InlineOpenInNewIcon = styled("span")(() => ({
+  position: "relative",
+  width: "1em",
+  height: "1em",
+  marginLeft: "0.25em",
+  display: "inline-block",
+  verticalAlign: "baseline",
+
+  "&::after": {
+    content: "'\\2197'",
+    position: "absolute",
+    top: 0,
+    left: 0,
+  },
+}));
+
+export default InlineOpenInNewIcon;
