@@ -87,7 +87,6 @@ export default function NavDrawer({
     >
       <Stack
         direction="row"
-        spacing={1.5}
         alignItems="center"
         sx={{
           height: APP_BAR_HEIGHT,
@@ -109,7 +108,7 @@ export default function NavDrawer({
           <CloseIcon />
         </IconButton>
 
-        <Logo />
+        <Logo style={{ marginLeft: 1 }} />
 
         {canPin && (
           <IconButton
