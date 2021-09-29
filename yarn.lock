@@ -2657,10 +2657,10 @@
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
 
-"@rowy/form-builder@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@rowy/form-builder/-/form-builder-0.2.0.tgz#407c1be0e8fa8e40f57546be4499f7f6b93285de"
-  integrity sha512-YO/kES8k4xj+1tteF+07gIpb/xrk0ZkyRE+2NxA9loSnkJ3XKDIj0/GadF8CMIdS9cEaRgCHLfswK3pkJjKGCg==
+"@rowy/form-builder@^0.2.4":
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/@rowy/form-builder/-/form-builder-0.2.4.tgz#f8f39c85c6142a730ecc84c7d69c871a97c1ff3f"
+  integrity sha512-Nu5VRcdyPv169xoL7MUZL2Y/2s3nfSJNGmEDcYppiDSZpR/MHN0MFZpv/WwI4Ns9Ogv32hFxkBbI/fF2KGS5Zg==
   dependencies:
     "@hookform/resolvers" "^2.6.0"
     "@mdi/js" "^5.9.55"
@@ -2677,10 +2677,10 @@
     use-debounce "^3.4.3"
     yup "^0.32.9"
 
-"@rowy/multiselect@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@rowy/multiselect/-/multiselect-0.2.0.tgz#b915d3cfcd5f7fc2947e97d242510894e454281e"
-  integrity sha512-PAQ6LCMkEbAS558krXq8UyI8/9rZ/jmNU9cxSyvtnjHF7GVS7ZIRFDU8InV+nzYHsJWF/QYtH7o3X64kRmDrgQ==
+"@rowy/multiselect@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@rowy/multiselect/-/multiselect-0.2.1.tgz#86357156b31b9d16e45e08ef2503a98de7b9885f"
+  integrity sha512-GUDa50Etb81N16K1qq7TVRUc5vOQX5k8OE8SDUnJCrgPOKWkVZaIcIIkEGRpZwEBBvmFocAZGwVO/pEUwNzsAQ==
 
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"
@@ -6262,6 +6262,11 @@ depd@~2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/depd/-/depd-2.0.0.tgz#b696163cc757560d09cf22cc8fad1571b79e76df"
   integrity sha512-g7nH6P6dyDioJogAAGprGpCtVImJhpPk/roCzdb3fIh61/s/nPsfR6onyMwkCAR/OlC3yBC0lESvUoQEAssIrw==
+
+dequal@2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/dequal/-/dequal-2.0.2.tgz#85ca22025e3a87e65ef75a7a437b35284a7e319d"
+  integrity sha512-q9K8BlJVxK7hQYqa6XISGmBZbtQQWVXSrRrWreHC94rMt1QL/Impruc+7p2CYSYuVIUr+YCt6hjrs1kkdJRTug==
 
 des.js@^1.0.0:
   version "1.0.1"
@@ -15405,6 +15410,13 @@ swc-loader@^0.1.14:
   dependencies:
     "@swc/core" "^1.2.52"
     loader-utils "^2.0.0"
+
+swr@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/swr/-/swr-1.0.1.tgz#15f62846b87ee000e52fa07812bb65eb62d79483"
+  integrity sha512-EPQAxSjoD4IaM49rpRHK0q+/NzcwoT8c0/Ylu/u3/6mFj/CWnQVjNJ0MV2Iuw/U+EJSd2TX5czdAwKPYZIG0YA==
+  dependencies:
+    dequal "2.0.2"
 
 symbol-tree@^3.2.4:
   version "3.2.4"

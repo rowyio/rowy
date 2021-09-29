@@ -127,7 +127,7 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
     () =>
       Array.isArray(tables)
         ? Array.from(
-            new Set(tables.reduce((a, c) => [...a, ...c.roles], [] as string[]))
+            new Set(tables.reduce((a, c) => [...a, ...c.roles], ["ADMIN"]))
           )
         : [],
     [tables]
