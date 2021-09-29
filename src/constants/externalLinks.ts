@@ -23,8 +23,29 @@ export const EXTERNAL_LINKS = {
 };
 
 const WIKI_PATHS = {
-  firebaseProject: "/setup/firebase-project",
+  setup: "/setup/install",
+  setupFirebaseProject: "/setup/firebase-project",
+  setupRoles: "/setup/roles",
+  setupUpdate: "/setup/update",
+
+  howToCreateTable: "/how-to/create-table",
+  howToCreateColumn: "/how-to/create-column",
+  howToAddRow: "/how-to/add-row",
+  howToDefaultValues: "/how-to/default-values",
+  howToCustomViews: "/how-to/custom-views",
+
+  fieldTypesSupportedFields: "/field-types/supported-fields",
+  fieldTypesDerivative: "/field-types/derivative",
+  fieldTypesConnectTable: "/field-types/connect-table",
+  fieldTypesAdd: "/field-types/add",
+
   rowyRun: "/rowy-run",
+
+  extensions: "/extensions",
+  extensionsAlgoliaIndex: "/extensions/algolia-index",
+  extensionsSendgridEmail: "/extensions/sendgrid-email",
+  extensionsTwilioMessage: "/extensions/twilio-message",
+  extensionsSlackMessage: "/extensions/slack-message",
 
   updating: "/Updating",
   derivatives: "/field-types/derivative",
@@ -32,7 +53,6 @@ const WIKI_PATHS = {
   functions: "/Cloud-Functions",
   securityRules: "/Role-Based-Security-Rules",
   setUpAuth: "/Setting-Up-Firebase-Authentication",
-  extensions: "/Extensions",
 };
 export const WIKI_LINKS = _mapValues(
   WIKI_PATHS,
