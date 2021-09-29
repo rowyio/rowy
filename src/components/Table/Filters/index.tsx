@@ -248,7 +248,7 @@ const Filters = () => {
             label="Value"
             labelPlacement="top"
             componentsProps={{
-              typography: { variant: "caption", fontWeight: "medium" },
+              typography: { variant: "button" },
             }}
             sx={{
               mr: 0,
