@@ -109,12 +109,9 @@ const Filters = () => {
 
   const [operators, setOperators] = useState<any[]>([]);
   const type = selectedColumn ? getType(selectedColumn) : null;
-  //const [filter, setFilter] = useState<any>();
-
   useEffect(() => {
     if (selectedColumn) {
       const _filter = getFieldProp("filter", selectedColumn.type);
-      //setFilter(_filter)
       setOperators(_filter?.operators ?? []);
       let updatedQuery: TableFilter = {
         key: selectedColumn.key,
@@ -150,10 +147,6 @@ const Filters = () => {
 
   const { control } = useForm({
     mode: "onBlur",
-    // defaultValues: {
-    //   [fieldName]:
-    //     config.defaultValue?.value ?? getFieldProp("initialValue", _type),
-    // },
   });
   return (
     <>
