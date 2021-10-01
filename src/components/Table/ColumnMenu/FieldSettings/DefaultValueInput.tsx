@@ -43,6 +43,8 @@ export default function DefaultValueInput({
   fieldName,
   ...props
 }: IDefaultValueInputProps) {
+  console.log("config defaultValueInput");
+  console.log(config);
   const classes = useStyles();
   const _type =
     type !== FieldType.derivative
@@ -91,6 +93,17 @@ export default function DefaultValueInput({
             className={classes.typeSelectItem}
           />
         </MenuItem>
+        {_type == FieldType.number && (
+          <MenuItem value="range">
+            <ListItemText
+              primary="Range"
+              secondary={
+                "Set a minimum and maximum value for cells in this column."
+              }
+              className={classes.typeSelectItem}
+            />
+          </MenuItem>
+        )}
         <MenuItem value="dynamic">
           <ListItemText
             primary={`Dynamic (Requires ${name} Cloud Functions)`}
@@ -143,7 +156,44 @@ export default function DefaultValueInput({
           })}
         </form>
       )}
-
+      {config.defaultValue?.type === "range" && customFieldInput && (
+        <>
+          <form>
+            <FormControlLabel
+              labelPlacement="top"
+              label="Minimum"
+              control={
+                <TextField
+                  value={config.range?.minValue}
+                  variant="filled"
+                  fullWidth
+                  margin="none"
+                  onChange={(e) =>
+                    handleChange("range.minValue")(e.target.value)
+                  }
+                  type="number"
+                />
+              }
+            />
+            <FormControlLabel
+              labelPlacement="top"
+              label="Maximum"
+              control={
+                <TextField
+                  value={config.range?.maxValue}
+                  variant="filled"
+                  fullWidth
+                  margin="none"
+                  onChange={(e) =>
+                    handleChange("range.maxValue")(e.target.value)
+                  }
+                  type="number"
+                />
+              }
+            />
+          </form>
+        </>
+      )}
       {config.defaultValue?.type === "dynamic" && (
         <>
           <CodeEditorHelper docLink={WIKI_LINKS.howToDefaultValues} />
