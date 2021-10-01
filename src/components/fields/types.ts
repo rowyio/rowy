@@ -21,6 +21,7 @@ export interface IFieldConfig {
   TableEditor: React.ComponentType<EditorProps<any, any>>;
   SideDrawerField: React.ComponentType<ISideDrawerFieldProps>;
   settings?: React.ComponentType<ISettingsProps>;
+  filters?: React.ComponentType<IFiltersProps>;
   csvExportFormatter?: (value: any, config?: any) => string;
   csvImportParser?: (value: string, config?: any) => any;
 }
@@ -57,5 +58,11 @@ export interface ISettingsProps {
   config: Record<string, any>;
   // TODO: WRITE TYPES
   tables: any;
+  [key: string]: any;
+}
+
+// TODO: WRITE TYPES
+export interface IFiltersProps {
+  handleChange: (key: string) => (value: any) => void;
   [key: string]: any;
 }
