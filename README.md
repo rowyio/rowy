@@ -31,7 +31,10 @@ Manage Firestore data in a spreadsheet-like UI, write Cloud Functions effortless
 
 <img width="100%" src="https://firebasestorage.googleapis.com/v0/b/rowyio.appspot.com/o/publicDemo%2FRowy%20Website%20Video%20GIF%20Small.gif?alt=media&token=3f699a8f-c1f2-4046-8ed5-e4ff66947cd8" />
 
-## Quick try
+## Live Demo
+💥 Check out the [live demo](https://demo.rowy.io/) of Rowy 💥
+
+## Quick Deploy
 
 Set up Rowy on your Google Cloud Platform project with this one-click deploy
 button.
