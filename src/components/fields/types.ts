@@ -21,7 +21,11 @@ export interface IFieldConfig {
   TableEditor: React.ComponentType<EditorProps<any, any>>;
   SideDrawerField: React.ComponentType<ISideDrawerFieldProps>;
   settings?: React.ComponentType<ISettingsProps>;
-  filters?: React.ComponentType<IFiltersProps>;
+  filter?: {
+    operators: IFilterOperator[];
+    input: React.ComponentType<IFiltersProps>;
+    defaultValue?: any;
+  };
   csvExportFormatter?: (value: any, config?: any) => string;
   csvImportParser?: (value: string, config?: any) => any;
 }
@@ -65,4 +69,9 @@ export interface ISettingsProps {
 export interface IFiltersProps {
   handleChange: (key: string) => (value: any) => void;
   [key: string]: any;
+}
+
+export interface IFilterOperator {
+  value: firebase.default.firestore.WhereFilterOp;
+  label: string;
 }

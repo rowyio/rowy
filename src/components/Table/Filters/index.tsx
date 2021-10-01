@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import _find from "lodash/find";
 import _sortBy from "lodash/sortBy";
 import _isEmpty from "lodash/isEmpty";
-
+import { useForm } from "react-hook-form";
 import { makeStyles, createStyles } from "@mui/styles";
 import {
   Popover,
@@ -11,78 +11,21 @@ import {
   Grid,
   MenuItem,
   TextField,
-  FormControlLabel,
-  Switch,
   Chip,
 } from "@mui/material";
 import FilterIcon from "@mui/icons-material/FilterList";
 import CloseIcon from "@mui/icons-material/Close";
-
-import MultiSelect from "@rowy/multiselect";
 import ButtonWithStatus from "components/ButtonWithStatus";
-
 import { FieldType } from "constants/fields";
 import { TableFilter } from "hooks/useTable";
 import { useProjectContext } from "contexts/ProjectContext";
-
 import { useAppContext } from "contexts/AppContext";
 import { DocActions } from "hooks/useDoc";
+import { getFieldProp } from "@src/components/fields";
 const getType = (column) =>
   column.type === FieldType.derivative
     ? column.config.renderFieldType
     : column.type;
-const OPERATORS = [
-  {
-    value: "==",
-    label: "Equals",
-    compatibleTypes: [
-      FieldType.phone,
-      FieldType.color,
-      FieldType.date,
-      FieldType.dateTime,
-      FieldType.shortText,
-      FieldType.singleSelect,
-      FieldType.url,
-      FieldType.email,
-      FieldType.checkbox,
-    ],
-  },
-  {
-    value: "in",
-    label: "matches any of",
-    compatibleTypes: [FieldType.singleSelect],
-  },
-  // {
-  //   value: "array-contains",
-  //   label: "includes",
-  //   compatibleTypes: [FieldType.connectTable],
-  // },
-  // {
-  //   value: "array-contains",
-  //   label: "Has",
-  //   compatibleTypes: [FieldType.multiSelect],
-  // },
-  {
-    value: "array-contains-any",
-    label: "Has any",
-    compatibleTypes: [FieldType.multiSelect, FieldType.connectTable],
-  },
-  { value: "<", label: "<", compatibleTypes: [FieldType.number] },
-  { value: "<=", label: "<=", compatibleTypes: [FieldType.number] },
-  { value: "==", label: "==", compatibleTypes: [FieldType.number] },
-  { value: ">=", label: ">=", compatibleTypes: [FieldType.number] },
-  { value: ">", label: ">", compatibleTypes: [FieldType.number] },
-  {
-    value: "<",
-    label: "before",
-    compatibleTypes: [FieldType.date, FieldType.dateTime],
-  },
-  {
-    value: ">=",
-    label: "after",
-    compatibleTypes: [FieldType.date, FieldType.dateTime],
-  },
-];
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -127,14 +70,6 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-const UNFILTERABLES = [
-  FieldType.image,
-  FieldType.file,
-  FieldType.action,
-  FieldType.subTable,
-  FieldType.last,
-  FieldType.longText,
-];
 const Filters = () => {
   const { tableState, tableActions } = useProjectContext();
   const { userDoc } = useAppContext();
@@ -150,7 +85,7 @@ const Filters = () => {
     }
   }, [userDoc.state, tableState?.tablePath]);
   const filterColumns = _sortBy(Object.values(tableState!.columns), "index")
-    .filter((c) => !UNFILTERABLES.includes(c.type))
+    .filter((c) => getFieldProp("filter", c.type))
     .map((c) => ({
       key: c.key,
       label: c.name,
@@ -159,7 +94,6 @@ const Filters = () => {
       ...c,
     }));
   const classes = useStyles();
-  const filters = [];
 
   const [selectedColumn, setSelectedColumn] = useState<any>();
 
@@ -169,51 +103,23 @@ const Filters = () => {
     value: "",
   });
 
+  const [operators, setOperators] = useState<any[]>([]);
+  const type = selectedColumn ? getType(selectedColumn) : null;
+  //const [filter, setFilter] = useState<any>();
+  const customFieldInput = type ? getFieldProp("SideDrawerField", type) : null;
   useEffect(() => {
     if (selectedColumn) {
+      const _filter = getFieldProp("filter", selectedColumn.type);
+      //setFilter(_filter)
+      setOperators(_filter?.operators ?? []);
       let updatedQuery: TableFilter = {
         key: selectedColumn.key,
-        operator: "",
-        value: "",
+        operator: _filter.operators[0].value,
+        value: _filter.defaultValue,
       };
-      const type = getType(selectedColumn);
-      if (
-        [
-          FieldType.phone,
-          FieldType.shortText,
-          FieldType.url,
-          FieldType.email,
-          FieldType.checkbox,
-        ].includes(type)
-      ) {
-        updatedQuery = { ...updatedQuery, operator: "==" };
-      }
-      if (type === FieldType.checkbox) {
-        updatedQuery = { ...updatedQuery, value: false };
-      }
-      if (type === FieldType.connectTable) {
-        updatedQuery = {
-          key: `${selectedColumn.key}ID`,
-          operator: "array-contains-any",
-          value: [],
-        };
-      }
-      if (type === FieldType.multiSelect) {
-        updatedQuery = {
-          ...updatedQuery,
-          operator: "array-contains-any",
-          value: [],
-        };
-      }
       setQuery(updatedQuery);
     }
   }, [selectedColumn]);
-
-  const operators = selectedColumn
-    ? OPERATORS.filter((operator) =>
-        operator.compatibleTypes.includes(getType(selectedColumn))
-      )
-    : [];
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const handleClose = () => setAnchorEl(null);
@@ -230,133 +136,6 @@ const Filters = () => {
 
   const id = open ? "simple-popper" : undefined;
 
-  const renderInputField = (selectedColumn, operator) => {
-    const type = getType(selectedColumn);
-    switch (type) {
-      case FieldType.checkbox:
-        return (
-          <FormControlLabel
-            control={
-              <Switch
-                value={query.value}
-                onChange={(e) => {
-                  setQuery((query) => ({ ...query, value: e.target.checked }));
-                }}
-                size="medium"
-              />
-            }
-            label="Value"
-            labelPlacement="top"
-            componentsProps={{
-              typography: { variant: "button" },
-            }}
-            sx={{
-              mr: 0,
-              ml: -0.5,
-              position: "relative",
-              bottom: -2,
-              "& .MuiFormControlLabel-label": { mt: 0, mb: -1 / 8, ml: 0.75 },
-            }}
-          />
-        );
-      case FieldType.email:
-      case FieldType.phone:
-      case FieldType.shortText:
-      case FieldType.longText:
-      case FieldType.url:
-        return (
-          <TextField
-            label="Value"
-            id="value"
-            onChange={(e) => {
-              const value = e.target.value;
-              if (value) setQuery((query) => ({ ...query, value: value }));
-            }}
-            placeholder="Text value"
-          />
-        );
-      case FieldType.number:
-        return (
-          <TextField
-            label="Value"
-            id="value"
-            onChange={(e) => {
-              const value = e.target.value;
-              if (query.value || value)
-                setQuery((query) => ({
-                  ...query,
-                  value: value !== "" ? parseFloat(value) : "",
-                }));
-            }}
-            value={typeof query.value === "number" ? query.value : ""}
-            type="number"
-            placeholder="Number value"
-          />
-        );
-
-      case FieldType.singleSelect:
-        if (operator === "in")
-          return (
-            <MultiSelect
-              label="Value"
-              multiple
-              max={10}
-              freeText={true}
-              onChange={(value) => setQuery((query) => ({ ...query, value }))}
-              options={
-                selectedColumn.config.options
-                  ? selectedColumn.config.options.sort()
-                  : []
-              }
-              value={Array.isArray(query?.value) ? query.value : []}
-            />
-          );
-
-        return (
-          <MultiSelect
-            label="Value"
-            freeText={true}
-            multiple={false}
-            onChange={(value) => {
-              if (value !== null) setQuery((query) => ({ ...query, value }));
-            }}
-            options={
-              selectedColumn.config.options
-                ? selectedColumn.config.options.sort()
-                : []
-            }
-            value={typeof query?.value === "string" ? query.value : null}
-          />
-        );
-
-      case FieldType.multiSelect:
-        return (
-          <MultiSelect
-            label="Value"
-            multiple
-            onChange={(value) => setQuery((query) => ({ ...query, value }))}
-            value={query.value as string[]}
-            max={10}
-            options={
-              selectedColumn.config.options
-                ? selectedColumn.config.options.sort()
-                : []
-            }
-            searchable={false}
-            freeText={true}
-          />
-        );
-
-      case FieldType.date:
-      case FieldType.dateTime:
-        return <>//TODO:Date/Time picker</>;
-      default:
-        return <>Not available</>;
-        // return <TextField variant="filled" fullWidth disabled />;
-        break;
-    }
-  };
-
   const handleUpdateFilters = (filters: TableFilter[]) => {
     userDoc.dispatch({
       action: DocActions.update,
@@ -365,6 +144,14 @@ const Filters = () => {
       },
     });
   };
+
+  const { control } = useForm({
+    mode: "onBlur",
+    // defaultValues: {
+    //   [fieldName]:
+    //     config.defaultValue?.value ?? getFieldProp("initialValue", _type),
+    // },
+  });
   return (
     <>
       <Grid container direction="row" wrap="nowrap" style={{ width: "auto" }}>
@@ -410,38 +197,7 @@ const Filters = () => {
         <IconButton className={classes.closeButton} onClick={handleClose}>
           <CloseIcon />
         </IconButton>
-
         <div className={classes.content}>
-          {/* <Grid
-          container
-          alignItems="center"
-          spacing={2}
-          className={classes.topRow}
-        >
-          <Grid item>
-            <Typography component="span">Results match</Typography>
-          </Grid>
-
-          <Grid item>
-            <TextField
-              select
-              variant="filled"
-              id="demo-simple-select-filled"
-              value={combineType}
-              hiddenLabel
-              // disabled
-              // onChange={handleChange}
-            >
-              <MenuItem value="all">all</MenuItem>
-              <MenuItem value="any">any</MenuItem>
-            </TextField>
-          </Grid>
-
-          <Grid item>
-            <Typography component="span">of the filter criteria.</Typography>
-          </Grid>
-        </Grid> */}
-
           <Grid container spacing={2}>
             <Grid item xs={4}>
               <TextField
@@ -492,13 +248,25 @@ const Filters = () => {
                 ))}
               </TextField>
             </Grid>
-
             <Grid item xs={4}>
-              {query.operator &&
-                renderInputField(selectedColumn, query.operator)}
+              {/* {query.operator&&React.createElement(filter.input,{
+              handleChange: (value) => setQuery((query) => ({
+                  ...query,
+                  value,
+                }))
+              ,
+              key: query.key,
+            },null)} */}
+
+              {customFieldInput &&
+                React.createElement(customFieldInput, {
+                  column: selectedColumn,
+                  control,
+                  docRef: {},
+                  disabled: false,
+                })}
             </Grid>
           </Grid>
-
           <Grid
             container
             className={classes.bottomButtons}
@@ -516,13 +284,11 @@ const Filters = () => {
                     value: "",
                   });
                   setSelectedColumn(null);
-                  //handleClose();
                 }}
               >
                 Clear
               </Button>
             </Grid>
-
             <Grid item>
               <Button
                 disabled={
@@ -547,5 +313,4 @@ const Filters = () => {
     </>
   );
 };
-
 export default Filters;

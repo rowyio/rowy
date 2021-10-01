@@ -6,12 +6,14 @@ import ShortTextIcon from "@mui/icons-material/ShortText";
 import BasicCell from "../_BasicCell/BasicCellValue";
 import TextEditor from "components/Table/editors/TextEditor";
 
+import FilterField, { filterOperators } from "./Filter";
 const SideDrawerField = lazy(
   () =>
     import(
       "./SideDrawerField" /* webpackChunkName: "SideDrawerField-ShortText" */
     )
 );
+
 const Settings = lazy(
   () => import("./Settings" /* webpackChunkName: "Settings-ShortText" */)
 );
@@ -29,5 +31,9 @@ export const config: IFieldConfig = {
   TableEditor: TextEditor,
   SideDrawerField,
   settings: Settings,
+  filter: {
+    operators: filterOperators,
+    input: FilterField,
+  },
 };
 export default config;
