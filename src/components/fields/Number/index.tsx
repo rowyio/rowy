@@ -5,7 +5,7 @@ import withBasicCell from "../_withTableCell/withBasicCell";
 import NumberIcon from "assets/icons/Number";
 import BasicCell from "./BasicCell";
 import TextEditor from "components/Table/editors/TextEditor";
-
+import { filterOperators } from "./Filter";
 const SideDrawerField = lazy(
   () =>
     import("./SideDrawerField" /* webpackChunkName: "SideDrawerField-Number" */)
@@ -23,6 +23,9 @@ export const config: IFieldConfig = {
   TableCell: withBasicCell(BasicCell),
   TableEditor: TextEditor,
   SideDrawerField,
+  filter: {
+    operators: filterOperators,
+  },
   csvImportParser: (v) => {
     try {
       const parsedValue = parseFloat(v);

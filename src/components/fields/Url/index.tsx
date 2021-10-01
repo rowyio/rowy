@@ -5,6 +5,7 @@ import withBasicCell from "../_withTableCell/withBasicCell";
 import UrlIcon from "@mui/icons-material/Link";
 import TableCell from "./TableCell";
 import TextEditor from "components/Table/editors/TextEditor";
+import { filterOperators } from "../ShortText/Filter";
 
 const SideDrawerField = lazy(
   () =>
@@ -23,5 +24,8 @@ export const config: IFieldConfig = {
   TableCell: withBasicCell(TableCell),
   TableEditor: TextEditor,
   SideDrawerField,
+  filter: {
+    operators: filterOperators,
+  },
 };
 export default config;

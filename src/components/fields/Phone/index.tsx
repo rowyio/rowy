@@ -5,6 +5,7 @@ import withBasicCell from "../_withTableCell/withBasicCell";
 import PhoneIcon from "@mui/icons-material/PhoneOutlined";
 import BasicCell from "../_BasicCell/BasicCellValue";
 import TextEditor from "components/Table/editors/TextEditor";
+import { filterOperators } from "../ShortText/Filter";
 
 const SideDrawerField = lazy(
   () =>
@@ -23,5 +24,8 @@ export const config: IFieldConfig = {
   TableCell: withBasicCell(BasicCell),
   TableEditor: TextEditor,
   SideDrawerField,
+  filter: {
+    operators: filterOperators,
+  },
 };
 export default config;

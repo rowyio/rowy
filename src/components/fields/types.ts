@@ -23,7 +23,7 @@ export interface IFieldConfig {
   settings?: React.ComponentType<ISettingsProps>;
   filter?: {
     operators: IFilterOperator[];
-    input: React.ComponentType<IFiltersProps>;
+    customInput?: React.ComponentType<IFiltersProps>;
     defaultValue?: any;
   };
   csvExportFormatter?: (value: any, config?: any) => string;

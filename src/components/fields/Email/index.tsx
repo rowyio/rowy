@@ -5,7 +5,7 @@ import withBasicCell from "../_withTableCell/withBasicCell";
 import EmailIcon from "@mui/icons-material/MailOutlined";
 import BasicCell from "../_BasicCell/BasicCellValue";
 import TextEditor from "components/Table/editors/TextEditor";
-
+import { filterOperators } from "../ShortText/Filter";
 const SideDrawerField = lazy(
   () =>
     import("./SideDrawerField" /* webpackChunkName: "SideDrawerField-Email" */)
@@ -23,5 +23,8 @@ export const config: IFieldConfig = {
   TableCell: withBasicCell(BasicCell),
   TableEditor: TextEditor,
   SideDrawerField,
+  filter: {
+    operators: filterOperators,
+  },
 };
 export default config;
