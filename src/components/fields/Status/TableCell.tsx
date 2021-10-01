@@ -11,7 +11,7 @@ export default function Status({ column, value }: IHeavyCellProps) {
   const label = useMemo(() => {
     if (["null", "undefined"].includes(typeof value)) {
       const condition = _find(conditions, (c) => c.type === typeof value);
-      return condition.label;
+      return condition?.label;
     } else if (typeof value === "number") {
       const numberConditions = conditions.filter((c) => c.type === "number");
       for (let i = 0; i < numberConditions.length; i++) {
