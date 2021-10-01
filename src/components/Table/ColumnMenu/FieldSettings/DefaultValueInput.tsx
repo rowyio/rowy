@@ -43,8 +43,6 @@ export default function DefaultValueInput({
   fieldName,
   ...props
 }: IDefaultValueInputProps) {
-  console.log("config defaultValueInput");
-  console.log(config);
   const classes = useStyles();
   const _type =
     type !== FieldType.derivative
