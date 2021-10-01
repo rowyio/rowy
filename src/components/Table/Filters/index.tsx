@@ -48,6 +48,21 @@ const OPERATORS = [
     ],
   },
   {
+    value: "!=",
+    label: "Not Equals",
+    compatibleTypes: [
+      FieldType.phone,
+      FieldType.color,
+      FieldType.date,
+      FieldType.dateTime,
+      FieldType.shortText,
+      FieldType.singleSelect,
+      FieldType.url,
+      FieldType.email,
+      FieldType.checkbox,
+    ],
+  },
+  {
     value: "in",
     label: "matches any of",
     compatibleTypes: [FieldType.singleSelect],
@@ -62,6 +77,11 @@ const OPERATORS = [
   //   label: "Has",
   //   compatibleTypes: [FieldType.multiSelect],
   // },
+  {
+    value: "!=",
+    label: "Not Equals",
+    compatibleTypes: [FieldType.multiSelect],
+  },
   {
     value: "array-contains-any",
     label: "Has any",
