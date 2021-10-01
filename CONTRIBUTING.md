@@ -33,7 +33,7 @@ All submissions, including code and copy changes, will require review by project
 
 When making any pull requests to the repository, please follow these instructions:
 
-- Submit your PR to the develop brand
+- Submit your PR to the develop branch
 - Add as much information as possible in your PR's description including link to any related issues.
 - Ensure all your commits have clear commit message along with comments in the code as required
 
