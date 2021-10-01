@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, Suspense, createElement } from "react";
 import _find from "lodash/find";
 import _sortBy from "lodash/sortBy";
 import _isEmpty from "lodash/isEmpty";
 import { useForm } from "react-hook-form";
+
 import { makeStyles, createStyles } from "@mui/styles";
 import {
   Popover,
@@ -12,18 +13,21 @@ import {
   MenuItem,
   TextField,
   Chip,
-  Typography,
+  InputLabel,
 } from "@mui/material";
 import FilterIcon from "@mui/icons-material/FilterList";
 import CloseIcon from "@mui/icons-material/Close";
+
 import ButtonWithStatus from "components/ButtonWithStatus";
+import FormAutosave from "components/Table/ColumnMenu/FieldSettings/FormAutosave";
+import FieldSkeleton from "components/SideDrawer/Form/FieldSkeleton";
+
 import { FieldType } from "constants/fields";
 import { TableFilter } from "hooks/useTable";
 import { useProjectContext } from "contexts/ProjectContext";
 import { useAppContext } from "contexts/AppContext";
 import { DocActions } from "hooks/useDoc";
-import { getFieldProp } from "@src/components/fields";
-import FormAutosave from "../ColumnMenu/FieldSettings/FormAutosave";
+import { getFieldProp } from "components/fields";
 
 const getType = (column) =>
   column.type === FieldType.derivative
@@ -245,8 +249,15 @@ const Filters = () => {
               </TextField>
             </Grid>
             <Grid item xs={4}>
-              <Typography variant="button">Value</Typography>
               <form>
+                <InputLabel
+                  variant="filled"
+                  id={`filters-label-${selectedColumn!.key}`}
+                  htmlFor={`sidedrawer-field-${selectedColumn!.key}`}
+                >
+                  Value
+                </InputLabel>
+
                 <FormAutosave
                   control={control}
                   handleSave={(values) =>
@@ -256,14 +267,16 @@ const Filters = () => {
                     }))
                   }
                 />
-                {query.operator &&
-                  React.createElement(getFieldProp("SideDrawerField", type), {
-                    column: selectedColumn,
-                    control,
-                    docRef: {},
-                    disabled: false,
-                    handleChange: (value) => {},
-                  })}
+                <Suspense fallback={<FieldSkeleton />}>
+                  {query.operator &&
+                    createElement(getFieldProp("SideDrawerField", type), {
+                      column: selectedColumn,
+                      control,
+                      docRef: {},
+                      disabled: false,
+                      handleChange: () => {},
+                    })}
+                </Suspense>
               </form>
             </Grid>
           </Grid>
