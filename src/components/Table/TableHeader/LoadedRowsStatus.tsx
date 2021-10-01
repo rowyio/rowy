@@ -25,7 +25,7 @@ export default function LoadedRowsStatus() {
         style={{ userSelect: "none" }}
       >
         Loaded {allLoaded && "all "}
-        {tableState.rows.length} rows
+        {tableState.rows.length} row{tableState.rows.length !== 1 && "s"}
       </Typography>
     </Tooltip>
   );
