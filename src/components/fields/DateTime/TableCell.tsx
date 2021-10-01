@@ -1,7 +1,7 @@
 import { useDebouncedCallback } from "use-debounce";
 import { IHeavyCellProps } from "../types";
 
-import DateTimePicker from "@mui/lab/MobileDateTimePicker";
+import DateTimePicker from "@mui/lab/DateTimePicker";
 import { TextField } from "@mui/material";
 
 import { transformValue, sanitizeValue } from "../Date/utils";
