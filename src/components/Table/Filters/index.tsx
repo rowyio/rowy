@@ -12,6 +12,7 @@ import {
   MenuItem,
   TextField,
   Chip,
+  Typography,
 } from "@mui/material";
 import FilterIcon from "@mui/icons-material/FilterList";
 import CloseIcon from "@mui/icons-material/Close";
@@ -22,6 +23,8 @@ import { useProjectContext } from "contexts/ProjectContext";
 import { useAppContext } from "contexts/AppContext";
 import { DocActions } from "hooks/useDoc";
 import { getFieldProp } from "@src/components/fields";
+import FormAutosave from "../ColumnMenu/FieldSettings/FormAutosave";
+
 const getType = (column) =>
   column.type === FieldType.derivative
     ? column.config.renderFieldType
@@ -73,6 +76,7 @@ const useStyles = makeStyles((theme) =>
 const Filters = () => {
   const { tableState, tableActions } = useProjectContext();
   const { userDoc } = useAppContext();
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   useEffect(() => {
     if (userDoc.state.doc && tableState?.tablePath) {
@@ -106,7 +110,7 @@ const Filters = () => {
   const [operators, setOperators] = useState<any[]>([]);
   const type = selectedColumn ? getType(selectedColumn) : null;
   //const [filter, setFilter] = useState<any>();
-  const customFieldInput = type ? getFieldProp("SideDrawerField", type) : null;
+
   useEffect(() => {
     if (selectedColumn) {
       const _filter = getFieldProp("filter", selectedColumn.type);
@@ -121,7 +125,6 @@ const Filters = () => {
     }
   }, [selectedColumn]);
 
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const handleClose = () => setAnchorEl(null);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -249,22 +252,26 @@ const Filters = () => {
               </TextField>
             </Grid>
             <Grid item xs={4}>
-              {/* {query.operator&&React.createElement(filter.input,{
-              handleChange: (value) => setQuery((query) => ({
-                  ...query,
-                  value,
-                }))
-              ,
-              key: query.key,
-            },null)} */}
-
-              {customFieldInput &&
-                React.createElement(customFieldInput, {
-                  column: selectedColumn,
-                  control,
-                  docRef: {},
-                  disabled: false,
-                })}
+              <Typography variant="button">Value</Typography>
+              <form>
+                <FormAutosave
+                  control={control}
+                  handleSave={(values) =>
+                    setQuery((query) => ({
+                      ...query,
+                      value: values[query.key],
+                    }))
+                  }
+                />
+                {query.operator &&
+                  React.createElement(getFieldProp("SideDrawerField", type), {
+                    column: selectedColumn,
+                    control,
+                    docRef: {},
+                    disabled: false,
+                    handleChange: (value) => {},
+                  })}
+              </form>
             </Grid>
           </Grid>
           <Grid
