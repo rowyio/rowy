@@ -249,35 +249,37 @@ const Filters = () => {
               </TextField>
             </Grid>
             <Grid item xs={4}>
-              <form>
-                <InputLabel
-                  variant="filled"
-                  id={`filters-label-${selectedColumn!.key}`}
-                  htmlFor={`sidedrawer-field-${selectedColumn!.key}`}
-                >
-                  Value
-                </InputLabel>
+              {query.key && query.operator && (
+                <form>
+                  <InputLabel
+                    variant="filled"
+                    id={`filters-label-${query.key}`}
+                    htmlFor={`sidedrawer-field-${query.key}`}
+                  >
+                    Value
+                  </InputLabel>
 
-                <FormAutosave
-                  control={control}
-                  handleSave={(values) =>
-                    setQuery((query) => ({
-                      ...query,
-                      value: values[query.key],
-                    }))
-                  }
-                />
-                <Suspense fallback={<FieldSkeleton />}>
-                  {query.operator &&
-                    createElement(getFieldProp("SideDrawerField", type), {
-                      column: selectedColumn,
-                      control,
-                      docRef: {},
-                      disabled: false,
-                      handleChange: () => {},
-                    })}
-                </Suspense>
-              </form>
+                  <FormAutosave
+                    control={control}
+                    handleSave={(values) =>
+                      setQuery((query) => ({
+                        ...query,
+                        value: values[query.key],
+                      }))
+                    }
+                  />
+                  <Suspense fallback={<FieldSkeleton />}>
+                    {query.operator &&
+                      createElement(getFieldProp("SideDrawerField", type), {
+                        column: selectedColumn,
+                        control,
+                        docRef: {},
+                        disabled: false,
+                        handleChange: () => {},
+                      })}
+                  </Suspense>
+                </form>
+              )}
             </Grid>
           </Grid>
           <Grid
