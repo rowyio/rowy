@@ -72,6 +72,8 @@ export default function CheckboxIcon() {
       <svg viewBox="0 0 18 18">
         <polyline
           strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
           points="2.705 8.29 7 12.585 15.295 4.29"
           fill="none"
           className="tick"
