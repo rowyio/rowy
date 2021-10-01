@@ -4,7 +4,6 @@ import _sortBy from "lodash/sortBy";
 import _isEmpty from "lodash/isEmpty";
 import { useForm } from "react-hook-form";
 
-import { makeStyles, createStyles } from "@mui/styles";
 import {
   Popover,
   Button,
@@ -34,50 +33,7 @@ const getType = (column) =>
     ? column.config.renderFieldType
     : column.type;
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    paper: { width: 640 },
-
-    closeButton: {
-      position: "absolute",
-      top: theme.spacing(0.5),
-      right: theme.spacing(0.5),
-    },
-
-    content: { padding: theme.spacing(2, 3) },
-
-    topRow: { marginBottom: theme.spacing(3.5) },
-    bottomButtons: {
-      marginTop: theme.spacing(3),
-      "& .MuiButton-root": { minWidth: 100 },
-    },
-
-    activeButton: {
-      borderTopRightRadius: 0,
-      borderBottomRightRadius: 0,
-      position: "relative",
-      zIndex: 1,
-    },
-
-    filterChip: {
-      borderTopLeftRadius: 0,
-      borderBottomLeftRadius: 0,
-      borderTopRightRadius: theme.shape.borderRadius,
-      borderBottomRightRadius: theme.shape.borderRadius,
-      borderLeft: "none",
-      backgroundColor: theme.palette.background.paper,
-      height: 32,
-      // paddingLeft: theme.shape.borderRadius,
-      // marginLeft: -theme.shape.borderRadius,
-      paddingRight: theme.spacing(0.5) + " !important",
-    },
-    filterChipLabel: {
-      padding: theme.spacing(0, 1.5),
-    },
-  })
-);
-
-const Filters = () => {
+export default function Filters() {
   const { tableState, tableActions } = useProjectContext();
   const { userDoc } = useAppContext();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -101,7 +57,6 @@ const Filters = () => {
       options: c.options,
       ...c,
     }));
-  const classes = useStyles();
 
   const [selectedColumn, setSelectedColumn] = useState<any>();
 
@@ -161,10 +116,15 @@ const Filters = () => {
           onClick={handleClick}
           startIcon={<FilterIcon />}
           active={tableState?.filters && tableState?.filters.length > 0}
-          className={
+          sx={
             tableState?.filters && tableState?.filters.length > 0
-              ? classes.activeButton
-              : ""
+              ? {
+                  borderTopRightRadius: 0,
+                  borderBottomRightRadius: 0,
+                  position: "relative",
+                  zIndex: 1,
+                }
+              : {}
           }
         >
           {tableState?.filters && tableState?.filters.length > 0
@@ -177,9 +137,16 @@ const Filters = () => {
             key={filter.key}
             label={`${filter.key} ${filter.operator} ${filter.value}`}
             onDelete={() => handleUpdateFilters([])}
-            classes={{
-              root: classes.filterChip,
-              label: classes.filterChipLabel,
+            sx={{
+              borderRadius: 1,
+              borderTopLeftRadius: 0,
+              borderBottomLeftRadius: 0,
+              borderLeft: "none",
+
+              backgroundColor: "background.paper",
+              height: 32,
+
+              "& .MuiChip-label": { px: 1.5 },
             }}
             variant="outlined"
           />
@@ -189,15 +156,25 @@ const Filters = () => {
         id={id}
         open={open}
         anchorEl={anchorEl}
-        classes={{ paper: classes.paper }}
         onClose={handleClose}
         anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
         transformOrigin={{ vertical: "top", horizontal: "left" }}
+        sx={{
+          "& .MuiPaper-root": { width: 640 },
+          "& .content": { py: 3, px: 2 },
+        }}
       >
-        <IconButton className={classes.closeButton} onClick={handleClose}>
+        <IconButton
+          onClick={handleClose}
+          sx={{
+            position: "absolute",
+            top: (theme) => theme.spacing(0.5),
+            right: (theme) => theme.spacing(0.5),
+          }}
+        >
           <CloseIcon />
         </IconButton>
-        <div className={classes.content}>
+        <div className="content">
           <Grid container spacing={2}>
             <Grid item xs={4}>
               <TextField
@@ -284,7 +261,10 @@ const Filters = () => {
           </Grid>
           <Grid
             container
-            className={classes.bottomButtons}
+            sx={{
+              mt: 3,
+              "& .MuiButton-root": { minWidth: 100 },
+            }}
             justifyContent="center"
             spacing={1}
           >
@@ -327,5 +307,4 @@ const Filters = () => {
       </Popover>
     </>
   );
-};
-export default Filters;
+}
