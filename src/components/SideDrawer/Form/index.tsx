@@ -1,7 +1,9 @@
-import React from "react";
+import { createElement } from "react";
 import { useForm } from "react-hook-form";
 import _sortBy from "lodash/sortBy";
 import _isEmpty from "lodash/isEmpty";
+import _mapValues from "lodash/mapValues";
+import firebase from "firebase/app";
 
 import { Stack } from "@mui/material";
 
@@ -36,7 +38,14 @@ export default function Form({ values }: IFormProps) {
     {}
   );
   const { ref: docRef, ...rowValues } = values;
-  const defaultValues = { ...initialValues, ...rowValues };
+  const safeRowValues = _mapValues(rowValues, (v) => {
+    // If react-hook-form receives a Firestore document reference, it tries to
+    // clone firebase.firestore and exceeds maximum call stack size.
+    if (firebase.firestore.DocumentReference.prototype.isPrototypeOf(v))
+      return v.path;
+    return v;
+  });
+  const defaultValues = { ...initialValues, ...safeRowValues };
 
   const methods = useForm({ mode: "onBlur", defaultValues });
   const { control, reset, formState, getValues } = methods;
@@ -98,7 +107,7 @@ export default function Form({ values }: IFormProps) {
               label={field.name}
               disabled={field.editable === false}
             >
-              {React.createElement(fieldComponent, {
+              {createElement(fieldComponent, {
                 column: field,
                 control,
                 docRef,
