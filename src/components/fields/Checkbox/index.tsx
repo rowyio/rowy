@@ -38,10 +38,6 @@ export const config: IFieldConfig = {
         value: "==",
         label: "is",
       },
-      {
-        value: "!=",
-        label: "is not",
-      },
     ],
     defaultValue: false,
   },
