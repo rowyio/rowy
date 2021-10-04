@@ -14,7 +14,7 @@ declare module "@mui/material/styles/createTypography" {
 
 export const BODY_FONT = "Inter, system-ui, sans-serif";
 export const HEADING_FONT = "Space Grotesk, " + BODY_FONT;
-export const MONO_FONT = "IBM Plex Mono, ui-monospace, monospace";
+export const MONO_FONT = "JetBrains Mono, ui-monospace, monospace";
 
 export const ROOT_FONT_SIZE = 16;
 export const toRem = (px: number) => `${px / ROOT_FONT_SIZE}rem`;
