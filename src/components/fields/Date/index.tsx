@@ -7,6 +7,7 @@ import { DATE_FORMAT } from "constants/dates";
 import DateIcon from "@mui/icons-material/TodayOutlined";
 import BasicCell from "./BasicCell";
 import NullEditor from "components/Table/editors/NullEditor";
+import { filterOperators, valueFormatter } from "./Filter";
 
 const TableCell = lazy(
   () => import("./TableCell" /* webpackChunkName: "TableCell-Date" */)
@@ -31,6 +32,10 @@ export const config: IFieldConfig = {
   TableCell: withHeavyCell(BasicCell, TableCell),
   TableEditor: NullEditor as any,
   SideDrawerField,
+  filter: {
+    operators: filterOperators,
+    valueFormatter,
+  },
   settings: Settings,
   csvImportParser: (value, config) =>
     parse(value, config?.format ?? DATE_FORMAT, new Date()),

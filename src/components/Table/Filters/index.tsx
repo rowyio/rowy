@@ -66,12 +66,12 @@ export default function Filters() {
     value: "",
   });
 
-  const [operators, setOperators] = useState<any[]>([]);
+  const [selectedFilter, setSelectedFilter] = useState<any>();
   const type = selectedColumn ? getType(selectedColumn) : null;
   useEffect(() => {
     if (selectedColumn) {
       const _filter = getFieldProp("filter", selectedColumn.type);
-      setOperators(_filter?.operators ?? []);
+      setSelectedFilter(_filter);
       let updatedQuery: TableFilter = {
         key: selectedColumn.key,
         operator: _filter.operators[0].value,
@@ -135,7 +135,11 @@ export default function Filters() {
         {(tableState?.filters ?? []).map((filter) => (
           <Chip
             key={filter.key}
-            label={`${filter.key} ${filter.operator} ${filter.value}`}
+            label={`${filter.key} ${filter.operator} ${
+              selectedFilter?.valueFormatter
+                ? selectedFilter.valueFormatter(filter.value)
+                : filter.value
+            }`}
             onDelete={() => handleUpdateFilters([])}
             sx={{
               borderRadius: 1,
@@ -206,7 +210,7 @@ export default function Filters() {
                 hiddenLabel
                 fullWidth
                 value={query.operator}
-                disabled={!query.key || operators?.length === 0}
+                disabled={!query.key || selectedFilter?.operators?.length === 0}
                 onChange={(e) => {
                   setQuery((query) => ({
                     ...query,
@@ -218,7 +222,7 @@ export default function Filters() {
                 <MenuItem disabled value="" style={{ display: "none" }}>
                   Select condition
                 </MenuItem>
-                {operators.map((operator) => (
+                {selectedFilter?.operators.map((operator) => (
                   <MenuItem key={operator.value} value={operator.value}>
                     {operator.label}
                   </MenuItem>
@@ -290,7 +294,8 @@ export default function Filters() {
                   query.value !== true &&
                   query.value !== false &&
                   _isEmpty(query.value) &&
-                  typeof query.value !== "number"
+                  typeof query.value !== "number" &&
+                  typeof query.value !== "object"
                 }
                 color="primary"
                 variant="contained"

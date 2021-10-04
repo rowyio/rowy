@@ -6,7 +6,7 @@ import MultiSelectIcon from "assets/icons/MultiSelect";
 import BasicCell from "../_BasicCell/BasicCellNull";
 import InlineCell from "./InlineCell";
 import NullEditor from "components/Table/editors/NullEditor";
-
+import { filterOperators } from "./Filter";
 const PopoverCell = lazy(
   () =>
     import("./PopoverCell" /* webpackChunkName: "PopoverCell-MultiSelect" */)
@@ -48,5 +48,8 @@ export const config: IFieldConfig = {
     else return v;
   },
   requireConfiguration: true,
+  filter: {
+    operators: filterOperators,
+  },
 };
 export default config;

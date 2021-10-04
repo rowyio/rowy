@@ -25,6 +25,7 @@ export interface IFieldConfig {
     operators: IFilterOperator[];
     customInput?: React.ComponentType<IFiltersProps>;
     defaultValue?: any;
+    valueFormatter?: (value: any) => string;
   };
   csvExportFormatter?: (value: any, config?: any) => string;
   csvImportParser?: (value: string, config?: any) => any;
