@@ -13,6 +13,7 @@ import Loading from "components/Loading";
 import Navigation from "components/Navigation";
 import Logo from "assets/Logo";
 
+import SwrProvider from "contexts/SwrContext";
 import ConfirmationProvider from "components/ConfirmationDialog/Provider";
 import { AppProvider } from "contexts/AppContext";
 import { ProjectContextProvider } from "contexts/ProjectContext";
@@ -56,166 +57,168 @@ export default function App() {
   return (
     <StyledEngineProvider injectFirst>
       <ErrorBoundary>
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <AppProvider>
-            <Favicon />
-            <SnackbarProvider>
-              <ConfirmationProvider>
-                <SnackLogProvider>
-                  <CustomBrowserRouter>
-                    <Suspense fallback={<Loading fullScreen />}>
-                      <Switch>
-                        <Route
-                          exact
-                          path={routes.auth}
-                          render={() => <AuthPage />}
-                        />
-                        <Route
-                          exact
-                          path={routes.authSetup}
-                          render={() => <AuthSetupGuidePage />}
-                        />
-                        <Route
-                          exact
-                          path={routes.jwtAuth}
-                          render={() => <JwtAuthPage />}
-                        />
-                        <Route
-                          exact
-                          path={routes.signOut}
-                          render={() => <SignOutPage />}
-                        />
-                        <Route
-                          exact
-                          path={routes.signUp}
-                          render={() => <SignUpPage />}
-                        />
-                        <Route
-                          exact
-                          path={routes.setup}
-                          render={() => <SetupPage />}
-                        />
-                        <Route
-                          exact
-                          path={routes.deploy}
-                          render={() => <DeployPage />}
-                        />
+        <SwrProvider>
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <AppProvider>
+              <Favicon />
+              <SnackbarProvider>
+                <ConfirmationProvider>
+                  <SnackLogProvider>
+                    <CustomBrowserRouter>
+                      <Suspense fallback={<Loading fullScreen />}>
+                        <Switch>
+                          <Route
+                            exact
+                            path={routes.auth}
+                            render={() => <AuthPage />}
+                          />
+                          <Route
+                            exact
+                            path={routes.authSetup}
+                            render={() => <AuthSetupGuidePage />}
+                          />
+                          <Route
+                            exact
+                            path={routes.jwtAuth}
+                            render={() => <JwtAuthPage />}
+                          />
+                          <Route
+                            exact
+                            path={routes.signOut}
+                            render={() => <SignOutPage />}
+                          />
+                          <Route
+                            exact
+                            path={routes.signUp}
+                            render={() => <SignUpPage />}
+                          />
+                          <Route
+                            exact
+                            path={routes.setup}
+                            render={() => <SetupPage />}
+                          />
+                          <Route
+                            exact
+                            path={routes.deploy}
+                            render={() => <DeployPage />}
+                          />
 
-                        <Route
-                          exact
-                          path={"/test"}
-                          render={() => <TestPage />}
-                        />
+                          <Route
+                            exact
+                            path={"/test"}
+                            render={() => <TestPage />}
+                          />
 
-                        <PrivateRoute
-                          exact
-                          path={[
-                            routes.home,
-                            routes.tableWithId,
-                            routes.tableGroupWithId,
-                            routes.settings,
-                            routes.projectSettings,
-                            routes.userSettings,
-                            routes.userManagement,
-                            routes.impersonatorAuth,
-                            routes.rowyRunTest,
-                          ]}
-                          render={() => (
-                            <ProjectContextProvider>
-                              <Switch>
-                                <Route
-                                  exact
-                                  path={routes.impersonatorAuth}
-                                  render={() => <ImpersonatorAuthPage />}
-                                />
-                                <Route
-                                  exact
-                                  path={routes.rowyRunTest}
-                                  render={() => <RowyRunTestPage />}
-                                />
-                                <PrivateRoute
-                                  exact
-                                  path={routes.home}
-                                  render={() => (
-                                    <Navigation
-                                      title="Home"
-                                      titleComponent={(open, pinned) =>
-                                        !(open && pinned) && (
-                                          <Logo
-                                            style={{
-                                              display: "block",
-                                              margin: "0 auto",
-                                            }}
-                                          />
-                                        )
-                                      }
-                                    >
-                                      <HomePage />
-                                    </Navigation>
-                                  )}
-                                />
-                                <PrivateRoute
-                                  path={routes.tableWithId}
-                                  render={() => <TablePage />}
-                                />
-                                <PrivateRoute
-                                  path={routes.tableGroupWithId}
-                                  render={() => <TablePage />}
-                                />
+                          <PrivateRoute
+                            exact
+                            path={[
+                              routes.home,
+                              routes.tableWithId,
+                              routes.tableGroupWithId,
+                              routes.settings,
+                              routes.projectSettings,
+                              routes.userSettings,
+                              routes.userManagement,
+                              routes.impersonatorAuth,
+                              routes.rowyRunTest,
+                            ]}
+                            render={() => (
+                              <ProjectContextProvider>
+                                <Switch>
+                                  <Route
+                                    exact
+                                    path={routes.impersonatorAuth}
+                                    render={() => <ImpersonatorAuthPage />}
+                                  />
+                                  <Route
+                                    exact
+                                    path={routes.rowyRunTest}
+                                    render={() => <RowyRunTestPage />}
+                                  />
+                                  <PrivateRoute
+                                    exact
+                                    path={routes.home}
+                                    render={() => (
+                                      <Navigation
+                                        title="Home"
+                                        titleComponent={(open, pinned) =>
+                                          !(open && pinned) && (
+                                            <Logo
+                                              style={{
+                                                display: "block",
+                                                margin: "0 auto",
+                                              }}
+                                            />
+                                          )
+                                        }
+                                      >
+                                        <HomePage />
+                                      </Navigation>
+                                    )}
+                                  />
+                                  <PrivateRoute
+                                    path={routes.tableWithId}
+                                    render={() => <TablePage />}
+                                  />
+                                  <PrivateRoute
+                                    path={routes.tableGroupWithId}
+                                    render={() => <TablePage />}
+                                  />
 
-                                <PrivateRoute
-                                  exact
-                                  path={routes.settings}
-                                  render={() => (
-                                    <Redirect to={routes.userSettings} />
-                                  )}
-                                />
-                                <PrivateRoute
-                                  exact
-                                  path={routes.projectSettings}
-                                  render={() => (
-                                    <Navigation title="Project Settings">
-                                      <ProjectSettingsPage />
-                                    </Navigation>
-                                  )}
-                                />
-                                <PrivateRoute
-                                  exact
-                                  path={routes.userSettings}
-                                  render={() => (
-                                    <Navigation title="Settings">
-                                      <UserSettingsPage />
-                                    </Navigation>
-                                  )}
-                                />
-                                <PrivateRoute
-                                  exact
-                                  path={routes.userManagement}
-                                  render={() => (
-                                    <Navigation title="User Management">
-                                      <UserManagementPage />
-                                    </Navigation>
-                                  )}
-                                />
-                              </Switch>
-                            </ProjectContextProvider>
-                          )}
-                        />
+                                  <PrivateRoute
+                                    exact
+                                    path={routes.settings}
+                                    render={() => (
+                                      <Redirect to={routes.userSettings} />
+                                    )}
+                                  />
+                                  <PrivateRoute
+                                    exact
+                                    path={routes.projectSettings}
+                                    render={() => (
+                                      <Navigation title="Project Settings">
+                                        <ProjectSettingsPage />
+                                      </Navigation>
+                                    )}
+                                  />
+                                  <PrivateRoute
+                                    exact
+                                    path={routes.userSettings}
+                                    render={() => (
+                                      <Navigation title="Settings">
+                                        <UserSettingsPage />
+                                      </Navigation>
+                                    )}
+                                  />
+                                  <PrivateRoute
+                                    exact
+                                    path={routes.userManagement}
+                                    render={() => (
+                                      <Navigation title="User Management">
+                                        <UserManagementPage />
+                                      </Navigation>
+                                    )}
+                                  />
+                                </Switch>
+                              </ProjectContextProvider>
+                            )}
+                          />
 
-                        <Route
-                          exact
-                          path={routes.pageNotFound}
-                          render={() => <PageNotFound />}
-                        />
-                        <Route render={() => <PageNotFound />} />
-                      </Switch>
-                    </Suspense>
-                  </CustomBrowserRouter>
-                </SnackLogProvider>
-              </ConfirmationProvider>
-            </SnackbarProvider>
-          </AppProvider>
-        </LocalizationProvider>
+                          <Route
+                            exact
+                            path={routes.pageNotFound}
+                            render={() => <PageNotFound />}
+                          />
+                          <Route render={() => <PageNotFound />} />
+                        </Switch>
+                      </Suspense>
+                    </CustomBrowserRouter>
+                  </SnackLogProvider>
+                </ConfirmationProvider>
+              </SnackbarProvider>
+            </AppProvider>
+          </LocalizationProvider>
+        </SwrProvider>
       </ErrorBoundary>
     </StyledEngineProvider>
   );

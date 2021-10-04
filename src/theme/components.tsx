@@ -231,7 +231,10 @@ export const components = (theme: Theme): ThemeOptions => {
       },
       MuiInputBase: {
         styleOverrides: {
-          input: { caretColor: theme.palette.primary.main },
+          input: {
+            caretColor: theme.palette.primary.main,
+            ".Mui-error &": { caretColor: theme.palette.error.main },
+          },
           inputSizeSmall: theme.typography.body2,
         },
       },
