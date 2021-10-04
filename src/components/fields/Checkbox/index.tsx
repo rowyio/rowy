@@ -32,6 +32,19 @@ export const config: IFieldConfig = {
     else if (["NO", "FALSE", "0"].includes(value.toUpperCase())) return false;
     else return null;
   },
+  filter: {
+    operators: [
+      {
+        value: "==",
+        label: "is",
+      },
+      {
+        value: "!=",
+        label: "is not",
+      },
+    ],
+    defaultValue: false,
+  },
   SideDrawerField,
 };
 export default config;

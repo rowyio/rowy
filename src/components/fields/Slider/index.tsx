@@ -5,6 +5,7 @@ import withHeavyCell from "../_withTableCell/withHeavyCell";
 import SliderIcon from "assets/icons/Slider";
 import BasicCell from "../_BasicCell/BasicCellNull";
 import withSideDrawerEditor from "components/Table/editors/withSideDrawerEditor";
+import { filterOperators } from "../Number/Filter";
 
 const TableCell = lazy(
   () => import("./TableCell" /* webpackChunkName: "TableCell-Slider" */)
@@ -29,6 +30,9 @@ export const config: IFieldConfig = {
   TableCell: withHeavyCell(BasicCell, TableCell),
   TableEditor: withSideDrawerEditor(TableCell),
   settings: Settings,
+  filter: {
+    operators: filterOperators,
+  },
   SideDrawerField,
 };
 export default config;
