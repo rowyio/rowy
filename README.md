@@ -9,7 +9,7 @@
 Build on Google Cloud Platform in minutes
 </h3>
 <p align="center">
-Manage Firestore data in a spreadsheet-like UI, write Cloud Functions effortlessly in the browser, and connect to your favorite third party platforms such as SendGrid, Twilio, Algolia, sSack and more. 
+Manage Firestore data in a spreadsheet-like UI, write Cloud Functions effortlessly in the browser, and connect to your favorite third party platforms such as SendGrid, Twilio, Algolia, Slack and more. 
 </p>
 
 <div align="center">
