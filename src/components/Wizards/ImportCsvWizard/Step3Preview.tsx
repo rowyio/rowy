@@ -79,7 +79,7 @@ export default function Step4Preview({ csvData, config }: IStepProps) {
             <Grid container wrap="nowrap" className={classes.data}>
               {columns.map(({ csvKey, name, columnKey, type }) => (
                 <Grid item key={csvKey} className={classes.column}>
-                  {csvData.rows.map((row, i) => (
+                  {csvData.rows.slice(0, 50).map((row, i) => (
                     <Cell
                       key={csvKey + i}
                       field={columnKey}
