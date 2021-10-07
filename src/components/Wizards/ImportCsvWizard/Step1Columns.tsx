@@ -181,8 +181,15 @@ export default function Step1Columns({
       <FadeList>
         {csvData.columns.map((field) => {
           const selected = selectedFields.indexOf(field) > -1;
+          const tableColumnPairs: { csvKey: string; columnKey: string }[] =
+            tableColumns.map((tableColumnObject) => {
+              return {
+                columnKey: tableColumnObject["value"],
+                csvKey: tableColumnObject["label"],
+              };
+            });
           const columnKey =
-            _find(config.pairs, { csvKey: field })?.columnKey ?? null;
+            _find(tableColumnPairs, { csvKey: field })?.columnKey ?? null;
           const matchingColumn = columnKey
             ? tableState?.columns[columnKey] ??
               _find(config.newColumns, { key: columnKey }) ??
