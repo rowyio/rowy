@@ -6,6 +6,10 @@ export const filterOperators: IFilterOperator[] = [
     value: "==",
   },
   {
+    value: "!=",
+    label: "not equal to",
+  },
+  {
     label: "before",
     value: "<",
   },
