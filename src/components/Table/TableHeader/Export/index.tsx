@@ -52,9 +52,10 @@ export default function Export() {
   const { tableState } = useProjectContext();
 
   const query: any = useMemo(() => {
+    const _path = tableState?.tablePath!.replaceAll("~2F", "/") ?? "";
     let _query = isCollectionGroup()
-      ? db.collectionGroup(tableState?.tablePath!)
-      : db.collection(tableState?.tablePath!);
+      ? db.collectionGroup(_path)
+      : db.collection(_path);
     // add filters
     tableState?.filters.forEach((filter) => {
       _query = _query.where(
