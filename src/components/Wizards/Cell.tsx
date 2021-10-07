@@ -75,7 +75,6 @@ export default function Cell({
           React.createElement(formatter, {
             value,
             rowIdx: 0,
-            style: { paddingLeft: "12px" },
             column: {
               type,
               key: field,
