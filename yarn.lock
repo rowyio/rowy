@@ -13759,11 +13759,6 @@ react-scripts@^4.0.3:
   optionalDependencies:
     fsevents "^2.1.3"
 
-react-scroll-sync@^0.8.0:
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/react-scroll-sync/-/react-scroll-sync-0.8.0.tgz#61fabed2afc47d41e6938819d620799da3610548"
-  integrity sha512-Ms9srm41UM+lWexuqdocXjqaqqt6ZRSFxcudgB0sYhC7Or+m12WemTwY8BaQCRf7hA8zHDk55FHvMkqsH7gF+w==
-
 react-side-effect@^2.1.0:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/react-side-effect/-/react-side-effect-2.1.1.tgz#66c5701c3e7560ab4822a4ee2742dee215d72eb3"

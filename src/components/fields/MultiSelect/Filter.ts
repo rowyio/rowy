@@ -6,6 +6,10 @@ export const filterOperators: IFilterOperator[] = [
     label: "is equal to",
   },
   {
+    value: "!=",
+    label: "not equal to",
+  },
+  {
     value: "array-contains",
     label: "contains",
   },

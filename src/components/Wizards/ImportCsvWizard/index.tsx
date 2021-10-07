@@ -129,6 +129,7 @@ export default function ImportCsvWizard({
                     rel="noopener"
                     target="_blank"
                     color="inherit"
+                    style={{ position: "relative", zIndex: 1 }}
                   >
                     a supported format
                   </Link>

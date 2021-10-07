@@ -6,6 +6,7 @@ import SingleSelectIcon from "assets/icons/SingleSelect";
 import BasicCell from "../_BasicCell/BasicCellNull";
 import InlineCell from "./InlineCell";
 import NullEditor from "components/Table/editors/NullEditor";
+import { filterOperators } from "../ShortText/Filter";
 
 const PopoverCell = lazy(
   () =>
@@ -38,6 +39,7 @@ export const config: IFieldConfig = {
   TableEditor: NullEditor as any,
   SideDrawerField,
   settings: Settings,
+  filter: { operators: filterOperators },
   requireConfiguration: true,
 };
 export default config;

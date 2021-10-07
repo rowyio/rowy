@@ -25,7 +25,6 @@ const useStyles = makeStyles((theme) =>
 
     typeHeading: { margin: theme.spacing(52 / 8, 0, 1) },
 
-    previewDivider: { marginBottom: theme.spacing(2) },
     previewSpacer: { width: theme.spacing(3) },
     cellContainer: { overflow: "hidden" },
   })
@@ -105,23 +104,25 @@ export default function Step3Types({ config, updateConfig, isXs }: IStepProps) {
         </Grid>
       </Grid>
 
-      <Divider className={classes.previewDivider} />
-
-      <Grid container spacing={3}>
-        {!isXs && (
-          <Grid item xs={12} sm={6}>
-            <Column label={fieldToEdit} />
-          </Grid>
-        )}
-        <Grid item xs={12} sm={6}>
-          <Column
-            label={config[fieldToEdit].name}
-            type={config[fieldToEdit].type}
-          />
-        </Grid>
-      </Grid>
-
       <FadeList listSx={{ pt: 0 }}>
+        <Grid
+          container
+          spacing={3}
+          style={{ position: "sticky", top: 0, zIndex: 1, marginTop: 0 }}
+        >
+          {!isXs && (
+            <Grid item xs={12} sm={6} style={{ paddingTop: 0 }}>
+              <Column label={fieldToEdit} />
+            </Grid>
+          )}
+          <Grid item xs={12} sm={6} style={{ paddingTop: 0 }}>
+            <Column
+              label={config[fieldToEdit].name}
+              type={config[fieldToEdit].type}
+            />
+          </Grid>
+        </Grid>
+
         {tableState!.rows!.slice(0, 20).map((row) => (
           <Grid container key={row.id} wrap="nowrap">
             {!isXs && (

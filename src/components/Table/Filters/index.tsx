@@ -48,6 +48,7 @@ export default function Filters() {
       }
     }
   }, [userDoc.state, tableState?.tablePath]);
+
   const filterColumns = _sortBy(Object.values(tableState!.columns), "index")
     .filter((c) => getFieldProp("filter", c.type))
     .map((c) => ({

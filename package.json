@@ -59,7 +59,6 @@
     "react-router-dom": "^5.0.1",
     "react-router-hash-link": "^2.4.3",
     "react-scripts": "^4.0.3",
-    "react-scroll-sync": "^0.8.0",
     "react-usestateref": "^1.0.5",
     "serve": "^11.3.2",
     "swr": "^1.0.1",
