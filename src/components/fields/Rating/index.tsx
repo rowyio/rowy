@@ -25,6 +25,7 @@ export const config: IFieldConfig = {
   initialValue: 0,
   initializable: true,
   icon: <RatingIcon />,
+  requireConfiguration: true,
   description:
     "Rating displayed as stars. Max stars is configurable, default: 5 stars.",
   TableCell: withHeavyCell(BasicCell, TableCell),
