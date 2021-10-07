@@ -51,7 +51,11 @@ const useStyles = makeStyles((theme) =>
       boxShadow: "none",
       height: 42,
 
-      ...theme.typography.subtitle2,
+      "& > *": {
+        ...theme.typography.caption,
+        fontWeight: theme.typography.fontWeightMedium,
+      },
+
       color: theme.palette.text.secondary,
       "&:hover": {
         backgroundColor: theme.palette.background.default,
@@ -87,7 +91,10 @@ export default function Step1Columns({
   const { tableState } = useProjectContext();
   const tableColumns = _sortBy(Object.values(tableState?.columns ?? {}), [
     "index",
-  ]).map((column) => ({ label: column.name, value: column.key }));
+  ]).map((column) => ({
+    label: column.name as string,
+    value: column.key as string,
+  }));
 
   const [selectedFields, setSelectedFields] = useState(
     config.pairs.map((pair) => pair.csvKey)
@@ -98,6 +105,18 @@ export default function Step1Columns({
 
     if (checked) {
       setSelectedFields((x) => [...x, field]);
+
+      // Try to match the field to a column in the table
+      const match =
+        _find(tableColumns, (column) =>
+          column.label.toLowerCase().includes(field.toLowerCase())
+        )?.value ?? null;
+      if (match) {
+        setConfig((config) => ({
+          ...config,
+          pairs: [...config.pairs, { csvKey: field, columnKey: match }],
+        }));
+      }
     } else {
       const newValue = [...selectedFields];
       newValue.splice(newValue.indexOf(field), 1);
@@ -181,15 +200,8 @@ export default function Step1Columns({
       <FadeList>
         {csvData.columns.map((field) => {
           const selected = selectedFields.indexOf(field) > -1;
-          const tableColumnPairs: { csvKey: string; columnKey: string }[] =
-            tableColumns.map((tableColumnObject) => {
-              return {
-                columnKey: tableColumnObject["value"],
-                csvKey: tableColumnObject["label"],
-              };
-            });
           const columnKey =
-            _find(tableColumnPairs, { csvKey: field })?.columnKey ?? null;
+            _find(config.pairs, { csvKey: field })?.columnKey ?? null;
           const matchingColumn = columnKey
             ? tableState?.columns[columnKey] ??
               _find(config.newColumns, { key: columnKey }) ??
