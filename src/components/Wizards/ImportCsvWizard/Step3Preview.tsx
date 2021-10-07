@@ -30,9 +30,9 @@ const useStyles = makeStyles((theme) =>
       flexShrink: 0,
     },
 
-    header: { overflowX: "hidden" },
+    header: { overflowX: "inherit" },
     data: {
-      overflow: "scroll",
+      overflow: "initial",
       flexGrow: 1,
     },
 
