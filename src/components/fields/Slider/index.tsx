@@ -26,6 +26,7 @@ export const config: IFieldConfig = {
   initialValue: 0,
   initializable: true,
   icon: <SliderIcon />,
+  requireConfiguration: true,
   description: "Numeric value edited with a Slider. Range is configurable.",
   TableCell: withHeavyCell(BasicCell, TableCell),
   TableEditor: withSideDrawerEditor(TableCell),
