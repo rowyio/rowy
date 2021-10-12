@@ -16,11 +16,9 @@ import {
 } from "utils/fns";
 import _findIndex from "lodash/findIndex";
 import _orderBy from "lodash/orderBy";
-import { rowyUser } from "contexts/ProjectContext";
 import { useAppContext } from "contexts/AppContext";
 
 const CAP = 1000; // safety  paramter sets the  upper limit of number of docs fetched by this hook
-const serverTimestamp = firebase.firestore.FieldValue.serverTimestamp;
 
 const tableReducer = (prevState: any, newProps: any) => {
   return { ...prevState, ...newProps };
@@ -74,10 +72,10 @@ const rowsReducer = (prevRows: any, update: any) => {
       ).reduce(missingFieldsReducer(_newRows[rowIndex]), []);
 
       if (missingRequiredFields.length === 0) {
+        delete _newRows[rowIndex]._missingRequiredFields;
         update.rowRef
           .set(_newRows[rowIndex], { merge: true })
           .then(update.onSuccess, update.onError);
-        delete _newRows[rowIndex]._missingRequiredFields;
       }
 
       return _newRows;
@@ -276,11 +274,6 @@ const useTableData = () => {
     if (filters) tableDispatch({ filters });
   };
 
-  const filterReducer = (acc, curr) => {
-    if (curr.operator === "==") {
-      return { ...acc, [curr.key]: curr.value };
-    } else return acc;
-  };
   /**  creating new document/row
    *  @param data(optional: default will create empty row)
    */
@@ -288,20 +281,13 @@ const useTableData = () => {
     const missingRequiredFields = requiredFields
       ? requiredFields.reduce(missingFieldsReducer(data), [])
       : [];
-    const valuesFromFilter = tableState.filters.reduce(filterReducer, {});
+
     const { path } = tableState;
     const newId = generateSmallerId(rows[0]?.id ?? "zzzzzzzzzzzzzzzzzzzzzzzz");
-    const docData = {
-      ...valuesFromFilter,
-      _createdAt: serverTimestamp(),
-      _createdBy: rowyUser(currentUser),
-      _updatedAt: serverTimestamp(),
-      _updatedBy: rowyUser(currentUser),
-      ...data,
-    };
+
     if (missingRequiredFields.length === 0) {
       try {
-        await db.collection(path).doc(newId).set(docData, { merge: true });
+        await db.collection(path).doc(newId).set(data, { merge: true });
       } catch (error: any) {
         if (error.code === "permission-denied") {
           enqueueSnackbar("You do not have the permissions to add new rows.", {
@@ -324,25 +310,6 @@ const useTableData = () => {
   };
 
   const updateRow = (rowRef, update, onSuccess, onError) => {
-    // const rowIndex = _findIndex(rows, { id: rowRef.id });
-    // const row = _find(rows, { id: rowRef.id });
-    // const { ref, _missingRequiredFields, ...rowData } = row;
-    // // const _rows = [...rows];
-    // // _rows[rowIndex] = { ...deepMerge(row, { ...deepen(update) }), ...update };
-
-    // const missingRequiredFields = _missingRequiredFields
-    //   ? _missingRequiredFields.reduce(missingFieldsReducer(row), [])
-    //   : [];
-
-    // if (missingRequiredFields.length === 0) {
-    //   const _rowData = {
-    //     ...deepMerge(rowData, { ...deepen(update) }),
-    //     ...update,
-    //   };
-    //   ref.set(_rowData, { merge: true }).then(onSuccess, onError);
-    //   delete _rows[rowIndex]._missingRequiredFields;
-    // }
-
     rowsDispatch({ type: "update", update, rowRef, onSuccess, onError });
   };
 

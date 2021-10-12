@@ -33,6 +33,8 @@ import Action from "./Action";
 import Derivative from "./Derivative";
 import Aggregate from "./Aggregate";
 import User from "./User";
+import UpdatedBy from "./UpdatedBy";
+import CreatedBy from "./CreatedBy";
 import Id from "./Id";
 import Status from "./Status";
 
@@ -76,6 +78,8 @@ export const FIELDS: IFieldConfig[] = [
   Status,
   // METADATA
   User,
+  UpdatedBy,
+  CreatedBy,
   Id,
 ];
 

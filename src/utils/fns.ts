@@ -162,3 +162,22 @@ export const deepMerge = (target, source) => {
   }
   return target;
 };
+
+export const rowyUser = (
+  currentUser: firebase.default.User,
+  data?: Record<string, any>
+) => {
+  const { displayName, email, uid, emailVerified, isAnonymous, photoURL } =
+    currentUser;
+
+  return {
+    timestamp: new Date(),
+    displayName,
+    email,
+    uid,
+    emailVerified,
+    isAnonymous,
+    photoURL,
+    ...data,
+  };
+};

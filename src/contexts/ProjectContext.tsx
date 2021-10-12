@@ -1,7 +1,8 @@
 import React, { useState, useContext, useEffect, useRef, useMemo } from "react";
 import { useSnackbar } from "notistack";
-import _sortBy from "lodash/sortBy";
 import { DataGridHandle } from "react-data-grid";
+import _sortBy from "lodash/sortBy";
+import _find from "lodash/find";
 import firebase from "firebase/app";
 
 import useTable, { TableActions, TableState } from "@src/hooks/useTable";
@@ -12,6 +13,8 @@ import { ColumnMenuRef } from "components/Table/ColumnMenu";
 import { ImportWizardRef } from "components/Wizards/ImportWizard";
 
 import { rowyRun, IRowyRunRequestProps } from "utils/rowyRun";
+import { FieldType } from "constants/fields";
+import { rowyUser } from "utils/fns";
 
 export type Table = {
   id: string;
@@ -28,6 +31,7 @@ interface IProjectContext {
   roles: string[];
   tableState: TableState;
   tableActions: TableActions;
+  addRow: (data?: Record<string, any>, ignoreRequiredFields?: boolean) => void;
   updateCell: (
     ref: firebase.firestore.DocumentReference,
     fieldName: string,
@@ -75,19 +79,6 @@ interface IProjectContext {
 const ProjectContext = React.createContext<Partial<IProjectContext>>({});
 export default ProjectContext;
 
-export const rowyUser = (currentUser) => {
-  const { displayName, email, uid, emailVerified, isAnonymous, photoURL } =
-    currentUser;
-  return {
-    timestamp: new Date(),
-    displayName,
-    email,
-    uid,
-    emailVerified,
-    isAnonymous,
-    photoURL,
-  };
-};
 export const useProjectContext = () => useContext(ProjectContext);
 
 export const ProjectContextProvider: React.FC = ({ children }) => {
@@ -133,6 +124,51 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
     [tables]
   );
 
+  const addRow: IProjectContext["addRow"] = (data, ignoreRequiredFields) => {
+    const valuesFromFilter = tableState.filters.reduce((acc, curr) => {
+      if (curr.operator === "==") {
+        return { ...acc, [curr.key]: curr.value };
+      } else {
+        return acc;
+      }
+    }, {});
+    const initialData = Object.values(tableState.columns).reduce(
+      (acc, column) => {
+        if (column.config?.defaultValue?.type === "static") {
+          return { ...acc, [column.key]: column.config.defaultValue.value };
+        } else if (column.config?.defaultValue?.type === "null") {
+          return { ...acc, [column.key]: null };
+        } else {
+          return acc;
+        }
+      },
+      {}
+    );
+
+    const requiredFields = Object.values(tableState.columns)
+      .filter((column) => column.config.required)
+      .map((column) => column.key);
+
+    const createdByColumn = _find(tableState.columns, [
+      "type",
+      FieldType.createdBy,
+    ]);
+    if (createdByColumn)
+      initialData[createdByColumn.key] = rowyUser(currentUser!);
+
+    const updatedByColumn = _find(tableState.columns, [
+      "type",
+      FieldType.updatedBy,
+    ]);
+    if (updatedByColumn)
+      initialData[updatedByColumn.key] = rowyUser(currentUser!);
+
+    tableActions.row.add(
+      { ...valuesFromFilter, ...initialData, ...data },
+      ignoreRequiredFields ? [] : requiredFields
+    );
+  };
+
   const updateCell: IProjectContext["updateCell"] = (
     ref,
     fieldName,
@@ -140,14 +176,18 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
     onSuccess
   ) => {
     if (value === undefined) return;
-    const _updatedBy = rowyUser(currentUser);
-    const _updatedAt = _updatedBy.timestamp;
 
-    const update = {
-      [fieldName]: value,
-      _updatedAt,
-      _updatedBy,
-    };
+    const update = { [fieldName]: value };
+
+    const updatedByColumn = _find(tableState.columns, [
+      "type",
+      FieldType.updatedBy,
+    ]);
+    if (updatedByColumn)
+      update[updatedByColumn.key] = rowyUser(currentUser!, {
+        updatedField: fieldName,
+      });
+
     tableActions.row.update(
       ref,
       update,
@@ -184,6 +224,7 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
       value={{
         tableState,
         tableActions,
+        addRow,
         updateCell,
         settingsActions,
         roles,
