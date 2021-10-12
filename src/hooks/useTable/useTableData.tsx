@@ -35,28 +35,17 @@ const doc2row = (doc) => {
 const rowsReducer = (prevRows: any, update: any) => {
   switch (update.type) {
     case "onSnapshot":
-      const localRowsIds = prevRows.map((r) => r.id); // used to remove added docs that were added from this client
-      const addedRows = update.changes
-        .filter((change) => change.type === "added")
-        .map((change) => doc2row(change.doc))
-        .filter((row) => !localRowsIds.includes(row.id));
-      const removedRowIds = update.changes
-        .filter((change) => change.type === "removed")
-        .map((change) => change.doc.id);
-      const _rows = [
-        ...addedRows,
-        ...prevRows.filter((row) => !removedRowIds.includes(row.id)),
-      ];
-      const modifiedRows = update.changes
-        .filter((change) => change.type === "modified")
-        .map((change) => doc2row(change.doc));
-      modifiedRows.forEach((row) => {
-        const rowIndex = _findIndex(_rows, (r) => r.id === row.id);
-        _rows[rowIndex] = row;
-      });
-      return _rows;
+      const localRows = prevRows.filter(
+        (r) =>
+          Array.isArray(r._missingRequiredFields) &&
+          r._missingRequiredFields.length > 0
+      );
+      const snapshotDocs = update.docs;
+      return [...localRows, ...snapshotDocs.map(doc2row)];
+
     case "delete":
       return prevRows.filter((row) => update.rowId !== row.id);
+
     case "set":
       return update.rows;
 
@@ -83,6 +72,7 @@ const rowsReducer = (prevRows: any, update: any) => {
 
     case "add":
       return [update.newRow, ...prevRows];
+
     case "queryChange":
       return [];
   }
@@ -102,7 +92,7 @@ const tableInitialState = {
 
 const useTableData = () => {
   const { enqueueSnackbar } = useSnackbar();
-  const { currentUser, projectId } = useAppContext();
+  const { projectId } = useAppContext();
 
   const [tableState, tableDispatch] = useReducer(
     tableReducer,
@@ -161,12 +151,9 @@ const useTableData = () => {
     const unsubscribe = query.limit(limit).onSnapshot(
       (snapshot) => {
         if (snapshot.docs.length > 0) {
-          const changes = snapshot.docChanges();
-          rowsDispatch({ type: "onSnapshot", changes });
+          rowsDispatch({ type: "onSnapshot", docs: snapshot.docs });
         }
-        tableDispatch({
-          loading: false,
-        });
+        tableDispatch({ loading: false });
       },
       (error: any) => {
         //TODO:callable to create new index
@@ -246,9 +233,9 @@ const useTableData = () => {
    *  @param documentId firestore document id
    */
   const deleteRow = (rowId: string) => {
-    //remove row locally
+    // Remove row locally
     rowsDispatch({ type: "delete", rowId });
-    // delete document
+    // Delete document
     try {
       db.collection(tableState.path).doc(rowId).delete();
     } catch (error: any) {
