@@ -4,25 +4,27 @@ import WarningIcon from "@mui/icons-material/WarningAmber";
 
 import RichTooltip from "components/RichTooltip";
 
-const Root = styled("div")(({ theme, ...props }) => ({
-  width: "100%",
-  height: "100%",
-  padding: "var(--cell-padding)",
-  position: "relative",
+const Root = styled("div", { shouldForwardProp: (prop) => prop !== "error" })(
+  ({ theme, ...props }) => ({
+    width: "100%",
+    height: "100%",
+    padding: "var(--cell-padding)",
+    position: "relative",
 
-  overflow: "hidden",
-  contain: "strict",
-  display: "flex",
-  alignItems: "center",
+    overflow: "hidden",
+    contain: "strict",
+    display: "flex",
+    alignItems: "center",
 
-  ...((props as any).error
-    ? {
-        ".rdg-cell:not([aria-selected=true]) &": {
-          boxShadow: `inset 0 0 0 2px ${theme.palette.error.main}`,
-        },
-      }
-    : {}),
-}));
+    ...((props as any).error
+      ? {
+          ".rdg-cell:not([aria-selected=true]) &": {
+            boxShadow: `inset 0 0 0 2px ${theme.palette.error.main}`,
+          },
+        }
+      : {}),
+  })
+);
 
 const Dot = styled("div")(({ theme }) => ({
   position: "absolute",
