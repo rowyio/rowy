@@ -62,6 +62,7 @@ export default function TextEditor({ row, column }: EditorProps<any>) {
       defaultValue={defaultValue}
       type={inputType}
       fullWidth
+      multiline={type === FieldType.longText}
       variant="standard"
       inputProps={{
         ref: inputRef,
@@ -76,6 +77,7 @@ export default function TextEditor({ row, column }: EditorProps<any>) {
           height: "100%",
           font: "inherit", // Prevent text jumping
           letterSpacing: "inherit", // Prevent text jumping
+          p: 0,
         },
         "& .MuiInputBase-input": {
           height: "100%",
@@ -83,6 +85,12 @@ export default function TextEditor({ row, column }: EditorProps<any>) {
           letterSpacing: "inherit", // Prevent text jumping
           p: "var(--cell-padding)",
           pb: 1 / 8,
+        },
+        "& textarea.MuiInputBase-input": {
+          lineHeight: (theme) => theme.typography.body2.lineHeight,
+          maxHeight: "100%",
+          boxSizing: "border-box",
+          py: 3 / 8,
         },
       }}
       InputProps={{
