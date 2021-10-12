@@ -18,7 +18,8 @@ import _findIndex from "lodash/findIndex";
 import _orderBy from "lodash/orderBy";
 import { useAppContext } from "contexts/AppContext";
 
-const CAP = 1000; // safety  paramter sets the  upper limit of number of docs fetched by this hook
+// Safety parameter sets the upper limit of number of docs fetched by this hook
+export const CAP = 1000;
 
 const tableReducer = (prevState: any, newProps: any) => {
   return { ...prevState, ...newProps };
