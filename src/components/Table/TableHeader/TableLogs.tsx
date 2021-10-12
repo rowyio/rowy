@@ -393,13 +393,13 @@ export default function TableLogs() {
   const [tabIndex, setTabIndex] = React.useState(0);
   const snackLogContext = useSnackLogContext();
   const functionConfigPath = tableState?.config.functionConfigPath;
-  console.log(functionConfigPath);
+  // console.log(functionConfigPath);
 
   const [collectionState, collectionDispatch] = useCollection({});
   useEffect(() => {
     if (functionConfigPath) {
       const path = `${functionConfigPath}/buildLogs`;
-      console.log(path);
+      // console.log(path);
       collectionDispatch({
         path,
         orderBy: [{ key: "startTimeStamp", direction: "desc" }],
