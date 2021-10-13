@@ -60,7 +60,7 @@ const ConditionModal = ({ modal, setModal, conditions, setConditions }) => {
     setModal({ ...modal, condition: { ...modal.condition, [key]: value } });
   };
   useEffect(() => {
-    handleUpdate("operator")("==");
+    handleUpdate("operator")(modal.condition.operator ?? "==");
   }, [modal.condition.type]);
   return (
     <Modal
