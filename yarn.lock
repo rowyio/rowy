@@ -2659,10 +2659,10 @@
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
 
-"@rowy/form-builder@^0.2.4":
-  version "0.2.5"
-  resolved "https://registry.yarnpkg.com/@rowy/form-builder/-/form-builder-0.2.5.tgz#f7d2f981899ed6ad7d3a79f617c5d4c37eb7219f"
-  integrity sha512-f2MLPIqBbw88vL7gSLlKv5PK6pLKBsa6xgi4efQUOvFLeDWFnU7ksHI1QH6yQwCEfl/tQmLbsanhv/on5pf0tA==
+"@rowy/form-builder@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@rowy/form-builder/-/form-builder-0.3.1.tgz#7359a05563c99ae4c222fa5336a57ce7a344ae29"
+  integrity sha512-5IlNtBb6V5VdbpYWhO4P6QIBVqI42SVko15Bmn1YLd0JyoI3wza+seFBK0PgrBUB/OzTEA/hsBN5cyWhqlKt2Q==
   dependencies:
     "@hookform/resolvers" "^2.6.0"
     "@mdi/js" "^5.9.55"
@@ -13588,7 +13588,12 @@ react-helmet@^6.1.0:
     react-fast-compare "^3.1.1"
     react-side-effect "^2.1.0"
 
-react-hook-form@^7.10.0, react-hook-form@^7.16.1:
+react-hook-form@^7.10.0:
+  version "7.17.2"
+  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.17.2.tgz#235f15bb65c13e7a1198d33f2db24bcc9e27b303"
+  integrity sha512-oBaHwlYnbpzSFdNrs43QpcM+K2A0kUeNjV86ECYkCimlR1Ctl+tz4oQQd9plfGYkO7PJGLVMOVpUtL5EHjAcYQ==
+
+react-hook-form@^7.16.1:
   version "7.17.1"
   resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.17.1.tgz#dc257a5e34b3c353460ecdbbba5236e066cf80b1"
   integrity sha512-9nQ+qKFHFpnWzQHdDh6F4Egxa8iJkue1KU921F8qqeyUVbPPjgQZDXaQyNHABEYjRh0ndjTI24GDA+lwm2lQdg==
