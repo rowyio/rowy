@@ -5,7 +5,10 @@ import _sortBy from "lodash/sortBy";
 import _find from "lodash/find";
 import firebase from "firebase/app";
 
-import useTable, { TableActions, TableState } from "@src/hooks/useTable";
+import { Button } from "@mui/material";
+import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
+
+import useTable, { TableActions, TableState } from "hooks/useTable";
 import useSettings from "hooks/useSettings";
 import { useAppContext } from "./AppContext";
 import { SideDrawerRef } from "components/SideDrawer";
@@ -15,6 +18,7 @@ import { ImportWizardRef } from "components/Wizards/ImportWizard";
 import { rowyRun, IRowyRunRequestProps } from "utils/rowyRun";
 import { FieldType } from "constants/fields";
 import { rowyUser } from "utils/fns";
+import { WIKI_LINKS } from "constants/externalLinks";
 
 export type Table = {
   id: string;
@@ -217,12 +221,19 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
         ...args,
       });
     else {
-      enqueueSnackbar(
-        `RowyRun is not setup. Checkout the docs for installation guide`,
-        {
-          variant: "error",
-        }
-      );
+      enqueueSnackbar(`Rowy Run is not set up`, {
+        variant: "error",
+        action: (
+          <Button
+            href={WIKI_LINKS.rowyRun}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Docs
+            <InlineOpenInNewIcon />
+          </Button>
+        ),
+      });
       return { success: false, error: "rowyRun is not setup" };
     }
   };
