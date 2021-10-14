@@ -1,73 +1,42 @@
 import { useState } from "react";
 import _isEqual from "lodash/isEqual";
+import _upperFirst from "lodash/upperFirst";
 import useStateRef from "react-usestateref";
 
 import {
-  styled,
-  Button,
-  Checkbox,
-  Divider,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  FormLabel,
   Grid,
-  IconButton,
-  Switch,
-  Stack,
-  Tab,
   TextField,
+  FormControlLabel,
+  Switch,
+  Stepper,
+  Step,
+  StepButton,
+  StepContent,
   Typography,
+  Link,
 } from "@mui/material";
-import TabContext from "@mui/lab/TabContext";
-import TabList from "@mui/lab/TabList";
-import TabPanel from "@mui/lab/TabPanel";
-import AddIcon from "@mui/icons-material/AddBox";
-import DeleteIcon from "@mui/icons-material/RemoveCircle";
+import ExpandIcon from "@mui/icons-material/KeyboardArrowDown";
+import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
 
 import Modal, { IModalProps } from "components/Modal";
-import CodeEditor from "../../editors/CodeEditor";
-import CodeEditorHelper from "components/CodeEditorHelper";
+import Step1Triggers from "./Step1Triggers";
+import Step2RequiredFields from "./Step2RequiredFields";
+import Step3Conditions from "./Step3Conditions";
+import Step4Body from "./Step4Body";
 
 import { useConfirmation } from "components/ConfirmationDialog";
-import { useProjectContext } from "contexts/ProjectContext";
 
-import { IExtension, triggerTypes } from "./utils";
+import { extensionNames, IExtension } from "./utils";
 import { WIKI_LINKS } from "constants/externalLinks";
 
-const additionalVariables = [
-  {
-    key: "change",
-    description:
-      "you can pass in field name to change.before.get() or change.after.get() to get changes",
-  },
-  {
-    key: "triggerType",
-    description: "triggerType indicates the type of the extension invocation",
-  },
-  {
-    key: "fieldTypes",
-    description:
-      "fieldTypes is a map of all fields and its corresponding field type",
-  },
-  {
-    key: "extensionConfig",
-    description: "the configuration object of this extension",
-  },
-];
-
-const StyledTabPanel = styled(TabPanel)({
-  flexGrow: 1,
-
-  overflowY: "auto",
-  margin: "0 calc(var(--dialog-spacing) * -1) 0 !important",
-  padding: "var(--dialog-spacing) var(--dialog-spacing) 0",
-
-  "&[hidden]": { display: "none" },
-
-  display: "flex",
-  flexDirection: "column",
-});
+type StepValidation = Record<"condition" | "extensionBody", boolean>;
+export interface IExtensionModalStepProps {
+  extensionObject: IExtension;
+  setExtensionObject: React.Dispatch<React.SetStateAction<IExtension>>;
+  validation: StepValidation;
+  setValidation: React.Dispatch<React.SetStateAction<StepValidation>>;
+  validationRef: React.RefObject<StepValidation>;
+}
 
 export interface IExtensionModalProps {
   handleClose: IModalProps["onClose"];
@@ -85,46 +54,45 @@ export default function ExtensionModal({
   extensionObject: initialObject,
 }: IExtensionModalProps) {
   const { requestConfirmation } = useConfirmation();
+
   const [extensionObject, setExtensionObject] =
     useState<IExtension>(initialObject);
-  const [tab, setTab] = useState("triggersRequirements");
-  const [validation, setValidation, validationRef] = useStateRef({
-    condition: true,
-    extensionBody: true,
-  });
-  const [, setConditionEditorActive, conditionEditorActiveRef] =
-    useStateRef(false);
-  const [, setBodyEditorActive, bodyEditorActiveRef] = useStateRef(false);
-  const { tableState } = useProjectContext();
-  const columns = Object.keys(tableState?.columns ?? {});
+
+  const [activeStep, setActiveStep] = useState(0);
+
+  const [validation, setValidation, validationRef] =
+    useStateRef<StepValidation>({ condition: true, extensionBody: true });
+
   const edited = !_isEqual(initialObject, extensionObject);
 
   const handleAddOrUpdate = () => {
-    switch (mode) {
-      case "add":
-        handleAdd(extensionObject);
-        return;
-      case "update":
-        handleUpdate(extensionObject);
-        return;
-    }
+    if (mode === "add") handleAdd(extensionObject);
+    if (mode === "update") handleUpdate(extensionObject);
+  };
+
+  const stepProps = {
+    extensionObject,
+    setExtensionObject,
+    validation,
+    setValidation,
+    validationRef,
   };
 
   return (
     <Modal
       onClose={handleClose}
-      maxWidth="md"
       disableBackdropClick
       disableEscapeKeyDown
       fullWidth
-      fullHeight
+      title={`${mode === "add" ? "Add" : "Update"} Extension: ${
+        extensionNames[extensionObject.type]
+      }`}
       sx={{
-        "& .MuiDialogContent-root": {
-          display: "flex",
-          flexDirection: "column",
+        "& .MuiPaper-root": {
+          maxWidth: 742 + 20,
+          height: 980,
         },
       }}
-      title={`${mode === "add" ? "Add" : "Update"} Extension`}
       children={
         <>
           <Grid
@@ -133,7 +101,7 @@ export default function ExtensionModal({
             justifyContent="center"
             alignItems="center"
           >
-            <Grid item xs={4}>
+            <Grid item xs={6}>
               <TextField
                 size="small"
                 required
@@ -155,16 +123,16 @@ export default function ExtensionModal({
               />
             </Grid>
 
-            <Grid item xs={4}>
+            <Grid item xs={6}>
               <FormControlLabel
                 control={
                   <Switch
                     checked={extensionObject.active}
                     onChange={(e) =>
-                      setExtensionObject({
+                      setExtensionObject((extensionObject) => ({
                         ...extensionObject,
                         active: e.target.checked,
-                      })
+                      }))
                     }
                     size="medium"
                   />
@@ -174,337 +142,102 @@ export default function ExtensionModal({
                 }activated`}
               />
             </Grid>
-
-            <Grid item xs={4}>
-              <TextField
-                size="small"
-                label="Extension type"
-                value={extensionObject.type}
-                variant="filled"
-                fullWidth
-                disabled
-                helperText="Cannot be changed once created"
-              />
-            </Grid>
           </Grid>
 
-          <TabContext value={tab}>
-            <TabList
-              aria-label="Extension settings tabs"
-              onChange={(_, val) => setTab(val)}
-              variant="fullWidth"
-              centered
-              style={{
-                marginTop: 0,
-                marginLeft: "calc(var(--dialog-spacing) * -1)",
-                marginRight: "calc(var(--dialog-spacing) * -1)",
-              }}
-            >
-              <Tab
-                value="triggersRequirements"
-                label="Triggers & requirements"
-              />
-              <Tab value="parameters" label="Parameters" />
-            </TabList>
-            <Divider
-              style={{
-                marginTop: -1,
-                marginLeft: "calc(var(--dialog-spacing) * -1)",
-                marginRight: "calc(var(--dialog-spacing) * -1)",
-              }}
-            />
+          <Stepper
+            nonLinear
+            activeStep={activeStep}
+            orientation="vertical"
+            sx={{
+              mt: 0,
 
-            <StyledTabPanel value="triggersRequirements">
-              <Grid
-                container
-                spacing={3}
-                justifyContent="space-between"
-                alignItems="flex-start"
-              >
-                <Grid item xs={12} sm={6}>
-                  <FormControl component="fieldset" required>
-                    <FormLabel
-                      component="legend"
-                      sx={{
-                        typography: "subtitle2",
-                        color: "text.primary",
-                        mb: 1,
-                      }}
-                    >
-                      Triggers
-                    </FormLabel>
-                    <Typography gutterBottom>
-                      Select a trigger that runs your extension code. Selected
-                      actions on any cells will trigger the extension.
-                    </Typography>
-
-                    <FormGroup>
-                      {triggerTypes.map((trigger) => (
-                        <FormControlLabel
-                          label={trigger}
-                          control={
-                            <Checkbox
-                              checked={extensionObject.triggers.includes(
-                                trigger
-                              )}
-                              name={trigger}
-                              onChange={() => {
-                                if (
-                                  extensionObject.triggers.includes(trigger)
-                                ) {
-                                  setExtensionObject({
-                                    ...extensionObject,
-                                    triggers: extensionObject.triggers.filter(
-                                      (t) => t !== trigger
-                                    ),
-                                  });
-                                } else {
-                                  setExtensionObject({
-                                    ...extensionObject,
-                                    triggers: [
-                                      ...extensionObject.triggers,
-                                      trigger,
-                                    ],
-                                  });
-                                }
-                              }}
-                            />
-                          }
-                        />
-                      ))}
-                    </FormGroup>
-                  </FormControl>
-                </Grid>
-
-                <Grid item xs={12} sm={6}>
-                  <FormControl component="fieldset">
-                    <FormLabel
-                      component="legend"
-                      sx={{
-                        typography: "subtitle2",
-                        color: "text.primary",
-                        mb: 1,
-                      }}
-                    >
-                      Required fields (optional)
-                    </FormLabel>
-                    <Typography gutterBottom>
-                      Optionally, select the fields that are required for the
-                      extension to be triggered for a row.
-                    </Typography>
-
-                    <FormGroup
-                      sx={{
-                        maxHeight: 42 * 3.5,
-                        overflowY: "auto",
-                        flexWrap: "nowrap",
-                        borderBottom: 1,
-                        borderColor: "divider",
-                        "& > *": { flexShrink: 0 },
-                      }}
-                    >
-                      {columns.sort().map((field) => (
-                        <FormControlLabel
-                          label={field}
-                          control={
-                            <Checkbox
-                              checked={extensionObject.requiredFields.includes(
-                                field
-                              )}
-                              name={field}
-                              onChange={() => {
-                                if (
-                                  extensionObject.requiredFields.includes(field)
-                                ) {
-                                  setExtensionObject({
-                                    ...extensionObject,
-                                    requiredFields:
-                                      extensionObject.requiredFields.filter(
-                                        (t) => t !== field
-                                      ),
-                                  });
-                                } else {
-                                  setExtensionObject({
-                                    ...extensionObject,
-                                    requiredFields: [
-                                      ...extensionObject.requiredFields,
-                                      field,
-                                    ],
-                                  });
-                                }
-                              }}
-                            />
-                          }
-                        />
-                      ))}
-
-                      {extensionObject.requiredFields.map((trigger, index) => {
-                        const isTableColumn = columns.includes(trigger);
-                        if (isTableColumn) {
-                          return null;
-                        }
-
-                        return (
-                          <Stack
-                            direction="row"
-                            alignItems="center"
-                            sx={{ ml: -1.25, height: 42 }}
-                          >
-                            <IconButton
-                              color="secondary"
-                              component="span"
-                              aria-label="Delete Firestore field"
-                              onClick={() => {
-                                setExtensionObject({
-                                  ...extensionObject,
-                                  requiredFields:
-                                    extensionObject.requiredFields.filter(
-                                      (t) => t !== trigger
-                                    ),
-                                });
-                              }}
-                            >
-                              <DeleteIcon />
-                            </IconButton>
-                            <TextField
-                              id={`extensions-requiredFields-firestoreField-${index}`}
-                              label="Firestore field"
-                              sx={{
-                                flexDirection: "row",
-                                alignItems: "baseline",
-                                "& .MuiInputLabel-root": { pl: 0, pr: 1 },
-                              }}
-                              value={trigger}
-                              onChange={(event) => {
-                                setExtensionObject({
-                                  ...extensionObject,
-                                  requiredFields:
-                                    extensionObject.requiredFields.map(
-                                      (value, i) =>
-                                        i === index ? event.target.value : value
-                                    ),
-                                });
-                              }}
-                            />
-                          </Stack>
-                        );
-                      })}
-
-                      <Stack
-                        direction="row"
-                        justifyContent="flex-start"
-                        alignItems="center"
-                        sx={{ height: 42, ml: -0.875 }}
-                      >
-                        <Button
-                          variant="text"
-                          color="secondary"
-                          startIcon={<AddIcon />}
-                          onClick={() => {
-                            setExtensionObject({
-                              ...extensionObject,
-                              requiredFields: [
-                                ...extensionObject.requiredFields,
-                                "",
-                              ],
-                            });
-                          }}
-                        >
-                          Add Firestore field
-                        </Button>
-                      </Stack>
-                    </FormGroup>
-                  </FormControl>
-                </Grid>
-              </Grid>
-
-              <div style={{ flexGrow: 1 }}>
-                <Typography variant="subtitle2" gutterBottom>
-                  Conditions
+              "& .MuiStepLabel-root": { width: "100%" },
+              "& .MuiStepLabel-label": {
+                display: "flex",
+                width: "100%",
+                typography: "subtitle2",
+                "&.Mui-active": { typography: "subtitle2" },
+              },
+              "& .MuiStepLabel-label svg": {
+                display: "block",
+                marginLeft: "auto",
+                my: ((24 - 18) / 2 / 8) * -1,
+                transition: (theme) => theme.transitions.create("transform"),
+              },
+              "& .Mui-active svg": {
+                transform: "rotate(180deg)",
+              },
+            }}
+          >
+            <Step>
+              <StepButton onClick={() => setActiveStep(0)}>
+                Trigger events
+                <ExpandIcon />
+              </StepButton>
+              <StepContent>
+                <Typography gutterBottom>
+                  Select which events trigger this extension
                 </Typography>
+                <Step1Triggers {...stepProps} />
+              </StepContent>
+            </Step>
 
-                <CodeEditor
-                  script={extensionObject.conditions}
-                  height="100%"
-                  handleChange={(newValue) => {
-                    setExtensionObject({
-                      ...extensionObject,
-                      conditions: newValue,
-                    });
-                  }}
-                  onValideStatusUpdate={({ isValid }) => {
-                    if (!conditionEditorActiveRef.current) {
-                      return;
-                    }
-                    setValidation({
-                      ...validationRef.current,
-                      condition: isValid,
-                    });
-                    console.log(validationRef.current);
-                  }}
-                  diagnosticsOptions={{
-                    noSemanticValidation: false,
-                    noSyntaxValidation: false,
-                    noSuggestionDiagnostics: true,
-                  }}
-                  onMount={() => {
-                    setConditionEditorActive(true);
-                  }}
-                  onUnmount={() => {
-                    setConditionEditorActive(false);
-                  }}
-                />
-              </div>
-              <CodeEditorHelper
-                docLink={WIKI_LINKS.extensions}
-                additionalVariables={additionalVariables}
-              />
-            </StyledTabPanel>
-
-            <StyledTabPanel value="parameters">
-              <div style={{ flexGrow: 1 }}>
-                <Typography variant="subtitle2" gutterBottom>
-                  Extension body
+            <Step>
+              <StepButton onClick={() => setActiveStep(1)}>
+                Required fields (optional)
+                <ExpandIcon />
+              </StepButton>
+              <StepContent>
+                <Typography gutterBottom>
+                  Optionally, select fields that must have a value set for the
+                  extension to be triggered for that row
                 </Typography>
+                <Step2RequiredFields {...stepProps} />
+              </StepContent>
+            </Step>
 
-                <CodeEditor
-                  script={extensionObject.extensionBody}
-                  height="100%"
-                  handleChange={(newValue) => {
-                    setExtensionObject({
-                      ...extensionObject,
-                      extensionBody: newValue,
-                    });
-                  }}
-                  onValidStatusUpdate={({ isValid }) => {
-                    if (!bodyEditorActiveRef.current) {
-                      return;
+            <Step>
+              <StepButton onClick={() => setActiveStep(2)}>
+                Trigger conditions (optional)
+                <ExpandIcon />
+              </StepButton>
+              <StepContent>
+                <Typography gutterBottom>
+                  Optionally, write a function that determines if the extension
+                  should be triggered for a given row. Leave the function to
+                  always return <code>true</code> if you do not want to write
+                  additional logic.
+                </Typography>
+                <Step3Conditions {...stepProps} />
+              </StepContent>
+            </Step>
+
+            <Step>
+              <StepButton onClick={() => setActiveStep(3)}>
+                Extension body
+                <ExpandIcon />
+              </StepButton>
+              <StepContent>
+                <Typography gutterBottom>
+                  Write the extension body function. Make sure you have set all
+                  the required parameters.{" "}
+                  <Link
+                    href={
+                      WIKI_LINKS[
+                        `extensions${_upperFirst(extensionObject.type)}`
+                      ] || WIKI_LINKS.extensions
                     }
-                    setValidation({
-                      ...validationRef.current,
-                      extensionBody: isValid,
-                    });
-                    console.log(validationRef.current);
-                  }}
-                  diagnosticsOptions={{
-                    noSemanticValidation: false,
-                    noSyntaxValidation: false,
-                    noSuggestionDiagnostics: true,
-                  }}
-                  onMount={() => {
-                    setBodyEditorActive(true);
-                  }}
-                  onUnmount={() => {
-                    setBodyEditorActive(false);
-                  }}
-                />
-              </div>
-              <CodeEditorHelper
-                docLink={WIKI_LINKS.extensions}
-                additionalVariables={additionalVariables}
-              />
-            </StyledTabPanel>
-          </TabContext>
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Docs
+                    <InlineOpenInNewIcon />
+                  </Link>
+                </Typography>
+                <Step4Body {...stepProps} />
+              </StepContent>
+            </Step>
+          </Stepper>
         </>
       }
       actions={{
