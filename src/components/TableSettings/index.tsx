@@ -1,5 +1,6 @@
 import useSWR from "swr";
 import _find from "lodash/find";
+import _sortBy from "lodash/sortBy";
 
 import { Stack, Button, DialogContentText } from "@mui/material";
 
@@ -120,7 +121,15 @@ export default function TableSettingsDialog({
         mode,
         roles,
         sectionNames,
-        tables?.map((table) => ({ label: table.name, value: table.id })),
+        _sortBy(
+          tables?.map((table) => ({
+            label: table.name,
+            value: table.id,
+            section: table.section,
+            collection: table.collection,
+          })),
+          ["section", "label"]
+        ),
         collections
       )}
       customComponents={{

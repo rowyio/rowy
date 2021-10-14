@@ -35,7 +35,6 @@ export default function FieldSettings(props: IMenuModalProps) {
     ) {
       setShowRebuildPrompt(true);
     }
-    console.log(key, update);
     const updatedConfig = _set({ ...newConfig }, key, update);
     setNewConfig(updatedConfig);
   };
@@ -48,7 +47,6 @@ export default function FieldSettings(props: IMenuModalProps) {
     [newConfig.renderFieldType, type]
   );
   if (!open) return null;
-  console.log(newConfig);
 
   return (
     <Modal

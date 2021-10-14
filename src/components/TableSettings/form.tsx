@@ -13,7 +13,9 @@ export const tableSettings = (
   mode: TableSettingsDialogModes | null,
   roles: string[] | undefined,
   sections: string[] | undefined,
-  tables: { label: string; value: any }[] | undefined,
+  tables:
+    | { label: string; value: any; section: string; collection: string }[]
+    | undefined,
   collections: string[]
 ): Field[] =>
   [
@@ -271,10 +273,15 @@ export const tableSettings = (
           options: tables,
           clearable: true,
           freeText: false,
-          itemRenderer: (option: { value: string; label: string }) => (
+          itemRenderer: (option: {
+            value: string;
+            label: string;
+            section: string;
+            collection: string;
+          }) => (
             <>
-              {option.label}{" "}
-              <code style={{ marginLeft: "auto" }}>{option.value}</code>
+              {option.section} &gt; {option.label}{" "}
+              <code style={{ marginLeft: "auto" }}>{option.collection}</code>
             </>
           ),
         }
