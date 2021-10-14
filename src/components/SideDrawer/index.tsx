@@ -112,7 +112,7 @@ export default function SideDrawer() {
               (urlDocState.doc || cell) &&
               !_isEmpty(tableState?.columns) && (
                 <Form
-                  key={urlDocState.path}
+                  key={`${cell?.row}-${urlDocState.path}`}
                   values={
                     urlDocState.doc ?? tableState?.rows[cell?.row ?? -1] ?? {}
                   }
