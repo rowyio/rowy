@@ -42,10 +42,11 @@ const WIKI_PATHS = {
   rowyRun: "/rowy-run",
 
   extensions: "/extensions",
+  extensionsDocSync: "/extensions/doc-sync",
   extensionsAlgoliaIndex: "/extensions/algolia-index",
+  extensionsSlackMessage: "/extensions/slack-message",
   extensionsSendgridEmail: "/extensions/sendgrid-email",
   extensionsTwilioMessage: "/extensions/twilio-message",
-  extensionsSlackMessage: "/extensions/slack-message",
 };
 export const WIKI_LINKS = _mapValues(
   WIKI_PATHS,
