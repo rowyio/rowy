@@ -218,7 +218,7 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
       });
     else {
       enqueueSnackbar(
-        `The rowyRun is not setup. checkout docs for install guide`,
+        `RowyRun is not setup. Checkout the docs for installation guide`,
         {
           variant: "error",
         }
