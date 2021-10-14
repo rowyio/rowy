@@ -28,16 +28,25 @@ export const ConnectTable = forwardRef(function ConnectTable(
       }}
     >
       <ChipList>
-        {Array.isArray(value) &&
-          value.map((doc: any) => (
-            <Grid item key={doc.docPath}>
+        {Array.isArray(value) ? (
+          value.map((item: any) => (
+            <Grid item key={item.docPath}>
               <Chip
                 label={config.primaryKeys
-                  .map((key: string) => doc.snapshot[key])
+                  .map((key: string) => item.snapshot[key])
                   .join(" ")}
               />
             </Grid>
-          ))}
+          ))
+        ) : value ? (
+          <Grid item>
+            <Chip
+              label={config.primaryKeys
+                .map((key: string) => value.snapshot[key])
+                .join(" ")}
+            />
+          </Grid>
+        ) : null}
       </ChipList>
 
       {!disabled && (

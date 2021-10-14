@@ -4,12 +4,18 @@ import useAlgolia from "use-algolia";
 import _find from "lodash/find";
 import _get from "lodash/get";
 import _pick from "lodash/pick";
+import createPersistedState from "use-persisted-state";
 import { useSnackbar } from "notistack";
+
+import { Button } from "@mui/material";
 import MultiSelect, { MultiSelectProps } from "@rowy/multiselect";
 import Loading from "components/Loading";
-import createPersistedState from "use-persisted-state";
+import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
+
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import { runRoutes } from "@src/constants/runRoutes";
+import { WIKI_LINKS } from "constants/externalLinks";
+
 const useAlgoliaSearchKeys = createPersistedState("_ROWY_algolia-search-keys");
 const useAlgoliaAppId = createPersistedState("_ROWY_algolia-app-id");
 
@@ -25,8 +31,8 @@ const replacer = (data: any) => (m: string, key: string) => {
 };
 
 export interface IConnectTableSelectProps {
-  value: ConnectTableValue[];
-  onChange: (value: ConnectTableValue[]) => void;
+  value: ConnectTableValue[] | ConnectTableValue | null;
+  onChange: (value: ConnectTableValue[] | ConnectTableValue | null) => void;
   column: any;
   config: {
     filters: string;
@@ -61,35 +67,44 @@ export default function ConnectTableSelect({
   onClose,
   loadBeforeOpen,
 }: IConnectTableSelectProps) {
-  // Store a local copy of the value so the dropdown doesn’t automatically close
-  // when the user selects a new item and we allow for multiple selections
   const { enqueueSnackbar } = useSnackbar();
   const { rowyRun } = useProjectContext();
   const [algoliaAppId, setAlgoliaAppId] = useAlgoliaAppId<string | undefined>(
     undefined
   );
-
   useEffect(() => {
     if (!algoliaAppId && rowyRun) {
       rowyRun({ route: runRoutes.algoliaAppId }).then(
         ({ success, appId, message }) => {
-          if (success) {
-            setAlgoliaAppId(appId);
-          } else {
-            enqueueSnackbar(message, { variant: "error" });
-          }
+          if (success) setAlgoliaAppId(appId);
+          else
+            enqueueSnackbar(
+              message.replace("not setup", "not set up") +
+                ": Failed to get app ID",
+              {
+                variant: "error",
+                action: (
+                  <Button
+                    href={WIKI_LINKS.fieldTypesConnectTable}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Docs
+                    <InlineOpenInNewIcon />
+                  </Button>
+                ),
+              }
+            );
         }
       );
     }
   }, []);
-  const [localValue, setLocalValue] = useState(
-    Array.isArray(value) ? value : []
-  );
+
   const filters = config.filters
     ? config.filters.replace(/\{\{(.*?)\}\}/g, replacer(row))
     : "";
-  const algoliaIndex = config.index;
 
+  const algoliaIndex = config.index;
   const [algoliaSearchKeys, setAlgoliaSearchKeys] = useAlgoliaSearchKeys<any>(
     {}
   );
@@ -150,54 +165,97 @@ export default function ConnectTableSelect({
     value: hit.objectID,
   }));
 
-  // Pass a list of objectIDs to MultiSelect
-  const sanitisedValue = localValue.map(
-    (item) => item.docPath.split("/")[item.docPath.split("/").length - 1]
-  );
-
-  const handleChange = (_newValue) => {
-    // Ensure we return an array
-    const newValue = Array.isArray(_newValue)
-      ? _newValue
-      : _newValue !== null
-      ? [_newValue]
+  // Store a local copy of the value so the dropdown doesn’t automatically close
+  // when the user selects a new item and we allow for multiple selections
+  let initialLocalValue: any;
+  if (config.multiple !== false) {
+    initialLocalValue = Array.isArray(value)
+      ? value
+      : value?.docPath
+      ? [value]
       : [];
+  } else {
+    initialLocalValue = Array.isArray(value)
+      ? value[0]
+      : value?.docPath
+      ? value
+      : null;
+  }
+  const [localValue, setLocalValue] = useState(initialLocalValue);
 
-    // Calculate new value
-    const newLocalValue = newValue.map((objectID) => {
-      // If this objectID is already in the previous value, use that previous
-      // value’s snapshot (in case it points to an object not in the current
-      // Algolia query)
-      const existingMatch = _find(localValue, {
-        docPath: `${algoliaIndex}/${objectID}`,
-      });
-      if (existingMatch) return existingMatch;
+  // Pass objectID[] | objectID | null to MultiSelect
+  const sanitisedValue =
+    config.multiple !== false
+      ? localValue.map((item) => item.docPath.split("/").pop())
+      : localValue?.docPath?.split("/").pop() ?? null;
 
-      // If this is a completely new selection, grab the snapshot from the
-      // current Algolia query
-      const match = _find(algoliaState.hits, { objectID });
-      const { _highlightResult, ...snapshot } = match;
+  const handleChange = (_newValue: string[] | string | null) => {
+    let newLocalValue: any;
+    if (config.multiple !== false && Array.isArray(_newValue)) {
+      newLocalValue = (_newValue as string[])
+        .map((objectID) => {
+          const docPath = `${algoliaIndex}/${objectID}`;
 
-      // Use snapshotFields to limit snapshots
-      let partialSnapshot = snapshot;
-      if (
-        Array.isArray(config.snapshotFields) &&
-        config.snapshotFields.length > 0
-      )
-        partialSnapshot = _pick(snapshot, config.snapshotFields);
+          // Try to find the snapshot from the current Algolia query
+          const match = _find(algoliaState.hits, { objectID });
 
-      return {
-        snapshot: partialSnapshot,
-        docPath: `${algoliaIndex}/${snapshot.objectID}`,
-      };
-    });
+          // If not found and this objectID is already in the previous value,
+          // use that previous value’s snapshot
+          // Else return null
+          if (!match) {
+            const existingMatch = _find(localValue, { docPath });
+            if (existingMatch) return existingMatch;
+            else return null;
+          }
+
+          const { _highlightResult, ...snapshot } = match;
+
+          // Use snapshotFields to limit snapshots
+          let partialSnapshot = snapshot;
+          if (
+            Array.isArray(config.snapshotFields) &&
+            config.snapshotFields.length > 0
+          )
+            partialSnapshot = _pick(snapshot, config.snapshotFields);
+
+          return { snapshot: partialSnapshot, docPath };
+        })
+        .filter((x) => x !== null);
+    } else if (config.multiple === false && typeof _newValue === "string") {
+      const docPath = `${algoliaIndex}/${_newValue}`;
+
+      // Try to find the snapshot from the current Algolia query
+      const match = _find(algoliaState.hits, { objectID: _newValue });
+
+      // If not found and this objectID is the previous value, use that or null
+      if (!match) {
+        if (localValue?.docPath === docPath) newLocalValue = localValue;
+        else newLocalValue = null;
+      } else {
+        const { _highlightResult, ...snapshot } = match;
+
+        // Use snapshotFields to limit snapshots
+        let partialSnapshot = snapshot;
+        if (
+          Array.isArray(config.snapshotFields) &&
+          config.snapshotFields.length > 0
+        )
+          partialSnapshot = _pick(snapshot, config.snapshotFields);
+
+        newLocalValue = { snapshot: partialSnapshot, docPath };
+      }
+    } else if (config.multiple === false && _newValue === null) {
+      newLocalValue = null;
+    }
+
+    // Store in `localValue` until user closes dropdown and triggers `handleSave`
+    setLocalValue(newLocalValue);
 
     // If !multiple, we MUST change the value (bypassing localValue),
     // otherwise `setLocalValue` won’t be called in time for the new
-    // `localValue` to be read by `handleSave`
+    // `localValue` to be read by `handleSave` because this component is
+    // unmounted before `handleSave` is called
     if (config.multiple === false) onChange(newLocalValue);
-    // Otherwise, `setLocalValue` until user closes dropdown
-    else setLocalValue(newLocalValue);
   };
 
   // Save when user closes dropdown
@@ -214,12 +272,10 @@ export default function ConnectTableSelect({
 
   return (
     <MultiSelect
-      value={config.multiple === false ? sanitisedValue[0] : sanitisedValue}
+      value={sanitisedValue}
       onChange={handleChange}
       onOpen={() => {
-        setAlgoliaConfig({
-          indexName: algoliaIndex,
-        });
+        setAlgoliaConfig({ indexName: algoliaIndex });
         requestDispatch({ filters });
       }}
       onClose={handleSave}
@@ -227,11 +283,27 @@ export default function ConnectTableSelect({
       TextFieldProps={{
         className,
         hiddenLabel: true,
+        SelectProps: {
+          renderValue: () => {
+            if (Array.isArray(localValue)) {
+              if (localValue.length !== 1)
+                return `${localValue.length} selected`;
+              return config.primaryKeys
+                ?.map((key: string) => localValue[0]?.snapshot?.[key])
+                .join(" ");
+            } else {
+              if (!localValue?.snapshot) return "0 selected";
+              return config.primaryKeys
+                ?.map((key: string) => localValue?.snapshot?.[key])
+                .join(" ");
+            }
+          },
+        },
         ...TextFieldProps,
       }}
       label={column?.name}
       labelPlural={config.searchLabel}
-      multiple={(config.multiple ?? true) as any}
+      multiple={config.multiple !== false}
       {...({
         AutocompleteProps: {
           loading: algoliaState.loading,
@@ -243,9 +315,11 @@ export default function ConnectTableSelect({
           filterOptions: () => options,
         },
       } as any)}
-      countText={`${localValue.length} of ${
-        algoliaState.response?.nbHits ?? "?"
-      }`}
+      countText={
+        Array.isArray(localValue)
+          ? `${localValue.length} of ${algoliaState.response?.nbHits ?? "?"}`
+          : undefined
+      }
       disabled={disabled}
     />
   );
