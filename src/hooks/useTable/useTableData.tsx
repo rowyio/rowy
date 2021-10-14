@@ -35,12 +35,10 @@ const doc2row = (doc) => {
 const rowsReducer = (prevRows: any, update: any) => {
   switch (update.type) {
     case "onSnapshot":
-      const localRows = prevRows.filter(
-        (r) =>
-          Array.isArray(r._missingRequiredFields) &&
-          r._missingRequiredFields.length > 0
-      );
       const snapshotDocs = update.docs;
+      const localRows = prevRows.filter(
+        (r) => !snapshotDocs.some((d) => d.id === r.id)
+      );
       return [...localRows, ...snapshotDocs.map(doc2row)];
 
     case "delete":
