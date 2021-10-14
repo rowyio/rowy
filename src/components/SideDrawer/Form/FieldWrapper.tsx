@@ -39,6 +39,7 @@ export default function FieldWrapper({
         sx={{
           color: "text.primary",
           height: 24,
+          scrollMarginTop: 24,
           "& svg": {
             display: "block",
             color: "action.active",
