@@ -1,5 +1,4 @@
 import _get from "lodash/get";
-import _set from "lodash/set";
 import { TABLE_GROUP_SCHEMAS, TABLE_SCHEMAS } from "config/dbPaths";
 
 /**
@@ -118,18 +117,6 @@ export const getCellValue = (row: Record<string, any>, key: string) => {
   if (key.includes(".")) return _get(row, key);
   return row[key];
 };
-
-// convert dot notation to nested object
-export function deepen(obj) {
-  const result = {};
-
-  // For each object path (property key) in the object
-  for (const objectPath in obj) {
-    _set(result, objectPath, obj[objectPath]);
-  }
-
-  return result;
-}
 
 export function flattenObject(ob) {
   var toReturn = {};

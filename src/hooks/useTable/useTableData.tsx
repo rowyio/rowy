@@ -1,22 +1,21 @@
-import { db } from "../../firebase";
+import { useEffect, useReducer } from "react";
+import _findIndex from "lodash/findIndex";
+import _orderBy from "lodash/orderBy";
+import _isEqual from "lodash/isEqual";
+import _set from "lodash/set";
+import firebase from "firebase/app";
+import { db } from "@src/firebase";
 import { useSnackbar } from "notistack";
 
 import Button from "@mui/material/Button";
-import { useEffect, useReducer } from "react";
-import _isEqual from "lodash/isEqual";
-import _merge from "lodash/merge";
-import firebase from "firebase/app";
-import { TableFilter, TableOrder } from ".";
 
+import { useAppContext } from "contexts/AppContext";
+import { TableFilter, TableOrder } from ".";
 import {
   isCollectionGroup,
   generateSmallerId,
   missingFieldsReducer,
-  deepen,
 } from "utils/fns";
-import _findIndex from "lodash/findIndex";
-import _orderBy from "lodash/orderBy";
-import { useAppContext } from "contexts/AppContext";
 
 // Safety parameter sets the upper limit of number of docs fetched by this hook
 export const CAP = 1000;
@@ -53,12 +52,14 @@ const rowsReducer = (prevRows: any, update: any) => {
         (r: any) => r.id === update.rowRef.id
       );
       const _newRows = [...prevRows];
-      _newRows[rowIndex] = _merge(_newRows[rowIndex], deepen(update.update));
+      // Must not use lodash merge here. Breaks Connect Table: cannot clear value
+      for (const [key, value] of Object.entries(update.update)) {
+        _set(_newRows[rowIndex], key, value);
+      }
 
       const missingRequiredFields = (
         prevRows[rowIndex]._missingRequiredFields ?? []
       ).reduce(missingFieldsReducer(_newRows[rowIndex]), []);
-
       if (missingRequiredFields.length === 0) {
         delete _newRows[rowIndex]._missingRequiredFields;
         update.rowRef
