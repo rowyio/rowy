@@ -210,7 +210,21 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
   // rowyRun access
   const _rowyRun: IProjectContext["rowyRun"] = async (args) => {
     const authToken = await getAuthToken();
-    return rowyRun({ rowyRunUrl: settings.doc.rowyRunUrl, authToken, ...args });
+    if (settings.doc.rowyRunUrl)
+      return rowyRun({
+        rowyRunUrl: settings.doc.rowyRunUrl,
+        authToken,
+        ...args,
+      });
+    else {
+      enqueueSnackbar(
+        `The rowyRun is not setup. checkout docs for install guide`,
+        {
+          variant: "error",
+        }
+      );
+      return { success: false, error: "rowyRun is not setup" };
+    }
   };
 
   // A ref to the data grid. Contains data grid functions
