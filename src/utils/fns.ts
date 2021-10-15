@@ -1,5 +1,4 @@
 import _get from "lodash/get";
-import _set from "lodash/set";
 import { TABLE_GROUP_SCHEMAS, TABLE_SCHEMAS } from "config/dbPaths";
 
 /**
@@ -119,18 +118,6 @@ export const getCellValue = (row: Record<string, any>, key: string) => {
   return row[key];
 };
 
-// convert dot notation to nested object
-export function deepen(obj) {
-  const result = {};
-
-  // For each object path (property key) in the object
-  for (const objectPath in obj) {
-    _set(result, objectPath, obj[objectPath]);
-  }
-
-  return result;
-}
-
 export function flattenObject(ob) {
   var toReturn = {};
 
@@ -161,4 +148,23 @@ export const deepMerge = (target, source) => {
     }
   }
   return target;
+};
+
+export const rowyUser = (
+  currentUser: firebase.default.User,
+  data?: Record<string, any>
+) => {
+  const { displayName, email, uid, emailVerified, isAnonymous, photoURL } =
+    currentUser;
+
+  return {
+    timestamp: new Date(),
+    displayName,
+    email,
+    uid,
+    emailVerified,
+    isAnonymous,
+    photoURL,
+    ...data,
+  };
 };

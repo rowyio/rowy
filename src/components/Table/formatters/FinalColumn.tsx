@@ -28,30 +28,27 @@ export default function FinalColumn({ row }: FormatterProps<any, any>) {
   useStyles();
 
   const { requestConfirmation } = useConfirmation();
-  const { tableActions } = useProjectContext();
+  const { tableActions, addRow } = useProjectContext();
   const altPress = useKeyPress("Alt");
 
-  const handleDelete = async () => tableActions?.row.delete(row.id);
+  const handleDelete = () => tableActions!.row.delete(row.id);
+
   return (
     <Stack direction="row" spacing={0.5}>
       <Tooltip title="Duplicate row">
         <IconButton
           size="small"
           color="inherit"
+          disabled={!addRow}
           onClick={() => {
             const clonedRow = { ...row };
             // remove metadata
             delete clonedRow.ref;
             delete clonedRow.rowHeight;
-            delete clonedRow._updatedAt;
-            delete clonedRow._updatedBy;
-            delete clonedRow._createdAt;
             Object.keys(clonedRow).forEach((key) => {
-              if (clonedRow[key] === undefined) {
-                delete clonedRow[key];
-              }
+              if (clonedRow[key] === undefined) delete clonedRow[key];
             });
-            if (tableActions) tableActions?.row.add(clonedRow);
+            if (tableActions) addRow!(clonedRow);
           }}
           aria-label="Duplicate row"
           className="row-hover-iconButton"
@@ -64,6 +61,7 @@ export default function FinalColumn({ row }: FormatterProps<any, any>) {
         <IconButton
           size="small"
           color="inherit"
+          disabled={!tableActions}
           onClick={
             altPress
               ? handleDelete

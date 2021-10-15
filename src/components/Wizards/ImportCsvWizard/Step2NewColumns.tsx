@@ -120,23 +120,25 @@ export default function Step2NewColumns({
           </Grid>
         </Grid>
 
-        <Divider className={classes.previewDivider} />
-
-        <Grid container spacing={3}>
-          {!isXs && (
-            <Grid item xs={12} sm={6}>
-              <Column label={config.newColumns[fieldToEdit].key} />
-            </Grid>
-          )}
-          <Grid item xs={12} sm={6}>
-            <Column
-              label={config.newColumns[fieldToEdit].name}
-              type={config.newColumns[fieldToEdit].type}
-            />
-          </Grid>
-        </Grid>
-
         <FadeList listSx={{ pt: 0 }}>
+          <Grid
+            container
+            spacing={3}
+            style={{ position: "sticky", top: 0, zIndex: 1, marginTop: 0 }}
+          >
+            {!isXs && (
+              <Grid item xs={12} sm={6} style={{ paddingTop: 0 }}>
+                <Column label={config.newColumns[fieldToEdit].key} />
+              </Grid>
+            )}
+            <Grid item xs={12} sm={6} style={{ paddingTop: 0 }}>
+              <Column
+                label={config.newColumns[fieldToEdit].name}
+                type={config.newColumns[fieldToEdit].type}
+              />
+            </Grid>
+          </Grid>
+
           {rowData.slice(0, 20).map((cell, i) => (
             <Grid container key={i} wrap="nowrap">
               {!isXs && (

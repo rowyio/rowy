@@ -15,7 +15,7 @@ export default function Settings({ handleChange, config }: ISettingsProps) {
         itemRenderer={(option) => (
           <Typography sx={{ fontFamily: "mono" }}>{option.label}</Typography>
         )}
-        label="Format"
+        label="Display format"
         multiple={false}
         freeText
         clearable={false}

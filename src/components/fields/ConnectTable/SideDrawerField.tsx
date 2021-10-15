@@ -18,10 +18,9 @@ export default function ConnectTable({
       control={control}
       name={column.key}
       render={({ field: { onChange, onBlur, value } }) => {
-        const handleDelete = (hit: any) => () => {
-          // if (multiple)
-          onChange(value.filter((v) => v.snapshot.objectID !== hit.objectID));
-          // else form.setFieldValue(field.name, []);
+        const handleDelete = (docPath: string) => () => {
+          if (column.config?.multiple === false) onChange(null);
+          else onChange(value.filter((v) => v.docPath !== docPath));
         };
 
         return (
@@ -38,26 +37,37 @@ export default function ConnectTable({
                   hiddenLabel: true,
                   fullWidth: true,
                   onBlur,
-                  SelectProps: {
-                    renderValue: () => `${value?.length ?? 0} selected`,
-                  },
                 }}
               />
             )}
 
-            {Array.isArray(value) && (
+            {value && (
               <Grid container spacing={0.5} style={{ marginTop: 2 }}>
-                {value.map(({ snapshot }) => (
-                  <Grid item key={snapshot.objectID}>
+                {Array.isArray(value) ? (
+                  value.map(({ snapshot, docPath }) => (
+                    <Grid item key={docPath}>
+                      <Chip
+                        component="li"
+                        label={column.config?.primaryKeys
+                          ?.map((key: string) => snapshot[key])
+                          .join(" ")}
+                        onDelete={disabled ? undefined : handleDelete(docPath)}
+                      />
+                    </Grid>
+                  ))
+                ) : value ? (
+                  <Grid item>
                     <Chip
                       component="li"
                       label={column.config?.primaryKeys
-                        ?.map((key: string) => snapshot[key])
+                        ?.map((key: string) => value.snapshot[key])
                         .join(" ")}
-                      onDelete={disabled ? undefined : handleDelete(snapshot)}
+                      onDelete={
+                        disabled ? undefined : handleDelete(value.docPath)
+                      }
                     />
                   </Grid>
-                ))}
+                ) : null}
               </Grid>
             )}
           </>

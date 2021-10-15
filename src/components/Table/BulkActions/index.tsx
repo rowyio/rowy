@@ -1,6 +1,6 @@
 import { useState } from "react";
 import _find from "lodash/find";
-import { useSnackbar } from "notistack";
+// import { useSnackbar } from "notistack";
 
 import { makeStyles, createStyles } from "@mui/styles";
 import {
@@ -101,10 +101,10 @@ const useStyles = makeStyles((theme) =>
 export default function BulkActions({ selectedRows, columns, clearSelection }) {
   const classes = useStyles();
   const [, setLoading] = useState<Boolean>();
-  const { tableActions, tableState } = useProjectContext();
+  const { tableActions, addRow, tableState } = useProjectContext();
 
   const { requestConfirmation } = useConfirmation();
-  const { enqueueSnackbar } = useSnackbar();
+  // const { enqueueSnackbar } = useSnackbar();
 
   const actionColumns: { name: string; key: string; config: any }[] = columns
     .filter((column) => column.type === "ACTION")
@@ -120,15 +120,10 @@ export default function BulkActions({ selectedRows, columns, clearSelection }) {
       // remove metadata
       delete clonedRow.ref;
       delete clonedRow.rowHeight;
-      delete clonedRow._updatedAt;
-      delete clonedRow._updatedBy;
-      delete clonedRow._createdAt;
       Object.keys(clonedRow).forEach((key) => {
-        if (clonedRow[key] === undefined) {
-          delete clonedRow[key];
-        }
+        if (clonedRow[key] === undefined) delete clonedRow[key];
       });
-      if (tableActions) tableActions?.row.add(clonedRow);
+      if (tableActions) addRow!(clonedRow);
     });
     clearSelection();
   };

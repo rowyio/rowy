@@ -1,10 +1,14 @@
 import React, { useState, useContext, useEffect, useRef, useMemo } from "react";
 import { useSnackbar } from "notistack";
-import _sortBy from "lodash/sortBy";
 import { DataGridHandle } from "react-data-grid";
+import _sortBy from "lodash/sortBy";
+import _find from "lodash/find";
 import firebase from "firebase/app";
 
-import useTable, { TableActions, TableState } from "@src/hooks/useTable";
+import { Button } from "@mui/material";
+import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
+
+import useTable, { TableActions, TableState } from "hooks/useTable";
 import useSettings from "hooks/useSettings";
 import { useAppContext } from "./AppContext";
 import { SideDrawerRef } from "components/SideDrawer";
@@ -12,6 +16,9 @@ import { ColumnMenuRef } from "components/Table/ColumnMenu";
 import { ImportWizardRef } from "components/Wizards/ImportWizard";
 
 import { rowyRun, IRowyRunRequestProps } from "utils/rowyRun";
+import { FieldType } from "constants/fields";
+import { rowyUser } from "utils/fns";
+import { WIKI_LINKS } from "constants/externalLinks";
 
 export type Table = {
   id: string;
@@ -21,13 +28,18 @@ export type Table = {
   description: string;
   section: string;
   tableType: "primaryCollection" | "collectionGroup";
+  audit?: boolean;
+  auditFieldCreatedBy?: string;
+  auditFieldUpdatedBy?: string;
 };
 
 interface IProjectContext {
   tables: Table[];
+  table: Table;
   roles: string[];
   tableState: TableState;
   tableActions: TableActions;
+  addRow: (data?: Record<string, any>, ignoreRequiredFields?: boolean) => void;
   updateCell: (
     ref: firebase.firestore.DocumentReference,
     fieldName: string,
@@ -49,11 +61,12 @@ interface IProjectContext {
     }) => void;
     updateTable: (data: {
       id: string;
-      collection: string;
-      name: string;
-      description: string;
-      roles: string[];
-      section: string;
+      name?: string;
+      collection?: string;
+      section?: string;
+      description?: string;
+      roles?: string[];
+      [key: string]: any;
     }) => Promise<any>;
     deleteTable: (id: string) => void;
   };
@@ -75,19 +88,6 @@ interface IProjectContext {
 const ProjectContext = React.createContext<Partial<IProjectContext>>({});
 export default ProjectContext;
 
-export const rowyUser = (currentUser) => {
-  const { displayName, email, uid, emailVerified, isAnonymous, photoURL } =
-    currentUser;
-  return {
-    timestamp: new Date(),
-    displayName,
-    email,
-    uid,
-    emailVerified,
-    isAnonymous,
-    photoURL,
-  };
-};
 export const useProjectContext = () => useContext(ProjectContext);
 
 export const ProjectContextProvider: React.FC = ({ children }) => {
@@ -97,6 +97,7 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
   const { tableState, tableActions } = useTable();
   const [tables, setTables] = useState<IProjectContext["tables"]>();
   const [settings, settingsActions] = useSettings();
+  const table = _find(tables, (table) => table.id === tableState.config.id);
 
   useEffect(() => {
     const { tables } = settings;
@@ -133,6 +134,46 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
     [tables]
   );
 
+  const addRow: IProjectContext["addRow"] = (data, ignoreRequiredFields) => {
+    const valuesFromFilter = tableState.filters.reduce((acc, curr) => {
+      if (curr.operator === "==") {
+        return { ...acc, [curr.key]: curr.value };
+      } else {
+        return acc;
+      }
+    }, {});
+    const initialData = Object.values(tableState.columns).reduce(
+      (acc, column) => {
+        if (column.config?.defaultValue?.type === "static") {
+          return { ...acc, [column.key]: column.config.defaultValue.value };
+        } else if (column.config?.defaultValue?.type === "null") {
+          return { ...acc, [column.key]: null };
+        } else {
+          return acc;
+        }
+      },
+      {}
+    );
+
+    const requiredFields = Object.values(tableState.columns)
+      .filter((column) => column.config.required)
+      .map((column) => column.key);
+
+    if (table?.audit !== false) {
+      initialData[table?.auditFieldCreatedBy || "_createdBy"] = rowyUser(
+        currentUser!
+      );
+      initialData[table?.auditFieldUpdatedBy || "_updatedBy"] = rowyUser(
+        currentUser!
+      );
+    }
+
+    tableActions.row.add(
+      { ...valuesFromFilter, ...initialData, ...data },
+      ignoreRequiredFields ? [] : requiredFields
+    );
+  };
+
   const updateCell: IProjectContext["updateCell"] = (
     ref,
     fieldName,
@@ -140,14 +181,16 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
     onSuccess
   ) => {
     if (value === undefined) return;
-    const _updatedBy = rowyUser(currentUser);
-    const _updatedAt = _updatedBy.timestamp;
 
-    const update = {
-      [fieldName]: value,
-      _updatedAt,
-      _updatedBy,
-    };
+    const update = { [fieldName]: value };
+
+    if (table?.audit !== false) {
+      update[table?.auditFieldUpdatedBy || "_updatedBy"] = rowyUser(
+        currentUser!,
+        { updatedField: fieldName }
+      );
+    }
+
     tableActions.row.update(
       ref,
       update,
@@ -170,7 +213,28 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
   // rowyRun access
   const _rowyRun: IProjectContext["rowyRun"] = async (args) => {
     const authToken = await getAuthToken();
-    return rowyRun({ rowyRunUrl: settings.doc.rowyRunUrl, authToken, ...args });
+    if (settings.doc.rowyRunUrl)
+      return rowyRun({
+        rowyRunUrl: settings.doc.rowyRunUrl,
+        authToken,
+        ...args,
+      });
+    else {
+      enqueueSnackbar(`Rowy Run is not set up`, {
+        variant: "error",
+        action: (
+          <Button
+            href={WIKI_LINKS.rowyRun}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Docs
+            <InlineOpenInNewIcon />
+          </Button>
+        ),
+      });
+      return { success: false, error: "rowyRun is not setup" };
+    }
   };
 
   // A ref to the data grid. Contains data grid functions
@@ -184,10 +248,12 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
       value={{
         tableState,
         tableActions,
+        addRow,
         updateCell,
         settingsActions,
         roles,
         tables,
+        table,
         dataGridRef,
         sideDrawerRef,
         columnMenuRef,

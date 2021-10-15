@@ -5,7 +5,7 @@ import withBasicCell from "../_withTableCell/withBasicCell";
 import PercentageIcon from "assets/icons/Percentage";
 import BasicCell from "./BasicCell";
 import TextEditor from "components/Table/editors/TextEditor";
-
+import { filterOperators } from "../Number/Filter";
 const SideDrawerField = lazy(
   () =>
     import(
@@ -25,6 +25,9 @@ export const config: IFieldConfig = {
   TableCell: withBasicCell(BasicCell),
   TableEditor: TextEditor,
   SideDrawerField,
+  filter: {
+    operators: filterOperators,
+  },
   csvImportParser: (v) => {
     try {
       const parsedValue = parseFloat(v);

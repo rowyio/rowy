@@ -152,6 +152,7 @@ export default function RichTextEditor({
               body {
                 font-family: ${theme.typography.fontFamily};
                 color: ${theme.palette.text.primary};
+                caret-color: ${theme.palette.primary.main};
                 margin: ${theme.spacing(12 / 8)};
                 margin-top: ${theme.spacing(1)};
                 padding: 0 !important;

@@ -4,7 +4,8 @@ import withBasicCell from "../_withTableCell/withBasicCell";
 
 import LongTextIcon from "@mui/icons-material/Notes";
 import BasicCell from "./BasicCell";
-import withSideDrawerEditor from "components/Table/editors/withSideDrawerEditor";
+import TextEditor from "components/Table/editors/TextEditor";
+import { filterOperators } from "../ShortText/Filter";
 
 const SideDrawerField = lazy(
   () =>
@@ -23,7 +24,10 @@ export const config: IFieldConfig = {
   icon: <LongTextIcon />,
   description: "Text displayed on multiple lines.",
   TableCell: withBasicCell(BasicCell),
-  TableEditor: withSideDrawerEditor(BasicCell),
+  TableEditor: TextEditor,
   SideDrawerField,
+  filter: {
+    operators: filterOperators,
+  },
 };
 export default config;

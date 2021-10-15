@@ -1,7 +1,9 @@
-import React from "react";
+import { createElement, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import _sortBy from "lodash/sortBy";
 import _isEmpty from "lodash/isEmpty";
+import _mapValues from "lodash/mapValues";
+import firebase from "firebase/app";
 
 import { Stack } from "@mui/material";
 
@@ -20,7 +22,7 @@ export interface IFormProps {
 }
 
 export default function Form({ values }: IFormProps) {
-  const { tableState } = useProjectContext();
+  const { tableState, sideDrawerRef } = useProjectContext();
   const { userDoc } = useAppContext();
   const userDocHiddenFields =
     userDoc.state.doc?.tables?.[`${tableState!.tablePath}`]?.hiddenFields ?? [];
@@ -36,23 +38,34 @@ export default function Form({ values }: IFormProps) {
     {}
   );
   const { ref: docRef, ...rowValues } = values;
-  const defaultValues = { ...initialValues, ...rowValues };
+  const safeRowValues = _mapValues(rowValues, (v) => {
+    // If react-hook-form receives a Firestore document reference, it tries to
+    // clone firebase.firestore and exceeds maximum call stack size.
+    if (firebase.firestore.DocumentReference.prototype.isPrototypeOf(v))
+      return v.path;
+    return v;
+  });
+  const defaultValues = { ...initialValues, ...safeRowValues };
 
   const methods = useForm({ mode: "onBlur", defaultValues });
   const { control, reset, formState, getValues } = methods;
   const { dirtyFields } = formState;
 
-  // const { sideDrawerRef } = useProjectContext();
-  // useEffect(() => {
-  //   const column = sideDrawerRef?.current?.cell?.column;
-  //   if (!column) return;
+  useEffect(() => {
+    const column = sideDrawerRef?.current?.cell?.column;
+    if (!column) return;
 
-  //   const elem = document.getElementById(`sidedrawer-label-${column}`)
-  //     ?.parentNode as HTMLElement;
+    const labelElem = document.getElementById(
+      `sidedrawer-label-${column}`
+    )?.parentElement;
+    const fieldElem = document.getElementById(`sidedrawer-field-${column}`);
 
-  //   // Time out for double-clicking on cells, which can open the null editor
-  //   setTimeout(() => elem?.scrollIntoView({ behavior: "smooth" }), 200);
-  // }, [sideDrawerRef?.current]);
+    // Time out for double-clicking on cells, which can open the null editor
+    setTimeout(() => {
+      if (labelElem) labelElem.scrollIntoView({ behavior: "smooth" });
+      if (fieldElem) fieldElem.focus({ preventScroll: true });
+    }, 200);
+  }, [sideDrawerRef?.current]);
 
   return (
     <form>
@@ -98,7 +111,7 @@ export default function Form({ values }: IFormProps) {
               label={field.name}
               disabled={field.editable === false}
             >
-              {React.createElement(fieldComponent, {
+              {createElement(fieldComponent, {
                 column: field,
                 control,
                 docRef,

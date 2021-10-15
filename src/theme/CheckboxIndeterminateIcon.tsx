@@ -70,7 +70,15 @@ export default function CheckboxIndeterminateIcon() {
       }}
     >
       <svg viewBox="0 0 18 18">
-        <line x1="3" y1="9" x2="15" y2="9" strokeWidth="2" className="tick" />
+        <line
+          x1="3"
+          y1="9"
+          x2="15"
+          y2="9"
+          strokeWidth="2"
+          strokeLinecap="round"
+          className="tick"
+        />
       </svg>
     </Box>
   );

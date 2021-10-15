@@ -1,11 +1,14 @@
 import { useEffect } from "react";
 import _findIndex from "lodash/findIndex";
+import _camelCase from "lodash/camelCase";
 
 import useDoc from "./useDoc";
 import { db } from "../firebase";
 import { SETTINGS, TABLE_GROUP_SCHEMAS, TABLE_SCHEMAS } from "config/dbPaths";
+import { FieldType } from "constants/fields";
+import { getFieldProp } from "@src/components/fields";
 
-const useSettings = () => {
+export default function useSettings() {
   const [settingsState, documentDispatch] = useDoc({ path: SETTINGS });
   useEffect(() => {
     //updates tables data on document change
@@ -30,6 +33,7 @@ const useSettings = () => {
     tableType: string;
     roles: string[];
     schemaSource: any;
+    _initialColumns: Record<FieldType, boolean>;
   }) => {
     const { tables } = settingsState;
     const { schemaSource, ...tableSettings } = data;
@@ -41,7 +45,7 @@ const useSettings = () => {
     const tableSchemaDocRef = db.doc(tableSchemaPath);
 
     // Get columns from schemaSource if provided
-    let columns = [];
+    let columns: Record<string, any> = {};
     if (schemaSource) {
       const schemaSourcePath = `${
         tableSettings.tableType !== "collectionGroup"
@@ -50,6 +54,21 @@ const useSettings = () => {
       }/${schemaSource.id}`;
       const sourceDoc = await db.doc(schemaSourcePath).get();
       columns = sourceDoc.get("columns");
+    }
+    // Add columns from `_initialColumns`
+    for (const [type, checked] of Object.entries(data._initialColumns)) {
+      if (
+        checked &&
+        !Object.values(columns).some((column) => column.type === type)
+      )
+        columns["_" + _camelCase(type)] = {
+          type,
+          name: getFieldProp("name", type as FieldType),
+          key: "_" + _camelCase(type),
+          fieldName: "_" + _camelCase(type),
+          config: {},
+          index: Object.values(columns).length,
+        };
     }
 
     // Appends table to settings doc
@@ -68,10 +87,12 @@ const useSettings = () => {
 
   const updateTable = async (data: {
     id: string;
-    name: string;
-    collection: string;
-    description: string;
-    roles: string[];
+    name?: string;
+    collection?: string;
+    section?: string;
+    description?: string;
+    roles?: string[];
+    [key: string]: any;
   }) => {
     const { tables } = settingsState;
     const newTables = Array.isArray(tables) ? [...tables] : [];
@@ -92,6 +113,4 @@ const useSettings = () => {
   };
   const settingsActions = { createTable, updateTable, deleteTable };
   return [settingsState, settingsActions];
-};
-
-export default useSettings;
+}

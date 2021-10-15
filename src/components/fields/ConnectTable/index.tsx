@@ -25,11 +25,12 @@ export const config: IFieldConfig = {
   type: FieldType.connectTable,
   name: "Connect Table (Alpha)",
   group: "Connection",
-  dataType: "{ docPath: string; snapshot: Record<string, any>; }[]",
+  dataType:
+    "{ docPath: string; snapshot: Record<string, any>; }[] | { docPath: string; snapshot: Record<string, any>; } | null",
   initialValue: [],
   icon: <ConnectTableIcon />,
   description:
-    "Connects to an existing table to fetch a snapshot of values from a row. Requires Algolia integration.",
+    "Connects to an existing table to fetch a snapshot of values from a row. Requires Algolia setup.",
   TableCell: withPopoverCell(BasicCell, InlineCell, PopoverCell, {
     anchorOrigin: { horizontal: "left", vertical: "bottom" },
     transparent: true,

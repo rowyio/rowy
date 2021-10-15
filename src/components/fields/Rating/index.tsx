@@ -5,6 +5,7 @@ import withHeavyCell from "../_withTableCell/withHeavyCell";
 import RatingIcon from "@mui/icons-material/StarBorder";
 import BasicCell from "../_BasicCell/BasicCellNull";
 import NullEditor from "components/Table/editors/NullEditor";
+import { filterOperators } from "../Number/Filter";
 
 const TableCell = lazy(
   () => import("./TableCell" /* webpackChunkName: "TableCell-Rating" */)
@@ -25,11 +26,15 @@ export const config: IFieldConfig = {
   initialValue: 0,
   initializable: true,
   icon: <RatingIcon />,
+  requireConfiguration: true,
   description:
     "Rating displayed as stars. Max stars is configurable, default: 5 stars.",
   TableCell: withHeavyCell(BasicCell, TableCell),
   TableEditor: NullEditor as any,
   settings: Settings,
   SideDrawerField,
+  filter: {
+    operators: filterOperators,
+  },
 };
 export default config;

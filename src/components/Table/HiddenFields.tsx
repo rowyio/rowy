@@ -119,7 +119,7 @@ export default function HiddenFields() {
         active={hiddenFields.length > 0}
         ref={buttonRef}
       >
-        {hiddenFields.length > 0 ? `${hiddenFields.length} Hidden` : "Hide"}
+        {hiddenFields.length > 0 ? `${hiddenFields.length} hidden` : "Hide"}
       </ButtonWithStatus>
       <MultiSelect
         TextFieldProps={{

@@ -20,7 +20,7 @@ import ColumnHeader from "./ColumnHeader";
 import ColumnMenu from "./ColumnMenu";
 import FinalColumnHeader from "./FinalColumnHeader";
 import FinalColumn from "./formatters/FinalColumn";
-import BulkActions from "./BulkActions";
+// import BulkActions from "./BulkActions";
 
 import { getFieldProp } from "components/fields";
 import { FieldType } from "constants/fields";
@@ -246,14 +246,14 @@ export default function Table() {
       </div>
 
       <ColumnMenu />
-      <BulkActions
+      {/* <BulkActions
         selectedRows={selectedRows}
         columns={columns}
         clearSelection={() => {
           setSelectedRowsSet(new Set());
           setSelectedRows([]);
         }}
-      />
+      /> */}
     </>
   );
 }

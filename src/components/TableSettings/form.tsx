@@ -7,12 +7,15 @@ import WarningIcon from "@mui/icons-material/WarningAmber";
 
 import { WIKI_LINKS } from "constants/externalLinks";
 import { name } from "@root/package.json";
+import { FieldType as TableFieldType } from "constants/fields";
 
 export const tableSettings = (
   mode: TableSettingsDialogModes | null,
   roles: string[] | undefined,
   sections: string[] | undefined,
-  tables: { label: string; value: any }[] | undefined,
+  tables:
+    | { label: string; value: any; section: string; collection: string }[]
+    | undefined,
   collections: string[]
 ): Field[] =>
   [
@@ -70,9 +73,7 @@ export const tableSettings = (
           </Link>
         </>
       ),
-      AddButtonProps: {
-        children: "Add collection",
-      },
+      AddButtonProps: { children: "Add collection…" },
       AddDialogProps: {
         title: "Add collection",
         textFieldLabel: (
@@ -159,8 +160,8 @@ export const tableSettings = (
     },
 
     {
-      type: FieldType.contentSubHeader,
-      name: "_contentSubHeader_userFacing",
+      type: FieldType.contentHeader,
+      name: "_contentHeader_userFacing",
       label: "Display",
     },
     {
@@ -182,9 +183,9 @@ export const tableSettings = (
     },
 
     {
-      type: FieldType.contentSubHeader,
-      name: "_contentSubHeader_admin",
-      label: "Admin",
+      type: FieldType.contentHeader,
+      name: "_contentHeader_admin",
+      label: "Access controls",
     },
     {
       type: FieldType.multiSelect,
@@ -253,21 +254,123 @@ export const tableSettings = (
         </>
       ),
     },
+
+    {
+      type: FieldType.contentHeader,
+      name: "_contentHeader_audit",
+      label: "Auditing",
+    },
+    {
+      type: FieldType.checkbox,
+      name: "audit",
+      label: "Enable auditing for this table",
+      defaultValue: true,
+      assistiveText: "Track when users create or update rows",
+    },
+    {
+      type: FieldType.shortText,
+      name: "auditFieldCreatedBy",
+      label: "Created By field key (optional)",
+      defaultValue: "_createdBy",
+      displayCondition: "return values.audit",
+      assistiveText: "Optionally change the field key",
+      gridCols: { xs: 12, sm: 6 },
+      sx: { "& .MuiInputBase-input": { fontFamily: "mono" } },
+    },
+    {
+      type: FieldType.shortText,
+      name: "auditFieldUpdatedBy",
+      label: "Updated By field key (optional)",
+      defaultValue: "_updatedBy",
+      displayCondition: "return values.audit",
+      assistiveText: "Optionally change the field key",
+      gridCols: { xs: 12, sm: 6 },
+      sx: { "& .MuiInputBase-input": { fontFamily: "mono" } },
+    },
+
+    mode === TableSettingsDialogModes.create
+      ? {
+          type: FieldType.contentHeader,
+          name: "_contentHeader_columns",
+          label: "Columns",
+        }
+      : null,
     mode === TableSettingsDialogModes.create && tables && tables?.length !== 0
       ? {
           type: FieldType.singleSelect,
           name: "schemaSource",
-          label: "Copy column config from existing table (optional)",
+          label: "Copy columns from existing table (optional)",
           labelPlural: "tables",
           options: tables,
           clearable: true,
           freeText: false,
-          itemRenderer: (option: { value: string; label: string }) => (
+          itemRenderer: (option: {
+            value: string;
+            label: string;
+            section: string;
+            collection: string;
+          }) => (
             <>
-              {option.label}{" "}
-              <code style={{ marginLeft: "auto" }}>{option.value}</code>
+              {option.section} &gt; {option.label}{" "}
+              <code style={{ marginLeft: "auto" }}>{option.collection}</code>
             </>
           ),
+        }
+      : null,
+    mode === TableSettingsDialogModes.create
+      ? {
+          type: FieldType.contentSubHeader,
+          name: "_contentSubHeader_initialColumns",
+          label: "Initial columns",
+          sx: { "&&": { mb: 1 }, typography: "button", ml: 2 / 8 },
+        }
+      : null,
+    mode === TableSettingsDialogModes.create
+      ? {
+          type: FieldType.checkbox,
+          name: `_initialColumns.${TableFieldType.createdBy}`,
+          label: "Created By",
+          displayCondition: "return values.audit",
+          gridCols: 6,
+          disablePaddingTop: true,
+        }
+      : null,
+    mode === TableSettingsDialogModes.create
+      ? {
+          type: FieldType.checkbox,
+          name: `_initialColumns.${TableFieldType.updatedBy}`,
+          label: "Updated By",
+          displayCondition: "return values.audit",
+          gridCols: 6,
+          disablePaddingTop: true,
+        }
+      : null,
+    mode === TableSettingsDialogModes.create
+      ? {
+          type: FieldType.checkbox,
+          name: `_initialColumns.${TableFieldType.createdAt}`,
+          label: "Created At",
+          displayCondition: "return values.audit",
+          gridCols: 6,
+          disablePaddingTop: true,
+        }
+      : null,
+    mode === TableSettingsDialogModes.create
+      ? {
+          type: FieldType.checkbox,
+          name: `_initialColumns.${TableFieldType.updatedAt}`,
+          label: "Updated At",
+          displayCondition: "return values.audit",
+          gridCols: 6,
+          disablePaddingTop: true,
+        }
+      : null,
+    mode === TableSettingsDialogModes.create
+      ? {
+          type: FieldType.checkbox,
+          name: `_initialColumns.${TableFieldType.id}`,
+          label: "Row ID",
+          disablePaddingTop: true,
         }
       : null,
   ].filter((field) => field !== null) as Field[];

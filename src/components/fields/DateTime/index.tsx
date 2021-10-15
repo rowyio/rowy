@@ -7,6 +7,7 @@ import { DATE_TIME_FORMAT } from "constants/dates";
 import DateTimeIcon from "@mui/icons-material/AccessTime";
 import BasicCell from "./BasicCell";
 import NullEditor from "components/Table/editors/NullEditor";
+import { filterOperators, valueFormatter } from "./Filter";
 
 const TableCell = lazy(
   () => import("./TableCell" /* webpackChunkName: "TableCell-DateTime" */)
@@ -33,6 +34,10 @@ export const config: IFieldConfig = {
   TableCell: withHeavyCell(BasicCell, TableCell),
   TableEditor: NullEditor as any,
   SideDrawerField,
+  filter: {
+    operators: filterOperators,
+    valueFormatter,
+  },
   settings: Settings,
   csvImportParser: (value) => parseJSON(value).getTime(),
   csvExportFormatter: (value: any, config?: any) =>

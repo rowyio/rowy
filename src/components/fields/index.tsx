@@ -32,6 +32,10 @@ import Code from "./Code";
 import Action from "./Action";
 import Derivative from "./Derivative";
 import Aggregate from "./Aggregate";
+import CreatedBy from "./CreatedBy";
+import UpdatedBy from "./UpdatedBy";
+import CreatedAt from "./CreatedAt";
+import UpdatedAt from "./UpdatedAt";
 import User from "./User";
 import Id from "./Id";
 import Status from "./Status";
@@ -74,6 +78,11 @@ export const FIELDS: IFieldConfig[] = [
   Derivative,
   Aggregate,
   Status,
+  // AUDITING
+  CreatedBy,
+  UpdatedBy,
+  CreatedAt,
+  UpdatedAt,
   // METADATA
   User,
   Id,

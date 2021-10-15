@@ -17,31 +17,38 @@ export default function User({ control, column }: ISideDrawerFieldProps) {
       render={({ field: { value } }) => {
         if (!value || !value.displayName || !value.timestamp)
           return <div className={fieldClasses.root} />;
-        const dateLabel = format(
-          value.timestamp.toDate ? value.timestamp.toDate() : value.timestamp,
-          DATE_TIME_FORMAT
-        );
+        const dateLabel = value.timestamp
+          ? format(
+              value.timestamp.toDate
+                ? value.timestamp.toDate()
+                : value.timestamp,
+              column.config?.format || DATE_TIME_FORMAT
+            )
+          : null;
+
         return (
-          <Stack
-            direction="row"
-            alignItems="center"
-            className={fieldClasses.root}
-          >
+          <Stack direction="row" className={fieldClasses.root}>
             <Avatar
               alt="Avatar"
               src={value.photoURL}
-              sx={{ width: 32, height: 32, ml: -0.5, mr: 1.5 }}
+              sx={{ width: 32, height: 32, ml: -0.5, mr: 1.5, my: 0.5 }}
             />
 
-            <Typography variant="body2" component="div">
+            <Typography
+              variant="body2"
+              component="div"
+              style={{ whiteSpace: "normal" }}
+            >
               {value.displayName} ({value.email})
-              <Typography
-                variant="caption"
-                color="textSecondary"
-                component="div"
-              >
-                Updated at {dateLabel}
-              </Typography>
+              {dateLabel && (
+                <Typography
+                  variant="caption"
+                  color="textSecondary"
+                  component="div"
+                >
+                  {dateLabel}
+                </Typography>
+              )}
             </Typography>
           </Stack>
         );

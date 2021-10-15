@@ -2,22 +2,34 @@ import { useEffect, useState } from "react";
 import { ISettingsProps } from "../types";
 import _sortBy from "lodash/sortBy";
 
-import { TextField } from "@mui/material";
+import {
+  Typography,
+  Link,
+  TextField,
+  FormControlLabel,
+  Checkbox,
+  FormHelperText,
+} from "@mui/material";
 import MultiSelect from "@rowy/multiselect";
+import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
+import WarningIcon from "@mui/icons-material/WarningAmberOutlined";
 
 import { FieldType } from "constants/fields";
-import { db } from "../../../firebase";
+import { db } from "@src/firebase";
 import { useProjectContext } from "contexts/ProjectContext";
 import { TABLE_SCHEMAS } from "config/dbPaths";
+import { WIKI_LINKS } from "constants/externalLinks";
 
 export default function Settings({ handleChange, config }: ISettingsProps) {
   const { tables } = useProjectContext();
   const tableOptions = _sortBy(
-    tables?.map((t) => ({
-      label: `${t.section} – ${t.name} (${t.collection})`,
-      value: t.id,
+    tables?.map((table) => ({
+      label: table.name,
+      value: table.id,
+      section: table.section,
+      collection: table.collection,
     })) ?? [],
-    "label"
+    ["section", "label"]
   );
 
   const [columns, setColumns] = useState<
@@ -43,6 +55,18 @@ export default function Settings({ handleChange, config }: ISettingsProps) {
 
   return (
     <>
+      <Typography>
+        Connect Table requires additional setup.{" "}
+        <Link
+          href={WIKI_LINKS.fieldTypesConnectTable}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Instructions
+          <InlineOpenInNewIcon />
+        </Link>
+      </Typography>
+
       <MultiSelect
         options={tableOptions}
         freeText={false}
@@ -51,16 +75,86 @@ export default function Settings({ handleChange, config }: ISettingsProps) {
         multiple={false}
         label="Table"
         labelPlural="tables"
+        itemRenderer={(option: Record<string, string>) => (
+          <>
+            {option.section} &gt; {option.label}{" "}
+            <code style={{ marginLeft: "auto" }}>{option.collection}</code>
+          </>
+        )}
+        TextFieldProps={{
+          helperText:
+            "Make sure this table is being synced to an Algolia index",
+        }}
       />
+
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={config.multiple !== false}
+            onChange={(e) => handleChange("multiple")(e.target.checked)}
+          />
+        }
+        label={
+          <>
+            Multiple selection
+            <FormHelperText>
+              {config.multiple === false ? (
+                <>
+                  Field values will be either{" "}
+                  <code>
+                    {"{ docPath: string; snapshot: Record<string, any>; }"}
+                  </code>{" "}
+                  or <code>null</code>.<br />
+                  Easier to filter.
+                </>
+              ) : (
+                <>
+                  Field values will be an array of{" "}
+                  <code>
+                    {"{ docPath: string; snapshot: Record<string, any>; }"}
+                  </code>{" "}
+                  or an empty array.
+                  <br />
+                  Harder to filter.
+                </>
+              )}
+            </FormHelperText>
+            <FormHelperText>
+              <WarningIcon
+                color="warning"
+                aria-label="Warning: "
+                style={{ verticalAlign: "text-bottom", fontSize: "1rem" }}
+              />
+              &nbsp; Existing values in this table will not be updated
+            </FormHelperText>
+          </>
+        }
+        style={{ marginLeft: -10 }}
+      />
+
       <TextField
         label="Filter template"
         name="filters"
         fullWidth
         value={config.filters}
-        onChange={(e) => {
-          handleChange("filters")(e.target.value);
-        }}
+        onChange={(e) => handleChange("filters")(e.target.value)}
+        placeholder="attribute:value AND | OR | NOT attribute:value"
+        id="connectTable-filters"
+        helperText={
+          <>
+            Use the Algolia syntax for filters:{" "}
+            <Link
+              href="https://www.algolia.com/doc/api-reference/api-parameters/filters/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Algolia documentation
+              <InlineOpenInNewIcon />
+            </Link>
+          </>
+        }
       />
+
       <MultiSelect
         label="Primary keys"
         value={config.primaryKeys ?? []}
@@ -68,18 +162,26 @@ export default function Settings({ handleChange, config }: ISettingsProps) {
           [FieldType.shortText, FieldType.singleSelect].includes(c.type)
         )}
         onChange={handleChange("primaryKeys")}
+        TextFieldProps={{ helperText: "Field values displayed" }}
       />
+
       <MultiSelect
         label="Snapshot fields"
         value={config.snapshotFields ?? []}
         options={columns.filter((c) => ![FieldType.subTable].includes(c.type))}
         onChange={handleChange("snapshotFields")}
+        TextFieldProps={{ helperText: "Fields stored in the snapshots" }}
       />
+
       <MultiSelect
         label="Tracked fields"
         value={config.trackedFields ?? []}
         options={columns.filter((c) => ![FieldType.subTable].includes(c.type))}
         onChange={handleChange("trackedFields")}
+        TextFieldProps={{
+          helperText:
+            "Fields to be tracked for changes and synced to the snapshot",
+        }}
       />
     </>
   );

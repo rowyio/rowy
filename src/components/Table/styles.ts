@@ -90,6 +90,15 @@ export const useStyles = makeStyles((theme) =>
             .split("),")
             .slice(1)
             .join("),"),
+
+          "&[aria-selected=true]": {
+            boxShadow:
+              theme.shadows[2]
+                .replace(/, 0 (\d+px)/g, ", $1 0")
+                .split("),")
+                .slice(1)
+                .join("),") + ", inset 0 0 0 2px var(--selection-color)",
+          },
         },
 
         "& .rdg-cell-copied": {

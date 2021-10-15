@@ -8,11 +8,12 @@ import {
   IconButton,
   Typography,
   Divider,
+  FormControlLabel,
+  Checkbox,
+  FormHelperText,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/AddCircle";
 import RemoveIcon from "@mui/icons-material/CancelRounded";
-
-import Subheading from "components/Table/ColumnMenu/Subheading";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -106,6 +107,25 @@ export default function Settings({ handleChange, config }) {
           />
         </Grid>
       </Grid>
+
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={config.freeText}
+            onChange={(e) => handleChange("freeText")(e.target.checked)}
+          />
+        }
+        label={
+          <>
+            Users can add custom options
+            <FormHelperText>
+              Custom options will only appear in the row it was added to. They
+              will not appear in the list of options above.
+            </FormHelperText>
+          </>
+        }
+        style={{ marginLeft: -10 }}
+      />
     </div>
   );
 }

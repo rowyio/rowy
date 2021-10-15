@@ -30,9 +30,9 @@ export default function CamelCaseId({
 }: ICamelCaseIdProps) {
   const watchedValue = useWatch({ control, name: watchedField } as any);
   useEffect(() => {
-    if (watchedField && typeof watchedValue === "string" && !!watchedValue)
+    if (!disabled && typeof watchedValue === "string" && !!watchedValue)
       onChange(_camelCase(watchedValue));
-  }, [watchedValue]);
+  }, [watchedValue, disabled]);
 
   return (
     <TextField

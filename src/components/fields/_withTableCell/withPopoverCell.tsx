@@ -168,6 +168,7 @@ export default function withPopoverCell(
                 ...popoverProps?.PaperProps,
               }}
               onClick={(e) => e.stopPropagation()}
+              onDoubleClick={(e) => e.stopPropagation()}
               onKeyDown={(e) => e.stopPropagation()}
             >
               <PopoverCellComponent

@@ -6,6 +6,7 @@ import ShortTextIcon from "@mui/icons-material/ShortText";
 import BasicCell from "../_BasicCell/BasicCellValue";
 import TextEditor from "components/Table/editors/TextEditor";
 
+import { filterOperators } from "./Filter";
 const SideDrawerField = lazy(
   () =>
     import(
@@ -29,5 +30,8 @@ export const config: IFieldConfig = {
   TableEditor: TextEditor,
   SideDrawerField,
   settings: Settings,
+  filter: {
+    operators: filterOperators,
+  },
 };
 export default config;

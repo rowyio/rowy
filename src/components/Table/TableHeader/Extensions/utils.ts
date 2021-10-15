@@ -1,40 +1,4 @@
-type IExtensionType =
-  | "task"
-  | "docSync"
-  | "historySnapshot"
-  | "algoliaIndex"
-  | "meiliIndex"
-  | "bigqueryIndex"
-  | "slackMessage"
-  | "sendgridEmail"
-  | "apiCall"
-  | "twilioMessage";
-
-type IExtensionTrigger = "create" | "update" | "delete";
-
-interface IExtensionEditor {
-  displayName: string;
-  photoURL: string;
-  lastUpdate: number;
-}
-
-interface IExtension {
-  // rowy meta fields
-  name: string;
-  active: boolean;
-  lastEditor: IExtensionEditor;
-
-  // ft build fields
-  triggers: IExtensionTrigger[];
-  type: IExtensionType;
-  requiredFields: string[];
-  extensionBody: string;
-  conditions: string;
-}
-
-const triggerTypes: IExtensionTrigger[] = ["create", "update", "delete"];
-
-const extensionTypes: IExtensionType[] = [
+export const extensionTypes = [
   "task",
   "docSync",
   "historySnapshot",
@@ -45,7 +9,46 @@ const extensionTypes: IExtensionType[] = [
   "sendgridEmail",
   "apiCall",
   "twilioMessage",
-];
+] as const;
+
+export type ExtensionType = typeof extensionTypes[number];
+
+export const extensionNames: Record<ExtensionType, string> = {
+  task: "Task",
+  docSync: "Doc Sync",
+  historySnapshot: "History Snapshot",
+  algoliaIndex: "Algolia Index",
+  meiliIndex: "MeiliSearch Index",
+  bigqueryIndex: "Big Query Index",
+  slackMessage: "Slack Message",
+  sendgridEmail: "SendGrid Email",
+  apiCall: "API Call",
+  twilioMessage: "Twilio Message",
+};
+
+export type ExtensionTrigger = "create" | "update" | "delete";
+
+export interface IExtensionEditor {
+  displayName: string;
+  photoURL: string;
+  lastUpdate: number;
+}
+
+export interface IExtension {
+  // rowy meta fields
+  name: string;
+  active: boolean;
+  lastEditor: IExtensionEditor;
+
+  // ft build fields
+  triggers: ExtensionTrigger[];
+  type: ExtensionType;
+  requiredFields: string[];
+  extensionBody: string;
+  conditions: string;
+}
+
+export const triggerTypes: ExtensionTrigger[] = ["create", "update", "delete"];
 
 const extensionBodyTemplate = {
   task: `const extensionBody: TaskBody = async({row, db, change, ref}) => {
@@ -158,8 +161,8 @@ const extensionBodyTemplate = {
 }`,
 };
 
-function emptyExtensionObject(
-  type: IExtensionType,
+export function emptyExtensionObject(
+  type: ExtensionType,
   user: IExtensionEditor
 ): IExtension {
   return {
@@ -176,7 +179,7 @@ function emptyExtensionObject(
     lastEditor: user,
   };
 }
-function sparkToExtensionObjects(
+export function sparkToExtensionObjects(
   sparkConfig: string,
   user: IExtensionEditor
 ): IExtension[] {
@@ -225,8 +228,8 @@ function sparkToExtensionObjects(
       lastEditor: user,
 
       // ft build fields
-      triggers: (spark.triggers ?? []) as IExtensionTrigger[],
-      type: spark.type as IExtensionType,
+      triggers: (spark.triggers ?? []) as ExtensionTrigger[],
+      type: spark.type as ExtensionType,
       requiredFields: spark.requiredFields ?? [],
       extensionBody: spark.sparkBody,
       conditions: spark.shouldRun ?? "",
@@ -234,11 +237,3 @@ function sparkToExtensionObjects(
   });
   return extensionObjects ?? [];
 }
-
-export {
-  extensionTypes,
-  triggerTypes,
-  emptyExtensionObject,
-  sparkToExtensionObjects,
-};
-export type { IExtension, IExtensionType, IExtensionEditor };
