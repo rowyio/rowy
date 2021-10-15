@@ -22,7 +22,7 @@ export default function User({ control, column }: ISideDrawerFieldProps) {
               value.timestamp.toDate
                 ? value.timestamp.toDate()
                 : value.timestamp,
-              DATE_TIME_FORMAT
+              column.config?.format || DATE_TIME_FORMAT
             )
           : null;
 

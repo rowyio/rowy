@@ -36,10 +36,13 @@ export enum FieldType {
   derivative = "DERIVATIVE",
   aggregate = "AGGREGATE",
   status = "STATUS",
+  // AUDIT
+  createdBy = "CREATED_BY",
+  updatedBy = "UPDATED_BY",
+  createdAt = "CREATED_AT",
+  updatedAt = "UPDATED_AT",
   // METADATA
   user = "USER",
-  updatedBy = "UPDATED_BY",
-  createdBy = "CREATED_BY",
   id = "ID",
   last = "LAST",
 }

@@ -2,16 +2,18 @@ import { lazy } from "react";
 import { IFieldConfig, FieldType } from "components/fields/types";
 import withHeavyCell from "../_withTableCell/withHeavyCell";
 
-import UserIcon from "@mui/icons-material/PersonOutlined";
+import UpdatedAtIcon from "assets/icons/UpdatedAt";
 import BasicCell from "../_BasicCell/BasicCellNull";
 import withSideDrawerEditor from "components/Table/editors/withSideDrawerEditor";
 
 const TableCell = lazy(
-  () => import("./TableCell" /* webpackChunkName: "TableCell-User" */)
+  () => import("./TableCell" /* webpackChunkName: "TableCell-UpdatedAt" */)
 );
 const SideDrawerField = lazy(
   () =>
-    import("./SideDrawerField" /* webpackChunkName: "SideDrawerField-User" */)
+    import(
+      "./SideDrawerField" /* webpackChunkName: "SideDrawerField-UpdatedAt" */
+    )
 );
 const Settings = lazy(
   () =>
@@ -19,14 +21,14 @@ const Settings = lazy(
 );
 
 export const config: IFieldConfig = {
-  type: FieldType.user,
-  name: "User",
-  group: "Metadata",
-  dataType:
-    "{ displayName: string; email: string; emailVerified: boolean; isAnonymous: boolean; photoURL: string; uid: string; timestamp?: firebase.firestore.Timestamp; }",
+  type: FieldType.updatedAt,
+  name: "Updated At",
+  group: "Auditing",
+  dataType: "firebase.firestore.Timestamp",
   initialValue: null,
-  icon: <UserIcon />,
-  description: "User information and optionally, timestamp. Read-only.",
+  icon: <UpdatedAtIcon />,
+  description:
+    "Displays the timestamp of the last update to the row. Read-only.",
   TableCell: withHeavyCell(BasicCell, TableCell),
   TableEditor: withSideDrawerEditor(TableCell),
   SideDrawerField,

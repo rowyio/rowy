@@ -28,10 +28,14 @@ export type Table = {
   description: string;
   section: string;
   tableType: "primaryCollection" | "collectionGroup";
+  audit?: boolean;
+  auditFieldCreatedBy?: string;
+  auditFieldUpdatedBy?: string;
 };
 
 interface IProjectContext {
   tables: Table[];
+  table: Table;
   roles: string[];
   tableState: TableState;
   tableActions: TableActions;
@@ -57,11 +61,12 @@ interface IProjectContext {
     }) => void;
     updateTable: (data: {
       id: string;
-      collection: string;
-      name: string;
-      description: string;
-      roles: string[];
-      section: string;
+      name?: string;
+      collection?: string;
+      section?: string;
+      description?: string;
+      roles?: string[];
+      [key: string]: any;
     }) => Promise<any>;
     deleteTable: (id: string) => void;
   };
@@ -92,6 +97,7 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
   const { tableState, tableActions } = useTable();
   const [tables, setTables] = useState<IProjectContext["tables"]>();
   const [settings, settingsActions] = useSettings();
+  const table = _find(tables, (table) => table.id === tableState.config.id);
 
   useEffect(() => {
     const { tables } = settings;
@@ -153,19 +159,14 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
       .filter((column) => column.config.required)
       .map((column) => column.key);
 
-    const createdByColumn = _find(tableState.columns, [
-      "type",
-      FieldType.createdBy,
-    ]);
-    if (createdByColumn)
-      initialData[createdByColumn.key] = rowyUser(currentUser!);
-
-    const updatedByColumn = _find(tableState.columns, [
-      "type",
-      FieldType.updatedBy,
-    ]);
-    if (updatedByColumn)
-      initialData[updatedByColumn.key] = rowyUser(currentUser!);
+    if (table?.audit !== false) {
+      initialData[table?.auditFieldCreatedBy || "_createdBy"] = rowyUser(
+        currentUser!
+      );
+      initialData[table?.auditFieldUpdatedBy || "_updatedBy"] = rowyUser(
+        currentUser!
+      );
+    }
 
     tableActions.row.add(
       { ...valuesFromFilter, ...initialData, ...data },
@@ -183,14 +184,12 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
 
     const update = { [fieldName]: value };
 
-    const updatedByColumn = _find(tableState.columns, [
-      "type",
-      FieldType.updatedBy,
-    ]);
-    if (updatedByColumn)
-      update[updatedByColumn.key] = rowyUser(currentUser!, {
-        updatedField: fieldName,
-      });
+    if (table?.audit !== false) {
+      update[table?.auditFieldUpdatedBy || "_updatedBy"] = rowyUser(
+        currentUser!,
+        { updatedField: fieldName }
+      );
+    }
 
     tableActions.row.update(
       ref,
@@ -254,6 +253,7 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
         settingsActions,
         roles,
         tables,
+        table,
         dataGridRef,
         sideDrawerRef,
         columnMenuRef,

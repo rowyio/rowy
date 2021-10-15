@@ -45,7 +45,7 @@ export default function useSettings() {
     const tableSchemaDocRef = db.doc(tableSchemaPath);
 
     // Get columns from schemaSource if provided
-    let columns: Record<string, any> = [];
+    let columns: Record<string, any> = {};
     if (schemaSource) {
       const schemaSourcePath = `${
         tableSettings.tableType !== "collectionGroup"
@@ -57,14 +57,18 @@ export default function useSettings() {
     }
     // Add columns from `_initialColumns`
     for (const [type, checked] of Object.entries(data._initialColumns)) {
-      if (checked && !columns.some((column) => column.type === type))
-        columns.push({
+      if (
+        checked &&
+        !Object.values(columns).some((column) => column.type === type)
+      )
+        columns["_" + _camelCase(type)] = {
           type,
           name: getFieldProp("name", type as FieldType),
           key: "_" + _camelCase(type),
           fieldName: "_" + _camelCase(type),
           config: {},
-        });
+          index: Object.values(columns).length,
+        };
     }
 
     // Appends table to settings doc
@@ -83,10 +87,12 @@ export default function useSettings() {
 
   const updateTable = async (data: {
     id: string;
-    name: string;
-    collection: string;
-    description: string;
-    roles: string[];
+    name?: string;
+    collection?: string;
+    section?: string;
+    description?: string;
+    roles?: string[];
+    [key: string]: any;
   }) => {
     const { tables } = settingsState;
     const newTables = Array.isArray(tables) ? [...tables] : [];
