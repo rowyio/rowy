@@ -20,7 +20,7 @@
     "@mui/material": "^5.0.0",
     "@mui/styles": "^5.0.0",
     "@rowy/form-builder": "^0.3.1",
-    "@rowy/multiselect": "^0.2.1",
+    "@rowy/multiselect": "^0.2.3",
     "@tinymce/tinymce-react": "^3.12.6",
     "algoliasearch": "^4.8.6",
     "ansi-to-react": "^6.1.5",

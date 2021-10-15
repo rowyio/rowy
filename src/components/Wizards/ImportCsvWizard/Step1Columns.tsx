@@ -282,7 +282,7 @@ export default function Step1Columns({
                     displayEmpty
                     labelPlural="columns"
                     freeText
-                    AddButtonProps={{ children: "Add new column" }}
+                    AddButtonProps={{ children: "Add new column…" }}
                     AddDialogProps={{
                       title: "Add new column",
                       textFieldLabel: "Column name",

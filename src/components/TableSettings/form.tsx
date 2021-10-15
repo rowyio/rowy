@@ -73,9 +73,7 @@ export const tableSettings = (
           </Link>
         </>
       ),
-      AddButtonProps: {
-        children: "Add collection",
-      },
+      AddButtonProps: { children: "Add collection…" },
       AddDialogProps: {
         title: "Add collection",
         textFieldLabel: (
