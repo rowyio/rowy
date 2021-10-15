@@ -1,5 +1,6 @@
-import { Stack, Typography, Grid, Tooltip, Chip, Button } from "@mui/material";
+import { Stack, Typography, Grid, Tooltip, Button } from "@mui/material";
 import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
+
 export interface ICodeEditorHelperProps {
   docLink: string;
   additionalVariables?: {
@@ -42,24 +43,19 @@ export default function CodeEditorHelper({
   return (
     <Stack
       direction="row"
-      spacing={0.25}
       alignItems="baseline"
       justifyContent="space-between"
-      sx={{ mb: 1 }}
+      sx={{ my: 1 }}
     >
-      <Typography
-        variant="body2"
-        color="textSecondary"
-        style={{ flexShrink: 0 }}
-      >
+      <Typography variant="body2" color="textSecondary">
         You can access:
       </Typography>
 
-      <Grid container spacing={0.5}>
+      <Grid container spacing={1}>
         {availableVariables.concat(additionalVariables ?? []).map((v) => (
           <Grid item key={v.key}>
             <Tooltip title={v.description}>
-              <Chip label={v.key} size="small" />
+              <code>{v.key}</code>
             </Tooltip>
           </Grid>
         ))}

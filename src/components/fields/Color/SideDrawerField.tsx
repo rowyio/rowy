@@ -4,45 +4,15 @@ import { ISideDrawerFieldProps } from "../types";
 import { ColorPicker, toColor } from "react-color-palette";
 import "react-color-palette/lib/css/styles.css";
 
-import { makeStyles, createStyles } from "@mui/styles";
-import { ButtonBase, Box, Typography, Collapse } from "@mui/material";
+import { ButtonBase, Box, Collapse } from "@mui/material";
 
 import { useFieldStyles } from "components/SideDrawer/Form/utils";
-
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    root: {
-      height: 56,
-      cursor: "pointer",
-      textAlign: "left",
-      borderRadius: theme.shape.borderRadius,
-
-      backgroundColor:
-        theme.palette.mode === "light"
-          ? "rgba(0, 0, 0, 0.09)"
-          : "rgba(255, 255, 255, 0.09)",
-      margin: 0,
-      width: "100%",
-      padding: theme.spacing(0, 0.75),
-    },
-
-    colorIndicator: {
-      width: 20,
-      height: 20,
-      marginLeft: 2,
-
-      boxShadow: `0 0 0 1px ${theme.palette.text.disabled} inset`,
-      borderRadius: theme.shape.borderRadius,
-    },
-  })
-);
 
 export default function Color({
   column,
   control,
   disabled,
 }: ISideDrawerFieldProps) {
-  const classes = useStyles();
   const fieldClasses = useFieldStyles();
 
   const [showPicker, setShowPicker] = useState(false);
@@ -53,7 +23,6 @@ export default function Color({
       control={control}
       name={column.key}
       render={({ field: { onChange, onBlur, value } }) => {
-        console.log(value);
         return (
           <>
             <ButtonBase

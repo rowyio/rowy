@@ -1,4 +1,4 @@
-import { createElement } from "react";
+import { createElement, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import _sortBy from "lodash/sortBy";
 import _isEmpty from "lodash/isEmpty";
@@ -22,7 +22,7 @@ export interface IFormProps {
 }
 
 export default function Form({ values }: IFormProps) {
-  const { tableState } = useProjectContext();
+  const { tableState, sideDrawerRef } = useProjectContext();
   const { userDoc } = useAppContext();
   const userDocHiddenFields =
     userDoc.state.doc?.tables?.[`${tableState!.tablePath}`]?.hiddenFields ?? [];
@@ -51,17 +51,21 @@ export default function Form({ values }: IFormProps) {
   const { control, reset, formState, getValues } = methods;
   const { dirtyFields } = formState;
 
-  // const { sideDrawerRef } = useProjectContext();
-  // useEffect(() => {
-  //   const column = sideDrawerRef?.current?.cell?.column;
-  //   if (!column) return;
+  useEffect(() => {
+    const column = sideDrawerRef?.current?.cell?.column;
+    if (!column) return;
 
-  //   const elem = document.getElementById(`sidedrawer-label-${column}`)
-  //     ?.parentNode as HTMLElement;
+    const labelElem = document.getElementById(
+      `sidedrawer-label-${column}`
+    )?.parentElement;
+    const fieldElem = document.getElementById(`sidedrawer-field-${column}`);
 
-  //   // Time out for double-clicking on cells, which can open the null editor
-  //   setTimeout(() => elem?.scrollIntoView({ behavior: "smooth" }), 200);
-  // }, [sideDrawerRef?.current]);
+    // Time out for double-clicking on cells, which can open the null editor
+    setTimeout(() => {
+      if (labelElem) labelElem.scrollIntoView({ behavior: "smooth" });
+      if (fieldElem) fieldElem.focus({ preventScroll: true });
+    }, 200);
+  }, [sideDrawerRef?.current]);
 
   return (
     <form>

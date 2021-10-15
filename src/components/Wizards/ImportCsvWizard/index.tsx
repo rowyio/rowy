@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { useSnackbar } from "notistack";
 import _mergeWith from "lodash/mergeWith";
 import _find from "lodash/find";
@@ -52,7 +52,7 @@ export default function ImportCsvWizard({
 
   const [open, setOpen] = useState(true);
 
-  const { tableState, tableActions } = useProjectContext();
+  const { tableState, tableActions, addRow } = useProjectContext();
   const { enqueueSnackbar } = useSnackbar();
 
   const [config, setConfig] = useState<CsvConfig>({
@@ -68,7 +68,7 @@ export default function ImportCsvWizard({
   };
 
   const parsedRows: any[] = useMemo(() => {
-    if (!tableState || !tableActions || !csvData) return [];
+    if (!tableState || !csvData) return [];
     return csvData.rows.map((row) =>
       config.pairs.reduce((a, pair) => {
         const matchingColumn =
@@ -84,13 +84,13 @@ export default function ImportCsvWizard({
         return { ...a, [pair.columnKey]: value };
       }, {})
     );
-  }, [csvData, tableState, tableActions, config]);
+  }, [csvData, tableState, config]);
 
   const handleFinish = () => {
-    if (!tableState || !tableActions || !parsedRows) return;
+    if (!tableState || !tableActions || !addRow || !parsedRows) return;
     enqueueSnackbar("Importing data…");
     // Add all new rows — synchronous
-    parsedRows?.forEach((newRow) => tableActions.row.add(newRow));
+    parsedRows!.forEach((newRow) => addRow(newRow, true));
 
     // Add any new columns to the end
     for (const col of config.newColumns) {

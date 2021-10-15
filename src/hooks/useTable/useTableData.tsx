@@ -1,26 +1,24 @@
-import { db } from "../../firebase";
+import { useEffect, useReducer } from "react";
+import _findIndex from "lodash/findIndex";
+import _orderBy from "lodash/orderBy";
+import _isEqual from "lodash/isEqual";
+import _set from "lodash/set";
+import firebase from "firebase/app";
+import { db } from "@src/firebase";
 import { useSnackbar } from "notistack";
 
 import Button from "@mui/material/Button";
-import { useEffect, useReducer } from "react";
-import _isEqual from "lodash/isEqual";
-import _merge from "lodash/merge";
-import firebase from "firebase/app";
-import { TableFilter, TableOrder } from ".";
 
+import { useAppContext } from "contexts/AppContext";
+import { TableFilter, TableOrder } from ".";
 import {
   isCollectionGroup,
   generateSmallerId,
   missingFieldsReducer,
-  deepen,
 } from "utils/fns";
-import _findIndex from "lodash/findIndex";
-import _orderBy from "lodash/orderBy";
-import { rowyUser } from "contexts/ProjectContext";
-import { useAppContext } from "contexts/AppContext";
 
-const CAP = 1000; // safety  paramter sets the  upper limit of number of docs fetched by this hook
-const serverTimestamp = firebase.firestore.FieldValue.serverTimestamp;
+// Safety parameter sets the upper limit of number of docs fetched by this hook
+export const CAP = 1000;
 
 const tableReducer = (prevState: any, newProps: any) => {
   return { ...prevState, ...newProps };
@@ -36,28 +34,15 @@ const doc2row = (doc) => {
 const rowsReducer = (prevRows: any, update: any) => {
   switch (update.type) {
     case "onSnapshot":
-      const localRowsIds = prevRows.map((r) => r.id); // used to remove added docs that were added from this client
-      const addedRows = update.changes
-        .filter((change) => change.type === "added")
-        .map((change) => doc2row(change.doc))
-        .filter((row) => !localRowsIds.includes(row.id));
-      const removedRowIds = update.changes
-        .filter((change) => change.type === "removed")
-        .map((change) => change.doc.id);
-      const _rows = [
-        ...addedRows,
-        ...prevRows.filter((row) => !removedRowIds.includes(row.id)),
-      ];
-      const modifiedRows = update.changes
-        .filter((change) => change.type === "modified")
-        .map((change) => doc2row(change.doc));
-      modifiedRows.forEach((row) => {
-        const rowIndex = _findIndex(_rows, (r) => r.id === row.id);
-        _rows[rowIndex] = row;
-      });
-      return _rows;
+      const snapshotDocs = update.docs;
+      const localRows = prevRows.filter(
+        (r) => !snapshotDocs.some((d) => d.id === r.id)
+      );
+      return [...localRows, ...snapshotDocs.map(doc2row)];
+
     case "delete":
       return prevRows.filter((row) => update.rowId !== row.id);
+
     case "set":
       return update.rows;
 
@@ -67,23 +52,26 @@ const rowsReducer = (prevRows: any, update: any) => {
         (r: any) => r.id === update.rowRef.id
       );
       const _newRows = [...prevRows];
-      _newRows[rowIndex] = _merge(_newRows[rowIndex], deepen(update.update));
+      // Must not use lodash merge here. Breaks Connect Table: cannot clear value
+      for (const [key, value] of Object.entries(update.update)) {
+        _set(_newRows[rowIndex], key, value);
+      }
 
       const missingRequiredFields = (
         prevRows[rowIndex]._missingRequiredFields ?? []
       ).reduce(missingFieldsReducer(_newRows[rowIndex]), []);
-
       if (missingRequiredFields.length === 0) {
+        delete _newRows[rowIndex]._missingRequiredFields;
         update.rowRef
           .set(_newRows[rowIndex], { merge: true })
           .then(update.onSuccess, update.onError);
-        delete _newRows[rowIndex]._missingRequiredFields;
       }
 
       return _newRows;
 
     case "add":
       return [update.newRow, ...prevRows];
+
     case "queryChange":
       return [];
   }
@@ -103,7 +91,7 @@ const tableInitialState = {
 
 const useTableData = () => {
   const { enqueueSnackbar } = useSnackbar();
-  const { currentUser, projectId } = useAppContext();
+  const { projectId } = useAppContext();
 
   const [tableState, tableDispatch] = useReducer(
     tableReducer,
@@ -162,12 +150,9 @@ const useTableData = () => {
     const unsubscribe = query.limit(limit).onSnapshot(
       (snapshot) => {
         if (snapshot.docs.length > 0) {
-          const changes = snapshot.docChanges();
-          rowsDispatch({ type: "onSnapshot", changes });
+          rowsDispatch({ type: "onSnapshot", docs: snapshot.docs });
         }
-        tableDispatch({
-          loading: false,
-        });
+        tableDispatch({ loading: false });
       },
       (error: any) => {
         //TODO:callable to create new index
@@ -247,9 +232,9 @@ const useTableData = () => {
    *  @param documentId firestore document id
    */
   const deleteRow = (rowId: string) => {
-    //remove row locally
+    // Remove row locally
     rowsDispatch({ type: "delete", rowId });
-    // delete document
+    // Delete document
     try {
       db.collection(tableState.path).doc(rowId).delete();
     } catch (error: any) {
@@ -276,11 +261,6 @@ const useTableData = () => {
     if (filters) tableDispatch({ filters });
   };
 
-  const filterReducer = (acc, curr) => {
-    if (curr.operator === "==") {
-      return { ...acc, [curr.key]: curr.value };
-    } else return acc;
-  };
   /**  creating new document/row
    *  @param data(optional: default will create empty row)
    */
@@ -288,20 +268,13 @@ const useTableData = () => {
     const missingRequiredFields = requiredFields
       ? requiredFields.reduce(missingFieldsReducer(data), [])
       : [];
-    const valuesFromFilter = tableState.filters.reduce(filterReducer, {});
+
     const { path } = tableState;
     const newId = generateSmallerId(rows[0]?.id ?? "zzzzzzzzzzzzzzzzzzzzzzzz");
-    const docData = {
-      ...valuesFromFilter,
-      _createdAt: serverTimestamp(),
-      _createdBy: rowyUser(currentUser),
-      _updatedAt: serverTimestamp(),
-      _updatedBy: rowyUser(currentUser),
-      ...data,
-    };
+
     if (missingRequiredFields.length === 0) {
       try {
-        await db.collection(path).doc(newId).set(docData, { merge: true });
+        await db.collection(path).doc(newId).set(data, { merge: true });
       } catch (error: any) {
         if (error.code === "permission-denied") {
           enqueueSnackbar("You do not have the permissions to add new rows.", {
@@ -324,25 +297,6 @@ const useTableData = () => {
   };
 
   const updateRow = (rowRef, update, onSuccess, onError) => {
-    // const rowIndex = _findIndex(rows, { id: rowRef.id });
-    // const row = _find(rows, { id: rowRef.id });
-    // const { ref, _missingRequiredFields, ...rowData } = row;
-    // // const _rows = [...rows];
-    // // _rows[rowIndex] = { ...deepMerge(row, { ...deepen(update) }), ...update };
-
-    // const missingRequiredFields = _missingRequiredFields
-    //   ? _missingRequiredFields.reduce(missingFieldsReducer(row), [])
-    //   : [];
-
-    // if (missingRequiredFields.length === 0) {
-    //   const _rowData = {
-    //     ...deepMerge(rowData, { ...deepen(update) }),
-    //     ...update,
-    //   };
-    //   ref.set(_rowData, { merge: true }).then(onSuccess, onError);
-    //   delete _rows[rowIndex]._missingRequiredFields;
-    // }
-
     rowsDispatch({ type: "update", update, rowRef, onSuccess, onError });
   };
 

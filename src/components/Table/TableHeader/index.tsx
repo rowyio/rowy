@@ -15,14 +15,14 @@ import Extensions from "./Extensions";
 import ReExecute from "./ReExecute";
 
 import { useAppContext } from "contexts/AppContext";
-import { useProjectContext, rowyUser } from "contexts/ProjectContext";
+import { useProjectContext } from "contexts/ProjectContext";
 import { FieldType } from "constants/fields";
 
 export const TABLE_HEADER_HEIGHT = 44;
 
 export default function TableHeader() {
-  const { currentUser, userClaims } = useAppContext();
-  const { tableActions, tableState } = useProjectContext();
+  const { userClaims } = useAppContext();
+  const { addRow, tableState } = useProjectContext();
 
   const hasDerivatives =
     tableState &&
@@ -34,7 +34,6 @@ export default function TableHeader() {
     tableState.config?.compiledExtension?.replace(/\W/g, "")?.length > 0;
 
   if (!tableState || !tableState.columns) return null;
-  const { columns } = tableState;
 
   return (
     <Stack
@@ -65,34 +64,8 @@ export default function TableHeader() {
       >
         */}
       <Button
-        disabled={isCollectionGroup()}
-        onClick={() => {
-          const requiredFields = Object.values(columns)
-            .map((column) => {
-              if (column.config.required) {
-                return column.key;
-              }
-            })
-            .filter((c) => c);
-          const initialVal = Object.values(columns).reduce((acc, column) => {
-            if (column.config?.defaultValue?.type === "static") {
-              return {
-                ...acc,
-                [column.key]: column.config.defaultValue.value,
-              };
-            } else if (column.config?.defaultValue?.type === "null") {
-              return { ...acc, [column.key]: null };
-            } else return acc;
-          }, {});
-          tableActions?.row.add(
-            {
-              ...initialVal,
-              _updatedBy: rowyUser(currentUser),
-              _createdBy: rowyUser(currentUser),
-            },
-            requiredFields
-          );
-        }}
+        disabled={isCollectionGroup() || !addRow}
+        onClick={() => addRow!()}
         variant="contained"
         color="primary"
         startIcon={<AddRowIcon />}

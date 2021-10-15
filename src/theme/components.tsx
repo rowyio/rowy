@@ -91,6 +91,16 @@ export const components = (theme: Theme): ThemeOptions => {
 
             "& input, & label": theme.typography.body2,
           },
+
+          ".visually-hidden": {
+            position: "absolute",
+            clip: "rect(1px, 1px, 1px, 1px)",
+            overflow: "hidden",
+            height: 1,
+            width: 1,
+            padding: 0,
+            border: 0,
+          },
         },
       },
 

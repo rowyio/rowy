@@ -18,16 +18,22 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import ExtensionIcon from "assets/icons/Extension";
-import DuplicateIcon from "@mui/icons-material/ContentCopy";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/DeleteForever";
+import DuplicateIcon from "assets/icons/Copy";
+import EditIcon from "@mui/icons-material/EditOutlined";
+import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 
 import EmptyState from "components/EmptyState";
-import { extensionTypes, IExtension, IExtensionType } from "./utils";
+import {
+  extensionTypes,
+  extensionNames,
+  IExtension,
+  ExtensionType,
+} from "./utils";
+import { DATE_TIME_FORMAT } from "constants/dates";
 
 export interface IExtensionListProps {
   extensions: IExtension[];
-  handleAddExtension: (type: IExtensionType) => void;
+  handleAddExtension: (type: ExtensionType) => void;
   handleUpdateActive: (index: number, active: boolean) => void;
   handleDuplicate: (index: number) => void;
   handleEdit: (index: number) => void;
@@ -53,7 +59,7 @@ export default function ExtensionList({
     setAnchorEl(addButtonRef.current);
   };
 
-  const handleChooseAddType = (type: IExtensionType) => {
+  const handleChooseAddType = (type: ExtensionType) => {
     handleClose();
     handleAddExtension(type);
   };
@@ -95,12 +101,8 @@ export default function ExtensionList({
           transformOrigin={{ vertical: "top", horizontal: "right" }}
         >
           {extensionTypes.map((type) => (
-            <MenuItem
-              onClick={() => {
-                handleChooseAddType(type);
-              }}
-            >
-              {type}
+            <MenuItem onClick={() => handleChooseAddType(type)}>
+              {extensionNames[type]}
             </MenuItem>
           ))}
         </Menu>
@@ -132,7 +134,14 @@ export default function ExtensionList({
               children={
                 <ListItemText
                   primary={extensionObject.name}
-                  secondary={extensionObject.type}
+                  secondary={extensionNames[extensionObject.type]}
+                  primaryTypographyProps={{
+                    style: {
+                      minHeight: 40,
+                      display: "flex",
+                      alignItems: "center",
+                    },
+                  }}
                 />
               }
               secondaryAction={
@@ -182,13 +191,15 @@ export default function ExtensionList({
                   <Tooltip
                     title={
                       <>
-                        Last updated by {extensionObject.lastEditor.displayName}
+                        Last updated
                         <br />
-                        on{" "}
-                        {format(extensionObject.lastEditor.lastUpdate, "PPPP")}
+                        by {extensionObject.lastEditor.displayName}
                         <br />
                         at{" "}
-                        {format(extensionObject.lastEditor.lastUpdate, "pppp")}
+                        {format(
+                          extensionObject.lastEditor.lastUpdate,
+                          DATE_TIME_FORMAT
+                        )}
                       </>
                     }
                   >

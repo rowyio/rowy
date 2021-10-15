@@ -1,5 +1,6 @@
 import useSWR from "swr";
 import _find from "lodash/find";
+import _sortBy from "lodash/sortBy";
 
 import { Stack, Button, DialogContentText } from "@mui/material";
 
@@ -10,8 +11,9 @@ import SuggestedRules from "./SuggestedRules";
 import Confirmation from "components/Confirmation";
 
 import { useProjectContext, Table } from "contexts/ProjectContext";
-import useRouter from "../../hooks/useRouter";
-import { db } from "../../firebase";
+import useRouter from "hooks/useRouter";
+import { routes } from "constants/routes";
+import { db } from "@src/firebase";
 import { name } from "@root/package.json";
 import { SETTINGS, TABLE_SCHEMAS, TABLE_GROUP_SCHEMAS } from "config/dbPaths";
 import { runRoutes } from "constants/runRoutes";
@@ -103,8 +105,8 @@ export default function TableSettingsDialog({
       )
       .doc(data?.id)
       .delete();
-    window.location.reload();
     clearDialog();
+    router.history.push(routes.home);
   };
 
   return (
@@ -119,7 +121,15 @@ export default function TableSettingsDialog({
         mode,
         roles,
         sectionNames,
-        tables?.map((table) => ({ label: table.name, value: table.id })),
+        _sortBy(
+          tables?.map((table) => ({
+            label: table.name,
+            value: table.id,
+            section: table.section,
+            collection: table.collection,
+          })),
+          ["section", "label"]
+        ),
         collections
       )}
       customComponents={{

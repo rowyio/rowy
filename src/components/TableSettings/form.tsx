@@ -7,12 +7,15 @@ import WarningIcon from "@mui/icons-material/WarningAmber";
 
 import { WIKI_LINKS } from "constants/externalLinks";
 import { name } from "@root/package.json";
+import { FieldType as TableFieldType } from "constants/fields";
 
 export const tableSettings = (
   mode: TableSettingsDialogModes | null,
   roles: string[] | undefined,
   sections: string[] | undefined,
-  tables: { label: string; value: any }[] | undefined,
+  tables:
+    | { label: string; value: any; section: string; collection: string }[]
+    | undefined,
   collections: string[]
 ): Field[] =>
   [
@@ -159,8 +162,8 @@ export const tableSettings = (
     },
 
     {
-      type: FieldType.contentSubHeader,
-      name: "_contentSubHeader_userFacing",
+      type: FieldType.contentHeader,
+      name: "_contentHeader_userFacing",
       label: "Display",
     },
     {
@@ -182,9 +185,9 @@ export const tableSettings = (
     },
 
     {
-      type: FieldType.contentSubHeader,
-      name: "_contentSubHeader_admin",
-      label: "Admin",
+      type: FieldType.contentHeader,
+      name: "_contentHeader_admin",
+      label: "Access controls",
     },
     {
       type: FieldType.multiSelect,
@@ -253,21 +256,64 @@ export const tableSettings = (
         </>
       ),
     },
+
+    mode === TableSettingsDialogModes.create
+      ? {
+          type: FieldType.contentHeader,
+          name: "_contentHeader_columns",
+          label: "Columns",
+        }
+      : null,
     mode === TableSettingsDialogModes.create && tables && tables?.length !== 0
       ? {
           type: FieldType.singleSelect,
           name: "schemaSource",
-          label: "Copy column config from existing table (optional)",
+          label: "Copy columns from existing table (optional)",
           labelPlural: "tables",
           options: tables,
           clearable: true,
           freeText: false,
-          itemRenderer: (option: { value: string; label: string }) => (
+          itemRenderer: (option: {
+            value: string;
+            label: string;
+            section: string;
+            collection: string;
+          }) => (
             <>
-              {option.label}{" "}
-              <code style={{ marginLeft: "auto" }}>{option.value}</code>
+              {option.section} &gt; {option.label}{" "}
+              <code style={{ marginLeft: "auto" }}>{option.collection}</code>
             </>
           ),
+        }
+      : null,
+    mode === TableSettingsDialogModes.create
+      ? {
+          type: FieldType.contentSubHeader,
+          name: "_contentSubHeader_initialColumns",
+          label: "Initial columns",
+        }
+      : null,
+    mode === TableSettingsDialogModes.create
+      ? {
+          type: FieldType.checkbox,
+          name: `_initialColumns.${TableFieldType.updatedBy}`,
+          label: "Updated By: Automatically log who updates a row",
+        }
+      : null,
+    mode === TableSettingsDialogModes.create
+      ? {
+          type: FieldType.checkbox,
+          name: `_initialColumns.${TableFieldType.createdBy}`,
+          label: "Created By: Automatically log who creates a row",
+          disablePaddingTop: true,
+        }
+      : null,
+    mode === TableSettingsDialogModes.create
+      ? {
+          type: FieldType.checkbox,
+          name: `_initialColumns.${TableFieldType.id}`,
+          label: "Row ID",
+          disablePaddingTop: true,
         }
       : null,
   ].filter((field) => field !== null) as Field[];

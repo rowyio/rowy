@@ -261,6 +261,7 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
               }}
               helperText={error}
               error={!!error}
+              sx={{ "& .MuiInputBase-input": { fontFamily: "mono" } }}
             />
           </TabPanel>
 

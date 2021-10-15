@@ -1,9 +1,7 @@
 import { useState } from "react";
 import _isEqual from "lodash/isEqual";
-import { db } from "../../../../firebase";
-import { useSnackbar } from "notistack";
 
-import { Breadcrumbs, Typography, Button } from "@mui/material";
+import { Breadcrumbs } from "@mui/material";
 
 import TableHeaderButton from "../TableHeaderButton";
 import ExtensionIcon from "assets/icons/Extension";
@@ -17,20 +15,19 @@ import { useAppContext } from "contexts/AppContext";
 import { useConfirmation } from "components/ConfirmationDialog";
 import { useSnackLogContext } from "contexts/SnackLogContext";
 
-import { emptyExtensionObject, IExtension, IExtensionType } from "./utils";
-import { name } from "@root/package.json";
+import { emptyExtensionObject, IExtension, ExtensionType } from "./utils";
 import { runRoutes } from "constants/runRoutes";
 import { analytics } from "@src/analytics";
 
-export default function ExtensionsEditor() {
-  const { enqueueSnackbar } = useSnackbar();
+export default function Extensions() {
   const { tableState, tableActions, rowyRun } = useProjectContext();
   const appContext = useAppContext();
   const { requestConfirmation } = useConfirmation();
-  const currentextensionObjects = (tableState?.config.extensionObjects ??
+
+  const currentExtensionObjects = (tableState?.config.extensionObjects ??
     []) as IExtension[];
   const [localExtensionsObjects, setLocalExtensionsObjects] = useState(
-    currentextensionObjects
+    currentExtensionObjects
   );
   const [openExtensionList, setOpenExtensionList] = useState(false);
   const [openMigrationGuide, setOpenMigrationGuide] = useState(false);
@@ -39,8 +36,9 @@ export default function ExtensionsEditor() {
     extensionObject: IExtension;
     index?: number;
   } | null>(null);
+
   const snackLogContext = useSnackLogContext();
-  const edited = !_isEqual(currentextensionObjects, localExtensionsObjects);
+  const edited = !_isEqual(currentExtensionObjects, localExtensionsObjects);
 
   const tablePathTokens =
     tableState?.tablePath?.split("/").filter(function (_, i) {
@@ -65,7 +63,7 @@ export default function ExtensionsEditor() {
         body: "You will lose changes you have made to extensions",
         confirm: "Discard",
         handleConfirm: () => {
-          setLocalExtensionsObjects(currentextensionObjects);
+          setLocalExtensionsObjects(currentExtensionObjects);
           setOpenExtensionList(false);
         },
       });
@@ -199,13 +197,13 @@ export default function ExtensionsEditor() {
           children={
             <>
               <Breadcrumbs aria-label="breadcrumb">
-                {tablePathTokens.map((pathToken) => {
-                  return <Typography>{pathToken}</Typography>;
-                })}
+                {tablePathTokens.map((pathToken) => (
+                  <code>{pathToken}</code>
+                ))}
               </Breadcrumbs>
               <ExtensionList
                 extensions={localExtensionsObjects}
-                handleAddExtension={(type: IExtensionType) => {
+                handleAddExtension={(type: ExtensionType) => {
                   setExtensionModal({
                     mode: "add",
                     extensionObject: emptyExtensionObject(

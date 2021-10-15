@@ -38,6 +38,8 @@ export enum FieldType {
   status = "STATUS",
   // METADATA
   user = "USER",
+  updatedBy = "UPDATED_BY",
+  createdBy = "CREATED_BY",
   id = "ID",
   last = "LAST",
 }
