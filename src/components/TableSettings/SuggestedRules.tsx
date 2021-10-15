@@ -62,7 +62,9 @@ export default function SuggestedRules({
   return (
     <>
       <InputLabel sx={{ mb: 0.5, ml: 0.25 }}>{label}</InputLabel>
-      <pre style={{ margin: 0, userSelect: "all" }}>{generatedRules}</pre>
+      <pre style={{ margin: 0, userSelect: "all", whiteSpace: "pre-wrap" }}>
+        {generatedRules}
+      </pre>
 
       <Collapse in={customized}>
         <Grid container>

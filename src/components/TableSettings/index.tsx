@@ -53,15 +53,14 @@ export default function TableSettingsDialog({
 
   const handleSubmit = async (v) => {
     const { _suggestedRules, ...values } = v;
-    const data: any = {
-      ...values,
-    };
+    const data: any = { ...values };
 
     if (values.schemaSource)
       data.schemaSource = _find(tables, { id: values.schemaSource });
 
     if (mode === TableSettingsDialogModes.update) {
-      await Promise.all([settingsActions?.updateTable(data), clearDialog()]);
+      await settingsActions?.updateTable(data);
+      clearDialog();
     } else {
       settingsActions?.createTable(data);
 
@@ -77,9 +76,7 @@ export default function TableSettingsDialog({
     }
     analytics.logEvent(
       TableSettingsDialogModes.update ? "update_table" : "create_table",
-      {
-        type: values.tableType,
-      }
+      { type: values.tableType }
     );
     clearDialog();
   };
