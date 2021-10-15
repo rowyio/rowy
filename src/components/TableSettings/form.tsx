@@ -73,9 +73,7 @@ export const tableSettings = (
           </Link>
         </>
       ),
-      AddButtonProps: {
-        children: "Add collection",
-      },
+      AddButtonProps: { children: "Add collection…" },
       AddDialogProps: {
         title: "Add collection",
         textFieldLabel: (
@@ -257,6 +255,39 @@ export const tableSettings = (
       ),
     },
 
+    {
+      type: FieldType.contentHeader,
+      name: "_contentHeader_audit",
+      label: "Auditing",
+    },
+    {
+      type: FieldType.checkbox,
+      name: "audit",
+      label: "Enable auditing for this table",
+      defaultValue: true,
+      assistiveText: "Track when users create or update rows",
+    },
+    {
+      type: FieldType.shortText,
+      name: "auditFieldCreatedBy",
+      label: "Created By field key (optional)",
+      defaultValue: "_createdBy",
+      displayCondition: "return values.audit",
+      assistiveText: "Optionally change the field key",
+      gridCols: { xs: 12, sm: 6 },
+      sx: { "& .MuiInputBase-input": { fontFamily: "mono" } },
+    },
+    {
+      type: FieldType.shortText,
+      name: "auditFieldUpdatedBy",
+      label: "Updated By field key (optional)",
+      defaultValue: "_updatedBy",
+      displayCondition: "return values.audit",
+      assistiveText: "Optionally change the field key",
+      gridCols: { xs: 12, sm: 6 },
+      sx: { "& .MuiInputBase-input": { fontFamily: "mono" } },
+    },
+
     mode === TableSettingsDialogModes.create
       ? {
           type: FieldType.contentHeader,
@@ -291,20 +322,46 @@ export const tableSettings = (
           type: FieldType.contentSubHeader,
           name: "_contentSubHeader_initialColumns",
           label: "Initial columns",
-        }
-      : null,
-    mode === TableSettingsDialogModes.create
-      ? {
-          type: FieldType.checkbox,
-          name: `_initialColumns.${TableFieldType.updatedBy}`,
-          label: "Updated By: Automatically log who updates a row",
+          sx: { "&&": { mb: 1 }, typography: "button", ml: 2 / 8 },
         }
       : null,
     mode === TableSettingsDialogModes.create
       ? {
           type: FieldType.checkbox,
           name: `_initialColumns.${TableFieldType.createdBy}`,
-          label: "Created By: Automatically log who creates a row",
+          label: "Created By",
+          displayCondition: "return values.audit",
+          gridCols: 6,
+          disablePaddingTop: true,
+        }
+      : null,
+    mode === TableSettingsDialogModes.create
+      ? {
+          type: FieldType.checkbox,
+          name: `_initialColumns.${TableFieldType.updatedBy}`,
+          label: "Updated By",
+          displayCondition: "return values.audit",
+          gridCols: 6,
+          disablePaddingTop: true,
+        }
+      : null,
+    mode === TableSettingsDialogModes.create
+      ? {
+          type: FieldType.checkbox,
+          name: `_initialColumns.${TableFieldType.createdAt}`,
+          label: "Created At",
+          displayCondition: "return values.audit",
+          gridCols: 6,
+          disablePaddingTop: true,
+        }
+      : null,
+    mode === TableSettingsDialogModes.create
+      ? {
+          type: FieldType.checkbox,
+          name: `_initialColumns.${TableFieldType.updatedAt}`,
+          label: "Updated At",
+          displayCondition: "return values.audit",
+          gridCols: 6,
           disablePaddingTop: true,
         }
       : null,

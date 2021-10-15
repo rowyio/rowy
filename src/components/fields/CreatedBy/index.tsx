@@ -15,19 +15,23 @@ const SideDrawerField = lazy(
       "./SideDrawerField" /* webpackChunkName: "SideDrawerField-CreatedBy" */
     )
 );
+const Settings = lazy(
+  () => import("./Settings" /* webpackChunkName: "Settings-CreatedBy" */)
+);
 
 export const config: IFieldConfig = {
   type: FieldType.createdBy,
   name: "Created By",
-  group: "Metadata",
+  group: "Auditing",
   dataType:
     "{ displayName: string; email: string; emailVerified: boolean; isAnonymous: boolean; photoURL: string; uid: string; timestamp: firebase.firestore.Timestamp; }",
   initialValue: null,
   icon: <CreatedByIcon />,
   description:
-    "When a user creates a row, automatically logs user information and timestamp. Read-only.",
+    "Displays the user that created the row and timestamp. Read-only.",
   TableCell: withHeavyCell(BasicCell, TableCell),
   TableEditor: withSideDrawerEditor(TableCell),
   SideDrawerField,
+  settings: Settings,
 };
 export default config;

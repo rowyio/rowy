@@ -36,7 +36,7 @@ export default function Step2RequiredFields({
       }
       TextFieldProps={{ autoFocus: true }}
       freeText
-      AddButtonProps={{ children: "Add other field" }}
+      AddButtonProps={{ children: "Add other field…" }}
       AddDialogProps={{
         title: "Add other field",
         textFieldLabel: "Field key",
