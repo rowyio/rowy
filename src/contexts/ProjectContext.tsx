@@ -34,6 +34,9 @@ export type Table = {
 };
 
 interface IProjectContext {
+  settings: {
+    rowyRunUrl?: string;
+  };
   tables: Table[];
   table: Table;
   roles: string[];
@@ -251,6 +254,7 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
         addRow,
         updateCell,
         settingsActions,
+        settings: settings.doc,
         roles,
         tables,
         table,

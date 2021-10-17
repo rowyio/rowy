@@ -20,6 +20,7 @@ import { runRoutes } from "constants/runRoutes";
 import { db } from "@src/firebase";
 import { USERS } from "config/dbPaths";
 import { useConfirmation } from "components/ConfirmationDialog";
+import { analytics } from "@src/analytics";
 
 export default function UserItem({ id, user, roles: rolesProp }: User) {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();

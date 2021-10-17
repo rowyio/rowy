@@ -47,6 +47,7 @@ const WIKI_PATHS = {
   extensionsSlackMessage: "/extensions/slack-message",
   extensionsSendgridEmail: "/extensions/sendgrid-email",
   extensionsTwilioMessage: "/extensions/twilio-message",
+  webhooks: "/webhooks",
 };
 export const WIKI_LINKS = _mapValues(
   WIKI_PATHS,
