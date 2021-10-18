@@ -10,6 +10,7 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
+  Typography,
   ListItemSecondaryAction,
   Divider,
   Grow,
@@ -25,8 +26,14 @@ export default function UserMenu(props: IconButtonProps) {
   const [open, setOpen] = useState(false);
   const [themeSubMenu, setThemeSubMenu] = useState<EventTarget | null>(null);
 
-  const { userDoc, theme, themeOverridden, setTheme, setThemeOverridden } =
-    useAppContext();
+  const {
+    userDoc,
+    theme,
+    themeOverridden,
+    setTheme,
+    setThemeOverridden,
+    projectId,
+  } = useAppContext();
 
   const displayName = userDoc?.state?.doc?.user?.displayName;
   const avatarUrl = userDoc?.state?.doc?.user?.photoURL;
@@ -95,7 +102,13 @@ export default function UserMenu(props: IconButtonProps) {
           </ListItemAvatar>
           <ListItemText
             primary={displayName}
-            secondary={email}
+            secondary={
+              <>
+                {email}
+                <br />
+                <Typography variant="caption">Project: {projectId}</Typography>
+              </>
+            }
             primaryTypographyProps={{ variant: "subtitle1" }}
           />
         </ListItem>
