@@ -19,10 +19,9 @@ import ExpandIcon from "@mui/icons-material/KeyboardArrowDown";
 import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
 
 import Modal, { IModalProps } from "components/Modal";
-import Step1Triggers from "./Step1Endpoint";
-import Step2RequiredFields from "./Step2Auth";
-import Step3Conditions from "./Step3Conditions";
-import Step4Body from "./Step4Parser";
+import Step1Secret from "./Step1Secret";
+import Step2Conditions from "./Step2Conditions";
+import Step3Body from "./Step3Parser";
 
 import { useConfirmation } from "components/ConfirmationDialog";
 
@@ -121,7 +120,6 @@ export default function WebhookModal({
                 }}
               />
             </Grid>
-
             <Grid item xs={6}>
               <FormControlLabel
                 control={
@@ -170,32 +168,19 @@ export default function WebhookModal({
           >
             <Step>
               <StepButton onClick={() => setActiveStep(0)}>
-                Endpoint URL
+                Verification
                 <ExpandIcon />
               </StepButton>
               <StepContent>
                 <Typography gutterBottom>
-                  Set the endpoint URL for the webhook.
+                  Set the verification secret for the webhook.
                 </Typography>
-                <Step1Triggers {...stepProps} />
+                <Step1Secret {...stepProps} />
               </StepContent>
             </Step>
 
             <Step>
               <StepButton onClick={() => setActiveStep(1)}>
-                Authentication
-                <ExpandIcon />
-              </StepButton>
-              <StepContent>
-                <Typography gutterBottom>
-                  Set the authentication configuration for the webhook.
-                </Typography>
-                <Step2RequiredFields {...stepProps} />
-              </StepContent>
-            </Step>
-
-            <Step>
-              <StepButton onClick={() => setActiveStep(2)}>
                 Conditions (optional)
                 <ExpandIcon />
               </StepButton>
@@ -206,12 +191,12 @@ export default function WebhookModal({
                   <code>true</code> if you do not want to write additional
                   logic.
                 </Typography>
-                <Step3Conditions {...stepProps} />
+                <Step2Conditions {...stepProps} />
               </StepContent>
             </Step>
 
             <Step>
-              <StepButton onClick={() => setActiveStep(3)}>
+              <StepButton onClick={() => setActiveStep(2)}>
                 Parser
                 <ExpandIcon />
               </StepButton>
@@ -232,7 +217,7 @@ export default function WebhookModal({
                     <InlineOpenInNewIcon />
                   </Link>
                 </Typography>
-                <Step4Body {...stepProps} />
+                <Step3Body {...stepProps} />
               </StepContent>
             </Step>
           </Stepper>
@@ -251,7 +236,6 @@ export default function WebhookModal({
             } else if (!validation.parser) {
               warningMessage = "Webhook body is not valid";
             }
-
             if (warningMessage) {
               requestConfirmation({
                 title: "Validation failed",
