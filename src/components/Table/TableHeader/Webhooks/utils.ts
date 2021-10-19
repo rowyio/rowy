@@ -36,6 +36,7 @@ export interface IWebhook {
   type: WebhookType;
   parser: string;
   conditions: string;
+  secret?: string;
 }
 
 const parserTemplates = {
@@ -48,8 +49,43 @@ const parserTemplates = {
     const {body} = req;
     return body;
 }`,
+  typeform: `const typeformParser: TypeformParser = async({req, db,ref}) =>{
+    // this reduces the form submission into a single object of key value pairs
+    // eg: {name: "John", age: 20}
+    // ⚠️ ensure that you have assigned ref values of the fields
+    // set the ref value to field key you would like to sync to
+    // docs: https://help.typeform.com/hc/en-us/articles/360050447552-Block-reference-format-restrictions
+    const {submitted_at,hidden,answers} = req.body.form_response
+    return ({
+    _createdAt: submitted_at,
+    ...hidden,
+    ...answers.reduce((accRow, currAnswer) => {
+      switch (currAnswer.type) {
+        case "date":
+          return {
+            ...accRow,
+            [currAnswer.field.ref]: new Date(currAnswer[currAnswer.type]),
+          };
+        case "choice":
+          return {
+            ...accRow,
+            [currAnswer.field.ref]: currAnswer[currAnswer.type].label,
+          };
+        case "choices":
+          return {
+            ...accRow,
+            [currAnswer.field.ref]: currAnswer[currAnswer.type].labels,
+          };
+        case "file_url":
+        default:
+          return {
+            ...accRow,
+            [currAnswer.field.ref]: currAnswer[currAnswer.type],
+          };
+      }
+    }, {}),
+  })};`,
 };
-
 export function emptyWebhookObject(
   type: WebhookType,
   user: IWebhookEditor
