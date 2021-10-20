@@ -6,7 +6,7 @@ import LoopIcon from "@mui/icons-material/Loop";
 import { useProjectContext } from "contexts/ProjectContext";
 import { db } from "../../../firebase";
 import { isCollectionGroup } from "utils/fns";
-import CircularProgress from "@mui/material/CircularProgress";
+import CircularProgressOptical from "components/CircularProgressOptical";
 
 import Modal from "components/Modal";
 
@@ -61,7 +61,7 @@ export default function ReExecute() {
             primary: {
               children: "Confirm",
               onClick: handleConfirm,
-              startIcon: updating && <CircularProgress size={16} />,
+              startIcon: updating && <CircularProgressOptical size={16} />,
               disabled: updating,
             },
             secondary: {

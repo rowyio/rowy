@@ -2,10 +2,11 @@ import { useState } from "react";
 import _get from "lodash/get";
 import { useSnackbar } from "notistack";
 
-import { Fab, FabProps, CircularProgress } from "@mui/material";
+import { Fab, FabProps } from "@mui/material";
 import PlayIcon from "@mui/icons-material/PlayArrow";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import UndoIcon from "@mui/icons-material/Undo";
+import CircularProgressOptical from "components/CircularProgressOptical";
 
 import { useProjectContext } from "contexts/ProjectContext";
 import { functions } from "@src/firebase";
@@ -159,7 +160,7 @@ export default function ActionFab({
       {...props}
     >
       {isRunning ? (
-        <CircularProgress color="secondary" size={16} thickness={5.6} />
+        <CircularProgressOptical color="secondary" size={16} />
       ) : (
         getStateIcon(actionState)
       )}
