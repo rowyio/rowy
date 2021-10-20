@@ -15,7 +15,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Switch from "@mui/material/Switch";
-import CodeEditor from "../editors/CodeEditor";
+// import CodeEditor from "../editors/CodeEditor";
 import { useProjectContext } from "contexts/ProjectContext";
 import { makeId } from "../../../utils/fns";
 
@@ -144,12 +144,12 @@ export default function WebhooksDialog({ open, handleClose }) {
               <MenuItem value={WebhookTypes.custom}>Custom</MenuItem>
             </Select>
           </FormControl>
-          {state.type === WebhookTypes.custom && (
+          {/* {state.type === WebhookTypes.custom && (
             <CodeEditor
               script={state.customParser}
               handleChange={handleChange("customParser")}
             />
-          )}
+          )} */}
           <br />
           {state.type === WebhookTypes.typeForm && (
             <>

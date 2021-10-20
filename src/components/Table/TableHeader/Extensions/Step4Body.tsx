@@ -1,11 +1,16 @@
+import { lazy, Suspense } from "react";
 import { IExtensionModalStepProps } from "./ExtensionModal";
 import _upperFirst from "lodash/upperFirst";
 import useStateRef from "react-usestateref";
 
-import CodeEditor from "components/Table/editors/CodeEditor";
-import CodeEditorHelper from "components/CodeEditorHelper";
+import FieldSkeleton from "components/SideDrawer/Form/FieldSkeleton";
+import CodeEditorHelper from "@src/components/CodeEditor/CodeEditorHelper";
 
 import { WIKI_LINKS } from "constants/externalLinks";
+
+const CodeEditor = lazy(
+  () => import("components/CodeEditor" /* webpackChunkName: "CodeEditor" */)
+);
 
 const additionalVariables = [
   {
@@ -38,14 +43,14 @@ export default function Step4Body({
 
   return (
     <>
-      <div>
+      <Suspense fallback={<FieldSkeleton height={200} />}>
         <CodeEditor
-          script={extensionObject.extensionBody}
-          height={400}
-          handleChange={(newValue) => {
+          value={extensionObject.extensionBody}
+          minHeight={400}
+          onChange={(newValue) => {
             setExtensionObject({
               ...extensionObject,
-              extensionBody: newValue,
+              extensionBody: newValue || "",
             });
           }}
           onValidStatusUpdate={({ isValid }) => {
@@ -63,7 +68,7 @@ export default function Step4Body({
           onMount={() => setBodyEditorActive(true)}
           onUnmount={() => setBodyEditorActive(false)}
         />
-      </div>
+      </Suspense>
 
       <CodeEditorHelper
         docLink={
