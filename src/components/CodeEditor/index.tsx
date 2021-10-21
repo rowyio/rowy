@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 import Editor, { EditorProps, useMonaco } from "@monaco-editor/react";
-import type { languages } from "monaco-editor/esm/vs/editor/editor.api";
+import type { editor, languages } from "monaco-editor/esm/vs/editor/editor.api";
 import githubLightTheme from "./github-light-default.json";
 import githubDarkTheme from "./github-dark-default.json";
 
@@ -23,11 +23,15 @@ export interface ICodeEditorProps extends Partial<EditorProps> {
   value: string;
   minHeight?: number;
   disabled?: boolean;
+  error?: boolean;
   containerProps?: Partial<BoxProps>;
 
   extraLibs?: string[];
   onValidate?: EditorProps["onValidate"];
-  onValidStatusUpdate?: ({ isValid: boolean }) => void;
+  onValidStatusUpdate?: (result: {
+    isValid: boolean;
+    markers: editor.IMarker[];
+  }) => void;
   diagnosticsOptions?: languages.typescript.DiagnosticsOptions;
   onUnmount?: () => void;
 }
@@ -36,6 +40,7 @@ export default function CodeEditor({
   value,
   minHeight = 100,
   disabled,
+  error,
   containerProps,
 
   extraLibs,
@@ -60,7 +65,7 @@ export default function CodeEditor({
 
   const onValidate_: EditorProps["onValidate"] = (markers) => {
     if (onValidStatusUpdate)
-      onValidStatusUpdate({ isValid: markers.length <= 0 });
+      onValidStatusUpdate({ isValid: markers.length <= 0, markers });
     else if (onValidate) onValidate(markers);
   };
 
@@ -210,6 +215,15 @@ export default function CodeEditor({
                       0 0 0 1px ${theme.palette.action.inputOutline} inset`,
         },
 
+        ...(error
+          ? {
+              "&::after, &:hover::after, &:focus-within::after": {
+                boxShadow: `0 -2px 0 0 ${theme.palette.error.main} inset,
+                            0 0 0 1px ${theme.palette.action.inputOutline} inset`,
+              },
+            }
+          : {}),
+
         "& .editor": {
           // Overwrite user-select: none that causes editor
           // to not be focusable in Safari
@@ -221,7 +235,7 @@ export default function CodeEditor({
       }}
     >
       <Editor
-        language="javascript"
+        defaultLanguage="javascript"
         value={initialEditorValue}
         onValidate={onValidate_}
         loading={<CircularProgressOptical size={20} sx={{ m: 2 }} />}
@@ -236,6 +250,7 @@ export default function CodeEditor({
           lineDecorationsWidth: 0,
           automaticLayout: true,
           fixedOverflowWidgets: true,
+          tabSize: 2,
           ...props.options,
         }}
       />
