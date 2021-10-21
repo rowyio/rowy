@@ -20,7 +20,6 @@ import utilsDefs from "!!raw-loader!./utils.d.ts";
 import extensionsDefs from "!!raw-loader!./extensions.d.ts";
 
 export interface ICodeEditorProps extends Partial<EditorProps> {
-  onChange: EditorProps["onChange"];
   value: string;
   minHeight?: number;
   disabled?: boolean;
@@ -34,7 +33,6 @@ export interface ICodeEditorProps extends Partial<EditorProps> {
 }
 
 export default function CodeEditor({
-  onChange,
   value,
   minHeight = 100,
   disabled,
