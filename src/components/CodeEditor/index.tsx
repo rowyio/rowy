@@ -179,11 +179,36 @@ export default function CodeEditor({
         minWidth: 400,
         minHeight,
         height: minHeight,
-        border: `1px solid ${theme.palette.divider}`,
         borderRadius: 1,
         resize: "vertical",
         overflow: "hidden",
         position: "relative",
+
+        "&::after": {
+          content: '""',
+          position: "absolute",
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 0,
+          pointerEvents: "none",
+          borderRadius: "inherit",
+
+          boxShadow: `0 -1px 0 0 ${theme.palette.text.disabled} inset,
+                      0 0 0 1px ${theme.palette.action.inputOutline} inset`,
+          transition: theme.transitions.create("box-shadow", {
+            duration: theme.transitions.duration.short,
+          }),
+        },
+
+        "&:hover::after": {
+          boxShadow: `0 -1px 0 0 ${theme.palette.text.primary} inset,
+                      0 0 0 1px ${theme.palette.action.inputOutline} inset`,
+        },
+        "&:focus-within::after": {
+          boxShadow: `0 -2px 0 0 ${theme.palette.primary.main} inset,
+                      0 0 0 1px ${theme.palette.action.inputOutline} inset`,
+        },
 
         "& .editor": {
           // Overwrite user-select: none that causes editor
@@ -220,8 +245,8 @@ export default function CodeEditor({
         color="action"
         sx={{
           position: "absolute",
-          bottom: 0,
-          right: 0,
+          bottom: 1,
+          right: 1,
           zIndex: 1,
         }}
       />
