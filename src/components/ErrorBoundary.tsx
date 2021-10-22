@@ -1,11 +1,13 @@
-import React from "react";
+import { Component } from "react";
 import EmptyState, { IEmptyStateProps } from "./EmptyState";
 
 import { Button } from "@mui/material";
 import ReloadIcon from "@mui/icons-material/Refresh";
 import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
-import meta from "../../package.json";
-class ErrorBoundary extends React.Component<
+
+import meta from "@root/package.json";
+
+class ErrorBoundary extends Component<
   IEmptyStateProps & { render?: (errorMessage: string) => React.ReactNode }
 > {
   state = { hasError: false, errorMessage: "" };
@@ -25,13 +27,14 @@ class ErrorBoundary extends React.Component<
     if (this.state.hasError) {
       if (this.props.render) return this.props.render(this.state.errorMessage);
 
-      return (
-        <EmptyState
-          message="Something went wrong"
-          description={
-            <>
-              <span>{this.state.errorMessage}</span>
-              {this.state.errorMessage.startsWith("Loading chunk") ? (
+      if (this.state.errorMessage.startsWith("Loading chunk"))
+        return (
+          <EmptyState
+            Icon={ReloadIcon}
+            message="New update available"
+            description={
+              <>
+                <span>Reload this page to get the latest update</span>
                 <Button
                   variant="outlined"
                   color="secondary"
@@ -40,19 +43,28 @@ class ErrorBoundary extends React.Component<
                 >
                   Reload
                 </Button>
-              ) : (
-                <Button
-                  href={
-                    meta.repository.url.replace(".git", "") +
-                    "/issues/new/choose"
-                  }
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Report issue
-                  <InlineOpenInNewIcon />
-                </Button>
-              )}
+              </>
+            }
+            fullScreen
+          />
+        );
+
+      return (
+        <EmptyState
+          message="Something went wrong"
+          description={
+            <>
+              <span>{this.state.errorMessage}</span>
+              <Button
+                href={
+                  meta.repository.url.replace(".git", "") + "/issues/new/choose"
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Report issue
+                <InlineOpenInNewIcon />
+              </Button>
             </>
           }
           fullScreen
