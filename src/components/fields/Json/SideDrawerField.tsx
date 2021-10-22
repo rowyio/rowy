@@ -46,9 +46,17 @@ export default function Json({
       control={control}
       name={column.key}
       render={({ field: { onChange, value } }) => {
-        const formattedJson = value
-          ? jsonFormat(value, { type: "space", char: " ", size: 2 })
-          : "";
+        const sanitizedValue =
+          value !== undefined && isValidJson(value)
+            ? value
+            : column.config?.isArray
+            ? []
+            : {};
+        const formattedJson = jsonFormat(sanitizedValue, {
+          type: "space",
+          char: " ",
+          size: 2,
+        });
 
         if (disabled)
           return (
@@ -93,13 +101,7 @@ export default function Json({
                 style={{ overflowX: "auto", ...theme.typography.caption }}
               >
                 <ReactJson
-                  src={
-                    value !== undefined && isValidJson(value)
-                      ? value
-                      : column.config?.isArray
-                      ? []
-                      : {}
-                  }
+                  src={sanitizedValue}
                   onEdit={handleEdit}
                   onAdd={handleEdit}
                   onDelete={handleEdit}
