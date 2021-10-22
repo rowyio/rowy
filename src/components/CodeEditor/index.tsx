@@ -188,6 +188,7 @@ export default function CodeEditor({
         resize: "vertical",
         overflow: "hidden",
         position: "relative",
+        backgroundColor: disabled ? "transparent" : theme.palette.action.input,
 
         "&::after": {
           content: '""',
@@ -230,6 +231,11 @@ export default function CodeEditor({
           userSelect: "auto",
           height: "100%",
         },
+
+        "& .monaco-editor, & .monaco-editor .margin, & .monaco-editor-background":
+          {
+            backgroundColor: "transparent",
+          },
 
         ...containerProps?.sx,
       }}
