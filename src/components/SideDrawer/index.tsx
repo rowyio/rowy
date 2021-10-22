@@ -46,18 +46,10 @@ export default function SideDrawer() {
     setCell!((cell) => ({ column: cell!.column, row }));
 
     const idx = tableState?.columns[cell!.column]?.index;
-    console.log(
-      "selectCell",
-      { rowIdx: cell!.row, idx },
-      dataGridRef?.current?.selectCell
-    );
     dataGridRef?.current?.selectCell({ rowIdx: row, idx }, false);
   };
 
   const [urlDocState, dispatchUrlDoc] = useDoc({});
-  // useEffect(() => {
-  //   if (urlDocState.doc) setOpen(true);
-  // }, [urlDocState]);
 
   useEffect(() => {
     setOpen(false);
@@ -83,7 +75,6 @@ export default function SideDrawer() {
           tableState?.rows[cell.row].ref.path
         )}`
       );
-      // console.log(tableState?.tablePath, tableState?.rows[cell.row].id);
       if (urlDocState.doc) {
         urlDocState.unsubscribe();
         dispatchUrlDoc({ path: "", doc: null });

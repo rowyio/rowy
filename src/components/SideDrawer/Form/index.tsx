@@ -51,8 +51,8 @@ export default function Form({ values }: IFormProps) {
   const { control, reset, formState, getValues } = methods;
   const { dirtyFields } = formState;
 
+  const column = sideDrawerRef?.current?.cell?.column;
   useEffect(() => {
-    const column = sideDrawerRef?.current?.cell?.column;
     if (!column) return;
 
     const labelElem = document.getElementById(
@@ -65,7 +65,7 @@ export default function Form({ values }: IFormProps) {
       if (labelElem) labelElem.scrollIntoView({ behavior: "smooth" });
       if (fieldElem) fieldElem.focus({ preventScroll: true });
     }, 200);
-  }, [sideDrawerRef?.current]);
+  }, [column]);
 
   return (
     <form>
