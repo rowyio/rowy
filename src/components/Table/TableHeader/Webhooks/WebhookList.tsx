@@ -19,7 +19,7 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import WebhookIcon from "assets/icons/Webhook";
-import DuplicateIcon from "assets/icons/Copy";
+import LogsIcon from "assets/icons/CloudLogs";
 import EditIcon from "@mui/icons-material/EditOutlined";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 
@@ -32,7 +32,7 @@ export interface IWebhookListProps {
   webhooks: IWebhook[];
   handleAddWebhook: (type: WebhookType) => void;
   handleUpdateActive: (index: number, active: boolean) => void;
-  handleDuplicate: (index: number) => void;
+  handleOpenLogs: (index: number) => void;
   handleEdit: (index: number) => void;
   handleDelete: (index: number) => void;
 }
@@ -41,7 +41,7 @@ export default function WebhookList({
   webhooks,
   handleAddWebhook,
   handleUpdateActive,
-  handleDuplicate,
+  handleOpenLogs,
   handleEdit,
   handleDelete,
 }: IWebhookListProps) {
@@ -190,12 +190,12 @@ export default function WebhookList({
                       />
                     </Tooltip>
 
-                    <Tooltip title="Duplicate">
+                    <Tooltip title="Logs">
                       <IconButton
-                        aria-label="Duplicate"
-                        onClick={() => handleDuplicate(index)}
+                        aria-label="Logs"
+                        onClick={() => handleOpenLogs(index)}
                       >
-                        <DuplicateIcon />
+                        <LogsIcon />
                       </IconButton>
                     </Tooltip>
                     <Tooltip title="Edit">

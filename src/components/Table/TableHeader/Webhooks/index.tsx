@@ -8,6 +8,7 @@ import WebhookIcon from "assets/icons/Webhook";
 import Modal from "components/Modal";
 import WebhookList from "./WebhookList";
 import WebhookModal from "./WebhookModal";
+import WebhookLogs from "./WebhookLogs";
 
 import { useProjectContext } from "contexts/ProjectContext";
 import { useAppContext } from "contexts/AppContext";
@@ -33,6 +34,7 @@ export default function Webhooks() {
     webhookObject: IWebhook;
     index?: number;
   } | null>(null);
+  const [webhookLogs, setWebhookLogs] = useState<IWebhook | null>();
 
   const edited = !_isEqual(currentwebhooks, localWebhooksObjects);
 
@@ -130,18 +132,12 @@ export default function Webhooks() {
     );
   };
 
-  const handleDuplicate = (index: number) => {
-    setLocalWebhooksObjects([
-      ...localWebhooksObjects,
-      {
-        ...localWebhooksObjects[index],
-        name: `${localWebhooksObjects[index].name} (duplicate)`,
-        active: false,
-        lastEditor: currentEditor(),
-      },
-    ]);
-    analytics.logEvent("duplicated_webhook", {
-      type: localWebhooksObjects[index].type,
+  const handleOpenLogs = (index: number) => {
+    const _webhook = localWebhooksObjects[index];
+
+    setWebhookLogs(_webhook);
+    analytics.logEvent("view_webhook_logs", {
+      type: _webhook.type,
     });
   };
 
@@ -203,7 +199,7 @@ export default function Webhooks() {
                 }}
                 handleUpdateActive={handleUpdateActive}
                 handleEdit={handleEdit}
-                handleDuplicate={handleDuplicate}
+                handleOpenLogs={handleOpenLogs}
                 handleDelete={handleDelete}
               />
             </>
@@ -232,6 +228,14 @@ export default function Webhooks() {
           handleUpdate={handleUpdateWebhook}
           mode={webhookModal.mode}
           webhookObject={webhookModal.webhookObject}
+        />
+      )}
+      {webhookLogs && (
+        <WebhookLogs
+          webhookObject={webhookLogs}
+          handleClose={() => {
+            setWebhookLogs(null);
+          }}
         />
       )}
     </>
