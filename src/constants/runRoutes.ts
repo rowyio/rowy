@@ -52,4 +52,5 @@ export const runRoutes = {
   deleteUser: { path: "/deleteUser", method: "DELETE" } as RunRoute,
   algoliaSearchKey: { path: `/algoliaSearchKey`, method: "GET" } as RunRoute,
   algoliaAppId: { path: `/algoliaAppId`, method: "GET" } as RunRoute,
+  functionLogs: { path: `/functionLogs`, method: "GET" } as RunRoute,
 } as const;
