@@ -1,5 +1,6 @@
 import { forwardRef } from "react";
 import { IPopoverInlineCellProps } from "../types";
+import { get } from "lodash";
 
 import { ButtonBase, Grid, Chip } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
@@ -29,9 +30,9 @@ export const ConnectService = forwardRef(function ConnectService(
     >
       <ChipList>
         {Array.isArray(value) &&
-          value.map((doc: any) => (
-            <Grid item key={doc.primaryKey}>
-              <Chip label={config.titleKey} size="small" />
+          value.map((snapshot) => (
+            <Grid item key={get(snapshot, config.primaryKey)}>
+              <Chip label={get(snapshot, displayKey)} size="small" />
             </Grid>
           ))}
       </ChipList>
