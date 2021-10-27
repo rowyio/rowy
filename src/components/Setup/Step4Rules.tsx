@@ -21,6 +21,7 @@ import { CONFIG } from "config/dbPaths";
 import { requiredRules, adminRules, utilFns } from "config/firestoreRules";
 import { rowyRun } from "utils/rowyRun";
 import { runRoutes } from "constants/runRoutes";
+import { useConfirmation } from "components/ConfirmationDialog";
 
 export default function Step4Rules({
   rowyRunUrl,
@@ -28,6 +29,7 @@ export default function Step4Rules({
   setCompletion,
 }: ISetupStepBodyProps) {
   const { projectId, getAuthToken } = useAppContext();
+  const { requestConfirmation } = useConfirmation();
 
   const [hasRules, setHasRules] = useState(completion.rules);
   const [adminRule, setAdminRule] = useState(true);
@@ -83,18 +85,29 @@ export default function Step4Rules({
         body: { ruleset: newRules },
       });
       if (!res.success) throw new Error(res.message);
-
       const isSuccessful = await checkRules(rowyRunUrl, authToken);
       if (isSuccessful) {
         setCompletion((c) => ({ ...c, rules: true }));
         setHasRules(true);
       }
-
       setRulesStatus("IDLE");
     } catch (e: any) {
       console.error(e);
       setRulesStatus(e.message);
     }
+  };
+
+  const handleSkip = () => {
+    requestConfirmation({
+      title: "Skip rules",
+      body: "This might prevent you or other users in your project from accessing firestore data on Rowy",
+      confirm: "Skip",
+      cancel: "cancel",
+      handleConfirm: async () => {
+        setCompletion((c) => ({ ...c, rules: true }));
+        setHasRules(true);
+      },
+    });
   };
 
   return (
@@ -201,15 +214,23 @@ export default function Step4Rules({
             Please check the generated rules first.
           </Typography>
 
-          <LoadingButton
-            variant="contained"
-            color="primary"
-            onClick={setRules}
-            loading={rulesStatus === "LOADING"}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+            }}
           >
-            Set Firestore Rules
-          </LoadingButton>
-
+            {" "}
+            <LoadingButton
+              variant="contained"
+              color="primary"
+              onClick={setRules}
+              loading={rulesStatus === "LOADING"}
+            >
+              Set Firestore Rules
+            </LoadingButton>
+            <Button onClick={handleSkip}>Skip</Button>
+          </div>
           {rulesStatus !== "LOADING" && typeof rulesStatus === "string" && (
             <Typography variant="caption" color="error">
               {rulesStatus}
@@ -246,7 +267,6 @@ export const checkRules = async (
       sanitizedRules.includes(
         utilFns.replace(/\s{2,}/g, " ").replace(/\n/g, " ")
       );
-
     return hasRules;
   } catch (e: any) {
     console.error(e);
