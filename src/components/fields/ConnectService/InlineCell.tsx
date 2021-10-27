@@ -6,13 +6,14 @@ import { ButtonBase, Grid, Chip } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 import ChipList from "components/Table/formatters/ChipList";
+import { get } from "lodash";
 
 export const ConnectService = forwardRef(function ConnectService(
   { value, showPopoverCell, disabled, column }: IPopoverInlineCellProps,
   ref: React.Ref<any>
 ) {
   const config = column.config ?? {};
-
+  const displayKey = config.titleKey ?? config.primaryKey;
   return (
     <ButtonBase
       onClick={() => showPopoverCell(true)}
