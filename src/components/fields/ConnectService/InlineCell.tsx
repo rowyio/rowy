@@ -1,6 +1,5 @@
 import { forwardRef } from "react";
 import { IPopoverInlineCellProps } from "../types";
-import { get } from "lodash";
 
 import { ButtonBase, Grid, Chip } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
