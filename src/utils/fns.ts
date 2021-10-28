@@ -117,13 +117,6 @@ export const generateBiggerId = (id: string) => {
     }
   }
 
-  console.log(id, generated.join(""));
-
-  // Ensure we don't get 00...0, then the next ID would be 00...0z,
-  // which would appear as the second row
-  // if (generated.every((char) => char === characters[0]))
-  //   generated.push(characters[characters.length - 1]);
-
   return generated.join("");
 };
 
