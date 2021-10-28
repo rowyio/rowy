@@ -1,4 +1,8 @@
+import firebase from "firebase/app";
 import _get from "lodash/get";
+import _mapValues from "lodash/mapValues";
+import _isPlainObject from "lodash/isPlainObject";
+
 import { TABLE_GROUP_SCHEMAS, TABLE_SCHEMAS } from "config/dbPaths";
 
 /**
@@ -178,7 +182,7 @@ export const deepMerge = (target, source) => {
 };
 
 export const rowyUser = (
-  currentUser: firebase.default.User,
+  currentUser: firebase.User,
   data?: Record<string, any>
 ) => {
   const { displayName, email, uid, emailVerified, isAnonymous, photoURL } =
@@ -195,3 +199,26 @@ export const rowyUser = (
     ...data,
   };
 };
+
+const _firestoreRefSanitizer = (v: any) => {
+  // If react-hook-form receives a Firestore document reference, it tries to
+  // clone firebase.firestore and exceeds maximum call stack size.
+  if (firebase.firestore.DocumentReference.prototype.isPrototypeOf(v))
+    return v.path;
+
+  // Also test for arrays
+  if (Array.isArray(v))
+    return v.map((w) => {
+      if (firebase.firestore.DocumentReference.prototype.isPrototypeOf(w))
+        return w.path;
+      return w;
+    });
+
+  // Also test for objects
+  if (_isPlainObject(v)) return _mapValues(v, _firestoreRefSanitizer);
+
+  return v;
+};
+
+export const sanitizeFirestoreRefs = (doc: Record<string, any>) =>
+  _mapValues(doc, _firestoreRefSanitizer);
