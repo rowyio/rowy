@@ -9,6 +9,9 @@ import {
 import MultiSelect from "@rowy/multiselect";
 import FieldSkeleton from "components/SideDrawer/Form/FieldSkeleton";
 import { useProjectContext } from "contexts/ProjectContext";
+import { InputLabel } from "@mui/material";
+import CodeEditorHelper from "@src/components/CodeEditor/CodeEditorHelper";
+import { WIKI_LINKS } from "constants/externalLinks";
 
 const CodeEditor = lazy(
   () => import("components/CodeEditor" /* webpackChunkName: "CodeEditor" */)
@@ -87,7 +90,12 @@ const Settings = ({ config, handleChange }) => {
         />
       ) : (
         <>
-          <Typography variant="overline">action script</Typography>
+          <InputLabel>Action script</InputLabel>
+          <CodeEditorHelper
+            docLink={WIKI_LINKS.fieldTypesAction}
+            additionalVariables={[]}
+          />
+
           <Suspense fallback={<FieldSkeleton height={300} />}>
             <CodeEditor
               minHeight={300}
