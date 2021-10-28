@@ -270,7 +270,7 @@ const useTableData = () => {
       : [];
 
     const { path } = tableState;
-    const newId = generateSmallerId(rows[0]?.id ?? "zzzzzzzzzzzzzzzzzzzzzzzz");
+    const newId = generateSmallerId(rows[0]?.id ?? "zzzzzzzzzzzzzzzzzzzz");
 
     if (missingRequiredFields.length === 0) {
       try {
