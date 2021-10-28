@@ -2,7 +2,7 @@ import { useState, Suspense, useMemo, createElement } from "react";
 import _set from "lodash/set";
 import { IMenuModalProps } from "..";
 
-import { Typography, Divider, Stack } from "@mui/material";
+import { Typography, Stack } from "@mui/material";
 
 import Modal from "components/Modal";
 import { getFieldProp } from "components/fields";
@@ -79,6 +79,7 @@ export default function FieldSettings(props: IMenuModalProps) {
                 {createElement(customFieldSettings, {
                   config: newConfig,
                   handleChange,
+                  fieldName,
                 })}
               </Stack>
             )}

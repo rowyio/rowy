@@ -44,15 +44,15 @@ const useStyles = makeStyles((theme) =>
           border: "none",
 
           backgroundColor: theme.palette.action.input,
-          boxShadow: `0 0 0 1px ${theme.palette.action.inputOutline} inset,
-                        0 -1px 0 0 ${theme.palette.text.disabled} inset`,
+          boxShadow: `0 -1px 0 0 ${theme.palette.text.disabled} inset,
+                      0 0 0 1px ${theme.palette.action.inputOutline} inset`,
           transition: theme.transitions.create("box-shadow", {
             duration: theme.transitions.duration.short,
           }),
 
           "&:hover": {
-            boxShadow: `0 0 0 1px ${theme.palette.action.inputOutline} inset,
-                          0 -1px 0 0 ${theme.palette.text.primary} inset`,
+            boxShadow: `0 -1px 0 0 ${theme.palette.text.primary} inset,
+                        0 0 0 1px ${theme.palette.action.inputOutline} inset`,
           },
         },
 
@@ -92,8 +92,8 @@ const useStyles = makeStyles((theme) =>
 
     focus: {
       "& .tox.tox-tinymce, & .tox.tox-tinymce:hover": {
-        boxShadow: `0 0 0 1px ${theme.palette.action.inputOutline} inset,
-                    0 -2px 0 0 ${theme.palette.primary.main} inset`,
+        boxShadow: `0 -2px 0 0 ${theme.palette.primary.main} inset,
+                    0 0 0 1px ${theme.palette.action.inputOutline} inset`,
       },
     },
 

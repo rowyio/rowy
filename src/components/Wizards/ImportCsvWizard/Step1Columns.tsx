@@ -91,10 +91,12 @@ export default function Step1Columns({
   const { tableState } = useProjectContext();
   const tableColumns = _sortBy(Object.values(tableState?.columns ?? {}), [
     "index",
-  ]).map((column) => ({
-    label: column.name as string,
-    value: column.key as string,
-  }));
+  ])
+    .filter((column) => column.type !== FieldType.id)
+    .map((column) => ({
+      label: column.name as string,
+      value: column.key as string,
+    }));
 
   const [selectedFields, setSelectedFields] = useState(
     config.pairs.map((pair) => pair.csvKey)

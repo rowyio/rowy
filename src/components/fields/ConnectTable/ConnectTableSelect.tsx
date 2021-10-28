@@ -16,8 +16,10 @@ import { useProjectContext } from "@src/contexts/ProjectContext";
 import { runRoutes } from "@src/constants/runRoutes";
 import { WIKI_LINKS } from "constants/externalLinks";
 
-const useAlgoliaSearchKeys = createPersistedState("_ROWY_algolia-search-keys");
-const useAlgoliaAppId = createPersistedState("_ROWY_algolia-app-id");
+const useAlgoliaSearchKeys = createPersistedState(
+  "__ROWY__ALGOLIA_SEARCH_KEYS"
+);
+const useAlgoliaAppId = createPersistedState("__ROWY__ALGOLIA_APP_ID");
 
 export type ConnectTableValue = {
   docPath: string;

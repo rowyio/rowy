@@ -2,8 +2,8 @@ import { IWebhookModalStepProps } from "./WebhookModal";
 import _upperFirst from "lodash/upperFirst";
 import useStateRef from "react-usestateref";
 
-import CodeEditor from "components/Table/editors/CodeEditor";
-import CodeEditorHelper from "components/CodeEditorHelper";
+import CodeEditor from "components/CodeEditor";
+import CodeEditorHelper from "components/CodeEditor/CodeEditorHelper";
 
 import { WIKI_LINKS } from "constants/externalLinks";
 
@@ -26,12 +26,12 @@ export default function Step4Body({
     <>
       <div>
         <CodeEditor
-          script={webhookObject.parser}
-          height={400}
-          handleChange={(newValue) => {
+          value={webhookObject.parser}
+          minHeight={400}
+          onChange={(newValue) => {
             setWebhookObject({
               ...webhookObject,
-              parser: newValue,
+              parser: newValue || "",
             });
           }}
           onValidStatusUpdate={({ isValid }) => {

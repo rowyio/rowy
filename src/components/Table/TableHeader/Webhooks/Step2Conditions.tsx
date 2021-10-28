@@ -1,8 +1,8 @@
 import { IWebhookModalStepProps } from "./WebhookModal";
 import useStateRef from "react-usestateref";
 
-import CodeEditor from "components/Table/editors/CodeEditor";
-import CodeEditorHelper from "components/CodeEditorHelper";
+import CodeEditor from "components/CodeEditor";
+import CodeEditorHelper from "components/CodeEditor/CodeEditorHelper";
 
 import { WIKI_LINKS } from "constants/externalLinks";
 
@@ -26,12 +26,12 @@ export default function Step3Conditions({
     <>
       <div>
         <CodeEditor
-          script={webhookObject.conditions}
-          height={200}
-          handleChange={(newValue) => {
+          value={webhookObject.conditions}
+          minHeight={200}
+          onChange={(newValue) => {
             setWebhookObject({
               ...webhookObject,
-              conditions: newValue,
+              conditions: newValue || "",
             });
           }}
           onValidStatusUpdate={({ isValid }) => {

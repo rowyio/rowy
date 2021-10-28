@@ -15,12 +15,12 @@ import {
   Grid,
   Tooltip,
   Chip,
-  CircularProgress,
 } from "@mui/material";
 import UploadIcon from "assets/icons/Upload";
 import { FileIcon } from ".";
 
 import Confirmation from "components/Confirmation";
+import CircularProgressOptical from "components/CircularProgressOptical";
 import { DATE_TIME_FORMAT } from "constants/dates";
 
 import { useFieldStyles } from "components/SideDrawer/Form/utils";
@@ -148,9 +148,7 @@ function ControlledFileUploader({
             <Chip
               icon={<FileIcon />}
               label={localFile}
-              deleteIcon={
-                <CircularProgress size={20} thickness={4.5} color="inherit" />
-              }
+              deleteIcon={<CircularProgressOptical size={20} color="inherit" />}
             />
           </Grid>
         )}

@@ -100,7 +100,6 @@ export default function TableHeader() {
         <>
           {/* Spacer */} <div />
           <Webhooks />
-          {/* Spacer */} <div />
           <Extensions />
           <TableLogs />
           {(hasDerivatives || hasExtensions) && <ReExecute />}

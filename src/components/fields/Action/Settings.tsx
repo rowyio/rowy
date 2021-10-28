@@ -11,10 +11,7 @@ import FieldSkeleton from "components/SideDrawer/Form/FieldSkeleton";
 import { useProjectContext } from "contexts/ProjectContext";
 
 const CodeEditor = lazy(
-  () =>
-    import(
-      "components/Table/editors/CodeEditor" /* webpackChunkName: "CodeEditor" */
-    )
+  () => import("components/CodeEditor" /* webpackChunkName: "CodeEditor" */)
 );
 
 const Settings = ({ config, handleChange }) => {
@@ -93,8 +90,8 @@ const Settings = ({ config, handleChange }) => {
           <Typography variant="overline">action script</Typography>
           <Suspense fallback={<FieldSkeleton height={300} />}>
             <CodeEditor
-              height={300}
-              script={config.script}
+              minHeight={300}
+              value={config.script}
               extraLibs={[
                 [
                   "declare class ref {",
@@ -121,9 +118,9 @@ const Settings = ({ config, handleChange }) => {
                     } else return `static ${param.name}:any`;
                   }),
                   "}",
-                ],
+                ].join("\n"),
               ]}
-              handleChange={handleChange("script")}
+              onChange={handleChange("script")}
             />
           </Suspense>
           <FormControlLabel
@@ -175,9 +172,9 @@ const Settings = ({ config, handleChange }) => {
               <Typography variant="overline">Undo action script</Typography>
               <Suspense fallback={<FieldSkeleton height={300} />}>
                 <CodeEditor
-                  height={300}
-                  script={config["undo.script"]}
-                  handleChange={handleChange("undo.script")}
+                  minHeight={300}
+                  value={config["undo.script"]}
+                  onChange={handleChange("undo.script")}
                 />
               </Suspense>
             </>

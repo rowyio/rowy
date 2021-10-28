@@ -90,7 +90,7 @@ export default function WebhookList({
           onClick={handleAddButton}
           ref={addButtonRef}
         >
-          Add Webhook…
+          Add webhook…
         </Button>
         <Menu
           anchorEl={anchorEl}

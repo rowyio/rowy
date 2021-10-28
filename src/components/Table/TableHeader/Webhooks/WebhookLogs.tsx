@@ -48,7 +48,7 @@ export default function WebhookModal({
       disableBackdropClick
       disableEscapeKeyDown
       fullWidth
-      title={`Webhook Logs: ${webhookObject.name}`}
+      title={`Webhook logs: ${webhookObject.name}`}
       sx={{
         "& .MuiPaper-root": {
           maxWidth: 742 + 20,

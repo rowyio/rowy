@@ -6,17 +6,10 @@ import _findIndex from "lodash/findIndex";
 import { format } from "date-fns";
 
 import { makeStyles, createStyles } from "@mui/styles";
-import {
-  alpha,
-  Stack,
-  Grid,
-  Tooltip,
-  Chip,
-  IconButton,
-  CircularProgress,
-} from "@mui/material";
+import { alpha, Stack, Grid, Tooltip, Chip, IconButton } from "@mui/material";
 import UploadIcon from "assets/icons/Upload";
 import ChipList from "components/Table/formatters/ChipList";
+import CircularProgressOptical from "components/CircularProgressOptical";
 
 import { useConfirmation } from "components/ConfirmationDialog";
 import useUploader, { FileValue } from "hooks/useTable/useUploader";
@@ -184,11 +177,10 @@ export default function File_({
         )
       ) : (
         <div style={{ padding: 4 }}>
-          <CircularProgress
+          <CircularProgressOptical
             size={24}
             variant={progress === 0 ? "indeterminate" : "determinate"}
             value={progress}
-            thickness={4}
             style={{ display: "block" }}
           />
         </div>

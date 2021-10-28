@@ -12,13 +12,13 @@ import {
   Grid,
   IconButton,
   ButtonBase,
-  CircularProgress,
   Tooltip,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/AddAPhotoOutlined";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import OpenIcon from "@mui/icons-material/OpenInNewOutlined";
 
+import CircularProgressOptical from "components/CircularProgressOptical";
 import { useConfirmation } from "components/ConfirmationDialog";
 import useUploader, { FileValue } from "hooks/useTable/useUploader";
 import { IMAGE_MIME_TYPES } from "./index";
@@ -272,11 +272,10 @@ export default function Image_({
         )
       ) : (
         <div style={{ padding: 4 }}>
-          <CircularProgress
+          <CircularProgressOptical
             size={24}
             variant={progress === 0 ? "indeterminate" : "determinate"}
             value={progress}
-            thickness={4}
             style={{ display: "block" }}
           />
         </div>

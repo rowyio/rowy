@@ -25,9 +25,9 @@ export default function Webhooks() {
   const { requestConfirmation } = useConfirmation();
   const { enqueueSnackbar } = useSnackbar();
 
-  const currentwebhooks = (tableState?.config.webhooks ?? []) as IWebhook[];
+  const currentWebhooks = (tableState?.config.webhooks ?? []) as IWebhook[];
   const [localWebhooksObjects, setLocalWebhooksObjects] =
-    useState(currentwebhooks);
+    useState(currentWebhooks);
   const [openWebhookList, setOpenWebhookList] = useState(false);
   const [webhookModal, setWebhookModal] = useState<{
     mode: "add" | "update";
@@ -36,7 +36,7 @@ export default function Webhooks() {
   } | null>(null);
   const [webhookLogs, setWebhookLogs] = useState<IWebhook | null>();
 
-  const edited = !_isEqual(currentwebhooks, localWebhooksObjects);
+  const edited = !_isEqual(currentWebhooks, localWebhooksObjects);
 
   const tablePathTokens =
     tableState?.tablePath?.split("/").filter(function (_, i) {
@@ -55,7 +55,7 @@ export default function Webhooks() {
         body: "You will lose changes you have made to webhooks",
         confirm: "Discard",
         handleConfirm: () => {
-          setLocalWebhooksObjects(currentwebhooks);
+          setLocalWebhooksObjects(currentWebhooks);
           setOpenWebhookList(false);
         },
       });
@@ -171,7 +171,7 @@ export default function Webhooks() {
   return (
     <>
       <TableHeaderButton
-        title="Webhook"
+        title="Webhooks"
         onClick={handleOpen}
         icon={<WebhookIcon />}
       />

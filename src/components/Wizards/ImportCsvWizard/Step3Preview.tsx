@@ -1,4 +1,5 @@
 import _find from "lodash/find";
+import { parseJSON } from "date-fns";
 
 import { makeStyles, createStyles } from "@mui/styles";
 import { Grid } from "@mui/material";
@@ -8,6 +9,7 @@ import Column from "../Column";
 import Cell from "../Cell";
 
 import { useProjectContext } from "contexts/ProjectContext";
+import { FieldType } from "constants/fields";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -81,7 +83,11 @@ export default function Step4Preview({ csvData, config }: IStepProps) {
                 <Cell
                   key={csvKey + i}
                   field={columnKey}
-                  value={row[columnKey]}
+                  value={
+                    type === FieldType.date || type === FieldType.dateTime
+                      ? parseJSON(row[columnKey])
+                      : row[columnKey]
+                  }
                   type={type}
                   name={name}
                 />

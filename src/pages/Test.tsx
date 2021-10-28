@@ -43,6 +43,7 @@ import { useConfirmation } from "components/ConfirmationDialog";
 import SnackbarProgress, {
   ISnackbarProgressRef,
 } from "components/SnackbarProgress";
+import CircularProgressOptical from "components/CircularProgressOptical";
 
 const typographyVariants = [
   "h1",
@@ -913,7 +914,26 @@ export default function TestView() {
             </Button>
           </Stack>
 
-          <CircularProgress />
+          <Stack spacing={1} direction="row" alignItems="flex-end">
+            {/* size 40 thickness 3.6 */}
+            <CircularProgress />
+            <CircularProgress size={30} thickness={4.2} />
+            <CircularProgress size={24} thickness={4.8} />
+            <CircularProgress size={20} thickness={5.4} />
+            <CircularProgress size={16} thickness={6.3} />
+            <CircularProgress size={12} thickness={7.8} />
+          </Stack>
+
+          <Stack spacing={1} direction="row" alignItems="flex-end">
+            {/* size 40 thickness 3.6 */}
+            <CircularProgressOptical />
+            <CircularProgressOptical size={30} />
+            <CircularProgressOptical size={24} />
+            <CircularProgressOptical size={20} />
+            <CircularProgressOptical size={16} />
+            <CircularProgressOptical size={12} />
+          </Stack>
+
           <LinearProgress />
         </Stack>
       </Container>

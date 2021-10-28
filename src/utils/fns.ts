@@ -68,29 +68,56 @@ export const isCollectionGroup = () => {
   const pathName = window.location.pathname.split("/")[1];
   return pathName === "tableGroup";
 };
-var characters =
+
+const characters =
   "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-export function makeId(length) {
-  var result = "";
-  var charactersLength = characters.length;
-  for (var i = 0; i < length; i++) {
+export const makeId = (length: number = 20) => {
+  let result = "";
+  const charactersLength = characters.length;
+  for (var i = 0; i < length; i++)
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
+
   return result;
-}
+};
 
 export const generateSmallerId = (id: string) => {
-  const indexOfFirstChar = characters.indexOf(id[0]);
-  if (indexOfFirstChar !== 0)
-    return characters[indexOfFirstChar - 1] + makeId(id.length - 1);
-  else return id[0] + generateSmallerId(id.substr(1, id.length - 1));
+  const generated = id.split("");
+  for (let i = generated.length - 1; i >= 0; i--) {
+    const charIndex = characters.indexOf(id[i]);
+    if (charIndex > 0) {
+      generated[i] = characters[charIndex - 1];
+      break;
+    } else if (i > 0) {
+      continue;
+    } else {
+      generated.push(characters[characters.length - 1]);
+    }
+  }
+
+  // Ensure we don't get 00...0, then the next ID would be 00...0z,
+  // which would appear as the second row
+  if (generated.every((char) => char === characters[0]))
+    generated.push(characters[characters.length - 1]);
+
+  return generated.join("");
 };
 
 export const generateBiggerId = (id: string) => {
-  const indexOfFirstChar = characters.indexOf(id[0]);
-  if (indexOfFirstChar !== 61)
-    return characters[indexOfFirstChar + 1] + makeId(id.length - 1);
-  else return id[0] + generateBiggerId(id.substr(1, id.length - 1));
+  const generated = id.split("");
+  for (let i = generated.length - 1; i >= 0; i--) {
+    const charIndex = characters.indexOf(id[i]);
+    console.log(i, id[i], charIndex);
+    if (charIndex < characters.length - 1) {
+      generated[i] = characters[charIndex + 1];
+      break;
+    } else if (i > 0) {
+      continue;
+    } else {
+      generated.push(characters[0]);
+    }
+  }
+
+  return generated.join("");
 };
 
 // Gets sub-table ID in $1

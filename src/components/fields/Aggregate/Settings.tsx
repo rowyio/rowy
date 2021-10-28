@@ -6,10 +6,7 @@ import { FieldType } from "constants/fields";
 import FieldsDropdown from "components/Table/ColumnMenu/FieldsDropdown";
 import { useProjectContext } from "contexts/ProjectContext";
 const CodeEditor = lazy(
-  () =>
-    import(
-      "components/Table/editors/CodeEditor" /* webpackChunkName: "CodeEditor" */
-    )
+  () => import("components/CodeEditor" /* webpackChunkName: "CodeEditor" */)
 );
 
 const Settings = ({ config, handleChange }) => {
@@ -29,7 +26,7 @@ const Settings = ({ config, handleChange }) => {
       <Typography variant="overline">Aggergate script</Typography>
       <Suspense fallback={<FieldSkeleton height={200} />}>
         <CodeEditor
-          script={
+          value={
             config.script ??
             `//triggerType:  create | update | delete\n//aggregateState: the subtable accumulator stored in the cell of this column\n//snapshot: the triggered document snapshot of the the subcollection\n//incrementor: short for firebase.firestore.FieldValue.increment(n);\n//This script needs to return the new aggregateState cell value.
 switch (triggerType){
@@ -45,13 +42,13 @@ switch (triggerType){
           }
           extraLibs={[
             `  /**
-    * increaments firestore field value
+    * increments firestore field value
     */",
     function incrementor(value:number):number {
 
     }`,
           ]}
-          handleChange={handleChange("script")}
+          onChange={handleChange("script")}
         />
       </Suspense>
 

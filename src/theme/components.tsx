@@ -256,23 +256,23 @@ export const components = (theme: Theme): ThemeOptions => {
               backgroundColor: theme.palette.action.input,
             },
 
-            boxShadow: `0 0 0 1px ${theme.palette.action.inputOutline} inset,
-                        0 -1px 0 0 ${theme.palette.text.disabled} inset`,
+            boxShadow: `0 -1px 0 0 ${theme.palette.text.disabled} inset,
+                        0 0 0 1px ${theme.palette.action.inputOutline} inset`,
             transition: theme.transitions.create("box-shadow", {
               duration: theme.transitions.duration.short,
             }),
 
             "&:hover": {
-              boxShadow: `0 0 0 1px ${theme.palette.action.inputOutline} inset,
-                          0 -1px 0 0 ${theme.palette.text.primary} inset`,
+              boxShadow: `0 -1px 0 0 ${theme.palette.text.primary} inset,
+                          0 0 0 1px ${theme.palette.action.inputOutline} inset`,
             },
             "&.Mui-focused, &.Mui-focused:hover": {
-              boxShadow: `0 0 0 1px ${theme.palette.action.inputOutline} inset,
-                          0 -2px 0 0 ${theme.palette.primary.main} inset`,
+              boxShadow: `0 -2px 0 0 ${theme.palette.primary.main} inset,
+                          0 0 0 1px ${theme.palette.action.inputOutline} inset`,
             },
             "&.Mui-error, &.Mui-error:hover": {
-              boxShadow: `0 0 0 1px ${theme.palette.action.inputOutline} inset,
-                          0 -2px 0 0 ${theme.palette.error.main} inset`,
+              boxShadow: `0 -2px 0 0 ${theme.palette.error.main} inset,
+                          0 0 0 1px ${theme.palette.action.inputOutline} inset`,
             },
 
             borderRadius: theme.shape.borderRadius,
@@ -368,7 +368,7 @@ export const components = (theme: Theme): ThemeOptions => {
           root: {
             width: `calc(100% - ${theme.spacing(1)})`,
             margin: theme.spacing(0, 0.5),
-            padding: theme.spacing(0.5, 0.75, 0.5, 1.5),
+            padding: theme.spacing(0.5, 1.5),
             minHeight: 32,
             borderRadius: theme.shape.borderRadius,
 

@@ -48,7 +48,7 @@ export default function UserSettingsPage() {
 
   const sections = [
     { title: "Account", Component: Account, props: childProps },
-    { title: "Theme", Component: Theme },
+    { title: "Theme", Component: Theme, props: childProps },
     { title: "Personalization", Component: Personalization, props: childProps },
   ];
 

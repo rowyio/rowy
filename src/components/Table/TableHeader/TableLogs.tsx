@@ -12,7 +12,6 @@ import moment from "moment";
 import {
   Chip,
   Stack,
-  CircularProgress,
   Typography,
   Box,
   Tabs,
@@ -32,6 +31,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import TableHeaderButton from "./TableHeaderButton";
 import Ansi from "ansi-to-react";
 import EmptyState from "components/EmptyState";
+import CircularProgressOptical from "components/CircularProgressOptical";
 
 import PropTypes from "prop-types";
 import routes from "constants/routes";
@@ -244,7 +244,7 @@ function LogPanel(props) {
           })}
           <div ref={liveStreamingRef} id="live-stream-target">
             {status === "BUILDING" && (
-              <CircularProgress
+              <CircularProgressOptical
                 className={classes.logPanelProgress}
                 size={30}
               />
@@ -371,7 +371,7 @@ function SnackLog({ log, onClose, onOpenPanel }) {
             })}
             <div ref={liveStreamingRef} id="live-stream-target-snack">
               {status === "BUILDING" && (
-                <CircularProgress
+                <CircularProgressOptical
                   className={classes.logPanelProgress}
                   size={30}
                 />
@@ -427,10 +427,9 @@ export default function TableLogs() {
           <>
             <LogsIcon />
             {latestStatus === "BUILDING" && (
-              <CircularProgress
+              <CircularProgressOptical
                 className={classes.toolbarStatusIcon}
                 size={12}
-                thickness={6}
                 style={{ padding: 1 }}
               />
             )}
@@ -499,7 +498,7 @@ export default function TableLogs() {
                             style={{ textAlign: "left" }}
                           >
                             {logEntry.status === "BUILDING" && (
-                              <CircularProgress size={24} />
+                              <CircularProgressOptical size={24} />
                             )}
                             {logEntry.status === "SUCCESS" && <SuccessIcon />}
                             {logEntry.status === "FAIL" && <FailIcon />}

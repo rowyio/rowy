@@ -1,25 +1,29 @@
 import { lazy, Suspense } from "react";
+import { ISettingsProps } from "../types";
+
 import { Grid, InputLabel } from "@mui/material";
 import MultiSelect from "@rowy/multiselect";
 import FieldSkeleton from "components/SideDrawer/Form/FieldSkeleton";
-import { FieldType } from "constants/fields";
 import FieldsDropdown from "components/Table/ColumnMenu/FieldsDropdown";
-import { useProjectContext } from "contexts/ProjectContext";
-import CodeEditorHelper from "components/CodeEditorHelper";
+import CodeEditorHelper from "@src/components/CodeEditor/CodeEditorHelper";
 
+import { FieldType } from "constants/fields";
+import { useProjectContext } from "contexts/ProjectContext";
 import { WIKI_LINKS } from "constants/externalLinks";
 
 const CodeEditor = lazy(
-  () =>
-    import(
-      "components/Table/editors/CodeEditor" /* webpackChunkName: "CodeEditor" */
-    )
+  () => import("components/CodeEditor" /* webpackChunkName: "CodeEditor" */)
 );
 
-const Settings = ({ config, handleChange }) => {
+export default function Settings({
+  config,
+  handleChange,
+  fieldName,
+}: ISettingsProps) {
   const { tableState } = useProjectContext();
   if (!tableState?.columns) return <></>;
   const columnOptions = Object.values(tableState.columns)
+    .filter((column) => column.fieldName !== fieldName)
     .filter((column) => column.type !== FieldType.subTable)
     .map((c) => ({ label: c.name, value: c.key }));
 
@@ -63,13 +67,9 @@ const Settings = ({ config, handleChange }) => {
         <InputLabel>Derivative script</InputLabel>
         <CodeEditorHelper docLink={WIKI_LINKS.fieldTypesDerivative} />
         <Suspense fallback={<FieldSkeleton height={200} />}>
-          <CodeEditor
-            script={config.script}
-            handleChange={handleChange("script")}
-          />
+          <CodeEditor value={config.script} onChange={handleChange("script")} />
         </Suspense>
       </div>
     </>
   );
-};
-export default Settings;
+}

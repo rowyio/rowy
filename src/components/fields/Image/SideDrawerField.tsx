@@ -7,14 +7,7 @@ import { useDropzone } from "react-dropzone";
 import useUploader from "hooks/useTable/useUploader";
 
 import { makeStyles, createStyles } from "@mui/styles";
-import {
-  alpha,
-  ButtonBase,
-  Typography,
-  Grid,
-  CircularProgress,
-  Tooltip,
-} from "@mui/material";
+import { alpha, ButtonBase, Typography, Grid, Tooltip } from "@mui/material";
 
 import AddIcon from "@mui/icons-material/AddAPhotoOutlined";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
@@ -22,6 +15,7 @@ import OpenIcon from "@mui/icons-material/OpenInNewOutlined";
 
 import { IMAGE_MIME_TYPES } from ".";
 import Thumbnail from "components/Thumbnail";
+import CircularProgressOptical from "components/CircularProgressOptical";
 import { useConfirmation } from "components/ConfirmationDialog";
 import { useProjectContext } from "contexts/ProjectContext";
 
@@ -247,7 +241,7 @@ function ControlledImageUploader({
                 alignItems="center"
                 className={classes.overlay}
               >
-                <CircularProgress
+                <CircularProgressOptical
                   color="inherit"
                   size={48}
                   variant={progress === 0 ? "indeterminate" : "determinate"}

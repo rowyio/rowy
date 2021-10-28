@@ -1,10 +1,14 @@
+import { lazy, Suspense } from "react";
 import { IExtensionModalStepProps } from "./ExtensionModal";
 import useStateRef from "react-usestateref";
 
-import CodeEditor from "components/Table/editors/CodeEditor";
-import CodeEditorHelper from "components/CodeEditorHelper";
-
+import FieldSkeleton from "components/SideDrawer/Form/FieldSkeleton";
+import CodeEditorHelper from "@src/components/CodeEditor/CodeEditorHelper";
 import { WIKI_LINKS } from "constants/externalLinks";
+
+const CodeEditor = lazy(
+  () => import("components/CodeEditor" /* webpackChunkName: "CodeEditor" */)
+);
 
 const additionalVariables = [
   {
@@ -38,14 +42,14 @@ export default function Step3Conditions({
 
   return (
     <>
-      <div>
+      <Suspense fallback={<FieldSkeleton height={200} />}>
         <CodeEditor
-          script={extensionObject.conditions}
-          height={200}
-          handleChange={(newValue) => {
+          value={extensionObject.conditions}
+          minHeight={200}
+          onChange={(newValue) => {
             setExtensionObject({
               ...extensionObject,
-              conditions: newValue,
+              conditions: newValue || "",
             });
           }}
           onValidStatusUpdate={({ isValid }) => {
@@ -60,7 +64,7 @@ export default function Step3Conditions({
           onMount={() => setConditionEditorActive(true)}
           onUnmount={() => setConditionEditorActive(false)}
         />
-      </div>
+      </Suspense>
 
       <CodeEditorHelper
         docLink={WIKI_LINKS.extensions}
