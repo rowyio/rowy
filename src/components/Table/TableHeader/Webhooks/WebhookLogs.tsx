@@ -1,12 +1,12 @@
 import _isEqual from "lodash/isEqual";
 import _upperFirst from "lodash/upperFirst";
 
-import Modal, { IModalProps } from "components/Modal";
+import Modal, { IModalProps } from "@src/components/Modal";
 
 import { IWebhook } from "./utils";
 import useCollection from "@src/hooks/useCollection";
 import { useEffect } from "react";
-import { useProjectContext } from "contexts/ProjectContext";
+import { useProjectContext } from "@src/contexts/ProjectContext";
 import { Typography } from "@mui/material";
 import { orderBy } from "lodash";
 

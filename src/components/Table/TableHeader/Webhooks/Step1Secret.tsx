@@ -1,5 +1,5 @@
 import { IWebhookModalStepProps } from "./WebhookModal";
-import { useProjectContext } from "contexts/ProjectContext";
+import { useProjectContext } from "@src/contexts/ProjectContext";
 import { FormControl, FormLabel, TextField, Typography } from "@mui/material";
 
 export default function Step1Endpoint({

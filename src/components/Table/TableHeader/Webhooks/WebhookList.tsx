@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { format, formatRelative } from "date-fns";
-import CopyIcon from "assets/icons/Copy";
+import CopyIcon from "@src/assets/icons/Copy";
 
 import {
   Stack,
@@ -18,14 +18,14 @@ import {
   Typography,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import WebhookIcon from "assets/icons/Webhook";
-import LogsIcon from "assets/icons/CloudLogs";
+import WebhookIcon from "@src/assets/icons/Webhook";
+import LogsIcon from "@src/assets/icons/CloudLogs";
 import EditIcon from "@mui/icons-material/EditOutlined";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 
-import EmptyState from "components/EmptyState";
+import EmptyState from "@src/components/EmptyState";
 import { webhookTypes, webhookNames, IWebhook, WebhookType } from "./utils";
-import { DATE_TIME_FORMAT } from "constants/dates";
+import { DATE_TIME_FORMAT } from "@src/constants/dates";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 
 export interface IWebhookListProps {

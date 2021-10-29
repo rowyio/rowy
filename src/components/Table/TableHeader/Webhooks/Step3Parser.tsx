@@ -2,10 +2,10 @@ import { IWebhookModalStepProps } from "./WebhookModal";
 import _upperFirst from "lodash/upperFirst";
 import useStateRef from "react-usestateref";
 
-import CodeEditor from "components/CodeEditor";
-import CodeEditorHelper from "components/CodeEditor/CodeEditorHelper";
+import CodeEditor from "@src/components/CodeEditor";
+import CodeEditorHelper from "@src/components/CodeEditor/CodeEditorHelper";
 
-import { WIKI_LINKS } from "constants/externalLinks";
+import { WIKI_LINKS } from "@src/constants/externalLinks";
 
 const additionalVariables = [
   {

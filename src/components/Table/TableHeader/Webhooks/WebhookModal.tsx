@@ -16,17 +16,17 @@ import {
   Link,
 } from "@mui/material";
 import ExpandIcon from "@mui/icons-material/KeyboardArrowDown";
-import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
+import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
-import Modal, { IModalProps } from "components/Modal";
+import Modal, { IModalProps } from "@src/components/Modal";
 import Step1Secret from "./Step1Secret";
 import Step2Conditions from "./Step2Conditions";
 import Step3Body from "./Step3Parser";
 
-import { useConfirmation } from "components/ConfirmationDialog";
+import { useConfirmation } from "@src/components/ConfirmationDialog";
 
 import { webhookNames, IWebhook } from "./utils";
-import { WIKI_LINKS } from "constants/externalLinks";
+import { WIKI_LINKS } from "@src/constants/externalLinks";
 
 type StepValidation = Record<"condition" | "parser", boolean>;
 export interface IWebhookModalStepProps {

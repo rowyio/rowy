@@ -4,18 +4,18 @@ import _isEqual from "lodash/isEqual";
 import { Breadcrumbs } from "@mui/material";
 
 import TableHeaderButton from "../TableHeaderButton";
-import WebhookIcon from "assets/icons/Webhook";
-import Modal from "components/Modal";
+import WebhookIcon from "@src/assets/icons/Webhook";
+import Modal from "@src/components/Modal";
 import WebhookList from "./WebhookList";
 import WebhookModal from "./WebhookModal";
 import WebhookLogs from "./WebhookLogs";
 
-import { useProjectContext } from "contexts/ProjectContext";
-import { useAppContext } from "contexts/AppContext";
-import { useConfirmation } from "components/ConfirmationDialog";
+import { useProjectContext } from "@src/contexts/ProjectContext";
+import { useAppContext } from "@src/contexts/AppContext";
+import { useConfirmation } from "@src/components/ConfirmationDialog";
 
 import { emptyWebhookObject, IWebhook, WebhookType } from "./utils";
-import { runRoutes } from "constants/runRoutes";
+import { runRoutes } from "@src/constants/runRoutes";
 import { analytics } from "@src/analytics";
 import { useSnackbar } from "notistack";
 
