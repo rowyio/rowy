@@ -15,7 +15,7 @@ import HomeIcon from "@mui/icons-material/HomeOutlined";
 import SettingsIcon from "@mui/icons-material/SettingsOutlined";
 import ProjectSettingsIcon from "@mui/icons-material/BuildCircleOutlined";
 import UserManagementIcon from "@mui/icons-material/AccountCircleOutlined";
-import CloseIcon from "@src/assets/icons/Backburger";
+import CloseIcon from "@mui/icons-material/MenuOpen";
 import PinIcon from "@mui/icons-material/PushPinOutlined";
 import UnpinIcon from "@mui/icons-material/PushPin";
 
