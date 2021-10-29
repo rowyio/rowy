@@ -60,6 +60,8 @@ export interface ISetupStepBodyProps {
   rowyRunUrl: string;
 }
 
+const BASE_WIDTH = 1024;
+
 const checkAllSteps = async (
   rowyRunUrl: string,
   currentUser: firebase.default.User | null | undefined,
@@ -256,7 +258,7 @@ export default function SetupPage() {
             alpha(theme.palette.background.paper, 0.5),
           backdropFilter: "blur(20px) saturate(150%)",
 
-          maxWidth: 840,
+          maxWidth: BASE_WIDTH,
           width: (theme) => `calc(100vw - ${theme.spacing(2)})`,
           maxHeight: (theme) =>
             `calc(${
@@ -264,7 +266,7 @@ export default function SetupPage() {
             } - ${theme.spacing(
               2
             )} - env(safe-area-inset-top) - env(safe-area-inset-bottom))`,
-          height: 840 * 0.75,
+          height: BASE_WIDTH * 0.75,
           resize: "both",
 
           p: 0,
