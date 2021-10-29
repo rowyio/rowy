@@ -14,7 +14,7 @@ import DataGrid, {
   SelectColumn as _SelectColumn,
 } from "react-data-grid";
 
-import Loading from "components/Loading";
+import Loading from "@src/components/Loading";
 import TableHeader from "./TableHeader";
 import ColumnHeader from "./ColumnHeader";
 import ColumnMenu from "./ColumnMenu";
@@ -22,13 +22,13 @@ import FinalColumnHeader from "./FinalColumnHeader";
 import FinalColumn from "./formatters/FinalColumn";
 // import BulkActions from "./BulkActions";
 
-import { getFieldProp } from "components/fields";
-import { FieldType } from "constants/fields";
-import { formatSubTableName } from "utils/fns";
+import { getFieldProp } from "@src/components/fields";
+import { FieldType } from "@src/constants/fields";
+import { formatSubTableName } from "@src/utils/fns";
 
-import { useAppContext } from "contexts/AppContext";
-import { useProjectContext } from "contexts/ProjectContext";
-import useWindowSize from "hooks/useWindowSize";
+import { useAppContext } from "@src/contexts/AppContext";
+import { useProjectContext } from "@src/contexts/ProjectContext";
+import useWindowSize from "@src/hooks/useWindowSize";
 import useStyles from "./styles";
 
 export type TableColumn = Column<any> & {

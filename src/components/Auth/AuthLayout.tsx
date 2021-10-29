@@ -7,11 +7,11 @@ import {
   LinkProps,
 } from "@mui/material";
 import { alpha } from "@mui/material/styles";
-import BrandedBackground, { Wrapper } from "assets/BrandedBackground";
-import Logo from "assets/Logo";
+import BrandedBackground, { Wrapper } from "@src/assets/BrandedBackground";
+import Logo from "@src/assets/Logo";
 
-import { useAppContext } from "contexts/AppContext";
-import { EXTERNAL_LINKS } from "constants/externalLinks";
+import { useAppContext } from "@src/contexts/AppContext";
+import { EXTERNAL_LINKS } from "@src/constants/externalLinks";
 
 export interface IAuthLayoutProps {
   hideLogo?: boolean;

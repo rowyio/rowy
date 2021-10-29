@@ -1,10 +1,10 @@
 import { lazy } from "react";
-import { IFieldConfig, FieldType } from "components/fields/types";
+import { IFieldConfig, FieldType } from "@src/components/fields/types";
 import withHeavyCell from "../_withTableCell/withHeavyCell";
 
-import ImageIcon from "assets/icons/Image";
+import ImageIcon from "@src/assets/icons/Image";
 import BasicCell from "../_BasicCell/BasicCellNull";
-import NullEditor from "components/Table/editors/NullEditor";
+import NullEditor from "@src/components/Table/editors/NullEditor";
 
 const TableCell = lazy(
   () => import("./TableCell" /* webpackChunkName: "TableCell-Image" */)

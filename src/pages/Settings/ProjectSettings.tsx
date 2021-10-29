@@ -4,15 +4,15 @@ import { useDebouncedCallback } from "use-debounce";
 
 import { Container, Stack, Fade } from "@mui/material";
 
-import SettingsSkeleton from "components/Settings/SettingsSkeleton";
-import SettingsSection from "components/Settings/SettingsSection";
-import About from "components/Settings/ProjectSettings/About";
+import SettingsSkeleton from "@src/components/Settings/SettingsSkeleton";
+import SettingsSection from "@src/components/Settings/SettingsSection";
+import About from "@src/components/Settings/ProjectSettings/About";
 import RowyRun from "@src/components/Settings/ProjectSettings/RowyRun";
-import Authentication from "components/Settings/ProjectSettings/Authentication";
-import Customization from "components/Settings/ProjectSettings/Customization";
+import Authentication from "@src/components/Settings/ProjectSettings/Authentication";
+import Customization from "@src/components/Settings/ProjectSettings/Customization";
 
-import { SETTINGS, PUBLIC_SETTINGS } from "config/dbPaths";
-import useDoc from "hooks/useDoc";
+import { SETTINGS, PUBLIC_SETTINGS } from "@src/config/dbPaths";
+import useDoc from "@src/hooks/useDoc";
 import { db } from "@src/firebase";
 import { name } from "@root/package.json";
 

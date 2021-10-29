@@ -1,6 +1,6 @@
 import MultiSelect from "@rowy/multiselect";
-import { FieldType } from "constants/fields";
-import { useProjectContext } from "contexts/ProjectContext";
+import { FieldType } from "@src/constants/fields";
+import { useProjectContext } from "@src/contexts/ProjectContext";
 
 const Settings = ({ config, handleChange }) => {
   const { tableState } = useProjectContext();

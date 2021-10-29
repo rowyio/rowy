@@ -4,14 +4,14 @@ import firebase from "firebase/app";
 import { Button, Link, Typography } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import DownloadIcon from "@mui/icons-material/FileDownloadOutlined";
-import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
+import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 import GoIcon from "@mui/icons-material/ChevronRight";
 
-import Modal from "components/Modal";
-import { useProjectContext } from "contexts/ProjectContext";
-import { useAppContext } from "contexts/AppContext";
+import Modal from "@src/components/Modal";
+import { useProjectContext } from "@src/contexts/ProjectContext";
+import { useAppContext } from "@src/contexts/AppContext";
 import { sparkToExtensionObjects } from "./utils";
-import { WIKI_LINKS } from "constants/externalLinks";
+import { WIKI_LINKS } from "@src/constants/externalLinks";
 
 export interface IExtensionMigrationProps {
   handleClose: () => void;

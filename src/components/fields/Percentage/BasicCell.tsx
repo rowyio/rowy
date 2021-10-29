@@ -1,7 +1,7 @@
 import { IBasicCellProps } from "../types";
 
 import { useTheme } from "@mui/material";
-import { resultColorsScale } from "utils/color";
+import { resultColorsScale } from "@src/utils/color";
 
 export default function Percentage({ value }: IBasicCellProps) {
   const theme = useTheme();

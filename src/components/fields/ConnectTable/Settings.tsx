@@ -11,14 +11,14 @@ import {
   FormHelperText,
 } from "@mui/material";
 import MultiSelect from "@rowy/multiselect";
-import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
+import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 import WarningIcon from "@mui/icons-material/WarningAmberOutlined";
 
-import { FieldType } from "constants/fields";
+import { FieldType } from "@src/constants/fields";
 import { db } from "@src/firebase";
-import { useProjectContext } from "contexts/ProjectContext";
-import { TABLE_SCHEMAS } from "config/dbPaths";
-import { WIKI_LINKS } from "constants/externalLinks";
+import { useProjectContext } from "@src/contexts/ProjectContext";
+import { TABLE_SCHEMAS } from "@src/config/dbPaths";
+import { WIKI_LINKS } from "@src/constants/externalLinks";
 
 export default function Settings({ handleChange, config }: ISettingsProps) {
   const { tables } = useProjectContext();

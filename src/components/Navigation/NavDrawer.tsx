@@ -15,18 +15,18 @@ import HomeIcon from "@mui/icons-material/HomeOutlined";
 import SettingsIcon from "@mui/icons-material/SettingsOutlined";
 import ProjectSettingsIcon from "@mui/icons-material/BuildCircleOutlined";
 import UserManagementIcon from "@mui/icons-material/AccountCircleOutlined";
-import CloseIcon from "assets/icons/Backburger";
+import CloseIcon from "@src/assets/icons/Backburger";
 import PinIcon from "@mui/icons-material/PushPinOutlined";
 import UnpinIcon from "@mui/icons-material/PushPin";
 
 import { APP_BAR_HEIGHT } from ".";
-import Logo from "assets/Logo";
+import Logo from "@src/assets/Logo";
 import NavItem from "./NavItem";
 import NavTableSection from "./NavTableSection";
 
-import { useAppContext } from "contexts/AppContext";
-import { useProjectContext } from "contexts/ProjectContext";
-import { routes } from "constants/routes";
+import { useAppContext } from "@src/contexts/AppContext";
+import { useProjectContext } from "@src/contexts/ProjectContext";
+import { routes } from "@src/constants/routes";
 
 export const NAV_DRAWER_WIDTH = 256;
 

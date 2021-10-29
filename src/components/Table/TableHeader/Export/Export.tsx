@@ -11,9 +11,9 @@ import MultiSelect from "@rowy/multiselect";
 
 import { Button, DialogActions } from "@mui/material";
 
-import { useProjectContext } from "contexts/ProjectContext";
-import { FieldType } from "constants/fields";
-import { getFieldProp } from "components/fields";
+import { useProjectContext } from "@src/contexts/ProjectContext";
+import { FieldType } from "@src/constants/fields";
+import { getFieldProp } from "@src/components/fields";
 import { analytics } from "@src/analytics";
 
 const selectedColumnsJsonReducer =

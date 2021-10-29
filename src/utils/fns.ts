@@ -3,7 +3,7 @@ import _get from "lodash/get";
 import _mapValues from "lodash/mapValues";
 import _isPlainObject from "lodash/isPlainObject";
 
-import { TABLE_GROUP_SCHEMAS, TABLE_SCHEMAS } from "config/dbPaths";
+import { TABLE_GROUP_SCHEMAS, TABLE_SCHEMAS } from "@src/config/dbPaths";
 
 /**
  * reposition an element in an array

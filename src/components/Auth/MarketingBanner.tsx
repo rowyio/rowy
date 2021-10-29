@@ -1,10 +1,10 @@
 import { Stack, Paper, Typography, Button } from "@mui/material";
 import { alpha } from "@mui/material/styles";
-import DiscordIcon from "assets/icons/Discord";
+import DiscordIcon from "@src/assets/icons/Discord";
 import TwitterIcon from "@mui/icons-material/Twitter";
 
-import Logo from "assets/Logo";
-import { EXTERNAL_LINKS } from "constants/externalLinks";
+import Logo from "@src/assets/Logo";
+import { EXTERNAL_LINKS } from "@src/constants/externalLinks";
 
 export default function MarketingBanner() {
   return (

@@ -3,9 +3,9 @@ import type {} from "@mui/lab/themeAugmentation";
 import { MultiSelectProps } from "@rowy/multiselect";
 import { toRem } from "./typography";
 
-import RadioIcon from "theme/RadioIcon";
-import CheckboxIcon from "theme/CheckboxIcon";
-import CheckboxIndeterminateIcon from "theme/CheckboxIndeterminateIcon";
+import RadioIcon from "@src/theme/RadioIcon";
+import CheckboxIcon from "@src/theme/CheckboxIcon";
+import CheckboxIndeterminateIcon from "@src/theme/CheckboxIndeterminateIcon";
 import AddCircleIcon from "@mui/icons-material/AddCircleOutline";
 import { SvgIcon } from "@mui/material";
 

@@ -17,16 +17,16 @@ import {
 import FilterIcon from "@mui/icons-material/FilterList";
 import CloseIcon from "@mui/icons-material/Close";
 
-import ButtonWithStatus from "components/ButtonWithStatus";
-import FormAutosave from "components/Table/ColumnMenu/FieldSettings/FormAutosave";
-import FieldSkeleton from "components/SideDrawer/Form/FieldSkeleton";
+import ButtonWithStatus from "@src/components/ButtonWithStatus";
+import FormAutosave from "@src/components/Table/ColumnMenu/FieldSettings/FormAutosave";
+import FieldSkeleton from "@src/components/SideDrawer/Form/FieldSkeleton";
 
-import { FieldType } from "constants/fields";
-import { TableFilter } from "hooks/useTable";
-import { useProjectContext } from "contexts/ProjectContext";
-import { useAppContext } from "contexts/AppContext";
-import { DocActions } from "hooks/useDoc";
-import { getFieldProp } from "components/fields";
+import { FieldType } from "@src/constants/fields";
+import { TableFilter } from "@src/hooks/useTable";
+import { useProjectContext } from "@src/contexts/ProjectContext";
+import { useAppContext } from "@src/contexts/AppContext";
+import { DocActions } from "@src/hooks/useDoc";
+import { getFieldProp } from "@src/components/fields";
 
 const getType = (column) =>
   column.type === FieldType.derivative

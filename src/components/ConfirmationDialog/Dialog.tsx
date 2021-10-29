@@ -10,7 +10,7 @@ import {
   Button,
 } from "@mui/material";
 
-import { SlideTransitionMui } from "components/Modal/SlideTransition";
+import { SlideTransitionMui } from "@src/components/Modal/SlideTransition";
 
 export default function Confirmation({
   title,

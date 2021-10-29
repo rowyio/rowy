@@ -4,7 +4,7 @@ import { IPopoverInlineCellProps } from "../types";
 import { ButtonBase, Grid, Chip } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
-import ChipList from "components/Table/formatters/ChipList";
+import ChipList from "@src/components/Table/formatters/ChipList";
 import { get } from "lodash";
 
 export const ConnectService = forwardRef(function ConnectService(

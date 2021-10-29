@@ -21,8 +21,8 @@ import { IStepProps } from ".";
 import FadeList from "../ScrollableList";
 import Column from "../Column";
 
-import { useProjectContext } from "contexts/ProjectContext";
-import { FieldType } from "constants/fields";
+import { useProjectContext } from "@src/contexts/ProjectContext";
+import { FieldType } from "@src/constants/fields";
 import { suggestType } from "../ImportWizard/utils";
 
 const useStyles = makeStyles((theme) =>

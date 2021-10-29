@@ -1,9 +1,9 @@
-import { ISetupStepBodyProps } from "pages/Setup";
+import { ISetupStepBodyProps } from "@src/pages/Setup";
 
 import { FormControlLabel, Checkbox, Typography, Link } from "@mui/material";
 
-import { useAppContext } from "contexts/AppContext";
-import { EXTERNAL_LINKS } from "constants/externalLinks";
+import { useAppContext } from "@src/contexts/AppContext";
+import { EXTERNAL_LINKS } from "@src/constants/externalLinks";
 
 export default function Step0Welcome({
   completion,

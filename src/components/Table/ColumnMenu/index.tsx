@@ -11,32 +11,32 @@ import LockOpenIcon from "@mui/icons-material/LockOpen";
 import LockIcon from "@mui/icons-material/LockOutlined";
 // import VisibilityOffIcon from "@mui/icons-material/VisibilityOffOutlined";
 // import VisibilityIcon from "@mui/icons-material/VisibilityOutlined";
-import FreezeIcon from "assets/icons/Freeze";
-import UnfreezeIcon from "assets/icons/Unfreeze";
-import CellResizeIcon from "assets/icons/CellResize";
+import FreezeIcon from "@src/assets/icons/Freeze";
+import UnfreezeIcon from "@src/assets/icons/Unfreeze";
+import CellResizeIcon from "@src/assets/icons/CellResize";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import EditIcon from "@mui/icons-material/EditOutlined";
 // import ReorderIcon from "@mui/icons-material/Reorder";
 import SettingsIcon from "@mui/icons-material/SettingsOutlined";
-import ColumnPlusBeforeIcon from "assets/icons/ColumnPlusBefore";
-import ColumnPlusAfterIcon from "assets/icons/ColumnPlusAfter";
-import ColumnRemoveIcon from "assets/icons/ColumnRemove";
+import ColumnPlusBeforeIcon from "@src/assets/icons/ColumnPlusBefore";
+import ColumnPlusAfterIcon from "@src/assets/icons/ColumnPlusAfter";
+import ColumnRemoveIcon from "@src/assets/icons/ColumnRemove";
 
 import MenuContents from "./MenuContents";
 import NameChange from "./NameChange";
 import NewColumn from "./NewColumn";
 import TypeChange from "./TypeChange";
 import FieldSettings from "./FieldSettings";
-import ColumnHeader from "components/Wizards/Column";
+import ColumnHeader from "@src/components/Wizards/Column";
 
-import { useProjectContext } from "contexts/ProjectContext";
-import { FieldType } from "constants/fields";
-import { getFieldProp } from "components/fields";
+import { useProjectContext } from "@src/contexts/ProjectContext";
+import { FieldType } from "@src/constants/fields";
+import { getFieldProp } from "@src/components/fields";
 
 import { Column } from "react-data-grid";
 import { PopoverProps } from "@mui/material";
-import { useConfirmation } from "components/ConfirmationDialog";
+import { useConfirmation } from "@src/components/ConfirmationDialog";
 
 const INITIAL_MODAL = { type: "", data: {} };
 

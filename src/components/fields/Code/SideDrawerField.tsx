@@ -1,7 +1,7 @@
 import { Controller } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 
-import CodeEditor from "components/CodeEditor";
+import CodeEditor from "@src/components/CodeEditor";
 
 export default function Code({
   control,

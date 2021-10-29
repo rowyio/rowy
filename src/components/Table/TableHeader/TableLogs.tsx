@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import useRouter from "hooks/useRouter";
-import useCollection from "hooks/useCollection";
-import { useProjectContext } from "contexts/ProjectContext";
+import useRouter from "@src/hooks/useRouter";
+import useCollection from "@src/hooks/useCollection";
+import { useProjectContext } from "@src/contexts/ProjectContext";
 import useStateRef from "react-usestateref";
-import { useSnackLogContext } from "contexts/SnackLogContext";
-import { isCollectionGroup } from "utils/fns";
+import { useSnackLogContext } from "@src/contexts/SnackLogContext";
+import { isCollectionGroup } from "@src/utils/fns";
 import _throttle from "lodash/throttle";
 import { format } from "date-fns";
 import moment from "moment";
@@ -19,9 +19,9 @@ import {
   IconButton,
   Button,
 } from "@mui/material";
-import Modal from "components/Modal";
+import Modal from "@src/components/Modal";
 import { makeStyles, createStyles } from "@mui/styles";
-import LogsIcon from "assets/icons/CloudLogs";
+import LogsIcon from "@src/assets/icons/CloudLogs";
 import SuccessIcon from "@mui/icons-material/CheckCircle";
 import FailIcon from "@mui/icons-material/Cancel";
 import ExpandIcon from "@mui/icons-material/ExpandLess";
@@ -30,13 +30,17 @@ import OpenIcon from "@mui/icons-material/OpenInNew";
 import CloseIcon from "@mui/icons-material/Close";
 import TableHeaderButton from "./TableHeaderButton";
 import Ansi from "ansi-to-react";
-import EmptyState from "components/EmptyState";
-import CircularProgressOptical from "components/CircularProgressOptical";
+import EmptyState from "@src/components/EmptyState";
+import CircularProgressOptical from "@src/components/CircularProgressOptical";
 
 import PropTypes from "prop-types";
-import routes from "constants/routes";
-import { DATE_TIME_FORMAT } from "constants/dates";
-import { SETTINGS, TABLE_SCHEMAS, TABLE_GROUP_SCHEMAS } from "config/dbPaths";
+import routes from "@src/constants/routes";
+import { DATE_TIME_FORMAT } from "@src/constants/dates";
+import {
+  SETTINGS,
+  TABLE_SCHEMAS,
+  TABLE_GROUP_SCHEMAS,
+} from "@src/config/dbPaths";
 
 function a11yProps(index) {
   return {

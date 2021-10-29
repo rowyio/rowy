@@ -1,10 +1,10 @@
 import { lazy } from "react";
-import { IFieldConfig, FieldType } from "components/fields/types";
+import { IFieldConfig, FieldType } from "@src/components/fields/types";
 import withBasicCell from "../_withTableCell/withBasicCell";
 
-import PercentageIcon from "assets/icons/Percentage";
+import PercentageIcon from "@src/assets/icons/Percentage";
 import BasicCell from "./BasicCell";
-import TextEditor from "components/Table/editors/TextEditor";
+import TextEditor from "@src/components/Table/editors/TextEditor";
 import { filterOperators } from "../Number/Filter";
 const SideDrawerField = lazy(
   () =>

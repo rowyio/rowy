@@ -9,13 +9,13 @@ import { useSnackbar } from "notistack";
 
 import Button from "@mui/material/Button";
 
-import { useAppContext } from "contexts/AppContext";
+import { useAppContext } from "@src/contexts/AppContext";
 import { TableFilter, TableOrder } from ".";
 import {
   isCollectionGroup,
   generateSmallerId,
   missingFieldsReducer,
-} from "utils/fns";
+} from "@src/utils/fns";
 
 // Safety parameter sets the upper limit of number of docs fetched by this hook
 export const CAP = 1000;

@@ -1,7 +1,7 @@
 import { use100vh } from "react-div-100vh";
 
 import { Fade, Stack, StackProps, Typography } from "@mui/material";
-import CircularProgressOptical from "components/CircularProgressOptical";
+import CircularProgressOptical from "@src/components/CircularProgressOptical";
 
 interface ILoadingProps extends Partial<StackProps> {
   message?: string;

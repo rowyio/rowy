@@ -16,18 +16,18 @@ import {
   Link,
 } from "@mui/material";
 import ExpandIcon from "@mui/icons-material/KeyboardArrowDown";
-import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
+import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
-import Modal, { IModalProps } from "components/Modal";
+import Modal, { IModalProps } from "@src/components/Modal";
 import Step1Triggers from "./Step1Triggers";
 import Step2RequiredFields from "./Step2RequiredFields";
 import Step3Conditions from "./Step3Conditions";
 import Step4Body from "./Step4Body";
 
-import { useConfirmation } from "components/ConfirmationDialog";
+import { useConfirmation } from "@src/components/ConfirmationDialog";
 
 import { extensionNames, IExtension } from "./utils";
-import { WIKI_LINKS } from "constants/externalLinks";
+import { WIKI_LINKS } from "@src/constants/externalLinks";
 
 type StepValidation = Record<"condition" | "extensionBody", boolean>;
 export interface IExtensionModalStepProps {

@@ -1,4 +1,4 @@
-import { IUserSettingsChildProps } from "pages/Settings/UserSettings";
+import { IUserSettingsChildProps } from "@src/pages/Settings/UserSettings";
 import _merge from "lodash/merge";
 
 import {
@@ -10,7 +10,7 @@ import {
   Checkbox,
 } from "@mui/material";
 
-import { useAppContext } from "contexts/AppContext";
+import { useAppContext } from "@src/contexts/AppContext";
 
 export default function Theme({
   settings,

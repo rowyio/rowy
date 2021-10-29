@@ -1,11 +1,11 @@
 import firebase from "firebase/app";
 import * as firebaseui from "firebaseui";
 
-import twitterLogo from "assets/logos/twitter.svg";
-import facebookLogo from "assets/logos/facebook.svg";
-import githubLogo from "assets/logos/github.svg";
-import appleLogo from "assets/logos/apple.svg";
-import yahooLogo from "assets/logos/yahoo.svg";
+import twitterLogo from "@src/assets/logos/twitter.svg";
+import facebookLogo from "@src/assets/logos/facebook.svg";
+import githubLogo from "@src/assets/logos/github.svg";
+import appleLogo from "@src/assets/logos/apple.svg";
+import yahooLogo from "@src/assets/logos/yahoo.svg";
 
 import { mdiGoogle } from "@mdi/js";
 console.log(

@@ -1,18 +1,18 @@
 import { useState, useEffect } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 import queryString from "query-string";
-import { ISetupStepBodyProps } from "pages/Setup";
+import { ISetupStepBodyProps } from "@src/pages/Setup";
 
 import { Button, Typography, Stack, TextField } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
-import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
+import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
 import SetupItem from "./SetupItem";
 
 import { name } from "@root/package.json";
-import { rowyRun } from "utils/rowyRun";
-import { runRoutes } from "constants/runRoutes";
-import { EXTERNAL_LINKS } from "constants/externalLinks";
+import { rowyRun } from "@src/utils/rowyRun";
+import { runRoutes } from "@src/constants/runRoutes";
+import { EXTERNAL_LINKS } from "@src/constants/externalLinks";
 
 export default function Step1RowyRun({
   completion,

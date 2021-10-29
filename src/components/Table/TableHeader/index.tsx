@@ -1,7 +1,7 @@
 import { Stack, Button } from "@mui/material";
 
-import { isCollectionGroup } from "utils/fns";
-import AddRowIcon from "assets/icons/AddRow";
+import { isCollectionGroup } from "@src/utils/fns";
+import AddRowIcon from "@src/assets/icons/AddRow";
 
 import Filters from "../Filters";
 import ImportCSV from "./ImportCsv";
@@ -14,9 +14,9 @@ import RowHeight from "./RowHeight";
 import Extensions from "./Extensions";
 import ReExecute from "./ReExecute";
 
-import { useAppContext } from "contexts/AppContext";
-import { useProjectContext } from "contexts/ProjectContext";
-import { FieldType } from "constants/fields";
+import { useAppContext } from "@src/contexts/AppContext";
+import { useProjectContext } from "@src/contexts/ProjectContext";
+import { FieldType } from "@src/constants/fields";
 
 export const TABLE_HEADER_HEIGHT = 44;
 

@@ -1,10 +1,10 @@
 import { lazy } from "react";
-import { IFieldConfig, FieldType } from "components/fields/types";
+import { IFieldConfig, FieldType } from "@src/components/fields/types";
 import withBasicCell from "../_withTableCell/withBasicCell";
 
 import UrlIcon from "@mui/icons-material/Link";
 import TableCell from "./TableCell";
-import TextEditor from "components/Table/editors/TextEditor";
+import TextEditor from "@src/components/Table/editors/TextEditor";
 import { filterOperators } from "../ShortText/Filter";
 
 const SideDrawerField = lazy(

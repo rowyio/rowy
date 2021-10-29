@@ -21,14 +21,14 @@ import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 
 import TableHeaderButton from "./TableHeaderButton";
-import ImportIcon from "assets/icons/Import";
+import ImportIcon from "@src/assets/icons/Import";
 
-import FileUploadIcon from "assets/icons/Upload";
+import FileUploadIcon from "@src/assets/icons/Upload";
 import CheckIcon from "@mui/icons-material/CheckCircle";
 
 import ImportCsvWizard, {
   IImportCsvWizardProps,
-} from "components/Wizards/ImportCsvWizard";
+} from "@src/components/Wizards/ImportCsvWizard";
 
 const useStyles = makeStyles((theme) =>
   createStyles({

@@ -2,7 +2,7 @@ import { IHeavyCellProps } from "../types";
 
 import { Grid, Box } from "@mui/material";
 
-import { resultColorsScale } from "utils/color";
+import { resultColorsScale } from "@src/utils/color";
 
 export default function Slider({ column, value }: IHeavyCellProps) {
   const {

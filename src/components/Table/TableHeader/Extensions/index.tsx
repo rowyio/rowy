@@ -4,19 +4,19 @@ import _isEqual from "lodash/isEqual";
 import { Breadcrumbs } from "@mui/material";
 
 import TableHeaderButton from "../TableHeaderButton";
-import ExtensionIcon from "assets/icons/Extension";
-import Modal from "components/Modal";
+import ExtensionIcon from "@src/assets/icons/Extension";
+import Modal from "@src/components/Modal";
 import ExtensionList from "./ExtensionList";
 import ExtensionModal from "./ExtensionModal";
 import ExtensionMigration from "./ExtensionMigration";
 
-import { useProjectContext } from "contexts/ProjectContext";
-import { useAppContext } from "contexts/AppContext";
-import { useConfirmation } from "components/ConfirmationDialog";
-import { useSnackLogContext } from "contexts/SnackLogContext";
+import { useProjectContext } from "@src/contexts/ProjectContext";
+import { useAppContext } from "@src/contexts/AppContext";
+import { useConfirmation } from "@src/components/ConfirmationDialog";
+import { useSnackLogContext } from "@src/contexts/SnackLogContext";
 
 import { emptyExtensionObject, IExtension, ExtensionType } from "./utils";
-import { runRoutes } from "constants/runRoutes";
+import { runRoutes } from "@src/constants/runRoutes";
 import { analytics } from "@src/analytics";
 
 export default function Extensions() {

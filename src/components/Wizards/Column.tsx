@@ -4,8 +4,8 @@ import { makeStyles, createStyles } from "@mui/styles";
 import { Grid, GridProps, Typography } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 
-import { FieldType } from "constants/fields";
-import { getFieldProp } from "components/fields";
+import { FieldType } from "@src/constants/fields";
+import { getFieldProp } from "@src/components/fields";
 
 const useStyles = makeStyles((theme) =>
   createStyles({

@@ -16,7 +16,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Switch from "@mui/material/Switch";
 // import CodeEditor from "../editors/CodeEditor";
-import { useProjectContext } from "contexts/ProjectContext";
+import { useProjectContext } from "@src/contexts/ProjectContext";
 import { makeId } from "../../../utils/fns";
 
 const useStyles = makeStyles((theme) =>

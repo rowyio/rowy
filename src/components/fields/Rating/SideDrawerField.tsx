@@ -6,7 +6,7 @@ import { Rating as MuiRating } from "@mui/material";
 import "@mui/lab";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 
-import { useFieldStyles } from "components/SideDrawer/Form/utils";
+import { useFieldStyles } from "@src/components/SideDrawer/Form/utils";
 
 export default function Rating({
   control,

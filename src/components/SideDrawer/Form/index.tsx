@@ -6,15 +6,15 @@ import _isEmpty from "lodash/isEmpty";
 import { Stack } from "@mui/material";
 
 import { Values } from "./utils";
-import { getFieldProp } from "components/fields";
-import { IFieldConfig } from "components/fields/types";
+import { getFieldProp } from "@src/components/fields";
+import { IFieldConfig } from "@src/components/fields/types";
 import Autosave from "./Autosave";
 import Reset from "./Reset";
 import FieldWrapper from "./FieldWrapper";
 
-import { useAppContext } from "contexts/AppContext";
-import { useProjectContext } from "contexts/ProjectContext";
-import { sanitizeFirestoreRefs } from "utils/fns";
+import { useAppContext } from "@src/contexts/AppContext";
+import { useProjectContext } from "@src/contexts/ProjectContext";
+import { sanitizeFirestoreRefs } from "@src/utils/fns";
 
 export interface IFormProps {
   values: Values;

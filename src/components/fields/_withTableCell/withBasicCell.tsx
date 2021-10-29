@@ -1,10 +1,10 @@
 import { FormatterProps } from "react-data-grid";
 import { IBasicCellProps } from "../types";
 
-import ErrorBoundary from "components/ErrorBoundary";
-import CellValidation from "components/Table/CellValidation";
-import { FieldType } from "constants/fields";
-import { getCellValue } from "utils/fns";
+import ErrorBoundary from "@src/components/ErrorBoundary";
+import CellValidation from "@src/components/Table/CellValidation";
+import { FieldType } from "@src/constants/fields";
+import { getCellValue } from "@src/utils/fns";
 
 /**
  * HOC to wrap around table cell components.

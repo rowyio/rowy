@@ -3,16 +3,17 @@ import { ISettingsProps } from "../types";
 
 import { Grid, InputLabel } from "@mui/material";
 import MultiSelect from "@rowy/multiselect";
-import FieldSkeleton from "components/SideDrawer/Form/FieldSkeleton";
-import FieldsDropdown from "components/Table/ColumnMenu/FieldsDropdown";
+import FieldSkeleton from "@src/components/SideDrawer/Form/FieldSkeleton";
+import FieldsDropdown from "@src/components/Table/ColumnMenu/FieldsDropdown";
 import CodeEditorHelper from "@src/components/CodeEditor/CodeEditorHelper";
 
-import { FieldType } from "constants/fields";
-import { useProjectContext } from "contexts/ProjectContext";
-import { WIKI_LINKS } from "constants/externalLinks";
+import { FieldType } from "@src/constants/fields";
+import { useProjectContext } from "@src/contexts/ProjectContext";
+import { WIKI_LINKS } from "@src/constants/externalLinks";
 
 const CodeEditor = lazy(
-  () => import("components/CodeEditor" /* webpackChunkName: "CodeEditor" */)
+  () =>
+    import("@src/components/CodeEditor" /* webpackChunkName: "CodeEditor" */)
 );
 
 export default function Settings({

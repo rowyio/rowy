@@ -1,5 +1,5 @@
 import { Stack, Typography, Grid, Tooltip, Button } from "@mui/material";
-import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
+import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
 export interface ICodeEditorHelperProps {
   docLink: string;

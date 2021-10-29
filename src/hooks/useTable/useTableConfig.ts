@@ -5,7 +5,7 @@ import _camelCase from "lodash/camelCase";
 import _sortBy from "lodash/sortBy";
 
 import useDoc, { DocActions } from "../useDoc";
-import { FieldType } from "constants/fields";
+import { FieldType } from "@src/constants/fields";
 import { arrayMover, formatPath } from "../../utils/fns";
 import { db, deleteField } from "../../firebase";
 

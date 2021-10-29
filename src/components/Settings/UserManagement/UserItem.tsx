@@ -10,16 +10,16 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import CopyIcon from "assets/icons/Copy";
+import CopyIcon from "@src/assets/icons/Copy";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 
 import MultiSelect from "@rowy/multiselect";
-import { User } from "pages/Settings/UserManagement";
+import { User } from "@src/pages/Settings/UserManagement";
 import { useProjectContext } from "@src/contexts/ProjectContext";
-import { runRoutes } from "constants/runRoutes";
+import { runRoutes } from "@src/constants/runRoutes";
 import { db } from "@src/firebase";
-import { USERS } from "config/dbPaths";
-import { useConfirmation } from "components/ConfirmationDialog";
+import { USERS } from "@src/config/dbPaths";
+import { useConfirmation } from "@src/components/ConfirmationDialog";
 
 export default function UserItem({ id, user, roles: rolesProp }: User) {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();

@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { EditorProps } from "react-data-grid";
-import { useProjectContext } from "contexts/ProjectContext";
-import { IHeavyCellProps } from "components/fields/types";
+import { useProjectContext } from "@src/contexts/ProjectContext";
+import { IHeavyCellProps } from "@src/components/fields/types";
 
-import { getCellValue } from "utils/fns";
+import { getCellValue } from "@src/utils/fns";
 
 /**
  * Allow the cell to be editable, but disable react-data-grid’s default

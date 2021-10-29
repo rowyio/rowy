@@ -1,7 +1,7 @@
 import { useState, Dispatch, SetStateAction, MutableRefObject } from "react";
 
 import { Stack } from "@mui/material";
-import CircularProgressOptical from "components/CircularProgressOptical";
+import CircularProgressOptical from "@src/components/CircularProgressOptical";
 
 export interface ISnackbarProgressRef {
   setProgress: Dispatch<SetStateAction<number>>;

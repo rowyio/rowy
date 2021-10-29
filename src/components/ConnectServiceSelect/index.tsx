@@ -3,8 +3,8 @@ import clsx from "clsx";
 
 import { TextField, TextFieldProps } from "@mui/material";
 import useStyles from "./styles";
-import Loading from "components/Loading";
-import ErrorBoundary from "components/ErrorBoundary";
+import Loading from "@src/components/Loading";
+import ErrorBoundary from "@src/components/ErrorBoundary";
 
 const PopupContents = lazy(
   () => import("./PopupContents" /* webpackChunkName: "PopupContents" */)

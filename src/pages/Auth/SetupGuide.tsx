@@ -1,9 +1,9 @@
 import { Button } from "@mui/material";
-import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
+import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
-import AuthLayout from "components/Auth/AuthLayout";
+import AuthLayout from "@src/components/Auth/AuthLayout";
 
-import { WIKI_LINKS } from "constants/externalLinks";
+import { WIKI_LINKS } from "@src/constants/externalLinks";
 import { name } from "@root/package.json";
 
 export default function AuthSetupGuide() {

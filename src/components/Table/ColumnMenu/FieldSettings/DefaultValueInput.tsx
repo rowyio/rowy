@@ -6,16 +6,17 @@ import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { Typography, TextField, MenuItem, ListItemText } from "@mui/material";
 
-import { getFieldProp } from "components/fields";
-import FieldSkeleton from "components/SideDrawer/Form/FieldSkeleton";
+import { getFieldProp } from "@src/components/fields";
+import FieldSkeleton from "@src/components/SideDrawer/Form/FieldSkeleton";
 import CodeEditorHelper from "@src/components/CodeEditor/CodeEditorHelper";
 import FormAutosave from "./FormAutosave";
-import { FieldType } from "constants/fields";
-import { WIKI_LINKS } from "constants/externalLinks";
+import { FieldType } from "@src/constants/fields";
+import { WIKI_LINKS } from "@src/constants/externalLinks";
 import { name } from "@root/package.json";
 
 const CodeEditor = lazy(
-  () => import("components/CodeEditor" /* webpackChunkName: "CodeEditor" */)
+  () =>
+    import("@src/components/CodeEditor" /* webpackChunkName: "CodeEditor" */)
 );
 
 export interface IDefaultValueInputProps extends IMenuModalProps {

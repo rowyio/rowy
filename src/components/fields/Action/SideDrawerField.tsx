@@ -4,8 +4,8 @@ import { ISideDrawerFieldProps } from "../types";
 import { Stack, Link } from "@mui/material";
 
 import ActionFab from "./ActionFab";
-import { useFieldStyles } from "components/SideDrawer/Form/utils";
-import { sanitiseCallableName, isUrl } from "utils/fns";
+import { useFieldStyles } from "@src/components/SideDrawer/Form/utils";
+import { sanitiseCallableName, isUrl } from "@src/utils/fns";
 
 export default function Action({
   column,

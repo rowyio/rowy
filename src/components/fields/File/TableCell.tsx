@@ -7,15 +7,15 @@ import { format } from "date-fns";
 
 import { makeStyles, createStyles } from "@mui/styles";
 import { alpha, Stack, Grid, Tooltip, Chip, IconButton } from "@mui/material";
-import UploadIcon from "assets/icons/Upload";
-import ChipList from "components/Table/formatters/ChipList";
-import CircularProgressOptical from "components/CircularProgressOptical";
+import UploadIcon from "@src/assets/icons/Upload";
+import ChipList from "@src/components/Table/formatters/ChipList";
+import CircularProgressOptical from "@src/components/CircularProgressOptical";
 
-import { useConfirmation } from "components/ConfirmationDialog";
-import useUploader, { FileValue } from "hooks/useTable/useUploader";
+import { useConfirmation } from "@src/components/ConfirmationDialog";
+import useUploader, { FileValue } from "@src/hooks/useTable/useUploader";
 import { FileIcon } from ".";
-import { DATE_TIME_FORMAT } from "constants/dates";
-import { useProjectContext } from "contexts/ProjectContext";
+import { DATE_TIME_FORMAT } from "@src/constants/dates";
+import { useProjectContext } from "@src/contexts/ProjectContext";
 
 const useStyles = makeStyles((theme) =>
   createStyles({

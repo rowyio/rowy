@@ -1,12 +1,13 @@
 import { lazy, Suspense } from "react";
 import { Typography } from "@mui/material";
 import MultiSelect from "@rowy/multiselect";
-import FieldSkeleton from "components/SideDrawer/Form/FieldSkeleton";
-import { FieldType } from "constants/fields";
-import FieldsDropdown from "components/Table/ColumnMenu/FieldsDropdown";
-import { useProjectContext } from "contexts/ProjectContext";
+import FieldSkeleton from "@src/components/SideDrawer/Form/FieldSkeleton";
+import { FieldType } from "@src/constants/fields";
+import FieldsDropdown from "@src/components/Table/ColumnMenu/FieldsDropdown";
+import { useProjectContext } from "@src/contexts/ProjectContext";
 const CodeEditor = lazy(
-  () => import("components/CodeEditor" /* webpackChunkName: "CodeEditor" */)
+  () =>
+    import("@src/components/CodeEditor" /* webpackChunkName: "CodeEditor" */)
 );
 
 const Settings = ({ config, handleChange }) => {

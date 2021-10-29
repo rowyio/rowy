@@ -2,7 +2,7 @@ import { useRef } from "react";
 import clsx from "clsx";
 import { HeaderRendererProps } from "react-data-grid";
 import { useDrag, useDrop, DragObjectWithType } from "react-dnd";
-import useCombinedRefs from "hooks/useCombinedRefs";
+import useCombinedRefs from "@src/hooks/useCombinedRefs";
 
 import { makeStyles, createStyles } from "@mui/styles";
 import {
@@ -17,10 +17,10 @@ import SortDescIcon from "@mui/icons-material/ArrowDownward";
 import DropdownIcon from "@mui/icons-material/MoreHoriz";
 import LockIcon from "@mui/icons-material/LockOutlined";
 
-import { FieldType } from "constants/fields";
-import { getFieldProp } from "components/fields";
-import { useAppContext } from "contexts/AppContext";
-import { useProjectContext } from "contexts/ProjectContext";
+import { FieldType } from "@src/constants/fields";
+import { getFieldProp } from "@src/components/fields";
+import { useAppContext } from "@src/contexts/AppContext";
+import { useProjectContext } from "@src/contexts/ProjectContext";
 import { TableOrder } from "@src/hooks/useTable";
 
 const useStyles = makeStyles((theme) =>

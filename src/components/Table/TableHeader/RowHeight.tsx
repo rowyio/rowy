@@ -1,10 +1,10 @@
 import { useRef, useState } from "react";
 
 import { useTheme, TextField, ListSubheader, MenuItem } from "@mui/material";
-import RowHeightIcon from "assets/icons/RowHeight";
+import RowHeightIcon from "@src/assets/icons/RowHeight";
 
 import TableHeaderButton from "./TableHeaderButton";
-import { useProjectContext } from "contexts/ProjectContext";
+import { useProjectContext } from "@src/contexts/ProjectContext";
 
 const ROW_HEIGHTS = [33, 41, 65, 97, 129, 161];
 

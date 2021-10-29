@@ -5,7 +5,7 @@ import { Grid } from "@mui/material";
 
 import "@mui/lab";
 
-import { useFieldStyles } from "components/SideDrawer/Form/utils";
+import { useFieldStyles } from "@src/components/SideDrawer/Form/utils";
 import { useStatusStyles } from "./styles";
 
 export default function Rating({ control, column }: ISideDrawerFieldProps) {

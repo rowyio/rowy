@@ -10,9 +10,9 @@ import { IStepProps } from ".";
 import FadeList from "../ScrollableList";
 import Column from "../Column";
 import Cell from "../Cell";
-import FieldsDropdown from "components/Table/ColumnMenu/FieldsDropdown";
+import FieldsDropdown from "@src/components/Table/ColumnMenu/FieldsDropdown";
 
-import { FieldType } from "constants/fields";
+import { FieldType } from "@src/constants/fields";
 import { SELECTABLE_TYPES } from "../ImportWizard/utils";
 
 const useStyles = makeStyles((theme) =>

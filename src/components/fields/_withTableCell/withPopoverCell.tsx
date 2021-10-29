@@ -9,12 +9,12 @@ import {
 import { makeStyles, createStyles } from "@mui/styles";
 import { Popover, PopoverProps } from "@mui/material";
 
-import ErrorBoundary from "components/ErrorBoundary";
-import CellValidation from "components/Table/CellValidation";
-import { useProjectContext } from "contexts/ProjectContext";
+import ErrorBoundary from "@src/components/ErrorBoundary";
+import CellValidation from "@src/components/Table/CellValidation";
+import { useProjectContext } from "@src/contexts/ProjectContext";
 
-import { FieldType } from "constants/fields";
-import { getCellValue } from "utils/fns";
+import { FieldType } from "@src/constants/fields";
+import { getCellValue } from "@src/utils/fns";
 
 const useStyles = makeStyles(() =>
   createStyles({

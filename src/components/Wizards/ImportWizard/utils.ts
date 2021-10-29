@@ -1,7 +1,7 @@
 import _isDate from "lodash/isDate";
 import _sortBy from "lodash/sortBy";
 
-import { FieldType } from "constants/fields";
+import { FieldType } from "@src/constants/fields";
 
 export const SELECTABLE_TYPES = [
   FieldType.shortText,

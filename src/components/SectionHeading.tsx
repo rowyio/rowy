@@ -5,7 +5,7 @@ import { HashLink } from "react-router-hash-link";
 import { Stack, StackProps, Typography, IconButton } from "@mui/material";
 import LinkIcon from "@mui/icons-material/Link";
 
-import { APP_BAR_HEIGHT } from "components/Navigation";
+import { APP_BAR_HEIGHT } from "@src/components/Navigation";
 
 export interface ISectionHeadingProps extends Omit<StackProps, "children"> {
   children: string;

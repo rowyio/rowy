@@ -1,4 +1,4 @@
-import { RunRoute } from "constants/runRoutes";
+import { RunRoute } from "@src/constants/runRoutes";
 
 export interface IRowyRunRequestProps {
   rowyRunUrl: string;

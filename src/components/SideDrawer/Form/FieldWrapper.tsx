@@ -1,16 +1,16 @@
 import { Suspense } from "react";
 
 import { Stack, InputLabel, Typography, IconButton } from "@mui/material";
-import DocumentPathIcon from "assets/icons/DocumentPath";
+import DocumentPathIcon from "@src/assets/icons/DocumentPath";
 import LaunchIcon from "@mui/icons-material/Launch";
 import LockIcon from "@mui/icons-material/LockOutlined";
 
-import ErrorBoundary from "components/ErrorBoundary";
+import ErrorBoundary from "@src/components/ErrorBoundary";
 import FieldSkeleton from "./FieldSkeleton";
 
-import { FieldType } from "constants/fields";
-import { getFieldProp } from "components/fields";
-import { useAppContext } from "contexts/AppContext";
+import { FieldType } from "@src/constants/fields";
+import { getFieldProp } from "@src/components/fields";
+import { useAppContext } from "@src/contexts/AppContext";
 
 export interface IFieldWrapperProps {
   children?: React.ReactNode;
