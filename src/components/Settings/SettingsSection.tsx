@@ -1,7 +1,7 @@
 import { Paper, PaperProps } from "@mui/material";
 
-import SectionHeading from "components/SectionHeading";
-import SlideTransition from "components/Modal/SlideTransition";
+import SectionHeading from "@src/components/SectionHeading";
+import SlideTransition from "@src/components/Modal/SlideTransition";
 
 export interface ISettingsSectionProps {
   children: React.ReactNode;

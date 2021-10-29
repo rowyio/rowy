@@ -6,34 +6,34 @@ import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import { StyledEngineProvider } from "@mui/material/styles";
 import "./space-grotesk.css";
 
-import CustomBrowserRouter from "utils/CustomBrowserRouter";
-import PrivateRoute from "utils/PrivateRoute";
-import ErrorBoundary from "components/ErrorBoundary";
-import Loading from "components/Loading";
-import Navigation from "components/Navigation";
-import Logo from "assets/Logo";
+import CustomBrowserRouter from "@src/utils/CustomBrowserRouter";
+import PrivateRoute from "@src/utils/PrivateRoute";
+import ErrorBoundary from "@src/components/ErrorBoundary";
+import Loading from "@src/components/Loading";
+import Navigation from "@src/components/Navigation";
+import Logo from "@src/assets/Logo";
 
-import SwrProvider from "contexts/SwrContext";
-import ConfirmationProvider from "components/ConfirmationDialog/Provider";
-import { AppProvider } from "contexts/AppContext";
-import { ProjectContextProvider } from "contexts/ProjectContext";
-import { SnackbarProvider } from "contexts/SnackbarContext";
-import { SnackLogProvider } from "contexts/SnackLogContext";
-import routes from "constants/routes";
+import SwrProvider from "@src/contexts/SwrContext";
+import ConfirmationProvider from "@src/components/ConfirmationDialog/Provider";
+import { AppProvider } from "@src/contexts/AppContext";
+import { ProjectContextProvider } from "@src/contexts/ProjectContext";
+import { SnackbarProvider } from "@src/contexts/SnackbarContext";
+import { SnackLogProvider } from "@src/contexts/SnackLogContext";
+import routes from "@src/constants/routes";
 
-import AuthPage from "pages/Auth";
-import SignOutPage from "pages/Auth/SignOut";
-import SignUpPage from "pages/Auth/SignUp";
-import DeployPage from "pages/Deploy";
-import TestPage from "pages/Test";
-import RowyRunTestPage from "pages/RowyRunTest";
-import PageNotFound from "pages/PageNotFound";
+import AuthPage from "@src/pages/Auth";
+import SignOutPage from "@src/pages/Auth/SignOut";
+import SignUpPage from "@src/pages/Auth/SignUp";
+import DeployPage from "@src/pages/Deploy";
+import TestPage from "@src/pages/Test";
+import RowyRunTestPage from "@src/pages/RowyRunTest";
+import PageNotFound from "@src/pages/PageNotFound";
 
-import Favicon from "assets/Favicon";
-import "analytics";
+import Favicon from "@src/assets/Favicon";
+import "@src/analytics";
 
 // prettier-ignore
-const AuthSetupGuidePage = lazy(() => import("pages/Auth/SetupGuide" /* webpackChunkName: "AuthSetupGuide" */));
+const AuthSetupGuidePage = lazy(() => import("@src/pages/Auth/SetupGuide" /* webpackChunkName: "AuthSetupGuide" */));
 // prettier-ignore
 const ImpersonatorAuthPage = lazy(() => import("./pages/Auth/ImpersonatorAuth" /* webpackChunkName: "ImpersonatorAuthPage" */));
 // prettier-ignore
@@ -51,7 +51,7 @@ const UserSettingsPage = lazy(() => import("./pages/Settings/UserSettings" /* we
 // prettier-ignore
 const UserManagementPage = lazy(() => import("./pages/Settings/UserManagement" /* webpackChunkName: "UserManagementPage" */));
 // prettier-ignore
-const SetupPage = lazy(() => import("pages/Setup" /* webpackChunkName: "SetupPage" */));
+const SetupPage = lazy(() => import("@src/pages/Setup" /* webpackChunkName: "SetupPage" */));
 
 export default function App() {
   return (

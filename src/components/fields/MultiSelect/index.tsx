@@ -1,11 +1,11 @@
 import { lazy } from "react";
-import { IFieldConfig, FieldType } from "components/fields/types";
+import { IFieldConfig, FieldType } from "@src/components/fields/types";
 import withPopoverCell from "../_withTableCell/withPopoverCell";
 
-import MultiSelectIcon from "assets/icons/MultiSelect";
+import MultiSelectIcon from "@src/assets/icons/MultiSelect";
 import BasicCell from "../_BasicCell/BasicCellNull";
 import InlineCell from "./InlineCell";
-import NullEditor from "components/Table/editors/NullEditor";
+import NullEditor from "@src/components/Table/editors/NullEditor";
 import { filterOperators } from "./Filter";
 const PopoverCell = lazy(
   () =>

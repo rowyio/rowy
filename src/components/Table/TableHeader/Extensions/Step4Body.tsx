@@ -3,13 +3,14 @@ import { IExtensionModalStepProps } from "./ExtensionModal";
 import _upperFirst from "lodash/upperFirst";
 import useStateRef from "react-usestateref";
 
-import FieldSkeleton from "components/SideDrawer/Form/FieldSkeleton";
+import FieldSkeleton from "@src/components/SideDrawer/Form/FieldSkeleton";
 import CodeEditorHelper from "@src/components/CodeEditor/CodeEditorHelper";
 
-import { WIKI_LINKS } from "constants/externalLinks";
+import { WIKI_LINKS } from "@src/constants/externalLinks";
 
 const CodeEditor = lazy(
-  () => import("components/CodeEditor" /* webpackChunkName: "CodeEditor" */)
+  () =>
+    import("@src/components/CodeEditor" /* webpackChunkName: "CodeEditor" */)
 );
 
 const additionalVariables = [

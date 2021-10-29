@@ -12,11 +12,11 @@ import {
 import AddIcon from "@mui/icons-material/PersonAddOutlined";
 
 import MultiSelect from "@rowy/multiselect";
-import Modal from "components/Modal";
+import Modal from "@src/components/Modal";
 
-import { useProjectContext } from "contexts/ProjectContext";
-import routes from "constants/routes";
-import { runRoutes } from "constants/runRoutes";
+import { useProjectContext } from "@src/contexts/ProjectContext";
+import routes from "@src/constants/routes";
+import { runRoutes } from "@src/constants/runRoutes";
 
 export default function InviteUser() {
   const { roles: projectRoles, rowyRun } = useProjectContext();

@@ -9,12 +9,12 @@ import { useSnackbar } from "notistack";
 
 import { Button } from "@mui/material";
 import MultiSelect, { MultiSelectProps } from "@rowy/multiselect";
-import Loading from "components/Loading";
-import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
+import Loading from "@src/components/Loading";
+import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import { runRoutes } from "@src/constants/runRoutes";
-import { WIKI_LINKS } from "constants/externalLinks";
+import { WIKI_LINKS } from "@src/constants/externalLinks";
 
 const useAlgoliaSearchKeys = createPersistedState(
   "__ROWY__ALGOLIA_SEARCH_KEYS"

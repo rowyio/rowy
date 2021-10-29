@@ -1,7 +1,7 @@
 import { Fragment, useRef, useState } from "react";
 import { useSnackbar } from "notistack";
 
-import Navigation from "components/Navigation";
+import Navigation from "@src/components/Navigation";
 import {
   useTheme,
   Container,
@@ -38,12 +38,12 @@ import {
   LinearProgress,
 } from "@mui/material";
 import SparkIcon from "@mui/icons-material/OfflineBoltOutlined";
-import { useConfirmation } from "components/ConfirmationDialog";
+import { useConfirmation } from "@src/components/ConfirmationDialog";
 
 import SnackbarProgress, {
   ISnackbarProgressRef,
-} from "components/SnackbarProgress";
-import CircularProgressOptical from "components/CircularProgressOptical";
+} from "@src/components/SnackbarProgress";
+import CircularProgressOptical from "@src/components/CircularProgressOptical";
 
 const typographyVariants = [
   "h1",

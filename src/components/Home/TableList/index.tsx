@@ -2,11 +2,11 @@ import { TransitionGroup } from "react-transition-group";
 
 import { Box, Paper, Collapse, List } from "@mui/material";
 
-import SectionHeading from "components/SectionHeading";
+import SectionHeading from "@src/components/SectionHeading";
 import TableListItem from "./TableListItem";
-import SlideTransition from "components/Modal/SlideTransition";
+import SlideTransition from "@src/components/Modal/SlideTransition";
 
-import { Table } from "contexts/ProjectContext";
+import { Table } from "@src/contexts/ProjectContext";
 
 export interface ITableListProps {
   sections: Record<string, Table[]>;

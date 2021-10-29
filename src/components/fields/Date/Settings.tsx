@@ -1,11 +1,11 @@
 import { ISettingsProps } from "../types";
 
 import { Typography, Link } from "@mui/material";
-import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
+import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
 import MultiSelect from "@rowy/multiselect";
-import { DATE_FORMAT } from "constants/dates";
-import { EXTERNAL_LINKS } from "constants/externalLinks";
+import { DATE_FORMAT } from "@src/constants/dates";
+import { EXTERNAL_LINKS } from "@src/constants/externalLinks";
 
 export default function Settings({ handleChange, config }: ISettingsProps) {
   return (

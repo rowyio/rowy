@@ -6,11 +6,11 @@ import githubLightTheme from "./github-light-default.json";
 import githubDarkTheme from "./github-dark-default.json";
 
 import { useTheme, Box, BoxProps } from "@mui/material";
-import CircularProgressOptical from "components/CircularProgressOptical";
-import ResizeBottomRightIcon from "assets/icons/ResizeBottomRight";
+import CircularProgressOptical from "@src/components/CircularProgressOptical";
+import ResizeBottomRightIcon from "@src/assets/icons/ResizeBottomRight";
 
-import { useProjectContext } from "contexts/ProjectContext";
-import { getFieldProp } from "components/fields";
+import { useProjectContext } from "@src/contexts/ProjectContext";
+import { getFieldProp } from "@src/components/fields";
 
 /* eslint-disable import/no-webpack-loader-syntax */
 import firestoreDefs from "!!raw-loader!./firestore.d.ts";

@@ -1,4 +1,4 @@
-import { FieldType } from "constants/fields";
+import { FieldType } from "@src/constants/fields";
 
 import { FormatterProps, EditorProps } from "react-data-grid";
 import { Control, UseFormReturn } from "react-hook-form";

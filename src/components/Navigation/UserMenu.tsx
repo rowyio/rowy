@@ -18,8 +18,8 @@ import {
 import AccountCircleIcon from "@mui/icons-material/AccountCircleOutlined";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 
-import { useAppContext } from "contexts/AppContext";
-import routes from "constants/routes";
+import { useAppContext } from "@src/contexts/AppContext";
+import routes from "@src/constants/routes";
 
 export default function UserMenu(props: IconButtonProps) {
   const anchorEl = useRef<HTMLButtonElement>(null);

@@ -1,7 +1,7 @@
 import { EditorProps } from "react-data-grid";
-import { IHeavyCellProps } from "components/fields/types";
+import { IHeavyCellProps } from "@src/components/fields/types";
 
-import { getCellValue } from "utils/fns";
+import { getCellValue } from "@src/utils/fns";
 
 /**
  * Allow the cell to be editable, but disable react-data-grid’s default

@@ -2,10 +2,10 @@ import { Controller } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 
 import { Stack, Typography, Avatar } from "@mui/material";
-import { useFieldStyles } from "components/SideDrawer/Form/utils";
+import { useFieldStyles } from "@src/components/SideDrawer/Form/utils";
 
 import { format } from "date-fns";
-import { DATE_TIME_FORMAT } from "constants/dates";
+import { DATE_TIME_FORMAT } from "@src/constants/dates";
 
 export default function User({ control, column }: ISideDrawerFieldProps) {
   const fieldClasses = useFieldStyles();

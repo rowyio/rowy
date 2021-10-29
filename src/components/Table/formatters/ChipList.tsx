@@ -1,5 +1,5 @@
 import { Grid } from "@mui/material";
-import { useProjectContext } from "contexts/ProjectContext";
+import { useProjectContext } from "@src/contexts/ProjectContext";
 
 export default function ChipList({ children }: React.PropsWithChildren<{}>) {
   const { tableState } = useProjectContext();

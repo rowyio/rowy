@@ -6,14 +6,14 @@ import { Fab, FabProps } from "@mui/material";
 import PlayIcon from "@mui/icons-material/PlayArrow";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import UndoIcon from "@mui/icons-material/Undo";
-import CircularProgressOptical from "components/CircularProgressOptical";
+import CircularProgressOptical from "@src/components/CircularProgressOptical";
 
-import { useProjectContext } from "contexts/ProjectContext";
+import { useProjectContext } from "@src/contexts/ProjectContext";
 import { functions } from "@src/firebase";
-import { formatPath } from "utils/fns";
-import { useConfirmation } from "components/ConfirmationDialog";
+import { formatPath } from "@src/utils/fns";
+import { useConfirmation } from "@src/components/ConfirmationDialog";
 import { useActionParams } from "./FormDialog/Context";
-import { runRoutes } from "constants/runRoutes";
+import { runRoutes } from "@src/constants/runRoutes";
 
 const replacer = (data: any) => (m: string, key: string) => {
   const objKey = key.split(":")[0];

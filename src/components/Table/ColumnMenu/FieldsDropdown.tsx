@@ -1,9 +1,9 @@
 import MultiSelect from "@rowy/multiselect";
 import { ListItemIcon } from "@mui/material";
 
-import { FIELDS } from "components/fields";
-import { FieldType } from "constants/fields";
-import { getFieldProp } from "components/fields";
+import { FIELDS } from "@src/components/fields";
+import { FieldType } from "@src/constants/fields";
+import { getFieldProp } from "@src/components/fields";
 
 export interface IFieldsDropdownProps {
   value: FieldType;

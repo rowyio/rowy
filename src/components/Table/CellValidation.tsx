@@ -2,7 +2,7 @@ import { styled } from "@mui/material/styles";
 import ErrorIcon from "@mui/icons-material/ErrorOutline";
 import WarningIcon from "@mui/icons-material/WarningAmber";
 
-import RichTooltip from "components/RichTooltip";
+import RichTooltip from "@src/components/RichTooltip";
 
 const Root = styled("div", { shouldForwardProp: (prop) => prop !== "error" })(
   ({ theme, ...props }) => ({

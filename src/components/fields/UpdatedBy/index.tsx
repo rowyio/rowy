@@ -1,10 +1,10 @@
 import { lazy } from "react";
-import { IFieldConfig, FieldType } from "components/fields/types";
+import { IFieldConfig, FieldType } from "@src/components/fields/types";
 import withHeavyCell from "../_withTableCell/withHeavyCell";
 
-import UpdatedByIcon from "assets/icons/UpdatedBy";
+import UpdatedByIcon from "@src/assets/icons/UpdatedBy";
 import BasicCell from "../_BasicCell/BasicCellNull";
-import withSideDrawerEditor from "components/Table/editors/withSideDrawerEditor";
+import withSideDrawerEditor from "@src/components/Table/editors/withSideDrawerEditor";
 
 const TableCell = lazy(
   () => import("./TableCell" /* webpackChunkName: "TableCell-UpdatedBy" */)

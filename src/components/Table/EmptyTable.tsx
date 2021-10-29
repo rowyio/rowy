@@ -1,12 +1,12 @@
 import { Grid, Stack, Typography, Button, Divider } from "@mui/material";
-import ImportIcon from "assets/icons/Import";
-import AddColumnIcon from "assets/icons/AddColumn";
+import ImportIcon from "@src/assets/icons/Import";
+import AddColumnIcon from "@src/assets/icons/AddColumn";
 
-import { APP_BAR_HEIGHT } from "components/Navigation";
+import { APP_BAR_HEIGHT } from "@src/components/Navigation";
 
-import { useProjectContext } from "contexts/ProjectContext";
+import { useProjectContext } from "@src/contexts/ProjectContext";
 import ColumnMenu from "./ColumnMenu";
-import ImportWizard from "components/Wizards/ImportWizard";
+import ImportWizard from "@src/components/Wizards/ImportWizard";
 import ImportCSV from "./TableHeader/ImportCsv";
 
 export default function EmptyTable() {

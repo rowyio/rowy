@@ -8,8 +8,8 @@ import { IStepProps } from ".";
 import Column from "../Column";
 import Cell from "../Cell";
 
-import { useProjectContext } from "contexts/ProjectContext";
-import { FieldType } from "constants/fields";
+import { useProjectContext } from "@src/contexts/ProjectContext";
+import { FieldType } from "@src/constants/fields";
 
 const useStyles = makeStyles((theme) =>
   createStyles({

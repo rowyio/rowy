@@ -11,9 +11,9 @@ import {
 } from "@mui/material";
 import ArrowRightIcon from "@mui/icons-material/ChevronRight";
 
-import { useProjectContext } from "contexts/ProjectContext";
-import useRouter from "hooks/useRouter";
-import routes from "constants/routes";
+import { useProjectContext } from "@src/contexts/ProjectContext";
+import useRouter from "@src/hooks/useRouter";
+import routes from "@src/constants/routes";
 
 export default function Breadcrumbs(props: BreadcrumbsProps) {
   const { tables, tableState } = useProjectContext();

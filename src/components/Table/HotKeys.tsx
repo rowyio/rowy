@@ -1,6 +1,6 @@
 import useHotkeys from "../../hooks/useHotkeys";
-import { FieldType } from "constants/fields";
-import { useAppContext } from "contexts/AppContext";
+import { FieldType } from "@src/constants/fields";
+import { useAppContext } from "@src/contexts/AppContext";
 
 // TODO: Hook up to ProjectContext
 const onSubmit: any = () => () => {};

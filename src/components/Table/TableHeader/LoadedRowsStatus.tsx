@@ -1,7 +1,7 @@
 import { Tooltip, Typography } from "@mui/material";
 
-import { useProjectContext } from "contexts/ProjectContext";
-import { CAP } from "hooks/useTable/useTableData";
+import { useProjectContext } from "@src/contexts/ProjectContext";
+import { CAP } from "@src/hooks/useTable/useTableData";
 
 export default function LoadedRowsStatus() {
   const { tableState } = useProjectContext();

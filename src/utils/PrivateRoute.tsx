@@ -1,8 +1,8 @@
 import { Route, RouteProps, Redirect } from "react-router-dom";
 
-import { useAppContext } from "contexts/AppContext";
-import Loading from "components/Loading";
-import routes from "constants/routes";
+import { useAppContext } from "@src/contexts/AppContext";
+import Loading from "@src/components/Loading";
+import routes from "@src/constants/routes";
 
 interface IPrivateRouteProps extends RouteProps {
   render: NonNullable<RouteProps["render"]>;

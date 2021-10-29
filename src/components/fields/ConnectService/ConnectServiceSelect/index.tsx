@@ -4,8 +4,8 @@ import clsx from "clsx";
 import { TextField, TextFieldProps } from "@mui/material";
 
 import useStyles from "./styles";
-import Loading from "components/Loading";
-import ErrorBoundary from "components/ErrorBoundary";
+import Loading from "@src/components/Loading";
+import ErrorBoundary from "@src/components/ErrorBoundary";
 import PopupContents from "./PopupContents";
 
 export type ServiceValue = {

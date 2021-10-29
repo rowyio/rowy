@@ -4,8 +4,8 @@ import { use100vh } from "react-div-100vh";
 import { useTheme, alpha } from "@mui/material/styles";
 import { Box, BoxProps } from "@mui/material";
 
-import bgPattern from "assets/bg-pattern.svg";
-import bgPatternDark from "assets/bg-pattern-dark.svg";
+import bgPattern from "@src/assets/bg-pattern.svg";
+import bgPatternDark from "@src/assets/bg-pattern-dark.svg";
 
 export default function BrandedBackground() {
   const theme = useTheme();

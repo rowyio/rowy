@@ -10,15 +10,15 @@ import {
   Collapse,
 } from "@mui/material";
 
-import FloatingSearch from "components/FloatingSearch";
-import SlideTransition from "components/Modal/SlideTransition";
-import UserItem from "components/Settings/UserManagement/UserItem";
-import UserSkeleton from "components/Settings/UserManagement/UserSkeleton";
-import InviteUser from "components/Settings/UserManagement/InviteUser";
+import FloatingSearch from "@src/components/FloatingSearch";
+import SlideTransition from "@src/components/Modal/SlideTransition";
+import UserItem from "@src/components/Settings/UserManagement/UserItem";
+import UserSkeleton from "@src/components/Settings/UserManagement/UserSkeleton";
+import InviteUser from "@src/components/Settings/UserManagement/InviteUser";
 
-import useCollection from "hooks/useCollection";
-import useBasicSearch from "hooks/useBasicSearch";
-import { USERS } from "config/dbPaths";
+import useCollection from "@src/hooks/useCollection";
+import useBasicSearch from "@src/hooks/useBasicSearch";
+import { USERS } from "@src/config/dbPaths";
 
 export interface User {
   id: string;

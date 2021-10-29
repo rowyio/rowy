@@ -1,18 +1,18 @@
 import { useState, useEffect } from "react";
-import { ISetupStepBodyProps } from "pages/Setup";
+import { ISetupStepBodyProps } from "@src/pages/Setup";
 
 import { Typography, Link, Stack } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
-import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
+import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
 import SetupItem from "./SetupItem";
 
 import { name } from "@root/package.json";
-import { useAppContext } from "contexts/AppContext";
-import { rowyRun } from "utils/rowyRun";
-import { runRoutes } from "constants/runRoutes";
-import { WIKI_LINKS } from "constants/externalLinks";
-import screenRecording from "assets/service-account.mp4";
+import { useAppContext } from "@src/contexts/AppContext";
+import { rowyRun } from "@src/utils/rowyRun";
+import { runRoutes } from "@src/constants/runRoutes";
+import { WIKI_LINKS } from "@src/constants/externalLinks";
+import screenRecording from "@src/assets/service-account.mp4";
 
 export default function Step2ServiceAccount({
   rowyRunUrl,

@@ -6,12 +6,12 @@ import { makeStyles, createStyles } from "@mui/styles";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOffOutlined";
 
 import MultiSelect from "@rowy/multiselect";
-import ButtonWithStatus from "components/ButtonWithStatus";
-import Column from "components/Wizards/Column";
+import ButtonWithStatus from "@src/components/ButtonWithStatus";
+import Column from "@src/components/Wizards/Column";
 
-import { useProjectContext } from "contexts/ProjectContext";
-import { useAppContext } from "contexts/AppContext";
-import { DocActions } from "hooks/useDoc";
+import { useProjectContext } from "@src/contexts/ProjectContext";
+import { useAppContext } from "@src/contexts/AppContext";
+import { DocActions } from "@src/hooks/useDoc";
 import { formatSubTableName } from "../../utils/fns";
 const useStyles = makeStyles((theme) =>
   createStyles({

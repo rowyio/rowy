@@ -4,16 +4,16 @@ import { IMenuModalProps } from "..";
 
 import { Typography, Stack } from "@mui/material";
 
-import Modal from "components/Modal";
-import { getFieldProp } from "components/fields";
+import Modal from "@src/components/Modal";
+import { getFieldProp } from "@src/components/fields";
 import DefaultValueInput from "./DefaultValueInput";
-import ErrorBoundary from "components/ErrorBoundary";
-import Loading from "components/Loading";
+import ErrorBoundary from "@src/components/ErrorBoundary";
+import Loading from "@src/components/Loading";
 
-import { useProjectContext } from "contexts/ProjectContext";
-import { useConfirmation } from "components/ConfirmationDialog";
-import { FieldType } from "constants/fields";
-import { runRoutes } from "constants/runRoutes";
+import { useProjectContext } from "@src/contexts/ProjectContext";
+import { useConfirmation } from "@src/components/ConfirmationDialog";
+import { FieldType } from "@src/constants/fields";
+import { runRoutes } from "@src/constants/runRoutes";
 
 export default function FieldSettings(props: IMenuModalProps) {
   const { name, fieldName, type, open, config, handleClose, handleSave } =

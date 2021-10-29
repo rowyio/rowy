@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ISetupStepBodyProps } from "pages/Setup";
+import { ISetupStepBodyProps } from "@src/pages/Setup";
 
 import {
   Typography,
@@ -10,18 +10,18 @@ import {
   TextField,
 } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
-import CopyIcon from "assets/icons/Copy";
-import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
+import CopyIcon from "@src/assets/icons/Copy";
+import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
 import SetupItem from "./SetupItem";
 
 import { name } from "@root/package.json";
-import { useAppContext } from "contexts/AppContext";
-import { CONFIG } from "config/dbPaths";
-import { requiredRules, adminRules, utilFns } from "config/firestoreRules";
-import { rowyRun } from "utils/rowyRun";
-import { runRoutes } from "constants/runRoutes";
-import { useConfirmation } from "components/ConfirmationDialog";
+import { useAppContext } from "@src/contexts/AppContext";
+import { CONFIG } from "@src/config/dbPaths";
+import { requiredRules, adminRules, utilFns } from "@src/config/firestoreRules";
+import { rowyRun } from "@src/utils/rowyRun";
+import { runRoutes } from "@src/constants/runRoutes";
+import { useConfirmation } from "@src/components/ConfirmationDialog";
 
 export default function Step4Rules({
   rowyRunUrl,

@@ -1,7 +1,7 @@
 import { makeStyles, createStyles } from "@mui/styles";
 import { alpha, darken, lighten } from "@mui/material";
-import { APP_BAR_HEIGHT } from "components/Navigation";
-import { DRAWER_COLLAPSED_WIDTH } from "components/SideDrawer";
+import { APP_BAR_HEIGHT } from "@src/components/Navigation";
+import { DRAWER_COLLAPSED_WIDTH } from "@src/components/SideDrawer";
 
 import { colord, extend } from "colord";
 import mixPlugin from "colord/plugins/lch";

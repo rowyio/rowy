@@ -6,19 +6,19 @@ import _find from "lodash/find";
 import firebase from "firebase/app";
 
 import { Button } from "@mui/material";
-import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
+import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
-import useTable, { TableActions, TableState } from "hooks/useTable";
-import useSettings from "hooks/useSettings";
+import useTable, { TableActions, TableState } from "@src/hooks/useTable";
+import useSettings from "@src/hooks/useSettings";
 import { useAppContext } from "./AppContext";
-import { SideDrawerRef } from "components/SideDrawer";
-import { ColumnMenuRef } from "components/Table/ColumnMenu";
-import { ImportWizardRef } from "components/Wizards/ImportWizard";
+import { SideDrawerRef } from "@src/components/SideDrawer";
+import { ColumnMenuRef } from "@src/components/Table/ColumnMenu";
+import { ImportWizardRef } from "@src/components/Wizards/ImportWizard";
 
-import { rowyRun, IRowyRunRequestProps } from "utils/rowyRun";
-import { FieldType } from "constants/fields";
-import { rowyUser } from "utils/fns";
-import { WIKI_LINKS } from "constants/externalLinks";
+import { rowyRun, IRowyRunRequestProps } from "@src/utils/rowyRun";
+import { FieldType } from "@src/constants/fields";
+import { rowyUser } from "@src/utils/fns";
+import { WIKI_LINKS } from "@src/constants/externalLinks";
 
 export type Table = {
   id: string;

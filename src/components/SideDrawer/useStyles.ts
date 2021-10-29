@@ -1,7 +1,7 @@
 import { makeStyles, createStyles } from "@mui/styles";
 import { DRAWER_WIDTH, DRAWER_COLLAPSED_WIDTH } from "./index";
-import { APP_BAR_HEIGHT } from "components/Navigation";
-import { TABLE_HEADER_HEIGHT } from "components/Table/TableHeader";
+import { APP_BAR_HEIGHT } from "@src/components/Navigation";
+import { TABLE_HEADER_HEIGHT } from "@src/components/Table/TableHeader";
 
 export const useStyles = makeStyles((theme) =>
   createStyles({

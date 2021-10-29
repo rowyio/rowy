@@ -2,7 +2,7 @@ import { IBasicCellProps } from "../types";
 import _isFunction from "lodash/isFunction";
 import _isDate from "lodash/isDate";
 import { format } from "date-fns";
-import { DATE_TIME_FORMAT } from "constants/dates";
+import { DATE_TIME_FORMAT } from "@src/constants/dates";
 
 export default function DateTime({
   value,

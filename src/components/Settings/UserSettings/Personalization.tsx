@@ -1,13 +1,13 @@
 import { lazy, Suspense, useState } from "react";
-import { IUserSettingsChildProps } from "pages/Settings/UserSettings";
+import { IUserSettingsChildProps } from "@src/pages/Settings/UserSettings";
 import _merge from "lodash/merge";
 import _unset from "lodash/unset";
 
 import { FormControlLabel, Checkbox, Collapse } from "@mui/material";
-import Loading from "components/Loading";
+import Loading from "@src/components/Loading";
 
 // prettier-ignore
-const ThemeColorPicker = lazy(() => import("components/Settings/ThemeColorPicker") /* webpackChunkName: "Settings/ThemeColorPicker" */);
+const ThemeColorPicker = lazy(() => import("@src/components/Settings/ThemeColorPicker") /* webpackChunkName: "Settings/ThemeColorPicker" */);
 
 export default function Personalization({
   settings,

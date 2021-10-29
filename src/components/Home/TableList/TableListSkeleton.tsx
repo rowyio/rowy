@@ -1,6 +1,6 @@
 import { Container, Box, Paper } from "@mui/material";
 
-import SectionHeadingSkeleton from "components/SectionHeadingSkeleton";
+import SectionHeadingSkeleton from "@src/components/SectionHeadingSkeleton";
 import TableListItemSkeleton from "./TableListItemSkeleton";
 
 export default function TableGridSkeleton() {

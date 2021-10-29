@@ -3,12 +3,12 @@ import { useState } from "react";
 import TableHeaderButton from "./TableHeaderButton";
 import LoopIcon from "@mui/icons-material/Loop";
 
-import { useProjectContext } from "contexts/ProjectContext";
+import { useProjectContext } from "@src/contexts/ProjectContext";
 import { db } from "../../../firebase";
-import { isCollectionGroup } from "utils/fns";
-import CircularProgressOptical from "components/CircularProgressOptical";
+import { isCollectionGroup } from "@src/utils/fns";
+import CircularProgressOptical from "@src/components/CircularProgressOptical";
 
-import Modal from "components/Modal";
+import Modal from "@src/components/Modal";
 
 export default function ReExecute() {
   const [open, setOpen] = useState(false);

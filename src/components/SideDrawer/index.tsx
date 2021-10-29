@@ -10,11 +10,11 @@ import ChevronUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import ChevronDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 import Form from "./Form";
-import ErrorBoundary from "components/ErrorBoundary";
+import ErrorBoundary from "@src/components/ErrorBoundary";
 
 import { useStyles } from "./useStyles";
-import { useProjectContext } from "contexts/ProjectContext";
-import useDoc from "hooks/useDoc";
+import { useProjectContext } from "@src/contexts/ProjectContext";
+import useDoc from "@src/hooks/useDoc";
 import { analytics } from "@src/analytics";
 
 export const DRAWER_WIDTH = 512;

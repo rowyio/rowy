@@ -5,15 +5,15 @@ import { differenceInDays } from "date-fns";
 import { Grid, Typography, Button, Link, Divider } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import GitHubIcon from "@mui/icons-material/GitHub";
-import DiscordIcon from "assets/icons/Discord";
+import DiscordIcon from "@src/assets/icons/Discord";
 import TwitterIcon from "@mui/icons-material/Twitter";
 
-import Logo from "assets/Logo";
-import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
+import Logo from "@src/assets/Logo";
+import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
 import { name, version, repository } from "@root/package.json";
-import { useAppContext } from "contexts/AppContext";
-import { EXTERNAL_LINKS, WIKI_LINKS } from "constants/externalLinks";
+import { useAppContext } from "@src/contexts/AppContext";
+import { EXTERNAL_LINKS, WIKI_LINKS } from "@src/constants/externalLinks";
 
 const useLastCheckedUpdateState = createPersistedState(
   "__ROWY__LAST_CHECKED_UPDATE"

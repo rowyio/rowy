@@ -5,7 +5,7 @@ import { IStepProps } from ".";
 import Column from "../Column";
 import Cell from "../Cell";
 
-import { useProjectContext } from "contexts/ProjectContext";
+import { useProjectContext } from "@src/contexts/ProjectContext";
 
 const useStyles = makeStyles((theme) =>
   createStyles({

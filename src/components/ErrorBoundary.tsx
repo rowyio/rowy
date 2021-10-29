@@ -3,7 +3,7 @@ import EmptyState, { IEmptyStateProps } from "./EmptyState";
 
 import { Button } from "@mui/material";
 import ReloadIcon from "@mui/icons-material/Refresh";
-import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
+import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
 import meta from "@root/package.json";
 

@@ -15,14 +15,14 @@ import {
   MenuItem,
 } from "@mui/material";
 
-import CopyCellsIcon from "assets/icons/CopyCells";
+import CopyCellsIcon from "@src/assets/icons/CopyCells";
 import ClearSelectionIcon from "@mui/icons-material/IndeterminateCheckBox";
 import DeleteIcon from "@mui/icons-material/DeleteForever";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 
-import { useConfirmation } from "components/ConfirmationDialog/Context";
-import { useProjectContext } from "contexts/ProjectContext";
-import { formatPath } from "utils/fns";
+import { useConfirmation } from "@src/components/ConfirmationDialog/Context";
+import { useProjectContext } from "@src/contexts/ProjectContext";
+import { formatPath } from "@src/utils/fns";
 
 const useStyles = makeStyles((theme) =>
   createStyles({

@@ -9,7 +9,7 @@ import {
   Grid,
   Button,
 } from "@mui/material";
-import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
+import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 import { IFieldComponentProps } from "@rowy/form-builder";
 
 import { useAppContext } from "@src/contexts/AppContext";

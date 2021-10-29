@@ -1,9 +1,9 @@
 import React from "react";
 import { makeStyles, createStyles } from "@mui/styles";
 
-import { FieldType } from "constants/fields";
-import { getFieldProp } from "components/fields";
-import EmptyState from "components/EmptyState";
+import { FieldType } from "@src/constants/fields";
+import { getFieldProp } from "@src/components/fields";
+import EmptyState from "@src/components/EmptyState";
 
 const useStyles = makeStyles((theme) =>
   createStyles({

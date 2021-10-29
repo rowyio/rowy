@@ -2,12 +2,12 @@ import { FormatterProps } from "react-data-grid";
 
 import { makeStyles, createStyles } from "@mui/styles";
 import { Stack, Tooltip, IconButton, alpha } from "@mui/material";
-import CopyCellsIcon from "assets/icons/CopyCells";
+import CopyCellsIcon from "@src/assets/icons/CopyCells";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 
-import { useConfirmation } from "components/ConfirmationDialog/Context";
-import { useProjectContext } from "contexts/ProjectContext";
-import useKeyPress from "hooks/useKeyPress";
+import { useConfirmation } from "@src/components/ConfirmationDialog/Context";
+import { useProjectContext } from "@src/contexts/ProjectContext";
+import useKeyPress from "@src/hooks/useKeyPress";
 
 const useStyles = makeStyles((theme) =>
   createStyles({

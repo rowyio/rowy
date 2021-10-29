@@ -1,17 +1,17 @@
 import { useState, useEffect } from "react";
-import { ISetupStepBodyProps } from "pages/Setup";
+import { ISetupStepBodyProps } from "@src/pages/Setup";
 
 import { Typography, Stack, Button, IconButton } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
-import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
+import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
 import SetupItem from "./SetupItem";
 import SignInWithGoogle from "./SignInWithGoogle";
 
-import { useAppContext } from "contexts/AppContext";
-import { rowyRun } from "utils/rowyRun";
-import { runRoutes } from "constants/runRoutes";
-import CopyIcon from "assets/icons/Copy";
+import { useAppContext } from "@src/contexts/AppContext";
+import { rowyRun } from "@src/utils/rowyRun";
+import { runRoutes } from "@src/constants/runRoutes";
+import CopyIcon from "@src/assets/icons/Copy";
 
 export default function Step3ProjectOwner({
   rowyRunUrl,

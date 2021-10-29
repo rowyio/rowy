@@ -11,7 +11,7 @@ import Skeleton from "@mui/material/Skeleton";
 
 import { auth, db } from "@src/firebase";
 import { defaultUiConfig, getSignInOptions } from "@src/firebase/firebaseui";
-import { PUBLIC_SETTINGS } from "config/dbPaths";
+import { PUBLIC_SETTINGS } from "@src/config/dbPaths";
 
 const useStyles = makeStyles((theme) =>
   createStyles({

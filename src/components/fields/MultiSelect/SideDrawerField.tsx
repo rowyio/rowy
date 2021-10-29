@@ -3,7 +3,7 @@ import { ISideDrawerFieldProps } from "../types";
 
 import { Grid } from "@mui/material";
 import MultiSelectComponent from "@rowy/multiselect";
-import FormattedChip from "components/FormattedChip";
+import FormattedChip from "@src/components/FormattedChip";
 
 import { sanitiseValue } from "./utils";
 import { ConvertStringToArray } from "./ConvertStringToArray";

@@ -5,13 +5,13 @@ import { ISideDrawerFieldProps } from "../types";
 
 import ReactJson from "react-json-view";
 import jsonFormat from "json-format";
-import CodeEditor from "components/CodeEditor";
+import CodeEditor from "@src/components/CodeEditor";
 
 import { useTheme, Tab, FormHelperText } from "@mui/material";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
-import { useFieldStyles } from "components/SideDrawer/Form/utils";
+import { useFieldStyles } from "@src/components/SideDrawer/Form/utils";
 
 const useJsonEditor = createPersistedState("__ROWY__JSON_EDITOR");
 

@@ -1,9 +1,9 @@
-import { IFieldConfig, FieldType } from "components/fields/types";
+import { IFieldConfig, FieldType } from "@src/components/fields/types";
 import withBasicCell from "../_withTableCell/withBasicCell";
 
 import AggregateIcon from "@mui/icons-material/LayersOutlined";
 import BasicCell from "../_BasicCell/BasicCellNull";
-import NullEditor from "components/Table/editors/NullEditor";
+import NullEditor from "@src/components/Table/editors/NullEditor";
 
 export const config: IFieldConfig = {
   type: FieldType.aggregate,
