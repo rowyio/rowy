@@ -7,7 +7,7 @@ import MultiSelect from "@rowy/multiselect";
 import { DATE_FORMAT } from "@src/constants/dates";
 import { EXTERNAL_LINKS } from "@src/constants/externalLinks";
 
-export default function Settings({ handleChange, config }: ISettingsProps) {
+export default function Settings({ onChange, config }: ISettingsProps) {
   return (
     <>
       <MultiSelect
@@ -21,7 +21,7 @@ export default function Settings({ handleChange, config }: ISettingsProps) {
         clearable={false}
         searchable={false}
         value={config.format ?? DATE_FORMAT}
-        onChange={handleChange("format")}
+        onChange={onChange("format")}
         TextFieldProps={{
           helperText: (
             <Link

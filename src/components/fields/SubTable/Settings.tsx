@@ -2,7 +2,7 @@ import MultiSelect from "@rowy/multiselect";
 import { FieldType } from "@src/constants/fields";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 
-const Settings = ({ config, handleChange }) => {
+const Settings = ({ config, onChange }) => {
   const { tableState } = useProjectContext();
   if (!tableState?.columns) return <></>;
   const columnOptions = Object.values(tableState.columns)
@@ -21,7 +21,7 @@ const Settings = ({ config, handleChange }) => {
         label="Parent label"
         options={columnOptions}
         value={config.parentLabel ?? []}
-        onChange={handleChange("parentLabel")}
+        onChange={onChange("parentLabel")}
       />
     </>
   );

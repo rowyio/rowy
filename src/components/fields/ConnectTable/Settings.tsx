@@ -20,7 +20,7 @@ import { useProjectContext } from "@src/contexts/ProjectContext";
 import { TABLE_SCHEMAS } from "@src/config/dbPaths";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
 
-export default function Settings({ handleChange, config }: ISettingsProps) {
+export default function Settings({ onChange, config }: ISettingsProps) {
   const { tables } = useProjectContext();
   const tableOptions = _sortBy(
     tables?.map((table) => ({
@@ -71,7 +71,7 @@ export default function Settings({ handleChange, config }: ISettingsProps) {
         options={tableOptions}
         freeText={false}
         value={config.index}
-        onChange={handleChange("index")}
+        onChange={onChange("index")}
         multiple={false}
         label="Table"
         labelPlural="tables"
@@ -91,7 +91,7 @@ export default function Settings({ handleChange, config }: ISettingsProps) {
         control={
           <Checkbox
             checked={config.multiple !== false}
-            onChange={(e) => handleChange("multiple")(e.target.checked)}
+            onChange={(e) => onChange("multiple")(e.target.checked)}
           />
         }
         label={
@@ -137,7 +137,7 @@ export default function Settings({ handleChange, config }: ISettingsProps) {
         name="filters"
         fullWidth
         value={config.filters}
-        onChange={(e) => handleChange("filters")(e.target.value)}
+        onChange={(e) => onChange("filters")(e.target.value)}
         placeholder="attribute:value AND | OR | NOT attribute:value"
         id="connectTable-filters"
         helperText={
@@ -161,7 +161,7 @@ export default function Settings({ handleChange, config }: ISettingsProps) {
         options={columns.filter((c) =>
           [FieldType.shortText, FieldType.singleSelect].includes(c.type)
         )}
-        onChange={handleChange("primaryKeys")}
+        onChange={onChange("primaryKeys")}
         TextFieldProps={{ helperText: "Field values displayed" }}
       />
 
@@ -169,7 +169,7 @@ export default function Settings({ handleChange, config }: ISettingsProps) {
         label="Snapshot fields"
         value={config.snapshotFields ?? []}
         options={columns.filter((c) => ![FieldType.subTable].includes(c.type))}
-        onChange={handleChange("snapshotFields")}
+        onChange={onChange("snapshotFields")}
         TextFieldProps={{ helperText: "Fields stored in the snapshots" }}
       />
 
@@ -177,7 +177,7 @@ export default function Settings({ handleChange, config }: ISettingsProps) {
         label="Tracked fields"
         value={config.trackedFields ?? []}
         options={columns.filter((c) => ![FieldType.subTable].includes(c.type))}
-        onChange={handleChange("trackedFields")}
+        onChange={onChange("trackedFields")}
         TextFieldProps={{
           helperText:
             "Fields to be tracked for changes and synced to the snapshot",

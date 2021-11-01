@@ -34,7 +34,7 @@ export const tableSettings = (
       label: "Table ID",
       required: true,
       watchedField: "name",
-      assistiveText: `Unique ID for this table used to store configuration. Cannot be edited ${
+      assistiveText: `Unique ID for this table used to store configuration. Cannot be edited${
         mode === TableSettingsDialogModes.create ? " later" : ""
       }.`,
       disabled: mode === TableSettingsDialogModes.update,

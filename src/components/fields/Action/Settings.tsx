@@ -18,7 +18,7 @@ const CodeEditor = lazy(
     import("@src/components/CodeEditor" /* webpackChunkName: "CodeEditor" */)
 );
 
-const Settings = ({ config, handleChange }) => {
+const Settings = ({ config, onChange }) => {
   const { tableState, roles } = useProjectContext();
   const columnOptions = Object.values(tableState?.columns ?? {}).map((c) => ({
     label: c.name,
@@ -34,7 +34,7 @@ const Settings = ({ config, handleChange }) => {
         label="Allowed roles"
         options={roles ?? []}
         value={config.requiredRoles ?? []}
-        onChange={handleChange("requiredRoles")}
+        onChange={onChange("requiredRoles")}
       />
 
       <Typography variant="overline">Required fields</Typography>
@@ -46,7 +46,7 @@ const Settings = ({ config, handleChange }) => {
         label="Required fields"
         options={columnOptions}
         value={config.requiredFields ?? []}
-        onChange={handleChange("requiredFields")}
+        onChange={onChange("requiredFields")}
       />
       <Divider />
       <Typography variant="overline">Confirmation template</Typography>
@@ -59,7 +59,7 @@ const Settings = ({ config, handleChange }) => {
         placeholder="Are sure you want to invest {{stockName}}?"
         value={config.confirmation}
         onChange={(e) => {
-          handleChange("confirmation")(e.target.value);
+          onChange("confirmation")(e.target.value);
         }}
         fullWidth
       />
@@ -68,7 +68,7 @@ const Settings = ({ config, handleChange }) => {
           <Switch
             checked={config.isActionScript}
             onChange={() =>
-              handleChange("isActionScript")(!Boolean(config.isActionScript))
+              onChange("isActionScript")(!Boolean(config.isActionScript))
             }
             name="actionScript"
           />
@@ -86,7 +86,7 @@ const Settings = ({ config, handleChange }) => {
           value={config.callableName}
           fullWidth
           onChange={(e) => {
-            handleChange("callableName")(e.target.value);
+            onChange("callableName")(e.target.value);
           }}
         />
       ) : (
@@ -129,7 +129,7 @@ const Settings = ({ config, handleChange }) => {
                   "}",
                 ].join("\n"),
               ]}
-              onChange={handleChange("script")}
+              onChange={onChange("script")}
             />
           </Suspense>
           <FormControlLabel
@@ -137,7 +137,7 @@ const Settings = ({ config, handleChange }) => {
               <Switch
                 checked={config.redo?.enabled}
                 onChange={() =>
-                  handleChange("redo.enabled")(!Boolean(config.redo?.enabled))
+                  onChange("redo.enabled")(!Boolean(config.redo?.enabled))
                 }
                 name="redo toggle"
               />
@@ -153,7 +153,7 @@ const Settings = ({ config, handleChange }) => {
               <Switch
                 checked={config.undo?.enabled}
                 onChange={() =>
-                  handleChange("undo.enabled")(!Boolean(config.undo?.enabled))
+                  onChange("undo.enabled")(!Boolean(config.undo?.enabled))
                 }
                 name="undo toggle"
               />
@@ -174,7 +174,7 @@ const Settings = ({ config, handleChange }) => {
                 placeholder="are you sure you want to sell your stocks in {{stockName}}"
                 value={config["undo.confirmation"]}
                 onChange={(e) => {
-                  handleChange("undo.confirmation")(e.target.value);
+                  onChange("undo.confirmation")(e.target.value);
                 }}
                 fullWidth
               />
@@ -183,7 +183,7 @@ const Settings = ({ config, handleChange }) => {
                 <CodeEditor
                   minHeight={300}
                   value={config["undo.script"]}
-                  onChange={handleChange("undo.script")}
+                  onChange={onChange("undo.script")}
                 />
               </Suspense>
             </>

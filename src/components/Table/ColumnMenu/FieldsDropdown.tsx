@@ -11,6 +11,7 @@ export interface IFieldsDropdownProps {
   hideLabel?: boolean;
   label?: string;
   options?: FieldType[];
+  [key: string]: any;
 }
 
 /**
@@ -22,6 +23,7 @@ export default function FieldsDropdown({
   hideLabel = false,
   label,
   options: optionsProp,
+  ...props
 }: IFieldsDropdownProps) {
   const options = optionsProp
     ? FIELDS.filter((fieldConfig) => optionsProp.indexOf(fieldConfig.type) > -1)
@@ -30,6 +32,7 @@ export default function FieldsDropdown({
   return (
     <MultiSelect
       multiple={false}
+      {...props}
       value={value ? value : ""}
       onChange={onChange}
       options={options.map((fieldConfig) => ({
@@ -54,6 +57,7 @@ export default function FieldsDropdown({
       TextFieldProps={{
         hiddenLabel: hideLabel,
         helperText: value && getFieldProp("description", value),
+        ...props.TextFieldProps,
         SelectProps: {
           displayEmpty: true,
           renderValue: () => (
@@ -70,6 +74,7 @@ export default function FieldsDropdown({
               {getFieldProp("name", value as FieldType)}
             </>
           ),
+          ...props.TextFieldProps?.SelectProps,
         },
       }}
     />

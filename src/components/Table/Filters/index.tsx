@@ -257,7 +257,7 @@ export default function Filters() {
                         control,
                         docRef: {},
                         disabled: false,
-                        handleChange: () => {},
+                        onChange: () => {},
                       })}
                   </Suspense>
                 </form>
