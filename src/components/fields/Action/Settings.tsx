@@ -74,10 +74,6 @@ const Settings = ({ config, onChange }) => {
           />
         }
         label="Set as an action script"
-        sx={{
-          alignItems: "center",
-          "& .MuiFormControlLabel-label": { mt: 0 },
-        }}
       />
       {!Boolean(config.isActionScript) ? (
         <TextField
@@ -143,10 +139,6 @@ const Settings = ({ config, onChange }) => {
               />
             }
             label="User can redo (re-runs the same script)"
-            sx={{
-              alignItems: "center",
-              "& .MuiFormControlLabel-label": { mt: 0 },
-            }}
           />
           <FormControlLabel
             control={
@@ -159,10 +151,6 @@ const Settings = ({ config, onChange }) => {
               />
             }
             label="User can undo"
-            sx={{
-              alignItems: "center",
-              "& .MuiFormControlLabel-label": { mt: 0 },
-            }}
           />
           {config["undo.enabled"] && (
             <>
