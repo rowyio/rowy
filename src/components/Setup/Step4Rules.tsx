@@ -10,6 +10,7 @@ import {
   Grid,
 } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
+import InfoIcon from "@mui/icons-material/InfoOutlined";
 import CopyIcon from "@src/assets/icons/Copy";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
@@ -19,7 +20,12 @@ import DiffEditor from "@src/components/CodeEditor/DiffEditor";
 import { name } from "@root/package.json";
 import { useAppContext } from "@src/contexts/AppContext";
 import { CONFIG } from "@src/config/dbPaths";
-import { requiredRules, adminRules, utilFns } from "@src/config/firestoreRules";
+import {
+  requiredRules,
+  adminRules,
+  utilFns,
+  insecureRule,
+} from "@src/config/firestoreRules";
 import { rowyRun } from "@src/utils/rowyRun";
 import { runRoutes } from "@src/constants/runRoutes";
 // import { useConfirmation } from "@src/components/ConfirmationDialog";
@@ -53,6 +59,17 @@ export default function Step4Rules({
         .then((data) => setCurrentRules(data?.source?.[0]?.content ?? ""));
   }, [rowyRunUrl, hasRules, currentRules, getAuthToken]);
 
+  const insecureRuleRegExp = new RegExp(
+    insecureRule
+      .replace(/\//g, "\\/")
+      .replace(/\*/g, "\\*")
+      .replace(/\s{2,}/g, "\\s+")
+      .replace(/\s/g, "\\s*")
+      .replace(/\n/g, "\\s+")
+      .replace(/;/g, ";?")
+  );
+  const hasInsecureRule = insecureRuleRegExp.test(currentRules);
+
   const [newRules, setNewRules] = useState("");
   useEffect(() => {
     let rulesToInsert = rules;
@@ -64,13 +81,15 @@ export default function Step4Rules({
       rulesToInsert = rulesToInsert.replace(/function hasAnyRole[^}]*}/s, "");
     }
 
-    const inserted = currentRules.replace(
+    let inserted = currentRules.replace(
       /match\s*\/databases\/\{database\}\/documents\s*\{/,
       `match /databases/{database}/documents {\n` + rulesToInsert
     );
 
+    if (hasInsecureRule) inserted = inserted.replace(insecureRuleRegExp, "");
+
     setNewRules(inserted);
-  }, [currentRules, rules]);
+  }, [currentRules, rules, hasInsecureRule, insecureRuleRegExp]);
 
   const [rulesStatus, setRulesStatus] = useState<"LOADING" | string>("");
   const setRules = async () => {
@@ -141,6 +160,16 @@ export default function Step4Rules({
               label="Allow admins to read and write all documents"
               sx={{ "&&": { ml: -11 / 8, mb: -11 / 8 }, width: "100%" }}
             />
+
+            <Typography>
+              <InfoIcon
+                aria-label="Info"
+                sx={{ fontSize: 18, mr: 11 / 8, verticalAlign: "sub" }}
+              />
+              We removed an insecure rule that allows anyone to access any part
+              of your database
+            </Typography>
+
             <DiffEditor
               original={currentRules}
               modified={newRules}

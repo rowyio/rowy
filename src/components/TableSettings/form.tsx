@@ -55,6 +55,7 @@ export const tableSettings = (
             <>
               <WarningIcon
                 color="warning"
+                aria-label="Warning"
                 sx={{ fontSize: 16, mr: 0.5, verticalAlign: "middle" }}
               />
               You change which Firestore collection to display. Data in the new
