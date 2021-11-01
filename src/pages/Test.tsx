@@ -768,14 +768,7 @@ export default function TestView() {
           </Stack>
 
           <div>
-            <FormControlLabel
-              control={<Switch />}
-              label="Label"
-              sx={{
-                alignItems: "center",
-                "& .MuiFormControlLabel-label": { mt: 0 },
-              }}
-            />
+            <FormControlLabel control={<Switch />} label="Label" />
             <FormControlLabel
               control={<Switch size="medium" />}
               label="Label"
