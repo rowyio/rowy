@@ -1,4 +1,4 @@
-import { TextField, FormControlLabel, Switch } from "@mui/material";
+import { TextField, FormControlLabel, Switch, Grid } from "@mui/material";
 
 export default function Settings({ config, handleChange }) {
   return (
@@ -32,24 +32,30 @@ export default function Settings({ config, handleChange }) {
           handleChange("primaryKey")(e.target.value);
         }}
       />
-      <TextField
-        label="Title key (optional)"
-        name="titleKey"
-        value={config.titleKey}
-        fullWidth
-        onChange={(e) => {
-          handleChange("titleKey")(e.target.value);
-        }}
-      />
-      <TextField
-        label="Subtitle key (optional)"
-        name="subtitleKey"
-        value={config.subtitleKey}
-        fullWidth
-        onChange={(e) => {
-          handleChange("subtitleKey")(e.target.value);
-        }}
-      />
+      <Grid container direction="row" spacing={1}>
+        <Grid item xs={12} md={6}>
+          <TextField
+            label="Title key (optional)"
+            name="titleKey"
+            value={config.titleKey}
+            fullWidth
+            onChange={(e) => {
+              handleChange("titleKey")(e.target.value);
+            }}
+          />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <TextField
+            label="Subtitle key (optional)"
+            name="subtitleKey"
+            value={config.subtitleKey}
+            fullWidth
+            onChange={(e) => {
+              handleChange("subtitleKey")(e.target.value);
+            }}
+          />{" "}
+        </Grid>{" "}
+      </Grid>
       <FormControlLabel
         control={
           <Switch
