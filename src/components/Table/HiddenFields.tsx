@@ -69,7 +69,7 @@ export default function HiddenFields() {
 
   // Initialise hiddenFields from user doc
   const userDocHiddenFields =
-    userDoc.state.doc?.tables?.[formatSubTableName(tableState?.tablePath!)]
+    userDoc.state.doc?.tables?.[formatSubTableName(tableState?.config.id!)]
       ?.hiddenFields;
   useEffect(() => {
     if (userDocHiddenFields) setHiddenFields(userDocHiddenFields);
@@ -94,7 +94,7 @@ export default function HiddenFields() {
         action: DocActions.update,
         data: {
           tables: {
-            [formatSubTableName(tableState?.tablePath)]: { hiddenFields },
+            [formatSubTableName(tableState?.config.id)]: { hiddenFields },
           },
         },
       });

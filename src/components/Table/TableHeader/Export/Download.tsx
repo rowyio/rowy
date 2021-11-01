@@ -64,7 +64,7 @@ export default function Export({ query, closeModal }) {
   const [columns, setColumns] = useState<any[]>([]);
   const [labelColumnsEnabled, setLabelColumnsEnabled] = useState(false);
   const [labelColumns, setLabelColumns] = useState<any[]>([]);
-  const [packageName, setPackageName] = useState(tableState?.tablePath);
+  const [packageName, setPackageName] = useState(tableState?.config.id);
 
   const handleClose = () => {
     closeModal();

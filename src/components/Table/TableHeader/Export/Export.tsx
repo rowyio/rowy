@@ -126,7 +126,8 @@ export default function Export({ query, closeModal }) {
       ...doc.data(),
     }));
 
-    const fileName = `${tableState?.tablePath!}-${new Date().toISOString()}.${exportType}`;
+    const fileName = `${tableState?.config
+      .id!}-${new Date().toISOString()}.${exportType}`;
     switch (exportType) {
       case "csv":
         const csvData = docs.map((doc: any) =>

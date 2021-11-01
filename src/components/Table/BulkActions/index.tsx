@@ -147,7 +147,7 @@ export default function BulkActions({ selectedRows, columns, clearSelection }) {
         },
         column: actionColumn,
         action: actionType,
-        schemaDocPath: formatPath(tableState?.tablePath ?? ""),
+        schemaDocPath: formatPath(tableState?.config.id ?? ""),
         actionParams: {},
       };
       return true;
