@@ -1,6 +1,6 @@
-import { TextField, FormControlLabel, Switch } from "@mui/material";
+import { TextField, FormControlLabel, Switch, Grid } from "@mui/material";
 
-export default function Settings({ config, handleChange }) {
+export default function Settings({ config, onChange }) {
   return (
     <>
       <TextField
@@ -9,7 +9,7 @@ export default function Settings({ config, handleChange }) {
         value={config.url}
         fullWidth
         onChange={(e) => {
-          handleChange("url")(e.target.value);
+          onChange("url")(e.target.value);
         }}
       />
       <TextField
@@ -20,7 +20,7 @@ export default function Settings({ config, handleChange }) {
         value={config.resultsKey}
         fullWidth
         onChange={(e) => {
-          handleChange("resultsKey")(e.target.value);
+          onChange("resultsKey")(e.target.value);
         }}
       />
       <TextField
@@ -29,32 +29,38 @@ export default function Settings({ config, handleChange }) {
         value={config.primaryKey}
         fullWidth
         onChange={(e) => {
-          handleChange("primaryKey")(e.target.value);
+          onChange("primaryKey")(e.target.value);
         }}
       />
-      <TextField
-        label="Title key (optional)"
-        name="titleKey"
-        value={config.titleKey}
-        fullWidth
-        onChange={(e) => {
-          handleChange("titleKey")(e.target.value);
-        }}
-      />
-      <TextField
-        label="Subtitle key (optional)"
-        name="subtitleKey"
-        value={config.subtitleKey}
-        fullWidth
-        onChange={(e) => {
-          handleChange("subtitleKey")(e.target.value);
-        }}
-      />
+      <Grid container direction="row" spacing={1}>
+        <Grid item xs={12} md={6}>
+          <TextField
+            label="Title key (optional)"
+            name="titleKey"
+            value={config.titleKey}
+            fullWidth
+            onChange={(e) => {
+              onChange("titleKey")(e.target.value);
+            }}
+          />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <TextField
+            label="Subtitle key (optional)"
+            name="subtitleKey"
+            value={config.subtitleKey}
+            fullWidth
+            onChange={(e) => {
+              onChange("subtitleKey")(e.target.value);
+            }}
+          />{" "}
+        </Grid>{" "}
+      </Grid>
       <FormControlLabel
         control={
           <Switch
             checked={config.multiple}
-            onChange={() => handleChange("multiple")(!Boolean(config.multiple))}
+            onChange={() => onChange("multiple")(!Boolean(config.multiple))}
             name="select-multiple"
           />
         }

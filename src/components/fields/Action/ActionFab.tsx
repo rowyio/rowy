@@ -54,7 +54,6 @@ export default function ActionFab({
   const { tableState, rowyRun } = useProjectContext();
   const { ref } = row;
   const { config } = column as any;
-
   const action = !value
     ? "run"
     : value.undo
@@ -71,7 +70,7 @@ export default function ActionFab({
     ref: { path: ref.path },
     column: { ...column, editor: undefined },
     action,
-    schemaDocPath: formatPath(tableState?.tablePath ?? ""),
+    schemaDocPath: tableState?.config.tableConfig.path,
     actionParams,
   });
 

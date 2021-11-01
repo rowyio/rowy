@@ -1,6 +1,6 @@
 import { TextField } from "@mui/material";
 
-export default function Settings({ handleChange, config }) {
+export default function Settings({ onChange, config }) {
   return (
     <>
       <TextField
@@ -10,8 +10,8 @@ export default function Settings({ handleChange, config }) {
         value={config.maxLength}
         fullWidth
         onChange={(e) => {
-          if (e.target.value === "0") handleChange("maxLength")(null);
-          else handleChange("maxLength")(e.target.value);
+          if (e.target.value === "0") onChange("maxLength")(null);
+          else onChange("maxLength")(e.target.value);
         }}
       />
       <TextField
@@ -21,8 +21,8 @@ export default function Settings({ handleChange, config }) {
         value={config.validationRegex}
         fullWidth
         onChange={(e) => {
-          if (e.target.value === "") handleChange("validationRegex")(null);
-          else handleChange("validationRegex")(e.target.value);
+          if (e.target.value === "") onChange("validationRegex")(null);
+          else onChange("validationRegex")(e.target.value);
         }}
       />
     </>

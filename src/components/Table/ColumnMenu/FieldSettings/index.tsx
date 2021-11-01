@@ -22,10 +22,34 @@ export default function FieldSettings(props: IMenuModalProps) {
   const [showRebuildPrompt, setShowRebuildPrompt] = useState(false);
   const [newConfig, setNewConfig] = useState(config ?? {});
   const customFieldSettings = getFieldProp("settings", type);
+  const settingsValidator = getFieldProp("settingsValidator", type);
   const initializable = getFieldProp("initializable", type);
 
   const { requestConfirmation } = useConfirmation();
   const { tableState, rowyRun } = useProjectContext();
+
+  const rendedFieldSettings = useMemo(
+    () =>
+      [FieldType.derivative, FieldType.aggregate].includes(type) &&
+      newConfig.renderFieldType
+        ? getFieldProp("settings", newConfig.renderFieldType)
+        : null,
+    [newConfig.renderFieldType, type]
+  );
+
+  const [errors, setErrors] = useState({});
+
+  if (!open) return null;
+
+  const validateSettings = () => {
+    if (settingsValidator) {
+      const errors = settingsValidator(newConfig);
+      setErrors(errors);
+      return errors;
+    }
+    setErrors({});
+    return {};
+  };
 
   const handleChange = (key: string) => (update: any) => {
     if (
@@ -37,16 +61,8 @@ export default function FieldSettings(props: IMenuModalProps) {
     }
     const updatedConfig = _set({ ...newConfig }, key, update);
     setNewConfig(updatedConfig);
+    validateSettings();
   };
-  const rendedFieldSettings = useMemo(
-    () =>
-      [FieldType.derivative, FieldType.aggregate].includes(type) &&
-      newConfig.renderFieldType
-        ? getFieldProp("settings", newConfig.renderFieldType)
-        : null,
-    [newConfig.renderFieldType, type]
-  );
-  if (!open) return null;
 
   return (
     <Modal
@@ -78,8 +94,10 @@ export default function FieldSettings(props: IMenuModalProps) {
               >
                 {createElement(customFieldSettings, {
                   config: newConfig,
-                  handleChange,
+                  onChange: handleChange,
                   fieldName,
+                  onBlur: validateSettings,
+                  errors,
                 })}
               </Stack>
             )}
@@ -94,7 +112,9 @@ export default function FieldSettings(props: IMenuModalProps) {
                 </Typography>
                 {createElement(rendedFieldSettings, {
                   config: newConfig,
-                  handleChange,
+                  onChange: handleChange,
+                  onBlur: validateSettings,
+                  errors,
                 })}
               </Stack>
             )}
@@ -111,6 +131,29 @@ export default function FieldSettings(props: IMenuModalProps) {
       actions={{
         primary: {
           onClick: () => {
+            const errors = validateSettings();
+            if (Object.keys(errors).length > 0) {
+              requestConfirmation({
+                title: "Invalid settings",
+                customBody: (
+                  <>
+                    <Typography>Please fix the following settings:</Typography>
+                    <ul style={{ paddingLeft: "1.5em" }}>
+                      {Object.entries(errors).map(([key, message]) => (
+                        <li key={key}>
+                          <code>{key}</code>: {message}
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                ),
+                confirm: "Fix",
+                hideCancel: true,
+                handleConfirm: () => {},
+              });
+              return;
+            }
+
             if (showRebuildPrompt) {
               requestConfirmation({
                 title: "Deploy changes",

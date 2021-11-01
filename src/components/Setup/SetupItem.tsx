@@ -31,7 +31,7 @@ export default function SetupItem({
         <ArrowIcon aria-label="Item" color="primary" />
       )}
 
-      <Stack spacing={2} alignItems="flex-start">
+      <Stack spacing={2} alignItems="flex-start" style={{ flexGrow: 1 }}>
         <Typography variant="inherit">{title}</Typography>
 
         {children}

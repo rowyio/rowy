@@ -792,7 +792,13 @@ export const components = (theme: Theme): ThemeOptions => {
           root: {
             display: "flex",
             alignItems: "flex-start",
-            "& .MuiSwitch-root": { marginRight: theme.spacing(1) },
+            "& .MuiSwitch-root": {
+              marginRight: theme.spacing(1),
+
+              "&.MuiSwitch-sizeSmall + .MuiFormControlLabel-label": {
+                marginTop: 4,
+              },
+            },
           },
           label: {
             marginTop: 10,

@@ -34,7 +34,7 @@ export const tableSettings = (
       label: "Table ID",
       required: true,
       watchedField: "name",
-      assistiveText: `Unique ID for this table used to store configuration. Cannot be edited ${
+      assistiveText: `Unique ID for this table used to store configuration. Cannot be edited${
         mode === TableSettingsDialogModes.create ? " later" : ""
       }.`,
       disabled: mode === TableSettingsDialogModes.update,
@@ -55,6 +55,7 @@ export const tableSettings = (
             <>
               <WarningIcon
                 color="warning"
+                aria-label="Warning"
                 sx={{ fontSize: 16, mr: 0.5, verticalAlign: "middle" }}
               />
               You change which Firestore collection to display. Data in the new

@@ -10,7 +10,7 @@ const CodeEditor = lazy(
     import("@src/components/CodeEditor" /* webpackChunkName: "CodeEditor" */)
 );
 
-const Settings = ({ config, handleChange }) => {
+const Settings = ({ config, onChange }) => {
   const { tableState } = useProjectContext();
 
   const columnOptions = Object.values(tableState?.columns ?? {})
@@ -22,7 +22,7 @@ const Settings = ({ config, handleChange }) => {
         label="Sub-tables"
         options={columnOptions}
         value={config.requiredFields ?? []}
-        onChange={handleChange("subtables")}
+        onChange={onChange("subtables")}
       />
       <Typography variant="overline">Aggergate script</Typography>
       <Suspense fallback={<FieldSkeleton height={200} />}>
@@ -49,7 +49,7 @@ switch (triggerType){
 
     }`,
           ]}
-          onChange={handleChange("script")}
+          onChange={onChange("script")}
         />
       </Suspense>
 
@@ -66,7 +66,7 @@ switch (triggerType){
             ].includes(f)
         )}
         onChange={(value) => {
-          handleChange("renderFieldType")(value);
+          onChange("renderFieldType")(value);
         }}
       />
     </>

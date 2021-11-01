@@ -70,7 +70,7 @@ export default function SideDrawer() {
     if (cell && tableState?.rows[cell.row]) {
       window.history.pushState(
         "",
-        `${tableState?.tablePath}`,
+        `${tableState?.config.id}`,
         `${window.location.pathname}?rowRef=${encodeURIComponent(
           tableState?.rows[cell.row].ref.path
         )}`

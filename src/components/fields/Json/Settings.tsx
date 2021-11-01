@@ -1,13 +1,13 @@
 import { Checkbox, FormControlLabel, FormHelperText } from "@mui/material";
 
-const Settings = ({ config, handleChange }) => {
+const Settings = ({ config, onChange }) => {
   return (
     <>
       <FormControlLabel
         control={
           <Checkbox
             checked={config.isArray}
-            onChange={() => handleChange("isArray")(!Boolean(config.isArray))}
+            onChange={() => onChange("isArray")(!Boolean(config.isArray))}
             name="isArray"
           />
         }

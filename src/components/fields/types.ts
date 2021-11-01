@@ -21,6 +21,7 @@ export interface IFieldConfig {
   TableEditor: React.ComponentType<EditorProps<any, any>>;
   SideDrawerField: React.ComponentType<ISideDrawerFieldProps>;
   settings?: React.ComponentType<ISettingsProps>;
+  settingsValidator?: (config: Record<string, any>) => Record<string, string>;
   filter?: {
     operators: IFilterOperator[];
     customInput?: React.ComponentType<IFiltersProps>;
@@ -59,14 +60,16 @@ export interface ISideDrawerFieldProps {
 }
 
 export interface ISettingsProps {
-  handleChange: (key: string) => (value: any) => void;
+  onChange: (key: string) => (value: any) => void;
   config: Record<string, any>;
   fieldName: string;
+  onBlur: React.FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>;
+  errors: Record<string, any>;
 }
 
 // TODO: WRITE TYPES
 export interface IFiltersProps {
-  handleChange: (key: string) => (value: any) => void;
+  onChange: (key: string) => (value: any) => void;
   [key: string]: any;
 }
 

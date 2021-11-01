@@ -39,15 +39,15 @@ export default function Filters() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   useEffect(() => {
-    if (userDoc.state.doc && tableState?.tablePath) {
-      if (userDoc.state.doc.tables?.[tableState?.tablePath]?.filters) {
+    if (userDoc.state.doc && tableState?.config.id) {
+      if (userDoc.state.doc.tables?.[tableState?.config.id]?.filters) {
         tableActions?.table.filter(
-          userDoc.state.doc.tables[tableState?.tablePath].filters
+          userDoc.state.doc.tables[tableState?.config.id].filters
         );
         tableActions?.table.orderBy();
       }
     }
-  }, [userDoc.state, tableState?.tablePath]);
+  }, [userDoc.state, tableState?.config.id]);
 
   const filterColumns = _sortBy(Object.values(tableState!.columns), "index")
     .filter((c) => getFieldProp("filter", c.type))
@@ -100,7 +100,7 @@ export default function Filters() {
     userDoc.dispatch({
       action: DocActions.update,
       data: {
-        tables: { [`${tableState?.tablePath}`]: { filters } },
+        tables: { [`${tableState?.config.id}`]: { filters } },
       },
     });
   };
@@ -257,7 +257,7 @@ export default function Filters() {
                         control,
                         docRef: {},
                         disabled: false,
-                        handleChange: () => {},
+                        onChange: () => {},
                       })}
                   </Suspense>
                 </form>

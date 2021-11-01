@@ -1,7 +1,7 @@
 import { lazy, Suspense } from "react";
 import { ISettingsProps } from "../types";
 
-import { Grid, InputLabel } from "@mui/material";
+import { Grid, InputLabel, FormHelperText } from "@mui/material";
 import MultiSelect from "@rowy/multiselect";
 import FieldSkeleton from "@src/components/SideDrawer/Form/FieldSkeleton";
 import FieldsDropdown from "@src/components/Table/ColumnMenu/FieldsDropdown";
@@ -18,11 +18,14 @@ const CodeEditor = lazy(
 
 export default function Settings({
   config,
-  handleChange,
+  onChange,
   fieldName,
+  onBlur,
+  errors,
 }: ISettingsProps) {
   const { tableState } = useProjectContext();
   if (!tableState?.columns) return <></>;
+
   const columnOptions = Object.values(tableState.columns)
     .filter((column) => column.fieldName !== fieldName)
     .filter((column) => column.type !== FieldType.subTable)
@@ -36,10 +39,25 @@ export default function Settings({
             label="Listener fields"
             options={columnOptions}
             value={config.listenerFields ?? []}
-            onChange={handleChange("listenerFields")}
+            onChange={onChange("listenerFields")}
             TextFieldProps={{
-              helperText:
-                "Changes to these fields will trigger the evaluation of the column.",
+              helperText: (
+                <>
+                  {errors.listenerFields && (
+                    <FormHelperText error style={{ margin: 0 }}>
+                      {errors.listenerFields}
+                    </FormHelperText>
+                  )}
+                  <FormHelperText error={false} style={{ margin: 0 }}>
+                    Changes to these fields will trigger the evaluation of the
+                    column.
+                  </FormHelperText>
+                </>
+              ),
+              FormHelperTextProps: { component: "div" } as any,
+              required: true,
+              error: errors.listenerFields,
+              onBlur,
             }}
           />
         </Grid>
@@ -58,7 +76,13 @@ export default function Settings({
                 ].includes(f)
             )}
             onChange={(value) => {
-              handleChange("renderFieldType")(value);
+              onChange("renderFieldType")(value);
+            }}
+            TextFieldProps={{
+              required: true,
+              error: errors.renderFieldType,
+              helperText: errors.renderFieldType,
+              onBlur,
             }}
           />
         </Grid>
@@ -68,9 +92,16 @@ export default function Settings({
         <InputLabel>Derivative script</InputLabel>
         <CodeEditorHelper docLink={WIKI_LINKS.fieldTypesDerivative} />
         <Suspense fallback={<FieldSkeleton height={200} />}>
-          <CodeEditor value={config.script} onChange={handleChange("script")} />
+          <CodeEditor value={config.script} onChange={onChange("script")} />
         </Suspense>
       </div>
     </>
   );
 }
+
+export const settingsValidator = (config) => {
+  const errors: Record<string, any> = {};
+  if (!config.listenerFields) errors.listenerFields = "Required";
+  if (!config.renderFieldType) errors.renderFieldType = "Required";
+  return errors;
+};

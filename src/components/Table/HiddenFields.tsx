@@ -13,6 +13,7 @@ import { useProjectContext } from "@src/contexts/ProjectContext";
 import { useAppContext } from "@src/contexts/AppContext";
 import { DocActions } from "@src/hooks/useDoc";
 import { formatSubTableName } from "../../utils/fns";
+
 const useStyles = makeStyles((theme) =>
   createStyles({
     listbox: {},
@@ -69,7 +70,7 @@ export default function HiddenFields() {
 
   // Initialise hiddenFields from user doc
   const userDocHiddenFields =
-    userDoc.state.doc?.tables?.[formatSubTableName(tableState?.tablePath!)]
+    userDoc.state.doc?.tables?.[formatSubTableName(tableState?.config.id!)]
       ?.hiddenFields;
   useEffect(() => {
     if (userDocHiddenFields) setHiddenFields(userDocHiddenFields);
@@ -94,7 +95,7 @@ export default function HiddenFields() {
         action: DocActions.update,
         data: {
           tables: {
-            [formatSubTableName(tableState?.tablePath)]: { hiddenFields },
+            [formatSubTableName(tableState?.config.id)]: { hiddenFields },
           },
         },
       });

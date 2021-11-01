@@ -172,7 +172,7 @@ const ConditionModal = ({ modal, setModal, conditions, setConditions }) => {
   );
 };
 
-export default function Settings({ handleChange, config }: ISettingsProps) {
+export default function Settings({ onChange, config }: ISettingsProps) {
   const [modal, setModal] = useState(EMPTY_STATE);
   const { conditions } = config;
   return (
@@ -228,7 +228,7 @@ export default function Settings({ handleChange, config }: ISettingsProps) {
         modal={modal}
         setModal={setModal}
         conditions={config.conditions}
-        setConditions={handleChange("conditions")}
+        setConditions={onChange("conditions")}
       />
     </>
   );

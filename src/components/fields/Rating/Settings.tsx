@@ -3,7 +3,7 @@ import { ISettingsProps } from "../types";
 import { Slider } from "@mui/material";
 import Subheading from "@src/components/Table/ColumnMenu/Subheading";
 
-export default function Settings({ handleChange, config }: ISettingsProps) {
+export default function Settings({ onChange, config }: ISettingsProps) {
   return (
     <>
       <Subheading>Maximum number of stars</Subheading>
@@ -14,7 +14,7 @@ export default function Settings({ handleChange, config }: ISettingsProps) {
         aria-labelledby="max-slider"
         valueLabelDisplay="auto"
         onChange={(_, v) => {
-          handleChange("max")(v);
+          onChange("max")(v);
         }}
         step={1}
         marks
@@ -29,7 +29,7 @@ export default function Settings({ handleChange, config }: ISettingsProps) {
         aria-labelledby="precision-slider"
         valueLabelDisplay="auto"
         onChange={(_, v) => {
-          handleChange("precision")(v);
+          onChange("precision")(v);
         }}
         step={0.25}
         marks
