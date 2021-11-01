@@ -146,7 +146,7 @@ export default function Step4Rules({
               modified={newRules}
               containerProps={{ sx: { width: "100%" } }}
               minHeight={400}
-              // options={{ renderValidationDecorations: "off" }}
+              options={{ renderValidationDecorations: "off" }}
             />
             <Typography
               variant="inherit"
