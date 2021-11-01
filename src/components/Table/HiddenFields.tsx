@@ -13,6 +13,7 @@ import { useProjectContext } from "@src/contexts/ProjectContext";
 import { useAppContext } from "@src/contexts/AppContext";
 import { DocActions } from "@src/hooks/useDoc";
 import { formatSubTableName } from "../../utils/fns";
+
 const useStyles = makeStyles((theme) =>
   createStyles({
     listbox: {},
