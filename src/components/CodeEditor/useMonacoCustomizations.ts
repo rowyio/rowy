@@ -26,6 +26,9 @@ export interface IUseMonacoCustomizationsProps {
   extraLibs?: string[];
   diagnosticsOptions?: languages.typescript.DiagnosticsOptions;
   onUnmount?: () => void;
+
+  // Internal only
+  fullScreen?: boolean;
 }
 
 export default function useMonacoCustomizations({
@@ -36,6 +39,8 @@ export default function useMonacoCustomizations({
   extraLibs,
   diagnosticsOptions,
   onUnmount,
+
+  fullScreen,
 }: IUseMonacoCustomizationsProps) {
   const theme = useTheme();
   const { tableState } = useProjectContext();
@@ -157,7 +162,7 @@ export default function useMonacoCustomizations({
     }
   }, [tableState?.columns, monaco, diagnosticsOptions, extraLibs]);
 
-  const boxSx: SxProps<Theme> = {
+  let boxSx: SxProps<Theme> = {
     minWidth: 400,
     minHeight,
     height: minHeight,
@@ -213,6 +218,23 @@ export default function useMonacoCustomizations({
       backgroundColor: "transparent",
     },
   };
+
+  if (fullScreen)
+    boxSx = {
+      ...boxSx,
+      position: "fixed",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      zIndex: theme.zIndex.tooltip + 1,
+      m: "0 !important",
+      resize: "none",
+      backgroundColor: theme.palette.background.paper,
+
+      borderRadius: 0,
+      "&::after": { display: "none" },
+    };
 
   return { boxSx };
 }

@@ -45,6 +45,9 @@ import SnackbarProgress, {
 } from "@src/components/SnackbarProgress";
 import CircularProgressOptical from "@src/components/CircularProgressOptical";
 
+import CodeEditor from "@src/components/CodeEditor";
+import DiffEditor from "@src/components/CodeEditor/DiffEditor";
+
 const typographyVariants = [
   "h1",
   "h2",
@@ -928,6 +931,9 @@ export default function TestView() {
           </Stack>
 
           <LinearProgress />
+
+          <CodeEditor value={`x\n`} />
+          <DiffEditor original={`x\n`} modified="y" />
         </Stack>
       </Container>
     </Navigation>
