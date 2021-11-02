@@ -9,6 +9,7 @@ import Export from "./Export";
 import LoadedRowsStatus from "./LoadedRowsStatus";
 import TableSettings from "./TableSettings";
 import TableLogs from "./TableLogs";
+import CloudLogs from "./CloudLogs";
 import HiddenFields from "../HiddenFields";
 import RowHeight from "./RowHeight";
 import Extensions from "./Extensions";
@@ -99,6 +100,7 @@ export default function TableHeader() {
         <>
           {/* Spacer */} <div />
           <Extensions />
+          <CloudLogs />
           <TableLogs />
           {(hasDerivatives || hasExtensions) && <ReExecute />}
           {/* Spacer */} <div />
