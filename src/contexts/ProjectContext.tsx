@@ -19,6 +19,7 @@ import { rowyRun, IRowyRunRequestProps } from "@src/utils/rowyRun";
 import { FieldType } from "@src/constants/fields";
 import { rowyUser } from "@src/utils/fns";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
+import { runRoutes } from "@src/constants/runRoutes";
 
 export type Table = {
   id: string;
@@ -169,6 +170,14 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
       initialData[table?.auditFieldUpdatedBy || "_updatedBy"] = rowyUser(
         currentUser!
       );
+      // _rowyRun({route:runRoutes.auditChange,body:{
+      //   rowyUser,
+      //   eventType:"ADD_ROW",
+      //   eventData:{
+      //     rowPath:ref.path,
+      //     tableId:table?.id,
+      //   }
+      // }})
     }
 
     tableActions.row.add(
@@ -188,10 +197,20 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
     const update = { [fieldName]: value };
 
     if (table?.audit !== false) {
-      update[table?.auditFieldUpdatedBy || "_updatedBy"] = rowyUser(
-        currentUser!,
-        { updatedField: fieldName }
-      );
+      const _rowyUser = rowyUser(currentUser!, { updatedField: fieldName });
+      update[table?.auditFieldUpdatedBy || "_updatedBy"] = _rowyUser;
+      _rowyRun({
+        route: runRoutes.auditChange,
+        body: {
+          rowyUser: _rowyUser,
+          eventType: "UPDATE_CELL",
+          eventData: {
+            rowPath: ref.path,
+            tableId: table?.id,
+            updatedField: fieldName,
+          },
+        },
+      });
     }
 
     tableActions.row.update(

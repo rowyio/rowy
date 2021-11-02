@@ -53,4 +53,5 @@ export const runRoutes = {
   algoliaSearchKey: { path: `/algoliaSearchKey`, method: "GET" } as RunRoute,
   algoliaAppId: { path: `/algoliaAppId`, method: "GET" } as RunRoute,
   functionLogs: { path: `/functionLogs`, method: "GET" } as RunRoute,
+  auditChange: { path: `/auditChange`, method: "POST" } as RunRoute,
 } as const;
