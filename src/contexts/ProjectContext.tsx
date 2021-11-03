@@ -44,6 +44,7 @@ interface IProjectContext {
   tableState: TableState;
   tableActions: TableActions;
   addRow: (data?: Record<string, any>, ignoreRequiredFields?: boolean) => void;
+  deleteRow: (rowId) => void;
   updateCell: (
     ref: firebase.firestore.DocumentReference,
     fieldName: string,
@@ -137,7 +138,28 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
         : [],
     [tables]
   );
-
+  const auditChange = (
+    type: "ADD_ROW" | "UPDATE_CELL" | "DELETE_ROW",
+    rowId,
+    data
+  ) => {
+    if (table?.audit !== false) {
+      _rowyRun({
+        route: runRoutes.auditChange,
+        body: {
+          rowyUser: rowyUser(currentUser!),
+          type,
+          ref: {
+            rowPath: tableState.tablePath,
+            rowId,
+            tableId: table?.id,
+            collectionPath: tableState.tablePath,
+          },
+          data,
+        },
+      });
+    }
+  };
   const addRow: IProjectContext["addRow"] = (data, ignoreRequiredFields) => {
     const valuesFromFilter = tableState.filters.reduce((acc, curr) => {
       if (curr.operator === "==") {
@@ -170,19 +192,12 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
       initialData[table?.auditFieldUpdatedBy || "_updatedBy"] = rowyUser(
         currentUser!
       );
-      // _rowyRun({route:runRoutes.auditChange,body:{
-      //   rowyUser,
-      //   eventType:"ADD_ROW",
-      //   eventData:{
-      //     rowPath:ref.path,
-      //     tableId:table?.id,
-      //   }
-      // }})
     }
 
     tableActions.row.add(
       { ...valuesFromFilter, ...initialData, ...data },
-      ignoreRequiredFields ? [] : requiredFields
+      ignoreRequiredFields ? [] : requiredFields,
+      (rowId: string) => auditChange("ADD_ROW", rowId, {})
     );
   };
 
@@ -197,26 +212,16 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
     const update = { [fieldName]: value };
 
     if (table?.audit !== false) {
-      const _rowyUser = rowyUser(currentUser!, { updatedField: fieldName });
-      update[table?.auditFieldUpdatedBy || "_updatedBy"] = _rowyUser;
-      _rowyRun({
-        route: runRoutes.auditChange,
-        body: {
-          rowyUser: _rowyUser,
-          eventType: "UPDATE_CELL",
-          eventData: {
-            rowPath: ref.path,
-            tableId: table?.id,
-            updatedField: fieldName,
-          },
-        },
-      });
+      update[table?.auditFieldUpdatedBy || "_updatedBy"] = rowyUser(
+        currentUser!,
+        { updatedField: fieldName }
+      );
     }
-
     tableActions.row.update(
       ref,
       update,
       () => {
+        auditChange("UPDATE_CELL", ref.id, { updatedField: fieldName });
         if (onSuccess) onSuccess(ref, fieldName, value);
       },
       (error) => {
@@ -231,6 +236,10 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
         }
       }
     );
+  };
+
+  const deleteRow = (rowId) => {
+    tableActions.row.delete(rowId, () => auditChange("DELETE_ROW", rowId, {}));
   };
   // rowyRun access
   const _rowyRun: IProjectContext["rowyRun"] = async (args) => {
@@ -272,6 +281,7 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
         tableActions,
         addRow,
         updateCell,
+        deleteRow,
         settingsActions,
         settings: settings.doc,
         roles,

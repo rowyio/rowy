@@ -231,12 +231,12 @@ const useTableData = () => {
    *  @param rowIndex local position
    *  @param documentId firestore document id
    */
-  const deleteRow = (rowId: string) => {
+  const deleteRow = async (rowId: string, onSuccess: () => void) => {
     // Remove row locally
     rowsDispatch({ type: "delete", rowId });
     // Delete document
     try {
-      db.collection(tableState.path).doc(rowId).delete();
+      await db.collection(tableState.path).doc(rowId).delete().then(onSuccess);
     } catch (error: any) {
       console.log(error);
       if (error.code === "permission-denied") {
@@ -264,7 +264,11 @@ const useTableData = () => {
   /**  creating new document/row
    *  @param data(optional: default will create empty row)
    */
-  const addRow = async (data: any, requiredFields: string[]) => {
+  const addRow = (
+    data: any,
+    requiredFields: string[],
+    onSuccess: (rowId: string) => void
+  ) => {
     const missingRequiredFields = requiredFields
       ? requiredFields.reduce(missingFieldsReducer(data), [])
       : [];
@@ -274,7 +278,12 @@ const useTableData = () => {
 
     if (missingRequiredFields.length === 0) {
       try {
-        await db.collection(path).doc(newId).set(data, { merge: true });
+        db.collection(path)
+          .doc(newId)
+          .set(data, { merge: true })
+          .then(() => {
+            onSuccess(newId);
+          });
       } catch (error: any) {
         if (error.code === "permission-denied") {
           enqueueSnackbar("You do not have the permissions to add new rows.", {
