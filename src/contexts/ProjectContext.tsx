@@ -16,11 +16,10 @@ import { ColumnMenuRef } from "@src/components/Table/ColumnMenu";
 import { ImportWizardRef } from "@src/components/Wizards/ImportWizard";
 
 import { rowyRun, IRowyRunRequestProps } from "@src/utils/rowyRun";
-import { FieldType } from "@src/constants/fields";
 import { rowyUser } from "@src/utils/fns";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
 import { runRoutes } from "@src/constants/runRoutes";
-
+import semver from "semver";
 export type Table = {
   id: string;
   collection: string;
@@ -76,6 +75,10 @@ interface IProjectContext {
     deleteTable: (id: string) => void;
   };
 
+  compatibleRowyRunVersion: (args: {
+    minVersion?: string;
+    maxVersion?: string;
+  }) => boolean;
   // A ref to the data grid. Contains data grid functions
   dataGridRef: React.RefObject<DataGridHandle>;
   // A ref to the side drawer state. Prevents unnecessary re-renders
@@ -103,6 +106,17 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
   const [tables, setTables] = useState<IProjectContext["tables"]>();
   const [settings, settingsActions] = useSettings();
   const table = _find(tables, (table) => table.id === tableState.config.id);
+
+  const [rowyRunVersion, setRowyRunVersion] = useState("");
+  useEffect(() => {
+    if (settings?.doc?.rowyRunUrl) {
+      _rowyRun({
+        route: runRoutes.version,
+      }).then((resp) => {
+        if (resp.version) setRowyRunVersion(resp.version);
+      });
+    }
+  }, [settings?.doc?.rowyRunUrl]);
 
   useEffect(() => {
     const { tables } = settings;
@@ -268,6 +282,21 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
     }
   };
 
+  const compatibleRowyRunVersion = ({
+    minVersion,
+    maxVersion,
+  }: {
+    minVersion?: string;
+    maxVersion?: string;
+  }) => {
+    // example: "1.0.0", "1.0.0-beta.1", "1.0.0-rc.1+1"
+    const version = rowyRunVersion.split("-")[0];
+    console.log(version, minVersion, maxVersion);
+    if (!version) return false;
+    if (minVersion && semver.lt(version, minVersion)) return false;
+    if (maxVersion && semver.gt(version, maxVersion)) return false;
+    return true;
+  };
   // A ref to the data grid. Contains data grid functions
   const dataGridRef = useRef<DataGridHandle>(null);
   const sideDrawerRef = useRef<SideDrawerRef>();
@@ -292,6 +321,7 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
         columnMenuRef,
         importWizardRef,
         rowyRun: _rowyRun,
+        compatibleRowyRunVersion,
       }}
     >
       {children}

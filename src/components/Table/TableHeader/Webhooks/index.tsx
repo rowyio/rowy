@@ -20,7 +20,8 @@ import { analytics } from "@src/analytics";
 import { useSnackbar } from "notistack";
 
 export default function Webhooks() {
-  const { tableState, tableActions, rowyRun } = useProjectContext();
+  const { tableState, tableActions, rowyRun, compatibleRowyRunVersion } =
+    useProjectContext();
   const appContext = useAppContext();
   const { requestConfirmation } = useConfirmation();
   const { enqueueSnackbar } = useSnackbar();
@@ -35,7 +36,7 @@ export default function Webhooks() {
     index?: number;
   } | null>(null);
   const [webhookLogs, setWebhookLogs] = useState<IWebhook | null>();
-
+  if (!compatibleRowyRunVersion?.({ minVersion: "1.1.1" })) return <></>;
   const edited = !_isEqual(currentWebhooks, localWebhooksObjects);
 
   const tablePathTokens =
