@@ -110,7 +110,7 @@ export default function Step4Rules({
         setCompletion((c) => ({ ...c, rules: true }));
         setHasRules(true);
       }
-      setRulesStatus("IDLE");
+      setRulesStatus("");
     } catch (e: any) {
       console.error(e);
       setRulesStatus(e.message);

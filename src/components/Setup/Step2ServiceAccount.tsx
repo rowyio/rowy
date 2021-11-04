@@ -20,7 +20,7 @@ export default function Step2ServiceAccount({
   setCompletion,
 }: ISetupStepBodyProps) {
   const [hasAllRoles, setHasAllRoles] = useState(completion.serviceAccount);
-  const [roles, setRoles] = useState<Record<string, any>>({});
+  // const [roles, setRoles] = useState<Record<string, any>>({});
   const [verificationStatus, setVerificationStatus] = useState<
     "IDLE" | "LOADING" | "FAIL"
   >("IDLE");
@@ -40,7 +40,7 @@ export default function Step2ServiceAccount({
     setVerificationStatus("LOADING");
     try {
       const result = await checkServiceAccount(rowyRunUrl);
-      setRoles(result);
+      // setRoles(result);
       if (result.hasAllRoles) {
         setVerificationStatus("IDLE");
         setHasAllRoles(true);
