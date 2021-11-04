@@ -157,7 +157,10 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
     rowId,
     data
   ) => {
-    if (table?.audit !== false) {
+    if (
+      table?.audit !== false &&
+      compatibleRowyRunVersion({ minVersion: "1.1.1" })
+    ) {
       _rowyRun({
         route: runRoutes.auditChange,
         body: {
@@ -291,7 +294,6 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
   }) => {
     // example: "1.0.0", "1.0.0-beta.1", "1.0.0-rc.1+1"
     const version = rowyRunVersion.split("-")[0];
-    console.log(version, minVersion, maxVersion);
     if (!version) return false;
     if (minVersion && semver.lt(version, minVersion)) return false;
     if (maxVersion && semver.gt(version, maxVersion)) return false;
