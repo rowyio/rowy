@@ -13,6 +13,7 @@ import CloudLogs from "./CloudLogs";
 import HiddenFields from "../HiddenFields";
 import RowHeight from "./RowHeight";
 import Extensions from "./Extensions";
+import Webhooks from "./Webhooks";
 import ReExecute from "./ReExecute";
 
 import { useAppContext } from "@src/contexts/AppContext";
@@ -99,6 +100,7 @@ export default function TableHeader() {
       {userClaims?.roles?.includes("ADMIN") && (
         <>
           {/* Spacer */} <div />
+          <Webhooks />
           <Extensions />
           <CloudLogs />
           <TableLogs />

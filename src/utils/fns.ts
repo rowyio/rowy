@@ -199,6 +199,12 @@ export const rowyUser = (
     ...data,
   };
 };
+export const generateRandomId = () => {
+  return (
+    Math.random().toString(36).substring(2, 15) +
+    Math.random().toString(36).substring(2, 15)
+  );
+};
 
 const _firestoreRefSanitizer = (v: any) => {
   // If react-hook-form receives a Firestore document reference, it tries to

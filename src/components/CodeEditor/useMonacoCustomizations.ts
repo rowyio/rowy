@@ -115,7 +115,10 @@ export default function useMonacoCustomizations({
         Object.keys(tableState?.columns!)
           .map((columnKey: string) => {
             const column = tableState?.columns[columnKey];
-            return `static ${columnKey}: ${getFieldProp("type", column.type)}`;
+            return `static "${columnKey}": ${getFieldProp(
+              "dataType",
+              column.type
+            )}`;
           })
           .join(";\n") + ";";
 
