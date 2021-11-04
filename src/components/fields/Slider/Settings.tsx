@@ -1,7 +1,7 @@
 import { TextField, FormControlLabel, Switch } from "@mui/material";
-import Subheading from "components/Table/ColumnMenu/Subheading";
+import Subheading from "@src/components/Table/ColumnMenu/Subheading";
 
-export default function Settings({ handleChange, config }) {
+export default function Settings({ onChange, config }) {
   return (
     <>
       <Subheading>Slider config</Subheading>
@@ -10,7 +10,7 @@ export default function Settings({ handleChange, config }) {
         variant="filled"
         fullWidth
         margin="none"
-        onChange={(e) => handleChange("min")(parseFloat(e.target.value))}
+        onChange={(e) => onChange("min")(parseFloat(e.target.value))}
         value={config["min"]}
         id={`settings-field-min`}
         label="Minimum value"
@@ -21,7 +21,7 @@ export default function Settings({ handleChange, config }) {
         variant="filled"
         fullWidth
         margin="none"
-        onChange={(e) => handleChange("max")(parseFloat(e.target.value))}
+        onChange={(e) => onChange("max")(parseFloat(e.target.value))}
         value={config["max"]}
         id={`settings-field-max`}
         label="Maximum value"
@@ -32,7 +32,7 @@ export default function Settings({ handleChange, config }) {
         variant="filled"
         fullWidth
         margin="none"
-        onChange={(e) => handleChange("step")(parseFloat(e.target.value))}
+        onChange={(e) => onChange("step")(parseFloat(e.target.value))}
         value={config["step"]}
         id={`settings-field-step`}
         label="Step value"
@@ -43,15 +43,11 @@ export default function Settings({ handleChange, config }) {
         control={
           <Switch
             checked={config.marks}
-            onChange={() => handleChange("marks")(!Boolean(config.marks))}
+            onChange={() => onChange("marks")(!Boolean(config.marks))}
             name="marks"
           />
         }
         label="Show slider steps"
-        sx={{
-          alignItems: "center",
-          "& .MuiFormControlLabel-label": { mt: 0 },
-        }}
       />
     </>
   );

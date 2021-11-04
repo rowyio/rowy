@@ -23,27 +23,27 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import EditIcon from "@mui/icons-material/EditOutlined";
 import AddIcon from "@mui/icons-material/Add";
 
-import FloatingSearch from "components/FloatingSearch";
-import SlideTransition from "components/Modal/SlideTransition";
-import TableGrid from "components/Home/TableGrid";
-import TableList from "components/Home/TableList";
-import TableGridSkeleton from "components/Home/TableGrid/TableGridSkeleton";
-import TableListSkeleton from "components/Home/TableList/TableListSkeleton";
-import HomeWelcomePrompt from "components/Home/HomeWelcomePrompt";
-import AccessDenied from "components/Home/AccessDenied";
-import EmptyState from "components/EmptyState";
+import FloatingSearch from "@src/components/FloatingSearch";
+import SlideTransition from "@src/components/Modal/SlideTransition";
+import TableGrid from "@src/components/Home/TableGrid";
+import TableList from "@src/components/Home/TableList";
+import TableGridSkeleton from "@src/components/Home/TableGrid/TableGridSkeleton";
+import TableListSkeleton from "@src/components/Home/TableList/TableListSkeleton";
+import HomeWelcomePrompt from "@src/components/Home/HomeWelcomePrompt";
+import AccessDenied from "@src/components/Home/AccessDenied";
+import EmptyState from "@src/components/EmptyState";
 import TableSettingsDialog, {
   TableSettingsDialogModes,
-} from "components/TableSettings";
+} from "@src/components/TableSettings";
 
-import routes from "constants/routes";
-import { useAppContext } from "contexts/AppContext";
-import { useProjectContext, Table } from "contexts/ProjectContext";
-import useDoc, { DocActions } from "hooks/useDoc";
-import useBasicSearch from "hooks/useBasicSearch";
+import routes from "@src/constants/routes";
+import { useAppContext } from "@src/contexts/AppContext";
+import { useProjectContext, Table } from "@src/contexts/ProjectContext";
+import useDoc, { DocActions } from "@src/hooks/useDoc";
+import useBasicSearch from "@src/hooks/useBasicSearch";
 
-import { SETTINGS } from "config/dbPaths";
-import { APP_BAR_HEIGHT } from "components/Navigation";
+import { SETTINGS } from "@src/config/dbPaths";
+import { APP_BAR_HEIGHT } from "@src/components/Navigation";
 
 const useHomeViewState = createPersistedState("__ROWY__HOME_VIEW");
 

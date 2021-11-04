@@ -37,6 +37,7 @@ const WIKI_PATHS = {
   fieldTypesSupportedFields: "/field-types/supported-fields",
   fieldTypesDerivative: "/field-types/derivative",
   fieldTypesConnectTable: "/field-types/connect-table",
+  fieldTypesAction: "/field-types/action",
   fieldTypesAdd: "/field-types/add",
 
   rowyRun: "/rowy-run",
@@ -47,6 +48,7 @@ const WIKI_PATHS = {
   extensionsSlackMessage: "/extensions/slack-message",
   extensionsSendgridEmail: "/extensions/sendgrid-email",
   extensionsTwilioMessage: "/extensions/twilio-message",
+  webhooks: "/webhooks",
 };
 export const WIKI_LINKS = _mapValues(
   WIKI_PATHS,

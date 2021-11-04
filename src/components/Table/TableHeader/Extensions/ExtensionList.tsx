@@ -17,19 +17,19 @@ import {
   Typography,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import ExtensionIcon from "assets/icons/Extension";
-import DuplicateIcon from "assets/icons/Copy";
+import ExtensionIcon from "@src/assets/icons/Extension";
+import DuplicateIcon from "@src/assets/icons/Copy";
 import EditIcon from "@mui/icons-material/EditOutlined";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 
-import EmptyState from "components/EmptyState";
+import EmptyState from "@src/components/EmptyState";
 import {
   extensionTypes,
   extensionNames,
   IExtension,
   ExtensionType,
 } from "./utils";
-import { DATE_TIME_FORMAT } from "constants/dates";
+import { DATE_TIME_FORMAT } from "@src/constants/dates";
 
 export interface IExtensionListProps {
   extensions: IExtension[];

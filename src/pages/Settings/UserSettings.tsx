@@ -4,15 +4,15 @@ import { useDebouncedCallback } from "use-debounce";
 
 import { Container, Stack, Fade } from "@mui/material";
 
-import SettingsSkeleton from "components/Settings/SettingsSkeleton";
-import SettingsSection from "components/Settings/SettingsSection";
-import Account from "components/Settings/UserSettings/Account";
-import Theme from "components/Settings/UserSettings/Theme";
-import Personalization from "components/Settings/UserSettings/Personalization";
+import SettingsSkeleton from "@src/components/Settings/SettingsSkeleton";
+import SettingsSection from "@src/components/Settings/SettingsSection";
+import Account from "@src/components/Settings/UserSettings/Account";
+import Theme from "@src/components/Settings/UserSettings/Theme";
+import Personalization from "@src/components/Settings/UserSettings/Personalization";
 
 import { useAppContext } from "@src/contexts/AppContext";
-import { USERS } from "config/dbPaths";
-import useDoc from "hooks/useDoc";
+import { USERS } from "@src/config/dbPaths";
+import useDoc from "@src/hooks/useDoc";
 import { db } from "@src/firebase";
 
 export interface IUserSettingsChildProps {
@@ -48,7 +48,7 @@ export default function UserSettingsPage() {
 
   const sections = [
     { title: "Account", Component: Account, props: childProps },
-    { title: "Theme", Component: Theme },
+    { title: "Theme", Component: Theme, props: childProps },
     { title: "Personalization", Component: Personalization, props: childProps },
   ];
 

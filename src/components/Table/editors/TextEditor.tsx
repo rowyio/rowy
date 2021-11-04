@@ -3,9 +3,9 @@ import { EditorProps } from "react-data-grid";
 
 import { TextField } from "@mui/material";
 
-import { FieldType } from "constants/fields";
-import { getCellValue } from "utils/fns";
-import { useProjectContext } from "contexts/ProjectContext";
+import { FieldType } from "@src/constants/fields";
+import { getCellValue } from "@src/utils/fns";
+import { useProjectContext } from "@src/contexts/ProjectContext";
 
 export default function TextEditor({ row, column }: EditorProps<any>) {
   const { updateCell } = useProjectContext();

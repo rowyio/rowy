@@ -6,23 +6,16 @@ import _findIndex from "lodash/findIndex";
 import { format } from "date-fns";
 
 import { makeStyles, createStyles } from "@mui/styles";
-import {
-  alpha,
-  Stack,
-  Grid,
-  Tooltip,
-  Chip,
-  IconButton,
-  CircularProgress,
-} from "@mui/material";
-import UploadIcon from "assets/icons/Upload";
-import ChipList from "components/Table/formatters/ChipList";
+import { alpha, Stack, Grid, Tooltip, Chip, IconButton } from "@mui/material";
+import UploadIcon from "@src/assets/icons/Upload";
+import ChipList from "@src/components/Table/formatters/ChipList";
+import CircularProgressOptical from "@src/components/CircularProgressOptical";
 
-import { useConfirmation } from "components/ConfirmationDialog";
-import useUploader, { FileValue } from "hooks/useTable/useUploader";
+import { useConfirmation } from "@src/components/ConfirmationDialog";
+import useUploader, { FileValue } from "@src/hooks/useTable/useUploader";
 import { FileIcon } from ".";
-import { DATE_TIME_FORMAT } from "constants/dates";
-import { useProjectContext } from "contexts/ProjectContext";
+import { DATE_TIME_FORMAT } from "@src/constants/dates";
+import { useProjectContext } from "@src/contexts/ProjectContext";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -184,11 +177,10 @@ export default function File_({
         )
       ) : (
         <div style={{ padding: 4 }}>
-          <CircularProgress
+          <CircularProgressOptical
             size={24}
             variant={progress === 0 ? "indeterminate" : "determinate"}
             value={progress}
-            thickness={4}
             style={{ display: "block" }}
           />
         </div>

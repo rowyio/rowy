@@ -3,7 +3,7 @@ import { IHeavyCellProps } from "../types";
 import { Stack } from "@mui/material";
 
 import ActionFab from "./ActionFab";
-import { sanitiseCallableName, isUrl } from "utils/fns";
+import { sanitiseCallableName, isUrl } from "@src/utils/fns";
 
 export default function Action({
   column,

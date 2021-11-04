@@ -4,9 +4,9 @@ import _sortBy from "lodash/sortBy";
 import MultiSelect from "@rowy/multiselect";
 import { ListItemIcon } from "@mui/material";
 
-import { useProjectContext } from "contexts/ProjectContext";
-import { FieldType } from "constants/fields";
-import { getFieldProp } from "components/fields";
+import { useProjectContext } from "@src/contexts/ProjectContext";
+import { FieldType } from "@src/constants/fields";
+import { getFieldProp } from "@src/components/fields";
 
 export default function Step2RequiredFields({
   extensionObject,

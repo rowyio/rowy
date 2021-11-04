@@ -17,13 +17,13 @@ import {
   Checkbox,
 } from "@mui/material";
 
-import { useProjectContext } from "contexts/ProjectContext";
+import { useProjectContext } from "@src/contexts/ProjectContext";
 import SnackbarProgress, {
   ISnackbarProgressRef,
-} from "components/SnackbarProgress";
+} from "@src/components/SnackbarProgress";
 
-import { FieldType } from "constants/fields";
-import { hasDataTypes } from "components/fields";
+import { FieldType } from "@src/constants/fields";
+import { hasDataTypes } from "@src/components/fields";
 
 const DOWNLOADABLE_COLUMNS = [FieldType.image, FieldType.file];
 const LABEL_COLUMNS = hasDataTypes(["string", "number"]);
@@ -64,7 +64,7 @@ export default function Export({ query, closeModal }) {
   const [columns, setColumns] = useState<any[]>([]);
   const [labelColumnsEnabled, setLabelColumnsEnabled] = useState(false);
   const [labelColumns, setLabelColumns] = useState<any[]>([]);
-  const [packageName, setPackageName] = useState(tableState?.tablePath);
+  const [packageName, setPackageName] = useState(tableState?.config.id);
 
   const handleClose = () => {
     closeModal();

@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { IMenuModalProps } from ".";
-import Modal from "components/Modal";
+import Modal from "@src/components/Modal";
 import FieldsDropdown from "./FieldsDropdown";
 import { analytics } from "analytics";
 export default function FormDialog({

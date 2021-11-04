@@ -44,6 +44,7 @@ export const runRoutes = {
   migrateFT2Rowy: { path: "/migrateFT2Rowy", method: "GET" } as RunRoute,
   actionScript: { path: "/actionScript", method: "POST" } as RunRoute,
   buildFunction: { path: "/buildFunction", method: "POST" } as RunRoute,
+  publishWebhooks: { path: "/publishWebhooks", method: "POST" } as RunRoute,
   projectOwner: { path: "/projectOwner", method: "GET" } as RunRoute,
   setOwnerRoles: { path: "/setOwnerRoles", method: "GET" } as RunRoute,
   inviteUser: { path: "/inviteUser", method: "POST" } as RunRoute,
@@ -51,4 +52,6 @@ export const runRoutes = {
   deleteUser: { path: "/deleteUser", method: "DELETE" } as RunRoute,
   algoliaSearchKey: { path: `/algoliaSearchKey`, method: "GET" } as RunRoute,
   algoliaAppId: { path: `/algoliaAppId`, method: "GET" } as RunRoute,
+  functionLogs: { path: `/functionLogs`, method: "GET" } as RunRoute,
+  auditChange: { path: `/auditChange`, method: "POST" } as RunRoute,
 } as const;

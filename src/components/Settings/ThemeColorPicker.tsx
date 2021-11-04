@@ -6,7 +6,7 @@ import { useTheme, Grid, Typography, Stack, Box, Button } from "@mui/material";
 import PassIcon from "@mui/icons-material/Check";
 import FailIcon from "@mui/icons-material/Error";
 
-import { PRIMARY, DARK_PRIMARY } from "theme/colors";
+import { PRIMARY, DARK_PRIMARY } from "@src/theme/colors";
 import themes from "theme";
 
 import { colord, extend } from "colord";

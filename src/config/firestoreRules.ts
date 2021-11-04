@@ -37,3 +37,9 @@ export const utilFns = `
       return request.auth != null && request.auth.token.roles.hasAny(roles);
     }
 ` as const;
+
+export const insecureRule = `
+    match /{document=**} {
+      allow read, write: if true;
+    }
+` as const;

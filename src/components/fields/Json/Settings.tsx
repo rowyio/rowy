@@ -1,21 +1,25 @@
-import { Switch, FormControlLabel } from "@mui/material";
+import { Checkbox, FormControlLabel, FormHelperText } from "@mui/material";
 
-const Settings = ({ config, handleChange }) => {
+const Settings = ({ config, onChange }) => {
   return (
     <>
       <FormControlLabel
         control={
-          <Switch
+          <Checkbox
             checked={config.isArray}
-            onChange={() => handleChange("isArray")(!Boolean(config.isArray))}
+            onChange={() => onChange("isArray")(!Boolean(config.isArray))}
             name="isArray"
           />
         }
-        label="Set as array"
-        sx={{
-          alignItems: "center",
-          "& .MuiFormControlLabel-label": { mt: 0 },
-        }}
+        label={
+          <>
+            Default as array
+            <FormHelperText>
+              You can still set individual field values as a JSON object or
+              array using the code editor
+            </FormHelperText>
+          </>
+        }
       />
     </>
   );

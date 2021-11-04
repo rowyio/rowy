@@ -1,7 +1,7 @@
 import { ISideDrawerFieldProps } from "../types";
 
 import { useTheme } from "@mui/material";
-import { useFieldStyles } from "components/SideDrawer/Form/utils";
+import { useFieldStyles } from "@src/components/SideDrawer/Form/utils";
 
 export default function Id({ docRef }: ISideDrawerFieldProps) {
   const theme = useTheme();

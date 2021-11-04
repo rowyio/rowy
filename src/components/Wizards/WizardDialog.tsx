@@ -18,8 +18,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 
-import { SlideTransitionMui } from "components/Modal/SlideTransition";
-import ScrollableDialogContent from "components/Modal/ScrollableDialogContent";
+import { SlideTransitionMui } from "@src/components/Modal/SlideTransition";
+import ScrollableDialogContent from "@src/components/Modal/ScrollableDialogContent";
 
 export interface IWizardDialogProps extends DialogProps {
   title: string;

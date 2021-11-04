@@ -5,8 +5,8 @@ import { ButtonBase, Grid } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 import { sanitiseValue } from "./utils";
-import ChipList from "components/Table/formatters/ChipList";
-import FormattedChip from "components/FormattedChip";
+import ChipList from "@src/components/Table/formatters/ChipList";
+import FormattedChip from "@src/components/FormattedChip";
 import { ConvertStringToArray } from "./ConvertStringToArray";
 
 export const MultiSelect = forwardRef(function MultiSelect(

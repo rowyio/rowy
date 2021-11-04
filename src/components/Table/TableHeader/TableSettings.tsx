@@ -6,8 +6,8 @@ import SettingsIcon from "@mui/icons-material/SettingsOutlined";
 
 import TableSettingsDialog, {
   TableSettingsDialogModes,
-} from "components/TableSettings";
-import { useProjectContext } from "contexts/ProjectContext";
+} from "@src/components/TableSettings";
+import { useProjectContext } from "@src/contexts/ProjectContext";
 
 export default function TableSettings() {
   const [open, setOpen] = useState(false);

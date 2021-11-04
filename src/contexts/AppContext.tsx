@@ -6,14 +6,14 @@ import Helmet from "react-helmet";
 import jwt_decode from "jwt-decode";
 import { useMediaQuery, ThemeProvider, CssBaseline } from "@mui/material";
 
-import ErrorBoundary from "components/ErrorBoundary";
+import ErrorBoundary from "@src/components/ErrorBoundary";
 
 import { projectId, auth, db } from "@src/firebase";
-import useDoc from "hooks/useDoc";
-import { PUBLIC_SETTINGS, USERS } from "config/dbPaths";
+import useDoc from "@src/hooks/useDoc";
+import { PUBLIC_SETTINGS, USERS } from "@src/config/dbPaths";
 import { analytics } from "analytics";
 import themes from "theme";
-import useDocumentTitle from "hooks/useDocumentTitle";
+import useDocumentTitle from "@src/hooks/useDocumentTitle";
 
 const useThemeState = createPersistedState("__ROWY__THEME");
 const useThemeOverriddenState = createPersistedState(

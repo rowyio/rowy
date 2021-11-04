@@ -4,13 +4,13 @@ import { IMenuModalProps } from ".";
 
 import { TextField, Typography, Button } from "@mui/material";
 
-import Modal from "components/Modal";
+import Modal from "@src/components/Modal";
 import FieldsDropdown from "./FieldsDropdown";
 
-import { FieldType } from "constants/fields";
-import { getFieldProp } from "components/fields";
+import { FieldType } from "@src/constants/fields";
+import { getFieldProp } from "@src/components/fields";
 import { analytics } from "analytics";
-import { useProjectContext } from "contexts/ProjectContext";
+import { useProjectContext } from "@src/contexts/ProjectContext";
 
 export interface INewColumnProps extends IMenuModalProps {
   data: Record<string, any>;

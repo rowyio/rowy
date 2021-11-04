@@ -1,13 +1,13 @@
 import { lazy, Suspense, useState } from "react";
-import { IUserSettingsChildProps } from "pages/Settings/UserSettings";
+import { IUserSettingsChildProps } from "@src/pages/Settings/UserSettings";
 import _merge from "lodash/merge";
 import _unset from "lodash/unset";
 
 import { FormControlLabel, Checkbox, Collapse } from "@mui/material";
-import Loading from "components/Loading";
+import Loading from "@src/components/Loading";
 
 // prettier-ignore
-const ThemeColorPicker = lazy(() => import("components/Settings/ThemeColorPicker") /* webpackChunkName: "Settings/ThemeColorPicker" */);
+const ThemeColorPicker = lazy(() => import("@src/components/Settings/ThemeColorPicker") /* webpackChunkName: "Settings/ThemeColorPicker" */);
 
 export default function Personalization({
   settings,
@@ -32,23 +32,6 @@ export default function Personalization({
       <FormControlLabel
         control={
           <Checkbox
-            checked={settings.theme?.dark?.palette?.darker}
-            onChange={(e) => {
-              updateSettings({
-                theme: _merge(settings.theme, {
-                  dark: { palette: { darker: e.target.checked } },
-                }),
-              });
-            }}
-          />
-        }
-        label="Darker dark theme"
-        sx={{ my: -10 / 8 }}
-      />
-
-      <FormControlLabel
-        control={
-          <Checkbox
             checked={customizedThemeColor}
             onChange={(e) => {
               setCustomizedThemeColor(e.target.checked);
@@ -62,7 +45,7 @@ export default function Personalization({
           />
         }
         label="Customize theme colors"
-        style={{ marginLeft: -11, marginBottom: -10 }}
+        style={{ marginLeft: -11, marginBottom: -10, marginTop: -10 }}
       />
 
       <Collapse in={customizedThemeColor} style={{ marginTop: 0 }}>

@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 import { Typography, Link as MuiLink, Button } from "@mui/material";
 import SecurityIcon from "@mui/icons-material/SecurityOutlined";
 
-import EmptyState from "components/EmptyState";
+import EmptyState from "@src/components/EmptyState";
 
-import { WIKI_LINKS } from "constants/externalLinks";
-import routes from "constants/routes";
+import { WIKI_LINKS } from "@src/constants/externalLinks";
+import routes from "@src/constants/routes";
 import { useAppContext } from "@src/contexts/AppContext";
 
 export default function AccessDenied() {

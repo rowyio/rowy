@@ -2,12 +2,12 @@ import { Field, FieldType } from "@rowy/form-builder";
 import { TableSettingsDialogModes } from "./index";
 
 import { Link, Typography } from "@mui/material";
-import OpenInNewIcon from "components/InlineOpenInNewIcon";
+import OpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 import WarningIcon from "@mui/icons-material/WarningAmber";
 
-import { WIKI_LINKS } from "constants/externalLinks";
+import { WIKI_LINKS } from "@src/constants/externalLinks";
 import { name } from "@root/package.json";
-import { FieldType as TableFieldType } from "constants/fields";
+import { FieldType as TableFieldType } from "@src/constants/fields";
 
 export const tableSettings = (
   mode: TableSettingsDialogModes | null,
@@ -34,7 +34,7 @@ export const tableSettings = (
       label: "Table ID",
       required: true,
       watchedField: "name",
-      assistiveText: `Unique ID for this table used to store configuration. Cannot be edited ${
+      assistiveText: `Unique ID for this table used to store configuration. Cannot be edited${
         mode === TableSettingsDialogModes.create ? " later" : ""
       }.`,
       disabled: mode === TableSettingsDialogModes.update,
@@ -55,6 +55,7 @@ export const tableSettings = (
             <>
               <WarningIcon
                 color="warning"
+                aria-label="Warning"
                 sx={{ fontSize: 16, mr: 0.5, verticalAlign: "middle" }}
               />
               You change which Firestore collection to display. Data in the new

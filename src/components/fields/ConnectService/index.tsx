@@ -1,11 +1,11 @@
 import { lazy } from "react";
-import { IFieldConfig, FieldType } from "components/fields/types";
+import { IFieldConfig, FieldType } from "@src/components/fields/types";
 import withPopoverCell from "../_withTableCell/withPopoverCell";
 
 import ConnectServiceIcon from "@mui/icons-material/Http";
 import BasicCell from "../_BasicCell/BasicCellNull";
 import InlineCell from "./InlineCell";
-import NullEditor from "components/Table/editors/NullEditor";
+import NullEditor from "@src/components/Table/editors/NullEditor";
 
 const PopoverCell = lazy(
   () =>
@@ -36,6 +36,7 @@ export const config: IFieldConfig = {
   }),
   TableEditor: NullEditor as any,
   SideDrawerField,
+  requireConfiguration: true,
   settings: Settings,
 };
 export default config;

@@ -10,6 +10,7 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
+  Typography,
   ListItemSecondaryAction,
   Divider,
   Grow,
@@ -17,16 +18,22 @@ import {
 import AccountCircleIcon from "@mui/icons-material/AccountCircleOutlined";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 
-import { useAppContext } from "contexts/AppContext";
-import routes from "constants/routes";
+import { useAppContext } from "@src/contexts/AppContext";
+import routes from "@src/constants/routes";
 
 export default function UserMenu(props: IconButtonProps) {
   const anchorEl = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
   const [themeSubMenu, setThemeSubMenu] = useState<EventTarget | null>(null);
 
-  const { userDoc, theme, themeOverridden, setTheme, setThemeOverridden } =
-    useAppContext();
+  const {
+    userDoc,
+    theme,
+    themeOverridden,
+    setTheme,
+    setThemeOverridden,
+    projectId,
+  } = useAppContext();
 
   const displayName = userDoc?.state?.doc?.user?.displayName;
   const avatarUrl = userDoc?.state?.doc?.user?.photoURL;
@@ -95,7 +102,13 @@ export default function UserMenu(props: IconButtonProps) {
           </ListItemAvatar>
           <ListItemText
             primary={displayName}
-            secondary={email}
+            secondary={
+              <>
+                {email}
+                <br />
+                <Typography variant="caption">Project: {projectId}</Typography>
+              </>
+            }
             primaryTypographyProps={{ variant: "subtitle1" }}
           />
         </ListItem>

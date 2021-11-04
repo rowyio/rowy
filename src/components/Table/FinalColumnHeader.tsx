@@ -2,9 +2,9 @@ import { Column } from "react-data-grid";
 
 import { makeStyles, createStyles } from "@mui/styles";
 import { Grid, Button } from "@mui/material";
-import AddColumnIcon from "assets/icons/AddColumn";
+import AddColumnIcon from "@src/assets/icons/AddColumn";
 
-import { useProjectContext } from "contexts/ProjectContext";
+import { useProjectContext } from "@src/contexts/ProjectContext";
 
 const useStyles = makeStyles((theme) =>
   createStyles({

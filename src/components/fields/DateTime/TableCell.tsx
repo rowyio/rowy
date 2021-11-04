@@ -5,7 +5,7 @@ import DateTimePicker from "@mui/lab/DateTimePicker";
 import { TextField } from "@mui/material";
 
 import { transformValue, sanitizeValue } from "../Date/utils";
-import { DATE_TIME_FORMAT } from "constants/dates";
+import { DATE_TIME_FORMAT } from "@src/constants/dates";
 import BasicCell from "./BasicCell";
 import { DateTimeIcon } from ".";
 

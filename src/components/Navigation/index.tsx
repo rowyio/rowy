@@ -17,11 +17,11 @@ import MenuIcon from "@mui/icons-material/Menu";
 
 import NavDrawer, { NAV_DRAWER_WIDTH } from "./NavDrawer";
 import UserMenu from "./UserMenu";
-import ErrorBoundary from "components/ErrorBoundary";
-import Loading from "components/Loading";
+import ErrorBoundary from "@src/components/ErrorBoundary";
+import Loading from "@src/components/Loading";
 
-import { useAppContext } from "contexts/AppContext";
-import useDocumentTitle from "hooks/useDocumentTitle";
+import { useAppContext } from "@src/contexts/AppContext";
+import useDocumentTitle from "@src/hooks/useDocumentTitle";
 
 export const APP_BAR_HEIGHT = 56;
 

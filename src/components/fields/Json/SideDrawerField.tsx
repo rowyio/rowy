@@ -1,11 +1,19 @@
+import { useState } from "react";
 import { Controller } from "react-hook-form";
+import createPersistedState from "use-persisted-state";
 import { ISideDrawerFieldProps } from "../types";
 
 import ReactJson from "react-json-view";
 import jsonFormat from "json-format";
+import CodeEditor from "@src/components/CodeEditor";
 
-import { useTheme } from "@mui/material";
-import { useFieldStyles } from "components/SideDrawer/Form/utils";
+import { useTheme, Tab, FormHelperText } from "@mui/material";
+import TabContext from "@mui/lab/TabContext";
+import TabList from "@mui/lab/TabList";
+import TabPanel from "@mui/lab/TabPanel";
+import { useFieldStyles } from "@src/components/SideDrawer/Form/utils";
+
+const useJsonEditor = createPersistedState("__ROWY__JSON_EDITOR");
 
 const isValidJson = (val: any) => {
   try {
@@ -25,11 +33,31 @@ export default function Json({
   const fieldClasses = useFieldStyles();
   const theme = useTheme();
 
+  const [editor, setEditor] = useJsonEditor<"tree" | "code">("tree");
+  const [codeValid, setCodeValid] = useState(true);
+
+  const changeEditor = (_, newValue) => {
+    setEditor(newValue);
+    setCodeValid(true);
+  };
+
   return (
     <Controller
       control={control}
       name={column.key}
       render={({ field: { onChange, value } }) => {
+        const sanitizedValue =
+          value !== undefined && isValidJson(value)
+            ? value
+            : column.config?.isArray
+            ? []
+            : {};
+        const formattedJson = jsonFormat(sanitizedValue, {
+          type: "space",
+          char: " ",
+          size: 2,
+        });
+
         if (disabled)
           return (
             <div
@@ -41,12 +69,7 @@ export default function Json({
                 wordBreak: "break-word",
               }}
             >
-              {value &&
-                jsonFormat(value, {
-                  type: "space",
-                  char: " ",
-                  size: 2,
-                })}
+              {value && formattedJson}
             </div>
           );
 
@@ -55,46 +78,68 @@ export default function Json({
         };
 
         return (
-          <div
-            className={fieldClasses.root}
-            style={{ overflowX: "auto", ...theme.typography.caption }}
-          >
-            <ReactJson
-              src={
-                value !== undefined && isValidJson(value)
-                  ? value
-                  : column.config?.isArray
-                  ? []
-                  : {}
-              }
-              onEdit={handleEdit}
-              onAdd={handleEdit}
-              onDelete={handleEdit}
-              theme={{
-                base00: "rgba(0, 0, 0, 0)",
-                base01: theme.palette.background.default,
-                base02: theme.palette.divider,
-                base03: "#93a1a1",
-                base04: theme.palette.text.disabled,
-                base05: theme.palette.text.secondary,
-                base06: "#073642",
-                base07: theme.palette.text.primary,
-                base08: "#d33682",
-                base09: "#cb4b16",
-                base0A: "#dc322f",
-                base0B: "#859900",
-                base0C: "#6c71c4",
-                base0D: theme.palette.text.secondary,
-                base0E: "#2aa198",
-                base0F: "#268bd2",
+          <TabContext value={editor}>
+            <TabList
+              onChange={changeEditor}
+              aria-label="JSON editor"
+              variant="standard"
+              sx={{
+                minHeight: 32,
+                mt: -32 / 8,
+
+                "& .MuiTabs-flexContainer": { justifyContent: "flex-end" },
+                "& .MuiTab-root": { minHeight: 32, py: 0 },
               }}
-              iconStyle="triangle"
-              style={{
-                fontFamily: theme.typography.fontFamilyMono,
-                backgroundColor: "transparent",
-              }}
-            />
-          </div>
+            >
+              <Tab label="Tree" value="tree" />
+              <Tab label="Code" value="code" />
+            </TabList>
+
+            <TabPanel value="tree" sx={{ p: 0 }}>
+              <div
+                className={fieldClasses.root}
+                style={{ overflowX: "auto", ...theme.typography.caption }}
+              >
+                <ReactJson
+                  src={sanitizedValue}
+                  onEdit={handleEdit}
+                  onAdd={handleEdit}
+                  onDelete={handleEdit}
+                  theme={
+                    theme.palette.mode === "dark" ? "monokai" : "rjv-default"
+                  }
+                  iconStyle="triangle"
+                  style={{
+                    fontFamily: theme.typography.fontFamilyMono,
+                    backgroundColor: "transparent",
+                    minHeight: 100 - 4 - 4,
+                  }}
+                />
+              </div>
+            </TabPanel>
+
+            <TabPanel value="code" sx={{ p: 0 }}>
+              <CodeEditor
+                defaultLanguage="json"
+                value={formattedJson || "{\n  \n}"}
+                onChange={(v) => {
+                  try {
+                    if (v) onChange(JSON.parse(v));
+                  } catch (e) {
+                    console.log(`Failed to parse JSON: ${e}`);
+                    setCodeValid(false);
+                  }
+                }}
+                onValidStatusUpdate={({ isValid }) => setCodeValid(isValid)}
+                error={!codeValid}
+              />
+              {!codeValid && (
+                <FormHelperText error variant="filled">
+                  Invalid JSON
+                </FormHelperText>
+              )}
+            </TabPanel>
+          </TabContext>
         );
       }}
     />

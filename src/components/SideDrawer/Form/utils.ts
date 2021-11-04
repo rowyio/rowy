@@ -1,6 +1,6 @@
 import { Control } from "react-hook-form";
 import { makeStyles, createStyles } from "@mui/styles";
-import { FieldType } from "constants/fields";
+import { FieldType } from "@src/constants/fields";
 import { colord } from "colord";
 
 export interface IFieldProps {

@@ -1,7 +1,7 @@
 import _find from "lodash/find";
 import _get from "lodash/get";
 
-import { FieldType } from "constants/fields";
+import { FieldType } from "@src/constants/fields";
 import { IFieldConfig } from "./types";
 
 // Import field configs

@@ -1,5 +1,5 @@
 import { Stack, Typography, Grid, Tooltip, Button } from "@mui/material";
-import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
+import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
 export interface ICodeEditorHelperProps {
   docLink: string;
@@ -47,8 +47,8 @@ export default function CodeEditorHelper({
       justifyContent="space-between"
       sx={{ my: 1 }}
     >
-      <Typography variant="body2" color="textSecondary">
-        You can access:
+      <Typography variant="body2" color="textSecondary" sx={{ mr: 0.5 }}>
+        Available:
       </Typography>
 
       <Grid container spacing={1}>

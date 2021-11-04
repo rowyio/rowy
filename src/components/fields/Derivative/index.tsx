@@ -1,10 +1,10 @@
-import { IFieldConfig, FieldType } from "components/fields/types";
+import { IFieldConfig, FieldType } from "@src/components/fields/types";
 import withBasicCell from "../_withTableCell/withBasicCell";
 
-import DerivativeIcon from "assets/icons/Derivative";
+import DerivativeIcon from "@src/assets/icons/Derivative";
 import BasicCell from "../_BasicCell/BasicCellNull";
-import NullEditor from "components/Table/editors/NullEditor";
-import Settings from "./Settings";
+import NullEditor from "@src/components/Table/editors/NullEditor";
+import Settings, { settingsValidator } from "./Settings";
 
 export const config: IFieldConfig = {
   type: FieldType.derivative,
@@ -21,5 +21,6 @@ export const config: IFieldConfig = {
   TableEditor: NullEditor as any,
   SideDrawerField: BasicCell as any,
   settings: Settings,
+  settingsValidator,
 };
 export default config;

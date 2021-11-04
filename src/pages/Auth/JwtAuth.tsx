@@ -4,7 +4,7 @@ import { useSnackbar } from "notistack";
 import { TextField, Button } from "@mui/material";
 
 import { auth } from "../../firebase";
-import AuthLayout from "components/Auth/AuthLayout";
+import AuthLayout from "@src/components/Auth/AuthLayout";
 
 export default function JwtAuthPage() {
   const { enqueueSnackbar } = useSnackbar();

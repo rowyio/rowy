@@ -5,7 +5,7 @@ import DatePicker from "@mui/lab/DatePicker";
 import { TextField } from "@mui/material";
 
 import { transformValue, sanitizeValue } from "./utils";
-import { DATE_FORMAT } from "constants/dates";
+import { DATE_FORMAT } from "@src/constants/dates";
 import BasicCell from "./BasicCell";
 import { DateIcon } from ".";
 

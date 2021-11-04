@@ -2,12 +2,12 @@ import React, { Suspense, useState, useEffect } from "react";
 import { FormatterProps } from "react-data-grid";
 import { IBasicCellProps, IHeavyCellProps } from "../types";
 
-import ErrorBoundary from "components/ErrorBoundary";
-import CellValidation from "components/Table/CellValidation";
-import { useProjectContext } from "contexts/ProjectContext";
+import ErrorBoundary from "@src/components/ErrorBoundary";
+import CellValidation from "@src/components/Table/CellValidation";
+import { useProjectContext } from "@src/contexts/ProjectContext";
 
-import { FieldType } from "constants/fields";
-import { getCellValue } from "utils/fns";
+import { FieldType } from "@src/constants/fields";
+import { getCellValue } from "@src/utils/fns";
 
 /**
  * HOC to wrap table cell components.

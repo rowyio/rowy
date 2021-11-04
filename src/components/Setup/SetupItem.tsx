@@ -1,6 +1,7 @@
-import { Stack, CircularProgress, Typography } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import ArrowIcon from "@mui/icons-material/ArrowForward";
+import CircularProgressOptical from "@src/components/CircularProgressOptical";
 
 export interface ISetupItemProps {
   status: "complete" | "loading" | "incomplete";
@@ -25,17 +26,12 @@ export default function SetupItem({
       {status === "complete" ? (
         <CheckIcon aria-label="Item complete" color="action" />
       ) : status === "loading" ? (
-        <CircularProgress
-          id="progress"
-          size={20}
-          thickness={5}
-          sx={{ m: 0.25 }}
-        />
+        <CircularProgressOptical id="progress" size={20} sx={{ m: 0.25 }} />
       ) : (
         <ArrowIcon aria-label="Item" color="primary" />
       )}
 
-      <Stack spacing={2} alignItems="flex-start">
+      <Stack spacing={2} alignItems="flex-start" style={{ flexGrow: 1 }}>
         <Typography variant="inherit">{title}</Typography>
 
         {children}

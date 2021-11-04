@@ -11,9 +11,9 @@ import MultiSelect from "@rowy/multiselect";
 
 import { Button, DialogActions } from "@mui/material";
 
-import { useProjectContext } from "contexts/ProjectContext";
-import { FieldType } from "constants/fields";
-import { getFieldProp } from "components/fields";
+import { useProjectContext } from "@src/contexts/ProjectContext";
+import { FieldType } from "@src/constants/fields";
+import { getFieldProp } from "@src/components/fields";
 import { analytics } from "@src/analytics";
 
 const selectedColumnsJsonReducer =
@@ -126,7 +126,8 @@ export default function Export({ query, closeModal }) {
       ...doc.data(),
     }));
 
-    const fileName = `${tableState?.tablePath!}-${new Date().toISOString()}.${exportType}`;
+    const fileName = `${tableState?.config
+      .id!}-${new Date().toISOString()}.${exportType}`;
     switch (exportType) {
       case "csv":
         const csvData = docs.map((doc: any) =>

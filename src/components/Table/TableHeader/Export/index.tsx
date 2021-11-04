@@ -7,15 +7,15 @@ import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 
 import TableHeaderButton from "../TableHeaderButton";
-import ExportIcon from "assets/icons/Export";
+import ExportIcon from "@src/assets/icons/Export";
 
-import Modal from "components/Modal";
+import Modal from "@src/components/Modal";
 import ExportDetails from "./Export";
 import DownloadDetails from "./Download";
 
-import { useProjectContext } from "contexts/ProjectContext";
+import { useProjectContext } from "@src/contexts/ProjectContext";
 import { db } from "../../../../firebase";
-import { isCollectionGroup } from "utils/fns";
+import { isCollectionGroup } from "@src/utils/fns";
 
 const useStyles = makeStyles((theme) =>
   createStyles({

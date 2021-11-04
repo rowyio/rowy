@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useSnackbar } from "notistack";
 import createPersistedState from "use-persisted-state";
-import Navigation from "components/Navigation";
+import Navigation from "@src/components/Navigation";
 import ReactJson from "react-json-view";
 import {
   useTheme,
@@ -16,9 +16,9 @@ import {
   FormControlLabel,
   Typography,
 } from "@mui/material";
-import { useConfirmation } from "components/ConfirmationDialog";
+import { useConfirmation } from "@src/components/ConfirmationDialog";
 import { useProjectContext } from "@src/contexts/ProjectContext";
-import { runRoutes } from "constants/runRoutes";
+import { runRoutes } from "@src/constants/runRoutes";
 
 const useBodyCacheState = createPersistedState("__ROWY__RR_TEST_REQ_BODY");
 export default function TestView() {

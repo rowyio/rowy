@@ -1,7 +1,7 @@
 import { Fragment, useRef, useState } from "react";
 import { useSnackbar } from "notistack";
 
-import Navigation from "components/Navigation";
+import Navigation from "@src/components/Navigation";
 import {
   useTheme,
   Container,
@@ -38,11 +38,15 @@ import {
   LinearProgress,
 } from "@mui/material";
 import SparkIcon from "@mui/icons-material/OfflineBoltOutlined";
-import { useConfirmation } from "components/ConfirmationDialog";
+import { useConfirmation } from "@src/components/ConfirmationDialog";
 
 import SnackbarProgress, {
   ISnackbarProgressRef,
-} from "components/SnackbarProgress";
+} from "@src/components/SnackbarProgress";
+import CircularProgressOptical from "@src/components/CircularProgressOptical";
+
+import CodeEditor from "@src/components/CodeEditor";
+import DiffEditor from "@src/components/CodeEditor/DiffEditor";
 
 const typographyVariants = [
   "h1",
@@ -767,14 +771,7 @@ export default function TestView() {
           </Stack>
 
           <div>
-            <FormControlLabel
-              control={<Switch />}
-              label="Label"
-              sx={{
-                alignItems: "center",
-                "& .MuiFormControlLabel-label": { mt: 0 },
-              }}
-            />
+            <FormControlLabel control={<Switch />} label="Label" />
             <FormControlLabel
               control={<Switch size="medium" />}
               label="Label"
@@ -913,8 +910,30 @@ export default function TestView() {
             </Button>
           </Stack>
 
-          <CircularProgress />
+          <Stack spacing={1} direction="row" alignItems="flex-end">
+            {/* size 40 thickness 3.6 */}
+            <CircularProgress />
+            <CircularProgress size={30} thickness={4.2} />
+            <CircularProgress size={24} thickness={4.8} />
+            <CircularProgress size={20} thickness={5.4} />
+            <CircularProgress size={16} thickness={6.3} />
+            <CircularProgress size={12} thickness={7.8} />
+          </Stack>
+
+          <Stack spacing={1} direction="row" alignItems="flex-end">
+            {/* size 40 thickness 3.6 */}
+            <CircularProgressOptical />
+            <CircularProgressOptical size={30} />
+            <CircularProgressOptical size={24} />
+            <CircularProgressOptical size={20} />
+            <CircularProgressOptical size={16} />
+            <CircularProgressOptical size={12} />
+          </Stack>
+
           <LinearProgress />
+
+          <CodeEditor value={`x\n`} />
+          <DiffEditor original={`x\n`} modified="y" />
         </Stack>
       </Container>
     </Navigation>

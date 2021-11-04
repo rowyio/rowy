@@ -1,10 +1,10 @@
 import { lazy } from "react";
-import { IFieldConfig, FieldType } from "components/fields/types";
+import { IFieldConfig, FieldType } from "@src/components/fields/types";
 import withHeavyCell from "../_withTableCell/withHeavyCell";
 
-import SliderIcon from "assets/icons/Slider";
+import SliderIcon from "@src/assets/icons/Slider";
 import BasicCell from "../_BasicCell/BasicCellNull";
-import withSideDrawerEditor from "components/Table/editors/withSideDrawerEditor";
+import withSideDrawerEditor from "@src/components/Table/editors/withSideDrawerEditor";
 import { filterOperators } from "../Number/Filter";
 
 const TableCell = lazy(

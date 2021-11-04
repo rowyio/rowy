@@ -40,7 +40,7 @@ export interface IExtension {
   active: boolean;
   lastEditor: IExtensionEditor;
 
-  // ft build fields
+  // build fields
   triggers: ExtensionTrigger[];
   type: ExtensionType;
   requiredFields: string[];

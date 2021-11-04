@@ -9,13 +9,13 @@ import { useSnackbar } from "notistack";
 
 import Button from "@mui/material/Button";
 
-import { useAppContext } from "contexts/AppContext";
+import { useAppContext } from "@src/contexts/AppContext";
 import { TableFilter, TableOrder } from ".";
 import {
   isCollectionGroup,
   generateSmallerId,
   missingFieldsReducer,
-} from "utils/fns";
+} from "@src/utils/fns";
 
 // Safety parameter sets the upper limit of number of docs fetched by this hook
 export const CAP = 1000;
@@ -231,12 +231,12 @@ const useTableData = () => {
    *  @param rowIndex local position
    *  @param documentId firestore document id
    */
-  const deleteRow = (rowId: string) => {
+  const deleteRow = async (rowId: string, onSuccess: () => void) => {
     // Remove row locally
     rowsDispatch({ type: "delete", rowId });
     // Delete document
     try {
-      db.collection(tableState.path).doc(rowId).delete();
+      await db.collection(tableState.path).doc(rowId).delete().then(onSuccess);
     } catch (error: any) {
       console.log(error);
       if (error.code === "permission-denied") {
@@ -264,17 +264,26 @@ const useTableData = () => {
   /**  creating new document/row
    *  @param data(optional: default will create empty row)
    */
-  const addRow = async (data: any, requiredFields: string[]) => {
+  const addRow = (
+    data: any,
+    requiredFields: string[],
+    onSuccess: (rowId: string) => void
+  ) => {
     const missingRequiredFields = requiredFields
       ? requiredFields.reduce(missingFieldsReducer(data), [])
       : [];
 
     const { path } = tableState;
-    const newId = generateSmallerId(rows[0]?.id ?? "zzzzzzzzzzzzzzzzzzzzzzzz");
+    const newId = generateSmallerId(rows[0]?.id ?? "zzzzzzzzzzzzzzzzzzzz");
 
     if (missingRequiredFields.length === 0) {
       try {
-        await db.collection(path).doc(newId).set(data, { merge: true });
+        db.collection(path)
+          .doc(newId)
+          .set(data, { merge: true })
+          .then(() => {
+            onSuccess(newId);
+          });
       } catch (error: any) {
         if (error.code === "permission-denied") {
           enqueueSnackbar("You do not have the permissions to add new rows.", {

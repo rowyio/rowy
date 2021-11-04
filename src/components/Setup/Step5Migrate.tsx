@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ISetupStepBodyProps } from "pages/Setup";
+import { ISetupStepBodyProps } from "@src/pages/Setup";
 
 import { Typography, Button } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -7,10 +7,10 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import SetupItem from "./SetupItem";
 
 import { name } from "@root/package.json";
-import { useAppContext } from "contexts/AppContext";
-import { CONFIG } from "config/dbPaths";
-import { rowyRun } from "utils/rowyRun";
-import { runRoutes } from "constants/runRoutes";
+import { useAppContext } from "@src/contexts/AppContext";
+import { CONFIG } from "@src/config/dbPaths";
+import { rowyRun } from "@src/utils/rowyRun";
+import { runRoutes } from "@src/constants/runRoutes";
 
 export default function Step5Migrate({
   rowyRunUrl,

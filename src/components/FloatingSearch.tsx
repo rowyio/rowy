@@ -7,8 +7,8 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 
-import SlideTransition from "components/Modal/SlideTransition";
-import { APP_BAR_HEIGHT } from "components/Navigation";
+import SlideTransition from "@src/components/Modal/SlideTransition";
+import { APP_BAR_HEIGHT } from "@src/components/Navigation";
 
 export interface IFloatingSearchProps extends Partial<FilledTextFieldProps> {
   label: string;

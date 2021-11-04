@@ -5,7 +5,7 @@ import { Controller } from "react-hook-form";
 import { format } from "date-fns";
 
 import { useDropzone } from "react-dropzone";
-import useUploader, { FileValue } from "hooks/useTable/useUploader";
+import useUploader, { FileValue } from "@src/hooks/useTable/useUploader";
 
 import { makeStyles, createStyles } from "@mui/styles";
 import {
@@ -15,16 +15,16 @@ import {
   Grid,
   Tooltip,
   Chip,
-  CircularProgress,
 } from "@mui/material";
-import UploadIcon from "assets/icons/Upload";
+import UploadIcon from "@src/assets/icons/Upload";
 import { FileIcon } from ".";
 
-import Confirmation from "components/Confirmation";
-import { DATE_TIME_FORMAT } from "constants/dates";
+import Confirmation from "@src/components/Confirmation";
+import CircularProgressOptical from "@src/components/CircularProgressOptical";
+import { DATE_TIME_FORMAT } from "@src/constants/dates";
 
-import { useFieldStyles } from "components/SideDrawer/Form/utils";
-import { useProjectContext } from "contexts/ProjectContext";
+import { useFieldStyles } from "@src/components/SideDrawer/Form/utils";
+import { useProjectContext } from "@src/contexts/ProjectContext";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -148,9 +148,7 @@ function ControlledFileUploader({
             <Chip
               icon={<FileIcon />}
               label={localFile}
-              deleteIcon={
-                <CircularProgress size={20} thickness={4.5} color="inherit" />
-              }
+              deleteIcon={<CircularProgressOptical size={20} color="inherit" />}
             />
           </Grid>
         )}

@@ -7,8 +7,8 @@ import _pickBy from "lodash/pickBy";
 import { Control, UseFormReturn, useWatch } from "react-hook-form";
 import { Values } from "./utils";
 
-import { useProjectContext } from "contexts/ProjectContext";
-import { TableState } from "hooks/useTable";
+import { useProjectContext } from "@src/contexts/ProjectContext";
+import { TableState } from "@src/hooks/useTable";
 
 export interface IAutosaveProps {
   control: Control;

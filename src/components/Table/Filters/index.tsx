@@ -17,16 +17,16 @@ import {
 import FilterIcon from "@mui/icons-material/FilterList";
 import CloseIcon from "@mui/icons-material/Close";
 
-import ButtonWithStatus from "components/ButtonWithStatus";
-import FormAutosave from "components/Table/ColumnMenu/FieldSettings/FormAutosave";
-import FieldSkeleton from "components/SideDrawer/Form/FieldSkeleton";
+import ButtonWithStatus from "@src/components/ButtonWithStatus";
+import FormAutosave from "@src/components/Table/ColumnMenu/FieldSettings/FormAutosave";
+import FieldSkeleton from "@src/components/SideDrawer/Form/FieldSkeleton";
 
-import { FieldType } from "constants/fields";
-import { TableFilter } from "hooks/useTable";
-import { useProjectContext } from "contexts/ProjectContext";
-import { useAppContext } from "contexts/AppContext";
-import { DocActions } from "hooks/useDoc";
-import { getFieldProp } from "components/fields";
+import { FieldType } from "@src/constants/fields";
+import { TableFilter } from "@src/hooks/useTable";
+import { useProjectContext } from "@src/contexts/ProjectContext";
+import { useAppContext } from "@src/contexts/AppContext";
+import { DocActions } from "@src/hooks/useDoc";
+import { getFieldProp } from "@src/components/fields";
 
 const getType = (column) =>
   column.type === FieldType.derivative
@@ -39,15 +39,15 @@ export default function Filters() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   useEffect(() => {
-    if (userDoc.state.doc && tableState?.tablePath) {
-      if (userDoc.state.doc.tables?.[tableState?.tablePath]?.filters) {
+    if (userDoc.state.doc && tableState?.config.id) {
+      if (userDoc.state.doc.tables?.[tableState?.config.id]?.filters) {
         tableActions?.table.filter(
-          userDoc.state.doc.tables[tableState?.tablePath].filters
+          userDoc.state.doc.tables[tableState?.config.id].filters
         );
         tableActions?.table.orderBy();
       }
     }
-  }, [userDoc.state, tableState?.tablePath]);
+  }, [userDoc.state, tableState?.config.id]);
 
   const filterColumns = _sortBy(Object.values(tableState!.columns), "index")
     .filter((c) => getFieldProp("filter", c.type))
@@ -100,7 +100,7 @@ export default function Filters() {
     userDoc.dispatch({
       action: DocActions.update,
       data: {
-        tables: { [`${tableState?.tablePath}`]: { filters } },
+        tables: { [`${tableState?.config.id}`]: { filters } },
       },
     });
   };
@@ -257,7 +257,7 @@ export default function Filters() {
                         control,
                         docRef: {},
                         disabled: false,
-                        handleChange: () => {},
+                        onChange: () => {},
                       })}
                   </Suspense>
                 </form>

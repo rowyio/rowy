@@ -2,17 +2,18 @@ import { useState } from "react";
 import _get from "lodash/get";
 import { useSnackbar } from "notistack";
 
-import { Fab, FabProps, CircularProgress } from "@mui/material";
+import { Fab, FabProps } from "@mui/material";
 import PlayIcon from "@mui/icons-material/PlayArrow";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import UndoIcon from "@mui/icons-material/Undo";
+import CircularProgressOptical from "@src/components/CircularProgressOptical";
 
-import { useProjectContext } from "contexts/ProjectContext";
+import { useProjectContext } from "@src/contexts/ProjectContext";
 import { functions } from "@src/firebase";
-import { formatPath } from "utils/fns";
-import { useConfirmation } from "components/ConfirmationDialog";
+import { formatPath } from "@src/utils/fns";
+import { useConfirmation } from "@src/components/ConfirmationDialog";
 import { useActionParams } from "./FormDialog/Context";
-import { runRoutes } from "constants/runRoutes";
+import { runRoutes } from "@src/constants/runRoutes";
 
 const replacer = (data: any) => (m: string, key: string) => {
   const objKey = key.split(":")[0];
@@ -53,7 +54,6 @@ export default function ActionFab({
   const { tableState, rowyRun } = useProjectContext();
   const { ref } = row;
   const { config } = column as any;
-
   const action = !value
     ? "run"
     : value.undo
@@ -70,7 +70,7 @@ export default function ActionFab({
     ref: { path: ref.path },
     column: { ...column, editor: undefined },
     action,
-    schemaDocPath: formatPath(tableState?.tablePath ?? ""),
+    schemaDocPath: tableState?.config.tableConfig.path,
     actionParams,
   });
 
@@ -159,7 +159,7 @@ export default function ActionFab({
       {...props}
     >
       {isRunning ? (
-        <CircularProgress color="secondary" size={16} thickness={5.6} />
+        <CircularProgressOptical color="secondary" size={16} />
       ) : (
         getStateIcon(actionState)
       )}

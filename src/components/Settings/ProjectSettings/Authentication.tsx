@@ -4,9 +4,9 @@ import _startCase from "lodash/startCase";
 
 import MultiSelect from "@rowy/multiselect";
 import { Typography, Link } from "@mui/material";
-import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
+import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
-import { IProjectSettingsChildProps } from "pages/Settings/ProjectSettings";
+import { IProjectSettingsChildProps } from "@src/pages/Settings/ProjectSettings";
 
 export default function Authentication({
   publicSettings,

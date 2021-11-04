@@ -26,10 +26,10 @@ export type TableState = {
     id: string;
     rowHeight: number;
     tableConfig: any;
-    webhooks: any;
     sparks: string;
     compiledExtension: string;
     extensionObjects?: any[];
+    webhooks?: any[];
     functionConfigPath?: string;
   };
   columns: any[];

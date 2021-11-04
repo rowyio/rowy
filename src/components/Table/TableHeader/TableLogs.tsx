@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import useRouter from "hooks/useRouter";
-import useCollection from "hooks/useCollection";
-import { useProjectContext } from "contexts/ProjectContext";
+import useRouter from "@src/hooks/useRouter";
+import useCollection from "@src/hooks/useCollection";
+import { useProjectContext } from "@src/contexts/ProjectContext";
 import useStateRef from "react-usestateref";
-import { useSnackLogContext } from "contexts/SnackLogContext";
-import { isCollectionGroup } from "utils/fns";
+import { useSnackLogContext } from "@src/contexts/SnackLogContext";
+import { isCollectionGroup } from "@src/utils/fns";
 import _throttle from "lodash/throttle";
 import { format } from "date-fns";
 import moment from "moment";
@@ -12,7 +12,6 @@ import moment from "moment";
 import {
   Chip,
   Stack,
-  CircularProgress,
   Typography,
   Box,
   Tabs,
@@ -20,9 +19,9 @@ import {
   IconButton,
   Button,
 } from "@mui/material";
-import Modal from "components/Modal";
+import Modal from "@src/components/Modal";
 import { makeStyles, createStyles } from "@mui/styles";
-import LogsIcon from "assets/icons/CloudLogs";
+import LogsIcon from "@src/assets/icons/CloudLogs";
 import SuccessIcon from "@mui/icons-material/CheckCircle";
 import FailIcon from "@mui/icons-material/Cancel";
 import ExpandIcon from "@mui/icons-material/ExpandLess";
@@ -31,12 +30,17 @@ import OpenIcon from "@mui/icons-material/OpenInNew";
 import CloseIcon from "@mui/icons-material/Close";
 import TableHeaderButton from "./TableHeaderButton";
 import Ansi from "ansi-to-react";
-import EmptyState from "components/EmptyState";
+import EmptyState from "@src/components/EmptyState";
+import CircularProgressOptical from "@src/components/CircularProgressOptical";
 
 import PropTypes from "prop-types";
-import routes from "constants/routes";
-import { DATE_TIME_FORMAT } from "constants/dates";
-import { SETTINGS, TABLE_SCHEMAS, TABLE_GROUP_SCHEMAS } from "config/dbPaths";
+import routes from "@src/constants/routes";
+import { DATE_TIME_FORMAT } from "@src/constants/dates";
+import {
+  SETTINGS,
+  TABLE_SCHEMAS,
+  TABLE_GROUP_SCHEMAS,
+} from "@src/config/dbPaths";
 
 function a11yProps(index) {
   return {
@@ -244,7 +248,7 @@ function LogPanel(props) {
           })}
           <div ref={liveStreamingRef} id="live-stream-target">
             {status === "BUILDING" && (
-              <CircularProgress
+              <CircularProgressOptical
                 className={classes.logPanelProgress}
                 size={30}
               />
@@ -371,7 +375,7 @@ function SnackLog({ log, onClose, onOpenPanel }) {
             })}
             <div ref={liveStreamingRef} id="live-stream-target-snack">
               {status === "BUILDING" && (
-                <CircularProgress
+                <CircularProgressOptical
                   className={classes.logPanelProgress}
                   size={30}
                 />
@@ -427,10 +431,9 @@ export default function TableLogs() {
           <>
             <LogsIcon />
             {latestStatus === "BUILDING" && (
-              <CircularProgress
+              <CircularProgressOptical
                 className={classes.toolbarStatusIcon}
                 size={12}
-                thickness={6}
                 style={{ padding: 1 }}
               />
             )}
@@ -499,7 +502,7 @@ export default function TableLogs() {
                             style={{ textAlign: "left" }}
                           >
                             {logEntry.status === "BUILDING" && (
-                              <CircularProgress size={24} />
+                              <CircularProgressOptical size={24} />
                             )}
                             {logEntry.status === "SUCCESS" && <SuccessIcon />}
                             {logEntry.status === "FAIL" && <FailIcon />}

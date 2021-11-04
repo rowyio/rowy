@@ -11,12 +11,12 @@ import {
   TextField,
 } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
-import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
+import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
-import { IProjectSettingsChildProps } from "pages/Settings/ProjectSettings";
-import { EXTERNAL_LINKS } from "constants/externalLinks";
+import { IProjectSettingsChildProps } from "@src/pages/Settings/ProjectSettings";
+import { EXTERNAL_LINKS } from "@src/constants/externalLinks";
 import { name } from "@root/package.json";
-import { runRoutes } from "constants/runRoutes";
+import { runRoutes } from "@src/constants/runRoutes";
 
 const useLastCheckedUpdateState = createPersistedState(
   "__ROWY__RUN_LAST_CHECKED_UPDATE"

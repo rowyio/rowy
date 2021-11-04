@@ -9,8 +9,8 @@ import Step2Rename from "./Step2Rename";
 import Step3Types from "./Step3Types";
 import Step4Preview from "./Step4Preview";
 
-import { ColumnConfig } from "hooks/useTable/useTableConfig";
-import { useProjectContext } from "contexts/ProjectContext";
+import { ColumnConfig } from "@src/hooks/useTable/useTableConfig";
+import { useProjectContext } from "@src/contexts/ProjectContext";
 
 export type TableColumnsConfig = { [key: string]: ColumnConfig };
 

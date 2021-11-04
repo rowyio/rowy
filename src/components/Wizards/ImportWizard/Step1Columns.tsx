@@ -21,11 +21,11 @@ import DragHandleIcon from "@mui/icons-material/DragHandle";
 import { IStepProps } from ".";
 import FadeList from "../ScrollableList";
 import Column from "../Column";
-import EmptyState from "components/EmptyState";
-import AddColumnIcon from "assets/icons/AddColumn";
+import EmptyState from "@src/components/EmptyState";
+import AddColumnIcon from "@src/assets/icons/AddColumn";
 
-import { useProjectContext } from "contexts/ProjectContext";
-import { FieldType } from "constants/fields";
+import { useProjectContext } from "@src/contexts/ProjectContext";
+import { FieldType } from "@src/constants/fields";
 import { suggestType } from "./utils";
 
 const useStyles = makeStyles((theme) =>

@@ -21,7 +21,7 @@ import SearchIcon from "@mui/icons-material/Search";
 
 import { IConnectServiceSelectProps } from ".";
 import useStyles from "./styles";
-import Loading from "components/Loading";
+import Loading from "@src/components/Loading";
 
 export interface IPopupContentsProps
   extends Omit<IConnectServiceSelectProps, "className" | "TextFieldProps"> {}

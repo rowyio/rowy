@@ -2,11 +2,11 @@ import { TransitionGroup } from "react-transition-group";
 
 import { Box, Grid, Collapse } from "@mui/material";
 
-import SectionHeading from "components/SectionHeading";
+import SectionHeading from "@src/components/SectionHeading";
 import TableCard from "./TableCard";
-import SlideTransition from "components/Modal/SlideTransition";
+import SlideTransition from "@src/components/Modal/SlideTransition";
 
-import { Table } from "contexts/ProjectContext";
+import { Table } from "@src/contexts/ProjectContext";
 
 export interface ITableGridProps {
   sections: Record<string, Table[]>;

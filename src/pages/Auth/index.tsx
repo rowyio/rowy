@@ -1,8 +1,8 @@
 import { useLocation } from "react-router-dom";
 import queryString from "query-string";
 
-import AuthLayout from "components/Auth/AuthLayout";
-import FirebaseUi from "components/Auth/FirebaseUi";
+import AuthLayout from "@src/components/Auth/AuthLayout";
+import FirebaseUi from "@src/components/Auth/FirebaseUi";
 
 export default function AuthPage() {
   const { search } = useLocation();
