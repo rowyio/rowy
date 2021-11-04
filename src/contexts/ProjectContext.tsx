@@ -16,10 +16,10 @@ import { ColumnMenuRef } from "@src/components/Table/ColumnMenu";
 import { ImportWizardRef } from "@src/components/Wizards/ImportWizard";
 
 import { rowyRun, IRowyRunRequestProps } from "@src/utils/rowyRun";
-import { FieldType } from "@src/constants/fields";
 import { rowyUser } from "@src/utils/fns";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
-
+import { runRoutes } from "@src/constants/runRoutes";
+import semver from "semver";
 export type Table = {
   id: string;
   collection: string;
@@ -34,12 +34,16 @@ export type Table = {
 };
 
 interface IProjectContext {
+  settings: {
+    rowyRunUrl?: string;
+  };
   tables: Table[];
   table: Table;
   roles: string[];
   tableState: TableState;
   tableActions: TableActions;
   addRow: (data?: Record<string, any>, ignoreRequiredFields?: boolean) => void;
+  deleteRow: (rowId) => void;
   updateCell: (
     ref: firebase.firestore.DocumentReference,
     fieldName: string,
@@ -71,6 +75,10 @@ interface IProjectContext {
     deleteTable: (id: string) => void;
   };
 
+  compatibleRowyRunVersion: (args: {
+    minVersion?: string;
+    maxVersion?: string;
+  }) => boolean;
   // A ref to the data grid. Contains data grid functions
   dataGridRef: React.RefObject<DataGridHandle>;
   // A ref to the side drawer state. Prevents unnecessary re-renders
@@ -98,6 +106,17 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
   const [tables, setTables] = useState<IProjectContext["tables"]>();
   const [settings, settingsActions] = useSettings();
   const table = _find(tables, (table) => table.id === tableState.config.id);
+
+  const [rowyRunVersion, setRowyRunVersion] = useState("");
+  useEffect(() => {
+    if (settings?.doc?.rowyRunUrl) {
+      _rowyRun({
+        route: runRoutes.version,
+      }).then((resp) => {
+        if (resp.version) setRowyRunVersion(resp.version);
+      });
+    }
+  }, [settings?.doc?.rowyRunUrl]);
 
   useEffect(() => {
     const { tables } = settings;
@@ -133,7 +152,31 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
         : [],
     [tables]
   );
-
+  const auditChange = (
+    type: "ADD_ROW" | "UPDATE_CELL" | "DELETE_ROW",
+    rowId,
+    data
+  ) => {
+    if (
+      table?.audit !== false &&
+      compatibleRowyRunVersion({ minVersion: "1.1.1" })
+    ) {
+      _rowyRun({
+        route: runRoutes.auditChange,
+        body: {
+          rowyUser: rowyUser(currentUser!),
+          type,
+          ref: {
+            rowPath: tableState.tablePath,
+            rowId,
+            tableId: table?.id,
+            collectionPath: tableState.tablePath,
+          },
+          data,
+        },
+      });
+    }
+  };
   const addRow: IProjectContext["addRow"] = (data, ignoreRequiredFields) => {
     const valuesFromFilter = tableState.filters.reduce((acc, curr) => {
       if (curr.operator === "==") {
@@ -170,7 +213,8 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
 
     tableActions.row.add(
       { ...valuesFromFilter, ...initialData, ...data },
-      ignoreRequiredFields ? [] : requiredFields
+      ignoreRequiredFields ? [] : requiredFields,
+      (rowId: string) => auditChange("ADD_ROW", rowId, {})
     );
   };
 
@@ -190,11 +234,11 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
         { updatedField: fieldName }
       );
     }
-
     tableActions.row.update(
       ref,
       update,
       () => {
+        auditChange("UPDATE_CELL", ref.id, { updatedField: fieldName });
         if (onSuccess) onSuccess(ref, fieldName, value);
       },
       (error) => {
@@ -209,6 +253,10 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
         }
       }
     );
+  };
+
+  const deleteRow = (rowId) => {
+    tableActions.row.delete(rowId, () => auditChange("DELETE_ROW", rowId, {}));
   };
   // rowyRun access
   const _rowyRun: IProjectContext["rowyRun"] = async (args) => {
@@ -237,6 +285,20 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
     }
   };
 
+  const compatibleRowyRunVersion = ({
+    minVersion,
+    maxVersion,
+  }: {
+    minVersion?: string;
+    maxVersion?: string;
+  }) => {
+    // example: "1.0.0", "1.0.0-beta.1", "1.0.0-rc.1+1"
+    const version = rowyRunVersion.split("-")[0];
+    if (!version) return false;
+    if (minVersion && semver.lt(version, minVersion)) return false;
+    if (maxVersion && semver.gt(version, maxVersion)) return false;
+    return true;
+  };
   // A ref to the data grid. Contains data grid functions
   const dataGridRef = useRef<DataGridHandle>(null);
   const sideDrawerRef = useRef<SideDrawerRef>();
@@ -250,7 +312,9 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
         tableActions,
         addRow,
         updateCell,
+        deleteRow,
         settingsActions,
+        settings: settings.doc,
         roles,
         tables,
         table,
@@ -259,6 +323,7 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
         columnMenuRef,
         importWizardRef,
         rowyRun: _rowyRun,
+        compatibleRowyRunVersion,
       }}
     >
       {children}

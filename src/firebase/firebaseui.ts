@@ -7,14 +7,6 @@ import githubLogo from "@src/assets/logos/github.svg";
 import appleLogo from "@src/assets/logos/apple.svg";
 import yahooLogo from "@src/assets/logos/yahoo.svg";
 
-import { mdiGoogle } from "@mdi/js";
-console.log(
-  `data:image/svg+xml;utf8,` +
-    encodeURIComponent(
-      `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="${mdiGoogle}" /></svg>`
-    )
-);
-
 export const authOptions = {
   google: {
     provider: firebase.auth.GoogleAuthProvider.PROVIDER_ID,
