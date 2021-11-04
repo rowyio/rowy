@@ -9898,6 +9898,11 @@ join-path@^1.1.1:
     url-join "0.0.1"
     valid-url "^1"
 
+jotai@^1.4.2:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/jotai/-/jotai-1.4.2.tgz#0747581840c82ec0862d4c15ee0f7d59246ed46e"
+  integrity sha512-/NcK8DGvfGcVCqoOvjWIo8/KaUYtadXEl+6uxLiQJUxbyiqCtXkhAdrugk5jmpAFXXD2y6fNDw2Ln7h0EuY+ng==
+
 jpeg-js@^0.4.2:
   version "0.4.3"
   resolved "https://registry.yarnpkg.com/jpeg-js/-/jpeg-js-0.4.3.tgz#6158e09f1983ad773813704be80680550eff977b"

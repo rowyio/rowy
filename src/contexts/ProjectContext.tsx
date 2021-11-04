@@ -80,9 +80,9 @@ interface IProjectContext {
   // A ref ot the import wizard. Prevents unnecessary re-renders
   importWizardRef: React.MutableRefObject<ImportWizardRef | undefined>;
 
-  rowyRun: (
+  rowyRun: <T = any>(
     args: Omit<IRowyRunRequestProps, "rowyRunUrl" | "authToken">
-  ) => Promise<any>;
+  ) => Promise<T>;
 }
 
 const ProjectContext = React.createContext<Partial<IProjectContext>>({});

@@ -1,15 +1,21 @@
-import { useState } from "react";
-
-import LogsIcon from "@src/assets/icons/CloudLogs";
+import { useAtom } from "jotai";
+import { atomWithHash } from "jotai/utils";
 
 import TableHeaderButton from "../TableHeaderButton";
-import Modal from "@src/components/Modal";
-import LogItem from "./LogItem";
+import LogsIcon from "@src/assets/icons/CloudLogs";
+import CloudLogsModal from "./CloudLogsModal";
+
+const modalAtom = atomWithHash("modal", "");
+// const modalStateAtom = atomWithHash<Record<string, any>>("modalState", {});
 
 export interface ICloudLogsProps {}
 
 export default function CloudLogs(props: ICloudLogsProps) {
-  const [open, setOpen] = useState(false);
+  const [modal, setModal] = useAtom(modalAtom);
+  const open = modal === "cloudLogs";
+  const setOpen = (open: boolean) => setModal(open ? "cloudLogs" : "");
+
+  // const [modalState, setModalState] = useAtom(modalStateAtom);
 
   return (
     <>
@@ -20,16 +26,7 @@ export default function CloudLogs(props: ICloudLogsProps) {
       />
 
       {open && (
-        <Modal
-          onClose={() => setOpen(false)}
-          maxWidth="xl"
-          fullWidth
-          fullHeight
-          title="Cloud logs"
-        >
-          <LogItem />
-          <LogItem />
-        </Modal>
+        <CloudLogsModal onClose={() => setOpen(false)} title="Cloud logs" />
       )}
     </>
   );
