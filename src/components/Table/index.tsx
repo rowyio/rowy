@@ -20,7 +20,7 @@ import ColumnHeader from "./ColumnHeader";
 import ColumnMenu from "./ColumnMenu";
 import FinalColumnHeader from "./FinalColumnHeader";
 import FinalColumn from "./formatters/FinalColumn";
-// import BulkActions from "./BulkActions";
+import BulkActions from "./BulkActions";
 
 import { getFieldProp } from "@src/components/fields";
 import { FieldType } from "@src/constants/fields";
@@ -38,7 +38,7 @@ export type TableColumn = Column<any> & {
 };
 
 const rowKeyGetter = (row: any) => row.id;
-// const SelectColumn = { ..._SelectColumn, width: 42, maxWidth: 42 };
+const SelectColumn = { ..._SelectColumn, width: 42, maxWidth: 42 };
 
 export default function Table() {
   const classes = useStyles();
@@ -93,8 +93,7 @@ export default function Table() {
         .filter((column) => !userDocHiddenFields.includes(column.key));
 
       setColumns([
-        // TODO: ENABLE ONCE BULK ACTIONS READY
-        // SelectColumn,
+        SelectColumn,
         ..._columns,
         {
           isNew: true,
@@ -246,14 +245,14 @@ export default function Table() {
       </div>
 
       <ColumnMenu />
-      {/* <BulkActions
+      <BulkActions
         selectedRows={selectedRows}
         columns={columns}
         clearSelection={() => {
           setSelectedRowsSet(new Set());
           setSelectedRows([]);
         }}
-      /> */}
+      />
     </>
   );
 }

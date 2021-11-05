@@ -1,6 +1,6 @@
 import { useState } from "react";
 import _find from "lodash/find";
-// import { useSnackbar } from "notistack";
+import { useSnackbar } from "notistack";
 
 import { makeStyles, createStyles } from "@mui/styles";
 import {
@@ -13,7 +13,9 @@ import {
   Typography,
   TextField,
   MenuItem,
+  Button,
 } from "@mui/material";
+import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
 import CopyCellsIcon from "@src/assets/icons/CopyCells";
 import ClearSelectionIcon from "@mui/icons-material/IndeterminateCheckBox";
@@ -23,6 +25,10 @@ import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import { useConfirmation } from "@src/components/ConfirmationDialog/Context";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import { formatPath } from "@src/utils/fns";
+import routes from "@src/constants/routes";
+import { runRoutes } from "@src/constants/runRoutes";
+import { config } from "process";
+import { WIKI_LINKS } from "@src/constants/externalLinks";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -82,8 +88,6 @@ const useStyles = makeStyles((theme) =>
     },
     dropdownLabel: {
       left: theme.spacing(1.5),
-      top: "50%",
-      transform: "translateY(-50%) !important",
 
       ...theme.typography.body1,
     },
@@ -91,20 +95,29 @@ const useStyles = makeStyles((theme) =>
       "$dropdownLabel&": { color: theme.palette.text.primary },
     },
     select: {
-      paddingTop: "6px !important",
-      paddingBottom: "7px !important",
+      // paddingTop: "6px !important",
+      // paddingBottom: "7px !important",
     },
-    dropdownMenu: { marginTop: theme.spacing(-3) },
+    dropdownMenu: {
+      // marginTop: theme.spacing(-3)
+    },
   })
 );
 
 export default function BulkActions({ selectedRows, columns, clearSelection }) {
   const classes = useStyles();
   const [, setLoading] = useState<Boolean>();
-  const { tableActions, addRow, tableState } = useProjectContext();
+  const {
+    tableActions,
+    addRow,
+    tableState,
+    deleteRow,
+    rowyRun,
+    compatibleRowyRunVersion,
+  } = useProjectContext();
 
   const { requestConfirmation } = useConfirmation();
-  // const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
   const actionColumns: { name: string; key: string; config: any }[] = columns
     .filter((column) => column.type === "ACTION")
@@ -128,55 +141,75 @@ export default function BulkActions({ selectedRows, columns, clearSelection }) {
     clearSelection();
   };
   const handleDelete = () => {
-    selectedRows.forEach((row) => row.ref.delete());
+    selectedRows.forEach((row) => deleteRow!(row.ref.id));
     clearSelection();
   };
 
-  const executeAction = async (key: string, actionType: string) => {
-    const actionColumn = _find(actionColumns, { key });
-    if (!actionColumn) return;
-    const callableName = actionColumn.config.callableName ?? "actionScript";
-
-    const calls = selectedRows.map((row) => {
+  const handleActionScript = async (actionColumn, actionType) => {
+    const requiredVersion = "1.2.0";
+    if (!compatibleRowyRunVersion!({ minVersion: requiredVersion })) {
+      enqueueSnackbar(
+        `Upgrade your Rowy run to ${requiredVersion} or above, to run bulk actions`,
+        {
+          variant: "warning",
+          action: (
+            <Button
+              href={WIKI_LINKS.rowyRun}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Docs
+              <InlineOpenInNewIcon />
+            </Button>
+          ),
+        }
+      );
+      return;
+    }
+    const refs = selectedRows.map((row) => {
       const { ref } = row;
-      const data = {
-        ref: {
-          path: ref.path,
-          id: ref.id,
-          tablePath: window.location.pathname,
-        },
-        column: actionColumn,
-        action: actionType,
-        schemaDocPath: formatPath(tableState?.config.id ?? ""),
-        actionParams: {},
+      return {
+        path: ref.path,
+        id: ref.id,
+        tablePath: window.location.pathname,
       };
-      return true;
-      //   cloudFunction(
-      //     callableName,
-      //     data,
-      //     async (response) => {
-      //       const { message, cellValue, success } = response.data;
-      //       // setIsRunning(false);
-      //       enqueueSnackbar(JSON.stringify(message), {
-      //         variant: success ? "success" : "error",
-      //       });
-      //       if (cellValue && cellValue.status) {
-      //         return ref.update({ [actionColumn.key]: cellValue });
-      //       }
-      //     },
-      //     (error) => {
-      //       console.error("ERROR", callableName, error);
-      //       //setIsRunning(false);
-      //       enqueueSnackbar(JSON.stringify(error), { variant: "error" });
-      //     }
-      //   );
     });
+    const data = {
+      refs,
+      column: actionColumn,
+      action: actionType,
+      schemaDocPath: formatPath(tableState?.config.id ?? ""),
+      actionParams: {},
+    };
     setLoading(true);
-    const result = await Promise.all(calls);
-    await Promise.all(result);
-    console.log(result);
+    const result = await rowyRun!({
+      route: runRoutes.actionScript,
+      body: data,
+    });
+    Array.isArray(result)
+      ? result.map((res) =>
+          enqueueSnackbar(res.message, {
+            variant: res.success ? "success" : "error",
+          })
+        )
+      : enqueueSnackbar(result.message, {
+          variant: result.success ? "success" : "error",
+        });
     setLoading(false);
     clearSelection();
+  };
+  const executeAction = async (key: string, actionType: string) => {
+    const actionColumn = _find(actionColumns, { key });
+    console.log(actionColumn);
+    if (!actionColumn) return;
+    console.log(actionColumn);
+    if (actionColumn.config.isActionScript) {
+      handleActionScript(actionColumn, actionType);
+    } else {
+      enqueueSnackbar("Callable actions not implemented yet", {
+        variant: "warning",
+      });
+    }
   };
 
   const numSelected = selectedRows.length;
@@ -210,6 +243,11 @@ export default function BulkActions({ selectedRows, columns, clearSelection }) {
             <Grid item className={classes.spacer} />
 
             <Grid item>
+              {/* <Typography>
+                {`${actionColumns.length} action${
+                  actionColumns.length !== 1 ? "s" : ""
+                }`}
+              </Typography> */}
               <TextField
                 select
                 variant="filled"
