@@ -12141,6 +12141,11 @@ path-type@^4.0.0:
   resolved "https://registry.yarnpkg.com/path-type/-/path-type-4.0.0.tgz#84ed01c0a7ba380afe09d90a8c180dcd9d03043b"
   integrity sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==
 
+pb-util@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/pb-util/-/pb-util-1.0.1.tgz#1df63f3a7f7c6ee74bfb87f39df3420dbe0707eb"
+  integrity sha512-cMm1ERTOTYb4LxAsLRN0oxhYTL3GivVItrBOiU4WSFcvaeynU/crNtHplNEGQIimSbl3/i7hxWflFvsx42tUVw==
+
 pbkdf2@^3.0.3:
   version "3.0.17"
   resolved "https://registry.yarnpkg.com/pbkdf2/-/pbkdf2-3.0.17.tgz#976c206530617b14ebb32114239f7b09336e93a6"

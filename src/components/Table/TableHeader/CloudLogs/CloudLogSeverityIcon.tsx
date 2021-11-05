@@ -22,14 +22,14 @@ export const SEVERITY_LEVELS = {
   EMERGENCY: "One or more systems are unusable.",
 };
 
-export interface ILogSeverityIconProps extends SvgIconProps {
+export interface ICloudLogSeverityIconProps extends SvgIconProps {
   severity: keyof typeof SEVERITY_LEVELS;
 }
 
-export default function LogSeverityIcon({
+export default function CloudLogSeverityIcon({
   severity,
   ...props
-}: ILogSeverityIconProps) {
+}: ICloudLogSeverityIconProps) {
   const commonIconProps: SvgIconProps = {
     ...props,
     "aria-hidden": "false",

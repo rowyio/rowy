@@ -40,6 +40,7 @@
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "notistack": "^2.0.2",
+    "pb-util": "^1.0.1",
     "query-string": "^6.8.3",
     "react": "^17.0.2",
     "react-beautiful-dnd": "^13.0.0",
