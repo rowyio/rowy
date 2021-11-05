@@ -131,7 +131,7 @@ export default function TableSettingsDialog({
           })),
           ["section", "label"]
         ),
-        collections
+        Array.isArray(collections) ? collections : []
       )}
       customComponents={{
         camelCaseId: {
