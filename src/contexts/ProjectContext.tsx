@@ -177,7 +177,10 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
       });
     }
   };
-  const addRow: IProjectContext["addRow"] = (data, ignoreRequiredFields) => {
+  const addRow: IProjectContext["addRow"] = async (
+    data,
+    ignoreRequiredFields
+  ) => {
     const valuesFromFilter = tableState.filters.reduce((acc, curr) => {
       if (curr.operator === "==") {
         return { ...acc, [curr.key]: curr.value };
@@ -211,11 +214,12 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
       );
     }
 
-    tableActions.row.add(
+    await tableActions.row.add(
       { ...valuesFromFilter, ...initialData, ...data },
       ignoreRequiredFields ? [] : requiredFields,
       (rowId: string) => auditChange("ADD_ROW", rowId, {})
     );
+    return;
   };
 
   const updateCell: IProjectContext["updateCell"] = (
@@ -255,8 +259,15 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
     );
   };
 
-  const deleteRow = (rowId) => {
-    tableActions.row.delete(rowId, () => auditChange("DELETE_ROW", rowId, {}));
+  const deleteRow = (rowId: string | string[]) => {
+    if (Array.isArray(rowId)) {
+      tableActions.row.delete(rowId, () => {
+        rowId.forEach((id) => auditChange("DELETE_ROW", id, {}));
+      });
+    } else
+      tableActions.row.delete(rowId, () =>
+        auditChange("DELETE_ROW", rowId, {})
+      );
   };
   // rowyRun access
   const _rowyRun: IProjectContext["rowyRun"] = async (args) => {

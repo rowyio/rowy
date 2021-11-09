@@ -24,7 +24,7 @@ import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 
 import { useConfirmation } from "@src/components/ConfirmationDialog/Context";
 import { useProjectContext } from "@src/contexts/ProjectContext";
-import { formatPath } from "@src/utils/fns";
+import { formatPath, asyncForEach } from "@src/utils/fns";
 import routes from "@src/constants/routes";
 import { runRoutes } from "@src/constants/runRoutes";
 import { config } from "process";
@@ -128,7 +128,7 @@ export default function BulkActions({ selectedRows, columns, clearSelection }) {
     }));
 
   const handleDuplicate = () => {
-    selectedRows.forEach((row) => {
+    asyncForEach(selectedRows, async (row) => {
       const clonedRow = { ...row };
       // remove metadata
       delete clonedRow.ref;
@@ -136,12 +136,14 @@ export default function BulkActions({ selectedRows, columns, clearSelection }) {
       Object.keys(clonedRow).forEach((key) => {
         if (clonedRow[key] === undefined) delete clonedRow[key];
       });
-      if (tableActions) addRow!(clonedRow);
+      await addRow!(clonedRow);
+      //sleep 1 sec
+      await new Promise((resolve) => setTimeout(resolve, 1000));
     });
     clearSelection();
   };
   const handleDelete = () => {
-    selectedRows.forEach((row) => deleteRow!(row.ref.id));
+    deleteRow!(selectedRows.map((row) => row.ref.id));
     clearSelection();
   };
 

@@ -42,7 +42,8 @@ const rowsReducer = (prevRows: any, update: any) => {
 
     case "delete":
       return prevRows.filter((row) => update.rowId !== row.id);
-
+    case "deleteMultiple":
+      return prevRows.filter((row) => !update.rowIds.includes(row.id));
     case "set":
       return update.rows;
 
@@ -231,12 +232,25 @@ const useTableData = () => {
    *  @param rowIndex local position
    *  @param documentId firestore document id
    */
-  const deleteRow = async (rowId: string, onSuccess: () => void) => {
-    // Remove row locally
-    rowsDispatch({ type: "delete", rowId });
+
+  const deleteRow = async (rowId: string | string[], onSuccess: () => void) => {
     // Delete document
     try {
-      await db.collection(tableState.path).doc(rowId).delete().then(onSuccess);
+      if (Array.isArray(rowId)) {
+        await Promise.all(
+          rowId.map((id) => db.collection(tableState.path).doc(id).delete())
+        );
+        onSuccess();
+        rowsDispatch({ type: "deleteMultiple", rowIds: rowId });
+      } else {
+        await db
+          .collection(tableState.path)
+          .doc(rowId)
+          .delete()
+          .then(onSuccess);
+        // Remove row locally
+        return rowsDispatch({ type: "delete", rowId });
+      }
     } catch (error: any) {
       console.log(error);
       if (error.code === "permission-denied") {
@@ -244,6 +258,7 @@ const useTableData = () => {
           variant: "error",
         });
       }
+      return false;
     }
   };
   /**  used for setting up the table listener
@@ -264,7 +279,7 @@ const useTableData = () => {
   /**  creating new document/row
    *  @param data(optional: default will create empty row)
    */
-  const addRow = (
+  const addRow = async (
     data: any,
     requiredFields: string[],
     onSuccess: (rowId: string) => void
@@ -278,7 +293,8 @@ const useTableData = () => {
 
     if (missingRequiredFields.length === 0) {
       try {
-        db.collection(path)
+        await db
+          .collection(path)
           .doc(newId)
           .set(data, { merge: true })
           .then(() => {
