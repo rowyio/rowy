@@ -3,6 +3,8 @@ import { sub } from "date-fns";
 
 import type { IProjectContext } from "@src/contexts/ProjectContext";
 
+export const modalAtom = atomWithHash<"cloudLogs" | "">("modal", "");
+
 export type CloudLogFilters = {
   type: "webhook" | "audit" | "build";
   timeRange:
@@ -10,6 +12,7 @@ export type CloudLogFilters = {
     | { type: "range"; start: Date; end: Date };
   webhook?: string[];
   auditRowId?: string;
+  buildLogExpanded?: number;
 };
 
 export const cloudLogFiltersAtom = atomWithHash<CloudLogFilters>(

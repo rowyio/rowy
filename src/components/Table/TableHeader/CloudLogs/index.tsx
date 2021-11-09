@@ -1,11 +1,10 @@
 import { useAtom } from "jotai";
-import { atomWithHash } from "jotai/utils";
 
 import TableHeaderButton from "../TableHeaderButton";
 import LogsIcon from "@src/assets/icons/CloudLogs";
 import CloudLogsModal from "./CloudLogsModal";
 
-const modalAtom = atomWithHash("modal", "");
+import { modalAtom } from "./utils";
 
 export interface ICloudLogsProps {}
 

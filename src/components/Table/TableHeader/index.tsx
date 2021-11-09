@@ -8,23 +8,25 @@ import ImportCSV from "./ImportCsv";
 import Export from "./Export";
 import LoadedRowsStatus from "./LoadedRowsStatus";
 import TableSettings from "./TableSettings";
-import TableLogs from "./TableLogs";
 import CloudLogs from "./CloudLogs";
 import HiddenFields from "../HiddenFields";
 import RowHeight from "./RowHeight";
 import Extensions from "./Extensions";
 import Webhooks from "./Webhooks";
 import ReExecute from "./ReExecute";
+import BuildLogsSnack from "./CloudLogs/BuildLogs/BuildLogsSnack";
 
 import { useAppContext } from "@src/contexts/AppContext";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import { FieldType } from "@src/constants/fields";
+import { useSnackLogContext } from "@src/contexts/SnackLogContext";
 
 export const TABLE_HEADER_HEIGHT = 44;
 
 export default function TableHeader() {
   const { userClaims } = useAppContext();
   const { addRow, tableState } = useProjectContext();
+  const snackLogContext = useSnackLogContext();
 
   const hasDerivatives =
     tableState &&
@@ -103,7 +105,12 @@ export default function TableHeader() {
           <Webhooks />
           <Extensions />
           <CloudLogs />
-          <TableLogs />
+          {snackLogContext.isSnackLogOpen && (
+            <BuildLogsSnack
+              onClose={snackLogContext.closeSnackLog}
+              onOpenPanel={alert}
+            />
+          )}
           {(hasDerivatives || hasExtensions) && <ReExecute />}
           {/* Spacer */} <div />
           <TableSettings />

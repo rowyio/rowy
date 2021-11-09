@@ -13,14 +13,15 @@ import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import RefreshIcon from "@mui/icons-material/Refresh";
+import LogsIcon from "@src/assets/icons/CloudLogs";
 
 import Modal, { IModalProps } from "@src/components/Modal";
 import TableHeaderButton from "@src/components/Table/TableHeader/TableHeaderButton";
 import MultiSelect from "@rowy/multiselect";
 import TimeRangeSelect from "./TimeRangeSelect";
 import CloudLogList from "./CloudLogList";
+import BuildLogs from "./BuildLogs";
 import EmptyState from "@src/components/EmptyState";
-import LogsIcon from "@src/assets/icons/CloudLogs";
 
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import { cloudLogFiltersAtom, cloudLogFetcher } from "./utils";
@@ -164,30 +165,34 @@ export default function CloudLogsModal(props: IModalProps) {
             {/* Spacer */}
             <div style={{ flexGrow: 1 }} />
 
-            {!isValidating && Array.isArray(data) && (
-              <Typography
-                variant="body2"
-                color="text.disabled"
-                display="block"
-                style={{ userSelect: "none" }}
-              >
-                {data.length} entries
-              </Typography>
-            )}
+            {cloudLogFilters.type !== "build" && (
+              <>
+                {!isValidating && Array.isArray(data) && (
+                  <Typography
+                    variant="body2"
+                    color="text.disabled"
+                    display="block"
+                    style={{ userSelect: "none" }}
+                  >
+                    {data.length} entries
+                  </Typography>
+                )}
 
-            <TimeRangeSelect
-              aria-label="Time range"
-              value={cloudLogFilters.timeRange}
-              onChange={(value) =>
-                setCloudLogFilters((c) => ({ ...c, timeRange: value }))
-              }
-            />
-            <TableHeaderButton
-              onClick={() => mutate()}
-              title="Refresh"
-              icon={<RefreshIcon />}
-              disabled={isValidating}
-            />
+                <TimeRangeSelect
+                  aria-label="Time range"
+                  value={cloudLogFilters.timeRange}
+                  onChange={(value) =>
+                    setCloudLogFilters((c) => ({ ...c, timeRange: value }))
+                  }
+                />
+                <TableHeaderButton
+                  onClick={() => mutate()}
+                  title="Refresh"
+                  icon={<RefreshIcon />}
+                  disabled={isValidating}
+                />
+              </>
+            )}
           </Stack>
 
           {isValidating && (
@@ -206,30 +211,31 @@ export default function CloudLogsModal(props: IModalProps) {
         </TabContext>
       }
     >
-      {Array.isArray(data) &&
-        (data.length > 0 ? (
-          <CloudLogList items={data} sx={{ mx: -1.5, mt: 1.5 }} />
-        ) : isValidating ? (
-          <EmptyState
-            Icon={LogsIcon}
-            message="Fetching logs…"
-            description="\xa0"
-          />
-        ) : (
-          <EmptyState
-            Icon={LogsIcon}
-            message="No logs"
-            description={
-              cloudLogFilters.type === "webhook" &&
-              (!Array.isArray(tableState?.config.webhooks) ||
-                tableState?.config.webhooks?.length === 0)
-                ? "There are no webhooks in this table"
-                : cloudLogFilters.type === "audit" && table?.audit === false
-                ? "Auditing is disabled in this table"
-                : "\xa0"
-            }
-          />
-        ))}
+      {cloudLogFilters.type === "build" ? (
+        <BuildLogs />
+      ) : Array.isArray(data) && data.length > 0 ? (
+        <CloudLogList items={data} sx={{ mx: -1.5, mt: 1.5 }} />
+      ) : isValidating ? (
+        <EmptyState
+          Icon={LogsIcon}
+          message="Fetching logs…"
+          description="\xa0"
+        />
+      ) : (
+        <EmptyState
+          Icon={LogsIcon}
+          message="No logs"
+          description={
+            cloudLogFilters.type === "webhook" &&
+            (!Array.isArray(tableState?.config.webhooks) ||
+              tableState?.config.webhooks?.length === 0)
+              ? "There are no webhooks in this table"
+              : cloudLogFilters.type === "audit" && table?.audit === false
+              ? "Auditing is disabled in this table"
+              : "\xa0"
+          }
+        />
+      )}
     </Modal>
   );
 }
