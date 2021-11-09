@@ -61,11 +61,11 @@ export default function Step4Body({
               extensionBody: isValid,
             });
           }}
-          // diagnosticsOptions={{
-          //   noSemanticValidation: false,
-          //   noSyntaxValidation: false,
-          //   noSuggestionDiagnostics: true,
-          // }}
+          diagnosticsOptions={{
+            noSemanticValidation: false,
+            noSyntaxValidation: false,
+            noSuggestionDiagnostics: true,
+          }}
           onMount={() => setBodyEditorActive(true)}
           onUnmount={() => setBodyEditorActive(false)}
         />
