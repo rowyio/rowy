@@ -2,7 +2,7 @@ import { format } from "date-fns";
 import _get from "lodash/get";
 import ReactJson from "react-json-view";
 import { struct } from "pb-util";
-import jsonFormat from "json-format";
+import stringify from "json-stable-stringify-without-jsonify";
 
 import {
   styled,
@@ -158,7 +158,7 @@ export default function CloudLogItem({
             {format(timestamp, TIME_FORMAT)}
           </Typography>
           <Typography variant="inherit" color="text.secondary" component="span">
-            {format(timestamp, ":ss.SSS")}
+            {format(timestamp, ":ss.SSS X")}
           </Typography>
         </time>
 
@@ -172,10 +172,8 @@ export default function CloudLogItem({
           {data.payload === "textPayload" && data.textPayload}
           {_get(data, "httpRequest.requestUrl")?.split(".run.app").pop()}
           {data.payload === "jsonPayload" &&
-            jsonFormat(data.jsonPayload.body ?? data.jsonPayload, {
-              type: "space",
-              char: " ",
-              size: 2,
+            stringify(data.jsonPayload.body ?? data.jsonPayload, {
+              space: 2,
             })}
         </Typography>
       </AccordionSummary>
@@ -195,6 +193,7 @@ export default function CloudLogItem({
             style={{ font: "inherit", backgroundColor: "transparent" }}
             displayDataTypes={false}
             quotesOnKeys={false}
+            sortKeys
           />
         )}
 
@@ -209,6 +208,7 @@ export default function CloudLogItem({
           style={{ font: "inherit", backgroundColor: "transparent" }}
           displayDataTypes={false}
           quotesOnKeys={false}
+          sortKeys
         />
       </AccordionDetails>
     </Accordion>

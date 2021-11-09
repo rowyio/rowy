@@ -1,4 +1,4 @@
-import jsonFormat from "json-format";
+import stringify from "json-stable-stringify-without-jsonify";
 import { IBasicCellProps } from "../types";
 
 import { useTheme } from "@mui/material";
@@ -8,11 +8,7 @@ export default function Json({ value }: IBasicCellProps) {
 
   if (!value) return null;
 
-  const formattedJson = jsonFormat(value, {
-    type: "space",
-    char: " ",
-    size: 2,
-  });
+  const formattedJson = stringify(value, { space: 2 });
 
   return (
     <div
