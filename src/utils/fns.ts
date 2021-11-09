@@ -228,3 +228,9 @@ const _firestoreRefSanitizer = (v: any) => {
 
 export const sanitizeFirestoreRefs = (doc: Record<string, any>) =>
   _mapValues(doc, _firestoreRefSanitizer);
+
+export const isTargetInsideBox = (target, box) => {
+  const targetRect = target.getBoundingClientRect();
+  const boxRect = box.getBoundingClientRect();
+  return targetRect.y < boxRect.y + boxRect.height;
+};

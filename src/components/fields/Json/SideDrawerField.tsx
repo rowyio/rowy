@@ -4,7 +4,7 @@ import createPersistedState from "use-persisted-state";
 import { ISideDrawerFieldProps } from "../types";
 
 import ReactJson from "react-json-view";
-import jsonFormat from "json-format";
+import stringify from "json-stable-stringify-without-jsonify";
 import CodeEditor from "@src/components/CodeEditor";
 
 import { useTheme, Tab, FormHelperText } from "@mui/material";
@@ -52,11 +52,7 @@ export default function Json({
             : column.config?.isArray
             ? []
             : {};
-        const formattedJson = jsonFormat(sanitizedValue, {
-          type: "space",
-          char: " ",
-          size: 2,
-        });
+        const formattedJson = stringify(sanitizedValue, { space: 2 });
 
         if (disabled)
           return (

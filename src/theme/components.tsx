@@ -143,6 +143,13 @@ export const components = (theme: Theme): ThemeOptions => {
 
       MuiDialog: {
         styleOverrides: {
+          root: {
+            "--dialog-title-height": "64px",
+            [theme.breakpoints.down("sm")]: {
+              "--dialog-title-height": "56px",
+            },
+          },
+
           paper: {
             borderRadius: (theme.shape.borderRadius as number) * 2,
 

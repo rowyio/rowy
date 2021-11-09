@@ -9898,6 +9898,11 @@ join-path@^1.1.1:
     url-join "0.0.1"
     valid-url "^1"
 
+jotai@^1.4.2:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/jotai/-/jotai-1.4.2.tgz#0747581840c82ec0862d4c15ee0f7d59246ed46e"
+  integrity sha512-/NcK8DGvfGcVCqoOvjWIo8/KaUYtadXEl+6uxLiQJUxbyiqCtXkhAdrugk5jmpAFXXD2y6fNDw2Ln7h0EuY+ng==
+
 jpeg-js@^0.4.2:
   version "0.4.3"
   resolved "https://registry.yarnpkg.com/jpeg-js/-/jpeg-js-0.4.3.tgz#6158e09f1983ad773813704be80680550eff977b"
@@ -9982,11 +9987,6 @@ json-buffer@3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/json-buffer/-/json-buffer-3.0.0.tgz#5b1f397afc75d677bde8bcfc0e47e1f9a3d9a898"
   integrity sha1-Wx85evx11ne96Lz8Dkfh+aPZqJg=
-
-json-format@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/json-format/-/json-format-1.0.1.tgz#143f67e62af129d6bffed288a46265ea23d0df0c"
-  integrity sha1-FD9n5irxKda//tKIpGJl6iPQ3ww=
 
 json-parse-better-errors@^1.0.1, json-parse-better-errors@^1.0.2:
   version "1.0.2"
@@ -11193,11 +11193,6 @@ mkdirp@~0.5.1:
   dependencies:
     minimist "^1.2.5"
 
-moment@^2.29.1:
-  version "2.29.1"
-  resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.1.tgz#b2be769fa31940be9eeea6469c075e35006fa3d3"
-  integrity sha512-kHmoybcPV8Sqy59DwNDY3Jefr64lK/by/da0ViFcuA4DH0vQg5Q6Ze5VimxkfQNSC+Mls/Kx53s7TjP1RhFEDQ==
-
 monaco-editor@^0.21.2:
   version "0.21.3"
   resolved "https://registry.yarnpkg.com/monaco-editor/-/monaco-editor-0.21.3.tgz#3381b66614b64d1c5e3b77dd5564ad496d1b4e5d"
@@ -12135,6 +12130,11 @@ path-type@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/path-type/-/path-type-4.0.0.tgz#84ed01c0a7ba380afe09d90a8c180dcd9d03043b"
   integrity sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==
+
+pb-util@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/pb-util/-/pb-util-1.0.1.tgz#1df63f3a7f7c6ee74bfb87f39df3420dbe0707eb"
+  integrity sha512-cMm1ERTOTYb4LxAsLRN0oxhYTL3GivVItrBOiU4WSFcvaeynU/crNtHplNEGQIimSbl3/i7hxWflFvsx42tUVw==
 
 pbkdf2@^3.0.3:
   version "3.0.17"
