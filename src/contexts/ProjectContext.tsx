@@ -20,6 +20,7 @@ import { rowyUser } from "@src/utils/fns";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
 import { runRoutes } from "@src/constants/runRoutes";
 import semver from "semver";
+
 export type Table = {
   id: string;
   collection: string;
@@ -33,7 +34,7 @@ export type Table = {
   auditFieldUpdatedBy?: string;
 };
 
-interface IProjectContext {
+export interface IProjectContext {
   settings: {
     rowyRunUrl?: string;
   };

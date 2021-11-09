@@ -37,6 +37,9 @@ const AccordionSummary = styled(MuiAccordionSummary)(({ theme }) => ({
   "&.Mui-expanded": {
     backgroundColor: theme.palette.action.hover,
     "&:hover": { backgroundColor: theme.palette.action.selected },
+    "&.Mui-focusVisible": {
+      backgroundColor: theme.palette.action.disabledBackground,
+    },
   },
 
   "& svg": {
@@ -169,7 +172,11 @@ export default function CloudLogItem({
           {data.payload === "textPayload" && data.textPayload}
           {_get(data, "httpRequest.requestUrl")?.split(".run.app").pop()}
           {data.payload === "jsonPayload" &&
-            jsonFormat(data.jsonPayload, { type: "space", char: " ", size: 2 })}
+            jsonFormat(data.jsonPayload.body ?? data.jsonPayload, {
+              type: "space",
+              char: " ",
+              size: 2,
+            })}
         </Typography>
       </AccordionSummary>
 
@@ -181,8 +188,8 @@ export default function CloudLogItem({
         )}
         {data.payload === "jsonPayload" && (
           <ReactJson
-            src={data.jsonPayload}
-            name="jsonPayload"
+            src={data.jsonPayload.body ?? data.jsonPayload}
+            name={data.jsonPayload.body ? "body" : "jsonPayload"}
             theme={theme.palette.mode === "dark" ? "monokai" : "rjv-default"}
             iconStyle="triangle"
             style={{ font: "inherit", backgroundColor: "transparent" }}

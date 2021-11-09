@@ -37,10 +37,12 @@ export default function CloudLogList({ items, ...props }: ICloudLogListProps) {
               "httpRequest.status",
               // Rowy audit logs
               "jsonPayload.type",
-              "jsonPayload.ref.tableId",
+              // "jsonPayload.ref.tableId",
               "jsonPayload.ref.rowId",
               "jsonPayload.data.updatedField",
               "jsonPayload.rowyUser.displayName",
+              // Webhook event
+              "jsonPayload.params.endpoint",
             ]}
           />
         </li>
