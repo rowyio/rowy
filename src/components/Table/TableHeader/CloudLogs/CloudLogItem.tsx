@@ -34,12 +34,43 @@ const AccordionSummary = styled(MuiAccordionSummary)(({ theme }) => ({
   minHeight: 32,
   alignItems: "flex-start",
 
+  padding: theme.spacing(0, 1.375, 0, 1.5),
+  borderRadius: theme.shape.borderRadius,
+  "&:hover": { backgroundColor: theme.palette.action.hover },
+
+  userSelect: "auto",
+
   "&.Mui-expanded": {
-    backgroundColor: theme.palette.action.hover,
-    "&:hover": { backgroundColor: theme.palette.action.selected },
-    "&.Mui-focusVisible": {
+    backgroundColor: theme.palette.background.paper,
+    ".MuiPaper-elevation24 &": {
+      backgroundImage:
+        "linear-gradient(rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.16))",
+    },
+
+    "&::before": {
+      content: '""',
+      position: "absolute",
+      zIndex: -1,
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0,
+      borderRadius: "inherit",
+
+      transition: theme.transitions.create(["background-color"], {
+        duration: theme.transitions.duration.short,
+      }),
+      backgroundColor: theme.palette.action.hover,
+    },
+    "&:hover::before": { backgroundColor: theme.palette.action.selected },
+    "&.Mui-focusVisible::before": {
       backgroundColor: theme.palette.action.disabledBackground,
     },
+
+    position: "sticky",
+    zIndex: 2,
+    top: 0,
+    ".MuiListSubheader-sticky ~ li &": { top: 32 },
   },
 
   "& svg": {
@@ -67,20 +98,7 @@ const AccordionSummary = styled(MuiAccordionSummary)(({ theme }) => ({
     },
   },
 
-  "& .log-preview": {
-    flexShrink: 1,
-
-    // ".Mui-expanded&": {
-    //   overflow: "visible",
-    //   whiteSpace: "pre-wrap",
-    // },
-  },
-
-  padding: theme.spacing(0, 1.375, 0, 1.5),
-  borderRadius: theme.shape.borderRadius,
-  "&:hover": { backgroundColor: theme.palette.action.hover },
-
-  userSelect: "auto",
+  "& .log-preview": { flexShrink: 1 },
 }));
 
 const Chip = styled((props: ChipProps) => <MuiChip size="small" {...props} />)({
