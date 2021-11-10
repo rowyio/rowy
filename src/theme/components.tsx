@@ -558,13 +558,13 @@ export const components = (theme: Theme): ThemeOptions => {
           groupedHorizontal: {
             "&:not(:first-of-type)": {
               borderLeft: 0,
-              "&.Mui-disabled": { clipPath: "inset(0 0 0 1px)" },
+              clipPath: "inset(0 0 0 1px)",
             },
           },
           groupedVertical: {
             "&:not(:first-of-type)": {
               borderTop: 0,
-              "&.Mui-disabled": { clipPath: "inset(1px 0 0 0)" },
+              clipPath: "inset(1px 0 0 0)",
             },
           },
         },
@@ -592,7 +592,7 @@ export const components = (theme: Theme): ThemeOptions => {
             "&:not(.Mui-disabled):hover": {
               backgroundColor: colord(theme.palette.action.input)
                 .mix(
-                  theme.palette.action.hover,
+                  theme.palette.text.primary,
                   theme.palette.action.hoverOpacity
                 )
                 .toHslString(),
