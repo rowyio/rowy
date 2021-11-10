@@ -6,7 +6,6 @@ import {
   FormGroup,
   Stack,
   TextField,
-  ButtonGroup,
   Button,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
@@ -67,13 +66,14 @@ export default function KeyValueInput({
       });
 
   return (
-    <FormControl variant="filled">
+    <FormControl variant="filled" style={{ alignItems: "flex-start" }}>
       <FormLabel
         component="legend"
         sx={{ typography: "button", color: "text.primary", mb: 0.25, ml: 0.25 }}
       >
         {label}
       </FormLabel>
+
       <FormGroup>
         {value.map(([propKey, propValue], i) => (
           <Stack
@@ -113,28 +113,26 @@ export default function KeyValueInput({
               onChange={handleChange(i, 1)}
             />
 
-            <ButtonGroup color="error" sx={{ ml: 1 }}>
-              <Button
-                onClick={handleRemove(i)}
-                aria-label="Remove row"
-                style={{ minWidth: 32, paddingLeft: 0, paddingRight: 0 }}
-              >
-                <RemoveIcon style={{ fontSize: 18 }} />
-              </Button>
-            </ButtonGroup>
+            <Button
+              onClick={handleRemove(i)}
+              aria-label="Remove row"
+              sx={{ ml: 1, px: "0 !important", minWidth: 32 }}
+              color="error"
+            >
+              <RemoveIcon />
+            </Button>
           </Stack>
         ))}
       </FormGroup>
-      <div>
-        <Button
-          style={{ marginTop: 4 }}
-          onClick={handleAdd(value.length - 1)}
-          aria-label="Add row"
-          color="primary"
-        >
-          <AddIcon style={{ fontSize: 18 }} /> Add Row
-        </Button>
-      </div>
+
+      <Button
+        onClick={handleAdd(value.length - 1)}
+        color="primary"
+        startIcon={<AddIcon />}
+        sx={{ mt: 1 }}
+      >
+        Add row
+      </Button>
     </FormControl>
   );
 }
