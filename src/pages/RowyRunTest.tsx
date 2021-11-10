@@ -22,6 +22,7 @@ import {
 import Navigation from "@src/components/Navigation";
 import CodeEditor from "@src/components/CodeEditor";
 import ReactJson from "react-json-view";
+import KeyValueInput from "@src/components/KeyValueInput";
 
 // import { useConfirmation } from "@src/components/ConfirmationDialog";
 import { useProjectContext } from "@src/contexts/ProjectContext";
@@ -44,6 +45,11 @@ export default function TestView() {
   const [method, setMethod] = useState<"GET" | "POST" | "DELETE">("GET");
   const [path, setPath] = useState<string>("/");
   const [codeValid, setCodeValid] = useState(true);
+  const [headers, setHeaders] = useState<Record<string, string>>({
+    x: "1",
+    y: "2",
+    z: "3",
+  });
 
   const cachedBodyKey = path.replace("/", "");
 
@@ -211,6 +217,16 @@ export default function TestView() {
             )}
           </FormControl>
         )}
+
+        {/* TODO: Remove */}
+        <KeyValueInput
+          value={headers}
+          onChange={(v) => setHeaders(v)}
+          label="Headers"
+        />
+        <code style={{ display: "block" }}>
+          {JSON.stringify(headers, undefined, 2)}
+        </code>
 
         <InputLabel sx={{ mb: 1, mt: 4 }}>Response</InputLabel>
         <Paper sx={{ p: 2 }}>
