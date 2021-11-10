@@ -12,7 +12,7 @@ import SetupItem from "./SetupItem";
 import { name } from "@root/package.json";
 import { rowyRun } from "@src/utils/rowyRun";
 import { runRoutes } from "@src/constants/runRoutes";
-import { EXTERNAL_LINKS } from "@src/constants/externalLinks";
+import { EXTERNAL_LINKS, WIKI_LINKS } from "@src/constants/externalLinks";
 
 export default function Step1RowyRun({
   completion,
@@ -79,11 +79,7 @@ export default function Step1RowyRun({
       />
     </a>
   ) : (
-    <Button
-      href={EXTERNAL_LINKS.rowyRunDocs}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
+    <Button href={WIKI_LINKS.rowyRun} target="_blank" rel="noopener noreferrer">
       Deploy instructions
       <InlineOpenInNewIcon />
     </Button>

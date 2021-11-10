@@ -14,7 +14,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
 import { IProjectSettingsChildProps } from "@src/pages/Settings/ProjectSettings";
-import { EXTERNAL_LINKS } from "@src/constants/externalLinks";
+import { EXTERNAL_LINKS, WIKI_LINKS } from "@src/constants/externalLinks";
 import { name } from "@root/package.json";
 import { runRoutes } from "@src/constants/runRoutes";
 
@@ -152,11 +152,7 @@ export default function RowyRun({
       </a>
     )
   ) : (
-    <Button
-      href={EXTERNAL_LINKS.rowyRunDocs}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
+    <Button href={WIKI_LINKS.rowyRun} target="_blank" rel="noopener noreferrer">
       Deploy instructions
     </Button>
   );
@@ -168,7 +164,7 @@ export default function RowyRun({
         such as table action scripts, user management, and easy Cloud Function
         deployment.{" "}
         <Link
-          href={EXTERNAL_LINKS.rowyRun}
+          href={WIKI_LINKS.rowyRun}
           target="_blank"
           rel="noopener noreferrer"
         >
