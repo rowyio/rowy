@@ -10,7 +10,7 @@ import {
   Button,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import RemoveIcon from "@mui/icons-material/Remove";
+import RemoveIcon from "@mui/icons-material/DeleteOutline";
 
 export interface IKeyValueInputProps {
   value: Record<string, string>;
@@ -113,14 +113,7 @@ export default function KeyValueInput({
               onChange={handleChange(i, 1)}
             />
 
-            <ButtonGroup color="secondary" sx={{ ml: 1 }}>
-              <Button
-                onClick={handleAdd(i)}
-                aria-label="Add row"
-                style={{ minWidth: 32, paddingLeft: 0, paddingRight: 0 }}
-              >
-                <AddIcon style={{ fontSize: 18 }} />
-              </Button>
+            <ButtonGroup color="error" sx={{ ml: 1 }}>
               <Button
                 onClick={handleRemove(i)}
                 aria-label="Remove row"
@@ -132,6 +125,16 @@ export default function KeyValueInput({
           </Stack>
         ))}
       </FormGroup>
+      <div>
+        <Button
+          style={{ marginTop: 4 }}
+          onClick={handleAdd(value.length - 1)}
+          aria-label="Add row"
+          color="primary"
+        >
+          <AddIcon style={{ fontSize: 18 }} /> Add Row
+        </Button>
+      </div>
     </FormControl>
   );
 }
