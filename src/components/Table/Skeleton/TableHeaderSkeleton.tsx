@@ -2,7 +2,7 @@ import { Fade, Stack, Button } from "@mui/material";
 import Skeleton from "@mui/material/Skeleton";
 import AddRowIcon from "@src/assets/icons/AddRow";
 
-import { TABLE_HEADER_HEIGHT } from "@src/components/Table/TableHeader";
+import { TABLE_HEADER_HEIGHT } from "@src/components/TableHeader";
 
 const ButtonSkeleton = (props) => (
   <Skeleton variant="rect" {...props} sx={{ borderRadius: 1, ...props.sx }} />

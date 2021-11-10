@@ -14,7 +14,7 @@ import ExportDetails from "./Export";
 import DownloadDetails from "./Download";
 
 import { useProjectContext } from "@src/contexts/ProjectContext";
-import { db } from "../../../../firebase";
+import { db } from "../../../firebase";
 import { isCollectionGroup } from "@src/utils/fns";
 
 const useStyles = makeStyles((theme) =>

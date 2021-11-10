@@ -4,7 +4,7 @@ import TableHeaderButton from "./TableHeaderButton";
 import LoopIcon from "@mui/icons-material/Loop";
 
 import { useProjectContext } from "@src/contexts/ProjectContext";
-import { db } from "../../../firebase";
+import { db } from "../../firebase";
 import { isCollectionGroup } from "@src/utils/fns";
 import CircularProgressOptical from "@src/components/CircularProgressOptical";
 

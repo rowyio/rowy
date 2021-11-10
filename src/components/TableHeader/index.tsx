@@ -3,13 +3,13 @@ import { Stack, Button } from "@mui/material";
 import { isCollectionGroup } from "@src/utils/fns";
 import AddRowIcon from "@src/assets/icons/AddRow";
 
-import Filters from "../Filters";
+import Filters from "../Table/Filters";
 import ImportCSV from "./ImportCsv";
 import Export from "./Export";
 import LoadedRowsStatus from "./LoadedRowsStatus";
 import TableSettings from "./TableSettings";
 import CloudLogs from "./CloudLogs";
-import HiddenFields from "../HiddenFields";
+import HiddenFields from "../Table/HiddenFields";
 import RowHeight from "./RowHeight";
 import Extensions from "./Extensions";
 import Webhooks from "./Webhooks";

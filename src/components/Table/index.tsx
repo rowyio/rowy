@@ -15,7 +15,7 @@ import DataGrid, {
 } from "react-data-grid";
 
 import Loading from "@src/components/Loading";
-import TableHeader from "./TableHeader";
+import TableHeader from "../TableHeader";
 import ColumnHeader from "./ColumnHeader";
 import ColumnMenu from "./ColumnMenu";
 import FinalColumnHeader from "./FinalColumnHeader";

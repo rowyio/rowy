@@ -7,7 +7,7 @@ import { APP_BAR_HEIGHT } from "@src/components/Navigation";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import ColumnMenu from "./ColumnMenu";
 import ImportWizard from "@src/components/Wizards/ImportWizard";
-import ImportCSV from "./TableHeader/ImportCsv";
+import ImportCSV from "@src/components/TableHeader/ImportCsv";
 
 export default function EmptyTable() {
   const { tableState, importWizardRef, columnMenuRef } = useProjectContext();

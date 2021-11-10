@@ -14,7 +14,7 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 import LogsIcon from "@src/assets/icons/CloudLogs";
 
 import Modal, { IModalProps } from "@src/components/Modal";
-import TableHeaderButton from "@src/components/Table/TableHeader/TableHeaderButton";
+import TableHeaderButton from "@src/components/TableHeader/TableHeaderButton";
 import MultiSelect from "@rowy/multiselect";
 import TimeRangeSelect from "./TimeRangeSelect";
 import CloudLogList from "./CloudLogList";
