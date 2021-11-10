@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Controller } from "react-hook-form";
 import createPersistedState from "use-persisted-state";
+import stringify from "json-stable-stringify-without-jsonify";
 import { ISideDrawerFieldProps } from "../types";
 
 import ReactJson from "react-json-view";
-import stringify from "json-stable-stringify-without-jsonify";
 import CodeEditor from "@src/components/CodeEditor";
 
 import { useTheme, Tab, FormHelperText } from "@mui/material";
@@ -110,6 +110,7 @@ export default function Json({
                     backgroundColor: "transparent",
                     minHeight: 100 - 4 - 4,
                   }}
+                  quotesOnKeys={false}
                 />
               </div>
             </TabPanel>

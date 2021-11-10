@@ -1,51 +1,61 @@
 import { useState } from "react";
 import { useSnackbar } from "notistack";
 import createPersistedState from "use-persisted-state";
-import Navigation from "@src/components/Navigation";
-import ReactJson from "react-json-view";
+import stringify from "json-stable-stringify-without-jsonify";
+
 import {
   useTheme,
   Container,
+  Grid,
   Button,
   TextField,
-  Tabs,
-  Tab,
+  ToggleButtonGroup,
+  ToggleButton,
   LinearProgress,
   MenuItem,
-  Switch,
-  FormControlLabel,
-  Typography,
+  FormControl,
+  InputLabel,
+  FormHelperText,
+  Paper,
 } from "@mui/material";
-import { useConfirmation } from "@src/components/ConfirmationDialog";
+
+import Navigation from "@src/components/Navigation";
+import CodeEditor from "@src/components/CodeEditor";
+import ReactJson from "react-json-view";
+
+// import { useConfirmation } from "@src/components/ConfirmationDialog";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import { runRoutes } from "@src/constants/runRoutes";
 
 const useBodyCacheState = createPersistedState("__ROWY__RR_TEST_REQ_BODY");
+
 export default function TestView() {
   const theme = useTheme();
-  const { requestConfirmation } = useConfirmation();
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
+  const { rowyRun } = useProjectContext();
+  // const { requestConfirmation } = useConfirmation();
+  const { enqueueSnackbar } = useSnackbar();
+
   const [loading, setLoading] = useState(false);
   const [localhost, setLocalhost] = useState(false);
-  const { rowyRun } = useProjectContext();
   const [result, setResult] = useState<any>({});
 
   const [cachedBody, setCachedBody] = useBodyCacheState<any>();
   const [method, setMethod] = useState<"GET" | "POST" | "DELETE">("GET");
   const [path, setPath] = useState<string>("/");
+  const [codeValid, setCodeValid] = useState(true);
+
   const cachedBodyKey = path.replace("/", "");
+
   const handleMethodChange = (_, newMethod) => setMethod(newMethod);
   const setDefinedRoute = (newPath) => {
     setPath(newPath.target.value);
     const _method = Object.values(runRoutes).find(
       (r) => r.path === path
     )?.method;
-    if (_method) {
-      setMethod(_method);
-    }
+    if (_method) setMethod(_method);
   };
-  const handleEdit = (edit) =>
-    setCachedBody((o) => ({ ...o, [cachedBodyKey]: edit.updated_src }));
+
   const handleRun = async () => {
     if (!rowyRun) return;
     setLoading(true);
@@ -53,17 +63,23 @@ export default function TestView() {
       ["POST", "PUT"].includes(method) && cachedBody[cachedBodyKey]
         ? cachedBody[cachedBodyKey]
         : undefined;
-    const resp = await rowyRun({
-      route: {
-        method,
-        path,
-      },
-      body,
-      localhost,
-    });
-    setResult(resp);
-    setLoading(false);
+    try {
+      const resp = await rowyRun({
+        route: {
+          method,
+          path,
+        },
+        body,
+        localhost,
+      });
+      setResult(resp);
+    } catch (e: any) {
+      enqueueSnackbar(e.message, { variant: "error" });
+    } finally {
+      setLoading(false);
+    }
   };
+
   return (
     <Navigation title="Rowy Run Sandbox">
       {loading && (
@@ -73,86 +89,144 @@ export default function TestView() {
       )}
 
       <Container style={{ margin: "24px 0 200px" }}>
-        <FormControlLabel
-          control={
-            <Switch
-              size="medium"
-              onClick={() => {
-                setLocalhost(!localhost);
-              }}
-            />
-          }
-          label="Localhost?"
-        />
-        <TextField
-          label="Defined route"
-          select
-          value={
-            Object.values(runRoutes).find((r) => r.path === path)?.path ?? ""
-          }
-          onChange={setDefinedRoute}
-          style={{ width: 255 }}
-        >
-          {Object.values(runRoutes).map((route) => (
-            <MenuItem key={route.path} value={route.path}>
-              {route.path}
-            </MenuItem>
-          ))}
-        </TextField>
-        <Tabs value={method} onChange={handleMethodChange}>
-          <Tab label="GET" value="GET" />
-          <Tab label="POST" value="POST" />
-          <Tab label="PUT" value="PUT" />
-          <Tab label="DELETE" value="DELETE" />
-        </Tabs>
-        <TextField
-          value={path}
-          onChange={(value) => {
-            setPath(value.target.value);
-          }}
-        />
-        <Button onClick={handleRun}>Call</Button>
-        <br />
-        {["POST", "PUT"].includes(method) && (
-          <>
-            <Typography variant="overline">Body</Typography>
-            <ReactJson
-              src={
-                cachedBody && cachedBody[cachedBodyKey]
-                  ? cachedBody[cachedBodyKey]
-                  : {}
+        <Grid container alignItems="center" spacing={2}>
+          <Grid item>
+            <ToggleButtonGroup
+              color="primary"
+              exclusive
+              value={localhost ? "localhost" : "deployed"}
+              onChange={(_, v) => setLocalhost(v === "localhost")}
+            >
+              <ToggleButton value="deployed">Deployed</ToggleButton>
+              <ToggleButton value="localhost">Localhost</ToggleButton>
+            </ToggleButtonGroup>
+          </Grid>
+
+          <Grid item>
+            <ToggleButtonGroup
+              color="primary"
+              exclusive
+              value={method}
+              onChange={handleMethodChange}
+            >
+              <ToggleButton value="GET">GET</ToggleButton>
+              <ToggleButton value="POST">POST</ToggleButton>
+              <ToggleButton value="PUT">PUT</ToggleButton>
+              <ToggleButton value="DELETE">DELETE</ToggleButton>
+            </ToggleButtonGroup>
+          </Grid>
+
+          <Grid item xs style={{ display: "flex" }}>
+            <TextField
+              aria-label="Defined route"
+              id="definedRoute"
+              select
+              value={
+                Object.values(runRoutes).find((r) => r.path === path)?.path ??
+                ""
               }
-              onEdit={handleEdit}
-              onAdd={handleEdit}
-              onDelete={handleEdit}
-              theme={{
-                base00: "rgba(0, 0, 0, 0)",
-                base01: theme.palette.background.default,
-                base02: theme.palette.divider,
-                base03: "#93a1a1",
-                base04: theme.palette.text.disabled,
-                base05: theme.palette.text.secondary,
-                base06: "#073642",
-                base07: theme.palette.text.primary,
-                base08: "#d33682",
-                base09: "#cb4b16",
-                base0A: "#dc322f",
-                base0B: "#859900",
-                base0C: "#6c71c4",
-                base0D: theme.palette.text.secondary,
-                base0E: "#2aa198",
-                base0F: "#268bd2",
+              onChange={setDefinedRoute}
+              SelectProps={{
+                renderValue: () => (
+                  <InputLabel style={{ cursor: "inherit", padding: 0 }}>
+                    Defined route
+                  </InputLabel>
+                ),
+                displayEmpty: true,
               }}
-              iconStyle="triangle"
-              style={{
-                fontFamily: theme.typography.fontFamilyMono,
-                backgroundColor: "transparent",
+              className="labelHorizontal"
+              sx={{
+                flexShrink: 0,
+                "& .MuiInputBase-root": {
+                  borderTopRightRadius: 0,
+                  borderBottomRightRadius: 0,
+                },
+              }}
+            >
+              {Object.values(runRoutes).map((route) => (
+                <MenuItem key={route.path} value={route.path}>
+                  {route.path}
+                </MenuItem>
+              ))}
+            </TextField>
+
+            <TextField
+              aria-label="Path"
+              value={path}
+              onChange={(e) => setPath(e.target.value)}
+              sx={{
+                minWidth: 200,
+                flexGrow: 1,
+
+                "& .MuiInputBase-root": {
+                  mx: "-1px",
+                  borderRadius: 0,
+                },
               }}
             />
-          </>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleRun}
+              style={{
+                marginLeft: 0,
+                borderTopLeftRadius: 0,
+                borderBottomLeftRadius: 0,
+              }}
+            >
+              Call
+            </Button>
+          </Grid>
+        </Grid>
+
+        {["POST", "PUT"].includes(method) && (
+          <FormControl variant="filled" sx={{ my: 2, width: "100%" }}>
+            <InputLabel>Body</InputLabel>
+
+            <CodeEditor
+              defaultLanguage="json"
+              value={
+                cachedBody && cachedBody[cachedBodyKey]
+                  ? stringify(cachedBody[cachedBodyKey], { space: 2 })
+                  : "{\n  \n}"
+              }
+              onChange={(v) => {
+                try {
+                  if (v) {
+                    const parsed = JSON.parse(v);
+                    setCachedBody((o) => ({ ...o, [cachedBodyKey]: parsed }));
+                  }
+                } catch (e) {
+                  console.log(`Failed to parse JSON: ${e}`);
+                  setCodeValid(false);
+                }
+              }}
+              onValidStatusUpdate={({ isValid }) => setCodeValid(isValid)}
+              error={!codeValid}
+            />
+            {!codeValid && (
+              <FormHelperText error variant="filled">
+                Invalid JSON
+              </FormHelperText>
+            )}
+          </FormControl>
         )}
-        <Typography variant="overline">Result</Typography>
-        <pre>{JSON.stringify(result, null, 2)}</pre>
+
+        <InputLabel sx={{ mb: 1, mt: 4 }}>Response</InputLabel>
+        <Paper sx={{ p: 2 }}>
+          <ReactJson
+            src={result}
+            name="body"
+            theme={theme.palette.mode === "dark" ? "monokai" : "rjv-default"}
+            iconStyle="triangle"
+            style={{
+              fontFamily: theme.typography.fontFamilyMono,
+              backgroundColor: "transparent",
+            }}
+            quotesOnKeys={false}
+            sortKeys
+          />
+        </Paper>
       </Container>
     </Navigation>
   );
