@@ -1,5 +1,6 @@
-import { format } from "date-fns";
+import { format, differenceInCalendarDays } from "date-fns";
 import { useAtom } from "jotai";
+import _get from "lodash/get";
 
 import {
   styled,
@@ -7,6 +8,8 @@ import {
   AccordionSummary as MuiAccordionSummary,
   Tooltip,
   AccordionDetails,
+  List,
+  ListProps,
 } from "@mui/material";
 import SuccessIcon from "@mui/icons-material/Check";
 import FailIcon from "@mui/icons-material/Close";
@@ -16,6 +19,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import EmptyState from "@src/components/EmptyState";
 import BuildLogList from "./BuildLogList";
+import CloudLogSubheader from "../CloudLogSubheader";
 
 import { DATE_TIME_FORMAT } from "@src/constants/dates";
 import useBuildLogs from "./useBuildLogs";
@@ -24,7 +28,6 @@ import { cloudLogFiltersAtom } from "../utils";
 const Accordion = styled(MuiAccordion)(({ theme }) => ({
   background: "none",
   marginTop: 0,
-  margin: theme.spacing(0, -1.5),
   "&::before": { display: "none" },
 
   ...theme.typography.caption,
@@ -100,7 +103,7 @@ const AccordionSummary = styled(MuiAccordionSummary)(({ theme }) => ({
   },
 }));
 
-export default function BuildLogs() {
+export default function BuildLogs(props: Partial<ListProps>) {
   const { collectionState, latestStatus } = useBuildLogs();
   const [cloudLogFilters, setCloudLogFilters] = useAtom(cloudLogFiltersAtom);
 
@@ -113,53 +116,91 @@ export default function BuildLogs() {
       />
     );
 
-  return collectionState.documents.map((logEntry, index) => (
-    <Accordion
-      disableGutters
-      elevation={0}
-      square
-      TransitionProps={{ unmountOnExit: true }}
-      expanded={cloudLogFilters.buildLogExpanded === index}
-      onChange={(_, expanded) =>
-        setCloudLogFilters((c) => ({
-          ...c,
-          buildLogExpanded: expanded ? index : -1,
-        }))
-      }
+  const renderedLogItems: React.ReactNodeArray = [];
+
+  for (let i = 0; i < collectionState.documents.length; i++) {
+    const logEntry = collectionState.documents[i];
+    const prevEntry = collectionState.documents[i - 1];
+
+    // Group by day
+    const diff = differenceInCalendarDays(
+      Date.now(),
+      _get(logEntry, "startTimeStamp") ?? 0
+    );
+    const prevDiff = differenceInCalendarDays(
+      Date.now(),
+      _get(prevEntry, "startTimeStamp") ?? 0
+    );
+
+    if (diff !== prevDiff) {
+      renderedLogItems.push(
+        <CloudLogSubheader key={`${diff} days ago`}>
+          {diff === 0 ? "Today" : diff === 1 ? "Yesterday" : `${diff} days ago`}
+        </CloudLogSubheader>
+      );
+    }
+
+    renderedLogItems.push(
+      <li key={logEntry.startTimeStamp}>
+        <Accordion
+          disableGutters
+          elevation={0}
+          square
+          TransitionProps={{ unmountOnExit: true }}
+          expanded={cloudLogFilters.buildLogExpanded === i}
+          onChange={(_, expanded) =>
+            setCloudLogFilters((c) => ({
+              ...c,
+              buildLogExpanded: expanded ? i : -1,
+            }))
+          }
+        >
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls={`${logEntry.id}-content`}
+            id={`${logEntry.id}-header`}
+          >
+            {logEntry.status === "BUILDING" && (
+              <Tooltip title="Building">
+                <HourglassIcon />
+              </Tooltip>
+            )}
+            {logEntry.status === "SUCCESS" && (
+              <Tooltip title="Success">
+                <SuccessIcon color="success" />
+              </Tooltip>
+            )}
+            {logEntry.status === "FAIL" && (
+              <Tooltip title="Fail">
+                <FailIcon color="error" />
+              </Tooltip>
+            )}
+
+            {format(logEntry.startTimeStamp, DATE_TIME_FORMAT + ":ss.SSS X")}
+          </AccordionSummary>
+
+          <AccordionDetails style={{ paddingLeft: 0, paddingRight: 0 }}>
+            <BuildLogList
+              key={i}
+              value={cloudLogFilters.buildLogExpanded!}
+              index={i}
+              logs={logEntry?.fullLog}
+              status={logEntry?.status}
+            />
+          </AccordionDetails>
+        </Accordion>
+      </li>
+    );
+  }
+
+  return (
+    <List
+      disablePadding
+      {...({ component: "ol" } as any)}
+      {...props}
+      sx={{ mx: -1.5, mt: 1.5, ...props.sx }}
     >
-      <AccordionSummary
-        expandIcon={<ExpandMoreIcon />}
-        aria-controls={`${logEntry.id}-content`}
-        id={`${logEntry.id}-header`}
-      >
-        {logEntry.status === "BUILDING" && (
-          <Tooltip title="Building">
-            <HourglassIcon />
-          </Tooltip>
-        )}
-        {logEntry.status === "SUCCESS" && (
-          <Tooltip title="Success">
-            <SuccessIcon color="success" />
-          </Tooltip>
-        )}
-        {logEntry.status === "FAIL" && (
-          <Tooltip title="Fail">
-            <FailIcon color="error" />
-          </Tooltip>
-        )}
-
-        {format(logEntry.startTimeStamp, DATE_TIME_FORMAT + ":ss.SSS X")}
-      </AccordionSummary>
-
-      <AccordionDetails style={{ paddingLeft: 0, paddingRight: 0 }}>
-        <BuildLogList
-          key={index}
-          value={cloudLogFilters.buildLogExpanded!}
-          index={index}
-          logs={logEntry?.fullLog}
-          status={logEntry?.status}
-        />
-      </AccordionDetails>
-    </Accordion>
-  ));
+      {renderedLogItems}
+    </List>
+  );
 }
