@@ -245,6 +245,16 @@ export const components = (theme: Theme): ThemeOptions => {
           variant: "filled",
           size: "small",
         },
+
+        styleOverrides: {
+          root: {
+            "&.labelHorizontal": {
+              flexDirection: "row",
+              alignItems: "center",
+              "& .MuiInputLabel-root": { paddingRight: theme.spacing(1) },
+            },
+          },
+        },
       },
       MuiInputBase: {
         styleOverrides: {
@@ -537,6 +547,138 @@ export const components = (theme: Theme): ThemeOptions => {
       MuiButtonGroup: {
         styleOverrides: {
           grouped: { minWidth: 32 },
+        },
+      },
+
+      MuiToggleButtonGroup: {
+        defaultProps: {
+          color: "primary",
+        },
+        styleOverrides: {
+          groupedHorizontal: {
+            "&:not(:first-of-type)": {
+              borderLeft: 0,
+              "&.Mui-disabled": { clipPath: "inset(0 0 0 1px)" },
+            },
+          },
+          groupedVertical: {
+            "&:not(:first-of-type)": {
+              borderTop: 0,
+              "&.Mui-disabled": { clipPath: "inset(1px 0 0 0)" },
+            },
+          },
+        },
+      },
+      MuiToggleButton: {
+        styleOverrides: {
+          root: {
+            "&, &.Mui-selected": {
+              backgroundColor: theme.palette.action.input,
+            },
+            transition: theme.transitions.create(
+              ["background-color", "color"],
+              { duration: theme.transitions.duration.short }
+            ),
+
+            border: 0,
+            boxShadow: `0 0 0 1px ${theme.palette.action.inputOutline} inset,
+            0 ${theme.palette.mode === "dark" ? "" : "-"}1px 0 0 ${
+              theme.palette.action.inputOutline
+            } inset`,
+            ".MuiToggleButtonGroup-vertical &:not(:last-of-type)": {
+              boxShadow: `0 0 0 1px ${theme.palette.action.inputOutline} inset`,
+            },
+
+            "&:not(.Mui-disabled):hover": {
+              backgroundColor: colord(theme.palette.action.input)
+                .mix(
+                  theme.palette.action.hover,
+                  theme.palette.action.hoverOpacity
+                )
+                .toHslString(),
+              zIndex: 1,
+            },
+
+            "&.Mui-selected:hover": {
+              ".MuiToggleButton-standard&": {
+                backgroundColor: colord(theme.palette.action.input)
+                  .mix(
+                    theme.palette.action.hover,
+                    theme.palette.action.hoverOpacity
+                  )
+                  .toHslString(),
+              },
+              ".MuiToggleButton-primary&": {
+                backgroundColor: colord(theme.palette.action.input)
+                  .mix(
+                    theme.palette.primary.main,
+                    theme.palette.action.hoverOpacity
+                  )
+                  .toHslString(),
+              },
+              ".MuiToggleButton-secondary&": {
+                backgroundColor: colord(theme.palette.action.input)
+                  .mix(
+                    theme.palette.secondary.main,
+                    theme.palette.action.hoverOpacity
+                  )
+                  .toHslString(),
+              },
+            },
+
+            "&.Mui-disabled": {
+              boxShadow: `0 0 0 1px ${theme.palette.divider} inset`,
+              backgroundColor: "transparent",
+              border: 0,
+            },
+
+            "&.Mui-selected::after": {
+              content: "''",
+              display: "block",
+              position: "absolute",
+              bottom: 0,
+              left: "50%",
+              transform: "translateX(-50%)",
+              maxWidth: 32,
+              width: `calc(100% - 16px)`,
+
+              height: 3,
+              borderRadius: 1.5,
+              backgroundColor: "currentColor",
+
+              ".MuiToggleButtonGroup-vertical &": {
+                left: 0,
+                top: "50%",
+                transform: "translateY(-50%)",
+                maxHeight: 32,
+                height: `calc(100% - 16px)`,
+
+                width: 3,
+              },
+            },
+          },
+
+          sizeSmall: {
+            minHeight: 24,
+            minWidth: 24,
+            padding: `${(24 - 18) / 2}px 10px`,
+            "& .MuiSvgIcon-root": {
+              margin: `0 ${-(10 - (24 - 18) / 2)}px`,
+              fontSize: 18,
+            },
+          },
+          sizeMedium: {
+            minHeight: 32,
+            minWidth: 32,
+            padding: `${(32 - 24) / 2}px 16px`,
+            "& .MuiSvgIcon-root": { margin: `0 ${-(16 - (32 - 24) / 2)}px` },
+          },
+          sizeLarge: {
+            minHeight: 48,
+            minWidth: 48,
+            padding: `${(48 - 24) / 2}px 22px`,
+            "& .MuiSvgIcon-root": { margin: `0 ${-(22 - (48 - 24) / 2)}px` },
+          },
         },
       },
 

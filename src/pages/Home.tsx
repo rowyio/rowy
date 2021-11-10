@@ -232,6 +232,7 @@ export default function HomePage() {
 
           <ToggleButtonGroup
             value={view}
+            size="large"
             exclusive
             onChange={(_, v) => {
               if (v !== null) setView(v);

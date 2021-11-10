@@ -3,15 +3,13 @@ import { useAtom } from "jotai";
 
 import {
   LinearProgress,
-  Tab,
+  ToggleButtonGroup,
+  ToggleButton,
   Stack,
   Typography,
   TextField,
   InputAdornment,
 } from "@mui/material";
-import TabContext from "@mui/lab/TabContext";
-import TabList from "@mui/lab/TabList";
-import TabPanel from "@mui/lab/TabPanel";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import LogsIcon from "@src/assets/icons/CloudLogs";
 
@@ -53,7 +51,7 @@ export default function CloudLogsModal(props: IModalProps) {
       fullHeight
       ScrollableDialogContentProps={{ disableBottomDivider: true }}
       header={
-        <TabContext value={cloudLogFilters.type}>
+        <>
           <Stack
             direction="row"
             spacing={2}
@@ -67,33 +65,31 @@ export default function CloudLogsModal(props: IModalProps) {
               ml: { md: 18 },
               mr: { md: 40 / 8 + 3 },
 
-              minHeight: 56,
+              minHeight: 32,
+              boxSizing: "content-box",
               overflowX: "auto",
               overflowY: "hidden",
               py: 0,
               px: { xs: "var(--dialog-spacing)", md: 0 },
+              pb: { xs: 1, md: 0 },
 
-              "& .MuiTabPanel-root": { padding: 0 },
               "& > *": { flexShrink: 0 },
             }}
           >
-            <TabList
+            <ToggleButtonGroup
+              value={cloudLogFilters.type}
+              exclusive
               onChange={(_, v) =>
                 setCloudLogFilters((c) => ({ type: v, timeRange: c.timeRange }))
               }
               aria-label="Filter by log type"
-              // centered
-              sx={{}}
             >
-              {/* {!Array.isArray(tableState?.config.webhooks) ||
-              tableState?.config.webhooks?.length === 0 ? ( */}
-              <Tab label="Webhooks" value="webhook" />
-              {/* {table?.audit === false ? ( */}
-              <Tab label="Audit" value="audit" />
-              <Tab label="Build" value="build" />
-            </TabList>
+              <ToggleButton value="webhook">Webhooks</ToggleButton>
+              <ToggleButton value="audit">Audit</ToggleButton>
+              <ToggleButton value="build">Build</ToggleButton>
+            </ToggleButtonGroup>
 
-            <TabPanel value="webhook">
+            {cloudLogFilters.type === "webhook" && (
               <MultiSelect
                 multiple
                 label="Webhook:"
@@ -112,12 +108,9 @@ export default function CloudLogsModal(props: IModalProps) {
                 }
                 TextFieldProps={{
                   id: "webhook",
-                  sx: {
-                    flexDirection: "row",
-                    alignItems: "center",
-                    "& .MuiInputLabel-root": { pr: 1 },
-                    "& .MuiInputBase-root": { minWidth: 180 },
-                  },
+                  className: "labelHorizontal",
+                  sx: { "& .MuiInputBase-root": { width: 180 } },
+                  fullWidth: false,
                 }}
                 itemRenderer={(option) => (
                   <>
@@ -125,8 +118,8 @@ export default function CloudLogsModal(props: IModalProps) {
                   </>
                 )}
               />
-            </TabPanel>
-            <TabPanel value="audit">
+            )}
+            {cloudLogFilters.type === "audit" && (
               <TextField
                 id="auditRowId"
                 label="Row ID:"
@@ -144,11 +137,8 @@ export default function CloudLogsModal(props: IModalProps) {
                     </InputAdornment>
                   ),
                 }}
+                className="labelHorizontal"
                 sx={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  "& .MuiInputLabel-root": { pr: 1 },
-
                   "& .MuiInputBase-root, & .MuiInputBase-input": {
                     typography: "body2",
                     fontFamily: "mono",
@@ -160,7 +150,7 @@ export default function CloudLogsModal(props: IModalProps) {
                   "& .MuiInputBase-input": { pl: 0 },
                 }}
               />
-            </TabPanel>
+            )}
 
             {/* Spacer */}
             <div style={{ flexGrow: 1 }} />
@@ -208,7 +198,7 @@ export default function CloudLogsModal(props: IModalProps) {
           )}
 
           {/* <code>{logQueryUrl}</code> */}
-        </TabContext>
+        </>
       }
     >
       {cloudLogFilters.type === "build" ? (

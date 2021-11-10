@@ -61,16 +61,19 @@ export default function TimeRangeSelect({
         id="timeRangeSelect.type"
         value={value?.type || "days"}
         {...props}
-        sx={
-          value?.type === "range"
-            ? props.sx
-            : {
-                "& .MuiInputBase-root": {
+        sx={{
+          "& .MuiInputBase-root":
+            value?.type !== "range"
+              ? {
                   borderTopLeftRadius: 0,
                   borderBottomLeftRadius: 0,
-                },
-              }
-        }
+                }
+              : {},
+
+          "& .MuiInputBase-input": { minHeight: 20 },
+
+          ...props.sx,
+        }}
         onChange={(e) => {
           const newValue: any = { type: e.target.value };
 

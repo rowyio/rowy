@@ -14,6 +14,8 @@ import {
   TableCell,
   Typography,
   Button,
+  ToggleButtonGroup,
+  ToggleButton,
   IconButton,
   Fab,
   Chip,
@@ -38,6 +40,10 @@ import {
   LinearProgress,
 } from "@mui/material";
 import SparkIcon from "@mui/icons-material/OfflineBoltOutlined";
+import FormatAlignLeftIcon from "@mui/icons-material/FormatAlignLeft";
+import FormatAlignCenterIcon from "@mui/icons-material/FormatAlignCenter";
+import FormatAlignRightIcon from "@mui/icons-material/FormatAlignRight";
+import FormatAlignJustifyIcon from "@mui/icons-material/FormatAlignJustify";
 import { useConfirmation } from "@src/components/ConfirmationDialog";
 
 import SnackbarProgress, {
@@ -73,6 +79,32 @@ export default function TestView() {
   const handleTabChange = (_, newTab) => setTab(newTab);
 
   const snackbarProgressRef = useRef<ISnackbarProgressRef>();
+
+  const [alignment, setAlignment] = useState("left");
+  const handleChangeAlignment = (_, v) => setAlignment(v);
+  const toggleButtonProps = {
+    value: alignment,
+    onChange: handleChangeAlignment,
+    exclusive: true,
+    children: [
+      <ToggleButton value="left" key="left">
+        <FormatAlignLeftIcon />
+        {/* Left */}
+      </ToggleButton>,
+      <ToggleButton value="center" key="center">
+        <FormatAlignCenterIcon />
+        {/* Center */}
+      </ToggleButton>,
+      <ToggleButton value="right" key="right">
+        <FormatAlignRightIcon />
+        {/* Right */}
+      </ToggleButton>,
+      <ToggleButton value="justify" key="justify">
+        <FormatAlignJustifyIcon />
+        {/* Justify */}
+      </ToggleButton>,
+    ],
+  };
 
   return (
     <Navigation title="Theme Test">
@@ -446,6 +478,58 @@ export default function TestView() {
             >
               Button
             </Button>
+          </Stack>
+
+          <Stack spacing={1} direction="row" alignItems="center">
+            <ToggleButtonGroup
+              color="standard"
+              size="small"
+              {...toggleButtonProps}
+            />
+            <ToggleButtonGroup
+              color="primary"
+              size="medium"
+              {...toggleButtonProps}
+            />
+            <ToggleButtonGroup
+              color="secondary"
+              size="large"
+              {...toggleButtonProps}
+            />
+            <ToggleButtonGroup
+              color="primary"
+              size="large"
+              {...toggleButtonProps}
+              disabled
+            />
+          </Stack>
+
+          <Stack spacing={1} direction="row" alignItems="center">
+            <ToggleButtonGroup
+              orientation="vertical"
+              color="standard"
+              size="small"
+              {...toggleButtonProps}
+            />
+            <ToggleButtonGroup
+              orientation="vertical"
+              color="primary"
+              size="medium"
+              {...toggleButtonProps}
+            />
+            <ToggleButtonGroup
+              orientation="vertical"
+              color="secondary"
+              size="large"
+              {...toggleButtonProps}
+            />
+            <ToggleButtonGroup
+              orientation="vertical"
+              color="primary"
+              size="large"
+              {...toggleButtonProps}
+              disabled
+            />
           </Stack>
 
           <Stack spacing={1} direction="row" alignItems="center">
