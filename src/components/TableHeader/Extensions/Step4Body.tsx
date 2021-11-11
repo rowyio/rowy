@@ -34,6 +34,12 @@ const additionalVariables = [
   },
 ];
 
+const diagnosticsOptions = {
+  noSemanticValidation: false,
+  noSyntaxValidation: false,
+  noSuggestionDiagnostics: true,
+};
+
 export default function Step4Body({
   extensionObject,
   setExtensionObject,
@@ -61,11 +67,7 @@ export default function Step4Body({
               extensionBody: isValid,
             });
           }}
-          diagnosticsOptions={{
-            noSemanticValidation: false,
-            noSyntaxValidation: false,
-            noSuggestionDiagnostics: true,
-          }}
+          diagnosticsOptions={diagnosticsOptions}
           onMount={() => setBodyEditorActive(true)}
           onUnmount={() => setBodyEditorActive(false)}
         />

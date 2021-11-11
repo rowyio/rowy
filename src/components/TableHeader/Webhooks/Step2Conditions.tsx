@@ -13,6 +13,12 @@ const additionalVariables = [
   },
 ];
 
+const diagnosticsOptions = {
+  noSemanticValidation: false,
+  noSyntaxValidation: false,
+  noSuggestionDiagnostics: true,
+};
+
 export default function Step3Conditions({
   webhookObject,
   setWebhookObject,
@@ -38,11 +44,7 @@ export default function Step3Conditions({
             if (!conditionEditorActiveRef.current) return;
             setValidation({ ...validationRef.current!, condition: isValid });
           }}
-          diagnosticsOptions={{
-            noSemanticValidation: false,
-            noSyntaxValidation: false,
-            noSuggestionDiagnostics: true,
-          }}
+          diagnosticsOptions={diagnosticsOptions}
           onMount={() => setConditionEditorActive(true)}
           onUnmount={() => setConditionEditorActive(false)}
         />

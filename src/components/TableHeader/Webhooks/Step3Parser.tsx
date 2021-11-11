@@ -14,6 +14,12 @@ const additionalVariables = [
   },
 ];
 
+const diagnosticsOptions = {
+  noSemanticValidation: false,
+  noSyntaxValidation: false,
+  noSuggestionDiagnostics: true,
+};
+
 export default function Step4Body({
   webhookObject,
   setWebhookObject,
@@ -41,11 +47,7 @@ export default function Step4Body({
               parser: isValid,
             });
           }}
-          diagnosticsOptions={{
-            noSemanticValidation: false,
-            noSyntaxValidation: false,
-            noSuggestionDiagnostics: true,
-          }}
+          diagnosticsOptions={diagnosticsOptions}
           onMount={() => setBodyEditorActive(true)}
           onUnmount={() => setBodyEditorActive(false)}
         />
