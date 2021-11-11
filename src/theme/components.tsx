@@ -353,6 +353,14 @@ export const components = (theme: Theme): ThemeOptions => {
           },
         },
       },
+      MuiFormLabel: {
+        styleOverrides: {
+          root: {
+            ...theme.typography.button,
+            color: theme.palette.text.primary,
+          },
+        },
+      },
       MuiFormHelperText: {
         styleOverrides: {
           contained: {
