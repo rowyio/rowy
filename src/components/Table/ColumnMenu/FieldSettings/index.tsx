@@ -69,6 +69,8 @@ export default function FieldSettings(props: IMenuModalProps) {
       maxWidth="md"
       onClose={handleClose}
       title={`${name}: Settings`}
+      disableBackdropClick
+      disableEscapeKeyDown
       children={
         <Suspense fallback={<Loading fullScreen={false} />}>
           <>
