@@ -318,6 +318,14 @@ export const components = (theme: Theme): ThemeOptions => {
             paddingTop: theme.spacing(1.5),
             paddingBottom: theme.spacing(13 / 8),
             height: toRem(23),
+
+            ".MuiInputBase-root .MuiFilledInput-input.MuiInputBase-input&::placeholder":
+              {
+                // https://github.com/mui-org/material-ui/blob/master/packages/mui-material/src/InputBase/InputBase.js#L136
+                opacity: `${
+                  theme.palette.mode === "light" ? 0.42 : 0.5
+                } !important`,
+              },
           },
           inputSizeSmall: {
             padding: theme.spacing(0.75, 1.5),
