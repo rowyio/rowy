@@ -71,7 +71,7 @@ export default function CloudLogsModal(props: IModalProps) {
               overflowY: "hidden",
               py: 0,
               px: { xs: "var(--dialog-spacing)", md: 0 },
-              pb: { xs: 1, md: 0 },
+              pb: { xs: 1.5, md: 0 },
 
               "& > *": { flexShrink: 0 },
             }}
@@ -189,10 +189,9 @@ export default function CloudLogsModal(props: IModalProps) {
             <LinearProgress
               style={{
                 borderRadius: 0,
-                position: "absolute",
-                top: 0,
-                left: 0,
-                right: 0,
+                marginTop: -4,
+                marginBottom: -1,
+                minHeight: 4,
               }}
             />
           )}
