@@ -163,7 +163,7 @@ export default function useMonacoCustomizations({
         error
       );
     }
-  }, [tableState?.columns, monaco, diagnosticsOptions, extraLibs]);
+  }, [tableState?.columns, monaco, extraLibs]);
 
   let boxSx: SxProps<Theme> = {
     minWidth: 400,
