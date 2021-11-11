@@ -37,7 +37,10 @@ export default function useMonacoCustomizations({
   error,
 
   extraLibs,
-  diagnosticsOptions,
+  diagnosticsOptions = {
+    noSemanticValidation: true,
+    noSyntaxValidation: false,
+  },
   onUnmount,
 
   fullScreen,
@@ -53,6 +56,7 @@ export default function useMonacoCustomizations({
     };
   }, []);
 
+  // Initialize theme
   useEffect(() => {
     if (!monaco) {
       // useMonaco returns a monaco instance but initialisation is done asynchronously
@@ -71,17 +75,11 @@ export default function useMonacoCustomizations({
     });
   }, [monaco, theme.palette.mode]);
 
+  // Initialize external libs & TypeScript compiler options
   useEffect(() => {
-    if (!monaco) {
-      // useMonaco returns a monaco instance but initialisation is done asynchronously
-      // dont execute the logic until the instance is initialised
-      return;
-    }
+    if (!monaco) return;
 
     try {
-      monaco.editor.defineTheme("github-light", githubLightTheme as any);
-      monaco.editor.defineTheme("github-dark", githubDarkTheme as any);
-
       monaco.languages.typescript.javascriptDefaults.addExtraLib(firestoreDefs);
       monaco.languages.typescript.javascriptDefaults.addExtraLib(
         firebaseAuthDefs
@@ -89,28 +87,57 @@ export default function useMonacoCustomizations({
       monaco.languages.typescript.javascriptDefaults.addExtraLib(
         firebaseStorageDefs
       );
-      monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions(
-        diagnosticsOptions ?? {
-          noSemanticValidation: true,
-          noSyntaxValidation: false,
-        }
-      );
-      // compiler options
+      // Compiler options
       monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
         target: monaco.languages.typescript.ScriptTarget.ES2020,
         allowNonTsExtensions: true,
       });
-      if (extraLibs) {
-        monaco.languages.typescript.javascriptDefaults.addExtraLib(
-          extraLibs.join("\n"),
-          "ts:filename/extraLibs.d.ts"
-        );
-      }
       monaco.languages.typescript.javascriptDefaults.addExtraLib(
         utilsDefs,
         "ts:filename/utils.d.ts"
       );
+    } catch (error) {
+      console.error(
+        "An error occurred during initialization of Monaco: ",
+        error
+      );
+    }
+  }, [monaco]);
 
+  // Initialize extraLibs from props
+  useEffect(() => {
+    if (!monaco) return;
+    if (!extraLibs) return;
+
+    try {
+      monaco.languages.typescript.javascriptDefaults.addExtraLib(
+        extraLibs.join("\n"),
+        "ts:filename/extraLibs.d.ts"
+      );
+    } catch (error) {
+      console.error("Could not add extraLibs from props: ", error);
+    }
+  }, [monaco, extraLibs]);
+
+  // Set diagnostics options
+  const stringifiedDiagnosticsOptions = JSON.stringify(diagnosticsOptions);
+  useEffect(() => {
+    if (!monaco) return;
+
+    try {
+      monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions(
+        JSON.parse(stringifiedDiagnosticsOptions)
+      );
+    } catch (error) {
+      console.error("Could not set diagnostics options: ", error);
+    }
+  }, [monaco, stringifiedDiagnosticsOptions]);
+
+  // Set row definitions
+  useEffect(() => {
+    if (!monaco) return;
+
+    try {
       const rowDefinition =
         Object.keys(tableState?.columns!)
           .map((columnKey: string) => {
@@ -158,12 +185,9 @@ export default function useMonacoCustomizations({
         "ts:filename/rowFields.d.ts"
       );
     } catch (error) {
-      console.error(
-        "An error occurred during initialization of Monaco: ",
-        error
-      );
+      console.error("Could not set row definitions: ", error);
     }
-  }, [tableState?.columns, monaco, diagnosticsOptions, extraLibs]);
+  }, [monaco, tableState?.columns]);
 
   let boxSx: SxProps<Theme> = {
     minWidth: 400,
