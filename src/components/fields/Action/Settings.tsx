@@ -10,7 +10,6 @@ import {
   Stack,
   Grid,
   TextField,
-  Divider,
   FormControl,
   FormLabel,
   FormControlLabel,
@@ -21,8 +20,12 @@ import {
   Link,
   Checkbox,
   FormHelperText,
+  Fab,
 } from "@mui/material";
 import ExpandIcon from "@mui/icons-material/KeyboardArrowDown";
+import RunIcon from "@mui/icons-material/PlayArrow";
+import RedoIcon from "@mui/icons-material/Refresh";
+import UndoIcon from "@mui/icons-material/Undo";
 
 import MultiSelect from "@rowy/multiselect";
 import FieldSkeleton from "@src/components/SideDrawer/Form/FieldSkeleton";
@@ -41,7 +44,13 @@ const CodeEditor = lazy(
 const Settings = ({ config, onChange }) => {
   const { tableState, roles } = useProjectContext();
 
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeStep, setActiveStep] = useState<
+    "requirements" | "friction" | "action" | "undo" | "customization"
+  >("requirements");
+  const steps =
+    config.isActionScript && _get(config, "undo.enabled")
+      ? ["requirements", "friction", "action", "undo", "customization"]
+      : ["requirements", "friction", "action", "customization"];
 
   const columnOptions = Object.values(tableState?.columns ?? {}).map((c) => ({
     label: c.name,
@@ -94,7 +103,7 @@ const Settings = ({ config, onChange }) => {
   return (
     <Stepper
       nonLinear
-      activeStep={activeStep}
+      activeStep={steps.indexOf(activeStep)}
       orientation="vertical"
       sx={{
         mt: 0,
@@ -118,7 +127,7 @@ const Settings = ({ config, onChange }) => {
       }}
     >
       <Step>
-        <StepButton onClick={() => setActiveStep(0)}>
+        <StepButton onClick={() => setActiveStep("requirements")}>
           Requirements
           <ExpandIcon />
         </StepButton>
@@ -156,7 +165,7 @@ const Settings = ({ config, onChange }) => {
       </Step>
 
       <Step>
-        <StepButton onClick={() => setActiveStep(1)}>
+        <StepButton onClick={() => setActiveStep("friction")}>
           Confirmation
           <ExpandIcon />
         </StepButton>
@@ -265,7 +274,7 @@ const Settings = ({ config, onChange }) => {
       </Step>
 
       <Step>
-        <StepButton onClick={() => setActiveStep(2)}>
+        <StepButton onClick={() => setActiveStep("action")}>
           Action
           <ExpandIcon />
         </StepButton>
@@ -444,7 +453,7 @@ const Settings = ({ config, onChange }) => {
 
       {config.isActionScript && _get(config, "undo.enabled") && (
         <Step>
-          <StepButton onClick={() => setActiveStep(3)}>
+          <StepButton onClick={() => setActiveStep("undo")}>
             Undo action
             <ExpandIcon />
           </StepButton>
@@ -492,6 +501,118 @@ const Settings = ({ config, onChange }) => {
           </StepContent>
         </Step>
       )}
+
+      <Step>
+        <StepButton onClick={() => setActiveStep("customization")}>
+          Customization
+          <ExpandIcon />
+        </StepButton>
+
+        <StepContent>
+          {/* <Stack spacing={3}> */}
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={config.customIcons?.enabled}
+                onChange={(e) =>
+                  onChange("customIcons.enabled")(e.target.checked)
+                }
+                name="customIcons.enabled"
+              />
+            }
+            label="Customize button icons with emoji"
+            style={{ marginLeft: -11 }}
+          />
+
+          {config.customIcons?.enabled && (
+            <Grid container spacing={2} sx={{ mt: { xs: 0, sm: -1 } }}>
+              <Grid item xs={12} sm={true}>
+                <Stack direction="row" spacing={1}>
+                  <TextField
+                    id="customIcons.run"
+                    value={_get(config, "customIcons.run")}
+                    onChange={(e) =>
+                      onChange("customIcons.run")(e.target.value)
+                    }
+                    label="Run:"
+                    className="labelHorizontal"
+                    inputProps={{ style: { width: "3ch" } }}
+                  />
+                  <Fab size="small" aria-label="Preview of run button">
+                    {_get(config, "customIcons.run") || <RunIcon />}
+                  </Fab>
+                </Stack>
+              </Grid>
+
+              <Grid item xs={12} sm={true}>
+                <Stack direction="row" spacing={1}>
+                  <TextField
+                    id="customIcons.redo"
+                    value={_get(config, "customIcons.redo")}
+                    onChange={(e) =>
+                      onChange("customIcons.redo")(e.target.value)
+                    }
+                    label="Redo:"
+                    className="labelHorizontal"
+                    inputProps={{ style: { width: "3ch" } }}
+                  />
+                  <Fab size="small" aria-label="Preview of redo button">
+                    {_get(config, "customIcons.redo") || <RedoIcon />}
+                  </Fab>
+                </Stack>
+              </Grid>
+
+              <Grid item xs={12} sm={true}>
+                <Stack direction="row" spacing={1}>
+                  <TextField
+                    id="customIcons.undo"
+                    value={_get(config, "customIcons.undo")}
+                    onChange={(e) =>
+                      onChange("customIcons.undo")(e.target.value)
+                    }
+                    label="Undo:"
+                    className="labelHorizontal"
+                    inputProps={{ style: { width: "3ch" } }}
+                  />
+                  <Fab size="small" aria-label="Preview of undo button">
+                    {_get(config, "customIcons.undo") || <UndoIcon />}
+                  </Fab>
+                </Stack>
+              </Grid>
+            </Grid>
+          )}
+          {/* </Stack> */}
+
+          {/* <Grid container spacing={3}>
+            <Grid item xs={12} sm={6}>
+              <MultiSelect
+                label="Required roles"
+                options={roles ?? []}
+                value={config.requiredRoles ?? []}
+                onChange={onChange("requiredRoles")}
+                TextFieldProps={{
+                  id: "requiredRoles",
+                  helperText:
+                    "The user must have at least one of these roles to run the script",
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <MultiSelect
+                label="Required fields"
+                options={columnOptions}
+                value={config.requiredFields ?? []}
+                onChange={onChange("requiredFields")}
+                TextFieldProps={{
+                  id: "requiredFields",
+                  helperText:
+                    "All the selected fields must have a value for the script to run",
+                }}
+              />
+            </Grid>
+          </Grid> */}
+        </StepContent>
+      </Step>
     </Stepper>
   );
 };
