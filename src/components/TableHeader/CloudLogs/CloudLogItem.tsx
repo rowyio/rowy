@@ -68,7 +68,7 @@ const AccordionSummary = styled(MuiAccordionSummary)(({ theme }) => ({
     },
 
     position: "sticky",
-    zIndex: 2,
+    zIndex: 1,
     top: 0,
     ".MuiListSubheader-sticky ~ li &": { top: 32 },
   },

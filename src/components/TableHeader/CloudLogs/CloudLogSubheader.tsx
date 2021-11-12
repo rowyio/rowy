@@ -3,6 +3,8 @@ import { styled, ListSubheader } from "@mui/material";
 export const CloudLogSubheader = styled((props) => (
   <ListSubheader disableGutters disableSticky={false} {...props} />
 ))(({ theme }) => ({
+  zIndex: 2,
+
   "&:not(:first-child)": { marginTop: theme.spacing(2) },
   ...theme.typography.subtitle2,
   padding: theme.spacing((32 - 20) / 2 / 8, 1.5),
