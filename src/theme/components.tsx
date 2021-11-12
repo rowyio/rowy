@@ -251,7 +251,11 @@ export const components = (theme: Theme): ThemeOptions => {
             "&.labelHorizontal": {
               flexDirection: "row",
               alignItems: "center",
-              "& .MuiInputLabel-root": { paddingRight: theme.spacing(1) },
+
+              "& .MuiInputLabel-root": {
+                padding: 0,
+                paddingRight: theme.spacing(1),
+              },
             },
           },
         },
