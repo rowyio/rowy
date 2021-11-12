@@ -1,10 +1,10 @@
 import { useState } from "react";
-import _get from "lodash/get";
 import { useSnackbar } from "notistack";
+import _get from "lodash/get";
 
 import { Fab, FabProps } from "@mui/material";
-import PlayIcon from "@mui/icons-material/PlayArrow";
-import RefreshIcon from "@mui/icons-material/Refresh";
+import RunIcon from "@mui/icons-material/PlayArrow";
+import RedoIcon from "@mui/icons-material/Refresh";
 import UndoIcon from "@mui/icons-material/Undo";
 import CircularProgressOptical from "@src/components/CircularProgressOptical";
 
@@ -20,14 +20,14 @@ const replacer = (data: any) => (m: string, key: string) => {
   return _get(data, objKey, defaultValue);
 };
 
-const getStateIcon = (actionState) => {
+const getStateIcon = (actionState, config) => {
   switch (actionState) {
     case "undo":
-      return <UndoIcon />;
+      return _get(config, "customIcons.undo") || <UndoIcon />;
     case "redo":
-      return <RefreshIcon />;
+      return _get(config, "customIcons.redo") || <RedoIcon />;
     default:
-      return <PlayIcon />;
+      return _get(config, "customIcons.run") || <RunIcon />;
   }
 };
 
@@ -161,12 +161,13 @@ export default function ActionFab({
               : theme.palette.background.default,
         },
       }}
+      aria-label={actionState}
       {...props}
     >
       {isRunning ? (
         <CircularProgressOptical color="secondary" size={16} />
       ) : (
-        getStateIcon(actionState)
+        getStateIcon(actionState, config)
       )}
     </Fab>
   );
