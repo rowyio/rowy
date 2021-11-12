@@ -25,7 +25,8 @@ import { useProjectContext } from "@src/contexts/ProjectContext";
 import { cloudLogFiltersAtom, cloudLogFetcher } from "./utils";
 
 export default function CloudLogsModal(props: IModalProps) {
-  const { rowyRun, tableState, table } = useProjectContext();
+  const { rowyRun, tableState, table, compatibleRowyRunVersion } =
+    useProjectContext();
 
   const [cloudLogFilters, setCloudLogFilters] = useAtom(cloudLogFiltersAtom);
 
@@ -76,18 +77,37 @@ export default function CloudLogsModal(props: IModalProps) {
               "& > *": { flexShrink: 0 },
             }}
           >
-            <ToggleButtonGroup
-              value={cloudLogFilters.type}
-              exclusive
-              onChange={(_, v) =>
-                setCloudLogFilters((c) => ({ type: v, timeRange: c.timeRange }))
-              }
-              aria-label="Filter by log type"
-            >
-              <ToggleButton value="webhook">Webhooks</ToggleButton>
-              <ToggleButton value="audit">Audit</ToggleButton>
-              <ToggleButton value="build">Build</ToggleButton>
-            </ToggleButtonGroup>
+            {compatibleRowyRunVersion!({ minVersion: "1.2.1" }) ? (
+              <ToggleButtonGroup
+                value={cloudLogFilters.type}
+                exclusive
+                onChange={(_, v) =>
+                  setCloudLogFilters((c) => ({
+                    type: v,
+                    timeRange: c.timeRange,
+                  }))
+                }
+                aria-label="Filter by log type"
+              >
+                <ToggleButton value="webhook">Webhooks</ToggleButton>
+                <ToggleButton value="audit">Audit</ToggleButton>
+                <ToggleButton value="build">Build</ToggleButton>
+              </ToggleButtonGroup>
+            ) : (
+              <ToggleButtonGroup
+                value={cloudLogFilters.type}
+                exclusive
+                onChange={(_, v) =>
+                  setCloudLogFilters((c) => ({
+                    type: v,
+                    timeRange: c.timeRange,
+                  }))
+                }
+                aria-label="Filter by log type"
+              >
+                <ToggleButton value="build">Build</ToggleButton>
+              </ToggleButtonGroup>
+            )}
 
             {cloudLogFilters.type === "webhook" && (
               <MultiSelect
