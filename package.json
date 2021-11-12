@@ -69,8 +69,7 @@
     "use-algolia": "^1.4.1",
     "use-debounce": "^3.3.0",
     "use-persisted-state": "^0.3.3",
-    "yarn": "^1.22.10",
-    "yup": "^0.32.9"
+    "yarn": "^1.22.10"
   },
   "scripts": {
     "upstream": "git fetch upstream;git merge upstream/main;git commit -m'merge upstream';git push",
