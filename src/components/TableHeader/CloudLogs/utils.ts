@@ -18,7 +18,7 @@ export type CloudLogFilters = {
 export const cloudLogFiltersAtom = atomWithHash<CloudLogFilters>(
   "cloudLogFilters",
   {
-    type: "webhook",
+    type: "build",
     timeRange: { type: "days", value: 7 },
   }
 );
