@@ -2664,10 +2664,10 @@
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
 
-"@rowy/form-builder@^0.3.1":
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/@rowy/form-builder/-/form-builder-0.3.1.tgz#7359a05563c99ae4c222fa5336a57ce7a344ae29"
-  integrity sha512-5IlNtBb6V5VdbpYWhO4P6QIBVqI42SVko15Bmn1YLd0JyoI3wza+seFBK0PgrBUB/OzTEA/hsBN5cyWhqlKt2Q==
+"@rowy/form-builder@^0.4.2":
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/@rowy/form-builder/-/form-builder-0.4.2.tgz#e1693b16af31ed486b7314cd657cd3a1c9c3e937"
+  integrity sha512-bedChgzyL7BxeQVijaxAXYJqcZtTaCLy4CfqInbsKEB+0OJ3nWi2c9l9d+v8yf6QJ2+3ERyveVfuKq6HAVTQ/g==
   dependencies:
     "@hookform/resolvers" "^2.6.0"
     "@mdi/js" "^5.9.55"

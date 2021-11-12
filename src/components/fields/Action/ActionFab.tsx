@@ -10,7 +10,6 @@ import CircularProgressOptical from "@src/components/CircularProgressOptical";
 
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import { functions } from "@src/firebase";
-import { formatPath } from "@src/utils/fns";
 import { useConfirmation } from "@src/components/ConfirmationDialog";
 import { useActionParams } from "./FormDialog/Context";
 import { runRoutes } from "@src/constants/runRoutes";
@@ -112,9 +111,15 @@ export default function ActionFab({
       : "redo"
     : "run";
 
-  const needsParams = Array.isArray(config.params) && config.params.length > 0;
+  const needsParams =
+    config.friction === "params" &&
+    Array.isArray(config.params) &&
+    config.params.length > 0;
   const needsConfirmation =
-    typeof config.confirmation === "string" && config.confirmation !== "";
+    (!config.friction || config.friction === "confirmation") &&
+    typeof config.confirmation === "string" &&
+    config.confirmation !== "";
+
   return (
     <Fab
       onClick={

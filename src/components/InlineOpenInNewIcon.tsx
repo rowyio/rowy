@@ -4,7 +4,7 @@ export const InlineOpenInNewIcon = styled("span")(() => ({
   position: "relative",
   width: "1em",
   height: "1em",
-  marginLeft: "0.25em",
+  marginLeft: "0.25ch",
   display: "inline-block",
   verticalAlign: "baseline",
 

@@ -63,6 +63,7 @@ export default function CodeEditorHelper({
 
       <Button
         size="small"
+        color="primary"
         target="_blank"
         rel="noopener noreferrer"
         href={docLink}

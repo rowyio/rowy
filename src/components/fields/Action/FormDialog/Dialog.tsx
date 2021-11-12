@@ -15,10 +15,10 @@ const yupOrderKeys = (acc, currKey) => {
   else return [...acc, currKey];
 };
 
-const validationCompiler = (validation) =>
-  Object.keys(validation)
-    .reduce(yupOrderKeys, [])
-    .reduce(yupReducer(validation), yup);
+// const validationCompiler = (validation) =>
+//   Object.keys(validation)
+//     .reduce(yupOrderKeys, [])
+//     .reduce(yupReducer(validation), yup);
 
 export default function ParamsDialog({
   column,
@@ -42,10 +42,6 @@ export default function ParamsDialog({
     validation:{array:null,required:'needs to specific the cohort to new cohort',max:[1,'only one cohort is allowed']},
   }]
 */
-  const fields = column.config.params.map((field) => ({
-    ...field,
-    validation: field.validation ? validationCompiler(field.validation) : null,
-  }));
 
   if (!open) return null;
 
@@ -53,7 +49,7 @@ export default function ParamsDialog({
     <FormDialog
       onClose={handleClose}
       title={`${column.name as string}`}
-      fields={fields}
+      fields={column.config.params}
       values={{}}
       onSubmit={handleRun}
       SubmitButtonProps={{ children: "Run" }}
