@@ -11,7 +11,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 // import "react-data-grid/dist/react-data-grid.css";
 import DataGrid, {
   Column,
-  SelectColumn as _SelectColumn,
+  //  SelectColumn as _SelectColumn,
 } from "react-data-grid";
 
 import Loading from "@src/components/Loading";
@@ -38,7 +38,7 @@ export type TableColumn = Column<any> & {
 };
 
 const rowKeyGetter = (row: any) => row.id;
-const SelectColumn = { ..._SelectColumn, width: 42, maxWidth: 42 };
+//const SelectColumn = { ..._SelectColumn, width: 42, maxWidth: 42 };
 
 export default function Table() {
   const classes = useStyles();
@@ -93,7 +93,7 @@ export default function Table() {
         .filter((column) => !userDocHiddenFields.includes(column.key));
 
       setColumns([
-        SelectColumn,
+        //  SelectColumn,
         ..._columns,
         {
           isNew: true,
