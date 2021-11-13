@@ -89,7 +89,7 @@ export default function NewColumn({
               onChange={(e) => {
                 setColumnLabel(e.target.value);
                 if (type !== FieldType.id && !isAuditField) {
-                  setFieldKey(_camel(columnLabel));
+                  setFieldKey(_camel(e.target.value));
                 }
               }}
               helperText="Set the user-facing name for this column."
