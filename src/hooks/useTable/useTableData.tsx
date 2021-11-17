@@ -13,7 +13,7 @@ import { useAppContext } from "@src/contexts/AppContext";
 import { TableFilter, TableOrder } from ".";
 import {
   isCollectionGroup,
-  generateSmallerId,
+  decrementId,
   missingFieldsReducer,
 } from "@src/utils/fns";
 
@@ -282,14 +282,20 @@ const useTableData = () => {
   const addRow = async (
     data: any,
     requiredFields: string[],
-    onSuccess: (rowId: string) => void
+    onSuccess: (rowId: string) => void,
+    id?: string
   ) => {
     const missingRequiredFields = requiredFields
       ? requiredFields.reduce(missingFieldsReducer(data), [])
       : [];
 
     const { path } = tableState;
-    const newId = generateSmallerId(rows[0]?.id ?? "zzzzzzzzzzzzzzzzzzzz");
+    const newId =
+      id ??
+      decrementId(
+        rows[0]?.id ?? "zzzzzzzzzzzzzzzzzzzzz",
+        Math.round(Math.random() * 10000)
+      );
 
     if (missingRequiredFields.length === 0) {
       try {
