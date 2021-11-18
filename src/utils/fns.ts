@@ -171,7 +171,7 @@ export const decrementId = (id, dec = 1) => {
   if (currentIndex === null) throw new Error("Could not convert id to number");
 
   if (parseInt(currentIndex) < 1 || Number.isNaN(parseInt(currentIndex)))
-    return `${id}zzzz`;
+    return `${id}${convertBase(`${Math.random() * 10000}`, 10, 62)}`;
   console.log({ id, val: parseInt(currentIndex) });
   const newIndex = parseInt(currentIndex) - dec;
 
@@ -180,6 +180,28 @@ export const decrementId = (id, dec = 1) => {
     10,
     62
   )}${trailingZeros.join("")}`;
+};
+
+export const generateSmallerId = (id: string) => {
+  const generated = id.split("");
+  for (let i = generated.length - 1; i >= 0; i--) {
+    const charIndex = characters.indexOf(id[i]);
+    if (charIndex > 0) {
+      generated[i] = characters[charIndex - 1];
+      break;
+    } else if (i > 0) {
+      continue;
+    } else {
+      generated.push(characters[characters.length - 1]);
+    }
+  }
+
+  // Ensure we don't get 00...0, then the next ID would be 00...0z,
+  // which would appear as the second row
+  if (generated.every((char) => char === characters[0]))
+    generated.push(characters[characters.length - 1]);
+
+  return generated.join("");
 };
 
 // Gets sub-table ID in $1

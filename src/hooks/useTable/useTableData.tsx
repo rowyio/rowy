@@ -15,6 +15,7 @@ import {
   isCollectionGroup,
   decrementId,
   missingFieldsReducer,
+  generateSmallerId,
 } from "@src/utils/fns";
 
 // Safety parameter sets the upper limit of number of docs fetched by this hook
@@ -291,11 +292,11 @@ const useTableData = () => {
 
     const { path } = tableState;
     const newId =
-      id ??
-      decrementId(
-        rows[0]?.id ?? "zzzzzzzzzzzzzzzzzzzzzzzz",
-        Math.round(Math.random() * 100)
-      );
+      id ?? generateSmallerId(rows[0]?.id ?? "zzzzzzzzzzzzzzzzzzzzzzzz");
+    // decrementId(
+    //   rows[0]?.id ?? "zzzzzzzzzzzzzzzzzzzzzzzz",
+    //   Math.round(Math.random() * 100)
+    // );
     if (missingRequiredFields.length === 0) {
       try {
         await db
@@ -342,8 +343,7 @@ const useTableData = () => {
       const missingRequiredFields = requiredFields
         ? requiredFields.reduce(missingFieldsReducer(data), [])
         : [];
-      const newId =
-        id ?? decrementId(previousId, Math.round(Math.random() * 100));
+      const newId = id ?? generateSmallerId(previousId);
       previousId = newId;
       if (missingRequiredFields.length === 0) {
         try {
