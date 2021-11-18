@@ -85,9 +85,6 @@ export const makeId = (length: number = 20) => {
 };
 
 function convertBase(str, fromBase, toBase) {
-  const DIGITS =
-    "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-
   const add = (x, y, base: number) => {
     let z: number[] = [];
     const n = Math.max(x.length, y.length);
@@ -124,15 +121,15 @@ function convertBase(str, fromBase, toBase) {
     const digits = str.split("");
     let arr: number[] = [];
     for (let i = digits.length - 1; i >= 0; i--) {
-      const n = DIGITS.indexOf(digits[i]);
-      if (n == -1) return null;
+      const n = characters.indexOf(digits[i]);
+      if (n == -1) return "0";
       arr.push(n);
     }
     return arr;
   };
 
   const digits = parseToDigitsArray(str, fromBase);
-  if (digits === null) return null;
+  if (digits === null) return "0";
 
   let outArray: number[] = [];
   let power: number[] | null = [1];
@@ -147,26 +144,38 @@ function convertBase(str, fromBase, toBase) {
   }
 
   let out = "";
-  for (let i = outArray.length - 1; i >= 0; i--) out += DIGITS[outArray[i]];
+  for (let i = outArray.length - 1; i >= 0; i--) out += characters[outArray[i]];
 
   return out;
 }
 
 export const decrementId = (id, dec = 1) => {
-  const newId = id.split("");
+  let newId = id.split("");
   const trailingZeros: string[] = [];
+  const leadingZeros: string[] = [];
   const leadingId: string[] = [];
+  while (newId[0] == "0") {
+    leadingZeros.push(newId.shift());
+  }
+  // remove all the zeros
   while (newId[newId.length - 1] == "0") {
     trailingZeros.push(newId.pop());
   }
+  // put back at most 6 zeros
+  newId = newId.concat(trailingZeros.splice(0, 6));
   while (newId.length > 8) {
     leadingId.push(newId.shift());
   }
-  console.log({ leadingId, trailingZeros, newId });
   const currentIndex: string | null = convertBase(newId.join(""), 62, 10);
-  if (!currentIndex) throw new Error("Could not convert id to number");
+
+  if (currentIndex === null) throw new Error("Could not convert id to number");
+
+  if (parseInt(currentIndex) < 1 || Number.isNaN(parseInt(currentIndex)))
+    return `${id}zzzz`;
+  console.log({ id, val: parseInt(currentIndex) });
   const newIndex = parseInt(currentIndex) - dec;
-  return `${leadingId.join("")}${convertBase(
+
+  return `${leadingZeros.join("")}${leadingId.join("")}${convertBase(
     `${newIndex}`,
     10,
     62

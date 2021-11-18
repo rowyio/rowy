@@ -99,7 +99,7 @@ const useTableData = () => {
     tableInitialState
   );
   const [rows, rowsDispatch] = useReducer(rowsReducer, []);
-
+  console.log(rows);
   /**  set collection listener
    *  @param filters
    *  @param limit max number of docs
@@ -293,10 +293,9 @@ const useTableData = () => {
     const newId =
       id ??
       decrementId(
-        rows[0]?.id ?? "zzzzzzzzzzzzzzzzzzzzz",
-        Math.round(Math.random() * 10000)
+        rows[0]?.id ?? "zzzzzzzzzzzzzzzzzzzzzzzz",
+        Math.round(Math.random() * 100)
       );
-
     if (missingRequiredFields.length === 0) {
       try {
         await db
@@ -327,6 +326,57 @@ const useTableData = () => {
     }
   };
 
+  /**  creating new rows from array
+   *  @param rows
+   * @param onSuccess
+   * @param requiredFields
+   */
+  const addRows = async (
+    rows: { data: any; id?: string }[],
+    requiredFields: string[],
+    onSuccess: (rowIds: string) => void
+  ) => {
+    let previousId = rows[0]?.id ?? "zzzzzzzzzzzzzzzzzzzzzzzz";
+    rows.forEach(async (row) => {
+      const { data, id } = row;
+      const missingRequiredFields = requiredFields
+        ? requiredFields.reduce(missingFieldsReducer(data), [])
+        : [];
+      const newId =
+        id ?? decrementId(previousId, Math.round(Math.random() * 100));
+      previousId = newId;
+      if (missingRequiredFields.length === 0) {
+        try {
+          await db
+            .collection(tableState.path)
+            .doc(newId)
+            .set(data, { merge: true })
+            .then(() => {
+              onSuccess(newId);
+            });
+        } catch (error: any) {
+          if (error.code === "permission-denied") {
+            enqueueSnackbar(
+              "You do not have the permissions to add new rows.",
+              {
+                variant: "error",
+              }
+            );
+          }
+        }
+      } else {
+        const ref = db.collection(tableState.path).doc(newId);
+        const newRow = {
+          ...data,
+          id: newId,
+          ref,
+          _missingRequiredFields: missingRequiredFields,
+        };
+        rowsDispatch({ type: "add", newRow });
+      }
+    });
+  };
+
   const updateRow = (rowRef, update, onSuccess, onError) => {
     rowsDispatch({ type: "update", update, rowRef, onSuccess, onError });
   };
@@ -350,6 +400,7 @@ const useTableData = () => {
     deleteRow,
     setTable,
     addRow,
+    addRows,
     updateRow,
     moreRows,
     dispatch: tableDispatch,

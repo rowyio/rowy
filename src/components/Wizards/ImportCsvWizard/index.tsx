@@ -52,7 +52,7 @@ export default function ImportCsvWizard({
 
   const [open, setOpen] = useState(true);
 
-  const { tableState, tableActions, addRow } = useProjectContext();
+  const { tableState, tableActions, addRows } = useProjectContext();
   const { enqueueSnackbar } = useSnackbar();
 
   const [config, setConfig] = useState<CsvConfig>({
@@ -87,10 +87,10 @@ export default function ImportCsvWizard({
   }, [csvData, tableState, config]);
 
   const handleFinish = () => {
-    if (!tableState || !tableActions || !addRow || !parsedRows) return;
+    if (!tableState || !tableActions || !addRows || !parsedRows) return;
     enqueueSnackbar("Importing data…");
     // Add all new rows — synchronous
-    parsedRows!.forEach((newRow) => addRow(newRow, true));
+    addRows(parsedRows.map((r) => ({ data: r })).reverse(), true);
 
     // Add any new columns to the end
     for (const col of config.newColumns) {

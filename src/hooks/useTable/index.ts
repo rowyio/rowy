@@ -10,6 +10,7 @@ export type TableActions = {
     update: Function;
     reorder: Function;
   };
+  addRows: Function;
   row: { add: Function; delete: Function; more: Function; update: Function };
   table: {
     set: (id: string, collection: string, filters: TableFilter[]) => void;
@@ -94,6 +95,7 @@ export default function useTable() {
       remove: configActions.remove,
       reorder: configActions.reorder,
     },
+    addRows: tableActions.addRows,
     row: {
       add: tableActions.addRow,
       update: tableActions.updateRow,
