@@ -28,7 +28,6 @@ export const filterOperators: IFilterOperator[] = [
 ];
 
 export const valueFormatter = (value: any) => {
-  console.log(value);
   if (value && value.toDate) {
     return value.toDate();
   }

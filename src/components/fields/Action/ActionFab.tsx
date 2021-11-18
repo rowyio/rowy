@@ -96,7 +96,6 @@ export default function ActionFab({
     } else {
       result = await handleCallableAction(data);
     }
-    console.log(result);
     const { message, success } = result;
     setIsRunning(false);
     enqueueSnackbar(JSON.stringify(message), {

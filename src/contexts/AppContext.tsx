@@ -73,7 +73,6 @@ export const AppProvider: React.FC = ({ children }) => {
       const token: any = jwt_decode(authToken);
       if (token && token.exp * 1000 < Date.now()) {
         // token is expired
-        console.log("token is expired,getting new token");
         const res = await currentUser.getIdTokenResult(true);
         setAuthToken(res.token as string);
         return res.token;
@@ -125,7 +124,6 @@ export const AppProvider: React.FC = ({ children }) => {
         if (currentUser[curr]) return { ...acc, [curr]: currentUser[curr] };
         return acc;
       }, {});
-      console.log("create user", userDoc.path, user);
       db.doc(userDoc.path).set({ user }, { merge: true });
     }
   }, [userDoc, currentUser]);

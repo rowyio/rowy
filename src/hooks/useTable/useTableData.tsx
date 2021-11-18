@@ -100,7 +100,6 @@ const useTableData = () => {
     tableInitialState
   );
   const [rows, rowsDispatch] = useReducer(rowsReducer, []);
-  console.log(rows);
   /**  set collection listener
    *  @param filters
    *  @param limit max number of docs
@@ -253,7 +252,6 @@ const useTableData = () => {
         return rowsDispatch({ type: "delete", rowId });
       }
     } catch (error: any) {
-      console.log(error);
       if (error.code === "permission-denied") {
         enqueueSnackbar("You do not have the permissions to delete this row.", {
           variant: "error",
