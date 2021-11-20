@@ -289,7 +289,13 @@ const useTableData = () => {
       : [];
 
     const { path } = tableState;
-    const newId = generateSmallerId(rows[0]?.id ?? "zzzzzzzzzzzzzzzzzzzz");
+    let rowIndex = 0;
+    let seedId = rows[rowIndex]?.id ?? "zzzzzzzzzzzzzzzzzzzz";
+    while (seedId.split("").every((char) => char === "0")) {
+      rowIndex += 1;
+      seedId = rows[rowIndex].id;
+    }
+    const newId = generateSmallerId(seedId);
 
     if (missingRequiredFields.length === 0) {
       try {

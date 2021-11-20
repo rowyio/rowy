@@ -174,7 +174,7 @@ export default function Step1RowyRun({
 }
 
 export const checkRowyRun = async (
-  rowyRunUrl: string,
+  serviceUrl: string,
   signal?: AbortSignal
 ) => {
   const result = {
@@ -184,7 +184,7 @@ export const checkRowyRun = async (
   };
 
   try {
-    const res = await rowyRun({ rowyRunUrl, route: runRoutes.version, signal });
+    const res = await rowyRun({ serviceUrl, route: runRoutes.version, signal });
     if (!res.version) return result;
 
     result.isValidRowyRunUrl = true;

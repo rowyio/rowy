@@ -51,7 +51,7 @@ export default function Step4Rules({
       getAuthToken(true)
         .then((authToken) =>
           rowyRun({
-            rowyRunUrl,
+            serviceUrl: rowyRunUrl,
             route: runRoutes.firestoreRules,
             authToken,
           })
@@ -99,7 +99,7 @@ export default function Step4Rules({
       if (!authToken) throw new Error("Failed to generate auth token");
 
       const res = await rowyRun({
-        rowyRunUrl,
+        serviceUrl: rowyRunUrl,
         route: runRoutes.setFirestoreRules,
         authToken,
         body: { ruleset: newRules },
@@ -275,7 +275,7 @@ export const checkRules = async (
 
   try {
     const res = await rowyRun({
-      rowyRunUrl,
+      serviceUrl: rowyRunUrl,
       route: runRoutes.firestoreRules,
       authToken,
       signal,

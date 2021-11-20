@@ -150,12 +150,12 @@ export default function Step2ServiceAccount({
 }
 
 export const checkServiceAccount = async (
-  rowyRunUrl: string,
+  serviceUrl: string,
   signal?: AbortSignal
 ) => {
   try {
     const res = await rowyRun({
-      rowyRunUrl,
+      serviceUrl,
       route: runRoutes.serviceAccountAccess,
       signal,
     });
