@@ -141,7 +141,6 @@ export default function ConnectTableSelect({
           params: [algoliaIndex as string],
         });
         const { key } = resp;
-        console.log(key);
         if (key) {
           const newKey = {
             key,

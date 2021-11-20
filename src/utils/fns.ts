@@ -84,6 +84,104 @@ export const makeId = (length: number = 20) => {
   return result;
 };
 
+function convertBase(str, fromBase, toBase) {
+  const add = (x, y, base: number) => {
+    let z: number[] = [];
+    const n = Math.max(x.length, y.length);
+    let carry = 0;
+    let i = 0;
+    while (i < n || carry) {
+      const xi = i < x.length ? x[i] : 0;
+      const yi = i < y.length ? y[i] : 0;
+      const zi = carry + xi + yi;
+      z.push(zi % base);
+      carry = Math.floor(zi / base);
+      i++;
+    }
+    return z;
+  };
+
+  const multiplyByNumber = (num, x, base) => {
+    if (num < 0) return null;
+    if (num == 0) return [];
+
+    let result: number[] = [];
+    let power = x;
+    while (true) {
+      num & 1 && (result = add(result, power, base));
+      num = num >> 1;
+      if (num === 0) break;
+      power = add(power, power, base);
+    }
+
+    return result;
+  };
+
+  const parseToDigitsArray = (str, base) => {
+    const digits = str.split("");
+    let arr: number[] = [];
+    for (let i = digits.length - 1; i >= 0; i--) {
+      const n = characters.indexOf(digits[i]);
+      if (n == -1) return "0";
+      arr.push(n);
+    }
+    return arr;
+  };
+
+  const digits = parseToDigitsArray(str, fromBase);
+  if (digits === null) return "0";
+
+  let outArray: number[] = [];
+  let power: number[] | null = [1];
+  for (let i = 0; i < digits.length; i++) {
+    digits[i] &&
+      (outArray = add(
+        outArray,
+        multiplyByNumber(digits[i], power, toBase),
+        toBase
+      ));
+    power = multiplyByNumber(fromBase, power, toBase);
+  }
+
+  let out = "";
+  for (let i = outArray.length - 1; i >= 0; i--) out += characters[outArray[i]];
+
+  return out;
+}
+
+export const decrementId = (id, dec = 1) => {
+  let newId = id.split("");
+  const trailingZeros: string[] = [];
+  const leadingZeros: string[] = [];
+  const leadingId: string[] = [];
+  while (newId[0] == "0") {
+    leadingZeros.push(newId.shift());
+  }
+  // remove all the zeros
+  while (newId[newId.length - 1] == "0") {
+    trailingZeros.push(newId.pop());
+  }
+  // put back at most 6 zeros
+  newId = newId.concat(trailingZeros.splice(0, 6));
+  while (newId.length > 8) {
+    leadingId.push(newId.shift());
+  }
+  const currentIndex: string | null = convertBase(newId.join(""), 62, 10);
+
+  if (currentIndex === null) throw new Error("Could not convert id to number");
+
+  if (parseInt(currentIndex) < 1 || Number.isNaN(parseInt(currentIndex)))
+    return `${id}${convertBase(`${Math.random() * 10000}`, 10, 62)}`;
+  console.log({ id, val: parseInt(currentIndex) });
+  const newIndex = parseInt(currentIndex) - dec;
+
+  return `${leadingZeros.join("")}${leadingId.join("")}${convertBase(
+    `${newIndex}`,
+    10,
+    62
+  )}${trailingZeros.join("")}`;
+};
+
 export const generateSmallerId = (id: string) => {
   const generated = id.split("");
   for (let i = generated.length - 1; i >= 0; i--) {
@@ -102,24 +200,6 @@ export const generateSmallerId = (id: string) => {
   // which would appear as the second row
   if (generated.every((char) => char === characters[0]))
     generated.push(characters[characters.length - 1]);
-
-  return generated.join("");
-};
-
-export const generateBiggerId = (id: string) => {
-  const generated = id.split("");
-  for (let i = generated.length - 1; i >= 0; i--) {
-    const charIndex = characters.indexOf(id[i]);
-    console.log(i, id[i], charIndex);
-    if (charIndex < characters.length - 1) {
-      generated[i] = characters[charIndex + 1];
-      break;
-    } else if (i > 0) {
-      continue;
-    } else {
-      generated.push(characters[0]);
-    }
-  }
 
   return generated.join("");
 };

@@ -47,7 +47,15 @@ export interface IProjectContext {
   roles: string[];
   tableState: TableState;
   tableActions: TableActions;
-  addRow: (data?: Record<string, any>, ignoreRequiredFields?: boolean) => void;
+  addRow: (
+    data?: Record<string, any>,
+    ignoreRequiredFields?: boolean,
+    id?: string
+  ) => void;
+  addRows: (
+    rows: { data?: Record<string, any>; id?: string }[],
+    ignoreRequiredFields?: boolean
+  ) => void;
   deleteRow: (rowId) => void;
   updateCell: (
     ref: firebase.firestore.DocumentReference,
@@ -225,6 +233,53 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
     return;
   };
 
+  const addRows = async (
+    rows: { data?: any; id?: string }[],
+    ignoreRequiredFields?: boolean
+  ) => {
+    const valuesFromFilter = tableState.filters.reduce((acc, curr) => {
+      if (curr.operator === "==") {
+        return { ...acc, [curr.key]: curr.value };
+      } else {
+        return acc;
+      }
+    }, {});
+    const initialData = Object.values(tableState.columns).reduce(
+      (acc, column) => {
+        if (column.config?.defaultValue?.type === "static") {
+          return { ...acc, [column.key]: column.config.defaultValue.value };
+        } else if (column.config?.defaultValue?.type === "null") {
+          return { ...acc, [column.key]: null };
+        } else {
+          return acc;
+        }
+      },
+      {}
+    );
+
+    const requiredFields = Object.values(tableState.columns)
+      .filter((column) => column.config.required)
+      .map((column) => column.key);
+
+    if (table?.audit !== false) {
+      initialData[table?.auditFieldCreatedBy || "_createdBy"] = rowyUser(
+        currentUser!
+      );
+      initialData[table?.auditFieldUpdatedBy || "_updatedBy"] = rowyUser(
+        currentUser!
+      );
+    }
+
+    await tableActions.addRows(
+      rows.map((row) => ({
+        data: { ...valuesFromFilter, ...initialData, ...row.data },
+      })),
+      ignoreRequiredFields ? [] : requiredFields,
+      (rowId: string) => auditChange("ADD_ROW", rowId, {})
+    );
+    return;
+  };
+
   const updateCell: IProjectContext["updateCell"] = (
     ref,
     fieldName,
@@ -330,6 +385,7 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
         tableState,
         tableActions,
         addRow,
+        addRows,
         updateCell,
         deleteRow,
         settingsActions,

@@ -82,8 +82,6 @@ export const cloudLogFetcher = (
           .join(encodeURIComponent("\n"))}`
       : "");
 
-  console.log(logQueryUrl);
-
   if (rowyRun)
     return rowyRun<Record<string, any>[]>({
       route: { path: logQueryUrl, method: "GET" },

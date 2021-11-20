@@ -13,8 +13,8 @@ import { useAppContext } from "@src/contexts/AppContext";
 import { TableFilter, TableOrder } from ".";
 import {
   isCollectionGroup,
-  generateSmallerId,
   missingFieldsReducer,
+  decrementId,
 } from "@src/utils/fns";
 
 // Safety parameter sets the upper limit of number of docs fetched by this hook
@@ -99,7 +99,6 @@ const useTableData = () => {
     tableInitialState
   );
   const [rows, rowsDispatch] = useReducer(rowsReducer, []);
-
   /**  set collection listener
    *  @param filters
    *  @param limit max number of docs
@@ -252,7 +251,6 @@ const useTableData = () => {
         return rowsDispatch({ type: "delete", rowId });
       }
     } catch (error: any) {
-      console.log(error);
       if (error.code === "permission-denied") {
         enqueueSnackbar("You do not have the permissions to delete this row.", {
           variant: "error",
@@ -282,21 +280,22 @@ const useTableData = () => {
   const addRow = async (
     data: any,
     requiredFields: string[],
-    onSuccess: (rowId: string) => void
+    onSuccess: (rowId: string) => void,
+    id?: string
   ) => {
     const missingRequiredFields = requiredFields
       ? requiredFields.reduce(missingFieldsReducer(data), [])
       : [];
 
     const { path } = tableState;
-    let rowIndex = 0;
-    let seedId = rows[rowIndex]?.id ?? "zzzzzzzzzzzzzzzzzzzz";
-    while (seedId.split("").every((char) => char === "0")) {
-      rowIndex += 1;
-      seedId = rows[rowIndex].id;
-    }
-    const newId = generateSmallerId(seedId);
 
+    const newId =
+      id ??
+      decrementId(
+        rows[0]?.id ?? "zzzzzzzzzzzzzzzzzzzzzzzz",
+        Math.round(Math.random() * 100)
+      );
+    //generateSmallerId(rows[0]?.id ?? "zzzzzzzzzzzzzzzzzzzzzzzz");
     if (missingRequiredFields.length === 0) {
       try {
         await db
@@ -327,6 +326,57 @@ const useTableData = () => {
     }
   };
 
+  /**  creating new rows from array
+   *  @param rows
+   * @param onSuccess
+   * @param requiredFields
+   */
+  const addRows = async (
+    rows: { data: any; id?: string }[],
+    requiredFields: string[],
+    onSuccess: (rowIds: string) => void
+  ) => {
+    let previousId = rows[0]?.id ?? "zzzzzzzzzzzzzzzzzzzzzzzz";
+    rows.forEach(async (row) => {
+      const { data, id } = row;
+      const missingRequiredFields = requiredFields
+        ? requiredFields.reduce(missingFieldsReducer(data), [])
+        : [];
+      const newId =
+        id ?? decrementId(previousId, Math.round(Math.random() * 100));
+      previousId = newId;
+      if (missingRequiredFields.length === 0) {
+        try {
+          await db
+            .collection(tableState.path)
+            .doc(newId)
+            .set(data, { merge: true })
+            .then(() => {
+              onSuccess(newId);
+            });
+        } catch (error: any) {
+          if (error.code === "permission-denied") {
+            enqueueSnackbar(
+              "You do not have the permissions to add new rows.",
+              {
+                variant: "error",
+              }
+            );
+          }
+        }
+      } else {
+        const ref = db.collection(tableState.path).doc(newId);
+        const newRow = {
+          ...data,
+          id: newId,
+          ref,
+          _missingRequiredFields: missingRequiredFields,
+        };
+        rowsDispatch({ type: "add", newRow });
+      }
+    });
+  };
+
   const updateRow = (rowRef, update, onSuccess, onError) => {
     rowsDispatch({ type: "update", update, rowRef, onSuccess, onError });
   };
@@ -350,6 +400,7 @@ const useTableData = () => {
     deleteRow,
     setTable,
     addRow,
+    addRows,
     updateRow,
     moreRows,
     dispatch: tableDispatch,

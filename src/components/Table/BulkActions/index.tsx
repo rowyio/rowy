@@ -202,9 +202,7 @@ export default function BulkActions({ selectedRows, columns, clearSelection }) {
   };
   const executeAction = async (key: string, actionType: string) => {
     const actionColumn = _find(actionColumns, { key });
-    console.log(actionColumn);
     if (!actionColumn) return;
-    console.log(actionColumn);
     if (actionColumn.config.isActionScript) {
       handleActionScript(actionColumn, actionType);
     } else {
