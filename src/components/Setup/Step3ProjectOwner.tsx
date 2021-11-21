@@ -22,7 +22,7 @@ export default function Step3ProjectOwner({
 
   const [email, setEmail] = useState("");
   useEffect(() => {
-    rowyRun({ rowyRunUrl, route: runRoutes.projectOwner })
+    rowyRun({ serviceUrl: rowyRunUrl, route: runRoutes.projectOwner })
       .then((data) => setEmail(data.email))
       .catch((e: any) => {
         console.error(e);
@@ -44,7 +44,7 @@ export default function Step3ProjectOwner({
       const authToken = await getAuthToken();
       const res = await rowyRun({
         route: runRoutes.setOwnerRoles,
-        rowyRunUrl,
+        serviceUrl: rowyRunUrl,
         authToken,
       });
 
@@ -186,7 +186,7 @@ export const checkProjectOwner = async (
 
   try {
     const res = await rowyRun({
-      rowyRunUrl,
+      serviceUrl: rowyRunUrl,
       route: runRoutes.projectOwner,
       signal,
     });

@@ -1,7 +1,7 @@
 import { RunRoute } from "@src/constants/runRoutes";
 
 export interface IRowyRunRequestProps {
-  rowyRunUrl: string;
+  serviceUrl: string;
   authToken?: string;
   route: RunRoute;
   body?: any;
@@ -12,7 +12,7 @@ export interface IRowyRunRequestProps {
 }
 
 export const rowyRun = async ({
-  rowyRunUrl,
+  serviceUrl,
   authToken,
   route,
   body,
@@ -22,7 +22,7 @@ export const rowyRun = async ({
   signal,
 }: IRowyRunRequestProps) => {
   const { method, path } = route;
-  let url = (localhost ? "http://localhost:8080" : rowyRunUrl) + path;
+  let url = (localhost ? "http://localhost:8080" : serviceUrl) + path;
   if (params && params.length > 0) url = url + "/" + params.join("/");
   const response = await fetch(url, {
     method: method,

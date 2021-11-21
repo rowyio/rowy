@@ -34,6 +34,10 @@ export type Table = {
   auditFieldUpdatedBy?: string;
 };
 
+interface IRowyRun
+  extends Omit<IRowyRunRequestProps, "serviceUrl" | "authToken"> {
+  service?: "hooks" | "builder";
+}
 export interface IProjectContext {
   settings: {
     rowyRunUrl?: string;
@@ -97,9 +101,7 @@ export interface IProjectContext {
   // A ref ot the import wizard. Prevents unnecessary re-renders
   importWizardRef: React.MutableRefObject<ImportWizardRef | undefined>;
 
-  rowyRun: <T = any>(
-    args: Omit<IRowyRunRequestProps, "rowyRunUrl" | "authToken">
-  ) => Promise<T>;
+  rowyRun: <T = any>(args: IRowyRun) => Promise<T>;
 }
 
 const ProjectContext = React.createContext<Partial<IProjectContext>>({});
@@ -329,15 +331,20 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
   };
   // rowyRun access
   const _rowyRun: IProjectContext["rowyRun"] = async (args) => {
+    const { service, ...rest } = args;
     const authToken = await getAuthToken();
-    if (settings.doc.rowyRunUrl)
+    const serviceUrl = service
+      ? settings.doc.services[service]
+      : settings.doc.rowyRunUrl;
+
+    if (serviceUrl) {
       return rowyRun({
-        rowyRunUrl: settings.doc.rowyRunUrl,
+        serviceUrl,
         authToken,
-        ...args,
+        ...rest,
       });
-    else {
-      enqueueSnackbar(`Rowy Run is not set up`, {
+    } else {
+      enqueueSnackbar(`Rowy Run${service ? ` ${service}` : ""} is not set up`, {
         variant: "error",
         action: (
           <Button

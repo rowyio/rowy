@@ -30,7 +30,7 @@ export default function Step5Migrate({
 
       const res = await rowyRun({
         route: runRoutes.migrateFT2Rowy,
-        rowyRunUrl,
+        serviceUrl: rowyRunUrl,
         authToken,
       });
       if (!res.success) throw new Error(res.message);
@@ -100,7 +100,7 @@ export const checkMigrate = async (
 
   try {
     const res = await rowyRun({
-      rowyRunUrl,
+      serviceUrl: rowyRunUrl,
       route: runRoutes.checkFT2Rowy,
       authToken,
       signal,

@@ -13,9 +13,8 @@ import { useAppContext } from "@src/contexts/AppContext";
 import { TableFilter, TableOrder } from ".";
 import {
   isCollectionGroup,
-  decrementId,
   missingFieldsReducer,
-  generateSmallerId,
+  decrementId,
 } from "@src/utils/fns";
 
 // Safety parameter sets the upper limit of number of docs fetched by this hook
@@ -289,12 +288,14 @@ const useTableData = () => {
       : [];
 
     const { path } = tableState;
+
     const newId =
-      id ?? generateSmallerId(rows[0]?.id ?? "zzzzzzzzzzzzzzzzzzzzzzzz");
-    // decrementId(
-    //   rows[0]?.id ?? "zzzzzzzzzzzzzzzzzzzzzzzz",
-    //   Math.round(Math.random() * 100)
-    // );
+      id ??
+      decrementId(
+        rows[0]?.id ?? "zzzzzzzzzzzzzzzzzzzzzzzz",
+        Math.round(Math.random() * 100)
+      );
+    //generateSmallerId(rows[0]?.id ?? "zzzzzzzzzzzzzzzzzzzzzzzz");
     if (missingRequiredFields.length === 0) {
       try {
         await db
@@ -341,7 +342,8 @@ const useTableData = () => {
       const missingRequiredFields = requiredFields
         ? requiredFields.reduce(missingFieldsReducer(data), [])
         : [];
-      const newId = id ?? generateSmallerId(previousId);
+      const newId =
+        id ?? decrementId(previousId, Math.round(Math.random() * 100));
       previousId = newId;
       if (missingRequiredFields.length === 0) {
         try {
