@@ -188,7 +188,8 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
   };
   const addRow: IProjectContext["addRow"] = async (
     data,
-    ignoreRequiredFields
+    ignoreRequiredFields,
+    id
   ) => {
     const valuesFromFilter = tableState.filters.reduce((acc, curr) => {
       if (curr.operator === "==") {
@@ -226,7 +227,8 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
     await tableActions.row.add(
       { ...valuesFromFilter, ...initialData, ...data },
       ignoreRequiredFields ? [] : requiredFields,
-      (rowId: string) => auditChange("ADD_ROW", rowId, {})
+      (rowId: string) => auditChange("ADD_ROW", rowId, {}),
+      id
     );
     return;
   };

@@ -1,7 +1,6 @@
-import { Stack, Button } from "@mui/material";
+import { Stack } from "@mui/material";
 
 import { isCollectionGroup } from "@src/utils/fns";
-import AddRowIcon from "@src/assets/icons/AddRow";
 
 import Filters from "../Table/Filters";
 import ImportCSV from "./ImportCsv";
@@ -20,12 +19,12 @@ import { useAppContext } from "@src/contexts/AppContext";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import { FieldType } from "@src/constants/fields";
 import { useSnackLogContext } from "@src/contexts/SnackLogContext";
-
+import AddRow from "./AddRow";
 export const TABLE_HEADER_HEIGHT = 44;
 
 export default function TableHeader() {
   const { userClaims } = useAppContext();
-  const { addRow, tableState } = useProjectContext();
+  const { tableState } = useProjectContext();
   const snackLogContext = useSnackLogContext();
 
   const hasDerivatives =
@@ -60,35 +59,7 @@ export default function TableHeader() {
         },
       }}
     >
-      {/*
-      <ButtonGroup
-        variant="contained"
-        aria-label="Split button"
-        style={{ display: "flex" }}
-      >
-        */}
-      <Button
-        disabled={isCollectionGroup() || !addRow}
-        onClick={() => addRow!()}
-        variant="contained"
-        color="primary"
-        startIcon={<AddRowIcon />}
-        // sx={{ pr: 1.5 }}
-      >
-        Add row
-      </Button>
-      {/*
-        <Button
-          // aria-controls={open ? 'split-button-menu' : undefined}
-          // aria-expanded={open ? 'true' : undefined}
-          // aria-label="select merge strategy"
-          aria-haspopup="menu"
-          style={{ padding: 0 }}
-        >
-          <ArrowDropDownIcon />
-        </Button>
-      </ButtonGroup>
-      */}
+      <AddRow />
       {/* Spacer */} <div />
       <HiddenFields />
       <Filters />
