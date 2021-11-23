@@ -6,7 +6,7 @@ import CodeEditor from "@src/components/CodeEditor";
 import CodeEditorHelper from "@src/components/CodeEditor/CodeEditorHelper";
 
 import { WIKI_LINKS } from "@src/constants/externalLinks";
-
+import { parserExtraLibs } from "./utils";
 const additionalVariables = [
   {
     key: "req",
@@ -50,6 +50,7 @@ export default function Step4Body({
           diagnosticsOptions={diagnosticsOptions}
           onMount={() => setBodyEditorActive(true)}
           onUnmount={() => setBodyEditorActive(false)}
+          extraLibs={parserExtraLibs}
         />
       </div>
 
