@@ -42,7 +42,7 @@ export default function Step3Conditions({
           onMount={() => setConditionEditorActive(true)}
           onUnmount={() => setConditionEditorActive(false)}
           extraLibs={
-            webhookSchemas[webhookObject.type].condition.extraLibs ??
+            webhookSchemas[webhookObject.type]?.condition?.extraLibs ??
             webhookSchemas["basic"].condition.extraLibs
           }
         />
@@ -51,7 +51,7 @@ export default function Step3Conditions({
       <CodeEditorHelper
         docLink={WIKI_LINKS.webhooks}
         additionalVariables={
-          webhookSchemas[webhookObject.type].condition.additionalVariables ??
+          webhookSchemas[webhookObject.type].condition?.additionalVariables ??
           webhookSchemas["basic"].condition.additionalVariables
         }
       />

@@ -20,6 +20,7 @@ export default function Step1Endpoint({
         labelPlacement="start"
         control={
           <Switch
+            value={webhookObject.auth?.enabled}
             onClick={() =>
               setWebhookObject({
                 ...webhookObject,
@@ -37,9 +38,8 @@ export default function Step1Endpoint({
         webhookSchemas[webhookObject.type].auth(webhookObject, setWebhookObject)
       ) : (
         <Typography>
-          Verification of webhooks is optional however it allows you to confirm
-          that the webhook is being called from real source rather than
-          malicious
+          Verification of webhooks is optional however it prevents malicious
+          actors from spoofing
         </Typography>
       )}
       {}

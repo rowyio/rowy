@@ -1,13 +1,13 @@
-import { Typography, Link } from "@mui/material";
+import { Typography, Link, TextField } from "@mui/material";
 import { generateRandomId } from "@src/utils/fns";
 
 export const webhookTypes = [
   "basic",
   "typeform",
   "sendgrid",
-  "shopify",
-  "twitter",
-  "stripe",
+  //"shopify",
+  //"twitter",
+  //"stripe",
 ] as const;
 
 const requestType = [
@@ -42,9 +42,9 @@ export type WebhookType = typeof webhookTypes[number];
 export const webhookNames: Record<WebhookType, string> = {
   sendgrid: "Sendgrid",
   typeform: "Typeform",
-  shopify: "Shopify",
-  twitter: "Twitter",
-  stripe: "Stripe",
+  // shopify: "Shopify",
+  // twitter: "Twitter",
+  //    stripe: "Stripe",
   basic: "Basic",
 };
 
@@ -98,6 +98,9 @@ export const webhookSchemas = {
   typeform: {
     name: "Typeform",
     parser: {
+      additionalVariables: null,
+      extraLibs: null,
+
       template: `const typeformParser: Parser = async({req, db,ref}) =>{
       // this reduces the form submission into a single object of key value pairs
       // eg: {name: "John", age: 20}
@@ -136,6 +139,8 @@ export const webhookSchemas = {
     })};`,
     },
     condition: {
+      additionalVariables: null,
+      extraLibs: null,
       template: `const condition: Condition = async({ref,req,db}) => {
       // feel free to add your own code logic here
       return true;
@@ -143,21 +148,95 @@ export const webhookSchemas = {
     },
     auth: (webhookObject, setWebhookObject) => {
       return (
-        <Typography gutterBottom>
-          To verify the webhook call is sent from typeform, you need to add
-          secret on your webhook config on be follow the instructions{" "}
-          <Link
-            href={
-              "https://developers.typeform.com/webhooks/secure-your-webhooks/"
-            }
-            rel="noopener noreferrer"
-            variant="body2"
-            underline="always"
-          >
-            here
-          </Link>{" "}
-          then add the secret below
-        </Typography>
+        <>
+          <Typography gutterBottom>
+            To verify the webhook call is sent from typeform, you need to add
+            secret on your webhook config on be follow the instructions{" "}
+            <Link
+              href={
+                "https://developers.typeform.com/webhooks/secure-your-webhooks/"
+              }
+              rel="noopener noreferrer"
+              variant="body2"
+              underline="always"
+            >
+              here
+            </Link>{" "}
+            to set the secret, then add it below
+          </Typography>
+
+          <TextField
+            label={"Typeform Secret"}
+            value={webhookObject.auth.secret}
+            onChange={(e) => {
+              setWebhookObject({
+                ...webhookObject,
+                auth: { ...webhookObject.auth, secret: e.target.value },
+              });
+            }}
+          />
+        </>
+      );
+    },
+  },
+  sendgrid: {
+    name: "Sendgrid",
+    parser: {
+      additionalVariables: null,
+      extraLibs: null,
+      template: `const sendgridParser: Parser = async({req, db,ref}) =>{
+
+        // {
+        //   "email": "example@test.com",
+        //   "timestamp": 1513299569,
+        //   "smtp-id": "<14c5d75ce93.dfd.64b469@ismtpd-555>",
+        //   "event": "processed",
+        //   "category": "cat facts",
+        //   "sg_event_id": "sg_event_id",
+        //   "sg_message_id": "sg_message_id"
+        // },
+
+
+    };`,
+    },
+    condition: {
+      additionalVariables: null,
+      extraLibs: null,
+      template: `const condition: Condition = async({ref,req,db}) => {
+      // feel free to add your own code logic here
+      return true;
+    }`,
+    },
+    auth: (webhookObject, setWebhookObject) => {
+      return (
+        <>
+          <Typography gutterBottom>
+            To verify the webhook call is sent from Sendgrid, You can enable
+            signed event webhooks
+            <Link
+              href={
+                "https://docs.sendgrid.com/for-developers/tracking-events/getting-started-event-webhook-security-features#enable-the-signed-event-webhook"
+              }
+              rel="noopener noreferrer"
+              variant="body2"
+              underline="always"
+            >
+              here
+            </Link>{" "}
+            to set the secret, then add it below
+          </Typography>
+
+          <TextField
+            label={"Verification Key"}
+            value={webhookObject.auth.secret}
+            onChange={(e) => {
+              setWebhookObject({
+                ...webhookObject,
+                auth: { ...webhookObject.auth, secret: e.target.value },
+              });
+            }}
+          />
+        </>
       );
     },
   },
