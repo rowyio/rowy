@@ -41,6 +41,9 @@ interface IRowyRun
 export interface IProjectContext {
   settings: {
     rowyRunUrl?: string;
+    services?: {
+      hooks?: string;
+    };
   };
   tables: Table[];
   table: Table;

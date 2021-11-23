@@ -77,6 +77,7 @@ export default function Webhooks() {
     try {
       if (rowyRun) {
         const resp = await rowyRun({
+          service: "hooks",
           route: runRoutes.publishWebhooks,
           body: {
             tableConfigPath: tableState?.config.tableConfig.path,

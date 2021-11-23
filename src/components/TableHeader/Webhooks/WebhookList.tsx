@@ -65,8 +65,7 @@ export default function WebhookList({
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  const baseUrl = `${settings?.rowyRunUrl}/whs/${tableState?.tablePath}/`;
+  const baseUrl = `${settings?.services?.hooks}/h/${tableState?.tablePath}/`;
   return (
     <>
       <Stack

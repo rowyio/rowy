@@ -39,7 +39,6 @@ const rowsReducer = (prevRows: any, update: any) => {
         (r) => !snapshotDocs.some((d) => d.id === r.id)
       );
       return [...localRows, ...snapshotDocs.map(doc2row)];
-
     case "delete":
       return prevRows.filter((row) => update.rowId !== row.id);
     case "deleteMultiple":
@@ -67,9 +66,7 @@ const rowsReducer = (prevRows: any, update: any) => {
           .set(_newRows[rowIndex], { merge: true })
           .then(update.onSuccess, update.onError);
       }
-
       return _newRows;
-
     case "add":
       return [update.newRow, ...prevRows];
 
@@ -77,6 +74,7 @@ const rowsReducer = (prevRows: any, update: any) => {
       return [];
   }
 };
+
 const tableInitialState = {
   prevFilters: null,
   prevPath: null,
@@ -286,16 +284,13 @@ const useTableData = () => {
     const missingRequiredFields = requiredFields
       ? requiredFields.reduce(missingFieldsReducer(data), [])
       : [];
-
     const { path } = tableState;
-
     const newId =
       id ??
       decrementId(
         rows[0]?.id ?? "zzzzzzzzzzzzzzzzzzzzzzzz",
         Math.round(Math.random() * 100)
       );
-    //generateSmallerId(rows[0]?.id ?? "zzzzzzzzzzzzzzzzzzzzzzzz");
     if (missingRequiredFields.length === 0) {
       try {
         await db

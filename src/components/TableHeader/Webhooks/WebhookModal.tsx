@@ -19,7 +19,7 @@ import ExpandIcon from "@mui/icons-material/KeyboardArrowDown";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
 import Modal, { IModalProps } from "@src/components/Modal";
-import Step1Secret from "./Step1Secret";
+import Step1Auth from "./Step1Auth";
 import Step2Conditions from "./Step2Conditions";
 import Step3Body from "./Step3Parser";
 
@@ -172,10 +172,7 @@ export default function WebhookModal({
                 <ExpandIcon />
               </StepButton>
               <StepContent>
-                <Typography gutterBottom>
-                  Set the verification secret for the webhook.
-                </Typography>
-                <Step1Secret {...stepProps} />
+                <Step1Auth {...stepProps} />
               </StepContent>
             </Step>
 
