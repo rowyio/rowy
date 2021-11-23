@@ -5,13 +5,7 @@ import CodeEditor from "@src/components/CodeEditor";
 import CodeEditorHelper from "@src/components/CodeEditor/CodeEditorHelper";
 
 import { WIKI_LINKS } from "@src/constants/externalLinks";
-
-const additionalVariables = [
-  {
-    key: "req",
-    description: "webhook request",
-  },
-];
+import { webhookSchemas } from "./utils";
 
 const diagnosticsOptions = {
   noSemanticValidation: false,
@@ -47,12 +41,19 @@ export default function Step3Conditions({
           diagnosticsOptions={diagnosticsOptions}
           onMount={() => setConditionEditorActive(true)}
           onUnmount={() => setConditionEditorActive(false)}
+          extraLibs={
+            webhookSchemas[webhookObject.type].condition.extraLibs ??
+            webhookSchemas["basic"].condition.extraLibs
+          }
         />
       </div>
 
       <CodeEditorHelper
         docLink={WIKI_LINKS.webhooks}
-        additionalVariables={additionalVariables}
+        additionalVariables={
+          webhookSchemas[webhookObject.type].condition.additionalVariables ??
+          webhookSchemas["basic"].condition.additionalVariables
+        }
       />
     </>
   );

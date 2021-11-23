@@ -10,6 +10,33 @@ export const webhookTypes = [
   "stripe",
 ] as const;
 
+const requestType = [
+  "declare type WebHookRequest {",
+  "    /**",
+  "     * Webhook Request object",
+  "     */",
+  "static params:string[]",
+  "static query:string",
+  "static body:any",
+  "}",
+].join("\n");
+
+export const parserExtraLibs = [
+  requestType,
+  `type Parser = (args:{req:WebHookRequest,db: FirebaseFirestore.Firestore,ref: FirebaseFirestore.CollectionReference}) => Promise<any>;`,
+];
+export const conditionExtraLibs = [
+  requestType,
+  `type Condition = (args:{req:WebHookRequest,db: FirebaseFirestore.Firestore,ref: FirebaseFirestore.CollectionReference}) => Promise<any>;`,
+];
+
+const additionalVariables = [
+  {
+    key: "req",
+    description: "webhook request",
+  },
+];
+
 export type WebhookType = typeof webhookTypes[number];
 
 export const webhookNames: Record<WebhookType, string> = {
@@ -43,7 +70,10 @@ export interface IWebhook {
 export const webhookSchemas = {
   basic: {
     name: "Basic",
-    parser: `const basicParser: BasicParser = async({req, db,ref}) => {
+    parser: {
+      additionalVariables,
+      extraLibs: parserExtraLibs,
+      template: `const basicParser: Parser = async({req, db,ref}) => {
       // request is the request object from the webhook
       // db is the database object
       // ref is the reference to collection of the table
@@ -52,17 +82,23 @@ export const webhookSchemas = {
       const {body} = req;
       return body;
   }`,
-    conditional: `const condition: Condition = async({ref,req,db}) => {
+    },
+    condition: {
+      additionalVariables,
+      extraLibs: conditionExtraLibs,
+      template: `const condition: Condition = async({ref,req,db}) => {
       // feel free to add your own code logic here
       return true;
     }`,
+    },
     auth: (webhookObject, setWebhookObject) => {
       return <></>;
     },
   },
   typeform: {
     name: "Typeform",
-    parser: `const typeformParser: TypeformParser = async({req, db,ref}) =>{
+    parser: {
+      template: `const typeformParser: Parser = async({req, db,ref}) =>{
       // this reduces the form submission into a single object of key value pairs
       // eg: {name: "John", age: 20}
       // ⚠️ ensure that you have assigned ref values of the fields
@@ -98,10 +134,13 @@ export const webhookSchemas = {
         }
       }, {}),
     })};`,
-    conditional: `const condition: Condition = async({ref,req,db}) => {
+    },
+    condition: {
+      template: `const condition: Condition = async({ref,req,db}) => {
       // feel free to add your own code logic here
       return true;
     }`,
+    },
     auth: (webhookObject, setWebhookObject) => {
       return (
         <Typography gutterBottom>
@@ -132,9 +171,12 @@ export function emptyWebhookObject(
     active: false,
     endpoint: generateRandomId(),
     type,
-    parser: webhookSchemas[type].parser ?? webhookSchemas["basic"].parser,
+    parser:
+      webhookSchemas[type].parser?.template ??
+      webhookSchemas["basic"].parser.template,
     conditions:
-      webhookSchemas[type].conditional ?? webhookSchemas["basic"].conditional,
+      webhookSchemas[type].condition?.template ??
+      webhookSchemas["basic"].condition.template,
     lastEditor: user,
   };
 }
