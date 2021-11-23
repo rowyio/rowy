@@ -58,10 +58,10 @@ const rowsReducer = (prevRows: any, update: any) => {
       }
 
       const missingRequiredFields = (
-        prevRows[rowIndex]._missingRequiredFields ?? []
+        prevRows[rowIndex]._rowy_missingRequiredFields ?? []
       ).reduce(missingFieldsReducer(_newRows[rowIndex]), []);
       if (missingRequiredFields.length === 0) {
-        delete _newRows[rowIndex]._missingRequiredFields;
+        delete _newRows[rowIndex]._rowy_missingRequiredFields;
         update.rowRef
           .set(_newRows[rowIndex], { merge: true })
           .then(update.onSuccess, update.onError);
@@ -315,7 +315,7 @@ const useTableData = () => {
         ...data,
         id,
         ref,
-        _missingRequiredFields: missingRequiredFields,
+        _rowy_missingRequiredFields: missingRequiredFields,
       };
       rowsDispatch({ type: "add", newRow });
     }
@@ -365,7 +365,7 @@ const useTableData = () => {
           ...data,
           id: newId,
           ref,
-          _missingRequiredFields: missingRequiredFields,
+          _rowy_missingRequiredFields: missingRequiredFields,
         };
         rowsDispatch({ type: "add", newRow });
       }
