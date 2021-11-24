@@ -1,6 +1,5 @@
-import { Typography, Link, TextField } from "@mui/material";
 import { generateRandomId } from "@src/utils/fns";
-
+import { typeform, basic, sendgrid } from "./Schemas";
 export const webhookTypes = [
   "basic",
   "typeform",
@@ -18,6 +17,7 @@ const requestType = [
   "static params:string[]",
   "static query:string",
   "static body:any",
+  "static headers:any",
   "}",
 ].join("\n");
 
@@ -42,9 +42,10 @@ export type WebhookType = typeof webhookTypes[number];
 export const webhookNames: Record<WebhookType, string> = {
   sendgrid: "Sendgrid",
   typeform: "Typeform",
+  //github:"Github",
   // shopify: "Shopify",
   // twitter: "Twitter",
-  //    stripe: "Stripe",
+  // stripe: "Stripe",
   basic: "Basic",
 };
 
@@ -68,178 +69,9 @@ export interface IWebhook {
 }
 
 export const webhookSchemas = {
-  basic: {
-    name: "Basic",
-    parser: {
-      additionalVariables,
-      extraLibs: parserExtraLibs,
-      template: `const basicParser: Parser = async({req, db,ref}) => {
-      // request is the request object from the webhook
-      // db is the database object
-      // ref is the reference to collection of the table
-      // the returned object will be added as a new row to the table
-      // eg: adding the webhook body as row
-      const {body} = req;
-      return body;
-  }`,
-    },
-    condition: {
-      additionalVariables,
-      extraLibs: conditionExtraLibs,
-      template: `const condition: Condition = async({ref,req,db}) => {
-      // feel free to add your own code logic here
-      return true;
-    }`,
-    },
-    auth: (webhookObject, setWebhookObject) => {
-      return <></>;
-    },
-  },
-  typeform: {
-    name: "Typeform",
-    parser: {
-      additionalVariables: null,
-      extraLibs: null,
-
-      template: `const typeformParser: Parser = async({req, db,ref}) =>{
-      // this reduces the form submission into a single object of key value pairs
-      // eg: {name: "John", age: 20}
-      // ⚠️ ensure that you have assigned ref values of the fields
-      // set the ref value to field key you would like to sync to
-      // docs: https://help.typeform.com/hc/en-us/articles/360050447552-Block-reference-format-restrictions
-      const {submitted_at,hidden,answers} = req.body.form_response
-      return ({
-      _createdAt: submitted_at,
-      ...hidden,
-      ...answers.reduce((accRow, currAnswer) => {
-        switch (currAnswer.type) {
-          case "date":
-            return {
-              ...accRow,
-              [currAnswer.field.ref]: new Date(currAnswer[currAnswer.type]),
-            };
-          case "choice":
-            return {
-              ...accRow,
-              [currAnswer.field.ref]: currAnswer[currAnswer.type].label,
-            };
-          case "choices":
-            return {
-              ...accRow,
-              [currAnswer.field.ref]: currAnswer[currAnswer.type].labels,
-            };
-          case "file_url":
-          default:
-            return {
-              ...accRow,
-              [currAnswer.field.ref]: currAnswer[currAnswer.type],
-            };
-        }
-      }, {}),
-    })};`,
-    },
-    condition: {
-      additionalVariables: null,
-      extraLibs: null,
-      template: `const condition: Condition = async({ref,req,db}) => {
-      // feel free to add your own code logic here
-      return true;
-    }`,
-    },
-    auth: (webhookObject, setWebhookObject) => {
-      return (
-        <>
-          <Typography gutterBottom>
-            To verify the webhook call is sent from typeform, you need to add
-            secret on your webhook config on be follow the instructions{" "}
-            <Link
-              href={
-                "https://developers.typeform.com/webhooks/secure-your-webhooks/"
-              }
-              rel="noopener noreferrer"
-              variant="body2"
-              underline="always"
-            >
-              here
-            </Link>{" "}
-            to set the secret, then add it below
-          </Typography>
-
-          <TextField
-            label={"Typeform Secret"}
-            value={webhookObject.auth.secret}
-            onChange={(e) => {
-              setWebhookObject({
-                ...webhookObject,
-                auth: { ...webhookObject.auth, secret: e.target.value },
-              });
-            }}
-          />
-        </>
-      );
-    },
-  },
-  sendgrid: {
-    name: "Sendgrid",
-    parser: {
-      additionalVariables: null,
-      extraLibs: null,
-      template: `const sendgridParser: Parser = async({req, db,ref}) =>{
-
-        // {
-        //   "email": "example@test.com",
-        //   "timestamp": 1513299569,
-        //   "smtp-id": "<14c5d75ce93.dfd.64b469@ismtpd-555>",
-        //   "event": "processed",
-        //   "category": "cat facts",
-        //   "sg_event_id": "sg_event_id",
-        //   "sg_message_id": "sg_message_id"
-        // },
-
-
-    };`,
-    },
-    condition: {
-      additionalVariables: null,
-      extraLibs: null,
-      template: `const condition: Condition = async({ref,req,db}) => {
-      // feel free to add your own code logic here
-      return true;
-    }`,
-    },
-    auth: (webhookObject, setWebhookObject) => {
-      return (
-        <>
-          <Typography gutterBottom>
-            To verify the webhook call is sent from Sendgrid, You can enable
-            signed event webhooks
-            <Link
-              href={
-                "https://docs.sendgrid.com/for-developers/tracking-events/getting-started-event-webhook-security-features#enable-the-signed-event-webhook"
-              }
-              rel="noopener noreferrer"
-              variant="body2"
-              underline="always"
-            >
-              here
-            </Link>{" "}
-            to set the secret, then add it below
-          </Typography>
-
-          <TextField
-            label={"Verification Key"}
-            value={webhookObject.auth.secret}
-            onChange={(e) => {
-              setWebhookObject({
-                ...webhookObject,
-                auth: { ...webhookObject.auth, secret: e.target.value },
-              });
-            }}
-          />
-        </>
-      );
-    },
-  },
+  basic,
+  typeform,
+  sendgrid,
 };
 export function emptyWebhookObject(
   type: WebhookType,

@@ -77,7 +77,7 @@ export default function CloudLogsModal(props: IModalProps) {
               "& > *": { flexShrink: 0 },
             }}
           >
-            {compatibleRowyRunVersion!({ minVersion: "1.2.1" }) ? (
+            {compatibleRowyRunVersion!({ minVersion: "1.2.0" }) ? (
               <ToggleButtonGroup
                 value={cloudLogFilters.type}
                 exclusive

@@ -65,7 +65,7 @@ export default function WebhookList({
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const baseUrl = `${settings?.services?.hooks}/h/${tableState?.tablePath}/`;
+  const baseUrl = `${settings?.services?.hooks}/wh/${tableState?.tablePath}/`;
   return (
     <>
       <Stack
@@ -165,7 +165,6 @@ export default function WebhookList({
                       </Tooltip>
                     </div>
                   }
-                  //secondary={webhookNames[webhook.type]}
                   primaryTypographyProps={{
                     style: {
                       minHeight: 40,
