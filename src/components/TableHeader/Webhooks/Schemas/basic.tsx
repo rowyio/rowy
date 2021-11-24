@@ -59,6 +59,6 @@ export default {
     }`,
   },
   auth: (webhookObject, setWebhookObject) => {
-    return <></>;
+    return <>no auth option for basic atm</>;
   },
 };
