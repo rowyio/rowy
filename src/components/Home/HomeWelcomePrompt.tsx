@@ -12,8 +12,7 @@ export default function HomeWelcomePrompt() {
 
           width: 320,
           height: 320,
-          p: 8,
-          pl: 9,
+          p: 5,
           borderRadius: "50% 50% 0 50%",
 
           position: "fixed",
@@ -21,14 +20,12 @@ export default function HomeWelcomePrompt() {
           right: 0,
         }}
       >
-        <Typography variant="h5" component="h1" gutterBottom>
-          Welcome!
-          <br />
-          Create a table to get started.
+        <Typography variant="overline" component="h1" gutterBottom>
+          Get started
         </Typography>
 
-        <Typography>
-          Tables connect to your Firestore collections and display their data.
+        <Typography variant="h5" component="p">
+          Create a table from a new or existing Firestore collection
         </Typography>
       </Stack>
     </Zoom>
