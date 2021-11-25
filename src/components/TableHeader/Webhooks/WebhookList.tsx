@@ -16,6 +16,7 @@ import {
   Switch,
   Tooltip,
   Typography,
+  Link,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import WebhookIcon from "@src/assets/icons/Webhook";
@@ -27,12 +28,16 @@ import EmptyState from "@src/components/EmptyState";
 import { webhookTypes, webhookNames, IWebhook, WebhookType } from "./utils";
 import { DATE_TIME_FORMAT } from "@src/constants/dates";
 import { useProjectContext } from "@src/contexts/ProjectContext";
+import { useAtom } from "jotai";
+import {
+  modalAtom,
+  cloudLogFiltersAtom,
+} from "@src/components/TableHeader/CloudLogs/utils";
 
 export interface IWebhookListProps {
   webhooks: IWebhook[];
   handleAddWebhook: (type: WebhookType) => void;
   handleUpdateActive: (index: number, active: boolean) => void;
-  handleOpenLogs: (index: number) => void;
   handleEdit: (index: number) => void;
   handleDelete: (index: number) => void;
 }
@@ -41,7 +46,6 @@ export default function WebhookList({
   webhooks,
   handleAddWebhook,
   handleUpdateActive,
-  handleOpenLogs,
   handleEdit,
   handleDelete,
 }: IWebhookListProps) {
@@ -49,6 +53,8 @@ export default function WebhookList({
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const addButtonRef = useRef(null);
 
+  const [, setModal] = useAtom(modalAtom);
+  const [, setCloudLogFilters] = useAtom(cloudLogFiltersAtom);
   const activeWebhookCount = webhooks.filter(
     (webhook) => webhook.active
   ).length;
@@ -191,7 +197,14 @@ export default function WebhookList({
                     <Tooltip title="Logs">
                       <IconButton
                         aria-label="Logs"
-                        onClick={() => handleOpenLogs(index)}
+                        onClick={() => {
+                          setModal("cloudLogs");
+                          setCloudLogFilters({
+                            type: "webhook",
+                            timeRange: { type: "days", value: 7 },
+                            webhook: [webhook.endpoint],
+                          });
+                        }}
                       >
                         <LogsIcon />
                       </IconButton>

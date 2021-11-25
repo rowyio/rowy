@@ -8,7 +8,6 @@ import WebhookIcon from "@src/assets/icons/Webhook";
 import Modal from "@src/components/Modal";
 import WebhookList from "./WebhookList";
 import WebhookModal from "./WebhookModal";
-import WebhookLogs from "./WebhookLogs";
 
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import { useAppContext } from "@src/contexts/AppContext";
@@ -35,7 +34,6 @@ export default function Webhooks() {
     webhookObject: IWebhook;
     index?: number;
   } | null>(null);
-  const [webhookLogs, setWebhookLogs] = useState<IWebhook | null>();
   if (!compatibleRowyRunVersion?.({ minVersion: "1.2.0" })) return <></>;
   const edited = !_isEqual(currentWebhooks, localWebhooksObjects);
 
@@ -134,15 +132,6 @@ export default function Webhooks() {
     );
   };
 
-  const handleOpenLogs = (index: number) => {
-    const _webhook = localWebhooksObjects[index];
-
-    setWebhookLogs(_webhook);
-    analytics.logEvent("view_webhook_logs", {
-      type: _webhook.type,
-    });
-  };
-
   const handleEdit = (index: number) => {
     setWebhookModal({
       mode: "update",
@@ -201,7 +190,6 @@ export default function Webhooks() {
                 }}
                 handleUpdateActive={handleUpdateActive}
                 handleEdit={handleEdit}
-                handleOpenLogs={handleOpenLogs}
                 handleDelete={handleDelete}
               />
             </>
@@ -230,14 +218,6 @@ export default function Webhooks() {
           handleUpdate={handleUpdateWebhook}
           mode={webhookModal.mode}
           webhookObject={webhookModal.webhookObject}
-        />
-      )}
-      {webhookLogs && (
-        <WebhookLogs
-          webhookObject={webhookLogs}
-          handleClose={() => {
-            setWebhookLogs(null);
-          }}
         />
       )}
     </>
