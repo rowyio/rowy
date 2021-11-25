@@ -2,6 +2,7 @@ import { Stack } from "@mui/material";
 
 import { isCollectionGroup } from "@src/utils/fns";
 
+import AddRow from "./AddRow";
 import Filters from "../Table/Filters";
 import ImportCSV from "./ImportCsv";
 import Export from "./Export";
@@ -19,7 +20,6 @@ import { useAppContext } from "@src/contexts/AppContext";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import { FieldType } from "@src/constants/fields";
 import { useSnackLogContext } from "@src/contexts/SnackLogContext";
-import AddRow from "./AddRow";
 export const TABLE_HEADER_HEIGHT = 44;
 
 export default function TableHeader() {

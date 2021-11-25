@@ -1,8 +1,8 @@
 import { useEffect, useReducer } from "react";
 import _findIndex from "lodash/findIndex";
-import _orderBy from "lodash/orderBy";
 import _isEqual from "lodash/isEqual";
 import _set from "lodash/set";
+import _uniqBy from "lodash/uniqBy";
 import firebase from "firebase/app";
 import { db } from "@src/firebase";
 import { useSnackbar } from "notistack";
@@ -35,10 +35,19 @@ const rowsReducer = (prevRows: any, update: any) => {
   switch (update.type) {
     case "onSnapshot":
       const snapshotDocs = update.docs;
+
+      // Get rows that may not be part of the snapshot
+      // Rows with missing required fields haven’t been written to the db yet
+      // Out of order rows will appear on top
       const localRows = prevRows.filter(
-        (r) => !snapshotDocs.some((d) => d.id === r.id)
+        (r) =>
+          (Array.isArray(r._rowy_missingRequiredFields) &&
+            r._rowy_missingRequiredFields.length > 0) ||
+          r._rowy_outOfOrder === true
       );
-      return [...localRows, ...snapshotDocs.map(doc2row)];
+
+      return _uniqBy([...localRows, ...snapshotDocs.map(doc2row)], "id");
+
     case "delete":
       return prevRows.filter((row) => update.rowId !== row.id);
     case "deleteMultiple":
@@ -57,18 +66,28 @@ const rowsReducer = (prevRows: any, update: any) => {
         _set(_newRows[rowIndex], key, value);
       }
 
+      // Only write if not missing required fields
       const missingRequiredFields = (
         prevRows[rowIndex]._rowy_missingRequiredFields ?? []
       ).reduce(missingFieldsReducer(_newRows[rowIndex]), []);
+
       if (missingRequiredFields.length === 0) {
+        // Don’t write _rowy_missingRequiredFields to the database
         delete _newRows[rowIndex]._rowy_missingRequiredFields;
+
+        // Omit _rowy_outOfOrder from the update
+        const { _rowy_outOfOrder, ...updatedData } = _newRows[rowIndex];
+
         update.rowRef
-          .set(_newRows[rowIndex], { merge: true })
+          .set(updatedData, { merge: true })
           .then(update.onSuccess, update.onError);
       }
+
       return _newRows;
+
+    // Add new row to the top
     case "add":
-      return [update.newRow, ...prevRows];
+      return _uniqBy([update.newRow, ...prevRows], "id");
 
     case "queryChange":
       return [];
@@ -97,6 +116,7 @@ const useTableData = () => {
     tableInitialState
   );
   const [rows, rowsDispatch] = useReducer(rowsReducer, []);
+
   /**  set collection listener
    *  @param filters
    *  @param limit max number of docs
@@ -117,8 +137,9 @@ const useTableData = () => {
     }
     //updates previous values
     if (
-      tableState.prevFilters !== tableState.filters ||
-      tableState.prevOrderBy !== tableState.orderBy ||
+      // Don’t clear all rows when sorting so out of order rows stay on top
+      // tableState.prevFilters !== tableState.filters ||
+      // tableState.prevOrderBy !== tableState.orderBy ||
       tableState.prevPath !== tableState.path
     ) {
       rowsDispatch({ type: "queryChange" });
@@ -148,7 +169,11 @@ const useTableData = () => {
     const unsubscribe = query.limit(limit).onSnapshot(
       (snapshot) => {
         if (snapshot.docs.length > 0) {
-          rowsDispatch({ type: "onSnapshot", docs: snapshot.docs });
+          rowsDispatch({
+            type: "onSnapshot",
+            docs: snapshot.docs,
+            // changes: snapshot.docChanges(),
+          });
         }
         tableDispatch({ loading: false });
       },
@@ -272,34 +297,57 @@ const useTableData = () => {
     if (filters) tableDispatch({ filters });
   };
 
-  /**  creating new document/row
-   *  @param data(optional: default will create empty row)
+  /**
+   * Create new document/row
+   * @param data Pass an empty object to create an empty row
+   * @param requiredFields Passed by ProjectContext addRow method
+   * @param onSuccess Callback function to be called after successful creation
+   * @param id Pass ID to be created for the row, or omit to use Firestore random ID
    */
   const addRow = async (
     data: any,
     requiredFields: string[],
     onSuccess: (rowId: string) => void,
-    id?: string
+    id?: string | { type: "smaller" }
   ) => {
+    const { path } = tableState;
+
+    let ref = db.collection(path).doc();
+    if (typeof id === "string") ref = db.collection(path).doc(id);
+    else if (id?.type === "smaller")
+      ref = db
+        .collection(path)
+        .doc(
+          decrementId(
+            rows.find((r) => !r._rowy_outOfOrder)?.id ?? "zzzzzzzzzzzzzzzzzzzz"
+          )
+        );
+    const newId = ref.id;
+
     const missingRequiredFields = requiredFields
       ? requiredFields.reduce(missingFieldsReducer(data), [])
       : [];
-    const { path } = tableState;
-    const newId =
-      id ??
-      decrementId(
-        rows[0]?.id ?? "zzzzzzzzzzzzzzzzzzzzzzzz",
-        Math.round(Math.random() * 100)
-      );
+    console.log(newId, missingRequiredFields.length);
+
+    // If there are missing required fields or intentionally out of order,
+    // add to the top of the table view
+    if (missingRequiredFields.length > 0 || data._rowy_outOfOrder === true) {
+      const newRow = {
+        ...data,
+        id: newId,
+        ref,
+        _rowy_missingRequiredFields: missingRequiredFields,
+      };
+      rowsDispatch({ type: "add", newRow });
+    }
+
+    // If there are no missing required fields, attempt to write to the database
     if (missingRequiredFields.length === 0) {
+      const { _rowy_outOfOrder, ...dataToWrite } = data;
       try {
-        await db
-          .collection(path)
-          .doc(newId)
-          .set(data, { merge: true })
-          .then(() => {
-            onSuccess(newId);
-          });
+        await ref
+          .set(dataToWrite, { merge: true })
+          .then(() => onSuccess(newId));
       } catch (error: any) {
         if (error.code === "permission-denied") {
           enqueueSnackbar("You do not have the permissions to add new rows.", {
@@ -307,69 +355,44 @@ const useTableData = () => {
           });
         }
       }
-    } else {
-      // missing required fields
-      const id = newId;
-      const ref = db.collection(path).doc(newId);
-      const newRow = {
-        ...data,
-        id,
-        ref,
-        _rowy_missingRequiredFields: missingRequiredFields,
-      };
-      rowsDispatch({ type: "add", newRow });
     }
   };
 
-  /**  creating new rows from array
-   *  @param rows
-   * @param onSuccess
-   * @param requiredFields
+  /**
+   * Create new rows from an array
+   * @param rowsToAdd
+   * @param requiredFields Passed by ProjectContext addRow method
+   * @param onSuccess Callback function to be called after successful creation
    */
   const addRows = async (
-    rows: { data: any; id?: string }[],
+    rowsToAdd: { data: any; id?: string }[],
     requiredFields: string[],
-    onSuccess: (rowIds: string) => void
+    onSuccess: (rowId: string) => void
   ) => {
-    let previousId = rows[0]?.id ?? "zzzzzzzzzzzzzzzzzzzzzzzz";
-    rows.forEach(async (row) => {
-      const { data, id } = row;
-      const missingRequiredFields = requiredFields
-        ? requiredFields.reduce(missingFieldsReducer(data), [])
-        : [];
-      const newId =
-        id ?? decrementId(previousId, Math.round(Math.random() * 100));
-      previousId = newId;
-      if (missingRequiredFields.length === 0) {
-        try {
-          await db
-            .collection(tableState.path)
-            .doc(newId)
-            .set(data, { merge: true })
-            .then(() => {
-              onSuccess(newId);
-            });
-        } catch (error: any) {
-          if (error.code === "permission-denied") {
-            enqueueSnackbar(
-              "You do not have the permissions to add new rows.",
-              {
-                variant: "error",
-              }
-            );
-          }
-        }
-      } else {
-        const ref = db.collection(tableState.path).doc(newId);
-        const newRow = {
-          ...data,
-          id: newId,
-          ref,
-          _rowy_missingRequiredFields: missingRequiredFields,
-        };
-        rowsDispatch({ type: "add", newRow });
-      }
-    });
+    const firstId = decrementId(
+      rows.find((r) => !r._rowy_outOfOrder)?.id ?? "zzzzzzzzzzzzzzzzzzzz"
+    );
+    const ids = [firstId];
+
+    for (const row of rowsToAdd) {
+      const { data } = row;
+
+      const nextSmallestId = decrementId(
+        ids[ids.length - 1] ??
+          rows.find((r) => !r._rowy_outOfOrder)?.id ??
+          "zzzzzzzzzzzzzzzzzzzz"
+      );
+
+      await addRow(
+        data,
+        requiredFields,
+        (id) => {
+          ids.push(id);
+          onSuccess(id);
+        },
+        nextSmallestId
+      );
+    }
   };
 
   const updateRow = (rowRef, update, onSuccess, onError) => {
@@ -400,14 +423,8 @@ const useTableData = () => {
     moreRows,
     dispatch: tableDispatch,
   };
-  const orderedRows = tableState.orderBy?.[0]
-    ? _orderBy(
-        rows,
-        [tableState.orderBy[0].key],
-        [tableState.orderBy[0].direction]
-      )
-    : _orderBy(rows, ["id"], ["asc"]);
-  return [{ ...tableState, rows: orderedRows }, tableActions];
+
+  return [{ ...tableState, rows }, tableActions];
 };
 
 export default useTableData;

@@ -53,7 +53,7 @@ export interface IProjectContext {
   addRow: (
     data?: Record<string, any>,
     ignoreRequiredFields?: boolean,
-    id?: string
+    id?: string | { type: "smaller" }
   ) => void;
   addRows: (
     rows: { data?: Record<string, any>; id?: string }[],
@@ -191,6 +191,7 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
       });
     }
   };
+
   const addRow: IProjectContext["addRow"] = async (
     data,
     ignoreRequiredFields,
@@ -228,6 +229,9 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
         currentUser!
       );
     }
+
+    if (!(typeof id === "object" && id?.type === "smaller"))
+      initialData._rowy_outOfOrder = true;
 
     await tableActions.row.add(
       { ...valuesFromFilter, ...initialData, ...data },

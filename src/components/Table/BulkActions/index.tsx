@@ -136,7 +136,7 @@ export default function BulkActions({ selectedRows, columns, clearSelection }) {
       Object.keys(clonedRow).forEach((key) => {
         if (clonedRow[key] === undefined) delete clonedRow[key];
       });
-      await addRow!(clonedRow);
+      await addRow!(clonedRow, undefined, { type: "smaller" });
       //sleep 1 sec
       await new Promise((resolve) => setTimeout(resolve, 1000));
     });

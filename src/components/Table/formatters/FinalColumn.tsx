@@ -48,7 +48,7 @@ export default function FinalColumn({ row }: FormatterProps<any, any>) {
             Object.keys(clonedRow).forEach((key) => {
               if (clonedRow[key] === undefined) delete clonedRow[key];
             });
-            if (addRow) addRow!(clonedRow);
+            if (addRow) addRow!(clonedRow, undefined, { type: "smaller" });
           }}
           aria-label="Duplicate row"
           className="row-hover-iconButton"
