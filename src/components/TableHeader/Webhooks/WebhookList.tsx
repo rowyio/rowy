@@ -16,6 +16,7 @@ import {
   Switch,
   Tooltip,
   Typography,
+  Link,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import WebhookIcon from "@src/assets/icons/Webhook";
@@ -32,7 +33,6 @@ export interface IWebhookListProps {
   webhooks: IWebhook[];
   handleAddWebhook: (type: WebhookType) => void;
   handleUpdateActive: (index: number, active: boolean) => void;
-  handleOpenLogs: (index: number) => void;
   handleEdit: (index: number) => void;
   handleDelete: (index: number) => void;
 }
@@ -41,7 +41,6 @@ export default function WebhookList({
   webhooks,
   handleAddWebhook,
   handleUpdateActive,
-  handleOpenLogs,
   handleEdit,
   handleDelete,
 }: IWebhookListProps) {
@@ -189,12 +188,17 @@ export default function WebhookList({
                     </Tooltip>
 
                     <Tooltip title="Logs">
-                      <IconButton
+                      <Link
+                        component={IconButton}
                         aria-label="Logs"
-                        onClick={() => handleOpenLogs(index)}
+                        href={`${
+                          window.location.pathname
+                        }#modal="cloudLogs"&cloudLogFilters=${encodeURIComponent(
+                          `{"type":"webhook","timeRange":{"type":"days","value":7},"webhook":["${webhook.endpoint}"]}`
+                        )}`}
                       >
                         <LogsIcon />
-                      </IconButton>
+                      </Link>
                     </Tooltip>
                     <Tooltip title="Edit">
                       <IconButton
