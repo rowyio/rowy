@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
+import { useAtom } from "jotai";
 import { format, formatRelative } from "date-fns";
-import CopyIcon from "@src/assets/icons/Copy";
 
 import {
   Stack,
@@ -13,22 +13,25 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  Divider,
+  ListItemIcon,
   Switch,
   Tooltip,
   Typography,
-  Link,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import WebhookIcon from "@src/assets/icons/Webhook";
 import LogsIcon from "@src/assets/icons/CloudLogs";
 import EditIcon from "@mui/icons-material/EditOutlined";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
+import CopyIcon from "@src/assets/icons/Copy";
+import EmailIcon from "@mui/icons-material/EmailOutlined";
 
 import EmptyState from "@src/components/EmptyState";
 import { webhookTypes, webhookNames, IWebhook, WebhookType } from "./utils";
 import { DATE_TIME_FORMAT } from "@src/constants/dates";
 import { useProjectContext } from "@src/contexts/ProjectContext";
-import { useAtom } from "jotai";
+import { EMAIL_REQUEST } from "@src/constants/externalLinks";
 import {
   modalAtom,
   cloudLogFiltersAtom,
@@ -109,6 +112,20 @@ export default function WebhookList({
               {webhookNames[type]}
             </MenuItem>
           ))}
+
+          <Divider variant="middle" />
+
+          <MenuItem
+            component="a"
+            href={EMAIL_REQUEST}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <ListItemIcon>
+              <EmailIcon aria-label="Send email" />
+            </ListItemIcon>
+            Request new webhook…
+          </MenuItem>
         </Menu>
       </Stack>
 

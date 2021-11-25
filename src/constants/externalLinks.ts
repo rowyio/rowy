@@ -53,3 +53,5 @@ export const WIKI_LINKS = _mapValues(
   WIKI_PATHS,
   (path) => EXTERNAL_LINKS.docs + path
 );
+
+export const EMAIL_REQUEST = `mailto:hello@rowy.io?subject=Feature%20request%3A%20Webhooks%2FExtension%2FOther&body=**Please%20describe%20the%20problem%20you%20are%20trying%20to%20solve%3A**%0D%0A(Please%20provide%20as%20much%20information%20as%20you%20can%20to%20help%20us%20address%20faster)%0D%0A%0D%0A%0D%0A**Describe%20the%20solution%20you%E2%80%99d%20like%3A**%0D%0A%0D%0A%0D%0A**Optionally%2C%20describe%20how%20you%20currently%20solve%20this%20problem%20or%20any%20alternatives%20that%20you've%20considered%3A**%0D%0A%0D%0A%0D%0A**Optionally%2C%20additional%20context%3A**%0D%0A(Add%20any%20other%20context%2C%20screenshots%2C%20or%20screen%20recordings)%0D%0A%0D%0A`;

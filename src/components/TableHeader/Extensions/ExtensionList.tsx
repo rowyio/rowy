@@ -12,6 +12,8 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  Divider,
+  ListItemIcon,
   Switch,
   Tooltip,
   Typography,
@@ -21,6 +23,7 @@ import ExtensionIcon from "@src/assets/icons/Extension";
 import DuplicateIcon from "@src/assets/icons/Copy";
 import EditIcon from "@mui/icons-material/EditOutlined";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
+import EmailIcon from "@mui/icons-material/EmailOutlined";
 
 import EmptyState from "@src/components/EmptyState";
 import {
@@ -30,6 +33,7 @@ import {
   ExtensionType,
 } from "./utils";
 import { DATE_TIME_FORMAT } from "@src/constants/dates";
+import { EMAIL_REQUEST } from "@src/constants/externalLinks";
 
 export interface IExtensionListProps {
   extensions: IExtension[];
@@ -105,6 +109,20 @@ export default function ExtensionList({
               {extensionNames[type]}
             </MenuItem>
           ))}
+
+          <Divider variant="middle" />
+
+          <MenuItem
+            component="a"
+            href={EMAIL_REQUEST}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <ListItemIcon>
+              <EmailIcon aria-label="Send email" />
+            </ListItemIcon>
+            Request new Extension…
+          </MenuItem>
         </Menu>
       </Stack>
 
