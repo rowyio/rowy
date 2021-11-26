@@ -1,6 +1,7 @@
 import { IExtensionModalStepProps } from "./ExtensionModal";
 
 import {
+  Typography,
   FormControl,
   FormLabel,
   FormGroup,
@@ -15,42 +16,48 @@ export default function Step1Triggers({
   setExtensionObject,
 }: IExtensionModalStepProps) {
   return (
-    <FormControl component="fieldset" required>
-      <FormLabel component="legend" className="visually-hidden">
-        Triggers
-      </FormLabel>
+    <>
+      <Typography gutterBottom>
+        Select which events trigger this extension
+      </Typography>
 
-      <FormGroup>
-        {triggerTypes.map((trigger) => (
-          <FormControlLabel
-            key={trigger}
-            label={trigger}
-            control={
-              <Checkbox
-                checked={extensionObject.triggers.includes(trigger)}
-                name={trigger}
-                onChange={() => {
-                  setExtensionObject((extensionObject) => {
-                    if (extensionObject.triggers.includes(trigger)) {
-                      return {
-                        ...extensionObject,
-                        triggers: extensionObject.triggers.filter(
-                          (t) => t !== trigger
-                        ),
-                      };
-                    } else {
-                      return {
-                        ...extensionObject,
-                        triggers: [...extensionObject.triggers, trigger],
-                      };
-                    }
-                  });
-                }}
-              />
-            }
-          />
-        ))}
-      </FormGroup>
-    </FormControl>
+      <FormControl component="fieldset" required>
+        <FormLabel component="legend" className="visually-hidden">
+          Triggers
+        </FormLabel>
+
+        <FormGroup>
+          {triggerTypes.map((trigger) => (
+            <FormControlLabel
+              key={trigger}
+              label={trigger}
+              control={
+                <Checkbox
+                  checked={extensionObject.triggers.includes(trigger)}
+                  name={trigger}
+                  onChange={() => {
+                    setExtensionObject((extensionObject) => {
+                      if (extensionObject.triggers.includes(trigger)) {
+                        return {
+                          ...extensionObject,
+                          triggers: extensionObject.triggers.filter(
+                            (t) => t !== trigger
+                          ),
+                        };
+                      } else {
+                        return {
+                          ...extensionObject,
+                          triggers: [...extensionObject.triggers, trigger],
+                        };
+                      }
+                    });
+                  }}
+                />
+              }
+            />
+          ))}
+        </FormGroup>
+      </FormControl>
+    </>
   );
 }

@@ -2,6 +2,7 @@ import { lazy, Suspense } from "react";
 import { IExtensionModalStepProps } from "./ExtensionModal";
 import useStateRef from "react-usestateref";
 
+import { Typography } from "@mui/material";
 import FieldSkeleton from "@src/components/SideDrawer/Form/FieldSkeleton";
 import CodeEditorHelper from "@src/components/CodeEditor/CodeEditorHelper";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
@@ -49,6 +50,12 @@ export default function Step3Conditions({
 
   return (
     <>
+      <Typography gutterBottom>
+        Optionally, write a function that determines if the extension should be
+        triggered for a given row. Leave the function to always return{" "}
+        <code>true</code> if you do not want to write additional logic.
+      </Typography>
+
       <Suspense fallback={<FieldSkeleton height={200} />}>
         <CodeEditor
           value={extensionObject.conditions}

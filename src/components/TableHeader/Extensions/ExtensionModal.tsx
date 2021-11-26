@@ -1,33 +1,18 @@
 import { useState } from "react";
 import _isEqual from "lodash/isEqual";
-import _upperFirst from "lodash/upperFirst";
 import useStateRef from "react-usestateref";
 
-import {
-  Grid,
-  TextField,
-  FormControlLabel,
-  Switch,
-  Stepper,
-  Step,
-  StepButton,
-  StepContent,
-  Typography,
-  Link,
-} from "@mui/material";
-import ExpandIcon from "@mui/icons-material/KeyboardArrowDown";
-import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
+import { Grid, TextField, FormControlLabel, Switch } from "@mui/material";
 
 import Modal, { IModalProps } from "@src/components/Modal";
+import SteppedAccordion from "@src/components/SteppedAccordion";
 import Step1Triggers from "./Step1Triggers";
 import Step2RequiredFields from "./Step2RequiredFields";
 import Step3Conditions from "./Step3Conditions";
 import Step4Body from "./Step4Body";
 
 import { useConfirmation } from "@src/components/ConfirmationDialog";
-
 import { extensionNames, IExtension } from "./utils";
-import { WIKI_LINKS } from "@src/constants/externalLinks";
 
 type StepValidation = Record<"condition" | "extensionBody", boolean>;
 export interface IExtensionModalStepProps {
@@ -57,8 +42,6 @@ export default function ExtensionModal({
 
   const [extensionObject, setExtensionObject] =
     useState<IExtension>(initialObject);
-
-  const [activeStep, setActiveStep] = useState(0);
 
   const [validation, setValidation, validationRef] =
     useStateRef<StepValidation>({ condition: true, extensionBody: true });
@@ -144,100 +127,32 @@ export default function ExtensionModal({
             </Grid>
           </Grid>
 
-          <Stepper
-            nonLinear
-            activeStep={activeStep}
-            orientation="vertical"
-            sx={{
-              mt: 0,
-
-              "& .MuiStepLabel-root": { width: "100%" },
-              "& .MuiStepLabel-label": {
-                display: "flex",
-                width: "100%",
-                typography: "subtitle2",
-                "&.Mui-active": { typography: "subtitle2" },
+          <SteppedAccordion
+            steps={[
+              {
+                id: "triggers",
+                title: "Trigger events",
+                content: <Step1Triggers {...stepProps} />,
               },
-              "& .MuiStepLabel-label svg": {
-                display: "block",
-                marginLeft: "auto",
-                my: ((24 - 18) / 2 / 8) * -1,
-                transition: (theme) => theme.transitions.create("transform"),
+              {
+                id: "requiredFields",
+                title: "Required fields",
+                optional: true,
+                content: <Step2RequiredFields {...stepProps} />,
               },
-              "& .Mui-active svg": {
-                transform: "rotate(180deg)",
+              {
+                id: "conditions",
+                title: "Trigger conditions",
+                optional: true,
+                content: <Step3Conditions {...stepProps} />,
               },
-            }}
-          >
-            <Step>
-              <StepButton onClick={() => setActiveStep(0)}>
-                Trigger events
-                <ExpandIcon />
-              </StepButton>
-              <StepContent>
-                <Typography gutterBottom>
-                  Select which events trigger this extension
-                </Typography>
-                <Step1Triggers {...stepProps} />
-              </StepContent>
-            </Step>
-
-            <Step>
-              <StepButton onClick={() => setActiveStep(1)}>
-                Required fields (optional)
-                <ExpandIcon />
-              </StepButton>
-              <StepContent>
-                <Typography gutterBottom>
-                  Optionally, select fields that must have a value set for the
-                  extension to be triggered for that row
-                </Typography>
-                <Step2RequiredFields {...stepProps} />
-              </StepContent>
-            </Step>
-
-            <Step>
-              <StepButton onClick={() => setActiveStep(2)}>
-                Trigger conditions (optional)
-                <ExpandIcon />
-              </StepButton>
-              <StepContent>
-                <Typography gutterBottom>
-                  Optionally, write a function that determines if the extension
-                  should be triggered for a given row. Leave the function to
-                  always return <code>true</code> if you do not want to write
-                  additional logic.
-                </Typography>
-                <Step3Conditions {...stepProps} />
-              </StepContent>
-            </Step>
-
-            <Step>
-              <StepButton onClick={() => setActiveStep(3)}>
-                Extension body
-                <ExpandIcon />
-              </StepButton>
-              <StepContent>
-                <Typography gutterBottom>
-                  Write the extension body function. Make sure you have set all
-                  the required parameters.{" "}
-                  <Link
-                    href={
-                      WIKI_LINKS[
-                        `extensions${_upperFirst(extensionObject.type)}`
-                      ] || WIKI_LINKS.extensions
-                    }
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Docs
-                    <InlineOpenInNewIcon />
-                  </Link>
-                </Typography>
-                <Step4Body {...stepProps} />
-              </StepContent>
-            </Step>
-          </Stepper>
+              {
+                id: "body",
+                title: "Extension body",
+                content: <Step4Body {...stepProps} />,
+              },
+            ]}
+          />
         </>
       }
       actions={{

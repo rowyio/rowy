@@ -1,32 +1,17 @@
 import { useState } from "react";
 import _isEqual from "lodash/isEqual";
-import _upperFirst from "lodash/upperFirst";
 import useStateRef from "react-usestateref";
 
-import {
-  Grid,
-  TextField,
-  FormControlLabel,
-  Switch,
-  Stepper,
-  Step,
-  StepButton,
-  StepContent,
-  Typography,
-  Link,
-} from "@mui/material";
-import ExpandIcon from "@mui/icons-material/KeyboardArrowDown";
-import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
+import { Grid, TextField, FormControlLabel, Switch } from "@mui/material";
 
 import Modal, { IModalProps } from "@src/components/Modal";
+import SteppedAccordion from "@src/components/SteppedAccordion";
 import Step1Auth from "./Step1Auth";
 import Step2Conditions from "./Step2Conditions";
 import Step3Body from "./Step3Parser";
 
 import { useConfirmation } from "@src/components/ConfirmationDialog";
-
 import { webhookNames, IWebhook } from "./utils";
-import { WIKI_LINKS } from "@src/constants/externalLinks";
 
 type StepValidation = Record<"condition" | "parser", boolean>;
 export interface IWebhookModalStepProps {
@@ -55,8 +40,6 @@ export default function WebhookModal({
   const { requestConfirmation } = useConfirmation();
 
   const [webhookObject, setWebhookObject] = useState<IWebhook>(initialObject);
-
-  const [activeStep, setActiveStep] = useState(0);
 
   const [validation, setValidation, validationRef] =
     useStateRef<StepValidation>({ condition: true, parser: true });
@@ -141,83 +124,27 @@ export default function WebhookModal({
             </Grid>
           </Grid>
 
-          <Stepper
-            nonLinear
-            activeStep={activeStep}
-            orientation="vertical"
-            sx={{
-              mt: 0,
-
-              "& .MuiStepLabel-root": { width: "100%" },
-              "& .MuiStepLabel-label": {
-                display: "flex",
-                width: "100%",
-                typography: "subtitle2",
-                "&.Mui-active": { typography: "subtitle2" },
+          <SteppedAccordion
+            steps={[
+              {
+                id: "verification",
+                title: "Verification",
+                optional: true,
+                content: <Step1Auth {...stepProps} />,
               },
-              "& .MuiStepLabel-label svg": {
-                display: "block",
-                marginLeft: "auto",
-                my: ((24 - 18) / 2 / 8) * -1,
-                transition: (theme) => theme.transitions.create("transform"),
+              {
+                id: "conditions",
+                title: "Conditions",
+                optional: true,
+                content: <Step2Conditions {...stepProps} />,
               },
-              "& .Mui-active svg": {
-                transform: "rotate(180deg)",
+              {
+                id: "parser",
+                title: "Parser",
+                content: <Step3Body {...stepProps} />,
               },
-            }}
-          >
-            <Step>
-              <StepButton onClick={() => setActiveStep(0)}>
-                Verification
-                <ExpandIcon />
-              </StepButton>
-              <StepContent>
-                <Step1Auth {...stepProps} />
-              </StepContent>
-            </Step>
-
-            <Step>
-              <StepButton onClick={() => setActiveStep(1)}>
-                Conditions (optional)
-                <ExpandIcon />
-              </StepButton>
-              <StepContent>
-                <Typography gutterBottom>
-                  Optionally, write a function that determines if the webhook
-                  call should be processed. Leave the function to always return{" "}
-                  <code>true</code> if you do not want to write additional
-                  logic.
-                </Typography>
-                <Step2Conditions {...stepProps} />
-              </StepContent>
-            </Step>
-
-            <Step>
-              <StepButton onClick={() => setActiveStep(2)}>
-                Parser
-                <ExpandIcon />
-              </StepButton>
-              <StepContent>
-                <Typography gutterBottom>
-                  Write the webhook parsed function. The returned object of the
-                  parser will be added as new row{" "}
-                  <Link
-                    href={
-                      WIKI_LINKS[
-                        `webhooks${_upperFirst(webhookObject.type)}`
-                      ] || WIKI_LINKS.webhooks
-                    }
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Docs
-                    <InlineOpenInNewIcon />
-                  </Link>
-                </Typography>
-                <Step3Body {...stepProps} />
-              </StepContent>
-            </Step>
-          </Stepper>
+            ]}
+          />
         </>
       }
       actions={{

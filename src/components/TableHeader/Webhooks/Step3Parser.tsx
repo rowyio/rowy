@@ -2,11 +2,14 @@ import { IWebhookModalStepProps } from "./WebhookModal";
 import _upperFirst from "lodash/upperFirst";
 import useStateRef from "react-usestateref";
 
+import { Typography, Link } from "@mui/material";
 import CodeEditor from "@src/components/CodeEditor";
 import CodeEditorHelper from "@src/components/CodeEditor/CodeEditorHelper";
+import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
 import { WIKI_LINKS } from "@src/constants/externalLinks";
 import { parserExtraLibs } from "./utils";
+
 const additionalVariables = [
   {
     key: "req",
@@ -30,6 +33,22 @@ export default function Step4Body({
 
   return (
     <>
+      <Typography gutterBottom>
+        Write the webhook parsed function. The returned object of the parser
+        will be added as new row{" "}
+        <Link
+          href={
+            WIKI_LINKS[`webhooks${_upperFirst(webhookObject.type)}`] ||
+            WIKI_LINKS.webhooks
+          }
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Docs
+          <InlineOpenInNewIcon />
+        </Link>
+      </Typography>
+
       <div>
         <CodeEditor
           value={webhookObject.parser}

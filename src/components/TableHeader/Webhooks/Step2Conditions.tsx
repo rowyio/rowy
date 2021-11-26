@@ -1,6 +1,7 @@
 import { IWebhookModalStepProps } from "./WebhookModal";
 import useStateRef from "react-usestateref";
 
+import { Typography } from "@mui/material";
 import CodeEditor from "@src/components/CodeEditor";
 import CodeEditorHelper from "@src/components/CodeEditor/CodeEditorHelper";
 
@@ -24,6 +25,12 @@ export default function Step3Conditions({
 
   return (
     <>
+      <Typography gutterBottom>
+        Optionally, write a function that determines if the webhook call should
+        be processed. Leave the function to always return <code>true</code> if
+        you do not want to write additional logic.
+      </Typography>
+
       <div>
         <CodeEditor
           value={webhookObject.conditions}
