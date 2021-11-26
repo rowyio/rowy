@@ -23,6 +23,7 @@ import { APP_BAR_HEIGHT } from ".";
 import Logo from "@src/assets/Logo";
 import NavItem from "./NavItem";
 import NavTableSection from "./NavTableSection";
+import UpdateCheckBadge from "./UpdateCheckBadge";
 
 import { useAppContext } from "@src/contexts/AppContext";
 import { useProjectContext } from "@src/contexts/ProjectContext";
@@ -157,6 +158,7 @@ export default function NavDrawer({
                   <ProjectSettingsIcon />
                 </ListItemIcon>
                 <ListItemText primary="Project Settings" />
+                <UpdateCheckBadge sx={{ mr: 1.5 }} />
               </NavItem>
             </li>
           )}

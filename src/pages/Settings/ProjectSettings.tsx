@@ -86,7 +86,11 @@ export default function ProjectSettingsPage() {
       ) : (
         <Stack spacing={4}>
           {sections.map(({ title, Component, props }, i) => (
-            <SettingsSection title={title} transitionTimeout={(i + 1) * 100}>
+            <SettingsSection
+              key={title}
+              title={title}
+              transitionTimeout={(i + 1) * 100}
+            >
               <Component {...(props as any)} />
             </SettingsSection>
           ))}
