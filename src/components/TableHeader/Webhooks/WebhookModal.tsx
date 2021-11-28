@@ -13,6 +13,9 @@ import Step3Body from "./Step3Parser";
 import { useConfirmation } from "@src/components/ConfirmationDialog";
 import { webhookNames, IWebhook } from "./utils";
 
+import CopyIcon from "@src/assets/icons/Copy";
+import { useProjectContext } from "@src/contexts/ProjectContext";
+import { IconButton, Tooltip, Typography } from "@mui/material";
 type StepValidation = Record<"condition" | "parser", boolean>;
 export interface IWebhookModalStepProps {
   webhookObject: IWebhook;
@@ -58,6 +61,9 @@ export default function WebhookModal({
     setValidation,
     validationRef,
   };
+  const { settings, tableState } = useProjectContext();
+
+  const baseUrl = `${settings?.services?.hooks}/wh/${tableState?.tablePath}/`;
 
   return (
     <Modal
@@ -122,6 +128,34 @@ export default function WebhookModal({
                 }activated`}
               />
             </Grid>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <Typography>URL:</Typography>
+              <div
+                style={{
+                  maxWidth: "90%",
+                  overflowX: "auto",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                <Typography variant="caption">
+                  <code>
+                    {baseUrl}
+                    {webhookObject.endpoint}
+                  </code>
+                </Typography>
+              </div>
+              <Tooltip title="copy to clipboard">
+                <IconButton
+                  onClick={() =>
+                    navigator.clipboard.writeText(
+                      `${baseUrl}${webhookObject.endpoint}`
+                    )
+                  }
+                >
+                  <CopyIcon />
+                </IconButton>
+              </Tooltip>
+            </div>
           </Grid>
 
           <SteppedAccordion

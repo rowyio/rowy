@@ -16,6 +16,7 @@ const requestType = [
   "static query:string",
   "static body:any",
   "static headers:any",
+  "static url:string",
   "}",
 ].join("\n");
 
