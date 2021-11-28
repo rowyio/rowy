@@ -119,7 +119,8 @@ export default function AddRow() {
                   "existing-id",
                   "A row with this ID already exists",
                   async (value) =>
-                   value &&(
+                    value &&
+                    (
                       await db
                         .collection(tableState!.tablePath!)
                         .doc(value)
