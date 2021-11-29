@@ -12,6 +12,7 @@ import Loading from "@src/components/Loading";
 
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import { useConfirmation } from "@src/components/ConfirmationDialog";
+import { useSnackLogContext } from "@src/contexts/SnackLogContext";
 import { FieldType } from "@src/constants/fields";
 import { runRoutes } from "@src/constants/runRoutes";
 
@@ -27,6 +28,7 @@ export default function FieldSettings(props: IMenuModalProps) {
 
   const { requestConfirmation } = useConfirmation();
   const { tableState, rowyRun } = useProjectContext();
+  const snackLogContext = useSnackLogContext();
 
   const rendedFieldSettings = useMemo(
     () =>
@@ -164,6 +166,7 @@ export default function FieldSettings(props: IMenuModalProps) {
                 cancel: "Later",
                 handleConfirm: async () => {
                   if (!rowyRun) return;
+                  snackLogContext.requestSnackLog();
                   rowyRun({
                     route: runRoutes.buildFunction,
                     body: {

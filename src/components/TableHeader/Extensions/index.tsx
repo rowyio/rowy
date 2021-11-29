@@ -76,8 +76,8 @@ export default function Extensions() {
   const handleSaveDeploy = async () => {
     handleSaveExtensions();
     try {
-      snackLogContext.requestSnackLog();
-      if (rowyRun)
+      if (rowyRun) {
+        snackLogContext.requestSnackLog();
         rowyRun({
           route: runRoutes.buildFunction,
           body: {
@@ -86,7 +86,8 @@ export default function Extensions() {
             tableConfigPath: tableState?.config.tableConfig.path,
           },
         });
-      analytics.logEvent("deployed_extensions");
+        analytics.logEvent("deployed_extensions");
+      }
     } catch (e) {
       console.error(e);
     }

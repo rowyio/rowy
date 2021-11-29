@@ -118,6 +118,7 @@ export default function BuildLogsSnack({ onClose, onOpenPanel }) {
               aria-label="Expand"
               size="small"
               onClick={() => setExpanded(!expanded)}
+              style={{ color: "white" }}
             >
               {expanded ? <CollapseIcon /> : <ExpandIcon />}
             </IconButton>
@@ -135,13 +136,19 @@ export default function BuildLogsSnack({ onClose, onOpenPanel }) {
                   buildLogExpanded: 0,
                 });
               }}
+              style={{ color: "white" }}
             >
               <OpenIcon />
             </IconButton>
           </Tooltip>
 
           <Tooltip title="Close">
-            <IconButton aria-label="Close" size="small" onClick={onClose}>
+            <IconButton
+              aria-label="Close"
+              size="small"
+              onClick={onClose}
+              style={{ color: "white" }}
+            >
               <CloseIcon />
             </IconButton>
           </Tooltip>
