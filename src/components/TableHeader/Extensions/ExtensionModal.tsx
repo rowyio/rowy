@@ -162,7 +162,7 @@ export default function ExtensionModal({
           onClick: () => {
             let warningMessage;
             if (!validation.condition && !validation.extensionBody) {
-              warningMessage = "Condition and extension body are not valid";
+              warningMessage = "Condition and Extension body are not valid";
             } else if (!validation.condition) {
               warningMessage = "Condition is not valid";
             } else if (!validation.extensionBody) {
