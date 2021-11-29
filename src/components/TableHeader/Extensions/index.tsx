@@ -1,11 +1,10 @@
 import { useState } from "react";
 import _isEqual from "lodash/isEqual";
 
-import { Breadcrumbs } from "@mui/material";
-
 import TableHeaderButton from "../TableHeaderButton";
 import ExtensionIcon from "@src/assets/icons/Extension";
 import Modal from "@src/components/Modal";
+import AddExtensionButton from "./AddExtensionButton";
 import ExtensionList from "./ExtensionList";
 import ExtensionModal from "./ExtensionModal";
 import ExtensionMigration from "./ExtensionMigration";
@@ -39,12 +38,6 @@ export default function Extensions() {
 
   const snackLogContext = useSnackLogContext();
   const edited = !_isEqual(currentExtensionObjects, localExtensionsObjects);
-
-  const tablePathTokens =
-    tableState?.tablePath?.split("/").filter(function (_, i) {
-      // replace IDs with dash that appears at even indexes
-      return i % 2 === 0;
-    }) ?? [];
 
   const handleOpen = () => {
     if (tableState?.config.sparks) {
@@ -180,6 +173,10 @@ export default function Extensions() {
     lastUpdate: Date.now(),
   });
 
+  const activeExtensionCount = localExtensionsObjects.filter(
+    (extension) => extension.active
+  ).length;
+
   return (
     <>
       <TableHeaderButton
@@ -191,33 +188,32 @@ export default function Extensions() {
       {openExtensionList && !!tableState && (
         <Modal
           onClose={handleClose}
+          disableBackdropClick={edited}
+          disableEscapeKeyDown={edited}
           maxWidth="sm"
           fullWidth
-          title="Extensions"
+          title={`Extensions (${activeExtensionCount}\u2009/\u2009${localExtensionsObjects.length})`}
+          header={
+            <AddExtensionButton
+              handleAddExtension={(type: ExtensionType) => {
+                setExtensionModal({
+                  mode: "add",
+                  extensionObject: emptyExtensionObject(type, currentEditor()),
+                });
+              }}
+              variant={
+                localExtensionsObjects.length === 0 ? "contained" : "outlined"
+              }
+            />
+          }
           children={
-            <>
-              <Breadcrumbs aria-label="breadcrumb">
-                {tablePathTokens.map((pathToken) => (
-                  <code>{pathToken}</code>
-                ))}
-              </Breadcrumbs>
-              <ExtensionList
-                extensions={localExtensionsObjects}
-                handleAddExtension={(type: ExtensionType) => {
-                  setExtensionModal({
-                    mode: "add",
-                    extensionObject: emptyExtensionObject(
-                      type,
-                      currentEditor()
-                    ),
-                  });
-                }}
-                handleUpdateActive={handleUpdateActive}
-                handleEdit={handleEdit}
-                handleDuplicate={handleDuplicate}
-                handleDelete={handleDelete}
-              />
-            </>
+            <ExtensionList
+              extensions={localExtensionsObjects}
+              handleUpdateActive={handleUpdateActive}
+              handleEdit={handleEdit}
+              handleDuplicate={handleDuplicate}
+              handleDelete={handleDelete}
+            />
           }
           actions={{
             primary: {

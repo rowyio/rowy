@@ -4,6 +4,7 @@ import { DataGridHandle } from "react-data-grid";
 import _sortBy from "lodash/sortBy";
 import _find from "lodash/find";
 import firebase from "firebase/app";
+import { compare } from "compare-versions";
 
 import { Button } from "@mui/material";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
@@ -19,7 +20,6 @@ import { rowyRun, IRowyRunRequestProps } from "@src/utils/rowyRun";
 import { rowyUser } from "@src/utils/fns";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
 import { runRoutes } from "@src/constants/runRoutes";
-import semver from "semver";
 
 export type Table = {
   id: string;
@@ -375,13 +375,12 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
     minVersion?: string;
     maxVersion?: string;
   }) => {
-    // example: "1.0.0", "1.0.0-beta.1", "1.0.0-rc.1+1"
-    const version = rowyRunVersion.split("-")[0];
-    if (!version) return false;
-    if (minVersion && semver.lt(version, minVersion)) return false;
-    if (maxVersion && semver.gt(version, maxVersion)) return false;
+    if (!rowyRunVersion) return false;
+    if (minVersion && compare(rowyRunVersion, minVersion, "<")) return false;
+    if (maxVersion && compare(rowyRunVersion, maxVersion, ">")) return false;
     return true;
   };
+
   // A ref to the data grid. Contains data grid functions
   const dataGridRef = useRef<DataGridHandle>(null);
   const sideDrawerRef = useRef<SideDrawerRef>();
