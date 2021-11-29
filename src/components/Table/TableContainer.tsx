@@ -136,14 +136,13 @@ export const TableContainer = styled("div", {
   ".row-hover-iconButton": {
     color: theme.palette.text.disabled,
     transitionDuration: "0s",
-
-    ".rdg-row:hover &": {
-      color: theme.palette.text.primary,
-      backgroundColor: alpha(
-        theme.palette.action.hover,
-        theme.palette.action.hoverOpacity * 1.5
-      ),
-    },
+  },
+  ".rdg-row:hover .row-hover-iconButton": {
+    color: theme.palette.text.primary,
+    backgroundColor: alpha(
+      theme.palette.action.hover,
+      theme.palette.action.hoverOpacity * 1.5
+    ),
   },
 
   ".cell-collapse-padding": {
