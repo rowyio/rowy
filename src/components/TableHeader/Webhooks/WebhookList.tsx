@@ -140,9 +140,9 @@ export default function WebhookList({
                     <EditIcon />
                   </IconButton>
                 </Tooltip>
-                <Tooltip title="Delete">
+                <Tooltip title="Delete…">
                   <IconButton
-                    aria-label="Delete"
+                    aria-label="Delete…"
                     color="error"
                     onClick={() => handleDelete(index)}
                     sx={{ "&&": { mr: -1.5 } }}
