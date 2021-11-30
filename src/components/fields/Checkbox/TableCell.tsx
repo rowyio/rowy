@@ -57,7 +57,7 @@ export default function Checkbox({
           letterSpacing: "inherit",
           flexGrow: 1,
           overflowX: "hidden",
-          mt: 0,
+          mt: "0 !important",
         },
 
         "& .MuiSwitch-root": { mr: -0.75 },
