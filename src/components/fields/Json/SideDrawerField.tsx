@@ -60,7 +60,7 @@ export default function Json({
               className={fieldClasses.root}
               style={{
                 whiteSpace: "pre-wrap",
-                ...theme.typography.caption,
+                ...(theme.typography.caption as any),
                 fontFamily: theme.typography.fontFamilyMono,
                 wordBreak: "break-word",
               }}
@@ -94,7 +94,10 @@ export default function Json({
             <TabPanel value="tree" sx={{ p: 0 }}>
               <div
                 className={fieldClasses.root}
-                style={{ overflowX: "auto", ...theme.typography.caption }}
+                style={{
+                  overflowX: "auto",
+                  ...(theme.typography.caption as any),
+                }}
               >
                 <ReactJson
                   src={sanitizedValue}

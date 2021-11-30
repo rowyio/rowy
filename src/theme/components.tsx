@@ -200,7 +200,7 @@ export const components = (theme: Theme): ThemeOptions => {
             "--dialog-contents-spacing": theme.spacing(3),
             "& > * + *": { marginTop: "var(--dialog-contents-spacing)" },
 
-            ...theme.typography.body2,
+            ...(theme.typography.body2 as any),
           },
         },
       },
@@ -266,7 +266,7 @@ export const components = (theme: Theme): ThemeOptions => {
             caretColor: theme.palette.primary.main,
             ".Mui-error &": { caretColor: theme.palette.error.main },
           },
-          inputSizeSmall: theme.typography.body2,
+          inputSizeSmall: theme.typography.body2 as any,
         },
       },
       MuiFilledInput: {
@@ -341,7 +341,7 @@ export const components = (theme: Theme): ThemeOptions => {
       MuiInputLabel: {
         styleOverrides: {
           root: {
-            ...theme.typography.button,
+            ...(theme.typography.button as any),
             color: theme.palette.text.primary,
           },
           filled: {
@@ -360,7 +360,7 @@ export const components = (theme: Theme): ThemeOptions => {
       MuiFormLabel: {
         styleOverrides: {
           root: {
-            ...theme.typography.button,
+            ...(theme.typography.button as any),
             color: theme.palette.text.primary,
           },
         },
@@ -441,7 +441,7 @@ export const components = (theme: Theme): ThemeOptions => {
         defaultProps: { disableSticky: true },
         styleOverrides: {
           root: {
-            ...theme.typography.subtitle2,
+            ...(theme.typography.subtitle2 as any),
             color: theme.palette.text.primary,
             lineHeight: "32px",
             userSelect: "none",
@@ -1037,7 +1037,7 @@ export const components = (theme: Theme): ThemeOptions => {
       MuiAlertTitle: {
         styleOverrides: {
           root: {
-            ...theme.typography.subtitle2,
+            ...(theme.typography.subtitle2 as any),
             lineHeight: "1.5rem",
           },
         },
@@ -1091,7 +1091,7 @@ export const components = (theme: Theme): ThemeOptions => {
         styleOverrides: {
           root: {
             "& .PrivatePickersYear-yearButton": {
-              ...theme.typography.button,
+              ...(theme.typography.button as any),
               fontSize: "1rem",
             },
           },

@@ -40,9 +40,9 @@ const additionalVariables = [
 export type WebhookType = typeof webhookTypes[number];
 
 export const webhookNames: Record<WebhookType, string> = {
-  sendgrid: "Sendgrid",
+  sendgrid: "SendGrid",
   typeform: "Typeform",
-  //github:"Github",
+  //github:"GitHub",
   // shopify: "Shopify",
   // twitter: "Twitter",
   // stripe: "Stripe",
@@ -73,6 +73,7 @@ export const webhookSchemas = {
   typeform,
   sendgrid,
 };
+
 export function emptyWebhookObject(
   type: WebhookType,
   user: IWebhookEditor

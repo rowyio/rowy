@@ -1,25 +1,23 @@
 import { IWebhookModalStepProps } from "./WebhookModal";
-import {
-  FormControl,
-  FormLabel,
-  FormControlLabel,
-  Switch,
-  Typography,
-} from "@mui/material";
+
+import { FormControlLabel, Checkbox, Typography } from "@mui/material";
+
 import { webhookSchemas } from "./utils";
+
 export default function Step1Endpoint({
   webhookObject,
   setWebhookObject,
 }: IWebhookModalStepProps) {
   return (
-    <FormControl component="fieldset">
-      <FormLabel component="legend" className="visually-hidden">
-        Verification
-      </FormLabel>
+    <>
+      <Typography variant="inherit" paragraph>
+        Verification prevents malicious requests from being sent to this webhook
+        endpoint
+      </Typography>
+
       <FormControlLabel
-        labelPlacement="start"
         control={
-          <Switch
+          <Checkbox
             checked={webhookObject.auth?.enabled}
             onClick={() =>
               setWebhookObject({
@@ -32,17 +30,16 @@ export default function Step1Endpoint({
             }
           />
         }
-        label="Enable Verification"
+        label="Enable verification for this webhook"
+        sx={{ mb: 2 }}
       />
-      {webhookObject.auth?.enabled ? (
-        webhookSchemas[webhookObject.type].auth(webhookObject, setWebhookObject)
-      ) : (
-        <Typography>
-          Verification of webhooks is optional however it prevents malicious
-          actors from spoofing the original sender
-        </Typography>
-      )}
+
+      {webhookObject.auth?.enabled &&
+        webhookSchemas[webhookObject.type].auth(
+          webhookObject,
+          setWebhookObject
+        )}
       {}
-    </FormControl>
+    </>
   );
 }

@@ -25,9 +25,9 @@ import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import { useConfirmation } from "@src/components/ConfirmationDialog/Context";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import { formatPath, asyncForEach } from "@src/utils/fns";
-import routes from "@src/constants/routes";
+// import routes from "@src/constants/routes";
 import { runRoutes } from "@src/constants/runRoutes";
-import { config } from "process";
+// import { config } from "process";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
 
 const useStyles = makeStyles((theme) =>
@@ -266,7 +266,7 @@ export default function BulkActions({ selectedRows, columns, clearSelection }) {
                   },
                 }}
                 SelectProps={{
-                  classes: { root: classes.select },
+                  classes: { select: classes.select },
                   displayEmpty: true,
                   MenuProps: {
                     anchorOrigin: { vertical: "top", horizontal: "left" },

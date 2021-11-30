@@ -1,11 +1,10 @@
 import { useState } from "react";
 import _isEqual from "lodash/isEqual";
 
-import { Breadcrumbs } from "@mui/material";
-
 import TableHeaderButton from "../TableHeaderButton";
 import WebhookIcon from "@src/assets/icons/Webhook";
 import Modal from "@src/components/Modal";
+import AddWebhookButton from "./AddWebhookButton";
 import WebhookList from "./WebhookList";
 import WebhookModal from "./WebhookModal";
 
@@ -34,26 +33,25 @@ export default function Webhooks() {
     webhookObject: IWebhook;
     index?: number;
   } | null>(null);
-  if (!compatibleRowyRunVersion?.({ minVersion: "1.2.0" })) return <></>;
-  const edited = !_isEqual(currentWebhooks, localWebhooksObjects);
 
-  const tablePathTokens =
-    tableState?.tablePath?.split("/").filter(function (_, i) {
-      // replace IDs with dash that appears at even indexes
-      return i % 2 === 0;
-    }) ?? [];
+  if (!compatibleRowyRunVersion?.({ minVersion: "1.2.0" })) return null;
+
+  const edited = !_isEqual(currentWebhooks, localWebhooksObjects);
 
   const handleOpen = () => {
     setOpenWebhookList(true);
   };
 
-  const handleClose = () => {
+  const handleClose = (
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>
+  ) => {
     if (edited) {
+      setOpen(true);
       requestConfirmation({
-        title: "Discard changes",
-        body: "You will lose changes you have made to webhooks",
+        title: "Discard changes?",
         confirm: "Discard",
         handleConfirm: () => {
+          setOpen(false);
           setLocalWebhooksObjects(currentWebhooks);
           setOpenWebhookList(false);
         },
@@ -142,8 +140,8 @@ export default function Webhooks() {
 
   const handleDelete = (index: number) => {
     requestConfirmation({
-      title: `Delete ${localWebhooksObjects[index].name}?`,
-      body: "This webhook will be permanently deleted.",
+      title: `Delete “${localWebhooksObjects[index].name}”?`,
+      body: "This webhook will be permanently deleted when you save",
       confirm: "Confirm",
       handleConfirm: () => {
         setLocalWebhooksObjects(
@@ -159,6 +157,10 @@ export default function Webhooks() {
     lastUpdate: Date.now(),
   });
 
+  const activeWebhookCount = localWebhooksObjects.filter(
+    (webhook) => webhook.active
+  ).length;
+
   return (
     <>
       <TableHeaderButton
@@ -170,29 +172,31 @@ export default function Webhooks() {
       {openWebhookList && !!tableState && (
         <Modal
           onClose={handleClose}
+          disableBackdropClick={edited}
+          disableEscapeKeyDown={edited}
           maxWidth="sm"
           fullWidth
-          title="Webhooks"
+          title={`Webhooks (${activeWebhookCount}\u2009/\u2009${localWebhooksObjects.length})`}
+          header={
+            <AddWebhookButton
+              handleAddWebhook={(type: WebhookType) => {
+                setWebhookModal({
+                  mode: "add",
+                  webhookObject: emptyWebhookObject(type, currentEditor()),
+                });
+              }}
+              variant={
+                localWebhooksObjects.length === 0 ? "contained" : "outlined"
+              }
+            />
+          }
           children={
-            <>
-              <Breadcrumbs aria-label="breadcrumb">
-                {tablePathTokens.map((pathToken) => (
-                  <code>{pathToken}</code>
-                ))}
-              </Breadcrumbs>
-              <WebhookList
-                webhooks={localWebhooksObjects}
-                handleAddWebhook={(type: WebhookType) => {
-                  setWebhookModal({
-                    mode: "add",
-                    webhookObject: emptyWebhookObject(type, currentEditor()),
-                  });
-                }}
-                handleUpdateActive={handleUpdateActive}
-                handleEdit={handleEdit}
-                handleDelete={handleDelete}
-              />
-            </>
+            <WebhookList
+              webhooks={localWebhooksObjects}
+              handleUpdateActive={handleUpdateActive}
+              handleEdit={handleEdit}
+              handleDelete={handleDelete}
+            />
           }
           actions={{
             primary: {

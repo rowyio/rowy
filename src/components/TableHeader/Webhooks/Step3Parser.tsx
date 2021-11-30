@@ -34,8 +34,8 @@ export default function Step4Body({
   return (
     <>
       <Typography gutterBottom>
-        Write the webhook parsed function. The returned object of the parser
-        will be added as new row{" "}
+        Write a function to parse webhook requests. Return an object, which will
+        be added as a new row.{" "}
         <Link
           href={
             WIKI_LINKS[`webhooks${_upperFirst(webhookObject.type)}`] ||

@@ -1,6 +1,7 @@
 import { Typography, Link, TextField } from "@mui/material";
+import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
-export default {
+export const webhookTypeform = {
   name: "Typeform",
   parser: {
     additionalVariables: null,
@@ -55,23 +56,24 @@ export default {
     return (
       <>
         <Typography gutterBottom>
-          To verify the webhook call is sent from typeform, you need to add
-          secret on your webhook config on be follow the instructions{" "}
+          Add a secret to your Typeform webhook config by following{" "}
           <Link
-            href={
-              "https://developers.typeform.com/webhooks/secure-your-webhooks/"
-            }
+            href="https://developers.typeform.com/webhooks/secure-your-webhooks/"
+            target="_blank"
             rel="noopener noreferrer"
-            variant="body2"
-            underline="always"
+            variant="inherit"
           >
-            here
-          </Link>{" "}
-          to set the secret, then add it below
+            these instructions
+            <InlineOpenInNewIcon />
+          </Link>
+          <br />
+          Then add the secret below.
         </Typography>
 
         <TextField
-          label={"Typeform Secret"}
+          id="typeform-secret"
+          label="Typeform secret"
+          fullWidth
           value={webhookObject.auth.secret}
           onChange={(e) => {
             setWebhookObject({
@@ -84,3 +86,5 @@ export default {
     );
   },
 };
+
+export default webhookTypeform;

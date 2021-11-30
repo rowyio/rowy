@@ -30,9 +30,9 @@ export default function FadeList({
   children,
   disableTopDivider = true,
   disableBottomDivider = false,
-  dividerSx,
-  topDividerSx,
-  bottomDividerSx,
+  dividerSx = [],
+  topDividerSx = [],
+  bottomDividerSx = [],
   listSx,
 }: IFadeListProps) {
   const [scrollInfo, setRef] = useScrollInfo();
@@ -42,7 +42,12 @@ export default function FadeList({
       {!disableTopDivider &&
         scrollInfo.y.percentage !== null &&
         scrollInfo.y.percentage > 0 && (
-          <Divider sx={{ ...dividerSx, ...topDividerSx }} />
+          <Divider
+            sx={[
+              ...(Array.isArray(dividerSx) ? dividerSx : [dividerSx]),
+              ...(Array.isArray(topDividerSx) ? topDividerSx : [topDividerSx]),
+            ]}
+          />
         )}
 
       <MemoizedList ref={setRef} sx={listSx}>
@@ -52,7 +57,14 @@ export default function FadeList({
       {!disableBottomDivider &&
         scrollInfo.y.percentage !== null &&
         scrollInfo.y.percentage < 1 && (
-          <Divider sx={{ ...dividerSx, ...bottomDividerSx }} />
+          <Divider
+            sx={[
+              ...(Array.isArray(dividerSx) ? dividerSx : [dividerSx]),
+              ...(Array.isArray(bottomDividerSx)
+                ? bottomDividerSx
+                : [bottomDividerSx]),
+            ]}
+          />
         )}
     </>
   );

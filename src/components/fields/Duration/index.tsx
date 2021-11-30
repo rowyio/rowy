@@ -2,7 +2,7 @@ import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
 import withHeavyCell from "../_withTableCell/withHeavyCell";
 
-import DurationIcon from "@mui/icons-material/Timer";
+import DurationIcon from "@mui/icons-material/TimerOutlined";
 import BasicCell from "../_BasicCell/BasicCellNull";
 import NullEditor from "@src/components/Table/editors/NullEditor";
 

@@ -2,7 +2,13 @@ import { useState } from "react";
 import _isEqual from "lodash/isEqual";
 import useStateRef from "react-usestateref";
 
-import { Grid, TextField, FormControlLabel, Switch } from "@mui/material";
+import {
+  Grid,
+  TextField,
+  FormControlLabel,
+  Switch,
+  Stack,
+} from "@mui/material";
 
 import Modal, { IModalProps } from "@src/components/Modal";
 import SteppedAccordion from "@src/components/SteppedAccordion";
@@ -16,7 +22,9 @@ import { webhookNames, IWebhook } from "./utils";
 import CopyIcon from "@src/assets/icons/Copy";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import { IconButton, Tooltip, Typography } from "@mui/material";
+
 type StepValidation = Record<"condition" | "parser", boolean>;
+
 export interface IWebhookModalStepProps {
   webhookObject: IWebhook;
   setWebhookObject: React.Dispatch<React.SetStateAction<IWebhook>>;
@@ -128,35 +136,38 @@ export default function WebhookModal({
                 }activated`}
               />
             </Grid>
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <Typography>URL:</Typography>
-              <div
-                style={{
-                  maxWidth: "90%",
-                  overflowX: "auto",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                <Typography variant="caption">
-                  <code>
-                    {baseUrl}
-                    {webhookObject.endpoint}
-                  </code>
-                </Typography>
-              </div>
-              <Tooltip title="copy to clipboard">
-                <IconButton
-                  onClick={() =>
-                    navigator.clipboard.writeText(
-                      `${baseUrl}${webhookObject.endpoint}`
-                    )
-                  }
-                >
-                  <CopyIcon />
-                </IconButton>
-              </Tooltip>
-            </div>
           </Grid>
+
+          <Stack direction="row" alignItems="center" style={{ marginTop: 0 }}>
+            <Typography
+              variant="inherit"
+              style={{ whiteSpace: "nowrap", flexShrink: 0 }}
+            >
+              Endpoint URL:
+            </Typography>
+            &nbsp;
+            <Typography
+              variant="caption"
+              style={{ overflowX: "auto", whiteSpace: "nowrap", flexGrow: 1 }}
+            >
+              <code>
+                {baseUrl}
+                {webhookObject.endpoint}
+              </code>
+            </Typography>
+            <Tooltip title="Copy endpoint URL">
+              <IconButton
+                onClick={() =>
+                  navigator.clipboard.writeText(
+                    `${baseUrl}${webhookObject.endpoint}`
+                  )
+                }
+                sx={{ flexShrink: 0, mr: -0.75 }}
+              >
+                <CopyIcon />
+              </IconButton>
+            </Tooltip>
+          </Stack>
 
           <SteppedAccordion
             steps={[
@@ -178,6 +189,7 @@ export default function WebhookModal({
                 content: <Step3Body {...stepProps} />,
               },
             ]}
+            style={{ marginTop: "var(--dialog-contents-spacing)" }}
           />
         </>
       }

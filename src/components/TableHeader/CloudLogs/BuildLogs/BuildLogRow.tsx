@@ -6,7 +6,7 @@ import Ansi from "ansi-to-react";
 import { TIME_FORMAT } from "constants/dates";
 
 const Root = styled("div")(({ theme }) => ({
-  ...theme.typography.caption,
+  ...(theme.typography.caption as any),
   fontFamily: theme.typography.fontFamilyMono,
   // TODO:
   color: "#CCC",

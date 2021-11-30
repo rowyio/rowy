@@ -1,3 +1,6 @@
+import { Typography } from "@mui/material";
+import WarningIcon from "@mui/icons-material/WarningAmber";
+
 export const webhookTypes = [
   "basic",
   "typeform",
@@ -36,7 +39,7 @@ const additionalVariables = [
   },
 ];
 
-export default {
+export const webhookBasic = {
   name: "Basic",
   parser: {
     additionalVariables,
@@ -60,6 +63,13 @@ export default {
     }`,
   },
   auth: (webhookObject, setWebhookObject) => {
-    return <>no auth option for basic atm</>;
+    return (
+      <Typography color="text.disabled">
+        <WarningIcon aria-label="Warning" style={{ verticalAlign: "bottom" }} />
+        &nbsp; Verification is not currently available for basic webhooks
+      </Typography>
+    );
   },
 };
+
+export default webhookBasic;

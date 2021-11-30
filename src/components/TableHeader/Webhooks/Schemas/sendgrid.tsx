@@ -1,7 +1,8 @@
 import { Typography, Link, TextField } from "@mui/material";
+import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
-export default {
-  name: "Sendgrid",
+export const webhookSendgrid = {
+  name: "SendGrid",
   parser: {
     additionalVariables: null,
     extraLibs: null,
@@ -32,24 +33,25 @@ export default {
     return (
       <>
         <Typography gutterBottom>
-          To verify the webhook call is sent from Sendgrid, You can enable
-          signed event webhooks
+          Enable Signed Event Webhooks on SendGrid by following{" "}
           <Link
-            href={
-              "https://docs.sendgrid.com/for-developers/tracking-events/getting-started-event-webhook-security-features#the-signed-event-webhook"
-            }
+            href="https://docs.sendgrid.com/for-developers/tracking-events/getting-started-event-webhook-security-features#the-signed-event-webhook"
+            target="_blank"
             rel="noopener noreferrer"
-            variant="body2"
-            underline="always"
+            variant="inherit"
           >
-            here
-          </Link>{" "}
-          to set the secret, then add it below
+            these instructions
+            <InlineOpenInNewIcon />
+          </Link>
+          <br />
+          Then add the secret below.
         </Typography>
 
         <TextField
-          label={"Verification Key"}
+          id="sendgrid-verification-key"
+          label="Verification key"
           value={webhookObject.auth.secret}
+          fullWidth
           multiline
           onChange={(e) => {
             setWebhookObject({
@@ -62,3 +64,5 @@ export default {
     );
   },
 };
+
+export default webhookSendgrid;
