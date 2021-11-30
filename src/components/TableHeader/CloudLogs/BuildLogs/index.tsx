@@ -30,7 +30,7 @@ const Accordion = styled(MuiAccordion)(({ theme }) => ({
   marginTop: 0,
   "&::before": { display: "none" },
 
-  ...theme.typography.caption,
+  ...(theme.typography.caption as any),
   fontFamily: theme.typography.fontFamilyMono,
 }));
 

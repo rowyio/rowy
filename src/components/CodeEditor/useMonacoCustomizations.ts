@@ -6,7 +6,7 @@ import githubLightTheme from "./github-light-default.json";
 import githubDarkTheme from "./github-dark-default.json";
 
 import { useTheme } from "@mui/material";
-import type { SxProps, Theme } from "@mui/system";
+import type { SystemStyleObject, Theme } from "@mui/system";
 
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import { getFieldProp } from "@src/components/fields";
@@ -189,7 +189,7 @@ export default function useMonacoCustomizations({
     }
   }, [monaco, tableState?.columns]);
 
-  let boxSx: SxProps<Theme> = {
+  let boxSx: SystemStyleObject<Theme> = {
     minWidth: 400,
     minHeight,
     height: minHeight,

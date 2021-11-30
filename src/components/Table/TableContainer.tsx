@@ -58,7 +58,7 @@ export const TableContainer = styled("div", {
     border: "none",
     backgroundColor: "transparent",
 
-    ...theme.typography.caption,
+    ...(theme.typography.caption as any),
     // fontSize: "0.8125rem",
     lineHeight: "inherit !important",
 

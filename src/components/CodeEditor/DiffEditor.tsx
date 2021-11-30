@@ -63,7 +63,14 @@ export default function DiffEditor({
   return (
     <TrapFocus open={fullScreen}>
       <Box
-        sx={{ ...boxSx, ...containerProps?.sx }}
+        sx={[
+          boxSx,
+          ...(Array.isArray(containerProps?.sx)
+            ? containerProps!.sx
+            : containerProps?.sx
+            ? [containerProps.sx]
+            : []),
+        ]}
         style={fullScreen ? { height: "100%" } : {}}
       >
         <MonacoDiffEditor

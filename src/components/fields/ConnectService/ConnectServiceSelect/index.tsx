@@ -52,7 +52,7 @@ export default function ConnectServiceSelect({
       SelectProps={{
         renderValue: (value) => `${(value as any[]).length} selected`,
         displayEmpty: true,
-        classes: { root: classes.selectRoot },
+        classes: { select: classes.selectRoot },
         ...TextFieldProps.SelectProps,
         // Must have this set to prevent MUI transforming `value`
         // prop for this component to a comma-separated string

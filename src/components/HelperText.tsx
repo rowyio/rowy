@@ -13,7 +13,7 @@ export default function HelperText(props: IHelperTextProps) {
       style={{
         marginTop: theme.spacing(-3),
         padding: theme.spacing(0, 1.5),
-        ...theme.typography.body2,
+        ...(theme.typography.body2 as any),
         color: theme.palette.text.secondary,
       }}
     />

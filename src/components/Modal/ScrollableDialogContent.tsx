@@ -26,9 +26,9 @@ export interface IScrollableDialogContentProps extends DialogContentProps {
 export default function ScrollableDialogContent({
   disableTopDivider = false,
   disableBottomDivider = false,
-  dividerSx,
-  topDividerSx,
-  bottomDividerSx,
+  dividerSx = [],
+  topDividerSx = [],
+  bottomDividerSx = [],
   ...props
 }: IScrollableDialogContentProps) {
   const [scrollInfo, setRef] = useScrollInfo();
@@ -40,7 +40,10 @@ export default function ScrollableDialogContent({
           style={{
             visibility: scrollInfo.y.percentage > 0 ? "visible" : "hidden",
           }}
-          sx={{ ...dividerSx, ...topDividerSx }}
+          sx={[
+            ...(Array.isArray(dividerSx) ? dividerSx : [dividerSx]),
+            ...(Array.isArray(topDividerSx) ? topDividerSx : [topDividerSx]),
+          ]}
         />
       )}
 
@@ -51,7 +54,12 @@ export default function ScrollableDialogContent({
           style={{
             visibility: scrollInfo.y.percentage < 1 ? "visible" : "hidden",
           }}
-          sx={{ ...dividerSx, ...bottomDividerSx }}
+          sx={[
+            ...(Array.isArray(dividerSx) ? dividerSx : [dividerSx]),
+            ...(Array.isArray(bottomDividerSx)
+              ? bottomDividerSx
+              : [bottomDividerSx]),
+          ]}
         />
       )}
     </>

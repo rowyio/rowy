@@ -47,6 +47,8 @@ export default function AddRow() {
         ref={anchorEl}
       >
         <Button
+          variant="contained"
+          color="primary"
           disabled={isCollectionGroup() || !addRow}
           onClick={handleClick}
           startIcon={<AddRowIcon />}
@@ -55,6 +57,8 @@ export default function AddRow() {
         </Button>
 
         <Button
+          variant="contained"
+          color="primary"
           aria-label="Select row add position"
           aria-haspopup="menu"
           style={{ padding: 0 }}
