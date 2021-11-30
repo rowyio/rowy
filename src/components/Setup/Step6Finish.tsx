@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSnackbar } from "notistack";
 
 import { Typography, Stack, RadioGroup, Radio } from "@mui/material";
@@ -9,10 +9,14 @@ import ThumbDownOffIcon from "@mui/icons-material/ThumbDownOffAlt";
 
 import { name } from "@root/package.json";
 import { analytics } from "analytics";
+import { db } from "@src/firebase";
 
 export default function Step6Finish() {
   const { enqueueSnackbar } = useSnackbar();
 
+  useEffect(() => {
+    db.doc("_rowy_/settings").update({ setupCompleted: true });
+  }, []);
   const [rating, setRating] = useState<"up" | "down" | undefined>();
 
   const handleRate = (e) => {

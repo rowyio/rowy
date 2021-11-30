@@ -5,8 +5,8 @@ import { List, ListItemText, Collapse } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import NavItem from "./NavItem";
 
-import { Table } from "contexts/ProjectContext";
-import { routes } from "constants/routes";
+import { Table } from "@src/contexts/ProjectContext";
+import { routes } from "@src/constants/routes";
 
 export interface INavDrawerItemProps {
   open?: boolean;

@@ -1,25 +1,33 @@
 import { lazy, Suspense } from "react";
-import { Grid, InputLabel } from "@mui/material";
-import MultiSelect from "@rowy/multiselect";
-import FieldSkeleton from "components/SideDrawer/Form/FieldSkeleton";
-import { FieldType } from "constants/fields";
-import FieldsDropdown from "components/Table/ColumnMenu/FieldsDropdown";
-import { useProjectContext } from "contexts/ProjectContext";
-import CodeEditorHelper from "components/CodeEditorHelper";
+import { ISettingsProps } from "../types";
 
-import { WIKI_LINKS } from "constants/externalLinks";
+import { Grid, InputLabel, FormHelperText } from "@mui/material";
+import MultiSelect from "@rowy/multiselect";
+import FieldSkeleton from "@src/components/SideDrawer/Form/FieldSkeleton";
+import FieldsDropdown from "@src/components/Table/ColumnMenu/FieldsDropdown";
+import CodeEditorHelper from "@src/components/CodeEditor/CodeEditorHelper";
+
+import { FieldType } from "@src/constants/fields";
+import { useProjectContext } from "@src/contexts/ProjectContext";
+import { WIKI_LINKS } from "@src/constants/externalLinks";
 
 const CodeEditor = lazy(
   () =>
-    import(
-      "components/Table/editors/CodeEditor" /* webpackChunkName: "CodeEditor" */
-    )
+    import("@src/components/CodeEditor" /* webpackChunkName: "CodeEditor" */)
 );
 
-const Settings = ({ config, handleChange }) => {
+export default function Settings({
+  config,
+  onChange,
+  fieldName,
+  onBlur,
+  errors,
+}: ISettingsProps) {
   const { tableState } = useProjectContext();
   if (!tableState?.columns) return <></>;
+
   const columnOptions = Object.values(tableState.columns)
+    .filter((column) => column.fieldName !== fieldName)
     .filter((column) => column.type !== FieldType.subTable)
     .map((c) => ({ label: c.name, value: c.key }));
 
@@ -31,10 +39,25 @@ const Settings = ({ config, handleChange }) => {
             label="Listener fields"
             options={columnOptions}
             value={config.listenerFields ?? []}
-            onChange={handleChange("listenerFields")}
+            onChange={onChange("listenerFields")}
             TextFieldProps={{
-              helperText:
-                "Changes to these fields will trigger the evaluation of the column.",
+              helperText: (
+                <>
+                  {errors.listenerFields && (
+                    <FormHelperText error style={{ margin: 0 }}>
+                      {errors.listenerFields}
+                    </FormHelperText>
+                  )}
+                  <FormHelperText error={false} style={{ margin: 0 }}>
+                    Changes to these fields will trigger the evaluation of the
+                    column.
+                  </FormHelperText>
+                </>
+              ),
+              FormHelperTextProps: { component: "div" } as any,
+              required: true,
+              error: errors.listenerFields,
+              onBlur,
             }}
           />
         </Grid>
@@ -53,7 +76,13 @@ const Settings = ({ config, handleChange }) => {
                 ].includes(f)
             )}
             onChange={(value) => {
-              handleChange("renderFieldType")(value);
+              onChange("renderFieldType")(value);
+            }}
+            TextFieldProps={{
+              required: true,
+              error: errors.renderFieldType,
+              helperText: errors.renderFieldType,
+              onBlur,
             }}
           />
         </Grid>
@@ -63,13 +92,16 @@ const Settings = ({ config, handleChange }) => {
         <InputLabel>Derivative script</InputLabel>
         <CodeEditorHelper docLink={WIKI_LINKS.fieldTypesDerivative} />
         <Suspense fallback={<FieldSkeleton height={200} />}>
-          <CodeEditor
-            script={config.script}
-            handleChange={handleChange("script")}
-          />
+          <CodeEditor value={config.script} onChange={onChange("script")} />
         </Suspense>
       </div>
     </>
   );
+}
+
+export const settingsValidator = (config) => {
+  const errors: Record<string, any> = {};
+  if (!config.listenerFields) errors.listenerFields = "Required";
+  if (!config.renderFieldType) errors.renderFieldType = "Required";
+  return errors;
 };
-export default Settings;

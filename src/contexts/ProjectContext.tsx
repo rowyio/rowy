@@ -4,21 +4,22 @@ import { DataGridHandle } from "react-data-grid";
 import _sortBy from "lodash/sortBy";
 import _find from "lodash/find";
 import firebase from "firebase/app";
+import { compare } from "compare-versions";
 
 import { Button } from "@mui/material";
-import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
+import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
-import useTable, { TableActions, TableState } from "hooks/useTable";
-import useSettings from "hooks/useSettings";
+import useTable, { TableActions, TableState } from "@src/hooks/useTable";
+import useSettings from "@src/hooks/useSettings";
 import { useAppContext } from "./AppContext";
-import { SideDrawerRef } from "components/SideDrawer";
-import { ColumnMenuRef } from "components/Table/ColumnMenu";
-import { ImportWizardRef } from "components/Wizards/ImportWizard";
+import { SideDrawerRef } from "@src/components/SideDrawer";
+import { ColumnMenuRef } from "@src/components/Table/ColumnMenu";
+import { ImportWizardRef } from "@src/components/Wizards/ImportWizard";
 
-import { rowyRun, IRowyRunRequestProps } from "utils/rowyRun";
-import { FieldType } from "constants/fields";
-import { rowyUser } from "utils/fns";
-import { WIKI_LINKS } from "constants/externalLinks";
+import { rowyRun, IRowyRunRequestProps } from "@src/utils/rowyRun";
+import { rowyUser } from "@src/utils/fns";
+import { WIKI_LINKS } from "@src/constants/externalLinks";
+import { runRoutes } from "@src/constants/runRoutes";
 
 export type Table = {
   id: string;
@@ -33,13 +34,32 @@ export type Table = {
   auditFieldUpdatedBy?: string;
 };
 
-interface IProjectContext {
+interface IRowyRun
+  extends Omit<IRowyRunRequestProps, "serviceUrl" | "authToken"> {
+  service?: "hooks" | "builder";
+}
+export interface IProjectContext {
+  settings: {
+    rowyRunUrl?: string;
+    services?: {
+      hooks?: string;
+    };
+  };
   tables: Table[];
   table: Table;
   roles: string[];
   tableState: TableState;
   tableActions: TableActions;
-  addRow: (data?: Record<string, any>, ignoreRequiredFields?: boolean) => void;
+  addRow: (
+    data?: Record<string, any>,
+    ignoreRequiredFields?: boolean,
+    id?: string | { type: "smaller" }
+  ) => void;
+  addRows: (
+    rows: { data?: Record<string, any>; id?: string }[],
+    ignoreRequiredFields?: boolean
+  ) => void;
+  deleteRow: (rowId) => void;
   updateCell: (
     ref: firebase.firestore.DocumentReference,
     fieldName: string,
@@ -71,6 +91,10 @@ interface IProjectContext {
     deleteTable: (id: string) => void;
   };
 
+  compatibleRowyRunVersion: (args: {
+    minVersion?: string;
+    maxVersion?: string;
+  }) => boolean;
   // A ref to the data grid. Contains data grid functions
   dataGridRef: React.RefObject<DataGridHandle>;
   // A ref to the side drawer state. Prevents unnecessary re-renders
@@ -80,9 +104,7 @@ interface IProjectContext {
   // A ref ot the import wizard. Prevents unnecessary re-renders
   importWizardRef: React.MutableRefObject<ImportWizardRef | undefined>;
 
-  rowyRun: (
-    args: Omit<IRowyRunRequestProps, "rowyRunUrl" | "authToken">
-  ) => Promise<any>;
+  rowyRun: <T = any>(args: IRowyRun) => Promise<T>;
 }
 
 const ProjectContext = React.createContext<Partial<IProjectContext>>({});
@@ -98,6 +120,17 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
   const [tables, setTables] = useState<IProjectContext["tables"]>();
   const [settings, settingsActions] = useSettings();
   const table = _find(tables, (table) => table.id === tableState.config.id);
+
+  const [rowyRunVersion, setRowyRunVersion] = useState("");
+  useEffect(() => {
+    if (settings?.doc?.rowyRunUrl) {
+      _rowyRun({
+        route: runRoutes.version,
+      }).then((resp) => {
+        if (resp.version) setRowyRunVersion(resp.version);
+      });
+    }
+  }, [settings?.doc?.rowyRunUrl]);
 
   useEffect(() => {
     const { tables } = settings;
@@ -133,8 +166,37 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
         : [],
     [tables]
   );
+  const auditChange = (
+    type: "ADD_ROW" | "UPDATE_CELL" | "DELETE_ROW",
+    rowId,
+    data
+  ) => {
+    if (
+      table?.audit !== false &&
+      compatibleRowyRunVersion({ minVersion: "1.1.1" })
+    ) {
+      _rowyRun({
+        route: runRoutes.auditChange,
+        body: {
+          rowyUser: rowyUser(currentUser!),
+          type,
+          ref: {
+            rowPath: tableState.tablePath,
+            rowId,
+            tableId: table?.id,
+            collectionPath: tableState.tablePath,
+          },
+          data,
+        },
+      });
+    }
+  };
 
-  const addRow: IProjectContext["addRow"] = (data, ignoreRequiredFields) => {
+  const addRow: IProjectContext["addRow"] = async (
+    data,
+    ignoreRequiredFields,
+    id
+  ) => {
     const valuesFromFilter = tableState.filters.reduce((acc, curr) => {
       if (curr.operator === "==") {
         return { ...acc, [curr.key]: curr.value };
@@ -168,10 +230,63 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
       );
     }
 
-    tableActions.row.add(
+    if (!(typeof id === "object" && id?.type === "smaller"))
+      initialData._rowy_outOfOrder = true;
+
+    await tableActions.row.add(
       { ...valuesFromFilter, ...initialData, ...data },
-      ignoreRequiredFields ? [] : requiredFields
+      ignoreRequiredFields ? [] : requiredFields,
+      (rowId: string) => auditChange("ADD_ROW", rowId, {}),
+      id
     );
+    return;
+  };
+
+  const addRows = async (
+    rows: { data?: any; id?: string }[],
+    ignoreRequiredFields?: boolean
+  ) => {
+    const valuesFromFilter = tableState.filters.reduce((acc, curr) => {
+      if (curr.operator === "==") {
+        return { ...acc, [curr.key]: curr.value };
+      } else {
+        return acc;
+      }
+    }, {});
+    const initialData = Object.values(tableState.columns).reduce(
+      (acc, column) => {
+        if (column.config?.defaultValue?.type === "static") {
+          return { ...acc, [column.key]: column.config.defaultValue.value };
+        } else if (column.config?.defaultValue?.type === "null") {
+          return { ...acc, [column.key]: null };
+        } else {
+          return acc;
+        }
+      },
+      {}
+    );
+
+    const requiredFields = Object.values(tableState.columns)
+      .filter((column) => column.config.required)
+      .map((column) => column.key);
+
+    if (table?.audit !== false) {
+      initialData[table?.auditFieldCreatedBy || "_createdBy"] = rowyUser(
+        currentUser!
+      );
+      initialData[table?.auditFieldUpdatedBy || "_updatedBy"] = rowyUser(
+        currentUser!
+      );
+    }
+
+    await tableActions.addRows(
+      rows.map((row) => ({
+        data: { ...valuesFromFilter, ...initialData, ...row.data },
+      })),
+      ignoreRequiredFields ? [] : requiredFields,
+      (rowId: string) => auditChange("ADD_ROW", rowId, {})
+    );
+    return;
   };
 
   const updateCell: IProjectContext["updateCell"] = (
@@ -190,11 +305,11 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
         { updatedField: fieldName }
       );
     }
-
     tableActions.row.update(
       ref,
       update,
       () => {
+        auditChange("UPDATE_CELL", ref.id, { updatedField: fieldName });
         if (onSuccess) onSuccess(ref, fieldName, value);
       },
       (error) => {
@@ -210,17 +325,33 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
       }
     );
   };
+
+  const deleteRow = (rowId: string | string[]) => {
+    if (Array.isArray(rowId)) {
+      tableActions.row.delete(rowId, () => {
+        rowId.forEach((id) => auditChange("DELETE_ROW", id, {}));
+      });
+    } else
+      tableActions.row.delete(rowId, () =>
+        auditChange("DELETE_ROW", rowId, {})
+      );
+  };
   // rowyRun access
   const _rowyRun: IProjectContext["rowyRun"] = async (args) => {
+    const { service, ...rest } = args;
     const authToken = await getAuthToken();
-    if (settings.doc.rowyRunUrl)
+    const serviceUrl = service
+      ? settings.doc.services[service]
+      : settings.doc.rowyRunUrl;
+
+    if (serviceUrl) {
       return rowyRun({
-        rowyRunUrl: settings.doc.rowyRunUrl,
+        serviceUrl,
         authToken,
-        ...args,
+        ...rest,
       });
-    else {
-      enqueueSnackbar(`Rowy Run is not set up`, {
+    } else {
+      enqueueSnackbar(`Rowy Run${service ? ` ${service}` : ""} is not set up`, {
         variant: "error",
         action: (
           <Button
@@ -237,6 +368,19 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
     }
   };
 
+  const compatibleRowyRunVersion = ({
+    minVersion,
+    maxVersion,
+  }: {
+    minVersion?: string;
+    maxVersion?: string;
+  }) => {
+    if (!rowyRunVersion) return false;
+    if (minVersion && compare(rowyRunVersion, minVersion, "<")) return false;
+    if (maxVersion && compare(rowyRunVersion, maxVersion, ">")) return false;
+    return true;
+  };
+
   // A ref to the data grid. Contains data grid functions
   const dataGridRef = useRef<DataGridHandle>(null);
   const sideDrawerRef = useRef<SideDrawerRef>();
@@ -249,8 +393,11 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
         tableState,
         tableActions,
         addRow,
+        addRows,
         updateCell,
+        deleteRow,
         settingsActions,
+        settings: settings.doc,
         roles,
         tables,
         table,
@@ -259,6 +406,7 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
         columnMenuRef,
         importWizardRef,
         rowyRun: _rowyRun,
+        compatibleRowyRunVersion,
       }}
     >
       {children}

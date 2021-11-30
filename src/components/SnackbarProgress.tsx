@@ -1,5 +1,7 @@
 import { useState, Dispatch, SetStateAction, MutableRefObject } from "react";
-import { Stack, CircularProgress } from "@mui/material";
+
+import { Stack } from "@mui/material";
+import CircularProgressOptical from "@src/components/CircularProgressOptical";
 
 export interface ISnackbarProgressRef {
   setProgress: Dispatch<SetStateAction<number>>;
@@ -31,12 +33,11 @@ export default function SnackbarProgress({
         {progress}/{target}
       </span>
 
-      <CircularProgress
+      <CircularProgressOptical
         value={(progress / target) * 100}
         variant="determinate"
         size={24}
         color="inherit"
-        thickness={4}
       />
     </Stack>
   );

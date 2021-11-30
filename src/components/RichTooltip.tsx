@@ -81,6 +81,10 @@ export interface IRichTooltipProps
   message?: React.ReactNode;
   dismissButtonText?: React.ReactNode;
   dismissButtonProps?: Partial<ButtonProps>;
+  defaultOpen?: boolean;
+  onOpen?: () => void;
+  onClose?: () => void;
+  onToggle?: (state: boolean) => void;
 }
 
 export default function RichTooltip({
@@ -90,14 +94,28 @@ export default function RichTooltip({
   message,
   dismissButtonText,
   dismissButtonProps,
+  defaultOpen,
+  onOpen,
+  onClose,
+  onToggle,
   ...props
 }: IRichTooltipProps) {
   const classes = useStyles();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(defaultOpen || false);
 
-  const openTooltip = () => setOpen(true);
-  const closeTooltip = () => setOpen(false);
-  const toggleTooltip = () => setOpen((state) => !state);
+  const openTooltip = () => {
+    setOpen(true);
+    if (onOpen) onOpen();
+  };
+  const closeTooltip = () => {
+    setOpen(false);
+    if (onClose) onClose();
+  };
+  const toggleTooltip = () =>
+    setOpen((state) => {
+      if (onToggle) onToggle(!state);
+      return !state;
+    });
 
   return (
     <Tooltip
@@ -145,6 +163,21 @@ export default function RichTooltip({
           )}
         </div>
       }
+      PopperProps={{
+        modifiers: [
+          {
+            name: "preventOverflow",
+            enabled: true,
+            options: {
+              altAxis: true,
+              altBoundary: true,
+              tether: false,
+              rootBoundary: "document",
+              padding: 8,
+            },
+          },
+        ],
+      }}
       {...props}
     >
       {render({ openTooltip, closeTooltip, toggleTooltip })}

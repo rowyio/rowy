@@ -3,9 +3,9 @@ import type {} from "@mui/lab/themeAugmentation";
 import { MultiSelectProps } from "@rowy/multiselect";
 import { toRem } from "./typography";
 
-import RadioIcon from "theme/RadioIcon";
-import CheckboxIcon from "theme/CheckboxIcon";
-import CheckboxIndeterminateIcon from "theme/CheckboxIndeterminateIcon";
+import RadioIcon from "@src/theme/RadioIcon";
+import CheckboxIcon from "@src/theme/CheckboxIcon";
+import CheckboxIndeterminateIcon from "@src/theme/CheckboxIndeterminateIcon";
 import AddCircleIcon from "@mui/icons-material/AddCircleOutline";
 import { SvgIcon } from "@mui/material";
 
@@ -143,6 +143,13 @@ export const components = (theme: Theme): ThemeOptions => {
 
       MuiDialog: {
         styleOverrides: {
+          root: {
+            "--dialog-title-height": "64px",
+            [theme.breakpoints.down("sm")]: {
+              "--dialog-title-height": "56px",
+            },
+          },
+
           paper: {
             borderRadius: (theme.shape.borderRadius as number) * 2,
 
@@ -193,7 +200,7 @@ export const components = (theme: Theme): ThemeOptions => {
             "--dialog-contents-spacing": theme.spacing(3),
             "& > * + *": { marginTop: "var(--dialog-contents-spacing)" },
 
-            ...theme.typography.body2,
+            ...(theme.typography.body2 as any),
           },
         },
       },
@@ -238,6 +245,20 @@ export const components = (theme: Theme): ThemeOptions => {
           variant: "filled",
           size: "small",
         },
+
+        styleOverrides: {
+          root: {
+            "&.labelHorizontal": {
+              flexDirection: "row",
+              alignItems: "center",
+
+              "& .MuiInputLabel-root": {
+                padding: 0,
+                paddingRight: theme.spacing(1),
+              },
+            },
+          },
+        },
       },
       MuiInputBase: {
         styleOverrides: {
@@ -245,7 +266,7 @@ export const components = (theme: Theme): ThemeOptions => {
             caretColor: theme.palette.primary.main,
             ".Mui-error &": { caretColor: theme.palette.error.main },
           },
-          inputSizeSmall: theme.typography.body2,
+          inputSizeSmall: theme.typography.body2 as any,
         },
       },
       MuiFilledInput: {
@@ -256,23 +277,23 @@ export const components = (theme: Theme): ThemeOptions => {
               backgroundColor: theme.palette.action.input,
             },
 
-            boxShadow: `0 0 0 1px ${theme.palette.action.inputOutline} inset,
-                        0 -1px 0 0 ${theme.palette.text.disabled} inset`,
+            boxShadow: `0 -1px 0 0 ${theme.palette.text.disabled} inset,
+                        0 0 0 1px ${theme.palette.action.inputOutline} inset`,
             transition: theme.transitions.create("box-shadow", {
               duration: theme.transitions.duration.short,
             }),
 
             "&:hover": {
-              boxShadow: `0 0 0 1px ${theme.palette.action.inputOutline} inset,
-                          0 -1px 0 0 ${theme.palette.text.primary} inset`,
+              boxShadow: `0 -1px 0 0 ${theme.palette.text.primary} inset,
+                          0 0 0 1px ${theme.palette.action.inputOutline} inset`,
             },
             "&.Mui-focused, &.Mui-focused:hover": {
-              boxShadow: `0 0 0 1px ${theme.palette.action.inputOutline} inset,
-                          0 -2px 0 0 ${theme.palette.primary.main} inset`,
+              boxShadow: `0 -2px 0 0 ${theme.palette.primary.main} inset,
+                          0 0 0 1px ${theme.palette.action.inputOutline} inset`,
             },
             "&.Mui-error, &.Mui-error:hover": {
-              boxShadow: `0 0 0 1px ${theme.palette.action.inputOutline} inset,
-                          0 -2px 0 0 ${theme.palette.error.main} inset`,
+              boxShadow: `0 -2px 0 0 ${theme.palette.error.main} inset,
+                          0 0 0 1px ${theme.palette.action.inputOutline} inset`,
             },
 
             borderRadius: theme.shape.borderRadius,
@@ -301,6 +322,14 @@ export const components = (theme: Theme): ThemeOptions => {
             paddingTop: theme.spacing(1.5),
             paddingBottom: theme.spacing(13 / 8),
             height: toRem(23),
+
+            ".MuiInputBase-root .MuiFilledInput-input.MuiInputBase-input&::placeholder":
+              {
+                // https://github.com/mui-org/material-ui/blob/master/packages/mui-material/src/InputBase/InputBase.js#L136
+                opacity: `${
+                  theme.palette.mode === "light" ? 0.42 : 0.5
+                } !important`,
+              },
           },
           inputSizeSmall: {
             padding: theme.spacing(0.75, 1.5),
@@ -312,7 +341,7 @@ export const components = (theme: Theme): ThemeOptions => {
       MuiInputLabel: {
         styleOverrides: {
           root: {
-            ...theme.typography.button,
+            ...(theme.typography.button as any),
             color: theme.palette.text.primary,
           },
           filled: {
@@ -325,6 +354,14 @@ export const components = (theme: Theme): ThemeOptions => {
             maxWidth: "none",
             overflow: "visible",
             whiteSpace: "normal",
+          },
+        },
+      },
+      MuiFormLabel: {
+        styleOverrides: {
+          root: {
+            ...(theme.typography.button as any),
+            color: theme.palette.text.primary,
           },
         },
       },
@@ -368,7 +405,7 @@ export const components = (theme: Theme): ThemeOptions => {
           root: {
             width: `calc(100% - ${theme.spacing(1)})`,
             margin: theme.spacing(0, 0.5),
-            padding: theme.spacing(0.5, 0.75, 0.5, 1.5),
+            padding: theme.spacing(0.5, 1.5),
             minHeight: 32,
             borderRadius: theme.shape.borderRadius,
 
@@ -404,7 +441,7 @@ export const components = (theme: Theme): ThemeOptions => {
         defaultProps: { disableSticky: true },
         styleOverrides: {
           root: {
-            ...theme.typography.subtitle2,
+            ...(theme.typography.subtitle2 as any),
             color: theme.palette.text.primary,
             lineHeight: "32px",
             userSelect: "none",
@@ -530,6 +567,138 @@ export const components = (theme: Theme): ThemeOptions => {
       MuiButtonGroup: {
         styleOverrides: {
           grouped: { minWidth: 32 },
+        },
+      },
+
+      MuiToggleButtonGroup: {
+        defaultProps: {
+          color: "primary",
+        },
+        styleOverrides: {
+          groupedHorizontal: {
+            "&:not(:first-of-type)": {
+              borderLeft: 0,
+              clipPath: "inset(0 0 0 1px)",
+            },
+          },
+          groupedVertical: {
+            "&:not(:first-of-type)": {
+              borderTop: 0,
+              clipPath: "inset(1px 0 0 0)",
+            },
+          },
+        },
+      },
+      MuiToggleButton: {
+        styleOverrides: {
+          root: {
+            "&, &.Mui-selected": {
+              backgroundColor: theme.palette.action.input,
+            },
+            transition: theme.transitions.create(
+              ["background-color", "color"],
+              { duration: theme.transitions.duration.short }
+            ),
+
+            border: 0,
+            boxShadow: `0 0 0 1px ${theme.palette.action.inputOutline} inset,
+            0 ${theme.palette.mode === "dark" ? "" : "-"}1px 0 0 ${
+              theme.palette.action.inputOutline
+            } inset`,
+            ".MuiToggleButtonGroup-vertical &:not(:last-of-type)": {
+              boxShadow: `0 0 0 1px ${theme.palette.action.inputOutline} inset`,
+            },
+
+            "&:not(.Mui-disabled):hover": {
+              backgroundColor: colord(theme.palette.action.input)
+                .mix(
+                  theme.palette.text.primary,
+                  theme.palette.action.hoverOpacity
+                )
+                .toHslString(),
+              zIndex: 1,
+            },
+
+            "&.Mui-selected:hover": {
+              ".MuiToggleButton-standard&": {
+                backgroundColor: colord(theme.palette.action.input)
+                  .mix(
+                    theme.palette.action.hover,
+                    theme.palette.action.hoverOpacity
+                  )
+                  .toHslString(),
+              },
+              ".MuiToggleButton-primary&": {
+                backgroundColor: colord(theme.palette.action.input)
+                  .mix(
+                    theme.palette.primary.main,
+                    theme.palette.action.hoverOpacity
+                  )
+                  .toHslString(),
+              },
+              ".MuiToggleButton-secondary&": {
+                backgroundColor: colord(theme.palette.action.input)
+                  .mix(
+                    theme.palette.secondary.main,
+                    theme.palette.action.hoverOpacity
+                  )
+                  .toHslString(),
+              },
+            },
+
+            "&.Mui-disabled": {
+              boxShadow: `0 0 0 1px ${theme.palette.divider} inset`,
+              backgroundColor: "transparent",
+              border: 0,
+            },
+
+            "&.Mui-selected::after": {
+              content: "''",
+              display: "block",
+              position: "absolute",
+              bottom: 0,
+              left: "50%",
+              transform: "translateX(-50%)",
+              maxWidth: 32,
+              width: `calc(100% - 16px)`,
+
+              height: 3,
+              borderRadius: 1.5,
+              backgroundColor: "currentColor",
+
+              ".MuiToggleButtonGroup-vertical &": {
+                left: 0,
+                top: "50%",
+                transform: "translateY(-50%)",
+                maxHeight: 32,
+                height: `calc(100% - 16px)`,
+
+                width: 3,
+              },
+            },
+          },
+
+          sizeSmall: {
+            minHeight: 24,
+            minWidth: 24,
+            padding: `${(24 - 18) / 2}px 10px`,
+            "& .MuiSvgIcon-root": {
+              margin: `0 ${-(10 - (24 - 18) / 2)}px`,
+              fontSize: 18,
+            },
+          },
+          sizeMedium: {
+            minHeight: 32,
+            minWidth: 32,
+            padding: `${(32 - 24) / 2}px 16px`,
+            "& .MuiSvgIcon-root": { margin: `0 ${-(16 - (32 - 24) / 2)}px` },
+          },
+          sizeLarge: {
+            minHeight: 48,
+            minWidth: 48,
+            padding: `${(48 - 24) / 2}px 22px`,
+            "& .MuiSvgIcon-root": { margin: `0 ${-(22 - (48 - 24) / 2)}px` },
+          },
         },
       },
 
@@ -792,7 +961,13 @@ export const components = (theme: Theme): ThemeOptions => {
           root: {
             display: "flex",
             alignItems: "flex-start",
-            "& .MuiSwitch-root": { marginRight: theme.spacing(1) },
+            "& .MuiSwitch-root": {
+              marginRight: theme.spacing(1),
+
+              "&.MuiSwitch-sizeSmall + .MuiFormControlLabel-label": {
+                marginTop: 4,
+              },
+            },
           },
           label: {
             marginTop: 10,
@@ -862,7 +1037,7 @@ export const components = (theme: Theme): ThemeOptions => {
       MuiAlertTitle: {
         styleOverrides: {
           root: {
-            ...theme.typography.subtitle2,
+            ...(theme.typography.subtitle2 as any),
             lineHeight: "1.5rem",
           },
         },
@@ -916,7 +1091,7 @@ export const components = (theme: Theme): ThemeOptions => {
         styleOverrides: {
           root: {
             "& .PrivatePickersYear-yearButton": {
-              ...theme.typography.button,
+              ...(theme.typography.button as any),
               fontSize: "1rem",
             },
           },

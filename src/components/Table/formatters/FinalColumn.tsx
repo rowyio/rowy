@@ -2,12 +2,12 @@ import { FormatterProps } from "react-data-grid";
 
 import { makeStyles, createStyles } from "@mui/styles";
 import { Stack, Tooltip, IconButton, alpha } from "@mui/material";
-import CopyCellsIcon from "assets/icons/CopyCells";
+import CopyCellsIcon from "@src/assets/icons/CopyCells";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 
-import { useConfirmation } from "components/ConfirmationDialog/Context";
-import { useProjectContext } from "contexts/ProjectContext";
-import useKeyPress from "hooks/useKeyPress";
+import { useConfirmation } from "@src/components/ConfirmationDialog/Context";
+import { useProjectContext } from "@src/contexts/ProjectContext";
+import useKeyPress from "@src/hooks/useKeyPress";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -28,11 +28,11 @@ export default function FinalColumn({ row }: FormatterProps<any, any>) {
   useStyles();
 
   const { requestConfirmation } = useConfirmation();
-  const { tableActions, addRow } = useProjectContext();
+  const { deleteRow, addRow } = useProjectContext();
   const altPress = useKeyPress("Alt");
-
-  const handleDelete = () => tableActions!.row.delete(row.id);
-
+  const handleDelete = () => {
+    if (deleteRow) deleteRow(row.id);
+  };
   return (
     <Stack direction="row" spacing={0.5}>
       <Tooltip title="Duplicate row">
@@ -48,7 +48,7 @@ export default function FinalColumn({ row }: FormatterProps<any, any>) {
             Object.keys(clonedRow).forEach((key) => {
               if (clonedRow[key] === undefined) delete clonedRow[key];
             });
-            if (tableActions) addRow!(clonedRow);
+            if (addRow) addRow!(clonedRow, undefined, { type: "smaller" });
           }}
           aria-label="Duplicate row"
           className="row-hover-iconButton"
@@ -61,7 +61,6 @@ export default function FinalColumn({ row }: FormatterProps<any, any>) {
         <IconButton
           size="small"
           color="inherit"
-          disabled={!tableActions}
           onClick={
             altPress
               ? handleDelete

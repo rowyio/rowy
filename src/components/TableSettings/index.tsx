@@ -8,15 +8,19 @@ import { FormDialog } from "@rowy/form-builder";
 import { tableSettings } from "./form";
 import CamelCaseId from "./CamelCaseId";
 import SuggestedRules from "./SuggestedRules";
-import Confirmation from "components/Confirmation";
+import Confirmation from "@src/components/Confirmation";
 
-import { useProjectContext, Table } from "contexts/ProjectContext";
-import useRouter from "hooks/useRouter";
-import { routes } from "constants/routes";
+import { useProjectContext, Table } from "@src/contexts/ProjectContext";
+import useRouter from "@src/hooks/useRouter";
+import { routes } from "@src/constants/routes";
 import { db } from "@src/firebase";
 import { name } from "@root/package.json";
-import { SETTINGS, TABLE_SCHEMAS, TABLE_GROUP_SCHEMAS } from "config/dbPaths";
-import { runRoutes } from "constants/runRoutes";
+import {
+  SETTINGS,
+  TABLE_SCHEMAS,
+  TABLE_GROUP_SCHEMAS,
+} from "@src/config/dbPaths";
+import { runRoutes } from "@src/constants/runRoutes";
 import { analytics } from "@src/analytics";
 
 export enum TableSettingsDialogModes {
@@ -127,7 +131,7 @@ export default function TableSettingsDialog({
           })),
           ["section", "label"]
         ),
-        collections
+        Array.isArray(collections) ? collections : []
       )}
       customComponents={{
         camelCaseId: {

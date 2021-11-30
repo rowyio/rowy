@@ -1,18 +1,18 @@
 import { useState } from "react";
-import _get from "lodash/get";
 import { useSnackbar } from "notistack";
+import _get from "lodash/get";
 
-import { Fab, FabProps, CircularProgress } from "@mui/material";
-import PlayIcon from "@mui/icons-material/PlayArrow";
-import RefreshIcon from "@mui/icons-material/Refresh";
+import { Fab, FabProps } from "@mui/material";
+import RunIcon from "@mui/icons-material/PlayArrow";
+import RedoIcon from "@mui/icons-material/Refresh";
 import UndoIcon from "@mui/icons-material/Undo";
+import CircularProgressOptical from "@src/components/CircularProgressOptical";
 
-import { useProjectContext } from "contexts/ProjectContext";
+import { useProjectContext } from "@src/contexts/ProjectContext";
 import { functions } from "@src/firebase";
-import { formatPath } from "utils/fns";
-import { useConfirmation } from "components/ConfirmationDialog";
+import { useConfirmation } from "@src/components/ConfirmationDialog";
 import { useActionParams } from "./FormDialog/Context";
-import { runRoutes } from "constants/runRoutes";
+import { runRoutes } from "@src/constants/runRoutes";
 
 const replacer = (data: any) => (m: string, key: string) => {
   const objKey = key.split(":")[0];
@@ -20,14 +20,14 @@ const replacer = (data: any) => (m: string, key: string) => {
   return _get(data, objKey, defaultValue);
 };
 
-const getStateIcon = (actionState) => {
+const getStateIcon = (actionState, config) => {
   switch (actionState) {
     case "undo":
-      return <UndoIcon />;
+      return _get(config, "customIcons.undo") || <UndoIcon />;
     case "redo":
-      return <RefreshIcon />;
+      return _get(config, "customIcons.redo") || <RedoIcon />;
     default:
-      return <PlayIcon />;
+      return _get(config, "customIcons.run") || <RunIcon />;
   }
 };
 
@@ -53,7 +53,6 @@ export default function ActionFab({
   const { tableState, rowyRun } = useProjectContext();
   const { ref } = row;
   const { config } = column as any;
-
   const action = !value
     ? "run"
     : value.undo
@@ -70,7 +69,7 @@ export default function ActionFab({
     ref: { path: ref.path },
     column: { ...column, editor: undefined },
     action,
-    schemaDocPath: formatPath(tableState?.tablePath ?? ""),
+    schemaDocPath: tableState?.config.tableConfig.path,
     actionParams,
   });
 
@@ -97,7 +96,6 @@ export default function ActionFab({
     } else {
       result = await handleCallableAction(data);
     }
-    console.log(result);
     const { message, success } = result;
     setIsRunning(false);
     enqueueSnackbar(JSON.stringify(message), {
@@ -112,9 +110,15 @@ export default function ActionFab({
       : "redo"
     : "run";
 
-  const needsParams = Array.isArray(config.params) && config.params.length > 0;
+  const needsParams =
+    config.friction === "params" &&
+    Array.isArray(config.params) &&
+    config.params.length > 0;
   const needsConfirmation =
-    typeof config.confirmation === "string" && config.confirmation !== "";
+    (!config.friction || config.friction === "confirmation") &&
+    typeof config.confirmation === "string" &&
+    config.confirmation !== "";
+
   return (
     <Fab
       onClick={
@@ -156,12 +160,13 @@ export default function ActionFab({
               : theme.palette.background.default,
         },
       }}
+      aria-label={actionState}
       {...props}
     >
       {isRunning ? (
-        <CircularProgress color="secondary" size={16} thickness={5.6} />
+        <CircularProgressOptical color="secondary" size={16} />
       ) : (
-        getStateIcon(actionState)
+        getStateIcon(actionState, config)
       )}
     </Fab>
   );

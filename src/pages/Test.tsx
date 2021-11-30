@@ -1,7 +1,7 @@
 import { Fragment, useRef, useState } from "react";
 import { useSnackbar } from "notistack";
 
-import Navigation from "components/Navigation";
+import Navigation from "@src/components/Navigation";
 import {
   useTheme,
   Container,
@@ -14,6 +14,8 @@ import {
   TableCell,
   Typography,
   Button,
+  ToggleButtonGroup,
+  ToggleButton,
   IconButton,
   Fab,
   Chip,
@@ -38,11 +40,19 @@ import {
   LinearProgress,
 } from "@mui/material";
 import SparkIcon from "@mui/icons-material/OfflineBoltOutlined";
-import { useConfirmation } from "components/ConfirmationDialog";
+import FormatAlignLeftIcon from "@mui/icons-material/FormatAlignLeft";
+import FormatAlignCenterIcon from "@mui/icons-material/FormatAlignCenter";
+import FormatAlignRightIcon from "@mui/icons-material/FormatAlignRight";
+import FormatAlignJustifyIcon from "@mui/icons-material/FormatAlignJustify";
+import { useConfirmation } from "@src/components/ConfirmationDialog";
 
 import SnackbarProgress, {
   ISnackbarProgressRef,
-} from "components/SnackbarProgress";
+} from "@src/components/SnackbarProgress";
+import CircularProgressOptical from "@src/components/CircularProgressOptical";
+
+import CodeEditor from "@src/components/CodeEditor";
+import DiffEditor from "@src/components/CodeEditor/DiffEditor";
 
 const typographyVariants = [
   "h1",
@@ -69,6 +79,32 @@ export default function TestView() {
   const handleTabChange = (_, newTab) => setTab(newTab);
 
   const snackbarProgressRef = useRef<ISnackbarProgressRef>();
+
+  const [alignment, setAlignment] = useState("left");
+  const handleChangeAlignment = (_, v) => setAlignment(v);
+  const toggleButtonProps = {
+    value: alignment,
+    onChange: handleChangeAlignment,
+    exclusive: true,
+    children: [
+      <ToggleButton value="left" key="left">
+        <FormatAlignLeftIcon />
+        {/* Left */}
+      </ToggleButton>,
+      <ToggleButton value="center" key="center">
+        <FormatAlignCenterIcon />
+        {/* Center */}
+      </ToggleButton>,
+      <ToggleButton value="right" key="right">
+        <FormatAlignRightIcon />
+        {/* Right */}
+      </ToggleButton>,
+      <ToggleButton value="justify" key="justify">
+        <FormatAlignJustifyIcon />
+        {/* Justify */}
+      </ToggleButton>,
+    ],
+  };
 
   return (
     <Navigation title="Theme Test">
@@ -445,6 +481,58 @@ export default function TestView() {
           </Stack>
 
           <Stack spacing={1} direction="row" alignItems="center">
+            <ToggleButtonGroup
+              color="standard"
+              size="small"
+              {...toggleButtonProps}
+            />
+            <ToggleButtonGroup
+              color="primary"
+              size="medium"
+              {...toggleButtonProps}
+            />
+            <ToggleButtonGroup
+              color="secondary"
+              size="large"
+              {...toggleButtonProps}
+            />
+            <ToggleButtonGroup
+              color="primary"
+              size="large"
+              {...toggleButtonProps}
+              disabled
+            />
+          </Stack>
+
+          <Stack spacing={1} direction="row" alignItems="center">
+            <ToggleButtonGroup
+              orientation="vertical"
+              color="standard"
+              size="small"
+              {...toggleButtonProps}
+            />
+            <ToggleButtonGroup
+              orientation="vertical"
+              color="primary"
+              size="medium"
+              {...toggleButtonProps}
+            />
+            <ToggleButtonGroup
+              orientation="vertical"
+              color="secondary"
+              size="large"
+              {...toggleButtonProps}
+            />
+            <ToggleButtonGroup
+              orientation="vertical"
+              color="primary"
+              size="large"
+              {...toggleButtonProps}
+              disabled
+            />
+          </Stack>
+
+          <Stack spacing={1} direction="row" alignItems="center">
             <IconButton size="small">
               <SparkIcon />
             </IconButton>
@@ -767,14 +855,7 @@ export default function TestView() {
           </Stack>
 
           <div>
-            <FormControlLabel
-              control={<Switch />}
-              label="Label"
-              sx={{
-                alignItems: "center",
-                "& .MuiFormControlLabel-label": { mt: 0 },
-              }}
-            />
+            <FormControlLabel control={<Switch />} label="Label" />
             <FormControlLabel
               control={<Switch size="medium" />}
               label="Label"
@@ -913,8 +994,30 @@ export default function TestView() {
             </Button>
           </Stack>
 
-          <CircularProgress />
+          <Stack spacing={1} direction="row" alignItems="flex-end">
+            {/* size 40 thickness 3.6 */}
+            <CircularProgress />
+            <CircularProgress size={30} thickness={4.2} />
+            <CircularProgress size={24} thickness={4.8} />
+            <CircularProgress size={20} thickness={5.4} />
+            <CircularProgress size={16} thickness={6.3} />
+            <CircularProgress size={12} thickness={7.8} />
+          </Stack>
+
+          <Stack spacing={1} direction="row" alignItems="flex-end">
+            {/* size 40 thickness 3.6 */}
+            <CircularProgressOptical />
+            <CircularProgressOptical size={30} />
+            <CircularProgressOptical size={24} />
+            <CircularProgressOptical size={20} />
+            <CircularProgressOptical size={16} />
+            <CircularProgressOptical size={12} />
+          </Stack>
+
           <LinearProgress />
+
+          <CodeEditor value={`x\n`} />
+          <DiffEditor original={`x\n`} modified="y" />
         </Stack>
       </Container>
     </Navigation>

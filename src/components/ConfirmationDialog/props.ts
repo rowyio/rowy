@@ -4,6 +4,7 @@ export type confirmationProps =
       customBody?: React.ReactNode;
       body?: string;
       cancel?: string;
+      hideCancel?: boolean;
       confirm?: string | JSX.Element;
       confirmationCommand?: string;
       handleConfirm: () => void;

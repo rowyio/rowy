@@ -18,10 +18,10 @@ import {
   Checkbox,
 } from "@mui/material";
 
-import MarketingBanner from "components/Auth/MarketingBanner";
-import AuthLayout from "components/Auth/AuthLayout";
+import MarketingBanner from "@src/components/Auth/MarketingBanner";
+import AuthLayout from "@src/components/Auth/AuthLayout";
 
-import { EXTERNAL_LINKS, WIKI_LINKS } from "constants/externalLinks";
+import { EXTERNAL_LINKS, WIKI_LINKS } from "@src/constants/externalLinks";
 import { name } from "@root/package.json";
 
 export default function DeployPage() {

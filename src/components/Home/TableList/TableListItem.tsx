@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import GoIcon from "@mui/icons-material/ArrowForward";
 
-import { Table } from "contexts/ProjectContext";
+import { Table } from "@src/contexts/ProjectContext";
 
 export interface ITableListItemProps extends Table {
   link: string;

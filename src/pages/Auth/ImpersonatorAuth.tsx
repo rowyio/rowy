@@ -3,13 +3,13 @@ import { useSnackbar } from "notistack";
 
 import { Typography, Button, TextField } from "@mui/material";
 
-import AuthLayout from "components/Auth/AuthLayout";
-import FirebaseUi from "components/Auth/FirebaseUi";
+import AuthLayout from "@src/components/Auth/AuthLayout";
+import FirebaseUi from "@src/components/Auth/FirebaseUi";
 
-import { signOut } from "utils/auth";
+import { signOut } from "@src/utils/auth";
 import { auth } from "../../firebase";
 import { useProjectContext } from "@src/contexts/ProjectContext";
-import { runRoutes } from "constants/runRoutes";
+import { runRoutes } from "@src/constants/runRoutes";
 import { name } from "@root/package.json";
 
 export default function ImpersonatorAuthPage() {

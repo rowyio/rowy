@@ -29,14 +29,14 @@ const useStyles = makeStyles(() =>
   })
 );
 
-export default function Settings({ handleChange, config }) {
+export default function Settings({ onChange, config }) {
   const listEndRef: any = useRef(null);
   const options = config.options ?? [];
   const classes = useStyles();
   const [newOption, setNewOption] = useState("");
   const handleAdd = () => {
     if (newOption.trim() !== "") {
-      handleChange("options")([...options, newOption.trim()]);
+      onChange("options")([...options, newOption.trim()]);
       setNewOption("");
       listEndRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
     }
@@ -62,7 +62,7 @@ export default function Settings({ handleChange, config }) {
                 <IconButton
                   aria-label="Remove"
                   onClick={() =>
-                    handleChange("options")(
+                    onChange("options")(
                       options.filter((o: string) => o !== option)
                     )
                   }
@@ -112,7 +112,7 @@ export default function Settings({ handleChange, config }) {
         control={
           <Checkbox
             checked={config.freeText}
-            onChange={(e) => handleChange("freeText")(e.target.checked)}
+            onChange={(e) => onChange("freeText")(e.target.checked)}
           />
         }
         label={

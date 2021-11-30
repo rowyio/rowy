@@ -8,9 +8,9 @@ import {
   CardActions,
   Button,
 } from "@mui/material";
-import GoIcon from "assets/icons/Go";
+import GoIcon from "@src/assets/icons/Go";
 
-import { Table } from "contexts/ProjectContext";
+import { Table } from "@src/contexts/ProjectContext";
 
 export interface ITableCardProps extends Table {
   link: string;

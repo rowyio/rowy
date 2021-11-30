@@ -1,6 +1,6 @@
 import { Controller } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
-import RichTextEditor from "components/RichTextEditor";
+import RichTextEditor from "@src/components/RichTextEditor";
 
 export default function RichText({
   control,

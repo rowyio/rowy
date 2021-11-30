@@ -2,7 +2,7 @@ import { IHeavyCellProps } from "../types";
 import _get from "lodash/get";
 
 import { FormControlLabel, Switch } from "@mui/material";
-import Confirmation from "components/Confirmation";
+import Confirmation from "@src/components/Confirmation";
 
 const replacer = (data: any) => (m: string, key: string) => {
   const objKey = key.split(":")[0];
@@ -57,7 +57,7 @@ export default function Checkbox({
           letterSpacing: "inherit",
           flexGrow: 1,
           overflowX: "hidden",
-          mt: 0,
+          mt: "0 !important",
         },
 
         "& .MuiSwitch-root": { mr: -0.75 },

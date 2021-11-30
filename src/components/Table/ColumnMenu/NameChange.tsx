@@ -3,7 +3,7 @@ import { IMenuModalProps } from ".";
 
 import { TextField } from "@mui/material";
 
-import Modal from "components/Modal";
+import Modal from "@src/components/Modal";
 
 export default function NameChange({
   name,

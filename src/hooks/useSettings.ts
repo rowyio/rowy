@@ -4,8 +4,12 @@ import _camelCase from "lodash/camelCase";
 
 import useDoc from "./useDoc";
 import { db } from "../firebase";
-import { SETTINGS, TABLE_GROUP_SCHEMAS, TABLE_SCHEMAS } from "config/dbPaths";
-import { FieldType } from "constants/fields";
+import {
+  SETTINGS,
+  TABLE_GROUP_SCHEMAS,
+  TABLE_SCHEMAS,
+} from "@src/config/dbPaths";
+import { FieldType } from "@src/constants/fields";
 import { getFieldProp } from "@src/components/fields";
 
 export default function useSettings() {

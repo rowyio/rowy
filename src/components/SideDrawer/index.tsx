@@ -10,11 +10,11 @@ import ChevronUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import ChevronDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 import Form from "./Form";
-import ErrorBoundary from "components/ErrorBoundary";
+import ErrorBoundary from "@src/components/ErrorBoundary";
 
 import { useStyles } from "./useStyles";
-import { useProjectContext } from "contexts/ProjectContext";
-import useDoc from "hooks/useDoc";
+import { useProjectContext } from "@src/contexts/ProjectContext";
+import useDoc from "@src/hooks/useDoc";
 import { analytics } from "@src/analytics";
 
 export const DRAWER_WIDTH = 512;
@@ -46,18 +46,10 @@ export default function SideDrawer() {
     setCell!((cell) => ({ column: cell!.column, row }));
 
     const idx = tableState?.columns[cell!.column]?.index;
-    console.log(
-      "selectCell",
-      { rowIdx: cell!.row, idx },
-      dataGridRef?.current?.selectCell
-    );
     dataGridRef?.current?.selectCell({ rowIdx: row, idx }, false);
   };
 
   const [urlDocState, dispatchUrlDoc] = useDoc({});
-  // useEffect(() => {
-  //   if (urlDocState.doc) setOpen(true);
-  // }, [urlDocState]);
 
   useEffect(() => {
     setOpen(false);
@@ -78,12 +70,11 @@ export default function SideDrawer() {
     if (cell && tableState?.rows[cell.row]) {
       window.history.pushState(
         "",
-        `${tableState?.tablePath}`,
+        `${tableState?.config.id}`,
         `${window.location.pathname}?rowRef=${encodeURIComponent(
           tableState?.rows[cell.row].ref.path
         )}`
       );
-      // console.log(tableState?.tablePath, tableState?.rows[cell.row].id);
       if (urlDocState.doc) {
         urlDocState.unsubscribe();
         dispatchUrlDoc({ path: "", doc: null });

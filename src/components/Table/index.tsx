@@ -11,25 +11,26 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 // import "react-data-grid/dist/react-data-grid.css";
 import DataGrid, {
   Column,
-  SelectColumn as _SelectColumn,
+  //  SelectColumn as _SelectColumn,
 } from "react-data-grid";
 
-import Loading from "components/Loading";
-import TableHeader from "./TableHeader";
+import Loading from "@src/components/Loading";
+import TableContainer, { OUT_OF_ORDER_MARGIN } from "./TableContainer";
+import TableHeader from "../TableHeader";
 import ColumnHeader from "./ColumnHeader";
 import ColumnMenu from "./ColumnMenu";
 import FinalColumnHeader from "./FinalColumnHeader";
 import FinalColumn from "./formatters/FinalColumn";
-// import BulkActions from "./BulkActions";
+import TableRow from "./TableRow";
+import BulkActions from "./BulkActions";
 
-import { getFieldProp } from "components/fields";
-import { FieldType } from "constants/fields";
-import { formatSubTableName } from "utils/fns";
+import { getFieldProp } from "@src/components/fields";
+import { FieldType } from "@src/constants/fields";
+import { formatSubTableName } from "@src/utils/fns";
 
-import { useAppContext } from "contexts/AppContext";
-import { useProjectContext } from "contexts/ProjectContext";
-import useWindowSize from "hooks/useWindowSize";
-import useStyles from "./styles";
+import { useAppContext } from "@src/contexts/AppContext";
+import { useProjectContext } from "@src/contexts/ProjectContext";
+import useWindowSize from "@src/hooks/useWindowSize";
 
 export type TableColumn = Column<any> & {
   isNew?: boolean;
@@ -38,17 +39,16 @@ export type TableColumn = Column<any> & {
 };
 
 const rowKeyGetter = (row: any) => row.id;
-const SelectColumn = { ..._SelectColumn, width: 42, maxWidth: 42 };
+const rowClass = (row: any) => (row._rowy_outOfOrder ? "out-of-order" : "");
+//const SelectColumn = { ..._SelectColumn, width: 42, maxWidth: 42 };
 
 export default function Table() {
-  const classes = useStyles();
-
   const { tableState, tableActions, dataGridRef, sideDrawerRef, updateCell } =
     useProjectContext();
   const { userDoc } = useAppContext();
 
   const userDocHiddenFields =
-    userDoc.state.doc?.tables?.[formatSubTableName(tableState?.tablePath)]
+    userDoc.state.doc?.tables?.[formatSubTableName(tableState?.config.id)]
       ?.hiddenFields ?? [];
 
   const [columns, setColumns] = useState<TableColumn[]>([]);
@@ -93,8 +93,7 @@ export default function Table() {
         .filter((column) => !userDocHiddenFields.includes(column.key));
 
       setColumns([
-        // TODO: ENABLE ONCE BULK ACTIONS READY
-        // SelectColumn,
+        //  SelectColumn,
         ..._columns,
         {
           isNew: true,
@@ -162,14 +161,14 @@ export default function Table() {
 
   if (!tableActions || !tableState) return <></>;
 
-  const rowHeight = tableState.config.rowHeight;
+  const rowHeight = tableState.config.rowHeight ?? 42;
 
   return (
     <>
       {/* <Suspense fallback={<Loading message="Loading header" />}>
         <Hotkeys selectedCell={selectedCell} />
       </Suspense> */}
-      <div className={classes.tableWrapper} ref={rowsContainerRef}>
+      <TableContainer ref={rowsContainerRef} rowHeight={rowHeight}>
         <TableHeader />
 
         {!tableState.loadingColumns ? (
@@ -180,11 +179,19 @@ export default function Table() {
               ref={dataGridRef}
               rows={rows}
               columns={columns}
-              rowHeight={rowHeight ?? 42}
+              // Increase row height of out of order rows to add margins
+              rowHeight={({ row }) => {
+                if (row._rowy_outOfOrder)
+                  return rowHeight + OUT_OF_ORDER_MARGIN + 1;
+
+                return rowHeight;
+              }}
               headerRowHeight={42}
               className="rdg-light" // Handle dark mode in MUI theme
               cellNavigationMode="LOOP_OVER_ROW"
+              rowRenderer={TableRow}
               rowKeyGetter={rowKeyGetter}
+              rowClass={rowClass}
               selectedRows={selectedRowsSet}
               onSelectedRowsChange={(newSelectedSet) => {
                 const newSelectedArray = newSelectedSet
@@ -243,17 +250,17 @@ export default function Table() {
         ) : (
           <Loading message="Fetching columns" />
         )}
-      </div>
+      </TableContainer>
 
       <ColumnMenu />
-      {/* <BulkActions
+      <BulkActions
         selectedRows={selectedRows}
         columns={columns}
         clearSelection={() => {
           setSelectedRowsSet(new Set());
           setSelectedRows([]);
         }}
-      /> */}
+      />
     </>
   );
 }

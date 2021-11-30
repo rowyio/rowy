@@ -4,8 +4,8 @@ import clsx from "clsx";
 import { TextField, TextFieldProps } from "@mui/material";
 
 import useStyles from "./styles";
-import Loading from "components/Loading";
-import ErrorBoundary from "components/ErrorBoundary";
+import Loading from "@src/components/Loading";
+import ErrorBoundary from "@src/components/ErrorBoundary";
 import PopupContents from "./PopupContents";
 
 export type ServiceValue = {
@@ -52,7 +52,7 @@ export default function ConnectServiceSelect({
       SelectProps={{
         renderValue: (value) => `${(value as any[]).length} selected`,
         displayEmpty: true,
-        classes: { root: classes.selectRoot },
+        classes: { select: classes.selectRoot },
         ...TextFieldProps.SelectProps,
         // Must have this set to prevent MUI transforming `value`
         // prop for this component to a comma-separated string

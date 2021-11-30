@@ -8,7 +8,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
-import { SlideTransitionMui } from "components/Modal/SlideTransition";
+import { SlideTransitionMui } from "@src/components/Modal/SlideTransition";
 
 const useStyles = makeStyles(() =>
   createStyles({

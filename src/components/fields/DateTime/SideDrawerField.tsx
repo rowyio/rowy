@@ -5,7 +5,7 @@ import DatePicker from "@mui/lab/DatePicker";
 import { TextField } from "@mui/material";
 
 import { transformValue, sanitizeValue } from "../Date/utils";
-import { DATE_TIME_FORMAT } from "constants/dates";
+import { DATE_TIME_FORMAT } from "@src/constants/dates";
 import { DateTimeIcon } from ".";
 
 export interface IDateProps extends ISideDrawerFieldProps {}

@@ -1,8 +1,8 @@
 import { IHeavyCellProps } from "../types";
 
 import { format } from "date-fns";
-import { DATE_TIME_FORMAT } from "constants/dates";
-import { useProjectContext } from "contexts/ProjectContext";
+import { DATE_TIME_FORMAT } from "@src/constants/dates";
+import { useProjectContext } from "@src/contexts/ProjectContext";
 
 export default function UpdatedBy({ row, column }: IHeavyCellProps) {
   const { table } = useProjectContext();

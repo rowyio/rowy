@@ -10,6 +10,7 @@ export type TableActions = {
     update: Function;
     reorder: Function;
   };
+  addRows: Function;
   row: { add: Function; delete: Function; more: Function; update: Function };
   table: {
     set: (id: string, collection: string, filters: TableFilter[]) => void;
@@ -26,10 +27,10 @@ export type TableState = {
     id: string;
     rowHeight: number;
     tableConfig: any;
-    webhooks: any;
     sparks: string;
     compiledExtension: string;
     extensionObjects?: any[];
+    webhooks?: any[];
     functionConfigPath?: string;
   };
   columns: any[];
@@ -94,6 +95,7 @@ export default function useTable() {
       remove: configActions.remove,
       reorder: configActions.reorder,
     },
+    addRows: tableActions.addRows,
     row: {
       add: tableActions.addRow,
       update: tableActions.updateRow,

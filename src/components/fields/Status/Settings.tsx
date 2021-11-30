@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { ISettingsProps } from "../types";
 
-import Subheading from "components/Table/ColumnMenu/Subheading";
+import Subheading from "@src/components/Table/ColumnMenu/Subheading";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Grid from "@mui/material/Grid";
@@ -9,7 +9,7 @@ import Divider from "@mui/material/Divider";
 
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
-import Modal from "components/Modal";
+import Modal from "@src/components/Modal";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
@@ -172,7 +172,7 @@ const ConditionModal = ({ modal, setModal, conditions, setConditions }) => {
   );
 };
 
-export default function Settings({ handleChange, config }: ISettingsProps) {
+export default function Settings({ onChange, config }: ISettingsProps) {
   const [modal, setModal] = useState(EMPTY_STATE);
   const { conditions } = config;
   return (
@@ -228,7 +228,7 @@ export default function Settings({ handleChange, config }: ISettingsProps) {
         modal={modal}
         setModal={setModal}
         conditions={config.conditions}
-        setConditions={handleChange("conditions")}
+        setConditions={onChange("conditions")}
       />
     </>
   );

@@ -6,14 +6,14 @@ import Helmet from "react-helmet";
 import jwt_decode from "jwt-decode";
 import { useMediaQuery, ThemeProvider, CssBaseline } from "@mui/material";
 
-import ErrorBoundary from "components/ErrorBoundary";
+import ErrorBoundary from "@src/components/ErrorBoundary";
 
 import { projectId, auth, db } from "@src/firebase";
-import useDoc from "hooks/useDoc";
-import { PUBLIC_SETTINGS, USERS } from "config/dbPaths";
+import useDoc from "@src/hooks/useDoc";
+import { PUBLIC_SETTINGS, USERS } from "@src/config/dbPaths";
 import { analytics } from "analytics";
 import themes from "theme";
-import useDocumentTitle from "hooks/useDocumentTitle";
+import useDocumentTitle from "@src/hooks/useDocumentTitle";
 
 const useThemeState = createPersistedState("__ROWY__THEME");
 const useThemeOverriddenState = createPersistedState(
@@ -73,7 +73,6 @@ export const AppProvider: React.FC = ({ children }) => {
       const token: any = jwt_decode(authToken);
       if (token && token.exp * 1000 < Date.now()) {
         // token is expired
-        console.log("token is expired,getting new token");
         const res = await currentUser.getIdTokenResult(true);
         setAuthToken(res.token as string);
         return res.token;
@@ -125,7 +124,6 @@ export const AppProvider: React.FC = ({ children }) => {
         if (currentUser[curr]) return { ...acc, [curr]: currentUser[curr] };
         return acc;
       }, {});
-      console.log("create user", userDoc.path, user);
       db.doc(userDoc.path).set({ user }, { merge: true });
     }
   }, [userDoc, currentUser]);

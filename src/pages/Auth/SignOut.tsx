@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import { Button } from "@mui/material";
 
-import AuthLayout from "components/Auth/AuthLayout";
+import AuthLayout from "@src/components/Auth/AuthLayout";
 import { auth } from "../../firebase";
 
 export default function SignOutPage() {

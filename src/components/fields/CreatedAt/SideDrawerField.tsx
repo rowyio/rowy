@@ -1,11 +1,11 @@
 import { useWatch } from "react-hook-form";
 import { ISideDrawerFieldProps } from "../types";
 
-import { useFieldStyles } from "components/SideDrawer/Form/utils";
+import { useFieldStyles } from "@src/components/SideDrawer/Form/utils";
 
 import { format } from "date-fns";
-import { DATE_TIME_FORMAT } from "constants/dates";
-import { useProjectContext } from "contexts/ProjectContext";
+import { DATE_TIME_FORMAT } from "@src/constants/dates";
+import { useProjectContext } from "@src/contexts/ProjectContext";
 
 export default function CreatedAt({ control, column }: ISideDrawerFieldProps) {
   const fieldClasses = useFieldStyles();

@@ -9,15 +9,17 @@ import { useSnackbar } from "notistack";
 
 import { Button } from "@mui/material";
 import MultiSelect, { MultiSelectProps } from "@rowy/multiselect";
-import Loading from "components/Loading";
-import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
+import Loading from "@src/components/Loading";
+import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import { runRoutes } from "@src/constants/runRoutes";
-import { WIKI_LINKS } from "constants/externalLinks";
+import { WIKI_LINKS } from "@src/constants/externalLinks";
 
-const useAlgoliaSearchKeys = createPersistedState("_ROWY_algolia-search-keys");
-const useAlgoliaAppId = createPersistedState("_ROWY_algolia-app-id");
+const useAlgoliaSearchKeys = createPersistedState(
+  "__ROWY__ALGOLIA_SEARCH_KEYS"
+);
+const useAlgoliaAppId = createPersistedState("__ROWY__ALGOLIA_APP_ID");
 
 export type ConnectTableValue = {
   docPath: string;
@@ -139,7 +141,6 @@ export default function ConnectTableSelect({
           params: [algoliaIndex as string],
         });
         const { key } = resp;
-        console.log(key);
         if (key) {
           const newKey = {
             key,

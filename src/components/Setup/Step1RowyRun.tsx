@@ -1,18 +1,18 @@
 import { useState, useEffect } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 import queryString from "query-string";
-import { ISetupStepBodyProps } from "pages/Setup";
+import { ISetupStepBodyProps } from "@src/pages/Setup";
 
 import { Button, Typography, Stack, TextField } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
-import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
+import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
 import SetupItem from "./SetupItem";
 
 import { name } from "@root/package.json";
-import { rowyRun } from "utils/rowyRun";
-import { runRoutes } from "constants/runRoutes";
-import { EXTERNAL_LINKS } from "constants/externalLinks";
+import { rowyRun } from "@src/utils/rowyRun";
+import { runRoutes } from "@src/constants/runRoutes";
+import { EXTERNAL_LINKS, WIKI_LINKS } from "@src/constants/externalLinks";
 
 export default function Step1RowyRun({
   completion,
@@ -79,11 +79,7 @@ export default function Step1RowyRun({
       />
     </a>
   ) : (
-    <Button
-      href={EXTERNAL_LINKS.rowyRunDocs}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
+    <Button href={WIKI_LINKS.rowyRun} target="_blank" rel="noopener noreferrer">
       Deploy instructions
       <InlineOpenInNewIcon />
     </Button>
@@ -178,7 +174,7 @@ export default function Step1RowyRun({
 }
 
 export const checkRowyRun = async (
-  rowyRunUrl: string,
+  serviceUrl: string,
   signal?: AbortSignal
 ) => {
   const result = {
@@ -188,7 +184,7 @@ export const checkRowyRun = async (
   };
 
   try {
-    const res = await rowyRun({ rowyRunUrl, route: runRoutes.version, signal });
+    const res = await rowyRun({ serviceUrl, route: runRoutes.version, signal });
     if (!res.version) return result;
 
     result.isValidRowyRunUrl = true;

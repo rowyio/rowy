@@ -36,13 +36,13 @@ export const useStyles = makeStyles((theme) =>
         display: "block",
         height: 16,
 
-        background: `linear-gradient(to bottom, #fff, rgba(255, 255, 255, 0))`,
+        background: `linear-gradient(to bottom, ${theme.palette.background.paper}, rgba(255, 255, 255, 0))`,
       },
 
       "&::after": {
         top: "auto",
         bottom: 0,
-        background: `linear-gradient(to top, #fff, rgba(255, 255, 255, 0))`,
+        background: `linear-gradient(to top, ${theme.palette.background.paper}, rgba(255, 255, 255, 0))`,
       },
     },
     list: () => {

@@ -17,11 +17,12 @@ import MenuIcon from "@mui/icons-material/Menu";
 
 import NavDrawer, { NAV_DRAWER_WIDTH } from "./NavDrawer";
 import UserMenu from "./UserMenu";
-import ErrorBoundary from "components/ErrorBoundary";
-import Loading from "components/Loading";
+import ErrorBoundary from "@src/components/ErrorBoundary";
+import Loading from "@src/components/Loading";
+import UpdateCheckBadge from "./UpdateCheckBadge";
 
-import { useAppContext } from "contexts/AppContext";
-import useDocumentTitle from "hooks/useDocumentTitle";
+import { useAppContext } from "@src/contexts/AppContext";
+import useDocumentTitle from "@src/hooks/useDocumentTitle";
 
 export const APP_BAR_HEIGHT = 56;
 
@@ -43,7 +44,7 @@ export default function Navigation({
   currentSection,
   titleTransitionProps,
 }: INavigationProps) {
-  const { projectId } = useAppContext();
+  const { projectId, userRoles } = useAppContext();
   useDocumentTitle(projectId, title);
 
   const [open, setOpen] = useOpenState(false);
@@ -114,7 +115,13 @@ export default function Navigation({
                 size="large"
                 edge="start"
               >
-                <MenuIcon />
+                {userRoles.includes("ADMIN") ? (
+                  <UpdateCheckBadge>
+                    <MenuIcon />
+                  </UpdateCheckBadge>
+                ) : (
+                  <MenuIcon />
+                )}
               </IconButton>
             </Grow>
           )}

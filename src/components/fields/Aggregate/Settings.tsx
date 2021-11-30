@@ -1,18 +1,16 @@
 import { lazy, Suspense } from "react";
 import { Typography } from "@mui/material";
 import MultiSelect from "@rowy/multiselect";
-import FieldSkeleton from "components/SideDrawer/Form/FieldSkeleton";
-import { FieldType } from "constants/fields";
-import FieldsDropdown from "components/Table/ColumnMenu/FieldsDropdown";
-import { useProjectContext } from "contexts/ProjectContext";
+import FieldSkeleton from "@src/components/SideDrawer/Form/FieldSkeleton";
+import { FieldType } from "@src/constants/fields";
+import FieldsDropdown from "@src/components/Table/ColumnMenu/FieldsDropdown";
+import { useProjectContext } from "@src/contexts/ProjectContext";
 const CodeEditor = lazy(
   () =>
-    import(
-      "components/Table/editors/CodeEditor" /* webpackChunkName: "CodeEditor" */
-    )
+    import("@src/components/CodeEditor" /* webpackChunkName: "CodeEditor" */)
 );
 
-const Settings = ({ config, handleChange }) => {
+const Settings = ({ config, onChange }) => {
   const { tableState } = useProjectContext();
 
   const columnOptions = Object.values(tableState?.columns ?? {})
@@ -24,12 +22,12 @@ const Settings = ({ config, handleChange }) => {
         label="Sub-tables"
         options={columnOptions}
         value={config.requiredFields ?? []}
-        onChange={handleChange("subtables")}
+        onChange={onChange("subtables")}
       />
       <Typography variant="overline">Aggergate script</Typography>
       <Suspense fallback={<FieldSkeleton height={200} />}>
         <CodeEditor
-          script={
+          value={
             config.script ??
             `//triggerType:  create | update | delete\n//aggregateState: the subtable accumulator stored in the cell of this column\n//snapshot: the triggered document snapshot of the the subcollection\n//incrementor: short for firebase.firestore.FieldValue.increment(n);\n//This script needs to return the new aggregateState cell value.
 switch (triggerType){
@@ -45,13 +43,13 @@ switch (triggerType){
           }
           extraLibs={[
             `  /**
-    * increaments firestore field value
+    * increments firestore field value
     */",
     function incrementor(value:number):number {
 
     }`,
           ]}
-          handleChange={handleChange("script")}
+          onChange={onChange("script")}
         />
       </Suspense>
 
@@ -68,7 +66,7 @@ switch (triggerType){
             ].includes(f)
         )}
         onChange={(value) => {
-          handleChange("renderFieldType")(value);
+          onChange("renderFieldType")(value);
         }}
       />
     </>

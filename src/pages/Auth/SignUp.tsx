@@ -3,10 +3,10 @@ import queryString from "query-string";
 
 import { useMediaQuery, Stack, Typography, Link } from "@mui/material";
 
-import MarketingBanner from "components/Auth/MarketingBanner";
-import AuthLayout from "components/Auth/AuthLayout";
-import FirebaseUi from "components/Auth/FirebaseUi";
-import { EXTERNAL_LINKS } from "constants/externalLinks";
+import MarketingBanner from "@src/components/Auth/MarketingBanner";
+import AuthLayout from "@src/components/Auth/AuthLayout";
+import FirebaseUi from "@src/components/Auth/FirebaseUi";
+import { EXTERNAL_LINKS } from "@src/constants/externalLinks";
 
 export default function SignUpPage() {
   const { search } = useLocation();

@@ -23,24 +23,24 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
-import BrandedBackground, { Wrapper } from "assets/BrandedBackground";
-import Logo from "assets/Logo";
-import ScrollableDialogContent from "components/Modal/ScrollableDialogContent";
-import { SlideTransition } from "components/Modal/SlideTransition";
+import BrandedBackground, { Wrapper } from "@src/assets/BrandedBackground";
+import Logo from "@src/assets/Logo";
+import ScrollableDialogContent from "@src/components/Modal/ScrollableDialogContent";
+import { SlideTransition } from "@src/components/Modal/SlideTransition";
 
-import Step0Welcome from "components/Setup/Step0Welcome";
-import Step1RowyRun, { checkRowyRun } from "components/Setup/Step1RowyRun";
+import Step0Welcome from "@src/components/Setup/Step0Welcome";
+import Step1RowyRun, { checkRowyRun } from "@src/components/Setup/Step1RowyRun";
 // prettier-ignore
-import Step2ServiceAccount, { checkServiceAccount } from "components/Setup/Step2ServiceAccount";
+import Step2ServiceAccount, { checkServiceAccount } from "@src/components/Setup/Step2ServiceAccount";
 // prettier-ignore
 import Step3ProjectOwner, { checkProjectOwner } from "@src/components/Setup/Step3ProjectOwner";
-import Step4Rules, { checkRules } from "components/Setup/Step4Rules";
-import Step5Migrate, { checkMigrate } from "components/Setup/Step5Migrate";
-import Step6Finish from "components/Setup/Step6Finish";
+import Step4Rules, { checkRules } from "@src/components/Setup/Step4Rules";
+import Step5Migrate, { checkMigrate } from "@src/components/Setup/Step5Migrate";
+import Step6Finish from "@src/components/Setup/Step6Finish";
 
 import { name } from "@root/package.json";
-import routes from "constants/routes";
-import { useAppContext } from "contexts/AppContext";
+import routes from "@src/constants/routes";
+import { useAppContext } from "@src/contexts/AppContext";
 import { analytics } from "analytics";
 
 export interface ISetupStep {
@@ -59,6 +59,8 @@ export interface ISetupStepBodyProps {
   checkAllSteps: typeof checkAllSteps;
   rowyRunUrl: string;
 }
+
+const BASE_WIDTH = 1024;
 
 const checkAllSteps = async (
   rowyRunUrl: string,
@@ -256,7 +258,7 @@ export default function SetupPage() {
             alpha(theme.palette.background.paper, 0.5),
           backdropFilter: "blur(20px) saturate(150%)",
 
-          maxWidth: 840,
+          maxWidth: BASE_WIDTH,
           width: (theme) => `calc(100vw - ${theme.spacing(2)})`,
           maxHeight: (theme) =>
             `calc(${
@@ -264,7 +266,7 @@ export default function SetupPage() {
             } - ${theme.spacing(
               2
             )} - env(safe-area-inset-top) - env(safe-area-inset-bottom))`,
-          height: 840 * 0.75,
+          height: BASE_WIDTH * 0.75,
           resize: "both",
 
           p: 0,

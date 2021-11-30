@@ -4,19 +4,24 @@ import { IMenuModalProps } from ".";
 
 import { TextField, Typography, Button } from "@mui/material";
 
-import Modal from "components/Modal";
+import Modal from "@src/components/Modal";
 import FieldsDropdown from "./FieldsDropdown";
 
-import { FieldType } from "constants/fields";
-import { getFieldProp } from "components/fields";
+import { FieldType } from "@src/constants/fields";
+import { getFieldProp } from "@src/components/fields";
 import { analytics } from "analytics";
-import { useProjectContext } from "contexts/ProjectContext";
+import { useProjectContext } from "@src/contexts/ProjectContext";
 
+const AUDIT_FIELD_TYPES = [
+  FieldType.createdBy,
+  FieldType.createdAt,
+  FieldType.updatedBy,
+  FieldType.updatedAt,
+];
 export interface INewColumnProps extends IMenuModalProps {
   data: Record<string, any>;
   openSettings: (column: any) => void;
 }
-
 export default function NewColumn({
   open,
   data,
@@ -31,16 +36,7 @@ export default function NewColumn({
   const [type, setType] = useState(FieldType.shortText);
   const requireConfiguration = getFieldProp("requireConfiguration", type);
 
-  const isAuditField =
-    type === FieldType.createdBy ||
-    type === FieldType.createdAt ||
-    type === FieldType.updatedBy ||
-    type === FieldType.updatedAt;
-
-  useEffect(() => {
-    if (type !== FieldType.id && !isAuditField)
-      setFieldKey(_camel(columnLabel));
-  }, [columnLabel, type, isAuditField]);
+  const isAuditField = AUDIT_FIELD_TYPES.includes(type);
 
   useEffect(() => {
     switch (type) {
@@ -90,7 +86,12 @@ export default function NewColumn({
               label="Column name"
               type="text"
               fullWidth
-              onChange={(e) => setColumnLabel(e.target.value)}
+              onChange={(e) => {
+                setColumnLabel(e.target.value);
+                if (type !== FieldType.id && !isAuditField) {
+                  setFieldKey(_camel(e.target.value));
+                }
+              }}
               helperText="Set the user-facing name for this column."
             />
           </section>

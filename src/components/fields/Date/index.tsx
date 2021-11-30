@@ -1,12 +1,12 @@
 import { lazy } from "react";
-import { IFieldConfig, FieldType } from "components/fields/types";
+import { IFieldConfig, FieldType } from "@src/components/fields/types";
 import withHeavyCell from "../_withTableCell/withHeavyCell";
 import { parse, format } from "date-fns";
-import { DATE_FORMAT } from "constants/dates";
+import { DATE_FORMAT } from "@src/constants/dates";
 
 import DateIcon from "@mui/icons-material/TodayOutlined";
 import BasicCell from "./BasicCell";
-import NullEditor from "components/Table/editors/NullEditor";
+import NullEditor from "@src/components/Table/editors/NullEditor";
 import { filterOperators, valueFormatter } from "./Filter";
 
 const TableCell = lazy(

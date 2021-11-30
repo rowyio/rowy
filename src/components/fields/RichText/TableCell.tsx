@@ -4,8 +4,8 @@ import { IHeavyCellProps } from "../types";
 import { makeStyles, createStyles } from "@mui/styles";
 import { Tooltip, Fade } from "@mui/material";
 
-import { useProjectContext } from "contexts/ProjectContext";
-import RenderedHtml from "components/RenderedHtml";
+import { useProjectContext } from "@src/contexts/ProjectContext";
+import RenderedHtml from "@src/components/RenderedHtml";
 
 type StylesProps = { width: number; rowHeight: number };
 

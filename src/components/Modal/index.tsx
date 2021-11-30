@@ -22,8 +22,9 @@ import ScrollableDialogContent, {
 } from "./ScrollableDialogContent";
 
 export interface IModalProps extends Partial<Omit<DialogProps, "title">> {
-  onClose: () => void;
+  onClose: (setOpen: React.Dispatch<React.SetStateAction<boolean>>) => void;
   disableBackdropClick?: boolean;
+  disableEscapeKeyDown?: boolean;
 
   title: ReactNode;
   header?: ReactNode;
@@ -45,6 +46,7 @@ export interface IModalProps extends Partial<Omit<DialogProps, "title">> {
 export default function Modal({
   onClose,
   disableBackdropClick,
+  disableEscapeKeyDown,
   title,
   header,
   footer,
@@ -60,12 +62,21 @@ export default function Modal({
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [open, setOpen] = useState(true);
-  const handleClose = (_, reason?: string) => {
-    if (disableBackdropClick && reason === "backdropClick") return;
+  const handleClose: NonNullable<DialogProps["onClose"]> = (_, reason) => {
+    if (
+      (disableBackdropClick && reason === "backdropClick") ||
+      (disableEscapeKeyDown && reason === "escapeKeyDown")
+    ) {
+      setEmphasizeCloseButton(true);
+      return;
+    }
 
     setOpen(false);
-    setTimeout(() => onClose(), 300);
+    setEmphasizeCloseButton(false);
+    setTimeout(() => onClose(setOpen), 300);
   };
+
+  const [emphasizeCloseButton, setEmphasizeCloseButton] = useState(false);
 
   return (
     <Dialog
@@ -99,11 +110,17 @@ export default function Modal({
 
         {!hideCloseButton && (
           <IconButton
-            onClick={handleClose}
+            onClick={handleClose as any}
             aria-label="Close"
             sx={{
               m: { xs: 1, sm: 1.5 },
               ml: { xs: -1, sm: -1 },
+
+              bgcolor: emphasizeCloseButton ? "error.main" : undefined,
+              color: emphasizeCloseButton ? "error.contrastText" : undefined,
+              "&:hover": emphasizeCloseButton
+                ? { bgcolor: "error.dark" }
+                : undefined,
             }}
             className="dialog-close"
           >

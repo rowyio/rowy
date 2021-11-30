@@ -1,6 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
-import createPersistedState from "use-persisted-state";
-import { differenceInDays } from "date-fns";
+import { useState } from "react";
 
 import {
   Typography,
@@ -11,19 +9,14 @@ import {
   TextField,
 } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
-import InlineOpenInNewIcon from "components/InlineOpenInNewIcon";
+import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
-import { IProjectSettingsChildProps } from "pages/Settings/ProjectSettings";
-import { EXTERNAL_LINKS } from "constants/externalLinks";
+import { IProjectSettingsChildProps } from "@src/pages/Settings/ProjectSettings";
+import { EXTERNAL_LINKS, WIKI_LINKS } from "@src/constants/externalLinks";
+import useUpdateCheck from "@src/hooks/useUpdateCheck";
 import { name } from "@root/package.json";
-import { runRoutes } from "constants/runRoutes";
-
-const useLastCheckedUpdateState = createPersistedState(
-  "__ROWY__RUN_LAST_CHECKED_UPDATE"
-);
-export const useLatestUpdateState = createPersistedState(
-  "__ROWY__RUN_LATEST_UPDATE"
-);
+import { runRoutes } from "@src/constants/runRoutes";
 
 export default function RowyRun({
   settings,
@@ -41,7 +34,12 @@ export default function RowyRun({
       if (!versionReq.version) throw new Error("No version found");
       else {
         setVerified(true);
-        setVersion(versionReq.version);
+
+        // If the deployed version is different from the last update check,
+        // check for updates again to clear update
+        if (versionReq.version !== latestUpdate.deployedRowyRun)
+          checkForUpdates();
+
         updateSettings({ rowyRunUrl: inputRowyRunUrl });
       }
     } catch (e) {
@@ -50,76 +48,7 @@ export default function RowyRun({
     }
   };
 
-  const [lastCheckedUpdate, setLastCheckedUpdate] =
-    useLastCheckedUpdateState<string>();
-  const [latestUpdate, setLatestUpdate] = useLatestUpdateState<null | Record<
-    string,
-    any
-  >>(null);
-
-  const [checkState, setCheckState] = useState<null | "LOADING" | "NO_UPDATE">(
-    null
-  );
-  const [version, setVersion] = useState("");
-  useEffect(() => {
-    fetch(settings.rowyRunUrl + runRoutes.version.path, {
-      method: runRoutes.version.method,
-    })
-      .then((res) => res.json())
-      .then((data) => setVersion(data.version));
-  }, [settings.rowyRunUrl]);
-
-  const checkForUpdate = useCallback(async () => {
-    setCheckState("LOADING");
-
-    // https://docs.github.com/en/rest/reference/repos#get-the-latest-release
-    const endpoint =
-      EXTERNAL_LINKS.rowyRunGitHub.replace(
-        "github.com",
-        "api.github.com/repos"
-      ) + "/releases/latest";
-    try {
-      const versionReq = await fetch(
-        settings.rowyRunUrl + runRoutes.version.path,
-        { method: runRoutes.version.method }
-      ).then((res) => res.json());
-      const version = versionReq.version;
-      setVersion(version);
-
-      const req = await fetch(endpoint, {
-        headers: {
-          Accept: "application/vnd.github.v3+json",
-        },
-      });
-      const res = await req.json();
-
-      if (res.tag_name > "v" + version) {
-        setLatestUpdate(res);
-        setCheckState(null);
-      } else {
-        setCheckState("NO_UPDATE");
-      }
-
-      setLastCheckedUpdate(new Date().toISOString());
-    } catch (e) {
-      console.error(e);
-      setLatestUpdate(null);
-      setCheckState("NO_UPDATE");
-    }
-  }, [setLastCheckedUpdate, setLatestUpdate, settings.rowyRunUrl]);
-
-  // Check for new updates on page load, if last check was more than 7 days ago
-  useEffect(() => {
-    if (!lastCheckedUpdate) checkForUpdate();
-    else if (differenceInDays(new Date(), new Date(lastCheckedUpdate)) > 7)
-      checkForUpdate();
-  }, [lastCheckedUpdate, checkForUpdate]);
-
-  // Verify latest update is not installed yet
-  useEffect(() => {
-    if (version && latestUpdate?.tag_name <= "v" + version)
-      setLatestUpdate(null);
-  }, [latestUpdate, setLatestUpdate, version]);
+  const [latestUpdate, checkForUpdates, loading] = useUpdateCheck();
 
   const deployButton = window.location.hostname.includes(
     EXTERNAL_LINKS.rowyAppHostName
@@ -152,11 +81,7 @@ export default function RowyRun({
       </a>
     )
   ) : (
-    <Button
-      href={EXTERNAL_LINKS.rowyRunDocs}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
+    <Button href={WIKI_LINKS.rowyRun} target="_blank" rel="noopener noreferrer">
       Deploy instructions
     </Button>
   );
@@ -168,7 +93,7 @@ export default function RowyRun({
         such as table action scripts, user management, and easy Cloud Function
         deployment.{" "}
         <Link
-          href={EXTERNAL_LINKS.rowyRun}
+          href={WIKI_LINKS.rowyRun}
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -183,35 +108,42 @@ export default function RowyRun({
         <div>
           <Grid container spacing={1} alignItems="center" direction="row">
             <Grid item xs>
-              {checkState === "LOADING" ? (
+              {loading ? (
                 <Typography display="block">Checking for updates…</Typography>
-              ) : latestUpdate === null ? (
+              ) : latestUpdate.rowyRun === null ? (
                 <Typography display="block">Up to date</Typography>
               ) : (
                 <Typography display="block">
+                  <span
+                    style={{
+                      display: "inline-block",
+                      backgroundColor: "#f00",
+                      borderRadius: "50%",
+                      width: 10,
+                      height: 10,
+                      marginRight: 4,
+                    }}
+                  />
                   Update available:{" "}
                   <Link
-                    href={latestUpdate.html_url}
+                    href={latestUpdate.rowyRun.html_url}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    {latestUpdate.tag_name}
+                    {latestUpdate.rowyRun.tag_name}
                     <InlineOpenInNewIcon />
                   </Link>
                 </Typography>
               )}
 
               <Typography display="block" color="textSecondary">
-                {name} Run v{version}
+                {name} Run v{latestUpdate.deployedRowyRun}
               </Typography>
             </Grid>
 
             <Grid item>
-              {latestUpdate === null ? (
-                <LoadingButton
-                  onClick={checkForUpdate}
-                  loading={checkState === "LOADING"}
-                >
+              {latestUpdate.rowyRun === null ? (
+                <LoadingButton onClick={checkForUpdates} loading={loading}>
                   Check for updates
                 </LoadingButton>
               ) : (
@@ -258,11 +190,20 @@ export default function RowyRun({
               autoComplete="url"
               error={verified === false}
               helperText={
-                verified === true
-                  ? `${name} Run is set up correctly`
-                  : verified === false
-                  ? `${name} Run is not set up correctly`
-                  : " "
+                verified === true ? (
+                  <>
+                    <CheckCircleIcon
+                      color="success"
+                      style={{ fontSize: "1rem", verticalAlign: "text-top" }}
+                    />
+                    &nbsp;
+                    {name} Run is set up correctly
+                  </>
+                ) : verified === false ? (
+                  `${name} Run is not set up correctly`
+                ) : (
+                  " "
+                )
               }
             />
           </Grid>

@@ -4,19 +4,19 @@ import queryString from "query-string";
 import _isEmpty from "lodash/isEmpty";
 import _find from "lodash/find";
 
-import Navigation from "components/Navigation";
-import Breadcrumbs from "components/Navigation/Breadcrumbs";
-import Table from "components/Table";
-import SideDrawer from "components/SideDrawer";
-import TableHeaderSkeleton from "components/Table/Skeleton/TableHeaderSkeleton";
-import HeaderRowSkeleton from "components/Table/Skeleton/HeaderRowSkeleton";
-import EmptyTable from "components/Table/EmptyTable";
+import Navigation from "@src/components/Navigation";
+import Breadcrumbs from "@src/components/Navigation/Breadcrumbs";
+import Table from "@src/components/Table";
+import SideDrawer from "@src/components/SideDrawer";
+import TableHeaderSkeleton from "@src/components/Table/Skeleton/TableHeaderSkeleton";
+import HeaderRowSkeleton from "@src/components/Table/Skeleton/HeaderRowSkeleton";
+import EmptyTable from "@src/components/Table/EmptyTable";
 
-import { useProjectContext } from "contexts/ProjectContext";
-import { useAppContext } from "contexts/AppContext";
-import { TableFilter } from "hooks/useTable";
-import { DocActions } from "hooks/useDoc";
-import ActionParamsProvider from "components/fields/Action/FormDialog/Provider";
+import { useProjectContext } from "@src/contexts/ProjectContext";
+import { useAppContext } from "@src/contexts/AppContext";
+import { TableFilter } from "@src/hooks/useTable";
+import { DocActions } from "@src/hooks/useDoc";
+import ActionParamsProvider from "@src/components/fields/Action/FormDialog/Provider";
 
 export default function TablePage() {
   const location = useLocation();
