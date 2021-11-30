@@ -26,6 +26,7 @@ export const cloudLogFiltersAtom = atomWithHash<CloudLogFilters>(
 export const cloudLogFetcher = (
   endpointRoot: string,
   rowyRun: IProjectContext["rowyRun"],
+  projectId: string,
   cloudLogFilters: CloudLogFilters,
   tablePath: string
 ) => {
@@ -34,7 +35,9 @@ export const cloudLogFetcher = (
 
   switch (cloudLogFilters.type) {
     case "webhook":
-      logQuery.push(`logName = "projects/rowyio/logs/rowy-webhook-events"`);
+      logQuery.push(
+        `logName = "projects/${projectId}/logs/rowy-webhook-events"`
+      );
       logQuery.push(`jsonPayload.url : "${tablePath}"`);
       if (
         Array.isArray(cloudLogFilters.webhook) &&
@@ -48,7 +51,7 @@ export const cloudLogFetcher = (
       break;
 
     case "audit":
-      logQuery.push(`logName = "projects/rowyio/logs/rowy-audit"`);
+      logQuery.push(`logName = "projects/${projectId}/logs/rowy-audit"`);
       logQuery.push(`jsonPayload.ref.collectionPath = "${tablePath}"`);
       if (cloudLogFilters.auditRowId)
         logQuery.push(
