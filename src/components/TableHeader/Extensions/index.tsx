@@ -49,12 +49,16 @@ export default function Extensions() {
     }
   };
 
-  const handleClose = () => {
+  const handleClose = (
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>
+  ) => {
     if (edited) {
+      setOpen(true);
       requestConfirmation({
         title: "Discard changes?",
         confirm: "Discard",
         handleConfirm: () => {
+          setOpen(false);
           setLocalExtensionsObjects(currentExtensionObjects);
           setOpenExtensionList(false);
         },

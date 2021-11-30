@@ -22,7 +22,7 @@ import ScrollableDialogContent, {
 } from "./ScrollableDialogContent";
 
 export interface IModalProps extends Partial<Omit<DialogProps, "title">> {
-  onClose: () => void;
+  onClose: (setOpen: React.Dispatch<React.SetStateAction<boolean>>) => void;
   disableBackdropClick?: boolean;
   disableEscapeKeyDown?: boolean;
 
@@ -73,7 +73,7 @@ export default function Modal({
 
     setOpen(false);
     setEmphasizeCloseButton(false);
-    setTimeout(() => onClose(), 300);
+    setTimeout(() => onClose(setOpen), 300);
   };
 
   const [emphasizeCloseButton, setEmphasizeCloseButton] = useState(false);
