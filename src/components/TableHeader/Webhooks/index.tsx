@@ -45,8 +45,7 @@ export default function Webhooks() {
   const handleClose = () => {
     if (edited) {
       requestConfirmation({
-        title: "Discard changes",
-        body: "You will lose changes you have made to webhooks",
+        title: "Discard changes?",
         confirm: "Discard",
         handleConfirm: () => {
           setLocalWebhooksObjects(currentWebhooks);
@@ -137,8 +136,8 @@ export default function Webhooks() {
 
   const handleDelete = (index: number) => {
     requestConfirmation({
-      title: `Delete ${localWebhooksObjects[index].name}?`,
-      body: "This webhook will be permanently deleted.",
+      title: `Delete “${localWebhooksObjects[index].name}”?`,
+      body: "This webhook will be permanently deleted when you save",
       confirm: "Confirm",
       handleConfirm: () => {
         setLocalWebhooksObjects(

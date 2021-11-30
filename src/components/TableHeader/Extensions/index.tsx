@@ -52,8 +52,7 @@ export default function Extensions() {
   const handleClose = () => {
     if (edited) {
       requestConfirmation({
-        title: "Discard changes",
-        body: "You will lose changes you have made to extensions",
+        title: "Discard changes?",
         confirm: "Discard",
         handleConfirm: () => {
           setLocalExtensionsObjects(currentExtensionObjects);
@@ -157,8 +156,8 @@ export default function Extensions() {
 
   const handleDelete = (index: number) => {
     requestConfirmation({
-      title: `Delete ${localExtensionsObjects[index].name}?`,
-      body: "This extension will be permanently deleted.",
+      title: `Delete “${localExtensionsObjects[index].name}”?`,
+      body: "This Extension will be permanently deleted when you save",
       confirm: "Confirm",
       handleConfirm: () => {
         setLocalExtensionsObjects(
