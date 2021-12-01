@@ -3,10 +3,10 @@
 </p>
 
 <h1 align="center">
-✨ GCP as easy as ABC ✨ <br>
+✨ Modern Backend Stack ✨ <br/>
 </h1>
 <h3 align="center">
-Build on Google Cloud Platform in minutes
+Build prototypes that scale on Google Cloud Platform in minutes
 </h3>
 <p align="center">
 Manage Firestore data in a spreadsheet-like UI, write Cloud Functions effortlessly in the browser, and connect to your favorite third party platforms such as SendGrid, Twilio, Algolia, Slack and more. 
@@ -40,6 +40,8 @@ Set up Rowy on your Google Cloud Platform project with this one-click deploy
 button.
 
 [![Run on Google Cloud](https://deploy.cloud.run/button.svg)](https://deploy.cloud.run/?git_repo=https://github.com/rowyio/rowyRun.git)
+
+https://deploy.cloud.run/?git_repo=https://github.com/rowyio/rowyRun.git
 
 ## Documentation
 
