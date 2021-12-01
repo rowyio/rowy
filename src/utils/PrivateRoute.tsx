@@ -14,7 +14,9 @@ export default function PrivateRoute({ render, ...props }: IPrivateRouteProps) {
   if (!!currentUser) return <Route {...props} render={render} />;
 
   const redirect =
-    (props.location?.pathname ?? "") + (props.location?.search ?? "");
+    (props.location?.pathname ?? "") +
+    (props.location?.search ?? "") +
+    (props.location?.hash ?? "");
 
   if (currentUser === null)
     return (
