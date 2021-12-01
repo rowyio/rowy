@@ -15,7 +15,8 @@ import CircularProgressOptical from "@src/components/CircularProgressOptical";
 import { isTargetInsideBox } from "utils/fns";
 import { useSnackLogContext } from "@src/contexts/SnackLogContext";
 import useBuildLogs from "./useBuildLogs";
-import { modalAtom, cloudLogFiltersAtom } from "../utils";
+import { modalAtom } from "@src/atoms/Table";
+import { cloudLogFiltersAtom } from "../utils";
 
 export interface IBuildLogsSnackProps {
   onClose: () => void;
