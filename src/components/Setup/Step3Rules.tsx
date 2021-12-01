@@ -30,7 +30,7 @@ import { rowyRun } from "@src/utils/rowyRun";
 import { runRoutes } from "@src/constants/runRoutes";
 // import { useConfirmation } from "@src/components/ConfirmationDialog";
 
-export default function Step4Rules({
+export default function Step3Rules({
   rowyRunUrl,
   completion,
   setCompletion,
