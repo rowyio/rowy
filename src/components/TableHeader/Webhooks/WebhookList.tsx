@@ -22,10 +22,8 @@ import EmptyState from "@src/components/EmptyState";
 import { webhookNames, IWebhook } from "./utils";
 import { DATE_TIME_FORMAT } from "@src/constants/dates";
 import { useProjectContext } from "@src/contexts/ProjectContext";
-import {
-  modalAtom,
-  cloudLogFiltersAtom,
-} from "@src/components/TableHeader/CloudLogs/utils";
+import { modalAtom } from "@src/atoms/Table";
+import { cloudLogFiltersAtom } from "@src/components/TableHeader/CloudLogs/utils";
 
 export interface IWebhookListProps {
   webhooks: IWebhook[];

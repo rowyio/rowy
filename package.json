@@ -1,6 +1,6 @@
 {
   "name": "Rowy",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "homepage": "https://rowy.io",
   "repository": {
     "type": "git",
@@ -64,7 +64,7 @@
     "react-usestateref": "^1.0.5",
     "serve": "^11.3.2",
     "swr": "^1.0.1",
-    "tinymce": "^5.9.2",
+    "tinymce": "^5.10.0",
     "typescript": "^4.4.2",
     "use-algolia": "^1.4.1",
     "use-debounce": "^3.3.0",
