@@ -36,6 +36,7 @@ import FormFieldSnippets from "./FormFieldSnippets";
 
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
+import { useAppContext } from "@src/contexts/AppContext";
 
 const CodeEditor = lazy(
   () =>
@@ -44,7 +45,7 @@ const CodeEditor = lazy(
 
 const Settings = ({ config, onChange }) => {
   const { tableState, roles } = useProjectContext();
-
+  const { projectId } = useAppContext();
   const [activeStep, setActiveStep] = useState<
     "requirements" | "friction" | "action" | "undo" | "customization"
   >("requirements");
@@ -325,7 +326,7 @@ const Settings = ({ config, onChange }) => {
                       Write the name of the callable function you’ve deployed to
                       your project.{" "}
                       <Link
-                        href={`https://console.firebase.google.com/project/rowyio/functions/list`}
+                        href={`https://console.firebase.google.com/project/${projectId}/functions/list`}
                         target="_blank"
                         rel="noopener noreferrer"
                       >

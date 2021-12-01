@@ -22,18 +22,25 @@ import BuildLogs from "./BuildLogs";
 import EmptyState from "@src/components/EmptyState";
 
 import { useProjectContext } from "@src/contexts/ProjectContext";
+import { useAppContext } from "@src/contexts/AppContext";
 import { cloudLogFiltersAtom, cloudLogFetcher } from "./utils";
 
 export default function CloudLogsModal(props: IModalProps) {
   const { rowyRun, tableState, table, compatibleRowyRunVersion } =
     useProjectContext();
-
+  const { projectId } = useAppContext();
   const [cloudLogFilters, setCloudLogFilters] = useAtom(cloudLogFiltersAtom);
 
   const { data, mutate, isValidating } = useSWR(
     cloudLogFilters.type === "build"
       ? null
-      : ["/logs", rowyRun, cloudLogFilters, tableState?.tablePath || ""],
+      : [
+          "/logs",
+          rowyRun,
+          projectId,
+          cloudLogFilters,
+          tableState?.tablePath || "",
+        ],
     cloudLogFetcher,
     {
       fallbackData: [],

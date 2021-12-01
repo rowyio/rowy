@@ -66,7 +66,9 @@ export const webhookBasic = {
     return (
       <Typography color="text.disabled">
         <WarningIcon aria-label="Warning" style={{ verticalAlign: "bottom" }} />
-        &nbsp; Verification is not currently available for basic webhooks
+        &nbsp; Specialized verification is not currently available for basic
+        webhooks, you can add your own verification logic in the conditions
+        section bellow.
       </Typography>
     );
   },

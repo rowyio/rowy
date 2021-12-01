@@ -37,7 +37,6 @@ export default function DeployPage() {
 
   const [continued, setContinued] = useState(false);
   const [confirmProject, setConfirmProject] = useState(false);
-  const [confirmFirestore, setConfirmFirestore] = useState(false);
   const [confirmAuth, setConfirmAuth] = useState(false);
 
   return (
@@ -97,17 +96,6 @@ export default function DeployPage() {
                       <FormControlLabel
                         control={
                           <Checkbox
-                            checked={confirmFirestore}
-                            onChange={(e) =>
-                              setConfirmFirestore(e.target.checked)
-                            }
-                          />
-                        }
-                        label="Firestore enabled"
-                      />
-                      <FormControlLabel
-                        control={
-                          <Checkbox
                             checked={confirmAuth}
                             onChange={(e) => setConfirmAuth(e.target.checked)}
                           />
@@ -129,7 +117,7 @@ export default function DeployPage() {
                   </Typography>
 
                   <div style={{ margin: "1rem 0", textAlign: "center" }}>
-                    {confirmProject && confirmFirestore && confirmAuth ? (
+                    {confirmProject && confirmAuth ? (
                       <a
                         href={EXTERNAL_LINKS.rowyRunDeploy}
                         target="_blank"
