@@ -564,6 +564,12 @@ export const components = (theme: Theme): ThemeOptions => {
           },
         },
       },
+      MuiLoadingButton: {
+        defaultProps: {
+          variant: "outlined",
+          color: "secondary",
+        },
+      },
       MuiButtonGroup: {
         styleOverrides: {
           grouped: { minWidth: 32 },
