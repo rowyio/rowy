@@ -9,7 +9,7 @@
 Build on Google Cloud Platform in minutes
 </h3>
 <p align="center">
-Manage Firestore data in a spreadsheet-like UI, write Cloud Functions effortlessly in the browser, and connect to your favorite third party platforms such as SendGrid, Twilio, Algolia, sSack and more. 
+Manage Firestore data in a spreadsheet-like UI, write Cloud Functions effortlessly in the browser, and connect to your favorite third party platforms such as SendGrid, Twilio, Algolia, Slack and more. 
 </p>
 
 <div align="center">
@@ -31,7 +31,10 @@ Manage Firestore data in a spreadsheet-like UI, write Cloud Functions effortless
 
 <img width="100%" src="https://firebasestorage.googleapis.com/v0/b/rowyio.appspot.com/o/publicDemo%2FRowy%20Website%20Video%20GIF%20Small.gif?alt=media&token=3f699a8f-c1f2-4046-8ed5-e4ff66947cd8" />
 
-## Quick try
+## Live Demo
+💥 Check out the [live demo](https://demo.rowy.io/) of Rowy 💥
+
+## Quick Deploy
 
 Set up Rowy on your Google Cloud Platform project with this one-click deploy
 button.
@@ -53,7 +56,7 @@ You can find the full documentation with how-to guides
 - Multiple views for the same collection
 - Bulk import or export data - csv, json
 
-### Supercharge your database with cloud functions and ready made extension
+### Automate with cloud functions and ready made extensions
 
 - Effortlessly build cloud functions on field level triggers right in the browser
     -  Use any NPM modules or APIs
@@ -82,7 +85,7 @@ You can find the full documentation with how-to guides
 
 ## Install
 
-Set up Rowy on your Google Cloud project with this one-click deploy button.
+Set up Rowy on your Google Cloud project with this one-click deploy button. Your data and cloud functions stay on your own Firestore/GCP.
 
 [![Run on Google Cloud](https://deploy.cloud.run/button.svg)](https://deploy.cloud.run/?git_repo=https://github.com/rowyio/rowyRun.git)
 
@@ -95,6 +98,12 @@ access to your service account or any of your data.
 
 Alternatively, you can manually install by
 [following this guide](https://docs.rowy.io/setup/install).
+
+## Roadmap
+
+[View our roadmap](https://demo.rowy.io/table/roadmap) on Rowy - Upvote, downvote, share your thoughts!
+
+If you'd like to propose a feature, submit an issue [here](https://github.com/rowyio/rowy/issues/new?assignees=&labels=&template=feature_request.md&title=).
 
 ## Join our community
 
