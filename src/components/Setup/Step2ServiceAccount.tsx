@@ -98,7 +98,7 @@ export default function Step2ServiceAccount({
             <Stack direction="row" spacing={1}>
               <LoadingButton
                 // loading={!region}
-                href={`https://console.cloud.google.com/run/deploy/${region}/rowy-run?project=${projectId}`}
+                href={`https://console.cloud.google.com/run/deploy/${region}/rowy-backend?project=${projectId}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >
