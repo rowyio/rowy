@@ -16,6 +16,7 @@ import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
 import SetupItem from "./SetupItem";
 import DiffEditor from "@src/components/CodeEditor/DiffEditor";
+import CodeEditor from "@src/components/CodeEditor";
 
 import { name } from "@root/package.json";
 import { useAppContext } from "@src/contexts/AppContext";
@@ -30,6 +31,16 @@ import { rowyRun } from "@src/utils/rowyRun";
 import { runRoutes } from "@src/constants/runRoutes";
 // import { useConfirmation } from "@src/components/ConfirmationDialog";
 
+const insecureRuleRegExp = new RegExp(
+  insecureRule
+    .replace(/\//g, "\\/")
+    .replace(/\*/g, "\\*")
+    .replace(/\s{2,}/g, "\\s+")
+    .replace(/\s/g, "\\s*")
+    .replace(/\n/g, "\\s+")
+    .replace(/;/g, ";?")
+);
+
 export default function Step3Rules({
   rowyRunUrl,
   completion,
@@ -38,12 +49,18 @@ export default function Step3Rules({
   const { projectId, getAuthToken } = useAppContext();
   // const { requestConfirmation } = useConfirmation();
 
+  const [error, setError] = useState<string | false>(false);
   const [hasRules, setHasRules] = useState(completion.rules);
   const [adminRule, setAdminRule] = useState(true);
+  const [showManualMode, setShowManualMode] = useState(false);
 
   const rules = `${
-    adminRule ? adminRules : ""
-  }${requiredRules}${utilFns}`.replace("\n", "");
+    error === "security-rules/not-found"
+      ? `rules_version = '2';\n\nservice cloud.firestore {\n  match /databases/{database}/documents {\n`
+      : ""
+  }${adminRule ? adminRules : ""}${requiredRules}${utilFns}${
+    error === "security-rules/not-found" ? "  }\n}" : ""
+  }`.replace("\n", "");
 
   const [currentRules, setCurrentRules] = useState("");
   useEffect(() => {
@@ -56,18 +73,16 @@ export default function Step3Rules({
             authToken,
           })
         )
-        .then((data) => setCurrentRules(data?.source?.[0]?.content ?? ""));
+        .then((data) => {
+          if (data?.code) {
+            setError(data.code);
+            setShowManualMode(true);
+          } else {
+            setCurrentRules(data?.source?.[0]?.content ?? "");
+          }
+        });
   }, [rowyRunUrl, hasRules, currentRules, getAuthToken]);
 
-  const insecureRuleRegExp = new RegExp(
-    insecureRule
-      .replace(/\//g, "\\/")
-      .replace(/\*/g, "\\*")
-      .replace(/\s{2,}/g, "\\s+")
-      .replace(/\s/g, "\\s*")
-      .replace(/\n/g, "\\s+")
-      .replace(/;/g, ";?")
-  );
   const hasInsecureRule = insecureRuleRegExp.test(currentRules);
 
   const [newRules, setNewRules] = useState("");
@@ -89,7 +104,7 @@ export default function Step3Rules({
     if (hasInsecureRule) inserted = inserted.replace(insecureRuleRegExp, "");
 
     setNewRules(inserted);
-  }, [currentRules, rules, hasInsecureRule, insecureRuleRegExp]);
+  }, [currentRules, rules, hasInsecureRule]);
 
   const [rulesStatus, setRulesStatus] = useState<"LOADING" | string>("");
   const setRules = async () => {
@@ -116,8 +131,23 @@ export default function Step3Rules({
       setRulesStatus(e.message);
     }
   };
+  const verifyRules = async () => {
+    setRulesStatus("LOADING");
+    try {
+      const authToken = await getAuthToken();
+      if (!authToken) throw new Error("Failed to generate auth token");
 
-  const [showManualMode, setShowManualMode] = useState(false);
+      const isSuccessful = await checkRules(rowyRunUrl, authToken);
+      if (isSuccessful) {
+        setCompletion((c) => ({ ...c, rules: true }));
+        setHasRules(true);
+      }
+      setRulesStatus("");
+    } catch (e: any) {
+      console.error(e);
+      setRulesStatus(e.message);
+    }
+  };
 
   // const handleSkip = () => {
   //   requestConfirmation({
@@ -140,81 +170,81 @@ export default function Step3Rules({
         admins will need write access.
       </Typography>
 
-      <SetupItem
-        status={hasRules ? "complete" : "incomplete"}
-        title={
-          hasRules
-            ? "Firestore Rules are set up."
-            : "Add the following rules to enable access to Rowy configuration:"
-        }
-      >
-        {!hasRules && (
-          <>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={adminRule}
-                  onChange={(e) => setAdminRule(e.target.checked)}
-                />
-              }
-              label="Allow admins to read and write all documents"
-              sx={{ "&&": { ml: -11 / 8, mb: -11 / 8 }, width: "100%" }}
-            />
-
-            <Typography>
-              <InfoIcon
-                aria-label="Info"
-                sx={{ fontSize: 18, mr: 11 / 8, verticalAlign: "sub" }}
+      {!hasRules && error !== "security-rules/not-found" && (
+        <SetupItem
+          status="incomplete"
+          title="Add the following rules to enable access to Rowy configuration:"
+        >
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={adminRule}
+                onChange={(e) => setAdminRule(e.target.checked)}
               />
-              We removed an insecure rule that allows anyone to access any part
-              of your database
-            </Typography>
+            }
+            label="Allow admins to read and write all documents"
+            sx={{ "&&": { ml: -11 / 8, mb: -11 / 8 }, width: "100%" }}
+          />
 
-            <DiffEditor
-              original={currentRules}
-              modified={newRules}
-              containerProps={{ sx: { width: "100%" } }}
-              minHeight={400}
-              options={{ renderValidationDecorations: "off" }}
+          <Typography>
+            <InfoIcon
+              aria-label="Info"
+              sx={{ fontSize: 18, mr: 11 / 8, verticalAlign: "sub" }}
             />
-            <Typography
-              variant="inherit"
-              color={
-                rulesStatus !== "LOADING" && rulesStatus ? "error" : undefined
-              }
-            >
-              Please verify the new rules first.
+            We removed an insecure rule that allows anyone to access any part of
+            your database
+          </Typography>
+
+          <DiffEditor
+            original={currentRules}
+            modified={newRules}
+            containerProps={{ sx: { width: "100%" } }}
+            minHeight={400}
+            options={{ renderValidationDecorations: "off" }}
+          />
+
+          <Typography
+            variant="inherit"
+            color={
+              rulesStatus !== "LOADING" && rulesStatus ? "error" : undefined
+            }
+          >
+            Please verify the new rules first.
+          </Typography>
+
+          <LoadingButton
+            variant="contained"
+            color="primary"
+            onClick={setRules}
+            loading={rulesStatus === "LOADING"}
+          >
+            Set Firestore Rules
+          </LoadingButton>
+          {rulesStatus !== "LOADING" && typeof rulesStatus === "string" && (
+            <Typography variant="caption" color="error">
+              {rulesStatus}
             </Typography>
-            <LoadingButton
-              variant="contained"
-              color="primary"
-              onClick={setRules}
-              loading={rulesStatus === "LOADING"}
+          )}
+          {!showManualMode && (
+            <Link
+              component="button"
+              variant="body2"
+              onClick={() => setShowManualMode(true)}
             >
-              Set Firestore Rules
-            </LoadingButton>
-            {rulesStatus !== "LOADING" && typeof rulesStatus === "string" && (
-              <Typography variant="caption" color="error">
-                {rulesStatus}
-              </Typography>
-            )}
-            {!showManualMode && (
-              <Link
-                component="button"
-                variant="body2"
-                onClick={() => setShowManualMode(true)}
-              >
-                Alternatively, add these rules in the Firebase Console
-              </Link>
-            )}
-          </>
-        )}
-      </SetupItem>
+              Alternatively, add these rules in the Firebase Console
+            </Link>
+          )}
+        </SetupItem>
+      )}
 
       {!hasRules && showManualMode && (
         <SetupItem
           status="incomplete"
-          title="Alternatively, you can add these rules in the Firebase Console."
+          title={
+            error === "security-rules/not-found"
+              ? "Add the following rules in the Firebase Console to enable access to Rowy configuration:"
+              : "Alternatively, you can add these rules in the Firebase Console."
+          }
         >
           <Typography
             variant="caption"
@@ -258,9 +288,29 @@ export default function Step3Rules({
                   <InlineOpenInNewIcon />
                 </Button>
               </Grid>
+
+              <Grid item>
+                <LoadingButton
+                  variant="contained"
+                  color="primary"
+                  onClick={verifyRules}
+                  loading={rulesStatus === "LOADING"}
+                >
+                  Verify
+                </LoadingButton>
+                {rulesStatus !== "LOADING" && typeof rulesStatus === "string" && (
+                  <Typography variant="caption" color="error">
+                    {rulesStatus}
+                  </Typography>
+                )}
+              </Grid>
             </Grid>
           </div>
         </SetupItem>
+      )}
+
+      {hasRules && (
+        <SetupItem status="complete" title="Firestore Rules are set up." />
       )}
     </>
   );
