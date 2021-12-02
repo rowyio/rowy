@@ -13,7 +13,7 @@ import { rowyRun } from "@src/utils/rowyRun";
 import { runRoutes } from "@src/constants/runRoutes";
 import CopyIcon from "@src/assets/icons/Copy";
 
-export default function Step3ProjectOwner({
+export default function Step2ProjectOwner({
   rowyRunUrl,
   completion,
   setCompletion,
