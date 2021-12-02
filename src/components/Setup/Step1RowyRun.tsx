@@ -119,7 +119,7 @@ export default function Step1RowyRun({
                 <TextField
                   id="rowyRunUrl"
                   label="Rowy Run instance URL"
-                  placeholder="https://*.run.app"
+                  placeholder="https://rowy-backend-*.run.app"
                   value={rowyRunUrl}
                   onChange={(e) => setRowyRunUrl(e.target.value)}
                   type="url"
