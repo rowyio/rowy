@@ -16,6 +16,7 @@ import firestoreDefs from "!!raw-loader!./firestore.d.ts";
 import firebaseAuthDefs from "!!raw-loader!./firebaseAuth.d.ts";
 import firebaseStorageDefs from "!!raw-loader!./firebaseStorage.d.ts";
 import utilsDefs from "!!raw-loader!./utils.d.ts";
+import rowyUtilsDefs from "!!raw-loader!./rowy.d.ts";
 import extensionsDefs from "!!raw-loader!./extensions.d.ts";
 
 export interface IUseMonacoCustomizationsProps {
@@ -96,6 +97,7 @@ export default function useMonacoCustomizations({
         utilsDefs,
         "ts:filename/utils.d.ts"
       );
+      monaco.languages.typescript.javascriptDefaults.addExtraLib(rowyUtilsDefs);
     } catch (error) {
       console.error(
         "An error occurred during initialization of Monaco: ",
