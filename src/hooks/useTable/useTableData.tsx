@@ -45,8 +45,7 @@ const rowsReducer = (prevRows: any, update: any) => {
             r._rowy_missingRequiredFields.length > 0) ||
           r._rowy_outOfOrder === true
       );
-
-      return _uniqBy([...localRows, ...snapshotDocs.map(doc2row)], "id");
+      return _uniqBy([...localRows, ...snapshotDocs.map(doc2row)], "ref.path");
 
     case "delete":
       return prevRows.filter((row) => update.rowId !== row.id);
