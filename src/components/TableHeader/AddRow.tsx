@@ -45,11 +45,11 @@ export default function AddRow() {
         color="primary"
         aria-label="Split button"
         ref={anchorEl}
+        disabled={isCollectionGroup() || !addRow}
       >
         <Button
           variant="contained"
           color="primary"
-          disabled={isCollectionGroup() || !addRow}
           onClick={handleClick}
           startIcon={<AddRowIcon />}
         >
