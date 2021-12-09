@@ -1,3 +1,4 @@
+import { useState } from "react";
 import _find from "lodash/find";
 import queryString from "query-string";
 import { Link as RouterLink } from "react-router-dom";
@@ -8,15 +9,19 @@ import {
   BreadcrumbsProps,
   Link,
   Typography,
+  Tooltip,
+  IconButton,
 } from "@mui/material";
 import ArrowRightIcon from "@mui/icons-material/ChevronRight";
+import InfoIcon from "@mui/icons-material/InfoOutlined";
+import CloseIcon from "@mui/icons-material/Close";
 
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import useRouter from "@src/hooks/useRouter";
 import routes from "@src/constants/routes";
 
-export default function Breadcrumbs(props: BreadcrumbsProps) {
-  const { tables, tableState } = useProjectContext();
+export default function Breadcrumbs({ sx = [], ...props }: BreadcrumbsProps) {
+  const { tables, table, tableState } = useProjectContext();
   const id = tableState?.config.id || "";
   const collection = id || tableState?.tablePath || "";
 
@@ -28,22 +33,26 @@ export default function Breadcrumbs(props: BreadcrumbsProps) {
 
   const breadcrumbs = collection.split("/");
 
-  const section = _find(tables, ["id", breadcrumbs[0]])?.section || "";
+  const section = table?.section || "";
   const getLabel = (id: string) => _find(tables, ["id", id])?.name || id;
+
+  const [openInfo, setOpenInfo] = useState(true);
 
   return (
     <MuiBreadcrumbs
       separator={<ArrowRightIcon />}
       aria-label="Sub-table breadcrumbs"
-      sx={{
-        "& ol": {
-          pl: 2,
-          userSelect: "none",
-          flexWrap: "nowrap",
-          whiteSpace: "nowrap",
+      {...props}
+      sx={[
+        {
+          "& .MuiBreadcrumbs-ol": {
+            userSelect: "none",
+            flexWrap: "nowrap",
+            whiteSpace: "nowrap",
+          },
         },
-      }}
-      {...(props as any)}
+        ...(Array.isArray(sx) ? sx : [sx]),
+      ]}
     >
       {/* Section name */}
       {section && (
@@ -63,7 +72,7 @@ export default function Breadcrumbs(props: BreadcrumbsProps) {
         const crumbProps = {
           key: index,
           variant: "h6",
-          component: index === 0 ? "h2" : "div",
+          component: index === 0 ? "h1" : "div",
           color:
             index === breadcrumbs.length - 1 ? "textPrimary" : "textSecondary",
         } as const;
@@ -71,9 +80,74 @@ export default function Breadcrumbs(props: BreadcrumbsProps) {
         // If it’s the last crumb, just show the label without linking
         if (index === breadcrumbs.length - 1)
           return (
-            <Typography {...crumbProps}>
-              {getLabel(crumb) || crumb.replace(/([A-Z])/g, " $1")}
-            </Typography>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+              }}
+            >
+              <Typography {...crumbProps}>
+                {getLabel(crumb) || crumb.replace(/([A-Z])/g, " $1")}
+              </Typography>
+              {crumb === table?.id && table?.description && (
+                <Tooltip
+                  title={
+                    <>
+                      {table?.description}
+                      <IconButton
+                        aria-label="Close table info"
+                        size="small"
+                        onClick={() => setOpenInfo(false)}
+                        sx={{ m: -0.5 }}
+                        color="inherit"
+                      >
+                        <CloseIcon fontSize="small" />
+                      </IconButton>
+                    </>
+                  }
+                  disableFocusListener
+                  disableHoverListener
+                  disableTouchListener
+                  arrow
+                  placement="right-start"
+                  describeChild
+                  open={openInfo}
+                  componentsProps={{
+                    popper: { sx: { zIndex: "appBar" } } as any,
+                    tooltip: {
+                      style: { marginLeft: "8px" },
+                      sx: {
+                        // bgcolor: "background.paper",
+                        // color: "text.primary",
+                        typography: "body2",
+                        boxShadow: 2,
+                        maxWidth: "75vw",
+
+                        display: "flex",
+                        gap: 1.5,
+                        alignItems: "flex-start",
+                        pr: 0.5,
+                      },
+                    },
+                    arrow: {
+                      sx: {
+                        //     color: "background.paper",
+                        "&::before": { boxShadow: 2 },
+                      },
+                    },
+                  }}
+                >
+                  <IconButton
+                    aria-label="Table info"
+                    size="small"
+                    onClick={() => setOpenInfo((x) => !x)}
+                  >
+                    <InfoIcon fontSize="small" />
+                  </IconButton>
+                </Tooltip>
+              )}
+            </div>
           );
 
         // If odd: breadcrumb points to a document — link to rowRef
