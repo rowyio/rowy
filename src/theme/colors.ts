@@ -63,6 +63,10 @@ export const colorsLight = (
 
       if (i === 0) return "none";
 
+      if (i === 1)
+        // prettier-ignore
+        return `0 0 0 1px ${shadowBase.alpha(0.03).toHslString()}, 0 1px 2px 0 ${shadowBase.alpha(0.1).toHslString()}`;
+
       if (i < 4)
         // prettier-ignore
         return `0 0 0 1px ${shadowBase.alpha(0.04).toHslString()}, 0 1px 3px 0 ${shadowBase.alpha(0.1).toHslString()}, 0 1px 2px 0 ${shadowBase.alpha(0.06).toHslString()}`;
@@ -158,6 +162,10 @@ export const colorsDark = (
       // and bigger shadow from https://github.com/outline/outline/blob/37fd7ec97a496094077a59f4d10fa0081516e3ef/shared/theme.js#L148
 
       if (i === 0) return "none";
+
+      if (i === 1)
+        // prettier-ignore
+        return `0 0 0 1px ${shadowBase.alpha(0.03*4).toHslString()}, 0 1px 2px 0 ${shadowBase.alpha(0.1*4).toHslString()}`;
 
       if (i < 4)
         // prettier-ignore
