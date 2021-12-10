@@ -28,7 +28,7 @@ const useDoc = (
 
         (prevState.ref ? prevState.ref : db.doc(prevState.path))
           .set({ ...newProps.data }, { merge: true })
-          .then(() => {})
+          .then(newProps.callback ? newProps.callback : () => {})
           .catch((error) => {
             console.log(error);
             documentDispatch({ error });

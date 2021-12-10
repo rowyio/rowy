@@ -74,32 +74,34 @@ export default function Extensions() {
     }
   };
 
-  const handleSaveExtensions = () => {
+  const handleSaveExtensions = (callback?: Function) => {
     tableActions?.table.updateConfig(
       "extensionObjects",
-      localExtensionsObjects
+      localExtensionsObjects,
+      callback
     );
     setOpen(false);
   };
 
   const handleSaveDeploy = async () => {
-    handleSaveExtensions();
-    try {
-      if (rowyRun) {
-        snackLogContext.requestSnackLog();
-        rowyRun({
-          route: runRoutes.buildFunction,
-          body: {
-            tablePath: tableState?.tablePath,
-            pathname: window.location.pathname,
-            tableConfigPath: tableState?.config.tableConfig.path,
-          },
-        });
-        analytics.logEvent("deployed_extensions");
+    handleSaveExtensions(() => {
+      try {
+        if (rowyRun) {
+          snackLogContext.requestSnackLog();
+          rowyRun({
+            route: runRoutes.buildFunction,
+            body: {
+              tablePath: tableState?.tablePath,
+              pathname: window.location.pathname,
+              tableConfigPath: tableState?.config.tableConfig.path,
+            },
+          });
+          analytics.logEvent("deployed_extensions");
+        }
+      } catch (e) {
+        console.error(e);
       }
-    } catch (e) {
-      console.error(e);
-    }
+    });
   };
 
   const handleAddExtension = (extensionObject: IExtension) => {
@@ -233,7 +235,7 @@ export default function Extensions() {
             },
             secondary: {
               children: "Save",
-              onClick: handleSaveExtensions,
+              onClick: () => handleSaveExtensions(),
               disabled: !edited,
             },
           }}
