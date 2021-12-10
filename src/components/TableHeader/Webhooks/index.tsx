@@ -65,35 +65,38 @@ export default function Webhooks() {
     }
   };
 
-  const handleSaveWebhooks = async () => {
-    tableActions?.table.updateConfig("webhooks", localWebhooksObjects);
+  const handleSaveWebhooks = async (callback?: Function) => {
+    tableActions?.table.updateConfig(
+      "webhooks",
+      localWebhooksObjects,
+      callback
+    );
     setOpen(false);
     // TODO: convert to async function that awaits for the document write to complete
     await new Promise((resolve) => setTimeout(resolve, 500));
   };
 
-  const handleSaveDeploy = async () => {
-    await handleSaveWebhooks();
-    try {
-      if (rowyRun) {
-        const resp = await rowyRun({
-          service: "hooks",
-          route: runRoutes.publishWebhooks,
-          body: {
-            tableConfigPath: tableState?.config.tableConfig.path,
-            tablePath: tableState?.tablePath,
-          },
-        });
-        enqueueSnackbar(resp.message, {
-          variant: resp.success ? "success" : "error",
-        });
-
-        analytics.logEvent("published_webhooks");
+  const handleSaveDeploy = () =>
+    handleSaveWebhooks(async () => {
+      try {
+        if (rowyRun) {
+          const resp = await rowyRun({
+            service: "hooks",
+            route: runRoutes.publishWebhooks,
+            body: {
+              tableConfigPath: tableState?.config.tableConfig.path,
+              tablePath: tableState?.tablePath,
+            },
+          });
+          enqueueSnackbar(resp.message, {
+            variant: resp.success ? "success" : "error",
+          });
+          analytics.logEvent("published_webhooks");
+        }
+      } catch (e) {
+        console.error(e);
       }
-    } catch (e) {
-      console.error(e);
-    }
-  };
+    });
 
   const handleAddWebhook = (webhookObject: IWebhook) => {
     setLocalWebhooksObjects([...localWebhooksObjects, webhookObject]);
@@ -205,12 +208,16 @@ export default function Webhooks() {
           actions={{
             primary: {
               children: "Save & Deploy",
-              onClick: handleSaveDeploy,
+              onClick: () => {
+                handleSaveDeploy();
+              },
               disabled: !edited,
             },
             secondary: {
               children: "Save",
-              onClick: handleSaveWebhooks,
+              onClick: () => {
+                handleSaveWebhooks();
+              },
               disabled: !edited,
             },
           }}

@@ -150,10 +150,11 @@ const useTableConfig = (tablePath?: string) => {
    * @param key name of parameter eg. rowHeight
    * @param value new value eg. 65
    */
-  const updateConfig = (key: string, value: unknown) => {
+  const updateConfig = (key: string, value: unknown, callback?: Function) => {
     documentDispatch({
       action: DocActions.update,
       data: { [key]: value },
+      callback,
     });
   };
   const actions = {
