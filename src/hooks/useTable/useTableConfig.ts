@@ -71,6 +71,20 @@ const useTableConfig = (tablePath?: string) => {
     });
   };
 
+  const arrangeColumns = (arrangedCol: any) => {
+    const { columns } = tableConfigState;
+
+    const newColumns: any = arrangedCol.reduce((acc, curr) => {
+      acc[curr.key] = { ...columns[curr.key], index: curr.index };
+      return acc;
+    }, {});
+
+    documentDispatch({
+      action: DocActions.update,
+      data: { columns: newColumns },
+    });
+  };
+
   /**  used for updating the width of column
    *  @param index of column.
    *  @param width number of pixels, eg: 120
@@ -160,6 +174,7 @@ const useTableConfig = (tablePath?: string) => {
     updateColumn,
     updateConfig,
     addColumn,
+    arrangeColumns,
     resize,
     setTable,
     remove,

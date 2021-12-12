@@ -14,6 +14,7 @@ import LockIcon from "@mui/icons-material/LockOutlined";
 import FreezeIcon from "@src/assets/icons/Freeze";
 import UnfreezeIcon from "@src/assets/icons/Unfreeze";
 import CellResizeIcon from "@src/assets/icons/CellResize";
+import ArrangeColumnsIcon from "@src/assets/icons/ArrangeColumns";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import EditIcon from "@mui/icons-material/EditOutlined";
@@ -23,6 +24,7 @@ import ColumnPlusBeforeIcon from "@src/assets/icons/ColumnPlusBefore";
 import ColumnPlusAfterIcon from "@src/assets/icons/ColumnPlusAfter";
 import ColumnRemoveIcon from "@src/assets/icons/ColumnRemove";
 
+import ArrangeColumns from "./ArrangeColumns";
 import MenuContents from "./MenuContents";
 import NameChange from "./NameChange";
 import NewColumn from "./NewColumn";
@@ -45,6 +47,7 @@ enum ModalStates {
   typeChange = "TYPE_CHANGE",
   new = "NEW_COLUMN",
   settings = "COLUMN_SETTINGS",
+  arrangeColumns = "ARRANGE_COLUMNS",
 }
 
 type SelectedColumnHeader = {
@@ -217,6 +220,13 @@ export default function ColumnMenu() {
     },
     { type: "subheader" },
     {
+      label: "Arrange Columns",
+      icon: <ArrangeColumnsIcon />,
+      onClick: () => {
+        setModal({ type: ModalStates.arrangeCol, data: {} });
+      },
+    },
+    {
       label: "Rename…",
       icon: <EditIcon />,
       onClick: () => {
@@ -333,6 +343,10 @@ export default function ColumnMenu() {
       )}
       {column && (
         <>
+          <ArrangeColumns
+            {...menuModalProps}
+            open={modal.type === ModalStates.arrangeColumns}
+          />
           <NameChange
             {...menuModalProps}
             open={modal.type === ModalStates.nameChange}
