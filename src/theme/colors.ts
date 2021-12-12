@@ -165,7 +165,7 @@ export const colorsDark = (
 
       if (i === 1)
         // prettier-ignore
-        return `0 0 0 1px ${shadowBase.alpha(0.03*4).toHslString()}, 0 1px 2px 0 ${shadowBase.alpha(0.1*4).toHslString()}`;
+        return `0 0 0 1px ${shadowBase.alpha(0.03 * 4).toHslString()}, 0 1px 2px 0 ${shadowBase.alpha(0.1 * 4).toHslString()}`;
 
       if (i < 4)
         // prettier-ignore
