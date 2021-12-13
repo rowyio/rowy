@@ -70,7 +70,18 @@ const useTableConfig = (tablePath?: string) => {
       data: { columns: updatedColumns },
     });
   };
-
+  /**  used for updating the single width of column
+   *  @param key of column.
+   *  @param width number of pixels, eg: 120
+   */
+  const singleResize = (key: string, width: number) => {
+    const { columns } = tableConfigState;
+    const updatedColumns = { ...columns, [key]: { ...columns[key], width } };
+    documentDispatch({
+      action: DocActions.update,
+      data: { columns: updatedColumns },
+    });
+  };
   /**  used for updating the width of column
    *  @param index of column.
    *  @param width number of pixels, eg: 120
@@ -160,6 +171,7 @@ const useTableConfig = (tablePath?: string) => {
     updateColumn,
     updateConfig,
     addColumn,
+    singleResize,
     resize,
     setTable,
     remove,

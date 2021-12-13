@@ -4,6 +4,7 @@ export type TableActions = {
   // TODO: Stricter types here
   column: {
     add: Function;
+    singleResize: Function;
     resize: (index: number, width: number) => void;
     rename: Function;
     remove: Function;
@@ -89,6 +90,7 @@ export default function useTable() {
   const actions: TableActions = {
     column: {
       add: configActions.addColumn,
+      singleResize: configActions.singleResize,
       resize: configActions.resize,
       rename: configActions.rename,
       update: configActions.updateColumn,

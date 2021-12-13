@@ -22,10 +22,12 @@ import SettingsIcon from "@mui/icons-material/SettingsOutlined";
 import ColumnPlusBeforeIcon from "@src/assets/icons/ColumnPlusBefore";
 import ColumnPlusAfterIcon from "@src/assets/icons/ColumnPlusAfter";
 import ColumnRemoveIcon from "@src/assets/icons/ColumnRemove";
+import ResizeColumnIcon from "@src/assets/icons/ResizeColumn";
 
 import MenuContents from "./MenuContents";
 import NameChange from "./NameChange";
 import NewColumn from "./NewColumn";
+import ResizeColumn from "./ResizeColumn";
 import TypeChange from "./TypeChange";
 import FieldSettings from "./FieldSettings";
 import ColumnHeader from "@src/components/Wizards/Column";
@@ -44,6 +46,7 @@ enum ModalStates {
   nameChange = "NAME_CHANGE",
   typeChange = "TYPE_CHANGE",
   new = "NEW_COLUMN",
+  resizeColumn = "RESIZE_COLUMN",
   settings = "COLUMN_SETTINGS",
 }
 
@@ -83,7 +86,6 @@ export default function ColumnMenu() {
     } as any;
 
   const { column, anchorEl } = (selectedColumnHeader ?? {}) as any;
-
   useEffect(() => {
     if (column && column.type === FieldType.last) {
       setModal({
@@ -166,6 +168,7 @@ export default function ColumnMenu() {
       },
       active: column.resizable,
     },
+
     {
       label: "Sort: descending",
       activeLabel: "Sorted: descending",
@@ -229,6 +232,13 @@ export default function ColumnMenu() {
       icon: getFieldProp("icon", column.type),
       onClick: () => {
         setModal({ type: ModalStates.typeChange, data: { column } });
+      },
+    },
+    {
+      label: "Resize Column ",
+      icon: <ResizeColumnIcon />,
+      onClick: () => {
+        setModal({ type: ModalStates.resizeColumn, data: { key: column.key } });
       },
     },
     {
@@ -333,6 +343,11 @@ export default function ColumnMenu() {
       )}
       {column && (
         <>
+          <ResizeColumn
+            {...menuModalProps}
+            data={modal.data}
+            open={modal.type === ModalStates.resizeColumn}
+          />
           <NameChange
             {...menuModalProps}
             open={modal.type === ModalStates.nameChange}
