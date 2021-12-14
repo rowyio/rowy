@@ -76,19 +76,16 @@ export const webhookSchemas = {
 
 export function emptyWebhookObject(
   type: WebhookType,
-  user: IWebhookEditor
+  user: IWebhookEditor,
+  table
 ): IWebhook {
   return {
-    name: "Untitled webhook",
+    name: `${type} webhook`,
     active: false,
     endpoint: generateRandomId(),
     type,
-    parser:
-      webhookSchemas[type].parser?.template ??
-      webhookSchemas["basic"].parser.template,
-    conditions:
-      webhookSchemas[type].condition?.template ??
-      webhookSchemas["basic"].condition.template,
+    parser: webhookSchemas[type].parser?.template(table),
+    conditions: webhookSchemas[type].condition?.template(table),
     lastEditor: user,
   };
 }
