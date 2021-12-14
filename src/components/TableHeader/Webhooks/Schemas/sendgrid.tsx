@@ -6,8 +6,13 @@ export const webhookSendgrid = {
   parser: {
     additionalVariables: null,
     extraLibs: null,
-    template: `const sendgridParser: Parser = async({req, db,ref}) =>{
-
+    template: (
+      table
+    ) => `const sendgridParser: Parser = async({req, db,ref}) =>{
+        // sendgrid webhook events docs : https://docs.sendgrid.com/for-developers/tracking-events/event#event-objects
+        
+        // sengrid sends request body with an array of events
+        // eg:
         // {
         //   "email": "example@test.com",
         //   "timestamp": 1513299569,
@@ -24,7 +29,7 @@ export const webhookSendgrid = {
   condition: {
     additionalVariables: null,
     extraLibs: null,
-    template: `const condition: Condition = async({ref,req,db}) => {
+    template: (table) => `const condition: Condition = async({ref,req,db}) => {
       // feel free to add your own code logic here
       return true;
     }`,

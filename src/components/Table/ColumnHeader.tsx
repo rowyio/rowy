@@ -112,7 +112,6 @@ export default function DraggableHeaderRenderer<R>({
   onColumnsReorder: (sourceKey: string, targetKey: string) => void;
 }) {
   const classes = useStyles();
-
   const { userClaims } = useAppContext();
   const { tableState, tableActions, columnMenuRef } = useProjectContext();
   const [{ isDragging }, drag] = useDrag({
@@ -149,16 +148,18 @@ export default function DraggableHeaderRenderer<R>({
       anchorEl: buttonRef.current,
     });
   };
+  const _sortKey = getFieldProp("sortKey", (column as any).type);
+  const sortKey = _sortKey ? `${column.key}.${_sortKey}` : column.key;
 
-  const isSorted = orderBy?.[0]?.key === column.key;
+  const isSorted = orderBy?.[0]?.key === sortKey;
   const isAsc = isSorted && orderBy?.[0]?.direction === "asc";
   const isDesc = isSorted && orderBy?.[0]?.direction === "desc";
 
   const handleSortClick = () => {
     let ordering: TableOrder = [];
 
-    if (!isSorted) ordering = [{ key: column.key, direction: "desc" }];
-    else if (isDesc) ordering = [{ key: column.key, direction: "asc" }];
+    if (!isSorted) ordering = [{ key: sortKey, direction: "desc" }];
+    else if (isDesc) ordering = [{ key: sortKey, direction: "asc" }];
     else ordering = [];
 
     tableActions.table.orderBy(ordering);
