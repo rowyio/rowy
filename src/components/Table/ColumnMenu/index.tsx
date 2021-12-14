@@ -114,8 +114,9 @@ export default function ColumnMenu() {
   );
 
   if (!column) return null;
-
-  const isSorted = orderBy?.[0]?.key === column.key;
+  const _sortKey = getFieldProp("sortKey", (column as any).type);
+  const sortKey = _sortKey ? `${column.key}.${_sortKey}` : column.key;
+  const isSorted = orderBy?.[0]?.key === sortKey;
   const isAsc = isSorted && orderBy?.[0]?.direction === "asc";
 
   const clearModal = () => {
@@ -172,7 +173,7 @@ export default function ColumnMenu() {
       icon: <ArrowDownwardIcon />,
       onClick: () => {
         tableActions.table.orderBy(
-          isSorted && !isAsc ? [] : [{ key: column.key, direction: "desc" }]
+          isSorted && !isAsc ? [] : [{ key: sortKey, direction: "desc" }]
         );
         handleClose();
       },
@@ -185,7 +186,7 @@ export default function ColumnMenu() {
       icon: <ArrowUpwardIcon />,
       onClick: () => {
         tableActions.table.orderBy(
-          isSorted && isAsc ? [] : [{ key: column.key, direction: "asc" }]
+          isSorted && isAsc ? [] : [{ key: sortKey, direction: "asc" }]
         );
         handleClose();
       },

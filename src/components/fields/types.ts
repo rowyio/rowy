@@ -28,6 +28,7 @@ export interface IFieldConfig {
     defaultValue?: any;
     valueFormatter?: (value: any) => string;
   };
+  sortKey?: string;
   csvExportFormatter?: (value: any, config?: any) => string;
   csvImportParser?: (value: string, config?: any) => any;
 }
