@@ -99,7 +99,7 @@ const useTableConfig = (tablePath?: string) => {
    *  @param index of column.
    *  @param {updatable[]} updatables properties to be updated
    */
-  const updateColumn = (key: string, updates: any) => {
+  const updateColumn = (key: string, updates: any, onSuccess?: Function) => {
     const { columns } = tableConfigState;
 
     const updatedColumns = {
@@ -110,6 +110,7 @@ const useTableConfig = (tablePath?: string) => {
     documentDispatch({
       action: DocActions.update,
       data: { columns: updatedColumns },
+      callback: onSuccess,
     });
   };
   /** remove column by index
