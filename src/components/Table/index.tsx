@@ -43,8 +43,14 @@ const rowClass = (row: any) => (row._rowy_outOfOrder ? "out-of-order" : "");
 //const SelectColumn = { ..._SelectColumn, width: 42, maxWidth: 42 };
 
 export default function Table() {
-  const { tableState, tableActions, dataGridRef, sideDrawerRef, updateCell } =
-    useProjectContext();
+  const {
+    table,
+    tableState,
+    tableActions,
+    dataGridRef,
+    sideDrawerRef,
+    updateCell,
+  } = useProjectContext();
   const { userDoc } = useAppContext();
 
   const userDocHiddenFields =
@@ -63,7 +69,6 @@ export default function Table() {
       )
         .map((column: any) => ({
           draggable: true,
-          editable: true,
           resizable: true,
           frozen: column.fixed,
           headerRenderer: ColumnHeader,
@@ -84,6 +89,7 @@ export default function Table() {
               return null;
             },
           ...column,
+          editable: table?.readOnly ? false : column.editable ?? true,
           width: (column.width as number)
             ? (column.width as number) > 380
               ? 380

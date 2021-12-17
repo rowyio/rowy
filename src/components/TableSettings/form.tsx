@@ -209,6 +209,15 @@ export const tableSettings = (
     },
     {
       step: "accessControls",
+      type: FieldType.checkbox,
+      name: "readOnly",
+      label: "Read-only table",
+      assistiveText:
+        "Disable all editing functionality. Locks all columns and disables adding and deleting rows and columns.",
+      defaultValue: false,
+    },
+    {
+      step: "accessControls",
       type: FieldType.contentParagraph,
       name: "_contentParagraph_rules",
       label: (

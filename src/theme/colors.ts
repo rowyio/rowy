@@ -108,6 +108,7 @@ export const colorsLight = (
       MuiTooltip: {
         styleOverrides: {
           tooltip: { backgroundColor: tooltip.toHslString() },
+          arrow: { color: tooltip.toHslString() },
         },
       },
       MuiSlider: {

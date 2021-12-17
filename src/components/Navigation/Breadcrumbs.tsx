@@ -15,6 +15,7 @@ import {
 import ArrowRightIcon from "@mui/icons-material/ChevronRight";
 import InfoIcon from "@mui/icons-material/InfoOutlined";
 import CloseIcon from "@mui/icons-material/Close";
+import ReadOnlyIcon from "@mui/icons-material/EditOffOutlined";
 
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import useRouter from "@src/hooks/useRouter";
@@ -90,6 +91,11 @@ export default function Breadcrumbs({ sx = [], ...props }: BreadcrumbsProps) {
               <Typography {...crumbProps}>
                 {getLabel(crumb) || crumb.replace(/([A-Z])/g, " $1")}
               </Typography>
+              {crumb === table?.id && table?.readOnly && (
+                <Tooltip title="Table is read-only">
+                  <ReadOnlyIcon fontSize="small" sx={{ ml: 0.5 }} />
+                </Tooltip>
+              )}
               {crumb === table?.id && table?.description && (
                 <Tooltip
                   title={

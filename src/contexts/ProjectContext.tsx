@@ -32,6 +32,7 @@ export type Table = {
   audit?: boolean;
   auditFieldCreatedBy?: string;
   auditFieldUpdatedBy?: string;
+  readOnly?: boolean;
 };
 
 interface IRowyRun

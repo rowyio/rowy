@@ -8,6 +8,7 @@ import {
   Select,
   MenuItem,
   ListItemText,
+  Tooltip,
 } from "@mui/material";
 import AddRowIcon from "@src/assets/icons/AddRow";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
@@ -19,7 +20,7 @@ import { db } from "@src/firebase";
 const useIdTypeState = createPersistedState("__ROWY__ADD_ROW_ID_TYPE");
 
 export default function AddRow() {
-  const { addRow, tableState } = useProjectContext();
+  const { addRow, table, tableState } = useProjectContext();
 
   const anchorEl = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
@@ -37,6 +38,37 @@ export default function AddRow() {
       setOpenIdModal(true);
     }
   };
+
+  if (table?.readOnly)
+    return (
+      <Tooltip title="Table is read-only">
+        <div>
+          <ButtonGroup
+            variant="contained"
+            color="primary"
+            aria-label="Split button"
+            disabled
+          >
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<AddRowIcon />}
+            >
+              Add row
+            </Button>
+
+            <Button
+              variant="contained"
+              color="primary"
+              aria-label="Select row add position"
+              style={{ padding: 0 }}
+            >
+              <ArrowDropDownIcon />
+            </Button>
+          </ButtonGroup>
+        </div>
+      </Tooltip>
+    );
 
   return (
     <>

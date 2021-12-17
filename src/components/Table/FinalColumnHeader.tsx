@@ -1,7 +1,7 @@
 import { Column } from "react-data-grid";
 
 import { makeStyles, createStyles } from "@mui/styles";
-import { Grid, Button } from "@mui/material";
+import { Grid, Button, Tooltip } from "@mui/material";
 import AddColumnIcon from "@src/assets/icons/AddColumn";
 
 import { useProjectContext } from "@src/contexts/ProjectContext";
@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) =>
 const FinalColumnHeader: Column<any>["headerRenderer"] = ({ column }) => {
   const classes = useStyles();
 
-  const { columnMenuRef } = useProjectContext();
+  const { columnMenuRef, table } = useProjectContext();
   if (!columnMenuRef) return null;
 
   const handleClick = (
@@ -62,15 +62,30 @@ const FinalColumnHeader: Column<any>["headerRenderer"] = ({ column }) => {
       justifyContent="center"
       className={classes.root}
     >
-      <Button
-        onClick={handleClick}
-        variant="contained"
-        color="primary"
-        className={classes.button}
-        startIcon={<AddColumnIcon />}
-      >
-        Add column
-      </Button>
+      {table?.readOnly ? (
+        <Tooltip title="Table is read-only">
+          <div>
+            <Button
+              disabled
+              variant="contained"
+              color="primary"
+              startIcon={<AddColumnIcon />}
+            >
+              Add column
+            </Button>
+          </div>
+        </Tooltip>
+      ) : (
+        <Button
+          onClick={handleClick}
+          variant="contained"
+          color="primary"
+          className={classes.button}
+          startIcon={<AddColumnIcon />}
+        >
+          Add column
+        </Button>
+      )}
     </Grid>
   );
 };
