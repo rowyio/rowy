@@ -2185,10 +2185,15 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
-"@hookform/resolvers@^2.6.0", "@hookform/resolvers@^2.8.1":
+"@hookform/resolvers@^2.6.0":
   version "2.8.2"
   resolved "https://registry.yarnpkg.com/@hookform/resolvers/-/resolvers-2.8.2.tgz#590dcc23212a659bad08212138261c3950ef09f1"
   integrity sha512-oDTGrm7yHxT4VIv4kJcfjvWvozCbdcL0/jrpbAkeo39FYn78XnKOrrGTNmrXdfu+EQVkNIdZ47IYRFManZ4jUA==
+
+"@hookform/resolvers@^2.8.5":
+  version "2.8.5"
+  resolved "https://registry.yarnpkg.com/@hookform/resolvers/-/resolvers-2.8.5.tgz#25b902bd40516c1755bc857753283de740560aff"
+  integrity sha512-n7eFm4snsejpfZVH8q2NU7YJbsGhF61IHB0TxgK11nmg08RymEr3KscnbTAZaPd9RaXa3vUPoULgBRN2nVDtMg==
 
 "@icons/material@^0.2.4":
   version "0.2.4"
@@ -2694,10 +2699,10 @@
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
 
-"@rowy/form-builder@^0.4.2":
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/@rowy/form-builder/-/form-builder-0.4.2.tgz#e1693b16af31ed486b7314cd657cd3a1c9c3e937"
-  integrity sha512-bedChgzyL7BxeQVijaxAXYJqcZtTaCLy4CfqInbsKEB+0OJ3nWi2c9l9d+v8yf6QJ2+3ERyveVfuKq6HAVTQ/g==
+"@rowy/form-builder@^0.5.2":
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/@rowy/form-builder/-/form-builder-0.5.2.tgz#06963aca11ed577e3b6a815987f81fb0e5bbfd04"
+  integrity sha512-bIa/2pp7nH8hoCZQET97m8NoFQ4bFE0ztf6rjP+G2QmHy0lQL8s6LAoBevgdJS7cqV8LePg3aycdl1A1GW0N+g==
   dependencies:
     "@hookform/resolvers" "^2.6.0"
     "@mdi/js" "^5.9.55"
@@ -13633,15 +13638,10 @@ react-helmet@^6.1.0:
     react-fast-compare "^3.1.1"
     react-side-effect "^2.1.0"
 
-react-hook-form@^7.10.0:
-  version "7.17.2"
-  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.17.2.tgz#235f15bb65c13e7a1198d33f2db24bcc9e27b303"
-  integrity sha512-oBaHwlYnbpzSFdNrs43QpcM+K2A0kUeNjV86ECYkCimlR1Ctl+tz4oQQd9plfGYkO7PJGLVMOVpUtL5EHjAcYQ==
-
-react-hook-form@^7.16.1:
-  version "7.17.1"
-  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.17.1.tgz#dc257a5e34b3c353460ecdbbba5236e066cf80b1"
-  integrity sha512-9nQ+qKFHFpnWzQHdDh6F4Egxa8iJkue1KU921F8qqeyUVbPPjgQZDXaQyNHABEYjRh0ndjTI24GDA+lwm2lQdg==
+react-hook-form@^7.10.0, react-hook-form@^7.21.2:
+  version "7.21.2"
+  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.21.2.tgz#3faf1292b66b97f6897ba46138aeaf5a1f6031c6"
+  integrity sha512-G2qcUsZSoVolLMZi83nRcZR3VquUWI8lgAfMUyL2teL7vAFPKKwPMfKv2+tXFZjBMzNXHb+HxARdUGcETo8IqQ==
 
 react-image@^4.0.3:
   version "4.0.3"

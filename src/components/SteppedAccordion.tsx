@@ -24,10 +24,12 @@ export interface ISteppedAccordionProps extends Partial<StepperProps> {
     titleProps?: Partial<StepButtonProps>;
     contentProps?: Partial<StepContentProps>;
   }[];
+  disableUnmount?: boolean;
 }
 
 export default function SteppedAccordion({
   steps,
+  disableUnmount,
   ...props
 }: ISteppedAccordionProps) {
   const [activeStep, setActiveStep] = useState(steps[0].id);
@@ -83,7 +85,14 @@ export default function SteppedAccordion({
               <ExpandIcon />
             </StepButton>
 
-            <StepContent {...contentProps}>{content}</StepContent>
+            <StepContent
+              TransitionProps={
+                disableUnmount ? { unmountOnExit: false } : undefined
+              }
+              {...contentProps}
+            >
+              {content}
+            </StepContent>
           </Step>
         )
       )}

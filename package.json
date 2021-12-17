@@ -12,14 +12,14 @@
     "@date-io/date-fns": "1.x",
     "@emotion/react": "^11.4.0",
     "@emotion/styled": "^11.3.0",
-    "@hookform/resolvers": "^2.8.1",
+    "@hookform/resolvers": "^2.8.5",
     "@mdi/js": "^6.5.95",
     "@monaco-editor/react": "^4.3.1",
     "@mui/icons-material": "^5.2.0",
     "@mui/lab": "^5.0.0-alpha.58",
     "@mui/material": "^5.2.2",
     "@mui/styles": "^5.2.2",
-    "@rowy/form-builder": "^0.4.2",
+    "@rowy/form-builder": "^0.5.2",
     "@rowy/multiselect": "^0.2.3",
     "@tinymce/tinymce-react": "^3.12.6",
     "algoliasearch": "^4.8.6",
@@ -54,7 +54,7 @@
     "react-element-scroll-hook": "^1.1.0",
     "react-firebaseui": "^5.0.2",
     "react-helmet": "^6.1.0",
-    "react-hook-form": "^7.16.1",
+    "react-hook-form": "^7.21.2",
     "react-image": "^4.0.3",
     "react-joyride": "^2.3.0",
     "react-json-view": "^1.19.1",
@@ -122,6 +122,9 @@
     "prettier": "^2.2.1",
     "pretty-quick": "^3.0.0",
     "raw-loader": "^4.0.2"
+  },
+  "resolutions": {
+    "react-hook-form": "^7.21.2"
   },
   "husky": {
     "hooks": {

@@ -4,10 +4,11 @@ import _sortBy from "lodash/sortBy";
 
 import { Stack, Button, DialogContentText } from "@mui/material";
 
-import { FormDialog } from "@rowy/form-builder";
+import { FormDialog, FormFields } from "@rowy/form-builder";
 import { tableSettings } from "./form";
 import CamelCaseId from "./CamelCaseId";
 import SuggestedRules from "./SuggestedRules";
+import SteppedAccordion from "@src/components/SteppedAccordion";
 import Confirmation from "@src/components/Confirmation";
 
 import { useProjectContext, Table } from "@src/contexts/ProjectContext";
@@ -22,6 +23,7 @@ import {
 } from "@src/config/dbPaths";
 import { runRoutes } from "@src/constants/runRoutes";
 import { analytics } from "@src/analytics";
+import { CONFIG } from "config/dbPaths";
 
 export enum TableSettingsDialogModes {
   create,
@@ -33,7 +35,7 @@ export interface ICreateTableDialogProps {
   data: Table | null;
 }
 
-export default function TableSettingsDialog({
+export default function TableSettings({
   mode,
   clearDialog,
   data,
@@ -110,6 +112,34 @@ export default function TableSettingsDialog({
     router.history.push(routes.home);
   };
 
+  const fields = tableSettings(
+    mode,
+    roles,
+    sectionNames,
+    _sortBy(
+      tables?.map((table) => ({
+        label: table.name,
+        value: table.id,
+        section: table.section,
+        collection: table.collection,
+      })),
+      ["section", "label"]
+    ),
+    Array.isArray(collections) ? collections.filter((x) => x !== CONFIG) : []
+  );
+  const customComponents = {
+    camelCaseId: {
+      component: CamelCaseId,
+      defaultValue: "",
+      validation: [["string"]],
+    },
+    suggestedRules: {
+      component: SuggestedRules,
+      defaultValue: "",
+      validation: [["string"]],
+    },
+  };
+
   return (
     <FormDialog
       onClose={clearDialog}
@@ -118,33 +148,102 @@ export default function TableSettingsDialog({
           ? "Create table"
           : "Table settings"
       }
-      fields={tableSettings(
-        mode,
-        roles,
-        sectionNames,
-        _sortBy(
-          tables?.map((table) => ({
-            label: table.name,
-            value: table.id,
-            section: table.section,
-            collection: table.collection,
-          })),
-          ["section", "label"]
-        ),
-        Array.isArray(collections) ? collections : []
+      fields={fields}
+      customBody={(formFieldsProps) => (
+        <SteppedAccordion
+          disableUnmount
+          steps={
+            [
+              {
+                id: "collection",
+                title: "Collection",
+                content: (
+                  <>
+                    <DialogContentText paragraph>
+                      Connect this table to a new or existing Firestore
+                      collection
+                    </DialogContentText>
+                    <FormFields
+                      {...formFieldsProps}
+                      fields={fields.filter((f) => f.step === "collection")}
+                    />
+                  </>
+                ),
+                optional: false,
+              },
+              {
+                id: "display",
+                title: "Display",
+                content: (
+                  <>
+                    <DialogContentText paragraph>
+                      Set how this table is displayed to users
+                    </DialogContentText>
+                    <FormFields
+                      {...formFieldsProps}
+                      fields={fields.filter((f) => f.step === "display")}
+                      customComponents={customComponents}
+                    />
+                  </>
+                ),
+                optional: false,
+              },
+              {
+                id: "accessControls",
+                title: "Access controls",
+                content: (
+                  <>
+                    <DialogContentText paragraph>
+                      Set who can view and edit this table
+                    </DialogContentText>
+                    <FormFields
+                      {...formFieldsProps}
+                      fields={fields.filter((f) => f.step === "accessControls")}
+                      customComponents={customComponents}
+                    />
+                  </>
+                ),
+                optional: false,
+              },
+              {
+                id: "auditing",
+                title: "Auditing",
+                content: (
+                  <>
+                    <DialogContentText paragraph>
+                      Track when users create or update rows
+                    </DialogContentText>
+                    <FormFields
+                      {...formFieldsProps}
+                      fields={fields.filter((f) => f.step === "auditing")}
+                    />
+                  </>
+                ),
+                optional: true,
+              },
+              mode === TableSettingsDialogModes.create
+                ? {
+                    id: "columns",
+                    title: "Columns",
+                    content: (
+                      <>
+                        <DialogContentText paragraph>
+                          Initialize table with columns
+                        </DialogContentText>
+                        <FormFields
+                          {...formFieldsProps}
+                          fields={fields.filter((f) => f.step === "columns")}
+                        />
+                      </>
+                    ),
+                    optional: true,
+                  }
+                : null,
+            ].filter(Boolean) as any
+          }
+        />
       )}
-      customComponents={{
-        camelCaseId: {
-          component: CamelCaseId,
-          defaultValue: "",
-          validation: [["string"]],
-        },
-        suggestedRules: {
-          component: SuggestedRules,
-          defaultValue: "",
-          validation: [["string"]],
-        },
-      }}
+      customComponents={customComponents}
       values={{ ...data }}
       onSubmit={handleSubmit}
       SubmitButtonProps={{
@@ -153,12 +252,7 @@ export default function TableSettingsDialog({
       }}
       formFooter={
         mode === TableSettingsDialogModes.update ? (
-          <Stack
-            direction="row"
-            justifyContent="center"
-            spacing={1}
-            sx={{ mt: 6 }}
-          >
+          <Stack direction="row" justifyContent="center" spacing={1}>
             <Confirmation
               message={{
                 title: `Reset columns of “${data?.name}”?`,
