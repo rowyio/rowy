@@ -1,5 +1,6 @@
 import useSWR from "swr";
 import { useAtom } from "jotai";
+import _startCase from "lodash/startCase";
 
 import {
   LinearProgress,
@@ -20,6 +21,7 @@ import TimeRangeSelect from "./TimeRangeSelect";
 import CloudLogList from "./CloudLogList";
 import BuildLogs from "./BuildLogs";
 import EmptyState from "@src/components/EmptyState";
+import CloudLogSeverityIcon, { SEVERITY_LEVELS } from "./CloudLogSeverityIcon";
 
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import { useAppContext } from "@src/contexts/AppContext";
@@ -196,6 +198,50 @@ export default function CloudLogsModal(props: IModalProps) {
                   </Typography>
                 )}
 
+                <MultiSelect
+                  aria-label="Severity"
+                  labelPlural="severity levels"
+                  options={Object.keys(SEVERITY_LEVELS)}
+                  value={cloudLogFilters.severity ?? []}
+                  onChange={(severity) =>
+                    setCloudLogFilters((prev) => ({ ...prev, severity }))
+                  }
+                  TextFieldProps={{
+                    style: { width: 130 },
+                    placeholder: "Severity",
+                    SelectProps: {
+                      renderValue: () => {
+                        if (
+                          !Array.isArray(cloudLogFilters.severity) ||
+                          cloudLogFilters.severity.length === 0
+                        )
+                          return `Severity`;
+
+                        if (cloudLogFilters.severity.length === 1)
+                          return (
+                            <>
+                              Severity{" "}
+                              <CloudLogSeverityIcon
+                                severity={cloudLogFilters.severity[0]}
+                                style={{ marginTop: -2, marginBottom: -7 }}
+                              />
+                            </>
+                          );
+
+                        return `Severity (${cloudLogFilters.severity.length})`;
+                      },
+                    },
+                  }}
+                  itemRenderer={(option) => (
+                    <>
+                      <CloudLogSeverityIcon
+                        severity={option.value}
+                        sx={{ mr: 1 }}
+                      />
+                      {_startCase(option.value.toLowerCase())}
+                    </>
+                  )}
+                />
                 <TimeRangeSelect
                   aria-label="Time range"
                   value={cloudLogFilters.timeRange}
