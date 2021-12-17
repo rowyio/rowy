@@ -67,7 +67,11 @@ export interface IMenuModalProps {
   config: Record<string, any>;
 
   handleClose: () => void;
-  handleSave: (fieldName: string, config: Record<string, any>) => void;
+  handleSave: (
+    fieldName: string,
+    config: Record<string, any>,
+    onSuccess?: Function
+  ) => void;
 }
 
 export default function ColumnMenu() {
@@ -125,8 +129,12 @@ export default function ColumnMenu() {
     setTimeout(() => handleClose(), 300);
   };
 
-  const handleModalSave = (key: string, update: Record<string, any>) => {
-    actions.update(key, update);
+  const handleModalSave = (
+    key: string,
+    update: Record<string, any>,
+    onSuccess?: Function
+  ) => {
+    actions.update(key, update, onSuccess);
   };
   const openSettings = (column) => {
     setSelectedColumnHeader({
