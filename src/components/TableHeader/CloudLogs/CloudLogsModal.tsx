@@ -97,6 +97,7 @@ export default function CloudLogsModal(props: IModalProps) {
                 aria-label="Filter by log type"
               >
                 <ToggleButton value="webhook">Webhooks</ToggleButton>
+                <ToggleButton value="functions">Functions</ToggleButton>
                 <ToggleButton value="audit">Audit</ToggleButton>
                 <ToggleButton value="build">Build</ToggleButton>
               </ToggleButtonGroup>

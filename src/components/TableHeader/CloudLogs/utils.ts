@@ -4,7 +4,7 @@ import { sub } from "date-fns";
 import type { IProjectContext } from "@src/contexts/ProjectContext";
 
 export type CloudLogFilters = {
-  type: "webhook" | "audit" | "build";
+  type: "webhook" | "functions" | "audit" | "build";
   timeRange:
     | { type: "seconds" | "minutes" | "hours" | "days"; value: number }
     | { type: "range"; start: Date; end: Date };
@@ -57,7 +57,9 @@ export const cloudLogFetcher = (
         );
       break;
 
-    // logQuery.push(`resource.labels.function_name="R-githubStars"`);
+    case "functions":
+      logQuery.push(`resource.labels.function_name = "R-${tablePath}"`);
+      break;
 
     default:
       break;
