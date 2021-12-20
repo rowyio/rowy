@@ -10,6 +10,7 @@ import {
   Typography,
   TextField,
   InputAdornment,
+  Button,
 } from "@mui/material";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import LogsIcon from "@src/assets/icons/CloudLogs";
@@ -277,7 +278,30 @@ export default function CloudLogsModal(props: IModalProps) {
       {cloudLogFilters.type === "build" ? (
         <BuildLogs />
       ) : Array.isArray(data) && data.length > 0 ? (
-        <CloudLogList items={data} sx={{ mx: -1.5, mt: 1.5 }} />
+        <>
+          <CloudLogList items={data} sx={{ mx: -1.5, mt: 1.5 }} />
+          {cloudLogFilters.timeRange.type !== "range" && (
+            <Button
+              style={{
+                marginLeft: "auto",
+                marginRight: "auto",
+                display: "flex",
+              }}
+              onClick={() =>
+                setCloudLogFilters((c) => ({
+                  ...c,
+                  timeRange: {
+                    ...c.timeRange,
+                    value: (c.timeRange as any).value * 2,
+                  },
+                }))
+              }
+            >
+              Load more (last {cloudLogFilters.timeRange.value * 2}{" "}
+              {cloudLogFilters.timeRange.type})
+            </Button>
+          )}
+        </>
       ) : isValidating ? (
         <EmptyState
           Icon={LogsIcon}
