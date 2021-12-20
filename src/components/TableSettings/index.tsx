@@ -194,7 +194,8 @@ export default function TableSettings({
                 content: (
                   <>
                     <DialogContentText paragraph>
-                      Set who can view and edit this table
+                      Set who can view and edit this table. Only ADMIN users can
+                      edit table settings or add, edit, and delete columns.
                     </DialogContentText>
                     <FormFields
                       {...formFieldsProps}

@@ -211,7 +211,7 @@ export const tableSettings = (
       step: "accessControls",
       type: FieldType.checkbox,
       name: "readOnly",
-      label: "Read-only table",
+      label: "Read-only for non-ADMIN users",
       assistiveText:
         "Disable all editing functionality. Locks all columns and disables adding and deleting rows and columns.",
       defaultValue: false,

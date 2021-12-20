@@ -29,6 +29,7 @@ import CheckIcon from "@mui/icons-material/CheckCircle";
 import ImportCsvWizard, {
   IImportCsvWizardProps,
 } from "@src/components/Wizards/ImportCsvWizard";
+import { useAppContext } from "@src/contexts/AppContext";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 
 const useStyles = makeStyles((theme) =>
@@ -86,6 +87,7 @@ export interface IImportCsvProps {
 
 export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
   const classes = useStyles();
+  const { userClaims } = useAppContext();
   const { table } = useProjectContext();
 
   const [open, setOpen] = useState<HTMLButtonElement | null>(null);
@@ -159,10 +161,7 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
 
   const [openWizard, setOpenWizard] = useState(false);
 
-  if (table?.readOnly)
-    return (
-      <TableHeaderButton title="Import CSV" icon={<ImportIcon />} disabled />
-    );
+  if (table?.readOnly && !userClaims?.roles.includes("ADMIN")) return null;
 
   return (
     <>

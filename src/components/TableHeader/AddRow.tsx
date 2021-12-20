@@ -8,11 +8,12 @@ import {
   Select,
   MenuItem,
   ListItemText,
-  Tooltip,
+  Box,
 } from "@mui/material";
 import AddRowIcon from "@src/assets/icons/AddRow";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
+import { useAppContext } from "@src/contexts/AppContext";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import { isCollectionGroup } from "@src/utils/fns";
 import { db } from "@src/firebase";
@@ -20,6 +21,7 @@ import { db } from "@src/firebase";
 const useIdTypeState = createPersistedState("__ROWY__ADD_ROW_ID_TYPE");
 
 export default function AddRow() {
+  const { userClaims } = useAppContext();
   const { addRow, table, tableState } = useProjectContext();
 
   const anchorEl = useRef<HTMLDivElement>(null);
@@ -39,36 +41,8 @@ export default function AddRow() {
     }
   };
 
-  if (table?.readOnly)
-    return (
-      <Tooltip title="Table is read-only">
-        <div>
-          <ButtonGroup
-            variant="contained"
-            color="primary"
-            aria-label="Split button"
-            disabled
-          >
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<AddRowIcon />}
-            >
-              Add row
-            </Button>
-
-            <Button
-              variant="contained"
-              color="primary"
-              aria-label="Select row add position"
-              style={{ padding: 0 }}
-            >
-              <ArrowDropDownIcon />
-            </Button>
-          </ButtonGroup>
-        </div>
-      </Tooltip>
-    );
+  if (table?.readOnly && !userClaims?.roles.includes("ADMIN"))
+    return <Box sx={{ mr: -2 }} />;
 
   return (
     <>

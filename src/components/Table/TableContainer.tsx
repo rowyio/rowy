@@ -104,11 +104,42 @@ export const TableContainer = styled("div", {
 
   ".rdg-row, .rdg-header-row": {
     marginLeft: `max(env(safe-area-inset-left), ${theme.spacing(2)})`,
-    marginRight: `env(safe-area-inset-right)`,
+    marginRight: `max(env(safe-area-inset-right), ${theme.spacing(8)})`,
+    display: "inline-grid", // Fix Safari not showing margin-right
   },
 
   ".rdg-header-row .rdg-cell:first-child": {
     borderTopLeftRadius: theme.shape.borderRadius,
+  },
+  ".rdg-header-row .rdg-cell:last-child": {
+    borderTopRightRadius: theme.shape.borderRadius,
+  },
+
+  ".rdg-header-row .rdg-cell.final-column-header": {
+    border: "none",
+    padding: theme.spacing(0, 0.75),
+    borderBottomRightRadius: theme.shape.borderRadius,
+
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+
+    position: "relative",
+    "&::before": {
+      content: "''",
+      display: "block",
+      width: 88,
+      height: "100%",
+
+      position: "absolute",
+      top: 0,
+      left: 0,
+
+      border: "1px solid var(--border-color)",
+      borderLeftWidth: 0,
+      borderTopRightRadius: theme.shape.borderRadius,
+      borderBottomRightRadius: theme.shape.borderRadius,
+    },
   },
 
   ".rdg-row .rdg-cell:first-child, .rdg-header-row .rdg-cell:first-child": {

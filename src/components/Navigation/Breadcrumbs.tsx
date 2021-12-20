@@ -17,11 +17,13 @@ import InfoIcon from "@mui/icons-material/InfoOutlined";
 import CloseIcon from "@mui/icons-material/Close";
 import ReadOnlyIcon from "@mui/icons-material/EditOffOutlined";
 
+import { useAppContext } from "@src/contexts/AppContext";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import useRouter from "@src/hooks/useRouter";
 import routes from "@src/constants/routes";
 
 export default function Breadcrumbs({ sx = [], ...props }: BreadcrumbsProps) {
+  const { userClaims } = useAppContext();
   const { tables, table, tableState } = useProjectContext();
   const id = tableState?.config.id || "";
   const collection = id || tableState?.tablePath || "";
@@ -92,7 +94,13 @@ export default function Breadcrumbs({ sx = [], ...props }: BreadcrumbsProps) {
                 {getLabel(crumb) || crumb.replace(/([A-Z])/g, " $1")}
               </Typography>
               {crumb === table?.id && table?.readOnly && (
-                <Tooltip title="Table is read-only">
+                <Tooltip
+                  title={
+                    userClaims?.roles.includes("ADMIN")
+                      ? "Table is read-only for non-ADMIN users"
+                      : "Table is read-only"
+                  }
+                >
                   <ReadOnlyIcon fontSize="small" sx={{ ml: 0.5 }} />
                 </Tooltip>
               )}

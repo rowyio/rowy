@@ -76,8 +76,7 @@ export interface IMenuModalProps {
 
 export default function ColumnMenu() {
   const [modal, setModal] = useState(INITIAL_MODAL);
-  const { table, tableState, tableActions, columnMenuRef } =
-    useProjectContext();
+  const { tableState, tableActions, columnMenuRef } = useProjectContext();
   const { requestConfirmation } = useConfirmation();
 
   const [selectedColumnHeader, setSelectedColumnHeader] = useState<any>(null);
@@ -144,26 +143,17 @@ export default function ColumnMenu() {
   };
   const menuItems = [
     { type: "subheader" },
-    table?.readOnly
-      ? {
-          label: "Locked – read-only table",
-          activeLabel: "Locked – read-only table",
-          icon: <LockIcon />,
-          activeIcon: <LockIcon />,
-          active: true,
-          disabled: true,
-        }
-      : {
-          label: "Lock",
-          activeLabel: "Unlock",
-          icon: <LockOpenIcon />,
-          activeIcon: <LockIcon />,
-          onClick: () => {
-            actions.update(column.key, { editable: !column.editable });
-            handleClose();
-          },
-          active: !column.editable,
-        },
+    {
+      label: "Lock",
+      activeLabel: "Unlock",
+      icon: <LockOpenIcon />,
+      activeIcon: <LockIcon />,
+      onClick: () => {
+        actions.update(column.key, { editable: !column.editable });
+        handleClose();
+      },
+      active: !column.editable,
+    },
     {
       label: "Freeze",
       activeLabel: "Unfreeze",

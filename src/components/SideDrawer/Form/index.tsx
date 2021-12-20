@@ -26,8 +26,8 @@ export interface IFormProps {
 }
 
 export default function Form({ values }: IFormProps) {
-  const { tableState, sideDrawerRef } = useProjectContext();
-  const { userDoc } = useAppContext();
+  const { userDoc, userClaims } = useAppContext();
+  const { table, tableState, sideDrawerRef } = useProjectContext();
 
   const userDocHiddenFields =
     userDoc.state.doc?.tables?.[`${tableState!.config.id}`]?.hiddenFields ?? [];
@@ -107,19 +107,24 @@ export default function Form({ values }: IFormProps) {
             return null;
           }
 
+          // Disable field if locked, or if table is read-only
+          const disabled =
+            field.editable === false ||
+            Boolean(table?.readOnly && !userClaims?.roles.includes("ADMIN"));
+
           return (
             <FieldWrapper
               key={field.key ?? i}
               type={field.type}
               name={field.key}
               label={field.name}
-              disabled={field.editable === false}
+              disabled={disabled}
             >
               {createElement(fieldComponent, {
                 column: field,
                 control,
                 docRef,
-                disabled: field.editable === false,
+                disabled,
                 useFormMethods: methods,
               })}
             </FieldWrapper>

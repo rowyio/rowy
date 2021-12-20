@@ -12,19 +12,17 @@ export const TableHeaderButton = forwardRef(function TableHeaderButton_(
 ) {
   return (
     <Tooltip title={title}>
-      <div>
-        <Button
-          variant="outlined"
-          color="secondary"
-          size="small"
-          style={{ minWidth: 40, height: 32, padding: 0 }}
-          aria-label={title}
-          {...props}
-          ref={ref}
-        >
-          {icon}
-        </Button>
-      </div>
+      <Button
+        variant="outlined"
+        color="secondary"
+        size="small"
+        style={{ minWidth: 40, height: 32, padding: 0 }}
+        aria-label={title}
+        {...props}
+        ref={ref}
+      >
+        {icon}
+      </Button>
     </Tooltip>
   );
 });
