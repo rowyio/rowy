@@ -89,13 +89,11 @@ interface IContainer {
 function Container({ arr, columns, setArr }: IContainer) {
   function arrangeRow(sourceIndex: number, targetIndex: number) {
     if (arr.length <= 1) return;
-    const newArr: any = Array.from(
-      arr.map((row, index) => {
-        if (index === sourceIndex) return { ...arr[targetIndex], index };
-        if (index === targetIndex) return { ...arr[sourceIndex], index };
-        return row;
-      })
-    );
+    const newArr: any = arr.map((row, index) => {
+      if (index === sourceIndex) return { ...arr[targetIndex], index };
+      if (index === targetIndex) return { ...arr[sourceIndex], index };
+      return row;
+    });
     setArr(newArr);
   }
 
