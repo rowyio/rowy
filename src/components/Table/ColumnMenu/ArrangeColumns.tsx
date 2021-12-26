@@ -11,13 +11,18 @@ import Modal from "@src/components/Modal";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import useCombinedRefs from "@src/hooks/useCombinedRefs";
 
-type DataGridColumn = Column<any> & {
+export type DataGridColumn = Column<any> & {
   [key: string]: any;
 };
+
+export type DataGridRow = {
+  [key: string]: any;
+};
+
 export default function ArrangeColumn({ open, handleClose }: IMenuModalProps) {
   const { tableState, tableActions } = useProjectContext();
-  const [arr, setArr] = useState<DataGridColumn[]>([]);
-  const columns = [
+  const [rows, setRows] = useState<DataGridRow[]>([]);
+  const columns: DataGridColumn[] = [
     {
       key: "index",
       name: "Order",
@@ -40,16 +45,15 @@ export default function ArrangeColumn({ open, handleClose }: IMenuModalProps) {
     },
   ];
 
-  const handleArrangeColumn = () => tableActions?.column.arrange(arr);
+  const handleReArrange = () => tableActions?.column.arrange(rows);
 
+  /**
+   *  Note: Covert Columns into row format for re arrangement
+   */
   useEffect(() => {
-    if (!tableState?.loadingColumns && tableState?.columns) {
-      const _rows: DataGridColumn[] = _orderBy(
-        Object.values(tableState?.columns!),
-        "index"
-      );
-      setArr(_rows);
-    }
+    if (tableState?.loadingColumns && !tableState?.columns) return;
+    const _rows: any = _orderBy(Object.values(tableState?.columns!), "index");
+    setRows(_rows);
   }, [tableState?.loadingColumns, tableState?.columns]);
 
   if (!open) return null;
@@ -60,16 +64,16 @@ export default function ArrangeColumn({ open, handleClose }: IMenuModalProps) {
       maxWidth="xs"
       children={
         <DndProvider backend={HTML5Backend}>
-          <Container arr={arr} setArr={setArr} columns={columns} />
+          <Container rows={rows} setRows={setRows} columns={columns} />
         </DndProvider>
       }
       actions={{
         primary: {
           onClick: () => {
-            handleArrangeColumn();
+            handleReArrange();
             handleClose();
           },
-          children: "Arrange",
+          children: "Update",
         },
         secondary: {
           onClick: handleClose,
@@ -81,23 +85,23 @@ export default function ArrangeColumn({ open, handleClose }: IMenuModalProps) {
 }
 
 interface IContainer {
-  arr: DataGridColumn[];
   columns: DataGridColumn[];
-  setArr: React.Dispatch<React.SetStateAction<DataGridColumn[]>>;
+  rows: DataGridRow[];
+  setRows: React.Dispatch<React.SetStateAction<DataGridRow[]>>;
 }
 
-function Container({ arr, columns, setArr }: IContainer) {
+function Container({ columns, rows, setRows }: IContainer) {
   function arrangeRow(sourceIndex: number, targetIndex: number) {
-    if (arr.length <= 1) return;
-    const newArr: any = arr.map((row, index) => {
-      if (index === sourceIndex) return { ...arr[targetIndex], index };
-      if (index === targetIndex) return { ...arr[sourceIndex], index };
+    if (rows.length <= 1) return;
+    const newArr: any = rows.map((row, index) => {
+      if (index === sourceIndex) return { ...rows[targetIndex], index };
+      if (index === targetIndex) return { ...rows[sourceIndex], index };
       return row;
     });
-    setArr(newArr);
+    setRows(newArr);
   }
 
-  function MyRowRenderer(props: RowRendererProps<typeof Row>) {
+  function MyRowRenderer(props: RowRendererProps<DataGridRow>) {
     const [{ isDragging }, drag] = useDrag({
       item: { type: "ROW_DRAG", cellIndex: props.rowIdx },
       collect: (monitor) => ({
@@ -119,12 +123,5 @@ function Container({ arr, columns, setArr }: IContainer) {
     return <Row ref={ref} {...props} />;
   }
 
-  return (
-    <DataGrid
-      className="rdg-light"
-      rows={arr}
-      columns={columns}
-      rowRenderer={MyRowRenderer}
-    />
-  );
+  return <DataGrid rows={rows} columns={columns} rowRenderer={MyRowRenderer} />;
 }

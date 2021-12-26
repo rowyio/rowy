@@ -223,7 +223,7 @@ export default function ColumnMenu() {
       label: "Arrange Columns",
       icon: <ArrangeColumnsIcon />,
       onClick: () => {
-        setModal({ type: ModalStates.arrangeCol, data: {} });
+        setModal({ type: ModalStates.arrangeColumns, data: {} });
       },
     },
     {
