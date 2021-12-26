@@ -40,10 +40,6 @@ export default function ResizeColumn({
     else setError(true);
   }, [newWidth]);
 
-  useEffect(() => {
-    console.log("data", data.key, tableState?.columns);
-  }, [data, tableState?.columns]);
-
   if (!open) return null;
   return (
     <Modal
