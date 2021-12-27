@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import _camelCase from "lodash/camelCase";
 
+import _orderBy from "lodash/orderBy";
 import _sortBy from "lodash/sortBy";
 
 import useDoc, { DocActions } from "../useDoc";
@@ -88,6 +89,8 @@ const useTableConfig = (tablePath?: string) => {
     column.width = width;
     let updatedColumns = columns;
     updatedColumns[column.key] = column;
+
+    console.log("what is updatedColumns resiz3", updatedColumns);
     documentDispatch({
       action: DocActions.update,
       data: { columns: updatedColumns },
@@ -106,6 +109,32 @@ const useTableConfig = (tablePath?: string) => {
       ...columns,
       [key]: { ...columns[key], ...updates },
     };
+
+    documentDispatch({
+      action: DocActions.update,
+      data: { columns: updatedColumns },
+    });
+  };
+
+  /** insert column by index
+   * @param col     properties of new column
+   * @param source  source object { index: selected index, position: left | right }
+   */
+
+  const insert = (col, source) => {
+    const { columns } = tableConfigState;
+    const position = source.position === "right" ? 1 : 0;
+    const insertPos = source.index + position;
+    const targetPos = insertPos === -1 ? 0 : insertPos;
+    const orderedCol = _orderBy(Object.values(columns), "index");
+    orderedCol.splice(targetPos, 0, col);
+    const updatedColumns = orderedCol.reduce(
+      (acc: any, col: any, indx: number) => {
+        acc[col.key] = { ...col, index: indx };
+        return acc;
+      },
+      {}
+    );
 
     documentDispatch({
       action: DocActions.update,
@@ -157,6 +186,7 @@ const useTableConfig = (tablePath?: string) => {
     });
   };
   const actions = {
+    insert,
     updateColumn,
     updateConfig,
     addColumn,

@@ -27,9 +27,8 @@ export default function NewColumn({
   data,
   openSettings,
   handleClose,
-  handleSave,
 }: INewColumnProps) {
-  const { table, settingsActions } = useProjectContext();
+  const { table, settingsActions, tableActions } = useProjectContext();
 
   const [columnLabel, setColumnLabel] = useState("");
   const [fieldKey, setFieldKey] = useState("");
@@ -139,14 +138,19 @@ export default function NewColumn({
       actions={{
         primary: {
           onClick: () => {
-            handleSave(fieldKey, {
-              type,
-              name: columnLabel,
-              fieldName: fieldKey,
-              key: fieldKey,
-              config: {},
-              ...data.initializeColumn,
-            });
+            tableActions?.column.insert(
+              {
+                type,
+                name: columnLabel,
+                fieldName: fieldKey,
+                key: fieldKey,
+                config: {},
+              },
+              {
+                position: data.insertPos,
+                index: data.sourceIndex,
+              }
+            );
             if (requireConfiguration) {
               openSettings({
                 type,
