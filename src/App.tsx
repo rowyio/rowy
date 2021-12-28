@@ -19,6 +19,7 @@ import { AppProvider } from "@src/contexts/AppContext";
 import { ProjectContextProvider } from "@src/contexts/ProjectContext";
 import { SnackbarProvider } from "@src/contexts/SnackbarContext";
 import { SnackLogProvider } from "@src/contexts/SnackLogContext";
+import HotKey from "@src/HotKey";
 import routes from "@src/constants/routes";
 
 import AuthPage from "@src/pages/Auth";
@@ -124,82 +125,84 @@ export default function App() {
                             ]}
                             render={() => (
                               <ProjectContextProvider>
-                                <Switch>
-                                  <Route
-                                    exact
-                                    path={routes.impersonatorAuth}
-                                    render={() => <ImpersonatorAuthPage />}
-                                  />
-                                  <Route
-                                    exact
-                                    path={routes.rowyRunTest}
-                                    render={() => <RowyRunTestPage />}
-                                  />
-                                  <PrivateRoute
-                                    exact
-                                    path={routes.home}
-                                    render={() => (
-                                      <Navigation
-                                        title="Home"
-                                        titleComponent={(open, pinned) =>
-                                          !(open && pinned) && (
-                                            <Logo
-                                              style={{
-                                                display: "block",
-                                                margin: "0 auto",
-                                              }}
-                                            />
-                                          )
-                                        }
-                                      >
-                                        <HomePage />
-                                      </Navigation>
-                                    )}
-                                  />
-                                  <PrivateRoute
-                                    path={routes.tableWithId}
-                                    render={() => <TablePage />}
-                                  />
-                                  <PrivateRoute
-                                    path={routes.tableGroupWithId}
-                                    render={() => <TablePage />}
-                                  />
+                                <HotKey>
+                                  <Switch>
+                                    <Route
+                                      exact
+                                      path={routes.impersonatorAuth}
+                                      render={() => <ImpersonatorAuthPage />}
+                                    />
+                                    <Route
+                                      exact
+                                      path={routes.rowyRunTest}
+                                      render={() => <RowyRunTestPage />}
+                                    />
+                                    <PrivateRoute
+                                      exact
+                                      path={routes.home}
+                                      render={() => (
+                                        <Navigation
+                                          title="Home"
+                                          titleComponent={(open, pinned) =>
+                                            !(open && pinned) && (
+                                              <Logo
+                                                style={{
+                                                  display: "block",
+                                                  margin: "0 auto",
+                                                }}
+                                              />
+                                            )
+                                          }
+                                        >
+                                          <HomePage />
+                                        </Navigation>
+                                      )}
+                                    />
+                                    <PrivateRoute
+                                      path={routes.tableWithId}
+                                      render={() => <TablePage />}
+                                    />
+                                    <PrivateRoute
+                                      path={routes.tableGroupWithId}
+                                      render={() => <TablePage />}
+                                    />
 
-                                  <PrivateRoute
-                                    exact
-                                    path={routes.settings}
-                                    render={() => (
-                                      <Redirect to={routes.userSettings} />
-                                    )}
-                                  />
-                                  <PrivateRoute
-                                    exact
-                                    path={routes.projectSettings}
-                                    render={() => (
-                                      <Navigation title="Project Settings">
-                                        <ProjectSettingsPage />
-                                      </Navigation>
-                                    )}
-                                  />
-                                  <PrivateRoute
-                                    exact
-                                    path={routes.userSettings}
-                                    render={() => (
-                                      <Navigation title="Settings">
-                                        <UserSettingsPage />
-                                      </Navigation>
-                                    )}
-                                  />
-                                  <PrivateRoute
-                                    exact
-                                    path={routes.userManagement}
-                                    render={() => (
-                                      <Navigation title="User Management">
-                                        <UserManagementPage />
-                                      </Navigation>
-                                    )}
-                                  />
-                                </Switch>
+                                    <PrivateRoute
+                                      exact
+                                      path={routes.settings}
+                                      render={() => (
+                                        <Redirect to={routes.userSettings} />
+                                      )}
+                                    />
+                                    <PrivateRoute
+                                      exact
+                                      path={routes.projectSettings}
+                                      render={() => (
+                                        <Navigation title="Project Settings">
+                                          <ProjectSettingsPage />
+                                        </Navigation>
+                                      )}
+                                    />
+                                    <PrivateRoute
+                                      exact
+                                      path={routes.userSettings}
+                                      render={() => (
+                                        <Navigation title="Settings">
+                                          <UserSettingsPage />
+                                        </Navigation>
+                                      )}
+                                    />
+                                    <PrivateRoute
+                                      exact
+                                      path={routes.userManagement}
+                                      render={() => (
+                                        <Navigation title="User Management">
+                                          <UserManagementPage />
+                                        </Navigation>
+                                      )}
+                                    />
+                                  </Switch>
+                                </HotKey>
                               </ProjectContextProvider>
                             )}
                           />
