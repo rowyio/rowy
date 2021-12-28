@@ -6,7 +6,7 @@ import _sortBy from "lodash/sortBy";
 
 import useDoc, { DocActions } from "../useDoc";
 import { FieldType } from "@src/constants/fields";
-import { arrayMover, formatPath } from "../../utils/fns";
+import { formatPath } from "../../utils/fns";
 import { db, deleteField } from "../../firebase";
 
 export type ColumnConfig = {
@@ -130,17 +130,17 @@ const useTableConfig = (tablePath?: string) => {
    */
   const reorder = (draggedColumnKey: string, droppedColumnKey: string) => {
     const { columns } = tableConfigState;
-    const oldIndex = columns[draggedColumnKey].index;
-    const newIndex = columns[droppedColumnKey].index;
-    const columnsArray = _sortBy(Object.values(columns), "index");
-    arrayMover(columnsArray, oldIndex, newIndex);
-    let updatedColumns = columns;
-
-    columnsArray
-      .filter((c) => c) // arrayMover has a bug creating undefined items
-      .forEach((column: any, index) => {
-        updatedColumns[column.key] = { ...column, index };
-      });
+    const updatedColumns = _sortBy(Object.values(columns), "index").reduce(
+      (acc: any, curr: any, index: number) => {
+        if (curr.key === droppedColumnKey)
+          acc[draggedColumnKey] = { ...columns[draggedColumnKey], index };
+        else if (curr.key === draggedColumnKey)
+          acc[droppedColumnKey] = { ...columns[droppedColumnKey], index };
+        else acc[curr.key] = { ...columns[curr.key], index };
+        return acc;
+      },
+      {}
+    );
     documentDispatch({
       action: DocActions.update,
       data: { columns: updatedColumns },
