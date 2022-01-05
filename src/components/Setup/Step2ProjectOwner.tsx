@@ -33,7 +33,7 @@ export default function Step2ProjectOwner({
   const [isDomainAuthorized, setIsDomainAuthorized] = useState(
     !!currentUser || completion.projectOwner
   );
-  const isSignedIn = currentUser?.email === email;
+  const isSignedIn = currentUser?.email?.toLowerCase() === email.toLowerCase();
   const [hasRoles, setHasRoles] = useState<boolean | "LOADING" | string>(
     completion.projectOwner
   );
