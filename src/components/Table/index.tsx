@@ -17,6 +17,7 @@ import DataGrid, {
 import Loading from "@src/components/Loading";
 import TableContainer, { OUT_OF_ORDER_MARGIN } from "./TableContainer";
 import TableHeader from "../TableHeader";
+import CellMenu from "./CellMenu";
 import ColumnHeader from "./ColumnHeader";
 import ColumnMenu from "./ColumnMenu";
 import FinalColumnHeader from "./FinalColumnHeader";
@@ -251,8 +252,8 @@ export default function Table() {
           <Loading message="Fetching columns" />
         )}
       </TableContainer>
-
       <ColumnMenu />
+      <CellMenu />
       <BulkActions
         selectedRows={selectedRows}
         columns={columns}
