@@ -2,6 +2,7 @@ import { Fragment } from "react";
 import { Row, RowRendererProps } from "react-data-grid";
 
 import OutOfOrderIndicator from "./OutOfOrderIndicator";
+import RowContextMenu from "./RowContextMenu";
 
 export default function TableRow(props: RowRendererProps<any>) {
   if (props.row._rowy_outOfOrder)
@@ -12,5 +13,9 @@ export default function TableRow(props: RowRendererProps<any>) {
       </Fragment>
     );
 
-  return <Row {...props} />;
+  return (
+    <RowContextMenu {...props}>
+      <Row {...props} />
+    </RowContextMenu>
+  );
 }
