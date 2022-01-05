@@ -31,6 +31,7 @@ import { formatSubTableName } from "@src/utils/fns";
 import { useAppContext } from "@src/contexts/AppContext";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import useWindowSize from "@src/hooks/useWindowSize";
+import CellMenu from "./CellMenu";
 
 export type TableColumn = Column<any> & {
   isNew?: boolean;
@@ -43,8 +44,14 @@ const rowClass = (row: any) => (row._rowy_outOfOrder ? "out-of-order" : "");
 //const SelectColumn = { ..._SelectColumn, width: 42, maxWidth: 42 };
 
 export default function Table() {
-  const { tableState, tableActions, dataGridRef, sideDrawerRef, updateCell } =
-    useProjectContext();
+  const {
+    tableState,
+    tableActions,
+    dataGridRef,
+    cellMenuRef,
+    sideDrawerRef,
+    updateCell,
+  } = useProjectContext();
   const { userDoc } = useAppContext();
 
   const userDocHiddenFields =
@@ -251,8 +258,8 @@ export default function Table() {
           <Loading message="Fetching columns" />
         )}
       </TableContainer>
-
       <ColumnMenu />
+      <CellMenu />
       <BulkActions
         selectedRows={selectedRows}
         columns={columns}

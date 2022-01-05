@@ -72,9 +72,9 @@ export interface IMenuModalProps {
 
 export default function ColumnMenu() {
   const [modal, setModal] = useState(INITIAL_MODAL);
-  const { tableState, tableActions, columnMenuRef } = useProjectContext();
+  const { tableState, tableActions, cellMenuRef, columnMenuRef } =
+    useProjectContext();
   const { requestConfirmation } = useConfirmation();
-
   const [selectedColumnHeader, setSelectedColumnHeader] = useState<any>(null);
   if (columnMenuRef)
     columnMenuRef.current = {
@@ -83,7 +83,6 @@ export default function ColumnMenu() {
     } as any;
 
   const { column, anchorEl } = (selectedColumnHeader ?? {}) as any;
-
   useEffect(() => {
     if (column && column.type === FieldType.last) {
       setModal({
