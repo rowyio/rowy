@@ -2,7 +2,7 @@ import useSWR from "swr";
 import _find from "lodash/find";
 import _sortBy from "lodash/sortBy";
 
-import { Stack, Button, DialogContentText } from "@mui/material";
+import { DialogContentText, Stack } from "@mui/material";
 
 import { FormDialog, FormFields } from "@rowy/form-builder";
 import { tableSettings } from "./form";
@@ -10,17 +10,10 @@ import CamelCaseId from "./CamelCaseId";
 import SuggestedRules from "./SuggestedRules";
 import SteppedAccordion from "@src/components/SteppedAccordion";
 import Confirmation from "@src/components/Confirmation";
+import DeleteMenu from "./DeleteMenu";
 
 import { useProjectContext, Table } from "@src/contexts/ProjectContext";
 import useRouter from "@src/hooks/useRouter";
-import { routes } from "@src/constants/routes";
-import { db } from "@src/firebase";
-import { name } from "@root/package.json";
-import {
-  SETTINGS,
-  TABLE_SCHEMAS,
-  TABLE_GROUP_SCHEMAS,
-} from "@src/config/dbPaths";
 import { runRoutes } from "@src/constants/runRoutes";
 import { analytics } from "@src/analytics";
 import { CONFIG } from "config/dbPaths";
@@ -87,31 +80,6 @@ export default function TableSettings({
     clearDialog();
   };
 
-  const handleResetStructure = async () => {
-    const schemaDocRef = db.doc(`${TABLE_SCHEMAS}/${data!.id}`);
-    await schemaDocRef.update({ columns: {} });
-    clearDialog();
-  };
-
-  const handleDelete = async () => {
-    const tablesDocRef = db.doc(SETTINGS);
-    const tableData = (await tablesDocRef.get()).data();
-    const updatedTables = tableData?.tables.filter(
-      (table) => table.id !== data?.id || table.tableType !== data?.tableType
-    );
-    await tablesDocRef.update({ tables: updatedTables });
-    await db
-      .collection(
-        data?.tableType === "primaryCollection"
-          ? TABLE_SCHEMAS
-          : TABLE_GROUP_SCHEMAS
-      )
-      .doc(data?.id)
-      .delete();
-    clearDialog();
-    router.history.push(routes.home);
-  };
-
   const fields = tableSettings(
     mode,
     roles,
@@ -150,99 +118,122 @@ export default function TableSettings({
       }
       fields={fields}
       customBody={(formFieldsProps) => (
-        <SteppedAccordion
-          disableUnmount
-          steps={
-            [
-              {
-                id: "collection",
-                title: "Collection",
-                content: (
-                  <>
-                    <DialogContentText paragraph>
-                      Connect this table to a new or existing Firestore
-                      collection
-                    </DialogContentText>
-                    <FormFields
-                      {...formFieldsProps}
-                      fields={fields.filter((f) => f.step === "collection")}
-                    />
-                  </>
-                ),
-                optional: false,
-              },
-              {
-                id: "display",
-                title: "Display",
-                content: (
-                  <>
-                    <DialogContentText paragraph>
-                      Set how this table is displayed to users
-                    </DialogContentText>
-                    <FormFields
-                      {...formFieldsProps}
-                      fields={fields.filter((f) => f.step === "display")}
-                      customComponents={customComponents}
-                    />
-                  </>
-                ),
-                optional: false,
-              },
-              {
-                id: "accessControls",
-                title: "Access controls",
-                content: (
-                  <>
-                    <DialogContentText paragraph>
-                      Set who can view and edit this table. Only ADMIN users can
-                      edit table settings or add, edit, and delete columns.
-                    </DialogContentText>
-                    <FormFields
-                      {...formFieldsProps}
-                      fields={fields.filter((f) => f.step === "accessControls")}
-                      customComponents={customComponents}
-                    />
-                  </>
-                ),
-                optional: false,
-              },
-              {
-                id: "auditing",
-                title: "Auditing",
-                content: (
-                  <>
-                    <DialogContentText paragraph>
-                      Track when users create or update rows
-                    </DialogContentText>
-                    <FormFields
-                      {...formFieldsProps}
-                      fields={fields.filter((f) => f.step === "auditing")}
-                    />
-                  </>
-                ),
-                optional: true,
-              },
-              mode === TableSettingsDialogModes.create
-                ? {
-                    id: "columns",
-                    title: "Columns",
-                    content: (
-                      <>
-                        <DialogContentText paragraph>
-                          Initialize table with columns
-                        </DialogContentText>
-                        <FormFields
-                          {...formFieldsProps}
-                          fields={fields.filter((f) => f.step === "columns")}
-                        />
-                      </>
-                    ),
-                    optional: true,
-                  }
-                : null,
-            ].filter(Boolean) as any
-          }
-        />
+        <>
+          <Stack
+            direction="row"
+            spacing={1}
+            sx={{
+              display: "flex",
+              height: "var(--dialog-title-height)",
+              alignItems: "center",
+
+              position: "absolute",
+              top: 0,
+              right: 40 + 12 + 8,
+            }}
+          >
+            {mode === TableSettingsDialogModes.update && (
+              <DeleteMenu clearDialog={clearDialog} data={data} />
+            )}
+          </Stack>
+
+          <SteppedAccordion
+            disableUnmount
+            steps={
+              [
+                {
+                  id: "collection",
+                  title: "Collection",
+                  content: (
+                    <>
+                      <DialogContentText paragraph>
+                        Connect this table to a new or existing Firestore
+                        collection
+                      </DialogContentText>
+                      <FormFields
+                        {...formFieldsProps}
+                        fields={fields.filter((f) => f.step === "collection")}
+                      />
+                    </>
+                  ),
+                  optional: false,
+                },
+                {
+                  id: "display",
+                  title: "Display",
+                  content: (
+                    <>
+                      <DialogContentText paragraph>
+                        Set how this table is displayed to users
+                      </DialogContentText>
+                      <FormFields
+                        {...formFieldsProps}
+                        fields={fields.filter((f) => f.step === "display")}
+                        customComponents={customComponents}
+                      />
+                    </>
+                  ),
+                  optional: false,
+                },
+                {
+                  id: "accessControls",
+                  title: "Access controls",
+                  content: (
+                    <>
+                      <DialogContentText paragraph>
+                        Set who can view and edit this table. Only ADMIN users
+                        can edit table settings or add, edit, and delete
+                        columns.
+                      </DialogContentText>
+                      <FormFields
+                        {...formFieldsProps}
+                        fields={fields.filter(
+                          (f) => f.step === "accessControls"
+                        )}
+                        customComponents={customComponents}
+                      />
+                    </>
+                  ),
+                  optional: false,
+                },
+                {
+                  id: "auditing",
+                  title: "Auditing",
+                  content: (
+                    <>
+                      <DialogContentText paragraph>
+                        Track when users create or update rows
+                      </DialogContentText>
+                      <FormFields
+                        {...formFieldsProps}
+                        fields={fields.filter((f) => f.step === "auditing")}
+                      />
+                    </>
+                  ),
+                  optional: true,
+                },
+                mode === TableSettingsDialogModes.create
+                  ? {
+                      id: "columns",
+                      title: "Columns",
+                      content: (
+                        <>
+                          <DialogContentText paragraph>
+                            Initialize table with columns
+                          </DialogContentText>
+                          <FormFields
+                            {...formFieldsProps}
+                            fields={fields.filter((f) => f.step === "columns")}
+                          />
+                        </>
+                      ),
+                      optional: true,
+                    }
+                  : null,
+              ].filter(Boolean) as any
+            }
+          />
+        </>
       )}
       customComponents={customComponents}
       values={{ ...data }}
@@ -251,70 +242,6 @@ export default function TableSettings({
         children:
           mode === TableSettingsDialogModes.create ? "Create" : "Update",
       }}
-      formFooter={
-        mode === TableSettingsDialogModes.update ? (
-          <Stack direction="row" justifyContent="center" spacing={1}>
-            <Confirmation
-              message={{
-                title: `Reset columns of “${data?.name}”?`,
-                body: (
-                  <>
-                    <DialogContentText paragraph>
-                      This will only reset the columns of this column so you can
-                      set up the columns again.
-                    </DialogContentText>
-                    <DialogContentText>
-                      You will not lose any data in your Firestore collection{" "}
-                      <code>{data?.collection}</code>.
-                    </DialogContentText>
-                  </>
-                ),
-                confirm: "Reset",
-                color: "error",
-              }}
-              functionName="onClick"
-            >
-              <Button
-                variant="outlined"
-                color="error"
-                onClick={handleResetStructure}
-                style={{ width: 150 }}
-              >
-                Reset columns…
-              </Button>
-            </Confirmation>
-
-            <Confirmation
-              message={{
-                title: `Delete the table “${data?.name}”?`,
-                body: (
-                  <>
-                    <DialogContentText paragraph>
-                      This will only delete the {name} configuration data.
-                    </DialogContentText>
-                    <DialogContentText>
-                      You will not lose any data in your Firestore collection{" "}
-                      <code>{data?.collection}</code>.
-                    </DialogContentText>
-                  </>
-                ),
-                confirm: "Delete",
-                color: "error",
-              }}
-              functionName="onClick"
-            >
-              <Button
-                variant="outlined"
-                color="error"
-                onClick={handleDelete}
-                style={{ width: 150 }}
-              >
-                Delete table…
-              </Button>
-            </Confirmation>
-          </Stack>
-        ) : null
-      }
     />
   );
 }
