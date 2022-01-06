@@ -391,7 +391,6 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
   const cellMenuRef = useRef<CellMenuRef>();
   const importWizardRef = useRef<ImportWizardRef>();
 
-  console.log(cellMenuRef);
   return (
     <ProjectContext.Provider
       value={{
