@@ -34,8 +34,8 @@ export default function SideDrawer() {
 
   const [cell, setCell] = useState<SelectedCell>(null);
   const [open, setOpen] = useState(false);
-  if (sideDrawerRef) sideDrawerRef.current = { cell, setCell, open, setOpen };
 
+  if (sideDrawerRef) sideDrawerRef.current = { cell, setCell, open, setOpen };
   const handleNavigate = (direction: "up" | "down") => () => {
     if (!tableState?.rows) return;
 

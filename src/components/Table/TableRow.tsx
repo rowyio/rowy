@@ -1,5 +1,5 @@
 import { useProjectContext } from "@src/contexts/ProjectContext";
-import { Fragment, useEffect } from "react";
+import { Fragment } from "react";
 import { Row, RowRendererProps } from "react-data-grid";
 
 import OutOfOrderIndicator from "./OutOfOrderIndicator";

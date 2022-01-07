@@ -44,8 +44,14 @@ const rowClass = (row: any) => (row._rowy_outOfOrder ? "out-of-order" : "");
 //const SelectColumn = { ..._SelectColumn, width: 42, maxWidth: 42 };
 
 export default function Table() {
-  const { tableState, tableActions, dataGridRef, sideDrawerRef, updateCell } =
-    useProjectContext();
+  const {
+    tableState,
+    tableActions,
+    dataGridRef,
+    cellMenuRef,
+    sideDrawerRef,
+    updateCell,
+  } = useProjectContext();
   const { userDoc } = useAppContext();
 
   const userDocHiddenFields =
@@ -245,6 +251,12 @@ export default function Table() {
                     column: column.key,
                   });
                 }
+              }}
+              onSelectedCellChange={({ rowIdx, idx }) => {
+                cellMenuRef?.current?.setSelectedCell({
+                  rowIndex: rowIdx,
+                  colIndex: idx,
+                });
               }}
             />
           </DndProvider>
