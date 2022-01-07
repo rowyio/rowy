@@ -130,17 +130,23 @@ const useTableConfig = (tablePath?: string) => {
    */
   const reorder = (draggedColumnKey: string, droppedColumnKey: string) => {
     const { columns } = tableConfigState;
-    const updatedColumns = _sortBy(Object.values(columns), "index").reduce(
-      (acc: any, curr: any, index: number) => {
-        if (curr.key === droppedColumnKey)
-          acc[draggedColumnKey] = { ...columns[draggedColumnKey], index };
-        else if (curr.key === draggedColumnKey)
-          acc[droppedColumnKey] = { ...columns[droppedColumnKey], index };
-        else acc[curr.key] = { ...columns[curr.key], index };
+    const oldIndex = columns[draggedColumnKey].index;
+    const newIndex = columns[droppedColumnKey].index;
+
+    //sort columns by index, remove drag col, insert it in drop position
+    const sortedColumns = _sortBy(Object.values(columns), "index");
+    const removeCol = sortedColumns.splice(oldIndex, 1);
+    sortedColumns.splice(newIndex, 0, removeCol[0]);
+
+    //itereate and update index to proper value
+    const updatedColumns = sortedColumns.reduce(
+      (acc: any, curr: any, index) => {
+        acc[curr.key] = { ...curr, index };
         return acc;
       },
       {}
     );
+
     documentDispatch({
       action: DocActions.update,
       data: { columns: updatedColumns },
