@@ -7,6 +7,8 @@ import {
   StepProps,
   StepButton,
   StepButtonProps,
+  StepLabel,
+  StepLabelProps,
   Typography,
   StepContent,
   StepContentProps,
@@ -17,11 +19,14 @@ export interface ISteppedAccordionProps extends Partial<StepperProps> {
   steps: {
     id: string;
     title: React.ReactNode;
+    subtitle?: React.ReactNode;
     optional?: boolean;
     content: React.ReactNode;
+    error?: boolean;
 
     stepProps?: Partial<StepProps>;
-    titleProps?: Partial<StepButtonProps>;
+    labelButtonProps?: Partial<StepButtonProps>;
+    labelProps?: Partial<StepLabelProps>;
     contentProps?: Partial<StepContentProps>;
   }[];
   disableUnmount?: boolean;
@@ -67,22 +72,30 @@ export default function SteppedAccordion({
         ({
           id,
           title,
+          subtitle,
           optional,
           content,
+          error,
           stepProps,
-          titleProps,
+          labelButtonProps,
+          labelProps,
           contentProps,
         }) => (
           <Step key={id} {...stepProps}>
             <StepButton
               onClick={() => setActiveStep((s) => (s === id ? "" : id))}
               optional={
-                optional && <Typography variant="caption">Optional</Typography>
+                subtitle ||
+                (optional && (
+                  <Typography variant="caption">Optional</Typography>
+                ))
               }
-              {...titleProps}
+              {...labelButtonProps}
             >
-              {title}
-              <ExpandIcon />
+              <StepLabel error={error} {...labelProps}>
+                {title}
+                <ExpandIcon />
+              </StepLabel>
             </StepButton>
 
             <StepContent

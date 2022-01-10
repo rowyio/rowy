@@ -1,6 +1,7 @@
 import useSWR from "swr";
 import _find from "lodash/find";
 import _sortBy from "lodash/sortBy";
+import _get from "lodash/get";
 import { useSnackbar } from "notistack";
 
 import { DialogContentText, Stack, Typography } from "@mui/material";
@@ -191,124 +192,173 @@ export default function TableSettings({
           : "Table settings"
       }
       fields={fields}
-      customBody={(formFieldsProps) => (
-        <>
-          <Stack
-            direction="row"
-            spacing={1}
-            sx={{
-              display: "flex",
-              height: "var(--dialog-title-height)",
-              alignItems: "center",
+      customBody={(formFieldsProps) => {
+        const { errors } = formFieldsProps.useFormMethods.formState;
+        const groupedErrors: Record<string, string> = Object.entries(
+          errors
+        ).reduce((acc, [name, err]) => {
+          const match = _find(fields, ["name", name])?.step;
+          if (!match) return acc;
+          acc[match] = err.message;
+          return acc;
+        }, {});
 
-              position: "absolute",
-              top: 0,
-              right: 40 + 12 + 8,
-            }}
-          >
-            {mode === TableSettingsDialogModes.update && (
-              <DeleteMenu clearDialog={clearDialog} data={data} />
-            )}
-          </Stack>
+        return (
+          <>
+            <Stack
+              direction="row"
+              spacing={1}
+              sx={{
+                display: "flex",
+                height: "var(--dialog-title-height)",
+                alignItems: "center",
 
-          <SteppedAccordion
-            disableUnmount
-            steps={
-              [
-                {
-                  id: "collection",
-                  title: "Collection",
-                  content: (
-                    <>
-                      <DialogContentText paragraph>
-                        Connect this table to a new or existing Firestore
-                        collection
-                      </DialogContentText>
-                      <FormFields
-                        {...formFieldsProps}
-                        fields={fields.filter((f) => f.step === "collection")}
-                      />
-                    </>
-                  ),
-                  optional: false,
-                },
-                {
-                  id: "display",
-                  title: "Display",
-                  content: (
-                    <>
-                      <DialogContentText paragraph>
-                        Set how this table is displayed to users
-                      </DialogContentText>
-                      <FormFields
-                        {...formFieldsProps}
-                        fields={fields.filter((f) => f.step === "display")}
-                        customComponents={customComponents}
-                      />
-                    </>
-                  ),
-                  optional: false,
-                },
-                {
-                  id: "accessControls",
-                  title: "Access controls",
-                  content: (
-                    <>
-                      <DialogContentText paragraph>
-                        Set who can view and edit this table. Only ADMIN users
-                        can edit table settings or add, edit, and delete
-                        columns.
-                      </DialogContentText>
-                      <FormFields
-                        {...formFieldsProps}
-                        fields={fields.filter(
-                          (f) => f.step === "accessControls"
-                        )}
-                        customComponents={customComponents}
-                      />
-                    </>
-                  ),
-                  optional: false,
-                },
-                {
-                  id: "auditing",
-                  title: "Auditing",
-                  content: (
-                    <>
-                      <DialogContentText paragraph>
-                        Track when users create or update rows
-                      </DialogContentText>
-                      <FormFields
-                        {...formFieldsProps}
-                        fields={fields.filter((f) => f.step === "auditing")}
-                      />
-                    </>
-                  ),
-                  optional: true,
-                },
-                mode === TableSettingsDialogModes.create
-                  ? {
-                      id: "columns",
-                      title: "Columns",
-                      content: (
-                        <>
-                          <DialogContentText paragraph>
-                            Initialize table with columns
-                          </DialogContentText>
-                          <FormFields
-                            {...formFieldsProps}
-                            fields={fields.filter((f) => f.step === "columns")}
-                          />
-                        </>
-                      ),
-                      optional: true,
-                    }
-                  : null,
-              ].filter(Boolean) as any
-            }
-          />
-        </>
-      )}
+                position: "absolute",
+                top: 0,
+                right: 40 + 12 + 8,
+              }}
+            >
+              <ActionsMenu
+                mode={mode}
+                control={formFieldsProps.control}
+                useFormMethods={formFieldsProps.useFormMethods}
+              />
+              {mode === TableSettingsDialogModes.update && (
+                <DeleteMenu clearDialog={clearDialog} data={data} />
+              )}
+            </Stack>
+
+            <SteppedAccordion
+              disableUnmount
+              steps={
+                [
+                  {
+                    id: "collection",
+                    title: "Collection",
+                    content: (
+                      <>
+                        <DialogContentText paragraph>
+                          Connect this table to a new or existing Firestore
+                          collection
+                        </DialogContentText>
+                        <FormFields
+                          {...formFieldsProps}
+                          fields={fields.filter((f) => f.step === "collection")}
+                        />
+                      </>
+                    ),
+                    optional: false,
+                    error: groupedErrors.collection,
+                    subtitle: groupedErrors.collection && (
+                      <Typography variant="caption" color="error">
+                        {groupedErrors.collection}
+                      </Typography>
+                    ),
+                  },
+                  {
+                    id: "display",
+                    title: "Display",
+                    content: (
+                      <>
+                        <DialogContentText paragraph>
+                          Set how this table is displayed to users
+                        </DialogContentText>
+                        <FormFields
+                          {...formFieldsProps}
+                          fields={fields.filter((f) => f.step === "display")}
+                          customComponents={customComponents}
+                        />
+                      </>
+                    ),
+                    optional: false,
+                    error: groupedErrors.display,
+                    subtitle: groupedErrors.display && (
+                      <Typography variant="caption" color="error">
+                        {groupedErrors.display}
+                      </Typography>
+                    ),
+                  },
+                  {
+                    id: "accessControls",
+                    title: "Access controls",
+                    content: (
+                      <>
+                        <DialogContentText paragraph>
+                          Set who can view and edit this table. Only ADMIN users
+                          can edit table settings or add, edit, and delete
+                          columns.
+                        </DialogContentText>
+                        <FormFields
+                          {...formFieldsProps}
+                          fields={fields.filter(
+                            (f) => f.step === "accessControls"
+                          )}
+                          customComponents={customComponents}
+                        />
+                      </>
+                    ),
+                    optional: false,
+                    error: groupedErrors.accessControls,
+                    subtitle: groupedErrors.accessControls && (
+                      <Typography variant="caption" color="error">
+                        {groupedErrors.accessControls}
+                      </Typography>
+                    ),
+                  },
+                  {
+                    id: "auditing",
+                    title: "Auditing",
+                    content: (
+                      <>
+                        <DialogContentText paragraph>
+                          Track when users create or update rows
+                        </DialogContentText>
+                        <FormFields
+                          {...formFieldsProps}
+                          fields={fields.filter((f) => f.step === "auditing")}
+                        />
+                      </>
+                    ),
+                    optional: true,
+                    error: groupedErrors.auditing,
+                    subtitle: groupedErrors.auditing && (
+                      <Typography variant="caption" color="error">
+                        {groupedErrors.auditing}
+                      </Typography>
+                    ),
+                  },
+                  mode === TableSettingsDialogModes.create
+                    ? {
+                        id: "columns",
+                        title: "Columns",
+                        content: (
+                          <>
+                            <DialogContentText paragraph>
+                              Initialize table with columns
+                            </DialogContentText>
+                            <FormFields
+                              {...formFieldsProps}
+                              fields={fields.filter(
+                                (f) => f.step === "columns"
+                              )}
+                            />
+                          </>
+                        ),
+                        optional: true,
+                        error: groupedErrors.columns,
+                        subtitle: groupedErrors.columns && (
+                          <Typography variant="caption" color="error">
+                            {groupedErrors.columns}
+                          </Typography>
+                        ),
+                      }
+                    : null,
+                ].filter(Boolean) as any
+              }
+            />
+          </>
+        );
+      }}
       customComponents={customComponents}
       values={{ ...data }}
       onSubmit={handleSubmit}
