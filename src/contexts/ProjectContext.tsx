@@ -79,7 +79,7 @@ export interface IProjectContext {
       description: string;
       roles: string[];
       section: string;
-    }) => void;
+    }) => Promise<void>;
     updateTable: (data: {
       id: string;
       name?: string;

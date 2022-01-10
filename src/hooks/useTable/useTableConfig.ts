@@ -21,9 +21,9 @@ export type ColumnConfig = {
   [key: string]: any;
 };
 
-const useTableConfig = (tablePath?: string) => {
+const useTableConfig = (tableId?: string) => {
   const [tableConfigState, documentDispatch] = useDoc({
-    path: tablePath ? formatPath(tablePath) : "",
+    path: tableId ? formatPath(tableId) : "",
   });
 
   useEffect(() => {

@@ -1,22 +1,29 @@
 import useSWR from "swr";
 import _find from "lodash/find";
 import _sortBy from "lodash/sortBy";
+import { useSnackbar } from "notistack";
 
-import { DialogContentText, Stack } from "@mui/material";
+import { DialogContentText, Stack, Typography } from "@mui/material";
 
 import { FormDialog, FormFields } from "@rowy/form-builder";
 import { tableSettings } from "./form";
 import CamelCaseId from "./CamelCaseId";
 import SuggestedRules from "./SuggestedRules";
 import SteppedAccordion from "@src/components/SteppedAccordion";
-import Confirmation from "@src/components/Confirmation";
+import ActionsMenu from "./ActionsMenu";
 import DeleteMenu from "./DeleteMenu";
 
 import { useProjectContext, Table } from "@src/contexts/ProjectContext";
 import useRouter from "@src/hooks/useRouter";
+import { useConfirmation } from "@src/components/ConfirmationDialog";
+import { useSnackLogContext } from "@src/contexts/SnackLogContext";
 import { runRoutes } from "@src/constants/runRoutes";
 import { analytics } from "@src/analytics";
-import { CONFIG } from "config/dbPaths";
+import {
+  CONFIG,
+  TABLE_GROUP_SCHEMAS,
+  TABLE_SCHEMAS,
+} from "@src/config/dbPaths";
 
 export enum TableSettingsDialogModes {
   create,
@@ -39,6 +46,9 @@ export default function TableSettings({
   );
 
   const router = useRouter();
+  const { requestConfirmation } = useConfirmation();
+  const snackLogContext = useSnackLogContext();
+  const { enqueueSnackbar } = useSnackbar();
 
   const { data: collections } = useSWR(
     "firebaseCollections",
@@ -57,27 +67,91 @@ export default function TableSettings({
     if (values.schemaSource)
       data.schemaSource = _find(tables, { id: values.schemaSource });
 
+    const hasExtensions = Boolean(_get(data, "_schema.extensionObjects"));
+    const hasWebhooks = Boolean(_get(data, "_schema.webhooks"));
+    const deployExtensionsWebhooks = (onComplete?: () => void) => {
+      if (rowyRun && (hasExtensions || hasWebhooks)) {
+        requestConfirmation({
+          title: `Deploy ${[
+            hasExtensions && "extensions",
+            hasWebhooks && "webhooks",
+          ]
+            .filter(Boolean)
+            .join(" and ")}?`,
+          body: "You can also deploy later from the table page",
+          confirm: "Deploy",
+          cancel: "Later",
+          handleConfirm: async () => {
+            const tablePath = data.collection;
+            const tableConfigPath = `${
+              data.tableType !== "collectionGroup"
+                ? TABLE_SCHEMAS
+                : TABLE_GROUP_SCHEMAS
+            }/${data.id}`;
+
+            if (hasExtensions) {
+              snackLogContext.requestSnackLog();
+              rowyRun({
+                route: runRoutes.buildFunction,
+                body: {
+                  tablePath,
+                  pathname: `/${
+                    data.tableType === "collectionGroup"
+                      ? "tableGroup"
+                      : "table"
+                  }/${data.id}`,
+                  tableConfigPath,
+                },
+              });
+              analytics.logEvent("deployed_extensions");
+            }
+
+            if (hasWebhooks) {
+              const resp = await rowyRun({
+                service: "hooks",
+                route: runRoutes.publishWebhooks,
+                body: {
+                  tableConfigPath,
+                  tablePath,
+                },
+              });
+              enqueueSnackbar(resp.message, {
+                variant: resp.success ? "success" : "error",
+              });
+              analytics.logEvent("published_webhooks");
+            }
+
+            if (onComplete) onComplete();
+          },
+        });
+      } else {
+        if (onComplete) onComplete();
+      }
+    };
+
     if (mode === TableSettingsDialogModes.update) {
       await settingsActions?.updateTable(data);
+      deployExtensionsWebhooks();
       clearDialog();
     } else {
-      settingsActions?.createTable(data);
-
-      if (router.location.pathname === "/") {
-        router.history.push(
-          `${values.tableType === "collectionGroup" ? "tableGroup" : "table"}/${
-            values.id
-          }`
-        );
-      } else {
-        router.history.push(values.id);
-      }
+      await settingsActions?.createTable(data);
+      deployExtensionsWebhooks(() => {
+        if (router.location.pathname === "/") {
+          router.history.push(
+            `${
+              values.tableType === "collectionGroup" ? "tableGroup" : "table"
+            }/${values.id}`
+          );
+        } else {
+          router.history.push(values.id);
+        }
+        clearDialog();
+      });
     }
     analytics.logEvent(
       TableSettingsDialogModes.update ? "update_table" : "create_table",
       { type: values.tableType }
     );
-    clearDialog();
   };
 
   const fields = tableSettings(

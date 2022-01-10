@@ -40,13 +40,12 @@ export default function DeleteMenu({ clearDialog, data }: IDeleteMenuProps) {
     const updatedTables = tableData?.tables.filter(
       (table) => table.id !== data?.id || table.tableType !== data?.tableType
     );
-    await tablesDocRef.update({ tables: updatedTables });
-    await db
-      .collection(
-        data?.tableType === "primaryCollection"
-          ? TABLE_SCHEMAS
-          : TABLE_GROUP_SCHEMAS
-      )
+    tablesDocRef.update({ tables: updatedTables });
+    db.collection(
+      data?.tableType === "primaryCollection"
+        ? TABLE_SCHEMAS
+        : TABLE_GROUP_SCHEMAS
+    )
       .doc(data?.id)
       .delete();
     clearDialog();
