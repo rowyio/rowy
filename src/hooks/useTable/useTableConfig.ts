@@ -77,17 +77,20 @@ const useTableConfig = (tableId?: string) => {
    */
   const [resize] = useDebouncedCallback((index: number, width: number) => {
     const { columns } = tableConfigState;
-    const numberOfFixedColumns = Object.values(columns).filter(
+    const _columnValues = Object.values(columns);
+    const numberOfFixedColumns = _columnValues.filter(
       (col: any) => col.fixed && !col.hidden
     ).length;
     const columnsArray = _sortBy(
-      Object.values(columns).filter((col: any) => !col.hidden && !col.fixed),
+      _columnValues.filter((col: any) => !col.hidden && !col.fixed),
       "index"
     );
-    let column: any = columnsArray[index - numberOfFixedColumns];
-    column.width = width;
-    let updatedColumns = columns;
-    updatedColumns[column.key] = column;
+    const targetColumn: any = columnsArray[index - numberOfFixedColumns];
+    const updatedColumns = {
+      ...columns,
+      [targetColumn.key]: { ...targetColumn, width },
+    };
+
     documentDispatch({
       action: DocActions.update,
       data: { columns: updatedColumns },
