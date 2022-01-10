@@ -248,7 +248,7 @@ export default function TableSettings({
                       </>
                     ),
                     optional: false,
-                    error: groupedErrors.collection,
+                    error: Boolean(groupedErrors.collection),
                     subtitle: groupedErrors.collection && (
                       <Typography variant="caption" color="error">
                         {groupedErrors.collection}
@@ -271,7 +271,7 @@ export default function TableSettings({
                       </>
                     ),
                     optional: false,
-                    error: groupedErrors.display,
+                    error: Boolean(groupedErrors.display),
                     subtitle: groupedErrors.display && (
                       <Typography variant="caption" color="error">
                         {groupedErrors.display}
@@ -298,7 +298,7 @@ export default function TableSettings({
                       </>
                     ),
                     optional: false,
-                    error: groupedErrors.accessControls,
+                    error: Boolean(groupedErrors.accessControls),
                     subtitle: groupedErrors.accessControls && (
                       <Typography variant="caption" color="error">
                         {groupedErrors.accessControls}
@@ -320,7 +320,7 @@ export default function TableSettings({
                       </>
                     ),
                     optional: true,
-                    error: groupedErrors.auditing,
+                    error: Boolean(groupedErrors.auditing),
                     subtitle: groupedErrors.auditing && (
                       <Typography variant="caption" color="error">
                         {groupedErrors.auditing}
@@ -345,7 +345,7 @@ export default function TableSettings({
                           </>
                         ),
                         optional: true,
-                        error: groupedErrors.columns,
+                        error: Boolean(groupedErrors.columns),
                         subtitle: groupedErrors.columns && (
                           <Typography variant="caption" color="error">
                             {groupedErrors.columns}
