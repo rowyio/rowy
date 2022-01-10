@@ -52,6 +52,7 @@ export default function CamelCaseId({
           </>
         )
       }
+      FormHelperTextProps={{ component: "div" } as any}
       name={name}
       id={`field-${name}`}
       sx={{ "& .MuiInputBase-input": { fontFamily: "mono" } }}

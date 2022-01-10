@@ -8,7 +8,7 @@ import { DialogContentText, Stack, Typography } from "@mui/material";
 
 import { FormDialog, FormFields } from "@rowy/form-builder";
 import { tableSettings } from "./form";
-import CamelCaseId from "./CamelCaseId";
+import TableId from "./TableId";
 import SuggestedRules from "./SuggestedRules";
 import SteppedAccordion from "@src/components/SteppedAccordion";
 import ActionsMenu from "./ActionsMenu";
@@ -171,8 +171,8 @@ export default function TableSettings({
     Array.isArray(collections) ? collections.filter((x) => x !== CONFIG) : []
   );
   const customComponents = {
-    camelCaseId: {
-      component: CamelCaseId,
+    tableId: {
+      component: TableId,
       defaultValue: "",
       validation: [["string"]],
     },

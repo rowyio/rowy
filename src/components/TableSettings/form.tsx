@@ -1,3 +1,4 @@
+import _find from "lodash/find";
 import { Field, FieldType } from "@rowy/form-builder";
 import { TableSettingsDialogModes } from "./index";
 
@@ -166,7 +167,7 @@ export const tableSettings = (
     },
     {
       step: "display",
-      type: "camelCaseId",
+      type: "tableId",
       name: "id",
       label: "Table ID",
       required: true,
@@ -176,6 +177,14 @@ export const tableSettings = (
       }.`,
       disabled: mode === TableSettingsDialogModes.update,
       gridCols: { xs: 12, sm: 6 },
+      validation: [
+        [
+          "test",
+          "unique",
+          "Another table exists with this ID",
+          (value) => !_find(tables, ["value", value]),
+        ],
+      ],
     },
     {
       step: "display",
