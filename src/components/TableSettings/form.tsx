@@ -177,14 +177,17 @@ export const tableSettings = (
       }.`,
       disabled: mode === TableSettingsDialogModes.update,
       gridCols: { xs: 12, sm: 6 },
-      validation: [
-        [
-          "test",
-          "unique",
-          "Another table exists with this ID",
-          (value) => !_find(tables, ["value", value]),
-        ],
-      ],
+      validation:
+        mode === TableSettingsDialogModes.create
+          ? [
+              [
+                "test",
+                "unique",
+                "Another table exists with this ID",
+                (value) => !_find(tables, ["value", value]),
+              ],
+            ]
+          : [],
     },
     {
       step: "display",
