@@ -13,6 +13,7 @@ import {
   Typography,
   TextField,
   FormHelperText,
+  Divider,
 } from "@mui/material";
 
 import Tab from "@mui/material/Tab";
@@ -207,6 +208,7 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
             <Tab label="Paste" value="paste" />
             <Tab label="URL" value="url" />
           </TabList>
+          <Divider style={{ marginTop: -1 }} />
 
           <TabPanel value="upload" className={classes.tabPanel}>
             <Grid
