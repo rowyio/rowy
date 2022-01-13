@@ -3,13 +3,13 @@ import { Stack } from "@mui/material";
 import { isCollectionGroup } from "@src/utils/fns";
 
 import AddRow from "./AddRow";
-import Filters from "../Table/Filters";
+import Filters from "./Filters";
 import ImportCSV from "./ImportCsv";
 import Export from "./Export";
 import LoadedRowsStatus from "./LoadedRowsStatus";
 import TableSettings from "./TableSettings";
 import CloudLogs from "./CloudLogs";
-import HiddenFields from "../Table/HiddenFields";
+import HiddenFields from "./HiddenFields";
 import RowHeight from "./RowHeight";
 import Extensions from "./Extensions";
 import Webhooks from "./Webhooks";
