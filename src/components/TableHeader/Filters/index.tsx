@@ -221,6 +221,9 @@ export default function Filters() {
                   }}
                 >
                   Clear
+                  {overrideTableFilters
+                    ? " (ignore table filter)"
+                    : " (use table filter)"}
                 </Button>
 
                 <Button
