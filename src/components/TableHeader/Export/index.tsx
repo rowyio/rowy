@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) =>
     paper: {
       [theme.breakpoints.up("sm")]: {
         maxWidth: 440,
-        height: 610,
+        height: 640,
       },
     },
 
@@ -103,8 +103,8 @@ export default function Export() {
                 <DialogContent style={{ flexGrow: 0, flexShrink: 0 }}>
                   {(tableState?.filters && tableState?.filters.length !== 0) ||
                   (tableState?.orderBy && tableState?.orderBy.length !== 0)
-                    ? "The filters and sorting applied to the table will be used in the export."
-                    : "No filters or sorting will be applied on the exported data."}
+                    ? "The filters and sorting applied to the table will be applied to the export"
+                    : "No filters or sorting will be applied on the exported data"}
                 </DialogContent>
 
                 <TabList
