@@ -46,6 +46,8 @@ export interface IExtension {
   requiredFields: string[];
   extensionBody: string;
   conditions: string;
+
+  trackedFields?: string[];
 }
 
 export const triggerTypes: ExtensionTrigger[] = ["create", "update", "delete"];
