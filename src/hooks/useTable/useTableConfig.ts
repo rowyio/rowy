@@ -21,9 +21,9 @@ export type ColumnConfig = {
   [key: string]: any;
 };
 
-const useTableConfig = (tablePath?: string) => {
+const useTableConfig = (tableId?: string) => {
   const [tableConfigState, documentDispatch] = useDoc({
-    path: tablePath ? formatPath(tablePath) : "",
+    path: tableId ? formatPath(tableId) : "",
   });
 
   useEffect(() => {
@@ -77,17 +77,20 @@ const useTableConfig = (tablePath?: string) => {
    */
   const [resize] = useDebouncedCallback((index: number, width: number) => {
     const { columns } = tableConfigState;
-    const numberOfFixedColumns = Object.values(columns).filter(
+    const _columnValues = Object.values(columns);
+    const numberOfFixedColumns = _columnValues.filter(
       (col: any) => col.fixed && !col.hidden
     ).length;
     const columnsArray = _sortBy(
-      Object.values(columns).filter((col: any) => !col.hidden && !col.fixed),
+      _columnValues.filter((col: any) => !col.hidden && !col.fixed),
       "index"
     );
-    let column: any = columnsArray[index - numberOfFixedColumns];
-    column.width = width;
-    let updatedColumns = columns;
-    updatedColumns[column.key] = column;
+    const targetColumn: any = columnsArray[index - numberOfFixedColumns];
+    const updatedColumns = {
+      ...columns,
+      [targetColumn.key]: { ...targetColumn, width },
+    };
+
     documentDispatch({
       action: DocActions.update,
       data: { columns: updatedColumns },
@@ -99,7 +102,7 @@ const useTableConfig = (tablePath?: string) => {
    *  @param index of column.
    *  @param {updatable[]} updatables properties to be updated
    */
-  const updateColumn = (key: string, updates: any) => {
+  const updateColumn = (key: string, updates: any, onSuccess?: Function) => {
     const { columns } = tableConfigState;
 
     const updatedColumns = {
@@ -110,6 +113,7 @@ const useTableConfig = (tablePath?: string) => {
     documentDispatch({
       action: DocActions.update,
       data: { columns: updatedColumns },
+      callback: onSuccess,
     });
   };
   /** remove column by index
@@ -150,7 +154,7 @@ const useTableConfig = (tablePath?: string) => {
    * @param key name of parameter eg. rowHeight
    * @param value new value eg. 65
    */
-  const updateConfig = (key: string, value: unknown, callback?: Function) => {
+  const updateConfig = (key: string, value: any, callback?: Function) => {
     documentDispatch({
       action: DocActions.update,
       data: { [key]: value },

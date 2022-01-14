@@ -13,6 +13,7 @@ import {
   Typography,
   TextField,
   FormHelperText,
+  Divider,
 } from "@mui/material";
 
 import Tab from "@mui/material/Tab";
@@ -29,6 +30,8 @@ import CheckIcon from "@mui/icons-material/CheckCircle";
 import ImportCsvWizard, {
   IImportCsvWizardProps,
 } from "@src/components/Wizards/ImportCsvWizard";
+import { useAppContext } from "@src/contexts/AppContext";
+import { useProjectContext } from "@src/contexts/ProjectContext";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -85,6 +88,8 @@ export interface IImportCsvProps {
 
 export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
   const classes = useStyles();
+  const { userClaims } = useAppContext();
+  const { table } = useProjectContext();
 
   const [open, setOpen] = useState<HTMLButtonElement | null>(null);
   const [tab, setTab] = useState("upload");
@@ -105,7 +110,7 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
   const popoverId = open ? "csv-popover" : undefined;
 
   const parseCsv = (csvString: string) =>
-    parse(csvString, {}, (err, rows) => {
+    parse(csvString, { delimiter: [",", "\t"] }, (err, rows) => {
       if (err) {
         setError(err.message);
       } else {
@@ -131,7 +136,7 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     multiple: false,
-    accept: "text/csv",
+    accept: ["text/csv", "text/tab-separated-values"],
   });
 
   const [handlePaste] = useDebouncedCallback(
@@ -157,13 +162,15 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
 
   const [openWizard, setOpenWizard] = useState(false);
 
+  if (table?.readOnly && !userClaims?.roles.includes("ADMIN")) return null;
+
   return (
     <>
       {render ? (
         render(handleOpen)
       ) : (
         <TableHeaderButton
-          title="Import CSV"
+          title="Import CSV or TSV"
           onClick={handleOpen}
           icon={<ImportIcon />}
         />
@@ -201,6 +208,7 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
             <Tab label="Paste" value="paste" />
             <Tab label="URL" value="url" />
           </TabList>
+          <Divider style={{ marginTop: -1 }} />
 
           <TabPanel value="upload" className={classes.tabPanel}>
             <Grid
@@ -215,7 +223,7 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
               <input {...getInputProps()} />
               {isDragActive ? (
                 <Typography variant="button" color="primary">
-                  Drop CSV file here…
+                  Drop CSV or TSV file here…
                 </Typography>
               ) : (
                 <>
@@ -225,8 +233,8 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
                   <Grid item>
                     <Typography variant="button" color="inherit">
                       {validCsv
-                        ? "Valid CSV"
-                        : "Click to upload or drop CSV file here"}
+                        ? "Valid CSV or TSV"
+                        : "Click to upload or drop CSV or TSV file here"}
                     </Typography>
                   </Grid>
                 </>
@@ -247,7 +255,7 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
               inputProps={{ minRows: 3 }}
               autoFocus
               fullWidth
-              label="Paste CSV text"
+              label="Paste CSV or TSV text"
               placeholder="column, column, …"
               onChange={(e) => {
                 if (csvData !== null) setCsvData(null);
@@ -270,13 +278,13 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
               variant="filled"
               autoFocus
               fullWidth
-              label="Paste URL to CSV file"
+              label="Paste URL to CSV or TSV file"
               placeholder="https://"
               onChange={(e) => {
                 if (csvData !== null) setCsvData(null);
                 handleUrl(e.target.value);
               }}
-              helperText={loading ? "Fetching CSV…" : error}
+              helperText={loading ? "Fetching…" : error}
               error={!!error}
             />
           </TabPanel>

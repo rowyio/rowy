@@ -20,7 +20,7 @@ import { useSnackbar } from "notistack";
 import { modalAtom } from "@src/atoms/Table";
 
 export default function Webhooks() {
-  const { tableState, tableActions, rowyRun, compatibleRowyRunVersion } =
+  const { tableState, table, tableActions, rowyRun, compatibleRowyRunVersion } =
     useProjectContext();
   const appContext = useAppContext();
   const { requestConfirmation } = useConfirmation();
@@ -189,7 +189,11 @@ export default function Webhooks() {
               handleAddWebhook={(type: WebhookType) => {
                 setWebhookModal({
                   mode: "add",
-                  webhookObject: emptyWebhookObject(type, currentEditor()),
+                  webhookObject: emptyWebhookObject(
+                    type,
+                    currentEditor(),
+                    table
+                  ),
                 });
               }}
               variant={

@@ -7,12 +7,17 @@ import { Control, useWatch } from "react-hook-form";
 export interface IAutosaveProps {
   control: Control;
   handleSave: (values: any) => void;
+  debounce?: number;
 }
 
-export default function FormAutosave({ control, handleSave }: IAutosaveProps) {
+export default function FormAutosave({
+  control,
+  handleSave,
+  debounce = 1000,
+}: IAutosaveProps) {
   const values = useWatch({ control });
 
-  const [debouncedValue] = useDebounce(values, 1000, {
+  const [debouncedValue] = useDebounce(values, debounce, {
     equalityFn: _isEqual,
   });
 

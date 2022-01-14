@@ -1,5 +1,6 @@
 import useSWR from "swr";
 import { useAtom } from "jotai";
+import _startCase from "lodash/startCase";
 
 import {
   LinearProgress,
@@ -9,6 +10,7 @@ import {
   Typography,
   TextField,
   InputAdornment,
+  Button,
 } from "@mui/material";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import LogsIcon from "@src/assets/icons/CloudLogs";
@@ -20,6 +22,7 @@ import TimeRangeSelect from "./TimeRangeSelect";
 import CloudLogList from "./CloudLogList";
 import BuildLogs from "./BuildLogs";
 import EmptyState from "@src/components/EmptyState";
+import CloudLogSeverityIcon, { SEVERITY_LEVELS } from "./CloudLogSeverityIcon";
 
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import { useAppContext } from "@src/contexts/AppContext";
@@ -97,6 +100,7 @@ export default function CloudLogsModal(props: IModalProps) {
                 aria-label="Filter by log type"
               >
                 <ToggleButton value="webhook">Webhooks</ToggleButton>
+                <ToggleButton value="functions">Functions</ToggleButton>
                 <ToggleButton value="audit">Audit</ToggleButton>
                 <ToggleButton value="build">Build</ToggleButton>
               </ToggleButtonGroup>
@@ -195,6 +199,50 @@ export default function CloudLogsModal(props: IModalProps) {
                   </Typography>
                 )}
 
+                <MultiSelect
+                  aria-label="Severity"
+                  labelPlural="severity levels"
+                  options={Object.keys(SEVERITY_LEVELS)}
+                  value={cloudLogFilters.severity ?? []}
+                  onChange={(severity) =>
+                    setCloudLogFilters((prev) => ({ ...prev, severity }))
+                  }
+                  TextFieldProps={{
+                    style: { width: 130 },
+                    placeholder: "Severity",
+                    SelectProps: {
+                      renderValue: () => {
+                        if (
+                          !Array.isArray(cloudLogFilters.severity) ||
+                          cloudLogFilters.severity.length === 0
+                        )
+                          return `Severity`;
+
+                        if (cloudLogFilters.severity.length === 1)
+                          return (
+                            <>
+                              Severity{" "}
+                              <CloudLogSeverityIcon
+                                severity={cloudLogFilters.severity[0]}
+                                style={{ marginTop: -2, marginBottom: -7 }}
+                              />
+                            </>
+                          );
+
+                        return `Severity (${cloudLogFilters.severity.length})`;
+                      },
+                    },
+                  }}
+                  itemRenderer={(option) => (
+                    <>
+                      <CloudLogSeverityIcon
+                        severity={option.value}
+                        sx={{ mr: 1 }}
+                      />
+                      {_startCase(option.value.toLowerCase())}
+                    </>
+                  )}
+                />
                 <TimeRangeSelect
                   aria-label="Time range"
                   value={cloudLogFilters.timeRange}
@@ -230,7 +278,30 @@ export default function CloudLogsModal(props: IModalProps) {
       {cloudLogFilters.type === "build" ? (
         <BuildLogs />
       ) : Array.isArray(data) && data.length > 0 ? (
-        <CloudLogList items={data} sx={{ mx: -1.5, mt: 1.5 }} />
+        <>
+          <CloudLogList items={data} sx={{ mx: -1.5, mt: 1.5 }} />
+          {cloudLogFilters.timeRange.type !== "range" && (
+            <Button
+              style={{
+                marginLeft: "auto",
+                marginRight: "auto",
+                display: "flex",
+              }}
+              onClick={() =>
+                setCloudLogFilters((c) => ({
+                  ...c,
+                  timeRange: {
+                    ...c.timeRange,
+                    value: (c.timeRange as any).value * 2,
+                  },
+                }))
+              }
+            >
+              Load more (last {cloudLogFilters.timeRange.value * 2}{" "}
+              {cloudLogFilters.timeRange.type})
+            </Button>
+          )}
+        </>
       ) : isValidating ? (
         <EmptyState
           Icon={LogsIcon}

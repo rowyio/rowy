@@ -15,7 +15,7 @@ export type TableActions = {
   table: {
     set: (id: string, collection: string, filters: TableFilter[]) => void;
     filter: Function;
-    updateConfig: Function;
+    updateConfig: (key: string, value: any, callback?: Function) => void;
     orderBy: Function;
   };
 };

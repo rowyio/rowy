@@ -24,8 +24,11 @@ export default function SuggestedRules({
 }: ISuggestedRulesProps) {
   const { projectId } = useAppContext();
 
-  const watched = useWatch({ control, name: ["collection", "roles"] } as any);
-  const [collection, roles] = Array.isArray(watched) ? watched : [];
+  const watched = useWatch({
+    control,
+    name: ["collection", "roles", "readOnly"],
+  } as any);
+  const [collection, roles, readOnly] = Array.isArray(watched) ? watched : [];
 
   const [customized, setCustomized] = useState<boolean>(false);
   const [customizations, setCustomizations] = useState<customizationOptions[]>(
@@ -44,7 +47,9 @@ export default function SuggestedRules({
   const generatedRules = `match /${collection}/{${
     customizations.includes("subcollections") ? "document=**" : "docId"
   }} {
-  allow read, write: if hasAnyRole(${JSON.stringify(roles)});${
+  allow read, write: if hasAnyRole(${
+    readOnly ? `["ADMIN"]` : JSON.stringify(roles)
+  });${
     customizations.includes("allRead")
       ? "\n  allow read: if true;"
       : customizations.includes("authRead")

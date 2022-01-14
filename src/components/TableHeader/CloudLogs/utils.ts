@@ -2,12 +2,14 @@ import { atomWithHash } from "jotai/utils";
 import { sub } from "date-fns";
 
 import type { IProjectContext } from "@src/contexts/ProjectContext";
+import { SEVERITY_LEVELS } from "./CloudLogSeverityIcon";
 
 export type CloudLogFilters = {
-  type: "webhook" | "audit" | "build";
+  type: "webhook" | "functions" | "audit" | "build";
   timeRange:
     | { type: "seconds" | "minutes" | "hours" | "days"; value: number }
     | { type: "range"; start: Date; end: Date };
+  severity?: Array<keyof typeof SEVERITY_LEVELS>;
   webhook?: string[];
   auditRowId?: string;
   buildLogExpanded?: number;
@@ -57,7 +59,9 @@ export const cloudLogFetcher = (
         );
       break;
 
-    // logQuery.push(`resource.labels.function_name="R-githubStars"`);
+    case "functions":
+      logQuery.push(`resource.labels.function_name = "R-${tablePath}"`);
+      break;
 
     default:
       break;
@@ -73,6 +77,13 @@ export const cloudLogFetcher = (
     } catch (e) {
       console.error("Failed to calculate minimum date", e);
     }
+  }
+
+  if (
+    Array.isArray(cloudLogFilters.severity) &&
+    cloudLogFilters.severity.length > 0
+  ) {
+    logQuery.push(`severity = (${cloudLogFilters.severity.join(" OR ")})`);
   }
 
   const logQueryUrl =

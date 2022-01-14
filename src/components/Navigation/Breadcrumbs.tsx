@@ -15,12 +15,16 @@ import {
 import ArrowRightIcon from "@mui/icons-material/ChevronRight";
 import InfoIcon from "@mui/icons-material/InfoOutlined";
 import CloseIcon from "@mui/icons-material/Close";
+import ReadOnlyIcon from "@mui/icons-material/EditOffOutlined";
 
+import InfoTooltip from "@src/components/InfoTooltip";
+import { useAppContext } from "@src/contexts/AppContext";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import useRouter from "@src/hooks/useRouter";
 import routes from "@src/constants/routes";
 
 export default function Breadcrumbs({ sx = [], ...props }: BreadcrumbsProps) {
+  const { userClaims } = useAppContext();
   const { tables, table, tableState } = useProjectContext();
   const id = tableState?.config.id || "";
   const collection = id || tableState?.tablePath || "";
@@ -90,62 +94,29 @@ export default function Breadcrumbs({ sx = [], ...props }: BreadcrumbsProps) {
               <Typography {...crumbProps}>
                 {getLabel(crumb) || crumb.replace(/([A-Z])/g, " $1")}
               </Typography>
-              {crumb === table?.id && table?.description && (
+              {crumb === table?.id && table?.readOnly && (
                 <Tooltip
                   title={
-                    <>
-                      {table?.description}
-                      <IconButton
-                        aria-label="Close table info"
-                        size="small"
-                        onClick={() => setOpenInfo(false)}
-                        sx={{ m: -0.5 }}
-                        color="inherit"
-                      >
-                        <CloseIcon fontSize="small" />
-                      </IconButton>
-                    </>
+                    userClaims?.roles.includes("ADMIN")
+                      ? "Table is read-only for non-ADMIN users"
+                      : "Table is read-only"
                   }
-                  disableFocusListener
-                  disableHoverListener
-                  disableTouchListener
-                  arrow
-                  placement="right-start"
-                  describeChild
-                  open={openInfo}
-                  componentsProps={{
-                    popper: { sx: { zIndex: "appBar" } } as any,
-                    tooltip: {
-                      style: { marginLeft: "8px" },
-                      sx: {
-                        // bgcolor: "background.paper",
-                        // color: "text.primary",
-                        typography: "body2",
-                        boxShadow: 2,
-                        maxWidth: "75vw",
-
-                        display: "flex",
-                        gap: 1.5,
-                        alignItems: "flex-start",
-                        pr: 0.5,
-                      },
-                    },
-                    arrow: {
-                      sx: {
-                        //     color: "background.paper",
-                        "&::before": { boxShadow: 2 },
-                      },
-                    },
-                  }}
                 >
-                  <IconButton
-                    aria-label="Table info"
-                    size="small"
-                    onClick={() => setOpenInfo((x) => !x)}
-                  >
-                    <InfoIcon fontSize="small" />
-                  </IconButton>
+                  <ReadOnlyIcon fontSize="small" sx={{ ml: 0.5 }} />
                 </Tooltip>
+              )}
+
+              {crumb === table?.id && table?.description && (
+                <InfoTooltip
+                  description={table?.description}
+                  buttonLabel="Table info"
+                  tooltipProps={{
+                    componentsProps: {
+                      popper: { sx: { zIndex: "appBar" } },
+                      tooltip: { sx: { maxWidth: "75vw" } },
+                    } as any,
+                  }}
+                />
               )}
             </div>
           );

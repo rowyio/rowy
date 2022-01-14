@@ -20,4 +20,13 @@ declare namespace rowy {
    * Gets the secret defined in Google Cloud Secret
    */
   async function getSecret(name: string, v?: string): Promise<string | null>;
+
+  async function getServiceAccountUser(): Promise<{
+    email: string;
+    emailVerified: boolean;
+    displayName: string;
+    photoURL: string;
+    uid: string;
+    timestamp: number;
+  }>;
 }
