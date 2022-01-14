@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { parse as json2csv } from "json2csv";
 import { saveAs } from "file-saver";
 import { useSnackbar } from "notistack";
@@ -9,7 +9,16 @@ import _sortBy from "lodash/sortBy";
 import { isString } from "lodash";
 import MultiSelect from "@rowy/multiselect";
 
-import { Button, DialogActions } from "@mui/material";
+import {
+  Button,
+  DialogActions,
+  FormControl,
+  FormLabel,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  FormHelperText,
+} from "@mui/material";
 
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import { FieldType } from "@src/constants/fields";
@@ -100,7 +109,7 @@ export default function Export({ query, closeModal }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const [columns, setColumns] = useState<any[]>([]);
-  const [exportType, setExportType] = useState<"csv" | "json">("csv");
+  const [exportType, setExportType] = useState<"csv" | "tsv" | "json">("csv");
 
   const handleClose = () => {
     closeModal();
@@ -130,10 +139,14 @@ export default function Export({ query, closeModal }) {
       .id!}-${new Date().toISOString()}.${exportType}`;
     switch (exportType) {
       case "csv":
+      case "tsv":
         const csvData = docs.map((doc: any) =>
           columns.reduce(selectedColumnsCsvReducer(doc), {})
         );
-        const csv = json2csv(csvData);
+        const csv = json2csv(
+          csvData,
+          exportType === "tsv" ? { delimiter: "\t" } : undefined
+        );
         const csvBlob = new Blob([csv], {
           type: `text/${exportType};charset=utf-8`,
         });
@@ -174,23 +187,23 @@ export default function Export({ query, closeModal }) {
         selectAll
       />
 
-      <MultiSelect
-        value={exportType}
-        options={[
-          { label: ".json", value: "json" },
-          { label: ".csv", value: "csv" },
-        ]}
-        label="Export type"
-        onChange={(v) => {
-          if (v) {
-            setExportType(v as "csv" | "json");
-          }
-        }}
-        multiple={false}
-        searchable={false}
-        clearable={false}
-        TextFieldProps={{ helperText: "Encoding: UTF-8" }}
-      />
+      <FormControl component="fieldset">
+        <FormLabel component="legend">Export type</FormLabel>
+        <RadioGroup
+          aria-label="export type"
+          name="export-type-radio-buttons-group"
+          value={exportType}
+          onChange={(e) => {
+            const v = e.target.value;
+            if (v) setExportType(v as "csv" | "tsv" | "json");
+          }}
+        >
+          <FormControlLabel value="csv" control={<Radio />} label=".csv" />
+          <FormControlLabel value="tsv" control={<Radio />} label=".tsv" />
+          <FormControlLabel value="json" control={<Radio />} label=".json" />
+        </RadioGroup>
+        <FormHelperText>Encoding: UTF-8</FormHelperText>
+      </FormControl>
 
       <div style={{ flexGrow: 1, marginTop: 0 }} />
 

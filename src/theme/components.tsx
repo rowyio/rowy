@@ -35,6 +35,11 @@ declare module "@mui/material/MenuItem" {
     error: true;
   }
 }
+declare module "@mui/material/Badge" {
+  interface BadgePropsVariantOverrides {
+    inlineDot: true;
+  }
+}
 
 export const components = (theme: Theme): ThemeOptions => {
   const buttonPrimaryHover = colord(theme.palette.primary.main)
@@ -1002,6 +1007,10 @@ export const components = (theme: Theme): ThemeOptions => {
                 marginTop: 4,
               },
             },
+
+            "&:hover .MuiCheckbox-root, &:hover .MuiRadio-root": {
+              backgroundColor: theme.palette.action.hover,
+            },
           },
           label: {
             marginTop: 10,
@@ -1066,6 +1075,28 @@ export const components = (theme: Theme): ThemeOptions => {
             },
           },
         },
+      },
+
+      MuiBadge: {
+        variants: [
+          {
+            props: { variant: "inlineDot" },
+            style: {
+              marginLeft: theme.spacing(1),
+              marginRight: theme.spacing(-1),
+
+              "& .MuiBadge-badge": {
+                position: "static",
+                transform: "none",
+
+                minWidth: theme.spacing(1),
+                height: theme.spacing(1),
+                borderRadius: theme.spacing(0.5),
+                padding: 0,
+              },
+            },
+          },
+        ],
       },
 
       MuiAlertTitle: {

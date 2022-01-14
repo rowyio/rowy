@@ -17,6 +17,7 @@ import InfoIcon from "@mui/icons-material/InfoOutlined";
 import CloseIcon from "@mui/icons-material/Close";
 import ReadOnlyIcon from "@mui/icons-material/EditOffOutlined";
 
+import InfoTooltip from "@src/components/InfoTooltip";
 import { useAppContext } from "@src/contexts/AppContext";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import useRouter from "@src/hooks/useRouter";
@@ -104,62 +105,18 @@ export default function Breadcrumbs({ sx = [], ...props }: BreadcrumbsProps) {
                   <ReadOnlyIcon fontSize="small" sx={{ ml: 0.5 }} />
                 </Tooltip>
               )}
-              {crumb === table?.id && table?.description && (
-                <Tooltip
-                  title={
-                    <>
-                      {table?.description}
-                      <IconButton
-                        aria-label="Close table info"
-                        size="small"
-                        onClick={() => setOpenInfo(false)}
-                        sx={{ m: -0.5 }}
-                        color="inherit"
-                      >
-                        <CloseIcon fontSize="small" />
-                      </IconButton>
-                    </>
-                  }
-                  disableFocusListener
-                  disableHoverListener
-                  disableTouchListener
-                  arrow
-                  placement="right-start"
-                  describeChild
-                  open={openInfo}
-                  componentsProps={{
-                    popper: { sx: { zIndex: "appBar" } } as any,
-                    tooltip: {
-                      style: { marginLeft: "8px" },
-                      sx: {
-                        // bgcolor: "background.paper",
-                        // color: "text.primary",
-                        typography: "body2",
-                        boxShadow: 2,
-                        maxWidth: "75vw",
 
-                        display: "flex",
-                        gap: 1.5,
-                        alignItems: "flex-start",
-                        pr: 0.5,
-                      },
-                    },
-                    arrow: {
-                      sx: {
-                        //     color: "background.paper",
-                        "&::before": { boxShadow: 2 },
-                      },
-                    },
+              {crumb === table?.id && table?.description && (
+                <InfoTooltip
+                  description={table?.description}
+                  buttonLabel="Table info"
+                  tooltipProps={{
+                    componentsProps: {
+                      popper: { sx: { zIndex: "appBar" } },
+                      tooltip: { sx: { maxWidth: "75vw" } },
+                    } as any,
                   }}
-                >
-                  <IconButton
-                    aria-label="Table info"
-                    size="small"
-                    onClick={() => setOpenInfo((x) => !x)}
-                  >
-                    <InfoIcon fontSize="small" />
-                  </IconButton>
-                </Tooltip>
+                />
               )}
             </div>
           );
