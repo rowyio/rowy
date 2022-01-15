@@ -19,7 +19,7 @@ export default function Step1Triggers({
   extensionObject,
   setExtensionObject,
 }: IExtensionModalStepProps) {
-  const { tableState } = useProjectContext();
+  const { tableState, compatibleRowyRunVersion } = useProjectContext();
   if (!tableState?.columns) return <></>;
   const columnOptions = Object.values(tableState.columns)
     .filter((column) => column.type !== FieldType.subTable)
@@ -67,7 +67,8 @@ export default function Step1Triggers({
                 }
               />
               {trigger === "update" &&
-                extensionObject.triggers.includes("update") && (
+                extensionObject.triggers.includes("update") &&
+                compatibleRowyRunVersion!({ minVersion: "1.2.4" }) && (
                   <MultiSelect
                     label="Tracked fields (optional)"
                     options={columnOptions}
