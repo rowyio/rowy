@@ -12,17 +12,15 @@ export default function useBuildLogs() {
   useEffect(() => {
     if (functionConfigPath) {
       const path = `${functionConfigPath}/buildLogs`;
-      // console.log(path);
       collectionDispatch({
         path,
         orderBy: [{ key: "startTimeStamp", direction: "desc" }],
-        limit: 30,
+        limit: 15,
       });
     }
   }, [functionConfigPath]);
 
   const latestLog = collectionState?.documents?.[0];
   const latestStatus = latestLog?.status;
-
   return { collectionState, latestLog, latestStatus };
 }
