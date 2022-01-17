@@ -98,9 +98,12 @@ export default function ActionFab({
     }
     const { message, success } = result;
     setIsRunning(false);
-    enqueueSnackbar(JSON.stringify(message), {
-      variant: success ? "success" : "error",
-    });
+    enqueueSnackbar(
+      typeof message === "string" ? message : JSON.stringify(message),
+      {
+        variant: success ? "success" : "error",
+      }
+    );
   };
   const hasRan = value && value.status;
 
