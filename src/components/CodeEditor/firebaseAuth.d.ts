@@ -2,7 +2,7 @@
 
 /* eslint-disable @typescript-eslint/ban-types */
 
-export namespace admin.auth {
+declare namespace firebaseauth {
   /**
    * Interface representing a user's metadata.
    */
