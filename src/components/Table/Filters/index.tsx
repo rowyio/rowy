@@ -250,6 +250,9 @@ export default function Filters() {
                       }))
                     }
                   />
+                  {/** Issue where value is not showing up */}
+                  {/** For some reason the values are not being save. Thus we need to check why */}
+                  {console.log(query.operator)}
                   <Suspense fallback={<FieldSkeleton />}>
                     {query.operator &&
                       createElement(getFieldProp("SideDrawerField", type), {

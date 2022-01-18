@@ -98,6 +98,7 @@ export default function withPopoverCell(
         </ErrorBoundary>
       );
 
+    //This is where we update the documents
     const handleSubmit = (value: any) => {
       if (updateCell && !options?.readOnly) {
         updateCell(props.row.ref, props.column.key, value);
