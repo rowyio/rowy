@@ -1,5 +1,5 @@
+import _find from "lodash/find";
 import { IPopoverCellProps } from "../types";
-
 import MultiSelect_ from "@rowy/multiselect";
 
 export default function StatusSingleSelect({
@@ -12,11 +12,14 @@ export default function StatusSingleSelect({
 }: IPopoverCellProps) {
   const config = column.config ?? {};
   const conditions = config.conditions ?? [];
+  const reMappedConditions = conditions.map((c) =>
+    c.type === "number" ? { ...c, value: Number(c.value) } : { ...c }
+  );
   return (
     <MultiSelect_
       value={value}
-      onChange={onSubmit}
-      options={conditions.length >= 1 ? conditions : []} // this handles when conditions are deleted
+      onChange={(v) => onSubmit(v)}
+      options={conditions.length >= 1 ? reMappedConditions : []} // this handles when conditions are deleted
       multiple={false}
       freeText={config.freeText}
       disabled={disabled}

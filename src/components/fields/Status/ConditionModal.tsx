@@ -3,8 +3,6 @@ import Modal from "@src/components/Modal";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { default as Content } from "./ConditionModalContent";
 import { EMPTY_STATE } from "./Settings";
-import { ConstructionOutlined } from "@mui/icons-material";
-import { mdiConsoleLine } from "@mdi/js";
 
 export default function ConditionModal({
   modal,
@@ -13,8 +11,6 @@ export default function ConditionModal({
   setConditions,
 }) {
   const handleClose = () => setModal(EMPTY_STATE);
-
-  //This is fine
   const handleSave = () => {
     let _conditions = [...conditions];
     _conditions[modal.index] = modal.condition;
@@ -25,10 +21,8 @@ export default function ConditionModal({
     function setConditionHack(type, condition) {
       let rCondition = condition;
       if (type === "undefined") rCondition = { ...condition, value: undefined };
-      if (type === "boolean" && typeof condition.value === "object") {
-        //Again 'rowy's multiselect does not accept default value'
-        rCondition = { ...condition, value: false };
-      }
+      if (type === "boolean" && typeof condition.value === "object")
+        rCondition = { ...condition, value: false }; //Again 'rowy's multiselect does not accept default value'
       return rCondition;
     }
     const modalCondition = setConditionHack(

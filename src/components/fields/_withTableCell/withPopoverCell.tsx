@@ -50,7 +50,7 @@ export default function withPopoverCell(
   return function PopoverCell(props: FormatterProps<any>) {
     const classes = useStyles();
     const { transparent, ...popoverProps } = options ?? {};
-    const { updateCell } = useProjectContext();
+    const { deleteCell, updateCell } = useProjectContext();
 
     const { validationRegex, required } = (props.column as any).config;
 
@@ -100,7 +100,10 @@ export default function withPopoverCell(
 
     //This is where we update the documents
     const handleSubmit = (value: any) => {
-      if (updateCell && !options?.readOnly) {
+      if (deleteCell && !options?.readOnly && typeof value === "undefined") {
+        deleteCell(props.row.ref, props.column.key);
+        setLocalValue(value);
+      } else if (updateCell && !options?.readOnly) {
         updateCell(props.row.ref, props.column.key, value);
         setLocalValue(value);
       }

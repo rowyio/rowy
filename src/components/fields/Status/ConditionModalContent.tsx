@@ -44,8 +44,8 @@ export default function ConditionModalContent({
         multiple={false}
         label="Select data type"
       />
-      {/** This is the issue where false i causing a problem */}
-      {/** To add into MultiSelect library, defaultValue */}
+      {/** This is the issue where false is causing a problem */}
+      {/** To add defaultValue into MultiSelect?*/}
       {type === "boolean" && (
         <MultiSelect
           options={booleanOptions}
@@ -70,7 +70,7 @@ export default function ConditionModalContent({
             type="number"
             label="Value"
             value={value}
-            onChange={(e) => handleUpdate("value")(e.target.value)}
+            onChange={(e) => handleUpdate("value")(Number(e.target.value))}
           />
         </Grid>
       )}

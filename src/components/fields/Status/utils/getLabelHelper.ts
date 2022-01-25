@@ -24,18 +24,22 @@ const getBooleanLabelFrom = (arr: condition[], value: string) => {
   }
 };
 
+/**
+ * @param arr conditional array
+ * @param value if value is not detected, conditional value becomes the default value
+ * @returns conditional's label || undefined
+ */
 const getNumericLabelFrom = (arr: condition[], value: number) => {
   const numLabelFind = (v, c) => {
-    const val = Number(v);
+    const val = Number(v); // need to handle when value is default seted
     const condVal: number = Number(c.value);
     const operatorMap = new Map([
-      ["<", val < condVal ? true : false],
-      ["<=", val <= condVal ? true : false],
-      [">=", val >= condVal ? true : false],
-      [">", val > condVal ? true : false],
       ["==", val === condVal ? true : false],
+      ["<", val < condVal ? true : false],
+      ["<=", val <= condVal ? true : false], // will never reach this point
+      [">", val > condVal ? true : false],
+      [">=", val >= condVal ? true : false],
     ]);
-    //console.log('check', `${val}${c.operator}${c.value}`, operatorMap.get(c.operator))
     return operatorMap.get(c.operator) ? c.label : undefined;
   };
 
@@ -55,7 +59,7 @@ const getLabelFrom = (arr, value) => {
 };
 
 const finalLabel = (label: string | undefined, value) => {
-  return typeof label === "string" ? label : JSON.stringify(value); //last resort
+  return typeof label === "string" ? label : value;
 };
 
 export default function getLabel(value, conditions) {
