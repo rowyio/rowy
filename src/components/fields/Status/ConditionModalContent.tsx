@@ -1,3 +1,4 @@
+import _find from "lodash/find";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
@@ -31,9 +32,12 @@ const operatorOptions = [
 
 export default function ConditionModalContent({
   condition,
+  conditions,
   handleUpdate,
 }: any) {
   const { label, operator, type, value } = condition;
+  const duplicateCond = Boolean(_find(conditions, condition));
+  const labelReqLen = Boolean(condition.label.length < 4);
   return (
     <>
       <Typography variant="overline">DATA TYPE (input)</Typography>
@@ -67,22 +71,29 @@ export default function ConditionModalContent({
             />
           </div>
           <TextField
+            error={duplicateCond}
             type="number"
             label="Value"
             value={value}
             onChange={(e) => handleUpdate("value")(Number(e.target.value))}
+            helperText={
+              duplicateCond ? "Numeric Conditional already exists" : ""
+            }
           />
         </Grid>
       )}
       {type === "string" && (
         <TextField
+          error={duplicateCond}
           fullWidth
           label="Value"
           value={value}
           onChange={(e) => handleUpdate("value")(e.target.value)}
+          helperText={duplicateCond ? "string value already exists" : ""}
         />
       )}
       <TextField
+        error={labelReqLen}
         value={label}
         label="Label"
         fullWidth

@@ -1,8 +1,10 @@
 import { useEffect } from "react";
+import _find from "lodash/find";
 import Modal from "@src/components/Modal";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { default as Content } from "./ConditionModalContent";
 import { EMPTY_STATE } from "./Settings";
+import { isElement, isEmpty } from "lodash";
 
 export default function ConditionModal({
   modal,
@@ -18,6 +20,15 @@ export default function ConditionModal({
     setModal(EMPTY_STATE);
   };
   const handleAdd = () => {
+    const labelIsEmpty = Boolean(modal.condition.label.length < 4);
+    const stringValueIsEmpty = Boolean(
+      modal.condition.type === "string" && modal.condition.value.length === 0
+    );
+    const hasDuplicate = Boolean(_find(conditions, modal.condition));
+    const validation = Boolean(
+      labelIsEmpty || stringValueIsEmpty || hasDuplicate
+    );
+    if (validation) return;
     function setConditionHack(type, condition) {
       let rCondition = condition;
       if (type === "undefined") rCondition = { ...condition, value: undefined };
@@ -44,7 +55,11 @@ export default function ConditionModal({
     setModal(EMPTY_STATE);
   };
   const handleUpdate = (key: string) => (value) => {
-    setModal({ ...modal, condition: { ...modal.condition, [key]: value } });
+    const newState = {
+      ...modal,
+      condition: { ...modal.condition, [key]: value },
+    };
+    setModal(newState);
   };
   const primaryAction = (index) => {
     return index === null
@@ -87,7 +102,11 @@ export default function ConditionModal({
         secondary: secondaryAction(modal.index),
       }}
       children={
-        <Content condition={modal.condition} handleUpdate={handleUpdate} />
+        <Content
+          condition={modal.condition}
+          conditions={conditions}
+          handleUpdate={handleUpdate}
+        />
       }
     />
   );

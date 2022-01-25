@@ -33,12 +33,24 @@ const getNumericLabelFrom = (arr: condition[], value: number) => {
   const numLabelFind = (v, c) => {
     const val = Number(v); // need to handle when value is default seted
     const condVal: number = Number(c.value);
+
+    const handleLessThan = () => {
+      if (val === condVal) return true;
+      if (val < condVal) return true;
+      else return false;
+    };
+
+    const hanldeGreaterThan = () => {
+      if (val === condVal) return true;
+      if (val > condVal) return true;
+      else return false;
+    };
     const operatorMap = new Map([
-      ["==", val === condVal ? true : false],
-      ["<", val < condVal ? true : false],
-      ["<=", val <= condVal ? true : false], // will never reach this point
-      [">", val > condVal ? true : false],
+      ["<", handleLessThan()],
+      [">", hanldeGreaterThan()],
+      ["<=", val <= condVal ? true : false],
       [">=", val >= condVal ? true : false],
+      ["==", val === condVal ? true : false],
     ]);
     return operatorMap.get(c.operator) ? c.label : undefined;
   };
@@ -67,7 +79,7 @@ export default function getLabel(value, conditions) {
   const isBoolean = Boolean(typeof value === "boolean");
   const notBoolean = Boolean(typeof value !== "boolean");
   const isNullOrUndefined = Boolean(!value && notBoolean);
-  const isNumeric = Boolean(typeof value === "number" || Number(value)); //currently this is hacky. we need to make sure types are being saved correctly. numbers are being save as number
+  const isNumeric = Boolean(typeof value === "number");
 
   if (isNullOrUndefined) _label = getFalseyLabelFrom(conditions, value);
   else if (isBoolean) _label = getBooleanLabelFrom(conditions, value);
