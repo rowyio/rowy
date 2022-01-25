@@ -115,7 +115,7 @@
     "@types/react-router-hash-link": "^2.4.1",
     "@types/use-persisted-state": "^0.3.0",
     "craco-alias": "^3.0.1",
-    "firebase-tools": "^8.12.1",
+    "firebase-tools": "^10.1.0",
     "husky": "^4.2.5",
     "monaco-editor": "^0.21.2",
     "playwright": "^1.5.2",

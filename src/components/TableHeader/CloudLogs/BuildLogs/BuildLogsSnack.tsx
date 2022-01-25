@@ -26,12 +26,11 @@ export interface IBuildLogsSnackProps {
 export default function BuildLogsSnack({ onClose, onOpenPanel }) {
   const snackLogContext = useSnackLogContext();
   const { latestLog } = useBuildLogs();
-
   const [, setModal] = useAtom(modalAtom);
   const [, setCloudLogFilters] = useAtom(cloudLogFiltersAtom);
-
   const latestActiveLog =
-    latestLog?.startTimeStamp > snackLogContext.latestBuildTimestamp
+    latestLog?.startTimeStamp > snackLogContext.latestBuildTimestamp - 5000 ||
+    latestLog?.startTimeStamp > snackLogContext.latestBuildTimestamp + 5000
       ? latestLog
       : null;
   const logs = latestActiveLog?.fullLog;

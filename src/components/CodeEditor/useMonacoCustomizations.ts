@@ -176,7 +176,7 @@ export default function useMonacoCustomizations({
           "const ref: FirebaseFirestore.DocumentReference;",
           "const storage: firebasestorage.Storage;",
           "const db: FirebaseFirestore.Firestore;",
-          "const auth: adminauth.BaseAuth;",
+          "const auth: firebaseauth.BaseAuth;",
           "declare class row {",
           "    /**",
           "     * Returns the row fields",

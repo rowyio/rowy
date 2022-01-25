@@ -12,7 +12,7 @@ type ExtensionContext = {
   ref: FirebaseFirestore.DocumentReference;
   storage: firebasestorage.Storage;
   db: FirebaseFirestore.Firestore;
-  auth: adminauth.BaseAuth;
+  auth: firebaseauth.BaseAuth;
   change: any;
   triggerType: Triggers;
   fieldTypes: any;

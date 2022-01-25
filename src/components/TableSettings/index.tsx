@@ -63,8 +63,7 @@ export default function TableSettings({
 
   const handleSubmit = async (v) => {
     const { _suggestedRules, ...values } = v;
-    const data: any = { ...values };
-
+    const data = { ...values };
     if (values.schemaSource)
       data.schemaSource = _find(tables, { id: values.schemaSource });
 
@@ -327,6 +326,32 @@ export default function TableSettings({
                       </Typography>
                     ),
                   },
+                  /**
+                   * TODO: Figure out where to store this settings
+                  
+                  {
+                    id: "function",
+                    title: "Cloud Function",
+                    content: (
+                      <>
+                        <DialogContentText paragraph>
+                          Configure cloud function settings, this setting is shared across all tables connected to the same collection
+                        </DialogContentText>
+                        <FormFields
+                          {...formFieldsProps}
+                          fields={fields.filter((f) => f.step === "function")}
+                        />
+                      </>
+                    ),
+                    optional: true,
+                    error: Boolean(groupedErrors.function),
+                    subtitle: groupedErrors.auditing && (
+                      <Typography variant="caption" color="error">
+                        {groupedErrors.function}
+                      </Typography>
+                    ),
+                  },
+                   */
                   mode === TableSettingsDialogModes.create
                     ? {
                         id: "columns",
