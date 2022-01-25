@@ -288,6 +288,7 @@ export const tableSettings = (
       sx: { "& .MuiInputBase-input": { fontFamily: "mono" } },
     },
     // Step 5:Cloud functions
+    /*
     {
       step: "function",
       type: FieldType.slider,
@@ -385,6 +386,7 @@ export const tableSettings = (
       },
       gridCols: { xs: 12, sm: 6 },
     },
+    */
     mode === TableSettingsDialogModes.create && tables && tables?.length !== 0
       ? {
           step: "columns",
