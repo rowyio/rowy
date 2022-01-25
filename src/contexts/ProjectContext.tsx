@@ -1,5 +1,4 @@
 import React, { useState, useContext, useEffect, useRef, useMemo } from "react";
-import { db } from "@src/firebase";
 import { useSnackbar } from "notistack";
 import { DataGridHandle } from "react-data-grid";
 import _sortBy from "lodash/sortBy";
