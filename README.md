@@ -39,9 +39,9 @@ Manage Firestore data in a spreadsheet-like UI, write Cloud Functions effortless
 Set up Rowy on your Google Cloud Platform project with this one-click deploy
 button.
 
-[![Run on Google Cloud](https://deploy.cloud.run/button.svg)](https://deploy.cloud.run/?git_repo=https://github.com/rowyio/rowyRun.git)
+[![Run on Google Cloud](https://deploy.cloud.run/button.svg)](https://rowy.app/deploy)
 
-https://deploy.cloud.run/?git_repo=https://github.com/rowyio/rowyRun.git
+https://rowy.app/deploy
 
 ## Documentation
 
@@ -89,7 +89,7 @@ You can find the full documentation with how-to guides
 
 Set up Rowy on your Google Cloud project with this one-click deploy button. Your data and cloud functions stay on your own Firestore/GCP.
 
-[![Run on Google Cloud](https://deploy.cloud.run/button.svg)](https://deploy.cloud.run/?git_repo=https://github.com/rowyio/rowyRun.git)
+[![Run on Google Cloud](https://deploy.cloud.run/button.svg)](https://rowy.app/deploy)
 
 The one-click deploy makes the process of setting up easy with a step by step
 guide and ensures your project is setup correctly.
