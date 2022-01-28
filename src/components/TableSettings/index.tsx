@@ -91,6 +91,7 @@ export default function TableSettings({
             }/${data.id}`;
 
             if (hasExtensions) {
+              // find derivative, default value
               snackLogContext.requestSnackLog();
               rowyRun({
                 route: runRoutes.buildFunction,
