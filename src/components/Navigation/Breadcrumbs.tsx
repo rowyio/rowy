@@ -10,14 +10,12 @@ import {
   Link,
   Typography,
   Tooltip,
-  IconButton,
 } from "@mui/material";
 import ArrowRightIcon from "@mui/icons-material/ChevronRight";
-import InfoIcon from "@mui/icons-material/InfoOutlined";
-import CloseIcon from "@mui/icons-material/Close";
 import ReadOnlyIcon from "@mui/icons-material/EditOffOutlined";
 
 import InfoTooltip from "@src/components/InfoTooltip";
+import RenderedMarkdown from "@src/components/RenderedMarkdown";
 import { useAppContext } from "@src/contexts/AppContext";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import useRouter from "@src/hooks/useRouter";
@@ -108,7 +106,14 @@ export default function Breadcrumbs({ sx = [], ...props }: BreadcrumbsProps) {
 
               {crumb === table?.id && table?.description && (
                 <InfoTooltip
-                  description={table?.description}
+                  description={
+                    <div>
+                      <RenderedMarkdown
+                        children={table?.description}
+                        restrictionPreset="singleLine"
+                      />
+                    </div>
+                  }
                   buttonLabel="Table info"
                   tooltipProps={{
                     componentsProps: {

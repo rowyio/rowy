@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import GoIcon from "@mui/icons-material/ArrowForward";
 
+import RenderedMarkdown from "@src/components/RenderedMarkdown";
 import { Table } from "@src/contexts/ProjectContext";
 
 export interface ITableListItemProps extends Table {
@@ -36,29 +37,31 @@ export default function TableListItem({
           "& > *": { lineHeight: "48px !important" },
           flexWrap: "nowrap",
           overflow: "hidden",
+
+          flexBasis: 160 + 16,
+          flexGrow: 0,
+          flexShrink: 0,
+          mr: 2,
         }}
       >
-        {/* <Typography
-          variant="overline"
-          component="p"
-          noWrap
-          color="textSecondary"
-          sx={{ maxWidth: 100, flexShrink: 0, flexGrow: 1, mr: 2 }}
-        >
-          {section}
-        </Typography> */}
-        <Typography
-          component="h3"
-          variant="button"
-          noWrap
-          sx={{ maxWidth: 160, flexShrink: 0, flexGrow: 1, mr: 2 }}
-        >
+        <Typography component="h3" variant="button" noWrap>
           {name}
         </Typography>
-        <Typography color="textSecondary" noWrap>
-          {description}
-        </Typography>
       </ListItemButton>
+
+      <Typography
+        color="textSecondary"
+        component="div"
+        noWrap
+        sx={{ flexGrow: 1, "& *": { display: "inline" } }}
+      >
+        {description && (
+          <RenderedMarkdown
+            children={description}
+            restrictionPreset="singleLine"
+          />
+        )}
+      </Typography>
 
       <div style={{ flexShrink: 0 }}>
         {actions}
