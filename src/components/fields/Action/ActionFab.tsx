@@ -53,13 +53,14 @@ export default function ActionFab({
   const { tableState, rowyRun } = useProjectContext();
   const { ref } = row;
   const { config } = column as any;
-  const action = !value
-    ? "run"
-    : value.undo
-    ? "undo"
-    : value.redo
-    ? "redo"
-    : "";
+
+  const hasRan = value && value.status;
+
+  const action: "run" | "undo" | "redo" = hasRan
+    ? value.undo || config.undo?.enabled
+      ? "undo"
+      : "redo"
+    : "run";
   const [isRunning, setIsRunning] = useState(false);
 
   const callableName: string =
@@ -98,50 +99,51 @@ export default function ActionFab({
     }
     const { message, success } = result;
     setIsRunning(false);
-    enqueueSnackbar(JSON.stringify(message), {
-      variant: success ? "success" : "error",
-    });
+    enqueueSnackbar(
+      typeof message === "string" ? message : JSON.stringify(message),
+      {
+        variant: success ? "success" : "error",
+      }
+    );
   };
-  const hasRan = value && value.status;
-
-  const actionState: "run" | "undo" | "redo" = hasRan
-    ? value.undo
-      ? "undo"
-      : "redo"
-    : "run";
 
   const needsParams =
     config.friction === "params" &&
     Array.isArray(config.params) &&
     config.params.length > 0;
-  const needsConfirmation =
-    (!config.friction || config.friction === "confirmation") &&
-    typeof config.confirmation === "string" &&
-    config.confirmation !== "";
 
+  const handleClick = async () => {
+    if (needsParams) {
+      return requestParams({
+        column,
+        row,
+        handleRun,
+      });
+    } else if (action === "undo" && config.undo.confirmation) {
+      return requestConfirmation({
+        title: `${column.name} Confirmation`,
+        body: config.undo.confirmation.replace(/\{\{(.*?)\}\}/g, replacer(row)),
+        confirm: "Run",
+        handleConfirm: () => handleRun(),
+      });
+    } else if (
+      action !== "undo" &&
+      config.friction === "confirmation" &&
+      typeof config.confirmation === "string"
+    ) {
+      return requestConfirmation({
+        title: `${column.name} Confirmation`,
+        body: config.confirmation.replace(/\{\{(.*?)\}\}/g, replacer(row)),
+        confirm: "Run",
+        handleConfirm: () => handleRun(),
+      });
+    } else {
+      handleRun();
+    }
+  };
   return (
     <Fab
-      onClick={
-        needsParams
-          ? () =>
-              requestParams({
-                column,
-                row,
-                handleRun,
-              })
-          : needsConfirmation
-          ? () =>
-              requestConfirmation({
-                title: `${column.name ?? column.key} Confirmation`,
-                body: (actionState === "undo" && config.undoConfirmation
-                  ? config.undoConfirmation
-                  : config.confirmation
-                ).replace(/\{\{(.*?)\}\}/g, replacer(row)),
-                confirm: "Run",
-                handleConfirm: () => handleRun(),
-              })
-          : () => handleRun()
-      }
+      onClick={handleClick}
       disabled={
         isRunning ||
         !!(
@@ -160,13 +162,13 @@ export default function ActionFab({
               : theme.palette.background.default,
         },
       }}
-      aria-label={actionState}
+      aria-label={action}
       {...props}
     >
       {isRunning ? (
         <CircularProgressOptical color="secondary" size={16} />
       ) : (
-        getStateIcon(actionState, config)
+        getStateIcon(action, config)
       )}
     </Fab>
   );

@@ -45,6 +45,26 @@ const FORM_FIELD_SNIPPETS = [
       options: ["ADMIN", "EDITOR", "VIEWER"],
     },
   },
+  {
+    label: "Number field",
+    value: {
+      type: "shortText",
+      InputProps: {
+        type: "number",
+      },
+      defaultValue: 1,
+      label: "Price",
+      name: "price",
+    },
+  },
+  {
+    label: "Check Box",
+    value: {
+      type: "checkbox",
+      label: "Breakfast included",
+      name: "breakfast",
+    },
+  },
 ];
 
 export default function FormFieldSnippets() {

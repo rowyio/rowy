@@ -9,6 +9,7 @@ import WarningIcon from "@mui/icons-material/WarningAmber";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
 import { name } from "@root/package.json";
 import { FieldType as TableFieldType } from "@src/constants/fields";
+import InputAdornment from "@mui/material/InputAdornment";
 
 export const tableSettings = (
   mode: TableSettingsDialogModes | null,
@@ -255,8 +256,41 @@ export const tableSettings = (
       label: "Suggested Firestore Rules",
       watchedField: "collection",
     },
+
+    // Step 4: Auditing
     {
-      step: "accessControls",
+      step: "auditing",
+      type: FieldType.checkbox,
+      name: "audit",
+      label: "Enable auditing for this table",
+      defaultValue: true,
+    },
+    {
+      step: "auditing",
+      type: FieldType.shortText,
+      name: "auditFieldCreatedBy",
+      label: "Created By field key (optional)",
+      defaultValue: "_createdBy",
+      displayCondition: "return values.audit",
+      assistiveText: "Optionally, change the field key",
+      gridCols: { xs: 12, sm: 6 },
+      sx: { "& .MuiInputBase-input": { fontFamily: "mono" } },
+    },
+    {
+      step: "auditing",
+      type: FieldType.shortText,
+      name: "auditFieldUpdatedBy",
+      label: "Updated By field key (optional)",
+      defaultValue: "_updatedBy",
+      displayCondition: "return values.audit",
+      assistiveText: "Optionally, change the field key",
+      gridCols: { xs: 12, sm: 6 },
+      sx: { "& .MuiInputBase-input": { fontFamily: "mono" } },
+    },
+    // Step 5:Cloud functions
+    /*
+    {
+      step: "function",
       type: FieldType.slider,
       name: "triggerDepth",
       defaultValue: 1,
@@ -289,37 +323,70 @@ export const tableSettings = (
       ),
     },
 
-    // Step 4: Auditing
     {
-      step: "auditing",
-      type: FieldType.checkbox,
-      name: "audit",
-      label: "Enable auditing for this table",
-      defaultValue: true,
-    },
-    {
-      step: "auditing",
-      type: FieldType.shortText,
-      name: "auditFieldCreatedBy",
-      label: "Created By field key (optional)",
-      defaultValue: "_createdBy",
-      displayCondition: "return values.audit",
-      assistiveText: "Optionally, change the field key",
+      step: "function",
+      type: FieldType.singleSelect,
+      name: "function.memory",
+      label: "Memory Allocation",
+      defaultValue: "256MB",
+      options: ["128MB", "256MB", "512MB", "1GB", "2GB", "4GB", "8GB"],
+      required: true,
       gridCols: { xs: 12, sm: 6 },
-      sx: { "& .MuiInputBase-input": { fontFamily: "mono" } },
     },
     {
-      step: "auditing",
+      step: "function",
       type: FieldType.shortText,
-      name: "auditFieldUpdatedBy",
-      label: "Updated By field key (optional)",
-      defaultValue: "_updatedBy",
-      displayCondition: "return values.audit",
-      assistiveText: "Optionally, change the field key",
+      name: "function.timeout",
+      label: "Timeout",
+      defaultValue: 60,
+      InputProps: {
+        type: "number",
+        endAdornment: <InputAdornment position="end">seconds</InputAdornment>,
+      },
       gridCols: { xs: 12, sm: 6 },
-      sx: { "& .MuiInputBase-input": { fontFamily: "mono" } },
     },
+    {
+      step: "function",
+      type: FieldType.contentSubHeader,
+      name: "functionHeader",
+      label: "Auto scaling",
 
+      assistiveText: (
+        <>
+          <Link
+            href="https://firebase.google.com/docs/functions/autoscaling"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Learn more about auto scaling
+            <OpenInNewIcon />
+          </Link>
+        </>
+      ),
+    },
+    {
+      step: "function",
+      type: FieldType.shortText,
+      name: "function.minInstances",
+      label: "Minimum Instances",
+      defaultValue: 0,
+      InputProps: {
+        type: "number",
+      },
+      gridCols: { xs: 12, sm: 6 },
+    },
+    {
+      step: "function",
+      type: FieldType.shortText,
+      name: "function.maxInstances",
+      label: "Maximum Instances",
+      defaultValue: 1000,
+      InputProps: {
+        type: "number",
+      },
+      gridCols: { xs: 12, sm: 6 },
+    },
+    */
     mode === TableSettingsDialogModes.create && tables && tables?.length !== 0
       ? {
           step: "columns",
