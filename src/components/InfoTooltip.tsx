@@ -10,6 +10,7 @@ export interface IInfoTooltipProps {
   description: React.ReactNode;
   buttonLabel?: string;
   defaultOpen?: boolean;
+  onClose?: () => void;
 
   buttonProps?: Partial<React.ComponentProps<typeof IconButton>>;
   tooltipProps?: Partial<React.ComponentProps<typeof Tooltip>>;
@@ -20,12 +21,27 @@ export default function InfoTooltip({
   description,
   buttonLabel = "Info",
   defaultOpen,
+  onClose,
 
   buttonProps,
   tooltipProps,
   iconProps,
 }: IInfoTooltipProps) {
   const [open, setOpen] = useState(defaultOpen || false);
+
+  const handleClose = () => {
+    setOpen(false);
+    if (onClose) onClose();
+  };
+
+  const toggleOpen = () => {
+    if (open) {
+      setOpen(false);
+      if (onClose) onClose();
+    } else {
+      setOpen(true);
+    }
+  };
 
   return (
     <Tooltip
@@ -35,7 +51,7 @@ export default function InfoTooltip({
           <IconButton
             aria-label={`Close ${buttonLabel}`}
             size="small"
-            onClick={() => setOpen(false)}
+            onClick={handleClose}
             sx={{
               m: -0.5,
               opacity: 0.8,
@@ -82,7 +98,7 @@ export default function InfoTooltip({
         aria-label={buttonLabel}
         size="small"
         {...buttonProps}
-        onClick={() => setOpen((x) => !x)}
+        onClick={toggleOpen}
       >
         {buttonProps?.children || <InfoIcon fontSize="small" {...iconProps} />}
       </IconButton>

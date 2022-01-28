@@ -3,6 +3,8 @@ import _find from "lodash/find";
 import queryString from "query-string";
 import { Link as RouterLink } from "react-router-dom";
 import _camelCase from "lodash/camelCase";
+import { useAtom } from "jotai";
+import { atomWithStorage } from "jotai/utils";
 
 import {
   Breadcrumbs as MuiBreadcrumbs,
@@ -21,6 +23,11 @@ import { useProjectContext } from "@src/contexts/ProjectContext";
 import useRouter from "@src/hooks/useRouter";
 import routes from "@src/constants/routes";
 
+const tableDescriptionDismissedAtom = atomWithStorage<string[]>(
+  "tableDescriptionDismissed",
+  []
+);
+
 export default function Breadcrumbs({ sx = [], ...props }: BreadcrumbsProps) {
   const { userClaims } = useAppContext();
   const { tables, table, tableState } = useProjectContext();
@@ -38,7 +45,7 @@ export default function Breadcrumbs({ sx = [], ...props }: BreadcrumbsProps) {
   const section = table?.section || "";
   const getLabel = (id: string) => _find(tables, ["id", id])?.name || id;
 
-  const [openInfo, setOpenInfo] = useState(true);
+  const [dismissed, setDismissed] = useAtom(tableDescriptionDismissedAtom);
 
   return (
     <MuiBreadcrumbs
@@ -121,6 +128,8 @@ export default function Breadcrumbs({ sx = [], ...props }: BreadcrumbsProps) {
                       tooltip: { sx: { maxWidth: "75vw" } },
                     } as any,
                   }}
+                  defaultOpen={!dismissed.includes(table?.id)}
+                  onClose={() => setDismissed((d) => [...d, table?.id])}
                 />
               )}
             </div>
