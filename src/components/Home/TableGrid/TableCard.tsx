@@ -50,7 +50,7 @@ export default function TableCard({
           {description && (
             <RenderedMarkdown
               children={description}
-              restrictionPreset="singleLine"
+              //restrictionPreset="singleLine"
             />
           )}
         </Typography>

@@ -6,8 +6,10 @@ import { Typography, Link } from "@mui/material";
 
 const remarkPlugins = [remarkGfm];
 const components = {
-  a: (p) => <Link color="inherit" {...p} />,
+  a: (props) => <Link color="inherit" {...props} />,
   p: Typography,
+  // eslint-disable-next-line jsx-a11y/alt-text
+  img: (props) => <img style={{ maxWidth: "100%" }} {...props} />,
 };
 
 const restrictionPresets = {
