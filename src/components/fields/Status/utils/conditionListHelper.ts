@@ -1,7 +1,7 @@
 export function createValueLabel(condition) {
   const { operator, type, value } = condition || {};
   const typeLabelMap = new Map([
-    ["undefined", `${type}`], // currently undefined value is returning null need to fix that
+    ["undefined", `${type}`],
     ["null", `${type}`],
     ["number", ` ${type}:${operator}${value}`],
     ["boolean", `${type}:${value}`],
