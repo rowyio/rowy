@@ -200,7 +200,7 @@ export default function ColumnMenu() {
         setModal({
           type: ModalStates.new,
           data: {
-            direction: "left",
+            insert: "left",
             sourceIndex: column.index,
           },
         }),
@@ -212,7 +212,7 @@ export default function ColumnMenu() {
         setModal({
           type: ModalStates.new,
           data: {
-            direction: "right",
+            insert: "right",
             sourceIndex: column.index,
           },
         }),

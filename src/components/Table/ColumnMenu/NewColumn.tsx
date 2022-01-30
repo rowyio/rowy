@@ -28,8 +28,7 @@ export default function NewColumn({
   openSettings,
   handleClose,
 }: INewColumnProps) {
-  const { table, settingsActions, tableActions } = useProjectContext();
-
+  const { settingsActions, table, tableActions } = useProjectContext();
   const [columnLabel, setColumnLabel] = useState("");
   const [fieldKey, setFieldKey] = useState("");
   const [type, setType] = useState(FieldType.shortText);
@@ -147,7 +146,7 @@ export default function NewColumn({
                 config: {},
               },
               {
-                position: data.insertPos,
+                insert: data.insert,
                 index: data.sourceIndex,
               }
             );

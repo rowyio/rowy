@@ -118,16 +118,21 @@ const useTableConfig = (tablePath?: string) => {
 
   /** insert column by index
    * @param col     properties of new column
-   * @param source  source object { index: selected index, position: left | right }
+   * @param source  source object { index: selected source index, insert: left | right }
    */
-
   const insert = (col, source) => {
     const { columns } = tableConfigState;
-    const position = source.position === "right" ? 1 : 0;
-    const insertPos = source.index + position;
-    const targetPos = insertPos === -1 ? 0 : insertPos;
     const orderedCol = _orderBy(Object.values(columns), "index");
-    orderedCol.splice(targetPos, 0, col);
+
+    //offset index is necessary for splice insert
+    const offset = source.insert === "left" ? 0 : 1;
+
+    //insert poistion, is source index + offset
+    const targetIndx = source.index + offset;
+
+    //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
+    orderedCol.splice(targetIndx, 0, col);
+
     const updatedColumns = orderedCol.reduce(
       (acc: any, col: any, indx: number) => {
         acc[col.key] = { ...col, index: indx };
