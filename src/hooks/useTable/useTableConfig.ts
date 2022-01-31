@@ -128,9 +128,9 @@ const useTableConfig = (tablePath?: string) => {
 
     //insert poistion, is source index + offset
     //if source.index is undefined, set target index to end of row
-    const targetIndx = Boolean(source.index)
-      ? source.index + offset
-      : orderedCol.length;
+    const targetIndx = Boolean(typeof source.index === "undefined")
+      ? orderedCol.length
+      : source.index + offset;
 
     //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
     orderedCol.splice(targetIndx, 0, col);

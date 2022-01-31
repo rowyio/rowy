@@ -157,7 +157,6 @@ export default function NewColumn({
                 fieldName: fieldKey,
                 key: fieldKey,
                 config: {},
-                ...data.initializeColumn,
               });
             } else handleClose();
             analytics.logEvent("create_column", {
