@@ -3,6 +3,8 @@ import _find from "lodash/find";
 import queryString from "query-string";
 import { Link as RouterLink } from "react-router-dom";
 import _camelCase from "lodash/camelCase";
+import { useAtom } from "jotai";
+import { atomWithStorage } from "jotai/utils";
 
 import {
   Breadcrumbs as MuiBreadcrumbs,
@@ -10,18 +12,21 @@ import {
   Link,
   Typography,
   Tooltip,
-  IconButton,
 } from "@mui/material";
 import ArrowRightIcon from "@mui/icons-material/ChevronRight";
-import InfoIcon from "@mui/icons-material/InfoOutlined";
-import CloseIcon from "@mui/icons-material/Close";
 import ReadOnlyIcon from "@mui/icons-material/EditOffOutlined";
 
 import InfoTooltip from "@src/components/InfoTooltip";
+import RenderedMarkdown from "@src/components/RenderedMarkdown";
 import { useAppContext } from "@src/contexts/AppContext";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import useRouter from "@src/hooks/useRouter";
 import routes from "@src/constants/routes";
+
+const tableDescriptionDismissedAtom = atomWithStorage<string[]>(
+  "tableDescriptionDismissed",
+  []
+);
 
 export default function Breadcrumbs({ sx = [], ...props }: BreadcrumbsProps) {
   const { userClaims } = useAppContext();
@@ -40,7 +45,7 @@ export default function Breadcrumbs({ sx = [], ...props }: BreadcrumbsProps) {
   const section = table?.section || "";
   const getLabel = (id: string) => _find(tables, ["id", id])?.name || id;
 
-  const [openInfo, setOpenInfo] = useState(true);
+  const [dismissed, setDismissed] = useAtom(tableDescriptionDismissedAtom);
 
   return (
     <MuiBreadcrumbs
@@ -108,7 +113,14 @@ export default function Breadcrumbs({ sx = [], ...props }: BreadcrumbsProps) {
 
               {crumb === table?.id && table?.description && (
                 <InfoTooltip
-                  description={table?.description}
+                  description={
+                    <div>
+                      <RenderedMarkdown
+                        children={table?.description}
+                        restrictionPreset="singleLine"
+                      />
+                    </div>
+                  }
                   buttonLabel="Table info"
                   tooltipProps={{
                     componentsProps: {
@@ -116,6 +128,8 @@ export default function Breadcrumbs({ sx = [], ...props }: BreadcrumbsProps) {
                       tooltip: { sx: { maxWidth: "75vw" } },
                     } as any,
                   }}
+                  defaultOpen={!dismissed.includes(table?.id)}
+                  onClose={() => setDismissed((d) => [...d, table?.id])}
                 />
               )}
             </div>
