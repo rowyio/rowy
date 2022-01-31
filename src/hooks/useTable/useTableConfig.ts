@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import _camelCase from "lodash/camelCase";
 
+import _orderBy from "lodash/orderBy";
 import _sortBy from "lodash/sortBy";
 
 import useDoc, { DocActions } from "../useDoc";
@@ -85,12 +86,13 @@ const useTableConfig = (tableId?: string) => {
       _columnValues.filter((col: any) => !col.hidden && !col.fixed),
       "index"
     );
+
     const targetColumn: any = columnsArray[index - numberOfFixedColumns];
     const updatedColumns = {
       ...columns,
       [targetColumn.key]: { ...targetColumn, width },
     };
-
+    
     documentDispatch({
       action: DocActions.update,
       data: { columns: updatedColumns },
@@ -114,6 +116,40 @@ const useTableConfig = (tableId?: string) => {
       action: DocActions.update,
       data: { columns: updatedColumns },
       callback: onSuccess,
+    });
+  };
+
+  /** insert column by index
+   * @param col     properties of new column
+   * @param source  source object { index: selected source index, insert: left | right }
+   */
+  const insert = (col, source) => {
+    const { columns } = tableConfigState;
+    const orderedCol = _orderBy(Object.values(columns), "index");
+
+    //offset index is necessary for splice insert
+    const offset = source.insert === "left" ? 0 : 1;
+
+    //insert poistion, is source index + offset
+    //if source.index is undefined, set target index to end of row
+    const targetIndx = Boolean(typeof source.index === "undefined")
+      ? orderedCol.length
+      : source.index + offset;
+
+    //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
+    orderedCol.splice(targetIndx, 0, col);
+
+    const updatedColumns = orderedCol.reduce(
+      (acc: any, col: any, indx: number) => {
+        acc[col.key] = { ...col, index: indx };
+        return acc;
+      },
+      {}
+    );
+
+    documentDispatch({
+      action: DocActions.update,
+      data: { columns: updatedColumns },
     });
   };
   /** remove column by index
@@ -168,6 +204,7 @@ const useTableConfig = (tableId?: string) => {
     });
   };
   const actions = {
+    insert,
     updateColumn,
     updateConfig,
     addColumn,

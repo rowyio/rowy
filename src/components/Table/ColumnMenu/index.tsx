@@ -92,9 +92,7 @@ export default function ColumnMenu() {
     if (column && column.type === FieldType.last) {
       setModal({
         type: ModalStates.new,
-        data: {
-          initializeColumn: { index: column.index ? column.index + 1 : 0 },
-        },
+        data: {},
       });
     }
   }, [column]);
@@ -209,7 +207,8 @@ export default function ColumnMenu() {
         setModal({
           type: ModalStates.new,
           data: {
-            initializeColumn: { index: column.index ? column.index - 1 : 0 },
+            insert: "left",
+            sourceIndex: column.index,
           },
         }),
     },
@@ -220,7 +219,8 @@ export default function ColumnMenu() {
         setModal({
           type: ModalStates.new,
           data: {
-            initializeColumn: { index: column.index ? column.index + 1 : 0 },
+            insert: "right",
+            sourceIndex: column.index,
           },
         }),
     },
