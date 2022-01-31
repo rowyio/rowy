@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useAtom } from "jotai";
 import _isEqual from "lodash/isEqual";
 
 import TableHeaderButton from "../TableHeaderButton";
@@ -16,9 +17,10 @@ import { emptyWebhookObject, IWebhook, WebhookType } from "./utils";
 import { runRoutes } from "@src/constants/runRoutes";
 import { analytics } from "@src/analytics";
 import { useSnackbar } from "notistack";
+import { modalAtom } from "@src/atoms/Table";
 
 export default function Webhooks() {
-  const { tableState, tableActions, rowyRun, compatibleRowyRunVersion } =
+  const { tableState, table, tableActions, rowyRun, compatibleRowyRunVersion } =
     useProjectContext();
   const appContext = useAppContext();
   const { requestConfirmation } = useConfirmation();
@@ -27,7 +29,11 @@ export default function Webhooks() {
   const currentWebhooks = (tableState?.config.webhooks ?? []) as IWebhook[];
   const [localWebhooksObjects, setLocalWebhooksObjects] =
     useState(currentWebhooks);
-  const [openWebhookList, setOpenWebhookList] = useState(false);
+
+  const [modal, setModal] = useAtom(modalAtom);
+  const open = modal === "webhooks";
+  const setOpen = (open: boolean) => setModal(open ? "webhooks" : "");
+
   const [webhookModal, setWebhookModal] = useState<{
     mode: "add" | "update";
     webhookObject: IWebhook;
@@ -38,58 +44,59 @@ export default function Webhooks() {
 
   const edited = !_isEqual(currentWebhooks, localWebhooksObjects);
 
-  const handleOpen = () => {
-    setOpenWebhookList(true);
-  };
+  const handleOpen = () => setOpen(true);
 
   const handleClose = (
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>
+    _setOpen: React.Dispatch<React.SetStateAction<boolean>>
   ) => {
     if (edited) {
-      setOpen(true);
+      _setOpen(true);
       requestConfirmation({
         title: "Discard changes?",
         confirm: "Discard",
         handleConfirm: () => {
-          setOpen(false);
+          _setOpen(false);
           setLocalWebhooksObjects(currentWebhooks);
-          setOpenWebhookList(false);
+          setOpen(false);
         },
       });
     } else {
-      setOpenWebhookList(false);
+      setOpen(false);
     }
   };
 
-  const handleSaveWebhooks = async () => {
-    tableActions?.table.updateConfig("webhooks", localWebhooksObjects);
-    setOpenWebhookList(false);
+  const handleSaveWebhooks = async (callback?: Function) => {
+    tableActions?.table.updateConfig(
+      "webhooks",
+      localWebhooksObjects,
+      callback
+    );
+    setOpen(false);
     // TODO: convert to async function that awaits for the document write to complete
     await new Promise((resolve) => setTimeout(resolve, 500));
   };
 
-  const handleSaveDeploy = async () => {
-    await handleSaveWebhooks();
-    try {
-      if (rowyRun) {
-        const resp = await rowyRun({
-          service: "hooks",
-          route: runRoutes.publishWebhooks,
-          body: {
-            tableConfigPath: tableState?.config.tableConfig.path,
-            tablePath: tableState?.tablePath,
-          },
-        });
-        enqueueSnackbar(resp.message, {
-          variant: resp.success ? "success" : "error",
-        });
-
-        analytics.logEvent("published_webhooks");
+  const handleSaveDeploy = () =>
+    handleSaveWebhooks(async () => {
+      try {
+        if (rowyRun) {
+          const resp = await rowyRun({
+            service: "hooks",
+            route: runRoutes.publishWebhooks,
+            body: {
+              tableConfigPath: tableState?.config.tableConfig.path,
+              tablePath: tableState?.tablePath,
+            },
+          });
+          enqueueSnackbar(resp.message, {
+            variant: resp.success ? "success" : "error",
+          });
+          analytics.logEvent("published_webhooks");
+        }
+      } catch (e) {
+        console.error(e);
       }
-    } catch (e) {
-      console.error(e);
-    }
-  };
+    });
 
   const handleAddWebhook = (webhookObject: IWebhook) => {
     setLocalWebhooksObjects([...localWebhooksObjects, webhookObject]);
@@ -169,7 +176,7 @@ export default function Webhooks() {
         icon={<WebhookIcon />}
       />
 
-      {openWebhookList && !!tableState && (
+      {open && !!tableState && (
         <Modal
           onClose={handleClose}
           disableBackdropClick={edited}
@@ -182,7 +189,11 @@ export default function Webhooks() {
               handleAddWebhook={(type: WebhookType) => {
                 setWebhookModal({
                   mode: "add",
-                  webhookObject: emptyWebhookObject(type, currentEditor()),
+                  webhookObject: emptyWebhookObject(
+                    type,
+                    currentEditor(),
+                    table
+                  ),
                 });
               }}
               variant={
@@ -201,12 +212,16 @@ export default function Webhooks() {
           actions={{
             primary: {
               children: "Save & Deploy",
-              onClick: handleSaveDeploy,
+              onClick: () => {
+                handleSaveDeploy();
+              },
               disabled: !edited,
             },
             secondary: {
               children: "Save",
-              onClick: handleSaveWebhooks,
+              onClick: () => {
+                handleSaveWebhooks();
+              },
               disabled: !edited,
             },
           }}
@@ -215,9 +230,7 @@ export default function Webhooks() {
 
       {webhookModal && (
         <WebhookModal
-          handleClose={() => {
-            setWebhookModal(null);
-          }}
+          handleClose={() => setWebhookModal(null)}
           handleAdd={handleAddWebhook}
           handleUpdate={handleUpdateWebhook}
           mode={webhookModal.mode}

@@ -111,7 +111,7 @@ export default function ImportCsvWizard({
         setOpen(false);
         setTimeout(handleClose, 300);
       }}
-      title="Import CSV"
+      title="Import CSV or TSV"
       steps={
         [
           {

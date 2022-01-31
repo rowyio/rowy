@@ -28,11 +28,15 @@ export default function FinalColumn({ row }: FormatterProps<any, any>) {
   useStyles();
 
   const { requestConfirmation } = useConfirmation();
-  const { deleteRow, addRow } = useProjectContext();
+  const { deleteRow, addRow, table } = useProjectContext();
   const altPress = useKeyPress("Alt");
+
   const handleDelete = () => {
     if (deleteRow) deleteRow(row.id);
   };
+
+  if (table?.readOnly) return null;
+
   return (
     <Stack direction="row" spacing={0.5}>
       <Tooltip title="Duplicate row">

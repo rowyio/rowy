@@ -1,12 +1,6 @@
 import { Fragment } from "react";
 
-import {
-  MenuItem,
-  ListItemIcon,
-  ListSubheader,
-  Divider,
-} from "@mui/material";
-import { alpha } from "@mui/material/styles";
+import { MenuItem, ListItemIcon, ListSubheader, Divider } from "@mui/material";
 
 export interface IMenuContentsProps {
   menuItems: {
@@ -43,38 +37,11 @@ export default function MenuContents({ menuItems }: IMenuContentsProps) {
           <MenuItem
             key={index}
             onClick={item.onClick}
-            sx={
-              item.color === "error"
-                ? {
-                    color: "error.main",
-                    "&:hover": {
-                      backgroundColor: (theme) =>
-                        alpha(
-                          theme.palette.error.main,
-                          theme.palette.action.hoverOpacity
-                        ),
-                    },
-                  }
-                : undefined
-            }
+            color={item.color}
             selected={item.active}
             disabled={item.disabled}
           >
-            <ListItemIcon
-              sx={
-                item.color === "error"
-                  ? {
-                      color: (theme) =>
-                        alpha(
-                          theme.palette.error.main,
-                          theme.palette.action.activeOpacity * 1.1
-                        ),
-                    }
-                  : undefined
-              }
-            >
-              {icon}
-            </ListItemIcon>
+            <ListItemIcon>{icon}</ListItemIcon>
             {item.active ? item.activeLabel : item.label}
           </MenuItem>
         );

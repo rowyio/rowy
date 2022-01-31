@@ -7,7 +7,7 @@ import _sortBy from "lodash/sortBy";
 
 import useDoc, { DocActions } from "../useDoc";
 import { FieldType } from "@src/constants/fields";
-import { arrayMover, formatPath } from "../../utils/fns";
+import { formatPath } from "../../utils/fns";
 import { db, deleteField } from "../../firebase";
 
 export type ColumnConfig = {
@@ -22,9 +22,9 @@ export type ColumnConfig = {
   [key: string]: any;
 };
 
-const useTableConfig = (tablePath?: string) => {
+const useTableConfig = (tableId?: string) => {
   const [tableConfigState, documentDispatch] = useDoc({
-    path: tablePath ? formatPath(tablePath) : "",
+    path: tableId ? formatPath(tableId) : "",
   });
 
   useEffect(() => {
@@ -78,18 +78,21 @@ const useTableConfig = (tablePath?: string) => {
    */
   const [resize] = useDebouncedCallback((index: number, width: number) => {
     const { columns } = tableConfigState;
-    const numberOfFixedColumns = Object.values(columns).filter(
+    const _columnValues = Object.values(columns);
+    const numberOfFixedColumns = _columnValues.filter(
       (col: any) => col.fixed && !col.hidden
     ).length;
     const columnsArray = _sortBy(
-      Object.values(columns).filter((col: any) => !col.hidden && !col.fixed),
+      _columnValues.filter((col: any) => !col.hidden && !col.fixed),
       "index"
     );
-    let column: any = columnsArray[index - numberOfFixedColumns];
-    column.width = width;
-    let updatedColumns = columns;
-    updatedColumns[column.key] = column;
 
+    const targetColumn: any = columnsArray[index - numberOfFixedColumns];
+    const updatedColumns = {
+      ...columns,
+      [targetColumn.key]: { ...targetColumn, width },
+    };
+    
     documentDispatch({
       action: DocActions.update,
       data: { columns: updatedColumns },
@@ -101,7 +104,7 @@ const useTableConfig = (tablePath?: string) => {
    *  @param index of column.
    *  @param {updatable[]} updatables properties to be updated
    */
-  const updateColumn = (key: string, updates: any) => {
+  const updateColumn = (key: string, updates: any, onSuccess?: Function) => {
     const { columns } = tableConfigState;
 
     const updatedColumns = {
@@ -112,6 +115,7 @@ const useTableConfig = (tablePath?: string) => {
     documentDispatch({
       action: DocActions.update,
       data: { columns: updatedColumns },
+      callback: onSuccess,
     });
   };
 
@@ -168,15 +172,21 @@ const useTableConfig = (tablePath?: string) => {
     const { columns } = tableConfigState;
     const oldIndex = columns[draggedColumnKey].index;
     const newIndex = columns[droppedColumnKey].index;
-    const columnsArray = _sortBy(Object.values(columns), "index");
-    arrayMover(columnsArray, oldIndex, newIndex);
-    let updatedColumns = columns;
 
-    columnsArray
-      .filter((c) => c) // arrayMover has a bug creating undefined items
-      .forEach((column: any, index) => {
-        updatedColumns[column.key] = { ...column, index };
-      });
+    //sort columns by index, remove drag col, insert it in drop position
+    const sortedColumns = _sortBy(Object.values(columns), "index");
+    const removeCol = sortedColumns.splice(oldIndex, 1);
+    sortedColumns.splice(newIndex, 0, removeCol[0]);
+
+    //itereate and update index to proper value
+    const updatedColumns = sortedColumns.reduce(
+      (acc: any, curr: any, index) => {
+        acc[curr.key] = { ...curr, index };
+        return acc;
+      },
+      {}
+    );
+
     documentDispatch({
       action: DocActions.update,
       data: { columns: updatedColumns },
@@ -186,10 +196,11 @@ const useTableConfig = (tablePath?: string) => {
    * @param key name of parameter eg. rowHeight
    * @param value new value eg. 65
    */
-  const updateConfig = (key: string, value: unknown) => {
+  const updateConfig = (key: string, value: any, callback?: Function) => {
     documentDispatch({
       action: DocActions.update,
       data: { [key]: value },
+      callback,
     });
   };
   const actions = {

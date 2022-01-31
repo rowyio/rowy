@@ -31,12 +31,11 @@ import { SlideTransition } from "@src/components/Modal/SlideTransition";
 import Step0Welcome from "@src/components/Setup/Step0Welcome";
 import Step1RowyRun, { checkRowyRun } from "@src/components/Setup/Step1RowyRun";
 // prettier-ignore
-import Step2ServiceAccount, { checkServiceAccount } from "@src/components/Setup/Step2ServiceAccount";
 // prettier-ignore
-import Step3ProjectOwner, { checkProjectOwner } from "@src/components/Setup/Step3ProjectOwner";
-import Step4Rules, { checkRules } from "@src/components/Setup/Step4Rules";
-import Step5Migrate, { checkMigrate } from "@src/components/Setup/Step5Migrate";
-import Step6Finish from "@src/components/Setup/Step6Finish";
+import Step2ProjectOwner, { checkProjectOwner } from "@src/components/Setup/Step2ProjectOwner";
+import Step3Rules, { checkRules } from "@src/components/Setup/Step3Rules";
+import Step4Migrate, { checkMigrate } from "@src/components/Setup/Step4Migrate";
+import Step5Finish from "@src/components/Setup/Step6Finish";
 
 import { name } from "@root/package.json";
 import routes from "@src/constants/routes";
@@ -77,9 +76,6 @@ const checkAllSteps = async (
     if (rowyRunValidation.isLatestVersion) completion.rowyRun = true;
 
     const promises = [
-      checkServiceAccount(rowyRunUrl, signal).then((serviceAccount) => {
-        if (serviceAccount.hasAllRoles) completion.serviceAccount = true;
-      }),
       checkProjectOwner(rowyRunUrl, currentUser, userRoles, signal).then(
         (projectOwner) => {
           if (projectOwner) completion.projectOwner = true;
@@ -183,29 +179,23 @@ export default function SetupPage() {
       body: <Step1RowyRun {...stepProps} />,
     },
     {
-      id: "serviceAccount",
-      shortTitle: `Service account`,
-      title: `Set up service account`,
-      body: <Step2ServiceAccount {...stepProps} />,
-    },
-    {
       id: "projectOwner",
       shortTitle: `Project owner`,
       title: `Set up project owner`,
-      body: <Step3ProjectOwner {...stepProps} />,
+      body: <Step2ProjectOwner {...stepProps} />,
     },
     {
       id: "rules",
       shortTitle: `Rules`,
       title: `Set up Firestore Rules`,
-      body: <Step4Rules {...stepProps} />,
+      body: <Step3Rules {...stepProps} />,
     },
     completion.migrate !== undefined
       ? {
           id: "migrate",
           shortTitle: `Migrate`,
           title: `Migrate to ${name} (optional)`,
-          body: <Step5Migrate {...stepProps} />,
+          body: <Step4Migrate {...stepProps} />,
         }
       : ({} as ISetupStep),
     {
@@ -213,7 +203,7 @@ export default function SetupPage() {
       layout: "centered" as "centered",
       shortTitle: `Finish`,
       title: `You’re all set up!`,
-      body: <Step6Finish />,
+      body: <Step5Finish />,
       actions: (
         <Button
           variant="contained"

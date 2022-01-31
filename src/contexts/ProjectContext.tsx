@@ -32,6 +32,7 @@ export type Table = {
   audit?: boolean;
   auditFieldCreatedBy?: string;
   auditFieldUpdatedBy?: string;
+  readOnly?: boolean;
 };
 
 interface IRowyRun
@@ -78,7 +79,7 @@ export interface IProjectContext {
       description: string;
       roles: string[];
       section: string;
-    }) => void;
+    }) => Promise<void>;
     updateTable: (data: {
       id: string;
       name?: string;

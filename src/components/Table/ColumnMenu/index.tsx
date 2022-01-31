@@ -67,7 +67,11 @@ export interface IMenuModalProps {
   config: Record<string, any>;
 
   handleClose: () => void;
-  handleSave: (fieldName: string, config: Record<string, any>) => void;
+  handleSave: (
+    fieldName: string,
+    config: Record<string, any>,
+    onSuccess?: Function
+  ) => void;
 }
 
 export default function ColumnMenu() {
@@ -112,8 +116,9 @@ export default function ColumnMenu() {
   );
 
   if (!column) return null;
-
-  const isSorted = orderBy?.[0]?.key === column.key;
+  const _sortKey = getFieldProp("sortKey", (column as any).type);
+  const sortKey = _sortKey ? `${column.key}.${_sortKey}` : column.key;
+  const isSorted = orderBy?.[0]?.key === sortKey;
   const isAsc = isSorted && orderBy?.[0]?.direction === "asc";
 
   const clearModal = () => {
@@ -121,8 +126,12 @@ export default function ColumnMenu() {
     setTimeout(() => handleClose(), 300);
   };
 
-  const handleModalSave = (key: string, update: Record<string, any>) => {
-    actions.update(key, update);
+  const handleModalSave = (
+    key: string,
+    update: Record<string, any>,
+    onSuccess?: Function
+  ) => {
+    actions.update(key, update, onSuccess);
   };
   const openSettings = (column) => {
     setSelectedColumnHeader({
@@ -170,7 +179,7 @@ export default function ColumnMenu() {
       icon: <ArrowDownwardIcon />,
       onClick: () => {
         tableActions.table.orderBy(
-          isSorted && !isAsc ? [] : [{ key: column.key, direction: "desc" }]
+          isSorted && !isAsc ? [] : [{ key: sortKey, direction: "desc" }]
         );
         handleClose();
       },
@@ -183,7 +192,7 @@ export default function ColumnMenu() {
       icon: <ArrowUpwardIcon />,
       onClick: () => {
         tableActions.table.orderBy(
-          isSorted && isAsc ? [] : [{ key: column.key, direction: "asc" }]
+          isSorted && isAsc ? [] : [{ key: sortKey, direction: "asc" }]
         );
         handleClose();
       },

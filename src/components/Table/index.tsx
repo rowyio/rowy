@@ -43,9 +43,15 @@ const rowClass = (row: any) => (row._rowy_outOfOrder ? "out-of-order" : "");
 //const SelectColumn = { ..._SelectColumn, width: 42, maxWidth: 42 };
 
 export default function Table() {
-  const { tableState, tableActions, dataGridRef, sideDrawerRef, updateCell } =
-    useProjectContext();
-  const { userDoc } = useAppContext();
+  const {
+    table,
+    tableState,
+    tableActions,
+    dataGridRef,
+    sideDrawerRef,
+    updateCell,
+  } = useProjectContext();
+  const { userDoc, userClaims } = useAppContext();
 
   const userDocHiddenFields =
     userDoc.state.doc?.tables?.[formatSubTableName(tableState?.config.id)]
@@ -63,7 +69,6 @@ export default function Table() {
       )
         .map((column: any) => ({
           draggable: true,
-          editable: true,
           resizable: true,
           frozen: column.fixed,
           headerRenderer: ColumnHeader,
@@ -84,6 +89,10 @@ export default function Table() {
               return null;
             },
           ...column,
+          editable:
+            table?.readOnly && !userClaims?.roles.includes("ADMIN")
+              ? false
+              : column.editable ?? true,
           width: (column.width as number)
             ? (column.width as number) > 380
               ? 380
@@ -92,28 +101,36 @@ export default function Table() {
         }))
         .filter((column) => !userDocHiddenFields.includes(column.key));
 
-      setColumns([
-        //  SelectColumn,
-        ..._columns,
-        {
+      if (!table?.readOnly || userClaims?.roles.includes("ADMIN")) {
+        _columns.push({
           isNew: true,
           key: "new",
           name: "Add column",
           type: FieldType.last,
           index: _columns.length ?? 0,
-          width: 204,
+          width: 154,
           headerRenderer: FinalColumnHeader,
           headerCellClass: "final-column-header",
           cellClass: "final-column-cell",
           formatter: FinalColumn,
           editable: false,
-        },
-      ]);
+        });
+      }
+
+      setColumns(_columns);
+
+      // setColumns([
+      //   //  SelectColumn,
+      //   ..._columns,
+      //   ,
+      // ]);
     }
   }, [
     tableState?.loadingColumns,
     tableState?.columns,
     JSON.stringify(userDocHiddenFields),
+    table?.readOnly,
+    userClaims?.roles,
   ]);
 
   const rows =
