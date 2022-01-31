@@ -6,6 +6,7 @@ import {
   IPopoverCellProps,
 } from "../types";
 
+import _find from "lodash/find";
 import { makeStyles, createStyles } from "@mui/styles";
 import { Popover, PopoverProps } from "@mui/material";
 
@@ -50,7 +51,7 @@ export default function withPopoverCell(
   return function PopoverCell(props: FormatterProps<any>) {
     const classes = useStyles();
     const { transparent, ...popoverProps } = options ?? {};
-    const { updateCell } = useProjectContext();
+    const { deleteCell, updateCell, tableState } = useProjectContext();
 
     const { validationRegex, required } = (props.column as any).config;
 
@@ -98,8 +99,18 @@ export default function withPopoverCell(
         </ErrorBoundary>
       );
 
+    //This is where we update the documents
     const handleSubmit = (value: any) => {
-      if (updateCell && !options?.readOnly) {
+      const targetRow = _find(tableState?.rows, { id: props.row.ref.id });
+      const targetCell = targetRow?.[props.column.key];
+      const canDelete = Boolean(
+        typeof value === "undefined" && targetCell !== value
+      );
+
+      if (deleteCell && !options?.readOnly && canDelete) {
+        deleteCell(props.row.ref, props.column.key);
+        setLocalValue(value);
+      } else if (updateCell && !options?.readOnly) {
         updateCell(props.row.ref, props.column.key, value);
         setLocalValue(value);
       }
