@@ -12,9 +12,15 @@ export default function StatusSingleSelect({
 }: IPopoverCellProps) {
   const config = column.config ?? {};
   const conditions = config.conditions ?? [];
-  const reMappedConditions = conditions.map((c) =>
-    c.type === "number" ? { ...c, value: Number(c.value) } : { ...c }
-  );
+  /**Revisit eventually, can we abstract or use a helper function to clean this? */
+  const reMappedConditions = conditions.map((c) => {
+    let rValue = { ...c };
+    if (c.type === "number") {
+      if (c.operator === "<") rValue = { ...c, value: c.value - 1 };
+      if (c.operator === ">") rValue = { ...c, value: c.value + 1 };
+    }
+    return rValue;
+  });
   return (
     <MultiSelect_
       value={value}

@@ -5,13 +5,34 @@ import { ButtonBase } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import _find from "lodash/find";
 import getLabel from "./utils/getLabelHelper";
+import { LowPriority } from "@mui/icons-material";
 
 export const StatusSingleSelect = forwardRef(function StatusSingleSelect(
   { column, value, showPopoverCell, disabled }: IPopoverInlineCellProps,
   ref: React.Ref<any>
 ) {
   const conditions = column.config?.conditions ?? [];
-  const label = useMemo(() => getLabel(value, conditions), [value, conditions]);
+  const lowPriorityOperator = ["<", "<=", ">=", ">"];
+  const otherOperator = conditions.filter(
+    (c) => !lowPriorityOperator.includes(c.operator)
+  );
+
+  /**Revisit this  */
+  const sortLowPriorityList = conditions
+    .filter((c) => {
+      return lowPriorityOperator.includes(c.operator);
+    })
+    .sort((a, b) => {
+      const aDistFromValue = Math.abs(value - a.value);
+      const bDistFromValue = Math.abs(value - b.value);
+      //return the smallest distance
+      return aDistFromValue - bDistFromValue;
+    });
+  const sortedConditions = [...otherOperator, ...sortLowPriorityList];
+  const label = useMemo(
+    () => getLabel(value, sortedConditions),
+    [value, sortedConditions]
+  );
   return (
     <ButtonBase
       onClick={() => showPopoverCell(true)}

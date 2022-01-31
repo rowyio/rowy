@@ -62,6 +62,7 @@ export default function ConditionModalContent({
       {type === "number" && (
         <Grid container direction="row" justifyContent="space-between">
           <div style={{ width: "45%" }}>
+            {console.log(operatorOptions)}
             <MultiSelect
               options={operatorOptions}
               onChange={(v) => handleUpdate("operator")(v)}
