@@ -44,6 +44,9 @@ export default function TableCard({
           sx={{
             minHeight: (theme) =>
               (theme.typography.body2.lineHeight as number) * 2 + "em",
+            display: "flex",
+            flexDirection: "column",
+            gap: 1,
           }}
           component="div"
         >
