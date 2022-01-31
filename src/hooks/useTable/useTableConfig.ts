@@ -90,7 +90,6 @@ const useTableConfig = (tablePath?: string) => {
     let updatedColumns = columns;
     updatedColumns[column.key] = column;
 
-    console.log("what is updatedColumns resiz3", updatedColumns);
     documentDispatch({
       action: DocActions.update,
       data: { columns: updatedColumns },
