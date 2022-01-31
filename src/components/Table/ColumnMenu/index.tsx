@@ -88,9 +88,7 @@ export default function ColumnMenu() {
     if (column && column.type === FieldType.last) {
       setModal({
         type: ModalStates.new,
-        data: {
-          initializeColumn: { index: column.index ? column.index + 1 : 0 },
-        },
+        data: {},
       });
     }
   }, [column]);
