@@ -92,7 +92,7 @@ const useTableConfig = (tableId?: string) => {
       ...columns,
       [targetColumn.key]: { ...targetColumn, width },
     };
-    
+
     documentDispatch({
       action: DocActions.update,
       data: { columns: updatedColumns },
@@ -157,8 +157,14 @@ const useTableConfig = (tableId?: string) => {
    */
   const remove = (key: string) => {
     const { columns } = tableConfigState;
-    let updatedColumns = columns;
-    updatedColumns[key] = deleteField();
+
+    let updatedColumns: any = Object.values(columns)
+      .filter((c: any) => c.key !== key)
+      .sort((c: any) => c.index)
+      .reduce((acc: any, curr: any, index: any) => {
+        acc[curr.key] = { ...curr, index };
+        return acc;
+      }, {});
     documentDispatch({
       action: DocActions.update,
       data: { columns: updatedColumns },
