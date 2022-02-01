@@ -40,14 +40,14 @@ const getNumericLabelFrom = (arr: condition[], value: number) => {
       else return false;
     };
 
-    const hanldeGreaterThan = () => {
+    const handleGreaterThan = () => {
       if (val === condVal) return true;
       if (val > condVal) return true;
       else return false;
     };
     const operatorMap = new Map([
       ["<", handleLessThan()],
-      [">", hanldeGreaterThan()],
+      [">", handleGreaterThan()],
       ["<=", val <= condVal ? true : false],
       [">=", val >= condVal ? true : false],
       ["==", val === condVal ? true : false],
@@ -63,15 +63,11 @@ const getNumericLabelFrom = (arr: condition[], value: number) => {
 };
 
 const getLabelFrom = (arr, value) => {
-  const invalidVal = Boolean(value);
-  if (invalidVal) return;
+  const validVal = Boolean(value);
+  if (!validVal) return;
   for (let c of arr) {
     if (value === c.value) return c.label;
   }
-};
-
-const finalLabel = (label: string | undefined, value) => {
-  return typeof label === "string" ? label : value;
 };
 
 export default function getLabel(value, conditions) {
@@ -85,5 +81,5 @@ export default function getLabel(value, conditions) {
   else if (isBoolean) _label = getBooleanLabelFrom(conditions, value);
   else if (isNumeric) _label = getNumericLabelFrom(conditions, value);
   else _label = getLabelFrom(conditions, value);
-  return finalLabel(_label, value);
+  return _label ?? value;
 }
