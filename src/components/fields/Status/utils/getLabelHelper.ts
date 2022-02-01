@@ -31,26 +31,13 @@ const getBooleanLabelFrom = (arr: condition[], value: string) => {
  */
 const getNumericLabelFrom = (arr: condition[], value: number) => {
   const numLabelFind = (v, c) => {
-    const val = Number(v); // need to handle when value is default seted
-    const condVal: number = Number(c.value);
-
-    const handleLessThan = () => {
-      if (val === condVal) return true;
-      if (val < condVal) return true;
-      else return false;
-    };
-
-    const handleGreaterThan = () => {
-      if (val === condVal) return true;
-      if (val > condVal) return true;
-      else return false;
-    };
+    const condVal = c.value;
     const operatorMap = new Map([
-      ["<", handleLessThan()],
-      [">", handleGreaterThan()],
-      ["<=", val <= condVal ? true : false],
-      [">=", val >= condVal ? true : false],
-      ["==", val === condVal ? true : false],
+      ["<", v < condVal],
+      [">", v > condVal],
+      ["<=", v <= condVal],
+      [">=", v >= condVal],
+      ["==", v === condVal],
     ]);
     return operatorMap.get(c.operator) ? c.label : undefined;
   };
