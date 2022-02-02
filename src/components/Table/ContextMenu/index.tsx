@@ -44,7 +44,8 @@ export default function ContextMenu() {
   const actions = getActions() || [];
   const hasNoActions = Boolean(actions.length === 0);
 
-  if (!contextMenuRef.current || !open || hasNoActions) return <></>;
+  if (!contextMenuRef.current || hasNoActions) return null;
+
   return (
     <MenuContents
       anchorEl={anchorEl}

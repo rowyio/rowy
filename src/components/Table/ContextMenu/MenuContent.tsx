@@ -15,6 +15,7 @@ export function MenuContents({
   items,
 }: IMenuContents) {
   const handleContext = (e: React.MouseEvent) => e.preventDefault();
+
   return (
     <Menu
       id="cell-context-menu"
