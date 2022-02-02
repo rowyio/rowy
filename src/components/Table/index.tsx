@@ -265,7 +265,6 @@ export default function Table() {
                 }
               }}
               onSelectedCellChange={({ rowIdx, idx }) => {
-                console.log("firing");
                 contextMenuRef?.current?.setSelectedCell({
                   rowIndex: rowIdx,
                   colIndex: idx,

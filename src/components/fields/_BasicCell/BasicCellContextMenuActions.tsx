@@ -22,10 +22,11 @@ export default function BasicContextMenuActions() {
 
   const handleCopy = () => {
     const cell = selectedRow?.[selectedCol.key];
-    const onFail = () => console.log("Fail to copy");
-    const onSuccess = () => console.log("Save to clipboard successful");
-    const copy = navigator.clipboard.writeText(JSON.stringify(cell));
-    copy.then(onSuccess, onFail);
+    // const onFail = () => console.log("Fail to copy");
+    // const onSuccess = () => console.log("Save to clipboard successful");
+    // const copy =
+    navigator.clipboard.writeText(JSON.stringify(cell));
+    // copy.then(onSuccess, onFail);
 
     handleClose();
   };
@@ -40,7 +41,7 @@ export default function BasicContextMenuActions() {
   };
 
   const handlePaste = () => {
-    console.log("home", rows);
+    // console.log("home", rows);
     const paste = navigator.clipboard.readText();
     paste.then(async (clipText) => {
       try {
@@ -49,7 +50,7 @@ export default function BasicContextMenuActions() {
       } catch (error) {
         //TODO check the coding style guide about error message
         //Add breadcrumb handler her
-        console.log(error);
+        // console.log(error);
       }
     });
 
