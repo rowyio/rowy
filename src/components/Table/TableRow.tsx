@@ -5,31 +5,21 @@ import { Row, RowRendererProps } from "react-data-grid";
 import OutOfOrderIndicator from "./OutOfOrderIndicator";
 
 export default function TableRow(props: RowRendererProps<any>) {
+  const { contextMenuRef }: any = useProjectContext();
+  const handleContextMenu = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
+    e.preventDefault();
+    if (contextMenuRef?.current) contextMenuRef?.current?.setAnchorEl(e.target);
+  };
+
   if (props.row._rowy_outOfOrder)
     return (
       <Fragment key={props.row.id}>
         <OutOfOrderIndicator top={props.top} height={props.height} />
-        <ContextMenu>
-          <Row {...props} />
-        </ContextMenu>
+        <Row {...props} onContextMenu={handleContextMenu} />
       </Fragment>
     );
 
-  return (
-    <ContextMenu>
-      <Row {...props} />
-    </ContextMenu>
-  );
+  return <Row {...props} onContextMenu={handleContextMenu} />;
 }
-
-const ContextMenu = (props: any) => {
-  const { contextMenuRef }: any = useProjectContext();
-  function handleClick(e: any) {
-    e.preventDefault();
-    const input = e?.target as HTMLElement;
-    if (contextMenuRef?.current) {
-      contextMenuRef?.current?.setAnchorEl(input);
-    }
-  }
-  return <span onContextMenu={(e) => handleClick(e)}>{props.children}</span>;
-};
