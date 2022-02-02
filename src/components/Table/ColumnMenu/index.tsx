@@ -51,6 +51,7 @@ type SelectedColumnHeader = {
   column: Column<any> & { [key: string]: any };
   anchorEl: PopoverProps["anchorEl"];
 };
+
 export type ColumnMenuRef = {
   selectedColumnHeader: SelectedColumnHeader | null;
   setSelectedColumnHeader: React.Dispatch<

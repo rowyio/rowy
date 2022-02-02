@@ -19,6 +19,7 @@ import TableContainer, { OUT_OF_ORDER_MARGIN } from "./TableContainer";
 import TableHeader from "../TableHeader";
 import ColumnHeader from "./ColumnHeader";
 import ColumnMenu from "./ColumnMenu";
+import ContextMenu from "./ContextMenu";
 import FinalColumnHeader from "./FinalColumnHeader";
 import FinalColumn from "./formatters/FinalColumn";
 import TableRow from "./TableRow";
@@ -48,6 +49,7 @@ export default function Table() {
     tableState,
     tableActions,
     dataGridRef,
+    contextMenuRef,
     sideDrawerRef,
     updateCell,
   } = useProjectContext();
@@ -262,6 +264,13 @@ export default function Table() {
                   });
                 }
               }}
+              onSelectedCellChange={({ rowIdx, idx }) => {
+                console.log("firing");
+                contextMenuRef?.current?.setSelectedCell({
+                  rowIndex: rowIdx,
+                  colIndex: idx,
+                });
+              }}
             />
           </DndProvider>
         ) : (
@@ -270,6 +279,7 @@ export default function Table() {
       </TableContainer>
 
       <ColumnMenu />
+      <ContextMenu />
       <BulkActions
         selectedRows={selectedRows}
         columns={columns}
