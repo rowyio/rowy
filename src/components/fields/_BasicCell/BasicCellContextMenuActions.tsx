@@ -24,40 +24,35 @@ export default function BasicContextMenuActions(
   const selectedColIndex = selectedCell?.colIndex;
   const selectedCol = _find(columns, { index: selectedColIndex });
   const selectedRow = rows?.[selectedRowIndex];
+  const cell = selectedRow?.[selectedCol.key];
 
-  const handleClose = () => reset?.();
+  const handleClose = async () => await reset?.();
 
-  const handleCopy = () => {
-    const cell = selectedRow?.[selectedCol.key];
-    const onFail = () =>
-      enqueueSnackbar("Failed to copy", { variant: "error" });
-    const onSuccess = () =>
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(JSON.stringify(cell));
       enqueueSnackbar("Copied to clipboard", { variant: "success" });
-    const copy = navigator.clipboard.writeText(JSON.stringify(cell));
-    copy.then(onSuccess, onFail);
-
+    } catch (error) {
+      enqueueSnackbar("Failed to copy", { variant: "error" });
+    }
     handleClose();
   };
 
   const handleCut = () => {
-    const cell = selectedRow?.[selectedCol.key];
     const notUndefined = Boolean(typeof cell !== "undefined");
     if (deleteCell && notUndefined)
       deleteCell(selectedRow?.ref, selectedCol?.key);
-
     handleClose();
   };
 
-  const handlePaste = () => {
-    const paste = navigator.clipboard.readText();
-    paste.then(async (clipText) => {
-      try {
-        const paste = await JSON.parse(clipText);
-        updateCell?.(selectedRow?.ref, selectedCol.key, paste);
-      } catch (error) {
-        enqueueSnackbar(`${error}`, { variant: "error" });
-      }
-    });
+  const handlePaste = async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      const paste = await JSON.parse(text);
+      updateCell?.(selectedRow?.ref, selectedCol.key, paste);
+    } catch (error) {
+      enqueueSnackbar(`${error}`, { variant: "error" });
+    }
 
     handleClose();
   };

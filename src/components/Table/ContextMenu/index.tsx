@@ -8,24 +8,20 @@ export default function ContextMenu() {
   const { tableState }: any = useProjectContext();
   const { contextMenu, resetContextMenu } = useContextMenuAtom();
   const { anchorEl, selectedCell } = contextMenu;
-  const selectedColIndex = selectedCell?.colIndex;
   const columns = tableState?.columns;
-
+  const selectedColIndex = selectedCell?.colIndex;
   const selectedCol = _find(columns, { index: selectedColIndex });
   const configActions =
     getFieldProp("contextMenuActions", selectedCol?.type) ||
     function empty() {};
   const actions = configActions(selectedCell, resetContextMenu) || [];
-
-  const hasAnchorEle = Boolean(contextMenu.anchorEl);
   const hasNoActions = Boolean(actions.length === 0);
-  const notOpen = Boolean(!anchorEl || !hasAnchorEle || hasNoActions);
 
-  if (notOpen) return <></>;
+  if (!contextMenu || hasNoActions) return <></>;
   return (
     <MenuContents
       anchorEl={anchorEl as HTMLElement}
-      open={hasAnchorEle}
+      open={Boolean(contextMenu.anchorEl)}
       handleClose={resetContextMenu}
       items={actions}
     />
