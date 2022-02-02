@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useLocation, useRouteMatch } from "react-router-dom";
+import { useLocation, useRouteMatch, Redirect } from "react-router-dom";
 import queryString from "query-string";
 import _isEmpty from "lodash/isEmpty";
 import _find from "lodash/find";
@@ -17,6 +17,7 @@ import { useAppContext } from "@src/contexts/AppContext";
 import { TableFilter } from "@src/hooks/useTable";
 import { DocActions } from "@src/hooks/useDoc";
 import ActionParamsProvider from "@src/components/fields/Action/FormDialog/Provider";
+import { routes } from "constants/routes";
 
 export default function TablePage() {
   const location = useLocation();
@@ -62,7 +63,9 @@ export default function TablePage() {
     }
   }, [urlPath, tableActions, tableState, table]);
 
-  if (!tableState || !table) return null;
+  if (!tableState) return null;
+  if (Array.isArray(tables) && tables.length > 0 && !table)
+    return <Redirect to={routes.pageNotFound} />;
 
   return (
     <Navigation

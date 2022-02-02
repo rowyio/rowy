@@ -31,7 +31,10 @@ export default function Confirmation({
   return (
     <Dialog
       open={open}
-      onClose={handleClose}
+      onClose={(_, reason) => {
+        if (reason === "backdropClick" || reason === "escapeKeyDown") return;
+        else handleClose();
+      }}
       maxWidth={maxWidth}
       TransitionComponent={SlideTransitionMui}
       style={{ cursor: "default" }}

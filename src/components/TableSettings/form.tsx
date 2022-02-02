@@ -1,3 +1,4 @@
+import _find from "lodash/find";
 import { Field, FieldType } from "@rowy/form-builder";
 import { TableSettingsDialogModes } from "./index";
 
@@ -8,6 +9,7 @@ import WarningIcon from "@mui/icons-material/WarningAmber";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
 import { name } from "@root/package.json";
 import { FieldType as TableFieldType } from "@src/constants/fields";
+import InputAdornment from "@mui/material/InputAdornment";
 
 export const tableSettings = (
   mode: TableSettingsDialogModes | null,
@@ -19,28 +21,76 @@ export const tableSettings = (
   collections: string[]
 ): Field[] =>
   [
+    // Step 1: Collection
     {
-      type: FieldType.shortText,
-      name: "name",
-      label: "Table name",
+      step: "collection",
+      type: FieldType.singleSelect,
+      name: "tableType",
+      label: "Table type",
+      defaultValue: "primaryCollection",
+      options: [
+        {
+          label: (
+            <div>
+              Primary collection
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                display="block"
+                sx={{
+                  width: 470,
+                  whiteSpace: "normal",
+                  ".MuiSelect-select &": { display: "none" },
+                }}
+              >
+                Connect this table to the <b>single collection</b> matching the
+                collection name entered below
+              </Typography>
+            </div>
+          ),
+          value: "primaryCollection",
+        },
+        {
+          label: (
+            <div>
+              Collection group
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                display="block"
+                sx={{
+                  width: 470,
+                  whiteSpace: "normal",
+                  ".MuiSelect-select &": { display: "none" },
+                }}
+              >
+                Connect this table to <b>all collections and subcollections</b>{" "}
+                matching the collection name entered below
+              </Typography>
+            </div>
+          ),
+          value: "collectionGroup",
+        },
+      ],
       required: true,
-      assistiveText: "User-facing name for this table",
-      autoFocus: true,
-      gridCols: { xs: 12, sm: 6 },
-    },
-    {
-      type: "camelCaseId",
-      name: "id",
-      label: "Table ID",
-      required: true,
-      watchedField: "name",
-      assistiveText: `Unique ID for this table used to store configuration. Cannot be edited${
-        mode === TableSettingsDialogModes.create ? " later" : ""
-      }.`,
       disabled: mode === TableSettingsDialogModes.update,
-      gridCols: { xs: 12, sm: 6 },
+      assistiveText: (
+        <>
+          Cannot be edited
+          {mode === TableSettingsDialogModes.create && " later"}.{" "}
+          <Link
+            href="https://firebase.googleblog.com/2019/06/understanding-collection-group-queries.html"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Learn more about collection groups
+            <OpenInNewIcon />
+          </Link>
+        </>
+      ),
     },
     {
+      step: "collection",
       type: FieldType.singleSelect,
       name: "collection",
       label: "Collection",
@@ -58,8 +108,8 @@ export const tableSettings = (
                 aria-label="Warning"
                 sx={{ fontSize: 16, mr: 0.5, verticalAlign: "middle" }}
               />
-              You change which Firestore collection to display. Data in the new
-              collection must be compatible with the existing columns.
+              You can change which Firestore collection to display. Data in the
+              new collection must be compatible with the existing columns.
             </>
           ) : (
             "Choose which Firestore collection to display."
@@ -74,14 +124,17 @@ export const tableSettings = (
           </Link>
         </>
       ),
-      AddButtonProps: { children: "Add collection…" },
+      AddButtonProps: {
+        children: "Create collection or use custom path…",
+      },
       AddDialogProps: {
-        title: "Add collection",
+        title: "Create collection or use custom path",
         textFieldLabel: (
           <>
             Collection name
             <Typography variant="caption" display="block">
-              (Collection won’t be created until you add a row)
+              If this collection does not exist, it won’t be created until you
+              add a row to the table
             </Typography>
           </>
         ),
@@ -89,83 +142,56 @@ export const tableSettings = (
       TextFieldProps: {
         sx: { "& .MuiInputBase-input": { fontFamily: "mono" } },
       },
-      gridCols: { xs: 12, sm: 6 },
-    },
-    {
-      type: FieldType.singleSelect,
-      name: "tableType",
-      label: "Table type",
-      defaultValue: "primaryCollection",
-      options: [
-        {
-          label: (
-            <div>
-              Primary collection
-              <Typography
-                variant="caption"
-                color="text.secondary"
-                display="block"
-                sx={{
-                  width: 240,
-                  whiteSpace: "normal",
-                  ".MuiSelect-select &": { display: "none" },
-                }}
-              >
-                Connect this table to the <b>single collection</b> matching the
-                collection name entered above
-              </Typography>
-            </div>
-          ),
-          value: "primaryCollection",
-        },
-        {
-          label: (
-            <div>
-              Collection group
-              <Typography
-                variant="caption"
-                color="text.secondary"
-                display="block"
-                sx={{
-                  width: 240,
-                  whiteSpace: "normal",
-                  ".MuiSelect-select &": { display: "none" },
-                }}
-              >
-                Connect this table to <b>all collections and subcollections</b>{" "}
-                matching the collection name entered above
-              </Typography>
-            </div>
-          ),
-          value: "collectionGroup",
-        },
+      // https://firebase.google.com/docs/firestore/quotas#collections_documents_and_fields
+      validation: [
+        ["matches", /^[^\s]+$/, "Collection name cannot have spaces"],
+        ["notOneOf", [".", ".."], "Collection name cannot be . or .."],
+        [
+          "test",
+          "double-underscore",
+          "Collection name cannot begin and end with __",
+          (value) => !value.startsWith("__") && !value.endsWith("__"),
+        ],
       ],
-      required: true,
-      disabled: mode === TableSettingsDialogModes.update,
-      assistiveText: (
-        <>
-          Cannot be edited
-          {mode === TableSettingsDialogModes.create && " later"}.{" "}
-          <Link
-            href="https://firebase.googleblog.com/2019/06/understanding-collection-group-queries.html"
-            target="_blank"
-            rel="noopener noreferrer"
-            display="block"
-          >
-            Learn more about collection groups
-            <OpenInNewIcon />
-          </Link>
-        </>
-      ),
-      gridCols: { xs: 12, sm: 6 },
     },
 
+    // Step 2: Display
     {
-      type: FieldType.contentHeader,
-      name: "_contentHeader_userFacing",
-      label: "Display",
+      step: "display",
+      type: FieldType.shortText,
+      name: "name",
+      label: "Table name",
+      required: true,
+      assistiveText: "User-facing name for this table",
+      autoFocus: true,
+      gridCols: { xs: 12, sm: 6 },
     },
     {
+      step: "display",
+      type: "tableId",
+      name: "id",
+      label: "Table ID",
+      required: true,
+      watchedField: "name",
+      assistiveText: `Unique ID used to store this table’s configuration. Cannot be edited${
+        mode === TableSettingsDialogModes.create ? " later" : ""
+      }.`,
+      disabled: mode === TableSettingsDialogModes.update,
+      gridCols: { xs: 12, sm: 6 },
+      validation:
+        mode === TableSettingsDialogModes.create
+          ? [
+              [
+                "test",
+                "unique",
+                "Another table exists with this ID",
+                (value) => !_find(tables, ["value", value]),
+              ],
+            ]
+          : [],
+    },
+    {
+      step: "display",
       type: FieldType.singleSelect,
       name: "section",
       label: "Section (optional)",
@@ -173,22 +199,18 @@ export const tableSettings = (
       freeText: true,
       options: sections,
       required: false,
-      gridCols: { xs: 12, sm: 6 },
     },
     {
+      step: "display",
       type: FieldType.paragraph,
       name: "description",
       label: "Description (optional)",
-      gridCols: { xs: 12, sm: 6 },
-      minRows: 1,
+      minRows: 2,
     },
 
+    // Step 3: Access controls
     {
-      type: FieldType.contentHeader,
-      name: "_contentHeader_admin",
-      label: "Access controls",
-    },
-    {
+      step: "accessControls",
       type: FieldType.multiSelect,
       name: "roles",
       label: "Accessed by",
@@ -199,6 +221,16 @@ export const tableSettings = (
       freeText: true,
     },
     {
+      step: "accessControls",
+      type: FieldType.checkbox,
+      name: "readOnly",
+      label: "Read-only for non-ADMIN users",
+      assistiveText:
+        "Disable all editing functionality. Locks all columns and disables adding and deleting rows and columns.",
+      defaultValue: false,
+    },
+    {
+      step: "accessControls",
       type: FieldType.contentParagraph,
       name: "_contentParagraph_rules",
       label: (
@@ -218,12 +250,47 @@ export const tableSettings = (
       ),
     },
     {
+      step: "accessControls",
       type: "suggestedRules",
       name: "_suggestedRules",
       label: "Suggested Firestore Rules",
       watchedField: "collection",
     },
+
+    // Step 4: Auditing
     {
+      step: "auditing",
+      type: FieldType.checkbox,
+      name: "audit",
+      label: "Enable auditing for this table",
+      defaultValue: true,
+    },
+    {
+      step: "auditing",
+      type: FieldType.shortText,
+      name: "auditFieldCreatedBy",
+      label: "Created By field key (optional)",
+      defaultValue: "_createdBy",
+      displayCondition: "return values.audit",
+      assistiveText: "Optionally, change the field key",
+      gridCols: { xs: 12, sm: 6 },
+      sx: { "& .MuiInputBase-input": { fontFamily: "mono" } },
+    },
+    {
+      step: "auditing",
+      type: FieldType.shortText,
+      name: "auditFieldUpdatedBy",
+      label: "Updated By field key (optional)",
+      defaultValue: "_updatedBy",
+      displayCondition: "return values.audit",
+      assistiveText: "Optionally, change the field key",
+      gridCols: { xs: 12, sm: 6 },
+      sx: { "& .MuiInputBase-input": { fontFamily: "mono" } },
+    },
+    // Step 5:Cloud functions
+    /*
+    {
+      step: "function",
       type: FieldType.slider,
       name: "triggerDepth",
       defaultValue: 1,
@@ -257,47 +324,72 @@ export const tableSettings = (
     },
 
     {
-      type: FieldType.contentHeader,
-      name: "_contentHeader_audit",
-      label: "Auditing",
-    },
-    {
-      type: FieldType.checkbox,
-      name: "audit",
-      label: "Enable auditing for this table",
-      defaultValue: true,
-      assistiveText: "Track when users create or update rows",
-    },
-    {
-      type: FieldType.shortText,
-      name: "auditFieldCreatedBy",
-      label: "Created By field key (optional)",
-      defaultValue: "_createdBy",
-      displayCondition: "return values.audit",
-      assistiveText: "Optionally change the field key",
+      step: "function",
+      type: FieldType.singleSelect,
+      name: "function.memory",
+      label: "Memory Allocation",
+      defaultValue: "256MB",
+      options: ["128MB", "256MB", "512MB", "1GB", "2GB", "4GB", "8GB"],
+      required: true,
       gridCols: { xs: 12, sm: 6 },
-      sx: { "& .MuiInputBase-input": { fontFamily: "mono" } },
     },
     {
+      step: "function",
       type: FieldType.shortText,
-      name: "auditFieldUpdatedBy",
-      label: "Updated By field key (optional)",
-      defaultValue: "_updatedBy",
-      displayCondition: "return values.audit",
-      assistiveText: "Optionally change the field key",
+      name: "function.timeout",
+      label: "Timeout",
+      defaultValue: 60,
+      InputProps: {
+        type: "number",
+        endAdornment: <InputAdornment position="end">seconds</InputAdornment>,
+      },
       gridCols: { xs: 12, sm: 6 },
-      sx: { "& .MuiInputBase-input": { fontFamily: "mono" } },
     },
+    {
+      step: "function",
+      type: FieldType.contentSubHeader,
+      name: "functionHeader",
+      label: "Auto scaling",
 
-    mode === TableSettingsDialogModes.create
-      ? {
-          type: FieldType.contentHeader,
-          name: "_contentHeader_columns",
-          label: "Columns",
-        }
-      : null,
+      assistiveText: (
+        <>
+          <Link
+            href="https://firebase.google.com/docs/functions/autoscaling"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Learn more about auto scaling
+            <OpenInNewIcon />
+          </Link>
+        </>
+      ),
+    },
+    {
+      step: "function",
+      type: FieldType.shortText,
+      name: "function.minInstances",
+      label: "Minimum Instances",
+      defaultValue: 0,
+      InputProps: {
+        type: "number",
+      },
+      gridCols: { xs: 12, sm: 6 },
+    },
+    {
+      step: "function",
+      type: FieldType.shortText,
+      name: "function.maxInstances",
+      label: "Maximum Instances",
+      defaultValue: 1000,
+      InputProps: {
+        type: "number",
+      },
+      gridCols: { xs: 12, sm: 6 },
+    },
+    */
     mode === TableSettingsDialogModes.create && tables && tables?.length !== 0
       ? {
+          step: "columns",
           type: FieldType.singleSelect,
           name: "schemaSource",
           label: "Copy columns from existing table (optional)",
@@ -320,6 +412,7 @@ export const tableSettings = (
       : null,
     mode === TableSettingsDialogModes.create
       ? {
+          step: "columns",
           type: FieldType.contentSubHeader,
           name: "_contentSubHeader_initialColumns",
           label: "Initial columns",
@@ -328,6 +421,7 @@ export const tableSettings = (
       : null,
     mode === TableSettingsDialogModes.create
       ? {
+          step: "columns",
           type: FieldType.checkbox,
           name: `_initialColumns.${TableFieldType.createdBy}`,
           label: "Created By",
@@ -338,6 +432,7 @@ export const tableSettings = (
       : null,
     mode === TableSettingsDialogModes.create
       ? {
+          step: "columns",
           type: FieldType.checkbox,
           name: `_initialColumns.${TableFieldType.updatedBy}`,
           label: "Updated By",
@@ -348,6 +443,7 @@ export const tableSettings = (
       : null,
     mode === TableSettingsDialogModes.create
       ? {
+          step: "columns",
           type: FieldType.checkbox,
           name: `_initialColumns.${TableFieldType.createdAt}`,
           label: "Created At",
@@ -358,6 +454,7 @@ export const tableSettings = (
       : null,
     mode === TableSettingsDialogModes.create
       ? {
+          step: "columns",
           type: FieldType.checkbox,
           name: `_initialColumns.${TableFieldType.updatedAt}`,
           label: "Updated At",
@@ -368,6 +465,7 @@ export const tableSettings = (
       : null,
     mode === TableSettingsDialogModes.create
       ? {
+          step: "columns",
           type: FieldType.checkbox,
           name: `_initialColumns.${TableFieldType.id}`,
           label: "Row ID",

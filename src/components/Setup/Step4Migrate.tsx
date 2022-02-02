@@ -12,7 +12,7 @@ import { CONFIG } from "@src/config/dbPaths";
 import { rowyRun } from "@src/utils/rowyRun";
 import { runRoutes } from "@src/constants/runRoutes";
 
-export default function Step5Migrate({
+export default function Step4Migrate({
   rowyRunUrl,
   completion,
   setCompletion,

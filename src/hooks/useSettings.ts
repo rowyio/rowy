@@ -38,9 +38,10 @@ export default function useSettings() {
     roles: string[];
     schemaSource: any;
     _initialColumns: Record<FieldType, boolean>;
+    _schema?: Record<string, any>;
   }) => {
     const { tables } = settingsState;
-    const { schemaSource, ...tableSettings } = data;
+    const { schemaSource, _initialColumns, _schema, ...tableSettings } = data;
     const tableSchemaPath = `${
       tableSettings.tableType !== "collectionGroup"
         ? TABLE_SCHEMAS
@@ -48,8 +49,11 @@ export default function useSettings() {
     }/${tableSettings.id}`;
     const tableSchemaDocRef = db.doc(tableSchemaPath);
 
-    // Get columns from schemaSource if provided
-    let columns: Record<string, any> = {};
+    // Get columns from imported table settings or schemaSource if provided
+    let columns: Record<string, any> =
+      Array.isArray(_schema?.columns) || !_schema?.columns
+        ? {}
+        : _schema?.columns;
     if (schemaSource) {
       const schemaSourcePath = `${
         tableSettings.tableType !== "collectionGroup"
@@ -60,7 +64,7 @@ export default function useSettings() {
       columns = sourceDoc.get("columns");
     }
     // Add columns from `_initialColumns`
-    for (const [type, checked] of Object.entries(data._initialColumns)) {
+    for (const [type, checked] of Object.entries(_initialColumns)) {
       if (
         checked &&
         !Object.values(columns).some((column) => column.type === type)
@@ -86,7 +90,12 @@ export default function useSettings() {
     );
 
     // Creates schema doc with columns
-    await tableSchemaDocRef.set({ columns }, { merge: true });
+    const { functionConfigPath, functionBuilderRef, ..._schemaToWrite } =
+      _schema ?? {};
+    await tableSchemaDocRef.set(
+      { ..._schemaToWrite, columns },
+      { merge: true }
+    );
   };
 
   const updateTable = async (data: {
@@ -96,15 +105,31 @@ export default function useSettings() {
     section?: string;
     description?: string;
     roles?: string[];
+    _schema?: Record<string, any>;
     [key: string]: any;
   }) => {
     const { tables } = settingsState;
     const newTables = Array.isArray(tables) ? [...tables] : [];
     const foundIndex = _findIndex(newTables, { id: data.id });
     const tableIndex = foundIndex > -1 ? foundIndex : tables.length;
-    newTables[tableIndex] = { ...newTables[tableIndex], ...data };
+
+    const { _initialColumns, _schema, ...dataToWrite } = data;
+    newTables[tableIndex] = { ...newTables[tableIndex], ...dataToWrite };
 
     await db.doc(SETTINGS).set({ tables: newTables }, { merge: true });
+
+    // Updates schema doc if present
+    if (_schema) {
+      const tableSchemaPath = `${
+        data.tableType !== "collectionGroup"
+          ? TABLE_SCHEMAS
+          : TABLE_GROUP_SCHEMAS
+      }/${data.id}`;
+
+      const { functionConfigPath, functionBuilderRef, ..._schemaToWrite } =
+        _schema ?? {};
+      await db.doc(tableSchemaPath).update(_schemaToWrite);
+    }
   };
 
   const deleteTable = (id: string) => {

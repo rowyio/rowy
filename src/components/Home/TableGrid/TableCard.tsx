@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import GoIcon from "@src/assets/icons/Go";
 
+import RenderedMarkdown from "@src/components/RenderedMarkdown";
 import { Table } from "@src/contexts/ProjectContext";
 
 export interface ITableCardProps extends Table {
@@ -26,35 +27,37 @@ export default function TableCard({
 }: ITableCardProps) {
   return (
     <Card style={{ height: "100%", display: "flex", flexDirection: "column" }}>
-      <CardActionArea
-        sx={{
-          flexGrow: 1,
-          display: "flex",
-          alignItems: "flex-start",
-          justifyContent: "flex-start",
-          borderRadius: 2,
-        }}
-        component={Link}
-        to={link}
-      >
-        <CardContent>
+      <CardActionArea component={Link} to={link}>
+        <CardContent style={{ paddingBottom: 0 }}>
           <Typography variant="overline" component="p">
             {section}
           </Typography>
           <Typography variant="h6" component="h3" gutterBottom>
             {name}
           </Typography>
-          <Typography
-            color="textSecondary"
-            sx={{
-              minHeight: (theme) =>
-                (theme.typography.body2.lineHeight as number) * 2 + "em",
-            }}
-          >
-            {description}
-          </Typography>
         </CardContent>
       </CardActionArea>
+
+      <CardContent style={{ flexGrow: 1, paddingTop: 0 }}>
+        <Typography
+          color="textSecondary"
+          sx={{
+            minHeight: (theme) =>
+              (theme.typography.body2.lineHeight as number) * 2 + "em",
+            display: "flex",
+            flexDirection: "column",
+            gap: 1,
+          }}
+          component="div"
+        >
+          {description && (
+            <RenderedMarkdown
+              children={description}
+              //restrictionPreset="singleLine"
+            />
+          )}
+        </Typography>
+      </CardContent>
 
       <CardActions>
         <Button

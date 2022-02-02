@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useAtom } from "jotai";
 import _isEqual from "lodash/isEqual";
 
 import TableHeaderButton from "../TableHeaderButton";
@@ -17,6 +18,7 @@ import { useSnackLogContext } from "@src/contexts/SnackLogContext";
 import { emptyExtensionObject, IExtension, ExtensionType } from "./utils";
 import { runRoutes } from "@src/constants/runRoutes";
 import { analytics } from "@src/analytics";
+import { modalAtom } from "@src/atoms/Table";
 
 export default function Extensions() {
   const { tableState, tableActions, rowyRun } = useProjectContext();
@@ -28,7 +30,11 @@ export default function Extensions() {
   const [localExtensionsObjects, setLocalExtensionsObjects] = useState(
     currentExtensionObjects
   );
-  const [openExtensionList, setOpenExtensionList] = useState(false);
+
+  const [modal, setModal] = useAtom(modalAtom);
+  const open = modal === "extensions";
+  const setOpen = (open: boolean) => setModal(open ? "extensions" : "");
+
   const [openMigrationGuide, setOpenMigrationGuide] = useState(false);
   const [extensionModal, setExtensionModal] = useState<{
     mode: "add" | "update";
@@ -45,55 +51,57 @@ export default function Extensions() {
       console.log("Extension migration required.");
       setOpenMigrationGuide(true);
     } else {
-      setOpenExtensionList(true);
+      setOpen(true);
     }
   };
 
   const handleClose = (
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>
+    _setOpen: React.Dispatch<React.SetStateAction<boolean>>
   ) => {
     if (edited) {
-      setOpen(true);
+      _setOpen(true);
       requestConfirmation({
         title: "Discard changes?",
         confirm: "Discard",
         handleConfirm: () => {
-          setOpen(false);
+          _setOpen(false);
           setLocalExtensionsObjects(currentExtensionObjects);
-          setOpenExtensionList(false);
+          setOpen(false);
         },
       });
     } else {
-      setOpenExtensionList(false);
+      setOpen(false);
     }
   };
 
-  const handleSaveExtensions = () => {
+  const handleSaveExtensions = (callback?: Function) => {
     tableActions?.table.updateConfig(
       "extensionObjects",
-      localExtensionsObjects
+      localExtensionsObjects,
+      callback
     );
-    setOpenExtensionList(false);
+    setOpen(false);
   };
 
   const handleSaveDeploy = async () => {
-    handleSaveExtensions();
-    try {
-      if (rowyRun) {
-        snackLogContext.requestSnackLog();
-        rowyRun({
-          route: runRoutes.buildFunction,
-          body: {
-            tablePath: tableState?.tablePath,
-            pathname: window.location.pathname,
-            tableConfigPath: tableState?.config.tableConfig.path,
-          },
-        });
-        analytics.logEvent("deployed_extensions");
+    handleSaveExtensions(() => {
+      try {
+        if (rowyRun) {
+          snackLogContext.requestSnackLog();
+          rowyRun({
+            route: runRoutes.buildFunction,
+            body: {
+              tablePath: tableState?.tablePath,
+              pathname: window.location.pathname,
+              tableConfigPath: tableState?.config.tableConfig.path,
+            },
+          });
+          analytics.logEvent("deployed_extensions");
+        }
+      } catch (e) {
+        console.error(e);
       }
-    } catch (e) {
-      console.error(e);
-    }
+    });
   };
 
   const handleAddExtension = (extensionObject: IExtension) => {
@@ -189,7 +197,7 @@ export default function Extensions() {
         icon={<ExtensionIcon />}
       />
 
-      {openExtensionList && !!tableState && (
+      {open && !!tableState && (
         <Modal
           onClose={handleClose}
           disableBackdropClick={edited}
@@ -227,7 +235,7 @@ export default function Extensions() {
             },
             secondary: {
               children: "Save",
-              onClick: handleSaveExtensions,
+              onClick: () => handleSaveExtensions(),
               disabled: !edited,
             },
           }}
@@ -236,9 +244,7 @@ export default function Extensions() {
 
       {extensionModal && (
         <ExtensionModal
-          handleClose={() => {
-            setExtensionModal(null);
-          }}
+          handleClose={() => setExtensionModal(null)}
           handleAdd={handleAddExtension}
           handleUpdate={handleUpdateExtension}
           mode={extensionModal.mode}
@@ -248,12 +254,10 @@ export default function Extensions() {
 
       {openMigrationGuide && (
         <ExtensionMigration
-          handleClose={() => {
-            setOpenMigrationGuide(false);
-          }}
+          handleClose={() => setOpenMigrationGuide(false)}
           handleUpgradeComplete={() => {
             setOpenMigrationGuide(false);
-            setOpenExtensionList(true);
+            setOpen(true);
           }}
         />
       )}

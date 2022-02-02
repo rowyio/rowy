@@ -17,6 +17,7 @@ export interface IFieldConfig {
   icon?: React.ReactNode;
   description?: string;
   setupGuideLink?: string;
+  contextMenuActions?: () => void;
   TableCell: React.ComponentType<FormatterProps<any>>;
   TableEditor: React.ComponentType<EditorProps<any, any>>;
   SideDrawerField: React.ComponentType<ISideDrawerFieldProps>;
@@ -28,6 +29,7 @@ export interface IFieldConfig {
     defaultValue?: any;
     valueFormatter?: (value: any) => string;
   };
+  sortKey?: string;
   csvExportFormatter?: (value: any, config?: any) => string;
   csvImportParser?: (value: string, config?: any) => any;
 }

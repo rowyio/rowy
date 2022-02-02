@@ -13,7 +13,7 @@ import { rowyRun } from "@src/utils/rowyRun";
 import { runRoutes } from "@src/constants/runRoutes";
 import CopyIcon from "@src/assets/icons/Copy";
 
-export default function Step3ProjectOwner({
+export default function Step2ProjectOwner({
   rowyRunUrl,
   completion,
   setCompletion,
@@ -33,7 +33,7 @@ export default function Step3ProjectOwner({
   const [isDomainAuthorized, setIsDomainAuthorized] = useState(
     !!currentUser || completion.projectOwner
   );
-  const isSignedIn = currentUser?.email === email;
+  const isSignedIn = currentUser?.email?.toLowerCase() === email.toLowerCase();
   const [hasRoles, setHasRoles] = useState<boolean | "LOADING" | string>(
     completion.projectOwner
   );

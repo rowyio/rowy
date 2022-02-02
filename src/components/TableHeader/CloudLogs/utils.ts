@@ -2,14 +2,14 @@ import { atomWithHash } from "jotai/utils";
 import { sub } from "date-fns";
 
 import type { IProjectContext } from "@src/contexts/ProjectContext";
-
-export const modalAtom = atomWithHash<"cloudLogs" | "">("modal", "");
+import { SEVERITY_LEVELS } from "./CloudLogSeverityIcon";
 
 export type CloudLogFilters = {
-  type: "webhook" | "audit" | "build";
+  type: "webhook" | "functions" | "audit" | "build";
   timeRange:
     | { type: "seconds" | "minutes" | "hours" | "days"; value: number }
     | { type: "range"; start: Date; end: Date };
+  severity?: Array<keyof typeof SEVERITY_LEVELS>;
   webhook?: string[];
   auditRowId?: string;
   buildLogExpanded?: number;
@@ -26,6 +26,7 @@ export const cloudLogFiltersAtom = atomWithHash<CloudLogFilters>(
 export const cloudLogFetcher = (
   endpointRoot: string,
   rowyRun: IProjectContext["rowyRun"],
+  projectId: string,
   cloudLogFilters: CloudLogFilters,
   tablePath: string
 ) => {
@@ -34,7 +35,9 @@ export const cloudLogFetcher = (
 
   switch (cloudLogFilters.type) {
     case "webhook":
-      logQuery.push(`logName = "projects/rowyio/logs/rowy-webhook-events"`);
+      logQuery.push(
+        `logName = "projects/${projectId}/logs/rowy-webhook-events"`
+      );
       logQuery.push(`jsonPayload.url : "${tablePath}"`);
       if (
         Array.isArray(cloudLogFilters.webhook) &&
@@ -48,7 +51,7 @@ export const cloudLogFetcher = (
       break;
 
     case "audit":
-      logQuery.push(`logName = "projects/rowyio/logs/rowy-audit"`);
+      logQuery.push(`logName = "projects/${projectId}/logs/rowy-audit"`);
       logQuery.push(`jsonPayload.ref.collectionPath = "${tablePath}"`);
       if (cloudLogFilters.auditRowId)
         logQuery.push(
@@ -56,7 +59,9 @@ export const cloudLogFetcher = (
         );
       break;
 
-    // logQuery.push(`resource.labels.function_name="R-githubStars"`);
+    case "functions":
+      logQuery.push(`resource.labels.function_name = "R-${tablePath}"`);
+      break;
 
     default:
       break;
@@ -72,6 +77,13 @@ export const cloudLogFetcher = (
     } catch (e) {
       console.error("Failed to calculate minimum date", e);
     }
+  }
+
+  if (
+    Array.isArray(cloudLogFilters.severity) &&
+    cloudLogFilters.severity.length > 0
+  ) {
+    logQuery.push(`severity = (${cloudLogFilters.severity.join(" OR ")})`);
   }
 
   const logQueryUrl =

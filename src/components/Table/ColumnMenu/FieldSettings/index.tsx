@@ -15,6 +15,7 @@ import { useConfirmation } from "@src/components/ConfirmationDialog";
 import { useSnackLogContext } from "@src/contexts/SnackLogContext";
 import { FieldType } from "@src/constants/fields";
 import { runRoutes } from "@src/constants/runRoutes";
+import { useSnackbar } from "notistack";
 
 export default function FieldSettings(props: IMenuModalProps) {
   const { name, fieldName, type, open, config, handleClose, handleSave } =
@@ -27,6 +28,7 @@ export default function FieldSettings(props: IMenuModalProps) {
   const initializable = getFieldProp("initializable", type);
 
   const { requestConfirmation } = useConfirmation();
+  const { enqueueSnackbar } = useSnackbar();
   const { tableState, rowyRun } = useProjectContext();
   const snackLogContext = useSnackLogContext();
 
@@ -157,29 +159,34 @@ export default function FieldSettings(props: IMenuModalProps) {
               });
               return;
             }
-
             if (showRebuildPrompt) {
-              requestConfirmation({
-                title: "Deploy changes",
-                body: "You have made changes that affect the behavior of the cloud function of this table, Would you like to redeploy it now?",
-                confirm: "Deploy",
-                cancel: "Later",
-                handleConfirm: async () => {
-                  if (!rowyRun) return;
-                  snackLogContext.requestSnackLog();
-                  rowyRun({
-                    route: runRoutes.buildFunction,
-                    body: {
-                      tablePath: tableState?.tablePath,
-                      pathname: window.location.pathname,
-                      tableConfigPath: tableState?.config.tableConfig.path,
-                    },
-                    params: [],
-                  });
-                },
+              enqueueSnackbar("Saving changes...", {
+                autoHideDuration: 1500,
               });
+              handleSave(fieldName, { config: newConfig }, () => {
+                requestConfirmation({
+                  title: "Deploy changes",
+                  body: "You have made changes that affect the behavior of the cloud function of this table, Would you like to redeploy it now?",
+                  confirm: "Deploy",
+                  cancel: "Later",
+                  handleConfirm: async () => {
+                    if (!rowyRun) return;
+                    snackLogContext.requestSnackLog();
+                    rowyRun({
+                      route: runRoutes.buildFunction,
+                      body: {
+                        tablePath: tableState?.tablePath,
+                        pathname: window.location.pathname,
+                        tableConfigPath: tableState?.config.tableConfig.path,
+                      },
+                    });
+                  },
+                });
+              });
+            } else {
+              handleSave(fieldName, { config: newConfig });
             }
-            handleSave(fieldName, { config: newConfig });
+
             handleClose();
             setShowRebuildPrompt(false);
           },

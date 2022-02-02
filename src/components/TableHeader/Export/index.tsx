@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useAtom } from "jotai";
 
 import { makeStyles, createStyles } from "@mui/styles";
 import { DialogContent, Tab, Divider } from "@mui/material";
@@ -14,15 +15,16 @@ import ExportDetails from "./Export";
 import DownloadDetails from "./Download";
 
 import { useProjectContext } from "@src/contexts/ProjectContext";
-import { db } from "../../../firebase";
+import { db } from "@src/firebase";
 import { isCollectionGroup } from "@src/utils/fns";
+import { modalAtom } from "@src/atoms/Table";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
     paper: {
       [theme.breakpoints.up("sm")]: {
         maxWidth: 440,
-        height: 610,
+        height: 640,
       },
     },
 
@@ -47,7 +49,11 @@ const useStyles = makeStyles((theme) =>
 
 export default function Export() {
   const classes = useStyles();
-  const [open, setOpen] = useState(false);
+
+  const [modal, setModal] = useAtom(modalAtom);
+  const open = modal === "export";
+  const setOpen = (open: boolean) => setModal(open ? "export" : "");
+
   const [mode, setMode] = useState<"Export" | "Download">("Export");
   const { tableState } = useProjectContext();
 
@@ -97,8 +103,8 @@ export default function Export() {
                 <DialogContent style={{ flexGrow: 0, flexShrink: 0 }}>
                   {(tableState?.filters && tableState?.filters.length !== 0) ||
                   (tableState?.orderBy && tableState?.orderBy.length !== 0)
-                    ? "The filters and sorting applied to the table will be used in the export."
-                    : "No filters or sorting will be applied on the exported data."}
+                    ? "The filters and sorting applied to the table will be applied to the export"
+                    : "No filters or sorting will be applied on the exported data"}
                 </DialogContent>
 
                 <TabList

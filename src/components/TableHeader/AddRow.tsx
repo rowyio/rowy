@@ -8,10 +8,12 @@ import {
   Select,
   MenuItem,
   ListItemText,
+  Box,
 } from "@mui/material";
 import AddRowIcon from "@src/assets/icons/AddRow";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
+import { useAppContext } from "@src/contexts/AppContext";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import { isCollectionGroup } from "@src/utils/fns";
 import { db } from "@src/firebase";
@@ -19,7 +21,8 @@ import { db } from "@src/firebase";
 const useIdTypeState = createPersistedState("__ROWY__ADD_ROW_ID_TYPE");
 
 export default function AddRow() {
-  const { addRow, tableState } = useProjectContext();
+  const { userClaims } = useAppContext();
+  const { addRow, table, tableState } = useProjectContext();
 
   const anchorEl = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
@@ -38,6 +41,9 @@ export default function AddRow() {
     }
   };
 
+  if (table?.readOnly && !userClaims?.roles.includes("ADMIN"))
+    return <Box sx={{ mr: -2 }} />;
+
   return (
     <>
       <ButtonGroup
@@ -45,11 +51,11 @@ export default function AddRow() {
         color="primary"
         aria-label="Split button"
         ref={anchorEl}
+        disabled={isCollectionGroup() || !addRow}
       >
         <Button
           variant="contained"
           color="primary"
-          disabled={isCollectionGroup() || !addRow}
           onClick={handleClick}
           startIcon={<AddRowIcon />}
         >
