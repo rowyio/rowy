@@ -4,6 +4,7 @@ import Cut from "@src/assets/icons/Cut";
 import Paste from "@src/assets/icons/Paste";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import { useSnackbar } from "notistack";
+import { SelectedCell } from "@src/atoms/ContextMenu";
 
 export interface IContextMenuActions {
   label: string;
@@ -11,22 +12,20 @@ export interface IContextMenuActions {
   onClick: () => void;
 }
 
-export default function BasicContextMenuActions(): IContextMenuActions[] {
-  const { contextMenuRef, tableState, deleteCell, updateCell } =
-    useProjectContext();
+export default function BasicContextMenuActions(
+  selectedCell: SelectedCell,
+  reset: () => void | Promise<void>
+): IContextMenuActions[] {
+  const { tableState, deleteCell, updateCell } = useProjectContext();
   const { enqueueSnackbar } = useSnackbar();
   const columns = tableState?.columns;
   const rows = tableState?.rows;
-  const selectedRowIndex = contextMenuRef?.current?.selectedCell
-    .rowIndex as number;
-  const selectedColIndex = contextMenuRef?.current?.selectedCell?.colIndex;
+  const selectedRowIndex = selectedCell.rowIndex as number;
+  const selectedColIndex = selectedCell?.colIndex;
   const selectedCol = _find(columns, { index: selectedColIndex });
   const selectedRow = rows?.[selectedRowIndex];
 
-  const handleClose = () => {
-    contextMenuRef?.current?.setSelectedCell(null);
-    contextMenuRef?.current?.setAnchorEl(null);
-  };
+  const handleClose = () => reset?.();
 
   const handleCopy = () => {
     const cell = selectedRow?.[selectedCol.key];

@@ -1,6 +1,8 @@
 import { useProjectContext } from "@src/contexts/ProjectContext";
+import useContextMenuAtom from "@src/hooks/useContextMenuAtom";
 import { Fragment } from "react";
 import { Row, RowRendererProps } from "react-data-grid";
+import { IContextMenuActions } from "../fields/_BasicCell/BasicCellContextMenuActions";
 
 import OutOfOrderIndicator from "./OutOfOrderIndicator";
 
@@ -23,13 +25,14 @@ export default function TableRow(props: RowRendererProps<any>) {
 }
 
 const ContextMenu = (props: any) => {
-  const { contextMenuRef }: any = useProjectContext();
+  const { setContextMenu } = useContextMenuAtom();
   function handleClick(e: any) {
     e.preventDefault();
-    const input = e?.target as HTMLElement;
-    if (contextMenuRef?.current) {
-      contextMenuRef?.current?.setAnchorEl(input);
-    }
+    if (setContextMenu)
+      setContextMenu((prev) => ({
+        ...prev,
+        anchorEl: e?.target as HTMLElement,
+      }));
   }
   return <span onContextMenu={(e) => handleClick(e)}>{props.children}</span>;
 };

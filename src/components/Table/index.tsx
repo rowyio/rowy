@@ -32,6 +32,7 @@ import { formatSubTableName } from "@src/utils/fns";
 import { useAppContext } from "@src/contexts/AppContext";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import useWindowSize from "@src/hooks/useWindowSize";
+import useContextMenuAtom from "@src/hooks/useContextMenuAtom";
 
 export type TableColumn = Column<any> & {
   isNew?: boolean;
@@ -49,11 +50,11 @@ export default function Table() {
     tableState,
     tableActions,
     dataGridRef,
-    contextMenuRef,
     sideDrawerRef,
     updateCell,
   } = useProjectContext();
   const { userDoc, userClaims } = useAppContext();
+  const { setContextMenu } = useContextMenuAtom();
 
   const userDocHiddenFields =
     userDoc.state.doc?.tables?.[formatSubTableName(tableState?.config.id)]
@@ -265,10 +266,13 @@ export default function Table() {
                 }
               }}
               onSelectedCellChange={({ rowIdx, idx }) => {
-                contextMenuRef?.current?.setSelectedCell({
-                  rowIndex: rowIdx,
-                  colIndex: idx,
-                });
+                setContextMenu((prev) => ({
+                  ...prev,
+                  selectedCell: {
+                    rowIndex: rowIdx,
+                    colIndex: idx,
+                  },
+                }));
               }}
             />
           </DndProvider>
