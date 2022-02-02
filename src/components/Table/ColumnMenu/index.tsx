@@ -351,6 +351,7 @@ export default function ColumnMenu() {
             open={modal.type === ModalStates.typeChange}
           />
           <FieldSettings
+            key={column.key}
             {...menuModalProps}
             open={modal.type === ModalStates.settings}
           />
