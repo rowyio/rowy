@@ -1,7 +1,9 @@
 import _find from "lodash/find";
+
+import Cut from "@mui/icons-material/ContentCut";
 import CopyCells from "@src/assets/icons/CopyCells";
-import Cut from "@src/assets/icons/Cut";
-import Paste from "@src/assets/icons/Paste";
+import Paste from "@mui/icons-material/ContentPaste";
+
 import { useProjectContext } from "@src/contexts/ProjectContext";
 
 export default function BasicContextMenuActions() {
