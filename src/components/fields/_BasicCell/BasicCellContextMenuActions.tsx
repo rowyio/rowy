@@ -5,56 +5,56 @@ import CopyCells from "@src/assets/icons/CopyCells";
 import Paste from "@mui/icons-material/ContentPaste";
 
 import { useProjectContext } from "@src/contexts/ProjectContext";
+import { useSnackbar } from "notistack";
+import { SelectedCell } from "@src/atoms/ContextMenu";
 
-export default function BasicContextMenuActions() {
-  const { contextMenuRef, tableState, deleteCell, updateCell } =
-    useProjectContext();
+export interface IContextMenuActions {
+  label: string;
+  icon: React.ReactNode;
+  onClick: () => void;
+}
+
+export default function BasicContextMenuActions(
+  selectedCell: SelectedCell,
+  reset: () => void | Promise<void>
+): IContextMenuActions[] {
+  const { tableState, deleteCell, updateCell } = useProjectContext();
+  const { enqueueSnackbar } = useSnackbar();
   const columns = tableState?.columns;
   const rows = tableState?.rows;
-  const selectedRowIndex = contextMenuRef?.current?.selectedCell
-    .rowIndex as number;
-  const selectedColIndex = contextMenuRef?.current?.selectedCell?.colIndex;
+  const selectedRowIndex = selectedCell.rowIndex as number;
+  const selectedColIndex = selectedCell?.colIndex;
   const selectedCol = _find(columns, { index: selectedColIndex });
   const selectedRow = rows?.[selectedRowIndex];
+  const cell = selectedRow?.[selectedCol.key];
 
-  const handleClose = () => {
-    contextMenuRef?.current?.setSelectedCell(null);
-    contextMenuRef?.current?.setAnchorEl(null);
-  };
+  const handleClose = async () => await reset?.();
 
-  const handleCopy = () => {
-    const cell = selectedRow?.[selectedCol.key];
-    // const onFail = () => console.log("Fail to copy");
-    // const onSuccess = () => console.log("Save to clipboard successful");
-    // const copy =
-    navigator.clipboard.writeText(JSON.stringify(cell));
-    // copy.then(onSuccess, onFail);
-
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(JSON.stringify(cell));
+      enqueueSnackbar("Copied to clipboard", { variant: "success" });
+    } catch (error) {
+      enqueueSnackbar("Failed to copy", { variant: "error" });
+    }
     handleClose();
   };
 
   const handleCut = () => {
-    const cell = selectedRow?.[selectedCol.key];
     const notUndefined = Boolean(typeof cell !== "undefined");
     if (deleteCell && notUndefined)
       deleteCell(selectedRow?.ref, selectedCol?.key);
-
     handleClose();
   };
 
-  const handlePaste = () => {
-    // console.log("home", rows);
-    const paste = navigator.clipboard.readText();
-    paste.then(async (clipText) => {
-      try {
-        const paste = await JSON.parse(clipText);
-        updateCell?.(selectedRow?.ref, selectedCol.key, paste);
-      } catch (error) {
-        //TODO check the coding style guide about error message
-        //Add breadcrumb handler her
-        // console.log(error);
-      }
-    });
+  const handlePaste = async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      const paste = await JSON.parse(text);
+      updateCell?.(selectedRow?.ref, selectedCol.key, paste);
+    } catch (error) {
+      enqueueSnackbar(`${error}`, { variant: "error" });
+    }
 
     handleClose();
   };
@@ -64,10 +64,11 @@ export default function BasicContextMenuActions() {
   //     return typeof cell === "undefined" ? true : false;
   // };
 
-  const cellMenuAction = [
+  const contextMenuActions = [
     { label: "Cut", icon: <Cut />, onClick: handleCut },
     { label: "Copy", icon: <CopyCells />, onClick: handleCopy },
     { label: "Paste", icon: <Paste />, onClick: handlePaste },
   ];
-  return cellMenuAction;
+
+  return contextMenuActions;
 }
