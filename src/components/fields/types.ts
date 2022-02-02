@@ -3,6 +3,7 @@ import { FieldType } from "@src/constants/fields";
 import { FormatterProps, EditorProps } from "react-data-grid";
 import { Control, UseFormReturn } from "react-hook-form";
 import { PopoverProps } from "@mui/material";
+import { IContextMenuActions } from "./_BasicCell/BasicCellContextMenuActions";
 
 export { FieldType };
 
@@ -17,7 +18,7 @@ export interface IFieldConfig {
   icon?: React.ReactNode;
   description?: string;
   setupGuideLink?: string;
-  contextMenuActions?: () => void;
+  contextMenuActions?: () => IContextMenuActions[];
   TableCell: React.ComponentType<FormatterProps<any>>;
   TableEditor: React.ComponentType<EditorProps<any, any>>;
   SideDrawerField: React.ComponentType<ISideDrawerFieldProps>;

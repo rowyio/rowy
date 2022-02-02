@@ -3,10 +3,18 @@ import CopyCells from "@src/assets/icons/CopyCells";
 import Cut from "@src/assets/icons/Cut";
 import Paste from "@src/assets/icons/Paste";
 import { useProjectContext } from "@src/contexts/ProjectContext";
+import { useSnackbar } from "notistack";
 
-export default function BasicContextMenuActions() {
+export interface IContextMenuActions {
+  label: string;
+  icon: React.ReactNode;
+  onClick: () => void;
+}
+
+export default function BasicContextMenuActions(): IContextMenuActions[] {
   const { contextMenuRef, tableState, deleteCell, updateCell } =
     useProjectContext();
+  const { enqueueSnackbar } = useSnackbar();
   const columns = tableState?.columns;
   const rows = tableState?.rows;
   const selectedRowIndex = contextMenuRef?.current?.selectedCell
@@ -22,8 +30,10 @@ export default function BasicContextMenuActions() {
 
   const handleCopy = () => {
     const cell = selectedRow?.[selectedCol.key];
-    const onFail = () => console.log("Fail to copy");
-    const onSuccess = () => console.log("Save to clipboard successful");
+    const onFail = () =>
+      enqueueSnackbar("Failed to copy", { variant: "error" });
+    const onSuccess = () =>
+      enqueueSnackbar("Copied to clipboard", { variant: "success" });
     const copy = navigator.clipboard.writeText(JSON.stringify(cell));
     copy.then(onSuccess, onFail);
 
@@ -40,16 +50,13 @@ export default function BasicContextMenuActions() {
   };
 
   const handlePaste = () => {
-    console.log("home", rows);
     const paste = navigator.clipboard.readText();
     paste.then(async (clipText) => {
       try {
         const paste = await JSON.parse(clipText);
         updateCell?.(selectedRow?.ref, selectedCol.key, paste);
       } catch (error) {
-        //TODO check the coding style guide about error message
-        //Add breadcrumb handler her
-        console.log(error);
+        enqueueSnackbar(`${error}`, { variant: "error" });
       }
     });
 
@@ -61,10 +68,11 @@ export default function BasicContextMenuActions() {
   //     return typeof cell === "undefined" ? true : false;
   // };
 
-  const cellMenuAction = [
+  const contextMenuActions = [
     { label: "Cut", icon: <Cut />, onClick: handleCut },
     { label: "Copy", icon: <CopyCells />, onClick: handleCopy },
     { label: "Paste", icon: <Paste />, onClick: handlePaste },
   ];
-  return cellMenuAction;
+
+  return contextMenuActions;
 }
