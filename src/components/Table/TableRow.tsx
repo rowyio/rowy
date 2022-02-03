@@ -1,4 +1,4 @@
-import useContextMenuAtom from "@src/hooks/useContextMenuAtom";
+import useContextMenuAtom from "@src/atoms/ContextMenu";
 import { Fragment } from "react";
 import { Row, RowRendererProps } from "react-data-grid";
 

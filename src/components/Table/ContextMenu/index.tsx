@@ -1,8 +1,8 @@
 import _find from "lodash/find";
 import { getFieldProp } from "@src/components/fields";
 import { useProjectContext } from "@src/contexts/ProjectContext";
-import useContextMenuAtom from "@src/hooks/useContextMenuAtom";
 import { MenuContents } from "./MenuContent";
+import useContextMenuAtom from "@src/atoms/ContextMenu";
 
 export default function ContextMenu() {
   const { tableState }: any = useProjectContext();

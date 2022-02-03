@@ -41,7 +41,7 @@ export default function BasicContextMenuActions(
   };
 
   const handleCut = () => {
-    const notUndefined = Boolean(typeof cell !== "undefined");
+    const notUndefined = typeof cell !== "undefined";
     if (deleteCell && notUndefined)
       deleteCell(selectedRow?.ref, selectedCol?.key);
     handleClose();

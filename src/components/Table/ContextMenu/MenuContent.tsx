@@ -1,4 +1,4 @@
-import { Menu, MenuList } from "@mui/material";
+import { Menu } from "@mui/material";
 import { default as MenuItem } from "./MenuItem";
 import { IContextMenuItem } from "./MenuItem";
 
@@ -39,14 +39,11 @@ export function MenuContents({
           maxWidth: "100%",
         },
       }}
-      MenuListProps={{ disablePadding: true }}
       onContextMenu={handleContext}
     >
-      <MenuList dense>
-        {items.map((item, indx: number) => (
-          <MenuItem key={indx} {...item} />
-        ))}
-      </MenuList>
+      {items.map((item, indx: number) => (
+        <MenuItem key={indx} {...item} />
+      ))}
     </Menu>
   );
 }

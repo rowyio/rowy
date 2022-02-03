@@ -31,8 +31,8 @@ import { formatSubTableName } from "@src/utils/fns";
 
 import { useAppContext } from "@src/contexts/AppContext";
 import { useProjectContext } from "@src/contexts/ProjectContext";
+import useContextMenuAtom from "@src/atoms/ContextMenu";
 import useWindowSize from "@src/hooks/useWindowSize";
-import useContextMenuAtom from "@src/hooks/useContextMenuAtom";
 
 export type TableColumn = Column<any> & {
   isNew?: boolean;
