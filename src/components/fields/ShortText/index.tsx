@@ -7,6 +7,7 @@ import BasicCell from "../_BasicCell/BasicCellValue";
 import TextEditor from "@src/components/Table/editors/TextEditor";
 
 import { filterOperators } from "./Filter";
+import BasicContextMenuActions from "../_BasicCell/BasicCellContextMenuActions";
 const SideDrawerField = lazy(
   () =>
     import(
@@ -26,6 +27,7 @@ export const config: IFieldConfig = {
   initializable: true,
   icon: <ShortTextIcon />,
   description: "Text displayed on a single line.",
+  contextMenuActions: BasicContextMenuActions,
   TableCell: withBasicCell(BasicCell),
   TableEditor: TextEditor,
   SideDrawerField,

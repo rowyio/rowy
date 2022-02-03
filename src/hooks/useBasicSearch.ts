@@ -1,17 +1,16 @@
 import { useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
+import { matchSorter } from "match-sorter";
 
 export default function useBasicSearch<T>(
   list: T[],
-  predicate: (item: T, query: string) => boolean,
+  keys: string[],
   debounce: number = 400
 ) {
   const [query, setQuery] = useState("");
   const [handleQuery] = useDebouncedCallback(setQuery, debounce);
 
-  const results = query
-    ? list.filter((user) => predicate(user, query.toLowerCase()))
-    : list;
+  const results = query ? matchSorter(list, query, { keys }) : list;
 
   return [results, query, handleQuery] as const;
 }

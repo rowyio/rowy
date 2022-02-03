@@ -51,6 +51,7 @@ type SelectedColumnHeader = {
   column: Column<any> & { [key: string]: any };
   anchorEl: PopoverProps["anchorEl"];
 };
+
 export type ColumnMenuRef = {
   selectedColumnHeader: SelectedColumnHeader | null;
   setSelectedColumnHeader: React.Dispatch<
@@ -351,6 +352,7 @@ export default function ColumnMenu() {
             open={modal.type === ModalStates.typeChange}
           />
           <FieldSettings
+            key={column.key}
             {...menuModalProps}
             open={modal.type === ModalStates.settings}
           />
