@@ -46,6 +46,7 @@ import { SETTINGS } from "@src/config/dbPaths";
 import { APP_BAR_HEIGHT } from "@src/components/Navigation";
 
 const useHomeViewState = createPersistedState("__ROWY__HOME_VIEW");
+const SEARCH_KEYS = ["id", "name", "section", "description"];
 
 export default function HomePage() {
   const { userDoc, userRoles } = useAppContext();
@@ -53,11 +54,7 @@ export default function HomePage() {
 
   const [results, query, handleQuery] = useBasicSearch(
     tables ?? [],
-    (table, query) =>
-      table.id.toLowerCase().includes(query) ||
-      table.name.toLowerCase().includes(query) ||
-      table.section.toLowerCase().includes(query) ||
-      table.description.toLowerCase().includes(query)
+    SEARCH_KEYS
   );
 
   const [view, setView] = useHomeViewState("grid");
