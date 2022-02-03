@@ -2,12 +2,12 @@ import _find from "lodash/find";
 import { getFieldProp } from "@src/components/fields";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import { MenuContents } from "./MenuContent";
-import useContextMenuAtom from "@src/atoms/ContextMenu";
+import { useContextMenuAtom, useSetSelectedCell } from "@src/atoms/ContextMenu";
 
 export default function ContextMenu() {
   const { tableState }: any = useProjectContext();
-  const { contextMenu, resetContextMenu } = useContextMenuAtom();
-  const { anchorEl, selectedCell } = contextMenu;
+  const { anchorEle, selectedCell, resetContextMenu }: any =
+    useContextMenuAtom();
   const columns = tableState?.columns;
   const selectedColIndex = selectedCell?.colIndex;
   const selectedCol = _find(columns, { index: selectedColIndex });
@@ -15,13 +15,12 @@ export default function ContextMenu() {
     getFieldProp("contextMenuActions", selectedCol?.type) ||
     function empty() {};
   const actions = configActions(selectedCell, resetContextMenu) || [];
-  const hasNoActions = Boolean(actions.length === 0);
 
-  if (!contextMenu || hasNoActions) return <></>;
+  if (!anchorEle || actions.length === 0) return <></>;
   return (
     <MenuContents
-      anchorEl={anchorEl as HTMLElement}
-      open={Boolean(contextMenu.anchorEl)}
+      anchorEl={anchorEle}
+      open={Boolean(anchorEle)}
       handleClose={resetContextMenu}
       items={actions}
     />

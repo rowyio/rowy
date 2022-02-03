@@ -1,30 +1,40 @@
 import { useAtom } from "jotai";
-import { atomWithReset, useResetAtom } from "jotai/utils";
+import { atomWithReset, useResetAtom, useUpdateAtom } from "jotai/utils";
 
 export type SelectedCell = {
   rowIndex: number;
   colIndex: number;
 };
 
-export interface IContextMenuAtom {
-  selectedCell: SelectedCell | null;
-  anchorEl: HTMLElement | null;
+export type anchorEl = HTMLElement;
+
+const selectedCellAtom = atomWithReset<SelectedCell | null>(null);
+const anchorEleAtom = atomWithReset<HTMLElement | null>(null);
+
+export function useSetAnchorEle() {
+  const setAnchorEle = useUpdateAtom(anchorEleAtom);
+  return { setAnchorEle };
 }
 
-const INIT_VALUE = {
-  selectedCell: null,
-  anchorEl: null,
-};
+export function useSetSelectedCell() {
+  const setSelectedCell = useUpdateAtom(selectedCellAtom);
+  return { setSelectedCell };
+}
 
-export default function useContextMenuAtom() {
-  const [contextMenu, setContextMenu] = useAtom(contextMenuAtom);
-  const resetContextMenu = useResetAtom(contextMenuAtom);
+export function useContextMenuAtom() {
+  const [anchorEle] = useAtom(anchorEleAtom);
+  const [selectedCell] = useAtom(selectedCellAtom);
+  const resetAnchorEle = useResetAtom(anchorEleAtom);
+  const resetSelectedCell = useResetAtom(selectedCellAtom);
+
+  const resetContextMenu = async () => {
+    await resetAnchorEle();
+    await resetSelectedCell();
+  };
 
   return {
-    contextMenu,
-    setContextMenu,
+    anchorEle,
+    selectedCell,
     resetContextMenu,
   };
 }
-
-export const contextMenuAtom = atomWithReset<IContextMenuAtom>(INIT_VALUE);
