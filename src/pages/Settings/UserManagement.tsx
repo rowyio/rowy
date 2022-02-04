@@ -20,6 +20,8 @@ import useCollection from "@src/hooks/useCollection";
 import useBasicSearch from "@src/hooks/useBasicSearch";
 import { USERS } from "@src/config/dbPaths";
 
+const SEARCH_KEYS = ["id", "user.displayName", "user.email"];
+
 export interface User {
   id: string;
   user: {
@@ -35,13 +37,7 @@ export default function UserManagementPage() {
   const users: User[] = usersState.documents ?? [];
   const loading = usersState.loading || !Array.isArray(usersState.documents);
 
-  const [results, query, handleQuery] = useBasicSearch(
-    users,
-    (user, query) =>
-      user.id.toLowerCase() === query ||
-      user.user.displayName.toLowerCase().includes(query) ||
-      user.user.email.toLowerCase().includes(query)
-  );
+  const [results, query, handleQuery] = useBasicSearch(users, SEARCH_KEYS);
 
   return (
     <Container maxWidth="sm" sx={{ px: 1, pt: 1, pb: 7 + 3 + 3 }}>

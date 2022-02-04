@@ -134,8 +134,10 @@ export default function TableSettings({
       await settingsActions?.updateTable(data);
       deployExtensionsWebhooks();
       clearDialog();
+      analytics.logEvent("update_table", { type: values.tableType });
     } else {
       await settingsActions?.createTable(data);
+      await analytics.logEvent("create_table", { type: values.tableType });
       deployExtensionsWebhooks(() => {
         if (router.location.pathname === "/") {
           router.history.push(
@@ -149,10 +151,6 @@ export default function TableSettings({
         clearDialog();
       });
     }
-    analytics.logEvent(
-      TableSettingsDialogModes.update ? "update_table" : "create_table",
-      { type: values.tableType }
-    );
   };
 
   const fields = tableSettings(

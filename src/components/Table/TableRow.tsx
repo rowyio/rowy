@@ -1,35 +1,24 @@
-import { useProjectContext } from "@src/contexts/ProjectContext";
+import { useSetAnchorEle } from "@src/atoms/ContextMenu";
 import { Fragment } from "react";
 import { Row, RowRendererProps } from "react-data-grid";
 
 import OutOfOrderIndicator from "./OutOfOrderIndicator";
 
 export default function TableRow(props: RowRendererProps<any>) {
+  const { setAnchorEle } = useSetAnchorEle();
+  const handleContextMenu = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
+    e.preventDefault();
+    setAnchorEle?.(e?.target as HTMLElement);
+  };
   if (props.row._rowy_outOfOrder)
     return (
       <Fragment key={props.row.id}>
         <OutOfOrderIndicator top={props.top} height={props.height} />
-        <ContextMenu>
-          <Row {...props} />
-        </ContextMenu>
+        <Row onContextMenu={handleContextMenu} {...props} />
       </Fragment>
     );
 
-  return (
-    <ContextMenu>
-      <Row {...props} />
-    </ContextMenu>
-  );
+  return <Row onContextMenu={handleContextMenu} {...props} />;
 }
-
-const ContextMenu = (props: any) => {
-  const { contextMenuRef }: any = useProjectContext();
-  function handleClick(e: any) {
-    e.preventDefault();
-    const input = e?.target as HTMLElement;
-    if (contextMenuRef?.current) {
-      contextMenuRef?.current?.setAnchorEl(input);
-    }
-  }
-  return <span onContextMenu={(e) => handleClick(e)}>{props.children}</span>;
-};
