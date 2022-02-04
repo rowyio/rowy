@@ -2,6 +2,7 @@ import React from "react";
 import _find from "lodash/find";
 import { PopoverProps } from "@mui/material";
 
+import { FieldType } from "@src/constants/fields";
 import { getFieldProp } from "@src/components/fields";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 
@@ -38,9 +39,17 @@ export default function ContextMenu() {
 
   const selectedColIndex = selectedCell?.colIndex;
   const selectedCol = _find(tableState?.columns, { index: selectedColIndex });
+
+  function getColType(col) {
+    if (!col) return null;
+    return col.type === FieldType.derivative
+      ? selectedCol.config.renderFieldType
+      : selectedCol.type;
+  }
+
+  const columnType = getColType(selectedCol);
   const getActions =
-    getFieldProp("contextMenuActions", selectedCol?.type) ||
-    function empty() {};
+    getFieldProp("contextMenuActions", columnType) || function empty() {};
   const actions = getActions() || [];
   const hasNoActions = Boolean(actions.length === 0);
 
