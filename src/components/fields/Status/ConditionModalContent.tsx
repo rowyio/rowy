@@ -9,40 +9,33 @@ interface I_ConditionModalContent {
   modal: any;
 }
 
-const multiSelectOption = [
-  { label: "Boolean", value: "boolean" },
-  { label: "Number", value: "number" },
-  { label: "String", value: "string" },
-  { label: "Undefined", value: "undefined" },
-  { label: "Null", value: "null" },
-];
-
-const booleanOptions = [
-  { label: "True", value: "true" },
-  { label: "False", value: "false" },
-];
-
-const operatorOptions = [
-  { label: "Less than", value: "<" },
-  { label: "Less than or equal", value: "<=" },
-  { label: "Equal", value: "==" },
-  { label: "Equal or more than", value: ">=" },
-  { label: "More than", value: ">" },
-];
-
 export default function ConditionModalContent({
+  isEditing,
   condition,
   conditions,
   handleUpdate,
 }: any) {
   const { label, operator, type, value } = condition;
-  const duplicateCond = Boolean(_find(conditions, condition));
-  const labelReqLen = Boolean(condition.label.length < 4);
+  const labelReqLen = Boolean(condition.label.length < 1);
+  const onNewHasDuplicate = Boolean(_find(conditions, condition));
+  const onEditConditions = conditions.filter(
+    (c) => c.value !== condition.value
+  ); //remove the current condition from list of conditions, to prevent false positive error on duplicate value
+  const onEditHasDuplicate = Boolean(_find(onEditConditions, condition));
+
+  const errorTextType = (isEditing: boolean, error: string) => {
+    const hasError = isEditing ? onEditHasDuplicate : onNewHasDuplicate;
+    return hasError ? error : "";
+  };
+
   return (
     <>
       <Typography variant="overline">DATA TYPE (input)</Typography>
       <MultiSelect
-        options={multiSelectOption}
+        options={[
+          { label: "True", value: "true" },
+          { label: "False", value: "false" },
+        ]}
         onChange={(v) => handleUpdate("type")(v)}
         value={type}
         multiple={false}
@@ -52,7 +45,13 @@ export default function ConditionModalContent({
       {/** To add defaultValue into MultiSelect?*/}
       {type === "boolean" && (
         <MultiSelect
-          options={booleanOptions}
+          options={[
+            { label: "Boolean", value: "boolean" },
+            { label: "Number", value: "number" },
+            { label: "String", value: "string" },
+            { label: "Undefined", value: "undefined" },
+            { label: "Null", value: "null" },
+          ]}
           onChange={(v) => handleUpdate("value")(v === "true")}
           value={value ? "true" : "false"}
           multiple={false}
@@ -63,7 +62,13 @@ export default function ConditionModalContent({
         <Grid container direction="row" justifyContent="space-between">
           <div style={{ width: "45%" }}>
             <MultiSelect
-              options={operatorOptions}
+              options={[
+                { label: "Less than", value: "<" },
+                { label: "Less than or equal", value: "<=" },
+                { label: "Equal", value: "==" },
+                { label: "Equal or more than", value: ">=" },
+                { label: "More than", value: ">" },
+              ]}
               onChange={(v) => handleUpdate("operator")(v)}
               value={operator}
               multiple={false}
@@ -71,25 +76,23 @@ export default function ConditionModalContent({
             />
           </div>
           <TextField
-            error={duplicateCond}
+            error={isEditing ? onEditHasDuplicate : onNewHasDuplicate}
             type="number"
             label="Value"
             value={value}
             onChange={(e) => handleUpdate("value")(Number(e.target.value))}
-            helperText={
-              duplicateCond ? "Numeric Conditional already exists" : ""
-            }
+            helperText={errorTextType(isEditing, "Number value already exists")}
           />
         </Grid>
       )}
       {type === "string" && (
         <TextField
-          error={duplicateCond}
+          error={isEditing ? onEditHasDuplicate : onNewHasDuplicate}
           fullWidth
           label="Value"
           value={value}
           onChange={(e) => handleUpdate("value")(e.target.value)}
-          helperText={duplicateCond ? "string value already exists" : ""}
+          helperText={errorTextType(isEditing, "String value already exists")}
         />
       )}
       <TextField
