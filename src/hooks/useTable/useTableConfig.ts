@@ -2,11 +2,12 @@ import { useEffect } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import _camelCase from "lodash/camelCase";
 
+import _orderBy from "lodash/orderBy";
 import _sortBy from "lodash/sortBy";
 
 import useDoc, { DocActions } from "../useDoc";
 import { FieldType } from "@src/constants/fields";
-import { arrayMover, formatPath } from "../../utils/fns";
+import { formatPath } from "../../utils/fns";
 import { db, deleteField } from "../../firebase";
 
 export type ColumnConfig = {
@@ -85,6 +86,7 @@ const useTableConfig = (tableId?: string) => {
       _columnValues.filter((col: any) => !col.hidden && !col.fixed),
       "index"
     );
+
     const targetColumn: any = columnsArray[index - numberOfFixedColumns];
     const updatedColumns = {
       ...columns,
@@ -116,13 +118,53 @@ const useTableConfig = (tableId?: string) => {
       callback: onSuccess,
     });
   };
+
+  /** insert column by index
+   * @param col     properties of new column
+   * @param source  source object { index: selected source index, insert: left | right }
+   */
+  const insert = (col, source) => {
+    const { columns } = tableConfigState;
+    const orderedCol = _orderBy(Object.values(columns), "index");
+
+    //offset index is necessary for splice insert
+    const offset = source.insert === "left" ? 0 : 1;
+
+    //insert poistion, is source index + offset
+    //if source.index is undefined, set target index to end of row
+    const targetIndx = Boolean(typeof source.index === "undefined")
+      ? orderedCol.length
+      : source.index + offset;
+
+    //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
+    orderedCol.splice(targetIndx, 0, col);
+
+    const updatedColumns = orderedCol.reduce(
+      (acc: any, col: any, indx: number) => {
+        acc[col.key] = { ...col, index: indx };
+        return acc;
+      },
+      {}
+    );
+
+    documentDispatch({
+      action: DocActions.update,
+      data: { columns: updatedColumns },
+    });
+  };
   /** remove column by index
    *  @param index of column.
    */
   const remove = (key: string) => {
     const { columns } = tableConfigState;
-    let updatedColumns = columns;
-    updatedColumns[key] = deleteField();
+
+    let updatedColumns: any = Object.values(columns)
+      .filter((c: any) => c.key !== key)
+      .sort((c: any) => c.index)
+      .reduce((acc: any, curr: any, index: any) => {
+        acc[curr.key] = { ...curr, index };
+        return acc;
+      }, {});
     documentDispatch({
       action: DocActions.update,
       data: { columns: updatedColumns },
@@ -136,15 +178,21 @@ const useTableConfig = (tableId?: string) => {
     const { columns } = tableConfigState;
     const oldIndex = columns[draggedColumnKey].index;
     const newIndex = columns[droppedColumnKey].index;
-    const columnsArray = _sortBy(Object.values(columns), "index");
-    arrayMover(columnsArray, oldIndex, newIndex);
-    let updatedColumns = columns;
 
-    columnsArray
-      .filter((c) => c) // arrayMover has a bug creating undefined items
-      .forEach((column: any, index) => {
-        updatedColumns[column.key] = { ...column, index };
-      });
+    //sort columns by index, remove drag col, insert it in drop position
+    const sortedColumns = _sortBy(Object.values(columns), "index");
+    const removeCol = sortedColumns.splice(oldIndex, 1);
+    sortedColumns.splice(newIndex, 0, removeCol[0]);
+
+    //itereate and update index to proper value
+    const updatedColumns = sortedColumns.reduce(
+      (acc: any, curr: any, index) => {
+        acc[curr.key] = { ...curr, index };
+        return acc;
+      },
+      {}
+    );
+
     documentDispatch({
       action: DocActions.update,
       data: { columns: updatedColumns },
@@ -162,6 +210,7 @@ const useTableConfig = (tableId?: string) => {
     });
   };
   const actions = {
+    insert,
     updateColumn,
     updateConfig,
     addColumn,

@@ -19,6 +19,7 @@ import TableContainer, { OUT_OF_ORDER_MARGIN } from "./TableContainer";
 import TableHeader from "../TableHeader";
 import ColumnHeader from "./ColumnHeader";
 import ColumnMenu from "./ColumnMenu";
+import ContextMenu from "./ContextMenu";
 import FinalColumnHeader from "./FinalColumnHeader";
 import FinalColumn from "./formatters/FinalColumn";
 import TableRow from "./TableRow";
@@ -31,6 +32,7 @@ import { formatSubTableName } from "@src/utils/fns";
 import { useAppContext } from "@src/contexts/AppContext";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import useWindowSize from "@src/hooks/useWindowSize";
+import { useSetSelectedCell } from "@src/atoms/ContextMenu";
 
 export type TableColumn = Column<any> & {
   isNew?: boolean;
@@ -52,6 +54,7 @@ export default function Table() {
     updateCell,
   } = useProjectContext();
   const { userDoc, userClaims } = useAppContext();
+  const { setSelectedCell } = useSetSelectedCell();
 
   const userDocHiddenFields =
     userDoc.state.doc?.tables?.[formatSubTableName(tableState?.config.id)]
@@ -262,6 +265,12 @@ export default function Table() {
                   });
                 }
               }}
+              onSelectedCellChange={({ rowIdx, idx }) =>
+                setSelectedCell({
+                  rowIndex: rowIdx,
+                  colIndex: idx,
+                })
+              }
             />
           </DndProvider>
         ) : (
@@ -270,6 +279,7 @@ export default function Table() {
       </TableContainer>
 
       <ColumnMenu />
+      <ContextMenu />
       <BulkActions
         selectedRows={selectedRows}
         columns={columns}

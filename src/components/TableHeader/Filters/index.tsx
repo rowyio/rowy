@@ -229,9 +229,10 @@ export default function Filters() {
                     }}
                   >
                     Clear
-                    {overrideTableFilters
-                      ? " (ignore table filter)"
-                      : " (use table filter)"}
+                    {hasTableFilters &&
+                      (overrideTableFilters
+                        ? " (ignore table filter)"
+                        : " (use table filter)")}
                   </Button>
 
                   <Button
@@ -337,20 +338,16 @@ export default function Filters() {
             <div className="content">
               <FilterInputs {...userFilterInputs} />
 
-              {hasTableFilters && (
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={overrideTableFilters}
-                      onChange={(e) =>
-                        setOverrideTableFilters(e.target.checked)
-                      }
-                    />
-                  }
-                  label="Override table filters"
-                  sx={{ justifyContent: "center", mb: 1, mr: 0 }}
-                />
-              )}
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={overrideTableFilters}
+                    onChange={(e) => setOverrideTableFilters(e.target.checked)}
+                  />
+                }
+                label="Override table filters"
+                sx={{ justifyContent: "center", mb: 1, mr: 0 }}
+              />
 
               <Stack
                 direction="row"

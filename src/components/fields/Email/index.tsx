@@ -6,6 +6,8 @@ import EmailIcon from "@mui/icons-material/MailOutlined";
 import BasicCell from "../_BasicCell/BasicCellValue";
 import TextEditor from "@src/components/Table/editors/TextEditor";
 import { filterOperators } from "../ShortText/Filter";
+import BasicContextMenuActions from "../_BasicCell/BasicCellContextMenuActions";
+
 const SideDrawerField = lazy(
   () =>
     import("./SideDrawerField" /* webpackChunkName: "SideDrawerField-Email" */)
@@ -20,6 +22,7 @@ export const config: IFieldConfig = {
   initializable: true,
   icon: <EmailIcon />,
   description: "Email address. Not validated.",
+  contextMenuActions: BasicContextMenuActions,
   TableCell: withBasicCell(BasicCell),
   TableEditor: TextEditor,
   SideDrawerField,
