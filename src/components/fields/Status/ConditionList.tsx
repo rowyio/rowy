@@ -14,9 +14,7 @@ interface I_ConditionList {
 
 export default function ConditionList({ config, setModal }: I_ConditionList) {
   const conditions = config?.conditions ?? [];
-  const noConditions = Boolean(conditions?.length < 1); // Double check this
-
-  if (noConditions) {
+  if (conditions?.length === 0) {
     return (
       <>
         No conditions set yet
@@ -50,13 +48,12 @@ export default function ConditionList({ config, setModal }: I_ConditionList) {
 }
 
 const GridItem = ({ condition, setModal, index }: any) => {
-  const noCondition = Boolean(!condition);
-  if (noCondition) return <></>;
+  if (!condition) return <></>;
   return (
     <>
-      {condition?.label}
+      <span>{condition?.label}</span>
       <Grid item>
-        {createValueLabel(condition)}
+        <span>{createValueLabel(condition)}</span>
         <IconButton
           onClick={() => setModal({ isOpen: true, condition, index })}
         >

@@ -4,7 +4,6 @@ import Modal from "@src/components/Modal";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { default as Content } from "./ConditionModalContent";
 import { EMPTY_STATE } from "./Settings";
-import { isElement, isEmpty } from "lodash";
 
 export default function ConditionModal({
   modal,
@@ -90,7 +89,6 @@ export default function ConditionModal({
   useEffect(() => {
     handleUpdate("operator")(modal.condition.operator ?? "==");
   }, [modal.condition.type]);
-
   return (
     <Modal
       open={modal.isOpen}
@@ -103,6 +101,7 @@ export default function ConditionModal({
       }}
       children={
         <Content
+          isEditing={modal.index}
           condition={modal.condition}
           conditions={conditions}
           handleUpdate={handleUpdate}
