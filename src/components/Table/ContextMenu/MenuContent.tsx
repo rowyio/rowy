@@ -1,11 +1,12 @@
 import { Menu } from "@mui/material";
-import MenuRow, { IMenuRow } from "./MenuRow";
+import { default as MenuItem } from "./MenuItem";
+import { IContextMenuItem } from "./MenuItem";
 
 interface IMenuContents {
   anchorEl: HTMLElement;
   open: boolean;
   handleClose: () => void;
-  items: IMenuRow[];
+  items: IContextMenuItem[];
 }
 
 export function MenuContents({
@@ -31,12 +32,17 @@ export function MenuContents({
         vertical: "top",
         horizontal: "left",
       }}
-      sx={{ "& .MuiMenu-paper": { backgroundColor: "background.default" } }}
-      MenuListProps={{ disablePadding: true }}
+      sx={{
+        "& .MuiMenu-paper": {
+          backgroundColor: "background.default",
+          width: 200,
+          maxWidth: "100%",
+        },
+      }}
       onContextMenu={handleContext}
     >
       {items.map((item, indx: number) => (
-        <MenuRow key={indx} {...item} />
+        <MenuItem key={indx} {...item} />
       ))}
     </Menu>
   );
