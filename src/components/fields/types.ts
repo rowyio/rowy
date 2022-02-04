@@ -20,7 +20,7 @@ export interface IFieldConfig {
   setupGuideLink?: string;
   contextMenuActions?: (
     selectedCell: SelectedCell,
-    reset: () => void | Promise<void>
+    reset: () => Promise<void>
   ) => IContextMenuActions[];
   TableCell: React.ComponentType<FormatterProps<any>>;
   TableEditor: React.ComponentType<EditorProps<any, any>>;

@@ -5,9 +5,8 @@ import { MenuContents } from "./MenuContent";
 import { useContextMenuAtom, useSetSelectedCell } from "@src/atoms/ContextMenu";
 
 export default function ContextMenu() {
-  const { tableState }: any = useProjectContext();
-  const { anchorEle, selectedCell, resetContextMenu }: any =
-    useContextMenuAtom();
+  const { tableState } = useProjectContext();
+  const { anchorEle, selectedCell, resetContextMenu } = useContextMenuAtom();
   const columns = tableState?.columns;
   const selectedColIndex = selectedCell?.colIndex;
   const selectedCol = _find(columns, { index: selectedColIndex });

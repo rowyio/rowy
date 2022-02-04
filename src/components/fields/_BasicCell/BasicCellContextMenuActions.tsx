@@ -35,15 +35,20 @@ export default function BasicContextMenuActions(
       await navigator.clipboard.writeText(JSON.stringify(cell));
       enqueueSnackbar("Copied to clipboard", { variant: "success" });
     } catch (error) {
-      enqueueSnackbar("Failed to copy", { variant: "error" });
+      enqueueSnackbar(`Failed to copy:${error}`, { variant: "error" });
     }
     handleClose();
   };
 
-  const handleCut = () => {
-    const notUndefined = typeof cell !== "undefined";
-    if (deleteCell && notUndefined)
-      deleteCell(selectedRow?.ref, selectedCol?.key);
+  const handleCut = async () => {
+    try {
+      await navigator.clipboard.writeText(JSON.stringify(cell));
+      if (typeof cell !== "undefined")
+        deleteCell?.(selectedRow?.ref, selectedCol?.key);
+    } catch (error) {
+      enqueueSnackbar(`Failed to cut: ${error}`, { variant: "error" });
+    }
+
     handleClose();
   };
 
@@ -53,16 +58,11 @@ export default function BasicContextMenuActions(
       const paste = await JSON.parse(text);
       updateCell?.(selectedRow?.ref, selectedCol.key, paste);
     } catch (error) {
-      enqueueSnackbar(`${error}`, { variant: "error" });
+      enqueueSnackbar(`Failed to paste: ${error}`, { variant: "error" });
     }
 
     handleClose();
   };
-
-  // const handleDisable = () => {
-  //     const cell = selectedRow?.[selectedCol.key];
-  //     return typeof cell === "undefined" ? true : false;
-  // };
 
   const contextMenuActions = [
     { label: "Cut", icon: <Cut />, onClick: handleCut },
