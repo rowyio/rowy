@@ -36,6 +36,7 @@ const WIKI_PATHS = {
   fieldTypesSupportedFields: "/field-types/supported-fields",
   fieldTypesDerivative: "/field-types/derivative",
   fieldTypesConnectTable: "/field-types/connect-table",
+  fieldTypesConnectService: "/field-types/connect-service",
   fieldTypesAction: "/field-types/action",
   fieldTypesAdd: "/field-types/add",
 

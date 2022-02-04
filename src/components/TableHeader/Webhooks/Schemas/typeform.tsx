@@ -6,15 +6,16 @@ export const webhookTypeform = {
   parser: {
     additionalVariables: null,
     extraLibs: null,
-
-    template: `const typeformParser: Parser = async({req, db,ref}) =>{
+    template: (
+      table
+    ) => `const typeformParser: Parser = async({req, db,ref}) =>{
       // this reduces the form submission into a single object of key value pairs
       // eg: {name: "John", age: 20}
       // ⚠️ ensure that you have assigned ref values of the fields
       // set the ref value to field key you would like to sync to
       // docs: https://help.typeform.com/hc/en-us/articles/360050447552-Block-reference-format-restrictions
       const {submitted_at,hidden,answers} = req.body.form_response
-      return ({
+      const submission  = ({
       _createdAt: submitted_at,
       ...hidden,
       ...answers.reduce((accRow, currAnswer) => {
@@ -42,12 +43,30 @@ export const webhookTypeform = {
             };
         }
       }, {}),
-    })};`,
+    })
+
+    ${
+      table.audit !== false
+        ? `
+    // auditField
+    const ${
+      table.auditFieldCreatedBy ?? "_createdBy"
+    } = await rowy.getServiceAccountUser()
+    return {
+      ...submission,
+      ${table.auditFieldCreatedBy ?? "_createdBy"}
+    }
+    `
+        : `
+    return submission
+    `
+    }
+  };`,
   },
   condition: {
     additionalVariables: null,
     extraLibs: null,
-    template: `const condition: Condition = async({ref,req,db}) => {
+    template: (table) => `const condition: Condition = async({ref,req,db}) => {
       // feel free to add your own code logic here
       return true;
     }`,

@@ -44,20 +44,36 @@ export const webhookBasic = {
   parser: {
     additionalVariables,
     extraLibs: parserExtraLibs,
-    template: `const basicParser: Parser = async({req, db,ref}) => {
+    template: (table) => `const basicParser: Parser = async({req, db,ref}) => {
       // request is the request object from the webhook
       // db is the database object
       // ref is the reference to collection of the table
       // the returned object will be added as a new row to the table
       // eg: adding the webhook body as row
       const {body} = req;
+      ${
+        table.audit !== false
+          ? `
+      // auditField
+      const ${
+        table.auditFieldCreatedBy ?? "_createdBy"
+      } = await rowy.getServiceAccountUser()
+      return {
+        ...body,
+        ${table.auditFieldCreatedBy ?? "_createdBy"}
+      }
+      `
+          : `
       return body;
+      `
+      }
+      
   }`,
   },
   condition: {
     additionalVariables,
     extraLibs: conditionExtraLibs,
-    template: `const condition: Condition = async({ref,req,db}) => {
+    template: (table) => `const condition: Condition = async({ref,req,db}) => {
       // feel free to add your own code logic here
       return true;
     }`,
@@ -66,7 +82,9 @@ export const webhookBasic = {
     return (
       <Typography color="text.disabled">
         <WarningIcon aria-label="Warning" style={{ verticalAlign: "bottom" }} />
-        &nbsp; Verification is not currently available for basic webhooks
+        &nbsp; Specialized verification is not currently available for basic
+        webhooks, you can add your own verification logic in the conditions
+        section bellow.
       </Typography>
     );
   },

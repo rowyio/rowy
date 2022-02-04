@@ -189,6 +189,16 @@ export default function CloudLogItem({
         <Typography variant="inherit" noWrap className="log-preview">
           {data.payload === "textPayload" && data.textPayload}
           {_get(data, "httpRequest.requestUrl")?.split(".run.app").pop()}
+          {data.payload === "jsonPayload" && (
+            <Typography
+              variant="inherit"
+              color="error"
+              fontWeight="bold"
+              component="span"
+            >
+              {data.jsonPayload.error}{" "}
+            </Typography>
+          )}
           {data.payload === "jsonPayload" &&
             stringify(data.jsonPayload.body ?? data.jsonPayload, {
               space: 2,
@@ -203,16 +213,29 @@ export default function CloudLogItem({
           </Typography>
         )}
         {data.payload === "jsonPayload" && (
-          <ReactJson
-            src={data.jsonPayload.body ?? data.jsonPayload}
-            name={data.jsonPayload.body ? "body" : "jsonPayload"}
-            theme={theme.palette.mode === "dark" ? "monokai" : "rjv-default"}
-            iconStyle="triangle"
-            style={{ font: "inherit", backgroundColor: "transparent" }}
-            displayDataTypes={false}
-            quotesOnKeys={false}
-            sortKeys
-          />
+          <>
+            {data.payload === "jsonPayload" && data.jsonPayload.error && (
+              <Typography
+                variant="inherit"
+                color="error"
+                fontWeight="bold"
+                paragraph
+                style={{ whiteSpace: "pre-wrap" }}
+              >
+                {data.jsonPayload.error}
+              </Typography>
+            )}
+            <ReactJson
+              src={data.jsonPayload.body ?? data.jsonPayload}
+              name={data.jsonPayload.body ? "body" : "jsonPayload"}
+              theme={theme.palette.mode === "dark" ? "monokai" : "rjv-default"}
+              iconStyle="triangle"
+              style={{ font: "inherit", backgroundColor: "transparent" }}
+              displayDataTypes={false}
+              quotesOnKeys={false}
+              sortKeys
+            />
+          </>
         )}
 
         {data.payload && <Divider sx={{ my: 1 }} />}

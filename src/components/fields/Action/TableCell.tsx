@@ -12,7 +12,7 @@ export default function Action({
   onSubmit,
   disabled,
 }: IHeavyCellProps) {
-  const hasRan = value && value.status;
+  const hasRan = value && ![null, undefined].includes(value.status);
 
   return (
     <Stack

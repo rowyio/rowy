@@ -6,25 +6,29 @@ export const webhookSendgrid = {
   parser: {
     additionalVariables: null,
     extraLibs: null,
-    template: `const sendgridParser: Parser = async({req, db,ref}) =>{
-
-        // {
-        //   "email": "example@test.com",
-        //   "timestamp": 1513299569,
-        //   "smtp-id": "<14c5d75ce93.dfd.64b469@ismtpd-555>",
-        //   "event": "processed",
-        //   "category": "cat facts",
-        //   "sg_event_id": "sg_event_id",
-        //   "sg_message_id": "sg_message_id"
-        // },
-
-
-    };`,
+    template: (
+      table
+    ) => `const sendgridParser: Parser = async ({ req, db, ref }) => {
+      const { body } = req 
+      const eventHandler = async (sgEvent) => {
+          // Event handlers can be modiefed to preform different actions based on the sendgrid event
+          // List of events & docs : https://docs.sendgrid.com/for-developers/tracking-events/event#events
+          const { event, docPath } = sgEvent
+          // event param is provided by default
+          // however docPath or other custom parameter needs be passed in the custom_args variable in Sengrid Extension 
+          return db.doc(docPath).update({ sgStatus: event })
+      }
+      // 
+      if (Array.isArray(body)) {
+          // when multiple events are passed in one call
+          await Promise.allSettled(body.map(eventHandler))
+      } else eventHandler(body)
+  };`,
   },
   condition: {
     additionalVariables: null,
     extraLibs: null,
-    template: `const condition: Condition = async({ref,req,db}) => {
+    template: (table) => `const condition: Condition = async({ref,req,db}) => {
       // feel free to add your own code logic here
       return true;
     }`,

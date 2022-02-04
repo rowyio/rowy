@@ -4,6 +4,7 @@ export type TableActions = {
   // TODO: Stricter types here
   column: {
     add: Function;
+    insert: Function;
     resize: (index: number, width: number) => void;
     rename: Function;
     remove: Function;
@@ -15,7 +16,7 @@ export type TableActions = {
   table: {
     set: (id: string, collection: string, filters: TableFilter[]) => void;
     filter: Function;
-    updateConfig: Function;
+    updateConfig: (key: string, value: any, callback?: Function) => void;
     orderBy: Function;
   };
 };
@@ -89,6 +90,7 @@ export default function useTable() {
   const actions: TableActions = {
     column: {
       add: configActions.addColumn,
+      insert: configActions.insert,
       resize: configActions.resize,
       rename: configActions.rename,
       update: configActions.updateColumn,

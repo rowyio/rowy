@@ -46,6 +46,8 @@ export interface IExtension {
   requiredFields: string[];
   extensionBody: string;
   conditions: string;
+
+  trackedFields?: string[];
 }
 
 export const triggerTypes: ExtensionTrigger[] = ["create", "update", "delete"];
@@ -138,6 +140,10 @@ const extensionBodyTemplate = {
     ],
     template_id: "",    // sendgrid template ID
     categories: [], // helper info to categorise sendgrid emails
+    custom_args:{
+      docPath:ref.path, // optional, reference to be used for tracking email events
+      // add any other custom args you want to pass to sendgrid events here
+    },
   })
 }`,
   apiCall: `const extensionBody: ApiCallBody = async({row, db, change, ref}) => {

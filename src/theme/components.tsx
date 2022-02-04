@@ -1,4 +1,4 @@
-import { Theme, ThemeOptions } from "@mui/material/styles";
+import { Theme, ThemeOptions, alpha } from "@mui/material/styles";
 import type {} from "@mui/lab/themeAugmentation";
 import { MultiSelectProps } from "@rowy/multiselect";
 import { toRem } from "./typography";
@@ -27,6 +27,17 @@ declare module "@mui/material/styles" {
         "multiple" | "value" | "onChange" | "options"
       >;
     };
+  }
+}
+
+declare module "@mui/material/MenuItem" {
+  interface MenuItemPropsVariantOverrides {
+    error: true;
+  }
+}
+declare module "@mui/material/Badge" {
+  interface BadgePropsVariantOverrides {
+    inlineDot: true;
   }
 }
 
@@ -436,6 +447,28 @@ export const components = (theme: Theme): ThemeOptions => {
             },
           },
         },
+
+        variants: [
+          {
+            props: { color: "error" },
+            style: {
+              color: theme.palette.error.main,
+              "&:hover": {
+                backgroundColor: alpha(
+                  theme.palette.error.main,
+                  theme.palette.action.hoverOpacity
+                ),
+              },
+
+              "& .MuiListItemIcon-root .MuiSvgIcon-root": {
+                color: alpha(
+                  theme.palette.error.main,
+                  theme.palette.action.activeOpacity * 1.1
+                ),
+              },
+            },
+          },
+        ],
       },
       MuiListSubheader: {
         defaultProps: { disableSticky: true },
@@ -562,6 +595,12 @@ export const components = (theme: Theme): ThemeOptions => {
           containedSecondary: {
             "&:hover": { backgroundColor: buttonSecondaryHover },
           },
+        },
+      },
+      MuiLoadingButton: {
+        defaultProps: {
+          variant: "outlined",
+          color: "secondary",
         },
       },
       MuiButtonGroup: {
@@ -968,6 +1007,10 @@ export const components = (theme: Theme): ThemeOptions => {
                 marginTop: 4,
               },
             },
+
+            "&:hover .MuiCheckbox-root, &:hover .MuiRadio-root": {
+              backgroundColor: theme.palette.action.hover,
+            },
           },
           label: {
             marginTop: 10,
@@ -1032,6 +1075,28 @@ export const components = (theme: Theme): ThemeOptions => {
             },
           },
         },
+      },
+
+      MuiBadge: {
+        variants: [
+          {
+            props: { variant: "inlineDot" },
+            style: {
+              marginLeft: theme.spacing(1),
+              marginRight: theme.spacing(-1),
+
+              "& .MuiBadge-badge": {
+                position: "static",
+                transform: "none",
+
+                minWidth: theme.spacing(1),
+                height: theme.spacing(1),
+                borderRadius: theme.spacing(0.5),
+                padding: 0,
+              },
+            },
+          },
+        ],
       },
 
       MuiAlertTitle: {

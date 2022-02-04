@@ -27,10 +27,8 @@ export default function NewColumn({
   data,
   openSettings,
   handleClose,
-  handleSave,
 }: INewColumnProps) {
-  const { table, settingsActions } = useProjectContext();
-
+  const { settingsActions, table, tableActions } = useProjectContext();
   const [columnLabel, setColumnLabel] = useState("");
   const [fieldKey, setFieldKey] = useState("");
   const [type, setType] = useState(FieldType.shortText);
@@ -139,14 +137,19 @@ export default function NewColumn({
       actions={{
         primary: {
           onClick: () => {
-            handleSave(fieldKey, {
-              type,
-              name: columnLabel,
-              fieldName: fieldKey,
-              key: fieldKey,
-              config: {},
-              ...data.initializeColumn,
-            });
+            tableActions?.column.insert(
+              {
+                type,
+                name: columnLabel,
+                fieldName: fieldKey,
+                key: fieldKey,
+                config: {},
+              },
+              {
+                insert: data.insert,
+                index: data.sourceIndex,
+              }
+            );
             if (requireConfiguration) {
               openSettings({
                 type,
@@ -154,7 +157,6 @@ export default function NewColumn({
                 fieldName: fieldKey,
                 key: fieldKey,
                 config: {},
-                ...data.initializeColumn,
               });
             } else handleClose();
             analytics.logEvent("create_column", {
