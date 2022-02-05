@@ -1,4 +1,5 @@
 import _find from "lodash/find";
+import _get from "lodash/get";
 
 import Cut from "@mui/icons-material/ContentCut";
 import CopyCells from "@src/assets/icons/CopyCells";
@@ -27,7 +28,7 @@ export default function BasicContextMenuActions(
   const selectedColIndex = selectedCell?.colIndex;
   const selectedCol = _find(columns, { index: selectedColIndex });
   const selectedRow = rows?.[selectedRowIndex];
-  const cellValue = selectedRow?.[selectedCol.key];
+  const cellValue = _get(selectedRow, selectedCol.key);
 
   const handleClose = async () => await reset?.();
 
