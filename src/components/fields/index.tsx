@@ -119,3 +119,8 @@ export const hasDataTypes = (dataTypes: string[]) => {
     dataTypes.includes(getFieldProp("dataType", fieldType))
   );
 };
+
+export const getColumnType = (column) =>
+  column.type === FieldType.derivative
+    ? column.config.renderFieldType
+    : column.type;
