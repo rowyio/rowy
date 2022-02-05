@@ -27,13 +27,13 @@ export default function BasicContextMenuActions(
   const selectedColIndex = selectedCell?.colIndex;
   const selectedCol = _find(columns, { index: selectedColIndex });
   const selectedRow = rows?.[selectedRowIndex];
-  const cell = selectedRow?.[selectedCol.key];
+  const cellValue = selectedRow?.[selectedCol.key];
 
   const handleClose = async () => await reset?.();
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(JSON.stringify(cell));
+      await navigator.clipboard.writeText(cellValue);
       enqueueSnackbar("Copied to clipboard", { variant: "success" });
     } catch (error) {
       enqueueSnackbar(`Failed to copy:${error}`, { variant: "error" });
@@ -43,8 +43,8 @@ export default function BasicContextMenuActions(
 
   const handleCut = async () => {
     try {
-      await navigator.clipboard.writeText(JSON.stringify(cell));
-      if (typeof cell !== "undefined")
+      await navigator.clipboard.writeText(cellValue);
+      if (typeof cellValue !== "undefined")
         deleteCell?.(selectedRow?.ref, selectedCol?.key);
     } catch (error) {
       enqueueSnackbar(`Failed to cut: ${error}`, { variant: "error" });
@@ -57,16 +57,17 @@ export default function BasicContextMenuActions(
       const text = await navigator.clipboard.readText();
       const cellDataType = getFieldProp("dataType", getColumnType(selectedCol));
       let parsed;
-      if (cellDataType === "number") {
-        parsed = Number(text);
-        if (isNaN(parsed)) {
-          enqueueSnackbar(`Failed to paste: ${text} is not a number`, {
-            variant: "error",
-          });
-          return;
-        }
-      } else {
-        parsed = await JSON.parse(text);
+      switch (cellDataType) {
+        case "number":
+          parsed = Number(text);
+          if (isNaN(parsed)) throw new Error(`${text} is not a number`);
+          break;
+        case "string":
+          parsed = text;
+          break;
+        default:
+          parsed = JSON.parse(text);
+          break;
       }
       updateCell?.(selectedRow?.ref, selectedCol.key, parsed);
     } catch (error) {
