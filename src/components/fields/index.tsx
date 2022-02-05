@@ -39,6 +39,7 @@ import UpdatedAt from "./UpdatedAt";
 import User from "./User";
 import Id from "./Id";
 import Status from "./Status";
+import { TableColumn } from "../Table";
 
 // Export field configs in order for FieldsDropdown
 export const FIELDS: IFieldConfig[] = [
@@ -119,3 +120,10 @@ export const hasDataTypes = (dataTypes: string[]) => {
     dataTypes.includes(getFieldProp("dataType", fieldType))
   );
 };
+
+export const getColumnType = (column?: TableColumn) =>
+  !column
+    ? null
+    : column.type === FieldType.derivative
+    ? column.config.renderFieldType
+    : column.type;

@@ -6,6 +6,7 @@ import PercentageIcon from "@src/assets/icons/Percentage";
 import BasicCell from "./BasicCell";
 import TextEditor from "@src/components/Table/editors/TextEditor";
 import { filterOperators } from "../Number/Filter";
+import BasicContextMenuActions from "../_BasicCell/BasicCellContextMenuActions";
 const SideDrawerField = lazy(
   () =>
     import(
@@ -22,6 +23,7 @@ export const config: IFieldConfig = {
   initializable: true,
   icon: <PercentageIcon />,
   description: "Percentage stored as a number between 0 and 1.",
+  contextMenuActions: BasicContextMenuActions,
   TableCell: withBasicCell(BasicCell),
   TableEditor: TextEditor,
   SideDrawerField,
