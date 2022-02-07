@@ -10,7 +10,7 @@ export default function TableRow(props: RowRendererProps<any>) {
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
     e.preventDefault();
-    setAnchorEle?.(e?.target as HTMLElement);
+    setAnchorEle?.(e?.target);
   };
   if (props.row._rowy_outOfOrder)
     return (
