@@ -33,8 +33,11 @@ export default function ConditionModalContent({
       <Typography variant="overline">DATA TYPE (input)</Typography>
       <MultiSelect
         options={[
-          { label: "True", value: "true" },
-          { label: "False", value: "false" },
+          { label: "Boolean", value: "boolean" },
+          { label: "Number", value: "number" },
+          { label: "String", value: "string" },
+          { label: "Undefined", value: "undefined" },
+          { label: "Null", value: "null" },
         ]}
         onChange={(v) => handleUpdate("type")(v)}
         value={type}
@@ -46,11 +49,8 @@ export default function ConditionModalContent({
       {type === "boolean" && (
         <MultiSelect
           options={[
-            { label: "Boolean", value: "boolean" },
-            { label: "Number", value: "number" },
-            { label: "String", value: "string" },
-            { label: "Undefined", value: "undefined" },
-            { label: "Null", value: "null" },
+            { label: "True", value: "true" },
+            { label: "False", value: "false" },
           ]}
           onChange={(v) => handleUpdate("value")(v === "true")}
           value={value ? "true" : "false"}
