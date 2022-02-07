@@ -172,12 +172,13 @@ export function emptyExtensionObject(
   user: IExtensionEditor
 ): IExtension {
   return {
-    name: "Untitled extension",
+    name: `${type} extension`,
     active: false,
     triggers: [],
     type,
     extensionBody: extensionBodyTemplate[type] ?? extensionBodyTemplate["task"],
     requiredFields: [],
+    trackedFields: [],
     conditions: `const condition: Condition = async({row, change}) => {
   // feel free to add your own code logic here
   return true;
