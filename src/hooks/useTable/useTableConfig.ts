@@ -172,6 +172,7 @@ const useTableConfig = (tableId?: string) => {
       }, {});
 
     const deleteColumn = { [key]: deleteField() };
+    //append key with firestore delete function, so firestore knows what key to delete
     const finalColumn = { ...updatedColumns, ...deleteColumn };
 
     documentDispatch({
