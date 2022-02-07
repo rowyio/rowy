@@ -303,13 +303,10 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
         () => console.log("Field Value deleted"),
         (error) => {
           if (error.code === "permission-denied") {
-            enqueueSnackbar(
-              `You do not have the permissions to make this change.`,
-              {
-                variant: "error",
-                anchorOrigin: { horizontal: "center", vertical: "top" },
-              }
-            );
+            enqueueSnackbar(`You don't have permission to delete this field`, {
+              variant: "error",
+              anchorOrigin: { horizontal: "center", vertical: "top" },
+            });
           } else {
             enqueueSnackbar(error.message, {
               variant: "error",
