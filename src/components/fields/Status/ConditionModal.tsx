@@ -19,12 +19,6 @@ export default function ConditionModal({
     setModal(EMPTY_STATE);
   };
   const handleAdd = () => {
-    const labelIsEmpty = Boolean(modal.condition.label.length === 0);
-    const stringValueIsEmpty = Boolean(
-      modal.condition.type === "string" && modal.condition.value.length === 0
-    );
-    const validation = Boolean(labelIsEmpty || stringValueIsEmpty);
-    if (validation) return;
     function setConditionHack(type, condition) {
       let rCondition = condition;
       if (type === "undefined") rCondition = { ...condition, value: undefined };

@@ -9,7 +9,6 @@ export default function ConditionModalContent({
   handleUpdate,
 }: any) {
   const { label, operator, type, value } = condition;
-  const labelReqLen = Boolean(condition.label.length < 1);
 
   return (
     <>
@@ -75,7 +74,6 @@ export default function ConditionModalContent({
         />
       )}
       <TextField
-        error={labelReqLen}
         value={label}
         label="Label"
         fullWidth
