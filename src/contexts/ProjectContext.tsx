@@ -301,7 +301,22 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
       })
       .then(
         () => console.log("Field Value deleted"),
-        (error) => console.error("Failed to delete", error)
+        (error) => {
+          if (error.code === "permission-denied") {
+            enqueueSnackbar(
+              `You do not have the permissions to make this change.`,
+              {
+                variant: "error",
+                anchorOrigin: { horizontal: "center", vertical: "top" },
+              }
+            );
+          } else {
+            enqueueSnackbar(error.message, {
+              variant: "error",
+              anchorOrigin: { horizontal: "center", vertical: "top" },
+            });
+          }
+        }
       );
   };
 
@@ -335,6 +350,11 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
               anchorOrigin: { horizontal: "center", vertical: "top" },
             }
           );
+        } else {
+          enqueueSnackbar(error.message, {
+            variant: "error",
+            anchorOrigin: { horizontal: "center", vertical: "top" },
+          });
         }
       }
     );
