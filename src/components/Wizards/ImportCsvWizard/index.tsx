@@ -99,9 +99,7 @@ export default function ImportCsvWizard({
     for (const col of config.newColumns) {
       tableActions.column.add(col.name, col.type, col);
     }
-    importType === ImportType.TSV
-      ? analytics.logEvent("import_tsv")
-      : analytics.logEvent("import_csv");
+    analytics.logEvent("import_success", { type: importType }); //change this import_success
     // Close wizard
     setOpen(false);
     setTimeout(handleClose, 300);

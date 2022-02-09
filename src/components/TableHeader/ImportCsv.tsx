@@ -28,6 +28,7 @@ import ImportIcon from "@src/assets/icons/Import";
 import FileUploadIcon from "@src/assets/icons/Upload";
 import CheckIcon from "@mui/icons-material/CheckCircle";
 
+import { analytics } from "@src/analytics";
 import ImportCsvWizard, {
   IImportCsvWizardProps,
 } from "@src/components/Wizards/ImportCsvWizard";
@@ -85,6 +86,13 @@ export enum ImportType {
   TSV = "tsv",
 }
 
+export enum ImportMethod {
+  DEFAULT = "",
+  PASTE = "paste",
+  UPLOAD = "upload",
+  URL = "url",
+}
+
 export interface IImportCsvProps {
   render?: (
     onClick: (event: React.MouseEvent<HTMLButtonElement>) => void
@@ -99,6 +107,7 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
   const { enqueueSnackbar } = useSnackbar();
 
   const importTypeRef = useRef(ImportType.CSV);
+  const importMethodRef = useRef(ImportMethod.DEFAULT);
   const [open, setOpen] = useState<HTMLButtonElement | null>(null);
   const [tab, setTab] = useState("upload");
   const [csvData, setCsvData] =
@@ -136,11 +145,15 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
     });
 
   const onDrop = useCallback(async (acceptedFiles) => {
-    const file = acceptedFiles[0];
-    const reader = new FileReader();
     try {
+      const file = acceptedFiles[0];
+      const reader = new FileReader();
       reader.onload = (event: any) => parseCsv(event.target.result);
       reader.readAsText(file);
+      importTypeRef.current =
+        file.type === "text/tab-separated-values"
+          ? ImportType.TSV
+          : ImportType.CSV;
     } catch (error) {
       enqueueSnackbar(`Please import a .tsv or .csv file`, {
         variant: "error",
@@ -152,24 +165,33 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
     }
   }, []);
 
-  function handleSetUploadType(dropzonefile) {
-    if (dropzonefile.length === 0) return;
-    if (dropzonefile[0].type === "text/tab-separated-values")
-      importTypeRef.current = ImportType.TSV;
-    else importTypeRef.current = ImportType.CSV;
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    multiple: false,
+    accept: ["text/csv", "text/tab-separated-values"],
+  });
+
+  function setDataTypeRef(data: string) {
+    const getFirstLine = data?.match(/^(.*)/)?.[0];
+    /**
+     *  Catching edge case with regex
+     *  EG: "hello\tworld"\tFirst
+     *  - find \t between quotes, and replace with '\s'
+     *  - w/ the \t pattern test it against the formatted string
+     */
+    const strInQuotes = /"(.*?)"/;
+    const tabsWithSpace = (str: string) => str.replace("\t", "s");
+    const formatString =
+      getFirstLine?.replace(strInQuotes, tabsWithSpace) ?? "";
+    const tabPattern = /\t/;
+    return tabPattern.test(formatString)
+      ? (importTypeRef.current = ImportType.TSV)
+      : (importTypeRef.current = ImportType.CSV);
   }
-
-  const { acceptedFiles, getRootProps, getInputProps, isDragActive } =
-    useDropzone({
-      onDrop,
-      multiple: false,
-      accept: ["text/csv", "text/tab-separated-values"],
-    });
-
-  const [handlePaste] = useDebouncedCallback(
-    (value: string) => parseCsv(value),
-    1000
-  );
+  const [handlePaste] = useDebouncedCallback((value: string) => {
+    parseCsv(value);
+    setDataTypeRef(value);
+  }, 1000);
 
   const [loading, setLoading] = useState(false);
   const [handleUrl] = useDebouncedCallback((value: string) => {
@@ -179,6 +201,7 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
       .then((res) => res.text())
       .then((data) => {
         parseCsv(data);
+        setDataTypeRef(data);
         setLoading(false);
       })
       .catch((e) => {
@@ -231,9 +254,21 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
             }
             variant="fullWidth"
           >
-            <Tab label="Upload" value="upload" />
-            <Tab label="Paste" value="paste" />
-            <Tab label="URL" value="url" />
+            <Tab
+              label="Upload"
+              value="upload"
+              onClick={() => (importMethodRef.current = ImportMethod.UPLOAD)}
+            />
+            <Tab
+              label="Paste"
+              value="paste"
+              onClick={() => (importMethodRef.current = ImportMethod.PASTE)}
+            />
+            <Tab
+              label="URL"
+              value="url"
+              onClick={() => (importMethodRef.current = ImportMethod.URL)}
+            />
           </TabList>
           <Divider style={{ marginTop: -1 }} />
 
@@ -259,7 +294,6 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
                   </Grid>
                   <Grid item>
                     <Typography variant="button" color="inherit">
-                      {handleSetUploadType(acceptedFiles)}
                       {validCsv
                         ? "Valid CSV or TSV"
                         : "Click to upload or drop CSV or TSV file here"}
@@ -323,7 +357,12 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
           color="primary"
           disabled={!validCsv}
           className={classes.continueButton}
-          onClick={() => setOpenWizard(true)}
+          onClick={() => {
+            setOpenWizard(true);
+            analytics.logEvent(`import_${importMethodRef.current}`, {
+              type: importTypeRef.current,
+            });
+          }}
         >
           Continue
         </Button>
