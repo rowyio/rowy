@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import clsx from "clsx";
 import parse from "csv-parse";
 import { useDropzone } from "react-dropzone";
@@ -79,6 +79,11 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
+export enum ImportType {
+  CSV = "csv",
+  TSV = "tsv",
+}
+
 export interface IImportCsvProps {
   render?: (
     onClick: (event: React.MouseEvent<HTMLButtonElement>) => void
@@ -91,6 +96,7 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
   const { userClaims } = useAppContext();
   const { table } = useProjectContext();
 
+  const importTypeRef = useRef(ImportType.CSV);
   const [open, setOpen] = useState<HTMLButtonElement | null>(null);
   const [tab, setTab] = useState("upload");
   const [csvData, setCsvData] =
@@ -133,11 +139,20 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
     reader.onload = (event: any) => parseCsv(event.target.result);
     reader.readAsText(file);
   }, []);
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    multiple: false,
-    accept: ["text/csv", "text/tab-separated-values"],
-  });
+
+  function handleSetUploadType(dropzonefile) {
+    if (dropzonefile.length === 0) return;
+    if (dropzonefile[0].type === "text/tab-separated-values")
+      importTypeRef.current = ImportType.TSV;
+    else importTypeRef.current = ImportType.CSV;
+  }
+
+  const { acceptedFiles, getRootProps, getInputProps, isDragActive } =
+    useDropzone({
+      onDrop,
+      multiple: false,
+      accept: ["text/csv", "text/tab-separated-values"],
+    });
 
   const [handlePaste] = useDebouncedCallback(
     (value: string) => parseCsv(value),
@@ -232,6 +247,7 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
                   </Grid>
                   <Grid item>
                     <Typography variant="button" color="inherit">
+                      {handleSetUploadType(acceptedFiles)}
                       {validCsv
                         ? "Valid CSV or TSV"
                         : "Click to upload or drop CSV or TSV file here"}
@@ -303,6 +319,7 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
 
       {openWizard && csvData && (
         <ImportCsvWizard
+          importType={importTypeRef.current}
           handleClose={() => setOpenWizard(false)}
           csvData={csvData}
         />

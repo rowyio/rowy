@@ -21,6 +21,7 @@ import { ColumnConfig } from "@src/hooks/useTable/useTableConfig";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import { getFieldProp } from "@src/components/fields";
 import { analytics } from "@src/analytics";
+import { ImportType } from "@src/components/TableHeader/ImportCsv";
 
 export type CsvConfig = {
   pairs: { csvKey: string; columnKey: string }[];
@@ -36,6 +37,7 @@ export interface IStepProps {
 }
 
 export interface IImportCsvWizardProps {
+  importType: ImportType;
   handleClose: () => void;
   csvData: {
     columns: string[];
@@ -44,6 +46,7 @@ export interface IImportCsvWizardProps {
 }
 
 export default function ImportCsvWizard({
+  importType,
   handleClose,
   csvData,
 }: IImportCsvWizardProps) {
@@ -96,7 +99,9 @@ export default function ImportCsvWizard({
     for (const col of config.newColumns) {
       tableActions.column.add(col.name, col.type, col);
     }
-    analytics.logEvent("import_csv");
+    importType === ImportType.TSV
+      ? analytics.logEvent("import_tsv")
+      : analytics.logEvent("import_csv");
     // Close wizard
     setOpen(false);
     setTimeout(handleClose, 300);
