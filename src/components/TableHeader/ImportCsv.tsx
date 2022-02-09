@@ -3,6 +3,7 @@ import clsx from "clsx";
 import parse from "csv-parse";
 import { useDropzone } from "react-dropzone";
 import { useDebouncedCallback } from "use-debounce";
+import { useSnackbar } from "notistack";
 
 import { makeStyles, createStyles } from "@mui/styles";
 import {
@@ -95,6 +96,7 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
   const classes = useStyles();
   const { userClaims } = useAppContext();
   const { table } = useProjectContext();
+  const { enqueueSnackbar } = useSnackbar();
 
   const importTypeRef = useRef(ImportType.CSV);
   const [open, setOpen] = useState<HTMLButtonElement | null>(null);
@@ -136,8 +138,18 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
   const onDrop = useCallback(async (acceptedFiles) => {
     const file = acceptedFiles[0];
     const reader = new FileReader();
-    reader.onload = (event: any) => parseCsv(event.target.result);
-    reader.readAsText(file);
+    try {
+      reader.onload = (event: any) => parseCsv(event.target.result);
+      reader.readAsText(file);
+    } catch (error) {
+      enqueueSnackbar(`Please import a .tsv or .csv file`, {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+      });
+    }
   }, []);
 
   function handleSetUploadType(dropzonefile) {
