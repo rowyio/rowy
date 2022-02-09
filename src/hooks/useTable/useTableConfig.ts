@@ -153,21 +153,30 @@ const useTableConfig = (tableId?: string) => {
     });
   };
   /** remove column by index
-   *  @param index of column.
+   *  @param key of column.
    */
   const remove = (key: string) => {
     const { columns } = tableConfigState;
 
-    let updatedColumns: any = Object.values(columns)
+    /**
+     *  Filter column, and remove key index
+     *  Sort and reorder column
+     *  Rewrite column index for firestore
+     */
+    const updatedColumns: any = Object.values(columns)
       .filter((c: any) => c.key !== key)
       .sort((c: any) => c.index)
       .reduce((acc: any, curr: any, index: any) => {
         acc[curr.key] = { ...curr, index };
         return acc;
       }, {});
+
+    const deleteColumn = { [key]: deleteField() };
+    const finalColumns = { ...updatedColumns, ...deleteColumn };
+
     documentDispatch({
       action: DocActions.update,
-      data: { columns: updatedColumns },
+      data: { columns: finalColumns },
     });
   };
   /** reorder columns by key

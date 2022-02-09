@@ -8,8 +8,7 @@ import FormAutosave from "@src/components/Table/ColumnMenu/FieldSettings/FormAut
 import FieldSkeleton from "@src/components/SideDrawer/Form/FieldSkeleton";
 
 import type { useFilterInputs } from "./useFilterInputs";
-import { FieldType } from "@src/constants/fields";
-import { getFieldProp } from "@src/components/fields";
+import { getColumnType, getFieldProp } from "@src/components/fields";
 
 export interface IFilterInputsProps extends ReturnType<typeof useFilterInputs> {
   disabled?: boolean;
@@ -22,7 +21,6 @@ export default function FilterInputs({
   availableFilters,
   query,
   setQuery,
-
   disabled,
 }: IFilterInputsProps) {
   // Need to use react-hook-form with autosave for the value field,
@@ -32,12 +30,7 @@ export default function FilterInputs({
     defaultValues: selectedColumn ? { [selectedColumn.key]: query.value } : {},
   });
 
-  // Get column type to render for the value field
-  const columnType = selectedColumn
-    ? selectedColumn.type === FieldType.derivative
-      ? selectedColumn.config.renderFieldType
-      : selectedColumn.type
-    : null;
+  const columnType = selectedColumn ? getColumnType(selectedColumn) : null;
 
   return (
     <Grid container spacing={2} sx={{ mb: 3 }}>
