@@ -140,6 +140,9 @@ export default function Export({ query, closeModal }) {
     switch (exportType) {
       case "csv":
       case "tsv":
+        exportType === "tsv"
+          ? analytics.logEvent("export_tsv")
+          : analytics.logEvent("export_csv");
         const csvData = docs.map((doc: any) =>
           columns.reduce(selectedColumnsCsvReducer(doc), {})
         );
@@ -153,7 +156,7 @@ export default function Export({ query, closeModal }) {
         saveAs(csvBlob, fileName);
         break;
       case "json":
-        analytics.logEvent("export_json")
+        analytics.logEvent("export_json");
         const jsonData = docs.map((doc: any) =>
           columns.reduce(selectedColumnsJsonReducer(doc), { id: doc.id })
         );
