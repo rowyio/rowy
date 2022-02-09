@@ -153,6 +153,7 @@ export default function Export({ query, closeModal }) {
         saveAs(csvBlob, fileName);
         break;
       case "json":
+        analytics.logEvent("export_json")
         const jsonData = docs.map((doc: any) =>
           columns.reduce(selectedColumnsJsonReducer(doc), { id: doc.id })
         );
