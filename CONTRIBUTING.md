@@ -12,13 +12,13 @@ Read the documentation on getting started [here](http://docs.rowy.io/). To get f
 
 ## Working on existing issues
 
-If you are working on an  [issue](https://github.com/rowyio/rowy/issues), share that you are working on it by commenting on the issue and posting a message on #contributions channel in Rowy's [Discord](https://discord.com/invite/B8yAD5PDX4). 
+If you are working on an  [issue](https://github.com/rowyio/rowy/issues), share that you are working on it by commenting on the issue and posting a message on #contributions channel in Rowy's [Discord](https://discord.com/invite/fjBugmvzZP). 
 This allows others in the community and the maintainers a chance to provide feedback and guidance before you spend time working on it.
 
 ## File a feature request
 
 If you have some interesting idea that will be a good addition to Rowy, then create a new issue using [Feature Request Template](https://github.com/rowyio/rowy/issues/new?assignees=&labels=&template=feature_request.md) 
-to share your idea. If you are working on this to contribute to the project, then let others in the community and project maintainers know by posting on #contributions channel in Rowy's [Discord](https://discord.com/invite/B8yAD5PDX4). 
+to share your idea. If you are working on this to contribute to the project, then let others in the community and project maintainers know by posting on #contributions channel in Rowy's [Discord](https://discord.com/invite/fjBugmvzZP). 
 This allows others in the community and the maintainers a chance to provide feedback and guidance before you spend time working on it.
 
 ## Report an issue
