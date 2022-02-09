@@ -14,12 +14,12 @@ Manage Firestore data in a spreadsheet-like UI, write Cloud Functions effortless
 
 <div align="center">
 
-[![Discord](https://img.shields.io/discord/853498675484819476?color=%234200FF&label=Chat%20with%20us&logo=discord&logoColor=%23FFFFFF&style=for-the-badge)](https://discord.gg/B8yAD5PDX4)
+[![Discord](https://img.shields.io/discord/853498675484819476?color=%234200FF&label=Chat%20with%20us&logo=discord&logoColor=%23FFFFFF&style=for-the-badge)](https://discord.gg/fjBugmvzZP)
 
 <p align="center">
     <a href="http://www.rowy.io"><b>Website</b></a> •
     <a href="http://docs.rowy.io"><b>Documentation</b></a> •
-    <a href="https://discord.gg/B8yAD5PDX4"><b>Discord</b></a> • 
+    <a href="https://discord.gg/fjBugmvzZP"><b>Discord</b></a> • 
     <a href="https://twitter.com/rowyio"><b>Twitter</b></a>
 </p>
 
@@ -32,6 +32,7 @@ Manage Firestore data in a spreadsheet-like UI, write Cloud Functions effortless
 <img width="100%" src="https://firebasestorage.googleapis.com/v0/b/rowyio.appspot.com/o/publicDemo%2FRowy%20Website%20Video%20GIF%20Small.gif?alt=media&token=3f699a8f-c1f2-4046-8ed5-e4ff66947cd8" />
 
 ## Live Demo
+
 💥 Check out the [live demo](https://demo.rowy.io/) of Rowy 💥
 
 ## Quick Deploy
@@ -60,19 +61,20 @@ You can find the full documentation with how-to guides
 
 ### Automate with cloud functions and ready made extensions
 
-- Effortlessly build cloud functions on field level triggers right in the browser
-    -  Use any NPM modules or APIs
+- Effortlessly build cloud functions on field level triggers right in the
+  browser
+  - Use any NPM modules or APIs
 - Connect to your favourite tool with pre-built extensions or create your own
-    - SendGrid, Algolia, Twilio, Bigquery and more
+  - SendGrid, Algolia, Twilio, Bigquery and more
 
 ### Rich and flexible data fields
 
 - [30+ fields supported](https://docs.rowy.io/field-types/supported-fields)
-    - Basic types: Short Text, Long Text, Email, Phone, URL…
-    - Custom UI pickers: Date, Checkbox, Single Select, Multi Select…
-    - Uploaders: Image, File
-    - Rich Editors: JSON, Code, Rich Text (HTML)
- - Data validation, default values, required fields
+  - Basic types: Short Text, Long Text, Email, Phone, URL…
+  - Custom UI pickers: Date, Checkbox, Single Select, Multi Select…
+  - Uploaders: Image, File
+  - Rich Editors: JSON, Code, Rich Text (HTML)
+- Data validation, default values, required fields
 - Action field: Clickable trigger for any Cloud Function
 - Aggregate field: Populate cell with value aggregated from the row’s sub-table
 - Connect Table: Get snapshot of data from another data table using Algolia
@@ -87,7 +89,8 @@ You can find the full documentation with how-to guides
 
 ## Install
 
-Set up Rowy on your Google Cloud project with this one-click deploy button. Your data and cloud functions stay on your own Firestore/GCP.
+Set up Rowy on your Google Cloud project with this one-click deploy button. Your
+data and cloud functions stay on your own Firestore/GCP.
 
 [![Run on Google Cloud](https://deploy.cloud.run/button.svg)](https://rowy.app/deploy)
 
@@ -103,14 +106,16 @@ Alternatively, you can manually install by
 
 ## Roadmap
 
-[View our roadmap](https://demo.rowy.io/table/roadmap) on Rowy - Upvote, downvote, share your thoughts!
+[View our roadmap](https://demo.rowy.io/table/roadmap) on Rowy - Upvote,
+downvote, share your thoughts!
 
-If you'd like to propose a feature, submit an issue [here](https://github.com/rowyio/rowy/issues/new?assignees=&labels=&template=feature_request.md&title=).
+If you'd like to propose a feature, submit an issue
+[here](https://github.com/rowyio/rowy/issues/new?assignees=&labels=&template=feature_request.md&title=).
 
 ## Join our community
 
 We would love to connect and hear what you think!
 
-- [Discord](https://discord.gg/B8yAD5PDX4)
+- [Discord](https://discord.gg/fjBugmvzZP)
 - [Twitter](https://twitter.com/rowyio)
 - [Email](mailto:rowy.io)
