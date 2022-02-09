@@ -14,12 +14,12 @@ Manage Firestore data in a spreadsheet-like UI, write Cloud Functions effortless
 
 <div align="center">
 
-[![Discord](https://img.shields.io/discord/853498675484819476?color=%234200FF&label=Chat%20with%20us&logo=discord&logoColor=%23FFFFFF&style=for-the-badge)](https://discord.gg/B8yAD5PDX4)
+[![Discord](https://img.shields.io/discord/853498675484819476?color=%234200FF&label=Chat%20with%20us&logo=discord&logoColor=%23FFFFFF&style=for-the-badge)](https://discord.gg/fjBugmvzZP)
 
 <p align="center">
     <a href="http://www.rowy.io"><b>Website</b></a> •
     <a href="http://docs.rowy.io"><b>Documentation</b></a> •
-    <a href="https://discord.gg/B8yAD5PDX4"><b>Discord</b></a> • 
+    <a href="https://discord.gg/fjBugmvzZP"><b>Discord</b></a> • 
     <a href="https://twitter.com/rowyio"><b>Twitter</b></a>
 </p>
 
@@ -111,6 +111,6 @@ If you'd like to propose a feature, submit an issue [here](https://github.com/ro
 
 We would love to connect and hear what you think!
 
-- [Discord](https://discord.gg/B8yAD5PDX4)
+- [Discord](https://discord.gg/fjBugmvzZP)
 - [Twitter](https://twitter.com/rowyio)
 - [Email](mailto:rowy.io)
