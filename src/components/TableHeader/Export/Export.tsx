@@ -125,7 +125,7 @@ export default function Export({ query, closeModal }) {
 
   const handleExport = async () => {
     handleClose();
-    analytics.logEvent("export_type", {
+    analytics.logEvent("export_table", {
       type: exportType,
     });
     enqueueSnackbar("Preparing file. Download will start shortly.");
