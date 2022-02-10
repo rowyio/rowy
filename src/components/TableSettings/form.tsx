@@ -7,9 +7,7 @@ import OpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 import WarningIcon from "@mui/icons-material/WarningAmber";
 
 import { WIKI_LINKS } from "@src/constants/externalLinks";
-import { name } from "@root/package.json";
 import { FieldType as TableFieldType } from "@src/constants/fields";
-import InputAdornment from "@mui/material/InputAdornment";
 
 export const tableSettings = (
   mode: TableSettingsDialogModes | null,
@@ -18,7 +16,7 @@ export const tableSettings = (
   tables:
     | { label: string; value: any; section: string; collection: string }[]
     | undefined,
-  collections: string[]
+  collections: string[] | null
 ): Field[] =>
   [
     // Step 1: Collection
@@ -89,71 +87,120 @@ export const tableSettings = (
         </>
       ),
     },
-    {
-      step: "collection",
-      type: FieldType.singleSelect,
-      name: "collection",
-      label: "Collection",
-      labelPlural: "collections",
-      options: collections,
-      itemRenderer: (option) => <code key={option.value}>{option.label}</code>,
-      freeText: true,
-      required: true,
-      assistiveText: (
-        <>
-          {mode === TableSettingsDialogModes.update ? (
+    Array.isArray(collections)
+      ? {
+          step: "collection",
+          type: FieldType.singleSelect,
+          name: "collection",
+          label: "Collection",
+          labelPlural: "collections",
+          options: collections,
+          itemRenderer: (option) => (
+            <code key={option.value}>{option.label}</code>
+          ),
+          freeText: true,
+          required: true,
+          assistiveText: (
             <>
-              <WarningIcon
-                color="warning"
-                aria-label="Warning"
-                sx={{ fontSize: 16, mr: 0.5, verticalAlign: "middle" }}
-              />
-              You can change which Firestore collection to display. Data in the
-              new collection must be compatible with the existing columns.
+              {mode === TableSettingsDialogModes.update ? (
+                <>
+                  <WarningIcon
+                    color="warning"
+                    aria-label="Warning"
+                    sx={{ fontSize: 16, mr: 0.5, verticalAlign: "middle" }}
+                  />
+                  You can change which Firestore collection to display. Data in
+                  the new collection must be compatible with the existing
+                  columns.
+                </>
+              ) : (
+                "Choose which Firestore collection to display."
+              )}{" "}
+              <Link
+                href={`https://console.firebase.google.com/project/_/firestore/data`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Your collections
+                <OpenInNewIcon />
+              </Link>
             </>
-          ) : (
-            "Choose which Firestore collection to display."
-          )}{" "}
-          <Link
-            href={`https://console.firebase.google.com/project/_/firestore/data`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Your collections
-            <OpenInNewIcon />
-          </Link>
-        </>
-      ),
-      AddButtonProps: {
-        children: "Create collection or use custom path…",
-      },
-      AddDialogProps: {
-        title: "Create collection or use custom path",
-        textFieldLabel: (
-          <>
-            Collection name
-            <Typography variant="caption" display="block">
-              If this collection does not exist, it won’t be created until you
-              add a row to the table
-            </Typography>
-          </>
-        ),
-      },
-      TextFieldProps: {
-        sx: { "& .MuiInputBase-input": { fontFamily: "mono" } },
-      },
-      // https://firebase.google.com/docs/firestore/quotas#collections_documents_and_fields
-      validation: [
-        ["matches", /^[^\s]+$/, "Collection name cannot have spaces"],
-        ["notOneOf", [".", ".."], "Collection name cannot be . or .."],
-        [
-          "test",
-          "double-underscore",
-          "Collection name cannot begin and end with __",
-          (value) => !value.startsWith("__") && !value.endsWith("__"),
-        ],
-      ],
-    },
+          ),
+          AddButtonProps: {
+            children: "Create collection or use custom path…",
+          },
+          AddDialogProps: {
+            title: "Create collection or use custom path",
+            textFieldLabel: (
+              <>
+                Collection name
+                <Typography variant="caption" display="block">
+                  If this collection does not exist, it won’t be created until
+                  you add a row to the table
+                </Typography>
+              </>
+            ),
+          },
+          TextFieldProps: {
+            sx: { "& .MuiInputBase-input": { fontFamily: "mono" } },
+          },
+          // https://firebase.google.com/docs/firestore/quotas#collections_documents_and_fields
+          validation: [
+            ["matches", /^[^\s]+$/, "Collection name cannot have spaces"],
+            ["notOneOf", [".", ".."], "Collection name cannot be . or .."],
+            [
+              "test",
+              "double-underscore",
+              "Collection name cannot begin and end with __",
+              (value) => !value.startsWith("__") && !value.endsWith("__"),
+            ],
+          ],
+        }
+      : {
+          step: "collection",
+          type: FieldType.shortText,
+          name: "collection",
+          label: "Collection name",
+          required: true,
+          assistiveText: (
+            <>
+              {mode === TableSettingsDialogModes.update ? (
+                <>
+                  <WarningIcon
+                    color="warning"
+                    aria-label="Warning"
+                    sx={{ fontSize: 16, mr: 0.5, verticalAlign: "middle" }}
+                  />
+                  You can change which Firestore collection to display. Data in
+                  the new collection must be compatible with the existing
+                  columns.
+                </>
+              ) : (
+                "Type the name of the Firestore collection to display."
+              )}{" "}
+              <Link
+                href={`https://console.firebase.google.com/project/_/firestore/data`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Your collections
+                <OpenInNewIcon />
+              </Link>
+            </>
+          ),
+          sx: { "& .MuiInputBase-input": { fontFamily: "mono" } },
+          // https://firebase.google.com/docs/firestore/quotas#collections_documents_and_fields
+          validation: [
+            ["matches", /^[^\s]+$/, "Collection name cannot have spaces"],
+            ["notOneOf", [".", ".."], "Collection name cannot be . or .."],
+            [
+              "test",
+              "double-underscore",
+              "Collection name cannot begin and end with __",
+              (value) => !value.startsWith("__") && !value.endsWith("__"),
+            ],
+          ],
+        },
 
     // Step 2: Display
     {
