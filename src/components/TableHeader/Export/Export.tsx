@@ -125,7 +125,7 @@ export default function Export({ query, closeModal }) {
 
   const handleExport = async () => {
     handleClose();
-    analytics.logEvent("export_table", {
+    analytics.logEvent("export_type", {
       type: exportType,
     });
     enqueueSnackbar("Preparing file. Download will start shortly.");
@@ -140,9 +140,6 @@ export default function Export({ query, closeModal }) {
     switch (exportType) {
       case "csv":
       case "tsv":
-        exportType === "tsv"
-          ? analytics.logEvent("export_tsv")
-          : analytics.logEvent("export_csv");
         const csvData = docs.map((doc: any) =>
           columns.reduce(selectedColumnsCsvReducer(doc), {})
         );
@@ -156,7 +153,6 @@ export default function Export({ query, closeModal }) {
         saveAs(csvBlob, fileName);
         break;
       case "json":
-        analytics.logEvent("export_json");
         const jsonData = docs.map((doc: any) =>
           columns.reduce(selectedColumnsJsonReducer(doc), { id: doc.id })
         );
