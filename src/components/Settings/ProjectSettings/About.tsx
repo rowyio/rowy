@@ -7,7 +7,7 @@ import TwitterIcon from "@mui/icons-material/Twitter";
 import Logo from "@src/assets/Logo";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
-import { name, version } from "@root/package.json";
+import { version } from "@root/package.json";
 import { useAppContext } from "@src/contexts/AppContext";
 import useUpdateCheck from "@src/hooks/useUpdateCheck";
 import { EXTERNAL_LINKS, WIKI_LINKS } from "@src/constants/externalLinks";
@@ -100,7 +100,7 @@ export default function About() {
             )}
 
             <Typography display="block" color="textSecondary">
-              {name} v{version}
+              Rowy v{version}
             </Typography>
           </Grid>
 

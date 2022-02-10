@@ -12,7 +12,6 @@ import CodeEditorHelper from "@src/components/CodeEditor/CodeEditorHelper";
 import FormAutosave from "./FormAutosave";
 import { FieldType } from "@src/constants/fields";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
-import { name } from "@root/package.json";
 
 const CodeEditor = lazy(
   () =>
@@ -81,8 +80,8 @@ export default function DefaultValueInput({
         </MenuItem>
         <MenuItem value="dynamic">
           <ListItemText
-            primary={`Dynamic (Requires ${name} Cloud Functions)`}
-            secondary={`Write code to set the default value using this table’s ${name} Cloud Function. Setup is required.`}
+            primary={`Dynamic (Requires Rowy Cloud Functions)`}
+            secondary={`Write code to set the default value using this table’s Rowy Cloud Function. Setup is required.`}
           />
         </MenuItem>
       </TextField>

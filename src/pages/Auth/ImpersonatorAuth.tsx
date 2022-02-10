@@ -10,7 +10,6 @@ import { signOut } from "@src/utils/auth";
 import { auth } from "../../firebase";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import { runRoutes } from "@src/constants/runRoutes";
-import { name } from "@root/package.json";
 
 export default function ImpersonatorAuthPage() {
   const { enqueueSnackbar } = useSnackbar();
@@ -58,7 +57,7 @@ export default function ImpersonatorAuthPage() {
             test permissions and access controls.
           </Typography>
           <Typography variant="inherit" component="span">
-            Make sure the {name} Run service account has the{" "}
+            Make sure the Rowy Run service account has the{" "}
             <b>Service Account Token Creator</b> IAM role.
           </Typography>
         </>

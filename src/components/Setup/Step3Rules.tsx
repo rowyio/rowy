@@ -16,9 +16,7 @@ import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
 import SetupItem from "./SetupItem";
 import DiffEditor from "@src/components/CodeEditor/DiffEditor";
-import CodeEditor from "@src/components/CodeEditor";
 
-import { name } from "@root/package.json";
 import { useAppContext } from "@src/contexts/AppContext";
 import { CONFIG } from "@src/config/dbPaths";
 import {
@@ -165,8 +163,8 @@ export default function Step3Rules({
   return (
     <>
       <Typography variant="inherit">
-        {name} configuration is stored in the <code>{CONFIG}</code> collection
-        on Firestore. Your users will need read access to this collection and
+        Rowy configuration is stored in the <code>{CONFIG}</code> collection on
+        Firestore. Your users will need read access to this collection and
         admins will need write access.
       </Typography>
 

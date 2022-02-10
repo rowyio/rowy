@@ -1,12 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { ISetupStepBodyProps } from "@src/pages/Setup";
 
-import { Typography, Button } from "@mui/material";
+import { Typography } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 
 import SetupItem from "./SetupItem";
 
-import { name } from "@root/package.json";
 import { useAppContext } from "@src/contexts/AppContext";
 import { CONFIG } from "@src/config/dbPaths";
 import { rowyRun } from "@src/utils/rowyRun";
@@ -51,7 +50,7 @@ export default function Step4Migrate({
       <Typography variant="inherit">
         It looks like you’ve previously configured your Firestore database for
         Firetable. You can migrate this configuration, including your tables to{" "}
-        {name}.
+        Rowy.
       </Typography>
 
       <SetupItem

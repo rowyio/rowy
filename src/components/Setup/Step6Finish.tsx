@@ -7,7 +7,6 @@ import ThumbUpOffIcon from "@mui/icons-material/ThumbUpOffAlt";
 import ThumbDownIcon from "@mui/icons-material/ThumbDownAlt";
 import ThumbDownOffIcon from "@mui/icons-material/ThumbDownOffAlt";
 
-import { name } from "@root/package.json";
 import { analytics } from "analytics";
 import { db } from "@src/firebase";
 
@@ -28,7 +27,7 @@ export default function Step6Finish() {
   return (
     <>
       <Typography variant="body1" gutterBottom>
-        You can now continue to {name} and create a table from your Firestore
+        You can now continue to Rowy and create a table from your Firestore
         collections.
       </Typography>
 

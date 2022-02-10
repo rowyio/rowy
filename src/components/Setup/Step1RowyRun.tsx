@@ -9,7 +9,6 @@ import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
 import SetupItem from "./SetupItem";
 
-import { name } from "@root/package.json";
 import { rowyRun } from "@src/utils/rowyRun";
 import { runRoutes } from "@src/constants/runRoutes";
 import { EXTERNAL_LINKS, WIKI_LINKS } from "@src/constants/externalLinks";
@@ -88,7 +87,7 @@ export default function Step1RowyRun({
   return (
     <>
       <Typography variant="inherit">
-        {name} Run is a Google Cloud Run instance that provides backend
+        Rowy Run is a Google Cloud Run instance that provides backend
         functionality, such as table action scripts, user management, and easy
         Cloud Function deployment.
       </Typography>

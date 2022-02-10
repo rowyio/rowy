@@ -9,7 +9,6 @@ import Confirmation from "@src/components/Confirmation";
 import { Table } from "@src/contexts/ProjectContext";
 import { routes } from "@src/constants/routes";
 import { db } from "@src/firebase";
-import { name } from "@root/package.json";
 import {
   SETTINGS,
   TABLE_SCHEMAS,
@@ -106,7 +105,7 @@ export default function DeleteMenu({ clearDialog, data }: IDeleteMenuProps) {
             body: (
               <>
                 <DialogContentText paragraph>
-                  This will only delete the {name} configuration data.
+                  This will only delete the Rowy configuration data.
                 </DialogContentText>
                 <DialogContentText>
                   You will not lose any data in your Firestore collection{" "}

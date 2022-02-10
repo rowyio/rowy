@@ -31,13 +31,11 @@ import { SlideTransition } from "@src/components/Modal/SlideTransition";
 import Step0Welcome from "@src/components/Setup/Step0Welcome";
 import Step1RowyRun, { checkRowyRun } from "@src/components/Setup/Step1RowyRun";
 // prettier-ignore
-// prettier-ignore
 import Step2ProjectOwner, { checkProjectOwner } from "@src/components/Setup/Step2ProjectOwner";
 import Step3Rules, { checkRules } from "@src/components/Setup/Step3Rules";
 import Step4Migrate, { checkMigrate } from "@src/components/Setup/Step4Migrate";
 import Step5Finish from "@src/components/Setup/Step6Finish";
 
-import { name } from "@root/package.json";
 import routes from "@src/constants/routes";
 import { useAppContext } from "@src/contexts/AppContext";
 import { analytics } from "analytics";
@@ -146,7 +144,7 @@ export default function SetupPage() {
       id: "welcome",
       layout: "centered" as "centered",
       shortTitle: "Welcome",
-      title: `Welcome to ${name}`,
+      title: `Welcome to Rowy`,
       body: <Step0Welcome {...stepProps} />,
       actions: completion.welcome ? (
         <LoadingButton
@@ -174,8 +172,8 @@ export default function SetupPage() {
     },
     {
       id: "rowyRun",
-      shortTitle: `${name} Run`,
-      title: `Set up ${name} Run`,
+      shortTitle: `Rowy Run`,
+      title: `Set up Rowy Run`,
       body: <Step1RowyRun {...stepProps} />,
     },
     {
@@ -194,7 +192,7 @@ export default function SetupPage() {
       ? {
           id: "migrate",
           shortTitle: `Migrate`,
-          title: `Migrate to ${name} (optional)`,
+          title: `Migrate to Rowy (optional)`,
           body: <Step4Migrate {...stepProps} />,
         }
       : ({} as ISetupStep),
@@ -212,7 +210,7 @@ export default function SetupPage() {
           to={routes.home}
           sx={{ ml: 1 }}
         >
-          Continue to {name}
+          Continue to Rowy
         </Button>
       ),
     },
