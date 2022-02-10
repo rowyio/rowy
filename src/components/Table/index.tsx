@@ -7,6 +7,7 @@ import _get from "lodash/get";
 
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { useHotkeys } from "react-hotkeys-hook";
 
 // import "react-data-grid/dist/react-data-grid.css";
 import DataGrid, {
@@ -33,6 +34,7 @@ import { useAppContext } from "@src/contexts/AppContext";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import useWindowSize from "@src/hooks/useWindowSize";
 import { useSetSelectedCell } from "@src/atoms/ContextMenu";
+import useHotKey from "./useHotKeyHelprs";
 
 export type TableColumn = Column<any> & {
   isNew?: boolean;
@@ -55,12 +57,24 @@ export default function Table() {
   } = useProjectContext();
   const { userDoc, userClaims } = useAppContext();
   const { setSelectedCell } = useSetSelectedCell();
+  const { handleCopy, handlePaste, handleCut } = useHotKey();
 
   const userDocHiddenFields =
     userDoc.state.doc?.tables?.[formatSubTableName(tableState?.config.id)]
       ?.hiddenFields ?? [];
 
   const [columns, setColumns] = useState<TableColumn[]>([]);
+
+  //hotkeys
+  useHotkeys("command+c", () => {
+    handleCopy();
+  });
+  useHotkeys("command+v", () => {
+    handlePaste();
+  });
+  useHotkeys("command+x", () => {
+    handleCut();
+  });
 
   useEffect(() => {
     if (!tableState?.loadingColumns && tableState?.columns) {
@@ -185,9 +199,6 @@ export default function Table() {
 
   return (
     <>
-      {/* <Suspense fallback={<Loading message="Loading header" />}>
-        <Hotkeys selectedCell={selectedCell} />
-      </Suspense> */}
       <TableContainer ref={rowsContainerRef} rowHeight={rowHeight}>
         <TableHeader />
 
@@ -251,12 +262,12 @@ export default function Table() {
               //     );
               //   return [];
               // }}
-              onPaste={(e) => {
-                const copiedValue = e.sourceRow[e.sourceColumnKey];
-                if (updateCell) {
-                  updateCell(e.targetRow.ref, e.targetColumnKey, copiedValue);
-                }
-              }}
+              // onPaste={(e) => {
+              //   const copiedValue = e.sourceRow[e.sourceColumnKey];
+              //   if (updateCell) {
+              //     updateCell(e.targetRow.ref, e.targetColumnKey, copiedValue);
+              //   }
+              // }}
               onRowClick={(row, column) => {
                 if (sideDrawerRef?.current) {
                   sideDrawerRef.current.setCell({

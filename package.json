@@ -56,6 +56,7 @@
     "react-firebaseui": "^5.0.2",
     "react-helmet": "^6.1.0",
     "react-hook-form": "^7.21.2",
+    "react-hotkeys-hook": "^3.4.4",
     "react-image": "^4.0.3",
     "react-json-view": "^1.19.1",
     "react-markdown": "^8.0.0",
