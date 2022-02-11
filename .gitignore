@@ -13,6 +13,7 @@ cloud_functions/functions/lib
 *.firebaserc
 *-firebase.json
 .firebase/
+*firebase-adminsdk*.json
 
 # misc
 .DS_Store
