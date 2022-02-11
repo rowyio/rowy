@@ -17,10 +17,12 @@ import Modal from "@src/components/Modal";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import routes from "@src/constants/routes";
 import { runRoutes } from "@src/constants/runRoutes";
+import { useRowyRunModal } from "@src/atoms/RowyRunModal";
 
 export default function InviteUser() {
-  const { roles: projectRoles, rowyRun } = useProjectContext();
+  const { roles: projectRoles, rowyRun, settings } = useProjectContext();
   const { enqueueSnackbar } = useSnackbar();
+  const openRowyRunModal = useRowyRunModal();
 
   const [open, setOpen] = useState(false);
   const [status, setStatus] = useState<"LOADING" | string>("");
@@ -49,7 +51,11 @@ export default function InviteUser() {
     <>
       <Button
         aria-label="Invite user"
-        onClick={() => setOpen(true)}
+        onClick={
+          settings?.rowyRunUrl
+            ? () => setOpen(true)
+            : () => openRowyRunModal("Invite user")
+        }
         variant="text"
         color="primary"
         startIcon={<AddIcon />}
