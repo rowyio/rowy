@@ -12,6 +12,7 @@ import CodeEditorHelper from "@src/components/CodeEditor/CodeEditorHelper";
 import FormAutosave from "./FormAutosave";
 import { FieldType } from "@src/constants/fields";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
+import { useProjectContext } from "@src/contexts/ProjectContext";
 
 const CodeEditor = lazy(
   () =>
@@ -29,6 +30,8 @@ export default function DefaultValueInput({
   fieldName,
   ...props
 }: IDefaultValueInputProps) {
+  const { settings } = useProjectContext();
+
   const _type =
     type !== FieldType.derivative
       ? type
@@ -41,6 +44,7 @@ export default function DefaultValueInput({
         config.defaultValue?.value ?? getFieldProp("initialValue", _type),
     },
   });
+
   return (
     <>
       <TextField
@@ -50,11 +54,6 @@ export default function DefaultValueInput({
         onChange={(e) => handleChange("defaultValue.type")(e.target.value)}
         fullWidth
         sx={{ mb: 1 }}
-        SelectProps={{
-          MenuProps: {
-            sx: { "& .MuiListItemText-root": { whiteSpace: "normal" } },
-          },
-        }}
       >
         <MenuItem value="undefined">
           <ListItemText
@@ -78,10 +77,30 @@ export default function DefaultValueInput({
             secondary="Set a specific default value for all cells in this column."
           />
         </MenuItem>
-        <MenuItem value="dynamic">
+        <MenuItem
+          value="dynamic"
+          disabled={!settings?.rowyRunUrl}
+          sx={{
+            "&.Mui-disabled": { opacity: 1, color: "text.disabled" },
+            "&.Mui-disabled .MuiListItemText-secondary": {
+              color: "text.disabled",
+            },
+          }}
+        >
           <ListItemText
-            primary={`Dynamic (Requires Rowy Cloud Functions)`}
-            secondary={`Write code to set the default value using this table’s Rowy Cloud Function. Setup is required.`}
+            primary={
+              settings?.rowyRunUrl ? (
+                "Dynamic"
+              ) : (
+                <>
+                  Dynamic —{" "}
+                  <Typography color="error" variant="inherit" component="span">
+                    Requires Rowy Run setup
+                  </Typography>
+                </>
+              )
+            }
+            secondary="Write code to set the default value using Rowy Run"
           />
         </MenuItem>
       </TextField>

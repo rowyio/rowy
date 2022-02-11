@@ -2,7 +2,7 @@ import _find from "lodash/find";
 import { Field, FieldType } from "@rowy/form-builder";
 import { TableSettingsDialogModes } from "./index";
 
-import { Link, Typography } from "@mui/material";
+import { Link, ListItemText, Typography } from "@mui/material";
 import OpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 import WarningIcon from "@mui/icons-material/WarningAmber";
 
@@ -29,43 +29,32 @@ export const tableSettings = (
       options: [
         {
           label: (
-            <div>
-              Primary collection
-              <Typography
-                variant="caption"
-                color="text.secondary"
-                display="block"
-                sx={{
-                  width: 470,
-                  whiteSpace: "normal",
-                  ".MuiSelect-select &": { display: "none" },
-                }}
-              >
-                Connect this table to the <b>single collection</b> matching the
-                collection name entered below
-              </Typography>
-            </div>
+            <ListItemText
+              primary="Primary collection"
+              secondary={
+                <>
+                  Connect this table to the <b>single collection</b> matching
+                  the collection name entered below
+                </>
+              }
+              style={{ maxWidth: 470 }}
+            />
           ),
           value: "primaryCollection",
         },
         {
           label: (
-            <div>
-              Collection group
-              <Typography
-                variant="caption"
-                color="text.secondary"
-                display="block"
-                sx={{
-                  width: 470,
-                  whiteSpace: "normal",
-                  ".MuiSelect-select &": { display: "none" },
-                }}
-              >
-                Connect this table to <b>all collections and subcollections</b>{" "}
-                matching the collection name entered below
-              </Typography>
-            </div>
+            <ListItemText
+              primary="Collection group"
+              secondary={
+                <>
+                  Connect this table to{" "}
+                  <b>all collections and subcollections</b> matching the
+                  collection name entered below
+                </>
+              }
+              style={{ maxWidth: 470 }}
+            />
           ),
           value: "collectionGroup",
         },
