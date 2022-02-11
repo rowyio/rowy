@@ -31,6 +31,7 @@ import { FieldType } from "@src/constants/fields";
 import { formatSubTableName } from "@src/utils/fns";
 
 import { useAppContext } from "@src/contexts/AppContext";
+import { useContextMenuAtom } from "@src/atoms/ContextMenu";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import useWindowSize from "@src/hooks/useWindowSize";
 import { useSetSelectedCell } from "@src/atoms/ContextMenu";
@@ -47,34 +48,34 @@ const rowClass = (row: any) => (row._rowy_outOfOrder ? "out-of-order" : "");
 //const SelectColumn = { ..._SelectColumn, width: 42, maxWidth: 42 };
 
 export default function Table() {
-  const {
-    table,
-    tableState,
-    tableActions,
-    dataGridRef,
-    sideDrawerRef,
-    updateCell,
-  } = useProjectContext();
+  const { table, tableState, tableActions, dataGridRef, sideDrawerRef } =
+    useProjectContext();
   const { userDoc, userClaims } = useAppContext();
+  const { selectedCell } = useContextMenuAtom();
   const { setSelectedCell } = useSetSelectedCell();
-  const { handleCopy, handlePaste, handleCut } = useHotKey();
+
+  const { handleCopy, handlePaste, handleCut }: any = useHotKey(selectedCell);
+  useHotkeys("command+c", () => handleCopy(), [selectedCell]);
+  useHotkeys(
+    "command+v",
+    () => {
+      handlePaste();
+    },
+    [selectedCell]
+  );
+  useHotkeys(
+    "command+x",
+    () => {
+      handleCut();
+    },
+    [selectedCell]
+  );
 
   const userDocHiddenFields =
     userDoc.state.doc?.tables?.[formatSubTableName(tableState?.config.id)]
       ?.hiddenFields ?? [];
 
   const [columns, setColumns] = useState<TableColumn[]>([]);
-
-  //hotkeys
-  useHotkeys("command+c", () => {
-    handleCopy();
-  });
-  useHotkeys("command+v", () => {
-    handlePaste();
-  });
-  useHotkeys("command+x", () => {
-    handleCut();
-  });
 
   useEffect(() => {
     if (!tableState?.loadingColumns && tableState?.columns) {

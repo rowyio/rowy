@@ -79,9 +79,19 @@ export default function BasicContextMenuActions(
   };
 
   const contextMenuActions = [
-    { label: "Cut", icon: <Cut />, onClick: handleCut },
-    { label: "Copy", icon: <CopyCells />, onClick: handleCopy },
-    { label: "Paste", icon: <Paste />, onClick: handlePaste },
+    { label: "Cut", icon: <Cut />, onClick: handleCut, hotkeyLabel: "⌘ + X" },
+    {
+      label: "Copy",
+      icon: <CopyCells />,
+      onClick: handleCopy,
+      hotkeyLabel: "⌘ + C",
+    },
+    {
+      label: "Paste",
+      icon: <Paste />,
+      onClick: handlePaste,
+      hotkeyLabel: "⌘ + V",
+    },
   ];
 
   return contextMenuActions;
