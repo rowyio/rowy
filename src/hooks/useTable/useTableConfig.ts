@@ -157,7 +157,6 @@ const useTableConfig = (tableId?: string) => {
    */
   const remove = (key: string) => {
     const { columns } = tableConfigState;
-
     /**
      *  Filter column, and remove key index
      *  Sort and reorder column
@@ -165,7 +164,7 @@ const useTableConfig = (tableId?: string) => {
      */
     const updatedColumns: any = Object.values(columns)
       .filter((c: any) => c.key !== key)
-      .sort((c: any) => c.index)
+      .sort((a: any, b: any) => a.index - b.index)
       .reduce((acc: any, curr: any, index: any) => {
         acc[curr.key] = { ...curr, index };
         return acc;
