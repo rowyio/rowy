@@ -3,8 +3,12 @@ import { ISettingsProps } from "../types";
 
 import AddIcon from "@mui/icons-material/Add";
 import Button from "@mui/material/Button";
-import ConditionModal from "./ConditionModal";
-import ConditionList from "./ConditionList";
+import { default as List } from "./ConditionList";
+import { default as Modal } from "./ConditionModal";
+import createConditionsArr, {
+  removeCondition,
+  updateCondition,
+} from "./utils/conditionArrHelper";
 
 export interface IConditionModal {
   isOpen: boolean;
@@ -29,21 +33,49 @@ export const EMPTY_STATE: IConditionModal = {
 };
 
 export default function Settings({ onChange, config }: ISettingsProps) {
-  const [modal, setModal] = useState(EMPTY_STATE);
+  const { conditions } = config;
+  const [modalState, setModalState] = useState(EMPTY_STATE);
+
+  const handleAdd = (condition: any) => {
+    const arr = createConditionsArr(condition, conditions);
+    onChange("conditions")(arr);
+    setModalState(EMPTY_STATE);
+  };
+
+  const handleSave = (condition: any) => {
+    const arr = updateCondition(condition, conditions, modalState.index);
+    onChange("conditions")(arr);
+    setModalState(EMPTY_STATE);
+  };
+
+  const handleRemove = () => {
+    const arr = removeCondition(modalState.index, conditions);
+    onChange("conditions")(arr);
+    setModalState(EMPTY_STATE);
+  };
+
+  const handleClose = () => {
+    setModalState(EMPTY_STATE);
+  };
+
   return (
     <>
-      <ConditionList config={config} setModal={setModal} />
+      <List config={config} setModal={setModalState} />
       <Button
-        onClick={() => setModal({ ...EMPTY_STATE, isOpen: true })}
+        onClick={() => setModalState({ ...EMPTY_STATE, isOpen: true })}
         startIcon={<AddIcon />}
       >
         Add condition
       </Button>
-      <ConditionModal
-        modal={modal}
-        setModal={setModal}
-        conditions={config.conditions}
-        setConditions={onChange("conditions")}
+      <Modal
+        isEditing={typeof modalState.index === "number"}
+        conditions={conditions}
+        modalState={modalState}
+        setModalState={setModalState}
+        handleAdd={handleAdd}
+        handleSave={handleSave}
+        handleRemove={handleRemove}
+        handleClose={handleClose}
       />
     </>
   );
