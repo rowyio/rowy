@@ -35,6 +35,7 @@ const rowsReducer = (prevRows: any, update: any) => {
   switch (update.type) {
     case "onSnapshot":
       const snapshotDocs = update.docs;
+      console.log("onSnapshot", snapshotDocs);
 
       // Get rows that may not be part of the snapshot
       // Rows with missing required fields haven’t been written to the db yet
@@ -167,13 +168,14 @@ const useTableData = () => {
 
     const unsubscribe = query.limit(limit).onSnapshot(
       (snapshot) => {
-        if (snapshot.docs.length > 0) {
-          rowsDispatch({
-            type: "onSnapshot",
-            docs: snapshot.docs,
-            // changes: snapshot.docChanges(),
-          });
-        }
+        console.log("snapshot", snapshot);
+        // if (snapshot.docs.length > 0) {
+        rowsDispatch({
+          type: "onSnapshot",
+          docs: snapshot.docs,
+          // changes: snapshot.docChanges(),
+        });
+        // }
         tableDispatch({ loading: false });
       },
       (error: any) => {
