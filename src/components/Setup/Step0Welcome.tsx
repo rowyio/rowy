@@ -1,25 +1,36 @@
 import { ISetupStepBodyProps } from "@src/pages/Setup";
 
-import { FormControlLabel, Checkbox, Typography, Link } from "@mui/material";
+import {
+  FormControlLabel,
+  Checkbox,
+  Typography,
+  Link,
+  Button,
+} from "@mui/material";
 
 import { useAppContext } from "@src/contexts/AppContext";
 import { EXTERNAL_LINKS } from "@src/constants/externalLinks";
 
+export interface IStep0WelcomeProps extends ISetupStepBodyProps {
+  handleContinue: () => void;
+}
+
 export default function Step0Welcome({
   completion,
   setCompletion,
-}: ISetupStepBodyProps) {
+  handleContinue,
+}: IStep0WelcomeProps) {
   const { projectId } = useAppContext();
 
   return (
     <>
       <div>
-        <Typography variant="body1" gutterBottom>
-          You’ll be up and running in just a few minutes.
+        <Typography variant="body1" paragraph>
+          Get started with Rowy in just a few minutes.
         </Typography>
-        <Typography variant="body1" gutterBottom>
-          Configure your project’s backend functionality, Firestore Rules, and
-          user management.
+        <Typography variant="body1" paragraph>
+          We have no access to your data and it always stays on your Firebase
+          project.
         </Typography>
         <Typography variant="body1">
           Project: <b>{projectId}</b>
@@ -67,6 +78,23 @@ export default function Step0Welcome({
           m: 0,
         }}
       />
+
+      <Button
+        variant="contained"
+        color="primary"
+        size="large"
+        disabled={!completion.welcome}
+        onClick={handleContinue}
+      >
+        Get started
+      </Button>
+
+      <div>
+        <Typography variant="body2" paragraph sx={{ mt: 4 }}>
+          Want to invite your teammate to help with setup instead?
+        </Typography>
+        <Button>Send to teammate</Button>
+      </div>
     </>
   );
 }

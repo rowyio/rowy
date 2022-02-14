@@ -29,7 +29,8 @@ import ScrollableDialogContent from "@src/components/Modal/ScrollableDialogConte
 import { SlideTransition } from "@src/components/Modal/SlideTransition";
 
 import Step0Welcome from "@src/components/Setup/Step0Welcome";
-import Step1RowyRun, { checkRowyRun } from "@src/components/Setup/Step1RowyRun";
+import Step1Oauth from "@src/components/Setup/Step1Oauth";
+import Step2Project from "@src/components/Setup/Step2Project";
 // prettier-ignore
 import Step2ProjectOwner, { checkProjectOwner } from "@src/components/Setup/Step2ProjectOwner";
 import Step3Rules, { checkRules } from "@src/components/Setup/Step3Rules";
@@ -47,7 +48,6 @@ export interface ISetupStep {
   title: React.ReactNode;
   description?: React.ReactNode;
   body: React.ReactNode;
-  actions?: React.ReactNode;
 }
 
 export interface ISetupStepBodyProps {
@@ -69,25 +69,25 @@ const checkAllSteps = async (
   console.log("Check all steps");
   const completion: Record<string, boolean> = {};
 
-  const rowyRunValidation = await checkRowyRun(rowyRunUrl, signal);
-  if (rowyRunValidation.isValidRowyRunUrl) {
-    if (rowyRunValidation.isLatestVersion) completion.rowyRun = true;
+  // const rowyRunValidation = await checkRowyRun(rowyRunUrl, signal);
+  // if (rowyRunValidation.isValidRowyRunUrl) {
+  //   if (rowyRunValidation.isLatestVersion) completion.rowyRun = true;
 
-    const promises = [
-      checkProjectOwner(rowyRunUrl, currentUser, userRoles, signal).then(
-        (projectOwner) => {
-          if (projectOwner) completion.projectOwner = true;
-        }
-      ),
-      checkRules(rowyRunUrl, authToken, signal).then((rules) => {
-        if (rules) completion.rules = true;
-      }),
-      checkMigrate(rowyRunUrl, authToken, signal).then((requiresMigration) => {
-        if (requiresMigration) completion.migrate = false;
-      }),
-    ];
-    await Promise.all(promises);
-  }
+  //   const promises = [
+  //     checkProjectOwner(rowyRunUrl, currentUser, userRoles, signal).then(
+  //       (projectOwner) => {
+  //         if (projectOwner) completion.projectOwner = true;
+  //       }
+  //     ),
+  //     checkRules(rowyRunUrl, authToken, signal).then((rules) => {
+  //       if (rules) completion.rules = true;
+  //     }),
+  //     checkMigrate(rowyRunUrl, authToken, signal).then((requiresMigration) => {
+  //       if (requiresMigration) completion.migrate = false;
+  //     }),
+  //   ];
+  //   await Promise.all(promises);
+  // }
 
   return completion;
 };
@@ -111,117 +111,33 @@ export default function SetupPage() {
     rules: false,
   });
 
-  const [checkingAllSteps, setCheckingAllSteps] = useState(false);
-  useEffect(() => {
-    const controller = new AbortController();
-    const signal = controller.signal;
+  // const [checkingAllSteps, setCheckingAllSteps] = useState(false);
+  // useEffect(() => {
+  //   const controller = new AbortController();
+  //   const signal = controller.signal;
 
-    if (rowyRunUrl) {
-      setCheckingAllSteps(true);
-      getAuthToken().then((authToken) =>
-        checkAllSteps(
-          rowyRunUrl,
-          currentUser,
-          userRoles,
-          authToken,
-          signal
-        ).then((result) => {
-          if (!signal.aborted) {
-            setCompletion((c) => ({ ...c, ...result }));
-            setCheckingAllSteps(false);
-          }
-        })
-      );
-    }
+  //   if (rowyRunUrl) {
+  //     setCheckingAllSteps(true);
+  //     getAuthToken().then((authToken) =>
+  //       checkAllSteps(
+  //         rowyRunUrl,
+  //         currentUser,
+  //         userRoles,
+  //         authToken,
+  //         signal
+  //       ).then((result) => {
+  //         if (!signal.aborted) {
+  //           setCompletion((c) => ({ ...c, ...result }));
+  //           setCheckingAllSteps(false);
+  //         }
+  //       })
+  //     );
+  //   }
 
-    return () => controller.abort();
-  }, [rowyRunUrl, currentUser, userRoles, getAuthToken]);
+  //   return () => controller.abort();
+  // }, [rowyRunUrl, currentUser, userRoles, getAuthToken]);
 
   const stepProps = { completion, setCompletion, checkAllSteps, rowyRunUrl };
-
-  const steps: ISetupStep[] = [
-    {
-      id: "welcome",
-      layout: "centered" as "centered",
-      shortTitle: "Welcome",
-      title: `Welcome to Rowy`,
-      body: <Step0Welcome {...stepProps} />,
-      actions: completion.welcome ? (
-        <LoadingButton
-          loading={checkingAllSteps}
-          variant="contained"
-          color="primary"
-          type="submit"
-        >
-          Get started
-        </LoadingButton>
-      ) : (
-        <Tooltip title="Please accept the terms and conditions">
-          <div>
-            <LoadingButton
-              loading={checkingAllSteps}
-              variant="contained"
-              color="primary"
-              disabled
-            >
-              Get started
-            </LoadingButton>
-          </div>
-        </Tooltip>
-      ),
-    },
-    {
-      id: "rowyRun",
-      shortTitle: `Rowy Run`,
-      title: `Set up Rowy Run`,
-      body: <Step1RowyRun {...stepProps} />,
-    },
-    {
-      id: "projectOwner",
-      shortTitle: `Project owner`,
-      title: `Set up project owner`,
-      body: <Step2ProjectOwner {...stepProps} />,
-    },
-    {
-      id: "rules",
-      shortTitle: `Rules`,
-      title: `Set up Firestore Rules`,
-      body: <Step3Rules {...stepProps} />,
-    },
-    completion.migrate !== undefined
-      ? {
-          id: "migrate",
-          shortTitle: `Migrate`,
-          title: `Migrate to Rowy (optional)`,
-          body: <Step4Migrate {...stepProps} />,
-        }
-      : ({} as ISetupStep),
-    {
-      id: "finish",
-      layout: "centered" as "centered",
-      shortTitle: `Finish`,
-      title: `You’re all set up!`,
-      body: <Step5Finish />,
-      actions: (
-        <Button
-          variant="contained"
-          color="primary"
-          component={Link}
-          to={routes.home}
-          sx={{ ml: 1 }}
-        >
-          Continue to Rowy
-        </Button>
-      ),
-    },
-  ].filter((x) => x.id);
-
-  const step =
-    steps.find((step) => step.id === (stepId || steps[0].id)) ?? steps[0];
-  const stepIndex = steps.findIndex(
-    (step) => step.id === (stepId || steps[0].id)
-  );
-  const listedSteps = steps.filter((step) => step.layout !== "centered");
 
   const handleContinue = () => {
     let nextIncompleteStepIndex = stepIndex + 1;
@@ -235,6 +151,78 @@ export default function SetupPage() {
     setStepId(nextStepId);
   };
 
+  const steps: ISetupStep[] = [
+    {
+      id: "welcome",
+      layout: "centered" as "centered",
+      shortTitle: "Welcome",
+      title: `Welcome`,
+      body: <Step0Welcome handleContinue={handleContinue} {...stepProps} />,
+      actions: <></>,
+    },
+    // {
+    //   id: "rowyRun",
+    //   shortTitle: `Rowy Run`,
+    //   title: `Set up Rowy Run`,
+    //   body: <Step1RowyRun {...stepProps} />,
+    // },
+    // {
+    //   id: "projectOwner",
+    //   shortTitle: `Project owner`,
+    //   title: `Set up project owner`,
+    //   body: <Step2ProjectOwner {...stepProps} />,
+    // },
+    {
+      id: "oauth",
+      shortTitle: `Access`,
+      title: `Allow Firebase access`,
+      body: <Step1Oauth {...stepProps} />,
+    },
+    {
+      id: "project",
+      shortTitle: `Project`,
+      title: `Select project`,
+      body: <Step2Project {...stepProps} />,
+    },
+    {
+      id: "rules",
+      shortTitle: `Firestore Rules`,
+      title: `Set up Firestore Rules`,
+      body: <Step3Rules {...stepProps} />,
+    },
+    {
+      id: "storageRules",
+      shortTitle: `Storage Rules`,
+      title: `Set up Firestore Rules`,
+      body: <Step3Rules {...stepProps} />,
+    },
+    {
+      id: "finish",
+      layout: "centered" as "centered",
+      shortTitle: `Finish`,
+      title: `You’re all set up!`,
+      body: <Step5Finish />,
+      // actions: (
+      //   <Button
+      //     variant="contained"
+      //     color="primary"
+      //     component={Link}
+      //     to={routes.home}
+      //     sx={{ ml: 1 }}
+      //   >
+      //     Continue to Rowy
+      //   </Button>
+      // ),
+    },
+  ].filter((x) => x.id);
+
+  const step =
+    steps.find((step) => step.id === (stepId || steps[0].id)) ?? steps[0];
+  const stepIndex = steps.findIndex(
+    (step) => step.id === (stepId || steps[0].id)
+  );
+  const listedSteps = steps.filter((step) => step.layout !== "centered");
+
   return (
     <Wrapper>
       <BrandedBackground />
@@ -243,18 +231,17 @@ export default function SetupPage() {
         elevation={4}
         sx={{
           backgroundColor: (theme) =>
-            alpha(theme.palette.background.paper, 0.5),
+            alpha(theme.palette.background.paper, 0.75),
           backdropFilter: "blur(20px) saturate(150%)",
 
           maxWidth: BASE_WIDTH,
           width: (theme) => `calc(100vw - ${theme.spacing(2)})`,
-          maxHeight: (theme) =>
+          height: (theme) =>
             `calc(${
               fullScreenHeight > 0 ? `${fullScreenHeight}px` : "100vh"
             } - ${theme.spacing(
               2
             )} - env(safe-area-inset-top) - env(safe-area-inset-bottom))`,
-          height: BASE_WIDTH * 0.75,
           resize: "both",
 
           p: 0,
@@ -393,31 +380,32 @@ export default function SetupPage() {
           </>
         )}
 
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            try {
-              handleContinue();
-            } catch (e: any) {
-              throw new Error(e.message);
-            }
-            return false;
-          }}
-        >
-          <DialogActions>
-            {step.actions ?? (
-              <LoadingButton
+        {step.layout !== "centered" && (
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              try {
+                handleContinue();
+              } catch (e: any) {
+                throw new Error(e.message);
+              }
+              return false;
+            }}
+          >
+            <DialogActions>
+              <Button
                 variant="contained"
                 color="primary"
+                size="large"
                 type="submit"
-                loading={checkingAllSteps}
+                // loading={checkingAllSteps}
                 disabled={!completion[stepId]}
               >
                 Continue
-              </LoadingButton>
-            )}
-          </DialogActions>
-        </form>
+              </Button>
+            </DialogActions>
+          </form>
+        )}
       </Paper>
     </Wrapper>
   );
