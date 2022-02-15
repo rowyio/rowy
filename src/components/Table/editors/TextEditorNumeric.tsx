@@ -1,4 +1,4 @@
-import { useRef, useLayoutEffect, useEffect } from "react";
+import { useRef, useLayoutEffect } from "react";
 import { EditorProps } from "react-data-grid";
 
 import { TextField } from "@mui/material";
@@ -7,38 +7,36 @@ import { FieldType } from "@src/constants/fields";
 import { getCellValue } from "@src/utils/fns";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 
-export default function TextEditor({ row, column }: EditorProps<any>) {
-  const defaultValue = getCellValue(row, column.key);
+export default function TextEditorNumeric({ row, column }: EditorProps<any>) {
+  const type = (column as any).config?.renderFieldType ?? (column as any).type;
+  const cellValue = getCellValue(row, column.key);
+  const defaultValue =
+    type === FieldType.percentage && typeof cellValue === "number"
+      ? cellValue * 100
+      : cellValue;
+
   /**
-   *  react-data-grid always unmounts and remounts this component, when user hits enter or ecape
-   *  this saves the value when this TextEditor component is unmounted, which occurs when the user hits enter or escape.
+   *    react-data-grid always unmounts and remounts this component, when user hits enter or ecape
+   *    this saves the value when this TextEditor component is unmounted, which occurs when the user hits enter or escape.
    */
   const inputRef = useRef<HTMLInputElement>(null);
   const { updateCell } = useProjectContext();
   useLayoutEffect(() => {
     return () => {
       const newValue = inputRef.current?.value;
-      if (newValue !== undefined) updateCell?.(row.ref, column.key, newValue);
+      if (newValue !== undefined && updateCell) {
+        if (type === FieldType.number) {
+          updateCell(row.ref, column.key, Number(newValue));
+        } else {
+          //type is percentage
+          updateCell(row.ref, column.key, Number(newValue) / 100);
+        }
+      }
     };
   }, []);
 
-  const type = (column as any).config?.renderFieldType ?? (column as any).type;
-  let inputType = "text";
-  switch (type) {
-    case FieldType.email:
-      inputType = "email";
-      break;
-    case FieldType.phone:
-      inputType = "tel";
-      break;
-    case FieldType.url:
-      inputType = "url";
-      break;
-    default:
-      break;
-  }
-
   const { maxLength } = (column as any).config;
+  const inputType = "number";
   return (
     <TextField
       defaultValue={defaultValue}

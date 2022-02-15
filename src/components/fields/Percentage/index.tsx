@@ -4,7 +4,7 @@ import withBasicCell from "../_withTableCell/withBasicCell";
 
 import PercentageIcon from "@src/assets/icons/Percentage";
 import BasicCell from "./BasicCell";
-import TextEditor from "@src/components/Table/editors/TextEditor";
+import { default as TextEditor } from "@src/components/Table/editors/TextEditorNumeric";
 import { filterOperators } from "../Number/Filter";
 import BasicContextMenuActions from "../_BasicCell/BasicCellContextMenuActions";
 const SideDrawerField = lazy(

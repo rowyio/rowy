@@ -4,7 +4,8 @@ import withBasicCell from "../_withTableCell/withBasicCell";
 
 import NumberIcon from "@src/assets/icons/Number";
 import BasicCell from "./BasicCell";
-import TextEditor from "@src/components/Table/editors/TextEditor";
+
+import { default as TextEditor } from "@src/components/Table/editors/TextEditorNumeric";
 import { filterOperators } from "./Filter";
 import BasicContextMenuActions from "../_BasicCell/BasicCellContextMenuActions";
 const SideDrawerField = lazy(
