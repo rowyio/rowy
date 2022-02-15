@@ -32,8 +32,8 @@ const shouldDisableApplyButton = (value: any) =>
   typeof value !== "object";
 
 enum FilterType {
-  YOURFILTER = "local_filter",
-  TABLEFILTER = "table_filter",
+  yourFilter = "local_filter",
+  tableFilter = "table_filter",
 }
 
 export default function Filters() {
@@ -115,14 +115,14 @@ export default function Filters() {
 
   // Save table filters to table schema document
   const setTableFilters = (filters: TableFilter[]) => {
-    analytics.logEvent(FilterType.TABLEFILTER);
+    analytics.logEvent(FilterType.tableFilter);
     tableActions?.table.updateConfig("filters", filters);
     tableActions?.table.updateConfig("filtersOverridable", canOverrideCheckbox);
   };
   // Save user filters to user document
   // null overrides table filters
   const setUserFilters = (filters: TableFilter[] | null) => {
-    analytics.logEvent(FilterType.YOURFILTER);
+    analytics.logEvent(FilterType.yourFilter);
     userDoc.dispatch({
       action: DocActions.update,
       data: {

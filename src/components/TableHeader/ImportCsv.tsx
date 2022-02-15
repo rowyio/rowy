@@ -82,15 +82,14 @@ const useStyles = makeStyles((theme) =>
 );
 
 export enum ImportType {
-  CSV = "csv",
-  TSV = "tsv",
+  csv = "csv",
+  tsv = "tsv",
 }
 
 export enum ImportMethod {
-  DEFAULT = "",
-  PASTE = "paste",
-  UPLOAD = "upload",
-  URL = "url",
+  paste = "paste",
+  upload = "upload",
+  url = "url",
 }
 
 export interface IImportCsvProps {
@@ -106,8 +105,8 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
   const { table } = useProjectContext();
   const { enqueueSnackbar } = useSnackbar();
 
-  const importTypeRef = useRef(ImportType.CSV);
-  const importMethodRef = useRef(ImportMethod.DEFAULT);
+  const importTypeRef = useRef(ImportType.csv);
+  const importMethodRef = useRef(ImportMethod.upload);
   const [open, setOpen] = useState<HTMLButtonElement | null>(null);
   const [tab, setTab] = useState("upload");
   const [csvData, setCsvData] =
@@ -152,8 +151,8 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
       reader.readAsText(file);
       importTypeRef.current =
         file.type === "text/tab-separated-values"
-          ? ImportType.TSV
-          : ImportType.CSV;
+          ? ImportType.tsv
+          : ImportType.csv;
     } catch (error) {
       enqueueSnackbar(`Please import a .tsv or .csv file`, {
         variant: "error",
@@ -185,8 +184,8 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
       getFirstLine?.replace(strInQuotes, tabsWithSpace) ?? "";
     const tabPattern = /\t/;
     return tabPattern.test(formatString)
-      ? (importTypeRef.current = ImportType.TSV)
-      : (importTypeRef.current = ImportType.CSV);
+      ? (importTypeRef.current = ImportType.tsv)
+      : (importTypeRef.current = ImportType.csv);
   }
   const [handlePaste] = useDebouncedCallback((value: string) => {
     parseCsv(value);
@@ -257,17 +256,17 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
             <Tab
               label="Upload"
               value="upload"
-              onClick={() => (importMethodRef.current = ImportMethod.UPLOAD)}
+              onClick={() => (importMethodRef.current = ImportMethod.upload)}
             />
             <Tab
               label="Paste"
               value="paste"
-              onClick={() => (importMethodRef.current = ImportMethod.PASTE)}
+              onClick={() => (importMethodRef.current = ImportMethod.paste)}
             />
             <Tab
               label="URL"
               value="url"
-              onClick={() => (importMethodRef.current = ImportMethod.URL)}
+              onClick={() => (importMethodRef.current = ImportMethod.url)}
             />
           </TabList>
           <Divider style={{ marginTop: -1 }} />
