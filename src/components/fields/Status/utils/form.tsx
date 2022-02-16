@@ -3,17 +3,19 @@ import { Typography } from "@mui/material";
 import { Field, FieldType } from "@rowy/form-builder";
 
 export const conditionSettings = (conditions?: any, editIndex?: number) => {
-  function setDefaultValue(type: any, conditions: any, index: any) {
-    if (!index) return null;
-    console.log("breaking", conditions);
-    console.log("index", index, "type", type);
+  function setDefaultValue(
+    defaultValue: any,
+    type: any,
+    conditions: any,
+    index: any
+  ) {
+    if (!index) return defaultValue;
     const editCondition = conditions[index];
     const fieldTypeValue = editCondition[type];
     return fieldTypeValue;
   }
 
   /**
-   *
    * @param index from modal conditions list, when editing a modal this is a num
    * @param value from validation, watching current field type
    * @param conditions
@@ -27,6 +29,7 @@ export const conditionSettings = (conditions?: any, editIndex?: number) => {
       copyConditions.splice(index, 1); // remove curr condition from condition list
       result = !_find(copyConditions, { value: value });
     }
+    console.log("what is result", result);
     return result;
   }
 
@@ -50,7 +53,7 @@ export const conditionSettings = (conditions?: any, editIndex?: number) => {
         { label: "Null", value: "null" },
       ],
       multiple: false,
-      defaultValue: setDefaultValue("type", conditions, editIndex) ?? "null",
+      defaultValue: setDefaultValue("null", "type", conditions, editIndex),
       freeText: true,
     },
     {
@@ -61,11 +64,19 @@ export const conditionSettings = (conditions?: any, editIndex?: number) => {
         { label: "False", value: false },
         { label: "True", value: true },
       ],
-      defaultValue: false,
+      defaultValue: setDefaultValue(false, "value", conditions, editIndex),
       displayCondition: 'return values.type==="boolean"',
       label: "Select condition value",
       required: true,
       minRows: 2,
+      validation: [
+        [
+          "test",
+          "duplicate-boolen-value",
+          "Value already exist",
+          (value) => setValidation(editIndex, value, conditions),
+        ],
+      ],
     },
     {
       type: FieldType.singleSelect,
@@ -79,7 +90,7 @@ export const conditionSettings = (conditions?: any, editIndex?: number) => {
         { label: "More than", value: ">" },
       ],
       displayCondition: 'return values.type==="number"',
-      defaultValue: setDefaultValue("operator", conditions, editIndex) ?? "==",
+      defaultValue: setDefaultValue("==", "operator", conditions, editIndex),
       label: "Select operator",
       minRows: 2,
     },
@@ -88,7 +99,7 @@ export const conditionSettings = (conditions?: any, editIndex?: number) => {
       format: "number",
       name: "value",
       multiple: false,
-      defaultValue: setDefaultValue("value", conditions, editIndex) ?? 0,
+      defaultValue: setDefaultValue(0, "value", conditions, editIndex),
       displayCondition: 'return values.type==="number"',
       label: "Value",
       minRows: 2,
@@ -99,7 +110,7 @@ export const conditionSettings = (conditions?: any, editIndex?: number) => {
       name: "value",
       label: "Value",
       displayCondition: 'return values.type==="string"',
-      defaultValue: setDefaultValue("value", conditions, editIndex) ?? "",
+      defaultValue: setDefaultValue("", "value", conditions, editIndex),
       minRows: 2,
       validation: [
         [
@@ -114,7 +125,7 @@ export const conditionSettings = (conditions?: any, editIndex?: number) => {
       type: FieldType.shortText,
       name: "label",
       label: "Label (optional)",
-      defaultValue: setDefaultValue("label", conditions, editIndex) ?? "",
+      defaultValue: setDefaultValue("", "label", conditions, editIndex),
       minRows: 2,
     },
   ] as Field[];
