@@ -85,7 +85,7 @@ export const conditionSettings = (conditions?: any, editIndex?: number) => {
       displayCondition: 'return values.type==="number"',
       label: "Value",
       minRows: 2,
-      watchedField: "number",
+      //TODO validation by watching value of operator field and number field and comparing agaisnt existing value
     },
     {
       type: FieldType.shortText,

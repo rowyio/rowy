@@ -3,7 +3,8 @@ import _find from "lodash/find";
  * @param index from modal conditions list, when editing a modal this is a num
  * @param value from validation, watching current field type
  * @param conditions
- * @returns true or false, if FALSE validation pass, if TRUE validation fails
+ * @returns true or false. TRUE, validation passes and form can submit. vice versa
+ *
  */
 
 export function setValueValidation(index, value, conditions) {

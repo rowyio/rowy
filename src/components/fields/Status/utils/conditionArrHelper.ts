@@ -1,6 +1,3 @@
-import { mdiConsoleLine } from "@mdi/js";
-import { conditionSettings } from "./form";
-
 export default function createConditionsArr(newCondition, conditions) {
   let result;
   const noConditions = Boolean(conditions?.length === 0 || !conditions);
