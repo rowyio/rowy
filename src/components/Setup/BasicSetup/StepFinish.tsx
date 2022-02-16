@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { useSnackbar } from "notistack";
+import { Link } from "react-router-dom";
+import type { ISetupStep } from "../types";
 
-import { Typography, Stack, RadioGroup, Radio } from "@mui/material";
+import { Typography, Stack, RadioGroup, Radio, Button } from "@mui/material";
 import ThumbUpIcon from "@mui/icons-material/ThumbUpAlt";
 import ThumbUpOffIcon from "@mui/icons-material/ThumbUpOffAlt";
 import ThumbDownIcon from "@mui/icons-material/ThumbDownAlt";
@@ -9,8 +11,17 @@ import ThumbDownOffIcon from "@mui/icons-material/ThumbDownOffAlt";
 
 import { analytics } from "analytics";
 import { db } from "@src/firebase";
+import { routes } from "@src/constants/routes";
 
-export default function Step6Finish() {
+export default {
+  id: "finish",
+  layout: "centered",
+  shortTitle: "Finish",
+  title: "You’re all set up!",
+  body: StepFinish,
+} as ISetupStep;
+
+function StepFinish() {
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
@@ -66,6 +77,16 @@ export default function Step6Finish() {
           />
         </RadioGroup>
       </Stack>
+
+      <Button
+        variant="contained"
+        color="primary"
+        size="large"
+        component={Link}
+        to={routes.auth}
+      >
+        Sign in to your Rowy project
+      </Button>
     </>
   );
 }

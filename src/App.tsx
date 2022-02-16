@@ -52,7 +52,7 @@ const UserSettingsPage = lazy(() => import("./pages/Settings/UserSettings" /* we
 // prettier-ignore
 const UserManagementPage = lazy(() => import("./pages/Settings/UserManagement" /* webpackChunkName: "UserManagementPage" */));
 // prettier-ignore
-const SetupPage = lazy(() => import("@src/pages/Setup" /* webpackChunkName: "SetupPage" */));
+const BasicSetupPage = lazy(() => import("@src/pages/Setup/BasicSetup" /* webpackChunkName: "BasicSetupPage" */));
 
 export default function App() {
   return (
@@ -97,7 +97,7 @@ export default function App() {
                           <Route
                             exact
                             path={routes.setup}
-                            render={() => <SetupPage />}
+                            render={() => <BasicSetupPage />}
                           />
                           <Route
                             exact

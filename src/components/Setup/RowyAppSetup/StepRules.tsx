@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ISetupStepBodyProps } from "@src/pages/Setup";
+import type { ISetupStep, ISetupStepBodyProps } from "../types";
 
 import {
   Typography,
@@ -14,24 +14,32 @@ import InfoIcon from "@mui/icons-material/InfoOutlined";
 import CopyIcon from "@src/assets/icons/Copy";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
-import SetupItem from "./SetupItem";
+import SetupItem from "../SetupItem";
 import DiffEditor from "@src/components/CodeEditor/DiffEditor";
 
 import { useAppContext } from "@src/contexts/AppContext";
 import { CONFIG } from "@src/config/dbPaths";
 import {
-  requiredRules,
-  adminRules,
-  utilFns,
-  insecureRule,
+  RULES_START,
+  RULES_END,
+  REQUIRED_RULES,
+  ADMIN_RULES,
+  RULES_UTILS,
+  INSECURE_RULES,
 } from "@src/config/firestoreRules";
 import { rowyRun } from "@src/utils/rowyRun";
 import { runRoutes } from "@src/constants/runRoutes";
 // import { useConfirmation } from "@src/components/ConfirmationDialog";
 
+export default {
+  id: "rules",
+  shortTitle: "Firestore Rules",
+  title: "Set up Firestore Rules",
+  body: StepRules,
+} as ISetupStep;
+
 const insecureRuleRegExp = new RegExp(
-  insecureRule
-    .replace(/\//g, "\\/")
+  INSECURE_RULES.replace(/\//g, "\\/")
     .replace(/\*/g, "\\*")
     .replace(/\s{2,}/g, "\\s+")
     .replace(/\s/g, "\\s*")
@@ -39,25 +47,23 @@ const insecureRuleRegExp = new RegExp(
     .replace(/;/g, ";?")
 );
 
-export default function Step3Rules({
+function StepRules({
   rowyRunUrl,
-  completion,
-  setCompletion,
-}: ISetupStepBodyProps) {
+  isComplete,
+  setComplete,
+}: ISetupStepBodyProps & { rowyRunUrl: string }) {
   const { projectId, getAuthToken } = useAppContext();
   // const { requestConfirmation } = useConfirmation();
 
   const [error, setError] = useState<string | false>(false);
-  const [hasRules, setHasRules] = useState(completion.rules);
+  const [hasRules, setHasRules] = useState(isComplete);
   const [adminRule, setAdminRule] = useState(true);
   const [showManualMode, setShowManualMode] = useState(false);
 
-  const rules = `${
-    error === "security-rules/not-found"
-      ? `rules_version = '2';\n\nservice cloud.firestore {\n  match /databases/{database}/documents {\n`
-      : ""
-  }${adminRule ? adminRules : ""}${requiredRules}${utilFns}${
-    error === "security-rules/not-found" ? "  }\n}" : ""
+  const rules = `${error === "security-rules/not-found" ? RULES_START : ""}${
+    adminRule ? ADMIN_RULES : ""
+  }${REQUIRED_RULES}${RULES_UTILS}${
+    error === "security-rules/not-found" ? RULES_END : ""
   }`.replace("\n", "");
 
   const [currentRules, setCurrentRules] = useState("");
@@ -120,7 +126,7 @@ export default function Step3Rules({
       if (!res.success) throw new Error(res.message);
       const isSuccessful = await checkRules(rowyRunUrl, authToken);
       if (isSuccessful) {
-        setCompletion((c) => ({ ...c, rules: true }));
+        setComplete();
         setHasRules(true);
       }
       setRulesStatus("");
@@ -137,7 +143,7 @@ export default function Step3Rules({
 
       const isSuccessful = await checkRules(rowyRunUrl, authToken);
       if (isSuccessful) {
-        setCompletion((c) => ({ ...c, rules: true }));
+        setComplete();
         setHasRules(true);
       }
       setRulesStatus("");
@@ -154,7 +160,7 @@ export default function Step3Rules({
   //     confirm: "Skip",
   //     cancel: "cancel",
   //     handleConfirm: async () => {
-  //       setCompletion((c) => ({ ...c, rules: true }));
+  //       setComplete();
   //       setHasRules(true);
   //     },
   //   });
@@ -215,6 +221,7 @@ export default function Step3Rules({
             color="primary"
             onClick={setRules}
             loading={rulesStatus === "LOADING"}
+            style={{ position: "sticky", bottom: 8 }}
           >
             Set Firestore Rules
           </LoadingButton>
@@ -236,75 +243,92 @@ export default function Step3Rules({
       )}
 
       {!hasRules && showManualMode && (
-        <SetupItem
-          status="incomplete"
-          title={
-            error === "security-rules/not-found"
-              ? "Add the following rules in the Firebase Console to enable access to Rowy configuration:"
-              : "Alternatively, you can add these rules in the Firebase Console."
-          }
-        >
-          <Typography
-            variant="caption"
-            component="pre"
-            sx={{
-              width: "100%",
-              height: 400,
-              resize: "both",
-              overflow: "auto",
+        <>
+          <SetupItem
+            status="incomplete"
+            title={
+              error === "security-rules/not-found"
+                ? "Add the following rules in the Firebase Console to enable access to Rowy configuration:"
+                : "Alternatively, you can add these rules in the Firebase Console."
+            }
+          >
+            <Typography
+              variant="caption"
+              component="pre"
+              sx={{
+                width: "100%",
+                height: 400,
+                resize: "both",
+                overflow: "auto",
 
-              "& .comment": { color: "info.dark" },
-            }}
-            dangerouslySetInnerHTML={{
-              __html: rules.replace(
-                /(\/\/.*$)/gm,
-                `<span class="comment">$1</span>`
-              ),
-            }}
-          />
+                "& .comment": { color: "info.dark" },
+              }}
+              dangerouslySetInnerHTML={{
+                __html: rules.replace(
+                  /(\/\/.*$)/gm,
+                  `<span class="comment">$1</span>`
+                ),
+              }}
+            />
 
-          <div>
-            <Grid container spacing={1}>
-              <Grid item>
-                <Button
-                  startIcon={<CopyIcon />}
-                  onClick={() => navigator.clipboard.writeText(rules)}
-                >
-                  Copy to clipboard
-                </Button>
+            <div>
+              <Grid container spacing={1}>
+                <Grid item>
+                  <Button
+                    startIcon={<CopyIcon />}
+                    onClick={() => navigator.clipboard.writeText(rules)}
+                  >
+                    Copy to clipboard
+                  </Button>
+                </Grid>
+
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    href={`https://console.firebase.google.com/project/${
+                      projectId || "_"
+                    }/firestore/rules`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Set up in Firebase Console
+                    <InlineOpenInNewIcon />
+                  </Button>
+                </Grid>
+
+                <Grid item>
+                  {rulesStatus !== "LOADING" &&
+                    typeof rulesStatus === "string" && (
+                      <Typography variant="caption" color="error">
+                        {rulesStatus}
+                      </Typography>
+                    )}
+                </Grid>
               </Grid>
+            </div>
+          </SetupItem>
 
-              <Grid item>
-                <Button
-                  href={`https://console.firebase.google.com/project/${
-                    projectId || "_"
-                  }/firestore/rules`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Firebase Console
-                  <InlineOpenInNewIcon />
-                </Button>
-              </Grid>
-
-              <Grid item>
-                <LoadingButton
-                  variant="contained"
-                  color="primary"
-                  onClick={verifyRules}
-                  loading={rulesStatus === "LOADING"}
-                >
-                  Verify
-                </LoadingButton>
-                {rulesStatus !== "LOADING" && typeof rulesStatus === "string" && (
-                  <Typography variant="caption" color="error">
-                    {rulesStatus}
-                  </Typography>
-                )}
-              </Grid>
-            </Grid>
-          </div>
-        </SetupItem>
+          <SetupItem
+            status="incomplete"
+            title={
+              <LoadingButton
+                variant="contained"
+                color="primary"
+                onClick={verifyRules}
+                loading={rulesStatus === "LOADING"}
+              >
+                Verify
+              </LoadingButton>
+            }
+          >
+            {rulesStatus !== "LOADING" && typeof rulesStatus === "string" && (
+              <Typography variant="caption" color="error">
+                {rulesStatus}
+              </Typography>
+            )}
+          </SetupItem>
+        </>
       )}
 
       {hasRules && (
@@ -334,10 +358,10 @@ export const checkRules = async (
     const sanitizedRules = rules.replace(/\s{2,}/g, " ").replace(/\n/g, " ");
     const hasRules =
       sanitizedRules.includes(
-        requiredRules.replace(/\s{2,}/g, " ").replace(/\n/g, " ")
+        REQUIRED_RULES.replace(/\s{2,}/g, " ").replace(/\n/g, " ")
       ) &&
       sanitizedRules.includes(
-        utilFns.replace(/\s{2,}/g, " ").replace(/\n/g, " ")
+        RULES_UTILS.replace(/\s{2,}/g, " ").replace(/\n/g, " ")
       );
     return hasRules;
   } catch (e: any) {

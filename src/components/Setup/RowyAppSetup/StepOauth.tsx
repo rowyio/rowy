@@ -1,16 +1,20 @@
-import { ISetupStepBodyProps } from "@src/pages/Setup";
+import type { ISetupStep, ISetupStepBodyProps } from "../types";
 
 import { Typography, Link, Button } from "@mui/material";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
-import SetupItem from "./SetupItem";
+import SetupItem from "../SetupItem";
 
 import { WIKI_LINKS } from "@src/constants/externalLinks";
 
-export default function Step1Oauth({
-  completion,
-  setCompletion,
-}: ISetupStepBodyProps) {
+export default {
+  id: "oauth",
+  shortTitle: "Access",
+  title: "Allow Firebase access",
+  body: StepOauth,
+} as ISetupStep;
+
+function StepOauth({ isComplete, setComplete }: ISetupStepBodyProps) {
   return (
     <>
       <div>
@@ -44,7 +48,7 @@ export default function Step1Oauth({
               height="20"
             />
           }
-          onClick={() => setCompletion((c) => ({ ...c, oauth: true }))}
+          onClick={() => setComplete()}
         >
           Sign in with Google
         </Button>

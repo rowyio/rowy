@@ -1,4 +1,4 @@
-import { ISetupStepBodyProps } from "@src/pages/Setup";
+import type { ISetupStep, ISetupStepBodyProps } from "../types";
 
 import {
   FormControlLabel,
@@ -8,20 +8,17 @@ import {
   Button,
 } from "@mui/material";
 
-import { useAppContext } from "@src/contexts/AppContext";
 import { EXTERNAL_LINKS } from "@src/constants/externalLinks";
 
-export interface IStep0WelcomeProps extends ISetupStepBodyProps {
-  handleContinue: () => void;
-}
+export default {
+  id: "welcome",
+  layout: "centered",
+  shortTitle: "Welcome",
+  title: "Welcome",
+  body: StepWelcome,
+} as ISetupStep;
 
-export default function Step0Welcome({
-  completion,
-  setCompletion,
-  handleContinue,
-}: IStep0WelcomeProps) {
-  const { projectId } = useAppContext();
-
+function StepWelcome({ isComplete, setComplete }: ISetupStepBodyProps) {
   return (
     <>
       <div>
@@ -32,18 +29,13 @@ export default function Step0Welcome({
           We have no access to your data and it always stays on your Firebase
           project.
         </Typography>
-        <Typography variant="body1">
-          Project: <b>{projectId}</b>
-        </Typography>
       </div>
 
       <FormControlLabel
         control={
           <Checkbox
-            checked={completion.welcome}
-            onChange={(e) =>
-              setCompletion((c) => ({ ...c, welcome: e.target.checked }))
-            }
+            checked={isComplete}
+            onChange={(e) => setComplete(e.target.checked)}
           />
         }
         label={
@@ -83,8 +75,8 @@ export default function Step0Welcome({
         variant="contained"
         color="primary"
         size="large"
-        disabled={!completion.welcome}
-        onClick={handleContinue}
+        disabled={!isComplete}
+        type="submit"
       >
         Get started
       </Button>

@@ -28,12 +28,11 @@ import Logo from "@src/assets/Logo";
 import ScrollableDialogContent from "@src/components/Modal/ScrollableDialogContent";
 import { SlideTransition } from "@src/components/Modal/SlideTransition";
 
-import Step0Welcome from "@src/components/Setup/Step0Welcome";
+import StepWelcome from "@src/components/Setup/RowyAppSetup/StepWelcome";
 import Step1Oauth from "@src/components/Setup/Step1Oauth";
-import Step2Project from "@src/components/Setup/Step2Project";
 // prettier-ignore
 import Step2ProjectOwner, { checkProjectOwner } from "@src/components/Setup/Step2ProjectOwner";
-import Step3Rules, { checkRules } from "@src/components/Setup/Step3Rules";
+// import Step3Rules, { checkRules } from "@src/components/Setup/Step3Rules";
 import Step4Migrate, { checkMigrate } from "@src/components/Setup/Step4Migrate";
 import Step5Finish from "@src/components/Setup/Step6Finish";
 
@@ -157,8 +156,7 @@ export default function SetupPage() {
       layout: "centered" as "centered",
       shortTitle: "Welcome",
       title: `Welcome`,
-      body: <Step0Welcome handleContinue={handleContinue} {...stepProps} />,
-      actions: <></>,
+      body: <StepWelcome {...stepProps} />,
     },
     // {
     //   id: "rowyRun",
@@ -182,19 +180,19 @@ export default function SetupPage() {
       id: "project",
       shortTitle: `Project`,
       title: `Select project`,
-      body: <Step2Project {...stepProps} />,
+      body: <Step1Oauth {...stepProps} />,
     },
     {
       id: "rules",
       shortTitle: `Firestore Rules`,
       title: `Set up Firestore Rules`,
-      body: <Step3Rules {...stepProps} />,
+      body: <Step1Oauth {...stepProps} />,
     },
     {
       id: "storageRules",
       shortTitle: `Storage Rules`,
       title: `Set up Firestore Rules`,
-      body: <Step3Rules {...stepProps} />,
+      body: <Step1Oauth {...stepProps} />,
     },
     {
       id: "finish",
@@ -214,7 +212,7 @@ export default function SetupPage() {
       //   </Button>
       // ),
     },
-  ].filter((x) => x.id);
+  ];
 
   const step =
     steps.find((step) => step.id === (stepId || steps[0].id)) ?? steps[0];

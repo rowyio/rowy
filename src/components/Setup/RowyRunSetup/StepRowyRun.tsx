@@ -1,32 +1,37 @@
 import { useState, useEffect } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 import queryString from "query-string";
-import { ISetupStepBodyProps } from "@src/pages/Setup";
+import type { ISetupStep, ISetupStepBodyProps } from "../types";
 
 import { Button, Typography, Stack, TextField } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
-import SetupItem from "./SetupItem";
+import SetupItem from "../SetupItem";
 
 import { rowyRun } from "@src/utils/rowyRun";
 import { runRoutes } from "@src/constants/runRoutes";
 import { EXTERNAL_LINKS, WIKI_LINKS } from "@src/constants/externalLinks";
 
-export default function Step1RowyRun({
-  completion,
-  setCompletion,
-  rowyRunUrl: paramsRowyRunUrl,
-}: ISetupStepBodyProps) {
+export default {
+  id: "rowyRun",
+  shortTitle: "Rowy Run",
+  title: "Set up Rowy Run",
+  body: StepRowyRun,
+} as ISetupStep;
+
+function StepRowyRun({
+  isComplete,
+  setComplete,
+}: // rowyRunUrl: paramsRowyRunUrl,
+ISetupStepBodyProps) {
   const { pathname } = useLocation();
   const history = useHistory();
 
-  const [isValidRowyRunUrl, setIsValidRowyRunUrl] = useState(
-    completion.rowyRun
-  );
-  const [isLatestVersion, setIsLatestVersion] = useState(completion.rowyRun);
+  const [isValidRowyRunUrl, setIsValidRowyRunUrl] = useState(isComplete);
+  const [isLatestVersion, setIsLatestVersion] = useState(isComplete);
 
-  const [rowyRunUrl, setRowyRunUrl] = useState(paramsRowyRunUrl);
+  const [rowyRunUrl, setRowyRunUrl] = useState("paramsRowyRunUrl");
   const [latestVersion, setLatestVersion] = useState("");
   const [verificationStatus, setVerificationStatus] = useState<
     "IDLE" | "LOADING" | "FAIL"
@@ -45,7 +50,7 @@ export default function Step1RowyRun({
 
       if (result.isLatestVersion) {
         setIsLatestVersion(true);
-        setCompletion((c) => ({ ...c, rowyRun: true }));
+        setComplete();
         history.replace({
           pathname,
           search: queryString.stringify({ rowyRunUrl }),
@@ -57,9 +62,9 @@ export default function Step1RowyRun({
     }
   };
 
-  useEffect(() => {
-    if (!isValidRowyRunUrl && paramsRowyRunUrl) console.log(paramsRowyRunUrl);
-  }, [paramsRowyRunUrl, isValidRowyRunUrl]);
+  // useEffect(() => {
+  //   if (!isValidRowyRunUrl && paramsRowyRunUrl) console.log(paramsRowyRunUrl);
+  // }, [paramsRowyRunUrl, isValidRowyRunUrl]);
 
   const deployButton = window.location.hostname.includes(
     EXTERNAL_LINKS.rowyAppHostName
