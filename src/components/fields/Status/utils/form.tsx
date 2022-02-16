@@ -1,38 +1,14 @@
-import _find from "lodash/find";
 import { Typography } from "@mui/material";
 import { Field, FieldType } from "@rowy/form-builder";
+import { setDefaultValue } from "./defaultValueHelpr";
+import {
+  setBooleanValidation,
+  setDataTypeValidation,
+  setLabelValidation,
+  setValueValidation,
+} from "./validationHelper";
 
 export const conditionSettings = (conditions?: any, editIndex?: number) => {
-  function setDefaultValue(
-    defaultValue: any,
-    type: any,
-    conditions: any,
-    index: any
-  ) {
-    if (!index) return defaultValue;
-    const editCondition = conditions[index];
-    const fieldTypeValue = editCondition[type];
-    return fieldTypeValue;
-  }
-
-  /**
-   * @param index from modal conditions list, when editing a modal this is a num
-   * @param value from validation, watching current field type
-   * @param conditions
-   * @returns
-   */
-  function setValidation(index, value, conditions) {
-    let result;
-    if (!index) result = !_find(conditions, { value: value });
-    else {
-      const copyConditions = [...conditions];
-      copyConditions.splice(index, 1); // remove curr condition from condition list
-      result = !_find(copyConditions, { value: value });
-    }
-    console.log("what is result", result);
-    return result;
-  }
-
   return [
     {
       type: FieldType.singleSelect,
@@ -44,37 +20,43 @@ export const conditionSettings = (conditions?: any, editIndex?: number) => {
         </>
       ),
       assistiveText: "Selected Data Type",
-      labelPlural: "sections",
       options: [
+        { label: "Null", value: "null" },
+        { label: "Undefined", value: "undefined" },
         { label: "Boolean", value: "boolean" },
         { label: "Number", value: "number" },
         { label: "String", value: "string" },
-        { label: "Undefined", value: "undefined" },
-        { label: "Null", value: "null" },
       ],
       multiple: false,
       defaultValue: setDefaultValue("null", "type", conditions, editIndex),
-      freeText: true,
-    },
-    {
-      type: FieldType.singleSelect,
-      name: "value",
-      multiple: false,
-      options: [
-        { label: "False", value: false },
-        { label: "True", value: true },
-      ],
-      defaultValue: setDefaultValue(false, "value", conditions, editIndex),
-      displayCondition: 'return values.type==="boolean"',
-      label: "Select condition value",
-      required: true,
-      minRows: 2,
+      freeText: false,
       validation: [
         [
           "test",
-          "duplicate-boolen-value",
-          "Value already exist",
-          (value) => setValidation(editIndex, value, conditions),
+          "duplicate-falsey",
+          "Falsy already exist",
+          (value) => setDataTypeValidation(editIndex, value, conditions),
+        ],
+      ],
+    },
+    {
+      type: FieldType.singleSelect,
+      name: "boolean",
+      assistiveText: "Selected boolean type",
+      options: [
+        { label: "False", value: "false" },
+        { label: "True", value: "true" },
+      ],
+      multiple: false,
+      defaultValue: setDefaultValue("false", "type", conditions, editIndex),
+      displayCondition: 'return values.type==="boolean"',
+      freeText: false,
+      validation: [
+        [
+          "test",
+          "duplicate-boolean",
+          "Boolean already exist",
+          (value) => setBooleanValidation(editIndex, value, conditions),
         ],
       ],
     },
@@ -89,15 +71,15 @@ export const conditionSettings = (conditions?: any, editIndex?: number) => {
         { label: "Equal or more than", value: ">=" },
         { label: "More than", value: ">" },
       ],
+      defaultValue: setDefaultValue("==", "value", conditions, editIndex),
       displayCondition: 'return values.type==="number"',
-      defaultValue: setDefaultValue("==", "operator", conditions, editIndex),
       label: "Select operator",
       minRows: 2,
     },
     {
       type: FieldType.shortText,
       format: "number",
-      name: "value",
+      name: "number",
       multiple: false,
       defaultValue: setDefaultValue(0, "value", conditions, editIndex),
       displayCondition: 'return values.type==="number"',
@@ -107,7 +89,7 @@ export const conditionSettings = (conditions?: any, editIndex?: number) => {
     },
     {
       type: FieldType.shortText,
-      name: "value",
+      name: "string",
       label: "Value",
       displayCondition: 'return values.type==="string"',
       defaultValue: setDefaultValue("", "value", conditions, editIndex),
@@ -117,7 +99,7 @@ export const conditionSettings = (conditions?: any, editIndex?: number) => {
           "test",
           "duplicate-value",
           "Value already exist",
-          (value) => setValidation(editIndex, value, conditions),
+          (value) => setValueValidation(editIndex, value, conditions),
         ],
       ],
     },
@@ -127,6 +109,14 @@ export const conditionSettings = (conditions?: any, editIndex?: number) => {
       label: "Label (optional)",
       defaultValue: setDefaultValue("", "label", conditions, editIndex),
       minRows: 2,
+      validation: [
+        [
+          "test",
+          "duplicate-label",
+          "Label already exist",
+          (label) => setLabelValidation(editIndex, label, conditions),
+        ],
+      ],
     },
   ] as Field[];
 };
