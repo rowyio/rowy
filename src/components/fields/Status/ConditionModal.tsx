@@ -1,6 +1,7 @@
 import { FormDialog } from "@rowy/form-builder";
 import { conditionSettings } from "./utils/form";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { formatDataValues } from "./utils/formatDataHelper";
 
 export default function ConditionModal({
   modalState,
@@ -14,7 +15,7 @@ export default function ConditionModal({
   const conditionFields = conditionSettings(conditions, modalState.index);
   const handleSubmit = (data: any) => {
     //create new obj, with init modal values, and update with data values
-    const formatData = { ...modalState.condition, ...data };
+    const formatData = formatDataValues({ ...modalState.condition, ...data });
     if (isEditing) handleSave(formatData);
     else handleAdd(formatData);
   };

@@ -71,7 +71,7 @@ export const conditionSettings = (conditions?: any, editIndex?: number) => {
         { label: "Equal or more than", value: ">=" },
         { label: "More than", value: ">" },
       ],
-      defaultValue: setDefaultValue("==", "value", conditions, editIndex),
+      defaultValue: setDefaultValue("==", "operator", conditions, editIndex),
       displayCondition: 'return values.type==="number"',
       label: "Select operator",
       minRows: 2,

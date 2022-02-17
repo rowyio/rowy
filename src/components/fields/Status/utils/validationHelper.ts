@@ -9,6 +9,7 @@ import _find from "lodash/find";
 
 export function setValueValidation(index, value, conditions) {
   let result;
+  if (!conditions) return true; // if no condition pass validation
   if (!index) result = !_find(conditions, { value: value });
   else {
     const copyConditions = [...conditions];
@@ -20,6 +21,7 @@ export function setValueValidation(index, value, conditions) {
 
 export function setLabelValidation(index, label, conditions) {
   let result;
+  if (!conditions) return true;
   if (!index) result = !_find(conditions, { label: label });
   else {
     const copyConditions = [...conditions];
@@ -31,6 +33,7 @@ export function setLabelValidation(index, label, conditions) {
 
 export function setBooleanValidation(index, value, conditions) {
   let result;
+  if (!conditions) return true;
   const formatConditions = conditions.map((curr) => {
     return { ...curr, value: JSON.stringify(curr.value) };
   });
@@ -46,6 +49,7 @@ export function setBooleanValidation(index, value, conditions) {
 
 export function setDataTypeValidation(index, value, conditions) {
   let result;
+  if (!conditions) return true;
   //We only care about duplicate undefined || null value
   if (value === "boolean" || value === "number" || value === "string") {
     return true;
