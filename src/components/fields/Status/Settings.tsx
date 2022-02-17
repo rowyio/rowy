@@ -37,21 +37,21 @@ export default function Settings({ onChange, config }: ISettingsProps) {
   const [modalState, setModalState] = useState(EMPTY_STATE);
 
   const handleAdd = (condition: any) => {
+    setModalState(EMPTY_STATE);
     const arr = createConditionsArr(condition, conditions);
     onChange("conditions")(arr);
-    setModalState(EMPTY_STATE);
   };
 
   const handleSave = (condition: any) => {
+    setModalState(EMPTY_STATE);
     const arr = updateCondition(condition, conditions, modalState.index);
     onChange("conditions")(arr);
-    setModalState(EMPTY_STATE);
   };
 
   const handleRemove = () => {
+    setModalState(EMPTY_STATE); // reset modal state because onChange updates conditions immediately
     const arr = removeCondition(modalState.index, conditions);
     onChange("conditions")(arr);
-    setModalState(EMPTY_STATE);
   };
 
   const handleClose = () => {

@@ -48,7 +48,7 @@ export const conditionSettings = (conditions?: any, editIndex?: number) => {
         { label: "True", value: "true" },
       ],
       multiple: false,
-      defaultValue: setDefaultValue("false", "type", conditions, editIndex),
+      defaultValue: setDefaultValue("false", "value", conditions, editIndex),
       displayCondition: 'return values.type==="boolean"',
       freeText: false,
       validation: [

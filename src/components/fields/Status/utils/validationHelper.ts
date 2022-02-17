@@ -10,7 +10,8 @@ import _find from "lodash/find";
 export function setValueValidation(index, value, conditions) {
   let result;
   if (!conditions) return true; // if no condition pass validation
-  if (!index) result = !_find(conditions, { value: value });
+  // index is null when adding
+  if (typeof index !== "number") result = !_find(conditions, { value: value });
   else {
     const copyConditions = [...conditions];
     copyConditions.splice(index, 1); // remove curr condition from condition list
@@ -22,7 +23,7 @@ export function setValueValidation(index, value, conditions) {
 export function setLabelValidation(index, label, conditions) {
   let result;
   if (!conditions) return true;
-  if (!index) result = !_find(conditions, { label: label });
+  if (typeof index !== "number") result = !_find(conditions, { label: label });
   else {
     const copyConditions = [...conditions];
     copyConditions.splice(index, 1); // remove curr condition from condition list
@@ -38,7 +39,8 @@ export function setBooleanValidation(index, value, conditions) {
     return { ...curr, value: JSON.stringify(curr.value) };
   });
 
-  if (!index) result = !_find(formatConditions, { value: value });
+  if (typeof index !== "number")
+    result = !_find(formatConditions, { value: value });
   else {
     //const copyConditions = [...formatConditions];
     formatConditions.splice(index, 1); // remove curr condition from condition list
@@ -63,7 +65,8 @@ export function setDataTypeValidation(index, value, conditions) {
     return result;
   });
 
-  if (!index) result = !_find(formatConditions, { value: value });
+  if (typeof index !== "number")
+    result = !_find(formatConditions, { value: value });
   else {
     //const copyConditions = [...formatConditions];
     formatConditions.splice(index, 1); // remove curr condition from condition list

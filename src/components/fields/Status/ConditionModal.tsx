@@ -1,8 +1,8 @@
+import { useState } from "react";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { FormDialog } from "@rowy/form-builder";
 import { conditionSettings } from "./utils/form";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { formatDataValues } from "./utils/formatDataHelper";
-import { useState } from "react";
 
 export default function ConditionModal({
   modalState,
@@ -18,8 +18,7 @@ export default function ConditionModal({
   const handleSubmit = (data: any) => {
     //create new obj, with init modal values, and update with data values
     const formatData = formatDataValues({ ...modalState.condition, ...data });
-    if (isEditing) handleSave(formatData);
-    else handleAdd(formatData);
+    isEditing ? handleSave(formatData) : handleAdd(formatData);
   };
 
   if (!modalState.isOpen) return null;
@@ -54,7 +53,7 @@ export default function ConditionModal({
           values={{}}
           onSubmit={handleRemove}
           SubmitButtonProps={{
-            children: "Confirm",
+            children: "Delete",
           }}
         />
       )}
