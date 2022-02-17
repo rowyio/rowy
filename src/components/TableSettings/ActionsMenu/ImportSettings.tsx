@@ -8,6 +8,7 @@ import { useSnackbar } from "notistack";
 
 import { MenuItem, DialogContentText, FormHelperText } from "@mui/material";
 
+import { analytics } from "@src/analytics";
 import Modal from "@src/components/Modal";
 import DiffEditor from "@src/components/CodeEditor/DiffEditor";
 
@@ -59,8 +60,8 @@ export default function ImportSettings({
   const { enqueueSnackbar } = useSnackbar();
   const { setValue } = useFormMethods;
   const handleImport = () => {
+    analytics.logEvent("import_tableSettings");
     const { id, collection, ...newValues } = JSON.parse(newSettings);
-
     for (const key in newValues) {
       setValue(key, newValues[key], {
         shouldDirty: true,

@@ -19,6 +19,7 @@ import FiltersPopover from "./FiltersPopover";
 import FilterInputs from "./FilterInputs";
 
 import { useFilterInputs, INITIAL_QUERY } from "./useFilterInputs";
+import { analytics } from "@src/analytics";
 import type { TableFilter } from "@src/hooks/useTable";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import { useAppContext } from "@src/contexts/AppContext";
@@ -29,6 +30,11 @@ const shouldDisableApplyButton = (value: any) =>
   typeof value !== "boolean" &&
   typeof value !== "number" &&
   typeof value !== "object";
+
+enum FilterType {
+  yourFilter = "local_filter",
+  tableFilter = "table_filter",
+}
 
 export default function Filters() {
   const { table, tableState, tableActions } = useProjectContext();
@@ -109,12 +115,14 @@ export default function Filters() {
 
   // Save table filters to table schema document
   const setTableFilters = (filters: TableFilter[]) => {
+    analytics.logEvent(FilterType.tableFilter);
     tableActions?.table.updateConfig("filters", filters);
     tableActions?.table.updateConfig("filtersOverridable", canOverrideCheckbox);
   };
   // Save user filters to user document
   // null overrides table filters
   const setUserFilters = (filters: TableFilter[] | null) => {
+    analytics.logEvent(FilterType.yourFilter);
     userDoc.dispatch({
       action: DocActions.update,
       data: {
