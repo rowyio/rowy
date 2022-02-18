@@ -28,7 +28,7 @@ import {
 export default {
   id: "rules",
   shortTitle: "Firestore Rules",
-  title: "Set up Firestore Rules",
+  title: "Set up Firestore rules",
   description: (
     <>
       Rowy configuration is stored in the <code>{CONFIG}</code> collection on

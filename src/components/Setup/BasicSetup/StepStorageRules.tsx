@@ -17,8 +17,8 @@ import {
 
 export default {
   id: "storageRules",
-  shortTitle: "Storage Rules",
-  title: "Set up Firebase Storage Rules",
+  shortTitle: "Storage rules",
+  title: "Set up Firebase Storage rules",
   description:
     "Image and File fields store files in Firebase Storage. Your users will need read and write access.",
   body: StepStorageRules,
@@ -96,7 +96,6 @@ function StepStorageRules({ isComplete, setComplete }: ISetupStepBodyProps) {
               color="primary"
               startIcon={<DoneIcon />}
               onClick={() => setComplete()}
-              sx={{ mt: -0.5 }}
             >
               Mark as done
             </Button>

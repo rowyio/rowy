@@ -33,8 +33,15 @@ import { runRoutes } from "@src/constants/runRoutes";
 
 export default {
   id: "rules",
-  shortTitle: "Firestore Rules",
-  title: "Set up Firestore Rules",
+  shortTitle: "Firestore rules",
+  title: "Set up Firestore rules",
+  description: (
+    <>
+      Rowy configuration is stored in the <code>{CONFIG}</code> collection on
+      Firestore. Your users will need read access to this collection and admins
+      will need write access.
+    </>
+  ),
   body: StepRules,
 } as ISetupStep;
 
@@ -60,11 +67,7 @@ function StepRules({
   const [adminRule, setAdminRule] = useState(true);
   const [showManualMode, setShowManualMode] = useState(false);
 
-  const rules = `${error === "security-rules/not-found" ? RULES_START : ""}${
-    adminRule ? ADMIN_RULES : ""
-  }${REQUIRED_RULES}${RULES_UTILS}${
-    error === "security-rules/not-found" ? RULES_END : ""
-  }`.replace("\n", "");
+  const rules = (adminRule ? ADMIN_RULES : "") + REQUIRED_RULES + RULES_UTILS;
 
   const [currentRules, setCurrentRules] = useState("");
   useEffect(() => {
@@ -91,23 +94,27 @@ function StepRules({
 
   const [newRules, setNewRules] = useState("");
   useEffect(() => {
-    let rulesToInsert = rules;
+    if (!currentRules) {
+      setNewRules(RULES_START + rules + RULES_END);
+    } else {
+      let rulesToInsert = rules;
 
-    if (currentRules.indexOf("function isDocOwner") > -1) {
-      rulesToInsert = rulesToInsert.replace(/function isDocOwner[^}]*}/s, "");
+      if (currentRules.indexOf("function isDocOwner") > -1) {
+        rulesToInsert = rulesToInsert.replace(/function isDocOwner[^}]*}/s, "");
+      }
+      if (currentRules.indexOf("function hasAnyRole") > -1) {
+        rulesToInsert = rulesToInsert.replace(/function hasAnyRole[^}]*}/s, "");
+      }
+
+      let inserted = currentRules.replace(
+        /match\s*\/databases\/\{database\}\/documents\s*\{/,
+        `match /databases/{database}/documents {\n` + rulesToInsert
+      );
+
+      if (hasInsecureRule) inserted = inserted.replace(insecureRuleRegExp, "");
+
+      setNewRules(inserted);
     }
-    if (currentRules.indexOf("function hasAnyRole") > -1) {
-      rulesToInsert = rulesToInsert.replace(/function hasAnyRole[^}]*}/s, "");
-    }
-
-    let inserted = currentRules.replace(
-      /match\s*\/databases\/\{database\}\/documents\s*\{/,
-      `match /databases/{database}/documents {\n` + rulesToInsert
-    );
-
-    if (hasInsecureRule) inserted = inserted.replace(insecureRuleRegExp, "");
-
-    setNewRules(inserted);
   }, [currentRules, rules, hasInsecureRule]);
 
   const [rulesStatus, setRulesStatus] = useState<"LOADING" | string>("");
@@ -168,12 +175,6 @@ function StepRules({
 
   return (
     <>
-      <Typography variant="inherit">
-        Rowy configuration is stored in the <code>{CONFIG}</code> collection on
-        Firestore. Your users will need read access to this collection and
-        admins will need write access.
-      </Typography>
-
       {!hasRules && error !== "security-rules/not-found" && (
         <SetupItem
           status="incomplete"
@@ -190,14 +191,16 @@ function StepRules({
             sx={{ "&&": { ml: -11 / 8, mb: -11 / 8 }, width: "100%" }}
           />
 
-          <Typography>
-            <InfoIcon
-              aria-label="Info"
-              sx={{ fontSize: 18, mr: 11 / 8, verticalAlign: "sub" }}
-            />
-            We removed an insecure rule that allows anyone to access any part of
-            your database
-          </Typography>
+          {hasInsecureRule && (
+            <Typography>
+              <InfoIcon
+                aria-label="Info"
+                sx={{ fontSize: 18, mr: 11 / 8, verticalAlign: "sub" }}
+              />
+              We removed an insecure rule that allows anyone to access any part
+              of your database
+            </Typography>
+          )}
 
           <DiffEditor
             original={currentRules}
@@ -213,17 +216,18 @@ function StepRules({
               rulesStatus !== "LOADING" && rulesStatus ? "error" : undefined
             }
           >
-            Please verify the new rules first.
+            Please verify the new rules are valid first.
           </Typography>
 
           <LoadingButton
             variant="contained"
             color="primary"
-            onClick={setRules}
+            // TODO: onClick={setRules}
+            onClick={() => setComplete()}
             loading={rulesStatus === "LOADING"}
             style={{ position: "sticky", bottom: 8 }}
           >
-            Set Firestore Rules
+            Set Firestore rules
           </LoadingButton>
           {rulesStatus !== "LOADING" && typeof rulesStatus === "string" && (
             <Typography variant="caption" color="error">
@@ -332,7 +336,7 @@ function StepRules({
       )}
 
       {hasRules && (
-        <SetupItem status="complete" title="Firestore Rules are set up." />
+        <SetupItem status="complete" title="Firestore rules are set up." />
       )}
     </>
   );

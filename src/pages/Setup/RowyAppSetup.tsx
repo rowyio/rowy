@@ -5,7 +5,7 @@ import StepWelcome from "@src/components/Setup/RowyAppSetup/StepWelcome";
 import StepOauth from "@src/components/Setup/RowyAppSetup/StepOauth";
 import StepProject from "@src/components/Setup/RowyAppSetup/StepProject";
 import StepRules from "@src/components/Setup/RowyAppSetup/StepRules";
-import StepStorageRules from "@src/components/Setup/BasicSetup/StepStorageRules";
+import StepStorageRules from "@src/components/Setup/RowyAppSetup/StepStorageRules";
 import StepFinish from "@src/components/Setup/BasicSetup/StepFinish";
 
 const steps = [

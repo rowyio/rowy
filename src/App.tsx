@@ -52,7 +52,7 @@ const UserSettingsPage = lazy(() => import("./pages/Settings/UserSettings" /* we
 // prettier-ignore
 const UserManagementPage = lazy(() => import("./pages/Settings/UserManagement" /* webpackChunkName: "UserManagementPage" */));
 // prettier-ignore
-const BasicSetupPage = lazy(() => import("@src/pages/Setup/BasicSetup" /* webpackChunkName: "BasicSetupPage" */));
+const BasicSetupPage = lazy(() => import("@src/pages/Setup/RowyAppSetup" /* webpackChunkName: "BasicSetupPage" */));
 
 export default function App() {
   return (
