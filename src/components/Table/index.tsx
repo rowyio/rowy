@@ -203,7 +203,9 @@ export default function Table() {
       <TableContainer ref={rowsContainerRef} rowHeight={rowHeight}>
         <TableHeader />
 
-        {!tableState.loadingColumns ? (
+        {tableState.loadingColumns ? (
+          <Loading message="Fetching columns" />
+        ) : (
           <DndProvider backend={HTML5Backend}>
             <DataGrid
               onColumnResize={tableActions.column.resize}
@@ -285,8 +287,6 @@ export default function Table() {
               }
             />
           </DndProvider>
-        ) : (
-          <Loading message="Fetching columns" />
         )}
       </TableContainer>
 

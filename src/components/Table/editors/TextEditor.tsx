@@ -1,4 +1,4 @@
-import { useRef, useLayoutEffect, useEffect } from "react";
+import { useRef } from "react";
 import { EditorProps } from "react-data-grid";
 
 import { TextField } from "@mui/material";
@@ -6,21 +6,25 @@ import { TextField } from "@mui/material";
 import { FieldType } from "@src/constants/fields";
 import { getCellValue } from "@src/utils/fns";
 import { useProjectContext } from "@src/contexts/ProjectContext";
+import useOnClickOutside from "@src/hooks/useOnClickOutside";
 
 export default function TextEditor({ row, column }: EditorProps<any>) {
   const defaultValue = getCellValue(row, column.key);
-  /**
-   *  react-data-grid always unmounts and remounts this component, when user hits enter or ecape
-   *  this saves the value when this TextEditor component is unmounted, which occurs when the user hits enter or escape.
-   */
-  const inputRef = useRef<HTMLInputElement>(null);
+
   const { updateCell } = useProjectContext();
-  useLayoutEffect(() => {
-    return () => {
-      const newValue = inputRef.current?.value;
-      if (newValue !== undefined) updateCell?.(row.ref, column.key, newValue);
-    };
-  }, []);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  function handleUpdateCell() {
+    const newValue = inputRef.current?.value;
+    if (newValue !== undefined || newValue !== defaultValue)
+      updateCell?.(row.ref, column.key, newValue);
+  }
+
+  /**
+   *  react-data-grid always unmounts and remounts this component, when user hits enter or escape
+   *  if user clicks outside the cell, update the cell with current value
+   */
+  useOnClickOutside(inputRef, () => handleUpdateCell());
 
   const type = (column as any).config?.renderFieldType ?? (column as any).type;
   let inputType = "text";
@@ -41,6 +45,7 @@ export default function TextEditor({ row, column }: EditorProps<any>) {
   const { maxLength } = (column as any).config;
   return (
     <TextField
+      onBeforeInput={(e) => e.target}
       defaultValue={defaultValue}
       type={inputType}
       fullWidth
@@ -75,18 +80,15 @@ export default function TextEditor({ row, column }: EditorProps<any>) {
           py: 3 / 8,
         },
       }}
-      InputProps={{
-        endAdornment:
-          (column as any).type === FieldType.percentage ? "%" : undefined,
-      }}
       autoFocus
-      onKeyDown={(e) => {
+      onKeyDown={(e: any) => {
         if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
           e.stopPropagation();
         }
-
-        if (e.key === "Escape") {
-          (e.target as any).value = defaultValue;
+        if (e.key === "Enter") {
+          const newValue = inputRef.current?.value;
+          if (newValue !== defaultValue)
+            updateCell?.(row.ref, column.key, newValue);
         }
       }}
     />
