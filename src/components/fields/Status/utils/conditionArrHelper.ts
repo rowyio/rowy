@@ -1,4 +1,4 @@
-export default function createConditionsArr(newCondition, conditions) {
+export function createConditionsArr(newCondition, conditions) {
   let result;
   const noConditions = Boolean(conditions?.length === 0 || !conditions);
   if (noConditions) result = [newCondition];

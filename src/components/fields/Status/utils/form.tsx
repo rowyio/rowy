@@ -1,6 +1,6 @@
 import { Typography } from "@mui/material";
 import { Field, FieldType } from "@rowy/form-builder";
-import { setDefaultValue } from "./defaultValueHelpr";
+import { setDefaultValue } from "./defaultValueHelper";
 import {
   setBooleanValidation,
   setDataTypeValidation,
@@ -8,7 +8,10 @@ import {
   setValueValidation,
 } from "./validationHelper";
 
-export const conditionSettings = (conditions?: any, editIndex?: number) => {
+export const conditionSettings = (
+  conditions?: [{ [key: string]: any }] | undefined,
+  editIndex?: number
+) => {
   return [
     {
       type: FieldType.singleSelect,

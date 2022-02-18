@@ -10,7 +10,7 @@ import _find from "lodash/find";
 export function setValueValidation(index, value, conditions) {
   let result;
   if (!conditions) return true; // if no condition pass validation
-  // index is null when adding
+  // index is null when adding new condition
   if (typeof index !== "number") result = !_find(conditions, { value: value });
   else {
     const copyConditions = [...conditions];
@@ -42,7 +42,6 @@ export function setBooleanValidation(index, value, conditions) {
   if (typeof index !== "number")
     result = !_find(formatConditions, { value: value });
   else {
-    //const copyConditions = [...formatConditions];
     formatConditions.splice(index, 1); // remove curr condition from condition list
     result = !_find(formatConditions, { value: value });
   }

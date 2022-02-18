@@ -3,9 +3,11 @@ import { ISettingsProps } from "../types";
 
 import AddIcon from "@mui/icons-material/Add";
 import Button from "@mui/material/Button";
+
 import { default as List } from "./ConditionList";
 import { default as Modal } from "./ConditionModal";
-import createConditionsArr, {
+import {
+  createConditionsArr,
   removeCondition,
   updateCondition,
 } from "./utils/conditionArrHelper";

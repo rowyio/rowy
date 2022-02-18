@@ -1,7 +1,7 @@
 /**
  * We have to format data value because,
  * duplicate field types with same { name: [value]}  does something to validation
- * we have to name values to booleanValue, stringValue, numberValue to get validation to work
+ * we have to name values to boolean, string, number to get validation to work
  */
 export function formatDataValues(condition) {
   const { type } = condition;

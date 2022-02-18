@@ -1,7 +1,7 @@
 export function setDefaultValue(
   defaultValue: string | number,
   type: string,
-  conditions: [{ [key: string]: any }],
+  conditions?: [{ [key: string]: any }] | undefined,
   index?: number
 ) {
   if (typeof index !== "number") return defaultValue;
@@ -9,17 +9,22 @@ export function setDefaultValue(
    *  Firebase stores value as number, undefined, and null
    *  In order for Form Builder' Field Type to display value, format data to strings
    */
-  const formatConditions = conditions.map((curr) => {
+  const formatConditions = conditions?.map((curr) => {
     let result;
     //cannot stringify sometime that does not exist
-    if (curr.type === undefined) result = { ...curr, value: "undefined" };
-    if (curr.type === null) result = { ...curr, value: "null" };
+    if (curr.type === "undefined") result = { ...curr, value: "undefined" };
+    if (curr.type === "null") result = { ...curr, value: "null" };
     if (curr.type === "boolean")
-      result = { ...curr, value: JSON.stringify(curr.value) };
+      result = { ...curr, value: setBoolean(curr.value) };
     else result = { ...curr };
     return result;
   });
-  const editCondition = formatConditions[index];
+  const editCondition = formatConditions?.[index];
   const fieldTypeValue = editCondition[type];
   return fieldTypeValue;
+}
+
+function setBoolean(value: string) {
+  if (value === "false") return false;
+  else return true;
 }
