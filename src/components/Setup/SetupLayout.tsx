@@ -194,20 +194,28 @@ export default function SetupLayout({
               >
                 {stepId === "welcome" && (
                   <SwitchTransition mode="out-in">
-                    <SlideTransition key={stepId} appear timeout={50}>
+                    <SlideTransition key={stepId} appear timeout={25}>
                       <Logo size={2} />
                     </SlideTransition>
                   </SwitchTransition>
                 )}
 
                 <SwitchTransition mode="out-in">
-                  <SlideTransition key={stepId} appear timeout={100}>
+                  <SlideTransition key={stepId} appear timeout={50}>
                     <Typography
                       variant="h4"
                       component="h1"
                       sx={{ mb: 1, typography: { xs: "h5", md: "h4" } }}
                     >
                       {step.title}
+                    </Typography>
+                  </SlideTransition>
+                </SwitchTransition>
+
+                <SwitchTransition mode="out-in">
+                  <SlideTransition key={stepId} appear timeout={100}>
+                    <Typography variant="inherit">
+                      {step.description}
                     </Typography>
                   </SlideTransition>
                 </SwitchTransition>
@@ -235,16 +243,24 @@ export default function SetupLayout({
                 </SlideTransition>
               </SwitchTransition>
 
-              <SwitchTransition mode="out-in">
-                <SlideTransition key={stepId} appear timeout={100}>
-                  <ScrollableDialogContent
-                    disableTopDivider={step.layout === "centered"}
-                    sx={{ overflowX: "auto" }}
-                  >
+              <ScrollableDialogContent
+                disableTopDivider={step.layout === "centered"}
+                sx={{ overflowX: "auto" }}
+              >
+                <SwitchTransition mode="out-in">
+                  <SlideTransition key={stepId} appear timeout={100}>
+                    <Typography variant="inherit">
+                      {step.description}
+                    </Typography>
+                  </SlideTransition>
+                </SwitchTransition>
+
+                <SwitchTransition mode="out-in">
+                  <SlideTransition key={stepId} appear timeout={150}>
                     <Stack spacing={4}>{body}</Stack>
-                  </ScrollableDialogContent>
-                </SlideTransition>
-              </SwitchTransition>
+                  </SlideTransition>
+                </SwitchTransition>
+              </ScrollableDialogContent>
             </>
           )}
 

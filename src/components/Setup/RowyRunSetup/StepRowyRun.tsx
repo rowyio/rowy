@@ -17,6 +17,8 @@ export default {
   id: "rowyRun",
   shortTitle: "Rowy Run",
   title: "Set up Rowy Run",
+  description:
+    "Rowy Run is a Google Cloud Run instance that provides backend functionality, such as table action scripts, user management, and easy Cloud Function deployment.",
   body: StepRowyRun,
 } as ISetupStep;
 
@@ -91,12 +93,6 @@ ISetupStepBodyProps) {
 
   return (
     <>
-      <Typography variant="inherit">
-        Rowy Run is a Google Cloud Run instance that provides backend
-        functionality, such as table action scripts, user management, and easy
-        Cloud Function deployment.
-      </Typography>
-
       <SetupItem
         status={isValidRowyRunUrl ? "complete" : "incomplete"}
         title={

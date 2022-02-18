@@ -16,6 +16,15 @@ export default {
   layout: "centered",
   shortTitle: "Welcome",
   title: "Welcome",
+  description: (
+    <>
+      Get started with Rowy in just a few minutes.
+      <br />
+      <br />
+      We have no access to your data and it always stays on your Firebase
+      project.
+    </>
+  ),
   body: StepWelcome,
 } as ISetupStep;
 
@@ -24,18 +33,9 @@ function StepWelcome({ isComplete, setComplete }: ISetupStepBodyProps) {
 
   return (
     <>
-      <div>
-        <Typography variant="body1" paragraph>
-          Get started with Rowy in just a few minutes.
-        </Typography>
-        <Typography variant="body1" paragraph>
-          We have no access to your data and it always stays on your Firebase
-          project.
-        </Typography>
-        <Typography variant="body1" paragraph>
-          Project: <code>{projectId}</code>
-        </Typography>
-      </div>
+      <Typography variant="inherit">
+        Project: <code>{projectId}</code>
+      </Typography>
 
       <FormControlLabel
         control={

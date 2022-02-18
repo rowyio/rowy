@@ -29,6 +29,13 @@ export default {
   id: "rules",
   shortTitle: "Firestore Rules",
   title: "Set up Firestore Rules",
+  description: (
+    <>
+      Rowy configuration is stored in the <code>{CONFIG}</code> collection on
+      Firestore. Your users will need read access to this collection and admins
+      will need write access.
+    </>
+  ),
   body: StepRules,
 } as ISetupStep;
 
@@ -47,12 +54,6 @@ function StepRules({ isComplete, setComplete }: ISetupStepBodyProps) {
 
   return (
     <>
-      <Typography variant="inherit">
-        Rowy configuration is stored in the <code>{CONFIG}</code> collection on
-        Firestore. Your users will need read access to this collection and
-        admins will need write access.
-      </Typography>
-
       <SetupItem
         status="incomplete"
         title="Add the following rules to enable access to Rowy configuration:"

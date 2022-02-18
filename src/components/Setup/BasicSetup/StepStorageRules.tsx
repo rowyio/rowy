@@ -19,6 +19,8 @@ export default {
   id: "storageRules",
   shortTitle: "Storage Rules",
   title: "Set up Firebase Storage Rules",
+  description:
+    "Image and File fields store files in Firebase Storage. Your users will need read and write access.",
   body: StepStorageRules,
 } as ISetupStep;
 
@@ -30,11 +32,6 @@ function StepStorageRules({ isComplete, setComplete }: ISetupStepBodyProps) {
 
   return (
     <>
-      <Typography variant="inherit">
-        Image and File fields store files in Firebase Storage. Your users will
-        need read and write access.
-      </Typography>
-
       <SetupItem
         status="incomplete"
         title="Add the following rules to allow users to access Firebase Storage:"

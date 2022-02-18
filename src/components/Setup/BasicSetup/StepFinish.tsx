@@ -18,6 +18,8 @@ export default {
   layout: "centered",
   shortTitle: "Finish",
   title: "You’re all set up!",
+  description:
+    "You can now continue to Rowy and create a table from your Firestore collections.",
   body: StepFinish,
 } as ISetupStep;
 
@@ -37,11 +39,6 @@ function StepFinish() {
 
   return (
     <>
-      <Typography variant="body1" gutterBottom>
-        You can now continue to Rowy and create a table from your Firestore
-        collections.
-      </Typography>
-
       <Stack
         component="fieldset"
         spacing={1}
