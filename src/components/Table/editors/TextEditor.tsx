@@ -16,10 +16,9 @@ export default function TextEditor({ row, column }: EditorProps<any>) {
 
   function handleUpdateCell() {
     const newValue = inputRef.current?.value;
-    if (newValue !== undefined || newValue !== defaultValue)
-      updateCell?.(row.ref, column.key, newValue);
+    if (newValue === defaultValue) return;
+    updateCell?.(row.ref, column.key, newValue);
   }
-
   /**
    *  react-data-grid always unmounts and remounts this component, when user hits enter or escape
    *  if user clicks outside the cell, update the cell with current value
@@ -86,9 +85,7 @@ export default function TextEditor({ row, column }: EditorProps<any>) {
           e.stopPropagation();
         }
         if (e.key === "Enter") {
-          const newValue = inputRef.current?.value;
-          if (newValue !== defaultValue)
-            updateCell?.(row.ref, column.key, newValue);
+          handleUpdateCell();
         }
       }}
     />
