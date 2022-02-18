@@ -32,7 +32,6 @@
     "dompurify": "^2.2.6",
     "file-saver": "^2.0.5",
     "firebase": "8.6.8",
-    "hotkeys-js": "^3.7.2",
     "jotai": "^1.5.3",
     "json-stable-stringify-without-jsonify": "^1.0.1",
     "json2csv": "^5.0.6",

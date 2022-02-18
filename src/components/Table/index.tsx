@@ -35,7 +35,7 @@ import { useContextMenuAtom } from "@src/atoms/ContextMenu";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import useWindowSize from "@src/hooks/useWindowSize";
 import { useSetSelectedCell } from "@src/atoms/ContextMenu";
-import useHotKey from "./useHotKeyHelprs";
+import useHotKey from "./useHotKeyHelpers";
 
 export type TableColumn = Column<any> & {
   isNew?: boolean;
