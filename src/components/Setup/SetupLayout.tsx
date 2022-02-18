@@ -179,7 +179,7 @@ export default function SetupLayout({
           )}
 
           {step.layout === "centered" ? (
-            <ScrollableDialogContent disableTopDivider>
+            <ScrollableDialogContent disableTopDivider disableBottomDivider>
               <Stack
                 alignItems="center"
                 justifyContent="center"
