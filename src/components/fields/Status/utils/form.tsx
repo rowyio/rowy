@@ -88,7 +88,7 @@ export const conditionSettings = (
       displayCondition: 'return values.type==="number"',
       label: "Value",
       minRows: 2,
-      //TODO validation by watching value of operator field and number field and comparing agaisnt existing value
+      //TODO validation by watching value of operator field and number field and comparing against existing value
     },
     {
       type: FieldType.shortText,
