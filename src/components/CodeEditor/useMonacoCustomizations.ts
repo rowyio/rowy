@@ -1,4 +1,9 @@
 import { useEffect } from "react";
+import {
+  quicktype,
+  InputData,
+  jsonInputForTargetLanguage,
+} from "quicktype-core";
 
 import { useMonaco } from "@monaco-editor/react";
 import type { languages } from "monaco-editor/esm/vs/editor/editor.api";
@@ -135,6 +140,35 @@ export default function useMonacoCustomizations({
     }
   }, [monaco, stringifiedDiagnosticsOptions]);
 
+  const addDef = async (columnKey, interfaceName) => {
+    // add delay
+    const samples = tableState?.rows
+      .map((row) => row[columnKey])
+      .filter((entry) => entry !== undefined)
+      .map((entry) => JSON.stringify(entry));
+    if (!samples || samples.length === 0) {
+      monaco?.languages.typescript.javascriptDefaults.addExtraLib(
+        `type ${interfaceName} = any;`
+      );
+      return;
+    } else {
+      const jsonInput = jsonInputForTargetLanguage("typescript");
+      await jsonInput.addSource({
+        name: interfaceName,
+        samples,
+      });
+      const inputData = new InputData();
+      inputData.addInput(jsonInput);
+      const result = await quicktype({
+        inputData,
+        lang: "typescript",
+        rendererOptions: { "just-types": "true" },
+      });
+      const newLib = result.lines.join("\n").replaceAll("export ", "");
+      console.log(newLib);
+      monaco?.languages.typescript.javascriptDefaults.addExtraLib(newLib);
+    }
+  };
   // Set row definitions
   useEffect(() => {
     if (!monaco) return;
@@ -144,6 +178,16 @@ export default function useMonacoCustomizations({
         Object.keys(tableState?.columns!)
           .map((columnKey: string) => {
             const column = tableState?.columns[columnKey];
+            if (
+              column.type === "JSON" ||
+              (column.type === "DERIVATIVE" &&
+                column.config.renderFieldType === "JSON")
+            ) {
+              const interfaceName =
+                columnKey[0].toUpperCase() + columnKey.slice(1);
+              addDef(columnKey, interfaceName);
+              return `static "${columnKey}": ${interfaceName}`;
+            }
             return `static "${columnKey}": ${getFieldProp(
               "dataType",
               column.type
