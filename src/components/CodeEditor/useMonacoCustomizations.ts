@@ -115,7 +115,6 @@ export default function useMonacoCustomizations({
   useEffect(() => {
     if (!monaco) return;
     if (!extraLibs) return;
-
     try {
       monaco.languages.typescript.javascriptDefaults.addExtraLib(
         extraLibs.join("\n"),
@@ -140,7 +139,7 @@ export default function useMonacoCustomizations({
     }
   }, [monaco, stringifiedDiagnosticsOptions]);
 
-  const addDef = async (columnKey, interfaceName) => {
+  const addJsonFieldDefinition = async (columnKey, interfaceName) => {
     // add delay
     const samples = tableState?.rows
       .map((row) => row[columnKey])
@@ -185,7 +184,7 @@ export default function useMonacoCustomizations({
             ) {
               const interfaceName =
                 columnKey[0].toUpperCase() + columnKey.slice(1);
-              addDef(columnKey, interfaceName);
+              addJsonFieldDefinition(columnKey, interfaceName);
               return `static "${columnKey}": ${interfaceName}`;
             }
             return `static "${columnKey}": ${getFieldProp(
