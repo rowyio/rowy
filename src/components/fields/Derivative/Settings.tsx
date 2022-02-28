@@ -15,6 +15,11 @@ const CodeEditor = lazy(
   () =>
     import("@src/components/CodeEditor" /* webpackChunkName: "CodeEditor" */)
 );
+const diagnosticsOptions = {
+  noSemanticValidation: false,
+  noSyntaxValidation: false,
+  noSuggestionDiagnostics: true,
+};
 
 export default function Settings({
   config,
@@ -30,6 +35,20 @@ export default function Settings({
     .filter((column) => column.fieldName !== fieldName)
     .filter((column) => column.type !== FieldType.subTable)
     .map((c) => ({ label: c.name, value: c.key }));
+  console.log({ config });
+  const code = config.code
+    ? config.code
+    : config?.script
+    ? `const derivative:Derivative = async ({row,ref,db,storage,auth})=>{
+    ${config.script.replace(/utilFns.getSecret/g, "rowy.secrets.getSecret")}
+  }`
+    : `const derivative:Derivative = async ({row,ref,db,storage,auth})=>{
+    // Write your derivative code here
+    // for example:
+    // const sum = row.a + row.b;
+    // return sum;
+    // checkout the documentation for more info: https://docs.rowy.io/field-types/derivative
+  }`;
 
   return (
     <>
@@ -92,7 +111,11 @@ export default function Settings({
         <InputLabel>Derivative script</InputLabel>
         <CodeEditorHelper docLink={WIKI_LINKS.fieldTypesDerivative} />
         <Suspense fallback={<FieldSkeleton height={200} />}>
-          <CodeEditor value={config.script} onChange={onChange("script")} />
+          <CodeEditor
+            diagnosticsOptions={diagnosticsOptions}
+            value={code}
+            onChange={onChange("code")}
+          />
         </Suspense>
       </div>
     </>

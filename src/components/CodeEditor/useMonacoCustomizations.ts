@@ -23,6 +23,7 @@ import firebaseStorageDefs from "!!raw-loader!./firebaseStorage.d.ts";
 import utilsDefs from "!!raw-loader!./utils.d.ts";
 import rowyUtilsDefs from "!!raw-loader!./rowy.d.ts";
 import extensionsDefs from "!!raw-loader!./extensions.d.ts";
+import derivativeDefs from "!!raw-loader!./derivative.d.ts";
 
 export interface IUseMonacoCustomizationsProps {
   minHeight?: number;
@@ -103,6 +104,9 @@ export default function useMonacoCustomizations({
         "ts:filename/utils.d.ts"
       );
       monaco.languages.typescript.javascriptDefaults.addExtraLib(rowyUtilsDefs);
+      monaco.languages.typescript.javascriptDefaults.addExtraLib(
+        derivativeDefs
+      );
     } catch (error) {
       console.error(
         "An error occurred during initialization of Monaco: ",
