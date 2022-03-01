@@ -55,6 +55,7 @@ export default function BasicContextMenuActions(
 
   const handlePaste = async () => {
     try {
+      if (!selectedCol) return;
       const text = await navigator.clipboard.readText();
       const cellDataType = getFieldProp("dataType", getColumnType(selectedCol));
       let parsed;

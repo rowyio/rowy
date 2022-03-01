@@ -6,11 +6,12 @@ import { TextField } from "@mui/material";
 import { FieldType } from "@src/constants/fields";
 import { getCellValue } from "@src/utils/fns";
 import { useProjectContext } from "@src/contexts/ProjectContext";
+import { getColumnType } from "@src/components/fields";
 
 export default function TextEditor({ row, column }: EditorProps<any>) {
   const { updateCell } = useProjectContext();
 
-  const type = (column as any).config?.renderFieldType ?? (column as any).type;
+  const type = getColumnType(column as any);
 
   const cellValue = getCellValue(row, column.key);
   const defaultValue =

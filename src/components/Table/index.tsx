@@ -25,7 +25,7 @@ import FinalColumn from "./formatters/FinalColumn";
 import TableRow from "./TableRow";
 import BulkActions from "./BulkActions";
 
-import { getFieldProp } from "@src/components/fields";
+import { getColumnType, getFieldProp } from "@src/components/fields";
 import { FieldType } from "@src/constants/fields";
 import { formatSubTableName } from "@src/utils/fns";
 
@@ -76,18 +76,12 @@ export default function Table() {
           frozen: column.fixed,
           headerRenderer: ColumnHeader,
           formatter:
-            getFieldProp(
-              "TableCell",
-              column.config?.renderFieldType ?? column.type
-            ) ??
+            getFieldProp("TableCell", getColumnType(column)) ??
             function InDev() {
               return null;
             },
           editor:
-            getFieldProp(
-              "TableEditor",
-              column.config?.renderFieldType ?? column.type
-            ) ??
+            getFieldProp("TableEditor", getColumnType(column)) ??
             function InDev() {
               return null;
             },

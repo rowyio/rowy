@@ -14,7 +14,7 @@ import { useTheme } from "@mui/material";
 import type { SystemStyleObject, Theme } from "@mui/system";
 
 import { useProjectContext } from "@src/contexts/ProjectContext";
-import { getFieldProp } from "@src/components/fields";
+import { getColumnType, getFieldProp } from "@src/components/fields";
 
 /* eslint-disable import/no-webpack-loader-syntax */
 import firestoreDefs from "!!raw-loader!./firestore.d.ts";
@@ -181,11 +181,7 @@ export default function useMonacoCustomizations({
         Object.keys(tableState?.columns!)
           .map((columnKey: string) => {
             const column = tableState?.columns[columnKey];
-            if (
-              column.type === "JSON" ||
-              (column.type === "DERIVATIVE" &&
-                column.config.renderFieldType === "JSON")
-            ) {
+            if (getColumnType(column) === "JSON") {
               const interfaceName =
                 columnKey[0].toUpperCase() + columnKey.slice(1);
               addJsonFieldDefinition(columnKey, interfaceName);

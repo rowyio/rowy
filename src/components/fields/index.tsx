@@ -121,9 +121,12 @@ export const hasDataTypes = (dataTypes: string[]) => {
   );
 };
 
-export const getColumnType = (column?: TableColumn) =>
-  !column
-    ? null
-    : column.type === FieldType.derivative
+export const getColumnType = (column: {
+  type: FieldType;
+  config: {
+    renderFieldType: FieldType;
+  };
+}) =>
+  column.type === FieldType.derivative
     ? column.config.renderFieldType
     : column.type;
