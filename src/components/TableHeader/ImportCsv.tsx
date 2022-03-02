@@ -1,8 +1,9 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import clsx from "clsx";
 import parse from "csv-parse";
 import { useDropzone } from "react-dropzone";
 import { useDebouncedCallback } from "use-debounce";
+import { useSnackbar } from "notistack";
 
 import { makeStyles, createStyles } from "@mui/styles";
 import {
@@ -27,6 +28,7 @@ import ImportIcon from "@src/assets/icons/Import";
 import FileUploadIcon from "@src/assets/icons/Upload";
 import CheckIcon from "@mui/icons-material/CheckCircle";
 
+import { analytics } from "@src/analytics";
 import ImportCsvWizard, {
   IImportCsvWizardProps,
 } from "@src/components/Wizards/ImportCsvWizard";
@@ -79,6 +81,17 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
+export enum ImportType {
+  csv = "csv",
+  tsv = "tsv",
+}
+
+export enum ImportMethod {
+  paste = "paste",
+  upload = "upload",
+  url = "url",
+}
+
 export interface IImportCsvProps {
   render?: (
     onClick: (event: React.MouseEvent<HTMLButtonElement>) => void
@@ -90,7 +103,10 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
   const classes = useStyles();
   const { userClaims } = useAppContext();
   const { table } = useProjectContext();
+  const { enqueueSnackbar } = useSnackbar();
 
+  const importTypeRef = useRef(ImportType.csv);
+  const importMethodRef = useRef(ImportMethod.upload);
   const [open, setOpen] = useState<HTMLButtonElement | null>(null);
   const [tab, setTab] = useState("upload");
   const [csvData, setCsvData] =
@@ -128,21 +144,53 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
     });
 
   const onDrop = useCallback(async (acceptedFiles) => {
-    const file = acceptedFiles[0];
-    const reader = new FileReader();
-    reader.onload = (event: any) => parseCsv(event.target.result);
-    reader.readAsText(file);
+    try {
+      const file = acceptedFiles[0];
+      const reader = new FileReader();
+      reader.onload = (event: any) => parseCsv(event.target.result);
+      reader.readAsText(file);
+      importTypeRef.current =
+        file.type === "text/tab-separated-values"
+          ? ImportType.tsv
+          : ImportType.csv;
+    } catch (error) {
+      enqueueSnackbar(`Please import a .tsv or .csv file`, {
+        variant: "error",
+        anchorOrigin: {
+          vertical: "top",
+          horizontal: "center",
+        },
+      });
+    }
   }, []);
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     multiple: false,
     accept: ["text/csv", "text/tab-separated-values"],
   });
 
-  const [handlePaste] = useDebouncedCallback(
-    (value: string) => parseCsv(value),
-    1000
-  );
+  function setDataTypeRef(data: string) {
+    const getFirstLine = data?.match(/^(.*)/)?.[0];
+    /**
+     *  Catching edge case with regex
+     *  EG: "hello\tworld"\tFirst
+     *  - find \t between quotes, and replace with '\s'
+     *  - w/ the \t pattern test it against the formatted string
+     */
+    const strInQuotes = /"(.*?)"/;
+    const tabsWithSpace = (str: string) => str.replace("\t", "s");
+    const formatString =
+      getFirstLine?.replace(strInQuotes, tabsWithSpace) ?? "";
+    const tabPattern = /\t/;
+    return tabPattern.test(formatString)
+      ? (importTypeRef.current = ImportType.tsv)
+      : (importTypeRef.current = ImportType.csv);
+  }
+  const [handlePaste] = useDebouncedCallback((value: string) => {
+    parseCsv(value);
+    setDataTypeRef(value);
+  }, 1000);
 
   const [loading, setLoading] = useState(false);
   const [handleUrl] = useDebouncedCallback((value: string) => {
@@ -152,6 +200,7 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
       .then((res) => res.text())
       .then((data) => {
         parseCsv(data);
+        setDataTypeRef(data);
         setLoading(false);
       })
       .catch((e) => {
@@ -204,9 +253,21 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
             }
             variant="fullWidth"
           >
-            <Tab label="Upload" value="upload" />
-            <Tab label="Paste" value="paste" />
-            <Tab label="URL" value="url" />
+            <Tab
+              label="Upload"
+              value="upload"
+              onClick={() => (importMethodRef.current = ImportMethod.upload)}
+            />
+            <Tab
+              label="Paste"
+              value="paste"
+              onClick={() => (importMethodRef.current = ImportMethod.paste)}
+            />
+            <Tab
+              label="URL"
+              value="url"
+              onClick={() => (importMethodRef.current = ImportMethod.url)}
+            />
           </TabList>
           <Divider style={{ marginTop: -1 }} />
 
@@ -295,7 +356,12 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
           color="primary"
           disabled={!validCsv}
           className={classes.continueButton}
-          onClick={() => setOpenWizard(true)}
+          onClick={() => {
+            setOpenWizard(true);
+            analytics.logEvent(`import_${importMethodRef.current}`, {
+              type: importTypeRef.current,
+            });
+          }}
         >
           Continue
         </Button>
@@ -303,6 +369,7 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
 
       {openWizard && csvData && (
         <ImportCsvWizard
+          importType={importTypeRef.current}
           handleClose={() => setOpenWizard(false)}
           csvData={csvData}
         />

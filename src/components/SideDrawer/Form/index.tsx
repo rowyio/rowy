@@ -2,6 +2,7 @@ import { createElement, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import _sortBy from "lodash/sortBy";
 import _isEmpty from "lodash/isEmpty";
+import _set from "lodash/set";
 import createPersistedState from "use-persisted-state";
 
 import { Stack, FormControlLabel, Switch } from "@mui/material";
@@ -44,7 +45,16 @@ export default function Form({ values }: IFormProps) {
   // Get initial values from fields config. This won’t be written to the db
   // when the SideDrawer is opened. Only dirty fields will be written
   const initialValues = fields.reduce(
-    (a, { key, type }) => ({ ...a, [key]: getFieldProp("initialValue", type) }),
+    (a, { key, type }) => {
+      const initialValue = getFieldProp("initialValue", type);
+      const nextValues = { ...a };
+      if (key.indexOf('.') !== -1) {
+        _set(nextValues, key, initialValue);
+      } else {
+        nextValues[key] = initialValue;
+      }
+      return nextValues;
+    },
     {}
   );
   const { ref: docRef, ...rowValues } = values;

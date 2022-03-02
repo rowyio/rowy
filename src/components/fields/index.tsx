@@ -31,7 +31,7 @@ import Json from "./Json";
 import Code from "./Code";
 import Action from "./Action";
 import Derivative from "./Derivative";
-import Aggregate from "./Aggregate";
+// import Aggregate from "./Aggregate";
 import CreatedBy from "./CreatedBy";
 import UpdatedBy from "./UpdatedBy";
 import CreatedAt from "./CreatedAt";
@@ -77,7 +77,7 @@ export const FIELDS: IFieldConfig[] = [
   // CLOUD FUNCTION
   Action,
   Derivative,
-  Aggregate,
+  // Aggregate,
   Status,
   // AUDITING
   CreatedBy,
