@@ -52,7 +52,7 @@ const UserSettingsPage = lazy(() => import("./pages/Settings/UserSettings" /* we
 // prettier-ignore
 const UserManagementPage = lazy(() => import("./pages/Settings/UserManagement" /* webpackChunkName: "UserManagementPage" */));
 // prettier-ignore
-const BasicSetupPage = lazy(() => import("@src/pages/Setup/RowyAppSetup" /* webpackChunkName: "BasicSetupPage" */));
+const SetupPage = lazy(() => import("@src/pages/Setup" /* webpackChunkName: "SetupPage" */));
 
 export default function App() {
   return (
@@ -97,7 +97,7 @@ export default function App() {
                           <Route
                             exact
                             path={routes.setup}
-                            render={() => <BasicSetupPage />}
+                            render={() => <SetupPage />}
                           />
                           <Route
                             exact
