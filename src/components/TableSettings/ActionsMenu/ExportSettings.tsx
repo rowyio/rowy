@@ -6,6 +6,7 @@ import { useSnackbar } from "notistack";
 
 import { MenuItem, DialogContentText, LinearProgress } from "@mui/material";
 
+import { analytics } from "@src/analytics";
 import Modal from "@src/components/Modal";
 import CodeEditor from "@src/components/CodeEditor";
 
@@ -49,6 +50,7 @@ export default function ExportSettings({
 
   const { enqueueSnackbar } = useSnackbar();
   const handleExport = () => {
+    analytics.logEvent("export_tableSettings");
     navigator.clipboard.writeText(formattedJson);
     enqueueSnackbar("Copied to clipboard");
     handleClose();
