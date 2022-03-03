@@ -1,7 +1,7 @@
 /**
  * utility functions
  */
-declare namespace utilFns {
+declare namespace RULES_UTILS {
   /**
    * Sends out an email through sendGrid
    */

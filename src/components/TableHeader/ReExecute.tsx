@@ -9,6 +9,7 @@ import { isCollectionGroup } from "@src/utils/fns";
 import CircularProgressOptical from "@src/components/CircularProgressOptical";
 
 import Modal from "@src/components/Modal";
+import { useRowyRunModal } from "@src/atoms/RowyRunModal";
 
 export default function ReExecute() {
   const [open, setOpen] = useState(false);
@@ -17,7 +18,18 @@ export default function ReExecute() {
     setOpen(false);
   };
 
-  const { tableState } = useProjectContext();
+  const { tableState, settings } = useProjectContext();
+
+  const openRowyRunModal = useRowyRunModal();
+  if (!settings?.rowyRunUrl)
+    return (
+      <TableHeaderButton
+        title="Force refresh"
+        onClick={() => openRowyRunModal()}
+        icon={<LoopIcon />}
+      />
+    );
+
   const query: any = isCollectionGroup()
     ? db.collectionGroup(tableState?.tablePath!)
     : db.collection(tableState?.tablePath!);

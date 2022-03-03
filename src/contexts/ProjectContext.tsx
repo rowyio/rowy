@@ -367,6 +367,7 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
         auditChange("DELETE_ROW", rowId, {})
       );
   };
+
   // rowyRun access
   const _rowyRun: IProjectContext["rowyRun"] = async (args) => {
     const { service, ...rest } = args;
@@ -382,20 +383,7 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
         ...rest,
       });
     } else {
-      enqueueSnackbar(`Rowy Run${service ? ` ${service}` : ""} is not set up`, {
-        variant: "error",
-        action: (
-          <Button
-            href={WIKI_LINKS.rowyRun}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Docs
-            <InlineOpenInNewIcon />
-          </Button>
-        ),
-      });
-      return { success: false, error: "rowyRun is not setup" };
+      console.log("Rowy Run is not set up", args);
     }
   };
 

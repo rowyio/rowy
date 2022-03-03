@@ -1,6 +1,7 @@
 import { lazy, Suspense, useState } from "react";
 import _get from "lodash/get";
 import stringify from "json-stable-stringify-without-jsonify";
+import { Link } from "react-router-dom";
 
 import {
   Stack,
@@ -13,7 +14,7 @@ import {
   Radio,
   Typography,
   InputLabel,
-  Link,
+  Link as MuiLink,
   Checkbox,
   FormHelperText,
   Fab,
@@ -32,6 +33,7 @@ import FormFieldSnippets from "./FormFieldSnippets";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
 import { useAppContext } from "@src/contexts/AppContext";
+import { routes } from "constants/routes";
 
 const CodeEditor = lazy(
   () =>
@@ -39,15 +41,8 @@ const CodeEditor = lazy(
 );
 
 const Settings = ({ config, onChange }) => {
-  const { tableState, roles } = useProjectContext();
+  const { tableState, roles, settings } = useProjectContext();
   const { projectId } = useAppContext();
-  const [activeStep, setActiveStep] = useState<
-    "requirements" | "friction" | "action" | "undo" | "customization"
-  >("requirements");
-  const steps =
-    config.isActionScript && _get(config, "undo.enabled")
-      ? ["requirements", "friction", "action", "undo", "customization"]
-      : ["requirements", "friction", "action", "customization"];
 
   const columnOptions = Object.values(tableState?.columns ?? {}).map((c) => ({
     label: c.name,
@@ -260,17 +255,19 @@ const Settings = ({ config, onChange }) => {
                         <Typography variant="caption" color="textSecondary">
                           Write JavaScript code below that will be executed by
                           Rowy Run.{" "}
-                          <Link
-                            href={WIKI_LINKS.rowyRun}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            Requires Rowy Run setup
-                            <InlineOpenInNewIcon />
-                          </Link>
+                          {!settings?.rowyRunUrl && (
+                            <MuiLink
+                              component={Link}
+                              to={routes.projectSettings + "#rowyRun"}
+                              color="error"
+                            >
+                              Requires Rowy Run setup&nbsp;→
+                            </MuiLink>
+                          )}
                         </Typography>
                       </>
                     }
+                    disabled={!settings?.rowyRunUrl}
                   />
                   <FormControlLabel
                     value="cloudFunction"
@@ -280,14 +277,14 @@ const Settings = ({ config, onChange }) => {
                         <Typography variant="inherit">Callable</Typography>
                         <Typography variant="caption" color="textSecondary">
                           A{" "}
-                          <Link
+                          <MuiLink
                             href="https://firebase.google.com/docs/functions/callable"
                             target="_blank"
                             rel="noopener noreferrer"
                           >
                             callable function
                             <InlineOpenInNewIcon />
-                          </Link>{" "}
+                          </MuiLink>{" "}
                           you’ve deployed on your Firestore or Google Cloud
                           project
                         </Typography>
@@ -309,25 +306,25 @@ const Settings = ({ config, onChange }) => {
                     <>
                       Write the name of the callable function you’ve deployed to
                       your project.{" "}
-                      <Link
+                      <MuiLink
                         href={`https://console.firebase.google.com/project/${projectId}/functions/list`}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
                         View your callable functions
                         <InlineOpenInNewIcon />
-                      </Link>
+                      </MuiLink>
                       <br />
                       Your callable function must be compatible with Rowy Action
                       columns.{" "}
-                      <Link
+                      <MuiLink
                         href={WIKI_LINKS.fieldTypesAction + "#callable"}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
                         View requirements
                         <InlineOpenInNewIcon />
-                      </Link>
+                      </MuiLink>
                     </>
                   }
                 />

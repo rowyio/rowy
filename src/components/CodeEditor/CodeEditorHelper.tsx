@@ -35,8 +35,8 @@ export default function CodeEditorHelper({
       description: `firebase Storage can be accessed through this, storage.bucket() returns default storage bucket of the firebase project.`,
     },
     {
-      key: "utilFns",
-      description: `utilFns provides a set of functions that are commonly used, such as easy access to GCP Secret Manager`,
+      key: "RULES_UTILS",
+      description: `RULES_UTILS provides a set of functions that are commonly used, such as easy access to GCP Secret Manager`,
     },
   ];
 
