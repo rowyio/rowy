@@ -33,16 +33,20 @@ export default function Settings({
   onBlur,
   errors,
 }: ISettingsProps) {
-  const { tableState } = useProjectContext();
+  const { tableState, compatibleRowyRunVersion } = useProjectContext();
+
   if (!tableState?.columns) return <></>;
   const columns = Object.values(tableState.columns);
   const returnType = getFieldProp("dataType", config.renderFieldType) ?? "any";
-  console.log({ returnType, r: config.renderFieldType });
   const columnOptions = columns
     .filter((column) => column.fieldName !== fieldName)
     .filter((column) => column.type !== FieldType.subTable)
     .map((c) => ({ label: c.name, value: c.key }));
-  const code = config.derivativeFn
+
+  const functionBodyOnly = compatibleRowyRunVersion!({ maxVersion: "1.4.0" });
+  const code = functionBodyOnly
+    ? config?.script
+    : config.derivativeFn
     ? config.derivativeFn
     : config?.script
     ? `const derivative:Derivative = async ({row,ref,db,storage,auth})=>{
@@ -118,7 +122,9 @@ export default function Settings({
         <CodeEditorHelper docLink={WIKI_LINKS.fieldTypesDerivative} />
         <Suspense fallback={<FieldSkeleton height={200} />}>
           <CodeEditor
-            diagnosticsOptions={diagnosticsOptions}
+            diagnosticsOptions={
+              functionBodyOnly ? undefined : diagnosticsOptions
+            }
             value={code}
             extraLibs={[
               derivativeDefs.replace(
@@ -126,7 +132,7 @@ export default function Settings({
                 `${returnType} | Promise<${returnType}>`
               ),
             ]}
-            onChange={onChange("code")}
+            onChange={onChange(functionBodyOnly ? "script" : "code")}
           />
         </Suspense>
       </div>

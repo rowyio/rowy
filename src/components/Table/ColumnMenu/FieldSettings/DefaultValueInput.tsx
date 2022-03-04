@@ -15,6 +15,7 @@ import { WIKI_LINKS } from "@src/constants/externalLinks";
 import { name } from "@root/package.json";
 /* eslint-disable import/no-webpack-loader-syntax */
 import defaultValueDefs from "!!raw-loader!./defaultValue.d.ts";
+import { useProjectContext } from "@src/contexts/ProjectContext";
 const _CodeEditor = lazy(
   () =>
     import("@src/components/CodeEditor" /* webpackChunkName: "CodeEditor" */)
@@ -31,14 +32,19 @@ export interface IDefaultValueInputProps extends IMenuModalProps {
 }
 
 const CodeEditor = ({ type, config, handleChange }) => {
+  const { compatibleRowyRunVersion } = useProjectContext();
+  const functionBodyOnly = compatibleRowyRunVersion!({ maxVersion: "1.4.0" });
   const returnType = getFieldProp("dataType", type) ?? "any";
-  const defaultValueFn = config.defaultValue?.defaultValueFn
-    ? config.defaultValue?.defaultValueFn
+
+  const dynamicValueFn = functionBodyOnly
+    ? config.defaultValue?.script
+    : config.defaultValue?.dynamicValueFn
+    ? config.defaultValue?.dynamicValueFn
     : config.defaultValue?.script
-    ? `const defaultValueFn : DefaultValue = async ({row,ref,db,storage,auth})=>{
+    ? `const dynamicValueFn : DefaultValue = async ({row,ref,db,storage,auth})=>{
     ${config.defaultValue.script}
     }`
-    : `const defaultValueFn: DefaultValue = async ({row,ref,db,storage,auth})=>{
+    : `const dynamicValueFn : DefaultValue = async ({row,ref,db,storage,auth})=>{
     // Write your default value code here
     // for example:
     // generate random hex color
@@ -48,15 +54,17 @@ const CodeEditor = ({ type, config, handleChange }) => {
   }`;
   return (
     <_CodeEditor
-      value={defaultValueFn}
-      diagnosticsOptions={diagnosticsOptions}
+      value={dynamicValueFn}
+      diagnosticsOptions={functionBodyOnly ? undefined : diagnosticsOptions}
       extraLibs={[
         defaultValueDefs.replace(
           `"PLACEHOLDER_OUTPUT_TYPE"`,
           `${returnType} | Promise<${returnType}>`
         ),
       ]}
-      onChange={handleChange("defaultValue.defaultValueFn")}
+      onChange={handleChange(
+        functionBodyOnly ? "defaultValue.script" : "defaultValue.dynamicValueFn"
+      )}
     />
   );
 };

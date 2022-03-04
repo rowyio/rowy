@@ -34,6 +34,7 @@ import { WIKI_LINKS } from "@src/constants/externalLinks";
 import { useAppContext } from "@src/contexts/AppContext";
 /* eslint-disable import/no-webpack-loader-syntax */
 import actionDefs from "!!raw-loader!./action.d.ts";
+import { RUN_ACTION_TEMPLATE, UNDO_ACTION_TEMPLATE } from "./templates";
 
 const diagnosticsOptions = {
   noSemanticValidation: false,
@@ -47,11 +48,12 @@ const CodeEditor = lazy(
 );
 
 const Settings = ({ config, onChange }) => {
-  const { tableState, roles } = useProjectContext();
+  const { tableState, roles, compatibleRowyRunVersion } = useProjectContext();
   const { projectId } = useAppContext();
   const [activeStep, setActiveStep] = useState<
     "requirements" | "friction" | "action" | "undo" | "customization"
   >("requirements");
+  const functionBodyOnly = compatibleRowyRunVersion!({ maxVersion: "1.4.0" });
   const steps =
     config.isActionScript && _get(config, "undo.enabled")
       ? ["requirements", "friction", "action", "undo", "customization"]
@@ -95,72 +97,25 @@ const Settings = ({ config, onChange }) => {
       typeof config.confirmation === "string" &&
       config.confirmation !== "");
 
-  const runFn = config.runFn
+  const runFn = functionBodyOnly
+    ? config?.script
+    : config.runFn
     ? config.derivativeFn
     : config?.script
     ? `const action:Action = async ({row,ref,db,storage,auth,actionParams,user}) => {
       ${config.script.replace(/utilFns.getSecret/g, "rowy.secrets.getSecret")}
     }`
-    : `const action:Action = async ({row,ref,db,storage,auth,actionParams,user}) => {
-      // Write your action code here
-      // for example:
-      // const authToken = await rowy.secrets.getSecret("service")
-      // try {
-      // const resp = await fetch('https://example.com/api/v1/users/'+ref.id,{
-      //   method: 'PUT',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //     'Authorization': authToken
-      //   },
-      //   body: JSON.stringify(row)
-      // })
-      // 
-      // return {
-      //   success: true,
-      //   message: 'User updated successfully on example service',  
-      //   status: "upto date"
-      // }
-      // } catch (error) {
-      //   return {
-      //     success: false,
-      //     message: 'User update failed on example service',
-      //     }
-      // }
-      // checkout the documentation for more info: https://docs.rowy.io/field-types/action#script
-    }`;
+    : RUN_ACTION_TEMPLATE;
 
-  const undoFn = config.undoFn
+  const undoFn = functionBodyOnly
+    ? _get(config, "undo.script")
+    : config.undoFn
     ? config.undoFn
     : _get(config, "undo.script")
-    ? `const action:Action = async ({row,ref,db,storage,auth,actionParams,user}) => {
+    ? `const action : Action = async ({row,ref,db,storage,auth,actionParams,user}) => {
     ${_get(config, "undo.script")}
   }`
-    : `const action:Action = async ({row,ref,db,storage,auth,actionParams,user}) => {
-    // Write your undo code here
-    // for example:
-    // const authToken = await rowy.secrets.getSecret("service")
-    // try {
-    // const resp = await fetch('https://example.com/api/v1/users/'+ref.id,{
-    //   method: 'DELETE',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     'Authorization': authToken
-    //   },
-    //   body: JSON.stringify(row)
-    // })
-    //
-    // return {
-    //   success: true,
-    //   message: 'User deleted successfully on example service',
-    //   status: null
-    // }
-    // } catch (error) {
-    //   return {
-    //     success: false,
-    //     message: 'User delete failed on example service',
-    //     }
-    // }
-  }`;
+    : UNDO_ACTION_TEMPLATE;
   return (
     <SteppedAccordion
       steps={[
@@ -414,9 +369,15 @@ const Settings = ({ config, onChange }) => {
                       <CodeEditor
                         minHeight={200}
                         value={runFn}
-                        onChange={onChange("runFn")}
+                        onChange={
+                          functionBodyOnly
+                            ? onChange("script")
+                            : onChange("runFn")
+                        }
                         extraLibs={scriptExtraLibs}
-                        diagnosticsOptions={diagnosticsOptions}
+                        diagnosticsOptions={
+                          functionBodyOnly ? undefined : diagnosticsOptions
+                        }
                       />
                     </Suspense>
                     <CodeEditorHelper
@@ -524,8 +485,15 @@ const Settings = ({ config, onChange }) => {
                   <Suspense fallback={<FieldSkeleton height={300} />}>
                     <CodeEditor
                       value={undoFn}
-                      onChange={onChange("undoFn")}
+                      onChange={
+                        functionBodyOnly
+                          ? onChange("undo.script")
+                          : onChange("undoFn")
+                      }
                       extraLibs={scriptExtraLibs}
+                      diagnosticsOptions={
+                        functionBodyOnly ? undefined : diagnosticsOptions
+                      }
                     />
                   </Suspense>
                   <CodeEditorHelper
