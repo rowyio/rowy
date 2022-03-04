@@ -32,6 +32,14 @@ import FormFieldSnippets from "./FormFieldSnippets";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
 import { useAppContext } from "@src/contexts/AppContext";
+/* eslint-disable import/no-webpack-loader-syntax */
+import actionDefs from "!!raw-loader!./action.d.ts";
+
+const diagnosticsOptions = {
+  noSemanticValidation: false,
+  noSyntaxValidation: false,
+  noSuggestionDiagnostics: true,
+};
 
 const CodeEditor = lazy(
   () =>
@@ -62,7 +70,7 @@ const Settings = ({ config, onChange }) => {
 
   const scriptExtraLibs = [
     [
-      "declare class actionParams {",
+      "declare class ActionParams {",
       "    /**",
       "     * actionParams are provided by dialog popup form",
       "     */",
@@ -76,6 +84,7 @@ const Settings = ({ config, onChange }) => {
       }),
       "}",
     ].join("\n"),
+    actionDefs,
   ];
 
   // Backwards-compatibility: previously user could set `confirmation` without
@@ -86,6 +95,72 @@ const Settings = ({ config, onChange }) => {
       typeof config.confirmation === "string" &&
       config.confirmation !== "");
 
+  const runFn = config.runFn
+    ? config.derivativeFn
+    : config?.script
+    ? `const action:Action = async ({row,ref,db,storage,auth,actionParams,user}) => {
+      ${config.script.replace(/utilFns.getSecret/g, "rowy.secrets.getSecret")}
+    }`
+    : `const action:Action = async ({row,ref,db,storage,auth,actionParams,user}) => {
+      // Write your action code here
+      // for example:
+      // const authToken = await rowy.secrets.getSecret("service")
+      // try {
+      // const resp = await fetch('https://example.com/api/v1/users/'+ref.id,{
+      //   method: 'PUT',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     'Authorization': authToken
+      //   },
+      //   body: JSON.stringify(row)
+      // })
+      // 
+      // return {
+      //   success: true,
+      //   message: 'User updated successfully on example service',  
+      //   status: "upto date"
+      // }
+      // } catch (error) {
+      //   return {
+      //     success: false,
+      //     message: 'User update failed on example service',
+      //     }
+      // }
+      // checkout the documentation for more info: https://docs.rowy.io/field-types/action#script
+    }`;
+
+  const undoFn = config.undoFn
+    ? config.undoFn
+    : _get(config, "undo.script")
+    ? `const action:Action = async ({row,ref,db,storage,auth,actionParams,user}) => {
+    ${_get(config, "undo.script")}
+  }`
+    : `const action:Action = async ({row,ref,db,storage,auth,actionParams,user}) => {
+    // Write your undo code here
+    // for example:
+    // const authToken = await rowy.secrets.getSecret("service")
+    // try {
+    // const resp = await fetch('https://example.com/api/v1/users/'+ref.id,{
+    //   method: 'DELETE',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     'Authorization': authToken
+    //   },
+    //   body: JSON.stringify(row)
+    // })
+    //
+    // return {
+    //   success: true,
+    //   message: 'User deleted successfully on example service',
+    //   status: null
+    // }
+    // } catch (error) {
+    //   return {
+    //     success: false,
+    //     message: 'User delete failed on example service',
+    //     }
+    // }
+  }`;
   return (
     <SteppedAccordion
       steps={[
@@ -338,9 +413,10 @@ const Settings = ({ config, onChange }) => {
                     <Suspense fallback={<FieldSkeleton height={300} />}>
                       <CodeEditor
                         minHeight={200}
-                        value={config.script}
-                        onChange={onChange("script")}
+                        value={runFn}
+                        onChange={onChange("runFn")}
                         extraLibs={scriptExtraLibs}
+                        diagnosticsOptions={diagnosticsOptions}
                       />
                     </Suspense>
                     <CodeEditorHelper
@@ -447,8 +523,8 @@ const Settings = ({ config, onChange }) => {
                   <InputLabel variant="filled">Undo script</InputLabel>
                   <Suspense fallback={<FieldSkeleton height={300} />}>
                     <CodeEditor
-                      value={_get(config, "undo.script")}
-                      onChange={onChange("undo.script")}
+                      value={undoFn}
+                      onChange={onChange("undoFn")}
                       extraLibs={scriptExtraLibs}
                     />
                   </Suspense>

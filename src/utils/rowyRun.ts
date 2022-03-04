@@ -17,7 +17,7 @@ export const rowyRun = async ({
   route,
   body,
   params,
-  localhost = false,
+  localhost = true,
   json = true,
   signal,
 }: IRowyRunRequestProps) => {

@@ -96,9 +96,3 @@ interface Rowy {
 }
 
 declare const rowy: Rowy;
-type SecretNames = "sendgrid" | "unsplash" | "twilio";
-enum secrets {
-  sendgrid = "sendgrid",
-  unsplash = "unsplash",
-  twilio = "twilio",
-}

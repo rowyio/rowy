@@ -29,6 +29,7 @@ export default function ContextMenuActions(
   const selectedRowIndex = selectedCell.rowIndex as number;
   const selectedColIndex = selectedCell?.colIndex;
   const selectedCol = _find(columns, { index: selectedColIndex });
+  if (!selectedCol) return [];
   const selectedRow = rows?.[selectedRowIndex];
   const cellValue = _get(selectedRow, selectedCol.key);
   console.log({

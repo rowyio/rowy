@@ -1,10 +1,8 @@
-type DerivativeContext = {
+type DefaultValueContext = {
   row: Row;
   ref: FirebaseFirestore.DocumentReference;
   storage: firebasestorage.Storage;
   db: FirebaseFirestore.Firestore;
   auth: firebaseauth.BaseAuth;
-  change: any;
 };
-
-type Derivative = (context: DerivativeContext) => Promise<any>;
+type DefaultValue = (context: DefaultValueContext) => "PLACEHOLDER_OUTPUT_TYPE";

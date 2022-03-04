@@ -23,7 +23,8 @@ import firebaseStorageDefs from "!!raw-loader!./firebaseStorage.d.ts";
 import utilsDefs from "!!raw-loader!./utils.d.ts";
 import rowyUtilsDefs from "!!raw-loader!./rowy.d.ts";
 import extensionsDefs from "!!raw-loader!./extensions.d.ts";
-import derivativeDefs from "!!raw-loader!./derivative.d.ts";
+import defaultValueDefs from "!!raw-loader!./defaultValue.d.ts";
+import { runRoutes } from "@src/constants/runRoutes";
 
 export interface IUseMonacoCustomizationsProps {
   minHeight?: number;
@@ -53,7 +54,7 @@ export default function useMonacoCustomizations({
   fullScreen,
 }: IUseMonacoCustomizationsProps) {
   const theme = useTheme();
-  const { tableState } = useProjectContext();
+  const { tableState, rowyRun } = useProjectContext();
 
   const monaco = useMonaco();
 
@@ -104,9 +105,6 @@ export default function useMonacoCustomizations({
         "ts:filename/utils.d.ts"
       );
       monaco.languages.typescript.javascriptDefaults.addExtraLib(rowyUtilsDefs);
-      monaco.languages.typescript.javascriptDefaults.addExtraLib(
-        derivativeDefs
-      );
     } catch (error) {
       console.error(
         "An error occurred during initialization of Monaco: ",
@@ -144,7 +142,6 @@ export default function useMonacoCustomizations({
   }, [monaco, stringifiedDiagnosticsOptions]);
 
   const addJsonFieldDefinition = async (columnKey, interfaceName) => {
-    // add delay
     const samples = tableState?.rows
       .map((row) => row[columnKey])
       .filter((entry) => entry !== undefined)
@@ -168,19 +165,38 @@ export default function useMonacoCustomizations({
         rendererOptions: { "just-types": "true" },
       });
       const newLib = result.lines.join("\n").replaceAll("export ", "");
-      console.log(newLib);
+      // console.log(newLib);
       monaco?.languages.typescript.javascriptDefaults.addExtraLib(newLib);
+    }
+  };
+
+  const setSecrets = async (monaco, rowyRun) => {
+    // set secret options
+    try {
+      const listSecrets = await rowyRun({
+        route: runRoutes.listSecrets,
+      });
+      const secretsDef = `type SecretNames = ${listSecrets
+        .map((secret) => `"${secret}"`)
+        .join(" | ")}
+        enum secrets {
+          ${listSecrets.map((secret) => `${secret} = "${secret}"`).join("\n")}
+        }
+        `;
+      monaco.languages.typescript.javascriptDefaults.addExtraLib(secretsDef);
+    } catch (error) {
+      console.error("Could not set secret definitions: ", error);
     }
   };
   // Set row definitions
   useEffect(() => {
-    if (!monaco) return;
-
+    if (!monaco || !rowyRun || !tableState?.columns) return;
+    console.log("setting row definitions");
     try {
       const rowDefinition =
-        Object.keys(tableState?.columns!)
+        Object.keys(tableState.columns)
           .map((columnKey: string) => {
-            const column = tableState?.columns[columnKey];
+            const column = tableState.columns[columnKey];
             if (getColumnType(column) === "JSON") {
               const interfaceName =
                 columnKey[0].toUpperCase() + columnKey.slice(1);
@@ -194,7 +210,7 @@ export default function useMonacoCustomizations({
           })
           .join(";\n") + ";";
 
-      const availableFields = Object.keys(tableState?.columns!)
+      const availableFields = Object.keys(tableState.columns)
         .map((columnKey: string) => `"${columnKey}"`)
         .join("|\n");
 
@@ -232,7 +248,13 @@ export default function useMonacoCustomizations({
     } catch (error) {
       console.error("Could not set row definitions: ", error);
     }
-  }, [monaco, tableState?.columns]);
+    // set available secrets from secretManager
+    try {
+      setSecrets(monaco, rowyRun);
+    } catch (error) {
+      console.error("Could not set secrets: ", error);
+    }
+  }, [monaco, tableState?.columns, rowyRun]);
 
   let boxSx: SystemStyleObject<Theme> = {
     minWidth: 400,

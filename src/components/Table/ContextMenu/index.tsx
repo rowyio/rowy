@@ -14,7 +14,6 @@ export default function ContextMenu() {
   const configActions =
     getFieldProp("contextMenuActions", selectedColumn.type) ||
     function empty() {};
-  console.log(configActions);
   const actions = configActions(selectedCell, resetContextMenu) || [];
 
   if (!anchorEle || actions.length === 0) return <></>;

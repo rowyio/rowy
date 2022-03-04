@@ -36,6 +36,7 @@ export const runRoutes = {
   firestoreRules: { path: "/firestoreRules", method: "GET" } as RunRoute,
   setFirestoreRules: { path: "/setFirestoreRules", method: "POST" } as RunRoute,
   listCollections: { path: "/listCollections", method: "GET" } as RunRoute,
+  listSecrets: { path: "/listSecrets", method: "GET" } as RunRoute,
   serviceAccountAccess: {
     path: "/serviceAccountAccess",
     method: "GET",

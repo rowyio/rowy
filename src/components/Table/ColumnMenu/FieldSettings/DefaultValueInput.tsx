@@ -13,15 +13,53 @@ import FormAutosave from "./FormAutosave";
 import { FieldType } from "@src/constants/fields";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
 import { name } from "@root/package.json";
-
-const CodeEditor = lazy(
+/* eslint-disable import/no-webpack-loader-syntax */
+import defaultValueDefs from "!!raw-loader!./defaultValue.d.ts";
+const _CodeEditor = lazy(
   () =>
     import("@src/components/CodeEditor" /* webpackChunkName: "CodeEditor" */)
 );
 
+const diagnosticsOptions = {
+  noSemanticValidation: false,
+  noSyntaxValidation: false,
+  noSuggestionDiagnostics: true,
+};
+
 export interface IDefaultValueInputProps extends IMenuModalProps {
   handleChange: (key: any) => (update: any) => void;
 }
+
+const CodeEditor = ({ type, config, handleChange }) => {
+  const returnType = getFieldProp("dataType", type) ?? "any";
+  const defaultValueFn = config.defaultValue?.defaultValueFn
+    ? config.defaultValue?.defaultValueFn
+    : config.defaultValue?.script
+    ? `const defaultValueFn : DefaultValue = async ({row,ref,db,storage,auth})=>{
+    ${config.defaultValue.script}
+    }`
+    : `const defaultValueFn: DefaultValue = async ({row,ref,db,storage,auth})=>{
+    // Write your default value code here
+    // for example:
+    // generate random hex color
+    // const color = "#" + Math.floor(Math.random() * 16777215).toString(16);
+    // return color;
+    // checkout the documentation for more info: https://docs.rowy.io/how-to/default-values#dynamic
+  }`;
+  return (
+    <_CodeEditor
+      value={defaultValueFn}
+      diagnosticsOptions={diagnosticsOptions}
+      extraLibs={[
+        defaultValueDefs.replace(
+          `"PLACEHOLDER_OUTPUT_TYPE"`,
+          `${returnType} | Promise<${returnType}>`
+        ),
+      ]}
+      onChange={handleChange("defaultValue.defaultValueFn")}
+    />
+  );
+};
 
 export default function DefaultValueInput({
   config,
@@ -42,6 +80,7 @@ export default function DefaultValueInput({
         config.defaultValue?.value ?? getFieldProp("initialValue", _type),
     },
   });
+
   return (
     <>
       <TextField
@@ -136,8 +175,9 @@ export default function DefaultValueInput({
           <CodeEditorHelper docLink={WIKI_LINKS.howToDefaultValues} />
           <Suspense fallback={<FieldSkeleton height={100} />}>
             <CodeEditor
-              value={config.defaultValue?.script}
-              onChange={handleChange("defaultValue.script")}
+              config={config}
+              type={type}
+              handleChange={handleChange}
             />
           </Suspense>
         </>

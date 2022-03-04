@@ -11,10 +11,15 @@ import { FieldType } from "@src/constants/fields";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
 
+import { getFieldProp } from "@src/components/fields";
+/* eslint-disable import/no-webpack-loader-syntax */
+import derivativeDefs from "!!raw-loader!./derivative.d.ts";
+
 const CodeEditor = lazy(
   () =>
     import("@src/components/CodeEditor" /* webpackChunkName: "CodeEditor" */)
 );
+
 const diagnosticsOptions = {
   noSemanticValidation: false,
   noSyntaxValidation: false,
@@ -30,14 +35,15 @@ export default function Settings({
 }: ISettingsProps) {
   const { tableState } = useProjectContext();
   if (!tableState?.columns) return <></>;
-
-  const columnOptions = Object.values(tableState.columns)
+  const columns = Object.values(tableState.columns);
+  const returnType = getFieldProp("dataType", config.renderFieldType) ?? "any";
+  console.log({ returnType, r: config.renderFieldType });
+  const columnOptions = columns
     .filter((column) => column.fieldName !== fieldName)
     .filter((column) => column.type !== FieldType.subTable)
     .map((c) => ({ label: c.name, value: c.key }));
-  console.log({ config });
-  const code = config.code
-    ? config.code
+  const code = config.derivativeFn
+    ? config.derivativeFn
     : config?.script
     ? `const derivative:Derivative = async ({row,ref,db,storage,auth})=>{
     ${config.script.replace(/utilFns.getSecret/g, "rowy.secrets.getSecret")}
@@ -114,6 +120,12 @@ export default function Settings({
           <CodeEditor
             diagnosticsOptions={diagnosticsOptions}
             value={code}
+            extraLibs={[
+              derivativeDefs.replace(
+                `"PLACEHOLDER_OUTPUT_TYPE"`,
+                `${returnType} | Promise<${returnType}>`
+              ),
+            ]}
             onChange={onChange("code")}
           />
         </Suspense>
