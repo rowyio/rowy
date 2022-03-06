@@ -45,14 +45,8 @@ export default function FinalColumn({ row }: FormatterProps<any, any>) {
           color="inherit"
           disabled={!addRow}
           onClick={() => {
-            const clonedRow = { ...row };
-            // remove metadata
-            delete clonedRow.ref;
-            delete clonedRow.rowHeight;
-            Object.keys(clonedRow).forEach((key) => {
-              if (clonedRow[key] === undefined) delete clonedRow[key];
-            });
-            if (addRow) addRow!(clonedRow, undefined, { type: "smaller" });
+            const { ref, ...clonedRow } = row;
+            addRow!(clonedRow, undefined, { type: "smaller" });
           }}
           aria-label="Duplicate row"
           className="row-hover-iconButton"

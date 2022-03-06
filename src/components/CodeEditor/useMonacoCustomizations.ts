@@ -165,7 +165,6 @@ export default function useMonacoCustomizations({
         rendererOptions: { "just-types": "true" },
       });
       const newLib = result.lines.join("\n").replaceAll("export ", "");
-      // console.log(newLib);
       monaco?.languages.typescript.javascriptDefaults.addExtraLib(newLib);
     }
   };
@@ -191,7 +190,6 @@ export default function useMonacoCustomizations({
   // Set row definitions
   useEffect(() => {
     if (!monaco || !rowyRun || !tableState?.columns) return;
-    console.log("setting row definitions");
     try {
       const rowDefinition =
         Object.keys(tableState.columns)
