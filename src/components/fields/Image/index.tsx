@@ -18,8 +18,7 @@ export const config: IFieldConfig = {
   type: FieldType.image,
   name: "Image",
   group: "File",
-  dataType:
-    "{ downloadURL: string; lastModifiedTS: number; name: string; type: string; ref: string; }[]",
+  dataType: "RowyFile[]",
   initialValue: [],
   icon: <ImageIcon />,
   description:

@@ -36,10 +36,9 @@ export const useFilterInputs = (columns: TableState["columns"]) => {
   // Get the column config
   const selectedColumn = _find(filterColumns, ["key", query?.key]);
   // Get available filters from selected column type
-  const availableFilters = getFieldProp(
-    "filter",
-    getColumnType(selectedColumn)
-  );
+  const availableFilters = selectedColumn
+    ? getFieldProp("filter", getColumnType(selectedColumn))
+    : null;
 
   return {
     filterColumns,

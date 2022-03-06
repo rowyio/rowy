@@ -3,15 +3,6 @@
  */
 declare namespace RULES_UTILS {
   /**
-   * Sends out an email through sendGrid
-   */
-  function sendEmail(msg: {
-    from: string;
-    templateId: string;
-    personalizations: { to: string; dynamic_template_data: any }[];
-  }): void {}
-
-  /**
    * Gets the secret defined in Google Cloud Secret
    */
   async function getSecret(name: string, v?: string): any {}

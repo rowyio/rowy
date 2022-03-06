@@ -36,6 +36,7 @@ export const runRoutes = {
   firestoreRules: { path: "/firestoreRules", method: "GET" } as RunRoute,
   setFirestoreRules: { path: "/setFirestoreRules", method: "POST" } as RunRoute,
   listCollections: { path: "/listCollections", method: "GET" } as RunRoute,
+  listSecrets: { path: "/listSecrets", method: "GET" } as RunRoute,
   serviceAccountAccess: {
     path: "/serviceAccountAccess",
     method: "GET",
@@ -54,4 +55,8 @@ export const runRoutes = {
   algoliaAppId: { path: `/algoliaAppId`, method: "GET" } as RunRoute,
   functionLogs: { path: `/functionLogs`, method: "GET" } as RunRoute,
   auditChange: { path: `/auditChange`, method: "POST" } as RunRoute,
+  evaluateDerivative: {
+    path: `/evaluateDerivative`,
+    method: "POST",
+  } as RunRoute,
 } as const;

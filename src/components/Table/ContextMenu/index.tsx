@@ -12,7 +12,7 @@ export default function ContextMenu() {
   const selectedColumn = _find(columns, { index: selectedColIndex });
   if (!selectedColumn) return <></>;
   const configActions =
-    getFieldProp("contextMenuActions", getColumnType(selectedColumn)) ||
+    getFieldProp("contextMenuActions", selectedColumn.type) ||
     function empty() {};
   const actions = configActions(selectedCell, resetContextMenu) || [];
 

@@ -27,6 +27,7 @@ export default function BasicContextMenuActions(
   const selectedRowIndex = selectedCell.rowIndex as number;
   const selectedColIndex = selectedCell?.colIndex;
   const selectedCol = _find(columns, { index: selectedColIndex });
+  if (!selectedCol) return [];
   const selectedRow = rows?.[selectedRowIndex];
   const cellValue = _get(selectedRow, selectedCol.key);
 
@@ -55,6 +56,7 @@ export default function BasicContextMenuActions(
 
   const handlePaste = async () => {
     try {
+      if (!selectedCol) return;
       const text = await navigator.clipboard.readText();
       const cellDataType = getFieldProp("dataType", getColumnType(selectedCol));
       let parsed;

@@ -33,7 +33,17 @@ import FormFieldSnippets from "./FormFieldSnippets";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
 import { useAppContext } from "@src/contexts/AppContext";
+
+/* eslint-disable import/no-webpack-loader-syntax */
+import actionDefs from "!!raw-loader!./action.d.ts";
+import { RUN_ACTION_TEMPLATE, UNDO_ACTION_TEMPLATE } from "./templates";
 import { routes } from "constants/routes";
+
+const diagnosticsOptions = {
+  noSemanticValidation: false,
+  noSyntaxValidation: false,
+  noSuggestionDiagnostics: true,
+};
 
 const CodeEditor = lazy(
   () =>
@@ -41,8 +51,17 @@ const CodeEditor = lazy(
 );
 
 const Settings = ({ config, onChange }) => {
-  const { tableState, roles, settings } = useProjectContext();
+  const { tableState, roles, settings, compatibleRowyRunVersion } =
+    useProjectContext();
   const { projectId } = useAppContext();
+  const [activeStep, setActiveStep] = useState<
+    "requirements" | "friction" | "action" | "undo" | "customization"
+  >("requirements");
+  const functionBodyOnly = compatibleRowyRunVersion!({ maxVersion: "1.4.0" });
+  const steps =
+    config.isActionScript && _get(config, "undo.enabled")
+      ? ["requirements", "friction", "action", "undo", "customization"]
+      : ["requirements", "friction", "action", "customization"];
 
   const columnOptions = Object.values(tableState?.columns ?? {}).map((c) => ({
     label: c.name,
@@ -57,7 +76,7 @@ const Settings = ({ config, onChange }) => {
 
   const scriptExtraLibs = [
     [
-      "declare class actionParams {",
+      "declare class ActionParams {",
       "    /**",
       "     * actionParams are provided by dialog popup form",
       "     */",
@@ -71,6 +90,7 @@ const Settings = ({ config, onChange }) => {
       }),
       "}",
     ].join("\n"),
+    actionDefs,
   ];
 
   // Backwards-compatibility: previously user could set `confirmation` without
@@ -81,6 +101,25 @@ const Settings = ({ config, onChange }) => {
       typeof config.confirmation === "string" &&
       config.confirmation !== "");
 
+  const runFn = functionBodyOnly
+    ? config?.script
+    : config.runFn
+    ? config.derivativeFn
+    : config?.script
+    ? `const action:Action = async ({row,ref,db,storage,auth,actionParams,user}) => {
+      ${config.script.replace(/utilFns.getSecret/g, "rowy.secrets.getSecret")}
+    }`
+    : RUN_ACTION_TEMPLATE;
+
+  const undoFn = functionBodyOnly
+    ? _get(config, "undo.script")
+    : config.undoFn
+    ? config.undoFn
+    : _get(config, "undo.script")
+    ? `const action : Action = async ({row,ref,db,storage,auth,actionParams,user}) => {
+    ${_get(config, "undo.script")}
+  }`
+    : UNDO_ACTION_TEMPLATE;
   return (
     <SteppedAccordion
       steps={[
@@ -335,9 +374,16 @@ const Settings = ({ config, onChange }) => {
                     <Suspense fallback={<FieldSkeleton height={300} />}>
                       <CodeEditor
                         minHeight={200}
-                        value={config.script}
-                        onChange={onChange("script")}
+                        value={runFn}
+                        onChange={
+                          functionBodyOnly
+                            ? onChange("script")
+                            : onChange("runFn")
+                        }
                         extraLibs={scriptExtraLibs}
+                        diagnosticsOptions={
+                          functionBodyOnly ? undefined : diagnosticsOptions
+                        }
                       />
                     </Suspense>
                     <CodeEditorHelper
@@ -444,9 +490,16 @@ const Settings = ({ config, onChange }) => {
                   <InputLabel variant="filled">Undo script</InputLabel>
                   <Suspense fallback={<FieldSkeleton height={300} />}>
                     <CodeEditor
-                      value={_get(config, "undo.script")}
-                      onChange={onChange("undo.script")}
+                      value={undoFn}
+                      onChange={
+                        functionBodyOnly
+                          ? onChange("undo.script")
+                          : onChange("undoFn")
+                      }
                       extraLibs={scriptExtraLibs}
+                      diagnosticsOptions={
+                        functionBodyOnly ? undefined : diagnosticsOptions
+                      }
                     />
                   </Suspense>
                   <CodeEditorHelper
