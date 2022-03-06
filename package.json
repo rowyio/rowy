@@ -1,6 +1,6 @@
 {
-  "name": "Rowy",
-  "version": "2.3.2",
+  "name": "rowy",
+  "version": "2.4.0-rc.0",
   "homepage": "https://rowy.io",
   "repository": {
     "type": "git",
@@ -15,10 +15,10 @@
     "@hookform/resolvers": "^2.8.5",
     "@mdi/js": "^6.5.95",
     "@monaco-editor/react": "^4.3.1",
-    "@mui/icons-material": "^5.4.1",
-    "@mui/lab": "^5.0.0-alpha.68",
-    "@mui/material": "^5.4.1",
-    "@mui/styles": "^5.4.1",
+    "@mui/icons-material": "^5.4.2",
+    "@mui/lab": "^5.0.0-alpha.69",
+    "@mui/material": "^5.4.2",
+    "@mui/styles": "^5.4.2",
     "@rowy/form-builder": "^0.5.3",
     "@rowy/multiselect": "^0.2.3",
     "@tinymce/tinymce-react": "^3.12.6",

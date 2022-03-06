@@ -45,6 +45,11 @@ export default function CodeEditorHelper({
       key: "storage",
       description: `firebase Storage can be accessed through this, storage.bucket() returns default storage bucket of the firebase project.`,
     },
+    {
+      key: "rowy",
+      description: `rowy provides a set of functions that are commonly used, such as easy access to GCP Secret Manager`,
+    },
+
   ];
 
   return (
@@ -108,17 +113,6 @@ export default function CodeEditorHelper({
           </IconButton>
         </Tooltip>
       </Grid>
-      {/* <Button
-        size="small"
-        color="primary"
-        target="_blank"
-        rel="noopener noreferrer"
-        href={docLink}
-        style={{ flexShrink: 0 }}
-      >
-        Examples & docs
-        <InlineOpenInNewIcon />
-      </Button> */}
     </Stack>
   );
 }

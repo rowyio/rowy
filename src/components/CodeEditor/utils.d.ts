@@ -1,7 +1,7 @@
 /**
  * utility functions
  */
-declare namespace utilFns {
+declare namespace RULES_UTILS {
   /**
    * Gets the secret defined in Google Cloud Secret
    */

@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { ISettingsProps } from "../types";
 
 import { Grid, InputLabel, FormHelperText } from "@mui/material";
@@ -10,6 +10,7 @@ import CodeEditorHelper from "@src/components/CodeEditor/CodeEditorHelper";
 import { FieldType } from "@src/constants/fields";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
+import { useRowyRunModal } from "@src/atoms/RowyRunModal";
 
 import { getFieldProp } from "@src/components/fields";
 /* eslint-disable import/no-webpack-loader-syntax */
@@ -33,7 +34,14 @@ export default function Settings({
   onBlur,
   errors,
 }: ISettingsProps) {
-  const { tableState, compatibleRowyRunVersion } = useProjectContext();
+
+  const { tableState, compatibleRowyRunVersion ,settings } = useProjectContext();
+  const openRowyRunModal = useRowyRunModal();
+  useEffect(() => {
+    if (!settings?.rowyRunUrl) openRowyRunModal("Derivative fields");
+  }, [settings?.rowyRunUrl]);
+
+  if (!tableState?.columns) return null;
 
   if (!tableState?.columns) return <></>;
   const columns = Object.values(tableState.columns);

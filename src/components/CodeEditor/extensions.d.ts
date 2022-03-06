@@ -24,7 +24,7 @@ type ExtensionContext = {
     requiredFields: string[];
     extensionBody: any;
   };
-  utilFns: any;
+  RULES_UTILS: any;
 };
 
 // extension body definition
