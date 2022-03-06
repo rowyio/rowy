@@ -37,6 +37,7 @@ import { useAppContext } from "@src/contexts/AppContext";
 /* eslint-disable import/no-webpack-loader-syntax */
 import actionDefs from "!!raw-loader!./action.d.ts";
 import { RUN_ACTION_TEMPLATE, UNDO_ACTION_TEMPLATE } from "./templates";
+import { routes } from "constants/routes";
 
 const diagnosticsOptions = {
   noSemanticValidation: false,
@@ -44,15 +45,14 @@ const diagnosticsOptions = {
   noSuggestionDiagnostics: true,
 };
 
-import { routes } from "constants/routes";
-
 const CodeEditor = lazy(
   () =>
     import("@src/components/CodeEditor" /* webpackChunkName: "CodeEditor" */)
 );
 
 const Settings = ({ config, onChange }) => {
-  const { tableState, roles,settings, compatibleRowyRunVersion } = useProjectContext();
+  const { tableState, roles, settings, compatibleRowyRunVersion } =
+    useProjectContext();
   const { projectId } = useAppContext();
   const [activeStep, setActiveStep] = useState<
     "requirements" | "friction" | "action" | "undo" | "customization"
