@@ -34,8 +34,8 @@ export default function Settings({
   onBlur,
   errors,
 }: ISettingsProps) {
-
-  const { tableState, compatibleRowyRunVersion ,settings } = useProjectContext();
+  const { tableState, compatibleRowyRunVersion, settings } =
+    useProjectContext();
   const openRowyRunModal = useRowyRunModal();
   useEffect(() => {
     if (!settings?.rowyRunUrl) openRowyRunModal("Derivative fields");
@@ -51,8 +51,8 @@ export default function Settings({
     .filter((column) => column.type !== FieldType.subTable)
     .map((c) => ({ label: c.name, value: c.key }));
 
-  const functionBodyOnly = compatibleRowyRunVersion!({ maxVersion: "1.4.0" });
-  const code = functionBodyOnly
+  const functionBodyOnly = compatibleRowyRunVersion!({ maxVersion: "1.3.10" });
+  const derivativeFn = functionBodyOnly
     ? config?.script
     : config.derivativeFn
     ? config.derivativeFn
@@ -133,14 +133,14 @@ export default function Settings({
             diagnosticsOptions={
               functionBodyOnly ? undefined : diagnosticsOptions
             }
-            value={code}
+            value={derivativeFn}
             extraLibs={[
               derivativeDefs.replace(
                 `"PLACEHOLDER_OUTPUT_TYPE"`,
                 `${returnType} | Promise<${returnType}>`
               ),
             ]}
-            onChange={onChange(functionBodyOnly ? "script" : "code")}
+            onChange={onChange(functionBodyOnly ? "script" : "derivativeFn")}
           />
         </Suspense>
       </div>

@@ -57,7 +57,7 @@ const Settings = ({ config, onChange }) => {
   const [activeStep, setActiveStep] = useState<
     "requirements" | "friction" | "action" | "undo" | "customization"
   >("requirements");
-  const functionBodyOnly = compatibleRowyRunVersion!({ maxVersion: "1.4.0" });
+  const functionBodyOnly = compatibleRowyRunVersion!({ maxVersion: "1.3.10" });
   const steps =
     config.isActionScript && _get(config, "undo.enabled")
       ? ["requirements", "friction", "action", "undo", "customization"]

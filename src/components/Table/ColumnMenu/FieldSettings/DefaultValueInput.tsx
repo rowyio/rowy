@@ -33,7 +33,7 @@ export interface IDefaultValueInputProps extends IMenuModalProps {
 
 const CodeEditor = ({ type, config, handleChange }) => {
   const { compatibleRowyRunVersion } = useProjectContext();
-  const functionBodyOnly = compatibleRowyRunVersion!({ maxVersion: "1.4.0" });
+  const functionBodyOnly = compatibleRowyRunVersion!({ maxVersion: "1.3.10" });
   const returnType = getFieldProp("dataType", type) ?? "any";
 
   const dynamicValueFn = functionBodyOnly
