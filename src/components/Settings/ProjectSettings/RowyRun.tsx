@@ -50,37 +50,7 @@ export default function RowyRun({
 
   const [latestUpdate, checkForUpdates, loading] = useUpdateCheck();
 
-  const deployButton = window.location.hostname.includes(
-    EXTERNAL_LINKS.rowyAppHostName
-  ) ? (
-    settings.rowyRunDeployStatus === "BUILDING" ||
-    settings.rowyRunDeployStatus === "COMPLETE" ? (
-      <LoadingButton
-        variant="contained"
-        loading
-        loadingIndicator={
-          settings.rowyRunDeployStatus === "COMPLETE" ? "Deployed" : undefined
-        }
-        style={{ width: 183, borderRadius: 12 }}
-      >
-        Run on Google Cloud
-      </LoadingButton>
-    ) : (
-      <a
-        href={EXTERNAL_LINKS.rowyRunDeploy}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <img
-          src="https://deploy.cloud.run/button.svg"
-          alt="Run on Google Cloud"
-          width={183}
-          height={32}
-          style={{ display: "block" }}
-        />
-      </a>
-    )
-  ) : (
+  const deployButton = (
     <Button href={WIKI_LINKS.rowyRun} target="_blank" rel="noopener noreferrer">
       Deploy instructions
     </Button>
