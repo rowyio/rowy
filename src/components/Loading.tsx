@@ -6,17 +6,26 @@ import CircularProgressOptical from "@src/components/CircularProgressOptical";
 interface ILoadingProps extends Partial<StackProps> {
   message?: string;
   fullScreen?: boolean;
+  timeout?: number;
+  delay?: number;
 }
 
 export default function Loading({
   message = "Loading",
   fullScreen = false,
+  timeout = 1000,
+  delay = 1000,
   ...props
 }: ILoadingProps) {
   const fullScreenHeight = use100vh() ?? "100vh";
 
   return (
-    <Fade in timeout={1000} style={{ transitionDelay: "1s" }} unmountOnExit>
+    <Fade
+      in
+      timeout={timeout}
+      style={{ transitionDelay: `${delay}ms` }}
+      unmountOnExit
+    >
       <Stack
         justifyContent="center"
         alignItems="center"
