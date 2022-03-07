@@ -406,6 +406,23 @@ export const components = (theme: Theme): ThemeOptions => {
       MuiListItem: {
         defaultProps: { dense: true },
       },
+      MuiListItemText: {
+        defaultProps: {
+          secondaryTypographyProps: { variant: "caption" },
+        },
+        styleOverrides: {
+          root: {
+            ".MuiMenu-list &": { whiteSpace: "normal" },
+          },
+          primary: {
+            ".MuiSelect-select &": theme.typography.body2,
+          },
+          secondary: {
+            ".MuiSelect-select &": { display: "none" },
+          },
+        },
+      },
+
       MuiMenu: {
         styleOverrides: {
           list: { padding: theme.spacing(0.5, 0) },
@@ -1014,9 +1031,10 @@ export const components = (theme: Theme): ThemeOptions => {
               },
             },
 
-            "&:hover .MuiCheckbox-root, &:hover .MuiRadio-root": {
-              backgroundColor: theme.palette.action.hover,
-            },
+            "&:hover .MuiCheckbox-root:not(.Mui-disabled), &:hover .MuiRadio-root:not(.Mui-disabled)":
+              {
+                backgroundColor: theme.palette.action.hover,
+              },
           },
           label: {
             marginTop: 10,
