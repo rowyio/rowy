@@ -1,14 +1,8 @@
-import {
-  Stack,
-  Typography,
-  Grid,
-  Tooltip,
-  Button,
-  IconButton,
-} from "@mui/material";
+import { Stack, Typography, Grid, Tooltip, IconButton } from "@mui/material";
 import SecretsIcon from "@mui/icons-material/VpnKeyOutlined";
 import FunctionsIcon from "@mui/icons-material/CloudOutlined";
 import DocsIcon from "@mui/icons-material/DescriptionOutlined";
+
 import { useAppContext } from "@src/contexts/AppContext";
 
 export interface ICodeEditorHelperProps {
@@ -49,23 +43,26 @@ export default function CodeEditorHelper({
       key: "rowy",
       description: `rowy provides a set of functions that are commonly used, such as easy access to GCP Secret Manager`,
     },
-
   ];
 
   return (
     <Stack
       direction="row"
-      alignItems="baseline"
+      alignItems="flex-start"
       justifyItems="space-between"
       spacing={1}
       justifyContent="space-between"
       sx={{ my: 1 }}
     >
-      <Typography variant="body2" color="textSecondary" sx={{ mr: 0.5 }}>
+      <Typography variant="body2" color="textSecondary">
         Available:
       </Typography>
 
-      <Grid container spacing={1}>
+      <Grid
+        container
+        spacing={1}
+        style={{ flexGrow: 1, marginTop: -8, marginLeft: 0 }}
+      >
         {availableVariables.concat(additionalVariables ?? []).map((v) => (
           <Grid item key={v.key}>
             <Tooltip title={v.description}>
@@ -74,20 +71,26 @@ export default function CodeEditorHelper({
           </Grid>
         ))}
       </Grid>
-      <Grid container spacing={1} direction="row" justifyContent={"flex-end"}>
-        <Tooltip title="Open Secret Manager">
+
+      <Stack
+        direction="row"
+        alignItems="center"
+        spacing={1}
+        style={{ marginTop: -4 }}
+      >
+        <Tooltip title="Secret Manager&nbsp;↗">
           <IconButton
             size="small"
             color="primary"
             target="_blank"
             rel="noopener noreferrer"
             href={`https://console.cloud.google.com/security/secret-manager?project=${projectId}`}
-            aria-label="secret manager"
           >
-            <SecretsIcon />
+            <SecretsIcon fontSize="small" />
           </IconButton>
         </Tooltip>
-        <Tooltip title="Configure Cloud function">
+
+        <Tooltip title="Configure Cloud Function&nbsp;↗">
           <IconButton
             size="small"
             color="primary"
@@ -95,24 +98,23 @@ export default function CodeEditorHelper({
             rel="noopener noreferrer"
             //href={`https://console.cloud.google.com/functions/list?project=${projectId}`}
             href={`https://console.cloud.google.com/functions/edit/us-central1/R-lwj?env=gen1&project=${projectId}`}
-            aria-label="Cloud function"
           >
-            <FunctionsIcon />
+            <FunctionsIcon fontSize="small" />
           </IconButton>
         </Tooltip>
-        <Tooltip title="Examples & documentation">
+
+        <Tooltip title="Examples & documentation&nbsp;↗">
           <IconButton
             size="small"
             color="primary"
             target="_blank"
             rel="noopener noreferrer"
             href={docLink}
-            aria-label="documentation"
           >
-            <DocsIcon />
+            <DocsIcon fontSize="small" />
           </IconButton>
         </Tooltip>
-      </Grid>
+      </Stack>
     </Stack>
   );
 }
