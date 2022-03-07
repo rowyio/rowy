@@ -2,10 +2,11 @@ import {
   ListItemIcon,
   ListItemText,
   MenuItem,
+  MenuItemProps,
   Typography,
 } from "@mui/material";
 
-export interface IContextMenuItem {
+export interface IContextMenuItem extends Partial<MenuItemProps> {
   onClick: () => void;
   icon: JSX.Element;
   label: string;
@@ -19,9 +20,10 @@ export default function ContextMenuItem({
   label,
   disabled,
   hotkeyLabel,
+  ...props
 }: IContextMenuItem) {
   return (
-    <MenuItem disabled={disabled} onClick={onClick}>
+    <MenuItem {...props} disabled={disabled} onClick={onClick}>
       <ListItemIcon>{icon} </ListItemIcon>
       <ListItemText> {label} </ListItemText>
       {hotkeyLabel && (

@@ -1,25 +1,32 @@
 import _find from "lodash/find";
-import { getColumnType, getFieldProp } from "@src/components/fields";
+import { getFieldProp } from "@src/components/fields";
+
+import MenuContents from "./MenuContent";
+import DuplicateIcon from "@src/assets/icons/CopyCells";
+import DeleteIcon from "@mui/icons-material/DeleteOutlined";
+
 import { useProjectContext } from "@src/contexts/ProjectContext";
-import { MenuContents } from "./MenuContent";
 import { useContextMenuAtom } from "@src/atoms/ContextMenu";
 import { FieldType } from "@src/constants/fields";
-import DuplicateIcon from "@src/assets/icons/Copy";
-import DeleteIcon from "@mui/icons-material/DeleteOutlined";
+
 import { useAppContext } from "@src/contexts/AppContext";
 import { IContextMenuItem } from "./MenuItem";
 import { useConfirmation } from "@src/components/ConfirmationDialog/Context";
+
 export default function ContextMenu() {
   const { requestConfirmation } = useConfirmation();
   const { tableState, deleteRow, addRow } = useProjectContext();
   const { userRoles } = useAppContext();
+
   const { anchorEle, selectedCell, resetContextMenu } = useContextMenuAtom();
+
   const columns = tableState?.columns;
   const selectedColIndex = selectedCell?.colIndex;
   const selectedColumn = _find(columns, { index: selectedColIndex });
-  if (!selectedColumn) return <></>;
-  const menuActions = getFieldProp("contextMenuActions", selectedColumn.type);
 
+  if (!selectedColumn || !anchorEle) return null;
+
+  const menuActions = getFieldProp("contextMenuActions", selectedColumn.type);
   const actionGroups: IContextMenuItem[][] = [];
 
   const actions = menuActions
@@ -27,7 +34,6 @@ export default function ContextMenu() {
     : [];
   if (actions.length > 0) actionGroups.push(actions);
 
-  let hasRenderedFieldActions = false;
   if (selectedColumn.type === FieldType.derivative) {
     const renderedFieldMenuActions = getFieldProp(
       "contextMenuActions",
@@ -37,26 +43,25 @@ export default function ContextMenu() {
       actionGroups.push(
         renderedFieldMenuActions(selectedCell, resetContextMenu)
       );
-      hasRenderedFieldActions = true;
     }
   }
-  if (!anchorEle || (actions.length === 0 && !hasRenderedFieldActions))
-    return <></>;
+
   const row = tableState?.rows[selectedCell!.rowIndex];
   if (userRoles.includes("ADMIN") && row) {
     const rowActions = [
       {
-        label: "Duplicate Row",
+        label: "Duplicate row",
         icon: <DuplicateIcon />,
         onClick: () => {
           const { ref, ...clonedRow } = row;
           addRow!(clonedRow, undefined, { type: "smaller" });
+          resetContextMenu();
         },
       },
       {
-        label: "Delete Row",
-        variant: "secondary",
-        icon: <DeleteIcon color="warning" />,
+        label: "Delete row…",
+        color: "error",
+        icon: <DeleteIcon />,
         onClick: () => {
           requestConfirmation({
             title: "Delete row?",
@@ -79,6 +84,7 @@ export default function ContextMenu() {
     ];
     actionGroups.push(rowActions);
   }
+
   return (
     <MenuContents
       anchorEl={anchorEle}

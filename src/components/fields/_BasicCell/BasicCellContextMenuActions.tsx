@@ -2,7 +2,7 @@ import _find from "lodash/find";
 import _get from "lodash/get";
 
 import Cut from "@mui/icons-material/ContentCut";
-import CopyCells from "@src/assets/icons/CopyCells";
+import CopyCells from "@src/assets/icons/Copy";
 import Paste from "@mui/icons-material/ContentPaste";
 
 import { useProjectContext } from "@src/contexts/ProjectContext";
@@ -36,7 +36,7 @@ export default function BasicContextMenuActions(
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(cellValue);
-      enqueueSnackbar("Copied to clipboard", { variant: "success" });
+      enqueueSnackbar("Copied");
     } catch (error) {
       enqueueSnackbar(`Failed to copy:${error}`, { variant: "error" });
     }
