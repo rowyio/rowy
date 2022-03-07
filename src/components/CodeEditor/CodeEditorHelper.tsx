@@ -1,5 +1,15 @@
-import { Stack, Typography, Grid, Tooltip, Button } from "@mui/material";
-import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
+import {
+  Stack,
+  Typography,
+  Grid,
+  Tooltip,
+  Button,
+  IconButton,
+} from "@mui/material";
+import SecretsIcon from "@mui/icons-material/VpnKeyOutlined";
+import FunctionsIcon from "@mui/icons-material/CloudOutlined";
+import DocsIcon from "@mui/icons-material/DescriptionOutlined";
+import { useAppContext } from "@src/contexts/AppContext";
 
 export interface ICodeEditorHelperProps {
   docLink: string;
@@ -13,6 +23,7 @@ export default function CodeEditorHelper({
   docLink,
   additionalVariables,
 }: ICodeEditorHelperProps) {
+  const { projectId } = useAppContext();
   const availableVariables = [
     {
       key: "row",
@@ -35,15 +46,18 @@ export default function CodeEditorHelper({
       description: `firebase Storage can be accessed through this, storage.bucket() returns default storage bucket of the firebase project.`,
     },
     {
-      key: "utilFns",
-      description: `utilFns provides a set of functions that are commonly used, such as easy access to GCP Secret Manager`,
+      key: "rowy",
+      description: `rowy provides a set of functions that are commonly used, such as easy access to GCP Secret Manager`,
     },
+
   ];
 
   return (
     <Stack
       direction="row"
       alignItems="baseline"
+      justifyItems="space-between"
+      spacing={1}
       justifyContent="space-between"
       sx={{ my: 1 }}
     >
@@ -60,18 +74,45 @@ export default function CodeEditorHelper({
           </Grid>
         ))}
       </Grid>
-
-      <Button
-        size="small"
-        color="primary"
-        target="_blank"
-        rel="noopener noreferrer"
-        href={docLink}
-        style={{ flexShrink: 0 }}
-      >
-        Examples & docs
-        <InlineOpenInNewIcon />
-      </Button>
+      <Grid container spacing={1} direction="row" justifyContent={"flex-end"}>
+        <Tooltip title="Open Secret Manager">
+          <IconButton
+            size="small"
+            color="primary"
+            target="_blank"
+            rel="noopener noreferrer"
+            href={`https://console.cloud.google.com/security/secret-manager?project=${projectId}`}
+            aria-label="secret manager"
+          >
+            <SecretsIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Configure Cloud function">
+          <IconButton
+            size="small"
+            color="primary"
+            target="_blank"
+            rel="noopener noreferrer"
+            //href={`https://console.cloud.google.com/functions/list?project=${projectId}`}
+            href={`https://console.cloud.google.com/functions/edit/us-central1/R-lwj?env=gen1&project=${projectId}`}
+            aria-label="Cloud function"
+          >
+            <FunctionsIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Examples & documentation">
+          <IconButton
+            size="small"
+            color="primary"
+            target="_blank"
+            rel="noopener noreferrer"
+            href={docLink}
+            aria-label="documentation"
+          >
+            <DocsIcon />
+          </IconButton>
+        </Tooltip>
+      </Grid>
     </Stack>
   );
 }

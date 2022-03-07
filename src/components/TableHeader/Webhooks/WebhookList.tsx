@@ -12,7 +12,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import WebhookIcon from "@src/assets/icons/Webhook";
+import WebhookIcon from "@mui/icons-material/Webhook";
 import LogsIcon from "@src/assets/icons/CloudLogs";
 import EditIcon from "@mui/icons-material/EditOutlined";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";

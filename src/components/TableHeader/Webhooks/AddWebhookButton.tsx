@@ -73,7 +73,7 @@ export default function AddWebhookButton({
           rel="noopener noreferrer"
         >
           <ListItemIcon>
-            <EmailIcon aria-label="Send email" />
+            <EmailIcon aria-label="Send email" sx={{ mr: 1.5 }} />
           </ListItemIcon>
           Request new webhook…
         </MenuItem>

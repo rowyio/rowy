@@ -1,6 +1,7 @@
 import { lazy, Suspense, useState } from "react";
 import _get from "lodash/get";
 import stringify from "json-stable-stringify-without-jsonify";
+import { Link } from "react-router-dom";
 
 import {
   Stack,
@@ -13,7 +14,7 @@ import {
   Radio,
   Typography,
   InputLabel,
-  Link,
+  Link as MuiLink,
   Checkbox,
   FormHelperText,
   Fab,
@@ -33,17 +34,30 @@ import { useProjectContext } from "@src/contexts/ProjectContext";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
 import { useAppContext } from "@src/contexts/AppContext";
 
+/* eslint-disable import/no-webpack-loader-syntax */
+import actionDefs from "!!raw-loader!./action.d.ts";
+import { RUN_ACTION_TEMPLATE, UNDO_ACTION_TEMPLATE } from "./templates";
+import { routes } from "constants/routes";
+
+const diagnosticsOptions = {
+  noSemanticValidation: false,
+  noSyntaxValidation: false,
+  noSuggestionDiagnostics: true,
+};
+
 const CodeEditor = lazy(
   () =>
     import("@src/components/CodeEditor" /* webpackChunkName: "CodeEditor" */)
 );
 
 const Settings = ({ config, onChange }) => {
-  const { tableState, roles } = useProjectContext();
+  const { tableState, roles, settings, compatibleRowyRunVersion } =
+    useProjectContext();
   const { projectId } = useAppContext();
   const [activeStep, setActiveStep] = useState<
     "requirements" | "friction" | "action" | "undo" | "customization"
   >("requirements");
+  const functionBodyOnly = compatibleRowyRunVersion!({ maxVersion: "1.3.10" });
   const steps =
     config.isActionScript && _get(config, "undo.enabled")
       ? ["requirements", "friction", "action", "undo", "customization"]
@@ -62,7 +76,7 @@ const Settings = ({ config, onChange }) => {
 
   const scriptExtraLibs = [
     [
-      "declare class actionParams {",
+      "declare class ActionParams {",
       "    /**",
       "     * actionParams are provided by dialog popup form",
       "     */",
@@ -76,6 +90,7 @@ const Settings = ({ config, onChange }) => {
       }),
       "}",
     ].join("\n"),
+    actionDefs,
   ];
 
   // Backwards-compatibility: previously user could set `confirmation` without
@@ -86,6 +101,25 @@ const Settings = ({ config, onChange }) => {
       typeof config.confirmation === "string" &&
       config.confirmation !== "");
 
+  const runFn = functionBodyOnly
+    ? config?.script
+    : config.runFn
+    ? config.derivativeFn
+    : config?.script
+    ? `const action:Action = async ({row,ref,db,storage,auth,actionParams,user}) => {
+      ${config.script.replace(/utilFns.getSecret/g, "rowy.secrets.getSecret")}
+    }`
+    : RUN_ACTION_TEMPLATE;
+
+  const undoFn = functionBodyOnly
+    ? _get(config, "undo.script")
+    : config.undoFn
+    ? config.undoFn
+    : _get(config, "undo.script")
+    ? `const action : Action = async ({row,ref,db,storage,auth,actionParams,user}) => {
+    ${_get(config, "undo.script")}
+  }`
+    : UNDO_ACTION_TEMPLATE;
   return (
     <SteppedAccordion
       steps={[
@@ -260,17 +294,19 @@ const Settings = ({ config, onChange }) => {
                         <Typography variant="caption" color="textSecondary">
                           Write JavaScript code below that will be executed by
                           Rowy Run.{" "}
-                          <Link
-                            href={WIKI_LINKS.rowyRun}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            Requires Rowy Run setup
-                            <InlineOpenInNewIcon />
-                          </Link>
+                          {!settings?.rowyRunUrl && (
+                            <MuiLink
+                              component={Link}
+                              to={routes.projectSettings + "#rowyRun"}
+                              color="error"
+                            >
+                              Requires Rowy Run setup&nbsp;→
+                            </MuiLink>
+                          )}
                         </Typography>
                       </>
                     }
+                    disabled={!settings?.rowyRunUrl}
                   />
                   <FormControlLabel
                     value="cloudFunction"
@@ -280,14 +316,14 @@ const Settings = ({ config, onChange }) => {
                         <Typography variant="inherit">Callable</Typography>
                         <Typography variant="caption" color="textSecondary">
                           A{" "}
-                          <Link
+                          <MuiLink
                             href="https://firebase.google.com/docs/functions/callable"
                             target="_blank"
                             rel="noopener noreferrer"
                           >
                             callable function
                             <InlineOpenInNewIcon />
-                          </Link>{" "}
+                          </MuiLink>{" "}
                           you’ve deployed on your Firestore or Google Cloud
                           project
                         </Typography>
@@ -309,25 +345,25 @@ const Settings = ({ config, onChange }) => {
                     <>
                       Write the name of the callable function you’ve deployed to
                       your project.{" "}
-                      <Link
+                      <MuiLink
                         href={`https://console.firebase.google.com/project/${projectId}/functions/list`}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
                         View your callable functions
                         <InlineOpenInNewIcon />
-                      </Link>
+                      </MuiLink>
                       <br />
                       Your callable function must be compatible with Rowy Action
                       columns.{" "}
-                      <Link
+                      <MuiLink
                         href={WIKI_LINKS.fieldTypesAction + "#callable"}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
                         View requirements
                         <InlineOpenInNewIcon />
-                      </Link>
+                      </MuiLink>
                     </>
                   }
                 />
@@ -338,9 +374,16 @@ const Settings = ({ config, onChange }) => {
                     <Suspense fallback={<FieldSkeleton height={300} />}>
                       <CodeEditor
                         minHeight={200}
-                        value={config.script}
-                        onChange={onChange("script")}
+                        value={runFn}
+                        onChange={
+                          functionBodyOnly
+                            ? onChange("script")
+                            : onChange("runFn")
+                        }
                         extraLibs={scriptExtraLibs}
+                        diagnosticsOptions={
+                          functionBodyOnly ? undefined : diagnosticsOptions
+                        }
                       />
                     </Suspense>
                     <CodeEditorHelper
@@ -447,9 +490,16 @@ const Settings = ({ config, onChange }) => {
                   <InputLabel variant="filled">Undo script</InputLabel>
                   <Suspense fallback={<FieldSkeleton height={300} />}>
                     <CodeEditor
-                      value={_get(config, "undo.script")}
-                      onChange={onChange("undo.script")}
+                      value={undoFn}
+                      onChange={
+                        functionBodyOnly
+                          ? onChange("undo.script")
+                          : onChange("undoFn")
+                      }
                       extraLibs={scriptExtraLibs}
+                      diagnosticsOptions={
+                        functionBodyOnly ? undefined : diagnosticsOptions
+                      }
                     />
                   </Suspense>
                   <CodeEditorHelper

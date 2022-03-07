@@ -75,11 +75,14 @@ export default function useUpdateCheck() {
 
     // Only store the latest release
     if (compare(resRowy.tag_name, version, ">")) newState.rowy = resRowy;
-    if (compare(resRowyRun.tag_name, deployedRowyRun.version, ">"))
+    if (
+      deployedRowyRun &&
+      compare(resRowyRun.tag_name, deployedRowyRun.version, ">")
+    )
       newState.rowyRun = resRowyRun;
 
     // Save deployed version
-    newState.deployedRowyRun = deployedRowyRun.version;
+    newState.deployedRowyRun = deployedRowyRun?.version ?? "";
 
     setLatestUpdate(newState);
     setLoading(false);

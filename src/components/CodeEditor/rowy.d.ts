@@ -48,7 +48,7 @@ interface Rowy {
     /**
      * Get an existing secret from the secret manager.
      */
-    get: (name: string, version?: string) => Promise<string | undefined>;
+    get: (name: SecretNames, version?: string) => Promise<string | undefined>;
   };
   /**
    * Gives access to the Cloud Storage.
@@ -60,14 +60,14 @@ interface Rowy {
        */
       url: (
         url: string,
-        options: uploadOptions
+        options?: uploadOptions
       ) => Promise<RowyFile | undefined>;
       /**
        * uploads a file to storage bucket from a buffer or string
        */
       data: (
         data: Buffer | string,
-        options: uploadOptions
+        options?: uploadOptions
       ) => Promise<RowyFile | undefined>;
     };
   };
@@ -76,7 +76,10 @@ interface Rowy {
    * use rowy.secrets.get instead.
    * Get an existing secret from the secret manager.
    */
-  getSecret: (name: string, version?: string) => Promise<string | undefined>;
+  getSecret: (
+    name: SecretNames,
+    version?: string
+  ) => Promise<string | undefined>;
   /**
    * @deprecated will be removed in version 2.0.
    * use rowy.metadata.serviceAccountUser instead.

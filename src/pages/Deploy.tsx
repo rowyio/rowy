@@ -22,7 +22,6 @@ import MarketingBanner from "@src/components/Auth/MarketingBanner";
 import AuthLayout from "@src/components/Auth/AuthLayout";
 
 import { EXTERNAL_LINKS, WIKI_LINKS } from "@src/constants/externalLinks";
-import { name } from "@root/package.json";
 
 export default function DeployPage() {
   const { search } = useLocation();
@@ -51,7 +50,7 @@ export default function DeployPage() {
           title="Get started"
           description={
             <>
-              Set up {name} on your Google Cloud or Firebase project with a
+              Set up Rowy on your Google Cloud or Firebase project with a
               one-click deploy button.
               <br />
               <br />
@@ -148,7 +147,7 @@ export default function DeployPage() {
                   </div>
 
                   <Typography variant="caption" color="text.secondary">
-                    By setting up {name}, you agree to our{" "}
+                    By setting up Rowy, you agree to our{" "}
                     <Link
                       href={EXTERNAL_LINKS.terms}
                       target="_blank"

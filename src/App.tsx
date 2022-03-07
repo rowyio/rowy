@@ -12,6 +12,7 @@ import ErrorBoundary from "@src/components/ErrorBoundary";
 import Loading from "@src/components/Loading";
 import Navigation from "@src/components/Navigation";
 import Logo from "@src/assets/Logo";
+import RowyRunModal from "@src/components/RowyRunModal";
 
 import SwrProvider from "@src/contexts/SwrContext";
 import ConfirmationProvider from "@src/components/ConfirmationDialog/Provider";
@@ -65,6 +66,7 @@ export default function App() {
                 <ConfirmationProvider>
                   <SnackLogProvider>
                     <CustomBrowserRouter>
+                      <RowyRunModal />
                       <Suspense fallback={<Loading fullScreen />}>
                         <Switch>
                           <Route

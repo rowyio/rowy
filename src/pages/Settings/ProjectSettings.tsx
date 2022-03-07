@@ -14,7 +14,6 @@ import Customization from "@src/components/Settings/ProjectSettings/Customizatio
 import { SETTINGS, PUBLIC_SETTINGS } from "@src/config/dbPaths";
 import useDoc from "@src/hooks/useDoc";
 import { db } from "@src/firebase";
-import { name } from "@root/package.json";
 
 export interface IProjectSettingsChildProps {
   settings: Record<string, any>;
@@ -68,7 +67,7 @@ export default function ProjectSettingsPage() {
 
   const sections = [
     { title: "About", Component: About },
-    { title: `${name} Run`, Component: RowyRun, props: childProps },
+    { title: `Rowy Run`, Component: RowyRun, props: childProps },
     { title: "Authentication", Component: Authentication, props: childProps },
     { title: "Customization", Component: Customization, props: childProps },
   ];

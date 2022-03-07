@@ -3,7 +3,7 @@ import { useAtom } from "jotai";
 import _isEqual from "lodash/isEqual";
 
 import TableHeaderButton from "../TableHeaderButton";
-import WebhookIcon from "@src/assets/icons/Webhook";
+import WebhookIcon from "@mui/icons-material/Webhook";
 import Modal from "@src/components/Modal";
 import AddWebhookButton from "./AddWebhookButton";
 import WebhookList from "./WebhookList";
@@ -18,6 +18,7 @@ import { runRoutes } from "@src/constants/runRoutes";
 import { analytics } from "@src/analytics";
 import { useSnackbar } from "notistack";
 import { modalAtom } from "@src/atoms/Table";
+import { useRowyRunModal } from "@src/atoms/RowyRunModal";
 
 export default function Webhooks() {
   const { tableState, table, tableActions, rowyRun, compatibleRowyRunVersion } =
@@ -40,7 +41,15 @@ export default function Webhooks() {
     index?: number;
   } | null>(null);
 
-  if (!compatibleRowyRunVersion?.({ minVersion: "1.2.0" })) return null;
+  const openRowyRunModal = useRowyRunModal();
+  if (!compatibleRowyRunVersion?.({ minVersion: "1.2.0" }))
+    return (
+      <TableHeaderButton
+        title="Webhooks"
+        onClick={() => openRowyRunModal("Webhooks", "1.2.0")}
+        icon={<WebhookIcon />}
+      />
+    );
 
   const edited = !_isEqual(currentWebhooks, localWebhooksObjects);
 

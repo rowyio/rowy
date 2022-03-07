@@ -98,13 +98,14 @@ export default function FilterInputs({
               }}
             />
             <Suspense fallback={<FieldSkeleton />}>
-              {createElement(getFieldProp("SideDrawerField", columnType), {
-                column: selectedColumn,
-                control,
-                docRef: {},
-                disabled,
-                onChange: () => {},
-              })}
+              {columnType &&
+                createElement(getFieldProp("SideDrawerField", columnType), {
+                  column: selectedColumn,
+                  control,
+                  docRef: {},
+                  disabled,
+                  onChange: () => {},
+                })}
             </Suspense>
           </form>
         )}

@@ -3,26 +3,88 @@ import { getColumnType, getFieldProp } from "@src/components/fields";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import { MenuContents } from "./MenuContent";
 import { useContextMenuAtom } from "@src/atoms/ContextMenu";
-
+import { FieldType } from "@src/constants/fields";
+import DuplicateIcon from "@src/assets/icons/Copy";
+import DeleteIcon from "@mui/icons-material/DeleteOutlined";
+import { useAppContext } from "@src/contexts/AppContext";
+import { IContextMenuItem } from "./MenuItem";
+import { useConfirmation } from "@src/components/ConfirmationDialog/Context";
 export default function ContextMenu() {
-  const { tableState } = useProjectContext();
+  const { requestConfirmation } = useConfirmation();
+  const { tableState, deleteRow, addRow } = useProjectContext();
+  const { userRoles } = useAppContext();
   const { anchorEle, selectedCell, resetContextMenu } = useContextMenuAtom();
   const columns = tableState?.columns;
   const selectedColIndex = selectedCell?.colIndex;
   const selectedColumn = _find(columns, { index: selectedColIndex });
   if (!selectedColumn) return <></>;
-  const configActions =
-    getFieldProp("contextMenuActions", getColumnType(selectedColumn)) ||
-    function empty() {};
-  const actions = configActions(selectedCell, resetContextMenu) || [];
+  const menuActions = getFieldProp("contextMenuActions", selectedColumn.type);
 
-  if (!anchorEle || actions.length === 0) return <></>;
+  const actionGroups: IContextMenuItem[][] = [];
+
+  const actions = menuActions
+    ? menuActions(selectedCell, resetContextMenu)
+    : [];
+  if (actions.length > 0) actionGroups.push(actions);
+
+  let hasRenderedFieldActions = false;
+  if (selectedColumn.type === FieldType.derivative) {
+    const renderedFieldMenuActions = getFieldProp(
+      "contextMenuActions",
+      selectedColumn.config.renderFieldType
+    );
+    if (renderedFieldMenuActions) {
+      actionGroups.push(
+        renderedFieldMenuActions(selectedCell, resetContextMenu)
+      );
+      hasRenderedFieldActions = true;
+    }
+  }
+  if (!anchorEle || (actions.length === 0 && !hasRenderedFieldActions))
+    return <></>;
+  const row = tableState?.rows[selectedCell!.rowIndex];
+  if (userRoles.includes("ADMIN") && row) {
+    const rowActions = [
+      {
+        label: "Duplicate Row",
+        icon: <DuplicateIcon />,
+        onClick: () => {
+          const { ref, ...clonedRow } = row;
+          addRow!(clonedRow, undefined, { type: "smaller" });
+        },
+      },
+      {
+        label: "Delete Row",
+        variant: "secondary",
+        icon: <DeleteIcon color="warning" />,
+        onClick: () => {
+          requestConfirmation({
+            title: "Delete row?",
+            customBody: (
+              <>
+                Row path:
+                <br />
+                <code style={{ userSelect: "all", wordBreak: "break-all" }}>
+                  {row.ref.path}
+                </code>
+              </>
+            ),
+            confirm: "Delete",
+            confirmColor: "error",
+            handleConfirm: () => deleteRow?.(row.id),
+          });
+          resetContextMenu();
+        },
+      },
+    ];
+    actionGroups.push(rowActions);
+  }
   return (
     <MenuContents
       anchorEl={anchorEle}
       open={Boolean(anchorEle)}
       handleClose={resetContextMenu}
-      items={actions}
+      groups={actionGroups}
     />
   );
 }

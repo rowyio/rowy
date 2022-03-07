@@ -1,16 +1,7 @@
 /**
  * utility functions
  */
-declare namespace utilFns {
-  /**
-   * Sends out an email through sendGrid
-   */
-  function sendEmail(msg: {
-    from: string;
-    templateId: string;
-    personalizations: { to: string; dynamic_template_data: any }[];
-  }): void {}
-
+declare namespace RULES_UTILS {
   /**
    * Gets the secret defined in Google Cloud Secret
    */

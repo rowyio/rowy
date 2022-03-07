@@ -88,23 +88,31 @@ export default function ActionFab({
   };
 
   const handleRun = async (actionParams = null) => {
-    setIsRunning(true);
-    const data = fnParams(actionParams);
-    let result;
+    try {
+      setIsRunning(true);
+      const data = fnParams(actionParams);
+      let result;
 
-    if (callableName === "actionScript") {
-      result = await handleActionScript(data);
-    } else {
-      result = await handleCallableAction(data);
-    }
-    const { message, success } = result;
-    setIsRunning(false);
-    enqueueSnackbar(
-      typeof message === "string" ? message : JSON.stringify(message),
-      {
-        variant: success ? "success" : "error",
+      if (callableName === "actionScript") {
+        result = await handleActionScript(data);
+      } else {
+        result = await handleCallableAction(data);
       }
-    );
+      const { message, success } = result ?? {};
+      enqueueSnackbar(
+        typeof message === "string" ? message : JSON.stringify(message),
+        {
+          variant: success ? "success" : "error",
+        }
+      );
+    } catch (e) {
+      console.log(e);
+      enqueueSnackbar(`Failed to run action. Check the column settings.`, {
+        variant: "error",
+      });
+    } finally {
+      setIsRunning(false);
+    }
   };
 
   const needsParams =
