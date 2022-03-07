@@ -1,4 +1,4 @@
-import { useState, createElement } from "react";
+import React, { useState, createElement } from "react";
 import { use100vh } from "react-div-100vh";
 import { SwitchTransition } from "react-transition-group";
 import type { ISetupStep } from "./types";
@@ -33,7 +33,11 @@ export interface ISetupLayoutProps {
   steps: ISetupStep[];
   completion: Record<string, boolean>;
   setCompletion: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
-  continueButtonLoading?: boolean;
+  continueButtonLoading?: boolean | string;
+  onContinue?: (
+    completion: Record<string, boolean>
+  ) => Promise<Record<string, boolean>>;
+  logo?: React.ReactNode;
 }
 
 export default function SetupLayout({
@@ -41,6 +45,8 @@ export default function SetupLayout({
   completion,
   setCompletion,
   continueButtonLoading = false,
+  onContinue,
+  logo,
 }: ISetupLayoutProps) {
   const fullScreenHeight = use100vh() ?? 0;
   const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down("sm"));
@@ -55,9 +61,13 @@ export default function SetupLayout({
   const listedSteps = steps.filter((step) => step.layout !== "centered");
 
   // Continue goes to the next incomplete step
-  const handleContinue = () => {
+  const handleContinue = async () => {
+    let updatedCompletion = completion;
+    if (onContinue && step.layout !== "centered")
+      updatedCompletion = await onContinue(completion);
+
     let nextIncompleteStepIndex = stepIndex + 1;
-    while (completion[steps[nextIncompleteStepIndex]?.id]) {
+    while (updatedCompletion[steps[nextIncompleteStepIndex]?.id]) {
       // console.log("iteration", steps[nextIncompleteStepIndex]?.id);
       nextIncompleteStepIndex++;
     }
@@ -118,7 +128,7 @@ export default function SetupLayout({
             },
 
             "& p": {
-              maxWidth: "70ch",
+              maxWidth: "80ch",
             },
           }}
         >
@@ -195,7 +205,7 @@ export default function SetupLayout({
                 {stepId === "welcome" && (
                   <SwitchTransition mode="out-in">
                     <SlideTransition key={stepId} appear timeout={25}>
-                      <Logo size={2} />
+                      {logo || <Logo size={2} />}
                     </SlideTransition>
                   </SwitchTransition>
                 )}
@@ -245,7 +255,7 @@ export default function SetupLayout({
 
               <ScrollableDialogContent
                 disableTopDivider={step.layout === "centered"}
-                sx={{ overflowX: "auto" }}
+                sx={{ overflowX: "auto", pb: 3 }}
               >
                 <SwitchTransition mode="out-in">
                   <SlideTransition key={stepId} appear timeout={100}>
@@ -271,10 +281,20 @@ export default function SetupLayout({
                 color="primary"
                 size="large"
                 type="submit"
-                loading={continueButtonLoading}
+                loading={Boolean(continueButtonLoading)}
+                loadingPosition={
+                  typeof continueButtonLoading === "string" ? "start" : "center"
+                }
+                startIcon={
+                  typeof continueButtonLoading === "string" && (
+                    <div style={{ width: 24 }} />
+                  )
+                }
                 disabled={!completion[stepId]}
               >
-                Continue
+                {typeof continueButtonLoading === "string"
+                  ? continueButtonLoading
+                  : "Continue"}
               </LoadingButton>
             </DialogActions>
           )}
