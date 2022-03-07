@@ -96,8 +96,7 @@ export default function CodeEditorHelper({
             color="primary"
             target="_blank"
             rel="noopener noreferrer"
-            //href={`https://console.cloud.google.com/functions/list?project=${projectId}`}
-            href={`https://console.cloud.google.com/functions/edit/us-central1/R-lwj?env=gen1&project=${projectId}`}
+            href={`https://console.cloud.google.com/functions/list?project=${projectId}`}
           >
             <FunctionsIcon fontSize="small" />
           </IconButton>
