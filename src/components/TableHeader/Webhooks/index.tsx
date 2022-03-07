@@ -3,7 +3,7 @@ import { useAtom } from "jotai";
 import _isEqual from "lodash/isEqual";
 
 import TableHeaderButton from "../TableHeaderButton";
-import WebhookIcon from "@src/assets/icons/Webhook";
+import WebhookIcon from "@mui/icons-material/Webhook";
 import Modal from "@src/components/Modal";
 import AddWebhookButton from "./AddWebhookButton";
 import WebhookList from "./WebhookList";
