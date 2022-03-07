@@ -9,7 +9,6 @@ export enum routes {
 
   authSetup = "/authSetup",
   setup = "/setup",
-  deploy = "/deploy",
   pageNotFound = "/404",
 
   table = "/table",
