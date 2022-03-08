@@ -19,7 +19,7 @@ export default function ContextMenuActions(
   reset: () => void | Promise<void>
 ): IContextMenuActions[] {
   const { tableState, rowyRun } = useProjectContext();
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const columns = tableState?.columns;
   const rows = tableState?.rows;
   const selectedRowIndex = selectedCell.rowIndex as number;
@@ -37,6 +37,10 @@ export default function ContextMenuActions(
   const handleEvaluate = async () => {
     try {
       if (!selectedCol || !rowyRun || !selectedRow) return;
+      handleClose();
+      const evaluatingSnackKey = enqueueSnackbar("Evaluating...", {
+        variant: "info",
+      });
       const result = await rowyRun({
         route: runRoutes.evaluateDerivative,
         body: {
@@ -47,13 +51,13 @@ export default function ContextMenuActions(
           columnKey: selectedCol.key,
         },
       });
+      closeSnackbar(evaluatingSnackKey);
       if (result.success === false) {
         enqueueSnackbar(result.message, { variant: "error" });
       }
     } catch (error) {
       enqueueSnackbar(`Failed: ${error}`, { variant: "error" });
     }
-    handleClose();
   };
   const isEmpty =
     cellValue === "" || cellValue === null || cellValue === undefined;

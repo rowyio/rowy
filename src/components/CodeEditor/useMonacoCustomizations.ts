@@ -153,7 +153,6 @@ export default function useMonacoCustomizations({
       return;
     } else {
       const jsonInput = jsonInputForTargetLanguage("typescript");
-      console.log("jsonInput", jsonInput);
       await jsonInput.addSource({
         name: interfaceName,
         samples,
@@ -196,7 +195,6 @@ export default function useMonacoCustomizations({
           const column = columns[columnKey];
           const type = getColumnType(column);
           if (type === "JSON") {
-            console.log("adding json field definition");
             const interfaceName =
               columnKey[0].toUpperCase() + columnKey.slice(1);
             addJsonFieldDefinition(columnKey, interfaceName);
