@@ -9,9 +9,7 @@
 Modern Backend Stack
 </h3>
 <p align="center">
-Forget CLIs, configs, and DevOps. Focus on building your apps with a platform designed for developer productivity.
-    
-Your production database (Firestore) in an Airtable-like UI with full coding extensibility via Cloud Functions visually in the browser.
+Forget CLIs, configs, and DevOps. Focus on building your apps with a platform designed for developer productivity. Your production database (Firestore) in an Airtable-like UI with full coding extensibility via Cloud Functions visually in the browser.
 </p>
 
 <div align="center">
