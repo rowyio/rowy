@@ -1,4 +1,4 @@
-import { Menu } from "@mui/material";
+import { Divider, Menu } from "@mui/material";
 import { default as MenuItem } from "./MenuItem";
 import { IContextMenuItem } from "./MenuItem";
 
@@ -6,14 +6,14 @@ interface IMenuContents {
   anchorEl: HTMLElement;
   open: boolean;
   handleClose: () => void;
-  items: IContextMenuItem[];
+  groups: IContextMenuItem[][];
 }
 
-export function MenuContents({
+export default function MenuContents({
   anchorEl,
   open,
   handleClose,
-  items,
+  groups,
 }: IMenuContents) {
   const handleContext = (e: React.MouseEvent) => e.preventDefault();
 
@@ -35,14 +35,17 @@ export function MenuContents({
       sx={{
         "& .MuiMenu-paper": {
           backgroundColor: "background.default",
-          width: 200,
-          maxWidth: "100%",
         },
       }}
       onContextMenu={handleContext}
     >
-      {items.map((item, indx: number) => (
-        <MenuItem key={indx} {...item} />
+      {groups.map((items, groupIndex) => (
+        <>
+          {groupIndex > 0 && <Divider variant="middle" />}
+          {items.map((item, index: number) => (
+            <MenuItem key={`contextMenu-${groupIndex}-${index}`} {...item} />
+          ))}
+        </>
       ))}
     </Menu>
   );

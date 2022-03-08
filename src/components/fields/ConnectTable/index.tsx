@@ -30,7 +30,7 @@ export const config: IFieldConfig = {
   initialValue: [],
   icon: <ConnectTableIcon />,
   description:
-    "Connects to an existing table to fetch a snapshot of values from a row. Requires Algolia setup.",
+    "Connects to an existing table to fetch a snapshot of values from a row. Requires Rowy Run and Algolia setup.",
   TableCell: withPopoverCell(BasicCell, InlineCell, PopoverCell, {
     anchorOrigin: { horizontal: "left", vertical: "bottom" },
     transparent: true,
@@ -38,5 +38,6 @@ export const config: IFieldConfig = {
   TableEditor: NullEditor as any,
   SideDrawerField,
   settings: Settings,
+  requireConfiguration: true,
 };
 export default config;

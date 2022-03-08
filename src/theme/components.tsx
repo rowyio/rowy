@@ -8,6 +8,7 @@ import CheckboxIcon from "@src/theme/CheckboxIcon";
 import CheckboxIndeterminateIcon from "@src/theme/CheckboxIndeterminateIcon";
 import AddCircleIcon from "@mui/icons-material/AddCircleOutline";
 import { SvgIcon } from "@mui/material";
+import CircularProgressOptical from "@src/components/CircularProgressOptical";
 
 import { colord, extend } from "colord";
 import mixPlugin from "colord/plugins/mix";
@@ -405,6 +406,23 @@ export const components = (theme: Theme): ThemeOptions => {
       MuiListItem: {
         defaultProps: { dense: true },
       },
+      MuiListItemText: {
+        defaultProps: {
+          secondaryTypographyProps: { variant: "caption" },
+        },
+        styleOverrides: {
+          root: {
+            ".MuiMenu-list &": { whiteSpace: "normal" },
+          },
+          primary: {
+            ".MuiSelect-select &": theme.typography.body2,
+          },
+          secondary: {
+            ".MuiSelect-select &": { display: "none" },
+          },
+        },
+      },
+
       MuiMenu: {
         styleOverrides: {
           list: { padding: theme.spacing(0.5, 0) },
@@ -525,6 +543,8 @@ export const components = (theme: Theme): ThemeOptions => {
               paddingRight: theme.spacing(2),
             },
             "& .MuiButton-iconSizeMedium > *:nth-of-type(1)": { fontSize: 24 },
+
+            "&.Mui-disabled": { color: theme.palette.text.disabled },
           },
           sizeSmall: {
             minHeight: 24,
@@ -601,6 +621,9 @@ export const components = (theme: Theme): ThemeOptions => {
         defaultProps: {
           variant: "outlined",
           color: "secondary",
+          loadingIndicator: (
+            <CircularProgressOptical color="inherit" size={16} />
+          ),
         },
       },
       MuiButtonGroup: {
@@ -1008,9 +1031,10 @@ export const components = (theme: Theme): ThemeOptions => {
               },
             },
 
-            "&:hover .MuiCheckbox-root, &:hover .MuiRadio-root": {
-              backgroundColor: theme.palette.action.hover,
-            },
+            "&:hover .MuiCheckbox-root:not(.Mui-disabled), &:hover .MuiRadio-root:not(.Mui-disabled)":
+              {
+                backgroundColor: theme.palette.action.hover,
+              },
           },
           label: {
             marginTop: 10,

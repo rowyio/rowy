@@ -13,15 +13,61 @@ import FormAutosave from "./FormAutosave";
 import { FieldType } from "@src/constants/fields";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
 import { name } from "@root/package.json";
-
-const CodeEditor = lazy(
+/* eslint-disable import/no-webpack-loader-syntax */
+import defaultValueDefs from "!!raw-loader!./defaultValue.d.ts";
+import { useProjectContext } from "@src/contexts/ProjectContext";
+const _CodeEditor = lazy(
   () =>
     import("@src/components/CodeEditor" /* webpackChunkName: "CodeEditor" */)
 );
 
+const diagnosticsOptions = {
+  noSemanticValidation: false,
+  noSyntaxValidation: false,
+  noSuggestionDiagnostics: true,
+};
+
 export interface IDefaultValueInputProps extends IMenuModalProps {
   handleChange: (key: any) => (update: any) => void;
 }
+
+const CodeEditor = ({ type, config, handleChange }) => {
+  const { compatibleRowyRunVersion } = useProjectContext();
+  const functionBodyOnly = compatibleRowyRunVersion!({ maxVersion: "1.3.10" });
+  const returnType = getFieldProp("dataType", type) ?? "any";
+
+  const dynamicValueFn = functionBodyOnly
+    ? config.defaultValue?.script
+    : config.defaultValue?.dynamicValueFn
+    ? config.defaultValue?.dynamicValueFn
+    : config.defaultValue?.script
+    ? `const dynamicValueFn : DefaultValue = async ({row,ref,db,storage,auth})=>{
+    ${config.defaultValue.script}
+    }`
+    : `const dynamicValueFn : DefaultValue = async ({row,ref,db,storage,auth})=>{
+    // Write your default value code here
+    // for example:
+    // generate random hex color
+    // const color = "#" + Math.floor(Math.random() * 16777215).toString(16);
+    // return color;
+    // checkout the documentation for more info: https://docs.rowy.io/how-to/default-values#dynamic
+  }`;
+  return (
+    <_CodeEditor
+      value={dynamicValueFn}
+      diagnosticsOptions={functionBodyOnly ? undefined : diagnosticsOptions}
+      extraLibs={[
+        defaultValueDefs.replace(
+          `"PLACEHOLDER_OUTPUT_TYPE"`,
+          `${returnType} | Promise<${returnType}>`
+        ),
+      ]}
+      onChange={handleChange(
+        functionBodyOnly ? "defaultValue.script" : "defaultValue.dynamicValueFn"
+      )}
+    />
+  );
+};
 
 export default function DefaultValueInput({
   config,
@@ -30,6 +76,8 @@ export default function DefaultValueInput({
   fieldName,
   ...props
 }: IDefaultValueInputProps) {
+  const { settings } = useProjectContext();
+
   const _type =
     type !== FieldType.derivative
       ? type
@@ -42,6 +90,7 @@ export default function DefaultValueInput({
         config.defaultValue?.value ?? getFieldProp("initialValue", _type),
     },
   });
+
   return (
     <>
       <TextField
@@ -51,11 +100,6 @@ export default function DefaultValueInput({
         onChange={(e) => handleChange("defaultValue.type")(e.target.value)}
         fullWidth
         sx={{ mb: 1 }}
-        SelectProps={{
-          MenuProps: {
-            sx: { "& .MuiListItemText-root": { whiteSpace: "normal" } },
-          },
-        }}
       >
         <MenuItem value="undefined">
           <ListItemText
@@ -79,10 +123,30 @@ export default function DefaultValueInput({
             secondary="Set a specific default value for all cells in this column."
           />
         </MenuItem>
-        <MenuItem value="dynamic">
+        <MenuItem
+          value="dynamic"
+          disabled={!settings?.rowyRunUrl}
+          sx={{
+            "&.Mui-disabled": { opacity: 1, color: "text.disabled" },
+            "&.Mui-disabled .MuiListItemText-secondary": {
+              color: "text.disabled",
+            },
+          }}
+        >
           <ListItemText
-            primary={`Dynamic (Requires ${name} Cloud Functions)`}
-            secondary={`Write code to set the default value using this table’s ${name} Cloud Function. Setup is required.`}
+            primary={
+              settings?.rowyRunUrl ? (
+                "Dynamic"
+              ) : (
+                <>
+                  Dynamic —{" "}
+                  <Typography color="error" variant="inherit" component="span">
+                    Requires Rowy Run setup
+                  </Typography>
+                </>
+              )
+            }
+            secondary="Write code to set the default value using Rowy Run"
           />
         </MenuItem>
       </TextField>
@@ -136,8 +200,9 @@ export default function DefaultValueInput({
           <CodeEditorHelper docLink={WIKI_LINKS.howToDefaultValues} />
           <Suspense fallback={<FieldSkeleton height={100} />}>
             <CodeEditor
-              value={config.defaultValue?.script}
-              onChange={handleChange("defaultValue.script")}
+              config={config}
+              type={type}
+              handleChange={handleChange}
             />
           </Suspense>
         </>

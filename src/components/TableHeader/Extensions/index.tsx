@@ -19,9 +19,10 @@ import { emptyExtensionObject, IExtension, ExtensionType } from "./utils";
 import { runRoutes } from "@src/constants/runRoutes";
 import { analytics } from "@src/analytics";
 import { modalAtom } from "@src/atoms/Table";
+import { useRowyRunModal } from "@src/atoms/RowyRunModal";
 
 export default function Extensions() {
-  const { tableState, tableActions, rowyRun } = useProjectContext();
+  const { tableState, tableActions, rowyRun, settings } = useProjectContext();
   const appContext = useAppContext();
   const { requestConfirmation } = useConfirmation();
 
@@ -44,6 +45,16 @@ export default function Extensions() {
 
   const snackLogContext = useSnackLogContext();
   const edited = !_isEqual(currentExtensionObjects, localExtensionsObjects);
+
+  const openRowyRunModal = useRowyRunModal();
+  if (!settings?.rowyRunUrl)
+    return (
+      <TableHeaderButton
+        title="Extensions"
+        onClick={() => openRowyRunModal("Extensions")}
+        icon={<ExtensionIcon />}
+      />
+    );
 
   const handleOpen = () => {
     if (tableState?.config.sparks) {

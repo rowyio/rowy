@@ -2,7 +2,7 @@ import _find from "lodash/find";
 import _get from "lodash/get";
 
 import Cut from "@mui/icons-material/ContentCut";
-import CopyCells from "@src/assets/icons/CopyCells";
+import CopyCells from "@src/assets/icons/Copy";
 import Paste from "@mui/icons-material/ContentPaste";
 
 import { useProjectContext } from "@src/contexts/ProjectContext";
@@ -27,6 +27,7 @@ export default function BasicContextMenuActions(
   const selectedRowIndex = selectedCell.rowIndex as number;
   const selectedColIndex = selectedCell?.colIndex;
   const selectedCol = _find(columns, { index: selectedColIndex });
+  if (!selectedCol) return [];
   const selectedRow = rows?.[selectedRowIndex];
   const cellValue = _get(selectedRow, selectedCol.key);
 
@@ -35,7 +36,7 @@ export default function BasicContextMenuActions(
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(cellValue);
-      enqueueSnackbar("Copied to clipboard", { variant: "success" });
+      enqueueSnackbar("Copied");
     } catch (error) {
       enqueueSnackbar(`Failed to copy:${error}`, { variant: "error" });
     }
@@ -55,6 +56,7 @@ export default function BasicContextMenuActions(
 
   const handlePaste = async () => {
     try {
+      if (!selectedCol) return;
       const text = await navigator.clipboard.readText();
       const cellDataType = getFieldProp("dataType", getColumnType(selectedCol));
       let parsed;

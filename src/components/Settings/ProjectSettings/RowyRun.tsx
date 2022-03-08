@@ -12,10 +12,10 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
+import LogoRowyRun from "@src/assets/LogoRowyRun";
 import { IProjectSettingsChildProps } from "@src/pages/Settings/ProjectSettings";
 import { EXTERNAL_LINKS, WIKI_LINKS } from "@src/constants/externalLinks";
 import useUpdateCheck from "@src/hooks/useUpdateCheck";
-import { name } from "@root/package.json";
 import { runRoutes } from "@src/constants/runRoutes";
 
 export default function RowyRun({
@@ -50,37 +50,7 @@ export default function RowyRun({
 
   const [latestUpdate, checkForUpdates, loading] = useUpdateCheck();
 
-  const deployButton = window.location.hostname.includes(
-    EXTERNAL_LINKS.rowyAppHostName
-  ) ? (
-    settings.rowyRunDeployStatus === "BUILDING" ||
-    settings.rowyRunDeployStatus === "COMPLETE" ? (
-      <LoadingButton
-        variant="contained"
-        loading
-        loadingIndicator={
-          settings.rowyRunDeployStatus === "COMPLETE" ? "Deployed" : undefined
-        }
-        style={{ width: 183, borderRadius: 12 }}
-      >
-        Run on Google Cloud
-      </LoadingButton>
-    ) : (
-      <a
-        href={EXTERNAL_LINKS.rowyRunDeploy}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <img
-          src="https://deploy.cloud.run/button.svg"
-          alt="Run on Google Cloud"
-          width={183}
-          height={32}
-          style={{ display: "block" }}
-        />
-      </a>
-    )
-  ) : (
+  const deployButton = (
     <Button href={WIKI_LINKS.rowyRun} target="_blank" rel="noopener noreferrer">
       Deploy instructions
     </Button>
@@ -88,8 +58,12 @@ export default function RowyRun({
 
   return (
     <>
-      <Typography>
-        {name} Run is a Cloud Run instance that provides backend functionality,
+      <LogoRowyRun
+        style={{ display: "block", marginLeft: "auto", marginRight: "auto" }}
+      />
+
+      <Typography style={{ marginTop: 8 }}>
+        Rowy Run is a Cloud Run instance that provides backend functionality,
         such as table action scripts, user management, and easy Cloud Function
         deployment.{" "}
         <Link
@@ -137,7 +111,7 @@ export default function RowyRun({
               )}
 
               <Typography display="block" color="textSecondary">
-                {name} Run v{latestUpdate.deployedRowyRun}
+                Rowy Run v{latestUpdate.deployedRowyRun}
               </Typography>
             </Grid>
 
@@ -166,7 +140,7 @@ export default function RowyRun({
           >
             <Grid item xs={12} sm>
               <Typography>
-                If you have not yet deployed {name} Run, click this button and
+                If you have not yet deployed Rowy Run, click this button and
                 follow the prompts on Cloud Shell.
               </Typography>
             </Grid>
@@ -196,11 +170,10 @@ export default function RowyRun({
                       color="success"
                       style={{ fontSize: "1rem", verticalAlign: "text-top" }}
                     />
-                    &nbsp;
-                    {name} Run is set up correctly
+                    &nbsp; Rowy Run is set up correctly
                   </>
                 ) : verified === false ? (
-                  `${name} Run is not set up correctly`
+                  `Rowy Run is not set up correctly`
                 ) : (
                   " "
                 )

@@ -31,8 +31,17 @@ export default function SetupItem({
         <ArrowIcon aria-label="Item" color="primary" />
       )}
 
-      <Stack spacing={2} alignItems="flex-start" style={{ flexGrow: 1 }}>
-        <Typography variant="inherit">{title}</Typography>
+      <Stack
+        spacing={2}
+        alignItems="flex-start"
+        style={{ flexGrow: 1, minWidth: 0 }}
+      >
+        <Typography
+          variant="inherit"
+          sx={{ "& .MuiButton-root": { mt: -0.5 } }}
+        >
+          {title}
+        </Typography>
 
         {children}
       </Stack>

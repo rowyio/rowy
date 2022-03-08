@@ -12,6 +12,7 @@ import ErrorBoundary from "@src/components/ErrorBoundary";
 import Loading from "@src/components/Loading";
 import Navigation from "@src/components/Navigation";
 import Logo from "@src/assets/Logo";
+import RowyRunModal from "@src/components/RowyRunModal";
 
 import SwrProvider from "@src/contexts/SwrContext";
 import ConfirmationProvider from "@src/components/ConfirmationDialog/Provider";
@@ -24,7 +25,6 @@ import routes from "@src/constants/routes";
 import AuthPage from "@src/pages/Auth";
 import SignOutPage from "@src/pages/Auth/SignOut";
 import SignUpPage from "@src/pages/Auth/SignUp";
-import DeployPage from "@src/pages/Deploy";
 import TestPage from "@src/pages/Test";
 import RowyRunTestPage from "@src/pages/RowyRunTest";
 import PageNotFound from "@src/pages/PageNotFound";
@@ -65,6 +65,7 @@ export default function App() {
                 <ConfirmationProvider>
                   <SnackLogProvider>
                     <CustomBrowserRouter>
+                      <RowyRunModal />
                       <Suspense fallback={<Loading fullScreen />}>
                         <Switch>
                           <Route
@@ -96,11 +97,6 @@ export default function App() {
                             exact
                             path={routes.setup}
                             render={() => <SetupPage />}
-                          />
-                          <Route
-                            exact
-                            path={routes.deploy}
-                            render={() => <DeployPage />}
                           />
 
                           <Route

@@ -1,6 +1,16 @@
 import { CONFIG, USERS, PUBLIC_SETTINGS } from "./dbPaths";
 
-export const requiredRules = `
+export const RULES_START = `rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+`;
+
+export const RULES_END = `
+  }
+}`;
+
+export const REQUIRED_RULES = `
     // Rowy: Allow signed in users to read Rowy configuration and admins to write
     match /${CONFIG}/{docId} {
       allow read: if request.auth != null;
@@ -21,14 +31,14 @@ export const requiredRules = `
     }
 ` as const;
 
-export const adminRules = `
+export const ADMIN_RULES = `
     // Allow admins to read and write all documents
     match /{document=**} {
       allow read, write: if hasAnyRole(["ADMIN", "OWNER"]);
     }
 ` as const;
 
-export const utilFns = `
+export const RULES_UTILS = `
     // Rowy: Utility functions
     function isDocOwner(docId) {
       return request.auth != null && (request.auth.uid == resource.id || request.auth.uid == docId);
@@ -38,7 +48,7 @@ export const utilFns = `
     }
 ` as const;
 
-export const insecureRule = `
+export const INSECURE_RULES = `
     match /{document=**} {
       allow read, write: if true;
     }

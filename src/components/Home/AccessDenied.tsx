@@ -19,7 +19,7 @@ export default function AccessDenied() {
       description={
         <>
           <Typography>
-            You are currently signed in as {currentUser?.email}
+            You are signed in as <strong>{currentUser?.email}</strong>
           </Typography>
           <Typography>
             You do not have access to this project. Please contact the project

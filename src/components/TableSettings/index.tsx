@@ -54,7 +54,7 @@ export default function TableSettings({
   const { data: collections } = useSWR(
     "firebaseCollections",
     () => rowyRun?.({ route: runRoutes.listCollections }),
-    { fallbackData: [], revalidateIfStale: false, dedupingInterval: 60_000 }
+    { revalidateIfStale: false, dedupingInterval: 60_000 }
   );
 
   const open = mode !== null;
@@ -166,7 +166,7 @@ export default function TableSettings({
       })),
       ["section", "label"]
     ),
-    Array.isArray(collections) ? collections.filter((x) => x !== CONFIG) : []
+    Array.isArray(collections) ? collections.filter((x) => x !== CONFIG) : null
   );
   const customComponents = {
     tableId: {

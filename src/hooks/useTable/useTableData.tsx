@@ -35,8 +35,6 @@ const rowsReducer = (prevRows: any, update: any) => {
   switch (update.type) {
     case "onSnapshot":
       const snapshotDocs = update.docs;
-      console.log("onSnapshot", snapshotDocs);
-
       // Get rows that may not be part of the snapshot
       // Rows with missing required fields haven’t been written to the db yet
       // Out of order rows will appear on top
@@ -168,7 +166,6 @@ const useTableData = () => {
 
     const unsubscribe = query.limit(limit).onSnapshot(
       (snapshot) => {
-        console.log("snapshot", snapshot);
         // if (snapshot.docs.length > 0) {
         rowsDispatch({
           type: "onSnapshot",

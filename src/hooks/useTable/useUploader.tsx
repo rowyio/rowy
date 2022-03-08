@@ -1,6 +1,12 @@
 import { useReducer } from "react";
+import { useSnackbar } from "notistack";
+
+import { Paper, Button } from "@mui/material";
+import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
+
 import firebase from "firebase/app";
 import { bucket } from "../../firebase/index";
+import { WIKI_LINKS } from "@src/constants/externalLinks";
 
 export type UploaderState = {
   progress: number;
@@ -30,6 +36,8 @@ export type UploadProps = {
 };
 
 const useUploader = () => {
+  const { enqueueSnackbar } = useSnackbar();
+
   const [uploaderState, uploaderDispatch] = useReducer(uploadReducer, {
     ...initialState,
   });
@@ -75,18 +83,46 @@ const useUploader = () => {
           switch (error.code) {
             case "storage/unknown":
               // Unknown error occurred, inspect error.serverResponse
+              enqueueSnackbar("Unknown error occurred", { variant: "error" });
               uploaderDispatch({ error: error.serverResponse });
               break;
 
             case "storage/unauthorized":
-            // User doesn't have permission to access the object
+              // User doesn't have permission to access the object
+              enqueueSnackbar("You don’t have permissions to upload files", {
+                variant: "error",
+                action: (
+                  <Paper elevation={0} sx={{ borderRadius: 1 }}>
+                    <Button
+                      color="primary"
+                      href={
+                        WIKI_LINKS.setupRoles +
+                        "#write-firebase-storage-security-rules"
+                      }
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Fix
+                      <InlineOpenInNewIcon />
+                    </Button>
+                  </Paper>
+                ),
+              });
+              uploaderDispatch({ error: error.code });
+              break;
+
             case "storage/canceled":
-            // User canceled the upload
+              // User canceled the upload
+              uploaderDispatch({ error: error.code });
+              break;
+
             default:
               uploaderDispatch({ error: error.code });
               // Unknown error occurred, inspect error.serverResponse
               break;
           }
+
+          uploaderDispatch({ isLoading: false });
         },
 
         // complete

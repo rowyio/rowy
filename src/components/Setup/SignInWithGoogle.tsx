@@ -41,16 +41,22 @@ export default function SignInWithGoogle({
           <img
             src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
             alt="Google logo"
-            width={20}
-            height={20}
+            width={18}
+            height={18}
             style={{
-              margin: (24 - 20) / 2,
+              margin: (24 - 18) / 2,
               filter: props.disabled ? "grayscale(1)" : "",
             }}
           />
         }
         onClick={handleSignIn}
         loading={status === "LOADING"}
+        style={{ minHeight: 40 }}
+        sx={{
+          minHeight: 40,
+          "& .MuiButton-startIcon": { mr: 3 },
+          "&.MuiButton-outlined": { pr: 3 },
+        }}
         {...props}
       >
         Sign in with Google

@@ -19,9 +19,16 @@ import { db } from "@src/firebase";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import { TABLE_SCHEMAS } from "@src/config/dbPaths";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
+import { useRowyRunModal } from "@src/atoms/RowyRunModal";
 
 export default function Settings({ onChange, config }: ISettingsProps) {
-  const { tables } = useProjectContext();
+  const { tables, settings } = useProjectContext();
+
+  const openRowyRunModal = useRowyRunModal();
+  useEffect(() => {
+    if (!settings?.rowyRunUrl) openRowyRunModal("Connect Table fields");
+  }, [settings?.rowyRunUrl]);
+
   const tableOptions = _sortBy(
     tables?.map((table) => ({
       label: table.name,
