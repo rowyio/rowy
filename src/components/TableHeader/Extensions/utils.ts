@@ -55,20 +55,29 @@ export const triggerTypes: ExtensionTrigger[] = ["create", "update", "delete"];
 const extensionBodyTemplate = {
   task: `const extensionBody: TaskBody = async({row, db, change, ref}) => {
   // task extensions are very flexible you can do anything from updating other documents in your database, to making an api request to 3rd party service.
-
-  // eg:
-  // const got = require('got');
-  // const {body} = await got.post('https://httpbin.org/anything', {
-  // json: {
-  //    hello: 'world'
-  // },
-  // responseType: 'json'
-  // });
-
-  // console.log(body.data);
-  // => {hello: 'world'}
-    
-  console.log("Task Extension completed.")
+  
+  // example:
+  // we can post notification to different discord channels based on row data
+  /*
+  const topic = row.topic;
+  const channel = await db.collection('discordChannels').doc(topic).get();
+  const channelUrl = await channel.get("channelUrl");
+  const content = "Hello discord channel";
+    return fetch("https://discord.com/api/webhooks/"+channelUrl, {
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          content
+        })
+      }).then(async resp => {
+        const result = await resp.json()
+        if (resp.ok) console.info(result)
+        else console.error(result)
+      })
+  */
 }`,
   docSync: `const extensionBody: DocSyncBody = async({row, db, change, ref}) => {
   // feel free to add your own code logic here
