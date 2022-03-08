@@ -58,7 +58,7 @@ export default function Settings({
     ? config.derivativeFn
     : config?.script
     ? `const derivative:Derivative = async ({row,ref,db,storage,auth})=>{
-    ${config.script.replace(/utilFns.getSecret/g, "rowy.secrets.getSecret")}
+    ${config.script.replace(/utilFns.getSecret/g, "rowy.secrets.get")}
   }`
     : `const derivative:Derivative = async ({row,ref,db,storage,auth})=>{
     // Write your derivative code here

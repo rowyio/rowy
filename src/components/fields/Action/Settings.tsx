@@ -107,7 +107,7 @@ const Settings = ({ config, onChange }) => {
     ? config.derivativeFn
     : config?.script
     ? `const action:Action = async ({row,ref,db,storage,auth,actionParams,user}) => {
-      ${config.script.replace(/utilFns.getSecret/g, "rowy.secrets.getSecret")}
+      ${config.script.replace(/utilFns.getSecret/g, "rowy.secrets.get")}
     }`
     : RUN_ACTION_TEMPLATE;
 
