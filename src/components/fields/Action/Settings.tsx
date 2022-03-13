@@ -103,8 +103,8 @@ const Settings = ({ config, onChange }) => {
 
   const runFn = functionBodyOnly
     ? config?.script
-    : config.runFn
-    ? config.derivativeFn
+    : config?.runFn
+    ? config.runFn
     : config?.script
     ? `const action:Action = async ({row,ref,db,storage,auth,actionParams,user}) => {
       ${config.script.replace(/utilFns.getSecret/g, "rowy.secrets.get")}
