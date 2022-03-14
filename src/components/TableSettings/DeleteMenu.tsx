@@ -9,6 +9,7 @@ import Confirmation from "@src/components/Confirmation";
 import { Table } from "@src/contexts/ProjectContext";
 import { routes } from "@src/constants/routes";
 import { db } from "@src/firebase";
+import { analytics } from "@src/analytics";
 import {
   SETTINGS,
   TABLE_SCHEMAS,
@@ -40,13 +41,15 @@ export default function DeleteMenu({ clearDialog, data }: IDeleteMenuProps) {
       (table) => table.id !== data?.id || table.tableType !== data?.tableType
     );
     tablesDocRef.update({ tables: updatedTables });
-    db.collection(
-      data?.tableType === "primaryCollection"
-        ? TABLE_SCHEMAS
-        : TABLE_GROUP_SCHEMAS
-    )
+    await db
+      .collection(
+        data?.tableType === "primaryCollection"
+          ? TABLE_SCHEMAS
+          : TABLE_GROUP_SCHEMAS
+      )
       .doc(data?.id)
       .delete();
+    await analytics.logEvent("delete_table");
     clearDialog();
     history.push(routes.home);
   };

@@ -37,6 +37,7 @@ import { getFieldProp } from "@src/components/fields";
 import { Column } from "react-data-grid";
 import { PopoverProps } from "@mui/material";
 import { useConfirmation } from "@src/components/ConfirmationDialog";
+import { analytics } from "@src/analytics";
 
 const INITIAL_MODAL = { type: "", data: {} };
 
@@ -290,6 +291,7 @@ export default function ColumnMenu() {
           confirmColor: "error",
           handleConfirm: () => {
             actions.remove(column.key);
+            await analytics.logEvent("delete_column", { type: column.type });
             handleClose();
           },
         }),
