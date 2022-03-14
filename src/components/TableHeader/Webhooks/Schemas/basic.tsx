@@ -57,7 +57,7 @@ export const webhookBasic = {
       // auditField
       const ${
         table.auditFieldCreatedBy ?? "_createdBy"
-      } = await rowy.getServiceAccountUser()
+      } = await rowy.metadata.serviceAccountUser()
       return {
         ...body,
         ${table.auditFieldCreatedBy ?? "_createdBy"}

@@ -157,6 +157,7 @@ export default function useMonacoCustomizations({
         name: interfaceName,
         samples,
       });
+
       const inputData = new InputData();
       inputData.addInput(jsonInput);
       const result = await quicktype({
@@ -187,64 +188,56 @@ export default function useMonacoCustomizations({
       console.error("Could not set secret definitions: ", error);
     }
   };
+  const setBaseDefinitions = (monaco, columns) => {
+    const rowDefinition =
+      [
+        Object.keys(columns).map((columnKey: string) => {
+          const column = columns[columnKey];
+          const type = getColumnType(column);
+          if (type === "JSON") {
+            const interfaceName =
+              columnKey[0].toUpperCase() + columnKey.slice(1);
+            addJsonFieldDefinition(columnKey, interfaceName);
+            const def = `static "${columnKey}": ${interfaceName}`;
+            return def;
+          }
+          return `static "${columnKey}": ${getFieldProp("dataType", type)}`;
+        }),
+      ].join(";\n") + ";";
+
+    const availableFields = Object.keys(columns)
+      .map((columnKey: string) => `"${columnKey}"`)
+      .join("|\n");
+
+    monaco.languages.typescript.javascriptDefaults.addExtraLib(
+      ["/**", " * extensions type configuration", " */", extensionsDefs].join(
+        "\n"
+      ),
+      "ts:filename/extensions.d.ts"
+    );
+    monaco.languages.typescript.javascriptDefaults.addExtraLib(
+      [
+        "// basic types that are used in all places",
+        "declare var require: any;",
+        "declare var Buffer: any;",
+        "const ref: FirebaseFirestore.DocumentReference;",
+        "const storage: firebasestorage.Storage;",
+        "const db: FirebaseFirestore.Firestore;",
+        "const auth: firebaseauth.BaseAuth;",
+        `type Row = {${rowDefinition}};`,
+        `type Field = ${availableFields} | string | object;`,
+        `type Fields = Field[];`,
+      ].join("\n"),
+      "ts:filename/rowFields.d.ts"
+    );
+  };
   // Set row definitions
   useEffect(() => {
     if (!monaco || !rowyRun || !tableState?.columns) return;
     try {
-      const rowDefinition =
-        Object.keys(tableState.columns)
-          .map((columnKey: string) => {
-            const column = tableState.columns[columnKey];
-            if (getColumnType(column) === "JSON") {
-              const interfaceName =
-                columnKey[0].toUpperCase() + columnKey.slice(1);
-              addJsonFieldDefinition(columnKey, interfaceName);
-              return `static "${columnKey}": ${interfaceName}`;
-            }
-            return `static "${columnKey}": ${getFieldProp(
-              "dataType",
-              column.type
-            )}`;
-          })
-          .join(";\n") + ";";
-
-      const availableFields = Object.keys(tableState.columns)
-        .map((columnKey: string) => `"${columnKey}"`)
-        .join("|\n");
-
-      monaco.languages.typescript.javascriptDefaults.addExtraLib(
-        [
-          "/**",
-          " * extensions type configuration",
-          " */",
-          "// basic types that are used in all places",
-          `type Row = {${rowDefinition}};`,
-          `type Field = ${availableFields} | string | object;`,
-          `type Fields = Field[];`,
-          extensionsDefs,
-        ].join("\n"),
-        "ts:filename/extensions.d.ts"
-      );
-
-      monaco.languages.typescript.javascriptDefaults.addExtraLib(
-        [
-          "declare var require: any;",
-          "declare var Buffer: any;",
-          "const ref: FirebaseFirestore.DocumentReference;",
-          "const storage: firebasestorage.Storage;",
-          "const db: FirebaseFirestore.Firestore;",
-          "const auth: firebaseauth.BaseAuth;",
-          "declare class row {",
-          "    /**",
-          "     * Returns the row fields",
-          "     */",
-          rowDefinition,
-          "}",
-        ].join("\n"),
-        "ts:filename/rowFields.d.ts"
-      );
+      setBaseDefinitions(monaco, tableState.columns);
     } catch (error) {
-      console.error("Could not set row definitions: ", error);
+      console.error("Could not set basic", error);
     }
     // set available secrets from secretManager
     try {
