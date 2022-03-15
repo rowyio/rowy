@@ -76,7 +76,7 @@ export default function ContextMenu() {
             ),
             confirm: "Delete",
             confirmColor: "error",
-            handleConfirm: () => deleteRow?.(row.id),
+            handleConfirm: () => deleteRow?.(row.ref),
           });
           resetContextMenu();
         },

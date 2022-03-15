@@ -143,7 +143,7 @@ export default function BulkActions({ selectedRows, columns, clearSelection }) {
     clearSelection();
   };
   const handleDelete = () => {
-    deleteRow!(selectedRows.map((row) => row.ref.id));
+    deleteRow!(selectedRows.map((row) => row.ref));
     clearSelection();
   };
 

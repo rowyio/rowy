@@ -18,8 +18,8 @@ import { ImportWizardRef } from "@src/components/Wizards/ImportWizard";
 
 import { rowyRun, IRowyRunRequestProps } from "@src/utils/rowyRun";
 import { rowyUser } from "@src/utils/fns";
-import { WIKI_LINKS } from "@src/constants/externalLinks";
 import { runRoutes } from "@src/constants/runRoutes";
+import { DocumentReference } from "@google-cloud/firestore";
 
 export type Table = {
   id: string;
@@ -357,14 +357,14 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
     );
   };
 
-  const deleteRow = (rowId: string | string[]) => {
-    if (Array.isArray(rowId)) {
-      tableActions.row.delete(rowId, () => {
-        rowId.forEach((id) => auditChange("DELETE_ROW", id, {}));
+  const deleteRow = (ref: DocumentReference | DocumentReference[]) => {
+    if (Array.isArray(ref)) {
+      tableActions.row.delete(ref, () => {
+        ref.forEach((r) => auditChange("DELETE_ROW", r.path, {}));
       });
     } else
-      tableActions.row.delete(rowId, () =>
-        auditChange("DELETE_ROW", rowId, {})
+      tableActions.row.delete(ref, () =>
+        auditChange("DELETE_ROW", ref.path, {})
       );
   };
 

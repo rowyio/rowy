@@ -289,7 +289,7 @@ export default function ColumnMenu() {
           ),
           confirm: "Delete",
           confirmColor: "error",
-          handleConfirm: () => {
+          handleConfirm: async () => {
             actions.remove(column.key);
             await analytics.logEvent("delete_column", { type: column.type });
             handleClose();
