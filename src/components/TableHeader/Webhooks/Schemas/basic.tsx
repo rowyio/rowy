@@ -25,11 +25,17 @@ const requestType = [
 
 export const parserExtraLibs = [
   requestType,
-  `type Parser = (args:{req:WebHookRequest,db: FirebaseFirestore.Firestore,ref: FirebaseFirestore.CollectionReference}) => Promise<any>;`,
+  `type Parser = (args:{req:WebHookRequest,db: FirebaseFirestore.Firestore,ref: FirebaseFirestore.CollectionReference,res:{
+    send:(v:any)=>void
+    sendStatus:(status:number)=>void
+  }}) => Promise<any>;`,
 ];
 export const conditionExtraLibs = [
   requestType,
-  `type Condition = (args:{req:WebHookRequest,db: FirebaseFirestore.Firestore,ref: FirebaseFirestore.CollectionReference}) => Promise<any>;`,
+  `type Condition = (args:{req:WebHookRequest,db: FirebaseFirestore.Firestore,ref: FirebaseFirestore.CollectionReference,res:{
+    send:(v:any)=>void
+    sendStatus:(status:number)=>void
+  }}) => Promise<any>;`,
 ];
 
 const additionalVariables = [
