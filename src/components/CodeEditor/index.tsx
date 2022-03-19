@@ -38,7 +38,7 @@ export default function CodeEditor({
   extraLibs,
   diagnosticsOptions,
   onUnmount,
-
+  defaultLanguage = "javascript",
   ...props
 }: ICodeEditorProps) {
   const theme = useTheme();
@@ -77,7 +77,7 @@ export default function CodeEditor({
         style={fullScreen ? { height: "100%" } : {}}
       >
         <Editor
-          defaultLanguage="javascript"
+          defaultLanguage={defaultLanguage}
           value={initialEditorValue}
           loading={<CircularProgressOptical size={20} sx={{ m: 2 }} />}
           className="editor"
