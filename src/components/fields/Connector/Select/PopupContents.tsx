@@ -19,15 +19,16 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 
-import { IConnectServiceSelectProps } from ".";
+import { IConnectorSelectProps } from ".";
 import useStyles from "./styles";
 import Loading from "@src/components/Loading";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import { replacer } from "@src/utils/fns";
 import { getLabel } from "../utils";
+import { useSnackbar } from "notistack";
 
 export interface IPopupContentsProps
-  extends Omit<IConnectServiceSelectProps, "className" | "TextFieldProps"> {}
+  extends Omit<IConnectorSelectProps, "className" | "TextFieldProps"> {}
 
 // TODO: Implement infinite scroll here
 export default function PopupContents({
@@ -37,6 +38,8 @@ export default function PopupContents({
   docRef,
 }: IPopupContentsProps) {
   const { rowyRun, tableState } = useProjectContext();
+
+  const { enqueueSnackbar } = useSnackbar();
   // const url = config.url ;
   const { config } = column;
   const elementId = config.elementId;
@@ -48,16 +51,28 @@ export default function PopupContents({
   const [query, setQuery] = useState("");
   // Webservice response
   const [response, setResponse] = useState<any | null>(null);
+  const [hits, setHits] = useState<any[]>([]);
 
-  const hits: any["hits"] = response;
+  useEffect(() => {
+    console.log(response);
+    if (response?.success === false) {
+      enqueueSnackbar(response.message, { variant: "error" });
+    } else if (Array.isArray(response?.hits)) {
+      setHits(response.hits);
+    } else {
+      setHits([]);
+      //enqueueSnackbar("response is not any array", { variant: "error" });
+    }
+  }, [response]);
   const [search] = useDebouncedCallback(
     async (query: string) => {
       const resp = await rowyRun!({
-        route: { method: "POST", path: "/connect" },
+        route: { method: "POST", path: "/connector" },
         body: {
           columnKey: column.key,
           query: query,
           schemaDocPath: tableState?.config.tableConfig.path,
+          rowDocPath: docRef.path,
         },
       });
       setResponse(resp);

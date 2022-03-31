@@ -66,14 +66,14 @@ export default function Settings({ config, onChange }) {
       steps={[
         {
           id: "function",
-          title: "Connect Function",
+          title: "Connector Function",
           content: (
             <Stack>
               <Suspense fallback={<FieldSkeleton height={300} />}>
                 <CodeEditor
                   minHeight={200}
-                  value={config.connectFn ?? baseFunction}
-                  onChange={onChange("connectFn")}
+                  value={config.connectorFn ?? baseFunction}
+                  onChange={onChange("connectorFn")}
                   diagnosticsOptions={diagnosticsOptions}
                   extraLibs={[connectorDefs]}
                 />

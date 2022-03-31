@@ -13,7 +13,7 @@ export type ServiceValue = {
   [prop: string]: any;
 };
 
-export interface IConnectServiceSelectProps {
+export interface IConnectorSelectProps {
   value: ServiceValue[];
   onChange: (value: ServiceValue[]) => void;
   column: any;
@@ -26,13 +26,13 @@ export interface IConnectServiceSelectProps {
   disabled?: boolean;
 }
 
-export default function ConnectServiceSelect({
+export default function ConnectorSelect({
   value = [],
   className,
   TextFieldProps = {},
   disabled,
   ...props
-}: IConnectServiceSelectProps) {
+}: IConnectorSelectProps) {
   const classes = useStyles();
 
   const sanitisedValue = Array.isArray(value) ? value : [];
