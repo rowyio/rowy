@@ -13,7 +13,7 @@ type ActionContext = {
   storage: firebasestorage.Storage;
   db: FirebaseFirestore.Firestore;
   auth: firebaseauth.BaseAuth;
-  actionParams: ActionParams;
+  actionParams: actionParams;
   user: ActionUser;
 };
 

@@ -76,7 +76,7 @@ const Settings = ({ config, onChange }) => {
 
   const scriptExtraLibs = [
     [
-      "declare class ActionParams {",
+      "declare interface actionParams {",
       "    /**",
       "     * actionParams are provided by dialog popup form",
       "     */",
