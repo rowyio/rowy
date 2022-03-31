@@ -22,7 +22,7 @@ const Settings = lazy(
 
 export const config: IFieldConfig = {
   type: FieldType.connector,
-  name: "connector",
+  name: "Connector",
   group: "Connection",
   dataType: "any",
   initialValue: [],

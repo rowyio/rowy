@@ -28,6 +28,8 @@ import SteppedAccordion from "@src/components/SteppedAccordion";
 import FieldSkeleton from "@src/components/SideDrawer/Form/FieldSkeleton";
 import CodeEditorHelper from "@src/components/CodeEditor/CodeEditorHelper";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
+/* eslint-disable import/no-webpack-loader-syntax */
+import connectorDefs from "!!raw-loader!./connector.d.ts";
 
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
@@ -73,9 +75,7 @@ export default function Settings({ config, onChange }) {
                   value={config.connectFn ?? baseFunction}
                   onChange={onChange("connectFn")}
                   diagnosticsOptions={diagnosticsOptions}
-                  extraLibs={[
-                    `type Connect = (request: {query:string, row:any, user:any,rowy:Rowy}) => Promise<any>;`,
-                  ]}
+                  extraLibs={[connectorDefs]}
                 />
               </Suspense>
               <CodeEditorHelper
@@ -86,8 +86,8 @@ export default function Settings({ config, onChange }) {
           ),
         },
         {
-          id: "Interface",
-          title: "Interface",
+          id: "config",
+          title: "Configuration",
           content: (
             <Stack spacing={3}>
               <FormControl>
@@ -144,15 +144,6 @@ export default function Settings({ config, onChange }) {
                   }
                 />
               </FormControl>
-            </Stack>
-          ),
-        },
-
-        {
-          id: "optionsSettings",
-          title: "Options Settings",
-          content: (
-            <Stack spacing={3}>
               <FormControl>
                 <Grid container>
                   <InputLabel variant="filled">

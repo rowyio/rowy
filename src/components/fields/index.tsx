@@ -39,7 +39,7 @@ import UpdatedAt from "./UpdatedAt";
 import User from "./User";
 import Id from "./Id";
 import Status from "./Status";
-import Connect from "./Connect";
+import Connector from "./Connector";
 import { TableColumn } from "../Table";
 
 // Export field configs in order for FieldsDropdown
@@ -69,7 +69,7 @@ export const FIELDS: IFieldConfig[] = [
   Image_,
   File_,
   // CONNECTION
-  Connect,
+  Connector,
   SubTable,
   ConnectTable,
   ConnectService,

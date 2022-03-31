@@ -16,10 +16,7 @@ export type ServiceValue = {
 export interface IConnectServiceSelectProps {
   value: ServiceValue[];
   onChange: (value: ServiceValue[]) => void;
-  config: {
-    displayKey: string;
-    [key: string]: any;
-  };
+  column: any;
   editable?: boolean;
   /** Optional style overrides for root MUI `TextField` component */
   className?: string;
@@ -39,7 +36,6 @@ export default function ConnectServiceSelect({
   const classes = useStyles();
 
   const sanitisedValue = Array.isArray(value) ? value : [];
-
   return (
     <TextField
       label=""

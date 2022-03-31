@@ -11,14 +11,11 @@ export default function ConnectService({
   disabled,
   docRef,
 }: IPopoverCellProps) {
-  const config = column.config ?? {};
-  if (!config) return null;
-
   return (
     <ConnectServiceSelect
       value={value}
       onChange={onSubmit}
-      config={(config as any) ?? {}}
+      column={column}
       disabled={disabled}
       docRef={docRef}
       TextFieldProps={{

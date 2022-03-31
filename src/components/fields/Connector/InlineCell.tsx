@@ -6,6 +6,7 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 import ChipList from "@src/components/Table/formatters/ChipList";
 import { get } from "lodash";
+import { getLabel } from "./utils";
 
 export const ConnectService = forwardRef(function ConnectService(
   { value, showPopoverCell, disabled, column }: IPopoverInlineCellProps,
@@ -30,9 +31,9 @@ export const ConnectService = forwardRef(function ConnectService(
     >
       <ChipList>
         {Array.isArray(value) &&
-          value.map((snapshot) => (
-            <Grid item key={get(snapshot, config.primaryKey)}>
-              <Chip label={get(snapshot, displayKey)} size="small" />
+          value.map((item) => (
+            <Grid item key={get(item, config.id)}>
+              <Chip label={getLabel(config, item)} size="small" />
             </Grid>
           ))}
       </ChipList>

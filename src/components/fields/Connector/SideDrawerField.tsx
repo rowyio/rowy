@@ -5,6 +5,7 @@ import { get } from "lodash";
 import { useTheme, Grid, Chip } from "@mui/material";
 
 import ConnectServiceSelect from "./Select";
+import { getLabel } from "./utils";
 
 export default function ConnectService({
   column,
@@ -22,13 +23,9 @@ export default function ConnectService({
       control={control}
       name={column.key}
       render={({ field: { onChange, onBlur, value } }) => {
-        const handleDelete = (hit: any) => () => {
+        const handleDelete = (id: any) => () => {
           // if (multiple)
-          onChange(
-            value.filter(
-              (v) => get(v, config.primaryKey) !== get(hit, config.primaryKey)
-            )
-          );
+          onChange(value.filter((v) => get(v, config.elementId) !== id));
           // else form.setFieldValue(field.name, []);
         };
 
@@ -36,7 +33,7 @@ export default function ConnectService({
           <>
             {!disabled && (
               <ConnectServiceSelect
-                config={(config as any) ?? {}}
+                column={column}
                 value={value}
                 onChange={onChange}
                 docRef={docRef}
@@ -54,15 +51,19 @@ export default function ConnectService({
 
             {Array.isArray(value) && (
               <Grid container spacing={0.5} style={{ marginTop: 2 }}>
-                {value.map((snapshot) => (
-                  <Grid item key={get(snapshot, config.primaryKey)}>
-                    <Chip
-                      component="li"
-                      label={get(snapshot, displayKey)}
-                      onDelete={disabled ? undefined : handleDelete(snapshot)}
-                    />
-                  </Grid>
-                ))}
+                {value.map((item) => {
+                  const key = get(item, config.elementId);
+                  console.log(key, item);
+                  return (
+                    <Grid item key={key}>
+                      <Chip
+                        component="li"
+                        label={getLabel(config, item)}
+                        onDelete={disabled ? undefined : handleDelete(key)}
+                      />
+                    </Grid>
+                  );
+                })}
               </Grid>
             )}
           </>

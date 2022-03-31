@@ -24,6 +24,7 @@ import useStyles from "./styles";
 import Loading from "@src/components/Loading";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import { replacer } from "@src/utils/fns";
+import { getLabel } from "../utils";
 
 export interface IPopupContentsProps
   extends Omit<IConnectServiceSelectProps, "className" | "TextFieldProps"> {}
@@ -32,11 +33,12 @@ export interface IPopupContentsProps
 export default function PopupContents({
   value = [],
   onChange,
-  config,
+  column,
   docRef,
 }: IPopupContentsProps) {
   const { rowyRun, tableState } = useProjectContext();
   // const url = config.url ;
+  const { config } = column;
   const elementId = config.elementId;
   const multiple = Boolean(config.multiple);
 
@@ -47,23 +49,17 @@ export default function PopupContents({
   // Webservice response
   const [response, setResponse] = useState<any | null>(null);
 
-  const [docData, setDocData] = useState<any | null>(null);
-  useEffect(() => {
-    docRef.get().then((d) => setDocData(d.data()));
-  }, []);
   const hits: any["hits"] = response;
   const [search] = useDebouncedCallback(
     async (query: string) => {
-      if (!docData) return;
       const resp = await rowyRun!({
         route: { method: "POST", path: "/connect" },
         body: {
-          columnKey: "game",
+          columnKey: column.key,
           query: query,
           schemaDocPath: tableState?.config.tableConfig.path,
         },
       });
-      console.log(resp);
       setResponse(resp);
     },
     1000,
@@ -72,7 +68,7 @@ export default function PopupContents({
 
   useEffect(() => {
     search(query);
-  }, [query, docData]);
+  }, [query]);
 
   if (!response) return <Loading />;
 
@@ -127,6 +123,9 @@ export default function PopupContents({
                 <MenuItem
                   dense
                   onClick={isSelected ? deselect(hit) : select(hit)}
+                  disabled={
+                    !isSelected && multiple && value.length >= config.max
+                  }
                 >
                   <ListItemIcon className={classes.checkboxContainer}>
                     {multiple ? (
@@ -157,10 +156,7 @@ export default function PopupContents({
                   </ListItemIcon>
                   <ListItemText
                     id={`label-${_get(hit, elementId)}`}
-                    primary={config.labelFormatter.replace(
-                      /\{\{(.*?)\}\}/g,
-                      replacer(hit)
-                    )}
+                    primary={getLabel(config, hit)}
                   />
                 </MenuItem>
                 <Divider className={classes.divider} />
