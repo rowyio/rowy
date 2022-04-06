@@ -25,6 +25,7 @@ import {
   TABLE_GROUP_SCHEMAS,
   TABLE_SCHEMAS,
 } from "@src/config/dbPaths";
+import { Controller } from "react-hook-form";
 
 export enum TableSettingsDialogModes {
   create,
@@ -203,6 +204,13 @@ export default function TableSettings({
 
         return (
           <>
+            <Controller
+              control={formFieldsProps.control}
+              name="_schema"
+              defaultValue={{}}
+              render={() => <></>}
+            />
+
             <Stack
               direction="row"
               spacing={1}
