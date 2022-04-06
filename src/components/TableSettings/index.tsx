@@ -2,6 +2,7 @@ import useSWR from "swr";
 import _find from "lodash/find";
 import _sortBy from "lodash/sortBy";
 import _get from "lodash/get";
+import _isEmpty from "lodash/isEmpty";
 import { useSnackbar } from "notistack";
 
 import { DialogContentText, Stack, Typography } from "@mui/material";
@@ -65,11 +66,12 @@ export default function TableSettings({
   const handleSubmit = async (v) => {
     const { _suggestedRules, ...values } = v;
     const data = { ...values };
+
     if (values.schemaSource)
       data.schemaSource = _find(tables, { id: values.schemaSource });
 
-    const hasExtensions = Boolean(_get(data, "_schema.extensionObjects"));
-    const hasWebhooks = Boolean(_get(data, "_schema.webhooks"));
+    const hasExtensions = !_isEmpty(_get(data, "_schema.extensionObjects"));
+    const hasWebhooks = !_isEmpty(_get(data, "_schema.webhooks"));
     const deployExtensionsWebhooks = (onComplete?: () => void) => {
       if (rowyRun && (hasExtensions || hasWebhooks)) {
         requestConfirmation({
