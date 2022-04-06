@@ -56,7 +56,12 @@ export default function TableSettings({
   const { data: collections } = useSWR(
     "firebaseCollections",
     () => rowyRun?.({ route: runRoutes.listCollections }),
-    { revalidateIfStale: false, dedupingInterval: 60_000 }
+    {
+      revalidateOnMount: true,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      dedupingInterval: 60_000 * 60,
+    }
   );
 
   const open = mode !== null;
