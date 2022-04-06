@@ -25,7 +25,8 @@ export const config: IFieldConfig = {
   name: "Connector",
   group: "Connection",
   dataType: "any",
-  initialValue: [],
+  initialValue: "",
+  initializable: true,
   icon: <ConnectorIcon />,
   description:
     "Connects to any table or API to fetch a list of results based on a text query or row data.",
