@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
+import { useSnackbar } from "notistack";
 
 import { IconButton, Menu, MenuItem, DialogContentText } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
@@ -27,14 +28,21 @@ export default function DeleteMenu({ clearDialog, data }: IDeleteMenuProps) {
   const handleClose = () => setAnchorEl(null);
 
   const history = useHistory();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const handleResetStructure = async () => {
+    const snack = enqueueSnackbar("Resetting columns…", { persist: true });
+
     const schemaDocRef = db.doc(`${TABLE_SCHEMAS}/${data!.id}`);
     await schemaDocRef.update({ columns: {} });
+
     clearDialog();
+    closeSnackbar(snack);
   };
 
   const handleDelete = async () => {
+    const snack = enqueueSnackbar("Deleting table…", { persist: true });
+
     const tablesDocRef = db.doc(SETTINGS);
     const tableData = (await tablesDocRef.get()).data();
     const updatedTables = tableData?.tables.filter(
@@ -49,8 +57,10 @@ export default function DeleteMenu({ clearDialog, data }: IDeleteMenuProps) {
       )
       .doc(data?.id)
       .delete();
+
     await analytics.logEvent("delete_table");
     clearDialog();
+    closeSnackbar(snack);
     history.push(routes.home);
   };
 

@@ -51,7 +51,7 @@ export default function TableSettings({
   const router = useRouter();
   const { requestConfirmation } = useConfirmation();
   const snackLogContext = useSnackLogContext();
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const { data: collections } = useSWR(
     "firebaseCollections",
@@ -163,7 +163,11 @@ export default function TableSettings({
       deployExtensionsWebhooks();
       clearDialog();
       analytics.logEvent("update_table", { type: values.tableType });
+      enqueueSnackbar("Updated table");
     } else {
+      const creatingSnackbar = enqueueSnackbar("Creating table…", {
+        persist: true,
+      });
       await settingsActions?.createTable(data);
       await analytics.logEvent("create_table", { type: values.tableType });
       deployExtensionsWebhooks(() => {
@@ -177,6 +181,7 @@ export default function TableSettings({
           router.history.push(values.id);
         }
         clearDialog();
+        closeSnackbar(creatingSnackbar);
       });
     }
   };
