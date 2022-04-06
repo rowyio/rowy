@@ -9,6 +9,7 @@ import { DialogContentText, Stack, Typography } from "@mui/material";
 
 import { FormDialog, FormFields } from "@rowy/form-builder";
 import { tableSettings } from "./form";
+import TableName from "./TableName";
 import TableId from "./TableId";
 import SuggestedRules from "./SuggestedRules";
 import SteppedAccordion from "@src/components/SteppedAccordion";
@@ -32,7 +33,25 @@ export enum TableSettingsDialogModes {
   create,
   update,
 }
-export interface ICreateTableDialogProps {
+const customComponents = {
+  tableName: {
+    component: TableName,
+    defaultValue: "",
+    validation: [["string"]],
+  },
+  tableId: {
+    component: TableId,
+    defaultValue: "",
+    validation: [["string"]],
+  },
+  suggestedRules: {
+    component: SuggestedRules,
+    defaultValue: "",
+    validation: [["string"]],
+  },
+};
+
+export interface ITableSettingsProps {
   mode: TableSettingsDialogModes | null;
   clearDialog: () => void;
   data: Table | null;
@@ -42,7 +61,7 @@ export default function TableSettings({
   mode,
   clearDialog,
   data,
-}: ICreateTableDialogProps) {
+}: ITableSettingsProps) {
   const { settingsActions, roles, tables, rowyRun } = useProjectContext();
   const sectionNames = Array.from(
     new Set((tables ?? []).map((t) => t.section))
@@ -206,18 +225,6 @@ export default function TableSettings({
     ),
     Array.isArray(collections) ? collections.filter((x) => x !== CONFIG) : null
   );
-  const customComponents = {
-    tableId: {
-      component: TableId,
-      defaultValue: "",
-      validation: [["string"]],
-    },
-    suggestedRules: {
-      component: SuggestedRules,
-      defaultValue: "",
-      validation: [["string"]],
-    },
-  };
 
   return (
     <FormDialog
