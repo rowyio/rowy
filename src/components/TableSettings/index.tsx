@@ -125,6 +125,31 @@ export default function TableSettings({
 
             if (onComplete) onComplete();
           },
+          handleCancel: async () => {
+            let _schema: Record<string, any> = {};
+            if (hasExtensions) {
+              _schema.extensionObjects = _get(
+                data,
+                "_schema.extensionObjects"
+              )!.map((x) => ({
+                ...x,
+                active: false,
+              }));
+            }
+            if (hasWebhooks) {
+              _schema.webhooks = _get(data, "_schema.webhooks")!.map((x) => ({
+                ...x,
+                active: false,
+              }));
+            }
+
+            await settingsActions?.updateTable({
+              id: data.id,
+              tableType: data.tableType,
+              _schema,
+            });
+            if (onComplete) onComplete();
+          },
         });
       } else {
         if (onComplete) onComplete();
