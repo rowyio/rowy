@@ -1,7 +1,7 @@
 export const RUN_ACTION_TEMPLATE = `const action:Action = async ({row,ref,db,storage,auth,actionParams,user}) => {
     // Write your action code here
     // for example:
-    // const authToken = await rowy.secrets.getSecret("service")
+    // const authToken = await rowy.secrets.get("service")
     // try {
     // const resp = await fetch('https://example.com/api/v1/users/'+ref.id,{
     //   method: 'PUT',
@@ -29,7 +29,7 @@ export const RUN_ACTION_TEMPLATE = `const action:Action = async ({row,ref,db,sto
 export const UNDO_ACTION_TEMPLATE = `const action : Action = async ({row,ref,db,storage,auth,actionParams,user}) => {
     // Write your undo code here
     // for example:
-    // const authToken = await rowy.secrets.getSecret("service")
+    // const authToken = await rowy.secrets.get("service")
     // try {
     // const resp = await fetch('https://example.com/api/v1/users/'+ref.id,{
     //   method: 'DELETE',

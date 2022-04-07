@@ -6,9 +6,6 @@ import _find from "lodash/find";
 import firebase from "firebase/app";
 import { compare } from "compare-versions";
 
-import { Button } from "@mui/material";
-import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
-
 import useTable, { TableActions, TableState } from "@src/hooks/useTable";
 import useSettings from "@src/hooks/useSettings";
 import { useAppContext } from "./AppContext";
@@ -18,8 +15,8 @@ import { ImportWizardRef } from "@src/components/Wizards/ImportWizard";
 
 import { rowyRun, IRowyRunRequestProps } from "@src/utils/rowyRun";
 import { rowyUser } from "@src/utils/fns";
-import { WIKI_LINKS } from "@src/constants/externalLinks";
 import { runRoutes } from "@src/constants/runRoutes";
+import { DocumentReference } from "@google-cloud/firestore";
 
 export type Table = {
   id: string;
@@ -123,6 +120,7 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
   const { enqueueSnackbar } = useSnackbar();
   const { tableState, tableActions } = useTable();
   const [tables, setTables] = useState<IProjectContext["tables"]>();
+
   const [settings, settingsActions] = useSettings();
   const table = _find(tables, (table) => table.id === tableState.config.id);
 
@@ -166,7 +164,12 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
     () =>
       Array.isArray(tables)
         ? Array.from(
-            new Set(tables.reduce((a, c) => [...a, ...c.roles], ["ADMIN"]))
+            new Set(
+              tables.reduce(
+                (a, c) => [...a, ...c.roles],
+                ["ADMIN", "EDITOR", "VIEWER"]
+              )
+            )
           )
         : [],
     [tables]
@@ -357,14 +360,14 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
     );
   };
 
-  const deleteRow = (rowId: string | string[]) => {
-    if (Array.isArray(rowId)) {
-      tableActions.row.delete(rowId, () => {
-        rowId.forEach((id) => auditChange("DELETE_ROW", id, {}));
+  const deleteRow = (ref: DocumentReference | DocumentReference[]) => {
+    if (Array.isArray(ref)) {
+      tableActions.row.delete(ref, () => {
+        ref.forEach((r) => auditChange("DELETE_ROW", r.path, {}));
       });
     } else
-      tableActions.row.delete(rowId, () =>
-        auditChange("DELETE_ROW", rowId, {})
+      tableActions.row.delete(ref, () =>
+        auditChange("DELETE_ROW", ref.path, {})
       );
   };
 
@@ -373,8 +376,8 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
     const { service, ...rest } = args;
     const authToken = await getAuthToken();
     const serviceUrl = service
-      ? settings.doc.services[service]
-      : settings.doc.rowyRunUrl;
+      ? settings.doc?.services[service]
+      : settings.doc?.rowyRunUrl;
 
     if (serviceUrl) {
       return rowyRun({

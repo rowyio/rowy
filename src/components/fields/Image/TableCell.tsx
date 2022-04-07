@@ -30,6 +30,7 @@ const useStyles = makeStyles((theme) =>
     root: {
       padding: theme.spacing(0, 0.5, 0, 1),
       outline: "none",
+      height: "100%",
     },
     dragActive: {
       backgroundColor: alpha(

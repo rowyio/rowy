@@ -21,6 +21,7 @@ export default function Confirmation({
   confirm,
   confirmationCommand,
   handleConfirm,
+  handleCancel,
   confirmColor,
   open,
   handleClose,
@@ -60,7 +61,14 @@ export default function Confirmation({
 
       <DialogActions>
         {!hideCancel && (
-          <Button onClick={handleClose}>{cancel ?? "Cancel"}</Button>
+          <Button
+            onClick={() => {
+              if (handleCancel) handleCancel();
+              handleClose();
+            }}
+          >
+            {cancel ?? "Cancel"}
+          </Button>
         )}
         <Button
           onClick={() => {

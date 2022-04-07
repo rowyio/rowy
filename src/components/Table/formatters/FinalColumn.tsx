@@ -9,6 +9,7 @@ import { useConfirmation } from "@src/components/ConfirmationDialog/Context";
 import { useAppContext } from "@src/contexts/AppContext";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import useKeyPress from "@src/hooks/useKeyPress";
+import { isCollectionGroup } from "@src/utils/fns";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -34,29 +35,30 @@ export default function FinalColumn({ row }: FormatterProps<any, any>) {
   const altPress = useKeyPress("Alt");
 
   const handleDelete = () => {
-    if (deleteRow) deleteRow(row.id);
+    if (deleteRow) deleteRow(row.ref);
   };
 
   if (!userClaims?.roles.includes("ADMIN") && table?.readOnly === true)
     return null;
-
   return (
     <Stack direction="row" spacing={0.5}>
-      <Tooltip title="Duplicate row">
-        <IconButton
-          size="small"
-          color="inherit"
-          disabled={!addRow}
-          onClick={() => {
-            const { ref, ...clonedRow } = row;
-            addRow!(clonedRow, undefined, { type: "smaller" });
-          }}
-          aria-label="Duplicate row"
-          className="row-hover-iconButton"
-        >
-          <CopyCellsIcon />
-        </IconButton>
-      </Tooltip>
+      {!isCollectionGroup() && (
+        <Tooltip title="Duplicate row">
+          <IconButton
+            size="small"
+            color="inherit"
+            disabled={!addRow}
+            onClick={() => {
+              const { ref, ...clonedRow } = row;
+              addRow!(clonedRow, undefined, { type: "smaller" });
+            }}
+            aria-label="Duplicate row"
+            className="row-hover-iconButton"
+          >
+            <CopyCellsIcon />
+          </IconButton>
+        </Tooltip>
+      )}
 
       <Tooltip title={`Delete row${altPress ? "" : "…"}`}>
         <IconButton

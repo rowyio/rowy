@@ -78,10 +78,10 @@ export default function HomePage() {
       data: null,
     });
 
-  const handleCreateTable = () =>
+  const handleCreateTable = (data?: null | (Table & { tableType: string })) =>
     setSettingsDialogState({
       mode: TableSettingsDialogModes.create,
-      data: null,
+      data: data || null,
     });
 
   const [settingsDocState] = useDoc(
@@ -107,7 +107,7 @@ export default function HomePage() {
         <Fab
           color="secondary"
           aria-label="Create table"
-          onClick={handleCreateTable}
+          onClick={() => handleCreateTable()}
           sx={{
             zIndex: "speedDial",
             position: "fixed",

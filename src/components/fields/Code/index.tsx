@@ -6,6 +6,10 @@ import CodeIcon from "@mui/icons-material/Code";
 import BasicCell from "./BasicCell";
 import withSideDrawerEditor from "@src/components/Table/editors/withSideDrawerEditor";
 
+const Settings = lazy(
+  () => import("./Settings" /* webpackChunkName: "Settings-ConnectService" */)
+);
+
 const SideDrawerField = lazy(
   () =>
     import("./SideDrawerField" /* webpackChunkName: "SideDrawerField-Code" */)
@@ -23,5 +27,6 @@ export const config: IFieldConfig = {
   TableCell: withBasicCell(BasicCell),
   TableEditor: withSideDrawerEditor(BasicCell),
   SideDrawerField,
+  settings: Settings,
 };
 export default config;

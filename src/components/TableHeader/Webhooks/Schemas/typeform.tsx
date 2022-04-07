@@ -51,7 +51,7 @@ export const webhookTypeform = {
     // auditField
     const ${
       table.auditFieldCreatedBy ?? "_createdBy"
-    } = await rowy.getServiceAccountUser()
+    } = await rowy.metadata.serviceAccountUser()
     return {
       ...submission,
       ${table.auditFieldCreatedBy ?? "_createdBy"}

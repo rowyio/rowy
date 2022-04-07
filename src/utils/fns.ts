@@ -195,3 +195,9 @@ export const isTargetInsideBox = (target, box) => {
   const boxRect = box.getBoundingClientRect();
   return targetRect.y < boxRect.y + boxRect.height;
 };
+
+export const replacer = (data: any) => (m: string, key: string) => {
+  const objKey = key.split(":")[0];
+  const defaultValue = key.split(":")[1] || "";
+  return _get(data, objKey, defaultValue);
+};

@@ -13,7 +13,12 @@ export default function Code({
       control={control}
       name={column.key}
       render={({ field: { onChange, value } }) => (
-        <CodeEditor disabled={disabled} value={value} onChange={onChange} />
+        <CodeEditor
+          defaultLanguage={column.config?.language}
+          disabled={disabled}
+          value={value}
+          onChange={onChange}
+        />
       )}
     />
   );
