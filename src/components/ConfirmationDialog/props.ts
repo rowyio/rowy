@@ -8,6 +8,7 @@ export type confirmationProps =
       confirm?: string | JSX.Element;
       confirmationCommand?: string;
       handleConfirm: () => void;
+      handleCancel?: () => void;
       open?: Boolean;
       confirmColor?: string;
     }

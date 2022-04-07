@@ -194,10 +194,11 @@ export const tableSettings = (
     // Step 2: Display
     {
       step: "display",
-      type: FieldType.shortText,
+      type: "tableName",
       name: "name",
       label: "Table name",
       required: true,
+      watchedField: "collection",
       assistiveText: "User-facing name for this table",
       autoFocus: true,
       gridCols: { xs: 12, sm: 6 },

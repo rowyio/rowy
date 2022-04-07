@@ -48,7 +48,10 @@ interface Rowy {
     /**
      * Get an existing secret from the secret manager.
      */
-    get: (name: SecretNames, version?: string) => Promise<string | undefined>;
+    get: (
+      name: SecretNames,
+      version?: string
+    ) => Promise<string | any | undefined>;
   };
   /**
    * Gives access to the Cloud Storage.

@@ -310,14 +310,19 @@ const useTableData = () => {
 
     let ref = db.collection(path).doc();
     if (typeof id === "string") ref = db.collection(path).doc(id);
-    else if (id?.type === "smaller")
-      ref = db
-        .collection(path)
-        .doc(
-          decrementId(
-            rows.find((r) => !r._rowy_outOfOrder)?.id ?? "zzzzzzzzzzzzzzzzzzzz"
-          )
-        );
+    else if (id?.type === "smaller") {
+      let prevId =
+        rows.find((r) => !r._rowy_outOfOrder)?.id ?? "zzzzzzzzzzzzzzzzzzzz";
+      if (
+        tableState.orderBy?.length !== 0 ||
+        tableState.filters?.length !== 0
+      ) {
+        const query = await db.collection(tableState.path).limit(1).get();
+        prevId = query.empty ? "zzzzzzzzzzzzzzzzzzzz" : query.docs[0].id;
+      }
+      ref = db.collection(path).doc(decrementId(prevId));
+    }
+
     const newId = ref.id;
 
     const missingRequiredFields = requiredFields

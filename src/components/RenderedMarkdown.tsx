@@ -33,7 +33,7 @@ export default function RenderedMarkdown({
       unwrapDisallowed
       linkTarget="_blank"
       remarkPlugins={remarkPlugins}
-      components={components}
+      components={{ ...components, ...props.components }}
     />
   );
 }
