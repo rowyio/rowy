@@ -376,8 +376,8 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
     const { service, ...rest } = args;
     const authToken = await getAuthToken();
     const serviceUrl = service
-      ? settings.doc.services[service]
-      : settings.doc.rowyRunUrl;
+      ? settings.doc?.services[service]
+      : settings.doc?.rowyRunUrl;
 
     if (serviceUrl) {
       return rowyRun({
