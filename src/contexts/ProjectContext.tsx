@@ -120,7 +120,7 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
   const { enqueueSnackbar } = useSnackbar();
   const { tableState, tableActions } = useTable();
   const [tables, setTables] = useState<IProjectContext["tables"]>();
-  console.log("tables", tables);
+
   const [settings, settingsActions] = useSettings();
   const table = _find(tables, (table) => table.id === tableState.config.id);
 
