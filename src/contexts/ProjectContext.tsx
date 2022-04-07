@@ -6,9 +6,6 @@ import _find from "lodash/find";
 import firebase from "firebase/app";
 import { compare } from "compare-versions";
 
-import { Button } from "@mui/material";
-import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
-
 import useTable, { TableActions, TableState } from "@src/hooks/useTable";
 import useSettings from "@src/hooks/useSettings";
 import { useAppContext } from "./AppContext";
@@ -123,6 +120,7 @@ export const ProjectContextProvider: React.FC = ({ children }) => {
   const { enqueueSnackbar } = useSnackbar();
   const { tableState, tableActions } = useTable();
   const [tables, setTables] = useState<IProjectContext["tables"]>();
+  console.log("tables", tables);
   const [settings, settingsActions] = useSettings();
   const table = _find(tables, (table) => table.id === tableState.config.id);
 
