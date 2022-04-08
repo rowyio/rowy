@@ -1,4 +1,5 @@
 {
+  "extends": "./tsconfig.extend.json",
   "compilerOptions": {
     "target": "es2021",
     "lib": ["dom", "dom.iterable", "esnext"],
@@ -18,7 +19,8 @@
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "baseUrl": "src"
   },
   "include": ["src"]
 }

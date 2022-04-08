@@ -4990,6 +4990,11 @@ cosmiconfig@^7, cosmiconfig@^7.0.0, cosmiconfig@^7.0.1:
     path-type "^4.0.0"
     yaml "^1.10.0"
 
+craco-alias@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/craco-alias/-/craco-alias-3.0.1.tgz#45e5cb338b222a7f62d17e398b54aff7cf1572af"
+  integrity sha512-N+Qaf/Gr/f3o5ZH2TQjMu5NhR9PnT1ZYsfejpNvZPpB0ujdrhsSr4Ct6GVjnV5ostCVquhTKJpIVBKyL9qDQYA==
+
 craco-swc@^0.5.1:
   version "0.5.1"
   resolved "https://registry.yarnpkg.com/craco-swc/-/craco-swc-0.5.1.tgz#fa9bf7b5f9c3ca58c44e2dabcd35a8d6e102ab5f"
@@ -9425,6 +9430,13 @@ react-app-polyfill@^3.0.0:
     raf "^3.4.1"
     regenerator-runtime "^0.13.9"
     whatwg-fetch "^3.6.2"
+
+react-data-grid@7.0.0-beta.5:
+  version "7.0.0-beta.5"
+  resolved "https://registry.yarnpkg.com/react-data-grid/-/react-data-grid-7.0.0-beta.5.tgz#bc39ce45b7a7f42ebfb66840e0ec1c8619d60f10"
+  integrity sha512-rtN4wnePrQ80UN6lYF/zUQqVVJMT3HW5bTLx9nR5XOKQiG72cGzX2d2+b+e82vUh23zTFBicEnuWSlN9Fa/83Q==
+  dependencies:
+    clsx "^1.1.1"
 
 react-dev-utils@^12.0.0:
   version "12.0.0"
