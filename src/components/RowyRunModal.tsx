@@ -19,7 +19,7 @@ import { WIKI_LINKS } from "@src/constants/externalLinks";
 import { useProjectContext } from "@src/contexts/ProjectContext";
 
 export default function RowyRunModal() {
-  const { userClaims } = useAppContext();
+  const { userRoles } = useAppContext();
   const { settings } = useProjectContext();
 
   const [state, setState] = useAtom(rowyRunModalAtom);
@@ -79,12 +79,12 @@ export default function RowyRunModal() {
             size="large"
             onClick={handleClose}
             style={{ display: "flex" }}
-            disabled={!userClaims?.roles.includes("ADMIN")}
+            disabled={!userRoles.includes("ADMIN")}
           >
             Set up Rowy Run
           </Button>
 
-          {!userClaims?.roles.includes("ADMIN") && (
+          {!userRoles.includes("ADMIN") && (
             <Typography
               variant="body2"
               textAlign="center"
