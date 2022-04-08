@@ -81,7 +81,7 @@ export const AppProvider: React.FC = ({ children }) => {
   };
   useEffect(() => {
     auth.onAuthStateChanged((auth) => {
-      if (auth)
+      if (auth) {
         auth.getIdTokenResult(true).then((results) => {
           setCurrentUser(auth);
           setAuthToken(results.token);
@@ -90,6 +90,9 @@ export const AppProvider: React.FC = ({ children }) => {
           );
           setUserClaims(results.claims);
         });
+      } else {
+        setCurrentUser(auth);
+      }
     });
   }, []);
 
