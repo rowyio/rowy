@@ -1,0 +1,2 @@
+cd www
+yarn lint-staged

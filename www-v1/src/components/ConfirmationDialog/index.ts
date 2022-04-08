@@ -1,1 +1,0 @@
-export { useConfirmation } from "./Context";

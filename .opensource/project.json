@@ -1,5 +1,5 @@
 {
-  "name": "Firetable",
+  "name": "Rowy",
   "platforms": ["Node", "Admin", "Web"],
   "content": "README.md",
   "related": ["firebase/firebase-js-sdk"],

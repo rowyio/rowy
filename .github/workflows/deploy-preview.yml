@@ -1,0 +1,32 @@
+name: Deploy to Preview Channel
+
+on:
+  pull_request:
+    # Optionally configure to run only for specific files. For example:
+    # paths:
+    # - "website/**"
+env:
+  REACT_APP_FIREBASE_PROJECT_ID: rowyio
+  REACT_APP_FIREBASE_PROJECT_WEB_API_KEY:
+    "${{ secrets.FIREBASE_WEB_API_KEY_ROWYIO }}"
+  CI: ""
+jobs:
+  build_and_preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: borales/actions-yarn@v2.3.0
+        with:
+          cmd: install # will run `yarn install` command
+      - uses: borales/actions-yarn@v2.3.0
+        with:
+          cmd: build # will run `yarn build` command
+        env:
+          CI: ""
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount:
+            "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ROWYIO }}"
+          expires: 14d
+          projectId: rowyio
