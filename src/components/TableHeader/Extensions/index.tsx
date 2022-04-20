@@ -207,7 +207,6 @@ export default function Extensions() {
         onClick={handleOpen}
         icon={<ExtensionIcon />}
       />
-
       {open && !!tableState && (
         <Modal
           onClose={handleClose}
@@ -252,7 +251,6 @@ export default function Extensions() {
           }}
         />
       )}
-
       {extensionModal && (
         <ExtensionModal
           handleClose={() => setExtensionModal(null)}
@@ -262,7 +260,6 @@ export default function Extensions() {
           extensionObject={extensionModal.extensionObject}
         />
       )}
-
       {openMigrationGuide && (
         <ExtensionMigration
           handleClose={() => setOpenMigrationGuide(false)}

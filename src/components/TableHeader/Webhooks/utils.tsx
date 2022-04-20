@@ -1,9 +1,10 @@
 import { generateRandomId } from "@src/utils/fns";
-import { typeform, basic, sendgrid } from "./Schemas";
+import { typeform, basic, sendgrid, webform } from "./Schemas";
 export const webhookTypes = [
   "basic",
   "typeform",
   "sendgrid",
+  "webform",
   //"shopify",
   //"twitter",
   //"stripe",
@@ -53,6 +54,7 @@ export const webhookNames: Record<WebhookType, string> = {
   // twitter: "Twitter",
   // stripe: "Stripe",
   basic: "Basic",
+  webform: "Web form",
 };
 
 export interface IWebhookEditor {
@@ -78,6 +80,7 @@ export const webhookSchemas = {
   basic,
   typeform,
   sendgrid,
+  webform,
 };
 
 export function emptyWebhookObject(
