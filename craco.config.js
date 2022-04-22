@@ -1,4 +1,4 @@
-const { whenProd } = require("@craco/craco");
+const { whenDev } = require("@craco/craco");
 const CracoAlias = require("craco-alias");
 const CracoSwcPlugin = require("craco-swc");
 
@@ -12,10 +12,12 @@ module.exports = {
         tsConfigPath: "./tsconfig.extend.json",
       },
     },
-    // Use swc on production only since Jotai doesn’t have swc plugins yet
+    // Use Babel on dev since Jotai doesn’t have swc plugins yet
     // See https://github.com/pmndrs/jotai/discussions/1057
-    ...whenProd(
-      () => [
+    // Use swc on production and test since Babel seems to break Jest
+    ...whenDev(
+      () => [],
+      [
         {
           plugin: CracoSwcPlugin,
           options: {
@@ -31,11 +33,16 @@ module.exports = {
             },
           },
         },
-      ],
-      []
+      ]
     ),
   ],
   babel: {
     plugins: ["jotai/babel/plugin-debug-label"],
+  },
+  jest: {
+    configure: (jestConfig) => {
+      jestConfig.moduleNameMapper["^lodash-es$"] = "lodash";
+      return jestConfig;
+    },
   },
 };

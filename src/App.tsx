@@ -1,25 +1,55 @@
-import "./App.css";
-import DataGrid from "react-data-grid";
-import CloudLogs from "@src/assets/icons/CloudLogs";
+import { lazy, Suspense } from "react";
+import { HelmetProvider } from "react-helmet-async";
 
-const columns = [
-  { key: "id", name: "ID" },
-  { key: "title", name: "Title" },
-];
+import { ErrorBoundary } from "react-error-boundary";
+import ErrorFallback from "@src/components/ErrorFallback";
 
-const rows = [
-  { id: 0, title: "Example" },
-  { id: 1, title: "Demo" },
-];
+import { Provider } from "jotai";
+import { globalScope } from "@src/atoms/globalScope";
+import Loading from "@src/components/Loading";
 
-function App() {
+import FirebaseProject from "@src/sources/ProjectSourceFirebase";
+import ThemeProvider from "@src/theme/ThemeProvider";
+
+const AuthPage = lazy(
+  () => import("@src/pages/Auth" /* webpackChunkName: "AuthPage" */)
+);
+
+export default function App() {
   return (
-    <div className="App">
-      <DataGrid columns={columns} rows={rows} />
-
-      <CloudLogs />
-    </div>
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <HelmetProvider>
+        <Provider scope={globalScope}>
+          <ThemeProvider>
+            <ErrorBoundary FallbackComponent={ErrorFallback}>
+              <Suspense
+                fallback={
+                  <Loading
+                    fullScreen
+                    message="FirebaseProject suspended"
+                    timeout={0}
+                    delay={0}
+                  />
+                }
+              >
+                <FirebaseProject />
+              </Suspense>
+              <Suspense
+                fallback={
+                  <Loading
+                    fullScreen
+                    message="AuthPage suspended"
+                    timeout={0}
+                    delay={0}
+                  />
+                }
+              >
+                <AuthPage />
+              </Suspense>
+            </ErrorBoundary>
+          </ThemeProvider>
+        </Provider>
+      </HelmetProvider>
+    </ErrorBoundary>
   );
 }
-
-export default App;
