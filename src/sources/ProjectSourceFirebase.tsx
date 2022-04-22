@@ -9,7 +9,7 @@ import { currentUserAtom, userRolesAtom } from "@src/atoms/auth";
 
 import useFirestoreDocWithAtom from "@src/hooks/useFirestoreDocWithAtom";
 import { globalScope } from "@src/atoms/globalScope";
-import { publicSettingsAtom } from "@src/atoms/project";
+import { projectIdAtom, publicSettingsAtom } from "@src/atoms/project";
 import { useUpdateAtom } from "jotai/utils";
 import { userSettingsAtom } from "@src/atoms/user";
 
@@ -48,6 +48,13 @@ export const firebaseDbAtom = atom((get) => {
 });
 
 export default function ProjectSourceFirebase() {
+  // Set projectId from Firebase project
+  const [firebaseConfig] = useAtom(firebaseConfigAtom, globalScope);
+  const setProjectId = useUpdateAtom(projectIdAtom, globalScope);
+  useEffect(() => {
+    setProjectId(firebaseConfig.projectId || "");
+  }, [firebaseConfig.projectId, setProjectId]);
+
   // Get current user and store in atoms
   const [firebaseAuth] = useAtom(firebaseAuthAtom, globalScope);
   // const setCurrentUser: any = useUpdateAtom(currentUserAtom, globalScope);
@@ -86,7 +93,7 @@ export default function ProjectSourceFirebase() {
     userSettingsAtom,
     globalScope,
     `_rowy_/userManagement/users`,
-    [currentUser?.uid]
+    { pathSegments: [currentUser?.uid] }
   );
 
   return null;

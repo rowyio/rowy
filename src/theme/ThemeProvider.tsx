@@ -1,11 +1,13 @@
 import { useEffect } from "react";
 import { useAtom } from "jotai";
 import { Helmet } from "react-helmet-async";
+
 import {
   useMediaQuery,
   ThemeProvider as MuiThemeProvider,
   CssBaseline,
 } from "@mui/material";
+import Favicon from "@src/assets/Favicon";
 
 import { globalScope } from "@src/atoms/globalScope";
 import {
@@ -41,17 +43,20 @@ export default function ThemeProvider({
     document.body.setAttribute("data-theme", theme);
   }, [theme]);
 
+  const fontCssUrls = customizedThemes[theme].typography.fontCssUrls;
+
   return (
     <>
-      {Array.isArray(customizedThemes[theme].typography.fontCssUrls) && (
+      {Array.isArray(fontCssUrls) && (
         <Helmet>
-          {customizedThemes[theme].typography.fontCssUrls!.map((url) => (
+          {fontCssUrls!.map((url) => (
             <link key={url} rel="stylesheet" href={url} />
           ))}
         </Helmet>
       )}
 
       <MuiThemeProvider theme={customizedThemes[theme]}>
+        <Favicon />
         <CssBaseline />
         {children}
       </MuiThemeProvider>

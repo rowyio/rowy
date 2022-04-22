@@ -8,6 +8,7 @@ import { publicSettingsAtom } from "@src/atoms/project";
 // import { GoogleAuthProvider } from "firebase/auth";
 import { firebaseAuthAtom } from "@src/sources/ProjectSourceFirebase";
 import { Button } from "@mui/material";
+import { useSnackbar } from "notistack";
 
 import {
   GoogleAuthProvider,
@@ -32,6 +33,8 @@ function Auth() {
   console.log("publicSettings", publicSettings);
   console.log("userSettings", userSettings);
 
+  const { enqueueSnackbar } = useSnackbar();
+
   return (
     <>
       <Button
@@ -39,6 +42,7 @@ function Auth() {
         color={currentUser ? "secondary" : "primary"}
         onClick={() => {
           signInWithPopup(firebaseAuth, provider);
+          enqueueSnackbar("Signed in");
         }}
         sx={{ my: 4, mx: 1 }}
       >
@@ -49,6 +53,7 @@ function Auth() {
         color={!currentUser ? "secondary" : "primary"}
         onClick={() => {
           signOut(firebaseAuth);
+          enqueueSnackbar("Signed out");
         }}
         sx={{ my: 4, mx: 1 }}
       >

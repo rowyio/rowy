@@ -12,44 +12,65 @@ import {
 import { globalScope } from "@src/atoms/globalScope";
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
 
+/** Options for {@link useFirestoreDocWithAtom} */
+interface IUseFirestoreDocWithAtomOptions {
+  /** Additional path segments appended to the path. If any are undefined, the listener isn’t created at all. */
+  pathSegments?: Array<string | undefined>;
+  /** Called when an error occurs. Make sure to wrap in useCallback! */
+  onError?: (error: FirestoreError) => void;
+  /** Optionally disable Suspense */
+  disableSuspense?: boolean;
+}
+
 /**
  * Attaches a listener for Firestore documents and unsubscribes on unmount.
  * Gets the Firestore instance initiated in globalScope.
- * Updates an atom and suspends that atom until the first snapshot is received.
+ * Updates an atom and optionally Suspends that atom until the first snapshot
+ * is received.
  *
  * @param dataAtom - Atom to store data in
  * @param dataScope - Atom scope
- * @param path - Document path
- * @param pathSegments - Additional path segments appended to the path
- * @param onError - Called when an error occurs. Make sure to wrap in useCallback!
+ * @param path - Document path. If falsy, the listener isn’t created at all.
+ * @param options - {@link IUseFirestoreDocWithAtomOptions}
  */
 export default function useFirestoreDocWithAtom(
   dataAtom: PrimitiveAtom<DocumentData>,
   dataScope: Scope | undefined,
   path: string | undefined,
-  pathSegments?: Array<string | undefined>,
-  onError?: (error: FirestoreError) => void
+  options?: IUseFirestoreDocWithAtomOptions
 ) {
   const [firebaseDb] = useAtom(firebaseDbAtom, globalScope);
   const setDataAtom = useUpdateAtom(dataAtom, dataScope);
+
+  // Destructure options so they can be used as useEffect dependencies
+  const { pathSegments, onError, disableSuspense } = options || {};
 
   useEffect(() => {
     if (!path || (Array.isArray(pathSegments) && pathSegments.some((x) => !x)))
       return;
 
+    let suspended = false;
+
     // Suspend data atom until we get the first snapshot
-    setDataAtom(new Promise(() => {}));
+    if (!disableSuspense) {
+      setDataAtom(new Promise(() => {}));
+      suspended = true;
+    }
 
     const unsubscribe = onSnapshot(
       doc(firebaseDb, path, ...((pathSegments as string[]) || [])),
       (doc) => {
         setDataAtom(doc.data()!);
+        suspended = false;
       },
-      onError
+      (error) => {
+        if (suspended) setDataAtom({});
+        if (onError) onError(error);
+      }
     );
 
     return () => {
       unsubscribe();
     };
-  }, [firebaseDb, path, pathSegments, onError, setDataAtom]);
+  }, [firebaseDb, path, pathSegments, onError, setDataAtom, disableSuspense]);
 }

@@ -1,55 +1,65 @@
 import { lazy, Suspense } from "react";
-import { HelmetProvider } from "react-helmet-async";
+import { Routes, Route } from "react-router-dom";
+import { useAtom } from "jotai";
 
-import { ErrorBoundary } from "react-error-boundary";
-import ErrorFallback from "@src/components/ErrorFallback";
-
-import { Provider } from "jotai";
-import { globalScope } from "@src/atoms/globalScope";
 import Loading from "@src/components/Loading";
+import ProjectSourceFirebase from "@src/sources/ProjectSourceFirebase";
+import NotFound from "@src/pages/NotFound";
+import RequireAuth from "@src/layouts/RequireAuth";
+import Nav from "@src/layouts/Nav";
 
-import FirebaseProject from "@src/sources/ProjectSourceFirebase";
-import ThemeProvider from "@src/theme/ThemeProvider";
+import { globalScope } from "@src/atoms/globalScope";
+import { currentUserAtom } from "@src/atoms/auth";
+import { routes } from "@src/constants/routes";
 
-const AuthPage = lazy(
-  () => import("@src/pages/Auth" /* webpackChunkName: "AuthPage" */)
-);
+import JotaiTestPage from "@src/pages/JotaiTest";
+import SignOutPage from "@src/pages/Auth/SignOut";
+
+// prettier-ignore
+const AuthPage = lazy(() => import("@src/pages/Auth/index" /* webpackChunkName: "AuthPage" */));
+// prettier-ignore
+const SignUpPage = lazy(() => import("@src/pages/Auth/SignUp" /* webpackChunkName: "Auth/SignUpPage" */));
+// prettier-ignore
+const JwtAuthPage = lazy(() => import("@src/pages/Auth/JwtAuth" /* webpackChunkName: "Auth/JwtAuthPage" */));
+// prettier-ignore
+const ImpersonatorAuthPage = lazy(() => import("@src/pages/Auth/ImpersonatorAuth" /* webpackChunkName: "Auth/ImpersonatorAuthPage" */));
 
 export default function App() {
+  const [currentUser] = useAtom(currentUserAtom, globalScope);
+
   return (
-    <ErrorBoundary FallbackComponent={ErrorFallback}>
-      <HelmetProvider>
-        <Provider scope={globalScope}>
-          <ThemeProvider>
-            <ErrorBoundary FallbackComponent={ErrorFallback}>
-              <Suspense
-                fallback={
-                  <Loading
-                    fullScreen
-                    message="FirebaseProject suspended"
-                    timeout={0}
-                    delay={0}
-                  />
-                }
-              >
-                <FirebaseProject />
-              </Suspense>
-              <Suspense
-                fallback={
-                  <Loading
-                    fullScreen
-                    message="AuthPage suspended"
-                    timeout={0}
-                    delay={0}
-                  />
-                }
-              >
-                <AuthPage />
-              </Suspense>
-            </ErrorBoundary>
-          </ThemeProvider>
-        </Provider>
-      </HelmetProvider>
-    </ErrorBoundary>
+    <Suspense fallback={<Loading fullScreen />}>
+      <ProjectSourceFirebase />
+
+      {currentUser === undefined ? (
+        <Loading fullScreen message="Authenticating" />
+      ) : (
+        <Routes>
+          <Route path="*" element={<NotFound />} />
+
+          <Route path={routes.auth} element={<AuthPage />} />
+          <Route path={routes.signUp} element={<SignUpPage />} />
+          <Route path={routes.signOut} element={<SignOutPage />} />
+          <Route path={routes.jwtAuth} element={<JwtAuthPage />} />
+          <Route
+            path={routes.impersonatorAuth}
+            element={<ImpersonatorAuthPage />}
+          />
+
+          <Route
+            path="/"
+            element={
+              <RequireAuth>
+                <Nav />
+              </RequireAuth>
+            }
+          >
+            <Route path="dash" element={<div>Dash</div>} />
+          </Route>
+
+          <Route path="/jotaiTest" element={<JotaiTestPage />} />
+        </Routes>
+      )}
+    </Suspense>
   );
 }
