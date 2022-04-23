@@ -4,7 +4,6 @@ import { useAtom } from "jotai";
 import * as firebaseui from "firebaseui";
 import "firebaseui/dist/firebaseui.css";
 import { onAuthStateChanged } from "firebase/auth";
-import { Props as FirebaseUiProps } from "react-firebaseui";
 
 import { makeStyles } from "tss-react/mui";
 import { Typography } from "@mui/material";
@@ -201,7 +200,12 @@ const useStyles = makeStyles()((theme) => ({
   },
 }));
 
-export default function FirebaseUi(props: Partial<FirebaseUiProps>) {
+export interface IFirebaseUiProps {
+  className?: string;
+  uiConfig?: firebaseui.auth.Config;
+}
+
+export default function FirebaseUi(props: IFirebaseUiProps) {
   const { classes, cx } = useStyles();
   const [firebaseAuth] = useAtom(firebaseAuthAtom, globalScope);
   const [publicSettings] = useAtom(publicSettingsAtom, globalScope);
