@@ -20,25 +20,25 @@ export const muiCache = createCache({ key: "mui", prepend: true });
 const container = document.getElementById("root")!;
 const root = createRoot(container);
 root.render(
-  // <StrictMode>
-  <ErrorBoundary FallbackComponent={ErrorFallback}>
-    <BrowserRouter>
-      <HelmetProvider>
-        <Provider scope={globalScope}>
-          <CacheProvider value={muiCache}>
-            <ThemeProvider>
-              <ErrorBoundary FallbackComponent={ErrorFallback}>
-                <SnackbarProvider>
-                  <App />
-                </SnackbarProvider>
-              </ErrorBoundary>
-            </ThemeProvider>
-          </CacheProvider>
-        </Provider>
-      </HelmetProvider>
-    </BrowserRouter>
-  </ErrorBoundary>
-  // </StrictMode>
+  <StrictMode>
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <BrowserRouter>
+        <HelmetProvider>
+          <Provider scope={globalScope}>
+            <CacheProvider value={muiCache}>
+              <ThemeProvider>
+                <ErrorBoundary FallbackComponent={ErrorFallback}>
+                  <SnackbarProvider>
+                    <App />
+                  </SnackbarProvider>
+                </ErrorBoundary>
+              </ThemeProvider>
+            </CacheProvider>
+          </Provider>
+        </HelmetProvider>
+      </BrowserRouter>
+    </ErrorBoundary>
+  </StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

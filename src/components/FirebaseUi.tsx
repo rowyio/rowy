@@ -1,6 +1,9 @@
+import { useMemo, useEffect } from "react";
 import { useAtom } from "jotai";
 
-import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
+import * as firebaseui from "firebaseui";
+import "firebaseui/dist/firebaseui.css";
+import { onAuthStateChanged } from "firebase/auth";
 import { Props as FirebaseUiProps } from "react-firebaseui";
 
 import { makeStyles } from "tss-react/mui";
@@ -11,6 +14,8 @@ import { globalScope } from "@src/atoms/globalScope";
 import { firebaseAuthAtom } from "@src/sources/ProjectSourceFirebase";
 import { publicSettingsAtom } from "@src/atoms/project";
 import { defaultUiConfig, getSignInOptions } from "@src/config/firebaseui";
+
+const ELEMENT_ID = "firebaseui_container";
 
 const useStyles = makeStyles()((theme) => ({
   root: {
@@ -194,28 +199,6 @@ const useStyles = makeStyles()((theme) => ({
       backgroundColor: theme.palette.primary.main + " !important",
     },
   },
-
-  signInText: {
-    display: "block",
-    textAlign: "center",
-    color: theme.palette.text.secondary,
-    margin: theme.spacing(-1, 0, -3),
-  },
-
-  skeleton: {
-    width: "100%",
-    marginBottom: "calc(var(--spacing-contents) * -1)",
-
-    "& > *": {
-      width: "100%",
-      height: 32,
-      borderRadius: theme.shape.borderRadius,
-    },
-
-    "& > * + *": {
-      marginTop: theme.spacing(1),
-    },
-  },
 }));
 
 export default function FirebaseUi(props: Partial<FirebaseUiProps>) {
@@ -223,37 +206,64 @@ export default function FirebaseUi(props: Partial<FirebaseUiProps>) {
   const [firebaseAuth] = useAtom(firebaseAuthAtom, globalScope);
   const [publicSettings] = useAtom(publicSettingsAtom, globalScope);
 
-  const signInOptions =
-    Array.isArray(publicSettings.signInOptions) &&
-    publicSettings.signInOptions.length > 0
-      ? publicSettings.signInOptions
-      : ["google"];
+  const signInOptions = useMemo(
+    () =>
+      Array.isArray(publicSettings.signInOptions) &&
+      publicSettings.signInOptions.length > 0
+        ? publicSettings.signInOptions
+        : ["google"],
+    [publicSettings.signInOptions]
+  );
 
-  const uiConfig: firebaseui.auth.Config = {
-    ...defaultUiConfig,
-    ...props.uiConfig,
-    callbacks: {
-      uiShown: () => {
-        const node = document.getElementById("rowy-firebaseui-skeleton");
-        if (node) node.style.display = "none";
-      },
-      ...props.uiConfig?.callbacks,
-    },
-    signInOptions: getSignInOptions(signInOptions),
-  };
+  const uiConfig: firebaseui.auth.Config = useMemo(
+    () => ({
+      ...defaultUiConfig,
+      ...props.uiConfig,
+      signInOptions: getSignInOptions(signInOptions),
+    }),
+    [props.uiConfig, signInOptions]
+  );
+
+  useEffect(() => {
+    let firebaseUiWidget: firebaseui.auth.AuthUI;
+    let userSignedIn = false;
+    let unregisterAuthObserver: ReturnType<typeof onAuthStateChanged>;
+
+    // Get or Create a firebaseUI instance.
+    firebaseUiWidget =
+      firebaseui.auth.AuthUI.getInstance() ||
+      new firebaseui.auth.AuthUI(firebaseAuth);
+
+    if (uiConfig.signInFlow === "popup") firebaseUiWidget.reset();
+
+    // We track the auth state to reset firebaseUi if the user signs out.
+    unregisterAuthObserver = onAuthStateChanged(firebaseAuth, (user) => {
+      if (!user && userSignedIn) firebaseUiWidget.reset();
+      userSignedIn = !!user;
+    });
+
+    // Render the firebaseUi Widget.
+    firebaseUiWidget.start("#" + ELEMENT_ID, uiConfig);
+
+    return () => {
+      unregisterAuthObserver();
+      firebaseUiWidget.reset();
+    };
+  }, [firebaseAuth, uiConfig]);
 
   return (
     <>
-      <Typography variant="button" className={classes.signInText}>
+      <Typography
+        variant="button"
+        display="block"
+        textAlign="center"
+        color="textSecondary"
+        sx={{ mt: -1, mb: -3 }}
+      >
         Continue with
       </Typography>
 
-      <StyledFirebaseAuth
-        {...props}
-        firebaseAuth={firebaseAuth}
-        uiConfig={uiConfig}
-        className={cx(classes.root, props.className)}
-      />
+      <div className={cx(classes.root, props.className)} id={ELEMENT_ID} />
     </>
   );
 }
