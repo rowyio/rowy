@@ -20,7 +20,6 @@
     "firebase": "^9.6.10",
     "firebaseui": "^6.0.1",
     "jotai": "^1.6.4",
-    "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
     "notistack": "^2.0.4",
     "react": "^18.0.0",
@@ -66,6 +65,20 @@
           "allowSameFolder": true
         }
       ],
+      "no-restricted-imports": [
+        "error",
+        {
+          "patterns": [
+            {
+              "group": [
+                "lodash",
+                "lodash/*"
+              ],
+              "message": "Use lodash-es instead"
+            }
+          ]
+        }
+      ],
       "tsdoc/syntax": "warn"
     }
   },
@@ -92,7 +105,6 @@
     "@testing-library/user-event": "^14.0.4",
     "@types/dompurify": "^2.3.3",
     "@types/jest": "^27.4.1",
-    "@types/lodash": "^4.14.181",
     "@types/lodash-es": "^4.17.6",
     "@types/node": "^17.0.23",
     "@types/react": "^18.0.5",

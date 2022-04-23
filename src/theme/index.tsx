@@ -1,5 +1,5 @@
 import { createTheme, ThemeOptions } from "@mui/material/styles";
-import _merge from "lodash/merge";
+import { merge } from "lodash-es";
 
 import { typography } from "@src/theme/typography";
 import { colorsLight, colorsDark } from "@src/theme/colors";
@@ -7,7 +7,7 @@ import { components } from "@src/theme/components";
 
 export const customizableLightTheme = (customization: ThemeOptions) => {
   const customizedLightThemeBase = createTheme(
-    _merge(
+    merge(
       {},
       typography((customization?.typography as any) ?? {}),
       colorsLight((customization?.palette?.primary as any)?.main)
@@ -15,7 +15,7 @@ export const customizableLightTheme = (customization: ThemeOptions) => {
   );
 
   return createTheme(
-    _merge(
+    merge(
       {},
       customizedLightThemeBase,
       components(customizedLightThemeBase),
@@ -26,7 +26,7 @@ export const customizableLightTheme = (customization: ThemeOptions) => {
 
 export const customizableDarkTheme = (customization: ThemeOptions) => {
   const customizedDarkThemeBase = createTheme(
-    _merge(
+    merge(
       {},
       typography((customization?.typography as any) ?? {}),
       colorsDark(
@@ -37,7 +37,7 @@ export const customizableDarkTheme = (customization: ThemeOptions) => {
   );
 
   return createTheme(
-    _merge(
+    merge(
       {},
       customizedDarkThemeBase,
       components(customizedDarkThemeBase),
