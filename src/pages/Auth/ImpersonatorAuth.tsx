@@ -2,12 +2,12 @@
 import { useEffect, useState } from "react";
 import { useAtom } from "jotai";
 import { useSnackbar } from "notistack";
-import { signOut } from "firebase/auth";
+import { getIdTokenResult, signOut } from "firebase/auth";
 
 import { Typography, Button, TextField } from "@mui/material";
 
 import AuthLayout from "@src/layouts/AuthLayout";
-// import FirebaseUi from "@src/components/Auth/FirebaseUi";
+import FirebaseUi from "@src/components/FirebaseUi";
 
 import { globalScope } from "@src/atoms/globalScope";
 import { firebaseAuthAtom } from "@src/sources/ProjectSourceFirebase";
@@ -16,6 +16,7 @@ import { runRoutes } from "@src/constants/runRoutes";
 export default function ImpersonatorAuthPage() {
   const [firebaseAuth] = useAtom(firebaseAuthAtom, globalScope);
   const { enqueueSnackbar } = useSnackbar();
+  // TODO:
   // const { rowyRun } = useProjectContext();
 
   useEffect(() => {
@@ -66,19 +67,20 @@ export default function ImpersonatorAuthPage() {
         </>
       }
     >
-      {/* {adminUser === undefined ? (
+      {adminUser === undefined ? (
         <FirebaseUi
           uiConfig={{
             callbacks: {
               signInSuccessWithAuthResult: (authUser) => {
-                authUser.user.getIdTokenResult().then((result) => {
-                  if (result.claims.roles?.includes("ADMIN")) {
+                getIdTokenResult(authUser.user).then((result) => {
+                  const roles = result.claims.roles;
+                  if (Array.isArray(roles) && roles.includes("ADMIN")) {
                     setAdminUser(authUser.user);
                   } else {
                     enqueueSnackbar("Not an admin account", {
                       variant: "error",
                     });
-                    signOut();
+                    signOut(firebaseAuth);
                   }
                 });
 
@@ -104,7 +106,7 @@ export default function ImpersonatorAuthPage() {
             Sign in
           </Button>
         </>
-      )} */}
+      )}
     </AuthLayout>
   );
 }

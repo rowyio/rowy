@@ -9485,6 +9485,11 @@ react-dom@^18.0.0:
     loose-envify "^1.1.0"
     scheduler "^0.21.0"
 
+react-element-scroll-hook@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/react-element-scroll-hook/-/react-element-scroll-hook-1.1.0.tgz#4a472933f381667007ae249fb5790c39134bcae3"
+  integrity sha512-c9ITNZIb57HT93HbuK+7lVWNOt5ZmmPWguYrf2YbWpLT8AJMHlxXp0926jLxXnFEr0qr4yiyTA8tfkHx+H+scg==
+
 react-error-boundary@^3.1.0, react-error-boundary@^3.1.4:
   version "3.1.4"
   resolved "https://registry.yarnpkg.com/react-error-boundary/-/react-error-boundary-3.1.4.tgz#255db92b23197108757a888b01e5b729919abde0"

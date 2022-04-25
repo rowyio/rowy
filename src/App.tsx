@@ -18,11 +18,14 @@ import SignOutPage from "@src/pages/Auth/SignOut";
 // prettier-ignore
 const AuthPage = lazy(() => import("@src/pages/Auth/index" /* webpackChunkName: "AuthPage" */));
 // prettier-ignore
-const SignUpPage = lazy(() => import("@src/pages/Auth/SignUp" /* webpackChunkName: "Auth/SignUpPage" */));
+const SignUpPage = lazy(() => import("@src/pages/Auth/SignUp" /* webpackChunkName: "SignUpPage" */));
 // prettier-ignore
-const JwtAuthPage = lazy(() => import("@src/pages/Auth/JwtAuth" /* webpackChunkName: "Auth/JwtAuthPage" */));
+const JwtAuthPage = lazy(() => import("@src/pages/Auth/JwtAuth" /* webpackChunkName: "JwtAuthPage" */));
 // prettier-ignore
-const ImpersonatorAuthPage = lazy(() => import("@src/pages/Auth/ImpersonatorAuth" /* webpackChunkName: "Auth/ImpersonatorAuthPage" */));
+const ImpersonatorAuthPage = lazy(() => import("@src/pages/Auth/ImpersonatorAuth" /* webpackChunkName: "ImpersonatorAuthPage" */));
+
+// prettier-ignore
+const SetupPage = lazy(() => import("@src/pages/Setup" /* webpackChunkName: "SetupPage" */));
 
 export default function App() {
   const [currentUser] = useAtom(currentUserAtom, globalScope);
@@ -43,8 +46,14 @@ export default function App() {
           <Route path={routes.jwtAuth} element={<JwtAuthPage />} />
           <Route
             path={routes.impersonatorAuth}
-            element={<ImpersonatorAuthPage />}
+            element={
+              <RequireAuth>
+                <ImpersonatorAuthPage />
+              </RequireAuth>
+            }
           />
+
+          <Route path={routes.setup} element={<SetupPage />} />
 
           <Route
             path="/"
