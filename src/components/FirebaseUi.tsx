@@ -210,7 +210,7 @@ export default function FirebaseUi(props: IFirebaseUiProps) {
   const [firebaseAuth] = useAtom(firebaseAuthAtom, globalScope);
   const [publicSettings] = useAtom(publicSettingsAtom, globalScope);
 
-  const signInOptions = useMemo(
+  const signInOptions: typeof publicSettings.signInOptions = useMemo(
     () =>
       Array.isArray(publicSettings.signInOptions) &&
       publicSettings.signInOptions.length > 0
