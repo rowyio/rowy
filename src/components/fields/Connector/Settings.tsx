@@ -1,27 +1,14 @@
 import { lazy, Suspense, useState } from "react";
 import _get from "lodash/get";
-import stringify from "json-stable-stringify-without-jsonify";
 
 import {
-  Stepper,
-  Step,
-  StepButton,
-  StepContent,
-  Stack,
   Grid,
   Switch,
   TextField,
   FormControl,
-  FormLabel,
-  FormControlLabel,
-  RadioGroup,
-  Radio,
   Typography,
   InputLabel,
   Link,
-  Checkbox,
-  FormHelperText,
-  Fab,
 } from "@mui/material";
 
 import SteppedAccordion from "@src/components/SteppedAccordion";
@@ -31,9 +18,7 @@ import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 /* eslint-disable import/no-webpack-loader-syntax */
 import connectorDefs from "!!raw-loader!./connector.d.ts";
 
-import { useProjectContext } from "@src/contexts/ProjectContext";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
-import { useAppContext } from "@src/contexts/AppContext";
 import { baseFunction } from "./utils";
 
 //import typeDefs from "!!raw-loader!./types.d.ts";
@@ -60,7 +45,6 @@ const diagnosticsOptions = {
 };
 
 export default function Settings({ config, onChange }) {
-  const { projectId } = useAppContext();
   return (
     <>
       <div>
@@ -80,7 +64,6 @@ export default function Settings({ config, onChange }) {
         />
       </div>
       <FormControl>
-        {/* <InputLabel variant="filled">Primary Key</InputLabel> */}
         <TextField
           id="elementId"
           label="ID"

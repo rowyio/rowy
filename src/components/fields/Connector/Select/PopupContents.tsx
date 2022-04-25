@@ -23,7 +23,6 @@ import { IConnectorSelectProps } from ".";
 import useStyles from "./styles";
 import Loading from "@src/components/Loading";
 import { useProjectContext } from "@src/contexts/ProjectContext";
-import { replacer } from "@src/utils/fns";
 import { getLabel } from "../utils";
 import { useSnackbar } from "notistack";
 
@@ -128,11 +127,6 @@ export default function PopupContents({
         <List className={classes.list}>
           {hits.map((hit) => {
             const isSelected = selectedValues.some((v) => v === hit[elementId]);
-            console.log({
-              isSelected,
-              selectedValues,
-              elementId,
-            });
             return (
               <React.Fragment key={_get(hit, elementId)}>
                 <MenuItem
