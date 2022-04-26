@@ -33,7 +33,7 @@ interface IUseFirestoreDocWithAtomOptions {
  * @param path - Document path. If falsy, the listener isn’t created at all.
  * @param options - {@link IUseFirestoreDocWithAtomOptions}
  */
-export default function useFirestoreDocWithAtom(
+export function useFirestoreDocWithAtom(
   dataAtom: PrimitiveAtom<DocumentData>,
   dataScope: Scope | undefined,
   path: string | undefined,
@@ -60,7 +60,7 @@ export default function useFirestoreDocWithAtom(
     const unsubscribe = onSnapshot(
       doc(firebaseDb, path, ...((pathSegments as string[]) || [])),
       (doc) => {
-        setDataAtom(doc.data()!);
+        setDataAtom(doc.data() || {});
         suspended = false;
       },
       (error) => {
@@ -74,3 +74,5 @@ export default function useFirestoreDocWithAtom(
     };
   }, [firebaseDb, path, pathSegments, onError, setDataAtom, disableSuspense]);
 }
+
+export default useFirestoreDocWithAtom;

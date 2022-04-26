@@ -1,0 +1,22 @@
+{
+  "kind": "identitytoolkit#DownloadAccountResponse",
+  "users": [
+    {
+      "localId": "uhYEjLj2GUl4jNeOkSR6QyesPJb9",
+      "createdAt": "1650966071948",
+      "lastLoginAt": "1650969459716",
+      "providerUserInfo": [
+        {
+          "providerId": "google.com",
+          "rawId": "abc123",
+          "federatedId": "abc123",
+          "email": "foo@example.com"
+        }
+      ],
+      "validSince": "1650969876",
+      "email": "foo@example.com",
+      "emailVerified": true,
+      "disabled": false
+    }
+  ]
+}

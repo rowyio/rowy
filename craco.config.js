@@ -41,6 +41,9 @@ module.exports = {
   },
   jest: {
     configure: (jestConfig) => {
+      jestConfig.setupFilesAfterEnv = ["./src/test/setupTests.ts"];
+      jestConfig.forceExit = true; // jest hangs if we don't have this
+
       jestConfig.moduleNameMapper["^lodash-es$"] = "lodash";
       return jestConfig;
     },

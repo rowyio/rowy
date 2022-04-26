@@ -3,7 +3,11 @@ import { atom, useAtom } from "jotai";
 
 import { FirebaseOptions, initializeApp } from "firebase/app";
 import { getAuth, connectAuthEmulator, getIdTokenResult } from "firebase/auth";
-import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
+import {
+  getFirestore,
+  connectFirestoreEmulator,
+  enableMultiTabIndexedDbPersistence,
+} from "firebase/firestore";
 
 import { currentUserAtom, userRolesAtom } from "@src/atoms/auth";
 
@@ -13,7 +17,7 @@ import { projectIdAtom, publicSettingsAtom } from "@src/atoms/project";
 import { useUpdateAtom } from "jotai/utils";
 import { userSettingsAtom } from "@src/atoms/user";
 
-const envConfig = {
+export const envConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_PROJECT_WEB_API_KEY,
   authDomain: `${process.env.REACT_APP_FIREBASE_PROJECT_ID}.firebaseapp.com`,
   databaseURL: `https://${process.env.REACT_APP_FIREBASE_PROJECT_ID}.firebaseio.com`,
@@ -37,13 +41,21 @@ export const firebaseAppAtom = atom((get) =>
 
 export const firebaseAuthAtom = atom((get) => {
   const auth = getAuth(get(firebaseAppAtom));
-  if (envConnectEmulators) connectAuthEmulator(auth, "http://localhost:9099");
+  if (envConnectEmulators)
+    connectAuthEmulator(auth, "http://localhost:9099", {
+      disableWarnings: true,
+    });
   return auth;
 });
 
+let firebaseDbStarted = false;
 export const firebaseDbAtom = atom((get) => {
   const db = getFirestore(get(firebaseAppAtom));
-  if (envConnectEmulators) connectFirestoreEmulator(db, "localhost", 8080);
+  if (!firebaseDbStarted) {
+    if (envConnectEmulators) connectFirestoreEmulator(db, "localhost", 8080);
+    else enableMultiTabIndexedDbPersistence(db);
+    firebaseDbStarted = true;
+  }
   return db;
 });
 

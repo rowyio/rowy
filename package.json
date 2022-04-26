@@ -17,7 +17,7 @@
     "@rowy/multiselect": "^0.2.3",
     "date-fns": "^2.28.0",
     "dompurify": "^2.3.6",
-    "firebase": "^9.6.10",
+    "firebase": "^9.6.11",
     "firebaseui": "^6.0.1",
     "jotai": "^1.6.4",
     "lodash-es": "^4.17.21",
@@ -38,13 +38,14 @@
   "scripts": {
     "start": "cross-env PORT=7699 craco start",
     "startWithEmulator": "cross-env PORT=7699 REACT_APP_FIREBASE_EMULATOR=true craco start",
+    "emulators": "firebase emulators:start --only firestore,auth --import ./emulators/ --export-on-exit",
+    "test": "craco test --env ./src/test/custom-jest-env.js",
     "build": "craco build",
-    "test": "craco test",
     "analyze": "source-map-explorer ./build/static/js/*.js",
     "prepare": "husky install",
     "env": "node createDotEnv",
     "target": "firebase target:apply hosting rowy",
-    "deploy": "firebase deploy"
+    "deploy": "firebase deploy --only hosting"
   },
   "engines": {
     "node": ">=16"
@@ -102,7 +103,6 @@
     "@craco/craco": "^6.4.3",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.0.0",
-    "@testing-library/react-hooks": "^8.0.0",
     "@testing-library/user-event": "^14.0.4",
     "@types/dompurify": "^2.3.3",
     "@types/jest": "^27.4.1",

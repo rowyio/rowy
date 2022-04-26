@@ -9,6 +9,7 @@ import { publicSettingsAtom } from "@src/atoms/project";
 import { firebaseAuthAtom } from "@src/sources/ProjectSourceFirebase";
 import { Button } from "@mui/material";
 import { useSnackbar } from "notistack";
+import { useFirestoreDocWithAtom } from "hooks/useFirestoreDocWithAtom";
 
 import {
   GoogleAuthProvider,
@@ -20,20 +21,26 @@ import { userSettingsAtom } from "@src/atoms/user";
 const provider = new GoogleAuthProvider();
 
 function CurrentUser({ currentUser }: { currentUser: User }) {
-  console.log("currentUser", currentUser);
+  console.log("currentUser", currentUser.uid);
   return <p>{currentUser?.email}</p>;
 }
 
-function Auth() {
+function JotaiTest() {
   const [firebaseAuth] = useAtom(firebaseAuthAtom, globalScope);
   const [currentUser] = useAtom(currentUserAtom, globalScope);
   const [userRoles] = useAtom(userRolesAtom, globalScope);
   const [publicSettings] = useAtom(publicSettingsAtom, globalScope);
   const [userSettings] = useAtom(userSettingsAtom, globalScope);
-  console.log("publicSettings", publicSettings);
-  console.log("userSettings", userSettings);
+  // console.log("publicSettings", publicSettings);
+  // console.log("userSettings", userSettings);
 
   const { enqueueSnackbar } = useSnackbar();
+
+  useFirestoreDocWithAtom(
+    publicSettingsAtom,
+    globalScope,
+    "_rowy_/publicSettings"
+  );
 
   return (
     <>
@@ -61,7 +68,7 @@ function Auth() {
       </Button>
 
       {currentUser === undefined && <p>Authenticating …</p>}
-      <CurrentUser currentUser={currentUser!} />
+      {currentUser && <CurrentUser currentUser={currentUser} />}
       <p>{JSON.stringify(userRoles)}</p>
 
       <p>{JSON.stringify(publicSettings)}</p>
@@ -79,4 +86,4 @@ function Auth() {
   );
 }
 
-export default Auth;
+export default JotaiTest;
