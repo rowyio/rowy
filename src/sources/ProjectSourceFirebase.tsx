@@ -4,7 +4,7 @@ import { atom, useAtom } from "jotai";
 import { FirebaseOptions, initializeApp } from "firebase/app";
 import { getAuth, connectAuthEmulator, getIdTokenResult } from "firebase/auth";
 import {
-  getFirestore,
+  initializeFirestore,
   connectFirestoreEmulator,
   enableMultiTabIndexedDbPersistence,
 } from "firebase/firestore";
@@ -15,7 +15,7 @@ import useFirestoreDocWithAtom from "@src/hooks/useFirestoreDocWithAtom";
 import { globalScope } from "@src/atoms/globalScope";
 import { projectIdAtom, publicSettingsAtom } from "@src/atoms/project";
 import { useUpdateAtom } from "jotai/utils";
-import { userSettingsAtom } from "@src/atoms/user";
+import { userSettingsAtom, UserSettings } from "@src/atoms/user";
 
 export const envConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_PROJECT_WEB_API_KEY,
@@ -41,20 +41,23 @@ export const firebaseAppAtom = atom((get) =>
 
 export const firebaseAuthAtom = atom((get) => {
   const auth = getAuth(get(firebaseAppAtom));
-  if (envConnectEmulators)
+  if (envConnectEmulators && !(window as any).firebaseAuthEmulatorStarted) {
     connectAuthEmulator(auth, "http://localhost:9099", {
       disableWarnings: true,
     });
+    (window as any).firebaseAuthEmulatorStarted = true;
+  }
   return auth;
 });
 
-let firebaseDbStarted = false;
 export const firebaseDbAtom = atom((get) => {
-  const db = getFirestore(get(firebaseAppAtom));
-  if (!firebaseDbStarted) {
+  const db = initializeFirestore(get(firebaseAppAtom), {
+    ignoreUndefinedProperties: true,
+  });
+  if (!(window as any).firebaseDbStarted) {
     if (envConnectEmulators) connectFirestoreEmulator(db, "localhost", 8080);
     else enableMultiTabIndexedDbPersistence(db);
-    firebaseDbStarted = true;
+    (window as any).firebaseDbStarted = true;
   }
   return db;
 });
