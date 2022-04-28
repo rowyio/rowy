@@ -1,4 +1,4 @@
-import { customRender, signIn } from "./testUtils";
+import { customRender, signInAsAdmin } from "./testUtils";
 import { screen } from "@testing-library/react";
 
 import App from "@src/App";
@@ -11,11 +11,11 @@ test("renders without crashing", async () => {
 });
 
 test("signs in", async () => {
-  const initialAtomValues = await signIn();
+  const initialAtomValues = await signInAsAdmin();
 
   customRender(<App />, initialAtomValues);
 
   expect(await screen.findByText(/Nav/i)).toBeInTheDocument();
   expect(await screen.findByText(/Nav/i)).toBeInTheDocument();
-  // expect(await screen.findByText(/{"emulator":true}/i)).toBeInTheDocument();
+  expect(await screen.findByText(/{"emulator":true}/i)).toBeInTheDocument();
 });

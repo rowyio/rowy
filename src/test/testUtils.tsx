@@ -31,10 +31,10 @@ export const customRender = (
   );
 
 /**
- * Signs in with Google using foo(at)example.com.
+ * Signs in with Google as an admin: admin(at)example.com
  * Returns `initialAtomValues`, which must be passed to `customRender`.
  */
-export const signIn = async () => {
+export const signInAsAdmin = async () => {
   const app = initializeApp(envConfig);
   const auth = getAuth(app);
   connectAuthEmulator(auth, "http://localhost:9099", { disableWarnings: true });
@@ -42,10 +42,10 @@ export const signIn = async () => {
   const userCredential = await signInWithCredential(
     auth,
     GoogleAuthProvider.credential(
-      '{"sub": "abc123", "email": "foo@example.com", "email_verified": true}'
+      '{"sub": "abc123", "email": "admin@example.com", "email_verified": true}'
     )
   );
-  expect(userCredential.user.email).toBe("foo@example.com");
+  expect(userCredential.user.email).toBe("admin@example.com");
 
   const initialAtomValues = [
     [firebaseAuthAtom, auth],

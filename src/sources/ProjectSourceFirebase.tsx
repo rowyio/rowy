@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { atom, useAtom } from "jotai";
+import { useUpdateAtom } from "jotai/utils";
 
 import { FirebaseOptions, initializeApp } from "firebase/app";
 import { getAuth, connectAuthEmulator, getIdTokenResult } from "firebase/auth";
@@ -9,13 +10,18 @@ import {
   enableMultiTabIndexedDbPersistence,
 } from "firebase/firestore";
 
-import { currentUserAtom, userRolesAtom } from "@src/atoms/auth";
-
 import useFirestoreDocWithAtom from "@src/hooks/useFirestoreDocWithAtom";
-import { globalScope } from "@src/atoms/globalScope";
-import { projectIdAtom, publicSettingsAtom } from "@src/atoms/project";
-import { useUpdateAtom } from "jotai/utils";
-import { userSettingsAtom, UserSettings } from "@src/atoms/user";
+import {
+  globalScope,
+  projectIdAtom,
+  projectSettingsAtom,
+  publicSettingsAtom,
+  currentUserAtom,
+  userRolesAtom,
+  userSettingsAtom,
+  UserSettings,
+} from "@src/atoms/globalScope";
+import { SETTINGS, PUBLIC_SETTINGS, USERS } from "@src/config/dbPaths";
 
 export const envConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_PROJECT_WEB_API_KEY,
@@ -30,15 +36,22 @@ const envConnectEmulators =
   process.env.NODE_ENV === "test" ||
   process.env.REACT_APP_FIREBASE_EMULATOR === "true";
 
-// Store Firebase config here so it can be set programmatically.
-// This lets us switch between Firebase projects.
-// Then app, auth, db, storage need to be derived atoms.
+/**
+ * Store Firebase config here so it can be set programmatically.
+ * This lets us switch between Firebase projects.
+ * Then app, auth, db, storage need to be derived atoms.
+ */
 export const firebaseConfigAtom = atom<FirebaseOptions>(envConfig);
 
+/** Store Firebase app instance */
 export const firebaseAppAtom = atom((get) =>
   initializeApp(get(firebaseConfigAtom))
 );
 
+/**
+ * Store Firebase Auth instance for current app.
+ * Connects to emulators based on env vars.
+ */
 export const firebaseAuthAtom = atom((get) => {
   const auth = getAuth(get(firebaseAppAtom));
   if (envConnectEmulators && !(window as any).firebaseAuthEmulatorStarted) {
@@ -50,18 +63,27 @@ export const firebaseAuthAtom = atom((get) => {
   return auth;
 });
 
+/**
+ * Store Firestore instance for current app.
+ * Connects to emulators based on env vars, or enables multi-tab indexed db persistence.
+ */
 export const firebaseDbAtom = atom((get) => {
   const db = initializeFirestore(get(firebaseAppAtom), {
     ignoreUndefinedProperties: true,
   });
   if (!(window as any).firebaseDbStarted) {
-    if (envConnectEmulators) connectFirestoreEmulator(db, "localhost", 8080);
+    if (envConnectEmulators) connectFirestoreEmulator(db, "localhost", 9299);
     else enableMultiTabIndexedDbPersistence(db);
     (window as any).firebaseDbStarted = true;
   }
   return db;
 });
 
+/**
+ * When rendered, connects to a Firebase project.
+ *
+ * Sets project ID, project settings, public settings, current user, user roles, and user settings.
+ */
 export default function ProjectSourceFirebase() {
   // Set projectId from Firebase project
   const [firebaseConfig] = useAtom(firebaseConfigAtom, globalScope);
@@ -97,19 +119,29 @@ export default function ProjectSourceFirebase() {
   }, [firebaseAuth, setCurrentUser, setUserRoles]);
 
   // Store public settings in atom
+  useFirestoreDocWithAtom(publicSettingsAtom, globalScope, PUBLIC_SETTINGS);
+
+  // Store public settings in atom when a user is signed in
   useFirestoreDocWithAtom(
-    publicSettingsAtom,
+    projectSettingsAtom,
     globalScope,
-    "_rowy_/publicSettings"
+    currentUser ? SETTINGS : undefined
   );
 
   // Store user settings in atom when a user is signed in
-  useFirestoreDocWithAtom(
-    userSettingsAtom,
-    globalScope,
-    `_rowy_/userManagement/users`,
-    { pathSegments: [currentUser?.uid] }
-  );
+  useFirestoreDocWithAtom<UserSettings>(userSettingsAtom, globalScope, USERS, {
+    pathSegments: [currentUser?.uid],
+    createIfNonExistent: currentUser
+      ? {
+          user: {
+            email: currentUser.email || "",
+            displayName: currentUser.displayName || undefined,
+            photoURL: currentUser.photoURL || undefined,
+            phoneNumber: currentUser.phoneNumber || undefined,
+          },
+        }
+      : undefined,
+  });
 
   return null;
 }

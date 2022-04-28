@@ -36,6 +36,7 @@ export type ProjectSettings = Partial<{
   rowyRunBuildStatus: "BUILDING" | "COMPLETE";
   services: Partial<{
     hooks: string;
+    builder: string;
     terminal: string;
   }>;
 }>;
@@ -60,7 +61,7 @@ export type TableSettings = {
   readOnly?: boolean;
 };
 /** Tables visible to the signed-in user based on roles */
-export const tablesAtom = atom((get) => {
+export const tablesAtom = atom<TableSettings[]>((get) => {
   const userRoles = get(userRolesAtom);
   const tables = get(projectSettingsAtom).tables || [];
 

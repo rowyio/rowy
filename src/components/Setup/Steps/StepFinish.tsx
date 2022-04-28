@@ -22,7 +22,7 @@ import ThumbDownOffIcon from "@mui/icons-material/ThumbDownOffAlt";
 import { analytics } from "@src/analytics";
 import { globalScope } from "@src/atoms/globalScope";
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
-import { routes } from "@src/constants/routes";
+import { ROUTES } from "@src/constants/routes";
 import { SETTINGS } from "config/dbPaths";
 
 export default {
@@ -93,7 +93,7 @@ function StepFinish() {
         color="primary"
         size="large"
         component={Link}
-        to={routes.auth}
+        to={ROUTES.auth}
       >
         Sign in to your Rowy project
       </Button>

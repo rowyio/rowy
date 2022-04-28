@@ -1,11 +1,14 @@
+import { useState } from "react";
 import { useAtom } from "jotai";
-import { globalScope } from "@src/atoms/globalScope";
-import { currentUserAtom, userRolesAtom } from "@src/atoms/auth";
-import { publicSettingsAtom } from "@src/atoms/project";
-
-// import StyledFirebaseAuth from "react-firebaseui/FirebaseAuth";
-// import "firebase/compat/auth";
-// import { GoogleAuthProvider } from "firebase/auth";
+import {
+  globalScope,
+  currentUserAtom,
+  userRolesAtom,
+  userSettingsAtom,
+  publicSettingsAtom,
+  projectSettingsAtom,
+  rowyRunAtom,
+} from "@src/atoms/globalScope";
 import { firebaseAuthAtom } from "@src/sources/ProjectSourceFirebase";
 import { Button } from "@mui/material";
 import { useSnackbar } from "notistack";
@@ -16,12 +19,14 @@ import {
   signInWithPopup,
   signOut,
   User,
+  getIdTokenResult,
 } from "firebase/auth";
-import { userSettingsAtom } from "@src/atoms/user";
+import { runRoutes } from "@src/constants/runRoutes";
+
 const provider = new GoogleAuthProvider();
 
 function CurrentUser({ currentUser }: { currentUser: User }) {
-  console.log("currentUser", currentUser.uid);
+  // console.log("currentUser", currentUser.uid);
   return <p>{currentUser?.email}</p>;
 }
 
@@ -30,10 +35,13 @@ function JotaiTest() {
   const [currentUser] = useAtom(currentUserAtom, globalScope);
   const [userRoles] = useAtom(userRolesAtom, globalScope);
   const [publicSettings] = useAtom(publicSettingsAtom, globalScope);
+  const [projectSettings] = useAtom(projectSettingsAtom, globalScope);
   const [userSettings] = useAtom(userSettingsAtom, globalScope);
+  const [rowyRun] = useAtom(rowyRunAtom, globalScope);
   // console.log("publicSettings", publicSettings);
   // console.log("userSettings", userSettings);
 
+  const [count, setCount] = useState(0);
   const { enqueueSnackbar } = useSnackbar();
 
   useFirestoreDocWithAtom(
@@ -67,21 +75,32 @@ function JotaiTest() {
         Sign out
       </Button>
 
+      <Button onClick={() => getIdTokenResult(currentUser!).then(console.log)}>
+        getIdTokenResult
+      </Button>
+      <Button
+        onClick={() =>
+          rowyRun({ route: runRoutes.version, localhost: true }).then(
+            console.log
+          )
+        }
+      >
+        rowyRun
+      </Button>
+
       {currentUser === undefined && <p>Authenticating …</p>}
       {currentUser && <CurrentUser currentUser={currentUser} />}
       <p>{JSON.stringify(userRoles)}</p>
 
       <p>{JSON.stringify(publicSettings)}</p>
-
+      <p>{JSON.stringify(projectSettings)}</p>
       <p>{JSON.stringify(userSettings)}</p>
-      {/* <StyledFirebaseAuth
-        uiConfig={{
-          signInFlow: "popup",
-          signInSuccessUrl: "/",
-          signInOptions: [GoogleAuthProvider.PROVIDER_ID],
-        }}
-        firebaseAuth={firebaseAuth}
-      /> */}
+
+      <div>
+        <Button onClick={() => setCount((c) => c + 1)}>
+          Increment: {count}
+        </Button>
+      </div>
     </>
   );
 }

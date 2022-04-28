@@ -1,48 +1,50 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from "react";
 import { useAtom } from "jotai";
 import { useSnackbar } from "notistack";
-import { getIdTokenResult, signOut } from "firebase/auth";
+import {
+  getIdTokenResult,
+  signOut,
+  signInWithCustomToken,
+} from "firebase/auth";
 
 import { Typography, Button, TextField } from "@mui/material";
 
 import AuthLayout from "@src/layouts/AuthLayout";
 import FirebaseUi from "@src/components/FirebaseUi";
 
-import { globalScope } from "@src/atoms/globalScope";
+import { globalScope, rowyRunAtom } from "@src/atoms/globalScope";
 import { firebaseAuthAtom } from "@src/sources/ProjectSourceFirebase";
 import { runRoutes } from "@src/constants/runRoutes";
 
 export default function ImpersonatorAuthPage() {
   const [firebaseAuth] = useAtom(firebaseAuthAtom, globalScope);
+  const [rowyRun] = useAtom(rowyRunAtom, globalScope);
+
   const { enqueueSnackbar } = useSnackbar();
-  // TODO:
-  // const { rowyRun } = useProjectContext();
 
   useEffect(() => {
-    //sign out user on initial load
-    // signOut();
-  }, []);
+    // sign out user on initial load
+    signOut(firebaseAuth);
+  }, [firebaseAuth]);
 
   const [loading, setLoading] = useState(false);
   const [adminUser, setAdminUser] = useState();
   const [email, setEmail] = useState("");
 
   const handleAuth = async (email: string) => {
-    // if (!rowyRun) return;
-    // setLoading(true);
-    // const resp = await rowyRun({
-    //   route: runRoutes.impersonateUser,
-    //   params: [email],
-    // });
-    // setLoading(false);
-    // if (resp.success) {
-    //   enqueueSnackbar(resp.message, { variant: "success" });
-    //   await auth.signInWithCustomToken(resp.token);
-    //   window.location.href = "/";
-    // } else {
-    //   enqueueSnackbar(resp.error.message, { variant: "error" });
-    // }
+    setLoading(true);
+    const resp = await rowyRun({
+      route: runRoutes.impersonateUser,
+      params: [email],
+    });
+    setLoading(false);
+    if (resp.success) {
+      enqueueSnackbar(resp.message, { variant: "success" });
+      await signInWithCustomToken(firebaseAuth, resp.token);
+      window.location.href = "/";
+    } else {
+      enqueueSnackbar(resp.error.message, { variant: "error" });
+    }
   };
 
   return (

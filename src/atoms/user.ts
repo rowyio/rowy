@@ -7,13 +7,14 @@ import themes from "@src/theme";
 import { publicSettingsAtom } from "./project";
 import { TableFilter } from "./table";
 
-/** User info and settings*/
+/** User info and settings */
 export type UserSettings = Partial<{
   /** Synced from user auth info */
   user: {
     email: string;
     displayName?: string;
     photoURL?: string;
+    phoneNumber?: string;
   };
   roles: string[];
 
@@ -29,15 +30,20 @@ export type UserSettings = Partial<{
     }>
   >;
 }>;
-/** User info and settings*/
+/** User info and settings */
 export const userSettingsAtom = atom<UserSettings>({});
 
-/** Stores which theme is currently active, based on user or OS setting */
+/**
+ * Stores which theme is currently active, based on user or OS setting.
+ * Saved in localStorage.
+ */
 export const themeAtom = atomWithStorage<"light" | "dark">(
   "__ROWY__THEME",
   "light"
 );
-/** User can override OS theme */
+/**
+ * User can override OS theme. Saved in localStorage.
+ */
 export const themeOverriddenAtom = atomWithStorage(
   "__ROWY__THEME_OVERRIDDEN",
   false

@@ -21,7 +21,7 @@
       "port": 9099
     },
     "firestore": {
-      "port": 8080
+      "port": 9299
     },
     "storage": {
       "port": 9199

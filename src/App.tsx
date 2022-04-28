@@ -1,16 +1,16 @@
 import { lazy, Suspense } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { useAtom } from "jotai";
 
 import Loading from "@src/components/Loading";
 import ProjectSourceFirebase from "@src/sources/ProjectSourceFirebase";
 import NotFound from "@src/pages/NotFound";
 import RequireAuth from "@src/layouts/RequireAuth";
-import Nav from "@src/layouts/Nav";
+import Navigation from "@src/layouts/Navigation";
 
 import { globalScope } from "@src/atoms/globalScope";
 import { currentUserAtom } from "@src/atoms/auth";
-import { routes } from "@src/constants/routes";
+import { ROUTES } from "@src/constants/routes";
 
 import JotaiTestPage from "@src/pages/JotaiTest";
 import SignOutPage from "@src/pages/Auth/SignOut";
@@ -27,6 +27,13 @@ const ImpersonatorAuthPage = lazy(() => import("@src/pages/Auth/ImpersonatorAuth
 // prettier-ignore
 const SetupPage = lazy(() => import("@src/pages/Setup" /* webpackChunkName: "SetupPage" */));
 
+// prettier-ignore
+const UserSettingsPage = lazy(() => import("@src/pages/Settings/UserSettings" /* webpackChunkName: "UserSettingsPage" */));
+// prettier-ignore
+const ProjectSettingsPage = lazy(() => import("@src/pages/Settings/ProjectSettings" /* webpackChunkName: "ProjectSettingsPage" */));
+// prettier-ignore
+// const RowyRunTestPage = lazy(() => import("@src/pages/RowyRunTest" /* webpackChunkName: "RowyRunTestPage" */));
+
 export default function App() {
   const [currentUser] = useAtom(currentUserAtom, globalScope);
 
@@ -40,12 +47,12 @@ export default function App() {
         <Routes>
           <Route path="*" element={<NotFound />} />
 
-          <Route path={routes.auth} element={<AuthPage />} />
-          <Route path={routes.signUp} element={<SignUpPage />} />
-          <Route path={routes.signOut} element={<SignOutPage />} />
-          <Route path={routes.jwtAuth} element={<JwtAuthPage />} />
+          <Route path={ROUTES.auth} element={<AuthPage />} />
+          <Route path={ROUTES.signUp} element={<SignUpPage />} />
+          <Route path={ROUTES.signOut} element={<SignOutPage />} />
+          <Route path={ROUTES.jwtAuth} element={<JwtAuthPage />} />
           <Route
-            path={routes.impersonatorAuth}
+            path={ROUTES.impersonatorAuth}
             element={
               <RequireAuth>
                 <ImpersonatorAuthPage />
@@ -53,17 +60,23 @@ export default function App() {
             }
           />
 
-          <Route path={routes.setup} element={<SetupPage />} />
+          <Route path={ROUTES.setup} element={<SetupPage />} />
 
           <Route
             path="/"
             element={
               <RequireAuth>
-                <Nav />
+                <Navigation />
               </RequireAuth>
             }
           >
-            <Route path="dash" element={<div>Dash</div>} />
+            <Route
+              path={ROUTES.settings}
+              element={<Navigate to={ROUTES.userSettings} replace />}
+            />
+            <Route path={ROUTES.userSettings} element={<UserSettingsPage />} />
+            <Route path={ROUTES.projectSettings} element={<ProjectSettingsPage />} />
+            {/* <Route path={ROUTES.rowyRunTest} element={<RowyRunTestPage />} /> */}
           </Route>
 
           <Route path="/jotaiTest" element={<JotaiTestPage />} />

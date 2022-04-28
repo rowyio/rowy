@@ -5,7 +5,7 @@ import Loading from "@src/components/Loading";
 
 import { globalScope } from "@src/atoms/globalScope";
 import { currentUserAtom } from "@src/atoms/auth";
-import routes from "constants/routes";
+import { ROUTES } from "@src/constants/routes";
 
 export interface IRequireAuthProps {
   children: React.ReactElement;
@@ -24,7 +24,7 @@ export default function RequireAuth({ children }: IRequireAuthProps) {
   if (currentUser === null)
     return (
       <Navigate
-        to={routes.auth + `?redirect=${encodeURIComponent(redirect)}`}
+        to={ROUTES.auth + `?redirect=${encodeURIComponent(redirect)}`}
         replace
       />
     );
