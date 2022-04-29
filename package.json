@@ -58,7 +58,8 @@
   "eslintConfig": {
     "plugins": [
       "eslint-plugin-no-relative-import-paths",
-      "eslint-plugin-tsdoc"
+      "eslint-plugin-tsdoc",
+      "eslint-plugin-local-rules"
     ],
     "extends": [
       "react-app",
@@ -86,7 +87,8 @@
           ]
         }
       ],
-      "tsdoc/syntax": "warn"
+      "tsdoc/syntax": "warn",
+      "local-rules/no-jotai-use-atom-without-scope": "error"
     }
   },
   "browserslist": {
@@ -125,6 +127,7 @@
     "eslint": "^8.12.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-react-app": "^7.0.0",
+    "eslint-plugin-local-rules": "^1.1.0",
     "eslint-plugin-no-relative-import-paths": "^1.2.0",
     "eslint-plugin-tsdoc": "^0.2.16",
     "husky": ">=7.0.4",
