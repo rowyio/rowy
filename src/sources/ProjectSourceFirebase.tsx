@@ -44,9 +44,10 @@ const envConnectEmulators =
 export const firebaseConfigAtom = atom<FirebaseOptions>(envConfig);
 
 /** Store Firebase app instance */
-export const firebaseAppAtom = atom((get) =>
-  initializeApp(get(firebaseConfigAtom))
-);
+export const firebaseAppAtom = atom((get) => {
+  const firebaseConfig = get(firebaseConfigAtom);
+  return initializeApp(firebaseConfig, firebaseConfig.projectId);
+});
 
 /**
  * Store Firebase Auth instance for current app.

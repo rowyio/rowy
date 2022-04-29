@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAtom } from "jotai";
 import {
   globalScope,
+  projectIdAtom,
   currentUserAtom,
   userRolesAtom,
   userSettingsAtom,
@@ -32,6 +33,7 @@ function CurrentUser({ currentUser }: { currentUser: User }) {
 
 function JotaiTest() {
   const [firebaseAuth] = useAtom(firebaseAuthAtom, globalScope);
+  const [projectId] = useAtom(projectIdAtom, globalScope);
   const [currentUser] = useAtom(currentUserAtom, globalScope);
   const [userRoles] = useAtom(userRolesAtom, globalScope);
   const [publicSettings] = useAtom(publicSettingsAtom, globalScope);
@@ -92,6 +94,7 @@ function JotaiTest() {
       {currentUser && <CurrentUser currentUser={currentUser} />}
       <p>{JSON.stringify(userRoles)}</p>
 
+      <p>{projectId}</p>
       <p>{JSON.stringify(publicSettings)}</p>
       <p>{JSON.stringify(projectSettings)}</p>
       <p>{JSON.stringify(userSettings)}</p>
