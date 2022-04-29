@@ -33,7 +33,7 @@ export default function Personalization({
       <FormControlLabel
         control={
           <Checkbox
-            checked={customizedThemeColor}
+            defaultChecked={customizedThemeColor}
             onChange={(e) => {
               setCustomizedThemeColor(e.target.checked);
               if (!e.target.checked) {
@@ -50,7 +50,7 @@ export default function Personalization({
       />
 
       <Collapse in={customizedThemeColor} style={{ marginTop: 0 }}>
-        <Suspense fallback={<Loading />}>
+        <Suspense fallback={<Loading style={{ height: "auto" }} />}>
           <ThemeColorPicker
             currentLight={settings.theme?.light?.palette?.primary?.main}
             currentDark={settings.theme?.dark?.palette?.primary?.main}

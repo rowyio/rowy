@@ -6,7 +6,7 @@ import { Provider, Atom } from "jotai";
 import { globalScope } from "@src/atoms/globalScope";
 import createCache from "@emotion/cache";
 import { CacheProvider } from "@emotion/react";
-import ThemeProvider from "@src/theme/ThemeProvider";
+import RowyThemeProvider from "@src/theme/RowyThemeProvider";
 import SnackbarProvider from "@src/contexts/SnackbarContext";
 
 import { Suspense } from "react";
@@ -29,7 +29,7 @@ export default function Providers({
         <HelmetProvider>
           <Provider scope={globalScope} initialValues={initialAtomValues}>
             <CacheProvider value={muiCache}>
-              <ThemeProvider>
+              <RowyThemeProvider>
                 <ErrorBoundary FallbackComponent={ErrorFallback}>
                   <SnackbarProvider>
                     <Suspense fallback={<Loading fullScreen />}>
@@ -37,7 +37,7 @@ export default function Providers({
                     </Suspense>
                   </SnackbarProvider>
                 </ErrorBoundary>
-              </ThemeProvider>
+              </RowyThemeProvider>
             </CacheProvider>
           </Provider>
         </HelmetProvider>

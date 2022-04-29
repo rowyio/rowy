@@ -12,6 +12,7 @@ import {
 } from "@src/atoms/globalScope";
 import { firebaseAuthAtom } from "@src/sources/ProjectSourceFirebase";
 import { Button } from "@mui/material";
+import MultiSelect from "@rowy/multiselect";
 import { useSnackbar } from "notistack";
 import { useFirestoreDocWithAtom } from "hooks/useFirestoreDocWithAtom";
 
@@ -76,6 +77,13 @@ function JotaiTest() {
       >
         Sign out
       </Button>
+
+      <MultiSelect
+        multiple={false}
+        onChange={console.log}
+        value="2"
+        options={new Array(10).fill(undefined).map((_, i) => i.toString())}
+      />
 
       <Button onClick={() => getIdTokenResult(currentUser!).then(console.log)}>
         getIdTokenResult

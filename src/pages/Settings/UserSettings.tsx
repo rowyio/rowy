@@ -15,6 +15,7 @@ import {
   globalScope,
   currentUserAtom,
   userSettingsAtom,
+  updateUserSettingsAtom,
 } from "@src/atoms/globalScope";
 
 export interface IUserSettingsChildProps {
@@ -27,16 +28,17 @@ export default function UserSettingsPage() {
   const [userSettings] = useAtom(userSettingsAtom, globalScope);
   const { enqueueSnackbar } = useSnackbar();
 
-  const updateSettings = useDebouncedCallback((data: Record<string, any>) => {
-    // TODO:
-    // db
-    //   .doc(path)
-    //   .update(data)
-    //   .then(() =>
-
-    enqueueSnackbar("Saved", { variant: "success" });
-
-    // )
+  const [_updateUserSettings] = useAtom(updateUserSettingsAtom, globalScope);
+  const updateSettings = useDebouncedCallback((data) => {
+    if (_updateUserSettings) {
+      _updateUserSettings(data).then(() =>
+        enqueueSnackbar("Saved", { variant: "success" })
+      );
+    } else {
+      enqueueSnackbar("Could not update project settings", {
+        variant: "error",
+      });
+    }
   }, 1000);
   // When the component is to be unmounted, force update settings
   useEffect(

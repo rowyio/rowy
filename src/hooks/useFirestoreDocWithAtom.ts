@@ -1,17 +1,19 @@
 import { useEffect } from "react";
 import { useAtom, PrimitiveAtom } from "jotai";
 import { Scope } from "jotai/core/atom";
-import { useUpdateAtom } from "jotai/utils";
+import { useUpdateAtom, RESET } from "jotai/utils";
 import {
   doc,
   DocumentData,
   onSnapshot,
   FirestoreError,
   setDoc,
+  DocumentReference,
 } from "firebase/firestore";
 import { useErrorHandler } from "react-error-boundary";
 
 import { globalScope } from "@src/atoms/globalScope";
+import { UpdateFunction } from "@src/atoms/types";
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
 
 /** Options for {@link useFirestoreDocWithAtom} */
@@ -24,6 +26,8 @@ interface IUseFirestoreDocWithAtomOptions<T> {
   disableSuspense?: boolean;
   /** Optionally create the document if it doesn’t exist with the following data */
   createIfNonExistent?: T;
+  /** Set this atom’s value to a function that updates the document. Uses same scope as `dataScope`. */
+  updateDataAtom?: PrimitiveAtom<UpdateFunction<T> | null>;
 }
 
 /**
@@ -45,11 +49,20 @@ export function useFirestoreDocWithAtom<T = DocumentData>(
 ) {
   const [firebaseDb] = useAtom(firebaseDbAtom, globalScope);
   const setDataAtom = useUpdateAtom(dataAtom, dataScope);
+  const setUpdateDataAtom = useUpdateAtom(
+    options?.updateDataAtom || (dataAtom as any),
+    globalScope
+  );
   const handleError = useErrorHandler();
 
   // Destructure options so they can be used as useEffect dependencies
-  const { pathSegments, onError, disableSuspense, createIfNonExistent } =
-    options || {};
+  const {
+    pathSegments,
+    onError,
+    disableSuspense,
+    createIfNonExistent,
+    updateDataAtom,
+  } = options || {};
 
   useEffect(() => {
     if (!path || (Array.isArray(pathSegments) && pathSegments.some((x) => !x)))
@@ -63,8 +76,14 @@ export function useFirestoreDocWithAtom<T = DocumentData>(
       suspended = true;
     }
 
+    const ref = doc(
+      firebaseDb,
+      path,
+      ...((pathSegments as string[]) || [])
+    ) as DocumentReference<T>;
+
     const unsubscribe = onSnapshot(
-      doc(firebaseDb, path, ...((pathSegments as string[]) || [])),
+      ref,
       (doc) => {
         try {
           if (!doc.exists() && !!createIfNonExistent) {
@@ -86,8 +105,19 @@ export function useFirestoreDocWithAtom<T = DocumentData>(
       }
     );
 
+    // If `options?.updateDataAtom` was passed,
+    // set the atom’s value to a function that updates the document
+    if (updateDataAtom) {
+      setUpdateDataAtom(
+        () => (update: T) => setDoc(ref, update, { merge: true })
+      );
+    }
+
     return () => {
       unsubscribe();
+      // If `options?.updateDataAtom` was passed,
+      // reset the atom’s value to prevent writes
+      if (updateDataAtom) setUpdateDataAtom(RESET);
     };
   }, [
     firebaseDb,
@@ -98,6 +128,8 @@ export function useFirestoreDocWithAtom<T = DocumentData>(
     disableSuspense,
     createIfNonExistent,
     handleError,
+    updateDataAtom,
+    setUpdateDataAtom,
   ]);
 }
 

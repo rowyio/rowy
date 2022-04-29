@@ -14,7 +14,9 @@ import Customization from "@src/components/Settings/ProjectSettings/Customizatio
 import {
   globalScope,
   projectSettingsAtom,
+  updateProjectSettingsAtom,
   publicSettingsAtom,
+  updatePublicSettingsAtom,
 } from "@src/atoms/globalScope";
 
 export interface IProjectSettingsChildProps {
@@ -30,20 +32,21 @@ export default function ProjectSettingsPage() {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const updateProjectSettings = useDebouncedCallback(
-    (data: Record<string, any>) => {
-      // TODO:
-      // db
-      //   .doc(path)
-      //   .update(data)
-      //   .then(() =>
-
-      enqueueSnackbar("Saved", { variant: "success" });
-
-      // )
-    },
-    1000
+  const [_updateProjectSettingsDoc] = useAtom(
+    updateProjectSettingsAtom,
+    globalScope
   );
+  const updateProjectSettings = useDebouncedCallback((data) => {
+    if (_updateProjectSettingsDoc) {
+      _updateProjectSettingsDoc(data).then(() =>
+        enqueueSnackbar("Saved", { variant: "success" })
+      );
+    } else {
+      enqueueSnackbar("Could not update project settings", {
+        variant: "error",
+      });
+    }
+  }, 1000);
   // When the component is to be unmounted, force update settings
   useEffect(
     () => () => {
@@ -52,17 +55,21 @@ export default function ProjectSettingsPage() {
     [updateProjectSettings]
   );
 
+  const [_updatePublicSettingsDoc] = useAtom(
+    updatePublicSettingsAtom,
+    globalScope
+  );
   const updatePublicSettings = useDebouncedCallback(
     (data: Record<string, any>) => {
-      // TODO:
-      // db
-      //   .doc(path)
-      //   .update(data)
-      //   .then(() =>
-
-      enqueueSnackbar("Saved", { variant: "success" });
-
-      // )
+      if (_updatePublicSettingsDoc) {
+        _updatePublicSettingsDoc(data).then(() =>
+          enqueueSnackbar("Saved", { variant: "success" })
+        );
+      } else {
+        enqueueSnackbar("Could not update public settings", {
+          variant: "error",
+        });
+      }
     },
     1000
   );

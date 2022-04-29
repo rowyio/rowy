@@ -2,11 +2,7 @@ import { useEffect } from "react";
 import { useAtom } from "jotai";
 import { Helmet } from "react-helmet-async";
 
-import {
-  useMediaQuery,
-  ThemeProvider as MuiThemeProvider,
-  CssBaseline,
-} from "@mui/material";
+import { useMediaQuery, ThemeProvider, CssBaseline } from "@mui/material";
 import Favicon from "@src/assets/Favicon";
 
 import { globalScope } from "@src/atoms/globalScope";
@@ -20,7 +16,7 @@ import {
  * Injects the MUI theme with customizations from project and user settings.
  * Also adds dark mode support.
  */
-export default function ThemeProvider({
+export default function RowyThemeProvider({
   children,
 }: React.PropsWithChildren<{}>) {
   const [theme, setTheme] = useAtom(themeAtom, globalScope);
@@ -55,11 +51,11 @@ export default function ThemeProvider({
         </Helmet>
       )}
 
-      <MuiThemeProvider theme={customizedThemes[theme]}>
+      <ThemeProvider theme={customizedThemes[theme]}>
         <Favicon />
         <CssBaseline />
         {children}
-      </MuiThemeProvider>
+      </ThemeProvider>
     </>
   );
 }

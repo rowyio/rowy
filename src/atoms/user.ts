@@ -6,6 +6,7 @@ import { ThemeOptions } from "@mui/material";
 import themes from "@src/theme";
 import { publicSettingsAtom } from "./project";
 import { TableFilter } from "./table";
+import { UpdateFunction } from "./types";
 
 /** User info and settings */
 export type UserSettings = Partial<{
@@ -32,6 +33,10 @@ export type UserSettings = Partial<{
 }>;
 /** User info and settings */
 export const userSettingsAtom = atom<UserSettings>({});
+/** Stores a function that updates user settings */
+export const updateUserSettingsAtom = atom<UpdateFunction<UserSettings> | null>(
+  null
+);
 
 /**
  * Stores which theme is currently active, based on user or OS setting.

@@ -3,6 +3,7 @@ import { sortBy } from "lodash-es";
 import { ThemeOptions } from "@mui/material";
 
 import { userRolesAtom } from "./auth";
+import { UpdateFunction } from "./types";
 
 export const projectIdAtom = atom<string>("");
 
@@ -24,10 +25,13 @@ export type PublicSettings = Partial<{
 }>;
 /** Public settings are visible to unauthenticated users */
 export const publicSettingsAtom = atom<PublicSettings>({});
+/** Stores a function that updates public settings */
+export const updatePublicSettingsAtom =
+  atom<UpdateFunction<PublicSettings> | null>(null);
 
 /** Project settings are visible to authenticated users */
 export type ProjectSettings = Partial<{
-  tables: Array<TableSettings>;
+  tables: TableSettings[];
 
   setupCompleted: boolean;
 
@@ -42,6 +46,9 @@ export type ProjectSettings = Partial<{
 }>;
 /** Project settings are visible to authenticated users */
 export const projectSettingsAtom = atom<ProjectSettings>({});
+/** Stores a function that updates project settings */
+export const updateProjectSettingsAtom =
+  atom<UpdateFunction<ProjectSettings> | null>(null);
 
 /** Table settings stored in project settings */
 export type TableSettings = {

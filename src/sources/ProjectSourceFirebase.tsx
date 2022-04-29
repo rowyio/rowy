@@ -15,10 +15,13 @@ import {
   globalScope,
   projectIdAtom,
   projectSettingsAtom,
+  updateProjectSettingsAtom,
   publicSettingsAtom,
+  updatePublicSettingsAtom,
   currentUserAtom,
   userRolesAtom,
   userSettingsAtom,
+  updateUserSettingsAtom,
   UserSettings,
 } from "@src/atoms/globalScope";
 import { SETTINGS, PUBLIC_SETTINGS, USERS } from "@src/config/dbPaths";
@@ -120,17 +123,20 @@ export default function ProjectSourceFirebase() {
   }, [firebaseAuth, setCurrentUser, setUserRoles]);
 
   // Store public settings in atom
-  useFirestoreDocWithAtom(publicSettingsAtom, globalScope, PUBLIC_SETTINGS);
+  useFirestoreDocWithAtom(publicSettingsAtom, globalScope, PUBLIC_SETTINGS, {
+    updateDataAtom: updatePublicSettingsAtom,
+  });
 
   // Store public settings in atom when a user is signed in
   useFirestoreDocWithAtom(
     projectSettingsAtom,
     globalScope,
-    currentUser ? SETTINGS : undefined
+    currentUser ? SETTINGS : undefined,
+    { updateDataAtom: updateProjectSettingsAtom }
   );
 
   // Store user settings in atom when a user is signed in
-  useFirestoreDocWithAtom<UserSettings>(userSettingsAtom, globalScope, USERS, {
+  useFirestoreDocWithAtom(userSettingsAtom, globalScope, USERS, {
     pathSegments: [currentUser?.uid],
     createIfNonExistent: currentUser
       ? {
@@ -142,6 +148,7 @@ export default function ProjectSourceFirebase() {
           },
         }
       : undefined,
+    updateDataAtom: updateUserSettingsAtom,
   });
 
   return null;
