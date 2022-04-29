@@ -29,7 +29,11 @@ export default function Theme({
 
   return (
     <>
-      <FormControl component="fieldset" variant="standard" sx={{ my: -10 / 8 }}>
+      <FormControl
+        component="fieldset"
+        variant="standard"
+        sx={{ my: -10 / 8, display: "flex" }}
+      >
         <legend style={{ fontSize: 0 }}>Theme</legend>
 
         <RadioGroup
