@@ -1,6 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import { atom, useAtom } from "jotai";
-import { useUpdateAtom } from "jotai/utils";
+import { useUpdateAtom, useAtomCallback } from "jotai/utils";
 
 import { FirebaseOptions, initializeApp } from "firebase/app";
 import { getAuth, connectAuthEmulator, getIdTokenResult } from "firebase/auth";
@@ -22,7 +22,6 @@ import {
   userRolesAtom,
   userSettingsAtom,
   updateUserSettingsAtom,
-  UserSettings,
 } from "@src/atoms/globalScope";
 import { SETTINGS, PUBLIC_SETTINGS, USERS } from "@src/config/dbPaths";
 
@@ -98,9 +97,14 @@ export default function ProjectSourceFirebase() {
 
   // Get current user and store in atoms
   const [firebaseAuth] = useAtom(firebaseAuthAtom, globalScope);
-  // const setCurrentUser: any = useUpdateAtom(currentUserAtom, globalScope);
   const [currentUser, setCurrentUser] = useAtom(currentUserAtom, globalScope);
   const setUserRoles = useUpdateAtom(userRolesAtom, globalScope);
+  // Must use `useAtomCallback`, otherwise `useAtom(updateUserSettingsAtom)`
+  // will cause infinite render
+  const updateUserSettings = useAtomCallback(
+    useCallback((get) => get(updateUserSettingsAtom), []),
+    globalScope
+  );
 
   useEffect(() => {
     // Suspend when currentUser has not been read yet
@@ -110,8 +114,14 @@ export default function ProjectSourceFirebase() {
       setCurrentUser(user);
 
       if (user) {
+        // Get user roles
         const tokenResult = await getIdTokenResult(user);
-        setUserRoles((tokenResult.claims.roles as string[]) ?? []);
+        const roles = (tokenResult.claims.roles as string[]) ?? [];
+        setUserRoles(roles);
+
+        // Update user settings doc with roles for User Management page
+        const _updateUserSettings = await updateUserSettings();
+        if (_updateUserSettings) _updateUserSettings({ roles });
       } else {
         setUserRoles([]);
       }
@@ -120,7 +130,7 @@ export default function ProjectSourceFirebase() {
     return () => {
       unsubscribe();
     };
-  }, [firebaseAuth, setCurrentUser, setUserRoles]);
+  }, [firebaseAuth, setCurrentUser, setUserRoles, updateUserSettings]);
 
   // Store public settings in atom
   useFirestoreDocWithAtom(publicSettingsAtom, globalScope, PUBLIC_SETTINGS, {
