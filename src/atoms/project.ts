@@ -1,9 +1,10 @@
-import { atom } from "jotai";
+import { atom, PrimitiveAtom } from "jotai";
 import { sortBy } from "lodash-es";
 import { ThemeOptions } from "@mui/material";
 
 import { userRolesAtom } from "./auth";
-import { UpdateFunction } from "./types";
+import { UpdateDocFunction, UpdateCollectionFunction } from "./types";
+import { UserSettings } from "./user";
 
 export const projectIdAtom = atom<string>("");
 
@@ -27,7 +28,7 @@ export type PublicSettings = Partial<{
 export const publicSettingsAtom = atom<PublicSettings>({});
 /** Stores a function that updates public settings */
 export const updatePublicSettingsAtom =
-  atom<UpdateFunction<PublicSettings> | null>(null);
+  atom<UpdateDocFunction<PublicSettings> | null>(null);
 
 /** Project settings are visible to authenticated users */
 export type ProjectSettings = Partial<{
@@ -48,7 +49,7 @@ export type ProjectSettings = Partial<{
 export const projectSettingsAtom = atom<ProjectSettings>({});
 /** Stores a function that updates project settings */
 export const updateProjectSettingsAtom =
-  atom<UpdateFunction<ProjectSettings> | null>(null);
+  atom<UpdateDocFunction<ProjectSettings> | null>(null);
 
 /** Table settings stored in project settings */
 export type TableSettings = {
@@ -98,3 +99,9 @@ export const rolesAtom = atom((get) =>
     )
   )
 );
+
+/** User management page: all users */
+export const allUsersAtom = atom<UserSettings[]>([]);
+/** Stores a function that updates a user document */
+export const updateUserAtom =
+  atom<UpdateCollectionFunction<UserSettings> | null>(null);

@@ -4,6 +4,8 @@ import { useAtom } from "jotai";
 
 import Loading from "@src/components/Loading";
 import ProjectSourceFirebase from "@src/sources/ProjectSourceFirebase";
+import ConfirmDialog from "@src/components/ConfirmDialog";
+import RowyRunModal from "@src/components/RowyRunModal";
 import NotFound from "@src/pages/NotFound";
 import RequireAuth from "@src/layouts/RequireAuth";
 import Navigation from "@src/layouts/Navigation";
@@ -32,6 +34,8 @@ const UserSettingsPage = lazy(() => import("@src/pages/Settings/UserSettings" /*
 // prettier-ignore
 const ProjectSettingsPage = lazy(() => import("@src/pages/Settings/ProjectSettings" /* webpackChunkName: "ProjectSettingsPage" */));
 // prettier-ignore
+const UserManagementPage = lazy(() => import("@src/pages/Settings/UserManagement" /* webpackChunkName: "UserManagementPage" */));
+// prettier-ignore
 // const RowyRunTestPage = lazy(() => import("@src/pages/RowyRunTest" /* webpackChunkName: "RowyRunTestPage" */));
 
 export default function App() {
@@ -40,6 +44,8 @@ export default function App() {
   return (
     <Suspense fallback={<Loading fullScreen />}>
       <ProjectSourceFirebase />
+      <ConfirmDialog />
+      <RowyRunModal/>
 
       {currentUser === undefined ? (
         <Loading fullScreen message="Authenticating" />
@@ -76,10 +82,14 @@ export default function App() {
             />
             <Route path={ROUTES.userSettings} element={<UserSettingsPage />} />
             <Route path={ROUTES.projectSettings} element={<ProjectSettingsPage />} />
+            <Route path={ROUTES.userManagement} element={<UserManagementPage />} />
             {/* <Route path={ROUTES.rowyRunTest} element={<RowyRunTestPage />} /> */}
-          </Route>
 
           <Route path="/jotaiTest" element={<JotaiTestPage />} />
+
+          </Route>
+
+          {/* <Route path="/jotaiTest" element={<JotaiTestPage />} /> */}
         </Routes>
       )}
     </Suspense>

@@ -3,48 +3,54 @@ import { useAtom, PrimitiveAtom, useSetAtom } from "jotai";
 import { Scope } from "jotai/core/atom";
 import { RESET } from "jotai/utils";
 import {
-  doc,
+  query,
+  collection,
+  where,
+  orderBy,
   DocumentData,
   onSnapshot,
   FirestoreError,
   setDoc,
-  DocumentReference,
+  doc,
+  CollectionReference,
 } from "firebase/firestore";
 import { useErrorHandler } from "react-error-boundary";
 
 import { globalScope } from "@src/atoms/globalScope";
-import { UpdateDocFunction } from "@src/atoms/types";
+import { UpdateCollectionFunction } from "@src/atoms/types";
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
 
-/** Options for {@link useFirestoreDocWithAtom} */
-interface IUseFirestoreDocWithAtomOptions<T> {
+/** Options for {@link useFirestoreCollectionWithAtom} */
+interface IUseFirestoreCollectionWithAtomOptions<T> {
   /** Additional path segments appended to the path. If any are undefined, the listener isn’t created at all. */
   pathSegments?: Array<string | undefined>;
+  /** Attach filters to the query */
+  filters?: Parameters<typeof where>[];
+  /** Attach orders to the query */
+  orders?: Parameters<typeof orderBy>[];
   /** Called when an error occurs. Make sure to wrap in useCallback! If not provided, errors trigger the nearest ErrorBoundary. */
   onError?: (error: FirestoreError) => void;
   /** Optionally disable Suspense */
   disableSuspense?: boolean;
-  /** Optionally create the document if it doesn’t exist with the following data */
-  createIfNonExistent?: T;
   /** Set this atom’s value to a function that updates the document. Uses same scope as `dataScope`. */
-  updateDataAtom?: PrimitiveAtom<UpdateDocFunction<T> | null>;
+  updateDataAtom?: PrimitiveAtom<UpdateCollectionFunction<T> | null>;
 }
 
 /**
- * Attaches a listener for a Firestore document and unsubscribes on unmount.
+ * Attaches a listener for a Firestore collection and unsubscribes on unmount.
  * Gets the Firestore instance initiated in globalScope.
  * Updates an atom and Suspends that atom until the first snapshot is received.
  *
  * @param dataAtom - Atom to store data in
  * @param dataScope - Atom scope
- * @param path - Document path. If falsy, the listener isn’t created at all.
- * @param options - {@link IUseFirestoreDocWithAtomOptions}
+ * @param path - Collection path. If falsy, the listener isn’t created at all.
+ * @param options - {@link IUseFirestoreCollectionWithAtomOptions}
  */
-export function useFirestoreDocWithAtom<T = DocumentData>(
-  dataAtom: PrimitiveAtom<T>,
+export function useFirestoreCollectionWithAtom<T = DocumentData>(
+  dataAtom: PrimitiveAtom<T[]>,
   dataScope: Scope | undefined,
   path: string | undefined,
-  options?: IUseFirestoreDocWithAtomOptions<T>
+  options?: IUseFirestoreCollectionWithAtomOptions<T>
 ) {
   const [firebaseDb] = useAtom(firebaseDbAtom, globalScope);
   const setDataAtom = useSetAtom(dataAtom, dataScope);
@@ -57,9 +63,10 @@ export function useFirestoreDocWithAtom<T = DocumentData>(
   // Destructure options so they can be used as useEffect dependencies
   const {
     pathSegments,
+    filters,
+    orders,
     onError,
     disableSuspense,
-    createIfNonExistent,
     updateDataAtom,
   } = options || {};
 
@@ -71,26 +78,35 @@ export function useFirestoreDocWithAtom<T = DocumentData>(
 
     // Suspend data atom until we get the first snapshot
     if (!disableSuspense) {
-      setDataAtom(new Promise(() => {}) as unknown as T);
+      setDataAtom(new Promise(() => {}) as unknown as T[]);
       suspended = true;
     }
 
-    const ref = doc(
+    // Create a collection reference to use in `updateDataAtom`
+    const collectionRef = collection(
       firebaseDb,
       path,
       ...((pathSegments as string[]) || [])
-    ) as DocumentReference<T>;
+    ) as CollectionReference<T>;
+    // Create the query with filters and orders
+    const _query = query<T>(
+      collectionRef,
+      ...(filters?.map((filter) => where(...filter)) || []),
+      ...(orders?.map((order) => orderBy(...order)) || [])
+    );
 
     const unsubscribe = onSnapshot(
-      ref,
-      (docSnapshot) => {
+      _query,
+      (querySnapshot) => {
         try {
-          if (!docSnapshot.exists() && !!createIfNonExistent) {
-            setDoc(docSnapshot.ref, createIfNonExistent);
-            setDataAtom(createIfNonExistent);
-          } else {
-            setDataAtom(docSnapshot.data() || ({} as T));
-          }
+          // Extract doc data from query
+          // and add `_rowy_id` and `_rowy_ref` fields
+          const docs = querySnapshot.docs.map((doc) => ({
+            ...doc.data(),
+            _rowy_id: doc.id,
+            _rowy_ref: doc.ref,
+          }));
+          setDataAtom(docs);
         } catch (error) {
           if (onError) onError(error as FirestoreError);
           else handleError(error);
@@ -98,7 +114,7 @@ export function useFirestoreDocWithAtom<T = DocumentData>(
         suspended = false;
       },
       (error) => {
-        if (suspended) setDataAtom({} as T);
+        if (suspended) setDataAtom([]);
         if (onError) onError(error);
         else handleError(error);
       }
@@ -108,7 +124,8 @@ export function useFirestoreDocWithAtom<T = DocumentData>(
     // set the atom’s value to a function that updates the document
     if (updateDataAtom) {
       setUpdateDataAtom(
-        () => (update: T) => setDoc(ref, update, { merge: true })
+        () => (path: string, update: T) =>
+          setDoc(doc(collectionRef, path), update, { merge: true })
       );
     }
 
@@ -122,14 +139,15 @@ export function useFirestoreDocWithAtom<T = DocumentData>(
     firebaseDb,
     path,
     pathSegments,
+    filters,
+    orders,
     onError,
     setDataAtom,
     disableSuspense,
-    createIfNonExistent,
     handleError,
     updateDataAtom,
     setUpdateDataAtom,
   ]);
 }
 
-export default useFirestoreDocWithAtom;
+export default useFirestoreCollectionWithAtom;

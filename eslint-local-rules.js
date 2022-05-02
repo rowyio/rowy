@@ -1,5 +1,7 @@
 const JOTAI_USE_ATOM_HOOKS = [
   "useAtom",
+  "useSetAtom",
+  "useAtomValue",
   "useUpdateAtom",
   "useAtomValue",
   "useResetAtom",

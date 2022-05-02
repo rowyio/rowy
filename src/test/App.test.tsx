@@ -19,3 +19,6 @@ test("signs in", async () => {
   expect(await screen.findByText(/Nav/i)).toBeInTheDocument();
   expect(await screen.findByText(/{"emulator":true}/i)).toBeInTheDocument();
 });
+
+// TODO:
+// test("signs in without roles in auth")

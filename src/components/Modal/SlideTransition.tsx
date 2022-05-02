@@ -59,6 +59,7 @@ export const SlideTransition: React.ForwardRefExoticComponent<
         {(state) =>
           cloneElement(children as any, {
             style: { ...defaultStyle, ...transitionStyles[state] },
+            tabIndex: -1,
             ref,
           })
         }

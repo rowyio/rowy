@@ -7586,10 +7586,10 @@ jju@~1.4.0:
   resolved "https://registry.yarnpkg.com/jju/-/jju-1.4.0.tgz#a3abe2718af241a2b2904f84a625970f389ae32a"
   integrity sha1-o6vicYryQaKykE+EpiWXDzia4yo=
 
-jotai@^1.6.4:
-  version "1.6.4"
-  resolved "https://registry.yarnpkg.com/jotai/-/jotai-1.6.4.tgz#4d9904362c53c4293d32e21fb358d3de34b82912"
-  integrity sha512-XC0ExLhdE6FEBdIjKTe6kMlHaAUV/QiwN7vZond76gNr/WdcdonJOEW79+5t8u38sR41bJXi26B1dRi7cCRz9A==
+jotai@^1.6.5:
+  version "1.6.5"
+  resolved "https://registry.yarnpkg.com/jotai/-/jotai-1.6.5.tgz#989efe63dc65beea23b3a5eab56f689d78e38070"
+  integrity sha512-B+DGV5ALIkIeyA1Bi9yBpdGmcWkmDS/p8C1XFYx9jFBs+lkeOdu0WAozAPCG4Qq1EcQ68vF+07HmPYFN5kf9OQ==
 
 "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
   version "4.0.0"
@@ -8004,6 +8004,14 @@ makeerror@1.0.x:
   integrity sha1-4BpckQnyr3lmDk6LlYd5AYT1qWw=
   dependencies:
     tmpl "1.0.x"
+
+match-sorter@^6.3.1:
+  version "6.3.1"
+  resolved "https://registry.yarnpkg.com/match-sorter/-/match-sorter-6.3.1.tgz#98cc37fda756093424ddf3cbc62bfe9c75b92bda"
+  integrity sha512-mxybbo3pPNuA+ZuCUhm5bwNkXrJTbsk5VWbR5wiwz/GC6LIiegBGn2w3O08UG/jdbYLinw51fSQ5xNU1U3MgBw==
+  dependencies:
+    "@babel/runtime" "^7.12.5"
+    remove-accents "0.4.2"
 
 material-design-lite@^1.2.0:
   version "1.3.0"
@@ -9735,6 +9743,11 @@ relateurl@^0.2.7:
   version "0.2.7"
   resolved "https://registry.yarnpkg.com/relateurl/-/relateurl-0.2.7.tgz#54dbf377e51440aca90a4cd274600d3ff2d888a9"
   integrity sha1-VNvzd+UUQKypCkzSdGANP/LYiKk=
+
+remove-accents@0.4.2:
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/remove-accents/-/remove-accents-0.4.2.tgz#0a43d3aaae1e80db919e07ae254b285d9e1c7bb5"
+  integrity sha1-CkPTqq4egNuRngeuJUsoXZ4ce7U=
 
 renderkid@^3.0.0:
   version "3.0.0"

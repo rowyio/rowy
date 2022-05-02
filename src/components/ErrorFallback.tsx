@@ -5,6 +5,7 @@ import ReloadIcon from "@mui/icons-material/Refresh";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
 import EmptyState, { IEmptyStateProps } from "@src/components/EmptyState";
+import AccessDenied from "@src/components/AccessDenied";
 import meta from "@root/package.json";
 
 export interface IErrorFallbackProps extends FallbackProps, IEmptyStateProps {}
@@ -36,12 +37,17 @@ export default function ErrorFallback({
       />
     );
 
+  if ((error as any).code === "permission-denied") return <AccessDenied />;
+
   return (
     <EmptyState
       message="Something went wrong"
       description={
         <>
-          <span>{error.message}</span>
+          <span>
+            {(error as any).code && <b>{(error as any).code}: </b>}
+            {error.message}
+          </span>
           <Button
             href={
               meta.repository.url.replace(".git", "") + "/issues/new/choose"

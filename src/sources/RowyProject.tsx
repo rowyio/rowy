@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useUpdateAtom } from "jotai/utils";
+import { useSetAtom } from "jotai";
 import { firebaseConfigAtom } from "@src/sources/ProjectSourceFirebase";
 import { globalScope } from "@src/atoms/globalScope";
 
@@ -14,7 +14,7 @@ const envConfig = {
 
 export default function RowyProject({ children }: React.PropsWithChildren<{}>) {
   const [hasConfig, setHasConfig] = useState(false);
-  const setConfigAtom = useUpdateAtom(firebaseConfigAtom, globalScope);
+  const setConfigAtom = useSetAtom(firebaseConfigAtom, globalScope);
 
   if (!hasConfig) {
     return (

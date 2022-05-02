@@ -38,11 +38,15 @@ export interface IRowyRunRequestProps {
   json?: boolean;
   /** Optionally pass an abort signal to abort the request */
   signal?: AbortSignal;
+  /** Optionally pass a callback that’s called if Rowy Run not set up */
+  handleNotSetUp?: () => void;
 }
 
 /**
  * An atom that returns a function to call Rowy Run endpoints using the URL
- * defined in project settings and retrieving a JWT token
+ * defined in project settings and retrieving a JWT token.
+ *
+ * Returns `false` if user not signed in or Rowy Run not set up.
  *
  * @example Basic usage:
  * ```
@@ -65,10 +69,12 @@ export const rowyRunAtom = atom((get) => {
     body,
     signal,
     json = true,
-  }: IRowyRunRequestProps): Promise<Response | any | void> => {
+    handleNotSetUp,
+  }: IRowyRunRequestProps): Promise<Response | any | false> => {
     if (!currentUser) {
       console.log("Rowy Run: Not signed in");
-      return;
+      if (handleNotSetUp) handleNotSetUp();
+      return false;
     }
     const authToken = await getIdTokenResult(currentUser!, forceRefresh);
 
@@ -79,7 +85,8 @@ export const rowyRunAtom = atom((get) => {
       : rowyRunUrl;
     if (!serviceUrl) {
       console.log("Rowy Run: Not set up");
-      return;
+      if (handleNotSetUp) handleNotSetUp();
+      return false;
     }
 
     const { method, path } = route;

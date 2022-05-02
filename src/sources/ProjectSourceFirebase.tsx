@@ -1,6 +1,6 @@
-import { useEffect, useCallback } from "react";
-import { atom, useAtom } from "jotai";
-import { useUpdateAtom, useAtomCallback } from "jotai/utils";
+import { memo, useEffect, useCallback } from "react";
+import { atom, useAtom, useSetAtom } from "jotai";
+import { useAtomCallback } from "jotai/utils";
 
 import { FirebaseOptions, initializeApp } from "firebase/app";
 import { getAuth, connectAuthEmulator, getIdTokenResult } from "firebase/auth";
@@ -87,10 +87,10 @@ export const firebaseDbAtom = atom((get) => {
  *
  * Sets project ID, project settings, public settings, current user, user roles, and user settings.
  */
-export default function ProjectSourceFirebase() {
+export const ProjectSourceFirebase = memo(function ProjectSourceFirebase() {
   // Set projectId from Firebase project
   const [firebaseConfig] = useAtom(firebaseConfigAtom, globalScope);
-  const setProjectId = useUpdateAtom(projectIdAtom, globalScope);
+  const setProjectId = useSetAtom(projectIdAtom, globalScope);
   useEffect(() => {
     setProjectId(firebaseConfig.projectId || "");
   }, [firebaseConfig.projectId, setProjectId]);
@@ -98,9 +98,9 @@ export default function ProjectSourceFirebase() {
   // Get current user and store in atoms
   const [firebaseAuth] = useAtom(firebaseAuthAtom, globalScope);
   const [currentUser, setCurrentUser] = useAtom(currentUserAtom, globalScope);
-  const setUserRoles = useUpdateAtom(userRolesAtom, globalScope);
+  const setUserRoles = useSetAtom(userRolesAtom, globalScope);
   // Must use `useAtomCallback`, otherwise `useAtom(updateUserSettingsAtom)`
-  // will cause infinite render
+  // will cause infinite re-render
   const updateUserSettings = useAtomCallback(
     useCallback((get) => get(updateUserSettingsAtom), []),
     globalScope
@@ -137,7 +137,8 @@ export default function ProjectSourceFirebase() {
     updateDataAtom: updatePublicSettingsAtom,
   });
 
-  // Store public settings in atom when a user is signed in
+  // Store project settings in atom when a user is signed in.
+  // If they have no access, display AccessDenied screen via ErrorBoundary.
   useFirestoreDocWithAtom(
     projectSettingsAtom,
     globalScope,
@@ -162,4 +163,6 @@ export default function ProjectSourceFirebase() {
   });
 
   return null;
-}
+});
+
+export default ProjectSourceFirebase;

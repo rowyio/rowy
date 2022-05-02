@@ -41,8 +41,6 @@ function JotaiTest() {
   const [projectSettings] = useAtom(projectSettingsAtom, globalScope);
   const [userSettings] = useAtom(userSettingsAtom, globalScope);
   const [rowyRun] = useAtom(rowyRunAtom, globalScope);
-  // console.log("publicSettings", publicSettings);
-  // console.log("userSettings", userSettings);
 
   const [count, setCount] = useState(0);
   const { enqueueSnackbar } = useSnackbar();
