@@ -184,7 +184,8 @@ export default function Navigation({ children }: React.PropsWithChildren<{}>) {
                     : "100%",
               }}
             >
-              {children || <Outlet />}
+              <Outlet />
+              {children}
             </div>
           </Suspense>
         </ErrorBoundary>

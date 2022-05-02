@@ -9,6 +9,7 @@ import RowyRunModal from "@src/components/RowyRunModal";
 import NotFound from "@src/pages/NotFound";
 import RequireAuth from "@src/layouts/RequireAuth";
 import Navigation from "@src/layouts/Navigation";
+import TableSettingsDialog from "@src/components/TableSettingsDialog";
 
 import { globalScope, currentUserAtom } from "@src/atoms/globalScope";
 import { ROUTES } from "@src/constants/routes";
@@ -29,12 +30,14 @@ const ImpersonatorAuthPage = lazy(() => import("@src/pages/Auth/ImpersonatorAuth
 const SetupPage = lazy(() => import("@src/pages/Setup" /* webpackChunkName: "SetupPage" */));
 
 // prettier-ignore
+const TablesPage = lazy(() => import("@src/pages/Tables" /* webpackChunkName: "TablesPage" */));
+
+// prettier-ignore
 const UserSettingsPage = lazy(() => import("@src/pages/Settings/UserSettings" /* webpackChunkName: "UserSettingsPage" */));
 // prettier-ignore
 const ProjectSettingsPage = lazy(() => import("@src/pages/Settings/ProjectSettings" /* webpackChunkName: "ProjectSettingsPage" */));
 // prettier-ignore
 const UserManagementPage = lazy(() => import("@src/pages/Settings/UserManagement" /* webpackChunkName: "UserManagementPage" */));
-// prettier-ignore
 // const RowyRunTestPage = lazy(() => import("@src/pages/RowyRunTest" /* webpackChunkName: "RowyRunTestPage" */));
 
 export default function App() {
@@ -44,7 +47,7 @@ export default function App() {
     <Suspense fallback={<Loading fullScreen />}>
       <ProjectSourceFirebase />
       <ConfirmDialog />
-      <RowyRunModal/>
+      <RowyRunModal />
 
       {currentUser === undefined ? (
         <Loading fullScreen message="Authenticating" />
@@ -71,21 +74,34 @@ export default function App() {
             path="/"
             element={
               <RequireAuth>
-                <Navigation />
+                <Navigation>
+                  <TableSettingsDialog />
+                </Navigation>
               </RequireAuth>
             }
           >
+            <Route
+              path={ROUTES.home}
+              element={<Navigate to={ROUTES.tables} replace />}
+            />
+            <Route path={ROUTES.tables} element={<TablesPage />} />
+
             <Route
               path={ROUTES.settings}
               element={<Navigate to={ROUTES.userSettings} replace />}
             />
             <Route path={ROUTES.userSettings} element={<UserSettingsPage />} />
-            <Route path={ROUTES.projectSettings} element={<ProjectSettingsPage />} />
-            <Route path={ROUTES.userManagement} element={<UserManagementPage />} />
+            <Route
+              path={ROUTES.projectSettings}
+              element={<ProjectSettingsPage />}
+            />
+            <Route
+              path={ROUTES.userManagement}
+              element={<UserManagementPage />}
+            />
             {/* <Route path={ROUTES.rowyRunTest} element={<RowyRunTestPage />} /> */}
 
-          <Route path="/jotaiTest" element={<JotaiTestPage />} />
-
+            <Route path="/jotaiTest" element={<JotaiTestPage />} />
           </Route>
 
           {/* <Route path="/jotaiTest" element={<JotaiTestPage />} /> */}

@@ -14,6 +14,9 @@ export enum ROUTES {
   setup = "/setup",
   pageNotFound = "/404",
 
+  tables = "/tables",
+  automations = "/automations",
+
   table = "/table",
   tableWithId = "/table/:id",
   tableGroup = "/tableGroup",
@@ -27,8 +30,8 @@ export enum ROUTES {
 }
 
 export const ROUTE_TITLES = {
-  [ROUTES.home]: {
-    title: "Home",
+  [ROUTES.tables]: {
+    title: "Tables",
     titleComponent: (open, pinned) =>
       !(open && pinned) && (
         <Logo

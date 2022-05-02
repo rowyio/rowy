@@ -1,4 +1,4 @@
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { find, groupBy } from "lodash-es";
 
 import {
@@ -11,13 +11,14 @@ import {
   ListItemText,
   Divider,
 } from "@mui/material";
+import CloseIcon from "@mui/icons-material/MenuOpen";
+import PinIcon from "@mui/icons-material/PushPinOutlined";
+import UnpinIcon from "@mui/icons-material/PushPin";
 import HomeIcon from "@mui/icons-material/HomeOutlined";
 import SettingsIcon from "@mui/icons-material/SettingsOutlined";
 import ProjectSettingsIcon from "@mui/icons-material/BuildCircleOutlined";
 import UserManagementIcon from "@mui/icons-material/AccountCircleOutlined";
-import CloseIcon from "@mui/icons-material/MenuOpen";
-import PinIcon from "@mui/icons-material/PushPinOutlined";
-import UnpinIcon from "@mui/icons-material/PushPin";
+import AddIcon from "@mui/icons-material/Add";
 
 import { APP_BAR_HEIGHT } from ".";
 import Logo from "@src/assets/Logo";
@@ -31,6 +32,7 @@ import {
   userSettingsAtom,
   tablesAtom,
   TableSettings,
+  tableSettingsDialogAtom,
 } from "@src/atoms/globalScope";
 import { ROUTES } from "@src/constants/routes";
 
@@ -54,6 +56,10 @@ export default function NavDrawer({
   const [tables] = useAtom(tablesAtom, globalScope);
   const [userSettings] = useAtom(userSettingsAtom, globalScope);
   const [userRoles] = useAtom(userRolesAtom, globalScope);
+  const openTableSettingsDialog = useSetAtom(
+    tableSettingsDialogAtom,
+    globalScope
+  );
 
   const favorites = Array.isArray(userSettings.favoriteTables)
     ? userSettings.favoriteTables
@@ -65,7 +71,9 @@ export default function NavDrawer({
     ...groupBy(tables, "section"),
   };
 
-  const closeDrawer = (e: {}) => props.onClose(e, "escapeKeyDown");
+  const closeDrawer = pinned
+    ? undefined
+    : (e: {}) => props.onClose(e, "escapeKeyDown");
 
   return (
     <Drawer
@@ -134,21 +142,20 @@ export default function NavDrawer({
       <nav>
         <List disablePadding>
           <li>
-            <NavItem
-              to={ROUTES.home}
-              onClick={pinned ? undefined : closeDrawer}
-            >
+            <NavItem to={ROUTES.home} onClick={closeDrawer}>
               <ListItemIcon>
                 <HomeIcon />
               </ListItemIcon>
               <ListItemText primary="Home" />
             </NavItem>
           </li>
+
+          {userRoles.includes("ADMIN") && (
+            <Divider variant="middle" sx={{ my: 1 }} />
+          )}
+
           <li>
-            <NavItem
-              to={ROUTES.userSettings}
-              onClick={pinned ? undefined : closeDrawer}
-            >
+            <NavItem to={ROUTES.userSettings} onClick={closeDrawer}>
               <ListItemIcon>
                 <SettingsIcon />
               </ListItemIcon>
@@ -157,10 +164,7 @@ export default function NavDrawer({
           </li>
           {userRoles.includes("ADMIN") && (
             <li>
-              <NavItem
-                to={ROUTES.projectSettings}
-                onClick={pinned ? undefined : closeDrawer}
-              >
+              <NavItem to={ROUTES.projectSettings} onClick={closeDrawer}>
                 <ListItemIcon>
                   <ProjectSettingsIcon />
                 </ListItemIcon>
@@ -171,10 +175,7 @@ export default function NavDrawer({
           )}
           {userRoles.includes("ADMIN") && (
             <li>
-              <NavItem
-                to={ROUTES.userManagement}
-                onClick={pinned ? undefined : closeDrawer}
-              >
+              <NavItem to={ROUTES.userManagement} onClick={closeDrawer}>
                 <ListItemIcon>
                   <UserManagementIcon />
                 </ListItemIcon>
@@ -182,6 +183,24 @@ export default function NavDrawer({
               </NavItem>
             </li>
           )}
+
+          <Divider variant="middle" sx={{ my: 1 }} />
+
+          <li>
+            <NavItem
+              {...({ component: "button" } as any)}
+              style={{ textAlign: "left" }}
+              onClick={(e) => {
+                if (closeDrawer) closeDrawer(e);
+                openTableSettingsDialog({});
+              }}
+            >
+              <ListItemIcon>
+                <AddIcon />
+              </ListItemIcon>
+              <ListItemText primary="Create table…" />
+            </NavItem>
+          </li>
 
           <Divider variant="middle" sx={{ my: 1 }} />
 
@@ -193,7 +212,7 @@ export default function NavDrawer({
                   key={section}
                   section={section}
                   tables={tables}
-                  closeDrawer={pinned ? undefined : closeDrawer}
+                  closeDrawer={closeDrawer}
                 />
               ))}
         </List>
