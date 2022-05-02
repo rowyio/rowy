@@ -5,12 +5,12 @@ import { Helmet } from "react-helmet-async";
 import { useMediaQuery, ThemeProvider, CssBaseline } from "@mui/material";
 import Favicon from "@src/assets/Favicon";
 
-import { globalScope } from "@src/atoms/globalScope";
 import {
+  globalScope,
   themeAtom,
   themeOverriddenAtom,
   customizedThemesAtom,
-} from "@src/atoms/user";
+} from "@src/atoms/globalScope";
 
 /**
  * Injects the MUI theme with customizations from project and user settings.

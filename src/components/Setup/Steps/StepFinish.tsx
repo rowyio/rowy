@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useAtom } from "jotai";
 import { useSnackbar } from "notistack";
 import { Link } from "react-router-dom";
-import { logEvent } from "firebase/analytics";
 import { doc, updateDoc } from "firebase/firestore";
 import type { ISetupStep } from "@src/components/Setup/SetupStep";
 
@@ -19,7 +18,7 @@ import ThumbUpOffIcon from "@mui/icons-material/ThumbUpOffAlt";
 import ThumbDownIcon from "@mui/icons-material/ThumbDownAlt";
 import ThumbDownOffIcon from "@mui/icons-material/ThumbDownOffAlt";
 
-import { analytics } from "@src/analytics";
+import { analytics, logEvent } from "@src/analytics";
 import { globalScope } from "@src/atoms/globalScope";
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
 import { ROUTES } from "@src/constants/routes";

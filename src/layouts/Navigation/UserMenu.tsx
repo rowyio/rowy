@@ -26,7 +26,7 @@ import {
   themeAtom,
   themeOverriddenAtom,
 } from "@src/atoms/globalScope";
-import ROUTES from "@src/constants/routes";
+import { ROUTES } from "@src/constants/routes";
 
 export default function UserMenu(props: IconButtonProps) {
   const anchorEl = useRef<HTMLButtonElement>(null);

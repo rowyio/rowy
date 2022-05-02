@@ -21,7 +21,7 @@ import {
   rolesAtom,
   projectSettingsAtom,
   rowyRunAtom,
-  openRowyRunModalAtom,
+  rowyRunModalAtom,
   UserSettings,
   updateUserAtom,
   confirmDialogAtom,
@@ -36,7 +36,7 @@ export default function UserItem({
 }: UserSettings) {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const confirm = useSetAtom(confirmDialogAtom, globalScope);
-  const openRowyRunModal = useSetAtom(openRowyRunModalAtom, globalScope);
+  const openRowyRunModal = useSetAtom(rowyRunModalAtom, globalScope);
 
   const [projectRoles] = useAtom(rolesAtom, globalScope);
   const [projectSettings] = useAtom(projectSettingsAtom, globalScope);

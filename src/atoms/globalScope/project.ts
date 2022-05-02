@@ -1,9 +1,9 @@
-import { atom, PrimitiveAtom } from "jotai";
+import { atom } from "jotai";
 import { sortBy } from "lodash-es";
 import { ThemeOptions } from "@mui/material";
 
 import { userRolesAtom } from "./auth";
-import { UpdateDocFunction, UpdateCollectionFunction } from "./types";
+import { UpdateDocFunction, UpdateCollectionFunction } from "@src/atoms/types";
 import { UserSettings } from "./user";
 
 export const projectIdAtom = atom<string>("");

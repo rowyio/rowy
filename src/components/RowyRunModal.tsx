@@ -34,7 +34,7 @@ export default function RowyRunModal() {
     globalScope
   );
 
-  const handleClose = () => setRowyRunModal((s) => ({ ...s, open: false }));
+  const handleClose = () => setRowyRunModal({ ...rowyRunModal, open: false });
 
   const showUpdateModal = rowyRunModal.version && projectSettings?.rowyRunUrl;
 

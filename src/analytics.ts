@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+import { getAnalytics, logEvent } from "firebase/analytics";
 
 const firebaseConfig = {
   apiKey: "AIzaSyArABiYGK7dZgwSk0pw_6vKbOt6U1ZRPpc",
@@ -13,3 +13,4 @@ const firebaseConfig = {
 
 const rowyServiceApp = initializeApp(firebaseConfig, "rowy-service");
 export const analytics = getAnalytics(rowyServiceApp);
+export { logEvent };

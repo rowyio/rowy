@@ -19,8 +19,7 @@ import DoneIcon from "@mui/icons-material/Done";
 
 import SetupItem from "@src/components/Setup/SetupItem";
 
-import { globalScope } from "@src/atoms/globalScope";
-import { projectIdAtom } from "@src/atoms/project";
+import { globalScope, projectIdAtom } from "@src/atoms/globalScope";
 import { CONFIG } from "@src/config/dbPaths";
 import {
   RULES_START,

@@ -25,7 +25,6 @@ export enum ROUTES {
   userManagement = "/settings/userManagement",
   rowyRunTest = "/rrTest",
 }
-export default ROUTES;
 
 export const ROUTE_TITLES = {
   [ROUTES.home]: {

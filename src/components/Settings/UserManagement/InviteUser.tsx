@@ -20,16 +20,16 @@ import {
   rolesAtom,
   projectSettingsAtom,
   rowyRunAtom,
-  openRowyRunModalAtom,
+  rowyRunModalAtom,
 } from "@src/atoms/globalScope";
-import routes from "@src/constants/routes";
+import { ROUTES } from "@src/constants/routes";
 import { runRoutes } from "@src/constants/runRoutes";
 
 export default function InviteUser() {
   const [projectRoles] = useAtom(rolesAtom, globalScope);
   const [projectSettings] = useAtom(projectSettingsAtom, globalScope);
   const [rowyRun] = useAtom(rowyRunAtom, globalScope);
-  const openRowyRunModal = useSetAtom(openRowyRunModalAtom, globalScope);
+  const openRowyRunModal = useSetAtom(rowyRunModalAtom, globalScope);
   const { enqueueSnackbar } = useSnackbar();
 
   const [open, setOpen] = useState(false);
@@ -86,7 +86,7 @@ export default function InviteUser() {
                 They can sign up with any of the sign-in options{" "}
                 <MuiLink
                   component={Link}
-                  to={routes.projectSettings + "#authentication"}
+                  to={ROUTES.projectSettings + "#authentication"}
                 >
                   you have enabled
                 </MuiLink>

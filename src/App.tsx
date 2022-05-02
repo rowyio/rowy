@@ -10,8 +10,7 @@ import NotFound from "@src/pages/NotFound";
 import RequireAuth from "@src/layouts/RequireAuth";
 import Navigation from "@src/layouts/Navigation";
 
-import { globalScope } from "@src/atoms/globalScope";
-import { currentUserAtom } from "@src/atoms/auth";
+import { globalScope, currentUserAtom } from "@src/atoms/globalScope";
 import { ROUTES } from "@src/constants/routes";
 
 import JotaiTestPage from "@src/pages/JotaiTest";

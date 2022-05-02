@@ -3,8 +3,7 @@ import { useLocation, Navigate } from "react-router-dom";
 
 import Loading from "@src/components/Loading";
 
-import { globalScope } from "@src/atoms/globalScope";
-import { currentUserAtom } from "@src/atoms/auth";
+import { globalScope, currentUserAtom } from "@src/atoms/globalScope";
 import { ROUTES } from "@src/constants/routes";
 
 export interface IRequireAuthProps {

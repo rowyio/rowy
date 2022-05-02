@@ -13,8 +13,7 @@ import BrandedBackground, { Wrapper } from "@src/assets/BrandedBackground";
 import Logo from "@src/assets/Logo";
 
 import { EXTERNAL_LINKS } from "@src/constants/externalLinks";
-import { globalScope } from "@src/atoms/globalScope";
-import { projectIdAtom } from "@src/atoms/project";
+import { globalScope, projectIdAtom } from "@src/atoms/globalScope";
 
 export interface IAuthLayoutProps {
   hideLogo?: boolean;

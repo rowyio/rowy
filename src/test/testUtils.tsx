@@ -13,7 +13,7 @@ import {
   envConfig,
   firebaseAuthAtom,
 } from "@src/sources/ProjectSourceFirebase";
-import { currentUserAtom } from "@src/atoms/auth";
+import { currentUserAtom } from "@src/atoms/globalScope";
 
 /**
  * Render with Jotai `globalScope` providers

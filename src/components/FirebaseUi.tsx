@@ -9,9 +9,8 @@ import { makeStyles } from "tss-react/mui";
 import { Typography } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 
-import { globalScope } from "@src/atoms/globalScope";
+import { globalScope, publicSettingsAtom } from "@src/atoms/globalScope";
 import { firebaseAuthAtom } from "@src/sources/ProjectSourceFirebase";
-import { publicSettingsAtom } from "@src/atoms/project";
 import { defaultUiConfig, getSignInOptions } from "@src/config/firebaseui";
 
 const ELEMENT_ID = "firebaseui_container";

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import { Grid, Avatar, Typography, Button } from "@mui/material";
 
-import ROUTES from "@src/constants/routes";
+import { ROUTES } from "@src/constants/routes";
 
 export default function Account({ settings }: IUserSettingsChildProps) {
   return (
