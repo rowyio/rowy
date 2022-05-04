@@ -31,15 +31,14 @@ import {
   userRolesAtom,
   userSettingsAtom,
   tablesAtom,
-  TableSettings,
   tableSettingsDialogAtom,
 } from "@src/atoms/globalScope";
+import { TableSettings } from "@src/types/table";
 import { ROUTES } from "@src/constants/routes";
 
 export const NAV_DRAWER_WIDTH = 256;
 
 export interface INavDrawerProps extends DrawerProps {
-  currentSection?: string;
   onClose: NonNullable<DrawerProps["onClose"]>;
   pinned: boolean;
   setPinned: React.Dispatch<React.SetStateAction<boolean>>;
@@ -142,7 +141,7 @@ export default function NavDrawer({
       <nav>
         <List disablePadding>
           <li>
-            <NavItem to={ROUTES.home} onClick={closeDrawer}>
+            <NavItem to={ROUTES.tables} onClick={closeDrawer}>
               <ListItemIcon>
                 <HomeIcon />
               </ListItemIcon>

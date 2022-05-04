@@ -23,8 +23,8 @@ import {
   rolesAtom,
   rowyRunAtom,
   confirmDialogAtom,
-  TableSettings,
 } from "@src/atoms/globalScope";
+import { TableSettings } from "@src/types/table";
 import { analytics, logEvent } from "@src/analytics";
 
 // TODO:

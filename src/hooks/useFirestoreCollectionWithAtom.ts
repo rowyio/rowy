@@ -17,7 +17,11 @@ import {
 import { useErrorHandler } from "react-error-boundary";
 
 import { globalScope } from "@src/atoms/globalScope";
-import { UpdateCollectionFunction } from "@src/atoms/types";
+import {
+  UpdateCollectionFunction,
+  TableFilter,
+  TableOrder,
+} from "@src/types/table";
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
 
 /** Options for {@link useFirestoreCollectionWithAtom} */
@@ -25,9 +29,9 @@ interface IUseFirestoreCollectionWithAtomOptions<T> {
   /** Additional path segments appended to the path. If any are undefined, the listener isn’t created at all. */
   pathSegments?: Array<string | undefined>;
   /** Attach filters to the query */
-  filters?: Parameters<typeof where>[];
+  filters?: TableFilter[];
   /** Attach orders to the query */
-  orders?: Parameters<typeof orderBy>[];
+  orders?: TableOrder[];
   /** Called when an error occurs. Make sure to wrap in useCallback! If not provided, errors trigger the nearest ErrorBoundary. */
   onError?: (error: FirestoreError) => void;
   /** Optionally disable Suspense */
@@ -91,8 +95,10 @@ export function useFirestoreCollectionWithAtom<T = DocumentData>(
     // Create the query with filters and orders
     const _query = query<T>(
       collectionRef,
-      ...(filters?.map((filter) => where(...filter)) || []),
-      ...(orders?.map((order) => orderBy(...order)) || [])
+      ...(filters?.map((filter) =>
+        where(filter.key, filter.operator, filter.value)
+      ) || []),
+      ...(orders?.map((order) => orderBy(order.key, order.direction)) || [])
     );
 
     const unsubscribe = onSnapshot(

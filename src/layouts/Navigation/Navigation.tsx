@@ -49,7 +49,11 @@ export default function Navigation({ children }: React.PropsWithChildren<{}>) {
   const canPin = !useMediaQuery((theme: any) => theme.breakpoints.down("lg"));
 
   const { pathname } = useLocation();
-  const routeTitle = ROUTE_TITLES[pathname as keyof typeof ROUTE_TITLES] || "";
+  const basePath = ("/" + pathname.split("/")[1]) as keyof typeof ROUTE_TITLES;
+  const routeTitle =
+    ROUTE_TITLES[pathname as keyof typeof ROUTE_TITLES] ||
+    ROUTE_TITLES[basePath] ||
+    "";
   const title = typeof routeTitle === "string" ? routeTitle : routeTitle.title;
   useDocumentTitle(projectId, title);
 

@@ -5,8 +5,7 @@ import { ThemeOptions } from "@mui/material";
 
 import themes from "@src/theme";
 import { publicSettingsAtom } from "./project";
-import { TableFilter } from "@src/atoms/tableScope/table";
-import { UpdateDocFunction } from "@src/atoms/types";
+import { UpdateDocFunction, TableFilter } from "@src/types/table";
 
 /** User info and settings */
 export type UserSettings = Partial<{

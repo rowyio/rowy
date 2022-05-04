@@ -13,7 +13,7 @@ import {
 import { useErrorHandler } from "react-error-boundary";
 
 import { globalScope } from "@src/atoms/globalScope";
-import { UpdateDocFunction } from "@src/atoms/types";
+import { UpdateDocFunction } from "@src/types/table";
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
 
 /** Options for {@link useFirestoreDocWithAtom} */

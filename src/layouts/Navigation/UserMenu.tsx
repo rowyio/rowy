@@ -45,11 +45,7 @@ export default function UserMenu(props: IconButtonProps) {
   const avatarUrl = userSettings.user?.photoURL;
   const email = userSettings.user?.email;
 
-  const avatar = avatarUrl ? (
-    <Avatar src={avatarUrl} />
-  ) : (
-    <AccountCircleIcon color="secondary" />
-  );
+  const avatar = avatarUrl ? <Avatar src={avatarUrl} /> : <AccountCircleIcon />;
 
   const changeTheme = (option: "system" | "light" | "dark") => {
     if (option === "system") {

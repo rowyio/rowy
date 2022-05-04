@@ -9,7 +9,7 @@ import {
 import GoIcon from "@mui/icons-material/ArrowForward";
 
 import RenderedMarkdown from "@src/components/RenderedMarkdown";
-import { TableSettings } from "@src/atoms/globalScope";
+import { TableSettings } from "@src/types/table";
 
 export interface ITableListItemProps extends TableSettings {
   link: string;

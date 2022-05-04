@@ -43,6 +43,8 @@ export const ROUTE_TITLES = {
       ),
   },
 
+  [ROUTES.table]: "Table Test",
+
   [ROUTES.settings]: "Settings",
   [ROUTES.userSettings]: "Settings",
   [ROUTES.projectSettings]: "Project Settings",

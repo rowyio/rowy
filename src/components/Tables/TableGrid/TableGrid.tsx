@@ -6,7 +6,7 @@ import SectionHeading from "@src/components/SectionHeading";
 import TableCard from "./TableCard";
 import SlideTransition from "@src/components/Modal/SlideTransition";
 
-import { TableSettings } from "@src/atoms/globalScope";
+import { TableSettings } from "@src/types/table";
 
 export interface ITableGridProps {
   sections: Record<string, TableSettings[]>;

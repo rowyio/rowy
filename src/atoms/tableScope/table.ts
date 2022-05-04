@@ -1,7 +1,18 @@
-import { where } from "firebase/firestore";
+import { atom } from "jotai";
+import {
+  TableSettings,
+  TableSchema,
+  TableFilter,
+  TableOrder,
+} from "@src/types/table";
 
-export type TableFilter = {
-  key: Parameters<typeof where>[0];
-  operator: Parameters<typeof where>[1];
-  value: Parameters<typeof where>[2];
-};
+export const tableIdAtom = atom<string | undefined>(undefined);
+export const tableSettingsAtom = atom<TableSettings | undefined>(undefined);
+export const tableSchemaAtom = atom<TableSchema | undefined>(undefined);
+
+export const tableFiltersAtom = atom<TableFilter[]>([]);
+export const tableOrdersAtom = atom<TableOrder[]>([]);
+export const tablePageAtom = atom(0);
+
+export const tableRowsAtom = atom<Record<string, any>[]>([]);
+export const tableLoadingMoreAtom = atom(false);

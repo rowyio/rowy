@@ -2,7 +2,7 @@ import { atom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 
 import { DialogProps, ButtonProps } from "@mui/material";
-import { TableSettings } from "./project";
+import { TableSettings } from "@src/types/table";
 
 /** Nav open state stored in local storage. */
 export const navOpenAtom = atomWithStorage("__ROWY__NAV_OPEN", false);

@@ -11,7 +11,7 @@ import {
 import GoIcon from "@src/assets/icons/Go";
 
 import RenderedMarkdown from "@src/components/RenderedMarkdown";
-import { TableSettings } from "@src/atoms/globalScope";
+import { TableSettings } from "@src/types/table";
 
 export interface ITableCardProps extends TableSettings {
   link: string;

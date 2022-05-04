@@ -3,8 +3,12 @@ import { sortBy } from "lodash-es";
 import { ThemeOptions } from "@mui/material";
 
 import { userRolesAtom } from "./auth";
-import { UpdateDocFunction, UpdateCollectionFunction } from "@src/atoms/types";
 import { UserSettings } from "./user";
+import {
+  UpdateDocFunction,
+  UpdateCollectionFunction,
+  TableSettings,
+} from "@src/types/table";
 
 export const projectIdAtom = atom<string>("");
 
@@ -51,23 +55,6 @@ export const projectSettingsAtom = atom<ProjectSettings>({});
 export const updateProjectSettingsAtom =
   atom<UpdateDocFunction<ProjectSettings> | null>(null);
 
-/** Table settings stored in project settings */
-export type TableSettings = {
-  id: string;
-  collection: string;
-  name: string;
-  roles: string[];
-
-  description: string;
-  section: string;
-
-  tableType: "primaryCollection" | "collectionGroup";
-
-  audit?: boolean;
-  auditFieldCreatedBy?: string;
-  auditFieldUpdatedBy?: string;
-  readOnly?: boolean;
-};
 /** Tables visible to the signed-in user based on roles */
 export const tablesAtom = atom<TableSettings[]>((get) => {
   const userRoles = get(userRolesAtom);

@@ -72,7 +72,7 @@ export const rowyRunAtom = atom((get) => {
     handleNotSetUp,
   }: IRowyRunRequestProps): Promise<Response | any | false> => {
     if (!currentUser) {
-      console.log("Rowy Run: Not signed in");
+      console.log("Rowy Run: Not signed in", route.path);
       if (handleNotSetUp) handleNotSetUp();
       return false;
     }
@@ -84,7 +84,7 @@ export const rowyRunAtom = atom((get) => {
       ? rowyRunServices?.[service]
       : rowyRunUrl;
     if (!serviceUrl) {
-      console.log("Rowy Run: Not set up");
+      console.log("Rowy Run: Not set up", route.path);
       if (handleNotSetUp) handleNotSetUp();
       return false;
     }

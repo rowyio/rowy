@@ -35,8 +35,8 @@ import {
   tablesAtom,
   tablesViewAtom,
   tableSettingsDialogAtom,
-  TableSettings,
 } from "@src/atoms/globalScope";
+import { TableSettings } from "@src/types/table";
 import { ROUTES } from "@src/constants/routes";
 import useBasicSearch from "@src/hooks/useBasicSearch";
 import { APP_BAR_HEIGHT } from "@src/layouts/Navigation";

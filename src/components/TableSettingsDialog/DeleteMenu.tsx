@@ -6,11 +6,8 @@ import { useSnackbar } from "notistack";
 import { IconButton, Menu, MenuItem, DialogContentText } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 
-import {
-  globalScope,
-  confirmDialogAtom,
-  TableSettings,
-} from "@src/atoms/globalScope";
+import { globalScope, confirmDialogAtom } from "@src/atoms/globalScope";
+import { TableSettings } from "@src/types/table";
 import { ROUTES } from "@src/constants/routes";
 import { analytics, logEvent } from "@src/analytics";
 

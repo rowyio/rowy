@@ -41,7 +41,7 @@ const envConnectEmulators =
 /**
  * Store Firebase config here so it can be set programmatically.
  * This lets us switch between Firebase projects.
- * Then app, auth, db, storage need to be derived atoms.
+ * Root atom from which app, auth, db, storage are derived.
  */
 export const firebaseConfigAtom = atom<FirebaseOptions>(envConfig);
 
