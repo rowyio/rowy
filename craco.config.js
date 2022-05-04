@@ -37,7 +37,10 @@ module.exports = {
     ),
   ],
   babel: {
-    plugins: ["jotai/babel/plugin-debug-label"],
+    plugins: [
+      "jotai/babel/plugin-debug-label",
+      "./node_modules/jotai/babel/plugin-react-refresh",
+    ],
   },
   jest: {
     configure: (jestConfig) => {
