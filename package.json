@@ -16,7 +16,7 @@
     "@mui/lab": "^5.0.0-alpha.76",
     "@mui/material": "^5.6.0",
     "@mui/styles": "^5.6.2",
-    "@rowy/form-builder": "^0.5.5",
+    "@rowy/form-builder": "^0.6.0",
     "@rowy/multiselect": "^0.3.0",
     "compare-versions": "^4.1.3",
     "date-fns": "^2.28.0",
@@ -46,7 +46,7 @@
     "swr": "^1.3.0",
     "tss-react": "^3.6.2",
     "typescript": "^4.6.3",
-    "use-debounce": "^7.0.1",
+    "use-debounce": "^8.0.0",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
