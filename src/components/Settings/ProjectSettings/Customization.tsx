@@ -1,13 +1,12 @@
 import { lazy, Suspense, useState } from "react";
 import { IProjectSettingsChildProps } from "@src/pages/Settings/ProjectSettings";
-import _merge from "lodash/merge";
-import _unset from "lodash/unset";
+import { merge, unset } from "lodash-es";
 
 import { FormControlLabel, Checkbox, Collapse } from "@mui/material";
 import Loading from "@src/components/Loading";
 
 // prettier-ignore
-const ThemeColorPicker = lazy(() => import("@src/components/Settings/ThemeColorPicker") /* webpackChunkName: "Settings/ThemeColorPicker" */);
+const ThemeColorPicker = lazy(() => import("@src/components/Settings/ThemeColorPicker") /* webpackChunkName: "ThemeColorPicker" */);
 
 export default function Customization({
   publicSettings,
@@ -20,7 +19,7 @@ export default function Customization({
 
   const handleSave = ({ light, dark }: { light: string; dark: string }) => {
     updatePublicSettings({
-      theme: _merge(publicSettings.theme, {
+      theme: merge(publicSettings.theme, {
         light: { palette: { primary: { main: light } } },
         dark: { palette: { primary: { main: dark } } },
       }),
@@ -37,8 +36,8 @@ export default function Customization({
               setCustomizedThemeColor(e.target.checked);
               if (!e.target.checked) {
                 const newTheme = publicSettings.theme;
-                _unset(newTheme, "light.palette.primary.main");
-                _unset(newTheme, "dark.palette.primary.main");
+                unset(newTheme, "light.palette.primary.main");
+                unset(newTheme, "dark.palette.primary.main");
                 updatePublicSettings({ theme: newTheme });
               }
             }}

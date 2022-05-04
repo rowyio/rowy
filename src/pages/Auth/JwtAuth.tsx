@@ -1,12 +1,17 @@
 import { useState } from "react";
+import { useAtom } from "jotai";
 import { useSnackbar } from "notistack";
+import { signInWithCustomToken } from "firebase/auth";
 
 import { TextField, Button } from "@mui/material";
 
-import { auth } from "../../firebase";
-import AuthLayout from "@src/components/Auth/AuthLayout";
+import AuthLayout from "@src/layouts/AuthLayout";
+
+import { globalScope } from "@src/atoms/globalScope";
+import { firebaseAuthAtom } from "@src/sources/ProjectSourceFirebase";
 
 export default function JwtAuthPage() {
+  const [firebaseAuth] = useAtom(firebaseAuthAtom, globalScope);
   const { enqueueSnackbar } = useSnackbar();
 
   const [jwt, setJWT] = useState("");
@@ -16,7 +21,7 @@ export default function JwtAuthPage() {
     setLoading(true);
 
     try {
-      await auth.signInWithCustomToken(jwt);
+      await signInWithCustomToken(firebaseAuth, jwt);
       enqueueSnackbar("Success", { variant: "success" });
       window.location.assign("/");
     } catch (e: any) {

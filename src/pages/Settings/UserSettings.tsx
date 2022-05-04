@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useAtom } from "jotai";
 import { useSnackbar } from "notistack";
 import { useDebouncedCallback } from "use-debounce";
 
@@ -10,10 +11,12 @@ import Account from "@src/components/Settings/UserSettings/Account";
 import Theme from "@src/components/Settings/UserSettings/Theme";
 import Personalization from "@src/components/Settings/UserSettings/Personalization";
 
-import { useAppContext } from "@src/contexts/AppContext";
-import { USERS } from "@src/config/dbPaths";
-import useDoc from "@src/hooks/useDoc";
-import { db } from "@src/firebase";
+import {
+  globalScope,
+  currentUserAtom,
+  userSettingsAtom,
+  updateUserSettingsAtom,
+} from "@src/atoms/globalScope";
 
 export interface IUserSettingsChildProps {
   settings: Record<string, any>;
@@ -21,30 +24,34 @@ export interface IUserSettingsChildProps {
 }
 
 export default function UserSettingsPage() {
-  const { currentUser } = useAppContext();
+  const [currentUser] = useAtom(currentUserAtom, globalScope);
+  const [userSettings] = useAtom(userSettingsAtom, globalScope);
   const { enqueueSnackbar } = useSnackbar();
 
-  const path = `${USERS}/${currentUser?.uid}`;
-
-  const [settingsState] = useDoc({ path }, { createIfMissing: true });
-  const settings = settingsState.doc;
-  const [updateSettings, , callPending] = useDebouncedCallback(
-    (data: Record<string, any>) =>
-      db
-        .doc(path)
-        .update(data)
-        .then(() => enqueueSnackbar("Saved", { variant: "success" })),
-    1000
-  );
-
+  const [_updateUserSettings] = useAtom(updateUserSettingsAtom, globalScope);
+  const updateSettings = useDebouncedCallback((data) => {
+    if (_updateUserSettings) {
+      _updateUserSettings(data).then(() =>
+        enqueueSnackbar("Saved", { variant: "success" })
+      );
+    } else {
+      enqueueSnackbar("Could not update project settings", {
+        variant: "error",
+      });
+    }
+  }, 1000);
+  // When the component is to be unmounted, force update settings
   useEffect(
     () => () => {
-      callPending();
+      updateSettings.flush();
     },
-    []
+    [updateSettings]
   );
 
-  const childProps: IUserSettingsChildProps = { settings, updateSettings };
+  const childProps: IUserSettingsChildProps = {
+    settings: userSettings,
+    updateSettings,
+  };
 
   const sections = [
     { title: "Account", Component: Account, props: childProps },
@@ -54,7 +61,7 @@ export default function UserSettingsPage() {
 
   return (
     <Container maxWidth="sm" sx={{ px: 1, pt: 1, pb: 7 + 3 + 3 }}>
-      {!currentUser || settingsState.loading ? (
+      {!currentUser ? (
         <Fade in timeout={1000} style={{ transitionDelay: "1s" }} unmountOnExit>
           <Stack spacing={4}>
             {new Array(sections.length).fill(null).map((_, i) => (

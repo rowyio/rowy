@@ -1,16 +1,20 @@
 import { useState, useCallback, useEffect } from "react";
-import createPersistedState from "use-persisted-state";
+import { useAtom } from "jotai";
 import { differenceInDays } from "date-fns";
 import { compare } from "compare-versions";
 
-import { useProjectContext } from "@src/contexts/ProjectContext";
-import { repository, version } from "@root/package.json";
+import {
+  globalScope,
+  rowyRunAtom,
+  rowyRunLatestUpdateAtom,
+} from "@src/atoms/globalScope";
+import meta from "@root/package.json";
 import { EXTERNAL_LINKS } from "@src/constants/externalLinks";
 import { runRoutes } from "@src/constants/runRoutes";
 
 // https://docs.github.com/en/rest/reference/repos#get-the-latest-release
 const UPDATE_ENDPOINTS = {
-  rowy: repository.url
+  rowy: meta.repository.url
     .replace("github.com", "api.github.com/repos")
     .replace(/.git$/, "/releases/latest"),
 
@@ -19,46 +23,29 @@ const UPDATE_ENDPOINTS = {
     "/releases/latest",
 };
 
-export const useLatestUpdateState = createPersistedState(
-  "__ROWY__UPDATE_CHECK"
-);
-type LatestUpdateState = {
-  lastChecked: string;
-  rowy: null | Record<string, any>;
-  rowyRun: null | Record<string, any>;
-  deployedRowy: string;
-  deployedRowyRun: string;
-};
-
 /**
  * Get the latest version of Rowy and Rowy Run from GitHub releases,
  * and the currently deployed versions
  * @returns [latestUpdate, checkForUpdates, loading]
  */
 export default function useUpdateCheck() {
-  const { rowyRun } = useProjectContext();
-  const [loading, setLoading] = useState(false);
-
+  const [rowyRun] = useAtom(rowyRunAtom, globalScope);
   // Store latest release from GitHub
-  const [latestUpdate, setLatestUpdate] =
-    useLatestUpdateState<LatestUpdateState>({
-      lastChecked: "",
-      rowy: null,
-      rowyRun: null,
-      deployedRowy: version,
-      deployedRowyRun: "",
-    });
+  const [latestUpdate, setLatestUpdate] = useAtom(
+    rowyRunLatestUpdateAtom,
+    globalScope
+  );
+  const [loading, setLoading] = useState(false);
 
   // Check for updates using latest releases from GitHub
   const checkForUpdates = useCallback(async () => {
-    if (!rowyRun) return;
     setLoading(true);
 
     const newState = {
       lastChecked: new Date().toISOString(),
       rowy: null,
       rowyRun: null,
-      deployedRowy: version,
+      deployedRowy: meta.version,
       deployedRowyRun: "",
     };
 
@@ -74,7 +61,7 @@ export default function useUpdateCheck() {
     ]);
 
     // Only store the latest release
-    if (compare(resRowy.tag_name, version, ">")) newState.rowy = resRowy;
+    if (compare(resRowy.tag_name, meta.version, ">")) newState.rowy = resRowy;
     if (
       deployedRowyRun &&
       compare(resRowyRun.tag_name, deployedRowyRun.version, ">")
@@ -96,7 +83,7 @@ export default function useUpdateCheck() {
     if (
       !latestUpdate.lastChecked ||
       differenceInDays(new Date(), new Date(latestUpdate.lastChecked)) > 7 ||
-      latestUpdate.deployedRowy !== version
+      latestUpdate.deployedRowy !== meta.version
     )
       checkForUpdates();
   }, [latestUpdate, loading, checkForUpdates]);

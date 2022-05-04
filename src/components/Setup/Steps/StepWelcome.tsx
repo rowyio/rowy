@@ -1,4 +1,8 @@
-import type { ISetupStep, ISetupStepBodyProps } from "../types";
+import { useAtom } from "jotai";
+import type {
+  ISetupStep,
+  ISetupStepBodyProps,
+} from "@src/components/Setup/SetupStep";
 
 import {
   FormControlLabel,
@@ -9,7 +13,7 @@ import {
 } from "@mui/material";
 
 import { EXTERNAL_LINKS } from "@src/constants/externalLinks";
-import { useAppContext } from "@src/contexts/AppContext";
+import { globalScope, projectIdAtom } from "@src/atoms/globalScope";
 
 export default {
   id: "welcome",
@@ -29,7 +33,7 @@ export default {
 } as ISetupStep;
 
 function StepWelcome({ isComplete, setComplete }: ISetupStepBodyProps) {
-  const { projectId } = useAppContext();
+  const [projectId] = useAtom(projectIdAtom, globalScope);
 
   return (
     <>

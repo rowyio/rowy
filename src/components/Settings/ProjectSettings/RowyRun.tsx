@@ -14,7 +14,7 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 import LogoRowyRun from "@src/assets/LogoRowyRun";
 import { IProjectSettingsChildProps } from "@src/pages/Settings/ProjectSettings";
-import { EXTERNAL_LINKS, WIKI_LINKS } from "@src/constants/externalLinks";
+import { WIKI_LINKS } from "@src/constants/externalLinks";
 import useUpdateCheck from "@src/hooks/useUpdateCheck";
 import { runRoutes } from "@src/constants/runRoutes";
 

@@ -1,5 +1,6 @@
+import { useAtom } from "jotai";
+import { merge } from "lodash-es";
 import { IUserSettingsChildProps } from "@src/pages/Settings/UserSettings";
-import _merge from "lodash/merge";
 
 import {
   FormControl,
@@ -10,18 +11,29 @@ import {
   Checkbox,
 } from "@mui/material";
 
-import { useAppContext } from "@src/contexts/AppContext";
+import {
+  globalScope,
+  themeAtom,
+  themeOverriddenAtom,
+} from "@src/atoms/globalScope";
 
 export default function Theme({
   settings,
   updateSettings,
 }: IUserSettingsChildProps) {
-  const { theme, themeOverridden, setTheme, setThemeOverridden } =
-    useAppContext();
+  const [theme, setTheme] = useAtom(themeAtom, globalScope);
+  const [themeOverridden, setThemeOverridden] = useAtom(
+    themeOverriddenAtom,
+    globalScope
+  );
 
   return (
     <>
-      <FormControl component="fieldset" variant="standard" sx={{ my: -10 / 8 }}>
+      <FormControl
+        component="fieldset"
+        variant="standard"
+        sx={{ my: -10 / 8, display: "flex" }}
+      >
         <legend style={{ fontSize: 0 }}>Theme</legend>
 
         <RadioGroup
@@ -50,10 +62,10 @@ export default function Theme({
       <FormControlLabel
         control={
           <Checkbox
-            checked={settings.theme?.dark?.palette?.darker}
+            defaultChecked={Boolean(settings.theme?.dark?.palette?.darker)}
             onChange={(e) => {
               updateSettings({
-                theme: _merge(settings.theme, {
+                theme: merge(settings.theme, {
                   dark: { palette: { darker: e.target.checked } },
                 }),
               });

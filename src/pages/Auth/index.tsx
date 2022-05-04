@@ -1,16 +1,15 @@
-import { useLocation } from "react-router-dom";
-import queryString from "query-string";
+import { useSearchParams } from "react-router-dom";
 
-import AuthLayout from "@src/components/Auth/AuthLayout";
-import FirebaseUi from "@src/components/Auth/FirebaseUi";
+import AuthLayout from "@src/layouts/AuthLayout";
+import FirebaseUi from "@src/components/FirebaseUi";
 
 export default function AuthPage() {
-  const { search } = useLocation();
-  const parsed = queryString.parse(search);
+  const [searchParams] = useSearchParams();
 
   const uiConfig: firebaseui.auth.Config = {};
-  if (typeof parsed.redirect === "string" && parsed.redirect.length > 0) {
-    uiConfig.signInSuccessUrl = parsed.redirect;
+  const redirect = searchParams.get("redirect");
+  if (typeof redirect === "string" && redirect.length > 0) {
+    uiConfig.signInSuccessUrl = redirect;
   }
 
   return (

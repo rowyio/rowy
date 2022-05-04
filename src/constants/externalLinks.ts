@@ -1,4 +1,4 @@
-import _mapValues from "lodash/mapValues";
+import { mapValues } from "lodash-es";
 import meta from "@root/package.json";
 
 export const EXTERNAL_LINKS = {
@@ -51,7 +51,7 @@ const WIKI_PATHS = {
   extensionsTwilioMessage: "/extensions/twilio-message",
   webhooks: "/webhooks",
 };
-export const WIKI_LINKS = _mapValues(
+export const WIKI_LINKS = mapValues(
   WIKI_PATHS,
   (path) => EXTERNAL_LINKS.docs + path
 );

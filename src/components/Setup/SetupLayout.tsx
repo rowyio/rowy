@@ -1,7 +1,7 @@
 import React, { useState, createElement } from "react";
 import { use100vh } from "react-div-100vh";
 import { SwitchTransition } from "react-transition-group";
-import type { ISetupStep } from "./types";
+import type { ISetupStep } from "./SetupStep";
 
 import {
   useMediaQuery,
@@ -25,7 +25,7 @@ import Logo from "@src/assets/Logo";
 import ScrollableDialogContent from "@src/components/Modal/ScrollableDialogContent";
 import { SlideTransition } from "@src/components/Modal/SlideTransition";
 
-import { analytics } from "analytics";
+import { analytics, logEvent } from "@src/analytics";
 
 const BASE_WIDTH = 1024;
 
@@ -73,7 +73,7 @@ export default function SetupLayout({
     }
 
     const nextStepId = steps[nextIncompleteStepIndex].id;
-    analytics.logEvent("setup_step", { step: nextStepId });
+    logEvent(analytics, "setup_step", { step: nextStepId });
     setStepId(nextStepId);
   };
 

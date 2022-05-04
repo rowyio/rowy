@@ -1,0 +1,93 @@
+import { useAtom } from "jotai";
+
+import {
+  Typography,
+  Stack,
+  Avatar,
+  Alert,
+  Divider,
+  Link as MuiLink,
+  Button,
+} from "@mui/material";
+import SecurityIcon from "@mui/icons-material/SecurityOutlined";
+
+import EmptyState from "@src/components/EmptyState";
+
+import {
+  globalScope,
+  currentUserAtom,
+  userRolesAtom,
+} from "@src/atoms/globalScope";
+import { WIKI_LINKS } from "@src/constants/externalLinks";
+import { ROUTES } from "@src/constants/routes";
+
+export default function AccessDenied() {
+  const [currentUser] = useAtom(currentUserAtom, globalScope);
+  const [userRoles] = useAtom(userRolesAtom, globalScope);
+
+  if (!currentUser) window.location.reload();
+
+  return (
+    <EmptyState
+      fullScreen
+      Icon={SecurityIcon}
+      message="Access denied"
+      description={
+        <>
+          <div style={{ textAlign: "left", width: "100%" }}>
+            <Stack
+              direction="row"
+              spacing={1.25}
+              alignItems="flex-start"
+              sx={{ mt: 2 }}
+            >
+              <Avatar src={currentUser?.photoURL || ""} />
+              <div>
+                <Typography>{currentUser?.displayName}</Typography>
+                <Typography variant="button">{currentUser?.email}</Typography>
+              </div>
+            </Stack>
+
+            {(!userRoles || userRoles.length === 0) && (
+              <Alert severity="warning" sx={{ mt: 2 }}>
+                Your account has no roles set
+              </Alert>
+            )}
+          </div>
+
+          <Typography>
+            You do not have access to this project. Please contact the project
+            owner.
+          </Typography>
+
+          <Button href={ROUTES.signOut}>Sign out</Button>
+
+          <Divider flexItem sx={{ typography: "overline" }}>
+            OR
+          </Divider>
+
+          <Typography>
+            If you are the project owner, please follow{" "}
+            <MuiLink
+              href={WIKI_LINKS.setupRoles}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              these instructions
+            </MuiLink>{" "}
+            to set up this project’s security rules.
+          </Typography>
+        </>
+      }
+      sx={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        bgcolor: "background.default",
+        zIndex: 9999,
+      }}
+    />
+  );
+}

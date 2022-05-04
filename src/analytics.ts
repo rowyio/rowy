@@ -1,5 +1,5 @@
-import firebase from "firebase/app";
-import "firebase/analytics";
+import { initializeApp } from "firebase/app";
+import { getAnalytics, logEvent } from "firebase/analytics";
 
 const firebaseConfig = {
   apiKey: "AIzaSyArABiYGK7dZgwSk0pw_6vKbOt6U1ZRPpc",
@@ -11,7 +11,6 @@ const firebaseConfig = {
   measurementId: "G-0VWE25LFZJ",
 };
 
-// Initialize Firebase
-const rowyServiceApp = firebase.initializeApp(firebaseConfig, "rowy-service");
-
-export const analytics = firebase.analytics(rowyServiceApp);
+const rowyServiceApp = initializeApp(firebaseConfig, "rowy-service");
+export const analytics = getAnalytics(rowyServiceApp);
+export { logEvent };

@@ -1,11 +1,16 @@
-import { Fade, Stack, Button } from "@mui/material";
-import Skeleton from "@mui/material/Skeleton";
+import { Fade, Stack, Button, Skeleton, SkeletonProps } from "@mui/material";
 import AddRowIcon from "@src/assets/icons/AddRow";
 
-import { TABLE_HEADER_HEIGHT } from "@src/components/TableHeader";
+// TODO:
+// import { TABLE_HEADER_HEIGHT } from "@src/components/TableHeader";
+const TABLE_HEADER_HEIGHT = 44;
 
-const ButtonSkeleton = (props) => (
-  <Skeleton variant="rect" {...props} sx={{ borderRadius: 1, ...props.sx }} />
+const ButtonSkeleton = (props: Partial<SkeletonProps>) => (
+  <Skeleton
+    variant="rectangular"
+    {...props}
+    sx={{ borderRadius: 1, ...props.sx }}
+  />
 );
 
 export default function TableHeaderSkeleton() {

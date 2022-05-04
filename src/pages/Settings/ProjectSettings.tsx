@@ -1,19 +1,23 @@
 import { useEffect } from "react";
+import { useAtom } from "jotai";
 import { useSnackbar } from "notistack";
 import { useDebouncedCallback } from "use-debounce";
 
-import { Container, Stack, Fade } from "@mui/material";
+import { Container, Stack } from "@mui/material";
 
-import SettingsSkeleton from "@src/components/Settings/SettingsSkeleton";
 import SettingsSection from "@src/components/Settings/SettingsSection";
 import About from "@src/components/Settings/ProjectSettings/About";
 import RowyRun from "@src/components/Settings/ProjectSettings/RowyRun";
 import Authentication from "@src/components/Settings/ProjectSettings/Authentication";
 import Customization from "@src/components/Settings/ProjectSettings/Customization";
 
-import { SETTINGS, PUBLIC_SETTINGS } from "@src/config/dbPaths";
-import useDoc from "@src/hooks/useDoc";
-import { db } from "@src/firebase";
+import {
+  globalScope,
+  projectSettingsAtom,
+  updateProjectSettingsAtom,
+  publicSettingsAtom,
+  updatePublicSettingsAtom,
+} from "@src/atoms/globalScope";
 
 export interface IProjectSettingsChildProps {
   settings: Record<string, any>;
@@ -23,44 +27,63 @@ export interface IProjectSettingsChildProps {
 }
 
 export default function ProjectSettingsPage() {
+  const [projectSettings] = useAtom(projectSettingsAtom, globalScope);
+  const [publicSettings] = useAtom(publicSettingsAtom, globalScope);
+
   const { enqueueSnackbar } = useSnackbar();
 
-  const [settingsState] = useDoc({ path: SETTINGS }, { createIfMissing: true });
-  const settings = settingsState.doc;
-  const [updateSettings, , callPending] = useDebouncedCallback(
-    (data: Record<string, any>) =>
-      db
-        .doc(SETTINGS)
-        .update(data)
-        .then(() => enqueueSnackbar("Saved", { variant: "success" })),
-    1000
+  const [_updateProjectSettingsDoc] = useAtom(
+    updateProjectSettingsAtom,
+    globalScope
   );
-
-  const [publicSettingsState] = useDoc(
-    { path: PUBLIC_SETTINGS },
-    { createIfMissing: true }
-  );
-  const publicSettings = publicSettingsState.doc;
-  const [updatePublicSettings, , callPendingPublic] = useDebouncedCallback(
-    (data: Record<string, any>) =>
-      db
-        .doc(PUBLIC_SETTINGS)
-        .update(data)
-        .then(() => enqueueSnackbar("Saved", { variant: "success" })),
-    1000
-  );
-
+  const updateProjectSettings = useDebouncedCallback((data) => {
+    if (_updateProjectSettingsDoc) {
+      _updateProjectSettingsDoc(data).then(() =>
+        enqueueSnackbar("Saved", { variant: "success" })
+      );
+    } else {
+      enqueueSnackbar("Could not update project settings", {
+        variant: "error",
+      });
+    }
+  }, 1000);
+  // When the component is to be unmounted, force update settings
   useEffect(
     () => () => {
-      callPending();
-      callPendingPublic();
+      updateProjectSettings.flush();
     },
-    []
+    [updateProjectSettings]
+  );
+
+  const [_updatePublicSettingsDoc] = useAtom(
+    updatePublicSettingsAtom,
+    globalScope
+  );
+  const updatePublicSettings = useDebouncedCallback(
+    (data: Record<string, any>) => {
+      if (_updatePublicSettingsDoc) {
+        _updatePublicSettingsDoc(data).then(() =>
+          enqueueSnackbar("Saved", { variant: "success" })
+        );
+      } else {
+        enqueueSnackbar("Could not update public settings", {
+          variant: "error",
+        });
+      }
+    },
+    1000
+  );
+  // When the component is to be unmounted, force update settings
+  useEffect(
+    () => () => {
+      updatePublicSettings.flush();
+    },
+    [updatePublicSettings]
   );
 
   const childProps: IProjectSettingsChildProps = {
-    settings,
-    updateSettings,
+    settings: projectSettings,
+    updateSettings: updateProjectSettings,
     publicSettings,
     updatePublicSettings,
   };
@@ -74,27 +97,17 @@ export default function ProjectSettingsPage() {
 
   return (
     <Container maxWidth="sm" sx={{ px: 1, pt: 1, pb: 7 + 3 + 3 }}>
-      {settingsState.loading || publicSettingsState.loading ? (
-        <Fade in timeout={1000} style={{ transitionDelay: "1s" }} unmountOnExit>
-          <Stack spacing={4}>
-            {new Array(sections.length).fill(null).map((_, i) => (
-              <SettingsSkeleton key={i} />
-            ))}
-          </Stack>
-        </Fade>
-      ) : (
-        <Stack spacing={4}>
-          {sections.map(({ title, Component, props }, i) => (
-            <SettingsSection
-              key={title}
-              title={title}
-              transitionTimeout={(i + 1) * 100}
-            >
-              <Component {...(props as any)} />
-            </SettingsSection>
-          ))}
-        </Stack>
-      )}
+      <Stack spacing={4}>
+        {sections.map(({ title, Component, props }, i) => (
+          <SettingsSection
+            key={title}
+            title={title}
+            transitionTimeout={(i + 1) * 100}
+          >
+            <Component {...(props as any)} />
+          </SettingsSection>
+        ))}
+      </Stack>
     </Container>
   );
 }

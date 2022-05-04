@@ -1,9 +1,15 @@
 import { useState } from "react";
+import { useAtom } from "jotai";
+import { signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
 
 import { Typography } from "@mui/material";
 import LoadingButton, { LoadingButtonProps } from "@mui/lab/LoadingButton";
 
-import { auth, googleProvider } from "@src/firebase";
+import { globalScope } from "@src/atoms/globalScope";
+import { firebaseAuthAtom } from "@src/sources/ProjectSourceFirebase";
+
+const googleProvider = new GoogleAuthProvider();
+googleProvider.setCustomParameters({ prompt: "select_account" });
 
 export interface ISignInWithGoogleProps extends Partial<LoadingButtonProps> {
   matchEmail?: string;
@@ -13,12 +19,13 @@ export default function SignInWithGoogle({
   matchEmail,
   ...props
 }: ISignInWithGoogleProps) {
+  const [firebaseAuth] = useAtom(firebaseAuthAtom, globalScope);
   const [status, setStatus] = useState<"IDLE" | "LOADING" | string>("IDLE");
 
   const handleSignIn = async () => {
     setStatus("LOADING");
     try {
-      const result = await auth.signInWithPopup(googleProvider);
+      const result = await signInWithPopup(firebaseAuth, googleProvider);
       if (!result.user) throw new Error("Missing user");
       if (
         matchEmail &&
@@ -28,7 +35,7 @@ export default function SignInWithGoogle({
 
       setStatus("IDLE");
     } catch (error: any) {
-      if (auth.currentUser) auth.signOut();
+      if (firebaseAuth.currentUser) signOut(firebaseAuth);
       console.log(error);
       setStatus(error.message);
     }

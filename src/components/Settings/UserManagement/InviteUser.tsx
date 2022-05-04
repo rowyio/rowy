@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useAtom, useSetAtom } from "jotai";
 import { Link } from "react-router-dom";
 import { useSnackbar } from "notistack";
 
@@ -14,15 +15,22 @@ import AddIcon from "@mui/icons-material/PersonAddOutlined";
 import MultiSelect from "@rowy/multiselect";
 import Modal from "@src/components/Modal";
 
-import { useProjectContext } from "@src/contexts/ProjectContext";
-import routes from "@src/constants/routes";
+import {
+  globalScope,
+  rolesAtom,
+  projectSettingsAtom,
+  rowyRunAtom,
+  rowyRunModalAtom,
+} from "@src/atoms/globalScope";
+import { ROUTES } from "@src/constants/routes";
 import { runRoutes } from "@src/constants/runRoutes";
-import { useRowyRunModal } from "@src/atoms/RowyRunModal";
 
 export default function InviteUser() {
-  const { roles: projectRoles, rowyRun, settings } = useProjectContext();
+  const [projectRoles] = useAtom(rolesAtom, globalScope);
+  const [projectSettings] = useAtom(projectSettingsAtom, globalScope);
+  const [rowyRun] = useAtom(rowyRunAtom, globalScope);
+  const openRowyRunModal = useSetAtom(rowyRunModalAtom, globalScope);
   const { enqueueSnackbar } = useSnackbar();
-  const openRowyRunModal = useRowyRunModal();
 
   const [open, setOpen] = useState(false);
   const [status, setStatus] = useState<"LOADING" | string>("");
@@ -33,7 +41,7 @@ export default function InviteUser() {
   const handleInvite = async () => {
     try {
       setStatus("LOADING");
-      const res = await rowyRun?.({
+      const res = await rowyRun({
         route: runRoutes.inviteUser,
         body: { email, roles },
       });
@@ -52,9 +60,9 @@ export default function InviteUser() {
       <Button
         aria-label="Invite user"
         onClick={
-          settings?.rowyRunUrl
+          projectSettings.rowyRunUrl
             ? () => setOpen(true)
-            : () => openRowyRunModal("Invite user")
+            : () => openRowyRunModal({ feature: "Invite user" })
         }
         variant="text"
         color="primary"
@@ -78,7 +86,7 @@ export default function InviteUser() {
                 They can sign up with any of the sign-in options{" "}
                 <MuiLink
                   component={Link}
-                  to={routes.projectSettings + "#authentication"}
+                  to={ROUTES.projectSettings + "#authentication"}
                 >
                   you have enabled
                 </MuiLink>
@@ -104,7 +112,7 @@ export default function InviteUser() {
                 TextFieldProps={{
                   id: "invite-roles",
                   SelectProps: {
-                    renderValue: (_) => {
+                    renderValue: () => {
                       if (Array.isArray(roles)) {
                         if (roles.length >= 1) return roles.join(", ");
                         return (
@@ -113,6 +121,7 @@ export default function InviteUser() {
                           </Typography>
                         );
                       }
+                      return null;
                     },
                   },
                   sx: { mt: 3 },

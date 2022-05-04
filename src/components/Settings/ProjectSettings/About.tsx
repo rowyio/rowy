@@ -1,3 +1,5 @@
+import { useAtom } from "jotai";
+
 import { Grid, Typography, Button, Link, Divider } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import GitHubIcon from "@mui/icons-material/GitHub";
@@ -7,13 +9,13 @@ import TwitterIcon from "@mui/icons-material/Twitter";
 import Logo from "@src/assets/Logo";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
-import { version } from "@root/package.json";
-import { useAppContext } from "@src/contexts/AppContext";
+import meta from "@root/package.json";
+import { globalScope, projectIdAtom } from "@src/atoms/globalScope";
 import useUpdateCheck from "@src/hooks/useUpdateCheck";
 import { EXTERNAL_LINKS, WIKI_LINKS } from "@src/constants/externalLinks";
 
 export default function About() {
-  const { projectId } = useAppContext();
+  const [projectId] = useAtom(projectIdAtom, globalScope);
 
   const [latestUpdate, checkForUpdates, loading] = useUpdateCheck();
 
@@ -100,7 +102,7 @@ export default function About() {
             )}
 
             <Typography display="block" color="textSecondary">
-              Rowy v{version}
+              Rowy v{meta.version}
             </Typography>
           </Grid>
 

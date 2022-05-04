@@ -1,6 +1,10 @@
 import { useState } from "react";
+import { useAtom } from "jotai";
 import { useSnackbar } from "notistack";
-import type { ISetupStep, ISetupStepBodyProps } from "../types";
+import type {
+  ISetupStep,
+  ISetupStepBodyProps,
+} from "@src/components/Setup/SetupStep";
 
 import {
   Typography,
@@ -13,9 +17,9 @@ import CopyIcon from "@src/assets/icons/Copy";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 import DoneIcon from "@mui/icons-material/Done";
 
-import SetupItem from "../SetupItem";
+import SetupItem from "@src/components/Setup/SetupItem";
 
-import { useAppContext } from "@src/contexts/AppContext";
+import { globalScope, projectIdAtom } from "@src/atoms/globalScope";
 import { CONFIG } from "@src/config/dbPaths";
 import {
   RULES_START,
@@ -40,7 +44,7 @@ export default {
 } as ISetupStep;
 
 function StepRules({ isComplete, setComplete }: ISetupStepBodyProps) {
-  const { projectId } = useAppContext();
+  const [projectId] = useAtom(projectIdAtom, globalScope);
   const { enqueueSnackbar } = useSnackbar();
 
   const [adminRule, setAdminRule] = useState(true);

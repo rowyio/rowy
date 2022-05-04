@@ -1,3 +1,4 @@
+/* eslint-disable tsdoc/syntax */
 type Trigger = "create" | "update" | "delete";
 type Triggers = Trigger[];
 

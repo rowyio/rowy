@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import { Grid, Avatar, Typography, Button } from "@mui/material";
 
-import routes from "@src/constants/routes";
+import { ROUTES } from "@src/constants/routes";
 
 export default function Account({ settings }: IUserSettingsChildProps) {
   return (
@@ -26,7 +26,7 @@ export default function Account({ settings }: IUserSettingsChildProps) {
       </Grid>
 
       <Grid item>
-        <Button component={Link} to={routes.signOut}>
+        <Button component={Link} to={ROUTES.signOut}>
           Sign out
         </Button>
       </Grid>

@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { useState } from "react";
 
 import {
   Dialog,
@@ -20,9 +20,9 @@ export interface IFullScreenModalProps
   disableEscapeKeyDown?: boolean;
 
   "aria-labelledby": DialogProps["aria-labelledby"];
-  header?: ReactNode;
-  children?: ReactNode;
-  footer?: ReactNode;
+  header?: React.ReactNode;
+  children?: React.ReactNode;
+  footer?: React.ReactNode;
 
   hideCloseButton?: boolean;
   ScrollableDialogContentProps?: Partial<IScrollableDialogContentProps>;

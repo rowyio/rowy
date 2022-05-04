@@ -1,31 +1,37 @@
 import { useEffect, useState } from "react";
+import { useAtom } from "jotai";
 import { useSnackbar } from "notistack";
+import {
+  getIdTokenResult,
+  signOut,
+  signInWithCustomToken,
+} from "firebase/auth";
 
 import { Typography, Button, TextField } from "@mui/material";
 
-import AuthLayout from "@src/components/Auth/AuthLayout";
-import FirebaseUi from "@src/components/Auth/FirebaseUi";
+import AuthLayout from "@src/layouts/AuthLayout";
+import FirebaseUi from "@src/components/FirebaseUi";
 
-import { signOut } from "@src/utils/auth";
-import { auth } from "../../firebase";
-import { useProjectContext } from "@src/contexts/ProjectContext";
+import { globalScope, rowyRunAtom } from "@src/atoms/globalScope";
+import { firebaseAuthAtom } from "@src/sources/ProjectSourceFirebase";
 import { runRoutes } from "@src/constants/runRoutes";
 
 export default function ImpersonatorAuthPage() {
+  const [firebaseAuth] = useAtom(firebaseAuthAtom, globalScope);
+  const [rowyRun] = useAtom(rowyRunAtom, globalScope);
+
   const { enqueueSnackbar } = useSnackbar();
-  const { rowyRun } = useProjectContext();
 
   useEffect(() => {
-    //sign out user on initial load
-    // signOut();
-  }, []);
+    // sign out user on initial load
+    signOut(firebaseAuth);
+  }, [firebaseAuth]);
 
   const [loading, setLoading] = useState(false);
   const [adminUser, setAdminUser] = useState();
   const [email, setEmail] = useState("");
 
   const handleAuth = async (email: string) => {
-    if (!rowyRun) return;
     setLoading(true);
     const resp = await rowyRun({
       route: runRoutes.impersonateUser,
@@ -34,7 +40,7 @@ export default function ImpersonatorAuthPage() {
     setLoading(false);
     if (resp.success) {
       enqueueSnackbar(resp.message, { variant: "success" });
-      await auth.signInWithCustomToken(resp.token);
+      await signInWithCustomToken(firebaseAuth, resp.token);
       window.location.href = "/";
     } else {
       enqueueSnackbar(resp.error.message, { variant: "error" });
@@ -68,14 +74,15 @@ export default function ImpersonatorAuthPage() {
           uiConfig={{
             callbacks: {
               signInSuccessWithAuthResult: (authUser) => {
-                authUser.user.getIdTokenResult().then((result) => {
-                  if (result.claims.roles?.includes("ADMIN")) {
+                getIdTokenResult(authUser.user).then((result) => {
+                  const roles = result.claims.roles;
+                  if (Array.isArray(roles) && roles.includes("ADMIN")) {
                     setAdminUser(authUser.user);
                   } else {
                     enqueueSnackbar("Not an admin account", {
                       variant: "error",
                     });
-                    signOut();
+                    signOut(firebaseAuth);
                   }
                 });
 

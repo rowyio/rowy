@@ -1,27 +1,26 @@
-import { useLocation } from "react-router-dom";
-import queryString from "query-string";
+import { useSearchParams } from "react-router-dom";
 
 import { useMediaQuery, Stack, Typography, Link } from "@mui/material";
 
-import MarketingBanner from "@src/components/Auth/MarketingBanner";
-import AuthLayout from "@src/components/Auth/AuthLayout";
-import FirebaseUi from "@src/components/Auth/FirebaseUi";
+import MarketingPanel from "@src/layouts/MarketingPanel";
+import AuthLayout from "@src/layouts/AuthLayout";
+import FirebaseUi from "@src/components/FirebaseUi";
 import { EXTERNAL_LINKS } from "@src/constants/externalLinks";
 
 export default function SignUpPage() {
-  const { search } = useLocation();
-  const parsed = queryString.parse(search);
+  const [searchParams] = useSearchParams();
 
   const uiConfig: firebaseui.auth.Config = {};
-  if (typeof parsed.redirect === "string" && parsed.redirect.length > 0) {
-    uiConfig.signInSuccessUrl = parsed.redirect;
+  const redirect = searchParams.get("redirect");
+  if (typeof redirect === "string" && redirect.length > 0) {
+    uiConfig.signInSuccessUrl = redirect;
   }
 
   const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down("md"));
 
   return (
     <Stack direction="row">
-      <MarketingBanner />
+      <MarketingPanel />
 
       <div style={{ flexGrow: 1 }}>
         <AuthLayout
@@ -31,9 +30,12 @@ export default function SignUpPage() {
           description={
             <>
               Welcome! To join this project, sign in with the email address
-              {parsed.email ? (
+              {searchParams.get("email") ? (
                 <>
-                  : <b style={{ userSelect: "all" }}>{parsed.email}</b>
+                  :{" "}
+                  <b style={{ userSelect: "all" }}>
+                    {searchParams.get("email")}
+                  </b>
                 </>
               ) : (
                 " used to invite you."

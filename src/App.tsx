@@ -1,221 +1,119 @@
 import { lazy, Suspense } from "react";
-import { Route, Switch, Redirect } from "react-router-dom";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useAtom } from "jotai";
 
-import { StyledEngineProvider } from "@mui/material/styles";
-import "./space-grotesk.css";
-
-import CustomBrowserRouter from "@src/utils/CustomBrowserRouter";
-import PrivateRoute from "@src/utils/PrivateRoute";
-import ErrorBoundary from "@src/components/ErrorBoundary";
 import Loading from "@src/components/Loading";
-import Navigation from "@src/components/Navigation";
-import Logo from "@src/assets/Logo";
+import ProjectSourceFirebase from "@src/sources/ProjectSourceFirebase";
+import ConfirmDialog from "@src/components/ConfirmDialog";
 import RowyRunModal from "@src/components/RowyRunModal";
+import NotFound from "@src/pages/NotFound";
+import RequireAuth from "@src/layouts/RequireAuth";
+import Navigation from "@src/layouts/Navigation";
+import TableSettingsDialog from "@src/components/TableSettingsDialog";
 
-import SwrProvider from "@src/contexts/SwrContext";
-import ConfirmationProvider from "@src/components/ConfirmationDialog/Provider";
-import { AppProvider } from "@src/contexts/AppContext";
-import { ProjectContextProvider } from "@src/contexts/ProjectContext";
-import { SnackbarProvider } from "@src/contexts/SnackbarContext";
-import { SnackLogProvider } from "@src/contexts/SnackLogContext";
-import routes from "@src/constants/routes";
+import { globalScope, currentUserAtom } from "@src/atoms/globalScope";
+import { ROUTES } from "@src/constants/routes";
 
-import AuthPage from "@src/pages/Auth";
+import JotaiTestPage from "@src/pages/JotaiTest";
 import SignOutPage from "@src/pages/Auth/SignOut";
-import SignUpPage from "@src/pages/Auth/SignUp";
-import TestPage from "@src/pages/Test";
-import RowyRunTestPage from "@src/pages/RowyRunTest";
-import PageNotFound from "@src/pages/PageNotFound";
-
-import Favicon from "@src/assets/Favicon";
-import "@src/analytics";
 
 // prettier-ignore
-const AuthSetupGuidePage = lazy(() => import("@src/pages/Auth/SetupGuide" /* webpackChunkName: "AuthSetupGuide" */));
+const AuthPage = lazy(() => import("@src/pages/Auth/index" /* webpackChunkName: "AuthPage" */));
 // prettier-ignore
-const ImpersonatorAuthPage = lazy(() => import("./pages/Auth/ImpersonatorAuth" /* webpackChunkName: "ImpersonatorAuthPage" */));
+const SignUpPage = lazy(() => import("@src/pages/Auth/SignUp" /* webpackChunkName: "SignUpPage" */));
 // prettier-ignore
-const JwtAuthPage = lazy(() => import("./pages/Auth/JwtAuth" /* webpackChunkName: "JwtAuthPage" */));
+const JwtAuthPage = lazy(() => import("@src/pages/Auth/JwtAuth" /* webpackChunkName: "JwtAuthPage" */));
+// prettier-ignore
+const ImpersonatorAuthPage = lazy(() => import("@src/pages/Auth/ImpersonatorAuth" /* webpackChunkName: "ImpersonatorAuthPage" */));
 
-// prettier-ignore
-const HomePage = lazy(() => import("./pages/Home" /* webpackChunkName: "HomePage" */));
-// prettier-ignore
-const TablePage = lazy(() => import("./pages/Table" /* webpackChunkName: "TablePage" */));
-
-// prettier-ignore
-const ProjectSettingsPage = lazy(() => import("./pages/Settings/ProjectSettings" /* webpackChunkName: "ProjectSettingsPage" */));
-// prettier-ignore
-const UserSettingsPage = lazy(() => import("./pages/Settings/UserSettings" /* webpackChunkName: "UserSettingsPage" */));
-// prettier-ignore
-const UserManagementPage = lazy(() => import("./pages/Settings/UserManagement" /* webpackChunkName: "UserManagementPage" */));
 // prettier-ignore
 const SetupPage = lazy(() => import("@src/pages/Setup" /* webpackChunkName: "SetupPage" */));
 
+// prettier-ignore
+const TablesPage = lazy(() => import("@src/pages/Tables" /* webpackChunkName: "TablesPage" */));
+// prettier-ignore
+const TablePage = lazy(() => import("@src/pages/TableTest" /* webpackChunkName: "TablePage" */));
+
+// prettier-ignore
+const UserSettingsPage = lazy(() => import("@src/pages/Settings/UserSettings" /* webpackChunkName: "UserSettingsPage" */));
+// prettier-ignore
+const ProjectSettingsPage = lazy(() => import("@src/pages/Settings/ProjectSettings" /* webpackChunkName: "ProjectSettingsPage" */));
+// prettier-ignore
+const UserManagementPage = lazy(() => import("@src/pages/Settings/UserManagement" /* webpackChunkName: "UserManagementPage" */));
+// const RowyRunTestPage = lazy(() => import("@src/pages/RowyRunTest" /* webpackChunkName: "RowyRunTestPage" */));
+
 export default function App() {
+  const [currentUser] = useAtom(currentUserAtom, globalScope);
+
   return (
-    <StyledEngineProvider injectFirst>
-      <ErrorBoundary>
-        <SwrProvider>
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <AppProvider>
-              <Favicon />
-              <SnackbarProvider>
-                <ConfirmationProvider>
-                  <SnackLogProvider>
-                    <CustomBrowserRouter>
-                      <RowyRunModal />
-                      <Suspense fallback={<Loading fullScreen />}>
-                        <Switch>
-                          <Route
-                            exact
-                            path={routes.auth}
-                            render={() => <AuthPage />}
-                          />
-                          <Route
-                            exact
-                            path={routes.authSetup}
-                            render={() => <AuthSetupGuidePage />}
-                          />
-                          <Route
-                            exact
-                            path={routes.jwtAuth}
-                            render={() => <JwtAuthPage />}
-                          />
-                          <Route
-                            exact
-                            path={routes.signOut}
-                            render={() => <SignOutPage />}
-                          />
-                          <Route
-                            exact
-                            path={routes.signUp}
-                            render={() => <SignUpPage />}
-                          />
-                          <Route
-                            exact
-                            path={routes.setup}
-                            render={() => <SetupPage />}
-                          />
+    <Suspense fallback={<Loading fullScreen />}>
+      <ProjectSourceFirebase />
+      <ConfirmDialog />
+      <RowyRunModal />
 
-                          <Route
-                            exact
-                            path={"/test"}
-                            render={() => <TestPage />}
-                          />
+      {currentUser === undefined ? (
+        <Loading fullScreen message="Authenticating" />
+      ) : (
+        <Routes>
+          <Route path="*" element={<NotFound />} />
 
-                          <PrivateRoute
-                            exact
-                            path={[
-                              routes.home,
-                              routes.tableWithId,
-                              routes.tableGroupWithId,
-                              routes.settings,
-                              routes.projectSettings,
-                              routes.userSettings,
-                              routes.userManagement,
-                              routes.impersonatorAuth,
-                              routes.rowyRunTest,
-                            ]}
-                            render={() => (
-                              <ProjectContextProvider>
-                                <Switch>
-                                  <Route
-                                    exact
-                                    path={routes.impersonatorAuth}
-                                    render={() => <ImpersonatorAuthPage />}
-                                  />
-                                  <Route
-                                    exact
-                                    path={routes.rowyRunTest}
-                                    render={() => <RowyRunTestPage />}
-                                  />
-                                  <PrivateRoute
-                                    exact
-                                    path={routes.home}
-                                    render={() => (
-                                      <Navigation
-                                        title="Home"
-                                        titleComponent={(open, pinned) =>
-                                          !(open && pinned) && (
-                                            <Logo
-                                              style={{
-                                                display: "block",
-                                                margin: "0 auto",
-                                              }}
-                                            />
-                                          )
-                                        }
-                                      >
-                                        <HomePage />
-                                      </Navigation>
-                                    )}
-                                  />
-                                  <PrivateRoute
-                                    path={routes.tableWithId}
-                                    render={() => <TablePage />}
-                                  />
-                                  <PrivateRoute
-                                    path={routes.tableGroupWithId}
-                                    render={() => <TablePage />}
-                                  />
+          <Route path={ROUTES.auth} element={<AuthPage />} />
+          <Route path={ROUTES.signUp} element={<SignUpPage />} />
+          <Route path={ROUTES.signOut} element={<SignOutPage />} />
+          <Route path={ROUTES.jwtAuth} element={<JwtAuthPage />} />
+          <Route
+            path={ROUTES.impersonatorAuth}
+            element={
+              <RequireAuth>
+                <ImpersonatorAuthPage />
+              </RequireAuth>
+            }
+          />
 
-                                  <PrivateRoute
-                                    exact
-                                    path={routes.settings}
-                                    render={() => (
-                                      <Redirect to={routes.userSettings} />
-                                    )}
-                                  />
-                                  <PrivateRoute
-                                    exact
-                                    path={routes.projectSettings}
-                                    render={() => (
-                                      <Navigation title="Project Settings">
-                                        <ProjectSettingsPage />
-                                      </Navigation>
-                                    )}
-                                  />
-                                  <PrivateRoute
-                                    exact
-                                    path={routes.userSettings}
-                                    render={() => (
-                                      <Navigation title="Settings">
-                                        <UserSettingsPage />
-                                      </Navigation>
-                                    )}
-                                  />
-                                  <PrivateRoute
-                                    exact
-                                    path={routes.userManagement}
-                                    render={() => (
-                                      <Navigation title="User Management">
-                                        <UserManagementPage />
-                                      </Navigation>
-                                    )}
-                                  />
-                                </Switch>
-                              </ProjectContextProvider>
-                            )}
-                          />
+          <Route path={ROUTES.setup} element={<SetupPage />} />
 
-                          <Route
-                            exact
-                            path={routes.pageNotFound}
-                            render={() => <PageNotFound />}
-                          />
-                          <Route render={() => <PageNotFound />} />
-                        </Switch>
-                      </Suspense>
-                    </CustomBrowserRouter>
-                  </SnackLogProvider>
-                </ConfirmationProvider>
-              </SnackbarProvider>
-            </AppProvider>
-          </LocalizationProvider>
-        </SwrProvider>
-      </ErrorBoundary>
-    </StyledEngineProvider>
+          <Route
+            path="/"
+            element={
+              <RequireAuth>
+                <Navigation>
+                  <TableSettingsDialog />
+                </Navigation>
+              </RequireAuth>
+            }
+          >
+            <Route
+              path={ROUTES.home}
+              element={<Navigate to={ROUTES.tables} replace />}
+            />
+            <Route path={ROUTES.tables} element={<TablesPage />} />
+
+            <Route path={ROUTES.table}>
+              <Route index element={<Navigate to={ROUTES.tables} replace />} />
+              <Route path=":id" element={<TablePage />} />
+            </Route>
+
+            <Route
+              path={ROUTES.settings}
+              element={<Navigate to={ROUTES.userSettings} replace />}
+            />
+            <Route path={ROUTES.userSettings} element={<UserSettingsPage />} />
+            <Route
+              path={ROUTES.projectSettings}
+              element={<ProjectSettingsPage />}
+            />
+            <Route
+              path={ROUTES.userManagement}
+              element={<UserManagementPage />}
+            />
+            {/* <Route path={ROUTES.rowyRunTest} element={<RowyRunTestPage />} /> */}
+
+            <Route path="/jotaiTest" element={<JotaiTestPage />} />
+          </Route>
+
+          {/* <Route path="/jotaiTest" element={<JotaiTestPage />} /> */}
+        </Routes>
+      )}
+    </Suspense>
   );
 }

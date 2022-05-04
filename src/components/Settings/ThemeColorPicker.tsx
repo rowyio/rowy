@@ -57,7 +57,7 @@ export default function ThemeColorPicker({
             width={244}
             height={140}
             color={toColor("hex", light)}
-            onChange={(c: any) => setLight(c.hex)}
+            onChange={(c) => setLight(c.hex)}
             dark={theme.palette.mode === "dark"}
           />
 
