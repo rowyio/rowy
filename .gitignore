@@ -14,6 +14,7 @@ cloud_functions/functions/lib
 *-firebase.json
 .firebase/
 *firebase-adminsdk*.json
+*.log
 
 # misc
 .DS_Store
