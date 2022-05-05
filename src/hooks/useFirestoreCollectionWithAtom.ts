@@ -5,14 +5,16 @@ import { RESET } from "jotai/utils";
 import {
   query,
   collection,
+  collectionGroup as queryCollectionGroup,
+  limit as queryLimit,
   where,
   orderBy,
-  DocumentData,
   onSnapshot,
   FirestoreError,
   setDoc,
   doc,
   CollectionReference,
+  Query,
 } from "firebase/firestore";
 import { useErrorHandler } from "react-error-boundary";
 
@@ -21,22 +23,29 @@ import {
   UpdateCollectionFunction,
   TableFilter,
   TableOrder,
+  TableRow,
 } from "@src/types/table";
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
+
+export const DEFAULT_COLLECTION_QUERY_LIMIT = 50;
 
 /** Options for {@link useFirestoreCollectionWithAtom} */
 interface IUseFirestoreCollectionWithAtomOptions<T> {
   /** Additional path segments appended to the path. If any are undefined, the listener isn’t created at all. */
   pathSegments?: Array<string | undefined>;
+  /** Optionally use a collection group query get all documents from collections with the same name as the `path` prop */
+  collectionGroup?: boolean;
   /** Attach filters to the query */
   filters?: TableFilter[];
   /** Attach orders to the query */
   orders?: TableOrder[];
+  /** Limit query */
+  limit?: number;
   /** Called when an error occurs. Make sure to wrap in useCallback! If not provided, errors trigger the nearest ErrorBoundary. */
   onError?: (error: FirestoreError) => void;
   /** Optionally disable Suspense */
   disableSuspense?: boolean;
-  /** Set this atom’s value to a function that updates the document. Uses same scope as `dataScope`. */
+  /** Set this atom’s value to a function that updates a document in the collection. If `collectionGroup` is true, you must pass the full path. Uses same scope as `dataScope`. */
   updateDataAtom?: PrimitiveAtom<UpdateCollectionFunction<T> | null>;
 }
 
@@ -50,7 +59,7 @@ interface IUseFirestoreCollectionWithAtomOptions<T> {
  * @param path - Collection path. If falsy, the listener isn’t created at all.
  * @param options - {@link IUseFirestoreCollectionWithAtomOptions}
  */
-export function useFirestoreCollectionWithAtom<T = DocumentData>(
+export function useFirestoreCollectionWithAtom<T = TableRow>(
   dataAtom: PrimitiveAtom<T[]>,
   dataScope: Scope | undefined,
   path: string | undefined,
@@ -67,8 +76,10 @@ export function useFirestoreCollectionWithAtom<T = DocumentData>(
   // Destructure options so they can be used as useEffect dependencies
   const {
     pathSegments,
+    collectionGroup,
     filters,
     orders,
+    limit = DEFAULT_COLLECTION_QUERY_LIMIT,
     onError,
     disableSuspense,
     updateDataAtom,
@@ -86,15 +97,22 @@ export function useFirestoreCollectionWithAtom<T = DocumentData>(
       suspended = true;
     }
 
-    // Create a collection reference to use in `updateDataAtom`
-    const collectionRef = collection(
-      firebaseDb,
-      path,
-      ...((pathSegments as string[]) || [])
-    ) as CollectionReference<T>;
+    // Create a collection or collection group reference
+    // to query data and to use in `updateDataAtom`
+    const collectionRef = collectionGroup
+      ? (queryCollectionGroup(
+          firebaseDb,
+          [path, ...((pathSegments as string[]) || [])].join("/")
+        ) as Query<T>)
+      : (collection(
+          firebaseDb,
+          path,
+          ...((pathSegments as string[]) || [])
+        ) as CollectionReference<T>);
     // Create the query with filters and orders
     const _query = query<T>(
       collectionRef,
+      queryLimit(limit),
       ...(filters?.map((filter) =>
         where(filter.key, filter.operator, filter.value)
       ) || []),
@@ -127,11 +145,17 @@ export function useFirestoreCollectionWithAtom<T = DocumentData>(
     );
 
     // If `options?.updateDataAtom` was passed,
-    // set the atom’s value to a function that updates the document
+    // set the atom’s value to a function that updates a doc in the collection
     if (updateDataAtom) {
       setUpdateDataAtom(
         () => (path: string, update: T) =>
-          setDoc(doc(collectionRef, path), update, { merge: true })
+          setDoc(
+            collectionGroup
+              ? doc(firebaseDb, path)
+              : doc(collectionRef as CollectionReference<T>, path),
+            update,
+            { merge: true }
+          )
       );
     }
 
@@ -145,8 +169,10 @@ export function useFirestoreCollectionWithAtom<T = DocumentData>(
     firebaseDb,
     path,
     pathSegments,
+    collectionGroup,
     filters,
     orders,
+    limit,
     onError,
     setDataAtom,
     disableSuspense,

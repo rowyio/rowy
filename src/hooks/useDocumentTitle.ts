@@ -5,7 +5,7 @@ const DOCUMENT_TITLE_BASE =
   (process.env.NODE_ENV === "production"
     ? ""
     : ` (${
-        process.env.REACT_APP_FIREBASE_EMULATOR ? "Emulator • " : ""
+        process.env.REACT_APP_FIREBASE_EMULATORS ? "Emulator • " : ""
       }${process.env.NODE_ENV.replace("development", "dev")})`);
 
 /**

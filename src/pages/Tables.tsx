@@ -118,9 +118,7 @@ export default function HomePage() {
   }
 
   const getLink = (table: TableSettings) =>
-    `${
-      table.tableType === "primaryCollection" ? ROUTES.table : ROUTES.tableGroup
-    }/${table.id.replace(/\//g, "~2F")}`;
+    `${ROUTES.table}/${table.id.replace(/\//g, "~2F")}`;
 
   const handleFavorite =
     (id: string) => (e: React.ChangeEvent<HTMLInputElement>) => {

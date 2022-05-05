@@ -8,12 +8,11 @@ import ConfirmDialog from "@src/components/ConfirmDialog";
 import RowyRunModal from "@src/components/RowyRunModal";
 import NotFound from "@src/pages/NotFound";
 import RequireAuth from "@src/layouts/RequireAuth";
-import Navigation from "@src/layouts/Navigation";
-import TableSettingsDialog from "@src/components/TableSettingsDialog";
 
 import { globalScope, currentUserAtom } from "@src/atoms/globalScope";
 import { ROUTES } from "@src/constants/routes";
 
+import TableGroupRedirectPage from "./pages/TableGroupRedirect";
 import JotaiTestPage from "@src/pages/JotaiTest";
 import SignOutPage from "@src/pages/Auth/SignOut";
 
@@ -28,6 +27,11 @@ const ImpersonatorAuthPage = lazy(() => import("@src/pages/Auth/ImpersonatorAuth
 
 // prettier-ignore
 const SetupPage = lazy(() => import("@src/pages/Setup" /* webpackChunkName: "SetupPage" */));
+
+// prettier-ignore
+const Navigation = lazy(() => import("@src/layouts/Navigation" /* webpackChunkName: "Navigation" */));
+// prettier-ignore
+const TableSettingsDialog = lazy(() => import("@src/components/TableSettingsDialog" /* webpackChunkName: "TableSettingsDialog" */));
 
 // prettier-ignore
 const TablesPage = lazy(() => import("@src/pages/Tables" /* webpackChunkName: "TablesPage" */));
@@ -91,6 +95,10 @@ export default function App() {
             <Route path={ROUTES.table}>
               <Route index element={<Navigate to={ROUTES.tables} replace />} />
               <Route path=":id" element={<TablePage />} />
+            </Route>
+            <Route path={ROUTES.tableGroup}>
+              <Route index element={<Navigate to={ROUTES.tables} replace />} />
+              <Route path=":id" element={<TableGroupRedirectPage />} />
             </Route>
 
             <Route

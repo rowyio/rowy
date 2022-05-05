@@ -1,11 +1,16 @@
 import { FallbackProps } from "react-error-boundary";
+import { Link } from "react-router-dom";
 
 import { Button } from "@mui/material";
 import ReloadIcon from "@mui/icons-material/Refresh";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
+import TablesIcon from "mdi-material-ui/TableMultiple";
 
 import EmptyState, { IEmptyStateProps } from "@src/components/EmptyState";
 import AccessDenied from "@src/components/AccessDenied";
+
+import { ERROR_TABLE_NOT_FOUND } from "@src/sources/TableSourceFirestore";
+import { ROUTES } from "@src/constants/routes";
 import meta from "@root/package.json";
 
 export interface IErrorFallbackProps extends FallbackProps, IEmptyStateProps {}
@@ -15,53 +20,71 @@ export default function ErrorFallback({
   resetErrorBoundary,
   ...props
 }: IErrorFallbackProps) {
-  if (error.message.startsWith("Loading chunk"))
+  if ((error as any).code === "permission-denied")
     return (
-      <EmptyState
-        Icon={ReloadIcon}
-        message="New update available"
-        description={
-          <>
-            <span>Reload this page to get the latest update</span>
-            <Button
-              variant="outlined"
-              color="secondary"
-              startIcon={<ReloadIcon />}
-              onClick={() => window.location.reload()}
-            >
-              Reload
-            </Button>
-          </>
-        }
-        fullScreen
-      />
+      <AccessDenied error={error} resetErrorBoundary={resetErrorBoundary} />
     );
 
-  if ((error as any).code === "permission-denied") return <AccessDenied />;
+  let renderProps: Partial<IEmptyStateProps> = {
+    message: "Something went wrong",
+    description: (
+      <>
+        <span>
+          {(error as any).code && <b>{(error as any).code}: </b>}
+          {error.message}
+        </span>
+        <Button
+          href={meta.repository.url.replace(".git", "") + "/issues/new/choose"}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Report issue
+          <InlineOpenInNewIcon />
+        </Button>
+      </>
+    ),
+  };
 
-  return (
-    <EmptyState
-      message="Something went wrong"
-      description={
+  if (error.message === ERROR_TABLE_NOT_FOUND) {
+    renderProps = {
+      message: "Table not found",
+      description: (
         <>
-          <span>
-            {(error as any).code && <b>{(error as any).code}: </b>}
-            {error.message}
-          </span>
+          <span>Make sure you have the right ID</span>
           <Button
-            href={
-              meta.repository.url.replace(".git", "") + "/issues/new/choose"
-            }
-            target="_blank"
-            rel="noopener noreferrer"
+            variant="outlined"
+            color="secondary"
+            component={Link}
+            to={ROUTES.tables}
+            startIcon={<TablesIcon />}
+            onClick={() => resetErrorBoundary()}
           >
-            Report issue
-            <InlineOpenInNewIcon />
+            All tables
           </Button>
         </>
-      }
-      fullScreen
-      {...props}
-    />
-  );
+      ),
+    };
+  }
+
+  if (error.message.startsWith("Loading chunk")) {
+    renderProps = {
+      Icon: ReloadIcon,
+      message: "New update available",
+      description: (
+        <>
+          <span>Reload this page to get the latest update</span>
+          <Button
+            variant="outlined"
+            color="secondary"
+            startIcon={<ReloadIcon />}
+            onClick={() => window.location.reload()}
+          >
+            Reload
+          </Button>
+        </>
+      ),
+    };
+  }
+
+  return <EmptyState fullScreen {...renderProps} {...props} />;
 }

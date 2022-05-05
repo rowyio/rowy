@@ -36,7 +36,7 @@ export const envConfig = {
 // Connect emulators based on env vars
 const envConnectEmulators =
   process.env.NODE_ENV === "test" ||
-  process.env.REACT_APP_FIREBASE_EMULATOR === "true";
+  process.env.REACT_APP_FIREBASE_EMULATORS === "true";
 
 /**
  * Store Firebase config here so it can be set programmatically.

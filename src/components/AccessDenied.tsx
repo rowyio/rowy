@@ -1,4 +1,6 @@
 import { useAtom } from "jotai";
+import { FallbackProps } from "react-error-boundary";
+import { Link } from "react-router-dom";
 
 import {
   Typography,
@@ -21,7 +23,7 @@ import {
 import { WIKI_LINKS } from "@src/constants/externalLinks";
 import { ROUTES } from "@src/constants/routes";
 
-export default function AccessDenied() {
+export default function AccessDenied({ resetErrorBoundary }: FallbackProps) {
   const [currentUser] = useAtom(currentUserAtom, globalScope);
   const [userRoles] = useAtom(userRolesAtom, globalScope);
 
@@ -60,7 +62,13 @@ export default function AccessDenied() {
             owner.
           </Typography>
 
-          <Button href={ROUTES.signOut}>Sign out</Button>
+          <Button
+            component={Link}
+            to={ROUTES.signOut}
+            onClick={() => resetErrorBoundary()}
+          >
+            Sign out
+          </Button>
 
           <Divider flexItem sx={{ typography: "overline" }}>
             OR

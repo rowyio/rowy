@@ -1,8 +1,15 @@
-import type { where, orderBy } from "firebase/firestore";
+import type {
+  where,
+  orderBy,
+  DocumentData,
+  DocumentReference,
+} from "firebase/firestore";
 
-export type UpdateDocFunction<T> = (update: Partial<T>) => Promise<void>;
+export type UpdateDocFunction<T = TableRow> = (
+  update: Partial<T>
+) => Promise<void>;
 
-export type UpdateCollectionFunction<T> = (
+export type UpdateCollectionFunction<T = TableRow> = (
   path: string,
   update: Partial<T>
 ) => Promise<void>;
@@ -58,4 +65,12 @@ export type TableFilter = {
 export type TableOrder = {
   key: Parameters<typeof orderBy>[0];
   direction: Parameters<typeof orderBy>[1];
+};
+
+export type TableRow = DocumentData & {
+  _rowy_id: string;
+  _rowy_ref: { id: string; path: string } & Partial<DocumentReference>;
+
+  _rowy_missingRequiredFields?: string[];
+  _rowy_outOfOrder?: boolean;
 };

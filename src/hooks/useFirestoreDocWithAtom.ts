@@ -4,7 +4,6 @@ import { Scope } from "jotai/core/atom";
 import { RESET } from "jotai/utils";
 import {
   doc,
-  DocumentData,
   onSnapshot,
   FirestoreError,
   setDoc,
@@ -13,7 +12,7 @@ import {
 import { useErrorHandler } from "react-error-boundary";
 
 import { globalScope } from "@src/atoms/globalScope";
-import { UpdateDocFunction } from "@src/types/table";
+import { UpdateDocFunction, TableRow } from "@src/types/table";
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
 
 /** Options for {@link useFirestoreDocWithAtom} */
@@ -40,7 +39,7 @@ interface IUseFirestoreDocWithAtomOptions<T> {
  * @param path - Document path. If falsy, the listener isn’t created at all.
  * @param options - {@link IUseFirestoreDocWithAtomOptions}
  */
-export function useFirestoreDocWithAtom<T = DocumentData>(
+export function useFirestoreDocWithAtom<T = TableRow>(
   dataAtom: PrimitiveAtom<T>,
   dataScope: Scope | undefined,
   path: string | undefined,

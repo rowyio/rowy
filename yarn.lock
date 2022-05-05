@@ -3032,16 +3032,16 @@
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
 
-"@rowy/form-builder@^0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@rowy/form-builder/-/form-builder-0.6.0.tgz#db363136d5dcfd9b6cb9ecf0d470282d4b98b3dd"
-  integrity sha512-knhNMEURpqI2GSAkW6HUUMCXnvaDm+EX6lqqfdZOanuHR1pejj062Q50cXjw4/5bWHbAA1ca4EDifAwN8xt/UQ==
+"@rowy/form-builder@^0.6.1":
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/@rowy/form-builder/-/form-builder-0.6.1.tgz#008d910f05c96fb4db32d95ce3c850a6145c9a7a"
+  integrity sha512-s1r4aXVNQFo/ncc9OWlQVMx9wj+ggIgAU1IdkpTBKV/7674NDMesFr8iymeDHJM/9zf9mVoPgbLmIQixrGgbeQ==
   dependencies:
     "@hookform/resolvers" "^2.6.0"
+    "@types/lodash-es" "^4.17.6"
     array-move "^3.0.1"
     date-fns "^2.22.1"
     dompurify "^2.2.9"
-    lodash "^4.17.21"
     lodash-es "^4.17.21"
     mdi-material-ui "^7.2.0"
     react-color-palette "^6.2.0"

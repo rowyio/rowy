@@ -208,13 +208,7 @@ export default function TableSettingsDialog() {
       await logEvent(analytics, "create_table", { type: values.tableType });
       deployExtensionsWebhooks(() => {
         if (location.pathname === ROUTES.tables) {
-          navigate(
-            `${
-              values.tableType === "collectionGroup"
-                ? ROUTES.tableGroup
-                : ROUTES.table
-            }/${values.id}`
-          );
+          navigate(`${ROUTES.table}/${values.id}`);
         } else {
           navigate(values.id);
         }

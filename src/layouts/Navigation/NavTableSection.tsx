@@ -9,9 +9,7 @@ import { TableSettings } from "@src/types/table";
 import { ROUTES } from "@src/constants/routes";
 
 const getTableRoute = (table: TableSettings) =>
-  table.tableType === "collectionGroup"
-    ? `${ROUTES.tableGroup}/${table.id}`
-    : `${ROUTES.table}/${table.id.replace(/\//g, "~2F")}`;
+  `${ROUTES.table}/${table.id.replace(/\//g, "~2F")}`;
 
 export interface INavTableSectionProps {
   section: string;
