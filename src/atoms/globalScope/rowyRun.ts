@@ -2,10 +2,11 @@ import { atom } from "jotai";
 import { selectAtom, atomWithStorage } from "jotai/utils";
 import { isEqual } from "lodash-es";
 import { getIdTokenResult } from "firebase/auth";
+import { compare } from "compare-versions";
 
 import { projectSettingsAtom } from "./project";
 import { currentUserAtom } from "./auth";
-import { RunRoute } from "@src/constants/runRoutes";
+import { RunRoute, runRoutes } from "@src/constants/runRoutes";
 import meta from "@root/package.json";
 
 /**
@@ -111,6 +112,34 @@ export const rowyRunAtom = atom((get) => {
 
     if (json) return await response.json();
     return response;
+  };
+});
+
+/** Store deployed Rowy Run version */
+export const rowyRunVersionAtom = atom(async (get) => {
+  const rowyRun = get(rowyRunAtom);
+  const response = await rowyRun({ route: runRoutes.version });
+  return response.version as string | false;
+});
+
+/**
+ * Helper function to check if deployed Rowy Run version
+ * is compatible with a feature
+ */
+export const compatibleRowyRunVersionAtom = atom((get) => {
+  const deployedVersion = get(rowyRunVersionAtom);
+
+  return ({
+    minVersion,
+    maxVersion,
+  }: {
+    minVersion?: string;
+    maxVersion?: string;
+  }) => {
+    if (!deployedVersion) return false;
+    if (minVersion && compare(deployedVersion, minVersion, "<")) return false;
+    if (maxVersion && compare(deployedVersion, maxVersion, ">")) return false;
+    return true;
   };
 });
 

@@ -1,12 +1,17 @@
 import { useState } from "react";
-import { useSetAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "notistack";
 
 import { IconButton, Menu, MenuItem, DialogContentText } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 
-import { globalScope, confirmDialogAtom } from "@src/atoms/globalScope";
+import {
+  globalScope,
+  confirmDialogAtom,
+  updateTableAtom,
+  deleteTableAtom,
+} from "@src/atoms/globalScope";
 import { TableSettings } from "@src/types/table";
 import { ROUTES } from "@src/constants/routes";
 import { analytics, logEvent } from "@src/analytics";
@@ -25,40 +30,27 @@ export default function DeleteMenu({ clearDialog, data }: IDeleteMenuProps) {
   const confirm = useSetAtom(confirmDialogAtom, globalScope);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
+  const [updateTable] = useAtom(updateTableAtom, globalScope);
   const handleResetStructure = async () => {
     const snack = enqueueSnackbar("Resetting columns…", { persist: true });
-
-    // TODO:
-    // const schemaDocRef = db.doc(`${TABLE_SCHEMAS}/${data!.id}`);
-    // await schemaDocRef.update({ columns: {} });
-
+    await updateTable!(
+      { id: data!.id, tableType: data!.tableType },
+      { _schema: { columns: {} } }
+    );
     clearDialog();
     closeSnackbar(snack);
+    enqueueSnackbar("Columns reset");
   };
 
+  const [deleteTable] = useAtom(deleteTableAtom, globalScope);
   const handleDelete = async () => {
     const snack = enqueueSnackbar("Deleting table…", { persist: true });
-
-    // TODO:
-    // const tablesDocRef = db.doc(SETTINGS);
-    // const tableData = (await tablesDocRef.get()).data();
-    // const updatedTables = tableData?.tables.filter(
-    //   (table) => table.id !== data?.id || table.tableType !== data?.tableType
-    // );
-    // tablesDocRef.update({ tables: updatedTables });
-    // await db
-    //   .collection(
-    //     data?.tableType === "primaryCollection"
-    //       ? TABLE_SCHEMAS
-    //       : TABLE_GROUP_SCHEMAS
-    //   )
-    //   .doc(data?.id)
-    //   .delete();
-
+    await deleteTable!(data!.id);
     logEvent(analytics, "delete_table");
     clearDialog();
     closeSnackbar(snack);
     navigate(ROUTES.home);
+    enqueueSnackbar("Deleted table");
   };
 
   return (
@@ -106,6 +98,7 @@ export default function DeleteMenu({ clearDialog, data }: IDeleteMenuProps) {
               handleConfirm: handleResetStructure,
             })
           }
+          disabled={!updateTable}
         >
           Reset columns…
         </MenuItem>
@@ -131,6 +124,7 @@ export default function DeleteMenu({ clearDialog, data }: IDeleteMenuProps) {
               handleConfirm: handleDelete,
             })
           }
+          disabled={!deleteTable}
         >
           Delete table…
         </MenuItem>

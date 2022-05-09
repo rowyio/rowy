@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { useSetAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { Control, useWatch } from "react-hook-form";
 import type { UseFormReturn, FieldValues } from "react-hook-form";
 import stringify from "json-stable-stringify-without-jsonify";
-import { isEmpty, get } from "lodash-es";
+import { merge, get } from "lodash-es";
 import { useSnackbar } from "notistack";
 
 import { MenuItem, DialogContentText, FormHelperText } from "@mui/material";
@@ -11,8 +11,12 @@ import { MenuItem, DialogContentText, FormHelperText } from "@mui/material";
 import Modal from "@src/components/Modal";
 import DiffEditor from "@src/components/CodeEditor/DiffEditor";
 
-// import useTableConfig from "@src/hooks/useTable/useTableConfig";
-import { globalScope, confirmDialogAtom } from "@src/atoms/globalScope";
+import {
+  globalScope,
+  confirmDialogAtom,
+  tableSettingsDialogSchemaAtom,
+  tableSettingsDialogAtom,
+} from "@src/atoms/globalScope";
 import { analytics, logEvent } from "@src/analytics";
 
 export interface IImportSettingsProps {
@@ -32,17 +36,12 @@ export default function ImportSettings({
   const [valid, setValid] = useState(true);
 
   const { _suggestedRules, ...values } = useWatch({ control });
-  // TODO:
-  const tableConfigState = {} as any;
-  // const [tableConfigState] = useTableConfig(values.id);
-  const { id, ref, ..._schema } = tableConfigState.doc ?? {};
+  const [tableSchema] = useAtom(tableSettingsDialogSchemaAtom, globalScope);
 
   const formattedJson = stringify(
-    // Allow values._schema to take priority if user imported _schema before
-    "_schema" in values || isEmpty(_schema) ? values : { ...values, _schema },
+    { ...values, _schema: merge(tableSchema, values._schema) },
     {
       space: 2,
-      // TODO: types
       cmp: (a: any, b: any) =>
         // Sort _schema at the end
         a.key.startsWith("_")
@@ -62,6 +61,7 @@ export default function ImportSettings({
   const confirm = useSetAtom(confirmDialogAtom, globalScope);
   const { enqueueSnackbar } = useSnackbar();
   const { setValue } = useFormMethods;
+  const [tableSettingsDialog] = useAtom(tableSettingsDialogAtom, globalScope);
 
   const handleImport = () => {
     logEvent(analytics, "import_tableSettings");
@@ -73,7 +73,11 @@ export default function ImportSettings({
       });
     }
 
-    enqueueSnackbar("Imported settings");
+    enqueueSnackbar(
+      `Imported settings. Click ${
+        tableSettingsDialog.mode === "create" ? "Create" : "Update"
+      } to save to the table.`
+    );
     handleClose();
   };
 

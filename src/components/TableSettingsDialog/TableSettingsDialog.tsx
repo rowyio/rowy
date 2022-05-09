@@ -4,6 +4,7 @@ import { useSnackbar } from "notistack";
 import { useLocation, useNavigate } from "react-router-dom";
 import { find, sortBy, get, isEmpty } from "lodash-es";
 import { FieldValues } from "react-hook-form";
+import { Controller } from "react-hook-form";
 
 import { DialogContentText, Stack, Typography } from "@mui/material";
 
@@ -23,6 +24,9 @@ import {
   rolesAtom,
   rowyRunAtom,
   confirmDialogAtom,
+  createTableAtom,
+  updateTableAtom,
+  AdditionalTableSettings,
 } from "@src/atoms/globalScope";
 import { TableSettings } from "@src/types/table";
 import { analytics, logEvent } from "@src/analytics";
@@ -35,7 +39,6 @@ import {
   TABLE_GROUP_SCHEMAS,
   TABLE_SCHEMAS,
 } from "@src/config/dbPaths";
-import { Controller } from "react-hook-form";
 import { ROUTES } from "@src/constants/routes";
 
 const customComponents = {
@@ -88,15 +91,20 @@ export default function TableSettingsDialog() {
     }
   );
 
+  const [createTable] = useAtom(createTableAtom, globalScope);
+  const [updateTable] = useAtom(updateTableAtom, globalScope);
+
   if (!open) return null;
 
-  // TODO: types
-  const handleSubmit = async (v: FieldValues) => {
-    const { _suggestedRules, ...values } = v;
+  const handleSubmit = async (v: TableSettings & AdditionalTableSettings) => {
+    const {
+      _schemaSource,
+      _initialColumns,
+      _schema,
+      _suggestedRules,
+      ...values
+    } = v;
     const data = { ...values };
-
-    if (values.schemaSource)
-      data.schemaSource = find(tables, { id: values.schemaSource });
 
     const hasExtensions = !isEmpty(get(data, "_schema.extensionObjects"));
     const hasWebhooks = !isEmpty(get(data, "_schema.webhooks"));
@@ -178,12 +186,10 @@ export default function TableSettingsDialog() {
               );
             }
 
-            // TODO:
-            // await settingsActions?.updateTable({
-            //   id: data.id,
-            //   tableType: data.tableType,
-            //   _schema,
-            // });
+            await updateTable!(
+              { id: data.id, tableType: data.tableType },
+              { _schema }
+            );
             if (onComplete) onComplete();
           },
         });
@@ -193,8 +199,7 @@ export default function TableSettingsDialog() {
     };
 
     if (mode === "update") {
-      // TODO:
-      // await settingsActions?.updateTable(data);
+      await updateTable!(data, { _schema });
       deployExtensionsWebhooks();
       clearDialog();
       logEvent(analytics, "update_table", { type: values.tableType });
@@ -203,15 +208,16 @@ export default function TableSettingsDialog() {
       const creatingSnackbar = enqueueSnackbar("Creating table…", {
         persist: true,
       });
-      // TODO:
-      // await settingsActions?.createTable(data);
-      await logEvent(analytics, "create_table", { type: values.tableType });
+
+      await createTable!(data, {
+        _schemaSource,
+        _initialColumns,
+        _schema,
+        _suggestedRules,
+      });
+      logEvent(analytics, "create_table", { type: values.tableType });
       deployExtensionsWebhooks(() => {
-        if (location.pathname === ROUTES.tables) {
-          navigate(`${ROUTES.table}/${values.id}`);
-        } else {
-          navigate(values.id);
-        }
+        navigate(`${ROUTES.table}/${values.id}`);
         clearDialog();
         closeSnackbar(creatingSnackbar);
       });
@@ -237,10 +243,7 @@ export default function TableSettingsDialog() {
   return (
     <FormDialog
       onClose={clearDialog}
-      title={
-        (mode === "create" ? "Create table" : "Table settings") +
-        " (INCOMPLETE)"
-      }
+      title={mode === "create" ? "Create table" : "Table settings"}
       fields={fields}
       customBody={(formFieldsProps) => {
         const { errors } = formFieldsProps.useFormMethods.formState;
@@ -444,11 +447,12 @@ export default function TableSettingsDialog() {
       }}
       customComponents={customComponents}
       values={{ ...data }}
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit as any}
       SubmitButtonProps={{
         children: mode === "create" ? "Create" : "Update",
-        // TODO:
-        disabled: true,
+        disabled:
+          (mode === "create" && !createTable) ||
+          (mode === "update" && !updateTable),
       }}
     />
   );

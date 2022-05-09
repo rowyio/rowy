@@ -1,15 +1,20 @@
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { Control } from "react-hook-form";
+import { useSetAtom } from "jotai";
 import type { UseFormReturn, FieldValues } from "react-hook-form";
 
-import { IconButton, Menu } from "@mui/material";
+import { IconButton, Menu, MenuItem } from "@mui/material";
 import ExportIcon from "assets/icons/Export";
 import ImportIcon from "assets/icons/Import";
 
 import ImportSettings from "./ImportSettings";
 import ExportSettings from "./ExportSettings";
 
-import { TableSettingsDialogState } from "@src/atoms/globalScope";
+import {
+  globalScope,
+  tableSettingsDialogIdAtom,
+  TableSettingsDialogState,
+} from "@src/atoms/globalScope";
 
 export interface IActionsMenuProps {
   mode: TableSettingsDialogState["mode"];
@@ -24,7 +29,25 @@ export default function ActionsMenu({
 }: IActionsMenuProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const handleClose = () => setAnchorEl(null);
+
+  const setTableSettingsDialogId = useSetAtom(
+    tableSettingsDialogIdAtom,
+    globalScope
+  );
+
+  // On open, set tableSettingsDialogIdAtom so the derived
+  // tableSettingsDialogSchemaAtom can fetch the schema doc
+  const handleOpen: React.MouseEventHandler<HTMLButtonElement> = (e) => {
+    setAnchorEl(e.currentTarget);
+    const tableId = useFormMethods.getValues("id") as string;
+    setTableSettingsDialogId(tableId);
+  };
+  // Reset the tableSettingsDialogIdAtom so we fetch fresh data every time
+  // the menu is opened
+  const handleClose = () => {
+    setAnchorEl(null);
+    setTableSettingsDialogId("");
+  };
 
   return (
     <>
@@ -34,7 +57,7 @@ export default function ActionsMenu({
         aria-controls="table-settings-actions-menu"
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
-        onClick={(e) => setAnchorEl(e.currentTarget)}
+        onClick={handleOpen}
       >
         {mode === "create" ? <ImportIcon /> : <ExportIcon />}
       </IconButton>
@@ -49,12 +72,21 @@ export default function ActionsMenu({
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         transformOrigin={{ vertical: "top", horizontal: "right" }}
       >
-        <ImportSettings
-          closeMenu={handleClose}
-          control={control}
-          useFormMethods={useFormMethods}
-        />
-        <ExportSettings closeMenu={handleClose} control={control} />
+        <Suspense
+          fallback={
+            <>
+              <MenuItem disabled>Loading table settings…</MenuItem>
+              <MenuItem disabled />
+            </>
+          }
+        >
+          <ImportSettings
+            closeMenu={handleClose}
+            control={control}
+            useFormMethods={useFormMethods}
+          />
+          <ExportSettings closeMenu={handleClose} control={control} />
+        </Suspense>
       </Menu>
     </>
   );

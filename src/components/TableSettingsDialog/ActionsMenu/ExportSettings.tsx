@@ -1,14 +1,20 @@
 import { useState } from "react";
+import { useAtom } from "jotai";
 import { Control, useWatch } from "react-hook-form";
 import stringify from "json-stable-stringify-without-jsonify";
-import { isEmpty } from "lodash-es";
+import { merge } from "lodash-es";
 import { useSnackbar } from "notistack";
 
-import { MenuItem, DialogContentText, LinearProgress } from "@mui/material";
+import { MenuItem, DialogContentText } from "@mui/material";
 
-import { analytics, logEvent } from "@src/analytics";
 import Modal from "@src/components/Modal";
 import CodeEditor from "@src/components/CodeEditor";
+
+import {
+  globalScope,
+  tableSettingsDialogSchemaAtom,
+} from "@src/atoms/globalScope";
+import { analytics, logEvent } from "@src/analytics";
 
 export interface IExportSettingsProps {
   closeMenu: () => void;
@@ -22,17 +28,12 @@ export default function ExportSettings({
   const [open, setOpen] = useState(false);
 
   const { _suggestedRules, ...values } = useWatch({ control });
-  // TODO:
-  const tableConfigState = {} as any;
-  // const [tableConfigState] = useTableConfig(values.id);
-  const { id, ref, ..._schema } = tableConfigState.doc ?? {};
+  const [tableSchema] = useAtom(tableSettingsDialogSchemaAtom, globalScope);
 
   const formattedJson = stringify(
-    // Allow values._schema to take priority if user imported _schema before
-    "_schema" in values || isEmpty(_schema) ? values : { ...values, _schema },
+    { ...values, _schema: merge(tableSchema, values._schema) },
     {
       space: 2,
-      // TODO: types
       cmp: (a: any, b: any) =>
         // Sort _schema at the end
         a.key.startsWith("_")
@@ -66,16 +67,9 @@ export default function ExportSettings({
           onClose={handleClose}
           title="Export table settings"
           header={
-            <>
-              {tableConfigState.loading && values.id && (
-                <LinearProgress
-                  style={{ position: "absolute", top: 0, left: 0, right: 0 }}
-                />
-              )}
-              <DialogContentText style={{ margin: "0 var(--dialog-spacing)" }}>
-                Export table settings and columns in JSON format
-              </DialogContentText>
-            </>
+            <DialogContentText style={{ margin: "0 var(--dialog-spacing)" }}>
+              Export table settings and columns in JSON format
+            </DialogContentText>
           }
           body={
             <div style={{ marginTop: "var(--dialog-contents-spacing)" }}>

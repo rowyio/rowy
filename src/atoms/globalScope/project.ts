@@ -8,7 +8,9 @@ import {
   UpdateDocFunction,
   UpdateCollectionFunction,
   TableSettings,
+  TableSchema,
 } from "@src/types/table";
+import { FieldType } from "@src/constants/fields";
 
 export const projectIdAtom = atom<string>("");
 
@@ -74,6 +76,54 @@ export const tablesAtom = atom<TableSettings[]>((get) => {
       section: table.section ? table.section.trim() : "Other",
     }));
 });
+
+/**
+ * Additional table settings that can be passed to write functions
+ * but are not written to the settings document
+ */
+export type AdditionalTableSettings = Partial<{
+  _schemaSource: string;
+  _initialColumns: Record<FieldType, boolean>;
+  _schema: TableSchema;
+  _suggestedRules: string;
+}>;
+
+/** Stores a function to create a table with schema doc */
+export const createTableAtom = atom<
+  | ((
+      settings: TableSettings,
+      additionalSettings?: AdditionalTableSettings
+    ) => Promise<void>)
+  | null
+>(null);
+
+/**
+ * Minimum amount of table settings required to be passed to updateTable to
+ * idetify the table and schema doc
+ */
+export type MinimumTableSettings = {
+  id: TableSettings["id"];
+  tableType: TableSettings["tableType"];
+} & Partial<TableSettings>;
+
+/** Stores a function to update a table and its schema doc */
+export const updateTableAtom = atom<
+  | ((
+      settings: MinimumTableSettings,
+      additionalSettings?: AdditionalTableSettings
+    ) => Promise<void>)
+  | null
+>(null);
+
+/** Stores a function to delete a table and its schema doc */
+export const deleteTableAtom = atom<((id: string) => Promise<void>) | null>(
+  null
+);
+
+/** Stores a function to get a table’s schema doc (without listener) */
+export const getTableSchemaAtom = atom<
+  ((id: string) => Promise<TableSchema>) | null
+>(null);
 
 /** Roles used in the project based on table settings */
 export const rolesAtom = atom((get) =>

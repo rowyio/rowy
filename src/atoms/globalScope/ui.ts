@@ -2,7 +2,8 @@ import { atom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 
 import { DialogProps, ButtonProps } from "@mui/material";
-import { TableSettings } from "@src/types/table";
+import { TableSettings, TableSchema } from "@src/types/table";
+import { getTableSchemaAtom } from "./project";
 
 /** Nav open state stored in local storage. */
 export const navOpenAtom = atomWithStorage("__ROWY__NAV_OPEN", false);
@@ -124,3 +125,11 @@ export const tableSettingsDialogAtom = atom(
     });
   }
 );
+
+export const tableSettingsDialogIdAtom = atom("");
+export const tableSettingsDialogSchemaAtom = atom(async (get) => {
+  const tableId = get(tableSettingsDialogIdAtom);
+  const getTableSchema = get(getTableSchemaAtom);
+  if (!tableId || !getTableSchema) return {} as TableSchema;
+  return getTableSchema(tableId);
+});

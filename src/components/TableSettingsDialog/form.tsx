@@ -428,7 +428,7 @@ export const tableSettings = (
       ? {
           step: "columns",
           type: FieldType.singleSelect,
-          name: "schemaSource",
+          name: "_schemaSource",
           label: "Copy columns from existing table (optional)",
           labelPlural: "tables",
           options: tables,

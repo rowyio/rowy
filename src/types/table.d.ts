@@ -21,8 +21,8 @@ export type TableSettings = {
   name: string;
   roles: string[];
 
-  description: string;
   section: string;
+  description?: string;
 
   tableType: "primaryCollection" | "collectionGroup";
 
@@ -39,6 +39,7 @@ export type TableSchema = {
   filters?: TableFilter[];
 
   functionConfigPath?: string;
+  functionBuilderRef?: any;
 
   extensionObjects?: any[];
   webhooks?: any[];
