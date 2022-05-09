@@ -1,5 +1,6 @@
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "@src/components/ErrorFallback";
+import SwrProvider from "@src/contexts/SwrContext";
 import { BrowserRouter } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { Provider, Atom } from "jotai";
@@ -8,6 +9,7 @@ import createCache from "@emotion/cache";
 import { CacheProvider } from "@emotion/react";
 import RowyThemeProvider from "@src/theme/RowyThemeProvider";
 import SnackbarProvider from "@src/contexts/SnackbarContext";
+import { SnackLogProvider } from "@src/contexts/SnackLogContext";
 
 import { Suspense } from "react";
 import Loading from "@src/components/Loading";
@@ -32,9 +34,11 @@ export default function Providers({
               <RowyThemeProvider>
                 <ErrorBoundary FallbackComponent={ErrorFallback}>
                   <SnackbarProvider>
-                    <Suspense fallback={<Loading fullScreen />}>
-                      {children}
-                    </Suspense>
+                    <SnackLogProvider>
+                      <Suspense fallback={<Loading fullScreen />}>
+                        {children}
+                      </Suspense>
+                    </SnackLogProvider>
                   </SnackbarProvider>
                 </ErrorBoundary>
               </RowyThemeProvider>

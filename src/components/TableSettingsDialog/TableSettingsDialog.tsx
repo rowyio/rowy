@@ -1,9 +1,8 @@
 import { useAtom, useSetAtom } from "jotai";
 import useSWR from "swr";
 import { useSnackbar } from "notistack";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { find, sortBy, get, isEmpty } from "lodash-es";
-import { FieldValues } from "react-hook-form";
 import { Controller } from "react-hook-form";
 
 import { DialogContentText, Stack, Typography } from "@mui/material";
@@ -31,8 +30,6 @@ import {
 import { TableSettings } from "@src/types/table";
 import { analytics, logEvent } from "@src/analytics";
 
-// TODO:
-// import { useSnackLogContext } from "@src/contexts/SnackLogContext";
 import { runRoutes } from "@src/constants/runRoutes";
 import {
   CONFIG,
@@ -40,6 +37,7 @@ import {
   TABLE_SCHEMAS,
 } from "@src/config/dbPaths";
 import { ROUTES } from "@src/constants/routes";
+import { useSnackLogContext } from "@src/contexts/SnackLogContext";
 
 const customComponents = {
   tableName: {
@@ -70,10 +68,9 @@ export default function TableSettingsDialog() {
   const [tables] = useAtom(tablesAtom, globalScope);
   const [rowyRun] = useAtom(rowyRunAtom, globalScope);
 
-  const location = useLocation();
   const navigate = useNavigate();
   const confirm = useSetAtom(confirmDialogAtom, globalScope);
-  // const snackLogContext = useSnackLogContext();
+  const snackLogContext = useSnackLogContext();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const sectionNames = Array.from(
@@ -81,8 +78,11 @@ export default function TableSettingsDialog() {
   );
 
   const { data: collections } = useSWR(
-    "firebaseCollections",
-    () => rowyRun({ route: runRoutes.listCollections }),
+    "collectionsList",
+    async () => {
+      const result = await rowyRun({ route: runRoutes.listCollections });
+      return result || [];
+    },
     {
       revalidateOnMount: true,
       revalidateOnFocus: false,
@@ -130,8 +130,7 @@ export default function TableSettingsDialog() {
 
             if (hasExtensions) {
               // find derivative, default value
-              // TODO:
-              // snackLogContext.requestSnackLog();
+              snackLogContext.requestSnackLog();
               rowyRun({
                 route: runRoutes.buildFunction,
                 body: {
