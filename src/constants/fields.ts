@@ -29,6 +29,7 @@ export enum FieldType {
   connector = "CONNECTOR",
   connectTable = "DOCUMENT_SELECT",
   connectService = "SERVICE_SELECT",
+  reference = "REFERENCE",
   // CODE
   json = "JSON",
   code = "CODE",
