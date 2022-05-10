@@ -33,8 +33,9 @@ export type PublicSettings = Partial<{
 /** Public settings are visible to unauthenticated users */
 export const publicSettingsAtom = atom<PublicSettings>({});
 /** Stores a function that updates public settings */
-export const updatePublicSettingsAtom =
-  atom<UpdateDocFunction<PublicSettings> | null>(null);
+export const updatePublicSettingsAtom = atom<
+  UpdateDocFunction<PublicSettings> | undefined
+>(undefined);
 
 /** Project settings are visible to authenticated users */
 export type ProjectSettings = Partial<{
@@ -54,8 +55,9 @@ export type ProjectSettings = Partial<{
 /** Project settings are visible to authenticated users */
 export const projectSettingsAtom = atom<ProjectSettings>({});
 /** Stores a function that updates project settings */
-export const updateProjectSettingsAtom =
-  atom<UpdateDocFunction<ProjectSettings> | null>(null);
+export const updateProjectSettingsAtom = atom<
+  UpdateDocFunction<ProjectSettings> | undefined
+>(undefined);
 
 /** Tables visible to the signed-in user based on roles */
 export const tablesAtom = atom<TableSettings[]>((get) => {
@@ -94,8 +96,8 @@ export const createTableAtom = atom<
       settings: TableSettings,
       additionalSettings?: AdditionalTableSettings
     ) => Promise<void>)
-  | null
->(null);
+  | undefined
+>(undefined);
 
 /**
  * Minimum amount of table settings required to be passed to updateTable to
@@ -112,18 +114,18 @@ export const updateTableAtom = atom<
       settings: MinimumTableSettings,
       additionalSettings?: AdditionalTableSettings
     ) => Promise<void>)
-  | null
->(null);
+  | undefined
+>(undefined);
 
 /** Stores a function to delete a table and its schema doc */
-export const deleteTableAtom = atom<((id: string) => Promise<void>) | null>(
-  null
-);
+export const deleteTableAtom = atom<
+  ((id: string) => Promise<void>) | undefined
+>(undefined);
 
 /** Stores a function to get a table’s schema doc (without listener) */
 export const getTableSchemaAtom = atom<
-  ((id: string) => Promise<TableSchema>) | null
->(null);
+  ((id: string) => Promise<TableSchema>) | undefined
+>(undefined);
 
 /** Roles used in the project based on table settings */
 export const rolesAtom = atom((get) =>
@@ -140,5 +142,6 @@ export const rolesAtom = atom((get) =>
 /** User management page: all users */
 export const allUsersAtom = atom<UserSettings[]>([]);
 /** Stores a function that updates a user document */
-export const updateUserAtom =
-  atom<UpdateCollectionFunction<UserSettings> | null>(null);
+export const updateUserAtom = atom<
+  UpdateCollectionFunction<UserSettings> | undefined
+>(undefined);

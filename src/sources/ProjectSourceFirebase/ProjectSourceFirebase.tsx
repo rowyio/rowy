@@ -27,7 +27,6 @@ export const ProjectSourceFirebase = memo(function ProjectSourceFirebase() {
   // Also sets functions to update those documents.
   useSettingsDocs();
   useTableFunctions();
-  console.log("rerender");
 
   return null;
 });

@@ -34,8 +34,9 @@ export type UserSettings = Partial<{
 /** User info and settings */
 export const userSettingsAtom = atom<UserSettings>({});
 /** Stores a function that updates user settings */
-export const updateUserSettingsAtom =
-  atom<UpdateDocFunction<UserSettings> | null>(null);
+export const updateUserSettingsAtom = atom<
+  UpdateDocFunction<UserSettings> | undefined
+>(undefined);
 
 /**
  * Stores which theme is currently active, based on user or OS setting.

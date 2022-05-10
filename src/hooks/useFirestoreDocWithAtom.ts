@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useAtom, PrimitiveAtom, useSetAtom } from "jotai";
 import { Scope } from "jotai/core/atom";
-import { RESET } from "jotai/utils";
 import {
   doc,
   onSnapshot,
@@ -26,7 +25,7 @@ interface IUseFirestoreDocWithAtomOptions<T> {
   /** Optionally create the document if it doesn’t exist with the following data */
   createIfNonExistent?: T;
   /** Set this atom’s value to a function that updates the document. Uses same scope as `dataScope`. */
-  updateDataAtom?: PrimitiveAtom<UpdateDocFunction<T> | null>;
+  updateDataAtom?: PrimitiveAtom<UpdateDocFunction<T> | undefined>;
 }
 
 /**
@@ -115,7 +114,7 @@ export function useFirestoreDocWithAtom<T = TableRow>(
       unsubscribe();
       // If `options?.updateDataAtom` was passed,
       // reset the atom’s value to prevent writes
-      if (updateDataAtom) setUpdateDataAtom(RESET);
+      if (updateDataAtom) setUpdateDataAtom(undefined);
     };
   }, [
     firebaseDb,

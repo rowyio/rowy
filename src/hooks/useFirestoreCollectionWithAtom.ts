@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useAtom, PrimitiveAtom, useSetAtom } from "jotai";
 import { Scope } from "jotai/core/atom";
-import { RESET } from "jotai/utils";
 import {
   query,
   collection,
@@ -46,7 +45,7 @@ interface IUseFirestoreCollectionWithAtomOptions<T> {
   /** Optionally disable Suspense */
   disableSuspense?: boolean;
   /** Set this atom’s value to a function that updates a document in the collection. If `collectionGroup` is true, you must pass the full path. Uses same scope as `dataScope`. */
-  updateDataAtom?: PrimitiveAtom<UpdateCollectionFunction<T> | null>;
+  updateDataAtom?: PrimitiveAtom<UpdateCollectionFunction<T> | undefined>;
 }
 
 /**
@@ -163,7 +162,7 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
       unsubscribe();
       // If `options?.updateDataAtom` was passed,
       // reset the atom’s value to prevent writes
-      if (updateDataAtom) setUpdateDataAtom(RESET);
+      if (updateDataAtom) setUpdateDataAtom(undefined);
     };
   }, [
     firebaseDb,

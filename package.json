@@ -54,7 +54,7 @@
     "start": "cross-env PORT=7699 craco start",
     "startWithEmulators": "cross-env PORT=7699 REACT_APP_FIREBASE_EMULATORS=true craco start",
     "emulators": "firebase emulators:start --only firestore,auth --import ./emulators/ --export-on-exit",
-    "test": "craco test --env ./src/test/custom-jest-env.js",
+    "test": "craco test --env ./src/test/custom-jest-env.js --verbose --detectOpenHandles",
     "build": "craco build",
     "analyze": "source-map-explorer ./build/static/js/*.js",
     "prepare": "husky install",

@@ -19,6 +19,7 @@ export type TableSettings = {
   id: string;
   collection: string;
   name: string;
+  /** Roles that can see this table in the UI and navigate. Firestore Rules need to be set to give access to the data */
   roles: string[];
 
   section: string;
@@ -46,15 +47,24 @@ export type TableSchema = {
 };
 
 export type ColumnConfig = {
-  fieldName: string;
+  /** Unique key for this column. Currently set to the same as fieldName */
   key: string;
+  /** Field key/name stored in document */
+  fieldName: string;
+  /** User-facing name */
   name: string;
+  /** Field type stored in config */
   type: FieldType;
+
+  /** Column index set by addColumn, updateColumn functions */
   index: number;
+
   width?: number;
   editable?: boolean;
+
+  /** Column-specific config */
   config: { [key: string]: any };
-  [key: string]: any;
+  // [key: string]: any;
 };
 
 export type TableFilter = {

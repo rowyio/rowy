@@ -38,7 +38,6 @@ export function useTableFunctions() {
   // Set the createTable function
   const setCreateTable = useSetAtom(createTableAtom, globalScope);
   useEffect(() => {
-    console.log("effect firebaseDb");
     setCreateTable(
       () =>
         async (
@@ -53,7 +52,6 @@ export function useTableFunctions() {
 
           // Get latest tables
           const tables = (await getTables()) || [];
-          console.log("createTable", tables);
 
           // Get columns from imported table settings or _schemaSource if provided
           let columns: NonNullable<TableSchema["columns"]> =

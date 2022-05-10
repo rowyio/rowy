@@ -126,7 +126,12 @@ export const tableSettingsDialogAtom = atom(
   }
 );
 
+/**
+ * Store the current ID of the table being edited in tableSettingsDialog
+ * to derive tableSettingsDialogSchemaAtom
+ */
 export const tableSettingsDialogIdAtom = atom("");
+/** Get and store the schema document of the current table being edited */
 export const tableSettingsDialogSchemaAtom = atom(async (get) => {
   const tableId = get(tableSettingsDialogIdAtom);
   const getTableSchema = get(getTableSchemaAtom);
