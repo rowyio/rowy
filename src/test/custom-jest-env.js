@@ -9,7 +9,7 @@
  * Correct Jest bug that prevents the Firestore tests from running. More info here:
  * https://github.com/firebase/firebase-js-sdk/issues/3096#issuecomment-637584185
  */
-
+import "regenerator-runtime/runtime";
 const BrowserEnvironment = require("jest-environment-jsdom");
 
 class MyEnvironment extends BrowserEnvironment {

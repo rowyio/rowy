@@ -47,7 +47,20 @@ module.exports = {
       jestConfig.setupFilesAfterEnv = ["./src/test/setupTests.ts"];
       jestConfig.forceExit = true; // jest hangs if we don't have this
 
-      jestConfig.moduleNameMapper["^lodash-es$"] = "lodash";
+      jestConfig.moduleNameMapper["lodash-es"] = "lodash";
+      jestConfig.moduleNameMapper["^.+\\.(css|less)$"] =
+        "<rootDir>/src/test/importStub.js";
+      jestConfig.moduleNameMapper["^!!raw-loader!.*"] =
+        "<rootDir>/src/test/importStub.js";
+
+      jestConfig.extensionsToTreatAsEsm = [".ts", ".tsx"];
+      // Need to transform node modules to prevent
+      // "cannot use import outside module" error
+      jestConfig.transformIgnorePatterns = [
+        // "/node_modules/",
+        "\\.pnp\\.[^\\/]+$",
+      ];
+
       return jestConfig;
     },
   },

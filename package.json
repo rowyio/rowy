@@ -145,7 +145,8 @@
     "monaco-editor": "^0.33.0",
     "prettier": "^2.6.2",
     "raw-loader": "^4.0.2",
-    "source-map-explorer": "^2.5.2"
+    "source-map-explorer": "^2.5.2",
+    "ts-jest": "^28.0.2"
   },
   "resolutions": {
     "@types/react": "^18"

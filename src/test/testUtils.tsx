@@ -3,8 +3,7 @@ import { initializeApp } from "firebase/app";
 import {
   getAuth,
   connectAuthEmulator,
-  signInWithCredential,
-  GoogleAuthProvider,
+  signInWithEmailAndPassword,
 } from "firebase/auth";
 
 import Providers, { IProvidersProps } from "@src/Providers";
@@ -39,17 +38,19 @@ export const signInAsAdmin = async () => {
   const auth = getAuth(app);
   connectAuthEmulator(auth, "http://localhost:9099", { disableWarnings: true });
 
-  const userCredential = await signInWithCredential(
+  const userCredential = await signInWithEmailAndPassword(
     auth,
-    GoogleAuthProvider.credential(
-      '{"sub": "abc123", "email": "admin@example.com", "email_verified": true}'
-    )
+    "admin@example.com",
+    "adminUser"
   );
   expect(userCredential.user.email).toBe("admin@example.com");
 
+  const tokenResult = await userCredential.user.getIdTokenResult();
+  expect(tokenResult.claims.roles).toContain("ADMIN");
+
   const initialAtomValues = [
     [firebaseAuthAtom, auth],
-    [currentUserAtom, userCredential.user],
+    // [currentUserAtom, userCredential.user],
   ] as const;
 
   return initialAtomValues;
