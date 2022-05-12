@@ -59,7 +59,7 @@ function UserManagementPage() {
           <List sx={{ py: { xs: 0, sm: 1.5 }, px: { xs: 0, sm: 1 } }}>
             <TransitionGroup>
               {results.map((user) => (
-                <Collapse key={user._rowy_id}>
+                <Collapse key={user._rowy_ref!.id}>
                   <UserItem {...user} />
                 </Collapse>
               ))}

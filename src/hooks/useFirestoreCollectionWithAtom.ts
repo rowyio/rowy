@@ -12,6 +12,7 @@ import {
   FirestoreError,
   setDoc,
   doc,
+  deleteDoc,
   CollectionReference,
   Query,
 } from "firebase/firestore";
@@ -19,7 +20,8 @@ import { useErrorHandler } from "react-error-boundary";
 
 import { globalScope } from "@src/atoms/globalScope";
 import {
-  UpdateCollectionFunction,
+  UpdateCollectionDocFunction,
+  DeleteCollectionDocFunction,
   TableFilter,
   TableOrder,
   TableRow,
@@ -44,8 +46,10 @@ interface IUseFirestoreCollectionWithAtomOptions<T> {
   onError?: (error: FirestoreError) => void;
   /** Optionally disable Suspense */
   disableSuspense?: boolean;
-  /** Set this atom’s value to a function that updates a document in the collection. If `collectionGroup` is true, you must pass the full path. Uses same scope as `dataScope`. */
-  updateDataAtom?: PrimitiveAtom<UpdateCollectionFunction<T> | undefined>;
+  /** Set this atom’s value to a function that updates a document in the collection. Must pass the full path. Uses same scope as `dataScope`. */
+  updateDocAtom?: PrimitiveAtom<UpdateCollectionDocFunction<T> | undefined>;
+  /** Set this atom’s value to a function that deletes a document in the collection. Must pass the full path. Uses same scope as `dataScope`. */
+  deleteDocAtom?: PrimitiveAtom<DeleteCollectionDocFunction | undefined>;
 }
 
 /**
@@ -66,9 +70,13 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
 ) {
   const [firebaseDb] = useAtom(firebaseDbAtom, globalScope);
   const setDataAtom = useSetAtom(dataAtom, dataScope);
-  const setUpdateDataAtom = useSetAtom(
-    options?.updateDataAtom || (dataAtom as any),
-    globalScope
+  const setUpdateDocAtom = useSetAtom(
+    options?.updateDocAtom || (dataAtom as any),
+    dataScope
+  );
+  const setDeleteDocAtom = useSetAtom(
+    options?.deleteDocAtom || (dataAtom as any),
+    dataScope
   );
   const handleError = useErrorHandler();
 
@@ -81,7 +89,8 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
     limit = DEFAULT_COLLECTION_QUERY_LIMIT,
     onError,
     disableSuspense,
-    updateDataAtom,
+    updateDocAtom,
+    deleteDocAtom,
   } = options || {};
 
   useEffect(() => {
@@ -96,8 +105,7 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
       suspended = true;
     }
 
-    // Create a collection or collection group reference
-    // to query data and to use in `updateDataAtom`
+    // Create a collection or collection group reference to query data
     const collectionRef = collectionGroup
       ? (queryCollectionGroup(
           firebaseDb,
@@ -108,6 +116,7 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
           path,
           ...((pathSegments as string[]) || [])
         ) as CollectionReference<T>);
+
     // Create the query with filters and orders
     const _query = query<T>(
       collectionRef,
@@ -122,11 +131,9 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
       _query,
       (querySnapshot) => {
         try {
-          // Extract doc data from query
-          // and add `_rowy_id` and `_rowy_ref` fields
+          // Extract doc data from query and add `_rowy_ref` fields
           const docs = querySnapshot.docs.map((doc) => ({
             ...doc.data(),
-            _rowy_id: doc.id,
             _rowy_ref: doc.ref,
           }));
           setDataAtom(docs);
@@ -143,26 +150,31 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
       }
     );
 
-    // If `options?.updateDataAtom` was passed,
+    // If `options?.updateDocAtom` was passed,
     // set the atom’s value to a function that updates a doc in the collection
-    if (updateDataAtom) {
-      setUpdateDataAtom(
+    if (updateDocAtom) {
+      setUpdateDocAtom(
         () => (path: string, update: T) =>
-          setDoc(
-            collectionGroup
-              ? doc(firebaseDb, path)
-              : doc(collectionRef as CollectionReference<T>, path),
-            update,
-            { merge: true }
-          )
+          setDoc(doc(firebaseDb, path), update, { merge: true })
+      );
+    }
+
+    // If `options?.deleteDocAtom` was passed,
+    // set the atom’s value to a function that deletes a doc in the collection
+    if (deleteDocAtom) {
+      setDeleteDocAtom(
+        () => (path: string) => deleteDoc(doc(firebaseDb, path))
       );
     }
 
     return () => {
       unsubscribe();
-      // If `options?.updateDataAtom` was passed,
+      // If `options?.updateDocAtom` was passed,
       // reset the atom’s value to prevent writes
-      if (updateDataAtom) setUpdateDataAtom(undefined);
+      if (updateDocAtom) setUpdateDocAtom(undefined);
+      // If `options?.deleteDoc` was passed,
+      // reset the atom’s value to prevent deletes
+      if (deleteDocAtom) setDeleteDocAtom(undefined);
     };
   }, [
     firebaseDb,
@@ -176,8 +188,10 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
     setDataAtom,
     disableSuspense,
     handleError,
-    updateDataAtom,
-    setUpdateDataAtom,
+    updateDocAtom,
+    setUpdateDocAtom,
+    deleteDocAtom,
+    setDeleteDocAtom,
   ]);
 }
 

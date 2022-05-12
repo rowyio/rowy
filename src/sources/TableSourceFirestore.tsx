@@ -2,7 +2,12 @@ import { memo, useMemo, useEffect } from "react";
 import { useAtom, useSetAtom } from "jotai";
 import { find } from "lodash-es";
 
-import { globalScope, tablesAtom } from "@src/atoms/globalScope";
+import {
+  globalScope,
+  tablesAtom,
+  rowyRunAtom,
+  compatibleRowyRunVersionAtom,
+} from "@src/atoms/globalScope";
 import {
   tableScope,
   tableIdAtom,
@@ -12,6 +17,9 @@ import {
   tableOrdersAtom,
   tablePageAtom,
   tableRowsDbAtom,
+  _updateRowDbAtom,
+  _deleteRowDbAtom,
+  auditChangeAtom,
 } from "@src/atoms/tableScope";
 
 import useFirestoreDocWithAtom from "@src/hooks/useFirestoreDocWithAtom";
@@ -23,6 +31,7 @@ import { TABLE_SCHEMAS, TABLE_GROUP_SCHEMAS } from "@src/config/dbPaths";
 import type { FirestoreError } from "firebase/firestore";
 import { useSnackbar } from "notistack";
 import { useErrorHandler } from "react-error-boundary";
+import { runRoutes } from "@src/constants/runRoutes";
 import { Button } from "@mui/material";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
@@ -30,7 +39,6 @@ export const ERROR_TABLE_NOT_FOUND = "Table not found";
 
 const TableSourceFirestore = memo(function TableSourceFirestore() {
   const [tables] = useAtom(tablesAtom, globalScope);
-  // const [firebaseDb] = useAtom(firebaseDbAtom, globalScope);
 
   // Get tableSettings from tableId and tables in globalScope
   const [tableId] = useAtom(tableIdAtom, tableScope);
@@ -77,8 +85,53 @@ const TableSourceFirestore = memo(function TableSourceFirestore() {
       collectionGroup: isCollectionGroup,
       onError: (error) =>
         handleFirestoreError(error, enqueueSnackbar, elevateError),
+      updateDocAtom: _updateRowDbAtom,
+      deleteDocAtom: _deleteRowDbAtom,
     }
   );
+
+  // Set auditChange function
+  const setAuditChange = useSetAtom(auditChangeAtom, tableScope);
+  const [rowyRun] = useAtom(rowyRunAtom, globalScope);
+  const [compatibleRowyRunVersion] = useAtom(
+    compatibleRowyRunVersionAtom,
+    globalScope
+  );
+  useEffect(() => {
+    if (
+      !tableSettings?.id ||
+      !tableSettings?.collection ||
+      !tableSettings.audit ||
+      !compatibleRowyRunVersion({ minVersion: "1.1.1" })
+    ) {
+      setAuditChange(undefined);
+      return;
+    }
+
+    setAuditChange(
+      () =>
+        (
+          type: "ADD_ROW" | "UPDATE_CELL" | "DELETE_ROW",
+          rowId: string,
+          data?: { updatedField?: string }
+        ) =>
+          rowyRun({
+            route: runRoutes.auditChange,
+            body: {
+              type,
+              ref: {
+                rowPath: tableSettings.collection,
+                rowId,
+                tableId: tableSettings.id,
+                collectionPath: tableSettings.collection,
+              },
+              data,
+            },
+          })
+    );
+
+    return () => setAuditChange(undefined);
+  }, [setAuditChange, rowyRun, compatibleRowyRunVersion, tableSettings]);
 
   return null;
 });

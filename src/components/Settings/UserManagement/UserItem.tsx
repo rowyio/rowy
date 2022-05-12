@@ -30,7 +30,7 @@ import { runRoutes } from "@src/constants/runRoutes";
 import { USERS } from "@src/config/dbPaths";
 
 export default function UserItem({
-  _rowy_id,
+  _rowy_ref,
   user,
   roles: rolesProp,
 }: UserSettings) {
@@ -59,7 +59,7 @@ export default function UserItem({
       });
       if (res.success) {
         if (!updateUser) throw new Error("Could not update user document");
-        await updateUser(_rowy_id!, { roles: value });
+        await updateUser(_rowy_ref!.id, { roles: value });
         closeSnackbar(loadingSnackbarId);
         enqueueSnackbar(`Set roles for ${user!.email}: ${value.join(", ")}`);
       }
@@ -179,9 +179,11 @@ export default function UserItem({
             <IconButton
               aria-label="Copy UID"
               onClick={async () => {
-                if (!_rowy_id) return;
-                await navigator.clipboard.writeText(_rowy_id);
-                enqueueSnackbar(`Copied UID for ${user?.email}: ${_rowy_id}`);
+                if (!_rowy_ref?.id) return;
+                await navigator.clipboard.writeText(_rowy_ref.id);
+                enqueueSnackbar(
+                  `Copied UID for ${user?.email}: ${_rowy_ref.id}`
+                );
               }}
             >
               <CopyIcon />

@@ -24,7 +24,7 @@ import { WIKI_LINKS } from "@src/constants/externalLinks";
 /**
  * Display a modal asking the user to deploy or upgrade Rowy Run
  * using `rowyRunModalAtom` in `globalState`
- * {@link rowyRunModalAtom | See usage example}
+ * @see {@link rowyRunModalAtom | Usage example}
  */
 export default function RowyRunModal() {
   const [userRoles] = useAtom(userRolesAtom, globalScope);

@@ -1,5 +1,6 @@
 import { renderHook, act } from "@testing-library/react";
 import { useAtomValue, useSetAtom } from "jotai";
+
 import {
   tableScope,
   tableSchemaAtom,
@@ -9,7 +10,6 @@ import {
   deleteColumnAtom,
 } from "@src/atoms/tableScope";
 import { TableSchema } from "@src/types/table";
-
 import { FieldType } from "@src/constants/fields";
 
 const initUpdateTableSchemaAtom = (initialTableSchema?: TableSchema) =>
@@ -49,10 +49,10 @@ describe("addColumn", () => {
     initUpdateTableSchemaAtom();
     const {
       result: { current: addColumn },
-    } = renderHook(() => useAtomValue(addColumnAtom, tableScope));
+    } = renderHook(() => useSetAtom(addColumnAtom, tableScope));
     expect(addColumn).toBeDefined();
 
-    await act(() => addColumn(columnToAdd));
+    await act(() => addColumn({ config: columnToAdd }));
 
     const {
       result: { current: tableSchema },
@@ -65,10 +65,10 @@ describe("addColumn", () => {
     initUpdateTableSchemaAtom({ columns: generatedColumns });
     const {
       result: { current: addColumn },
-    } = renderHook(() => useAtomValue(addColumnAtom, tableScope));
+    } = renderHook(() => useSetAtom(addColumnAtom, tableScope));
     expect(addColumn).toBeDefined();
 
-    await act(() => addColumn(columnToAdd));
+    await act(() => addColumn({ config: columnToAdd }));
 
     const {
       result: { current: tableSchema },
@@ -83,10 +83,10 @@ describe("addColumn", () => {
     initUpdateTableSchemaAtom({ columns: generatedColumns });
     const {
       result: { current: addColumn },
-    } = renderHook(() => useAtomValue(addColumnAtom, tableScope));
+    } = renderHook(() => useSetAtom(addColumnAtom, tableScope));
     expect(addColumn).toBeDefined();
 
-    await act(() => addColumn(columnToAdd, 7));
+    await act(() => addColumn({ config: columnToAdd, index: 7 }));
 
     const {
       result: { current: tableSchema },
@@ -104,10 +104,12 @@ describe("updateColumn", () => {
     initUpdateTableSchemaAtom({ columns: generatedColumns });
     const {
       result: { current: updateColumn },
-    } = renderHook(() => useAtomValue(updateColumnAtom, tableScope));
+    } = renderHook(() => useSetAtom(updateColumnAtom, tableScope));
     expect(updateColumn).toBeDefined();
 
-    await act(() => updateColumn("column7", { name: "Updated column" }));
+    await act(() =>
+      updateColumn({ key: "column7", config: { name: "Updated column" } })
+    );
 
     const {
       result: { current: tableSchema },
@@ -126,17 +128,17 @@ describe("updateColumn", () => {
     initUpdateTableSchemaAtom({ columns: generatedColumns });
     const {
       result: { current: updateColumn },
-    } = renderHook(() => useAtomValue(updateColumnAtom, tableScope));
+    } = renderHook(() => useSetAtom(updateColumnAtom, tableScope));
     expect(updateColumn).toBeDefined();
 
     const SOURCE_INDEX = 2;
     const TARGET_INDEX = 4;
     await act(() =>
-      updateColumn(
-        `column${SOURCE_INDEX}`,
-        { name: "Updated column" },
-        TARGET_INDEX
-      )
+      updateColumn({
+        key: `column${SOURCE_INDEX}`,
+        config: { name: "Updated column" },
+        index: TARGET_INDEX,
+      })
     );
 
     const {
@@ -162,17 +164,17 @@ describe("updateColumn", () => {
     initUpdateTableSchemaAtom({ columns: generatedColumns });
     const {
       result: { current: updateColumn },
-    } = renderHook(() => useAtomValue(updateColumnAtom, tableScope));
+    } = renderHook(() => useSetAtom(updateColumnAtom, tableScope));
     expect(updateColumn).toBeDefined();
 
     const SOURCE_INDEX = 9;
     const TARGET_INDEX = 3;
     await act(() =>
-      updateColumn(
-        `column${SOURCE_INDEX}`,
-        { name: "Updated column" },
-        TARGET_INDEX
-      )
+      updateColumn({
+        key: `column${SOURCE_INDEX}`,
+        config: { name: "Updated column" },
+        index: TARGET_INDEX,
+      })
     );
 
     const {
@@ -198,12 +200,16 @@ describe("updateColumn", () => {
     initUpdateTableSchemaAtom({ columns: generatedColumns });
     const {
       result: { current: updateColumn },
-    } = renderHook(() => useAtomValue(updateColumnAtom, tableScope));
+    } = renderHook(() => useSetAtom(updateColumnAtom, tableScope));
     expect(updateColumn).toBeDefined();
 
-    expect(() => {
-      act(() => updateColumn("nonExistentColumn", {}));
-    }).toThrow(/Column with key .* not found/);
+    let error = new Error();
+    try {
+      await updateColumn({ key: "nonExistentColumn", config: {} });
+    } catch (e: any) {
+      error = e;
+    }
+    expect(error?.message).toMatch(/Column with key .* not found/);
 
     const {
       result: { current: tableSchema },
@@ -215,12 +221,16 @@ describe("updateColumn", () => {
     initUpdateTableSchemaAtom();
     const {
       result: { current: updateColumn },
-    } = renderHook(() => useAtomValue(updateColumnAtom, tableScope));
+    } = renderHook(() => useSetAtom(updateColumnAtom, tableScope));
     expect(updateColumn).toBeDefined();
 
-    expect(() => {
-      act(() => updateColumn("nonExistentColumn", {}));
-    }).toThrow(/Column with key .* not found/);
+    let error = new Error();
+    try {
+      await updateColumn({ key: "nonExistentColumn", config: {} });
+    } catch (e: any) {
+      error = e;
+    }
+    expect(error?.message).toMatch(/Column with key .* not found/);
 
     const {
       result: { current: tableSchema },
@@ -234,7 +244,7 @@ describe("deleteColumn", () => {
     initUpdateTableSchemaAtom({ columns: generatedColumns });
     const {
       result: { current: deleteColumn },
-    } = renderHook(() => useAtomValue(deleteColumnAtom, tableScope));
+    } = renderHook(() => useSetAtom(deleteColumnAtom, tableScope));
     expect(deleteColumn).toBeDefined();
 
     await act(() => deleteColumn("column7"));
@@ -251,7 +261,7 @@ describe("deleteColumn", () => {
     initUpdateTableSchemaAtom({ columns: generatedColumns });
     const {
       result: { current: deleteColumn },
-    } = renderHook(() => useAtomValue(deleteColumnAtom, tableScope));
+    } = renderHook(() => useSetAtom(deleteColumnAtom, tableScope));
     expect(deleteColumn).toBeDefined();
 
     await act(() => deleteColumn("column72"));
@@ -269,7 +279,7 @@ describe("deleteColumn", () => {
     initUpdateTableSchemaAtom();
     const {
       result: { current: deleteColumn },
-    } = renderHook(() => useAtomValue(deleteColumnAtom, tableScope));
+    } = renderHook(() => useSetAtom(deleteColumnAtom, tableScope));
     expect(deleteColumn).toBeDefined();
 
     await act(() => deleteColumn("column7"));

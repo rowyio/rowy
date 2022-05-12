@@ -2,3 +2,4 @@
 export const tableScope = Symbol("tableScope");
 
 export * from "./table";
+export * from "./columns";

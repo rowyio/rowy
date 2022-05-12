@@ -6,7 +6,7 @@ import { userRolesAtom } from "./auth";
 import { UserSettings } from "./user";
 import {
   UpdateDocFunction,
-  UpdateCollectionFunction,
+  UpdateCollectionDocFunction,
   TableSettings,
   TableSchema,
 } from "@src/types/table";
@@ -54,7 +54,15 @@ export type ProjectSettings = Partial<{
 }>;
 /** Project settings are visible to authenticated users */
 export const projectSettingsAtom = atom<ProjectSettings>({});
-/** Stores a function that updates project settings */
+/**
+ * Stores a function that updates project settings
+ *
+ * @example Basic usage:
+ * ```
+ * const [updateProjectSettings] = useAtom(updateProjectSettingsAtom, globalScope);
+ * if (updateProjectSettings) updateProjectSettings({ ... });
+ * ```
+ */
 export const updateProjectSettingsAtom = atom<
   UpdateDocFunction<ProjectSettings> | undefined
 >(undefined);
@@ -143,5 +151,5 @@ export const rolesAtom = atom((get) =>
 export const allUsersAtom = atom<UserSettings[]>([]);
 /** Stores a function that updates a user document */
 export const updateUserAtom = atom<
-  UpdateCollectionFunction<UserSettings> | undefined
+  UpdateCollectionDocFunction<UserSettings> | undefined
 >(undefined);

@@ -1,5 +1,5 @@
 import { atom } from "jotai";
-import { uniqBy, orderBy, findIndex } from "lodash-es";
+import { uniqBy } from "lodash-es";
 
 import {
   TableSettings,
@@ -7,7 +7,8 @@ import {
   TableFilter,
   TableOrder,
   TableRow,
-  ColumnConfig,
+  UpdateCollectionDocFunction,
+  DeleteCollectionDocFunction,
 } from "@src/types/table";
 
 /** Root atom from which others are derived */
@@ -20,116 +21,6 @@ export const tableSchemaAtom = atom<TableSchema | undefined>(undefined);
 export const updateTableSchemaAtom = atom<
   ((update: Partial<TableSchema>) => Promise<void>) | undefined
 >(undefined);
-/** Store the table columns as an ordered array */
-export const tableColumnsOrderedAtom = atom<ColumnConfig[]>((get) => {
-  const tableSchema = get(tableSchemaAtom);
-  if (!tableSchema || !tableSchema.columns) return [];
-  return orderBy(Object.values(tableSchema?.columns ?? {}), "index");
-});
-/** Reducer function to convert from array of columns to columns object */
-export const tableColumnsReducer = (
-  a: Record<string, ColumnConfig>,
-  c: ColumnConfig,
-  index: number
-) => {
-  a[c.key] = { ...c, index };
-  return a;
-};
-
-/**
- * Store function to add a column to tableSchema, to the end or by index.
- * Also fixes any issues with column indexes, so they go from 0 to length - 1
- * @param config - Column config to add. `config.index` is ignored
- * @param index - Index to add column at. If undefined, adds to end
- */
-export const addColumnAtom = atom((get) => {
-  const tableColumnsOrdered = [...get(tableColumnsOrderedAtom)];
-  const updateTableSchema = get(updateTableSchemaAtom);
-  if (!updateTableSchema) {
-    return async (config: ColumnConfig, index?: number) => {
-      throw new Error("Cannot update table schema");
-    };
-  }
-
-  return (config: Omit<ColumnConfig, "index">, index?: number) => {
-    // If index is provided, insert at index. Otherwise, append to end
-    tableColumnsOrdered.splice(index ?? tableColumnsOrdered.length, 0, {
-      ...config,
-      index: index ?? tableColumnsOrdered.length,
-    } as ColumnConfig);
-
-    // Reduce array into single object with updated indexes
-    const updatedColumns = tableColumnsOrdered.reduce(tableColumnsReducer, {});
-    return updateTableSchema({ columns: updatedColumns });
-  };
-});
-
-/**
- * Store function to update a column in tableSchema. If not found, throws error.
- * @param key - Unique key of column to update
- * @param config - Partial column config to add. `config.index` is ignored
- * @param index - If passed, reorders the column to the index
- */
-export const updateColumnAtom = atom((get) => {
-  const tableColumnsOrdered = [...get(tableColumnsOrderedAtom)];
-  const updateTableSchema = get(updateTableSchemaAtom);
-  if (!updateTableSchema) {
-    return async (key: string, config: Partial<ColumnConfig>) => {
-      throw new Error("Cannot update table schema");
-    };
-  }
-
-  return (key: string, config: Partial<ColumnConfig>, index?: number) => {
-    const currentIndex = findIndex(tableColumnsOrdered, ["key", key]);
-    if (currentIndex === -1)
-      throw new Error(`Column with key "${key}" not found`);
-
-    // If column is not being reordered, just update the config
-    if (!index) {
-      tableColumnsOrdered[currentIndex] = {
-        ...tableColumnsOrdered[currentIndex],
-        ...config,
-        index: currentIndex,
-      };
-    }
-    // Otherwise, remove the column from the current position
-    // Then insert it at the new position
-    else {
-      const currentColumn = tableColumnsOrdered.splice(currentIndex, 1)[0];
-      tableColumnsOrdered.splice(index, 0, {
-        ...currentColumn,
-        ...config,
-        index,
-      });
-    }
-
-    // Reduce array into single object with updated indexes
-    const updatedColumns = tableColumnsOrdered.reduce(tableColumnsReducer, {});
-    return updateTableSchema({ columns: updatedColumns });
-  };
-});
-
-/**
- * Store function to delete a column in tableSchema
- * @param key - Unique key of column to delete
- */
-export const deleteColumnAtom = atom((get) => {
-  const tableColumnsOrdered = [...get(tableColumnsOrderedAtom)];
-  const updateTableSchema = get(updateTableSchemaAtom);
-  if (!updateTableSchema) {
-    return async (key: string) => {
-      throw new Error("Cannot update table schema");
-    };
-  }
-
-  return (key: string) => {
-    const updatedColumns = tableColumnsOrdered
-      .filter((c) => c.key !== key)
-      .reduce(tableColumnsReducer, {});
-
-    return updateTableSchema({ columns: updatedColumns });
-  };
-});
 
 /** Filters applied to the local view */
 export const tableFiltersAtom = atom<TableFilter[]>([]);
@@ -151,3 +42,40 @@ export const tableRowsAtom = atom<TableRow[]>((get) =>
 );
 /** Store loading more state for infinite scroll */
 export const tableLoadingMoreAtom = atom(false);
+
+/**
+ * Store function to add or update row in db directly.
+ * Has same behaviour as Firestore setDoc with merge.
+ * See https://stackoverflow.com/a/47554197/3572007
+ * @internal Use {@link addRowAtom} or {@link updateRowAtom} instead
+ */
+export const _updateRowDbAtom = atom<UpdateCollectionDocFunction | undefined>(
+  undefined
+);
+/**
+ * Store function to delete row in db directly
+ * @internal Use {@link deleteRowAtom} instead
+ */
+export const _deleteRowDbAtom = atom<DeleteCollectionDocFunction | undefined>(
+  undefined
+);
+
+export type AuditChangeFunction = (
+  type: "ADD_ROW" | "UPDATE_CELL" | "DELETE_ROW",
+  rowId: string,
+  data?:
+    | {
+        updatedField?: string | undefined;
+      }
+    | undefined
+) => Promise<any>;
+/**
+ * Store function to write auditing logs when user makes changes to the table.
+ * Silently fails if auditing is disabled for the table or Rowy Run version
+ * not compatible.
+ *
+ * @param type - Action type: "ADD_ROW" | "UPDATE_CELL" | "DELETE_ROW"
+ * @param rowId - ID of row updated
+ * @param data - Optional additional data to log
+ */
+export const auditChangeAtom = atom<AuditChangeFunction | undefined>(undefined);

@@ -9,10 +9,12 @@ export type UpdateDocFunction<T = TableRow> = (
   update: Partial<T>
 ) => Promise<void>;
 
-export type UpdateCollectionFunction<T = TableRow> = (
+export type UpdateCollectionDocFunction<T = TableRow> = (
   path: string,
   update: Partial<T>
 ) => Promise<void>;
+
+export type DeleteCollectionDocFunction = (path: string) => Promise<void>;
 
 /** Table settings stored in project settings */
 export type TableSettings = {
@@ -78,10 +80,13 @@ export type TableOrder = {
   direction: Parameters<typeof orderBy>[1];
 };
 
-export type TableRow = DocumentData & {
-  _rowy_id: string;
-  _rowy_ref: { id: string; path: string } & Partial<DocumentReference>;
+export type TableRowRef = {
+  id: string;
+  path: string;
+} & Partial<DocumentReference>;
 
+export type TableRow = DocumentData & {
+  _rowy_ref: TableRowRef;
   _rowy_missingRequiredFields?: string[];
   _rowy_outOfOrder?: boolean;
 };

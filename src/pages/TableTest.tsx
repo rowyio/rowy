@@ -10,11 +10,17 @@ import {
   tableFiltersAtom,
   tableOrdersAtom,
   tableRowsAtom,
+  auditChangeAtom,
 } from "@src/atoms/tableScope";
 
 import TableSourceFirestore from "@src/sources/TableSourceFirestore";
 import TableHeaderSkeleton from "@src/components/Table/Skeleton/TableHeaderSkeleton";
 import HeaderRowSkeleton from "@src/components/Table/Skeleton/HeaderRowSkeleton";
+
+import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
+import { globalScope } from "@src/atoms/globalScope";
+import { doc, setDoc, updateDoc } from "firebase/firestore";
+import { TABLE_SCHEMAS } from "@src/config/dbPaths";
 
 function TableTestPage() {
   const [tableId] = useAtom(tableIdAtom, tableScope);
@@ -25,8 +31,11 @@ function TableTestPage() {
   const setTableOrders = useSetAtom(tableOrdersAtom, tableScope);
 
   const [tableRows] = useAtom(tableRowsAtom, tableScope);
+  const [auditChange] = useAtom(auditChangeAtom, tableScope);
 
   console.log(tableId, tableSchema);
+
+  const [firebaseDb] = useAtom(firebaseDbAtom, globalScope);
 
   return (
     <div>
@@ -34,12 +43,38 @@ function TableTestPage() {
         Table ID: <code>{tableId}</code>
       </p>
 
-      <pre style={{ height: "4em", overflow: "auto" }}>
+      <pre style={{ height: "4em", overflow: "auto", resize: "vertical" }}>
         tableSettings: {JSON.stringify(tableSettings, undefined, 2)}
       </pre>
-      <pre style={{ height: "4em", overflow: "auto" }}>
+      <pre style={{ height: "4em", overflow: "auto", resize: "vertical" }}>
         tableSchema: {JSON.stringify(tableSchema, undefined, 2)}
       </pre>
+
+      <button
+        onClick={() => {
+          setDoc(
+            doc(firebaseDb, TABLE_SCHEMAS, tableId!),
+            {
+              _test: { [Date.now()]: "write" },
+              _testArray: [{ [Date.now()]: "writeArray" }],
+            },
+            { merge: true }
+          );
+        }}
+      >
+        Firestore set + merge
+      </button>
+      <button
+        onClick={() => {
+          updateDoc(doc(firebaseDb, TABLE_SCHEMAS, tableId!), {
+            _test: { [Date.now()]: "write" },
+            _testArray: [{ [Date.now()]: "writeArray" }],
+          });
+        }}
+      >
+        Firestore update
+      </button>
+      <br />
 
       <button
         onClick={() =>
@@ -58,9 +93,9 @@ function TableTestPage() {
       <button onClick={() => setTableFilters([])}>Clear table orders</button>
 
       <ol>
-        {tableRows.map(({ _rowy_id, ...data }) => (
-          <li key={_rowy_id}>
-            {_rowy_id}: {data.firstName} {data.signedUp.toString()}
+        {tableRows.map(({ _rowy_ref, ...data }) => (
+          <li key={_rowy_ref.id}>
+            {_rowy_ref.id}: {data.firstName} {data.signedUp.toString()}
           </li>
         ))}
       </ol>

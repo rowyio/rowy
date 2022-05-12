@@ -11,7 +11,7 @@ import { USERS } from "@src/config/dbPaths";
 const UserManagementSourceFirebase = memo(
   function UserManagementSourceFirebase() {
     useFirestoreCollectionWithAtom(allUsersAtom, globalScope, USERS, {
-      updateDataAtom: updateUserAtom,
+      updateDocAtom: updateUserAtom,
     });
 
     return null;

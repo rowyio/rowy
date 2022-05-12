@@ -85,9 +85,12 @@ export function useFirestoreDocWithAtom<T = TableRow>(
         try {
           if (!docSnapshot.exists() && !!createIfNonExistent) {
             setDoc(docSnapshot.ref, createIfNonExistent);
-            setDataAtom(createIfNonExistent);
+            setDataAtom({ ...createIfNonExistent, _rowy_ref: docSnapshot.ref });
           } else {
-            setDataAtom(docSnapshot.data() || ({} as T));
+            setDataAtom({
+              ...(docSnapshot.data() as T),
+              _rowy_ref: docSnapshot.ref,
+            });
           }
         } catch (error) {
           if (onError) onError(error as FirestoreError);

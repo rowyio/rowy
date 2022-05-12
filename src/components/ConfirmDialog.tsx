@@ -16,7 +16,7 @@ import { globalScope, confirmDialogAtom } from "@src/atoms/globalScope";
 
 /**
  * Display a confirm dialog using `confirmDialogAtom` in `globalState`
- * {@link confirmDialogAtom | See usage example}
+ * @see {@link confirmDialogAtom | Usage example}
  */
 export default function ConfirmDialog() {
   const [

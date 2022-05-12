@@ -30,7 +30,7 @@ export function useTableFunctions() {
 
   // Create a function to get the latest tables from project settings,
   // so we don’t create new functions when tables change
-  const getTables = useAtomCallback(
+  const readTables = useAtomCallback(
     useCallback((get) => get(projectSettingsAtom).tables, []),
     globalScope
   );
@@ -51,7 +51,7 @@ export function useTableFunctions() {
           } = additionalSettings || {};
 
           // Get latest tables
-          const tables = (await getTables()) || [];
+          const tables = (await readTables()) || [];
 
           // Get columns from imported table settings or _schemaSource if provided
           let columns: NonNullable<TableSchema["columns"]> =
@@ -120,7 +120,7 @@ export function useTableFunctions() {
           await Promise.all([promiseUpdateSettings, promiseAddSchema]);
         }
     );
-  }, [firebaseDb, getTables, setCreateTable]);
+  }, [firebaseDb, readTables, setCreateTable]);
 
   // Set the createTable function
   const setUpdateTable = useSetAtom(updateTableAtom, globalScope);
@@ -134,7 +134,7 @@ export function useTableFunctions() {
           const { _schema } = additionalSettings || {};
 
           // Get latest tables
-          const tables = [...((await getTables()) || [])];
+          const tables = [...((await readTables()) || [])];
           const foundIndex = findIndex(tables, ["id", settings.id]);
           const tableIndex = foundIndex > -1 ? foundIndex : tables.length;
 
@@ -166,14 +166,14 @@ export function useTableFunctions() {
           await Promise.all([promiseUpdateSettings, promiseUpdateSchema]);
         }
     );
-  }, [firebaseDb, getTables, setUpdateTable]);
+  }, [firebaseDb, readTables, setUpdateTable]);
 
   // Set the deleteTable function
   const setDeleteTable = useSetAtom(deleteTableAtom, globalScope);
   useEffect(() => {
     setDeleteTable(() => async (id: string) => {
       // Get latest tables
-      const tables = (await getTables()) || [];
+      const tables = (await readTables()) || [];
       const table = find(tables, ["id", id]);
 
       // Removes table from settings doc array
@@ -196,14 +196,14 @@ export function useTableFunctions() {
       // Wait for both to complete
       await Promise.all([promiseUpdateSettings, promiseDeleteSchema]);
     });
-  }, [firebaseDb, getTables, setDeleteTable]);
+  }, [firebaseDb, readTables, setDeleteTable]);
 
   // Set the getTableSchema function
   const setGetTableSchema = useSetAtom(getTableSchemaAtom, globalScope);
   useEffect(() => {
     setGetTableSchema(() => async (id: string) => {
       // Get latest tables
-      const tables = (await getTables()) || [];
+      const tables = (await readTables()) || [];
       const table = find(tables, ["id", id]);
 
       const tableSchemaDocRef = doc(
@@ -217,5 +217,5 @@ export function useTableFunctions() {
         (doc) => (doc.data() || {}) as TableSchema
       );
     });
-  }, [firebaseDb, getTables, setGetTableSchema]);
+  }, [firebaseDb, readTables, setGetTableSchema]);
 }
