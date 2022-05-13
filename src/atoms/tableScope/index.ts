@@ -2,4 +2,5 @@
 export const tableScope = Symbol("tableScope");
 
 export * from "./table";
-export * from "./columns";
+export * from "./columnActions";
+export * from "./rowActions";

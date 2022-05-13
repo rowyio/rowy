@@ -18,7 +18,7 @@ import TableHeaderSkeleton from "@src/components/Table/Skeleton/TableHeaderSkele
 import HeaderRowSkeleton from "@src/components/Table/Skeleton/HeaderRowSkeleton";
 
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
-import { globalScope } from "@src/atoms/globalScope";
+import { currentUserAtom, globalScope } from "@src/atoms/globalScope";
 import { doc, setDoc, updateDoc } from "firebase/firestore";
 import { TABLE_SCHEMAS } from "@src/config/dbPaths";
 
@@ -105,6 +105,7 @@ function TableTestPage() {
 
 export default function ProvidedTableTestPage() {
   const { id } = useParams();
+  const [currentUser] = useAtom(currentUserAtom, globalScope);
 
   return (
     <Suspense
@@ -115,7 +116,14 @@ export default function ProvidedTableTestPage() {
         </>
       }
     >
-      <Provider key={id} scope={tableScope} initialValues={[[tableIdAtom, id]]}>
+      <Provider
+        key={id}
+        scope={tableScope}
+        initialValues={[
+          [tableIdAtom, id],
+          [currentUserAtom, currentUser],
+        ]}
+      >
         <TableSourceFirestore />
         <TableTestPage />
       </Provider>

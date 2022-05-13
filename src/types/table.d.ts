@@ -65,18 +65,28 @@ export type ColumnConfig = {
   editable?: boolean;
 
   /** Column-specific config */
-  config: { [key: string]: any };
+  config?: {
+    required?: boolean;
+    defaultValue?: {
+      type: "undefined" | "null" | "static" | "dynamic";
+      value?: any;
+      script?: string;
+      dynamicValueFn?: string;
+    };
+
+    [key: string]: any;
+  };
   // [key: string]: any;
 };
 
 export type TableFilter = {
-  key: Parameters<typeof where>[0];
+  key: string;
   operator: Parameters<typeof where>[1];
-  value: Parameters<typeof where>[2];
+  value: any;
 };
 
 export type TableOrder = {
-  key: Parameters<typeof orderBy>[0];
+  key: string;
   direction: Parameters<typeof orderBy>[1];
 };
 

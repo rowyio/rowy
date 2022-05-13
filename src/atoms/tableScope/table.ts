@@ -1,5 +1,6 @@
 import { atom } from "jotai";
-import { uniqBy } from "lodash-es";
+import { atomWithReducer } from "jotai/utils";
+import { uniqBy, findIndex } from "lodash-es";
 
 import {
   TableSettings,
@@ -10,6 +11,7 @@ import {
   UpdateCollectionDocFunction,
   DeleteCollectionDocFunction,
 } from "@src/types/table";
+import { updateRowData } from "@src/utils/table";
 
 /** Root atom from which others are derived */
 export const tableIdAtom = atom<string | undefined>(undefined);
@@ -29,8 +31,66 @@ export const tableOrdersAtom = atom<TableOrder[]>([]);
 /** Latest page in the infinite scroll */
 export const tablePageAtom = atom(0);
 
-/** Store rows that are out of order or not ready to be written to the db */
-export const tableRowsLocalAtom = atom<TableRow[]>([]);
+type TableRowsLocalAction =
+  /** Overwrite all rows */
+  | { type: "set"; rows: TableRow[] }
+  /** Add a row or multiple rows */
+  | { type: "add"; row: TableRow | TableRow[] }
+  /** Update a row */
+  | { type: "update"; path: string; row: Partial<TableRow> }
+  /** Delete a row or multiple rows */
+  | { type: "delete"; path: string | string[] };
+const tableRowsLocalReducer = (
+  prev: TableRow[],
+  action: TableRowsLocalAction
+): TableRow[] => {
+  if (action.type === "set") {
+    return [...action.rows];
+  }
+  if (action.type === "add") {
+    if (Array.isArray(action.row)) return [...action.row, ...prev];
+    return [action.row, ...prev];
+  }
+  if (action.type === "update") {
+    const index = findIndex(prev, ["_rowy_ref.path", action.path]);
+    if (index > -1) {
+      const updatedRows = [...prev];
+      updatedRows[index] = updateRowData(prev[index], action.row);
+      return updatedRows;
+    }
+    // If not found, add to start
+    if (index === -1)
+      return [
+        {
+          ...action.row,
+          _rowy_ref: {
+            path: action.path,
+            id: action.path.split("/").pop() || action.path,
+          },
+        },
+        ...prev,
+      ];
+  }
+  if (action.type === "delete") {
+    return prev.filter((row) => {
+      if (Array.isArray(action.path)) {
+        return !action.path.includes(row._rowy_ref.path);
+      } else {
+        return row._rowy_ref.path !== action.path;
+      }
+    });
+  }
+  throw new Error("Invalid action");
+};
+/**
+ * Store rows that are out of order or not ready to be written to the db.
+ * See {@link TableRowsLocalAction} for reducer actions.
+ */
+export const tableRowsLocalAtom = atomWithReducer(
+  [] as TableRow[],
+  tableRowsLocalReducer
+);
+
 /** Store rows from the db listener */
 export const tableRowsDbAtom = atom<TableRow[]>([]);
 /** Combine tableRowsLocal and tableRowsDb */
@@ -46,7 +106,9 @@ export const tableLoadingMoreAtom = atom(false);
 /**
  * Store function to add or update row in db directly.
  * Has same behaviour as Firestore setDoc with merge.
- * See https://stackoverflow.com/a/47554197/3572007
+ * @see
+ * - {@link updateRowData} implementation
+ * - https://stackoverflow.com/a/47554197/3572007
  * @internal Use {@link addRowAtom} or {@link updateRowAtom} instead
  */
 export const _updateRowDbAtom = atom<UpdateCollectionDocFunction | undefined>(
