@@ -13,7 +13,7 @@ import { globalScope, currentUserAtom } from "@src/atoms/globalScope";
 import { ROUTES } from "@src/constants/routes";
 
 import TableGroupRedirectPage from "./pages/TableGroupRedirect";
-import JotaiTestPage from "@src/pages/JotaiTest";
+import JotaiTestPage from "@src/pages/Test/JotaiTest";
 import SignOutPage from "@src/pages/Auth/SignOut";
 
 // prettier-ignore
@@ -44,6 +44,9 @@ const UserSettingsPage = lazy(() => import("@src/pages/Settings/UserSettings" /*
 const ProjectSettingsPage = lazy(() => import("@src/pages/Settings/ProjectSettings" /* webpackChunkName: "ProjectSettingsPage" */));
 // prettier-ignore
 const UserManagementPage = lazy(() => import("@src/pages/Settings/UserManagement" /* webpackChunkName: "UserManagementPage" */));
+
+// prettier-ignore
+const ThemeTestPage = lazy(() => import("@src/pages/Test/ThemeTest" /* webpackChunkName: "ThemeTestPage" */));
 // const RowyRunTestPage = lazy(() => import("@src/pages/RowyRunTest" /* webpackChunkName: "RowyRunTestPage" */));
 
 export default function App() {
@@ -119,7 +122,7 @@ export default function App() {
             <Route path="/jotaiTest" element={<JotaiTestPage />} />
           </Route>
 
-          {/* <Route path="/jotaiTest" element={<JotaiTestPage />} /> */}
+          <Route path={ROUTES.themeTest} element={<ThemeTestPage />} />
         </Routes>
       )}
     </Suspense>

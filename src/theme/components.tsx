@@ -861,20 +861,32 @@ export const components = (theme: Theme): ThemeOptions => {
         },
         styleOverrides: {
           sizeMedium: {
-            width: 56 + (38 - 32),
+            width: 52 + (38 - 32),
             height: 32 + (38 - 32),
             padding: (38 - 32) / 2,
 
-            "& .MuiSwitch-thumb": { width: 22, height: 22 },
-            "& .MuiSwitch-switchBase": { padding: 8 },
+            "& .MuiSwitch-thumb": { width: 18, height: 18 },
+            "& .MuiSwitch-switchBase": { padding: 10 },
+
+            "& .Mui-checked .MuiSwitch-thumb": { width: 24, height: 24 },
+            "& .MuiSwitch-switchBase.Mui-checked": {
+              padding: 7,
+              transform: "translateX(20px)",
+            },
           },
           sizeSmall: {
-            width: 36 + (28 - 20),
+            width: 32 + (28 - 20),
             height: 20 + (28 - 20),
             padding: (28 - 20) / 2,
 
-            "& .MuiSwitch-thumb": { width: 12, height: 12 },
-            "& .MuiSwitch-switchBase": { padding: 8 },
+            "& .MuiSwitch-thumb": { width: 10, height: 10 },
+            "& .MuiSwitch-switchBase": { padding: 9 },
+
+            "& .Mui-checked .MuiSwitch-thumb": { width: 14, height: 14 },
+            "& .MuiSwitch-switchBase.Mui-checked": {
+              padding: 7,
+              transform: "translateX(12px)",
+            },
           },
 
           track: {
@@ -893,54 +905,60 @@ export const components = (theme: Theme): ThemeOptions => {
               boxShadow: "none",
             },
           },
-          switchBase: {
-            color: theme.palette.text.primary,
-            "&.Mui-checked": { transform: "translateX(24px)" },
-          },
+          switchBase: { color: theme.palette.text.primary },
           thumb: {
-            borderRadius: 22 / 2,
+            borderRadius: 100,
             boxShadow: theme.shadows[1],
 
             background: theme.palette.text.secondary,
-            ".MuiSwitch-switchBase.Mui-checked &": {
+            ".Mui-checked &": {
               backgroundColor: theme.palette.secondary.contrastText,
             },
 
+            position: "relative",
+            ".Mui-checked &::before": {
+              content: "''",
+              position: "absolute",
+              width: "100%",
+              height: "100%",
+              left: 0,
+              top: 0,
+
+              backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -0.5 18 18"><polyline stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" points="2.705 8.29 7 12.585 15.295 4.29" fill="none" stroke="${encodeURIComponent(
+                theme.palette.secondary.main
+              )}" /></svg>')`,
+              backgroundPosition: "center",
+              backgroundSize: `${(16 / 24) * 100}%`,
+              backgroundRepeat: "no-repeat",
+            },
+            ".MuiSwitch-sizeSmall .Mui-checked &::before": {
+              backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -0.5 18 18"><polyline stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="2.705 8.29 7 12.585 15.295 4.29" fill="none" stroke="${encodeURIComponent(
+                theme.palette.secondary.main
+              )}" /></svg>')`,
+            },
+
             transition: theme.transitions.create(
-              ["width", "transform", "background-color"],
+              ["transform", "background-color"],
               { duration: theme.transitions.duration.shortest }
             ),
 
-            ".MuiSwitch-root:hover .MuiSwitch-switchBase:not(.Mui-disabled) &":
-              {
-                transform: `scale(${1 + 2 / 22})`,
-              },
-            ".MuiSwitch-root.MuiSwitch-sizeSmall:hover .MuiSwitch-switchBase:not(.Mui-disabled) &":
-              {
-                transform: `scale(${1 + 2 / 12})`,
-              },
-
             ".MuiSwitch-root:active .MuiSwitch-switchBase:not(.Mui-disabled) &":
               {
-                width: 22 * 1.333,
+                transform: `scale(${28 / 18})`,
               },
             ".MuiSwitch-root.MuiSwitch-sizeSmall:active .MuiSwitch-switchBase:not(.Mui-disabled) &":
               {
-                width: 12 * 1.333,
+                transform: `scale(${16 / 10})`,
               },
-            "& + .MuiTouchRipple-root": {
-              borderRadius: 22 / 2,
-              zIndex: -1,
-            },
+            "& + .MuiTouchRipple-root": { zIndex: -1 },
 
             ".MuiSwitch-root:active .MuiSwitch-switchBase.Mui-checked:not(.Mui-disabled) &":
               {
-                transform: `translateX(-${0.333 * 22}px) scale(${1 + 2 / 22})`,
-                "& + .MuiTouchRipple-root": { left: -4 },
+                transform: `scale(${28 / 24})`,
               },
             ".MuiSwitch-root.MuiSwitch-sizeSmall:active .MuiSwitch-switchBase.Mui-checked:not(.Mui-disabled) &":
               {
-                transform: `translateX(-${0.333 * 12}px) scale(${1 + 2 / 12})`,
+                transform: `scale(${16 / 14})`,
               },
 
             ".MuiSwitch-switchBase.Mui-disabled &": {
@@ -948,6 +966,22 @@ export const components = (theme: Theme): ThemeOptions => {
             },
             ".MuiSwitch-switchBase.Mui-disabled.Mui-checked &": {
               opacity: 1,
+              "&::before": { opacity: theme.palette.action.disabledOpacity },
+            },
+          },
+
+          colorPrimary: {
+            "&.Mui-checked ": {
+              "& .MuiSwitch-thumb::before": {
+                backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -0.5 18 18"><polyline stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" points="2.705 8.29 7 12.585 15.295 4.29" fill="none" stroke="${encodeURIComponent(
+                  theme.palette.primary.main
+                )}" /></svg>')`,
+              },
+              ".MuiSwitch-sizeSmall & .MuiSwitch-thumb::before": {
+                backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -0.5 18 18"><polyline stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="2.705 8.29 7 12.585 15.295 4.29" fill="none" stroke="${encodeURIComponent(
+                  theme.palette.primary.main
+                )}" /></svg>')`,
+              },
             },
           },
 
@@ -956,6 +990,17 @@ export const components = (theme: Theme): ThemeOptions => {
               color: theme.palette.success.light,
               "& + .MuiSwitch-track": {
                 backgroundColor: theme.palette.success.light,
+              },
+
+              "& .MuiSwitch-thumb::before": {
+                backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -0.5 18 18"><polyline stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" points="2.705 8.29 7 12.585 15.295 4.29" fill="none" stroke="${encodeURIComponent(
+                  theme.palette.success.main
+                )}" /></svg>')`,
+              },
+              ".MuiSwitch-sizeSmall & .MuiSwitch-thumb::before": {
+                backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -0.5 18 18"><polyline stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="2.705 8.29 7 12.585 15.295 4.29" fill="none" stroke="${encodeURIComponent(
+                  theme.palette.success.main
+                )}" /></svg>')`,
               },
             },
           },
