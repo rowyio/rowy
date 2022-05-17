@@ -13,6 +13,7 @@ import {
   tableIdAtom,
   tableSettingsAtom,
   tableSchemaAtom,
+  updateTableSchemaAtom,
   tableFiltersAtom,
   tableOrdersAtom,
   tablePageAtom,
@@ -63,7 +64,11 @@ const TableSourceFirestore = memo(function TableSourceFirestore() {
     tableSchemaAtom,
     tableScope,
     isCollectionGroup ? TABLE_GROUP_SCHEMAS : TABLE_SCHEMAS,
-    { pathSegments: [tableId], createIfNonExistent: { columns: {} } }
+    {
+      pathSegments: [tableId],
+      createIfNonExistent: { columns: {} },
+      updateDataAtom: updateTableSchemaAtom,
+    }
   );
 
   // Get table filters and orders

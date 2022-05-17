@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useAtom, PrimitiveAtom, useSetAtom } from "jotai";
 import { Scope } from "jotai/core/atom";
+import { set } from "lodash-es";
 import {
   query,
   collection,
@@ -15,6 +16,7 @@ import {
   deleteDoc,
   CollectionReference,
   Query,
+  deleteField,
 } from "firebase/firestore";
 import { useErrorHandler } from "react-error-boundary";
 
@@ -154,8 +156,17 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
     // set the atom’s value to a function that updates a doc in the collection
     if (updateDocAtom) {
       setUpdateDocAtom(
-        () => (path: string, update: T) =>
-          setDoc(doc(firebaseDb, path), update, { merge: true })
+        () => (path: string, update: T, deleteFields?: string[]) => {
+          const updateToDb = { ...update };
+
+          if (Array.isArray(deleteFields)) {
+            for (const field of deleteFields) {
+              set(updateToDb as any, field, deleteField());
+            }
+          }
+
+          return setDoc(doc(firebaseDb, path), updateToDb, { merge: true });
+        }
       );
     }
 

@@ -130,5 +130,5 @@ export const deleteColumnAtom = atom(null, async (get, _set, key: string) => {
     .filter((c) => c.key !== key)
     .reduce(tableColumnsReducer, {});
 
-  await updateTableSchema({ columns: updatedColumns });
+  await updateTableSchema({ columns: updatedColumns }, [`columns.${key}`]);
 });

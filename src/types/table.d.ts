@@ -5,15 +5,35 @@ import type {
   DocumentReference,
 } from "firebase/firestore";
 
+/**
+ * A standard function to update a doc in the database
+ * @param update - The updates to be deeply merged with the existing doc. Note arrays should be ovewritten to match Firestore set with merge behavior
+ * @param deleteFields - Optionally, fields to be deleted from the doc. Access nested fields with dot notation
+ * @returns Promise when complete
+ */
 export type UpdateDocFunction<T = TableRow> = (
-  update: Partial<T>
+  update: Partial<T>,
+  deleteFields?: string[]
 ) => Promise<void>;
 
+/**
+ * A standard function to update a doc in a specific collection in the database
+ * @param path - The full path to the doc
+ * @param update - The updates to be deeply merged with the existing doc. Note arrays should be ovewritten to match Firestore set with merge behavior
+ * @param deleteFields - Optionally, fields to be deleted from the doc. Access nested fields with dot notation
+ * @returns Promise when complete
+ */
 export type UpdateCollectionDocFunction<T = TableRow> = (
   path: string,
-  update: Partial<T>
+  update: Partial<T>,
+  deleteFields?: string[]
 ) => Promise<void>;
 
+/**
+ * A standard function to delete a doc in a specific collection in the database
+ * @param path - The full path to the doc
+ * @returns Promise when complete
+ */
 export type DeleteCollectionDocFunction = (path: string) => Promise<void>;
 
 /** Table settings stored in project settings */

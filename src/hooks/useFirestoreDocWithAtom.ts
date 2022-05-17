@@ -1,12 +1,14 @@
 import { useEffect } from "react";
 import { useAtom, PrimitiveAtom, useSetAtom } from "jotai";
 import { Scope } from "jotai/core/atom";
+import { set } from "lodash-es";
 import {
   doc,
   onSnapshot,
   FirestoreError,
   setDoc,
   DocumentReference,
+  deleteField,
 } from "firebase/firestore";
 import { useErrorHandler } from "react-error-boundary";
 
@@ -108,9 +110,17 @@ export function useFirestoreDocWithAtom<T = TableRow>(
     // If `options?.updateDataAtom` was passed,
     // set the atom’s value to a function that updates the document
     if (updateDataAtom) {
-      setUpdateDataAtom(
-        () => (update: T) => setDoc(ref, update, { merge: true })
-      );
+      setUpdateDataAtom(() => (update: T, deleteFields?: string[]) => {
+        const updateToDb = { ...update };
+
+        if (Array.isArray(deleteFields)) {
+          for (const field of deleteFields) {
+            set(updateToDb as any, field, deleteField());
+          }
+        }
+
+        return setDoc(ref, updateToDb, { merge: true });
+      });
     }
 
     return () => {

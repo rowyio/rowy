@@ -1,6 +1,5 @@
 import { mergeWith, isArray } from "lodash-es";
 import type { User } from "firebase/auth";
-import { TableRow } from "@src/types/table";
 
 /**
  * Creates a standard user object to write to table rows
@@ -32,10 +31,65 @@ export const rowyUser = (currentUser: User, data?: Record<string, any>) => {
  * @param update - The partial update to apply
  * @returns The row with updated values
  */
-export const updateRowData = (row: TableRow, update: Partial<TableRow>) =>
+export const updateRowData = <T = Record<string, any>>(
+  row: T,
+  update: Partial<T>
+): T =>
   mergeWith(
     row,
     update,
     // If the proeprty to be merged is array, overwrite the array entirely
     (objValue, srcValue) => (isArray(objValue) ? srcValue : undefined)
   );
+
+const ID_CHARACTERS =
+  "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+/**
+ * Generate an ID compatible with Firestore
+ * @param length - The length of the ID to generate
+ * @returns - Generated ID
+ */
+export const generateId = (length: number = 20) => {
+  let result = "";
+  const charactersLength = ID_CHARACTERS.length;
+  for (var i = 0; i < length; i++)
+    result += ID_CHARACTERS.charAt(
+      Math.floor(Math.random() * charactersLength)
+    );
+
+  return result;
+};
+
+/**
+ * Lexicographically decrement a given ID
+ * @param id - The ID to decrement. If not provided, set to 20 `z` characters
+ * @returns - The decremented ID
+ */
+export const decrementId = (id: string = "zzzzzzzzzzzzzzzzzzzz") => {
+  const newId = id.split("");
+
+  // Loop through ID characters from the end
+  let i = newId.length - 1;
+  while (i > -1) {
+    const newCharacterIndex = ID_CHARACTERS.indexOf(newId[i]) - 1;
+
+    newId[i] =
+      ID_CHARACTERS[
+        newCharacterIndex > -1 ? newCharacterIndex : ID_CHARACTERS.length - 1
+      ];
+
+    // If we don’t hit 0, we’re done
+    if (newCharacterIndex > -1) break;
+
+    // Otherwise, if we hit 0, we need to decrement the next character
+    i--;
+  }
+
+  // Ensure we don't get 00...0, then the next ID would be 00...0z,
+  // which would appear as the second row
+  if (newId.every((x) => x === ID_CHARACTERS[0]))
+    newId.push(ID_CHARACTERS[ID_CHARACTERS.length - 1]);
+
+  return newId.join("");
+};

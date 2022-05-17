@@ -1,6 +1,6 @@
 import { atom } from "jotai";
 import { atomWithReducer } from "jotai/utils";
-import { uniqBy, findIndex } from "lodash-es";
+import { uniqBy, findIndex, cloneDeep, unset } from "lodash-es";
 
 import {
   TableSettings,
@@ -8,6 +8,7 @@ import {
   TableFilter,
   TableOrder,
   TableRow,
+  UpdateDocFunction,
   UpdateCollectionDocFunction,
   DeleteCollectionDocFunction,
 } from "@src/types/table";
@@ -18,10 +19,10 @@ export const tableIdAtom = atom<string | undefined>(undefined);
 /** Store tableSettings from project settings document */
 export const tableSettingsAtom = atom<TableSettings | undefined>(undefined);
 /** Store tableSchema from schema document */
-export const tableSchemaAtom = atom<TableSchema | undefined>(undefined);
+export const tableSchemaAtom = atom<TableSchema>({});
 /** Store function to update tableSchema */
 export const updateTableSchemaAtom = atom<
-  ((update: Partial<TableSchema>) => Promise<void>) | undefined
+  UpdateDocFunction<TableSchema> | undefined
 >(undefined);
 
 /** Filters applied to the local view */
@@ -37,7 +38,12 @@ type TableRowsLocalAction =
   /** Add a row or multiple rows */
   | { type: "add"; row: TableRow | TableRow[] }
   /** Update a row */
-  | { type: "update"; path: string; row: Partial<TableRow> }
+  | {
+      type: "update";
+      path: string;
+      row: Partial<TableRow>;
+      deleteFields?: string[];
+    }
   /** Delete a row or multiple rows */
   | { type: "delete"; path: string | string[] };
 const tableRowsLocalReducer = (
@@ -55,7 +61,13 @@ const tableRowsLocalReducer = (
     const index = findIndex(prev, ["_rowy_ref.path", action.path]);
     if (index > -1) {
       const updatedRows = [...prev];
-      updatedRows[index] = updateRowData(prev[index], action.row);
+      if (Array.isArray(action.deleteFields)) {
+        updatedRows[index] = cloneDeep(prev[index]);
+        for (const field of action.deleteFields) {
+          unset(updatedRows[index], field);
+        }
+      }
+      updatedRows[index] = updateRowData(updatedRows[index], action.row);
       return updatedRows;
     }
     // If not found, add to start

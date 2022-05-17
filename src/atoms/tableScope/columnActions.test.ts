@@ -1,5 +1,6 @@
 import { renderHook, act } from "@testing-library/react";
 import { useAtomValue, useSetAtom } from "jotai";
+import { cloneDeep, unset } from "lodash-es";
 
 import {
   tableScope,
@@ -11,6 +12,7 @@ import {
 } from "@src/atoms/tableScope";
 import { TableSchema } from "@src/types/table";
 import { FieldType } from "@src/constants/fields";
+import { updateRowData } from "@src/utils/table";
 
 const initUpdateTableSchemaAtom = (initialTableSchema?: TableSchema) =>
   renderHook(() => {
@@ -18,9 +20,19 @@ const initUpdateTableSchemaAtom = (initialTableSchema?: TableSchema) =>
     setTableSchema(initialTableSchema ?? {});
 
     const setUpdateTableSchema = useSetAtom(updateTableSchemaAtom, tableScope);
-    setUpdateTableSchema(() => async (update: Partial<TableSchema>) => {
-      setTableSchema(update);
-    });
+    setUpdateTableSchema(
+      () => async (update: Partial<TableSchema>, deleteFields?: string[]) => {
+        setTableSchema((current) => {
+          const withFieldsDeleted = cloneDeep(current);
+          if (Array.isArray(deleteFields)) {
+            for (const field of deleteFields) {
+              unset(withFieldsDeleted, field);
+            }
+          }
+          return updateRowData(withFieldsDeleted || {}, update);
+        });
+      }
+    );
   });
 
 const GENERATED_COLUMNS_LENGTH = 10;

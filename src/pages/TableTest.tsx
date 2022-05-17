@@ -33,7 +33,7 @@ function TableTestPage() {
   const [tableRows] = useAtom(tableRowsAtom, tableScope);
   const [auditChange] = useAtom(auditChangeAtom, tableScope);
 
-  console.log(tableId, tableSchema);
+  console.log(tableId, tableSettings, tableSchema);
 
   const [firebaseDb] = useAtom(firebaseDbAtom, globalScope);
 

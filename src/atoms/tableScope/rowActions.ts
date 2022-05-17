@@ -1,5 +1,5 @@
 import { atom } from "jotai";
-import { find } from "lodash-es";
+import { cloneDeep, find, set as _set, unset } from "lodash-es";
 
 import { currentUserAtom } from "@src/atoms/globalScope";
 import {
@@ -7,22 +7,30 @@ import {
   tableSettingsAtom,
   tableFiltersAtom,
   tableRowsLocalAtom,
+  tableRowsAtom,
   _updateRowDbAtom,
   _deleteRowDbAtom,
 } from "./table";
 import { tableColumnsOrderedAtom } from "./columnActions";
 import { TableRow } from "@src/types/table";
-import { rowyUser } from "@src/utils/table";
+import {
+  rowyUser,
+  generateId,
+  decrementId,
+  updateRowData,
+} from "@src/utils/table";
 
 export interface IAddRowOptions {
+  /** The row or array of rows to add */
   row: TableRow | TableRow[];
+  /** If true, ignores checking required fields have values */
   ignoreRequiredFields?: boolean;
+  /** Optionally overwite the IDs in the provided rows */
+  setId?: "random" | "decrement";
 }
-
 /**
  * Adds a row or an array of rows.
- * Adds to rowsDb if it has no missing required fields,
- * otherwise to or rowsLocal.
+ * Adds to rowsDb if it has no missing required fields, otherwise to rowsLocal.
  * @param options - {@link IAddRowOptions}
  *
  * @example Basic usage:
@@ -33,7 +41,7 @@ export interface IAddRowOptions {
  */
 export const addRowAtom = atom(
   null,
-  async (get, set, { row, ignoreRequiredFields }: IAddRowOptions) => {
+  async (get, set, { row, ignoreRequiredFields, setId }: IAddRowOptions) => {
     const updateRowDb = get(_updateRowDbAtom);
     if (!updateRowDb) throw new Error("Cannot write to database");
     const tableSettings = get(tableSettingsAtom);
@@ -43,6 +51,7 @@ export const addRowAtom = atom(
     const auditChange = get(auditChangeAtom);
     const tableFilters = get(tableFiltersAtom);
     const tableColumnsOrdered = get(tableColumnsOrderedAtom);
+    const tableRows = get(tableRowsAtom);
 
     const _addSingleRowAndAudit = async (row: TableRow) => {
       // Store initial values to be written
@@ -113,10 +122,43 @@ export const addRowAtom = atom(
     };
 
     if (Array.isArray(row)) {
-      const promises = row.map(_addSingleRowAndAudit);
+      const promises: Promise<void>[] = [];
+
+      let lastId = tableRows[0]?._rowy_ref.id;
+      for (const r of row) {
+        const id =
+          setId === "random"
+            ? generateId()
+            : setId === "decrement"
+            ? decrementId(lastId)
+            : r._rowy_ref.id;
+        lastId = id;
+
+        const path = setId
+          ? `${r._rowy_ref.path.split("/").slice(0, -1).join("/")}/${id}`
+          : r._rowy_ref.path;
+
+        promises.push(
+          _addSingleRowAndAudit(setId ? { ...r, _rowy_ref: { id, path } } : r)
+        );
+      }
+
       await Promise.all(promises);
     } else {
-      await _addSingleRowAndAudit(row);
+      const id =
+        setId === "random"
+          ? generateId()
+          : setId === "decrement"
+          ? decrementId(tableRows[0]?._rowy_ref.id)
+          : row._rowy_ref.id;
+
+      const path = setId
+        ? `${row._rowy_ref.path.split("/").slice(0, -1).join("/")}/${id}`
+        : row._rowy_ref.path;
+
+      await _addSingleRowAndAudit(
+        setId ? { ...row, _rowy_ref: { id, path } } : row
+      );
     }
   }
 );
@@ -138,10 +180,12 @@ export const deleteRowAtom = atom(
     if (!deleteRowDb) throw new Error("Cannot write to database");
 
     const auditChange = get(auditChangeAtom);
-    const rowsLocal = get(tableRowsLocalAtom);
+    const tableRowsLocal = get(tableRowsLocalAtom);
 
     const _deleteSingleRowAndAudit = async (path: string) => {
-      const isLocalRow = Boolean(find(rowsLocal, ["_rowy_ref.path", path]));
+      const isLocalRow = Boolean(
+        find(tableRowsLocal, ["_rowy_ref.path", path])
+      );
       if (isLocalRow) set(tableRowsLocalAtom, { type: "delete", path });
       else await deleteRowDb(path);
       if (auditChange) auditChange("DELETE_ROW", path);
@@ -153,5 +197,109 @@ export const deleteRowAtom = atom(
     } else {
       await _deleteSingleRowAndAudit(path);
     }
+  }
+);
+
+export interface IUpdateFieldOptions {
+  /** The path to the row to update */
+  path: string;
+  /** The field name to update. Use dot notation to access nested fields. */
+  fieldName: string;
+  /** The value to write */
+  value: any;
+  /** Optionally, delete the field with fieldName. Use dot notation to access nested fields. */
+  deleteField?: boolean;
+  /** If true, ignores checking required fields have values */
+  ignoreRequiredFields?: boolean;
+}
+/**
+ * Updates or deletes a field in a row.
+ * Adds to rowsDb if it has no missing required fields,
+ * otherwise keeps in rowsLocal.
+ * @param options - {@link IAddRowOptions}
+ *
+ * @example Basic usage:
+ * ```
+ * const updateField = useSetAtom(updateFieldAtom, tableScope);
+ * updateField({ path, fieldName: "", value: null, deleteField: true });
+ * ```
+ */
+export const updateFieldAtom = atom(
+  null,
+  async (
+    get,
+    set,
+    {
+      path,
+      fieldName,
+      value,
+      deleteField,
+      ignoreRequiredFields,
+    }: IUpdateFieldOptions
+  ) => {
+    const updateRowDb = get(_updateRowDbAtom);
+    if (!updateRowDb) throw new Error("Cannot write to database");
+    const tableSettings = get(tableSettingsAtom);
+    if (!tableSettings) throw new Error("Cannot read table settings");
+    const currentUser = get(currentUserAtom);
+    if (!currentUser) throw new Error("Cannot read current user");
+    const auditChange = get(auditChangeAtom);
+    const tableColumnsOrdered = get(tableColumnsOrderedAtom);
+    const tableRows = get(tableRowsAtom);
+    const tableRowsLocal = get(tableRowsLocalAtom);
+
+    const row = find(tableRows, ["_rowy_ref.path", path]);
+    if (!row) throw new Error("Could not find row");
+    const isLocalRow = Boolean(find(tableRowsLocal, ["_rowy_ref.path", path]));
+
+    const update: Partial<TableRow> = {};
+
+    // Write audit fields if not explicitly disabled
+    if (tableSettings.audit !== false) {
+      const auditValue = rowyUser(currentUser);
+      update[tableSettings.auditFieldUpdatedBy || "_updatedBy"] = auditValue;
+    }
+
+    // Check for required fields
+    const requiredFields = ignoreRequiredFields
+      ? []
+      : tableColumnsOrdered
+          .filter((column) => column.config?.required)
+          .map((column) => column.key);
+    const missingRequiredFields = ignoreRequiredFields
+      ? []
+      : requiredFields.filter((field) => row[field] === undefined);
+
+    // Apply field update
+    if (!deleteField) _set(update, fieldName, value);
+
+    // Update rowsLocal if any required fields are missing
+    if (missingRequiredFields.length > 0) {
+      set(tableRowsLocalAtom, {
+        type: "update",
+        path,
+        row: update,
+        deleteFields: deleteField ? [fieldName] : [],
+      });
+    }
+    // If no required fields are missing and the row is only local,
+    // write the entire row to the database
+    else if (isLocalRow) {
+      const rowValues = updateRowData(cloneDeep(row), update);
+      if (deleteField) unset(rowValues, fieldName);
+
+      await updateRowDb(
+        row._rowy_ref.path,
+        rowValues,
+        deleteField ? [fieldName] : []
+      );
+    }
+    // Otherwise, update single field in database
+    else {
+      await updateRowDb(path, update, deleteField ? [fieldName] : []);
+    }
+
+    if (auditChange)
+      auditChange("UPDATE_CELL", path, { updatedField: fieldName });
   }
 );
