@@ -296,7 +296,6 @@ export const updateFieldAtom = atom(
     }
     // Otherwise, update single field in database
     else {
-      await updateRowDb(path, update, deleteField ? [fieldName] : []);
     }
 
     if (auditChange)

@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { renderHook, act } from "@testing-library/react";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useAtomCallback } from "jotai/utils";
-import { find, findIndex, mergeWith, isArray } from "lodash-es";
+import { find, findIndex } from "lodash-es";
 
 import { currentUserAtom } from "@src/atoms/globalScope";
 import {
@@ -21,7 +21,11 @@ import { updateRowData, decrementId } from "@src/utils/table";
 
 const TEST_COLLECTION = "_testing";
 
-const initRows = (initialRowsDb?: TableRow[], initialRowsLocal?: TableRow[]) =>
+const initRows = (
+  initialRowsDb: TableRow[] = [],
+  initialRowsLocal: TableRow[] = [],
+  enableAudit: boolean = false
+) =>
   renderHook(async () => {
     const setCurrentUser = useSetAtom(currentUserAtom, tableScope);
     setCurrentUser({
@@ -38,32 +42,35 @@ const initRows = (initialRowsDb?: TableRow[], initialRowsLocal?: TableRow[]) =>
       roles: ["ADMIN"],
       section: "",
       tableType: "primaryCollection",
+      audit: enableAudit,
     });
 
     const setRowsDb = useSetAtom(tableRowsDbAtom, tableScope);
-    setRowsDb([...(initialRowsDb ?? [])]);
+    setRowsDb([...initialRowsDb]);
     const readRowsDb = useAtomCallback(
       useCallback((get) => get(tableRowsDbAtom), []),
       tableScope
     );
 
     const setRowsLocal = useSetAtom(tableRowsLocalAtom, tableScope);
-    setRowsLocal({ type: "set", rows: [...(initialRowsLocal ?? [])] });
+    setRowsLocal({ type: "set", rows: [...initialRowsLocal] });
 
     const setUpdateRowDb = useSetAtom(_updateRowDbAtom, tableScope);
     setUpdateRowDb(() => async (path: string, update: Partial<TableRow>) => {
-      const rows = [...(await readRowsDb())];
-      const index = findIndex(rows, ["_rowy_ref.path", path]);
-      // Append if not found
-      if (index === -1) {
-        setRowsDb([
-          ...rows,
-          { ...update, _rowy_ref: { id: path.split("/").pop()!, path } },
-        ]);
-      } else {
+      setRowsDb((rows) => {
+        const index = findIndex(rows, ["_rowy_ref.path", path]);
+
+        // Append if not found
+        if (index === -1) {
+          return [
+            ...rows,
+            { ...update, _rowy_ref: { id: path.split("/").pop()!, path } },
+          ];
+        }
+
         rows[index] = updateRowData(rows[index], update);
-        setRowsDb(rows);
-      }
+        return rows;
+      });
       return Promise.resolve();
     });
 
@@ -94,132 +101,382 @@ const generatedRowsLocal = new Array(GENERATED_ROWS_LENGTH)
   }));
 
 describe("addRow", () => {
-  test("adds a single row with pre-defined id", async () => {
-    initRows(generatedRows);
-    const {
-      result: { current: addRow },
-    } = renderHook(() => useSetAtom(addRowAtom, tableScope));
-    expect(addRow).toBeDefined();
+  describe("single", () => {
+    test("adds a single row with pre-defined id", async () => {
+      initRows(generatedRows);
+      const {
+        result: { current: addRow },
+      } = renderHook(() => useSetAtom(addRowAtom, tableScope));
+      expect(addRow).toBeDefined();
 
-    await act(() =>
-      addRow({
-        row: {
-          _rowy_ref: { id: "addedRow", path: TEST_COLLECTION + "/addedRow" },
-          added: true,
-        },
-      })
-    );
+      await act(() =>
+        addRow({
+          row: {
+            _rowy_ref: { id: "addedRow", path: TEST_COLLECTION + "/addedRow" },
+            added: true,
+          },
+        })
+      );
 
-    const {
-      result: { current: tableRows },
-    } = renderHook(() => useAtomValue(tableRowsAtom, tableScope));
-    expect(tableRows).toHaveLength(GENERATED_ROWS_LENGTH + 1);
-    expect(find(tableRows, ["_rowy_ref.id", "addedRow"])).toBeDefined();
-    expect(find(tableRows, ["_rowy_ref.id", "addedRow"])?.added).toBe(true);
+      const {
+        result: { current: tableRows },
+      } = renderHook(() => useAtomValue(tableRowsAtom, tableScope));
+      expect(tableRows).toHaveLength(GENERATED_ROWS_LENGTH + 1);
+      expect(find(tableRows, ["_rowy_ref.id", "addedRow"])).toBeDefined();
+      expect(find(tableRows, ["_rowy_ref.id", "addedRow"])?.added).toBe(true);
+    });
+
+    test("adds a single row with pre-defined id to an empty table", async () => {
+      initRows();
+      const {
+        result: { current: addRow },
+      } = renderHook(() => useSetAtom(addRowAtom, tableScope));
+      expect(addRow).toBeDefined();
+
+      await act(() =>
+        addRow({
+          row: {
+            _rowy_ref: { id: "addedRow", path: TEST_COLLECTION + "/addedRow" },
+            added: true,
+          },
+        })
+      );
+
+      const {
+        result: { current: tableRows },
+      } = renderHook(() => useAtomValue(tableRowsAtom, tableScope));
+      expect(tableRows).toHaveLength(1);
+      expect(find(tableRows, ["_rowy_ref.id", "addedRow"])).toBeDefined();
+      expect(find(tableRows, ["_rowy_ref.id", "addedRow"])?.added).toBe(true);
+    });
+
+    test("adds a single row and generates random id", async () => {
+      initRows(generatedRows);
+      const {
+        result: { current: addRow },
+      } = renderHook(() => useSetAtom(addRowAtom, tableScope));
+      expect(addRow).toBeDefined();
+
+      await act(() =>
+        addRow({
+          row: {
+            _rowy_ref: { id: "addedRow", path: TEST_COLLECTION + "/addedRow" },
+            added: true,
+          },
+          setId: "random",
+        })
+      );
+
+      const {
+        result: { current: tableRows },
+      } = renderHook(() => useAtomValue(tableRowsAtom, tableScope));
+      expect(tableRows).toHaveLength(GENERATED_ROWS_LENGTH + 1);
+      expect(find(tableRows, ["_rowy_ref.id", "addedRow"])).toBeUndefined();
+      expect(find(tableRows, ["added", true])).toBeDefined();
+      expect(find(tableRows, ["added", true])?._rowy_ref.id).toHaveLength(20);
+    });
+
+    test("adds a single row and decrements id", async () => {
+      initRows(generatedRows);
+      const {
+        result: { current: addRow },
+      } = renderHook(() => useSetAtom(addRowAtom, tableScope));
+      expect(addRow).toBeDefined();
+
+      await act(() =>
+        addRow({
+          row: {
+            _rowy_ref: { id: "addedRow", path: TEST_COLLECTION + "/addedRow" },
+            added: true,
+          },
+          setId: "decrement",
+        })
+      );
+
+      const {
+        result: { current: tableRows },
+      } = renderHook(() => useAtomValue(tableRowsAtom, tableScope));
+      expect(tableRows).toHaveLength(GENERATED_ROWS_LENGTH + 1);
+      expect(find(tableRows, ["_rowy_ref.id", "addedRow"])).toBeUndefined();
+      expect(find(tableRows, ["added", true])).toBeDefined();
+      expect(find(tableRows, ["added", true])?._rowy_ref.id).toBe(
+        decrementId("row0")
+      );
+    });
+
+    test("adds a single row with decrements id to an empty table", async () => {
+      initRows([]);
+      const {
+        result: { current: addRow },
+      } = renderHook(() => useSetAtom(addRowAtom, tableScope));
+      expect(addRow).toBeDefined();
+
+      await act(() =>
+        addRow({
+          row: {
+            _rowy_ref: { id: "addedRow", path: TEST_COLLECTION + "/addedRow" },
+            added: true,
+          },
+          setId: "decrement",
+        })
+      );
+
+      const {
+        result: { current: tableRows },
+      } = renderHook(() => useAtomValue(tableRowsAtom, tableScope));
+      expect(tableRows).toHaveLength(1);
+      expect(find(tableRows, ["_rowy_ref.id", "addedRow"])).toBeUndefined();
+      expect(find(tableRows, ["added", true])).toBeDefined();
+      expect(find(tableRows, ["added", true])?._rowy_ref.id).toBe(
+        decrementId()
+      );
+    });
   });
 
-  test("adds a single row with pre-defined id to an empty table", async () => {
-    initRows();
-    const {
-      result: { current: addRow },
-    } = renderHook(() => useSetAtom(addRowAtom, tableScope));
-    expect(addRow).toBeDefined();
+  describe("multiple", () => {
+    test("adds multiple rows with pre-defined id", async () => {
+      initRows(generatedRows);
+      const {
+        result: { current: addRow },
+      } = renderHook(() => useSetAtom(addRowAtom, tableScope));
+      expect(addRow).toBeDefined();
 
-    await act(() =>
-      addRow({
-        row: {
-          _rowy_ref: { id: "addedRow", path: TEST_COLLECTION + "/addedRow" },
-          added: true,
-        },
-      })
-    );
+      await act(
+        async () =>
+          await addRow({
+            row: [
+              {
+                _rowy_ref: {
+                  id: "addedRow0",
+                  path: TEST_COLLECTION + "/addedRow0",
+                },
+                added: true,
+              },
+              {
+                _rowy_ref: {
+                  id: "addedRow1",
+                  path: TEST_COLLECTION + "/addedRow1",
+                },
+                added: true,
+              },
+              {
+                _rowy_ref: {
+                  id: "addedRow2",
+                  path: TEST_COLLECTION + "/addedRow2",
+                },
+                added: true,
+              },
+            ],
+          })
+      );
 
-    const {
-      result: { current: tableRows },
-    } = renderHook(() => useAtomValue(tableRowsAtom, tableScope));
-    expect(tableRows).toHaveLength(1);
-    expect(find(tableRows, ["_rowy_ref.id", "addedRow"])).toBeDefined();
-    expect(find(tableRows, ["_rowy_ref.id", "addedRow"])?.added).toBe(true);
-  });
+      const {
+        result: { current: tableRows },
+      } = renderHook(() => useAtomValue(tableRowsAtom, tableScope));
+      expect(tableRows).toHaveLength(GENERATED_ROWS_LENGTH + 3);
+      expect(find(tableRows, ["_rowy_ref.id", "addedRow0"])).toBeDefined();
+      expect(find(tableRows, ["_rowy_ref.id", "addedRow0"])?.added).toBe(true);
+      expect(find(tableRows, ["_rowy_ref.id", "addedRow1"])).toBeDefined();
+      expect(find(tableRows, ["_rowy_ref.id", "addedRow1"])?.added).toBe(true);
+      expect(find(tableRows, ["_rowy_ref.id", "addedRow2"])).toBeDefined();
+      expect(find(tableRows, ["_rowy_ref.id", "addedRow2"])?.added).toBe(true);
+    });
 
-  test("adds a single row and generate random id", async () => {
-    initRows(generatedRows);
-    const {
-      result: { current: addRow },
-    } = renderHook(() => useSetAtom(addRowAtom, tableScope));
-    expect(addRow).toBeDefined();
+    test("adds multiple rows with pre-defined id to an empty table", async () => {
+      initRows();
+      const {
+        result: { current: addRow },
+      } = renderHook(() => useSetAtom(addRowAtom, tableScope));
+      expect(addRow).toBeDefined();
 
-    await act(() =>
-      addRow({
-        row: {
-          _rowy_ref: { id: "addedRow", path: TEST_COLLECTION + "/addedRow" },
-          added: true,
-        },
-        setId: "random",
-      })
-    );
+      await act(
+        async () =>
+          await addRow({
+            row: [
+              {
+                _rowy_ref: {
+                  id: "addedRow0",
+                  path: TEST_COLLECTION + "/addedRow0",
+                },
+                added: true,
+              },
+              {
+                _rowy_ref: {
+                  id: "addedRow1",
+                  path: TEST_COLLECTION + "/addedRow1",
+                },
+                added: true,
+              },
+              {
+                _rowy_ref: {
+                  id: "addedRow2",
+                  path: TEST_COLLECTION + "/addedRow2",
+                },
+                added: true,
+              },
+            ],
+          })
+      );
 
-    const {
-      result: { current: tableRows },
-    } = renderHook(() => useAtomValue(tableRowsAtom, tableScope));
-    expect(tableRows).toHaveLength(GENERATED_ROWS_LENGTH + 1);
-    expect(find(tableRows, ["_rowy_ref.id", "addedRow"])).toBeUndefined();
-    expect(find(tableRows, ["added", true])).toBeDefined();
-    expect(find(tableRows, ["added", true])?._rowy_ref.id).toHaveLength(20);
-  });
+      const {
+        result: { current: tableRows },
+      } = renderHook(() => useAtomValue(tableRowsAtom, tableScope));
+      expect(tableRows).toHaveLength(3);
+      expect(find(tableRows, ["_rowy_ref.id", "addedRow0"])).toBeDefined();
+      expect(find(tableRows, ["_rowy_ref.id", "addedRow0"])?.added).toBe(true);
+      expect(find(tableRows, ["_rowy_ref.id", "addedRow1"])).toBeDefined();
+      expect(find(tableRows, ["_rowy_ref.id", "addedRow1"])?.added).toBe(true);
+      expect(find(tableRows, ["_rowy_ref.id", "addedRow2"])).toBeDefined();
+      expect(find(tableRows, ["_rowy_ref.id", "addedRow2"])?.added).toBe(true);
+    });
 
-  test("adds a single row and decrement id", async () => {
-    initRows(generatedRows);
-    const {
-      result: { current: addRow },
-    } = renderHook(() => useSetAtom(addRowAtom, tableScope));
-    expect(addRow).toBeDefined();
+    test("adds multiple rows and generates random id", async () => {
+      initRows(generatedRows);
+      const {
+        result: { current: addRow },
+      } = renderHook(() => useSetAtom(addRowAtom, tableScope));
+      expect(addRow).toBeDefined();
 
-    await act(() =>
-      addRow({
-        row: {
-          _rowy_ref: { id: "addedRow", path: TEST_COLLECTION + "/addedRow" },
-          added: true,
-        },
-        setId: "decrement",
-      })
-    );
+      await act(
+        async () =>
+          await addRow({
+            row: [
+              {
+                _rowy_ref: {
+                  id: "addedRow0",
+                  path: TEST_COLLECTION + "/addedRow0",
+                },
+                added: true,
+              },
+              {
+                _rowy_ref: {
+                  id: "addedRow1",
+                  path: TEST_COLLECTION + "/addedRow1",
+                },
+                added: true,
+              },
+              {
+                _rowy_ref: {
+                  id: "addedRow2",
+                  path: TEST_COLLECTION + "/addedRow2",
+                },
+                added: true,
+              },
+            ],
+            setId: "random",
+          })
+      );
 
-    const {
-      result: { current: tableRows },
-    } = renderHook(() => useAtomValue(tableRowsAtom, tableScope));
-    expect(tableRows).toHaveLength(GENERATED_ROWS_LENGTH + 1);
-    expect(find(tableRows, ["_rowy_ref.id", "addedRow"])).toBeUndefined();
-    expect(find(tableRows, ["added", true])).toBeDefined();
-    expect(find(tableRows, ["added", true])?._rowy_ref.id).toBe(
-      decrementId("row0")
-    );
-  });
+      const {
+        result: { current: tableRows },
+      } = renderHook(() => useAtomValue(tableRowsAtom, tableScope));
+      expect(tableRows).toHaveLength(GENERATED_ROWS_LENGTH + 3);
+      expect(find(tableRows, ["_rowy_ref.id", "addedRow0"])).toBeUndefined();
+      expect(find(tableRows, ["_rowy_ref.id", "addedRow1"])).toBeUndefined();
+      expect(find(tableRows, ["_rowy_ref.id", "addedRow2"])).toBeUndefined();
+      expect(find(tableRows, ["added", true])).toBeDefined();
+      expect(find(tableRows, ["added", true])?._rowy_ref.id).toHaveLength(20);
+    });
 
-  test("adds a single row with decrement id to an empty table", async () => {
-    initRows([]);
-    const {
-      result: { current: addRow },
-    } = renderHook(() => useSetAtom(addRowAtom, tableScope));
-    expect(addRow).toBeDefined();
+    test("adds multiple rows and decrements id", async () => {
+      initRows(generatedRows);
+      const {
+        result: { current: addRow },
+      } = renderHook(() => useSetAtom(addRowAtom, tableScope));
+      expect(addRow).toBeDefined();
 
-    await act(() =>
-      addRow({
-        row: {
-          _rowy_ref: { id: "addedRow", path: TEST_COLLECTION + "/addedRow" },
-          added: true,
-        },
-        setId: "decrement",
-      })
-    );
+      await act(
+        async () =>
+          await addRow({
+            row: [
+              {
+                _rowy_ref: {
+                  id: "addedRow0",
+                  path: TEST_COLLECTION + "/addedRow0",
+                },
+                added: true,
+              },
+              {
+                _rowy_ref: {
+                  id: "addedRow1",
+                  path: TEST_COLLECTION + "/addedRow1",
+                },
+                added: true,
+              },
+              {
+                _rowy_ref: {
+                  id: "addedRow2",
+                  path: TEST_COLLECTION + "/addedRow2",
+                },
+                added: true,
+              },
+            ],
+            setId: "decrement",
+          })
+      );
 
-    const {
-      result: { current: tableRows },
-    } = renderHook(() => useAtomValue(tableRowsAtom, tableScope));
-    expect(tableRows).toHaveLength(1);
-    expect(find(tableRows, ["_rowy_ref.id", "addedRow"])).toBeUndefined();
-    expect(find(tableRows, ["added", true])).toBeDefined();
-    expect(find(tableRows, ["added", true])?._rowy_ref.id).toBe(decrementId());
+      const {
+        result: { current: tableRows },
+      } = renderHook(() => useAtomValue(tableRowsAtom, tableScope));
+      expect(tableRows).toHaveLength(GENERATED_ROWS_LENGTH + 3);
+      expect(find(tableRows, ["_rowy_ref.id", "addedRow0"])).toBeUndefined();
+      expect(find(tableRows, ["_rowy_ref.id", "addedRow1"])).toBeUndefined();
+      expect(find(tableRows, ["_rowy_ref.id", "addedRow2"])).toBeUndefined();
+      expect(find(tableRows, ["added", true])).toBeDefined();
+      expect(find(tableRows, ["added", true])?._rowy_ref.id).toBe(
+        decrementId(decrementId(decrementId("row0")))
+      );
+    });
+
+    test("adds multiple rows and decrements id to an empty table", async () => {
+      initRows();
+      const {
+        result: { current: addRow },
+      } = renderHook(() => useSetAtom(addRowAtom, tableScope));
+      expect(addRow).toBeDefined();
+
+      await act(
+        async () =>
+          await addRow({
+            row: [
+              {
+                _rowy_ref: {
+                  id: "addedRow0",
+                  path: TEST_COLLECTION + "/addedRow0",
+                },
+                added: true,
+              },
+              {
+                _rowy_ref: {
+                  id: "addedRow1",
+                  path: TEST_COLLECTION + "/addedRow1",
+                },
+                added: true,
+              },
+              {
+                _rowy_ref: {
+                  id: "addedRow2",
+                  path: TEST_COLLECTION + "/addedRow2",
+                },
+                added: true,
+              },
+            ],
+            setId: "decrement",
+          })
+      );
+
+      const {
+        result: { current: tableRows },
+      } = renderHook(() => useAtomValue(tableRowsAtom, tableScope));
+      expect(tableRows).toHaveLength(3);
+      expect(find(tableRows, ["_rowy_ref.id", "addedRow0"])).toBeUndefined();
+      expect(find(tableRows, ["_rowy_ref.id", "addedRow1"])).toBeUndefined();
+      expect(find(tableRows, ["_rowy_ref.id", "addedRow2"])).toBeUndefined();
+      expect(find(tableRows, ["added", true])).toBeDefined();
+      expect(find(tableRows, ["added", true])?._rowy_ref.id).toBe(
+        decrementId(decrementId(decrementId()))
+      );
+    });
   });
 });
 

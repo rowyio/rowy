@@ -1,6 +1,6 @@
 import { atom } from "jotai";
 import { atomWithReducer } from "jotai/utils";
-import { uniqBy, findIndex, cloneDeep, unset } from "lodash-es";
+import { uniqBy, sortBy, findIndex, cloneDeep, unset } from "lodash-es";
 
 import {
   TableSettings,
@@ -107,8 +107,11 @@ export const tableRowsLocalAtom = atomWithReducer(
 export const tableRowsDbAtom = atom<TableRow[]>([]);
 /** Combine tableRowsLocal and tableRowsDb */
 export const tableRowsAtom = atom<TableRow[]>((get) =>
-  uniqBy(
-    [...get(tableRowsLocalAtom), ...get(tableRowsDbAtom)],
+  sortBy(
+    uniqBy(
+      [...get(tableRowsLocalAtom), ...get(tableRowsDbAtom)],
+      "_rowy_ref.path"
+    ),
     "_rowy_ref.path"
   )
 );
