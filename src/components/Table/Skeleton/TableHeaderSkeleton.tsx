@@ -1,7 +1,7 @@
 import { Fade, Stack, Button, Skeleton, SkeletonProps } from "@mui/material";
 import AddRowIcon from "@src/assets/icons/AddRow";
 
-// TODO:
+// FIXME:
 // import { TABLE_HEADER_HEIGHT } from "@src/components/TableHeader";
 const TABLE_HEADER_HEIGHT = 44;
 

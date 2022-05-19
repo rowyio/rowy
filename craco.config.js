@@ -64,4 +64,15 @@ module.exports = {
       return jestConfig;
     },
   },
+  webpack: {
+    configure: {
+      resolve: {
+        // Need to add polyfill for csv-parse
+        fallback: {
+          stream: require.resolve("stream-browserify"),
+          buffer: require.resolve("buffer"),
+        },
+      },
+    },
+  },
 };

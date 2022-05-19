@@ -138,3 +138,18 @@ export const tableSettingsDialogSchemaAtom = atom(async (get) => {
   if (!tableId || !getTableSchema) return {} as TableSchema;
   return getTableSchema(tableId);
 });
+
+/** Persist the state of the add row ID type */
+export const tableAddRowIdTypeAtom = atomWithStorage<
+  "decrement" | "random" | "custom"
+>("__ROWY__ADD_ROW_ID_TYPE", "decrement");
+/** Persist when the user dismissed the row out of order warning */
+export const tableOutOfOrderDismissedAtom = atomWithStorage(
+  "__ROWY__OUT_OF_ORDER_TOOLTIP_DISMISSED",
+  false
+);
+/** Store tables where user has dismissed the description tooltip */
+export const tableDescriptionDismissedAtom = atomWithStorage<string[]>(
+  "__ROWY__TABLE_DESCRIPTION_DISMISSED",
+  []
+);

@@ -24,10 +24,9 @@ import {
 } from "@src/atoms/tableScope";
 
 import useFirestoreDocWithAtom from "@src/hooks/useFirestoreDocWithAtom";
-import useFirestoreCollectionWithAtom, {
-  DEFAULT_COLLECTION_QUERY_LIMIT,
-} from "@src/hooks/useFirestoreCollectionWithAtom";
+import useFirestoreCollectionWithAtom from "@src/hooks/useFirestoreCollectionWithAtom";
 import { TABLE_SCHEMAS, TABLE_GROUP_SCHEMAS } from "@src/config/dbPaths";
+import { COLLECTION_PAGE_SIZE } from "@src/config/db";
 
 import type { FirestoreError } from "firebase/firestore";
 import { useSnackbar } from "notistack";
@@ -46,15 +45,13 @@ const TableSourceFirestore = memo(function TableSourceFirestore() {
   const setTableSettings = useSetAtom(tableSettingsAtom, tableScope);
   // Store tableSettings as local const so we don’t re-render
   // when tableSettingsAtom is set
-  const tableSettings = useMemo(
-    () => find(tables, ["id", tableId]),
-    [tables, tableId]
-  );
+  const tableSettings = useMemo(() => {
+    const match = find(tables, ["id", tableId]);
+    // Store in tableSettingsAtom
+    if (match) setTableSettings(match);
+    return match;
+  }, [tables, tableId, setTableSettings]);
   if (!tableSettings) throw new Error(ERROR_TABLE_NOT_FOUND);
-  // Store in tableSettingsAtom
-  useEffect(() => {
-    setTableSettings(tableSettings);
-  }, [tableSettings, setTableSettings]);
 
   const isCollectionGroup = tableSettings?.tableType === "collectionGroup";
 
@@ -86,7 +83,7 @@ const TableSourceFirestore = memo(function TableSourceFirestore() {
     {
       filters,
       orders,
-      limit: DEFAULT_COLLECTION_QUERY_LIMIT * (page + 1),
+      limit: COLLECTION_PAGE_SIZE * (page + 1),
       collectionGroup: isCollectionGroup,
       onError: (error) =>
         handleFirestoreError(error, enqueueSnackbar, elevateError),

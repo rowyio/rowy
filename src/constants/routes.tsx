@@ -1,4 +1,5 @@
 import Logo from "@src/assets/Logo";
+import Breadcrumbs from "@src/components/Table/Breadcrumbs";
 import { GrowProps } from "@mui/material";
 
 export enum ROUTES {
@@ -46,7 +47,13 @@ export const ROUTE_TITLES = {
       ),
   },
 
-  [ROUTES.table]: "Table Test",
+  [ROUTES.table]: {
+    title: "Table",
+    titleComponent: (open, pinned) => (
+      <Breadcrumbs sx={{ ml: open && pinned ? -48 / 8 : 2 }} />
+    ),
+    titleTransitionProps: { style: { transformOrigin: "0 50%" } },
+  },
 
   [ROUTES.settings]: "Settings",
   [ROUTES.userSettings]: "Settings",

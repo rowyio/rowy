@@ -1,5 +1,6 @@
+import { useState, useEffect } from "react";
 import { FallbackProps } from "react-error-boundary";
-import { Link } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 
 import { Button } from "@mui/material";
 import ReloadIcon from "@mui/icons-material/Refresh";
@@ -20,6 +21,13 @@ export default function ErrorFallback({
   resetErrorBoundary,
   ...props
 }: IErrorFallbackProps) {
+  // Reset error boundary when navigating away from the page
+  const location = useLocation();
+  const [errorPathname] = useState(location.pathname);
+  useEffect(() => {
+    if (errorPathname !== location.pathname) resetErrorBoundary();
+  }, [errorPathname, location.pathname, resetErrorBoundary]);
+
   if ((error as any).code === "permission-denied")
     return (
       <AccessDenied error={error} resetErrorBoundary={resetErrorBoundary} />

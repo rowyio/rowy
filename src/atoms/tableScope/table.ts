@@ -1,10 +1,18 @@
 import { atom } from "jotai";
 import { atomWithReducer } from "jotai/utils";
-import { uniqBy, sortBy, findIndex, cloneDeep, unset } from "lodash-es";
+import {
+  uniqBy,
+  sortBy,
+  findIndex,
+  cloneDeep,
+  unset,
+  orderBy,
+} from "lodash-es";
 
 import {
   TableSettings,
   TableSchema,
+  ColumnConfig,
   TableFilter,
   TableOrder,
   TableRow,
@@ -15,15 +23,37 @@ import {
 import { updateRowData } from "@src/utils/table";
 
 /** Root atom from which others are derived */
-export const tableIdAtom = atom<string | undefined>(undefined);
+export const tableIdAtom = atom("");
 /** Store tableSettings from project settings document */
-export const tableSettingsAtom = atom<TableSettings | undefined>(undefined);
+export const tableSettingsAtom = atom<TableSettings>({
+  id: "",
+  collection: "",
+  name: "",
+  roles: [],
+  section: "",
+  tableType: "primaryCollection",
+});
 /** Store tableSchema from schema document */
 export const tableSchemaAtom = atom<TableSchema>({});
 /** Store function to update tableSchema */
 export const updateTableSchemaAtom = atom<
   UpdateDocFunction<TableSchema> | undefined
 >(undefined);
+/** Store the table columns as an ordered array */
+export const tableColumnsOrderedAtom = atom<ColumnConfig[]>((get) => {
+  const tableSchema = get(tableSchemaAtom);
+  if (!tableSchema || !tableSchema.columns) return [];
+  return orderBy(Object.values(tableSchema?.columns ?? {}), "index");
+});
+/** Reducer function to convert from array of columns to columns object */
+export const tableColumnsReducer = (
+  a: Record<string, ColumnConfig>,
+  c: ColumnConfig,
+  index: number
+) => {
+  a[c.key] = { ...c, index };
+  return a;
+};
 
 /** Filters applied to the local view */
 export const tableFiltersAtom = atom<TableFilter[]>([]);

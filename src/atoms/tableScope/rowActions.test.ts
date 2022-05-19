@@ -233,6 +233,9 @@ describe("addRow", () => {
     });
   });
 
+  // TODO: NESTED FIELDS TESTS
+  // TODO: TEST _rowy_* fields are removed
+
   describe("multiple", () => {
     test("adds multiple rows with pre-defined id", async () => {
       initRows(generatedRows);

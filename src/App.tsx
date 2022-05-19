@@ -36,7 +36,7 @@ const TableSettingsDialog = lazy(() => import("@src/components/TableSettingsDial
 // prettier-ignore
 const TablesPage = lazy(() => import("@src/pages/Tables" /* webpackChunkName: "TablesPage" */));
 // prettier-ignore
-const TablePage = lazy(() => import("@src/pages/TableTest" /* webpackChunkName: "TablePage" */));
+const TablePage = lazy(() => import("@src/pages/Table" /* webpackChunkName: "TablePage" */));
 
 // prettier-ignore
 const UserSettingsPage = lazy(() => import("@src/pages/Settings/UserSettings" /* webpackChunkName: "UserSettingsPage" */));
@@ -119,7 +119,7 @@ export default function App() {
             />
             {/* <Route path={ROUTES.rowyRunTest} element={<RowyRunTestPage />} /> */}
 
-            <Route path="/jotaiTest" element={<JotaiTestPage />} />
+            <Route path="/test/jotai" element={<JotaiTestPage />} />
           </Route>
 
           <Route path={ROUTES.themeTest} element={<ThemeTestPage />} />

@@ -5,13 +5,13 @@ import { currentUserAtom } from "@src/atoms/globalScope";
 import {
   auditChangeAtom,
   tableSettingsAtom,
+  tableColumnsOrderedAtom,
   tableFiltersAtom,
   tableRowsLocalAtom,
   tableRowsAtom,
   _updateRowDbAtom,
   _deleteRowDbAtom,
 } from "./table";
-import { tableColumnsOrderedAtom } from "./columnActions";
 import { TableRow } from "@src/types/table";
 import {
   rowyUser,
@@ -216,7 +216,7 @@ export interface IUpdateFieldOptions {
  * Updates or deletes a field in a row.
  * Adds to rowsDb if it has no missing required fields,
  * otherwise keeps in rowsLocal.
- * @param options - {@link IAddRowOptions}
+ * @param options - {@link IUpdateFieldOptions}
  *
  * @example Basic usage:
  * ```

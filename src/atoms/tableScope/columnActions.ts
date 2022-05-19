@@ -1,24 +1,12 @@
 import { atom } from "jotai";
-import { orderBy, findIndex } from "lodash-es";
+import { findIndex } from "lodash-es";
 
-import { tableSchemaAtom, updateTableSchemaAtom } from "./table";
+import {
+  tableColumnsOrderedAtom,
+  tableColumnsReducer,
+  updateTableSchemaAtom,
+} from "./table";
 import { ColumnConfig } from "@src/types/table";
-
-/** Store the table columns as an ordered array */
-export const tableColumnsOrderedAtom = atom<ColumnConfig[]>((get) => {
-  const tableSchema = get(tableSchemaAtom);
-  if (!tableSchema || !tableSchema.columns) return [];
-  return orderBy(Object.values(tableSchema?.columns ?? {}), "index");
-});
-/** Reducer function to convert from array of columns to columns object */
-export const tableColumnsReducer = (
-  a: Record<string, ColumnConfig>,
-  c: ColumnConfig,
-  index: number
-) => {
-  a[c.key] = { ...c, index };
-  return a;
-};
 
 export interface IAddColumnOptions {
   /** Column config to add. `config.index` is ignored */

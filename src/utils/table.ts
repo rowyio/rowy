@@ -1,5 +1,6 @@
 import { mergeWith, isArray } from "lodash-es";
 import type { User } from "firebase/auth";
+import { TABLE_GROUP_SCHEMAS, TABLE_SCHEMAS } from "@src/config/dbPaths";
 
 /**
  * Creates a standard user object to write to table rows
@@ -93,3 +94,22 @@ export const decrementId = (id: string = "zzzzzzzzzzzzzzzzzzzz") => {
 
   return newId.join("");
 };
+
+// Gets sub-table ID in $1
+const formatPathRegex = /\/[^\/]+\/([^\/]+)/g;
+
+/** Format table path  */
+export const formatPath = (
+  tablePath: string,
+  isCollectionGroup: boolean = false
+) => {
+  return `${
+    isCollectionGroup ? TABLE_GROUP_SCHEMAS : TABLE_SCHEMAS
+  }/${tablePath.replace(formatPathRegex, "/subTables/$1")}`;
+};
+
+/** Format sub-table name to store settings in user settings */
+export const formatSubTableName = (tablePath: string) =>
+  tablePath
+    ? tablePath.replace(formatPathRegex, "/subTables/$1").replace(/\//g, "_")
+    : "";

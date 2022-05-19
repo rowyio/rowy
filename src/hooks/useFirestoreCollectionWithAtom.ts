@@ -29,8 +29,7 @@ import {
   TableRow,
 } from "@src/types/table";
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
-
-export const DEFAULT_COLLECTION_QUERY_LIMIT = 50;
+import { COLLECTION_PAGE_SIZE } from "@src/config/db";
 
 /** Options for {@link useFirestoreCollectionWithAtom} */
 interface IUseFirestoreCollectionWithAtomOptions<T> {
@@ -88,7 +87,7 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
     collectionGroup,
     filters,
     orders,
-    limit = DEFAULT_COLLECTION_QUERY_LIMIT,
+    limit = COLLECTION_PAGE_SIZE,
     onError,
     disableSuspense,
     updateDocAtom,

@@ -65,6 +65,7 @@ export type TableSchema = {
   functionBuilderRef?: any;
 
   extensionObjects?: any[];
+  compiledExtension?: string;
   webhooks?: any[];
 };
 
@@ -81,12 +82,17 @@ export type ColumnConfig = {
   /** Column index set by addColumn, updateColumn functions */
   index: number;
 
+  /** Set column width for all users */
   width?: number;
+  /** If false (not undefined), locks the column for all users */
   editable?: boolean;
+  /** Hide the column for all users */
+  hidden?: boolean;
 
-  /** Column-specific config */
   config?: {
+    /** Set column to required */
     required?: boolean;
+    /** Set column default value */
     defaultValue?: {
       type: "undefined" | "null" | "static" | "dynamic";
       value?: any;
@@ -94,9 +100,9 @@ export type ColumnConfig = {
       dynamicValueFn?: string;
     };
 
+    /** Column-specific config */
     [key: string]: any;
   };
-  // [key: string]: any;
 };
 
 export type TableFilter = {
