@@ -7,13 +7,13 @@ import { TextField } from "@mui/material";
 
 import { tableScope, updateFieldAtom } from "@src/atoms/tableScope";
 import { FieldType } from "@src/constants/fields";
-import { getColumnType } from "@src/components/fields";
+import { getFieldType } from "@src/components/fields";
 
 /** WARNING: THIS DOES NOT WORK IN REACT 18 STRICT MODE */
 export default function TextEditor({ row, column }: EditorProps<any>) {
   const updateField = useSetAtom(updateFieldAtom, tableScope);
 
-  const type = getColumnType(column as any);
+  const type = getFieldType(column as any);
 
   const cellValue = get(row, column.key);
   const defaultValue =

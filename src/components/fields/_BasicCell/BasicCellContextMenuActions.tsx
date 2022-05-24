@@ -13,7 +13,7 @@ import {
 } from "@src/atoms/tableScope";
 import { useSnackbar } from "notistack";
 // import { SelectedCell } from "@src/atoms/ContextMenu";
-import { getFieldProp, getColumnType } from "@src/components/fields";
+import { getFieldProp, getFieldType } from "@src/components/fields";
 
 export interface IContextMenuActions {
   label: string;
@@ -70,7 +70,7 @@ export default function BasicContextMenuActions(
     try {
       if (!selectedCol) return;
       const text = await navigator.clipboard.readText();
-      const cellDataType = getFieldProp("dataType", getColumnType(selectedCol));
+      const cellDataType = getFieldProp("dataType", getFieldType(selectedCol));
       let parsed;
       switch (cellDataType) {
         case "number":

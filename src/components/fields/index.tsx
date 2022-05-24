@@ -23,15 +23,16 @@ import DateTime from "./DateTime";
 import Duration from "./Duration";
 import Image_ from "./Image";
 import File_ from "./File";
-// import SubTable from "./SubTable";
-// import ConnectTable from "./ConnectTable";
-// import ConnectService from "./ConnectService";
-// import Json from "./Json";
-// import Code from "./Code";
-// import Action from "./Action";
-// import Derivative from "./Derivative";
+import Connector from "./Connector";
+import SubTable from "./SubTable";
+import ConnectTable from "./ConnectTable";
+import ConnectService from "./ConnectService";
+import Json from "./Json";
+import Code from "./Code";
+import Action from "./Action";
+import Derivative from "./Derivative";
 // // import Aggregate from "./Aggregate";
-// import Status from "./Status";
+import Status from "./Status";
 import CreatedBy from "./CreatedBy";
 import UpdatedBy from "./UpdatedBy";
 import CreatedAt from "./CreatedAt";
@@ -39,8 +40,6 @@ import UpdatedAt from "./UpdatedAt";
 import User from "./User";
 import Id from "./Id";
 import { ColumnConfig } from "@src/types/table";
-
-// import Connector from "./Connector";
 
 // Export field configs in order for FieldsDropdown
 export const FIELDS: IFieldConfig[] = [
@@ -69,18 +68,18 @@ export const FIELDS: IFieldConfig[] = [
   Image_,
   File_,
   /** CONNECTION */
-  // Connector,
-  // SubTable,
-  // ConnectTable,
-  // ConnectService,
+  Connector,
+  SubTable,
+  ConnectTable,
+  ConnectService,
   /** CODE */
-  // Json,
-  // Code,
+  Json,
+  Code,
   /** CLOUD FUNCTION */
-  // Action,
-  // Derivative,
+  Action,
+  Derivative,
   // // Aggregate,
-  // Status,
+  Status,
   /** AUDITING */
   CreatedBy,
   UpdatedBy,
@@ -93,7 +92,9 @@ export const FIELDS: IFieldConfig[] = [
 
 /**
  * Returns specific property of field config
- * @param fieldType
+ * @param prop - The field config prop to retrieve
+ * @param fieldType - The field type to get the config from
+ * @returns The field config prop value
  */
 export const getFieldProp = (
   prop: keyof IFieldConfig,
@@ -105,7 +106,8 @@ export const getFieldProp = (
 
 /**
  * Returns `true` if it receives an existing fieldType
- * @param fieldType
+ * @param fieldType - The field type to check
+ * @returns boolean
  */
 export const isFieldType = (fieldType: any) => {
   const fieldTypes = FIELDS.map((field) => field.type);
@@ -114,7 +116,8 @@ export const isFieldType = (fieldType: any) => {
 
 /**
  * Returns array of fieldTypes with dataType included dataTypes array
- * @param dataTypes
+ * @param dataTypes - The dataTypes to check
+ * @returns array of fieldTypes
  */
 export const hasDataTypes = (dataTypes: string[]) => {
   const fieldTypes = FIELDS.map((field) => field.type);
@@ -123,7 +126,12 @@ export const hasDataTypes = (dataTypes: string[]) => {
   );
 };
 
-export const getColumnType = (column: ColumnConfig) =>
+/**
+ * Returns the FieldType of a config. Used for Derivative fields.
+ * @param column - The column to check
+ * @returns FieldType
+ */
+export const getFieldType = (column: ColumnConfig) =>
   column.type === FieldType.derivative
     ? column.config?.renderFieldType
     : column.type;

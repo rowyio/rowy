@@ -14,7 +14,7 @@ import { useTheme } from "@mui/material";
 import type { SystemStyleObject, Theme } from "@mui/system";
 
 // TODO:
-// import { getColumnType, getFieldProp } from "@src/components/fields";
+// import { getFieldType, getFieldProp } from "@src/components/fields";
 
 /* eslint-disable import/no-webpack-loader-syntax */
 import firestoreDefs from "!!raw-loader!./firestore.d.ts";
@@ -194,7 +194,7 @@ export default function useMonacoCustomizations({
   //     [
   //       Object.keys(columns).map((columnKey: string) => {
   //         const column = columns[columnKey];
-  //         const type = getColumnType(column);
+  //         const type = getFieldType(column);
   //         if (type === "JSON") {
   //           const interfaceName =
   //             columnKey[0].toUpperCase() + columnKey.slice(1);

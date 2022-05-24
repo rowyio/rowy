@@ -18,6 +18,7 @@ import {
   tableSettingsAtom,
   tableSchemaAtom,
 } from "@src/atoms/tableScope";
+import ActionParamsProvider from "@src/components/fields/Action/FormDialog/Provider";
 
 function TablePage() {
   const [tableId] = useAtom(tableIdAtom, tableScope);
@@ -37,7 +38,9 @@ function TablePage() {
 
   return (
     // <Suspense fallback={<div>Loading rows…</div>}>
-    <Table />
+    <ActionParamsProvider>
+      <Table />
+    </ActionParamsProvider>
     // </Suspense>
   );
 }

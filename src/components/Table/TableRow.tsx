@@ -13,6 +13,7 @@ export default function TableRow(props: RowRendererProps<any>) {
     e.preventDefault();
     // setAnchorEle?.(e?.target as HTMLElement);
   };
+
   if (props.row._rowy_outOfOrder)
     return (
       <Fragment key={props.row._rowy_ref.path}>

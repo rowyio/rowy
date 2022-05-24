@@ -101,6 +101,8 @@ export type ColumnConfig = {
     };
     /** FieldType to render for Derivative fields */
     renderFieldType?: FieldType;
+    /** For sub-table fields */
+    parentLabel?: string[];
 
     /** Column-specific config */
     [key: string]: any;

@@ -153,3 +153,9 @@ export const tableDescriptionDismissedAtom = atomWithStorage<string[]>(
   "__ROWY__TABLE_DESCRIPTION_DISMISSED",
   []
 );
+
+/** Store current JSON editor view */
+export const jsonEditorAtom = atomWithStorage<"tree" | "code">(
+  "__ROWY__JSON_EDITOR",
+  "tree"
+);

@@ -1,4 +1,4 @@
-import { mergeWith, isArray } from "lodash-es";
+import { mergeWith, isArray, get } from "lodash-es";
 import type { User } from "firebase/auth";
 import { TABLE_GROUP_SCHEMAS, TABLE_SCHEMAS } from "@src/config/dbPaths";
 

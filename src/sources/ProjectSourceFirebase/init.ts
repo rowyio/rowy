@@ -7,6 +7,7 @@ import {
   enableMultiTabIndexedDbPersistence,
 } from "firebase/firestore";
 import { getStorage, connectStorageEmulator } from "firebase/storage";
+import { getFunctions } from "firebase/functions";
 
 export const envConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_PROJECT_WEB_API_KEY,
@@ -77,3 +78,10 @@ export const firebaseStorageAtom = atom((get) => {
   }
   return storage;
 });
+
+/**
+ * Store Firebase Functions instance for current app.
+ */
+export const firebaseFunctionsAtom = atom((get) =>
+  getFunctions(get(firebaseAppAtom))
+);

@@ -40,7 +40,7 @@ import {
   updateFieldAtom,
 } from "@src/atoms/tableScope";
 
-import { getColumnType, getFieldProp } from "@src/components/fields";
+import { getFieldType, getFieldProp } from "@src/components/fields";
 import { FieldType } from "@src/constants/fields";
 import { formatSubTableName } from "@src/utils/table";
 import { ColumnConfig } from "@src/types/table";
@@ -89,12 +89,12 @@ export default function Table() {
         frozen: column.fixed,
         headerRenderer: ColumnHeader,
         formatter:
-          getFieldProp("TableCell", getColumnType(column)) ??
+          getFieldProp("TableCell", getFieldType(column)) ??
           function InDev() {
             return null;
           },
         editor:
-          getFieldProp("TableEditor", getColumnType(column)) ??
+          getFieldProp("TableEditor", getFieldType(column)) ??
           function InDev() {
             return null;
           },
