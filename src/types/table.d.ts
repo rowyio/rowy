@@ -99,6 +99,8 @@ export type ColumnConfig = {
       script?: string;
       dynamicValueFn?: string;
     };
+    /** FieldType to render for Derivative fields */
+    renderFieldType?: FieldType;
 
     /** Column-specific config */
     [key: string]: any;

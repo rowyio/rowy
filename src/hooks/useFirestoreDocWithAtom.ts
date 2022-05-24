@@ -50,7 +50,7 @@ export function useFirestoreDocWithAtom<T = TableRow>(
   const setDataAtom = useSetAtom(dataAtom, dataScope);
   const setUpdateDataAtom = useSetAtom(
     options?.updateDataAtom || (dataAtom as any),
-    globalScope
+    dataScope
   );
   const handleError = useErrorHandler();
 

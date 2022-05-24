@@ -1221,6 +1221,18 @@ export const components = (theme: Theme): ThemeOptions => {
         },
       },
 
+      MuiAvatar: {
+        styleOverrides: {
+          root: {
+            ...theme.typography.button,
+          },
+          colorDefault: {
+            backgroundColor: theme.palette.action.selected,
+            color: theme.palette.text.secondary,
+          },
+        },
+      },
+
       MuiYearPicker: {
         styleOverrides: {
           root: {

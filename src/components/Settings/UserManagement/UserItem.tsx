@@ -18,7 +18,7 @@ import MultiSelect from "@rowy/multiselect";
 
 import {
   globalScope,
-  rolesAtom,
+  projectRolesAtom,
   projectSettingsAtom,
   rowyRunAtom,
   rowyRunModalAtom,
@@ -38,7 +38,7 @@ export default function UserItem({
   const confirm = useSetAtom(confirmDialogAtom, globalScope);
   const openRowyRunModal = useSetAtom(rowyRunModalAtom, globalScope);
 
-  const [projectRoles] = useAtom(rolesAtom, globalScope);
+  const [projectRoles] = useAtom(projectRolesAtom, globalScope);
   const [projectSettings] = useAtom(projectSettingsAtom, globalScope);
   const [rowyRun] = useAtom(rowyRunAtom, globalScope);
   const [updateUser] = useAtom(updateUserAtom, globalScope);

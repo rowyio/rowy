@@ -3,26 +3,26 @@ import { find, get } from "lodash-es";
 import { FieldType } from "@src/constants/fields";
 import { IFieldConfig } from "./types";
 
-// // Import field configs
-// import ShortText from "./ShortText";
-// import LongText from "./LongText";
-// import RichText from "./RichText";
-// import Email from "./Email";
-// import Phone from "./Phone";
-// import Url from "./Url";
-// import Number_ from "./Number";
-// import Checkbox from "./Checkbox";
-// import Percentage from "./Percentage";
-// import Rating from "./Rating";
-// import Slider from "./Slider";
-// import Color from "./Color";
-// import Date_ from "./Date";
-// import DateTime from "./DateTime";
-// import Duration from "./Duration";
-// import Image_ from "./Image";
-// import File_ from "./File";
-// import SingleSelect from "./SingleSelect";
-// import MultiSelect from "./MultiSelect";
+// Import field configs
+import ShortText from "./ShortText";
+import LongText from "./LongText";
+import RichText from "./RichText";
+import Email from "./Email";
+import Phone from "./Phone";
+import Url from "./Url";
+import SingleSelect from "./SingleSelect";
+import MultiSelect from "./MultiSelect";
+import Number_ from "./Number";
+import Checkbox from "./Checkbox";
+import Percentage from "./Percentage";
+import Rating from "./Rating";
+import Slider from "./Slider";
+import Color from "./Color";
+import Date_ from "./Date";
+import DateTime from "./DateTime";
+import Duration from "./Duration";
+import Image_ from "./Image";
+import File_ from "./File";
 // import SubTable from "./SubTable";
 // import ConnectTable from "./ConnectTable";
 // import ConnectService from "./ConnectService";
@@ -31,63 +31,64 @@ import { IFieldConfig } from "./types";
 // import Action from "./Action";
 // import Derivative from "./Derivative";
 // // import Aggregate from "./Aggregate";
-// import CreatedBy from "./CreatedBy";
-// import UpdatedBy from "./UpdatedBy";
-// import CreatedAt from "./CreatedAt";
-// import UpdatedAt from "./UpdatedAt";
-// import User from "./User";
-// import Id from "./Id";
 // import Status from "./Status";
+import CreatedBy from "./CreatedBy";
+import UpdatedBy from "./UpdatedBy";
+import CreatedAt from "./CreatedAt";
+import UpdatedAt from "./UpdatedAt";
+import User from "./User";
+import Id from "./Id";
+import { ColumnConfig } from "@src/types/table";
+
 // import Connector from "./Connector";
-// import { TableColumn } from "../Table";
 
 // Export field configs in order for FieldsDropdown
 export const FIELDS: IFieldConfig[] = [
-  // // TEXT
-  // ShortText,
-  // LongText,
-  // RichText,
-  // Email,
-  // Phone,
-  // Url,
-  // // SELECT
-  // SingleSelect,
-  // MultiSelect,
-  // // NUMERIC
-  // Number_,
-  // Checkbox,
-  // Percentage,
-  // Rating,
-  // Slider,
-  // Color,
-  // // DATE & TIME
-  // Date_,
-  // DateTime,
-  // Duration,
-  // // FILE
-  // Image_,
-  // File_,
-  // // CONNECTION
+  /** TEXT */
+  ShortText,
+  LongText,
+  RichText,
+  Email,
+  Phone,
+  Url,
+  /** SELECT */
+  SingleSelect,
+  MultiSelect,
+  /** NUMERIC */
+  Number_,
+  Checkbox,
+  Percentage,
+  Rating,
+  Slider,
+  Color,
+  /** DATE & TIME */
+  Date_,
+  DateTime,
+  Duration,
+  /** FILE */
+  Image_,
+  File_,
+  /** CONNECTION */
   // Connector,
   // SubTable,
   // ConnectTable,
   // ConnectService,
-  // // CODE
+  /** CODE */
   // Json,
   // Code,
-  // // CLOUD FUNCTION
+  /** CLOUD FUNCTION */
   // Action,
   // Derivative,
   // // Aggregate,
   // Status,
-  // // AUDITING
-  // CreatedBy,
-  // UpdatedBy,
-  // CreatedAt,
-  // UpdatedAt,
-  // // METADATA
-  // User,
-  // Id,
+  /** AUDITING */
+  CreatedBy,
+  UpdatedBy,
+  CreatedAt,
+  UpdatedAt,
+  /** METADATA */
+  User,
+  Id,
 ];
 
 /**
@@ -122,12 +123,7 @@ export const hasDataTypes = (dataTypes: string[]) => {
   );
 };
 
-export const getColumnType = (column: {
-  type: FieldType;
-  config: {
-    renderFieldType: FieldType;
-  };
-}) =>
+export const getColumnType = (column: ColumnConfig) =>
   column.type === FieldType.derivative
-    ? column.config.renderFieldType
+    ? column.config?.renderFieldType
     : column.type;

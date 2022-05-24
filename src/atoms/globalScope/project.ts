@@ -136,7 +136,7 @@ export const getTableSchemaAtom = atom<
 >(undefined);
 
 /** Roles used in the project based on table settings */
-export const rolesAtom = atom((get) =>
+export const projectRolesAtom = atom((get) =>
   Array.from(
     new Set(
       get(tablesAtom).reduce(

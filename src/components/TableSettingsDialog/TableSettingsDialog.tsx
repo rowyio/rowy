@@ -20,7 +20,7 @@ import {
   globalScope,
   tableSettingsDialogAtom,
   tablesAtom,
-  rolesAtom,
+  projectRolesAtom,
   rowyRunAtom,
   confirmDialogAtom,
   createTableAtom,
@@ -64,7 +64,7 @@ export default function TableSettingsDialog() {
   );
   const clearDialog = () => setTableSettingsDialog({ open: false });
 
-  const [roles] = useAtom(rolesAtom, globalScope);
+  const [projectRoles] = useAtom(projectRolesAtom, globalScope);
   const [tables] = useAtom(tablesAtom, globalScope);
   const [rowyRun] = useAtom(rowyRunAtom, globalScope);
 
@@ -225,7 +225,7 @@ export default function TableSettingsDialog() {
 
   const fields = tableSettings(
     mode,
-    roles,
+    projectRoles,
     sectionNames,
     sortBy(
       tables?.map((table) => ({

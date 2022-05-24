@@ -17,7 +17,7 @@ import Modal from "@src/components/Modal";
 
 import {
   globalScope,
-  rolesAtom,
+  projectRolesAtom,
   projectSettingsAtom,
   rowyRunAtom,
   rowyRunModalAtom,
@@ -26,7 +26,7 @@ import { ROUTES } from "@src/constants/routes";
 import { runRoutes } from "@src/constants/runRoutes";
 
 export default function InviteUser() {
-  const [projectRoles] = useAtom(rolesAtom, globalScope);
+  const [projectRoles] = useAtom(projectRolesAtom, globalScope);
   const [projectSettings] = useAtom(projectSettingsAtom, globalScope);
   const [rowyRun] = useAtom(rowyRunAtom, globalScope);
   const openRowyRunModal = useSetAtom(rowyRunModalAtom, globalScope);

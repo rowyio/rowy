@@ -6,6 +6,7 @@ import {
   connectFirestoreEmulator,
   enableMultiTabIndexedDbPersistence,
 } from "firebase/firestore";
+import { getStorage, connectStorageEmulator } from "firebase/storage";
 
 export const envConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_PROJECT_WEB_API_KEY,
@@ -62,4 +63,17 @@ export const firebaseDbAtom = atom((get) => {
     (window as any).firebaseDbStarted = true;
   }
   return db;
+});
+
+/**
+ * Store Firebase Storage instance for current app.
+ * Connects to emulators based on env vars.
+ */
+export const firebaseStorageAtom = atom((get) => {
+  const storage = getStorage(get(firebaseAppAtom));
+  if (!(window as any).firebaseStorageEmulatorStarted) {
+    if (envConnectEmulators) connectStorageEmulator(storage, "localhost", 9199);
+    (window as any).firebaseStorageEmulatorStarted = true;
+  }
+  return storage;
 });

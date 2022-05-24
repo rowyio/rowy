@@ -9,6 +9,7 @@ import { tableScope, updateFieldAtom } from "@src/atoms/tableScope";
 import { FieldType } from "@src/constants/fields";
 import { getColumnType } from "@src/components/fields";
 
+/** WARNING: THIS DOES NOT WORK IN REACT 18 STRICT MODE */
 export default function TextEditor({ row, column }: EditorProps<any>) {
   const updateField = useSetAtom(updateFieldAtom, tableScope);
 
@@ -22,9 +23,11 @@ export default function TextEditor({ row, column }: EditorProps<any>) {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // WARNING: THIS DOES NOT WORK IN REACT 18 STRICT MODE
   useLayoutEffect(() => {
+    const inputElement = inputRef.current;
     return () => {
-      const newValue = inputRef.current?.value;
+      const newValue = inputElement?.value;
       let formattedValue: any = newValue;
       if (newValue !== undefined) {
         if (type === FieldType.number) {
@@ -40,7 +43,7 @@ export default function TextEditor({ row, column }: EditorProps<any>) {
         });
       }
     };
-  }, []);
+  }, [column.key, row._rowy_ref.path, type, updateField]);
 
   let inputType = "text";
   switch (type) {
