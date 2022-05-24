@@ -18,8 +18,9 @@ import {
   deleteRowAtom,
 } from "@src/atoms/tableScope";
 import useKeyPress from "@src/hooks/useKeyPress";
+import { TableRow } from "@src/types/table";
 
-export default function FinalColumn({ row }: FormatterProps<any, any>) {
+export default function FinalColumn({ row }: FormatterProps<TableRow, any>) {
   const [userRoles] = useAtom(userRolesAtom, globalScope);
   const [addRowIdType] = useAtom(tableAddRowIdTypeAtom, globalScope);
   const confirm = useSetAtom(confirmDialogAtom, globalScope);

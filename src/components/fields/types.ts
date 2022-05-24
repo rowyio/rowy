@@ -2,9 +2,10 @@ import { FieldType } from "@src/constants/fields";
 import { FormatterProps, EditorProps } from "react-data-grid";
 import { Control, UseFormReturn } from "react-hook-form";
 import { PopoverProps } from "@mui/material";
-import { DocumentReference, WhereFilterOp } from "firebase/firestore";
+import { WhereFilterOp } from "firebase/firestore";
+import { TableRow, TableRowRef } from "@src/types/table";
 // import { SelectedCell } from "@src/atoms/ContextMenu";
-// import { IContextMenuActions } from "./_BasicCell/BasicCellContextMenuActions";
+import { IContextMenuActions } from "./_BasicCell/BasicCellContextMenuActions";
 
 export { FieldType };
 
@@ -19,12 +20,12 @@ export interface IFieldConfig {
   icon?: React.ReactNode;
   description?: string;
   setupGuideLink?: string;
-  // contextMenuActions?: (
-  //   selectedCell: SelectedCell,
-  //   reset: () => Promise<void>
-  // ) => IContextMenuActions[];
-  TableCell: React.ComponentType<FormatterProps<any>>;
-  TableEditor: React.ComponentType<EditorProps<any, any>>;
+  contextMenuActions?: (
+    selectedCell: any, // FIXME: SelectedCell,
+    reset: () => Promise<void>
+  ) => IContextMenuActions[];
+  TableCell: React.ComponentType<FormatterProps<TableRow>>;
+  TableEditor: React.ComponentType<EditorProps<TableRow, any>>;
   SideDrawerField: React.ComponentType<ISideDrawerFieldProps>;
   settings?: React.ComponentType<ISettingsProps>;
   settingsValidator?: (config: Record<string, any>) => Record<string, string>;
@@ -44,10 +45,12 @@ export interface IBasicCellProps {
   type: FieldType;
   name: string;
 }
-export interface IHeavyCellProps extends IBasicCellProps, FormatterProps<any> {
-  column: FormatterProps<any>["column"] & { config?: Record<string, any> };
+export interface IHeavyCellProps
+  extends IBasicCellProps,
+    FormatterProps<TableRow> {
+  column: FormatterProps<TableRow>["column"] & { config?: Record<string, any> };
   onSubmit: (value: any) => void;
-  docRef: DocumentReference;
+  docRef: TableRowRef;
   disabled: boolean;
 }
 
@@ -59,9 +62,9 @@ export interface IPopoverCellProps extends IPopoverInlineCellProps {
 }
 
 export interface ISideDrawerFieldProps {
-  column: FormatterProps<any>["column"] & { config?: Record<string, any> };
+  column: FormatterProps<TableRow>["column"] & { config?: Record<string, any> };
   control: Control;
-  docRef: DocumentReference;
+  docRef: TableRowRef;
   disabled: boolean;
   useFormMethods: UseFormReturn;
 }

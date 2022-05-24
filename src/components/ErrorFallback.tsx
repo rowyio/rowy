@@ -96,3 +96,7 @@ export default function ErrorFallback({
 
   return <EmptyState fullScreen {...renderProps} {...props} />;
 }
+
+export function InlineErrorFallback(props: IErrorFallbackProps) {
+  return <ErrorFallback {...props} fullScreen={false} basic wrap="nowrap" />;
+}

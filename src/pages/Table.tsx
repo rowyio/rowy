@@ -5,8 +5,8 @@ import { isEmpty } from "lodash-es";
 
 import { Fade } from "@mui/material";
 
-import TableHeaderSkeleton from "@src/components/Table/Skeleton/TableHeaderSkeleton";
-import HeaderRowSkeleton from "@src/components/Table/Skeleton/HeaderRowSkeleton";
+import TableToolbarSkeleton from "@src/components/TableToolbar/TableToolbarSkeleton";
+import HeaderRowSkeleton from "@src/components/Table/HeaderRowSkeleton";
 import EmptyTable from "@src/components/Table/EmptyTable";
 import Table from "@src/components/Table";
 
@@ -35,7 +35,11 @@ function TablePage() {
       </Fade>
     );
 
-  return <Table />;
+  return (
+    // <Suspense fallback={<div>Loading rows…</div>}>
+    <Table />
+    // </Suspense>
+  );
 }
 
 export default function ProvidedTablePage() {
@@ -46,13 +50,13 @@ export default function ProvidedTablePage() {
     <Suspense
       fallback={
         <>
-          <TableHeaderSkeleton />
+          <TableToolbarSkeleton />
           <HeaderRowSkeleton />
         </>
       }
     >
       <Provider
-        key={id}
+        key={tableScope.description + "/" + id}
         scope={tableScope}
         initialValues={[
           [tableIdAtom, id],

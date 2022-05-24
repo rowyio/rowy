@@ -13,7 +13,7 @@ import DataGrid, {
 } from "react-data-grid";
 
 import TableContainer, { OUT_OF_ORDER_MARGIN } from "./TableContainer";
-import TableHeader from "@src/components/TableHeader";
+import TableToolbar from "@src/components/TableToolbar/TableToolbar";
 import ColumnHeader from "./ColumnHeader";
 // import ColumnMenu from "./ColumnMenu";
 // import ContextMenu from "./ContextMenu";
@@ -189,7 +189,7 @@ export default function Table() {
         <Hotkeys selectedCell={selectedCell} />
       </Suspense> */}
       <TableContainer ref={rowsContainerRef} rowHeight={rowHeight}>
-        <TableHeader />
+        <TableToolbar />
 
         <DndProvider backend={HTML5Backend}>
           <DataGrid

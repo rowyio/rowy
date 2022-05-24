@@ -14,8 +14,8 @@ import {
 } from "@src/atoms/tableScope";
 
 import TableSourceFirestore from "@src/sources/TableSourceFirestore";
-import TableHeaderSkeleton from "@src/components/Table/Skeleton/TableHeaderSkeleton";
-import HeaderRowSkeleton from "@src/components/Table/Skeleton/HeaderRowSkeleton";
+import TableToolbarSkeleton from "@src/components/TableToolbar/TableToolbarSkeleton";
+import HeaderRowSkeleton from "@src/components/Table/HeaderRowSkeleton";
 
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
 import { currentUserAtom, globalScope } from "@src/atoms/globalScope";
@@ -111,7 +111,7 @@ export default function ProvidedTableTestPage() {
     <Suspense
       fallback={
         <>
-          <TableHeaderSkeleton />
+          <TableToolbarSkeleton />
           <HeaderRowSkeleton />
         </>
       }

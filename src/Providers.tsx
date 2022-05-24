@@ -1,10 +1,12 @@
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "@src/components/ErrorFallback";
-import SwrProvider from "@src/contexts/SwrContext";
+// import SwrProvider from "@src/contexts/SwrContext";
 import { BrowserRouter } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { Provider, Atom } from "jotai";
 import { globalScope } from "@src/atoms/globalScope";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import createCache from "@emotion/cache";
 import { CacheProvider } from "@emotion/react";
 import RowyThemeProvider from "@src/theme/RowyThemeProvider";
@@ -29,20 +31,26 @@ export default function Providers({
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <BrowserRouter>
         <HelmetProvider>
-          <Provider scope={globalScope} initialValues={initialAtomValues}>
-            <CacheProvider value={muiCache}>
-              <RowyThemeProvider>
-                <ErrorBoundary FallbackComponent={ErrorFallback}>
-                  <SnackbarProvider>
-                    <SnackLogProvider>
-                      <Suspense fallback={<Loading fullScreen />}>
-                        {children}
-                      </Suspense>
-                    </SnackLogProvider>
-                  </SnackbarProvider>
-                </ErrorBoundary>
-              </RowyThemeProvider>
-            </CacheProvider>
+          <Provider
+            key={globalScope.description}
+            scope={globalScope}
+            initialValues={initialAtomValues}
+          >
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <CacheProvider value={muiCache}>
+                <RowyThemeProvider>
+                  <ErrorBoundary FallbackComponent={ErrorFallback}>
+                    <SnackbarProvider>
+                      <SnackLogProvider>
+                        <Suspense fallback={<Loading fullScreen />}>
+                          {children}
+                        </Suspense>
+                      </SnackLogProvider>
+                    </SnackbarProvider>
+                  </ErrorBoundary>
+                </RowyThemeProvider>
+              </CacheProvider>
+            </LocalizationProvider>
           </Provider>
         </HelmetProvider>
       </BrowserRouter>
