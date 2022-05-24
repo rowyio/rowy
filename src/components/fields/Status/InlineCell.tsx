@@ -58,7 +58,7 @@ export const StatusSingleSelect = forwardRef(function StatusSingleSelect(
             mr: 0.5,
             borderRadius: 1,
             p: (32 - 24) / 2 / 8,
-            boxSizing: "content-box",
+            boxSizing: "content-box !important",
           }}
         />
       )}
