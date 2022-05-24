@@ -11,6 +11,7 @@ import {
   TableSchema,
 } from "@src/types/table";
 import { FieldType } from "@src/constants/fields";
+import { FunctionSettings } from "@src/types/function";
 
 export const projectIdAtom = atom<string>("");
 
@@ -152,4 +153,11 @@ export const allUsersAtom = atom<UserSettings[]>([]);
 /** Stores a function that updates a user document */
 export const updateUserAtom = atom<
   UpdateCollectionDocFunction<UserSettings> | undefined
+>(undefined);
+
+/** Functions home page: all functions */
+export const FunctionsIndexAtom = atom<FunctionSettings[]>([]);
+/** Stores a function that updates a user document */
+export const updateFunctionAtom = atom<
+  UpdateCollectionDocFunction<FunctionSettings> | undefined
 >(undefined);

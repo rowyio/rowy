@@ -39,6 +39,8 @@ const TablesPage = lazy(() => import("@src/pages/Tables" /* webpackChunkName: "T
 const TablePage = lazy(() => import("@src/pages/Table" /* webpackChunkName: "TablePage" */));
 
 // prettier-ignore
+const FunctionPage = lazy(() => import("@src/pages/Function" /* webpackChunkName: "FunctionPage" */));
+// prettier-ignore
 const UserSettingsPage = lazy(() => import("@src/pages/Settings/UserSettings" /* webpackChunkName: "UserSettingsPage" */));
 // prettier-ignore
 const ProjectSettingsPage = lazy(() => import("@src/pages/Settings/ProjectSettings" /* webpackChunkName: "ProjectSettingsPage" */));
@@ -104,6 +106,13 @@ export default function App() {
               <Route path=":id" element={<TableGroupRedirectPage />} />
             </Route>
 
+            <Route path={ROUTES.function}>
+              <Route
+                index
+                element={<Navigate to={ROUTES.functions} replace />}
+              />
+              <Route path=":id" element={<FunctionPage />} />
+            </Route>
             <Route
               path={ROUTES.settings}
               element={<Navigate to={ROUTES.userSettings} replace />}

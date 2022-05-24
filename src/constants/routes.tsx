@@ -17,6 +17,9 @@ export enum ROUTES {
 
   tables = "/tables",
   automations = "/automations",
+  functions = "/functions",
+  function = "/function",
+  functionWithId = "/function/:id",
 
   table = "/table",
   tableWithId = "/table/:id",
