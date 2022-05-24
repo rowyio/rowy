@@ -9143,6 +9143,11 @@ mkdirp@^0.5.5, mkdirp@~0.5.1:
   dependencies:
     minimist "^1.2.5"
 
+monaco-editor-auto-typings@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/monaco-editor-auto-typings/-/monaco-editor-auto-typings-0.4.0.tgz#52c0b1c74086fbf23568a0322a505808ecd95566"
+  integrity sha512-rd98fgFtHIvetD/Pr3bU5u2lZkd39d8mFJJOIOuEPcf+ZLj1YpRWM0rv/7KKBbOkR50ya6IAp/xR1gE1BEiXrw==
+
 monaco-editor@^0.33.0:
   version "0.33.0"
   resolved "https://registry.yarnpkg.com/monaco-editor/-/monaco-editor-0.33.0.tgz#842e244f3750a2482f8a29c676b5684e75ff34af"
@@ -9590,6 +9595,11 @@ pascal-case@^3.1.2:
   dependencies:
     no-case "^3.0.4"
     tslib "^2.0.3"
+
+path-browserify@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/path-browserify/-/path-browserify-1.0.1.tgz#d98454a9c3753d5790860f16f68867b9e46be1fd"
+  integrity sha512-b7uo2UCUOYZcnF/3ID0lulOJi/bafxa1xPe7ZPsammBSpjSWQkjNxlt635YGS2MiR9GjvuXCtz2emr3jbsz98g==
 
 path-exists@^3.0.0:
   version "3.0.0"

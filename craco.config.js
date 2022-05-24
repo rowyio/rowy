@@ -69,6 +69,7 @@ module.exports = {
       resolve: {
         // Need to add polyfill for csv-parse
         fallback: {
+          path: require.resolve("path-browserify"),
           stream: require.resolve("stream-browserify"),
           buffer: require.resolve("buffer"),
         },
