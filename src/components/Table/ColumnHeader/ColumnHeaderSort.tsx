@@ -9,6 +9,10 @@ import { getFieldProp } from "@src/components/fields";
 
 import { ColumnConfig } from "@src/types/table";
 
+import { colord, extend } from "colord";
+import mixPlugin from "colord/plugins/lch";
+extend([mixPlugin]);
+
 const SORT_STATES = ["none", "desc", "asc"] as const;
 
 export interface IColumnHeaderSortProps {
@@ -45,8 +49,19 @@ export default function ColumnHeaderSort({ column }: IColumnHeaderSortProps) {
         onClick={handleSortClick}
         color="inherit"
         sx={{
+          bgcolor: "background.default",
+          "&:hover": {
+            backgroundColor: (theme) =>
+              colord(theme.palette.background.default)
+                .mix(
+                  theme.palette.action.hover,
+                  theme.palette.action.hoverOpacity
+                )
+                .alpha(1)
+                .toHslString(),
+          },
+
           position: "relative",
-          backgroundColor: "background.default",
           opacity: currentSort !== "none" ? 1 : 0,
           ".column-header:hover &": { opacity: 1 },
 
@@ -59,7 +74,7 @@ export default function ColumnHeaderSort({ column }: IColumnHeaderSortProps) {
             ),
           transform: currentSort === "asc" ? "rotate(180deg)" : "none",
 
-          "&:hover": {
+          "&:hover svg": {
             transform:
               currentSort === "asc" || nextSort === "asc"
                 ? "rotate(180deg)"

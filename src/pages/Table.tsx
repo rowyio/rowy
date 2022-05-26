@@ -8,24 +8,23 @@ import { Fade } from "@mui/material";
 import TableToolbarSkeleton from "@src/components/TableToolbar/TableToolbarSkeleton";
 import HeaderRowSkeleton from "@src/components/Table/HeaderRowSkeleton";
 import EmptyTable from "@src/components/Table/EmptyTable";
+import TableToolbar from "@src/components/TableToolbar";
 import Table from "@src/components/Table";
+import ColumnMenu from "@src/components/ColumnMenu";
+import ColumnModals from "@src/components/ColumnModals";
 
 import { currentUserAtom, globalScope } from "@src/atoms/globalScope";
 import TableSourceFirestore from "@src/sources/TableSourceFirestore";
 import {
   tableScope,
   tableIdAtom,
-  tableSettingsAtom,
+  // tableSettingsAtom,
   tableSchemaAtom,
 } from "@src/atoms/tableScope";
 import ActionParamsProvider from "@src/components/fields/Action/FormDialog/Provider";
 
 function TablePage() {
-  const [tableId] = useAtom(tableIdAtom, tableScope);
-  const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
-
-  console.log(tableSchema);
 
   if (isEmpty(tableSchema.columns))
     return (
@@ -37,11 +36,20 @@ function TablePage() {
     );
 
   return (
-    // <Suspense fallback={<div>Loading rows…</div>}>
     <ActionParamsProvider>
-      <Table />
+      <Suspense fallback={<TableToolbarSkeleton />}>
+        <TableToolbar />
+      </Suspense>
+
+      <Suspense fallback={<HeaderRowSkeleton />}>
+        <Table />
+      </Suspense>
+
+      <Suspense>
+        <ColumnMenu />
+        <ColumnModals />
+      </Suspense>
     </ActionParamsProvider>
-    // </Suspense>
   );
 }
 

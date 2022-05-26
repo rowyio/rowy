@@ -72,7 +72,7 @@ export default function FinalColumn({ row }: FormatterProps<TableRow, any>) {
                         <code
                           style={{ userSelect: "all", wordBreak: "break-all" }}
                         >
-                          {row.ref.path}
+                          {row._rowy_ref.path}
                         </code>
                       </>
                     ),
@@ -94,6 +94,7 @@ export default function FinalColumn({ row }: FormatterProps<TableRow, any>) {
                 ),
             },
           }}
+          disabled={!row._rowy_ref.path}
         >
           <DeleteIcon />
         </IconButton>

@@ -24,7 +24,7 @@ import {
 import { FieldType } from "@src/constants/fields";
 // import { useSnackLogContext } from "@src/contexts/SnackLogContext";
 
-export const TABLE_HEADER_HEIGHT = 44;
+export const TABLE_TOOLBAR_HEIGHT = 44;
 
 export default function TableToolbar() {
   const [userRoles] = useAtom(userRolesAtom, globalScope);
@@ -49,7 +49,7 @@ export default function TableToolbar() {
       sx={{
         pl: (theme) => `max(env(safe-area-inset-left), ${theme.spacing(2)})`,
         pb: 1.5,
-        height: TABLE_HEADER_HEIGHT,
+        height: TABLE_TOOLBAR_HEIGHT,
         overflowX: "auto",
         overflowY: "hidden",
         "& > *": { flexShrink: 0 },

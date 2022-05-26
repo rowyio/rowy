@@ -1,5 +1,6 @@
 import { styled, alpha, darken, lighten } from "@mui/material";
 import { APP_BAR_HEIGHT } from "@src/layouts/Navigation";
+import { TABLE_TOOLBAR_HEIGHT } from "@src/components/TableToolbar";
 // import { DRAWER_COLLAPSED_WIDTH } from "@src/components/SideDrawer";
 
 import { colord, extend } from "colord";
@@ -13,7 +14,7 @@ export const TableContainer = styled("div", {
 })<{ rowHeight: number }>(({ theme, rowHeight }) => ({
   display: "flex",
   flexDirection: "column",
-  height: `calc(100vh - ${APP_BAR_HEIGHT}px)`,
+  height: `calc(100vh - ${APP_BAR_HEIGHT}px - ${TABLE_TOOLBAR_HEIGHT}px)`,
 
   "& > .rdg": {
     // FIXME:

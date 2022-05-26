@@ -18,12 +18,17 @@ import LockIcon from "@mui/icons-material/LockOutlined";
 
 import ColumnHeaderSort from "./ColumnHeaderSort";
 
-import { globalScope, userRolesAtom } from "@src/atoms/globalScope";
+import {
+  globalScope,
+  userRolesAtom,
+  columnMenuAtom,
+} from "@src/atoms/globalScope";
 import { tableScope, updateColumnAtom } from "@src/atoms/tableScope";
 import { FieldType } from "@src/constants/fields";
 import { getFieldProp } from "@src/components/fields";
 import { DEFAULT_ROW_HEIGHT } from "@src/components/Table";
 import { ColumnConfig } from "@src/types/table";
+import useKeyPress from "@src/hooks/useKeyPress";
 
 const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -47,6 +52,8 @@ export default function DraggableHeaderRenderer({
 }: IDraggableHeaderRendererProps) {
   const [userRoles] = useAtom(userRolesAtom, globalScope);
   const updateColumn = useSetAtom(updateColumnAtom, tableScope);
+  const openColumnMenu = useSetAtom(columnMenuAtom, globalScope);
+  const altPress = useKeyPress("Alt");
 
   const [{ isDragging }, dragRef] = useDrag({
     type: "COLUMN_DRAG",
@@ -59,7 +66,6 @@ export default function DraggableHeaderRenderer({
   const [{ isOver }, dropRef] = useDrop({
     accept: "COLUMN_DRAG",
     drop: ({ key }: { key: string }) => {
-      console.log("drop", key, column.index);
       updateColumn({ key, config: {}, index: column.index });
     },
     collect: (monitor) => ({
@@ -72,11 +78,7 @@ export default function DraggableHeaderRenderer({
 
   const handleOpenMenu = (e: React.MouseEvent) => {
     e.preventDefault();
-    // FIXME:
-    // columnMenuRef?.current?.setSelectedColumnHeader({
-    //   column,
-    //   anchorEl: buttonRef.current,
-    // });
+    openColumnMenu({ column, anchorEl: buttonRef.current });
   };
 
   return (
@@ -186,7 +188,7 @@ export default function DraggableHeaderRenderer({
             component="div"
             color="inherit"
           >
-            {column.name as string}
+            {altPress ? `${column.index}: ${column.fieldName}` : column.name}
           </Typography>
         </LightTooltip>
       </Grid>

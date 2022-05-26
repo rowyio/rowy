@@ -1,6 +1,7 @@
 import { mergeWith, isArray, get } from "lodash-es";
 import type { User } from "firebase/auth";
 import { TABLE_GROUP_SCHEMAS, TABLE_SCHEMAS } from "@src/config/dbPaths";
+import { TableSettings } from "@src/types/table";
 
 /**
  * Creates a standard user object to write to table rows
@@ -98,18 +99,26 @@ export const decrementId = (id: string = "zzzzzzzzzzzzzzzzzzzz") => {
 // Gets sub-table ID in $1
 const formatPathRegex = /\/[^\/]+\/([^\/]+)/g;
 
-/** Format table path  */
-export const formatPath = (
-  tablePath: string,
-  isCollectionGroup: boolean = false
-) => {
-  return `${
-    isCollectionGroup ? TABLE_GROUP_SCHEMAS : TABLE_SCHEMAS
-  }/${tablePath.replace(formatPathRegex, "/subTables/$1")}`;
-};
+/**
+ * Gets the path to the table’s schema doc, accounting for sub-tables
+ * and collectionGroup tables
+ * @param id - The table ID (could include sub-table ID)
+ * @param tableType - primaryCollection (default) or collectionGroup
+ * @returns Path to the table’s schema doc
+ */
+export const getSchemaPath = (
+  tableSettings: Pick<TableSettings, "id" | "tableType">
+) =>
+  (tableSettings.tableType === "collectionGroup"
+    ? TABLE_GROUP_SCHEMAS
+    : TABLE_SCHEMAS) +
+  "/" +
+  tableSettings.id.replace(formatPathRegex, "/subTables/$1");
 
-/** Format sub-table name to store settings in user settings */
-export const formatSubTableName = (tablePath: string) =>
-  tablePath
-    ? tablePath.replace(formatPathRegex, "/subTables/$1").replace(/\//g, "_")
-    : "";
+/**
+ * Format sub-table name to store settings in user settings
+ * @param id - Sub-table ID, including parent table ID
+ * @returns Standardized sub-table name
+ */
+export const formatSubTableName = (id?: string) =>
+  id ? id.replace(formatPathRegex, "/subTables/$1").replace(/\//g, "_") : "";

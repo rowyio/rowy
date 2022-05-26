@@ -85,9 +85,13 @@ export type ColumnConfig = {
   /** Set column width for all users */
   width?: number;
   /** If false (not undefined), locks the column for all users */
-  editable?: boolean;
+  editable?: boolean = true;
   /** Hide the column for all users */
-  hidden?: boolean;
+  hidden?: boolean = false;
+  /** Freeze the column to the left */
+  fixed?: boolean = false;
+  /** Prevent column resizability */
+  resizable?: boolean = true;
 
   config?: {
     /** Set column to required */

@@ -39,11 +39,18 @@ export const tableSchemaAtom = atom<TableSchema>({});
 export const updateTableSchemaAtom = atom<
   UpdateDocFunction<TableSchema> | undefined
 >(undefined);
-/** Store the table columns as an ordered array */
+/**
+ * Store the table columns as an ordered array.
+ * Puts frozen columns at the start, then sorts by ascending index.
+ */
 export const tableColumnsOrderedAtom = atom<ColumnConfig[]>((get) => {
   const tableSchema = get(tableSchemaAtom);
   if (!tableSchema || !tableSchema.columns) return [];
-  return orderBy(Object.values(tableSchema?.columns ?? {}), "index");
+  return orderBy(
+    Object.values(tableSchema?.columns ?? {}),
+    [(c) => Boolean(c.fixed), "index"],
+    ["desc", "asc"]
+  );
 });
 /** Reducer function to convert from array of columns to columns object */
 export const tableColumnsReducer = (

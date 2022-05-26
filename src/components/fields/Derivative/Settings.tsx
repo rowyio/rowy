@@ -5,7 +5,7 @@ import { useAtom, useSetAtom } from "jotai";
 import { Grid, InputLabel, FormHelperText } from "@mui/material";
 import MultiSelect from "@rowy/multiselect";
 import FieldSkeleton from "@src/components/SideDrawer/Form/FieldSkeleton";
-// FIXME: import FieldsDropdown from "@src/components/Table/ColumnMenu/FieldsDropdown";
+import FieldsDropdown from "@src/components/ColumnModals/FieldsDropdown";
 import CodeEditorHelper from "@src/components/CodeEditor/CodeEditorHelper";
 
 import {
@@ -108,7 +108,7 @@ export default function Settings({
         </Grid>
 
         <Grid item xs={12} md={6}>
-          {/* <FieldsDropdown
+          <FieldsDropdown
             label="Output field type"
             value={config.renderFieldType}
             options={Object.values(FieldType).filter(
@@ -129,7 +129,7 @@ export default function Settings({
               helperText: errors.renderFieldType,
               onBlur,
             }}
-          /> */}
+          />
         </Grid>
       </Grid>
 

@@ -1,8 +1,12 @@
 import { atom } from "jotai";
-import { atomWithStorage } from "jotai/utils";
+import { atomWithStorage, atomWithHash } from "jotai/utils";
 
-import { DialogProps, ButtonProps } from "@mui/material";
-import { TableSettings, TableSchema } from "@src/types/table";
+import type { DialogProps, ButtonProps, PopoverProps } from "@mui/material";
+import type {
+  TableSettings,
+  TableSchema,
+  ColumnConfig,
+} from "@src/types/table";
 import { getTableSchemaAtom } from "./project";
 
 /** Nav open state stored in local storage. */
@@ -153,6 +157,46 @@ export const tableDescriptionDismissedAtom = atomWithStorage<string[]>(
   "__ROWY__TABLE_DESCRIPTION_DISMISSED",
   []
 );
+
+/**
+ * Open table column menu. Set to `null` to close.
+ *
+ * @example Basic usage:
+ * ```
+ * const openColumnMenu = useSetAtom(columnMenuAtom, globalScope);
+ * openColumnMenu({ column, anchorEl: ... });
+ * ```
+ *
+ * @example Close:
+ * ```
+ * openColumnMenu(null)
+ * ```
+ */
+export const columnMenuAtom = atom<{
+  column: ColumnConfig;
+  anchorEl: PopoverProps["anchorEl"];
+} | null>(null);
+
+/**
+ * Opens a table column modal. Set to `null` to close.
+ * Modals: new column, name change, type change, column settings.
+ *
+ * @example Basic usage:
+ * ```
+ * const openColumnModal = useSetAtom(columnModalAtom, globalScope);
+ * openColumnModal({ type: "...", column });
+ * ```
+ *
+ * @example Close:
+ * ```
+ * openColumnModal(null)
+ * ```
+ */
+export const columnModalAtom = atomWithHash<{
+  type: "new" | "name" | "type" | "config";
+  columnKey?: string;
+  index?: number;
+} | null>("columnModal", null, { replaceState: true });
 
 /** Store current JSON editor view */
 export const jsonEditorAtom = atomWithStorage<"tree" | "code">(

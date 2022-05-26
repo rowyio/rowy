@@ -1,9 +1,7 @@
 import { Fade, Stack, Button, Skeleton, SkeletonProps } from "@mui/material";
 import AddRowIcon from "@src/assets/icons/AddRow";
 
-// FIXME:
-// import { TABLE_HEADER_HEIGHT } from "@src/components/TableToolbar";
-const TABLE_HEADER_HEIGHT = 44;
+import { TABLE_TOOLBAR_HEIGHT } from "@src/components/TableToolbar";
 
 const ButtonSkeleton = (props: Partial<SkeletonProps>) => (
   <Skeleton
@@ -26,7 +24,7 @@ export default function TableToolbarSkeleton() {
           pl: 2,
           pr: 2,
           pb: 1.5,
-          height: TABLE_HEADER_HEIGHT,
+          height: TABLE_TOOLBAR_HEIGHT,
         }}
       >
         <ButtonSkeleton>

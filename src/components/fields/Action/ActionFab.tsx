@@ -19,7 +19,7 @@ import {
 import { tableScope, tableSettingsAtom } from "@src/atoms/tableScope";
 import { useActionParams } from "./FormDialog/Context";
 import { runRoutes } from "@src/constants/runRoutes";
-import { TABLE_SCHEMAS, TABLE_GROUP_SCHEMAS } from "@src/config/dbPaths";
+import { getSchemaPath } from "@src/utils/table";
 
 const replacer = (data: any) => (m: string, key: string) => {
   const objKey = key.split(":")[0];
@@ -80,11 +80,7 @@ export default function ActionFab({
     ref: { path: ref.path },
     column: { ...column, editor: undefined },
     action,
-    schemaDocPath: `${
-      tableSettings.tableType === "collectionGroup"
-        ? TABLE_GROUP_SCHEMAS
-        : TABLE_SCHEMAS
-    }/${tableSettings.id}`,
+    schemaDocPath: getSchemaPath(tableSettings),
     actionParams,
   });
 

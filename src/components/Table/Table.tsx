@@ -13,9 +13,7 @@ import DataGrid, {
 } from "react-data-grid";
 
 import TableContainer, { OUT_OF_ORDER_MARGIN } from "./TableContainer";
-import TableToolbar from "@src/components/TableToolbar/TableToolbar";
 import ColumnHeader from "./ColumnHeader";
-// import ColumnMenu from "./ColumnMenu";
 // import ContextMenu from "./ContextMenu";
 import FinalColumnHeader from "./FinalColumnHeader";
 import FinalColumn from "./formatters/FinalColumn";
@@ -138,21 +136,22 @@ export default function Table() {
   // Handle columns with field names that use dot notation (nested fields)
   const rows =
     useMemo(() => {
-      const columnsWithNestedFieldNames = columns
-        .map((col) => col.fieldName)
-        .filter((fieldName) => fieldName.includes("."));
+      // const columnsWithNestedFieldNames = columns
+      //   .map((col) => col.fieldName)
+      //   .filter((fieldName) => fieldName.includes("."));
 
-      if (columnsWithNestedFieldNames.length === 0) return tableRows;
+      // if (columnsWithNestedFieldNames.length === 0)
+      return tableRows;
 
-      return tableRows.map((row) =>
-        columnsWithNestedFieldNames.reduce(
-          (acc, fieldName) => ({
-            ...acc,
-            [fieldName]: get(row, fieldName),
-          }),
-          { ...row }
-        )
-      );
+      // return tableRows.map((row) =>
+      //   columnsWithNestedFieldNames.reduce(
+      //     (acc, fieldName) => ({
+      //       ...acc,
+      //       [fieldName]: get(row, fieldName),
+      //     }),
+      //     { ...row }
+      //   )
+      // );
     }, [columns, tableRows]) ?? [];
 
   const rowsContainerRef = useRef<HTMLDivElement>(null);
@@ -189,8 +188,6 @@ export default function Table() {
         <Hotkeys selectedCell={selectedCell} />
       </Suspense> */}
       <TableContainer ref={rowsContainerRef} rowHeight={rowHeight}>
-        <TableToolbar />
-
         <DndProvider backend={HTML5Backend}>
           <DataGrid
             onColumnResize={handleResize}
@@ -276,7 +273,6 @@ export default function Table() {
         </DndProvider>
       </TableContainer>
 
-      {/* <ColumnMenu /> */}
       {/* <ContextMenu />
       <BulkActions
         selectedRows={selectedRows}

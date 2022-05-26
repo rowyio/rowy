@@ -31,13 +31,10 @@ import { TableSettings } from "@src/types/table";
 import { analytics, logEvent } from "@src/analytics";
 
 import { runRoutes } from "@src/constants/runRoutes";
-import {
-  CONFIG,
-  TABLE_GROUP_SCHEMAS,
-  TABLE_SCHEMAS,
-} from "@src/config/dbPaths";
+import { CONFIG } from "@src/config/dbPaths";
 import { ROUTES } from "@src/constants/routes";
 import { useSnackLogContext } from "@src/contexts/SnackLogContext";
+import { getSchemaPath } from "@src/utils/table";
 
 const customComponents = {
   tableName: {
@@ -122,11 +119,7 @@ export default function TableSettingsDialog() {
           cancel: "Later",
           handleConfirm: async () => {
             const tablePath = data.collection;
-            const tableConfigPath = `${
-              data.tableType !== "collectionGroup"
-                ? TABLE_SCHEMAS
-                : TABLE_GROUP_SCHEMAS
-            }/${data.id}`;
+            const tableConfigPath = getSchemaPath(data);
 
             if (hasExtensions) {
               // find derivative, default value

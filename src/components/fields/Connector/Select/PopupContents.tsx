@@ -27,7 +27,7 @@ import { getLabel } from "@src/components/fields/Connector/utils";
 import { useSnackbar } from "notistack";
 import { globalScope, rowyRunAtom } from "@src/atoms/globalScope";
 import { tableScope, tableSettingsAtom } from "@src/atoms/tableScope";
-import { TABLE_SCHEMAS, TABLE_GROUP_SCHEMAS } from "@src/config/dbPaths";
+import { getSchemaPath } from "@src/utils/table";
 
 export interface IPopupContentsProps
   extends Omit<IConnectorSelectProps, "className" | "TextFieldProps"> {}
@@ -74,11 +74,7 @@ export default function PopupContents({
         body: {
           columnKey: column.key,
           query: query,
-          schemaDocPath: `${
-            tableSettings.tableType === "collectionGroup"
-              ? TABLE_GROUP_SCHEMAS
-              : TABLE_SCHEMAS
-          }/${tableSettings.id}`,
+          schemaDocPath: getSchemaPath(tableSettings),
           rowDocPath: docRef.path,
         },
       });
