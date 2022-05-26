@@ -50,6 +50,9 @@ export default function ColumnHeaderSort({ column }: IColumnHeaderSortProps) {
         color="inherit"
         sx={{
           bgcolor: "background.default",
+          "& .slash-mask": {
+            stroke: (theme) => theme.palette.background.default,
+          },
           "&:hover": {
             backgroundColor: (theme) =>
               colord(theme.palette.background.default)
@@ -59,6 +62,17 @@ export default function ColumnHeaderSort({ column }: IColumnHeaderSortProps) {
                 )
                 .alpha(1)
                 .toHslString(),
+
+            "& .slash-mask": {
+              stroke: (theme) =>
+                colord(theme.palette.background.default)
+                  .mix(
+                    theme.palette.action.hover,
+                    theme.palette.action.hoverOpacity
+                  )
+                  .alpha(1)
+                  .toHslString(),
+            },
           },
 
           position: "relative",
@@ -66,38 +80,59 @@ export default function ColumnHeaderSort({ column }: IColumnHeaderSortProps) {
           ".column-header:hover &": { opacity: 1 },
 
           transition: (theme) =>
-            theme.transitions.create(
-              ["background-color", "transform", "opacity"],
-              {
-                duration: theme.transitions.duration.short,
-              }
-            ),
-          transform: currentSort === "asc" ? "rotate(180deg)" : "none",
+            theme.transitions.create(["background-color", "opacity"], {
+              duration: theme.transitions.duration.short,
+            }),
 
-          "&:hover svg": {
+          "& .arrow": {
+            transition: (theme) =>
+              theme.transitions.create("transform", {
+                duration: theme.transitions.duration.short,
+              }),
+
+            transform: currentSort === "asc" ? "rotate(180deg)" : "none",
+          },
+          "&:hover .arrow": {
             transform:
               currentSort === "asc" || nextSort === "asc"
                 ? "rotate(180deg)"
                 : "none",
           },
 
-          "& .slash": { opacity: currentSort === "none" ? 1 : 0 },
-          "&:hover .slash": { opacity: nextSort === "none" ? 1 : 0 },
+          "& .slash": {
+            transition: (theme) =>
+              theme.transitions.create("stroke-dashoffset", {
+                duration: theme.transitions.duration.short,
+              }),
+            strokeDasharray: 27.9,
+            strokeDashoffset: currentSort === "none" ? 0 : 27.9,
+          },
+          "&:hover .slash": {
+            strokeDashoffset: nextSort === "none" ? 0 : 27.9,
+          },
         }}
       >
-        <SortDescIcon />
+        <SortDescIcon className="arrow" />
 
         <svg
           viewBox="0 0 24 24"
           style={{
-            fill: "currentColor",
+            stroke: "currentColor",
             position: "absolute",
-            top: (32 - 24) / 2,
-            left: (32 - 24) / 2,
+            inset: (32 - 24) / 2,
           }}
           className="slash"
         >
-          <polygon points="0 1.27 1.28 0 21 19.73 19.73 21" />
+          <line
+            className="slash-mask"
+            x1="3.08"
+            y1="1.04"
+            x2="22.8633788"
+            y2="20.7130253"
+            stroke-width="2"
+          />
+
+          <line x1="1.75" y1="2.365" x2="21.475" y2="22.095" stroke-width="2" />
         </svg>
       </IconButton>
     </Tooltip>
