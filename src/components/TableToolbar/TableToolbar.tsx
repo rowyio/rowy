@@ -2,7 +2,7 @@ import { useAtom } from "jotai";
 
 import { Stack } from "@mui/material";
 import AddRow from "./AddRow";
-// import Filters from "./Filters";
+import Filters from "./Filters";
 import ImportCSV from "./ImportCsv";
 // import Export from "./Export";
 import LoadedRowsStatus from "./LoadedRowsStatus";
@@ -65,7 +65,7 @@ export default function TableToolbar() {
       <AddRow />
       {/* Spacer */} <div />
       <HiddenFields />
-      {/* <Filters /> */}
+      <Filters />
       {/* Spacer */} <div />
       <LoadedRowsStatus />
       <div style={{ flexGrow: 1, minWidth: 64 }} />

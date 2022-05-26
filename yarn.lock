@@ -11662,7 +11662,7 @@ shallow-copy@~0.0.1:
   resolved "https://registry.yarnpkg.com/shallow-copy/-/shallow-copy-0.0.1.tgz#415f42702d73d810330292cc5ee86eae1a11a170"
   integrity sha1-QV9CcC1z2BAzApLMXuhurhoRoXA=
 
-shallowequal@^1.1.0:
+"shallowequal@^0.1.0 || ^0.2.0 || ^1.0.0", shallowequal@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/shallowequal/-/shallowequal-1.1.0.tgz#188d521de95b9087404fd4dcb68b13df0ae4e7f8"
   integrity sha512-y0m1JoUZSlPAjXVtPPW70aZWfIL/dSP7AFkRnniLCrK/8MDKog3TySTBmckD+RObVxH0v4Tox67+F14PdED2oQ==
@@ -12789,6 +12789,13 @@ use-latest@^1.2.1:
   integrity sha512-xA+AVm/Wlg3e2P/JiItTziwS7FK92LWrDB0p+hgXloIMuVCeJJ8v6f0eeHyPZaJrM+usM1FkFfbNCrJGs8A/zw==
   dependencies:
     use-isomorphic-layout-effect "^1.1.1"
+
+use-memo-value@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/use-memo-value/-/use-memo-value-1.0.1.tgz#71ba4500d143a1cf3ad3f18cc98a59365955f4a1"
+  integrity sha512-1DqRcvh5XguuuO8QXw9KeAp7MDUKrLPrCv3+GawjFqxjwRJN9FjzayW0Z3RBvWi826l5mim8ov+kCFSTs70svg==
+  dependencies:
+    shallowequal "^0.1.0 || ^0.2.0 || ^1.0.0"
 
 util-deprecate@^1.0.1, util-deprecate@^1.0.2, util-deprecate@~1.0.1:
   version "1.0.2"

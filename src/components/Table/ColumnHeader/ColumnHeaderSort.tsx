@@ -118,6 +118,7 @@ export default function ColumnHeaderSort({ column }: IColumnHeaderSortProps) {
           viewBox="0 0 24 24"
           style={{
             stroke: "currentColor",
+            strokeWidth: 2,
             position: "absolute",
             inset: (32 - 24) / 2,
           }}
@@ -129,10 +130,9 @@ export default function ColumnHeaderSort({ column }: IColumnHeaderSortProps) {
             y1="1.04"
             x2="22.8633788"
             y2="20.7130253"
-            stroke-width="2"
           />
 
-          <line x1="1.75" y1="2.365" x2="21.475" y2="22.095" stroke-width="2" />
+          <line x1="1.75" y1="2.365" x2="21.475" y2="22.095" />
         </svg>
       </IconButton>
     </Tooltip>

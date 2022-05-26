@@ -8,7 +8,7 @@ export interface IButtonWithStatusProps extends ButtonProps {
 }
 
 export const ButtonWithStatus = forwardRef(function ButtonWithStatus_(
-  { active = false, className, ...props }: IButtonWithStatusProps,
+  { active = false, className, sx, ...props }: IButtonWithStatusProps,
   ref: React.Ref<HTMLButtonElement>
 ) {
   return (
@@ -52,6 +52,7 @@ export const ButtonWithStatus = forwardRef(function ButtonWithStatus_(
               },
             }
           : {},
+        ...((Array.isArray(sx) ? sx : [sx]) as any),
       ]}
     />
   );

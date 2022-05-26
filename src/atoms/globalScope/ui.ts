@@ -6,6 +6,7 @@ import type {
   TableSettings,
   TableSchema,
   ColumnConfig,
+  TableFilter,
 } from "@src/types/table";
 import { getTableSchemaAtom } from "./project";
 
@@ -197,6 +198,32 @@ export const columnModalAtom = atomWithHash<{
   columnKey?: string;
   index?: number;
 } | null>("columnModal", null, { replaceState: true });
+
+export type TableFiltersPopoverState = {
+  open: boolean;
+  defaultQuery?: TableFilter;
+};
+/**
+ * Store table filter popover state.
+ * Calling the set function resets props.
+ *
+ * @example Basic usage:
+ * ```
+ * const openTableFiltersPopover = useSetAtom(tableFiltersPopoverAtom, globalScope);
+ * openTableFiltersPopover({ query: ... });
+ * ```
+ *
+ * @example Close:
+ * ```
+ * openTableFiltersPopover({ open: false })
+ * ```
+ */
+export const tableFiltersPopoverAtom = atom(
+  { open: false } as TableFiltersPopoverState,
+  (_, set, update?: Partial<TableFiltersPopoverState>) => {
+    set(tableFiltersPopoverAtom, { open: true, ...update });
+  }
+);
 
 /** Store current JSON editor view */
 export const jsonEditorAtom = atomWithStorage<"tree" | "code">(

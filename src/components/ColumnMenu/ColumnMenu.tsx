@@ -33,6 +33,7 @@ import {
   confirmDialogAtom,
   columnMenuAtom,
   columnModalAtom,
+  tableFiltersPopoverAtom,
 } from "@src/atoms/globalScope";
 import {
   tableScope,
@@ -73,6 +74,10 @@ export default function ColumnMenu() {
   const updateColumn = useSetAtom(updateColumnAtom, tableScope);
   const deleteColumn = useSetAtom(deleteColumnAtom, tableScope);
   const [tableOrders, setTableOrders] = useAtom(tableOrdersAtom, tableScope);
+  const openTableFiltersPopover = useSetAtom(
+    tableFiltersPopoverAtom,
+    globalScope
+  );
   const altPress = useKeyPress("Alt");
 
   if (!columnMenu) return null;
@@ -150,12 +155,19 @@ export default function ColumnMenu() {
     {
       label: "Filter…",
       icon: <FilterIcon />,
-      // FIXME: onClick: () => {
-      //   actions.update(column.key, { hidden: !column.hidden });
-      //   handleClose();
-      // },
+      onClick: () => {
+        openTableFiltersPopover({
+          defaultQuery: {
+            key: column.fieldName,
+            operator:
+              getFieldProp("filter", column.type)!.operators[0]?.value || "==",
+            value: "",
+          },
+        });
+        handleClose();
+      },
       active: column.hidden,
-      disabled: true,
+      disabled: !getFieldProp("filter", column.type),
     },
     { type: "subheader", label: "All users’ views" },
     {
@@ -196,9 +208,9 @@ export default function ColumnMenu() {
       },
       active: column.fixed,
     },
-    { type: "subheader", label: "Add column" },
+    { type: "subheader", label: "Insert column" },
     {
-      label: "Add new to left…",
+      label: "Insert to the left…",
       icon: <ColumnPlusBeforeIcon />,
       onClick: () => {
         openColumnModal({ type: "new", index: column.index - 1 });
@@ -206,7 +218,7 @@ export default function ColumnMenu() {
       },
     },
     {
-      label: "Add new to right…",
+      label: "Insert to the right…",
       icon: <ColumnPlusAfterIcon />,
       onClick: () => {
         openColumnModal({ type: "new", index: column.index + 1 });

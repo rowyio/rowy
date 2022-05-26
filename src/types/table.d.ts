@@ -60,6 +60,7 @@ export type TableSchema = {
   columns?: Record<string, ColumnConfig>;
   rowHeight?: number;
   filters?: TableFilter[];
+  filtersOverridable?: boolean;
 
   functionConfigPath?: string;
   functionBuilderRef?: any;
