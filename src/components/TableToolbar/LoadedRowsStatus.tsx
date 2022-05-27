@@ -32,10 +32,9 @@ function LoadedRowsStatus() {
   const [tableLoadingMore] = useAtom(tableLoadingMoreAtom, tableScope);
   const [tablePage] = useAtom(tablePageAtom, tableScope);
 
-  const allLoaded =
-    !tableLoadingMore && tableRows.length < COLLECTION_PAGE_SIZE * tablePage;
-
   if (tableLoadingMore) return <StatusText>Loading more…</StatusText>;
+
+  const allLoaded = tableRows.length < COLLECTION_PAGE_SIZE * (tablePage + 1);
 
   return (
     <Tooltip
