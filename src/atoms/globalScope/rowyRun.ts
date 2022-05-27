@@ -93,7 +93,6 @@ export const rowyRunAtom = atom((get) => {
     const { method, path } = route;
     let url = serviceUrl + path;
     if (params && params.length > 0) url = url + "/" + params.join("/");
-    console.log(authToken);
     const response = await fetch(url, {
       method: method,
       mode: "cors",
