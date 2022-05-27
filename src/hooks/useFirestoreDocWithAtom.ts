@@ -107,7 +107,7 @@ export function useFirestoreDocWithAtom<T = TableRow>(
       }
     );
 
-    // If `options?.updateDataAtom` was passed,
+    // If `updateDataAtom` was passed,
     // set the atom’s value to a function that updates the document
     if (updateDataAtom) {
       setUpdateDataAtom(() => (update: T, deleteFields?: string[]) => {
