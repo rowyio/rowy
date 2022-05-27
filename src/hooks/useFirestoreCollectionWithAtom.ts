@@ -1,9 +1,12 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
+import useMemoValue from "use-memo-value";
 import { useAtom, PrimitiveAtom, useSetAtom } from "jotai";
 import { Scope } from "jotai/core/atom";
 import { set } from "lodash-es";
 import {
+  Firestore,
   query,
+  queryEqual,
   collection,
   collectionGroup as queryCollectionGroup,
   limit as queryLimit,
@@ -14,9 +17,9 @@ import {
   setDoc,
   doc,
   deleteDoc,
+  deleteField,
   CollectionReference,
   Query,
-  deleteField,
 } from "firebase/firestore";
 import { useErrorHandler } from "react-error-boundary";
 
@@ -41,8 +44,10 @@ interface IUseFirestoreCollectionWithAtomOptions<T> {
   filters?: TableFilter[];
   /** Attach orders to the query */
   orders?: TableOrder[];
-  /** Limit query */
-  limit?: number;
+  /** Set query page */
+  page?: number;
+  /** Set query page size */
+  pageSize?: number;
   /** Called when an error occurs. Make sure to wrap in useCallback! If not provided, errors trigger the nearest ErrorBoundary. */
   onError?: (error: FirestoreError) => void;
   /** Optionally disable Suspense */
@@ -51,6 +56,8 @@ interface IUseFirestoreCollectionWithAtomOptions<T> {
   updateDocAtom?: PrimitiveAtom<UpdateCollectionDocFunction<T> | undefined>;
   /** Set this atom’s value to a function that deletes a document in the collection. Must pass the full path. Uses same scope as `dataScope`. */
   deleteDocAtom?: PrimitiveAtom<DeleteCollectionDocFunction | undefined>;
+  /** Update this atom when we’re loading the next page. Uses same scope as `dataScope`. */
+  loadingMoreAtom?: PrimitiveAtom<boolean>;
 }
 
 /**
@@ -69,75 +76,91 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
   path: string | undefined,
   options?: IUseFirestoreCollectionWithAtomOptions<T>
 ) {
-  const [firebaseDb] = useAtom(firebaseDbAtom, globalScope);
-  const setDataAtom = useSetAtom(dataAtom, dataScope);
-  const setUpdateDocAtom = useSetAtom(
-    options?.updateDocAtom || (dataAtom as any),
-    dataScope
-  );
-  const setDeleteDocAtom = useSetAtom(
-    options?.deleteDocAtom || (dataAtom as any),
-    dataScope
-  );
-  const handleError = useErrorHandler();
-
   // Destructure options so they can be used as useEffect dependencies
   const {
     pathSegments,
     collectionGroup,
     filters,
     orders,
-    limit = COLLECTION_PAGE_SIZE,
+    page = 0,
+    pageSize = COLLECTION_PAGE_SIZE,
     onError,
     disableSuspense,
     updateDocAtom,
     deleteDocAtom,
+    loadingMoreAtom,
   } = options || {};
 
-  useEffect(() => {
-    if (!path || (Array.isArray(pathSegments) && pathSegments.some((x) => !x)))
-      return;
+  const [firebaseDb] = useAtom(firebaseDbAtom, globalScope);
+  const setDataAtom = useSetAtom(dataAtom, dataScope);
+  const handleError = useErrorHandler();
 
-    let suspended = false;
+  // Create set functions that point to optional atoms,
+  // or use dataAtom if not provided. Make sure to check that the corresponding
+  // option was provided before calling these functions!
+  const setUpdateDocAtom = useSetAtom(
+    updateDocAtom || (dataAtom as any),
+    dataScope
+  );
+  const setDeleteDocAtom = useSetAtom(
+    deleteDocAtom || (dataAtom as any),
+    dataScope
+  );
+  const setLoadingMoreAtom = useSetAtom(
+    loadingMoreAtom || (dataAtom as any),
+    dataScope
+  );
+
+  // Store if we’re at the last page to prevent a new query from being created
+  const [isLastPage, setIsLastPage] = useState(false);
+
+  // Create the query and memoize using Firestore’s queryEqual
+  const memoizedQuery = useMemoValue(
+    getQuery<T>(
+      firebaseDb,
+      path,
+      pathSegments,
+      collectionGroup,
+      page,
+      pageSize,
+      filters,
+      orders
+    ),
+    (next, prev) =>
+      isLastPage || queryEqual(next?.query as any, prev?.query as any)
+  );
+
+  useEffect(() => {
+    // If path is invalid and no memoizedQuery was created, don’t continue
+    if (!memoizedQuery) return;
 
     // Suspend data atom until we get the first snapshot
-    if (!disableSuspense) {
+    // Don’t suspend if we’re getting the next page
+    let suspended = false;
+    if (!disableSuspense && memoizedQuery.page === 0) {
       setDataAtom(new Promise(() => {}) as unknown as T[]);
       suspended = true;
     }
+    // Set loadingMoreAtom if provided and getting the next page
+    else if (memoizedQuery.page > 0 && loadingMoreAtom) {
+      setLoadingMoreAtom(true);
+    }
 
-    // Create a collection or collection group reference to query data
-    const collectionRef = collectionGroup
-      ? (queryCollectionGroup(
-          firebaseDb,
-          [path, ...((pathSegments as string[]) || [])].join("/")
-        ) as Query<T>)
-      : (collection(
-          firebaseDb,
-          path,
-          ...((pathSegments as string[]) || [])
-        ) as CollectionReference<T>);
-
-    // Create the query with filters and orders
-    const _query = query<T>(
-      collectionRef,
-      queryLimit(limit),
-      ...(filters?.map((filter) =>
-        where(filter.key, filter.operator, filter.value)
-      ) || []),
-      ...(orders?.map((order) => orderBy(order.key, order.direction)) || [])
-    );
-
+    // Create a listener for the query
     const unsubscribe = onSnapshot(
-      _query,
-      (querySnapshot) => {
+      memoizedQuery.query,
+      (snapshot) => {
         try {
           // Extract doc data from query and add `_rowy_ref` fields
-          const docs = querySnapshot.docs.map((doc) => ({
+          const docs = snapshot.docs.map((doc) => ({
             ...doc.data(),
             _rowy_ref: doc.ref,
           }));
           setDataAtom(docs);
+          // If the snapshot doesn’t fill the page, it’s the last page
+          if (docs.length < memoizedQuery.limit) setIsLastPage(true);
+          // Mark loadingMore as done
+          if (loadingMoreAtom) setLoadingMoreAtom(false);
         } catch (error) {
           if (onError) onError(error as FirestoreError);
           else handleError(error);
@@ -145,11 +168,40 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
         suspended = false;
       },
       (error) => {
-        if (suspended) setDataAtom([]);
+        if (suspended) {
+          setDataAtom([]);
+          suspended = false;
+        }
+        if (loadingMoreAtom) setLoadingMoreAtom(false);
         if (onError) onError(error);
         else handleError(error);
       }
     );
+
+    // When the listener will change, unsubscribe
+    return () => {
+      unsubscribe();
+      if (loadingMoreAtom) setLoadingMoreAtom(false);
+    };
+  }, [
+    firebaseDb,
+    memoizedQuery,
+    disableSuspense,
+    setDataAtom,
+    onError,
+    handleError,
+    loadingMoreAtom,
+    setLoadingMoreAtom,
+  ]);
+
+  // Create variable for validity of query to pass to useEffect dependencies
+  // below, and prevent it being called when page, filters, or orders is updated
+  const queryValid = Boolean(memoizedQuery);
+  // Set updateDocAtom and deleteDocAtom values if they exist
+  useEffect(() => {
+    // If path is invalid and no collectionRef was created,
+    // don’t set update and delete atoms
+    if (!queryValid) return;
 
     // If `options?.updateDocAtom` was passed,
     // set the atom’s value to a function that updates a doc in the collection
@@ -169,7 +221,7 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
       );
     }
 
-    // If `options?.deleteDocAtom` was passed,
+    // If `deleteDocAtom` was passed,
     // set the atom’s value to a function that deletes a doc in the collection
     if (deleteDocAtom) {
       setDeleteDocAtom(
@@ -178,31 +230,72 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
     }
 
     return () => {
-      unsubscribe();
-      // If `options?.updateDocAtom` was passed,
+      // If `updateDocAtom` was passed,
       // reset the atom’s value to prevent writes
       if (updateDocAtom) setUpdateDocAtom(undefined);
-      // If `options?.deleteDoc` was passed,
+      // If `deleteDoc` was passed,
       // reset the atom’s value to prevent deletes
       if (deleteDocAtom) setDeleteDocAtom(undefined);
     };
   }, [
     firebaseDb,
-    path,
-    pathSegments,
-    collectionGroup,
-    filters,
-    orders,
-    limit,
-    onError,
-    setDataAtom,
-    disableSuspense,
-    handleError,
+    queryValid,
     updateDocAtom,
     setUpdateDocAtom,
     deleteDocAtom,
     setDeleteDocAtom,
+    loadingMoreAtom,
   ]);
 }
 
 export default useFirestoreCollectionWithAtom;
+
+/**
+ * Create the Firestore query with page, filters, and orders constraints.
+ * Put code in a function so the results can be compared by useMemoValue.
+ */
+const getQuery = <T>(
+  firebaseDb: Firestore,
+  path: string | undefined,
+  pathSegments: IUseFirestoreCollectionWithAtomOptions<T>["pathSegments"],
+  collectionGroup: IUseFirestoreCollectionWithAtomOptions<T>["collectionGroup"],
+  page: number,
+  pageSize: number,
+  filters: IUseFirestoreCollectionWithAtomOptions<T>["filters"],
+  orders: IUseFirestoreCollectionWithAtomOptions<T>["orders"]
+) => {
+  if (!path || (Array.isArray(pathSegments) && pathSegments.some((x) => !x)))
+    return null;
+
+  let collectionRef: Query<T>;
+
+  if (collectionGroup) {
+    collectionRef = queryCollectionGroup(
+      firebaseDb,
+      [path, ...((pathSegments as string[]) || [])].join("/")
+    ) as Query<T>;
+  } else {
+    collectionRef = collection(
+      firebaseDb,
+      path,
+      ...((pathSegments as string[]) || [])
+    ) as CollectionReference<T>;
+  }
+
+  if (!collectionRef) return null;
+
+  const limit = (page + 1) * pageSize;
+
+  return {
+    query: query<T>(
+      collectionRef,
+      queryLimit((page + 1) * pageSize),
+      ...(filters?.map((filter) =>
+        where(filter.key, filter.operator, filter.value)
+      ) || []),
+      ...(orders?.map((order) => orderBy(order.key, order.direction)) || [])
+    ),
+    page,
+    limit,
+  };
+};

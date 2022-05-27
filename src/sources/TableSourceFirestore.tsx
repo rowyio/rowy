@@ -1,4 +1,4 @@
-import { memo, useMemo, useEffect } from "react";
+import { memo, useMemo, useEffect, useCallback } from "react";
 import { useAtom, useSetAtom } from "jotai";
 import { find } from "lodash-es";
 
@@ -20,13 +20,13 @@ import {
   tableRowsDbAtom,
   _updateRowDbAtom,
   _deleteRowDbAtom,
+  tableLoadingMoreAtom,
   auditChangeAtom,
 } from "@src/atoms/tableScope";
 
 import useFirestoreDocWithAtom from "@src/hooks/useFirestoreDocWithAtom";
 import useFirestoreCollectionWithAtom from "@src/hooks/useFirestoreCollectionWithAtom";
 import { TABLE_SCHEMAS, TABLE_GROUP_SCHEMAS } from "@src/config/dbPaths";
-import { COLLECTION_PAGE_SIZE } from "@src/config/db";
 
 import type { FirestoreError } from "firebase/firestore";
 import { useSnackbar } from "notistack";
@@ -76,6 +76,11 @@ const TableSourceFirestore = memo(function TableSourceFirestore() {
   // and handle some errors with snackbars
   const { enqueueSnackbar } = useSnackbar();
   const elevateError = useErrorHandler();
+  const handleErrorCallback = useCallback(
+    (error: FirestoreError) =>
+      handleFirestoreError(error, enqueueSnackbar, elevateError),
+    [enqueueSnackbar, elevateError]
+  );
   useFirestoreCollectionWithAtom(
     tableRowsDbAtom,
     tableScope,
@@ -83,12 +88,12 @@ const TableSourceFirestore = memo(function TableSourceFirestore() {
     {
       filters,
       orders,
-      limit: COLLECTION_PAGE_SIZE * (page + 1),
+      page,
       collectionGroup: isCollectionGroup,
-      onError: (error) =>
-        handleFirestoreError(error, enqueueSnackbar, elevateError),
+      onError: handleErrorCallback,
       updateDocAtom: _updateRowDbAtom,
       deleteDocAtom: _deleteRowDbAtom,
+      loadingMoreAtom: tableLoadingMoreAtom,
     }
   );
 

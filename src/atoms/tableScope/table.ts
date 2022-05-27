@@ -21,6 +21,7 @@ import {
   DeleteCollectionDocFunction,
 } from "@src/types/table";
 import { updateRowData } from "@src/utils/table";
+import { COLLECTION_PAGE_SIZE } from "@src/config/db";
 
 /** Root atom from which others are derived */
 export const tableIdAtom = atom("");
@@ -66,8 +67,28 @@ export const tableColumnsReducer = (
 export const tableFiltersAtom = atom<TableFilter[]>([]);
 /** Orders applied to the local view */
 export const tableOrdersAtom = atom<TableOrder[]>([]);
-/** Latest page in the infinite scroll */
-export const tablePageAtom = atom(0);
+
+/**
+ * Set the page for the table query. Stops updating if we’ve loaded all rows.
+ */
+export const tablePageAtom = atom(
+  0,
+  (get, set, update: number | ((p: number) => number)) => {
+    // If loading more, don’t request another page
+    const tableLoadingMore = get(tableLoadingMoreAtom);
+    if (tableLoadingMore) return;
+
+    // Check that we haven’t loaded all rows
+    const tableRowsDb = get(tableRowsDbAtom);
+    const currentPage = get(tablePageAtom);
+    if (tableRowsDb.length < (currentPage + 1) * COLLECTION_PAGE_SIZE) return;
+
+    set(
+      tablePageAtom,
+      typeof update === "number" ? update : update(currentPage)
+    );
+  }
+);
 
 type TableRowsLocalAction =
   /** Overwrite all rows */
