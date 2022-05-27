@@ -1,9 +1,10 @@
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 
 import { Grid, Stack, Typography, Button, Divider } from "@mui/material";
 import ImportIcon from "@src/assets/icons/Import";
 import AddColumnIcon from "@src/assets/icons/AddColumn";
 
+import { globalScope, columnModalAtom } from "@src/atoms/globalScope";
 import {
   tableScope,
   tableSettingsAtom,
@@ -17,6 +18,8 @@ import { APP_BAR_HEIGHT } from "@src/layouts/Navigation";
 // import ImportCSV from "@src/components/TableToolbar/ImportCsv";
 
 export default function EmptyTable() {
+  const openColumnModal = useSetAtom(columnModalAtom, globalScope);
+
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [tableRows] = useAtom(tableRowsAtom, tableScope);
   // const { tableState, importWizardRef, columnMenuRef } = useProjectContext();
@@ -115,19 +118,10 @@ export default function EmptyTable() {
               variant="contained"
               color="primary"
               startIcon={<AddColumnIcon />}
-              // onClick={(event) =>
-              //   columnMenuRef?.current?.setSelectedColumnHeader({
-              //     column: { isNew: true, key: "new", type: "LAST" } as any,
-              //     anchorEl: event.currentTarget,
-              //   })
-              // }
-              // disabled={!columnMenuRef?.current}
-              disabled
+              onClick={() => openColumnModal({ type: "new" })}
             >
               Add column
             </Button>
-
-            {/* <ColumnMenu /> */}
           </Grid>
         </Grid>
       </>

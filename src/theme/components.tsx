@@ -1224,7 +1224,7 @@ export const components = (theme: Theme): ThemeOptions => {
       MuiAvatar: {
         styleOverrides: {
           root: {
-            ...theme.typography.button,
+            fontWeight: theme.typography.fontWeightMedium,
           },
           colorDefault: {
             backgroundColor: theme.palette.action.selected,

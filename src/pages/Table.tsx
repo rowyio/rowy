@@ -28,11 +28,17 @@ function TablePage() {
 
   if (isEmpty(tableSchema.columns))
     return (
-      <Fade style={{ transitionDelay: "500ms" }}>
-        <div>
-          <EmptyTable />
-        </div>
-      </Fade>
+      <Suspense fallback={null}>
+        <Fade in style={{ transitionDelay: "500ms" }}>
+          <div>
+            <EmptyTable />
+
+            <Suspense fallback={null}>
+              <ColumnModals />
+            </Suspense>
+          </div>
+        </Fade>
+      </Suspense>
     );
 
   return (
@@ -45,7 +51,7 @@ function TablePage() {
         <Table />
       </Suspense>
 
-      <Suspense>
+      <Suspense fallback={null}>
         <ColumnMenu />
         <ColumnModals />
       </Suspense>

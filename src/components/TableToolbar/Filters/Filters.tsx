@@ -85,7 +85,6 @@ export default function Filters() {
 
   // Set the local table filter
   useEffect(() => {
-    console.log("Filters effect");
     // Set local state for UI
     setTableQuery(
       Array.isArray(tableFilters) && tableFilters[0]

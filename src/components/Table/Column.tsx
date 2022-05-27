@@ -4,6 +4,8 @@ import { alpha } from "@mui/material/styles";
 import { FieldType } from "@src/constants/fields";
 import { getFieldProp } from "@src/components/fields";
 
+export const COLUMN_HEADER_HEIGHT = 42;
+
 export interface IColumnProps extends Partial<GridProps> {
   label: string;
   type?: FieldType;
@@ -29,7 +31,7 @@ export default function Column({
       sx={[
         {
           width: "100%",
-          height: 42,
+          height: COLUMN_HEADER_HEIGHT,
           border: (theme) => `1px solid ${theme.palette.divider}`,
           backgroundColor: "background.default",
 

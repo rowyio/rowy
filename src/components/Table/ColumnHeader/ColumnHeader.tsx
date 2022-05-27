@@ -26,9 +26,11 @@ import {
 import { tableScope, updateColumnAtom } from "@src/atoms/tableScope";
 import { FieldType } from "@src/constants/fields";
 import { getFieldProp } from "@src/components/fields";
-import { DEFAULT_ROW_HEIGHT } from "@src/components/Table";
+import { COLUMN_HEADER_HEIGHT } from "@src/components/Table/Column";
 import { ColumnConfig } from "@src/types/table";
 import useKeyPress from "@src/hooks/useKeyPress";
+
+export { COLUMN_HEADER_HEIGHT };
 
 const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -37,7 +39,7 @@ const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
     backgroundColor: theme.palette.background.default,
     color: theme.palette.text.primary,
 
-    margin: `-${DEFAULT_ROW_HEIGHT - 2}px 0 0 !important`,
+    margin: `-${COLUMN_HEADER_HEIGHT - 1 - 2}px 0 0 !important`,
     padding: 0,
     paddingRight: theme.spacing(1.5),
   },
@@ -83,6 +85,7 @@ export default function DraggableHeaderRenderer({
 
   return (
     <Grid
+      key={column.key}
       ref={(ref) => {
         dragRef(ref);
         dropRef(ref);
@@ -164,7 +167,7 @@ export default function DraggableHeaderRenderer({
               sx={{
                 typography: "caption",
                 fontWeight: "fontWeightMedium",
-                lineHeight: `${DEFAULT_ROW_HEIGHT - 1 - 4}px`,
+                lineHeight: `${COLUMN_HEADER_HEIGHT - 2 - 4}px`,
                 textOverflow: "clip",
               }}
               color="inherit"
@@ -182,7 +185,7 @@ export default function DraggableHeaderRenderer({
             sx={{
               typography: "caption",
               fontWeight: "fontWeightMedium",
-              lineHeight: `${DEFAULT_ROW_HEIGHT + 1}px`,
+              lineHeight: `${COLUMN_HEADER_HEIGHT}px`,
               textOverflow: "clip",
             }}
             component="div"

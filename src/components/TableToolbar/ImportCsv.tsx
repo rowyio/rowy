@@ -180,6 +180,8 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
           title="Import CSV or TSV"
           onClick={handleOpen}
           icon={<ImportIcon />}
+          // FIXME:
+          disabled
         />
       )}
 

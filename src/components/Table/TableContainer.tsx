@@ -13,6 +13,7 @@ export const TableContainer = styled("div", {
   shouldForwardProp: (prop) => prop !== "rowHeight",
 })<{ rowHeight: number }>(({ theme, rowHeight }) => ({
   display: "flex",
+  position: "relative",
   flexDirection: "column",
   height: `calc(100vh - ${APP_BAR_HEIGHT}px - ${TABLE_TOOLBAR_HEIGHT}px)`,
 

@@ -1,8 +1,7 @@
 import React, { useRef, useMemo, useState } from "react";
-import { find, difference, get } from "lodash-es";
+import { find, difference } from "lodash-es";
 import { useAtom, useSetAtom } from "jotai";
 import { useDebouncedCallback } from "use-debounce";
-
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
@@ -11,14 +10,18 @@ import DataGrid, {
   Column,
   //  SelectColumn as _SelectColumn,
 } from "react-data-grid";
+import { LinearProgress } from "@mui/material";
 
 import TableContainer, { OUT_OF_ORDER_MARGIN } from "./TableContainer";
-import ColumnHeader from "./ColumnHeader";
+import ColumnHeader, { COLUMN_HEADER_HEIGHT } from "./ColumnHeader";
 // import ContextMenu from "./ContextMenu";
 import FinalColumnHeader from "./FinalColumnHeader";
 import FinalColumn from "./formatters/FinalColumn";
 import TableRow from "./TableRow";
+import EmptyState from "@src/components/EmptyState";
 // import BulkActions from "./BulkActions";
+import AddRow from "@src/components/TableToolbar/AddRow";
+import AddRowIcon from "@src/assets/icons/AddRow";
 
 import {
   globalScope,
@@ -152,7 +155,7 @@ export default function Table() {
       //     { ...row }
       //   )
       // );
-    }, [columns, tableRows]) ?? [];
+    }, [tableRows]) ?? [];
 
   const rowsContainerRef = useRef<HTMLDivElement>(null);
   const [selectedRowsSet, setSelectedRowsSet] = useState<Set<React.Key>>();
@@ -166,8 +169,6 @@ export default function Table() {
     const isAtBottom =
       target.clientHeight + target.scrollTop >= target.scrollHeight - offset;
     if (!isAtBottom) return;
-    // Prevent calling more rows when they’ve already been called
-    if (tableLoadingMore) return;
     // Call for the next page
     setTablePageAtom((p) => p + 1);
   };
@@ -271,6 +272,26 @@ export default function Table() {
             // }
           />
         </DndProvider>
+
+        {tableRows.length === 0 && (
+          <EmptyState
+            Icon={AddRowIcon}
+            message="Add a row to get started"
+            description={
+              <div>
+                <br />
+                <AddRow />
+              </div>
+            }
+            style={{
+              position: "absolute",
+              inset: 0,
+              top: COLUMN_HEADER_HEIGHT,
+              height: "auto",
+            }}
+          />
+        )}
+        {tableLoadingMore && <LinearProgress />}
       </TableContainer>
 
       {/* <ContextMenu />

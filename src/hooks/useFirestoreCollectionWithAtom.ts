@@ -130,6 +130,7 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
       isLastPage || queryEqual(next?.query as any, prev?.query as any)
   );
 
+  // Create listener
   useEffect(() => {
     // If path is invalid and no memoizedQuery was created, don’t continue
     if (!memoizedQuery) return;
@@ -244,7 +245,6 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
     setUpdateDocAtom,
     deleteDocAtom,
     setDeleteDocAtom,
-    loadingMoreAtom,
   ]);
 }
 
