@@ -1,9 +1,12 @@
 import { useEffect } from "react";
+import useMemoValue from "use-memo-value";
 import { useAtom, PrimitiveAtom, useSetAtom } from "jotai";
 import { Scope } from "jotai/core/atom";
 import { set } from "lodash-es";
 import {
+  Firestore,
   doc,
+  refEqual,
   onSnapshot,
   FirestoreError,
   setDoc,
@@ -46,14 +49,6 @@ export function useFirestoreDocWithAtom<T = TableRow>(
   path: string | undefined,
   options?: IUseFirestoreDocWithAtomOptions<T>
 ) {
-  const [firebaseDb] = useAtom(firebaseDbAtom, globalScope);
-  const setDataAtom = useSetAtom(dataAtom, dataScope);
-  const setUpdateDataAtom = useSetAtom(
-    options?.updateDataAtom || (dataAtom as any),
-    dataScope
-  );
-  const handleError = useErrorHandler();
-
   // Destructure options so they can be used as useEffect dependencies
   const {
     pathSegments,
@@ -63,28 +58,37 @@ export function useFirestoreDocWithAtom<T = TableRow>(
     updateDataAtom,
   } = options || {};
 
-  useEffect(() => {
-    if (!path || (Array.isArray(pathSegments) && pathSegments.some((x) => !x)))
-      return;
+  const [firebaseDb] = useAtom(firebaseDbAtom, globalScope);
+  const setDataAtom = useSetAtom(dataAtom, dataScope);
+  const setUpdateDataAtom = useSetAtom(
+    options?.updateDataAtom || (dataAtom as any),
+    dataScope
+  );
+  const handleError = useErrorHandler();
 
-    let suspended = false;
+  // Create the doc ref and memoize using Firestore’s refEqual
+  const memoizedDocRef = useMemoValue(
+    getDocRef<T>(firebaseDb, path, pathSegments),
+    (next, prev) => refEqual(next as any, prev as any)
+  );
+
+  useEffect(() => {
+    // If path is invalid and no memoizedDocRef was created, don’t continue
+    if (!memoizedDocRef) return;
 
     // Suspend data atom until we get the first snapshot
+    let suspended = false;
     if (!disableSuspense) {
       setDataAtom(new Promise(() => {}) as unknown as T);
       suspended = true;
     }
 
-    const ref = doc(
-      firebaseDb,
-      path,
-      ...((pathSegments as string[]) || [])
-    ) as DocumentReference<T>;
-
+    // Create a listener for the document
     const unsubscribe = onSnapshot(
-      ref,
+      memoizedDocRef,
       (docSnapshot) => {
         try {
+          // Create doc if it doesn’t exist
           if (!docSnapshot.exists() && !!createIfNonExistent) {
             setDoc(docSnapshot.ref, createIfNonExistent);
             setDataAtom({ ...createIfNonExistent, _rowy_ref: docSnapshot.ref });
@@ -107,6 +111,27 @@ export function useFirestoreDocWithAtom<T = TableRow>(
       }
     );
 
+    // When the listener will change, unsubscribe
+    return () => {
+      unsubscribe();
+    };
+  }, [
+    memoizedDocRef,
+    onError,
+    setDataAtom,
+    disableSuspense,
+    createIfNonExistent,
+    handleError,
+    updateDataAtom,
+    setUpdateDataAtom,
+  ]);
+
+  // Set updateDocAtom and deleteDocAtom values if they exist
+  useEffect(() => {
+    // If path is invalid and no memoizedDocRef was created,
+    // don’t set update and delete atoms
+    if (!memoizedDocRef) return;
+
     // If `updateDataAtom` was passed,
     // set the atom’s value to a function that updates the document
     if (updateDataAtom) {
@@ -119,28 +144,35 @@ export function useFirestoreDocWithAtom<T = TableRow>(
           }
         }
 
-        return setDoc(ref, updateToDb, { merge: true });
+        return setDoc(memoizedDocRef, updateToDb, { merge: true });
       });
     }
 
     return () => {
-      unsubscribe();
-      // If `options?.updateDataAtom` was passed,
+      // If `updateDataAtom` was passed,
       // reset the atom’s value to prevent writes
       if (updateDataAtom) setUpdateDataAtom(undefined);
     };
-  }, [
-    firebaseDb,
-    path,
-    pathSegments,
-    onError,
-    setDataAtom,
-    disableSuspense,
-    createIfNonExistent,
-    handleError,
-    updateDataAtom,
-    setUpdateDataAtom,
-  ]);
+  }, [memoizedDocRef, updateDataAtom, setUpdateDataAtom]);
 }
 
 export default useFirestoreDocWithAtom;
+
+/**
+ * Create the Firestore document reference.
+ * Put code in a function so the results can be compared by useMemoValue.
+ */
+const getDocRef = <T>(
+  firebaseDb: Firestore,
+  path: string | undefined,
+  pathSegments?: Array<string | undefined>
+) => {
+  if (!path || (Array.isArray(pathSegments) && pathSegments.some((x) => !x)))
+    return null;
+
+  return doc(
+    firebaseDb,
+    path,
+    ...((pathSegments as string[]) || [])
+  ) as DocumentReference<T>;
+};
