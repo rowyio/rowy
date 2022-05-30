@@ -1,5 +1,4 @@
-import React, { useRef, useMemo, useState } from "react";
-import { find, difference } from "lodash-es";
+import React, { useMemo, useState } from "react";
 import { useAtom, useSetAtom } from "jotai";
 import { useDebouncedCallback, useThrottledCallback } from "use-debounce";
 import { DndProvider } from "react-dnd";
@@ -27,6 +26,7 @@ import {
   globalScope,
   userRolesAtom,
   userSettingsAtom,
+  navPinnedAtom,
 } from "@src/atoms/globalScope";
 import {
   tableScope,
@@ -56,6 +56,7 @@ const rowClass = (row: any) => (row._rowy_outOfOrder ? "out-of-order" : "");
 export default function Table() {
   const [userRoles] = useAtom(userRolesAtom, globalScope);
   const [userSettings] = useAtom(userSettingsAtom, globalScope);
+  const [navPinned] = useAtom(navPinnedAtom, globalScope);
 
   const [tableId] = useAtom(tableIdAtom, tableScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
@@ -157,15 +158,18 @@ export default function Table() {
       // );
     }, [tableRows]) ?? [];
 
-  const rowsContainerRef = useRef<HTMLDivElement>(null);
-  const [selectedRowsSet, setSelectedRowsSet] = useState<Set<React.Key>>();
-  const [selectedRows, setSelectedRows] = useState<any[]>([]);
+  // const [selectedRowsSet, setSelectedRowsSet] = useState<Set<React.Key>>();
+  // const [selectedRows, setSelectedRows] = useState<any[]>([]);
 
   // Gets more rows when scrolled down.
   // https://github.com/adazzle/react-data-grid/blob/ead05032da79d7e2b86e37cdb9af27f2a4d80b90/stories/demos/AllFeatures.tsx#L60
   const handleScroll = useThrottledCallback(
     (event: React.UIEvent<HTMLDivElement>) => {
       const target = event.target as HTMLDivElement;
+
+      if (navPinned && !columns[0].fixed)
+        setShowLeftScrollDivider(target.scrollLeft > 16);
+
       const offset = 800;
       const isAtBottom =
         target.clientHeight + target.scrollTop >= target.scrollHeight - offset;
@@ -175,6 +179,8 @@ export default function Table() {
     },
     250
   );
+
+  const [showLeftScrollDivider, setShowLeftScrollDivider] = useState(false);
 
   const rowHeight = tableSchema.rowHeight ?? DEFAULT_ROW_HEIGHT;
   const handleResize = useDebouncedCallback(
@@ -191,12 +197,13 @@ export default function Table() {
       {/* <Suspense fallback={<Loading message="Loading header" />}>
         <Hotkeys selectedCell={selectedCell} />
       </Suspense> */}
-      <TableContainer ref={rowsContainerRef} rowHeight={rowHeight}>
+      <TableContainer rowHeight={rowHeight}>
         <DndProvider backend={HTML5Backend}>
+          {showLeftScrollDivider && <div className="left-scroll-divider" />}
+
           <DataGrid
             onColumnResize={handleResize}
             onScroll={handleScroll}
-            // ref={dataGridRef}
             rows={rows}
             columns={columns}
             // Increase row height of out of order rows to add margins
@@ -212,31 +219,31 @@ export default function Table() {
             rowRenderer={TableRow}
             rowKeyGetter={rowKeyGetter}
             rowClass={rowClass}
-            selectedRows={selectedRowsSet}
-            onSelectedRowsChange={(newSelectedSet) => {
-              const newSelectedArray = newSelectedSet
-                ? [...newSelectedSet]
-                : [];
-              const prevSelectedRowsArray = selectedRowsSet
-                ? [...selectedRowsSet]
-                : [];
-              const addedSelections = difference(
-                newSelectedArray,
-                prevSelectedRowsArray
-              );
-              const removedSelections = difference(
-                prevSelectedRowsArray,
-                newSelectedArray
-              );
-              addedSelections.forEach((id) => {
-                const newRow = find(rows, { id });
-                setSelectedRows([...selectedRows, newRow]);
-              });
-              removedSelections.forEach((rowId) => {
-                setSelectedRows(selectedRows.filter((row) => row.id !== rowId));
-              });
-              setSelectedRowsSet(newSelectedSet);
-            }}
+            // selectedRows={selectedRowsSet}
+            // onSelectedRowsChange={(newSelectedSet) => {
+            //   const newSelectedArray = newSelectedSet
+            //     ? [...newSelectedSet]
+            //     : [];
+            //   const prevSelectedRowsArray = selectedRowsSet
+            //     ? [...selectedRowsSet]
+            //     : [];
+            //   const addedSelections = difference(
+            //     newSelectedArray,
+            //     prevSelectedRowsArray
+            //   );
+            //   const removedSelections = difference(
+            //     prevSelectedRowsArray,
+            //     newSelectedArray
+            //   );
+            //   addedSelections.forEach((id) => {
+            //     const newRow = find(rows, { id });
+            //     setSelectedRows([...selectedRows, newRow]);
+            //   });
+            //   removedSelections.forEach((rowId) => {
+            //     setSelectedRows(selectedRows.filter((row) => row.id !== rowId));
+            //   });
+            //   setSelectedRowsSet(newSelectedSet);
+            // }}
             // onRowsChange={() => {
             //console.log('onRowsChange',rows)
             // }}

@@ -17,6 +17,20 @@ export const TableContainer = styled("div", {
   flexDirection: "column",
   height: `calc(100vh - ${APP_BAR_HEIGHT}px - ${TABLE_TOOLBAR_HEIGHT}px)`,
 
+  "& .left-scroll-divider": {
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    left: 0,
+    width: 1,
+    zIndex: 1,
+
+    backgroundColor: colord(theme.palette.background.paper)
+      .mix(theme.palette.divider, 0.12)
+      .alpha(1)
+      .toHslString(),
+  },
+
   "& > .rdg": {
     // FIXME:
     // width: `calc(100% - ${DRAWER_COLLAPSED_WIDTH}px)`,

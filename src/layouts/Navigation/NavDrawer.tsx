@@ -43,6 +43,7 @@ export interface INavDrawerProps extends DrawerProps {
   pinned: boolean;
   setPinned: React.Dispatch<React.SetStateAction<boolean>>;
   canPin: boolean;
+  scrollTrigger: boolean;
 }
 
 export default function NavDrawer({
@@ -50,6 +51,7 @@ export default function NavDrawer({
   pinned,
   setPinned,
   canPin,
+  scrollTrigger,
   ...props
 }: INavDrawerProps) {
   const [tables] = useAtom(tablesAtom, globalScope);
@@ -96,6 +98,7 @@ export default function NavDrawer({
 
         "& .MuiDrawer-paper": {
           minWidth: NAV_DRAWER_WIDTH,
+          borderRight: "none",
           bgcolor: pinned ? "background.default" : "background.paper",
         },
       }}
@@ -111,8 +114,44 @@ export default function NavDrawer({
           position: "sticky",
           top: 0,
           zIndex: "appBar",
-          backgroundColor: "inherit",
-          backgroundImage: "inherit",
+          backgroundColor:
+            pinned && scrollTrigger ? "background.paper" : "inherit",
+          backgroundImage: pinned
+            ? "linear-gradient(rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.09))" // Elevation 8
+            : "inherit",
+
+          "&::before": {
+            content: "''",
+            display: "block",
+            position: "absolute",
+            inset: 0,
+
+            bgcolor: "background.default",
+            opacity: pinned ? (scrollTrigger ? 0 : 1) : 0,
+            transition: (theme) =>
+              theme.transitions.create("opacity", {
+                easing:
+                  canPin && pinned
+                    ? theme.transitions.easing.easeOut
+                    : theme.transitions.easing.sharp,
+                duration:
+                  canPin && pinned
+                    ? theme.transitions.duration.enteringScreen
+                    : theme.transitions.duration.leavingScreen,
+              }),
+          },
+          boxShadow: pinned && scrollTrigger ? 1 : 0,
+          transition: (theme) =>
+            theme.transitions.create(["background-color", "box-shadow"], {
+              easing:
+                canPin && pinned
+                  ? theme.transitions.easing.easeOut
+                  : theme.transitions.easing.sharp,
+              duration:
+                canPin && pinned
+                  ? theme.transitions.duration.enteringScreen
+                  : theme.transitions.duration.leavingScreen,
+            }),
         }}
       >
         <IconButton
@@ -123,7 +162,7 @@ export default function NavDrawer({
           <CloseIcon />
         </IconButton>
 
-        <Logo style={{ marginLeft: 1 }} />
+        <Logo style={{ marginLeft: 1, position: "relative", zIndex: 1 }} />
 
         {canPin && (
           <IconButton
@@ -139,7 +178,7 @@ export default function NavDrawer({
       </Stack>
 
       <nav>
-        <List disablePadding>
+        <List>
           <li>
             <NavItem to={ROUTES.tables} onClick={closeDrawer}>
               <ListItemIcon>

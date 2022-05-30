@@ -64,9 +64,9 @@ export default function Navigation({ children }: React.PropsWithChildren<{}>) {
         color="inherit"
         elevation={trigger ? 1 : 0}
         sx={{
-          height: APP_BAR_HEIGHT, // Elevation 8
+          height: APP_BAR_HEIGHT,
           backgroundImage:
-            "linear-gradient(rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.09))",
+            "linear-gradient(rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.09))", // Elevation 8
 
           "&::before": {
             content: "''",
@@ -79,12 +79,26 @@ export default function Navigation({ children }: React.PropsWithChildren<{}>) {
 
             bgcolor: "background.default",
             opacity: trigger ? 0 : 1,
-            transition: (theme) => theme.transitions.create("opacity"),
+            transition: (theme) =>
+              theme.transitions.create("opacity", {
+                easing:
+                  canPin && pinned
+                    ? theme.transitions.easing.easeOut
+                    : theme.transitions.easing.sharp,
+                duration:
+                  canPin && pinned
+                    ? theme.transitions.duration.enteringScreen
+                    : theme.transitions.duration.leavingScreen,
+              }),
           },
 
-          pl: canPin && pinned && open ? `${NAV_DRAWER_WIDTH}px` : 0,
+          ml: canPin && pinned && open ? `${NAV_DRAWER_WIDTH}px` : 0,
+          width:
+            canPin && pinned && open
+              ? `calc(100% - ${NAV_DRAWER_WIDTH}px)`
+              : "100%",
           transition: (theme) =>
-            theme.transitions.create("padding-left", {
+            theme.transitions.create(["margin-left", "width", "box-shadow"], {
               easing:
                 canPin && pinned
                   ? theme.transitions.easing.easeOut
@@ -171,6 +185,7 @@ export default function Navigation({ children }: React.PropsWithChildren<{}>) {
           setPinned={setPinned}
           canPin={canPin}
           onClose={() => setOpen(false)}
+          scrollTrigger={trigger}
         />
 
         <ErrorBoundary FallbackComponent={StyledErrorFallback}>

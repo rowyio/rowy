@@ -83,7 +83,7 @@ export default function ColumnConfigModal({
     <Modal
       maxWidth="md"
       onClose={handleClose}
-      title={`${column.name}: Settings`}
+      title={`${column.name}: Config`}
       disableBackdropClick
       disableEscapeKeyDown
       children={
