@@ -170,7 +170,6 @@ export default function Table() {
       const isAtBottom =
         target.clientHeight + target.scrollTop >= target.scrollHeight - offset;
       if (!isAtBottom) return;
-      console.log("Scrolled to bottom");
       // Call for the next page
       setTablePage((p) => p + 1);
     },

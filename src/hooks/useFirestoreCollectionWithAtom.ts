@@ -147,7 +147,6 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
     // Set nextPageAtom if provided and getting the next page
     else if (memoizedQuery.page > 0 && nextPageAtom) {
       setNextPageAtom((s) => ({ ...s, loading: true }));
-      console.log("Loading next page", memoizedQuery.page);
     }
 
     // Create a listener for the query
@@ -163,6 +162,8 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
           setDataAtom(docs);
           // If the snapshot doesn’t fill the page, it’s the last page
           if (docs.length < memoizedQuery.limit) setIsLastPage(true);
+          // Make sure to unset in case of mistake
+          else setIsLastPage(false);
           // Update nextPageAtom if provided
           if (nextPageAtom) {
             setNextPageAtom((s) => ({
@@ -171,12 +172,6 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
               available: docs.length >= memoizedQuery.limit,
             }));
           }
-          console.log(
-            "Loaded next page",
-            memoizedQuery.page,
-            "  Next page available:",
-            docs.length >= memoizedQuery.limit
-          );
         } catch (error) {
           if (onError) onError(error as FirestoreError);
           else handleError(error);
