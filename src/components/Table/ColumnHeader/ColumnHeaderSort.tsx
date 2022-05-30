@@ -109,8 +109,10 @@ export default function ColumnHeaderSort({ column }: IColumnHeaderSortProps) {
           },
         }}
       >
-        <SortDescIcon className="arrow" />
-        <IconSlash />
+        <div style={{ position: "relative" }}>
+          <SortDescIcon className="arrow" />
+          <IconSlash />
+        </div>
       </IconButton>
     </Tooltip>
   );
