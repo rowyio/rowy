@@ -36,6 +36,14 @@ export type UpdateCollectionDocFunction<T = TableRow> = (
  */
 export type DeleteCollectionDocFunction = (path: string) => Promise<void>;
 
+/**
+ * Store the next page state to know if it’s loading and if it’s available
+ */
+export type NextPageState = {
+  loading: boolean = false;
+  available: boolean = true;
+};
+
 /** Table settings stored in project settings */
 export type TableSettings = {
   id: string;

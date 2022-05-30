@@ -19,9 +19,9 @@ import {
   UpdateDocFunction,
   UpdateCollectionDocFunction,
   DeleteCollectionDocFunction,
+  NextPageState,
 } from "@src/types/table";
 import { updateRowData } from "@src/utils/table";
-import { COLLECTION_PAGE_SIZE } from "@src/config/db";
 
 /** Root atom from which others are derived */
 export const tableIdAtom = atom("");
@@ -74,15 +74,11 @@ export const tableOrdersAtom = atom<TableOrder[]>([]);
 export const tablePageAtom = atom(
   0,
   (get, set, update: number | ((p: number) => number)) => {
-    // If loading more, don’t request another page
-    const tableLoadingMore = get(tableLoadingMoreAtom);
-    if (tableLoadingMore) return;
+    // If loading more or doesn’t have next page, don’t request another page
+    const tableNextPage = get(tableNextPageAtom);
+    if (tableNextPage.loading || !tableNextPage.available) return;
 
-    // Check that we haven’t loaded all rows
-    const tableRowsDb = get(tableRowsDbAtom);
     const currentPage = get(tablePageAtom);
-    if (tableRowsDb.length < (currentPage + 1) * COLLECTION_PAGE_SIZE) return;
-
     set(
       tablePageAtom,
       typeof update === "number" ? update : update(currentPage)
@@ -173,8 +169,11 @@ export const tableRowsAtom = atom<TableRow[]>((get) =>
     "_rowy_ref.path"
   )
 );
-/** Store loading more state for infinite scroll */
-export const tableLoadingMoreAtom = atom(false);
+/** Store next page state for infinite scroll */
+export const tableNextPageAtom = atom({
+  loading: false,
+  available: true,
+} as NextPageState);
 
 /**
  * Store function to add or update row in db directly.

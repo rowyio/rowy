@@ -6,10 +6,9 @@ import { Tooltip, Typography, TypographyProps } from "@mui/material";
 import {
   tableScope,
   tableRowsAtom,
-  tableLoadingMoreAtom,
+  tableNextPageAtom,
   tablePageAtom,
 } from "@src/atoms/tableScope";
-import { COLLECTION_PAGE_SIZE } from "@src/config/db";
 
 const StatusText = forwardRef(function StatusText(
   props: TypographyProps,
@@ -29,23 +28,21 @@ const StatusText = forwardRef(function StatusText(
 
 function LoadedRowsStatus() {
   const [tableRows] = useAtom(tableRowsAtom, tableScope);
-  const [tableLoadingMore] = useAtom(tableLoadingMoreAtom, tableScope);
+  const [tableNextPage] = useAtom(tableNextPageAtom, tableScope);
   const [tablePage] = useAtom(tablePageAtom, tableScope);
 
-  if (tableLoadingMore) return <StatusText>Loading more…</StatusText>;
-
-  const allLoaded = tableRows.length < COLLECTION_PAGE_SIZE * (tablePage + 1);
+  if (tableNextPage.loading) return <StatusText>Loading more…</StatusText>;
 
   return (
     <Tooltip
       title={
-        allLoaded
-          ? "All rows have been loaded in this table"
-          : "Scroll to the bottom to load more rows"
+        tableNextPage.available
+          ? "Scroll to the bottom to load more rows"
+          : "All rows have been loaded in this table"
       }
     >
       <StatusText>
-        Loaded {allLoaded && "all "}
+        Loaded {!tableNextPage.available && "all "}
         {tableRows.length} row{tableRows.length !== 1 && "s"}
       </StatusText>
     </Tooltip>

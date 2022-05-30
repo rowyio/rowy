@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import useMemoValue from "use-memo-value";
-import { useAtom, PrimitiveAtom, useSetAtom } from "jotai";
+import { useAtom, PrimitiveAtom, useSetAtom, SetStateAction } from "jotai";
 import { Scope } from "jotai/core/atom";
 import { set } from "lodash-es";
 import {
@@ -27,6 +27,7 @@ import { globalScope } from "@src/atoms/globalScope";
 import {
   UpdateCollectionDocFunction,
   DeleteCollectionDocFunction,
+  NextPageState,
   TableFilter,
   TableOrder,
   TableRow,
@@ -56,8 +57,8 @@ interface IUseFirestoreCollectionWithAtomOptions<T> {
   updateDocAtom?: PrimitiveAtom<UpdateCollectionDocFunction<T> | undefined>;
   /** Set this atom’s value to a function that deletes a document in the collection. Must pass the full path. Uses same scope as `dataScope`. */
   deleteDocAtom?: PrimitiveAtom<DeleteCollectionDocFunction | undefined>;
-  /** Update this atom when we’re loading the next page. Uses same scope as `dataScope`. */
-  loadingMoreAtom?: PrimitiveAtom<boolean>;
+  /** Update this atom when we’re loading the next page, and if there is a next page available. Uses same scope as `dataScope`. */
+  nextPageAtom?: PrimitiveAtom<NextPageState>;
 }
 
 /**
@@ -88,7 +89,7 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
     disableSuspense,
     updateDocAtom,
     deleteDocAtom,
-    loadingMoreAtom,
+    nextPageAtom,
   } = options || {};
 
   const [firebaseDb] = useAtom(firebaseDbAtom, globalScope);
@@ -106,10 +107,11 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
     deleteDocAtom || (dataAtom as any),
     dataScope
   );
-  const setLoadingMoreAtom = useSetAtom(
-    loadingMoreAtom || (dataAtom as any),
-    dataScope
-  );
+  const setNextPageAtom = useSetAtom<
+    NextPageState,
+    SetStateAction<NextPageState>,
+    void
+  >(nextPageAtom || (dataAtom as any), dataScope);
 
   // Store if we’re at the last page to prevent a new query from being created
   const [isLastPage, setIsLastPage] = useState(false);
@@ -142,9 +144,9 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
       setDataAtom(new Promise(() => {}) as unknown as T[]);
       suspended = true;
     }
-    // Set loadingMoreAtom if provided and getting the next page
-    else if (memoizedQuery.page > 0 && loadingMoreAtom) {
-      setLoadingMoreAtom(true);
+    // Set nextPageAtom if provided and getting the next page
+    else if (memoizedQuery.page > 0 && nextPageAtom) {
+      setNextPageAtom((s) => ({ ...s, loading: true }));
     }
 
     // Create a listener for the query
@@ -160,8 +162,14 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
           setDataAtom(docs);
           // If the snapshot doesn’t fill the page, it’s the last page
           if (docs.length < memoizedQuery.limit) setIsLastPage(true);
-          // Mark loadingMore as done
-          if (loadingMoreAtom) setLoadingMoreAtom(false);
+          // Update nextPageAtom if provided
+          if (nextPageAtom) {
+            setNextPageAtom((s) => ({
+              ...s,
+              loading: false,
+              available: docs.length >= memoizedQuery.limit,
+            }));
+          }
         } catch (error) {
           if (onError) onError(error as FirestoreError);
           else handleError(error);
@@ -173,7 +181,7 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
           setDataAtom([]);
           suspended = false;
         }
-        if (loadingMoreAtom) setLoadingMoreAtom(false);
+        if (nextPageAtom) setNextPageAtom({ loading: false, available: true });
         if (onError) onError(error);
         else handleError(error);
       }
@@ -182,7 +190,7 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
     // When the listener will change, unsubscribe
     return () => {
       unsubscribe();
-      if (loadingMoreAtom) setLoadingMoreAtom(false);
+      if (nextPageAtom) setNextPageAtom({ loading: false, available: true });
     };
   }, [
     firebaseDb,
@@ -191,8 +199,8 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
     setDataAtom,
     onError,
     handleError,
-    loadingMoreAtom,
-    setLoadingMoreAtom,
+    nextPageAtom,
+    setNextPageAtom,
   ]);
 
   // Create variable for validity of query to pass to useEffect dependencies

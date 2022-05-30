@@ -20,7 +20,7 @@ import {
   tableRowsDbAtom,
   _updateRowDbAtom,
   _deleteRowDbAtom,
-  tableLoadingMoreAtom,
+  tableNextPageAtom,
   auditChangeAtom,
 } from "@src/atoms/tableScope";
 
@@ -93,7 +93,7 @@ const TableSourceFirestore = memo(function TableSourceFirestore() {
       onError: handleErrorCallback,
       updateDocAtom: _updateRowDbAtom,
       deleteDocAtom: _deleteRowDbAtom,
-      loadingMoreAtom: tableLoadingMoreAtom,
+      nextPageAtom: tableNextPageAtom,
     }
   );
 

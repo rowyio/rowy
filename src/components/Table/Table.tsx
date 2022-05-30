@@ -1,7 +1,7 @@
 import React, { useRef, useMemo, useState } from "react";
 import { find, difference } from "lodash-es";
 import { useAtom, useSetAtom } from "jotai";
-import { useDebouncedCallback } from "use-debounce";
+import { useDebouncedCallback, useThrottledCallback } from "use-debounce";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
@@ -35,7 +35,7 @@ import {
   tableSchemaAtom,
   tableColumnsOrderedAtom,
   tableRowsAtom,
-  tableLoadingMoreAtom,
+  tableNextPageAtom,
   tablePageAtom,
   updateColumnAtom,
   updateFieldAtom,
@@ -62,8 +62,8 @@ export default function Table() {
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
   const [tableRows] = useAtom(tableRowsAtom, tableScope);
-  const [tableLoadingMore] = useAtom(tableLoadingMoreAtom, tableScope);
-  const setTablePageAtom = useSetAtom(tablePageAtom, tableScope);
+  const [tableNextPage] = useAtom(tableNextPageAtom, tableScope);
+  const setTablePage = useSetAtom(tablePageAtom, tableScope);
 
   const updateColumn = useSetAtom(updateColumnAtom, tableScope);
   const updateField = useSetAtom(updateFieldAtom, tableScope);
@@ -163,15 +163,19 @@ export default function Table() {
 
   // Gets more rows when scrolled down.
   // https://github.com/adazzle/react-data-grid/blob/ead05032da79d7e2b86e37cdb9af27f2a4d80b90/stories/demos/AllFeatures.tsx#L60
-  const handleScroll = (event: React.UIEvent<HTMLDivElement>) => {
-    const target = event.target as HTMLDivElement;
-    const offset = 800;
-    const isAtBottom =
-      target.clientHeight + target.scrollTop >= target.scrollHeight - offset;
-    if (!isAtBottom) return;
-    // Call for the next page
-    setTablePageAtom((p) => p + 1);
-  };
+  const handleScroll = useThrottledCallback(
+    (event: React.UIEvent<HTMLDivElement>) => {
+      const target = event.target as HTMLDivElement;
+      const offset = 800;
+      const isAtBottom =
+        target.clientHeight + target.scrollTop >= target.scrollHeight - offset;
+      if (!isAtBottom) return;
+      console.log("Scroll");
+      // Call for the next page
+      setTablePage((p) => p + 1);
+    },
+    250
+  );
 
   const rowHeight = tableSchema.rowHeight ?? DEFAULT_ROW_HEIGHT;
   const handleResize = useDebouncedCallback(
@@ -291,7 +295,7 @@ export default function Table() {
             }}
           />
         )}
-        {tableLoadingMore && <LinearProgress />}
+        {tableNextPage.loading && <LinearProgress />}
       </TableContainer>
 
       {/* <ContextMenu />
