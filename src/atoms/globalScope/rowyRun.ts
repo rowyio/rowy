@@ -93,7 +93,6 @@ export const rowyRunAtom = atom((get) => {
     const { method, path } = route;
     let url = serviceUrl + path;
     if (params && params.length > 0) url = url + "/" + params.join("/");
-
     const response = await fetch(url, {
       method: method,
       mode: "cors",
@@ -101,7 +100,7 @@ export const rowyRunAtom = atom((get) => {
       credentials: "same-origin",
       headers: {
         "Content-Type": "application/json",
-        Authorization: "Bearer " + authToken,
+        Authorization: "Bearer " + authToken.token,
       },
       redirect: "follow",
       referrerPolicy: "no-referrer",
