@@ -2,6 +2,9 @@ import { useAtom } from "jotai";
 
 import { Tooltip, IconButton } from "@mui/material";
 import SortDescIcon from "@mui/icons-material/ArrowDownward";
+import IconSlash, {
+  ICON_SLASH_STROKE_DASHOFFSET,
+} from "@src/components/IconSlash";
 
 import { tableScope, tableOrdersAtom } from "@src/atoms/tableScope";
 import { FieldType } from "@src/constants/fields";
@@ -50,9 +53,6 @@ export default function ColumnHeaderSort({ column }: IColumnHeaderSortProps) {
         color="inherit"
         sx={{
           bgcolor: "background.default",
-          "& .slash-mask": {
-            stroke: (theme) => theme.palette.background.default,
-          },
           "&:hover": {
             backgroundColor: (theme) =>
               colord(theme.palette.background.default)
@@ -63,7 +63,7 @@ export default function ColumnHeaderSort({ column }: IColumnHeaderSortProps) {
                 .alpha(1)
                 .toHslString(),
 
-            "& .slash-mask": {
+            "& .icon-slash-mask": {
               stroke: (theme) =>
                 colord(theme.palette.background.default)
                   .mix(
@@ -99,41 +99,18 @@ export default function ColumnHeaderSort({ column }: IColumnHeaderSortProps) {
                 : "none",
           },
 
-          "& .slash": {
-            transition: (theme) =>
-              theme.transitions.create("stroke-dashoffset", {
-                duration: theme.transitions.duration.short,
-              }),
-            strokeDasharray: 27.9,
-            strokeDashoffset: currentSort === "none" ? 0 : 27.9,
+          "& .icon-slash": {
+            strokeDashoffset:
+              currentSort === "none" ? 0 : ICON_SLASH_STROKE_DASHOFFSET,
           },
-          "&:hover .slash": {
-            strokeDashoffset: nextSort === "none" ? 0 : 27.9,
+          "&:hover .icon-slash": {
+            strokeDashoffset:
+              nextSort === "none" ? 0 : ICON_SLASH_STROKE_DASHOFFSET,
           },
         }}
       >
         <SortDescIcon className="arrow" />
-
-        <svg
-          viewBox="0 0 24 24"
-          style={{
-            stroke: "currentColor",
-            strokeWidth: 2,
-            position: "absolute",
-            inset: (32 - 24) / 2,
-          }}
-          className="slash"
-        >
-          <line
-            className="slash-mask"
-            x1="3.08"
-            y1="1.04"
-            x2="22.8633788"
-            y2="20.7130253"
-          />
-
-          <line x1="1.75" y1="2.365" x2="21.475" y2="22.095" />
-        </svg>
+        <IconSlash />
       </IconButton>
     </Tooltip>
   );

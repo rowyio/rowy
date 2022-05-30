@@ -7,7 +7,6 @@ import {
   tableScope,
   tableRowsAtom,
   tableNextPageAtom,
-  tablePageAtom,
 } from "@src/atoms/tableScope";
 
 const StatusText = forwardRef(function StatusText(
@@ -29,7 +28,6 @@ const StatusText = forwardRef(function StatusText(
 function LoadedRowsStatus() {
   const [tableRows] = useAtom(tableRowsAtom, tableScope);
   const [tableNextPage] = useAtom(tableNextPageAtom, tableScope);
-  const [tablePage] = useAtom(tablePageAtom, tableScope);
 
   if (tableNextPage.loading) return <StatusText>Loading more…</StatusText>;
 
@@ -40,6 +38,7 @@ function LoadedRowsStatus() {
           ? "Scroll to the bottom to load more rows"
           : "All rows have been loaded in this table"
       }
+      describeChild
     >
       <StatusText>
         Loaded {!tableNextPage.available && "all "}

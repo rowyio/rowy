@@ -3,7 +3,11 @@ import { useAtom } from "jotai";
 import { isEqual } from "lodash-es";
 
 import { AutocompleteProps } from "@mui/material";
+import VisibilityIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOffOutlined";
+import IconSlash, {
+  ICON_SLASH_STROKE_DASHOFFSET,
+} from "@src/components/IconSlash";
 
 import MultiSelect from "@rowy/multiselect";
 import ButtonWithStatus from "@src/components/ButtonWithStatus";
@@ -72,8 +76,16 @@ export default function HiddenFields() {
       <Column
         label={option.label}
         type={tableSchema.columns?.[option.value]?.type}
-        secondaryItem={<VisibilityOffIcon className="hiddenIcon" />}
-        active={selected}
+        secondaryItem={
+          <div
+            className="icon-container"
+            style={selected ? { opacity: 1 } : {}}
+          >
+            <VisibilityIcon />
+            <IconSlash style={selected ? { strokeDashoffset: 0 } : {}} />
+          </div>
+        }
+        // active={selected}
       />
     </li>
   );
@@ -106,10 +118,9 @@ export default function HiddenFields() {
                   marginBottom: "-1px",
 
                   "&::after": { content: "none" },
+                  "& .icon-container": { opacity: 0 },
 
                   "&:hover, &.Mui-focused, &.Mui-focusVisible": {
-                    backgroundColor: "transparent",
-
                     position: "relative",
                     zIndex: 2,
 
@@ -119,18 +130,16 @@ export default function HiddenFields() {
                       boxShadow: (theme: any) =>
                         `0 0 0 1px ${theme.palette.text.primary} inset`,
                     },
-                    "& .hiddenIcon": { opacity: 0.5 },
+                    "& .icon-container": { opacity: 0.5 },
                   },
 
-                  '&[aria-selected="true"], &[aria-selected="true"].Mui-focused, &[aria-selected="true"].Mui-focusVisible':
-                    {
-                      backgroundColor: "transparent",
-
-                      position: "relative",
-                      zIndex: 1,
-
-                      "& .hiddenIcon": { opacity: 1 },
+                  "&:hover .icon-slash": { strokeDashoffset: 0 },
+                  '&[aria-selected="true"]:hover': {
+                    "& .icon-slash": {
+                      strokeDashoffset:
+                        ICON_SLASH_STROKE_DASHOFFSET + " !important",
                     },
+                  },
                 },
               },
             },

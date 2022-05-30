@@ -100,7 +100,7 @@ export default function Column({
       </Grid>
 
       {secondaryItem && (
-        <Grid item sx={{ ml: 1 }}>
+        <Grid item sx={{ ml: 1, position: "relative" }}>
           {secondaryItem}
         </Grid>
       )}
