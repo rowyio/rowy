@@ -147,6 +147,7 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
     // Set nextPageAtom if provided and getting the next page
     else if (memoizedQuery.page > 0 && nextPageAtom) {
       setNextPageAtom((s) => ({ ...s, loading: true }));
+      console.log("Loading next page", memoizedQuery.page);
     }
 
     // Create a listener for the query
@@ -170,6 +171,12 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
               available: docs.length >= memoizedQuery.limit,
             }));
           }
+          console.log(
+            "Loaded next page",
+            memoizedQuery.page,
+            "  Next page available:",
+            docs.length >= memoizedQuery.limit
+          );
         } catch (error) {
           if (onError) onError(error as FirestoreError);
           else handleError(error);

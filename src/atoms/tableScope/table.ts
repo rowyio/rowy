@@ -76,6 +76,7 @@ export const tablePageAtom = atom(
   (get, set, update: number | ((p: number) => number)) => {
     // If loading more or doesn’t have next page, don’t request another page
     const tableNextPage = get(tableNextPageAtom);
+    console.log("Next page requested", JSON.stringify(tableNextPage));
     if (tableNextPage.loading || !tableNextPage.available) return;
 
     const currentPage = get(tablePageAtom);
