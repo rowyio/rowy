@@ -107,7 +107,7 @@ function ControlledImageUploader({
 
       if (docRef && imageFile) {
         upload({
-          docRef: docRef as any,
+          docRef: docRef! as any,
           fieldName: column.key,
           files: [imageFile],
           previousValue: value ?? [],

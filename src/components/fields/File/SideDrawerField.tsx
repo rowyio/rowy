@@ -53,7 +53,7 @@ function ControlledFileUploader({
 
       if (docRef && file) {
         upload({
-          docRef: docRef as any,
+          docRef: docRef! as any,
           fieldName: column.key,
           files: [file],
           previousValue: value ?? [],

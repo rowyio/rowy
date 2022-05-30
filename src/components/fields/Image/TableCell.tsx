@@ -90,6 +90,7 @@ export default function Image_({
   value,
   onSubmit,
   disabled,
+  docRef,
 }: IHeavyCellProps) {
   const confirm = useSetAtom(confirmDialogAtom, globalScope);
   const updateField = useSetAtom(updateFieldAtom, tableScope);
@@ -106,13 +107,13 @@ export default function Image_({
 
       if (imageFile) {
         upload({
-          docRef: row.ref,
+          docRef: docRef! as any,
           fieldName: column.key,
           files: [imageFile],
           previousValue: value,
           onComplete: (newValue) => {
             updateField({
-              path: row._rowy_ref.path,
+              path: docRef.path,
               fieldName: column.key,
               value: newValue,
             });
@@ -270,12 +271,13 @@ export default function Image_({
         !disabled && (
           <IconButton
             size="small"
-            className="row-hover-iconButton"
             onClick={(e) => {
               dropzoneProps.onClick!(e);
               e.stopPropagation();
             }}
             style={{ display: "flex" }}
+            className={docRef && "row-hover-iconButton"}
+            disabled={!docRef}
           >
             <AddIcon />
           </IconButton>
