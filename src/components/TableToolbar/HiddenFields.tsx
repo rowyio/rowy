@@ -133,6 +133,7 @@ export default function HiddenFields() {
                     "& .icon-container": { opacity: 0.5 },
                   },
 
+                  // "&:hover .icon-container svg": { color: "primary.main" },
                   "&:hover .icon-slash": { strokeDashoffset: 0 },
                   '&[aria-selected="true"]:hover': {
                     "& .icon-slash": {

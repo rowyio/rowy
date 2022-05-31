@@ -1,10 +1,11 @@
+import { lazy, Suspense } from "react";
 import { useAtom } from "jotai";
 
 import { Stack } from "@mui/material";
 import AddRow from "./AddRow";
 import Filters from "./Filters";
 import ImportCSV from "./ImportCsv";
-import Export from "./Export";
+// import Export from "./Export";
 import LoadedRowsStatus from "./LoadedRowsStatus";
 import TableSettings from "./TableSettings";
 // import CloudLogs from "./CloudLogs";
@@ -23,6 +24,8 @@ import {
 } from "@src/atoms/tableScope";
 import { FieldType } from "@src/constants/fields";
 // import { useSnackLogContext } from "@src/contexts/SnackLogContext";
+
+const Export = lazy(() => import("./Export"));
 
 export const TABLE_TOOLBAR_HEIGHT = 44;
 
@@ -72,7 +75,9 @@ export default function TableToolbar() {
       <RowHeight />
       {/* Spacer */} <div />
       {tableSettings.tableType !== "collectionGroup" && <ImportCSV />}
-      <Export />
+      <Suspense fallback={null}>
+        <Export />
+      </Suspense>
       {userRoles.includes("ADMIN") && (
         <>
           {/* Spacer */} <div />
