@@ -117,6 +117,8 @@ export type ColumnConfig = {
     /** For sub-table fields */
     parentLabel?: string[];
 
+    primaryKeys?: string[];
+
     /** Column-specific config */
     [key: string]: any;
   };
@@ -142,4 +144,12 @@ export type TableRow = DocumentData & {
   _rowy_ref: TableRowRef;
   _rowy_missingRequiredFields?: string[];
   _rowy_outOfOrder?: boolean;
+};
+
+export type FileValue = {
+  ref: string;
+  downloadURL: string;
+  name: string;
+  type: string;
+  lastModifiedTS: number;
 };

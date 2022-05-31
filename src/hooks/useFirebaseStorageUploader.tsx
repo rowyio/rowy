@@ -15,18 +15,12 @@ import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 import { globalScope } from "@src/atoms/globalScope";
 import { firebaseStorageAtom } from "@src/sources/ProjectSourceFirebase";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
+import { FileValue } from "@src/types/table";
 
 export type UploaderState = {
   progress: number;
   isLoading: boolean;
   error?: string;
-};
-export type FileValue = {
-  ref: string;
-  downloadURL: string;
-  name: string;
-  type: string;
-  lastModifiedTS: number;
 };
 
 const initialState: UploaderState = { progress: 0, isLoading: false };

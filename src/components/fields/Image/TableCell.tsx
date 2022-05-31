@@ -28,9 +28,10 @@ import {
   tableScope,
   updateFieldAtom,
 } from "@src/atoms/tableScope";
-import useUploader, { FileValue } from "@src/hooks/useFirebaseStorageUploader";
+import useUploader from "@src/hooks/useFirebaseStorageUploader";
 import { IMAGE_MIME_TYPES } from "./index";
 import { DEFAULT_ROW_HEIGHT } from "@src/components/Table";
+import { FileValue } from "@src/types/table";
 
 // MULTIPLE
 const imgSx = (rowHeight: number) => ({

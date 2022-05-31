@@ -225,6 +225,25 @@ export const tableFiltersPopoverAtom = atom(
   }
 );
 
+/**
+ * Opens a table modal. Set to `null` to close.
+ * Modals: cloud logs, extensions, webhooks, export.
+ *
+ * @example Basic usage:
+ * ```
+ * const openTableModal = useSetAtom(tableModalAtom, globalScope);
+ * openTableModal("...");
+ * ```
+ *
+ * @example Close:
+ * ```
+ * openTableModal(null)
+ * ```
+ */
+export const tableModalAtom = atomWithHash<
+  "cloudLogs" | "extensions" | "webhooks" | "export" | null
+>("tableModal", null, { replaceState: true });
+
 /** Store current JSON editor view */
 export const jsonEditorAtom = atomWithStorage<"tree" | "code">(
   "__ROWY__JSON_EDITOR",

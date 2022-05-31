@@ -13,9 +13,10 @@ import CircularProgressOptical from "@src/components/CircularProgressOptical";
 
 import { globalScope, confirmDialogAtom } from "@src/atoms/globalScope";
 import { tableScope, updateFieldAtom } from "@src/atoms/tableScope";
-import useUploader, { FileValue } from "@src/hooks/useFirebaseStorageUploader";
+import useUploader from "@src/hooks/useFirebaseStorageUploader";
 import { FileIcon } from ".";
 import { DATE_TIME_FORMAT } from "@src/constants/dates";
+import { FileValue } from "@src/types/table";
 
 export default function File_({
   column,

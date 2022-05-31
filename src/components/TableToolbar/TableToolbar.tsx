@@ -4,7 +4,7 @@ import { Stack } from "@mui/material";
 import AddRow from "./AddRow";
 import Filters from "./Filters";
 import ImportCSV from "./ImportCsv";
-// import Export from "./Export";
+import Export from "./Export";
 import LoadedRowsStatus from "./LoadedRowsStatus";
 import TableSettings from "./TableSettings";
 // import CloudLogs from "./CloudLogs";
@@ -72,7 +72,7 @@ export default function TableToolbar() {
       <RowHeight />
       {/* Spacer */} <div />
       {tableSettings.tableType !== "collectionGroup" && <ImportCSV />}
-      {/* <Export /> */}
+      <Export />
       {userRoles.includes("ADMIN") && (
         <>
           {/* Spacer */} <div />

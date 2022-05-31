@@ -5,7 +5,7 @@ import { Controller } from "react-hook-form";
 import { format } from "date-fns";
 
 import { useDropzone } from "react-dropzone";
-import useUploader, { FileValue } from "@src/hooks/useFirebaseStorageUploader";
+import useUploader from "@src/hooks/useFirebaseStorageUploader";
 
 import {
   alpha,
@@ -24,6 +24,7 @@ import { DATE_TIME_FORMAT } from "@src/constants/dates";
 import { fieldSx } from "@src/components/SideDrawer/Form/utils";
 import { globalScope, confirmDialogAtom } from "@src/atoms/globalScope";
 import { tableScope, updateFieldAtom } from "@src/atoms/tableScope";
+import { FileValue } from "@src/types/table";
 
 interface IControlledFileUploaderProps
   extends Pick<ISideDrawerFieldProps, "column" | "docRef" | "disabled"> {
