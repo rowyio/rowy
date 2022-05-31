@@ -2,12 +2,14 @@ import useSWR from "swr";
 import _find from "lodash/find";
 import _sortBy from "lodash/sortBy";
 import _get from "lodash/get";
+import _isEmpty from "lodash/isEmpty";
 import { useSnackbar } from "notistack";
 
 import { DialogContentText, Stack, Typography } from "@mui/material";
 
 import { FormDialog, FormFields } from "@rowy/form-builder";
 import { tableSettings } from "./form";
+import TableName from "./TableName";
 import TableId from "./TableId";
 import SuggestedRules from "./SuggestedRules";
 import SteppedAccordion from "@src/components/SteppedAccordion";
@@ -25,12 +27,31 @@ import {
   TABLE_GROUP_SCHEMAS,
   TABLE_SCHEMAS,
 } from "@src/config/dbPaths";
+import { Controller } from "react-hook-form";
 
 export enum TableSettingsDialogModes {
   create,
   update,
 }
-export interface ICreateTableDialogProps {
+const customComponents = {
+  tableName: {
+    component: TableName,
+    defaultValue: "",
+    validation: [["string"]],
+  },
+  tableId: {
+    component: TableId,
+    defaultValue: "",
+    validation: [["string"]],
+  },
+  suggestedRules: {
+    component: SuggestedRules,
+    defaultValue: "",
+    validation: [["string"]],
+  },
+};
+
+export interface ITableSettingsProps {
   mode: TableSettingsDialogModes | null;
   clearDialog: () => void;
   data: Table | null;
@@ -40,7 +61,7 @@ export default function TableSettings({
   mode,
   clearDialog,
   data,
-}: ICreateTableDialogProps) {
+}: ITableSettingsProps) {
   const { settingsActions, roles, tables, rowyRun } = useProjectContext();
   const sectionNames = Array.from(
     new Set((tables ?? []).map((t) => t.section))
@@ -49,12 +70,17 @@ export default function TableSettings({
   const router = useRouter();
   const { requestConfirmation } = useConfirmation();
   const snackLogContext = useSnackLogContext();
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   const { data: collections } = useSWR(
     "firebaseCollections",
     () => rowyRun?.({ route: runRoutes.listCollections }),
-    { revalidateIfStale: false, dedupingInterval: 60_000 }
+    {
+      revalidateOnMount: true,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      dedupingInterval: 60_000 * 60,
+    }
   );
 
   const open = mode !== null;
@@ -64,11 +90,12 @@ export default function TableSettings({
   const handleSubmit = async (v) => {
     const { _suggestedRules, ...values } = v;
     const data = { ...values };
+
     if (values.schemaSource)
       data.schemaSource = _find(tables, { id: values.schemaSource });
 
-    const hasExtensions = Boolean(_get(data, "_schema.extensionObjects"));
-    const hasWebhooks = Boolean(_get(data, "_schema.webhooks"));
+    const hasExtensions = !_isEmpty(_get(data, "_schema.extensionObjects"));
+    const hasWebhooks = !_isEmpty(_get(data, "_schema.webhooks"));
     const deployExtensionsWebhooks = (onComplete?: () => void) => {
       if (rowyRun && (hasExtensions || hasWebhooks)) {
         requestConfirmation({
@@ -124,6 +151,31 @@ export default function TableSettings({
 
             if (onComplete) onComplete();
           },
+          handleCancel: async () => {
+            let _schema: Record<string, any> = {};
+            if (hasExtensions) {
+              _schema.extensionObjects = _get(
+                data,
+                "_schema.extensionObjects"
+              )!.map((x) => ({
+                ...x,
+                active: false,
+              }));
+            }
+            if (hasWebhooks) {
+              _schema.webhooks = _get(data, "_schema.webhooks")!.map((x) => ({
+                ...x,
+                active: false,
+              }));
+            }
+
+            await settingsActions?.updateTable({
+              id: data.id,
+              tableType: data.tableType,
+              _schema,
+            });
+            if (onComplete) onComplete();
+          },
         });
       } else {
         if (onComplete) onComplete();
@@ -135,7 +187,11 @@ export default function TableSettings({
       deployExtensionsWebhooks();
       clearDialog();
       analytics.logEvent("update_table", { type: values.tableType });
+      enqueueSnackbar("Updated table");
     } else {
+      const creatingSnackbar = enqueueSnackbar("Creating table…", {
+        persist: true,
+      });
       await settingsActions?.createTable(data);
       await analytics.logEvent("create_table", { type: values.tableType });
       deployExtensionsWebhooks(() => {
@@ -149,6 +205,7 @@ export default function TableSettings({
           router.history.push(values.id);
         }
         clearDialog();
+        closeSnackbar(creatingSnackbar);
       });
     }
   };
@@ -168,18 +225,6 @@ export default function TableSettings({
     ),
     Array.isArray(collections) ? collections.filter((x) => x !== CONFIG) : null
   );
-  const customComponents = {
-    tableId: {
-      component: TableId,
-      defaultValue: "",
-      validation: [["string"]],
-    },
-    suggestedRules: {
-      component: SuggestedRules,
-      defaultValue: "",
-      validation: [["string"]],
-    },
-  };
 
   return (
     <FormDialog
@@ -203,6 +248,13 @@ export default function TableSettings({
 
         return (
           <>
+            <Controller
+              control={formFieldsProps.control}
+              name="_schema"
+              defaultValue={{}}
+              render={() => <></>}
+            />
+
             <Stack
               direction="row"
               spacing={1}

@@ -81,15 +81,18 @@ export const AppProvider: React.FC = ({ children }) => {
   };
   useEffect(() => {
     auth.onAuthStateChanged((auth) => {
-      setCurrentUser(auth);
-      if (auth)
+      if (auth) {
         auth.getIdTokenResult(true).then((results) => {
+          setCurrentUser(auth);
           setAuthToken(results.token);
           setUserRoles(
             Array.isArray(results.claims.roles) ? results.claims.roles : []
           );
           setUserClaims(results.claims);
         });
+      } else {
+        setCurrentUser(auth);
+      }
     });
   }, []);
 

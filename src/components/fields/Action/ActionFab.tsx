@@ -14,11 +14,7 @@ import { useConfirmation } from "@src/components/ConfirmationDialog";
 import { useActionParams } from "./FormDialog/Context";
 import { runRoutes } from "@src/constants/runRoutes";
 
-const replacer = (data: any) => (m: string, key: string) => {
-  const objKey = key.split(":")[0];
-  const defaultValue = key.split(":")[1] || "";
-  return _get(data, objKey, defaultValue);
-};
+import { replacer } from "@src/utils/fns";
 
 const getStateIcon = (actionState, config) => {
   switch (actionState) {

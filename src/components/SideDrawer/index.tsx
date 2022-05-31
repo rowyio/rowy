@@ -38,13 +38,10 @@ export default function SideDrawer() {
 
   const handleNavigate = (direction: "up" | "down") => () => {
     if (!tableState?.rows) return;
-
     let row = cell!.row;
     if (direction === "up" && row > 0) row -= 1;
     if (direction === "down" && row < tableState.rows.length - 1) row += 1;
-
     setCell!((cell) => ({ column: cell!.column, row }));
-
     const idx = tableState?.columns[cell!.column]?.index;
     dataGridRef?.current?.selectCell({ rowIdx: row, idx }, false);
   };
@@ -68,13 +65,6 @@ export default function SideDrawer() {
 
   useEffect(() => {
     if (cell && tableState?.rows[cell.row]) {
-      window.history.pushState(
-        "",
-        `${tableState?.config.id}`,
-        `${window.location.pathname}?rowRef=${encodeURIComponent(
-          tableState?.rows[cell.row].ref.path
-        )}`
-      );
       if (urlDocState.doc) {
         urlDocState.unsubscribe();
         dispatchUrlDoc({ path: "", doc: null });

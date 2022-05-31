@@ -4,6 +4,7 @@ import { getFieldProp } from "@src/components/fields";
 import MenuContents from "./MenuContent";
 import DuplicateIcon from "@src/assets/icons/CopyCells";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
+import LinkIcon from "@mui/icons-material/Link";
 
 import { useProjectContext } from "@src/contexts/ProjectContext";
 import { useContextMenuAtom } from "@src/atoms/ContextMenu";
@@ -47,8 +48,18 @@ export default function ContextMenu() {
   }
 
   const row = tableState?.rows[selectedCell!.rowIndex];
-  if (userRoles.includes("ADMIN") && row) {
+  if (row) {
     const rowActions = [
+      {
+        label: "Copy link to row",
+        icon: <LinkIcon />,
+        onClick: () => {
+          const rowRef = encodeURIComponent(row.ref.path);
+          navigator.clipboard.writeText(
+            window.location.href + `?rowRef=${rowRef}`
+          );
+        },
+      },
       {
         label: "Duplicate row",
         icon: <DuplicateIcon />,

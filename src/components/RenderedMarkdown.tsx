@@ -9,7 +9,9 @@ const components = {
   a: (props) => <Link color="inherit" {...props} />,
   p: Typography,
   // eslint-disable-next-line jsx-a11y/alt-text
-  img: (props) => <img style={{ maxWidth: "100%" }} {...props} />,
+  img: (props) => (
+    <img style={{ maxWidth: "100%", borderRadius: 4 }} {...props} />
+  ),
 };
 
 const restrictionPresets = {
@@ -31,7 +33,7 @@ export default function RenderedMarkdown({
       unwrapDisallowed
       linkTarget="_blank"
       remarkPlugins={remarkPlugins}
-      components={components}
+      components={{ ...components, ...props.components }}
     />
   );
 }

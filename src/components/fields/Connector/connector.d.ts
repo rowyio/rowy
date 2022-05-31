@@ -1,4 +1,4 @@
-type ActionUser = {
+type ConnectorUser = {
   timestamp: Date;
   displayName: string;
   email: string;
@@ -7,20 +7,16 @@ type ActionUser = {
   photoURL: string;
   roles: string[];
 };
-type ActionContext = {
+type ConnectorContext = {
   row: Row;
   ref: FirebaseFirestore.DocumentReference;
   storage: firebasestorage.Storage;
   db: FirebaseFirestore.Firestore;
   auth: firebaseauth.BaseAuth;
-  actionParams: actionParams;
-  user: ActionUser;
+  query: string;
+  user: ConnectorUser;
 };
-
-type ActionResult = {
-  success: boolean;
-  message?: any;
-  status?: string | number | null | undefined;
-};
-
-type Action = (context: ActionContext) => Promise<ActionResult> | ActionResult;
+type ConnectorResult = any[];
+type Connector = (
+  context: ConnectorContext
+) => Promise<ConnectorResult> | ActionResult;
