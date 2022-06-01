@@ -231,6 +231,7 @@ export default function NavDrawer({
             <NavItem
               {...({ component: "button" } as any)}
               style={{ textAlign: "left" }}
+              sx={{ mb: 1 }}
               onClick={(e) => {
                 if (closeDrawer) closeDrawer(e);
                 openTableSettingsDialog({});
