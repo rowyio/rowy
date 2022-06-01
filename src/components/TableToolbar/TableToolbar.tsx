@@ -27,7 +27,7 @@ const Export = lazy(() => import("./Export" /* webpackChunkName: "Export" */));
 // prettier-ignore
 const ImportCsv = lazy(() => import("./ImportCsv" /* webpackChunkName: "ImportCsv" */));
 // prettier-ignore
-// const CloudLogs = lazy(() => import("./CloudLogs" /* webpackChunkName: "CloudLogs" */));
+const CloudLogs = lazy(() => import("./CloudLogs" /* webpackChunkName: "CloudLogs" */));
 // prettier-ignore
 // const Extensions = lazy(() => import("./Extensions" /* webpackChunkName: "Extensions" */));
 // prettier-ignore
@@ -105,11 +105,9 @@ export default function TableToolbar() {
           <Extensions /> 
       </Suspense>
           */}
-          {/* 
-      <Suspense fallback={<ButtonSkeleton/>}>
-          <CloudLogs /> 
-      </Suspense>
-          */}
+          <Suspense fallback={<ButtonSkeleton />}>
+            <CloudLogs />
+          </Suspense>
           {/* {snackLogContext.isSnackLogOpen && (
             <BuildLogsSnack
               onClose={snackLogContext.closeSnackLog}

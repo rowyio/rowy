@@ -75,7 +75,7 @@ export type TableSchema = {
 
   extensionObjects?: any[];
   compiledExtension?: string;
-  webhooks?: any[];
+  webhooks?: { name: string; endpoint: string; [key: string]: any }[];
 };
 
 export type ColumnConfig = {
