@@ -34,6 +34,7 @@ import {
   columnMenuAtom,
   columnModalAtom,
   tableFiltersPopoverAtom,
+  altPressAtom,
 } from "@src/atoms/globalScope";
 import {
   tableScope,
@@ -45,7 +46,6 @@ import {
 import { FieldType } from "@src/constants/fields";
 import { getFieldProp } from "@src/components/fields";
 import { analytics, logEvent } from "@src/analytics";
-import useKeyPress from "@src/hooks/useKeyPress";
 import { formatSubTableName } from "@src/utils/table";
 
 export interface IMenuModalProps {
@@ -78,7 +78,7 @@ export default function ColumnMenu() {
     tableFiltersPopoverAtom,
     globalScope
   );
-  const altPress = useKeyPress("Alt");
+  const [altPress] = useAtom(altPressAtom, globalScope);
 
   if (!columnMenu) return null;
   const { column, anchorEl } = columnMenu;

@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { Grid, MenuItem, TextField, InputLabel } from "@mui/material";
 
 import MultiSelect from "@rowy/multiselect";
+import ColumnSelect from "@src/components/TableToolbar/ColumnSelect";
 import FormAutosave from "@src/components/ColumnModals/ColumnConfigModal/FormAutosave";
 import FieldSkeleton from "@src/components/SideDrawer/Form/FieldSkeleton";
 
@@ -35,7 +36,7 @@ export default function FilterInputs({
   return (
     <Grid container spacing={2} sx={{ mb: 3 }}>
       <Grid item xs={4}>
-        <MultiSelect
+        <ColumnSelect
           multiple={false}
           label="Column"
           options={filterColumns}

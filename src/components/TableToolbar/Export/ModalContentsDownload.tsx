@@ -15,6 +15,7 @@ import {
   FormControlLabel,
   Checkbox,
 } from "@mui/material";
+import ColumnSelect from "@src/components/TableToolbar/ColumnSelect";
 
 import {
   tableScope,
@@ -133,17 +134,10 @@ export default function Export({
   };
   return (
     <>
-      <MultiSelect
+      <ColumnSelect
         value={columns.map((x) => x.key)}
         onChange={handleChange(setColumns)}
-        options={tableColumnsOrdered
-          .filter(
-            (column) =>
-              isString(column.name) &&
-              isString(column.key) &&
-              DOWNLOADABLE_COLUMNS.includes(column.type)
-          )
-          .map((column: any) => ({ label: column.name, value: column.key }))}
+        filterColumns={(column) => DOWNLOADABLE_COLUMNS.includes(column.type)}
         label="Columns to export"
         labelPlural="columns"
         TextFieldProps={{

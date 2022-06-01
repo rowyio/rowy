@@ -3,11 +3,11 @@ import AddRowIcon from "@src/assets/icons/AddRow";
 
 import { TABLE_TOOLBAR_HEIGHT } from "@src/components/TableToolbar";
 
-const ButtonSkeleton = (props: Partial<SkeletonProps>) => (
+export const ButtonSkeleton = (props: Partial<SkeletonProps>) => (
   <Skeleton
     variant="rectangular"
     {...props}
-    sx={{ borderRadius: 1, ...props.sx }}
+    sx={{ borderRadius: 1, width: 40, height: 32, ...props.sx }}
   />
 );
 
@@ -27,7 +27,7 @@ export default function TableToolbarSkeleton() {
           height: TABLE_TOOLBAR_HEIGHT,
         }}
       >
-        <ButtonSkeleton>
+        <ButtonSkeleton sx={{ width: undefined, height: undefined }}>
           <Button variant="contained" startIcon={<AddRowIcon />}>
             Add row
           </Button>
@@ -35,12 +35,12 @@ export default function TableToolbarSkeleton() {
 
         <div />
 
-        <ButtonSkeleton>
+        <ButtonSkeleton sx={{ width: undefined, height: undefined }}>
           <Button variant="contained" startIcon={<AddRowIcon />}>
             Hide
           </Button>
         </ButtonSkeleton>
-        <ButtonSkeleton>
+        <ButtonSkeleton sx={{ width: undefined, height: undefined }}>
           <Button variant="contained" startIcon={<AddRowIcon />}>
             Filter
           </Button>
@@ -48,10 +48,10 @@ export default function TableToolbarSkeleton() {
 
         <div style={{ flexGrow: 1 }} />
 
-        <ButtonSkeleton style={{ width: 40, height: 32 }} />
+        <ButtonSkeleton />
         <div />
-        <ButtonSkeleton style={{ width: 40, height: 32 }} />
-        <ButtonSkeleton style={{ width: 40, height: 32 }} />
+        <ButtonSkeleton />
+        <ButtonSkeleton />
       </Stack>
     </Fade>
   );

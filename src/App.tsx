@@ -9,8 +9,13 @@ import RowyRunModal from "@src/components/RowyRunModal";
 import NotFound from "@src/pages/NotFound";
 import RequireAuth from "@src/layouts/RequireAuth";
 
-import { globalScope, currentUserAtom } from "@src/atoms/globalScope";
+import {
+  globalScope,
+  currentUserAtom,
+  altPressAtom,
+} from "@src/atoms/globalScope";
 import { ROUTES } from "@src/constants/routes";
+import useKeyPressWithAtom from "@src/hooks/useKeyPressWithAtom";
 
 import TableGroupRedirectPage from "./pages/TableGroupRedirect";
 import JotaiTestPage from "@src/pages/Test/JotaiTest";
@@ -53,6 +58,7 @@ const ThemeTestPage = lazy(() => import("@src/pages/Test/ThemeTest" /* webpackCh
 
 export default function App() {
   const [currentUser] = useAtom(currentUserAtom, globalScope);
+  useKeyPressWithAtom("Alt", altPressAtom, globalScope);
 
   return (
     <Suspense fallback={<Loading fullScreen />}>

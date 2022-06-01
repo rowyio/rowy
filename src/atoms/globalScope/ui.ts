@@ -10,6 +10,12 @@ import type {
 } from "@src/types/table";
 import { getTableSchemaAtom } from "./project";
 
+/**
+ * Global state when the Alt key is pressed,
+ * so we don’t set multiple event listeners
+ */
+export const altPressAtom = atom(false);
+
 /** Nav open state stored in local storage. */
 export const navOpenAtom = atomWithStorage("__ROWY__NAV_OPEN", false);
 /** Nav pinned state stored in local storage. */

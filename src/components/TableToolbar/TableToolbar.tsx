@@ -2,18 +2,13 @@ import { lazy, Suspense } from "react";
 import { useAtom } from "jotai";
 
 import { Stack } from "@mui/material";
+import { ButtonSkeleton } from "./TableToolbarSkeleton";
+
 import AddRow from "./AddRow";
-import Filters from "./Filters";
-import ImportCSV from "./ImportCsv";
-// import Export from "./Export";
 import LoadedRowsStatus from "./LoadedRowsStatus";
 import TableSettings from "./TableSettings";
-// import CloudLogs from "./CloudLogs";
 import HiddenFields from "./HiddenFields";
 import RowHeight from "./RowHeight";
-// import Extensions from "./Extensions";
-// import Webhooks from "./Webhooks";
-import ReExecute from "./ReExecute";
 // import BuildLogsSnack from "./CloudLogs/BuildLogs/BuildLogsSnack";
 
 import { globalScope, userRolesAtom } from "@src/atoms/globalScope";
@@ -25,7 +20,20 @@ import {
 import { FieldType } from "@src/constants/fields";
 // import { useSnackLogContext } from "@src/contexts/SnackLogContext";
 
-const Export = lazy(() => import("./Export"));
+// prettier-ignore
+const Filters = lazy(() => import("./Filters" /* webpackChunkName: "Filters" */));
+// prettier-ignore
+const Export = lazy(() => import("./Export" /* webpackChunkName: "Export" */));
+// prettier-ignore
+const ImportCsv = lazy(() => import("./ImportCsv" /* webpackChunkName: "ImportCsv" */));
+// prettier-ignore
+// const CloudLogs = lazy(() => import("./CloudLogs" /* webpackChunkName: "CloudLogs" */));
+// prettier-ignore
+// const Extensions = lazy(() => import("./Extensions" /* webpackChunkName: "Extensions" */));
+// prettier-ignore
+// const Webhooks = lazy(() => import("./Webhooks" /* webpackChunkName: "Webhooks" */));
+// prettier-ignore
+const ReExecute = lazy(() => import("./ReExecute" /* webpackChunkName: "ReExecute" */));
 
 export const TABLE_TOOLBAR_HEIGHT = 44;
 
@@ -68,29 +76,51 @@ export default function TableToolbar() {
       <AddRow />
       {/* Spacer */} <div />
       <HiddenFields />
-      <Filters />
+      <Suspense fallback={<ButtonSkeleton />}>
+        <Filters />
+      </Suspense>
       {/* Spacer */} <div />
       <LoadedRowsStatus />
       <div style={{ flexGrow: 1, minWidth: 64 }} />
       <RowHeight />
       {/* Spacer */} <div />
-      {tableSettings.tableType !== "collectionGroup" && <ImportCSV />}
-      <Suspense fallback={null}>
+      {tableSettings.tableType !== "collectionGroup" && (
+        <Suspense fallback={<ButtonSkeleton />}>
+          <ImportCsv />
+        </Suspense>
+      )}
+      <Suspense fallback={<ButtonSkeleton />}>
         <Export />
       </Suspense>
       {userRoles.includes("ADMIN") && (
         <>
           {/* Spacer */} <div />
-          {/* <Webhooks /> */}
-          {/* <Extensions /> */}
-          {/* <CloudLogs /> */}
+          {/* 
+      <Suspense fallback={<ButtonSkeleton/>}>
+          <Webhooks /> 
+      </Suspense>
+          */}
+          {/* 
+      <Suspense fallback={<ButtonSkeleton/>}>
+          <Extensions /> 
+      </Suspense>
+          */}
+          {/* 
+      <Suspense fallback={<ButtonSkeleton/>}>
+          <CloudLogs /> 
+      </Suspense>
+          */}
           {/* {snackLogContext.isSnackLogOpen && (
             <BuildLogsSnack
               onClose={snackLogContext.closeSnackLog}
               onOpenPanel={alert}
             />
           )} */}
-          {(hasDerivatives || hasExtensions) && <ReExecute />}
+          {(hasDerivatives || hasExtensions) && (
+            <Suspense fallback={<ButtonSkeleton />}>
+              <ReExecute />
+            </Suspense>
+          )}
           {/* Spacer */} <div />
           <TableSettings />
         </>

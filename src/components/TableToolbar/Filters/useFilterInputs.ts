@@ -14,7 +14,13 @@ export const useFilterInputs = (
   // Get list of columns that can be filtered
   const filterColumns = columns
     .filter((c) => getFieldProp("filter", getFieldType(c)))
-    .map((c) => ({ value: c.key, label: c.name, ...c }));
+    .map((c) => ({
+      value: c.key,
+      label: c.name,
+      type: c.type,
+      key: c.key,
+      index: c.index,
+    }));
 
   // State for filter inputs
   const [query, setQuery] = useState<TableFilter | typeof INITIAL_QUERY>(

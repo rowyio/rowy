@@ -2,37 +2,28 @@ import { useEffect, useRef, useMemo, useState } from "react";
 import { useAtom } from "jotai";
 import { isEqual } from "lodash-es";
 
-import { AutocompleteProps } from "@mui/material";
+import { Stack, Typography, Box, AutocompleteProps } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOffOutlined";
-import IconSlash, {
-  ICON_SLASH_STROKE_DASHOFFSET,
-} from "@src/components/IconSlash";
+import IconSlash from "@src/components/IconSlash";
 
-import MultiSelect from "@rowy/multiselect";
+import ColumnSelect, { ColumnItem } from "./ColumnSelect";
 import ButtonWithStatus from "@src/components/ButtonWithStatus";
-import Column from "@src/components/Table/Column";
 
 import {
   globalScope,
   userSettingsAtom,
   updateUserSettingsAtom,
 } from "@src/atoms/globalScope";
-import {
-  tableScope,
-  tableIdAtom,
-  tableSchemaAtom,
-  tableColumnsOrderedAtom,
-} from "@src/atoms/tableScope";
+import { tableScope, tableIdAtom } from "@src/atoms/tableScope";
 import { formatSubTableName } from "@src/utils/table";
+import { getFieldProp } from "@src/components/fields";
 
 export default function HiddenFields() {
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   const [userSettings] = useAtom(userSettingsAtom, globalScope);
   const [tableId] = useAtom(tableIdAtom, tableScope);
-  const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
-  const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
 
   const [open, setOpen] = useState(false);
 
@@ -50,10 +41,10 @@ export default function HiddenFields() {
     setHiddenFields(userDocHiddenFields);
   }, [userDocHiddenFields]);
 
-  const tableColumns = tableColumnsOrdered.map(({ key, name }) => ({
-    value: key,
-    label: name,
-  }));
+  // const tableColumns = tableColumnsOrdered.map(({ key, name }) => ({
+  //   value: key,
+  //   label: name,
+  // }));
 
   // Save when MultiSelect closes
   const [updateUserSettings] = useAtom(updateUserSettingsAtom, globalScope);
@@ -73,20 +64,22 @@ export default function HiddenFields() {
     any
   >["renderOption"] = (props, option, { selected }) => (
     <li {...props}>
-      <Column
-        label={option.label}
-        type={tableSchema.columns?.[option.value]?.type}
-        secondaryItem={
-          <div
-            className="icon-container"
-            style={selected ? { opacity: 1 } : {}}
-          >
-            <VisibilityIcon />
-            <IconSlash style={selected ? { strokeDashoffset: 0 } : {}} />
-          </div>
-        }
-        // active={selected}
-      />
+      <ColumnItem option={option}>
+        <Box
+          sx={[
+            { position: "relative", height: "1.5rem" },
+            selected
+              ? { color: "primary.main" }
+              : {
+                  opacity: 0,
+                  ".MuiAutocomplete-option.Mui-focused &": { opacity: 0.5 },
+                },
+          ]}
+        >
+          <VisibilityIcon />
+          <IconSlash style={selected ? { strokeDashoffset: 0 } : {}} />
+        </Box>
+      </ColumnItem>
     </li>
   );
 
@@ -100,7 +93,7 @@ export default function HiddenFields() {
       >
         {hiddenFields.length > 0 ? `${hiddenFields.length} hidden` : "Hide"}
       </ButtonWithStatus>
-      <MultiSelect
+      <ColumnSelect
         TextFieldProps={{
           style: { display: "none" },
           SelectProps: {
@@ -109,47 +102,12 @@ export default function HiddenFields() {
               anchorEl: buttonRef.current,
               anchorOrigin: { vertical: "bottom", horizontal: "left" },
               transformOrigin: { vertical: "top", horizontal: "left" },
-
-              sx: {
-                "& .MuiAutocomplete-listbox .MuiAutocomplete-option": {
-                  padding: 0,
-                  paddingLeft: "0 !important",
-                  borderRadius: 0,
-                  marginBottom: "-1px",
-
-                  "&::after": { content: "none" },
-                  "& .icon-container": { opacity: 0 },
-
-                  "&:hover, &.Mui-focused, &.Mui-focusVisible": {
-                    position: "relative",
-                    zIndex: 2,
-
-                    "& > div": {
-                      color: "text.primary",
-                      borderColor: "currentColor",
-                      boxShadow: (theme: any) =>
-                        `0 0 0 1px ${theme.palette.text.primary} inset`,
-                    },
-                    "& .icon-container": { opacity: 0.5 },
-                  },
-
-                  // "&:hover .icon-container svg": { color: "primary.main" },
-                  "&:hover .icon-slash": { strokeDashoffset: 0 },
-                  '&[aria-selected="true"]:hover': {
-                    "& .icon-slash": {
-                      strokeDashoffset:
-                        ICON_SLASH_STROKE_DASHOFFSET + " !important",
-                    },
-                  },
-                },
-              },
             },
           },
         }}
         {...{ AutocompleteProps: { renderOption } }}
         label="Hidden fields"
         labelPlural="fields"
-        options={tableColumns}
         value={hiddenFields ?? []}
         onChange={setHiddenFields}
         onClose={handleSave}

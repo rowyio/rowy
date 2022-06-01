@@ -22,13 +22,13 @@ import {
   globalScope,
   userRolesAtom,
   columnMenuAtom,
+  altPressAtom,
 } from "@src/atoms/globalScope";
 import { tableScope, updateColumnAtom } from "@src/atoms/tableScope";
 import { FieldType } from "@src/constants/fields";
 import { getFieldProp } from "@src/components/fields";
 import { COLUMN_HEADER_HEIGHT } from "@src/components/Table/Column";
 import { ColumnConfig } from "@src/types/table";
-import useKeyPress from "@src/hooks/useKeyPress";
 
 export { COLUMN_HEADER_HEIGHT };
 
@@ -55,7 +55,7 @@ export default function DraggableHeaderRenderer({
   const [userRoles] = useAtom(userRolesAtom, globalScope);
   const updateColumn = useSetAtom(updateColumnAtom, tableScope);
   const openColumnMenu = useSetAtom(columnMenuAtom, globalScope);
-  const altPress = useKeyPress("Alt");
+  const [altPress] = useAtom(altPressAtom, globalScope);
 
   const [{ isDragging }, dragRef] = useDrag({
     type: "COLUMN_DRAG",
@@ -191,7 +191,13 @@ export default function DraggableHeaderRenderer({
             component="div"
             color="inherit"
           >
-            {altPress ? `${column.index}: ${column.fieldName}` : column.name}
+            {altPress ? (
+              <>
+                {column.index} <code>{column.fieldName}</code>
+              </>
+            ) : (
+              column.name
+            )}
           </Typography>
         </LightTooltip>
       </Grid>

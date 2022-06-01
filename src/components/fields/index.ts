@@ -131,7 +131,9 @@ export const hasDataTypes = (dataTypes: string[]) => {
  * @param column - The column to check
  * @returns FieldType
  */
-export const getFieldType = (column: ColumnConfig) =>
+export const getFieldType = (
+  column: Pick<ColumnConfig, "type" | "config"> & Partial<ColumnConfig>
+) =>
   column.type === FieldType.derivative
     ? column.config?.renderFieldType
     : column.type;

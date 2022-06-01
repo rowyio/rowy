@@ -4,9 +4,7 @@ import { parse as json2csv } from "json2csv";
 import { saveAs } from "file-saver";
 import { useSnackbar } from "notistack";
 import { getDocs } from "firebase/firestore";
-import { get, find, sortBy, isString } from "lodash-es";
-
-import MultiSelect from "@rowy/multiselect";
+import { get, find } from "lodash-es";
 
 import {
   Button,
@@ -18,6 +16,7 @@ import {
   Radio,
   FormHelperText,
 } from "@mui/material";
+import ColumnSelect from "@src/components/TableToolbar/ColumnSelect";
 
 import {
   tableScope,
@@ -175,12 +174,9 @@ export default function Export({
   };
   return (
     <>
-      <MultiSelect
+      <ColumnSelect
         value={columns.map((x) => x.key)}
         onChange={handleChange}
-        options={tableColumnsOrdered
-          .filter((column) => isString(column.name) && isString(column.key))
-          .map((column) => ({ label: column.name, value: column.key }))}
         label="Columns to export"
         labelPlural="columns"
         TextFieldProps={{
@@ -191,23 +187,25 @@ export default function Export({
         selectAll
       />
 
-      <FormControl component="fieldset">
-        <FormLabel component="legend">Export type</FormLabel>
-        <RadioGroup
-          aria-label="export type"
-          name="export-type-radio-buttons-group"
-          value={exportType}
-          onChange={(e) => {
-            const v = e.target.value;
-            if (v) setExportType(v as "csv" | "tsv" | "json");
-          }}
-        >
-          <FormControlLabel value="csv" control={<Radio />} label=".csv" />
-          <FormControlLabel value="tsv" control={<Radio />} label=".tsv" />
-          <FormControlLabel value="json" control={<Radio />} label=".json" />
-        </RadioGroup>
-        <FormHelperText>Encoding: UTF-8</FormHelperText>
-      </FormControl>
+      <div>
+        <FormControl component="fieldset">
+          <FormLabel component="legend">Export type</FormLabel>
+          <RadioGroup
+            aria-label="export type"
+            name="export-type-radio-buttons-group"
+            value={exportType}
+            onChange={(e) => {
+              const v = e.target.value;
+              if (v) setExportType(v as "csv" | "tsv" | "json");
+            }}
+          >
+            <FormControlLabel value="csv" control={<Radio />} label=".csv" />
+            <FormControlLabel value="tsv" control={<Radio />} label=".tsv" />
+            <FormControlLabel value="json" control={<Radio />} label=".json" />
+          </RadioGroup>
+          <FormHelperText>Encoding: UTF-8</FormHelperText>
+        </FormControl>
+      </div>
 
       <div style={{ flexGrow: 1, marginTop: 0 }} />
 

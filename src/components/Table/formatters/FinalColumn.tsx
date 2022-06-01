@@ -9,6 +9,7 @@ import {
   globalScope,
   userRolesAtom,
   tableAddRowIdTypeAtom,
+  altPressAtom,
   confirmDialogAtom,
 } from "@src/atoms/globalScope";
 import {
@@ -17,7 +18,6 @@ import {
   addRowAtom,
   deleteRowAtom,
 } from "@src/atoms/tableScope";
-import useKeyPress from "@src/hooks/useKeyPress";
 import { TableRow } from "@src/types/table";
 
 export default function FinalColumn({ row }: FormatterProps<TableRow, any>) {
@@ -29,7 +29,7 @@ export default function FinalColumn({ row }: FormatterProps<TableRow, any>) {
   const addRow = useSetAtom(addRowAtom, tableScope);
   const deleteRow = useSetAtom(deleteRowAtom, tableScope);
 
-  const altPress = useKeyPress("Alt");
+  const [altPress] = useAtom(altPressAtom, globalScope);
   const handleDelete = () => deleteRow(row._rowy_ref.path);
 
   if (!userRoles.includes("ADMIN") && tableSettings.readOnly === true)
