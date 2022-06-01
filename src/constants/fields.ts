@@ -29,6 +29,7 @@ export enum FieldType {
   connector = "CONNECTOR",
   connectTable = "DOCUMENT_SELECT",
   connectService = "SERVICE_SELECT",
+  reference = "REFERENCE",
   // CODE
   json = "JSON",
   code = "CODE",
@@ -43,6 +44,7 @@ export enum FieldType {
   createdAt = "CREATED_AT",
   updatedAt = "UPDATED_AT",
   // METADATA
+
   user = "USER",
   id = "ID",
   last = "LAST",
