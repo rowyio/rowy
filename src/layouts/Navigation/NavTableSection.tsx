@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 
-import { List, ListItemText, Collapse } from "@mui/material";
+import { List, ListItemIcon, ListItemText, Collapse } from "@mui/material";
+import FolderIcon from "@mui/icons-material/FolderOutlined";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import NavItem from "./NavItem";
 
@@ -34,6 +35,10 @@ export default function NavTableSection({
         selected={hasMatch && !open}
         onClick={() => setOpen((o) => !o)}
       >
+        <ListItemIcon>
+          <FolderIcon />
+        </ListItemIcon>
+
         <ListItemText primary={section} style={{ textAlign: "left" }} />
 
         <ArrowDropDownIcon
@@ -56,12 +61,17 @@ export default function NavTableSection({
                   to={route}
                   selected={pathname.split("%2F")[0] === route}
                   onClick={closeDrawer}
-                  sx={{
-                    ml: 2,
-                    width: (theme) => `calc(100% - ${theme.spacing(2 + 0.5)})`,
-                  }}
                 >
-                  <ListItemText primary={table.name} />
+                  <ListItemIcon />
+                  <ListItemText
+                    primary={table.name}
+                    sx={{
+                      "& .MuiListItemText-primary": {
+                        fontWeight: "normal",
+                        fontSize: ".8125rem",
+                      },
+                    }}
+                  />
                 </NavItem>
               </li>
             );

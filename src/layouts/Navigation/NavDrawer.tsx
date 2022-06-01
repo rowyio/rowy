@@ -9,6 +9,7 @@ import {
   List,
   ListItemIcon,
   ListItemText,
+  // ListSubheader,
   Divider,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/MenuOpen";
@@ -224,6 +225,8 @@ export default function NavDrawer({
 
           <Divider variant="middle" sx={{ my: 1 }} />
 
+          {/* <ListSubheader>Your tables</ListSubheader> */}
+
           <li>
             <NavItem
               {...({ component: "button" } as any)}
@@ -239,8 +242,6 @@ export default function NavDrawer({
               <ListItemText primary="Create table…" />
             </NavItem>
           </li>
-
-          <Divider variant="middle" sx={{ my: 1 }} />
 
           {sections &&
             Object.entries(sections)

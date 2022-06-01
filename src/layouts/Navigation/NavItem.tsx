@@ -10,11 +10,19 @@ export default function NavItem(props: MenuItemProps<typeof Link>) {
       selected={pathname === props.to}
       {...props}
       sx={{
-        ...props.sx,
-        "&&::before": {
-          left: "auto",
-          right: 0,
+        "& .MuiListItemText-primary": {
+          typography: "button",
+          color: "text.secondary",
         },
+        "& .MuiListItemIcon-root": { opacity: 0.87 },
+
+        "&:hover, &.Mui-selected": {
+          "& .MuiListItemText-primary": { color: "text.primary" },
+          "& .MuiSvgIcon-root": { color: "text.primary" },
+        },
+
+        ...props.sx,
+        "&&::before": { left: "auto", right: 0 },
       }}
     />
   );
