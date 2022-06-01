@@ -27,7 +27,7 @@ import { getLabel } from "@src/components/fields/Connector/utils";
 import { useSnackbar } from "notistack";
 import { globalScope, rowyRunAtom } from "@src/atoms/globalScope";
 import { tableScope, tableSettingsAtom } from "@src/atoms/tableScope";
-import { getSchemaPath } from "@src/utils/table";
+import { getTableSchemaPath } from "@src/utils/table";
 
 export interface IPopupContentsProps
   extends Omit<IConnectorSelectProps, "className" | "TextFieldProps"> {}
@@ -74,7 +74,7 @@ export default function PopupContents({
         body: {
           columnKey: column.key,
           query: query,
-          schemaDocPath: getSchemaPath(tableSettings),
+          schemaDocPath: getTableSchemaPath(tableSettings),
           rowDocPath: docRef.path,
         },
       });

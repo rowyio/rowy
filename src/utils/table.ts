@@ -106,7 +106,7 @@ const formatPathRegex = /\/[^\/]+\/([^\/]+)/g;
  * @param tableType - primaryCollection (default) or collectionGroup
  * @returns Path to the table’s schema doc
  */
-export const getSchemaPath = (
+export const getTableSchemaPath = (
   tableSettings: Pick<TableSettings, "id" | "tableType">
 ) =>
   (tableSettings.tableType === "collectionGroup"

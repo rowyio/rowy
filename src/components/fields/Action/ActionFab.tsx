@@ -19,7 +19,7 @@ import {
 import { tableScope, tableSettingsAtom } from "@src/atoms/tableScope";
 import { useActionParams } from "./FormDialog/Context";
 import { runRoutes } from "@src/constants/runRoutes";
-import { getSchemaPath } from "@src/utils/table";
+import { getTableSchemaPath } from "@src/utils/table";
 
 const replacer = (data: any) => (m: string, key: string) => {
   const objKey = key.split(":")[0];
@@ -80,7 +80,7 @@ export default function ActionFab({
     ref: { path: ref.path },
     column: { ...column, editor: undefined },
     action,
-    schemaDocPath: getSchemaPath(tableSettings),
+    schemaDocPath: getTableSchemaPath(tableSettings),
     actionParams,
   });
 

@@ -26,7 +26,7 @@ import { useSnackLogContext } from "@src/contexts/SnackLogContext";
 import { FieldType } from "@src/constants/fields";
 import { runRoutes } from "@src/constants/runRoutes";
 import { useSnackbar } from "notistack";
-import { getSchemaPath } from "@src/utils/table";
+import { getTableSchemaPath } from "@src/utils/table";
 
 export default function ColumnConfigModal({
   handleClose,
@@ -193,7 +193,7 @@ export default function ColumnConfigModal({
                     body: {
                       tablePath: tableSettings.collection,
                       pathname: window.location.pathname,
-                      tableConfigPath: getSchemaPath(tableSettings),
+                      tableConfigPath: getTableSchemaPath(tableSettings),
                     },
                   });
                 },

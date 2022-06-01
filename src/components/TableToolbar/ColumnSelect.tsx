@@ -18,11 +18,13 @@ export type ColumnOption = {
 
 export interface IColumnSelectProps {
   filterColumns?: (column: ColumnConfig) => boolean;
+  showFieldNames?: boolean;
   options?: ColumnOption[];
 }
 
 export default function ColumnSelect({
   filterColumns,
+  showFieldNames,
   ...props
 }: IColumnSelectProps & Omit<MultiSelectProps<string>, "options">) {
   const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
@@ -43,7 +45,9 @@ export default function ColumnSelect({
       label="Column"
       labelPlural="columns"
       {...(props as any)}
-      itemRenderer={(option: ColumnOption) => <ColumnItem option={option} />}
+      itemRenderer={(option: ColumnOption) => (
+        <ColumnItem option={option} showFieldNames={showFieldNames} />
+      )}
       TextFieldProps={{
         ...props.TextFieldProps,
         SelectProps: {
@@ -59,6 +63,7 @@ export default function ColumnSelect({
             return option ? (
               <ColumnItem
                 option={option}
+                showFieldNames={showFieldNames}
                 sx={{ "& .MuiSvgIcon-root": { my: -0.25 } }}
               />
             ) : (
@@ -73,10 +78,16 @@ export default function ColumnSelect({
 
 export interface IColumnItemProps extends Partial<StackProps> {
   option: ColumnOption;
+  showFieldNames?: boolean;
   children?: React.ReactNode;
 }
 
-export function ColumnItem({ option, children, ...props }: IColumnItemProps) {
+export function ColumnItem({
+  option,
+  showFieldNames,
+  children,
+  ...props
+}: IColumnItemProps) {
   const [altPress] = useAtom(altPressAtom, globalScope);
 
   return (
@@ -94,7 +105,7 @@ export function ColumnItem({ option, children, ...props }: IColumnItemProps) {
       <Typography color="text.primary" style={{ flexGrow: 1 }}>
         {altPress ? <code>{option.value}</code> : option.label}
       </Typography>
-      {altPress && (
+      {altPress ? (
         <Typography
           color="text.disabled"
           variant="caption"
@@ -102,7 +113,11 @@ export function ColumnItem({ option, children, ...props }: IColumnItemProps) {
         >
           {option.index}
         </Typography>
-      )}
+      ) : showFieldNames ? (
+        <Typography color="text.primary">
+          <code>{option.value}</code>
+        </Typography>
+      ) : null}
       {children}
     </Stack>
   );

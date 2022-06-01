@@ -323,7 +323,7 @@ export default function CloudLogsModal(props: IModalProps) {
         <EmptyState
           Icon={LogsIcon}
           message="Fetching logs…"
-          description="\xa0"
+          description={"\xa0"}
         />
       ) : (
         <EmptyState
