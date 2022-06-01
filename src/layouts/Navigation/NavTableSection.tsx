@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 
 import { List, ListItemIcon, ListItemText, Collapse } from "@mui/material";
 import FolderIcon from "@mui/icons-material/FolderOutlined";
+import FavoriteIcon from "@mui/icons-material/FavoriteBorder";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import NavItem from "./NavItem";
 
@@ -27,16 +28,17 @@ export default function NavTableSection({
   const hasMatch = tables.map(getTableRoute).includes(pathname);
 
   const [open, setOpen] = useState(hasMatch);
+  const isFavorites = section === "Favorites";
 
   return (
     <li>
       <NavItem
         {...({ component: "button" } as any)}
-        selected={hasMatch && !open}
+        selected={!isFavorites && hasMatch && !open}
         onClick={() => setOpen((o) => !o)}
       >
         <ListItemIcon>
-          <FolderIcon />
+          {isFavorites ? <FavoriteIcon /> : <FolderIcon />}
         </ListItemIcon>
 
         <ListItemText primary={section} style={{ textAlign: "left" }} />
@@ -59,7 +61,7 @@ export default function NavTableSection({
               <li key={table.id}>
                 <NavItem
                   to={route}
-                  selected={pathname.split("%2F")[0] === route}
+                  selected={!isFavorites && pathname.split("%2F")[0] === route}
                   onClick={closeDrawer}
                 >
                   <ListItemIcon />
