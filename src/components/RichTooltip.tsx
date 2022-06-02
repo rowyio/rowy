@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { colord } from "colord";
 
 import {
   Tooltip,
@@ -8,10 +9,6 @@ import {
   Button,
   ButtonProps,
 } from "@mui/material";
-
-import { colord, extend } from "colord";
-import mixPlugin from "colord/plugins/lch";
-extend([mixPlugin]);
 
 export interface IRichTooltipProps
   extends Partial<Omit<TooltipProps, "title">> {

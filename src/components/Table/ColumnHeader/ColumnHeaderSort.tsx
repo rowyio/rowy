@@ -1,4 +1,5 @@
 import { useAtom } from "jotai";
+import { colord } from "colord";
 
 import { Tooltip, IconButton } from "@mui/material";
 import SortDescIcon from "@mui/icons-material/ArrowDownward";
@@ -11,10 +12,6 @@ import { FieldType } from "@src/constants/fields";
 import { getFieldProp } from "@src/components/fields";
 
 import { ColumnConfig } from "@src/types/table";
-
-import { colord, extend } from "colord";
-import mixPlugin from "colord/plugins/lch";
-extend([mixPlugin]);
 
 const SORT_STATES = ["none", "desc", "asc"] as const;
 

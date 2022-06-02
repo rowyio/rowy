@@ -1,11 +1,8 @@
+import { colord } from "colord";
 import { styled, alpha, darken, lighten } from "@mui/material";
 import { APP_BAR_HEIGHT } from "@src/layouts/Navigation";
 import { TABLE_TOOLBAR_HEIGHT } from "@src/components/TableToolbar";
 // import { DRAWER_COLLAPSED_WIDTH } from "@src/components/SideDrawer";
-
-import { colord, extend } from "colord";
-import mixPlugin from "colord/plugins/lch";
-extend([mixPlugin]);
 
 export const OUT_OF_ORDER_MARGIN = 8;
 

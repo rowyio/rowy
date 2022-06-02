@@ -1,9 +1,6 @@
+import { colord } from "colord";
 import { ThemeOptions } from "@mui/material/styles";
 import { Shadows } from "@mui/material/styles/shadows";
-
-import { colord, extend } from "colord";
-import lchPlugin from "colord/plugins/lch";
-extend([lchPlugin]);
 
 declare module "@mui/material/styles/createPalette" {
   interface TypeAction {

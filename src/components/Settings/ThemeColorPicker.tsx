@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ColorPicker, toColor } from "react-color-palette";
+import { colord } from "colord";
 import "react-color-palette/lib/css/styles.css";
 
 import { useTheme, Grid, Typography, Stack, Box, Button } from "@mui/material";
@@ -8,11 +9,6 @@ import FailIcon from "@mui/icons-material/Error";
 
 import { PRIMARY, DARK_PRIMARY } from "@src/theme/colors";
 import themes from "theme";
-
-import { colord, extend } from "colord";
-import a11yPlugin from "colord/plugins/a11y";
-import mixPlugin from "colord/plugins/mix";
-extend([a11yPlugin, mixPlugin]);
 
 export interface IThemeColorPickerProps {
   currentLight?: string;

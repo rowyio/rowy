@@ -1,4 +1,5 @@
 import { Theme, ThemeOptions, alpha } from "@mui/material/styles";
+import { colord } from "colord";
 import type {} from "@mui/lab/themeAugmentation";
 import { MultiSelectProps } from "@rowy/multiselect";
 import { toRem } from "./typography";
@@ -9,10 +10,6 @@ import CheckboxIndeterminateIcon from "@src/theme/CheckboxIndeterminateIcon";
 import AddCircleIcon from "@mui/icons-material/AddCircleOutline";
 import { SvgIcon } from "@mui/material";
 import CircularProgressOptical from "@src/components/CircularProgressOptical";
-
-import { colord, extend } from "colord";
-import mixPlugin from "colord/plugins/mix";
-extend([mixPlugin]);
 
 declare module "@mui/material/styles/createTransitions" {
   interface Easing {

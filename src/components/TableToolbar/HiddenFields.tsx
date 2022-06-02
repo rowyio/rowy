@@ -1,8 +1,9 @@
 import { useEffect, useRef, useMemo, useState } from "react";
 import { useAtom } from "jotai";
 import { isEqual } from "lodash-es";
+import { colord } from "colord";
 
-import { Stack, Typography, Box, AutocompleteProps } from "@mui/material";
+import { Box, AutocompleteProps } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOffOutlined";
 import IconSlash from "@src/components/IconSlash";
@@ -17,7 +18,6 @@ import {
 } from "@src/atoms/globalScope";
 import { tableScope, tableIdAtom } from "@src/atoms/tableScope";
 import { formatSubTableName } from "@src/utils/table";
-import { getFieldProp } from "@src/components/fields";
 
 export default function HiddenFields() {
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -77,7 +77,24 @@ export default function HiddenFields() {
           ]}
         >
           <VisibilityIcon />
-          <IconSlash style={selected ? { strokeDashoffset: 0 } : {}} />
+          <IconSlash
+            sx={[
+              {
+                "& .icon-slash-mask": {
+                  stroke: (theme) =>
+                    colord(theme.palette.background.paper)
+                      .mix("#fff", theme.palette.mode === "dark" ? 0.17 : 0)
+                      .mix(
+                        theme.palette.action.selected,
+                        theme.palette.action.selectedOpacity
+                      )
+                      .alpha(1)
+                      .toHslString(),
+                },
+              },
+              selected ? { strokeDashoffset: 0 } : {},
+            ]}
+          />
         </Box>
       </ColumnItem>
     </li>

@@ -1,25 +1,35 @@
-import { styled } from "@mui/material";
+import { Box, BoxProps } from "@mui/material";
 
 export const ICON_SLASH_STROKE_DASHOFFSET = 27.9;
 
-const StyledSvg = styled("svg")(({ theme }) => ({
-  stroke: "currentColor",
-  strokeWidth: 2,
-  position: "absolute",
-  inset: 0,
-
-  transition: theme.transitions.create("stroke-dashoffset", {
-    duration: theme.transitions.duration.short,
-  }),
-  strokeDasharray: ICON_SLASH_STROKE_DASHOFFSET,
-  strokeDashoffset: ICON_SLASH_STROKE_DASHOFFSET,
-
-  "& .icon-slash-mask": { stroke: theme.palette.background.default },
-}));
-
-export default function IconSlash(props: React.SVGProps<SVGSVGElement>) {
+export default function IconSlash(props: BoxProps<"svg">) {
   return (
-    <StyledSvg viewBox="0 0 24 24" className="icon-slash" {...props}>
+    <Box
+      component="svg"
+      viewBox="0 0 24 24"
+      className="icon-slash"
+      {...props}
+      sx={[
+        {
+          stroke: "currentColor",
+          strokeWidth: 2,
+          position: "absolute",
+          inset: 0,
+
+          transition: (theme) =>
+            theme.transitions.create("stroke-dashoffset", {
+              duration: theme.transitions.duration.short,
+            }),
+          strokeDasharray: ICON_SLASH_STROKE_DASHOFFSET,
+          strokeDashoffset: ICON_SLASH_STROKE_DASHOFFSET,
+
+          "& .icon-slash-mask": {
+            stroke: (theme) => theme.palette.background.default,
+          },
+        },
+        ...(Array.isArray(props.sx) ? props.sx : props.sx ? [props.sx] : []),
+      ]}
+    >
       <line
         className="icon-slash-mask"
         x1="3.08"
@@ -36,6 +46,6 @@ export default function IconSlash(props: React.SVGProps<SVGSVGElement>) {
       />
 
       <line x1="1.75" y1="2.365" x2="21.475" y2="22.095" />
-    </StyledSvg>
+    </Box>
   );
 }
