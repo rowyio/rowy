@@ -520,6 +520,10 @@ export const components = (theme: Theme): ThemeOptions => {
               paddingLeft: theme.spacing(1) + " !important",
               minHeight: 32,
               borderRadius: theme.shape.borderRadius,
+
+              [`&[aria-selected="true"]`]: {
+                backgroundColor: theme.palette.action.selected,
+              },
             },
           },
           groupLabel: {
