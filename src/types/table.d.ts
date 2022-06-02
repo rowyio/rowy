@@ -4,6 +4,8 @@ import type {
   DocumentData,
   DocumentReference,
 } from "firebase/firestore";
+import { IExtension } from "@src/components/TableToolbar/Extensions/utils";
+import { IWebhook } from "@src/components/TableToolbar/Webhooks/utils";
 
 /**
  * A standard function to update a doc in the database
@@ -73,9 +75,12 @@ export type TableSchema = {
   functionConfigPath?: string;
   functionBuilderRef?: any;
 
-  extensionObjects?: any[];
+  extensionObjects?: IExtension[];
   compiledExtension?: string;
-  webhooks?: any[];
+  webhooks?: IWebhook[];
+
+  /** @deprecated Migrate to Extensions */
+  sparks?: string;
 };
 
 export type ColumnConfig = {

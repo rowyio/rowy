@@ -53,7 +53,7 @@ export default function NavTableSection({
       </NavItem>
 
       <Collapse in={open}>
-        <List disablePadding>
+        <List style={{ paddingTop: 0 }}>
           {tables.map((table) => {
             const route = getTableRoute(table);
 
@@ -68,7 +68,7 @@ export default function NavTableSection({
                   <ListItemText
                     primary={table.name}
                     sx={{
-                      "& .MuiListItemText-primary": {
+                      "&& .MuiListItemText-primary": {
                         fontWeight: "normal",
                         fontSize: ".8125rem",
                       },

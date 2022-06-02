@@ -9,7 +9,7 @@ import LoadedRowsStatus from "./LoadedRowsStatus";
 import TableSettings from "./TableSettings";
 import HiddenFields from "./HiddenFields";
 import RowHeight from "./RowHeight";
-// import BuildLogsSnack from "./CloudLogs/BuildLogs/BuildLogsSnack";
+import BuildLogsSnack from "./CloudLogs/BuildLogs/BuildLogsSnack";
 
 import { globalScope, userRolesAtom } from "@src/atoms/globalScope";
 import {
@@ -18,7 +18,7 @@ import {
   tableSchemaAtom,
 } from "@src/atoms/tableScope";
 import { FieldType } from "@src/constants/fields";
-// import { useSnackLogContext } from "@src/contexts/SnackLogContext";
+import { useSnackLogContext } from "@src/contexts/SnackLogContext";
 
 // prettier-ignore
 const Filters = lazy(() => import("./Filters" /* webpackChunkName: "Filters" */));
@@ -27,11 +27,11 @@ const Export = lazy(() => import("./Export" /* webpackChunkName: "Export" */));
 // prettier-ignore
 const ImportCsv = lazy(() => import("./ImportCsv" /* webpackChunkName: "ImportCsv" */));
 // prettier-ignore
-// const CloudLogs = lazy(() => import("./CloudLogs" /* webpackChunkName: "CloudLogs" */));
+const CloudLogs = lazy(() => import("./CloudLogs" /* webpackChunkName: "CloudLogs" */));
 // prettier-ignore
-// const Extensions = lazy(() => import("./Extensions" /* webpackChunkName: "Extensions" */));
+const Extensions = lazy(() => import("./Extensions" /* webpackChunkName: "Extensions" */));
 // prettier-ignore
-// const Webhooks = lazy(() => import("./Webhooks" /* webpackChunkName: "Webhooks" */));
+const Webhooks = lazy(() => import("./Webhooks" /* webpackChunkName: "Webhooks" */));
 // prettier-ignore
 const ReExecute = lazy(() => import("./ReExecute" /* webpackChunkName: "ReExecute" */));
 
@@ -41,7 +41,7 @@ export default function TableToolbar() {
   const [userRoles] = useAtom(userRolesAtom, globalScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
-  // const snackLogContext = useSnackLogContext();
+  const snackLogContext = useSnackLogContext();
 
   const hasDerivatives =
     Object.values(tableSchema.columns ?? {}).filter(
@@ -95,27 +95,23 @@ export default function TableToolbar() {
       {userRoles.includes("ADMIN") && (
         <>
           {/* Spacer */} <div />
-          {/* 
-      <Suspense fallback={<ButtonSkeleton/>}>
-          <Webhooks /> 
-      </Suspense>
-          */}
-          {/* 
-      <Suspense fallback={<ButtonSkeleton/>}>
-          <Extensions /> 
-      </Suspense>
-          */}
-          {/* 
-      <Suspense fallback={<ButtonSkeleton/>}>
-          <CloudLogs /> 
-      </Suspense>
-          */}
-          {/* {snackLogContext.isSnackLogOpen && (
-            <BuildLogsSnack
-              onClose={snackLogContext.closeSnackLog}
-              onOpenPanel={alert}
-            />
-          )} */}
+          <Suspense fallback={<ButtonSkeleton />}>
+            <Webhooks />
+          </Suspense>
+          <Suspense fallback={<ButtonSkeleton />}>
+            <Extensions />
+          </Suspense>
+          <Suspense fallback={<ButtonSkeleton />}>
+            <CloudLogs />
+          </Suspense>
+          {snackLogContext.isSnackLogOpen && (
+            <Suspense fallback={null}>
+              <BuildLogsSnack
+                onClose={snackLogContext.closeSnackLog}
+                onOpenPanel={alert}
+              />
+            </Suspense>
+          )}
           {(hasDerivatives || hasExtensions) && (
             <Suspense fallback={<ButtonSkeleton />}>
               <ReExecute />

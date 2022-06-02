@@ -1,7 +1,7 @@
 import { useAtom } from "jotai";
 
 import MultiSelect, { MultiSelectProps } from "@rowy/multiselect";
-import { Stack, Typography } from "@mui/material";
+import { Stack, StackProps, Typography } from "@mui/material";
 
 import { globalScope, altPressAtom } from "@src/atoms/globalScope";
 import { tableScope, tableColumnsOrderedAtom } from "@src/atoms/tableScope";
@@ -18,11 +18,13 @@ export type ColumnOption = {
 
 export interface IColumnSelectProps {
   filterColumns?: (column: ColumnConfig) => boolean;
+  showFieldNames?: boolean;
   options?: ColumnOption[];
 }
 
 export default function ColumnSelect({
   filterColumns,
+  showFieldNames,
   ...props
 }: IColumnSelectProps & Omit<MultiSelectProps<string>, "options">) {
   const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
@@ -30,7 +32,7 @@ export default function ColumnSelect({
     filterColumns
       ? tableColumnsOrdered.filter(filterColumns)
       : tableColumnsOrdered
-  ).map(({ key, name, type, index, fixed }) => ({
+  ).map(({ key, name, type, index }) => ({
     value: key,
     label: name,
     type,
@@ -43,15 +45,49 @@ export default function ColumnSelect({
       label="Column"
       labelPlural="columns"
       {...(props as any)}
-      itemRenderer={(option: ColumnOption) => <ColumnItem option={option} />}
+      itemRenderer={(option: ColumnOption) => (
+        <ColumnItem option={option} showFieldNames={showFieldNames} />
+      )}
+      TextFieldProps={{
+        ...props.TextFieldProps,
+        SelectProps: {
+          ...props.TextFieldProps?.SelectProps,
+          renderValue: () => {
+            if (Array.isArray(props.value) && props.value.length > 1)
+              return `${props.value.length} columns`;
+
+            const value = Array.isArray(props.value)
+              ? props.value[0]
+              : props.value;
+            const option = options.find((o) => o.value === value);
+            return option ? (
+              <ColumnItem
+                option={option}
+                showFieldNames={showFieldNames}
+                sx={{ "& .MuiSvgIcon-root": { my: -0.25 } }}
+              />
+            ) : (
+              value
+            );
+          },
+        },
+      }}
     />
   );
 }
 
+export interface IColumnItemProps extends Partial<StackProps> {
+  option: ColumnOption;
+  showFieldNames?: boolean;
+  children?: React.ReactNode;
+}
+
 export function ColumnItem({
   option,
+  showFieldNames,
   children,
-}: React.PropsWithChildren<{ option: ColumnOption }>) {
+  ...props
+}: IColumnItemProps) {
   const [altPress] = useAtom(altPressAtom, globalScope);
 
   return (
@@ -59,13 +95,17 @@ export function ColumnItem({
       direction="row"
       alignItems="center"
       gap={1}
-      sx={{ color: "text.secondary", width: "100%" }}
+      {...props}
+      sx={[
+        { color: "text.secondary", width: "100%" },
+        ...(Array.isArray(props.sx) ? props.sx : props.sx ? [props.sx] : []),
+      ]}
     >
       {getFieldProp("icon", option.type)}
       <Typography color="text.primary" style={{ flexGrow: 1 }}>
         {altPress ? <code>{option.value}</code> : option.label}
       </Typography>
-      {altPress && (
+      {altPress ? (
         <Typography
           color="text.disabled"
           variant="caption"
@@ -73,7 +113,11 @@ export function ColumnItem({
         >
           {option.index}
         </Typography>
-      )}
+      ) : showFieldNames ? (
+        <Typography color="text.primary">
+          <code>{option.value}</code>
+        </Typography>
+      ) : null}
       {children}
     </Stack>
   );
