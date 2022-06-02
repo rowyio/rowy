@@ -2,7 +2,7 @@ import { colord } from "colord";
 import { styled, alpha, darken, lighten } from "@mui/material";
 import { APP_BAR_HEIGHT } from "@src/layouts/Navigation";
 import { TABLE_TOOLBAR_HEIGHT } from "@src/components/TableToolbar";
-// import { DRAWER_COLLAPSED_WIDTH } from "@src/components/SideDrawer";
+import { DRAWER_COLLAPSED_WIDTH } from "@src/components/SideDrawer";
 
 export const OUT_OF_ORDER_MARGIN = 8;
 
@@ -29,8 +29,7 @@ export const TableContainer = styled("div", {
   },
 
   "& > .rdg": {
-    // FIXME:
-    // width: `calc(100% - ${DRAWER_COLLAPSED_WIDTH}px)`,
+    width: `calc(100% - ${DRAWER_COLLAPSED_WIDTH}px)`,
     flex: 1,
     paddingBottom: `max(env(safe-area-inset-bottom), ${theme.spacing(2)})`,
   },

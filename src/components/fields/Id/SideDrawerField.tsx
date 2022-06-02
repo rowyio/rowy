@@ -6,7 +6,7 @@ import { fieldSx } from "@src/components/SideDrawer/Form/utils";
 export default function Id({ docRef }: ISideDrawerFieldProps) {
   return (
     <Box sx={[fieldSx, { fontFamily: "fontFamilyMono", userSelect: "all" }]}>
-      {docRef.id}
+      {docRef?.id}
     </Box>
   );
 }

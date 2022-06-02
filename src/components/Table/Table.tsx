@@ -7,6 +7,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 // import "react-data-grid/dist/react-data-grid.css";
 import DataGrid, {
   Column,
+  DataGridHandle,
   //  SelectColumn as _SelectColumn,
 } from "react-data-grid";
 import { LinearProgress } from "@mui/material";
@@ -39,6 +40,7 @@ import {
   tablePageAtom,
   updateColumnAtom,
   updateFieldAtom,
+  sideDrawerSelectedCellAtom,
 } from "@src/atoms/tableScope";
 
 import { getFieldType, getFieldProp } from "@src/components/fields";
@@ -53,7 +55,11 @@ const rowKeyGetter = (row: any) => row.id;
 const rowClass = (row: any) => (row._rowy_outOfOrder ? "out-of-order" : "");
 //const SelectColumn = { ..._SelectColumn, width: 42, maxWidth: 42 };
 
-export default function Table() {
+export default function Table({
+  dataGridRef,
+}: {
+  dataGridRef?: React.MutableRefObject<DataGridHandle | null>;
+}) {
   const [userRoles] = useAtom(userRolesAtom, globalScope);
   const [userSettings] = useAtom(userSettingsAtom, globalScope);
   const [navPinned] = useAtom(navPinnedAtom, globalScope);
@@ -65,6 +71,10 @@ export default function Table() {
   const [tableRows] = useAtom(tableRowsAtom, tableScope);
   const [tableNextPage] = useAtom(tableNextPageAtom, tableScope);
   const setTablePage = useSetAtom(tablePageAtom, tableScope);
+  const setSideDrawerSelectedCell = useSetAtom(
+    sideDrawerSelectedCellAtom,
+    tableScope
+  );
 
   const updateColumn = useSetAtom(updateColumnAtom, tableScope);
   const updateField = useSetAtom(updateFieldAtom, tableScope);
@@ -204,6 +214,9 @@ export default function Table() {
           <DataGrid
             onColumnResize={handleResize}
             onScroll={handleScroll}
+            ref={(handle) => {
+              if (dataGridRef) dataGridRef.current = handle;
+            }}
             rows={rows}
             columns={columns}
             // Increase row height of out of order rows to add margins
@@ -264,15 +277,12 @@ export default function Table() {
                 value,
               });
             }}
-            // FIXME:
-            // onRowClick={(row, column) => {
-            //   if (sideDrawerRef?.current) {
-            //     sideDrawerRef.current.setCell({
-            //       row: findIndex(tableState.rows, { id: row.id }),
-            //       column: column.key,
-            //     });
-            //   }
-            // }}
+            onRowClick={(row, column) =>
+              setSideDrawerSelectedCell({
+                path: row._rowy_ref.path,
+                columnKey: column.key,
+              })
+            }
             // FIXME:
             // onSelectedCellChange={({ rowIdx, idx }) =>
             //   setSelectedCell({

@@ -1,6 +1,7 @@
-import { Suspense } from "react";
+import { useRef, Suspense } from "react";
 import { useAtom, Provider } from "jotai";
 import { useParams } from "react-router-dom";
+import { DataGridHandle } from "react-data-grid";
 import { isEmpty } from "lodash-es";
 
 import { Fade } from "@mui/material";
@@ -10,6 +11,7 @@ import HeaderRowSkeleton from "@src/components/Table/HeaderRowSkeleton";
 import EmptyTable from "@src/components/Table/EmptyTable";
 import TableToolbar from "@src/components/TableToolbar";
 import Table from "@src/components/Table";
+import SideDrawer from "@src/components/SideDrawer";
 import ColumnMenu from "@src/components/ColumnMenu";
 import ColumnModals from "@src/components/ColumnModals";
 
@@ -25,6 +27,9 @@ import ActionParamsProvider from "@src/components/fields/Action/FormDialog/Provi
 
 function TablePage() {
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
+
+  // A ref to the data grid. Contains data grid functions
+  const dataGridRef = useRef<DataGridHandle | null>(null);
 
   if (isEmpty(tableSchema.columns))
     return (
@@ -48,7 +53,11 @@ function TablePage() {
       </Suspense>
 
       <Suspense fallback={<HeaderRowSkeleton />}>
-        <Table />
+        <Table dataGridRef={dataGridRef} />
+      </Suspense>
+
+      <Suspense fallback={null}>
+        <SideDrawer dataGridRef={dataGridRef} />
       </Suspense>
 
       <Suspense fallback={null}>
@@ -81,7 +90,9 @@ export default function ProvidedTablePage() {
         ]}
       >
         <TableSourceFirestore />
-        <TablePage />
+        <main>
+          <TablePage />
+        </main>
       </Provider>
     </Suspense>
   );

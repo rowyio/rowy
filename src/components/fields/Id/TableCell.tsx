@@ -13,7 +13,7 @@ export default function Id({ docRef }: IHeavyCellProps) {
         userSelect: "all",
       }}
     >
-      {docRef.id}
+      {docRef?.id}
     </span>
   );
 }

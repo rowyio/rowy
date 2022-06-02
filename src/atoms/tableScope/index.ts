@@ -4,3 +4,4 @@ export const tableScope = Symbol("tableScope");
 export * from "./table";
 export * from "./columnActions";
 export * from "./rowActions";
+export * from "./ui";
