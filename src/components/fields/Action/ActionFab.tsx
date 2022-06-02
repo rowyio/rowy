@@ -140,7 +140,7 @@ export default function ActionFab({
         row,
         handleRun,
       });
-    } else if (action === "undo" && config.undo.confirmation) {
+    } else if (action === "undo" && config.undo?.confirmation) {
       return confirm({
         title: `${column.name} Confirmation`,
         body: config.undo.confirmation.replace(/\{\{(.*?)\}\}/g, replacer(row)),
