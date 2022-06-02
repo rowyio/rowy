@@ -14,14 +14,17 @@ import ErrorFallback from "@src/components/ErrorFallback";
 import StyledDrawer from "./StyledDrawer";
 // import Form from "./Form";
 
+import { globalScope, userSettingsAtom } from "@src/atoms/globalScope";
 import {
   tableScope,
+  tableIdAtom,
   tableColumnsOrderedAtom,
   tableRowsAtom,
   sideDrawerOpenAtom,
-  sideDrawerSelectedCellAtom,
+  selectedCellAtom,
 } from "@src/atoms/tableScope";
 import { analytics, logEvent } from "@src/analytics";
+import { formatSubTableName } from "@src/utils/table";
 
 export const DRAWER_WIDTH = 512;
 export const DRAWER_COLLAPSED_WIDTH = 36;
@@ -31,10 +34,15 @@ export default function SideDrawer({
 }: {
   dataGridRef?: React.MutableRefObject<DataGridHandle | null>;
 }) {
+  const [userSettings] = useAtom(userSettingsAtom, globalScope);
+  const [tableId] = useAtom(tableIdAtom, tableScope);
   const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
   const [tableRows] = useAtom(tableRowsAtom, tableScope);
 
-  const [cell, setCell] = useAtom(sideDrawerSelectedCellAtom, tableScope);
+  const userDocHiddenFields =
+    userSettings.tables?.[formatSubTableName(tableId)]?.hiddenFields ?? [];
+
+  const [cell, setCell] = useAtom(selectedCellAtom, tableScope);
   const [open, setOpen] = useAtom(sideDrawerOpenAtom, tableScope);
   const selectedCellRowIndex = findIndex(tableRows, [
     "_rowy_ref.path",
@@ -50,10 +58,12 @@ export default function SideDrawer({
 
     setCell((cell) => ({ columnKey: cell!.columnKey, path: newPath }));
 
-    const columnIndex = findIndex(tableColumnsOrdered, [
-      "key",
-      cell!.columnKey,
-    ]);
+    const columnIndex = findIndex(
+      tableColumnsOrdered.filter(
+        (col) => !userDocHiddenFields.includes(col.key)
+      ),
+      ["key", cell!.columnKey]
+    );
 
     dataGridRef?.current?.selectCell(
       { rowIdx: rowIndex, idx: columnIndex },

@@ -40,7 +40,7 @@ import {
   tablePageAtom,
   updateColumnAtom,
   updateFieldAtom,
-  sideDrawerSelectedCellAtom,
+  selectedCellAtom,
 } from "@src/atoms/tableScope";
 
 import { getFieldType, getFieldProp } from "@src/components/fields";
@@ -71,10 +71,7 @@ export default function Table({
   const [tableRows] = useAtom(tableRowsAtom, tableScope);
   const [tableNextPage] = useAtom(tableNextPageAtom, tableScope);
   const setTablePage = useSetAtom(tablePageAtom, tableScope);
-  const setSideDrawerSelectedCell = useSetAtom(
-    sideDrawerSelectedCellAtom,
-    tableScope
-  );
+  const setSelectedCell = useSetAtom(selectedCellAtom, tableScope);
 
   const updateColumn = useSetAtom(updateColumnAtom, tableScope);
   const updateField = useSetAtom(updateFieldAtom, tableScope);
@@ -277,19 +274,16 @@ export default function Table({
                 value,
               });
             }}
-            onRowClick={(row, column) =>
-              setSideDrawerSelectedCell({
-                path: row._rowy_ref.path,
-                columnKey: column.key,
+            onSelectedCellChange={({ rowIdx, idx }) =>
+              setSelectedCell({
+                path: rows[rowIdx]._rowy_ref.path,
+                columnKey: tableColumnsOrdered.filter((col) =>
+                  userDocHiddenFields
+                    ? !userDocHiddenFields.includes(col.key)
+                    : true
+                )[idx].key,
               })
             }
-            // FIXME:
-            // onSelectedCellChange={({ rowIdx, idx }) =>
-            //   setSelectedCell({
-            //     rowIndex: rowIdx,
-            //     colIndex: idx,
-            //   })
-            // }
           />
         </DndProvider>
 

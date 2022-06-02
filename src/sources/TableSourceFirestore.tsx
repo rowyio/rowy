@@ -134,7 +134,7 @@ const TableSourceFirestore = memo(function TableSourceFirestore() {
               },
               data,
             },
-          })
+          }).catch(console.log)
     );
 
     return () => setAuditChange(undefined);
