@@ -36,7 +36,7 @@
     "jszip": "^3.10.0",
     "lodash-es": "^4.17.21",
     "match-sorter": "^6.3.1",
-    "mdi-material-ui": "^7.2.0",
+    "mdi-material-ui": "^7.3.0",
     "monaco-editor-auto-typings": "^0.4.0",
     "notistack": "^2.0.4",
     "path-browserify": "^1.0.1",

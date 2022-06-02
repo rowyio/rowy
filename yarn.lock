@@ -9025,6 +9025,11 @@ mdi-material-ui@^7.2.0:
   resolved "https://registry.yarnpkg.com/mdi-material-ui/-/mdi-material-ui-7.2.0.tgz#e4746b123fd3a438b1cde39eb44329a4c761162d"
   integrity sha512-tJnT4fY+gJmlq/wt4GYCV5qezOs/cuSysg6N3KRkl2/8dSpyZsL/P5lN4UWZ2ayViwhoRUHns/FCKFnMngJd0g==
 
+mdi-material-ui@^7.3.0:
+  version "7.3.0"
+  resolved "https://registry.yarnpkg.com/mdi-material-ui/-/mdi-material-ui-7.3.0.tgz#db3ed681d35ae12c37fb1c95bcfe679a1be80c0b"
+  integrity sha512-BJ4JF+LlO/aYcOg9wrgbzRiInyRH6padgfBdJpoPNc3CoZDaik9ARTP3PWzgMjRSQQZ2KvxtFVpOHDkHfrc2Fw==
+
 mdn-data@2.0.14:
   version "2.0.14"
   resolved "https://registry.yarnpkg.com/mdn-data/-/mdn-data-2.0.14.tgz#7113fc4281917d63ce29b43446f701e68c25ba50"

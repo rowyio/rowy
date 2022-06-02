@@ -1,7 +1,7 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
 
-import SingleSelectIcon from "@src/assets/icons/SingleSelect";
+import { FileLinkOutline } from "mdi-material-ui";
 //import InlineCell from "./InlineCell";
 import BasicCell from "./BasicCell";
 import { filterOperators } from "@src/components/fields/ShortText/Filter";
@@ -27,7 +27,7 @@ export const config: IFieldConfig = {
   dataType: "reference",
   initialValue: null,
   initializable: true,
-  icon: <SingleSelectIcon />,
+  icon: <FileLinkOutline />,
   description: "Firestore document reference",
   TableCell: withBasicCell(BasicCell),
   TableEditor: EditorCell,

@@ -25,9 +25,9 @@ import Image_ from "./Image";
 import File_ from "./File";
 import Connector from "./Connector";
 import SubTable from "./SubTable";
+import Reference from "./Reference";
 import ConnectTable from "./ConnectTable";
 import ConnectService from "./ConnectService";
-import Reference from "./Reference";
 import Json from "./Json";
 import Code from "./Code";
 import Action from "./Action";
@@ -71,9 +71,9 @@ export const FIELDS: IFieldConfig[] = [
   /** CONNECTION */
   Connector,
   SubTable,
+  Reference,
   ConnectTable,
   ConnectService,
-  Reference,
   /** CODE */
   Json,
   Code,

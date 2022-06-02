@@ -25,11 +25,11 @@ export enum FieldType {
   image = "IMAGE",
   file = "FILE",
   // CONNECTION
-  subTable = "SUB_TABLE",
   connector = "CONNECTOR",
+  subTable = "SUB_TABLE",
+  reference = "REFERENCE",
   connectTable = "DOCUMENT_SELECT",
   connectService = "SERVICE_SELECT",
-  reference = "REFERENCE",
   // CODE
   json = "JSON",
   code = "CODE",
