@@ -2,7 +2,7 @@ import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
 import withHeavyCell from "@src/components/fields/_withTableCell/withHeavyCell";
 
-import UpdatedByIcon from "@src/assets/icons/UpdatedBy";
+import { UpdatedBy as UpdatedByIcon } from "@src/assets/icons";
 import BasicCell from "@src/components/fields/_BasicCell/BasicCellNull";
 import withSideDrawerEditor from "@src/components/Table/editors/withSideDrawerEditor";
 

@@ -4,7 +4,7 @@ import InfoIcon from "@mui/icons-material/InfoOutlined";
 import NoticeIcon from "@mui/icons-material/NotificationsOutlined";
 import WarningIcon from "@mui/icons-material/WarningAmberOutlined";
 import ErrorIcon from "@mui/icons-material/ErrorOutline";
-import { mdiCarBrakeAlert } from "@mdi/js";
+import { Critical as CriticalIcon } from "@src/assets/icons";
 import AlertIcon from "@mui/icons-material/Error";
 import EmergencyIcon from "@mui/icons-material/NewReleases";
 
@@ -64,11 +64,7 @@ export default function CloudLogSeverityIcon({
       break;
 
     case "CRITICAL":
-      icon = (
-        <SvgIcon {...commonIconProps} color="error">
-          <path d={mdiCarBrakeAlert} />
-        </SvgIcon>
-      );
+      icon = <CriticalIcon {...commonIconProps} color="error" />;
       break;
 
     case "ALERT":

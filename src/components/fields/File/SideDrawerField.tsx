@@ -15,7 +15,7 @@ import {
   Tooltip,
   Chip,
 } from "@mui/material";
-import UploadIcon from "@src/assets/icons/Upload";
+import { Upload as UploadIcon } from "@src/assets/icons";
 import { FileIcon } from ".";
 
 import CircularProgressOptical from "@src/components/CircularProgressOptical";

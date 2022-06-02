@@ -13,7 +13,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import CopyIcon from "@src/assets/icons/Copy";
+import { Copy as CopyIcon } from "@src/assets/icons";
 
 import Modal, { IModalProps } from "@src/components/Modal";
 import SteppedAccordion from "@src/components/SteppedAccordion";

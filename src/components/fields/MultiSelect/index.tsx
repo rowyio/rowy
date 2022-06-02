@@ -2,7 +2,7 @@ import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
 import withPopoverCell from "@src/components/fields/_withTableCell/withPopoverCell";
 
-import MultiSelectIcon from "@src/assets/icons/MultiSelect";
+import { MultiSelect as MultiSelectIcon } from "@src/assets/icons";
 import BasicCell from "@src/components/fields/_BasicCell/BasicCellNull";
 import InlineCell from "./InlineCell";
 import NullEditor from "@src/components/Table/editors/NullEditor";

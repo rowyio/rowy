@@ -10,7 +10,7 @@ import {
   ListItemText,
   Box,
 } from "@mui/material";
-import AddRowIcon from "@src/assets/icons/AddRow";
+import { AddRow as AddRowIcon } from "@src/assets/icons";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 import {

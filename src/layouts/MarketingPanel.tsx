@@ -1,6 +1,6 @@
 import { Stack, Paper, Typography, Button } from "@mui/material";
 import { alpha } from "@mui/material/styles";
-import DiscordIcon from "@src/assets/icons/Discord";
+import { Discord as DiscordIcon } from "@src/assets/icons";
 import TwitterIcon from "@mui/icons-material/Twitter";
 
 import Logo from "@src/assets/Logo";

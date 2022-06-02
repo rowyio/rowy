@@ -13,7 +13,7 @@ import {
   Typography,
 } from "@mui/material";
 import WebhookIcon from "@mui/icons-material/Webhook";
-import LogsIcon from "@src/assets/icons/CloudLogs";
+import { CloudLogs as LogsIcon } from "@src/assets/icons";
 import EditIcon from "@mui/icons-material/EditOutlined";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import LinkIcon from "@mui/icons-material/Link";

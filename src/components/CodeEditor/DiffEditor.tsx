@@ -8,7 +8,7 @@ import {
 import { useTheme, Box, BoxProps } from "@mui/material";
 import TrapFocus from "@mui/material/Unstable_TrapFocus";
 import CircularProgressOptical from "@src/components/CircularProgressOptical";
-import ResizeBottomRightIcon from "@src/assets/icons/ResizeBottomRight";
+import { ResizeBottomRight } from "@src/assets/icons";
 
 import useMonacoCustomizations, {
   IUseMonacoCustomizationsProps,
@@ -101,7 +101,7 @@ export default function DiffEditor({
           style={{ right: 32 }}
         />
 
-        <ResizeBottomRightIcon
+        <ResizeBottomRight
           aria-label="Resize code editor"
           color="action"
           sx={{

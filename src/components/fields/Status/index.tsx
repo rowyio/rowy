@@ -1,6 +1,6 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import StatusIcon from "@src/assets/icons/Status";
+import { Status as StatusIcon } from "@src/assets/icons";
 import NullEditor from "@src/components/Table/editors/NullEditor";
 
 import { filterOperators } from "./Filter";

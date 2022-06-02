@@ -1,5 +1,5 @@
 import { Fade, Stack, Skeleton, Button } from "@mui/material";
-import AddColumnIcon from "@src/assets/icons/AddColumn";
+import { AddColumn as AddColumnIcon } from "@src/assets/icons";
 
 const NUM_CELLS = 5;
 

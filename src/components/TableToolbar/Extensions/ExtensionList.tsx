@@ -11,8 +11,10 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import ExtensionIcon from "@src/assets/icons/Extension";
-import DuplicateIcon from "@src/assets/icons/Copy";
+import {
+  Extension as ExtensionIcon,
+  Copy as DuplicateIcon,
+} from "@src/assets/icons";
 import EditIcon from "@mui/icons-material/EditOutlined";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 

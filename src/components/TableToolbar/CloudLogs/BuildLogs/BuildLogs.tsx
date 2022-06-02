@@ -14,7 +14,7 @@ import {
 import SuccessIcon from "@mui/icons-material/Check";
 import FailIcon from "@mui/icons-material/Close";
 import HourglassIcon from "@mui/icons-material/HourglassEmpty";
-import LogsIcon from "@src/assets/icons/CloudLogs";
+import { CloudLogs as LogsIcon } from "@src/assets/icons";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import EmptyState from "@src/components/EmptyState";

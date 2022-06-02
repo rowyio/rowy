@@ -4,8 +4,7 @@ import { useSetAtom } from "jotai";
 import type { UseFormReturn, FieldValues } from "react-hook-form";
 
 import { IconButton, Menu, MenuItem } from "@mui/material";
-import ExportIcon from "assets/icons/Export";
-import ImportIcon from "assets/icons/Import";
+import { Export as ExportIcon, Import as ImportIcon } from "@src/assets/icons";
 
 import ImportSettings from "./ImportSettings";
 import ExportSettings from "./ExportSettings";

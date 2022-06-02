@@ -11,17 +11,19 @@ import FilterIcon from "@mui/icons-material/FilterList";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import LockIcon from "@mui/icons-material/LockOutlined";
 import VisibilityIcon from "@mui/icons-material/VisibilityOutlined";
-import FreezeIcon from "@src/assets/icons/Freeze";
-import UnfreezeIcon from "@src/assets/icons/Unfreeze";
-import CellResizeIcon from "@src/assets/icons/CellResize";
+import {
+  Freeze as FreezeIcon,
+  Unfreeze as UnfreezeIcon,
+  CellResize as CellResizeIcon,
+  ColumnPlusBefore as ColumnPlusBeforeIcon,
+  ColumnPlusAfter as ColumnPlusAfterIcon,
+  ColumnRemove as ColumnRemoveIcon,
+} from "@src/assets/icons";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import EditIcon from "@mui/icons-material/EditOutlined";
 // import ReorderIcon from "@mui/icons-material/Reorder";
 import SettingsIcon from "@mui/icons-material/SettingsOutlined";
-import ColumnPlusBeforeIcon from "@src/assets/icons/ColumnPlusBefore";
-import ColumnPlusAfterIcon from "@src/assets/icons/ColumnPlusAfter";
-import ColumnRemoveIcon from "@src/assets/icons/ColumnRemove";
 
 import MenuContents from "./MenuContents";
 import ColumnHeader from "@src/components/Table/Column";

@@ -8,7 +8,7 @@ import {
   CardActions,
   Button,
 } from "@mui/material";
-import GoIcon from "@src/assets/icons/Go";
+import { Go as GoIcon } from "@src/assets/icons";
 
 import RenderedMarkdown from "@src/components/RenderedMarkdown";
 import { TableSettings } from "@src/types/table";

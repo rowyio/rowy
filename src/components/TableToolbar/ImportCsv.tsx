@@ -21,8 +21,8 @@ import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 
 import TableToolbarButton from "./TableToolbarButton";
-import ImportIcon from "@src/assets/icons/Import";
-import FileUploadIcon from "@src/assets/icons/Upload";
+import { Import as ImportIcon } from "@src/assets/icons";
+import { Upload as FileUploadIcon } from "@src/assets/icons";
 import CheckIcon from "@mui/icons-material/CheckCircle";
 
 import { globalScope, userRolesAtom } from "@src/atoms/globalScope";

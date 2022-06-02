@@ -7,7 +7,7 @@ import { useDropzone } from "react-dropzone";
 import { format } from "date-fns";
 
 import { alpha, Stack, Grid, Tooltip, Chip, IconButton } from "@mui/material";
-import UploadIcon from "@src/assets/icons/Upload";
+import { Upload as UploadIcon } from "@src/assets/icons";
 import ChipList from "@src/components/Table/formatters/ChipList";
 import CircularProgressOptical from "@src/components/CircularProgressOptical";
 

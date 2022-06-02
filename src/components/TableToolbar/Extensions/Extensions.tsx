@@ -3,7 +3,7 @@ import { useAtom, useSetAtom } from "jotai";
 import { isEqual } from "lodash-es";
 
 import TableToolbarButton from "@src/components/TableToolbar/TableToolbarButton";
-import ExtensionIcon from "@src/assets/icons/Extension";
+import { Extension as ExtensionIcon } from "@src/assets/icons";
 import Modal from "@src/components/Modal";
 import AddExtensionButton from "./AddExtensionButton";
 import ExtensionList from "./ExtensionList";

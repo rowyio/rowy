@@ -2,7 +2,7 @@ import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
 import withBasicCell from "@src/components/fields/_withTableCell/withBasicCell";
 
-import JsonIcon from "@src/assets/icons/Json";
+import { Json as JsonIcon } from "@src/assets/icons";
 import BasicCell from "./BasicCell";
 import withSideDrawerEditor from "@src/components/Table/editors/withSideDrawerEditor";
 

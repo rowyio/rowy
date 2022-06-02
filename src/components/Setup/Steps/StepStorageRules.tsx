@@ -6,7 +6,7 @@ import type {
 } from "@src/components/Setup/SetupStep";
 
 import { Typography, Button, Grid } from "@mui/material";
-import CopyIcon from "@src/assets/icons/Copy";
+import { Copy as CopyIcon } from "@src/assets/icons";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 import DoneIcon from "@mui/icons-material/Done";
 

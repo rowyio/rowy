@@ -13,7 +13,7 @@ import {
   Button,
 } from "@mui/material";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import LogsIcon from "@src/assets/icons/CloudLogs";
+import { CloudLogs as LogsIcon } from "@src/assets/icons";
 
 import Modal, { IModalProps } from "@src/components/Modal";
 import TableToolbarButton from "@src/components/TableToolbar/TableToolbarButton";

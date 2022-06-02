@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { useAtom } from "jotai";
 
 import { useTheme, TextField, ListSubheader, MenuItem } from "@mui/material";
-import RowHeightIcon from "@src/assets/icons/RowHeight";
+import { RowHeight as RowHeightIcon } from "@src/assets/icons";
 import TableToolbarButton from "./TableToolbarButton";
 
 import {

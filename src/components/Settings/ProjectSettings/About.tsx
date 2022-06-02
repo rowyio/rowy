@@ -3,7 +3,7 @@ import { useAtom } from "jotai";
 import { Grid, Typography, Button, Link, Divider } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import GitHubIcon from "@mui/icons-material/GitHub";
-import DiscordIcon from "@src/assets/icons/Discord";
+import { Discord as DiscordIcon } from "@src/assets/icons";
 import TwitterIcon from "@mui/icons-material/Twitter";
 
 import Logo from "@src/assets/Logo";

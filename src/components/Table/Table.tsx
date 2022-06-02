@@ -20,7 +20,7 @@ import TableRow from "./TableRow";
 import EmptyState from "@src/components/EmptyState";
 // import BulkActions from "./BulkActions";
 import AddRow from "@src/components/TableToolbar/AddRow";
-import AddRowIcon from "@src/assets/icons/AddRow";
+import { AddRow as AddRowIcon } from "@src/assets/icons";
 
 import {
   globalScope,

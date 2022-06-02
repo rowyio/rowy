@@ -1,8 +1,8 @@
 import { useAtom, useSetAtom } from "jotai";
 
 import { Grid, Stack, Typography, Button, Divider } from "@mui/material";
-import ImportIcon from "@src/assets/icons/Import";
-import AddColumnIcon from "@src/assets/icons/AddColumn";
+import { Import as ImportIcon } from "@src/assets/icons";
+import { AddColumn as AddColumnIcon } from "@src/assets/icons";
 
 import { globalScope, columnModalAtom } from "@src/atoms/globalScope";
 import {

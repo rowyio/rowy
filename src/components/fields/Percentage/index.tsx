@@ -2,7 +2,7 @@ import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
 import withBasicCell from "@src/components/fields/_withTableCell/withBasicCell";
 
-import PercentageIcon from "@src/assets/icons/Percentage";
+import { Percentage as PercentageIcon } from "@src/assets/icons";
 import BasicCell from "./BasicCell";
 import TextEditor from "@src/components/Table/editors/TextEditor";
 import { filterOperators } from "@src/components/fields/Number/Filter";

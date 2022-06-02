@@ -1,7 +1,7 @@
 import { useAtom, useSetAtom } from "jotai";
 
 import TableToolbarButton from "@src/components/TableToolbar/TableToolbarButton";
-import LogsIcon from "@src/assets/icons/CloudLogs";
+import { CloudLogs as LogsIcon } from "@src/assets/icons";
 import CloudLogsModal from "./CloudLogsModal";
 
 import {

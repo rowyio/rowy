@@ -2,7 +2,7 @@ import { useAtom, useSetAtom } from "jotai";
 import { Column } from "react-data-grid";
 
 import { Button } from "@mui/material";
-import AddColumnIcon from "@src/assets/icons/AddColumn";
+import { AddColumn as AddColumnIcon } from "@src/assets/icons";
 
 import {
   globalScope,

@@ -2,7 +2,7 @@ import { useAtom } from "jotai";
 import { Link } from "react-router-dom";
 
 import { Button } from "@mui/material";
-import GoIcon from "@src/assets/icons/Go";
+import { Go as GoIcon } from "@src/assets/icons";
 import HomeIcon from "@mui/icons-material/HomeOutlined";
 
 import AuthLayout from "@src/layouts/AuthLayout";

@@ -5,7 +5,7 @@ import { useLocation, Link } from "react-router-dom";
 import { Button } from "@mui/material";
 import ReloadIcon from "@mui/icons-material/Refresh";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
-import TablesIcon from "mdi-material-ui/TableMultiple";
+import { Tables as TablesIcon } from "@src/assets/icons";
 
 import EmptyState, { IEmptyStateProps } from "@src/components/EmptyState";
 import AccessDenied from "@src/components/AccessDenied";

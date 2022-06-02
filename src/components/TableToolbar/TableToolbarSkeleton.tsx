@@ -6,7 +6,7 @@ import {
   Skeleton,
   SkeletonProps,
 } from "@mui/material";
-import AddRowIcon from "@src/assets/icons/AddRow";
+import { AddRow as AddRowIcon } from "@src/assets/icons";
 
 import { TABLE_TOOLBAR_HEIGHT } from "@src/components/TableToolbar";
 

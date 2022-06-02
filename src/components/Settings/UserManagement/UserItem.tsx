@@ -11,7 +11,7 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import CopyIcon from "@src/assets/icons/Copy";
+import { Copy as CopyIcon } from "@src/assets/icons";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 
 import MultiSelect from "@rowy/multiselect";
