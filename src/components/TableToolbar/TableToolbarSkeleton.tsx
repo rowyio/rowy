@@ -1,4 +1,11 @@
-import { Fade, Stack, Button, Skeleton, SkeletonProps } from "@mui/material";
+import {
+  Fade,
+  Stack,
+  ButtonGroup,
+  Button,
+  Skeleton,
+  SkeletonProps,
+} from "@mui/material";
 import AddRowIcon from "@src/assets/icons/AddRow";
 
 import { TABLE_TOOLBAR_HEIGHT } from "@src/components/TableToolbar";
@@ -28,9 +35,19 @@ export default function TableToolbarSkeleton() {
         }}
       >
         <ButtonSkeleton sx={{ width: undefined, height: undefined }}>
-          <Button variant="contained" startIcon={<AddRowIcon />}>
-            Add row
-          </Button>
+          <ButtonGroup variant="contained" color="primary">
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<AddRowIcon />}
+            >
+              Add row
+            </Button>
+
+            <Button variant="contained" color="primary" style={{ padding: 0 }}>
+              <AddRowIcon />
+            </Button>
+          </ButtonGroup>
         </ButtonSkeleton>
 
         <div />
