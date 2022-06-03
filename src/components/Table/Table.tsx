@@ -3,6 +3,7 @@ import { useAtom, useSetAtom } from "jotai";
 import { useDebouncedCallback, useThrottledCallback } from "use-debounce";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { findIndex } from "lodash-es";
 
 // import "react-data-grid/dist/react-data-grid.css";
 import DataGrid, {
@@ -71,7 +72,7 @@ export default function Table({
   const [tableRows] = useAtom(tableRowsAtom, tableScope);
   const [tableNextPage] = useAtom(tableNextPageAtom, tableScope);
   const setTablePage = useSetAtom(tablePageAtom, tableScope);
-  const setSelectedCell = useSetAtom(selectedCellAtom, tableScope);
+  const [selectedCell, setSelectedCell] = useAtom(selectedCellAtom, tableScope);
 
   const updateColumn = useSetAtom(updateColumnAtom, tableScope);
   const updateField = useSetAtom(updateFieldAtom, tableScope);
@@ -143,6 +144,10 @@ export default function Table({
     tableSettings.readOnly,
     userRoles,
   ]);
+  const selectedColumnIndex = useMemo(() => {
+    if (!selectedCell?.columnKey) return -1;
+    return findIndex(columns, ["key", selectedCell.columnKey]);
+  }, [selectedCell?.columnKey, columns]);
 
   // Handle columns with field names that use dot notation (nested fields)
   const rows =
@@ -172,6 +177,12 @@ export default function Table({
   // https://github.com/adazzle/react-data-grid/blob/ead05032da79d7e2b86e37cdb9af27f2a4d80b90/stories/demos/AllFeatures.tsx#L60
   const handleScroll = useThrottledCallback(
     (event: React.UIEvent<HTMLDivElement>) => {
+      // Select corresponding header cell when scrolled to prevent jumping
+      dataGridRef?.current?.selectCell({
+        idx: selectedColumnIndex || 0,
+        rowIdx: -1,
+      });
+
       const target = event.target as HTMLDivElement;
 
       if (navPinned && !columns[0].fixed)
