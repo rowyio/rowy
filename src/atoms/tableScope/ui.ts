@@ -5,6 +5,12 @@ import type { PopoverProps } from "@mui/material";
 import type { ColumnConfig, TableFilter } from "@src/types/table";
 import { SEVERITY_LEVELS } from "@src/components/TableToolbar/CloudLogs/CloudLogSeverityIcon";
 
+function beforeUnloadHandler(event: BeforeUnloadEvent) {
+  event.preventDefault();
+  return (event.returnValue =
+    "Are you sure you want to leave? You may have unsaved changes.");
+}
+
 /**
  * Open table column menu. Set to `null` to close.
  *
@@ -36,7 +42,8 @@ export const columnMenuAtom = atom<{
  *
  * @example Close:
  * ```
- * openColumnModal(null)
+ * import { RESET } from "jotai/utils";
+ * openColumnModal(RESET)
  * ```
  */
 export const columnModalAtom = atomWithHash<{

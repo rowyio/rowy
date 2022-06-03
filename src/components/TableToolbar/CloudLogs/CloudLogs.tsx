@@ -1,4 +1,5 @@
 import { useAtom, useSetAtom } from "jotai";
+import { RESET } from "jotai/utils";
 
 import TableToolbarButton from "@src/components/TableToolbar/TableToolbarButton";
 import { CloudLogs as LogsIcon } from "@src/assets/icons";
@@ -17,7 +18,7 @@ export default function CloudLogs() {
   const [modal, setModal] = useAtom(tableModalAtom, tableScope);
 
   const open = modal === "cloudLogs";
-  const setOpen = (open: boolean) => setModal(open ? "cloudLogs" : null);
+  const setOpen = (open: boolean) => setModal(open ? "cloudLogs" : RESET);
 
   return (
     <>

@@ -274,16 +274,21 @@ export default function Table({
                 value,
               });
             }}
-            onSelectedCellChange={({ rowIdx, idx }) =>
-              setSelectedCell({
-                path: rows[rowIdx]._rowy_ref.path,
-                columnKey: tableColumnsOrdered.filter((col) =>
-                  userDocHiddenFields
-                    ? !userDocHiddenFields.includes(col.key)
-                    : true
-                )[idx].key,
-              })
-            }
+            onSelectedCellChange={({ rowIdx, idx }) => {
+              if (!rows[rowIdx]?._rowy_ref) return; // May be the header row
+
+              const path = rows[rowIdx]._rowy_ref.path;
+              if (!path) return;
+
+              const columnKey = tableColumnsOrdered.filter((col) =>
+                userDocHiddenFields
+                  ? !userDocHiddenFields.includes(col.key)
+                  : true
+              )[idx]?.key;
+              if (!columnKey) return; // May be the final column
+
+              setSelectedCell({ path, columnKey });
+            }}
           />
         </DndProvider>
 

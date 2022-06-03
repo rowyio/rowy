@@ -5,6 +5,7 @@ import { BrowserRouter } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { Provider, Atom } from "jotai";
 import { globalScope } from "@src/atoms/globalScope";
+import { DebugAtoms } from "@src/atoms/utils";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import createCache from "@emotion/cache";
@@ -36,6 +37,7 @@ export default function Providers({
             scope={globalScope}
             initialValues={initialAtomValues}
           >
+            <DebugAtoms scope={globalScope} />
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <CacheProvider value={muiCache}>
                 <RowyThemeProvider>

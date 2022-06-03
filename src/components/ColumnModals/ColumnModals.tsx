@@ -1,4 +1,5 @@
 import { useAtom } from "jotai";
+import { RESET } from "jotai/utils";
 
 import NewColumnModal from "./NewColumnModal";
 import NameChangeModal from "./NameChangeModal";
@@ -23,7 +24,7 @@ export default function ColumnModals() {
 
   if (!columnModal) return null;
 
-  const handleClose = () => setColumnModal(null);
+  const handleClose = () => setColumnModal(RESET);
 
   if (columnModal.type === "new")
     return <NewColumnModal handleClose={handleClose} />;

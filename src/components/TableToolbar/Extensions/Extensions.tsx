@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAtom, useSetAtom } from "jotai";
+import { RESET } from "jotai/utils";
 import { isEqual } from "lodash-es";
 
 import TableToolbarButton from "@src/components/TableToolbar/TableToolbarButton";
@@ -50,7 +51,7 @@ export default function Extensions() {
   );
 
   const open = modal === "extensions";
-  const setOpen = (open: boolean) => setModal(open ? "extensions" : null);
+  const setOpen = (open: boolean) => setModal(open ? "extensions" : RESET);
 
   const [openMigrationGuide, setOpenMigrationGuide] = useState(false);
   const [extensionModal, setExtensionModal] = useState<{

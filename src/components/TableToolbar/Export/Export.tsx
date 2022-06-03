@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { useAtom } from "jotai";
+import { RESET } from "jotai/utils";
 import {
   query as firestoreQuery,
   Query,
@@ -42,7 +43,7 @@ export interface IExportModalContentsProps {
 export default function Export() {
   const [modal, setModal] = useAtom(tableModalAtom, tableScope);
   const open = modal === "export";
-  const setOpen = (open: boolean) => setModal(open ? "export" : null);
+  const setOpen = (open: boolean) => setModal(open ? "export" : RESET);
   const [mode, setMode] = useState<"Export" | "Download">("Export");
 
   const [firebaseDb] = useAtom(firebaseDbAtom, globalScope);

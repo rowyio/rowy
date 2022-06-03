@@ -1,5 +1,6 @@
 import { useRef, Suspense } from "react";
 import { useAtom, Provider } from "jotai";
+import { DebugAtoms } from "@src/atoms/utils";
 import { useParams } from "react-router-dom";
 import { DataGridHandle } from "react-data-grid";
 import { isEmpty } from "lodash-es";
@@ -89,6 +90,7 @@ export default function ProvidedTablePage() {
           [currentUserAtom, currentUser],
         ]}
       >
+        <DebugAtoms scope={tableScope} />
         <TableSourceFirestore />
         <main>
           <TablePage />

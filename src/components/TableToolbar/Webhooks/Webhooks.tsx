@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAtom, useSetAtom } from "jotai";
+import { RESET } from "jotai/utils";
 import { isEqual } from "lodash-es";
 import { useSnackbar } from "notistack";
 
@@ -50,7 +51,7 @@ export default function Webhooks() {
     useState(currentWebhooks);
 
   const open = modal === "webhooks";
-  const setOpen = (open: boolean) => setModal(open ? "webhooks" : null);
+  const setOpen = (open: boolean) => setModal(open ? "webhooks" : RESET);
 
   const [webhookModal, setWebhookModal] = useState<{
     mode: "add" | "update";
