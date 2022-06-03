@@ -1,5 +1,5 @@
 import { atom } from "jotai";
-import { atomWithReducer } from "jotai/utils";
+import { atomWithReducer, atomWithHash } from "jotai/utils";
 import {
   uniqBy,
   sortBy,
@@ -68,19 +68,21 @@ export const tableFiltersAtom = atom<TableFilter[]>([]);
 /** Orders applied to the local view */
 export const tableOrdersAtom = atom<TableOrder[]>([]);
 
+/** Store current page in URL */
+export const tablePageHashAtom = atomWithHash("page", 0);
 /**
  * Set the page for the table query. Stops updating if we’ve loaded all rows.
  */
 export const tablePageAtom = atom(
-  0,
+  (get) => get(tablePageHashAtom),
   (get, set, update: number | ((p: number) => number)) => {
     // If loading more or doesn’t have next page, don’t request another page
     const tableNextPage = get(tableNextPageAtom);
     if (tableNextPage.loading || !tableNextPage.available) return;
 
-    const currentPage = get(tablePageAtom);
+    const currentPage = get(tablePageHashAtom);
     set(
-      tablePageAtom,
+      tablePageHashAtom,
       typeof update === "number" ? update : update(currentPage)
     );
   }
