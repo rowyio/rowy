@@ -5,12 +5,6 @@ import type { PopoverProps } from "@mui/material";
 import type { ColumnConfig, TableFilter } from "@src/types/table";
 import { SEVERITY_LEVELS } from "@src/components/TableToolbar/CloudLogs/CloudLogSeverityIcon";
 
-function beforeUnloadHandler(event: BeforeUnloadEvent) {
-  event.preventDefault();
-  return (event.returnValue =
-    "Are you sure you want to leave? You may have unsaved changes.");
-}
-
 /**
  * Open table column menu. Set to `null` to close.
  *
@@ -112,34 +106,6 @@ export const selectedCellAtom = atom<{
   columnKey: string;
 } | null>(null);
 
-/*
-function selectedCellBeforeUnloadHandler(event: BeforeUnloadEvent) {
-  event.preventDefault();
-  return (event.returnValue =
-    "Are you sure you want to leave? You have selected a cell and will lose your position in the table.");
-}
-export type SelectedCell = {
-  path: string;
-  columnKey: string;
-};
-
-export const selectedCellAtom = atom<
-  SelectedCell | null,
-  SetStateAction<SelectedCell | null>
->(null, (get, set, update) => {
-  window.removeEventListener("beforeunload", selectedCellBeforeUnloadHandler);
-  if (update !== null) {
-    console.log("set beforeunload");
-    window.addEventListener("beforeunload", selectedCellBeforeUnloadHandler);
-  }
-
-  set(
-    selectedCellAtom,
-    isFunction(update) ? update(get(selectedCellAtom)) : update
-  );
-});
-*/
-
 export type CloudLogFilters = {
   type: "webhook" | "functions" | "audit" | "build";
   timeRange:
@@ -150,7 +116,7 @@ export type CloudLogFilters = {
   auditRowId?: string;
   buildLogExpanded?: number;
 };
-
+/** Store cloud log modal filters in URL */
 export const cloudLogFiltersAtom = atomWithHash<CloudLogFilters>(
   "cloudLogFilters",
   {

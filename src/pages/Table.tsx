@@ -21,13 +21,19 @@ import TableSourceFirestore from "@src/sources/TableSourceFirestore";
 import {
   tableScope,
   tableIdAtom,
-  // tableSettingsAtom,
   tableSchemaAtom,
+  columnModalAtom,
+  tableModalAtom,
 } from "@src/atoms/tableScope";
+import useBeforeUnload from "@src/hooks/useBeforeUnload";
 import ActionParamsProvider from "@src/components/fields/Action/FormDialog/Provider";
 
 function TablePage() {
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
+
+  // Warn user about leaving when they have a table modal open
+  useBeforeUnload(columnModalAtom, tableScope);
+  useBeforeUnload(tableModalAtom, tableScope);
 
   // A ref to the data grid. Contains data grid functions
   const dataGridRef = useRef<DataGridHandle | null>(null);
