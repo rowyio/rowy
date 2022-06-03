@@ -3,7 +3,7 @@ import { ISideDrawerFieldProps } from "@src/components/fields/types";
 
 import { ButtonBase, FormControlLabel, Switch } from "@mui/material";
 
-import { fieldSx } from "@src/components/SideDrawer/Form/utils";
+import { fieldSx } from "@src/components/SideDrawer/utils";
 
 export default function Checkbox({
   column,

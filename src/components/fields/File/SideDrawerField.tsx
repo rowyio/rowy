@@ -21,7 +21,7 @@ import { FileIcon } from ".";
 import CircularProgressOptical from "@src/components/CircularProgressOptical";
 import { DATE_TIME_FORMAT } from "@src/constants/dates";
 
-import { fieldSx } from "@src/components/SideDrawer/Form/utils";
+import { fieldSx } from "@src/components/SideDrawer/utils";
 import { globalScope, confirmDialogAtom } from "@src/atoms/globalScope";
 import { tableScope, updateFieldAtom } from "@src/atoms/tableScope";
 import { FileValue } from "@src/types/table";

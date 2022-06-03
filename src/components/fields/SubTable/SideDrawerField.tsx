@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { Box, Stack, IconButton } from "@mui/material";
 import LaunchIcon from "@mui/icons-material/Launch";
 
-import { fieldSx } from "@src/components/SideDrawer/Form/utils";
+import { fieldSx } from "@src/components/SideDrawer/utils";
 import { useSubTableData } from "./utils";
 
 export default function SubTable({

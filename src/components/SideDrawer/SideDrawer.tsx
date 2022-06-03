@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import clsx from "clsx";
 import { useAtom } from "jotai";
-import { findIndex } from "lodash-es";
+import { find, findIndex } from "lodash-es";
 import { ErrorBoundary } from "react-error-boundary";
 import { DataGridHandle } from "react-data-grid";
 
@@ -12,6 +12,7 @@ import ChevronDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 import ErrorFallback from "@src/components/ErrorFallback";
 import StyledDrawer from "./StyledDrawer";
+import SideDrawerFields from "./SideDrawerFields";
 // import Form from "./Form";
 
 import { globalScope, userSettingsAtom } from "@src/atoms/globalScope";
@@ -44,6 +45,7 @@ export default function SideDrawer({
 
   const [cell, setCell] = useAtom(selectedCellAtom, tableScope);
   const [open, setOpen] = useAtom(sideDrawerOpenAtom, tableScope);
+  const selectedRow = find(tableRows, ["_rowy_ref.path", cell?.path]);
   const selectedCellRowIndex = findIndex(tableRows, [
     "_rowy_ref.path",
     cell?.path,
@@ -109,17 +111,9 @@ export default function SideDrawer({
     >
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <div className="sidedrawer-contents">
-          {cell?.path}
-          {/* {open &&
-              (urlDocState.doc || cell) &&
-              !isEmpty(tableState?.columns) && (
-                <Form
-                  key={`${cell?.row}-${urlDocState.path}`}
-                  values={
-                    urlDocState.doc ?? tableState?.rows[cell?.row ?? -1] ?? {}
-                  }
-                />
-              )} */}
+          {open && cell && selectedRow && (
+            <SideDrawerFields key={cell.path} row={selectedRow} />
+          )}
         </div>
       </ErrorBoundary>
 

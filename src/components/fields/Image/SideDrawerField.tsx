@@ -25,7 +25,7 @@ import CircularProgressOptical from "@src/components/CircularProgressOptical";
 import { globalScope, confirmDialogAtom } from "@src/atoms/globalScope";
 import { tableScope, updateFieldAtom } from "@src/atoms/tableScope";
 import { IMAGE_MIME_TYPES } from ".";
-import { fieldSx } from "@src/components/SideDrawer/Form/utils";
+import { fieldSx } from "@src/components/SideDrawer/utils";
 
 const imgSx = {
   position: "relative",

@@ -1,25 +1,25 @@
-import { Control } from "react-hook-form";
+// import { Control } from "react-hook-form";
 import { colord } from "colord";
 import type { SystemStyleObject, Theme } from "@mui/system";
 
-import { FieldType } from "@src/constants/fields";
-import { TableRowRef } from "@src/types/table";
+// import { FieldType } from "@src/constants/fields";
+// import { TableRowRef } from "@src/types/table";
 
-export interface IFieldProps {
-  control: Control;
-  name: string;
-  docRef: TableRowRef;
-  editable?: boolean;
-}
+// export interface ISideDrawerFieldProps {
+//   control: Control;
+//   name: string;
+//   docRef: TableRowRef;
+//   editable?: boolean;
+// }
 
-export type Values = Record<string, any>;
-export type Field = {
-  type?: FieldType;
-  name: string;
-  label?: string;
-  [key: string]: any;
-};
-export type Fields = (Field | ((values: Values) => Field))[];
+// export type Values = Record<string, any>;
+// export type Field = {
+//   type?: FieldType;
+//   name: string;
+//   label?: string;
+//   [key: string]: any;
+// };
+// export type Fields = (Field | ((values: Values) => Field))[];
 
 export const fieldSx: SystemStyleObject<Theme> = {
   borderRadius: 1,

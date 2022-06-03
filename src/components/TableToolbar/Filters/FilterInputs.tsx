@@ -6,7 +6,7 @@ import { Grid, MenuItem, TextField, InputLabel } from "@mui/material";
 import MultiSelect from "@rowy/multiselect";
 import ColumnSelect from "@src/components/TableToolbar/ColumnSelect";
 import FormAutosave from "@src/components/ColumnModals/ColumnConfigModal/FormAutosave";
-import FieldSkeleton from "@src/components/SideDrawer/Form/FieldSkeleton";
+import FieldSkeleton from "@src/components/SideDrawer/FieldSkeleton";
 
 import type { useFilterInputs } from "./useFilterInputs";
 import { getFieldType, getFieldProp } from "@src/components/fields";

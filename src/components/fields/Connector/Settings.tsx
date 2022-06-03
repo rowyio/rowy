@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 
 import SteppedAccordion from "@src/components/SteppedAccordion";
-import FieldSkeleton from "@src/components/SideDrawer/Form/FieldSkeleton";
+import FieldSkeleton from "@src/components/SideDrawer/FieldSkeleton";
 import CodeEditorHelper from "@src/components/CodeEditor/CodeEditorHelper";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 /* eslint-disable import/no-webpack-loader-syntax */

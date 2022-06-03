@@ -2,7 +2,7 @@ import { Controller } from "react-hook-form";
 import { ISideDrawerFieldProps } from "@src/components/fields/types";
 
 import { Box } from "@mui/material";
-import { fieldSx } from "@src/components/SideDrawer/Form/utils";
+import { fieldSx } from "@src/components/SideDrawer/utils";
 import { getDurationString } from "./utils";
 
 export default function Duration({ column, control }: ISideDrawerFieldProps) {

@@ -3,8 +3,8 @@ import { FormatterProps, EditorProps } from "react-data-grid";
 import { Control, UseFormReturn } from "react-hook-form";
 import { PopoverProps } from "@mui/material";
 import { WhereFilterOp } from "firebase/firestore";
-import { TableRow, TableRowRef } from "@src/types/table";
-// import { SelectedCell } from "@src/atoms/ContextMenu";
+import { ColumnConfig, TableRow, TableRowRef } from "@src/types/table";
+import { selectedCellAtom } from "@src/atoms/tableScope";
 import { IContextMenuActions } from "./_BasicCell/BasicCellContextMenuActions";
 
 export { FieldType };
@@ -21,7 +21,7 @@ export interface IFieldConfig {
   description?: string;
   setupGuideLink?: string;
   contextMenuActions?: (
-    selectedCell: any, // FIXME: SelectedCell,
+    selectedCell: ReturnType<typeof selectedCellAtom["read"]>,
     reset: () => Promise<void>
   ) => IContextMenuActions[];
   TableCell: React.ComponentType<FormatterProps<TableRow>>;
@@ -62,10 +62,15 @@ export interface IPopoverCellProps extends IPopoverInlineCellProps {
 }
 
 export interface ISideDrawerFieldProps {
-  column: FormatterProps<TableRow>["column"] & { config?: Record<string, any> };
+  column: FormatterProps<TableRow>["column"] & ColumnConfig;
   control: Control;
   docRef: TableRowRef;
   disabled: boolean;
+
+  value: any;
+  onSubmit: (value: any) => void;
+
+  /** @deprecated */
   useFormMethods: UseFormReturn;
 }
 

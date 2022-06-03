@@ -2,7 +2,7 @@ import { Controller } from "react-hook-form";
 import { ISideDrawerFieldProps } from "@src/components/fields/types";
 
 import { Slider as MuiSlider, Stack, Typography } from "@mui/material";
-import { fieldSx } from "@src/components/SideDrawer/Form/utils";
+import { fieldSx } from "@src/components/SideDrawer/utils";
 
 export default function Slider({
   control,

@@ -3,7 +3,7 @@ import { IExtensionModalStepProps } from "./ExtensionModal";
 import useStateRef from "react-usestateref";
 
 import { Typography } from "@mui/material";
-import FieldSkeleton from "@src/components/SideDrawer/Form/FieldSkeleton";
+import FieldSkeleton from "@src/components/SideDrawer/FieldSkeleton";
 import CodeEditorHelper from "@src/components/CodeEditor/CodeEditorHelper";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
 

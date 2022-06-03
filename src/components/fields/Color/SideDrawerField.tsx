@@ -6,7 +6,7 @@ import "react-color-palette/lib/css/styles.css";
 
 import { ButtonBase, Box, Collapse } from "@mui/material";
 
-import { fieldSx } from "@src/components/SideDrawer/Form/utils";
+import { fieldSx } from "@src/components/SideDrawer/utils";
 
 export default function Color({
   column,

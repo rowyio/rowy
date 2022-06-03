@@ -1,7 +1,7 @@
 import { ISideDrawerFieldProps } from "@src/components/fields/types";
 
 import { Box } from "@mui/material";
-import { fieldSx } from "@src/components/SideDrawer/Form/utils";
+import { fieldSx } from "@src/components/SideDrawer/utils";
 
 export default function Id({ docRef }: ISideDrawerFieldProps) {
   return (

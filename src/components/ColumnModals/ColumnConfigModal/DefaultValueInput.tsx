@@ -7,7 +7,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import { Typography, TextField, MenuItem, ListItemText } from "@mui/material";
 
 import { getFieldProp } from "@src/components/fields";
-import FieldSkeleton from "@src/components/SideDrawer/Form/FieldSkeleton";
+import FieldSkeleton from "@src/components/SideDrawer/FieldSkeleton";
 import CodeEditorHelper from "@src/components/CodeEditor/CodeEditorHelper";
 import FormAutosave from "./FormAutosave";
 import { FieldType } from "@src/constants/fields";

@@ -12,7 +12,7 @@ import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 
-import { fieldSx } from "@src/components/SideDrawer/Form/utils";
+import { fieldSx } from "@src/components/SideDrawer/utils";
 import { globalScope, jsonEditorAtom } from "@src/atoms/globalScope";
 
 const isValidJson = (val: any) => {

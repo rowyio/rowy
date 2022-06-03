@@ -94,7 +94,7 @@ export function ColumnItem({
     <Stack
       direction="row"
       alignItems="center"
-      gap={1}
+      spacing={1}
       {...props}
       sx={[
         { color: "text.secondary", width: "100%" },

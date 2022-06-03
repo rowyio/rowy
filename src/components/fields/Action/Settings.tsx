@@ -26,7 +26,7 @@ import UndoIcon from "@mui/icons-material/Undo";
 
 import SteppedAccordion from "@src/components/SteppedAccordion";
 import MultiSelect from "@rowy/multiselect";
-import FieldSkeleton from "@src/components/SideDrawer/Form/FieldSkeleton";
+import FieldSkeleton from "@src/components/SideDrawer/FieldSkeleton";
 import CodeEditorHelper from "@src/components/CodeEditor/CodeEditorHelper";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 import FormFieldSnippets from "./FormFieldSnippets";
