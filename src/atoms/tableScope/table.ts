@@ -69,7 +69,9 @@ export const tableFiltersAtom = atom<TableFilter[]>([]);
 export const tableOrdersAtom = atom<TableOrder[]>([]);
 
 /** Store current page in URL */
-export const tablePageHashAtom = atomWithHash("page", 0);
+export const tablePageHashAtom = atomWithHash("page", 0, {
+  replaceState: true,
+});
 /**
  * Set the page for the table query. Stops updating if we’ve loaded all rows.
  */

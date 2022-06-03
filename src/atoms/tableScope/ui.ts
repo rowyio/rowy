@@ -122,5 +122,6 @@ export const cloudLogFiltersAtom = atomWithHash<CloudLogFilters>(
   {
     type: "build",
     timeRange: { type: "days", value: 7 },
-  }
+  },
+  { replaceState: true }
 );
