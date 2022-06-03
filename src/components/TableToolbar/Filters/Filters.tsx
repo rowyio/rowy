@@ -25,7 +25,6 @@ import {
   userSettingsAtom,
   updateUserSettingsAtom,
   userRolesAtom,
-  tableFiltersPopoverAtom,
 } from "@src/atoms/globalScope";
 import {
   tableScope,
@@ -35,6 +34,7 @@ import {
   tableFiltersAtom,
   tableOrdersAtom,
   updateTableSchemaAtom,
+  tableFiltersPopoverAtom,
 } from "@src/atoms/tableScope";
 import { useFilterInputs, INITIAL_QUERY } from "./useFilterInputs";
 import { analytics, logEvent } from "@src/analytics";
@@ -61,7 +61,7 @@ export default function Filters() {
   const [localFilters, setLocalFilters] = useAtom(tableFiltersAtom, tableScope);
   const [, setTableOrders] = useAtom(tableOrdersAtom, tableScope);
   const [updateTableSchema] = useAtom(updateTableSchemaAtom, tableScope);
-  const [{ defaultQuery }] = useAtom(tableFiltersPopoverAtom, globalScope);
+  const [{ defaultQuery }] = useAtom(tableFiltersPopoverAtom, tableScope);
 
   const tableFilterInputs = useFilterInputs(tableColumnsOrdered);
   const setTableQuery = tableFilterInputs.setQuery;

@@ -21,10 +21,13 @@ import ColumnHeaderSort from "./ColumnHeaderSort";
 import {
   globalScope,
   userRolesAtom,
-  columnMenuAtom,
   altPressAtom,
 } from "@src/atoms/globalScope";
-import { tableScope, updateColumnAtom } from "@src/atoms/tableScope";
+import {
+  tableScope,
+  updateColumnAtom,
+  columnMenuAtom,
+} from "@src/atoms/tableScope";
 import { FieldType } from "@src/constants/fields";
 import { getFieldProp } from "@src/components/fields";
 import { COLUMN_HEADER_HEIGHT } from "@src/components/Table/Column";
@@ -54,7 +57,7 @@ export default function DraggableHeaderRenderer({
 }: IDraggableHeaderRendererProps) {
   const [userRoles] = useAtom(userRolesAtom, globalScope);
   const updateColumn = useSetAtom(updateColumnAtom, tableScope);
-  const openColumnMenu = useSetAtom(columnMenuAtom, globalScope);
+  const openColumnMenu = useSetAtom(columnMenuAtom, tableScope);
   const [altPress] = useAtom(altPressAtom, globalScope);
 
   const [{ isDragging }, dragRef] = useDrag({

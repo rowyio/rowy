@@ -8,15 +8,12 @@ import { TextField, Typography, Button } from "@mui/material";
 import Modal from "@src/components/Modal";
 import FieldsDropdown from "./FieldsDropdown";
 
-import {
-  globalScope,
-  columnModalAtom,
-  updateTableAtom,
-} from "@src/atoms/globalScope";
+import { globalScope, updateTableAtom } from "@src/atoms/globalScope";
 import {
   tableScope,
   tableSettingsAtom,
   addColumnAtom,
+  columnModalAtom,
 } from "@src/atoms/tableScope";
 import { FieldType } from "@src/constants/fields";
 import { getFieldProp } from "@src/components/fields";
@@ -32,10 +29,10 @@ const AUDIT_FIELD_TYPES = [
 export default function NewColumnModal({
   handleClose,
 }: Pick<IColumnModalProps, "handleClose">) {
-  const [columnModal, setColumnModal] = useAtom(columnModalAtom, globalScope);
   const [updateTable] = useAtom(updateTableAtom, globalScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const addColumn = useSetAtom(addColumnAtom, tableScope);
+  const [columnModal, setColumnModal] = useAtom(columnModalAtom, tableScope);
 
   const [columnLabel, setColumnLabel] = useState("");
   const [fieldKey, setFieldKey] = useState("");

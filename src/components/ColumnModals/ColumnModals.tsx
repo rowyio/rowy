@@ -5,8 +5,11 @@ import NameChangeModal from "./NameChangeModal";
 import TypeChangeModal from "./TypeChangeModal";
 import ColumnConfigModal from "./ColumnConfigModal";
 
-import { globalScope, columnModalAtom } from "@src/atoms/globalScope";
-import { tableScope, tableSchemaAtom } from "@src/atoms/tableScope";
+import {
+  tableScope,
+  tableSchemaAtom,
+  columnModalAtom,
+} from "@src/atoms/tableScope";
 import { ColumnConfig } from "@src/types/table";
 
 export interface IColumnModalProps {
@@ -15,8 +18,8 @@ export interface IColumnModalProps {
 }
 
 export default function ColumnModals() {
-  const [columnModal, setColumnModal] = useAtom(columnModalAtom, globalScope);
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
+  const [columnModal, setColumnModal] = useAtom(columnModalAtom, tableScope);
 
   if (!columnModal) return null;
 

@@ -14,8 +14,11 @@ import CircularProgressOptical from "@src/components/CircularProgressOptical";
 import { isTargetInsideBox } from "@src/utils/ui";
 import { useSnackLogContext } from "@src/contexts/SnackLogContext";
 import useBuildLogs from "./useBuildLogs";
-import { globalScope, tableModalAtom } from "@src/atoms/globalScope";
-import { cloudLogFiltersAtom } from "@src/components/TableToolbar/CloudLogs/utils";
+import {
+  tableScope,
+  tableModalAtom,
+  cloudLogFiltersAtom,
+} from "@src/atoms/tableScope";
 
 export interface IBuildLogsSnackProps {
   onClose: () => void;
@@ -28,8 +31,8 @@ export default function BuildLogsSnack({
 }: IBuildLogsSnackProps) {
   const snackLogContext = useSnackLogContext();
   const { latestLog } = useBuildLogs();
-  const setModal = useSetAtom(tableModalAtom, globalScope);
-  const setCloudLogFilters = useSetAtom(cloudLogFiltersAtom, globalScope);
+  const setModal = useSetAtom(tableModalAtom, tableScope);
+  const setCloudLogFilters = useSetAtom(cloudLogFiltersAtom, tableScope);
   const latestActiveLog =
     latestLog?.startTimeStamp > snackLogContext.latestBuildTimestamp - 5000 ||
     latestLog?.startTimeStamp > snackLogContext.latestBuildTimestamp + 5000

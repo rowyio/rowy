@@ -6,7 +6,7 @@ import FilterIcon from "@mui/icons-material/FilterList";
 
 import ButtonWithStatus from "@src/components/ButtonWithStatus";
 
-import { globalScope, tableFiltersPopoverAtom } from "@src/atoms/globalScope";
+import { tableScope, tableFiltersPopoverAtom } from "@src/atoms/tableScope";
 import type { TableFilter } from "@src/types/table";
 import type { useFilterInputs } from "./useFilterInputs";
 
@@ -32,7 +32,7 @@ export default function FiltersPopover({
 }: IFiltersPopoverProps) {
   const [{ open }, setTableFiltersPopoverState] = useAtom(
     tableFiltersPopoverAtom,
-    globalScope
+    tableScope
   );
 
   const anchorEl = useRef<HTMLButtonElement>(null);

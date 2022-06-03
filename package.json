@@ -30,7 +30,7 @@
     "file-saver": "^2.0.5",
     "firebase": "^9.6.11",
     "firebaseui": "^6.0.1",
-    "jotai": "^1.6.5",
+    "jotai": "^1.7.1",
     "json-stable-stringify-without-jsonify": "^1.0.1",
     "json2csv": "^5.0.7",
     "jszip": "^3.10.0",

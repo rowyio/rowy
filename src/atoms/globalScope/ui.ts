@@ -1,13 +1,8 @@
 import { atom } from "jotai";
-import { atomWithStorage, atomWithHash } from "jotai/utils";
+import { atomWithStorage } from "jotai/utils";
 
-import type { DialogProps, ButtonProps, PopoverProps } from "@mui/material";
-import type {
-  TableSettings,
-  TableSchema,
-  ColumnConfig,
-  TableFilter,
-} from "@src/types/table";
+import type { DialogProps, ButtonProps } from "@mui/material";
+import type { TableSettings, TableSchema } from "@src/types/table";
 import { getTableSchemaAtom } from "./project";
 
 /**
@@ -164,91 +159,6 @@ export const tableDescriptionDismissedAtom = atomWithStorage<string[]>(
   "__ROWY__TABLE_DESCRIPTION_DISMISSED",
   []
 );
-
-/**
- * Open table column menu. Set to `null` to close.
- *
- * @example Basic usage:
- * ```
- * const openColumnMenu = useSetAtom(columnMenuAtom, globalScope);
- * openColumnMenu({ column, anchorEl: ... });
- * ```
- *
- * @example Close:
- * ```
- * openColumnMenu(null)
- * ```
- */
-export const columnMenuAtom = atom<{
-  column: ColumnConfig;
-  anchorEl: PopoverProps["anchorEl"];
-} | null>(null);
-
-/**
- * Opens a table column modal. Set to `null` to close.
- * Modals: new column, name change, type change, column settings.
- *
- * @example Basic usage:
- * ```
- * const openColumnModal = useSetAtom(columnModalAtom, globalScope);
- * openColumnModal({ type: "...", column });
- * ```
- *
- * @example Close:
- * ```
- * openColumnModal(null)
- * ```
- */
-export const columnModalAtom = atomWithHash<{
-  type: "new" | "name" | "type" | "config";
-  columnKey?: string;
-  index?: number;
-} | null>("columnModal", null, { replaceState: true });
-
-export type TableFiltersPopoverState = {
-  open: boolean;
-  defaultQuery?: TableFilter;
-};
-/**
- * Store table filter popover state.
- * Calling the set function resets props.
- *
- * @example Basic usage:
- * ```
- * const openTableFiltersPopover = useSetAtom(tableFiltersPopoverAtom, globalScope);
- * openTableFiltersPopover({ query: ... });
- * ```
- *
- * @example Close:
- * ```
- * openTableFiltersPopover({ open: false })
- * ```
- */
-export const tableFiltersPopoverAtom = atom(
-  { open: false } as TableFiltersPopoverState,
-  (_, set, update?: Partial<TableFiltersPopoverState>) => {
-    set(tableFiltersPopoverAtom, { open: true, ...update });
-  }
-);
-
-/**
- * Opens a table modal. Set to `null` to close.
- * Modals: cloud logs, extensions, webhooks, export.
- *
- * @example Basic usage:
- * ```
- * const openTableModal = useSetAtom(tableModalAtom, globalScope);
- * openTableModal("...");
- * ```
- *
- * @example Close:
- * ```
- * openTableModal(null)
- * ```
- */
-export const tableModalAtom = atomWithHash<
-  "cloudLogs" | "extensions" | "webhooks" | "export" | null
->("tableModal", null, { replaceState: true });
 
 /** Store current JSON editor view */
 export const jsonEditorAtom = atomWithStorage<"tree" | "code">(

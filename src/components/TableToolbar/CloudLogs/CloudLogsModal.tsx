@@ -34,8 +34,9 @@ import {
   tableScope,
   tableSettingsAtom,
   tableSchemaAtom,
+  cloudLogFiltersAtom,
 } from "@src/atoms/tableScope";
-import { cloudLogFiltersAtom, cloudLogFetcher } from "./utils";
+import { cloudLogFetcher } from "./utils";
 
 export default function CloudLogsModal(props: IModalProps) {
   const [projectId] = useAtom(projectIdAtom, globalScope);
@@ -48,7 +49,7 @@ export default function CloudLogsModal(props: IModalProps) {
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const [cloudLogFilters, setCloudLogFilters] = useAtom(
     cloudLogFiltersAtom,
-    globalScope
+    tableScope
   );
 
   const { data, mutate, isValidating } = useSWR(

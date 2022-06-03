@@ -46,6 +46,7 @@ export default function NavTableSection({
         <ArrowDropDownIcon
           sx={{
             color: "action.active",
+            mr: -0.5,
             transform: open ? "rotate(180deg)" : "rotate(0)",
             transition: (theme) => theme.transitions.create("transform"),
           }}

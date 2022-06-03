@@ -23,8 +23,7 @@ import CloudLogSubheader from "@src/components/TableToolbar/CloudLogs/CloudLogSu
 
 import { DATE_TIME_FORMAT } from "@src/constants/dates";
 import useBuildLogs from "./useBuildLogs";
-import { cloudLogFiltersAtom } from "@src/components/TableToolbar/CloudLogs/utils";
-import { globalScope } from "@src/atoms/globalScope";
+import { tableScope, cloudLogFiltersAtom } from "@src/atoms/tableScope";
 
 const Accordion = styled(MuiAccordion)(({ theme }) => ({
   background: "none",
@@ -108,7 +107,7 @@ export default function BuildLogs(props: Partial<ListProps>) {
   const { logs, latestStatus } = useBuildLogs();
   const [cloudLogFilters, setCloudLogFilters] = useAtom(
     cloudLogFiltersAtom,
-    globalScope
+    tableScope
   );
 
   if (!latestStatus)

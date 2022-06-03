@@ -4,11 +4,11 @@ import { Grid, Stack, Typography, Button, Divider } from "@mui/material";
 import { Import as ImportIcon } from "@src/assets/icons";
 import { AddColumn as AddColumnIcon } from "@src/assets/icons";
 
-import { globalScope, columnModalAtom } from "@src/atoms/globalScope";
 import {
   tableScope,
   tableSettingsAtom,
   tableRowsAtom,
+  columnModalAtom,
 } from "@src/atoms/tableScope";
 import { APP_BAR_HEIGHT } from "@src/layouts/Navigation";
 
@@ -18,7 +18,7 @@ import { APP_BAR_HEIGHT } from "@src/layouts/Navigation";
 // import ImportCSV from "@src/components/TableToolbar/ImportCsv";
 
 export default function EmptyTable() {
-  const openColumnModal = useSetAtom(columnModalAtom, globalScope);
+  const openColumnModal = useSetAtom(columnModalAtom, tableScope);
 
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [tableRows] = useAtom(tableRowsAtom, tableScope);

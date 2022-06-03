@@ -22,12 +22,13 @@ import Modal from "@src/components/Modal";
 import ExportDetails from "./ModalContentsExport";
 import DownloadDetails from "./ModalContentsDownload";
 
-import { globalScope, tableModalAtom } from "@src/atoms/globalScope";
+import { globalScope } from "@src/atoms/globalScope";
 import {
   tableScope,
   tableSettingsAtom,
   tableFiltersAtom,
   tableOrdersAtom,
+  tableModalAtom,
 } from "@src/atoms/tableScope";
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
 import { TableRow } from "@src/types/table";
@@ -39,7 +40,7 @@ export interface IExportModalContentsProps {
 
 // TODO: Generalize and remove Firestore dependencies
 export default function Export() {
-  const [modal, setModal] = useAtom(tableModalAtom, globalScope);
+  const [modal, setModal] = useAtom(tableModalAtom, tableScope);
   const open = modal === "export";
   const setOpen = (open: boolean) => setModal(open ? "export" : null);
   const [mode, setMode] = useState<"Export" | "Download">("Export");

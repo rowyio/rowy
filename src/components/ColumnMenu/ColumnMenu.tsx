@@ -33,9 +33,6 @@ import {
   userSettingsAtom,
   updateUserSettingsAtom,
   confirmDialogAtom,
-  columnMenuAtom,
-  columnModalAtom,
-  tableFiltersPopoverAtom,
   altPressAtom,
 } from "@src/atoms/globalScope";
 import {
@@ -44,6 +41,9 @@ import {
   updateColumnAtom,
   deleteColumnAtom,
   tableOrdersAtom,
+  columnMenuAtom,
+  columnModalAtom,
+  tableFiltersPopoverAtom,
 } from "@src/atoms/tableScope";
 import { FieldType } from "@src/constants/fields";
 import { getFieldProp } from "@src/components/fields";
@@ -69,16 +69,16 @@ export interface IMenuModalProps {
 export default function ColumnMenu() {
   const [userSettings] = useAtom(userSettingsAtom, globalScope);
   const [updateUserSettings] = useAtom(updateUserSettingsAtom, globalScope);
-  const [columnMenu, setColumnMenu] = useAtom(columnMenuAtom, globalScope);
-  const openColumnModal = useSetAtom(columnModalAtom, globalScope);
   const confirm = useSetAtom(confirmDialogAtom, globalScope);
   const [tableId] = useAtom(tableIdAtom, tableScope);
   const updateColumn = useSetAtom(updateColumnAtom, tableScope);
   const deleteColumn = useSetAtom(deleteColumnAtom, tableScope);
   const [tableOrders, setTableOrders] = useAtom(tableOrdersAtom, tableScope);
+  const [columnMenu, setColumnMenu] = useAtom(columnMenuAtom, tableScope);
+  const openColumnModal = useSetAtom(columnModalAtom, tableScope);
   const openTableFiltersPopover = useSetAtom(
     tableFiltersPopoverAtom,
-    globalScope
+    tableScope
   );
   const [altPress] = useAtom(altPressAtom, globalScope);
 

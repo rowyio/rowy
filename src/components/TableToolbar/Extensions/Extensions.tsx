@@ -17,13 +17,13 @@ import {
   rowyRunAtom,
   rowyRunModalAtom,
   confirmDialogAtom,
-  tableModalAtom,
 } from "@src/atoms/globalScope";
 import {
   tableScope,
   tableSettingsAtom,
   tableSchemaAtom,
   updateTableSchemaAtom,
+  tableModalAtom,
 } from "@src/atoms/tableScope";
 import { useSnackLogContext } from "@src/contexts/SnackLogContext";
 
@@ -38,10 +38,10 @@ export default function Extensions() {
   const [rowyRun] = useAtom(rowyRunAtom, globalScope);
   const openRowyRunModal = useSetAtom(rowyRunModalAtom, globalScope);
   const confirm = useSetAtom(confirmDialogAtom, globalScope);
-  const [modal, setModal] = useAtom(tableModalAtom, globalScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const [updateTableSchema] = useAtom(updateTableSchemaAtom, tableScope);
+  const [modal, setModal] = useAtom(tableModalAtom, tableScope);
 
   const currentExtensionObjects = (tableSchema.extensionObjects ??
     []) as IExtension[];

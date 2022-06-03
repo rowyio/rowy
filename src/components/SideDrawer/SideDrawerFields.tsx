@@ -9,7 +9,6 @@ import {
   globalScope,
   userRolesAtom,
   userSettingsAtom,
-  sideDrawerShowHiddenFieldsAtom,
 } from "@src/atoms/globalScope";
 import {
   tableScope,
@@ -17,6 +16,7 @@ import {
   tableSettingsAtom,
   tableColumnsOrderedAtom,
   selectedCellAtom,
+  sideDrawerShowHiddenFieldsAtom,
 } from "@src/atoms/tableScope";
 import { formatSubTableName } from "@src/utils/table";
 import { getFieldProp } from "@src/components/fields";
@@ -36,7 +36,7 @@ export default function SideDrawerFields({ row }: ISideDrawerFieldsProps) {
   const [selectedCell] = useAtom(selectedCellAtom, tableScope);
   const [showHiddenFields, setShowHiddenFields] = useAtom(
     sideDrawerShowHiddenFieldsAtom,
-    globalScope
+    tableScope
   );
 
   const userDocHiddenFields =

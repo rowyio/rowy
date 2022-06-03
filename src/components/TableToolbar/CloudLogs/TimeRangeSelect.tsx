@@ -5,7 +5,7 @@ import {
   MenuItem,
 } from "@mui/material";
 
-import type { CloudLogFilters } from "./utils";
+import type { CloudLogFilters } from "@src/atoms/tableScope";
 
 export interface ITimeRangeSelectProps
   extends Partial<Omit<FilledTextFieldProps, "value" | "onChange">> {

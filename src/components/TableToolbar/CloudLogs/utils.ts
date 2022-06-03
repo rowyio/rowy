@@ -1,27 +1,6 @@
-import { atomWithHash } from "jotai/utils";
 import { sub } from "date-fns";
-
 import { rowyRunAtom } from "@src/atoms/globalScope";
-import { SEVERITY_LEVELS } from "./CloudLogSeverityIcon";
-
-export type CloudLogFilters = {
-  type: "webhook" | "functions" | "audit" | "build";
-  timeRange:
-    | { type: "seconds" | "minutes" | "hours" | "days"; value: number }
-    | { type: "range"; start: Date; end: Date };
-  severity?: Array<keyof typeof SEVERITY_LEVELS>;
-  webhook?: string[];
-  auditRowId?: string;
-  buildLogExpanded?: number;
-};
-
-export const cloudLogFiltersAtom = atomWithHash<CloudLogFilters>(
-  "cloudLogFilters",
-  {
-    type: "build",
-    timeRange: { type: "days", value: 7 },
-  }
-);
+import { CloudLogFilters } from "@src/atoms/tableScope";
 
 export const cloudLogFetcher = (
   endpointRoot: string,

@@ -8,13 +8,13 @@ import {
   globalScope,
   projectSettingsAtom,
   rowyRunModalAtom,
-  tableModalAtom,
 } from "@src/atoms/globalScope";
+import { tableScope, tableModalAtom } from "@src/atoms/tableScope";
 
 export default function CloudLogs() {
   const [projectSettings] = useAtom(projectSettingsAtom, globalScope);
   const openRowyRunModal = useSetAtom(rowyRunModalAtom, globalScope);
-  const [modal, setModal] = useAtom(tableModalAtom, globalScope);
+  const [modal, setModal] = useAtom(tableModalAtom, tableScope);
 
   const open = modal === "cloudLogs";
   const setOpen = (open: boolean) => setModal(open ? "cloudLogs" : null);
