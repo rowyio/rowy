@@ -128,6 +128,9 @@ export default function HiddenFields() {
         value={hiddenFields ?? []}
         onChange={setHiddenFields}
         onClose={handleSave}
+        clearText="Show all"
+        selectAllText="Hide all"
+        doneText="Apply"
       />
     </>
   );

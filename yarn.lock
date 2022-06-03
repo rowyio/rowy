@@ -3250,10 +3250,10 @@
     use-debounce "^8.0.0"
     yup "^0.32.9"
 
-"@rowy/multiselect@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@rowy/multiselect/-/multiselect-0.3.0.tgz#0b8f0f833113499b514c1d5314cb35184bfee162"
-  integrity sha512-0UseM8j+7qYwXTm/2xKhHvaucOnVNL/5o13J1v+Hgf1EqcKcVrYZg6QYauRC+AscHMEf8LstzY6u85OB4/UD9g==
+"@rowy/multiselect@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@rowy/multiselect/-/multiselect-0.4.0.tgz#0fe8b19e294a7c458f1610548f04ad36d00c290c"
+  integrity sha512-I441p29hwA99N9nlz1nckZqd7Br3/0vaIBsdR+UfCHUieQXvh19Awup1xOAi46i/ofKSWuYslhXncvGkyuEeIg==
 
 "@rushstack/eslint-patch@^1.1.0":
   version "1.1.1"
