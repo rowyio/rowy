@@ -38,9 +38,7 @@ export default function ProjectSettingsPage() {
   );
   const updateProjectSettings = useDebouncedCallback((data) => {
     if (_updateProjectSettingsDoc) {
-      _updateProjectSettingsDoc(data).then(() =>
-        enqueueSnackbar("Saved", { variant: "success" })
-      );
+      _updateProjectSettingsDoc(data).then(() => enqueueSnackbar("Saved"));
     } else {
       enqueueSnackbar("Could not update project settings", {
         variant: "error",

@@ -50,16 +50,20 @@ export default function Breadcrumbs({ sx = [], ...props }: BreadcrumbsProps) {
 
   return (
     <MuiBreadcrumbs
-      separator={<ArrowRightIcon />}
-      aria-label="Sub-table breadcrumbs"
+      aria-label="Table breadcrumbs"
       {...props}
       sx={[
         {
+          fontSize: (theme) => theme.typography.h6.fontSize,
+          fontWeight: "medium",
+          color: "text.disabled",
+
           "& .MuiBreadcrumbs-ol": {
             userSelect: "none",
             flexWrap: "nowrap",
             whiteSpace: "nowrap",
           },
+          "& .MuiBreadcrumbs-li": { display: "flex" },
         },
         ...(Array.isArray(sx) ? sx : [sx]),
       ]}

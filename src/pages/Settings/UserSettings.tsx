@@ -31,9 +31,7 @@ export default function UserSettingsPage() {
   const [_updateUserSettings] = useAtom(updateUserSettingsAtom, globalScope);
   const updateSettings = useDebouncedCallback((data) => {
     if (_updateUserSettings) {
-      _updateUserSettings(data).then(() =>
-        enqueueSnackbar("Saved", { variant: "success" })
-      );
+      _updateUserSettings(data).then(() => enqueueSnackbar("Saved"));
     } else {
       enqueueSnackbar("Could not update project settings", {
         variant: "error",

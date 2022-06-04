@@ -93,14 +93,6 @@ export const components = (theme: Theme): ThemeOptions => {
             padding: `${4 / 16}em ${8 / 16}em`,
           },
 
-          ".chrome-picker": {
-            colorScheme: "light",
-            boxShadow: theme.shadows[1] + " !important",
-            borderRadius: theme.shape.borderRadius + "px !important",
-
-            "& input, & label": theme.typography.body2,
-          },
-
           ".visually-hidden": {
             position: "absolute",
             clip: "rect(1px, 1px, 1px, 1px)",
@@ -109,6 +101,71 @@ export const components = (theme: Theme): ThemeOptions => {
             width: 1,
             padding: 0,
             border: 0,
+          },
+
+          ".rcp": {
+            backgroundColor: "transparent",
+            borderRadius: (theme.shape.borderRadius as number) * 2,
+            border: `1px solid ${theme.palette.divider}`,
+            boxSizing: "border-box",
+
+            "--rcp-background": "transparent",
+            "--rcp-input-text": theme.palette.text.primary,
+            "--rcp-input-border": theme.palette.divider,
+            "--rcp-input-label": theme.palette.text.primary,
+
+            "& .rcp-saturation": {
+              borderTopLeftRadius: (theme.shape.borderRadius as number) * 2 - 1,
+              borderTopRightRadius:
+                (theme.shape.borderRadius as number) * 2 - 1,
+            },
+            "& .rcp-body": {
+              padding: theme.spacing(2),
+            },
+            "& .rcp-fields": {
+              gridTemplateColumns: `repeat(auto-fit, minmax(${theme.spacing(
+                20
+              )}, 1fr))`,
+            },
+            "& .rcp-fields-element": {
+              flexDirection: "column-reverse",
+              alignItems: "flex-start",
+              gap: theme.spacing(0.25),
+            },
+            "& .rcp-fields-element-label": {
+              ...theme.typography.button,
+              paddingLeft: theme.spacing(0.25),
+            },
+            "& .rcp-fields-element-input": {
+              ...theme.typography.body2,
+              textAlign: "left",
+              fontVariantNumeric: "tabular-nums",
+
+              backgroundColor: theme.palette.action.input,
+              "&:hover:not(.Mui-disabled), &:focus": {
+                backgroundColor: theme.palette.action.input,
+              },
+
+              border: 0,
+              boxShadow: `0 -1px 0 0 ${theme.palette.text.disabled} inset,
+                        0 0 0 1px ${theme.palette.action.inputOutline} inset`,
+              transition: theme.transitions.create("box-shadow", {
+                duration: theme.transitions.duration.short,
+              }),
+
+              "&:hover": {
+                boxShadow: `0 -1px 0 0 ${theme.palette.text.primary} inset,
+                          0 0 0 1px ${theme.palette.action.inputOutline} inset`,
+              },
+              "&:focus, &:focus:hover": {
+                boxShadow: `0 -2px 0 0 ${theme.palette.primary.main} inset,
+                          0 0 0 1px ${theme.palette.action.inputOutline} inset`,
+              },
+
+              borderRadius: theme.shape.borderRadius,
+              padding: theme.spacing(0.75, 1.5),
+              caretColor: theme.palette.primary.main,
+            },
           },
         },
       },
