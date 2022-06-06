@@ -1,24 +1,19 @@
-import { useAtom } from "jotai";
-import { globalScope } from "@src/atoms/globalScope";
-
-import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
-
 import { useRef, useLayoutEffect } from "react";
+import { useAtom, useSetAtom } from "jotai";
 import { EditorProps } from "react-data-grid";
-import { useSetAtom } from "jotai";
 import { get } from "lodash-es";
 
 import { TextField } from "@mui/material";
 
+import { globalScope } from "@src/atoms/globalScope";
+import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
 import { tableScope, updateFieldAtom } from "@src/atoms/tableScope";
-import { FieldType } from "@src/constants/fields";
-import { getFieldType } from "@src/components/fields";
 import { doc } from "firebase/firestore";
 
 /** WARNING: THIS DOES NOT WORK IN REACT 18 STRICT MODE */
 export default function TextEditor({ row, column }: EditorProps<any>) {
-  const updateField = useSetAtom(updateFieldAtom, tableScope);
   const [firebaseDb] = useAtom(firebaseDbAtom, globalScope);
+  const updateField = useSetAtom(updateFieldAtom, tableScope);
 
   const inputRef = useRef<HTMLInputElement>(null);
 

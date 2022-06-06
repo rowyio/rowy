@@ -1,6 +1,6 @@
 import { IPopoverCellProps } from "@src/components/fields/types";
 
-import MultiSelect_ from "@rowy/multiselect";
+import MultiSelectComponent from "@rowy/multiselect";
 
 import { sanitiseValue } from "./utils";
 
@@ -15,7 +15,7 @@ export default function MultiSelect({
   const config = column.config ?? {};
 
   return (
-    <MultiSelect_
+    <MultiSelectComponent
       value={sanitiseValue(value)}
       onChange={onSubmit}
       options={config.options ?? []}

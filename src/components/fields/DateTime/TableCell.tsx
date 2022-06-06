@@ -22,7 +22,7 @@ export default function DateTime({
 
   const handleDateChange = useDebouncedCallback((date: Date | null) => {
     const sanitized = sanitizeValue(date);
-    if (sanitized === undefined) return;
+    if (!sanitized) return; // Temp disable setting it to null
     onSubmit(sanitized);
   }, 500);
 

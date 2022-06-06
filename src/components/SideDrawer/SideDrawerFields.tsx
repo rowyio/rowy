@@ -1,9 +1,12 @@
-import { useEffect, createElement } from "react";
-import { useAtom } from "jotai";
-import { isEmpty, get } from "lodash-es";
+import { useEffect, useState, useCallback } from "react";
+import { useAtom, useSetAtom } from "jotai";
+import { get, isEqual } from "lodash-es";
+import { useSnackbar } from "notistack";
 
 import { Stack, FormControlLabel, Switch } from "@mui/material";
 import FieldWrapper from "./FieldWrapper";
+import MemoizedField from "./MemoizedField";
+import SaveState from "./SaveState";
 
 import {
   globalScope,
@@ -15,13 +18,12 @@ import {
   tableIdAtom,
   tableSettingsAtom,
   tableColumnsOrderedAtom,
+  updateFieldAtom,
   selectedCellAtom,
   sideDrawerShowHiddenFieldsAtom,
 } from "@src/atoms/tableScope";
 import { formatSubTableName } from "@src/utils/table";
-import { getFieldProp } from "@src/components/fields";
 import { TableRow } from "@src/types/table";
-import { IFieldConfig } from "@src/components/fields/types";
 
 export interface ISideDrawerFieldsProps {
   row: TableRow;
@@ -33,15 +35,53 @@ export default function SideDrawerFields({ row }: ISideDrawerFieldsProps) {
   const [tableId] = useAtom(tableIdAtom, tableScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
+  const updateField = useSetAtom(updateFieldAtom, tableScope);
   const [selectedCell] = useAtom(selectedCellAtom, tableScope);
   const [showHiddenFields, setShowHiddenFields] = useAtom(
     sideDrawerShowHiddenFieldsAtom,
     tableScope
   );
+  const [saveState, setSaveState] = useState<
+    "" | "unsaved" | "saving" | "saved"
+  >("");
+  const [dirtyField, setDirtyField] = useState("");
+  const { enqueueSnackbar } = useSnackbar();
+
+  // Called when a field has unsaved changes
+  const onDirty = useCallback((key: string) => {
+    setSaveState("unsaved");
+    setDirtyField(key);
+  }, []);
+  // Called when an individual field is ready to be saved
+  const onSubmit = useCallback(
+    async (fieldName: string, value: any) => {
+      if (!selectedCell) return;
+
+      const currentValue = get(row, fieldName);
+      console.log("submit", fieldName, isEqual(currentValue, value), value);
+      if (isEqual(currentValue, value)) {
+        console.log("currentValue", currentValue);
+        setSaveState("");
+        setDirtyField("");
+        return;
+      }
+
+      setSaveState("saving");
+      try {
+        await updateField({ path: selectedCell!.path, fieldName, value });
+        setSaveState("saved");
+      } catch (e) {
+        enqueueSnackbar((e as Error).message, { variant: "error" });
+        setSaveState("");
+      } finally {
+        setDirtyField("");
+      }
+    },
+    [row, selectedCell, updateField, enqueueSnackbar]
+  );
 
   const userDocHiddenFields =
     userSettings.tables?.[formatSubTableName(tableId)]?.hiddenFields ?? [];
-
   const fields = showHiddenFields
     ? tableColumnsOrdered
     : tableColumnsOrdered.filter((f) => !userDocHiddenFields.includes(f.key));
@@ -67,54 +107,28 @@ export default function SideDrawerFields({ row }: ISideDrawerFieldsProps) {
 
   return (
     <Stack spacing={3}>
-      {fields.map((field, i) => {
-        // Derivative/aggregate field support
-        let type = field.type;
-        if (field.config && field.config.renderFieldType) {
-          type = field.config.renderFieldType;
-        }
+      <SaveState state={saveState} />
 
-        const fieldComponent: IFieldConfig["SideDrawerField"] = getFieldProp(
-          "SideDrawerField",
-          type
-        );
-
-        // Should not reach this state
-        if (isEmpty(fieldComponent)) {
-          // console.error('Could not find SideDrawerField component', field);
-          return null;
-        }
-
-        // Disable field if locked, or if table is read-only
-        const disabled = Boolean(
-          field.editable === false ||
-            (tableSettings.readOnly && !userRoles.includes("ADMIN"))
-        );
-
-        return (
-          <FieldWrapper
-            key={field.key ?? i}
-            type={field.type}
-            name={field.key}
-            label={field.name}
-            disabled={disabled}
-          >
-            {createElement(fieldComponent, {
-              column: field as any,
-              control: {} as any,
-              docRef: row._rowy_ref,
-              disabled,
-              value: get(row, field.fieldName),
-              onSubmit: console.log,
-              useFormMethods: {} as any,
-            })}
-          </FieldWrapper>
-        );
-      })}
+      {fields.map((field, i) => (
+        <MemoizedField
+          key={field.key ?? i}
+          field={field}
+          disabled={Boolean(
+            field.editable === false ||
+              (tableSettings.readOnly && !userRoles.includes("ADMIN"))
+          )}
+          hidden={userDocHiddenFields.includes(field.key)}
+          _rowy_ref={row._rowy_ref}
+          value={get(row, field.fieldName)}
+          onDirty={onDirty}
+          onSubmit={onSubmit}
+          isDirty={dirtyField === field.key}
+        />
+      ))}
 
       <FieldWrapper
         type="debug"
-        name="_debug_path"
+        fieldName="_rowy_ref.path"
         label="Document path"
         debugText={row._rowy_ref.path ?? row._rowy_ref.id ?? "No ref"}
       />

@@ -1,17 +1,12 @@
-import { useAtom } from "jotai";
 import { IHeavyCellProps } from "@src/components/fields/types";
 
 import { format } from "date-fns";
 import { DATE_TIME_FORMAT } from "@src/constants/dates";
-import { tableScope, tableSettingsAtom } from "@src/atoms/tableScope";
 
-export default function CreatedAt({ row, column }: IHeavyCellProps) {
-  const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
-  const value = row[tableSettings.auditFieldCreatedBy || "_createdBy"];
-
-  if (!value || !value.timestamp) return null;
+export default function CreatedAt({ column, value }: IHeavyCellProps) {
+  if (!value) return null;
   const dateLabel = format(
-    value.timestamp.toDate ? value.timestamp.toDate() : value.timestamp,
+    value.toDate ? value.toDate() : value,
     column.config?.format || DATE_TIME_FORMAT
   );
 

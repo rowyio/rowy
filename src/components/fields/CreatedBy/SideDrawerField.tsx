@@ -1,5 +1,3 @@
-import { useWatch } from "react-hook-form";
-import { useAtom } from "jotai";
 import { ISideDrawerFieldProps } from "@src/components/fields/types";
 
 import { Box, Stack, Typography, Avatar } from "@mui/material";
@@ -7,16 +5,8 @@ import { fieldSx } from "@src/components/SideDrawer/utils";
 
 import { format } from "date-fns";
 import { DATE_TIME_FORMAT } from "@src/constants/dates";
-import { tableScope, tableSettingsAtom } from "@src/atoms/tableScope";
 
-export default function CreatedBy({ control, column }: ISideDrawerFieldProps) {
-  const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
-
-  const value = useWatch({
-    control,
-    name: tableSettings.auditFieldCreatedBy || "_createdBy",
-  });
-
+export default function CreatedBy({ column, value }: ISideDrawerFieldProps) {
   if (!value || !value.displayName || !value.timestamp)
     return <Box sx={fieldSx} />;
 

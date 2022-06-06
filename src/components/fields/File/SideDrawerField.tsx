@@ -1,7 +1,6 @@
 import { useCallback, useState } from "react";
 import { ISideDrawerFieldProps } from "@src/components/fields/types";
 import { useSetAtom } from "jotai";
-import { Controller } from "react-hook-form";
 import { format } from "date-fns";
 
 import { useDropzone } from "react-dropzone";
@@ -21,27 +20,19 @@ import { FileIcon } from ".";
 import CircularProgressOptical from "@src/components/CircularProgressOptical";
 import { DATE_TIME_FORMAT } from "@src/constants/dates";
 
-import { fieldSx } from "@src/components/SideDrawer/utils";
+import { fieldSx, getFieldId } from "@src/components/SideDrawer/utils";
 import { globalScope, confirmDialogAtom } from "@src/atoms/globalScope";
-import { tableScope, updateFieldAtom } from "@src/atoms/tableScope";
 import { FileValue } from "@src/types/table";
 
-interface IControlledFileUploaderProps
-  extends Pick<ISideDrawerFieldProps, "column" | "docRef" | "disabled"> {
-  onChange: (value: any) => void;
-  value: any;
-}
-
-function ControlledFileUploader({
-  onChange,
-
-  value,
+export default function File_({
   column,
-  docRef,
+  _rowy_ref,
+  value,
+  onChange,
+  onSubmit,
   disabled,
-}: IControlledFileUploaderProps) {
+}: ISideDrawerFieldProps) {
   const confirm = useSetAtom(confirmDialogAtom, globalScope);
-  const updateField = useSetAtom(updateFieldAtom, tableScope);
 
   const { uploaderState, upload, deleteUpload } = useUploader();
 
@@ -52,26 +43,22 @@ function ControlledFileUploader({
     (acceptedFiles: File[]) => {
       const file = acceptedFiles[0];
 
-      if (docRef && file) {
+      if (_rowy_ref && file) {
         upload({
-          docRef: docRef! as any,
+          docRef: _rowy_ref! as any,
           fieldName: column.key,
           files: [file],
           previousValue: value ?? [],
           onComplete: (newValue) => {
-            updateField({
-              path: docRef.path,
-              fieldName: column.key,
-              value: newValue,
-            });
             onChange(newValue);
+            onSubmit();
             setLocalFile("");
           },
         });
         setLocalFile(file.name);
       }
     },
-    [docRef, value]
+    [_rowy_ref, value]
   );
 
   const handleDelete = (index: number) => {
@@ -79,6 +66,7 @@ function ControlledFileUploader({
     const toBeDeleted = newValue.splice(index, 1);
     toBeDeleted.length && deleteUpload(toBeDeleted[0]);
     onChange(newValue);
+    onSubmit();
   };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -109,7 +97,7 @@ function ControlledFileUploader({
           ]}
           {...getRootProps()}
         >
-          <input id={`sidedrawer-field-${column.key}`} {...getInputProps()} />
+          <input id={getFieldId(column.key)} {...getInputProps()} />
           <Typography color="inherit" style={{ flexGrow: 1 }}>
             Click to upload or drop file here
           </Typography>
@@ -161,28 +149,5 @@ function ControlledFileUploader({
         )}
       </Grid>
     </>
-  );
-}
-
-export default function File_({
-  control,
-  column,
-  disabled,
-  docRef,
-}: ISideDrawerFieldProps) {
-  return (
-    <Controller
-      control={control}
-      name={column.key}
-      render={({ field: { onChange, value } }) => (
-        <ControlledFileUploader
-          disabled={disabled}
-          column={column}
-          docRef={docRef}
-          onChange={onChange}
-          value={value}
-        />
-      )}
-    />
   );
 }

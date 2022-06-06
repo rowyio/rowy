@@ -2,7 +2,7 @@ import { useAtom, useSetAtom } from "jotai";
 import type { FormatterProps } from "react-data-grid";
 
 import { Stack, Tooltip, IconButton, alpha } from "@mui/material";
-import { Copy as CopyCellsIcon } from "@src/assets/icons";
+import { CopyCells as CopyCellsIcon } from "@src/assets/icons";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 
 import {

@@ -1,7 +1,9 @@
-// import { useEffect } from "react";
+import { useEffect } from "react";
+import { useSetAtom } from "jotai";
 import { EditorProps } from "react-data-grid";
 import { get } from "lodash-es";
 
+import { tableScope, sideDrawerOpenAtom } from "@src/atoms/tableScope";
 import { IHeavyCellProps } from "@src/components/fields/types";
 
 /**
@@ -17,12 +19,11 @@ export default function withSideDrawerEditor(
 ) {
   return function SideDrawerEditor(props: EditorProps<any, any>) {
     const { row, column } = props;
-    // FIXME: const { sideDrawerRef } = useProjectContext();
 
-    // useEffect(() => {
-    //   if (!sideDrawerRef?.current?.open && sideDrawerRef?.current?.setOpen)
-    //     sideDrawerRef?.current?.setOpen(true);
-    // }, [column]);
+    const setSideDrawerOpen = useSetAtom(sideDrawerOpenAtom, tableScope);
+    useEffect(() => {
+      setSideDrawerOpen(true);
+    }, [setSideDrawerOpen]);
 
     return HeavyCell ? (
       <div

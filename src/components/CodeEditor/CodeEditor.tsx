@@ -2,7 +2,7 @@ import { useState } from "react";
 import Editor, { EditorProps } from "@monaco-editor/react";
 import type { editor } from "monaco-editor/esm/vs/editor/editor.api";
 
-import { useTheme, Box, BoxProps } from "@mui/material";
+import { useTheme, Box, BoxProps, AppBar, Toolbar } from "@mui/material";
 import TrapFocus from "@mui/material/Unstable_TrapFocus";
 import CircularProgressOptical from "@src/components/CircularProgressOptical";
 import { ResizeBottomRight } from "@src/assets/icons";
@@ -17,12 +17,15 @@ export interface ICodeEditorProps
     Omit<IUseMonacoCustomizationsProps, "fullScreen"> {
   value: string;
   containerProps?: Partial<BoxProps>;
+  fullScreenTitle?: React.ReactNode;
 
   onValidate?: EditorProps["onValidate"];
   onValidStatusUpdate?: (result: {
     isValid: boolean;
     markers: editor.IMarker[];
   }) => void;
+  onFocus?: () => void;
+  onBlur?: () => void;
 }
 
 export default function CodeEditor({
@@ -31,9 +34,12 @@ export default function CodeEditor({
   disabled,
   error,
   containerProps,
+  fullScreenTitle,
 
   onValidate,
   onValidStatusUpdate,
+  onFocus,
+  onBlur,
 
   extraLibs,
   diagnosticsOptions,
@@ -76,11 +82,22 @@ export default function CodeEditor({
         ]}
         style={fullScreen ? { height: "100%" } : {}}
       >
+        {fullScreen && fullScreenTitle && (
+          <AppBar position="static" color="inherit">
+            <Toolbar variant="dense" sx={{ gap: 2 }}>
+              {fullScreenTitle}
+            </Toolbar>
+          </AppBar>
+        )}
         <Editor
           defaultLanguage={defaultLanguage}
           value={initialEditorValue}
           loading={<CircularProgressOptical size={20} sx={{ m: 2 }} />}
           className="editor"
+          onMount={(editor) => {
+            if (onFocus) editor.onDidFocusEditorWidget(onFocus);
+            if (onBlur) editor.onDidBlurEditorWidget(onBlur);
+          }}
           {...props}
           onValidate={onValidate_}
           options={{

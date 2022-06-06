@@ -84,6 +84,13 @@ export const StyledDrawer = styled(Drawer)(({ theme }) => ({
     zIndex: theme.zIndex.drawer + 1,
 
     animation: `${theme.transitions.duration.standard}ms ${theme.transitions.easing.easeInOut} both navFabSlide`,
+
+    "& .MuiFab-root.Mui-disabled": {
+      backgroundColor:
+        theme.palette.mode === "dark"
+          ? undefined
+          : theme.palette.background.paper,
+    },
   },
   "@keyframes navFabSlide": {
     from: {

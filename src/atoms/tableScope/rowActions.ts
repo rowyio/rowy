@@ -1,5 +1,12 @@
 import { atom } from "jotai";
-import { cloneDeep, find, set as _set, unset } from "lodash-es";
+import {
+  cloneDeep,
+  find,
+  get as _get,
+  set as _set,
+  isEqual,
+  unset,
+} from "lodash-es";
 
 import { currentUserAtom } from "@src/atoms/globalScope";
 import {
@@ -211,6 +218,8 @@ export interface IUpdateFieldOptions {
   deleteField?: boolean;
   /** If true, ignores checking required fields have values */
   ignoreRequiredFields?: boolean;
+  /** Optionally, disable checking if the updated value is equal to the current value. By default, we skip the update if they’re equal. */
+  disableCheckEquality?: boolean;
 }
 /**
  * Updates or deletes a field in a row.
@@ -235,6 +244,7 @@ export const updateFieldAtom = atom(
       value,
       deleteField,
       ignoreRequiredFields,
+      disableCheckEquality,
     }: IUpdateFieldOptions
   ) => {
     const updateRowDb = get(_updateRowDbAtom);
@@ -271,7 +281,15 @@ export const updateFieldAtom = atom(
       : requiredFields.filter((field) => row[field] === undefined);
 
     // Apply field update
-    if (!deleteField) _set(update, fieldName, value);
+    if (!deleteField) {
+      // Check for equality. If updated value is same as current, skip update
+      if (!disableCheckEquality) {
+        const currentValue = _get(row, fieldName);
+        if (isEqual(currentValue, value)) return;
+      }
+      // Otherwise, apply the update
+      _set(update, fieldName, value);
+    }
 
     // Update rowsLocal if any required fields are missing
     if (missingRequiredFields.length > 0) {

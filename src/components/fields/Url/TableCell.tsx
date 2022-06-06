@@ -25,6 +25,7 @@ export default function Url({ value }: IBasicCellProps) {
         className="row-hover-iconButton"
         size="small"
         style={{ flexShrink: 0 }}
+        aria-label="Open in new tab"
       >
         <LaunchIcon />
       </IconButton>

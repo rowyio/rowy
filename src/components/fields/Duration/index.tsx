@@ -4,7 +4,7 @@ import withHeavyCell from "@src/components/fields/_withTableCell/withHeavyCell";
 
 import DurationIcon from "@mui/icons-material/TimerOutlined";
 import BasicCell from "@src/components/fields/_BasicCell/BasicCellNull";
-import NullEditor from "@src/components/Table/editors/NullEditor";
+import withSideDrawerEditor from "@src/components/Table/editors/withSideDrawerEditor";
 
 const TableCell = lazy(
   () => import("./TableCell" /* webpackChunkName: "TableCell-Duration" */)
@@ -25,7 +25,7 @@ export const config: IFieldConfig = {
   icon: <DurationIcon />,
   description: "Duration calculated from two timestamps.",
   TableCell: withHeavyCell(BasicCell, TableCell),
-  TableEditor: NullEditor as any,
+  TableEditor: withSideDrawerEditor(TableCell),
   SideDrawerField,
 };
 export default config;

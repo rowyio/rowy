@@ -1,4 +1,4 @@
-export const transformValue = (value: any) => {
+export const transformValue = (value: any): Date | null => {
   if (typeof value === "number") return new Date(value);
   if (value && "toDate" in value) return value.toDate();
   if (value !== undefined) return value;

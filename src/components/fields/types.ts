@@ -61,15 +61,29 @@ export interface IPopoverCellProps extends IPopoverInlineCellProps {
   parentRef: PopoverProps["anchorEl"];
 }
 
+/** Props to be passed to all SideDrawerFields */
 export interface ISideDrawerFieldProps {
+  /** The column config */
   column: FormatterProps<TableRow>["column"] & ColumnConfig;
-  control: Control;
-  docRef: TableRowRef;
+  /** The row’s _rowy_ref object */
+  _rowy_ref: TableRowRef;
+
+  /** The field’s local value – synced with db when field is not dirty */
+  value: any;
+  /** Call when the user has input but changes have not been saved */
+  onDirty: () => void;
+  /** Update the local value. Also calls onDirty */
+  onChange: (value: any) => void;
+  /** Call when user input is ready to be saved (e.g. onBlur) */
+  onSubmit: () => void;
+
+  /** Field locked. Do NOT check `column.locked` */
   disabled: boolean;
 
-  value: any;
-  onSubmit: (value: any) => void;
-
+  /** @deprecated */
+  docRef: TableRowRef;
+  /** @deprecated */
+  control: Control;
   /** @deprecated */
   useFormMethods: UseFormReturn;
 }

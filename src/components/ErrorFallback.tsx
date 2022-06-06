@@ -42,6 +42,7 @@ export default function ErrorFallback({
           {error.message}
         </span>
         <Button
+          size={props.basic ? "small" : "medium"}
           href={meta.repository.url.replace(".git", "") + "/issues/new/choose"}
           target="_blank"
           rel="noopener noreferrer"
@@ -60,6 +61,7 @@ export default function ErrorFallback({
         <>
           <span>Make sure you have the right ID</span>
           <Button
+            size={props.basic ? "small" : "medium"}
             variant="outlined"
             color="secondary"
             component={Link}
@@ -82,6 +84,7 @@ export default function ErrorFallback({
         <>
           <span>Reload this page to get the latest update</span>
           <Button
+            size={props.basic ? "small" : "medium"}
             variant="outlined"
             color="secondary"
             startIcon={<ReloadIcon />}
@@ -98,5 +101,13 @@ export default function ErrorFallback({
 }
 
 export function InlineErrorFallback(props: IErrorFallbackProps) {
-  return <ErrorFallback {...props} fullScreen={false} basic wrap="nowrap" />;
+  return (
+    <ErrorFallback
+      {...props}
+      fullScreen={false}
+      basic
+      wrap="nowrap"
+      sx={{ typography: "body2" }}
+    />
+  );
 }

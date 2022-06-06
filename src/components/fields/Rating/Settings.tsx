@@ -11,7 +11,7 @@ export default function Settings({ onChange, config }: ISettingsProps) {
         value={config.max}
         getAriaValueText={(v) => `${v} max stars`}
         aria-labelledby="max-slider"
-        valueLabelDisplay="auto"
+        valueLabelDisplay="on"
         onChange={(_, v) => {
           onChange("max")(v);
         }}
@@ -27,7 +27,7 @@ export default function Settings({ onChange, config }: ISettingsProps) {
         value={config.precision}
         getAriaValueText={(v) => `${v} rating step size`}
         aria-labelledby="precision-slider"
-        valueLabelDisplay="auto"
+        valueLabelDisplay="on"
         onChange={(_, v) => {
           onChange("precision")(v);
         }}

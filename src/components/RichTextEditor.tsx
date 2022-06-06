@@ -27,80 +27,82 @@ import "tinymce/plugins/paste";
 import "tinymce/plugins/help";
 import "tinymce/plugins/code";
 
-const Styles = styled("div")<{ focus?: boolean; disabled?: boolean }>(
-  ({ theme, focus, disabled }) => ({
-    "& .tox": {
-      "&.tox-tinymce": {
-        borderRadius: theme.shape.borderRadius,
-        border: "none",
+const Styles = styled("div", {
+  shouldForwardProp: (prop) => prop !== "focus",
+})<{ focus?: boolean; disabled?: boolean }>(({ theme, focus, disabled }) => ({
+  "& .tox": {
+    "&.tox-tinymce": {
+      borderRadius: theme.shape.borderRadius,
+      border: "none",
 
-        backgroundColor: theme.palette.action.input,
-        boxShadow: `0 -1px 0 0 ${theme.palette.text.disabled} inset,
+      backgroundColor: theme.palette.action.input,
+      boxShadow: `0 -1px 0 0 ${theme.palette.text.disabled} inset,
                   0 0 0 1px ${theme.palette.action.inputOutline} inset`,
-        transition: theme.transitions.create("box-shadow", {
-          duration: theme.transitions.duration.short,
-        }),
+      transition: theme.transitions.create("box-shadow", {
+        duration: theme.transitions.duration.short,
+      }),
 
-        "&:hover": {
-          boxShadow: `0 -1px 0 0 ${theme.palette.text.primary} inset,
+      "&:hover": {
+        boxShadow: `0 -1px 0 0 ${theme.palette.text.primary} inset,
                     0 0 0 1px ${theme.palette.action.inputOutline} inset`,
-        },
       },
-
-      "& .tox-toolbar-overlord, & .tox-edit-area__iframe, & .tox-toolbar__primary":
-        {
-          background: "transparent",
-          borderRadius: theme.shape.borderRadius,
-        },
-      "& .tox-edit-area__iframe": { colorScheme: "auto" },
-
-      "& .tox-toolbar__group": { border: "none !important" },
-
-      "& .tox-tbtn": {
-        borderRadius: theme.shape.borderRadius,
-        color: theme.palette.text.secondary,
-        cursor: "pointer",
-        margin: 0,
-
-        transition: theme.transitions.create(["color", "background-color"], {
-          duration: theme.transitions.duration.shortest,
-        }),
-
-        "&:hover": {
-          color: theme.palette.text.primary,
-          backgroundColor: "transparent",
-        },
-
-        "& svg": { fill: "currentColor" },
-      },
-
-      "& .tox-tbtn--enabled, & .tox-tbtn--enabled:hover": {
-        backgroundColor: theme.palette.action.selected + " !important",
-        color: theme.palette.text.primary,
-      },
-
-      "& .tox.tox-tinymce, & .tox.tox-tinymce:hover": disabled
-        ? {
-            backgroundColor:
-              theme.palette.mode === "dark"
-                ? "transparent"
-                : theme.palette.action.disabledBackground,
-          }
-        : focus
-        ? {
-            boxShadow: `0 -2px 0 0 ${theme.palette.primary.main} inset,
-                  0 0 0 1px ${theme.palette.action.inputOutline} inset`,
-          }
-        : {},
     },
-  })
-);
+
+    "& .tox-toolbar-overlord, & .tox-edit-area__iframe, & .tox-toolbar__primary":
+      {
+        background: "transparent",
+        borderRadius: theme.shape.borderRadius,
+      },
+    "& .tox-edit-area__iframe": { colorScheme: "auto" },
+
+    "& .tox-toolbar__group": { border: "none !important" },
+
+    "& .tox-tbtn": {
+      borderRadius: theme.shape.borderRadius,
+      color: theme.palette.text.secondary,
+      cursor: "pointer",
+      margin: 0,
+
+      transition: theme.transitions.create(["color", "background-color"], {
+        duration: theme.transitions.duration.shortest,
+      }),
+
+      "&:hover": {
+        color: theme.palette.text.primary,
+        backgroundColor: "transparent",
+      },
+
+      "& svg": { fill: "currentColor" },
+    },
+
+    "& .tox-tbtn--enabled, & .tox-tbtn--enabled:hover": {
+      backgroundColor: theme.palette.action.selected + " !important",
+      color: theme.palette.text.primary,
+    },
+
+    "& .tox.tox-tinymce, & .tox.tox-tinymce:hover": disabled
+      ? {
+          backgroundColor:
+            theme.palette.mode === "dark"
+              ? "transparent"
+              : theme.palette.action.disabledBackground,
+        }
+      : focus
+      ? {
+          boxShadow: `0 -2px 0 0 ${theme.palette.primary.main} inset,
+                  0 0 0 1px ${theme.palette.action.inputOutline} inset`,
+        }
+      : {},
+  },
+}));
 
 export interface IRichTextEditorProps {
   value?: string;
   onChange: (value: string) => void;
   disabled?: boolean;
   id: string;
+  onFocus?: () => void;
+  onBlur?: () => void;
 }
 
 export default function RichTextEditor({
@@ -108,6 +110,8 @@ export default function RichTextEditor({
   onChange,
   disabled,
   id,
+  onFocus,
+  onBlur,
 }: IRichTextEditorProps) {
   const theme = useTheme();
   const [focus, setFocus] = useState(false);
@@ -152,8 +156,14 @@ export default function RichTextEditor({
         }}
         value={value}
         onEditorChange={onChange}
-        onFocus={() => setFocus(true)}
-        onBlur={() => setFocus(false)}
+        onFocus={() => {
+          setFocus(true);
+          if (onFocus) onFocus();
+        }}
+        onBlur={() => {
+          setFocus(false);
+          if (onBlur) onBlur();
+        }}
       />
     </Styles>
   );

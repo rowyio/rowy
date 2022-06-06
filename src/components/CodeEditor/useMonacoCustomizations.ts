@@ -314,7 +314,7 @@ export default function useMonacoCustomizations({
       left: 0,
       right: 0,
       bottom: 0,
-      zIndex: theme.zIndex.tooltip + 1,
+      zIndex: theme.zIndex.tooltip * 2,
       m: "0 !important",
       resize: "none",
       backgroundColor: theme.palette.background.paper,

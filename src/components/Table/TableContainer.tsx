@@ -2,7 +2,10 @@ import { colord } from "colord";
 import { styled, alpha, darken, lighten } from "@mui/material";
 import { APP_BAR_HEIGHT } from "@src/layouts/Navigation";
 import { TABLE_TOOLBAR_HEIGHT } from "@src/components/TableToolbar";
-import { DRAWER_COLLAPSED_WIDTH } from "@src/components/SideDrawer";
+import {
+  DRAWER_COLLAPSED_WIDTH,
+  DRAWER_WIDTH,
+} from "@src/components/SideDrawer";
 
 export const OUT_OF_ORDER_MARGIN = 8;
 
@@ -124,7 +127,7 @@ export const TableContainer = styled("div", {
 
   ".rdg-row, .rdg-header-row": {
     marginLeft: `max(env(safe-area-inset-left), ${theme.spacing(2)})`,
-    marginRight: `max(env(safe-area-inset-right), ${theme.spacing(8)})`,
+    marginRight: `max(env(safe-area-inset-right), ${DRAWER_WIDTH}px)`,
     display: "inline-grid", // Fix Safari not showing margin-right
   },
 
@@ -244,5 +247,6 @@ export const TableContainer = styled("div", {
     },
   },
 }));
+TableContainer.displayName = "TableContainer";
 
 export default TableContainer;

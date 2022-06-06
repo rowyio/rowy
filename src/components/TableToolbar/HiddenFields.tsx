@@ -119,6 +119,12 @@ export default function HiddenFields() {
               anchorEl: buttonRef.current,
               anchorOrigin: { vertical: "bottom", horizontal: "left" },
               transformOrigin: { vertical: "top", horizontal: "left" },
+              sx: {
+                "& .MuiAutocomplete-listbox .MuiAutocomplete-option[aria-selected=true]":
+                  {
+                    backgroundColor: "transparent",
+                  },
+              },
             },
           },
         }}

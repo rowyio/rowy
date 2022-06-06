@@ -140,7 +140,7 @@ const useFirebaseStorageUploader = () => {
           getDownloadURL(uploadTask.snapshot.ref).then(
             (downloadURL: string) => {
               const newValue: FileValue[] = Array.isArray(previousValue)
-                ? previousValue
+                ? [...previousValue]
                 : [];
 
               newValue.push({

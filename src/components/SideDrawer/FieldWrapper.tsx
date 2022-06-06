@@ -2,42 +2,60 @@ import { Suspense } from "react";
 import { useAtom } from "jotai";
 import { ErrorBoundary } from "react-error-boundary";
 
-import { Stack, InputLabel, Typography, IconButton } from "@mui/material";
+import {
+  Stack,
+  InputLabel,
+  Tooltip,
+  Typography,
+  IconButton,
+} from "@mui/material";
 import { DocumentPath as DocumentPathIcon } from "@src/assets/icons";
 import LaunchIcon from "@mui/icons-material/Launch";
 import LockIcon from "@mui/icons-material/LockOutlined";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOffOutlined";
 
 import { InlineErrorFallback } from "@src/components/ErrorFallback";
 import FieldSkeleton from "./FieldSkeleton";
 
-import { globalScope, projectIdAtom } from "@src/atoms/globalScope";
+import {
+  globalScope,
+  projectIdAtom,
+  altPressAtom,
+} from "@src/atoms/globalScope";
 import { FieldType } from "@src/constants/fields";
 import { getFieldProp } from "@src/components/fields";
+import { getLabelId, getFieldId } from "./utils";
 
 export interface IFieldWrapperProps {
   children?: React.ReactNode;
   type: FieldType | "debug";
-  name?: string;
+  fieldName?: string;
   label?: React.ReactNode;
   debugText?: React.ReactNode;
   disabled?: boolean;
+  hidden?: boolean;
+  index?: number;
 }
 
 export default function FieldWrapper({
   children,
   type,
-  name,
+  fieldName,
   label,
   debugText,
   disabled,
+  hidden,
+  index,
 }: IFieldWrapperProps) {
   const [projectId] = useAtom(projectIdAtom, globalScope);
+  const [altPress] = useAtom(altPressAtom, globalScope);
 
   return (
     <div>
       <Stack
         direction="row"
         alignItems="center"
+        spacing={1}
         sx={{
           color: "text.primary",
           height: 24,
@@ -51,13 +69,29 @@ export default function FieldWrapper({
       >
         {type === "debug" ? <DocumentPathIcon /> : getFieldProp("icon", type)}
         <InputLabel
-          id={`sidedrawer-label-${name}`}
-          htmlFor={`sidedrawer-field-${name}`}
-          sx={{ flexGrow: 1, lineHeight: "18px", ml: 0.75 }}
+          id={getLabelId(fieldName!)}
+          htmlFor={getFieldId(fieldName!)}
+          sx={{ flexGrow: 1, lineHeight: "18px" }}
         >
-          {label}
+          {altPress ? <code>{fieldName}</code> : label}
         </InputLabel>
-        {disabled && <LockIcon />}
+
+        {hidden && (
+          <Tooltip title="Hidden in your table view">
+            <VisibilityOffIcon />
+          </Tooltip>
+        )}
+        {disabled && (
+          <Tooltip title="Locked by ADMIN">
+            <LockIcon />
+          </Tooltip>
+        )}
+
+        {altPress && (
+          <Typography variant="caption" color="text.disabled">
+            {index}
+          </Typography>
+        )}
       </Stack>
 
       <ErrorBoundary FallbackComponent={InlineErrorFallback}>

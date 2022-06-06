@@ -309,7 +309,22 @@ export const tableSettings = (
       label: "Created By field key (optional)",
       defaultValue: "_createdBy",
       displayCondition: "return values.audit",
-      assistiveText: "Optionally, change the field key",
+      assistiveText:
+        mode === "update" ? (
+          <>
+            You can change the field key.
+            <br />
+            <WarningIcon
+              color="warning"
+              aria-label="Warning"
+              sx={{ fontSize: 16, mr: 0.5, verticalAlign: "middle" }}
+            />
+            You’ll need to delete and re-add any Created By or Created At
+            columns.
+          </>
+        ) : (
+          "Optionally, change the field key"
+        ),
       gridCols: { xs: 12, sm: 6 },
       sx: { "& .MuiInputBase-input": { fontFamily: "mono" } },
     },
@@ -320,7 +335,22 @@ export const tableSettings = (
       label: "Updated By field key (optional)",
       defaultValue: "_updatedBy",
       displayCondition: "return values.audit",
-      assistiveText: "Optionally, change the field key",
+      assistiveText:
+        mode === "update" ? (
+          <>
+            You can change the field key.
+            <br />
+            <WarningIcon
+              color="warning"
+              aria-label="Warning"
+              sx={{ fontSize: 16, mr: 0.5, verticalAlign: "middle" }}
+            />
+            You’ll need to delete and re-add any Updated By or Updated At
+            columns.
+          </>
+        ) : (
+          "Optionally, change the field key"
+        ),
       gridCols: { xs: 12, sm: 6 },
       sx: { "& .MuiInputBase-input": { fontFamily: "mono" } },
     },

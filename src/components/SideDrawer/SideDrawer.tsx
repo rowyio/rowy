@@ -4,8 +4,9 @@ import { useAtom } from "jotai";
 import { find, findIndex } from "lodash-es";
 import { ErrorBoundary } from "react-error-boundary";
 import { DataGridHandle } from "react-data-grid";
+import { TransitionGroup } from "react-transition-group";
 
-import { Fab } from "@mui/material";
+import { Fab, Fade } from "@mui/material";
 import ChevronIcon from "@mui/icons-material/KeyboardArrowLeft";
 import ChevronUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import ChevronDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -111,20 +112,22 @@ export default function SideDrawer({
     >
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <div className="sidedrawer-contents">
-          {open && cell && selectedRow && (
-            <SideDrawerFields key={cell.path} row={selectedRow} />
-          )}
+          <TransitionGroup>
+            {open && cell && selectedRow && (
+              <Fade>
+                <div>
+                  <SideDrawerFields key={cell.path} row={selectedRow} />
+                </div>
+              </Fade>
+            )}
+          </TransitionGroup>
         </div>
       </ErrorBoundary>
 
-      {open && (
+      {!!cell && (
         <div className="sidedrawer-nav-fab-container">
           <Fab
-            style={{
-              animationDelay: "0.2s",
-              borderBottomLeftRadius: 0,
-              borderBottomRightRadius: 0,
-            }}
+            style={{ borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }}
             size="small"
             disabled={disabled || !cell || selectedCellRowIndex <= 0}
             onClick={handleNavigate("up")}
@@ -133,11 +136,7 @@ export default function SideDrawer({
           </Fab>
 
           <Fab
-            style={{
-              animationDelay: "0.1s",
-              borderTopLeftRadius: 0,
-              borderTopRightRadius: 0,
-            }}
+            style={{ borderTopLeftRadius: 0, borderTopRightRadius: 0 }}
             size="small"
             disabled={
               disabled || !cell || selectedCellRowIndex >= tableRows.length - 1
