@@ -4,8 +4,8 @@ import { Control, UseFormReturn } from "react-hook-form";
 import { PopoverProps } from "@mui/material";
 import { WhereFilterOp } from "firebase/firestore";
 import { ColumnConfig, TableRow, TableRowRef } from "@src/types/table";
-import { selectedCellAtom } from "@src/atoms/tableScope";
-import { IContextMenuActions } from "./_BasicCell/BasicCellContextMenuActions";
+import { SelectedCell } from "@src/atoms/tableScope";
+import { IContextMenuItem } from "@src/components/Table/ContextMenu/MenuItem";
 
 export { FieldType };
 
@@ -21,9 +21,9 @@ export interface IFieldConfig {
   description?: string;
   setupGuideLink?: string;
   contextMenuActions?: (
-    selectedCell: ReturnType<typeof selectedCellAtom["read"]>,
-    reset: () => Promise<void>
-  ) => IContextMenuActions[];
+    selectedCell: SelectedCell,
+    reset: () => void
+  ) => IContextMenuItem[];
   TableCell: React.ComponentType<FormatterProps<TableRow>>;
   TableEditor: React.ComponentType<EditorProps<TableRow, any>>;
   SideDrawerField: React.ComponentType<ISideDrawerFieldProps>;

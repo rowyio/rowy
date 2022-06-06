@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, Suspense } from "react";
 import { useAtom, useSetAtom } from "jotai";
 import { useDebouncedCallback, useThrottledCallback } from "use-debounce";
 import { DndProvider } from "react-dnd";
@@ -15,7 +15,6 @@ import { LinearProgress } from "@mui/material";
 
 import TableContainer, { OUT_OF_ORDER_MARGIN } from "./TableContainer";
 import ColumnHeader, { COLUMN_HEADER_HEIGHT } from "./ColumnHeader";
-// import ContextMenu from "./ContextMenu";
 import FinalColumnHeader from "./FinalColumnHeader";
 import FinalColumn from "./formatters/FinalColumn";
 import TableRow from "./TableRow";
@@ -23,6 +22,8 @@ import EmptyState from "@src/components/EmptyState";
 // import BulkActions from "./BulkActions";
 import AddRow from "@src/components/TableToolbar/AddRow";
 import { AddRow as AddRowIcon } from "@src/assets/icons";
+import Loading from "@src/components/Loading";
+import ContextMenu from "./ContextMenu";
 
 import {
   globalScope,
@@ -211,10 +212,8 @@ export default function Table({
   );
 
   return (
-    <>
-      {/* <Suspense fallback={<Loading message="Loading header" />}>
-        <Hotkeys selectedCell={selectedCell} />
-      </Suspense> */}
+    <Suspense fallback={<Loading message="Loading fields" />}>
+      {/* <Hotkeys selectedCell={selectedCell} /> */}
       <TableContainer rowHeight={rowHeight}>
         <DndProvider backend={HTML5Backend}>
           {showLeftScrollDivider && <div className="left-scroll-divider" />}
@@ -268,7 +267,7 @@ export default function Table({
             // onRowsChange={() => {
             //console.log('onRowsChange',rows)
             // }}
-            // FIXME: onFill={(e) => {
+            // TODO: onFill={(e) => {
             //   console.log("onFill", e);
             //   const { columnKey, sourceRow, targetRows } = e;
             //   if (updateCell)
@@ -277,7 +276,8 @@ export default function Table({
             //     );
             //   return [];
             // }}
-            onPaste={(e) => {
+            onPaste={(e, ...args) => {
+              console.log("onPaste", e, ...args);
               const value = e.sourceRow[e.sourceColumnKey];
               updateField({
                 path: e.targetRow._rowy_ref.path,
@@ -324,7 +324,8 @@ export default function Table({
         {tableNextPage.loading && <LinearProgress />}
       </TableContainer>
 
-      {/* <ContextMenu />
+      <ContextMenu />
+      {/* 
       <BulkActions
         selectedRows={selectedRows}
         columns={columns}
@@ -333,6 +334,6 @@ export default function Table({
           setSelectedRows([]);
         }}
       /> */}
-    </>
+    </Suspense>
   );
 }
