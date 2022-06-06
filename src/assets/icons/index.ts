@@ -83,6 +83,7 @@ import { CarBrakeAlert } from "mdi-material-ui";
 export { CarBrakeAlert as Critical };
 
 export * from "./AddRow";
+export * from "./Clear";
 export * from "./ConnectTable";
 export * from "./Copy";
 export * from "./CopyCells";

@@ -100,11 +100,12 @@ export const tableModalAtom = atomWithHash<
 /** Store side drawer open state */
 export const sideDrawerOpenAtom = atom(false);
 
-/** Store selected cell in table */
-export const selectedCellAtom = atom<{
-  path: string;
-  columnKey: string;
-} | null>(null);
+export type SelectedCell = { path: string; columnKey: string };
+/** Store selected cell in table. Used in side drawer and context menu */
+export const selectedCellAtom = atom<SelectedCell | null>(null);
+
+/** Store context menu target atom for positioning. If not null, menu open. */
+export const contextMenuTargetAtom = atom<HTMLElement | null>(null);
 
 export type CloudLogFilters = {
   type: "webhook" | "functions" | "audit" | "build";

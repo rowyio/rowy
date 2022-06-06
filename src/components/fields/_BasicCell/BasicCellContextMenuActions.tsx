@@ -1,42 +1,36 @@
 import { useAtom, useSetAtom } from "jotai";
-import { get } from "lodash-es";
+import { useSnackbar } from "notistack";
+import { get, find } from "lodash-es";
 
-import Cut from "@mui/icons-material/ContentCut";
+// import Cut from "@mui/icons-material/ContentCut";
 import { CopyCells } from "@src/assets/icons";
 import Paste from "@mui/icons-material/ContentPaste";
 
 import {
   tableScope,
-  tableColumnsOrderedAtom,
+  tableSchemaAtom,
   tableRowsAtom,
   updateFieldAtom,
 } from "@src/atoms/tableScope";
-import { useSnackbar } from "notistack";
-// import { SelectedCell } from "@src/atoms/ContextMenu";
 import { getFieldProp, getFieldType } from "@src/components/fields";
+import { IFieldConfig } from "@src/components/fields/types";
 
-export interface IContextMenuActions {
-  label: string;
-  icon: React.ReactNode;
-  onClick: () => void;
-}
-
-export default function BasicContextMenuActions(
-  selectedCell: any,
-  reset: () => void | Promise<void>
-): IContextMenuActions[] {
+// TODO: Remove this and add `handlePaste` function to column config
+export const BasicContextMenuActions: IFieldConfig["contextMenuActions"] = (
+  selectedCell,
+  reset
+) => {
   const { enqueueSnackbar } = useSnackbar();
 
-  // TODO: Remove these useAtom calls that cause re-render
-  const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
+  const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const [tableRows] = useAtom(tableRowsAtom, tableScope);
   const updateField = useSetAtom(updateFieldAtom, tableScope);
 
-  const selectedCol = tableColumnsOrdered[selectedCell?.colIndex];
+  const selectedCol = tableSchema.columns?.[selectedCell.columnKey];
   if (!selectedCol) return [];
 
-  const selectedRow = tableRows[selectedCell.rowIndex];
-  const cellValue = get(selectedRow, selectedCol.key);
+  const selectedRow = find(tableRows, ["_rowy_ref.path", selectedCell.path]);
+  const cellValue = get(selectedRow, selectedCol.fieldName);
 
   const handleClose = async () => await reset?.();
 
@@ -50,21 +44,21 @@ export default function BasicContextMenuActions(
     handleClose();
   };
 
-  const handleCut = async () => {
-    try {
-      await navigator.clipboard.writeText(cellValue);
-      if (typeof cellValue !== "undefined")
-        updateField({
-          path: selectedRow._rowy_ref.path,
-          fieldName: selectedCol.fieldName,
-          value: undefined,
-          deleteField: true,
-        });
-    } catch (error) {
-      enqueueSnackbar(`Failed to cut: ${error}`, { variant: "error" });
-    }
-    handleClose();
-  };
+  // const handleCut = async () => {
+  //   try {
+  //     await navigator.clipboard.writeText(cellValue);
+  //     if (typeof cellValue !== "undefined")
+  //       updateField({
+  //         path: selectedCell.path,
+  //         fieldName: selectedCol.fieldName,
+  //         value: undefined,
+  //         deleteField: true,
+  //       });
+  //   } catch (error) {
+  //     enqueueSnackbar(`Failed to cut: ${error}`, { variant: "error" });
+  //   }
+  //   handleClose();
+  // };
 
   const handlePaste = async () => {
     try {
@@ -85,7 +79,7 @@ export default function BasicContextMenuActions(
           break;
       }
       updateField({
-        path: selectedRow._rowy_ref.path,
+        path: selectedCell.path,
         fieldName: selectedCol.fieldName,
         value: parsed,
       });
@@ -97,10 +91,12 @@ export default function BasicContextMenuActions(
   };
 
   const contextMenuActions = [
-    { label: "Cut", icon: <Cut />, onClick: handleCut },
+    // { label: "Cut", icon: <Cut />, onClick: handleCut },
     { label: "Copy", icon: <CopyCells />, onClick: handleCopy },
     { label: "Paste", icon: <Paste />, onClick: handlePaste },
   ];
 
   return contextMenuActions;
-}
+};
+
+export default BasicContextMenuActions;

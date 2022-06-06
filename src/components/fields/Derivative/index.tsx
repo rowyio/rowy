@@ -5,7 +5,7 @@ import { Derivative as DerivativeIcon } from "@src/assets/icons";
 import BasicCell from "@src/components/fields/_BasicCell/BasicCellNull";
 import NullEditor from "@src/components/Table/editors/NullEditor";
 import Settings, { settingsValidator } from "./Settings";
-// import ContextMenuActions from "./ContextMenuActions";
+import ContextMenuActions from "./ContextMenuActions";
 
 export const config: IFieldConfig = {
   type: FieldType.derivative,
@@ -20,7 +20,7 @@ export const config: IFieldConfig = {
   TableCell: withBasicCell(BasicCell),
   TableEditor: NullEditor as any,
   SideDrawerField: BasicCell as any,
-  // FIXME: contextMenuActions: ContextMenuActions,
+  contextMenuActions: ContextMenuActions,
   settings: Settings,
   settingsValidator,
   requireConfiguration: true,
