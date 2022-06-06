@@ -18,7 +18,7 @@ const SideDrawerField = lazy(
 
 export const config: IFieldConfig = {
   type: FieldType.duration,
-  name: "Duration (Alpha)",
+  name: "Duration",
   group: "Date & Time",
   dataType: "Record<'start' | 'end', firebase.firestore.Timestamp>",
   initialValue: {},
