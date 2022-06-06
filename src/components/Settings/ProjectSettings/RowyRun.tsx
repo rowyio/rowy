@@ -17,7 +17,7 @@ import { IProjectSettingsChildProps } from "@src/pages/Settings/ProjectSettings"
 import { WIKI_LINKS } from "@src/constants/externalLinks";
 import useUpdateCheck from "@src/hooks/useUpdateCheck";
 import { runRoutes } from "@src/constants/runRoutes";
-
+import RegionSelect from "@src/components/Settings/RegionSelect";
 export default function RowyRun({
   settings,
   updateSettings,
@@ -189,6 +189,22 @@ export default function RowyRun({
               Verify
             </LoadingButton>
           </Grid>
+        </Grid>
+      </div>
+      <div>
+        <Grid container spacing={1} alignItems="center" direction="row">
+          <Grid item>
+            <RegionSelect
+              label={"Cloud functions Region"}
+              value={settings.region}
+              onChange={(v) => updateSettings({ region: v || "" })}
+              fullWidth
+            />
+          </Grid>
+          <Typography variant="caption">
+            Select the region where your Cloud Functions are deployed. All new
+            deployments of Rowy cloud functions will be deployed to this region.
+          </Typography>
         </Grid>
       </div>
     </>
