@@ -8,7 +8,7 @@ import { TextField } from "@mui/material";
 import { globalScope } from "@src/atoms/globalScope";
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
 import { tableScope, updateFieldAtom } from "@src/atoms/tableScope";
-import { doc } from "firebase/firestore";
+import { doc, deleteField } from "firebase/firestore";
 
 /** WARNING: THIS DOES NOT WORK IN REACT 18 STRICT MODE */
 export default function TextEditor({ row, column }: EditorProps<any>) {
@@ -32,7 +32,7 @@ export default function TextEditor({ row, column }: EditorProps<any>) {
         updateField({
           path: row._rowy_ref.path,
           fieldName: column.key,
-          value: null,
+          value: deleteField(),
         });
       }
     };
