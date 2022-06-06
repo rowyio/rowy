@@ -92,7 +92,13 @@ export const BasicContextMenuActions: IFieldConfig["contextMenuActions"] = (
 
   const contextMenuActions = [
     // { label: "Cut", icon: <Cut />, onClick: handleCut },
-    { label: "Copy", icon: <CopyCells />, onClick: handleCopy },
+    {
+      label: "Copy",
+      icon: <CopyCells />,
+      onClick: handleCopy,
+      disabled:
+        cellValue === undefined || cellValue === null || cellValue === "",
+    },
     { label: "Paste", icon: <Paste />, onClick: handlePaste },
   ];
 

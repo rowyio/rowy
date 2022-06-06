@@ -18,12 +18,11 @@ export default function ContextMenuItem({
   onClick,
   icon,
   label,
-  disabled,
   hotkeyLabel,
   ...props
 }: IContextMenuItem) {
   return (
-    <MenuItem {...props} disabled={disabled} onClick={onClick}>
+    <MenuItem {...props} onClick={onClick}>
       <ListItemIcon>{icon}</ListItemIcon>
       <ListItemText>{label}</ListItemText>
       {hotkeyLabel && (
