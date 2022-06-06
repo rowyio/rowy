@@ -5,6 +5,7 @@ import withHeavyCell from "@src/components/fields/_withTableCell/withHeavyCell";
 import { Image as ImageIcon } from "@src/assets/icons";
 import BasicCell from "@src/components/fields/_BasicCell/BasicCellNull";
 import NullEditor from "@src/components/Table/editors/NullEditor";
+import ContextMenuActions from "./ContextMenuActions";
 
 const TableCell = lazy(
   () => import("./TableCell" /* webpackChunkName: "TableCell-Image" */)
@@ -26,6 +27,7 @@ export const config: IFieldConfig = {
   TableCell: withHeavyCell(BasicCell, TableCell),
   TableEditor: NullEditor as any,
   SideDrawerField,
+  contextMenuActions: ContextMenuActions,
 };
 export default config;
 
