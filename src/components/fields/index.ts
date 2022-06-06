@@ -18,6 +18,7 @@ import Percentage from "./Percentage";
 import Rating from "./Rating";
 import Slider from "./Slider";
 import Color from "./Color";
+import GeoPoint from "./GeoPoint";
 import Date_ from "./Date";
 import DateTime from "./DateTime";
 import Duration from "./Duration";
@@ -61,6 +62,7 @@ export const FIELDS: IFieldConfig[] = [
   Rating,
   Slider,
   Color,
+  GeoPoint,
   /** DATE & TIME */
   Date_,
   DateTime,

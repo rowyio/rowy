@@ -17,6 +17,7 @@ export enum FieldType {
   rating = "RATING",
   slider = "SLIDER",
   color = "COLOR",
+  geoPoint = "GEO_POINT",
   // DATE & TIME
   date = "DATE",
   dateTime = "DATE_TIME",

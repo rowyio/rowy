@@ -2,28 +2,27 @@ import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
 import withBasicCell from "@src/components/fields/_withTableCell/withBasicCell";
 
-import DurationIcon from "@mui/icons-material/TimerOutlined";
-import BasicCell from "@src/components/fields/_BasicCell/BasicCellNull";
+import GeoPointIcon from "@mui/icons-material/PinDropOutlined";
 import withSideDrawerEditor from "@src/components/Table/editors/withSideDrawerEditor";
 
 const TableCell = lazy(
-  () => import("./TableCell" /* webpackChunkName: "TableCell-Duration" */)
+  () => import("./TableCell" /* webpackChunkName: "TableCell-GeoPoint" */)
 );
 const SideDrawerField = lazy(
   () =>
     import(
-      "./SideDrawerField" /* webpackChunkName: "SideDrawerField-Duration" */
+      "./SideDrawerField" /* webpackChunkName: "SideDrawerField-GeoPoint" */
     )
 );
 
 export const config: IFieldConfig = {
-  type: FieldType.duration,
-  name: "Duration (Alpha)",
-  group: "Date & Time",
-  dataType: "Record<'start' | 'end', firebase.firestore.Timestamp>",
+  type: FieldType.geoPoint,
+  name: "GeoPoint (Alpha)",
+  group: "Numeric",
+  dataType: "{latitude:number; longitude:number}",
   initialValue: {},
-  icon: <DurationIcon />,
-  description: "Duration calculated from two timestamps.",
+  icon: <GeoPointIcon />,
+  description: "Geo point is represented as latitude/longitude pair.",
   TableCell: withBasicCell(TableCell),
   TableEditor: withSideDrawerEditor(TableCell),
   SideDrawerField,
