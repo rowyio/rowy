@@ -4,7 +4,6 @@ import { useTheme } from "@mui/material";
 
 export default function Code({ value }: IBasicCellProps) {
   const theme = useTheme();
-
   return (
     <div
       style={{

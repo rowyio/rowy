@@ -7,23 +7,25 @@ import BasicCell from "./BasicCell";
 import withSideDrawerEditor from "@src/components/Table/editors/withSideDrawerEditor";
 
 const Settings = lazy(
-  () => import("./Settings" /* webpackChunkName: "Settings-Code" */)
+  () => import("./Settings" /* webpackChunkName: "Settings-markdown" */)
 );
 
 const SideDrawerField = lazy(
   () =>
-    import("./SideDrawerField" /* webpackChunkName: "SideDrawerField-Code" */)
+    import(
+      "./SideDrawerField" /* webpackChunkName: "SideDrawerField-markdown" */
+    )
 );
 
 export const config: IFieldConfig = {
-  type: FieldType.code,
-  name: "Code",
+  type: FieldType.markdown,
+  name: "Markdown",
   group: "Code",
   dataType: "string",
   initialValue: "",
   initializable: true,
   icon: <CodeIcon />,
-  description: "Raw code edited with the Monaco Editor.",
+  description: "Markdown Editor",
   TableCell: withBasicCell(BasicCell),
   TableEditor: withSideDrawerEditor(BasicCell),
   SideDrawerField,

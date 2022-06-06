@@ -13,11 +13,11 @@ const PopoverCell = lazy(
 const SideDrawerField = lazy(
   () =>
     import(
-      "./SideDrawerField" /* webpackChunkName: "SideDrawerField-ConnectService" */
+      "./SideDrawerField" /* webpackChunkName: "SideDrawerField-Connector" */
     )
 );
 const Settings = lazy(
-  () => import("./Settings" /* webpackChunkName: "Settings-ConnectService" */)
+  () => import("./Settings" /* webpackChunkName: "Settings-Connector" */)
 );
 
 export const config: IFieldConfig = {

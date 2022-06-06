@@ -33,6 +33,7 @@ import Json from "./Json";
 import Code from "./Code";
 import Action from "./Action";
 import Derivative from "./Derivative";
+import Markdown from "./Markdown";
 // // import Aggregate from "./Aggregate";
 import Status from "./Status";
 import CreatedBy from "./CreatedBy";
@@ -79,6 +80,7 @@ export const FIELDS: IFieldConfig[] = [
   /** CODE */
   Json,
   Code,
+  Markdown,
   /** CLOUD FUNCTION */
   Action,
   Derivative,

@@ -34,6 +34,7 @@ export enum FieldType {
   // CODE
   json = "JSON",
   code = "CODE",
+  markdown = "MARKDOWN",
   // CLOUD FUNCTION
   action = "ACTION",
   derivative = "DERIVATIVE",

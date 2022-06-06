@@ -17,7 +17,7 @@ const SideDrawerField = lazy(
 );
 const Settings = lazy(
   () =>
-    import("../CreatedBy/Settings" /* webpackChunkName: "Settings-CreatedBy" */)
+    import("../CreatedBy/Settings" /* webpackChunkName: "Settings-CreatedAt" */)
 );
 
 export const config: IFieldConfig = {

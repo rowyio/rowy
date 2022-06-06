@@ -20,6 +20,7 @@
     "@rowy/form-builder": "^0.6.1",
     "@rowy/multiselect": "^0.4.0",
     "@tinymce/tinymce-react": "^3",
+    "@uiw/react-md-editor": "^3.14.1",
     "algoliasearch": "^4.13.1",
     "ansi-to-react": "^6.1.6",
     "buffer": "^6.0.3",
