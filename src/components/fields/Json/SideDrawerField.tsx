@@ -107,7 +107,7 @@ export default function Json({
             }}
             quotesOnKeys={false}
             sortKeys
-            id={getFieldId(column.key)}
+            // id={getFieldId(column.key)}
           />
         </Box>
       </TabPanel>

@@ -33,7 +33,7 @@ export default function Rating({
         max={max}
         precision={precision}
         sx={{ ml: -0.5 }}
-        id={getFieldId(column.key)}
+        // id={getFieldId(column.key)}
       />
     </Grid>
   );

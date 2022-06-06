@@ -16,6 +16,7 @@ export default function Action({
   _rowy_ref,
   value,
   onChange,
+  onSubmit,
   disabled,
 }: ISideDrawerFieldProps) {
   const [row] = useAtom(
