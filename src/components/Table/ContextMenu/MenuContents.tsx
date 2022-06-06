@@ -52,7 +52,7 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
   const menuActions = getFieldProp("contextMenuActions", selectedColumn.type);
 
   const actionGroups: IContextMenuItem[][] = [];
-
+  const row = find(tableRows, ["_rowy_ref.path", selectedCell.path]);
   // Field type actions
   const fieldTypeActions = menuActions
     ? menuActions(selectedCell, onClose)
@@ -78,8 +78,9 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
       value: null,
       deleteField: true,
     });
-  const cellActions = [
-    {
+  const cellActions = [];
+  if (row && row[selectedCell.columnKey] !== undefined) {
+    cellActions.push({
       label: altPress ? "Clear value" : "Clear value…",
       color: "error",
       icon: <ClearIcon />,
@@ -95,12 +96,10 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
             });
             onClose();
           },
-    },
-  ];
-  actionGroups.push(cellActions);
-
+    });
+  }
+  if (cellActions.length !== 0) actionGroups.push(cellActions);
   // Row actions
-  const row = find(tableRows, ["_rowy_ref.path", selectedCell.path]);
   if (row) {
     const handleDelete = () => deleteRow(row._rowy_ref.path);
     const rowActions = [
