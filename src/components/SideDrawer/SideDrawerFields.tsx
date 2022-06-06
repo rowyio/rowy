@@ -58,9 +58,7 @@ export default function SideDrawerFields({ row }: ISideDrawerFieldsProps) {
       if (!selectedCell) return;
 
       const currentValue = get(row, fieldName);
-      console.log("submit", fieldName, isEqual(currentValue, value), value);
       if (isEqual(currentValue, value)) {
-        console.log("currentValue", currentValue);
         setSaveState("");
         setDirtyField("");
         return;

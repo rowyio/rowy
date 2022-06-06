@@ -1,7 +1,8 @@
 import { useEffect } from "react";
+import useMemoValue from "use-memo-value";
 import clsx from "clsx";
 import { useAtom } from "jotai";
-import { find, findIndex } from "lodash-es";
+import { find, findIndex, isEqual } from "lodash-es";
 import { ErrorBoundary } from "react-error-boundary";
 import { DataGridHandle } from "react-data-grid";
 import { TransitionGroup } from "react-transition-group";
@@ -51,6 +52,26 @@ export default function SideDrawer({
     "_rowy_ref.path",
     cell?.path,
   ]);
+  // Memo a list of visible column keys for useEffect dependencies
+  const visibleColumnKeys = useMemoValue(
+    tableColumnsOrdered
+      .filter((col) => !userDocHiddenFields.includes(col.key))
+      .map((col) => col.key),
+    isEqual
+  );
+
+  // When side drawer is opened, select the cell in the table
+  // in case we’ve scrolled and selected cell was reset
+  useEffect(() => {
+    if (open) {
+      const columnIndex = visibleColumnKeys.indexOf(cell?.columnKey || "");
+      if (columnIndex === -1 || selectedCellRowIndex === -1) return;
+      dataGridRef?.current?.selectCell(
+        { rowIdx: selectedCellRowIndex, idx: columnIndex },
+        false
+      );
+    }
+  }, [open, visibleColumnKeys, selectedCellRowIndex, cell, dataGridRef]);
 
   const handleNavigate = (direction: "up" | "down") => () => {
     if (!tableRows || !cell) return;
@@ -61,13 +82,7 @@ export default function SideDrawer({
 
     setCell((cell) => ({ columnKey: cell!.columnKey, path: newPath }));
 
-    const columnIndex = findIndex(
-      tableColumnsOrdered.filter(
-        (col) => !userDocHiddenFields.includes(col.key)
-      ),
-      ["key", cell!.columnKey]
-    );
-
+    const columnIndex = visibleColumnKeys.indexOf(cell!.columnKey || "");
     dataGridRef?.current?.selectCell(
       { rowIdx: rowIndex, idx: columnIndex },
       false
