@@ -44,6 +44,12 @@ export const ContextMenuActions: IFieldConfig["contextMenuActions"] = (
         disabled: true,
         onClick: () => {},
       },
+      {
+        label: "View Image",
+        icon: <OpenIcon />,
+        onClick: () => {},
+        disabled: true,
+      },
     ];
 
   const handleCopyImageURL = (imgObj: RowyFile) => () => {
