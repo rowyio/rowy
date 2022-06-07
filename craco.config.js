@@ -67,11 +67,11 @@ module.exports = {
   webpack: {
     configure: {
       resolve: {
-        // Need to add polyfill for csv-parse
+        // Polyfill for monaco-editor-auto-typings
         fallback: {
           path: require.resolve("path-browserify"),
-          stream: require.resolve("stream-browserify"),
-          buffer: require.resolve("buffer"),
+          // stream: require.resolve("stream-browserify"),
+          // buffer: require.resolve("buffer"),
         },
       },
     },
