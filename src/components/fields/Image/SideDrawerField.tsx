@@ -13,6 +13,8 @@ import {
   Grid,
   Tooltip,
   Theme,
+  IconButton,
+  Box,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/AddAPhotoOutlined";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
@@ -190,38 +192,47 @@ export default function Image_({
                   </ButtonBase>
                 </Tooltip>
               ) : (
-                <Tooltip title="Delete…">
-                  <div>
-                    <ButtonBase
-                      sx={imgSx}
-                      onClick={() =>
-                        confirm({
-                          title: "Delete image?",
-                          body: "This image cannot be recovered after",
-                          confirm: "Delete",
-                          confirmColor: "error",
-                          handleConfirm: () => handleDelete(i),
-                        })
-                      }
-                      className="img"
+                <div>
+                  <Box sx={imgSx} className="img">
+                    <Thumbnail
+                      imageUrl={image.downloadURL}
+                      size="200x200"
+                      objectFit="contain"
+                      sx={thumbnailSx}
+                    />
+                    <Grid
+                      container
+                      justifyContent="center"
+                      alignItems="center"
+                      sx={[overlaySx, deleteImgHoverSx]}
                     >
-                      <Thumbnail
-                        imageUrl={image.downloadURL}
-                        size="200x200"
-                        objectFit="contain"
-                        sx={thumbnailSx}
-                      />
-                      <Grid
-                        container
-                        justifyContent="center"
-                        alignItems="center"
-                        sx={[overlaySx, deleteImgHoverSx]}
-                      >
-                        <DeleteIcon color="error" />
-                      </Grid>
-                    </ButtonBase>
-                  </div>
-                </Tooltip>
+                      <Tooltip title="Delete…">
+                        <IconButton
+                          onClick={() =>
+                            confirm({
+                              title: "Delete image?",
+                              body: "This image cannot be recovered after",
+                              confirm: "Delete",
+                              confirmColor: "error",
+                              handleConfirm: () => handleDelete(i),
+                            })
+                          }
+                        >
+                          <DeleteIcon color="error" />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Open">
+                        <IconButton
+                          onClick={() =>
+                            window.open(image.downloadURL, "_blank")
+                          }
+                        >
+                          <OpenIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Grid>
+                  </Box>
+                </div>
               )}
             </Grid>
           ))}
