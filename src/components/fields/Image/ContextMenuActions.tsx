@@ -9,6 +9,7 @@ import {
   tableRowsAtom,
 } from "@src/atoms/tableScope";
 import { IFieldConfig } from "@src/components/fields/types";
+import OpenIcon from "@mui/icons-material/OpenInNewOutlined";
 
 export interface IContextMenuActions {
   label: string;
@@ -29,31 +30,65 @@ export const ContextMenuActions: IFieldConfig["contextMenuActions"] = (
 
   const selectedRow = find(tableRows, ["_rowy_ref.path", selectedCell.path]);
   const cellValue = get(selectedRow, selectedCol.fieldName);
-  const handleCopyImageURL = () => {
-    if (!cellValue || cellValue.length === 0) return;
-    navigator.clipboard.writeText(
-      cellValue.map((imgObj: RowyFile) => imgObj.downloadURL).join(",")
-    );
-    enqueueSnackbar("Copied image URL to clipboard", {
-      variant: "success",
-    });
-  };
+
   const isEmpty =
     cellValue === "" ||
     cellValue === null ||
     cellValue === undefined ||
     cellValue.length === 0;
-  const contextMenuActions = isEmpty
-    ? []
-    : [
-        {
-          label: "Copy Image URL",
-          icon: <Copy />,
-          onClick: handleCopyImageURL,
-        },
-      ];
+  if (isEmpty)
+    return [
+      {
+        label: "Copy Image URL",
+        icon: <Copy />,
+        disabled: true,
+        onClick: () => {},
+      },
+    ];
 
-  return contextMenuActions;
+  const handleCopyImageURL = (imgObj: RowyFile) => () => {
+    navigator.clipboard.writeText(imgObj.downloadURL);
+    enqueueSnackbar("Copied image URL to clipboard", {
+      variant: "success",
+    });
+  };
+  const handleViewImage = (imgObj: RowyFile) => () => {
+    window.open(imgObj.downloadURL, "_blank");
+  };
+
+  if (cellValue.length === 1)
+    return [
+      {
+        label: "Copy Image URL",
+        icon: <Copy />,
+        onClick: handleCopyImageURL(cellValue[0]),
+      },
+      {
+        label: "View Image",
+        icon: <OpenIcon />,
+        onClick: handleViewImage(cellValue[0]),
+      },
+    ];
+  else
+    return [
+      {
+        label: "Copy Image URL",
+        //onClick: handleCopyImageURL,
+        subItems: cellValue.map((imgObj: RowyFile, index: number) => ({
+          label: "Image " + (index + 1),
+          icon: <Copy />,
+          onClick: handleCopyImageURL(imgObj),
+        })),
+      },
+      {
+        label: "View Image",
+        subItems: cellValue.map((imgObj: RowyFile, index: number) => ({
+          label: "Image " + (index + 1),
+          icon: <OpenIcon />,
+          onClick: handleViewImage(imgObj),
+        })),
+      },
+    ];
 };
 
 export default ContextMenuActions;
