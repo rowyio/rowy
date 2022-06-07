@@ -15,7 +15,7 @@ export interface IAddColumnOptions {
   index?: number;
 }
 /**
- * Store function to add a column to tableSchema, to the end or by index.
+ * Set function adds a column to tableSchema, to the end or by index.
  * Also fixes any issues with column indexes, so they go from 0 to length - 1
  * @param options - {@link IAddColumnOptions}
  *
@@ -53,7 +53,7 @@ export interface IUpdateColumnOptions {
   index?: number;
 }
 /**
- * Store function to update a column in tableSchema
+ * Set function updates a column in tableSchema
  * @throws Error if column not found
  * @param options - {@link IUpdateColumnOptions}
  *
@@ -100,7 +100,7 @@ export const updateColumnAtom = atom(
 );
 
 /**
- * Store function to delete a column in tableSchema
+ * Set function deletes a column in tableSchema
  * @param key - Unique key of column to delete
  *
  * @example Basic usage:

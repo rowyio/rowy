@@ -8,6 +8,7 @@ import { tableScope, tableColumnsOrderedAtom } from "@src/atoms/tableScope";
 import { ColumnConfig } from "@src/types/table";
 import { FieldType } from "@src/constants/fields";
 import { getFieldProp } from "@src/components/fields";
+import { spreadSx } from "@src/utils/ui";
 
 export type ColumnOption = {
   value: string;
@@ -96,10 +97,7 @@ export function ColumnItem({
       alignItems="center"
       spacing={1}
       {...props}
-      sx={[
-        { color: "text.secondary", width: "100%" },
-        ...(Array.isArray(props.sx) ? props.sx : props.sx ? [props.sx] : []),
-      ]}
+      sx={[{ color: "text.secondary", width: "100%" }, ...spreadSx(props.sx)]}
     >
       {getFieldProp("icon", option.type)}
       <Typography color="text.primary" style={{ flexGrow: 1 }}>

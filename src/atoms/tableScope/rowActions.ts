@@ -36,7 +36,7 @@ export interface IAddRowOptions {
   setId?: "random" | "decrement";
 }
 /**
- * Adds a row or an array of rows.
+ * Set function adds a row or an array of rows.
  * Adds to rowsDb if it has no missing required fields, otherwise to rowsLocal.
  * @param options - {@link IAddRowOptions}
  *
@@ -171,7 +171,7 @@ export const addRowAtom = atom(
 );
 
 /**
- * Deletes a row or an array of rows from rowsDb or rowsLocal.
+ * Set function deletes a row or an array of rows from rowsDb or rowsLocal.
  * @param path - A single path or array of paths of rows to delete
  *
  * @example Basic usage:
@@ -222,7 +222,7 @@ export interface IUpdateFieldOptions {
   disableCheckEquality?: boolean;
 }
 /**
- * Updates or deletes a field in a row.
+ * Set function updates or deletes a field in a row.
  * Adds to rowsDb if it has no missing required fields,
  * otherwise keeps in rowsLocal.
  * @param options - {@link IUpdateFieldOptions}

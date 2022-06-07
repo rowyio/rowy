@@ -13,7 +13,6 @@ import {
   Typography,
   Tooltip,
 } from "@mui/material";
-import ArrowRightIcon from "@mui/icons-material/ChevronRight";
 import ReadOnlyIcon from "@mui/icons-material/EditOffOutlined";
 
 import InfoTooltip from "@src/components/InfoTooltip";
@@ -26,6 +25,7 @@ import {
   tablesAtom,
 } from "@src/atoms/globalScope";
 import { ROUTES } from "@src/constants/routes";
+import { spreadSx } from "@src/utils/ui";
 
 export default function Breadcrumbs({ sx = [], ...props }: BreadcrumbsProps) {
   const [userRoles] = useAtom(userRolesAtom, globalScope);
@@ -65,7 +65,7 @@ export default function Breadcrumbs({ sx = [], ...props }: BreadcrumbsProps) {
           },
           "& .MuiBreadcrumbs-li": { display: "flex" },
         },
-        ...(Array.isArray(sx) ? sx : [sx]),
+        ...spreadSx(sx),
       ]}
     >
       {/* Section name */}

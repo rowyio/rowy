@@ -13,7 +13,7 @@ import {
 import { APP_BAR_HEIGHT } from "@src/layouts/Navigation";
 
 // FIXME:
-// import ImportWizard from "@src/components/Wizards/ImportWizard";
+// import ImportWizard from "@src/components/TableWizards/ImportWizard";
 // import ImportCSV from "@src/components/TableToolbar/ImportCsv";
 
 export default function EmptyTable() {

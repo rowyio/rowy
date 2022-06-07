@@ -1,4 +1,5 @@
 import { Box, BoxProps } from "@mui/material";
+import { spreadSx } from "@src/utils/ui";
 
 export const ICON_SLASH_STROKE_DASHOFFSET = 27.9;
 
@@ -27,7 +28,7 @@ export default function IconSlash(props: BoxProps<"svg">) {
             stroke: (theme) => theme.palette.background.default,
           },
         },
-        ...(Array.isArray(props.sx) ? props.sx : props.sx ? [props.sx] : []),
+        ...spreadSx(props.sx),
       ]}
     >
       <line

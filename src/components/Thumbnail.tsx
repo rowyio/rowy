@@ -6,6 +6,7 @@ import { Box, BoxProps, Skeleton } from "@mui/material";
 
 import EmptyState from "./EmptyState";
 import BrokenImageIcon from "@mui/icons-material/BrokenImageOutlined";
+import { spreadSx } from "@src/utils/ui";
 
 export interface IThumbnailProps
   extends React.DetailedHTMLProps<
@@ -79,7 +80,7 @@ export function Thumbnail({
               border ? `0 0 0 1px ${theme.palette.divider} inset` : "none",
           },
         },
-        ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
+        ...spreadSx(props.sx),
       ]}
     />
   );

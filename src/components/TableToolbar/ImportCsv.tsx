@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useRef } from "react";
 import { useAtom } from "jotai";
-// FIXME: import { parse } from "csv-parse";
+import { parse } from "csv-parse/browser/esm";
 import { useDropzone } from "react-dropzone";
 import { useDebouncedCallback } from "use-debounce";
 import { useSnackbar } from "notistack";
@@ -31,7 +31,7 @@ import { analytics, logEvent } from "@src/analytics";
 // FIXME:
 // import ImportCsvWizard, {
 //   IImportCsvWizardProps,
-// } from "@src/components/Wizards/ImportCsvWizard";
+// } from "@src/components/TableWizards/ImportCsvWizard";
 
 export enum ImportType {
   csv = "csv",
@@ -76,27 +76,26 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
   };
   const popoverId = open ? "csv-popover" : undefined;
 
-  const parseCsv = (csvString: string) => {};
-  // FIXME:
-  // parse(csvString, { delimiter: [",", "\t"] }, (err, rows) => {
-  //   if (err) {
-  //     setError(err.message);
-  //   } else {
-  //     const columns = rows.shift() ?? [];
-  //     if (columns.length === 0) {
-  //       setError("No columns detected");
-  //     } else {
-  //       const mappedRows = rows.map((row: any) =>
-  //         row.reduce(
-  //           (a: any, c: any, i: number) => ({ ...a, [columns[i]]: c }),
-  //           {}
-  //         )
-  //       );
-  //       setCsvData({ columns, rows: mappedRows });
-  //       setError("");
-  //     }
-  //   }
-  // });
+  const parseCsv = (csvString: string) =>
+    parse(csvString, { delimiter: [",", "\t"] }, (err, rows) => {
+      if (err) {
+        setError(err.message);
+      } else {
+        const columns = rows.shift() ?? [];
+        if (columns.length === 0) {
+          setError("No columns detected");
+        } else {
+          const mappedRows = rows.map((row: any) =>
+            row.reduce(
+              (a: any, c: any, i: number) => ({ ...a, [columns[i]]: c }),
+              {}
+            )
+          );
+          setCsvData({ columns, rows: mappedRows });
+          setError("");
+        }
+      }
+    });
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
@@ -130,7 +129,7 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
 
   function setDataTypeRef(data: string) {
     const getFirstLine = data?.match(/^(.*)/)?.[0];
-    /**
+    /*
      *  Catching edge case with regex
      *  EG: "hello\tworld"\tFirst
      *  - find \t between quotes, and replace with '\s'
@@ -180,8 +179,6 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
           title="Import CSV or TSV"
           onClick={handleOpen}
           icon={<ImportIcon />}
-          // FIXME:
-          disabled
         />
       )}
 
