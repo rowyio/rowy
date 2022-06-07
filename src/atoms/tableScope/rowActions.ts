@@ -18,13 +18,16 @@ import {
   tableRowsAtom,
   _updateRowDbAtom,
   _deleteRowDbAtom,
+  _bulkWriteDbAtom,
 } from "./table";
-import { TableRow } from "@src/types/table";
+
+import { TableRow, TableRowRef } from "@src/types/table";
 import {
   rowyUser,
   generateId,
   decrementId,
   updateRowData,
+  omitRowyFields,
 } from "@src/utils/table";
 
 export interface IAddRowOptions {
@@ -204,6 +207,63 @@ export const deleteRowAtom = atom(
     } else {
       await _deleteSingleRowAndAudit(path);
     }
+  }
+);
+
+export interface IBulkAddRowsOptions {
+  rows: Partial<TableRow[]>;
+  collection: string;
+}
+export const bulkAddRowsAtom = atom(
+  null,
+  async (get, _, { rows, collection }: IBulkAddRowsOptions) => {
+    const bulkWriteDb = get(_bulkWriteDbAtom);
+    if (!bulkWriteDb) throw new Error("Cannot write to database");
+    const tableSettings = get(tableSettingsAtom);
+    if (!tableSettings) throw new Error("Cannot read table settings");
+    const currentUser = get(currentUserAtom);
+    if (!currentUser) throw new Error("Cannot read current user");
+    const auditChange = get(auditChangeAtom);
+    const tableColumnsOrdered = get(tableColumnsOrderedAtom);
+
+    // Create initial values for all rows to be added
+    const initialValues: Partial<TableRow> = {};
+
+    // Set initial values based on default values
+    for (const column of tableColumnsOrdered) {
+      if (column.config?.defaultValue?.type === "static")
+        initialValues[column.key] = column.config.defaultValue.value!;
+      else if (column.config?.defaultValue?.type === "null")
+        initialValues[column.key] = null;
+    }
+
+    // Write audit fields if not explicitly disabled
+    if (tableSettings.audit !== false) {
+      const auditValue = rowyUser(currentUser);
+      initialValues[tableSettings.auditFieldCreatedBy || "_createdBy"] =
+        auditValue;
+      initialValues[tableSettings.auditFieldUpdatedBy || "_updatedBy"] =
+        auditValue;
+    }
+
+    // Assign a random ID to each row
+    const operations = rows.map((row) => ({
+      type: "add" as "add",
+      path: `${collection}/${generateId()}`,
+      data: { ...initialValues, ...omitRowyFields(row) },
+    }));
+
+    // Write to db
+    await bulkWriteDb(operations);
+
+    // Write an audit entry for each row
+    // if (auditChange) {
+    //   const auditChangePromises: Promise<void>[] = [];
+    //   for (const operation of operations) {
+    //     auditChangePromises.push(auditChange("ADD_ROW", operation.path));
+    //   }
+    //   await Promise.all(auditChangePromises);
+    // }
   }
 );
 

@@ -223,8 +223,6 @@ export default function Step1Columns({
                               </>
                             );
                         },
-                      },
-                      InputProps: {
                         sx: [
                           {
                             backgroundColor: "background.default",
@@ -232,11 +230,12 @@ export default function Step1Columns({
                               `1px solid ${theme.palette.divider}`,
                             borderRadius: 0,
                             boxShadow: "none",
-                            height: 42,
-
-                            "& > *": {
+                            "& .MuiSelect-select": {
+                              boxSizing: "border-box",
+                              height: 40,
                               typography: "caption",
                               fontWeight: "medium",
+                              lineHeight: "28px",
                             },
 
                             color: "text.secondary",

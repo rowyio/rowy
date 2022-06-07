@@ -67,7 +67,7 @@ export default function Export() {
       orderBy(order.key, order.direction)
     );
     // TODO: paginate
-    return firestoreQuery(collectionRef, ...filters, ...orders, limit(10000));
+    return firestoreQuery(collectionRef, ...filters, ...orders, limit(10_000));
   }, [
     firebaseDb,
     tableCollection,
@@ -106,6 +106,7 @@ export default function Export() {
                   {tableFilters.length !== 0 || tableOrders.length !== 0
                     ? "The filters and sorting applied to the table will be applied to the export"
                     : "No filters or sorting will be applied on the exported data"}
+                  . Limited to 10,000 rows.
                 </DialogContent>
 
                 <TabList

@@ -41,10 +41,13 @@ export enum ImportMethod {
 }
 
 export interface IImportCsvProps {
+  render?: (
+    onClick: (event: React.MouseEvent<HTMLButtonElement>) => void
+  ) => React.ReactNode;
   PopoverProps?: Partial<MuiPopoverProps>;
 }
 
-export default function ImportCsv({ PopoverProps }: IImportCsvProps) {
+export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
   const [userRoles] = useAtom(userRolesAtom, globalScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [{ importType, csvData }, setImportCsv] = useAtom(
@@ -171,11 +174,15 @@ export default function ImportCsv({ PopoverProps }: IImportCsvProps) {
 
   return (
     <>
-      <TableToolbarButton
-        title="Import CSV or TSV"
-        onClick={handleOpen}
-        icon={<ImportIcon />}
-      />
+      {render ? (
+        render(handleOpen)
+      ) : (
+        <TableToolbarButton
+          title="Import CSV or TSV"
+          onClick={handleOpen}
+          icon={<ImportIcon />}
+        />
+      )}
 
       <Popover
         id={popoverId}

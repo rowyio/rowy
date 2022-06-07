@@ -2,7 +2,7 @@ import { useState, useMemo, useCallback } from "react";
 import useMemoValue from "use-memo-value";
 import { useAtom, useSetAtom } from "jotai";
 import { useSnackbar } from "notistack";
-import { mergeWith, find, isEqual } from "lodash-es";
+import { uniqBy, find, isEqual } from "lodash-es";
 import { ITableModalProps } from "@src/components/TableModals";
 
 import {
@@ -18,12 +18,14 @@ import WizardDialog from "@src/components/TableModals/WizardDialog";
 import Step1Columns from "./Step1Columns";
 import Step2NewColumns from "./Step2NewColumns";
 import Step3Preview from "./Step3Preview";
+import CircularProgressOptical from "@src/components/CircularProgressOptical";
 
 import {
   tableScope,
+  tableSettingsAtom,
   tableSchemaAtom,
   addColumnAtom,
-  addRowAtom,
+  bulkAddRowsAtom,
   importCsvAtom,
   ImportCsvData,
 } from "@src/atoms/tableScope";
@@ -45,11 +47,12 @@ export interface IStepProps {
 }
 
 export default function ImportCsvWizard({ onClose }: ITableModalProps) {
+  const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const addColumn = useSetAtom(addColumnAtom, tableScope);
-  // const addRow = useSetAtom(addRowAtom, tableScope);
+  const bulkAddRows = useSetAtom(bulkAddRowsAtom, tableScope);
   const [{ importType, csvData }] = useAtom(importCsvAtom, tableScope);
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -60,11 +63,15 @@ export default function ImportCsvWizard({ onClose }: ITableModalProps) {
     newColumns: [],
   });
   const updateConfig: IStepProps["updateConfig"] = useCallback((value) => {
-    setConfig((prev) => ({
-      ...mergeWith(prev, value, (objValue, srcValue) =>
-        Array.isArray(objValue) ? objValue.concat(srcValue) : undefined
-      ),
-    }));
+    setConfig((prev) => {
+      const pairs = uniqBy([...prev.pairs, ...(value.pairs ?? [])], "csvKey");
+      const newColumns = uniqBy(
+        [...prev.newColumns, ...(value.newColumns ?? [])],
+        "key"
+      ).filter((col) => pairs.some((pair) => pair.columnKey === col.key));
+
+      return { pairs, newColumns };
+    });
   }, []);
 
   const parsedRows: any[] = useMemo(() => {
@@ -86,19 +93,38 @@ export default function ImportCsvWizard({ onClose }: ITableModalProps) {
     );
   }, [csvData, columns, config]);
 
-  const handleFinish = () => {
-    if (!columns || !parsedRows) return;
-    enqueueSnackbar("Importing data…");
-    // Add all new rows — synchronous
-    // FIXME:
-    // addRows(parsedRows.map((r) => ({ data: r })).reverse(), true);
+  const handleFinish = async () => {
+    if (!parsedRows) return;
+    console.time("importCsv");
+    const loadingSnackbar = enqueueSnackbar(
+      `Importing ${parsedRows.length} rows. This may take a while…`,
+      {
+        persist: true,
+        action: <CircularProgressOptical color="inherit" size={24} />,
+      }
+    );
+    const promises: Promise<void>[] = [];
 
-    // Add any new columns to the end
-    for (const col of config.newColumns) addColumn({ config: col });
-    logEvent(analytics, "import_success", { type: importType });
+    try {
+      // Add any new columns to the end
+      for (const col of config.newColumns)
+        promises.push(addColumn({ config: col }));
 
-    // Close wizard
-    onClose();
+      promises.push(
+        bulkAddRows({ rows: parsedRows, collection: tableSettings.collection })
+      );
+
+      await Promise.all(promises);
+      logEvent(analytics, "import_success", { type: importType });
+      closeSnackbar(loadingSnackbar);
+    } catch (e) {
+      enqueueSnackbar((e as Error).message, { variant: "error" });
+    } finally {
+      closeSnackbar(loadingSnackbar);
+      // Close wizard
+      onClose();
+    }
+    console.timeEnd("importCsv");
   };
 
   if (!csvData) return null;
@@ -107,7 +133,7 @@ export default function ImportCsvWizard({ onClose }: ITableModalProps) {
     <WizardDialog
       open
       onClose={onClose}
-      title="Import CSV or TSV"
+      title={`Import ${importType.toUpperCase()}`}
       steps={
         [
           {

@@ -11,7 +11,7 @@ import { IWebhook } from "@src/components/TableModals/WebhooksModal/utils";
  * A standard function to update a doc in the database
  * @param update - The updates to be deeply merged with the existing doc. Note arrays should be ovewritten to match Firestore set with merge behavior
  * @param deleteFields - Optionally, fields to be deleted from the doc. Access nested fields with dot notation
- * @returns Promise when complete
+ * @returns Promise
  */
 export type UpdateDocFunction<T = TableRow> = (
   update: Partial<T>,
@@ -23,7 +23,7 @@ export type UpdateDocFunction<T = TableRow> = (
  * @param path - The full path to the doc
  * @param update - The updates to be deeply merged with the existing doc. Note arrays should be ovewritten to match Firestore set with merge behavior
  * @param deleteFields - Optionally, fields to be deleted from the doc. Access nested fields with dot notation
- * @returns Promise when complete
+ * @returns Promise
  */
 export type UpdateCollectionDocFunction<T = TableRow> = (
   path: string,
@@ -34,9 +34,22 @@ export type UpdateCollectionDocFunction<T = TableRow> = (
 /**
  * A standard function to delete a doc in a specific collection in the database
  * @param path - The full path to the doc
- * @returns Promise when complete
+ * @returns Promise
  */
 export type DeleteCollectionDocFunction = (path: string) => Promise<void>;
+
+export type BulkWriteOperation<T> =
+  | { type: "delete"; path: string }
+  | { type: "add"; path: string; data: T }
+  | { type: "update"; path: string; data: Partial<T>; deleteFields?: string[] };
+/**
+ * A standard function to write bulk updates to the database
+ * @param operations - {@link BulkWriteOperation}
+ * @returns Promise
+ */
+export type BulkWriteFunction<T = Partial<TableRow>> = (
+  operations: BulkWriteOperation<T>[]
+) => Promise<void[]>;
 
 /**
  * Store the next page state to know if it’s loading and if it’s available

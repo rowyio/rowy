@@ -1,6 +1,7 @@
 import { memo, useMemo, useEffect, useCallback } from "react";
 import { useAtom, useSetAtom } from "jotai";
-import { find } from "lodash-es";
+import { find, chunk, set } from "lodash-es";
+import { doc, writeBatch, deleteField } from "firebase/firestore";
 
 import {
   globalScope,
@@ -20,10 +21,12 @@ import {
   tableRowsDbAtom,
   _updateRowDbAtom,
   _deleteRowDbAtom,
+  _bulkWriteDbAtom,
   tableNextPageAtom,
   auditChangeAtom,
 } from "@src/atoms/tableScope";
-
+import { BulkWriteOperation, TableRow } from "@src/types/table";
+import { firebaseDbAtom } from "./ProjectSourceFirebase";
 import useFirestoreDocWithAtom from "@src/hooks/useFirestoreDocWithAtom";
 import useFirestoreCollectionWithAtom from "@src/hooks/useFirestoreCollectionWithAtom";
 import { TABLE_SCHEMAS, TABLE_GROUP_SCHEMAS } from "@src/config/dbPaths";
@@ -139,6 +142,56 @@ const TableSourceFirestore = memo(function TableSourceFirestore() {
 
     return () => setAuditChange(undefined);
   }, [setAuditChange, rowyRun, compatibleRowyRunVersion, tableSettings]);
+
+  // Set _bulkWriteDb function
+  const [firebaseDb] = useAtom(firebaseDbAtom, globalScope);
+  const setBulkWriteDb = useSetAtom(_bulkWriteDbAtom, tableScope);
+  useEffect(() => {
+    setBulkWriteDb(
+      () => async (operations: BulkWriteOperation<Partial<TableRow>>[]) => {
+        // Chunk operations into batches of 500 (Firestore limit is 500)
+        const operationsChunked = chunk(operations, 500);
+        // Store array of promises so we can run them all at once
+        const promises: Promise<void>[] = [];
+        // Loop through chunks of 500
+        for (const operationsChunk of operationsChunked) {
+          // Create Firestore batch transaction
+          const batch = writeBatch(firebaseDb);
+          // Loop through operations and write to batch
+          for (const operation of operationsChunk) {
+            // New document
+            if (operation.type === "add") {
+              batch.set(doc(firebaseDb, operation.path), operation.data);
+            }
+            // Update existing document and merge values and delete fields
+            else if (operation.type === "update") {
+              const updateToDb = { ...operation.data };
+              if (Array.isArray(operation.deleteFields)) {
+                for (const field of operation.deleteFields) {
+                  set(updateToDb as any, field, deleteField());
+                }
+              }
+              batch.set(doc(firebaseDb, operation.path), operation.data, {
+                merge: true,
+              });
+            }
+            // Delete existing documents
+            else if (operation.type === "delete") {
+              batch.delete(doc(firebaseDb, operation.path));
+            }
+          }
+          // Add to promises array
+          // promises.push(
+          await batch.commit().then(() => console.log("Batch committed"));
+          // );
+        }
+        // Return promise that waits for all promises to resolve
+        return Promise.all(promises);
+      }
+    );
+
+    return () => setBulkWriteDb(undefined);
+  }, [firebaseDb, setBulkWriteDb]);
 
   return null;
 });

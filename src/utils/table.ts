@@ -1,4 +1,4 @@
-import { mergeWith, isArray, get } from "lodash-es";
+import { mergeWith, isArray } from "lodash-es";
 import type { User } from "firebase/auth";
 import { TABLE_GROUP_SCHEMAS, TABLE_SCHEMAS } from "@src/config/dbPaths";
 import { TableSettings } from "@src/types/table";
@@ -43,6 +43,16 @@ export const updateRowData = <T = Record<string, any>>(
     // If the proeprty to be merged is array, overwrite the array entirely
     (objValue, srcValue) => (isArray(objValue) ? srcValue : undefined)
   );
+
+export const omitRowyFields = <T = Record<string, any>>(row: T) => {
+  const shallowClonedRow: any = { ...row };
+  delete shallowClonedRow["_rowy_ref"];
+  delete shallowClonedRow["_rowy_outOfOrder"];
+  delete shallowClonedRow["_rowy_missingRequiredFields"];
+  delete shallowClonedRow["_rowy_new"];
+
+  return shallowClonedRow as T;
+};
 
 const ID_CHARACTERS =
   "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";

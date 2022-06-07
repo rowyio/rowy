@@ -4,20 +4,20 @@ import { Grid, Stack, Typography, Button, Divider } from "@mui/material";
 import { Import as ImportIcon } from "@src/assets/icons";
 import { AddColumn as AddColumnIcon } from "@src/assets/icons";
 
+import ImportCsv from "@src/components/TableToolbar/ImportCsv";
+
 import {
   tableScope,
   tableSettingsAtom,
   tableRowsAtom,
   columnModalAtom,
+  tableModalAtom,
 } from "@src/atoms/tableScope";
 import { APP_BAR_HEIGHT } from "@src/layouts/Navigation";
 
-// FIXME:
-// import ImportWizard from "@src/components/TableModals/ImportWizard";
-// import ImportCSV from "@src/components/TableToolbar/ImportCsv";
-
 export default function EmptyTable() {
   const openColumnModal = useSetAtom(columnModalAtom, tableScope);
+  const openTableModal = useSetAtom(tableModalAtom, tableScope);
 
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [tableRows] = useAtom(tableRowsAtom, tableScope);
@@ -48,12 +48,10 @@ export default function EmptyTable() {
             variant="contained"
             color="primary"
             startIcon={<ImportIcon />}
-            // onClick={() => importWizardRef?.current?.setOpen(true)}
+            onClick={() => openTableModal("import")}
           >
             Import
           </Button>
-
-          {/* <ImportWizard /> */}
         </div>
       </>
     );
@@ -77,18 +75,17 @@ export default function EmptyTable() {
               You can import data from an external CSV file:
             </Typography>
 
-            {/* <ImportCSV
-              render={(onClick) => ( */}
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<ImportIcon />}
-              // onClick={onClick}
-              disabled
-            >
-              Import CSV
-            </Button>
-            {/*  )}
+            <ImportCsv
+              render={(onClick) => (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<ImportIcon />}
+                  onClick={onClick}
+                >
+                  Import CSV
+                </Button>
+              )}
               PopoverProps={{
                 anchorOrigin: {
                   vertical: "bottom",
@@ -99,7 +96,7 @@ export default function EmptyTable() {
                   horizontal: "center",
                 },
               }}
-            /> */}
+            />
           </Grid>
 
           <Grid item>

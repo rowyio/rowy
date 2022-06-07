@@ -54,6 +54,10 @@ function TablePage() {
             <Suspense fallback={null}>
               <ColumnModals />
             </Suspense>
+
+            <Suspense fallback={null}>
+              <TableModals />
+            </Suspense>
           </div>
         </Fade>
       </Suspense>

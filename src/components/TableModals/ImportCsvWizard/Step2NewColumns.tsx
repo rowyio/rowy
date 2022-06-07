@@ -64,17 +64,9 @@ export default function Step2NewColumns({
               ))}
             </ScrollableList>
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography
-              variant="subtitle2"
-              noWrap
-              component="h2"
-              sx={{ mt: 52 / 8, mx: 0, mb: 1 }}
-            >
-              Column type: {config.newColumns[fieldToEdit].name}
-            </Typography>
-
+          <Grid item xs={12} sm={6} style={{ paddingTop: 68 }}>
             <FieldsDropdown
+              label={`Column type: ${config.newColumns[fieldToEdit].name}`}
               value={config.newColumns[fieldToEdit].type}
               onChange={handleChange}
               hideLabel

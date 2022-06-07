@@ -74,7 +74,7 @@ export default function Step1Columns({ config, setConfig }: IStepProps) {
   };
 
   useEffect(() => {
-    setConfig(
+    setConfig((config) =>
       selectedFields.reduce(
         (a, c, i) => ({
           ...a,

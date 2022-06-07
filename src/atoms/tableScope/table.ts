@@ -20,6 +20,7 @@ import {
   UpdateCollectionDocFunction,
   DeleteCollectionDocFunction,
   NextPageState,
+  BulkWriteFunction,
 } from "@src/types/table";
 import { updateRowData } from "@src/utils/table";
 
@@ -197,6 +198,11 @@ export const _updateRowDbAtom = atom<UpdateCollectionDocFunction | undefined>(
 export const _deleteRowDbAtom = atom<DeleteCollectionDocFunction | undefined>(
   undefined
 );
+/**
+ * Store function to bulk write to db
+ * @internal Use {@link bulkAddRowsAtom} instead
+ */
+export const _bulkWriteDbAtom = atom<BulkWriteFunction | undefined>(undefined);
 
 export type AuditChangeFunction = (
   type: "ADD_ROW" | "UPDATE_CELL" | "DELETE_ROW",
