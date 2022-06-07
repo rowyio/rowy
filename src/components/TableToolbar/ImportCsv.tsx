@@ -1,5 +1,5 @@
-import React, { useState, useCallback, useRef } from "react";
-import { useAtom } from "jotai";
+import { useState, useCallback, useRef } from "react";
+import { useAtom, useSetAtom } from "jotai";
 import { parse } from "csv-parse/browser/esm";
 import { useDropzone } from "react-dropzone";
 import { useDebouncedCallback } from "use-debounce";
@@ -26,17 +26,13 @@ import { Upload as FileUploadIcon } from "@src/assets/icons";
 import CheckIcon from "@mui/icons-material/CheckCircle";
 
 import { globalScope, userRolesAtom } from "@src/atoms/globalScope";
-import { tableScope, tableSettingsAtom } from "@src/atoms/tableScope";
+import {
+  tableScope,
+  tableSettingsAtom,
+  tableModalAtom,
+  importCsvAtom,
+} from "@src/atoms/tableScope";
 import { analytics, logEvent } from "@src/analytics";
-// FIXME:
-// import ImportCsvWizard, {
-//   IImportCsvWizardProps,
-// } from "@src/components/TableWizards/ImportCsvWizard";
-
-export enum ImportType {
-  csv = "csv",
-  tsv = "tsv",
-}
 
 export enum ImportMethod {
   paste = "paste",
@@ -45,23 +41,24 @@ export enum ImportMethod {
 }
 
 export interface IImportCsvProps {
-  render?: (
-    onClick: (event: React.MouseEvent<HTMLButtonElement>) => void
-  ) => React.ReactNode;
   PopoverProps?: Partial<MuiPopoverProps>;
 }
 
-export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
+export default function ImportCsv({ PopoverProps }: IImportCsvProps) {
   const [userRoles] = useAtom(userRolesAtom, globalScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
+  const [{ importType, csvData }, setImportCsv] = useAtom(
+    importCsvAtom,
+    tableScope
+  );
+  const openTableModal = useSetAtom(tableModalAtom, tableScope);
   const { enqueueSnackbar } = useSnackbar();
 
-  const importTypeRef = useRef(ImportType.csv);
+  const importTypeRef = useRef(importType);
   const importMethodRef = useRef(ImportMethod.upload);
   const [open, setOpen] = useState<HTMLButtonElement | null>(null);
   const [tab, setTab] = useState("upload");
-  const [csvData, setCsvData] =
-    useState</* IImportCsvWizardProps["csvData"] */ any>(null);
+
   const [error, setError] = useState("");
   const validCsv =
     csvData !== null && csvData?.columns.length > 0 && csvData?.rows.length > 0;
@@ -70,32 +67,38 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
     setOpen(event.currentTarget);
   const handleClose = () => {
     setOpen(null);
-    setCsvData(null);
+    setImportCsv({ importType: "csv", csvData: null });
     setTab("upload");
     setError("");
   };
   const popoverId = open ? "csv-popover" : undefined;
 
-  const parseCsv = (csvString: string) =>
-    parse(csvString, { delimiter: [",", "\t"] }, (err, rows) => {
-      if (err) {
-        setError(err.message);
-      } else {
-        const columns = rows.shift() ?? [];
-        if (columns.length === 0) {
-          setError("No columns detected");
+  const parseCsv = useCallback(
+    (csvString: string) =>
+      parse(csvString, { delimiter: [",", "\t"] }, (err, rows) => {
+        if (err) {
+          setError(err.message);
         } else {
-          const mappedRows = rows.map((row: any) =>
-            row.reduce(
-              (a: any, c: any, i: number) => ({ ...a, [columns[i]]: c }),
-              {}
-            )
-          );
-          setCsvData({ columns, rows: mappedRows });
-          setError("");
+          const columns = rows.shift() ?? [];
+          if (columns.length === 0) {
+            setError("No columns detected");
+          } else {
+            const mappedRows = rows.map((row: any) =>
+              row.reduce(
+                (a: any, c: any, i: number) => ({ ...a, [columns[i]]: c }),
+                {}
+              )
+            );
+            setImportCsv({
+              importType: importTypeRef.current,
+              csvData: { columns, rows: mappedRows },
+            });
+            setError("");
+          }
         }
-      }
-    });
+      }),
+    [setImportCsv]
+  );
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
@@ -105,9 +108,7 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
         reader.onload = (event: any) => parseCsv(event.target.result);
         reader.readAsText(file);
         importTypeRef.current =
-          file.type === "text/tab-separated-values"
-            ? ImportType.tsv
-            : ImportType.csv;
+          file.type === "text/tab-separated-values" ? "tsv" : "csv";
       } catch (error) {
         enqueueSnackbar(`Please import a .tsv or .csv file`, {
           variant: "error",
@@ -118,7 +119,7 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
         });
       }
     },
-    [enqueueSnackbar]
+    [enqueueSnackbar, parseCsv]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -141,8 +142,8 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
       getFirstLine?.replace(strInQuotes, tabsWithSpace) ?? "";
     const tabPattern = /\t/;
     return tabPattern.test(formatString)
-      ? (importTypeRef.current = ImportType.tsv)
-      : (importTypeRef.current = ImportType.csv);
+      ? (importTypeRef.current = "tsv")
+      : (importTypeRef.current = "csv");
   }
   const handlePaste = useDebouncedCallback((value: string) => {
     parseCsv(value);
@@ -166,21 +167,15 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
       });
   }, 1000);
 
-  const [openWizard, setOpenWizard] = useState(false);
-
   if (tableSettings.readOnly && !userRoles.includes("ADMIN")) return null;
 
   return (
     <>
-      {render ? (
-        render(handleOpen)
-      ) : (
-        <TableToolbarButton
-          title="Import CSV or TSV"
-          onClick={handleOpen}
-          icon={<ImportIcon />}
-        />
-      )}
+      <TableToolbarButton
+        title="Import CSV or TSV"
+        onClick={handleOpen}
+        icon={<ImportIcon />}
+      />
 
       <Popover
         id={popoverId}
@@ -204,7 +199,10 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
           <TabList
             onChange={(_, v) => {
               setTab(v);
-              setCsvData(null);
+              setImportCsv({
+                importType: importTypeRef.current,
+                csvData: null,
+              });
               setError("");
             }}
             aria-label="Import CSV method tabs"
@@ -299,7 +297,11 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
               label="Paste CSV or TSV text"
               placeholder="column, column, …"
               onChange={(e) => {
-                if (csvData !== null) setCsvData(null);
+                if (csvData !== null)
+                  setImportCsv({
+                    importType: importTypeRef.current,
+                    csvData: null,
+                  });
                 handlePaste(e.target.value);
               }}
               sx={{
@@ -325,7 +327,11 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
               label="Paste URL to CSV or TSV file"
               placeholder="https://"
               onChange={(e) => {
-                if (csvData !== null) setCsvData(null);
+                if (csvData !== null)
+                  setImportCsv({
+                    importType: importTypeRef.current,
+                    csvData: null,
+                  });
                 handleUrl(e.target.value);
               }}
               helperText={loading ? "Fetching…" : error}
@@ -346,7 +352,7 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
             minWidth: 100,
           }}
           onClick={() => {
-            setOpenWizard(true);
+            openTableModal("importCsv");
             logEvent(analytics, `import_${importMethodRef.current}`, {
               type: importTypeRef.current,
             });
@@ -355,14 +361,6 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
           Continue
         </Button>
       </Popover>
-
-      {/* {openWizard && csvData && (
-        <ImportCsvWizard
-          importType={importTypeRef.current}
-          handleClose={() => setOpenWizard(false)}
-          csvData={csvData}
-        />
-      )} */}
     </>
   );
 }

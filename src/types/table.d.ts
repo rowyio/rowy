@@ -4,8 +4,8 @@ import type {
   DocumentData,
   DocumentReference,
 } from "firebase/firestore";
-import { IExtension } from "@src/components/TableToolbar/Extensions/utils";
-import { IWebhook } from "@src/components/TableToolbar/Webhooks/utils";
+import { IExtension } from "@src/components/TableModals/ExtensionsModal/utils";
+import { IWebhook } from "@src/components/TableModals/WebhooksModal/utils";
 
 /**
  * A standard function to update a doc in the database

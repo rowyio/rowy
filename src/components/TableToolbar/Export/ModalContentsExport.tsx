@@ -16,7 +16,7 @@ import {
   Radio,
   FormHelperText,
 } from "@mui/material";
-import ColumnSelect from "@src/components/TableToolbar/ColumnSelect";
+import ColumnSelect from "@src/components/Table/ColumnSelect";
 
 import {
   tableScope,

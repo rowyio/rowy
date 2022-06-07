@@ -27,8 +27,8 @@ const AUDIT_FIELD_TYPES = [
 ];
 
 export default function NewColumnModal({
-  handleClose,
-}: Pick<IColumnModalProps, "handleClose">) {
+  onClose,
+}: Pick<IColumnModalProps, "onClose">) {
   const [updateTable] = useAtom(updateTableAtom, globalScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const addColumn = useSetAtom(addColumnAtom, tableScope);
@@ -73,7 +73,7 @@ export default function NewColumnModal({
 
   return (
     <Modal
-      onClose={handleClose}
+      onClose={onClose}
       title="Add new column"
       fullWidth
       maxWidth="xs"
@@ -159,7 +159,7 @@ export default function NewColumnModal({
             if (requireConfiguration) {
               setColumnModal({ type: "config", columnKey: fieldKey });
             } else {
-              handleClose();
+              onClose();
             }
             logEvent(analytics, "create_column", { type });
           },
@@ -171,7 +171,7 @@ export default function NewColumnModal({
           children: requireConfiguration ? "Next" : "Add",
         },
         secondary: {
-          onClick: handleClose,
+          onClick: onClose,
           children: "Cancel",
         },
       }}

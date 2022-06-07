@@ -8,7 +8,7 @@ import Modal from "@src/components/Modal";
 import { tableScope, updateColumnAtom } from "@src/atoms/tableScope";
 
 export default function NameChangeModal({
-  handleClose,
+  onClose,
   column,
 }: IColumnModalProps) {
   const updateColumn = useSetAtom(updateColumnAtom, tableScope);
@@ -16,7 +16,7 @@ export default function NameChangeModal({
 
   return (
     <Modal
-      onClose={handleClose}
+      onClose={onClose}
       title="Rename column"
       maxWidth="xs"
       children={
@@ -35,12 +35,12 @@ export default function NameChangeModal({
         primary: {
           onClick: () => {
             updateColumn({ key: column.key, config: { name: newName } });
-            handleClose();
+            onClose();
           },
           children: "Update",
         },
         secondary: {
-          onClick: handleClose,
+          onClick: onClose,
           children: "Cancel",
         },
       }}

@@ -29,7 +29,7 @@ import { useSnackbar } from "notistack";
 import { getTableSchemaPath } from "@src/utils/table";
 
 export default function ColumnConfigModal({
-  handleClose,
+  onClose,
   column,
 }: IColumnModalProps) {
   const [rowyRun] = useAtom(rowyRunAtom, globalScope);
@@ -82,7 +82,7 @@ export default function ColumnConfigModal({
   return (
     <Modal
       maxWidth="md"
-      onClose={handleClose}
+      onClose={onClose}
       title={`${column.name}: Config`}
       disableBackdropClick
       disableEscapeKeyDown
@@ -203,13 +203,13 @@ export default function ColumnConfigModal({
             closeSnackbar(savingSnack);
             enqueueSnackbar("Changes saved");
 
-            handleClose();
+            onClose();
             setShowRebuildPrompt(false);
           },
           children: "Update",
         },
         secondary: {
-          onClick: handleClose,
+          onClick: onClose,
           children: "Cancel",
         },
       }}

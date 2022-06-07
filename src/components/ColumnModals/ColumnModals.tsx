@@ -14,7 +14,7 @@ import {
 import { ColumnConfig } from "@src/types/table";
 
 export interface IColumnModalProps {
-  handleClose: () => void;
+  onClose: () => void;
   column: ColumnConfig;
 }
 
@@ -24,22 +24,21 @@ export default function ColumnModals() {
 
   if (!columnModal) return null;
 
-  const handleClose = () => setColumnModal(RESET);
+  const onClose = () => setColumnModal(RESET);
 
-  if (columnModal.type === "new")
-    return <NewColumnModal handleClose={handleClose} />;
+  if (columnModal.type === "new") return <NewColumnModal onClose={onClose} />;
 
   const column = tableSchema.columns?.[columnModal.columnKey ?? ""];
   if (!column) return null;
 
   if (columnModal.type === "name")
-    return <NameChangeModal handleClose={handleClose} column={column} />;
+    return <NameChangeModal onClose={onClose} column={column} />;
 
   if (columnModal.type === "type")
-    return <TypeChangeModal handleClose={handleClose} column={column} />;
+    return <TypeChangeModal onClose={onClose} column={column} />;
 
   if (columnModal.type === "config")
-    return <ColumnConfigModal handleClose={handleClose} column={column} />;
+    return <ColumnConfigModal onClose={onClose} column={column} />;
 
   return null;
 }

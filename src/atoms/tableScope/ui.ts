@@ -3,7 +3,7 @@ import { atomWithStorage, atomWithHash } from "jotai/utils";
 
 import type { PopoverProps } from "@mui/material";
 import type { ColumnConfig, TableFilter } from "@src/types/table";
-import { SEVERITY_LEVELS } from "@src/components/TableToolbar/CloudLogs/CloudLogSeverityIcon";
+import { SEVERITY_LEVELS } from "@src/components/TableModals/CloudLogsModal/CloudLogSeverityIcon";
 
 /**
  * Open table column menu. Set to `null` to close.
@@ -80,7 +80,7 @@ export const sideDrawerShowHiddenFieldsAtom = atomWithStorage(
 
 /**
  * Opens a table modal. Set to `null` to close.
- * Modals: cloud logs, extensions, webhooks, export.
+ * Modals: cloud logs, extensions, webhooks, export, import, import CSV.
  *
  * @example Basic usage:
  * ```
@@ -94,8 +94,21 @@ export const sideDrawerShowHiddenFieldsAtom = atomWithStorage(
  * ```
  */
 export const tableModalAtom = atomWithHash<
-  "cloudLogs" | "extensions" | "webhooks" | "export" | null
+  | "cloudLogs"
+  | "extensions"
+  | "webhooks"
+  | "export"
+  | "import"
+  | "importCsv"
+  | null
 >("tableModal", null, { replaceState: true });
+
+export type ImportCsvData = { columns: string[]; rows: Record<string, any>[] };
+/** Store import CSV popover and wizard state */
+export const importCsvAtom = atom<{
+  importType: "csv" | "tsv";
+  csvData: ImportCsvData | null;
+}>({ importType: "csv", csvData: null });
 
 /** Store side drawer open state */
 export const sideDrawerOpenAtom = atom(false);

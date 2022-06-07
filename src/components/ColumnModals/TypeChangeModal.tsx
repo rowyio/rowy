@@ -12,7 +12,7 @@ import { getFieldProp } from "@src/components/fields";
 import { analytics, logEvent } from "analytics";
 
 export default function TypeChangeModal({
-  handleClose,
+  onClose,
   column,
 }: IColumnModalProps) {
   const updateColumn = useSetAtom(updateColumnAtom, tableScope);
@@ -20,7 +20,7 @@ export default function TypeChangeModal({
 
   return (
     <Modal
-      onClose={handleClose}
+      onClose={onClose}
       title="Change column type"
       children={
         <>
@@ -41,7 +41,7 @@ export default function TypeChangeModal({
           onClick: () => {
             const prevType = column.type;
             updateColumn({ key: column.key, config: { type: newType } });
-            handleClose();
+            onClose();
             logEvent(analytics, "change_column_type", { newType, prevType });
           },
           children: "Update",

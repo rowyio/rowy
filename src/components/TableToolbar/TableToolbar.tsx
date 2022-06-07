@@ -1,7 +1,13 @@
 import { lazy, Suspense } from "react";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 
 import { Stack } from "@mui/material";
+import WebhookIcon from "@mui/icons-material/Webhook";
+import {
+  Extension as ExtensionIcon,
+  CloudLogs as CloudLogsIcon,
+} from "@src/assets/icons";
+import TableToolbarButton from "./TableToolbarButton";
 import { ButtonSkeleton } from "./TableToolbarSkeleton";
 
 import AddRow from "./AddRow";
@@ -9,16 +15,21 @@ import LoadedRowsStatus from "./LoadedRowsStatus";
 import TableSettings from "./TableSettings";
 import HiddenFields from "./HiddenFields";
 import RowHeight from "./RowHeight";
-import BuildLogsSnack from "./CloudLogs/BuildLogs/BuildLogsSnack";
 
-import { globalScope, userRolesAtom } from "@src/atoms/globalScope";
+import {
+  globalScope,
+  projectSettingsAtom,
+  userRolesAtom,
+  compatibleRowyRunVersionAtom,
+  rowyRunModalAtom,
+} from "@src/atoms/globalScope";
 import {
   tableScope,
   tableSettingsAtom,
   tableSchemaAtom,
+  tableModalAtom,
 } from "@src/atoms/tableScope";
 import { FieldType } from "@src/constants/fields";
-import { useSnackLogContext } from "@src/contexts/SnackLogContext";
 
 // prettier-ignore
 const Filters = lazy(() => import("./Filters" /* webpackChunkName: "Filters" */));
@@ -27,21 +38,21 @@ const Export = lazy(() => import("./Export" /* webpackChunkName: "Export" */));
 // prettier-ignore
 const ImportCsv = lazy(() => import("./ImportCsv" /* webpackChunkName: "ImportCsv" */));
 // prettier-ignore
-const CloudLogs = lazy(() => import("./CloudLogs" /* webpackChunkName: "CloudLogs" */));
-// prettier-ignore
-const Extensions = lazy(() => import("./Extensions" /* webpackChunkName: "Extensions" */));
-// prettier-ignore
-const Webhooks = lazy(() => import("./Webhooks" /* webpackChunkName: "Webhooks" */));
-// prettier-ignore
 const ReExecute = lazy(() => import("./ReExecute" /* webpackChunkName: "ReExecute" */));
 
 export const TABLE_TOOLBAR_HEIGHT = 44;
 
 export default function TableToolbar() {
+  const [projectSettings] = useAtom(projectSettingsAtom, globalScope);
   const [userRoles] = useAtom(userRolesAtom, globalScope);
+  const [compatibleRowyRunVersion] = useAtom(
+    compatibleRowyRunVersionAtom,
+    globalScope
+  );
+  const openRowyRunModal = useSetAtom(rowyRunModalAtom, globalScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
-  const snackLogContext = useSnackLogContext();
+  const openTableModal = useSetAtom(tableModalAtom, tableScope);
 
   const hasDerivatives =
     Object.values(tableSchema.columns ?? {}).filter(
@@ -74,16 +85,16 @@ export default function TableToolbar() {
       }}
     >
       <AddRow />
-      {/* Spacer */} <div />
+      <div /> {/* Spacer */}
       <HiddenFields />
       <Suspense fallback={<ButtonSkeleton />}>
         <Filters />
       </Suspense>
-      {/* Spacer */} <div />
+      <div /> {/* Spacer */}
       <LoadedRowsStatus />
       <div style={{ flexGrow: 1, minWidth: 64 }} />
       <RowHeight />
-      {/* Spacer */} <div />
+      <div /> {/* Spacer */}
       {tableSettings.tableType !== "collectionGroup" && (
         <Suspense fallback={<ButtonSkeleton />}>
           <ImportCsv />
@@ -94,30 +105,40 @@ export default function TableToolbar() {
       </Suspense>
       {userRoles.includes("ADMIN") && (
         <>
-          {/* Spacer */} <div />
-          <Suspense fallback={<ButtonSkeleton />}>
-            <Webhooks />
-          </Suspense>
-          <Suspense fallback={<ButtonSkeleton />}>
-            <Extensions />
-          </Suspense>
-          <Suspense fallback={<ButtonSkeleton />}>
-            <CloudLogs />
-          </Suspense>
-          {snackLogContext.isSnackLogOpen && (
-            <Suspense fallback={null}>
-              <BuildLogsSnack
-                onClose={snackLogContext.closeSnackLog}
-                onOpenPanel={alert}
-              />
-            </Suspense>
-          )}
+          <div /> {/* Spacer */}
+          <TableToolbarButton
+            title="Webhooks"
+            onClick={() => {
+              if (compatibleRowyRunVersion({ minVersion: "1.2.0" })) {
+                openTableModal("webhooks");
+              } else {
+                openRowyRunModal({ feature: "Webhooks", version: "1.2.0" });
+              }
+            }}
+            icon={<WebhookIcon />}
+          />
+          <TableToolbarButton
+            title="Extensions"
+            onClick={() => {
+              if (projectSettings.rowyRunUrl) openTableModal("extensions");
+              else openRowyRunModal({ feature: "Extensions" });
+            }}
+            icon={<ExtensionIcon />}
+          />
+          <TableToolbarButton
+            title="Cloud logs"
+            icon={<CloudLogsIcon />}
+            onClick={() => {
+              if (projectSettings.rowyRunUrl) openTableModal("cloudLogs");
+              else openRowyRunModal({ feature: "Cloud logs" });
+            }}
+          />
           {(hasDerivatives || hasExtensions) && (
             <Suspense fallback={<ButtonSkeleton />}>
               <ReExecute />
             </Suspense>
           )}
-          {/* Spacer */} <div />
+          <div /> {/* Spacer */}
           <TableSettings />
         </>
       )}

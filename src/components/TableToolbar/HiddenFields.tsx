@@ -8,7 +8,7 @@ import VisibilityIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOffOutlined";
 import IconSlash from "@src/components/IconSlash";
 
-import ColumnSelect, { ColumnItem } from "./ColumnSelect";
+import ColumnSelect, { ColumnItem } from "@src/components/Table/ColumnSelect";
 import ButtonWithStatus from "@src/components/ButtonWithStatus";
 
 import {

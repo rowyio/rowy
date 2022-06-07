@@ -1,4 +1,4 @@
-import { useRef, Suspense } from "react";
+import { useRef, Suspense, lazy } from "react";
 import { useAtom, Provider } from "jotai";
 import { DebugAtoms } from "@src/atoms/utils";
 import { useParams } from "react-router-dom";
@@ -15,6 +15,7 @@ import Table from "@src/components/Table";
 import SideDrawer from "@src/components/SideDrawer";
 import ColumnMenu from "@src/components/ColumnMenu";
 import ColumnModals from "@src/components/ColumnModals";
+import TableModals from "@src/components/TableModals";
 
 import { currentUserAtom, globalScope } from "@src/atoms/globalScope";
 import TableSourceFirestore from "@src/sources/TableSourceFirestore";
@@ -27,9 +28,14 @@ import {
 } from "@src/atoms/tableScope";
 import useBeforeUnload from "@src/hooks/useBeforeUnload";
 import ActionParamsProvider from "@src/components/fields/Action/FormDialog/Provider";
+import { useSnackLogContext } from "@src/contexts/SnackLogContext";
+
+// prettier-ignore
+const BuildLogsSnack = lazy(() => import("@src/components/TableModals/CloudLogsModal/BuildLogs/BuildLogsSnack" /* webpackChunkName: "TableModals-BuildLogsSnack" */));
 
 function TablePage() {
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
+  const snackLogContext = useSnackLogContext();
 
   // Warn user about leaving when they have a table modal open
   useBeforeUnload(columnModalAtom, tableScope);
@@ -70,6 +76,18 @@ function TablePage() {
       <Suspense fallback={null}>
         <ColumnMenu />
         <ColumnModals />
+      </Suspense>
+
+      <Suspense fallback={null}>
+        <TableModals />
+        {snackLogContext.isSnackLogOpen && (
+          <Suspense fallback={null}>
+            <BuildLogsSnack
+              onClose={snackLogContext.closeSnackLog}
+              onOpenPanel={alert}
+            />
+          </Suspense>
+        )}
       </Suspense>
     </ActionParamsProvider>
   );

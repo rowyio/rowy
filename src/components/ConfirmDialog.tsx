@@ -52,7 +52,7 @@ export default function ConfirmDialog() {
       }}
       maxWidth={maxWidth}
       TransitionComponent={SlideTransitionMui}
-      style={{ cursor: "default" }}
+      sx={{ cursor: "default", zIndex: (theme) => theme.zIndex.modal + 50 }}
     >
       <DialogTitle>{title}</DialogTitle>
 
