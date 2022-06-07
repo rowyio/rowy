@@ -44,7 +44,7 @@ export default function GeoPointField({
           label="Longitude"
           type="number"
           value={longitude}
-          inputProps={{ min: -90, max: 90 }}
+          inputProps={{ min: -180, max: 180 }}
           onChange={handleChange("longitude")}
           disabled={disabled}
           onBlur={onSubmit}
