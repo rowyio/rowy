@@ -23,6 +23,7 @@ const languages = [
   "go",
   "plaintext",
 ];
+
 export default function Settings({ config, onChange }: ISettingsProps) {
   return (
     <MultiSelect
@@ -34,6 +35,7 @@ export default function Settings({ config, onChange }: ISettingsProps) {
         onChange("language")(value);
       }}
       label="Language"
+      labelPlural="languages"
     />
   );
 }

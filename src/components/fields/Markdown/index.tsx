@@ -2,7 +2,7 @@ import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
 import withBasicCell from "@src/components/fields/_withTableCell/withBasicCell";
 
-import CodeIcon from "@mui/icons-material/Code";
+import { Markdown as MarkdownIcon } from "@src/assets/icons";
 import BasicCell from "./BasicCell";
 import withSideDrawerEditor from "@src/components/Table/editors/withSideDrawerEditor";
 
@@ -24,8 +24,8 @@ export const config: IFieldConfig = {
   dataType: "string",
   initialValue: "",
   initializable: true,
-  icon: <CodeIcon />,
-  description: "Markdown Editor",
+  icon: <MarkdownIcon />,
+  description: "Markdown editor with preview",
   TableCell: withBasicCell(BasicCell),
   TableEditor: withSideDrawerEditor(BasicCell),
   SideDrawerField,

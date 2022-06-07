@@ -82,6 +82,9 @@ export { FileLinkOutline as Reference };
 import { CarBrakeAlert } from "mdi-material-ui";
 export { CarBrakeAlert as Critical };
 
+import { LanguageMarkdownOutline } from "mdi-material-ui";
+export { LanguageMarkdownOutline as Markdown };
+
 export * from "./AddRow";
 export * from "./Clear";
 export * from "./ConnectTable";
