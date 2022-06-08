@@ -4,6 +4,8 @@ import {
   TypographyStyleOptions,
 } from "@mui/material/styles/createTypography";
 
+import "./space-grotesk.css";
+
 declare module "@mui/material/styles/createTypography" {
   interface FontStyle {
     fontFamilyMono: string;
