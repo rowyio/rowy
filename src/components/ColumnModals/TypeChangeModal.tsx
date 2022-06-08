@@ -4,7 +4,7 @@ import { IColumnModalProps } from ".";
 
 import Modal from "@src/components/Modal";
 import FieldsDropdown from "./FieldsDropdown";
-import { Alert, AlertTitle } from "@mui/material";
+import { Alert, AlertTitle, Typography } from "@mui/material";
 
 import { tableScope, updateColumnAtom } from "@src/atoms/tableScope";
 import { FieldType } from "@src/constants/fields";
@@ -30,8 +30,31 @@ export default function TypeChangeModal({
             getFieldProp("dataType", newType) && (
             <Alert severity="warning">
               <AlertTitle>Potential data loss</AlertTitle>
-              {getFieldProp("name", newType)} has an incompatible data type.
-              Selecting this can result in data loss.
+              <Typography>
+                {getFieldProp("name", newType)} has an incompatible data type.
+                Selecting this can result in data loss.
+              </Typography>
+
+              <dl
+                style={{
+                  marginBottom: 0,
+                  display: "grid",
+                  gridTemplateColumns: "repeat(2, max-content)",
+                  columnGap: 4,
+                }}
+              >
+                <Typography component="dt">Previous:</Typography>
+                <Typography component="dd">
+                  <code>{getFieldProp("dataType", column.type)}</code>
+                </Typography>
+
+                <Typography component="dt">
+                  {getFieldProp("name", newType)}:
+                </Typography>
+                <Typography component="dd">
+                  <code>{getFieldProp("dataType", column.type)}</code>
+                </Typography>
+              </dl>
             </Alert>
           )}
         </>
