@@ -31,3 +31,4 @@ firebase-debug.log*
 .npm
 
 .vercel
+typedoc/
