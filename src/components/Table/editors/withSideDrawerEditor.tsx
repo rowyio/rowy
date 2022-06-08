@@ -43,7 +43,7 @@ export default function withSideDrawerEditor(
           value={get(row, column.key)}
           name={column.name as string}
           type={(column as any).type}
-          docRef={props.row.ref}
+          docRef={props.row._rowy_ref}
           onSubmit={() => {}}
           disabled={props.column.editable === false}
         />

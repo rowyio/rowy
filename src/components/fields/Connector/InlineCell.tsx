@@ -8,7 +8,7 @@ import ChipList from "@src/components/Table/formatters/ChipList";
 import { get } from "lodash-es";
 import { getLabel } from "./utils";
 
-export const ConnectService = forwardRef(function ConnectService(
+export const Connector = forwardRef(function Connector(
   { value, showPopoverCell, disabled, column }: IPopoverInlineCellProps,
   ref: React.Ref<any>
 ) {
@@ -54,4 +54,4 @@ export const ConnectService = forwardRef(function ConnectService(
   );
 });
 
-export default ConnectService;
+export default Connector;

@@ -272,7 +272,7 @@ export default function Table({
             //   const { columnKey, sourceRow, targetRows } = e;
             //   if (updateCell)
             //     targetRows.forEach((row) =>
-            //       updateCell(row.ref, columnKey, sourceRow[columnKey])
+            //       updateCell(row._rowy_ref, columnKey, sourceRow[columnKey])
             //     );
             //   return [];
             // }}
