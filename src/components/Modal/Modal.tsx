@@ -62,6 +62,7 @@ export default function Modal({
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [open, setOpen] = useState(true);
+  const [emphasizeCloseButton, setEmphasizeCloseButton] = useState(false);
   const handleClose: NonNullable<DialogProps["onClose"]> = (_, reason) => {
     if (
       (disableBackdropClick && reason === "backdropClick") ||
@@ -75,8 +76,6 @@ export default function Modal({
     setEmphasizeCloseButton(false);
     setTimeout(() => onClose(setOpen), 300);
   };
-
-  const [emphasizeCloseButton, setEmphasizeCloseButton] = useState(false);
 
   return (
     <Dialog

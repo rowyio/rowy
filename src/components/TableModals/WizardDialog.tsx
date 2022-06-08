@@ -40,10 +40,21 @@ export default function WizardDialog({
   steps,
   onFinish,
   fullHeight = true,
+  onClose,
   ...props
 }: IWizardDialogProps) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const [emphasizeCloseButton, setEmphasizeCloseButton] = useState(false);
+  const handleClose: NonNullable<DialogProps["onClose"]> = (event, reason) => {
+    if (reason === "backdropClick" || reason === "escapeKeyDown") {
+      setEmphasizeCloseButton(true);
+      return;
+    }
+    setEmphasizeCloseButton(false);
+    if (onClose) setTimeout(() => onClose!(event, reason), 300);
+  };
 
   const [step, setStep] = useState(0);
   const currentStep = steps[step];
@@ -51,18 +62,19 @@ export default function WizardDialog({
   const handleNext = () =>
     step < steps.length - 1 ? setStep((s) => s + 1) : onFinish();
   const handleBack = () =>
-    step > 0 ? setStep((s) => s - 1) : props.onClose?.({}, "escapeKeyDown");
+    step > 0 ? setStep((s) => s - 1) : onClose?.({}, "escapeKeyDown");
 
   return (
     <Dialog
       fullWidth
-      fullScreen={isMobile}
-      TransitionComponent={isMobile ? Slide : SlideTransitionMui}
-      TransitionProps={isMobile ? ({ direction: "up" } as any) : undefined}
+      fullScreen
+      TransitionComponent={Slide}
+      TransitionProps={{ direction: "up" } as any}
       aria-labelledby="wizard-title"
       aria-describedby="wizard-step-description"
       maxWidth="md"
       {...props}
+      onClose={handleClose}
       sx={[
         fullHeight && { "& .MuiDialog-paper": { height: "100%" } },
         ...spreadSx(props.sx),
@@ -125,11 +137,17 @@ export default function WizardDialog({
           />
 
           <IconButton
-            onClick={props.onClose as any}
+            onClick={handleClose as any}
             aria-label="Close"
             sx={{
               m: { xs: 1, sm: 1.5 },
               ml: { xs: -1, sm: -1 },
+
+              bgcolor: emphasizeCloseButton ? "error.main" : undefined,
+              color: emphasizeCloseButton ? "error.contrastText" : undefined,
+              "&:hover": emphasizeCloseButton
+                ? { bgcolor: "error.dark" }
+                : undefined,
             }}
             className="dialog-close"
           >
