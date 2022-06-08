@@ -4,7 +4,13 @@ import {
   InputData,
   jsonInputForTargetLanguage,
 } from "quicktype-core";
+import { useAtom } from "jotai";
 
+import {
+  tableScope,
+  tableRowsAtom,
+  tableColumnsOrderedAtom,
+} from "@src/atoms/tableScope";
 import { useMonaco } from "@monaco-editor/react";
 import type { languages } from "monaco-editor/esm/vs/editor/editor.api";
 import githubLightTheme from "./github-light-default.json";
@@ -24,6 +30,8 @@ import utilsDefs from "!!raw-loader!./utils.d.ts";
 import rowyUtilsDefs from "!!raw-loader!./rowy.d.ts";
 import extensionsDefs from "!!raw-loader!./extensions.d.ts";
 import { runRoutes } from "@src/constants/runRoutes";
+import { rowyRunAtom, globalScope } from "@src/atoms/globalScope";
+import { getFieldProp } from "@src/components/fields";
 
 export interface IUseMonacoCustomizationsProps {
   minHeight?: number;
@@ -53,9 +61,10 @@ export default function useMonacoCustomizations({
   fullScreen,
 }: IUseMonacoCustomizationsProps) {
   const theme = useTheme();
-
   const monaco = useMonaco();
-
+  const [tableRows] = useAtom(tableRowsAtom, tableScope);
+  const [rowyRun] = useAtom(rowyRunAtom, globalScope);
+  const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
   useEffect(() => {
     return () => {
       onUnmount?.();
@@ -139,115 +148,113 @@ export default function useMonacoCustomizations({
     }
   }, [monaco, stringifiedDiagnosticsOptions]);
 
-  // TODO:
-  // const addJsonFieldDefinition = async (columnKey, interfaceName) => {
-  //   const samples = tableState?.rows
-  //     .map((row) => row[columnKey])
-  //     .filter((entry) => entry !== undefined)
-  //     .map((entry) => JSON.stringify(entry));
-  //   if (!samples || samples.length === 0) {
-  //     monaco?.languages.typescript.javascriptDefaults.addExtraLib(
-  //       `type ${interfaceName} = any;`
-  //     );
-  //     return;
-  //   } else {
-  //     const jsonInput = jsonInputForTargetLanguage("typescript");
-  //     await jsonInput.addSource({
-  //       name: interfaceName,
-  //       samples,
-  //     });
+  const addJsonFieldDefinition = async (
+    columnKey: string,
+    interfaceName: string
+  ) => {
+    const samples = tableRows
+      .map((row) => row[columnKey])
+      .filter((entry) => entry !== undefined)
+      .map((entry) => JSON.stringify(entry));
+    if (!samples || samples.length === 0) {
+      monaco?.languages.typescript.javascriptDefaults.addExtraLib(
+        `type ${interfaceName} = any;`
+      );
+      return;
+    } else {
+      //const jsonInput = jsonInputForTargetLanguage("typescript");
+      // await jsonInput.addSource({
+      //   name: interfaceName,
+      //   samples,
+      // });
+      // const inputData = new InputData();
+      // inputData.addInput(jsonInput);
+      //   const result = await quicktype({
+      //     inputData,
+      //     lang: "typescript",
+      //     rendererOptions: { "just-types": "true" },
+      //   });
+      //   const newLib = result.lines.join("\n").replaceAll("export ", "");
+      //  monaco?.languages.typescript.javascriptDefaults.addExtraLib(newLib);
+    }
+  };
 
-  //     const inputData = new InputData();
-  //     inputData.addInput(jsonInput);
-  //     const result = await quicktype({
-  //       inputData,
-  //       lang: "typescript",
-  //       rendererOptions: { "just-types": "true" },
-  //     });
-  //     const newLib = result.lines.join("\n").replaceAll("export ", "");
-  //     monaco?.languages.typescript.javascriptDefaults.addExtraLib(newLib);
-  //   }
-  // };
+  const setSecrets = async () => {
+    // set secret options
+    try {
+      const listSecrets = await rowyRun({
+        route: runRoutes.listSecrets,
+      });
+      const secretsDef = `type SecretNames = ${listSecrets
+        .map((secret: string) => `"${secret}"`)
+        .join(" | ")}
+        enum secrets {
+          ${listSecrets
+            .map((secret: string) => `${secret} = "${secret}"`)
+            .join("\n")}
+        }
+        `;
+      monaco?.languages.typescript.javascriptDefaults.addExtraLib(secretsDef);
+    } catch (error) {
+      console.error("Could not set secret definitions: ", error);
+    }
+  };
+  //TODO: types
+  const setBaseDefinitions = () => {
+    const rowDefinition =
+      tableColumnsOrdered
+        .map((column) => {
+          const { type, key } = column;
+          if (type === "JSON") {
+            const interfaceName = key[0].toUpperCase() + key.slice(1);
+            addJsonFieldDefinition(key, interfaceName);
+            const def = `static "${key}": ${interfaceName}`;
+            return def;
+          }
+          return `static "${key}": ${getFieldProp("dataType", type)}`;
+        })
+        .join(";\n") + ";";
+    const availableFields = tableColumnsOrdered
+      .map((key) => `"${key}"`)
+      .join("|\n");
 
-  // TODO: types
-  // const setSecrets = async (monaco, rowyRun) => {
-  //   // set secret options
-  //   try {
-  //     const listSecrets = await rowyRun({
-  //       route: runRoutes.listSecrets,
-  //     });
-  //     const secretsDef = `type SecretNames = ${listSecrets
-  //       .map((secret) => `"${secret}"`)
-  //       .join(" | ")}
-  //       enum secrets {
-  //         ${listSecrets.map((secret) => `${secret} = "${secret}"`).join("\n")}
-  //       }
-  //       `;
-  //     monaco.languages.typescript.javascriptDefaults.addExtraLib(secretsDef);
-  //   } catch (error) {
-  //     console.error("Could not set secret definitions: ", error);
-  //   }
-  // };
-  // TODO: types
-  // const setBaseDefinitions = (monaco, columns) => {
-  //   const rowDefinition =
-  //     [
-  //       Object.keys(columns).map((columnKey: string) => {
-  //         const column = columns[columnKey];
-  //         const type = getFieldType(column);
-  //         if (type === "JSON") {
-  //           const interfaceName =
-  //             columnKey[0].toUpperCase() + columnKey.slice(1);
-  //           addJsonFieldDefinition(columnKey, interfaceName);
-  //           const def = `static "${columnKey}": ${interfaceName}`;
-  //           return def;
-  //         }
-  //         return `static "${columnKey}": ${getFieldProp("dataType", type)}`;
-  //       }),
-  //     ].join(";\n") + ";";
-
-  // const availableFields = Object.keys(columns)
-  //   .map((columnKey: string) => `"${columnKey}"`)
-  //   .join("|\n");
-
-  // monaco.languages.typescript.javascriptDefaults.addExtraLib(
-  //   ["/**", " * extensions type configuration", " */", extensionsDefs].join(
-  //     "\n"
-  //   ),
-  //   "ts:filename/extensions.d.ts"
-  // );
-  // monaco.languages.typescript.javascriptDefaults.addExtraLib(
-  //   [
-  //     "// basic types that are used in all places",
-  //     "declare var require: any;",
-  //     "declare var Buffer: any;",
-  //     "const ref: FirebaseFirestore.DocumentReference;",
-  //     "const storage: firebasestorage.Storage;",
-  //     "const db: FirebaseFirestore.Firestore;",
-  //     "const auth: firebaseauth.BaseAuth;",
-  //     `type Row = {${rowDefinition}};`,
-  //     `type Field = ${availableFields} | string | object;`,
-  //     `type Fields = Field[];`,
-  //   ].join("\n"),
-  //   "ts:filename/rowFields.d.ts"
-  // );
-  // };
-  // TODO:
-  // Set row definitions
-  // useEffect(() => {
-  //   if (!monaco || !rowyRun || !tableState?.columns) return;
-  //   try {
-  //     setBaseDefinitions(monaco, tableState.columns);
-  //   } catch (error) {
-  //     console.error("Could not set basic", error);
-  //   }
-  //   // set available secrets from secretManager
-  //   try {
-  //     setSecrets(monaco, rowyRun);
-  //   } catch (error) {
-  //     console.error("Could not set secrets: ", error);
-  //   }
-  // }, [monaco, tableState?.columns, rowyRun]);
+    monaco?.languages.typescript.javascriptDefaults.addExtraLib(
+      ["/**", " * extensions type configuration", " */", extensionsDefs].join(
+        "\n"
+      ),
+      "ts:filename/extensions.d.ts"
+    );
+    monaco?.languages.typescript.javascriptDefaults.addExtraLib(
+      [
+        "// basic types that are used in all places",
+        "declare var require: any;",
+        "declare var Buffer: any;",
+        "const ref: FirebaseFirestore.DocumentReference;",
+        "const storage: firebasestorage.Storage;",
+        "const db: FirebaseFirestore.Firestore;",
+        "const auth: firebaseauth.BaseAuth;",
+        `type Row = {${rowDefinition}};`,
+        `type Field = ${availableFields} | string | object;`,
+        `type Fields = Field[];`,
+      ].join("\n"),
+      "ts:filename/rowFields.d.ts"
+    );
+  };
+  //TODO: Set row definitions
+  useEffect(() => {
+    if (!monaco) return;
+    try {
+      setBaseDefinitions();
+    } catch (error) {
+      console.error("Could not set basic", error);
+    }
+    // set available secrets from secretManager
+    try {
+      setSecrets();
+    } catch (error) {
+      console.error("Could not set secrets: ", error);
+    }
+  }, [monaco, tableColumnsOrdered]);
 
   let boxSx: SystemStyleObject<Theme> = {
     minWidth: 400,
