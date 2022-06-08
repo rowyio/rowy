@@ -6,7 +6,7 @@ import Loading from "@src/components/Loading";
 import ProjectSourceFirebase from "@src/sources/ProjectSourceFirebase";
 import ConfirmDialog from "@src/components/ConfirmDialog";
 import RowyRunModal from "@src/components/RowyRunModal";
-import NotFound from "@src/pages/NotFound";
+import NotFound from "@src/pages/NotFoundPage";
 import RequireAuth from "@src/layouts/RequireAuth";
 
 import {
@@ -17,21 +17,21 @@ import {
 import { ROUTES } from "@src/constants/routes";
 import useKeyPressWithAtom from "@src/hooks/useKeyPressWithAtom";
 
-import TableGroupRedirectPage from "./pages/TableGroupRedirect";
-import JotaiTestPage from "@src/pages/Test/JotaiTest";
-import SignOutPage from "@src/pages/Auth/SignOut";
+import TableGroupRedirectPage from "./pages/TableGroupRedirectPage";
+import JotaiTestPage from "@src/pages/Test/JotaiTestPage";
+import SignOutPage from "@src/pages/Auth/SignOutPage";
 
 // prettier-ignore
-const AuthPage = lazy(() => import("@src/pages/Auth/index" /* webpackChunkName: "AuthPage" */));
+const AuthPage = lazy(() => import("@src/pages/Auth/AuthPage" /* webpackChunkName: "AuthPage" */));
 // prettier-ignore
-const SignUpPage = lazy(() => import("@src/pages/Auth/SignUp" /* webpackChunkName: "SignUpPage" */));
+const SignUpPage = lazy(() => import("@src/pages/Auth/SignUpPage" /* webpackChunkName: "SignUpPage" */));
 // prettier-ignore
-const JwtAuthPage = lazy(() => import("@src/pages/Auth/JwtAuth" /* webpackChunkName: "JwtAuthPage" */));
+const JwtAuthPage = lazy(() => import("@src/pages/Auth/JwtAuthPage" /* webpackChunkName: "JwtAuthPage" */));
 // prettier-ignore
-const ImpersonatorAuthPage = lazy(() => import("@src/pages/Auth/ImpersonatorAuth" /* webpackChunkName: "ImpersonatorAuthPage" */));
+const ImpersonatorAuthPage = lazy(() => import("@src/pages/Auth/ImpersonatorAuthPage" /* webpackChunkName: "ImpersonatorAuthPage" */));
 
 // prettier-ignore
-const SetupPage = lazy(() => import("@src/pages/Setup" /* webpackChunkName: "SetupPage" */));
+const SetupPage = lazy(() => import("@src/pages/SetupPage" /* webpackChunkName: "SetupPage" */));
 
 // prettier-ignore
 const Navigation = lazy(() => import("@src/layouts/Navigation" /* webpackChunkName: "Navigation" */));
@@ -39,22 +39,22 @@ const Navigation = lazy(() => import("@src/layouts/Navigation" /* webpackChunkNa
 const TableSettingsDialog = lazy(() => import("@src/components/TableSettingsDialog" /* webpackChunkName: "TableSettingsDialog" */));
 
 // prettier-ignore
-const TablesPage = lazy(() => import("@src/pages/Tables" /* webpackChunkName: "TablesPage" */));
+const TablesPage = lazy(() => import("@src/pages/TablesPage" /* webpackChunkName: "TablesPage" */));
 // prettier-ignore
-const TablePage = lazy(() => import("@src/pages/Table" /* webpackChunkName: "TablePage" */));
+const TablePage = lazy(() => import("@src/pages/TablePage" /* webpackChunkName: "TablePage" */));
 
 // prettier-ignore
-const FunctionPage = lazy(() => import("@src/pages/Function" /* webpackChunkName: "FunctionPage" */));
+const FunctionPage = lazy(() => import("@src/pages/FunctionPage" /* webpackChunkName: "FunctionPage" */));
 // prettier-ignore
-const UserSettingsPage = lazy(() => import("@src/pages/Settings/UserSettings" /* webpackChunkName: "UserSettingsPage" */));
+const UserSettingsPage = lazy(() => import("@src/pages/Settings/UserSettingsPage" /* webpackChunkName: "UserSettingsPage" */));
 // prettier-ignore
-const ProjectSettingsPage = lazy(() => import("@src/pages/Settings/ProjectSettings" /* webpackChunkName: "ProjectSettingsPage" */));
+const ProjectSettingsPage = lazy(() => import("@src/pages/Settings/ProjectSettingsPage" /* webpackChunkName: "ProjectSettingsPage" */));
 // prettier-ignore
-const UserManagementPage = lazy(() => import("@src/pages/Settings/UserManagement" /* webpackChunkName: "UserManagementPage" */));
+const UserManagementPage = lazy(() => import("@src/pages/Settings/UserManagementPage" /* webpackChunkName: "UserManagementPage" */));
 
 // prettier-ignore
-const ThemeTestPage = lazy(() => import("@src/pages/Test/ThemeTest" /* webpackChunkName: "ThemeTestPage" */));
-// const RowyRunTestPage = lazy(() => import("@src/pages/RowyRunTest" /* webpackChunkName: "RowyRunTestPage" */));
+const ThemeTestPage = lazy(() => import("@src/pages/Test/ThemeTestPage" /* webpackChunkName: "ThemeTestPage" */));
+// const RowyRunTestPage = lazy(() => import("@src/pages/RowyRunTestPage" /* webpackChunkName: "RowyRunTestPage" */));
 
 export default function App() {
   const [currentUser] = useAtom(currentUserAtom, globalScope);
