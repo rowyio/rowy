@@ -257,14 +257,13 @@ export const bulkAddRowsAtom = atom(
     // Write to db
     await bulkWriteDb(operations, onBatchCommit);
 
-    // TODO: Write an audit entry for each row
-    // if (auditChange) {
-    //   const auditChangePromises: Promise<void>[] = [];
-    //   for (const operation of operations) {
-    //     auditChangePromises.push(auditChange("ADD_ROW", operation.path));
-    //   }
-    //   await Promise.all(auditChangePromises);
-    // }
+    if (auditChange) {
+      const auditChangePromises: Promise<void>[] = [];
+      for (const operation of operations) {
+        auditChangePromises.push(auditChange("ADD_ROW", operation.path));
+      }
+      await Promise.all(auditChangePromises);
+    }
   }
 );
 
