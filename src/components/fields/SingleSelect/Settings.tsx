@@ -21,9 +21,13 @@ export default function Settings({ onChange, config }: ISettingsProps) {
   const [newOption, setNewOption] = useState("");
   const handleAdd = () => {
     if (newOption.trim() !== "") {
-      onChange("options")([...options, newOption.trim()]);
-      setNewOption("");
-      listEndRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+      if (options.includes(newOption)) {
+        window.alert(`"${newOption}" is already an option`);
+      } else {
+        onChange("options")([...options, newOption.trim()]);
+        setNewOption("");
+        listEndRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+      }
     }
   };
 

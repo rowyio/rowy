@@ -34,6 +34,5 @@ export const config: IFieldConfig = {
   SideDrawerField,
   //settings: Settings,
   filter: { operators: filterOperators },
-  requireConfiguration: true,
 };
 export default config;
