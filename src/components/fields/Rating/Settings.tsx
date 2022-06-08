@@ -1,41 +1,48 @@
 import { ISettingsProps } from "@src/components/fields/types";
 
-import { Slider, InputLabel } from "@mui/material";
+import { Slider, InputLabel, TextField, Grid } from "@mui/material";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 
 export default function Settings({ onChange, config }: ISettingsProps) {
   return (
     <>
-      <InputLabel>Maximum number of stars</InputLabel>
-      <Slider
-        defaultValue={5}
-        value={config.max}
-        getAriaValueText={(v) => `${v} max stars`}
-        aria-labelledby="max-slider"
-        valueLabelDisplay="on"
-        onChange={(_, v) => {
-          onChange("max")(v);
-        }}
-        step={1}
-        marks
-        min={1}
-        max={15}
-      />
-
-      <InputLabel>Slider precision</InputLabel>
-      <Slider
-        defaultValue={0.5}
-        value={config.precision}
-        getAriaValueText={(v) => `${v} rating step size`}
-        aria-labelledby="precision-slider"
-        valueLabelDisplay="on"
-        onChange={(_, v) => {
-          onChange("precision")(v);
-        }}
-        step={0.25}
-        marks
-        min={0.25}
-        max={1}
-      />
+      <Grid container spacing={2} justifyItems="end" direction={"row"}>
+        <Grid item xs={6}>
+          <TextField
+            label="Maximum number of stars"
+            type={"number"}
+            value={config.max}
+            fullWidth
+            onChange={(e) => {
+              onChange("max")(parseInt(e.target.value));
+            }}
+            inputProps={{ min: 1, max: 20 }}
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <InputLabel>Star fraction</InputLabel>
+          <ToggleButtonGroup
+            value={config.precision}
+            exclusive
+            fullWidth
+            onChange={(_, value) => {
+              onChange("precision")(value);
+            }}
+            aria-label="text alignment"
+          >
+            <ToggleButton value={0.25} aria-label="quarter">
+              1/4
+            </ToggleButton>
+            <ToggleButton value={0.5} aria-label="half">
+              1/2
+            </ToggleButton>
+            <ToggleButton value={1} aria-label="whole">
+              1
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </Grid>
+      </Grid>
     </>
   );
 }

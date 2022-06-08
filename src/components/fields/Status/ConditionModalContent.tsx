@@ -41,22 +41,21 @@ export default function ConditionModalContent({
       )}
       {type === "number" && (
         <Grid container direction="row" justifyContent="space-between">
-          <div style={{ width: "45%" }}>
-            <MultiSelect
-              options={[
-                { label: "Less than", value: "<" },
-                { label: "Less than or equal", value: "<=" },
-                { label: "Equal", value: "==" },
-                { label: "Equal or more than", value: ">=" },
-                { label: "More than", value: ">" },
-              ]}
-              onChange={(v) => handleUpdate("operator")(v)}
-              value={operator}
-              multiple={false}
-              label="Select operator"
-            />
-          </div>
+          <MultiSelect
+            options={[
+              { label: "Less than", value: "<" },
+              { label: "Less than or equal", value: "<=" },
+              { label: "Equal", value: "==" },
+              { label: "Equal or more than", value: ">=" },
+              { label: "More than", value: ">" },
+            ]}
+            onChange={(v) => handleUpdate("operator")(v)}
+            value={operator}
+            multiple={false}
+            label="Select operator"
+          />
           <TextField
+            fullWidth
             type="number"
             label="Value"
             value={value}
@@ -74,7 +73,7 @@ export default function ConditionModalContent({
       )}
       <TextField
         value={label}
-        label="Label"
+        label="Cell label"
         fullWidth
         onChange={(e) => handleUpdate("label")(e.target.value)}
       />
