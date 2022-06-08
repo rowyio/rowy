@@ -1,5 +1,4 @@
-import { lazy, Suspense, createElement } from "react";
-import { useForm } from "react-hook-form";
+import { lazy, Suspense, createElement, useState } from "react";
 import { useAtom } from "jotai";
 
 import Checkbox from "@mui/material/Checkbox";
@@ -9,7 +8,6 @@ import { Typography, TextField, MenuItem, ListItemText } from "@mui/material";
 import { getFieldProp } from "@src/components/fields";
 import FieldSkeleton from "@src/components/SideDrawer/FieldSkeleton";
 import CodeEditorHelper from "@src/components/CodeEditor/CodeEditorHelper";
-import FormAutosave from "./FormAutosave";
 import { FieldType } from "@src/constants/fields";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
 
@@ -100,15 +98,11 @@ export default function DefaultValueInput({
     column.type !== FieldType.derivative
       ? column.type
       : column.config?.renderFieldType ?? FieldType.shortText;
+  const [localValue, setLocalValue] = useState(
+    column.config?.defaultValue?.value ?? getFieldProp("initialValue", _type)
+  );
+
   const customFieldInput = getFieldProp("SideDrawerField", _type);
-  const { control } = useForm({
-    mode: "onBlur",
-    defaultValues: {
-      [column.fieldName]:
-        column.config?.defaultValue?.value ??
-        getFieldProp("initialValue", _type),
-    },
-  });
 
   return (
     <>
@@ -197,23 +191,16 @@ export default function DefaultValueInput({
           />
         </>
       )}
-      {column.config?.defaultValue?.type === "static" && customFieldInput && (
-        <form>
-          <FormAutosave
-            control={control}
-            handleSave={(values) =>
-              handleChange("defaultValue.value")(values[column.fieldName])
-            }
-          />
-
-          {createElement(customFieldInput, {
-            column,
-            control,
-            docRef: {},
-            disabled: false,
-          })}
-        </form>
-      )}
+      {column.config?.defaultValue?.type === "static" &&
+        customFieldInput &&
+        createElement(customFieldInput, {
+          column,
+          _rowy_ref: {},
+          value: localValue,
+          onChange: setLocalValue,
+          onSubmit: () => handleChange("defaultValue.value")(localValue),
+          disabled: false,
+        })}
 
       {column.config?.defaultValue?.type === "dynamic" && (
         <>

@@ -1,11 +1,7 @@
 import { Suspense, createElement } from "react";
-import { useForm } from "react-hook-form";
 
 import { Grid, MenuItem, TextField, InputLabel } from "@mui/material";
-
-import MultiSelect from "@rowy/multiselect";
 import ColumnSelect from "@src/components/Table/ColumnSelect";
-import FormAutosave from "@src/components/ColumnModals/ColumnConfigModal/FormAutosave";
 import FieldSkeleton from "@src/components/SideDrawer/FieldSkeleton";
 
 import type { useFilterInputs } from "./useFilterInputs";
@@ -24,13 +20,6 @@ export default function FilterInputs({
   setQuery,
   disabled,
 }: IFilterInputsProps) {
-  // Need to use react-hook-form with autosave for the value field,
-  // since we render the side drawer field for that type
-  const { control } = useForm({
-    mode: "onBlur",
-    defaultValues: selectedColumn ? { [selectedColumn.key]: query.value } : {},
-  });
-
   const columnType = selectedColumn ? getFieldType(selectedColumn) : null;
 
   return (
@@ -77,7 +66,7 @@ export default function FilterInputs({
 
       <Grid item xs={4}>
         {query.key && query.operator && (
-          <form>
+          <>
             <InputLabel
               variant="filled"
               id={`filters-label-${query.key}`}
@@ -86,29 +75,19 @@ export default function FilterInputs({
               Value
             </InputLabel>
 
-            <FormAutosave
-              debounce={0}
-              control={control}
-              handleSave={(values) => {
-                if (values[query.key] !== undefined) {
-                  setQuery((query) => ({
-                    ...query,
-                    value: values[query.key],
-                  }));
-                }
-              }}
-            />
             <Suspense fallback={<FieldSkeleton />}>
               {columnType &&
                 createElement(getFieldProp("SideDrawerField", columnType), {
                   column: selectedColumn,
-                  control,
-                  docRef: {},
+                  _rowy_ref: {},
+                  value: query.value,
+                  onChange: (value: any) => {
+                    setQuery((query) => ({ ...query, value }));
+                  },
                   disabled,
-                  onChange: () => {},
                 })}
             </Suspense>
-          </form>
+          </>
         )}
       </Grid>
     </Grid>
