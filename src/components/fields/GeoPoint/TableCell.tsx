@@ -2,12 +2,31 @@ import { IBasicCellProps } from "@src/components/fields/types";
 
 export default function Duration({ value }: IBasicCellProps) {
   if (value === undefined) return null;
+  const { latitude, longitude } = value;
 
-  if (value.latitude === undefined || value.longitude === undefined)
-    throw new Error("Invalid value");
+  if (latitude === undefined || longitude === undefined)
+    return <>⚠️ Invalid Value</>;
+  // direction
+  const latDirection = latitude > 0 ? "N" : "S";
+  const lat = Math.abs(latitude);
+  const longDirection = longitude > 0 ? "E" : "W";
+  const long = Math.abs(longitude);
+  // degrees
+  const latDegrees = Math.floor(lat);
+  const longDegrees = Math.floor(long);
+  // minutes
+  const latMinutes = Math.floor((lat - latDegrees) * 60);
+  const longMinutes = Math.floor((long - longDegrees) * 60);
+  // seconds
+  const latSeconds = Math.floor((lat - latDegrees - latMinutes / 60) * 3600);
+  const longSeconds = Math.floor(
+    (long - longDegrees - longMinutes / 60) * 3600
+  );
+
   return (
     <>
-      {value.latitude},{value.longitude}
+      {latDegrees}°{latMinutes}'{latSeconds.toFixed(2)}"{latDirection},
+      {longDegrees}°{longMinutes}'{longSeconds.toFixed(2)}"{longDirection}
     </>
   );
 }
