@@ -162,25 +162,23 @@ export default function useMonacoCustomizations({
       );
       return;
     } else {
-      const jsonInput = jsonInputForTargetLanguage("typescript");
-      await jsonInput.addSource({
-        name: interfaceName,
-        samples,
-      });
-
-      const inputData = new InputData();
-      inputData.addInput(jsonInput);
-      const result = await quicktype({
-        inputData,
-        lang: "typescript",
-        rendererOptions: { "just-types": "true" },
-      });
-      const newLib = result.lines.join("\n").replaceAll("export ", "");
-      monaco?.languages.typescript.javascriptDefaults.addExtraLib(newLib);
+      //const jsonInput = jsonInputForTargetLanguage("typescript");
+      // await jsonInput.addSource({
+      //   name: interfaceName,
+      //   samples,
+      // });
+      // const inputData = new InputData();
+      // inputData.addInput(jsonInput);
+      //   const result = await quicktype({
+      //     inputData,
+      //     lang: "typescript",
+      //     rendererOptions: { "just-types": "true" },
+      //   });
+      //   const newLib = result.lines.join("\n").replaceAll("export ", "");
+      //  monaco?.languages.typescript.javascriptDefaults.addExtraLib(newLib);
     }
   };
 
-  // TODO: types
   const setSecrets = async () => {
     // set secret options
     try {
