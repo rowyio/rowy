@@ -2,6 +2,7 @@ import { useState } from "react";
 import { find } from "lodash-es";
 
 import { getFieldType, getFieldProp } from "@src/components/fields";
+import { FieldType } from "@src/constants/fields";
 import type { ColumnConfig, TableFilter } from "@src/types/table";
 import type { IFieldConfig } from "@src/components/fields/types";
 
@@ -22,6 +23,15 @@ export const useFilterInputs = (
       index: c.index,
     }));
 
+  // Always allow IDs to be filterable
+  filterColumns.push({
+    value: "_rowy_ref.id",
+    label: "Document ID",
+    type: FieldType.id,
+    key: "_rowy_ref.id",
+    index: filterColumns.length,
+  });
+
   // State for filter inputs
   const [query, setQuery] = useState<TableFilter | typeof INITIAL_QUERY>(
     defaultQuery || INITIAL_QUERY
@@ -30,6 +40,11 @@ export const useFilterInputs = (
 
   // When the user sets a new column, automatically set the operator and value
   const handleChangeColumn = (value: string | null) => {
+    if (value === "_rowy_ref.id") {
+      setQuery({ key: "_rowy_ref.id", operator: "id-equal", value: "" });
+      return;
+    }
+
     const column = find(filterColumns, ["key", value]);
 
     if (column) {
@@ -47,9 +62,12 @@ export const useFilterInputs = (
   // Get the column config
   const selectedColumn = find(filterColumns, ["key", query?.key]);
   // Get available filters from selected column type
-  const availableFilters: IFieldConfig["filter"] = selectedColumn
-    ? getFieldProp("filter", getFieldType(selectedColumn))
-    : undefined;
+  const availableFilters: IFieldConfig["filter"] =
+    query?.key === "_rowy_ref.id"
+      ? { operators: [{ value: "id-equal", label: "is" }] }
+      : selectedColumn
+      ? getFieldProp("filter", getFieldType(selectedColumn))
+      : undefined;
 
   return {
     filterColumns,

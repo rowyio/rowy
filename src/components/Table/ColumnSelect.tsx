@@ -29,16 +29,17 @@ export default function ColumnSelect({
   ...props
 }: IColumnSelectProps & Omit<MultiSelectProps<string>, "options">) {
   const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
-  const options = (
-    filterColumns
+  const options =
+    props.options ||
+    (filterColumns
       ? tableColumnsOrdered.filter(filterColumns)
       : tableColumnsOrdered
-  ).map(({ key, name, type, index }) => ({
-    value: key,
-    label: name,
-    type,
-    index,
-  }));
+    ).map(({ key, name, type, index }) => ({
+      value: key,
+      label: name,
+      type,
+      index,
+    }));
 
   return (
     <MultiSelect

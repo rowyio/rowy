@@ -36,7 +36,7 @@ export interface IFieldConfig {
   settingsValidator?: (config: Record<string, any>) => Record<string, string>;
   filter?: {
     operators: IFilterOperator[];
-    customInput?: React.ComponentType<IFiltersProps>;
+    customInput?: React.ComponentType<{ onChange: (value: any) => void }>;
     defaultValue?: any;
     valueFormatter?: (value: any) => string;
   };
@@ -99,12 +99,6 @@ export interface ISettingsProps {
   fieldName: string;
   onBlur: React.FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>;
   errors: Record<string, any>;
-}
-
-// TODO: WRITE TYPES
-export interface IFiltersProps {
-  onChange: (key: string) => (value: any) => void;
-  [key: string]: any;
 }
 
 export interface IFilterOperator {

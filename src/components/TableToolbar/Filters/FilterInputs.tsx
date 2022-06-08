@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import ColumnSelect from "@src/components/Table/ColumnSelect";
 import FieldSkeleton from "@src/components/SideDrawer/FieldSkeleton";
+import IdFilterInput from "./IdFilterInput";
 
 import type { useFilterInputs } from "./useFilterInputs";
 import { getFieldType, getFieldProp } from "@src/components/fields";
@@ -97,15 +98,21 @@ export default function FilterInputs({
 
             <Suspense fallback={<FieldSkeleton />}>
               {columnType &&
-                createElement(getFieldProp("SideDrawerField", columnType), {
-                  column: selectedColumn,
-                  _rowy_ref: {},
-                  value: query.value,
-                  onChange: (value: any) => {
-                    setQuery((query) => ({ ...query, value }));
-                  },
-                  disabled,
-                })}
+                createElement(
+                  query.key === "_rowy_ref.id"
+                    ? IdFilterInput
+                    : getFieldProp("filter.customInput" as any, columnType) ||
+                        getFieldProp("SideDrawerField", columnType),
+                  {
+                    column: selectedColumn,
+                    _rowy_ref: {},
+                    value: query.value,
+                    onChange: (value: any) => {
+                      setQuery((query) => ({ ...query, value }));
+                    },
+                    disabled,
+                  }
+                )}
             </Suspense>
           </>
         )}

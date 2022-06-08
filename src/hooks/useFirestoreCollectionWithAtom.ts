@@ -22,6 +22,7 @@ import {
   Query,
   QueryConstraint,
   WhereFilterOp,
+  documentId,
 } from "firebase/firestore";
 import { useErrorHandler } from "react-error-boundary";
 
@@ -357,6 +358,9 @@ export const tableFiltersToFirestoreFilters = (filters: TableFilter[]) => {
 
       firestoreFilters.push(where(filter.key, ">=", startDate));
       firestoreFilters.push(where(filter.key, "<=", endDate));
+      continue;
+    } else if (filter.operator === "id-equal") {
+      firestoreFilters.push(where(documentId(), "==", filter.value));
       continue;
     }
 

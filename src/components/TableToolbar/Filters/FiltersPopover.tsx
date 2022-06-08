@@ -65,6 +65,7 @@ export default function FiltersPopover({
         </ButtonWithStatus>
 
         {appliedFilters.map((filter) => {
+          const fieldName = filter.key === "_rowy_ref.id" ? "ID" : filter.key;
           const operator = (availableFilters?.operators ?? []).find(
             (f) => f.value === filter.operator
           );
@@ -78,8 +79,8 @@ export default function FiltersPopover({
             <Chip
               key={filter.key}
               label={
-                <Typography variant="inherit">
-                  {filter.key}{" "}
+                <Typography variant="inherit" component="span">
+                  {fieldName}{" "}
                   <Typography
                     variant="inherit"
                     display="inline"
