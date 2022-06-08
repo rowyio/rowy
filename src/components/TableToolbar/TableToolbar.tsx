@@ -4,6 +4,7 @@ import { useAtom, useSetAtom } from "jotai";
 import { Stack } from "@mui/material";
 import WebhookIcon from "@mui/icons-material/Webhook";
 import {
+  Export as ExportIcon,
   Extension as ExtensionIcon,
   CloudLogs as CloudLogsIcon,
 } from "@src/assets/icons";
@@ -33,8 +34,6 @@ import { FieldType } from "@src/constants/fields";
 
 // prettier-ignore
 const Filters = lazy(() => import("./Filters" /* webpackChunkName: "Filters" */));
-// prettier-ignore
-const Export = lazy(() => import("./Export" /* webpackChunkName: "Export" */));
 // prettier-ignore
 const ImportCsv = lazy(() => import("./ImportCsv" /* webpackChunkName: "ImportCsv" */));
 // prettier-ignore
@@ -101,7 +100,11 @@ export default function TableToolbar() {
         </Suspense>
       )}
       <Suspense fallback={<ButtonSkeleton />}>
-        <Export />
+        <TableToolbarButton
+          title="Export/Download"
+          onClick={() => openTableModal("export")}
+          icon={<ExportIcon />}
+        />
       </Suspense>
       {userRoles.includes("ADMIN") && (
         <>

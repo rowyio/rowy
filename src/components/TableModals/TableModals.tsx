@@ -8,6 +8,8 @@ const CloudLogsModal = lazy(() => import("./CloudLogsModal" /* webpackChunkName:
 // prettier-ignore
 const ExtensionsModal = lazy(() => import("./ExtensionsModal" /* webpackChunkName: "TableModals-ExtensionsModal" */));
 // prettier-ignore
+const ExportModal = lazy(() => import("./ExportModal" /* webpackChunkName: "TableModals-ExportModal" */));
+// prettier-ignore
 const WebhooksModal = lazy(() => import("./WebhooksModal" /* webpackChunkName: "TableModals-WebhooksModal" */));
 // prettier-ignore
 const ImportExistingWizard = lazy(() => import("./ImportExistingWizard" /* webpackChunkName: "TableModals-ImportExistingWizard" */));
@@ -28,6 +30,7 @@ export default function TableModals() {
   if (tableModal === "cloudLogs") return <CloudLogsModal onClose={onClose} />;
   if (tableModal === "extensions") return <ExtensionsModal onClose={onClose} />;
   if (tableModal === "webhooks") return <WebhooksModal onClose={onClose} />;
+  if (tableModal === "export") return <ExportModal onClose={onClose} />;
   if (tableModal === "importExisting")
     return <ImportExistingWizard onClose={onClose} />;
   if (tableModal === "importCsv") return <ImportCsvWizard onClose={onClose} />;
