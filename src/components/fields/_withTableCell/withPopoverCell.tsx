@@ -118,7 +118,7 @@ export default function withPopoverCell(
       column: props.column,
       onSubmit: handleSubmit,
       disabled: props.column.editable === false,
-      docRef: props.row.ref,
+      docRef: props.row._rowy_ref,
       showPopoverCell,
       ref: inlineCellRef,
     };
