@@ -15,7 +15,7 @@ import ArrowIcon from "@mui/icons-material/ArrowForward";
 
 import { IStepProps } from ".";
 import FadeList from "@src/components/TableModals/ScrollableList";
-import Column from "@src/components/Table/Column";
+import Column, { COLUMN_HEADER_HEIGHT } from "@src/components/Table/Column";
 import MultiSelect from "@rowy/multiselect";
 
 import {
@@ -24,7 +24,7 @@ import {
   tableColumnsOrderedAtom,
 } from "@src/atoms/tableScope";
 import { FieldType } from "@src/constants/fields";
-import { suggestType } from "@src/components/TableModals/ImportWizard/utils";
+import { suggestType } from "@src/components/TableModals/ImportExistingWizard/utils";
 
 export default function Step1Columns({
   csvData,
@@ -232,7 +232,7 @@ export default function Step1Columns({
                             boxShadow: "none",
                             "& .MuiSelect-select": {
                               boxSizing: "border-box",
-                              height: 40,
+                              height: COLUMN_HEADER_HEIGHT - 2,
                               typography: "caption",
                               fontWeight: "medium",
                               lineHeight: "28px",

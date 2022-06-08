@@ -98,7 +98,7 @@ export const tableModalAtom = atomWithHash<
   | "extensions"
   | "webhooks"
   | "export"
-  | "import"
+  | "importExisting"
   | "importCsv"
   | null
 >("tableModal", null, { replaceState: true });

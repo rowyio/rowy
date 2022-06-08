@@ -55,7 +55,7 @@ export default function Step4Preview({ config }: IStepProps) {
             <ColumnWrapper item>
               {tableRows.slice(0, 20).map((row) => (
                 <Cell
-                  key={field + row.id}
+                  key={`${field}--${row._rowy_ref.path}`}
                   field={field}
                   value={row[field]}
                   type={type}

@@ -14,7 +14,7 @@ import DoneIcon from "@mui/icons-material/Done";
 
 import { IStepProps } from ".";
 import ScrollableList from "@src/components/TableModals/ScrollableList";
-import Column from "@src/components/Table/Column";
+import Column, { COLUMN_HEADER_HEIGHT } from "@src/components/Table/Column";
 
 export default function Step2Rename({
   config,
@@ -79,17 +79,24 @@ export default function Step2Rename({
                       </InputAdornment>
                     ),
                     sx: {
-                      paddingRight: "1px",
+                      pr: 0.25,
                       borderRadius: 0,
-                      boxShadow: (theme) =>
-                        `0 0 0 1px inset ${theme.palette.divider}`,
-                      backgroundColor: "background.default",
-                      typography: "subtitle2",
-                      "& .MuiFilledInput-inputHiddenLabel": {
-                        pt: 15 / 8,
-                        pb: 14 / 8,
-                        pl: 17 / 8,
+                      // boxShadow: (theme) =>
+                      //   `0 0 0 1px inset ${theme.palette.divider}`,
+                      // backgroundColor: "background.default",
+
+                      "& .MuiFilledInput-input": {
+                        typography: "caption",
+                        fontWeight: "medium",
+                        height: COLUMN_HEADER_HEIGHT,
+                        boxSizing: "border-box",
                       },
+
+                      // "& .MuiFilledInput-inputHiddenLabel": {
+                      //   pt: 15 / 8,
+                      //   pb: 14 / 8,
+                      //   pl: 17 / 8,
+                      // },
                     },
                   }}
                   hiddenLabel

@@ -48,9 +48,9 @@ export default function EmptyTable() {
             variant="contained"
             color="primary"
             startIcon={<ImportIcon />}
-            onClick={() => openTableModal("import")}
+            onClick={() => openTableModal("importExisting")}
           >
-            Import
+            Import existing data
           </Button>
         </div>
       </>

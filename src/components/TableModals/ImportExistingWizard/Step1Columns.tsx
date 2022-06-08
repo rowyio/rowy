@@ -36,7 +36,7 @@ export default function Step1Columns({ config, setConfig }: IStepProps) {
     const fields_ = new Set<string>();
     tableRowsSample.forEach((doc) =>
       Object.keys(doc).forEach((key) => {
-        if (key !== "ref") fields_.add(key);
+        if (!key.startsWith("_rowy")) fields_.add(key);
       })
     );
     return Array.from(fields_).sort();
@@ -162,29 +162,28 @@ export default function Step1Columns({ config, setConfig }: IStepProps) {
             <EmptyState Icon={AddColumnIcon} message="No columns selected" />
           </ScrollableList>
         ) : (
+          // WARNING: THIS DOES NOT WORK IN REACT 18 STRICT MODE
           <DragDropContext onDragEnd={handleDragEnd}>
             <ScrollableList>
               <Droppable droppableId="droppable">
                 {(provided) => (
                   <div {...provided.droppableProps} ref={provided.innerRef}>
                     {selectedFields.map((field, i) => (
-                      <li key={field}>
-                        <Draggable draggableId={field} index={i}>
-                          {(provided, snapshot) => (
-                            <div
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                            >
-                              <Column
-                                label={field}
-                                active={snapshot.isDragging}
-                                secondaryItem={<DragHandleIcon />}
-                              />
-                            </div>
-                          )}
-                        </Draggable>
-                      </li>
+                      <Draggable key={field} draggableId={field} index={i}>
+                        {(provided, snapshot) => (
+                          <li
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                          >
+                            <Column
+                              label={field}
+                              active={snapshot.isDragging}
+                              secondaryItem={<DragHandleIcon />}
+                            />
+                          </li>
+                        )}
+                      </Draggable>
                     ))}
                     {provided.placeholder}
                   </div>

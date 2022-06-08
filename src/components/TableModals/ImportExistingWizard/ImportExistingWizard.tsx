@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useAtom, useSetAtom } from "jotai";
+import { RESET } from "jotai/utils";
 import { merge } from "lodash-es";
 import { ITableModalProps } from "@src/components/TableModals";
 
@@ -13,15 +14,17 @@ import Step4Preview from "./Step4Preview";
 
 import {
   tableScope,
+  updateTableSchemaAtom,
   tableFiltersAtom,
   tableOrdersAtom,
   tableRowsAtom,
+  tableModalAtom,
 } from "@src/atoms/tableScope";
 import { TableSchema, ColumnConfig } from "@src/types/table";
 
 export type TableColumnsConfig = NonNullable<TableSchema["columns"]>;
 
-export type ImportWizardRef = {
+export type ImportExistingWizardRef = {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -33,10 +36,12 @@ export interface IStepProps {
   isXs: boolean;
 }
 
-export default function ImportWizard({ onClose }: ITableModalProps) {
+export default function ImportExistingWizard({ onClose }: ITableModalProps) {
+  const [updateTableSchema] = useAtom(updateTableSchemaAtom, tableScope);
   const setTableFilters = useSetAtom(tableFiltersAtom, tableScope);
   const setTableOrders = useSetAtom(tableOrdersAtom, tableScope);
   const [tableRows] = useAtom(tableRowsAtom, tableScope);
+  const setTableModal = useSetAtom(tableModalAtom, tableScope);
 
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.down("sm"));
@@ -52,11 +57,13 @@ export default function ImportWizard({ onClose }: ITableModalProps) {
     setTableOrders([]);
   }, [setTableFilters, setTableOrders]);
 
-  if (tableRows.length === 0) return null;
+  if (tableRows.length === 0 || !updateTableSchema) {
+    setTableModal(RESET);
+    return null;
+  }
 
   const handleFinish = () => {
-    // FIXME: Investigate if this overwrites
-    // tableActions?.table.updateConfig("columns", config);
+    updateTableSchema!({ columns: config });
     onClose();
   };
 
@@ -64,7 +71,7 @@ export default function ImportWizard({ onClose }: ITableModalProps) {
     <WizardDialog
       open
       onClose={onClose}
-      title="Import"
+      title="Import existing data"
       steps={[
         {
           title: "Choose columns",

@@ -12,7 +12,7 @@ import Cell from "@src/components/Table/Cell";
 import FieldsDropdown from "@src/components/ColumnModals/FieldsDropdown";
 
 import { FieldType } from "@src/constants/fields";
-import { SELECTABLE_TYPES } from "@src/components/TableModals/ImportWizard/utils";
+import { SELECTABLE_TYPES } from "@src/components/TableModals/ImportExistingWizard/utils";
 
 export default function Step2NewColumns({
   csvData,
