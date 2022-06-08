@@ -1,6 +1,7 @@
 import { useState, useMemo, useCallback, useRef } from "react";
 import useMemoValue from "use-memo-value";
 import { useAtom, useSetAtom } from "jotai";
+import { RESET } from "jotai/utils";
 import { useSnackbar } from "notistack";
 import { uniqBy, find, isEqual } from "lodash-es";
 import { ITableModalProps } from "@src/components/TableModals";
@@ -12,13 +13,13 @@ import {
   Link,
   Alert,
   AlertTitle,
+  Button,
 } from "@mui/material";
 
 import WizardDialog from "@src/components/TableModals/WizardDialog";
 import Step1Columns from "./Step1Columns";
 import Step2NewColumns from "./Step2NewColumns";
 import Step3Preview from "./Step3Preview";
-import CircularProgressOptical from "@src/components/CircularProgressOptical";
 import SnackbarProgress, {
   ISnackbarProgressRef,
 } from "@src/components/SnackbarProgress";
@@ -31,6 +32,7 @@ import {
   bulkAddRowsAtom,
   importCsvAtom,
   ImportCsvData,
+  tableModalAtom,
 } from "@src/atoms/tableScope";
 import { ColumnConfig } from "@src/types/table";
 import { getFieldProp } from "@src/components/fields";
@@ -55,6 +57,7 @@ export default function ImportCsvWizard({ onClose }: ITableModalProps) {
   const addColumn = useSetAtom(addColumnAtom, tableScope);
   const bulkAddRows = useSetAtom(bulkAddRowsAtom, tableScope);
   const [{ importType, csvData }] = useAtom(importCsvAtom, tableScope);
+  const setTableModal = useSetAtom(tableModalAtom, tableScope);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.down("sm"));
@@ -116,6 +119,24 @@ export default function ImportCsvWizard({ onClose }: ITableModalProps) {
         ),
       }
     );
+
+    const warningSnackbar = enqueueSnackbar(
+      "Do not close this page until the import is complete",
+      {
+        variant: "warning",
+        persist: true,
+        action: (
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => closeSnackbar(warningSnackbar)}
+          >
+            OK
+          </Button>
+        ),
+      }
+    );
+
     // Run add column & batch write at the same time
     const promises: Promise<void>[] = [];
 
@@ -136,16 +157,23 @@ export default function ImportCsvWizard({ onClose }: ITableModalProps) {
       onClose();
       await Promise.all(promises);
       logEvent(analytics, "import_success", { type: importType });
-      closeSnackbar(loadingSnackbar);
+      enqueueSnackbar(
+        `Imported ${Number(parsedRows.length).toLocaleString()} rows`,
+        { variant: "success" }
+      );
     } catch (e) {
       enqueueSnackbar((e as Error).message, { variant: "error" });
     } finally {
       closeSnackbar(loadingSnackbar);
+      closeSnackbar(warningSnackbar);
     }
     console.timeEnd("importCsv");
   };
 
-  if (!csvData) return null;
+  if (!csvData) {
+    setTableModal(RESET);
+    return null;
+  }
 
   return (
     <WizardDialog
