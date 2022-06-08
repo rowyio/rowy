@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useRef } from "react";
 import useMemoValue from "use-memo-value";
 import { useAtom, useSetAtom } from "jotai";
 import { useSnackbar } from "notistack";
@@ -19,6 +19,9 @@ import Step1Columns from "./Step1Columns";
 import Step2NewColumns from "./Step2NewColumns";
 import Step3Preview from "./Step3Preview";
 import CircularProgressOptical from "@src/components/CircularProgressOptical";
+import SnackbarProgress, {
+  ISnackbarProgressRef,
+} from "@src/components/SnackbarProgress";
 
 import {
   tableScope,
@@ -55,6 +58,7 @@ export default function ImportCsvWizard({ onClose }: ITableModalProps) {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.down("sm"));
+  const snackbarProgressRef = useRef<ISnackbarProgressRef>();
 
   const columns = useMemoValue(tableSchema.columns ?? {}, isEqual);
 
@@ -96,13 +100,23 @@ export default function ImportCsvWizard({ onClose }: ITableModalProps) {
   const handleFinish = async () => {
     if (!parsedRows) return;
     console.time("importCsv");
+    snackbarProgressRef.current?.setProgress(0);
     const loadingSnackbar = enqueueSnackbar(
-      `Importing ${parsedRows.length} rows. This may take a while…`,
+      `Importing ${Number(
+        parsedRows.length
+      ).toLocaleString()} rows. This might take a while.`,
       {
         persist: true,
-        action: <CircularProgressOptical color="inherit" size={24} />,
+        action: (
+          <SnackbarProgress
+            stateRef={snackbarProgressRef}
+            target={Math.ceil(parsedRows.length / 500)}
+            label=" batches"
+          />
+        ),
       }
     );
+    // Run add column & batch write at the same time
     const promises: Promise<void>[] = [];
 
     try {
@@ -111,9 +125,15 @@ export default function ImportCsvWizard({ onClose }: ITableModalProps) {
         promises.push(addColumn({ config: col }));
 
       promises.push(
-        bulkAddRows({ rows: parsedRows, collection: tableSettings.collection })
+        bulkAddRows({
+          rows: parsedRows,
+          collection: tableSettings.collection,
+          onBatchCommit: (batchNumber: number) =>
+            snackbarProgressRef.current?.setProgress(batchNumber),
+        })
       );
 
+      onClose();
       await Promise.all(promises);
       logEvent(analytics, "import_success", { type: importType });
       closeSnackbar(loadingSnackbar);
@@ -121,8 +141,6 @@ export default function ImportCsvWizard({ onClose }: ITableModalProps) {
       enqueueSnackbar((e as Error).message, { variant: "error" });
     } finally {
       closeSnackbar(loadingSnackbar);
-      // Close wizard
-      onClose();
     }
     console.timeEnd("importCsv");
   };

@@ -48,8 +48,9 @@ export type BulkWriteOperation<T> =
  * @returns Promise
  */
 export type BulkWriteFunction<T = Partial<TableRow>> = (
-  operations: BulkWriteOperation<T>[]
-) => Promise<void[]>;
+  operations: BulkWriteOperation<T>[],
+  onBatchCommit?: (batchNumber: number) => void
+) => Promise<void>;
 
 /**
  * Store the next page state to know if it’s loading and if it’s available

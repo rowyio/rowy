@@ -21,7 +21,7 @@ import {
   _bulkWriteDbAtom,
 } from "./table";
 
-import { TableRow, TableRowRef } from "@src/types/table";
+import { TableRow, BulkWriteFunction } from "@src/types/table";
 import {
   rowyUser,
   generateId,
@@ -213,10 +213,11 @@ export const deleteRowAtom = atom(
 export interface IBulkAddRowsOptions {
   rows: Partial<TableRow[]>;
   collection: string;
+  onBatchCommit?: Parameters<BulkWriteFunction>[1];
 }
 export const bulkAddRowsAtom = atom(
   null,
-  async (get, _, { rows, collection }: IBulkAddRowsOptions) => {
+  async (get, _, { rows, collection, onBatchCommit }: IBulkAddRowsOptions) => {
     const bulkWriteDb = get(_bulkWriteDbAtom);
     if (!bulkWriteDb) throw new Error("Cannot write to database");
     const tableSettings = get(tableSettingsAtom);
@@ -254,9 +255,9 @@ export const bulkAddRowsAtom = atom(
     }));
 
     // Write to db
-    await bulkWriteDb(operations);
+    await bulkWriteDb(operations, onBatchCommit);
 
-    // Write an audit entry for each row
+    // TODO: Write an audit entry for each row
     // if (auditChange) {
     //   const auditChangePromises: Promise<void>[] = [];
     //   for (const operation of operations) {

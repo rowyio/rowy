@@ -25,7 +25,7 @@ import {
   tableNextPageAtom,
   auditChangeAtom,
 } from "@src/atoms/tableScope";
-import { BulkWriteOperation, TableRow } from "@src/types/table";
+import { BulkWriteFunction } from "@src/types/table";
 import { firebaseDbAtom } from "./ProjectSourceFirebase";
 import useFirestoreDocWithAtom from "@src/hooks/useFirestoreDocWithAtom";
 import useFirestoreCollectionWithAtom from "@src/hooks/useFirestoreCollectionWithAtom";
@@ -148,46 +148,47 @@ const TableSourceFirestore = memo(function TableSourceFirestore() {
   const setBulkWriteDb = useSetAtom(_bulkWriteDbAtom, tableScope);
   useEffect(() => {
     setBulkWriteDb(
-      () => async (operations: BulkWriteOperation<Partial<TableRow>>[]) => {
-        // Chunk operations into batches of 500 (Firestore limit is 500)
-        const operationsChunked = chunk(operations, 500);
-        // Store array of promises so we can run them all at once
-        const promises: Promise<void>[] = [];
-        // Loop through chunks of 500
-        for (const operationsChunk of operationsChunked) {
-          // Create Firestore batch transaction
-          const batch = writeBatch(firebaseDb);
-          // Loop through operations and write to batch
-          for (const operation of operationsChunk) {
-            // New document
-            if (operation.type === "add") {
-              batch.set(doc(firebaseDb, operation.path), operation.data);
-            }
-            // Update existing document and merge values and delete fields
-            else if (operation.type === "update") {
-              const updateToDb = { ...operation.data };
-              if (Array.isArray(operation.deleteFields)) {
-                for (const field of operation.deleteFields) {
-                  set(updateToDb as any, field, deleteField());
-                }
+      () =>
+        async (
+          operations: Parameters<BulkWriteFunction>[0],
+          onBatchCommit: Parameters<BulkWriteFunction>[1]
+        ) => {
+          // Chunk operations into batches of 500 (Firestore limit is 500)
+          const operationsChunked = chunk(operations, 500);
+
+          // Loop through chunks of 500, then commit the batch sequentially
+          for (const [index, operationsChunk] of operationsChunked.entries()) {
+            // Create Firestore batch transaction
+            const batch = writeBatch(firebaseDb);
+            // Loop through operations and write to batch
+            for (const operation of operationsChunk) {
+              // New document
+              if (operation.type === "add") {
+                batch.set(doc(firebaseDb, operation.path), operation.data);
               }
-              batch.set(doc(firebaseDb, operation.path), operation.data, {
-                merge: true,
-              });
+              // Update existing document and merge values and delete fields
+              else if (operation.type === "update") {
+                const updateToDb = { ...operation.data };
+                if (Array.isArray(operation.deleteFields)) {
+                  for (const field of operation.deleteFields) {
+                    set(updateToDb as any, field, deleteField());
+                  }
+                }
+                batch.set(doc(firebaseDb, operation.path), operation.data, {
+                  merge: true,
+                });
+              }
+              // Delete existing documents
+              else if (operation.type === "delete") {
+                batch.delete(doc(firebaseDb, operation.path));
+              }
             }
-            // Delete existing documents
-            else if (operation.type === "delete") {
-              batch.delete(doc(firebaseDb, operation.path));
-            }
+            // Commit batch and wait for it to finish before continuing
+            // to prevent Firestore rate limits
+            await batch.commit().then(() => console.log("Batch committed"));
+            if (onBatchCommit) onBatchCommit(index + 1);
           }
-          // Add to promises array
-          // promises.push(
-          await batch.commit().then(() => console.log("Batch committed"));
-          // );
         }
-        // Return promise that waits for all promises to resolve
-        return Promise.all(promises);
-      }
     );
 
     return () => setBulkWriteDb(undefined);
