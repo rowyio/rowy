@@ -1,6 +1,6 @@
 import { useAtom } from "jotai";
 import { merge } from "lodash-es";
-import { IUserSettingsChildProps } from "@src/pages/Settings/UserSettings";
+import { IUserSettingsChildProps } from "@src/pages/Settings/UserSettingsPage";
 
 import {
   FormControl,
