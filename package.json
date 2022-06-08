@@ -85,7 +85,8 @@
     "prepare": "husky install",
     "env": "node createDotEnv",
     "target": "firebase target:apply hosting rowy",
-    "deploy": "firebase deploy --only hosting"
+    "deploy": "firebase deploy --only hosting",
+    "typedoc": "typedoc src/atoms/tableScope/index.ts src/atoms/globalScope/index.ts --out typedoc"
   },
   "engines": {
     "node": ">=16"
@@ -174,7 +175,8 @@
     "prettier": "^2.6.2",
     "raw-loader": "^4.0.2",
     "source-map-explorer": "^2.5.2",
-    "ts-jest": "^28.0.2"
+    "ts-jest": "^28.0.2",
+    "typedoc": "^0.22.17"
   },
   "resolutions": {
     "@types/react": "^18"
