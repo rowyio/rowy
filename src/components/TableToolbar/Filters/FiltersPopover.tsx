@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { useAtom } from "jotai";
 
-import { Popover, Stack, Chip } from "@mui/material";
+import { Popover, Stack, Chip, Typography } from "@mui/material";
 import FilterIcon from "@mui/icons-material/FilterList";
 
 import ButtonWithStatus from "@src/components/ButtonWithStatus";
@@ -64,33 +64,53 @@ export default function FiltersPopover({
           {hasAppliedFilters ? "Filtered" : "Filter"}
         </ButtonWithStatus>
 
-        {appliedFilters.map((filter) => (
-          <Chip
-            key={filter.key}
-            label={`${filter.key} ${filter.operator} ${
-              availableFilters?.valueFormatter
-                ? availableFilters.valueFormatter(filter.value)
-                : filter.value
-            }`}
-            onDelete={
-              hasTableFilters && !tableFiltersOverridden
-                ? undefined
-                : () => setUserFilters([])
-            }
-            sx={{
-              borderRadius: 1,
-              borderTopLeftRadius: 0,
-              borderBottomLeftRadius: 0,
-              borderLeft: "none",
+        {appliedFilters.map((filter) => {
+          const operator = (availableFilters?.operators ?? []).find(
+            (f) => f.value === filter.operator
+          );
+          const operatorLabel = operator?.label ?? filter.operator;
 
-              backgroundColor: "background.paper",
-              height: 32,
+          const formattedValue = availableFilters?.valueFormatter
+            ? availableFilters.valueFormatter(filter.value)
+            : filter.value;
 
-              "& .MuiChip-label": { px: 1.5 },
-            }}
-            variant="outlined"
-          />
-        ))}
+          return (
+            <Chip
+              key={filter.key}
+              label={
+                <Typography variant="inherit">
+                  {filter.key}{" "}
+                  <Typography
+                    variant="inherit"
+                    display="inline"
+                    color="text.secondary"
+                    fontWeight="normal"
+                  >
+                    {operatorLabel}
+                  </Typography>{" "}
+                  {formattedValue}
+                </Typography>
+              }
+              onDelete={
+                hasTableFilters && !tableFiltersOverridden
+                  ? undefined
+                  : () => setUserFilters([])
+              }
+              sx={{
+                borderRadius: 1,
+                borderTopLeftRadius: 0,
+                borderBottomLeftRadius: 0,
+                borderLeft: "none",
+
+                backgroundColor: "background.paper",
+                height: 32,
+
+                "& .MuiChip-label": { px: 1.5 },
+              }}
+              variant="outlined"
+            />
+          );
+        })}
       </Stack>
 
       <Popover

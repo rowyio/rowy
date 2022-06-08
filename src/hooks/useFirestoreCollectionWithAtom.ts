@@ -20,6 +20,8 @@ import {
   deleteField,
   CollectionReference,
   Query,
+  QueryConstraint,
+  WhereFilterOp,
 } from "firebase/firestore";
 import { useErrorHandler } from "react-error-boundary";
 
@@ -34,6 +36,7 @@ import {
 } from "@src/types/table";
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
 import { COLLECTION_PAGE_SIZE } from "@src/config/db";
+import { getDateRange, getTimeRange } from "@src/utils/date";
 
 /** Options for {@link useFirestoreCollectionWithAtom} */
 interface IUseFirestoreCollectionWithAtomOptions<T> {
@@ -128,8 +131,17 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
       filters,
       orders
     ),
-    (next, prev) =>
-      isLastPage || queryEqual(next?.query as any, prev?.query as any)
+    (next, prev) => {
+      // If filters are not equal, update the query
+      // Firestore queryEqual does not detect when date filters change
+      if (
+        JSON.stringify(next?.firestoreFilters) !==
+        JSON.stringify(prev?.firestoreFilters)
+      )
+        return false;
+
+      return isLastPage || queryEqual(next?.query as any, prev?.query as any);
+    }
   );
 
   // Create listener
@@ -295,17 +307,63 @@ const getQuery = <T>(
   if (!collectionRef) return null;
 
   const limit = (page + 1) * pageSize;
+  const firestoreFilters = tableFiltersToFirestoreFilters(filters || []);
 
   return {
     query: query<T>(
       collectionRef,
       queryLimit((page + 1) * pageSize),
-      ...(filters?.map((filter) =>
-        where(filter.key, filter.operator, filter.value)
-      ) || []),
+      ...firestoreFilters,
       ...(orders?.map((order) => orderBy(order.key, order.direction)) || [])
     ),
     page,
     limit,
+    firestoreFilters,
   };
+};
+
+/**
+ * Support custom filter operators not supported by Firestore.
+ * e.g. date-range-equal: `>=` && `<=` operators when `==` is used on dates.
+ * @param filters - Array of TableFilters to convert
+ * @returns Array of Firestore query `where` constraints
+ */
+export const tableFiltersToFirestoreFilters = (filters: TableFilter[]) => {
+  const firestoreFilters: QueryConstraint[] = [];
+
+  for (const filter of filters) {
+    if (filter.operator.startsWith("date-")) {
+      const filterDate =
+        "toDate" in filter.value ? filter.value.toDate() : filter.value;
+      const [startDate, endDate] = getDateRange(filterDate);
+
+      if (filter.operator === "date-equal") {
+        firestoreFilters.push(where(filter.key, ">=", startDate));
+        firestoreFilters.push(where(filter.key, "<=", endDate));
+      } else if (filter.operator === "date-before") {
+        firestoreFilters.push(where(filter.key, "<", startDate));
+      } else if (filter.operator === "date-after") {
+        firestoreFilters.push(where(filter.key, ">", endDate));
+      } else if (filter.operator === "date-before-equal") {
+        firestoreFilters.push(where(filter.key, "<=", endDate));
+      } else if (filter.operator === "date-after-equal") {
+        firestoreFilters.push(where(filter.key, ">=", startDate));
+      }
+      continue;
+    } else if (filter.operator === "time-minute-equal") {
+      const filterDate =
+        "toDate" in filter.value ? filter.value.toDate() : filter.value;
+      const [startDate, endDate] = getTimeRange(filterDate);
+
+      firestoreFilters.push(where(filter.key, ">=", startDate));
+      firestoreFilters.push(where(filter.key, "<=", endDate));
+      continue;
+    }
+
+    firestoreFilters.push(
+      where(filter.key, filter.operator as WhereFilterOp, filter.value)
+    );
+  }
+
+  return firestoreFilters;
 };

@@ -145,7 +145,14 @@ export type ColumnConfig = {
 
 export type TableFilter = {
   key: string;
-  operator: Parameters<typeof where>[1];
+  operator:
+    | Parameters<typeof where>[1]
+    | "date-equal"
+    | "date-before"
+    | "date-after"
+    | "date-before-equal"
+    | "date-after-equal"
+    | "time-minute-equal";
   value: any;
 };
 

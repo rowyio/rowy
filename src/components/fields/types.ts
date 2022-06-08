@@ -3,7 +3,12 @@ import { FormatterProps, EditorProps } from "react-data-grid";
 import { Control, UseFormReturn } from "react-hook-form";
 import { PopoverProps } from "@mui/material";
 import { WhereFilterOp } from "firebase/firestore";
-import { ColumnConfig, TableRow, TableRowRef } from "@src/types/table";
+import {
+  ColumnConfig,
+  TableRow,
+  TableRowRef,
+  TableFilter,
+} from "@src/types/table";
 import { SelectedCell } from "@src/atoms/tableScope";
 import { IContextMenuItem } from "@src/components/Table/ContextMenu/MenuItem";
 
@@ -103,6 +108,7 @@ export interface IFiltersProps {
 }
 
 export interface IFilterOperator {
-  value: WhereFilterOp;
+  value: TableFilter["operator"];
   label: string;
+  secondaryLabel?: React.ReactNode;
 }

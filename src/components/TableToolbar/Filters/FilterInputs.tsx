@@ -1,6 +1,13 @@
 import { Suspense, createElement } from "react";
 
-import { Grid, MenuItem, TextField, InputLabel } from "@mui/material";
+import {
+  Grid,
+  MenuItem,
+  ListItemText,
+  Typography,
+  TextField,
+  InputLabel,
+} from "@mui/material";
 import ColumnSelect from "@src/components/Table/ColumnSelect";
 import FieldSkeleton from "@src/components/SideDrawer/FieldSkeleton";
 
@@ -52,13 +59,26 @@ export default function FilterInputs({
             }));
           }}
           SelectProps={{ displayEmpty: true }}
+          sx={{ "& .MuiSelect-select": { display: "flex" } }}
         >
           <MenuItem disabled value="" style={{ display: "none" }}>
             Select operator
           </MenuItem>
           {availableFilters?.operators.map((operator) => (
             <MenuItem key={operator.value} value={operator.value}>
-              {operator.label}
+              <ListItemText style={{ flexShrink: 0 }}>
+                {operator.label}
+              </ListItemText>
+
+              {operator.secondaryLabel && (
+                <Typography
+                  variant="inherit"
+                  color="text.disabled"
+                  style={{ overflow: "hidden", textOverflow: "ellipsis" }}
+                >
+                  &nbsp;{operator.secondaryLabel}
+                </Typography>
+              )}
             </MenuItem>
           ))}
         </TextField>

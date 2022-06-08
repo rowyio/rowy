@@ -1,5 +1,6 @@
 import { useDebouncedCallback } from "use-debounce";
 import { IHeavyCellProps } from "@src/components/fields/types";
+import { setSeconds } from "date-fns";
 
 import DateTimePicker from "@mui/lab/DateTimePicker";
 import { TextField } from "@mui/material";
@@ -103,7 +104,7 @@ export default function DateTime({
       )}
       label={column.name}
       value={transformedValue}
-      onChange={handleDateChange}
+      onChange={(date) => handleDateChange(date ? setSeconds(date, 0) : null)}
       inputFormat={format}
       mask={format.replace(/[A-Za-z]/g, "_")}
       clearable
@@ -115,7 +116,6 @@ export default function DateTime({
       }}
       components={{ OpenPickerIcon: DateTimeIcon }}
       disableOpenPicker={false}
-      showToolbar
     />
   );
 }

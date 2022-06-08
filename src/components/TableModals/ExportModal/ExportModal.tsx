@@ -7,7 +7,6 @@ import {
   Query,
   collection,
   collectionGroup,
-  where,
   orderBy,
   limit,
 } from "firebase/firestore";
@@ -27,9 +26,9 @@ import {
   tableSettingsAtom,
   tableFiltersAtom,
   tableOrdersAtom,
-  tableModalAtom,
 } from "@src/atoms/tableScope";
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
+import { tableFiltersToFirestoreFilters } from "@src/hooks/useFirestoreCollectionWithAtom";
 import { TableRow } from "@src/types/table";
 
 export interface IExportModalContentsProps {
@@ -39,7 +38,6 @@ export interface IExportModalContentsProps {
 
 // TODO: Generalize and remove Firestore dependencies
 export default function Export({ onClose }: ITableModalProps) {
-  const setModal = useSetAtom(tableModalAtom, tableScope);
   const [mode, setMode] = useState<"Export" | "Download">("Export");
 
   const [firebaseDb] = useAtom(firebaseDbAtom, globalScope);
@@ -55,9 +53,7 @@ export default function Export({ onClose }: ITableModalProps) {
       ? (collectionGroup(firebaseDb, _path) as Query<TableRow>)
       : (collection(firebaseDb, _path) as Query<TableRow>);
     // add filters
-    const filters = tableFilters.map((filter) =>
-      where(filter.key, filter.operator, filter.value)
-    );
+    const filters = tableFiltersToFirestoreFilters(tableFilters);
     // optional order results
     const orders = tableOrders.map((order) =>
       orderBy(order.key, order.direction)
@@ -72,15 +68,10 @@ export default function Export({ onClose }: ITableModalProps) {
     tableOrders,
   ]);
 
-  const handleClose = () => {
-    setModal(RESET);
-    setMode("Export");
-  };
-
   return (
     <TabContext value={mode}>
       <Modal
-        onClose={handleClose}
+        onClose={onClose}
         sx={{
           "& .MuiDialog-paper": {
             maxWidth: { sm: 440 },
@@ -142,7 +133,7 @@ export default function Export({ onClose }: ITableModalProps) {
             "&[hidden]": { display: "none" },
           }}
         >
-          <ExportDetails query={query} closeModal={handleClose} />
+          <ExportDetails query={query} closeModal={onClose} />
         </TabPanel>
 
         <TabPanel
@@ -164,7 +155,7 @@ export default function Export({ onClose }: ITableModalProps) {
             "&[hidden]": { display: "none" },
           }}
         >
-          <DownloadDetails query={query} closeModal={handleClose} />
+          <DownloadDetails query={query} closeModal={onClose} />
         </TabPanel>
       </Modal>
     </TabContext>

@@ -1,6 +1,7 @@
 import { ISideDrawerFieldProps } from "@src/components/fields/types";
+import { setSeconds } from "date-fns";
 
-import DatePicker from "@mui/lab/DatePicker";
+import DateTimePicker from "@mui/lab/DateTimePicker";
 import { TextField } from "@mui/material";
 
 import {
@@ -31,7 +32,7 @@ export default function Date_({
   };
 
   return (
-    <DatePicker
+    <DateTimePicker
       renderInput={(props) => (
         <TextField
           {...props}
@@ -57,7 +58,7 @@ export default function Date_({
       )}
       label={column.name}
       value={transformedValue}
-      onChange={handleChange}
+      onChange={(date) => handleChange(date ? setSeconds(date, 0) : null)}
       onAccept={onSubmit}
       inputFormat={format}
       mask={format.replace(/[A-Za-z]/g, "_")}
@@ -65,7 +66,6 @@ export default function Date_({
       OpenPickerButtonProps={{ size: "small" }}
       components={{ OpenPickerIcon: DateTimeIcon }}
       disableOpenPicker={false}
-      showToolbar
       disabled={disabled}
     />
   );
