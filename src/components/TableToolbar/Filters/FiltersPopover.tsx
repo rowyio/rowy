@@ -69,7 +69,10 @@ export default function FiltersPopover({
           const operator = (availableFilters?.operators ?? []).find(
             (f) => f.value === filter.operator
           );
-          const operatorLabel = operator?.label ?? filter.operator;
+          const operatorLabel = (operator?.label ?? filter.operator).replace(
+            "id-equal",
+            "is"
+          );
 
           const formattedValue = availableFilters?.valueFormatter
             ? availableFilters.valueFormatter(filter.value)
