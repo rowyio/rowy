@@ -1,5 +1,5 @@
 import { lazy, Suspense, useState } from "react";
-import { IProjectSettingsChildProps } from "@src/pages/Settings/ProjectSettings";
+import { IProjectSettingsChildProps } from "@src/pages/Settings/ProjectSettingsPage";
 import { merge, unset } from "lodash-es";
 
 import { FormControlLabel, Checkbox, Collapse } from "@mui/material";

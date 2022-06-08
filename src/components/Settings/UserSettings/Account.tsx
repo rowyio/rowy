@@ -1,4 +1,4 @@
-import { IUserSettingsChildProps } from "@src/pages/Settings/UserSettings";
+import { IUserSettingsChildProps } from "@src/pages/Settings/UserSettingsPage";
 import { Link } from "react-router-dom";
 
 import { Grid, Avatar, Typography, Button } from "@mui/material";
