@@ -1,18 +1,23 @@
+import { Fragment } from "react";
 import { useAtom, useSetAtom } from "jotai";
 import { getFieldProp } from "@src/components/fields";
 import { find } from "lodash-es";
 
 import { Divider } from "@mui/material";
 import {
+  Copy as CopyIcon,
   CopyCells as DuplicateIcon,
   Clear as ClearIcon,
+  Row as RowIcon,
 } from "@src/assets/icons";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
+import OpenIcon from "@mui/icons-material/OpenInNewOutlined";
 
-import MenuItem from "./MenuItem";
+import ContextMenuItem, { IContextMenuItem } from "./ContextMenuItem";
 
 import {
   globalScope,
+  projectIdAtom,
   altPressAtom,
   tableAddRowIdTypeAtom,
   confirmDialogAtom,
@@ -27,7 +32,6 @@ import {
   deleteRowAtom,
   updateFieldAtom,
 } from "@src/atoms/tableScope";
-import { IContextMenuItem } from "./MenuItem";
 import { FieldType } from "@src/constants/fields";
 
 interface IMenuContentsProps {
@@ -35,6 +39,7 @@ interface IMenuContentsProps {
 }
 
 export default function MenuContents({ onClose }: IMenuContentsProps) {
+  const [projectId] = useAtom(projectIdAtom, globalScope);
   const [altPress] = useAtom(altPressAtom, globalScope);
   const [addRowIdType] = useAtom(tableAddRowIdTypeAtom, globalScope);
   const confirm = useSetAtom(confirmDialogAtom, globalScope);
@@ -84,6 +89,7 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
       label: altPress ? "Clear value" : "Clear value…",
       color: "error",
       icon: <ClearIcon />,
+      disabled: selectedColumn.editable === false,
       onClick: altPress
         ? handleClearValue
         : () => {
@@ -104,41 +110,79 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
     const handleDelete = () => deleteRow(row._rowy_ref.path);
     const rowActions = [
       {
-        label: "Duplicate row",
-        icon: <DuplicateIcon />,
-        disabled: tableSettings.tableType === "collectionGroup",
-        onClick: () => {
-          addRow({
-            row,
-            setId: addRowIdType === "custom" ? "decrement" : addRowIdType,
-          });
-          onClose();
-        },
-      },
-      {
-        label: altPress ? "Delete row" : "Delete row…",
-        color: "error",
-        icon: <DeleteIcon />,
-        onClick: altPress
-          ? handleDelete
-          : () => {
-              confirm({
-                title: "Delete row?",
-                body: (
-                  <>
-                    Row path:
-                    <br />
-                    <code style={{ userSelect: "all", wordBreak: "break-all" }}>
-                      {row._rowy_ref.path}
-                    </code>
-                  </>
-                ),
-                confirm: "Delete",
-                confirmColor: "error",
-                handleConfirm: handleDelete,
+        label: "Row",
+        icon: <RowIcon />,
+        subItems: [
+          {
+            label: "Copy ID",
+            icon: <CopyIcon />,
+            onClick: () => {
+              navigator.clipboard.writeText(row._rowy_ref.id);
+              onClose();
+            },
+          },
+          {
+            label: "Copy path",
+            icon: <CopyIcon />,
+            onClick: () => {
+              navigator.clipboard.writeText(row._rowy_ref.path);
+              onClose();
+            },
+          },
+          {
+            label: "Open in Firebase Console",
+            icon: <OpenIcon />,
+            onClick: () => {
+              window.open(
+                `https://console.firebase.google.com/project/${projectId}/firestore/data/~2F${row._rowy_ref.path.replace(
+                  /\//g,
+                  "~2F"
+                )}`
+              );
+              onClose();
+            },
+          },
+          { label: "Divider", divider: true },
+          {
+            label: "Duplicate",
+            icon: <DuplicateIcon />,
+            disabled: tableSettings.tableType === "collectionGroup",
+            onClick: () => {
+              addRow({
+                row,
+                setId: addRowIdType === "custom" ? "decrement" : addRowIdType,
               });
               onClose();
             },
+          },
+          {
+            label: altPress ? "Delete" : "Delete…",
+            color: "error",
+            icon: <DeleteIcon />,
+            onClick: altPress
+              ? handleDelete
+              : () => {
+                  confirm({
+                    title: "Delete row?",
+                    body: (
+                      <>
+                        Row path:
+                        <br />
+                        <code
+                          style={{ userSelect: "all", wordBreak: "break-all" }}
+                        >
+                          {row._rowy_ref.path}
+                        </code>
+                      </>
+                    ),
+                    confirm: "Delete",
+                    confirmColor: "error",
+                    handleConfirm: handleDelete,
+                  });
+                  onClose();
+                },
+          },
+        ],
       },
     ];
     actionGroups.push(rowActions);
@@ -147,12 +191,15 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
   return (
     <>
       {actionGroups.map((items, groupIndex) => (
-        <>
+        <Fragment key={groupIndex}>
           {groupIndex > 0 && <Divider variant="middle" />}
           {items.map((item, index: number) => (
-            <MenuItem key={`contextMenu-${groupIndex}-${index}`} {...item} />
+            <ContextMenuItem
+              key={`contextMenu-${groupIndex}-${index}`}
+              {...item}
+            />
           ))}
-        </>
+        </Fragment>
       ))}
     </>
   );

@@ -22,11 +22,7 @@ export default function ContextMenu() {
       onClose={handleClose}
       anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
       transformOrigin={{ vertical: "top", horizontal: "left" }}
-      // sx={{
-      //   "& .MuiMenu-paper": {
-      //     backgroundColor: "background.default",
-      //   },
-      // }}
+      sx={{ "& .MuiMenu-paper": { minWidth: 150 } }}
     >
       <MenuContents onClose={handleClose} />
     </Menu>
