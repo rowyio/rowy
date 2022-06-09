@@ -8,7 +8,7 @@ import RadioIcon from "@src/theme/RadioIcon";
 import CheckboxIcon from "@src/theme/CheckboxIcon";
 import CheckboxIndeterminateIcon from "@src/theme/CheckboxIndeterminateIcon";
 import AddCircleIcon from "@mui/icons-material/AddCircleOutline";
-import { ChevronRight as ChevronRightIcon } from "@src/assets/icons";
+import { ChevronDown as ChevronDownIcon } from "@src/assets/icons";
 import { SvgIcon } from "@mui/material";
 import CircularProgressOptical from "@src/components/CircularProgressOptical";
 
@@ -442,7 +442,7 @@ export const components = (theme: Theme): ThemeOptions => {
 
       MuiSelect: {
         defaultProps: {
-          IconComponent: ChevronRightIcon,
+          IconComponent: ChevronDownIcon,
         },
         styleOverrides: {
           select: {
