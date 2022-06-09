@@ -1,12 +1,13 @@
 import { useRef, Suspense, lazy } from "react";
-import { useAtom, Provider } from "jotai";
-import { DebugAtoms } from "@src/atoms/utils";
-import { useParams } from "react-router-dom";
+import { useAtom } from "jotai";
 import { DataGridHandle } from "react-data-grid";
+import { ErrorBoundary } from "react-error-boundary";
 import { isEmpty } from "lodash-es";
 
 import { Fade } from "@mui/material";
-
+import ErrorFallback, {
+  InlineErrorFallback,
+} from "@src/components/ErrorFallback";
 import TableToolbarSkeleton from "@src/components/TableToolbar/TableToolbarSkeleton";
 import HeaderRowSkeleton from "@src/components/Table/HeaderRowSkeleton";
 import EmptyTable from "@src/components/Table/EmptyTable";
@@ -17,11 +18,8 @@ import ColumnMenu from "@src/components/ColumnMenu";
 import ColumnModals from "@src/components/ColumnModals";
 import TableModals from "@src/components/TableModals";
 
-import { currentUserAtom, globalScope } from "@src/atoms/globalScope";
-import TableSourceFirestore from "@src/sources/TableSourceFirestore";
 import {
   tableScope,
-  tableIdAtom,
   tableSchemaAtom,
   columnModalAtom,
   tableModalAtom,
@@ -33,7 +31,11 @@ import { useSnackLogContext } from "@src/contexts/SnackLogContext";
 // prettier-ignore
 const BuildLogsSnack = lazy(() => import("@src/components/TableModals/CloudLogsModal/BuildLogs/BuildLogsSnack" /* webpackChunkName: "TableModals-BuildLogsSnack" */));
 
-function TablePage() {
+/**
+ * TablePage renders all the UI for the table.
+ * Must be wrapped by either `ProvidedTablePage` or `ProvidedSubTablePage`.
+ */
+export default function TablePage() {
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const snackLogContext = useSnackLogContext();
 
@@ -65,65 +67,44 @@ function TablePage() {
 
   return (
     <ActionParamsProvider>
-      <Suspense fallback={<TableToolbarSkeleton />}>
-        <TableToolbar />
-      </Suspense>
+      <ErrorBoundary FallbackComponent={InlineErrorFallback}>
+        <Suspense fallback={<TableToolbarSkeleton />}>
+          <TableToolbar />
+        </Suspense>
+      </ErrorBoundary>
 
-      <Suspense fallback={<HeaderRowSkeleton />}>
-        <Table dataGridRef={dataGridRef} />
-      </Suspense>
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <Suspense fallback={<HeaderRowSkeleton />}>
+          <Table dataGridRef={dataGridRef} />
+        </Suspense>
+      </ErrorBoundary>
 
-      <Suspense fallback={null}>
-        <SideDrawer dataGridRef={dataGridRef} />
-      </Suspense>
+      <ErrorBoundary FallbackComponent={InlineErrorFallback}>
+        <Suspense fallback={null}>
+          <SideDrawer dataGridRef={dataGridRef} />
+        </Suspense>
+      </ErrorBoundary>
 
-      <Suspense fallback={null}>
-        <ColumnMenu />
-        <ColumnModals />
-      </Suspense>
+      <ErrorBoundary FallbackComponent={InlineErrorFallback}>
+        <Suspense fallback={null}>
+          <ColumnMenu />
+          <ColumnModals />
+        </Suspense>
+      </ErrorBoundary>
 
-      <Suspense fallback={null}>
-        <TableModals />
-        {snackLogContext.isSnackLogOpen && (
-          <Suspense fallback={null}>
-            <BuildLogsSnack
-              onClose={snackLogContext.closeSnackLog}
-              onOpenPanel={alert}
-            />
-          </Suspense>
-        )}
-      </Suspense>
+      <ErrorBoundary FallbackComponent={InlineErrorFallback}>
+        <Suspense fallback={null}>
+          <TableModals />
+          {snackLogContext.isSnackLogOpen && (
+            <Suspense fallback={null}>
+              <BuildLogsSnack
+                onClose={snackLogContext.closeSnackLog}
+                onOpenPanel={alert}
+              />
+            </Suspense>
+          )}
+        </Suspense>
+      </ErrorBoundary>
     </ActionParamsProvider>
-  );
-}
-
-export default function ProvidedTablePage() {
-  const { id } = useParams();
-  const [currentUser] = useAtom(currentUserAtom, globalScope);
-
-  return (
-    <Suspense
-      fallback={
-        <>
-          <TableToolbarSkeleton />
-          <HeaderRowSkeleton />
-        </>
-      }
-    >
-      <Provider
-        key={tableScope.description + "/" + id}
-        scope={tableScope}
-        initialValues={[
-          [tableIdAtom, id],
-          [currentUserAtom, currentUser],
-        ]}
-      >
-        <DebugAtoms scope={tableScope} />
-        <TableSourceFirestore />
-        <main>
-          <TablePage />
-        </main>
-      </Provider>
-    </Suspense>
   );
 }

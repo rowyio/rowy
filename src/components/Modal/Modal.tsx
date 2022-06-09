@@ -99,7 +99,11 @@ export default function Modal({
           : props.sx
       }
     >
-      <Stack direction="row" alignItems="flex-start">
+      <Stack
+        direction="row"
+        alignItems="flex-start"
+        className="modal-title-row"
+      >
         <DialogTitle
           id="modal-title"
           style={{ flexGrow: 1, userSelect: "none" }}

@@ -23,7 +23,13 @@ export enum ROUTES {
 
   table = "/table",
   tableWithId = "/table/:id",
+  /** Nested route: `/table/:id/subTable/...` */
+  subTable = "subTable",
+  /** Nested route: `/table/:id/subTable/...` */
+  subTableWithId = "subTable/:docPath/:subTableKey",
+  /** @deprecated Redirects to /table */
   tableGroup = "/tableGroup",
+  /** @deprecated Redirects to /table */
   tableGroupWithId = "/tableGroup/:id",
 
   settings = "/settings",

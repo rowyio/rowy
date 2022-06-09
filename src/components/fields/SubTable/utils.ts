@@ -1,4 +1,4 @@
-import { useLocation, useSearchParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 import { ROUTES } from "@src/constants/routes";
 import { ColumnConfig, TableRow, TableRowRef } from "@src/types/table";
@@ -13,24 +13,24 @@ export const useSubTableData = (
     else return row[curr];
   }, "");
 
-  const fieldName = column.key;
-  const documentCount: string = row[fieldName]?.count ?? "";
+  const documentCount: string = row[column.fieldName]?.count ?? "";
 
   const location = useLocation();
-  const parentPath = decodeURIComponent(
-    location.pathname.split("/").pop() ?? ""
+  const rootTablePath = decodeURIComponent(
+    location.pathname.split("/" + ROUTES.subTable)[0]
   );
 
-  const [searchParams] = useSearchParams();
-  const parentLabels = searchParams.get("parentLabel");
-  let subTablePath =
-    ROUTES.table +
-    "/" +
-    encodeURIComponent(`${parentPath}/${docRef.id}/${fieldName}`) +
-    "?parentLabel=";
+  // const [searchParams] = useSearchParams();
+  // const parentLabels = searchParams.get("parentLabel");
+  let subTablePath = [
+    rootTablePath,
+    ROUTES.subTable,
+    encodeURIComponent(docRef.path),
+    column.key,
+  ].join("/");
 
-  if (parentLabels) subTablePath += `${parentLabels ?? ""},${label ?? ""}`;
-  else subTablePath += encodeURIComponent(label ?? "");
+  // if (parentLabels) subTablePath += `${parentLabels ?? ""},${label ?? ""}`;
+  // else subTablePath += encodeURIComponent(label ?? "");
 
   return { documentCount, label, subTablePath };
 };

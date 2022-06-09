@@ -20,7 +20,7 @@ export default function TableSettings() {
         openTableSettingsDialog({ mode: "update", data: tableSettings })
       }
       icon={<SettingsIcon />}
-      disabled={!openTableSettingsDialog}
+      disabled={!openTableSettingsDialog || tableSettings.id.includes("/")}
     />
   );
 }

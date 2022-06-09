@@ -10,9 +10,10 @@ import { Tables as TablesIcon } from "@src/assets/icons";
 import EmptyState, { IEmptyStateProps } from "@src/components/EmptyState";
 import AccessDenied from "@src/components/AccessDenied";
 
-import { ERROR_TABLE_NOT_FOUND } from "@src/sources/TableSourceFirestore";
 import { ROUTES } from "@src/constants/routes";
 import meta from "@root/package.json";
+
+export const ERROR_TABLE_NOT_FOUND = "Table not found";
 
 export interface IErrorFallbackProps extends FallbackProps, IEmptyStateProps {}
 
@@ -54,12 +55,13 @@ export default function ErrorFallback({
     ),
   };
 
-  if (error.message === ERROR_TABLE_NOT_FOUND) {
+  if (error.message.startsWith(ERROR_TABLE_NOT_FOUND)) {
     renderProps = {
-      message: "Table not found",
+      message: ERROR_TABLE_NOT_FOUND,
       description: (
         <>
           <span>Make sure you have the right ID</span>
+          <code>{error.message.replace(ERROR_TABLE_NOT_FOUND + ": ", "")}</code>
           <Button
             size={props.basic ? "small" : "medium"}
             variant="outlined"

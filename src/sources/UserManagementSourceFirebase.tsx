@@ -8,6 +8,9 @@ import {
 } from "@src/atoms/globalScope";
 import { USERS } from "@src/config/dbPaths";
 
+/**
+ * When rendered, provides atom values for top-level tables
+ */
 const UserManagementSourceFirebase = memo(
   function UserManagementSourceFirebase() {
     useFirestoreCollectionWithAtom(allUsersAtom, globalScope, USERS, {

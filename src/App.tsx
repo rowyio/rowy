@@ -41,7 +41,9 @@ const TableSettingsDialog = lazy(() => import("@src/components/TableSettingsDial
 // prettier-ignore
 const TablesPage = lazy(() => import("@src/pages/TablesPage" /* webpackChunkName: "TablesPage" */));
 // prettier-ignore
-const TablePage = lazy(() => import("@src/pages/TablePage" /* webpackChunkName: "TablePage" */));
+const ProvidedTablePage = lazy(() => import("@src/pages/Table/ProvidedTablePage" /* webpackChunkName: "ProvidedTablePage" */));
+// prettier-ignore
+const ProvidedSubTablePage = lazy(() => import("@src/pages/Table/ProvidedSubTablePage" /* webpackChunkName: "ProvidedSubTablePage" */));
 
 // prettier-ignore
 const FunctionPage = lazy(() => import("@src/pages/FunctionPage" /* webpackChunkName: "FunctionPage" */));
@@ -105,8 +107,17 @@ export default function App() {
 
             <Route path={ROUTES.table}>
               <Route index element={<Navigate to={ROUTES.tables} replace />} />
-              <Route path=":id" element={<TablePage />} />
+              <Route path=":id" element={<ProvidedTablePage />}>
+                <Route path={ROUTES.subTable}>
+                  <Route index element={<NotFound />} />
+                  <Route
+                    path=":docPath/:subTableKey"
+                    element={<ProvidedSubTablePage />}
+                  />
+                </Route>
+              </Route>
             </Route>
+
             <Route path={ROUTES.tableGroup}>
               <Route index element={<Navigate to={ROUTES.tables} replace />} />
               <Route path=":id" element={<TableGroupRedirectPage />} />
