@@ -7,7 +7,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { find, isEqual } from "lodash-es";
 
 import Modal from "@src/components/Modal";
-import Breadcrumbs from "@src/components/Table/Breadcrumbs";
+import BreadcrumbsSubTable from "@src/components/Table/BreadcrumbsSubTable";
 import ErrorFallback from "@src/components/ErrorFallback";
 import TableSourceFirestore from "@src/sources/TableSourceFirestore";
 import TablePage from "./TablePage";
@@ -36,7 +36,7 @@ export default function ProvidedSubTablePage() {
   const [currentUser] = useAtom(currentUserAtom, globalScope);
 
   // Get table settings and the source column from root table
-  const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
+  const [rootTableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [sourceColumn] = useAtom(
     useMemo(
       () =>
@@ -57,25 +57,31 @@ export default function ProvidedSubTablePage() {
   // Must be compatible with `getTableSchemaPath`: tableId/rowId/subTableKey
   // This is why we can’t have a sub-table column fieldName !== key
   const subTableId =
-    docPath?.replace(tableSettings.collection, tableSettings.id) +
+    docPath?.replace(rootTableSettings.collection, rootTableSettings.id) +
     "/" +
     subTableKey;
 
   // Write fake tableSettings
   const subTableSettings = {
-    ...tableSettings,
+    ...rootTableSettings,
     collection: subTableCollection,
     id: subTableId,
     tableType: "primaryCollection" as "primaryCollection",
-    name: sourceColumn?.name || subTableKey,
+    name: sourceColumn?.name || subTableKey || "",
   };
+
+  const rootTableLink = location.pathname.split("/" + ROUTES.subTable)[0];
 
   return (
     <Modal
-      title={<>Sub-table: {subTableCollection}</>}
-      onClose={() =>
-        navigate(location.pathname.split("/" + ROUTES.subTable)[0])
+      title={
+        <BreadcrumbsSubTable
+          rootTableSettings={rootTableSettings}
+          subTableSettings={subTableSettings}
+          rootTableLink={rootTableLink}
+        />
       }
+      onClose={() => navigate(rootTableLink)}
       disableBackdropClick
       disableEscapeKeyDown
       fullScreen

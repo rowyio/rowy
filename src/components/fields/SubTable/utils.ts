@@ -30,7 +30,8 @@ export const useSubTableData = (
   ].join("/");
 
   // if (parentLabels) subTablePath += `${parentLabels ?? ""},${label ?? ""}`;
-  // else subTablePath += encodeURIComponent(label ?? "");
+  // else
+  subTablePath += "?parentLabel=" + encodeURIComponent(label ?? "");
 
   return { documentCount, label, subTablePath };
 };
