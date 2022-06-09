@@ -62,6 +62,7 @@ export const ROUTE_TITLES = {
       <BreadcrumbsTableRoot sx={{ ml: open && pinned ? -48 / 8 : 2 }} />
     ),
     titleTransitionProps: { style: { transformOrigin: "0 50%" } },
+    leftAligned: true,
   },
 
   [ROUTES.settings]: "Settings",
@@ -79,5 +80,6 @@ export const ROUTE_TITLES = {
       title: string;
       titleComponent: (open: boolean, pinned: boolean) => React.ReactNode;
       titleTransitionProps?: Partial<GrowProps>;
+      leftAligned?: boolean;
     }
 >;

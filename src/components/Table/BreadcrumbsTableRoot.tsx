@@ -41,7 +41,7 @@ export default function BreadcrumbsTableRoot(props: StackProps) {
   if (!tableSettings) return null;
 
   return (
-    <Stack direction="row" alignItems="center" spacing={1} {...props}>
+    <Stack direction="row" alignItems="center" spacing={1.5} {...props}>
       <Breadcrumbs
         aria-label="Table breadcrumbs"
         sx={{
@@ -80,7 +80,7 @@ export default function BreadcrumbsTableRoot(props: StackProps) {
               : "Table is read-only"
           }
         >
-          <ReadOnlyIcon fontSize="small" sx={{ ml: 0.5 }} />
+          <ReadOnlyIcon fontSize="small" sx={{ ml: 0.5 }} color="action" />
         </Tooltip>
       )}
 

@@ -28,7 +28,7 @@ export default function BreadcrumbsSubTable({
   const splitSubTableId = subTableSettings.id.split("/");
 
   return (
-    <Stack direction="row" alignItems="center" spacing={1}>
+    <Stack direction="row" alignItems="center" spacing={1.5}>
       <Breadcrumbs
         sx={{
           typography: "button",
@@ -84,7 +84,7 @@ export default function BreadcrumbsSubTable({
               : "Table is read-only"
           }
         >
-          <ReadOnlyIcon fontSize="small" sx={{ ml: 0.5 }} />
+          <ReadOnlyIcon fontSize="small" sx={{ ml: 0.5 }} color="action" />
         </Tooltip>
       )}
     </Stack>

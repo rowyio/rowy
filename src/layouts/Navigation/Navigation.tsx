@@ -17,6 +17,7 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 
 import NavDrawer, { NAV_DRAWER_WIDTH } from "./NavDrawer";
+import HelpMenu from "./HelpMenu";
 import UserMenu from "./UserMenu";
 import ErrorFallback, {
   IErrorFallbackProps,
@@ -157,6 +158,10 @@ export default function Navigation({ children }: React.PropsWithChildren<{}>) {
                 overflowX: "auto",
                 userSelect: "none",
                 pl: open && canPin && pinned ? 48 / 8 : 0,
+                pr: 1,
+                ml: (routeTitle as any)?.leftAligned
+                  ? 0
+                  : { xs: 0, sm: 1.5 + 6 + 1 },
               }}
             >
               {typeof routeTitle !== "string" ? (
@@ -166,7 +171,10 @@ export default function Navigation({ children }: React.PropsWithChildren<{}>) {
                   variant="h6"
                   component="h1"
                   textAlign="center"
-                  sx={{ typography: { sm: "h5" } }}
+                  sx={{
+                    typography: { sm: "h5" },
+                    textAlign: { xs: "left", sm: "center" },
+                  }}
                 >
                   {title}
                 </Typography>
@@ -174,6 +182,7 @@ export default function Navigation({ children }: React.PropsWithChildren<{}>) {
             </Box>
           </Grow>
 
+          <HelpMenu />
           <UserMenu />
         </Toolbar>
       </AppBar>
