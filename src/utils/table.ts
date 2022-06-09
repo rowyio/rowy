@@ -44,6 +44,7 @@ export const updateRowData = <T = Record<string, any>>(
     (objValue, srcValue) => (isArray(objValue) ? srcValue : undefined)
   );
 
+/** Omits internal `_rowy_*` fields for writing to the database */
 export const omitRowyFields = <T = Record<string, any>>(row: T) => {
   const shallowClonedRow: any = { ...row };
   delete shallowClonedRow["_rowy_ref"];

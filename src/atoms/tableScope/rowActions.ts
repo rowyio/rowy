@@ -113,19 +113,27 @@ export const addRowAtom = atom(
       // Combine initial values with row values
       const rowValues = { ...initialValues, ...row };
 
-      // Add to rowsLocal if any required fields are missing or
-      // deliberately out of order
+      // Add to rowsLocal (i.e. display on top, out of order) if:
+      // - any required fields are missing
+      // - deliberately out of order
+      // - there are filters set and we couldn’t set the value of a field to
+      //   fit in the filtered query
+      // - user added with some custom ID
       if (
         missingRequiredFields.length > 0 ||
         row._rowy_outOfOrder === true ||
-        outOfOrderFilters.size > 0
+        outOfOrderFilters.size > 0 ||
+        !setId
       ) {
         set(tableRowsLocalAtom, {
           type: "add",
           row: { ...rowValues, _rowy_outOfOrder: true },
         });
-      } else {
-        await updateRowDb(row._rowy_ref.path, rowValues);
+      }
+
+      // Write to database if no required fields are missing
+      if (missingRequiredFields.length === 0) {
+        await updateRowDb(row._rowy_ref.path, omitRowyFields(rowValues));
       }
 
       if (auditChange) auditChange("ADD_ROW", row._rowy_ref.path);
@@ -368,7 +376,7 @@ export const updateFieldAtom = atom(
 
       await updateRowDb(
         row._rowy_ref.path,
-        rowValues,
+        omitRowyFields(rowValues),
         deleteField ? [fieldName] : []
       );
     }
@@ -376,7 +384,7 @@ export const updateFieldAtom = atom(
     else {
       await updateRowDb(
         row._rowy_ref.path,
-        update,
+        omitRowyFields(update),
         deleteField ? [fieldName] : []
       );
     }
