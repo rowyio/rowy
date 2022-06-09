@@ -71,7 +71,7 @@ export default function UserMenu(props: IconButtonProps) {
           {...props}
           ref={anchorEl}
           onClick={() => setOpen(true)}
-          sx={{ "& .MuiAvatar-root": { width: 24, height: 24 } }}
+          sx={{ "& .MuiAvatar-root": { width: 22, height: 22, m: 1 / 8 } }}
         >
           {avatar}
         </IconButton>
