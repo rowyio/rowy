@@ -2,7 +2,7 @@ import { forwardRef, useMemo } from "react";
 import { IPopoverInlineCellProps } from "@src/components/fields/types";
 
 import { ButtonBase } from "@mui/material";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { ChevronDown } from "@src/assets/icons";
 import getLabel from "./utils/getLabelHelper";
 
 export const StatusSingleSelect = forwardRef(function StatusSingleSelect(
@@ -51,13 +51,13 @@ export const StatusSingleSelect = forwardRef(function StatusSingleSelect(
       <div style={{ flexGrow: 1, overflow: "hidden" }}>{label}</div>
 
       {!disabled && (
-        <ArrowDropDownIcon
+        <ChevronDown
           className="row-hover-iconButton"
           sx={{
             flexShrink: 0,
             mr: 0.5,
             borderRadius: 1,
-            p: (32 - 24) / 2 / 8,
+            p: (32 - 20) / 2 / 8,
             boxSizing: "content-box !important",
           }}
         />

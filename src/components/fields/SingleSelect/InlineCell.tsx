@@ -2,7 +2,7 @@ import { forwardRef } from "react";
 import { IPopoverInlineCellProps } from "@src/components/fields/types";
 
 import { ButtonBase } from "@mui/material";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { ChevronDown } from "@src/assets/icons";
 
 import { sanitiseValue } from "./utils";
 
@@ -33,13 +33,13 @@ export const SingleSelect = forwardRef(function SingleSelect(
       </div>
 
       {!disabled && (
-        <ArrowDropDownIcon
+        <ChevronDown
           className="row-hover-iconButton"
           sx={{
             flexShrink: 0,
             mr: 0.5,
             borderRadius: 1,
-            p: (32 - 24) / 2 / 8,
+            p: (32 - 20) / 2 / 8,
             boxSizing: "content-box !important",
           }}
         />

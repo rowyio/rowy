@@ -17,7 +17,7 @@ import {
   Grow,
 } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircleOutlined";
-import ArrowRightIcon from "@mui/icons-material/ArrowRight";
+import { ChevronRight as ChevronRightIcon } from "@src/assets/icons";
 
 import {
   globalScope,
@@ -31,7 +31,7 @@ import { ROUTES } from "@src/constants/routes";
 export default function UserMenu(props: IconButtonProps) {
   const anchorEl = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
-  const [themeSubMenu, setThemeSubMenu] = useState<EventTarget | null>(null);
+  const [themeSubMenu, setThemeSubMenu] = useState<HTMLElement | null>(null);
 
   const [projectId] = useAtom(projectIdAtom, globalScope);
   const [userSettings] = useAtom(userSettingsAtom, globalScope);
@@ -117,43 +117,41 @@ export default function UserMenu(props: IconButtonProps) {
 
         <Divider variant="middle" sx={{ mt: 0.5, mb: 0.5 }} />
 
-        <MenuItem onClick={(e) => setThemeSubMenu(e.target)}>
+        <MenuItem onClick={(e) => setThemeSubMenu(e.currentTarget)}>
           Theme
           <ListItemSecondaryAction style={{ pointerEvents: "none" }}>
-            <ArrowRightIcon style={{ display: "block" }} />
+            <ChevronRightIcon style={{ display: "block" }} color="action" />
           </ListItemSecondaryAction>
         </MenuItem>
 
-        {themeSubMenu && (
-          <Menu
-            anchorEl={themeSubMenu as any}
-            id="theme-sub-menu"
-            anchorOrigin={{ vertical: "top", horizontal: "left" }}
-            transformOrigin={{ vertical: "top", horizontal: "right" }}
-            open
-            onClose={() => setThemeSubMenu(null)}
-            sx={{ "& .MuiPaper-root": { mt: -0.5 } }}
+        <Menu
+          anchorEl={themeSubMenu}
+          id="theme-sub-menu"
+          anchorOrigin={{ vertical: "top", horizontal: "left" }}
+          transformOrigin={{ vertical: "top", horizontal: "right" }}
+          open={Boolean(themeSubMenu)}
+          onClose={() => setThemeSubMenu(null)}
+          sx={{ "& .MuiPaper-root": { mt: -0.5 } }}
+        >
+          <MenuItem
+            onClick={() => changeTheme("system")}
+            selected={!themeOverridden}
           >
-            <MenuItem
-              onClick={() => changeTheme("system")}
-              selected={!themeOverridden}
-            >
-              System
-            </MenuItem>
-            <MenuItem
-              onClick={() => changeTheme("light")}
-              selected={themeOverridden && theme === "light"}
-            >
-              Light
-            </MenuItem>
-            <MenuItem
-              onClick={() => changeTheme("dark")}
-              selected={themeOverridden && theme === "dark"}
-            >
-              Dark
-            </MenuItem>
-          </Menu>
-        )}
+            System
+          </MenuItem>
+          <MenuItem
+            onClick={() => changeTheme("light")}
+            selected={themeOverridden && theme === "light"}
+          >
+            Light
+          </MenuItem>
+          <MenuItem
+            onClick={() => changeTheme("dark")}
+            selected={themeOverridden && theme === "dark"}
+          >
+            Dark
+          </MenuItem>
+        </Menu>
 
         <MenuItem
           component={Link}
