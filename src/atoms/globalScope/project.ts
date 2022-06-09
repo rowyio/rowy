@@ -46,7 +46,7 @@ export type ProjectSettings = Partial<{
 
   rowyRunUrl: string;
   rowyRunRegion: string;
-  rowyRunBuildStatus: "BUILDING" | "COMPLETE";
+  rowyRunDeployStatus: "BUILDING" | "COMPLETE";
   services: Partial<{
     hooks: string;
     builder: string;
