@@ -5,6 +5,7 @@ import {
   globalScope,
   rowyRunAtom,
   compatibleRowyRunVersionAtom,
+  currentUserAtom,
 } from "@src/atoms/globalScope";
 import {
   tableScope,
@@ -12,6 +13,7 @@ import {
   auditChangeAtom,
 } from "@src/atoms/tableScope";
 import { runRoutes } from "@src/constants/runRoutes";
+import { rowyUser } from "@src/utils/table";
 
 /**
  * Sets the value of auditChangeAtom
@@ -19,6 +21,8 @@ import { runRoutes } from "@src/constants/runRoutes";
 export default function useAuditChange() {
   const setAuditChange = useSetAtom(auditChangeAtom, tableScope);
   const [rowyRun] = useAtom(rowyRunAtom, globalScope);
+  const [currentUser] = useAtom(currentUserAtom, globalScope);
+
   const [compatibleRowyRunVersion] = useAtom(
     compatibleRowyRunVersionAtom,
     globalScope
@@ -47,6 +51,7 @@ export default function useAuditChange() {
             route: runRoutes.auditChange,
             body: {
               type,
+              rowyUser: rowyUser(currentUser!),
               ref: {
                 rowPath: tableSettings.collection,
                 rowId,
