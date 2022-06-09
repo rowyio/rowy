@@ -2,8 +2,8 @@ import { useAtom } from "jotai";
 import { find, get } from "lodash-es";
 import { useSnackbar } from "notistack";
 
-import ReEvalIcon from "@mui/icons-material/Replay";
-import EvalIcon from "@mui/icons-material/PlayCircle";
+import ReEvalIcon from "@mui/icons-material/ReplayOutlined";
+import EvalIcon from "@mui/icons-material/PlayCircleOutline";
 
 import { globalScope, rowyRunAtom } from "@src/atoms/globalScope";
 import {

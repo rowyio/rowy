@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import {
   ListItemIcon,
   ListItemSecondaryAction,
@@ -6,9 +8,9 @@ import {
   MenuItemProps,
   Typography,
   Menu,
+  Divider,
 } from "@mui/material";
-import ArrowRightIcon from "@mui/icons-material/ArrowRight";
-import { useState } from "react";
+import { ChevronRight as ChevronRightIcon } from "@src/assets/icons";
 
 export interface IContextMenuItem extends Partial<MenuItemProps> {
   onClick?: () => void;
@@ -16,6 +18,7 @@ export interface IContextMenuItem extends Partial<MenuItemProps> {
   label: string;
   disabled?: boolean;
   hotkeyLabel?: string;
+  divider?: boolean;
 }
 
 export interface IContextMenuItemProps extends IContextMenuItem {
@@ -29,29 +32,42 @@ export default function ContextMenuItem({
   subItems,
   ...props
 }: IContextMenuItemProps) {
-  const [subMenu, setSubMenu] = useState<EventTarget | null>(null);
+  const [subMenu, setSubMenu] = useState<HTMLElement | null>(null);
 
   if (subItems && subItems.length > 0) {
     return (
       <>
-        <MenuItem onClick={(e) => setSubMenu(e.target)}>
-          {label}
-          <ListItemSecondaryAction style={{ pointerEvents: "none" }}>
-            <ArrowRightIcon style={{ display: "block" }} />
+        <MenuItem onClick={(e) => setSubMenu(e.currentTarget)}>
+          <ListItemIcon>{icon}</ListItemIcon>
+          <ListItemText>{label}</ListItemText>
+          <ListItemSecondaryAction
+            sx={{
+              pointerEvents: "none",
+              position: "static",
+              transform: "none",
+              ml: 1,
+              mr: -1,
+            }}
+          >
+            <ChevronRightIcon color="action" style={{ display: "block" }} />
           </ListItemSecondaryAction>
         </MenuItem>
-        {subMenu && (
-          <Menu
-            anchorEl={subMenu as any}
-            id={`${label}-sub-menu`}
-            anchorOrigin={{ vertical: "top", horizontal: "right" }}
-            transformOrigin={{ vertical: "top", horizontal: "left" }}
-            open
-            onClose={() => setSubMenu(null)}
-            sx={{ "& .MuiPaper-root": { mt: -0.5 } }}
-          >
-            {subItems?.map((itemProps) => (
-              <MenuItem {...itemProps}>
+
+        <Menu
+          anchorEl={subMenu}
+          id={`${label}-sub-menu`}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          transformOrigin={{ vertical: "top", horizontal: "left" }}
+          open={Boolean(subMenu)}
+          onClose={() => setSubMenu(null)}
+          sx={{ "& .MuiPaper-root": { mt: -0.5 } }}
+          PaperProps={{ elevation: 16 }}
+        >
+          {subItems.map((itemProps) =>
+            itemProps.divider ? (
+              <Divider variant="middle" />
+            ) : (
+              <MenuItem key={itemProps.label} {...itemProps}>
                 <ListItemIcon>{itemProps.icon}</ListItemIcon>
                 <ListItemText>{itemProps.label}</ListItemText>
                 {itemProps.hotkeyLabel && (
@@ -60,12 +76,12 @@ export default function ContextMenuItem({
                   </Typography>
                 )}
               </MenuItem>
-            ))}
-          </Menu>
-        )}
+            )
+          )}
+        </Menu>
       </>
     );
-  } else
+  } else {
     return (
       <MenuItem {...props} onClick={onClick}>
         <ListItemIcon>{icon}</ListItemIcon>
@@ -77,4 +93,5 @@ export default function ContextMenuItem({
         )}
       </MenuItem>
     );
+  }
 }

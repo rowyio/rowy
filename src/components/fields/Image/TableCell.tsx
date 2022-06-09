@@ -87,7 +87,6 @@ const deleteImgHoverSx = {
 
 export default function Image_({
   column,
-  row,
   value,
   onSubmit,
   disabled,

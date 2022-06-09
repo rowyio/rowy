@@ -4,6 +4,7 @@ import { setSeconds } from "date-fns";
 
 import DateTimePicker from "@mui/lab/DateTimePicker";
 import { TextField } from "@mui/material";
+import { ChevronDown } from "@src/assets/icons";
 
 import {
   transformValue,
@@ -11,7 +12,6 @@ import {
 } from "@src/components/fields/Date/utils";
 import { DATE_TIME_FORMAT } from "@src/constants/dates";
 import BasicCell from "./BasicCell";
-import { DateTimeIcon } from ".";
 
 export default function DateTime({
   column,
@@ -48,20 +48,6 @@ export default function DateTime({
           label=""
           hiddenLabel
           aria-label={column.name as string}
-          InputProps={{
-            ...props.InputProps,
-            endAdornment: props.InputProps?.endAdornment || (
-              <DateTimeIcon
-                className="row-hover-iconButton"
-                sx={{
-                  borderRadius: 1,
-                  p: (32 - 24) / 2 / 8,
-                  boxSizing: "content-box",
-                  mr: 0.5,
-                }}
-              />
-            ),
-          }}
           className="cell-collapse-padding"
           sx={{
             width: "100%",
@@ -112,9 +98,9 @@ export default function DateTime({
         size: "small",
         className: "row-hover-iconButton",
         edge: false,
-        sx: { mr: 0.5 },
+        sx: { mr: 3 / 8, width: 32, height: 32 },
       }}
-      components={{ OpenPickerIcon: DateTimeIcon }}
+      components={{ OpenPickerIcon: ChevronDown }}
       disableOpenPicker={false}
     />
   );

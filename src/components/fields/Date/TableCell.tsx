@@ -3,11 +3,11 @@ import { IHeavyCellProps } from "@src/components/fields/types";
 
 import DatePicker from "@mui/lab/DatePicker";
 import { TextField } from "@mui/material";
+import { ChevronDown } from "@src/assets/icons";
 
 import { transformValue, sanitizeValue } from "./utils";
 import { DATE_FORMAT } from "@src/constants/dates";
 import BasicCell from "./BasicCell";
-import { DateIcon } from ".";
 
 export default function Date_({
   column,
@@ -43,20 +43,6 @@ export default function Date_({
           label=""
           hiddenLabel
           aria-label={column.name as string}
-          InputProps={{
-            ...props.InputProps,
-            endAdornment: props.InputProps?.endAdornment || (
-              <DateIcon
-                className="row-hover-iconButton"
-                sx={{
-                  borderRadius: 1,
-                  p: (32 - 24) / 2 / 8,
-                  boxSizing: "content-box",
-                  mr: 0.5,
-                }}
-              />
-            ),
-          }}
           className="cell-collapse-padding"
           sx={{
             width: "100%",
@@ -107,9 +93,9 @@ export default function Date_({
         size: "small",
         className: "row-hover-iconButton",
         edge: false,
-        sx: { mr: 0.5 },
+        sx: { mr: 3 / 8, width: 32, height: 32 },
       }}
-      components={{ OpenPickerIcon: DateIcon }}
+      components={{ OpenPickerIcon: ChevronDown }}
       disableOpenPicker={false}
     />
   );

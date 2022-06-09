@@ -8,6 +8,7 @@ import RadioIcon from "@src/theme/RadioIcon";
 import CheckboxIcon from "@src/theme/CheckboxIcon";
 import CheckboxIndeterminateIcon from "@src/theme/CheckboxIndeterminateIcon";
 import AddCircleIcon from "@mui/icons-material/AddCircleOutline";
+import { ChevronDown as ChevronDownIcon } from "@src/assets/icons";
 import { SvgIcon } from "@mui/material";
 import CircularProgressOptical from "@src/components/CircularProgressOptical";
 
@@ -440,6 +441,9 @@ export const components = (theme: Theme): ThemeOptions => {
       },
 
       MuiSelect: {
+        defaultProps: {
+          IconComponent: ChevronDownIcon,
+        },
         styleOverrides: {
           select: {
             // If Select option is a MenuItem, don’t add spacing

@@ -1,10 +1,12 @@
+import { sortBy } from "lodash-es";
+
 import MultiSelect from "@rowy/multiselect";
 import { Grid } from "@mui/material";
 import LeafIcon from "@src/assets/icons/Leaf";
 
-import _sortBy from "lodash-es/sortBy";
 import { CLOUD_RUN_REGIONS } from "@src/constants/regions";
-const REGIONS = _sortBy(CLOUD_RUN_REGIONS, ["group", "value"]);
+
+const REGIONS = sortBy(CLOUD_RUN_REGIONS, ["group", "value"]);
 
 export interface ICloudRunRegionSelectProps {
   value: string;
@@ -28,7 +30,7 @@ export default function CloudRunRegionSelect({
       options={REGIONS}
       clearable={false}
       itemRenderer={(option: any) => (
-        <Grid container spacing={0} sx={{ my: 0.5, maxWidth: 300 }}>
+        <Grid container spacing={0} sx={{ my: 0.5 }}>
           <Grid item xs>
             {option.value}
           </Grid>
@@ -54,7 +56,6 @@ export default function CloudRunRegionSelect({
       {...({
         AutocompleteProps: { groupBy: (option: any) => option.group },
       } as any)}
-      TextFieldProps={{ style: { maxWidth: 364 }, ...props.TextFieldProps }}
     />
   );
 }

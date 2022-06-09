@@ -3,13 +3,13 @@ import { setSeconds } from "date-fns";
 
 import DateTimePicker from "@mui/lab/DateTimePicker";
 import { TextField } from "@mui/material";
+import { ChevronDown } from "@src/assets/icons";
 
 import {
   transformValue,
   sanitizeValue,
 } from "@src/components/fields/Date/utils";
 import { DATE_TIME_FORMAT } from "@src/constants/dates";
-import { DateTimeIcon } from ".";
 import { getFieldId } from "@src/components/SideDrawer/utils";
 
 export interface IDateProps extends ISideDrawerFieldProps {}
@@ -40,12 +40,6 @@ export default function Date_({
           label=""
           hiddenLabel
           aria-label={column.name as string}
-          InputProps={{
-            ...props.InputProps,
-            endAdornment: props.InputProps?.endAdornment || (
-              <DateTimeIcon color="action" />
-            ),
-          }}
           sx={{
             "& .MuiInputBase-input": { fontVariantNumeric: "tabular-nums" },
             "& .MuiInputAdornment-root": { m: 0 },
@@ -63,8 +57,11 @@ export default function Date_({
       inputFormat={format}
       mask={format.replace(/[A-Za-z]/g, "_")}
       clearable
-      OpenPickerButtonProps={{ size: "small" }}
-      components={{ OpenPickerIcon: DateTimeIcon }}
+      OpenPickerButtonProps={{
+        size: "small",
+        sx: { width: 32, height: 32 },
+      }}
+      components={{ OpenPickerIcon: ChevronDown }}
       disableOpenPicker={false}
       disabled={disabled}
     />

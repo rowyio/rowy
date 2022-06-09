@@ -111,3 +111,7 @@ export function InlineErrorFallback(props: IErrorFallbackProps) {
     />
   );
 }
+
+export function NonFullScreenErrorFallback(props: IErrorFallbackProps) {
+  return <ErrorFallback {...props} fullScreen={false} />;
+}

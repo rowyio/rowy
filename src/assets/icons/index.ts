@@ -85,7 +85,12 @@ export { CarBrakeAlert as Critical };
 import { LanguageMarkdownOutline } from "mdi-material-ui";
 export { LanguageMarkdownOutline as Markdown };
 
+import { TableRow } from "mdi-material-ui";
+export { TableRow as Row };
+
 export * from "./AddRow";
+export * from "./ChevronDown";
+export * from "./ChevronRight";
 export * from "./Clear";
 export * from "./ConnectTable";
 export * from "./Copy";

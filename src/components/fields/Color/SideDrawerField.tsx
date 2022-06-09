@@ -4,7 +4,7 @@ import { ColorPicker, toColor } from "react-color-palette";
 import "react-color-palette/lib/css/styles.css";
 
 import { ButtonBase, Box, Collapse } from "@mui/material";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { ChevronDown } from "@src/assets/icons";
 
 import { fieldSx, getFieldId } from "@src/components/SideDrawer/utils";
 
@@ -60,7 +60,7 @@ export default function Color({
 
         <div style={{ flexGrow: 1 }}>{value?.hex ?? "Choose a color…"}</div>
 
-        <ArrowDropDownIcon
+        <ChevronDown
           color="action"
           sx={{
             transition: (theme) => theme.transitions.create("transform"),

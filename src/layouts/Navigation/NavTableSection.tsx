@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 import { List, ListItemIcon, ListItemText, Collapse } from "@mui/material";
 import FolderIcon from "@mui/icons-material/FolderOutlined";
 import FavoriteIcon from "@mui/icons-material/FavoriteBorder";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { ChevronRight } from "@src/assets/icons";
 import NavItem from "./NavItem";
 
 import { TableSettings } from "@src/types/table";
@@ -43,7 +43,7 @@ export default function NavTableSection({
 
         <ListItemText primary={section} style={{ textAlign: "left" }} />
 
-        <ArrowDropDownIcon
+        <ChevronRight
           sx={{
             color: "action.active",
             mr: -0.5,
