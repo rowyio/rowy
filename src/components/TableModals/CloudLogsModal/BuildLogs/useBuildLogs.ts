@@ -25,7 +25,7 @@ export default function useBuildLogs() {
     functionConfigPath
       ? query(
           collection(firebaseDb, `${functionConfigPath}/buildLogs`),
-          orderBy("timestamp", "desc"),
+          orderBy("startTimeStamp", "desc"),
           limit(15)
         )
       : null,

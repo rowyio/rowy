@@ -86,18 +86,16 @@ export default function ExtensionsModal({ onClose }: ITableModalProps) {
   const handleSaveDeploy = async () => {
     handleSaveExtensions(() => {
       try {
-        if (rowyRun) {
-          snackLogContext.requestSnackLog();
-          rowyRun({
-            route: runRoutes.buildFunction,
-            body: {
-              tablePath: tableSettings.collection,
-              pathname: window.location.pathname,
-              tableConfigPath: getTableSchemaPath(tableSettings),
-            },
-          });
-          logEvent(analytics, "deployed_extensions");
-        }
+        snackLogContext.requestSnackLog();
+        rowyRun({
+          route: runRoutes.buildFunction,
+          body: {
+            tablePath: tableSettings.collection,
+            pathname: window.location.pathname,
+            tableConfigPath: getTableSchemaPath(tableSettings),
+          },
+        });
+        logEvent(analytics, "deployed_extensions");
       } catch (e) {
         console.error(e);
       }
