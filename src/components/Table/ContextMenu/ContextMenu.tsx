@@ -1,4 +1,6 @@
 import { useAtom } from "jotai";
+import { ErrorBoundary } from "react-error-boundary";
+import { NonFullScreenErrorFallback } from "@src/components/ErrorFallback";
 
 import { Menu } from "@mui/material";
 import MenuContents from "./MenuContents";
@@ -24,7 +26,9 @@ export default function ContextMenu() {
       transformOrigin={{ vertical: "top", horizontal: "left" }}
       sx={{ "& .MuiMenu-paper": { minWidth: 150 } }}
     >
-      <MenuContents onClose={handleClose} />
+      <ErrorBoundary FallbackComponent={NonFullScreenErrorFallback}>
+        <MenuContents onClose={handleClose} />
+      </ErrorBoundary>
     </Menu>
   );
 }

@@ -31,13 +31,14 @@ export const ContextMenuActions: IFieldConfig["contextMenuActions"] = (
   if (!selectedCol) return [];
 
   const selectedRow = find(tableRows, ["_rowy_ref.path", selectedCell.path]);
-  const cellValue = get(selectedRow, selectedCol.fieldName);
+  const cellValue = get(selectedRow, selectedCol.fieldName) || [];
 
   const isEmpty =
     cellValue === "" ||
     cellValue === null ||
     cellValue === undefined ||
     cellValue.length === 0;
+  const isSingleValue = isEmpty || cellValue?.length === 1;
 
   const handleCopyImageURL = (imgObj: RowyFile) => () => {
     navigator.clipboard.writeText(imgObj.downloadURL);
@@ -53,56 +54,52 @@ export const ContextMenuActions: IFieldConfig["contextMenuActions"] = (
     {
       label: "Copy image URL",
       icon: <Copy />,
-      onClick:
-        cellValue.length === 1 ? handleCopyImageURL(cellValue[0]) : undefined,
+      onClick: isSingleValue ? handleCopyImageURL(cellValue[0]) : undefined,
       disabled: isEmpty,
-      subItems:
-        cellValue.length === 1
-          ? []
-          : cellValue.map((imgObj: RowyFile, index: number) => ({
-              label: imgObj.name || "Image " + (index + 1),
-              icon: (
-                <Thumbnail
-                  imageUrl={imgObj.downloadURL}
-                  size="100x100"
-                  objectFit="contain"
-                  sx={{
-                    width: 24,
-                    height: 24,
-                    boxShadow: (theme) =>
-                      `0 0 0 1px ${theme.palette.divider} inset`,
-                  }}
-                />
-              ),
-              onClick: handleCopyImageURL(imgObj),
-            })),
+      subItems: isSingleValue
+        ? []
+        : cellValue.map((imgObj: RowyFile, index: number) => ({
+            label: imgObj.name || "Image " + (index + 1),
+            icon: (
+              <Thumbnail
+                imageUrl={imgObj.downloadURL}
+                size="100x100"
+                objectFit="contain"
+                sx={{
+                  width: 24,
+                  height: 24,
+                  boxShadow: (theme) =>
+                    `0 0 0 1px ${theme.palette.divider} inset`,
+                }}
+              />
+            ),
+            onClick: handleCopyImageURL(imgObj),
+          })),
     },
     {
       label: "View image",
       icon: <OpenIcon />,
-      onClick:
-        cellValue.length === 1 ? handleViewImage(cellValue[0]) : undefined,
+      onClick: isSingleValue ? handleViewImage(cellValue[0]) : undefined,
       disabled: isEmpty,
-      subItems:
-        cellValue.length === 1
-          ? []
-          : cellValue.map((imgObj: RowyFile, index: number) => ({
-              label: imgObj.name || "Image " + (index + 1),
-              icon: (
-                <Thumbnail
-                  imageUrl={imgObj.downloadURL}
-                  size="100x100"
-                  objectFit="contain"
-                  sx={{
-                    width: 24,
-                    height: 24,
-                    boxShadow: (theme) =>
-                      `0 0 0 1px ${theme.palette.divider} inset`,
-                  }}
-                />
-              ),
-              onClick: handleViewImage(imgObj),
-            })),
+      subItems: isSingleValue
+        ? []
+        : cellValue.map((imgObj: RowyFile, index: number) => ({
+            label: imgObj.name || "Image " + (index + 1),
+            icon: (
+              <Thumbnail
+                imageUrl={imgObj.downloadURL}
+                size="100x100"
+                objectFit="contain"
+                sx={{
+                  width: 24,
+                  height: 24,
+                  boxShadow: (theme) =>
+                    `0 0 0 1px ${theme.palette.divider} inset`,
+                }}
+              />
+            ),
+            onClick: handleViewImage(imgObj),
+          })),
     },
   ];
 };
