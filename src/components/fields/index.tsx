@@ -40,7 +40,6 @@ import User from "./User";
 import Id from "./Id";
 import Status from "./Status";
 import Connector from "./Connector";
-import Reference from "./Reference";
 import { TableColumn } from "../Table";
 
 // Export field configs in order for FieldsDropdown
@@ -74,7 +73,6 @@ export const FIELDS: IFieldConfig[] = [
   SubTable,
   ConnectTable,
   ConnectService,
-  // Reference, TODO: fix Write functionality
   // CODE
   Json,
   Code,
