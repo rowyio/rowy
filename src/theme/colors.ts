@@ -189,7 +189,7 @@ export const colorsDark = (
     components: {
       MuiCssBaseline: {
         styleOverrides: {
-          ":root": { colorScheme: "dark" },
+          // ":root": { colorScheme: "dark" },
           ".rdg": { colorScheme: "dark" },
         },
       },
