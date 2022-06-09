@@ -1,9 +1,9 @@
 import { useEffect } from "react";
-import {
-  quicktype,
-  InputData,
-  jsonInputForTargetLanguage,
-} from "quicktype-core";
+// import {
+//   quicktype,
+//   InputData,
+//   jsonInputForTargetLanguage,
+// } from "quicktype-core";
 import { useAtom } from "jotai";
 
 import {
@@ -156,27 +156,30 @@ export default function useMonacoCustomizations({
       .map((row) => row[columnKey])
       .filter((entry) => entry !== undefined)
       .map((entry) => JSON.stringify(entry));
-    if (!samples || samples.length === 0) {
-      monaco?.languages.typescript.javascriptDefaults.addExtraLib(
-        `type ${interfaceName} = any;`
-      );
-      return;
-    } else {
-      //const jsonInput = jsonInputForTargetLanguage("typescript");
-      // await jsonInput.addSource({
-      //   name: interfaceName,
-      //   samples,
-      // });
-      // const inputData = new InputData();
-      // inputData.addInput(jsonInput);
-      //   const result = await quicktype({
-      //     inputData,
-      //     lang: "typescript",
-      //     rendererOptions: { "just-types": "true" },
-      //   });
-      //   const newLib = result.lines.join("\n").replaceAll("export ", "");
-      //  monaco?.languages.typescript.javascriptDefaults.addExtraLib(newLib);
-    }
+    monaco?.languages.typescript.javascriptDefaults.addExtraLib(
+      `type ${interfaceName} = any;`
+    );
+    // if (!samples || samples.length === 0) {
+    //   monaco?.languages.typescript.javascriptDefaults.addExtraLib(
+    //     `type ${interfaceName} = any;`
+    //   );
+    //   return;
+    // } else {
+    // const jsonInput = jsonInputForTargetLanguage("typescript");
+    // await jsonInput.addSource({
+    //   name: interfaceName,
+    //   samples,
+    // });
+    // const inputData = new InputData();
+    // inputData.addInput(jsonInput);
+    //   const result = await quicktype({
+    //     inputData,
+    //     lang: "typescript",
+    //     rendererOptions: { "just-types": "true" },
+    //   });
+    //   const newLib = result.lines.join("\n").replaceAll("export ", "");
+    //  monaco?.languages.typescript.javascriptDefaults.addExtraLib(newLib);
+    //}
   };
 
   const setSecrets = async () => {
