@@ -9,6 +9,7 @@ export const extensionTypes = [
   "sendgridEmail",
   "apiCall",
   "twilioMessage",
+  "pushNotification",
 ] as const;
 
 export type ExtensionType = typeof extensionTypes[number];
@@ -24,6 +25,7 @@ export const extensionNames: Record<ExtensionType, string> = {
   sendgridEmail: "SendGrid Email",
   apiCall: "API Call",
   twilioMessage: "Twilio Message",
+  pushNotification: "Push Notification",
 };
 
 export type ExtensionTrigger = "create" | "update" | "delete";
@@ -166,13 +168,47 @@ const extensionBodyTemplate = {
   })
 }`,
   twilioMessage: `const extensionBody: TwilioMessageBody = async({row, db, change, ref}) => {
-  // feel free to add your own code logic here
-  
+  // you can get a user's phone number from the row or from the user document in the database
+  // const phoneNumber = row.phoneNumber
   return ({
     from:"",
     to:"",
     body:"Hi there!"
   })
+}`,
+  pushNotification: `const extensionBody: PushNotificationBody = async({row, db, change, ref}) => {
+  // you can FCM token from the row or from the user document in the database
+  // const FCMtoken = row.FCMtoken
+  // or push through topic  
+  const topicName = 'industry-tech';
+  // you can return single or array of notification payloads
+ return [{
+  notification: {
+    title: 'Hello!',
+  },
+  android: {
+    notification: {
+      imageUrl: 'https://thiscatdoesnotexist.com/'
+    }
+  },
+  apns: {
+    payload: {
+      aps: {
+        'mutable-content': 1
+      }
+    },
+    fcm_options: {
+      image: 'https://thiscatdoesnotexist.com/'
+    }
+  },
+  webpush: {
+    headers: {
+      image: 'https://thiscatdoesnotexist.com/'
+    }
+  },
+  // topic: topicName, // add topic send to subscribers
+  // token: FCMtoken // add FCM token to send to specific user
+}]
 }`,
 };
 

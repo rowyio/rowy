@@ -95,4 +95,36 @@ type TwilioMessageBody = (context: ExtensionContext) => Promise<{
   to: string;
 }>;
 
+type PushNotificationRequest = {
+  notification: {
+    title?: string;
+    body?: string;
+    imageUrl?: string;
+  };
+  android?: {
+    notification: {
+      imageUrl?: string;
+    };
+  };
+  apns?: {
+    payload: {
+      aps: {
+        "mutable-content"?: number;
+      };
+    };
+    fcm_options: {
+      image?: string;
+    };
+  };
+  webpush?: {
+    headers?: {
+      image?: string;
+    };
+  };
+  topic?: string;
+  token?: string;
+};
+type PushNotificationBody = (
+  context: ExtensionContext
+) => Message | Message[] | Promise<Message | Message[]>;
 type TaskBody = (context: ExtensionContext) => Promise<any>;
