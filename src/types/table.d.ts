@@ -157,7 +157,7 @@ export type TableFilter = {
   value: any;
 };
 
-export type TableOrder = {
+export type TableSort = {
   key: string;
   direction: Parameters<typeof orderBy>[1];
 };

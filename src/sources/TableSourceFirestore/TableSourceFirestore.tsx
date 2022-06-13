@@ -8,7 +8,7 @@ import {
   tableSchemaAtom,
   updateTableSchemaAtom,
   tableFiltersAtom,
-  tableOrdersAtom,
+  tableSortsAtom,
   tablePageAtom,
   tableRowsDbAtom,
   _updateRowDbAtom,
@@ -46,9 +46,9 @@ export const TableSourceFirestore = memo(function TableSourceFirestore() {
     }
   );
 
-  // Get table filters and orders
+  // Get table filters and sorts
   const [filters] = useAtom(tableFiltersAtom, tableScope);
-  const [orders] = useAtom(tableOrdersAtom, tableScope);
+  const [sorts] = useAtom(tableSortsAtom, tableScope);
   const [page] = useAtom(tablePageAtom, tableScope);
   // Get documents from collection and store in tableRowsDbAtom
   // and handle some errors with snackbars
@@ -65,7 +65,7 @@ export const TableSourceFirestore = memo(function TableSourceFirestore() {
     tableSettings?.collection,
     {
       filters,
-      orders,
+      sorts,
       page,
       collectionGroup: isCollectionGroup,
       onError: handleErrorCallback,

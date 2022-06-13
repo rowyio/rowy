@@ -25,7 +25,7 @@ import {
   tableScope,
   tableSettingsAtom,
   tableFiltersAtom,
-  tableOrdersAtom,
+  tableSortsAtom,
 } from "@src/atoms/tableScope";
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
 import { tableFiltersToFirestoreFilters } from "@src/hooks/useFirestoreCollectionWithAtom";
@@ -43,7 +43,7 @@ export default function Export({ onClose }: ITableModalProps) {
   const [firebaseDb] = useAtom(firebaseDbAtom, globalScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [tableFilters] = useAtom(tableFiltersAtom, tableScope);
-  const [tableOrders] = useAtom(tableOrdersAtom, tableScope);
+  const [tableSorts] = useAtom(tableSortsAtom, tableScope);
 
   const tableCollection = tableSettings.collection;
   const isCollectionGroup = tableSettings.tableType === "collectionGroup";
@@ -55,17 +55,17 @@ export default function Export({ onClose }: ITableModalProps) {
     // add filters
     const filters = tableFiltersToFirestoreFilters(tableFilters);
     // optional order results
-    const orders = tableOrders.map((order) =>
+    const sorts = tableSorts.map((order) =>
       orderBy(order.key, order.direction)
     );
     // TODO: paginate
-    return firestoreQuery(collectionRef, ...filters, ...orders, limit(10_000));
+    return firestoreQuery(collectionRef, ...filters, ...sorts, limit(10_000));
   }, [
     firebaseDb,
     tableCollection,
     isCollectionGroup,
     tableFilters,
-    tableOrders,
+    tableSorts,
   ]);
 
   return (
@@ -82,7 +82,7 @@ export default function Export({ onClose }: ITableModalProps) {
         header={
           <>
             <DialogContent style={{ flexGrow: 0, flexShrink: 0 }}>
-              {tableFilters.length !== 0 || tableOrders.length !== 0
+              {tableFilters.length !== 0 || tableSorts.length !== 0
                 ? "The filters and sorting applied to the table will be applied to the export"
                 : "No filters or sorting will be applied on the exported data"}
               . Limited to 10,000 rows.

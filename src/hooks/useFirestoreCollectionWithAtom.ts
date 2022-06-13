@@ -32,7 +32,7 @@ import {
   DeleteCollectionDocFunction,
   NextPageState,
   TableFilter,
-  TableOrder,
+  TableSort,
   TableRow,
 } from "@src/types/table";
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
@@ -47,8 +47,8 @@ interface IUseFirestoreCollectionWithAtomOptions<T> {
   collectionGroup?: boolean;
   /** Attach filters to the query */
   filters?: TableFilter[];
-  /** Attach orders to the query */
-  orders?: TableOrder[];
+  /** Attach sorts to the query */
+  sorts?: TableSort[];
   /** Set query page */
   page?: number;
   /** Set query page size */
@@ -86,7 +86,7 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
     pathSegments,
     collectionGroup,
     filters,
-    orders,
+    sorts,
     page = 0,
     pageSize = COLLECTION_PAGE_SIZE,
     onError,
@@ -130,7 +130,7 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
       page,
       pageSize,
       filters,
-      orders,
+      sorts,
       onError
     ),
     (next, prev) => {
@@ -142,9 +142,9 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
       )
         return false;
 
-      // If orders are not equal, update the query
+      // If sorts are not equal, update the query
       // Overrides isLastPage check
-      if (JSON.stringify(next?.orders) !== JSON.stringify(prev?.orders))
+      if (JSON.stringify(next?.sorts) !== JSON.stringify(prev?.sorts))
         return false;
 
       return isLastPage || queryEqual(next?.query as any, prev?.query as any);
@@ -226,7 +226,7 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
   ]);
 
   // Create variable for validity of query to pass to useEffect dependencies
-  // below, and prevent it being called when page, filters, or orders is updated
+  // below, and prevent it being called when page, filters, or sorts is updated
   const queryValid = Boolean(memoizedQuery);
   // Set updateDocAtom and deleteDocAtom values if they exist
   useEffect(() => {
@@ -281,7 +281,7 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
 export default useFirestoreCollectionWithAtom;
 
 /**
- * Create the Firestore query with page, filters, and orders constraints.
+ * Create the Firestore query with page, filters, and sorts constraints.
  * Put code in a function so the results can be compared by useMemoValue.
  */
 const getQuery = <T>(
@@ -292,7 +292,7 @@ const getQuery = <T>(
   page: number,
   pageSize: number,
   filters: IUseFirestoreCollectionWithAtomOptions<T>["filters"],
-  orders: IUseFirestoreCollectionWithAtomOptions<T>["orders"],
+  sorts: IUseFirestoreCollectionWithAtomOptions<T>["sorts"],
   onError: IUseFirestoreCollectionWithAtomOptions<T>["onError"]
 ) => {
   if (!path || (Array.isArray(pathSegments) && pathSegments.some((x) => !x)))
@@ -324,12 +324,12 @@ const getQuery = <T>(
         collectionRef,
         queryLimit((page + 1) * pageSize),
         ...firestoreFilters,
-        ...(orders?.map((order) => orderBy(order.key, order.direction)) || [])
+        ...(sorts?.map((order) => orderBy(order.key, order.direction)) || [])
       ),
       page,
       limit,
       firestoreFilters,
-      orders,
+      sorts,
     };
   } catch (e) {
     if (onError) onError(e as FirestoreError);

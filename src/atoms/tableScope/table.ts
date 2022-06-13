@@ -7,7 +7,7 @@ import {
   TableSchema,
   ColumnConfig,
   TableFilter,
-  TableOrder,
+  TableSort,
   TableRow,
   UpdateDocFunction,
   UpdateCollectionDocFunction,
@@ -59,8 +59,8 @@ export const tableColumnsReducer = (
 
 /** Filters applied to the local view */
 export const tableFiltersAtom = atom<TableFilter[]>([]);
-/** Orders applied to the local view */
-export const tableOrdersAtom = atom<TableOrder[]>([]);
+/** Sorts applied to the local view */
+export const tableSortsAtom = atom<TableSort[]>([]);
 
 /** Store current page in URL */
 export const tablePageHashAtom = atomWithHash("page", 0, {

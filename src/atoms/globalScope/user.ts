@@ -9,7 +9,7 @@ import {
   UpdateDocFunction,
   TableFilter,
   TableRowRef,
-  TableOrder,
+  TableSort,
 } from "@src/types/table";
 
 /** User info and settings */
@@ -33,7 +33,7 @@ export type UserSettings = Partial<{
     Partial<{
       filters: TableFilter[];
       hiddenFields: string[];
-      sorts: TableOrder[];
+      sorts: TableSort[];
     }>
   >;
 }>;

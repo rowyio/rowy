@@ -32,7 +32,7 @@ import {
   tableSchemaAtom,
   tableColumnsOrderedAtom,
   tableFiltersAtom,
-  tableOrdersAtom,
+  tableSortsAtom,
   updateTableSchemaAtom,
   tableFiltersPopoverAtom,
 } from "@src/atoms/tableScope";
@@ -59,7 +59,7 @@ export default function Filters() {
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
   const [localFilters, setLocalFilters] = useAtom(tableFiltersAtom, tableScope);
-  const [, setTableOrders] = useAtom(tableOrdersAtom, tableScope);
+  const [, setTableSorts] = useAtom(tableSortsAtom, tableScope);
   const [updateTableSchema] = useAtom(updateTableSchemaAtom, tableScope);
   const [{ defaultQuery }] = useAtom(tableFiltersPopoverAtom, tableScope);
 
@@ -112,12 +112,12 @@ export default function Filters() {
 
     setLocalFilters(filtersToApply);
     // Reset order so we don’t have to make a new index
-    setTableOrders([]);
+    setTableSorts([]);
   }, [
     hasTableFilters,
     hasUserFilters,
     setLocalFilters,
-    setTableOrders,
+    setTableSorts,
     setTableQuery,
     tableFilters,
     tableFiltersOverridable,

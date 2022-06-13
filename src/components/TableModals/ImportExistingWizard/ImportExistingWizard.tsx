@@ -16,7 +16,7 @@ import {
   tableScope,
   updateTableSchemaAtom,
   tableFiltersAtom,
-  tableOrdersAtom,
+  tableSortsAtom,
   tableRowsAtom,
   tableModalAtom,
 } from "@src/atoms/tableScope";
@@ -39,7 +39,7 @@ export interface IStepProps {
 export default function ImportExistingWizard({ onClose }: ITableModalProps) {
   const [updateTableSchema] = useAtom(updateTableSchemaAtom, tableScope);
   const setTableFilters = useSetAtom(tableFiltersAtom, tableScope);
-  const setTableOrders = useSetAtom(tableOrdersAtom, tableScope);
+  const setTableSorts = useSetAtom(tableSortsAtom, tableScope);
   const [tableRows] = useAtom(tableRowsAtom, tableScope);
   const setTableModal = useSetAtom(tableModalAtom, tableScope);
 
@@ -51,11 +51,11 @@ export default function ImportExistingWizard({ onClose }: ITableModalProps) {
     setConfig((prev) => ({ ...merge(prev, value) }));
   }, []);
 
-  // Reset table filters and orders on open
+  // Reset table filters and sorts on open
   useEffect(() => {
     setTableFilters([]);
-    setTableOrders([]);
-  }, [setTableFilters, setTableOrders]);
+    setTableSorts([]);
+  }, [setTableFilters, setTableSorts]);
 
   if (tableRows.length === 0 || !updateTableSchema) {
     setTableModal(RESET);

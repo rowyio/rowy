@@ -7,7 +7,7 @@ import IconSlash, {
   ICON_SLASH_STROKE_DASHOFFSET,
 } from "@src/components/IconSlash";
 
-import { tableScope, tableOrdersAtom } from "@src/atoms/tableScope";
+import { tableScope, tableSortsAtom } from "@src/atoms/tableScope";
 import { FieldType } from "@src/constants/fields";
 import { getFieldProp } from "@src/components/fields";
 
@@ -20,21 +20,21 @@ export interface IColumnHeaderSortProps {
 }
 
 export default function ColumnHeaderSort({ column }: IColumnHeaderSortProps) {
-  const [tableOrders, setTableOrders] = useAtom(tableOrdersAtom, tableScope);
+  const [tableSorts, setTableSorts] = useAtom(tableSortsAtom, tableScope);
 
   const _sortKey = getFieldProp("sortKey", (column as any).type);
   const sortKey = _sortKey ? `${column.key}.${_sortKey}` : column.key;
 
   const currentSort: typeof SORT_STATES[number] =
-    tableOrders[0]?.key !== sortKey
+    tableSorts[0]?.key !== sortKey
       ? "none"
-      : tableOrders[0]?.direction || "none";
+      : tableSorts[0]?.direction || "none";
   const nextSort =
     SORT_STATES[SORT_STATES.indexOf(currentSort) + 1] ?? SORT_STATES[0];
 
   const handleSortClick = () => {
-    if (nextSort === "none") setTableOrders([]);
-    else setTableOrders([{ key: sortKey, direction: nextSort }]);
+    if (nextSort === "none") setTableSorts([]);
+    else setTableSorts([{ key: sortKey, direction: nextSort }]);
   };
 
   if (column.type === FieldType.id) return null;

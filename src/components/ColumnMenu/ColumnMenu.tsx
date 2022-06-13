@@ -41,7 +41,7 @@ import {
   tableIdAtom,
   updateColumnAtom,
   deleteColumnAtom,
-  tableOrdersAtom,
+  tableSortsAtom,
   columnMenuAtom,
   columnModalAtom,
   tableFiltersPopoverAtom,
@@ -75,7 +75,7 @@ export default function ColumnMenu() {
   const [tableId] = useAtom(tableIdAtom, tableScope);
   const updateColumn = useSetAtom(updateColumnAtom, tableScope);
   const deleteColumn = useSetAtom(deleteColumnAtom, tableScope);
-  const [tableOrders, setTableOrders] = useAtom(tableOrdersAtom, tableScope);
+  const [tableSorts, setTableSorts] = useAtom(tableSortsAtom, tableScope);
   const [columnMenu, setColumnMenu] = useAtom(columnMenuAtom, tableScope);
   const openColumnModal = useSetAtom(columnModalAtom, tableScope);
   const openTableFiltersPopover = useSetAtom(
@@ -100,8 +100,8 @@ export default function ColumnMenu() {
 
   const _sortKey = getFieldProp("sortKey", (column as any).type);
   const sortKey = _sortKey ? `${column.key}.${_sortKey}` : column.key;
-  const isSorted = tableOrders[0]?.key === sortKey;
-  const isAsc = isSorted && tableOrders[0]?.direction === "asc";
+  const isSorted = tableSorts[0]?.key === sortKey;
+  const isAsc = isSorted && tableSorts[0]?.direction === "asc";
 
   const userDocHiddenFields =
     userSettings.tables?.[formatSubTableName(tableId)]?.hiddenFields ?? [];
@@ -119,7 +119,7 @@ export default function ColumnMenu() {
       activeLabel: "Remove sort: descending",
       icon: <ArrowDownwardIcon />,
       onClick: () => {
-        setTableOrders(
+        setTableSorts(
           isSorted && !isAsc ? [] : [{ key: sortKey, direction: "desc" }]
         );
         handleClose();
@@ -132,7 +132,7 @@ export default function ColumnMenu() {
       activeLabel: "Remove sort: ascending",
       icon: <ArrowUpwardIcon />,
       onClick: () => {
-        setTableOrders(
+        setTableSorts(
           isSorted && isAsc ? [] : [{ key: sortKey, direction: "asc" }]
         );
         handleClose();

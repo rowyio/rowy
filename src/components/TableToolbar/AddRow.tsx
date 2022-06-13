@@ -25,7 +25,7 @@ import {
   tableScope,
   tableSettingsAtom,
   tableFiltersAtom,
-  tableOrdersAtom,
+  tableSortsAtom,
   addRowAtom,
 } from "@src/atoms/tableScope";
 
@@ -33,7 +33,7 @@ export default function AddRow() {
   const [userRoles] = useAtom(userRolesAtom, globalScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [tableFilters] = useAtom(tableFiltersAtom, tableScope);
-  const [tableOrders] = useAtom(tableOrdersAtom, tableScope);
+  const [tableSorts] = useAtom(tableSortsAtom, tableScope);
   const addRow = useSetAtom(addRowAtom, tableScope);
   const [idType, setIdType] = useAtom(tableAddRowIdTypeAtom, globalScope);
 
@@ -41,7 +41,7 @@ export default function AddRow() {
   const [open, setOpen] = useState(false);
   const [openIdModal, setOpenIdModal] = useState(false);
 
-  const forceRandomId = tableFilters.length > 0 || tableOrders.length > 0;
+  const forceRandomId = tableFilters.length > 0 || tableSorts.length > 0;
 
   const handleClick = () => {
     if (idType === "random" || (forceRandomId && idType === "decrement")) {

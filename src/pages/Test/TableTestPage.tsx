@@ -8,7 +8,7 @@ import {
   tableSettingsAtom,
   tableSchemaAtom,
   tableFiltersAtom,
-  tableOrdersAtom,
+  tableSortsAtom,
   tableRowsAtom,
   auditChangeAtom,
 } from "@src/atoms/tableScope";
@@ -28,7 +28,7 @@ function TableTestPage() {
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
 
   const setTableFilters = useSetAtom(tableFiltersAtom, tableScope);
-  const setTableOrders = useSetAtom(tableOrdersAtom, tableScope);
+  const setTableSorts = useSetAtom(tableSortsAtom, tableScope);
 
   const [tableRows] = useAtom(tableRowsAtom, tableScope);
   const [auditChange] = useAtom(auditChangeAtom, tableScope);
@@ -86,11 +86,11 @@ function TableTestPage() {
       <button onClick={() => setTableFilters([])}>Clear table filters</button>
 
       <button
-        onClick={() => setTableOrders([{ key: "firstName", direction: "asc" }])}
+        onClick={() => setTableSorts([{ key: "firstName", direction: "asc" }])}
       >
-        Set table orders
+        Set table sorts
       </button>
-      <button onClick={() => setTableFilters([])}>Clear table orders</button>
+      <button onClick={() => setTableFilters([])}>Clear table sorts</button>
 
       <ol>
         {tableRows.map(({ _rowy_ref, ...data }) => (
