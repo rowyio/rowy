@@ -44,5 +44,12 @@ export const handleFirestoreError = (
     return;
   }
 
+  if (error.code === "invalid-argument") {
+    enqueueSnackbar("Cannot sort by this column with the current set filters", {
+      variant: "error",
+    });
+    return;
+  }
+
   elevateError(error);
 };

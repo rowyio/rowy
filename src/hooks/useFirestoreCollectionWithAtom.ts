@@ -130,7 +130,8 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
       page,
       pageSize,
       filters,
-      orders
+      orders,
+      onError
     ),
     (next, prev) => {
       // If filters are not equal, update the query
@@ -152,6 +153,7 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
 
   // Create listener
   useEffect(() => {
+    console.log("memoizedQuery", memoizedQuery);
     // If path is invalid and no memoizedQuery was created, don’t continue
     if (!memoizedQuery) return;
 
@@ -290,43 +292,49 @@ const getQuery = <T>(
   page: number,
   pageSize: number,
   filters: IUseFirestoreCollectionWithAtomOptions<T>["filters"],
-  orders: IUseFirestoreCollectionWithAtomOptions<T>["orders"]
+  orders: IUseFirestoreCollectionWithAtomOptions<T>["orders"],
+  onError: IUseFirestoreCollectionWithAtomOptions<T>["onError"]
 ) => {
   if (!path || (Array.isArray(pathSegments) && pathSegments.some((x) => !x)))
     return null;
 
-  let collectionRef: Query<T>;
+  try {
+    let collectionRef: Query<T>;
 
-  if (collectionGroup) {
-    collectionRef = queryCollectionGroup(
-      firebaseDb,
-      [path, ...((pathSegments as string[]) || [])].join("/")
-    ) as Query<T>;
-  } else {
-    collectionRef = collection(
-      firebaseDb,
-      path,
-      ...((pathSegments as string[]) || [])
-    ) as CollectionReference<T>;
+    if (collectionGroup) {
+      collectionRef = queryCollectionGroup(
+        firebaseDb,
+        [path, ...((pathSegments as string[]) || [])].join("/")
+      ) as Query<T>;
+    } else {
+      collectionRef = collection(
+        firebaseDb,
+        path,
+        ...((pathSegments as string[]) || [])
+      ) as CollectionReference<T>;
+    }
+
+    if (!collectionRef) return null;
+
+    const limit = (page + 1) * pageSize;
+    const firestoreFilters = tableFiltersToFirestoreFilters(filters || []);
+
+    return {
+      query: query<T>(
+        collectionRef,
+        queryLimit((page + 1) * pageSize),
+        ...firestoreFilters,
+        ...(orders?.map((order) => orderBy(order.key, order.direction)) || [])
+      ),
+      page,
+      limit,
+      firestoreFilters,
+      orders,
+    };
+  } catch (e) {
+    if (onError) onError(e as FirestoreError);
+    return null;
   }
-
-  if (!collectionRef) return null;
-
-  const limit = (page + 1) * pageSize;
-  const firestoreFilters = tableFiltersToFirestoreFilters(filters || []);
-
-  return {
-    query: query<T>(
-      collectionRef,
-      queryLimit((page + 1) * pageSize),
-      ...firestoreFilters,
-      ...(orders?.map((order) => orderBy(order.key, order.direction)) || [])
-    ),
-    page,
-    limit,
-    firestoreFilters,
-    orders,
-  };
 };
 
 /**
