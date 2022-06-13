@@ -171,6 +171,7 @@ export default function Navigation({ children }: React.PropsWithChildren<{}>) {
                   variant="h6"
                   component="h1"
                   textAlign="center"
+                  noWrap
                   sx={{
                     typography: { sm: "h5" },
                     textAlign: { xs: "left", sm: "center" },
