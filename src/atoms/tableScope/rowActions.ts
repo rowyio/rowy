@@ -15,6 +15,7 @@ import {
   tableColumnsOrderedAtom,
   tableFiltersAtom,
   tableRowsLocalAtom,
+  tableRowsDbAtom,
   tableRowsAtom,
   _updateRowDbAtom,
   _deleteRowDbAtom,
@@ -61,6 +62,7 @@ export const addRowAtom = atom(
     const auditChange = get(auditChangeAtom);
     const tableFilters = get(tableFiltersAtom);
     const tableColumnsOrdered = get(tableColumnsOrderedAtom);
+    const tableRowsDb = get(tableRowsDbAtom);
     const tableRows = get(tableRowsAtom);
 
     const _addSingleRowAndAudit = async (row: TableRow) => {
@@ -118,12 +120,12 @@ export const addRowAtom = atom(
       // - deliberately out of order
       // - there are filters set and we couldn’t set the value of a field to
       //   fit in the filtered query
-      // - user added with some custom ID
+      // - user did not set ID to decrement
       if (
         missingRequiredFields.length > 0 ||
         row._rowy_outOfOrder === true ||
         outOfOrderFilters.size > 0 ||
-        !setId
+        setId !== "decrement"
       ) {
         set(tableRowsLocalAtom, {
           type: "add",
@@ -142,7 +144,7 @@ export const addRowAtom = atom(
     if (Array.isArray(row)) {
       const promises: Promise<void>[] = [];
 
-      let lastId = tableRows[0]?._rowy_ref.id;
+      let lastId = tableRowsDb[0]?._rowy_ref.id;
       for (const r of row) {
         const id =
           setId === "random"
@@ -167,7 +169,7 @@ export const addRowAtom = atom(
         setId === "random"
           ? generateId()
           : setId === "decrement"
-          ? decrementId(tableRows[0]?._rowy_ref.id)
+          ? decrementId(tableRowsDb[0]?._rowy_ref.id)
           : row._rowy_ref.id;
 
       const path = setId

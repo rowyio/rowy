@@ -10,8 +10,11 @@ import {
   ListItemText,
   Box,
 } from "@mui/material";
-import { AddRow as AddRowIcon } from "@src/assets/icons";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import {
+  AddRow as AddRowIcon,
+  AddRowTop as AddRowTopIcon,
+  ChevronDown as ArrowDropDownIcon,
+} from "@src/assets/icons";
 
 import {
   globalScope,
@@ -21,12 +24,16 @@ import {
 import {
   tableScope,
   tableSettingsAtom,
+  tableFiltersAtom,
+  tableOrdersAtom,
   addRowAtom,
 } from "@src/atoms/tableScope";
 
 export default function AddRow() {
   const [userRoles] = useAtom(userRolesAtom, globalScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
+  const [tableFilters] = useAtom(tableFiltersAtom, tableScope);
+  const [tableOrders] = useAtom(tableOrdersAtom, tableScope);
   const addRow = useSetAtom(addRowAtom, tableScope);
   const [idType, setIdType] = useAtom(tableAddRowIdTypeAtom, globalScope);
 
@@ -34,18 +41,10 @@ export default function AddRow() {
   const [open, setOpen] = useState(false);
   const [openIdModal, setOpenIdModal] = useState(false);
 
+  const forceRandomId = tableFilters.length > 0 || tableOrders.length > 0;
+
   const handleClick = () => {
-    if (idType === "decrement") {
-      addRow({
-        row: {
-          _rowy_ref: {
-            id: "decrement",
-            path: tableSettings.collection + "/decrement",
-          },
-        },
-        setId: "decrement",
-      });
-    } else if (idType === "random") {
+    if (idType === "random" || (forceRandomId && idType === "decrement")) {
       addRow({
         row: {
           _rowy_ref: {
@@ -54,6 +53,16 @@ export default function AddRow() {
           },
         },
         setId: "random",
+      });
+    } else if (idType === "decrement") {
+      addRow({
+        row: {
+          _rowy_ref: {
+            id: "decrement",
+            path: tableSettings.collection + "/decrement",
+          },
+        },
+        setId: "decrement",
       });
     } else if (idType === "custom") {
       setOpenIdModal(true);
@@ -76,7 +85,13 @@ export default function AddRow() {
           variant="contained"
           color="primary"
           onClick={handleClick}
-          startIcon={<AddRowIcon />}
+          startIcon={
+            idType === "decrement" && !forceRandomId ? (
+              <AddRowTopIcon />
+            ) : (
+              <AddRowIcon />
+            )
+          }
         >
           Add row{idType === "custom" ? "…" : ""}
         </Button>
@@ -102,25 +117,37 @@ export default function AddRow() {
         onClose={() => setOpen(false)}
         label="Row add position"
         style={{ display: "none" }}
-        value={idType}
+        value={forceRandomId && idType === "decrement" ? "random" : idType}
         onChange={(e) => setIdType(e.target.value as typeof idType)}
         MenuProps={{
           anchorEl: anchorEl.current,
           MenuListProps: { "aria-labelledby": "add-row-menu-button" },
-          anchorOrigin: { horizontal: "right", vertical: "bottom" },
-          transformOrigin: { horizontal: "right", vertical: "top" },
+          anchorOrigin: { horizontal: "left", vertical: "bottom" },
+          transformOrigin: { horizontal: "left", vertical: "top" },
         }}
       >
-        <MenuItem value="decrement">
+        <MenuItem value="decrement" disabled={forceRandomId}>
           <ListItemText
-            primary="Auto-generated ID"
+            primary="To top"
             secondary="Generates a smaller ID so the new row will appear on the top"
             secondaryTypographyProps={{ variant: "caption" }}
           />
         </MenuItem>
+        <MenuItem value="random">
+          <ListItemText
+            primary="With random ID"
+            secondary={
+              "Temporarily displays the new row on the top for editing,\nbut will appear in a different position afterwards"
+            }
+            secondaryTypographyProps={{
+              variant: "caption",
+              whiteSpace: "pre-line",
+            }}
+          />
+        </MenuItem>
         <MenuItem value="custom">
           <ListItemText
-            primary="Custom ID"
+            primary="With custom ID…"
             secondary={
               "Temporarily displays the new row on the top for editing,\nbut will appear in a different position afterwards"
             }

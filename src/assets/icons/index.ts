@@ -89,6 +89,7 @@ import { TableRow } from "mdi-material-ui";
 export { TableRow as Row };
 
 export * from "./AddRow";
+export * from "./AddRowTop";
 export * from "./ChevronDown";
 export * from "./ChevronRight";
 export * from "./Clear";
