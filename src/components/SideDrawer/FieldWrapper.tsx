@@ -116,7 +116,7 @@ export default function FieldWrapper({
             color="text.secondary"
             sx={{
               flexGrow: 1,
-              paddingLeft: 18 / 8 + 0.75,
+              paddingLeft: 18 / 8 + 1,
 
               fontFamily: "mono",
               whiteSpace: "normal",
