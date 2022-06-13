@@ -141,6 +141,11 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
       )
         return false;
 
+      // If orders are not equal, update the query
+      // Overrides isLastPage check
+      if (JSON.stringify(next?.orders) !== JSON.stringify(prev?.orders))
+        return false;
+
       return isLastPage || queryEqual(next?.query as any, prev?.query as any);
     }
   );
@@ -320,6 +325,7 @@ const getQuery = <T>(
     page,
     limit,
     firestoreFilters,
+    orders,
   };
 };
 
