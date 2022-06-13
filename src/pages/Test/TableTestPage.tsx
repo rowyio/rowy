@@ -15,7 +15,7 @@ import {
 
 import TableSourceFirestore from "@src/sources/TableSourceFirestore";
 import TableToolbarSkeleton from "@src/components/TableToolbar/TableToolbarSkeleton";
-import HeaderRowSkeleton from "@src/components/Table/HeaderRowSkeleton";
+import TableSkeleton from "@src/components/Table/TableSkeleton";
 
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
 import { currentUserAtom, globalScope } from "@src/atoms/globalScope";
@@ -112,7 +112,7 @@ export default function ProvidedTableTestPage() {
       fallback={
         <>
           <TableToolbarSkeleton />
-          <HeaderRowSkeleton />
+          <TableSkeleton />
         </>
       }
     >

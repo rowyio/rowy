@@ -9,7 +9,7 @@ import ErrorFallback, {
   InlineErrorFallback,
 } from "@src/components/ErrorFallback";
 import TableToolbarSkeleton from "@src/components/TableToolbar/TableToolbarSkeleton";
-import HeaderRowSkeleton from "@src/components/Table/HeaderRowSkeleton";
+import TableSkeleton from "@src/components/Table/TableSkeleton";
 import EmptyTable from "@src/components/Table/EmptyTable";
 import TableToolbar from "@src/components/TableToolbar";
 import Table from "@src/components/Table";
@@ -74,7 +74,7 @@ export default function TablePage() {
       </ErrorBoundary>
 
       <ErrorBoundary FallbackComponent={ErrorFallback}>
-        <Suspense fallback={<HeaderRowSkeleton />}>
+        <Suspense fallback={<TableSkeleton />}>
           <Table dataGridRef={dataGridRef} />
         </Suspense>
       </ErrorBoundary>

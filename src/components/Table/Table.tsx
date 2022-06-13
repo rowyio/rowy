@@ -52,6 +52,8 @@ import { ColumnConfig } from "@src/types/table";
 
 export type DataGridColumn = ColumnConfig & Column<any> & { isNew?: true };
 export const DEFAULT_ROW_HEIGHT = 41;
+export const DEFAULT_COL_WIDTH = 150;
+export const MAX_COL_WIDTH = 380;
 
 const rowKeyGetter = (row: any) => row.id;
 const rowClass = (row: any) => (row._rowy_outOfOrder ? "out-of-order" : "");
@@ -115,10 +117,10 @@ export default function Table({
             ? false
             : column.editable ?? true,
         width: (column.width as number)
-          ? (column.width as number) > 380
-            ? 380
+          ? (column.width as number) > MAX_COL_WIDTH
+            ? MAX_COL_WIDTH
             : (column.width as number)
-          : 150,
+          : DEFAULT_COL_WIDTH,
       }));
 
     if (userRoles.includes("ADMIN") || !tableSettings.readOnly) {
@@ -233,7 +235,7 @@ export default function Table({
 
               return rowHeight;
             }}
-            headerRowHeight={42}
+            headerRowHeight={DEFAULT_ROW_HEIGHT + 1}
             className="rdg-light" // Handle dark mode in MUI theme
             cellNavigationMode="LOOP_OVER_ROW"
             rowRenderer={TableRow}

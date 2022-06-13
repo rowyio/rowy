@@ -11,7 +11,7 @@ import ErrorFallback, {
 import TableSourceFirestore from "@src/sources/TableSourceFirestore";
 import TablePage from "./TablePage";
 import TableToolbarSkeleton from "@src/components/TableToolbar/TableToolbarSkeleton";
-import HeaderRowSkeleton from "@src/components/Table/HeaderRowSkeleton";
+import TableSkeleton from "@src/components/Table/TableSkeleton";
 
 import {
   globalScope,
@@ -42,7 +42,7 @@ export default function ProvidedTablePage() {
         fallback={
           <>
             <TableToolbarSkeleton />
-            <HeaderRowSkeleton />
+            <TableSkeleton />
           </>
         }
       >

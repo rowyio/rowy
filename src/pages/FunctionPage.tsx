@@ -6,7 +6,7 @@ import { isEmpty } from "lodash-es";
 import { Fade } from "@mui/material";
 
 //import TableHeaderSkeleton from "@src/components/Table/Skeleton/TableHeaderSkeleton";
-//import HeaderRowSkeleton from "@src/components/Table/Skeleton/HeaderRowSkeleton";
+//import TableSkeleton from "@src/components/Table/Skeleton/TableSkeleton";
 //import EmptyTable from "@src/components/Table/EmptyTable";
 import Function from "@src/components/Function";
 
@@ -47,7 +47,7 @@ function ProvidedFunctionPage() {
       fallback={
         <>
           {/* <TableHeaderSkeleton />
-          <HeaderRowSkeleton /> */}
+          <TableSkeleton /> */}
         </>
       }
     >

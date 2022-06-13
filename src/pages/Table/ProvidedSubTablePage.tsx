@@ -12,7 +12,7 @@ import ErrorFallback from "@src/components/ErrorFallback";
 import TableSourceFirestore from "@src/sources/TableSourceFirestore";
 import TablePage from "./TablePage";
 import TableToolbarSkeleton from "@src/components/TableToolbar/TableToolbarSkeleton";
-import HeaderRowSkeleton from "@src/components/Table/HeaderRowSkeleton";
+import TableSkeleton from "@src/components/Table/TableSkeleton";
 
 import { globalScope, currentUserAtom } from "@src/atoms/globalScope";
 import {
@@ -109,7 +109,7 @@ export default function ProvidedSubTablePage() {
           fallback={
             <>
               <TableToolbarSkeleton />
-              <HeaderRowSkeleton />
+              <TableSkeleton />
             </>
           }
         >

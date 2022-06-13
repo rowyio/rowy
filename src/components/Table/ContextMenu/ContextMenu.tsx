@@ -6,6 +6,7 @@ import { Menu } from "@mui/material";
 import MenuContents from "./MenuContents";
 
 import { tableScope, contextMenuTargetAtom } from "@src/atoms/tableScope";
+import { DEFAULT_COL_WIDTH } from "@src/components/Table";
 
 export default function ContextMenu() {
   const [contextMenuTarget, setContextMenuTarget] = useAtom(
@@ -24,7 +25,7 @@ export default function ContextMenu() {
       onClose={handleClose}
       anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
       transformOrigin={{ vertical: "top", horizontal: "left" }}
-      sx={{ "& .MuiMenu-paper": { minWidth: 150 } }}
+      sx={{ "& .MuiMenu-paper": { minWidth: DEFAULT_COL_WIDTH } }}
     >
       <ErrorBoundary FallbackComponent={NonFullScreenErrorFallback}>
         <MenuContents onClose={handleClose} />
