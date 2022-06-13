@@ -3,7 +3,7 @@ import { useSnackbar } from "notistack";
 import { get, find } from "lodash-es";
 
 // import Cut from "@mui/icons-material/ContentCut";
-import { CopyCells } from "@src/assets/icons";
+import { Copy as CopyCells } from "@src/assets/icons";
 import Paste from "@mui/icons-material/ContentPaste";
 
 import {

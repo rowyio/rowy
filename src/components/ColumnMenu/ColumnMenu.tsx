@@ -30,6 +30,7 @@ import ColumnHeader from "@src/components/Table/Column";
 
 import {
   globalScope,
+  userRolesAtom,
   userSettingsAtom,
   updateUserSettingsAtom,
   confirmDialogAtom,
@@ -67,6 +68,7 @@ export interface IMenuModalProps {
 }
 
 export default function ColumnMenu() {
+  const [userRoles] = useAtom(userRolesAtom, globalScope);
   const [userSettings] = useAtom(userSettingsAtom, globalScope);
   const [updateUserSettings] = useAtom(updateUserSettingsAtom, globalScope);
   const confirm = useSetAtom(confirmDialogAtom, globalScope);
@@ -110,8 +112,8 @@ export default function ColumnMenu() {
     handleClose();
   };
 
-  const menuItems = [
-    { type: "subheader", label: "Your view" },
+  const localViewActions = [
+    { type: "subheader" },
     {
       label: "Sort: descending",
       activeLabel: "Remove sort: descending",
@@ -171,7 +173,10 @@ export default function ColumnMenu() {
       active: column.hidden,
       disabled: !getFieldProp("filter", column.type),
     },
-    { type: "subheader", label: "All users’ views" },
+  ];
+
+  const configActions = [
+    { type: "subheader" },
     {
       label: "Lock",
       activeLabel: "Unlock",
@@ -210,24 +215,7 @@ export default function ColumnMenu() {
       },
       active: column.fixed,
     },
-    { type: "subheader", label: "Insert column" },
-    {
-      label: "Insert to the left…",
-      icon: <ColumnPlusBeforeIcon />,
-      onClick: () => {
-        openColumnModal({ type: "new", index: column.index - 1 });
-        handleClose();
-      },
-    },
-    {
-      label: "Insert to the right…",
-      icon: <ColumnPlusAfterIcon />,
-      onClick: () => {
-        openColumnModal({ type: "new", index: column.index + 1 });
-        handleClose();
-      },
-    },
-    { type: "subheader", label: "Configure" },
+    // { type: "subheader" },
     {
       label: "Rename…",
       icon: <EditIcon />,
@@ -272,6 +260,23 @@ export default function ColumnMenu() {
     //   active: column.hidden,
     //   color: "error" as "error",
     // },
+    { type: "subheader" },
+    {
+      label: "Insert to the left…",
+      icon: <ColumnPlusBeforeIcon />,
+      onClick: () => {
+        openColumnModal({ type: "new", index: column.index - 1 });
+        handleClose();
+      },
+    },
+    {
+      label: "Insert to the right…",
+      icon: <ColumnPlusAfterIcon />,
+      onClick: () => {
+        openColumnModal({ type: "new", index: column.index + 1 });
+        handleClose();
+      },
+    },
     {
       label: `Delete column${altPress ? "" : "…"}`,
       icon: <ColumnRemoveIcon />,
@@ -299,6 +304,11 @@ export default function ColumnMenu() {
       color: "error" as "error",
     },
   ];
+
+  const menuItems =
+    userRoles.includes("ADMIN") || userRoles.includes("OPS")
+      ? [...localViewActions, ...configActions]
+      : localViewActions;
 
   return (
     <Menu

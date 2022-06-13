@@ -18,6 +18,7 @@ import ContextMenuItem, { IContextMenuItem } from "./ContextMenuItem";
 import {
   globalScope,
   projectIdAtom,
+  userRolesAtom,
   altPressAtom,
   tableAddRowIdTypeAtom,
   confirmDialogAtom,
@@ -40,6 +41,7 @@ interface IMenuContentsProps {
 
 export default function MenuContents({ onClose }: IMenuContentsProps) {
   const [projectId] = useAtom(projectIdAtom, globalScope);
+  const [userRoles] = useAtom(userRolesAtom, globalScope);
   const [altPress] = useAtom(altPressAtom, globalScope);
   const [addRowIdType] = useAtom(tableAddRowIdTypeAtom, globalScope);
   const confirm = useSetAtom(confirmDialogAtom, globalScope);
@@ -83,13 +85,16 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
       value: null,
       deleteField: true,
     });
-  const cellActions = [];
-  if (row && row[selectedCell.columnKey] !== undefined) {
-    cellActions.push({
+  const cellActions = [
+    {
       label: altPress ? "Clear value" : "Clear value…",
       color: "error",
       icon: <ClearIcon />,
-      disabled: selectedColumn.editable === false,
+      disabled:
+        selectedColumn.editable === false ||
+        !row ||
+        row[selectedCell.columnKey] === undefined ||
+        getFieldProp("group", selectedColumn.type) === "Auditing",
       onClick: altPress
         ? handleClearValue
         : () => {
@@ -102,9 +107,10 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
             });
             onClose();
           },
-    });
-  }
-  if (cellActions.length !== 0) actionGroups.push(cellActions);
+    },
+  ];
+  actionGroups.push(cellActions);
+
   // Row actions
   if (row) {
     const handleDelete = () => deleteRow(row._rowy_ref.path);
@@ -146,7 +152,9 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
           {
             label: "Duplicate",
             icon: <DuplicateIcon />,
-            disabled: tableSettings.tableType === "collectionGroup",
+            disabled:
+              tableSettings.tableType === "collectionGroup" ||
+              (!userRoles.includes("ADMIN") && tableSettings.readOnly),
             onClick: () => {
               addRow({
                 row,
@@ -159,6 +167,7 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
             label: altPress ? "Delete" : "Delete…",
             color: "error",
             icon: <DeleteIcon />,
+            disabled: !userRoles.includes("ADMIN") && tableSettings.readOnly,
             onClick: altPress
               ? handleDelete
               : () => {

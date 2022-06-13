@@ -209,34 +209,28 @@ export default function DraggableHeaderRenderer({
         <ColumnHeaderSort column={column as any} />
       </Grid>
 
-      {(userRoles.includes("ADMIN") ||
-        (userRoles.includes("OPS") &&
-          [FieldType.multiSelect, FieldType.singleSelect].includes(
-            (column as any).type
-          ))) && (
-        <Grid item>
-          <Tooltip title="Column settings">
-            <IconButton
-              size="small"
-              aria-label={`Column settings for ${column.name as string}`}
-              color="inherit"
-              onClick={handleOpenMenu}
-              ref={buttonRef}
-              sx={{
-                transition: (theme) =>
-                  theme.transitions.create("color", {
-                    duration: theme.transitions.duration.short,
-                  }),
+      <Grid item>
+        <Tooltip title="Column settings">
+          <IconButton
+            size="small"
+            aria-label={`Column settings for ${column.name as string}`}
+            color="inherit"
+            onClick={handleOpenMenu}
+            ref={buttonRef}
+            sx={{
+              transition: (theme) =>
+                theme.transitions.create("color", {
+                  duration: theme.transitions.duration.short,
+                }),
 
-                color: "text.disabled",
-                ".column-header:hover &": { color: "text.primary" },
-              }}
-            >
-              <DropdownIcon />
-            </IconButton>
-          </Tooltip>
-        </Grid>
-      )}
+              color: "text.disabled",
+              ".column-header:hover &": { color: "text.primary" },
+            }}
+          >
+            <DropdownIcon />
+          </IconButton>
+        </Tooltip>
+      </Grid>
     </Grid>
   );
 }
