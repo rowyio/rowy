@@ -153,7 +153,6 @@ export function useFirestoreCollectionWithAtom<T = TableRow>(
 
   // Create listener
   useEffect(() => {
-    console.log("memoizedQuery", memoizedQuery);
     // If path is invalid and no memoizedQuery was created, don’t continue
     if (!memoizedQuery) return;
 
