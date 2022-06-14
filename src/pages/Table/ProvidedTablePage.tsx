@@ -22,6 +22,7 @@ import {
   tableScope,
   tableIdAtom,
   tableSettingsAtom,
+  tableSchemaAtom,
 } from "@src/atoms/tableScope";
 
 /**
@@ -57,9 +58,18 @@ export default function ProvidedTablePage() {
         >
           <DebugAtoms scope={tableScope} />
           <TableSourceFirestore />
-          <main>
-            <TablePage />
-          </main>
+          <Suspense
+            fallback={
+              <>
+                <TableToolbarSkeleton />
+                <TableSkeleton />
+              </>
+            }
+          >
+            <main>
+              <TablePage />
+            </main>
+          </Suspense>
           <Suspense fallback={null}>
             <Outlet />
           </Suspense>

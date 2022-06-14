@@ -46,6 +46,14 @@ export default function TablePage() {
   // A ref to the data grid. Contains data grid functions
   const dataGridRef = useRef<DataGridHandle | null>(null);
 
+  if (!(tableSchema as any)._rowy_ref)
+    return (
+      <>
+        <TableToolbarSkeleton />
+        <TableSkeleton />
+      </>
+    );
+
   if (isEmpty(tableSchema.columns))
     return (
       <Suspense fallback={null}>
