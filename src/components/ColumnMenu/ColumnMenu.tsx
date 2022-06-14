@@ -1,4 +1,5 @@
 import { useAtom, useSetAtom } from "jotai";
+import { useSnackbar } from "notistack";
 
 import {
   Menu,
@@ -24,8 +25,9 @@ import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import EditIcon from "@mui/icons-material/EditOutlined";
 // import ReorderIcon from "@mui/icons-material/Reorder";
 import SettingsIcon from "@mui/icons-material/SettingsOutlined";
+import EvalIcon from "@mui/icons-material/PlayCircleOutline";
 
-import MenuContents from "./MenuContents";
+import MenuContents, { IMenuContentsProps } from "./MenuContents";
 import ColumnHeader from "@src/components/Table/Column";
 
 import {
@@ -34,11 +36,13 @@ import {
   userSettingsAtom,
   updateUserSettingsAtom,
   confirmDialogAtom,
+  rowyRunAtom,
   altPressAtom,
 } from "@src/atoms/globalScope";
 import {
   tableScope,
   tableIdAtom,
+  tableSettingsAtom,
   updateColumnAtom,
   deleteColumnAtom,
   tableSortsAtom,
@@ -49,7 +53,8 @@ import {
 import { FieldType } from "@src/constants/fields";
 import { getFieldProp } from "@src/components/fields";
 import { analytics, logEvent } from "@src/analytics";
-import { formatSubTableName } from "@src/utils/table";
+import { formatSubTableName, getTableSchemaPath } from "@src/utils/table";
+import { runRoutes } from "@src/constants/runRoutes";
 
 export interface IMenuModalProps {
   name: string;
@@ -72,7 +77,9 @@ export default function ColumnMenu() {
   const [userSettings] = useAtom(userSettingsAtom, globalScope);
   const [updateUserSettings] = useAtom(updateUserSettingsAtom, globalScope);
   const confirm = useSetAtom(confirmDialogAtom, globalScope);
+  const [rowyRun] = useAtom(rowyRunAtom, globalScope);
   const [tableId] = useAtom(tableIdAtom, tableScope);
+  const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const updateColumn = useSetAtom(updateColumnAtom, tableScope);
   const deleteColumn = useSetAtom(deleteColumnAtom, tableScope);
   const [tableSorts, setTableSorts] = useAtom(tableSortsAtom, tableScope);
@@ -83,6 +90,7 @@ export default function ColumnMenu() {
     tableScope
   );
   const [altPress] = useAtom(altPressAtom, globalScope);
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   if (!columnMenu) return null;
   const { column, anchorEl } = columnMenu;
@@ -112,7 +120,7 @@ export default function ColumnMenu() {
     handleClose();
   };
 
-  const localViewActions = [
+  const localViewActions: IMenuContentsProps["menuItems"] = [
     { type: "subheader" },
     {
       label: "Sort: descending",
@@ -175,7 +183,7 @@ export default function ColumnMenu() {
     },
   ];
 
-  const configActions = [
+  const configActions: IMenuContentsProps["menuItems"] = [
     { type: "subheader" },
     {
       label: "Lock",
@@ -260,6 +268,50 @@ export default function ColumnMenu() {
     //   active: column.hidden,
     //   color: "error" as "error",
     // },
+  ];
+
+  // TODO: Generalize
+  const handleEvaluateAll = async () => {
+    try {
+      handleClose();
+      const evaluatingSnackKey = enqueueSnackbar(`Evaluating “${column.key}”…`);
+      const result = await rowyRun({
+        route: runRoutes.evaluateDerivative,
+        body: {
+          collectionPath: tableSettings.collection,
+          schemaDocPath: getTableSchemaPath(tableSettings),
+          columnKey: column.key,
+        },
+      });
+      closeSnackbar(evaluatingSnackKey);
+      if (result.success === false) {
+        enqueueSnackbar(result.message, { variant: "error" });
+      } else {
+        enqueueSnackbar(`Column “${column.key}” evaluated`, {
+          variant: "success",
+        });
+      }
+    } catch (error) {
+      enqueueSnackbar(`Failed: ${error}`, { variant: "error" });
+    }
+  };
+  const derivativeActions: IMenuContentsProps["menuItems"] = [
+    { type: "subheader" },
+    {
+      label: altPress ? "Evaluate all" : "Evaluate all…",
+      icon: <EvalIcon />,
+      onClick: altPress
+        ? handleEvaluateAll
+        : () =>
+            confirm({
+              title: "Evaluate all?",
+              body: "All rows will be evaluated. This may take a while.",
+              handleConfirm: handleEvaluateAll,
+            }),
+    },
+  ];
+
+  const columnActions: IMenuContentsProps["menuItems"] = [
     { type: "subheader" },
     {
       label: "Insert to the left…",
@@ -305,10 +357,15 @@ export default function ColumnMenu() {
     },
   ];
 
-  const menuItems =
-    userRoles.includes("ADMIN") || userRoles.includes("OPS")
-      ? [...localViewActions, ...configActions]
-      : localViewActions;
+  let menuItems = [...localViewActions];
+
+  if (userRoles.includes("ADMIN") || userRoles.includes("OPS")) {
+    menuItems.push.apply(menuItems, configActions);
+    if (column.type === FieldType.derivative) {
+      menuItems.push.apply(menuItems, derivativeActions);
+    }
+    menuItems.push.apply(menuItems, columnActions);
+  }
 
   return (
     <Menu

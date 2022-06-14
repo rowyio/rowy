@@ -49,9 +49,7 @@ export const ContextMenuActions: IFieldConfig["contextMenuActions"] = (
     try {
       if (!selectedCol || !rowyRun || !selectedRow) return;
       reset();
-      const evaluatingSnackKey = enqueueSnackbar("Evaluating...", {
-        variant: "info",
-      });
+      const evaluatingSnackKey = enqueueSnackbar("Evaluating…");
       const result = await rowyRun({
         route: runRoutes.evaluateDerivative,
         body: {
@@ -63,6 +61,8 @@ export const ContextMenuActions: IFieldConfig["contextMenuActions"] = (
       closeSnackbar(evaluatingSnackKey);
       if (result.success === false) {
         enqueueSnackbar(result.message, { variant: "error" });
+      } else {
+        enqueueSnackbar("Cell evaluated", { variant: "success" });
       }
     } catch (error) {
       enqueueSnackbar(`Failed: ${error}`, { variant: "error" });
