@@ -34,7 +34,7 @@ export default function TableToolbarSkeleton() {
           height: TABLE_TOOLBAR_HEIGHT,
         }}
       >
-        <ButtonSkeleton sx={{ width: undefined, height: undefined }}>
+        <ButtonSkeleton sx={{ width: undefined, height: 32 }}>
           <ButtonGroup variant="contained" color="primary">
             <Button
               variant="contained"
@@ -52,12 +52,12 @@ export default function TableToolbarSkeleton() {
 
         <div />
 
-        <ButtonSkeleton sx={{ width: undefined, height: undefined }}>
+        <ButtonSkeleton sx={{ width: undefined, height: 32 }}>
           <Button variant="contained" startIcon={<AddRowIcon />}>
             Hide
           </Button>
         </ButtonSkeleton>
-        <ButtonSkeleton sx={{ width: undefined, height: undefined }}>
+        <ButtonSkeleton sx={{ width: undefined, height: 32 }}>
           <Button variant="contained" startIcon={<AddRowIcon />}>
             Filter
           </Button>

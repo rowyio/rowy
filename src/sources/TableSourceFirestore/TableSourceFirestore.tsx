@@ -43,6 +43,7 @@ export const TableSourceFirestore = memo(function TableSourceFirestore() {
     {
       createIfNonExistent: { columns: {} },
       updateDataAtom: updateTableSchemaAtom,
+      disableSuspense: true,
     }
   );
 
