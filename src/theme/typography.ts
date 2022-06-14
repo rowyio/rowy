@@ -14,7 +14,7 @@ declare module "@mui/material/styles/createTypography" {
   }
 }
 
-export const BODY_FONT = "Inter, system-ui, sans-serif";
+export const BODY_FONT = "system-ui, sans-serif";
 export const HEADING_FONT = "Space Grotesk, " + BODY_FONT;
 export const MONO_FONT = "JetBrains Mono, ui-monospace, monospace";
 
@@ -48,11 +48,15 @@ export const typography = ({
       fontFamily !== BODY_FONT
         ? "normal"
         : `"calt", "ss01", "ss03", "cv05", "cv08", "cv09"`,
+    "-webkit-font-smoothing": "auto",
+    "-moz-osx-font-smoothing": "auto",
   };
   const fontStyleHeading: TypographyStyleOptions = {
     fontFamily: fontFamilyHeading,
     fontFeatureSettings:
       fontFamilyHeading !== HEADING_FONT ? "normal" : `"ss02", "ss03"`,
+    "-webkit-font-smoothing": "antialiased",
+    "-moz-osx-font-smoothing": "grayscale",
   };
 
   return {
