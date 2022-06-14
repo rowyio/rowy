@@ -4,12 +4,17 @@ import { useTheme } from "@mui/material";
 
 import MDEditor from "@uiw/react-md-editor";
 
-export default function Code({ value }: IBasicCellProps) {
+export default function Markdown({ value }: IBasicCellProps) {
   const theme = useTheme();
 
+  if (!value || typeof value !== "string") return null;
+
   return (
-    <div data-color-mode={theme.palette.mode}>
-      <MDEditor.Markdown source={value} />
+    <div
+      data-color-mode={theme.palette.mode}
+      style={{ height: "100%", overflow: "hidden", whiteSpace: "normal" }}
+    >
+      <MDEditor.Markdown source={value.slice(0, 240)} />
     </div>
   );
 }
