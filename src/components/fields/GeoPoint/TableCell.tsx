@@ -1,6 +1,7 @@
 import { IBasicCellProps } from "@src/components/fields/types";
+import { Typography } from "@mui/material";
 
-export default function Duration({ value }: IBasicCellProps) {
+export default function GeoPoint({ value }: IBasicCellProps) {
   if (value === undefined) return null;
   const { latitude, longitude } = value;
 
@@ -24,9 +25,13 @@ export default function Duration({ value }: IBasicCellProps) {
   );
 
   return (
-    <>
-      {latDegrees}°{latMinutes}'{latSeconds.toFixed(2)}"{latDirection},
-      {longDegrees}°{longMinutes}'{longSeconds.toFixed(2)}"{longDirection}
-    </>
+    <Typography variant="inherit" component="span" sx={{ fontFamily: "mono" }}>
+      {latDegrees.toString().padStart(2, "0")}°
+      {latMinutes.toString().padStart(2, "0")}′
+      {latSeconds.toFixed(1).toString().padStart(3, "0")}″{latDirection}{" "}
+      {longDegrees.toString().padStart(2, "0")}°
+      {longMinutes.toString().padStart(2, "0")}′
+      {longSeconds.toFixed(1).toString().padStart(3, "0")}″{longDirection}
+    </Typography>
   );
 }
