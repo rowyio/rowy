@@ -168,12 +168,19 @@ const extensionBodyTemplate = {
   })
 }`,
   twilioMessage: `const extensionBody: TwilioMessageBody = async({row, db, change, ref}) => {
-  // you can get a user's phone number from the row or from the user document in the database
-  // const phoneNumber = row.phoneNumber
+ /** 
+   * 
+   * Setup twilio secret key: https://docs.rowy.io/extensions/twilio-message#secret-manager-setup
+   * 
+   * You can add any code logic here to be able to customize your message
+   * or dynamically get the from or to numbers
+   * 
+  **/
+  
   return ({
-    from:"",
-    to:"",
-    body:"Hi there!"
+    from: "", // from phone number registered on twilio
+    to: "", // recipient phone number - eg: row.<fieldname>
+    body: "Hi there!" // message text
   })
 }`,
   pushNotification: `const extensionBody: PushNotificationBody = async({row, db, change, ref}) => {
