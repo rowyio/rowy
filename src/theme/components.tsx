@@ -168,6 +168,28 @@ export const components = (theme: Theme): ThemeOptions => {
               caretColor: theme.palette.primary.main,
             },
           },
+
+          ".wmde-markdown.wmde-markdown, .wmde-markdown-var.wmde-markdown-var":
+            {
+              font: "inherit",
+              fontFeatureSettings: "inherit",
+              letterSpacing: "inherit",
+              backgroundColor: "transparent",
+              color: "inherit",
+
+              "--color-canvas-default": "transparent",
+              "--color-border-default": theme.palette.divider,
+              "--color-border-muted": theme.palette.divider,
+
+              "& .w-md-editor-text": { fontFeatureSettings: "inherit" },
+
+              "& .w-md-editor-text-pre > code": {
+                font: "inherit !important",
+                fontFeatureSettings: "inherit",
+                letterSpacing: "inherit",
+                background: "none",
+              },
+            },
         },
       },
 
