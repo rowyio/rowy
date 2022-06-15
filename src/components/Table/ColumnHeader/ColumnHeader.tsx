@@ -28,7 +28,6 @@ import {
   updateColumnAtom,
   columnMenuAtom,
 } from "@src/atoms/tableScope";
-import { FieldType } from "@src/constants/fields";
 import { getFieldProp } from "@src/components/fields";
 import { COLUMN_HEADER_HEIGHT } from "@src/components/Table/Column";
 import { ColumnConfig } from "@src/types/table";

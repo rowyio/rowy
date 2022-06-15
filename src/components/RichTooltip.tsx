@@ -2,13 +2,43 @@ import { useState } from "react";
 import { colord } from "colord";
 
 import {
+  styled,
   Tooltip,
+  tooltipClasses,
   TooltipProps,
   Box,
   Typography,
   Button,
   ButtonProps,
 } from "@mui/material";
+
+const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.popper}`]: { zIndex: theme.zIndex.drawer - 1 },
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor:
+      theme.palette.mode === "light"
+        ? theme.palette.background.default
+        : colord(theme.palette.background.paper)
+            .mix("#fff", 0.16)
+            .toHslString(),
+    boxShadow: theme.shadows[8],
+
+    ...theme.typography.body2,
+    color: theme.palette.text.primary,
+    padding: 0,
+  },
+  [`& .${tooltipClasses.arrow}::before`]: {
+    backgroundColor:
+      theme.palette.mode === "light"
+        ? theme.palette.background.default
+        : colord(theme.palette.background.paper)
+            .mix("#fff", 0.16)
+            .toHslString(),
+    boxShadow: theme.shadows[8],
+  },
+}));
 
 export interface IRichTooltipProps
   extends Partial<Omit<TooltipProps, "title">> {
@@ -59,39 +89,13 @@ export default function RichTooltip({
     });
 
   return (
-    <Tooltip
+    <LightTooltip
       disableFocusListener
       disableHoverListener
       disableTouchListener
       arrow
       open={open}
       onClose={closeTooltip}
-      sx={{
-        "& .MuiTooltip-popper": { zIndex: (theme) => theme.zIndex.drawer - 1 },
-        "& .MuiTooltip-tooltip": {
-          backgroundColor: (theme) =>
-            theme.palette.mode === "light"
-              ? theme.palette.background.default
-              : colord(theme.palette.background.paper)
-                  .mix("#fff", 0.16)
-                  .toHslString(),
-          boxShadow: 8,
-
-          typography: "body2",
-          color: "text.primary",
-          padding: 0,
-        },
-
-        "& .MuiTooltip-arrow::before": {
-          backgroundColor: (theme) =>
-            theme.palette.mode === "light"
-              ? theme.palette.background.default
-              : colord(theme.palette.background.paper)
-                  .mix("#fff", 0.16)
-                  .toHslString(),
-          boxShadow: 8,
-        },
-      }}
       title={
         <Box
           sx={{
@@ -158,6 +162,6 @@ export default function RichTooltip({
       {...props}
     >
       {render({ openTooltip, closeTooltip, toggleTooltip })}
-    </Tooltip>
+    </LightTooltip>
   );
 }
