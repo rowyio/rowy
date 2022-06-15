@@ -63,7 +63,6 @@ export const addRowAtom = atom(
     const tableFilters = get(tableFiltersAtom);
     const tableColumnsOrdered = get(tableColumnsOrderedAtom);
     const tableRowsDb = get(tableRowsDbAtom);
-    const tableRows = get(tableRowsAtom);
 
     const _addSingleRowAndAudit = async (row: TableRow) => {
       // Store initial values to be written
@@ -361,28 +360,29 @@ export const updateFieldAtom = atom(
       _set(update, fieldName, value);
     }
 
-    // Update rowsLocal if any required fields are missing
-    if (missingRequiredFields.length > 0) {
+    // If it’s a local row, update the row in rowsLocal
+    if (isLocalRow) {
       set(tableRowsLocalAtom, {
         type: "update",
         path,
         row: update,
         deleteFields: deleteField ? [fieldName] : [],
       });
-    }
-    // If no required fields are missing and the row is only local,
-    // write the entire row to the database
-    else if (isLocalRow) {
-      const rowValues = updateRowData(cloneDeep(row), update);
-      if (deleteField) unset(rowValues, fieldName);
 
-      await updateRowDb(
-        row._rowy_ref.path,
-        omitRowyFields(rowValues),
-        deleteField ? [fieldName] : []
-      );
+      // If it has no missingRequiredFields, also write to db
+      // And write entire row to handle the case where it doesn’t exist in db yet
+      if (missingRequiredFields.length === 0) {
+        const rowValues = updateRowData(cloneDeep(row), update);
+        if (deleteField) unset(rowValues, fieldName);
+
+        await updateRowDb(
+          row._rowy_ref.path,
+          omitRowyFields(rowValues),
+          deleteField ? [fieldName] : []
+        );
+      }
     }
-    // Otherwise, update single field in database
+    // Otherwise, update single field in database and write audit update field
     else {
       await updateRowDb(
         row._rowy_ref.path,
