@@ -83,11 +83,10 @@ export const components = (theme: Theme): ThemeOptions => {
 
           "#root": {
             "@supports selector(:has(a))": {
+              transformOrigin: `50% ${theme.spacing(1)}`,
               transition: theme.transitions.create(
                 ["transform", "border-radius"],
-                {
-                  duration: theme.transitions.duration.leavingScreen,
-                }
+                { duration: theme.transitions.duration.leavingScreen }
               ),
             },
           },
@@ -288,7 +287,7 @@ export const components = (theme: Theme): ThemeOptions => {
                 borderRadius: (theme.shape.borderRadius as number) * 2,
                 overflow: "hidden",
 
-                transform: "scale(0.9) translateY(-4.5%)",
+                transform: `scale(0.9) translateY(${theme.spacing(1)})`,
                 transition: theme.transitions.create(
                   ["transform", "border-radius"],
                   {
