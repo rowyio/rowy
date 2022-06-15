@@ -116,6 +116,7 @@ export const addRowAtom = atom(
 
       // Add to rowsLocal (i.e. display on top, out of order) if:
       // - any required fields are missing
+      //   (**not out of order if IDs are not decrementing**)
       // - deliberately out of order
       // - there are filters set and we couldn’t set the value of a field to
       //   fit in the filtered query
@@ -128,7 +129,13 @@ export const addRowAtom = atom(
       ) {
         set(tableRowsLocalAtom, {
           type: "add",
-          row: { ...rowValues, _rowy_outOfOrder: true },
+          row: {
+            ...rowValues,
+            _rowy_outOfOrder:
+              row._rowy_outOfOrder === true ||
+              outOfOrderFilters.size > 0 ||
+              setId !== "decrement",
+          },
         });
       }
 
