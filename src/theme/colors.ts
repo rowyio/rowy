@@ -89,6 +89,7 @@ export const colorsLight = (
       MuiCssBaseline: {
         styleOverrides: {
           ":root": { colorScheme: "light" },
+          "#root": { backgroundColor: bgDefault.toHslString() },
           ".rdg": { colorScheme: "light" },
         },
       },
@@ -193,6 +194,7 @@ export const colorsDark = (
       MuiCssBaseline: {
         styleOverrides: {
           // ":root": { colorScheme: "dark" },
+          "#root": { backgroundColor: bgDefault.toHslString() },
           ".rdg": { colorScheme: "dark" },
         },
       },
@@ -201,7 +203,7 @@ export const colorsDark = (
           root: {
             backgroundColor: colord({ l: 0, c: 1, h }).alpha(0.6).toHslString(),
             ".MuiDialog-root:has(.MuiDialog-paperFullScreen) &": {
-              backgroundColor: "rgba(0, 0, 0, 0.25)",
+              backgroundColor: "rgba(0, 0, 0, 0)",
             },
           },
           invisible: { backgroundColor: "transparent" },

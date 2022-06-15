@@ -39,6 +39,10 @@ export default function BrandedBackground() {
             background-size: ${(480 * 10) / 14}px;
             mix-blend-mode: overlay;
           }
+
+          #root#root {
+            background-color: transparent;
+          }
         `}
     />
   );

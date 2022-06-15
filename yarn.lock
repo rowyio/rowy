@@ -3217,10 +3217,10 @@
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
 
-"@rowy/form-builder@^0.6.1":
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/@rowy/form-builder/-/form-builder-0.6.1.tgz#008d910f05c96fb4db32d95ce3c850a6145c9a7a"
-  integrity sha512-s1r4aXVNQFo/ncc9OWlQVMx9wj+ggIgAU1IdkpTBKV/7674NDMesFr8iymeDHJM/9zf9mVoPgbLmIQixrGgbeQ==
+"@rowy/form-builder@^0.6.2":
+  version "0.6.2"
+  resolved "https://registry.yarnpkg.com/@rowy/form-builder/-/form-builder-0.6.2.tgz#aa51c877525afc061f25d614e6526ff57193dd3a"
+  integrity sha512-Lr4CJk4zQpp8ae27umsuxkRf8zs6GQGGA26u/z6lFDIeM+wIr33IOsRjgx9XlNhrRHGEhfLdwX4okuQGv3MwOA==
   dependencies:
     "@hookform/resolvers" "^2.6.0"
     "@types/lodash-es" "^4.17.6"

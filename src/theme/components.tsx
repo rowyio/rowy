@@ -81,13 +81,20 @@ export const components = (theme: Theme): ThemeOptions => {
 
           body: { cursor: "default" },
 
-          "#root": {
-            "@supports selector(:has(a))": {
+          "@supports selector(:has(a))": {
+            body: {
+              transition: "background-color 0s",
+              transitionDelay: theme.transitions.duration.leavingScreen + "ms",
+            },
+
+            "#root": {
               transformOrigin: `50% ${theme.spacing(1)}`,
-              transition: theme.transitions.create(
-                ["transform", "border-radius"],
-                { duration: theme.transitions.duration.leavingScreen }
-              ),
+              transition: theme.transitions.create([
+                "transform",
+                "border-radius",
+              ]),
+              transitionDuration: `${theme.transitions.duration.leavingScreen}ms, 0s`,
+              transitionDelay: `0s, ${theme.transitions.duration.leavingScreen}ms`,
             },
           },
 
@@ -276,14 +283,9 @@ export const components = (theme: Theme): ThemeOptions => {
 
             "body:has([data-open=true] &)": {
               backgroundColor: theme.palette.common.black,
+              transitionDelay: "0s",
 
               "#root": {
-                backgroundColor:
-                  theme.palette.mode === "dark"
-                    ? colord(theme.palette.background.paper)
-                        .mix("#fff", 0.09) // Elevation 8
-                        .toHslString()
-                    : theme.palette.background.default,
                 borderRadius: (theme.shape.borderRadius as number) * 2,
                 overflow: "hidden",
 
@@ -291,10 +293,11 @@ export const components = (theme: Theme): ThemeOptions => {
                 transition: theme.transitions.create(
                   ["transform", "border-radius"],
                   {
-                    duration: theme.transitions.duration.enteringScreen,
                     easing: theme.transitions.easing.easeOut,
                   }
                 ),
+                transitionDuration: `${theme.transitions.duration.enteringScreen}ms, 0s`,
+                transitionDelay: "0s, 0s",
               },
             },
           },
