@@ -60,7 +60,8 @@ export default function Modal({
 }: IModalProps) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const fullScreen = props.fullScreen || isMobile;
+  const fullScreen =
+    props.fullScreen === false ? false : props.fullScreen || isMobile;
 
   const [open, setOpen] = useState(true);
   const [emphasizeCloseButton, setEmphasizeCloseButton] = useState(false);
@@ -108,7 +109,7 @@ export default function Modal({
       >
         <DialogTitle
           id="modal-title"
-          style={{ flexGrow: 1, userSelect: "none" }}
+          style={{ flex: 1, overflow: "auto", userSelect: "none" }}
         >
           {title}
         </DialogTitle>

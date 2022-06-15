@@ -81,6 +81,7 @@ export default function ReExecute() {
           onClose={handleClose}
           maxWidth="xs"
           fullWidth
+          fullScreen={false}
           hideCloseButton
           title="Force refresh?"
           children="All Extensions and Derivatives in this table will re-execute."
