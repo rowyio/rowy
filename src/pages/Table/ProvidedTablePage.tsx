@@ -1,7 +1,7 @@
 import { Suspense, useMemo } from "react";
 import { useAtom, Provider } from "jotai";
 import { DebugAtoms } from "@src/atoms/utils";
-import { useParams, Outlet } from "react-router-dom";
+import { useParams, useOutlet } from "react-router-dom";
 import { ErrorBoundary } from "react-error-boundary";
 import { find } from "lodash-es";
 
@@ -22,7 +22,6 @@ import {
   tableScope,
   tableIdAtom,
   tableSettingsAtom,
-  tableSchemaAtom,
 } from "@src/atoms/tableScope";
 
 /**
@@ -31,6 +30,7 @@ import {
  */
 export default function ProvidedTablePage() {
   const { id } = useParams();
+  const outlet = useOutlet();
   const [currentUser] = useAtom(currentUserAtom, globalScope);
   const [tables] = useAtom(tablesAtom, globalScope);
 
@@ -67,12 +67,10 @@ export default function ProvidedTablePage() {
             }
           >
             <main>
-              <TablePage />
+              <TablePage disableModals={Boolean(outlet)} />
             </main>
           </Suspense>
-          <Suspense fallback={null}>
-            <Outlet />
-          </Suspense>
+          <Suspense fallback={null}>{outlet}</Suspense>
         </Provider>
       </Suspense>
     </ErrorBoundary>

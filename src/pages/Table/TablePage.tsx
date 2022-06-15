@@ -31,11 +31,16 @@ import { useSnackLogContext } from "@src/contexts/SnackLogContext";
 // prettier-ignore
 const BuildLogsSnack = lazy(() => import("@src/components/TableModals/CloudLogsModal/BuildLogs/BuildLogsSnack" /* webpackChunkName: "TableModals-BuildLogsSnack" */));
 
+export interface ITablePageProps {
+  /** Disable modals on this table when a sub-table is open and it’s listening to URL state */
+  disableModals?: boolean;
+}
+
 /**
  * TablePage renders all the UI for the table.
  * Must be wrapped by either `ProvidedTablePage` or `ProvidedSubTablePage`.
  */
-export default function TablePage() {
+export default function TablePage({ disableModals }: ITablePageProps) {
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const snackLogContext = useSnackLogContext();
 
@@ -62,11 +67,11 @@ export default function TablePage() {
             <EmptyTable />
 
             <Suspense fallback={null}>
-              <ColumnModals />
+              {!disableModals && <ColumnModals />}
             </Suspense>
 
             <Suspense fallback={null}>
-              <TableModals />
+              {!disableModals && <TableModals />}
             </Suspense>
           </div>
         </Fade>
@@ -93,26 +98,30 @@ export default function TablePage() {
         </Suspense>
       </ErrorBoundary>
 
-      <ErrorBoundary FallbackComponent={InlineErrorFallback}>
-        <Suspense fallback={null}>
-          <ColumnMenu />
-          <ColumnModals />
-        </Suspense>
-      </ErrorBoundary>
+      {!disableModals && (
+        <ErrorBoundary FallbackComponent={InlineErrorFallback}>
+          <Suspense fallback={null}>
+            <ColumnMenu />
+            <ColumnModals />
+          </Suspense>
+        </ErrorBoundary>
+      )}
 
-      <ErrorBoundary FallbackComponent={InlineErrorFallback}>
-        <Suspense fallback={null}>
-          <TableModals />
-          {snackLogContext.isSnackLogOpen && (
-            <Suspense fallback={null}>
-              <BuildLogsSnack
-                onClose={snackLogContext.closeSnackLog}
-                onOpenPanel={alert}
-              />
-            </Suspense>
-          )}
-        </Suspense>
-      </ErrorBoundary>
+      {!disableModals && (
+        <ErrorBoundary FallbackComponent={InlineErrorFallback}>
+          <Suspense fallback={null}>
+            <TableModals />
+            {snackLogContext.isSnackLogOpen && (
+              <Suspense fallback={null}>
+                <BuildLogsSnack
+                  onClose={snackLogContext.closeSnackLog}
+                  onOpenPanel={alert}
+                />
+              </Suspense>
+            )}
+          </Suspense>
+        </ErrorBoundary>
+      )}
     </ActionParamsProvider>
   );
 }
