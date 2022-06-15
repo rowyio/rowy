@@ -192,7 +192,10 @@ export default function ColumnConfigModal({
                     route: runRoutes.buildFunction,
                     body: {
                       tablePath: tableSettings.collection,
-                      pathname: window.location.pathname,
+                      // pathname must match old URL format
+                      pathname: `/table/${encodeURIComponent(
+                        tableSettings.collection
+                      )}`,
                       tableConfigPath: getTableSchemaPath(tableSettings),
                     },
                   });
