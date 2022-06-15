@@ -34,6 +34,15 @@ export const StyledDrawer = styled(Drawer)(({ theme }) => ({
 
     top: APP_BAR_HEIGHT + TABLE_TOOLBAR_HEIGHT,
     height: `calc(100% - ${APP_BAR_HEIGHT + TABLE_TOOLBAR_HEIGHT}px)`,
+    ".MuiDialog-paperFullScreen &": {
+      top:
+        APP_BAR_HEIGHT +
+        TABLE_TOOLBAR_HEIGHT +
+        Number(theme.spacing(2).replace("px", "")),
+      height: `calc(100% - ${
+        APP_BAR_HEIGHT + TABLE_TOOLBAR_HEIGHT
+      }px - ${theme.spacing(2)})`,
+    },
 
     transition: theme.transitions.create("transform", {
       easing: theme.transitions.easing.easeInOut,

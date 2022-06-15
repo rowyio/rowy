@@ -41,17 +41,20 @@ export default function WizardDialog({
   onFinish,
   fullHeight = true,
   onClose,
+  open: openProp,
   ...props
 }: IWizardDialogProps) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const [open, setOpen] = useState(true);
   const [emphasizeCloseButton, setEmphasizeCloseButton] = useState(false);
   const handleClose: NonNullable<DialogProps["onClose"]> = (event, reason) => {
     if (reason === "backdropClick" || reason === "escapeKeyDown") {
       setEmphasizeCloseButton(true);
       return;
     }
+    setOpen(false);
     setEmphasizeCloseButton(false);
     if (onClose) setTimeout(() => onClose!(event, reason), 300);
   };
@@ -66,6 +69,9 @@ export default function WizardDialog({
 
   return (
     <Dialog
+      open={open}
+      data-open={open}
+      onClose={handleClose}
       fullWidth
       fullScreen
       TransitionComponent={Slide}
@@ -74,7 +80,6 @@ export default function WizardDialog({
       aria-describedby="wizard-step-description"
       maxWidth="md"
       {...props}
-      onClose={handleClose}
       sx={[
         fullHeight && { "& .MuiDialog-paper": { height: "100%" } },
         ...spreadSx(props.sx),

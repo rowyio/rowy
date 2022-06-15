@@ -88,6 +88,7 @@ export default function ProvidedSubTablePage() {
       sx={{
         "& > .MuiDialog-container > .MuiPaper-root": {
           bgcolor: "background.default",
+          backgroundImage: "none",
         },
         "& .modal-title-row": {
           height: APP_BAR_HEIGHT,

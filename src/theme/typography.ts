@@ -48,15 +48,15 @@ export const typography = ({
       fontFamily !== BODY_FONT
         ? "normal"
         : `"calt", "ss01", "ss03", "cv05", "cv08", "cv09"`,
-    "-webkit-font-smoothing": "auto",
-    "-moz-osx-font-smoothing": "auto",
+    WebkitFontSmoothing: "auto",
+    MozOsxFontSmoothing: "auto",
   };
   const fontStyleHeading: TypographyStyleOptions = {
     fontFamily: fontFamilyHeading,
     fontFeatureSettings:
       fontFamilyHeading !== HEADING_FONT ? "normal" : `"ss02", "ss03"`,
-    "-webkit-font-smoothing": "antialiased",
-    "-moz-osx-font-smoothing": "grayscale",
+    WebkitFontSmoothing: "antialiased",
+    MozOsxFontSmoothing: "grayscale",
   };
 
   return {

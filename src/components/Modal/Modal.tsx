@@ -60,6 +60,7 @@ export default function Modal({
 }: IModalProps) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const fullScreen = props.fullScreen || isMobile;
 
   const [open, setOpen] = useState(true);
   const [emphasizeCloseButton, setEmphasizeCloseButton] = useState(false);
@@ -80,11 +81,12 @@ export default function Modal({
   return (
     <Dialog
       open={open}
+      data-open={open}
       onClose={handleClose}
       fullWidth
-      fullScreen={isMobile}
-      TransitionComponent={isMobile ? Slide : SlideTransitionMui}
-      TransitionProps={isMobile ? ({ direction: "up" } as any) : undefined}
+      fullScreen={fullScreen}
+      TransitionComponent={fullScreen ? Slide : SlideTransitionMui}
+      TransitionProps={fullScreen ? ({ direction: "up" } as any) : undefined}
       aria-labelledby="modal-title"
       {...props}
       sx={

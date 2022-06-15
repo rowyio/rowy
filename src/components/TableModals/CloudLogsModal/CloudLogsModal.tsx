@@ -78,8 +78,7 @@ export default function CloudLogsModal({ onClose }: ITableModalProps) {
       title="Cloud logs"
       onClose={onClose}
       maxWidth="xl"
-      fullWidth
-      fullHeight
+      fullScreen
       ScrollableDialogContentProps={{ disableBottomDivider: true }}
       header={
         <>

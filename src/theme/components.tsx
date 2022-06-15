@@ -81,6 +81,17 @@ export const components = (theme: Theme): ThemeOptions => {
 
           body: { cursor: "default" },
 
+          "#root": {
+            "@supports selector(:has(a))": {
+              transition: theme.transitions.create(
+                ["transform", "border-radius"],
+                {
+                  duration: theme.transitions.duration.leavingScreen,
+                }
+              ),
+            },
+          },
+
           "code, pre, pre.MuiTypography-root": {
             fontFamily: theme.typography.fontFamilyMono,
             fontFeatureSettings: "normal",
@@ -254,15 +265,39 @@ export const components = (theme: Theme): ThemeOptions => {
           paperFullScreen: {
             borderBottomLeftRadius: 0,
             borderBottomRightRadius: 0,
-            marginTop: `calc(env(safe-area-inset-top) + ${theme.spacing(1)})`,
+            marginTop: `calc(env(safe-area-inset-top) + ${theme.spacing(2)})`,
             maxHeight: `calc(100% - env(safe-area-inset-top) - ${theme.spacing(
-              1
+              2
             )})`,
             maxWidth: "100% !important",
 
             paddingLeft: "env(safe-area-inset-left)",
             paddingRight: "env(safe-area-inset-right)",
             paddingBottom: "env(safe-area-inset-bottom)",
+
+            "body:has([data-open=true] &)": {
+              backgroundColor: theme.palette.common.black,
+
+              "#root": {
+                backgroundColor:
+                  theme.palette.mode === "dark"
+                    ? colord(theme.palette.background.paper)
+                        .mix("#fff", 0.09) // Elevation 8
+                        .toHslString()
+                    : theme.palette.background.default,
+                borderRadius: (theme.shape.borderRadius as number) * 2,
+                overflow: "hidden",
+
+                transform: "scale(0.9) translateY(-4.5%)",
+                transition: theme.transitions.create(
+                  ["transform", "border-radius"],
+                  {
+                    duration: theme.transitions.duration.enteringScreen,
+                    easing: theme.transitions.easing.easeOut,
+                  }
+                ),
+              },
+            },
           },
         },
       },
