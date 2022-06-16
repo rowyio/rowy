@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { renderHook, act } from "@testing-library/react";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useAtomCallback } from "jotai/utils";
-import { find, findIndex } from "lodash-es";
+import { find, findIndex, sortBy } from "lodash-es";
 
 import { currentUserAtom } from "@src/atoms/globalScope";
 import {
@@ -60,12 +60,15 @@ const initRows = (
       setRowsDb((rows) => {
         const index = findIndex(rows, ["_rowy_ref.path", path]);
 
-        // Append if not found
+        // Append if not found and sort by ID
         if (index === -1) {
-          return [
-            ...rows,
-            { ...update, _rowy_ref: { id: path.split("/").pop()!, path } },
-          ];
+          return sortBy(
+            [
+              ...rows,
+              { ...update, _rowy_ref: { id: path.split("/").pop()!, path } },
+            ],
+            ["_rowy_ref.id"]
+          );
         }
 
         rows[index] = updateRowData(rows[index], update);

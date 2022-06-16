@@ -5,12 +5,19 @@ import {
   connectAuthEmulator,
   signInWithEmailAndPassword,
 } from "firebase/auth";
+import {
+  initializeFirestore,
+  connectFirestoreEmulator,
+} from "firebase/firestore";
 
 import Providers, { IProvidersProps } from "@src/Providers";
 import ProjectSourceFirebase from "@src/sources/ProjectSourceFirebase";
 import {
   envConfig,
+  firebaseConfigAtom,
+  firebaseAppAtom,
   firebaseAuthAtom,
+  firebaseDbAtom,
 } from "@src/sources/ProjectSourceFirebase";
 import { currentUserAtom } from "@src/atoms/globalScope";
 
@@ -20,11 +27,12 @@ import { currentUserAtom } from "@src/atoms/globalScope";
  */
 export const customRender = (
   ui: React.ReactElement,
-  initialAtomValues?: IProvidersProps["initialAtomValues"]
+  initialAtomValues?: IProvidersProps["initialAtomValues"],
+  disableProjectSource: boolean = false
 ) =>
   render(
     <Providers initialAtomValues={initialAtomValues}>
-      <ProjectSourceFirebase />
+      {!disableProjectSource && <ProjectSourceFirebase />}
       {ui}
     </Providers>
   );
@@ -37,6 +45,8 @@ export const signInAsAdmin = async () => {
   const app = initializeApp(envConfig);
   const auth = getAuth(app);
   connectAuthEmulator(auth, "http://localhost:9099", { disableWarnings: true });
+  const db = initializeFirestore(app, { ignoreUndefinedProperties: true });
+  connectFirestoreEmulator(db, "localhost", 9299);
 
   const userCredential = await signInWithEmailAndPassword(
     auth,
@@ -49,8 +59,11 @@ export const signInAsAdmin = async () => {
   expect(tokenResult.claims.roles).toContain("ADMIN");
 
   const initialAtomValues = [
+    [firebaseConfigAtom, envConfig],
+    [firebaseAppAtom, app],
     [firebaseAuthAtom, auth],
-    // [currentUserAtom, userCredential.user],
+    [firebaseDbAtom, db],
+    [currentUserAtom, userCredential.user],
   ] as const;
 
   return initialAtomValues;
