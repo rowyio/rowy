@@ -49,6 +49,7 @@ import {
   columnMenuAtom,
   columnModalAtom,
   tableFiltersPopoverAtom,
+  tableNextPageAtom,
 } from "@src/atoms/tableScope";
 import { FieldType } from "@src/constants/fields";
 import { getFieldProp } from "@src/components/fields";
@@ -89,6 +90,8 @@ export default function ColumnMenu() {
     tableFiltersPopoverAtom,
     tableScope
   );
+  const [tableNextPage] = useAtom(tableNextPageAtom, tableScope);
+
   const [altPress] = useAtom(altPressAtom, globalScope);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
@@ -305,7 +308,15 @@ export default function ColumnMenu() {
         : () =>
             confirm({
               title: "Evaluate all?",
-              body: "All rows will be evaluated. This may take a while.",
+              body: (
+                <>
+                  All documents in {tableSettings.collection} collection will be
+                  evaluated.
+                  <br />{" "}
+                  {tableNextPage.available &&
+                    "For large collections this will take a while and might incur significant firestore costs."}
+                </>
+              ),
               handleConfirm: handleEvaluateAll,
             }),
     },
