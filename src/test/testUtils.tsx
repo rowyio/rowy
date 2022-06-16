@@ -3,6 +3,7 @@ import { initializeApp } from "firebase/app";
 import {
   getAuth,
   connectAuthEmulator,
+  signOut,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import {
@@ -21,6 +22,14 @@ import {
 } from "@src/sources/ProjectSourceFirebase";
 import { currentUserAtom } from "@src/atoms/globalScope";
 
+/** Initialize Firebase */
+console.log("Initializing Firebase...");
+const app = initializeApp(envConfig);
+const auth = getAuth(app);
+connectAuthEmulator(auth, "http://localhost:9099", { disableWarnings: true });
+const db = initializeFirestore(app, { ignoreUndefinedProperties: true });
+connectFirestoreEmulator(db, "localhost", 9299);
+
 /**
  * Render with Jotai `globalScope` providers
  * & `ProjectSourceFirebase` component
@@ -38,25 +47,26 @@ export const customRender = (
   );
 
 /**
- * Signs in with Google as an admin: admin(at)example.com
+ * Signs in with email and password.
  * Returns `initialAtomValues`, which must be passed to `customRender`.
  */
-export const signInAsAdmin = async () => {
-  const app = initializeApp(envConfig);
-  const auth = getAuth(app);
-  connectAuthEmulator(auth, "http://localhost:9099", { disableWarnings: true });
-  const db = initializeFirestore(app, { ignoreUndefinedProperties: true });
-  connectFirestoreEmulator(db, "localhost", 9299);
+export const signIn = async (
+  userType: "admin" | "ops" | "editor" | "viewer" | "noRoles"
+) => {
+  await signOut(auth);
 
   const userCredential = await signInWithEmailAndPassword(
     auth,
-    "admin@example.com",
-    "adminUser"
+    `${userType}@example.com`,
+    `${userType}User`
   );
-  expect(userCredential.user.email).toBe("admin@example.com");
+  expect(userCredential.user.email?.toLowerCase()).toBe(
+    `${userType}@example.com`.toLowerCase()
+  );
 
   const tokenResult = await userCredential.user.getIdTokenResult();
-  expect(tokenResult.claims.roles).toContain("ADMIN");
+  if (userType === "noRoles") expect(tokenResult.claims.roles).toBeUndefined();
+  else expect(tokenResult.claims.roles).toContain(userType.toUpperCase());
 
   const initialAtomValues = [
     [firebaseConfigAtom, envConfig],
@@ -69,7 +79,7 @@ export const signInAsAdmin = async () => {
   return initialAtomValues;
 };
 
-// Suppress Jotai warning about setting an initial value for derived atoms
+/** Suppress Jotai warning about setting an initial value for derived atoms */
 const realConsoleWarn = console.warn.bind(console.warn);
 beforeAll(() => {
   console.warn = (msg) =>

@@ -1,11 +1,8 @@
-import { customRender, signInAsAdmin } from "./testUtils";
-import { screen, renderHook } from "@testing-library/react";
-import { useAtom, useSetAtom } from "jotai";
+import { customRender, signIn } from "./testUtils";
+import { screen, fireEvent } from "@testing-library/react";
 
 import App from "@src/App";
 import JotaiTestPage from "@src/pages/Test/JotaiTestPage";
-
-import { globalScope, currentUserAtom } from "@src/atoms/globalScope";
 
 test("renders without crashing", async () => {
   customRender(<JotaiTestPage />);
@@ -16,18 +13,53 @@ test("renders without crashing", async () => {
   ).toBeGreaterThan(0);
 });
 
-test("signs in", async () => {
-  const initialAtomValues = await signInAsAdmin();
+describe("sign in with roles", () => {
+  test("signs in as admin", async () => {
+    customRender(<App />, await signIn("admin"), true);
+    expect((await screen.findAllByText(/tables/i)).length).toBeGreaterThan(0);
 
-  customRender(<App />, initialAtomValues, true);
-  // const {
-  //   result: { current: currentUser },
-  // } = renderHook(() => useSetAtom(currentUserAtom, globalScope));
-  // expect(currentUser).toBeDefined();
+    const userMenuButton = screen.getByLabelText("Open user menu");
+    expect(userMenuButton).toBeInTheDocument();
+    fireEvent.click(userMenuButton);
+    expect(await screen.findByText(/admin@example.com/i)).toBeInTheDocument();
+  });
 
-  // expect(await screen.findByText(/Loading/i)).toBeInTheDocument();
-  expect((await screen.findAllByText(/tablesd/i)).length).toBeGreaterThan(0);
+  test("signs in as ops", async () => {
+    customRender(<App />, await signIn("ops"), true);
+    expect((await screen.findAllByText(/tables/i)).length).toBeGreaterThan(0);
+
+    const userMenuButton = screen.getByLabelText("Open user menu");
+    expect(userMenuButton).toBeInTheDocument();
+    fireEvent.click(userMenuButton);
+    expect(await screen.findByText(/ops@example.com/i)).toBeInTheDocument();
+  });
+
+  test("signs in as editor", async () => {
+    customRender(<App />, await signIn("editor"), true);
+    expect((await screen.findAllByText(/tables/i)).length).toBeGreaterThan(0);
+
+    const userMenuButton = screen.getByLabelText("Open user menu");
+    expect(userMenuButton).toBeInTheDocument();
+    fireEvent.click(userMenuButton);
+    expect(await screen.findByText(/editor@example.com/i)).toBeInTheDocument();
+  });
+
+  test("signs in as viewer", async () => {
+    customRender(<App />, await signIn("viewer"), true);
+    expect((await screen.findAllByText(/tables/i)).length).toBeGreaterThan(0);
+
+    const userMenuButton = screen.getByLabelText("Open user menu");
+    expect(userMenuButton).toBeInTheDocument();
+    fireEvent.click(userMenuButton);
+    expect(await screen.findByText(/viewer@example.com/i)).toBeInTheDocument();
+  });
+
+  test("signs in with no roles", async () => {
+    customRender(<App />, await signIn("noRoles"), true);
+
+    expect(await screen.findByText(/Access denied/i)).toBeInTheDocument();
+    expect(
+      await screen.findByText(/Your account has no roles set/i)
+    ).toBeInTheDocument();
+  });
 });
-
-// TODO:
-// test("signs in without roles in auth")
