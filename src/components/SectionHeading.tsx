@@ -1,11 +1,11 @@
 import { forwardRef } from "react";
-import _camelCase from "lodash/camelCase";
+import { camelCase } from "lodash-es";
 import { HashLink } from "react-router-hash-link";
 
 import { Stack, StackProps, Typography, IconButton } from "@mui/material";
 import LinkIcon from "@mui/icons-material/Link";
 
-import { APP_BAR_HEIGHT } from "@src/components/Navigation";
+import { APP_BAR_HEIGHT } from "@src/layouts/Navigation";
 
 export interface ISectionHeadingProps extends Omit<StackProps, "children"> {
   children: string;
@@ -15,7 +15,7 @@ export const SectionHeading = forwardRef(function SectionHeading_(
   { children, sx, ...props }: ISectionHeadingProps,
   ref
 ) {
-  const sectionLink = _camelCase(children);
+  const sectionLink = camelCase(children);
 
   return (
     <Stack

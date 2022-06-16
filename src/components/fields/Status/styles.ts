@@ -1,8 +1,6 @@
-import { makeStyles, createStyles } from "@mui/styles";
+import { makeStyles } from "tss-react/mui";
 
-export const useStatusStyles = makeStyles((theme) =>
-  createStyles({
-    root: { color: theme.palette.text.secondary },
-    iconEmpty: { color: theme.palette.text.secondary },
-  })
-);
+export const useStatusStyles = makeStyles()((theme) => ({
+  root: { color: theme.palette.text.secondary },
+  iconEmpty: { color: theme.palette.text.secondary },
+}));

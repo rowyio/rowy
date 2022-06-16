@@ -1,6 +1,7 @@
+import { ISettingsProps } from "@src/components/fields/types";
 import { Checkbox, FormControlLabel, FormHelperText } from "@mui/material";
 
-const Settings = ({ config, onChange }) => {
+const Settings = ({ config, onChange }: ISettingsProps) => {
   return (
     <>
       <FormControlLabel

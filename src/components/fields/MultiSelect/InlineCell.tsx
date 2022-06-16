@@ -1,8 +1,8 @@
 import { forwardRef } from "react";
-import { IPopoverInlineCellProps } from "../types";
+import { IPopoverInlineCellProps } from "@src/components/fields/types";
 
 import { ButtonBase, Grid } from "@mui/material";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { ChevronDown } from "@src/assets/icons";
 
 import { sanitiseValue } from "./utils";
 import ChipList from "@src/components/Table/formatters/ChipList";
@@ -43,14 +43,14 @@ export const MultiSelect = forwardRef(function MultiSelect(
       </ChipList>
 
       {!disabled && (
-        <ArrowDropDownIcon
+        <ChevronDown
           className="row-hover-iconButton"
           sx={{
             flexShrink: 0,
             mr: 0.5,
             borderRadius: 1,
-            p: (32 - 24) / 2 / 8,
-            boxSizing: "content-box",
+            p: (32 - 20) / 2 / 8,
+            boxSizing: "content-box !important",
           }}
         />
       )}

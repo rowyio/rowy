@@ -1,64 +1,59 @@
-import { FormatterProps } from "react-data-grid";
+import { useAtom, useSetAtom } from "jotai";
+import type { FormatterProps } from "react-data-grid";
 
-import { makeStyles, createStyles } from "@mui/styles";
 import { Stack, Tooltip, IconButton, alpha } from "@mui/material";
-import CopyCellsIcon from "@src/assets/icons/CopyCells";
+import { CopyCells as CopyCellsIcon } from "@src/assets/icons";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 
-import { useConfirmation } from "@src/components/ConfirmationDialog/Context";
-import { useAppContext } from "@src/contexts/AppContext";
-import { useProjectContext } from "@src/contexts/ProjectContext";
-import useKeyPress from "@src/hooks/useKeyPress";
-import { isCollectionGroup } from "@src/utils/fns";
+import {
+  globalScope,
+  userRolesAtom,
+  tableAddRowIdTypeAtom,
+  altPressAtom,
+  confirmDialogAtom,
+} from "@src/atoms/globalScope";
+import {
+  tableScope,
+  tableSettingsAtom,
+  addRowAtom,
+  deleteRowAtom,
+} from "@src/atoms/tableScope";
+import { TableRow } from "@src/types/table";
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    "@global": {
-      ".final-column-cell": {
-        ".rdg.rdg .rdg-cell&": {
-          backgroundColor: "var(--header-background-color)",
-          borderColor: "var(--header-background-color)",
-          color: theme.palette.text.disabled,
-          padding: "var(--cell-padding)",
-        },
-      },
-    },
-  })
-);
+export default function FinalColumn({ row }: FormatterProps<TableRow, any>) {
+  const [userRoles] = useAtom(userRolesAtom, globalScope);
+  const [addRowIdType] = useAtom(tableAddRowIdTypeAtom, globalScope);
+  const confirm = useSetAtom(confirmDialogAtom, globalScope);
 
-export default function FinalColumn({ row }: FormatterProps<any, any>) {
-  useStyles();
+  const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
+  const addRow = useSetAtom(addRowAtom, tableScope);
+  const deleteRow = useSetAtom(deleteRowAtom, tableScope);
 
-  const { userClaims } = useAppContext();
-  const { requestConfirmation } = useConfirmation();
-  const { deleteRow, addRow, table } = useProjectContext();
-  const altPress = useKeyPress("Alt");
+  const [altPress] = useAtom(altPressAtom, globalScope);
+  const handleDelete = () => deleteRow(row._rowy_ref.path);
 
-  const handleDelete = () => {
-    if (deleteRow) deleteRow(row.ref);
-  };
-
-  if (!userClaims?.roles.includes("ADMIN") && table?.readOnly === true)
+  if (!userRoles.includes("ADMIN") && tableSettings.readOnly === true)
     return null;
+
   return (
     <Stack direction="row" spacing={0.5}>
-      {!isCollectionGroup() && (
-        <Tooltip title="Duplicate row">
-          <IconButton
-            size="small"
-            color="inherit"
-            disabled={!addRow}
-            onClick={() => {
-              const { ref, ...clonedRow } = row;
-              addRow!(clonedRow, undefined, { type: "smaller" });
-            }}
-            aria-label="Duplicate row"
-            className="row-hover-iconButton"
-          >
-            <CopyCellsIcon />
-          </IconButton>
-        </Tooltip>
-      )}
+      <Tooltip title="Duplicate row">
+        <IconButton
+          size="small"
+          color="inherit"
+          disabled={tableSettings.tableType === "collectionGroup"}
+          onClick={() =>
+            addRow({
+              row,
+              setId: addRowIdType === "custom" ? "decrement" : addRowIdType,
+            })
+          }
+          aria-label="Duplicate row"
+          className="row-hover-iconButton"
+        >
+          <CopyCellsIcon />
+        </IconButton>
+      </Tooltip>
 
       <Tooltip title={`Delete row${altPress ? "" : "…"}`}>
         <IconButton
@@ -68,16 +63,16 @@ export default function FinalColumn({ row }: FormatterProps<any, any>) {
             altPress
               ? handleDelete
               : () => {
-                  requestConfirmation({
+                  confirm({
                     title: "Delete row?",
-                    customBody: (
+                    body: (
                       <>
                         Row path:
                         <br />
                         <code
                           style={{ userSelect: "all", wordBreak: "break-all" }}
                         >
-                          {row.ref.path}
+                          {row._rowy_ref.path}
                         </code>
                       </>
                     ),
@@ -90,7 +85,7 @@ export default function FinalColumn({ row }: FormatterProps<any, any>) {
           aria-label={`Delete row${altPress ? "" : "…"}`}
           className="row-hover-iconButton"
           sx={{
-            ".rdg-row:hover &.row-hover-iconButton": {
+            ".rdg-row:hover .row-hover-iconButton&&": {
               color: "error.main",
               backgroundColor: (theme) =>
                 alpha(
@@ -99,6 +94,7 @@ export default function FinalColumn({ row }: FormatterProps<any, any>) {
                 ),
             },
           }}
+          disabled={!row._rowy_ref.path}
         >
           <DeleteIcon />
         </IconButton>

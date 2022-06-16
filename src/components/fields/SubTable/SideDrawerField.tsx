@@ -1,32 +1,42 @@
-import { useWatch } from "react-hook-form";
-import { ISideDrawerFieldProps } from "../types";
+import { useMemo } from "react";
+import { useAtom } from "jotai";
+import { selectAtom } from "jotai/utils";
+import { find, isEqual } from "lodash-es";
+import { ISideDrawerFieldProps } from "@src/components/fields/types";
 import { Link } from "react-router-dom";
 
-import { Stack, IconButton } from "@mui/material";
+import { Box, Stack, IconButton } from "@mui/material";
 import LaunchIcon from "@mui/icons-material/Launch";
 
-import { useFieldStyles } from "@src/components/SideDrawer/Form/utils";
+import { tableScope, tableRowsAtom } from "@src/atoms/tableScope";
+import { fieldSx, getFieldId } from "@src/components/SideDrawer/utils";
 import { useSubTableData } from "./utils";
 
-export default function SubTable({
-  column,
-  control,
-  docRef,
-}: ISideDrawerFieldProps) {
-  const fieldClasses = useFieldStyles();
+export default function SubTable({ column, _rowy_ref }: ISideDrawerFieldProps) {
+  const [row] = useAtom(
+    useMemo(
+      () =>
+        selectAtom(
+          tableRowsAtom,
+          (tableRows) => find(tableRows, ["_rowy_ref.path", _rowy_ref.path]),
+          isEqual
+        ),
+      [_rowy_ref.path]
+    ),
+    tableScope
+  );
 
-  const row = useWatch({ control });
   const { documentCount, label, subTablePath } = useSubTableData(
-    column,
-    row,
-    docRef
+    column as any,
+    row as any,
+    _rowy_ref
   );
 
   return (
-    <Stack direction="row">
-      <div className={fieldClasses.root}>
+    <Stack direction="row" id={getFieldId(column.key)}>
+      <Box sx={fieldSx}>
         {documentCount} {column.name as string}: {label}
-      </div>
+      </Box>
 
       <IconButton
         component={Link}

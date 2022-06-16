@@ -1,36 +1,30 @@
-import { Controller } from "react-hook-form";
-import { ISideDrawerFieldProps } from "../types";
+import { ISideDrawerFieldProps } from "@src/components/fields/types";
 
 import { TextField } from "@mui/material";
+import { getFieldId } from "@src/components/SideDrawer/utils";
 
 export default function LongText({
-  control,
   column,
+  value,
+  onChange,
+  onSubmit,
   disabled,
 }: ISideDrawerFieldProps) {
   return (
-    <Controller
-      control={control}
-      name={column.key}
-      render={({ field: { onChange, onBlur, value } }) => {
-        return (
-          <TextField
-            variant="filled"
-            fullWidth
-            margin="none"
-            onChange={onChange}
-            onBlur={onBlur}
-            value={value}
-            id={`sidedrawer-field-${column.key}`}
-            label=""
-            hiddenLabel
-            disabled={disabled}
-            multiline
-            minRows={3}
-            inputProps={{ maxLength: column.config?.maxLength }}
-          />
-        );
-      }}
+    <TextField
+      variant="filled"
+      fullWidth
+      margin="none"
+      onChange={(e) => onChange(e.target.value)}
+      onBlur={onSubmit}
+      value={value}
+      id={getFieldId(column.key)}
+      label=""
+      hiddenLabel
+      disabled={disabled}
+      multiline
+      minRows={3}
+      inputProps={{ maxLength: column.config?.maxLength }}
     />
   );
 }

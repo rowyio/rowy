@@ -1,9 +1,11 @@
+import { useAtom } from "jotai";
+
 import { Stack, Typography, Grid, Tooltip, IconButton } from "@mui/material";
 import SecretsIcon from "@mui/icons-material/VpnKeyOutlined";
 import FunctionsIcon from "@mui/icons-material/CloudOutlined";
 import DocsIcon from "@mui/icons-material/DescriptionOutlined";
 
-import { useAppContext } from "@src/contexts/AppContext";
+import { globalScope, projectIdAtom } from "@src/atoms/globalScope";
 
 export interface ICodeEditorHelperProps {
   docLink: string;
@@ -17,7 +19,8 @@ export default function CodeEditorHelper({
   docLink,
   additionalVariables,
 }: ICodeEditorHelperProps) {
-  const { projectId } = useAppContext();
+  const [projectId] = useAtom(projectIdAtom, globalScope);
+
   const availableVariables = [
     {
       key: "row",

@@ -1,7 +1,6 @@
+import { get } from "lodash-es";
 import { EditorProps } from "react-data-grid";
 import { IHeavyCellProps } from "@src/components/fields/types";
-
-import { getCellValue } from "@src/utils/fns";
 
 /**
  * Allow the cell to be editable, but disable react-data-grid’s default
@@ -32,10 +31,10 @@ export default function withNullEditor(
       >
         <HeavyCell
           {...(props as any)}
-          value={getCellValue(row, column.key)}
+          value={get(row, column.key)}
           name={column.name as string}
           type={(column as any).type}
-          docRef={props.row.ref}
+          docRef={props.row._rowy_ref}
           onSubmit={() => {}}
           disabled={props.column.editable === false}
         />

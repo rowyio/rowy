@@ -1,4 +1,5 @@
 import { Theme, ThemeOptions, alpha } from "@mui/material/styles";
+import { colord } from "colord";
 import type {} from "@mui/lab/themeAugmentation";
 import { MultiSelectProps } from "@rowy/multiselect";
 import { toRem } from "./typography";
@@ -7,12 +8,9 @@ import RadioIcon from "@src/theme/RadioIcon";
 import CheckboxIcon from "@src/theme/CheckboxIcon";
 import CheckboxIndeterminateIcon from "@src/theme/CheckboxIndeterminateIcon";
 import AddCircleIcon from "@mui/icons-material/AddCircleOutline";
+import { ChevronDown as ChevronDownIcon } from "@src/assets/icons";
 import { SvgIcon } from "@mui/material";
 import CircularProgressOptical from "@src/components/CircularProgressOptical";
-
-import { colord, extend } from "colord";
-import mixPlugin from "colord/plugins/mix";
-extend([mixPlugin]);
 
 declare module "@mui/material/styles/createTransitions" {
   interface Easing {
@@ -83,6 +81,23 @@ export const components = (theme: Theme): ThemeOptions => {
 
           body: { cursor: "default" },
 
+          "@supports selector(:has(a))": {
+            body: {
+              transition: "background-color 0s",
+              transitionDelay: theme.transitions.duration.leavingScreen + "ms",
+            },
+
+            "#root": {
+              transformOrigin: `50% ${theme.spacing(1)}`,
+              transition: theme.transitions.create([
+                "transform",
+                "border-radius",
+              ]),
+              transitionDuration: `${theme.transitions.duration.leavingScreen}ms, 0s`,
+              transitionDelay: `0s, ${theme.transitions.duration.leavingScreen}ms`,
+            },
+          },
+
           "code, pre, pre.MuiTypography-root": {
             fontFamily: theme.typography.fontFamilyMono,
             fontFeatureSettings: "normal",
@@ -96,14 +111,6 @@ export const components = (theme: Theme): ThemeOptions => {
             padding: `${4 / 16}em ${8 / 16}em`,
           },
 
-          ".chrome-picker": {
-            colorScheme: "light",
-            boxShadow: theme.shadows[1] + " !important",
-            borderRadius: theme.shape.borderRadius + "px !important",
-
-            "& input, & label": theme.typography.body2,
-          },
-
           ".visually-hidden": {
             position: "absolute",
             clip: "rect(1px, 1px, 1px, 1px)",
@@ -113,6 +120,93 @@ export const components = (theme: Theme): ThemeOptions => {
             padding: 0,
             border: 0,
           },
+
+          ".rcp": {
+            backgroundColor: "transparent",
+            borderRadius: (theme.shape.borderRadius as number) * 2,
+            border: `1px solid ${theme.palette.divider}`,
+            boxSizing: "border-box",
+
+            "--rcp-background": "transparent",
+            "--rcp-input-text": theme.palette.text.primary,
+            "--rcp-input-border": theme.palette.divider,
+            "--rcp-input-label": theme.palette.text.primary,
+
+            "& .rcp-saturation": {
+              borderTopLeftRadius: (theme.shape.borderRadius as number) * 2 - 1,
+              borderTopRightRadius:
+                (theme.shape.borderRadius as number) * 2 - 1,
+            },
+            "& .rcp-body": {
+              padding: theme.spacing(2),
+            },
+            "& .rcp-fields": {
+              gridTemplateColumns: `repeat(auto-fit, minmax(${theme.spacing(
+                20
+              )}, 1fr))`,
+            },
+            "& .rcp-fields-element": {
+              flexDirection: "column-reverse",
+              alignItems: "flex-start",
+              gap: theme.spacing(0.25),
+            },
+            "& .rcp-fields-element-label": {
+              ...theme.typography.button,
+              paddingLeft: theme.spacing(0.25),
+            },
+            "& .rcp-fields-element-input": {
+              ...theme.typography.body2,
+              textAlign: "left",
+              fontVariantNumeric: "tabular-nums",
+
+              backgroundColor: theme.palette.action.input,
+              "&:hover:not(.Mui-disabled), &:focus": {
+                backgroundColor: theme.palette.action.input,
+              },
+
+              border: 0,
+              boxShadow: `0 -1px 0 0 ${theme.palette.text.disabled} inset,
+                        0 0 0 1px ${theme.palette.action.inputOutline} inset`,
+              transition: theme.transitions.create("box-shadow", {
+                duration: theme.transitions.duration.short,
+              }),
+
+              "&:hover": {
+                boxShadow: `0 -1px 0 0 ${theme.palette.text.primary} inset,
+                          0 0 0 1px ${theme.palette.action.inputOutline} inset`,
+              },
+              "&:focus, &:focus:hover": {
+                boxShadow: `0 -2px 0 0 ${theme.palette.primary.main} inset,
+                          0 0 0 1px ${theme.palette.action.inputOutline} inset`,
+              },
+
+              borderRadius: theme.shape.borderRadius,
+              padding: theme.spacing(0.75, 1.5),
+              caretColor: theme.palette.primary.main,
+            },
+          },
+
+          ".wmde-markdown.wmde-markdown, .wmde-markdown-var.wmde-markdown-var":
+            {
+              font: "inherit",
+              fontFeatureSettings: "inherit",
+              letterSpacing: "inherit",
+              backgroundColor: "transparent",
+              color: "inherit",
+
+              "--color-canvas-default": "transparent",
+              "--color-border-default": theme.palette.divider,
+              "--color-border-muted": theme.palette.divider,
+
+              "& .w-md-editor-text": { fontFeatureSettings: "inherit" },
+
+              "& .w-md-editor-text-pre > code": {
+                font: "inherit !important",
+                fontFeatureSettings: "inherit",
+                letterSpacing: "inherit",
+                background: "none",
+              },
+            },
         },
       },
 
@@ -177,15 +271,35 @@ export const components = (theme: Theme): ThemeOptions => {
           paperFullScreen: {
             borderBottomLeftRadius: 0,
             borderBottomRightRadius: 0,
-            marginTop: `calc(env(safe-area-inset-top) + ${theme.spacing(1)})`,
+            marginTop: `calc(env(safe-area-inset-top) + ${theme.spacing(2)})`,
             maxHeight: `calc(100% - env(safe-area-inset-top) - ${theme.spacing(
-              1
+              2
             )})`,
             maxWidth: "100% !important",
 
             paddingLeft: "env(safe-area-inset-left)",
             paddingRight: "env(safe-area-inset-right)",
             paddingBottom: "env(safe-area-inset-bottom)",
+
+            "body:has([data-open=true] &)": {
+              backgroundColor: theme.palette.common.black,
+              transitionDelay: "0s",
+
+              "#root": {
+                borderRadius: (theme.shape.borderRadius as number) * 2,
+                overflow: "hidden",
+
+                transform: `scale(0.9) translateY(${theme.spacing(1)})`,
+                transition: theme.transitions.create(
+                  ["transform", "border-radius"],
+                  {
+                    easing: theme.transitions.easing.easeOut,
+                  }
+                ),
+                transitionDuration: `${theme.transitions.duration.enteringScreen}ms, 0s`,
+                transitionDelay: "0s, 0s",
+              },
+            },
           },
         },
       },
@@ -386,6 +500,9 @@ export const components = (theme: Theme): ThemeOptions => {
       },
 
       MuiSelect: {
+        defaultProps: {
+          IconComponent: ChevronDownIcon,
+        },
         styleOverrides: {
           select: {
             // If Select option is a MenuItem, don’t add spacing
@@ -520,6 +637,10 @@ export const components = (theme: Theme): ThemeOptions => {
               paddingLeft: theme.spacing(1) + " !important",
               minHeight: 32,
               borderRadius: theme.shape.borderRadius,
+
+              [`&[aria-selected="true"]`]: {
+                backgroundColor: theme.palette.action.selected,
+              },
             },
           },
           groupLabel: {
@@ -861,20 +982,32 @@ export const components = (theme: Theme): ThemeOptions => {
         },
         styleOverrides: {
           sizeMedium: {
-            width: 56 + (38 - 32),
+            width: 52 + (38 - 32),
             height: 32 + (38 - 32),
             padding: (38 - 32) / 2,
 
-            "& .MuiSwitch-thumb": { width: 22, height: 22 },
-            "& .MuiSwitch-switchBase": { padding: 8 },
+            "& .MuiSwitch-thumb": { width: 18, height: 18 },
+            "& .MuiSwitch-switchBase": { padding: 10 },
+
+            "& .Mui-checked .MuiSwitch-thumb": { width: 24, height: 24 },
+            "& .MuiSwitch-switchBase.Mui-checked": {
+              padding: 7,
+              transform: "translateX(20px)",
+            },
           },
           sizeSmall: {
-            width: 36 + (28 - 20),
+            width: 32 + (28 - 20),
             height: 20 + (28 - 20),
             padding: (28 - 20) / 2,
 
-            "& .MuiSwitch-thumb": { width: 12, height: 12 },
-            "& .MuiSwitch-switchBase": { padding: 8 },
+            "& .MuiSwitch-thumb": { width: 10, height: 10 },
+            "& .MuiSwitch-switchBase": { padding: 9 },
+
+            "& .Mui-checked .MuiSwitch-thumb": { width: 14, height: 14 },
+            "& .MuiSwitch-switchBase.Mui-checked": {
+              padding: 7,
+              transform: "translateX(12px)",
+            },
           },
 
           track: {
@@ -893,54 +1026,60 @@ export const components = (theme: Theme): ThemeOptions => {
               boxShadow: "none",
             },
           },
-          switchBase: {
-            color: theme.palette.text.primary,
-            "&.Mui-checked": { transform: "translateX(24px)" },
-          },
+          switchBase: { color: theme.palette.text.primary },
           thumb: {
-            borderRadius: 22 / 2,
+            borderRadius: 100,
             boxShadow: theme.shadows[1],
 
             background: theme.palette.text.secondary,
-            ".MuiSwitch-switchBase.Mui-checked &": {
+            ".Mui-checked &": {
               backgroundColor: theme.palette.secondary.contrastText,
             },
 
+            position: "relative",
+            ".Mui-checked &::before": {
+              content: "''",
+              position: "absolute",
+              width: "100%",
+              height: "100%",
+              left: 0,
+              top: 0,
+
+              backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -0.5 18 18"><polyline stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" points="2.705 8.29 7 12.585 15.295 4.29" fill="none" stroke="${encodeURIComponent(
+                theme.palette.secondary.main
+              )}" /></svg>')`,
+              backgroundPosition: "center",
+              backgroundSize: `${(16 / 24) * 100}%`,
+              backgroundRepeat: "no-repeat",
+            },
+            ".MuiSwitch-sizeSmall .Mui-checked &::before": {
+              backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -0.5 18 18"><polyline stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="2.705 8.29 7 12.585 15.295 4.29" fill="none" stroke="${encodeURIComponent(
+                theme.palette.secondary.main
+              )}" /></svg>')`,
+            },
+
             transition: theme.transitions.create(
-              ["width", "transform", "background-color"],
+              ["transform", "background-color"],
               { duration: theme.transitions.duration.shortest }
             ),
 
-            ".MuiSwitch-root:hover .MuiSwitch-switchBase:not(.Mui-disabled) &":
-              {
-                transform: `scale(${1 + 2 / 22})`,
-              },
-            ".MuiSwitch-root.MuiSwitch-sizeSmall:hover .MuiSwitch-switchBase:not(.Mui-disabled) &":
-              {
-                transform: `scale(${1 + 2 / 12})`,
-              },
-
             ".MuiSwitch-root:active .MuiSwitch-switchBase:not(.Mui-disabled) &":
               {
-                width: 22 * 1.333,
+                transform: `scale(${28 / 18})`,
               },
             ".MuiSwitch-root.MuiSwitch-sizeSmall:active .MuiSwitch-switchBase:not(.Mui-disabled) &":
               {
-                width: 12 * 1.333,
+                transform: `scale(${16 / 10})`,
               },
-            "& + .MuiTouchRipple-root": {
-              borderRadius: 22 / 2,
-              zIndex: -1,
-            },
+            "& + .MuiTouchRipple-root": { zIndex: -1 },
 
             ".MuiSwitch-root:active .MuiSwitch-switchBase.Mui-checked:not(.Mui-disabled) &":
               {
-                transform: `translateX(-${0.333 * 22}px) scale(${1 + 2 / 22})`,
-                "& + .MuiTouchRipple-root": { left: -4 },
+                transform: `scale(${28 / 24})`,
               },
             ".MuiSwitch-root.MuiSwitch-sizeSmall:active .MuiSwitch-switchBase.Mui-checked:not(.Mui-disabled) &":
               {
-                transform: `translateX(-${0.333 * 12}px) scale(${1 + 2 / 12})`,
+                transform: `scale(${16 / 14})`,
               },
 
             ".MuiSwitch-switchBase.Mui-disabled &": {
@@ -948,6 +1087,22 @@ export const components = (theme: Theme): ThemeOptions => {
             },
             ".MuiSwitch-switchBase.Mui-disabled.Mui-checked &": {
               opacity: 1,
+              "&::before": { opacity: theme.palette.action.disabledOpacity },
+            },
+          },
+
+          colorPrimary: {
+            "&.Mui-checked ": {
+              "& .MuiSwitch-thumb::before": {
+                backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -0.5 18 18"><polyline stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" points="2.705 8.29 7 12.585 15.295 4.29" fill="none" stroke="${encodeURIComponent(
+                  theme.palette.primary.main
+                )}" /></svg>')`,
+              },
+              ".MuiSwitch-sizeSmall & .MuiSwitch-thumb::before": {
+                backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -0.5 18 18"><polyline stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="2.705 8.29 7 12.585 15.295 4.29" fill="none" stroke="${encodeURIComponent(
+                  theme.palette.primary.main
+                )}" /></svg>')`,
+              },
             },
           },
 
@@ -956,6 +1111,17 @@ export const components = (theme: Theme): ThemeOptions => {
               color: theme.palette.success.light,
               "& + .MuiSwitch-track": {
                 backgroundColor: theme.palette.success.light,
+              },
+
+              "& .MuiSwitch-thumb::before": {
+                backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -0.5 18 18"><polyline stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" points="2.705 8.29 7 12.585 15.295 4.29" fill="none" stroke="${encodeURIComponent(
+                  theme.palette.success.main
+                )}" /></svg>')`,
+              },
+              ".MuiSwitch-sizeSmall & .MuiSwitch-thumb::before": {
+                backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -0.5 18 18"><polyline stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="2.705 8.29 7 12.585 15.295 4.29" fill="none" stroke="${encodeURIComponent(
+                  theme.palette.success.main
+                )}" /></svg>')`,
               },
             },
           },
@@ -1173,6 +1339,22 @@ export const components = (theme: Theme): ThemeOptions => {
       MuiRating: {
         styleOverrides: {
           iconFilled: { color: theme.palette.text.secondary },
+          icon: {
+            // https://github.com/mui/material-ui/issues/32557
+            "& .MuiSvgIcon-root": { pointerEvents: "auto" },
+          },
+        },
+      },
+
+      MuiAvatar: {
+        styleOverrides: {
+          root: {
+            fontWeight: theme.typography.fontWeightMedium,
+          },
+          colorDefault: {
+            backgroundColor: theme.palette.action.selected,
+            color: theme.palette.text.secondary,
+          },
         },
       },
 

@@ -1,6 +1,6 @@
 import SvgIcon, { SvgIconProps } from "@mui/material/SvgIcon";
 
-export default function FileDownload(props: SvgIconProps) {
+export function Freeze(props: SvgIconProps) {
   return (
     <SvgIcon viewBox="-2 -2 24 24" {...props}>
       <path

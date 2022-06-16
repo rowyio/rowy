@@ -1,13 +1,13 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import StatusIcon from "@src/assets/icons/Status";
+import { Status as StatusIcon } from "@src/assets/icons";
 import NullEditor from "@src/components/Table/editors/NullEditor";
 
 import { filterOperators } from "./Filter";
-import BasicCell from "../_BasicCell/BasicCellNull";
+import BasicCell from "@src/components/fields/_BasicCell/BasicCellNull";
 import PopoverCell from "./PopoverCell";
 import InlineCell from "./InlineCell";
-import withPopoverCell from "../_withTableCell/withPopoverCell";
+import withPopoverCell from "@src/components/fields/_withTableCell/withPopoverCell";
 
 const SideDrawerField = lazy(
   () =>

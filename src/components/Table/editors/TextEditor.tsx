@@ -1,19 +1,21 @@
 import { useRef, useLayoutEffect } from "react";
 import { EditorProps } from "react-data-grid";
+import { useSetAtom } from "jotai";
+import { get } from "lodash-es";
 
 import { TextField } from "@mui/material";
 
+import { tableScope, updateFieldAtom } from "@src/atoms/tableScope";
 import { FieldType } from "@src/constants/fields";
-import { getCellValue } from "@src/utils/fns";
-import { useProjectContext } from "@src/contexts/ProjectContext";
-import { getColumnType } from "@src/components/fields";
+import { getFieldType } from "@src/components/fields";
 
+/** WARNING: THIS DOES NOT WORK IN REACT 18 STRICT MODE */
 export default function TextEditor({ row, column }: EditorProps<any>) {
-  const { updateCell } = useProjectContext();
+  const updateField = useSetAtom(updateFieldAtom, tableScope);
 
-  const type = getColumnType(column as any);
+  const type = getFieldType(column as any);
 
-  const cellValue = getCellValue(row, column.key);
+  const cellValue = get(row, column.key);
   const defaultValue =
     type === FieldType.percentage && typeof cellValue === "number"
       ? cellValue * 100
@@ -21,20 +23,27 @@ export default function TextEditor({ row, column }: EditorProps<any>) {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // WARNING: THIS DOES NOT WORK IN REACT 18 STRICT MODE
   useLayoutEffect(() => {
+    const inputElement = inputRef.current;
     return () => {
-      const newValue = inputRef.current?.value;
-      if (newValue !== undefined && updateCell) {
+      const newValue = inputElement?.value;
+      let formattedValue: any = newValue;
+      if (newValue !== undefined) {
         if (type === FieldType.number) {
-          updateCell(row.ref, column.key, Number(newValue));
+          formattedValue = Number(newValue);
         } else if (type === FieldType.percentage) {
-          updateCell(row.ref, column.key, Number(newValue) / 100);
-        } else {
-          updateCell(row.ref, column.key, newValue);
+          formattedValue = Number(newValue) / 100;
         }
+
+        updateField({
+          path: row._rowy_ref.path,
+          fieldName: column.key,
+          value: formattedValue,
+        });
       }
     };
-  }, []);
+  }, [column.key, row._rowy_ref.path, type, updateField]);
 
   let inputType = "text";
   switch (type) {

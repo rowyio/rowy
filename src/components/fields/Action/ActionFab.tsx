@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useSnackbar } from "notistack";
-import _get from "lodash/get";
+import { get } from "lodash-es";
+import { useAtom, useSetAtom } from "jotai";
+import { httpsCallable } from "firebase/functions";
 
 import { Fab, FabProps } from "@mui/material";
 import RunIcon from "@mui/icons-material/PlayArrow";
@@ -8,22 +10,31 @@ import RedoIcon from "@mui/icons-material/Refresh";
 import UndoIcon from "@mui/icons-material/Undo";
 import CircularProgressOptical from "@src/components/CircularProgressOptical";
 
-import { useProjectContext } from "@src/contexts/ProjectContext";
-import { functions } from "@src/firebase";
-import { useConfirmation } from "@src/components/ConfirmationDialog";
+import { firebaseFunctionsAtom } from "@src/sources/ProjectSourceFirebase";
+import {
+  globalScope,
+  confirmDialogAtom,
+  rowyRunAtom,
+} from "@src/atoms/globalScope";
+import { tableScope, tableSettingsAtom } from "@src/atoms/tableScope";
 import { useActionParams } from "./FormDialog/Context";
 import { runRoutes } from "@src/constants/runRoutes";
+import { getTableSchemaPath } from "@src/utils/table";
 
-import { replacer } from "@src/utils/fns";
+const replacer = (data: any) => (m: string, key: string) => {
+  const objKey = key.split(":")[0];
+  const defaultValue = key.split(":")[1] || "";
+  return get(data, objKey, defaultValue);
+};
 
-const getStateIcon = (actionState, config) => {
+const getStateIcon = (actionState: "undo" | "redo" | string, config: any) => {
   switch (actionState) {
     case "undo":
-      return _get(config, "customIcons.undo") || <UndoIcon />;
+      return get(config, "customIcons.undo") || <UndoIcon />;
     case "redo":
-      return _get(config, "customIcons.redo") || <RedoIcon />;
+      return get(config, "customIcons.redo") || <RedoIcon />;
     default:
-      return _get(config, "customIcons.run") || <RunIcon />;
+      return get(config, "customIcons.run") || <RunIcon />;
   }
 };
 
@@ -43,11 +54,14 @@ export default function ActionFab({
   disabled,
   ...props
 }: IActionFabProps) {
-  const { requestConfirmation } = useConfirmation();
+  const confirm = useSetAtom(confirmDialogAtom, globalScope);
+  const [rowyRun] = useAtom(rowyRunAtom, globalScope);
+  const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
+  const [firebaseFunctions] = useAtom(firebaseFunctionsAtom, globalScope);
+
   const { enqueueSnackbar } = useSnackbar();
   const { requestParams } = useActionParams();
-  const { tableState, rowyRun } = useProjectContext();
-  const { ref } = row;
+  const { _rowy_ref: ref } = row;
   const { config } = column as any;
 
   const hasRan = value && value.status;
@@ -66,11 +80,11 @@ export default function ActionFab({
     ref: { path: ref.path },
     column: { ...column, editor: undefined },
     action,
-    schemaDocPath: tableState?.config.tableConfig.path,
+    schemaDocPath: getTableSchemaPath(tableSettings),
     actionParams,
   });
 
-  const handleActionScript = async (data) => {
+  const handleActionScript = async (data: any) => {
     if (!rowyRun) return;
     const resp = await rowyRun({
       route: runRoutes.actionScript,
@@ -78,8 +92,11 @@ export default function ActionFab({
     });
     return resp;
   };
-  const handleCallableAction = async (data) => {
-    const resp: any = await functions.httpsCallable(callableName)(data);
+  const handleCallableAction = async (data: any) => {
+    const resp: any = await httpsCallable(
+      firebaseFunctions,
+      callableName
+    )(data);
     return resp.data;
   };
 
@@ -124,7 +141,7 @@ export default function ActionFab({
         handleRun,
       });
     } else if (action === "undo" && config.undo?.confirmation) {
-      return requestConfirmation({
+      return confirm({
         title: `${column.name} Confirmation`,
         body: config.undo.confirmation.replace(/\{\{(.*?)\}\}/g, replacer(row)),
         confirm: "Run",
@@ -135,7 +152,7 @@ export default function ActionFab({
       config.friction === "confirmation" &&
       typeof config.confirmation === "string"
     ) {
-      return requestConfirmation({
+      return confirm({
         title: `${column.name} Confirmation`,
         body: config.confirmation.replace(/\{\{(.*?)\}\}/g, replacer(row)),
         confirm: "Run",

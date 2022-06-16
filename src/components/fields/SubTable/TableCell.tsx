@@ -1,4 +1,4 @@
-import { IHeavyCellProps } from "../types";
+import { IHeavyCellProps } from "@src/components/fields/types";
 import { Link } from "react-router-dom";
 
 import { Stack, IconButton } from "@mui/material";
@@ -8,12 +8,12 @@ import { useSubTableData } from "./utils";
 
 export default function SubTable({ column, row }: IHeavyCellProps) {
   const { documentCount, label, subTablePath } = useSubTableData(
-    column,
+    column as any,
     row,
-    row.ref
+    row._rowy_ref
   );
 
-  if (!row.ref) return null;
+  if (!row._rowy_ref) return null;
 
   return (
     <Stack

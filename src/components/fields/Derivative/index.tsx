@@ -1,11 +1,12 @@
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withBasicCell from "../_withTableCell/withBasicCell";
+import withBasicCell from "@src/components/fields/_withTableCell/withBasicCell";
 
-import DerivativeIcon from "@src/assets/icons/Derivative";
-import BasicCell from "../_BasicCell/BasicCellNull";
+import { Derivative as DerivativeIcon } from "@src/assets/icons";
+import BasicCell from "@src/components/fields/_BasicCell/BasicCellNull";
 import NullEditor from "@src/components/Table/editors/NullEditor";
 import Settings, { settingsValidator } from "./Settings";
 import ContextMenuActions from "./ContextMenuActions";
+
 export const config: IFieldConfig = {
   type: FieldType.derivative,
   name: "Derivative",

@@ -1,9 +1,9 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withHeavyCell from "../_withTableCell/withHeavyCell";
+import withHeavyCell from "@src/components/fields/_withTableCell/withHeavyCell";
 
 import FileIcon from "@mui/icons-material/AttachFile";
-import BasicCell from "../_BasicCell/BasicCellNull";
+import BasicCell from "@src/components/fields/_BasicCell/BasicCellNull";
 import NullEditor from "@src/components/Table/editors/NullEditor";
 
 const TableCell = lazy(

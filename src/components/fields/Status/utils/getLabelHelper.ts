@@ -1,4 +1,4 @@
-import _find from "lodash/find";
+import { find } from "lodash-es";
 
 type value = number | "string" | undefined | null;
 
@@ -9,11 +9,11 @@ interface condition {
   value: value;
 }
 
-//TODO ADD TYPES
+// TODO: ADD TYPES
 const getFalseyLabelFrom = (arr: condition[], value: string) => {
-  const falseyType = (value) =>
+  const falseyType = (value: any) =>
     typeof value === "object" ? "null" : "undefined";
-  const conditions = _find(arr, (c) => c.type === falseyType(value));
+  const conditions = find(arr, (c) => c.type === falseyType(value));
   return conditions?.label;
 };
 
@@ -22,15 +22,16 @@ const getBooleanLabelFrom = (arr: condition[], value: string) => {
   for (let c of boolConditions) {
     if (value === c.value) return c.label;
   }
+  return undefined;
 };
 
 /**
- * @param arr conditional array
- * @param value if value is not detected, conditional value becomes the default value
+ * @param arr- conditional array
+ * @param value -if value is not detected, conditional value becomes the default value
  * @returns conditional's label || undefined
  */
 const getNumericLabelFrom = (arr: condition[], value: number) => {
-  const numLabelFind = (v, c) => {
+  const numLabelFind = (v: any, c: any) => {
     const condVal = c.value;
     const operatorMap = new Map([
       ["<", v < condVal],
@@ -47,9 +48,10 @@ const getNumericLabelFrom = (arr: condition[], value: number) => {
     const label = numLabelFind(value, c);
     if (typeof label === "string") return label;
   }
+  return undefined;
 };
 
-const getLabelFrom = (arr, value) => {
+const getLabelFrom = (arr: any[], value: any) => {
   const validVal = Boolean(value);
   if (!validVal) return;
   for (let c of arr) {
@@ -57,7 +59,7 @@ const getLabelFrom = (arr, value) => {
   }
 };
 
-export default function getLabel(value, conditions) {
+export default function getLabel(value: any, conditions: any) {
   let _label: any = undefined;
   const isBoolean = Boolean(typeof value === "boolean");
   const notBoolean = Boolean(typeof value !== "boolean");

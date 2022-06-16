@@ -1,13 +1,11 @@
 import { useCallback, useState } from "react";
-import { ISideDrawerFieldProps } from "../types";
-import clsx from "clsx";
-import { Controller } from "react-hook-form";
+import { ISideDrawerFieldProps } from "@src/components/fields/types";
+import { useSetAtom } from "jotai";
 import { format } from "date-fns";
 
 import { useDropzone } from "react-dropzone";
-import useUploader, { FileValue } from "@src/hooks/useTable/useUploader";
+import useUploader from "@src/hooks/useFirebaseStorageUploader";
 
-import { makeStyles, createStyles } from "@mui/styles";
 import {
   alpha,
   ButtonBase,
@@ -16,46 +14,27 @@ import {
   Tooltip,
   Chip,
 } from "@mui/material";
-import UploadIcon from "@src/assets/icons/Upload";
+import { Upload as UploadIcon } from "@src/assets/icons";
 import { FileIcon } from ".";
 
-import Confirmation from "@src/components/Confirmation";
 import CircularProgressOptical from "@src/components/CircularProgressOptical";
 import { DATE_TIME_FORMAT } from "@src/constants/dates";
 
-import { useFieldStyles } from "@src/components/SideDrawer/Form/utils";
-import { useProjectContext } from "@src/contexts/ProjectContext";
+import { fieldSx, getFieldId } from "@src/components/SideDrawer/utils";
+import { globalScope, confirmDialogAtom } from "@src/atoms/globalScope";
+import { FileValue } from "@src/types/table";
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    dropzoneButton: {
-      justifyContent: "flex-start",
-      color: theme.palette.text.secondary,
-    },
-    dropzoneDragActive: {
-      backgroundColor: alpha(
-        theme.palette.primary.light,
-        theme.palette.action.hoverOpacity * 2
-      ),
-      color: theme.palette.primary.main,
-    },
-  })
-);
-
-function ControlledFileUploader({
-  onChange,
-
-  value,
+export default function File_({
   column,
-  docRef,
+  _rowy_ref,
+  value,
+  onChange,
+  onSubmit,
   disabled,
-}) {
-  const classes = useStyles();
-  const fieldClasses = useFieldStyles();
-  const { updateCell } = useProjectContext();
+}: ISideDrawerFieldProps) {
+  const confirm = useSetAtom(confirmDialogAtom, globalScope);
 
   const { uploaderState, upload, deleteUpload } = useUploader();
-  const {} = uploaderState;
 
   // Store a preview image locally while uploading
   const [localFile, setLocalFile] = useState<string>("");
@@ -64,22 +43,22 @@ function ControlledFileUploader({
     (acceptedFiles: File[]) => {
       const file = acceptedFiles[0];
 
-      if (docRef && file) {
+      if (_rowy_ref && file) {
         upload({
-          docRef,
+          docRef: _rowy_ref! as any,
           fieldName: column.key,
           files: [file],
           previousValue: value ?? [],
           onComplete: (newValue) => {
-            if (updateCell) updateCell(docRef, column.key, newValue);
             onChange(newValue);
+            onSubmit();
             setLocalFile("");
           },
         });
         setLocalFile(file.name);
       }
     },
-    [docRef, value]
+    [_rowy_ref, value]
   );
 
   const handleDelete = (index: number) => {
@@ -87,6 +66,7 @@ function ControlledFileUploader({
     const toBeDeleted = newValue.splice(index, 1);
     toBeDeleted.length && deleteUpload(toBeDeleted[0]);
     onChange(newValue);
+    onSubmit();
   };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -98,14 +78,26 @@ function ControlledFileUploader({
     <>
       {!disabled && (
         <ButtonBase
-          className={clsx(
-            fieldClasses.root,
-            classes.dropzoneButton,
-            isDragActive && classes.dropzoneDragActive
-          )}
+          sx={[
+            fieldSx,
+            {
+              justifyContent: "flex-start",
+              color: "text.secondary",
+            },
+            isDragActive
+              ? {
+                  backgroundColor: (theme) =>
+                    alpha(
+                      theme.palette.primary.light,
+                      theme.palette.action.hoverOpacity * 2
+                    ),
+                  color: "primary.main",
+                }
+              : {},
+          ]}
           {...getRootProps()}
         >
-          <input id={`sidedrawer-field-${column.key}`} {...getInputProps()} />
+          <input id={getFieldId(column.key)} {...getInputProps()} />
           <Typography color="inherit" style={{ flexGrow: 1 }}>
             Click to upload or drop file here
           </Typography>
@@ -124,20 +116,23 @@ function ControlledFileUploader({
                 )}`}
               >
                 <div>
-                  <Confirmation
-                    message={{
-                      title: "Delete file?",
-                      confirm: "Delete",
-                    }}
-                    functionName={!disabled ? "onDelete" : ""}
-                  >
-                    <Chip
-                      icon={<FileIcon />}
-                      label={file.name}
-                      onClick={() => window.open(file.downloadURL)}
-                      onDelete={!disabled ? () => handleDelete(i) : undefined}
-                    />
-                  </Confirmation>
+                  <Chip
+                    icon={<FileIcon />}
+                    label={file.name}
+                    onClick={() => window.open(file.downloadURL)}
+                    onDelete={
+                      !disabled
+                        ? () =>
+                            confirm({
+                              title: "Delete file?",
+                              body: "This file cannot be recovered after",
+                              confirm: "Delete",
+                              confirmColor: "error",
+                              handleConfirm: () => handleDelete(i),
+                            })
+                        : undefined
+                    }
+                  />
                 </div>
               </Tooltip>
             </Grid>
@@ -154,28 +149,5 @@ function ControlledFileUploader({
         )}
       </Grid>
     </>
-  );
-}
-
-export default function File_({
-  control,
-  column,
-  disabled,
-  docRef,
-}: ISideDrawerFieldProps) {
-  return (
-    <Controller
-      control={control}
-      name={column.key}
-      render={({ field: { onChange, value } }) => (
-        <ControlledFileUploader
-          disabled={disabled}
-          column={column}
-          docRef={docRef}
-          onChange={onChange}
-          value={value}
-        />
-      )}
-    />
   );
 }

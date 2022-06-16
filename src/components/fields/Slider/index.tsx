@@ -1,11 +1,11 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withHeavyCell from "../_withTableCell/withHeavyCell";
+import withHeavyCell from "@src/components/fields/_withTableCell/withHeavyCell";
 
-import SliderIcon from "@src/assets/icons/Slider";
-import BasicCell from "../_BasicCell/BasicCellNull";
+import { Slider as SliderIcon } from "@src/assets/icons";
+import BasicCell from "@src/components/fields/_BasicCell/BasicCellNull";
 import withSideDrawerEditor from "@src/components/Table/editors/withSideDrawerEditor";
-import { filterOperators } from "../Number/Filter";
+import { filterOperators } from "@src/components/fields/Number/Filter";
 
 const TableCell = lazy(
   () => import("./TableCell" /* webpackChunkName: "TableCell-Slider" */)

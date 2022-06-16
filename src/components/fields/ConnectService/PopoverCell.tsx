@@ -1,4 +1,4 @@
-import { IPopoverCellProps } from "../types";
+import { IPopoverCellProps } from "@src/components/fields/types";
 
 import ConnectServiceSelect from "./ConnectServiceSelect";
 
@@ -20,7 +20,7 @@ export default function ConnectService({
       onChange={onSubmit}
       config={(config as any) ?? {}}
       disabled={disabled}
-      docRef={docRef}
+      docRef={docRef as any}
       TextFieldProps={{
         style: { display: "none" },
         SelectProps: {

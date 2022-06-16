@@ -1,11 +1,11 @@
 import { forwardRef } from "react";
-import { IPopoverInlineCellProps } from "../types";
+import { IPopoverInlineCellProps } from "@src/components/fields/types";
 
 import { ButtonBase, Grid, Chip } from "@mui/material";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { ChevronDown } from "@src/assets/icons";
 
 import ChipList from "@src/components/Table/formatters/ChipList";
-import { get } from "lodash";
+import { get } from "lodash-es";
 
 export const ConnectService = forwardRef(function ConnectService(
   { value, showPopoverCell, disabled, column }: IPopoverInlineCellProps,
@@ -38,14 +38,14 @@ export const ConnectService = forwardRef(function ConnectService(
       </ChipList>
 
       {!disabled && (
-        <ArrowDropDownIcon
+        <ChevronDown
           className="row-hover-iconButton"
           sx={{
             flexShrink: 0,
             mr: 0.5,
             borderRadius: 1,
-            p: (32 - 24) / 2 / 8,
-            boxSizing: "content-box",
+            p: (32 - 20) / 2 / 8,
+            boxSizing: "content-box !important",
           }}
         />
       )}

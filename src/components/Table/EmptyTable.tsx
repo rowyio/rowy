@@ -1,20 +1,31 @@
+import { useAtom, useSetAtom } from "jotai";
+
 import { Grid, Stack, Typography, Button, Divider } from "@mui/material";
-import ImportIcon from "@src/assets/icons/Import";
-import AddColumnIcon from "@src/assets/icons/AddColumn";
+import { Import as ImportIcon } from "@src/assets/icons";
+import { AddColumn as AddColumnIcon } from "@src/assets/icons";
 
-import { APP_BAR_HEIGHT } from "@src/components/Navigation";
+import ImportCsv from "@src/components/TableToolbar/ImportCsv";
 
-import { useProjectContext } from "@src/contexts/ProjectContext";
-import ColumnMenu from "./ColumnMenu";
-import ImportWizard from "@src/components/Wizards/ImportWizard";
-import ImportCSV from "@src/components/TableHeader/ImportCsv";
+import {
+  tableScope,
+  tableSettingsAtom,
+  tableRowsAtom,
+  columnModalAtom,
+  tableModalAtom,
+} from "@src/atoms/tableScope";
+import { APP_BAR_HEIGHT } from "@src/layouts/Navigation";
 
 export default function EmptyTable() {
-  const { tableState, importWizardRef, columnMenuRef } = useProjectContext();
+  const openColumnModal = useSetAtom(columnModalAtom, tableScope);
+  const openTableModal = useSetAtom(tableModalAtom, tableScope);
+
+  const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
+  const [tableRows] = useAtom(tableRowsAtom, tableScope);
+  // const { tableState, importWizardRef, columnMenuRef } = useProjectContext();
 
   let contents = <></>;
 
-  if (tableState?.rows && tableState!.rows.length > 0) {
+  if (tableRows.length > 0) {
     contents = (
       <>
         <div>
@@ -24,7 +35,7 @@ export default function EmptyTable() {
           <Typography>
             There is existing data in the Firestore collection:
             <br />
-            <code>{tableState?.tablePath}</code>
+            <code>{tableSettings.collection}</code>
           </Typography>
         </div>
 
@@ -37,12 +48,10 @@ export default function EmptyTable() {
             variant="contained"
             color="primary"
             startIcon={<ImportIcon />}
-            onClick={() => importWizardRef?.current?.setOpen(true)}
+            onClick={() => openTableModal("importExisting")}
           >
-            Import
+            Import existing data
           </Button>
-
-          <ImportWizard />
         </div>
       </>
     );
@@ -56,7 +65,7 @@ export default function EmptyTable() {
           <Typography>
             There is no data in the Firestore collection:
             <br />
-            <code>{tableState?.tablePath}</code>
+            <code>{tableSettings.collection}</code>
           </Typography>
         </div>
 
@@ -66,7 +75,7 @@ export default function EmptyTable() {
               You can import data from an external CSV file:
             </Typography>
 
-            <ImportCSV
+            <ImportCsv
               render={(onClick) => (
                 <Button
                   variant="contained"
@@ -105,18 +114,10 @@ export default function EmptyTable() {
               variant="contained"
               color="primary"
               startIcon={<AddColumnIcon />}
-              onClick={(event) =>
-                columnMenuRef?.current?.setSelectedColumnHeader({
-                  column: { isNew: true, key: "new", type: "LAST" } as any,
-                  anchorEl: event.currentTarget,
-                })
-              }
-              disabled={!columnMenuRef?.current}
+              onClick={() => openColumnModal({ type: "new" })}
             >
               Add column
             </Button>
-
-            <ColumnMenu />
           </Grid>
         </Grid>
       </>

@@ -1,11 +1,9 @@
+import { ISettingsProps } from "@src/components/fields/types";
 import { TextField, FormControlLabel, Switch } from "@mui/material";
-import Subheading from "@src/components/Table/ColumnMenu/Subheading";
 
-export default function Settings({ onChange, config }) {
+export default function Settings({ onChange, config }: ISettingsProps) {
   return (
     <>
-      <Subheading>Slider config</Subheading>
-
       <TextField
         variant="filled"
         fullWidth

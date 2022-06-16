@@ -1,5 +1,4 @@
-import _find from "lodash/find";
-import { IPopoverCellProps } from "../types";
+import { IPopoverCellProps } from "@src/components/fields/types";
 import MultiSelect_ from "@rowy/multiselect";
 
 export default function StatusSingleSelect({
@@ -13,7 +12,7 @@ export default function StatusSingleSelect({
   const config = column.config ?? {};
   const conditions = config.conditions ?? [];
   /**Revisit eventually, can we abstract or use a helper function to clean this? */
-  const reMappedConditions = conditions.map((c) => {
+  const reMappedConditions = conditions.map((c: any) => {
     let rValue = { ...c };
     if (c.type === "number") {
       if (c.operator === "<") rValue = { ...c, value: c.value - 1 };
@@ -22,6 +21,7 @@ export default function StatusSingleSelect({
     return rValue;
   });
   return (
+    // eslint-disable-next-line react/jsx-pascal-case
     <MultiSelect_
       value={value}
       onChange={(v) => onSubmit(v)}

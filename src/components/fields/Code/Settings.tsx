@@ -1,3 +1,4 @@
+import { ISettingsProps } from "@src/components/fields/types";
 import MultiSelect from "@rowy/multiselect";
 
 const languages = [
@@ -22,7 +23,7 @@ const languages = [
   "go",
   "plaintext",
 ];
-export default function Settings({ config, onChange }) {
+export default function Settings({ config, onChange }: ISettingsProps) {
   return (
     <MultiSelect
       searchable

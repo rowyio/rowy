@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { useAtom } from "jotai";
-import { rowyRunModalAtom } from "@src/atoms/RowyRunModal";
 
 import {
   Typography,
@@ -13,23 +12,35 @@ import Modal from "@src/components/Modal";
 import Logo from "@src/assets/LogoRowyRun";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
-import { useAppContext } from "@src/contexts/AppContext";
-import { routes } from "@src/constants/routes";
+import {
+  globalScope,
+  userRolesAtom,
+  projectSettingsAtom,
+  rowyRunModalAtom,
+} from "@src/atoms/globalScope";
+import { ROUTES } from "@src/constants/routes";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
-import { useProjectContext } from "@src/contexts/ProjectContext";
 
+/**
+ * Display a modal asking the user to deploy or upgrade Rowy Run
+ * using `rowyRunModalAtom` in `globalState`
+ * @see {@link rowyRunModalAtom | Usage example}
+ */
 export default function RowyRunModal() {
-  const { userRoles } = useAppContext();
-  const { settings } = useProjectContext();
+  const [userRoles] = useAtom(userRolesAtom, globalScope);
+  const [projectSettings] = useAtom(projectSettingsAtom, globalScope);
+  const [rowyRunModal, setRowyRunModal] = useAtom(
+    rowyRunModalAtom,
+    globalScope
+  );
 
-  const [state, setState] = useAtom(rowyRunModalAtom);
-  const handleClose = () => setState((s) => ({ ...s, open: false }));
+  const handleClose = () => setRowyRunModal({ ...rowyRunModal, open: false });
 
-  const showUpdateModal = state.version && settings?.rowyRunUrl;
+  const showUpdateModal = rowyRunModal.version && projectSettings?.rowyRunUrl;
 
   return (
     <Modal
-      open={state.open}
+      open={rowyRunModal.open}
       onClose={handleClose}
       title={
         <Logo
@@ -47,13 +58,13 @@ export default function RowyRunModal() {
         <>
           <Typography variant="h5" paragraph align="center">
             {showUpdateModal ? "Update" : "Set up"} Rowy Run to use{" "}
-            {state.feature || "this feature"}
+            {rowyRunModal.feature || "this feature"}
           </Typography>
 
           {showUpdateModal && (
             <DialogContentText variant="body1" paragraph textAlign="center">
-              {state.feature || "This feature"} requires Rowy Run v
-              {state.version} or later.
+              {rowyRunModal.feature || "This feature"} requires Rowy Run v
+              {rowyRunModal.version} or later.
             </DialogContentText>
           )}
 
@@ -73,7 +84,7 @@ export default function RowyRunModal() {
 
           <Button
             component={Link}
-            to={routes.projectSettings + "#rowyRun"}
+            to={ROUTES.projectSettings + "#rowyRun"}
             variant="contained"
             color="primary"
             size="large"

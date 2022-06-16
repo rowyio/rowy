@@ -1,28 +1,31 @@
-import React, { Suspense, useState, useEffect } from "react";
+import { Suspense, useState, useEffect } from "react";
+import { useSetAtom } from "jotai";
+import { get } from "lodash-es";
 import { FormatterProps } from "react-data-grid";
-import { IBasicCellProps, IHeavyCellProps } from "../types";
+import { ErrorBoundary } from "react-error-boundary";
+import { IBasicCellProps, IHeavyCellProps } from "@src/components/fields/types";
 
-import ErrorBoundary from "@src/components/ErrorBoundary";
+import { InlineErrorFallback } from "@src/components/ErrorFallback";
 import CellValidation from "@src/components/Table/CellValidation";
-import { useProjectContext } from "@src/contexts/ProjectContext";
 
+import { tableScope, updateFieldAtom } from "@src/atoms/tableScope";
 import { FieldType } from "@src/constants/fields";
-import { getCellValue } from "@src/utils/fns";
+import { TableRow } from "@src/types/table";
 
 /**
  * HOC to wrap table cell components.
  * Renders read-only BasicCell while scrolling for better scroll performance.
- * @param BasicCellComponent The lighter cell component to display while scrolling
- * @param HeavyCellComponent The read/write cell component to display
- * @param readOnly Prevent the component from updating the cell value
+ * @param BasicCellComponent - The lighter cell component to display while scrolling
+ * @param HeavyCellComponent - The read/write cell component to display
+ * @param readOnly - Prevent the component from updating the cell value
  */
 export default function withHeavyCell(
   BasicCellComponent: React.ComponentType<IBasicCellProps>,
   HeavyCellComponent: React.ComponentType<IHeavyCellProps>,
   readOnly: boolean = false
 ) {
-  return function HeavyCell(props: FormatterProps<any>) {
-    const { updateCell } = useProjectContext();
+  return function HeavyCell(props: FormatterProps<TableRow>) {
+    const updateField = useSetAtom(updateFieldAtom, tableScope);
 
     const { validationRegex, required } = (props.column as any).config;
 
@@ -38,7 +41,7 @@ export default function withHeavyCell(
     }, []);
 
     // TODO: Investigate if this still needs to be a state
-    const value = getCellValue(props.row, props.column.key);
+    const value = get(props.row, props.column.key);
     const [localValue, setLocalValue] = useState(value);
     useEffect(() => {
       setLocalValue(value);
@@ -54,7 +57,7 @@ export default function withHeavyCell(
 
     if (displayedComponent === "basic")
       return (
-        <ErrorBoundary fullScreen={false} basic wrap="nowrap">
+        <ErrorBoundary FallbackComponent={InlineErrorFallback}>
           <CellValidation
             value={value}
             required={required}
@@ -66,15 +69,18 @@ export default function withHeavyCell(
       );
 
     const handleSubmit = (value: any) => {
-      if (updateCell && !readOnly) {
-        updateCell(props.row.ref, props.column.key, value);
-        setLocalValue(value);
-      }
+      if (readOnly) return;
+      updateField({
+        path: props.row._rowy_ref.path,
+        fieldName: props.column.key,
+        value,
+      });
+      setLocalValue(value);
     };
 
     if (displayedComponent === "heavy")
       return (
-        <ErrorBoundary fullScreen={false} basic wrap="nowrap">
+        <ErrorBoundary FallbackComponent={InlineErrorFallback}>
           <Suspense fallback={basicCell}>
             <CellValidation
               value={value}
@@ -84,7 +90,7 @@ export default function withHeavyCell(
               <HeavyCellComponent
                 {...props}
                 {...basicCellProps}
-                docRef={props.row.ref}
+                docRef={props.row._rowy_ref}
                 onSubmit={handleSubmit}
                 disabled={props.column.editable === false}
               />

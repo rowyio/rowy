@@ -1,3 +1,4 @@
+/* eslint-disable tsdoc/syntax */
 /*! firebase-admin v8.11.0 */
 
 /* eslint-disable @typescript-eslint/ban-types */

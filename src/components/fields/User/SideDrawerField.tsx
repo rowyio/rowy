@@ -1,58 +1,50 @@
-import { Controller } from "react-hook-form";
-import { ISideDrawerFieldProps } from "../types";
-
-import { Stack, Typography, Avatar } from "@mui/material";
-import { useFieldStyles } from "@src/components/SideDrawer/Form/utils";
-
 import { format } from "date-fns";
+import { ISideDrawerFieldProps } from "@src/components/fields/types";
+
+import { Box, Stack, Typography, Avatar } from "@mui/material";
+
+import { fieldSx, getFieldId } from "@src/components/SideDrawer/utils";
 import { DATE_TIME_FORMAT } from "@src/constants/dates";
 
-export default function User({ control, column }: ISideDrawerFieldProps) {
-  const fieldClasses = useFieldStyles();
+export default function User({
+  column,
+  _rowy_ref,
+  value,
+  onDirty,
+  onChange,
+  onSubmit,
+  disabled,
+}: ISideDrawerFieldProps) {
+  if (!value || !value.displayName || !value.timestamp)
+    return <Box sx={fieldSx} />;
+
+  const dateLabel = value.timestamp
+    ? format(
+        value.timestamp.toDate ? value.timestamp.toDate() : value.timestamp,
+        column.config?.format || DATE_TIME_FORMAT
+      )
+    : null;
 
   return (
-    <Controller
-      control={control}
-      name={column.key}
-      render={({ field: { value } }) => {
-        if (!value || !value.displayName || !value.timestamp)
-          return <div className={fieldClasses.root} />;
-        const dateLabel = value.timestamp
-          ? format(
-              value.timestamp.toDate
-                ? value.timestamp.toDate()
-                : value.timestamp,
-              column.config?.format || DATE_TIME_FORMAT
-            )
-          : null;
+    <Stack direction="row" sx={fieldSx} id={getFieldId(column.key)}>
+      <Avatar
+        alt="Avatar"
+        src={value.photoURL}
+        sx={{ width: 32, height: 32, ml: -0.5, mr: 1.5, my: 0.5 }}
+      />
 
-        return (
-          <Stack direction="row" className={fieldClasses.root}>
-            <Avatar
-              alt="Avatar"
-              src={value.photoURL}
-              sx={{ width: 32, height: 32, ml: -0.5, mr: 1.5, my: 0.5 }}
-            />
-
-            <Typography
-              variant="body2"
-              component="div"
-              style={{ whiteSpace: "normal" }}
-            >
-              {value.displayName} ({value.email})
-              {dateLabel && (
-                <Typography
-                  variant="caption"
-                  color="textSecondary"
-                  component="div"
-                >
-                  {dateLabel}
-                </Typography>
-              )}
-            </Typography>
-          </Stack>
-        );
-      }}
-    />
+      <Typography
+        variant="body2"
+        component="div"
+        style={{ whiteSpace: "normal" }}
+      >
+        {value.displayName} ({value.email})
+        {dateLabel && (
+          <Typography variant="caption" color="textSecondary" component="div">
+            {dateLabel}
+          </Typography>
+        )}
+      </Typography>
+    </Stack>
   );
 }

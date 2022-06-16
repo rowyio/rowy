@@ -1,4 +1,4 @@
-import { IBasicCellProps } from "../types";
+import { IBasicCellProps } from "@src/components/fields/types";
 
 import { useTheme } from "@mui/material";
 import { resultColorsScale } from "@src/utils/color";

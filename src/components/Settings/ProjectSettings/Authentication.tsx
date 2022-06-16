@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { authOptions } from "firebase/firebaseui";
-import _startCase from "lodash/startCase";
+import { startCase } from "lodash-es";
 
 import MultiSelect from "@rowy/multiselect";
 import { Typography, Link } from "@mui/material";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
-import { IProjectSettingsChildProps } from "@src/pages/Settings/ProjectSettings";
+import { IProjectSettingsChildProps } from "@src/pages/Settings/ProjectSettingsPage";
+import { authOptions } from "@src/config/firebaseui";
 
 export default function Authentication({
   publicSettings,
@@ -25,7 +25,7 @@ export default function Authentication({
         value={signInOptions}
         options={Object.keys(authOptions).map((option) => ({
           value: option,
-          label: _startCase(option).replace("Github", "GitHub"),
+          label: startCase(option).replace("Github", "GitHub"),
         }))}
         onChange={setSignInOptions}
         onClose={() => updatePublicSettings({ signInOptions })}

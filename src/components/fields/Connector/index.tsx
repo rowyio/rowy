@@ -1,8 +1,8 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withPopoverCell from "../_withTableCell/withPopoverCell";
+import withPopoverCell from "@src/components/fields/_withTableCell/withPopoverCell";
 import ConnectorIcon from "@mui/icons-material/Cable";
-import BasicCell from "../_BasicCell/BasicCellNull";
+import BasicCell from "@src/components/fields/_BasicCell/BasicCellNull";
 import InlineCell from "./InlineCell";
 import NullEditor from "@src/components/Table/editors/NullEditor";
 
@@ -13,11 +13,11 @@ const PopoverCell = lazy(
 const SideDrawerField = lazy(
   () =>
     import(
-      "./SideDrawerField" /* webpackChunkName: "SideDrawerField-ConnectService" */
+      "./SideDrawerField" /* webpackChunkName: "SideDrawerField-Connector" */
     )
 );
 const Settings = lazy(
-  () => import("./Settings" /* webpackChunkName: "Settings-ConnectService" */)
+  () => import("./Settings" /* webpackChunkName: "Settings-Connector" */)
 );
 
 export const config: IFieldConfig = {

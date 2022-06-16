@@ -1,14 +1,18 @@
+import { useAtom } from "jotai";
 import { useSnackbar } from "notistack";
-import type { ISetupStep, ISetupStepBodyProps } from "../types";
+import type {
+  ISetupStep,
+  ISetupStepBodyProps,
+} from "@src/components/Setup/SetupStep";
 
 import { Typography, Button, Grid } from "@mui/material";
-import CopyIcon from "@src/assets/icons/Copy";
+import { Copy as CopyIcon } from "@src/assets/icons";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 import DoneIcon from "@mui/icons-material/Done";
 
-import SetupItem from "../SetupItem";
+import SetupItem from "@src/components/Setup/SetupItem";
 
-import { useAppContext } from "@src/contexts/AppContext";
+import { globalScope, projectIdAtom } from "@src/atoms/globalScope";
 import {
   RULES_START,
   RULES_END,
@@ -27,7 +31,7 @@ export default {
 const rules = RULES_START + REQUIRED_RULES + RULES_END;
 
 function StepStorageRules({ isComplete, setComplete }: ISetupStepBodyProps) {
-  const { projectId } = useAppContext();
+  const [projectId] = useAtom(projectIdAtom, globalScope);
   const { enqueueSnackbar } = useSnackbar();
 
   return (

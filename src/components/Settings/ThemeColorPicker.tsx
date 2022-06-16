@@ -1,18 +1,14 @@
 import { useState } from "react";
+import { colord } from "colord";
 import { ColorPicker, toColor } from "react-color-palette";
 import "react-color-palette/lib/css/styles.css";
 
-import { useTheme, Grid, Typography, Stack, Box, Button } from "@mui/material";
+import { Grid, Typography, Stack, Box, Button } from "@mui/material";
 import PassIcon from "@mui/icons-material/Check";
 import FailIcon from "@mui/icons-material/Error";
 
 import { PRIMARY, DARK_PRIMARY } from "@src/theme/colors";
 import themes from "theme";
-
-import { colord, extend } from "colord";
-import a11yPlugin from "colord/plugins/a11y";
-import mixPlugin from "colord/plugins/mix";
-extend([a11yPlugin, mixPlugin]);
 
 export interface IThemeColorPickerProps {
   currentLight?: string;
@@ -25,8 +21,6 @@ export default function ThemeColorPicker({
   currentDark = DARK_PRIMARY,
   handleSave,
 }: IThemeColorPickerProps) {
-  const theme = useTheme();
-
   const [light, setLight] = useState(currentLight);
   const [dark, setDark] = useState(currentDark);
 
@@ -35,20 +29,7 @@ export default function ThemeColorPicker({
 
   return (
     <>
-      <Grid
-        container
-        spacing={2}
-        sx={{
-          mt: 0,
-          "& .rcp": {
-            borderRadius: 1,
-            boxShadow: (theme) =>
-              `0 0 0 1px ${theme.palette.divider} inset !important`,
-
-            "& .rcp-fields-element-input": theme.typography.body2,
-          },
-        }}
-      >
+      <Grid container spacing={2} style={{ marginTop: 0 }}>
         <Grid item xs={12} sm={6}>
           <Typography variant="subtitle2" component="h3" gutterBottom>
             Light theme
@@ -57,8 +38,7 @@ export default function ThemeColorPicker({
             width={244}
             height={140}
             color={toColor("hex", light)}
-            onChange={(c: any) => setLight(c.hex)}
-            dark={theme.palette.mode === "dark"}
+            onChange={(c) => setLight(c.hex)}
           />
 
           <Stack
@@ -107,7 +87,6 @@ export default function ThemeColorPicker({
             height={140}
             color={toColor("hex", dark)}
             onChange={(c: any) => setDark(c.hex)}
-            dark={theme.palette.mode === "dark"}
           />
 
           <Stack

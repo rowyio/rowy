@@ -1,4 +1,4 @@
-import { IHeavyCellProps } from "../types";
+import { IHeavyCellProps } from "@src/components/fields/types";
 
 import { useTheme } from "@mui/material";
 
@@ -13,7 +13,7 @@ export default function Id({ docRef }: IHeavyCellProps) {
         userSelect: "all",
       }}
     >
-      {docRef.id}
+      {docRef?.id}
     </span>
   );
 }

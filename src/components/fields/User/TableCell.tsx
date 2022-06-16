@@ -1,4 +1,4 @@
-import { IHeavyCellProps } from "../types";
+import { IHeavyCellProps } from "@src/components/fields/types";
 
 import { Tooltip, Stack, Avatar } from "@mui/material";
 

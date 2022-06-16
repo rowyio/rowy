@@ -17,6 +17,7 @@ export enum FieldType {
   rating = "RATING",
   slider = "SLIDER",
   color = "COLOR",
+  geoPoint = "GEO_POINT",
   // DATE & TIME
   date = "DATE",
   dateTime = "DATE_TIME",
@@ -25,13 +26,15 @@ export enum FieldType {
   image = "IMAGE",
   file = "FILE",
   // CONNECTION
-  subTable = "SUB_TABLE",
   connector = "CONNECTOR",
+  subTable = "SUB_TABLE",
+  reference = "REFERENCE",
   connectTable = "DOCUMENT_SELECT",
   connectService = "SERVICE_SELECT",
   // CODE
   json = "JSON",
   code = "CODE",
+  markdown = "MARKDOWN",
   // CLOUD FUNCTION
   action = "ACTION",
   derivative = "DERIVATIVE",
@@ -43,6 +46,7 @@ export enum FieldType {
   createdAt = "CREATED_AT",
   updatedAt = "UPDATED_AT",
   // METADATA
+
   user = "USER",
   id = "ID",
   last = "LAST",

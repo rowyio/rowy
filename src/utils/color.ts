@@ -1,6 +1,4 @@
-import { colord, extend } from "colord";
-import mixPlugin from "colord/plugins/mix";
-extend([mixPlugin]);
+import { colord } from "colord";
 
 export const resultColors = {
   No: "#ED4747",

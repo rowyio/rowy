@@ -13,10 +13,11 @@ import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 import LogoRowyRun from "@src/assets/LogoRowyRun";
-import { IProjectSettingsChildProps } from "@src/pages/Settings/ProjectSettings";
-import { EXTERNAL_LINKS, WIKI_LINKS } from "@src/constants/externalLinks";
+import { IProjectSettingsChildProps } from "@src/pages/Settings/ProjectSettingsPage";
+import { WIKI_LINKS } from "@src/constants/externalLinks";
 import useUpdateCheck from "@src/hooks/useUpdateCheck";
 import { runRoutes } from "@src/constants/runRoutes";
+// import RegionSelect from "@src/components/Settings/RegionSelect";
 
 export default function RowyRun({
   settings,
@@ -191,6 +192,17 @@ export default function RowyRun({
           </Grid>
         </Grid>
       </div>
+
+      {/* <RegionSelect
+        label="Cloud Functions region"
+        value={settings.region}
+        onChange={(v) => updateSettings({ region: v || "" })}
+        fullWidth
+        TextFieldProps={{
+          helperText:
+            "All new deployments of Rowy Cloud Functions will be deployed to this region",
+        }}
+      /> */}
     </>
   );
 }

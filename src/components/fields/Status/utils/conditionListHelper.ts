@@ -1,4 +1,5 @@
-export function createValueLabel(condition) {
+// TODO: types
+export function createValueLabel(condition: any) {
   const { operator, type, value } = condition || {};
   const typeLabelMap = new Map([
     ["undefined", `${type}`],

@@ -1,11 +1,15 @@
+import { useAtom } from "jotai";
+import { ISettingsProps } from "@src/components/fields/types";
+
 import MultiSelect from "@rowy/multiselect";
 import { FieldType } from "@src/constants/fields";
-import { useProjectContext } from "@src/contexts/ProjectContext";
 
-const Settings = ({ config, onChange }) => {
-  const { tableState } = useProjectContext();
-  if (!tableState?.columns) return <></>;
-  const columnOptions = Object.values(tableState.columns)
+import { tableScope, tableColumnsOrderedAtom } from "@src/atoms/tableScope";
+
+const Settings = ({ config, onChange }: ISettingsProps) => {
+  const [tableOrderedColumns] = useAtom(tableColumnsOrderedAtom, tableScope);
+
+  const columnOptions = tableOrderedColumns
     .filter((column) =>
       [
         FieldType.shortText,
@@ -15,15 +19,14 @@ const Settings = ({ config, onChange }) => {
       ].includes(column.type)
     )
     .map((c) => ({ label: c.name, value: c.key }));
+
   return (
-    <>
-      <MultiSelect
-        label="Parent label"
-        options={columnOptions}
-        value={config.parentLabel ?? []}
-        onChange={onChange("parentLabel")}
-      />
-    </>
+    <MultiSelect
+      label="Parent label"
+      options={columnOptions}
+      value={config.parentLabel ?? []}
+      onChange={onChange("parentLabel")}
+    />
   );
 };
 export default Settings;

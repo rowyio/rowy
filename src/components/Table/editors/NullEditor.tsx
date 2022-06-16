@@ -1,9 +1,6 @@
 import React from "react";
 import { EditorProps } from "react-data-grid";
-// import _findIndex from "lodash/findIndex";
-
-import { withStyles, WithStyles } from "@mui/styles";
-import styles from "./styles";
+import { GlobalStyles } from "tss-react";
 
 /**
  * Allow the cell to be editable, but disable react-data-grid’s default
@@ -15,12 +12,14 @@ import styles from "./styles";
  *
  * TODO: fix NullEditor overwriting the formatter component
  */
-class NullEditor extends React.Component<
-  EditorProps<any, any> & WithStyles<typeof styles>
-> {
+export default class NullEditor extends React.Component<EditorProps<any, any>> {
   getInputNode = () => null;
   getValue = () => null;
-  render = () => null;
+  render = () => (
+    <GlobalStyles
+      styles={{
+        ".rdg-editor-container": { display: "none" },
+      }}
+    />
+  );
 }
-
-export default withStyles(styles)(NullEditor);

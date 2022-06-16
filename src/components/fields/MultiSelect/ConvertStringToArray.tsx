@@ -1,6 +1,10 @@
+import { IPopoverInlineCellProps } from "@src/components/fields/types";
 import { Grid, Tooltip, Button } from "@mui/material";
 
-export const ConvertStringToArray = ({ value, onSubmit }) => (
+export const ConvertStringToArray = ({
+  value,
+  onSubmit,
+}: Pick<IPopoverInlineCellProps, "value" | "onSubmit">) => (
   <Grid container wrap="nowrap" alignItems="center">
     <Grid item xs style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
       {value}

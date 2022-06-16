@@ -1,72 +1,80 @@
-import { Controller, useWatch } from "react-hook-form";
-import { ISideDrawerFieldProps } from "../types";
+import { useMemo } from "react";
+import { useAtom } from "jotai";
+import { selectAtom } from "jotai/utils";
+import { find, isEqual } from "lodash-es";
+import { ISideDrawerFieldProps } from "@src/components/fields/types";
 
-import { Stack, Link } from "@mui/material";
-
+import { Box, Stack, Link } from "@mui/material";
 import ActionFab from "./ActionFab";
-import { useFieldStyles } from "@src/components/SideDrawer/Form/utils";
-import { sanitiseCallableName, isUrl } from "@src/utils/fns";
+
+import { tableScope, tableRowsAtom } from "@src/atoms/tableScope";
+import { fieldSx, getFieldId } from "@src/components/SideDrawer/utils";
+import { sanitiseCallableName, isUrl } from "./utils";
 
 export default function Action({
   column,
-  control,
-  docRef,
+  _rowy_ref,
+  value,
+  onChange,
+  onSubmit,
   disabled,
 }: ISideDrawerFieldProps) {
-  const fieldClasses = useFieldStyles();
+  const [row] = useAtom(
+    useMemo(
+      () =>
+        selectAtom(
+          tableRowsAtom,
+          (tableRows) => find(tableRows, ["_rowy_ref.path", _rowy_ref.path]),
+          isEqual
+        ),
+      [_rowy_ref.path]
+    ),
+    tableScope
+  );
 
-  const row = useWatch({ control });
+  const hasRan = value && value.status;
 
   return (
-    <Controller
-      control={control}
-      name={column.key}
-      render={({ field: { onChange, value } }) => {
-        const hasRan = value && value.status;
-
-        return (
-          <Stack
-            direction="row"
-            alignItems="center"
-            spacing={1}
-            sx={{ mr: -2 / 8 }}
+    <Stack direction="row" alignItems="center" spacing={1} sx={{ mr: -2 / 8 }}>
+      <Box
+        sx={[
+          fieldSx,
+          {
+            flexGrow: 1,
+            whiteSpace: "normal",
+            width: "100%",
+            overflow: "hidden",
+          },
+        ]}
+      >
+        {hasRan && isUrl(value.status) ? (
+          <Link
+            href={value.status}
+            target="_blank"
+            rel="noopener noreferrer"
+            variant="body2"
+            underline="always"
           >
-            <div
-              className={fieldClasses.root}
-              style={{
-                flexGrow: 1,
-                whiteSpace: "normal",
-                width: "100%",
-                overflow: "hidden",
-              }}
-            >
-              {hasRan && isUrl(value.status) ? (
-                <Link
-                  href={value.status}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  variant="body2"
-                  underline="always"
-                >
-                  {value.status}
-                </Link>
-              ) : hasRan ? (
-                value.status
-              ) : (
-                sanitiseCallableName(column.key)
-              )}
-            </div>
+            {value.status}
+          </Link>
+        ) : hasRan ? (
+          value.status
+        ) : (
+          sanitiseCallableName(column.key)
+        )}
+      </Box>
 
-            <ActionFab
-              row={{ ...row, ref: docRef }}
-              column={{ config: column.config, key: column.key }}
-              onSubmit={onChange}
-              value={value}
-              disabled={disabled}
-            />
-          </Stack>
-        );
-      }}
-    />
+      <ActionFab
+        row={row}
+        column={column}
+        onSubmit={(value) => {
+          onChange(value);
+          onSubmit();
+        }}
+        value={value}
+        disabled={disabled}
+        id={getFieldId(column.key)}
+      />
+    </Stack>
   );
 }

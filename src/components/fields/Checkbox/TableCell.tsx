@@ -1,13 +1,14 @@
-import { IHeavyCellProps } from "../types";
-import _get from "lodash/get";
+import { IHeavyCellProps } from "@src/components/fields/types";
+import { useSetAtom } from "jotai";
+import { get } from "lodash-es";
 
 import { FormControlLabel, Switch } from "@mui/material";
-import Confirmation from "@src/components/Confirmation";
+import { globalScope, confirmDialogAtom } from "@src/atoms/globalScope";
 
 const replacer = (data: any) => (m: string, key: string) => {
   const objKey = key.split(":")[0];
   const defaultValue = key.split(":")[1] || "";
-  return _get(data, objKey, defaultValue);
+  return get(data, objKey, defaultValue);
 };
 
 export default function Checkbox({
@@ -17,34 +18,33 @@ export default function Checkbox({
   onSubmit,
   disabled,
 }: IHeavyCellProps) {
-  let component = (
-    <Switch
-      checked={!!value}
-      onChange={() => onSubmit(!value)}
-      disabled={disabled}
-      color="success"
-    />
-  );
+  const confirm = useSetAtom(confirmDialogAtom, globalScope);
 
-  if (column?.config?.confirmation)
-    component = (
-      <Confirmation
-        message={{
-          title: column.config.confirmation.title,
-          body: column.config.confirmation.body.replace(
-            /\{\{(.*?)\}\}/g,
-            replacer(row)
-          ),
-        }}
-        functionName="onChange"
-      >
-        {component}
-      </Confirmation>
-    );
+  const handleChange = () => {
+    if (column?.config?.confirmation) {
+      confirm({
+        title: column.config.confirmation.title,
+        body: column.config.confirmation.body.replace(
+          /\{\{(.*?)\}\}/g,
+          replacer(row)
+        ),
+        handleConfirm: () => onSubmit(!value),
+      });
+    } else {
+      onSubmit(!value);
+    }
+  };
 
   return (
     <FormControlLabel
-      control={component}
+      control={
+        <Switch
+          checked={!!value}
+          onChange={handleChange}
+          disabled={disabled}
+          color="success"
+        />
+      }
       label={column.name as string}
       labelPlacement="start"
       sx={{

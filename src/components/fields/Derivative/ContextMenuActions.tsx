@@ -1,11 +1,19 @@
-import _find from "lodash/find";
-import _get from "lodash/get";
-
-import ReEvalIcon from "@mui/icons-material/Replay";
-import EvalIcon from "@mui/icons-material/PlayCircle";
-import { useProjectContext } from "@src/contexts/ProjectContext";
+import { useAtom } from "jotai";
+import { find, get } from "lodash-es";
 import { useSnackbar } from "notistack";
-import { SelectedCell } from "@src/atoms/ContextMenu";
+
+import ReEvalIcon from "@mui/icons-material/ReplayOutlined";
+import EvalIcon from "@mui/icons-material/PlayCircleOutline";
+
+import { globalScope, rowyRunAtom } from "@src/atoms/globalScope";
+import {
+  tableScope,
+  tableSettingsAtom,
+  tableSchemaAtom,
+  tableRowsAtom,
+} from "@src/atoms/tableScope";
+import { getTableSchemaPath } from "@src/utils/table";
+import { IFieldConfig } from "@src/components/fields/types";
 import { runRoutes } from "@src/constants/runRoutes";
 
 export interface IContextMenuActions {
@@ -14,46 +22,47 @@ export interface IContextMenuActions {
   onClick: () => void;
 }
 
-export default function ContextMenuActions(
-  selectedCell: SelectedCell,
-  reset: () => void | Promise<void>
-): IContextMenuActions[] {
-  const { tableState, rowyRun } = useProjectContext();
+export const ContextMenuActions: IFieldConfig["contextMenuActions"] = (
+  selectedCell,
+  reset
+) => {
+  const [rowyRun] = useAtom(rowyRunAtom, globalScope);
+  const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
+  const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
+  const [tableRows] = useAtom(tableRowsAtom, tableScope);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-  const columns = tableState?.columns;
-  const rows = tableState?.rows;
-  const selectedRowIndex = selectedCell.rowIndex as number;
-  const selectedColIndex = selectedCell?.colIndex;
-  const selectedCol = _find(columns, { index: selectedColIndex });
+
+  const selectedCol = tableSchema.columns?.[selectedCell.columnKey];
   if (!selectedCol) return [];
-  // don't show evalute button if function has external dependency
+
+  const selectedRow = find(tableRows, ["_rowy_ref.path", selectedCell.path]);
+  const cellValue = get(selectedRow, selectedCol.fieldName);
+
+  if (!selectedCol) return [];
+
+  // don't show evaluate button if function has external dependency
   const code =
-    selectedCol.config.derivativeFn ?? selectedCol.config.script ?? "";
+    selectedCol.config?.derivativeFn ?? selectedCol.config?.script ?? "";
   if (code.includes("require(")) return [];
-  const selectedRow = rows?.[selectedRowIndex];
-  const cellValue = _get(selectedRow, selectedCol.key);
-  const handleClose = async () => await reset?.();
 
   const handleEvaluate = async () => {
     try {
       if (!selectedCol || !rowyRun || !selectedRow) return;
-      handleClose();
-      const evaluatingSnackKey = enqueueSnackbar("Evaluating...", {
-        variant: "info",
-      });
+      reset();
+      const evaluatingSnackKey = enqueueSnackbar("Evaluating…");
       const result = await rowyRun({
         route: runRoutes.evaluateDerivative,
         body: {
-          ref: {
-            path: selectedRow.ref.path,
-          },
-          schemaDocPath: tableState?.config.tableConfig.path,
+          ref: { path: selectedCell.path },
+          schemaDocPath: getTableSchemaPath(tableSettings),
           columnKey: selectedCol.key,
         },
       });
       closeSnackbar(evaluatingSnackKey);
       if (result.success === false) {
         enqueueSnackbar(result.message, { variant: "error" });
+      } else {
+        enqueueSnackbar("Cell evaluated", { variant: "success" });
       }
     } catch (error) {
       enqueueSnackbar(`Failed: ${error}`, { variant: "error" });
@@ -70,4 +79,6 @@ export default function ContextMenuActions(
   ];
 
   return contextMenuActions;
-}
+};
+
+export default ContextMenuActions;

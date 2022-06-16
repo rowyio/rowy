@@ -1,60 +1,14 @@
-import React, { Suspense } from "react";
-import clsx from "clsx";
+import { Suspense } from "react";
 import { useImage } from "react-image";
+import { ErrorBoundary } from "react-error-boundary";
 
-import { makeStyles, createStyles } from "@mui/styles";
-import Skeleton from "@mui/material/Skeleton";
+import { Box, BoxProps, Skeleton } from "@mui/material";
+
+import EmptyState from "./EmptyState";
 import BrokenImageIcon from "@mui/icons-material/BrokenImageOutlined";
+import { spreadSx } from "@src/utils/ui";
 
-import ErrorBoundary from "./ErrorBoundary";
-
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    root: ({
-      objectFit,
-      shape,
-      border,
-    }: Pick<IThubmnailProps, "objectFit" | "shape" | "border">) => ({
-      objectFit: objectFit as any,
-      borderRadius:
-        shape === "circle"
-          ? "50%"
-          : shape === "square"
-          ? 0
-          : theme.shape.borderRadius,
-
-      display: "block",
-      pointerEvents: "none",
-      userSelect: "none",
-
-      position: "relative",
-
-      "&::after": {
-        content: '""',
-        display: "block",
-        position: "absolute",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100%",
-
-        boxShadow: border ? `0 0 0 1px ${theme.palette.divider} inset` : "none",
-      },
-    }),
-
-    skeleton: ({ shape }: Pick<IThubmnailProps, "shape">) => ({
-      borderRadius:
-        shape === "circle"
-          ? "50%"
-          : shape === "square"
-          ? 0
-          : theme.shape.borderRadius,
-      display: "block",
-    }),
-  })
-);
-
-export interface IThubmnailProps
+export interface IThumbnailProps
   extends React.DetailedHTMLProps<
     React.ImgHTMLAttributes<HTMLImageElement>,
     HTMLImageElement
@@ -65,6 +19,8 @@ export interface IThubmnailProps
   objectFit?: string;
   shape?: "roundedRectangle" | "square" | "circle";
   border?: boolean;
+
+  sx?: BoxProps["sx"];
 }
 
 /**
@@ -73,7 +29,7 @@ export interface IThubmnailProps
  *
  * Uses react-image: https://github.com/mbrevda/react-image
  */
-export function Thubmnail_({
+export function Thumbnail({
   imageUrl,
   size = "200x200",
 
@@ -82,9 +38,7 @@ export function Thubmnail_({
   border = false,
 
   ...props
-}: IThubmnailProps) {
-  const classes = useStyles({ objectFit, shape, border });
-
+}: IThumbnailProps) {
   // Add size suffix just before file name extension (e.g. .jpg)
   const thumbnailUrl = imageUrl.replace(
     /(\.[\w]+\?.*token=[\w-]+$)/,
@@ -98,32 +52,73 @@ export function Thubmnail_({
   if (error) return <>x</>;
 
   return (
-    <img {...props} src={src} className={clsx(classes.root, props.className)} />
+    <Box
+      component="img"
+      {...props}
+      {...({ src } as any)}
+      sx={[
+        {
+          objectFit: objectFit as any,
+          borderRadius: shape === "circle" ? "50%" : shape === "square" ? 0 : 1,
+
+          display: "block",
+          pointerEvents: "none",
+          userSelect: "none",
+
+          position: "relative",
+
+          "&::after": {
+            content: '""',
+            display: "block",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+
+            boxShadow: (theme) =>
+              border ? `0 0 0 1px ${theme.palette.divider} inset` : "none",
+          },
+        },
+        ...spreadSx(props.sx),
+      ]}
+    />
   );
 }
 
 /**
  * Wrap thumbnail in an ErrorBoundary and Skeleton for loading
  */
-export default function Thumbnail(props: IThubmnailProps) {
-  const classes = useStyles({ shape: props.shape });
-
+export default function ErrorBoundedThumbnail(props: IThumbnailProps) {
   return (
     <ErrorBoundary
-      basic
-      message="Failed to load image"
-      className={props.className}
-      render={(m) => <BrokenImageIcon color="disabled" />}
+      fallback={
+        <EmptyState
+          basic
+          message="Failed to load image"
+          className={props.className}
+          Icon={BrokenImageIcon}
+        />
+      }
     >
       <Suspense
         fallback={
           <Skeleton
             variant="rectangular"
-            className={clsx(classes.skeleton, props.className)}
+            className={props.className}
+            sx={{
+              borderRadius:
+                props.shape === "circle"
+                  ? "50%"
+                  : props.shape === "square"
+                  ? 0
+                  : 1,
+              display: "block",
+            }}
           />
         }
       >
-        <Thubmnail_ {...props} />
+        <Thumbnail {...props} />
       </Suspense>
     </ErrorBoundary>
   );

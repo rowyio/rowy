@@ -7,6 +7,7 @@ import {
   DialogContent,
   DialogContentProps,
 } from "@mui/material";
+import { spreadSx } from "@src/utils/ui";
 
 const MemoizedDialogContent = memo(function MemoizedDialogContent_({
   setRef,
@@ -40,10 +41,7 @@ export default function ScrollableDialogContent({
           style={{
             visibility: scrollInfo.y.percentage > 0 ? "visible" : "hidden",
           }}
-          sx={[
-            ...(Array.isArray(dividerSx) ? dividerSx : [dividerSx]),
-            ...(Array.isArray(topDividerSx) ? topDividerSx : [topDividerSx]),
-          ]}
+          sx={[...spreadSx(dividerSx), ...spreadSx(topDividerSx)]}
         />
       )}
 
@@ -54,12 +52,7 @@ export default function ScrollableDialogContent({
           style={{
             visibility: scrollInfo.y.percentage < 1 ? "visible" : "hidden",
           }}
-          sx={[
-            ...(Array.isArray(dividerSx) ? dividerSx : [dividerSx]),
-            ...(Array.isArray(bottomDividerSx)
-              ? bottomDividerSx
-              : [bottomDividerSx]),
-          ]}
+          sx={[...spreadSx(dividerSx), ...spreadSx(bottomDividerSx)]}
         />
       )}
     </>

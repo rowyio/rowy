@@ -1,12 +1,14 @@
 import { Suspense } from "react";
 import clsx from "clsx";
+import { ErrorBoundary } from "react-error-boundary";
 
 import { TextField, TextFieldProps } from "@mui/material";
 
+import ErrorFallback from "@src/components/ErrorFallback";
 import useStyles from "./styles";
 import Loading from "@src/components/Loading";
-import ErrorBoundary from "@src/components/ErrorBoundary";
 import PopupContents from "./PopupContents";
+import { TableRowRef } from "@src/types/table";
 
 export type ServiceValue = {
   value: string;
@@ -22,7 +24,7 @@ export interface IConnectorSelectProps {
   className?: string;
   /** Override any props of the root MUI `TextField` component */
   TextFieldProps?: Partial<TextFieldProps>;
-  docRef: firebase.default.firestore.DocumentReference;
+  docRef: TableRowRef;
   disabled?: boolean;
 }
 
@@ -33,7 +35,7 @@ export default function ConnectorSelect({
   disabled,
   ...props
 }: IConnectorSelectProps) {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const sanitisedValue = Array.isArray(value) ? value : [];
   return (
@@ -62,7 +64,7 @@ export default function ConnectorSelect({
       }}
       disabled={disabled}
     >
-      <ErrorBoundary>
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
         <Suspense fallback={<Loading />}>
           <PopupContents value={sanitisedValue} {...props} />
         </Suspense>

@@ -1,9 +1,6 @@
+import { colord } from "colord";
 import { ThemeOptions } from "@mui/material/styles";
 import { Shadows } from "@mui/material/styles/shadows";
-
-import { colord, extend } from "colord";
-import lchPlugin from "colord/plugins/lch";
-extend([lchPlugin]);
 
 declare module "@mui/material/styles/createPalette" {
   interface TypeAction {
@@ -92,6 +89,7 @@ export const colorsLight = (
       MuiCssBaseline: {
         styleOverrides: {
           ":root": { colorScheme: "light" },
+          "#root": { backgroundColor: bgDefault.toHslString() },
           ".rdg": { colorScheme: "light" },
         },
       },
@@ -101,6 +99,9 @@ export const colorsLight = (
             backgroundColor: colord({ l: 70, c: 5, h })
               .alpha(0.6)
               .toHslString(),
+            ".MuiDialog-root:has(.MuiDialog-paperFullScreen) &": {
+              backgroundColor: "rgba(0, 0, 0, 0.25)",
+            },
           },
           invisible: { backgroundColor: "transparent" },
         },
@@ -192,7 +193,8 @@ export const colorsDark = (
     components: {
       MuiCssBaseline: {
         styleOverrides: {
-          ":root": { colorScheme: "dark" },
+          // ":root": { colorScheme: "dark" },
+          "#root": { backgroundColor: bgDefault.toHslString() },
           ".rdg": { colorScheme: "dark" },
         },
       },
@@ -200,6 +202,9 @@ export const colorsDark = (
         styleOverrides: {
           root: {
             backgroundColor: colord({ l: 0, c: 1, h }).alpha(0.6).toHslString(),
+            ".MuiDialog-root:has(.MuiDialog-paperFullScreen) &": {
+              backgroundColor: "rgba(0, 0, 0, 0)",
+            },
           },
           invisible: { backgroundColor: "transparent" },
         },

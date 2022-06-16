@@ -1,11 +1,13 @@
 import { Suspense } from "react";
 import clsx from "clsx";
+import { DocumentReference } from "firebase/firestore";
+import { ErrorBoundary } from "react-error-boundary";
 
 import { TextField, TextFieldProps } from "@mui/material";
 
 import useStyles from "./styles";
 import Loading from "@src/components/Loading";
-import ErrorBoundary from "@src/components/ErrorBoundary";
+import ErrorFallback from "@src/components/ErrorFallback";
 import PopupContents from "./PopupContents";
 
 export type ServiceValue = {
@@ -25,7 +27,7 @@ export interface IConnectServiceSelectProps {
   className?: string;
   /** Override any props of the root MUI `TextField` component */
   TextFieldProps?: Partial<TextFieldProps>;
-  docRef: firebase.default.firestore.DocumentReference;
+  docRef: DocumentReference;
   disabled?: boolean;
 }
 
@@ -36,7 +38,7 @@ export default function ConnectServiceSelect({
   disabled,
   ...props
 }: IConnectServiceSelectProps) {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const sanitisedValue = Array.isArray(value) ? value : [];
 
@@ -66,7 +68,7 @@ export default function ConnectServiceSelect({
       }}
       disabled={disabled}
     >
-      <ErrorBoundary>
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
         <Suspense fallback={<Loading />}>
           <PopupContents value={sanitisedValue} {...props} />
         </Suspense>

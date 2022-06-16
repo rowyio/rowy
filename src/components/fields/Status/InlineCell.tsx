@@ -1,11 +1,9 @@
 import { forwardRef, useMemo } from "react";
-import { IPopoverInlineCellProps } from "../types";
+import { IPopoverInlineCellProps } from "@src/components/fields/types";
 
 import { ButtonBase } from "@mui/material";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import _find from "lodash/find";
+import { ChevronDown } from "@src/assets/icons";
 import getLabel from "./utils/getLabelHelper";
-import { LowPriority } from "@mui/icons-material";
 
 export const StatusSingleSelect = forwardRef(function StatusSingleSelect(
   { column, value, showPopoverCell, disabled }: IPopoverInlineCellProps,
@@ -14,15 +12,15 @@ export const StatusSingleSelect = forwardRef(function StatusSingleSelect(
   const conditions = column.config?.conditions ?? [];
   const lowPriorityOperator = ["<", "<=", ">=", ">"];
   const otherOperator = conditions.filter(
-    (c) => !lowPriorityOperator.includes(c.operator)
+    (c: any) => !lowPriorityOperator.includes(c.operator)
   );
 
   /**Revisit this  */
   const sortLowPriorityList = conditions
-    .filter((c) => {
+    .filter((c: any) => {
       return lowPriorityOperator.includes(c.operator);
     })
-    .sort((a, b) => {
+    .sort((a: any, b: any) => {
       const aDistFromValue = Math.abs(value - a.value);
       const bDistFromValue = Math.abs(value - b.value);
       //return the smallest distance
@@ -53,14 +51,14 @@ export const StatusSingleSelect = forwardRef(function StatusSingleSelect(
       <div style={{ flexGrow: 1, overflow: "hidden" }}>{label}</div>
 
       {!disabled && (
-        <ArrowDropDownIcon
+        <ChevronDown
           className="row-hover-iconButton"
           sx={{
             flexShrink: 0,
             mr: 0.5,
             borderRadius: 1,
-            p: (32 - 24) / 2 / 8,
-            boxSizing: "content-box",
+            p: (32 - 20) / 2 / 8,
+            boxSizing: "content-box !important",
           }}
         />
       )}

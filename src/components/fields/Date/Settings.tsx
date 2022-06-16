@@ -1,4 +1,4 @@
-import { ISettingsProps } from "../types";
+import { ISettingsProps } from "@src/components/fields/types";
 
 import { Typography, Link } from "@mui/material";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";

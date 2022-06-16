@@ -1,7 +1,12 @@
-import { makeStyles, createStyles } from "@mui/styles";
+import { makeStyles } from "tss-react/mui";
 
-export const useStyles = makeStyles((theme) =>
-  createStyles({
+export const useStyles = makeStyles()((theme) => {
+  let maxHeightDeductions = 0;
+  maxHeightDeductions -= 64; // search box
+  maxHeightDeductions -= 48; // multiple
+  maxHeightDeductions += 8; // footer padding
+
+  return {
     root: { minWidth: 200 },
     selectRoot: { paddingRight: theme.spacing(4) },
 
@@ -45,18 +50,11 @@ export const useStyles = makeStyles((theme) =>
         background: `linear-gradient(to top, ${theme.palette.background.paper}, rgba(255, 255, 255, 0))`,
       },
     },
-    list: () => {
-      let maxHeightDeductions = 0;
-      maxHeightDeductions -= 64; // search box
-      maxHeightDeductions -= 48; // multiple
-      maxHeightDeductions += 8; // footer padding
-
-      return {
-        padding: theme.spacing(2, 0),
-        overflowY: "auto" as "auto",
-        // height: `calc(340px - ${-maxHeightDeductions}px)`,
-        height: 340 + maxHeightDeductions,
-      };
+    list: {
+      padding: theme.spacing(2, 0),
+      overflowY: "auto" as "auto",
+      // height: `calc(340px - ${-maxHeightDeductions}px)`,
+      height: 340 + maxHeightDeductions,
     },
 
     checkboxContainer: { minWidth: theme.spacing(36 / 8) },
@@ -77,7 +75,7 @@ export const useStyles = makeStyles((theme) =>
     },
     selectAllButton: { marginRight: -theme.spacing(1) },
     selectedNum: { fontFeatureSettings: '"tnum"' },
-  })
-);
+  };
+});
 
 export default useStyles;

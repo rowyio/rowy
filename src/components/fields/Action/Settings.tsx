@@ -1,7 +1,8 @@
 import { lazy, Suspense, useState } from "react";
-import _get from "lodash/get";
+import { get } from "lodash-es";
 import stringify from "json-stable-stringify-without-jsonify";
 import { Link } from "react-router-dom";
+import { useAtom, useSetAtom } from "jotai";
 
 import {
   Stack,
@@ -25,19 +26,26 @@ import UndoIcon from "@mui/icons-material/Undo";
 
 import SteppedAccordion from "@src/components/SteppedAccordion";
 import MultiSelect from "@rowy/multiselect";
-import FieldSkeleton from "@src/components/SideDrawer/Form/FieldSkeleton";
+import FieldSkeleton from "@src/components/SideDrawer/FieldSkeleton";
 import CodeEditorHelper from "@src/components/CodeEditor/CodeEditorHelper";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 import FormFieldSnippets from "./FormFieldSnippets";
 
-import { useProjectContext } from "@src/contexts/ProjectContext";
+import {
+  globalScope,
+  projectIdAtom,
+  projectRolesAtom,
+  projectSettingsAtom,
+  compatibleRowyRunVersionAtom,
+} from "@src/atoms/globalScope";
+import { tableScope, tableColumnsOrderedAtom } from "@src/atoms/tableScope";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
-import { useAppContext } from "@src/contexts/AppContext";
 
 /* eslint-disable import/no-webpack-loader-syntax */
 import actionDefs from "!!raw-loader!./action.d.ts";
 import { RUN_ACTION_TEMPLATE, UNDO_ACTION_TEMPLATE } from "./templates";
-import { routes } from "constants/routes";
+import { ROUTES } from "@src/constants/routes";
+import { ISettingsProps } from "@src/components/fields/types";
 
 const diagnosticsOptions = {
   noSemanticValidation: false,
@@ -50,20 +58,26 @@ const CodeEditor = lazy(
     import("@src/components/CodeEditor" /* webpackChunkName: "CodeEditor" */)
 );
 
-const Settings = ({ config, onChange }) => {
-  const { tableState, roles, settings, compatibleRowyRunVersion } =
-    useProjectContext();
-  const { projectId } = useAppContext();
-  const [activeStep, setActiveStep] = useState<
-    "requirements" | "friction" | "action" | "undo" | "customization"
-  >("requirements");
-  const functionBodyOnly = compatibleRowyRunVersion!({ maxVersion: "1.3.10" });
-  const steps =
-    config.isActionScript && _get(config, "undo.enabled")
-      ? ["requirements", "friction", "action", "undo", "customization"]
-      : ["requirements", "friction", "action", "customization"];
+const Settings = ({ config, onChange }: ISettingsProps) => {
+  const [projectId] = useAtom(projectIdAtom, globalScope);
+  const [roles] = useAtom(projectRolesAtom, globalScope);
+  const [settings] = useAtom(projectSettingsAtom, globalScope);
+  const [compatibleRowyRunVersion] = useAtom(
+    compatibleRowyRunVersionAtom,
+    globalScope
+  );
+  const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
 
-  const columnOptions = Object.values(tableState?.columns ?? {}).map((c) => ({
+  // const [activeStep, setActiveStep] = useState<
+  //   "requirements" | "friction" | "action" | "undo" | "customization"
+  // >("requirements");
+  const functionBodyOnly = compatibleRowyRunVersion!({ maxVersion: "1.3.10" });
+  // const steps =
+  //   config.isActionScript && get(config, "undo.enabled")
+  //     ? ["requirements", "friction", "action", "undo", "customization"]
+  //     : ["requirements", "friction", "action", "customization"];
+
+  const columnOptions = tableColumnsOrdered.map((c) => ({
     label: c.name,
     value: c.key,
   }));
@@ -80,7 +94,7 @@ const Settings = ({ config, onChange }) => {
       "    /**",
       "     * actionParams are provided by dialog popup form",
       "     */",
-      (config.params ?? []).filter(Boolean).map((param) => {
+      (config.params ?? []).filter(Boolean).map((param: any) => {
         const validationKeys = Object.keys(param.validation ?? {});
         if (validationKeys.includes("string")) {
           return `static ${param.name}: string`;
@@ -112,12 +126,12 @@ const Settings = ({ config, onChange }) => {
     : RUN_ACTION_TEMPLATE;
 
   const undoFn = functionBodyOnly
-    ? _get(config, "undo.script")
+    ? get(config, "undo.script")
     : config.undoFn
     ? config.undoFn
-    : _get(config, "undo.script")
+    : get(config, "undo.script")
     ? `const action : Action = async ({row,ref,db,storage,auth,actionParams,user}) => {
-    ${_get(config, "undo.script")}
+    ${get(config, "undo.script")}
   }`
     : UNDO_ACTION_TEMPLATE;
   return (
@@ -297,7 +311,7 @@ const Settings = ({ config, onChange }) => {
                           {!settings?.rowyRunUrl && (
                             <MuiLink
                               component={Link}
-                              to={routes.projectSettings + "#rowyRun"}
+                              to={ROUTES.projectSettings + "#rowyRun"}
                               color="error"
                             >
                               Requires Rowy Run setup&nbsp;→
@@ -458,7 +472,7 @@ const Settings = ({ config, onChange }) => {
           ),
         },
         config.isActionScript &&
-          _get(config, "undo.enabled") && {
+          get(config, "undo.enabled") && {
             id: "undo",
             title: "Undo action",
             content: (
@@ -470,7 +484,7 @@ const Settings = ({ config, onChange }) => {
                     id="undo.confirmation"
                     label="Undo confirmation template"
                     placeholder="Are you sure you want to sell your stocks in {{stockName}}?"
-                    value={_get(config, "undo.confirmation")}
+                    value={get(config, "undo.confirmation")}
                     onChange={(e) => {
                       onChange("undo.confirmation")(e.target.value);
                     }}
@@ -535,7 +549,7 @@ const Settings = ({ config, onChange }) => {
                     <Stack direction="row" spacing={1}>
                       <TextField
                         id="customIcons.run"
-                        value={_get(config, "customIcons.run")}
+                        value={get(config, "customIcons.run")}
                         onChange={(e) =>
                           onChange("customIcons.run")(e.target.value)
                         }
@@ -544,7 +558,7 @@ const Settings = ({ config, onChange }) => {
                         inputProps={{ style: { width: "3ch" } }}
                       />
                       <Fab size="small" aria-label="Preview of run button">
-                        {_get(config, "customIcons.run") || <RunIcon />}
+                        {get(config, "customIcons.run") || <RunIcon />}
                       </Fab>
                     </Stack>
                   </Grid>
@@ -553,7 +567,7 @@ const Settings = ({ config, onChange }) => {
                     <Stack direction="row" spacing={1}>
                       <TextField
                         id="customIcons.redo"
-                        value={_get(config, "customIcons.redo")}
+                        value={get(config, "customIcons.redo")}
                         onChange={(e) =>
                           onChange("customIcons.redo")(e.target.value)
                         }
@@ -562,7 +576,7 @@ const Settings = ({ config, onChange }) => {
                         inputProps={{ style: { width: "3ch" } }}
                       />
                       <Fab size="small" aria-label="Preview of redo button">
-                        {_get(config, "customIcons.redo") || <RedoIcon />}
+                        {get(config, "customIcons.redo") || <RedoIcon />}
                       </Fab>
                     </Stack>
                   </Grid>
@@ -571,7 +585,7 @@ const Settings = ({ config, onChange }) => {
                     <Stack direction="row" spacing={1}>
                       <TextField
                         id="customIcons.undo"
-                        value={_get(config, "customIcons.undo")}
+                        value={get(config, "customIcons.undo")}
                         onChange={(e) =>
                           onChange("customIcons.undo")(e.target.value)
                         }
@@ -580,7 +594,7 @@ const Settings = ({ config, onChange }) => {
                         inputProps={{ style: { width: "3ch" } }}
                       />
                       <Fab size="small" aria-label="Preview of undo button">
-                        {_get(config, "customIcons.undo") || <UndoIcon />}
+                        {get(config, "customIcons.undo") || <UndoIcon />}
                       </Fab>
                     </Stack>
                   </Grid>

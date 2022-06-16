@@ -1,16 +1,12 @@
-import { IHeavyCellProps } from "../types";
+import { IHeavyCellProps } from "@src/components/fields/types";
 
 import { format } from "date-fns";
 import { DATE_TIME_FORMAT } from "@src/constants/dates";
-import { useProjectContext } from "@src/contexts/ProjectContext";
 
-export default function CreatedAt({ row, column }: IHeavyCellProps) {
-  const { table } = useProjectContext();
-  const value = row[table?.auditFieldCreatedBy || "_createdBy"];
-
-  if (!value || !value.timestamp) return null;
+export default function CreatedAt({ column, value }: IHeavyCellProps) {
+  if (!value) return null;
   const dateLabel = format(
-    value.timestamp.toDate ? value.timestamp.toDate() : value.timestamp,
+    value.toDate ? value.toDate() : value,
     column.config?.format || DATE_TIME_FORMAT
   );
 

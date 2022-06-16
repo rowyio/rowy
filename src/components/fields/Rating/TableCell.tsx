@@ -1,4 +1,4 @@
-import { IHeavyCellProps } from "../types";
+import { IHeavyCellProps } from "@src/components/fields/types";
 
 import MuiRating from "@mui/material/Rating";
 import StarBorderIcon from "@mui/icons-material/StarBorder";

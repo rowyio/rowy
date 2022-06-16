@@ -4,6 +4,8 @@ import {
   TypographyStyleOptions,
 } from "@mui/material/styles/createTypography";
 
+import "./space-grotesk.css";
+
 declare module "@mui/material/styles/createTypography" {
   interface FontStyle {
     fontFamilyMono: string;
@@ -46,11 +48,15 @@ export const typography = ({
       fontFamily !== BODY_FONT
         ? "normal"
         : `"calt", "ss01", "ss03", "cv05", "cv08", "cv09"`,
+    WebkitFontSmoothing: "auto",
+    MozOsxFontSmoothing: "auto",
   };
   const fontStyleHeading: TypographyStyleOptions = {
     fontFamily: fontFamilyHeading,
     fontFeatureSettings:
       fontFamilyHeading !== HEADING_FONT ? "normal" : `"ss02", "ss03"`,
+    WebkitFontSmoothing: "antialiased",
+    MozOsxFontSmoothing: "grayscale",
   };
 
   return {

@@ -1,13 +1,14 @@
-import createPersistedState from "use-persisted-state";
+import { useAtom } from "jotai";
 
 import { styled } from "@mui/material/styles";
 import RichTooltip from "@src/components/RichTooltip";
 import WarningIcon from "@mui/icons-material/WarningAmber";
 import { OUT_OF_ORDER_MARGIN } from "./TableContainer";
 
-const useOutOfOrderTooltipDismissedState = createPersistedState(
-  "__ROWY__OUT_OF_ORDER_TOOLTIP_DISMISSED"
-);
+import {
+  globalScope,
+  tableOutOfOrderDismissedAtom,
+} from "@src/atoms/globalScope";
 
 const Dot = styled("div")(({ theme }) => ({
   position: "absolute",
@@ -32,7 +33,10 @@ export default function OutOfOrderIndicator({
   top,
   height,
 }: IOutOfOrderIndicatorProps) {
-  const [dismissed, setDismissed] = useOutOfOrderTooltipDismissedState(false);
+  const [dismissed, setDismissed] = useAtom(
+    tableOutOfOrderDismissedAtom,
+    globalScope
+  );
 
   return (
     <div
