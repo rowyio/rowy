@@ -100,7 +100,7 @@ function JotaiTest() {
       {currentUser && <CurrentUser currentUser={currentUser} />}
       <p>{JSON.stringify(userRoles)}</p>
 
-      <p>{projectId}</p>
+      <p>Project: {projectId}</p>
       <p>{JSON.stringify(publicSettings)}</p>
       <p>{JSON.stringify(projectSettings)}</p>
       <p>{JSON.stringify(userSettings)}</p>
