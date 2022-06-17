@@ -1,13 +1,13 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withHeavyCell from "../_withTableCell/withHeavyCell";
+import withHeavyCell from "@src/components/fields/_withTableCell/withHeavyCell";
 import { parseJSON, format } from "date-fns";
 import { DATE_TIME_FORMAT } from "@src/constants/dates";
 
 import DateTimeIcon from "@mui/icons-material/AccessTime";
 import BasicCell from "./BasicCell";
 import NullEditor from "@src/components/Table/editors/NullEditor";
-import { filterOperators, valueFormatter } from "./Filter";
+import { filterOperators, valueFormatter } from "./filters";
 
 const TableCell = lazy(
   () => import("./TableCell" /* webpackChunkName: "TableCell-DateTime" */)
@@ -34,10 +34,7 @@ export const config: IFieldConfig = {
   TableCell: withHeavyCell(BasicCell, TableCell),
   TableEditor: NullEditor as any,
   SideDrawerField,
-  filter: {
-    operators: filterOperators,
-    valueFormatter,
-  },
+  filter: { operators: filterOperators, valueFormatter },
   settings: Settings,
   csvImportParser: (value) => parseJSON(value).getTime(),
   csvExportFormatter: (value: any, config?: any) =>

@@ -1,5 +1,5 @@
 import stringify from "json-stable-stringify-without-jsonify";
-import { IBasicCellProps } from "../types";
+import { IBasicCellProps } from "@src/components/fields/types";
 
 import { useTheme } from "@mui/material";
 

@@ -1,13 +1,14 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withBasicCell from "../_withTableCell/withBasicCell";
+import withBasicCell from "@src/components/fields/_withTableCell/withBasicCell";
 
 import ShortTextIcon from "@mui/icons-material/ShortText";
-import BasicCell from "../_BasicCell/BasicCellValue";
+import BasicCell from "@src/components/fields/_BasicCell/BasicCellValue";
 import TextEditor from "@src/components/Table/editors/TextEditor";
 
 import { filterOperators } from "./Filter";
-import BasicContextMenuActions from "../_BasicCell/BasicCellContextMenuActions";
+import BasicContextMenuActions from "@src/components/fields/_BasicCell/BasicCellContextMenuActions";
+
 const SideDrawerField = lazy(
   () =>
     import(

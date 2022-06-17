@@ -1,15 +1,11 @@
-import { IHeavyCellProps } from "../types";
+import { IHeavyCellProps } from "@src/components/fields/types";
 
 import { Tooltip, Stack, Avatar } from "@mui/material";
 
 import { format } from "date-fns";
 import { DATE_TIME_FORMAT } from "@src/constants/dates";
-import { useProjectContext } from "@src/contexts/ProjectContext";
 
-export default function UpdatedBy({ row, column }: IHeavyCellProps) {
-  const { table } = useProjectContext();
-  const value = row[table?.auditFieldUpdatedBy || "_updatedBy"];
-
+export default function UpdatedBy({ column, value }: IHeavyCellProps) {
   if (!value || !value.displayName || !value.timestamp) return null;
   const dateLabel = format(
     value.timestamp.toDate ? value.timestamp.toDate() : value.timestamp,
@@ -36,8 +32,10 @@ export default function UpdatedBy({ row, column }: IHeavyCellProps) {
         <Avatar
           alt="Avatar"
           src={value.photoURL}
-          style={{ width: 20, height: 20 }}
-        />
+          sx={{ width: 20, height: 20, fontSize: "inherit" }}
+        >
+          {value.displayName[0]}
+        </Avatar>
         <span>{value.displayName}</span>
       </Stack>
     </Tooltip>

@@ -1,8 +1,8 @@
-import { IHeavyCellProps } from "../types";
+import { IBasicCellProps } from "@src/components/fields/types";
 
 import { getDurationString } from "./utils";
 
-export default function Duration({ value }: IHeavyCellProps) {
+export default function Duration({ value }: IBasicCellProps) {
   if (
     !value ||
     !value.start ||

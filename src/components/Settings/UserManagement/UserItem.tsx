@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useAtom, useSetAtom } from "jotai";
 import { useSnackbar } from "notistack";
 
 import {
@@ -10,22 +11,37 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import CopyIcon from "@src/assets/icons/Copy";
+import { Copy as CopyIcon } from "@src/assets/icons";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 
 import MultiSelect from "@rowy/multiselect";
-import { User } from "@src/pages/Settings/UserManagement";
-import { useProjectContext } from "@src/contexts/ProjectContext";
+
+import {
+  globalScope,
+  projectRolesAtom,
+  projectSettingsAtom,
+  rowyRunAtom,
+  rowyRunModalAtom,
+  UserSettings,
+  updateUserAtom,
+  confirmDialogAtom,
+} from "@src/atoms/globalScope";
 import { runRoutes } from "@src/constants/runRoutes";
-import { db } from "@src/firebase";
 import { USERS } from "@src/config/dbPaths";
-import { useConfirmation } from "@src/components/ConfirmationDialog";
 
-export default function UserItem({ id, user, roles: rolesProp }: User) {
+export default function UserItem({
+  _rowy_ref,
+  user,
+  roles: rolesProp,
+}: UserSettings) {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-  const { requestConfirmation } = useConfirmation();
+  const confirm = useSetAtom(confirmDialogAtom, globalScope);
+  const openRowyRunModal = useSetAtom(rowyRunModalAtom, globalScope);
 
-  const { roles: projectRoles, rowyRun } = useProjectContext();
+  const [projectRoles] = useAtom(projectRolesAtom, globalScope);
+  const [projectSettings] = useAtom(projectSettingsAtom, globalScope);
+  const [rowyRun] = useAtom(rowyRunAtom, globalScope);
+  const [updateUser] = useAtom(updateUserAtom, globalScope);
 
   const [value, setValue] = useState(Array.isArray(rolesProp) ? rolesProp : []);
   const allRoles = new Set(["ADMIN", ...(projectRoles ?? []), ...value]);
@@ -42,7 +58,8 @@ export default function UserItem({ id, user, roles: rolesProp }: User) {
         body: { email: user!.email, roles: value },
       });
       if (res.success) {
-        await db.collection(USERS).doc(id).update({ roles: value });
+        if (!updateUser) throw new Error("Could not update user document");
+        await updateUser(_rowy_ref!.id, { roles: value });
         closeSnackbar(loadingSnackbarId);
         enqueueSnackbar(`Set roles for ${user!.email}: ${value.join(", ")}`);
       }
@@ -72,9 +89,15 @@ export default function UserItem({ id, user, roles: rolesProp }: User) {
   );
 
   const handleDelete = async () => {
-    requestConfirmation({
+    if (!projectSettings.rowyRunUrl) {
+      openRowyRunModal({ feature: "User Management" });
+      return;
+    }
+
+    confirm({
+      open: true,
       title: "Delete user?",
-      customBody: (
+      body: (
         <>
           <ListItem children={listItemChildren} disablePadding sx={{ mb: 3 }} />
           You will delete the user in Firebase Authentication and the
@@ -86,12 +109,12 @@ export default function UserItem({ id, user, roles: rolesProp }: User) {
       handleConfirm: async () => {
         if (!user) return;
         const loadingSnackbarId = enqueueSnackbar("Deleting user…");
-        await rowyRun?.({
+        const response = await rowyRun({
           route: runRoutes.deleteUser,
           body: { email: user.email },
         });
         closeSnackbar(loadingSnackbarId);
-        enqueueSnackbar(`Deleted user: ${user.email}`);
+        if (response) enqueueSnackbar(`Deleted user: ${user.email}`);
       },
     });
   };
@@ -109,7 +132,7 @@ export default function UserItem({ id, user, roles: rolesProp }: User) {
             freeText
             TextFieldProps={{
               SelectProps: {
-                renderValue: (_) => {
+                renderValue: () => {
                   if (Array.isArray(value)) {
                     if (value.length === 1) return value[0];
                     if (value.length > 1) return `${value.length} roles`;
@@ -119,6 +142,7 @@ export default function UserItem({ id, user, roles: rolesProp }: User) {
                       </Typography>
                     );
                   }
+                  return null;
                 },
               },
 
@@ -155,9 +179,11 @@ export default function UserItem({ id, user, roles: rolesProp }: User) {
             <IconButton
               aria-label="Copy UID"
               onClick={async () => {
-                if (!id) return;
-                await navigator.clipboard.writeText(id);
-                enqueueSnackbar(`Copied UID for ${user?.email}: ${id}`);
+                if (!_rowy_ref?.id) return;
+                await navigator.clipboard.writeText(_rowy_ref.id);
+                enqueueSnackbar(
+                  `Copied UID for ${user?.email}: ${_rowy_ref.id}`
+                );
               }}
             >
               <CopyIcon />

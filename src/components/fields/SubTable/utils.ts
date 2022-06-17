@@ -1,38 +1,37 @@
-import queryString from "query-string";
 import { useLocation } from "react-router-dom";
 
+import { ROUTES } from "@src/constants/routes";
+import { ColumnConfig, TableRow, TableRowRef } from "@src/types/table";
+
 export const useSubTableData = (
-  column: any,
-  row: any,
-  docRef: firebase.default.firestore.DocumentReference
+  column: ColumnConfig,
+  row: TableRow,
+  docRef: TableRowRef
 ) => {
-  const { parentLabel, config } = column as any;
-  const label: string = parentLabel
-    ? row[parentLabel]
-    : config.parentLabel
-    ? config.parentLabel.reduce((acc, curr) => {
-        if (acc !== "") return `${acc} - ${row[curr]}`;
-        else return row[curr];
-      }, "")
-    : "";
-  const fieldName = column.key;
-  const documentCount: string = row[fieldName]?.count ?? "";
+  const label = (column.config?.parentLabel ?? []).reduce((acc, curr) => {
+    if (acc !== "") return `${acc} - ${row[curr]}`;
+    else return row[curr];
+  }, "");
+
+  const documentCount: string = row[column.fieldName]?.count ?? "";
 
   const location = useLocation();
-  const parentLabels = queryString.parse(location.search).parentLabel;
-  const parentPath = decodeURIComponent(
-    location.pathname.split("/").pop() ?? ""
+  const rootTablePath = decodeURIComponent(
+    location.pathname.split("/" + ROUTES.subTable)[0]
   );
 
-  let subTablePath = "";
-  if (parentLabels)
-    subTablePath =
-      encodeURIComponent(`${parentPath}/${docRef.id}/${fieldName}`) +
-      `?parentLabel=${parentLabels ?? ""},${label ?? ""}`;
-  else
-    subTablePath =
-      encodeURIComponent(`${parentPath}/${docRef.id}/${fieldName}`) +
-      `?parentLabel=${encodeURIComponent(label ?? "")}`;
+  // const [searchParams] = useSearchParams();
+  // const parentLabels = searchParams.get("parentLabel");
+  let subTablePath = [
+    rootTablePath,
+    ROUTES.subTable,
+    encodeURIComponent(docRef.path),
+    column.key,
+  ].join("/");
+
+  // if (parentLabels) subTablePath += `${parentLabels ?? ""},${label ?? ""}`;
+  // else
+  subTablePath += "?parentLabel=" + encodeURIComponent(label ?? "");
 
   return { documentCount, label, subTablePath };
 };

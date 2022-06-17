@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
 
 const DEFAULT_STATE = {
   isSnackLogOpen: false,
@@ -9,7 +9,7 @@ const DEFAULT_FUNCTIONS = {
   closeSnackLog: () => {},
 };
 
-export const SnackLogContext = React.createContext({
+export const SnackLogContext = createContext({
   ...DEFAULT_STATE,
   ...DEFAULT_FUNCTIONS,
 });

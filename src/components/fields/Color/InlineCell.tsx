@@ -1,5 +1,5 @@
 import { forwardRef } from "react";
-import { IPopoverInlineCellProps } from "../types";
+import { IPopoverInlineCellProps } from "@src/components/fields/types";
 
 import { ButtonBase, Box } from "@mui/material";
 

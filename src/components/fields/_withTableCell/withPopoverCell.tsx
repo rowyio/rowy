@@ -1,30 +1,21 @@
-import React, { Suspense, useState, useEffect, useRef } from "react";
+import { Suspense, useState, useEffect, useRef } from "react";
+import { useSetAtom } from "jotai";
+import { find, get } from "lodash-es";
 import { FormatterProps } from "react-data-grid";
 import {
   IBasicCellProps,
   IPopoverInlineCellProps,
   IPopoverCellProps,
-} from "../types";
+} from "@src/components/fields/types";
+import { ErrorBoundary } from "react-error-boundary";
 
-import _find from "lodash/find";
-import { makeStyles, createStyles } from "@mui/styles";
 import { Popover, PopoverProps } from "@mui/material";
 
-import ErrorBoundary from "@src/components/ErrorBoundary";
+import { InlineErrorFallback } from "@src/components/ErrorFallback";
 import CellValidation from "@src/components/Table/CellValidation";
-import { useProjectContext } from "@src/contexts/ProjectContext";
 
+import { tableScope, updateFieldAtom } from "@src/atoms/tableScope";
 import { FieldType } from "@src/constants/fields";
-import { getCellValue } from "@src/utils/fns";
-
-const useStyles = makeStyles(() =>
-  createStyles({
-    transparentPaper: {
-      backgroundColor: "transparent",
-      boxShadow: "none",
-    },
-  })
-);
 
 export interface IPopoverCellOptions extends Partial<PopoverProps> {
   transparent?: boolean;
@@ -35,10 +26,10 @@ export interface IPopoverCellOptions extends Partial<PopoverProps> {
  * HOC to wrap around table cell formatters.
  * Renders read-only BasicCell while scrolling for better scroll performance.
  * When the user clicks the heavier inline cell, it displays PopoverCell.
- * @param BasicCellComponent The lighter cell component to display while scrolling
- * @param InlineCellComponent The heavier cell component to display inline
- * @param PopoverCellComponent The heavy read/write cell component to display in Popover
- * @param options See `IPopoverCellOptions`
+ * @param BasicCellComponent - The lighter cell component to display while scrolling
+ * @param InlineCellComponent - The heavier cell component to display inline
+ * @param PopoverCellComponent - The heavy read/write cell component to display in Popover
+ * @param options - {@link IPopoverCellOptions}
  */
 export default function withPopoverCell(
   BasicCellComponent: React.ComponentType<IBasicCellProps>,
@@ -49,9 +40,9 @@ export default function withPopoverCell(
   options?: IPopoverCellOptions
 ) {
   return function PopoverCell(props: FormatterProps<any>) {
-    const classes = useStyles();
     const { transparent, ...popoverProps } = options ?? {};
-    const { deleteCell, updateCell, tableState } = useProjectContext();
+
+    const updateField = useSetAtom(updateFieldAtom, tableScope);
 
     const { validationRegex, required } = (props.column as any).config;
 
@@ -73,7 +64,7 @@ export default function withPopoverCell(
     const inlineCellRef = useRef<any>(null);
 
     // TODO: Investigate if this still needs to be a state
-    const value = getCellValue(props.row, props.column.key);
+    const value = get(props.row, props.column.key);
     const [localValue, setLocalValue] = useState(value);
     useEffect(() => {
       setLocalValue(value);
@@ -88,7 +79,7 @@ export default function withPopoverCell(
 
     if (displayedComponent === "basic")
       return (
-        <ErrorBoundary fullScreen={false} basic wrap="nowrap">
+        <ErrorBoundary FallbackComponent={InlineErrorFallback}>
           <CellValidation
             value={value}
             required={required}
@@ -99,21 +90,16 @@ export default function withPopoverCell(
         </ErrorBoundary>
       );
 
-    //This is where we update the documents
+    // This is where we update the documents
     const handleSubmit = (value: any) => {
-      const targetRow = _find(tableState?.rows, { id: props.row.ref.id });
-      const targetCell = targetRow?.[props.column.key];
-      const canDelete = Boolean(
-        typeof value === "undefined" && targetCell !== value
-      );
-
-      if (deleteCell && !options?.readOnly && canDelete) {
-        deleteCell(props.row.ref, props.column.key);
-        setLocalValue(value);
-      } else if (updateCell && !options?.readOnly) {
-        updateCell(props.row.ref, props.column.key, value);
-        setLocalValue(value);
-      }
+      if (options?.readOnly) return;
+      updateField({
+        path: props.row._rowy_ref.path,
+        fieldName: props.column.key,
+        value,
+        deleteField: value === undefined,
+      });
+      setLocalValue(value);
     };
     const showPopoverCell: any = (popover: boolean) => {
       if (popover) {
@@ -132,7 +118,7 @@ export default function withPopoverCell(
       column: props.column,
       onSubmit: handleSubmit,
       disabled: props.column.editable === false,
-      docRef: props.row.ref,
+      docRef: props.row._rowy_ref,
       showPopoverCell,
       ref: inlineCellRef,
     };
@@ -142,7 +128,7 @@ export default function withPopoverCell(
 
     if (displayedComponent === "inline")
       return (
-        <ErrorBoundary fullScreen={false} basic wrap="nowrap">
+        <ErrorBoundary FallbackComponent={InlineErrorFallback}>
           <CellValidation
             value={value}
             required={required}
@@ -157,7 +143,7 @@ export default function withPopoverCell(
 
     if (displayedComponent === "popover")
       return (
-        <ErrorBoundary fullScreen={false} basic wrap="nowrap">
+        <ErrorBoundary FallbackComponent={InlineErrorFallback}>
           <CellValidation
             value={value}
             required={required}
@@ -172,12 +158,13 @@ export default function withPopoverCell(
               anchorEl={parentRef}
               onClose={() => showPopoverCell(false)}
               {...popoverProps}
-              PaperProps={{
-                classes: {
-                  root: transparent ? classes.transparentPaper : "",
-                },
-                ...popoverProps?.PaperProps,
-              }}
+              sx={
+                transparent
+                  ? {
+                      "& .MuiPopover-paper": { backgroundColor: "transparent" },
+                    }
+                  : {}
+              }
               onClick={(e) => e.stopPropagation()}
               onDoubleClick={(e) => e.stopPropagation()}
               onKeyDown={(e) => e.stopPropagation()}

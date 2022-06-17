@@ -1,38 +1,33 @@
-import { Controller } from "react-hook-form";
-import { ISideDrawerFieldProps } from "../types";
+import { ISideDrawerFieldProps } from "@src/components/fields/types";
 
 import MultiSelect from "@rowy/multiselect";
+import { getFieldId } from "@src/components/SideDrawer/utils";
 import { sanitiseValue } from "./utils";
 
 export default function SingleSelect({
   column,
-  control,
+  value,
+  onChange,
+  onSubmit,
   disabled,
 }: ISideDrawerFieldProps) {
   const config = column.config ?? {};
 
   return (
-    <Controller
-      control={control}
-      name={column.key}
-      render={({ field: { onChange, onBlur, value } }) => (
-        <>
-          <MultiSelect
-            value={sanitiseValue(value)}
-            onChange={onChange}
-            options={config.options ?? []}
-            multiple={false}
-            freeText={config.freeText}
-            disabled={disabled}
-            TextFieldProps={{
-              label: "",
-              hiddenLabel: true,
-              onBlur,
-              id: `sidedrawer-field-${column.key}`,
-            }}
-          />
-        </>
-      )}
+    <MultiSelect
+      value={sanitiseValue(value)}
+      onChange={onChange}
+      options={config.options ?? []}
+      multiple={false}
+      freeText={config.freeText}
+      disabled={disabled}
+      TextFieldProps={{
+        label: "",
+        hiddenLabel: true,
+        onBlur: onSubmit,
+        id: getFieldId(column.key),
+      }}
+      onClose={onSubmit}
     />
   );
 }

@@ -94,7 +94,7 @@ export default function SteppedAccordion({
             >
               <StepLabel error={error} {...labelProps}>
                 {title}
-                <ExpandIcon />
+                <ExpandIcon sx={{ mr: -0.5 }} />
               </StepLabel>
             </StepButton>
 

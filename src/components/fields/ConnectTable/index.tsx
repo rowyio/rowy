@@ -1,9 +1,9 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withPopoverCell from "../_withTableCell/withPopoverCell";
+import withPopoverCell from "@src/components/fields/_withTableCell/withPopoverCell";
 
-import ConnectTableIcon from "@src/assets/icons/ConnectTable";
-import BasicCell from "../_BasicCell/BasicCellNull";
+import { ConnectTable as ConnectTableIcon } from "@src/assets/icons";
+import BasicCell from "@src/components/fields/_BasicCell/BasicCellNull";
 import InlineCell from "./InlineCell";
 import NullEditor from "@src/components/Table/editors/NullEditor";
 

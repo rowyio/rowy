@@ -8,12 +8,13 @@ import {
 import { useTheme, Box, BoxProps } from "@mui/material";
 import TrapFocus from "@mui/material/Unstable_TrapFocus";
 import CircularProgressOptical from "@src/components/CircularProgressOptical";
-import ResizeBottomRightIcon from "@src/assets/icons/ResizeBottomRight";
+import { ResizeBottomRight } from "@src/assets/icons";
 
 import useMonacoCustomizations, {
   IUseMonacoCustomizationsProps,
 } from "./useMonacoCustomizations";
 import FullScreenButton from "./FullScreenButton";
+import { spreadSx } from "@src/utils/ui";
 
 export interface IDiffEditorProps
   extends Partial<DiffEditorProps>,
@@ -63,14 +64,7 @@ export default function DiffEditor({
   return (
     <TrapFocus open={fullScreen}>
       <Box
-        sx={[
-          boxSx,
-          ...(Array.isArray(containerProps?.sx)
-            ? containerProps!.sx
-            : containerProps?.sx
-            ? [containerProps.sx]
-            : []),
-        ]}
+        sx={[boxSx, ...spreadSx(containerProps?.sx)]}
         style={fullScreen ? { height: "100%" } : {}}
       >
         <MonacoDiffEditor
@@ -101,7 +95,7 @@ export default function DiffEditor({
           style={{ right: 32 }}
         />
 
-        <ResizeBottomRightIcon
+        <ResizeBottomRight
           aria-label="Resize code editor"
           color="action"
           sx={{

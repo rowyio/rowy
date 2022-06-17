@@ -1,25 +1,26 @@
 import { useState, useEffect } from "react";
-// Hook
-export default function useKeyPress(targetKey) {
+
+/**
+ * A hook that listens to when the target key is pressed.
+ * @param targetKey - The key to listen to
+ * @returns If the key is currently pressed
+ */
+export default function useKeyPress(targetKey: string) {
   // State for keeping track of whether key is pressed
   const [keyPressed, setKeyPressed] = useState(false);
 
-  // If pressed key is our target key then set to true
-  function downHandler({ key }) {
-    if (key === targetKey) {
-      setKeyPressed(true);
-    }
-  }
-
-  // If released key is our target key then set to false
-  const upHandler = ({ key }) => {
-    if (key === targetKey) {
-      setKeyPressed(false);
-    }
-  };
-
   // Add event listeners
   useEffect(() => {
+    // If pressed key is our target key then set to true
+    const downHandler = ({ key }: KeyboardEvent) => {
+      if (key === targetKey) setKeyPressed(true);
+    };
+
+    // If released key is our target key then set to false
+    const upHandler = ({ key }: KeyboardEvent) => {
+      if (key === targetKey) setKeyPressed(false);
+    };
+
     window.addEventListener("keydown", downHandler);
     window.addEventListener("keyup", upHandler);
     // Remove event listeners on cleanup
@@ -27,7 +28,7 @@ export default function useKeyPress(targetKey) {
       window.removeEventListener("keydown", downHandler);
       window.removeEventListener("keyup", upHandler);
     };
-  }, []); // Empty array ensures that effect is only run on mount and unmount
+  }, [targetKey]);
 
   return keyPressed;
 }

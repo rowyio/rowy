@@ -1,27 +1,29 @@
+import { get } from "lodash-es";
 import { FormatterProps } from "react-data-grid";
-import { IBasicCellProps } from "../types";
+import { ErrorBoundary } from "react-error-boundary";
+import { IBasicCellProps } from "@src/components/fields/types";
 
-import ErrorBoundary from "@src/components/ErrorBoundary";
+import { InlineErrorFallback } from "@src/components/ErrorFallback";
 import CellValidation from "@src/components/Table/CellValidation";
 import { FieldType } from "@src/constants/fields";
-import { getCellValue } from "@src/utils/fns";
+import { TableRow } from "@src/types/table";
 
 /**
  * HOC to wrap around table cell components.
  * Renders read-only BasicCell only.
- * @param BasicCellComponent The light cell component to display at all times
+ * @param BasicCellComponent - The light cell component to display at all times
  */
 export default function withBasicCell(
   BasicCellComponent: React.ComponentType<IBasicCellProps>
 ) {
-  return function BasicCell(props: FormatterProps<any>) {
+  return function BasicCell(props: FormatterProps<TableRow>) {
     const { name, key } = props.column;
-    const value = getCellValue(props.row, key);
+    const value = get(props.row, key);
 
     const { validationRegex, required } = (props.column as any).config;
 
     return (
-      <ErrorBoundary fullScreen={false} basic wrap="nowrap">
+      <ErrorBoundary FallbackComponent={InlineErrorFallback}>
         <CellValidation
           value={value}
           required={required}

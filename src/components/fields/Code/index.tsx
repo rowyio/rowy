@@ -1,13 +1,13 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withBasicCell from "../_withTableCell/withBasicCell";
+import withBasicCell from "@src/components/fields/_withTableCell/withBasicCell";
 
 import CodeIcon from "@mui/icons-material/Code";
 import BasicCell from "./BasicCell";
 import withSideDrawerEditor from "@src/components/Table/editors/withSideDrawerEditor";
 
 const Settings = lazy(
-  () => import("./Settings" /* webpackChunkName: "Settings-ConnectService" */)
+  () => import("./Settings" /* webpackChunkName: "Settings-Code" */)
 );
 
 const SideDrawerField = lazy(

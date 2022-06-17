@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
+import { ISettingsProps } from "@src/components/fields/types";
 
-import { makeStyles, createStyles } from "@mui/styles";
 import {
   InputLabel,
   TextField,
@@ -15,37 +15,33 @@ import {
 import AddIcon from "@mui/icons-material/AddCircle";
 import RemoveIcon from "@mui/icons-material/CancelRounded";
 
-const useStyles = makeStyles(() =>
-  createStyles({
-    field: {
-      width: "100%",
-    },
-    optionsList: {
-      maxHeight: 180,
-      overflowY: "scroll",
-      overflowX: "hidden",
-      marginBottom: 5,
-    },
-  })
-);
-
-export default function Settings({ onChange, config }) {
+export default function Settings({ onChange, config }: ISettingsProps) {
   const listEndRef: any = useRef(null);
   const options = config.options ?? [];
-  const classes = useStyles();
   const [newOption, setNewOption] = useState("");
   const handleAdd = () => {
     if (newOption.trim() !== "") {
-      onChange("options")([...options, newOption.trim()]);
-      setNewOption("");
-      listEndRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+      if (options.includes(newOption)) {
+        window.alert(`"${newOption}" is already an option`);
+      } else {
+        onChange("options")([...options, newOption.trim()]);
+        setNewOption("");
+        listEndRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+      }
     }
   };
 
   return (
     <div>
       <InputLabel>Options</InputLabel>
-      <div className={classes.optionsList}>
+      <div
+        style={{
+          maxHeight: 180,
+          overflowY: "scroll",
+          overflowX: "hidden",
+          marginBottom: 5,
+        }}
+      >
         {options?.map((option: string) => (
           <>
             <Grid
@@ -91,7 +87,6 @@ export default function Settings({ onChange, config }) {
         <Grid item xs={10} md={11}>
           <TextField
             value={newOption}
-            className={classes.field}
             fullWidth
             label="New option"
             id="new-option"

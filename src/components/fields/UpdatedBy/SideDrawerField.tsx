@@ -1,24 +1,14 @@
-import { useWatch } from "react-hook-form";
-import { ISideDrawerFieldProps } from "../types";
+import { ISideDrawerFieldProps } from "@src/components/fields/types";
 
-import { Stack, Typography, Avatar } from "@mui/material";
-import { useFieldStyles } from "@src/components/SideDrawer/Form/utils";
+import { Box, Stack, Typography, Avatar } from "@mui/material";
+import { fieldSx } from "@src/components/SideDrawer/utils";
 
 import { format } from "date-fns";
 import { DATE_TIME_FORMAT } from "@src/constants/dates";
-import { useProjectContext } from "@src/contexts/ProjectContext";
 
-export default function UpdatedBy({ control, column }: ISideDrawerFieldProps) {
-  const fieldClasses = useFieldStyles();
-
-  const { table } = useProjectContext();
-  const value = useWatch({
-    control,
-    name: table?.auditFieldUpdatedBy || "_updatedBy",
-  });
-
+export default function UpdatedBy({ column, value }: ISideDrawerFieldProps) {
   if (!value || !value.displayName || !value.timestamp)
-    return <div className={fieldClasses.root} />;
+    return <Box sx={fieldSx} />;
 
   const dateLabel = format(
     value.timestamp.toDate ? value.timestamp.toDate() : value.timestamp,
@@ -26,16 +16,21 @@ export default function UpdatedBy({ control, column }: ISideDrawerFieldProps) {
   );
 
   return (
-    <Stack
-      direction="row"
-      className={fieldClasses.root}
-      style={{ alignItems: "flex-start" }}
-    >
+    <Stack direction="row" sx={[fieldSx, { alignItems: "flex-start" }]}>
       <Avatar
         alt="Avatar"
         src={value.photoURL}
-        sx={{ width: 32, height: 32, ml: -0.5, mr: 1.5, my: 0.5 }}
-      />
+        sx={{
+          width: 32,
+          height: 32,
+          ml: -0.5,
+          mr: 1.5,
+          my: 0.5,
+          fontSize: "inherit",
+        }}
+      >
+        {value.displayName[0]}
+      </Avatar>
 
       <Typography
         variant="body2"

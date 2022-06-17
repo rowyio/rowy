@@ -1,9 +1,9 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withHeavyCell from "../_withTableCell/withHeavyCell";
+import withHeavyCell from "@src/components/fields/_withTableCell/withHeavyCell";
 
-import CreatedAtIcon from "@src/assets/icons/CreatedAt";
-import BasicCell from "../_BasicCell/BasicCellNull";
+import { CreatedAt as CreatedAtIcon } from "@src/assets/icons";
+import BasicCell from "@src/components/fields/_BasicCell/BasicCellNull";
 import withSideDrawerEditor from "@src/components/Table/editors/withSideDrawerEditor";
 
 const TableCell = lazy(
@@ -17,7 +17,7 @@ const SideDrawerField = lazy(
 );
 const Settings = lazy(
   () =>
-    import("../CreatedBy/Settings" /* webpackChunkName: "Settings-CreatedBy" */)
+    import("../CreatedBy/Settings" /* webpackChunkName: "Settings-CreatedAt" */)
 );
 
 export const config: IFieldConfig = {

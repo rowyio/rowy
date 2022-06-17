@@ -1,10 +1,14 @@
+import { useAtom } from "jotai";
+
 import { Grid } from "@mui/material";
-import { useProjectContext } from "@src/contexts/ProjectContext";
+
+import { tableScope, tableSchemaAtom } from "@src/atoms/tableScope";
+import { DEFAULT_ROW_HEIGHT } from "@src/components/Table";
 
 export default function ChipList({ children }: React.PropsWithChildren<{}>) {
-  const { tableState } = useProjectContext();
+  const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
 
-  const rowHeight = tableState?.config.rowHeight ?? 41;
+  const rowHeight = tableSchema.rowHeight ?? DEFAULT_ROW_HEIGHT;
   const canWrap = rowHeight > 24 * 2 + 4;
 
   return (

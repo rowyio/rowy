@@ -1,19 +1,15 @@
-import Helmet from "react-helmet";
 import { use100vh } from "react-div-100vh";
 
-import { useTheme, alpha } from "@mui/material/styles";
-import { Box, BoxProps } from "@mui/material";
+import { GlobalStyles, Box, BoxProps } from "@mui/material";
+import { alpha } from "@mui/material/styles";
 
 import bgPattern from "@src/assets/bg-pattern.svg";
 import bgPatternDark from "@src/assets/bg-pattern-dark.svg";
 
 export default function BrandedBackground() {
-  const theme = useTheme();
-
   return (
-    <Helmet>
-      <style type="text/css">
-        {`
+    <GlobalStyles
+      styles={(theme) => `
           body {
             background-size: 100%;
             background-image: ${
@@ -43,9 +39,12 @@ export default function BrandedBackground() {
             background-size: ${(480 * 10) / 14}px;
             mix-blend-mode: overlay;
           }
+
+          #root#root {
+            background-color: transparent;
+          }
         `}
-      </style>
-    </Helmet>
+    />
   );
 }
 

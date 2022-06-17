@@ -24,14 +24,14 @@ export default function LogoRowyRun({
       <title id="rowy-run-logo-title">Rowy Run</title>
 
       <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
+        fillRule="evenodd"
+        clipRule="evenodd"
         d="M32 7.75a6.25 6.25 0 1 1 0 12.5 6.25 6.25 0 0 1 0-12.5Zm0 2a4.25 4.25 0 1 0 0 8.5 4.25 4.25 0 0 0 0-8.5ZM20 20V8h6v2h-4v10h-2Zm24 0 3-9 3 9h2l4-12 5 11.5-2 4.5h2l7-16h-2l-4 9-4-9h-4l-3 9-3-9h-2l-3 9-3-9h-2l4 12h2Z"
         fill={theme.palette.text.primary}
       />
       <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
+        fillRule="evenodd"
+        clipRule="evenodd"
         d="M0 8v10a3 3 0 1 0 6 0v-7h7a3 3 0 1 0 0-6H8a2.997 2.997 0 0 0-2.5 1.341A3 3 0 0 0 0 8Zm10-2H8a2 2 0 0 0-1.995 1.85L6 8v2h4V6Zm-5 4V8a2 2 0 0 0-1.85-1.995L3 6a2 2 0 0 0-1.995 1.85L1 8v2h4Zm0 1H1v4h4v-4Zm-4 5v2a2 2 0 0 0 1.85 1.994L3 20a2 2 0 0 0 1.995-1.85L5 18v-2H1ZM11.001 6H13l.15.005A2 2 0 0 1 15 8l-.005.15A2 2 0 0 1 13 10h-1.999V6Z"
         fill={theme.palette.primary.main}
       />

@@ -1,11 +1,11 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withHeavyCell from "../_withTableCell/withHeavyCell";
+import withHeavyCell from "@src/components/fields/_withTableCell/withHeavyCell";
 
 import RichTextIcon from "@mui/icons-material/TextFormat";
-import BasicCell from "../_BasicCell/BasicCellNull";
+import BasicCell from "@src/components/fields/_BasicCell/BasicCellNull";
 import withSideDrawerEditor from "@src/components/Table/editors/withSideDrawerEditor";
-import BasicContextMenuActions from "../_BasicCell/BasicCellContextMenuActions";
+import BasicContextMenuActions from "@src/components/fields/_BasicCell/BasicCellContextMenuActions";
 
 const TableCell = lazy(
   () => import("./TableCell" /* webpackChunkName: "TableCell-RichText" */)

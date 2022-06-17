@@ -1,3 +1,4 @@
+/* eslint-disable tsdoc/syntax */
 /**
  * @fileoverview Firestore Server API.
  *

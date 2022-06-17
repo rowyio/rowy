@@ -1,4 +1,4 @@
-import { IHeavyCellProps } from "../types";
+import { IHeavyCellProps } from "@src/components/fields/types";
 
 import { Grid, Box } from "@mui/material";
 

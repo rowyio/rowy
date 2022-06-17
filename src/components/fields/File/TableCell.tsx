@@ -1,52 +1,22 @@
 import { useCallback } from "react";
-import { IHeavyCellProps } from "../types";
+import { IHeavyCellProps } from "@src/components/fields/types";
+import { useSetAtom } from "jotai";
+import { findIndex } from "lodash-es";
 
 import { useDropzone } from "react-dropzone";
-import _findIndex from "lodash/findIndex";
 import { format } from "date-fns";
 
-import { makeStyles, createStyles } from "@mui/styles";
 import { alpha, Stack, Grid, Tooltip, Chip, IconButton } from "@mui/material";
-import UploadIcon from "@src/assets/icons/Upload";
+import { Upload as UploadIcon } from "@src/assets/icons";
 import ChipList from "@src/components/Table/formatters/ChipList";
 import CircularProgressOptical from "@src/components/CircularProgressOptical";
 
-import { useConfirmation } from "@src/components/ConfirmationDialog";
-import useUploader, { FileValue } from "@src/hooks/useTable/useUploader";
+import { globalScope, confirmDialogAtom } from "@src/atoms/globalScope";
+import { tableScope, updateFieldAtom } from "@src/atoms/tableScope";
+import useUploader from "@src/hooks/useFirebaseStorageUploader";
 import { FileIcon } from ".";
 import { DATE_TIME_FORMAT } from "@src/constants/dates";
-import { useProjectContext } from "@src/contexts/ProjectContext";
-
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    root: {
-      paddingRight: theme.spacing(0.5),
-      outline: "none",
-    },
-    dragActive: {
-      backgroundColor: alpha(
-        theme.palette.primary.main,
-        theme.palette.action.hoverOpacity * 2
-      ),
-
-      "& .row-hover-iconButton": { color: theme.palette.primary.main },
-    },
-
-    chipList: {
-      overflow: "hidden",
-      flexGrow: 1,
-      marginLeft: "0 !important",
-    },
-    chip: { width: "100%" },
-
-    endButtonContainer: {},
-    circularProgress: {
-      color: theme.palette.action.active,
-      display: "block",
-      margin: theme.spacing(0, 0.5),
-    },
-  })
-);
+import { FileValue } from "@src/types/table";
 
 export default function File_({
   column,
@@ -54,25 +24,30 @@ export default function File_({
   value,
   onSubmit,
   disabled,
+  docRef,
 }: IHeavyCellProps) {
-  const classes = useStyles();
-  const { updateCell } = useProjectContext();
+  const confirm = useSetAtom(confirmDialogAtom, globalScope);
+  const updateField = useSetAtom(updateFieldAtom, tableScope);
 
   const { uploaderState, upload, deleteUpload } = useUploader();
   const { progress, isLoading } = uploaderState;
-  const { requestConfirmation } = useConfirmation();
+
   const onDrop = useCallback(
-    (acceptedFiles) => {
+    (acceptedFiles: File[]) => {
       const file = acceptedFiles[0];
 
       if (file) {
         upload({
-          docRef: row.ref,
+          docRef: docRef! as any,
           fieldName: column.key,
           files: [file],
           previousValue: value,
           onComplete: (newValue) => {
-            if (updateCell) updateCell(row.ref, column.key, newValue);
+            updateField({
+              path: docRef.path,
+              fieldName: column.key,
+              value: newValue,
+            });
           },
         });
       }
@@ -82,7 +57,7 @@ export default function File_({
 
   const handleDelete = (ref: string) => {
     const newValue = [...value];
-    const index = _findIndex(newValue, ["ref", ref]);
+    const index = findIndex(newValue, ["ref", ref]);
     const toBeDeleted = newValue.splice(index, 1);
     toBeDeleted.length && deleteUpload(toBeDeleted[0]);
     onSubmit(newValue);
@@ -147,14 +122,15 @@ export default function File_({
                     disabled
                       ? undefined
                       : () =>
-                          requestConfirmation({
+                          confirm({
                             handleConfirm: () => handleDelete(file.ref),
-                            title: "Delete file",
-                            body: "Are you sure you want to delete this file?",
+                            title: "Delete file?",
+                            body: "This file cannot be recovered after",
                             confirm: "Delete",
+                            confirmColor: "error",
                           })
                   }
-                  className={classes.chip}
+                  style={{ width: "100%" }}
                 />
               </Tooltip>
             </Grid>
@@ -165,12 +141,13 @@ export default function File_({
         !disabled && (
           <IconButton
             size="small"
-            className="row-hover-iconButton"
             onClick={(e) => {
               dropzoneProps.onClick!(e);
               e.stopPropagation();
             }}
             style={{ display: "flex" }}
+            className={docRef && "row-hover-iconButton"}
+            disabled={!docRef}
           >
             <UploadIcon />
           </IconButton>

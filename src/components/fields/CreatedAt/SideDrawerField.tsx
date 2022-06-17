@@ -1,34 +1,22 @@
-import { useWatch } from "react-hook-form";
-import { ISideDrawerFieldProps } from "../types";
+import { ISideDrawerFieldProps } from "@src/components/fields/types";
 
-import { useFieldStyles } from "@src/components/SideDrawer/Form/utils";
+import { Box } from "@mui/material";
+import { fieldSx } from "@src/components/SideDrawer/utils";
 
 import { format } from "date-fns";
 import { DATE_TIME_FORMAT } from "@src/constants/dates";
-import { useProjectContext } from "@src/contexts/ProjectContext";
 
-export default function CreatedAt({ control, column }: ISideDrawerFieldProps) {
-  const fieldClasses = useFieldStyles();
-
-  const { table } = useProjectContext();
-  const value = useWatch({
-    control,
-    name: table?.auditFieldCreatedBy || "_createdBy",
-  });
-
-  if (!value || !value.timestamp) return <div className={fieldClasses.root} />;
+export default function CreatedAt({ column, value }: ISideDrawerFieldProps) {
+  if (!value) return <Box sx={fieldSx} />;
 
   const dateLabel = format(
-    value.timestamp.toDate ? value.timestamp.toDate() : value.timestamp,
+    value.toDate ? value.toDate() : value,
     column.config?.format || DATE_TIME_FORMAT
   );
 
   return (
-    <div
-      className={fieldClasses.root}
-      style={{ fontVariantNumeric: "tabular-nums" }}
-    >
+    <Box sx={[fieldSx, { fontVariantNumeric: "tabular-nums" }]}>
       {dateLabel}
-    </div>
+    </Box>
   );
 }

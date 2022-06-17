@@ -1,10 +1,10 @@
 import { lazy } from "react";
 import { IFieldConfig, FieldType } from "@src/components/fields/types";
-import withHeavyCell from "../_withTableCell/withHeavyCell";
+import withBasicCell from "@src/components/fields/_withTableCell/withBasicCell";
 
 import DurationIcon from "@mui/icons-material/TimerOutlined";
-import BasicCell from "../_BasicCell/BasicCellNull";
-import NullEditor from "@src/components/Table/editors/NullEditor";
+import BasicCell from "@src/components/fields/_BasicCell/BasicCellNull";
+import withSideDrawerEditor from "@src/components/Table/editors/withSideDrawerEditor";
 
 const TableCell = lazy(
   () => import("./TableCell" /* webpackChunkName: "TableCell-Duration" */)
@@ -18,14 +18,14 @@ const SideDrawerField = lazy(
 
 export const config: IFieldConfig = {
   type: FieldType.duration,
-  name: "Duration (Alpha)",
+  name: "Duration",
   group: "Date & Time",
   dataType: "Record<'start' | 'end', firebase.firestore.Timestamp>",
   initialValue: {},
   icon: <DurationIcon />,
   description: "Duration calculated from two timestamps.",
-  TableCell: withHeavyCell(BasicCell, TableCell),
-  TableEditor: NullEditor as any,
+  TableCell: withBasicCell(TableCell),
+  TableEditor: withSideDrawerEditor(TableCell),
   SideDrawerField,
 };
 export default config;

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import _merge from "lodash/merge";
+import { merge } from "lodash-es";
 
 import { Tooltip, IconButton } from "@mui/material";
 import { alpha } from "@mui/material/styles";
@@ -74,7 +74,7 @@ export default function InfoTooltip({
       describeChild
       {...tooltipProps}
       open={open}
-      componentsProps={_merge(
+      componentsProps={merge(
         {
           tooltip: {
             style: {

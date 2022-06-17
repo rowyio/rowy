@@ -1,9 +1,10 @@
 import { useEffect } from "react";
+import { useSetAtom } from "jotai";
 import { EditorProps } from "react-data-grid";
-import { useProjectContext } from "@src/contexts/ProjectContext";
-import { IHeavyCellProps } from "@src/components/fields/types";
+import { get } from "lodash-es";
 
-import { getCellValue } from "@src/utils/fns";
+import { tableScope, sideDrawerOpenAtom } from "@src/atoms/tableScope";
+import { IHeavyCellProps } from "@src/components/fields/types";
 
 /**
  * Allow the cell to be editable, but disable react-data-grid’s default
@@ -18,12 +19,11 @@ export default function withSideDrawerEditor(
 ) {
   return function SideDrawerEditor(props: EditorProps<any, any>) {
     const { row, column } = props;
-    const { sideDrawerRef } = useProjectContext();
 
+    const setSideDrawerOpen = useSetAtom(sideDrawerOpenAtom, tableScope);
     useEffect(() => {
-      if (!sideDrawerRef?.current?.open && sideDrawerRef?.current?.setOpen)
-        sideDrawerRef?.current?.setOpen(true);
-    }, [column]);
+      setSideDrawerOpen(true);
+    }, [setSideDrawerOpen]);
 
     return HeavyCell ? (
       <div
@@ -40,10 +40,10 @@ export default function withSideDrawerEditor(
       >
         <HeavyCell
           {...(props as any)}
-          value={getCellValue(row, column.key)}
+          value={get(row, column.key)}
           name={column.name as string}
           type={(column as any).type}
-          docRef={props.row.ref}
+          docRef={props.row._rowy_ref}
           onSubmit={() => {}}
           disabled={props.column.editable === false}
         />

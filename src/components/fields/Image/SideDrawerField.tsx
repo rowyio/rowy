@@ -1,109 +1,94 @@
-import { ISideDrawerFieldProps } from "../types";
+import { ISideDrawerFieldProps } from "@src/components/fields/types";
 import { useCallback, useState } from "react";
-import clsx from "clsx";
-import { Controller } from "react-hook-form";
+import { useSetAtom } from "jotai";
 
 import { useDropzone } from "react-dropzone";
-import useUploader from "@src/hooks/useTable/useUploader";
+// TODO: GENERALIZE
+import useUploader from "@src/hooks/useFirebaseStorageUploader";
 
-import { makeStyles, createStyles } from "@mui/styles";
-import { alpha, ButtonBase, Typography, Grid, Tooltip } from "@mui/material";
-
+import {
+  alpha,
+  ButtonBase,
+  Typography,
+  Grid,
+  Tooltip,
+  Theme,
+  IconButton,
+  Box,
+} from "@mui/material";
 import AddIcon from "@mui/icons-material/AddAPhotoOutlined";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import OpenIcon from "@mui/icons-material/OpenInNewOutlined";
 
-import { IMAGE_MIME_TYPES } from ".";
 import Thumbnail from "@src/components/Thumbnail";
 import CircularProgressOptical from "@src/components/CircularProgressOptical";
-import { useConfirmation } from "@src/components/ConfirmationDialog";
-import { useProjectContext } from "@src/contexts/ProjectContext";
 
-import { useFieldStyles } from "@src/components/SideDrawer/Form/utils";
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    dropzoneButton: {
-      justifyContent: "flex-start",
-      color: theme.palette.text.secondary,
-    },
-    dropzoneDragActive: {
-      backgroundColor: alpha(
-        theme.palette.primary.light,
-        theme.palette.action.hoverOpacity * 2
-      ),
-      color: theme.palette.primary.main,
-    },
+import { globalScope, confirmDialogAtom } from "@src/atoms/globalScope";
+import { IMAGE_MIME_TYPES } from ".";
+import { fieldSx, getFieldId } from "@src/components/SideDrawer/utils";
 
-    imagesContainer: {
-      marginTop: 0,
-    },
+const imgSx = {
+  position: "relative",
+  width: 80,
+  height: 80,
+  borderRadius: 1,
+  // boxShadow: `0 0 0 1px ${theme.palette.divider} inset`,
 
-    img: {
-      position: "relative",
-      width: 80,
-      height: 80,
-      borderRadius: theme.shape.borderRadius,
-      // boxShadow: `0 0 0 1px ${theme.palette.divider} inset`,
+  backgroundSize: "contain",
+  backgroundPosition: "center center",
+  backgroundRepeat: "no-repeat",
+};
+const thumbnailSx = {
+  position: "absolute",
+  top: 0,
+  left: 0,
+  width: "100%",
+  height: "100%",
+};
+const overlaySx = {
+  position: "absolute",
+  top: 0,
+  left: 0,
+  bottom: 0,
+  right: 0,
 
-      backgroundSize: "contain",
-      backgroundPosition: "center center",
-      backgroundRepeat: "no-repeat",
-    },
-    thumbnail: {
-      position: "absolute",
-      top: 0,
-      left: 0,
-      width: "100%",
-      height: "100%",
-    },
+  backgroundColor: (theme: Theme) => alpha(theme.palette.background.paper, 0.8),
+  color: "text.secondary",
+  boxShadow: (theme: Theme) => `0 0 0 1px ${theme.palette.divider} inset`,
+  borderRadius: 1,
+};
+const deleteImgHoverSx = {
+  transition: (theme: Theme) =>
+    theme.transitions.create("background-color", {
+      duration: theme.transitions.duration.shortest,
+    }),
 
-    overlay: {
-      position: "absolute",
-      top: 0,
-      left: 0,
-      bottom: 0,
-      right: 0,
+  backgroundColor: "transparent",
 
-      backgroundColor: alpha(theme.palette.background.paper, 0.8),
-      color: theme.palette.text.secondary,
-      boxShadow: `0 0 0 1px ${theme.palette.divider} inset`,
-      borderRadius: theme.shape.borderRadius,
-    },
+  ".img:hover &": {
+    backgroundColor: (theme: Theme) =>
+      alpha(theme.palette.background.paper, 0.8),
+    "& *": { opacity: 1 },
+  },
 
-    deleteImgHover: {
-      transition: theme.transitions.create("background-color", {
+  "& *": {
+    opacity: 0,
+    transition: (theme: Theme) =>
+      theme.transitions.create("opacity", {
         duration: theme.transitions.duration.shortest,
       }),
+  },
+};
 
-      backgroundColor: "transparent",
-
-      "$img:hover &": {
-        backgroundColor: alpha(theme.palette.background.paper, 0.8),
-        "& *": { opacity: 1 },
-      },
-
-      "& *": {
-        opacity: 0,
-        transition: theme.transitions.create("opacity", {
-          duration: theme.transitions.duration.shortest,
-        }),
-      },
-    },
-  })
-);
-
-function ControlledImageUploader({
-  onChange,
-  value,
+export default function Image_({
   column,
-  docRef,
+  _rowy_ref,
+  value,
+  onChange,
+  onSubmit,
   disabled,
-}) {
-  const classes = useStyles();
-  const fieldClasses = useFieldStyles();
-  const { updateCell } = useProjectContext();
-
-  const { requestConfirmation } = useConfirmation();
+}: ISideDrawerFieldProps) {
+  const confirm = useSetAtom(confirmDialogAtom, globalScope);
   const { uploaderState, upload, deleteUpload } = useUploader();
   const { progress } = uploaderState;
 
@@ -111,25 +96,25 @@ function ControlledImageUploader({
   const [localImage, setLocalImage] = useState<string>("");
 
   const onDrop = useCallback(
-    (acceptedFiles) => {
+    (acceptedFiles: File[]) => {
       const imageFile = acceptedFiles[0];
 
-      if (docRef && imageFile) {
+      if (_rowy_ref && imageFile) {
         upload({
-          docRef,
+          docRef: _rowy_ref! as any,
           fieldName: column.key,
           files: [imageFile],
           previousValue: value ?? [],
           onComplete: (newValue) => {
-            if (updateCell) updateCell(docRef, column.key, newValue);
             onChange(newValue);
+            onSubmit();
             setLocalImage("");
           },
         });
         setLocalImage(URL.createObjectURL(imageFile));
       }
     },
-    [docRef, value]
+    [_rowy_ref, value]
   );
 
   const handleDelete = (index: number) => {
@@ -137,6 +122,7 @@ function ControlledImageUploader({
     const toBeDeleted = newValue.splice(index, 1);
     toBeDeleted.length && deleteUpload(toBeDeleted[0]);
     onChange(newValue);
+    onSubmit();
   };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -149,14 +135,26 @@ function ControlledImageUploader({
     <>
       {!disabled && (
         <ButtonBase
-          className={clsx(
-            fieldClasses.root,
-            classes.dropzoneButton,
-            isDragActive && classes.dropzoneDragActive
-          )}
+          sx={[
+            fieldSx,
+            {
+              justifyContent: "flex-start",
+              color: "text.secondary",
+            },
+            isDragActive
+              ? {
+                  backgroundColor: (theme) =>
+                    alpha(
+                      theme.palette.primary.light,
+                      theme.palette.action.hoverOpacity * 2
+                    ),
+                  color: "primary.main",
+                }
+              : {},
+          ]}
           {...getRootProps()}
         >
-          <input id={`sidedrawer-field-${column.key}`} {...getInputProps()} />
+          <input id={getFieldId(column.key)} {...getInputProps()} />
           <Typography color="inherit" style={{ flexGrow: 1 }}>
             {isDragActive
               ? "Drop image here"
@@ -166,65 +164,75 @@ function ControlledImageUploader({
         </ButtonBase>
       )}
 
-      <Grid container spacing={1} className={classes.imagesContainer}>
+      <Grid container spacing={1} style={{ marginTop: 0 }}>
         {Array.isArray(value) &&
           value.map((image, i) => (
             <Grid item key={image.downloadURL}>
               {disabled ? (
                 <Tooltip title="Open">
                   <ButtonBase
-                    className={classes.img}
+                    sx={imgSx}
                     onClick={() => window.open(image.downloadURL, "_blank")}
+                    className="img"
                   >
                     <Thumbnail
                       imageUrl={image.downloadURL}
                       size="200x200"
                       objectFit="contain"
-                      className={classes.thumbnail}
+                      sx={thumbnailSx}
                     />
                     <Grid
                       container
                       justifyContent="center"
                       alignItems="center"
-                      className={clsx(classes.overlay, classes.deleteImgHover)}
+                      sx={[overlaySx, deleteImgHoverSx]}
                     >
                       {disabled ? <OpenIcon /> : <DeleteIcon color="error" />}
                     </Grid>
                   </ButtonBase>
                 </Tooltip>
               ) : (
-                <Tooltip title="Delete…">
-                  <div>
-                    <ButtonBase
-                      className={classes.img}
-                      onClick={() =>
-                        requestConfirmation({
-                          title: "Delete image?",
-                          confirm: "Delete",
-                          handleConfirm: () => handleDelete(i),
-                        })
-                      }
+                <div>
+                  <Box sx={imgSx} className="img">
+                    <Thumbnail
+                      imageUrl={image.downloadURL}
+                      size="200x200"
+                      objectFit="contain"
+                      sx={thumbnailSx}
+                    />
+                    <Grid
+                      container
+                      justifyContent="center"
+                      alignItems="center"
+                      sx={[overlaySx, deleteImgHoverSx]}
                     >
-                      <Thumbnail
-                        imageUrl={image.downloadURL}
-                        size="200x200"
-                        objectFit="contain"
-                        className={classes.thumbnail}
-                      />
-                      <Grid
-                        container
-                        justifyContent="center"
-                        alignItems="center"
-                        className={clsx(
-                          classes.overlay,
-                          classes.deleteImgHover
-                        )}
-                      >
-                        <DeleteIcon color="error" />
-                      </Grid>
-                    </ButtonBase>
-                  </div>
-                </Tooltip>
+                      <Tooltip title="Delete…">
+                        <IconButton
+                          onClick={() =>
+                            confirm({
+                              title: "Delete image?",
+                              body: "This image cannot be recovered after",
+                              confirm: "Delete",
+                              confirmColor: "error",
+                              handleConfirm: () => handleDelete(i),
+                            })
+                          }
+                        >
+                          <DeleteIcon color="error" />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Open">
+                        <IconButton
+                          onClick={() =>
+                            window.open(image.downloadURL, "_blank")
+                          }
+                        >
+                          <OpenIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Grid>
+                  </Box>
+                </div>
               )}
             </Grid>
           ))}
@@ -232,14 +240,15 @@ function ControlledImageUploader({
         {localImage && (
           <Grid item>
             <ButtonBase
-              className={classes.img}
+              sx={imgSx}
               style={{ backgroundImage: `url("${localImage}")` }}
+              className="img"
             >
               <Grid
                 container
                 justifyContent="center"
                 alignItems="center"
-                className={classes.overlay}
+                sx={overlaySx}
               >
                 <CircularProgressOptical
                   color="inherit"
@@ -253,28 +262,5 @@ function ControlledImageUploader({
         )}
       </Grid>
     </>
-  );
-}
-
-export default function Image_({
-  control,
-  column,
-  disabled,
-  docRef,
-}: ISideDrawerFieldProps) {
-  return (
-    <Controller
-      control={control}
-      name={column.key}
-      render={({ field: { onChange, value } }) => (
-        <ControlledImageUploader
-          disabled={disabled}
-          column={column}
-          docRef={docRef}
-          onChange={onChange}
-          value={value}
-        />
-      )}
-    />
   );
 }

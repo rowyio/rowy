@@ -1,4 +1,4 @@
-import _mapValues from "lodash/mapValues";
+import { mapValues } from "lodash-es";
 import meta from "@root/package.json";
 
 export const EXTERNAL_LINKS = {
@@ -19,7 +19,7 @@ export const EXTERNAL_LINKS = {
   rowyAppHostName: "rowy.app",
 
   dateFormat: "https://date-fns.org/v2.24.0/docs/format",
-};
+} as const;
 
 const WIKI_PATHS = {
   setup: "/setup/install",
@@ -51,7 +51,7 @@ const WIKI_PATHS = {
   extensionsTwilioMessage: "/extensions/twilio-message",
   webhooks: "/webhooks",
 };
-export const WIKI_LINKS = _mapValues(
+export const WIKI_LINKS = mapValues(
   WIKI_PATHS,
   (path) => EXTERNAL_LINKS.docs + path
 );

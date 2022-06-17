@@ -1,6 +1,6 @@
 {
   "name": "rowy",
-  "version": "2.5.0",
+  "version": "2.6.0",
   "homepage": "https://rowy.io",
   "repository": {
     "type": "git",
@@ -8,94 +8,133 @@
   },
   "private": true,
   "dependencies": {
-    "@craco/craco": "^6.2.0",
-    "@date-io/date-fns": "1.x",
-    "@emotion/react": "^11.4.0",
-    "@emotion/styled": "^11.3.0",
-    "@hookform/resolvers": "^2.8.5",
-    "@mdi/js": "^6.5.95",
-    "@monaco-editor/react": "^4.3.1",
-    "@mui/icons-material": "^5.5.1",
-    "@mui/lab": "^5.0.0-alpha.73",
-    "@mui/material": "^5.5.1",
-    "@mui/styles": "^5.5.1",
-    "@rowy/form-builder": "^0.5.3",
-    "@rowy/multiselect": "^0.2.3",
-    "@tinymce/tinymce-react": "^3.12.6",
-    "algoliasearch": "^4.8.6",
-    "ansi-to-react": "^6.1.5",
-    "colord": "^2.7.0",
-    "compare-versions": "^4.1.1",
-    "craco-swc": "^0.1.3",
-    "csv-parse": "^4.15.3",
-    "date-fns": "^2.19.0",
-    "dompurify": "^2.2.6",
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
+    "@mdi/js": "^6.6.96",
+    "@monaco-editor/react": "^4.4.4",
+    "@mui/icons-material": "5.6.0",
+    "@mui/lab": "^5.0.0-alpha.76",
+    "@mui/material": "5.6.0",
+    "@mui/styles": "5.6.0",
+    "@mui/x-date-pickers": "^5.0.0-alpha.4",
+    "@rowy/form-builder": "^0.6.2",
+    "@rowy/multiselect": "^0.4.0",
+    "@tinymce/tinymce-react": "^3",
+    "@uiw/react-md-editor": "^3.14.1",
+    "algoliasearch": "^4.13.1",
+    "ansi-to-react": "^6.1.6",
+    "buffer": "^6.0.3",
+    "compare-versions": "^4.1.3",
+    "csv-parse": "^5.1.0",
+    "date-fns": "^2.28.0",
+    "dompurify": "^2.3.6",
     "file-saver": "^2.0.5",
-    "firebase": "8.6.8",
-    "hotkeys-js": "^3.7.2",
-    "jotai": "^1.5.3",
+    "firebase": "^9.6.11",
+    "firebaseui": "^6.0.1",
+    "jotai": "^1.7.2",
     "json-stable-stringify-without-jsonify": "^1.0.1",
-    "json2csv": "^5.0.6",
-    "jszip": "^3.6.0",
-    "jwt-decode": "^3.1.2",
-    "lodash": "^4.17.21",
+    "json2csv": "^5.0.7",
+    "jszip": "^3.10.0",
+    "lodash-es": "^4.17.21",
     "match-sorter": "^6.3.1",
-    "notistack": "^2.0.2",
-    "pb-util": "^1.0.1",
-    "query-string": "^6.8.3",
-    "quicktype-core": "^6.0.70",
-    "react": "^17.0.2",
-    "react-beautiful-dnd": "^13.0.0",
-    "react-color-palette": "^6.1.0",
-    "react-data-grid": "^7.0.0-beta.5",
-    "react-div-100vh": "^0.6.0",
-    "react-dnd": "^11.1.3",
-    "react-dnd-html5-backend": "^11.1.3",
-    "react-dom": "^17.0.2",
-    "react-dropzone": "^10.1.8",
+    "mdi-material-ui": "^7.3.0",
+    "monaco-editor-auto-typings": "^0.4.0",
+    "notistack": "^2.0.4",
+    "path-browserify": "^1.0.1",
+    "pb-util": "^1.0.3",
+    "quicktype-core": "^6.0.71",
+    "react": "^18.0.0",
+    "react-beautiful-dnd": "^13.1.0",
+    "react-color-palette": "^6.2.0",
+    "react-data-grid": "7.0.0-beta.5",
+    "react-div-100vh": "^0.7.0",
+    "react-dnd": "^16.0.1",
+    "react-dnd-html5-backend": "^16.0.1",
+    "react-dom": "^18.0.0",
+    "react-dropzone": "^10",
     "react-element-scroll-hook": "^1.1.0",
-    "react-firebaseui": "^5.0.2",
-    "react-helmet": "^6.1.0",
-    "react-hook-form": "^7.21.2",
-    "react-image": "^4.0.3",
-    "react-json-view": "^1.19.1",
-    "react-markdown": "^8.0.0",
-    "react-router-dom": "^5.0.1",
+    "react-error-boundary": "^3.1.4",
+    "react-helmet-async": "^1.3.0",
+    "react-hook-form": "^7.30.0",
+    "react-image": "^4",
+    "react-json-view": "^1.21.3",
+    "react-markdown": "^8.0.3",
+    "react-router-dom": "^6.3.0",
     "react-router-hash-link": "^2.4.3",
-    "react-scripts": "^4.0.3",
-    "react-usestateref": "^1.0.5",
+    "react-scripts": "^5.0.0",
+    "react-usestateref": "^1.0.8",
     "remark-gfm": "^3.0.1",
-    "serve": "^11.3.2",
-    "swr": "^1.0.1",
-    "tinymce": "^5.10.0",
-    "typescript": "^4.4.2",
-    "use-algolia": "^1.4.1",
-    "use-debounce": "^3.3.0",
-    "use-persisted-state": "^0.3.3",
-    "yarn": "^1.22.10"
+    "stream-browserify": "^3.0.0",
+    "swr": "^1.3.0",
+    "tinymce": "^5",
+    "tss-react": "^3.6.2",
+    "typescript": "^4.6.3",
+    "use-algolia": "^1.5.3",
+    "use-async-memo": "^1.2.4",
+    "use-debounce": "^8.0.0",
+    "use-memo-value": "^1.0.1",
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "upstream": "git fetch upstream;git merge upstream/main;git commit -m'merge upstream';git push",
-    "serve": "serve -s build",
-    "start": "craco start",
-    "build": "craco build CI=false",
-    "test": "craco test --env=jsdom",
-    "eject": "craco eject",
+    "start": "cross-env PORT=7699 craco start",
+    "startWithEmulators": "cross-env PORT=7699 REACT_APP_FIREBASE_EMULATORS=true craco start",
+    "emulators": "firebase emulators:start --only firestore,auth --import ./emulators/ --export-on-exit",
+    "test": "craco test --env ./src/test/custom-jest-env.js --verbose --detectOpenHandles",
+    "build": "craco build",
+    "analyze": "source-map-explorer ./build/static/js/*.js",
+    "prepare": "husky install",
     "env": "node createDotEnv",
     "target": "firebase target:apply hosting rowy",
-    "deploy": "firebase deploy"
+    "deploy": "firebase deploy --only hosting",
+    "typedoc": "typedoc src/atoms/tableScope/index.ts src/atoms/globalScope/index.ts --out typedoc"
   },
   "engines": {
-    "node": ">=10"
+    "node": ">=16"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "plugins": [
+      "eslint-plugin-no-relative-import-paths",
+      "eslint-plugin-tsdoc",
+      "eslint-plugin-local-rules"
+    ],
+    "extends": [
+      "react-app",
+      "react-app/jest",
+      "prettier"
+    ],
+    "rules": {
+      "no-relative-import-paths/no-relative-import-paths": [
+        "error",
+        {
+          "allowSameFolder": true
+        }
+      ],
+      "no-restricted-imports": [
+        "error",
+        {
+          "patterns": [
+            {
+              "group": [
+                "lodash",
+                "lodash/*"
+              ],
+              "message": "Use lodash-es instead"
+            }
+          ]
+        }
+      ],
+      "tsdoc/syntax": "warn",
+      "local-rules/no-jotai-use-atom-without-scope": "error"
+    }
   },
   "browserslist": {
     "production": [
-      ">0.2%",
+      "> 0.5%",
       "not dead",
-      "not op_mini all"
+      "not op_mini all",
+      "not ie > 0",
+      "not and_uc > 0",
+      "not ios_saf < 14"
     ],
     "development": [
       "last 1 chrome version",
@@ -104,34 +143,46 @@
     ]
   },
   "devDependencies": {
-    "@types/dompurify": "^2.2.1",
-    "@types/file-saver": "^2.0.1",
-    "@types/lodash": "^4.14.168",
-    "@types/node": "^14.14.6",
-    "@types/react": "^17.0.11",
-    "@types/react-beautiful-dnd": "^13.0.0",
-    "@types/react-color": "^3.0.1",
-    "@types/react-div-100vh": "^0.3.0",
-    "@types/react-dom": "^17.0.8",
-    "@types/react-helmet": "^6.1.2",
-    "@types/react-router-dom": "^5.1.7",
-    "@types/react-router-hash-link": "^2.4.1",
-    "@types/use-persisted-state": "^0.3.0",
+    "@craco/craco": "^6.4.3",
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^13.0.0",
+    "@testing-library/user-event": "^14.0.4",
+    "@types/dompurify": "^2.3.3",
+    "@types/file-saver": "^2.0.5",
+    "@types/jest": "^27.4.1",
+    "@types/json2csv": "^5.0.3",
+    "@types/lodash-es": "^4.17.6",
+    "@types/node": "^17.0.23",
+    "@types/react": "^18.0.5",
+    "@types/react-beautiful-dnd": "^13.1.2",
+    "@types/react-div-100vh": "^0.4.0",
+    "@types/react-dom": "^18.0.0",
+    "@types/react-router-dom": "^5.3.3",
+    "@types/react-router-hash-link": "^2.4.5",
+    "@typescript-eslint/parser": "^5.18.0",
     "craco-alias": "^3.0.1",
-    "firebase-tools": "^10.1.0",
-    "husky": "^4.2.5",
-    "monaco-editor": "^0.21.2",
-    "playwright": "^1.5.2",
-    "prettier": "^2.2.1",
-    "pretty-quick": "^3.0.0",
-    "raw-loader": "^4.0.2"
+    "craco-swc": "^0.5.1",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.12.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-react-app": "^7.0.0",
+    "eslint-plugin-local-rules": "^1.1.0",
+    "eslint-plugin-no-relative-import-paths": "^1.2.0",
+    "eslint-plugin-tsdoc": "^0.2.16",
+    "husky": ">=7.0.4",
+    "lint-staged": ">=12.3.7",
+    "monaco-editor": "^0.33.0",
+    "prettier": "^2.6.2",
+    "raw-loader": "^4.0.2",
+    "source-map-explorer": "^2.5.2",
+    "ts-jest": "^28.0.2",
+    "typedoc": "^0.22.17"
   },
   "resolutions": {
-    "react-hook-form": "^7.21.2"
+    "@types/react": "^18"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick --staged"
-    }
+  "lint-staged": {
+    "*.{js,ts,tsx}": "eslint --cache --fix",
+    "**/*": "prettier --write --ignore-unknown"
   }
 }

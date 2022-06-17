@@ -1,29 +1,21 @@
+import { useAtom, useSetAtom } from "jotai";
 import { Column } from "react-data-grid";
 
 import { Button } from "@mui/material";
-import AddColumnIcon from "@src/assets/icons/AddColumn";
+import { AddColumn as AddColumnIcon } from "@src/assets/icons";
 
-import { useAppContext } from "@src/contexts/AppContext";
-import { useProjectContext } from "@src/contexts/ProjectContext";
+import { globalScope, userRolesAtom } from "@src/atoms/globalScope";
+import { tableScope, columnModalAtom } from "@src/atoms/tableScope";
 
 const FinalColumnHeader: Column<any>["headerRenderer"] = ({ column }) => {
-  const { userClaims } = useAppContext();
-  const { columnMenuRef } = useProjectContext();
-  if (!columnMenuRef) return null;
+  const [userRoles] = useAtom(userRolesAtom, globalScope);
+  const openColumnModal = useSetAtom(columnModalAtom, tableScope);
 
-  if (!userClaims?.roles.includes("ADMIN")) return null;
-
-  const handleClick = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) =>
-    columnMenuRef?.current?.setSelectedColumnHeader({
-      column,
-      anchorEl: event.currentTarget,
-    });
+  if (!userRoles.includes("ADMIN")) return null;
 
   return (
     <Button
-      onClick={handleClick}
+      onClick={(e) => openColumnModal({ type: "new" })}
       variant="contained"
       color="primary"
       startIcon={<AddColumnIcon />}

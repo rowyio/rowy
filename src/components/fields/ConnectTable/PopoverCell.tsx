@@ -1,4 +1,4 @@
-import { IPopoverCellProps } from "../types";
+import { IPopoverCellProps } from "@src/components/fields/types";
 
 import ConnectTableSelect from "./ConnectTableSelect";
 

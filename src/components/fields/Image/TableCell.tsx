@@ -1,13 +1,14 @@
-import { IHeavyCellProps } from "../types";
 import { useCallback, useState } from "react";
+import { IHeavyCellProps } from "@src/components/fields/types";
+import { useAtom, useSetAtom } from "jotai";
+import { findIndex } from "lodash-es";
 
 import { useDropzone } from "react-dropzone";
-import _findIndex from "lodash/findIndex";
-import clsx from "clsx";
 
-import { makeStyles, createStyles } from "@mui/styles";
 import {
   alpha,
+  Theme,
+  Box,
   Stack,
   Grid,
   IconButton,
@@ -18,108 +19,82 @@ import AddIcon from "@mui/icons-material/AddAPhotoOutlined";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import OpenIcon from "@mui/icons-material/OpenInNewOutlined";
 
-import CircularProgressOptical from "@src/components/CircularProgressOptical";
-import { useConfirmation } from "@src/components/ConfirmationDialog";
-import useUploader, { FileValue } from "@src/hooks/useTable/useUploader";
-import { IMAGE_MIME_TYPES } from "./index";
-import { useProjectContext } from "@src/contexts/ProjectContext";
 import Thumbnail from "@src/components/Thumbnail";
+import CircularProgressOptical from "@src/components/CircularProgressOptical";
 
-const useStyles = makeStyles((theme) =>
-  createStyles({
-    root: {
-      padding: theme.spacing(0, 0.5, 0, 1),
-      outline: "none",
-      height: "100%",
-    },
-    dragActive: {
-      backgroundColor: alpha(
-        theme.palette.primary.main,
-        theme.palette.action.hoverOpacity * 2
-      ),
+import { globalScope, confirmDialogAtom } from "@src/atoms/globalScope";
+import {
+  tableSchemaAtom,
+  tableScope,
+  updateFieldAtom,
+} from "@src/atoms/tableScope";
+import useUploader from "@src/hooks/useFirebaseStorageUploader";
+import { IMAGE_MIME_TYPES } from "./index";
+import { DEFAULT_ROW_HEIGHT } from "@src/components/Table";
+import { FileValue } from "@src/types/table";
 
-      "& .row-hover-iconButton": { color: theme.palette.primary.main },
-    },
+// MULTIPLE
+const imgSx = (rowHeight: number) => ({
+  position: "relative",
+  display: "flex",
 
-    imglistContainer: {
-      width: `calc(100% - 30px)`,
-      overflowX: "hidden",
-      marginLeft: "0 !important",
-    },
+  width: (theme: Theme) => `calc(${rowHeight}px - ${theme.spacing(1)} - 1px)`,
+  height: (theme: Theme) => `calc(${rowHeight}px - ${theme.spacing(1)} - 1px)`,
 
-    img: ({ rowHeight }: { rowHeight: number }) => ({
-      position: "relative",
-      display: "flex",
+  backgroundSize: "contain",
+  backgroundPosition: "center center",
+  backgroundRepeat: "no-repeat",
 
-      width: `calc(${rowHeight}px - ${theme.spacing(1)} - 1px)`,
-      height: `calc(${rowHeight}px - ${theme.spacing(1)} - 1px)`,
+  borderRadius: 1,
+});
+const thumbnailSx = {
+  position: "absolute",
+  top: 0,
+  left: 0,
+  width: "100%",
+  height: "100%",
+};
+const deleteImgHoverSx = {
+  position: "absolute",
+  top: 0,
+  left: 0,
+  bottom: 0,
+  right: 0,
 
-      backgroundSize: "contain",
-      backgroundPosition: "center center",
-      backgroundRepeat: "no-repeat",
+  color: "text.secondary",
+  boxShadow: (theme: Theme) => `0 0 0 1px ${theme.palette.divider} inset`,
+  borderRadius: 1,
 
-      borderRadius: theme.shape.borderRadius,
+  transition: (theme: Theme) =>
+    theme.transitions.create("background-color", {
+      duration: theme.transitions.duration.shortest,
     }),
-    thumbnail: {
-      position: "absolute",
-      top: 0,
-      left: 0,
-      width: "100%",
-      height: "100%",
-    },
 
-    deleteImgHover: {
-      position: "absolute",
-      top: 0,
-      left: 0,
-      bottom: 0,
-      right: 0,
-
-      color: theme.palette.text.secondary,
-      boxShadow: `0 0 0 1px ${theme.palette.divider} inset`,
-      borderRadius: theme.shape.borderRadius,
-
-      transition: theme.transitions.create("background-color", {
+  "& *": {
+    opacity: 0,
+    transition: (theme: Theme) =>
+      theme.transitions.create("opacity", {
         duration: theme.transitions.duration.shortest,
       }),
+  },
 
-      "& *": {
-        opacity: 0,
-        transition: theme.transitions.create("opacity", {
-          duration: theme.transitions.duration.shortest,
-        }),
-      },
-
-      "$img:hover &": {
-        backgroundColor: alpha(theme.palette.background.paper, 0.8),
-        "& *": { opacity: 1 },
-      },
-    },
-
-    localImgPreview: {
-      boxShadow: `0 0 0 1px ${theme.palette.divider} inset`,
-    },
-
-    endButtonContainer: {},
-    circularProgress: {
-      color: theme.palette.action.active,
-      display: "block",
-      margin: theme.spacing(0, 0.5),
-    },
-  })
-);
+  ".img:hover &": {
+    backgroundColor: (theme: Theme) =>
+      alpha(theme.palette.background.paper, 0.8),
+    "& *": { opacity: 1 },
+  },
+};
 
 export default function Image_({
   column,
-  row,
   value,
   onSubmit,
   disabled,
+  docRef,
 }: IHeavyCellProps) {
-  const { tableState, updateCell } = useProjectContext();
-  const { requestConfirmation } = useConfirmation();
-  const classes = useStyles({ rowHeight: tableState?.config?.rowHeight ?? 44 });
-
+  const confirm = useSetAtom(confirmDialogAtom, globalScope);
+  const updateField = useSetAtom(updateFieldAtom, tableScope);
+  const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const { uploaderState, upload, deleteUpload } = useUploader();
   const { progress, isLoading } = uploaderState;
 
@@ -127,17 +102,21 @@ export default function Image_({
   const [localImage, setLocalImage] = useState<string>("");
 
   const onDrop = useCallback(
-    (acceptedFiles) => {
+    (acceptedFiles: File[]) => {
       const imageFile = acceptedFiles[0];
 
       if (imageFile) {
         upload({
-          docRef: row.ref,
+          docRef: docRef! as any,
           fieldName: column.key,
           files: [imageFile],
           previousValue: value,
           onComplete: (newValue) => {
-            if (updateCell) updateCell(row.ref, column.key, newValue);
+            updateField({
+              path: docRef.path,
+              fieldName: column.key,
+              value: newValue,
+            });
             setLocalImage("");
           },
         });
@@ -149,7 +128,7 @@ export default function Image_({
 
   const handleDelete = (ref: string) => () => {
     const newValue = [...value];
-    const index = _findIndex(newValue, ["ref", ref]);
+    const index = findIndex(newValue, ["ref", ref]);
     const toBeDeleted = newValue.splice(index, 1);
     toBeDeleted.length && deleteUpload(toBeDeleted[0]);
     onSubmit(newValue);
@@ -163,25 +142,46 @@ export default function Image_({
 
   const dropzoneProps = getRootProps();
 
+  const rowHeight = tableSchema.rowHeight ?? DEFAULT_ROW_HEIGHT;
   let thumbnailSize = "100x100";
-  if (tableState?.config?.rowHeight) {
-    if (tableState!.config!.rowHeight! > 50) thumbnailSize = "200x200";
-    if (tableState!.config!.rowHeight! > 100) thumbnailSize = "400x400";
-  }
+  if (rowHeight > 50) thumbnailSize = "200x200";
+  if (rowHeight > 100) thumbnailSize = "400x400";
 
   return (
     <Stack
       direction="row"
-      className={clsx(
-        "cell-collapse-padding",
-        classes.root,
-        isDragActive && classes.dragActive
-      )}
+      className="cell-collapse-padding"
+      sx={[
+        {
+          py: 0,
+          pl: 1,
+          pr: 0.5,
+          outline: "none",
+          height: "100%",
+        },
+        isDragActive
+          ? {
+              backgroundColor: (theme) =>
+                alpha(
+                  theme.palette.primary.main,
+                  theme.palette.action.hoverOpacity * 2
+                ),
+
+              "& .row-hover-iconButton": { color: "primary.main" },
+            }
+          : {},
+      ]}
       alignItems="center"
       {...dropzoneProps}
       onClick={undefined}
     >
-      <div className={classes.imglistContainer}>
+      <div
+        style={{
+          width: `calc(100% - 30px)`,
+          overflowX: "hidden",
+          marginLeft: "0 !important",
+        }}
+      >
         <Grid container spacing={0.5} wrap="nowrap">
           {Array.isArray(value) &&
             value.map((file: FileValue) => (
@@ -189,20 +189,21 @@ export default function Image_({
                 {disabled ? (
                   <Tooltip title="Open">
                     <ButtonBase
-                      className={classes.img}
+                      sx={imgSx(rowHeight)}
+                      className="img"
                       onClick={() => window.open(file.downloadURL, "_blank")}
                     >
                       <Thumbnail
                         imageUrl={file.downloadURL}
                         size={thumbnailSize}
                         objectFit="contain"
-                        className={classes.thumbnail}
+                        sx={thumbnailSx}
                       />
                       <Grid
                         container
                         justifyContent="center"
                         alignItems="center"
-                        className={classes.deleteImgHover}
+                        sx={deleteImgHoverSx}
                       >
                         {disabled ? (
                           <OpenIcon />
@@ -216,11 +217,14 @@ export default function Image_({
                   <Tooltip title="Delete…">
                     <div>
                       <ButtonBase
-                        className={classes.img}
+                        sx={imgSx(rowHeight)}
+                        className="img"
                         onClick={() => {
-                          requestConfirmation({
+                          confirm({
                             title: "Delete image?",
+                            body: "This image cannot be recovered after",
                             confirm: "Delete",
+                            confirmColor: "error",
                             handleConfirm: handleDelete(file.ref),
                           });
                         }}
@@ -229,13 +233,13 @@ export default function Image_({
                           imageUrl={file.downloadURL}
                           size={thumbnailSize}
                           objectFit="contain"
-                          className={classes.thumbnail}
+                          sx={thumbnailSx}
                         />
                         <Grid
                           container
                           justifyContent="center"
                           alignItems="center"
-                          className={classes.deleteImgHover}
+                          sx={deleteImgHoverSx}
                         >
                           <DeleteIcon color="error" />
                         </Grid>
@@ -248,8 +252,14 @@ export default function Image_({
 
           {localImage && (
             <Grid item>
-              <div
-                className={clsx(classes.img, classes.localImgPreview)}
+              <Box
+                sx={[
+                  imgSx(rowHeight),
+                  {
+                    boxShadow: (theme) =>
+                      `0 0 0 1px ${theme.palette.divider} inset`,
+                  },
+                ]}
                 style={{ backgroundImage: `url("${localImage}")` }}
               />
             </Grid>
@@ -261,12 +271,13 @@ export default function Image_({
         !disabled && (
           <IconButton
             size="small"
-            className="row-hover-iconButton"
             onClick={(e) => {
               dropzoneProps.onClick!(e);
               e.stopPropagation();
             }}
             style={{ display: "flex" }}
+            className={docRef && "row-hover-iconButton"}
+            disabled={!docRef}
           >
             <AddIcon />
           </IconButton>

@@ -1,6 +1,6 @@
-import { IPopoverCellProps } from "../types";
+import { IPopoverCellProps } from "@src/components/fields/types";
 
-import ConnectServiceSelect from "./Select";
+import Selector from "./Select";
 
 export default function ConnectService({
   value,
@@ -12,7 +12,7 @@ export default function ConnectService({
   docRef,
 }: IPopoverCellProps) {
   return (
-    <ConnectServiceSelect
+    <Selector
       value={value}
       onChange={onSubmit}
       column={column}

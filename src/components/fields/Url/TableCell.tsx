@@ -1,4 +1,4 @@
-import { IBasicCellProps } from "../types";
+import { IBasicCellProps } from "@src/components/fields/types";
 
 import { Stack, IconButton } from "@mui/material";
 import LaunchIcon from "@mui/icons-material/Launch";
@@ -25,6 +25,7 @@ export default function Url({ value }: IBasicCellProps) {
         className="row-hover-iconButton"
         size="small"
         style={{ flexShrink: 0 }}
+        aria-label="Open in new tab"
       >
         <LaunchIcon />
       </IconButton>

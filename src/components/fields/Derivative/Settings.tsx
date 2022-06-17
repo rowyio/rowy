@@ -1,16 +1,22 @@
 import { lazy, Suspense, useEffect } from "react";
-import { ISettingsProps } from "../types";
+import { ISettingsProps } from "@src/components/fields/types";
+import { useAtom, useSetAtom } from "jotai";
 
 import { Grid, InputLabel, FormHelperText } from "@mui/material";
 import MultiSelect from "@rowy/multiselect";
-import FieldSkeleton from "@src/components/SideDrawer/Form/FieldSkeleton";
-import FieldsDropdown from "@src/components/Table/ColumnMenu/FieldsDropdown";
+import FieldSkeleton from "@src/components/SideDrawer/FieldSkeleton";
+import FieldsDropdown from "@src/components/ColumnModals/FieldsDropdown";
 import CodeEditorHelper from "@src/components/CodeEditor/CodeEditorHelper";
 
+import {
+  globalScope,
+  compatibleRowyRunVersionAtom,
+  projectSettingsAtom,
+  rowyRunModalAtom,
+} from "@src/atoms/globalScope";
+import { tableScope, tableColumnsOrderedAtom } from "@src/atoms/tableScope";
 import { FieldType } from "@src/constants/fields";
-import { useProjectContext } from "@src/contexts/ProjectContext";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
-import { useRowyRunModal } from "@src/atoms/RowyRunModal";
 
 import { getFieldProp } from "@src/components/fields";
 /* eslint-disable import/no-webpack-loader-syntax */
@@ -34,19 +40,21 @@ export default function Settings({
   onBlur,
   errors,
 }: ISettingsProps) {
-  const { tableState, compatibleRowyRunVersion, settings } =
-    useProjectContext();
-  const openRowyRunModal = useRowyRunModal();
+  const [projectSettings] = useAtom(projectSettingsAtom, globalScope);
+  const [compatibleRowyRunVersion] = useAtom(
+    compatibleRowyRunVersionAtom,
+    globalScope
+  );
+  const openRowyRunModal = useSetAtom(rowyRunModalAtom, globalScope);
+  const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
+
   useEffect(() => {
-    if (!settings?.rowyRunUrl) openRowyRunModal("Derivative fields");
-  }, [settings?.rowyRunUrl]);
+    if (!projectSettings.rowyRunUrl)
+      openRowyRunModal({ feature: "Derivative fields" });
+  }, [projectSettings.rowyRunUrl]);
 
-  if (!tableState?.columns) return null;
-
-  if (!tableState?.columns) return <></>;
-  const columns = Object.values(tableState.columns);
   const returnType = getFieldProp("dataType", config.renderFieldType) ?? "any";
-  const columnOptions = columns
+  const columnOptions = tableColumnsOrdered
     .filter((column) => column.fieldName !== fieldName)
     .filter((column) => column.type !== FieldType.subTable)
     .map((c) => ({ label: c.name, value: c.key }));
@@ -148,7 +156,7 @@ export default function Settings({
   );
 }
 
-export const settingsValidator = (config) => {
+export const settingsValidator = (config: any) => {
   const errors: Record<string, any> = {};
   if (!config.listenerFields) errors.listenerFields = "Required";
   if (!config.renderFieldType) errors.renderFieldType = "Required";

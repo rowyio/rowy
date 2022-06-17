@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react";
-import { ISettingsProps } from "../types";
-import _sortBy from "lodash/sortBy";
+import { useEffect } from "react";
+import { useAsyncMemo } from "use-async-memo";
+import { ISettingsProps } from "@src/components/fields/types";
+import { sortBy } from "lodash-es";
+import { useAtom, useSetAtom } from "jotai";
 
 import {
   Typography,
@@ -14,22 +16,28 @@ import MultiSelect from "@rowy/multiselect";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 import WarningIcon from "@mui/icons-material/WarningAmberOutlined";
 
+import {
+  globalScope,
+  getTableSchemaAtom,
+  tablesAtom,
+  projectSettingsAtom,
+  rowyRunModalAtom,
+} from "@src/atoms/globalScope";
 import { FieldType } from "@src/constants/fields";
-import { db } from "@src/firebase";
-import { useProjectContext } from "@src/contexts/ProjectContext";
-import { TABLE_SCHEMAS } from "@src/config/dbPaths";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
-import { useRowyRunModal } from "@src/atoms/RowyRunModal";
 
 export default function Settings({ onChange, config }: ISettingsProps) {
-  const { tables, settings } = useProjectContext();
+  const [tables] = useAtom(tablesAtom, globalScope);
+  const [projectSettings] = useAtom(projectSettingsAtom, globalScope);
+  const openRowyRunModal = useSetAtom(rowyRunModalAtom, globalScope);
+  const [getTableSchema] = useAtom(getTableSchemaAtom, globalScope);
 
-  const openRowyRunModal = useRowyRunModal();
   useEffect(() => {
-    if (!settings?.rowyRunUrl) openRowyRunModal("Connect Table fields");
-  }, [settings?.rowyRunUrl]);
+    if (!projectSettings.rowyRunUrl)
+      openRowyRunModal({ feature: "Connect Table fields" });
+  }, [projectSettings.rowyRunUrl, openRowyRunModal]);
 
-  const tableOptions = _sortBy(
+  const tableOptions = sortBy(
     tables?.map((table) => ({
       label: table.name,
       value: table.id,
@@ -39,26 +47,20 @@ export default function Settings({ onChange, config }: ISettingsProps) {
     ["section", "label"]
   );
 
-  const [columns, setColumns] = useState<
-    { value: string; label: string; type: FieldType }[]
-  >([]);
-  const getColumns = async (table) => {
-    const tableConfigDoc = await db.doc(`${TABLE_SCHEMAS}/${table}`).get();
-    const tableConfig = tableConfigDoc.data();
-    if (tableConfig && tableConfig.columns)
-      setColumns(
-        Object.values(tableConfig.columns).map((c: any) => ({
-          label: c.name,
-          value: c.key,
-          type: c.type,
-        }))
-      );
-  };
-  useEffect(() => {
-    if (config.index) {
-      getColumns(config.index);
-    }
-  }, [config.index]);
+  const columns = useAsyncMemo(
+    async () => {
+      const id = config.index; // ???
+      if (!getTableSchema || !id) return [];
+      const tableConfig = await getTableSchema(id);
+      return Object.values(tableConfig.columns ?? {}).map((c: any) => ({
+        label: c.name,
+        value: c.key,
+        type: c.type,
+      }));
+    },
+    [config.index, getTableSchema],
+    []
+  );
 
   return (
     <>

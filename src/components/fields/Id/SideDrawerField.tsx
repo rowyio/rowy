@@ -1,18 +1,12 @@
-import { ISideDrawerFieldProps } from "../types";
+import { ISideDrawerFieldProps } from "@src/components/fields/types";
 
-import { useTheme } from "@mui/material";
-import { useFieldStyles } from "@src/components/SideDrawer/Form/utils";
+import { Box } from "@mui/material";
+import { fieldSx } from "@src/components/SideDrawer/utils";
 
-export default function Id({ docRef }: ISideDrawerFieldProps) {
-  const theme = useTheme();
-  const fieldClasses = useFieldStyles();
-
+export default function Id({ _rowy_ref }: ISideDrawerFieldProps) {
   return (
-    <div
-      className={fieldClasses.root}
-      style={{ fontFamily: theme.typography.fontFamilyMono, userSelect: "all" }}
-    >
-      {docRef.id}
-    </div>
+    <Box sx={[fieldSx, { fontFamily: "fontFamilyMono", userSelect: "all" }]}>
+      {_rowy_ref?.id}
+    </Box>
   );
 }

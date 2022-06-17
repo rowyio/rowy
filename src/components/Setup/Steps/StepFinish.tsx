@@ -1,17 +1,28 @@
 import { useState, useEffect } from "react";
+import { useAtom } from "jotai";
 import { useSnackbar } from "notistack";
 import { Link } from "react-router-dom";
-import type { ISetupStep } from "../types";
+import { doc, updateDoc } from "firebase/firestore";
+import type { ISetupStep } from "@src/components/Setup/SetupStep";
 
-import { Typography, Stack, RadioGroup, Radio, Button } from "@mui/material";
+import {
+  Typography,
+  Stack,
+  RadioGroup,
+  RadioGroupProps,
+  Radio,
+  Button,
+} from "@mui/material";
 import ThumbUpIcon from "@mui/icons-material/ThumbUpAlt";
 import ThumbUpOffIcon from "@mui/icons-material/ThumbUpOffAlt";
 import ThumbDownIcon from "@mui/icons-material/ThumbDownAlt";
 import ThumbDownOffIcon from "@mui/icons-material/ThumbDownOffAlt";
 
-import { analytics } from "analytics";
-import { db } from "@src/firebase";
-import { routes } from "@src/constants/routes";
+import { analytics, logEvent } from "@src/analytics";
+import { globalScope } from "@src/atoms/globalScope";
+import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
+import { ROUTES } from "@src/constants/routes";
+import { SETTINGS } from "config/dbPaths";
 
 export default {
   id: "finish",
@@ -24,16 +35,17 @@ export default {
 } as ISetupStep;
 
 function StepFinish() {
+  const [firebaseDb] = useAtom(firebaseDbAtom, globalScope);
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
-    db.doc("_rowy_/settings").update({ setupCompleted: true });
-  }, []);
+    updateDoc(doc(firebaseDb, SETTINGS), { setupCompleted: true });
+  }, [firebaseDb]);
   const [rating, setRating] = useState<"up" | "down" | undefined>();
 
-  const handleRate = (e) => {
-    setRating(e.target.value);
-    analytics.logEvent("setup_rating", { rating: e.target.value });
+  const handleRate: RadioGroupProps["onChange"] = (e) => {
+    setRating(e.target.value as typeof rating);
+    logEvent(analytics, "setup_rating", { rating: e.target.value });
     enqueueSnackbar("Thanks for your feedback!");
   };
 
@@ -80,7 +92,7 @@ function StepFinish() {
         color="primary"
         size="large"
         component={Link}
-        to={routes.auth}
+        to={ROUTES.auth}
       >
         Sign in to your Rowy project
       </Button>

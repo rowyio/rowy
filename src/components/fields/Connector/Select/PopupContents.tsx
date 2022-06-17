@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import { useDebouncedCallback } from "use-debounce";
-import _get from "lodash/get";
+import { get } from "lodash-es";
+import { useAtom } from "jotai";
 
 import {
   Button,
@@ -22,10 +23,11 @@ import SearchIcon from "@mui/icons-material/Search";
 import { IConnectorSelectProps } from ".";
 import useStyles from "./styles";
 import Loading from "@src/components/Loading";
-import { useProjectContext } from "@src/contexts/ProjectContext";
-import { replacer } from "@src/utils/fns";
-import { getLabel } from "../utils";
+import { getLabel } from "@src/components/fields/Connector/utils";
 import { useSnackbar } from "notistack";
+import { globalScope, rowyRunAtom } from "@src/atoms/globalScope";
+import { tableScope, tableSettingsAtom } from "@src/atoms/tableScope";
+import { getTableSchemaPath } from "@src/utils/table";
 
 export interface IPopupContentsProps
   extends Omit<IConnectorSelectProps, "className" | "TextFieldProps"> {}
@@ -37,7 +39,8 @@ export default function PopupContents({
   column,
   docRef,
 }: IPopupContentsProps) {
-  const { rowyRun, tableState } = useProjectContext();
+  const [rowyRun] = useAtom(rowyRunAtom, globalScope);
+  const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
 
   const { enqueueSnackbar } = useSnackbar();
   // const url = config.url ;
@@ -45,7 +48,7 @@ export default function PopupContents({
   const elementId = config.elementId;
   const multiple = Boolean(config.multiple);
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   // Webservice search query
   const [query, setQuery] = useState("");
@@ -64,14 +67,14 @@ export default function PopupContents({
       //enqueueSnackbar("response is not any array", { variant: "error" });
     }
   }, [response]);
-  const [search] = useDebouncedCallback(
+  const search = useDebouncedCallback(
     async (query: string) => {
       const resp = await rowyRun!({
         route: { method: "POST", path: "/connector" },
         body: {
           columnKey: column.key,
           query: query,
-          schemaDocPath: tableState?.config.tableConfig.path,
+          schemaDocPath: getTableSchemaPath(tableSettings),
           rowDocPath: docRef.path,
         },
       });
@@ -97,7 +100,7 @@ export default function PopupContents({
     else onChange([]);
   };
 
-  const selectedValues = value?.map((item) => _get(item, elementId));
+  const selectedValues = value?.map((item) => get(item, elementId));
 
   const clearSelection = () => onChange([]);
 
@@ -128,13 +131,8 @@ export default function PopupContents({
         <List className={classes.list}>
           {hits.map((hit) => {
             const isSelected = selectedValues.some((v) => v === hit[elementId]);
-            console.log({
-              isSelected,
-              selectedValues,
-              elementId,
-            });
             return (
-              <React.Fragment key={_get(hit, elementId)}>
+              <React.Fragment key={get(hit, elementId)}>
                 <MenuItem
                   dense
                   onClick={isSelected ? deselect(hit) : select(hit)}
@@ -152,7 +150,7 @@ export default function PopupContents({
                         className={classes.checkbox}
                         disableRipple
                         inputProps={{
-                          "aria-labelledby": `label-${_get(hit, elementId)}`,
+                          "aria-labelledby": `label-${get(hit, elementId)}`,
                         }}
                       />
                     ) : (
@@ -164,13 +162,13 @@ export default function PopupContents({
                         className={classes.checkbox}
                         disableRipple
                         inputProps={{
-                          "aria-labelledby": `label-${_get(hit, elementId)}`,
+                          "aria-labelledby": `label-${get(hit, elementId)}`,
                         }}
                       />
                     )}
                   </ListItemIcon>
                   <ListItemText
-                    id={`label-${_get(hit, elementId)}`}
+                    id={`label-${get(hit, elementId)}`}
                     primary={getLabel(config, hit)}
                   />
                 </MenuItem>

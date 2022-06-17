@@ -8,7 +8,7 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 
 import SlideTransition from "@src/components/Modal/SlideTransition";
-import { APP_BAR_HEIGHT } from "@src/components/Navigation";
+import { APP_BAR_HEIGHT } from "@src/layouts/Navigation";
 
 export interface IFloatingSearchProps extends Partial<FilledTextFieldProps> {
   label: string;
@@ -119,6 +119,12 @@ export default function FloatingSearch({
                     (theme.shape.borderRadius as number) * 2 * 2
                   }px)`,
                 left: (theme) => (theme.shape.borderRadius as number) * 2,
+              },
+
+              "&.Mui-disabled": {
+                bgcolor: "transparent",
+                boxShadow: "none",
+                "& .MuiInputAdornment-root": { color: "text.disabled" },
               },
             },
           }}

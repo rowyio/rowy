@@ -1,5 +1,7 @@
 import { SWRConfig } from "swr";
 
+// NOTE: This does not support React 18 yet. See: https://github.com/vercel/swr/issues/1904
+
 // https://swr.vercel.app/docs/advanced/cache#localstorage-based-persistent-cache
 function localStorageProvider() {
   // When initializing, we restore the data from `localStorage` into a map.

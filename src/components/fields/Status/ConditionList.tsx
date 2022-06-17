@@ -1,8 +1,6 @@
-import Subheading from "@src/components/Table/ColumnMenu/Subheading";
+import { InputLabel, Grid, Divider } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import IconButton from "@mui/material/IconButton";
-import Grid from "@mui/material/Grid";
-import Divider from "@mui/material/Divider";
 
 import { IConditionModal } from "./Settings";
 import { createValueLabel } from "./utils/conditionListHelper";
@@ -24,8 +22,8 @@ export default function ConditionList({ config, setModal }: I_ConditionList) {
   }
   return (
     <>
-      <Subheading>Conditions</Subheading>
-      {conditions.map((condition, index) => {
+      <InputLabel>Conditions</InputLabel>
+      {conditions.map((condition: any, index: number) => {
         return (
           <>
             <Grid

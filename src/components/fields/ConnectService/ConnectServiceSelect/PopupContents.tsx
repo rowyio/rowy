@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import { useDebouncedCallback } from "use-debounce";
-import _get from "lodash/get";
+import { get } from "lodash-es";
+import { getDoc } from "firebase/firestore";
 
 import {
   Button,
@@ -40,7 +41,7 @@ export default function PopupContents({
   const primaryKey = config.primaryKey;
   const multiple = Boolean(config.multiple);
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   // Webservice search query
   const [query, setQuery] = useState("");
@@ -49,16 +50,17 @@ export default function PopupContents({
 
   const [docData, setDocData] = useState<any | null>(null);
   useEffect(() => {
-    docRef.get().then((d) => setDocData(d.data()));
+    // TODO: GENERALIZE
+    getDoc(docRef).then((d) => setDocData(d.data()));
   }, []);
 
-  const hits: any["hits"] = _get(response, resultsKey) ?? [];
-  const [search] = useDebouncedCallback(
+  const hits: any["hits"] = get(response, resultsKey) ?? [];
+  const search = useDebouncedCallback(
     async (query: string) => {
       if (!docData) return;
       if (!url) return;
-      const uri = new URL(url),
-        params = { q: query };
+      const uri = new URL(url);
+      const params: any = { q: query };
       Object.keys(params).forEach((key) =>
         uri.searchParams.append(key, params[key])
       );
@@ -92,7 +94,7 @@ export default function PopupContents({
     else onChange([]);
   };
 
-  const selectedValues = value?.map((item) => _get(item, primaryKey));
+  const selectedValues = value?.map((item) => get(item, primaryKey));
 
   const clearSelection = () => onChange([]);
 
@@ -121,11 +123,11 @@ export default function PopupContents({
 
       <Grid item xs className={classes.listRow}>
         <List className={classes.list}>
-          {hits.map((hit) => {
+          {hits.map((hit: any) => {
             const isSelected =
-              selectedValues.indexOf(_get(hit, primaryKey)) !== -1;
+              selectedValues.indexOf(get(hit, primaryKey)) !== -1;
             return (
-              <React.Fragment key={_get(hit, primaryKey)}>
+              <React.Fragment key={get(hit, primaryKey)}>
                 <MenuItem
                   dense
                   onClick={isSelected ? deselect(hit) : select(hit)}
@@ -140,7 +142,7 @@ export default function PopupContents({
                         className={classes.checkbox}
                         disableRipple
                         inputProps={{
-                          "aria-labelledby": `label-${_get(hit, primaryKey)}`,
+                          "aria-labelledby": `label-${get(hit, primaryKey)}`,
                         }}
                       />
                     ) : (
@@ -152,15 +154,15 @@ export default function PopupContents({
                         className={classes.checkbox}
                         disableRipple
                         inputProps={{
-                          "aria-labelledby": `label-${_get(hit, primaryKey)}`,
+                          "aria-labelledby": `label-${get(hit, primaryKey)}`,
                         }}
                       />
                     )}
                   </ListItemIcon>
                   <ListItemText
-                    id={`label-${_get(hit, primaryKey)}`}
-                    primary={_get(hit, titleKey)}
-                    secondary={!subtitleKey ? "" : _get(hit, subtitleKey)}
+                    id={`label-${get(hit, primaryKey)}`}
+                    primary={get(hit, titleKey)}
+                    secondary={!subtitleKey ? "" : get(hit, subtitleKey)}
                   />
                 </MenuItem>
                 <Divider className={classes.divider} />

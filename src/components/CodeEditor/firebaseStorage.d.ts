@@ -1,3 +1,4 @@
+/* eslint-disable tsdoc/syntax */
 /* eslint-disable @typescript-eslint/ban-types */
 
 // node_modules/@google-cloud/storage/build/src/bucket.d.ts

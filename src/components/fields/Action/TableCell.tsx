@@ -1,9 +1,9 @@
-import { IHeavyCellProps } from "../types";
+import { IHeavyCellProps } from "@src/components/fields/types";
 
 import { Stack } from "@mui/material";
 
 import ActionFab from "./ActionFab";
-import { sanitiseCallableName, isUrl } from "@src/utils/fns";
+import { sanitiseCallableName, isUrl } from "./utils";
 
 export default function Action({
   column,
