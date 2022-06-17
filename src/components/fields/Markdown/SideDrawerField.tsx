@@ -20,7 +20,10 @@ export default function Markdown({
         sx={[fieldSx, { display: "block", maxHeight: 300, overflow: "auto" }]}
         data-color-mode={theme.palette.mode}
       >
-        <MDEditor.Markdown source={value} />
+        <MDEditor.Markdown
+          source={value}
+          style={{ backgroundColor: theme.palette.background.paper }}
+        />
       </Box>
     );
 
@@ -37,6 +40,7 @@ export default function Markdown({
       data-color-mode={theme.palette.mode}
     >
       <MDEditor
+        style={{ backgroundColor: theme.palette.background.paper }}
         height={300}
         value={value}
         onChange={onChange}
