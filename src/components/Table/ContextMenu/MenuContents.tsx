@@ -12,6 +12,7 @@ import {
 } from "@src/assets/icons";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import OpenIcon from "@mui/icons-material/OpenInNewOutlined";
+import FilterIcon from "@mui/icons-material/FilterList";
 
 import ContextMenuItem, { IContextMenuItem } from "./ContextMenuItem";
 
@@ -32,6 +33,7 @@ import {
   addRowAtom,
   deleteRowAtom,
   updateFieldAtom,
+  tableFiltersPopoverAtom,
 } from "@src/atoms/tableScope";
 import { FieldType } from "@src/constants/fields";
 
@@ -52,6 +54,10 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
   const addRow = useSetAtom(addRowAtom, tableScope);
   const deleteRow = useSetAtom(deleteRowAtom, tableScope);
   const updateField = useSetAtom(updateFieldAtom, tableScope);
+  const openTableFiltersPopover = useSetAtom(
+    tableFiltersPopoverAtom,
+    tableScope
+  );
 
   if (!tableSchema.columns || !selectedCell) return null;
 
@@ -78,6 +84,7 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
 
   // Cell actions
   // TODO: Add copy and paste here
+  const cellValue = row?.[selectedCell.columnKey];
   const handleClearValue = () =>
     updateField({
       path: selectedCell.path,
@@ -85,6 +92,17 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
       value: null,
       deleteField: true,
     });
+  const columnFilters = getFieldProp("filter", selectedColumn.type);
+  const handleFilterValue = () => {
+    openTableFiltersPopover({
+      defaultQuery: {
+        key: selectedColumn.fieldName,
+        operator: columnFilters!.operators[0]?.value || "==",
+        value: cellValue,
+      },
+    });
+    onClose();
+  };
   const cellActions = [
     {
       label: altPress ? "Clear value" : "Clear value…",
@@ -93,7 +111,7 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
       disabled:
         selectedColumn.editable === false ||
         !row ||
-        row[selectedCell.columnKey] === undefined ||
+        cellValue ||
         getFieldProp("group", selectedColumn.type) === "Auditing",
       onClick: altPress
         ? handleClearValue
@@ -107,6 +125,12 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
             });
             onClose();
           },
+    },
+    {
+      label: "Filter value",
+      icon: <FilterIcon />,
+      disabled: !columnFilters || cellValue === undefined,
+      onClick: handleFilterValue,
     },
   ];
   actionGroups.push(cellActions);
