@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAtom } from "jotai";
 import useMemoValue from "use-memo-value";
-import { isEmpty } from "lodash-es";
+import { isEmpty, isDate } from "lodash-es";
 
 import {
   Tab,
@@ -42,9 +42,9 @@ import type { TableFilter } from "@src/types/table";
 
 const shouldDisableApplyButton = (value: any) =>
   isEmpty(value) &&
+  !isDate(value) &&
   typeof value !== "boolean" &&
-  typeof value !== "number" &&
-  typeof value !== "object";
+  typeof value !== "number";
 
 enum FilterType {
   yourFilter = "local_filter",
