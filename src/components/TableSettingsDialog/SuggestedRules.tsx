@@ -30,7 +30,6 @@ export default function SuggestedRules({
     name: ["collection", "roles", "readOnly"],
   } as any);
   const [collection, roles, readOnly] = Array.isArray(watched) ? watched : [];
-
   const [customized, setCustomized] = useState<boolean>(false);
   const [customizations, setCustomizations] = useState<customizationOptions[]>(
     []
@@ -51,6 +50,12 @@ export default function SuggestedRules({
   allow read, write: if hasAnyRole(${
     readOnly ? `["ADMIN"]` : JSON.stringify(roles)
   });${
+    readOnly && roles.filter((r: string) => r !== "ADMIN").length > 0
+      ? `\n  allow read: if hasAnyRole(${JSON.stringify(
+          roles.filter((r: string) => r !== "ADMIN")
+        )});`
+      : ""
+  }${
     customizations.includes("allRead")
       ? "\n  allow read: if true;"
       : customizations.includes("authRead")
