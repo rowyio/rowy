@@ -36,8 +36,8 @@ export function useSettingsDocs() {
   );
 
   const roles =
-    JSON.parse((currentUser as any)?.reloadUserInfo?.customAttributes)?.roles ??
-    [];
+    JSON.parse((currentUser as any)?.reloadUserInfo?.customAttributes ?? "{}")
+      ?.roles ?? [];
   // Store user settings in atom when a user is signed in
   useFirestoreDocWithAtom(userSettingsAtom, globalScope, USERS, {
     pathSegments: [currentUser?.uid],
