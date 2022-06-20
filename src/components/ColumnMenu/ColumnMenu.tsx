@@ -56,6 +56,7 @@ import { getFieldProp } from "@src/components/fields";
 import { analytics, logEvent } from "@src/analytics";
 import { formatSubTableName, getTableSchemaPath } from "@src/utils/table";
 import { runRoutes } from "@src/constants/runRoutes";
+import useTablePersonalization from "@src/hooks/useTablePersonalization";
 
 export interface IMenuModalProps {
   name: string;
@@ -75,11 +76,12 @@ export interface IMenuModalProps {
 
 export default function ColumnMenu() {
   const [userRoles] = useAtom(userRolesAtom, globalScope);
-  const [userSettings] = useAtom(userSettingsAtom, globalScope);
-  const [updateUserSettings] = useAtom(updateUserSettingsAtom, globalScope);
+  const [hiddenFields, setHiddenFields] = useTablePersonalization(
+    "hiddenFields",
+    []
+  );
   const confirm = useSetAtom(confirmDialogAtom, globalScope);
   const [rowyRun] = useAtom(rowyRunAtom, globalScope);
-  const [tableId] = useAtom(tableIdAtom, tableScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const updateColumn = useSetAtom(updateColumnAtom, tableScope);
   const deleteColumn = useSetAtom(deleteColumnAtom, tableScope);
@@ -114,9 +116,6 @@ export default function ColumnMenu() {
   const isSorted = tableSorts[0]?.key === sortKey;
   const isAsc = isSorted && tableSorts[0]?.direction === "asc";
 
-  const userDocHiddenFields =
-    userSettings.tables?.[formatSubTableName(tableId)]?.hiddenFields ?? [];
-
   const handleDeleteColumn = () => {
     deleteColumn(column.key);
     logEvent(analytics, "delete_column", { type: column.type });
@@ -130,9 +129,19 @@ export default function ColumnMenu() {
       activeLabel: "Remove sort: descending",
       icon: <ArrowDownwardIcon />,
       onClick: () => {
-        setTableSorts(
-          isSorted && !isAsc ? [] : [{ key: sortKey, direction: "desc" }]
-        );
+        // if (updateUserSettings)
+        // updateUserSettings({
+        //   tables: {
+        //     [formatSubTableName(tableId)]: {
+        //       sorts:  isSorted && !isAsc ? [] : [{ key: sortKey, direction: "desc" }],
+        //     },
+        //   },
+        // });
+        handleClose();
+
+        // setTableSorts(
+        //   isSorted && !isAsc ? [] : [{ key: sortKey, direction: "desc" }]
+        // );
         handleClose();
       },
       active: isSorted && !isAsc,
@@ -155,17 +164,9 @@ export default function ColumnMenu() {
       label: "Hide",
       icon: <VisibilityIcon />,
       onClick: () => {
-        if (updateUserSettings)
-          updateUserSettings({
-            tables: {
-              [formatSubTableName(tableId)]: {
-                hiddenFields: [...userDocHiddenFields, column.key],
-              },
-            },
-          });
+        setHiddenFields([...hiddenFields, column.key]);
         handleClose();
       },
-      disabled: !updateUserSettings,
     },
     {
       label: "Filter…",

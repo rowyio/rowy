@@ -12,6 +12,14 @@ import {
   TableSort,
 } from "@src/types/table";
 
+export type TablePersonalization = {
+  filters: TableFilter[];
+  hiddenFields: string[];
+  sorts: TableSort[];
+  rowHeight: number;
+  frozenFields: string[];
+};
+
 /** User info and settings */
 export type UserSettings = Partial<{
   _rowy_ref: TableRowRef;
@@ -28,14 +36,7 @@ export type UserSettings = Partial<{
 
   favoriteTables: string[];
   /** Stores user overrides */
-  tables: Record<
-    string,
-    Partial<{
-      filters: TableFilter[];
-      hiddenFields: string[];
-      sorts: TableSort[];
-    }>
-  >;
+  tables: Record<string, Partial<TablePersonalization>>;
 }>;
 /** User info and settings */
 export const userSettingsAtom = atom<UserSettings>({});

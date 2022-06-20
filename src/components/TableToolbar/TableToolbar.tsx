@@ -16,7 +16,7 @@ import LoadedRowsStatus from "./LoadedRowsStatus";
 import TableSettings from "./TableSettings";
 import HiddenFields from "./HiddenFields";
 import RowHeight from "./RowHeight";
-
+import Sorts from "./Sorts";
 import {
   globalScope,
   projectSettingsAtom,
@@ -92,6 +92,7 @@ export default function TableToolbar() {
       <div /> {/* Spacer */}
       <LoadedRowsStatus />
       <div style={{ flexGrow: 1, minWidth: 64 }} />
+      <Sorts />
       <RowHeight />
       <div /> {/* Spacer */}
       {tableSettings.tableType !== "collectionGroup" && (
