@@ -366,6 +366,7 @@ export const tableFiltersToFirestoreFilters = (filters: TableFilter[]) => {
       }
       continue;
     } else if (filter.operator === "time-minute-equal") {
+      if (!filter.value) continue;
       const filterDate =
         "toDate" in filter.value ? filter.value.toDate() : filter.value;
       const [startDate, endDate] = getTimeRange(filterDate);
