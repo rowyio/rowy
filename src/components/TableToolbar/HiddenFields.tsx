@@ -3,7 +3,7 @@ import { useAtom } from "jotai";
 import { isEqual } from "lodash-es";
 import { colord } from "colord";
 
-import { Box, AutocompleteProps } from "@mui/material";
+import { Box, AutocompleteProps, Theme } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOffOutlined";
 import IconSlash from "@src/components/IconSlash";
@@ -62,43 +62,53 @@ export default function HiddenFields() {
     true,
     false,
     any
-  >["renderOption"] = (props, option, { selected }) => (
-    <li {...props}>
-      <ColumnItem option={option}>
-        <Box
-          sx={[
-            { position: "relative", height: "1.5rem" },
-            selected
-              ? { color: "primary.main" }
-              : {
-                  opacity: 0,
-                  ".MuiAutocomplete-option.Mui-focused &": { opacity: 0.5 },
-                },
-          ]}
-        >
-          <VisibilityIcon />
-          <IconSlash
+  >["renderOption"] = (props, option, { selected }) => {
+    const slashColor = (theme: Theme) =>
+      colord(theme.palette.background.paper)
+        .mix("#fff", theme.palette.mode === "dark" ? 0.16 : 0)
+        .alpha(1);
+
+    return (
+      <li {...props}>
+        <ColumnItem option={option}>
+          <Box
             sx={[
-              {
-                "& .icon-slash-mask": {
-                  stroke: (theme) =>
-                    colord(theme.palette.background.paper)
-                      .mix("#fff", theme.palette.mode === "dark" ? 0.17 : 0)
-                      .mix(
-                        theme.palette.action.selected,
-                        theme.palette.action.selectedOpacity
-                      )
-                      .alpha(1)
-                      .toHslString(),
-                },
-              },
-              selected ? { strokeDashoffset: 0 } : {},
+              { position: "relative", height: "1.5rem" },
+              selected
+                ? { color: "primary.main" }
+                : {
+                    opacity: 0,
+                    ".MuiAutocomplete-option.Mui-focused &": { opacity: 0.5 },
+                  },
             ]}
-          />
-        </Box>
-      </ColumnItem>
-    </li>
-  );
+          >
+            <VisibilityIcon />
+            <IconSlash
+              sx={[
+                {
+                  "& .icon-slash-mask": {
+                    stroke: (theme) => slashColor(theme).toHslString(),
+                  },
+                  ".Mui-focused & .icon-slash-mask": {
+                    stroke: (theme) =>
+                      slashColor(theme)
+                        .mix(
+                          theme.palette.primary.main,
+                          theme.palette.action.selectedOpacity +
+                            theme.palette.action.hoverOpacity
+                        )
+                        .alpha(1)
+                        .toHslString(),
+                  },
+                },
+                selected ? { strokeDashoffset: 0 } : {},
+              ]}
+            />
+          </Box>
+        </ColumnItem>
+      </li>
+    );
+  };
 
   return (
     <>

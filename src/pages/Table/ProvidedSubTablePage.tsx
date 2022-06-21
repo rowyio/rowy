@@ -23,6 +23,7 @@ import {
 } from "@src/atoms/tableScope";
 import { ROUTES } from "@src/constants/routes";
 import { APP_BAR_HEIGHT } from "@src/layouts/Navigation";
+import { TABLE_TOOLBAR_HEIGHT } from "@src/components/TableToolbar";
 
 /**
  * Wraps `TablePage` with the data for a top-level table.
@@ -97,6 +98,9 @@ export default function ProvidedSubTablePage() {
             py: (APP_BAR_HEIGHT - 28) / 2 / 8,
           },
           "& .dialog-close": { m: (APP_BAR_HEIGHT - 40) / 2 / 8, ml: -1 },
+        },
+        "& .table-container": {
+          height: `calc(100vh - ${APP_BAR_HEIGHT}px - ${TABLE_TOOLBAR_HEIGHT}px - 16px)`,
         },
       }}
       ScrollableDialogContentProps={{

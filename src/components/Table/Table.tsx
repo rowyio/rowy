@@ -216,7 +216,7 @@ export default function Table({
   return (
     <Suspense fallback={<Loading message="Loading fields" />}>
       {/* <Hotkeys selectedCell={selectedCell} /> */}
-      <TableContainer rowHeight={rowHeight}>
+      <TableContainer rowHeight={rowHeight} className="table-container">
         <DndProvider backend={HTML5Backend}>
           {showLeftScrollDivider && <div className="left-scroll-divider" />}
 
