@@ -29,7 +29,7 @@ export default function ColorPickerInput({
           {
             justifyContent: "flex-start",
             "&&": { pl: 0.75, pr: 0.5 },
-            color: "red",
+            color: value.hex,
             transition: (theme) =>
               theme.transitions.create("border-radius", {
                 delay: theme.transitions.duration.standard,
