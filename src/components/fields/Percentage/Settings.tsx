@@ -6,9 +6,9 @@ import { Color, toColor } from "react-color-palette";
 
 export default function Settings({ onChange, config }: ISettingsProps) {
   const defaultColors = {
-    startColor: toColor("hex", "#f00"),
-    midColor: toColor("hex", "#ff0"),
-    endColor: toColor("hex", "#0f0"),
+    startColor: toColor("hex", "#ED4747"),
+    midColor: toColor("hex", "#F3C900"),
+    endColor: toColor("hex", "#1FAD5F"),
   };
 
   const {
@@ -24,14 +24,11 @@ export default function Settings({ onChange, config }: ISettingsProps) {
     ...config,
   };
 
-  console.log(startColor, midColor, endColor);
-
   const [start, setStart] = useState<Color>(startColor);
   const [mid, setMid] = useState<Color>(midColor);
   const [end, setEnd] = useState<Color>(endColor);
   return (
     <>
-      {`Config: ${JSON.stringify(config)}`}
       <ColorPickerInput
         value={start}
         handleChange={(color) => setStart(color)}

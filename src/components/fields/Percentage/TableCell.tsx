@@ -7,9 +7,9 @@ import { Color, toColor } from "react-color-palette";
 export default function Percentage({ column, value }: IHeavyCellProps) {
   const theme = useTheme();
   const defaultColors = {
-    startColor: toColor("hex", "#f00"),
-    midColor: toColor("hex", "#ff0"),
-    endColor: toColor("hex", "#0f0"),
+    startColor: toColor("hex", "#ED4747"),
+    midColor: toColor("hex", "#F3C900"),
+    endColor: toColor("hex", "#1FAD5F"),
   };
   const {
     startColor,

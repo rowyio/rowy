@@ -4,6 +4,7 @@ import { TextField, InputAdornment, Box } from "@mui/material";
 import { emphasize } from "@mui/material/styles";
 import { resultColorsScale } from "@src/utils/color";
 import { getFieldId } from "@src/components/SideDrawer/utils";
+import { Color, toColor } from "react-color-palette";
 
 export default function Percentage({
   column,
@@ -12,18 +13,21 @@ export default function Percentage({
   onSubmit,
   disabled,
 }: ISideDrawerFieldProps) {
+  const defaultColors = {
+    startColor: toColor("hex", "#ED4747"),
+    midColor: toColor("hex", "#F3C900"),
+    endColor: toColor("hex", "#1FAD5F"),
+  };
   const {
     startColor,
     midColor,
     endColor,
   }: {
-    startColor: any;
-    endColor: any;
-    midColor: any;
+    startColor: Color;
+    endColor: Color;
+    midColor: Color;
   } = {
-    startColor: { hex: "#f00" },
-    midColor: { hex: "#0f0" },
-    endColor: { hex: "#00f" },
+    ...defaultColors,
     ...(column as any).config,
   };
 
