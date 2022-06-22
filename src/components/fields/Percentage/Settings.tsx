@@ -1,4 +1,4 @@
-import { InputLabel } from "@mui/material";
+import { Box, InputLabel } from "@mui/material";
 import ColorPickerInput from "@src/components/ColorPickerInput";
 import { ISettingsProps } from "@src/components/fields/types";
 
@@ -52,6 +52,17 @@ export default function Settings({ onChange, config }: ISettingsProps) {
           value={end}
           handleChange={(color) => setEnd(color)}
           handleOnChangeComplete={(color) => onChange("endColor")(color)}
+        />
+      </InputLabel>
+      <InputLabel>
+        Preview:
+        <Box
+          sx={{
+            height: 30,
+            borderRadius: 0.5,
+            boxShadow: (theme) => `0 0 0 1px ${theme.palette.divider} inest`,
+            background: `linear-gradient(90deg, ${startColor.hex} 0%, ${midColor.hex} 50%, ${endColor.hex} 100%)`,
+          }}
         />
       </InputLabel>
     </>
