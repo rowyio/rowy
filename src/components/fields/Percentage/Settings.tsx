@@ -1,3 +1,4 @@
+import { InputLabel } from "@mui/material";
 import ColorPickerInput from "@src/components/ColorPickerInput";
 import { ISettingsProps } from "@src/components/fields/types";
 
@@ -29,21 +30,30 @@ export default function Settings({ onChange, config }: ISettingsProps) {
   const [end, setEnd] = useState<Color>(endColor);
   return (
     <>
-      <ColorPickerInput
-        value={start}
-        handleChange={(color) => setStart(color)}
-        handleOnChangeComplete={(color) => onChange("startColor")(color)}
-      />
-      <ColorPickerInput
-        value={mid}
-        handleChange={(color) => setMid(color)}
-        handleOnChangeComplete={(color) => onChange("midColor")(color)}
-      />
-      <ColorPickerInput
-        value={end}
-        handleChange={(color) => setEnd(color)}
-        handleOnChangeComplete={(color) => onChange("endColor")(color)}
-      />
+      <InputLabel>
+        Start Color
+        <ColorPickerInput
+          value={start}
+          handleChange={(color) => setStart(color)}
+          handleOnChangeComplete={(color) => onChange("startColor")(color)}
+        />
+      </InputLabel>
+      <InputLabel>
+        Mid Color
+        <ColorPickerInput
+          value={mid}
+          handleChange={(color) => setMid(color)}
+          handleOnChangeComplete={(color) => onChange("midColor")(color)}
+        />
+      </InputLabel>
+      <InputLabel>
+        End Color
+        <ColorPickerInput
+          value={end}
+          handleChange={(color) => setEnd(color)}
+          handleOnChangeComplete={(color) => onChange("endColor")(color)}
+        />
+      </InputLabel>
     </>
   );
 }
