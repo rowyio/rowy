@@ -100,7 +100,7 @@ export const colorsLight = (
               .alpha(0.6)
               .toHslString(),
             ".MuiDialog-root:has(.MuiDialog-paperFullScreen) &": {
-              backgroundColor: "rgba(0, 0, 0, 0.25)",
+              backgroundColor: "rgba(0, 0, 0, 0)",
             },
           },
           invisible: { backgroundColor: "transparent" },
