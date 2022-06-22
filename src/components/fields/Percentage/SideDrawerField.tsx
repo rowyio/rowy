@@ -12,6 +12,26 @@ export default function Percentage({
   onSubmit,
   disabled,
 }: ISideDrawerFieldProps) {
+  const {
+    startColor,
+    midColor,
+    endColor,
+  }: {
+    startColor: any;
+    endColor: any;
+    midColor: any;
+  } = {
+    startColor: { hex: "#f00" },
+    midColor: { hex: "#0f0" },
+    endColor: { hex: "#00f" },
+    ...(column as any).config,
+  };
+
+  const colors = {
+    startColor: startColor.hex,
+    midColor: midColor.hex,
+    endColor: endColor.hex,
+  };
   return (
     <TextField
       variant="filled"
@@ -38,7 +58,7 @@ export default function Percentage({
                   `0 0 0 1px ${theme.palette.divider} inest`,
                 backgroundColor:
                   typeof value === "number"
-                    ? resultColorsScale(value).toHex() + "!important"
+                    ? resultColorsScale(value, colors).toHex() + "!important"
                     : undefined,
               }}
             />

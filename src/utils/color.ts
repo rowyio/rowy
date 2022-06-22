@@ -1,12 +1,12 @@
 import { colord } from "colord";
 
-export const resultColors = {
-  No: "#ED4747",
-  Maybe: "#f3c900",
-  Yes: "#1fad5f",
+export const defaultColors = {
+  startColor: "#ED4747",
+  midColor: "#f3c900",
+  endColor: "#1fad5f",
 };
 
-export const resultColorsScale = (value: number) =>
+export const resultColorsScale = (value: number, colors: any = defaultColors) =>
   value <= 0.5
-    ? colord(resultColors.No).mix(resultColors.Maybe, value * 2)
-    : colord(resultColors.Maybe).mix(resultColors.Yes, (value - 0.5) * 2);
+    ? colord(colors.startColor).mix(colors.midColor, value * 2)
+    : colord(colors.midColor).mix(colors.endColor, (value - 0.5) * 2);
