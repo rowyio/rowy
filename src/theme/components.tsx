@@ -288,6 +288,9 @@ export const components = (theme: Theme): ThemeOptions => {
               "#root": {
                 borderRadius: (theme.shape.borderRadius as number) * 2,
                 overflow: "hidden",
+                filter: `grayscale(100%) contrast(${
+                  theme.palette.mode === "dark" ? "80" : "75"
+                }%)`,
 
                 transform: `scale(0.9) translateY(${theme.spacing(1)})`,
                 transition: theme.transitions.create(
