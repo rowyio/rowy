@@ -2,7 +2,6 @@ import { Box, InputLabel } from "@mui/material";
 import ColorPickerInput from "@src/components/ColorPickerInput";
 import { ISettingsProps } from "@src/components/fields/types";
 
-import { useState } from "react";
 import { Color, toColor } from "react-color-palette";
 
 export default function Settings({ onChange, config }: ISettingsProps) {
@@ -25,32 +24,26 @@ export default function Settings({ onChange, config }: ISettingsProps) {
     ...config,
   };
 
-  const [start, setStart] = useState<Color>(startColor);
-  const [mid, setMid] = useState<Color>(midColor);
-  const [end, setEnd] = useState<Color>(endColor);
   return (
     <>
       <InputLabel>
         Start Color
         <ColorPickerInput
-          value={start}
-          handleChange={(color) => setStart(color)}
+          value={startColor}
           handleOnChangeComplete={(color) => onChange("startColor")(color)}
         />
       </InputLabel>
       <InputLabel>
         Mid Color
         <ColorPickerInput
-          value={mid}
-          handleChange={(color) => setMid(color)}
+          value={midColor}
           handleOnChangeComplete={(color) => onChange("midColor")(color)}
         />
       </InputLabel>
       <InputLabel>
         End Color
         <ColorPickerInput
-          value={end}
-          handleChange={(color) => setEnd(color)}
+          value={endColor}
           handleOnChangeComplete={(color) => onChange("endColor")(color)}
         />
       </InputLabel>

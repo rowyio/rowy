@@ -1,23 +1,32 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ButtonBase, Box, Collapse } from "@mui/material";
 
 import { fieldSx } from "@src/components/SideDrawer/utils";
 import { ChevronDown } from "@src/assets/icons/ChevronDown";
 import { Color, ColorPicker } from "react-color-palette";
+import { useDebouncedCallback } from "use-debounce";
 
 export interface IColorPickerProps {
   value: Color;
-  handleChange: (color: Color) => void;
   handleOnChangeComplete: (color: Color) => void;
 }
 
 export default function ColorPickerInput({
   value,
-  handleChange,
   handleOnChangeComplete,
 }: IColorPickerProps) {
+  const [localValue, setLocalValue] = useState(value);
   const [showPicker, setShowPicker] = useState(false);
   const toggleOpen = () => setShowPicker((s) => !s);
+
+  useEffect(() => {
+    handleChange(localValue);
+  }, [localValue]);
+
+  const handleChange = useDebouncedCallback((color) => {
+    handleOnChangeComplete(color);
+  }, 400);
+
   return (
     <>
       <ButtonBase
@@ -82,9 +91,8 @@ export default function ColorPickerInput({
         <ColorPicker
           width={400}
           height={100}
-          color={value}
-          onChange={handleChange}
-          onChangeComplete={handleOnChangeComplete}
+          color={localValue}
+          onChange={(color) => setLocalValue(color)}
           alpha
         />
       </Collapse>
