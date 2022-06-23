@@ -1,4 +1,10 @@
-import { useState, useEffect } from "react";
+import {
+  useState,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  MutableRefObject,
+} from "react";
 import { ButtonBase, Box, Collapse } from "@mui/material";
 
 import { fieldSx } from "@src/components/SideDrawer/utils";
@@ -17,15 +23,44 @@ export default function ColorPickerInput({
 }: IColorPickerProps) {
   const [localValue, setLocalValue] = useState(value);
   const [showPicker, setShowPicker] = useState(false);
-  const toggleOpen = () => setShowPicker((s) => !s);
+  const [width, setWidth] = useState(100);
+  const parentRef: MutableRefObject<HTMLElement | null> = useRef(null);
+
+  useLayoutEffect(() => {
+    if (!parentRef || !parentRef.current) {
+      return;
+    }
+    setWidth(parentRef!.current!.offsetWidth);
+  }, [parentRef]);
 
   useEffect(() => {
-    handleChange(localValue);
+    const resizeListener = () => {
+      if (!parentRef || !parentRef.current) {
+        return;
+      }
+      debouncedSetWidth(parentRef.current.offsetWidth);
+    };
+    window.addEventListener("resize", resizeListener);
+
+    return () => {
+      window.removeEventListener("resize", resizeListener);
+    };
+  }, []);
+
+  useEffect(() => {
+    debouncedOnChangeComplete(localValue);
   }, [localValue]);
 
-  const handleChange = useDebouncedCallback((color) => {
+  const toggleOpen = () => setShowPicker((s) => !s);
+
+  const debouncedOnChangeComplete = useDebouncedCallback((color) => {
     handleOnChangeComplete(color);
   }, 400);
+
+  const debouncedSetWidth = useDebouncedCallback(
+    (width) => setWidth(width),
+    400
+  );
 
   return (
     <>
@@ -76,6 +111,7 @@ export default function ColorPickerInput({
       </ButtonBase>
 
       <Collapse
+        ref={parentRef}
         in={showPicker}
         sx={{
           "& .rcp": {
@@ -89,7 +125,7 @@ export default function ColorPickerInput({
         }}
       >
         <ColorPicker
-          width={400}
+          width={width}
           height={100}
           color={localValue}
           onChange={(color) => setLocalValue(color)}
