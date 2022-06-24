@@ -48,6 +48,7 @@ export default function HomePage() {
   const [userSettings] = useAtom(userSettingsAtom, globalScope);
   const [updateUserSettings] = useAtom(updateUserSettingsAtom, globalScope);
   const [tables] = useAtom(tablesAtom, globalScope);
+  console.log(tables);
   const [view, setView] = useAtom(tablesViewAtom, globalScope);
   const openTableSettingsDialog = useSetAtom(
     tableSettingsDialogAtom,

@@ -7,10 +7,7 @@ import {
 import { useAtom } from "jotai";
 import { tableScope, tableIdAtom } from "@src/atoms/tableScope";
 import { formatSubTableName } from "@src/utils/table";
-const useTablePersonalization = (
-  keyName: keyof TablePersonalization,
-  fallback: any
-) => {
+const useTablePersonalization = (keyName: keyof TablePersonalization) => {
   const [userSettings] = useAtom(userSettingsAtom, globalScope);
   const [updateUserSettings] = useAtom(updateUserSettingsAtom, globalScope);
   const [tableId] = useAtom(tableIdAtom, tableScope);
@@ -24,6 +21,20 @@ const useTablePersonalization = (
         },
       });
   };
+  let fallback: any;
+  switch (keyName) {
+    case "filters":
+    case "sorts":
+    case "hiddenFields":
+    case "frozenFields":
+      fallback = [];
+      break;
+    case "rowHeight":
+      fallback = 40;
+      break;
+    default:
+      break;
+  }
   const value =
     userSettings?.tables?.[formatSubTableName(tableId)]?.[keyName] ?? fallback;
   return [value, handleUpdate];

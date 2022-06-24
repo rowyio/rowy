@@ -76,10 +76,8 @@ export interface IMenuModalProps {
 
 export default function ColumnMenu() {
   const [userRoles] = useAtom(userRolesAtom, globalScope);
-  const [hiddenFields, setHiddenFields] = useTablePersonalization(
-    "hiddenFields",
-    []
-  );
+  const [hiddenFields, setHiddenFields] =
+    useTablePersonalization("hiddenFields");
   const confirm = useSetAtom(confirmDialogAtom, globalScope);
   const [rowyRun] = useAtom(rowyRunAtom, globalScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
