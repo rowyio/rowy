@@ -21,6 +21,7 @@ export const useFilterInputs = (
       type: c.type,
       key: c.key,
       index: c.index,
+      config: c.config || {},
     }));
 
   // Always allow IDs to be filterable
@@ -30,6 +31,7 @@ export const useFilterInputs = (
     type: FieldType.id,
     key: "_rowy_ref.id",
     index: filterColumns.length,
+    config: {},
   });
 
   // State for filter inputs
