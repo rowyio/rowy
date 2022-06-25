@@ -1,9 +1,9 @@
 import {
   useState,
   useEffect,
-  useLayoutEffect,
   useRef,
   MutableRefObject,
+  useLayoutEffect,
 } from "react";
 import { ButtonBase, Box, Collapse } from "@mui/material";
 
@@ -17,50 +17,49 @@ export interface IColorPickerProps {
   handleOnChangeComplete: (color: Color) => void;
 }
 
+const useResponsiveWidth = (): [
+  width: number,
+  setRef: MutableRefObject<HTMLElement | null>
+] => {
+  const ref = useRef(null);
+  const [width, setWidth] = useState(0);
+
+  useLayoutEffect(() => {
+    if (!ref || !ref.current) {
+      return;
+    }
+    const resizeObserver = new ResizeObserver((targets) => {
+      const { width: currentWidth } = targets[0].contentRect;
+      setWidth(currentWidth);
+    });
+
+    resizeObserver.observe(ref.current);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, []);
+
+  return [width, ref];
+};
+
 export default function ColorPickerInput({
   value,
   handleOnChangeComplete,
 }: IColorPickerProps) {
   const [localValue, setLocalValue] = useState(value);
   const [showPicker, setShowPicker] = useState(false);
-  const [width, setWidth] = useState(100);
-  const parentRef: MutableRefObject<HTMLElement | null> = useRef(null);
-
-  useLayoutEffect(() => {
-    if (!parentRef || !parentRef.current) {
-      return;
-    }
-    setWidth(parentRef!.current!.offsetWidth);
-  }, [parentRef]);
-
-  useEffect(() => {
-    const resizeListener = () => {
-      if (!parentRef || !parentRef.current) {
-        return;
-      }
-      debouncedSetWidth(parentRef.current.offsetWidth);
-    };
-    window.addEventListener("resize", resizeListener);
-
-    return () => {
-      window.removeEventListener("resize", resizeListener);
-    };
-  }, []);
-
-  useEffect(() => {
-    debouncedOnChangeComplete(localValue);
-  }, [localValue]);
+  const [width, setRef] = useResponsiveWidth();
 
   const toggleOpen = () => setShowPicker((s) => !s);
 
   const debouncedOnChangeComplete = useDebouncedCallback((color) => {
     handleOnChangeComplete(color);
-  }, 400);
+  }, 100);
 
-  const debouncedSetWidth = useDebouncedCallback(
-    (width) => setWidth(width),
-    400
-  );
+  useEffect(() => {
+    debouncedOnChangeComplete(localValue);
+  }, [debouncedOnChangeComplete, localValue]);
 
   return (
     <>
@@ -83,8 +82,6 @@ export default function ColorPickerInput({
           showPicker && {
             transitionDelay: "0s",
             transitionDuration: "0s",
-            borderBottomLeftRadius: 0,
-            borderBottomRightRadius: 0,
           },
         ]}
       >
@@ -110,27 +107,35 @@ export default function ColorPickerInput({
         />
       </ButtonBase>
 
-      <Collapse
-        ref={parentRef}
-        in={showPicker}
-        sx={{
-          "& .rcp": {
-            borderTop: 0,
-            borderTopLeftRadius: 0,
-            borderTopRightRadius: 0,
-            "& .rcp-saturation": {
-              borderRadius: 0,
+      <Collapse in={showPicker}>
+        <Box
+          ref={setRef}
+          sx={[
+            fieldSx,
+            {
+              marginTop: "1rem",
+              padding: "1rem",
+              borderColor: "divider",
+              transitionDuration: 0,
+              "& .rcp": {
+                border: "none",
+                "& .rcp-saturation": {
+                  borderRadius: "4px",
+                },
+                "& .rcp-body": {
+                  boxSizing: "unset",
+                },
+              },
             },
-          },
-        }}
-      >
-        <ColorPicker
-          width={width}
-          height={100}
-          color={localValue}
-          onChange={(color) => setLocalValue(color)}
-          alpha
-        />
+          ]}
+        >
+          <ColorPicker
+            width={width}
+            height={100}
+            color={localValue}
+            onChange={(color) => setLocalValue(color)}
+          />
+        </Box>
       </Collapse>
     </>
   );
