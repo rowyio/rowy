@@ -91,7 +91,7 @@ export default function ExtensionsModal({ onClose }: ITableModalProps) {
           route: runRoutes.buildFunction,
           body: {
             tablePath: tableSettings.collection,
-            pathname: window.location.pathname,
+            pathname: `/table/${encodeURIComponent(tableSettings.collection)}`,
             tableConfigPath: getTableSchemaPath(tableSettings),
           },
         });
