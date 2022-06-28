@@ -57,7 +57,28 @@ const Styles = styled("div", {
       },
     "& .tox-edit-area__iframe": { colorScheme: "auto" },
 
-    "& .tox-toolbar__group": { border: "none !important" },
+    "& .tox-toolbar__group": {
+      border: "none !important",
+      "& .tox-tbtn__select-chevron": {
+        transition: theme.transitions.create("transform", {
+          duration: theme.transitions.duration.short,
+        }),
+      },
+      "& .tox-tbtn--select": {
+        "&::hover, &::focus": {
+          backgroundColor: theme.palette.action.input,
+        },
+        "& .tox-tbtn__select-chevron": {
+          transform: "none",
+        },
+      },
+      "& .tox-tbtn--active": {
+        backgroundColor: theme.palette.action.input,
+        "& .tox-tbtn__select-chevron": {
+          transform: "rotate(180deg)",
+        },
+      },
+    },
 
     "& .tox-tbtn": {
       borderRadius: theme.shape.borderRadius,
