@@ -59,21 +59,25 @@ const Styles = styled("div", {
 
     "& .tox-toolbar__group": {
       border: "none !important",
+      "& .tox-tbtn": {
+        "&:hover:": {
+          backgroundColor: "inherit",
+        },
+        "&:focus": {
+          backgroundColor: "inherit",
+        },
+      },
       "& .tox-tbtn__select-chevron": {
         transition: theme.transitions.create("transform", {
           duration: theme.transitions.duration.short,
         }),
       },
       "& .tox-tbtn--select": {
-        "&::hover, &::focus": {
-          backgroundColor: theme.palette.action.input,
-        },
         "& .tox-tbtn__select-chevron": {
           transform: "none",
         },
       },
       "& .tox-tbtn--active": {
-        backgroundColor: theme.palette.action.input,
         "& .tox-tbtn__select-chevron": {
           transform: "rotate(180deg)",
         },
