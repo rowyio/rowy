@@ -121,6 +121,40 @@ export default function RichTextEditor({
   return (
     <Styles focus={focus} disabled={disabled}>
     <style>{theme.palette.mode === "dark" ? skinDarkCss : skinCss}</style>
+        <GlobalStyles
+          styles={{
+            ".tox": {
+              "& .tox-menu.tox-menu, &.tox-tinymce-aux .tox-toolbar__overflow.tox-toolbar__overflow":
+                {
+                  backgroundColor: theme.palette.background.paper,
+                  backgroundImage:
+                    "linear-gradient(rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.12))", // elevation 8
+                  boxShadow: theme.shadows[8],
+                  border: "none",
+                  borderRadius: (theme.shape.borderRadius as number) * 2,
+                },
+
+              "& .tox-collection--list": {
+                "& .tox-collection__group.tox-collection__group": {
+                  padding: theme.spacing(0.5),
+                },
+                "& .tox-collection__item": {
+                  borderRadius: theme.shape.borderRadius,
+                },
+              },
+
+              "&.tox-tinymce-aux .tox-toolbar__overflow.tox-toolbar__overflow":
+                {
+                  padding: theme.spacing(0.5, 0),
+                },
+              "& .tox-tbtn.tox-tbtn": {
+                borderRadius: theme.shape.borderRadius,
+                margin: 0,
+              },
+            },
+          }}
+        />
+        
         <Editor
           disabled={disabled}
           init={{
