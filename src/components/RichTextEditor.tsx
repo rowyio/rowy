@@ -203,7 +203,6 @@ export default function RichTextEditor({
             if (onBlur) onBlur();
           }}
         />
-      </Suspense>
     </Styles>
   );
 }
