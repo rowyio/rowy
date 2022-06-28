@@ -133,3 +133,25 @@ export const getTableSchemaPath = (
  */
 export const formatSubTableName = (id?: string) =>
   id ? id.replace(formatPathRegex, "/subTables/$1").replace(/\//g, "_") : "";
+
+/**
+ * Gets the pathname of the table or sub-table
+ * for Rowy Run `buildFunction` endpoint.
+ * Rowy Run expects the previous URL format for sub-tables.
+ * @param id - Table ID (or sub-table ID from tableIdAtom)
+ * @param tableType - primaryCollection (default) or collectionGroup
+ * @returns - pathname
+ */
+export const getTableBuildFunctionPathname = (
+  id: string,
+  tableType: "primaryCollection" | "collectionGroup" = "primaryCollection"
+) => {
+  const root =
+    "/" + (tableType === "collectionGroup" ? "tableGroup" : "table") + "/";
+
+  if (!id.includes("/")) return root + id;
+
+  const split = id.split("/");
+  const rootTableId = split.shift();
+  return root + rootTableId + encodeURIComponent("/" + split.join("/"));
+};
