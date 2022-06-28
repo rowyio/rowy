@@ -120,12 +120,7 @@ export default function RichTextEditor({
 
   return (
     <Styles focus={focus} disabled={disabled}>
-      <Suspense fallback={<></>}>
-        {theme.palette.mode === "dark" ? (
-          <RichTextEditorDarkCSS />
-        ) : (
-          <RichTextEditorLightCSS />
-        )}
+    <style>{theme.palette.mode === "dark" ? skinDarkCss : skinCss}</style>
         <Editor
           disabled={disabled}
           init={{
