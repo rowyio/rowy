@@ -2,64 +2,40 @@ import { IHeavyCellProps } from "@src/components/fields/types";
 
 import { useTheme } from "@mui/material";
 import { resultColorsScale } from "@src/utils/color";
-import { Color, toColor } from "react-color-palette";
+import { configDefaults } from "@src/components/fields/Percentage";
 
 export default function Percentage({ column, value }: IHeavyCellProps) {
   const theme = useTheme();
-  const defaultColors = {
-    startColor: toColor("hex", "#ED4747"),
-    midColor: toColor("hex", "#F3C900"),
-    endColor: toColor("hex", "#1FAD5F"),
-  };
-  const {
-    startColor,
-    midColor,
-    endColor,
-  }: {
-    startColor: Color;
-    endColor: Color;
-    midColor: Color;
-  } = {
-    ...defaultColors,
+  const { colors }: { colors: string[] } = {
+    ...configDefaults,
     ...(column as any).config,
   };
 
-  const colors = {
-    startColor: startColor.hex,
-    midColor: midColor.hex,
-    endColor: endColor.hex,
-  };
-
-  if (typeof value === "number")
-    return (
-      <>
-        <div
-          style={{
-            backgroundColor: resultColorsScale(value, colors).toHex(),
-
-            position: "absolute",
-            top: 0,
-            right: 0,
-            bottom: 0,
-            left: 0,
-            opacity: 0.5,
-
-            zIndex: 0,
-          }}
-        />
-        <div
-          style={{
-            textAlign: "right",
-            color: theme.palette.text.primary,
-
-            position: "relative",
-            zIndex: 1,
-          }}
-        >
-          {Math.round(value * 100)}%
-        </div>
-      </>
-    );
-
-  return null;
+  const percentage = typeof value === "number" ? value : 0;
+  return (
+    <>
+      <div
+        style={{
+          backgroundColor: resultColorsScale(percentage, colors).toHex(),
+          position: "absolute",
+          top: 0,
+          right: 0,
+          bottom: 0,
+          left: 0,
+          opacity: 0.5,
+          zIndex: 0,
+        }}
+      />
+      <div
+        style={{
+          textAlign: "right",
+          color: theme.palette.text.primary,
+          position: "relative",
+          zIndex: 1,
+        }}
+      >
+        {Math.round(percentage * 100)}%
+      </div>
+    </>
+  );
 }

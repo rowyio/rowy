@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import {
   Box,
@@ -26,7 +26,7 @@ const ColorPickerCollapse = ({
   children,
 }: {
   colorKey: string;
-  color: Color;
+  color: string;
   active: boolean;
   setActive: (activeKey: string | null) => void;
   disabled?: boolean;
@@ -54,7 +54,7 @@ const ColorPickerCollapse = ({
           {
             justifyContent: "flex-start",
             "&&": { pl: 0.75, pr: 0.5 },
-            color: color.hex,
+            color: color,
             transition: (theme) =>
               theme.transitions.create("border-radius", {
                 delay: theme.transitions.duration.standard,
@@ -69,7 +69,7 @@ const ColorPickerCollapse = ({
       >
         <Box
           sx={{
-            backgroundColor: color?.hex,
+            backgroundColor: color,
             width: 15,
             height: 15,
             mr: 1.5,
@@ -78,7 +78,7 @@ const ColorPickerCollapse = ({
             opacity: 0.5,
           }}
         />
-        <div style={{ flexGrow: 1 }}>{color.hex}</div>
+        <div style={{ flexGrow: 1 }}>{color}</div>
         <ChevronDown
           color="action"
           sx={{
@@ -92,44 +92,51 @@ const ColorPickerCollapse = ({
   );
 };
 
-const defaultColors: { [key: string]: Color } = {
-  default: toColor("hex", "#FFFFFF"),
-  startColor: toColor("hex", "#ED4747"),
-  midColor: toColor("hex", "#F3C900"),
-  endColor: toColor("hex", "#1FAD5F"),
+const defaultColors: { [key: string]: string } = {
+  0: "#ED4747",
+  1: "#F3C900",
+  2: "#1FAD5F",
 };
 
 const colorLabels: { [key: string]: string } = {
-  startColor: "Start Color",
-  midColor: "Middle Color",
-  endColor: "End Color",
+  0: "No",
+  1: "Yes",
+  2: "Maybe",
 };
 
 export default function Settings({ onChange, config }: ISettingsProps) {
+  const { current: colorsDraft } = useRef<any>([]);
   const [checkStates, setCheckStates] = useState<{ [key: string]: boolean }>({
-    startColor: Boolean(config.startColor),
-    midColor: Boolean(config.midColor),
-    endColor: Boolean(config.endColor),
+    0: false,
+    1: false,
+    2: false,
   });
   const [activePicker, setActivePicker] = useState<string | null>(null);
-  const theme = useTheme();
 
   const onCheckboxChange = (key: string, checked: boolean) => {
-    if (!checked) {
-      onChange(key)(defaultColors.default);
+    if (checked) {
+      colorsDraft[key] = defaultColors[key];
+      onChange("colors")(colorsDraft);
     } else {
-      onChange(key)(defaultColors[key]);
+      colorsDraft[key] = null;
+      onChange("colors")(colorsDraft);
     }
     setCheckStates({ ...checkStates, [key]: checked });
   };
 
+  const handleOnChange = (key: string, color: Color): void => {
+    colorsDraft[key] = color.hex;
+    onChange("colors")(colorsDraft);
+  };
+
   return (
     <>
-      {Object.keys(checkStates).map((colorKey) => {
-        const color = config[colorKey] || defaultColors[colorKey];
+      {JSON.stringify(config)}
+      {Object.keys(checkStates).map((key) => {
+        const color = defaultColors[key];
         return (
-          <Box key={colorKey} sx={{ display: "flex", flexDirection: "column" }}>
-            {colorLabels[colorKey]}
+          <Box key={key} sx={{ display: "flex", flexDirection: "column" }}>
+            {colorLabels[key]}
             <Box
               sx={{
                 display: "flex",
@@ -142,54 +149,54 @@ export default function Settings({ onChange, config }: ISettingsProps) {
                   fieldSx,
                   { width: "auto", marginRight: "0.5rem", boxShadow: "none" },
                 ]}
-                checked={checkStates[colorKey]}
-                onChange={() =>
-                  onCheckboxChange(colorKey, !checkStates[colorKey])
-                }
+                checked={checkStates[key]}
+                onChange={() => onCheckboxChange(key, !checkStates[key])}
               />
               <ColorPickerCollapse
-                colorKey={colorKey}
-                active={activePicker === colorKey}
+                colorKey={key}
+                active={activePicker === key}
                 setActive={(activePicker) => setActivePicker(activePicker)}
                 color={color}
-                disabled={!checkStates[colorKey]}
+                disabled={!checkStates[key]}
               >
                 <ColorPickerInput
-                  value={color}
-                  handleOnChangeComplete={(color) => onChange(colorKey)(color)}
-                  disabled={!checkStates[colorKey]}
+                  value={toColor("hex", color)}
+                  handleOnChangeComplete={(color) => handleOnChange(key, color)}
+                  disabled={!checkStates[key]}
                 />
               </ColorPickerCollapse>
             </Box>
           </Box>
         );
       })}
-      <InputLabel>
-        Preview:
-        <Box sx={{ display: "flex", textAlign: "center" }}>
-          {[0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1].map((value) => {
-            const { startColor, midColor, endColor } = config;
-            return (
-              <Box
-                key={value}
-                sx={{
-                  width: "100%",
-                  padding: "0.5rem 0",
-                  color: theme.palette.text.primary,
-                  backgroundColor: resultColorsScale(value, {
-                    startColor: startColor.hex,
-                    midColor: midColor.hex,
-                    endColor: endColor.hex,
-                  }).toHex(),
-                  opacity: 0.5,
-                }}
-              >
-                {Math.floor(value * 100)}%
-              </Box>
-            );
-          })}
-        </Box>
-      </InputLabel>
+      <Preview colors={config.colors} />
     </>
   );
 }
+
+const Preview = ({ colors }: { colors: any }) => {
+  const theme = useTheme();
+  return (
+    <InputLabel>
+      Preview:
+      <Box sx={{ display: "flex", textAlign: "center" }}>
+        {[0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1].map((value) => {
+          return (
+            <Box
+              key={value}
+              sx={{
+                width: "100%",
+                padding: "0.5rem 0",
+                color: theme.palette.text.primary,
+                backgroundColor: resultColorsScale(value, colors).toHex(),
+                opacity: 0.5,
+              }}
+            >
+              {Math.floor(value * 100)}%
+            </Box>
+          );
+        })}
+      </Box>
+    </InputLabel>
+  );
+};
