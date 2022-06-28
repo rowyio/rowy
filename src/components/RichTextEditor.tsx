@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 
 import { styled, useTheme } from "@mui/material";
 import { Editor } from "@tinymce/tinymce-react";
@@ -9,8 +9,6 @@ import "tinymce/tinymce.min.js";
 import "tinymce/themes/silver";
 // Toolbar icons
 import "tinymce/icons/default";
-// Editor styles
-import "tinymce/skins/ui/oxide/skin.min.css";
 // Content styles, including inline UI like fake cursors
 /* eslint import/no-webpack-loader-syntax: off */
 import contentCss from "!!raw-loader!tinymce/skins/content/default/content.min.css";
@@ -26,6 +24,14 @@ import "tinymce/plugins/image";
 import "tinymce/plugins/paste";
 import "tinymce/plugins/help";
 import "tinymce/plugins/code";
+
+// Editor styles
+const RichTextEditorDarkCSS = lazy(
+  () => import("@src/theme/RichTextEditorDarkCSS")
+);
+const RichTextEditorLightCSS = lazy(
+  () => import("@src/theme/RichTextEditorLightCSS")
+);
 
 const Styles = styled("div", {
   shouldForwardProp: (prop) => prop !== "focus",
@@ -118,15 +124,21 @@ export default function RichTextEditor({
 
   return (
     <Styles focus={focus} disabled={disabled}>
-      <Editor
-        disabled={disabled}
-        init={{
-          skin: false,
-          content_css: false,
-          content_style: [
-            theme.palette.mode === "dark" ? contentCssDark : contentCss,
-            theme.palette.mode === "dark" ? contentUiCssDark : contentUiCss,
-            `
+      <Suspense fallback={<></>}>
+        {theme.palette.mode === "dark" ? (
+          <RichTextEditorDarkCSS />
+        ) : (
+          <RichTextEditorLightCSS />
+        )}
+        <Editor
+          disabled={disabled}
+          init={{
+            skin: false,
+            content_css: false,
+            content_style: [
+              theme.palette.mode === "dark" ? contentCssDark : contentCss,
+              theme.palette.mode === "dark" ? contentUiCssDark : contentUiCss,
+              `
               :root {
                 font-size: 14px;
                 -webkit-font-smoothing: antialiased;
@@ -145,26 +157,27 @@ export default function RichTextEditor({
               body :first-child { margin-top: 0; }
               a { color: ${theme.palette.primary.main}; }
             `,
-          ].join("\n"),
-          minHeight: 300,
-          menubar: false,
-          plugins: ["autoresize", "lists link image", "paste help", "code"],
-          statusbar: false,
-          toolbar:
-            "formatselect | bold italic forecolor | link | bullist numlist outdent indent | removeformat code | help",
-          body_id: id,
-        }}
-        value={value}
-        onEditorChange={onChange}
-        onFocus={() => {
-          setFocus(true);
-          if (onFocus) onFocus();
-        }}
-        onBlur={() => {
-          setFocus(false);
-          if (onBlur) onBlur();
-        }}
-      />
+            ].join("\n"),
+            minHeight: 300,
+            menubar: false,
+            plugins: ["autoresize", "lists link image", "paste help", "code"],
+            statusbar: false,
+            toolbar:
+              "formatselect | bold italic forecolor | link | bullist numlist outdent indent | removeformat code | help",
+            body_id: id,
+          }}
+          value={value}
+          onEditorChange={onChange}
+          onFocus={() => {
+            setFocus(true);
+            if (onFocus) onFocus();
+          }}
+          onBlur={() => {
+            setFocus(false);
+            if (onBlur) onBlur();
+          }}
+        />
+      </Suspense>
     </Styles>
   );
 }
