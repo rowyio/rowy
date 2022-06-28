@@ -9,6 +9,10 @@ import "tinymce/tinymce.min.js";
 import "tinymce/themes/silver";
 // Toolbar icons
 import "tinymce/icons/default";
+// Editor styles
+/* eslint import/no-webpack-loader-syntax: off */
+import skinCss from "!!raw-loader!tinymce/skins/ui/oxide/skin.min.css";
+import skinDarkCss from "!!raw-loader!tinymce/skins/ui/oxide-dark/skin.min.css";
 // Content styles, including inline UI like fake cursors
 /* eslint import/no-webpack-loader-syntax: off */
 import contentCss from "!!raw-loader!tinymce/skins/content/default/content.min.css";
