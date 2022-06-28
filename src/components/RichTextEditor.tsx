@@ -29,14 +29,6 @@ import "tinymce/plugins/paste";
 import "tinymce/plugins/help";
 import "tinymce/plugins/code";
 
-// Editor styles
-const RichTextEditorDarkCSS = lazy(
-  () => import("@src/theme/RichTextEditorDarkCSS")
-);
-const RichTextEditorLightCSS = lazy(
-  () => import("@src/theme/RichTextEditorLightCSS")
-);
-
 const Styles = styled("div", {
   shouldForwardProp: (prop) => prop !== "focus",
 })<{ focus?: boolean; disabled?: boolean }>(({ theme, focus, disabled }) => ({
