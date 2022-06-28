@@ -156,6 +156,7 @@ export default function RichTextEditor({
         />
         
         <Editor
+          key={theme.palette.mode}
           disabled={disabled}
           init={{
             skin: false,
