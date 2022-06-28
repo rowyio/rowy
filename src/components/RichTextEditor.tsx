@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState } from "react";
+import { useState } from "react";
 
 import { styled, useTheme } from "@mui/material";
 import { Editor } from "@tinymce/tinymce-react";
