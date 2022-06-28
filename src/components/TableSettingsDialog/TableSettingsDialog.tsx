@@ -34,7 +34,10 @@ import { runRoutes } from "@src/constants/runRoutes";
 import { CONFIG } from "@src/config/dbPaths";
 import { ROUTES } from "@src/constants/routes";
 import { useSnackLogContext } from "@src/contexts/SnackLogContext";
-import { getTableSchemaPath } from "@src/utils/table";
+import {
+  getTableSchemaPath,
+  getTableBuildFunctionPathname,
+} from "@src/utils/table";
 
 const customComponents = {
   tableName: {
@@ -128,11 +131,11 @@ export default function TableSettingsDialog() {
                 route: runRoutes.buildFunction,
                 body: {
                   tablePath,
-                  pathname: `/${
-                    data.tableType === "collectionGroup"
-                      ? "tableGroup"
-                      : "table"
-                  }/${data.id}`,
+                  // pathname must match old URL format
+                  pathname: getTableBuildFunctionPathname(
+                    data.id,
+                    data.tableType
+                  ),
                   tableConfigPath,
                 },
               });

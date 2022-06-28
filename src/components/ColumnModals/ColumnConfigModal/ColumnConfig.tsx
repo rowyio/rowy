@@ -26,7 +26,10 @@ import { useSnackLogContext } from "@src/contexts/SnackLogContext";
 import { FieldType } from "@src/constants/fields";
 import { runRoutes } from "@src/constants/runRoutes";
 import { useSnackbar } from "notistack";
-import { getTableSchemaPath } from "@src/utils/table";
+import {
+  getTableSchemaPath,
+  getTableBuildFunctionPathname,
+} from "@src/utils/table";
 
 export default function ColumnConfigModal({
   onClose,
@@ -193,9 +196,10 @@ export default function ColumnConfigModal({
                     body: {
                       tablePath: tableSettings.collection,
                       // pathname must match old URL format
-                      pathname: `/table/${encodeURIComponent(
-                        tableSettings.collection
-                      )}`,
+                      pathname: getTableBuildFunctionPathname(
+                        tableSettings.id,
+                        tableSettings.tableType
+                      ),
                       tableConfigPath: getTableSchemaPath(tableSettings),
                     },
                   });

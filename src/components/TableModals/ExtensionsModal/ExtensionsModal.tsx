@@ -26,7 +26,10 @@ import { useSnackLogContext } from "@src/contexts/SnackLogContext";
 import { emptyExtensionObject, IExtension, ExtensionType } from "./utils";
 import { runRoutes } from "@src/constants/runRoutes";
 import { analytics, logEvent } from "@src/analytics";
-import { getTableSchemaPath } from "@src/utils/table";
+import {
+  getTableSchemaPath,
+  getTableBuildFunctionPathname,
+} from "@src/utils/table";
 
 export default function ExtensionsModal({ onClose }: ITableModalProps) {
   const [currentUser] = useAtom(currentUserAtom, globalScope);
@@ -91,7 +94,11 @@ export default function ExtensionsModal({ onClose }: ITableModalProps) {
           route: runRoutes.buildFunction,
           body: {
             tablePath: tableSettings.collection,
-            pathname: `/table/${encodeURIComponent(tableSettings.collection)}`,
+            // pathname must match old URL format
+            pathname: getTableBuildFunctionPathname(
+              tableSettings.id,
+              tableSettings.tableType
+            ),
             tableConfigPath: getTableSchemaPath(tableSettings),
           },
         });
