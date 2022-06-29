@@ -14,7 +14,7 @@ import { getFieldId } from "@src/components/SideDrawer/utils";
 
 export interface IDateProps extends ISideDrawerFieldProps {}
 
-export default function Date_({
+export default function DateTime({
   column,
   value,
   onChange,

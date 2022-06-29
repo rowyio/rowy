@@ -76,7 +76,7 @@ export default function FiltersPopover({
 
           const formattedValue = availableFilters?.valueFormatter
             ? availableFilters.valueFormatter(filter.value)
-            : filter.value;
+            : filter.value.toString();
 
           return (
             <Chip

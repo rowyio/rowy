@@ -35,7 +35,7 @@ export interface IFieldConfig {
   settingsValidator?: (config: Record<string, any>) => Record<string, string>;
   filter?: {
     operators: IFilterOperator[];
-    customInput?: React.ComponentType<{ onChange: (value: any) => void }>;
+    customInput?: React.ComponentType<IFilterCustomInputProps>;
     defaultValue?: any;
     valueFormatter?: (value: any) => string;
   };
@@ -104,4 +104,11 @@ export interface IFilterOperator {
   value: TableFilter["operator"];
   label: string;
   secondaryLabel?: React.ReactNode;
+  group?: string;
+}
+
+export interface IFilterCustomInputProps {
+  onChange: (value: any) => void;
+  operator: TableFilter["operator"];
+  [key: string]: any;
 }
