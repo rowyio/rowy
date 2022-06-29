@@ -26,46 +26,41 @@ export default function Settings({ onChange, config }: ISettingsProps) {
     config.colors ? config.colors : defaultColors
   );
 
-  const [checkStates, setCheckStates] = useState<{ [key: string]: boolean }>({
-    0: colorsDraft[0],
-    1: colorsDraft[1],
-    2: colorsDraft[2],
-  });
+  const [checkStates, setCheckStates] = useState<boolean[]>([
+    colorsDraft[0],
+    colorsDraft[1],
+    colorsDraft[2],
+  ]);
 
   useEffect(() => {
     onChange("colors")(colorsDraft);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [colorsDraft]);
 
-  const onCheckboxChange = (index: string, checked: boolean) => {
+  const onCheckboxChange = (index: number, checked: boolean) => {
     setColorsDraft(
       colorsDraft.map((value: any, idx: number) =>
-        Number(index) === idx
-          ? checked
-            ? value || defaultColors[idx]
-            : null
-          : value
+        index === idx ? (checked ? value || defaultColors[idx] : null) : value
       )
     );
-    setCheckStates({ ...checkStates, [index]: checked });
+    setCheckStates(
+      checkStates.map((value, idx) => (index === idx ? checked : value))
+    );
   };
 
-  const handleColorChange = (key: string, color: Color): void => {
+  const handleColorChange = (index: number, color: Color): void => {
     setColorsDraft(
-      colorsDraft.map((value, index) =>
-        index === Number(key) ? color.hex : value
-      )
+      colorsDraft.map((value, idx) => (index === idx ? color.hex : value))
     );
   };
 
   return (
     <>
       {JSON.stringify(config)}
-      {Object.keys(checkStates).map((key) => {
-        const index = Number(key);
-        const colorHex = colorsDraft[Number(key)];
+      {checkStates.map((checked: boolean, index: number) => {
+        const colorHex = colorsDraft[index];
         return (
-          <Box key={key} sx={{ display: "flex", flexDirection: "column" }}>
+          <Box key={index} sx={{ display: "flex", flexDirection: "column" }}>
             <Box
               sx={{
                 display: "flex",
@@ -74,7 +69,7 @@ export default function Settings({ onChange, config }: ISettingsProps) {
               }}
             >
               <Checkbox
-                checked={Boolean(checkStates[key])}
+                checked={checked}
                 sx={[
                   fieldSx,
                   {
@@ -86,14 +81,14 @@ export default function Settings({ onChange, config }: ISettingsProps) {
                     },
                   },
                 ]}
-                onChange={() => onCheckboxChange(key, !checkStates[index])}
+                onChange={() => onCheckboxChange(index, !checked)}
               />
               <TextField
                 select
-                label={colorLabels[key]}
+                label={colorLabels[index]}
                 value={1}
                 fullWidth
-                disabled={!checkStates[key]}
+                disabled={!checkStates[index]}
                 sx={{
                   "& .MuiMenu-list": {
                     padding: 0,
@@ -101,7 +96,7 @@ export default function Settings({ onChange, config }: ISettingsProps) {
                 }}
               >
                 <MenuItem value={1} sx={{ display: "none" }}>
-                  {checkStates[key] && (
+                  {checked && (
                     <Box sx={{ display: "flex", alignItems: "center" }}>
                       <Box
                         sx={{
@@ -124,7 +119,7 @@ export default function Settings({ onChange, config }: ISettingsProps) {
                     <ColorPickerInput
                       value={toColor("hex", colorHex)}
                       handleOnChangeComplete={(color) =>
-                        handleColorChange(key, color)
+                        handleColorChange(index, color)
                       }
                       disabled={!checkStates[index]}
                     />
