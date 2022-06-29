@@ -5,9 +5,8 @@ import {
   MutableRefObject,
   useLayoutEffect,
 } from "react";
-import { Box } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 
-import { fieldSx } from "@src/components/SideDrawer/utils";
 import { Color, ColorPicker } from "react-color-palette";
 import { useDebouncedCallback } from "use-debounce";
 
@@ -50,7 +49,7 @@ export default function ColorPickerInput({
 }: IColorPickerProps) {
   const [localValue, setLocalValue] = useState(value);
   const [width, setRef] = useResponsiveWidth();
-
+  const theme = useTheme();
   const debouncedOnChangeComplete = useDebouncedCallback((color) => {
     handleOnChangeComplete(color);
   }, 100);
@@ -63,10 +62,8 @@ export default function ColorPickerInput({
     <Box
       ref={setRef}
       sx={[
-        fieldSx,
         {
-          padding: "1rem",
-          borderColor: "divider",
+          padding: theme.spacing(1.5),
           transitionDuration: 0,
           "& .rcp": {
             border: "none",
@@ -82,7 +79,7 @@ export default function ColorPickerInput({
     >
       <ColorPicker
         width={width}
-        height={100}
+        height={150}
         color={localValue}
         onChange={(color) => setLocalValue(color)}
       />

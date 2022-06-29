@@ -3,9 +3,11 @@ import { useEffect, useState } from "react";
 import {
   Box,
   Checkbox,
+  Grid,
   InputLabel,
   MenuItem,
   TextField,
+  Typography,
   useTheme,
 } from "@mui/material";
 import ColorPickerInput from "@src/components/ColorPickerInput";
@@ -14,6 +16,7 @@ import { ISettingsProps } from "@src/components/fields/types";
 import { Color, toColor } from "react-color-palette";
 import { fieldSx } from "@src/components/SideDrawer/utils";
 import { resultColorsScale, defaultColors } from "@src/utils/color";
+import { GlobalStyles } from "tss-react";
 
 const colorLabels: { [key: string]: string } = {
   0: "No",
@@ -56,80 +59,83 @@ export default function Settings({ onChange, config }: ISettingsProps) {
 
   return (
     <>
-      {JSON.stringify(config)}
-      {checkStates.map((checked: boolean, index: number) => {
-        const colorHex = colorsDraft[index];
-        return (
-          <Box key={index} sx={{ display: "flex", flexDirection: "column" }}>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "end",
-                justifyContent: "center",
-              }}
-            >
-              <Checkbox
-                checked={checked}
-                sx={[
-                  fieldSx,
-                  {
-                    width: "auto",
-                    boxShadow: "none",
-                    backgroundColor: "inherit",
-                    "&:hover": {
-                      backgroundColor: "inherit",
-                    },
-                  },
-                ]}
-                onChange={() => onCheckboxChange(index, !checked)}
-              />
-              <TextField
-                select
-                label={colorLabels[index]}
-                value={1}
-                fullWidth
-                disabled={!checkStates[index]}
+      <GlobalStyles
+        styles={{
+          "& .MuiList-root.MuiMenu-list": {
+            padding: 0,
+          },
+        }}
+      />
+      <Grid container>
+        {checkStates.map((checked: boolean, index: number) => {
+          const colorHex = colorsDraft[index];
+          return (
+            <Grid xs={12} md={4} item>
+              <Box
                 sx={{
-                  "& .MuiMenu-list": {
-                    padding: 0,
-                  },
+                  display: "flex",
+                  alignItems: "end",
+                  justifyContent: "center",
                 }}
               >
-                <MenuItem value={1} sx={{ display: "none" }}>
-                  {checked && (
-                    <Box sx={{ display: "flex", alignItems: "center" }}>
-                      <Box
-                        sx={{
-                          backgroundColor: colorHex,
-                          width: 15,
-                          height: 15,
-                          mr: 1.5,
-                          boxShadow: (theme) =>
-                            `0 0 0 1px ${theme.palette.divider} inset`,
-                          borderRadius: 0.5,
-                          opacity: 0.5,
-                        }}
+                <Checkbox
+                  checked={checked}
+                  sx={[
+                    fieldSx,
+                    {
+                      width: "auto",
+                      boxShadow: "none",
+                      backgroundColor: "inherit",
+                      "&:hover": {
+                        backgroundColor: "inherit",
+                      },
+                    },
+                  ]}
+                  onChange={() => onCheckboxChange(index, !checked)}
+                />
+                <TextField
+                  select
+                  label={colorLabels[index]}
+                  value={1}
+                  fullWidth
+                  disabled={!checkStates[index]}
+                >
+                  <MenuItem value={1} sx={{ display: "none" }}>
+                    {checked && (
+                      <Box sx={{ display: "flex", alignItems: "center" }}>
+                        <Box
+                          sx={{
+                            backgroundColor: colorHex,
+                            width: 15,
+                            height: 15,
+                            mr: 1.5,
+                            boxShadow: (theme) =>
+                              `0 0 0 1px ${theme.palette.divider} inset`,
+                            borderRadius: 0.5,
+                            opacity: 0.5,
+                          }}
+                        />
+                        <Box>{colorHex}</Box>
+                      </Box>
+                    )}
+                  </MenuItem>
+                  {colorHex && (
+                    <div>
+                      <ColorPickerInput
+                        value={toColor("hex", colorHex)}
+                        handleOnChangeComplete={(color) =>
+                          handleColorChange(index, color)
+                        }
+                        disabled={!checkStates[index]}
                       />
-                      <Box>{colorHex}</Box>
-                    </Box>
+                    </div>
                   )}
-                </MenuItem>
-                {colorHex && (
-                  <>
-                    <ColorPickerInput
-                      value={toColor("hex", colorHex)}
-                      handleOnChangeComplete={(color) =>
-                        handleColorChange(index, color)
-                      }
-                      disabled={!checkStates[index]}
-                    />
-                  </>
-                )}
-              </TextField>
-            </Box>
-          </Box>
-        );
-      })}
+                </TextField>
+              </Box>
+            </Grid>
+          );
+        })}
+      </Grid>
       <Preview colors={config.colors} />
     </>
   );
@@ -140,24 +146,36 @@ const Preview = ({ colors }: { colors: any }) => {
   return (
     <InputLabel>
       Preview:
-      <Box sx={{ display: "flex", textAlign: "center" }}>
+      <Box
+        sx={{
+          display: "flex",
+          textAlign: "center",
+        }}
+      >
         {[0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1].map((value) => {
           return (
             <Box
-              key={value}
               sx={{
+                position: "relative",
                 width: "100%",
                 padding: "0.5rem 0",
                 color: theme.palette.text.primary,
-                backgroundColor: resultColorsScale(
-                  value,
-                  colors,
-                  theme.palette.background.paper
-                ).toHex(),
-                opacity: 0.5,
               }}
             >
-              {Math.floor(value * 100)}%
+              <Box
+                key={value}
+                sx={{
+                  position: "absolute",
+                  inset: 0,
+                  backgroundColor: resultColorsScale(
+                    value,
+                    colors,
+                    theme.palette.background.paper
+                  ).toHex(),
+                  opacity: 0.5,
+                }}
+              />
+              <Typography>{Math.floor(value * 100)}%</Typography>
             </Box>
           );
         })}
