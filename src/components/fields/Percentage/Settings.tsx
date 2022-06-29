@@ -111,7 +111,8 @@ export default function Settings({ onChange, config }: ISettingsProps) {
 
   useEffect(() => {
     onChange("colors")(colorsDraft);
-  }, [colorsDraft, onChange]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [colorsDraft]);
 
   const onCheckboxChange = (index: string, checked: boolean) => {
     setColorsDraft(
@@ -137,7 +138,6 @@ export default function Settings({ onChange, config }: ISettingsProps) {
   return (
     <>
       {JSON.stringify(config)}
-      <button onClick={() => onChange("colors")([])}>reset</button>
       {Object.keys(checkStates).map((key) => {
         const index = Number(key);
         const colorHex = colorsDraft[Number(key)];
@@ -152,11 +152,11 @@ export default function Settings({ onChange, config }: ISettingsProps) {
               }}
             >
               <Checkbox
+                checked={Boolean(checkStates[key])}
                 sx={[
                   fieldSx,
                   { width: "auto", marginRight: "0.5rem", boxShadow: "none" },
                 ]}
-                checked={checkStates[index]}
                 onChange={() => onCheckboxChange(key, !checkStates[index])}
               />
               <ColorPickerCollapse
@@ -166,7 +166,7 @@ export default function Settings({ onChange, config }: ISettingsProps) {
                 color={colorHex || "#fff"}
                 disabled={!checkStates[index]}
               >
-                {colorHex && (
+                {colorHex ? (
                   <ColorPickerInput
                     value={toColor("hex", colorHex)}
                     handleOnChangeComplete={(color) =>
@@ -174,6 +174,8 @@ export default function Settings({ onChange, config }: ISettingsProps) {
                     }
                     disabled={!checkStates[index]}
                   />
+                ) : (
+                  <></>
                 )}
               </ColorPickerCollapse>
             </Box>
