@@ -65,7 +65,6 @@ export default function ColorPickerInput({
       sx={[
         fieldSx,
         {
-          marginTop: "1rem",
           padding: "1rem",
           borderColor: "divider",
           transitionDuration: 0,

@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 
 import {
   Box,
-  ButtonBase,
   Checkbox,
-  Collapse,
   InputLabel,
+  MenuItem,
+  TextField,
   useTheme,
 } from "@mui/material";
 import ColorPickerInput from "@src/components/ColorPickerInput";
@@ -13,88 +13,12 @@ import { ISettingsProps } from "@src/components/fields/types";
 
 import { Color, toColor } from "react-color-palette";
 import { fieldSx } from "@src/components/SideDrawer/utils";
-import { ChevronDown } from "mdi-material-ui";
-import { ReactElement } from "react-markdown/lib/react-markdown";
 import { resultColorsScale, defaultColors } from "@src/utils/color";
-
-const ColorPickerCollapse = ({
-  colorKey,
-  color,
-  active,
-  setActive,
-  disabled,
-  children,
-}: {
-  colorKey: string;
-  color: string;
-  active: boolean;
-  setActive: (activeKey: string | null) => void;
-  disabled?: boolean;
-  children?: ReactElement;
-}) => {
-  const toggleCollapse = () => !disabled && setActive(active ? null : colorKey);
-
-  const toggleState = (() => {
-    if (disabled && active) {
-      setActive(null);
-      return false;
-    }
-    return active;
-  })();
-
-  return (
-    <Box sx={{ width: "100%" }}>
-      <ButtonBase
-        onClick={toggleCollapse}
-        component={ButtonBase}
-        focusRipple
-        disabled={disabled}
-        sx={[
-          fieldSx,
-          {
-            justifyContent: "flex-start",
-            "&&": { pl: 0.75, pr: 0.5 },
-            transition: (theme) =>
-              theme.transitions.create("border-radius", {
-                delay: theme.transitions.duration.standard,
-              }),
-            "&.Mui-disabled": { color: "text.disabled" },
-          },
-          active && {
-            transitionDelay: "0s",
-            transitionDuration: "0s",
-          },
-        ]}
-      >
-        <Box
-          sx={{
-            backgroundColor: color,
-            width: 15,
-            height: 15,
-            mr: 1.5,
-            boxShadow: (theme) => `0 0 0 1px ${theme.palette.divider} inset`,
-            borderRadius: 0.5,
-            opacity: 0.5,
-          }}
-        />
-        <div style={{ flexGrow: 1 }}>{color}</div>
-        <ChevronDown
-          color="action"
-          sx={{
-            transition: (theme) => theme.transitions.create("transform"),
-            transform: active ? "rotate(180deg)" : "none",
-          }}
-        />
-      </ButtonBase>
-      <Collapse in={toggleState}>{children}</Collapse>
-    </Box>
-  );
-};
 
 const colorLabels: { [key: string]: string } = {
   0: "No",
-  1: "Yes",
-  2: "Maybe",
+  1: "Maybe",
+  2: "Yes",
 };
 
 export default function Settings({ onChange, config }: ISettingsProps) {
@@ -107,7 +31,6 @@ export default function Settings({ onChange, config }: ISettingsProps) {
     1: colorsDraft[1],
     2: colorsDraft[2],
   });
-  const [activePicker, setActivePicker] = useState<string | null>(null);
 
   useEffect(() => {
     onChange("colors")(colorsDraft);
@@ -143,11 +66,10 @@ export default function Settings({ onChange, config }: ISettingsProps) {
         const colorHex = colorsDraft[Number(key)];
         return (
           <Box key={key} sx={{ display: "flex", flexDirection: "column" }}>
-            {colorLabels[key]}
             <Box
               sx={{
                 display: "flex",
-                alignItems: "start",
+                alignItems: "end",
                 justifyContent: "center",
               }}
             >
@@ -155,29 +77,60 @@ export default function Settings({ onChange, config }: ISettingsProps) {
                 checked={Boolean(checkStates[key])}
                 sx={[
                   fieldSx,
-                  { width: "auto", marginRight: "0.5rem", boxShadow: "none" },
+                  {
+                    width: "auto",
+                    boxShadow: "none",
+                    backgroundColor: "inherit",
+                    "&:hover": {
+                      backgroundColor: "inherit",
+                    },
+                  },
                 ]}
                 onChange={() => onCheckboxChange(key, !checkStates[index])}
               />
-              <ColorPickerCollapse
-                colorKey={key}
-                active={activePicker === key}
-                setActive={(activePicker) => setActivePicker(activePicker)}
-                color={colorHex || "#fff"}
-                disabled={!checkStates[index]}
+              <TextField
+                select
+                label={colorLabels[key]}
+                value={1}
+                fullWidth
+                disabled={!checkStates[key]}
+                sx={{
+                  "& .MuiMenu-list": {
+                    padding: 0,
+                  },
+                }}
               >
-                {colorHex ? (
-                  <ColorPickerInput
-                    value={toColor("hex", colorHex)}
-                    handleOnChangeComplete={(color) =>
-                      handleColorChange(key, color)
-                    }
-                    disabled={!checkStates[index]}
-                  />
-                ) : (
-                  <></>
+                <MenuItem value={1} sx={{ display: "none" }}>
+                  {checkStates[key] && (
+                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                      <Box
+                        sx={{
+                          backgroundColor: colorHex,
+                          width: 15,
+                          height: 15,
+                          mr: 1.5,
+                          boxShadow: (theme) =>
+                            `0 0 0 1px ${theme.palette.divider} inset`,
+                          borderRadius: 0.5,
+                          opacity: 0.5,
+                        }}
+                      />
+                      <Box>{colorHex}</Box>
+                    </Box>
+                  )}
+                </MenuItem>
+                {colorHex && (
+                  <>
+                    <ColorPickerInput
+                      value={toColor("hex", colorHex)}
+                      handleOnChangeComplete={(color) =>
+                        handleColorChange(key, color)
+                      }
+                      disabled={!checkStates[index]}
+                    />
+                  </>
                 )}
-              </ColorPickerCollapse>
+              </TextField>
             </Box>
           </Box>
         );
