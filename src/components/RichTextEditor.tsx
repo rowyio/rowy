@@ -1,6 +1,6 @@
 import { useState } from "react";
-
-import { styled, useTheme } from "@mui/material";
+import { GlobalStyles } from "tss-react";
+import { alpha, styled, useTheme } from "@mui/material";
 import { Editor } from "@tinymce/tinymce-react";
 
 // TinyMCE so the global var exists
@@ -10,7 +10,9 @@ import "tinymce/themes/silver";
 // Toolbar icons
 import "tinymce/icons/default";
 // Editor styles
-import "tinymce/skins/ui/oxide/skin.min.css";
+/* eslint import/no-webpack-loader-syntax: off */
+import skinCss from "!!raw-loader!tinymce/skins/ui/oxide/skin.min.css";
+import skinDarkCss from "!!raw-loader!tinymce/skins/ui/oxide-dark/skin.min.css";
 // Content styles, including inline UI like fake cursors
 /* eslint import/no-webpack-loader-syntax: off */
 import contentCss from "!!raw-loader!tinymce/skins/content/default/content.min.css";
@@ -55,7 +57,32 @@ const Styles = styled("div", {
       },
     "& .tox-edit-area__iframe": { colorScheme: "auto" },
 
-    "& .tox-toolbar__group": { border: "none !important" },
+    "& .tox-toolbar__group": {
+      border: "none !important",
+      "& .tox-tbtn": {
+        "&:hover:": {
+          backgroundColor: "inherit",
+        },
+        "&:focus": {
+          backgroundColor: "inherit",
+        },
+      },
+      "& .tox-tbtn__select-chevron": {
+        transition: theme.transitions.create("transform", {
+          duration: theme.transitions.duration.short,
+        }),
+      },
+      "& .tox-tbtn--select": {
+        "& .tox-tbtn__select-chevron": {
+          transform: "none",
+        },
+      },
+      "& .tox-tbtn--active": {
+        "& .tox-tbtn__select-chevron": {
+          transform: "rotate(180deg)",
+        },
+      },
+    },
 
     "& .tox-tbtn": {
       borderRadius: theme.shape.borderRadius,
@@ -118,7 +145,74 @@ export default function RichTextEditor({
 
   return (
     <Styles focus={focus} disabled={disabled}>
+      <style>{theme.palette.mode === "dark" ? skinDarkCss : skinCss}</style>
+      <GlobalStyles
+        styles={{
+          ".tox": {
+            "& .tox-menu.tox-menu, &.tox-tinymce-aux .tox-toolbar__overflow.tox-toolbar__overflow":
+              {
+                backgroundColor: theme.palette.background.paper,
+                backgroundImage:
+                  "linear-gradient(rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.12))", // elevation 8
+                boxShadow: theme.shadows[8],
+                border: "none",
+                borderRadius: (theme.shape.borderRadius as number) * 2,
+              },
+
+            "& .tox-collection--list": {
+              "& .tox-collection__group.tox-collection__group": {
+                padding: theme.spacing(0.5),
+                paddingLeft: 0,
+                paddingRight: 0,
+              },
+              "& .tox-collection__item": {
+                padding: theme.spacing(0.5),
+                marginLeft: theme.spacing(0.5),
+                marginRight: theme.spacing(0.5),
+                borderRadius: theme.shape.borderRadius,
+              },
+
+              "& .tox-collection__item--enabled": {
+                backgroundColor: theme.palette.action.hover + " !important",
+                position: "relative",
+                "&::before": {
+                  content: '""',
+                  display: "block",
+                  position: "absolute",
+                  top: theme.spacing(1),
+                  bottom: theme.spacing(1),
+                  left: 0,
+                  width: theme.spacing(0.3),
+                  borderRadius: theme.shape.borderRadius,
+                  backgroundColor: theme.palette.primary.main,
+                },
+              },
+
+              "& .tox-collection__item--active": {
+                backgroundColor:
+                  alpha(
+                    theme.palette.primary.main,
+                    theme.palette.action.selectedOpacity
+                  ) + "!important",
+              },
+              "& .tox-collection__item-checkmark": {
+                display: "none",
+              },
+            },
+
+            "&.tox-tinymce-aux .tox-toolbar__overflow.tox-toolbar__overflow": {
+              padding: theme.spacing(0.5, 0),
+            },
+            "& .tox-tbtn.tox-tbtn": {
+              borderRadius: theme.shape.borderRadius,
+              margin: 0,
+            },
+          },
+        }}
+      />
+
       <Editor
+        key={theme.palette.mode}
         disabled={disabled}
         init={{
           skin: false,
