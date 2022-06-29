@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   Box,
@@ -15,7 +15,7 @@ import { Color, toColor } from "react-color-palette";
 import { fieldSx } from "@src/components/SideDrawer/utils";
 import { ChevronDown } from "mdi-material-ui";
 import { ReactElement } from "react-markdown/lib/react-markdown";
-import { resultColorsScale } from "@src/utils/color";
+import { resultColorsScale, defaultColors } from "@src/utils/color";
 
 const ColorPickerCollapse = ({
   colorKey,
@@ -54,7 +54,6 @@ const ColorPickerCollapse = ({
           {
             justifyContent: "flex-start",
             "&&": { pl: 0.75, pr: 0.5 },
-            color: color,
             transition: (theme) =>
               theme.transitions.create("border-radius", {
                 delay: theme.transitions.duration.standard,
@@ -92,12 +91,6 @@ const ColorPickerCollapse = ({
   );
 };
 
-const defaultColors: { [key: string]: string } = {
-  0: "#ED4747",
-  1: "#F3C900",
-  2: "#1FAD5F",
-};
-
 const colorLabels: { [key: string]: string } = {
   0: "No",
   1: "Yes",
@@ -105,35 +98,49 @@ const colorLabels: { [key: string]: string } = {
 };
 
 export default function Settings({ onChange, config }: ISettingsProps) {
-  const { current: colorsDraft } = useRef<any>([]);
+  const [colorsDraft, setColorsDraft] = useState<any[]>(
+    config.colors ? config.colors : defaultColors
+  );
+
   const [checkStates, setCheckStates] = useState<{ [key: string]: boolean }>({
-    0: false,
-    1: false,
-    2: false,
+    0: colorsDraft[0],
+    1: colorsDraft[1],
+    2: colorsDraft[2],
   });
   const [activePicker, setActivePicker] = useState<string | null>(null);
 
-  const onCheckboxChange = (key: string, checked: boolean) => {
-    if (checked) {
-      colorsDraft[key] = defaultColors[key];
-      onChange("colors")(colorsDraft);
-    } else {
-      colorsDraft[key] = null;
-      onChange("colors")(colorsDraft);
-    }
-    setCheckStates({ ...checkStates, [key]: checked });
+  useEffect(() => {
+    onChange("colors")(colorsDraft);
+  }, [colorsDraft, onChange]);
+
+  const onCheckboxChange = (index: string, checked: boolean) => {
+    setColorsDraft(
+      colorsDraft.map((value: any, idx: number) =>
+        Number(index) === idx
+          ? checked
+            ? value || defaultColors[idx]
+            : null
+          : value
+      )
+    );
+    setCheckStates({ ...checkStates, [index]: checked });
   };
 
-  const handleOnChange = (key: string, color: Color): void => {
-    colorsDraft[key] = color.hex;
-    onChange("colors")(colorsDraft);
+  const handleColorChange = (key: string, color: Color): void => {
+    setColorsDraft(
+      colorsDraft.map((value, index) =>
+        index === Number(key) ? color.hex : value
+      )
+    );
   };
 
   return (
     <>
       {JSON.stringify(config)}
+      <button onClick={() => onChange("colors")([])}>reset</button>
       {Object.keys(checkStates).map((key) => {
-        const color = defaultColors[key];
+        const index = Number(key);
+        const colorHex = colorsDraft[Number(key)];
         return (
           <Box key={key} sx={{ display: "flex", flexDirection: "column" }}>
             {colorLabels[key]}
@@ -149,21 +156,25 @@ export default function Settings({ onChange, config }: ISettingsProps) {
                   fieldSx,
                   { width: "auto", marginRight: "0.5rem", boxShadow: "none" },
                 ]}
-                checked={checkStates[key]}
-                onChange={() => onCheckboxChange(key, !checkStates[key])}
+                checked={checkStates[index]}
+                onChange={() => onCheckboxChange(key, !checkStates[index])}
               />
               <ColorPickerCollapse
                 colorKey={key}
                 active={activePicker === key}
                 setActive={(activePicker) => setActivePicker(activePicker)}
-                color={color}
-                disabled={!checkStates[key]}
+                color={colorHex || "#fff"}
+                disabled={!checkStates[index]}
               >
-                <ColorPickerInput
-                  value={toColor("hex", color)}
-                  handleOnChangeComplete={(color) => handleOnChange(key, color)}
-                  disabled={!checkStates[key]}
-                />
+                {colorHex && (
+                  <ColorPickerInput
+                    value={toColor("hex", colorHex)}
+                    handleOnChangeComplete={(color) =>
+                      handleColorChange(key, color)
+                    }
+                    disabled={!checkStates[index]}
+                  />
+                )}
               </ColorPickerCollapse>
             </Box>
           </Box>
@@ -188,7 +199,11 @@ const Preview = ({ colors }: { colors: any }) => {
                 width: "100%",
                 padding: "0.5rem 0",
                 color: theme.palette.text.primary,
-                backgroundColor: resultColorsScale(value, colors).toHex(),
+                backgroundColor: resultColorsScale(
+                  value,
+                  colors,
+                  theme.palette.background.paper
+                ).toHex(),
                 opacity: 0.5,
               }}
             >

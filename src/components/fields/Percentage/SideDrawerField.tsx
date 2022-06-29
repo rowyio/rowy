@@ -3,7 +3,6 @@ import { ISideDrawerFieldProps } from "@src/components/fields/types";
 import { TextField, InputAdornment, Box } from "@mui/material";
 import { resultColorsScale } from "@src/utils/color";
 import { getFieldId } from "@src/components/SideDrawer/utils";
-import { configDefaults } from "@src/components/fields/Percentage";
 
 export default function Percentage({
   column,
@@ -12,11 +11,7 @@ export default function Percentage({
   onSubmit,
   disabled,
 }: ISideDrawerFieldProps) {
-  const { colors }: { colors: string[] } = {
-    ...configDefaults,
-    ...(column as any).config,
-  };
-
+  const { colors } = (column as any).config;
   return (
     <TextField
       variant="filled"

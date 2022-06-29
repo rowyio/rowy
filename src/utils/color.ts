@@ -1,8 +1,18 @@
 import { colord } from "colord";
 
-const defaultColors = ["#ED4747", "#F3C900", "#1FAD5F"];
-
-export const resultColorsScale = (value: number, colors: any = defaultColors) =>
-  value <= 0.5
-    ? colord(colors[0]).mix(colors[1], value * 2)
-    : colord(colors[1]).mix(colors[2], (value - 0.5) * 2);
+export const defaultColors = ["#ED4747", "#F3C900", "#1FAD5F"];
+export const resultColorsScale = (
+  value: number,
+  colors: any = defaultColors,
+  defaultColor: string = "#fff"
+) => {
+  return value <= 0.5
+    ? colord(colors[0] || defaultColor).mix(
+        colors[1] || defaultColor,
+        value * 2
+      )
+    : colord(colors[1] || defaultColor).mix(
+        colors[2] || defaultColor,
+        (value - 0.5) * 2
+      );
+};
