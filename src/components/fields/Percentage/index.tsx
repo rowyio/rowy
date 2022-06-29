@@ -3,10 +3,13 @@ import { IFieldConfig, FieldType } from "@src/components/fields/types";
 import withHeavyCell from "@src/components/fields/_withTableCell/withHeavyCell";
 
 import { Percentage as PercentageIcon } from "@src/assets/icons";
-import BasicCell from "@src/components/fields/_BasicCell/BasicCellNull";
 import TextEditor from "@src/components/Table/editors/TextEditor";
 import { filterOperators } from "@src/components/fields/Number/Filter";
 import BasicContextMenuActions from "@src/components/fields/_BasicCell/BasicCellContextMenuActions";
+
+const BasicCell = lazy(
+  () => import("./BasicCell" /* webpackChunkName: "BasicCell-Percentage" */)
+);
 
 const TableCell = lazy(
   () => import("./TableCell" /* webpackChunkName: "TableCell-Percentage" */)
