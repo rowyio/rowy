@@ -7,7 +7,6 @@ export default function Percentage({ value }: IBasicCellProps) {
 
   const percentage = typeof value === "number" ? value : 0;
   return (
-    <>
       <div
         style={{
           textAlign: "right",
@@ -18,6 +17,5 @@ export default function Percentage({ value }: IBasicCellProps) {
       >
         {Math.round(percentage * 100)}%
       </div>
-    </>
   );
 }
