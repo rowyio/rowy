@@ -176,7 +176,9 @@ const Preview = ({ colors }: { colors: any }) => {
                   opacity: 0.5,
                 }}
               />
-              <Typography>{Math.floor(value * 100)}%</Typography>
+              <Typography style={{ position: "relative", zIndex: 1 }}>
+                {Math.floor(value * 100)}%
+              </Typography>
             </Box>
           );
         })}
