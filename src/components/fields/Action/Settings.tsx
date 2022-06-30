@@ -58,7 +58,7 @@ const CodeEditor = lazy(
     import("@src/components/CodeEditor" /* webpackChunkName: "CodeEditor" */)
 );
 
-const Settings = ({ config, onChange }: ISettingsProps) => {
+const Settings = ({ config, onChange, fieldName }: ISettingsProps) => {
   const [projectId] = useAtom(projectIdAtom, globalScope);
   const [roles] = useAtom(projectRolesAtom, globalScope);
   const [settings] = useAtom(projectSettingsAtom, globalScope);
@@ -77,10 +77,12 @@ const Settings = ({ config, onChange }: ISettingsProps) => {
   //     ? ["requirements", "friction", "action", "undo", "customization"]
   //     : ["requirements", "friction", "action", "customization"];
 
-  const columnOptions = tableColumnsOrdered.map((c) => ({
-    label: c.name,
-    value: c.key,
-  }));
+  const columnOptions = tableColumnsOrdered
+    .map((c) => ({
+      label: c.name,
+      value: c.key,
+    }))
+    .filter((c) => c.value !== fieldName);
 
   const formattedParamsJson = stringify(
     Array.isArray(config.params) ? config.params : [],
@@ -145,6 +147,7 @@ const Settings = ({ config, onChange }: ISettingsProps) => {
               <Grid item xs={12} sm={6}>
                 <MultiSelect
                   label="Required roles"
+                  labelPlural="roles"
                   options={roles ?? []}
                   value={config.requiredRoles ?? []}
                   onChange={onChange("requiredRoles")}
@@ -158,6 +161,7 @@ const Settings = ({ config, onChange }: ISettingsProps) => {
               <Grid item xs={12} sm={6}>
                 <MultiSelect
                   label="Required fields"
+                  labelPlural="fields"
                   options={columnOptions}
                   value={config.requiredFields ?? []}
                   onChange={onChange("requiredFields")}
