@@ -68,7 +68,7 @@ export default function ColorPickerInput({
           "& .rcp": {
             border: "none",
             "& .rcp-saturation": {
-              borderRadius: "4px",
+              borderRadius: theme.spacing(0.5),
             },
             "& .rcp-body": {
               boxSizing: "unset",

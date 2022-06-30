@@ -19,9 +19,9 @@ import { resultColorsScale, defaultColors } from "@src/utils/color";
 import { GlobalStyles } from "tss-react";
 
 const colorLabels: { [key: string]: string } = {
-  0: "No",
-  1: "Maybe",
-  2: "Yes",
+  0: "Start",
+  1: "Middle",
+  2: "End",
 };
 
 export default function Settings({ onChange, config }: ISettingsProps) {
@@ -70,68 +70,69 @@ export default function Settings({ onChange, config }: ISettingsProps) {
         {checkStates.map((checked: boolean, index: number) => {
           const colorHex = colorsDraft[index];
           return (
-            <Grid xs={12} md={4} item>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "end",
-                  justifyContent: "center",
-                }}
-              >
-                <Checkbox
-                  checked={checked}
-                  sx={[
-                    fieldSx,
-                    {
-                      width: "auto",
-                      boxShadow: "none",
+            <Grid
+              xs={12}
+              md={4}
+              item
+              sx={{
+                display: "flex",
+                alignItems: "end",
+                justifyContent: "center",
+              }}
+            >
+              <Checkbox
+                checked={checked}
+                sx={[
+                  fieldSx,
+                  {
+                    width: "auto",
+                    boxShadow: "none",
+                    backgroundColor: "inherit",
+                    "&:hover": {
                       backgroundColor: "inherit",
-                      "&:hover": {
-                        backgroundColor: "inherit",
-                      },
                     },
-                  ]}
-                  onChange={() => onCheckboxChange(index, !checked)}
-                />
-                <TextField
-                  select
-                  label={colorLabels[index]}
-                  value={1}
-                  fullWidth
-                  disabled={!checkStates[index]}
-                >
-                  <MenuItem value={1} sx={{ display: "none" }}>
-                    {checked && (
-                      <Box sx={{ display: "flex", alignItems: "center" }}>
-                        <Box
-                          sx={{
-                            backgroundColor: colorHex,
-                            width: 15,
-                            height: 15,
-                            mr: 1.5,
-                            boxShadow: (theme) =>
-                              `0 0 0 1px ${theme.palette.divider} inset`,
-                            borderRadius: 0.5,
-                            opacity: 0.5,
-                          }}
-                        />
-                        <Box>{colorHex}</Box>
-                      </Box>
-                    )}
-                  </MenuItem>
-                  {colorHex && (
-                    <div>
-                      <ColorPickerInput
-                        value={toColor("hex", colorHex)}
-                        handleOnChangeComplete={(color) =>
-                          handleColorChange(index, color)
-                        }
-                        disabled={!checkStates[index]}
+                  },
+                ]}
+                onChange={() => onCheckboxChange(index, !checked)}
+              />
+              <TextField
+                select
+                label={colorLabels[index]}
+                value={1}
+                fullWidth
+                disabled={!checkStates[index]}
+              >
+                <MenuItem value={1} sx={{ display: "none" }}>
+                  {checked && (
+                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                      <Box
+                        sx={{
+                          backgroundColor: colorHex,
+                          width: 15,
+                          height: 15,
+                          mr: 1.5,
+                          boxShadow: (theme) =>
+                            `0 0 0 1px ${theme.palette.divider} inset`,
+                          borderRadius: 0.5,
+                          opacity: 0.5,
+                        }}
                       />
-                    </div>
+                      <Box>{colorHex}</Box>
+                    </Box>
                   )}
-                </TextField>
-              </Box>
+                </MenuItem>
+                {colorHex && (
+                  <div>
+                    <ColorPickerInput
+                      value={toColor("hex", colorHex)}
+                      handleOnChangeComplete={(color) =>
+                        handleColorChange(index, color)
+                      }
+                      disabled={!checkStates[index]}
+                    />
+                  </div>
+                )}
+              </TextField>
             </Grid>
           );
         })}
