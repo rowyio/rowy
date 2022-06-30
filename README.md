@@ -9,7 +9,7 @@
 Airtable-like UI for Firestore meets IDE in browser for cloud functions
 </h3>
 <p align="center">
-Connect to your database, manage data in table-UI with role based access controls. Build cloud function workflows in JS/TS using any NPMs. Forget CLIs, configs, and DevOps. Focus on building your apps with a platform designed for developer productivity.
+Connect to your database, manage data in table-UI with role based access controls. Build cloud function workflows in JS/TS using any NPM or APIs. Forget CLIs, configs, and DevOps. Focus on building your apps with a platform designed for developer productivity.
 </p>
 
 <div align="center">
