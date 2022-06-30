@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { DATE_TIME_FORMAT } from "@src/constants/dates";
+import { DATE_TIME_FORMAT, DATE_FORMAT } from "@src/constants/dates";
 import { IFilterOperator } from "@src/components/fields/types";
 
 export const filterOperators: IFilterOperator[] = [
@@ -71,7 +71,11 @@ export const filterOperators: IFilterOperator[] = [
   },
 ];
 
-export const valueFormatter = (value: any) => {
-  if (value && value.toDate) return format(value.toDate(), DATE_TIME_FORMAT);
+export const valueFormatter = (value: any, operator: string) => {
+  if (value && value.toDate)
+    return format(
+      value.toDate(),
+      operator.startsWith("date") ? DATE_FORMAT : DATE_TIME_FORMAT
+    );
   return "";
 };

@@ -37,7 +37,7 @@ export interface IFieldConfig {
     operators: IFilterOperator[];
     customInput?: React.ComponentType<IFilterCustomInputProps>;
     defaultValue?: any;
-    valueFormatter?: (value: any) => string;
+    valueFormatter?: (value: any, operator: TableFilter["operator"]) => string;
   };
   sortKey?: string;
   csvExportFormatter?: (value: any, config?: any) => string;
