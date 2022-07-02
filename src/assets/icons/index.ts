@@ -52,6 +52,9 @@ export { Numeric as Number };
 import { Percent } from "mdi-material-ui";
 export { Percent as Percentage };
 
+import { Cube } from "mdi-material-ui";
+export { Cube as _3D };
+
 import { TableRowHeight } from "mdi-material-ui";
 export { TableRowHeight as RowHeight };
 

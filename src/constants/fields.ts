@@ -25,6 +25,7 @@ export enum FieldType {
   // FILE
   image = "IMAGE",
   file = "FILE",
+  "3d" = "3D",
   // CONNECTION
   connector = "CONNECTOR",
   subTable = "SUB_TABLE",

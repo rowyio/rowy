@@ -34,6 +34,7 @@ import Code from "./Code";
 import Action from "./Action";
 import Derivative from "./Derivative";
 import Markdown from "./Markdown";
+import _3D from "./3D";
 // // import Aggregate from "./Aggregate";
 import Status from "./Status";
 import CreatedBy from "./CreatedBy";
@@ -71,6 +72,7 @@ export const FIELDS: IFieldConfig[] = [
   /** FILE */
   Image_,
   File_,
+  _3D,
   /** CONNECTION */
   Connector,
   SubTable,
