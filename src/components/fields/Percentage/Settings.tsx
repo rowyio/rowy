@@ -25,23 +25,17 @@ const colorLabels: { [key: string]: string } = {
 };
 
 export default function Settings({ onChange, config }: ISettingsProps) {
-  const [colorsDraft, setColorsDraft] = useState<any[]>(
-    config.colors ? config.colors : defaultColors
-  );
+  const colors = config.colors ?? defaultColors;
 
+  // It makes sense to keep this a state
   const [checkStates, setCheckStates] = useState<boolean[]>([
     colorsDraft[0],
     colorsDraft[1],
     colorsDraft[2],
   ]);
 
-  useEffect(() => {
-    onChange("colors")(colorsDraft);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [colorsDraft]);
-
   const onCheckboxChange = (index: number, checked: boolean) => {
-    setColorsDraft(
+    onChange("colors")(
       colorsDraft.map((value: any, idx: number) =>
         index === idx ? (checked ? value || defaultColors[idx] : null) : value
       )
@@ -52,7 +46,7 @@ export default function Settings({ onChange, config }: ISettingsProps) {
   };
 
   const handleColorChange = (index: number, color: Color): void => {
-    setColorsDraft(
+    onChange("colors")(
       colorsDraft.map((value, idx) => (index === idx ? color.hex : value))
     );
   };
