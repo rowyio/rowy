@@ -6,10 +6,6 @@ import { Markdown as MarkdownIcon } from "@src/assets/icons";
 import BasicCell from "./BasicCell";
 import withSideDrawerEditor from "@src/components/Table/editors/withSideDrawerEditor";
 
-const Settings = lazy(
-  () => import("./Settings" /* webpackChunkName: "Settings-markdown" */)
-);
-
 const SideDrawerField = lazy(
   () =>
     import(
@@ -29,6 +25,5 @@ export const config: IFieldConfig = {
   TableCell: withBasicCell(BasicCell),
   TableEditor: withSideDrawerEditor(BasicCell),
   SideDrawerField,
-  settings: Settings,
 };
 export default config;
