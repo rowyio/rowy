@@ -35,7 +35,7 @@ export default function Percentage({
                 width: 20,
                 height: 20,
                 borderRadius: 0.5,
-                boxShadow: `0 0 0 1px ${theme.palette.divider} inest`,
+                boxShadow: `0 0 0 1px ${theme.palette.divider} inset`,
                 backgroundColor:
                   typeof value === "number"
                     ? resultColorsScale(

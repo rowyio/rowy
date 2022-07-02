@@ -38,20 +38,21 @@ const useResponsiveWidth = (): [
 
 export interface IColorPickerProps {
   value: Color;
-  handleOnChangeComplete: (color: Color) => void;
+  onChangeComplete: (color: Color) => void;
   disabled?: boolean;
 }
 
 export default function ColorPickerInput({
   value,
-  handleOnChangeComplete,
+  onChangeComplete,
   disabled = false,
 }: IColorPickerProps) {
   const [localValue, setLocalValue] = useState(value);
   const [width, setRef] = useResponsiveWidth();
   const theme = useTheme();
+
   const debouncedOnChangeComplete = useDebouncedCallback((color) => {
-    handleOnChangeComplete(color);
+    onChangeComplete(color);
   }, 100);
 
   useEffect(() => {
@@ -64,6 +65,7 @@ export default function ColorPickerInput({
       sx={[
         {
           padding: theme.spacing(1.5),
+          paddingTop: theme.spacing(1),
           transitionDuration: 0,
           "& .rcp": {
             border: "none",
@@ -82,6 +84,7 @@ export default function ColorPickerInput({
         height={150}
         color={localValue}
         onChange={(color) => setLocalValue(color)}
+        onChangeComplete={onChangeComplete}
       />
     </Box>
   );

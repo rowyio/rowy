@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import {
   Box,
@@ -16,7 +16,6 @@ import { ISettingsProps } from "@src/components/fields/types";
 import { Color, toColor } from "react-color-palette";
 import { fieldSx } from "@src/components/SideDrawer/utils";
 import { resultColorsScale, defaultColors } from "@src/utils/color";
-import { GlobalStyles } from "tss-react";
 
 const colorLabels: { [key: string]: string } = {
   0: "Start",
@@ -25,18 +24,15 @@ const colorLabels: { [key: string]: string } = {
 };
 
 export default function Settings({ onChange, config }: ISettingsProps) {
-  const colors = config.colors ?? defaultColors;
+  const colors: string[] = config.colors ?? defaultColors;
 
-  // It makes sense to keep this a state
-  const [checkStates, setCheckStates] = useState<boolean[]>([
-    colorsDraft[0],
-    colorsDraft[1],
-    colorsDraft[2],
-  ]);
+  const [checkStates, setCheckStates] = useState<boolean[]>(
+    colors.map(Boolean)
+  );
 
   const onCheckboxChange = (index: number, checked: boolean) => {
     onChange("colors")(
-      colorsDraft.map((value: any, idx: number) =>
+      colors.map((value: any, idx: number) =>
         index === idx ? (checked ? value || defaultColors[idx] : null) : value
       )
     );
@@ -47,22 +43,15 @@ export default function Settings({ onChange, config }: ISettingsProps) {
 
   const handleColorChange = (index: number, color: Color): void => {
     onChange("colors")(
-      colorsDraft.map((value, idx) => (index === idx ? color.hex : value))
+      colors.map((value, idx) => (index === idx ? color.hex : value))
     );
   };
 
   return (
     <>
-      <GlobalStyles
-        styles={{
-          "& .MuiList-root.MuiMenu-list": {
-            padding: 0,
-          },
-        }}
-      />
       <Grid container>
         {checkStates.map((checked: boolean, index: number) => {
-          const colorHex = colorsDraft[index];
+          const colorHex = colors[index];
           return (
             <Grid
               xs={12}
@@ -119,7 +108,7 @@ export default function Settings({ onChange, config }: ISettingsProps) {
                   <div>
                     <ColorPickerInput
                       value={toColor("hex", colorHex)}
-                      handleOnChangeComplete={(color) =>
+                      onChangeComplete={(color) =>
                         handleColorChange(index, color)
                       }
                       disabled={!checkStates[index]}
