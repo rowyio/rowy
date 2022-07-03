@@ -1,7 +1,8 @@
 const { whenDev } = require("@craco/craco");
 const CracoAlias = require("craco-alias");
 const CracoSwcPlugin = require("craco-swc");
-
+const BundleAnalyzerPlugin =
+  require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 module.exports = {
   plugins: [
     {
@@ -65,6 +66,7 @@ module.exports = {
     },
   },
   webpack: {
+    plugins: [new BundleAnalyzerPlugin({ analyzerMode: "server" })],
     configure: {
       resolve: {
         // Polyfill for monaco-editor-auto-typings
