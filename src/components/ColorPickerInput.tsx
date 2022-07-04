@@ -51,13 +51,6 @@ export default function ColorPickerInput({
   const [width, setRef] = useResponsiveWidth();
   const theme = useTheme();
 
-  const debouncedOnChangeComplete = useDebouncedCallback((color) => {
-    onChangeComplete(color);
-  }, 100);
-
-  useEffect(() => {
-    debouncedOnChangeComplete(localValue);
-  }, [debouncedOnChangeComplete, localValue]);
 
   return (
     <Box
