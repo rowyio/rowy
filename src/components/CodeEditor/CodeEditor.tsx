@@ -10,7 +10,7 @@ import { ResizeBottomRight } from "@src/assets/icons";
 import useMonacoCustomizations, {
   IUseMonacoCustomizationsProps,
 } from "./useMonacoCustomizations";
-import FullScreenButton from "./FullScreenButton";
+import FullScreenButton from "@src/components/FullScreenButton";
 import { spreadSx } from "@src/utils/ui";
 
 export interface ICodeEditorProps
@@ -73,6 +73,7 @@ export default function CodeEditor({
   return (
     <TrapFocus open={fullScreen}>
       <Box
+        component="div"
         sx={[boxSx, ...spreadSx(containerProps?.sx)]}
         style={fullScreen ? { height: "100%" } : {}}
       >

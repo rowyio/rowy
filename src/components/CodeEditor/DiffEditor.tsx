@@ -13,7 +13,7 @@ import { ResizeBottomRight } from "@src/assets/icons";
 import useMonacoCustomizations, {
   IUseMonacoCustomizationsProps,
 } from "./useMonacoCustomizations";
-import FullScreenButton from "./FullScreenButton";
+import FullScreenButton from "@src/components/FullScreenButton";
 import { spreadSx } from "@src/utils/ui";
 
 export interface IDiffEditorProps
@@ -64,6 +64,7 @@ export default function DiffEditor({
   return (
     <TrapFocus open={fullScreen}>
       <Box
+        component="div"
         sx={[boxSx, ...spreadSx(containerProps?.sx)]}
         style={fullScreen ? { height: "100%" } : {}}
       >
