@@ -2,7 +2,7 @@ import { sortBy } from "lodash-es";
 
 import MultiSelect from "@rowy/multiselect";
 import { Grid } from "@mui/material";
-import LeafIcon from "@src/assets/icons/Leaf";
+import { Leaf as LeafIcon } from "@src/assets/icons";
 
 import { CLOUD_RUN_REGIONS } from "@src/constants/regions";
 
