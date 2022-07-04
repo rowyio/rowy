@@ -1,14 +1,7 @@
-import {
-  useState,
-  useEffect,
-  useRef,
-  MutableRefObject,
-  useLayoutEffect,
-} from "react";
+import { useState, useRef, MutableRefObject, useLayoutEffect } from "react";
 import { Box, useTheme } from "@mui/material";
 
 import { Color, ColorPicker } from "react-color-palette";
-import { useDebouncedCallback } from "use-debounce";
 
 const useResponsiveWidth = (): [
   width: number,
@@ -50,7 +43,6 @@ export default function ColorPickerInput({
   const [localValue, setLocalValue] = useState(value);
   const [width, setRef] = useResponsiveWidth();
   const theme = useTheme();
-
 
   return (
     <Box
