@@ -66,7 +66,6 @@ export default function UserMenu(props: IconButtonProps) {
           aria-label="Open user menu"
           aria-controls="user-menu"
           aria-haspopup="true"
-          edge="end"
           size="large"
           {...props}
           ref={anchorEl}

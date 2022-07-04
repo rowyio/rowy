@@ -6,7 +6,8 @@ import { Go as GoIcon } from "@src/assets/icons";
 import HomeIcon from "@mui/icons-material/HomeOutlined";
 
 import AuthLayout from "@src/layouts/AuthLayout";
-import Navigation, { APP_BAR_HEIGHT } from "@src/layouts/Navigation";
+import Navigation from "@src/layouts/Navigation";
+import { TOP_BAR_HEIGHT } from "@src/layouts/Navigation/TopBar";
 import EmptyState from "@src/components/EmptyState";
 
 import meta from "@root/package.json";
@@ -33,7 +34,7 @@ export default function NotFound() {
               Home
             </Button>
           }
-          style={{ marginTop: -APP_BAR_HEIGHT }}
+          style={{ marginTop: -TOP_BAR_HEIGHT }}
         />
       </Navigation>
     );

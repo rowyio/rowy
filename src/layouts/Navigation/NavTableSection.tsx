@@ -1,7 +1,13 @@
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 
-import { List, ListItemIcon, ListItemText, Collapse } from "@mui/material";
+import {
+  List,
+  ListItemIcon,
+  ListItemText,
+  ListItemSecondaryAction,
+  Collapse,
+} from "@mui/material";
 import FolderIcon from "@mui/icons-material/FolderOutlined";
 import FavoriteIcon from "@mui/icons-material/FavoriteBorder";
 import { ChevronDown } from "@src/assets/icons";
@@ -17,12 +23,14 @@ export interface INavTableSectionProps {
   section: string;
   tables: TableSettings[];
   closeDrawer?: (e: {}) => void;
+  hidden?: boolean;
 }
 
 export default function NavTableSection({
   section,
   tables,
   closeDrawer,
+  hidden,
 }: INavTableSectionProps) {
   const { pathname } = useLocation();
   const hasMatch = tables.map(getTableRoute).includes(pathname);
@@ -31,7 +39,14 @@ export default function NavTableSection({
   const isFavorites = section === "Favorites";
 
   return (
-    <li>
+    <li
+      style={{
+        opacity: hidden ? 0.38 : 1,
+        transitionProperty: "opacity",
+        transitionTimingFunction: "var(--nav-transition-timing-function)",
+        transitionDuration: "var(--nav-transition-duration)",
+      }}
+    >
       <NavItem
         {...({ component: "button" } as any)}
         selected={!isFavorites && hasMatch && !open}
@@ -43,14 +58,17 @@ export default function NavTableSection({
 
         <ListItemText primary={section} style={{ textAlign: "left" }} />
 
-        <ChevronDown
-          sx={{
-            color: "action.active",
-            mr: -0.5,
-            transform: open ? "rotate(180deg)" : "rotate(0)",
-            transition: (theme) => theme.transitions.create("transform"),
-          }}
-        />
+        <ListItemSecondaryAction>
+          <ChevronDown
+            sx={{
+              color: "action.active",
+              m: 0.25,
+              display: "block",
+              transform: open ? "rotate(180deg)" : "rotate(0)",
+              transition: (theme) => theme.transitions.create("transform"),
+            }}
+          />
+        </ListItemSecondaryAction>
       </NavItem>
 
       <Collapse in={open}>

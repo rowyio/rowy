@@ -39,7 +39,7 @@ import {
 import { TableSettings } from "@src/types/table";
 import { ROUTES } from "@src/constants/routes";
 import useBasicSearch from "@src/hooks/useBasicSearch";
-import { APP_BAR_HEIGHT } from "@src/layouts/Navigation";
+import { TOP_BAR_HEIGHT } from "@src/layouts/Navigation/TopBar";
 
 const SEARCH_KEYS = ["id", "name", "section", "description"];
 
@@ -112,7 +112,7 @@ export default function HomePage() {
         message="No tables"
         description="There are no tables in this project. Sign in with an ADMIN account to create tables."
         fullScreen
-        style={{ marginTop: -APP_BAR_HEIGHT }}
+        style={{ marginTop: -TOP_BAR_HEIGHT }}
       />
     );
   }

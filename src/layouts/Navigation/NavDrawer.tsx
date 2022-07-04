@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { useAtom, useSetAtom } from "jotai";
 import { find, groupBy } from "lodash-es";
+import { colord } from "colord";
 
 import {
   Drawer,
@@ -9,19 +11,25 @@ import {
   List,
   ListItemIcon,
   ListItemText,
-  // ListSubheader,
+  Avatar,
   Divider,
+  ListItemSecondaryAction,
+  Box,
+  Fade,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/MenuOpen";
-import PinIcon from "@mui/icons-material/PushPinOutlined";
-import UnpinIcon from "@mui/icons-material/PushPin";
+import ArrowBackIcon from "@mui/icons-material/WorkspacesOutlined";
 import HomeIcon from "@mui/icons-material/HomeOutlined";
 import SettingsIcon from "@mui/icons-material/SettingsOutlined";
 import ProjectSettingsIcon from "@mui/icons-material/BuildCircleOutlined";
 import UserManagementIcon from "@mui/icons-material/AccountCircleOutlined";
 import AddIcon from "@mui/icons-material/Add";
+import { Table as TableIcon } from "@src/assets/icons";
+import DocsIcon from "@mui/icons-material/LibraryBooksOutlined";
+import LearningIcon from "@mui/icons-material/LocalLibraryOutlined";
+import HelpIcon from "@mui/icons-material/HelpOutline";
+import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
-import { APP_BAR_HEIGHT } from ".";
 import Logo from "@src/assets/Logo";
 import NavItem from "./NavItem";
 import NavTableSection from "./NavTableSection";
@@ -36,24 +44,22 @@ import {
 } from "@src/atoms/globalScope";
 import { TableSettings } from "@src/types/table";
 import { ROUTES } from "@src/constants/routes";
+import { EXTERNAL_LINKS, WIKI_LINKS } from "@src/constants/externalLinks";
+import { TOP_BAR_HEIGHT } from "./TopBar";
 
 export const NAV_DRAWER_WIDTH = 256;
+export const NAV_DRAWER_COLLAPSED_WIDTH = 56;
 
 export interface INavDrawerProps extends DrawerProps {
+  open: boolean;
+  isPermanent: boolean;
   onClose: NonNullable<DrawerProps["onClose"]>;
-  pinned: boolean;
-  setPinned: React.Dispatch<React.SetStateAction<boolean>>;
-  canPin: boolean;
-  scrollTrigger: boolean;
 }
 
 export default function NavDrawer({
   open,
-  pinned,
-  setPinned,
-  canPin,
-  scrollTrigger,
-  ...props
+  isPermanent,
+  onClose,
 }: INavDrawerProps) {
   const [tables] = useAtom(tablesAtom, globalScope);
   const [userSettings] = useAtom(userSettingsAtom, globalScope);
@@ -62,6 +68,8 @@ export default function NavDrawer({
     tableSettingsDialogAtom,
     globalScope
   );
+
+  const [hover, setHover] = useState(false);
 
   const favorites = Array.isArray(userSettings.favoriteTables)
     ? userSettings.favoriteTables
@@ -73,146 +81,145 @@ export default function NavDrawer({
     ...groupBy(tables, "section"),
   };
 
-  const closeDrawer = pinned
+  const collapsed = !open && isPermanent;
+  const tempExpanded = hover && collapsed;
+  const width =
+    collapsed && !tempExpanded ? NAV_DRAWER_COLLAPSED_WIDTH : NAV_DRAWER_WIDTH;
+  const closeDrawer = isPermanent
     ? undefined
-    : (e: {}) => props.onClose(e, "escapeKeyDown");
+    : (e: {}) => onClose(e, "escapeKeyDown");
+
+  const externalLinkIcon = !collapsed && (
+    <ListItemSecondaryAction sx={{ right: 10, color: "text.disabled" }}>
+      <InlineOpenInNewIcon />
+    </ListItemSecondaryAction>
+  );
 
   return (
-    <Drawer
-      open={open}
-      {...props}
-      variant={pinned ? "persistent" : "temporary"}
-      anchor="left"
-      sx={{
-        width: open ? NAV_DRAWER_WIDTH : 0,
-        transition: (theme) =>
-          theme.transitions.create("width", {
-            easing: pinned
-              ? theme.transitions.easing.easeOut
-              : theme.transitions.easing.sharp,
-            duration: pinned
-              ? theme.transitions.duration.enteringScreen
-              : theme.transitions.duration.leavingScreen,
-          }),
-
-        flexShrink: 0,
-
-        "& .MuiDrawer-paper": {
-          minWidth: NAV_DRAWER_WIDTH,
-          borderRight: "none",
-          bgcolor: pinned ? "background.default" : "background.paper",
-        },
-      }}
-    >
-      <Stack
-        direction="row"
-        alignItems="center"
-        sx={{
-          height: APP_BAR_HEIGHT,
-          flexShrink: 0,
-          px: 0.5,
-
-          position: "sticky",
-          top: 0,
-          zIndex: "appBar",
-          backgroundColor:
-            pinned && scrollTrigger ? "background.paper" : "inherit",
-          backgroundImage: pinned
-            ? "linear-gradient(rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.09))" // Elevation 8
-            : "inherit",
-
-          "&::before": {
-            content: "''",
-            display: "block",
-            position: "absolute",
-            inset: 0,
-
-            bgcolor: "background.default",
-            opacity: pinned ? (scrollTrigger ? 0 : 1) : 0,
-            transition: (theme) =>
-              theme.transitions.create("opacity", {
-                easing:
-                  canPin && pinned
-                    ? theme.transitions.easing.easeOut
-                    : theme.transitions.easing.sharp,
-                duration:
-                  canPin && pinned
-                    ? theme.transitions.duration.enteringScreen
-                    : theme.transitions.duration.leavingScreen,
-              }),
+    <>
+      <Drawer
+        open={isPermanent || open}
+        onClose={onClose}
+        hideBackdrop={isPermanent}
+        ModalProps={{ disablePortal: true }}
+        variant={isPermanent ? "permanent" : "temporary"}
+        anchor="left"
+        sx={[
+          {
+            width,
+            flexShrink: 0,
+            "& .MuiDrawer-paper": {
+              width,
+              pt: 0,
+              pb: 1,
+            },
           },
-          boxShadow: pinned && scrollTrigger ? 1 : 0,
-          transition: (theme) =>
-            theme.transitions.create(["background-color", "box-shadow"], {
-              easing:
-                canPin && pinned
-                  ? theme.transitions.easing.easeOut
-                  : theme.transitions.easing.sharp,
-              duration:
-                canPin && pinned
-                  ? theme.transitions.duration.enteringScreen
-                  : theme.transitions.duration.leavingScreen,
-            }),
-        }}
+          isPermanent && {
+            position: "fixed",
+            zIndex: (theme) => theme.zIndex.appBar - 1,
+
+            "& .MuiDrawer-paper": {
+              mt: `${TOP_BAR_HEIGHT - 4}px`,
+              height: `calc(100% - ${TOP_BAR_HEIGHT - 4}px)`,
+              pt: 0.5,
+              borderRadius: 2,
+              borderTopLeftRadius: 0,
+              borderBottomLeftRadius: 0,
+
+              width,
+              transitionProperty:
+                "width, transform, background-color, box-shadow",
+              transitionTimingFunction: "var(--nav-transition-timing-function)",
+              transitionDuration: "var(--nav-transition-duration)",
+              overflowX: "hidden",
+
+              borderRight: "none",
+              bgcolor: "background.default",
+            },
+
+            "& .MuiListItemSecondaryAction-root": {
+              transitionProperty: "opacity",
+              transitionTimingFunction: "var(--nav-transition-timing-function)",
+              transitionDuration: "var(--nav-transition-duration)",
+            },
+          },
+          collapsed &&
+            !tempExpanded && {
+              "& .MuiMenuItem-root": {},
+              "& .MuiListItemSecondaryAction-root": {
+                opacity: 0,
+                transitionDelay: "0ms",
+              },
+            },
+          tempExpanded && {
+            zIndex: "drawer",
+            "& .MuiDrawer-paper": {
+              bgcolor: (theme) =>
+                colord(theme.palette.background.paper)
+                  .mix("#fff", 0.09)
+                  .alpha(1)
+                  .toHslString(),
+              boxShadow: (theme) =>
+                theme.shadows[4].replace(/, 0 (\d+px)/g, ", $1 0"),
+            },
+          },
+        ]}
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
       >
-        <IconButton
-          aria-label="Close navigation drawer"
-          onClick={props.onClose as any}
-          size="large"
-        >
-          <CloseIcon />
-        </IconButton>
-
-        <Logo style={{ marginLeft: 1, position: "relative", zIndex: 1 }} />
-
-        {canPin && (
-          <IconButton
-            aria-label="Pin navigation drawer"
-            onClick={() => setPinned((p) => !p)}
-            aria-pressed={pinned}
-            size="large"
-            style={{ marginLeft: "auto" }}
+        {!isPermanent && (
+          <Stack
+            direction="row"
+            alignItems="center"
+            sx={{ height: TOP_BAR_HEIGHT, flexShrink: 0, px: 0.5 }}
           >
-            {pinned ? <UnpinIcon /> : <PinIcon />}
-          </IconButton>
+            <IconButton
+              aria-label="Close navigation drawer"
+              onClick={onClose as any}
+              size="large"
+            >
+              <CloseIcon />
+            </IconButton>
+
+            <Logo style={{ marginLeft: 1, position: "relative", zIndex: 1 }} />
+          </Stack>
         )}
-      </Stack>
 
-      <nav>
-        <List>
-          <li>
-            <NavItem to={ROUTES.tables} onClick={closeDrawer}>
-              <ListItemIcon>
-                <HomeIcon />
-              </ListItemIcon>
-              <ListItemText primary="Home" />
-            </NavItem>
-          </li>
-
-          {userRoles.includes("ADMIN") && (
-            <Divider variant="middle" sx={{ my: 1 }} />
-          )}
-
-          <li>
-            <NavItem to={ROUTES.userSettings} onClick={closeDrawer}>
-              <ListItemIcon>
-                <SettingsIcon />
-              </ListItemIcon>
-              <ListItemText primary="Settings" />
-            </NavItem>
-          </li>
-          {userRoles.includes("ADMIN") && (
+        <nav style={{ flexGrow: 1 }}>
+          <List
+            disablePadding
+            style={{ height: "100%", display: "flex", flexDirection: "column" }}
+          >
             <li>
-              <NavItem to={ROUTES.projectSettings} onClick={closeDrawer}>
+              <NavItem onClick={closeDrawer}>
                 <ListItemIcon>
-                  <ProjectSettingsIcon />
+                  <ArrowBackIcon />
                 </ListItemIcon>
-                <ListItemText primary="Project Settings" />
-                <UpdateCheckBadge sx={{ mr: 1.5 }} />
+                <ListItemText primary="Workspace" />
               </NavItem>
             </li>
-          )}
-          {userRoles.includes("ADMIN") && (
+
+            <li>
+              <NavItem onClick={closeDrawer}>
+                <ListItemIcon>
+                  <Avatar
+                    sx={{
+                      borderRadius: 1,
+                      width: 24,
+                      height: 24,
+                      fontSize: "inherit",
+                      bgcolor: "primary.main",
+                      color: "primary.contrastText",
+                    }}
+                  >
+                    P
+                  </Avatar>
+                </ListItemIcon>
+                <ListItemText primary="Project" />
+              </NavItem>
+            </li>
+
+            {/* {userRoles.includes("ADMIN") && (
             <li>
               <NavItem to={ROUTES.userManagement} onClick={closeDrawer}>
                 <ListItemIcon>
@@ -221,42 +228,126 @@ export default function NavDrawer({
                 <ListItemText primary="User Management" />
               </NavItem>
             </li>
-          )}
+          )} */}
 
-          <Divider variant="middle" sx={{ my: 1 }} />
+            <Divider variant="middle" sx={{ my: 1 }} />
 
-          {/* <ListSubheader>Your tables</ListSubheader> */}
+            <li>
+              <NavItem to={ROUTES.tables} onClick={closeDrawer}>
+                <ListItemIcon>
+                  <HomeIcon />
+                </ListItemIcon>
+                <ListItemText primary="Home" />
+              </NavItem>
+            </li>
 
-          <li>
-            <NavItem
-              {...({ component: "button" } as any)}
-              style={{ textAlign: "left" }}
-              sx={{ mb: 1 }}
-              onClick={(e) => {
-                if (closeDrawer) closeDrawer(e);
-                openTableSettingsDialog({});
-              }}
-            >
+            <li>
+              <NavItem to={ROUTES.userSettings} onClick={closeDrawer}>
+                <ListItemIcon>
+                  <SettingsIcon />
+                </ListItemIcon>
+                <ListItemText primary="Settings" />
+              </NavItem>
+            </li>
+
+            {userRoles.includes("ADMIN") && (
+              <li>
+                <NavItem to={ROUTES.projectSettings} onClick={closeDrawer}>
+                  <ListItemIcon>
+                    <ProjectSettingsIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Project Settings" />
+                  <UpdateCheckBadge sx={{ mr: 1.5 }} />
+                </NavItem>
+              </li>
+            )}
+
+            <Divider variant="middle" sx={{ my: 1 }} />
+
+            {/* <ListSubheader>Your tables</ListSubheader> */}
+
+            <li>
+              <NavItem
+                {...({ component: "button" } as any)}
+                style={{ textAlign: "left" }}
+                onClick={(e) => {
+                  if (closeDrawer) closeDrawer(e);
+                  openTableSettingsDialog({});
+                }}
+              >
+                <ListItemIcon>
+                  <AddIcon />
+                </ListItemIcon>
+                <ListItemText primary="Create table…" />
+              </NavItem>
+            </li>
+
+            {/* <li>
+            <NavItem to={ROUTES.tables} onClick={closeDrawer}>
               <ListItemIcon>
-                <AddIcon />
+                <TableIcon />
               </ListItemIcon>
-              <ListItemText primary="Create table…" />
+              <ListItemText primary="Table" />
             </NavItem>
-          </li>
+          </li> */}
 
-          {sections &&
-            Object.entries(sections)
-              .filter(([, tables]) => tables.length > 0)
-              .map(([section, tables]) => (
-                <NavTableSection
-                  key={section}
-                  section={section}
-                  tables={tables}
-                  closeDrawer={closeDrawer}
-                />
-              ))}
-        </List>
-      </nav>
-    </Drawer>
+            {sections &&
+              Object.entries(sections)
+                .filter(([, tables]) => tables.length > 0)
+                .map(([section, tables]) => (
+                  <NavTableSection
+                    key={section}
+                    section={section}
+                    tables={tables}
+                    closeDrawer={closeDrawer}
+                    hidden={isPermanent && !open && !tempExpanded}
+                  />
+                ))}
+
+            <Divider variant="middle" sx={{ my: 1, mt: "auto" }} />
+
+            <li>
+              <NavItem href={EXTERNAL_LINKS.docs}>
+                <ListItemIcon>
+                  <DocsIcon />
+                </ListItemIcon>
+                <ListItemText primary="Docs" />
+                {externalLinkIcon}
+              </NavItem>
+            </li>
+            <li>
+              <NavItem href={WIKI_LINKS.howTo}>
+                <ListItemIcon>
+                  <LearningIcon />
+                </ListItemIcon>
+                <ListItemText primary="Learning" />
+                {externalLinkIcon}
+              </NavItem>
+            </li>
+            <li>
+              <NavItem href={EXTERNAL_LINKS.docs}>
+                <ListItemIcon>
+                  <HelpIcon />
+                </ListItemIcon>
+                <ListItemText primary="Help" />
+              </NavItem>
+            </li>
+          </List>
+        </nav>
+      </Drawer>
+
+      {isPermanent && (
+        <Box
+          sx={{
+            flexShrink: 0,
+            flexGrow: 0,
+            width: open ? NAV_DRAWER_WIDTH : NAV_DRAWER_COLLAPSED_WIDTH,
+            transitionProperty: "width",
+            transitionTimingFunction: "var(--nav-transition-timing-function)",
+            transitionDuration: "var(--nav-transition-duration)",
+          }}
+        />
+      )}
+    </>
   );
 }

@@ -27,6 +27,7 @@ const WIKI_PATHS = {
   setupRoles: "/setup/roles",
   setupUpdate: "/setup/update",
 
+  howTo: "/category/quickstart-guide",
   howToCreateTable: "/how-to/create-table",
   howToCreateColumn: "/how-to/create-column",
   howToAddRow: "/how-to/add-row",

@@ -29,7 +29,6 @@ import {
   globalScope,
   userRolesAtom,
   userSettingsAtom,
-  navPinnedAtom,
 } from "@src/atoms/globalScope";
 import {
   tableScope,
@@ -66,7 +65,6 @@ export default function Table({
 }) {
   const [userRoles] = useAtom(userRolesAtom, globalScope);
   const [userSettings] = useAtom(userSettingsAtom, globalScope);
-  const [navPinned] = useAtom(navPinnedAtom, globalScope);
 
   const [tableId] = useAtom(tableIdAtom, tableScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
@@ -188,8 +186,9 @@ export default function Table({
 
       const target = event.target as HTMLDivElement;
 
-      if (navPinned && !columns[0].fixed)
-        setShowLeftScrollDivider(target.scrollLeft > 16);
+      // TODO:
+      // if (navPinned && !columns[0].fixed)
+      //   setShowLeftScrollDivider(target.scrollLeft > 16);
 
       const offset = 800;
       const isAtBottom =

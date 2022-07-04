@@ -11,7 +11,7 @@ import {
   Grow,
 } from "@mui/material";
 import HelpIcon from "@mui/icons-material/HelpOutline";
-import DocsIcon from "@mui/icons-material/DescriptionOutlined";
+import DocsIcon from "@mui/icons-material/LibraryBooksOutlined";
 import { Discord as DiscordIcon } from "@src/assets/icons";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import TwitterIcon from "@mui/icons-material/Twitter";
@@ -44,7 +44,6 @@ export default function UserMenu(props: IconButtonProps) {
             setOpen(true);
             analytics.logEvent("open_help_menu");
           }}
-          sx={{ ml: 1.5 }}
         >
           <HelpIcon />
         </IconButton>

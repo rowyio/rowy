@@ -1,6 +1,6 @@
 import Logo from "@src/assets/Logo";
 import BreadcrumbsTableRoot from "@src/components/Table/BreadcrumbsTableRoot";
-import { GrowProps } from "@mui/material";
+import { FadeProps } from "@mui/material";
 
 export enum ROUTES {
   home = "/",
@@ -46,22 +46,15 @@ export enum ROUTES {
 export const ROUTE_TITLES = {
   [ROUTES.tables]: {
     title: "Tables",
-    titleComponent: (open, pinned) =>
-      !(open && pinned) && (
-        <Logo
-          style={{
-            display: "block",
-            margin: "0 auto",
-          }}
-        />
+    titleComponent: (open, isPermanent) =>
+      !(open && isPermanent) && (
+        <Logo style={{ display: "block", margin: "0 auto" }} />
       ),
   },
 
   [ROUTES.table]: {
     title: "Table",
-    titleComponent: (open, pinned) => (
-      <BreadcrumbsTableRoot sx={{ ml: open && pinned ? -48 / 8 : 2 }} />
-    ),
+    titleComponent: (_open, _isPermanent) => <BreadcrumbsTableRoot />,
     titleTransitionProps: { style: { transformOrigin: "0 50%" } },
     leftAligned: true,
   },
@@ -80,8 +73,8 @@ export const ROUTE_TITLES = {
   | string
   | {
       title: string;
-      titleComponent: (open: boolean, pinned: boolean) => React.ReactNode;
-      titleTransitionProps?: Partial<GrowProps>;
+      titleComponent: (open: boolean, isPermanent: boolean) => React.ReactNode;
+      titleTransitionProps?: Partial<FadeProps>;
       leftAligned?: boolean;
     }
 >;

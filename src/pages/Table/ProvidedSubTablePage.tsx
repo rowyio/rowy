@@ -22,7 +22,7 @@ import {
   tableSchemaAtom,
 } from "@src/atoms/tableScope";
 import { ROUTES } from "@src/constants/routes";
-import { APP_BAR_HEIGHT } from "@src/layouts/Navigation";
+import { TOP_BAR_HEIGHT } from "@src/layouts/Navigation/TopBar";
 import { TABLE_TOOLBAR_HEIGHT } from "@src/components/TableToolbar";
 
 /**
@@ -92,15 +92,15 @@ export default function ProvidedSubTablePage() {
           backgroundImage: "none",
         },
         "& .modal-title-row": {
-          height: APP_BAR_HEIGHT,
+          height: TOP_BAR_HEIGHT,
           "& .MuiDialogTitle-root": {
             px: 2,
-            py: (APP_BAR_HEIGHT - 28) / 2 / 8,
+            py: (TOP_BAR_HEIGHT - 28) / 2 / 8,
           },
-          "& .dialog-close": { m: (APP_BAR_HEIGHT - 40) / 2 / 8, ml: -1 },
+          "& .dialog-close": { m: (TOP_BAR_HEIGHT - 40) / 2 / 8, ml: -1 },
         },
         "& .table-container": {
-          height: `calc(100vh - ${APP_BAR_HEIGHT}px - ${TABLE_TOOLBAR_HEIGHT}px - 16px)`,
+          height: `calc(100vh - ${TOP_BAR_HEIGHT}px - ${TABLE_TOOLBAR_HEIGHT}px - 16px)`,
         },
       }}
       ScrollableDialogContentProps={{

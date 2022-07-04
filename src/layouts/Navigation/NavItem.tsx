@@ -1,29 +1,35 @@
 import { Link, useLocation } from "react-router-dom";
 import { MenuItem, MenuItemProps } from "@mui/material";
+import { spreadSx } from "@src/utils/ui";
 
-export default function NavItem(props: MenuItemProps<typeof Link>) {
+const linkProps = { target: "_blank", rel: "noopener noreferrer" };
+
+export default function NavItem(props: MenuItemProps<typeof Link | "a">) {
   const { pathname } = useLocation();
 
   return (
     <MenuItem
-      component={Link}
-      selected={pathname === props.to}
+      component={"to" in props ? Link : "a"}
+      selected={"to" in props ? pathname === props.to : false}
       {...props}
-      sx={{
-        "& .MuiListItemText-primary": {
-          typography: "button",
-          color: "text.secondary",
-        },
-        "& .MuiListItemIcon-root": { opacity: 0.87 },
+      {...("href" in props ? linkProps : {})}
+      sx={[
+        {
+          overflow: "hidden",
 
-        "&:hover, &.Mui-selected": {
-          "& .MuiListItemText-primary": { color: "text.primary" },
-          "& .MuiSvgIcon-root": { color: "text.primary" },
-        },
+          "& .MuiListItemText-primary": {
+            typography: "button",
+            color: "text.secondary",
+          },
+          "& .MuiListItemIcon-root": { opacity: 0.87 },
 
-        ...props.sx,
-        "&&::before": { left: "auto", right: 0 },
-      }}
+          "&:hover, &.Mui-selected": {
+            "& .MuiListItemText-primary": { color: "text.primary" },
+            "& .MuiSvgIcon-root": { color: "text.primary" },
+          },
+        },
+        ...spreadSx(props.sx),
+      ]}
     />
   );
 }
