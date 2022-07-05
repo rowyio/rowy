@@ -112,6 +112,7 @@ export default function NavDrawer({
               width,
               pt: 0,
               pb: 1,
+              scrollbarWidth: "thin",
             },
           },
           isPermanent && {
@@ -145,7 +146,10 @@ export default function NavDrawer({
           },
           collapsed &&
             !tempExpanded && {
-              "& .MuiMenuItem-root": {},
+              "& .MuiDrawer-paper": {
+                scrollbarWidth: "none",
+                "::-webkit-scrollbar": { display: "none" },
+              },
               "& .MuiListItemSecondaryAction-root": {
                 opacity: 0,
                 transitionDelay: "0ms",

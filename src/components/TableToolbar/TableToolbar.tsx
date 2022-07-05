@@ -71,7 +71,9 @@ export default function TableToolbar() {
         pl: (theme) => `max(env(safe-area-inset-left), ${theme.spacing(2)})`,
         pb: 1.5,
         height: TABLE_TOOLBAR_HEIGHT,
+        scrollbarWidth: "thin",
         overflowX: "auto",
+        "&": { overflowX: "overlay" },
         overflowY: "hidden",
         "& > *": { flexShrink: 0 },
 
