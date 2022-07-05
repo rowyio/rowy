@@ -1,7 +1,6 @@
 import { ISideDrawerFieldProps } from "@src/components/fields/types";
 
-import { TextField, InputAdornment, Box } from "@mui/material";
-import { emphasize } from "@mui/material/styles";
+import { TextField, InputAdornment, Box, useTheme } from "@mui/material";
 import { resultColorsScale } from "@src/utils/color";
 import { getFieldId } from "@src/components/SideDrawer/utils";
 
@@ -12,6 +11,8 @@ export default function Percentage({
   onSubmit,
   disabled,
 }: ISideDrawerFieldProps) {
+  const { colors } = (column as any).config;
+  const theme = useTheme();
   return (
     <TextField
       variant="filled"
@@ -34,11 +35,14 @@ export default function Percentage({
                 width: 20,
                 height: 20,
                 borderRadius: 0.5,
-                boxShadow: (theme) =>
-                  `0 0 0 1px ${theme.palette.divider} inest`,
+                boxShadow: `0 0 0 1px ${theme.palette.divider} inset`,
                 backgroundColor:
                   typeof value === "number"
-                    ? resultColorsScale(value).toHex() + "!important"
+                    ? resultColorsScale(
+                        value,
+                        colors,
+                        theme.palette.background.paper
+                      ).toHex() + "!important"
                     : undefined,
               }}
             />

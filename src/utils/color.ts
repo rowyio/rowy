@@ -1,12 +1,18 @@
 import { colord } from "colord";
 
-export const resultColors = {
-  No: "#ED4747",
-  Maybe: "#f3c900",
-  Yes: "#1fad5f",
-};
+export const defaultColors = ["#ED4747", "#F3C900", "#1FAD5F"];
 
-export const resultColorsScale = (value: number) =>
+export const resultColorsScale = (
+  value: number,
+  colors: any = defaultColors,
+  defaultColor: string = "#fff"
+) =>
   value <= 0.5
-    ? colord(resultColors.No).mix(resultColors.Maybe, value * 2)
-    : colord(resultColors.Maybe).mix(resultColors.Yes, (value - 0.5) * 2);
+    ? colord(colors[0] || defaultColor).mix(
+        colors[1] || defaultColor,
+        value * 2
+      )
+    : colord(colors[1] || defaultColor).mix(
+        colors[2] || defaultColor,
+        (value - 0.5) * 2
+      );
