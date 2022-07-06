@@ -19,18 +19,18 @@ import UserSkeleton from "@src/components/Settings/UserManagement/UserSkeleton";
 import InviteUser from "@src/components/Settings/UserManagement/InviteUser";
 
 import { globalScope, allUsersAtom } from "@src/atoms/globalScope";
-import UserManagementSourceFirebase from "@src/sources/UserManagementSourceFirebase";
+import MembersSourceFirebase from "@src/sources/MembersSourceFirebase";
 import useBasicSearch from "@src/hooks/useBasicSearch";
 
 const SEARCH_KEYS = ["id", "user.displayName", "user.email"];
 
-function UserManagementPage() {
+function MembersPage() {
   const [users] = useAtom(allUsersAtom, globalScope);
   const [results, query, handleQuery] = useBasicSearch(users, SEARCH_KEYS);
 
   return (
     <Container maxWidth="sm" sx={{ px: 1, pt: 1, pb: 7 + 3 + 3 }}>
-      <UserManagementSourceFirebase />
+      <MembersSourceFirebase />
 
       <FloatingSearch
         label="Search users"
@@ -71,7 +71,7 @@ function UserManagementPage() {
   );
 }
 
-export default function SuspendedUserManagementPage() {
+export default function SuspendedMembersPage() {
   return (
     <Suspense
       fallback={
@@ -107,7 +107,7 @@ export default function SuspendedUserManagementPage() {
         </Fade>
       }
     >
-      <UserManagementPage />
+      <MembersPage />
     </Suspense>
   );
 }

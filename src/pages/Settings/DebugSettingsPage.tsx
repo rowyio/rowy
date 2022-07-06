@@ -17,7 +17,7 @@ import {
   allUsersAtom,
   updateUserAtom,
 } from "@src/atoms/globalScope";
-import UserManagementSourceFirebase from "@src/sources/UserManagementSourceFirebase";
+import UserManagementSourceFirebase from "@src/sources/MembersSourceFirebase";
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
 import { USERS } from "@src/config/dbPaths";
 import { getTableSchemaPath } from "@src/utils/table";

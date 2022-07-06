@@ -22,20 +22,20 @@ export default function Logo({ size = 1.5, ...props }: ILogoProps) {
 
       <defs>
         <linearGradient x1="83.349%" y1="50%" x2="0%" y2="50%" id="b">
-          <stop stop-color="#F0A" offset="0%" />
-          <stop stop-color="#FA0" offset="100%" />
+          <stop stopColor="#F0A" offset="0%" />
+          <stop stopColor="#FA0" offset="100%" />
         </linearGradient>
         <linearGradient x1="50%" y1="16.276%" x2="50%" y2="100%" id="c">
-          <stop stop-color="#4200FF" offset="0%" />
-          <stop stop-color="#F0A" offset="100%" />
+          <stop stopColor="#4200FF" offset="0%" />
+          <stop stopColor="#F0A" offset="100%" />
         </linearGradient>
         <linearGradient x1="83.052%" y1="50%" x2="0%" y2="50%" id="d">
-          <stop stop-color="#0AF" offset="0%" />
-          <stop stop-color="#0FA" offset="100%" />
+          <stop stopColor="#0AF" offset="0%" />
+          <stop stopColor="#0FA" offset="100%" />
         </linearGradient>
         <linearGradient x1="100%" y1="50%" x2="16.614%" y2="50%" id="e">
-          <stop stop-color="#0AF" offset="0%" />
-          <stop stop-color="#4200FF" offset="100%" />
+          <stop stopColor="#0AF" offset="0%" />
+          <stop stopColor="#4200FF" offset="100%" />
         </linearGradient>
       </defs>
 

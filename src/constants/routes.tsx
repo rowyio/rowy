@@ -35,7 +35,7 @@ export enum ROUTES {
   settings = "/settings",
   userSettings = "/settings/user",
   projectSettings = "/settings/project",
-  userManagement = "/settings/userManagement",
+  members = "/members",
   debugSettings = "/settings/debug",
 
   test = "/test",
@@ -62,7 +62,7 @@ export const ROUTE_TITLES = {
   [ROUTES.settings]: "Settings",
   [ROUTES.userSettings]: "Settings",
   [ROUTES.projectSettings]: "Project Settings",
-  [ROUTES.userManagement]: "User Management",
+  [ROUTES.members]: "Members",
   [ROUTES.debugSettings]: "Debug",
 
   [ROUTES.test]: "Test",

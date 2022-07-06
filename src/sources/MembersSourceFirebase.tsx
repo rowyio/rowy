@@ -11,14 +11,12 @@ import { USERS } from "@src/config/dbPaths";
 /**
  * When rendered, provides atom values for top-level tables
  */
-const UserManagementSourceFirebase = memo(
-  function UserManagementSourceFirebase() {
-    useFirestoreCollectionWithAtom(allUsersAtom, globalScope, USERS, {
-      updateDocAtom: updateUserAtom,
-    });
+const MembersSourceFirebase = memo(function MembersSourceFirebase() {
+  useFirestoreCollectionWithAtom(allUsersAtom, globalScope, USERS, {
+    updateDocAtom: updateUserAtom,
+  });
 
-    return null;
-  }
-);
+  return null;
+});
 
-export default UserManagementSourceFirebase;
+export default MembersSourceFirebase;

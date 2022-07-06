@@ -1,3 +1,4 @@
+import { useAtom } from "jotai";
 import { use100vh } from "react-div-100vh";
 
 import {
@@ -14,6 +15,7 @@ import Logo from "@src/assets/Logo";
 import bgTableLight from "@src/assets/bg-table-light.webp";
 import bgTableDark from "@src/assets/bg-table-dark.webp";
 
+import { globalScope, projectIdAtom } from "@src/atoms/globalScope";
 import { EXTERNAL_LINKS } from "@src/constants/externalLinks";
 
 export interface IAuthLayoutProps {
@@ -35,6 +37,7 @@ export default function AuthLayout({
   children,
   loading,
 }: IAuthLayoutProps) {
+  const [projectId] = useAtom(projectIdAtom, globalScope);
   const fullScreenHeight = use100vh() ?? 0;
 
   const linkProps: LinkProps = {
@@ -50,8 +53,8 @@ export default function AuthLayout({
       sx={{
         backgroundImage: (theme) =>
           `linear-gradient(to bottom,
-            ${alpha(theme.palette.background.default, 0.6)},
-            ${alpha(theme.palette.background.default, 0.6)}),
+            ${alpha(theme.palette.background.default, 0.75)},
+            ${alpha(theme.palette.background.default, 0.75)}),
             url(${theme.palette.mode === "dark" ? bgTableDark : bgTableLight})`,
         backgroundSize: { xs: "1920px 1080px", md: "cover" },
         backgroundRepeat: "no-repeat",
@@ -59,20 +62,19 @@ export default function AuthLayout({
 
         display: "grid",
         placeItems: "center",
-        alignContent: "center",
+        alignContent: "space-between",
         gap: 2,
         gridAutoRows: "max-content",
         minHeight: fullScreenHeight > 0 ? `${fullScreenHeight}px` : "100vh",
 
-        pt: (theme) => `max(env(safe-area-inset-top), ${theme.spacing(1)})`,
-        pb: (theme) => `max(env(safe-area-inset-bottom), ${theme.spacing(1)})`,
-        pl: (theme) => `max(env(safe-area-inset-left), ${theme.spacing(1)})`,
+        pt: (theme) => `max(env(safe-area-inset-top), ${theme.spacing(2)})`,
+        pb: (theme) => `max(env(safe-area-inset-bottom), ${theme.spacing(2)})`,
         pr: (theme) => `max(env(safe-area-inset-right), ${theme.spacing(1)})`,
+        pl: (theme) => `max(env(safe-area-inset-left), ${theme.spacing(1)})`,
       }}
     >
       <div
         style={{
-          textAlign: "center",
           marginBottom: -8,
           display: hideLogo && hideLinks ? "none" : "block",
           visibility: hideLogo ? "hidden" : "visible",
@@ -83,13 +85,13 @@ export default function AuthLayout({
           target="_blank"
           rel="noopener noreferrer"
         >
-          <Logo />
+          <Logo size={2} />
         </a>
       </div>
 
       <Paper
         component="main"
-        elevation={4}
+        elevation={8}
         sx={
           {
             position: "relative",
@@ -99,10 +101,11 @@ export default function AuthLayout({
             width: "100%",
             p: 4,
             minHeight: 300,
+            borderRadius: 3,
 
             display: "flex",
             flexDirection: "column",
-            textAlign: "center",
+            // textAlign: "center",
 
             "& > :not(style) + :not(style)": { mt: 4 },
           } as any
@@ -140,13 +143,13 @@ export default function AuthLayout({
           />
         )}
 
-        {/* <Typography
+        <Typography
           variant="caption"
           color="text.secondary"
-          sx={{ pt: 1, display: hideProject ? "none" : "block" }}
+          sx={{ display: hideProject ? "none" : "block", mb: -0.5 }}
         >
           Project: <span style={{ userSelect: "all" }}>{projectId}</span>
-        </Typography> */}
+        </Typography>
       </Paper>
 
       <Stack

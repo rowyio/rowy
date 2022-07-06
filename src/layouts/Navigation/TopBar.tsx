@@ -1,10 +1,13 @@
 import { useAtom } from "jotai";
+import { colord } from "colord";
+import { NavLink } from "react-router-dom";
 
 import {
   useScrollTrigger,
   AppBar,
   Toolbar,
   IconButton,
+  Button,
   Box,
   Typography,
   Grow,
@@ -12,15 +15,15 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import MenuCloseIcon from "@mui/icons-material/MenuOpen";
+import PersonAddIcon from "@mui/icons-material/PersonAddOutlined";
 
 import Logo from "@src/assets/Logo";
 import { NAV_DRAWER_WIDTH, NAV_DRAWER_COLLAPSED_WIDTH } from "./NavDrawer";
-import HelpMenu from "./HelpMenu";
 import UserMenu from "./UserMenu";
 import UpdateCheckBadge from "./UpdateCheckBadge";
 
 import { globalScope, userRolesAtom } from "@src/atoms/globalScope";
-import { ROUTE_TITLES } from "@src/constants/routes";
+import { ROUTES, ROUTE_TITLES } from "@src/constants/routes";
 
 export const TOP_BAR_HEIGHT = 56;
 
@@ -51,25 +54,14 @@ export default function TopBar({
       elevation={trigger ? 1 : 0}
       sx={{
         height: TOP_BAR_HEIGHT,
-        backgroundImage:
-          "linear-gradient(rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.09))", // Elevation 8
-
-        "&::before": {
-          content: "''",
-          display: "block",
-          position: "absolute",
-          top: 0,
-          right: 0,
-          bottom: 0,
-          left: 0,
-
-          bgcolor: "background.default",
-          opacity: trigger ? 0 : 1,
-
-          transitionProperty: "opacity",
-          transitionTimingFunction: "var(--nav-transition-timing-function)",
-          transitionDuration: "var(--nav-transition-duration)",
-        },
+        backgroundColor: trigger
+          ? (theme) =>
+              colord(theme.palette.background.paper)
+                .mix("#fff", 0.09) // Elevation 8
+                .alpha(1)
+                .toHslString()
+          : "transparent",
+        transitionProperty: "box-shadow, background-color",
       }}
     >
       <Toolbar
@@ -137,11 +129,12 @@ export default function TopBar({
               {
                 flex: 1,
                 overflowX: "auto",
+                scrollbarWidth: "thin",
                 userSelect: "none",
                 ml: 1,
               },
               !(routeTitle as any)?.leftAligned && {
-                ml: { xs: 1, sm: 6 },
+                ml: { xs: 1, sm: 208 / 8 + 1 },
               },
               isPermanent &&
                 (routeTitle as any)?.leftAligned && {
@@ -169,7 +162,18 @@ export default function TopBar({
           </Box>
         </Fade>
 
-        <HelpMenu />
+        <Button
+          component={NavLink}
+          to={ROUTES.members}
+          startIcon={<PersonAddIcon />}
+          sx={{
+            mr: 1,
+            "&.active": { visibility: "hidden" },
+          }}
+        >
+          Invite team members
+        </Button>
+
         <UserMenu />
       </Toolbar>
     </AppBar>

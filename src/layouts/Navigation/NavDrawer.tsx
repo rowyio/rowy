@@ -11,29 +11,27 @@ import {
   List,
   ListItemIcon,
   ListItemText,
-  Avatar,
   Divider,
   ListItemSecondaryAction,
   Box,
-  Fade,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/MenuOpen";
-import ArrowBackIcon from "@mui/icons-material/WorkspacesOutlined";
 import HomeIcon from "@mui/icons-material/HomeOutlined";
 import SettingsIcon from "@mui/icons-material/SettingsOutlined";
-import ProjectSettingsIcon from "@mui/icons-material/BuildCircleOutlined";
 import UserManagementIcon from "@mui/icons-material/AccountCircleOutlined";
 import AddIcon from "@mui/icons-material/Add";
-import { Table as TableIcon } from "@src/assets/icons";
 import DocsIcon from "@mui/icons-material/LibraryBooksOutlined";
 import LearningIcon from "@mui/icons-material/LocalLibraryOutlined";
 import HelpIcon from "@mui/icons-material/HelpOutline";
+import CommunityIcon from "@mui/icons-material/SentimentSatisfiedAltOutlined";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
+import { ChevronRight as ChevronRightIcon } from "@src/assets/icons";
 
 import Logo from "@src/assets/Logo";
 import NavItem from "./NavItem";
 import NavTableSection from "./NavTableSection";
 import UpdateCheckBadge from "./UpdateCheckBadge";
+import HelpMenu from "./HelpMenu";
 
 import {
   globalScope,
@@ -70,6 +68,8 @@ export default function NavDrawer({
   );
 
   const [hover, setHover] = useState(false);
+  const [helpMenuAnchorEl, setHelpMenuAnchorEl] =
+    useState<HTMLButtonElement | null>(null);
 
   const favorites = Array.isArray(userSettings.favoriteTables)
     ? userSettings.favoriteTables
@@ -89,8 +89,8 @@ export default function NavDrawer({
     ? undefined
     : (e: {}) => onClose(e, "escapeKeyDown");
 
-  const externalLinkIcon = !collapsed && (
-    <ListItemSecondaryAction sx={{ right: 10, color: "text.disabled" }}>
+  const externalLinkIcon = (
+    <ListItemSecondaryAction sx={{ right: 10 }}>
       <InlineOpenInNewIcon />
     </ListItemSecondaryAction>
   );
@@ -195,48 +195,6 @@ export default function NavDrawer({
             style={{ height: "100%", display: "flex", flexDirection: "column" }}
           >
             <li>
-              <NavItem onClick={closeDrawer}>
-                <ListItemIcon>
-                  <ArrowBackIcon />
-                </ListItemIcon>
-                <ListItemText primary="Workspace" />
-              </NavItem>
-            </li>
-
-            <li>
-              <NavItem onClick={closeDrawer}>
-                <ListItemIcon>
-                  <Avatar
-                    sx={{
-                      borderRadius: 1,
-                      width: 24,
-                      height: 24,
-                      fontSize: "inherit",
-                      bgcolor: "primary.main",
-                      color: "primary.contrastText",
-                    }}
-                  >
-                    P
-                  </Avatar>
-                </ListItemIcon>
-                <ListItemText primary="Project" />
-              </NavItem>
-            </li>
-
-            {/* {userRoles.includes("ADMIN") && (
-            <li>
-              <NavItem to={ROUTES.userManagement} onClick={closeDrawer}>
-                <ListItemIcon>
-                  <UserManagementIcon />
-                </ListItemIcon>
-                <ListItemText primary="User Management" />
-              </NavItem>
-            </li>
-          )} */}
-
-            <Divider variant="middle" sx={{ my: 1 }} />
-
-            <li>
               <NavItem to={ROUTES.tables} onClick={closeDrawer}>
                 <ListItemIcon>
                   <HomeIcon />
@@ -251,30 +209,30 @@ export default function NavDrawer({
                   <SettingsIcon />
                 </ListItemIcon>
                 <ListItemText primary="Settings" />
+                {userRoles.includes("ADMIN") && (
+                  <UpdateCheckBadge sx={{ mr: 1.5 }} />
+                )}
               </NavItem>
             </li>
 
             {userRoles.includes("ADMIN") && (
               <li>
-                <NavItem to={ROUTES.projectSettings} onClick={closeDrawer}>
+                <NavItem to={ROUTES.members} onClick={closeDrawer}>
                   <ListItemIcon>
-                    <ProjectSettingsIcon />
+                    <UserManagementIcon />
                   </ListItemIcon>
-                  <ListItemText primary="Project Settings" />
-                  <UpdateCheckBadge sx={{ mr: 1.5 }} />
+                  <ListItemText primary="Members" />
                 </NavItem>
               </li>
             )}
 
             <Divider variant="middle" sx={{ my: 1 }} />
 
-            {/* <ListSubheader>Your tables</ListSubheader> */}
-
             <li>
               <NavItem
                 {...({ component: "button" } as any)}
                 style={{ textAlign: "left" }}
-                onClick={(e) => {
+                onClick={(e: any) => {
                   if (closeDrawer) closeDrawer(e);
                   openTableSettingsDialog({});
                 }}
@@ -285,15 +243,6 @@ export default function NavDrawer({
                 <ListItemText primary="Create table…" />
               </NavItem>
             </li>
-
-            {/* <li>
-            <NavItem to={ROUTES.tables} onClick={closeDrawer}>
-              <ListItemIcon>
-                <TableIcon />
-              </ListItemIcon>
-              <ListItemText primary="Table" />
-            </NavItem>
-          </li> */}
 
             {sections &&
               Object.entries(sections)
@@ -329,13 +278,36 @@ export default function NavDrawer({
               </NavItem>
             </li>
             <li>
-              <NavItem href={EXTERNAL_LINKS.docs}>
+              <NavItem
+                onClick={(e: any) => setHelpMenuAnchorEl(e.currentTarget)}
+              >
+                <ListItemIcon>
+                  <CommunityIcon />
+                </ListItemIcon>
+                <ListItemText primary="Join our community" />
+                <ListItemSecondaryAction>
+                  <ChevronRightIcon />
+                </ListItemSecondaryAction>
+              </NavItem>
+            </li>
+            <li>
+              <NavItem
+                onClick={(e: any) => setHelpMenuAnchorEl(e.currentTarget)}
+              >
                 <ListItemIcon>
                   <HelpIcon />
                 </ListItemIcon>
                 <ListItemText primary="Help" />
+                <ListItemSecondaryAction>
+                  <ChevronRightIcon />
+                </ListItemSecondaryAction>
               </NavItem>
             </li>
+
+            <HelpMenu
+              anchorEl={helpMenuAnchorEl}
+              onClose={() => setHelpMenuAnchorEl(null)}
+            />
           </List>
         </nav>
       </Drawer>
