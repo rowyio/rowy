@@ -93,10 +93,9 @@ export default function ActionFab({
     return resp;
   };
   const handleCallableAction = async (data: any) => {
-    const resp: any = await httpsCallable(
-      firebaseFunctions,
-      callableName
-    )(data);
+    const resp: any = await httpsCallable(firebaseFunctions, callableName, {
+      timeout: 550,
+    })(data);
     return resp.data;
   };
 
