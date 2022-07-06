@@ -162,6 +162,7 @@
     "@types/react-dom": "^18.0.0",
     "@types/react-router-dom": "^5.3.3",
     "@types/react-router-hash-link": "^2.4.5",
+    "@types/three": "^0.141.0",
     "@typescript-eslint/parser": "^5.18.0",
     "craco-alias": "^3.0.1",
     "craco-swc": "^0.5.1",
