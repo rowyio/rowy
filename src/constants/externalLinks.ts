@@ -10,6 +10,7 @@ export const EXTERNAL_LINKS = {
   gitHub: meta.repository.url.replace(".git", ""),
   discord: "https://discord.gg/B8yAD5PDX4",
   twitter: "https://twitter.com/rowyio",
+  productHunt: "https://www.producthunt.com/products/rowy-2",
 
   rowyRun: meta.repository.url.replace(".git", "Run"),
   rowyRunGitHub: meta.repository.url.replace(".git", "Run"),

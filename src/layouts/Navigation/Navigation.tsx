@@ -11,6 +11,7 @@ import ErrorFallback, {
   IErrorFallbackProps,
 } from "@src/components/ErrorFallback";
 import Loading from "@src/components/Loading";
+import GetStartedChecklist from "./GetStartedChecklist";
 
 import {
   globalScope,
@@ -51,6 +52,7 @@ export default function Navigation({ children }: React.PropsWithChildren<{}>) {
           isPermanent={isPermanent}
           onClose={() => setOpen(false)}
         />
+        <GetStartedChecklist navOpen={open} navPermanent={isPermanent} />
 
         <ErrorBoundary FallbackComponent={StyledErrorFallback}>
           <Suspense

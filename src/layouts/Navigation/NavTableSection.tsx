@@ -23,14 +23,14 @@ export interface INavTableSectionProps {
   section: string;
   tables: TableSettings[];
   closeDrawer?: (e: {}) => void;
-  hidden?: boolean;
+  collapsed?: boolean;
 }
 
 export default function NavTableSection({
   section,
   tables,
   closeDrawer,
-  hidden,
+  collapsed,
 }: INavTableSectionProps) {
   const { pathname } = useLocation();
   const hasMatch = tables.map(getTableRoute).includes(pathname);
@@ -39,16 +39,8 @@ export default function NavTableSection({
   const isFavorites = section === "Favorites";
 
   return (
-    <li
-      style={{
-        opacity: hidden ? 0.38 : 1,
-        transitionProperty: "opacity",
-        transitionTimingFunction: "var(--nav-transition-timing-function)",
-        transitionDuration: "var(--nav-transition-duration)",
-      }}
-    >
+    <li>
       <NavItem
-        {...({ component: "button" } as any)}
         selected={!isFavorites && hasMatch && !open}
         onClick={() => setOpen((o) => !o)}
       >
@@ -71,7 +63,7 @@ export default function NavTableSection({
         </ListItemSecondaryAction>
       </NavItem>
 
-      <Collapse in={open}>
+      <Collapse in={open && !collapsed}>
         <List style={{ paddingTop: 0 }}>
           {tables.map((table) => {
             const route = getTableRoute(table);

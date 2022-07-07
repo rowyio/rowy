@@ -143,6 +143,9 @@ export const tableSettingsDialogSchemaAtom = atom(async (get) => {
   return getTableSchema(tableId);
 });
 
+/** Open the Get Started checklist from anywhere */
+export const getStartedChecklistAtom = atom(false);
+
 /** Persist the state of the add row ID type */
 export const tableAddRowIdTypeAtom = atomWithStorage<
   "decrement" | "random" | "custom"

@@ -7,7 +7,6 @@ import {
   MenuItem,
   ListItemIcon,
   ListItemSecondaryAction,
-  Divider,
 } from "@mui/material";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 import SocialLogo from "@src/components/SocialLogo";
@@ -21,19 +20,11 @@ export default function HelpMenu({
 }: Pick<MenuProps, "anchorEl" | "onClose">) {
   const open = Boolean(anchorEl);
   useEffect(() => {
-    if (open) logEvent(analytics, "open_help_menu");
+    if (open) logEvent(analytics, "open_community_menu");
   }, [open]);
 
   const externalLinkIcon = (
-    <ListItemSecondaryAction
-      sx={{
-        position: "static",
-        transform: "none",
-        ml: "auto",
-        pl: 2,
-        color: "text.disabled",
-      }}
-    >
+    <ListItemSecondaryAction sx={{ right: 10, color: "text.disabled" }}>
       <InlineOpenInNewIcon />
     </ListItemSecondaryAction>
   );
@@ -43,7 +34,7 @@ export default function HelpMenu({
       anchorEl={anchorEl}
       open={open}
       onClose={onClose}
-      id="help-menu"
+      id="community-menu"
       anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
       transformOrigin={{ vertical: "bottom", horizontal: "left" }}
       sx={{ "& .MuiPaper-root": { mt: 0.5, py: 1 } }}
@@ -51,42 +42,39 @@ export default function HelpMenu({
     >
       <ListSubheader
         sx={{
-          mb: 0.5,
+          pb: 0.5,
           typography: "subtitle1",
         }}
       >
-        Get support
+        Join our community
       </ListSubheader>
       <ListSubheader
         sx={{
-          mb: 1.5,
+          pb: 1.5,
           maxWidth: 260,
           typography: "body2",
           color: "text.secondary",
         }}
       >
-        Reach out for help and find FAQs on GitHub Discussions
+        Reach out for help, engage with our community, or shout us out!
       </ListSubheader>
 
       <MenuItem
         component="a"
-        href={EXTERNAL_LINKS.gitHub + "/discussions"}
+        href={EXTERNAL_LINKS.discord}
         target="_blank"
         rel="noopener noreferrer"
         onClick={onClose as any}
       >
         <ListItemIcon sx={{ mr: 1 }}>
-          <SocialLogo platform="gitHub" />
+          <SocialLogo platform="discord" />
         </ListItemIcon>
-        GitHub Discussions
+        Discord
         {externalLinkIcon}
       </MenuItem>
-
-      <Divider variant="middle" />
-
       <MenuItem
         component="a"
-        href={EXTERNAL_LINKS.gitHub + "/issues/new/choose"}
+        href={EXTERNAL_LINKS.gitHub}
         target="_blank"
         rel="noopener noreferrer"
         onClick={onClose as any}
@@ -94,7 +82,33 @@ export default function HelpMenu({
         <ListItemIcon sx={{ mr: 1 }}>
           <SocialLogo platform="gitHub" />
         </ListItemIcon>
-        Feature request
+        GitHub
+        {externalLinkIcon}
+      </MenuItem>
+      <MenuItem
+        component="a"
+        href={EXTERNAL_LINKS.twitter}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={onClose as any}
+      >
+        <ListItemIcon sx={{ mr: 1 }}>
+          <SocialLogo platform="twitter" />
+        </ListItemIcon>
+        Twitter
+        {externalLinkIcon}
+      </MenuItem>
+      <MenuItem
+        component="a"
+        href={EXTERNAL_LINKS.productHunt}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={onClose as any}
+      >
+        <ListItemIcon sx={{ mr: 1 }}>
+          <SocialLogo platform="productHunt" />
+        </ListItemIcon>
+        Product Hunt
         {externalLinkIcon}
       </MenuItem>
     </Menu>

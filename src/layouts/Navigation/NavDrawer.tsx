@@ -4,6 +4,7 @@ import { find, groupBy } from "lodash-es";
 import { colord } from "colord";
 
 import {
+  alpha,
   Drawer,
   DrawerProps,
   Stack,
@@ -17,28 +18,31 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/MenuOpen";
 import HomeIcon from "@mui/icons-material/HomeOutlined";
-import SettingsIcon from "@mui/icons-material/SettingsOutlined";
-import UserManagementIcon from "@mui/icons-material/AccountCircleOutlined";
 import AddIcon from "@mui/icons-material/Add";
 import DocsIcon from "@mui/icons-material/LibraryBooksOutlined";
 import LearningIcon from "@mui/icons-material/LocalLibraryOutlined";
 import HelpIcon from "@mui/icons-material/HelpOutline";
 import CommunityIcon from "@mui/icons-material/SentimentSatisfiedAltOutlined";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
-import { ChevronRight as ChevronRightIcon } from "@src/assets/icons";
+import {
+  ChevronRight as ChevronRightIcon,
+  Checklist as ChecklistIcon,
+} from "@src/assets/icons";
 
 import Logo from "@src/assets/Logo";
 import NavItem from "./NavItem";
+import SettingsNav from "./SettingsNav";
 import NavTableSection from "./NavTableSection";
-import UpdateCheckBadge from "./UpdateCheckBadge";
+import Progress from "./GetStartedChecklist/Progress";
+import CommunityMenu from "./CommunityMenu";
 import HelpMenu from "./HelpMenu";
 
 import {
   globalScope,
-  userRolesAtom,
   userSettingsAtom,
   tablesAtom,
   tableSettingsDialogAtom,
+  getStartedChecklistAtom,
 } from "@src/atoms/globalScope";
 import { TableSettings } from "@src/types/table";
 import { ROUTES } from "@src/constants/routes";
@@ -61,15 +65,22 @@ export default function NavDrawer({
 }: INavDrawerProps) {
   const [tables] = useAtom(tablesAtom, globalScope);
   const [userSettings] = useAtom(userSettingsAtom, globalScope);
-  const [userRoles] = useAtom(userRolesAtom, globalScope);
   const openTableSettingsDialog = useSetAtom(
     tableSettingsDialogAtom,
     globalScope
   );
+  const openGetStartedChecklist = useSetAtom(
+    getStartedChecklistAtom,
+    globalScope
+  );
 
   const [hover, setHover] = useState(false);
+  const [communityMenuAnchorEl, setCommunityMenuAnchorEl] =
+    useState<HTMLButtonElement | null>(null);
   const [helpMenuAnchorEl, setHelpMenuAnchorEl] =
     useState<HTMLButtonElement | null>(null);
+
+  const menuOpen = communityMenuAnchorEl || helpMenuAnchorEl;
 
   const favorites = Array.isArray(userSettings.favoriteTables)
     ? userSettings.favoriteTables
@@ -82,7 +93,7 @@ export default function NavDrawer({
   };
 
   const collapsed = !open && isPermanent;
-  const tempExpanded = hover && collapsed;
+  const tempExpanded = (hover || menuOpen) && collapsed;
   const width =
     collapsed && !tempExpanded ? NAV_DRAWER_COLLAPSED_WIDTH : NAV_DRAWER_WIDTH;
   const closeDrawer = isPermanent
@@ -111,8 +122,15 @@ export default function NavDrawer({
             "& .MuiDrawer-paper": {
               width,
               pt: 0,
-              pb: 1,
               scrollbarWidth: "thin",
+
+              "--nav-bg": (theme) =>
+                colord(theme.palette.background.paper)
+                  .mix("#fff", 0.09) // elevation 8
+                  .alpha(1)
+                  .toHslString(),
+              bgcolor: "var(--nav-bg)",
+              backgroundImage: "none",
             },
           },
           isPermanent && {
@@ -135,7 +153,7 @@ export default function NavDrawer({
               overflowX: "hidden",
 
               borderRight: "none",
-              bgcolor: "background.default",
+              "--nav-bg": (theme) => theme.palette.background.default,
             },
 
             "& .MuiListItemSecondaryAction-root": {
@@ -158,9 +176,9 @@ export default function NavDrawer({
           tempExpanded && {
             zIndex: "drawer",
             "& .MuiDrawer-paper": {
-              bgcolor: (theme) =>
+              "--nav-bg": (theme) =>
                 colord(theme.palette.background.paper)
-                  .mix("#fff", 0.09)
+                  .mix("#fff", 0.09) // elevation 8
                   .alpha(1)
                   .toHslString(),
               boxShadow: (theme) =>
@@ -168,14 +186,25 @@ export default function NavDrawer({
             },
           },
         ]}
-        onMouseEnter={() => setHover(true)}
-        onMouseLeave={() => setHover(false)}
+        PaperProps={{
+          elevation: isPermanent ? 0 : 8,
+          onMouseEnter: () => setHover(true),
+          onMouseLeave: () => setHover(false),
+        }}
       >
         {!isPermanent && (
           <Stack
             direction="row"
             alignItems="center"
-            sx={{ height: TOP_BAR_HEIGHT, flexShrink: 0, px: 0.5 }}
+            sx={{
+              height: TOP_BAR_HEIGHT,
+              flexShrink: 0,
+              px: 0.5,
+              position: "sticky",
+              top: 0,
+              zIndex: 1,
+              backgroundColor: "var(--nav-bg)",
+            }}
           >
             <IconButton
               aria-label="Close navigation drawer"
@@ -191,8 +220,15 @@ export default function NavDrawer({
 
         <nav style={{ flexGrow: 1 }}>
           <List
+            component="ol"
             disablePadding
-            style={{ height: "100%", display: "flex", flexDirection: "column" }}
+            style={{
+              height: "100%",
+              display: "flex",
+              flexDirection: "column",
+              position: "static",
+              backgroundColor: "var(--nav-bg)",
+            }}
           >
             <li>
               <NavItem to={ROUTES.tables} onClick={closeDrawer}>
@@ -203,46 +239,12 @@ export default function NavDrawer({
               </NavItem>
             </li>
 
-            <li>
-              <NavItem to={ROUTES.userSettings} onClick={closeDrawer}>
-                <ListItemIcon>
-                  <SettingsIcon />
-                </ListItemIcon>
-                <ListItemText primary="Settings" />
-                {userRoles.includes("ADMIN") && (
-                  <UpdateCheckBadge sx={{ mr: 1.5 }} />
-                )}
-              </NavItem>
-            </li>
-
-            {userRoles.includes("ADMIN") && (
-              <li>
-                <NavItem to={ROUTES.members} onClick={closeDrawer}>
-                  <ListItemIcon>
-                    <UserManagementIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Members" />
-                </NavItem>
-              </li>
-            )}
+            <SettingsNav
+              closeDrawer={closeDrawer as any}
+              collapsed={isPermanent && !open && !tempExpanded}
+            />
 
             <Divider variant="middle" sx={{ my: 1 }} />
-
-            <li>
-              <NavItem
-                {...({ component: "button" } as any)}
-                style={{ textAlign: "left" }}
-                onClick={(e: any) => {
-                  if (closeDrawer) closeDrawer(e);
-                  openTableSettingsDialog({});
-                }}
-              >
-                <ListItemIcon>
-                  <AddIcon />
-                </ListItemIcon>
-                <ListItemText primary="Create table…" />
-              </NavItem>
-            </li>
 
             {sections &&
               Object.entries(sections)
@@ -253,61 +255,142 @@ export default function NavDrawer({
                     section={section}
                     tables={tables}
                     closeDrawer={closeDrawer}
-                    hidden={isPermanent && !open && !tempExpanded}
+                    collapsed={isPermanent && !open && !tempExpanded}
                   />
                 ))}
 
-            <Divider variant="middle" sx={{ my: 1, mt: "auto" }} />
-
-            <li>
-              <NavItem href={EXTERNAL_LINKS.docs}>
-                <ListItemIcon>
-                  <DocsIcon />
-                </ListItemIcon>
-                <ListItemText primary="Docs" />
-                {externalLinkIcon}
-              </NavItem>
-            </li>
-            <li>
-              <NavItem href={WIKI_LINKS.howTo}>
-                <ListItemIcon>
-                  <LearningIcon />
-                </ListItemIcon>
-                <ListItemText primary="Learning" />
-                {externalLinkIcon}
-              </NavItem>
-            </li>
             <li>
               <NavItem
-                onClick={(e: any) => setHelpMenuAnchorEl(e.currentTarget)}
+                {...({ component: "button" } as any)}
+                onClick={(e: any) => {
+                  if (closeDrawer) closeDrawer(e);
+                  openTableSettingsDialog({});
+                }}
+                sx={{ mb: 1 }}
               >
                 <ListItemIcon>
-                  <CommunityIcon />
+                  <AddIcon />
                 </ListItemIcon>
-                <ListItemText primary="Join our community" />
-                <ListItemSecondaryAction>
-                  <ChevronRightIcon />
-                </ListItemSecondaryAction>
-              </NavItem>
-            </li>
-            <li>
-              <NavItem
-                onClick={(e: any) => setHelpMenuAnchorEl(e.currentTarget)}
-              >
-                <ListItemIcon>
-                  <HelpIcon />
-                </ListItemIcon>
-                <ListItemText primary="Help" />
-                <ListItemSecondaryAction>
-                  <ChevronRightIcon />
-                </ListItemSecondaryAction>
+                <ListItemText primary="Create table…" />
               </NavItem>
             </li>
 
-            <HelpMenu
-              anchorEl={helpMenuAnchorEl}
-              onClose={() => setHelpMenuAnchorEl(null)}
-            />
+            <List
+              component="li"
+              disablePadding
+              sx={{
+                position: "sticky",
+                bottom: 0,
+                bgcolor: "var(--nav-bg)",
+                mt: "auto",
+                pb: 1,
+              }}
+            >
+              <ol style={{ listStyle: "none", margin: 0, padding: 0 }}>
+                <Divider variant="middle" sx={{ mb: 1 }} />
+
+                <li>
+                  <NavItem
+                    onClick={() => {
+                      openGetStartedChecklist(true);
+                      setHover(false);
+                    }}
+                    sx={{
+                      mb: 1,
+                      py: 0.5,
+                      bgcolor: (theme) =>
+                        alpha(
+                          theme.palette.primary.main,
+                          theme.palette.action.selectedOpacity
+                        ),
+                      "&:hover": {
+                        bgcolor: (theme) =>
+                          alpha(
+                            theme.palette.primary.main,
+                            theme.palette.action.selectedOpacity +
+                              theme.palette.action.hoverOpacity
+                          ),
+                      },
+                      "& *, &&:hover *": {
+                        color: (theme) =>
+                          theme.palette.primary[
+                            theme.palette.mode === "dark" ? "light" : "dark"
+                          ],
+                      },
+                    }}
+                  >
+                    <ListItemIcon>
+                      <ChecklistIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary="Get started"
+                      secondary={<Progress sx={{ mr: 3 }} />}
+                    />
+                    <ListItemSecondaryAction>
+                      <ChevronRightIcon />
+                    </ListItemSecondaryAction>
+                  </NavItem>
+                </li>
+
+                <li>
+                  <NavItem href={EXTERNAL_LINKS.docs}>
+                    <ListItemIcon>
+                      <DocsIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Docs" />
+                    {externalLinkIcon}
+                  </NavItem>
+                </li>
+
+                <li>
+                  <NavItem href={WIKI_LINKS.howTo}>
+                    <ListItemIcon>
+                      <LearningIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Learning" />
+                    {externalLinkIcon}
+                  </NavItem>
+                </li>
+
+                <li>
+                  <NavItem
+                    onClick={(e: any) =>
+                      setCommunityMenuAnchorEl(e.currentTarget)
+                    }
+                  >
+                    <ListItemIcon>
+                      <CommunityIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Join our community" />
+                    <ListItemSecondaryAction>
+                      <ChevronRightIcon />
+                    </ListItemSecondaryAction>
+                  </NavItem>
+                  <CommunityMenu
+                    anchorEl={communityMenuAnchorEl}
+                    onClose={() => setCommunityMenuAnchorEl(null)}
+                  />
+                </li>
+
+                <li>
+                  <NavItem
+                    onClick={(e: any) => setHelpMenuAnchorEl(e.currentTarget)}
+                  >
+                    <ListItemIcon>
+                      <HelpIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Help" />
+                    <ListItemSecondaryAction>
+                      <ChevronRightIcon />
+                    </ListItemSecondaryAction>
+                  </NavItem>
+                  <HelpMenu
+                    anchorEl={helpMenuAnchorEl}
+                    onClose={() => setHelpMenuAnchorEl(null)}
+                  />
+                </li>
+              </ol>
+            </List>
           </List>
         </nav>
       </Drawer>

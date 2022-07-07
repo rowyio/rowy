@@ -134,7 +134,7 @@ export default function TopBar({
                 ml: 1,
               },
               !(routeTitle as any)?.leftAligned && {
-                ml: { xs: 1, sm: 208 / 8 + 1 },
+                ml: { xs: 1, sm: 40 / 8 + 1, md: 208 / 8 + 1 },
               },
               isPermanent &&
                 (routeTitle as any)?.leftAligned && {
@@ -167,11 +167,16 @@ export default function TopBar({
           to={ROUTES.members}
           startIcon={<PersonAddIcon />}
           sx={{
+            minWidth: 40,
+            "&&": { px: { xs: 1, md: 2 } },
             mr: 1,
             "&.active": { visibility: "hidden" },
+
+            "& .text": { display: { xs: "none", md: "inline" } },
+            "& .MuiButton-startIcon": { mr: { xs: 0, md: 1 } },
           }}
         >
-          Invite team members
+          <span className="text">Invite team members</span>
         </Button>
 
         <UserMenu />
