@@ -37,7 +37,7 @@ export default function HelpMenu({
       id="community-menu"
       anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
       transformOrigin={{ vertical: "bottom", horizontal: "left" }}
-      sx={{ "& .MuiPaper-root": { mt: 0.5, py: 1 } }}
+      sx={{ "& .MuiPaper-root": { mt: 1.5, py: 1 } }}
       PaperProps={{ elevation: 10 }}
     >
       <ListSubheader
