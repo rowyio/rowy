@@ -105,7 +105,6 @@ export default function AuthLayout({
 
             display: "flex",
             flexDirection: "column",
-            // textAlign: "center",
 
             "& > :not(style) + :not(style)": { mt: 4 },
           } as any
@@ -125,8 +124,8 @@ export default function AuthLayout({
         <Stack
           spacing={4}
           justifyContent="center"
-          alignItems="center"
-          style={{ textAlign: "center", flexGrow: 1 }}
+          alignItems="flex-start"
+          style={{ flexGrow: 1 }}
         >
           {children}
         </Stack>
@@ -145,7 +144,7 @@ export default function AuthLayout({
 
         <Typography
           variant="caption"
-          color="text.secondary"
+          color="text.disabled"
           sx={{ display: hideProject ? "none" : "block", mb: -0.5 }}
         >
           Project: <span style={{ userSelect: "all" }}>{projectId}</span>

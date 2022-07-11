@@ -1,10 +1,11 @@
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 
-import { Typography, Link } from "@mui/material";
+import { Typography, Link as MuiLink } from "@mui/material";
 
 import AuthLayout from "@src/layouts/AuthLayout";
 import FirebaseUi from "@src/components/FirebaseUi";
-import { EXTERNAL_LINKS } from "@src/constants/externalLinks";
+
+import { ROUTES } from "@src/constants/routes";
 
 export default function SignUpPage() {
   const [searchParams] = useSearchParams();
@@ -20,6 +21,18 @@ export default function SignUpPage() {
       title="Sign up"
       description={
         <>
+          <Typography
+            color="text.secondary"
+            align="right"
+            display="block"
+            component="span"
+            sx={{ mt: -4.25, mb: 2, alignSelf: "flex-end" }}
+          >
+            or{" "}
+            <MuiLink component={Link} to={ROUTES.auth} color="text.secondary">
+              sign in
+            </MuiLink>
+          </Typography>
           Welcome! To join this project, sign up with the email address
           {searchParams.get("email") ? (
             <>
@@ -32,31 +45,6 @@ export default function SignUpPage() {
       }
     >
       <FirebaseUi uiConfig={uiConfig} />
-      <Typography
-        variant="caption"
-        color="text.secondary"
-        style={{ marginTop: 16 }}
-      >
-        By signing up, you agree to our{" "}
-        <Link
-          href={EXTERNAL_LINKS.terms}
-          target="_blank"
-          rel="noopener noreferrer"
-          color="text.secondary"
-        >
-          Terms and Conditions
-        </Link>{" "}
-        and{" "}
-        <Link
-          href={EXTERNAL_LINKS.privacy}
-          target="_blank"
-          rel="noopener noreferrer"
-          color="text.secondary"
-        >
-          Privacy Policy
-        </Link>
-        .
-      </Typography>
     </AuthLayout>
   );
 }

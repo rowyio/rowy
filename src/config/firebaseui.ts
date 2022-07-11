@@ -65,8 +65,8 @@ export const defaultUiConfig: firebaseui.auth.Config = {
   signInFlow: "popup",
   signInSuccessUrl: "/",
   signInOptions: [authOptions.google],
-  // tosUrl: EXTERNAL_LINKS.terms,
-  // privacyPolicyUrl: EXTERNAL_LINKS.privacy,
+  tosUrl: EXTERNAL_LINKS.terms,
+  privacyPolicyUrl: EXTERNAL_LINKS.privacy,
 };
 
 export const getSignInOptions = (
