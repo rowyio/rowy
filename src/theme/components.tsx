@@ -725,12 +725,12 @@ export const components = (theme: Theme): ThemeOptions => {
           },
 
           contained: {
-            boxShadow: `0 -1px 0 0 rgba(0, 0, 0, 0.12) inset, ${theme.shadows[2]}`,
+            boxShadow: `0 -1px 0 0 rgba(0, 0, 0, 0.4) inset, 0 0 0 1px rgba(255, 255, 255, 0.08) inset, ${theme.shadows[2]}`,
             "&:hover": {
-              boxShadow: `0 -1px 0 0 rgba(0, 0, 0, 0.12) inset, ${theme.shadows[4]}`,
+              boxShadow: `0 -1px 0 0 rgba(0, 0, 0, 0.4) inset, 0 0 0 1px rgba(255, 255, 255, 0.08) inset, ${theme.shadows[4]}`,
             },
             "&:active": {
-              boxShadow: `0 -1px 0 0 rgba(0, 0, 0, 0.12) inset, ${theme.shadows[8]}`,
+              boxShadow: `0 -1px 0 0 rgba(0, 0, 0, 0.4) inset, 0 0 0 1px rgba(255, 255, 255, 0.08) inset, ${theme.shadows[8]}`,
             },
           },
           containedPrimary: {
