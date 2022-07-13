@@ -45,6 +45,8 @@ export type ConfirmDialogProps = {
 
   /** Optionally set dialog max width */
   maxWidth?: DialogProps["maxWidth"];
+  /** Optionally set button layout */
+  buttonLayout?: "horizontal" | "vertical";
 };
 /**
  * Open a confirm dialog

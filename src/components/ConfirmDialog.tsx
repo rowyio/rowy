@@ -36,6 +36,7 @@ export default function ConfirmDialog() {
       hideCancel,
 
       maxWidth = "xs",
+      buttonLayout = "horizontal",
     },
     setState,
   ] = useAtom(confirmDialogAtom, globalScope);
@@ -76,7 +77,15 @@ export default function ConfirmDialog() {
         )}
       </DialogContent>
 
-      <DialogActions>
+      <DialogActions
+        sx={[
+          buttonLayout === "vertical" && {
+            flexDirection: "column",
+            alignItems: "stretch",
+            "& > :not(:first-of-type)": { ml: 0, mt: 1 },
+          },
+        ]}
+      >
         {!hideCancel && (
           <Button
             onClick={() => {
