@@ -176,7 +176,8 @@
     "raw-loader": "^4.0.2",
     "source-map-explorer": "^2.5.2",
     "ts-jest": "^28.0.2",
-    "typedoc": "^0.22.17"
+    "typedoc": "^0.22.17",
+    "webpack-bundle-analyzer": "^4.5.0"
   },
   "resolutions": {
     "@types/react": "^18"
