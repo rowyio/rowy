@@ -47,6 +47,7 @@ export default function Step1Columns({
     config.pairs.map((pair) => pair.csvKey)
   );
 
+  // When a field is selected to be imported
   const handleSelect =
     (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
       const checked = e.target.checked;
@@ -63,6 +64,25 @@ export default function Step1Columns({
           setConfig((config) => ({
             ...config,
             pairs: [...config.pairs, { csvKey: field, columnKey: match }],
+          }));
+        }
+        // If no match, create a new column
+        else {
+          const columnKey = camelCase(field);
+          setConfig((config) => ({
+            ...config,
+            pairs: [...config.pairs, { csvKey: field, columnKey }],
+            newColumns: [
+              ...config.newColumns,
+              {
+                name: field,
+                fieldName: columnKey,
+                key: columnKey,
+                type: suggestType(csvData.rows, field) || FieldType.shortText,
+                index: -1,
+                config: {},
+              },
+            ],
           }));
         }
       } else {
@@ -95,6 +115,7 @@ export default function Step1Columns({
       }
     };
 
+  // When a field is mapped to a new column
   const handleChange = (csvKey: string) => (value: string) => {
     const columnKey = !!tableSchema.columns?.[value] ? value : camelCase(value);
 
