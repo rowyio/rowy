@@ -137,6 +137,7 @@ export default function EmptyTable() {
         margin: "0 auto",
         textAlign: "center",
       }}
+      id="empty-table"
     >
       {contents}
     </Stack>

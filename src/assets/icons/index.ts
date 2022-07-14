@@ -100,6 +100,9 @@ export { FormatListChecks as Checklist };
 import { FileTableBoxOutline } from "mdi-material-ui";
 export { FileTableBoxOutline as Project };
 
+import { TableColumn } from "mdi-material-ui";
+export { TableColumn };
+
 export * from "./AddRow";
 export * from "./AddRowTop";
 export * from "./ChevronDown";

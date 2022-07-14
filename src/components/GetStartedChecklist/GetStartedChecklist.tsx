@@ -9,7 +9,7 @@ import { Project as ProjectIcon } from "@src/assets/icons";
 
 import Modal, { IModalProps } from "@src/components/Modal";
 import SteppedAccordion from "@src/components/SteppedAccordion";
-import Progress from "./Progress";
+import StepsProgress from "@src/components/StepsProgress";
 
 import {
   globalScope,
@@ -73,14 +73,18 @@ export default function GetStartedChecklist({
         },
       ]}
     >
-      <Progress sx={{ mb: 2 }} />
+      <StepsProgress value={1} steps={5} sx={{ mb: 2 }} />
 
       <SteppedAccordion
         steps={[
           {
             id: "workspace",
             title: "Create a workspace",
-            labelButtonProps: { icon: <CheckedIcon color="success" /> },
+            labelButtonProps: {
+              icon: (
+                <CheckedIcon color="success" sx={{ color: "success.light" }} />
+              ),
+            },
             content: null,
           },
           {

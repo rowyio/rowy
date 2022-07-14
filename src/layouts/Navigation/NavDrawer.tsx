@@ -33,7 +33,7 @@ import Logo from "@src/assets/Logo";
 import NavItem from "./NavItem";
 import SettingsNav from "./SettingsNav";
 import NavTableSection from "./NavTableSection";
-import Progress from "./GetStartedChecklist/Progress";
+import StepsProgress from "@src/components/StepsProgress";
 import CommunityMenu from "./CommunityMenu";
 import HelpMenu from "./HelpMenu";
 
@@ -324,7 +324,9 @@ export default function NavDrawer({
                     </ListItemIcon>
                     <ListItemText
                       primary="Get started"
-                      secondary={<Progress sx={{ mr: 3 }} />}
+                      secondary={
+                        <StepsProgress value={1} steps={5} sx={{ mr: 3 }} />
+                      }
                     />
                     <ListItemSecondaryAction>
                       <ChevronRightIcon />

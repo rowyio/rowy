@@ -1,6 +1,6 @@
 import Logo from "@src/assets/Logo";
 import BreadcrumbsTableRoot from "@src/components/Table/BreadcrumbsTableRoot";
-import { FadeProps } from "@mui/material";
+import { FadeProps, Typography } from "@mui/material";
 
 export enum ROUTES {
   home = "/",
@@ -38,6 +38,9 @@ export enum ROUTES {
   members = "/members",
   debugSettings = "/settings/debug",
 
+  tutorial = "/tutorial",
+  tableTutorial = "/tutorial/table",
+
   test = "/test",
   themeTest = "/test/theme",
   rowyRunTest = "/test/rowyRunTest",
@@ -64,6 +67,18 @@ export const ROUTE_TITLES = {
   [ROUTES.projectSettings]: "Project Settings",
   [ROUTES.members]: "Members",
   [ROUTES.debugSettings]: "Debug",
+
+  [ROUTES.tutorial]: "Tutorial",
+  [ROUTES.tableTutorial]: {
+    title: "Tutorial",
+    titleComponent: (_o, _i) => (
+      <Typography component="h1" variant="h6">
+        Tutorial
+      </Typography>
+    ),
+    titleTransitionProps: { style: { transformOrigin: "0 50%" } },
+    leftAligned: true,
+  },
 
   [ROUTES.test]: "Test",
   [ROUTES.themeTest]: "Theme Test",

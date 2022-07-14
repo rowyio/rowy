@@ -11,7 +11,7 @@ import ErrorFallback, {
   IErrorFallbackProps,
 } from "@src/components/ErrorFallback";
 import Loading from "@src/components/Loading";
-import GetStartedChecklist from "./GetStartedChecklist";
+import GetStartedChecklist from "@src/components/GetStartedChecklist";
 
 import {
   globalScope,
