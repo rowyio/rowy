@@ -142,13 +142,15 @@ export default function AuthLayout({
           />
         )}
 
-        <Typography
-          variant="caption"
-          color="text.disabled"
-          sx={{ display: hideProject ? "none" : "block", mb: -0.5 }}
-        >
-          Project: <span style={{ userSelect: "all" }}>{projectId}</span>
-        </Typography>
+        {projectId && (
+          <Typography
+            variant="caption"
+            color="text.disabled"
+            sx={{ display: hideProject ? "none" : "block", mb: -0.5 }}
+          >
+            Project: <span style={{ userSelect: "all" }}>{projectId}</span>
+          </Typography>
+        )}
       </Paper>
 
       <Stack
