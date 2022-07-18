@@ -14,7 +14,7 @@ import SettingsIcon from "@mui/icons-material/SettingsOutlined";
 import { ChevronDown } from "@src/assets/icons";
 
 import NavItem from "./NavItem";
-import UpdateCheckBadge from "./UpdateCheckBadge";
+import UpdateCheckBadge from "@src/layouts/Navigation/UpdateCheckBadge";
 
 import { projectScope, userRolesAtom } from "@src/atoms/projectScope";
 import { ROUTES } from "@src/constants/routes";

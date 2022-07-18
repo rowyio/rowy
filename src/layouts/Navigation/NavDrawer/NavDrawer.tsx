@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { useAtom, useSetAtom } from "jotai";
-import { find, groupBy } from "lodash-es";
+import { useSetAtom } from "jotai";
 import { colord } from "colord";
 
 import {
@@ -10,15 +9,13 @@ import {
   Stack,
   IconButton,
   List,
+  Box,
   ListItemIcon,
   ListItemText,
-  Divider,
   ListItemSecondaryAction,
-  Box,
+  Divider,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/MenuOpen";
-import HomeIcon from "@mui/icons-material/HomeOutlined";
-import AddIcon from "@mui/icons-material/Add";
 import DocsIcon from "@mui/icons-material/LibraryBooksOutlined";
 import LearningIcon from "@mui/icons-material/LocalLibraryOutlined";
 import HelpIcon from "@mui/icons-material/HelpOutline";
@@ -31,24 +28,14 @@ import {
 
 import Logo from "@src/assets/Logo";
 import NavItem from "./NavItem";
-import SettingsNav from "./SettingsNav";
-import NavTableSection from "./NavTableSection";
 import StepsProgress from "@src/components/StepsProgress";
 import CommunityMenu from "./CommunityMenu";
 import HelpMenu from "./HelpMenu";
+import { INavDrawerContentsProps } from "./NavDrawerContents";
 
-import {
-  projectScope,
-  userSettingsAtom,
-  tablesAtom,
-  tableSettingsDialogAtom,
-  getStartedChecklistAtom,
-} from "@src/atoms/projectScope";
-import { TableSettings } from "@src/types/table";
-import { ROUTES } from "@src/constants/routes";
+import { projectScope, getStartedChecklistAtom } from "@src/atoms/projectScope";
 import { EXTERNAL_LINKS, WIKI_LINKS } from "@src/constants/externalLinks";
-import { TOP_BAR_HEIGHT } from "./TopBar";
-
+import { TOP_BAR_HEIGHT } from "@src/layouts/Navigation/TopBar";
 export const NAV_DRAWER_WIDTH = 256;
 export const NAV_DRAWER_COLLAPSED_WIDTH = 56;
 
@@ -56,49 +43,33 @@ export interface INavDrawerProps extends DrawerProps {
   open: boolean;
   isPermanent: boolean;
   onClose: NonNullable<DrawerProps["onClose"]>;
+  Contents: React.ComponentType<INavDrawerContentsProps>;
 }
 
 export default function NavDrawer({
   open,
   isPermanent,
   onClose,
+  Contents,
 }: INavDrawerProps) {
-  const [tables] = useAtom(tablesAtom, projectScope);
-  const [userSettings] = useAtom(userSettingsAtom, projectScope);
-  const openTableSettingsDialog = useSetAtom(
-    tableSettingsDialogAtom,
-    projectScope
-  );
-  const openGetStartedChecklist = useSetAtom(
-    getStartedChecklistAtom,
-    projectScope
-  );
-
-  const [hover, setHover] = useState(false);
-  const [communityMenuAnchorEl, setCommunityMenuAnchorEl] =
-    useState<HTMLButtonElement | null>(null);
-  const [helpMenuAnchorEl, setHelpMenuAnchorEl] =
-    useState<HTMLButtonElement | null>(null);
-
-  const menuOpen = communityMenuAnchorEl || helpMenuAnchorEl;
-
-  const favorites = Array.isArray(userSettings.favoriteTables)
-    ? userSettings.favoriteTables
-    : [];
-  const sections = {
-    Favorites: favorites
-      .map((id) => find(tables, { id }))
-      .filter((x) => x !== undefined) as TableSettings[],
-    ...groupBy(tables, "section"),
-  };
-
+  const [hover, setHover] = useState<boolean | "persist">(false);
   const collapsed = !open && isPermanent;
-  const tempExpanded = (hover || menuOpen) && collapsed;
+  const tempExpanded = hover && collapsed;
   const width =
     collapsed && !tempExpanded ? NAV_DRAWER_COLLAPSED_WIDTH : NAV_DRAWER_WIDTH;
   const closeDrawer = isPermanent
     ? undefined
     : (e: {}) => onClose(e, "escapeKeyDown");
+
+  const openGetStartedChecklist = useSetAtom(
+    getStartedChecklistAtom,
+    projectScope
+  );
+
+  const [communityMenuAnchorEl, setCommunityMenuAnchorEl] =
+    useState<HTMLButtonElement | null>(null);
+  const [helpMenuAnchorEl, setHelpMenuAnchorEl] =
+    useState<HTMLButtonElement | null>(null);
 
   const externalLinkIcon = (
     <ListItemSecondaryAction sx={{ right: 10 }}>
@@ -188,8 +159,10 @@ export default function NavDrawer({
         ]}
         PaperProps={{
           elevation: isPermanent ? 0 : 8,
-          onMouseEnter: () => setHover(true),
-          onMouseLeave: () => setHover(false),
+          onMouseEnter: () =>
+            setHover((h) => (h === "persist" ? "persist" : true)),
+          onMouseLeave: () =>
+            setHover((h) => (h === "persist" ? "persist" : false)),
         }}
       >
         {!isPermanent && (
@@ -230,50 +203,13 @@ export default function NavDrawer({
               backgroundColor: "var(--nav-bg)",
             }}
           >
-            <li>
-              <NavItem to={ROUTES.tables} onClick={closeDrawer}>
-                <ListItemIcon>
-                  <HomeIcon />
-                </ListItemIcon>
-                <ListItemText primary="Home" />
-              </NavItem>
-            </li>
-
-            <SettingsNav
-              closeDrawer={closeDrawer as any}
-              collapsed={isPermanent && !open && !tempExpanded}
+            <Contents
+              closeDrawer={closeDrawer}
+              open={open}
+              isPermanent={isPermanent}
+              tempExpanded={tempExpanded}
+              setHover={setHover}
             />
-
-            <Divider variant="middle" sx={{ my: 1 }} />
-
-            {sections &&
-              Object.entries(sections)
-                .filter(([, tables]) => tables.length > 0)
-                .map(([section, tables]) => (
-                  <NavTableSection
-                    key={section}
-                    section={section}
-                    tables={tables}
-                    closeDrawer={closeDrawer}
-                    collapsed={isPermanent && !open && !tempExpanded}
-                  />
-                ))}
-
-            <li>
-              <NavItem
-                {...({ component: "button" } as any)}
-                onClick={(e: any) => {
-                  if (closeDrawer) closeDrawer(e);
-                  openTableSettingsDialog({});
-                }}
-                sx={{ mb: 1 }}
-              >
-                <ListItemIcon>
-                  <AddIcon />
-                </ListItemIcon>
-                <ListItemText primary="Create table…" />
-              </NavItem>
-            </li>
 
             <List
               component="li"
@@ -356,9 +292,10 @@ export default function NavDrawer({
 
                 <li>
                   <NavItem
-                    onClick={(e: any) =>
-                      setCommunityMenuAnchorEl(e.currentTarget)
-                    }
+                    onClick={(e: any) => {
+                      setCommunityMenuAnchorEl(e.currentTarget);
+                      setHover("persist");
+                    }}
                   >
                     <ListItemIcon>
                       <CommunityIcon />
@@ -370,13 +307,19 @@ export default function NavDrawer({
                   </NavItem>
                   <CommunityMenu
                     anchorEl={communityMenuAnchorEl}
-                    onClose={() => setCommunityMenuAnchorEl(null)}
+                    onClose={() => {
+                      setCommunityMenuAnchorEl(null);
+                      setHover(false);
+                    }}
                   />
                 </li>
 
                 <li>
                   <NavItem
-                    onClick={(e: any) => setHelpMenuAnchorEl(e.currentTarget)}
+                    onClick={(e: any) => {
+                      setHelpMenuAnchorEl(e.currentTarget);
+                      setHover("persist");
+                    }}
                   >
                     <ListItemIcon>
                       <HelpIcon />
@@ -388,7 +331,10 @@ export default function NavDrawer({
                   </NavItem>
                   <HelpMenu
                     anchorEl={helpMenuAnchorEl}
-                    onClose={() => setHelpMenuAnchorEl(null)}
+                    onClose={() => {
+                      setHelpMenuAnchorEl(null);
+                      setHover(false);
+                    }}
                   />
                 </li>
               </ol>

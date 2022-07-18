@@ -7,6 +7,7 @@ import { useMediaQuery, Stack, GlobalStyles } from "@mui/material";
 
 import TopBar, { TOP_BAR_HEIGHT } from "./TopBar";
 import NavDrawer from "./NavDrawer";
+import NavDrawerContents from "./NavDrawer/NavDrawerContents";
 import ErrorFallback, {
   IErrorFallbackProps,
 } from "@src/components/ErrorFallback";
@@ -51,6 +52,7 @@ export default function Navigation({ children }: React.PropsWithChildren<{}>) {
           open={open}
           isPermanent={isPermanent}
           onClose={() => setOpen(false)}
+          Contents={NavDrawerContents}
         />
         <GetStartedChecklist navOpen={open} navPermanent={isPermanent} />
 
