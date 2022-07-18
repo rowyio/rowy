@@ -3,7 +3,7 @@ import ErrorFallback from "@src/components/ErrorFallback";
 // import SwrProvider from "@src/contexts/SwrContext";
 import { BrowserRouter } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
-import { Provider, Atom } from "jotai";
+import { Provider as JotaiProvider, Atom } from "jotai";
 import { globalScope } from "@src/atoms/globalScope";
 import { DebugAtoms } from "@src/atoms/utils";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
@@ -29,10 +29,21 @@ export default function Providers({
   initialAtomValues,
 }: IProvidersProps) {
   return (
-    <ErrorBoundary FallbackComponent={ErrorFallback}>
+    <ErrorBoundary
+      fallbackRender={
+        // Can’t use <ErrorFallback> here because it uses useLocation,
+        // which needs to be inside a <Router>
+        ({ error }) => (
+          <div role="alert">
+            <h1>Something went wrong</h1>
+            <p>{error.message}</p>
+          </div>
+        )
+      }
+    >
       <BrowserRouter>
         <HelmetProvider>
-          <Provider
+          <JotaiProvider
             key={globalScope.description}
             scope={globalScope}
             initialValues={initialAtomValues}
@@ -53,7 +64,7 @@ export default function Providers({
                 </RowyThemeProvider>
               </CacheProvider>
             </LocalizationProvider>
-          </Provider>
+          </JotaiProvider>
         </HelmetProvider>
       </BrowserRouter>
     </ErrorBoundary>
