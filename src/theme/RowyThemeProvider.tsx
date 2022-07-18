@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useAtom } from "jotai";
 import { Helmet } from "react-helmet-async";
+import { Outlet } from "react-router-dom";
 
 import { useMediaQuery, ThemeProvider, CssBaseline } from "@mui/material";
 import Favicon from "@src/assets/Favicon";
@@ -55,6 +56,7 @@ export default function RowyThemeProvider({
         <Favicon />
         <CssBaseline />
         {children}
+        <Outlet />
       </ThemeProvider>
     </>
   );
