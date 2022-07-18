@@ -4,7 +4,7 @@ import MultiSelect, { MultiSelectProps } from "@rowy/multiselect";
 import { Stack, StackProps, Typography, Chip } from "@mui/material";
 import { TableColumn as TableColumnIcon } from "@src/assets/icons";
 
-import { globalScope, altPressAtom } from "@src/atoms/globalScope";
+import { projectScope, altPressAtom } from "@src/atoms/projectScope";
 import { tableScope, tableColumnsOrderedAtom } from "@src/atoms/tableScope";
 import { ColumnConfig } from "@src/types/table";
 import { FieldType } from "@src/constants/fields";
@@ -91,7 +91,7 @@ export function ColumnItem({
   children,
   ...props
 }: IColumnItemProps) {
-  const [altPress] = useAtom(altPressAtom, globalScope);
+  const [altPress] = useAtom(altPressAtom, projectScope);
 
   const isNew = option.index === undefined && !option.type;
 

@@ -17,12 +17,12 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import StepsProgress from "@src/components/StepsProgress";
 import { TUTORIAL_STEPS } from "./Steps";
 
-import { globalScope, confirmDialogAtom } from "@src/atoms/globalScope";
+import { projectScope, confirmDialogAtom } from "@src/atoms/projectScope";
 import { ROUTES } from "@src/constants/routes";
 import { NAV_DRAWER_COLLAPSED_WIDTH } from "@src/layouts/Navigation/NavDrawer";
 
 export default function TableTutorial() {
-  const confirm = useSetAtom(confirmDialogAtom, globalScope);
+  const confirm = useSetAtom(confirmDialogAtom, projectScope);
   const navigate = useNavigate();
 
   const [completed, setCompleted] = useState(

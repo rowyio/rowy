@@ -12,10 +12,10 @@ import EmptyState from "@src/components/EmptyState";
 
 import meta from "@root/package.json";
 import { ROUTES } from "@src/constants/routes";
-import { globalScope, currentUserAtom } from "@src/atoms/globalScope";
+import { projectScope, currentUserAtom } from "@src/atoms/projectScope";
 
 export default function NotFound() {
-  const [currentUser] = useAtom(currentUserAtom, globalScope);
+  const [currentUser] = useAtom(currentUserAtom, projectScope);
 
   if (currentUser)
     return (

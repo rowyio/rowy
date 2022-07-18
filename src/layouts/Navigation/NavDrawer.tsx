@@ -38,12 +38,12 @@ import CommunityMenu from "./CommunityMenu";
 import HelpMenu from "./HelpMenu";
 
 import {
-  globalScope,
+  projectScope,
   userSettingsAtom,
   tablesAtom,
   tableSettingsDialogAtom,
   getStartedChecklistAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import { TableSettings } from "@src/types/table";
 import { ROUTES } from "@src/constants/routes";
 import { EXTERNAL_LINKS, WIKI_LINKS } from "@src/constants/externalLinks";
@@ -63,15 +63,15 @@ export default function NavDrawer({
   isPermanent,
   onClose,
 }: INavDrawerProps) {
-  const [tables] = useAtom(tablesAtom, globalScope);
-  const [userSettings] = useAtom(userSettingsAtom, globalScope);
+  const [tables] = useAtom(tablesAtom, projectScope);
+  const [userSettings] = useAtom(userSettingsAtom, projectScope);
   const openTableSettingsDialog = useSetAtom(
     tableSettingsDialogAtom,
-    globalScope
+    projectScope
   );
   const openGetStartedChecklist = useSetAtom(
     getStartedChecklistAtom,
-    globalScope
+    projectScope
   );
 
   const [hover, setHover] = useState(false);

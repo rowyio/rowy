@@ -12,10 +12,10 @@ import CircularProgressOptical from "@src/components/CircularProgressOptical";
 
 import { firebaseFunctionsAtom } from "@src/sources/ProjectSourceFirebase";
 import {
-  globalScope,
+  projectScope,
   confirmDialogAtom,
   rowyRunAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import { tableScope, tableSettingsAtom } from "@src/atoms/tableScope";
 import { useActionParams } from "./FormDialog/Context";
 import { runRoutes } from "@src/constants/runRoutes";
@@ -54,10 +54,10 @@ export default function ActionFab({
   disabled,
   ...props
 }: IActionFabProps) {
-  const confirm = useSetAtom(confirmDialogAtom, globalScope);
-  const [rowyRun] = useAtom(rowyRunAtom, globalScope);
+  const confirm = useSetAtom(confirmDialogAtom, projectScope);
+  const [rowyRun] = useAtom(rowyRunAtom, projectScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
-  const [firebaseFunctions] = useAtom(firebaseFunctionsAtom, globalScope);
+  const [firebaseFunctions] = useAtom(firebaseFunctionsAtom, projectScope);
 
   const { enqueueSnackbar } = useSnackbar();
   const { requestParams } = useActionParams();

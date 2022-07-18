@@ -1,6 +1,6 @@
 import { find } from "lodash-es";
 import { Field, FieldType } from "@rowy/form-builder";
-import { TableSettingsDialogState } from "@src/atoms/globalScope";
+import { TableSettingsDialogState } from "@src/atoms/projectScope";
 
 import { Link, ListItemText, Typography } from "@mui/material";
 import OpenInNewIcon from "@src/components/InlineOpenInNewIcon";

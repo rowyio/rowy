@@ -2,17 +2,17 @@ import { memo } from "react";
 
 import useFirestoreCollectionWithAtom from "@src/hooks/useFirestoreCollectionWithAtom";
 import {
-  globalScope,
+  projectScope,
   allUsersAtom,
   updateUserAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import { USERS } from "@src/config/dbPaths";
 
 /**
  * When rendered, provides atom values for top-level tables
  */
 const MembersSourceFirebase = memo(function MembersSourceFirebase() {
-  useFirestoreCollectionWithAtom(allUsersAtom, globalScope, USERS, {
+  useFirestoreCollectionWithAtom(allUsersAtom, projectScope, USERS, {
     updateDocAtom: updateUserAtom,
   });
 

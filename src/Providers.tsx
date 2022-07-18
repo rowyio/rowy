@@ -4,7 +4,7 @@ import ErrorFallback from "@src/components/ErrorFallback";
 import { BrowserRouter } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { Provider as JotaiProvider, Atom } from "jotai";
-import { globalScope } from "@src/atoms/globalScope";
+import { projectScope } from "@src/atoms/projectScope";
 import { DebugAtoms } from "@src/atoms/utils";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
@@ -44,11 +44,11 @@ export default function Providers({
       <BrowserRouter>
         <HelmetProvider>
           <JotaiProvider
-            key={globalScope.description}
-            scope={globalScope}
+            key={projectScope.description}
+            scope={projectScope}
             initialValues={initialAtomValues}
           >
-            <DebugAtoms scope={globalScope} />
+            <DebugAtoms scope={projectScope} />
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <CacheProvider value={muiCache}>
                 <RowyThemeProvider>

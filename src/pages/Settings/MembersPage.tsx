@@ -18,14 +18,14 @@ import UserItem from "@src/components/Settings/UserManagement/UserItem";
 import UserSkeleton from "@src/components/Settings/UserManagement/UserSkeleton";
 import InviteUser from "@src/components/Settings/UserManagement/InviteUser";
 
-import { globalScope, allUsersAtom } from "@src/atoms/globalScope";
+import { projectScope, allUsersAtom } from "@src/atoms/projectScope";
 import MembersSourceFirebase from "@src/sources/MembersSourceFirebase";
 import useBasicSearch from "@src/hooks/useBasicSearch";
 
 const SEARCH_KEYS = ["id", "user.displayName", "user.email"];
 
 function MembersPage() {
-  const [users] = useAtom(allUsersAtom, globalScope);
+  const [users] = useAtom(allUsersAtom, projectScope);
   const [results, query, handleQuery] = useBasicSearch(users, SEARCH_KEYS);
 
   return (

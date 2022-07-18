@@ -28,14 +28,14 @@ import HomeWelcomePrompt from "@src/components/Functions/HomeWelcomePrompt";
 import EmptyState from "@src/components/EmptyState";
 
 import {
-  globalScope,
+  projectScope,
   userRolesAtom,
   userSettingsAtom,
   updateUserSettingsAtom,
   tablesAtom,
   tablesViewAtom,
   tableSettingsDialogAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import { TableSettings } from "@src/types/table";
 import { ROUTES } from "@src/constants/routes";
 import useBasicSearch from "@src/hooks/useBasicSearch";
@@ -44,14 +44,14 @@ import { TOP_BAR_HEIGHT } from "@src/layouts/Navigation/TopBar";
 const SEARCH_KEYS = ["id", "name", "section", "description"];
 
 export default function HomePage() {
-  const [userRoles] = useAtom(userRolesAtom, globalScope);
-  const [userSettings] = useAtom(userSettingsAtom, globalScope);
-  const [updateUserSettings] = useAtom(updateUserSettingsAtom, globalScope);
-  const [tables] = useAtom(tablesAtom, globalScope);
-  const [view, setView] = useAtom(tablesViewAtom, globalScope);
+  const [userRoles] = useAtom(userRolesAtom, projectScope);
+  const [userSettings] = useAtom(userSettingsAtom, projectScope);
+  const [updateUserSettings] = useAtom(updateUserSettingsAtom, projectScope);
+  const [tables] = useAtom(tablesAtom, projectScope);
+  const [view, setView] = useAtom(tablesViewAtom, projectScope);
   const openTableSettingsDialog = useSetAtom(
     tableSettingsDialogAtom,
-    globalScope
+    projectScope
   );
 
   const [results, query, handleQuery] = useBasicSearch(

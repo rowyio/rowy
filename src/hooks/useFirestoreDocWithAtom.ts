@@ -15,7 +15,7 @@ import {
 } from "firebase/firestore";
 import { useErrorHandler } from "react-error-boundary";
 
-import { globalScope } from "@src/atoms/globalScope";
+import { projectScope } from "@src/atoms/projectScope";
 import { UpdateDocFunction, TableRow } from "@src/types/table";
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
 
@@ -35,7 +35,7 @@ interface IUseFirestoreDocWithAtomOptions<T> {
 
 /**
  * Attaches a listener for a Firestore document and unsubscribes on unmount.
- * Gets the Firestore instance initiated in globalScope.
+ * Gets the Firestore instance initiated in projectScope.
  * Updates an atom and Suspends that atom until the first snapshot is received.
  *
  * @param dataAtom - Atom to store data in
@@ -58,7 +58,7 @@ export function useFirestoreDocWithAtom<T = TableRow>(
     updateDataAtom,
   } = options || {};
 
-  const [firebaseDb] = useAtom(firebaseDbAtom, globalScope);
+  const [firebaseDb] = useAtom(firebaseDbAtom, projectScope);
   const setDataAtom = useSetAtom(dataAtom, dataScope);
   const setUpdateDataAtom = useSetAtom(
     options?.updateDataAtom || (dataAtom as any),

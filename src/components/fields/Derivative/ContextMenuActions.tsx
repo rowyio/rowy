@@ -5,7 +5,7 @@ import { useSnackbar } from "notistack";
 import ReEvalIcon from "@mui/icons-material/ReplayOutlined";
 import EvalIcon from "@mui/icons-material/PlayCircleOutline";
 
-import { globalScope, rowyRunAtom } from "@src/atoms/globalScope";
+import { projectScope, rowyRunAtom } from "@src/atoms/projectScope";
 import {
   tableScope,
   tableSettingsAtom,
@@ -26,7 +26,7 @@ export const ContextMenuActions: IFieldConfig["contextMenuActions"] = (
   selectedCell,
   reset
 ) => {
-  const [rowyRun] = useAtom(rowyRunAtom, globalScope);
+  const [rowyRun] = useAtom(rowyRunAtom, projectScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const [tableRows] = useAtom(tableRowsAtom, tableScope);

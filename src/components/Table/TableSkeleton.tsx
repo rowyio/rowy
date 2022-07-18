@@ -6,7 +6,7 @@ import { Fade, Stack, Skeleton, Button } from "@mui/material";
 import { AddColumn as AddColumnIcon } from "@src/assets/icons";
 import Column from "./Column";
 
-import { globalScope, userSettingsAtom } from "@src/atoms/globalScope";
+import { projectScope, userSettingsAtom } from "@src/atoms/projectScope";
 import {
   tableScope,
   tableIdAtom,
@@ -65,7 +65,7 @@ export function HeaderRowSkeleton() {
 }
 
 const useDisplayedColumns = () => {
-  const [userSettings] = useAtom(userSettingsAtom, globalScope);
+  const [userSettings] = useAtom(userSettingsAtom, projectScope);
   const [tableId] = useAtom(tableIdAtom, tableScope);
   const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
   const userDocHiddenFields =

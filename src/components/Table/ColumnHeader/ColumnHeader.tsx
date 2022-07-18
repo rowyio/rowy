@@ -19,10 +19,10 @@ import LockIcon from "@mui/icons-material/LockOutlined";
 import ColumnHeaderSort from "./ColumnHeaderSort";
 
 import {
-  globalScope,
+  projectScope,
   userRolesAtom,
   altPressAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import {
   tableScope,
   updateColumnAtom,
@@ -54,10 +54,10 @@ export interface IDraggableHeaderRendererProps {
 export default function DraggableHeaderRenderer({
   column,
 }: IDraggableHeaderRendererProps) {
-  const [userRoles] = useAtom(userRolesAtom, globalScope);
+  const [userRoles] = useAtom(userRolesAtom, projectScope);
   const updateColumn = useSetAtom(updateColumnAtom, tableScope);
   const openColumnMenu = useSetAtom(columnMenuAtom, tableScope);
-  const [altPress] = useAtom(altPressAtom, globalScope);
+  const [altPress] = useAtom(altPressAtom, projectScope);
 
   const [{ isDragging }, dragRef] = useDrag({
     type: "COLUMN_DRAG",

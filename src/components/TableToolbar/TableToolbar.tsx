@@ -18,12 +18,12 @@ import HiddenFields from "./HiddenFields";
 import RowHeight from "./RowHeight";
 
 import {
-  globalScope,
+  projectScope,
   projectSettingsAtom,
   userRolesAtom,
   compatibleRowyRunVersionAtom,
   rowyRunModalAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import {
   tableScope,
   tableSettingsAtom,
@@ -42,13 +42,13 @@ const ReExecute = lazy(() => import("./ReExecute" /* webpackChunkName: "ReExecut
 export const TABLE_TOOLBAR_HEIGHT = 44;
 
 export default function TableToolbar() {
-  const [projectSettings] = useAtom(projectSettingsAtom, globalScope);
-  const [userRoles] = useAtom(userRolesAtom, globalScope);
+  const [projectSettings] = useAtom(projectSettingsAtom, projectScope);
+  const [userRoles] = useAtom(userRolesAtom, projectScope);
   const [compatibleRowyRunVersion] = useAtom(
     compatibleRowyRunVersionAtom,
-    globalScope
+    projectScope
   );
-  const openRowyRunModal = useSetAtom(rowyRunModalAtom, globalScope);
+  const openRowyRunModal = useSetAtom(rowyRunModalAtom, projectScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const openTableModal = useSetAtom(tableModalAtom, tableScope);

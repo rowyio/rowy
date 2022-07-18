@@ -17,7 +17,7 @@ import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import MultiSelect from "@rowy/multiselect";
 
 import {
-  globalScope,
+  projectScope,
   projectRolesAtom,
   projectSettingsAtom,
   rowyRunAtom,
@@ -25,7 +25,7 @@ import {
   UserSettings,
   updateUserAtom,
   confirmDialogAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import { runRoutes } from "@src/constants/runRoutes";
 import { USERS } from "@src/config/dbPaths";
 
@@ -35,13 +35,13 @@ export default function UserItem({
   roles: rolesProp,
 }: UserSettings) {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-  const confirm = useSetAtom(confirmDialogAtom, globalScope);
-  const openRowyRunModal = useSetAtom(rowyRunModalAtom, globalScope);
+  const confirm = useSetAtom(confirmDialogAtom, projectScope);
+  const openRowyRunModal = useSetAtom(rowyRunModalAtom, projectScope);
 
-  const [projectRoles] = useAtom(projectRolesAtom, globalScope);
-  const [projectSettings] = useAtom(projectSettingsAtom, globalScope);
-  const [rowyRun] = useAtom(rowyRunAtom, globalScope);
-  const [updateUser] = useAtom(updateUserAtom, globalScope);
+  const [projectRoles] = useAtom(projectRolesAtom, projectScope);
+  const [projectSettings] = useAtom(projectSettingsAtom, projectScope);
+  const [rowyRun] = useAtom(rowyRunAtom, projectScope);
+  const [updateUser] = useAtom(updateUserAtom, projectScope);
 
   const [value, setValue] = useState(Array.isArray(rolesProp) ? rolesProp : []);
   const allRoles = new Set(["ADMIN", ...(projectRoles ?? []), ...value]);

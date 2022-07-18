@@ -26,10 +26,10 @@ import Loading from "@src/components/Loading";
 import ContextMenu from "./ContextMenu";
 
 import {
-  globalScope,
+  projectScope,
   userRolesAtom,
   userSettingsAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import {
   tableScope,
   tableIdAtom,
@@ -63,8 +63,8 @@ export default function Table({
 }: {
   dataGridRef?: React.MutableRefObject<DataGridHandle | null>;
 }) {
-  const [userRoles] = useAtom(userRolesAtom, globalScope);
-  const [userSettings] = useAtom(userSettingsAtom, globalScope);
+  const [userRoles] = useAtom(userRolesAtom, projectScope);
+  const [userSettings] = useAtom(userSettingsAtom, projectScope);
 
   const [tableId] = useAtom(tableIdAtom, tableScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);

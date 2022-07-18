@@ -12,10 +12,10 @@ import SteppedAccordion from "@src/components/SteppedAccordion";
 import StepsProgress from "@src/components/StepsProgress";
 
 import {
-  globalScope,
+  projectScope,
   getStartedChecklistAtom,
   tableSettingsDialogAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import {
   NAV_DRAWER_WIDTH,
   NAV_DRAWER_COLLAPSED_WIDTH,
@@ -31,10 +31,10 @@ export default function GetStartedChecklist({
   navPermanent,
   ...props
 }: IGetStartedChecklistProps) {
-  const [open, setOpen] = useAtom(getStartedChecklistAtom, globalScope);
+  const [open, setOpen] = useAtom(getStartedChecklistAtom, projectScope);
   const openTableSettingsDialog = useSetAtom(
     tableSettingsDialogAtom,
-    globalScope
+    projectScope
   );
 
   if (!open) return null;

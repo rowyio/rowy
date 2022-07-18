@@ -15,7 +15,7 @@ import Logo from "@src/assets/Logo";
 import bgTableLight from "@src/assets/bg-table-light.webp";
 import bgTableDark from "@src/assets/bg-table-dark.webp";
 
-import { globalScope, projectIdAtom } from "@src/atoms/globalScope";
+import { projectScope, projectIdAtom } from "@src/atoms/projectScope";
 import { EXTERNAL_LINKS } from "@src/constants/externalLinks";
 
 export interface IAuthLayoutProps {
@@ -37,7 +37,7 @@ export default function AuthLayout({
   children,
   loading,
 }: IAuthLayoutProps) {
-  const [projectId] = useAtom(projectIdAtom, globalScope);
+  const [projectId] = useAtom(projectIdAtom, projectScope);
   const fullScreenHeight = use100vh() ?? 0;
 
   const linkProps: LinkProps = {

@@ -12,11 +12,11 @@ import Theme from "@src/components/Settings/UserSettings/Theme";
 import Personalization from "@src/components/Settings/UserSettings/Personalization";
 
 import {
-  globalScope,
+  projectScope,
   currentUserAtom,
   userSettingsAtom,
   updateUserSettingsAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 
 export interface IUserSettingsChildProps {
   settings: Record<string, any>;
@@ -24,11 +24,11 @@ export interface IUserSettingsChildProps {
 }
 
 export default function UserSettingsPage() {
-  const [currentUser] = useAtom(currentUserAtom, globalScope);
-  const [userSettings] = useAtom(userSettingsAtom, globalScope);
+  const [currentUser] = useAtom(currentUserAtom, projectScope);
+  const [userSettings] = useAtom(userSettingsAtom, projectScope);
   const { enqueueSnackbar } = useSnackbar();
 
-  const [_updateUserSettings] = useAtom(updateUserSettingsAtom, globalScope);
+  const [_updateUserSettings] = useAtom(updateUserSettingsAtom, projectScope);
   const updateSettings = useDebouncedCallback((data) => {
     if (_updateUserSettings) {
       _updateUserSettings(data).then(() => enqueueSnackbar("Saved"));

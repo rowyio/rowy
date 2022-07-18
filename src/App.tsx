@@ -10,10 +10,10 @@ import NotFound from "@src/pages/NotFoundPage";
 import RequireAuth from "@src/layouts/RequireAuth";
 
 import {
-  globalScope,
+  projectScope,
   currentUserAtom,
   altPressAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import { ROUTES } from "@src/constants/routes";
 import useKeyPressWithAtom from "@src/hooks/useKeyPressWithAtom";
 
@@ -63,8 +63,8 @@ const ThemeTestPage = lazy(() => import("@src/pages/Test/ThemeTestPage" /* webpa
 // const RowyRunTestPage = lazy(() => import("@src/pages/RowyRunTestPage" /* webpackChunkName: "RowyRunTestPage" */));
 
 export default function App() {
-  const [currentUser] = useAtom(currentUserAtom, globalScope);
-  useKeyPressWithAtom("Alt", altPressAtom, globalScope);
+  const [currentUser] = useAtom(currentUserAtom, projectScope);
+  useKeyPressWithAtom("Alt", altPressAtom, projectScope);
 
   return (
     <Suspense fallback={<Loading fullScreen />}>

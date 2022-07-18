@@ -12,12 +12,12 @@ import Authentication from "@src/components/Settings/ProjectSettings/Authenticat
 import Customization from "@src/components/Settings/ProjectSettings/Customization";
 
 import {
-  globalScope,
+  projectScope,
   projectSettingsAtom,
   updateProjectSettingsAtom,
   publicSettingsAtom,
   updatePublicSettingsAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 
 export interface IProjectSettingsChildProps {
   settings: Record<string, any>;
@@ -27,14 +27,14 @@ export interface IProjectSettingsChildProps {
 }
 
 export default function ProjectSettingsPage() {
-  const [projectSettings] = useAtom(projectSettingsAtom, globalScope);
-  const [publicSettings] = useAtom(publicSettingsAtom, globalScope);
+  const [projectSettings] = useAtom(projectSettingsAtom, projectScope);
+  const [publicSettings] = useAtom(publicSettingsAtom, projectScope);
 
   const { enqueueSnackbar } = useSnackbar();
 
   const [_updateProjectSettingsDoc] = useAtom(
     updateProjectSettingsAtom,
-    globalScope
+    projectScope
   );
   const updateProjectSettings = useDebouncedCallback((data) => {
     if (_updateProjectSettingsDoc) {
@@ -55,7 +55,7 @@ export default function ProjectSettingsPage() {
 
   const [_updatePublicSettingsDoc] = useAtom(
     updatePublicSettingsAtom,
-    globalScope
+    projectScope
   );
   const updatePublicSettings = useDebouncedCallback(
     (data: Record<string, any>) => {

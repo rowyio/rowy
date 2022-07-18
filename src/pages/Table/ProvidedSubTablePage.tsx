@@ -14,7 +14,7 @@ import TablePage from "./TablePage";
 import TableToolbarSkeleton from "@src/components/TableToolbar/TableToolbarSkeleton";
 import TableSkeleton from "@src/components/Table/TableSkeleton";
 
-import { globalScope, currentUserAtom } from "@src/atoms/globalScope";
+import { projectScope, currentUserAtom } from "@src/atoms/projectScope";
 import {
   tableScope,
   tableIdAtom,
@@ -34,7 +34,7 @@ export default function ProvidedSubTablePage() {
   // Get params from URL: /subTable/:docPath/:subTableKey
   const { docPath, subTableKey } = useParams();
 
-  const [currentUser] = useAtom(currentUserAtom, globalScope);
+  const [currentUser] = useAtom(currentUserAtom, projectScope);
 
   // Get table settings and the source column from root table
   const [rootTableSettings] = useAtom(tableSettingsAtom, tableScope);

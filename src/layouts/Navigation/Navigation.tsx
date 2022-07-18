@@ -14,17 +14,17 @@ import Loading from "@src/components/Loading";
 import GetStartedChecklist from "@src/components/GetStartedChecklist";
 
 import {
-  globalScope,
+  projectScope,
   projectIdAtom,
   navOpenAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import { ROUTE_TITLES } from "@src/constants/routes";
 import { useDocumentTitle } from "@src/hooks/useDocumentTitle";
 
 export default function Navigation({ children }: React.PropsWithChildren<{}>) {
-  const [projectId] = useAtom(projectIdAtom, globalScope);
+  const [projectId] = useAtom(projectIdAtom, projectScope);
 
-  const [open, setOpen] = useAtom(navOpenAtom, globalScope);
+  const [open, setOpen] = useAtom(navOpenAtom, projectScope);
   const isPermanent = useMediaQuery((theme: any) => theme.breakpoints.up("md"));
 
   const { pathname } = useLocation();

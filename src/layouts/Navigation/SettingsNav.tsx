@@ -16,7 +16,7 @@ import { ChevronDown } from "@src/assets/icons";
 import NavItem from "./NavItem";
 import UpdateCheckBadge from "./UpdateCheckBadge";
 
-import { globalScope, userRolesAtom } from "@src/atoms/globalScope";
+import { projectScope, userRolesAtom } from "@src/atoms/projectScope";
 import { ROUTES } from "@src/constants/routes";
 
 export interface ISettingsNavProps {
@@ -28,7 +28,7 @@ export default function SettingsNav({
   closeDrawer,
   collapsed,
 }: ISettingsNavProps) {
-  const [userRoles] = useAtom(userRolesAtom, globalScope);
+  const [userRoles] = useAtom(userRolesAtom, projectScope);
   const { pathname } = useLocation();
   const [open, setOpen] = useState(pathname.includes(ROUTES.settings));
 

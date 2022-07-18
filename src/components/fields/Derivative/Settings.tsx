@@ -9,11 +9,11 @@ import FieldsDropdown from "@src/components/ColumnModals/FieldsDropdown";
 import CodeEditorHelper from "@src/components/CodeEditor/CodeEditorHelper";
 
 import {
-  globalScope,
+  projectScope,
   compatibleRowyRunVersionAtom,
   projectSettingsAtom,
   rowyRunModalAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import { tableScope, tableColumnsOrderedAtom } from "@src/atoms/tableScope";
 import { FieldType } from "@src/constants/fields";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
@@ -40,12 +40,12 @@ export default function Settings({
   onBlur,
   errors,
 }: ISettingsProps) {
-  const [projectSettings] = useAtom(projectSettingsAtom, globalScope);
+  const [projectSettings] = useAtom(projectSettingsAtom, projectScope);
   const [compatibleRowyRunVersion] = useAtom(
     compatibleRowyRunVersionAtom,
-    globalScope
+    projectScope
   );
-  const openRowyRunModal = useSetAtom(rowyRunModalAtom, globalScope);
+  const openRowyRunModal = useSetAtom(rowyRunModalAtom, projectScope);
   const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
 
   useEffect(() => {

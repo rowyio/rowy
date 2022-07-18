@@ -12,11 +12,11 @@ import { Container, Stack, Button } from "@mui/material";
 import SettingsSection from "@src/components/Settings/SettingsSection";
 
 import {
-  globalScope,
+  projectScope,
   projectSettingsAtom,
   allUsersAtom,
   updateUserAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import UserManagementSourceFirebase from "@src/sources/MembersSourceFirebase";
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
 import { USERS } from "@src/config/dbPaths";
@@ -30,10 +30,10 @@ export interface IProjectSettingsChildProps {
 }
 
 export default function DebugSettingsPage() {
-  const [firebaseDb] = useAtom(firebaseDbAtom, globalScope);
-  const [projectSettings] = useAtom(projectSettingsAtom, globalScope);
-  const [users] = useAtom(allUsersAtom, globalScope);
-  const [updateUser] = useAtom(updateUserAtom, globalScope);
+  const [firebaseDb] = useAtom(firebaseDbAtom, projectScope);
+  const [projectSettings] = useAtom(projectSettingsAtom, projectScope);
+  const [users] = useAtom(allUsersAtom, projectScope);
+  const [updateUser] = useAtom(updateUserAtom, projectScope);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   return (

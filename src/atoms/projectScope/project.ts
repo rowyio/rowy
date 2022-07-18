@@ -60,7 +60,7 @@ export const projectSettingsAtom = atom<ProjectSettings>({});
  *
  * @example Basic usage:
  * ```
- * const [updateProjectSettings] = useAtom(updateProjectSettingsAtom, globalScope);
+ * const [updateProjectSettings] = useAtom(updateProjectSettingsAtom, projectScope);
  * if (updateProjectSettings) updateProjectSettings({ ... });
  * ```
  */

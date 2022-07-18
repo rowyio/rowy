@@ -14,7 +14,7 @@ import TableTutorial from "@src/components/TableTutorial";
 import EmptyState from "@src/components/EmptyState";
 import TableModals from "@src/components/TableModals";
 
-import { globalScope, currentUserAtom } from "@src/atoms/globalScope";
+import { projectScope, currentUserAtom } from "@src/atoms/projectScope";
 import {
   tableScope,
   tableIdAtom,
@@ -39,7 +39,7 @@ import * as csvData from "@src/components/TableTutorial/data";
  * Wraps `TablePage` with the data for a top-level table.
  */
 export default function TableTutorialPage() {
-  const [currentUser] = useAtom(currentUserAtom, globalScope);
+  const [currentUser] = useAtom(currentUserAtom, projectScope);
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>

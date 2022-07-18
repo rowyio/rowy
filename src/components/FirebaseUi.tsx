@@ -9,7 +9,7 @@ import { makeStyles } from "tss-react/mui";
 import { Typography } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 
-import { globalScope, publicSettingsAtom } from "@src/atoms/globalScope";
+import { projectScope, publicSettingsAtom } from "@src/atoms/projectScope";
 import { firebaseAuthAtom } from "@src/sources/ProjectSourceFirebase";
 import { defaultUiConfig, getSignInOptions } from "@src/config/firebaseui";
 
@@ -217,8 +217,8 @@ export interface IFirebaseUiProps {
 
 export default function FirebaseUi(props: IFirebaseUiProps) {
   const { classes, cx } = useStyles();
-  const [firebaseAuth] = useAtom(firebaseAuthAtom, globalScope);
-  const [publicSettings] = useAtom(publicSettingsAtom, globalScope);
+  const [firebaseAuth] = useAtom(firebaseAuthAtom, projectScope);
+  const [publicSettings] = useAtom(publicSettingsAtom, projectScope);
 
   const signInOptions: typeof publicSettings.signInOptions = useMemo(
     () =>
