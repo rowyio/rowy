@@ -11,6 +11,8 @@ export default function NavItem(
 
   return (
     <MenuItem
+      role="none"
+      tabIndex={0}
       component={"to" in props ? Link : "href" in props ? "a" : "button"}
       selected={"to" in props ? pathname === props.to : false}
       {...props}
@@ -21,7 +23,10 @@ export default function NavItem(
           textAlign: "left",
           color: "text.secondary",
 
-          "& .MuiListItemText-primary": { typography: "button" },
+          "& .MuiListItemText-primary": {
+            typography: "button",
+            overflow: "hidden",
+          },
           "& .MuiSvgIcon-root": {
             color: "inherit",
             opacity: 0.87,
