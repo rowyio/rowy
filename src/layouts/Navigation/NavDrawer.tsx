@@ -232,7 +232,7 @@ export default function NavDrawer({
               {...({ component: "button" } as any)}
               style={{ textAlign: "left" }}
               sx={{ mb: 1 }}
-              onClick={(e) => {
+              onClick={(e: any) => {
                 if (closeDrawer) closeDrawer(e);
                 openTableSettingsDialog({});
               }}
