@@ -1339,6 +1339,12 @@ export const components = (theme: Theme): ThemeOptions => {
         },
       },
 
+      MuiSkeleton: {
+        styleOverrides: {
+          rectangular: { borderRadius: theme.shape.borderRadius },
+        },
+      },
+
       MuiRating: {
         styleOverrides: {
           iconFilled: { color: theme.palette.text.secondary },

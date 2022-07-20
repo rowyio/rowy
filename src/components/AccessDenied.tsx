@@ -31,6 +31,7 @@ export default function AccessDenied({ resetErrorBoundary }: FallbackProps) {
 
   return (
     <EmptyState
+      role="alert"
       fullScreen
       Icon={SecurityIcon}
       message="Access denied"

@@ -2,8 +2,7 @@ import { useAtom } from "jotai";
 import { Link } from "react-router-dom";
 
 import { Button } from "@mui/material";
-import { Go as GoIcon } from "@src/assets/icons";
-import HomeIcon from "@mui/icons-material/HomeOutlined";
+import { Go as GoIcon, Tables as TablesIcon } from "@src/assets/icons";
 
 import AuthLayout from "@src/layouts/AuthLayout";
 import Navigation from "@src/layouts/Navigation";
@@ -29,9 +28,9 @@ export default function NotFound() {
               sx={{ mt: 3 }}
               component={Link}
               to={ROUTES.home}
-              startIcon={<HomeIcon />}
+              startIcon={<TablesIcon />}
             >
-              Home
+              Tables
             </Button>
           }
           style={{ marginTop: -TOP_BAR_HEIGHT }}

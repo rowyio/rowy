@@ -48,7 +48,7 @@ export default function NavTableSection({
           {isFavorites ? <FavoriteIcon /> : <FolderIcon />}
         </ListItemIcon>
 
-        <ListItemText primary={section} style={{ textAlign: "left" }} />
+        <ListItemText primary={section} />
 
         <ListItemSecondaryAction>
           <ChevronDown

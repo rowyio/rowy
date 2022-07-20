@@ -2,7 +2,7 @@ import { useAtom, useSetAtom } from "jotai";
 import { find, groupBy } from "lodash-es";
 
 import { ListItemIcon, ListItemText, Divider } from "@mui/material";
-import HomeIcon from "@mui/icons-material/HomeOutlined";
+import { Tables as TablesIcon } from "@src/assets/icons";
 import AddIcon from "@mui/icons-material/Add";
 
 import NavItem from "./NavItem";
@@ -54,9 +54,9 @@ export default function NavDrawerContents({
       <li>
         <NavItem to={ROUTES.tables} onClick={closeDrawer}>
           <ListItemIcon>
-            <HomeIcon />
+            <TablesIcon />
           </ListItemIcon>
-          <ListItemText primary="Home" />
+          <ListItemText primary="Tables" />
         </NavItem>
       </li>
 
