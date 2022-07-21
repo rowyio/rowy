@@ -52,9 +52,11 @@ export default function NavDrawer({
   onClose,
   Contents,
 }: INavDrawerProps) {
-  const [hover, setHover] = useState<boolean | "persist">(false);
+  const [hover, _setHover] = useState<boolean | "persist">(false);
   const collapsed = !open && isPermanent;
+  const setHover = collapsed ? _setHover : () => {};
   const tempExpanded = hover && collapsed;
+
   const width =
     collapsed && !tempExpanded ? NAV_DRAWER_COLLAPSED_WIDTH : NAV_DRAWER_WIDTH;
   const closeDrawer = isPermanent

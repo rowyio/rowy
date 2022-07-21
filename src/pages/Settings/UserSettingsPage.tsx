@@ -17,6 +17,7 @@ import {
   userSettingsAtom,
   updateUserSettingsAtom,
 } from "@src/atoms/projectScope";
+import { useScrollToHash } from "@src/hooks/useScrollToHash";
 
 export interface IUserSettingsChildProps {
   settings: Record<string, any>;
@@ -27,6 +28,7 @@ export default function UserSettingsPage() {
   const [currentUser] = useAtom(currentUserAtom, projectScope);
   const [userSettings] = useAtom(userSettingsAtom, projectScope);
   const { enqueueSnackbar } = useSnackbar();
+  useScrollToHash();
 
   const [_updateUserSettings] = useAtom(updateUserSettingsAtom, projectScope);
   const updateSettings = useDebouncedCallback((data) => {

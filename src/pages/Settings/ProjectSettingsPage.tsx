@@ -18,6 +18,7 @@ import {
   publicSettingsAtom,
   updatePublicSettingsAtom,
 } from "@src/atoms/projectScope";
+import { useScrollToHash } from "@src/hooks/useScrollToHash";
 
 export interface IProjectSettingsChildProps {
   settings: Record<string, any>;
@@ -31,6 +32,7 @@ export default function ProjectSettingsPage() {
   const [publicSettings] = useAtom(publicSettingsAtom, projectScope);
 
   const { enqueueSnackbar } = useSnackbar();
+  useScrollToHash();
 
   const [_updateProjectSettingsDoc] = useAtom(
     updateProjectSettingsAtom,

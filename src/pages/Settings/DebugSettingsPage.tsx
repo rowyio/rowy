@@ -21,6 +21,7 @@ import UserManagementSourceFirebase from "@src/sources/MembersSourceFirebase";
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
 import { USERS } from "@src/config/dbPaths";
 import { getTableSchemaPath } from "@src/utils/table";
+import { useScrollToHash } from "@src/hooks/useScrollToHash";
 
 export interface IProjectSettingsChildProps {
   settings: Record<string, any>;
@@ -35,6 +36,7 @@ export default function DebugSettingsPage() {
   const [users] = useAtom(allUsersAtom, projectScope);
   const [updateUser] = useAtom(updateUserAtom, projectScope);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  useScrollToHash();
 
   return (
     <Container maxWidth="sm" sx={{ px: 1, pt: 1, pb: 7 + 3 + 3 }}>
