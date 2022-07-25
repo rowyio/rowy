@@ -76,7 +76,7 @@ export default function Modal({
 
     setOpen(false);
     setEmphasizeCloseButton(false);
-    setTimeout(() => onClose(setOpen), 300);
+    setTimeout(() => onClose(setOpen), 195 * 2);
   };
 
   return (
