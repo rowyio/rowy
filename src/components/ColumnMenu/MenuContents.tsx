@@ -4,6 +4,7 @@ import { MenuItem, ListItemIcon, ListSubheader, Divider } from "@mui/material";
 
 export interface IMenuContentsProps {
   menuItems: {
+    key: string;
     type?: string;
     label?: string;
     activeLabel?: string;
@@ -36,6 +37,7 @@ export default function MenuContents({ menuItems }: IMenuContentsProps) {
         return (
           <MenuItem
             key={index}
+            id={`column-menu-item-${item.key}`}
             onClick={item.onClick}
             color={item.color}
             selected={item.active}
