@@ -24,6 +24,7 @@ export default function TableRow(props: RowRendererProps<any>) {
   return (
     <Row
       key={props.row._rowy_ref.path}
+      id={`row-${props.row._rowy_ref.path}`}
       onContextMenu={handleContextMenu}
       {...props}
     />

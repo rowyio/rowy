@@ -124,8 +124,9 @@ export default function ColumnMenu() {
   };
 
   const localViewActions: IMenuContentsProps["menuItems"] = [
-    { type: "subheader" },
+    { type: "subheader", key: "subLocalView" },
     {
+      key: "sortDesc",
       label: "Sort: descending",
       activeLabel: "Remove sort: descending",
       icon: <ArrowDownwardIcon />,
@@ -139,6 +140,7 @@ export default function ColumnMenu() {
       disabled: column.type === FieldType.id,
     },
     {
+      key: "sortAsc",
       label: "Sort: ascending",
       activeLabel: "Remove sort: ascending",
       icon: <ArrowUpwardIcon />,
@@ -152,6 +154,7 @@ export default function ColumnMenu() {
       disabled: column.type === FieldType.id,
     },
     {
+      key: "hide",
       label: "Hide",
       icon: <VisibilityIcon />,
       onClick: () => {
@@ -168,6 +171,7 @@ export default function ColumnMenu() {
       disabled: !updateUserSettings,
     },
     {
+      key: "filter",
       label: "Filter…",
       icon: <FilterIcon />,
       onClick: () => {
@@ -187,9 +191,10 @@ export default function ColumnMenu() {
   ];
 
   const configActions: IMenuContentsProps["menuItems"] = [
-    { type: "subheader" },
+    { type: "subheader", key: "subActionsConfig" },
     {
       label: "Lock",
+      key: "lock",
       activeLabel: "Unlock",
       icon: <LockOpenIcon />,
       activeIcon: <LockIcon />,
@@ -204,6 +209,7 @@ export default function ColumnMenu() {
     },
     {
       label: "Disable resize",
+      key: "disableResize",
       activeLabel: "Enable resize",
       icon: <CellResizeIcon />,
       onClick: () => {
@@ -217,6 +223,7 @@ export default function ColumnMenu() {
     },
     {
       label: "Freeze",
+      key: "freeze",
       activeLabel: "Unfreeze",
       icon: <FreezeIcon />,
       activeIcon: <UnfreezeIcon />,
@@ -229,6 +236,7 @@ export default function ColumnMenu() {
     // { type: "subheader" },
     {
       label: "Rename…",
+      key: "rename",
       icon: <EditIcon />,
       onClick: () => {
         openColumnModal({ type: "name", columnKey: column.key });
@@ -237,6 +245,7 @@ export default function ColumnMenu() {
     },
     {
       label: `Edit type: ${getFieldProp("name", column.type)}…`,
+      key: "editType",
       // This is based on the cell type
       icon: getFieldProp("icon", column.type),
       onClick: () => {
@@ -246,6 +255,7 @@ export default function ColumnMenu() {
     },
     {
       label: `Column config…`,
+      key: "columConfig",
       icon: <SettingsIcon />,
       onClick: () => {
         openColumnModal({ type: "config", columnKey: column.key });
@@ -299,8 +309,9 @@ export default function ColumnMenu() {
     }
   };
   const derivativeActions: IMenuContentsProps["menuItems"] = [
-    { type: "subheader" },
+    { type: "subheader", key: "sub-derivative" },
     {
+      key: "evaluateAll",
       label: altPress ? "Evaluate all" : "Evaluate all…",
       icon: <EvalIcon />,
       onClick: altPress
@@ -323,9 +334,10 @@ export default function ColumnMenu() {
   ];
 
   const columnActions: IMenuContentsProps["menuItems"] = [
-    { type: "subheader" },
+    { type: "subheader", key: "subActions" },
     {
       label: "Insert to the left…",
+      key: "insertLeft",
       icon: <ColumnPlusBeforeIcon />,
       onClick: () => {
         openColumnModal({ type: "new", index: column.index - 1 });
@@ -334,6 +346,7 @@ export default function ColumnMenu() {
     },
     {
       label: "Insert to the right…",
+      key: "insertRight",
       icon: <ColumnPlusAfterIcon />,
       onClick: () => {
         openColumnModal({ type: "new", index: column.index + 1 });
@@ -342,6 +355,7 @@ export default function ColumnMenu() {
     },
     {
       label: `Delete column${altPress ? "" : "…"}`,
+      key: "delete",
       icon: <ColumnRemoveIcon />,
       onClick: altPress
         ? handleDeleteColumn
