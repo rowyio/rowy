@@ -15,6 +15,7 @@ import { Copy as CopyIcon } from "@src/assets/icons";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 
 import MultiSelect from "@rowy/multiselect";
+import EmojiAvatar from "@src/components/EmojiAvatar";
 
 import {
   projectScope,
@@ -72,9 +73,10 @@ export default function UserItem({
   const listItemChildren = (
     <>
       <ListItemAvatar>
-        <Avatar src={user?.photoURL}>
-          {user?.displayName ? user.displayName[0] : undefined}
-        </Avatar>
+        <EmojiAvatar
+          src={user?.photoURL}
+          fallback={user?.displayName || _rowy_ref?.id || "?"}
+        />
       </ListItemAvatar>
       <ListItemText
         primary={user?.displayName}

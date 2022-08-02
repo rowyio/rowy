@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useSetAtom } from "jotai";
 import { colord } from "colord";
 
@@ -14,6 +14,7 @@ import {
   ListItemText,
   ListItemSecondaryAction,
   Divider,
+  Skeleton,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/MenuOpen";
 import DocsIcon from "@mui/icons-material/LibraryBooksOutlined";
@@ -205,13 +206,24 @@ export default function NavDrawer({
               backgroundColor: "var(--nav-bg)",
             }}
           >
-            <Contents
-              closeDrawer={closeDrawer}
-              open={open}
-              isPermanent={isPermanent}
-              tempExpanded={tempExpanded}
-              setHover={setHover}
-            />
+            <Suspense
+              fallback={new Array(3).fill(undefined).map((_, i) => (
+                <Skeleton
+                  key={i}
+                  height={32}
+                  variant="rectangular"
+                  sx={{ mx: 0.5, my: 0.25 }}
+                />
+              ))}
+            >
+              <Contents
+                closeDrawer={closeDrawer}
+                open={open}
+                isPermanent={isPermanent}
+                tempExpanded={tempExpanded}
+                setHover={setHover}
+              />
+            </Suspense>
 
             <List
               component="li"

@@ -40,6 +40,7 @@ import { TableSettings } from "@src/types/table";
 import { ROUTES } from "@src/constants/routes";
 import useBasicSearch from "@src/hooks/useBasicSearch";
 import { TOP_BAR_HEIGHT } from "@src/layouts/Navigation/TopBar";
+import { useScrollToHash } from "@src/hooks/useScrollToHash";
 
 const SEARCH_KEYS = ["id", "name", "section", "description"];
 
@@ -53,6 +54,8 @@ export default function HomePage() {
     tableSettingsDialogAtom,
     projectScope
   );
+
+  useScrollToHash();
 
   const [results, query, handleQuery] = useBasicSearch(
     tables ?? [],
