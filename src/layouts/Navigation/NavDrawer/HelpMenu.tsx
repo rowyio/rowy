@@ -47,7 +47,7 @@ export default function HelpMenu({
       anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
       transformOrigin={{ vertical: "bottom", horizontal: "left" }}
       sx={{ "& .MuiPaper-root": { mt: 1.5, py: 1 } }}
-      PaperProps={{ elevation: 10 }}
+      PaperProps={{ elevation: 12 }}
     >
       <ListSubheader
         sx={{
