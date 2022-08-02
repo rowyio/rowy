@@ -232,7 +232,8 @@ export default function TableSettingsDialog() {
       })),
       ["section", "label"]
     ),
-    Array.isArray(collections) && collections.length !== 0
+    Array.isArray(collections) &&
+      collections.filter((x) => x !== CONFIG).length > 0
       ? collections.filter((x) => x !== CONFIG)
       : null
   );
