@@ -38,6 +38,7 @@ export enum ImportMethod {
   paste = "paste",
   upload = "upload",
   url = "url",
+  airtable = "airtable",
 }
 
 export interface IImportCsvProps {
@@ -62,7 +63,7 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
   const [open, setOpen] = useState<HTMLButtonElement | null>(null);
   const [tab, setTab] = useState("upload");
 
-  const [error, setError] = useState("");
+  const [error, setError] = useState<string | any>("");
   const validCsv =
     csvData !== null && csvData?.columns.length > 0 && csvData?.rows.length > 0;
 
@@ -170,6 +171,45 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
       });
   }, 1000);
 
+  const [airtable, setAirtable] = useState<any>({
+    apiKey: "",
+    baseID: "",
+    tableID: "",
+  });
+  const [data, setData] = useState<any>(null);
+  const [validConnection, setValidConnection] = useState(false);
+  const handleAirtableConnection = () => {
+    if (!airtable.apiKey) {
+      setError({ apiKey: { message: "API Key is missing!" } });
+      return;
+    }
+    if (!airtable.baseID) {
+      setError({ baseID: { message: "Base ID is missing!" } });
+      return;
+    }
+    if (!airtable.tableID) {
+      setError({ tableID: { message: "Table ID is missing!" } });
+      return;
+    }
+    setLoading(true);
+    fetch(
+      `https://api.airtable.com/v0/${airtable.baseID}/${airtable.tableID}?maxRecords=1`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${airtable.apiKey}`,
+        },
+      }
+    )
+      .then((response) => response.json())
+      .then((body) => setData(body.records))
+      .then(() => {
+        setValidConnection(true);
+        setLoading(false);
+        setError("");
+      });
+  };
+
   if (tableSettings.readOnly && !userRoles.includes("ADMIN")) return null;
 
   return (
@@ -232,6 +272,11 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
               label="URL"
               value="url"
               onClick={() => (importMethodRef.current = ImportMethod.url)}
+            />
+            <Tab
+              label="Airtable"
+              value="airtable"
+              onClick={() => (importMethodRef.current = ImportMethod.airtable)}
             />
           </TabList>
           <Divider style={{ marginTop: -1 }} />
@@ -345,12 +390,74 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
               error={!!error}
             />
           </TabPanel>
+
+          <TabPanel value="airtable">
+            <Typography variant="caption" color="gray">
+              Forget the storage limitations of Airtable.
+            </Typography>
+            <TextField
+              variant="filled"
+              autoFocus
+              fullWidth
+              label="Airtable API Key"
+              placeholder="Insert your API key here"
+              value={airtable.apiKey}
+              onChange={(e) => {
+                setAirtable((airtable: any) => ({
+                  ...airtable,
+                  apiKey: e.currentTarget.value,
+                }));
+              }}
+              helperText={error?.apiKey?.message}
+              error={!!error?.apiKey?.message}
+            />
+            <TextField
+              variant="filled"
+              autoFocus
+              fullWidth
+              label="Airtable Base ID"
+              placeholder="Insert your Base ID here"
+              value={airtable.baseID}
+              onChange={(e) => {
+                setAirtable((airtable: any) => ({
+                  ...airtable,
+                  baseID: e.currentTarget.value,
+                }));
+              }}
+              helperText={error?.baseID?.message}
+              error={!!error?.baseID?.message}
+            />
+            <TextField
+              variant="filled"
+              autoFocus
+              fullWidth
+              label="Airtable Table Name or ID"
+              placeholder="Insert your Table Name or ID here"
+              value={airtable.tableID}
+              onChange={(e) => {
+                setAirtable((prev: any) => ({
+                  ...airtable,
+                  tableID: e.currentTarget.value,
+                }));
+              }}
+              helperText={error?.tableID?.message}
+              error={!!error?.tableID?.message}
+            />
+            {data &&
+              data.map((record: any) => (
+                <div>Airtable record: {record.id}</div>
+              ))}
+          </TabPanel>
         </TabContext>
 
         <Button
           variant="contained"
           color="primary"
-          disabled={!validCsv}
+          disabled={
+            importMethodRef.current === "airtable"
+              ? loading && validConnection
+              : !validCsv
+          }
           sx={{
             mt: -4,
             mx: "auto",
@@ -359,13 +466,26 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
             minWidth: 100,
           }}
           onClick={() => {
-            openTableModal("importCsv");
-            logEvent(analytics, `import_${importMethodRef.current}`, {
-              type: importTypeRef.current,
-            });
+            if (importMethodRef.current === "airtable") {
+              if (!data) {
+                handleAirtableConnection();
+              } else {
+                console.log("hello");
+                openTableModal("importCsv");
+              }
+            } else {
+              openTableModal("importCsv");
+              logEvent(analytics, `import_${importMethodRef.current}`, {
+                type: importTypeRef.current,
+              });
+            }
           }}
         >
-          Continue
+          {importMethodRef.current === "airtable"
+            ? data
+              ? "Continue"
+              : "Test Connection"
+            : "Continue"}
         </Button>
       </Popover>
     </>
