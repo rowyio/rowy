@@ -72,8 +72,7 @@ export default function Step1Columns({
         // Check if this pair was already pushed to main config
         const configPair = find(config.pairs, { fieldKey: field });
         const configIndex = findIndex(config.pairs, { fieldKey: field });
-        console.log(configPair);
-        console.log(configIndex);
+
         // Delete matching newColumn if it was created
         if (configPair) {
           const newColumnIndex = findIndex(config.newColumns, {
