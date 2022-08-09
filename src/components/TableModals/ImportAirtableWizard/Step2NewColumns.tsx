@@ -29,8 +29,13 @@ export default function Step2NewColumns({
     setConfig((config) => ({ ...config, newColumns }));
   };
 
-  const fieldData =
-    airtableData.records[0].fields[config.pairs[fieldToEdit]?.fieldKey];
+  const currentPair = find(config.pairs, {
+    columnKey: config.newColumns[fieldToEdit]?.key,
+  });
+
+  const rowData = airtableData.records.map(
+    (record) => record.fields[currentPair?.fieldKey ?? ""]
+  );
 
   return (
     <>
@@ -108,30 +113,34 @@ export default function Step2NewColumns({
               />
             </Grid>
           </Grid>
-          <Grid container wrap="nowrap">
-            {!isXs && (
+          {rowData.slice(0, 20).map((cell, i) => (
+            <Grid container key={i} wrap="nowrap">
+              {!isXs && (
+                <Grid item xs style={{ overflow: "hidden" }}>
+                  <Cell
+                    field={config.newColumns[fieldToEdit].key}
+                    value={(JSON.stringify(cell) || "")
+                      .replace(/^"/, "")
+                      .replace(/"$/, "")}
+                    type={FieldType.shortText}
+                  />
+                </Grid>
+              )}
+
+              {!isXs && (
+                <Grid item sx={{ width: (theme) => theme.spacing(3) }} />
+              )}
+
               <Grid item xs style={{ overflow: "hidden" }}>
                 <Cell
                   field={config.newColumns[fieldToEdit].key}
-                  value={JSON.stringify(fieldData || "")
-                    .replace(/^"/, "")
-                    .replace(/"$/, "")}
-                  type={FieldType.shortText}
+                  value={cell}
+                  type={config.newColumns[fieldToEdit].type}
+                  name={config.newColumns[fieldToEdit].name}
                 />
               </Grid>
-            )}
-
-            {!isXs && <Grid item sx={{ width: (theme) => theme.spacing(3) }} />}
-
-            <Grid item xs style={{ overflow: "hidden" }}>
-              <Cell
-                field={config.newColumns[fieldToEdit].key}
-                value={fieldData}
-                type={config.newColumns[fieldToEdit].type}
-                name={config.newColumns[fieldToEdit].name}
-              />
             </Grid>
-          </Grid>
+          ))}
         </ScrollableList>
       </div>
     </>
