@@ -5,6 +5,7 @@ import { RESET } from "jotai/utils";
 import { useSnackbar } from "notistack";
 import { uniqBy, isEqual, find } from "lodash-es";
 import { ITableModalProps } from "@src/components/TableModals";
+import WizardDialog from "@src/components/TableModals/WizardDialog";
 
 import {
   useTheme,
@@ -15,9 +16,6 @@ import {
   AlertTitle,
   Button,
 } from "@mui/material";
-
-import WizardDialog from "@src/components/TableModals/WizardDialog";
-import Step1Columns from "./Step1Columns";
 
 import {
   tableScope,
@@ -30,11 +28,15 @@ import {
   tableModalAtom,
 } from "@src/atoms/tableScope";
 import { ColumnConfig } from "@src/types/table";
-import Step2NewColumns from "./Step2NewColumns";
+
 import SnackbarProgress, {
   ISnackbarProgressRef,
 } from "@src/components/SnackbarProgress";
 import { FieldType } from "@src/constants/fields";
+import Step1Columns from "./Step1Columns";
+import Step2NewColumns from "./Step2NewColumns";
+import Step3Preview from "./Step3Preview";
+import { parseISO, isValid as isValidDate } from "date-fns";
 
 export type AirtableConfig = {
   pairs: { fieldKey: string; columnKey: string }[];
@@ -101,13 +103,20 @@ export default function ImportAirtableWizard({ onClose }: ITableModalProps) {
     switch (fieldType) {
       case FieldType.multiSelect:
         return (v: string[]) => v;
+      case FieldType.date:
+      case FieldType.dateTime:
+        return (v: string) => {
+          const date = parseISO(v);
+          return isValidDate(date) ? date.getTime() : null;
+        };
       default:
         return null;
     }
   };
 
-  const parsedRecords = (records: any[]): any[] =>
-    records.map((record) =>
+  const parseRecords = (records: any[]): any[] => {
+    if (!columns || !airtableData) return [];
+    return records.map((record) =>
       config.pairs.reduce((a, pair) => {
         const matchingColumn =
           columns[pair.columnKey] ??
@@ -116,9 +125,10 @@ export default function ImportAirtableWizard({ onClose }: ITableModalProps) {
         const value = parser
           ? parser(record.fields[pair.fieldKey], matchingColumn.config)
           : record.fields[pair.fieldKey];
-        return { ...a, [pair.columnKey]: value };
+        return { ...a, [pair.columnKey]: value, id: record.id };
       }, {})
     );
+  };
 
   const handleFinish = async () => {
     console.time("importAirtable");
@@ -170,7 +180,7 @@ export default function ImportAirtableWizard({ onClose }: ITableModalProps) {
           );
           promises.push(
             bulkAddRows({
-              rows: parsedRecords(records),
+              rows: parseRecords(records),
               collection: tableSettings.collection,
             }).then(() => {
               countRef.current += records.length;
@@ -186,12 +196,12 @@ export default function ImportAirtableWizard({ onClose }: ITableModalProps) {
           }
         }
       };
-      const recursiveAll = async (): Promise<void[]> => {
+      const resolveAll = async (): Promise<void[]> => {
         return Promise.all(promises).then((result) => {
           if (result.length === promises.length) {
             return result;
           }
-          return recursiveAll();
+          return resolveAll();
         });
       };
 
@@ -200,19 +210,16 @@ export default function ImportAirtableWizard({ onClose }: ITableModalProps) {
       for (const col of config.newColumns)
         promises.push(addColumn({ config: col }));
 
-      await Promise.all(promises);
-
       const { records, offset: nextPage } = await fetchRecords();
       snackbarProgressRef.current?.setTarget(records.length);
-      countRef.current += records.length;
-      console.log("before fetcher");
+
       await fetcher(1, nextPage);
-      await recursiveAll();
+      await resolveAll();
+
       enqueueSnackbar(
         `Imported ${Number(countRef.current).toLocaleString()} rows`,
         { variant: "success" }
       );
-      console.log("after fetcher");
     } catch (e) {
       enqueueSnackbar((e as Error).message, { variant: "error" });
     } finally {
@@ -271,6 +278,20 @@ export default function ImportAirtableWizard({ onClose }: ITableModalProps) {
             disableNext: config.newColumns.reduce(
               (a, c) => a || (c.type as any) === "",
               false
+            ),
+          },
+          {
+            title: "Preview",
+            description:
+              "Preview your data with your configured columns. You can change column types by clicking “Edit type” from the column menu at any time.",
+            content: (
+              <Step3Preview
+                airtableData={airtableData}
+                config={config}
+                setConfig={setConfig}
+                updateConfig={updateConfig}
+                isXs={isXs}
+              />
             ),
           },
         ].filter((x) => x) as any
