@@ -1,6 +1,6 @@
 import { useAtom } from "jotai";
 import { find } from "lodash-es";
-import { parseJSON } from "date-fns";
+import { parseISO } from "date-fns";
 
 import { styled, Grid } from "@mui/material";
 import Column from "@src/components/Table/Column";
@@ -64,7 +64,11 @@ export default function Step3Preview({ airtableData, config }: IStepProps) {
                 <Cell
                   key={fieldKey + i}
                   field={columnKey}
-                  value={record.fields[fieldKey]}
+                  value={
+                    type === FieldType.date || type === FieldType.dateTime
+                      ? parseISO(record.fields[fieldKey])
+                      : record.fields[fieldKey]
+                  }
                   type={type}
                   name={name}
                 />

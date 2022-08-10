@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { find } from "lodash-es";
-import { parseJSON } from "date-fns";
+import { parseISO } from "date-fns";
 
 import { Grid, Typography, Divider, ButtonBase } from "@mui/material";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
@@ -134,7 +134,12 @@ export default function Step2NewColumns({
               <Grid item xs style={{ overflow: "hidden" }}>
                 <Cell
                   field={config.newColumns[fieldToEdit].key}
-                  value={cell}
+                  value={
+                    config.newColumns[fieldToEdit].type === FieldType.date ||
+                    config.newColumns[fieldToEdit].type === FieldType.dateTime
+                      ? parseISO(cell)
+                      : cell
+                  }
                   type={config.newColumns[fieldToEdit].type}
                   name={config.newColumns[fieldToEdit].name}
                 />
