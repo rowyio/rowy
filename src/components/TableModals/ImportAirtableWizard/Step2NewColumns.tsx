@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { find } from "lodash-es";
-import { parseISO } from "date-fns";
 
 import { Grid, Typography, Divider, ButtonBase } from "@mui/material";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
@@ -13,6 +12,8 @@ import FieldsDropdown from "@src/components/ColumnModals/FieldsDropdown";
 
 import { FieldType } from "@src/constants/fields";
 import { SELECTABLE_TYPES } from "@src/components/TableModals/ImportExistingWizard/utils";
+
+import { airtableFieldParser } from "./ImportAirtableWizard";
 
 export default function Step2NewColumns({
   airtableData,
@@ -36,6 +37,7 @@ export default function Step2NewColumns({
   const rowData = airtableData.records.map(
     (record) => record.fields[currentPair?.fieldKey ?? ""]
   );
+  console.log(airtableFieldParser(config.newColumns[fieldToEdit].type));
 
   return (
     <>
@@ -135,10 +137,9 @@ export default function Step2NewColumns({
                 <Cell
                   field={config.newColumns[fieldToEdit].key}
                   value={
-                    config.newColumns[fieldToEdit].type === FieldType.date ||
-                    config.newColumns[fieldToEdit].type === FieldType.dateTime
-                      ? parseISO(cell)
-                      : cell
+                    airtableFieldParser(config.newColumns[fieldToEdit].type)?.(
+                      cell
+                    ) ?? cell
                   }
                   type={config.newColumns[fieldToEdit].type}
                   name={config.newColumns[fieldToEdit].name}

@@ -51,6 +51,26 @@ export interface IStepProps {
   isXs: boolean;
 }
 
+export const airtableFieldParser = (fieldType: FieldType) => {
+  switch (fieldType) {
+    case FieldType.percentage:
+      return (v: string) => {
+        const numValue = parseFloat(v && v.includes("%") ? v.slice(0, -1) : v);
+        return isNaN(numValue) ? null : numValue / 100;
+      };
+    case FieldType.multiSelect:
+      return (v: string[]) => v;
+    case FieldType.date:
+    case FieldType.dateTime:
+      return (v: string) => {
+        const date = parseISO(v);
+        return isValidDate(date) ? date.getTime() : null;
+      };
+    default:
+      return null;
+  }
+};
+
 export default function ImportAirtableWizard({ onClose }: ITableModalProps) {
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
@@ -99,21 +119,6 @@ export default function ImportAirtableWizard({ onClose }: ITableModalProps) {
     return response;
   };
 
-  const airtableFieldParser = (fieldType: FieldType): any => {
-    switch (fieldType) {
-      case FieldType.multiSelect:
-        return (v: string[]) => v;
-      case FieldType.date:
-      case FieldType.dateTime:
-        return (v: string) => {
-          const date = parseISO(v);
-          return isValidDate(date) ? date.getTime() : null;
-        };
-      default:
-        return null;
-    }
-  };
-
   const parseRecords = (records: any[]): any[] => {
     if (!columns || !airtableData) return [];
     return records.map((record) =>
@@ -123,7 +128,7 @@ export default function ImportAirtableWizard({ onClose }: ITableModalProps) {
           find(config.newColumns, { key: pair.columnKey });
         const parser = airtableFieldParser(matchingColumn.type);
         const value = parser
-          ? parser(record.fields[pair.fieldKey], matchingColumn.config)
+          ? parser(record.fields[pair.fieldKey])
           : record.fields[pair.fieldKey];
         return { ...a, [pair.columnKey]: value, id: record.id };
       }, {})

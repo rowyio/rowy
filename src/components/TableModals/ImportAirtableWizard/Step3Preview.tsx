@@ -1,6 +1,5 @@
 import { useAtom } from "jotai";
 import { find } from "lodash-es";
-import { parseISO } from "date-fns";
 
 import { styled, Grid } from "@mui/material";
 import Column from "@src/components/Table/Column";
@@ -8,7 +7,7 @@ import Cell from "@src/components/Table/Cell";
 
 import { IStepProps } from ".";
 import { tableScope, tableSchemaAtom } from "@src/atoms/tableScope";
-import { FieldType } from "@src/constants/fields";
+import { airtableFieldParser } from "./ImportAirtableWizard";
 
 const Spacer = styled(Grid)(({ theme }) => ({
   width: theme.spacing(3),
@@ -65,9 +64,8 @@ export default function Step3Preview({ airtableData, config }: IStepProps) {
                   key={fieldKey + i}
                   field={columnKey}
                   value={
-                    type === FieldType.date || type === FieldType.dateTime
-                      ? parseISO(record.fields[fieldKey])
-                      : record.fields[fieldKey]
+                    airtableFieldParser(type)?.(record.fields[fieldKey]) ??
+                    record.fields[fieldKey]
                   }
                   type={type}
                   name={name}
