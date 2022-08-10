@@ -88,6 +88,12 @@ export { LanguageMarkdownOutline as Markdown };
 import { TableRow } from "mdi-material-ui";
 export { TableRow as Row };
 
+import { Table } from "mdi-material-ui";
+export { Table };
+
+import { Leaf } from "mdi-material-ui";
+export { Leaf };
+
 export * from "./AddRow";
 export * from "./AddRowTop";
 export * from "./ChevronDown";

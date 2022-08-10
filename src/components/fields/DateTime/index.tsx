@@ -21,6 +21,12 @@ const SideDrawerField = lazy(
 const Settings = lazy(
   () => import("./Settings" /* webpackChunkName: "Settings-DateTime" */)
 );
+const FilterCustomInput = lazy(
+  () =>
+    import(
+      "./FilterCustomInput" /* webpackChunkName: "FilterCustomInput-DateTime" */
+    )
+);
 
 export const config: IFieldConfig = {
   type: FieldType.dateTime,
@@ -34,7 +40,11 @@ export const config: IFieldConfig = {
   TableCell: withHeavyCell(BasicCell, TableCell),
   TableEditor: NullEditor as any,
   SideDrawerField,
-  filter: { operators: filterOperators, valueFormatter },
+  filter: {
+    operators: filterOperators,
+    valueFormatter,
+    customInput: FilterCustomInput,
+  },
   settings: Settings,
   csvImportParser: (value) => parseJSON(value).getTime(),
   csvExportFormatter: (value: any, config?: any) =>
