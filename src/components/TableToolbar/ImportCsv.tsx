@@ -31,6 +31,7 @@ import {
   tableSettingsAtom,
   tableModalAtom,
   importCsvAtom,
+  importAirtableAtom,
 } from "@src/atoms/tableScope";
 import { analytics, logEvent } from "@src/analytics";
 
@@ -51,19 +52,23 @@ export interface IImportCsvProps {
 export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
   const [userRoles] = useAtom(userRolesAtom, globalScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
-  const [{ importType, csvData }, setImportCsv] = useAtom(
+  const [{ importType: importTypeCsv, csvData }, setImportCsv] = useAtom(
     importCsvAtom,
     tableScope
   );
+  const [{ airtableData, baseId, tableId, apiKey }, setImportAirtable] =
+    useAtom(importAirtableAtom, tableScope);
+
   const openTableModal = useSetAtom(tableModalAtom, tableScope);
   const { enqueueSnackbar } = useSnackbar();
 
-  const importTypeRef = useRef(importType);
+  const importTypeRef = useRef(importTypeCsv);
   const importMethodRef = useRef(ImportMethod.upload);
   const [open, setOpen] = useState<HTMLButtonElement | null>(null);
   const [tab, setTab] = useState("upload");
 
   const [error, setError] = useState<string | any>("");
+  const [airtableError, setAirtableError] = useState<any>({});
   const validCsv =
     csvData !== null && csvData?.columns.length > 0 && csvData?.rows.length > 0;
 
@@ -171,42 +176,44 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
       });
   }, 1000);
 
-  const [airtable, setAirtable] = useState<any>({
-    apiKey: "",
-    baseID: "",
-    tableID: "",
-  });
-  const [data, setData] = useState<any>(null);
-  const [validConnection, setValidConnection] = useState(false);
   const handleAirtableConnection = () => {
-    if (!airtable.apiKey) {
-      setError({ apiKey: { message: "API Key is missing!" } });
+    if (!apiKey) {
+      setAirtableError({ apiKey: { message: "API Key is missing!" } });
       return;
     }
-    if (!airtable.baseID) {
-      setError({ baseID: { message: "Base ID is missing!" } });
+    if (!baseId) {
+      setAirtableError({ baseId: { message: "Base ID is missing!" } });
       return;
     }
-    if (!airtable.tableID) {
-      setError({ tableID: { message: "Table ID is missing!" } });
+    if (!tableId) {
+      setAirtableError({ tableId: { message: "Table ID is missing!" } });
       return;
     }
     setLoading(true);
-    fetch(
-      `https://api.airtable.com/v0/${airtable.baseID}/${airtable.tableID}?maxRecords=1`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${airtable.apiKey}`,
-        },
-      }
-    )
+    fetch(`https://api.airtable.com/v0/${baseId}/${tableId}?maxRecords=20`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+    })
       .then((response) => response.json())
-      .then((body) => setData(body.records))
+      .then((body) => {
+        const { error } = body;
+
+        if (error) {
+          throw new Error(error);
+        }
+        console.log(body);
+        setImportAirtable((prev) => ({ ...prev, airtableData: body }));
+        openTableModal("importAirtable");
+      })
       .then(() => {
-        setValidConnection(true);
         setLoading(false);
-        setError("");
+        setAirtableError(null);
+      })
+      .catch((error) => {
+        console.error(error);
+        setLoading(false);
       });
   };
 
@@ -401,15 +408,15 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
               fullWidth
               label="Airtable API Key"
               placeholder="Insert your API key here"
-              value={airtable.apiKey}
-              onChange={(e) => {
-                setAirtable((airtable: any) => ({
-                  ...airtable,
+              value={apiKey}
+              onChange={(e) =>
+                setImportAirtable((prev) => ({
+                  ...prev,
                   apiKey: e.currentTarget.value,
-                }));
-              }}
-              helperText={error?.apiKey?.message}
-              error={!!error?.apiKey?.message}
+                }))
+              }
+              helperText={airtableError?.apiKey?.message}
+              error={!!airtableError?.apiKey?.message}
             />
             <TextField
               variant="filled"
@@ -417,15 +424,15 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
               fullWidth
               label="Airtable Base ID"
               placeholder="Insert your Base ID here"
-              value={airtable.baseID}
+              value={baseId}
               onChange={(e) => {
-                setAirtable((airtable: any) => ({
-                  ...airtable,
-                  baseID: e.currentTarget.value,
+                setImportAirtable((prev) => ({
+                  ...prev,
+                  baseId: e.currentTarget.value,
                 }));
               }}
-              helperText={error?.baseID?.message}
-              error={!!error?.baseID?.message}
+              helperText={airtableError?.baseId?.message}
+              error={!!airtableError?.baseId?.message}
             />
             <TextField
               variant="filled"
@@ -433,20 +440,16 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
               fullWidth
               label="Airtable Table Name or ID"
               placeholder="Insert your Table Name or ID here"
-              value={airtable.tableID}
+              value={tableId}
               onChange={(e) => {
-                setAirtable((prev: any) => ({
-                  ...airtable,
-                  tableID: e.currentTarget.value,
+                setImportAirtable((prev) => ({
+                  ...prev,
+                  tableId: e.currentTarget.value,
                 }));
               }}
-              helperText={error?.tableID?.message}
-              error={!!error?.tableID?.message}
+              helperText={airtableError?.tableId?.message}
+              error={!!airtableError?.tableId?.message}
             />
-            {data &&
-              data.map((record: any) => (
-                <div>Airtable record: {record.id}</div>
-              ))}
           </TabPanel>
         </TabContext>
 
@@ -454,9 +457,7 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
           variant="contained"
           color="primary"
           disabled={
-            importMethodRef.current === "airtable"
-              ? loading && validConnection
-              : !validCsv
+            importMethodRef.current === "airtable" ? loading : !validCsv
           }
           sx={{
             mt: -4,
@@ -467,25 +468,16 @@ export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
           }}
           onClick={() => {
             if (importMethodRef.current === "airtable") {
-              if (!data) {
-                handleAirtableConnection();
-              } else {
-                console.log("hello");
-                openTableModal("importCsv");
-              }
+              handleAirtableConnection();
             } else {
               openTableModal("importCsv");
-              logEvent(analytics, `import_${importMethodRef.current}`, {
-                type: importTypeRef.current,
-              });
             }
+            logEvent(analytics, `import_${importMethodRef.current}`, {
+              type: importTypeRef.current,
+            });
           }}
         >
-          {importMethodRef.current === "airtable"
-            ? data
-              ? "Continue"
-              : "Test Connection"
-            : "Continue"}
+          Continue
         </Button>
       </Popover>
     </>

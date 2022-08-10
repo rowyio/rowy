@@ -53,13 +53,6 @@ export interface IStepProps {
 
 export const airtableFieldParser = (fieldType: FieldType) => {
   switch (fieldType) {
-    case FieldType.percentage:
-      return (v: string) => {
-        const numValue = parseFloat(v && v.includes("%") ? v.slice(0, -1) : v);
-        return isNaN(numValue) ? null : numValue / 100;
-      };
-    case FieldType.multiSelect:
-      return (v: string[]) => v;
     case FieldType.date:
     case FieldType.dateTime:
       return (v: string) => {
@@ -67,7 +60,7 @@ export const airtableFieldParser = (fieldType: FieldType) => {
         return isValidDate(date) ? date.getTime() : null;
       };
     default:
-      return null;
+      return (v: string) => v;
   }
 };
 
@@ -176,31 +169,31 @@ export default function ImportAirtableWizard({ onClose }: ITableModalProps) {
 
       // Airtable Rate Limits: 5 req/sec
       const RATE_LIMIT = { REQ_PER_SECOND: 5 };
-      const fetcher = async (i: number, offset?: string): Promise<void> => {
+      const fetcher = async (i: number = 0, offset?: string): Promise<void> => {
         console.log(i, offset, promises);
-        if (offset) {
-          const { records, offset: nextPage } = await fetchRecords(offset);
-          snackbarProgressRef.current?.setTarget(
-            (prev) => prev + records.length
-          );
-          promises.push(
-            bulkAddRows({
-              rows: parseRecords(records),
-              collection: tableSettings.collection,
-            }).then(() => {
-              countRef.current += records.length;
-              snackbarProgressRef.current?.setProgress(
-                (prev) => prev + records.length
-              );
-            })
-          );
-          if (i < RATE_LIMIT.REQ_PER_SECOND - 1) {
-            promises.push(fetcher(++i, nextPage));
-          } else {
-            promises.push(timeout(1050).then(() => fetcher(0, nextPage)));
-          }
+        const { records, offset: nextPage } = await fetchRecords(offset);
+        snackbarProgressRef.current?.setTarget((prev) => prev + records.length);
+        promises.push(
+          bulkAddRows({
+            rows: parseRecords(records),
+            collection: tableSettings.collection,
+          }).then(() => {
+            countRef.current += records.length;
+            snackbarProgressRef.current?.setProgress(
+              (prev) => prev + records.length
+            );
+          })
+        );
+        if (!nextPage) {
+          return;
+        }
+        if (i < RATE_LIMIT.REQ_PER_SECOND - 1) {
+          promises.push(fetcher(++i, nextPage));
+        } else {
+          promises.push(timeout(1050).then(() => fetcher(0, nextPage)));
         }
       };
+
       const resolveAll = async (): Promise<void[]> => {
         return Promise.all(promises).then((result) => {
           if (result.length === promises.length) {
@@ -215,10 +208,7 @@ export default function ImportAirtableWizard({ onClose }: ITableModalProps) {
       for (const col of config.newColumns)
         promises.push(addColumn({ config: col }));
 
-      const { records, offset: nextPage } = await fetchRecords();
-      snackbarProgressRef.current?.setTarget(records.length);
-
-      await fetcher(1, nextPage);
+      await fetcher();
       await resolveAll();
 
       enqueueSnackbar(

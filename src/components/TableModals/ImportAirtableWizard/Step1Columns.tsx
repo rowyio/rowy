@@ -95,8 +95,8 @@ export default function Step1Columns({
     };
 
   const handleChange = (fieldKey: string) => (value: string) => {
+    if (!value) return;
     const columnKey = !!tableSchema.columns?.[value] ? value : camelCase(value);
-    console.log(config);
     // Check if this pair already exists in config
     const configIndex = findIndex(config.pairs, { fieldKey });
     if (configIndex > -1) {

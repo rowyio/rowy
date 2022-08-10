@@ -63,10 +63,7 @@ export default function Step3Preview({ airtableData, config }: IStepProps) {
                 <Cell
                   key={fieldKey + i}
                   field={columnKey}
-                  value={
-                    airtableFieldParser(type)?.(record.fields[fieldKey]) ??
-                    record.fields[fieldKey]
-                  }
+                  value={airtableFieldParser(type)?.(record.fields[fieldKey])}
                   type={type}
                   name={name}
                 />

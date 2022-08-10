@@ -136,11 +136,9 @@ export default function Step2NewColumns({
               <Grid item xs style={{ overflow: "hidden" }}>
                 <Cell
                   field={config.newColumns[fieldToEdit].key}
-                  value={
-                    airtableFieldParser(config.newColumns[fieldToEdit].type)?.(
-                      cell
-                    ) ?? cell
-                  }
+                  value={airtableFieldParser(
+                    config.newColumns[fieldToEdit].type
+                  )?.(cell)}
                   type={config.newColumns[fieldToEdit].type}
                   name={config.newColumns[fieldToEdit].name}
                 />
