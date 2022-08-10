@@ -88,6 +88,7 @@ export default function DraggableHeaderRenderer({
   return (
     <Grid
       key={column.key}
+      id={`column-header-${column.key}`}
       ref={(ref) => {
         dragRef(ref);
         dropRef(ref);
@@ -213,6 +214,7 @@ export default function DraggableHeaderRenderer({
           <IconButton
             size="small"
             aria-label={`Column settings for ${column.name as string}`}
+            id={`column-settings-${column.key}`}
             color="inherit"
             onClick={handleOpenMenu}
             ref={buttonRef}
