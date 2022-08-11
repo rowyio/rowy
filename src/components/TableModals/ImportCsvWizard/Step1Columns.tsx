@@ -13,6 +13,8 @@ import {
   FormControl,
   RadioGroup,
   Radio,
+  TextField,
+  MenuItem,
 } from "@mui/material";
 import ArrowIcon from "@mui/icons-material/ArrowForward";
 
@@ -288,7 +290,6 @@ export default function Step1Columns({
                 setConfig((prev: CsvConfig) => ({
                   ...prev,
                   documentId,
-                  documentIdCsvKey: "number",
                 }));
               }}
             >
@@ -302,6 +303,30 @@ export default function Step1Columns({
                 control={<Radio />}
                 label="Pick Column"
               />
+              <TextField
+                select
+                value={config.documentIdCsvKey}
+                onChange={(e) =>
+                  setConfig((prev) => ({
+                    ...prev,
+                    documentIdCsvKey: e.target.value,
+                  }))
+                }
+                sx={{ width: 200 }}
+                SelectProps={{
+                  MenuProps: {
+                    sx: { height: 200 },
+                    anchorOrigin: { vertical: "bottom", horizontal: "right" },
+                    transformOrigin: { vertical: "top", horizontal: "right" },
+                  },
+                }}
+              >
+                {csvData.columns.map((column) => (
+                  <MenuItem key={column} value={column}>
+                    {column}
+                  </MenuItem>
+                ))}
+              </TextField>
             </RadioGroup>
           </FormControl>
         </Grid>
