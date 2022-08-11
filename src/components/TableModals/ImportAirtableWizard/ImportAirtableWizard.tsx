@@ -7,15 +7,7 @@ import { uniqBy, isEqual, find } from "lodash-es";
 import { ITableModalProps } from "@src/components/TableModals";
 import WizardDialog from "@src/components/TableModals/WizardDialog";
 
-import {
-  useTheme,
-  useMediaQuery,
-  Typography,
-  Link,
-  Alert,
-  AlertTitle,
-  Button,
-} from "@mui/material";
+import { useTheme, useMediaQuery, Typography, Button } from "@mui/material";
 
 import {
   tableScope,
@@ -32,15 +24,15 @@ import { ColumnConfig } from "@src/types/table";
 import SnackbarProgress, {
   ISnackbarProgressRef,
 } from "@src/components/SnackbarProgress";
-import { FieldType } from "@src/constants/fields";
+import { fieldParser } from "@src/components/TableModals/ImportAirtableWizard/utils";
 import Step1Columns from "./Step1Columns";
 import Step2NewColumns from "./Step2NewColumns";
 import Step3Preview from "./Step3Preview";
-import { parseISO, isValid as isValidDate } from "date-fns";
 
 export type AirtableConfig = {
   pairs: { fieldKey: string; columnKey: string }[];
   newColumns: ColumnConfig[];
+  documentId: "auto" | "recordId";
 };
 
 export interface IStepProps {
@@ -50,19 +42,6 @@ export interface IStepProps {
   updateConfig: (value: Partial<AirtableConfig>) => void;
   isXs: boolean;
 }
-
-export const airtableFieldParser = (fieldType: FieldType) => {
-  switch (fieldType) {
-    case FieldType.date:
-    case FieldType.dateTime:
-      return (v: string) => {
-        const date = parseISO(v);
-        return isValidDate(date) ? date.getTime() : null;
-      };
-    default:
-      return (v: string) => v;
-  }
-};
 
 export default function ImportAirtableWizard({ onClose }: ITableModalProps) {
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
@@ -84,6 +63,7 @@ export default function ImportAirtableWizard({ onClose }: ITableModalProps) {
   const [config, setConfig] = useState<AirtableConfig>({
     pairs: [],
     newColumns: [],
+    documentId: "recordId",
   });
 
   const updateConfig: IStepProps["updateConfig"] = useCallback((value) => {
@@ -93,7 +73,7 @@ export default function ImportAirtableWizard({ onClose }: ITableModalProps) {
         [...prev.newColumns, ...(value.newColumns ?? [])],
         "key"
       ).filter((col) => pairs.some((pair) => pair.columnKey === col.key));
-      return { pairs, newColumns };
+      return { ...prev, pairs, newColumns };
     });
   }, []);
 
@@ -119,11 +99,13 @@ export default function ImportAirtableWizard({ onClose }: ITableModalProps) {
         const matchingColumn =
           columns[pair.columnKey] ??
           find(config.newColumns, { key: pair.columnKey });
-        const parser = airtableFieldParser(matchingColumn.type);
+        const parser = fieldParser(matchingColumn.type);
         const value = parser
           ? parser(record.fields[pair.fieldKey])
           : record.fields[pair.fieldKey];
-        return { ...a, [pair.columnKey]: value, id: record.id };
+        return config.documentId === "recordId"
+          ? { ...a, [pair.columnKey]: value, id: record.id }
+          : { ...a, [pair.columnKey]: value };
       }, {})
     );
   };

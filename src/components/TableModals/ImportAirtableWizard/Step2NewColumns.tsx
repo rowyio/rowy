@@ -9,11 +9,9 @@ import ScrollableList from "@src/components/TableModals/ScrollableList";
 import Column from "@src/components/Table/Column";
 import Cell from "@src/components/Table/Cell";
 import FieldsDropdown from "@src/components/ColumnModals/FieldsDropdown";
-
 import { FieldType } from "@src/constants/fields";
 import { SELECTABLE_TYPES } from "@src/components/TableModals/ImportExistingWizard/utils";
-
-import { airtableFieldParser } from "./ImportAirtableWizard";
+import { fieldParser } from "@src/components/TableModals/ImportAirtableWizard/utils";
 
 export default function Step2NewColumns({
   airtableData,
@@ -37,7 +35,6 @@ export default function Step2NewColumns({
   const rowData = airtableData.records.map(
     (record) => record.fields[currentPair?.fieldKey ?? ""]
   );
-  console.log(airtableFieldParser(config.newColumns[fieldToEdit].type));
 
   return (
     <>
@@ -136,9 +133,9 @@ export default function Step2NewColumns({
               <Grid item xs style={{ overflow: "hidden" }}>
                 <Cell
                   field={config.newColumns[fieldToEdit].key}
-                  value={airtableFieldParser(
-                    config.newColumns[fieldToEdit].type
-                  )?.(cell)}
+                  value={fieldParser(config.newColumns[fieldToEdit].type)?.(
+                    cell
+                  )}
                   type={config.newColumns[fieldToEdit].type}
                   name={config.newColumns[fieldToEdit].name}
                 />

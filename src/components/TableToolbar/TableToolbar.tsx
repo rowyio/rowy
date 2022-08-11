@@ -35,7 +35,7 @@ import { FieldType } from "@src/constants/fields";
 // prettier-ignore
 const Filters = lazy(() => import("./Filters" /* webpackChunkName: "Filters" */));
 // prettier-ignore
-const ImportCsv = lazy(() => import("./ImportCsv" /* webpackChunkName: "ImportCsv" */));
+const ImportData = lazy(() => import("./ImportData/ImportData" /* webpackChunkName: "ImportData" */));
 // prettier-ignore
 const ReExecute = lazy(() => import("./ReExecute" /* webpackChunkName: "ReExecute" */));
 
@@ -96,7 +96,7 @@ export default function TableToolbar() {
       <div /> {/* Spacer */}
       {tableSettings.tableType !== "collectionGroup" && (
         <Suspense fallback={<ButtonSkeleton />}>
-          <ImportCsv />
+          <ImportData />
         </Suspense>
       )}
       <Suspense fallback={<ButtonSkeleton />}>

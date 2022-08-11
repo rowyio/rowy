@@ -63,3 +63,16 @@ export const suggestType = (data: { [key: string]: any }[], field: string) => {
 
   return bestMatch;
 };
+
+export const fieldParser = (fieldType: FieldType) => {
+  switch (fieldType) {
+    case FieldType.date:
+    case FieldType.dateTime:
+      return (v: string) => {
+        const date = parseISO(v);
+        return isValidDate(date) ? date.getTime() : null;
+      };
+    default:
+      return (v: any) => v;
+  }
+};

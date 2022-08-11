@@ -4,7 +4,7 @@ import { Grid, Stack, Typography, Button, Divider } from "@mui/material";
 import { Import as ImportIcon } from "@src/assets/icons";
 import { AddColumn as AddColumnIcon } from "@src/assets/icons";
 
-import ImportCsv from "@src/components/TableToolbar/ImportCsv";
+import ImportData from "@src/components/TableToolbar/ImportData/ImportData";
 
 import {
   tableScope,
@@ -72,10 +72,10 @@ export default function EmptyTable() {
         <Grid container spacing={1}>
           <Grid item xs>
             <Typography paragraph>
-              You can import data from an external CSV file:
+              You can import data from an external source:
             </Typography>
 
-            <ImportCsv
+            <ImportData
               render={(onClick) => (
                 <Button
                   variant="contained"
@@ -83,7 +83,7 @@ export default function EmptyTable() {
                   startIcon={<ImportIcon />}
                   onClick={onClick}
                 >
-                  Import CSV
+                  Import Data
                 </Button>
               )}
               PopoverProps={{

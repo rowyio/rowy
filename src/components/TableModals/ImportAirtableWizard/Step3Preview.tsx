@@ -7,7 +7,7 @@ import Cell from "@src/components/Table/Cell";
 
 import { IStepProps } from ".";
 import { tableScope, tableSchemaAtom } from "@src/atoms/tableScope";
-import { airtableFieldParser } from "./ImportAirtableWizard";
+import { fieldParser } from "@src/components/TableModals/ImportAirtableWizard/utils";
 
 const Spacer = styled(Grid)(({ theme }) => ({
   width: theme.spacing(3),
@@ -63,7 +63,7 @@ export default function Step3Preview({ airtableData, config }: IStepProps) {
                 <Cell
                   key={fieldKey + i}
                   field={columnKey}
-                  value={airtableFieldParser(type)?.(record.fields[fieldKey])}
+                  value={fieldParser(type)?.(record.fields[fieldKey])}
                   type={type}
                   name={name}
                 />
