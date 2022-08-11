@@ -10,10 +10,14 @@ import {
   FormControlLabel,
   Checkbox,
   Chip,
+  FormControl,
+  RadioGroup,
+  Radio,
 } from "@mui/material";
 import ArrowIcon from "@mui/icons-material/ArrowForward";
 
 import { IStepProps } from ".";
+import { AirtableConfig, fieldRecommendation } from "./ImportAirtableWizard";
 import FadeList from "@src/components/TableModals/ScrollableList";
 import Column, { COLUMN_HEADER_HEIGHT } from "@src/components/Table/Column";
 import MultiSelect from "@rowy/multiselect";
@@ -116,7 +120,7 @@ export default function Step1Columns({
             name: value,
             fieldName: columnKey,
             key: columnKey,
-            type: FieldType.shortText,
+            type: fieldRecommendation(value),
             index: -1,
             config: {},
           },
@@ -267,6 +271,36 @@ export default function Step1Columns({
           );
         })}
       </FadeList>
+      <Grid container marginTop={2}>
+        <Typography variant="subtitle2" gutterBottom component="h2">
+          Document Ids (Optional)
+        </Typography>
+        <Divider />
+        <Grid item xs={12}>
+          <FormControl>
+            <RadioGroup
+              defaultValue="recordId"
+              name="radio-buttons-group"
+              sx={{ flexDirection: "row" }}
+              onChange={(e) => {
+                const documentId = e.currentTarget.value as "auto" | "recordId";
+                setConfig((prev: AirtableConfig) => ({ ...prev, documentId }));
+              }}
+            >
+              <FormControlLabel
+                value="recordId"
+                control={<Radio />}
+                label="Use Airtable Record ID"
+              />
+              <FormControlLabel
+                value="auto"
+                control={<Radio />}
+                label="Auto-Generated"
+              />
+            </RadioGroup>
+          </FormControl>
+        </Grid>
+      </Grid>
     </div>
   );
 }
