@@ -10,10 +10,14 @@ import {
   FormControlLabel,
   Checkbox,
   Chip,
+  FormControl,
+  RadioGroup,
+  Radio,
 } from "@mui/material";
 import ArrowIcon from "@mui/icons-material/ArrowForward";
 
 import { IStepProps } from ".";
+import { CsvConfig } from "@src/components/TableModals/ImportCsvWizard";
 import FadeList from "@src/components/TableModals/ScrollableList";
 import Column, { COLUMN_HEADER_HEIGHT } from "@src/components/Table/Column";
 import MultiSelect from "@rowy/multiselect";
@@ -268,6 +272,40 @@ export default function Step1Columns({
           );
         })}
       </FadeList>
+      <Grid container marginTop={2}>
+        <Typography variant="subtitle2" gutterBottom component="h2">
+          Document Ids (Optional)
+        </Typography>
+        <Divider />
+        <Grid item xs={12}>
+          <FormControl>
+            <RadioGroup
+              defaultValue="auto"
+              name="radio-buttons-group"
+              sx={{ flexDirection: "row" }}
+              onChange={(e) => {
+                const documentId = e.currentTarget.value as "auto" | "column";
+                setConfig((prev: CsvConfig) => ({
+                  ...prev,
+                  documentId,
+                  documentIdCsvKey: "number",
+                }));
+              }}
+            >
+              <FormControlLabel
+                value="auto"
+                control={<Radio />}
+                label="Auto-Generated"
+              />
+              <FormControlLabel
+                value="column"
+                control={<Radio />}
+                label="Pick Column"
+              />
+            </RadioGroup>
+          </FormControl>
+        </Grid>
+      </Grid>
     </div>
   );
 }

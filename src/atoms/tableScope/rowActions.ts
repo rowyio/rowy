@@ -265,8 +265,8 @@ export const bulkAddRowsAtom = atom(
 
     // Assign a random ID to each row
     const operations = rows.map((row) => ({
-      type: row?.id ? ("update" as "update") : ("add" as "add"),
-      path: `${collection}/${row?.id ?? generateId()}`,
+      type: row?._rowy_ref?.id ? ("update" as "update") : ("add" as "add"),
+      path: `${collection}/${row?._rowy_ref?.id ?? generateId()}`,
       data: { ...initialValues, ...omitRowyFields(row) },
     }));
 

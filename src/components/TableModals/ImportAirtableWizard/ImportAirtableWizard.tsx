@@ -104,7 +104,7 @@ export default function ImportAirtableWizard({ onClose }: ITableModalProps) {
           ? parser(record.fields[pair.fieldKey])
           : record.fields[pair.fieldKey];
         return config.documentId === "recordId"
-          ? { ...a, [pair.columnKey]: value, id: record.id }
+          ? { ...a, [pair.columnKey]: value, _rowy_ref: { id: record.id } }
           : { ...a, [pair.columnKey]: value };
       }, {})
     );
