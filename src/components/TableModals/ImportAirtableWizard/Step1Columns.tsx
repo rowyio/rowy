@@ -17,7 +17,7 @@ import {
 import ArrowIcon from "@mui/icons-material/ArrowForward";
 
 import { IStepProps } from ".";
-import { AirtableConfig, fieldRecommendation } from "./ImportAirtableWizard";
+import { AirtableConfig } from "./ImportAirtableWizard";
 import FadeList from "@src/components/TableModals/ScrollableList";
 import Column, { COLUMN_HEADER_HEIGHT } from "@src/components/Table/Column";
 import MultiSelect from "@rowy/multiselect";
@@ -28,6 +28,7 @@ import {
   tableColumnsOrderedAtom,
 } from "@src/atoms/tableScope";
 import { FieldType } from "@src/constants/fields";
+import { suggestType } from "./utils";
 
 export default function Step1Columns({
   airtableData,
@@ -120,7 +121,9 @@ export default function Step1Columns({
             name: value,
             fieldName: columnKey,
             key: columnKey,
-            type: fieldRecommendation(value),
+            type:
+              suggestType(airtableData.records, fieldKey) ||
+              FieldType.shortText,
             index: -1,
             config: {},
           },
