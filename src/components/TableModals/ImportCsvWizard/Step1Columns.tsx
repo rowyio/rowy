@@ -142,8 +142,6 @@ export default function Step1Columns({
     if (config.pairs.length < 1) {
       errors.push("You must select at least one column to import!");
     }
-    console.log(config.documentId);
-    console.log(config.documentIdCsvKey);
     if (config.documentId === "column" && !config.documentIdCsvKey) {
       errors.push("You must select a column for document ID!");
     }

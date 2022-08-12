@@ -122,7 +122,6 @@ export default function ImportCsvWizard({ onClose }: ITableModalProps) {
           isValidDocId(row._rowy_ref?.id) ? "validRows" : "invalidRows"
         )
       : { validRows: parsedRows, invalidRows: [] };
-  console.log({ validRows, invalidRows });
 
   const handleFinish = async () => {
     if (!parsedRows) return;

@@ -48,7 +48,6 @@ export const suggestType = (data: { [key: string]: any }[], field: string) => {
     else results[result] += 1;
   });
 
-  console.log(results);
   const sortedResults = sortBy(Object.entries(results), 1).reverse();
   if (!sortedResults || !sortedResults[0]) return FieldType.json;
   const bestMatch = sortedResults[0][0];

@@ -152,7 +152,6 @@ export default function ImportAirtableWizard({ onClose }: ITableModalProps) {
       // Airtable Rate Limits: 5 req/sec
       const RATE_LIMIT = { REQ_PER_SECOND: 5 };
       const fetcher = async (i: number = 0, offset?: string): Promise<void> => {
-        console.log(i, offset, promises);
         const { records, offset: nextPage } = await fetchRecords(offset);
         snackbarProgressRef.current?.setTarget((prev) => prev + records.length);
         promises.push(
