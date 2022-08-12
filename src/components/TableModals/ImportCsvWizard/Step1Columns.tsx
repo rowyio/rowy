@@ -15,6 +15,8 @@ import {
   Radio,
   TextField,
   MenuItem,
+  Alert,
+  AlertTitle,
 } from "@mui/material";
 import ArrowIcon from "@mui/icons-material/ArrowForward";
 
@@ -28,6 +30,7 @@ import {
   tableScope,
   tableSchemaAtom,
   tableColumnsOrderedAtom,
+  ImportCsvData,
 } from "@src/atoms/tableScope";
 import { FieldType } from "@src/constants/fields";
 import { suggestType } from "@src/components/TableModals/ImportExistingWizard/utils";
@@ -38,7 +41,9 @@ export default function Step1Columns({
   updateConfig,
   setConfig,
   isXs,
-}: IStepProps) {
+}: IStepProps & {
+  csvData: NonNullable<ImportCsvData & { invalidRows: Record<string, any> }>;
+}) {
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
 
@@ -130,6 +135,19 @@ export default function Step1Columns({
         ],
       });
     }
+  };
+
+  const stepErrors = () => {
+    const errors = [];
+    if (config.pairs.length < 1) {
+      errors.push("You must select at least one column to import!");
+    }
+    console.log(config.documentId);
+    console.log(config.documentIdCsvKey);
+    if (config.documentId === "column" && !config.documentIdCsvKey) {
+      errors.push("You must select a column for document ID!");
+    }
+    return errors;
   };
 
   return (
@@ -290,6 +308,7 @@ export default function Step1Columns({
                 setConfig((prev: CsvConfig) => ({
                   ...prev,
                   documentId,
+                  documentIdCsvKey: null,
                 }));
               }}
             >
@@ -304,6 +323,7 @@ export default function Step1Columns({
                 label="Pick Column"
               />
               <TextField
+                disabled={config.documentId !== "column"}
                 select
                 value={config.documentIdCsvKey}
                 onChange={(e) =>
@@ -312,14 +332,23 @@ export default function Step1Columns({
                     documentIdCsvKey: e.target.value,
                   }))
                 }
-                sx={{ width: 200 }}
+                sx={{ width: isXs ? "100%" : 200, margin: "auto" }}
                 SelectProps={{
+                  displayEmpty: true,
+                  renderValue: (value) => (
+                    <>{value ? value : "Select ID Column"}</>
+                  ),
                   MenuProps: {
                     sx: { height: 200 },
                     anchorOrigin: { vertical: "bottom", horizontal: "right" },
                     transformOrigin: { vertical: "top", horizontal: "right" },
                   },
                 }}
+                helperText={
+                  config.documentId === "column" &&
+                  csvData.invalidRows &&
+                  `Invalid Rows: ${csvData.invalidRows.length}/${csvData.rows.length}`
+                }
               >
                 {csvData.columns.map((column) => (
                   <MenuItem key={column} value={column}>
@@ -329,6 +358,13 @@ export default function Step1Columns({
               </TextField>
             </RadioGroup>
           </FormControl>
+        </Grid>
+        <Grid item xs={12}>
+          {stepErrors().map((error) => (
+            <Alert severity="error" sx={{ my: 1 }}>
+              <AlertTitle>{error}</AlertTitle>
+            </Alert>
+          ))}
         </Grid>
       </Grid>
     </div>
