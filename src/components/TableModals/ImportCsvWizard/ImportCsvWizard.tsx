@@ -247,6 +247,7 @@ export default function ImportCsvWizard({ onClose }: ITableModalProps) {
             ),
             disableNext:
               config.pairs.length === 0 ||
+              !validRows ||
               (config.documentId === "column" && !config.documentIdCsvKey),
           },
           config.newColumns.length > 0 && {
