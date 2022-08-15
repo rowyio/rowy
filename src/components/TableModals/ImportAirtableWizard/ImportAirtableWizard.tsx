@@ -237,6 +237,7 @@ export default function ImportAirtableWizard({ onClose }: ITableModalProps) {
                 isXs={isXs}
               />
             ),
+            disableNext: config.pairs.length === 0,
           },
           config.newColumns.length > 0 && {
             title: "Set column types",
