@@ -1,5 +1,5 @@
 import { useState, Fragment } from "react";
-import { useSetAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -17,11 +17,19 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import StepsProgress from "@src/components/StepsProgress";
 import { TUTORIAL_STEPS } from "./Steps";
 
-import { projectScope, confirmDialogAtom } from "@src/atoms/projectScope";
+import {
+  projectScope,
+  confirmDialogAtom,
+  navOpenAtom,
+} from "@src/atoms/projectScope";
 import { ROUTES } from "@src/constants/routes";
-import { NAV_DRAWER_COLLAPSED_WIDTH } from "@src/layouts/Navigation/NavDrawer";
+import {
+  NAV_DRAWER_COLLAPSED_WIDTH,
+  NAV_DRAWER_WIDTH,
+} from "@src/layouts/Navigation/NavDrawer";
 
 export default function TableTutorial() {
+  const [navOpen] = useAtom(navOpenAtom, projectScope);
   const confirm = useSetAtom(confirmDialogAtom, projectScope);
   const navigate = useNavigate();
 
@@ -56,7 +64,7 @@ export default function TableTutorial() {
           bottom: `env(safe-area-inset-bottom)`,
           left: {
             xs: `env(safe-area-inset-left)`,
-            md: NAV_DRAWER_COLLAPSED_WIDTH + 2,
+            md: (navOpen ? NAV_DRAWER_WIDTH : NAV_DRAWER_COLLAPSED_WIDTH) + 2,
           },
           right: `env(safe-area-inset-right)`,
           height: "min(50vh, 440px)",
