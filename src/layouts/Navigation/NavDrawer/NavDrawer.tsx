@@ -29,7 +29,7 @@ import {
 
 import Logo from "@src/assets/Logo";
 import NavItem from "./NavItem";
-import StepsProgress from "@src/components/StepsProgress";
+import GetStartedProgress from "@src/components/GetStartedChecklist/GetStartedProgress";
 import CommunityMenu from "./CommunityMenu";
 import HelpMenu from "./HelpMenu";
 import { INavDrawerContentsProps } from "./NavDrawerContents";
@@ -37,6 +37,8 @@ import { INavDrawerContentsProps } from "./NavDrawerContents";
 import { projectScope, getStartedChecklistAtom } from "@src/atoms/projectScope";
 import { EXTERNAL_LINKS, WIKI_LINKS } from "@src/constants/externalLinks";
 import { TOP_BAR_HEIGHT } from "@src/layouts/Navigation/TopBar";
+import useGetStartedCompletion from "@src/components/GetStartedChecklist/useGetStartedCompletion";
+
 export const NAV_DRAWER_WIDTH = 256;
 export const NAV_DRAWER_COLLAPSED_WIDTH = 56;
 
@@ -68,6 +70,8 @@ export default function NavDrawer({
     getStartedChecklistAtom,
     projectScope
   );
+  const [getStartedCompleted, getStartedCompletionCount] =
+    useGetStartedCompletion();
 
   const [communityMenuAnchorEl, setCommunityMenuAnchorEl] =
     useState<HTMLButtonElement | null>(null);
@@ -239,50 +243,51 @@ export default function NavDrawer({
               <ol style={{ listStyle: "none", margin: 0, padding: 0 }}>
                 <Divider variant="middle" sx={{ mb: 1 }} />
 
-                <li>
-                  <NavItem
-                    onClick={() => {
-                      openGetStartedChecklist(true);
-                      setHover(false);
-                    }}
-                    sx={{
-                      mb: 1,
-                      py: 0.5,
-                      bgcolor: (theme) =>
-                        alpha(
-                          theme.palette.primary.main,
-                          theme.palette.action.selectedOpacity
-                        ),
-                      "&:hover": {
+                {getStartedCompletionCount <
+                  Object.keys(getStartedCompleted).length && (
+                  <li>
+                    <NavItem
+                      onClick={() => {
+                        openGetStartedChecklist(true);
+                        setHover(false);
+                      }}
+                      sx={{
+                        mb: 1,
+                        py: 0.5,
                         bgcolor: (theme) =>
                           alpha(
                             theme.palette.primary.main,
-                            theme.palette.action.selectedOpacity +
-                              theme.palette.action.hoverOpacity
+                            theme.palette.action.selectedOpacity
                           ),
-                      },
-                      "& *, &&:hover *": {
-                        color: (theme) =>
-                          theme.palette.primary[
-                            theme.palette.mode === "dark" ? "light" : "dark"
-                          ],
-                      },
-                    }}
-                  >
-                    <ListItemIcon>
-                      <ChecklistIcon />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary="Get started"
-                      secondary={
-                        <StepsProgress value={1} steps={5} sx={{ mr: 3 }} />
-                      }
-                    />
-                    <ListItemSecondaryAction>
-                      <ChevronRightIcon />
-                    </ListItemSecondaryAction>
-                  </NavItem>
-                </li>
+                        "&:hover": {
+                          bgcolor: (theme) =>
+                            alpha(
+                              theme.palette.primary.main,
+                              theme.palette.action.selectedOpacity +
+                                theme.palette.action.hoverOpacity
+                            ),
+                        },
+                        "& *, &&:hover *": {
+                          color: (theme) =>
+                            theme.palette.primary[
+                              theme.palette.mode === "dark" ? "light" : "dark"
+                            ],
+                        },
+                      }}
+                    >
+                      <ListItemIcon>
+                        <ChecklistIcon />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary="Get started"
+                        secondary={<GetStartedProgress sx={{ mr: 3 }} />}
+                      />
+                      <ListItemSecondaryAction>
+                        <ChevronRightIcon />
+                      </ListItemSecondaryAction>
+                    </NavItem>
+                  </li>
+                )}
 
                 <li>
                   <NavItem href={EXTERNAL_LINKS.docs}>

@@ -4,6 +4,7 @@ import { useAtom } from "jotai";
 
 import Loading from "@src/components/Loading";
 import ProjectSourceFirebase from "@src/sources/ProjectSourceFirebase";
+import MembersSourceFirebase from "@src/sources/MembersSourceFirebase";
 import ConfirmDialog from "@src/components/ConfirmDialog";
 import RowyRunModal from "@src/components/RowyRunModal";
 import NotFound from "@src/pages/NotFoundPage";
@@ -12,6 +13,7 @@ import RequireAuth from "@src/layouts/RequireAuth";
 import {
   projectScope,
   currentUserAtom,
+  userRolesAtom,
   altPressAtom,
 } from "@src/atoms/projectScope";
 import { ROUTES } from "@src/constants/routes";
@@ -64,11 +66,13 @@ const ThemeTestPage = lazy(() => import("@src/pages/Test/ThemeTestPage" /* webpa
 
 export default function App() {
   const [currentUser] = useAtom(currentUserAtom, projectScope);
+  const [userRoles] = useAtom(userRolesAtom, projectScope);
   useKeyPressWithAtom("Alt", altPressAtom, projectScope);
 
   return (
     <Suspense fallback={<Loading fullScreen />}>
       <ProjectSourceFirebase />
+      {userRoles.includes("ADMIN") && <MembersSourceFirebase />}
       <ConfirmDialog />
       <RowyRunModal />
 

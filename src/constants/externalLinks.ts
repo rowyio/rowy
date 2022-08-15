@@ -5,7 +5,10 @@ export const EXTERNAL_LINKS = {
   homepage: meta.homepage,
   privacy: meta.homepage + "/privacy",
   terms: meta.homepage + "/terms",
+  templates: meta.homepage + "/templates",
   docs: meta.homepage.replace("//", "//docs."),
+  demo: meta.homepage.replace("//", "//demo."),
+  playground: meta.homepage.replace("//", "//demo."),
 
   gitHub: meta.repository.url.replace(".git", ""),
   discord: "https://discord.gg/B8yAD5PDX4",

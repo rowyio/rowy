@@ -21,6 +21,7 @@ import {
   projectScope,
   confirmDialogAtom,
   navOpenAtom,
+  updateUserSettingsAtom,
 } from "@src/atoms/projectScope";
 import { ROUTES } from "@src/constants/routes";
 import {
@@ -31,12 +32,17 @@ import {
 export default function TableTutorial() {
   const [navOpen] = useAtom(navOpenAtom, projectScope);
   const confirm = useSetAtom(confirmDialogAtom, projectScope);
+  const [updateUserSettings] = useAtom(updateUserSettingsAtom, projectScope);
   const navigate = useNavigate();
 
   const [completed, setCompleted] = useState(
     new Array(TUTORIAL_STEPS.length).fill(false)
   );
   const [currentStep, setCurrentStep] = useState(0);
+
+  const stepProps = TUTORIAL_STEPS[currentStep];
+  const StepComponent = stepProps.StepComponent;
+  const isFinal = currentStep === TUTORIAL_STEPS.length - 1;
 
   const handleComplete = (value: boolean) =>
     setCompleted((c) => {
@@ -46,12 +52,16 @@ export default function TableTutorial() {
       return newCompleted;
     });
 
-  const handleNext = () =>
-    setCurrentStep((c) => Math.min(c + 1, TUTORIAL_STEPS.length - 1));
+  const handleNext = () => {
+    if (isFinal) {
+      if (updateUserSettings)
+        updateUserSettings({ tableTutorialComplete: true });
 
-  const stepProps = TUTORIAL_STEPS[currentStep];
-  const StepComponent = stepProps.StepComponent;
-  const isFinal = currentStep === TUTORIAL_STEPS.length - 1;
+      navigate(ROUTES.tables);
+    } else {
+      setCurrentStep((c) => Math.min(c + 1, TUTORIAL_STEPS.length - 1));
+    }
+  };
 
   return (
     <Slide in direction="up">
@@ -64,7 +74,7 @@ export default function TableTutorial() {
           bottom: `env(safe-area-inset-bottom)`,
           left: {
             xs: `env(safe-area-inset-left)`,
-            md: (navOpen ? NAV_DRAWER_WIDTH : NAV_DRAWER_COLLAPSED_WIDTH) + 2,
+            md: (navOpen ? NAV_DRAWER_WIDTH : NAV_DRAWER_COLLAPSED_WIDTH) + 8,
           },
           right: `env(safe-area-inset-right)`,
           height: "min(50vh, 440px)",

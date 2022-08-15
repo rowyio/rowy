@@ -19,7 +19,6 @@ import UserSkeleton from "@src/components/Settings/UserManagement/UserSkeleton";
 import InviteUser from "@src/components/Settings/UserManagement/InviteUser";
 
 import { projectScope, allUsersAtom } from "@src/atoms/projectScope";
-import MembersSourceFirebase from "@src/sources/MembersSourceFirebase";
 import useBasicSearch from "@src/hooks/useBasicSearch";
 
 const SEARCH_KEYS = ["id", "user.displayName", "user.email"];
@@ -30,8 +29,6 @@ function MembersPage() {
 
   return (
     <Container maxWidth="sm" sx={{ px: 1, pt: 1, pb: 7 + 3 + 3 }}>
-      <MembersSourceFirebase />
-
       <FloatingSearch
         label="Search users"
         onChange={(e) => handleQuery(e.target.value)}

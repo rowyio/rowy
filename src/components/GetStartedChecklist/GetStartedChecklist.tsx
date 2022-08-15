@@ -5,11 +5,10 @@ import UncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import CheckedIcon from "@mui/icons-material/CheckCircleOutline";
 import AddIcon from "@mui/icons-material/Add";
 import MembersIcon from "@mui/icons-material/AccountCircleOutlined";
-import { Project as ProjectIcon } from "@src/assets/icons";
 
 import Modal, { IModalProps } from "@src/components/Modal";
 import SteppedAccordion from "@src/components/SteppedAccordion";
-import StepsProgress from "@src/components/StepsProgress";
+import GetStartedProgress from "./GetStartedProgress";
 
 import {
   projectScope,
@@ -20,6 +19,7 @@ import {
   NAV_DRAWER_WIDTH,
   NAV_DRAWER_COLLAPSED_WIDTH,
 } from "@src/layouts/Navigation/NavDrawer";
+import useGetStartedCompletion from "./useGetStartedCompletion";
 
 export interface IGetStartedChecklistProps extends Partial<IModalProps> {
   navOpen: boolean;
@@ -37,7 +37,14 @@ export default function GetStartedChecklist({
     projectScope
   );
 
+  const [completedSteps] = useGetStartedCompletion();
+
   if (!open) return null;
+
+  const incompleteIcon = <UncheckedIcon color="action" />;
+  const completeIcon = (
+    <CheckedIcon color="success" sx={{ color: "success.light" }} />
+  );
 
   return (
     <Modal
@@ -73,27 +80,34 @@ export default function GetStartedChecklist({
         },
       ]}
     >
-      <StepsProgress value={1} steps={5} sx={{ mb: 2 }} />
+      <GetStartedProgress sx={{ mb: 2 }} />
 
       <SteppedAccordion
         steps={[
           {
-            id: "workspace",
-            title: "Create a workspace",
+            id: "project",
+            title: "Create a project",
             labelButtonProps: {
-              icon: (
-                <CheckedIcon color="success" sx={{ color: "success.light" }} />
-              ),
+              icon: completedSteps.project ? completeIcon : incompleteIcon,
             },
-            content: null,
+            content: (
+              <Typography paragraph>
+                You’ve created a project and connected it to a data source.
+              </Typography>
+            ),
           },
           {
             id: "tutorial",
             title: "Complete the table tutorial",
-            labelButtonProps: { icon: <UncheckedIcon color="action" /> },
+            labelButtonProps: {
+              icon: completedSteps.tutorial ? completeIcon : incompleteIcon,
+            },
             content: (
               <>
-                <Typography>This is why you should</Typography>
+                <Typography>
+                  Learn the basic features and functions of Rowy before creating
+                  a table.
+                </Typography>
                 <Button variant="contained" color="primary">
                   Begin tutorial
                 </Button>
@@ -101,31 +115,17 @@ export default function GetStartedChecklist({
             ),
           },
           {
-            id: "project",
-            title: "Create a project",
-            labelButtonProps: { icon: <UncheckedIcon color="action" /> },
+            id: "table",
+            title: "Create a table",
+            labelButtonProps: {
+              icon: completedSteps.table ? completeIcon : incompleteIcon,
+            },
             content: (
               <>
                 <Typography>
-                  You’re ready to create a project and connect to a data source
+                  Use tables to manage the data from your database in a
+                  spreadsheet UI.
                 </Typography>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  startIcon={<ProjectIcon />}
-                >
-                  Create project
-                </Button>
-              </>
-            ),
-          },
-          {
-            id: "table",
-            title: "Create a table",
-            labelButtonProps: { icon: <UncheckedIcon color="action" /> },
-            content: (
-              <>
-                <Typography>This is why you should</Typography>
                 <Button
                   variant="contained"
                   color="primary"
@@ -140,11 +140,14 @@ export default function GetStartedChecklist({
           {
             id: "members",
             title: "Invite team members",
-            labelButtonProps: { icon: <UncheckedIcon color="action" /> },
+            labelButtonProps: {
+              icon: completedSteps.members ? completeIcon : incompleteIcon,
+            },
             content: (
               <>
                 <Typography>
-                  Go to the members page to invite someone
+                  Collaborate on workspace projects by inviting your team
+                  members. You can control their roles and access.
                 </Typography>
                 <Button
                   variant="contained"
