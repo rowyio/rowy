@@ -27,20 +27,26 @@ export default function ImportFromAirtable() {
         baseId: "",
         tableId: "",
       });
+      setError(null);
+      setLoading(false);
     };
   }, [setImportAirtable]);
 
   const handleAirtableConnection = () => {
+    const errors = [];
     if (!apiKey) {
-      setError({ apiKey: { message: "API Key is missing!" } });
-      return;
+      errors.push({ apiKey: { message: "API Key is missing!" } });
     }
     if (!baseId) {
-      setError({ baseId: { message: "Base ID is missing!" } });
-      return;
+      errors.push({ baseId: { message: "Base ID is missing!" } });
     }
     if (!tableId) {
-      setError({ tableId: { message: "Table ID is missing!" } });
+      errors.push({ tableId: { message: "Table ID is missing!" } });
+    }
+    if (errors.length > 0) {
+      setError(
+        errors.reduce((obj, error) => ({ ...obj, ...error }), {} as any)
+      );
       return;
     }
     setLoading(true);
@@ -54,6 +60,18 @@ export default function ImportFromAirtable() {
       .then((body) => {
         const { error } = body;
         if (error) {
+          if (error.type === "AUTHENTICATION_REQUIRED") {
+            setError({ apiKey: { message: "Invalid API Key!" } });
+          }
+          if (error === "NOT_FOUND") {
+            setError({ baseId: { message: "Could not find base!" } });
+          }
+          if (
+            error.type === "TABLE_NOT_FOUND" ||
+            error.type === "MODEL_ID_NOT_FOUND"
+          ) {
+            setError({ tableId: { message: "Could not find table!" } });
+          }
           throw new Error(error);
         }
 
