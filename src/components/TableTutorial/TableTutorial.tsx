@@ -83,7 +83,7 @@ export default function TableTutorial() {
             position: "static",
             height: "100%",
 
-            borderRadius: 2,
+            borderRadius: 3,
             borderBottomLeftRadius: 0,
             borderBottomRightRadius: 0,
             border: "none",

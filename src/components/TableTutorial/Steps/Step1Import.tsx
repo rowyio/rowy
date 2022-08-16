@@ -9,7 +9,7 @@ import { tableScope, tableRowsAtom } from "@src/atoms/tableScope";
 
 export const Step1Import = {
   id: "import",
-  title: "Let’s create a simple product pricing table",
+  title: "Let’s create a simple product pricing table.",
   description:
     "Rowy connects to your database and displays it in a spreadsheet UI, making it easy to manage your data.",
   StepComponent,

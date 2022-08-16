@@ -15,7 +15,7 @@ import { FieldType } from "@src/constants/fields";
 
 export const Step2Add = {
   id: "add",
-  title: "Let’s add some columns and rows to your table",
+  title: "Let’s add some columns and rows to your table.",
   description:
     "When you make changes made to your data in Rowy, they’re reflected in your Firestore database in realtime.",
   StepComponent,
