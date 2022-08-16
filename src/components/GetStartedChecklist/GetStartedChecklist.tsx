@@ -1,4 +1,5 @@
 import { useAtom, useSetAtom } from "jotai";
+import { Link } from "react-router-dom";
 
 import { Typography, Button } from "@mui/material";
 import UncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
@@ -20,6 +21,7 @@ import {
   NAV_DRAWER_COLLAPSED_WIDTH,
 } from "@src/layouts/Navigation/NavDrawer";
 import useGetStartedCompletion from "./useGetStartedCompletion";
+import { ROUTES } from "@src/constants/routes";
 
 export interface IGetStartedChecklistProps extends Partial<IModalProps> {
   navOpen: boolean;
@@ -108,7 +110,13 @@ export default function GetStartedChecklist({
                   Learn the basic features and functions of Rowy before creating
                   a table.
                 </Typography>
-                <Button variant="contained" color="primary">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  component={Link}
+                  to={ROUTES.tableTutorial}
+                  onClick={() => setOpen(false)}
+                >
                   Begin tutorial
                 </Button>
               </>
@@ -130,7 +138,10 @@ export default function GetStartedChecklist({
                   variant="contained"
                   color="primary"
                   startIcon={<AddIcon />}
-                  onClick={() => openTableSettingsDialog({ open: true })}
+                  onClick={() => {
+                    openTableSettingsDialog({ open: true });
+                    setOpen(false);
+                  }}
                 >
                   Create table
                 </Button>
@@ -153,6 +164,9 @@ export default function GetStartedChecklist({
                   variant="contained"
                   color="primary"
                   startIcon={<MembersIcon />}
+                  component={Link}
+                  to={ROUTES.members}
+                  onClick={() => setOpen(false)}
                 >
                   Members
                 </Button>
