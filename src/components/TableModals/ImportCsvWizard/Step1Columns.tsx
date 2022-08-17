@@ -312,12 +312,12 @@ export default function Step1Columns({
             >
               <FormControlLabel
                 value="auto"
-                control={<Radio />}
+                control={<Radio checked={config.documentId === "auto"} />}
                 label="Auto-Generated"
               />
               <FormControlLabel
                 value="column"
-                control={<Radio />}
+                control={<Radio checked={config.documentId === "column"} />}
                 label="Pick Column"
               />
               <TextField
