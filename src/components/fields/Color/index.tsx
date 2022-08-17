@@ -37,9 +37,9 @@ export const config: IFieldConfig = {
       if ("hex" in obj) {
         return toColor("hex", obj.hex);
       }
-      throw Error("Invalid color value");
+      throw new Error();
     } catch (error) {
-      console.error(error);
+      console.error("Invalid color value");
       return null;
     }
   },
