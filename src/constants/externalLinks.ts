@@ -11,7 +11,7 @@ export const EXTERNAL_LINKS = {
   playground: meta.homepage.replace("//", "//demo."),
 
   gitHub: meta.repository.url.replace(".git", ""),
-  discord: "https://discord.gg/B8yAD5PDX4",
+  discord: "https://rowy.io/discord",
   twitter: "https://twitter.com/rowyio",
   productHunt: "https://www.producthunt.com/products/rowy-2",
 
