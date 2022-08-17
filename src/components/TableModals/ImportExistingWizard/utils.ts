@@ -46,6 +46,7 @@ const inferTypeFromValue = (value: any) => {
 
   if (typeof value === "object") {
     if ("hex" in value && "rgb" in value) return FieldType.color;
+    if ("latitude" in value && "longitude" in value) return FieldType.geoPoint;
     if ("toDate" in value) return FieldType.dateTime;
     return FieldType.json;
   }
