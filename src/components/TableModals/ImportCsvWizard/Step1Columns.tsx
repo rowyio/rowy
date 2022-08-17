@@ -70,12 +70,23 @@ export default function Step1Columns({
           find(tableColumns, (column) =>
             column.label.toLowerCase().includes(field.toLowerCase())
           )?.value ?? null;
-        if (match) {
-          setConfig((config) => ({
-            ...config,
-            pairs: [...config.pairs, { csvKey: field, columnKey: match }],
-          }));
+
+        const columnKey = camelCase(field);
+        const columnConfig: Partial<CsvConfig> = { pairs: [], newColumns: [] };
+        columnConfig.pairs = [{ csvKey: field, columnKey: match ?? columnKey }];
+        if (!match) {
+          columnConfig.newColumns = [
+            {
+              name: field,
+              fieldName: columnKey,
+              key: columnKey,
+              type: suggestType(csvData.rows, field) || FieldType.shortText,
+              index: -1,
+              config: {},
+            },
+          ];
         }
+        updateConfig(columnConfig);
       } else {
         const newValue = [...selectedFields];
         newValue.splice(newValue.indexOf(field), 1);
