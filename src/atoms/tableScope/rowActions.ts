@@ -346,16 +346,6 @@ export const updateFieldAtom = atom(
       update[tableSettings.auditFieldUpdatedBy || "_updatedBy"] = auditValue;
     }
 
-    // Check for required fields
-    const requiredFields = ignoreRequiredFields
-      ? []
-      : tableColumnsOrdered
-          .filter((column) => column.config?.required)
-          .map((column) => column.key);
-    const missingRequiredFields = ignoreRequiredFields
-      ? []
-      : requiredFields.filter((field) => row[field] === undefined);
-
     // Apply field update
     if (!deleteField) {
       // Check for equality. If updated value is same as current, skip update
@@ -366,6 +356,17 @@ export const updateFieldAtom = atom(
       // Otherwise, apply the update
       _set(update, fieldName, value);
     }
+
+    // Check for required fields
+    const newRowValues = updateRowData(cloneDeep(row), update);
+    const requiredFields = ignoreRequiredFields
+      ? []
+      : tableColumnsOrdered
+          .filter((column) => column.config?.required)
+          .map((column) => column.key);
+    const missingRequiredFields = ignoreRequiredFields
+      ? []
+      : requiredFields.filter((field) => newRowValues[field] === undefined);
 
     // If it’s a local row, update the row in rowsLocal
     if (isLocalRow) {
@@ -379,12 +380,11 @@ export const updateFieldAtom = atom(
       // If it has no missingRequiredFields, also write to db
       // And write entire row to handle the case where it doesn’t exist in db yet
       if (missingRequiredFields.length === 0) {
-        const rowValues = updateRowData(cloneDeep(row), update);
-        if (deleteField) unset(rowValues, fieldName);
+        if (deleteField) unset(newRowValues, fieldName);
 
         await updateRowDb(
           row._rowy_ref.path,
-          omitRowyFields(rowValues),
+          omitRowyFields(newRowValues),
           deleteField ? [fieldName] : []
         );
       }
