@@ -9,6 +9,7 @@ import {
   tableScope,
 } from "@src/atoms/tableScope";
 import { analytics, logEvent } from "@src/analytics";
+import { find } from "lodash-es";
 
 export default function ImportFromAirtable() {
   const [{ baseId, tableId, apiKey }, setImportAirtable] = useAtom(
@@ -18,6 +19,7 @@ export default function ImportFromAirtable() {
   const openTableModal = useSetAtom(tableModalAtom, tableScope);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<any>({});
+  const [tableUrl, setTableUrl] = useState("");
 
   useEffect(() => {
     return () => {
@@ -31,6 +33,16 @@ export default function ImportFromAirtable() {
       setLoading(false);
     };
   }, [setImportAirtable]);
+
+  useEffect(() => {
+    try {
+      const url = new URL(tableUrl);
+      const pathNames = url.pathname.split("/");
+      const baseId = find(pathNames, (path) => /^app[\w]+$/.test(path)) ?? "";
+      const tableId = find(pathNames, (path) => /^tbl[\w]+$/.test(path)) ?? "";
+      setImportAirtable((prev) => ({ ...prev, baseId, tableId }));
+    } catch (error) {}
+  }, [tableUrl, setImportAirtable]);
 
   const handleAirtableConnection = () => {
     const errors = [];
@@ -115,33 +127,14 @@ export default function ImportFromAirtable() {
         variant="filled"
         autoFocus
         fullWidth
-        label="Airtable Base ID"
-        placeholder="Insert your Base ID here"
-        value={baseId}
+        label="Airtable Table URL"
+        placeholder="Insert your Table URL here"
+        value={tableUrl}
         onChange={(e) => {
-          setImportAirtable((prev) => ({
-            ...prev,
-            baseId: e.currentTarget.value,
-          }));
+          setTableUrl(e.currentTarget.value);
         }}
-        helperText={error?.baseId?.message}
-        error={!!error?.baseId?.message}
-      />
-      <TextField
-        variant="filled"
-        autoFocus
-        fullWidth
-        label="Airtable Table Name or ID"
-        placeholder="Insert your Table Name or ID here"
-        value={tableId}
-        onChange={(e) => {
-          setImportAirtable((prev) => ({
-            ...prev,
-            tableId: e.currentTarget.value,
-          }));
-        }}
-        helperText={error?.tableId?.message}
-        error={!!error?.tableId?.message}
+        helperText={error?.baseId?.message || error?.tableId?.message}
+        error={!!error?.baseId?.message || error?.tableId?.message}
       />
       <Button
         variant="contained"
