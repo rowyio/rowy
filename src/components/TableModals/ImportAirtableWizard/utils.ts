@@ -9,8 +9,6 @@ import {
 import { isValid as isValidDate, parseISO } from "date-fns";
 
 export const inferTypeFromValue = (value: any) => {
-  if (!value || typeof value === "function") return;
-
   if (Array.isArray(value) && typeof value[0] === "string")
     return FieldType.multiSelect;
   if (typeof value === "boolean") return FieldType.checkbox;
