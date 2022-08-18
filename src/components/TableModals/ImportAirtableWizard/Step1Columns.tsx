@@ -63,12 +63,29 @@ export default function Step1Columns({
           find(tableColumns, (column) =>
             column.label.toLowerCase().includes(field.toLowerCase())
           )?.value ?? null;
-        if (match) {
-          setConfig((config) => ({
-            ...config,
-            pairs: [...config.pairs, { fieldKey: field, columnKey: match }],
-          }));
+
+        const columnKey = camelCase(field);
+        const columnConfig: Partial<AirtableConfig> = {
+          pairs: [],
+          newColumns: [],
+        };
+        columnConfig.pairs = [
+          { fieldKey: field, columnKey: match ?? columnKey },
+        ];
+        if (!match) {
+          columnConfig.newColumns = [
+            {
+              name: field,
+              fieldName: columnKey,
+              key: columnKey,
+              type:
+                suggestType(airtableData.records, field) || FieldType.shortText,
+              index: -1,
+              config: {},
+            },
+          ];
         }
+        updateConfig(columnConfig);
       } else {
         const newValue = [...selectedFields];
         newValue.splice(newValue.indexOf(field), 1);
