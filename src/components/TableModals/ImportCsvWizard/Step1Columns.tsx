@@ -119,7 +119,7 @@ export default function Step1Columns({
 
   const handleChange = (csvKey: string) => (value: string) => {
     const columnKey = !!tableSchema.columns?.[value] ? value : camelCase(value);
-
+    if (columnKey === "") return;
     // Check if this pair already exists in config
     const configIndex = findIndex(config.pairs, { csvKey });
     if (configIndex > -1) {
@@ -334,7 +334,7 @@ export default function Step1Columns({
               <TextField
                 disabled={config.documentId !== "column"}
                 select
-                value={config.documentIdCsvKey}
+                value={config.documentIdCsvKey ?? ""}
                 onChange={(e) =>
                   setConfig((prev) => ({
                     ...prev,
@@ -369,8 +369,8 @@ export default function Step1Columns({
           </FormControl>
         </Grid>
         <Grid item xs={12}>
-          {stepErrors().map((error) => (
-            <Alert severity="error" sx={{ my: 1 }}>
+          {stepErrors().map((error, index) => (
+            <Alert key={index} severity="error" sx={{ my: 1 }}>
               <AlertTitle>{error}</AlertTitle>
             </Alert>
           ))}
