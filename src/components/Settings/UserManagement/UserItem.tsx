@@ -59,7 +59,7 @@ export default function UserItem({
       });
       if (res.success) {
         if (!updateUser) throw new Error("Could not update user document");
-        await updateUser(_rowy_ref!.id, { roles: value });
+        await updateUser(_rowy_ref!.path, { roles: value });
         closeSnackbar(loadingSnackbarId);
         enqueueSnackbar(`Set roles for ${user!.email}: ${value.join(", ")}`);
       }
