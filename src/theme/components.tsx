@@ -88,7 +88,7 @@ export const components = (theme: Theme): ThemeOptions => {
             },
 
             "#root": {
-              transformOrigin: `50% ${theme.spacing(1)}`,
+              transformOrigin: `50% 0%`,
               transition: theme.transitions.create([
                 "transform",
                 "border-radius",
@@ -257,7 +257,7 @@ export const components = (theme: Theme): ThemeOptions => {
           },
 
           paper: {
-            borderRadius: (theme.shape.borderRadius as number) * 2,
+            borderRadius: (theme.shape.borderRadius as number) * 3,
 
             "--dialog-spacing": theme.spacing(3),
             [theme.breakpoints.down("sm")]: {
@@ -271,10 +271,8 @@ export const components = (theme: Theme): ThemeOptions => {
           paperFullScreen: {
             borderBottomLeftRadius: 0,
             borderBottomRightRadius: 0,
-            marginTop: `calc(env(safe-area-inset-top) + ${theme.spacing(2)})`,
-            maxHeight: `calc(100% - env(safe-area-inset-top) - ${theme.spacing(
-              2
-            )})`,
+            marginTop: `calc(env(safe-area-inset-top) + 10px)`,
+            maxHeight: `calc(100% - env(safe-area-inset-top) - 10px)`,
             maxWidth: "100% !important",
 
             paddingLeft: "env(safe-area-inset-left)",
@@ -292,7 +290,7 @@ export const components = (theme: Theme): ThemeOptions => {
                   theme.palette.mode === "dark" ? "80" : "75"
                 }%)`,
 
-                transform: `scale(0.9) translateY(${theme.spacing(1)})`,
+                transform: `scale(0.9)`,
                 transition: theme.transitions.create(
                   ["transform", "border-radius"],
                   {
@@ -395,7 +393,17 @@ export const components = (theme: Theme): ThemeOptions => {
             caretColor: theme.palette.primary.main,
             ".Mui-error &": { caretColor: theme.palette.error.main },
           },
-          inputSizeSmall: theme.typography.body2 as any,
+          inputSizeSmall: {
+            ...(theme.typography.body2 as any),
+            [theme.breakpoints.only("xs")]: {
+              ...(theme.typography.body1 as any),
+              "&, &.MuiSelect-select": {
+                minHeight: `${theme.typography.body1.lineHeight}em`,
+              },
+              paddingTop: theme.spacing(0.5),
+              paddingBottom: theme.spacing(0.5),
+            },
+          },
         },
       },
       MuiFilledInput: {
@@ -535,7 +543,10 @@ export const components = (theme: Theme): ThemeOptions => {
             ".MuiMenu-list &": { whiteSpace: "normal" },
           },
           primary: {
-            ".MuiSelect-select &": theme.typography.body2,
+            ".MuiSelect-select &": {
+              ...(theme.typography.body2 as any),
+              [theme.breakpoints.only("xs")]: theme.typography.body1,
+            },
           },
           secondary: {
             ".MuiSelect-select &": { display: "none" },
@@ -725,12 +736,12 @@ export const components = (theme: Theme): ThemeOptions => {
           },
 
           contained: {
-            boxShadow: `0 -1px 0 0 rgba(0, 0, 0, 0.12) inset, ${theme.shadows[2]}`,
+            boxShadow: `0 -1px 0 0 rgba(0, 0, 0, 0.4) inset, 0 0 0 1px rgba(255, 255, 255, 0.08) inset, ${theme.shadows[2]}`,
             "&:hover": {
-              boxShadow: `0 -1px 0 0 rgba(0, 0, 0, 0.12) inset, ${theme.shadows[4]}`,
+              boxShadow: `0 -1px 0 0 rgba(0, 0, 0, 0.4) inset, 0 0 0 1px rgba(255, 255, 255, 0.08) inset, ${theme.shadows[4]}`,
             },
             "&:active": {
-              boxShadow: `0 -1px 0 0 rgba(0, 0, 0, 0.12) inset, ${theme.shadows[8]}`,
+              boxShadow: `0 -1px 0 0 rgba(0, 0, 0, 0.4) inset, 0 0 0 1px rgba(255, 255, 255, 0.08) inset, ${theme.shadows[8]}`,
             },
           },
           containedPrimary: {
@@ -1336,6 +1347,12 @@ export const components = (theme: Theme): ThemeOptions => {
         styleOverrides: {
           root: { borderRadius: theme.shape.borderRadius },
           bar: { borderRadius: theme.shape.borderRadius },
+        },
+      },
+
+      MuiSkeleton: {
+        styleOverrides: {
+          rectangular: { borderRadius: theme.shape.borderRadius },
         },
       },
 

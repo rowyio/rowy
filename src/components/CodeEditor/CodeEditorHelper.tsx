@@ -5,7 +5,7 @@ import SecretsIcon from "@mui/icons-material/VpnKeyOutlined";
 import FunctionsIcon from "@mui/icons-material/CloudOutlined";
 import DocsIcon from "@mui/icons-material/DescriptionOutlined";
 
-import { globalScope, projectIdAtom } from "@src/atoms/globalScope";
+import { projectScope, projectIdAtom } from "@src/atoms/projectScope";
 
 export interface ICodeEditorHelperProps {
   docLink: string;
@@ -19,7 +19,7 @@ export default function CodeEditorHelper({
   docLink,
   additionalVariables,
 }: ICodeEditorHelperProps) {
-  const [projectId] = useAtom(projectIdAtom, globalScope);
+  const [projectId] = useAtom(projectIdAtom, projectScope);
 
   const availableVariables = [
     {

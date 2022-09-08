@@ -1,16 +1,17 @@
 import { useEffect } from "react";
 import { useAtom } from "jotai";
 import { Helmet } from "react-helmet-async";
+import { Outlet } from "react-router-dom";
 
 import { useMediaQuery, ThemeProvider, CssBaseline } from "@mui/material";
 import Favicon from "@src/assets/Favicon";
 
 import {
-  globalScope,
+  projectScope,
   themeAtom,
   themeOverriddenAtom,
   customizedThemesAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 
 /**
  * Injects the MUI theme with customizations from project and user settings.
@@ -19,9 +20,9 @@ import {
 export default function RowyThemeProvider({
   children,
 }: React.PropsWithChildren<{}>) {
-  const [theme, setTheme] = useAtom(themeAtom, globalScope);
-  const [themeOverridden] = useAtom(themeOverriddenAtom, globalScope);
-  const [customizedThemes] = useAtom(customizedThemesAtom, globalScope);
+  const [theme, setTheme] = useAtom(themeAtom, projectScope);
+  const [themeOverridden] = useAtom(themeOverriddenAtom, projectScope);
+  const [customizedThemes] = useAtom(customizedThemesAtom, projectScope);
 
   // Infer theme based on system settings
   const prefersDarkTheme = useMediaQuery("(prefers-color-scheme: dark)", {
@@ -55,6 +56,7 @@ export default function RowyThemeProvider({
         <Favicon />
         <CssBaseline />
         {children}
+        <Outlet />
       </ThemeProvider>
     </>
   );

@@ -18,10 +18,10 @@ import { InlineErrorFallback } from "@src/components/ErrorFallback";
 import FieldSkeleton from "./FieldSkeleton";
 
 import {
-  globalScope,
+  projectScope,
   projectIdAtom,
   altPressAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import { FieldType } from "@src/constants/fields";
 import { getFieldProp } from "@src/components/fields";
 import { getLabelId, getFieldId } from "./utils";
@@ -47,8 +47,8 @@ export default function FieldWrapper({
   hidden,
   index,
 }: IFieldWrapperProps) {
-  const [projectId] = useAtom(projectIdAtom, globalScope);
-  const [altPress] = useAtom(altPressAtom, globalScope);
+  const [projectId] = useAtom(projectIdAtom, projectScope);
+  const [altPress] = useAtom(altPressAtom, projectScope);
 
   return (
     <div>

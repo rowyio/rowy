@@ -10,7 +10,7 @@ import { SEVERITY_LEVELS } from "@src/components/TableModals/CloudLogsModal/Clou
  *
  * @example Basic usage:
  * ```
- * const openColumnMenu = useSetAtom(columnMenuAtom, globalScope);
+ * const openColumnMenu = useSetAtom(columnMenuAtom, projectScope);
  * openColumnMenu({ column, anchorEl: ... });
  * ```
  *
@@ -30,7 +30,7 @@ export const columnMenuAtom = atom<{
  *
  * @example Basic usage:
  * ```
- * const openColumnModal = useSetAtom(columnModalAtom, globalScope);
+ * const openColumnModal = useSetAtom(columnModalAtom, projectScope);
  * openColumnModal({ type: "...", column });
  * ```
  *
@@ -56,7 +56,7 @@ export type TableFiltersPopoverState = {
  *
  * @example Basic usage:
  * ```
- * const openTableFiltersPopover = useSetAtom(tableFiltersPopoverAtom, globalScope);
+ * const openTableFiltersPopover = useSetAtom(tableFiltersPopoverAtom, projectScope);
  * openTableFiltersPopover({ query: ... });
  * ```
  *
@@ -84,7 +84,7 @@ export const sideDrawerShowHiddenFieldsAtom = atomWithStorage(
  *
  * @example Basic usage:
  * ```
- * const openTableModal = useSetAtom(tableModalAtom, globalScope);
+ * const openTableModal = useSetAtom(tableModalAtom, projectScope);
  * openTableModal("...");
  * ```
  *

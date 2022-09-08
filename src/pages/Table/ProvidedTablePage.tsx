@@ -14,10 +14,10 @@ import TableToolbarSkeleton from "@src/components/TableToolbar/TableToolbarSkele
 import TableSkeleton from "@src/components/Table/TableSkeleton";
 
 import {
-  globalScope,
+  projectScope,
   currentUserAtom,
   tablesAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import {
   tableScope,
   tableIdAtom,
@@ -31,8 +31,8 @@ import {
 export default function ProvidedTablePage() {
   const { id } = useParams();
   const outlet = useOutlet();
-  const [currentUser] = useAtom(currentUserAtom, globalScope);
-  const [tables] = useAtom(tablesAtom, globalScope);
+  const [currentUser] = useAtom(currentUserAtom, projectScope);
+  const [tables] = useAtom(tablesAtom, projectScope);
 
   const tableSettings = useMemo(() => find(tables, ["id", id]), [tables, id]);
   if (!tableSettings) throw new Error(ERROR_TABLE_NOT_FOUND + ": " + id);

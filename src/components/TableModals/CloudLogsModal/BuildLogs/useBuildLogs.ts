@@ -11,12 +11,12 @@ import {
   DocumentData,
 } from "firebase/firestore";
 
-import { globalScope } from "@src/atoms/globalScope";
+import { projectScope } from "@src/atoms/projectScope";
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
 import { tableScope, tableSchemaAtom } from "@src/atoms/tableScope";
 
 export default function useBuildLogs() {
-  const [firebaseDb] = useAtom(firebaseDbAtom, globalScope);
+  const [firebaseDb] = useAtom(firebaseDbAtom, projectScope);
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const functionConfigPath = tableSchema.functionConfigPath;
 

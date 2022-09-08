@@ -13,8 +13,6 @@ export const altPressAtom = atom(false);
 
 /** Nav open state stored in local storage. */
 export const navOpenAtom = atomWithStorage("__ROWY__NAV_OPEN", false);
-/** Nav pinned state stored in local storage. */
-export const navPinnedAtom = atomWithStorage("__ROWY__NAV_PINNED", false);
 
 /** View for tables page */
 export const tablesViewAtom = atomWithStorage<"grid" | "list">(
@@ -47,13 +45,15 @@ export type ConfirmDialogProps = {
 
   /** Optionally set dialog max width */
   maxWidth?: DialogProps["maxWidth"];
+  /** Optionally set button layout */
+  buttonLayout?: "horizontal" | "vertical";
 };
 /**
  * Open a confirm dialog
  *
  * @example Basic usage:
  * ```
- * const confirm = useSetAtom(confirmDialogAtom, globalScope);
+ * const confirm = useSetAtom(confirmDialogAtom, projectScope);
  * confirm({ handleConfirm: () => ... });
  * ```
  */
@@ -79,7 +79,7 @@ export type RowyRunModalState = {
  *
  * @example Basic usage:
  * ```
- * const openRowyRunModal = useSetAtom(rowyRunModalAtom, globalScope);
+ * const openRowyRunModal = useSetAtom(rowyRunModalAtom, projectScope);
  * openRowyRunModal({ feature: ... , version: ... });
  * ```
  *
@@ -111,7 +111,7 @@ export type TableSettingsDialogState = {
  *
  * @example Basic usage:
  * ```
- * const openTableSettingsDialog = useSetAtom(tableSettingsDialogAtom, globalScope);
+ * const openTableSettingsDialog = useSetAtom(tableSettingsDialogAtom, projectScope);
  * openTableSettingsDialog({ data: ... });
  * ```
  *
@@ -144,6 +144,9 @@ export const tableSettingsDialogSchemaAtom = atom(async (get) => {
   if (!tableId || !getTableSchema) return {} as TableSchema;
   return getTableSchema(tableId);
 });
+
+/** Open the Get Started checklist from anywhere */
+export const getStartedChecklistAtom = atom(false);
 
 /** Persist the state of the add row ID type */
 export const tableAddRowIdTypeAtom = atomWithStorage<

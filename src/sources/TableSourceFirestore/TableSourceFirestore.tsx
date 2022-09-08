@@ -30,7 +30,7 @@ import { getTableSchemaPath } from "@src/utils/table";
  * When rendered, provides atom values for top-level tables and sub-tables
  */
 export const TableSourceFirestore = memo(function TableSourceFirestore() {
-  // Get tableSettings from tableId and tables in globalScope
+  // Get tableSettings from tableId and tables in projectScope
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const isCollectionGroup = tableSettings?.tableType === "collectionGroup";
 

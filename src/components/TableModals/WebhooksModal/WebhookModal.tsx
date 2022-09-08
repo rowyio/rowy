@@ -22,10 +22,10 @@ import Step2Conditions from "./Step2Conditions";
 import Step3Body from "./Step3Parser";
 
 import {
-  globalScope,
+  projectScope,
   projectSettingsAtom,
   confirmDialogAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import { tableScope, tableSettingsAtom } from "@src/atoms/tableScope";
 import { webhookNames, IWebhook } from "./utils";
 
@@ -54,8 +54,8 @@ export default function WebhookModal({
   mode,
   webhookObject: initialObject,
 }: IWebhookModalProps) {
-  const [projectSettings] = useAtom(projectSettingsAtom, globalScope);
-  const confirm = useSetAtom(confirmDialogAtom, globalScope);
+  const [projectSettings] = useAtom(projectSettingsAtom, projectScope);
+  const confirm = useSetAtom(confirmDialogAtom, projectScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
 
   const [webhookObject, setWebhookObject] = useState<IWebhook>(initialObject);

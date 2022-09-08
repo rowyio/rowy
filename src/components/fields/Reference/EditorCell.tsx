@@ -5,14 +5,14 @@ import { get } from "lodash-es";
 
 import { TextField } from "@mui/material";
 
-import { globalScope } from "@src/atoms/globalScope";
+import { projectScope } from "@src/atoms/projectScope";
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
 import { tableScope, updateFieldAtom } from "@src/atoms/tableScope";
 import { doc, deleteField } from "firebase/firestore";
 
 /** WARNING: THIS DOES NOT WORK IN REACT 18 STRICT MODE */
 export default function TextEditor({ row, column }: EditorProps<any>) {
-  const [firebaseDb] = useAtom(firebaseDbAtom, globalScope);
+  const [firebaseDb] = useAtom(firebaseDbAtom, projectScope);
   const updateField = useSetAtom(updateFieldAtom, tableScope);
 
   const inputRef = useRef<HTMLInputElement>(null);

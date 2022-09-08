@@ -3,7 +3,7 @@ import { useLocation, Navigate } from "react-router-dom";
 
 import Loading from "@src/components/Loading";
 
-import { globalScope, currentUserAtom } from "@src/atoms/globalScope";
+import { projectScope, currentUserAtom } from "@src/atoms/projectScope";
 import { ROUTES } from "@src/constants/routes";
 
 export interface IRequireAuthProps {
@@ -11,7 +11,7 @@ export interface IRequireAuthProps {
 }
 
 export default function RequireAuth({ children }: IRequireAuthProps) {
-  const [currentUser] = useAtom(currentUserAtom, globalScope);
+  const [currentUser] = useAtom(currentUserAtom, projectScope);
   const location = useLocation();
 
   if (currentUser === undefined)

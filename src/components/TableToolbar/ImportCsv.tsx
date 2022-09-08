@@ -25,7 +25,7 @@ import { Import as ImportIcon } from "@src/assets/icons";
 import { Upload as FileUploadIcon } from "@src/assets/icons";
 import CheckIcon from "@mui/icons-material/CheckCircle";
 
-import { globalScope, userRolesAtom } from "@src/atoms/globalScope";
+import { projectScope, userRolesAtom } from "@src/atoms/projectScope";
 import {
   tableScope,
   tableSettingsAtom,
@@ -48,7 +48,7 @@ export interface IImportCsvProps {
 }
 
 export default function ImportCsv({ render, PopoverProps }: IImportCsvProps) {
-  const [userRoles] = useAtom(userRolesAtom, globalScope);
+  const [userRoles] = useAtom(userRolesAtom, projectScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [{ importType, csvData }, setImportCsv] = useAtom(
     importCsvAtom,
