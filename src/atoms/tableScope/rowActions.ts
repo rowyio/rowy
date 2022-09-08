@@ -265,21 +265,21 @@ export const bulkAddRowsAtom = atom(
 
     // Assign a random ID to each row
     const operations = rows.map((row) => ({
-      type: "add" as "add",
-      path: `${collection}/${generateId()}`,
+      type: row?._rowy_ref?.id ? ("update" as "update") : ("add" as "add"),
+      path: `${collection}/${row?._rowy_ref?.id ?? generateId()}`,
       data: { ...initialValues, ...omitRowyFields(row) },
     }));
 
     // Write to db
     await bulkWriteDb(operations, onBatchCommit);
 
-    if (auditChange) {
-      const auditChangePromises: Promise<void>[] = [];
-      for (const operation of operations) {
-        auditChangePromises.push(auditChange("ADD_ROW", operation.path));
-      }
-      await Promise.all(auditChangePromises);
-    }
+    // if (auditChange) {
+    //   const auditChangePromises: Promise<void>[] = [];
+    //   for (const operation of operations) {
+    //     auditChangePromises.push(auditChange("ADD_ROW", operation.path));
+    //   }
+    //   await Promise.all(auditChangePromises);
+    // }
   }
 );
 

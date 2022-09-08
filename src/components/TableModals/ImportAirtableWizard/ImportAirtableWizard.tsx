@@ -1,28 +1,13 @@
-import { useState, useMemo, useCallback, useRef } from "react";
+import { useState, useCallback, useRef } from "react";
 import useMemoValue from "use-memo-value";
 import { useAtom, useSetAtom } from "jotai";
 import { RESET } from "jotai/utils";
 import { useSnackbar } from "notistack";
-import { uniqBy, find, isEqual, groupBy } from "lodash-es";
+import { uniqBy, isEqual, find } from "lodash-es";
 import { ITableModalProps } from "@src/components/TableModals";
-
-import {
-  useTheme,
-  useMediaQuery,
-  Typography,
-  Link,
-  Alert,
-  AlertTitle,
-  Button,
-} from "@mui/material";
-
 import WizardDialog from "@src/components/TableModals/WizardDialog";
-import Step1Columns from "./Step1Columns";
-import Step2NewColumns from "./Step2NewColumns";
-import Step3Preview from "./Step3Preview";
-import SnackbarProgress, {
-  ISnackbarProgressRef,
-} from "@src/components/SnackbarProgress";
+
+import { useTheme, useMediaQuery, Typography, Button } from "@mui/material";
 
 import {
   tableScope,
@@ -30,114 +15,113 @@ import {
   tableSchemaAtom,
   addColumnAtom,
   bulkAddRowsAtom,
-  importCsvAtom,
-  ImportCsvData,
+  importAirtableAtom,
+  ImportAirtableData,
   tableModalAtom,
 } from "@src/atoms/tableScope";
 import { ColumnConfig } from "@src/types/table";
-import { getFieldProp } from "@src/components/fields";
-import { analytics, logEvent } from "@src/analytics";
-import { isValidDocId } from "./utils";
 
-export type CsvConfig = {
-  pairs: { csvKey: string; columnKey: string }[];
+import SnackbarProgress, {
+  ISnackbarProgressRef,
+} from "@src/components/SnackbarProgress";
+import { fieldParser } from "@src/components/TableModals/ImportAirtableWizard/utils";
+import Step1Columns from "./Step1Columns";
+import Step2NewColumns from "./Step2NewColumns";
+import Step3Preview from "./Step3Preview";
+
+export type AirtableConfig = {
+  pairs: { fieldKey: string; columnKey: string }[];
   newColumns: ColumnConfig[];
-  documentId: "auto" | "column";
-  documentIdCsvKey: string | null;
+  documentId: "auto" | "recordId";
 };
 
 export interface IStepProps {
-  csvData: NonNullable<ImportCsvData>;
-  config: CsvConfig;
-  setConfig: React.Dispatch<React.SetStateAction<CsvConfig>>;
-  updateConfig: (value: Partial<CsvConfig>) => void;
+  airtableData: NonNullable<ImportAirtableData>;
+  config: AirtableConfig;
+  setConfig: React.Dispatch<React.SetStateAction<AirtableConfig>>;
+  updateConfig: (value: Partial<AirtableConfig>) => void;
   isXs: boolean;
 }
 
-export default function ImportCsvWizard({ onClose }: ITableModalProps) {
+export default function ImportAirtableWizard({ onClose }: ITableModalProps) {
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const addColumn = useSetAtom(addColumnAtom, tableScope);
   const bulkAddRows = useSetAtom(bulkAddRowsAtom, tableScope);
-  const [{ importType, csvData }] = useAtom(importCsvAtom, tableScope);
+  const [{ airtableData, tableId, baseId, apiKey }] = useAtom(
+    importAirtableAtom,
+    tableScope
+  );
   const setTableModal = useSetAtom(tableModalAtom, tableScope);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const theme = useTheme();
   const isXs = useMediaQuery(theme.breakpoints.down("sm"));
   const snackbarProgressRef = useRef<ISnackbarProgressRef>();
-
+  const countRef = useRef(0);
   const columns = useMemoValue(tableSchema.columns ?? {}, isEqual);
 
-  const [config, setConfig] = useState<CsvConfig>({
+  const [config, setConfig] = useState<AirtableConfig>({
     pairs: [],
     newColumns: [],
-    documentId: "auto",
-    documentIdCsvKey: null,
+    documentId: "recordId",
   });
+
   const updateConfig: IStepProps["updateConfig"] = useCallback((value) => {
     setConfig((prev) => {
-      const pairs = uniqBy([...prev.pairs, ...(value.pairs ?? [])], "csvKey");
+      const pairs = uniqBy([...prev.pairs, ...(value.pairs ?? [])], "fieldKey");
       const newColumns = uniqBy(
         [...prev.newColumns, ...(value.newColumns ?? [])],
         "key"
       ).filter((col) => pairs.some((pair) => pair.columnKey === col.key));
-
       return { ...prev, pairs, newColumns };
     });
   }, []);
 
-  const parsedRows: any[] = useMemo(() => {
-    if (!columns || !csvData) return [];
-    return csvData.rows.map((row) =>
+  const fetchRecords = async (offset?: string) => {
+    const url = offset
+      ? `https://api.airtable.com/v0/${baseId}/${tableId}?offset=${offset}`
+      : `https://api.airtable.com/v0/${baseId}/${tableId}`;
+
+    const response = await fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+    }).then((response) => response.json());
+
+    return response;
+  };
+
+  const parseRecords = (records: any[]): any[] => {
+    if (!columns || !airtableData) return [];
+    return records.map((record) =>
       config.pairs.reduce((a, pair) => {
         const matchingColumn =
           columns[pair.columnKey] ??
           find(config.newColumns, { key: pair.columnKey });
-        const csvFieldParser = getFieldProp(
-          "csvImportParser",
-          matchingColumn.type
-        );
-        const value = csvFieldParser
-          ? csvFieldParser(row[pair.csvKey], matchingColumn.config)
-          : row[pair.csvKey];
-
-        return config.documentId === "column"
-          ? {
-              ...a,
-              [pair.columnKey]: value,
-              _rowy_ref: {
-                id: config.documentIdCsvKey
-                  ? row[config.documentIdCsvKey]
-                  : null,
-              },
-            }
+        const parser = fieldParser(matchingColumn.type);
+        const value = parser
+          ? parser(record.fields[pair.fieldKey])
+          : record.fields[pair.fieldKey];
+        return config.documentId === "recordId"
+          ? { ...a, [pair.columnKey]: value, _rowy_ref: { id: record.id } }
           : { ...a, [pair.columnKey]: value };
       }, {})
     );
-  }, [csvData, columns, config]);
-
-  const { validRows, invalidRows } =
-    config.documentId === "column"
-      ? groupBy(parsedRows, (row) =>
-          isValidDocId(row._rowy_ref?.id) ? "validRows" : "invalidRows"
-        )
-      : { validRows: parsedRows, invalidRows: [] };
+  };
 
   const handleFinish = async () => {
-    if (!parsedRows) return;
-    console.time("importCsv");
+    console.time("importAirtable");
     snackbarProgressRef.current?.setProgress(0);
     const loadingSnackbar = enqueueSnackbar(
-      `Importing ${Number(
-        validRows.length
-      ).toLocaleString()} rows. This might take a while.`,
+      `Importing records. This might take a while.`,
       {
         persist: true,
         action: (
           <SnackbarProgress
             stateRef={snackbarProgressRef}
-            target={Math.ceil(validRows.length / 500)}
-            label=" batches"
+            target={0}
+            label=" records"
           />
         ),
       }
@@ -160,36 +144,56 @@ export default function ImportCsvWizard({ onClose }: ITableModalProps) {
       }
     );
 
-    // Run add column & batch write at the same time
-    const promises: Promise<void>[] = [];
-
     try {
-      // Add any new columns to the end
+      const promises: Promise<void>[] = [];
+      const timeout = (ms: number): Promise<void> =>
+        new Promise((resolve) => setTimeout(() => resolve(), ms));
+
+      // Airtable Rate Limits: 5 req/sec
+      const RATE_LIMIT = { REQ_PER_SECOND: 5 };
+      const fetcher = async (i: number = 0, offset?: string): Promise<void> => {
+        const { records, offset: nextPage } = await fetchRecords(offset);
+        snackbarProgressRef.current?.setTarget((prev) => prev + records.length);
+        promises.push(
+          bulkAddRows({
+            rows: parseRecords(records),
+            collection: tableSettings.collection,
+          }).then(() => {
+            countRef.current += records.length;
+            snackbarProgressRef.current?.setProgress(
+              (prev) => prev + records.length
+            );
+          })
+        );
+        if (!nextPage) {
+          return;
+        }
+        if (i < RATE_LIMIT.REQ_PER_SECOND - 1) {
+          promises.push(fetcher(++i, nextPage));
+        } else {
+          promises.push(timeout(1050).then(() => fetcher(0, nextPage)));
+        }
+      };
+
+      const resolveAll = async (): Promise<void[]> => {
+        return Promise.all(promises).then((result) => {
+          if (result.length === promises.length) {
+            return result;
+          }
+          return resolveAll();
+        });
+      };
+
+      onClose();
+
       for (const col of config.newColumns)
         promises.push(addColumn({ config: col }));
 
-      if (validRows.length < parsedRows.length) {
-        enqueueSnackbar(
-          `Invalid document ID! ${Number(
-            parsedRows.length - validRows.length
-          ).toLocaleString()} invalid rows skipped!`,
-          { variant: "warning" }
-        );
-      }
-      promises.push(
-        bulkAddRows({
-          rows: validRows,
-          collection: tableSettings.collection,
-          onBatchCommit: (batchNumber: number) =>
-            snackbarProgressRef.current?.setProgress(batchNumber),
-        })
-      );
+      await fetcher();
+      await resolveAll();
 
-      onClose();
-      await Promise.all(promises);
-      logEvent(analytics, "import_success", { type: importType });
       enqueueSnackbar(
-        `Imported ${Number(validRows.length).toLocaleString()} rows`,
+        `Imported ${Number(countRef.current).toLocaleString()} rows`,
         { variant: "success" }
       );
     } catch (e) {
@@ -198,10 +202,10 @@ export default function ImportCsvWizard({ onClose }: ITableModalProps) {
       closeSnackbar(loadingSnackbar);
       closeSnackbar(warningSnackbar);
     }
-    console.timeEnd("importCsv");
+    console.timeEnd("importAirtable");
   };
 
-  if (!csvData) {
+  if (!airtableData) {
     setTableModal(RESET);
     return null;
   }
@@ -210,45 +214,30 @@ export default function ImportCsvWizard({ onClose }: ITableModalProps) {
     <WizardDialog
       open
       onClose={onClose}
-      title={`Import ${importType.toUpperCase()}`}
+      title={`Import from Airtable`}
       steps={
         [
           {
             title: "Choose columns",
             description: (
               <>
+                <Typography paragraph>Base ID: {baseId}</Typography>
+                <Typography paragraph>Table ID: {tableId}</Typography>
                 <Typography paragraph>
                   Select or add the columns to be imported to your table.
                 </Typography>
-                <Alert severity="warning">
-                  <AlertTitle>Importing dates?</AlertTitle>
-                  Make sure they’re in UTC time and{" "}
-                  <Link
-                    href="https://date-fns.org/v2.16.1/docs/parseJSON"
-                    rel="noopener"
-                    target="_blank"
-                    color="inherit"
-                    style={{ position: "relative", zIndex: 1 }}
-                  >
-                    a supported format
-                  </Link>
-                  . If they’re not, you’ll need to re-import your CSV data.
-                </Alert>
               </>
             ),
             content: (
               <Step1Columns
-                csvData={{ ...csvData, invalidRows }}
+                airtableData={airtableData}
                 config={config}
                 setConfig={setConfig}
                 updateConfig={updateConfig}
                 isXs={isXs}
               />
             ),
-            disableNext:
-              config.pairs.length === 0 ||
-              !validRows ||
-              (config.documentId === "column" && !config.documentIdCsvKey),
+            disableNext: config.pairs.length === 0,
           },
           config.newColumns.length > 0 && {
             title: "Set column types",
@@ -256,7 +245,7 @@ export default function ImportCsvWizard({ onClose }: ITableModalProps) {
               "Set the type of each column to display your data correctly. Some column types have been suggested based on your data.",
             content: (
               <Step2NewColumns
-                csvData={csvData}
+                airtableData={airtableData}
                 config={config}
                 setConfig={setConfig}
                 updateConfig={updateConfig}
@@ -274,7 +263,7 @@ export default function ImportCsvWizard({ onClose }: ITableModalProps) {
               "Preview your data with your configured columns. You can change column types by clicking “Edit type” from the column menu at any time.",
             content: (
               <Step3Preview
-                csvData={{ ...csvData, rows: validRows }}
+                airtableData={airtableData}
                 config={config}
                 setConfig={setConfig}
                 updateConfig={updateConfig}

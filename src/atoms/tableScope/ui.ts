@@ -100,15 +100,26 @@ export const tableModalAtom = atomWithHash<
   | "export"
   | "importExisting"
   | "importCsv"
+  | "importAirtable"
   | null
 >("tableModal", null, { replaceState: true });
 
 export type ImportCsvData = { columns: string[]; rows: Record<string, any>[] };
+export type ImportAirtableData = { records: Record<string, any>[] };
+
 /** Store import CSV popover and wizard state */
 export const importCsvAtom = atom<{
   importType: "csv" | "tsv";
   csvData: ImportCsvData | null;
 }>({ importType: "csv", csvData: null });
+
+/** Store import Airtable popover and wizard state */
+export const importAirtableAtom = atom<{
+  airtableData: ImportAirtableData | null;
+  apiKey: string;
+  baseId: string;
+  tableId: string;
+}>({ airtableData: null, apiKey: "", baseId: "", tableId: "" });
 
 /** Store side drawer open state */
 export const sideDrawerOpenAtom = atom(false);

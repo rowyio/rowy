@@ -1,52 +1,20 @@
-import { isDate, sortBy } from "lodash-es";
+import { sortBy } from "lodash-es";
 import { FieldType } from "@src/constants/fields";
+import {
+  REGEX_EMAIL,
+  REGEX_PHONE,
+  REGEX_URL,
+  REGEX_HTML,
+} from "@src/components/TableModals/ImportExistingWizard/utils";
+import { isValid as isValidDate, parseISO } from "date-fns";
 
-export const SELECTABLE_TYPES = [
-  FieldType.shortText,
-  FieldType.longText,
-  FieldType.richText,
-  FieldType.email,
-  FieldType.phone,
-
-  FieldType.checkbox,
-  FieldType.number,
-  FieldType.percentage,
-
-  FieldType.date,
-  FieldType.dateTime,
-
-  FieldType.url,
-  FieldType.rating,
-
-  FieldType.singleSelect,
-  FieldType.multiSelect,
-
-  FieldType.json,
-  FieldType.code,
-
-  FieldType.color,
-  FieldType.slider,
-];
-
-export const REGEX_EMAIL =
-  /([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)/;
-export const REGEX_PHONE =
-  /(([+][(]?[0-9]{1,3}[)]?)|([(]?[0-9]{4}[)]?))\s*[)]?[-\s\.]?[(]?[0-9]{1,3}[)]?([-\s\.]?[0-9]{3})([-\s\.]?[0-9]{3,4})/;
-export const REGEX_URL =
-  /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
-export const REGEX_HTML = /<\/?[a-z][\s\S]*>/;
-
-const inferTypeFromValue = (value: any) => {
-  if (!value || typeof value === "function") return;
-
+export const inferTypeFromValue = (value: any) => {
   if (Array.isArray(value) && typeof value[0] === "string")
     return FieldType.multiSelect;
   if (typeof value === "boolean") return FieldType.checkbox;
-  if (isDate(value)) return FieldType.dateTime;
 
   if (typeof value === "object") {
     if ("hex" in value && "rgb" in value) return FieldType.color;
-    if ("latitude" in value && "longitude" in value) return FieldType.geoPoint;
     if ("toDate" in value) return FieldType.dateTime;
     return FieldType.json;
   }
@@ -57,6 +25,7 @@ const inferTypeFromValue = (value: any) => {
   }
 
   if (typeof value === "string") {
+    if (isValidDate(parseISO(value))) return FieldType.dateTime;
     if (REGEX_EMAIL.test(value)) return FieldType.email;
     if (REGEX_PHONE.test(value)) return FieldType.phone;
     if (REGEX_URL.test(value)) return FieldType.url;
@@ -67,12 +36,11 @@ const inferTypeFromValue = (value: any) => {
 
   return;
 };
-
 export const suggestType = (data: { [key: string]: any }[], field: string) => {
   const results: Record<string, number> = {};
 
-  data.forEach((row) => {
-    const result = inferTypeFromValue(row[field]);
+  data.forEach((record) => {
+    const result = inferTypeFromValue(record.fields[field]);
     if (!result) return;
     if (results[result] === undefined) results[result] = 1;
     else results[result] += 1;
@@ -83,7 +51,7 @@ export const suggestType = (data: { [key: string]: any }[], field: string) => {
   const bestMatch = sortedResults[0][0];
 
   if (bestMatch === FieldType.shortText) {
-    const values = data.map((row) => row[field]);
+    const values = data.map((record) => record.fields[field]);
     const uniqueValues = new Set(values);
     const hasDuplicates = values.length !== uniqueValues.size;
 
@@ -91,4 +59,17 @@ export const suggestType = (data: { [key: string]: any }[], field: string) => {
   }
 
   return bestMatch;
+};
+
+export const fieldParser = (fieldType: FieldType) => {
+  switch (fieldType) {
+    case FieldType.date:
+    case FieldType.dateTime:
+      return (v: string) => {
+        const date = parseISO(v);
+        return isValidDate(date) ? date.getTime() : null;
+      };
+    default:
+      return (v: any) => v;
+  }
 };

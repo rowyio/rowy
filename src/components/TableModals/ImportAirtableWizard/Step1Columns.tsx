@@ -13,41 +13,30 @@ import {
   FormControl,
   RadioGroup,
   Radio,
-  TextField,
-  MenuItem,
-  Alert,
-  AlertTitle,
-  Stack,
-  Box,
 } from "@mui/material";
 import ArrowIcon from "@mui/icons-material/ArrowForward";
-import { TableColumn as TableColumnIcon } from "@src/assets/icons";
 
 import { IStepProps } from ".";
-import { CsvConfig } from "@src/components/TableModals/ImportCsvWizard";
+import { AirtableConfig } from "./ImportAirtableWizard";
 import FadeList from "@src/components/TableModals/ScrollableList";
 import Column, { COLUMN_HEADER_HEIGHT } from "@src/components/Table/Column";
-import ColumnSelect from "@src/components/Table/ColumnSelect";
+import MultiSelect from "@rowy/multiselect";
 
 import {
   tableScope,
   tableSchemaAtom,
   tableColumnsOrderedAtom,
-  ImportCsvData,
 } from "@src/atoms/tableScope";
 import { FieldType } from "@src/constants/fields";
-import { getFieldProp } from "@src/components/fields";
-import { suggestType } from "@src/components/TableModals/ImportExistingWizard/utils";
+import { suggestType } from "./utils";
 
 export default function Step1Columns({
-  csvData,
+  airtableData,
   config,
   updateConfig,
   setConfig,
   isXs,
-}: IStepProps & {
-  csvData: NonNullable<ImportCsvData & { invalidRows: Record<string, any> }>;
-}) {
+}: IStepProps) {
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
 
@@ -59,10 +48,9 @@ export default function Step1Columns({
   );
 
   const [selectedFields, setSelectedFields] = useState(
-    config.pairs.map((pair) => pair.csvKey)
+    config.pairs.map((pair) => pair.fieldKey)
   );
 
-  // When a field is selected to be imported
   const handleSelect =
     (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
       const checked = e.target.checked;
@@ -77,15 +65,21 @@ export default function Step1Columns({
           )?.value ?? null;
 
         const columnKey = camelCase(field);
-        const columnConfig: Partial<CsvConfig> = { pairs: [], newColumns: [] };
-        columnConfig.pairs = [{ csvKey: field, columnKey: match ?? columnKey }];
+        const columnConfig: Partial<AirtableConfig> = {
+          pairs: [],
+          newColumns: [],
+        };
+        columnConfig.pairs = [
+          { fieldKey: field, columnKey: match ?? columnKey },
+        ];
         if (!match) {
           columnConfig.newColumns = [
             {
               name: field,
               fieldName: columnKey,
               key: columnKey,
-              type: suggestType(csvData.rows, field) || FieldType.shortText,
+              type:
+                suggestType(airtableData.records, field) || FieldType.shortText,
               index: -1,
               config: {},
             },
@@ -98,13 +92,13 @@ export default function Step1Columns({
         setSelectedFields(newValue);
 
         // Check if this pair was already pushed to main config
-        const configPair = find(config.pairs, { csvKey: field });
-        const configIndex = findIndex(config.pairs, { csvKey: field });
+        const configPair = find(config.pairs, { fieldKey: field });
+        const configIndex = findIndex(config.pairs, { fieldKey: field });
 
         // Delete matching newColumn if it was created
         if (configPair) {
           const newColumnIndex = findIndex(config.newColumns, {
-            key: configPair.columnKey,
+            key: configPair.fieldKey,
           });
           if (newColumnIndex > -1) {
             const newColumns = [...config.newColumns];
@@ -122,19 +116,18 @@ export default function Step1Columns({
       }
     };
 
-  // When a field is mapped to a new column
-  const handleChange = (csvKey: string) => (value: string) => {
+  const handleChange = (fieldKey: string) => (value: string) => {
+    if (!value) return;
     const columnKey = !!tableSchema.columns?.[value] ? value : camelCase(value);
-    if (columnKey === "") return;
     // Check if this pair already exists in config
-    const configIndex = findIndex(config.pairs, { csvKey });
+    const configIndex = findIndex(config.pairs, { fieldKey });
     if (configIndex > -1) {
       const pairs = [...config.pairs];
-      pairs[configIndex].columnKey = columnKey;
+      pairs[configIndex].fieldKey = columnKey;
       setConfig((config) => ({ ...config, pairs }));
     } else {
       updateConfig({
-        pairs: [{ csvKey, columnKey }],
+        pairs: [{ fieldKey, columnKey }],
       });
     }
 
@@ -145,7 +138,9 @@ export default function Step1Columns({
             name: value,
             fieldName: columnKey,
             key: columnKey,
-            type: suggestType(csvData.rows, csvKey) || FieldType.shortText,
+            type:
+              suggestType(airtableData.records, fieldKey) ||
+              FieldType.shortText,
             index: -1,
             config: {},
           },
@@ -154,24 +149,14 @@ export default function Step1Columns({
     }
   };
 
-  const stepErrors = () => {
-    const errors = [];
-    if (config.pairs.length < 1) {
-      errors.push("You must select at least one column to import!");
-    }
-    if (config.documentId === "column" && !config.documentIdCsvKey) {
-      errors.push("You must select a column for document ID!");
-    }
-    return errors;
-  };
-
+  const fieldKeys = Object.keys(airtableData.records[0].fields);
   return (
     <div>
       <Grid container spacing={7}>
         {!isXs && (
           <Grid item xs={12} sm={6}>
             <Typography variant="subtitle2" gutterBottom component="h2">
-              Select columns ({config.pairs.length} of {csvData.columns.length})
+              Select columns ({config.pairs.length} of {fieldKeys.length})
             </Typography>
           </Grid>
         )}
@@ -185,17 +170,16 @@ export default function Step1Columns({
       <Divider />
 
       <FadeList>
-        {csvData.columns.map((field) => {
+        {fieldKeys.map((field) => {
           const selected = selectedFields.indexOf(field) > -1;
           const columnKey =
-            find(config.pairs, { csvKey: field })?.columnKey ?? null;
+            find(config.pairs, { fieldKey: field })?.columnKey ?? null;
           const matchingColumn = columnKey
             ? tableSchema.columns?.[columnKey] ??
               find(config.newColumns, { key: columnKey }) ??
               null
             : null;
           const isNewColumn = !!find(config.newColumns, { key: columnKey });
-
           return (
             <Grid container key={field} component="li" wrap="nowrap">
               <Grid item xs>
@@ -233,8 +217,9 @@ export default function Step1Columns({
 
               <Grid item xs>
                 {selected && (
-                  <ColumnSelect
+                  <MultiSelect
                     multiple={false}
+                    options={tableColumns}
                     value={columnKey}
                     onChange={handleChange(field) as any}
                     TextFieldProps={{
@@ -244,34 +229,21 @@ export default function Step1Columns({
                           if (!columnKey) return "Select or add column";
                           else
                             return (
-                              <Stack
-                                direction="row"
-                                gap={1}
-                                alignItems="center"
-                              >
-                                <Box sx={{ width: 24, height: 24 }}>
-                                  {!isNewColumn ? (
-                                    getFieldProp("icon", matchingColumn?.type)
-                                  ) : (
-                                    <TableColumnIcon color="disabled" />
-                                  )}
-                                </Box>
+                              <>
                                 {matchingColumn?.name}
                                 {isNewColumn && (
                                   <Chip
                                     label="New"
-                                    color="primary"
                                     size="small"
-                                    variant="outlined"
-                                    style={{
-                                      marginLeft: "auto",
+                                    sx={{
+                                      marginLeft: (theme) =>
+                                        theme.spacing(1) + " !important",
+                                      backgroundColor: "action.focus",
                                       pointerEvents: "none",
-                                      height: 24,
-                                      fontWeight: "normal",
                                     }}
                                   />
                                 )}
-                              </Stack>
+                              </>
                             );
                         },
                         sx: [
@@ -302,14 +274,14 @@ export default function Step1Columns({
                           !columnKey && { color: "text.disabled" },
                         ],
                       },
-                      sx: { "& .MuiInputLabel-root": { display: "none" } },
                     }}
                     clearable={false}
                     displayEmpty
+                    labelPlural="columns"
                     freeText
-                    AddButtonProps={{ children: "Create column…" }}
+                    AddButtonProps={{ children: "Add new column…" }}
                     AddDialogProps={{
-                      title: "Create column",
+                      title: "Add new column",
                       textFieldLabel: "Column name",
                     }}
                   />
@@ -327,71 +299,26 @@ export default function Step1Columns({
         <Grid item xs={12}>
           <FormControl>
             <RadioGroup
-              defaultValue="auto"
+              defaultValue="recordId"
               name="radio-buttons-group"
               sx={{ flexDirection: "row" }}
               onChange={(e) => {
-                const documentId = e.currentTarget.value as "auto" | "column";
-                setConfig((prev: CsvConfig) => ({
-                  ...prev,
-                  documentId,
-                  documentIdCsvKey: null,
-                }));
+                const documentId = e.currentTarget.value as "auto" | "recordId";
+                setConfig((prev: AirtableConfig) => ({ ...prev, documentId }));
               }}
             >
               <FormControlLabel
-                value="auto"
-                control={<Radio checked={config.documentId === "auto"} />}
-                label="Auto-Generated"
+                value="recordId"
+                control={<Radio />}
+                label="Use Airtable Record ID"
               />
               <FormControlLabel
-                value="column"
-                control={<Radio checked={config.documentId === "column"} />}
-                label="Pick Column"
+                value="auto"
+                control={<Radio />}
+                label="Auto-Generated"
               />
-              <TextField
-                disabled={config.documentId !== "column"}
-                select
-                value={config.documentIdCsvKey ?? ""}
-                onChange={(e) =>
-                  setConfig((prev) => ({
-                    ...prev,
-                    documentIdCsvKey: e.target.value,
-                  }))
-                }
-                sx={{ width: isXs ? "100%" : 200, margin: "auto" }}
-                SelectProps={{
-                  displayEmpty: true,
-                  renderValue: (value) => (
-                    <>{value ? value : "Select ID Column"}</>
-                  ),
-                  MenuProps: {
-                    sx: { height: 200 },
-                    anchorOrigin: { vertical: "bottom", horizontal: "right" },
-                    transformOrigin: { vertical: "top", horizontal: "right" },
-                  },
-                }}
-                helperText={
-                  config.documentId === "column" &&
-                  csvData.invalidRows &&
-                  `Invalid Rows: ${csvData.invalidRows.length}/${csvData.rows.length}`
-                }
-              >
-                {csvData.columns.map((column) => (
-                  <MenuItem key={column} value={column}>
-                    {column}
-                  </MenuItem>
-                ))}
-              </TextField>
             </RadioGroup>
           </FormControl>
-        </Grid>
-        <Grid item xs={12}>
-          {stepErrors().map((error, index) => (
-            <Alert key={index} severity="error" sx={{ my: 1 }}>
-              <AlertTitle>{error}</AlertTitle>
-            </Alert>
-          ))}
         </Grid>
       </Grid>
     </div>
