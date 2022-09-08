@@ -5,11 +5,15 @@ export const EXTERNAL_LINKS = {
   homepage: meta.homepage,
   privacy: meta.homepage + "/privacy",
   terms: meta.homepage + "/terms",
+  templates: meta.homepage + "/templates",
   docs: meta.homepage.replace("//", "//docs."),
+  demo: meta.homepage.replace("//", "//demo."),
+  playground: meta.homepage.replace("//", "//demo."),
 
   gitHub: meta.repository.url.replace(".git", ""),
-  discord: "https://discord.gg/B8yAD5PDX4",
+  discord: "https://rowy.io/discord",
   twitter: "https://twitter.com/rowyio",
+  productHunt: "https://www.producthunt.com/products/rowy-2",
 
   rowyRun: meta.repository.url.replace(".git", "Run"),
   rowyRunGitHub: meta.repository.url.replace(".git", "Run"),
@@ -27,6 +31,7 @@ const WIKI_PATHS = {
   setupRoles: "/setup/roles",
   setupUpdate: "/setup/update",
 
+  howTo: "/category/quickstart-guide",
   howToCreateTable: "/how-to/create-table",
   howToCreateColumn: "/how-to/create-column",
   howToAddRow: "/how-to/add-row",

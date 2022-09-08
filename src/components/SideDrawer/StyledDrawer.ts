@@ -1,6 +1,6 @@
 import { styled, Drawer, drawerClasses } from "@mui/material";
 import { DRAWER_WIDTH, DRAWER_COLLAPSED_WIDTH } from "./index";
-import { APP_BAR_HEIGHT } from "@src/layouts/Navigation";
+import { TOP_BAR_HEIGHT } from "@src/layouts/Navigation/TopBar";
 import { TABLE_TOOLBAR_HEIGHT } from "@src/components/TableToolbar";
 
 export const StyledDrawer = styled(Drawer)(({ theme }) => ({
@@ -32,15 +32,15 @@ export const StyledDrawer = styled(Drawer)(({ theme }) => ({
 
     boxSizing: "content-box",
 
-    top: APP_BAR_HEIGHT + TABLE_TOOLBAR_HEIGHT,
-    height: `calc(100% - ${APP_BAR_HEIGHT + TABLE_TOOLBAR_HEIGHT}px)`,
+    top: TOP_BAR_HEIGHT + TABLE_TOOLBAR_HEIGHT,
+    height: `calc(100% - ${TOP_BAR_HEIGHT + TABLE_TOOLBAR_HEIGHT}px)`,
     ".MuiDialog-paperFullScreen &": {
       top:
-        APP_BAR_HEIGHT +
+        TOP_BAR_HEIGHT +
         TABLE_TOOLBAR_HEIGHT +
         Number(theme.spacing(2).replace("px", "")),
       height: `calc(100% - ${
-        APP_BAR_HEIGHT + TABLE_TOOLBAR_HEIGHT
+        TOP_BAR_HEIGHT + TABLE_TOOLBAR_HEIGHT
       }px - ${theme.spacing(2)})`,
     },
 

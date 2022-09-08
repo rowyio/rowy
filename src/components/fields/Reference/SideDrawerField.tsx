@@ -5,7 +5,7 @@ import { ISideDrawerFieldProps } from "@src/components/fields/types";
 import { Stack, TextField, IconButton } from "@mui/material";
 import LaunchIcon from "@mui/icons-material/Launch";
 
-import { globalScope, projectIdAtom } from "@src/atoms/globalScope";
+import { projectScope, projectIdAtom } from "@src/atoms/projectScope";
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
 import { getFieldId } from "@src/components/SideDrawer/utils";
 
@@ -16,8 +16,8 @@ export default function Reference({
   onSubmit,
   disabled,
 }: ISideDrawerFieldProps) {
-  const [projectId] = useAtom(projectIdAtom, globalScope);
-  const [firebaseDb] = useAtom(firebaseDbAtom, globalScope);
+  const [projectId] = useAtom(projectIdAtom, projectScope);
+  const [firebaseDb] = useAtom(firebaseDbAtom, projectScope);
 
   const transformedValue =
     Boolean(value) && "path" in value && typeof value.path === "string"

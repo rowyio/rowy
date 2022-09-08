@@ -14,10 +14,10 @@ import { WIKI_LINKS } from "@src/constants/externalLinks";
 /* eslint-disable import/no-webpack-loader-syntax */
 import defaultValueDefs from "!!raw-loader!./defaultValue.d.ts";
 import {
-  globalScope,
+  projectScope,
   compatibleRowyRunVersionAtom,
   projectSettingsAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import { ColumnConfig } from "@src/types/table";
 
 const CodeEditorComponent = lazy(
@@ -40,7 +40,7 @@ interface ICodeEditorProps {
 function CodeEditor({ type, column, handleChange }: ICodeEditorProps) {
   const [compatibleRowyRunVersion] = useAtom(
     compatibleRowyRunVersionAtom,
-    globalScope
+    projectScope
   );
 
   const functionBodyOnly = compatibleRowyRunVersion!({ maxVersion: "1.3.10" });
@@ -92,7 +92,7 @@ export default function DefaultValueInput({
   handleChange,
   column,
 }: IDefaultValueInputProps) {
-  const [projectSettings] = useAtom(projectSettingsAtom, globalScope);
+  const [projectSettings] = useAtom(projectSettingsAtom, projectScope);
 
   const _type =
     column.type !== FieldType.derivative

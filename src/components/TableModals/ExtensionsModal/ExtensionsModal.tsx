@@ -10,11 +10,11 @@ import ExtensionModal from "./ExtensionModal";
 import ExtensionMigration from "./ExtensionMigration";
 
 import {
-  globalScope,
+  projectScope,
   currentUserAtom,
   rowyRunAtom,
   confirmDialogAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import {
   tableScope,
   tableSettingsAtom,
@@ -32,9 +32,9 @@ import {
 } from "@src/utils/table";
 
 export default function ExtensionsModal({ onClose }: ITableModalProps) {
-  const [currentUser] = useAtom(currentUserAtom, globalScope);
-  const [rowyRun] = useAtom(rowyRunAtom, globalScope);
-  const confirm = useSetAtom(confirmDialogAtom, globalScope);
+  const [currentUser] = useAtom(currentUserAtom, projectScope);
+  const [rowyRun] = useAtom(rowyRunAtom, projectScope);
+  const confirm = useSetAtom(confirmDialogAtom, projectScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const [updateTableSchema] = useAtom(updateTableSchemaAtom, tableScope);

@@ -1,5 +1,5 @@
 import { sub } from "date-fns";
-import { rowyRunAtom } from "@src/atoms/globalScope";
+import { rowyRunAtom } from "@src/atoms/projectScope";
 import { CloudLogFilters } from "@src/atoms/tableScope";
 
 export const cloudLogFetcher = (

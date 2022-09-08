@@ -12,7 +12,7 @@ import DoneIcon from "@mui/icons-material/Done";
 
 import SetupItem from "@src/components/Setup/SetupItem";
 
-import { globalScope, projectIdAtom } from "@src/atoms/globalScope";
+import { projectScope, projectIdAtom } from "@src/atoms/projectScope";
 import {
   RULES_START,
   RULES_END,
@@ -31,7 +31,7 @@ export default {
 const rules = RULES_START + REQUIRED_RULES + RULES_END;
 
 function StepStorageRules({ isComplete, setComplete }: ISetupStepBodyProps) {
-  const [projectId] = useAtom(projectIdAtom, globalScope);
+  const [projectId] = useAtom(projectIdAtom, projectScope);
   const { enqueueSnackbar } = useSnackbar();
 
   return (

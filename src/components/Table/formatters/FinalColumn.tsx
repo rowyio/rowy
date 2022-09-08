@@ -6,12 +6,12 @@ import { CopyCells as CopyCellsIcon } from "@src/assets/icons";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 
 import {
-  globalScope,
+  projectScope,
   userRolesAtom,
   tableAddRowIdTypeAtom,
   altPressAtom,
   confirmDialogAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import {
   tableScope,
   tableSettingsAtom,
@@ -21,15 +21,15 @@ import {
 import { TableRow } from "@src/types/table";
 
 export default function FinalColumn({ row }: FormatterProps<TableRow, any>) {
-  const [userRoles] = useAtom(userRolesAtom, globalScope);
-  const [addRowIdType] = useAtom(tableAddRowIdTypeAtom, globalScope);
-  const confirm = useSetAtom(confirmDialogAtom, globalScope);
+  const [userRoles] = useAtom(userRolesAtom, projectScope);
+  const [addRowIdType] = useAtom(tableAddRowIdTypeAtom, projectScope);
+  const confirm = useSetAtom(confirmDialogAtom, projectScope);
 
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const addRow = useSetAtom(addRowAtom, tableScope);
   const deleteRow = useSetAtom(deleteRowAtom, tableScope);
 
-  const [altPress] = useAtom(altPressAtom, globalScope);
+  const [altPress] = useAtom(altPressAtom, projectScope);
   const handleDelete = () => deleteRow(row._rowy_ref.path);
 
   if (!userRoles.includes("ADMIN") && tableSettings.readOnly === true)

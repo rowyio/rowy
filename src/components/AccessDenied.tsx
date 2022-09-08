@@ -16,21 +16,22 @@ import SecurityIcon from "@mui/icons-material/SecurityOutlined";
 import EmptyState from "@src/components/EmptyState";
 
 import {
-  globalScope,
+  projectScope,
   currentUserAtom,
   userRolesAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
 import { ROUTES } from "@src/constants/routes";
 
 export default function AccessDenied({ resetErrorBoundary }: FallbackProps) {
-  const [currentUser] = useAtom(currentUserAtom, globalScope);
-  const [userRoles] = useAtom(userRolesAtom, globalScope);
+  const [currentUser] = useAtom(currentUserAtom, projectScope);
+  const [userRoles] = useAtom(userRolesAtom, projectScope);
 
   if (!currentUser) window.location.reload();
 
   return (
     <EmptyState
+      role="alert"
       fullScreen
       Icon={SecurityIcon}
       message="Access denied"

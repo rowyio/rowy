@@ -15,9 +15,10 @@ import { Copy as CopyIcon } from "@src/assets/icons";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 
 import MultiSelect from "@rowy/multiselect";
+import EmojiAvatar from "@src/components/EmojiAvatar";
 
 import {
-  globalScope,
+  projectScope,
   projectRolesAtom,
   projectSettingsAtom,
   rowyRunAtom,
@@ -25,7 +26,7 @@ import {
   UserSettings,
   updateUserAtom,
   confirmDialogAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import { runRoutes } from "@src/constants/runRoutes";
 import { USERS } from "@src/config/dbPaths";
 
@@ -35,13 +36,13 @@ export default function UserItem({
   roles: rolesProp,
 }: UserSettings) {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-  const confirm = useSetAtom(confirmDialogAtom, globalScope);
-  const openRowyRunModal = useSetAtom(rowyRunModalAtom, globalScope);
+  const confirm = useSetAtom(confirmDialogAtom, projectScope);
+  const openRowyRunModal = useSetAtom(rowyRunModalAtom, projectScope);
 
-  const [projectRoles] = useAtom(projectRolesAtom, globalScope);
-  const [projectSettings] = useAtom(projectSettingsAtom, globalScope);
-  const [rowyRun] = useAtom(rowyRunAtom, globalScope);
-  const [updateUser] = useAtom(updateUserAtom, globalScope);
+  const [projectRoles] = useAtom(projectRolesAtom, projectScope);
+  const [projectSettings] = useAtom(projectSettingsAtom, projectScope);
+  const [rowyRun] = useAtom(rowyRunAtom, projectScope);
+  const [updateUser] = useAtom(updateUserAtom, projectScope);
 
   const [value, setValue] = useState(Array.isArray(rolesProp) ? rolesProp : []);
   const allRoles = new Set(["ADMIN", ...(projectRoles ?? []), ...value]);
@@ -59,7 +60,7 @@ export default function UserItem({
       });
       if (res.success) {
         if (!updateUser) throw new Error("Could not update user document");
-        await updateUser(_rowy_ref!.id, { roles: value });
+        await updateUser(_rowy_ref!.path, { roles: value });
         closeSnackbar(loadingSnackbarId);
         enqueueSnackbar(`Set roles for ${user!.email}: ${value.join(", ")}`);
       }
@@ -72,9 +73,10 @@ export default function UserItem({
   const listItemChildren = (
     <>
       <ListItemAvatar>
-        <Avatar src={user?.photoURL}>
-          {user?.displayName ? user.displayName[0] : undefined}
-        </Avatar>
+        <EmojiAvatar
+          src={user?.photoURL}
+          fallback={user?.displayName || _rowy_ref?.id || "?"}
+        />
       </ListItemAvatar>
       <ListItemText
         primary={user?.displayName}

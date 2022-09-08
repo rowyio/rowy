@@ -94,18 +94,20 @@ export default function SteppedAccordion({
             >
               <StepLabel error={error} {...labelProps}>
                 {title}
-                <ExpandIcon sx={{ mr: -0.5 }} />
+                {content && <ExpandIcon sx={{ mr: -0.5 }} />}
               </StepLabel>
             </StepButton>
 
-            <StepContent
-              TransitionProps={
-                disableUnmount ? { unmountOnExit: false } : undefined
-              }
-              {...contentProps}
-            >
-              {content}
-            </StepContent>
+            {content && (
+              <StepContent
+                TransitionProps={
+                  disableUnmount ? { unmountOnExit: false } : undefined
+                }
+                {...contentProps}
+              >
+                {content}
+              </StepContent>
+            )}
           </Step>
         )
       )}

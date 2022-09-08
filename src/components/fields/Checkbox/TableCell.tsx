@@ -3,7 +3,7 @@ import { useSetAtom } from "jotai";
 import { get } from "lodash-es";
 
 import { FormControlLabel, Switch } from "@mui/material";
-import { globalScope, confirmDialogAtom } from "@src/atoms/globalScope";
+import { projectScope, confirmDialogAtom } from "@src/atoms/projectScope";
 
 const replacer = (data: any) => (m: string, key: string) => {
   const objKey = key.split(":")[0];
@@ -18,7 +18,7 @@ export default function Checkbox({
   onSubmit,
   disabled,
 }: IHeavyCellProps) {
-  const confirm = useSetAtom(confirmDialogAtom, globalScope);
+  const confirm = useSetAtom(confirmDialogAtom, projectScope);
 
   const handleChange = () => {
     if (column?.config?.confirmation) {

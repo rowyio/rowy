@@ -1,19 +1,33 @@
 import { Link, useLocation } from "react-router-dom";
+import { HashLink } from "react-router-hash-link";
+
 import { MenuItem, MenuItemProps } from "@mui/material";
 import { spreadSx } from "@src/utils/ui";
 
 const linkProps = { target: "_blank", rel: "noopener noreferrer" };
 
-export default function NavItem(
-  props: MenuItemProps<typeof Link | "a" | "button">
-) {
+type NavItemComponent = typeof HashLink | typeof Link | "a" | "button";
+
+export default function NavItem(props: MenuItemProps<NavItemComponent>) {
   const { pathname } = useLocation();
+
+  let component: NavItemComponent = "button";
+  if ("to" in props) {
+    component = Link;
+    if (
+      typeof props.to === "string" ? props.to.includes("#") : !!props.to.hash
+    ) {
+      component = HashLink;
+    }
+  } else if ("href" in props) {
+    component = "a";
+  }
 
   return (
     <MenuItem
       role="none"
       tabIndex={0}
-      component={"to" in props ? Link : "href" in props ? "a" : "button"}
+      component={component}
       selected={"to" in props ? pathname === props.to : false}
       {...props}
       {...("href" in props ? linkProps : {})}

@@ -13,7 +13,7 @@ import TabPanel from "@mui/lab/TabPanel";
 
 import { Import as ImportIcon } from "@src/assets/icons";
 
-import { globalScope, userRolesAtom } from "@src/atoms/globalScope";
+import { projectScope, userRolesAtom } from "@src/atoms/projectScope";
 import { tableScope, tableSettingsAtom } from "@src/atoms/tableScope";
 import TableToolbarButton from "@src/components/TableToolbar/TableToolbarButton";
 import ImportFromCsv from "@src/components/TableToolbar/ImportData/ImportFromCsv";
@@ -32,7 +32,7 @@ export enum ImportMethod {
 }
 
 export default function ImportData({ render, PopoverProps }: IImportDataProps) {
-  const [userRoles] = useAtom(userRolesAtom, globalScope);
+  const [userRoles] = useAtom(userRolesAtom, projectScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
 
   const importMethodRef = useRef(ImportMethod.csv);

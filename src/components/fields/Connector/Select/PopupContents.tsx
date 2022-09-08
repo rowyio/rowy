@@ -25,7 +25,7 @@ import useStyles from "./styles";
 import Loading from "@src/components/Loading";
 import { getLabel } from "@src/components/fields/Connector/utils";
 import { useSnackbar } from "notistack";
-import { globalScope, rowyRunAtom } from "@src/atoms/globalScope";
+import { projectScope, rowyRunAtom } from "@src/atoms/projectScope";
 import { tableScope, tableSettingsAtom } from "@src/atoms/tableScope";
 import { getTableSchemaPath } from "@src/utils/table";
 
@@ -39,7 +39,7 @@ export default function PopupContents({
   column,
   docRef,
 }: IPopupContentsProps) {
-  const [rowyRun] = useAtom(rowyRunAtom, globalScope);
+  const [rowyRun] = useAtom(rowyRunAtom, projectScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
 
   const { enqueueSnackbar } = useSnackbar();

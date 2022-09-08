@@ -13,7 +13,7 @@ import {
   columnModalAtom,
   tableModalAtom,
 } from "@src/atoms/tableScope";
-import { APP_BAR_HEIGHT } from "@src/layouts/Navigation";
+import { TOP_BAR_HEIGHT } from "@src/layouts/Navigation/TopBar";
 
 export default function EmptyTable() {
   const openColumnModal = useSetAtom(columnModalAtom, tableScope);
@@ -130,13 +130,14 @@ export default function EmptyTable() {
       justifyContent="center"
       alignItems="center"
       sx={{
-        height: `calc(100vh - ${APP_BAR_HEIGHT}px)`,
+        height: `calc(100vh - ${TOP_BAR_HEIGHT}px)`,
         width: "100%",
         p: 2,
         maxWidth: 480,
         margin: "0 auto",
         textAlign: "center",
       }}
+      id="empty-table"
     >
       {contents}
     </Stack>

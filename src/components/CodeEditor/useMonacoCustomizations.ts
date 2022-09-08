@@ -30,7 +30,7 @@ import utilsDefs from "!!raw-loader!./utils.d.ts";
 import rowyUtilsDefs from "!!raw-loader!./rowy.d.ts";
 import extensionsDefs from "!!raw-loader!./extensions.d.ts";
 import { runRoutes } from "@src/constants/runRoutes";
-import { rowyRunAtom, globalScope } from "@src/atoms/globalScope";
+import { rowyRunAtom, projectScope } from "@src/atoms/projectScope";
 import { getFieldProp } from "@src/components/fields";
 
 export interface IUseMonacoCustomizationsProps {
@@ -63,7 +63,7 @@ export default function useMonacoCustomizations({
   const theme = useTheme();
   const monaco = useMonaco();
   const [tableRows] = useAtom(tableRowsAtom, tableScope);
-  const [rowyRun] = useAtom(rowyRunAtom, globalScope);
+  const [rowyRun] = useAtom(rowyRunAtom, projectScope);
   const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
   useEffect(() => {
     return () => {

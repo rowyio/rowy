@@ -17,14 +17,17 @@ import {
   MenuItem,
   Alert,
   AlertTitle,
+  Stack,
+  Box,
 } from "@mui/material";
 import ArrowIcon from "@mui/icons-material/ArrowForward";
+import { TableColumn as TableColumnIcon } from "@src/assets/icons";
 
 import { IStepProps } from ".";
 import { CsvConfig } from "@src/components/TableModals/ImportCsvWizard";
 import FadeList from "@src/components/TableModals/ScrollableList";
 import Column, { COLUMN_HEADER_HEIGHT } from "@src/components/Table/Column";
-import MultiSelect from "@rowy/multiselect";
+import ColumnSelect from "@src/components/Table/ColumnSelect";
 
 import {
   tableScope,
@@ -33,6 +36,7 @@ import {
   ImportCsvData,
 } from "@src/atoms/tableScope";
 import { FieldType } from "@src/constants/fields";
+import { getFieldProp } from "@src/components/fields";
 import { suggestType } from "@src/components/TableModals/ImportExistingWizard/utils";
 
 export default function Step1Columns({
@@ -58,6 +62,7 @@ export default function Step1Columns({
     config.pairs.map((pair) => pair.csvKey)
   );
 
+  // When a field is selected to be imported
   const handleSelect =
     (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
       const checked = e.target.checked;
@@ -117,6 +122,7 @@ export default function Step1Columns({
       }
     };
 
+  // When a field is mapped to a new column
   const handleChange = (csvKey: string) => (value: string) => {
     const columnKey = !!tableSchema.columns?.[value] ? value : camelCase(value);
     if (columnKey === "") return;
@@ -227,9 +233,8 @@ export default function Step1Columns({
 
               <Grid item xs>
                 {selected && (
-                  <MultiSelect
+                  <ColumnSelect
                     multiple={false}
-                    options={tableColumns}
                     value={columnKey}
                     onChange={handleChange(field) as any}
                     TextFieldProps={{
@@ -239,21 +244,34 @@ export default function Step1Columns({
                           if (!columnKey) return "Select or add column";
                           else
                             return (
-                              <>
+                              <Stack
+                                direction="row"
+                                gap={1}
+                                alignItems="center"
+                              >
+                                <Box sx={{ width: 24, height: 24 }}>
+                                  {!isNewColumn ? (
+                                    getFieldProp("icon", matchingColumn?.type)
+                                  ) : (
+                                    <TableColumnIcon color="disabled" />
+                                  )}
+                                </Box>
                                 {matchingColumn?.name}
                                 {isNewColumn && (
                                   <Chip
                                     label="New"
+                                    color="primary"
                                     size="small"
-                                    sx={{
-                                      marginLeft: (theme) =>
-                                        theme.spacing(1) + " !important",
-                                      backgroundColor: "action.focus",
+                                    variant="outlined"
+                                    style={{
+                                      marginLeft: "auto",
                                       pointerEvents: "none",
+                                      height: 24,
+                                      fontWeight: "normal",
                                     }}
                                   />
                                 )}
-                              </>
+                              </Stack>
                             );
                         },
                         sx: [
@@ -284,14 +302,14 @@ export default function Step1Columns({
                           !columnKey && { color: "text.disabled" },
                         ],
                       },
+                      sx: { "& .MuiInputLabel-root": { display: "none" } },
                     }}
                     clearable={false}
                     displayEmpty
-                    labelPlural="columns"
                     freeText
-                    AddButtonProps={{ children: "Add new column…" }}
+                    AddButtonProps={{ children: "Create column…" }}
                     AddDialogProps={{
-                      title: "Add new column",
+                      title: "Create column",
                       textFieldLabel: "Column name",
                     }}
                   />

@@ -21,11 +21,11 @@ import FiltersPopover from "./FiltersPopover";
 import FilterInputs from "./FilterInputs";
 
 import {
-  globalScope,
+  projectScope,
   userSettingsAtom,
   updateUserSettingsAtom,
   userRolesAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import {
   tableScope,
   tableIdAtom,
@@ -52,9 +52,9 @@ enum FilterType {
 }
 
 export default function Filters() {
-  const [userSettings] = useAtom(userSettingsAtom, globalScope);
-  const [updateUserSettings] = useAtom(updateUserSettingsAtom, globalScope);
-  const [userRoles] = useAtom(userRolesAtom, globalScope);
+  const [userSettings] = useAtom(userSettingsAtom, projectScope);
+  const [updateUserSettings] = useAtom(updateUserSettingsAtom, projectScope);
+  const [userRoles] = useAtom(userRolesAtom, projectScope);
   const [tableId] = useAtom(tableIdAtom, tableScope);
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);

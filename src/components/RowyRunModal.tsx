@@ -13,11 +13,11 @@ import Logo from "@src/assets/LogoRowyRun";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
 import {
-  globalScope,
+  projectScope,
   userRolesAtom,
   projectSettingsAtom,
   rowyRunModalAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import { ROUTES } from "@src/constants/routes";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
 
@@ -27,11 +27,11 @@ import { WIKI_LINKS } from "@src/constants/externalLinks";
  * @see {@link rowyRunModalAtom | Usage example}
  */
 export default function RowyRunModal() {
-  const [userRoles] = useAtom(userRolesAtom, globalScope);
-  const [projectSettings] = useAtom(projectSettingsAtom, globalScope);
+  const [userRoles] = useAtom(userRolesAtom, projectScope);
+  const [projectSettings] = useAtom(projectSettingsAtom, projectScope);
   const [rowyRunModal, setRowyRunModal] = useAtom(
     rowyRunModalAtom,
-    globalScope
+    projectScope
   );
 
   const handleClose = () => setRowyRunModal({ ...rowyRunModal, open: false });

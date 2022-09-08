@@ -36,6 +36,9 @@ export type UserSettings = Partial<{
       sorts: TableSort[];
     }>
   >;
+
+  /** Stores table tutorial completion */
+  tableTutorialComplete?: boolean;
 }>;
 /** User info and settings */
 export const userSettingsAtom = atom<UserSettings>({});

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { FallbackProps } from "react-error-boundary";
 import { useLocation, Link } from "react-router-dom";
 
-import { Button } from "@mui/material";
+import { Typography, Button } from "@mui/material";
 import ReloadIcon from "@mui/icons-material/Refresh";
 import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 import { Tables as TablesIcon } from "@src/assets/icons";
@@ -17,18 +17,11 @@ export const ERROR_TABLE_NOT_FOUND = "Table not found";
 
 export interface IErrorFallbackProps extends FallbackProps, IEmptyStateProps {}
 
-export default function ErrorFallback({
+export function ErrorFallbackContents({
   error,
   resetErrorBoundary,
   ...props
 }: IErrorFallbackProps) {
-  // Reset error boundary when navigating away from the page
-  const location = useLocation();
-  const [errorPathname] = useState(location.pathname);
-  useEffect(() => {
-    if (errorPathname !== location.pathname) resetErrorBoundary();
-  }, [errorPathname, location.pathname, resetErrorBoundary]);
-
   if ((error as any).code === "permission-denied")
     return (
       <AccessDenied error={error} resetErrorBoundary={resetErrorBoundary} />
@@ -38,13 +31,17 @@ export default function ErrorFallback({
     message: "Something went wrong",
     description: (
       <>
-        <span>
+        <Typography variant="inherit" style={{ whiteSpace: "pre-line" }}>
           {(error as any).code && <b>{(error as any).code}: </b>}
           {error.message}
-        </span>
+        </Typography>
         <Button
           size={props.basic ? "small" : "medium"}
-          href={meta.repository.url.replace(".git", "") + "/issues/new/choose"}
+          href={
+            meta.repository.url.replace(".git", "") +
+            "/issues/new?labels=bug&template=bug_report.md&title=Error: " +
+            error.message.replace("\n", " ")
+          }
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -60,7 +57,9 @@ export default function ErrorFallback({
       message: ERROR_TABLE_NOT_FOUND,
       description: (
         <>
-          <span>Make sure you have the right ID</span>
+          <Typography variant="inherit">
+            Make sure you have the right ID
+          </Typography>
           <code>{error.message.replace(ERROR_TABLE_NOT_FOUND + ": ", "")}</code>
           <Button
             size={props.basic ? "small" : "medium"}
@@ -84,7 +83,9 @@ export default function ErrorFallback({
       message: "New update available",
       description: (
         <>
-          <span>Reload this page to get the latest update</span>
+          <Typography variant="inherit">
+            Reload this page to get the latest update
+          </Typography>
           <Button
             size={props.basic ? "small" : "medium"}
             variant="outlined"
@@ -99,12 +100,25 @@ export default function ErrorFallback({
     };
   }
 
-  return <EmptyState fullScreen {...renderProps} {...props} />;
+  return <EmptyState role="alert" fullScreen {...renderProps} {...props} />;
+}
+
+export default function ErrorFallback(props: IErrorFallbackProps) {
+  const { resetErrorBoundary } = props;
+
+  // Reset error boundary when navigating away from the page
+  const location = useLocation();
+  const [errorPathname] = useState(location.pathname);
+  useEffect(() => {
+    if (errorPathname !== location.pathname) resetErrorBoundary();
+  }, [errorPathname, location.pathname, resetErrorBoundary]);
+
+  return <ErrorFallbackContents {...props} />;
 }
 
 export function InlineErrorFallback(props: IErrorFallbackProps) {
   return (
-    <ErrorFallback
+    <ErrorFallbackContents
       {...props}
       fullScreen={false}
       basic
@@ -115,5 +129,5 @@ export function InlineErrorFallback(props: IErrorFallbackProps) {
 }
 
 export function NonFullScreenErrorFallback(props: IErrorFallbackProps) {
-  return <ErrorFallback {...props} fullScreen={false} />;
+  return <ErrorFallbackContents {...props} fullScreen={false} />;
 }
