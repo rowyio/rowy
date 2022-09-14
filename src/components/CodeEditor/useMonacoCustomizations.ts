@@ -71,25 +71,6 @@ export default function useMonacoCustomizations({
     };
   }, []);
 
-  // Initialize theme
-  useEffect(() => {
-    if (!monaco) {
-      // useMonaco returns a monaco instance but initialisation is done asynchronously
-      // dont execute the logic until the instance is initialised
-      return;
-    }
-
-    setTimeout(() => {
-      try {
-        monaco.editor.defineTheme("github-light", githubLightTheme as any);
-        monaco.editor.defineTheme("github-dark", githubDarkTheme as any);
-        monaco.editor.setTheme("github-" + theme.palette.mode);
-      } catch (error) {
-        console.error("Could not set Monaco theme: ", error);
-      }
-    });
-  }, [monaco, theme.palette.mode]);
-
   // Initialize external libs & TypeScript compiler options
   useEffect(() => {
     if (!monaco) return;

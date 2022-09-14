@@ -12,6 +12,8 @@ import useMonacoCustomizations, {
 } from "./useMonacoCustomizations";
 import FullScreenButton from "@src/components/FullScreenButton";
 import { spreadSx } from "@src/utils/ui";
+import githubLightTheme from "@src/components/CodeEditor/github-light-default.json";
+import githubDarkTheme from "@src/components/CodeEditor/github-dark-default.json";
 
 export interface ICodeEditorProps
   extends Partial<EditorProps>,
@@ -89,6 +91,10 @@ export default function CodeEditor({
           value={initialEditorValue}
           loading={<CircularProgressOptical size={20} sx={{ m: 2 }} />}
           className="editor"
+          beforeMount={(monaco) => {
+            monaco.editor.defineTheme("github-light", githubLightTheme as any);
+            monaco.editor.defineTheme("github-dark", githubDarkTheme as any);
+          }}
           onMount={(editor) => {
             if (onFocus) editor.onDidFocusEditorWidget(onFocus);
             if (onBlur) editor.onDidBlurEditorWidget(onBlur);
@@ -105,6 +111,7 @@ export default function CodeEditor({
             automaticLayout: true,
             fixedOverflowWidgets: true,
             tabSize: 2,
+            theme: `github-${theme.palette.mode}`,
             ...props.options,
           }}
         />
