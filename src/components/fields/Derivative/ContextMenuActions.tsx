@@ -5,7 +5,11 @@ import { useSnackbar } from "notistack";
 import ReEvalIcon from "@mui/icons-material/ReplayOutlined";
 import EvalIcon from "@mui/icons-material/PlayCircleOutline";
 
-import { projectScope, rowyRunAtom } from "@src/atoms/projectScope";
+import {
+  projectScope,
+  compatibleRowyRunVersionAtom,
+  rowyRunAtom,
+} from "@src/atoms/projectScope";
 import {
   tableScope,
   tableSettingsAtom,
@@ -31,6 +35,10 @@ export const ContextMenuActions: IFieldConfig["contextMenuActions"] = (
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const [tableRows] = useAtom(tableRowsAtom, tableScope);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const [compatibleRowyRunVersion] = useAtom(
+    compatibleRowyRunVersionAtom,
+    projectScope
+  );
 
   const selectedCol = tableSchema.columns?.[selectedCell.columnKey];
   if (!selectedCol) return [];
@@ -43,7 +51,11 @@ export const ContextMenuActions: IFieldConfig["contextMenuActions"] = (
   // don't show evaluate button if function has external dependency
   const code =
     selectedCol.config?.derivativeFn ?? selectedCol.config?.script ?? "";
-  if (code.includes("require(")) return [];
+  if (
+    code.includes("require(") &&
+    compatibleRowyRunVersion({ maxVersion: "1.6.2" })
+  )
+    return [];
 
   const handleEvaluate = async () => {
     try {
