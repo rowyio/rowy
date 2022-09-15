@@ -125,7 +125,6 @@ export default function ImportFromAirtable() {
       />
       <TextField
         variant="filled"
-        autoFocus
         fullWidth
         label="Airtable Table URL"
         placeholder="Insert your Table URL here"
