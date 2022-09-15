@@ -28,7 +28,7 @@ export const EXTERNAL_LINKS = {
 const WIKI_PATHS = {
   setup: "/setup/install",
   setupFirebaseProject: "/setup/firebase-project",
-  setupRoles: "/setup/roles",
+  setupRoles: "/how-to/roles",
   setupUpdate: "/setup/update",
 
   howTo: "/category/quickstart-guide",
