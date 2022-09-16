@@ -11,6 +11,7 @@ import NavTableSection from "./NavTableSection";
 
 import {
   projectScope,
+  userRolesAtom,
   userSettingsAtom,
   tablesAtom,
   tableSettingsDialogAtom,
@@ -33,6 +34,7 @@ export default function NavDrawerContents({
   tempExpanded,
 }: INavDrawerContentsProps) {
   const [tables] = useAtom(tablesAtom, projectScope);
+  const [userRoles] = useAtom(userRolesAtom, projectScope);
   const [userSettings] = useAtom(userSettingsAtom, projectScope);
   const openTableSettingsDialog = useSetAtom(
     tableSettingsDialogAtom,
@@ -80,21 +82,23 @@ export default function NavDrawerContents({
             />
           ))}
 
-      <li>
-        <NavItem
-          {...({ component: "button" } as any)}
-          onClick={(e: any) => {
-            if (closeDrawer) closeDrawer(e);
-            openTableSettingsDialog({});
-          }}
-          sx={{ mb: 1 }}
-        >
-          <ListItemIcon>
-            <AddIcon />
-          </ListItemIcon>
-          <ListItemText primary="Create table…" />
-        </NavItem>
-      </li>
+      {userRoles.includes("ADMIN") && (
+        <li>
+          <NavItem
+            {...({ component: "button" } as any)}
+            onClick={(e: any) => {
+              if (closeDrawer) closeDrawer(e);
+              openTableSettingsDialog({});
+            }}
+            sx={{ mb: 1 }}
+          >
+            <ListItemIcon>
+              <AddIcon />
+            </ListItemIcon>
+            <ListItemText primary="Create table…" />
+          </NavItem>
+        </li>
+      )}
     </>
   );
 }
