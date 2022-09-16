@@ -12,14 +12,14 @@ export default function NavItem(props: MenuItemProps<NavItemComponent>) {
   const { pathname } = useLocation();
 
   let component: NavItemComponent = "button";
-  if ("to" in props) {
+  if ("to" in props && props.to !== undefined) {
     component = Link;
     if (
       typeof props.to === "string" ? props.to.includes("#") : !!props.to.hash
     ) {
       component = HashLink;
     }
-  } else if ("href" in props) {
+  } else if ("href" in props && props.href !== undefined) {
     component = "a";
   }
 
