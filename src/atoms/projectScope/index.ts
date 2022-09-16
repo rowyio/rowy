@@ -1,5 +1,5 @@
 /** Scope for atoms stored at the root of the app */
-export const globalScope = Symbol("globalScope");
+export const projectScope = Symbol("projectScope");
 
 export * from "./auth";
 export * from "./project";

@@ -5,7 +5,7 @@ import { signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
 import { Typography } from "@mui/material";
 import LoadingButton, { LoadingButtonProps } from "@mui/lab/LoadingButton";
 
-import { globalScope } from "@src/atoms/globalScope";
+import { projectScope } from "@src/atoms/projectScope";
 import { firebaseAuthAtom } from "@src/sources/ProjectSourceFirebase";
 
 const googleProvider = new GoogleAuthProvider();
@@ -19,7 +19,7 @@ export default function SignInWithGoogle({
   matchEmail,
   ...props
 }: ISignInWithGoogleProps) {
-  const [firebaseAuth] = useAtom(firebaseAuthAtom, globalScope);
+  const [firebaseAuth] = useAtom(firebaseAuthAtom, projectScope);
   const [status, setStatus] = useState<"IDLE" | "LOADING" | string>("IDLE");
 
   const handleSignIn = async () => {

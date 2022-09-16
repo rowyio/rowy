@@ -11,9 +11,9 @@ import Modal from "@src/components/Modal";
 import CodeEditor from "@src/components/CodeEditor";
 
 import {
-  globalScope,
+  projectScope,
   tableSettingsDialogSchemaAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import { analytics, logEvent } from "@src/analytics";
 
 export interface IExportSettingsProps {
@@ -28,7 +28,7 @@ export default function ExportSettings({
   const [open, setOpen] = useState(false);
 
   const { _suggestedRules, ...values } = useWatch({ control });
-  const [tableSchema] = useAtom(tableSettingsDialogSchemaAtom, globalScope);
+  const [tableSchema] = useAtom(tableSettingsDialogSchemaAtom, projectScope);
 
   const formattedJson = stringify(
     { ...values, _schema: merge(tableSchema, values._schema) },

@@ -10,7 +10,7 @@ import { Fade } from "@mui/material";
 //import EmptyTable from "@src/components/Table/EmptyTable";
 import Function from "@src/components/Function";
 
-import { currentUserAtom, globalScope } from "@src/atoms/globalScope";
+import { currentUserAtom, projectScope } from "@src/atoms/projectScope";
 // import TableSourceFirestore from "@src/sources/TableSourceFirestore";
 // import {
 //   tableScope,
@@ -40,7 +40,7 @@ export default function FunctionPage() {
 
 function ProvidedFunctionPage() {
   const { id } = useParams();
-  const [currentUser] = useAtom(currentUserAtom, globalScope);
+  const [currentUser] = useAtom(currentUserAtom, projectScope);
 
   return (
     <Suspense

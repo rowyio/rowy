@@ -5,11 +5,11 @@ import { useErrorHandler } from "react-error-boundary";
 import { getIdTokenResult } from "firebase/auth";
 
 import {
-  globalScope,
+  projectScope,
   currentUserAtom,
   userRolesAtom,
   updateUserSettingsAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import { firebaseAuthAtom } from "./init";
 
 /**
@@ -18,14 +18,14 @@ import { firebaseAuthAtom } from "./init";
 export function useAuthUser() {
   const elevateError = useErrorHandler();
   // Get current user and store in atoms
-  const [firebaseAuth] = useAtom(firebaseAuthAtom, globalScope);
-  const setCurrentUser = useSetAtom(currentUserAtom, globalScope);
-  const setUserRoles = useSetAtom(userRolesAtom, globalScope);
+  const [firebaseAuth] = useAtom(firebaseAuthAtom, projectScope);
+  const setCurrentUser = useSetAtom(currentUserAtom, projectScope);
+  const setUserRoles = useSetAtom(userRolesAtom, projectScope);
   // Must use `useAtomCallback`, otherwise `useAtom(updateUserSettingsAtom)`
   // will cause infinite re-render
   const updateUserSettings = useAtomCallback(
     useCallback((get) => get(updateUserSettingsAtom), []),
-    globalScope
+    projectScope
   );
 
   useEffect(() => {

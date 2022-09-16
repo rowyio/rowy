@@ -19,7 +19,7 @@ import ThumbDownIcon from "@mui/icons-material/ThumbDownAlt";
 import ThumbDownOffIcon from "@mui/icons-material/ThumbDownOffAlt";
 
 import { analytics, logEvent } from "@src/analytics";
-import { globalScope } from "@src/atoms/globalScope";
+import { projectScope } from "@src/atoms/projectScope";
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
 import { ROUTES } from "@src/constants/routes";
 import { SETTINGS } from "config/dbPaths";
@@ -35,7 +35,7 @@ export default {
 } as ISetupStep;
 
 function StepFinish() {
-  const [firebaseDb] = useAtom(firebaseDbAtom, globalScope);
+  const [firebaseDb] = useAtom(firebaseDbAtom, projectScope);
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {

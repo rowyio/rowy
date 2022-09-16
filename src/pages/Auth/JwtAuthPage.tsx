@@ -7,11 +7,11 @@ import { TextField, Button } from "@mui/material";
 
 import AuthLayout from "@src/layouts/AuthLayout";
 
-import { globalScope } from "@src/atoms/globalScope";
+import { projectScope } from "@src/atoms/projectScope";
 import { firebaseAuthAtom } from "@src/sources/ProjectSourceFirebase";
 
 export default function JwtAuthPage() {
-  const [firebaseAuth] = useAtom(firebaseAuthAtom, globalScope);
+  const [firebaseAuth] = useAtom(firebaseAuthAtom, projectScope);
   const { enqueueSnackbar } = useSnackbar();
 
   const [jwt, setJWT] = useState("");

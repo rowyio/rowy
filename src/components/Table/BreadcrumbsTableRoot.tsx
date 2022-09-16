@@ -16,11 +16,11 @@ import InfoTooltip from "@src/components/InfoTooltip";
 import RenderedMarkdown from "@src/components/RenderedMarkdown";
 
 import {
-  globalScope,
+  projectScope,
   userRolesAtom,
   tableDescriptionDismissedAtom,
   tablesAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import { ROUTES } from "@src/constants/routes";
 
 /**
@@ -30,12 +30,12 @@ import { ROUTES } from "@src/constants/routes";
 export default function BreadcrumbsTableRoot(props: StackProps) {
   const { id } = useParams();
 
-  const [userRoles] = useAtom(userRolesAtom, globalScope);
+  const [userRoles] = useAtom(userRolesAtom, projectScope);
   const [dismissed, setDismissed] = useAtom(
     tableDescriptionDismissedAtom,
-    globalScope
+    projectScope
   );
-  const [tables] = useAtom(tablesAtom, globalScope);
+  const [tables] = useAtom(tablesAtom, projectScope);
 
   const tableSettings = find(tables, ["id", id]);
   if (!tableSettings) return null;

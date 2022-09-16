@@ -1,9 +1,10 @@
 import { useAtom } from "jotai";
 
 import MultiSelect, { MultiSelectProps } from "@rowy/multiselect";
-import { Stack, StackProps, Typography } from "@mui/material";
+import { Stack, StackProps, Typography, Chip } from "@mui/material";
+import { TableColumn as TableColumnIcon } from "@src/assets/icons";
 
-import { globalScope, altPressAtom } from "@src/atoms/globalScope";
+import { projectScope, altPressAtom } from "@src/atoms/projectScope";
 import { tableScope, tableColumnsOrderedAtom } from "@src/atoms/tableScope";
 import { ColumnConfig } from "@src/types/table";
 import { FieldType } from "@src/constants/fields";
@@ -53,7 +54,6 @@ export default function ColumnSelect({
       TextFieldProps={{
         ...props.TextFieldProps,
         SelectProps: {
-          ...props.TextFieldProps?.SelectProps,
           renderValue: () => {
             if (Array.isArray(props.value) && props.value.length > 1)
               return `${props.value.length} columns`;
@@ -72,6 +72,7 @@ export default function ColumnSelect({
               value
             );
           },
+          ...props.TextFieldProps?.SelectProps,
         },
       }}
     />
@@ -90,7 +91,9 @@ export function ColumnItem({
   children,
   ...props
 }: IColumnItemProps) {
-  const [altPress] = useAtom(altPressAtom, globalScope);
+  const [altPress] = useAtom(altPressAtom, projectScope);
+
+  const isNew = option.index === undefined && !option.type;
 
   return (
     <Stack
@@ -100,10 +103,18 @@ export function ColumnItem({
       {...props}
       sx={[{ color: "text.secondary", width: "100%" }, ...spreadSx(props.sx)]}
     >
-      {getFieldProp("icon", option.type)}
+      {getFieldProp("icon", option.type) ?? (
+        <TableColumnIcon color="disabled" />
+      )}
+
       <Typography color="text.primary" style={{ flexGrow: 1 }}>
         {altPress ? <code>{option.value}</code> : option.label}
       </Typography>
+
+      {isNew && (
+        <Chip label="New" color="primary" size="small" variant="outlined" />
+      )}
+
       {altPress ? (
         <Typography
           color="text.disabled"

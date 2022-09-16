@@ -1,6 +1,6 @@
 import Logo from "@src/assets/Logo";
 import BreadcrumbsTableRoot from "@src/components/Table/BreadcrumbsTableRoot";
-import { GrowProps } from "@mui/material";
+import { FadeProps, Typography } from "@mui/material";
 
 export enum ROUTES {
   home = "/",
@@ -35,8 +35,11 @@ export enum ROUTES {
   settings = "/settings",
   userSettings = "/settings/user",
   projectSettings = "/settings/project",
-  userManagement = "/settings/userManagement",
+  members = "/members",
   debugSettings = "/settings/debug",
+
+  tutorial = "/tutorial",
+  tableTutorial = "/tutorial/table",
 
   test = "/test",
   themeTest = "/test/theme",
@@ -46,22 +49,15 @@ export enum ROUTES {
 export const ROUTE_TITLES = {
   [ROUTES.tables]: {
     title: "Tables",
-    titleComponent: (open, pinned) =>
-      !(open && pinned) && (
-        <Logo
-          style={{
-            display: "block",
-            margin: "0 auto",
-          }}
-        />
+    titleComponent: (open, isPermanent) =>
+      !(open && isPermanent) && (
+        <Logo style={{ display: "block", margin: "0 auto" }} />
       ),
   },
 
   [ROUTES.table]: {
     title: "Table",
-    titleComponent: (open, pinned) => (
-      <BreadcrumbsTableRoot sx={{ ml: open && pinned ? -48 / 8 : 2 }} />
-    ),
+    titleComponent: (_open, _isPermanent) => <BreadcrumbsTableRoot />,
     titleTransitionProps: { style: { transformOrigin: "0 50%" } },
     leftAligned: true,
   },
@@ -69,8 +65,20 @@ export const ROUTE_TITLES = {
   [ROUTES.settings]: "Settings",
   [ROUTES.userSettings]: "Settings",
   [ROUTES.projectSettings]: "Project Settings",
-  [ROUTES.userManagement]: "User Management",
+  [ROUTES.members]: "Members",
   [ROUTES.debugSettings]: "Debug",
+
+  [ROUTES.tutorial]: "Tutorial",
+  [ROUTES.tableTutorial]: {
+    title: "Tutorial",
+    titleComponent: (_o, _i) => (
+      <Typography component="h1" variant="h6">
+        Tutorial
+      </Typography>
+    ),
+    titleTransitionProps: { style: { transformOrigin: "0 50%" } },
+    leftAligned: true,
+  },
 
   [ROUTES.test]: "Test",
   [ROUTES.themeTest]: "Theme Test",
@@ -80,8 +88,8 @@ export const ROUTE_TITLES = {
   | string
   | {
       title: string;
-      titleComponent: (open: boolean, pinned: boolean) => React.ReactNode;
-      titleTransitionProps?: Partial<GrowProps>;
+      titleComponent: (open: boolean, isPermanent: boolean) => React.ReactNode;
+      titleTransitionProps?: Partial<FadeProps>;
       leftAligned?: boolean;
     }
 >;

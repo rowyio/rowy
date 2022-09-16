@@ -18,12 +18,12 @@ import HiddenFields from "./HiddenFields";
 import RowHeight from "./RowHeight";
 
 import {
-  globalScope,
+  projectScope,
   projectSettingsAtom,
   userRolesAtom,
   compatibleRowyRunVersionAtom,
   rowyRunModalAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import {
   tableScope,
   tableSettingsAtom,
@@ -35,20 +35,20 @@ import { FieldType } from "@src/constants/fields";
 // prettier-ignore
 const Filters = lazy(() => import("./Filters" /* webpackChunkName: "Filters" */));
 // prettier-ignore
-const ImportCsv = lazy(() => import("./ImportCsv" /* webpackChunkName: "ImportCsv" */));
+const ImportData = lazy(() => import("./ImportData/ImportData" /* webpackChunkName: "ImportData" */));
 // prettier-ignore
 const ReExecute = lazy(() => import("./ReExecute" /* webpackChunkName: "ReExecute" */));
 
 export const TABLE_TOOLBAR_HEIGHT = 44;
 
 export default function TableToolbar() {
-  const [projectSettings] = useAtom(projectSettingsAtom, globalScope);
-  const [userRoles] = useAtom(userRolesAtom, globalScope);
+  const [projectSettings] = useAtom(projectSettingsAtom, projectScope);
+  const [userRoles] = useAtom(userRolesAtom, projectScope);
   const [compatibleRowyRunVersion] = useAtom(
     compatibleRowyRunVersionAtom,
-    globalScope
+    projectScope
   );
-  const openRowyRunModal = useSetAtom(rowyRunModalAtom, globalScope);
+  const openRowyRunModal = useSetAtom(rowyRunModalAtom, projectScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const openTableModal = useSetAtom(tableModalAtom, tableScope);
@@ -71,7 +71,9 @@ export default function TableToolbar() {
         pl: (theme) => `max(env(safe-area-inset-left), ${theme.spacing(2)})`,
         pb: 1.5,
         height: TABLE_TOOLBAR_HEIGHT,
+        scrollbarWidth: "thin",
         overflowX: "auto",
+        "&": { overflowX: "overlay" },
         overflowY: "hidden",
         "& > *": { flexShrink: 0 },
 
@@ -96,7 +98,7 @@ export default function TableToolbar() {
       <div /> {/* Spacer */}
       {tableSettings.tableType !== "collectionGroup" && (
         <Suspense fallback={<ButtonSkeleton />}>
-          <ImportCsv />
+          <ImportData />
         </Suspense>
       )}
       <Suspense fallback={<ButtonSkeleton />}>

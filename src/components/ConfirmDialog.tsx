@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 
 import { SlideTransitionMui } from "@src/components/Modal/SlideTransition";
-import { globalScope, confirmDialogAtom } from "@src/atoms/globalScope";
+import { projectScope, confirmDialogAtom } from "@src/atoms/projectScope";
 
 /**
  * Display a confirm dialog using `confirmDialogAtom` in `globalState`
@@ -36,9 +36,10 @@ export default function ConfirmDialog() {
       hideCancel,
 
       maxWidth = "xs",
+      buttonLayout = "horizontal",
     },
     setState,
-  ] = useAtom(confirmDialogAtom, globalScope);
+  ] = useAtom(confirmDialogAtom, projectScope);
   const handleClose = () => setState({ open: false });
 
   const [dryText, setDryText] = useState("");
@@ -76,7 +77,15 @@ export default function ConfirmDialog() {
         )}
       </DialogContent>
 
-      <DialogActions>
+      <DialogActions
+        sx={[
+          buttonLayout === "vertical" && {
+            flexDirection: "column",
+            alignItems: "stretch",
+            "& > :not(:first-of-type)": { ml: 0, mt: 1 },
+          },
+        ]}
+      >
         {!hideCancel && (
           <Button
             onClick={() => {

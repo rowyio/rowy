@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAtom } from "jotai";
 import {
-  globalScope,
+  projectScope,
   projectIdAtom,
   currentUserAtom,
   userRolesAtom,
@@ -9,7 +9,7 @@ import {
   publicSettingsAtom,
   projectSettingsAtom,
   rowyRunAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import { firebaseAuthAtom } from "@src/sources/ProjectSourceFirebase";
 import { Button } from "@mui/material";
 import MultiSelect from "@rowy/multiselect";
@@ -33,21 +33,21 @@ function CurrentUser({ currentUser }: { currentUser: User }) {
 }
 
 function JotaiTest() {
-  const [firebaseAuth] = useAtom(firebaseAuthAtom, globalScope);
-  const [projectId] = useAtom(projectIdAtom, globalScope);
-  const [currentUser] = useAtom(currentUserAtom, globalScope);
-  const [userRoles] = useAtom(userRolesAtom, globalScope);
-  const [publicSettings] = useAtom(publicSettingsAtom, globalScope);
-  const [projectSettings] = useAtom(projectSettingsAtom, globalScope);
-  const [userSettings] = useAtom(userSettingsAtom, globalScope);
-  const [rowyRun] = useAtom(rowyRunAtom, globalScope);
+  const [firebaseAuth] = useAtom(firebaseAuthAtom, projectScope);
+  const [projectId] = useAtom(projectIdAtom, projectScope);
+  const [currentUser] = useAtom(currentUserAtom, projectScope);
+  const [userRoles] = useAtom(userRolesAtom, projectScope);
+  const [publicSettings] = useAtom(publicSettingsAtom, projectScope);
+  const [projectSettings] = useAtom(projectSettingsAtom, projectScope);
+  const [userSettings] = useAtom(userSettingsAtom, projectScope);
+  const [rowyRun] = useAtom(rowyRunAtom, projectScope);
 
   const [count, setCount] = useState(0);
   const { enqueueSnackbar } = useSnackbar();
 
   useFirestoreDocWithAtom(
     publicSettingsAtom,
-    globalScope,
+    projectScope,
     "_rowy_/publicSettings"
   );
 

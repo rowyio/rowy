@@ -32,12 +32,12 @@ import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 import FormFieldSnippets from "./FormFieldSnippets";
 
 import {
-  globalScope,
+  projectScope,
   projectIdAtom,
   projectRolesAtom,
   projectSettingsAtom,
   compatibleRowyRunVersionAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import { tableScope, tableColumnsOrderedAtom } from "@src/atoms/tableScope";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
 
@@ -59,12 +59,12 @@ const CodeEditor = lazy(
 );
 
 const Settings = ({ config, onChange, fieldName }: ISettingsProps) => {
-  const [projectId] = useAtom(projectIdAtom, globalScope);
-  const [roles] = useAtom(projectRolesAtom, globalScope);
-  const [settings] = useAtom(projectSettingsAtom, globalScope);
+  const [projectId] = useAtom(projectIdAtom, projectScope);
+  const [roles] = useAtom(projectRolesAtom, projectScope);
+  const [settings] = useAtom(projectSettingsAtom, projectScope);
   const [compatibleRowyRunVersion] = useAtom(
     compatibleRowyRunVersionAtom,
-    globalScope
+    projectScope
   );
   const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
 

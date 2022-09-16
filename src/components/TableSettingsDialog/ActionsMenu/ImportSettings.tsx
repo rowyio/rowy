@@ -12,11 +12,11 @@ import Modal from "@src/components/Modal";
 import DiffEditor from "@src/components/CodeEditor/DiffEditor";
 
 import {
-  globalScope,
+  projectScope,
   confirmDialogAtom,
   tableSettingsDialogSchemaAtom,
   tableSettingsDialogAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import { analytics, logEvent } from "@src/analytics";
 
 export interface IImportSettingsProps {
@@ -36,7 +36,7 @@ export default function ImportSettings({
   const [valid, setValid] = useState(true);
 
   const { _suggestedRules, ...values } = useWatch({ control });
-  const [tableSchema] = useAtom(tableSettingsDialogSchemaAtom, globalScope);
+  const [tableSchema] = useAtom(tableSettingsDialogSchemaAtom, projectScope);
 
   const formattedJson = stringify(
     { ...values, _schema: merge(tableSchema, values._schema) },
@@ -58,10 +58,10 @@ export default function ImportSettings({
     closeMenu();
   };
 
-  const confirm = useSetAtom(confirmDialogAtom, globalScope);
+  const confirm = useSetAtom(confirmDialogAtom, projectScope);
   const { enqueueSnackbar } = useSnackbar();
   const { setValue } = useFormMethods;
-  const [tableSettingsDialog] = useAtom(tableSettingsDialogAtom, globalScope);
+  const [tableSettingsDialog] = useAtom(tableSettingsDialogAtom, projectScope);
 
   const handleImport = () => {
     logEvent(analytics, "import_tableSettings");

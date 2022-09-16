@@ -4,16 +4,18 @@ import { useAtom } from "jotai";
 
 import Loading from "@src/components/Loading";
 import ProjectSourceFirebase from "@src/sources/ProjectSourceFirebase";
+import MembersSourceFirebase from "@src/sources/MembersSourceFirebase";
 import ConfirmDialog from "@src/components/ConfirmDialog";
 import RowyRunModal from "@src/components/RowyRunModal";
 import NotFound from "@src/pages/NotFoundPage";
 import RequireAuth from "@src/layouts/RequireAuth";
 
 import {
-  globalScope,
+  projectScope,
   currentUserAtom,
+  userRolesAtom,
   altPressAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import { ROUTES } from "@src/constants/routes";
 import useKeyPressWithAtom from "@src/hooks/useKeyPressWithAtom";
 
@@ -44,6 +46,8 @@ const TablesPage = lazy(() => import("@src/pages/TablesPage" /* webpackChunkName
 const ProvidedTablePage = lazy(() => import("@src/pages/Table/ProvidedTablePage" /* webpackChunkName: "ProvidedTablePage" */));
 // prettier-ignore
 const ProvidedSubTablePage = lazy(() => import("@src/pages/Table/ProvidedSubTablePage" /* webpackChunkName: "ProvidedSubTablePage" */));
+// prettier-ignore
+const TableTutorialPage = lazy(() => import("@src/pages/Table/TableTutorialPage" /* webpackChunkName: "TableTutorialPage" */));
 
 // prettier-ignore
 const FunctionPage = lazy(() => import("@src/pages/FunctionPage" /* webpackChunkName: "FunctionPage" */));
@@ -52,7 +56,7 @@ const UserSettingsPage = lazy(() => import("@src/pages/Settings/UserSettingsPage
 // prettier-ignore
 const ProjectSettingsPage = lazy(() => import("@src/pages/Settings/ProjectSettingsPage" /* webpackChunkName: "ProjectSettingsPage" */));
 // prettier-ignore
-const UserManagementPage = lazy(() => import("@src/pages/Settings/UserManagementPage" /* webpackChunkName: "UserManagementPage" */));
+const MembersPage = lazy(() => import("@src/pages/Settings/MembersPage" /* webpackChunkName: "MembersPage" */));
 // prettier-ignore
 const DebugSettingsPage = lazy(() => import("@src/pages/Settings/DebugSettingsPage" /* webpackChunkName: "DebugSettingsPage" */));
 
@@ -61,12 +65,14 @@ const ThemeTestPage = lazy(() => import("@src/pages/Test/ThemeTestPage" /* webpa
 // const RowyRunTestPage = lazy(() => import("@src/pages/RowyRunTestPage" /* webpackChunkName: "RowyRunTestPage" */));
 
 export default function App() {
-  const [currentUser] = useAtom(currentUserAtom, globalScope);
-  useKeyPressWithAtom("Alt", altPressAtom, globalScope);
+  const [currentUser] = useAtom(currentUserAtom, projectScope);
+  const [userRoles] = useAtom(userRolesAtom, projectScope);
+  useKeyPressWithAtom("Alt", altPressAtom, projectScope);
 
   return (
     <Suspense fallback={<Loading fullScreen />}>
       <ProjectSourceFirebase />
+      {userRoles.includes("ADMIN") && <MembersSourceFirebase />}
       <ConfirmDialog />
       <RowyRunModal />
 
@@ -125,6 +131,11 @@ export default function App() {
               <Route path=":id" element={<TableGroupRedirectPage />} />
             </Route>
 
+            <Route
+              path={ROUTES.tableTutorial}
+              element={<TableTutorialPage />}
+            />
+
             <Route path={ROUTES.function}>
               <Route
                 index
@@ -141,10 +152,7 @@ export default function App() {
               path={ROUTES.projectSettings}
               element={<ProjectSettingsPage />}
             />
-            <Route
-              path={ROUTES.userManagement}
-              element={<UserManagementPage />}
-            />
+            <Route path={ROUTES.members} element={<MembersPage />} />
             <Route
               path={ROUTES.debugSettings}
               element={<DebugSettingsPage />}
