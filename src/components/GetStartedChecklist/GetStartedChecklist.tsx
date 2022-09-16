@@ -110,14 +110,15 @@ export default function GetStartedChecklist({
                   Learn the basic features and functions of Rowy before creating
                   a table.
                 </Typography>
+
                 <Button
-                  variant="contained"
+                  variant={completedSteps.tutorial ? "outlined" : "contained"}
                   color="primary"
                   component={Link}
                   to={ROUTES.tableTutorial}
                   onClick={() => setOpen(false)}
                 >
-                  Begin tutorial
+                  {completedSteps.tutorial ? "Redo" : "Begin"} tutorial
                 </Button>
               </>
             ),
