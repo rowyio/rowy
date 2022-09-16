@@ -1,7 +1,15 @@
 import { IHeavyCellProps } from "@src/components/fields/types";
 
 import MuiRating from "@mui/material/Rating";
-import StarBorderIcon from "@mui/icons-material/StarBorder";
+import RatingIcon from "@mui/icons-material/Star";
+import { get } from "lodash-es";
+
+
+const getStateIcon = (config: any) => {
+  // only use the config to get the custom rating icon if enabled via toggle
+  if (!get(config, "customIcons.enabled")) { return <RatingIcon /> }
+  return get(config, "customIcons.rating") || <RatingIcon />;
+};
 
 export default function Rating({
   row,
@@ -28,9 +36,10 @@ export default function Rating({
       name={`${row.id}-${column.key}`}
       value={typeof value === "number" ? value : 0}
       onClick={(e) => e.stopPropagation()}
+      icon={getStateIcon(column.config)}
       disabled={disabled}
       onChange={(_, newValue) => onSubmit(newValue)}
-      emptyIcon={<StarBorderIcon />}
+      emptyIcon={getStateIcon(column.config)}
       max={max}
       precision={precision}
       sx={{ mx: -0.25 }}
