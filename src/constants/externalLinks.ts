@@ -55,6 +55,10 @@ const WIKI_PATHS = {
   extensionsSendgridEmail: "/extensions/sendgrid-email",
   extensionsTwilioMessage: "/extensions/twilio-message",
   webhooks: "/webhooks",
+
+  importAirtable: "/import-export-data/import-airtable",
+  importAirtableApiKey: "/import-export-data/import-airtable#api-key",
+  importAirtableTableUrl: "/import-export-data/import-airtable#table-url",
 };
 export const WIKI_LINKS = mapValues(
   WIKI_PATHS,
