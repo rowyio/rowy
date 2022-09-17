@@ -15,6 +15,10 @@ const SideDrawerField = lazy(
     )
 );
 
+const Settings = lazy(
+  () => import("./Settings" /* webpackChunkName: "Settings-ShortText" */)
+);
+
 export const config: IFieldConfig = {
   type: FieldType.longText,
   name: "Long Text",
@@ -28,6 +32,7 @@ export const config: IFieldConfig = {
   TableCell: withBasicCell(BasicCell),
   TableEditor: TextEditor,
   SideDrawerField,
+  settings: Settings,
   filter: {
     operators: filterOperators,
   },
