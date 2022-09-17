@@ -28,13 +28,23 @@ const replacer = (data: any) => (m: string, key: string) => {
 };
 
 const getStateIcon = (actionState: "undo" | "redo" | string, config: any) => {
+  if (!get(config, "customIcons.enabled", false)) {
+    switch (actionState) {
+      case "undo":
+        return <UndoIcon />;
+      case "redo":
+        return <RedoIcon />;
+      default:
+        return <RunIcon />;
+    }
+  }
   switch (actionState) {
     case "undo":
-      return get(config, "customIcons.undo") || <UndoIcon />;
+      return get(config, "customIcons.undo", <UndoIcon />);
     case "redo":
-      return get(config, "customIcons.redo") || <RedoIcon />;
+      return get(config, "customIcons.redo", <RedoIcon />);
     default:
-      return get(config, "customIcons.run") || <RunIcon />;
+      return get(config, "customIcons.run", <RunIcon />);
   }
 };
 
