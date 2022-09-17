@@ -40,11 +40,11 @@ const getStateIcon = (actionState: "undo" | "redo" | string, config: any) => {
   }
   switch (actionState) {
     case "undo":
-      return get(config, "customIcons.undo", <UndoIcon />);
+      return get(config, "customIcons.undo") || <UndoIcon />;
     case "redo":
-      return get(config, "customIcons.redo", <RedoIcon />);
+      return get(config, "customIcons.redo") || <RedoIcon />;
     default:
-      return get(config, "customIcons.run", <RunIcon />);
+      return get(config, "customIcons.run") || <RunIcon />;
   }
 };
 
