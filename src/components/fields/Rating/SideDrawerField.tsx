@@ -3,9 +3,8 @@ import { ISideDrawerFieldProps } from "@src/components/fields/types";
 import { Grid } from "@mui/material";
 import { Rating as MuiRating } from "@mui/material";
 import "@mui/lab";
-import StarBorderIcon from "@mui/icons-material/StarBorder";
-
-import { fieldSx, getFieldId } from "@src/components/SideDrawer/utils";
+import { getStateIcon } from "./TableCell";
+import { fieldSx } from "@src/components/SideDrawer/utils";
 
 export default function Rating({
   column,
@@ -29,7 +28,9 @@ export default function Rating({
           onChange(newValue);
           onSubmit();
         }}
-        emptyIcon={<StarBorderIcon fontSize="inherit" />}
+        icon={getStateIcon(column.config)}
+        emptyIcon={getStateIcon(column.config)}
+        size="small"
         max={max}
         precision={precision}
         sx={{ ml: -0.5 }}
