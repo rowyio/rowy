@@ -81,22 +81,22 @@ export const components = (theme: Theme): ThemeOptions => {
 
           body: { cursor: "default" },
 
-          "@supports selector(:has(a))": {
-            body: {
-              transition: "background-color 0s",
-              transitionDelay: theme.transitions.duration.leavingScreen + "ms",
-            },
+          // "@supports selector(:has(a))": {
+          //   body: {
+          //     transition: "background-color 0s",
+          //     transitionDelay: theme.transitions.duration.leavingScreen + "ms",
+          //   },
 
-            "#root": {
-              transformOrigin: `50% 0%`,
-              transition: theme.transitions.create([
-                "transform",
-                "border-radius",
-              ]),
-              transitionDuration: `${theme.transitions.duration.leavingScreen}ms, 0s`,
-              transitionDelay: `0s, ${theme.transitions.duration.leavingScreen}ms`,
-            },
-          },
+          //   "#root": {
+          //     transformOrigin: `50% 0%`,
+          //     transition: theme.transitions.create([
+          //       "transform",
+          //       "border-radius",
+          //     ]),
+          //     transitionDuration: `${theme.transitions.duration.leavingScreen}ms, 0s`,
+          //     transitionDelay: `0s, ${theme.transitions.duration.leavingScreen}ms`,
+          //   },
+          // },
 
           "code, pre, pre.MuiTypography-root": {
             fontFamily: theme.typography.fontFamilyMono,
@@ -279,28 +279,28 @@ export const components = (theme: Theme): ThemeOptions => {
             paddingRight: "env(safe-area-inset-right)",
             paddingBottom: "env(safe-area-inset-bottom)",
 
-            "body:has([data-open=true] &)": {
-              backgroundColor: theme.palette.common.black,
-              transitionDelay: "0s",
+            // "body:has([data-open=true] &)": {
+            //   backgroundColor: theme.palette.common.black,
+            //   transitionDelay: "0s",
 
-              "#root": {
-                borderRadius: (theme.shape.borderRadius as number) * 2,
-                overflow: "hidden",
-                filter: `grayscale(100%) contrast(${
-                  theme.palette.mode === "dark" ? "80" : "75"
-                }%)`,
+            //   "#root": {
+            //     borderRadius: (theme.shape.borderRadius as number) * 2,
+            //     overflow: "hidden",
+            //     filter: `grayscale(100%) contrast(${
+            //       theme.palette.mode === "dark" ? "80" : "75"
+            //     }%)`,
 
-                transform: `scale(0.9)`,
-                transition: theme.transitions.create(
-                  ["transform", "border-radius"],
-                  {
-                    easing: theme.transitions.easing.easeOut,
-                  }
-                ),
-                transitionDuration: `${theme.transitions.duration.enteringScreen}ms, 0s`,
-                transitionDelay: "0s, 0s",
-              },
-            },
+            //     transform: `scale(0.9)`,
+            //     transition: theme.transitions.create(
+            //       ["transform", "border-radius"],
+            //       {
+            //         easing: theme.transitions.easing.easeOut,
+            //       }
+            //     ),
+            //     transitionDuration: `${theme.transitions.duration.enteringScreen}ms, 0s`,
+            //     transitionDelay: "0s, 0s",
+            //   },
+            // },
           },
         },
       },
