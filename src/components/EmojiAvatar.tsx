@@ -4,17 +4,28 @@ import { colord } from "colord";
 import { useTheme, Avatar, AvatarProps } from "@mui/material";
 import { spreadSx } from "@src/utils/ui";
 
+// https://www.stefanjudis.com/snippets/how-to-detect-emojis-in-javascript-strings/
+const emojiRegex = /\p{Emoji}/u;
+
+export const EMOJI_AVATAR_L_LIGHT = 90;
+export const EMOJI_AVATAR_L_DARK = 30;
+export const EMOJI_AVATAR_C_LIGHT = 15;
+export const EMOJI_AVATAR_C_DARK = 20;
+
 export interface IEmojiAvatarProps extends Partial<AvatarProps> {
+  /** CSS color string or a number (as a string). If number, used as hue */
   bgColor?: string;
   emoji?: string;
   fallback: string;
+  uid?: string;
   size?: number;
 }
 
 export default function EmojiAvatar({
-  bgColor,
+  bgColor: bgColorProp,
   emoji,
   fallback,
+  uid,
   children,
   size = 40,
   ...props
@@ -22,7 +33,19 @@ export default function EmojiAvatar({
   const theme = useTheme();
   const darkMode = theme.palette.mode === "dark";
 
-  const bgcolor = bgColor || generateRandomColor(fallback, darkMode);
+  let bgcolor: string;
+  if (bgColorProp && !Number.isNaN(Number(bgColorProp))) {
+    bgcolor = colord({
+      l: darkMode ? EMOJI_AVATAR_L_DARK : EMOJI_AVATAR_L_LIGHT,
+      c: darkMode ? EMOJI_AVATAR_C_DARK : EMOJI_AVATAR_C_LIGHT,
+      h: Number(bgColorProp),
+    }).toHslString();
+  } else if (bgColorProp) {
+    bgcolor = bgColorProp;
+  } else {
+    bgcolor = generateRandomColor(`${fallback}__${uid}`, darkMode);
+  }
+
   const bgcolorLch = colord(bgcolor).toLch();
   const textColor = colord({
     l:
@@ -42,7 +65,7 @@ export default function EmojiAvatar({
           color: textColor,
           width: size,
           height: size,
-          fontSize: size * 0.45,
+          fontSize: size * (emojiRegex.test(emoji || "") ? 0.67 : 0.45),
         },
         props.variant === "rounded" && { borderRadius: size / 40 },
         ...spreadSx(props.sx),
@@ -61,6 +84,10 @@ export default function EmojiAvatar({
 
 const generateRandomColor = (seed: string, darkMode: boolean) => {
   const rng = seedrandom(seed);
-  const color = colord({ l: darkMode ? 30 : 90, c: 15, h: rng() * 360 });
+  const color = colord({
+    l: darkMode ? EMOJI_AVATAR_L_DARK : EMOJI_AVATAR_L_LIGHT,
+    c: darkMode ? EMOJI_AVATAR_C_DARK : EMOJI_AVATAR_C_LIGHT,
+    h: rng() * 360,
+  });
   return color.toHslString();
 };
