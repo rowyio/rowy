@@ -101,6 +101,7 @@ export default function CodeEditor({
           }}
           {...props}
           onValidate={onValidate_}
+          theme={`github-${theme.palette.mode}`}
           options={{
             readOnly: disabled,
             fontFamily: theme.typography.fontFamilyMono,
@@ -111,7 +112,6 @@ export default function CodeEditor({
             automaticLayout: true,
             fixedOverflowWidgets: true,
             tabSize: 2,
-            theme: `github-${theme.palette.mode}`,
             ...props.options,
           }}
         />

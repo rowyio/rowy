@@ -137,6 +137,12 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
 
   // Row actions
   if (row) {
+    const handleDuplicate = () => {
+      addRow({
+        row,
+        setId: addRowIdType === "custom" ? "decrement" : addRowIdType,
+      });
+    };
     const handleDelete = () => deleteRow(row._rowy_ref.path);
     const rowActions = [
       {
@@ -179,13 +185,28 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
             disabled:
               tableSettings.tableType === "collectionGroup" ||
               (!userRoles.includes("ADMIN") && tableSettings.readOnly),
-            onClick: () => {
-              addRow({
-                row,
-                setId: addRowIdType === "custom" ? "decrement" : addRowIdType,
-              });
-              onClose();
-            },
+            onClick: altPress
+              ? handleDuplicate
+              : () => {
+                  confirm({
+                    title: "Duplicate row?",
+                    body: (
+                      <>
+                        Row path:
+                        <br />
+                        <code
+                          style={{ userSelect: "all", wordBreak: "break-all" }}
+                        >
+                          {row._rowy_ref.path}
+                        </code>
+                      </>
+                    ),
+                    confirm: "Duplicate",
+                    confirmColor: "success",
+                    handleConfirm: handleDuplicate,
+                  });
+                  onClose();
+                },
           },
           {
             label: altPress ? "Delete" : "Delete…",

@@ -1,7 +1,14 @@
 import { useState, useEffect } from "react";
 import { useAtom, useSetAtom } from "jotai";
 
-import { Button, Typography, TextField } from "@mui/material";
+import {
+  Button,
+  Typography,
+  TextField,
+  IconButton,
+  Stack,
+  InputLabel,
+} from "@mui/material";
 
 import {
   tableModalAtom,
@@ -10,6 +17,9 @@ import {
 } from "@src/atoms/tableScope";
 import { analytics, logEvent } from "@src/analytics";
 import { find } from "lodash-es";
+
+import { WIKI_LINKS } from "@src/constants/externalLinks";
+import DocsIcon from "@mui/icons-material/ArrowUpward";
 
 export default function ImportFromAirtable() {
   const [{ baseId, tableId, apiKey }, setImportAirtable] = useAtom(
@@ -108,10 +118,28 @@ export default function ImportFromAirtable() {
         manage with Rowy.
       </Typography>
       <TextField
+        sx={{ marginBottom: 1 }}
         variant="filled"
         autoFocus
         fullWidth
-        label="Airtable API Key"
+        label={
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="end"
+          >
+            <InputLabel>Airtable API Key</InputLabel>
+            <IconButton
+              size="small"
+              color="primary"
+              target="_blank"
+              rel="noopener noreferrer"
+              href={WIKI_LINKS.importAirtableApiKey}
+            >
+              API Key <DocsIcon sx={{ rotate: "45deg" }} />
+            </IconButton>
+          </Stack>
+        }
         placeholder="Insert your API key here"
         value={apiKey}
         onChange={(e) =>
@@ -126,7 +154,24 @@ export default function ImportFromAirtable() {
       <TextField
         variant="filled"
         fullWidth
-        label="Airtable Table URL"
+        label={
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="end"
+          >
+            <InputLabel>Airtable Table URL</InputLabel>
+            <IconButton
+              size="small"
+              color="primary"
+              target="_blank"
+              rel="noopener noreferrer"
+              href={WIKI_LINKS.importAirtableTableUrl}
+            >
+              Table URL <DocsIcon sx={{ rotate: "45deg" }} />
+            </IconButton>
+          </Stack>
+        }
         placeholder="Insert your Table URL here"
         value={tableUrl}
         onChange={(e) => {

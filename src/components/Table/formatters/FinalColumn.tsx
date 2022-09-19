@@ -31,6 +31,12 @@ export default function FinalColumn({ row }: FormatterProps<TableRow, any>) {
 
   const [altPress] = useAtom(altPressAtom, projectScope);
   const handleDelete = () => deleteRow(row._rowy_ref.path);
+  const handleDuplicate = () => {
+    addRow({
+      row,
+      setId: addRowIdType === "custom" ? "decrement" : addRowIdType,
+    });
+  };
 
   if (!userRoles.includes("ADMIN") && tableSettings.readOnly === true)
     return null;
@@ -42,11 +48,28 @@ export default function FinalColumn({ row }: FormatterProps<TableRow, any>) {
           size="small"
           color="inherit"
           disabled={tableSettings.tableType === "collectionGroup"}
-          onClick={() =>
-            addRow({
-              row,
-              setId: addRowIdType === "custom" ? "decrement" : addRowIdType,
-            })
+          onClick={
+            altPress
+              ? handleDuplicate
+              : () => {
+                  confirm({
+                    title: "Duplicate row?",
+                    body: (
+                      <>
+                        Row path:
+                        <br />
+                        <code
+                          style={{ userSelect: "all", wordBreak: "break-all" }}
+                        >
+                          {row._rowy_ref.path}
+                        </code>
+                      </>
+                    ),
+                    confirm: "Duplicate",
+                    confirmColor: "success",
+                    handleConfirm: handleDuplicate,
+                  });
+                }
           }
           aria-label="Duplicate row"
           className="row-hover-iconButton"

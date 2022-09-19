@@ -65,6 +65,7 @@ export default function useMonacoCustomizations({
   const [tableRows] = useAtom(tableRowsAtom, tableScope);
   const [rowyRun] = useAtom(rowyRunAtom, projectScope);
   const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
+
   useEffect(() => {
     return () => {
       onUnmount?.();
@@ -76,6 +77,10 @@ export default function useMonacoCustomizations({
     if (!monaco) return;
 
     try {
+      monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
+        target: monaco.languages.typescript.ScriptTarget.ES2020,
+        allowNonTsExtensions: true,
+      });
       monaco.languages.typescript.javascriptDefaults.addExtraLib(firestoreDefs);
       monaco.languages.typescript.javascriptDefaults.addExtraLib(
         firebaseAuthDefs
@@ -83,11 +88,6 @@ export default function useMonacoCustomizations({
       monaco.languages.typescript.javascriptDefaults.addExtraLib(
         firebaseStorageDefs
       );
-      // Compiler options
-      monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
-        target: monaco.languages.typescript.ScriptTarget.ES2020,
-        allowNonTsExtensions: true,
-      });
       monaco.languages.typescript.javascriptDefaults.addExtraLib(
         utilsDefs,
         "ts:filename/utils.d.ts"
@@ -121,9 +121,12 @@ export default function useMonacoCustomizations({
     if (!monaco) return;
 
     try {
-      monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions(
-        JSON.parse(stringifiedDiagnosticsOptions)
-      );
+      monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
+        ...JSON.parse(stringifiedDiagnosticsOptions),
+        diagnosticCodesToIgnore: [
+          1323, // remove dynamic import error
+        ],
+      });
     } catch (error) {
       console.error("Could not set diagnostics options: ", error);
     }
