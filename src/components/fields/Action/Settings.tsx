@@ -88,7 +88,7 @@ const Settings = ({ config, onChange, fieldName }: ISettingsProps) => {
     Array.isArray(config.params) ? config.params : [],
     { space: 2 }
   );
-  const [codeValid, setCodeValid] = useState(true);
+  const [codeErrorMessage, setCodeErrorMessage] = useState<string | null>(null);
 
   const scriptExtraLibs = [
     [
@@ -96,14 +96,16 @@ const Settings = ({ config, onChange, fieldName }: ISettingsProps) => {
       "    /**",
       "     * actionParams are provided by dialog popup form",
       "     */",
-      (config.params ?? []).filter(Boolean).map((param: any) => {
-        const validationKeys = Object.keys(param.validation ?? {});
-        if (validationKeys.includes("string")) {
-          return `static ${param.name}: string`;
-        } else if (validationKeys.includes("array")) {
-          return `static ${param.name}: any[]`;
-        } else return `static ${param.name}: any`;
-      }),
+      (Array.isArray(config.params) ? config.params : [])
+        .filter(Boolean)
+        .map((param: any) => {
+          const validationKeys = Object.keys(param.validation ?? {});
+          if (validationKeys.includes("string")) {
+            return `static ${param.name}: string`;
+          } else if (validationKeys.includes("array")) {
+            return `static ${param.name}: any[]`;
+          } else return `static ${param.name}: any`;
+        }),
       "}",
     ].join("\n"),
     actionDefs,
@@ -256,25 +258,25 @@ const Settings = ({ config, onChange, fieldName }: ISettingsProps) => {
                       value={formattedParamsJson}
                       onChange={(v) => {
                         try {
-                          if (v) {
-                            const parsed = JSON.parse(v);
+                          const parsed = JSON.parse(v ?? "");
+                          if (Array.isArray(parsed)) {
                             onChange("params")(parsed);
+                            setCodeErrorMessage(null);
+                          } else {
+                            setCodeErrorMessage("Form fields must be array");
                           }
                         } catch (e) {
                           console.log(`Failed to parse JSON: ${e}`);
-                          setCodeValid(false);
+                          setCodeErrorMessage("Invalid JSON");
                         }
                       }}
-                      onValidStatusUpdate={({ isValid }) =>
-                        setCodeValid(isValid)
-                      }
-                      error={!codeValid}
+                      error={!!codeErrorMessage}
                     />
                   </Suspense>
 
-                  {!codeValid && (
+                  {codeErrorMessage && (
                     <FormHelperText error variant="filled">
-                      Invalid JSON
+                      {codeErrorMessage}
                     </FormHelperText>
                   )}
                 </FormControl>
