@@ -2,6 +2,7 @@ import { useRef, useLayoutEffect } from "react";
 import { useAtom, useSetAtom } from "jotai";
 import { EditorProps } from "react-data-grid";
 import { get } from "lodash-es";
+import { useSnackbar } from "notistack";
 
 import { TextField } from "@mui/material";
 
@@ -14,6 +15,7 @@ import { doc, deleteField } from "firebase/firestore";
 export default function TextEditor({ row, column }: EditorProps<any>) {
   const [firebaseDb] = useAtom(firebaseDbAtom, projectScope);
   const updateField = useSetAtom(updateFieldAtom, tableScope);
+  const { enqueueSnackbar } = useSnackbar();
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -23,11 +25,17 @@ export default function TextEditor({ row, column }: EditorProps<any>) {
     return () => {
       const newValue = inputElement?.value;
       if (newValue !== undefined && newValue !== "") {
-        updateField({
-          path: row._rowy_ref.path,
-          fieldName: column.key,
-          value: doc(firebaseDb, newValue),
-        });
+        try {
+          const refValue = doc(firebaseDb, newValue);
+
+          updateField({
+            path: row._rowy_ref.path,
+            fieldName: column.key,
+            value: refValue,
+          });
+        } catch (e: any) {
+          enqueueSnackbar(`Invalid path: ${e.message}`, { variant: "error" });
+        }
       } else {
         updateField({
           path: row._rowy_ref.path,
