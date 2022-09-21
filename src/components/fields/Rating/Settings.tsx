@@ -1,8 +1,9 @@
 import { ISettingsProps } from "@src/components/fields/types";
 import RatingIcon from "@mui/icons-material/Star";
-import { Slider, InputLabel, TextField, Grid, FormControlLabel, Checkbox, Stack, Fab } from "@mui/material";
+import { InputLabel, TextField, Grid, FormControlLabel, Checkbox, Stack } from "@mui/material";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import MuiRating from "@mui/material/Rating";
 import { get } from "lodash-es";
 
 export default function Settings({ onChange, config }: ISettingsProps) {
@@ -10,18 +11,20 @@ export default function Settings({ onChange, config }: ISettingsProps) {
     <Grid container spacing={2} justifyItems="end" direction={"row"}>
       <Grid item xs={6}>
         <TextField
-          label="Maximum number of stars"
+          label="Highest possible rating"
           type={"number"}
           value={config.max}
           fullWidth
+          error={false}
           onChange={(e) => {
-            onChange("max")(parseInt(e.target.value));
+            let input = parseInt(e.target.value) || 0
+            if (input > 20) { input = 20 }
+            onChange("max")(input);
           }}
-          inputProps={{ min: 1, max: 20 }}
         />
       </Grid>
       <Grid item xs={6}>
-        <InputLabel>Star fraction</InputLabel>
+        <InputLabel>Rating fraction</InputLabel>
         <ToggleButtonGroup
           value={config.precision}
           exclusive
@@ -30,6 +33,7 @@ export default function Settings({ onChange, config }: ISettingsProps) {
             onChange("precision")(value);
           }}
           aria-label="text alignment"
+          sx={{ pt: 0.5 }}
         >
           <ToggleButton value={0.25} aria-label="quarter">
             1/4
@@ -42,38 +46,47 @@ export default function Settings({ onChange, config }: ISettingsProps) {
           </ToggleButton>
         </ToggleButtonGroup>
       </Grid>
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={config.customIcons?.enabled}
-            onChange={(e) =>
-              onChange("customIcons.enabled")(e.target.checked)
-            }
-            name="customIcons.enabled"
-          />
-        }
-        label="Customize button icons with emoji"
-        style={{ marginLeft: -11 }}
-      />
+      <Grid item xs={6}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={config.customIcons?.enabled}
+              onChange={(e) =>
+                onChange("customIcons.enabled")(e.target.checked)
+              }
+              name="customIcons.enabled"
+            />
+          }
+          label="Customize ratings with emoji"
+          style={{ marginLeft: -11 }}
+        />
+      </Grid>
       {config.customIcons?.enabled && (
-        <Grid container spacing={2} sx={{ mt: { xs: 0, sm: -1 } }}>
-          <Grid item xs={12} sm={true}>
-            <Stack direction="row" spacing={1}>
-              <TextField
-                id="customIcons.rating"
-                value={get(config, "customIcons.rating")}
-                onChange={(e) =>
-                  onChange("customIcons.rating")(e.target.value)
-                }
-                label="Rating:"
-                className="labelHorizontal"
-                inputProps={{ style: { width: "3ch" } }}
-              />
-              <Fab size="small" aria-label="Preview of rating button">
-                {get(config, "customIcons.rating") || <RatingIcon />}
-              </Fab>
-            </Stack>
-          </Grid>
+        <Grid item xs={6} sm={true}>
+          <Stack direction="row" spacing={1}>
+            <TextField
+              id="customIcons.rating"
+              value={get(config, "customIcons.rating")}
+              onChange={(e) =>
+                onChange("customIcons.rating")(e.target.value)
+              }
+              label="Custom icon preview:"
+              className="labelHorizontal"
+              inputProps={{ style: { width: "2ch" } }}
+            />
+
+            <MuiRating aria-label="Preview of the rating field with custom icon"
+              name="Preview"
+              onClick={(e) => e.stopPropagation()}
+              icon={get(config, "customIcons.rating") || <RatingIcon />}
+              size="small"
+              emptyIcon={get(config, "customIcons.rating") || <RatingIcon />}
+              max={get(config, "max")}
+              precision={get(config, "precision")}
+              sx={{ pt: 0.5 }}
+            />
+          </Stack>
+
         </Grid>
       )}
     </Grid>
