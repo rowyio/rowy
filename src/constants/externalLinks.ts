@@ -19,6 +19,7 @@ export const EXTERNAL_LINKS = {
   rowyAppHostName: "rowy.app",
 
   dateFormat: "https://date-fns.org/v2.24.0/docs/format",
+  firebaseProjectbasePath: "https://console.firebase.google.com/project",
 } as const;
 
 const WIKI_PATHS = {
