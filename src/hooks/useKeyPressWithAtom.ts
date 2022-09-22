@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useSetAtom } from "jotai";
-import { PrimitiveAtom, Scope } from "jotai/core/atom";
 
 /**
  * A hook that listens to when the target key is pressed
@@ -11,8 +10,8 @@ import { PrimitiveAtom, Scope } from "jotai/core/atom";
  */
 export default function useKeyPressWithAtom(
   targetKey: string,
-  atom: PrimitiveAtom<boolean>,
-  scope: Scope
+  atom: Parameters<typeof useSetAtom>[0],
+  scope: Parameters<typeof useSetAtom>[1]
 ) {
   const setAtom = useSetAtom(atom, scope);
 

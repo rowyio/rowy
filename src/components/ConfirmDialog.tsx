@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useAtom } from "jotai";
-import { Scope } from "jotai/core/atom";
 
 import {
   Dialog,
@@ -16,7 +15,7 @@ import { FadeTransitionMui } from "@src/components/Modal/FadeTransition";
 import { projectScope, confirmDialogAtom } from "@src/atoms/projectScope";
 
 export interface IConfirmDialogProps {
-  scope?: Scope;
+  scope?: Parameters<typeof useAtom>[1];
 }
 
 /**
