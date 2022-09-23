@@ -44,7 +44,7 @@ import { useScrollToHash } from "@src/hooks/useScrollToHash";
 
 const SEARCH_KEYS = ["id", "name", "section", "description"];
 
-export default function HomePage() {
+export default function TablesPage() {
   const [userRoles] = useAtom(userRolesAtom, projectScope);
   const [userSettings] = useAtom(userSettingsAtom, projectScope);
   const [updateUserSettings] = useAtom(updateUserSettingsAtom, projectScope);
