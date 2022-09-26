@@ -1,8 +1,8 @@
 blank_issues_enabled: false
 contact_links:
-  - name: 🤔 Support & questions
-    url: https://discord.com/invite/fjBugmvzZP
-    about: Chat with us for live support on discord.
+  - name: 🤔 Need support / Q&A
+    url: https://github.com/rowyio/rowy/discussions/categories/support-q-a
+    about: Raise a support query on Github Discussion
   - name: 🙌 Want to join our team?
     url: https://www.rowy.io/jobs
     about: Get in touch to contribute & work with Rowy

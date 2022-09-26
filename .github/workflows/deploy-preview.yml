@@ -8,7 +8,7 @@ on:
 env:
   REACT_APP_FIREBASE_PROJECT_ID: rowyio
   REACT_APP_FIREBASE_PROJECT_WEB_API_KEY:
-    "${{ secrets.FIREBASE_WEB_API_KEY_ROWYIO }}"
+    "${{ secrets.FIREBASE_WEB_API_KEY_TRYROWY }}"
   CI: ""
 jobs:
   build_and_preview:
@@ -27,6 +27,6 @@ jobs:
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
           firebaseServiceAccount:
-            "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ROWYIO }}"
+            "${{ secrets.FIREBASE_SERVICE_ACCOUNT_TRYROWY }}"
           expires: 14d
           projectId: rowyio

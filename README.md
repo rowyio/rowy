@@ -3,13 +3,13 @@
 </p>
 
 <h1 align="center">
-✨ Data x Code ✨ <br/>
+✨ Low-code for Firebase and GCP ✨ <br/>
 </h1>
 <h3 align="center">
-Modern Backend Stack
+Airtable-like UI for Firestore meets IDE in browser for cloud functions
 </h3>
 <p align="center">
-Forget CLIs, configs, and DevOps. Focus on building your apps with a platform designed for developer productivity. Your production database (Firestore) in an Airtable-like UI with full coding extensibility via Cloud Functions visually in the browser.
+Connect to your database, manage data in table-UI with role based access controls. Build cloud function workflows in JS/TS using any NPM or APIs. Forget CLIs, configs, and DevOps. Focus on building your apps with a platform designed for developer productivity.
 </p>
 
 <div align="center">
@@ -23,7 +23,6 @@ Forget CLIs, configs, and DevOps. Focus on building your apps with a platform de
     <a href="https://twitter.com/rowyio"><b>Twitter</b></a>
 </p>
 
-[![License](https://img.shields.io/github/license/rowyio/rowy)](https://github.com/rowyio/rowy/blob/main/LICENSE)
 [![Last commit](https://img.shields.io/github/last-commit/rowyio/rowy/rc)](https://github.com/rowyio/rowy/commits/rc)
 [![GitHub stars](https://img.shields.io/github/stars/rowyio/rowy)](https://github.com/rowyio/rowy/stargazers/)
 
@@ -37,9 +36,9 @@ Forget CLIs, configs, and DevOps. Focus on building your apps with a platform de
 
 Set up Rowy on your Google Cloud Platform project with this easy deploy button.
 
-[![Run on Google Cloud](https://deploy.cloud.run/button.svg)](https://deploy.rowy.app/)
+[<img width="250" alt="Guided quick start button" src="https://user-images.githubusercontent.com/307298/185548050-e9208fb6-fe53-4c84-bbfa-53c08e03c15f.png">](https://rowy.app/)
 
-https://deploy.rowy.app/
+https://rowy.app
 
 ## Documentation
 
@@ -54,17 +53,18 @@ https://user-images.githubusercontent.com/307298/157185793-f67511cd-7b7b-4229-95
  -->
 ### Powerful spreadsheet interface for Firestore
 
+- CMS for Firestore
 - CRUD operations
+- Bulk import or export data - csv, json, tsv
 - Sort and filter by row values
 - Lock, Freeze, Resize, Hide and Rename columns
 - Multiple views for the same collection
-- Bulk import or export data - csv, json
 
 ### Automate with cloud functions and ready made extensions
 
-- Effortlessly build cloud functions on field level triggers right in the browser
+- Build cloud functions workflows on field level data changes 
     -  Use any NPM modules or APIs
-- Connect to your favourite tool with pre-built extensions or create your own
+- Connect to your favourite tool with pre-built code blocks or create your own
     - SendGrid, Algolia, Twilio, Bigquery and more
 
 ### Rich and flexible data fields
@@ -73,17 +73,17 @@ https://user-images.githubusercontent.com/307298/157185793-f67511cd-7b7b-4229-95
     - Basic types: Short Text, Long Text, Email, Phone, URL…
     - Custom UI pickers: Date, Checkbox, Single Select, Multi Select…
     - Uploaders: Image, File
-    - Rich Editors: JSON, Code, Rich Text (HTML)
- - Data validation, default values, required fields
+    - Rich Editors: JSON, Code, Rich Text (HTML), Markdown
+- Data validation, default values, required fields
 - Action field: Clickable trigger for any Cloud Function
 - Aggregate field: Populate cell with value aggregated from the row’s sub-table
-- Connect Table: Get snapshot of data from another data table using Algolia
+- Connector field: Connect data from multiple table collections 
 - Connect Service: Get data from any HTTP endpoint
 
 ### Collaborate with your team
 
 - Granular table-level and field-level permission control  
-  with custom user roles
+  with role based access controls
 - Built in user management
 - Customizable views for different user roles
 
@@ -91,7 +91,7 @@ https://user-images.githubusercontent.com/307298/157185793-f67511cd-7b7b-4229-95
 
 Set up Rowy on your Google Cloud project with this one-click deploy button. Your data and cloud functions stay on your own Firestore/GCP.
 
-[![Run on Google Cloud](https://deploy.cloud.run/button.svg)](https://deploy.rowy.app/)
+[![Run on Google Cloud](https://deploy.cloud.run/button.svg)](https://rowy.app/)
 
 The one-click deploy makes the process of setting up easy with a step by step
 guide and ensures your project is setup correctly.
