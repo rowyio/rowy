@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useState, useEffect } from "react";
 import { get } from "lodash-es";
 import stringify from "json-stable-stringify-without-jsonify";
 import { Link } from "react-router-dom";
@@ -37,6 +37,7 @@ import {
   projectRolesAtom,
   projectSettingsAtom,
   compatibleRowyRunVersionAtom,
+  rowyRunModalAtom,
 } from "@src/atoms/projectScope";
 import { tableScope, tableColumnsOrderedAtom } from "@src/atoms/tableScope";
 import { WIKI_LINKS } from "@src/constants/externalLinks";
@@ -67,6 +68,11 @@ const Settings = ({ config, onChange, fieldName }: ISettingsProps) => {
     projectScope
   );
   const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
+
+  const openRowyRunModal = useSetAtom(rowyRunModalAtom, projectScope);
+  useEffect(() => {
+    if (!settings.rowyRunUrl) openRowyRunModal({ feature: "Action fields" });
+  }, [settings.rowyRunUrl]);
 
   // const [activeStep, setActiveStep] = useState<
   //   "requirements" | "friction" | "action" | "undo" | "customization"
