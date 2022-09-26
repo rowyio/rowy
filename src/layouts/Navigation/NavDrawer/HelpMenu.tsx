@@ -13,6 +13,7 @@ import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
 import { EXTERNAL_LINKS, WIKI_LINKS } from "@src/constants/externalLinks";
 import { logEvent, analytics } from "analytics";
+import meta from "@root/package.json";
 
 export default function HelpMenu({
   anchorEl,
