@@ -27,7 +27,7 @@ export default function Date_({
   if (disabled)
     return (
       <BasicCell
-        value={value}
+        value={transformedValue}
         type={(column as any).type}
         name={column.key}
         format={format}

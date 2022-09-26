@@ -22,7 +22,7 @@ import EmptyState from "@src/components/EmptyState";
 
 import { webhookNames, IWebhook } from "./utils";
 import { DATE_TIME_FORMAT } from "@src/constants/dates";
-import { globalScope, projectSettingsAtom } from "@src/atoms/globalScope";
+import { projectScope, projectSettingsAtom } from "@src/atoms/projectScope";
 import {
   tableScope,
   tableSettingsAtom,
@@ -43,7 +43,7 @@ export default function WebhookList({
   handleEdit,
   handleDelete,
 }: IWebhookListProps) {
-  const [projectSettings] = useAtom(projectSettingsAtom, globalScope);
+  const [projectSettings] = useAtom(projectSettingsAtom, projectScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const setModal = useSetAtom(tableModalAtom, tableScope);
   const setCloudLogFilters = useSetAtom(cloudLogFiltersAtom, tableScope);

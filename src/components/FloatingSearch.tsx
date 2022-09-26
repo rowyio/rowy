@@ -8,7 +8,7 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 
 import SlideTransition from "@src/components/Modal/SlideTransition";
-import { APP_BAR_HEIGHT } from "@src/layouts/Navigation";
+import { TOP_BAR_HEIGHT } from "@src/layouts/Navigation/TopBar";
 
 export interface IFloatingSearchProps extends Partial<FilledTextFieldProps> {
   label: string;
@@ -26,7 +26,7 @@ export default function FloatingSearch({
   });
   const docked = useScrollTrigger({
     disableHysteresis: true,
-    threshold: APP_BAR_HEIGHT,
+    threshold: TOP_BAR_HEIGHT,
   });
 
   return (

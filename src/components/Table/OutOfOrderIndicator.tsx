@@ -6,9 +6,9 @@ import WarningIcon from "@mui/icons-material/WarningAmber";
 import { OUT_OF_ORDER_MARGIN } from "./TableContainer";
 
 import {
-  globalScope,
+  projectScope,
   tableOutOfOrderDismissedAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 
 const Dot = styled("div")(({ theme }) => ({
   position: "absolute",
@@ -35,7 +35,7 @@ export default function OutOfOrderIndicator({
 }: IOutOfOrderIndicatorProps) {
   const [dismissed, setDismissed] = useAtom(
     tableOutOfOrderDismissedAtom,
-    globalScope
+    projectScope
   );
 
   return (

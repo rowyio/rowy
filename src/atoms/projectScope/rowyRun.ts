@@ -51,7 +51,7 @@ export interface IRowyRunRequestProps {
  *
  * @example Basic usage:
  * ```
- * const [rowyRun] = useAtom(rowyRunAtom, globalScope);
+ * const [rowyRun] = useAtom(rowyRunAtom, projectScope);
  * ...
  * await rowyRun(...);
  * ```

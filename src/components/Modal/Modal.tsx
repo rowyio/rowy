@@ -16,7 +16,7 @@ import {
 import LoadingButton, { LoadingButtonProps } from "@mui/lab/LoadingButton";
 import CloseIcon from "@mui/icons-material/Close";
 
-import { SlideTransitionMui } from "./SlideTransition";
+import { FadeTransitionMui } from "./FadeTransition";
 import ScrollableDialogContent, {
   IScrollableDialogContentProps,
 } from "./ScrollableDialogContent";
@@ -76,7 +76,7 @@ export default function Modal({
 
     setOpen(false);
     setEmphasizeCloseButton(false);
-    setTimeout(() => onClose(setOpen), 300);
+    setTimeout(() => onClose(setOpen), 195 * 2);
   };
 
   return (
@@ -86,7 +86,7 @@ export default function Modal({
       onClose={handleClose}
       fullWidth
       fullScreen={fullScreen}
-      TransitionComponent={fullScreen ? Slide : SlideTransitionMui}
+      TransitionComponent={fullScreen ? Slide : FadeTransitionMui}
       TransitionProps={fullScreen ? ({ direction: "up" } as any) : undefined}
       aria-labelledby="modal-title"
       {...props}

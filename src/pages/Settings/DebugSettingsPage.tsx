@@ -12,15 +12,16 @@ import { Container, Stack, Button } from "@mui/material";
 import SettingsSection from "@src/components/Settings/SettingsSection";
 
 import {
-  globalScope,
+  projectScope,
   projectSettingsAtom,
   allUsersAtom,
   updateUserAtom,
-} from "@src/atoms/globalScope";
-import UserManagementSourceFirebase from "@src/sources/UserManagementSourceFirebase";
+} from "@src/atoms/projectScope";
+import UserManagementSourceFirebase from "@src/sources/MembersSourceFirebase";
 import { firebaseDbAtom } from "@src/sources/ProjectSourceFirebase";
 import { USERS } from "@src/config/dbPaths";
 import { getTableSchemaPath } from "@src/utils/table";
+import { useScrollToHash } from "@src/hooks/useScrollToHash";
 
 export interface IProjectSettingsChildProps {
   settings: Record<string, any>;
@@ -30,11 +31,12 @@ export interface IProjectSettingsChildProps {
 }
 
 export default function DebugSettingsPage() {
-  const [firebaseDb] = useAtom(firebaseDbAtom, globalScope);
-  const [projectSettings] = useAtom(projectSettingsAtom, globalScope);
-  const [users] = useAtom(allUsersAtom, globalScope);
-  const [updateUser] = useAtom(updateUserAtom, globalScope);
+  const [firebaseDb] = useAtom(firebaseDbAtom, projectScope);
+  const [projectSettings] = useAtom(projectSettingsAtom, projectScope);
+  const [users] = useAtom(allUsersAtom, projectScope);
+  const [updateUser] = useAtom(updateUserAtom, projectScope);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  useScrollToHash();
 
   return (
     <Container maxWidth="sm" sx={{ px: 1, pt: 1, pb: 7 + 3 + 3 }}>

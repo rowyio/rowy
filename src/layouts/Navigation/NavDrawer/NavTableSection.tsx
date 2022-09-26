@@ -1,7 +1,13 @@
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 
-import { List, ListItemIcon, ListItemText, Collapse } from "@mui/material";
+import {
+  List,
+  ListItemIcon,
+  ListItemText,
+  ListItemSecondaryAction,
+  Collapse,
+} from "@mui/material";
 import FolderIcon from "@mui/icons-material/FolderOutlined";
 import FavoriteIcon from "@mui/icons-material/FavoriteBorder";
 import { ChevronDown } from "@src/assets/icons";
@@ -17,12 +23,14 @@ export interface INavTableSectionProps {
   section: string;
   tables: TableSettings[];
   closeDrawer?: (e: {}) => void;
+  collapsed?: boolean;
 }
 
 export default function NavTableSection({
   section,
   tables,
   closeDrawer,
+  collapsed,
 }: INavTableSectionProps) {
   const { pathname } = useLocation();
   const hasMatch = tables.map(getTableRoute).includes(pathname);
@@ -33,7 +41,6 @@ export default function NavTableSection({
   return (
     <li>
       <NavItem
-        {...({ component: "button" } as any)}
         selected={!isFavorites && hasMatch && !open}
         onClick={() => setOpen((o) => !o)}
       >
@@ -41,19 +48,22 @@ export default function NavTableSection({
           {isFavorites ? <FavoriteIcon /> : <FolderIcon />}
         </ListItemIcon>
 
-        <ListItemText primary={section} style={{ textAlign: "left" }} />
+        <ListItemText primary={section} />
 
-        <ChevronDown
-          sx={{
-            color: "action.active",
-            mr: -0.5,
-            transform: open ? "rotate(180deg)" : "rotate(0)",
-            transition: (theme) => theme.transitions.create("transform"),
-          }}
-        />
+        <ListItemSecondaryAction>
+          <ChevronDown
+            sx={{
+              color: "action.active",
+              m: 0.25,
+              display: "block",
+              transform: open ? "rotate(180deg)" : "rotate(0)",
+              transition: (theme) => theme.transitions.create("transform"),
+            }}
+          />
+        </ListItemSecondaryAction>
       </NavItem>
 
-      <Collapse in={open}>
+      <Collapse in={open && !collapsed}>
         <List style={{ paddingTop: 0 }}>
           {tables.map((table) => {
             const route = getTableRoute(table);

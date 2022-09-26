@@ -10,10 +10,10 @@ import ImportSettings from "./ImportSettings";
 import ExportSettings from "./ExportSettings";
 
 import {
-  globalScope,
+  projectScope,
   tableSettingsDialogIdAtom,
   TableSettingsDialogState,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 
 export interface IActionsMenuProps {
   mode: TableSettingsDialogState["mode"];
@@ -31,7 +31,7 @@ export default function ActionsMenu({
 
   const setTableSettingsDialogId = useSetAtom(
     tableSettingsDialogIdAtom,
-    globalScope
+    projectScope
   );
 
   // On open, set tableSettingsDialogIdAtom so the derived

@@ -17,7 +17,7 @@ import ActionsMenu from "./ActionsMenu";
 import DeleteMenu from "./DeleteMenu";
 
 import {
-  globalScope,
+  projectScope,
   tableSettingsDialogAtom,
   tablesAtom,
   projectRolesAtom,
@@ -26,7 +26,7 @@ import {
   createTableAtom,
   updateTableAtom,
   AdditionalTableSettings,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import { TableSettings } from "@src/types/table";
 import { analytics, logEvent } from "@src/analytics";
 
@@ -60,16 +60,16 @@ const customComponents = {
 export default function TableSettingsDialog() {
   const [{ open, mode, data }, setTableSettingsDialog] = useAtom(
     tableSettingsDialogAtom,
-    globalScope
+    projectScope
   );
   const clearDialog = () => setTableSettingsDialog({ open: false });
 
-  const [projectRoles] = useAtom(projectRolesAtom, globalScope);
-  const [tables] = useAtom(tablesAtom, globalScope);
-  const [rowyRun] = useAtom(rowyRunAtom, globalScope);
+  const [projectRoles] = useAtom(projectRolesAtom, projectScope);
+  const [tables] = useAtom(tablesAtom, projectScope);
+  const [rowyRun] = useAtom(rowyRunAtom, projectScope);
 
   const navigate = useNavigate();
-  const confirm = useSetAtom(confirmDialogAtom, globalScope);
+  const confirm = useSetAtom(confirmDialogAtom, projectScope);
   const snackLogContext = useSnackLogContext();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
@@ -91,8 +91,8 @@ export default function TableSettingsDialog() {
     }
   );
 
-  const [createTable] = useAtom(createTableAtom, globalScope);
-  const [updateTable] = useAtom(updateTableAtom, globalScope);
+  const [createTable] = useAtom(createTableAtom, projectScope);
+  const [updateTable] = useAtom(updateTableAtom, projectScope);
 
   if (!open) return null;
 

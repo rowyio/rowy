@@ -30,7 +30,7 @@ import utilsDefs from "!!raw-loader!./utils.d.ts";
 import rowyUtilsDefs from "!!raw-loader!./rowy.d.ts";
 import extensionsDefs from "!!raw-loader!./extensions.d.ts";
 import { runRoutes } from "@src/constants/runRoutes";
-import { rowyRunAtom, globalScope } from "@src/atoms/globalScope";
+import { rowyRunAtom, projectScope } from "@src/atoms/projectScope";
 import { getFieldProp } from "@src/components/fields";
 
 export interface IUseMonacoCustomizationsProps {
@@ -63,38 +63,24 @@ export default function useMonacoCustomizations({
   const theme = useTheme();
   const monaco = useMonaco();
   const [tableRows] = useAtom(tableRowsAtom, tableScope);
-  const [rowyRun] = useAtom(rowyRunAtom, globalScope);
+  const [rowyRun] = useAtom(rowyRunAtom, projectScope);
   const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
+
   useEffect(() => {
     return () => {
       onUnmount?.();
     };
   }, []);
 
-  // Initialize theme
-  useEffect(() => {
-    if (!monaco) {
-      // useMonaco returns a monaco instance but initialisation is done asynchronously
-      // dont execute the logic until the instance is initialised
-      return;
-    }
-
-    setTimeout(() => {
-      try {
-        monaco.editor.defineTheme("github-light", githubLightTheme as any);
-        monaco.editor.defineTheme("github-dark", githubDarkTheme as any);
-        monaco.editor.setTheme("github-" + theme.palette.mode);
-      } catch (error) {
-        console.error("Could not set Monaco theme: ", error);
-      }
-    });
-  }, [monaco, theme.palette.mode]);
-
   // Initialize external libs & TypeScript compiler options
   useEffect(() => {
     if (!monaco) return;
 
     try {
+      monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
+        target: monaco.languages.typescript.ScriptTarget.ES2020,
+        allowNonTsExtensions: true,
+      });
       monaco.languages.typescript.javascriptDefaults.addExtraLib(firestoreDefs);
       monaco.languages.typescript.javascriptDefaults.addExtraLib(
         firebaseAuthDefs
@@ -102,11 +88,6 @@ export default function useMonacoCustomizations({
       monaco.languages.typescript.javascriptDefaults.addExtraLib(
         firebaseStorageDefs
       );
-      // Compiler options
-      monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
-        target: monaco.languages.typescript.ScriptTarget.ES2020,
-        allowNonTsExtensions: true,
-      });
       monaco.languages.typescript.javascriptDefaults.addExtraLib(
         utilsDefs,
         "ts:filename/utils.d.ts"
@@ -140,9 +121,12 @@ export default function useMonacoCustomizations({
     if (!monaco) return;
 
     try {
-      monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions(
-        JSON.parse(stringifiedDiagnosticsOptions)
-      );
+      monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
+        ...JSON.parse(stringifiedDiagnosticsOptions),
+        diagnosticCodesToIgnore: [
+          1323, // remove dynamic import error
+        ],
+      });
     } catch (error) {
       console.error("Could not set diagnostics options: ", error);
     }

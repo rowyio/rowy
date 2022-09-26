@@ -36,5 +36,17 @@ export const config: IFieldConfig = {
   filter: {
     operators: filterOperators,
   },
+  csvImportParser: (value: string) => {
+    try {
+      const parsed = parseInt(value);
+      if (isNaN(parsed)) {
+        throw new Error("Invalid rating value!");
+      }
+      return parsed;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  },
 };
 export default config;

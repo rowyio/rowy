@@ -6,7 +6,7 @@ import { Stack, Breadcrumbs, Link, Typography, Tooltip } from "@mui/material";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import ReadOnlyIcon from "@mui/icons-material/EditOffOutlined";
 
-import { globalScope, userRolesAtom } from "@src/atoms/globalScope";
+import { projectScope, userRolesAtom } from "@src/atoms/projectScope";
 import { ROUTES } from "@src/constants/routes";
 import { TableSettings } from "@src/types/table";
 
@@ -23,7 +23,7 @@ export default function BreadcrumbsSubTable({
   rootTableLink,
   parentLabel,
 }: IBreadcrumbsSubTableProps) {
-  const [userRoles] = useAtom(userRolesAtom, globalScope);
+  const [userRoles] = useAtom(userRolesAtom, projectScope);
   const [searchParams] = useSearchParams();
   const splitSubTableId = subTableSettings.id.split("/");
 

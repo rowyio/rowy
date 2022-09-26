@@ -157,13 +157,34 @@ export const tableRowsLocalAtom = atomWithReducer(
 
 /** Store rows from the db listener */
 export const tableRowsDbAtom = atom<TableRow[]>([]);
+
 /** Combine tableRowsLocal and tableRowsDb */
-export const tableRowsAtom = atom<TableRow[]>((get) =>
-  uniqBy(
-    [...get(tableRowsLocalAtom), ...get(tableRowsDbAtom)],
-    "_rowy_ref.path"
-  )
-);
+export const tableRowsAtom = atom<TableRow[]>((get) => {
+  const rowsDb = [...get(tableRowsDbAtom)];
+  const rowsLocal = get(tableRowsLocalAtom);
+
+  // Optimization: create Map of rowsDb by path to index for faster lookup
+  const rowsDbMap = new Map<string, number>();
+  rowsDb.forEach((row, i) => rowsDbMap.set(row._rowy_ref.path, i));
+
+  // Loop through rowsLocal, which is usually the smaller of the two arrays
+  const rowsLocalToMerge = rowsLocal.map((row, i) => {
+    // If row is in rowsDb, merge the two
+    // and remove from rowsDb to prevent duplication
+    if (rowsDbMap.has(row._rowy_ref.path)) {
+      const index = rowsDbMap.get(row._rowy_ref.path)!;
+      const merged = updateRowData({ ...rowsDb[index] }, row);
+      rowsDb.splice(index, 1);
+      return merged;
+    }
+
+    return row;
+  });
+
+  // Merge the two arrays
+  return [...rowsLocalToMerge, ...rowsDb];
+});
+
 /** Store next page state for infinite scroll */
 export const tableNextPageAtom = atom({
   loading: false,

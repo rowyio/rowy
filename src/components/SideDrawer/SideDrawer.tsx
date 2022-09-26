@@ -16,7 +16,7 @@ import ErrorFallback from "@src/components/ErrorFallback";
 import StyledDrawer from "./StyledDrawer";
 import SideDrawerFields from "./SideDrawerFields";
 
-import { globalScope, userSettingsAtom } from "@src/atoms/globalScope";
+import { projectScope, userSettingsAtom } from "@src/atoms/projectScope";
 import {
   tableScope,
   tableIdAtom,
@@ -36,7 +36,7 @@ export default function SideDrawer({
 }: {
   dataGridRef?: React.MutableRefObject<DataGridHandle | null>;
 }) {
-  const [userSettings] = useAtom(userSettingsAtom, globalScope);
+  const [userSettings] = useAtom(userSettingsAtom, projectScope);
   const [tableId] = useAtom(tableIdAtom, tableScope);
   const [tableColumnsOrdered] = useAtom(tableColumnsOrderedAtom, tableScope);
   const [tableRows] = useAtom(tableRowsAtom, tableScope);

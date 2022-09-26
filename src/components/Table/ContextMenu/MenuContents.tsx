@@ -17,13 +17,13 @@ import FilterIcon from "@mui/icons-material/FilterList";
 import ContextMenuItem, { IContextMenuItem } from "./ContextMenuItem";
 
 import {
-  globalScope,
+  projectScope,
   projectIdAtom,
   userRolesAtom,
   altPressAtom,
   tableAddRowIdTypeAtom,
   confirmDialogAtom,
-} from "@src/atoms/globalScope";
+} from "@src/atoms/projectScope";
 import {
   tableScope,
   tableSettingsAtom,
@@ -42,11 +42,11 @@ interface IMenuContentsProps {
 }
 
 export default function MenuContents({ onClose }: IMenuContentsProps) {
-  const [projectId] = useAtom(projectIdAtom, globalScope);
-  const [userRoles] = useAtom(userRolesAtom, globalScope);
-  const [altPress] = useAtom(altPressAtom, globalScope);
-  const [addRowIdType] = useAtom(tableAddRowIdTypeAtom, globalScope);
-  const confirm = useSetAtom(confirmDialogAtom, globalScope);
+  const [projectId] = useAtom(projectIdAtom, projectScope);
+  const [userRoles] = useAtom(userRolesAtom, projectScope);
+  const [altPress] = useAtom(altPressAtom, projectScope);
+  const [addRowIdType] = useAtom(tableAddRowIdTypeAtom, projectScope);
+  const confirm = useSetAtom(confirmDialogAtom, projectScope);
   const [tableSettings] = useAtom(tableSettingsAtom, tableScope);
   const [tableSchema] = useAtom(tableSchemaAtom, tableScope);
   const [tableRows] = useAtom(tableRowsAtom, tableScope);
@@ -137,6 +137,12 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
 
   // Row actions
   if (row) {
+    const handleDuplicate = () => {
+      addRow({
+        row,
+        setId: addRowIdType === "custom" ? "decrement" : addRowIdType,
+      });
+    };
     const handleDelete = () => deleteRow(row._rowy_ref.path);
     const rowActions = [
       {
@@ -179,13 +185,28 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
             disabled:
               tableSettings.tableType === "collectionGroup" ||
               (!userRoles.includes("ADMIN") && tableSettings.readOnly),
-            onClick: () => {
-              addRow({
-                row,
-                setId: addRowIdType === "custom" ? "decrement" : addRowIdType,
-              });
-              onClose();
-            },
+            onClick: altPress
+              ? handleDuplicate
+              : () => {
+                  confirm({
+                    title: "Duplicate row?",
+                    body: (
+                      <>
+                        Row path:
+                        <br />
+                        <code
+                          style={{ userSelect: "all", wordBreak: "break-all" }}
+                        >
+                          {row._rowy_ref.path}
+                        </code>
+                      </>
+                    ),
+                    confirm: "Duplicate",
+                    confirmColor: "success",
+                    handleConfirm: handleDuplicate,
+                  });
+                  onClose();
+                },
           },
           {
             label: altPress ? "Delete" : "Delete…",
