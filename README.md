@@ -36,9 +36,9 @@ Connect to your database, manage data in table-UI with role based access control
 
 Set up Rowy on your Google Cloud Platform project with this easy deploy button.
 
-[![Run on Google Cloud](https://deploy.cloud.run/button.svg)](https://deploy.rowy.app/)
+[<img width="250" alt="Guided quick start button" src="https://user-images.githubusercontent.com/307298/185548050-e9208fb6-fe53-4c84-bbfa-53c08e03c15f.png">](https://rowy.app/)
 
-https://deploy.rowy.app/
+https://rowy.app
 
 ## Documentation
 
@@ -91,7 +91,7 @@ https://user-images.githubusercontent.com/307298/157185793-f67511cd-7b7b-4229-95
 
 Set up Rowy on your Google Cloud project with this one-click deploy button. Your data and cloud functions stay on your own Firestore/GCP.
 
-[![Run on Google Cloud](https://deploy.cloud.run/button.svg)](https://deploy.rowy.app/)
+[![Run on Google Cloud](https://deploy.cloud.run/button.svg)](https://rowy.app/)
 
 The one-click deploy makes the process of setting up easy with a step by step
 guide and ensures your project is setup correctly.
