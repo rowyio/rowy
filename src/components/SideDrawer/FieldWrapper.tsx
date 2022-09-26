@@ -51,8 +51,8 @@ export default function FieldWrapper({
   hidden,
   index,
 }: IFieldWrapperProps) {
-  const [projectId] = useAtom(projectIdAtom, globalScope);
-  const [altPress] = useAtom(altPressAtom, globalScope);
+  const [projectId] = useAtom(projectIdAtom, projectScope);
+  const [altPress] = useAtom(altPressAtom, projectScope);
   const { enqueueSnackbar } = useSnackbar();
   const documentPath = `${
     EXTERNAL_LINKS.firebaseProjectbasePath
