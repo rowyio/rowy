@@ -3,15 +3,6 @@ import WarningIcon from "@mui/icons-material/WarningAmber";
 import { TableSettings } from "@src/types/table";
 import { IWebhook } from "@src/components/TableModals/WebhooksModal/utils";
 
-export const webhookTypes = [
-  "basic",
-  "typeform",
-  "sendgrid",
-  //"shopify",
-  //"twitter",
-  //"stripe",
-] as const;
-
 const requestType = [
   "declare type WebHookRequest {",
   "    /**",
