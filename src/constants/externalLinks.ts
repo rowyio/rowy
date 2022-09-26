@@ -23,6 +23,9 @@ export const EXTERNAL_LINKS = {
   rowyAppHostName: "rowy.app",
 
   dateFormat: "https://date-fns.org/v2.24.0/docs/format",
+
+  welcomeVideo:
+    "https://www.youtube.com/watch?v=rJWASZW2ivg&list=PLow2dGbF6XclrTSvW3ug1pRxbGwsIgcWJ&index=1",
 } as const;
 
 const WIKI_PATHS = {
@@ -37,6 +40,9 @@ const WIKI_PATHS = {
   howToAddRow: "/how-to/add-row",
   howToDefaultValues: "/how-to/default-values",
   howToCustomViews: "/how-to/custom-views",
+
+  faqs: "/category/faqs",
+  faqsAccess: "/faqs/access",
 
   fieldTypesSupportedFields: "/field-types/supported-fields",
   fieldTypesDerivative: "/field-types/derivative",

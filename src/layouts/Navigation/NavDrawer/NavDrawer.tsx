@@ -30,6 +30,7 @@ import {
 import Logo from "@src/assets/Logo";
 import NavItem from "./NavItem";
 import GetStartedProgress from "@src/components/GetStartedChecklist/GetStartedProgress";
+import LearningMenu from "./LearningMenu";
 import CommunityMenu from "./CommunityMenu";
 import HelpMenu from "./HelpMenu";
 import { INavDrawerContentsProps } from "./NavDrawerContents";
@@ -73,6 +74,8 @@ export default function NavDrawer({
   const [getStartedCompleted, getStartedCompletionCount] =
     useGetStartedCompletion();
 
+  const [learningMenuAnchorEl, setLearningMenuAnchorEl] =
+    useState<HTMLButtonElement | null>(null);
   const [communityMenuAnchorEl, setCommunityMenuAnchorEl] =
     useState<HTMLButtonElement | null>(null);
   const [helpMenuAnchorEl, setHelpMenuAnchorEl] =
@@ -300,13 +303,27 @@ export default function NavDrawer({
                 </li>
 
                 <li>
-                  <NavItem href={WIKI_LINKS.howTo}>
+                  <NavItem
+                    onClick={(e: any) => {
+                      setLearningMenuAnchorEl(e.currentTarget);
+                      setHover("persist");
+                    }}
+                  >
                     <ListItemIcon>
                       <LearningIcon />
                     </ListItemIcon>
                     <ListItemText primary="Learning" />
-                    {externalLinkIcon}
+                    <ListItemSecondaryAction>
+                      <ChevronRightIcon />
+                    </ListItemSecondaryAction>
                   </NavItem>
+                  <LearningMenu
+                    anchorEl={learningMenuAnchorEl}
+                    onClose={() => {
+                      setLearningMenuAnchorEl(null);
+                      setHover(false);
+                    }}
+                  />
                 </li>
 
                 <li>
