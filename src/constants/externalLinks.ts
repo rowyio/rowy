@@ -52,6 +52,8 @@ const WIKI_PATHS = {
   fieldTypesAction: "/field-types/action",
   fieldTypesAdd: "/field-types/add",
 
+  fieldTypesFormula: "/field-types/formula",
+
   rowyRun: "/rowy-run",
 
   extensions: "/extensions",
