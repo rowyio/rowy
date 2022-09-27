@@ -11,7 +11,7 @@ import {
   Link as MuiLink,
   Button,
 } from "@mui/material";
-import SecurityIcon from "@mui/icons-material/SecurityOutlined";
+import LockIcon from "@mui/icons-material/LockOutlined";
 
 import EmptyState from "@src/components/EmptyState";
 
@@ -33,7 +33,7 @@ export default function AccessDenied({ resetErrorBoundary }: FallbackProps) {
     <EmptyState
       role="alert"
       fullScreen
-      Icon={SecurityIcon}
+      Icon={LockIcon}
       message="Access denied"
       description={
         <>

@@ -9,6 +9,7 @@ import ConfirmDialog from "@src/components/ConfirmDialog";
 import RowyRunModal from "@src/components/RowyRunModal";
 import NotFound from "@src/pages/NotFoundPage";
 import RequireAuth from "@src/layouts/RequireAuth";
+import AdminRoute from "@src/layouts/AdminRoute";
 
 import {
   projectScope,
@@ -20,7 +21,6 @@ import { ROUTES } from "@src/constants/routes";
 import useKeyPressWithAtom from "@src/hooks/useKeyPressWithAtom";
 
 import TableGroupRedirectPage from "./pages/TableGroupRedirectPage";
-import JotaiTestPage from "@src/pages/Test/JotaiTestPage";
 import SignOutPage from "@src/pages/Auth/SignOutPage";
 
 // prettier-ignore
@@ -59,10 +59,6 @@ const ProjectSettingsPage = lazy(() => import("@src/pages/Settings/ProjectSettin
 const MembersPage = lazy(() => import("@src/pages/Settings/MembersPage" /* webpackChunkName: "MembersPage" */));
 // prettier-ignore
 const DebugSettingsPage = lazy(() => import("@src/pages/Settings/DebugSettingsPage" /* webpackChunkName: "DebugSettingsPage" */));
-
-// prettier-ignore
-const ThemeTestPage = lazy(() => import("@src/pages/Test/ThemeTestPage" /* webpackChunkName: "ThemeTestPage" */));
-// const RowyRunTestPage = lazy(() => import("@src/pages/RowyRunTestPage" /* webpackChunkName: "RowyRunTestPage" */));
 
 export default function App() {
   const [currentUser] = useAtom(currentUserAtom, projectScope);
@@ -150,19 +146,22 @@ export default function App() {
             <Route path={ROUTES.userSettings} element={<UserSettingsPage />} />
             <Route
               path={ROUTES.projectSettings}
-              element={<ProjectSettingsPage />}
+              element={
+                <AdminRoute>
+                  <ProjectSettingsPage />
+                </AdminRoute>
+              }
             />
             <Route path={ROUTES.members} element={<MembersPage />} />
             <Route
               path={ROUTES.debugSettings}
-              element={<DebugSettingsPage />}
+              element={
+                <AdminRoute>
+                  <DebugSettingsPage />
+                </AdminRoute>
+              }
             />
-            {/* <Route path={ROUTES.rowyRunTest} element={<RowyRunTestPage />} /> */}
-
-            <Route path="/test/jotai" element={<JotaiTestPage />} />
           </Route>
-
-          <Route path={ROUTES.themeTest} element={<ThemeTestPage />} />
         </Routes>
       )}
     </Suspense>
