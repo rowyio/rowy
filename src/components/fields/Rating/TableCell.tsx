@@ -2,8 +2,8 @@ import { IHeavyCellProps } from "@src/components/fields/types";
 
 import MuiRating from "@mui/material/Rating";
 import RatingIcon from "@mui/icons-material/Star";
+import RatingOutlineIcon from "@mui/icons-material/StarBorder"
 import { get } from "lodash-es";
-import { MonitorSmall } from "mdi-material-ui";
 
 
 export const getStateIcon = (config: any) => {
@@ -11,6 +11,11 @@ export const getStateIcon = (config: any) => {
   if (!get(config, "customIcons.enabled")) { return <RatingIcon /> }
   return get(config, "customIcons.rating") || <RatingIcon />;
 };
+
+export const getStateOutline = (config: any) => {
+  if (!get(config, "customIcons.enabled")) { return <RatingOutlineIcon /> }
+  return get(config, "customIcons.rating") || <RatingOutlineIcon />;
+}
 
 export default function Rating({
   row,
@@ -41,7 +46,7 @@ export default function Rating({
       size="small"
       disabled={disabled}
       onChange={(_, newValue) => onSubmit(newValue)}
-      emptyIcon={getStateIcon(column.config)}
+      emptyIcon={getStateOutline(column.config)}
       max={max}
       precision={precision}
       sx={{ mx: -0.25 }}
