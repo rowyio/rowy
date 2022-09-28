@@ -3,7 +3,7 @@ import { useAtom, Provider } from "jotai";
 import { DebugAtoms } from "@src/atoms/utils";
 import { useParams, useOutlet } from "react-router-dom";
 import { ErrorBoundary } from "react-error-boundary";
-import { find } from "lodash-es";
+import { find, isEmpty } from "lodash-es";
 
 import ErrorFallback, {
   ERROR_TABLE_NOT_FOUND,
@@ -16,6 +16,7 @@ import TableSkeleton from "@src/components/Table/TableSkeleton";
 import {
   projectScope,
   currentUserAtom,
+  projectSettingsAtom,
   tablesAtom,
 } from "@src/atoms/projectScope";
 import {
@@ -32,10 +33,22 @@ export default function ProvidedTablePage() {
   const { id } = useParams();
   const outlet = useOutlet();
   const [currentUser] = useAtom(currentUserAtom, projectScope);
+  const [projectSettings] = useAtom(projectSettingsAtom, projectScope);
   const [tables] = useAtom(tablesAtom, projectScope);
 
   const tableSettings = useMemo(() => find(tables, ["id", id]), [tables, id]);
-  if (!tableSettings) throw new Error(ERROR_TABLE_NOT_FOUND + ": " + id);
+  if (!tableSettings) {
+    if (isEmpty(projectSettings)) {
+      return (
+        <>
+          <TableToolbarSkeleton />
+          <TableSkeleton />
+        </>
+      );
+    } else {
+      throw new Error(ERROR_TABLE_NOT_FOUND + ": " + id);
+    }
+  }
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
