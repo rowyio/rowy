@@ -1,5 +1,5 @@
 import { useAtom, useSetAtom } from "jotai";
-import { find, groupBy } from "lodash-es";
+import { find, groupBy, sortBy } from "lodash-es";
 
 import {
   Container,
@@ -67,7 +67,7 @@ export default function TablesPage() {
     : [];
   const sections: Record<string, TableSettings[]> = {
     Favorites: favorites.map((id) => find(results, { id })) as TableSettings[],
-    ...groupBy(results, "section"),
+    ...groupBy(sortBy(results, ["section", "name"]), "section"),
   };
 
   if (!Array.isArray(tables))
