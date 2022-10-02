@@ -9,7 +9,7 @@ export default function Settings({ onChange, config }: ISettingsProps) {
                 label="Validation regex"
                 id="validation-regex"
                 value={config.validationRegex}
-                defaultValue="[a-z0-9]+@[a-z]+\.[a-z]{2,3}"
+                defaultValue="^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-zA-z]{2,3}$"
                 fullWidth
                 onChange={(e) => {
                     if (e.target.value === "") onChange("validationRegex")(null);
