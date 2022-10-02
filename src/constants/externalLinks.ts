@@ -26,7 +26,6 @@ export const EXTERNAL_LINKS = {
 
   welcomeVideo:
     "https://www.youtube.com/watch?v=rJWASZW2ivg&list=PLow2dGbF6XclrTSvW3ug1pRxbGwsIgcWJ&index=1",
-  firebaseProjectbasePath: "https://console.firebase.google.com/project",
 } as const;
 
 const WIKI_PATHS = {

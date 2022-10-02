@@ -26,7 +26,6 @@ import {
 import { FieldType } from "@src/constants/fields";
 import { getFieldProp } from "@src/components/fields";
 import { getLabelId, getFieldId } from "./utils";
-import { EXTERNAL_LINKS } from "@src/constants/externalLinks";
 import { useSnackbar } from "notistack";
 import { copyToClipboard } from "@src/utils/ui";
 
@@ -54,12 +53,6 @@ export default function FieldWrapper({
   const [projectId] = useAtom(projectIdAtom, projectScope);
   const [altPress] = useAtom(altPressAtom, projectScope);
   const { enqueueSnackbar } = useSnackbar();
-  const documentPath = `${
-    EXTERNAL_LINKS.firebaseProjectbasePath
-  }/${projectId}/firestore/data/~2F${(debugText as string)?.replace(
-    /\//g,
-    "~2F"
-  )}`;
   return (
     <div>
       <Stack
@@ -138,14 +131,16 @@ export default function FieldWrapper({
           </Typography>
           <IconButton
             onClick={() => {
-              copyToClipboard(documentPath);
+              copyToClipboard((debugText as string).replace(/\//g, "~2F"));
               enqueueSnackbar("Copied!");
             }}
           >
             <ContentCopyIcon />
           </IconButton>
           <IconButton
-            href={documentPath}
+            href={`https://console.firebase.google.com/project/${projectId}/firestore/data/~2F${(
+              debugText as string
+            ).replace(/\//g, "~2F")}`}
             target="_blank"
             rel="noopener"
             aria-label="Open in Firebase Console"
