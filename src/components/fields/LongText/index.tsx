@@ -5,7 +5,8 @@ import withBasicCell from "@src/components/fields/_withTableCell/withBasicCell";
 import LongTextIcon from "@mui/icons-material/Notes";
 import BasicCell from "./BasicCell";
 import TextEditor from "@src/components/Table/editors/TextEditor";
-import { filterOperators } from "@src/components/fields/ShortText/Filter";
+
+import { filterOperators } from "./Filter";
 import BasicContextMenuActions from "@src/components/fields/_BasicCell/BasicCellContextMenuActions";
 
 const SideDrawerField = lazy(
@@ -16,7 +17,7 @@ const SideDrawerField = lazy(
 );
 
 const Settings = lazy(
-  () => import("./Settings" /* webpackChunkName: "Settings-ShortText" */)
+  () => import("./Settings" /* webpackChunkName: "Settings-LongText" */)
 );
 
 export const config: IFieldConfig = {
