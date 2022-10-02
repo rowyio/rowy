@@ -131,7 +131,7 @@ export default function FieldWrapper({
           </Typography>
           <IconButton
             onClick={() => {
-              copyToClipboard((debugText as string).replace(/\//g, "~2F"));
+              copyToClipboard(debugText as string);
               enqueueSnackbar("Copied!");
             }}
           >
