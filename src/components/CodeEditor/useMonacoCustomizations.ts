@@ -78,6 +78,8 @@ export default function useMonacoCustomizations({
 
     try {
       monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
+        moduleResolution:
+          monaco.languages.typescript.ModuleResolutionKind.NodeJs,
         target: monaco.languages.typescript.ScriptTarget.ES2020,
         allowNonTsExtensions: true,
       });
@@ -125,6 +127,7 @@ export default function useMonacoCustomizations({
         ...JSON.parse(stringifiedDiagnosticsOptions),
         diagnosticCodesToIgnore: [
           1323, // remove dynamic import error
+          2307, // silence type declarations not found for dynamic import
         ],
       });
     } catch (error) {
