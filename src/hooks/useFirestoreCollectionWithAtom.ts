@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import useMemoValue from "use-memo-value";
 import { useAtom, PrimitiveAtom, useSetAtom, SetStateAction } from "jotai";
-import { Scope } from "jotai/core/atom";
 import { set } from "lodash-es";
 import {
   Firestore,
@@ -77,7 +76,7 @@ interface IUseFirestoreCollectionWithAtomOptions<T> {
  */
 export function useFirestoreCollectionWithAtom<T = TableRow>(
   dataAtom: PrimitiveAtom<T[]>,
-  dataScope: Scope | undefined,
+  dataScope: Parameters<typeof useAtom>[1] | undefined,
   path: string | undefined,
   options?: IUseFirestoreCollectionWithAtomOptions<T>
 ) {

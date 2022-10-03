@@ -135,7 +135,19 @@ export default function Settings({
 
       <div>
         <InputLabel>Derivative script</InputLabel>
-        <CodeEditorHelper docLink={WIKI_LINKS.fieldTypesDerivative} />
+        <CodeEditorHelper
+          docLink={WIKI_LINKS.fieldTypesDerivative}
+          additionalVariables={[
+            {
+              key: "row",
+              description: `row has the value of doc.data() it has type definitions using this table's schema, but you can access any field in the document.`,
+            },
+            {
+              key: "ref",
+              description: `reference object that represents the reference to the current row in firestore db (ie: doc.ref).`,
+            },
+          ]}
+        />
         <Suspense fallback={<FieldSkeleton height={200} />}>
           <CodeEditor
             diagnosticsOptions={

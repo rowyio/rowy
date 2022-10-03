@@ -329,6 +329,7 @@ export default function ColumnMenu() {
                 </>
               ),
               handleConfirm: handleEvaluateAll,
+              confirm: "Evaluate",
             }),
     },
   ];

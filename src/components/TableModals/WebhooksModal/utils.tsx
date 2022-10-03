@@ -1,6 +1,7 @@
 import { TableSettings } from "@src/types/table";
 import { generateId } from "@src/utils/table";
-import { typeform, basic, sendgrid, webform } from "./Schemas";
+import { typeform, basic, sendgrid, webform, stripe } from "./Schemas";
+
 export const webhookTypes = [
   "basic",
   "typeform",
@@ -8,7 +9,7 @@ export const webhookTypes = [
   "webform",
   //"shopify",
   //"twitter",
-  //"stripe",
+  "stripe",
 ] as const;
 
 const requestType = [
@@ -53,7 +54,7 @@ export const webhookNames: Record<WebhookType, string> = {
   //github:"GitHub",
   // shopify: "Shopify",
   // twitter: "Twitter",
-  // stripe: "Stripe",
+  stripe: "Stripe",
   basic: "Basic",
   webform: "Web form",
 };
@@ -82,6 +83,7 @@ export const webhookSchemas = {
   typeform,
   sendgrid,
   webform,
+  stripe,
 };
 
 export function emptyWebhookObject(

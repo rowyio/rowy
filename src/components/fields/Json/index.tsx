@@ -5,6 +5,7 @@ import withBasicCell from "@src/components/fields/_withTableCell/withBasicCell";
 import { Json as JsonIcon } from "@src/assets/icons";
 import BasicCell from "./BasicCell";
 import withSideDrawerEditor from "@src/components/Table/editors/withSideDrawerEditor";
+import ContextMenuActions from "./ContextMenuActions";
 
 const SideDrawerField = lazy(
   () =>
@@ -35,5 +36,6 @@ export const config: IFieldConfig = {
   },
   SideDrawerField,
   settings: Settings,
+  contextMenuActions: ContextMenuActions,
 };
 export default config;

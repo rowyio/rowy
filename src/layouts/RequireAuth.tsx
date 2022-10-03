@@ -1,4 +1,4 @@
-import { useAtom } from "jotai";
+import { useAtom, Atom } from "jotai";
 import { useLocation, Navigate } from "react-router-dom";
 
 import Loading from "@src/components/Loading";
@@ -8,10 +8,16 @@ import { ROUTES } from "@src/constants/routes";
 
 export interface IRequireAuthProps {
   children: React.ReactElement;
+  atom?: Atom<any>;
+  scope?: Parameters<typeof useAtom>[1];
 }
 
-export default function RequireAuth({ children }: IRequireAuthProps) {
-  const [currentUser] = useAtom(currentUserAtom, projectScope);
+export default function RequireAuth({
+  children,
+  atom = currentUserAtom,
+  scope = projectScope,
+}: IRequireAuthProps) {
+  const [currentUser] = useAtom(atom, scope);
   const location = useLocation();
 
   if (currentUser === undefined)
@@ -25,6 +31,7 @@ export default function RequireAuth({ children }: IRequireAuthProps) {
       <Navigate
         to={ROUTES.auth + `?redirect=${encodeURIComponent(redirect)}`}
         replace
+        state={location.state}
       />
     );
 

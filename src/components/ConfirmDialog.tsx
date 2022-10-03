@@ -11,14 +11,20 @@ import {
   Button,
 } from "@mui/material";
 
-import { SlideTransitionMui } from "@src/components/Modal/SlideTransition";
+import { FadeTransitionMui } from "@src/components/Modal/FadeTransition";
 import { projectScope, confirmDialogAtom } from "@src/atoms/projectScope";
+
+export interface IConfirmDialogProps {
+  scope?: Parameters<typeof useAtom>[1];
+}
 
 /**
  * Display a confirm dialog using `confirmDialogAtom` in `globalState`
  * @see {@link confirmDialogAtom | Usage example}
  */
-export default function ConfirmDialog() {
+export default function ConfirmDialog({
+  scope = projectScope,
+}: IConfirmDialogProps) {
   const [
     {
       open,
@@ -39,8 +45,12 @@ export default function ConfirmDialog() {
       buttonLayout = "horizontal",
     },
     setState,
-  ] = useAtom(confirmDialogAtom, projectScope);
-  const handleClose = () => setState({ open: false });
+  ] = useAtom(confirmDialogAtom, scope);
+
+  const handleClose = () => {
+    setState({ open: false });
+    setDryText("");
+  };
 
   const [dryText, setDryText] = useState("");
 
@@ -52,7 +62,7 @@ export default function ConfirmDialog() {
         else handleClose();
       }}
       maxWidth={maxWidth}
-      TransitionComponent={SlideTransitionMui}
+      TransitionComponent={FadeTransitionMui}
       sx={{ cursor: "default", zIndex: (theme) => theme.zIndex.modal + 50 }}
     >
       <DialogTitle>{title}</DialogTitle>
@@ -68,7 +78,7 @@ export default function ConfirmDialog() {
             value={dryText}
             onChange={(e) => setDryText(e.target.value)}
             autoFocus
-            label={`Type ${confirmationCommand} below to continue:`}
+            label={`Type “${confirmationCommand}” below to continue:`}
             placeholder={confirmationCommand}
             fullWidth
             id="dryText"

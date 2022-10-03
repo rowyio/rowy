@@ -300,7 +300,7 @@ export const tableSettings = (
       type: FieldType.checkbox,
       name: "audit",
       label: "Enable auditing for this table",
-      defaultValue: true,
+      defaultValue: false,
     },
     {
       step: "auditing",

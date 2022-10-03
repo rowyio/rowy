@@ -58,8 +58,8 @@ const inferTypeFromValue = (value: any) => {
 
   if (typeof value === "string") {
     if (REGEX_EMAIL.test(value)) return FieldType.email;
-    if (REGEX_PHONE.test(value)) return FieldType.phone;
     if (REGEX_URL.test(value)) return FieldType.url;
+    if (REGEX_PHONE.test(value)) return FieldType.phone;
     if (REGEX_HTML.test(value)) return FieldType.richText;
     if (value.length >= 50) return FieldType.longText;
     return FieldType.shortText;

@@ -7,6 +7,7 @@ import { Box } from "@mui/material";
 
 export interface ICircularProgressTimedProps
   extends ICircularProgressOpticalProps {
+  /** Duration in seconds */
   duration: number;
   complete: boolean;
 }

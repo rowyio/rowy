@@ -204,7 +204,19 @@ export default function DefaultValueInput({
 
       {column.config?.defaultValue?.type === "dynamic" && (
         <>
-          <CodeEditorHelper docLink={WIKI_LINKS.howToDefaultValues} />
+          <CodeEditorHelper
+            docLink={WIKI_LINKS.howToDefaultValues}
+            additionalVariables={[
+              {
+                key: "row",
+                description: `row has the value of doc.data() it has type definitions using this table's schema, but you can access any field in the document.`,
+              },
+              {
+                key: "ref",
+                description: `reference object that represents the reference to the current row in firestore db (ie: doc.ref).`,
+              },
+            ]}
+          />
           <Suspense fallback={<FieldSkeleton height={100} />}>
             <CodeEditor
               column={column}
