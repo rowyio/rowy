@@ -1,6 +1,6 @@
 import { atom } from "jotai";
 import { atomWithReducer, atomWithHash } from "jotai/utils";
-import { uniqBy, findIndex, cloneDeep, unset, orderBy } from "lodash-es";
+import { findIndex, cloneDeep, unset, orderBy } from "lodash-es";
 
 import {
   TableSettings,
