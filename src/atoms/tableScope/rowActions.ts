@@ -213,7 +213,9 @@ export const deleteRowAtom = atom(
         find(tableRowsLocal, ["_rowy_ref.path", path])
       );
       if (isLocalRow) set(tableRowsLocalAtom, { type: "delete", path });
-      else await deleteRowDb(path);
+
+      // Always delete from db in case it exists
+      await deleteRowDb(path);
       if (auditChange) auditChange("DELETE_ROW", path);
     };
 
