@@ -114,11 +114,7 @@ export default function Table({
           tableSettings.readOnly && !userRoles.includes("ADMIN")
             ? false
             : column.editable ?? true,
-        width: (column.width as number)
-          ? (column.width as number) > MAX_COL_WIDTH
-            ? MAX_COL_WIDTH
-            : (column.width as number)
-          : DEFAULT_COL_WIDTH,
+        width: column.width ?? 100,
       }));
 
     if (userRoles.includes("ADMIN") || !tableSettings.readOnly) {
