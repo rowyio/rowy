@@ -15,7 +15,6 @@ import {
   tableColumnsOrderedAtom,
   tableFiltersAtom,
   tableRowsLocalAtom,
-  tableRowsDbAtom,
   tableRowsAtom,
   _updateRowDbAtom,
   _deleteRowDbAtom,
@@ -62,7 +61,7 @@ export const addRowAtom = atom(
     const auditChange = get(auditChangeAtom);
     const tableFilters = get(tableFiltersAtom);
     const tableColumnsOrdered = get(tableColumnsOrderedAtom);
-    const tableRowsDb = get(tableRowsDbAtom);
+    const tableRows = get(tableRowsAtom);
 
     const _addSingleRowAndAudit = async (row: TableRow) => {
       // Store initial values to be written
@@ -147,10 +146,19 @@ export const addRowAtom = atom(
       if (auditChange) auditChange("ADD_ROW", row._rowy_ref.path);
     };
 
+    // Find the first row in order to be used to decrement ID
+    let firstInOrderRowId = tableRows[0]?._rowy_ref.id;
+    for (const row of tableRows) {
+      if (row._rowy_outOfOrder === false) {
+        firstInOrderRowId = row._rowy_ref.id;
+        break;
+      }
+    }
+
     if (Array.isArray(row)) {
       const promises: Promise<void>[] = [];
 
-      let lastId = tableRowsDb[0]?._rowy_ref.id;
+      let lastId = firstInOrderRowId;
       for (const r of row) {
         const id =
           setId === "random"
@@ -175,7 +183,7 @@ export const addRowAtom = atom(
         setId === "random"
           ? generateId()
           : setId === "decrement"
-          ? decrementId(tableRowsDb[0]?._rowy_ref.id)
+          ? decrementId(firstInOrderRowId)
           : row._rowy_ref.id;
 
       const path = setId
