@@ -1,5 +1,5 @@
 import { useAtom, useSetAtom } from "jotai";
-import { find, groupBy } from "lodash-es";
+import { find, groupBy, sortBy } from "lodash-es";
 
 import { ListItemIcon, ListItemText, Divider } from "@mui/material";
 import { Tables as TablesIcon } from "@src/assets/icons";
@@ -44,11 +44,11 @@ export default function NavDrawerContents({
   const favorites = Array.isArray(userSettings.favoriteTables)
     ? userSettings.favoriteTables
     : [];
-  const sections = {
+  const sections: Record<string, TableSettings[]> = {
     Favorites: favorites
       .map((id) => find(tables, { id }))
       .filter((x) => x !== undefined) as TableSettings[],
-    ...groupBy(tables, "section"),
+    ...groupBy(sortBy(tables, ["section", "name"]), "section"),
   };
 
   return (
