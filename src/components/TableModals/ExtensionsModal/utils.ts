@@ -95,6 +95,7 @@ const extensionBodyTemplate = {
   
   return ({
     trackedFields: [],    // a list of string of column names
+    collectionId: "historySnapshots",    // optionally change the sub-collection id of where the history snapshots are stored
   })
 }`,
   algoliaIndex: `const extensionBody: AlgoliaIndexBody = async({row, db, change, ref}) => {

@@ -117,8 +117,13 @@ export const rowyRunAtom = atom((get) => {
 /** Store deployed Rowy Run version */
 export const rowyRunVersionAtom = atom(async (get) => {
   const rowyRun = get(rowyRunAtom);
-  const response = await rowyRun({ route: runRoutes.version });
-  return response.version as string | false;
+  try {
+    const response = await rowyRun({ route: runRoutes.version });
+    return response.version as string | false;
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
 });
 
 /**
