@@ -202,7 +202,6 @@ export default function MenuContents({ onClose }: IMenuContentsProps) {
                       </>
                     ),
                     confirm: "Duplicate",
-                    confirmColor: "success",
                     handleConfirm: handleDuplicate,
                   });
                   onClose();
