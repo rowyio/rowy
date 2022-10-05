@@ -66,7 +66,6 @@ export default function FinalColumn({ row }: FormatterProps<TableRow, any>) {
                       </>
                     ),
                     confirm: "Duplicate",
-                    confirmColor: "success",
                     handleConfirm: handleDuplicate,
                   });
                 }

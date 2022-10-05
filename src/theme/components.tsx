@@ -81,22 +81,22 @@ export const components = (theme: Theme): ThemeOptions => {
 
           body: { cursor: "default" },
 
-          "@supports selector(:has(a))": {
-            body: {
-              transition: "background-color 0s",
-              transitionDelay: theme.transitions.duration.leavingScreen + "ms",
-            },
+          // "@supports selector(:has(a))": {
+          //   body: {
+          //     transition: "background-color 0s",
+          //     transitionDelay: theme.transitions.duration.leavingScreen + "ms",
+          //   },
 
-            "#root": {
-              transformOrigin: `50% 0%`,
-              transition: theme.transitions.create([
-                "transform",
-                "border-radius",
-              ]),
-              transitionDuration: `${theme.transitions.duration.leavingScreen}ms, 0s`,
-              transitionDelay: `0s, ${theme.transitions.duration.leavingScreen}ms`,
-            },
-          },
+          //   "#root": {
+          //     transformOrigin: `50% 0%`,
+          //     transition: theme.transitions.create([
+          //       "transform",
+          //       "border-radius",
+          //     ]),
+          //     transitionDuration: `${theme.transitions.duration.leavingScreen}ms, 0s`,
+          //     transitionDelay: `0s, ${theme.transitions.duration.leavingScreen}ms`,
+          //   },
+          // },
 
           "code, pre, pre.MuiTypography-root": {
             fontFamily: theme.typography.fontFamilyMono,
@@ -279,28 +279,28 @@ export const components = (theme: Theme): ThemeOptions => {
             paddingRight: "env(safe-area-inset-right)",
             paddingBottom: "env(safe-area-inset-bottom)",
 
-            "body:has([data-open=true] &)": {
-              backgroundColor: theme.palette.common.black,
-              transitionDelay: "0s",
+            // "body:has([data-open=true] &)": {
+            //   backgroundColor: theme.palette.common.black,
+            //   transitionDelay: "0s",
 
-              "#root": {
-                borderRadius: (theme.shape.borderRadius as number) * 2,
-                overflow: "hidden",
-                filter: `grayscale(100%) contrast(${
-                  theme.palette.mode === "dark" ? "80" : "75"
-                }%)`,
+            //   "#root": {
+            //     borderRadius: (theme.shape.borderRadius as number) * 2,
+            //     overflow: "hidden",
+            //     filter: `grayscale(100%) contrast(${
+            //       theme.palette.mode === "dark" ? "80" : "75"
+            //     }%)`,
 
-                transform: `scale(0.9)`,
-                transition: theme.transitions.create(
-                  ["transform", "border-radius"],
-                  {
-                    easing: theme.transitions.easing.easeOut,
-                  }
-                ),
-                transitionDuration: `${theme.transitions.duration.enteringScreen}ms, 0s`,
-                transitionDelay: "0s, 0s",
-              },
-            },
+            //     transform: `scale(0.9)`,
+            //     transition: theme.transitions.create(
+            //       ["transform", "border-radius"],
+            //       {
+            //         easing: theme.transitions.easing.easeOut,
+            //       }
+            //     ),
+            //     transitionDuration: `${theme.transitions.duration.enteringScreen}ms, 0s`,
+            //     transitionDelay: "0s, 0s",
+            //   },
+            // },
           },
         },
       },
@@ -383,6 +383,18 @@ export const components = (theme: Theme): ThemeOptions => {
                 padding: 0,
                 paddingRight: theme.spacing(1),
               },
+            },
+
+            "input[type='search']::-webkit-search-cancel-button": {
+              appearance: "none",
+              mask: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3e%3cpath d='M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.59-13L12 10.59 8.41 7 7 8.41 10.59 12 7 15.59 8.41 17 12 13.41 15.59 17 17 15.59 13.41 12 17 8.41z'/%3e%3c/svg%3e") no-repeat 50% 50%`,
+              backgroundColor: "currentColor",
+              opacity: 0.67,
+
+              width: "1.5rem",
+              height: "1.5rem",
+              marginLeft: theme.spacing(0.5),
+              marginRight: 0,
             },
           },
         },
