@@ -1,9 +1,12 @@
 import { atom } from "jotai";
 import { sortBy } from "lodash-es";
-import { ThemeOptions } from "@mui/material";
 
 import { userRolesAtom } from "./auth";
-import { UserSettings } from "./user";
+import {
+  PublicSettings,
+  ProjectSettings,
+  UserSettings,
+} from "@src/types/settings";
 import {
   UpdateDocFunction,
   UpdateCollectionDocFunction,
@@ -16,43 +19,12 @@ import { FunctionSettings } from "@src/types/function";
 export const projectIdAtom = atom<string>("");
 
 /** Public settings are visible to unauthenticated users */
-export type PublicSettings = Partial<{
-  signInOptions: Array<
-    | "google"
-    | "twitter"
-    | "facebook"
-    | "github"
-    | "microsoft"
-    | "apple"
-    | "yahoo"
-    | "email"
-    | "phone"
-    | "anonymous"
-  >;
-  theme: Record<"base" | "light" | "dark", ThemeOptions>;
-}>;
-/** Public settings are visible to unauthenticated users */
 export const publicSettingsAtom = atom<PublicSettings>({});
 /** Stores a function that updates public settings */
 export const updatePublicSettingsAtom = atom<
   UpdateDocFunction<PublicSettings> | undefined
 >(undefined);
 
-/** Project settings are visible to authenticated users */
-export type ProjectSettings = Partial<{
-  tables: TableSettings[];
-
-  setupCompleted: boolean;
-
-  rowyRunUrl: string;
-  rowyRunRegion: string;
-  rowyRunDeployStatus: "BUILDING" | "COMPLETE";
-  services: Partial<{
-    hooks: string;
-    builder: string;
-    terminal: string;
-  }>;
-}>;
 /** Project settings are visible to authenticated users */
 export const projectSettingsAtom = atom<ProjectSettings>({});
 /**
