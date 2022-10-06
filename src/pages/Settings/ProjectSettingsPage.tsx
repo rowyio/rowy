@@ -19,12 +19,13 @@ import {
   updatePublicSettingsAtom,
 } from "@src/atoms/projectScope";
 import { useScrollToHash } from "@src/hooks/useScrollToHash";
+import { ProjectSettings, PublicSettings } from "@src/types/settings";
 
 export interface IProjectSettingsChildProps {
-  settings: Record<string, any>;
-  updateSettings: (data: Record<string, any>) => void;
-  publicSettings: Record<string, any>;
-  updatePublicSettings: (data: Record<string, any>) => void;
+  settings: ProjectSettings;
+  updateSettings: (data: Partial<ProjectSettings>) => void;
+  publicSettings: PublicSettings;
+  updatePublicSettings: (data: Partial<PublicSettings>) => void;
 }
 
 export default function ProjectSettingsPage() {

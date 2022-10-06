@@ -23,13 +23,6 @@ import { USERS } from "@src/config/dbPaths";
 import { getTableSchemaPath } from "@src/utils/table";
 import { useScrollToHash } from "@src/hooks/useScrollToHash";
 
-export interface IProjectSettingsChildProps {
-  settings: Record<string, any>;
-  updateSettings: (data: Record<string, any>) => void;
-  publicSettings: Record<string, any>;
-  updatePublicSettings: (data: Record<string, any>) => void;
-}
-
 export default function DebugSettingsPage() {
   const [firebaseDb] = useAtom(firebaseDbAtom, projectScope);
   const [projectSettings] = useAtom(projectSettingsAtom, projectScope);

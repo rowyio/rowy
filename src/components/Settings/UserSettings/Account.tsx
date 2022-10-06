@@ -9,19 +9,19 @@ export default function Account({ settings }: IUserSettingsChildProps) {
   return (
     <Grid container spacing={2} alignItems="center">
       <Grid item>
-        <Avatar src={settings.user.photoURL} />
+        <Avatar src={settings.user?.photoURL} />
       </Grid>
 
       <Grid item xs>
         <Typography variant="body1" style={{ userSelect: "all" }}>
-          {settings.user.displayName}
+          {settings.user?.displayName}
         </Typography>
         <Typography
           variant="body2"
           color="textSecondary"
           style={{ userSelect: "all" }}
         >
-          {settings.user.email}
+          {settings.user?.email}
         </Typography>
       </Grid>
 
