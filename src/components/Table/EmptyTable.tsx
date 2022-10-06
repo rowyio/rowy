@@ -83,7 +83,7 @@ export default function EmptyTable() {
                   startIcon={<ImportIcon />}
                   onClick={onClick}
                 >
-                  Import Data
+                  Import data
                 </Button>
               )}
               PopoverProps={{

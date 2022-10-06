@@ -4,11 +4,14 @@ import { useAtom, useSetAtom } from "jotai";
 import {
   Button,
   Typography,
-  TextField,
-  IconButton,
-  Stack,
+  FormControl,
   InputLabel,
+  FilledInput,
+  FormHelperText,
+  Stack,
 } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
+import InlineOpenInNewIcon from "@src/components/InlineOpenInNewIcon";
 
 import {
   tableModalAtom,
@@ -19,7 +22,6 @@ import { analytics, logEvent } from "@src/analytics";
 import { find } from "lodash-es";
 
 import { WIKI_LINKS } from "@src/constants/externalLinks";
-import DocsIcon from "@mui/icons-material/ArrowUpward";
 
 export default function ImportFromAirtable() {
   const [{ baseId, tableId, apiKey }, setImportAirtable] = useAtom(
@@ -112,78 +114,93 @@ export default function ImportFromAirtable() {
 
   return (
     <>
-      <Typography variant="caption" color="gray">
+      <Typography color="text.secondary" paragraph>
         Forget the storage limitations of Airtable. Migrate your app data from
         Airtable to a more scalable Firestore database that you can easily
         manage with Rowy.
       </Typography>
-      <TextField
-        sx={{ marginBottom: 1 }}
+
+      <FormControl
         variant="filled"
-        autoFocus
         fullWidth
-        label={
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="end"
-          >
-            <InputLabel>Airtable API Key</InputLabel>
-            <IconButton
-              size="small"
-              color="primary"
-              target="_blank"
-              rel="noopener noreferrer"
-              href={WIKI_LINKS.importAirtableApiKey}
-            >
-              API Key <DocsIcon sx={{ rotate: "45deg" }} />
-            </IconButton>
-          </Stack>
-        }
-        placeholder="Insert your API key here"
-        value={apiKey}
-        onChange={(e) =>
-          setImportAirtable((prev) => ({
-            ...prev,
-            apiKey: e.currentTarget.value,
-          }))
-        }
-        helperText={error?.apiKey?.message}
+        margin="dense"
         error={!!error?.apiKey?.message}
-      />
-      <TextField
+      >
+        <Stack direction="row" justifyContent="space-between" alignItems="end">
+          <InputLabel htmlFor="import-airtable-api-key">API key</InputLabel>
+          <Button
+            variant="text"
+            color="primary"
+            target="_blank"
+            rel="noopener noreferrer"
+            href={WIKI_LINKS.importAirtableApiKey}
+            sx={{ py: 0, minHeight: 24 }}
+          >
+            Find API key <InlineOpenInNewIcon />
+          </Button>
+        </Stack>
+
+        <FilledInput
+          id="import-airtable-api-key"
+          autoFocus
+          fullWidth
+          size="small"
+          placeholder="key…"
+          value={apiKey}
+          onChange={(e) =>
+            setImportAirtable((prev) => ({
+              ...prev,
+              apiKey: e.currentTarget.value,
+            }))
+          }
+          aria-describedby="import-airtable-api-key-error-text"
+        />
+        <FormHelperText id="import-airtable-api-key-error-text">
+          {error?.apiKey?.message}
+        </FormHelperText>
+      </FormControl>
+
+      <FormControl
         variant="filled"
         fullWidth
-        label={
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="end"
-          >
-            <InputLabel>Airtable Table URL</InputLabel>
-            <IconButton
-              size="small"
-              color="primary"
-              target="_blank"
-              rel="noopener noreferrer"
-              href={WIKI_LINKS.importAirtableTableUrl}
-            >
-              Table URL <DocsIcon sx={{ rotate: "45deg" }} />
-            </IconButton>
-          </Stack>
-        }
-        placeholder="Insert your Table URL here"
-        value={tableUrl}
-        onChange={(e) => {
-          setTableUrl(e.currentTarget.value);
-        }}
-        helperText={error?.baseId?.message || error?.tableId?.message}
+        margin="dense"
         error={!!error?.baseId?.message || error?.tableId?.message}
-      />
-      <Button
+      >
+        <Stack direction="row" justifyContent="space-between" alignItems="end">
+          <InputLabel htmlFor="import-airtable-table-url">Table URL</InputLabel>
+          <Button
+            variant="text"
+            color="primary"
+            target="_blank"
+            rel="noopener noreferrer"
+            href={WIKI_LINKS.importAirtableTableUrl}
+            sx={{ py: 0, minHeight: 24 }}
+          >
+            Find table URL <InlineOpenInNewIcon />
+          </Button>
+        </Stack>
+
+        <FilledInput
+          id="import-airtable-table-url"
+          autoFocus
+          fullWidth
+          size="small"
+          placeholder="https://airtable.com/app…/tbl…"
+          value={tableUrl}
+          onChange={(e) => {
+            setTableUrl(e.currentTarget.value);
+          }}
+          aria-describedby="import-airtable-table-url-error-text"
+        />
+        <FormHelperText id="import-airtable-table-url-error-text">
+          {error?.baseId?.message || error?.tableId?.message}
+        </FormHelperText>
+      </FormControl>
+
+      <LoadingButton
         variant="contained"
         color="primary"
-        disabled={loading}
+        loading={loading}
         sx={{
           my: 2,
           mx: "auto",
@@ -196,7 +213,7 @@ export default function ImportFromAirtable() {
         }}
       >
         Continue
-      </Button>
+      </LoadingButton>
     </>
   );
 }
