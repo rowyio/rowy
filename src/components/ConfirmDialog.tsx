@@ -11,7 +11,6 @@ import {
   Button,
 } from "@mui/material";
 
-import { FadeTransitionMui } from "@src/components/Modal/FadeTransition";
 import { projectScope, confirmDialogAtom } from "@src/atoms/projectScope";
 
 export interface IConfirmDialogProps {
@@ -62,7 +61,6 @@ export default function ConfirmDialog({
         else handleClose();
       }}
       maxWidth={maxWidth}
-      TransitionComponent={FadeTransitionMui}
       sx={{ cursor: "default", zIndex: (theme) => theme.zIndex.modal + 50 }}
     >
       <DialogTitle>{title}</DialogTitle>

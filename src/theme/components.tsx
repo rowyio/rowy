@@ -4,6 +4,7 @@ import type {} from "@mui/lab/themeAugmentation";
 import { MultiSelectProps } from "@rowy/multiselect";
 import { toRem } from "./typography";
 
+import ModalTransition from "@src/components/Modal/ModalTransition";
 import RadioIcon from "@src/theme/RadioIcon";
 import CheckboxIcon from "@src/theme/CheckboxIcon";
 import CheckboxIndeterminateIcon from "@src/theme/CheckboxIndeterminateIcon";
@@ -248,6 +249,9 @@ export const components = (theme: Theme): ThemeOptions => {
       },
 
       MuiDialog: {
+        defaultProps: {
+          TransitionComponent: ModalTransition,
+        },
         styleOverrides: {
           root: {
             "--dialog-title-height": "64px",
@@ -307,14 +311,8 @@ export const components = (theme: Theme): ThemeOptions => {
       MuiDialogTitle: {
         styleOverrides: {
           root: {
-            padding: "var(--dialog-spacing)",
-            paddingTop: (64 - 28) / 2,
-            paddingBottom: (64 - 28) / 2,
-
-            [theme.breakpoints.down("sm")]: {
-              paddingTop: (56 - 28) / 2,
-              paddingBottom: (56 - 28) / 2,
-            },
+            ...(theme.typography.h5 as any),
+            padding: `calc((var(--dialog-title-height) - ${theme.typography.h5.lineHeight} * ${theme.typography.h5.fontSize}) / 2) var(--dialog-spacing)`,
           },
         },
       },
