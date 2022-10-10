@@ -93,29 +93,40 @@ export function ErrorFallbackContents({
     } else {
       renderProps = {
         Icon: ReloadIcon,
-        message: "New update available",
+        message: "Update available",
         description: (
-          <>
-            <Typography variant="inherit">
-              Reload this page to get the latest update
-            </Typography>
-            <Button
-              size={props.basic ? "small" : "medium"}
-              variant="outlined"
-              color="secondary"
-              startIcon={<ReloadIcon />}
-              onClick={() => window.location.reload()}
-            >
-              Reload
-            </Button>
-          </>
+          <Button
+            size={props.basic ? "small" : "medium"}
+            variant="outlined"
+            color="secondary"
+            startIcon={<ReloadIcon />}
+            onClick={() => window.location.reload()}
+            sx={{ mt: 1 }}
+          >
+            Reload
+          </Button>
         ),
       };
     }
   }
 
   if (error.message.includes("Failed to fetch")) {
-    renderProps = { Icon: OfflineIcon, message: "You’re offline" };
+    renderProps = {
+      Icon: OfflineIcon,
+      message: "You’re offline",
+      description: isOffline ? null : (
+        <Button
+          size={props.basic ? "small" : "medium"}
+          variant="outlined"
+          color="secondary"
+          startIcon={<ReloadIcon />}
+          onClick={() => window.location.reload()}
+          sx={{ mt: 1 }}
+        >
+          Reload
+        </Button>
+      ),
+    };
   }
 
   return <EmptyState role="alert" fullScreen {...renderProps} {...props} />;
