@@ -4052,6 +4052,13 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-detect-offline@^2.4.1":
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/@types/react-detect-offline/-/react-detect-offline-2.4.1.tgz#5a71625d3614a56a6c3dacc53c5e9baed0610de0"
+  integrity sha512-ympSl07fvDbu7+EsnhrKwDWkdOqHp22lukhJYIHxnTfSIzOh1T/K9NGmpwKUtgJaNCfllwLvMSXBlyC6nHEObw==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-div-100vh@^0.4.0":
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/@types/react-div-100vh/-/react-div-100vh-0.4.0.tgz#750e3ac45ee239ec2952089c1516f3b510bd103e"
@@ -11361,6 +11368,11 @@ react-data-grid@7.0.0-beta.5:
   integrity sha512-rtN4wnePrQ80UN6lYF/zUQqVVJMT3HW5bTLx9nR5XOKQiG72cGzX2d2+b+e82vUh23zTFBicEnuWSlN9Fa/83Q==
   dependencies:
     clsx "^1.1.1"
+
+react-detect-offline@^2.4.5:
+  version "2.4.5"
+  resolved "https://registry.yarnpkg.com/react-detect-offline/-/react-detect-offline-2.4.5.tgz#3c242516c37b6789cf89102881031f87e70b80e6"
+  integrity sha512-sI13NPEKl3uQp95FT5CwrYzH3DnXCwNP6TnY6NRF5gFDM4NU9KDlbtA6HG2dwhDVS0RYQGXwZW/mHbdf8fCnaw==
 
 react-dev-utils@^12.0.0:
   version "12.0.0"
