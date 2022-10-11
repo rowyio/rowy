@@ -1,4 +1,4 @@
-import { Suspense, useMemo } from "react";
+import { Suspense } from "react";
 import { useAtom, Provider } from "jotai";
 import { DebugAtoms } from "@src/atoms/utils";
 import { useParams, useOutlet } from "react-router-dom";
@@ -25,6 +25,7 @@ import {
   tableIdAtom,
   tableSettingsAtom,
 } from "@src/atoms/tableScope";
+import { SyncAtomValue } from "@src/atoms/utils";
 import useDocumentTitle from "@src/hooks/useDocumentTitle";
 
 /**
@@ -39,7 +40,7 @@ export default function ProvidedTablePage() {
   const [projectSettings] = useAtom(projectSettingsAtom, projectScope);
   const [tables] = useAtom(tablesAtom, projectScope);
 
-  const tableSettings = useMemo(() => find(tables, ["id", id]), [tables, id]);
+  const tableSettings = find(tables, ["id", id]);
   useDocumentTitle(projectId, tableSettings ? tableSettings.name : "Not found");
 
   if (!tableSettings) {
@@ -75,6 +76,12 @@ export default function ProvidedTablePage() {
           ]}
         >
           <DebugAtoms scope={tableScope} />
+          <SyncAtomValue
+            atom={tableSettingsAtom}
+            scope={tableScope}
+            value={tableSettings}
+          />
+
           <TableSourceFirestore />
           <Suspense
             fallback={
