@@ -1,4 +1,4 @@
-import { Suspense, useMemo } from "react";
+import { Suspense } from "react";
 import { useAtom, Provider } from "jotai";
 import { DebugAtoms } from "@src/atoms/utils";
 import { useParams, useOutlet } from "react-router-dom";
@@ -15,6 +15,7 @@ import TableSkeleton from "@src/components/Table/TableSkeleton";
 
 import {
   projectScope,
+  projectIdAtom,
   currentUserAtom,
   projectSettingsAtom,
   tablesAtom,
@@ -24,6 +25,8 @@ import {
   tableIdAtom,
   tableSettingsAtom,
 } from "@src/atoms/tableScope";
+import { SyncAtomValue } from "@src/atoms/utils";
+import useDocumentTitle from "@src/hooks/useDocumentTitle";
 
 /**
  * Wraps `TablePage` with the data for a top-level table.
@@ -32,11 +35,14 @@ import {
 export default function ProvidedTablePage() {
   const { id } = useParams();
   const outlet = useOutlet();
+  const [projectId] = useAtom(projectIdAtom, projectScope);
   const [currentUser] = useAtom(currentUserAtom, projectScope);
   const [projectSettings] = useAtom(projectSettingsAtom, projectScope);
   const [tables] = useAtom(tablesAtom, projectScope);
 
-  const tableSettings = useMemo(() => find(tables, ["id", id]), [tables, id]);
+  const tableSettings = find(tables, ["id", id]);
+  useDocumentTitle(projectId, tableSettings ? tableSettings.name : "Not found");
+
   if (!tableSettings) {
     if (isEmpty(projectSettings)) {
       return (
@@ -70,6 +76,12 @@ export default function ProvidedTablePage() {
           ]}
         >
           <DebugAtoms scope={tableScope} />
+          <SyncAtomValue
+            atom={tableSettingsAtom}
+            scope={tableScope}
+            value={tableSettings}
+          />
+
           <TableSourceFirestore />
           <Suspense
             fallback={

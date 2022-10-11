@@ -124,9 +124,8 @@ export default function Image_({
     [value]
   );
 
-  const handleDelete = (ref: string) => () => {
+  const handleDelete = (index: number) => () => {
     const newValue = [...value];
-    const index = findIndex(newValue, ["ref", ref]);
     const toBeDeleted = newValue.splice(index, 1);
     toBeDeleted.length && deleteUpload(toBeDeleted[0]);
     onSubmit(newValue);
@@ -182,7 +181,7 @@ export default function Image_({
       >
         <Grid container spacing={0.5} wrap="nowrap">
           {Array.isArray(value) &&
-            value.map((file: FileValue) => (
+            value.map((file: FileValue, i) => (
               <Grid item key={file.downloadURL}>
                 {disabled ? (
                   <Tooltip title="Open">
@@ -223,7 +222,7 @@ export default function Image_({
                             body: "This image cannot be recovered after",
                             confirm: "Delete",
                             confirmColor: "error",
-                            handleConfirm: handleDelete(file.ref),
+                            handleConfirm: handleDelete(i),
                           });
                         }}
                       >

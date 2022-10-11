@@ -55,7 +55,7 @@ export default function ImportData({ render, PopoverProps }: IImportDataProps) {
         render(handleOpen)
       ) : (
         <TableToolbarButton
-          title="Import Data"
+          title="Import data"
           onClick={handleOpen}
           icon={<ImportIcon />}
         />
@@ -84,7 +84,7 @@ export default function ImportData({ render, PopoverProps }: IImportDataProps) {
         <TabContext value={tab}>
           <TabList
             onChange={(_, v) => setTab(v)}
-            aria-label="Import Data method tabs"
+            aria-label="Import data method tabs"
             action={(actions) =>
               setTimeout(() => actions?.updateIndicator(), 200)
             }

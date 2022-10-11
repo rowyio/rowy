@@ -36,7 +36,7 @@ export default function NewColumnModal({
 
   const [columnLabel, setColumnLabel] = useState("");
   const [fieldKey, setFieldKey] = useState("");
-  const [type, setType] = useState(FieldType.shortText);
+  const [type, setType] = useState("" as any);
   const requireConfiguration = getFieldProp("requireConfiguration", type);
 
   const isAuditField = AUDIT_FIELD_TYPES.includes(type);

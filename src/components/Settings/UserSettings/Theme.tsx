@@ -62,7 +62,9 @@ export default function Theme({
       <FormControlLabel
         control={
           <Checkbox
-            defaultChecked={Boolean(settings.theme?.dark?.palette?.darker)}
+            defaultChecked={Boolean(
+              (settings.theme?.dark?.palette as any)?.darker
+            )}
             onChange={(e) => {
               updateSettings({
                 theme: merge(settings.theme, {

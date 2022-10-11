@@ -58,7 +58,7 @@ const ProjectSettingsPage = lazy(() => import("@src/pages/Settings/ProjectSettin
 // prettier-ignore
 const MembersPage = lazy(() => import("@src/pages/Settings/MembersPage" /* webpackChunkName: "MembersPage" */));
 // prettier-ignore
-const DebugSettingsPage = lazy(() => import("@src/pages/Settings/DebugSettingsPage" /* webpackChunkName: "DebugSettingsPage" */));
+const DebugPage = lazy(() => import("@src/pages/Settings/DebugPage" /* webpackChunkName: "DebugPage" */));
 
 export default function App() {
   const [currentUser] = useAtom(currentUserAtom, projectScope);
@@ -153,14 +153,8 @@ export default function App() {
               }
             />
             <Route path={ROUTES.members} element={<MembersPage />} />
-            <Route
-              path={ROUTES.debugSettings}
-              element={
-                <AdminRoute>
-                  <DebugSettingsPage />
-                </AdminRoute>
-              }
-            />
+
+            <Route path={ROUTES.debug} element={<DebugPage />} />
           </Route>
         </Routes>
       )}
