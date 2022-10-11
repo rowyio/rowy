@@ -215,8 +215,9 @@ export const tableSettings = (
       }.`,
       disabled: mode === "update",
       gridCols: { xs: 12, sm: 6 },
-      validation:
-        mode === "create"
+      validation: [
+        ["matches", /^[^/]+$/g, "ID cannot have /"],
+        ...(mode === "create"
           ? [
               [
                 "test",
@@ -225,7 +226,8 @@ export const tableSettings = (
                 (value: any) => !find(tables, ["value", value]),
               ],
             ]
-          : [],
+          : []),
+      ],
     },
     {
       step: "display",
