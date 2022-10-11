@@ -53,8 +53,9 @@ const useFirebaseStorageUploader = () => {
         firebaseStorage,
         `${docRef.path}/${fieldName}/${file.name}`
       );
-      const uploadTask = uploadBytesResumable(storageRef, file);
-
+      const uploadTask = uploadBytesResumable(storageRef, file, {
+        cacheControl: "public, max-age=31536000",
+      });
       uploadTask.on(
         // event
         "state_changed",
