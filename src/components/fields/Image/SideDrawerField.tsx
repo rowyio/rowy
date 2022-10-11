@@ -26,6 +26,7 @@ import CircularProgressOptical from "@src/components/CircularProgressOptical";
 import { projectScope, confirmDialogAtom } from "@src/atoms/projectScope";
 import { IMAGE_MIME_TYPES } from ".";
 import { fieldSx, getFieldId } from "@src/components/SideDrawer/utils";
+import { arrayUnion } from "firebase/firestore";
 
 const imgSx = {
   position: "relative",
@@ -93,25 +94,21 @@ export default function Image_({
   const { progress } = uploaderState;
 
   // Store a preview image locally while uploading
-  const [localImage, setLocalImage] = useState<string>("");
+  const [localImages, setLocalImages] = useState<string[]>([]);
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
-      const imageFile = acceptedFiles[0];
-
-      if (_rowy_ref && imageFile) {
+      if (_rowy_ref && acceptedFiles.length > 0) {
         upload({
           docRef: _rowy_ref! as any,
           fieldName: column.key,
-          files: [imageFile],
-          previousValue: value ?? [],
-          onComplete: (newValue) => {
-            onChange(newValue);
-            onSubmit();
-            setLocalImage("");
+          files: acceptedFiles,
+          onComplete: (newUploads) => {
+            onChange(arrayUnion(newUploads));
+            setLocalImages([]);
           },
         });
-        setLocalImage(URL.createObjectURL(imageFile));
+        setLocalImages(acceptedFiles.map((file) => URL.createObjectURL(file)));
       }
     },
     [_rowy_ref, value]
@@ -127,7 +124,7 @@ export default function Image_({
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    multiple: false,
+    multiple: true,
     accept: IMAGE_MIME_TYPES,
   });
 
@@ -237,29 +234,30 @@ export default function Image_({
             </Grid>
           ))}
 
-        {localImage && (
-          <Grid item>
-            <ButtonBase
-              sx={imgSx}
-              style={{ backgroundImage: `url("${localImage}")` }}
-              className="img"
-            >
-              <Grid
-                container
-                justifyContent="center"
-                alignItems="center"
-                sx={overlaySx}
+        {localImages &&
+          localImages.map((image, i) => (
+            <Grid item>
+              <ButtonBase
+                sx={imgSx}
+                style={{ backgroundImage: `url("${image}")` }}
+                className="img"
               >
-                <CircularProgressOptical
-                  color="inherit"
-                  size={48}
-                  variant={progress === 0 ? "indeterminate" : "determinate"}
-                  value={progress}
-                />
-              </Grid>
-            </ButtonBase>
-          </Grid>
-        )}
+                <Grid
+                  container
+                  justifyContent="center"
+                  alignItems="center"
+                  sx={overlaySx}
+                >
+                  <CircularProgressOptical
+                    color="inherit"
+                    size={48}
+                    variant={progress === 0 ? "indeterminate" : "determinate"}
+                    value={progress}
+                  />
+                </Grid>
+              </ButtonBase>
+            </Grid>
+          ))}
       </Grid>
     </>
   );

@@ -33,8 +33,7 @@ export type UploadProps = {
   docRef: DocumentReference;
   fieldName: string;
   files: File[];
-  previousValue?: FileValue[];
-  onComplete?: (values: FileValue[]) => void;
+  onComplete?: (value: FileValue) => void;
 };
 
 // TODO: GENERALIZE INTO ATOM
@@ -46,13 +45,7 @@ const useFirebaseStorageUploader = () => {
     ...initialState,
   });
 
-  const upload = ({
-    docRef,
-    fieldName,
-    files,
-    previousValue,
-    onComplete,
-  }: UploadProps) => {
+  const upload = ({ docRef, fieldName, files, onComplete }: UploadProps) => {
     uploaderDispatch({ isLoading: true });
 
     files.forEach((file) => {
@@ -139,24 +132,20 @@ const useFirebaseStorageUploader = () => {
           // Upload completed successfully, now we can get the download URL
           getDownloadURL(uploadTask.snapshot.ref).then(
             (downloadURL: string) => {
-              const newValue: FileValue[] = Array.isArray(previousValue)
-                ? [...previousValue]
-                : [];
-
-              newValue.push({
-                ref: uploadTask.snapshot.ref.fullPath,
-                downloadURL,
-                name: file.name,
-                type: file.type,
-                lastModifiedTS: file.lastModified,
-              });
               // STore in the document if docRef provided
               // if (docRef && docRef.update)docRef.update({ [fieldName]: newValue });
               // Also call callback if it exists
               // IMPORTANT: SideDrawer form may not update its local values after this
               // function updates the doc, so you MUST update it manually
               // using this callback
-              if (onComplete) onComplete(newValue);
+              const obj = {
+                ref: uploadTask.snapshot.ref.fullPath,
+                downloadURL,
+                name: file.name,
+                type: file.type,
+                lastModifiedTS: file.lastModified,
+              };
+              if (onComplete) onComplete(obj);
             }
           );
         }

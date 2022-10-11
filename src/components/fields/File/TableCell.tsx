@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { IHeavyCellProps } from "@src/components/fields/types";
 import { useSetAtom } from "jotai";
 import { findIndex } from "lodash-es";
@@ -17,6 +17,7 @@ import useUploader from "@src/hooks/useFirebaseStorageUploader";
 import { FileIcon } from ".";
 import { DATE_TIME_FORMAT } from "@src/constants/dates";
 import { FileValue } from "@src/types/table";
+import { arrayUnion } from "firebase/firestore";
 
 export default function File_({
   column,
@@ -28,28 +29,26 @@ export default function File_({
 }: IHeavyCellProps) {
   const confirm = useSetAtom(confirmDialogAtom, projectScope);
   const updateField = useSetAtom(updateFieldAtom, tableScope);
-
+  const [localFiles, setLocalFiles] = useState<string[]>([]);
   const { uploaderState, upload, deleteUpload } = useUploader();
   const { progress, isLoading } = uploaderState;
-
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
-      const file = acceptedFiles[0];
-
-      if (file) {
+      if (acceptedFiles.length > 0) {
         upload({
           docRef: docRef! as any,
           fieldName: column.key,
-          files: [file],
-          previousValue: value,
-          onComplete: (newValue) => {
+          files: acceptedFiles,
+          onComplete: (newUploads) => {
             updateField({
               path: docRef.path,
               fieldName: column.key,
-              value: newValue,
+              value: arrayUnion(newUploads),
             });
+            setLocalFiles([]);
           },
         });
+        setLocalFiles(acceptedFiles.map((file) => file.name));
       }
     },
     [value]
@@ -65,7 +64,7 @@ export default function File_({
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    multiple: false,
+    multiple: true,
   });
 
   const dropzoneProps = getRootProps();
@@ -133,6 +132,18 @@ export default function File_({
                   style={{ width: "100%" }}
                 />
               </Tooltip>
+            </Grid>
+          ))}
+        {localFiles &&
+          localFiles.map((fileName) => (
+            <Grid item>
+              <Chip
+                icon={<FileIcon />}
+                label={fileName}
+                deleteIcon={
+                  <CircularProgressOptical size={20} color="inherit" />
+                }
+              />
             </Grid>
           ))}
       </ChipList>

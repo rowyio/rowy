@@ -23,6 +23,7 @@ import { DATE_TIME_FORMAT } from "@src/constants/dates";
 import { fieldSx, getFieldId } from "@src/components/SideDrawer/utils";
 import { projectScope, confirmDialogAtom } from "@src/atoms/projectScope";
 import { FileValue } from "@src/types/table";
+import { arrayUnion } from "firebase/firestore";
 
 export default function File_({
   column,
@@ -37,25 +38,22 @@ export default function File_({
   const { uploaderState, upload, deleteUpload } = useUploader();
 
   // Store a preview image locally while uploading
-  const [localFile, setLocalFile] = useState<string>("");
+  const [localFiles, setLocalFiles] = useState<string[]>([]);
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
-      const file = acceptedFiles[0];
-
-      if (_rowy_ref && file) {
+      if (acceptedFiles.length > 0) {
         upload({
           docRef: _rowy_ref! as any,
           fieldName: column.key,
-          files: [file],
-          previousValue: value ?? [],
-          onComplete: (newValue) => {
-            onChange(newValue);
+          files: acceptedFiles,
+          onComplete: (newUploads) => {
+            onChange(arrayUnion(newUploads));
             onSubmit();
-            setLocalFile("");
+            setLocalFiles([]);
           },
         });
-        setLocalFile(file.name);
+        setLocalFiles(acceptedFiles.map((file) => file.name));
       }
     },
     [_rowy_ref, value]
@@ -71,7 +69,7 @@ export default function File_({
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    multiple: false,
+    multiple: true,
   });
 
   return (
@@ -138,15 +136,18 @@ export default function File_({
             </Grid>
           ))}
 
-        {localFile && (
-          <Grid item>
-            <Chip
-              icon={<FileIcon />}
-              label={localFile}
-              deleteIcon={<CircularProgressOptical size={20} color="inherit" />}
-            />
-          </Grid>
-        )}
+        {localFiles &&
+          localFiles.map((fileName) => (
+            <Grid item>
+              <Chip
+                icon={<FileIcon />}
+                label={fileName}
+                deleteIcon={
+                  <CircularProgressOptical size={20} color="inherit" />
+                }
+              />
+            </Grid>
+          ))}
       </Grid>
     </>
   );

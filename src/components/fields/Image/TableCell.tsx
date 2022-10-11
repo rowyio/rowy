@@ -32,6 +32,7 @@ import useUploader from "@src/hooks/useFirebaseStorageUploader";
 import { IMAGE_MIME_TYPES } from "./index";
 import { DEFAULT_ROW_HEIGHT } from "@src/components/Table";
 import { FileValue } from "@src/types/table";
+import { arrayUnion } from "firebase/firestore";
 
 // MULTIPLE
 const imgSx = (rowHeight: number) => ({
@@ -99,28 +100,25 @@ export default function Image_({
   const { progress, isLoading } = uploaderState;
 
   // Store a preview image locally while uploading
-  const [localImage, setLocalImage] = useState<string>("");
+  const [localImages, setLocalImages] = useState<string[]>([]);
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
-      const imageFile = acceptedFiles[0];
-
-      if (imageFile) {
+      if (acceptedFiles.length > 0) {
         upload({
           docRef: docRef! as any,
           fieldName: column.key,
-          files: [imageFile],
-          previousValue: value,
-          onComplete: (newValue) => {
+          files: acceptedFiles,
+          onComplete: (newUploads) => {
             updateField({
               path: docRef.path,
               fieldName: column.key,
-              value: newValue,
+              value: arrayUnion(newUploads),
             });
-            setLocalImage("");
+            setLocalImages([]);
           },
         });
-        setLocalImage(URL.createObjectURL(imageFile));
+        setLocalImages(acceptedFiles.map((file) => URL.createObjectURL(file)));
       }
     },
     [value]
@@ -136,7 +134,7 @@ export default function Image_({
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    multiple: false,
+    multiple: true,
     accept: IMAGE_MIME_TYPES,
   });
 
@@ -250,20 +248,21 @@ export default function Image_({
               </Grid>
             ))}
 
-          {localImage && (
-            <Grid item>
-              <Box
-                sx={[
-                  imgSx(rowHeight),
-                  {
-                    boxShadow: (theme) =>
-                      `0 0 0 1px ${theme.palette.divider} inset`,
-                  },
-                ]}
-                style={{ backgroundImage: `url("${localImage}")` }}
-              />
-            </Grid>
-          )}
+          {localImages &&
+            localImages.map((url) => (
+              <Grid item>
+                <Box
+                  sx={[
+                    imgSx(rowHeight),
+                    {
+                      boxShadow: (theme) =>
+                        `0 0 0 1px ${theme.palette.divider} inset`,
+                    },
+                  ]}
+                  style={{ backgroundImage: `url("${url}")` }}
+                />
+              </Grid>
+            ))}
         </Grid>
       </div>
 
