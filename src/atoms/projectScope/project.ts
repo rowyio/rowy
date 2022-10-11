@@ -46,10 +46,10 @@ export const tablesAtom = atom<TableSettings[]>((get) => {
   const tables = get(projectSettingsAtom).tables || [];
 
   return sortBy(tables, "name")
-    .filter(
-      (table) =>
-        userRoles.includes("ADMIN") ||
-        table.roles.some((role) => userRoles.includes(role))
+    .filter((table) =>
+      userRoles.includes("ADMIN") || Array.isArray(table.roles)
+        ? table.roles.some((role) => userRoles.includes(role))
+        : false
     )
     .map((table) => ({
       ...table,
