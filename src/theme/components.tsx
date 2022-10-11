@@ -566,6 +566,13 @@ export const components = (theme: Theme): ThemeOptions => {
 
       MuiMenu: {
         styleOverrides: {
+          root: {
+            ".MuiDialog-root + & .MuiMenu-paper, form:has(.MuiDialog-root) + & .MuiMenu-paper, .MuiDialog-root & .MuiMenu-paper":
+              {
+                backgroundImage:
+                  "linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2))", // elevation 50
+              },
+          },
           list: { padding: theme.spacing(0.5, 0) },
         },
       },
