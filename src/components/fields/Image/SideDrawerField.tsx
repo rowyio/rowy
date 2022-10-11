@@ -105,6 +105,7 @@ export default function Image_({
           files: acceptedFiles,
           onComplete: (newUploads) => {
             onChange(arrayUnion(newUploads));
+            onSubmit();
             setLocalImages([]);
           },
         });

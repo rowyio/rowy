@@ -42,7 +42,7 @@ export default function File_({
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
-      if (acceptedFiles.length > 0) {
+      if (_rowy_ref && acceptedFiles.length > 0) {
         upload({
           docRef: _rowy_ref! as any,
           fieldName: column.key,
