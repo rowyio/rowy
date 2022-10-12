@@ -37,6 +37,7 @@ export function ErrorFallbackContents({
       <>
         <Typography variant="inherit" style={{ whiteSpace: "pre-line" }}>
           {(error as any).code && <b>{(error as any).code}: </b>}
+          {(error as any).status && <b>{(error as any).status}: </b>}
           {error.message}
         </Typography>
         <Button
