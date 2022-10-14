@@ -4,7 +4,7 @@ import { DataGridHandle } from "react-data-grid";
 import { ErrorBoundary } from "react-error-boundary";
 import { isEmpty } from "lodash-es";
 
-import { Fade } from "@mui/material";
+import { Box, Fade } from "@mui/material";
 import ErrorFallback, {
   InlineErrorFallback,
 } from "@src/components/ErrorFallback";
@@ -27,6 +27,12 @@ import {
 import useBeforeUnload from "@src/hooks/useBeforeUnload";
 import ActionParamsProvider from "@src/components/fields/Action/FormDialog/Provider";
 import { useSnackLogContext } from "@src/contexts/SnackLogContext";
+import { TOP_BAR_HEIGHT } from "@src/layouts/Navigation/TopBar";
+import { TABLE_TOOLBAR_HEIGHT } from "@src/components/TableToolbar";
+import {
+  DRAWER_COLLAPSED_WIDTH,
+  DRAWER_WIDTH,
+} from "@src/components/SideDrawer";
 
 // prettier-ignore
 const BuildLogsSnack = lazy(() => import("@src/components/TableModals/CloudLogsModal/BuildLogs/BuildLogsSnack" /* webpackChunkName: "TableModals-BuildLogsSnack" */));
@@ -93,7 +99,23 @@ export default function TablePage({
 
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <Suspense fallback={<TableSkeleton />}>
-          <Table dataGridRef={dataGridRef} />
+          <Box
+            sx={{
+              overflow: "auto",
+              height: `calc(100vh - ${TOP_BAR_HEIGHT}px - ${TABLE_TOOLBAR_HEIGHT}px)`,
+              width: {
+                xs: "100%",
+                sm: `calc(100% - ${DRAWER_COLLAPSED_WIDTH}px)`,
+              },
+
+              '& [role="grid"]': {
+                paddingBottom: (theme) =>
+                  `max(env(safe-area-inset-bottom), ${theme.spacing(2)})`,
+              },
+            }}
+          >
+            <Table />
+          </Box>
         </Suspense>
       </ErrorBoundary>
 

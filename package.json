@@ -18,6 +18,7 @@
     "@mui/x-date-pickers": "^5.0.0-alpha.4",
     "@rowy/form-builder": "^0.7.0",
     "@rowy/multiselect": "^0.4.1",
+    "@tanstack/react-table": "^8.5.15",
     "@tinymce/tinymce-react": "^3",
     "@uiw/react-md-editor": "^3.14.1",
     "algoliasearch": "^4.13.1",
