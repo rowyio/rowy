@@ -141,6 +141,7 @@ export default function SideDrawer({
       {!!cell && (
         <div className="sidedrawer-nav-fab-container">
           <Fab
+            aria-label="Previous row"
             style={{ borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }}
             size="small"
             disabled={disabled || !cell || selectedCellRowIndex <= 0}
@@ -150,6 +151,7 @@ export default function SideDrawer({
           </Fab>
 
           <Fab
+            aria-label="Next row"
             style={{ borderTopLeftRadius: 0, borderTopRightRadius: 0 }}
             size="small"
             disabled={
@@ -164,6 +166,7 @@ export default function SideDrawer({
 
       <div className="sidedrawer-open-fab-container">
         <Fab
+          aria-label={open ? "Close side drawer" : "Open side drawer"}
           disabled={disabled}
           onClick={() => {
             if (setOpen)
